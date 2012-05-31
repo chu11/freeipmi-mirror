@@ -40,11 +40,6 @@ AC_CONFIG_FILES([
         common/pingtool/Makefile
         common/portability/Makefile
         common/toolcommon/Makefile
-        common/toolevent/Makefile
-        common/toolhostrange/Makefile
-        common/tooloem/Makefile
-        common/toolsdr/Makefile
-        common/toolsensor/Makefile
         contrib/Makefile
         doc/Makefile 
         etc/Makefile
@@ -353,25 +348,6 @@ if test x"$enable_init_scripts" = xno; then
    INSTALL_INIT_SCRIPTS=
 fi
 AC_SUBST(INSTALL_INIT_SCRIPTS)
-
-dnl Option to disable installing logrotate config
-AC_ARG_ENABLE(logrotate-config,
-   AC_HELP_STRING([--disable-logrotate-config],
-      [don\'t install logrotate configuration files]))
-INSTALL_LOGROTATE_CONFIG=install-logrotate-config
-if test x"$enable_logrotate_config" = xno; then
-   INSTALL_LOGROTATE_CONFIG=
-fi
-AC_SUBST(INSTALL_LOGROTATE_CONFIG)
-
-dnl Option to disable creating log directory
-AC_ARG_ENABLE([logdir],
-   AC_HELP_STRING([--disable-logdir], [don\'t create log directory]))
-INSTALL_LOGDIR=install-logdir
-if test x"$enable_logdir" = xno; then
-   INSTALL_LOGDIR=
-fi
-AC_SUBST(INSTALL_LOGDIR)
 
 dnl Option to disable creating ipmi sdr cache directory
 AC_ARG_ENABLE([ipmisdrcachedir],
@@ -694,7 +670,6 @@ FREEIPMI_SYSCONFDIR=${sysconfdir}/freeipmi/
 AC_SUBST(FREEIPMI_SYSCONFDIR)
 
 AC_FREEIPMI_CONFIG_FILE
-AC_BMC_WATCHDOG_LOGFILE_DEFAULT
 AC_IPMI_MONITORING_SDR_CACHE_DIR
 dnl legacy
 AC_IPMI_MONITORING_SENSOR_CONFIG_FILE

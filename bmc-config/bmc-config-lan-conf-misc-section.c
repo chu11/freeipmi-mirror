@@ -79,7 +79,7 @@ _get_bmc_generated_arp_control (bmc_config_state_data_t *state_data,
                                                                            IPMI_LAN_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                            obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_bmc_generated_arp_control: %s\n",
@@ -154,7 +154,7 @@ _set_bmc_generated_arp_control (bmc_config_state_data_t *state_data,
                                                                            ac->bmc_generated_arp_responses,
                                                                            obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_bmc_generated_arp_control: %s\n",
@@ -312,7 +312,7 @@ gratuitous_arp_interval_checkout (const char *section_name,
                                                                          IPMI_LAN_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                          obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_gratuitous_arp_interval: %s\n",
@@ -384,7 +384,7 @@ gratuitous_arp_interval_commit (const char *section_name,
                                                                          atoi (kv->value_input),
                                                                          obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_gratuitous_arp_interval: %s\n",

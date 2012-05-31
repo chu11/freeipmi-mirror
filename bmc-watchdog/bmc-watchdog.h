@@ -42,6 +42,7 @@ enum bmc_watchdog_argp_option_keys
     CLEAR_KEY = 'c',
     DAEMON_KEY = 'd',
     LOGFILE_KEY = 'f',
+    VERBOSE_LOGGING_KEY = 'v',
     NO_LOGGING_KEY = 'n',
     TIMER_USE_KEY = 'u',
     STOP_TIMER_KEY = 'm',
@@ -68,7 +69,7 @@ enum bmc_watchdog_argp_option_keys
 
 struct bmc_watchdog_arguments
 {
-  struct common_cmd_args common;
+  struct common_cmd_args common_args;
   int set;
   int get;
   int reset;
@@ -76,7 +77,7 @@ struct bmc_watchdog_arguments
   int stop;
   int clear;
   int daemon;
-  char *logfile;
+  int verbose_logging;
   int no_logging;
   int timer_use;
   uint8_t timer_use_arg;

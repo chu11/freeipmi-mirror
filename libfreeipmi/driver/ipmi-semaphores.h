@@ -43,12 +43,12 @@ union semun {
 };
 #endif
 
-int ipmi_mutex_init (void);
+int driver_mutex_init (void);
 
-int ipmi_mutex_lock (int semid);
+int driver_mutex_lock (int semid);
 
-int ipmi_mutex_lock_interruptible (int semid);
+int driver_mutex_lock_interruptible (int semid);
 
-int ipmi_mutex_unlock (int semid);
+int driver_mutex_unlock (int semid);
 
 #endif /* IPMI_SEMAPHORES_H */

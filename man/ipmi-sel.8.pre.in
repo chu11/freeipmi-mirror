@@ -86,17 +86,16 @@ string name.  The current local system time can be specified with
 automatically because they do not possess a timestamp.
 .TP
 \fB\-t\fR \fISENSOR\-TYPE\-LIST\fR, \fB\-\-sensor\-types\fR=\fISENSOR\-TYPE\-LIST\fR
-Specify sensor types to show sensor outputs for.  Multiple types can
-be separated by commas or spaces.  A special command line type of
-"all", will indicate all types should be shown (may be useful for
-overriding configured defaults).  Users may specify sensor types by
-string (see \fB\-\-list\-sensor\-types\fR below) or by number (decimal
-or hex).
+Specify sensor types to show SEL events for.  Multiple types can be
+separated by commas or spaces.  A special command line type of "all",
+will indicate all types should be shown (may be useful for overriding
+configured defaults).  Users may specify sensor types by string (see
+\fB\-\-list\-sensor\-types\fR below) or by number (decimal or hex).
 .TP
 \fB\-T\fR \fISENSOR\-TYPE\-LIST\fR, \fB\-\-exclude\-sensor\-types\fR=\fISENSOR\-TYPE\-LIST\fR
-Specify sensor types to not show sensor outputs for.  Multiple types
-can be eparated by commas or spaces.  A special command line type of
-"no", will indicate no types should be excluded (may be useful for
+Specify sensor types to not show SEL events for.  Multiple types can
+be separated by commas or spaces.  A special command line type of "none",
+will indicate no types should be excluded (may be useful for
 overriding configured defaults).  Users may specify sensor types by
 string (see \fB\-\-list\-sensor\-types\fR below) or by number (decimal
 or hex).
@@ -138,7 +137,7 @@ Delete record ids from START to END in the SEL.
 Output only system event records (i.e. don't output OEM records).
 .TP
 \fB\-\-oem\-event\-only\fR
-Output only OEM event records.
+Output only OEM event records (i.e. don't output system event records).
 .TP
 \fB\-\-output\-manufacturer\-id\fR
 For OEM SEL record types, output the manufacturer ID along with event
@@ -159,6 +158,7 @@ if \fB\-\-output\-event\-state\fR not specified.
 .TP
 \fB\-\-hex\-dump\fR
 Hex-dump SEL entries.
+.if 0 \{
 .TP
 \fB\-\-assume\-system\-event\-records\fR
 Some motherboards have invalid SEL record types listed, leading to
@@ -167,6 +167,7 @@ formatted correctly.  Use this option to assume these invalid record
 types are system event records and pray for the best.  This option is
 confirmed to work around compliances issues on HP DL 380 G5
 motherboards.
+\}
 #include <@top_srcdir@/man/manpage-common-interpret-oem-data.man>
 .TP
 \fB\-\-output\-oem\-event\-strings\fR
@@ -188,8 +189,10 @@ systems.
 #include <@top_srcdir@/man/manpage-common-no-header-output.man>
 #include <@top_srcdir@/man/manpage-common-non-abbreviated-units.man>
 #include <@top_srcdir@/man/manpage-common-legacy-output.man>
-#include <@top_srcdir@/man/manpage-common-sdr-options.man>
-#include <@top_srcdir@/man/manpage-common-ignore-sdr-cache.man>
+#include <@top_srcdir@/man/manpage-common-sdr-cache-options-heading.man>
+#include <@top_srcdir@/man/manpage-common-sdr-cache-options.man>
+#include <@top_srcdir@/man/manpage-common-sdr-cache-file-directory.man>
+#include <@top_srcdir@/man/manpage-common-sdr-cache-ignore.man>
 #include <@top_srcdir@/man/manpage-common-hostranged-options-header.man>
 #include <@top_srcdir@/man/manpage-common-hostranged-buffer.man>
 #include <@top_srcdir@/man/manpage-common-hostranged-consolidate.man>
@@ -235,8 +238,7 @@ record types are system event records.  Records may be formatted
 correctly but report invalid record types.  Those hitting this issue
 may see "Unknown SEL Record Type" errors.  Output may be unknown, pray
 for the best.  This option is confirmed to work around compliances
-issues on HP DL 380 G5 motherboards.  This option is identical to
-using the \fB\-\-assume\-system\-event\-records\fR option above.
+issues on HP DL 380 G5 motherboards.
 #include <@top_srcdir@/man/manpage-common-workaround-extra-text.man>
 #include <@top_srcdir@/man/manpage-common-oem-interpretation.man>
 .LP
@@ -244,7 +246,13 @@ Dell Poweredge 2900, Dell Poweredge 2950, Dell Poweredge R610, Dell
 Poweredge R710, Fujitsu iRMC S1 and iRMC S2 systems, Intel
 S5500WB/Penguin Computing Relion 700, Intel S2600JF/Appro 512X, Intel
 S5000PAL, Inventec 5441/Dell Xanadu II, Inventec 5442/Dell Xanadu III,
-Quanta S99Q/Dell FS12-TY, Sun X4140, Quanta QSSC-S4R/Approp GB812X-CN.
+Quanta S99Q/Dell FS12-TY, Quanta QSSC-S4R/Approp GB812X-CN, Sun X4140
+Supermicro X7DBR-3, Supermicro X7DB8, Supermicro X8DTN, Supermicro
+X7SBI-LN4, Supermicro X8DTH, Supermicro X8DTG, Supermicro X8DTU,
+Supermicro X8DT3-LN4F, Supermicro X8DTU-6+, Supermicro X8DTL,
+Supermicro X8DTL-3F, Supermicro X8SIL-F, Supermicro X9SCL, Supermicro
+X9SCM, Supermicro X8DTN+-F, Supermicro X8SIE, Supermicro X9SCA-F-O,
+Supermicro H8DGU-F.
 .SH "EXAMPLES"
 .B # ipmi-sel 
 .PP

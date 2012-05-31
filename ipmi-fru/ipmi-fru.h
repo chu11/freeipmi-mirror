@@ -39,19 +39,21 @@ enum ipmi_sel_argp_option_keys
   {
     DEVICE_ID_KEY = 'e',
     VERBOSE_KEY = 'v',
+    /* legacy */
     SKIP_CHECKS_KEY = 's',
-    INTERPRET_OEM_DATA = 160,
+    BRIDGE_FRU_KEY = 160,
+    INTERPRET_OEM_DATA = 161,
   };
 
 struct ipmi_fru_arguments
 {
-  struct common_cmd_args common;
-  struct sdr_cmd_args sdr;
-  struct hostrange_cmd_args hostrange;
+  struct common_cmd_args common_args;
   uint8_t device_id;
   int device_id_set;
   int verbose_count;
+  /* legacy */
   int skip_checks;
+  int bridge_fru;
   int interpret_oem_data;
 };
 
@@ -68,8 +70,7 @@ typedef struct ipmi_fru_state_data
   pstdout_state_t pstate;
   char *hostname;
   ipmi_fru_parse_ctx_t fru_parse_ctx;
-  ipmi_sdr_cache_ctx_t sdr_cache_ctx;
-  ipmi_sdr_parse_ctx_t sdr_parse_ctx;
+  ipmi_sdr_ctx_t sdr_ctx;
   struct ipmi_oem_data oem_data;
 } ipmi_fru_state_data_t;
 

@@ -70,50 +70,50 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_DEBUG,
     /* for backwards compatability */
     { "get-capabilities", GET_CHASSIS_CAPABILITIES_KEY, NULL, OPTION_HIDDEN,
-      "Get chassis capabilities.", 30},
+      "Get chassis capabilities.", 40},
     /* for backwards compatability */
     { "get-status", GET_CHASSIS_STATUS_KEY, NULL, OPTION_HIDDEN,
-      "Get chassis status.", 31},
+      "Get chassis status.", 41},
     { "get-chassis-capabilities", GET_CHASSIS_CAPABILITIES_KEY, NULL, 0,
-      "Get chassis capabilities.", 30},
+      "Get chassis capabilities.", 40},
     { "get-chassis-status", GET_CHASSIS_STATUS_KEY, NULL, 0,
-      "Get chassis status.", 31},
+      "Get chassis status.", 41},
     { "chassis-control", CHASSIS_CONTROL_KEY, "CONTROL", 0,
-      "Control the chassis.", 32},
+      "Control the chassis.", 42},
     { "chassis-identify", CHASSIS_IDENTIFY_KEY, "IDENTIFY", 0,
-      "Set chassis Identification.", 33},
+      "Set chassis Identification.", 43},
     { "set-power-restore-policy", SET_POWER_RESTORE_POLICY_KEY, "POLICY", OPTION_HIDDEN,
-      "Set power restore policy.", 34},
+      "Set power restore policy.", 44},
     { "set-power-cycle-interval", SET_POWER_CYCLE_INTERVAL_KEY, "SECONDS", OPTION_HIDDEN,
-      "Set Power cycle interval in seconds.", 35},
+      "Set Power cycle interval in seconds.", 45},
     { "get-system-restart-cause", GET_SYSTEM_RESTART_CAUSE_KEY, NULL, 0,
-      "Get system restart cause.", 36},
+      "Get system restart cause.", 46},
     { "set-boot-flags", SET_BOOT_FLAGS_KEY, NULL, OPTION_HIDDEN,
-      "Set system boot flags.", 37},
+      "Set system boot flags.", 47},
     { "boot-type", SET_BOOT_FLAGS_BOOT_TYPE_KEY, "BOOT_TYPE", OPTION_ARG_OPTIONAL | OPTION_HIDDEN,
-      "Set BIOS boot type to BOOT_TYPE.", 38},
+      "Set BIOS boot type to BOOT_TYPE.", 48},
     { "lock-out-reset-button", SET_BOOT_FLAGS_LOCK_OUT_RESET_BUTTON_KEY, "LOCK_OUT_RESET_BUTTON", OPTION_ARG_OPTIONAL | OPTION_HIDDEN,
-      "Modify lock out reset button support.", 39},
+      "Modify lock out reset button support.", 49},
     { "blank-screen", SET_BOOT_FLAGS_SCREEN_BLANK_KEY, "BLANK_SCREEN", OPTION_ARG_OPTIONAL | OPTION_HIDDEN,
-      "Modify blank screen support.", 40},
+      "Modify blank screen support.", 50},
     { "boot-device", SET_BOOT_FLAGS_BOOT_DEVICE_KEY, "BOOT_DEVICE", OPTION_ARG_OPTIONAL | OPTION_HIDDEN,
-      "Set device to boot from to BOOT_DEVICE.", 41},
+      "Set device to boot from to BOOT_DEVICE.", 51},
     { "lock-keyboard", SET_BOOT_FLAGS_LOCK_KEYBOARD_KEY, "LOCK_KEYBOARD", OPTION_ARG_OPTIONAL | OPTION_HIDDEN,
-      "Modify lock keyboard support.", 42},
+      "Modify lock keyboard support.", 52},
     { "clear-cmos", SET_BOOT_FLAGS_CMOS_CLEAR_KEY, "CMOS_CLEAR", OPTION_ARG_OPTIONAL | OPTION_HIDDEN,
-      "Modify clear CMOS support.", 43},
+      "Modify clear CMOS support.", 53},
     { "console-redirection", SET_BOOT_FLAGS_CONSOLE_REDIRECTION_KEY, "CONSOLE_REDIRECTION", OPTION_ARG_OPTIONAL | OPTION_HIDDEN,
-      "Set console redirection type.", 44},
+      "Set console redirection type.", 54},
     { "user-password-bypass", SET_BOOT_FLAGS_USER_PASSWORD_BYPASS_KEY, "USER_PASSWORD_BYPASS", OPTION_ARG_OPTIONAL | OPTION_HIDDEN,
-      "Modify user password bypass support.", 44},
+      "Modify user password bypass support.", 54},
     { "force-progress-event-traps", SET_BOOT_FLAGS_FORCE_PROGRESS_EVENT_TRAPS_KEY, "FORCE_PROGRESS_EVENT_TRAPS", OPTION_ARG_OPTIONAL | OPTION_HIDDEN,
-      "Modify force progress event traps support.", 45},
+      "Modify force progress event traps support.", 55},
     { "firmware-bios-verbosity", SET_BOOT_FLAGS_FIRMWARE_BIOS_VERBOSITY_KEY, "FIRMWARE_BIOS_VERBOSITY", OPTION_ARG_OPTIONAL | OPTION_HIDDEN,
-      "Set firmware verbosity.", 46},
+      "Set firmware verbosity.", 56},
     { "get-boot-flags", GET_BOOT_FLAGS_KEY, NULL, OPTION_HIDDEN,
-      "Get system boot-flags.", 47},
+      "Get system boot-flags.", 57},
     { "get-power-on-hours-counter", GET_POWER_ON_HOURS_COUNTER_KEY, NULL, 0,
-      "Get power on hours (POH) counter.", 48},
+      "Get power on hours (POH) counter.", 58},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -151,7 +151,7 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
       else
         {
           fprintf (stderr, "invalid value for boot-type\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       cmd_args->set_system_boot_options_args.bios_boot_type++;
@@ -166,7 +166,7 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
       else
         {
           fprintf (stderr, "invalid value for lock-out-reset-button\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       cmd_args->set_system_boot_options_args.lock_out_reset_button++;
@@ -181,7 +181,7 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
       else
         {
           fprintf (stderr, "invalid value for blank-screen\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       cmd_args->set_system_boot_options_args.screen_blank++;
@@ -212,7 +212,7 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
       else
         {
           fprintf (stderr, "invalid value for boot-device\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       cmd_args->set_system_boot_options_args.boot_device++;
@@ -227,7 +227,7 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
       else
         {
           fprintf (stderr, "invalid value for lock-keyboard\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       cmd_args->set_system_boot_options_args.lock_keyboard++;
@@ -242,7 +242,7 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
       else
         {
           fprintf (stderr, "invalid value for clear-cmos\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       cmd_args->set_system_boot_options_args.cmos_clear++;
@@ -259,7 +259,7 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
       else
         {
           fprintf (stderr, "invalid value for console-redirection\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       cmd_args->set_system_boot_options_args.console_redirection++;
@@ -274,7 +274,7 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
       else
         {
           fprintf (stderr, "invalid value for user-password-bypass\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       cmd_args->set_system_boot_options_args.user_password_bypass++;
@@ -289,7 +289,7 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
       else
         {
           fprintf (stderr, "invalid value for force-progress-event-traps\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       cmd_args->set_system_boot_options_args.force_progress_event_traps++;
@@ -306,7 +306,7 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
       else
         {
           fprintf (stderr, "invalid value for firmware verbosity\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       cmd_args->set_system_boot_options_args.firmware_bios_verbosity++;
@@ -358,7 +358,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       else
         {
           fprintf (stderr, "invalid value for chassis control\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->chassis_control++;
       break;
@@ -388,13 +388,13 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	      || endptr[0] != '\0')
             {
               fprintf (stderr, "invalid value for chassis-identify\n");
-              exit (1);
+              exit (EXIT_FAILURE);
             }
           if (tmp < IPMI_CHASSIS_IDENTIFY_INTERVAL_MIN
               || tmp > IPMI_CHASSIS_IDENTIFY_INTERVAL_MAX)
             {
               fprintf (stderr, "chassis-identify interval out of range\n");
-              exit (1);
+              exit (EXIT_FAILURE);
             }
           cmd_args->chassis_identify_args.identify_interval = 1;
           cmd_args->chassis_identify_args.identify_interval_arg = tmp;
@@ -415,7 +415,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       else
         {
           fprintf (stderr, "invalid value for power restore policy\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->set_power_restore_policy++;
       break;
@@ -427,13 +427,13 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	  || endptr[0] != '\0')
         {
           fprintf (stderr, "invalid value for power cycle interval\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       if (tmp < IPMI_CHASSIS_POWER_CYCLE_INTERVAL_MIN
           || tmp > IPMI_CHASSIS_POWER_CYCLE_INTERVAL_MAX)
         {
           fprintf (stderr, "power-cycle interval out of range\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->set_power_cycle_interval_arg = tmp;
       cmd_args->set_power_cycle_interval++;
@@ -466,9 +466,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     default:
       ret = boot_flag_parse (key, arg, state);
       if (ret == ARGP_ERR_UNKNOWN)
-        ret = common_parse_opt (key, arg, &(cmd_args->common));
-      if (ret == ARGP_ERR_UNKNOWN)
-        ret = hostrange_parse_opt (key, arg, &(cmd_args->hostrange));
+        ret = common_parse_opt (key, arg, &(cmd_args->common_args));
       return (ret);
     }
 
@@ -480,17 +478,15 @@ _ipmi_chassis_config_file_parse (struct ipmi_chassis_arguments *cmd_args)
 {
   assert (cmd_args);
 
-  if (config_file_parse (cmd_args->common.config_file,
+  if (config_file_parse (cmd_args->common_args.config_file,
                          0,
-                         &(cmd_args->common),
-                         NULL,
-                         &(cmd_args->hostrange),
+                         &(cmd_args->common_args),
                          CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE,
                          CONFIG_FILE_TOOL_IPMI_CHASSIS,
                          NULL) < 0)
     {
       fprintf (stderr, "config_file_parse: %s\n", strerror (errno));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 }
 
@@ -512,7 +508,7 @@ _ipmi_chassis_args_validate (struct ipmi_chassis_arguments *cmd_args)
     {
       fprintf (stderr,
                "No command specified.\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if ((cmd_args->get_chassis_capabilities
@@ -528,7 +524,7 @@ _ipmi_chassis_args_validate (struct ipmi_chassis_arguments *cmd_args)
     {
       fprintf (stderr,
                "Multiple commands specified.\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (cmd_args->set_system_boot_options
@@ -545,7 +541,7 @@ _ipmi_chassis_args_validate (struct ipmi_chassis_arguments *cmd_args)
     {
       fprintf (stderr,
                "No boot flags configuration changes specified\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 }
 
@@ -558,8 +554,7 @@ ipmi_chassis_argp_parse (int argc,
   assert (argv);
   assert (cmd_args);
 
-  init_common_cmd_args_admin (&(cmd_args->common));
-  init_hostrange_cmd_args (&(cmd_args->hostrange));
+  init_common_cmd_args_admin (&(cmd_args->common_args));
 
   cmd_args->get_chassis_capabilities = 0;
   cmd_args->get_chassis_status = 0;
@@ -592,7 +587,7 @@ ipmi_chassis_argp_parse (int argc,
               argv,
               ARGP_IN_ORDER,
               NULL,
-              &(cmd_args->common));
+              &(cmd_args->common_args));
 
   _ipmi_chassis_config_file_parse (cmd_args);
 
@@ -603,8 +598,7 @@ ipmi_chassis_argp_parse (int argc,
               NULL,
               cmd_args);
 
-  verify_common_cmd_args (&(cmd_args->common));
-  verify_hostrange_cmd_args (&(cmd_args->hostrange));
+  verify_common_cmd_args (&(cmd_args->common_args));
   _ipmi_chassis_args_validate (cmd_args);
 }
 

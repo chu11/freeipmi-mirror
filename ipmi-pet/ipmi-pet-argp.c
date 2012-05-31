@@ -59,43 +59,43 @@ static struct argp_option cmdline_options[] =
   {
     ARGP_COMMON_OPTIONS_DRIVER,
     ARGP_COMMON_OPTIONS_INBAND,
-    ARGP_COMMON_OPTIONS_OUTOFBAND_HOSTRANGED,
+    ARGP_COMMON_OPTIONS_OUTOFBAND,
     ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE,
     ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID,
     ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL,
     ARGP_COMMON_OPTIONS_CONFIG_FILE,
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
-    ARGP_COMMON_SDR_OPTIONS,
-    ARGP_COMMON_IGNORE_SDR_OPTIONS,
+    ARGP_COMMON_SDR_CACHE_OPTIONS,
+    ARGP_COMMON_SDR_CACHE_OPTIONS_FILE_DIRECTORY,
     ARGP_COMMON_OPTIONS_DEBUG,
     { "verbose",    VERBOSE_KEY,    0, 0,
-      "Increase verbosity in output.", 30},
+      "Increase verbosity in output.", 40},
     { "pet-acknowledge", PET_ACKNOWLEDGE_KEY, 0, 0,
-      "Send PET acknowledge using inputted trap data instead of outputting data.", 31},
+      "Send PET acknowledge using inputted trap data instead of outputting data.", 41},
     { "file", CMD_FILE_KEY, "CMD-FILE", 0,
-      "Specify a file to read PET bytes from.", 32},
+      "Specify a file to read PET bytes from.", 42},
     { "output-event-severity", OUTPUT_EVENT_SEVERITY_KEY, 0, 0,
-      "Output event severity in output.", 33},
+      "Output event severity in output.", 43},
     { "output-event-state", OUTPUT_EVENT_STATE_KEY, 0, 0,
-      "Output event state in output.", 34},
+      "Output event state in output.", 44},
     { "event-state-config-file", EVENT_STATE_CONFIG_FILE_KEY, "FILE", 0,
-      "Specify an alternate event state configuration file.", 35},
+      "Specify an alternate event state configuration file.", 45},
     { "manufacturer-id", MANUFACTURER_ID_KEY, "NUMBER", 0,
-      "Specify a specific manufacturer id to assume.", 36},
+      "Specify a specific manufacturer id to assume.", 46},
     { "product-id", PRODUCT_ID_KEY, "NUMBER", 0,
-      "Specify a specific product id to assume.", 37},
+      "Specify a specific product id to assume.", 47},
     { "interpret-oem-data", INTERPRET_OEM_DATA_KEY, NULL, 0,
-      "Attempt to interpret OEM data.", 38},
+      "Attempt to interpret OEM data.", 48},
     { "entity-sensor-names", ENTITY_SENSOR_NAMES_KEY, NULL, 0,
-      "Output sensor names with entity ids and instances.", 39},
+      "Output sensor names with entity ids and instances.", 49},
     { "no-sensor-type-output", NO_SENSOR_TYPE_OUTPUT_KEY, 0, 0,
-      "Do not show sensor type output.", 40},
+      "Do not show sensor type output.", 50},
     { "comma-separated-output", COMMA_SEPARATED_OUTPUT_KEY, 0, 0,
-      "Output fields in comma separated format.", 41},
+      "Output fields in comma separated format.", 51},
     { "no-header-output", NO_HEADER_OUTPUT_KEY, 0, 0,
-      "Do not output column headers.", 42},
+      "Do not output column headers.", 52},
     { "non-abbreviated-units", NON_ABBREVIATED_UNITS_KEY, 0, 0,
-      "Output non-abbreviated units (e.g. 'Amps' instead of 'A').", 43},
+      "Output non-abbreviated units (e.g. 'Amps' instead of 'A').", 53},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -117,7 +117,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   struct ipmi_pet_arguments *cmd_args;
   char *endptr;
   unsigned long tmp;
-  error_t ret;
 
   assert (state);
   
@@ -135,7 +134,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       if (!(cmd_args->cmd_file = strdup (arg)))
         {
           perror ("strdup");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       break;
     case OUTPUT_EVENT_SEVERITY_KEY:
@@ -148,7 +147,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       if (!(cmd_args->event_state_config_file = strdup (arg)))
         {
           perror ("strdup");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       break;
     case MANUFACTURER_ID_KEY:
@@ -159,7 +158,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	  || !tmp)
         {
           fprintf (stderr, "invalid manufacturer id: %lu\n", tmp);
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->manufacturer_id = tmp;
       cmd_args->manufacturer_id_set = 1;
@@ -172,7 +171,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	  || tmp > USHRT_MAX)
         {
           fprintf (stderr, "invalid product id: %lu\n", tmp);
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->product_id = tmp;
       cmd_args->product_id_set = 1;
@@ -217,7 +216,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 		|| endptr[0] != '\0')
 	      {
 		fprintf (stderr, "invalid specific trap argument\n");
-		exit (1);
+		exit (EXIT_FAILURE);
 	      }
 	    
 	    cmd_args->specific_trap = uvalue;
@@ -234,7 +233,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
         if (*arg == '\0')
           {
             fprintf (stderr, "invalid variable binding hex byte argument\n");
-            exit (1);
+            exit (EXIT_FAILURE);
           }
         
         for (i = 0; arg[i] != '\0'; i++)
@@ -242,13 +241,13 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
             if (i >= 2)
               {
                 fprintf (stderr, "invalid variable binding hex byte argument\n");
-                exit (1);
+                exit (EXIT_FAILURE);
               }
             
             if (!isxdigit (arg[i]))
               {
                 fprintf (stderr, "invalid variable binding hex byte argument\n");
-                exit (1);
+                exit (EXIT_FAILURE);
               }
           }
         
@@ -260,14 +259,14 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 		|| endptr[0] != '\0')
 	      {
 		fprintf (stderr, "invalid variable binding hex byte argument\n");
-		exit (1);
+		exit (EXIT_FAILURE);
 	      }
 	    cmd_args->variable_bindings[cmd_args->variable_bindings_length++] = (uint8_t) value;
           }
         else
           {
             fprintf (stderr, "Too many arguments specified\n");
-            exit (1);
+            exit (EXIT_FAILURE);
           }
         
         break;
@@ -275,10 +274,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case ARGP_KEY_END:
       break;
     default:
-      ret = common_parse_opt (key, arg, &(cmd_args->common));
-      if (ret == ARGP_ERR_UNKNOWN)
-        ret = sdr_parse_opt (key, arg, &(cmd_args->sdr));
-      return (ret);
+      return (common_parse_opt (key, arg, &(cmd_args->common_args)));
     }
 
   return (0);
@@ -295,17 +291,15 @@ _ipmi_pet_config_file_parse (struct ipmi_pet_arguments *cmd_args)
           '\0',
           sizeof (struct config_file_data_ipmi_pet));
 
-  if (config_file_parse (cmd_args->common.config_file,
+  if (config_file_parse (cmd_args->common_args.config_file,
                          0,
-                         &(cmd_args->common),
-                         &(cmd_args->sdr),
-                         NULL,
+                         &(cmd_args->common_args),
                          CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_SDR,
                          CONFIG_FILE_TOOL_IPMI_PET,
                          &config_file_data) < 0)
     {
       fprintf (stderr, "config_file_parse: %s\n", strerror (errno));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (config_file_data.verbose_count_count)
@@ -336,10 +330,10 @@ _ipmi_pet_args_validate (struct ipmi_pet_arguments *cmd_args)
   assert (cmd_args);
 
   if (cmd_args->pet_acknowledge
-      && !cmd_args->common.hostname)
+      && !cmd_args->common_args.hostname)
     {
       fprintf (stderr, "Must specify hostname if PET acknowledge specified\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if ((cmd_args->manufacturer_id_set
@@ -348,7 +342,7 @@ _ipmi_pet_args_validate (struct ipmi_pet_arguments *cmd_args)
           && cmd_args->product_id_set))
     {
       fprintf (stderr, "Must specify both manufacturer id and product id\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 }
 
@@ -359,8 +353,7 @@ ipmi_pet_argp_parse (int argc, char **argv, struct ipmi_pet_arguments *cmd_args)
   assert (argv);
   assert (cmd_args);
 
-  init_common_cmd_args_operator (&(cmd_args->common));
-  init_sdr_cmd_args (&(cmd_args->sdr));
+  init_common_cmd_args_operator (&(cmd_args->common_args));
 
   cmd_args->verbose_count = 0;
   cmd_args->pet_acknowledge = 0;
@@ -391,7 +384,7 @@ ipmi_pet_argp_parse (int argc, char **argv, struct ipmi_pet_arguments *cmd_args)
               argv,
               ARGP_IN_ORDER,
               NULL,
-              &(cmd_args->common));
+              &(cmd_args->common_args));
   
   _ipmi_pet_config_file_parse (cmd_args);
   
@@ -402,8 +395,7 @@ ipmi_pet_argp_parse (int argc, char **argv, struct ipmi_pet_arguments *cmd_args)
               NULL,
               cmd_args);
 
-  verify_common_cmd_args (&(cmd_args->common));
-  verify_sdr_cmd_args (&(cmd_args->sdr));
+  verify_common_cmd_args (&(cmd_args->common_args));
   _ipmi_pet_args_validate (cmd_args);
 }
 

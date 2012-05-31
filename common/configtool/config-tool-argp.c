@@ -75,7 +75,7 @@ _config_parse_channel_number (char *arg,
       || endptr[0] != '\0')
     {
       fprintf (stderr, "invalid channel number\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (!IPMI_CHANNEL_NUMBER_VALID (tmp))
     {
@@ -124,7 +124,7 @@ config_parse_opt (int key,
       if (!(config_args->filename = strdup (arg)))
         {
           perror ("strdup");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       break;
     case CONFIG_ARGP_KEYPAIR_KEY:
@@ -134,7 +134,7 @@ config_parse_opt (int key,
                                        &value) < 0)
         {
           /* error printed in function call */
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       if (!(kp = config_keypair_create (section_name,
                                         key_name,
@@ -142,13 +142,13 @@ config_parse_opt (int key,
         {
           fprintf (stderr,
                    "config_keypair_create error\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       if (config_keypair_append (&(config_args->keypairs),
                                  kp) < 0)
         {
           /* error printed in function call */
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       free (section_name);
       free (key_name);
@@ -159,13 +159,13 @@ config_parse_opt (int key,
         {
           fprintf (stderr,
                    "config_section_str_create error\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       if (config_section_str_append (&(config_args->section_strs),
                                      sstr) < 0)
         {
           /* error printed in function call */
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       sstr = NULL;
       break;
@@ -211,7 +211,7 @@ config_args_validate (struct config_arguments *config_args)
     {
       fprintf (stderr,
                "Both --filename or --keypair cannot be used\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   /* only one of keypairs or section can be given for checkout */
@@ -220,7 +220,7 @@ config_args_validate (struct config_arguments *config_args)
     {
       fprintf (stderr,
                "Only one of --filename, --keypair, and --section can be used\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   /* filename is readable if commit, writable/creatable if checkout */
@@ -236,7 +236,7 @@ config_args_validate (struct config_arguments *config_args)
                        "Cannot read '%s': %s\n",
                        config_args->filename,
                        strerror (errno));
-              exit (1);
+              exit (EXIT_FAILURE);
             }
           break;
         case CONFIG_ACTION_CHECKOUT:
@@ -248,7 +248,7 @@ config_args_validate (struct config_arguments *config_args)
                            "Cannot write to '%s': %s\n",
                            config_args->filename,
                            strerror (errno));
-                  exit (1);
+                  exit (EXIT_FAILURE);
                 }
             }
           else
@@ -261,7 +261,7 @@ config_args_validate (struct config_arguments *config_args)
                            "Cannot open '%s': %s\n",
                            config_args->filename,
                            strerror (errno));
-                  exit (1);
+                  exit (EXIT_FAILURE);
                 }
               else
                 {
@@ -274,7 +274,7 @@ config_args_validate (struct config_arguments *config_args)
                                "Cannot remove '%s': %s\n",
                                config_args->filename,
                                strerror (errno));
-                      exit (1);
+                      exit (EXIT_FAILURE);
                     }
                 }
             }

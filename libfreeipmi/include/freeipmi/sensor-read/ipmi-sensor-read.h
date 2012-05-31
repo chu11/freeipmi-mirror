@@ -25,7 +25,7 @@ extern "C" {
 
 #include <stdint.h>
 #include <freeipmi/api/ipmi-api.h>
-#include <freeipmi/sdr-cache/ipmi-sdr-cache.h>
+#include <freeipmi/sdr/ipmi-sdr.h>
 
 /* note: SENSOR_READING_UNAVAILABLE and SENSOR_SCANNING_DISABLED are
  * because of configuration of a sensor.  It is "ok" to some extent.

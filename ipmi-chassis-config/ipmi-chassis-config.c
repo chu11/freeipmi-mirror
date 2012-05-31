@@ -36,6 +36,7 @@
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
 #include "tool-hostrange-common.h"
+#include "tool-util-common.h"
 
 static int
 _ipmi_chassis_config (pstdout_state_t pstate,
@@ -44,8 +45,7 @@ _ipmi_chassis_config (pstdout_state_t pstate,
 {
   ipmi_chassis_config_state_data_t state_data;
   ipmi_chassis_config_prog_data_t *prog_data;
-  char errmsg[IPMI_OPEN_ERRMSGLEN];
-  int exit_code = -1;
+  int exit_code = EXIT_FAILURE;
   config_err_t ret = 0;
   int file_opened = 0;
   FILE *fp = NULL;              /* init NULL to remove warnings */
@@ -61,23 +61,12 @@ _ipmi_chassis_config (pstdout_state_t pstate,
 
   if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
                                          hostname,
-                                         &(prog_data->args->config_args.common),
-                                         errmsg,
-                                         IPMI_OPEN_ERRMSGLEN)))
-    {
-      pstdout_fprintf (pstate,
-                       stderr,
-                       "%s\n",
-                       errmsg);
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
+                                         &(prog_data->args->config_args.common_args),
+					 state_data.pstate)))
+    goto cleanup;
 
   if (!(state_data.sections = ipmi_chassis_config_sections_create (&state_data)))
-    {
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
+    goto cleanup;
 
   if (prog_data->args->config_args.action == CONFIG_ACTION_CHECKOUT)
     {
@@ -88,14 +77,12 @@ _ipmi_chassis_config (pstdout_state_t pstate,
               pstdout_fprintf (pstate,
                                stderr,
                                "Cannot output multiple host checkout into a single file\n");
-              exit_code = EXIT_FAILURE;
               goto cleanup;
             }
 
           if (!(fp = fopen (prog_data->args->config_args.filename, "w")))
             {
               pstdout_perror (pstate, "fopen");
-              exit_code = EXIT_FAILURE;
               goto cleanup;
             }
           file_opened++;
@@ -112,7 +99,6 @@ _ipmi_chassis_config (pstdout_state_t pstate,
           if (!(fp = fopen (prog_data->args->config_args.filename, "r")))
             {
               pstdout_perror (pstate, "fopen");
-              exit_code = EXIT_FAILURE;
               goto cleanup;
             }
           file_opened++;
@@ -137,11 +123,7 @@ _ipmi_chassis_config (pstdout_state_t pstate,
                         state_data.sections,
                         &(prog_data->args->config_args),
                         fp) < 0)
-        {
-          /* errors printed in function call */
-          exit_code = EXIT_FAILURE;
-          goto cleanup;
-        }
+	goto cleanup;
     }
 
   /* note: argp validation catches if user specified keypair and
@@ -155,11 +137,7 @@ _ipmi_chassis_config (pstdout_state_t pstate,
       if (config_sections_insert_keyvalues (pstate,
                                             state_data.sections,
                                             prog_data->args->config_args.keypairs) < 0)
-        {
-          /* errors printed in function call */
-          exit_code = EXIT_FAILURE;
-          goto cleanup;
-        }
+	goto cleanup;
     }
 
   if (prog_data->args->config_args.action == CONFIG_ACTION_COMMIT
@@ -170,18 +148,11 @@ _ipmi_chassis_config (pstdout_state_t pstate,
       if ((num = config_sections_validate_keyvalue_inputs (pstate,
                                                            state_data.sections,
                                                            &state_data)) < 0)
-        {
-          /* errors printed in function call */
-          exit_code = EXIT_FAILURE;
-          goto cleanup;
-        }
+	goto cleanup;
 
       /* some errors found */
       if (num)
-        {
-          exit_code = EXIT_FAILURE;
-          goto cleanup;
-        }
+	goto cleanup;
     }
 
   if (prog_data->args->config_args.action == CONFIG_ACTION_CHECKOUT
@@ -199,7 +170,6 @@ _ipmi_chassis_config (pstdout_state_t pstate,
                                stderr,
                                "Unknown section `%s'\n",
                                sstr->section_name);
-              exit_code = EXIT_FAILURE;
               goto cleanup;
             }
           sstr = sstr->next;
@@ -329,12 +299,9 @@ _ipmi_chassis_config (pstdout_state_t pstate,
     }
 
   if (ret == CONFIG_ERR_FATAL_ERROR || ret == CONFIG_ERR_NON_FATAL_ERROR)
-    {
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
+    goto cleanup;
 
-  exit_code = 0;
+  exit_code = EXIT_SUCCESS;
  cleanup:
   ipmi_ctx_close (state_data.ipmi_ctx);
   ipmi_ctx_destroy (state_data.ipmi_ctx);
@@ -349,7 +316,6 @@ main (int argc, char **argv)
 {
   ipmi_chassis_config_prog_data_t prog_data;
   struct ipmi_chassis_config_arguments cmd_args;
-  int exit_code;
   int hosts_count;
   int rv;
 
@@ -361,38 +327,25 @@ main (int argc, char **argv)
 
   prog_data.args = &cmd_args;
 
-  if ((hosts_count = pstdout_setup (&(prog_data.args->config_args.common.hostname),
-                                    prog_data.args->config_args.hostrange.buffer_output,
-                                    prog_data.args->config_args.hostrange.consolidate_output,
-                                    prog_data.args->config_args.hostrange.fanout,
-                                    prog_data.args->config_args.hostrange.eliminate,
-                                    prog_data.args->config_args.hostrange.always_prefix)) < 0)
-    {
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
+  if ((hosts_count = pstdout_setup (&(prog_data.args->config_args.common_args.hostname),
+				    &(prog_data.args->config_args.common_args))) < 0)
+    return (EXIT_FAILURE);
 
   if (!hosts_count)
-    {
-      exit_code = EXIT_SUCCESS;
-      goto cleanup;
-    }
+    return (EXIT_SUCCESS);
 
   prog_data.hosts_count = hosts_count;
 
-  if ((rv = pstdout_launch (prog_data.args->config_args.common.hostname,
+  if ((rv = pstdout_launch (prog_data.args->config_args.common_args.hostname,
                             _ipmi_chassis_config,
                             &prog_data)) < 0)
     {
       fprintf (stderr,
                "pstdout_launch: %s\n",
                pstdout_strerror (pstdout_errnum));
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
+      return (EXIT_FAILURE);
     }
 
-  exit_code = rv;
- cleanup:
-  return (exit_code);
+  return (rv);
 }
 

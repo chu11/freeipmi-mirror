@@ -45,10 +45,10 @@ enum bmc_device_argp_option_keys
     GET_KCS_INTERFACE_CAPABILITIES_KEY = 176,
     GET_BT_INTERFACE_CAPABILITIES_KEY = 177,
     GET_BMC_GLOBAL_ENABLES_KEY = 178,
-    SET_SYSTEM_FIRMWARE_VERSION_KEY=179,
-    SET_SYSTEM_NAME_KEY=180,
-    SET_PRIMARY_OPERATING_SYSTEM_NAME_KEY=181,
-    SET_OPERATING_SYSTEM_NAME_KEY=182,
+    SET_SYSTEM_FIRMWARE_VERSION_KEY = 179,
+    SET_SYSTEM_NAME_KEY = 180, 
+    SET_PRIMARY_OPERATING_SYSTEM_NAME_KEY = 181,
+    SET_OPERATING_SYSTEM_NAME_KEY = 182,
     VERBOSE_KEY = 183,
   };
 
@@ -68,9 +68,7 @@ struct bmc_device_set_acpi_power_state
 
 struct bmc_device_arguments
 {
-  struct common_cmd_args common;
-  struct sdr_cmd_args sdr;
-  struct hostrange_cmd_args hostrange;
+  struct common_cmd_args common_args;
   int cold_reset;
   int warm_reset;
   int get_self_test_results;
@@ -119,8 +117,7 @@ typedef struct bmc_device_state_data
   ipmi_ctx_t ipmi_ctx;
   pstdout_state_t pstate;
   char *hostname;
-  ipmi_sdr_cache_ctx_t sdr_cache_ctx;
-  ipmi_sdr_parse_ctx_t sdr_parse_ctx;
+  ipmi_sdr_ctx_t sdr_ctx;
 } bmc_device_state_data_t;
 
 #endif /* BMC_DEVICE_H */

@@ -100,13 +100,13 @@ _ipmi_dump_lan_packet (int fd,
   assert ((!tmpl_ipmb_msg_hdr && !tmpl_ipmb_cmd)
           || (tmpl_ipmb_msg_hdr && tmpl_ipmb_cmd));
 
-  if (ipmi_debug_set_prefix (prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN, prefix) < 0)
+  if (debug_set_prefix (prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN, prefix) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
     }
 
-  if (ipmi_debug_output_str (fd, prefix_buf, hdr) < 0)
+  if (debug_output_str (fd, prefix_buf, hdr) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -342,12 +342,12 @@ _ipmi_dump_lan_packet (int fd,
   
   if (tmpl_ipmb_msg_hdr && tmpl_ipmb_cmd && ipmb_buf_len)
     {
-      if (ipmi_debug_dump_ipmb (fd,
-                                prefix,
-                                ipmb_buf,
-                                ipmb_buf_len,
-                                tmpl_ipmb_msg_hdr,
-                                tmpl_ipmb_cmd) < 0)
+      if (debug_dump_ipmb (fd,
+			   prefix,
+			   ipmb_buf,
+			   ipmb_buf_len,
+			   tmpl_ipmb_msg_hdr,
+			   tmpl_ipmb_cmd) < 0)
         goto cleanup;
     }
 
@@ -410,7 +410,7 @@ _ipmi_dump_lan_packet (int fd,
         }
     }
 
-  if (ipmi_debug_output_str (fd, prefix_buf, trlr) < 0)
+  if (debug_output_str (fd, prefix_buf, trlr) < 0)
     {
       ERRNO_TRACE (errno);
       goto cleanup;

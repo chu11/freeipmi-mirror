@@ -96,7 +96,7 @@ _rmcpplus_cipher_suite_id_privilege_setup (bmc_config_state_data_t *state_data,
                                                                                                    IPMI_LAN_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                                                    obj_cmd_count_rs) < 0)
         {
-          if (state_data->prog_data->args->config_args.common.debug)
+          if (state_data->prog_data->args->config_args.common_args.debug)
             pstdout_fprintf (state_data->pstate,
                              stderr,
                              "ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support: %s\n",
@@ -145,7 +145,7 @@ _rmcpplus_cipher_suite_id_privilege_setup (bmc_config_state_data_t *state_data,
                                                                                              IPMI_LAN_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                                              obj_cmd_id_rs) < 0)
         {
-          if (state_data->prog_data->args->config_args.common.debug)
+          if (state_data->prog_data->args->config_args.common_args.debug)
             pstdout_fprintf (state_data->pstate,
                              stderr,
                              "ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries: %s\n",
@@ -232,7 +232,7 @@ _rmcpplus_cipher_suite_id_privilege_setup (bmc_config_state_data_t *state_data,
                                                                                                       IPMI_LAN_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                                                       obj_cmd_priv_rs) < 0)
         {
-          if (state_data->prog_data->args->config_args.common.debug)
+          if (state_data->prog_data->args->config_args.common_args.debug)
             pstdout_fprintf (state_data->pstate,
                              stderr,
                              "ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_level: %s\n",
@@ -492,7 +492,7 @@ id_commit (const char *section_name,
               /* This is a fatal error, we're already in this section,
                * it should be findable
                */
-              if (state_data->prog_data->args->config_args.common.debug)
+              if (state_data->prog_data->args->config_args.common_args.debug)
                 pstdout_fprintf (state_data->pstate,
                                  stderr,
                                  "Cannot find section '%s'\n",
@@ -523,7 +523,7 @@ id_commit (const char *section_name,
                                                                                                   privs[15],
                                                                                                   obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels: %s\n",

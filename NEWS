@@ -1,8 +1,8 @@
 FreeIPMI 1.2.1 - XX/XX/XX
 -------------------------
 
-Tools
------
+Tools - New Features
+--------------------
 o In ipmipower, support --oem-power-type option to support OEM
   specific power control operations.  Included in this support were
   the follow changes to ipmipower:
@@ -13,34 +13,98 @@ o In ipmipower, support --oem-power-type option to support OEM
     under OEM power cases.
   - Re-architect to allow serialization of power control operations to
     the same host.
+o Globally in tools, support --target-channel-number and
+  --target-slave-address to specify specific targets.
 o Globally in tools, support ability to specify alternate port via
   optional [:port] in hostname or host config.
+o In ipmi-fru, support --bridge-fru option to allow reading FRU entries
+  from satellite controllers.
 o In bmc-config, add configuration support for
   Maximum_Privilege_Cipher_Suite_Id_15 under RMCPplus_Conf_Privilege.
 o Globally support Cipher Suite ID 15 and 16 based on comments from
   Intel.
+o In ipmi-sel, support new --post-clear option.
+o In bmc-device, support new --set-sensor-reading-and-event-status
+  option.
+
+Tools - Bug Fixes/Minor Changes
+-------------------------------
+o In ipmi-fru, if builtin FRU device (ID 0) has SDR entry, output SDR
+  entry name rather than fixed string.
 o In ipmipower, exit with value 1 on IPMI errors in addition to system
   errors.
 o In ipmidetect, exit with exit value 2 when an error occurs.  Exit
   value of 0 or 1 are reserved for scripting.
-o In ipmi-sel, support new --post-clear option.
-o In bmc-device, support new --set-sensor-reading-and-event-status option.
+o In bmc-watchdog, properly support assumeio and spinpoll workarounds.
+o In bmc-watchdog and ipmidetectd daemon, support handling of SIGQUIT
+  signal in addition to SIGTERM and SIGINT, properly umask generated
+  pidfile, and delete pidfile when necessary.
+o In bmc-watchdog, log all errors to syslog instead of unique file.
+o In bmc-watchdog, remove --logfile option.
+o In bmc-watchdog, support --verbose-logging option for increased
+  logging.
+o In ipmidetectd daemon, create/handle pidfile.
+o In ipmidetectd daemon and ipmidetect, update command line parsing to
+  use argp instead of getopt.  This change leads to some changes for
+  consistency with the rest of FreeIPMI, but changes some command line
+  options.
+  - -v is no longer supported, -V outputs version information
+  - -h is no longer supported, -? outputs help
+o In ipmi-raw, make --channel-number and --slave-address legacy
+  options.  They are now overriden by --target-channel-number and
+  --target-slave-address.
+o Re-work entity sensor names calculation to more properly meet IPMI
+  specification.  Users may see slight changes in the output of sensor
+  names when using the --entity-sensor-names option or similar output
+  in ipmi-sensors, ipmi-sel, ipmi-pet, or ipmi-oem.
+o Re-work shared sensors name output to more properly meet IPMI
+  specification.  Users may see slight changes in the output of sensor
+  names when using the --shared-sensors option or similar output in
+  ipmi-sensors, ipmi-sel, or ipmi-pet.
+o In ipmi-fru, deprecate --skip-checks option in favor of "skipchecks"
+  workaround flag.
 
 Libraries
 ---------
-o In libfreeipmi, add missing macro definitions.
 o In libfreeipmi, support Cipher Suite 15 and 16 implementation based
   on comments from Intel.
 o In libfreeipmi, add Cipher Suite 18 and 19 information, but do not
   support.
+o In libfreeipmi, support SEL string output format '%E' for combined
+  event data1, data2, and data3 output.
+o In libfreeipmi, support SEL string output format '%I' for
+  interpretation event output.
+o In libfreeipmi, support ability to config interpret config file and
+  sel library and receive appropriate error.
 o In libfreeipmi, support reservation-id registration and clearing in
   the sel-parse sub-library.
+o In libfreeipmi, sel-parse sub-library now supports a "no sel entries
+  loaded" error.
+o In libfreeipmi, condense sel-parse record parsing functions.  One
+  set of functions now handles the previous case of both sets.
+o In libfreeipmi, add missing macro definitions.
 o In libipmimonitoring, support Cipher Suite ID 15, 16, and 17.
 o In libfreeipmi, libipmiconsole, libipmimonitoring, support ability
   to specify alternate port via optional [:port] in hostname.
 o In libfreeipmi, add additional IPMI commands/payloads. 
 o In libfreeipmi, fix several macro names which did not meet
   standardization needs.
+o In libfreeipmi, support new IPMI_ERR_DRIVER_BUSY error code.
+o In libfreeipmi sdr-parse, support more complete parsing of
+  Management Controller Locator Records.
+o In libfreeipmi, KCS driver now sleeps a small amount between IPMB
+  retries to avoid spinning.
+o In libfreeipmi, create new 'sdr' sub-library which is merger of the
+  earlier 'sdr-cache' and 'sdr-parse' libraries.
+o In libfreeipmi, create new 'sel' sub-library which replaces the
+  'sel-parse' library.
+o In libfreeipmi and libipmimonitoring, do not export functions that
+  shouldn't be.
+o In libfreeipmi, support stats functions and new utility functions in
+  sdr sub-library.
+o In libfreeipmi, sel sub-library now supports the output of entity
+  sensor names.
+o In libipmimonitoring, support entity sensor name output options.
 
 Misc
 ----

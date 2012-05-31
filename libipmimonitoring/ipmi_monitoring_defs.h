@@ -109,7 +109,8 @@
 #define IPMI_MONITORING_SEL_FLAGS_MASK                    \
   (IPMI_MONITORING_SEL_FLAGS_REREAD_SDR_CACHE             \
    | IPMI_MONITORING_SEL_FLAGS_INTERPRET_OEM_DATA         \
-   | IPMI_MONITORING_SEL_FLAGS_ASSUME_SYSTEM_EVENT_RECORD)
+   | IPMI_MONITORING_SEL_FLAGS_ASSUME_SYSTEM_EVENT_RECORD \
+   | IPMI_MONITORING_SEL_FLAGS_ENTITY_SENSOR_NAMES)
 
 #define IPMI_MONITORING_SENSOR_READING_FLAGS_MASK                          \
   (IPMI_MONITORING_SENSOR_READING_FLAGS_REREAD_SDR_CACHE                   \
@@ -119,7 +120,8 @@
    | IPMI_MONITORING_SENSOR_READING_FLAGS_SHARED_SENSORS                   \
    | IPMI_MONITORING_SENSOR_READING_FLAGS_DISCRETE_READING                 \
    | IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_SCANNING_DISABLED         \
-   | IPMI_MONITORING_SENSOR_READING_FLAGS_ASSUME_BMC_OWNER)
+   | IPMI_MONITORING_SENSOR_READING_FLAGS_ASSUME_BMC_OWNER                 \
+   | IPMI_MONITORING_SENSOR_READING_FLAGS_ENTITY_SENSOR_NAMES)
 
 #define IPMI_MONITORING_AUTHENTICATION_TYPE_DEFAULT           IPMI_AUTHENTICATION_TYPE_MD5
 #define IPMI_MONITORING_PRIVILEGE_LEVEL_DEFAULT               IPMI_PRIVILEGE_LEVEL_USER
@@ -127,7 +129,6 @@
 #define IPMI_MONITORING_RETRANSMISSION_TIMEOUT_LENGTH_DEFAULT 500
 
 #define IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH      32
-#define IPMI_MONITORING_MAX_SDR_RECORD_LENGTH       1024
 
 #define IPMI_MONITORING_OEM_DATA_MAX                13
 
@@ -201,13 +202,13 @@ struct ipmi_monitoring_ctx {
   uint16_t product_id;
 
   /* for use by both sel and sensor codepath */
-  ipmi_sdr_cache_ctx_t sdr_cache_ctx;
+  ipmi_sdr_ctx_t sdr_ctx;
   ipmi_ctx_t ipmi_ctx;
   Ipmi_Monitoring_Callback callback;
   void *callback_data;
 
   /* for sel codepath */
-  ipmi_sel_parse_ctx_t sel_parse_ctx;
+  ipmi_sel_ctx_t sel_parse_ctx;
   List sel_records;
   ListIterator sel_records_itr;
   struct ipmi_monitoring_sel_record *current_sel_record;
@@ -215,7 +216,6 @@ struct ipmi_monitoring_ctx {
 
   /* for sensor codepath */
   ipmi_sensor_read_ctx_t sensor_read_ctx;
-  ipmi_sdr_parse_ctx_t sdr_parse_ctx;
   List sensor_readings;
   ListIterator sensor_readings_itr;
   struct ipmi_monitoring_sensor_reading *current_sensor_reading;

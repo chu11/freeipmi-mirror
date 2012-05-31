@@ -82,7 +82,7 @@ static char *_nextargv(char **strp, char *ignore)
     if (len > 0) {
         if (!(cpy = (char *)malloc(len + 1))) {
             fprintf (stderr, "malloc: %s", strerror (errno));
-            exit (1);
+            exit (EXIT_FAILURE);
         }
         memcpy(cpy, word, len);
         cpy[len] = '\0';
@@ -120,7 +120,7 @@ char **argv_create(char *cmdline, char *ignore)
 
     if (!(argv = (char **)malloc(sizeof(char *) * (argc + 1)))) {
         fprintf (stderr, "malloc: %s", strerror (errno));
-        exit (1);
+        exit (EXIT_FAILURE);
     }
 
     for (i = 0; i < argc; i++) {

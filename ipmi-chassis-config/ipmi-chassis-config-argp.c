@@ -59,6 +59,7 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_INBAND,
     ARGP_COMMON_OPTIONS_OUTOFBAND_HOSTRANGED,
     ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE,
+    ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID,
     ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL,
     ARGP_COMMON_OPTIONS_CONFIG_FILE,
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
@@ -101,9 +102,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     default:
       ret = config_parse_opt (key, arg, &cmd_args->config_args);
       if (ret == ARGP_ERR_UNKNOWN)
-        ret = common_parse_opt (key, arg, &(cmd_args->config_args.common));
-      if (ret == ARGP_ERR_UNKNOWN)
-        ret = hostrange_parse_opt (key, arg, &(cmd_args->config_args.hostrange));
+        ret = common_parse_opt (key, arg, &(cmd_args->config_args.common_args));
       return (ret);
     }
 
@@ -121,17 +120,15 @@ _ipmi_chassis_config_config_file_parse (struct ipmi_chassis_config_arguments *cm
           '\0',
           sizeof (struct config_file_data_ipmi_chassis_config));
   
-  if (config_file_parse (cmd_args->config_args.common.config_file,
+  if (config_file_parse (cmd_args->config_args.common_args.config_file,
                          0,
-                         &(cmd_args->config_args.common),
-                         NULL,
-                         &(cmd_args->config_args.hostrange),
+                         &(cmd_args->config_args.common_args),
                          CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE,
                          CONFIG_FILE_TOOL_IPMI_CHASSIS_CONFIG,
                          &config_file_data) < 0)
     {
       fprintf (stderr, "config_file_parse: %s\n", strerror (errno));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (config_file_data.verbose_count_count)
@@ -147,7 +144,7 @@ _ipmi_chassis_config_config_args_validate (struct ipmi_chassis_config_arguments 
     {
       fprintf (stderr,
                "Exactly one of --checkout, --commit, --diff, or --listsections MUST be given\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   config_args_validate (&(cmd_args->config_args));
@@ -161,15 +158,14 @@ ipmi_chassis_config_argp_parse (int argc, char **argv, struct ipmi_chassis_confi
   assert (cmd_args);
 
   init_config_args (&(cmd_args->config_args));
-  init_common_cmd_args_admin (&(cmd_args->config_args.common));
-  init_hostrange_cmd_args (&(cmd_args->config_args.hostrange));
+  init_common_cmd_args_admin (&(cmd_args->config_args.common_args));
 
   argp_parse (&cmdline_config_file_argp,
               argc,
               argv,
               ARGP_IN_ORDER,
               NULL,
-              &(cmd_args->config_args.common));
+              &(cmd_args->config_args.common_args));
 
   _ipmi_chassis_config_config_file_parse (cmd_args);
 
@@ -180,6 +176,6 @@ ipmi_chassis_config_argp_parse (int argc, char **argv, struct ipmi_chassis_confi
               NULL,
               cmd_args);
 
-  verify_common_cmd_args (&(cmd_args->config_args.common));
+  verify_common_cmd_args (&(cmd_args->config_args.common_args));
   _ipmi_chassis_config_config_args_validate (cmd_args);
 }

@@ -48,7 +48,6 @@
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
-#include "tool-common.h"
 #include "tool-cmdline-common.h"
 #include "tool-config-file-common.h"
 
@@ -84,53 +83,53 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
-#ifndef NDEBUG
-    { "rmcpdump", RMCPDUMP_KEY, 0, 0,
-      "Turn on RMCP packet dump output.", 27},
-#endif
     { "on", ON_KEY, 0, 0,
-      "Power on the target hosts.", 30},
+      "Power on the target hosts.", 40},
     { "off", OFF_KEY, 0, 0,
-      "Power off the target hosts.", 31},
+      "Power off the target hosts.", 41},
     { "cycle", CYCLE_KEY, 0, 0,
-      "Power cycle the target hosts.", 32},
+      "Power cycle the target hosts.", 42},
     { "reset", RESET_KEY, 0, 0,
-      "Reset the target hosts.", 33},
+      "Reset the target hosts.", 43},
     { "stat", STAT_KEY, 0, 0,
-      "Get power status of the target hosts.", 34},
+      "Get power status of the target hosts.", 44},
     { "pulse", PULSE_KEY, 0, 0,
-      "Send power diagnostic interrupt to target hosts.", 35},
+      "Send power diagnostic interrupt to target hosts.", 45},
     { "soft", SOFT_KEY, 0, 0,
-      "Initiate a soft-shutdown of the OS via ACPI.", 36},
+      "Initiate a soft-shutdown of the OS via ACPI.", 46},
     { "on-if-off", ON_IF_OFF_KEY, 0, 0,
       "Issue a power on command instead of a power cycle or hard reset "
-      "command if the remote machine's power is currently off.", 38},
+      "command if the remote machine's power is currently off.", 48},
     { "wait-until-off", WAIT_UNTIL_OFF_KEY, 0, 0,
-      "Regularly query the remote BMC and return only after the machine has powered off.", 39},
+      "Regularly query the remote BMC and return only after the machine has powered off.", 49},
     { "wait-until-on", WAIT_UNTIL_ON_KEY, 0, 0,
-      "Regularly query the remote BMC and return only after the machine has powered on.", 40},
+      "Regularly query the remote BMC and return only after the machine has powered on.", 50},
     { "oem-power-type", OEM_POWER_TYPE_KEY, "OEM-POWER-TYPE", 0,
-      "Specify an OEM power type to be used.", 41},
+      "Specify an OEM power type to be used.", 51},
     /* retry-wait-timeout maintained for backwards comptability */
     { "retry-wait-timeout", RETRY_WAIT_TIMEOUT_KEY, "MILLISECONDS", OPTION_HIDDEN,
-      "Specify the retransmission timeout length in milliseconds.", 42},
+      "Specify the retransmission timeout length in milliseconds.", 52},
     { "retransmission-wait-timeout", RETRANSMISSION_WAIT_TIMEOUT_KEY, "MILLISECONDS", 0,
-      "Specify the retransmission timeout length in milliseconds.", 42},
+      "Specify the retransmission timeout length in milliseconds.", 52},
     /* retry-backoff-count maintained for backwards comptability */
     { "retry-backoff-count", RETRY_BACKOFF_COUNT_KEY, "COUNT", OPTION_HIDDEN,
-      "Specify the retransmission backoff count for retransmissions.", 43},
+      "Specify the retransmission backoff count for retransmissions.", 53},
     { "retransmission-backoff-count", RETRANSMISSION_BACKOFF_COUNT_KEY, "COUNT", 0,
-      "Specify the retransmission backoff count for retransmissions.", 43},
+      "Specify the retransmission backoff count for retransmissions.", 53},
     { "ping-interval", PING_INTERVAL_KEY, "MILLISECONDS", 0,
-      "Specify the ping interval length in milliseconds.", 44},
+      "Specify the ping interval length in milliseconds.", 54},
     { "ping-timeout", PING_TIMEOUT_KEY, "MILLISECONDS", 0,
-      "Specify the ping timeout length in milliseconds.", 45},
+      "Specify the ping timeout length in milliseconds.", 55},
     { "ping-packet-count", PING_PACKET_COUNT_KEY, "COUNT", 0,
-      "Specify the ping packet count size.", 46},
+      "Specify the ping packet count size.", 56},
     { "ping-percent", PING_PERCENT_KEY, "PERCENT", 0,
-      "Specify the ping percent value.", 47},
+      "Specify the ping percent value.", 57},
     { "ping-consec-count", PING_CONSEC_COUNT_KEY, "COUNT", 0,
-      "Specify the ping consecutive count.", 48},
+      "Specify the ping consecutive count.", 58},
+#ifndef NDEBUG
+    { "rmcpdump", RMCPDUMP_KEY, 0, 0,
+      "Turn on RMCP packet dump output.", 59},
+#endif
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -166,7 +165,6 @@ cmdline_parse (int key,
 {
   struct ipmipower_arguments *cmd_args;
   char *endptr;
-  error_t ret;
   int tmp = 0;
 
   assert (state);
@@ -184,9 +182,9 @@ cmdline_parse (int key,
       else
         {
           fprintf (stderr, "invalid driver type specified");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
-      cmd_args->common.driver_type = tmp;
+      cmd_args->common_args.driver_type = tmp;
       break;
 #ifndef NDEBUG
     case RMCPDUMP_KEY:       /* --rmcpdump */
@@ -236,7 +234,7 @@ cmdline_parse (int key,
           || tmp <= 0)
         {
           fprintf (stderr, "retransmission wait timeout length invalid");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->retransmission_wait_timeout = tmp;
       break;
@@ -250,7 +248,7 @@ cmdline_parse (int key,
           || tmp <= 0)
         {
           fprintf (stderr, "retransmission backoff count invalid");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->retransmission_backoff_count = tmp;
       break;
@@ -262,7 +260,7 @@ cmdline_parse (int key,
           || tmp < 0)
         {
           fprintf (stderr, "ping interval length invalid");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->ping_interval = tmp;
       break;
@@ -274,7 +272,7 @@ cmdline_parse (int key,
           || tmp < 0)
         {
           fprintf (stderr, "ping timeout length invalid");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->ping_timeout = tmp;
       break;
@@ -286,7 +284,7 @@ cmdline_parse (int key,
           || tmp < 0)
         {
           fprintf (stderr, "ping packet count invalid");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->ping_packet_count = tmp;
       break;
@@ -298,7 +296,7 @@ cmdline_parse (int key,
           || tmp < 0)
         {
           fprintf (stderr, "ping percent invalid");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->ping_percent = tmp;
       break;
@@ -310,16 +308,13 @@ cmdline_parse (int key,
           || tmp < 0)
         {
           fprintf (stderr, "ping consec count invalid");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->ping_consec_count = tmp;
       break;
       /* removed legacy short options */
     default:
-      ret = common_parse_opt (key, arg, &(cmd_args->common));
-      if (ret == ARGP_ERR_UNKNOWN)
-        ret = hostrange_parse_opt (key, arg, &(cmd_args->hostrange));
-      return (ret);
+      return (common_parse_opt (key, arg, &(cmd_args->common_args)));
     }
 
   return (0);
@@ -337,30 +332,26 @@ _ipmipower_config_file_parse (struct ipmipower_arguments *cmd_args)
           sizeof (struct config_file_data_ipmipower));
 
   /* try legacy file first */
-  if (!cmd_args->common.config_file)
+  if (!cmd_args->common_args.config_file)
     {
       if (!config_file_parse (IPMIPOWER_CONFIG_FILE_LEGACY,
                               1,         /* do not exit if file not found */
-                              &(cmd_args->common),
-                              NULL,
-                              &(cmd_args->hostrange),
+                              &(cmd_args->common_args),
                               CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE,
                               CONFIG_FILE_TOOL_IPMIPOWER,
                               &config_file_data))
         goto out;
     }
 
-  if (config_file_parse (cmd_args->common.config_file,
+  if (config_file_parse (cmd_args->common_args.config_file,
                          0,
-                         &(cmd_args->common),
-                         NULL,
-                         &(cmd_args->hostrange),
+                         &(cmd_args->common_args),
                          CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE,
                          CONFIG_FILE_TOOL_IPMIPOWER,
                          &config_file_data) < 0)
     {
       fprintf (stderr, "config_file_parse: %s\n", strerror (errno));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
  out:
@@ -397,31 +388,31 @@ _ipmipower_args_validate (struct ipmipower_arguments *cmd_args)
   if (!IPMIPOWER_OEM_POWER_TYPE_VALID (cmd_args->oem_power_type))
     {
       fprintf (stderr, "invalid oem power type\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
-  if (cmd_args->retransmission_wait_timeout > cmd_args->common.session_timeout)
+  if (cmd_args->retransmission_wait_timeout > cmd_args->common_args.session_timeout)
     {
       fprintf (stderr, "retransmission wait timeout larger than session timeout\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
-  if (cmd_args->powercmd != IPMIPOWER_POWER_CMD_NONE && !cmd_args->common.hostname)
+  if (cmd_args->powercmd != IPMIPOWER_POWER_CMD_NONE && !cmd_args->common_args.hostname)
     {
       fprintf (stderr, "must specify target hostname(s) in non-interactive mode\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (cmd_args->ping_interval > cmd_args->ping_timeout)
     {
       fprintf (stderr, "ping interval larger than ping timeout\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (cmd_args->ping_consec_count > cmd_args->ping_packet_count)
     {
       fprintf (stderr, "ping consec count larger than ping packet count\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 }
 
@@ -432,14 +423,13 @@ ipmipower_argp_parse (int argc, char **argv, struct ipmipower_arguments *cmd_arg
   assert (argv);
   assert (cmd_args);
 
-  init_common_cmd_args_operator (&(cmd_args->common));
-  init_hostrange_cmd_args (&(cmd_args->hostrange));
+  init_common_cmd_args_operator (&(cmd_args->common_args));
 
   /* ipmipower differences */
-  cmd_args->common.driver_type = IPMI_DEVICE_LAN;
-  cmd_args->common.driver_type_outofband_only = 1;
-  cmd_args->common.session_timeout = 20000; /* 20 seconds */
-  cmd_args->common.retransmission_timeout = 400; /* .4 seconds */
+  cmd_args->common_args.driver_type = IPMI_DEVICE_LAN;
+  cmd_args->common_args.driver_type_outofband_only = 1;
+  cmd_args->common_args.session_timeout = 20000; /* 20 seconds */
+  cmd_args->common_args.retransmission_timeout = 400; /* .4 seconds */
 
 #ifndef NDEBUG
   cmd_args->rmcpdump = 0;
@@ -463,7 +453,7 @@ ipmipower_argp_parse (int argc, char **argv, struct ipmipower_arguments *cmd_arg
               argv,
               ARGP_IN_ORDER,
               NULL,
-              &(cmd_args->common));
+              &(cmd_args->common_args));
 
   _ipmipower_config_file_parse (cmd_args);
 
@@ -475,7 +465,6 @@ ipmipower_argp_parse (int argc, char **argv, struct ipmipower_arguments *cmd_arg
               cmd_args);
 
   /* don't check hostname inputs, ipmipower isn't like most tools */
-  verify_common_cmd_args_outofband (&(cmd_args->common), 0);
-  verify_hostrange_cmd_args (&(cmd_args->hostrange));
+  verify_common_cmd_args_outofband (&(cmd_args->common_args), 0);
   _ipmipower_args_validate (cmd_args);
 }

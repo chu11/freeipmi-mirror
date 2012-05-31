@@ -64,7 +64,7 @@ power_restore_policy_checkout (const char *section_name,
     {
       config_err_t ret;
 
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_chassis_status: %s\n",
@@ -131,7 +131,7 @@ power_restore_policy_commit (const char *section_name,
     {
       config_err_t ret;
 
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_power_restore_policy: %s\n",

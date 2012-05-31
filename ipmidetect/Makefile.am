@@ -18,7 +18,11 @@ ipmidetect_LDADD = \
 	$(top_builddir)/common/portability/libportability.la \
 	$(top_builddir)/libipmidetect/libipmidetect.la
 
-ipmidetect_SOURCES = ipmidetect.c
+ipmidetect_SOURCES = \
+	ipmidetect.c \
+	ipmidetect.h \
+	ipmidetect-argp.c \
+	ipmidetect-argp.h
 
 $(top_builddir)/common/miscutil/libmiscutil.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`

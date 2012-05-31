@@ -144,7 +144,7 @@ _ipmipower_power_cmd_to_oem_power_type_support (ipmipower_power_cmd_t cmd)
       return (IPMIPOWER_OEM_POWER_TYPE_SUPPORT_IDENTIFY_STATUS);
     default:
       IPMIPOWER_ERROR (("_ipmipower_power_cmd_to_oem_power_type_support: invalid power cmd: %d", cmd));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   return (-1);			/* NOT REACHED */
@@ -184,8 +184,8 @@ ipmipower_oem_power_cmd_check_support_and_privilege (ipmipower_power_cmd_t cmd,
       /* XXX - I'm pretty sure */
       if ((cmd == IPMIPOWER_POWER_CMD_POWER_OFF
 	   || cmd == IPMIPOWER_POWER_CMD_POWER_ON)
-	  && (cmd_args.common.privilege_level == IPMI_PRIVILEGE_LEVEL_USER
-	      || cmd_args.common.privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR))
+	  && (cmd_args.common_args.privilege_level == IPMI_PRIVILEGE_LEVEL_USER
+	      || cmd_args.common_args.privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR))
 	{
 	  if (errbuf && errbuflen)
 	    snprintf (errbuf,

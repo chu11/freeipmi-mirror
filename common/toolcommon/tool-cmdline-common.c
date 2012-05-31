@@ -39,28 +39,28 @@
 #include "freeipmi-portability.h"
 #include "parse-common.h"
 #include "pstdout.h"
-#include "tool-common.h"
 #include "tool-cmdline-common.h"
+#include "tool-util-common.h"
 
 error_t
 cmdline_config_file_parse (int key, char *arg, struct argp_state *state)
 {
-  struct common_cmd_args *cmd_args;
+  struct common_cmd_args *common_args;
 
   assert (state);
 
-  cmd_args = state->input;
+  common_args = state->input;
 
   switch (key)
     {
       /* ARGP_CONFIG_KEY for backwards compatability */
     case ARGP_CONFIG_KEY:
     case ARGP_CONFIG_FILE_KEY:
-      free (cmd_args->config_file);
-      if (!(cmd_args->config_file = strdup (arg)))
+      free (common_args->config_file);
+      if (!(common_args->config_file = strdup (arg)))
         {
           perror ("strdup");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       break;
     case ARGP_KEY_ARG:
@@ -94,24 +94,27 @@ __secure_memset (void *s, int c, size_t n)
 error_t
 common_parse_opt (int key,
                   char *arg,
-                  struct common_cmd_args *cmd_args)
+                  struct common_cmd_args *common_args)
 {
   char *endptr;
   int tmp;
   unsigned int outofband_flags, outofband_2_0_flags, inband_flags, section_flags;
   int n;
 
-  assert (cmd_args);
+  assert (common_args);
 
   switch (key)
     {
+      /*
+       * inband options
+       */
     case ARGP_DRIVER_TYPE_KEY:
-      if (cmd_args->driver_type_outofband_only)
+      if (common_args->driver_type_outofband_only)
         {
           if ((tmp = parse_outofband_driver_type (arg)) < 0)
             {
               fprintf (stderr, "invalid driver type\n");
-              exit (1);
+              exit (EXIT_FAILURE);
             }
         }
       else
@@ -119,15 +122,15 @@ common_parse_opt (int key,
           if ((tmp = parse_driver_type (arg)) < 0)
             {
               fprintf (stderr, "invalid driver type\n");
-              exit (1);
+              exit (EXIT_FAILURE);
             }
         }
-      cmd_args->driver_type = tmp;
+      common_args->driver_type = tmp;
       break;
       /* ARGP_NO_PROBING_KEY for backwards compatability */
     case ARGP_NO_PROBING_KEY:
     case ARGP_DISABLE_AUTO_PROBE_KEY:
-      cmd_args->disable_auto_probe = 1;
+      common_args->disable_auto_probe = 1;
       break;
     case ARGP_DRIVER_ADDRESS_KEY:
       errno = 0;
@@ -137,16 +140,16 @@ common_parse_opt (int key,
           || tmp <= 0)
         {
           fprintf (stderr, "invalid driver address\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
-      cmd_args->driver_address = tmp;
+      common_args->driver_address = tmp;
       break;
     case ARGP_DRIVER_DEVICE_KEY:
-      free (cmd_args->driver_device);
-      if (!(cmd_args->driver_device = strdup (arg)))
+      free (common_args->driver_device);
+      if (!(common_args->driver_device = strdup (arg)))
         {
           perror ("strdup");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       break;
     case ARGP_REGISTER_SPACING_KEY:
@@ -157,31 +160,62 @@ common_parse_opt (int key,
           || tmp <= 0)
         {
           fprintf (stderr, "invalid register spacing\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
-      cmd_args->register_spacing = tmp;
+      common_args->register_spacing = tmp;
       break;
+    case ARGP_TARGET_CHANNEL_NUMBER_KEY:
+      errno = 0;
+      tmp = strtol (arg, &endptr, 0);
+      if (errno
+	  || endptr[0] != '\0'
+	  || tmp < 0
+	  || !IPMI_CHANNEL_NUMBER_VALID (tmp))
+        {
+          fprintf (stderr, "invalid target channel numbern");
+          exit (EXIT_FAILURE);
+        }
+      common_args->target_channel_number = tmp;
+      common_args->target_channel_number_is_set = 1;
+      break;
+    case ARGP_TARGET_SLAVE_ADDRESS_KEY:
+      errno = 0;
+      tmp = strtol (arg, &endptr, 0);
+      if (errno
+	  || endptr[0] != '\0'
+	  || tmp < 0)
+        {
+          fprintf (stderr, "invalid target slave addressn");
+          exit (EXIT_FAILURE);
+        }
+      common_args->target_slave_address = tmp;
+      common_args->target_slave_address_is_set = 1;
+      break;
+
+      /* 
+       * outofband options
+       */
     case ARGP_HOSTNAME_KEY:
-      free (cmd_args->hostname);
-      if (!(cmd_args->hostname = strdup (arg)))
+      free (common_args->hostname);
+      if (!(common_args->hostname = strdup (arg)))
         {
           perror ("strdup");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       break;
     case ARGP_USERNAME_KEY:
       if (strlen (arg) > IPMI_MAX_USER_NAME_LENGTH)
         {
           fprintf (stderr, "username too long\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       else
         {
-	  free (cmd_args->username);
-          if (!(cmd_args->username = strdup (arg)))
+	  free (common_args->username);
+          if (!(common_args->username = strdup (arg)))
             {
               perror ("strdup");
-              exit (1);
+              exit (EXIT_FAILURE);
             }
         }
       n = strlen (arg);
@@ -191,57 +225,57 @@ common_parse_opt (int key,
       if (strlen (arg) > IPMI_2_0_MAX_PASSWORD_LENGTH)
         {
           fprintf (stderr, "password too long\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       else
         {
-	  free (cmd_args->password);
-          if (!(cmd_args->password = strdup (arg)))
+	  free (common_args->password);
+          if (!(common_args->password = strdup (arg)))
             {
               perror ("strdup");
-              exit (1);
+              exit (EXIT_FAILURE);
             }
         }
       n = strlen (arg);
       __secure_memset (arg, '\0', n);
       break;
     case ARGP_PASSWORD_PROMPT_KEY:
-      free (cmd_args->password);
+      free (common_args->password);
       arg = getpass ("Password: ");
       if (arg && strlen (arg) > IPMI_2_0_MAX_PASSWORD_LENGTH)
         {
           fprintf (stderr, "password too long\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
-      if (!(cmd_args->password = strdup (arg)))
+      if (!(common_args->password = strdup (arg)))
         {
           perror ("strdup");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       break;
     case ARGP_K_G_KEY:
       {
         int rv;
         
-        if (cmd_args->k_g_len)
+        if (common_args->k_g_len)
           {
-            memset (cmd_args->k_g, '\0', IPMI_MAX_K_G_LENGTH + 1);
-            cmd_args->k_g_len = 0;
+            memset (common_args->k_g, '\0', IPMI_MAX_K_G_LENGTH + 1);
+            common_args->k_g_len = 0;
           }
         
         if ((rv = check_kg_len (arg)) < 0)
           {
             fprintf (stderr, "k_g too long\n");
-            exit (1);
+            exit (EXIT_FAILURE);
           }
         
-        if ((rv = parse_kg (cmd_args->k_g, IPMI_MAX_K_G_LENGTH + 1, arg)) < 0)
+        if ((rv = parse_kg (common_args->k_g, IPMI_MAX_K_G_LENGTH + 1, arg)) < 0)
           {
             fprintf (stderr, "k_g input formatted incorrectly\n");
-            exit (1);
+            exit (EXIT_FAILURE);
           }
         if (rv > 0)
-          cmd_args->k_g_len = rv;
+          common_args->k_g_len = rv;
         n = strlen (arg);
         __secure_memset (arg, '\0', n);
       }
@@ -250,10 +284,10 @@ common_parse_opt (int key,
       {
         int rv;
         
-        if (cmd_args->k_g_len)
+        if (common_args->k_g_len)
           {
-            memset (cmd_args->k_g, '\0', IPMI_MAX_K_G_LENGTH + 1);
-            cmd_args->k_g_len = 0;
+            memset (common_args->k_g, '\0', IPMI_MAX_K_G_LENGTH + 1);
+            common_args->k_g_len = 0;
           }
         
         arg = getpass ("K_g: ");
@@ -261,16 +295,16 @@ common_parse_opt (int key,
         if ((rv = check_kg_len (arg)) < 0)
           {
             fprintf (stderr, "k_g too long\n");
-            exit (1);
+            exit (EXIT_FAILURE);
           }
         
-        if ((rv = parse_kg (cmd_args->k_g, IPMI_MAX_K_G_LENGTH + 1, arg)) < 0)
+        if ((rv = parse_kg (common_args->k_g, IPMI_MAX_K_G_LENGTH + 1, arg)) < 0)
           {
             fprintf (stderr, "k_g input formatted incorrectly\n");
-            exit (1);
+            exit (EXIT_FAILURE);
           }
         if (rv > 0)
-          cmd_args->k_g_len = rv;
+          common_args->k_g_len = rv;
       }
       break;
       /* ARGP_TIMEOUT_KEY for backwards compatability */
@@ -283,9 +317,9 @@ common_parse_opt (int key,
           || tmp <= 0)
         {
           fprintf (stderr, "invalid session timeout\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
-      cmd_args->session_timeout = tmp;
+      common_args->session_timeout = tmp;
       break;
       /* ARGP_RETRY_TIMEOUT_KEY for backwards compatability */
     case ARGP_RETRY_TIMEOUT_KEY:
@@ -297,9 +331,9 @@ common_parse_opt (int key,
           || tmp <= 0)
         {
           fprintf (stderr, "invalid retransmission timeout\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
-      cmd_args->retransmission_timeout = tmp;
+      common_args->retransmission_timeout = tmp;
       break;
       /* ARGP_AUTH_TYPE_KEY for backwards compatability */
     case ARGP_AUTH_TYPE_KEY:
@@ -307,9 +341,9 @@ common_parse_opt (int key,
       if ((tmp = parse_authentication_type (arg)) < 0)
         {
           fprintf (stderr, "invalid authentication type\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
-      cmd_args->authentication_type = tmp;
+      common_args->authentication_type = tmp;
       break;
     case ARGP_CIPHER_SUITE_ID_KEY:
       errno = 0;
@@ -320,14 +354,14 @@ common_parse_opt (int key,
           || tmp > IPMI_CIPHER_SUITE_ID_MAX)
         {
           fprintf (stderr, "invalid cipher suite id\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       if (!IPMI_CIPHER_SUITE_ID_SUPPORTED (tmp))
 	{
           fprintf (stderr, "unsupported cipher suite id\n");
-          exit (1);
+          exit (EXIT_FAILURE);
 	}
-      cmd_args->cipher_suite_id = tmp;
+      common_args->cipher_suite_id = tmp;
       break;
       /* ARGP_PRIVILEGE_KEY for backwards compatability */
       /* ARGP_PRIV_LEVEL_KEY for backwards compatability */     \
@@ -337,10 +371,15 @@ common_parse_opt (int key,
       if ((tmp = parse_privilege_level (arg)) < 0)
         {
           fprintf (stderr, "invalid privilege level\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
-      cmd_args->privilege_level = tmp;
+      common_args->privilege_level = tmp;
       break;
+
+      /* 
+       * misc options
+       */
+
       /* ARGP_CONFIG_KEY for backwards compatability */
     case ARGP_CONFIG_KEY:
     case ARGP_CONFIG_FILE_KEY:
@@ -354,84 +393,57 @@ common_parse_opt (int key,
 				       &section_flags) < 0)
         {
           fprintf (stderr, "invalid workaround flags\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
-      cmd_args->workaround_flags_outofband = outofband_flags;
-      cmd_args->workaround_flags_outofband_2_0 = outofband_2_0_flags;
-      cmd_args->workaround_flags_inband = inband_flags;
-      cmd_args->section_specific_workaround_flags = section_flags;
+      common_args->workaround_flags_outofband = outofband_flags;
+      common_args->workaround_flags_outofband_2_0 = outofband_2_0_flags;
+      common_args->workaround_flags_inband = inband_flags;
+      common_args->section_specific_workaround_flags = section_flags;
       break;
     case ARGP_DEBUG_KEY:
-      cmd_args->debug++;
+      common_args->debug++;
       break;
-    default:
-      return (ARGP_ERR_UNKNOWN);
-    }
 
-  return (0);
-}
-
-error_t
-sdr_parse_opt (int key,
-               char *arg,
-               struct sdr_cmd_args *sdr_cmd_args)
-{
-  assert (sdr_cmd_args);
-
-  switch (key)
-    {
+      /* 
+       * sdr options
+       */
     case ARGP_FLUSH_CACHE_KEY:
-      sdr_cmd_args->flush_cache = 1;
+      common_args->flush_cache = 1;
       break;
     case ARGP_QUIET_CACHE_KEY:
-      sdr_cmd_args->quiet_cache = 1;
-      break;
-    case ARGP_SDR_CACHE_DIRECTORY_KEY:
-      free (sdr_cmd_args->sdr_cache_directory);
-      if (!(sdr_cmd_args->sdr_cache_directory = strdup (arg)))
-        {
-          perror ("strdup");
-          exit (1);
-        }
-      break;
-    case ARGP_SDR_CACHE_FILE_KEY:
-      free (sdr_cmd_args->sdr_cache_file);
-      if (!(sdr_cmd_args->sdr_cache_file = strdup (arg)))
-        {
-          perror ("strdup");
-          exit (1);
-        }
+      common_args->quiet_cache = 1;
       break;
     case ARGP_SDR_CACHE_RECREATE_KEY:
-      sdr_cmd_args->sdr_cache_recreate = 1;
+      common_args->sdr_cache_recreate = 1;
+      break;
+    case ARGP_SDR_CACHE_FILE_KEY:
+      free (common_args->sdr_cache_file);
+      if (!(common_args->sdr_cache_file = strdup (arg)))
+        {
+          perror ("strdup");
+          exit (EXIT_FAILURE);
+        }
+      break;
+    case ARGP_SDR_CACHE_DIRECTORY_KEY:
+      free (common_args->sdr_cache_directory);
+      if (!(common_args->sdr_cache_directory = strdup (arg)))
+        {
+          perror ("strdup");
+          exit (EXIT_FAILURE);
+        }
       break;
     case ARGP_IGNORE_SDR_CACHE_KEY:
-      sdr_cmd_args->ignore_sdr_cache = 1;
+      common_args->ignore_sdr_cache = 1;
       break;
-    default:
-      return (ARGP_ERR_UNKNOWN);
-    }
 
-  return (0);
-}
-
-error_t
-hostrange_parse_opt (int key,
-                     char *arg,
-                     struct hostrange_cmd_args *hostrange_cmd_args)
-{
-  char *endptr;
-  int tmp;
-
-  assert (hostrange_cmd_args);
-
-  switch (key)
-    {
+      /* 
+       * hostrange options
+       */
     case ARGP_BUFFER_OUTPUT_KEY:
-      hostrange_cmd_args->buffer_output = 1;
+      common_args->buffer_output = 1;
       break;
     case ARGP_CONSOLIDATE_OUTPUT_KEY:
-      hostrange_cmd_args->consolidate_output = 1;
+      common_args->consolidate_output = 1;
       break;
     case ARGP_FANOUT_KEY:
       tmp = strtol (arg, &endptr, 10);
@@ -441,16 +453,16 @@ hostrange_parse_opt (int key,
           || (tmp > PSTDOUT_FANOUT_MAX))
         {
           fprintf (stderr, "invalid fanout\n");
-          exit (1);
+          exit (EXIT_FAILURE);
           break;
         }
-      hostrange_cmd_args->fanout = tmp;
+      common_args->fanout = tmp;
       break;
     case ARGP_ELIMINATE_KEY:
-      hostrange_cmd_args->eliminate = 1;
+      common_args->eliminate = 1;
       break;
     case ARGP_ALWAYS_PREFIX_KEY:
-      hostrange_cmd_args->always_prefix = 1;
+      common_args->always_prefix = 1;
       break;
     default:
       return (ARGP_ERR_UNKNOWN);
@@ -460,110 +472,128 @@ hostrange_parse_opt (int key,
 }
 
 static void
-_init_common_cmd_args (struct common_cmd_args *cmd_args)
+_init_common_cmd_args (struct common_cmd_args *common_args)
 {
-  assert (cmd_args);
+  assert (common_args);
 
-  cmd_args->disable_auto_probe = 0;
-  cmd_args->driver_type = IPMI_DEVICE_UNKNOWN;
-  cmd_args->driver_type_outofband_only = 0;
-  cmd_args->driver_address = 0;
-  cmd_args->driver_device = NULL;
-  cmd_args->register_spacing = 0;
-  cmd_args->session_timeout = 0;
-  cmd_args->retransmission_timeout = 0;
-  cmd_args->hostname = NULL;
-  cmd_args->username = NULL;
-  cmd_args->password = NULL;
-  memset (cmd_args->k_g, '\0', IPMI_MAX_K_G_LENGTH + 1);
-  cmd_args->k_g_len = 0;
-  cmd_args->authentication_type = IPMI_AUTHENTICATION_TYPE_MD5;
-  cmd_args->cipher_suite_id = 3;
+  common_args->disable_auto_probe = 0;
+  common_args->driver_type = IPMI_DEVICE_UNKNOWN;
+  common_args->driver_type_outofband_only = 0;
+  common_args->driver_address = 0;
+  common_args->driver_device = NULL;
+  common_args->register_spacing = 0;
+  common_args->target_channel_number = 0;
+  common_args->target_channel_number_is_set = 0;
+  common_args->target_slave_address = 0;
+  common_args->target_slave_address_is_set = 0;
+
+  common_args->hostname = NULL;
+  common_args->username = NULL;
+  common_args->password = NULL;
+  memset (common_args->k_g, '\0', IPMI_MAX_K_G_LENGTH + 1);
+  common_args->k_g_len = 0;
+  common_args->session_timeout = 0;
+  common_args->retransmission_timeout = 0;
+  common_args->authentication_type = IPMI_AUTHENTICATION_TYPE_MD5;
+  common_args->cipher_suite_id = 3;
   /* privilege_level set by parent function */
-  cmd_args->config_file = NULL;
-  cmd_args->workaround_flags_outofband = 0;
-  cmd_args->workaround_flags_outofband_2_0 = 0;
-  cmd_args->workaround_flags_inband = 0;
-  cmd_args->section_specific_workaround_flags = 0;
-  cmd_args->debug = 0;
+
+  common_args->config_file = NULL;
+  common_args->workaround_flags_outofband = 0;
+  common_args->workaround_flags_outofband_2_0 = 0;
+  common_args->workaround_flags_inband = 0;
+  common_args->section_specific_workaround_flags = 0;
+  common_args->debug = 0;
+
+  common_args->flush_cache = 0;
+  common_args->quiet_cache = 0;
+  common_args->sdr_cache_recreate = 0;
+  common_args->sdr_cache_file = NULL;
+  common_args->sdr_cache_directory = NULL;
+  common_args->ignore_sdr_cache = 0;
+
+  common_args->buffer_output = 0;
+  common_args->consolidate_output = 0;
+  common_args->fanout = 0;
+  common_args->eliminate = 0;
+  common_args->always_prefix = 0;
 }
 
 void
-init_common_cmd_args_user (struct common_cmd_args *cmd_args)
+init_common_cmd_args_user (struct common_cmd_args *common_args)
 {
-  assert (cmd_args);
+  assert (common_args);
 
-  _init_common_cmd_args (cmd_args);
-  cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_USER;
+  _init_common_cmd_args (common_args);
+  common_args->privilege_level = IPMI_PRIVILEGE_LEVEL_USER;
 }
 
 void
-init_common_cmd_args_operator (struct common_cmd_args *cmd_args)
+init_common_cmd_args_operator (struct common_cmd_args *common_args)
 {
-  assert (cmd_args);
+  assert (common_args);
 
-  _init_common_cmd_args (cmd_args);
-  cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_OPERATOR;
+  _init_common_cmd_args (common_args);
+  common_args->privilege_level = IPMI_PRIVILEGE_LEVEL_OPERATOR;
 }
 
 void
-init_common_cmd_args_admin (struct common_cmd_args *cmd_args)
+init_common_cmd_args_admin (struct common_cmd_args *common_args)
 {
-  _init_common_cmd_args (cmd_args);
-  cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
+  _init_common_cmd_args (common_args);
+  common_args->privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
 }
 
 void
-verify_common_cmd_args_inband (struct common_cmd_args *cmd_args)
+verify_common_cmd_args_inband (struct common_cmd_args *common_args)
 {
-  assert (cmd_args);
+  assert (common_args);
 
-  if (cmd_args->driver_device)
+  if (common_args->driver_device)
     {
-      if (access (cmd_args->driver_device, R_OK|W_OK) < 0)
+      if (access (common_args->driver_device, R_OK|W_OK) < 0)
         {
           fprintf (stderr, "insufficient permission on driver device '%s'\n",
-                   cmd_args->driver_device);
-          exit (1);
+                   common_args->driver_device);
+          exit (EXIT_FAILURE);
         }
     }
-
 }
 
 void
-verify_common_cmd_args_outofband (struct common_cmd_args *cmd_args, int check_hostname)
+verify_common_cmd_args_outofband (struct common_cmd_args *common_args, int check_hostname)
 {
-  assert (cmd_args);
+  assert (common_args);
 
   if (check_hostname
-      && (cmd_args->driver_type == IPMI_DEVICE_LAN
-          || cmd_args->driver_type == IPMI_DEVICE_LAN_2_0)
-      && !cmd_args->hostname)
+      && (common_args->driver_type == IPMI_DEVICE_LAN
+          || common_args->driver_type == IPMI_DEVICE_LAN_2_0)
+      && !common_args->hostname)
     {
       fprintf (stderr, "hostname not specified\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   /* We default to IPMI 1.5 if the user doesn't specify LAN vs. LAN_2_0 */
 
-  if (((cmd_args->hostname
-        && cmd_args->driver_type == IPMI_DEVICE_UNKNOWN)
-       || cmd_args->driver_type == IPMI_DEVICE_LAN)
-      && cmd_args->password
-      && strlen (cmd_args->password) > IPMI_1_5_MAX_PASSWORD_LENGTH)
+  if (((common_args->hostname
+        && common_args->driver_type == IPMI_DEVICE_UNKNOWN)
+       || common_args->driver_type == IPMI_DEVICE_LAN)
+      && common_args->password
+      && strlen (common_args->password) > IPMI_1_5_MAX_PASSWORD_LENGTH)
     {
       fprintf (stderr, "password too long\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   /* else, 2_0 password length was checked in argp_parse() previously */
 
-  if (cmd_args->retransmission_timeout > cmd_args->session_timeout)
+  if (common_args->retransmission_timeout > common_args->session_timeout)
     {
       fprintf (stderr, "retransmission timeout larger than session timeout\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
-  if (cmd_args->k_g_len)
+  if (common_args->k_g_len)
     {
       unsigned int i;
       int all_zeroes = 1;
@@ -573,7 +603,7 @@ verify_common_cmd_args_outofband (struct common_cmd_args *cmd_args, int check_ho
        */
       for (i = 0; i < IPMI_MAX_K_G_LENGTH; i++)
         {
-          if (cmd_args->k_g[i] != 0)
+          if (common_args->k_g[i] != 0)
             {
               all_zeroes = 0;
               break;
@@ -581,68 +611,31 @@ verify_common_cmd_args_outofband (struct common_cmd_args *cmd_args, int check_ho
         }
       
       if (all_zeroes)
-        cmd_args->k_g_len = 0;
+        common_args->k_g_len = 0;
     }
 }
 
 void
-verify_common_cmd_args (struct common_cmd_args *cmd_args)
+verify_common_cmd_args (struct common_cmd_args *common_args)
 {
-  assert (cmd_args);
+  assert (common_args);
 
-  verify_common_cmd_args_inband (cmd_args);
-  verify_common_cmd_args_outofband (cmd_args, 1);
-}
+  verify_common_cmd_args_inband (common_args);
+  verify_common_cmd_args_outofband (common_args, 1);
 
-void
-init_sdr_cmd_args (struct sdr_cmd_args *sdr_cmd_args)
-{
-  assert (sdr_cmd_args);
-
-  sdr_cmd_args->flush_cache = 0;
-  sdr_cmd_args->quiet_cache = 0;
-  sdr_cmd_args->sdr_cache_directory = NULL;
-  sdr_cmd_args->sdr_cache_file = NULL;
-  sdr_cmd_args->sdr_cache_recreate = 0;
-  sdr_cmd_args->ignore_sdr_cache = 0;
-}
-
-void
-verify_sdr_cmd_args (struct sdr_cmd_args *sdr_cmd_args)
-{
-  assert (sdr_cmd_args);
-
-  if (sdr_cmd_args->sdr_cache_directory)
+  if (common_args->sdr_cache_directory)
     {
-      if (access (sdr_cmd_args->sdr_cache_directory, R_OK|W_OK|X_OK) < 0)
+      if (access (common_args->sdr_cache_directory, R_OK|W_OK|X_OK) < 0)
         {
-          fprintf (stderr, "insufficient permission on sensor cache directory '%s'\n",
-                   sdr_cmd_args->sdr_cache_directory);
-          exit (1);
+          fprintf (stderr, "insufficient permission on SDR cache directory '%s'\n",
+                   common_args->sdr_cache_directory);
+          exit (EXIT_FAILURE);
         }
     }
-}
 
-void
-init_hostrange_cmd_args (struct hostrange_cmd_args *hostrange_cmd_args)
-{
-  assert (hostrange_cmd_args);
-
-  hostrange_cmd_args->buffer_output = 0;
-  hostrange_cmd_args->consolidate_output = 0;
-  hostrange_cmd_args->fanout = 0;
-  hostrange_cmd_args->eliminate = 0;
-  hostrange_cmd_args->always_prefix = 0;
-}
-
-void
-verify_hostrange_cmd_args (struct hostrange_cmd_args *hostrange_cmd_args)
-{
-  assert (hostrange_cmd_args);
-
-  if (hostrange_cmd_args->buffer_output && hostrange_cmd_args->consolidate_output)
+  if (common_args->buffer_output && common_args->consolidate_output)
     {
       fprintf (stderr, "cannot buffer and consolidate hostrange output, please select only one\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 }

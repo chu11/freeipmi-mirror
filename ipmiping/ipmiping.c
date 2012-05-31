@@ -469,5 +469,5 @@ main (int argc, char **argv)
 {
   ipmi_ping_setup (argc, argv, 0, IPMI_RQ_SEQ_MAX, "hVc:i:I:t:vr:s:d");
   ipmi_ping_loop (createpacket, parsepacket, latepacket, endresult);
-  exit (1);                    /* NOT REACHED */
+  exit (EXIT_FAILURE);                    /* NOT REACHED */
 }

@@ -56,14 +56,14 @@ fiid_template_t tmpl_ssif_raw =
   };
 
 static void
-_ipmi_ssif_dump (ipmi_ctx_t ctx,
-                 const void *pkt,
-                 unsigned int pkt_len,
-                 uint8_t cmd,
-                 uint8_t net_fn,
-		 uint8_t group_extension,
-                 unsigned int debug_direction,
-                 fiid_template_t tmpl_cmd)
+_api_ssif_dump (ipmi_ctx_t ctx,
+		const void *pkt,
+		unsigned int pkt_len,
+		uint8_t cmd,
+		uint8_t net_fn,
+		uint8_t group_extension,
+		unsigned int debug_direction,
+		fiid_template_t tmpl_cmd)
 {
   char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
 
@@ -95,51 +95,51 @@ _ipmi_ssif_dump (ipmi_ctx_t ctx,
 }
 
 static void
-_ipmi_ssif_dump_rq (ipmi_ctx_t ctx,
-                    const void *pkt,
-                    unsigned int pkt_len,
-                    uint8_t cmd,
-                    uint8_t net_fn,
-		    uint8_t group_extension,
-                    fiid_obj_t obj_cmd_rq)
+_api_ssif_dump_rq (ipmi_ctx_t ctx,
+		   const void *pkt,
+		   unsigned int pkt_len,
+		   uint8_t cmd,
+		   uint8_t net_fn,
+		   uint8_t group_extension,
+		   fiid_obj_t obj_cmd_rq)
 {
   fiid_field_t *tmpl_cmd = NULL;
 
   if ((tmpl_cmd = fiid_obj_template (obj_cmd_rq)))
     {
-      _ipmi_ssif_dump (ctx,
-                       pkt,
-                       pkt_len,
-                       cmd,
-                       net_fn,
-		       group_extension,
-                       DEBUG_UTIL_DIRECTION_REQUEST,
-                       tmpl_cmd);
+      _api_ssif_dump (ctx,
+		      pkt,
+		      pkt_len,
+		      cmd,
+		      net_fn,
+		      group_extension,
+		      DEBUG_UTIL_DIRECTION_REQUEST,
+		      tmpl_cmd);
       fiid_template_free (tmpl_cmd);
     }
 }
 
 static void
-_ipmi_ssif_dump_rs (ipmi_ctx_t ctx,
-                    const void *pkt,
-                    unsigned int pkt_len,
-                    uint8_t cmd,
-                    uint8_t net_fn,
-		    uint8_t group_extension,
-                    fiid_obj_t obj_cmd_rs)
+_api_ssif_dump_rs (ipmi_ctx_t ctx,
+		   const void *pkt,
+		   unsigned int pkt_len,
+		   uint8_t cmd,
+		   uint8_t net_fn,
+		   uint8_t group_extension,
+		   fiid_obj_t obj_cmd_rs)
 {
   fiid_field_t *tmpl_cmd = NULL;
 
   if ((tmpl_cmd = fiid_obj_template (obj_cmd_rs)))
     {
-      _ipmi_ssif_dump (ctx,
-                       pkt,
-                       pkt_len,
-                       cmd,
-                       net_fn,
-		       group_extension,
-                       DEBUG_UTIL_DIRECTION_RESPONSE,
-                       tmpl_cmd);
+      _api_ssif_dump (ctx,
+		      pkt,
+		      pkt_len,
+		      cmd,
+		      net_fn,
+		      group_extension,
+		      DEBUG_UTIL_DIRECTION_RESPONSE,
+		      tmpl_cmd);
       fiid_template_free (tmpl_cmd);
     }
 }
@@ -180,8 +180,8 @@ _ssif_cmd_write (ipmi_ctx_t ctx,
     }
   memset (pkt, '\0', pkt_len);
   
-  if (fill_hdr_ipmi_kcs (ctx->lun,
-                         ctx->net_fn,
+  if (fill_hdr_ipmi_kcs (ctx->target.lun,
+                         ctx->target.net_fn,
                          ctx->io.inband.rq.obj_hdr) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
@@ -199,13 +199,13 @@ _ssif_cmd_write (ipmi_ctx_t ctx,
     }
 
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP && send_len)
-    _ipmi_ssif_dump_rq (ctx,
-			pkt,
-			send_len,
-			cmd,
-			ctx->net_fn,
-			group_extension,
-			obj_cmd_rq);
+    _api_ssif_dump_rq (ctx,
+		       pkt,
+		       send_len,
+		       cmd,
+		       ctx->target.net_fn,
+		       group_extension,
+		       obj_cmd_rq);
 
   if (ipmi_ssif_write (ctx->io.inband.ssif_ctx, pkt, send_len) < 0)
     {
@@ -279,13 +279,13 @@ _ssif_cmd_read (ipmi_ctx_t ctx,
     }
   
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP && read_len)
-    _ipmi_ssif_dump_rs (ctx,
-			pkt,
-			read_len,
-			cmd,
-			ctx->net_fn,
-			group_extension,
-			obj_cmd_rs);
+    _api_ssif_dump_rs (ctx,
+		       pkt,
+		       read_len,
+		       cmd,
+		       ctx->target.net_fn,
+		       group_extension,
+		       obj_cmd_rs);
 
   if ((ret = unassemble_ipmi_kcs_pkt (pkt,
                                       read_len,
@@ -312,38 +312,20 @@ _ssif_cmd_read (ipmi_ctx_t ctx,
 }
 
 int
-ipmi_ssif_cmd_api (ipmi_ctx_t ctx,
-                   fiid_obj_t obj_cmd_rq,
-                   fiid_obj_t obj_cmd_rs)
+api_ssif_cmd (ipmi_ctx_t ctx,
+	      fiid_obj_t obj_cmd_rq,
+	      fiid_obj_t obj_cmd_rs)
 {
   uint8_t cmd = 0;             /* used for debugging */
   uint8_t group_extension = 0; /* used for debugging */
   uint64_t val;
 
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!fiid_obj_valid (obj_cmd_rq)
-      || !fiid_obj_valid (obj_cmd_rs))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (FIID_OBJ_PACKET_VALID (obj_cmd_rq) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
-      return (-1);
-    }
-
-  if (ctx->type != IPMI_DEVICE_SSIF)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_INTERNAL_ERROR);
-      return (-1);
-    }
+  assert (ctx
+	  && ctx->magic == IPMI_CTX_MAGIC
+	  && ctx->type == IPMI_DEVICE_SSIF
+	  && fiid_obj_valid (obj_cmd_rq)
+	  && fiid_obj_packet_valid (obj_cmd_rq) == 1
+	  && fiid_obj_valid (obj_cmd_rs));
 
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
     {
@@ -353,7 +335,7 @@ ipmi_ssif_cmd_api (ipmi_ctx_t ctx,
       else
         cmd = val;
 
-      if (IPMI_NET_FN_GROUP_EXTENSION (ctx->net_fn))
+      if (IPMI_NET_FN_GROUP_EXTENSION (ctx->target.net_fn))
         {
           /* ignore error, continue on */
           if (FIID_OBJ_GET (obj_cmd_rq,
@@ -375,36 +357,23 @@ ipmi_ssif_cmd_api (ipmi_ctx_t ctx,
 }
 
 int
-ipmi_ssif_cmd_raw_api (ipmi_ctx_t ctx,
-                       const void *buf_rq,
-                       unsigned int buf_rq_len,
-                       void *buf_rs,
-                       unsigned int buf_rs_len)
+api_ssif_cmd_raw (ipmi_ctx_t ctx,
+		  const void *buf_rq,
+		  unsigned int buf_rq_len,
+		  void *buf_rs,
+		  unsigned int buf_rs_len)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   fiid_obj_t obj_cmd_rs = NULL;
   int len, rv = -1;
 
-  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!buf_rq
-      || !buf_rq_len
-      || !buf_rs
-      || !buf_rs_len)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (ctx->type != IPMI_DEVICE_SSIF)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_INTERNAL_ERROR);
-      goto cleanup;
-    }
+  assert (ctx
+	  && ctx->magic == IPMI_CTX_MAGIC
+	  && ctx->type == IPMI_DEVICE_SSIF
+	  && buf_rq
+	  && buf_rq_len
+	  && buf_rs
+	  && buf_rs_len);
 
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_ssif_raw)))
     {
@@ -425,9 +394,9 @@ ipmi_ssif_cmd_raw_api (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  if (ipmi_ssif_cmd_api (ctx,
-			 obj_cmd_rq,
-			 obj_cmd_rs) < 0)
+  if (api_ssif_cmd (ctx,
+		    obj_cmd_rq,
+		    obj_cmd_rs) < 0)
     goto cleanup;
 
   if ((len = fiid_obj_get_all (obj_cmd_rs,

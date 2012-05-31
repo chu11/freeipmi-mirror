@@ -71,67 +71,69 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_OPTIONS_DEBUG,
     { "set", SET_KEY, NULL, 0,
-      "Set BMC Watchdog Config.", 30},
+      "Set BMC Watchdog Config.", 40},
     { "get", GET_KEY, NULL, 0,
-      "Get BMC Watchdog Config.", 31},
+      "Get BMC Watchdog Config.", 41},
     { "reset", RESET_KEY, NULL, 0,
-      "Reset BMC Watchdog Timer.", 32},
+      "Reset BMC Watchdog Timer.", 42},
     { "start", START_KEY, NULL, 0,
-      "Start BMC Watchdog Timer.", 33},
+      "Start BMC Watchdog Timer.", 43},
     { "stop", STOP_KEY, NULL, 0,
-      "Stop BMC Watchdog Timer.", 34},
+      "Stop BMC Watchdog Timer.", 44},
     { "clear", CLEAR_KEY, NULL, 0,
-      "Clear BMC Watchdog Config.", 35},
+      "Clear BMC Watchdog Config.", 45},
     { "daemon", DAEMON_KEY, NULL, 0,
-      "Run in daemon mode.", 36},
-    { "logfile", LOGFILE_KEY, "FILE", 0,
-      "Specify an alternate logfile.", 37},
+      "Run in daemon mode.", 46},
+    { "logfile", LOGFILE_KEY, "FILE", OPTION_HIDDEN,
+      "Specify an alternate logfile.", 47},
+    { "verbose-logging", VERBOSE_LOGGING_KEY, 0, 0,
+      "Increase verbosity in logging.", 48},
     { "no-logging", NO_LOGGING_KEY, NULL, 0,
-      "Turn off all syslogging.", 38},
+      "Turn off all syslogging.", 49},
     { "timer-use", TIMER_USE_KEY, "INT", 0,
-      "Set timer use.", 39},
+      "Set timer use.", 50},
     { "stop-timer", STOP_TIMER_KEY, "INT", 0,
-      "Set Stop Timer Flag.", 40},
+      "Set Stop Timer Flag.", 51},
     { "log", LOG_KEY, "INT", 0,
-      "Set Log Flag.", 41},
+      "Set Log Flag.", 52},
     { "timeout-action", TIMEOUT_ACTION_KEY, "INT", 0,
-      "Set timeout action.", 42},
+      "Set timeout action.", 53},
     { "pre-timeout-interrupt", PRE_TIMEOUT_INTERRUPT_KEY, "INT", 0,
-      "Set pre-timeout interrupt.", 43},
+      "Set pre-timeout interrupt.", 54},
     { "pre-timeout-interval", PRE_TIMEOUT_INTERVAL_KEY, "SECONDS", 0,
-      "Set pre-timeout interval in seconds.", 44},
+      "Set pre-timeout interval in seconds.", 55},
     { "clear-bios-frb2", CLEAR_BIOS_FRB2_KEY, NULL, 0,
-      "Clear BIOS FRB2 Timer Use Flag.", 45},
+      "Clear BIOS FRB2 Timer Use Flag.", 56},
     { "clear-bios-post", CLEAR_BIOS_POST_KEY, NULL, 0,
-      "Clear BIOS POST Timer Use Flag.", 46},
+      "Clear BIOS POST Timer Use Flag.", 57},
     { "clear-os-load", CLEAR_OS_LOAD_KEY, NULL, 0,
-      "Clear OS Load Timer Use Flag.", 47},
+      "Clear OS Load Timer Use Flag.", 58},
     { "clear-sms-os", CLEAR_SMS_OS_KEY, NULL, 0,
-      "Clear SMS/OS Timer Use Flag.", 48},
+      "Clear SMS/OS Timer Use Flag.", 59},
     { "clear-oem", CLEAR_OEM_KEY, NULL, 0,
-      "Clear OEM Timer Use Flag.", 49},
+      "Clear OEM Timer Use Flag.", 60},
     { "initial-countdown", INITIAL_COUNTDOWN_KEY, "SECONDS", 0,
-      "Set initial countdown in seconds.", 50},
+      "Set initial countdown in seconds.", 61},
     { "start-after-set", START_AFTER_SET_KEY, NULL, 0,
-      "Start timer after set if timer is stopped.", 51},
+      "Start timer after set if timer is stopped.", 62},
     { "reset-after-set", RESET_AFTER_SET_KEY, NULL, 0,
-      "Reset timer after set if timer is running.", 52},
+      "Reset timer after set if timer is running.", 63},
     { "start-if-stopped", START_IF_STOPPED_KEY, NULL, 0,
-      "Don't set if timer is stopped, just start.", 53},
+      "Don't set if timer is stopped, just start.", 64},
     { "reset-if-running", RESET_IF_RUNNING_KEY, NULL, 0,
-      "Don't set if timer is running, just reset.", 54},
+      "Don't set if timer is running, just reset.", 65},
     { "gratuitous-arp", GRATUITOUS_ARP_KEY, "INT", 0,
-      "Set Gratuitous ARPs Flag.", 55},
+      "Set Gratuitous ARPs Flag.", 66},
     { "arp-response", ARP_RESPONSE_KEY, "INT", 0,
-      "Set ARP Responses Flag.", 56},
+      "Set ARP Responses Flag.", 67},
     { "reset-period", RESET_PERIOD_KEY, "SECONDS", 0,
-      "Specify time interval before resetting timer.", 57},
+      "Specify time interval before resetting timer.", 68},
     { "help", HELP_KEY, NULL, 0,
-      "Output help.", 58},
+      "Output help.", 69},
     { "help", HELP_KEY, NULL, 0,
-      "Output help.", 58},
+      "Output help.", 70},
     { "version", VERSION_KEY, NULL, 0,
-      "Output version.", 59},
+      "Output version.", 71},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -199,8 +201,8 @@ _usage (struct bmc_watchdog_arguments *cmd_args)
            "                 --driver-address=DRIVER-ADDRESS      Specify driver address.\n"
            "                 --driver-device=DEVICE               Specify driver device path.\n"
            "                 --register-spacing=REGISTER-SPACING  Specify driver register spacing.\n"
-           "  -f FILE        --logfile=FILE                       Specify an alternate logfile\n"
            "                 --config-file=FILE                   Specify an alternate config file\n"
+	   "  -v             --verbose-logging                    Turn on verbose logging\n"
            "  -n             --no-logging                         Turn off all logging\n"
            "  -?             --help                               Output help menu.\n"
            "  -V             --version                            Output version.\n");
@@ -264,7 +266,10 @@ _usage (struct bmc_watchdog_arguments *cmd_args)
 
   if (cmd_args->set)
     fprintf (stderr,
-             "  -w         --start-after-set            Start timer after set if timer is stopped.\n"            "  -x         --reset-after-set            Reset timer after set if timer is running.\n"            "  -j         --start-if-stopped           Don't set if timer is stopped, just start.\n"            "  -k         --reset-if-running           Don't set if timer is running, just reset.\n");
+             "  -w         --start-after-set            Start timer after set if timer is stopped.\n"
+	     "  -x         --reset-after-set            Reset timer after set if timer is running.\n"
+	     "  -j         --start-if-stopped           Don't set if timer is stopped, just start.\n"
+	     "  -k         --reset-if-running           Don't set if timer is running, just reset.\n");
 
   if (cmd_args->start || cmd_args->daemon)
     fprintf (stderr,
@@ -285,14 +290,13 @@ _usage (struct bmc_watchdog_arguments *cmd_args)
   if (cmd_args->set || cmd_args->start || cmd_args->daemon)
     fprintf (stderr, "\n");
 
-  exit (1);
+  exit (EXIT_FAILURE);
 }
 
 static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   struct bmc_watchdog_arguments *cmd_args;
-  error_t ret;
   char *endptr;
   int tmp;
 
@@ -324,12 +328,10 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       cmd_args->daemon++;
       break;
     case LOGFILE_KEY:
-      free (cmd_args->logfile);
-      if (!(cmd_args->logfile = strdup (arg)))
-        {
-          perror ("strdup");
-          exit (1);
-        }
+      /* deprecated */
+      break;
+    case VERBOSE_LOGGING_KEY:
+      cmd_args->verbose_logging++;
       break;
     case NO_LOGGING_KEY:
       cmd_args->no_logging++;
@@ -343,7 +345,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           || !IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_VALID (tmp))
         {
           fprintf (stderr, "invalid timer use\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->timer_use_arg = tmp;
       break;
@@ -356,7 +358,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           || !IPMI_BMC_WATCHDOG_TIMER_STOP_TIMER_VALID (tmp))
         {
           fprintf (stderr, "invalid stop timer value\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->stop_timer_arg = tmp;
       break;
@@ -369,7 +371,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           || !IPMI_BMC_WATCHDOG_TIMER_LOG_VALID (tmp))
         {
           fprintf (stderr, "invalid log value\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->log_arg = tmp;
       break;
@@ -382,7 +384,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           || !IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_VALID (tmp))
         {
           fprintf (stderr, "invalid timeout action value\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->timeout_action_arg = tmp;
       break;
@@ -395,7 +397,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           || !IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_VALID (tmp))
         {
           fprintf (stderr, "invalid pre timeout interrupt value\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->pre_timeout_interrupt_arg = tmp;
       break;
@@ -407,13 +409,13 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	  || endptr[0] != '\0')
         {
           fprintf (stderr, "invalid pre timeout interval\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       if (tmp < IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERVAL_MIN
           || tmp > IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERVAL_MAX)
         {
           fprintf (stderr, "pre timeout interval out of range\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->pre_timeout_interval_arg = tmp;
       break;
@@ -440,13 +442,13 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	  || endptr[0] != '\0')
         {
           fprintf (stderr, "invalid initial countdown\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       if (tmp < IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MIN_SECONDS
           || tmp > IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MAX_SECONDS)
         {
           fprintf (stderr, "initial countdown out of range\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->initial_countdown_seconds_arg = tmp;
       break;
@@ -470,7 +472,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           || !IPMI_BMC_GENERATED_GRATUITOUS_ARP_VALID (tmp))
         {
           fprintf (stderr, "invalid gratuitous arp value\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->gratuitous_arp_arg = tmp;
       break;
@@ -483,7 +485,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           || !IPMI_BMC_GENERATED_ARP_RESPONSE_VALID (tmp))
         {
           fprintf (stderr, "invalid arp response value\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->arp_response_arg = tmp;
       break;
@@ -495,13 +497,13 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	  || endptr[0] != '\0')
         {
           fprintf (stderr, "invalid reset period\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       if (tmp < IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MIN_SECONDS
           || tmp > IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MAX_SECONDS)
         {
           fprintf (stderr, "reset period out of range\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->reset_period_arg = tmp;
       break;
@@ -519,8 +521,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case ARGP_KEY_END:
       break;
     default:
-      ret = common_parse_opt (key, arg, &(cmd_args->common));
-      return (ret);
+      return (common_parse_opt (key, arg, &(cmd_args->common_args)));
     }
 
   return (0);
@@ -535,22 +536,20 @@ _bmc_watchdog_config_file_parse (struct bmc_watchdog_arguments *cmd_args)
           '\0',
           sizeof (struct config_file_data_bmc_watchdog));
 
-  if (config_file_parse (cmd_args->common.config_file,
+  if (config_file_parse (cmd_args->common_args.config_file,
                          0,
-                         &(cmd_args->common),
-                         NULL,
-                         NULL,
+                         &(cmd_args->common_args),
                          CONFIG_FILE_INBAND,
                          CONFIG_FILE_TOOL_BMC_WATCHDOG,
                          &config_file_data) < 0)
 
     {
       fprintf (stderr, "config_file_parse: %s\n", strerror (errno));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
-  if (config_file_data.logfile_count)
-    cmd_args->logfile = config_file_data.logfile;
+  if (config_file_data.verbose_logging_count)
+    cmd_args->verbose_logging = config_file_data.verbose_logging;
   if (config_file_data.no_logging_count)
     cmd_args->no_logging = config_file_data.no_logging;
 }
@@ -568,7 +567,7 @@ _bmc_watchdog_args_validate (struct bmc_watchdog_arguments *cmd_args)
   if (cmd_args->version)
     {
       fprintf (stderr, "%s\n", argp_program_version);
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   count = cmd_args->set + cmd_args->get + cmd_args->reset +
@@ -578,7 +577,7 @@ _bmc_watchdog_args_validate (struct bmc_watchdog_arguments *cmd_args)
   if (count > 1)
     {
       fprintf (stderr, "Only one command can be specified\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (((cmd_args->get
@@ -620,7 +619,7 @@ _bmc_watchdog_args_validate (struct bmc_watchdog_arguments *cmd_args)
 
       cmdstr = _cmd_string (cmd_args);
       fprintf (stderr, "Invalid command option specified for '%s' command\n", cmdstr);
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 }
 
@@ -631,7 +630,7 @@ bmc_watchdog_argp_parse (int argc, char **argv, struct bmc_watchdog_arguments *c
   assert (argv);
   assert (cmd_args);
 
-  init_common_cmd_args_user (&(cmd_args->common));
+  init_common_cmd_args_user (&(cmd_args->common_args));
 
   cmd_args->set = 0;
   cmd_args->get = 0;
@@ -640,8 +639,7 @@ bmc_watchdog_argp_parse (int argc, char **argv, struct bmc_watchdog_arguments *c
   cmd_args->stop = 0;
   cmd_args->clear = 0;
   cmd_args->daemon = 0;
-  /* defined by Makefile */
-  cmd_args->logfile = NULL;
+  cmd_args->verbose_logging = 0;
   cmd_args->no_logging = 0;
   cmd_args->timer_use = 0;
   cmd_args->timer_use_arg = 0;
@@ -680,7 +678,7 @@ bmc_watchdog_argp_parse (int argc, char **argv, struct bmc_watchdog_arguments *c
               argv,
               ARGP_IN_ORDER | ARGP_NO_HELP,
               NULL,
-              &(cmd_args->common));
+              &(cmd_args->common_args));
 
   _bmc_watchdog_config_file_parse (cmd_args);
 
@@ -691,6 +689,6 @@ bmc_watchdog_argp_parse (int argc, char **argv, struct bmc_watchdog_arguments *c
               NULL,
               cmd_args);
 
-  verify_common_cmd_args (&(cmd_args->common));
+  verify_common_cmd_args (&(cmd_args->common_args));
   _bmc_watchdog_args_validate (cmd_args);
 }

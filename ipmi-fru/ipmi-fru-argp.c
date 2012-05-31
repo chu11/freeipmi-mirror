@@ -77,18 +77,22 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL,
     ARGP_COMMON_OPTIONS_CONFIG_FILE,
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
-    ARGP_COMMON_SDR_OPTIONS,
-    ARGP_COMMON_IGNORE_SDR_OPTIONS,
+    ARGP_COMMON_SDR_CACHE_OPTIONS,
+    ARGP_COMMON_SDR_CACHE_OPTIONS_FILE_DIRECTORY,
+    ARGP_COMMON_SDR_CACHE_OPTIONS_IGNORE,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
     { "device-id", DEVICE_ID_KEY, "DEVICE_ID", 0,
-      "Specify a specific FRU device ID.", 30},
+      "Specify a specific FRU device ID.", 40},
     { "verbose", VERBOSE_KEY, 0, 0,
-      "Increase verbosity in output.", 31},
-    { "skip-checks", SKIP_CHECKS_KEY, 0, 0,
-      "Skip FRU checksum checks", 32},
+      "Increase verbosity in output.", 41},
+    /* legacy */
+    { "skip-checks", SKIP_CHECKS_KEY, 0, OPTION_HIDDEN,
+      "Skip FRU checksum checks", 42},
+    { "bridge-fru", BRIDGE_FRU_KEY, 0, 0,
+      "Bridge to read FRU entries on other controllers", 43},
     { "interpret-oem-data", INTERPRET_OEM_DATA, NULL, 0,
-      "Attempt to interpret OEM data.", 33},
+      "Attempt to interpret OEM data.", 44},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -108,7 +112,6 @@ static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   struct ipmi_fru_arguments *cmd_args;
-  error_t ret;
   char *endptr;
   int tmp;
 
@@ -125,7 +128,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	  || endptr[0] != '\0')
         {
           fprintf (stderr, "invalid device id\n");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       
       if (tmp == IPMI_FRU_DEVICE_ID_RESERVED
@@ -133,7 +136,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           || tmp > IPMI_FRU_DEVICE_ID_MAX)
         {
           fprintf (stderr, "invalid device id\n");
-          exit(1);
+          exit (EXIT_FAILURE);
         }
       cmd_args->device_id = tmp;
       cmd_args->device_id_set++;
@@ -141,8 +144,12 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case VERBOSE_KEY:
       cmd_args->verbose_count++;
       break;
+      /* legacy */
     case SKIP_CHECKS_KEY:
       cmd_args->skip_checks = 1;
+      break;
+    case BRIDGE_FRU_KEY:
+      cmd_args->bridge_fru = 1;
       break;
     case INTERPRET_OEM_DATA:
       cmd_args->interpret_oem_data = 1;
@@ -154,12 +161,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case ARGP_KEY_END:
       break;
     default:
-      ret = common_parse_opt (key, arg, &(cmd_args->common));
-      if (ret == ARGP_ERR_UNKNOWN)
-        ret = sdr_parse_opt (key, arg, &(cmd_args->sdr));
-      if (ret == ARGP_ERR_UNKNOWN)
-        ret = hostrange_parse_opt (key, arg, &(cmd_args->hostrange));
-      return (ret);
+      return (common_parse_opt (key, arg, &(cmd_args->common_args)));
     }
 
   return (0);
@@ -176,23 +178,24 @@ _ipmi_fru_config_file_parse (struct ipmi_fru_arguments *cmd_args)
           '\0',
           sizeof (struct config_file_data_ipmi_fru));
 
-  if (config_file_parse (cmd_args->common.config_file,
+  if (config_file_parse (cmd_args->common_args.config_file,
                          0,
-                         &(cmd_args->common),
-                         &(cmd_args->sdr),
-                         &(cmd_args->hostrange),
+                         &(cmd_args->common_args),
                          CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_SDR | CONFIG_FILE_HOSTRANGE,
                          CONFIG_FILE_TOOL_IPMI_FRU,
                          &config_file_data) < 0)
     {
       fprintf (stderr, "config_file_parse: %s\n", strerror (errno));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (config_file_data.verbose_count_count)
     cmd_args->verbose_count = config_file_data.verbose_count;
+  /* legacy */
   if (config_file_data.skip_checks_count)
     cmd_args->skip_checks = config_file_data.skip_checks;
+  if (config_file_data.bridge_fru_count)
+    cmd_args->bridge_fru = config_file_data.bridge_fru;
   if (config_file_data.interpret_oem_data_count)
     cmd_args->interpret_oem_data = config_file_data.interpret_oem_data;
 }
@@ -204,21 +207,21 @@ ipmi_fru_argp_parse (int argc, char **argv, struct ipmi_fru_arguments *cmd_args)
   assert (argv);
   assert (cmd_args);
 
-  init_common_cmd_args_user (&(cmd_args->common));
-  init_sdr_cmd_args (&(cmd_args->sdr));
-  init_hostrange_cmd_args (&(cmd_args->hostrange));
+  init_common_cmd_args_user (&(cmd_args->common_args));
 
   cmd_args->device_id = 0;
   cmd_args->device_id_set = 0;
   cmd_args->verbose_count = 0;
+  /* legacy */
   cmd_args->skip_checks = 0;
+  cmd_args->bridge_fru = 0;
   cmd_args->interpret_oem_data = 0;
 
   argp_parse (&cmdline_config_file_argp,
               argc,
               argv,
               ARGP_IN_ORDER, NULL,
-              &(cmd_args->common));
+              &(cmd_args->common_args));
 
   _ipmi_fru_config_file_parse (cmd_args);
 
@@ -229,7 +232,5 @@ ipmi_fru_argp_parse (int argc, char **argv, struct ipmi_fru_arguments *cmd_args)
               NULL,
               cmd_args);
 
-  verify_common_cmd_args (&(cmd_args->common));
-  verify_sdr_cmd_args (&(cmd_args->sdr));
-  verify_hostrange_cmd_args (&(cmd_args->hostrange));
+  verify_common_cmd_args (&(cmd_args->common_args));
 }

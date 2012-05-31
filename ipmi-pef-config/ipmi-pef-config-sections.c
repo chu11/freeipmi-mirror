@@ -77,7 +77,7 @@ _get_number_of_lan_alert_destinations (struct ipmi_pef_config_state_data *state_
                                                                         IPMI_PEF_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                         obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_number_of_destinations: %s\n",
@@ -132,7 +132,7 @@ _get_number_of_alert_strings (struct ipmi_pef_config_state_data *state_data, uin
                                                                          IPMI_PEF_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                          obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings: %s\n",
@@ -187,7 +187,7 @@ _get_number_of_alert_policy_entries (struct ipmi_pef_config_state_data *state_da
                                                                                 IPMI_PEF_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                                 obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries: %s\n",
@@ -242,7 +242,7 @@ _get_number_of_event_filters (struct ipmi_pef_config_state_data *state_data, uin
                                                                          IPMI_PEF_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                          obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters: %s\n",

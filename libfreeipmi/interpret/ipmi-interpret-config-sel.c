@@ -1160,7 +1160,7 @@ _interpret_sel_oem_intel_smi_timeout_power_throttled (ipmi_interpret_ctx_t ctx)
    * Event/Reading Type Code = 3h (State Asserted/Deasserted)
    * Sensor Type = F3h (OEM)                                                                                 
    * EventData1 0x00 = "State Deasserted"
-   * EventData2 0x01 = "State Asserted"
+   * EventData1 0x01 = "State Asserted"
    */
   
   /* From Intel
@@ -1268,7 +1268,7 @@ _interpret_sel_oem_intel_nmi_state (ipmi_interpret_ctx_t ctx)
    * Event/Reading Type Code = 3h (State Asserted/Deasserted)
    * Sensor Type = F3h (OEM)                                                                                 
    * EventData1 0x00 = "State Deasserted"
-   * EventData2 0x01 = "State Asserted"
+   * EventData1 0x01 = "State Asserted"
    */
 
   /* Intel S5000PAL */
@@ -1277,6 +1277,144 @@ _interpret_sel_oem_intel_nmi_state (ipmi_interpret_ctx_t ctx)
 						  IPMI_INTEL_PRODUCT_ID_S5000PAL) < 0)
     return (-1);
   
+  return (0);
+}
+
+int
+_interpret_sel_oem_supermicro_discrete_cpu_temp_wrapper (ipmi_interpret_ctx_t ctx,
+							 uint32_t manufacturer_id,
+							 uint16_t product_id)
+{
+  struct ipmi_interpret_sel_oem_sensor_config *oem_conf;
+  
+  assert (ctx);
+  assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
+  assert (ctx->interpret_sel.sel_oem_sensor_config);
+  assert (ctx->interpret_sel.sel_oem_record_config);
+  
+  if (_interpret_sel_oem_sensor_config_create (ctx,
+					       manufacturer_id,
+					       product_id,
+					       IPMI_EVENT_READING_TYPE_CODE_OEM_SUPERMICRO_GENERIC,
+					       IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP,
+					       &oem_conf) < 0)
+    return (-1);
+  
+  oem_conf->oem_sensor_data[0].event_direction_any_flag = 1;
+  oem_conf->oem_sensor_data[0].event_direction = 0; /* doesn't matter */
+
+  oem_conf->oem_sensor_data[0].event_data1_any_flag = 0;
+  oem_conf->oem_sensor_data[0].event_data1 = IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP_SEL_OVERHEAT;
+
+  oem_conf->oem_sensor_data[0].event_data2_any_flag = 1;
+  oem_conf->oem_sensor_data[0].event_data2 = 0; /* doesn't matter */
+
+  oem_conf->oem_sensor_data[0].event_data3_any_flag = 1;
+  oem_conf->oem_sensor_data[0].event_data3 = 0; /* doesn't matter */
+
+  oem_conf->oem_sensor_data[0].sel_state = IPMI_INTERPRET_STATE_CRITICAL;
+
+  oem_conf->oem_sensor_data_count = 1;
+
+  return (0);
+}
+
+static int
+_interpret_sel_oem_supermicro_discrete_cpu_temp (ipmi_interpret_ctx_t ctx)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
+  assert (ctx->interpret_sel.sel_oem_sensor_config);
+  assert (ctx->interpret_sel.sel_oem_record_config);
+  
+  /* Supermicro CPU Temperature Overheat
+   * X7DBR-3/X7DB8/X8DTN/X7SBI-LN4/X8DTH/X8DTG/X8DTU/X8DT3-LN4F/X8DTU-6+/X8DTL/X8DTL-3F/X8SIL-F/X9SCL/X9SCM/X8DTN+-F/X8SIE/X9SCA-F-O/H8DGU-F
+   *
+   * Manufacturer ID = 10876 (Supermicro), 10437 (Peppercon, IPMI card manufacturer),
+   *                   47488 (Supermicro, not IANA number, special case)
+   *                   5593 (Magnum Technologies, rebranded Supermicro board)
+   * Product ID = 4 (X7DBR-3, X7DB8, X8DTN, X7SBI-LN4 / X7SBI_LN4), 43707 (X8DTH, X8DTG, X8DTU, X8DT3-LN4F / X8DT3_LN4F), 1549 (X8DTU-6+ / X8DTU_6PLUS),
+   *              6 (X8DTL, X8DTL-3F / X8DTL_3F), 1541 (X8SIL-F), 1572 (X9SCL, X9SCM), 1551 (X8DTN+-F / X8DTNPLUS_F), 1037 (X8SIE), 
+   *              1585 (X9SCA-F-O / X9SCA_F_O), 43025 (H8DGU-F / H8DGU_F)
+   * Event/Reading Type Code = 70h (OEM)
+   * Sensor Type = C0h (OEM)
+   * EventData1 0x02 = "Overheat"
+   */
+
+  if (_interpret_sel_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
+							       IPMI_IANA_ENTERPRISE_ID_SUPERMICRO,
+							       IPMI_SUPERMICRO_PRODUCT_ID_X9SC_BASE) < 0)
+    return (-1);
+
+  if (_interpret_sel_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
+							       IPMI_IANA_ENTERPRISE_ID_PEPPERCON,
+							       IPMI_SUPERMICRO_PRODUCT_ID_FOUR_BASE) < 0)
+    return (-1);
+
+  if (_interpret_sel_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
+							       IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+							       IPMI_SUPERMICRO_PRODUCT_ID_X8DT_BASE) < 0)
+    return (-1);
+  
+  if (_interpret_sel_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
+							       IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+							       IPMI_SUPERMICRO_PRODUCT_ID_X8DTU_6PLUS) < 0)
+    return (-1);
+  
+  if (_interpret_sel_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
+							       IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+							       IPMI_SUPERMICRO_PRODUCT_ID_X8DTL_BASE) < 0)
+    return (-1);
+  
+  if (_interpret_sel_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
+							       IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+							       IPMI_SUPERMICRO_PRODUCT_ID_X8SIL_F) < 0)
+    return (-1);
+
+  if (_interpret_sel_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
+							       IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+							       IPMI_SUPERMICRO_PRODUCT_ID_X9SC_BASE) < 0)
+    return (-1);
+
+  if (_interpret_sel_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
+							       IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+							       IPMI_SUPERMICRO_PRODUCT_ID_X8DTNPLUS_F) < 0)
+    return (-1);
+
+  if (_interpret_sel_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
+							       IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+							       IPMI_SUPERMICRO_PRODUCT_ID_X8SIE) < 0)
+    return (-1);
+
+  if (_interpret_sel_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
+							       IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+							       IPMI_SUPERMICRO_PRODUCT_ID_X9SCA_F_O) < 0)
+    return (-1);
+
+  if (_interpret_sel_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
+							       IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+							       IPMI_SUPERMICRO_PRODUCT_ID_H8DGU_F) < 0)
+    return (-1);
+
+  if (_interpret_sel_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
+							       IPMI_IANA_ENTERPRISE_ID_MAGNUM_TECHNOLOGIES,
+							       IPMI_SUPERMICRO_PRODUCT_ID_X8DTL_BASE) < 0)
+    return (-1);
+ 
+  return (0);
+}
+
+static int
+_interpret_sel_oem_supermicro (ipmi_interpret_ctx_t ctx)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
+  assert (ctx->interpret_sel.sel_oem_sensor_config);
+  assert (ctx->interpret_sel.sel_oem_record_config);
+
+  if (_interpret_sel_oem_supermicro_discrete_cpu_temp (ctx) < 0)
+    return (-1);
+
   return (0);
 }
 
@@ -1311,11 +1449,14 @@ _interpret_sel_oem_config_init (ipmi_interpret_ctx_t ctx)
   if (_interpret_sel_oem_intel (ctx) < 0)
     return (-1);
   
+  if (_interpret_sel_oem_supermicro (ctx) < 0)
+    return (-1);
+
   return (0);
 }
 
 int
-ipmi_interpret_sel_init (ipmi_interpret_ctx_t ctx)
+interpret_sel_init (ipmi_interpret_ctx_t ctx)
 {
   int rv = -1;
 
@@ -1730,7 +1871,7 @@ _interpret_config_sel_destroy (ipmi_interpret_ctx_t ctx,
 }
 
 void
-ipmi_interpret_sel_destroy (ipmi_interpret_ctx_t ctx)
+interpret_sel_destroy (ipmi_interpret_ctx_t ctx)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
@@ -1955,14 +2096,14 @@ _cb_sel_parse (conffile_t cf,
       return (-1);
     }
 
-  if ((assertion_state = ipmi_interpret_config_parse_state (cf,
-                                                            data->stringlist[0])) < 0)
+  if ((assertion_state = interpret_config_parse_state (cf,
+						       data->stringlist[0])) < 0)
     return (-1);
 
   if (data->stringlist_len > 1)
     {
-      if ((deassertion_state = ipmi_interpret_config_parse_state (cf,
-                                                                  data->stringlist[1])) < 0)
+      if ((deassertion_state = interpret_config_parse_state (cf,
+							     data->stringlist[1])) < 0)
         return (-1);
     }
   else
@@ -2037,23 +2178,23 @@ _cb_sel_oem_sensor_parse (conffile_t cf,
       return (-1);
     }
   
-  if (ipmi_interpret_config_parse_manufactuer_id_product_id (cf,
-                                                             data->stringlist[0],
-                                                             ids,
-                                                             &ids_count) < 0)
+  if (interpret_config_parse_manufactuer_id_product_id (cf,
+							data->stringlist[0],
+							ids,
+							&ids_count) < 0)
     return (-1);
 
-  if (ipmi_interpret_config_parse_strtoul (cf,
-                                           data->stringlist[1],
-                                           UCHAR_MAX,
-                                           &tmp) < 0)
+  if (interpret_config_parse_strtoul (cf,
+				      data->stringlist[1],
+				      UCHAR_MAX,
+				      &tmp) < 0)
     return (-1);
   event_reading_type_code = tmp;
 
-  if (ipmi_interpret_config_parse_strtoul (cf,
-                                           data->stringlist[2],
-                                           UCHAR_MAX,
-                                           &tmp) < 0)
+  if (interpret_config_parse_strtoul (cf,
+				      data->stringlist[2],
+				      UCHAR_MAX,
+				      &tmp) < 0)
     return (-1);
   sensor_type = tmp;
   
@@ -2073,10 +2214,10 @@ _cb_sel_oem_sensor_parse (conffile_t cf,
     event_data1_any_flag = 1;
   else
     {
-      if (ipmi_interpret_config_parse_strtoul (cf,
-                                               data->stringlist[4],
-                                               UCHAR_MAX,
-                                               &tmp) < 0)
+      if (interpret_config_parse_strtoul (cf,
+					  data->stringlist[4],
+					  UCHAR_MAX,
+					  &tmp) < 0)
         return (-1);
 
       event_data1 = tmp;
@@ -2086,10 +2227,10 @@ _cb_sel_oem_sensor_parse (conffile_t cf,
     event_data2_any_flag = 1;
   else
     {
-      if (ipmi_interpret_config_parse_strtoul (cf,
-                                               data->stringlist[5],
-                                               UCHAR_MAX,
-                                               &tmp) < 0)
+      if (interpret_config_parse_strtoul (cf,
+					  data->stringlist[5],
+					  UCHAR_MAX,
+					  &tmp) < 0)
         return (-1);
 
       event_data2 = tmp;
@@ -2099,16 +2240,16 @@ _cb_sel_oem_sensor_parse (conffile_t cf,
     event_data3_any_flag = 1;
   else
     {
-      if (ipmi_interpret_config_parse_strtoul (cf,
-                                               data->stringlist[6],
-                                               UCHAR_MAX,
-                                               &tmp) < 0)
+      if (interpret_config_parse_strtoul (cf,
+					  data->stringlist[6],
+					  UCHAR_MAX,
+					  &tmp) < 0)
         return (-1);
 
       event_data3 = tmp;
     }
 
-  if ((sel_state = ipmi_interpret_config_parse_state (cf, data->stringlist[7])) < 0)
+  if ((sel_state = interpret_config_parse_state (cf, data->stringlist[7])) < 0)
     return (-1);
   
   for (i = 0; i < ids_count; i++)
@@ -2252,16 +2393,16 @@ _cb_sel_oem_record_parse (conffile_t cf,
       oem_data_count = IPMI_SEL_OEM_DATA_NON_TIMESTAMPED_BYTES;
     }
   
-  if (ipmi_interpret_config_parse_manufactuer_id_product_id (cf,
-                                                             data->stringlist[0],
-                                                             ids,
-                                                             &ids_count) < 0)
+  if (interpret_config_parse_manufactuer_id_product_id (cf,
+							data->stringlist[0],
+							ids,
+							&ids_count) < 0)
     return (-1);
 
-  if (ipmi_interpret_config_parse_strtoul (cf,
-                                           data->stringlist[1],
-                                           UCHAR_MAX,
-                                           &tmp) < 0)
+  if (interpret_config_parse_strtoul (cf,
+				      data->stringlist[1],
+				      UCHAR_MAX,
+				      &tmp) < 0)
     return (-1);
   record_type = tmp;
 
@@ -2291,10 +2432,10 @@ _cb_sel_oem_record_parse (conffile_t cf,
         }
       else
         {
-          if (ipmi_interpret_config_parse_strtoul (cf,
-                                                   data->stringlist[2 + i],
-                                                   UCHAR_MAX,
-                                                   &tmp) < 0)
+          if (interpret_config_parse_strtoul (cf,
+					      data->stringlist[2 + i],
+					      UCHAR_MAX,
+					      &tmp) < 0)
             return (-1);
 
           oem_bytes[i].any_flag = 0;
@@ -2302,7 +2443,7 @@ _cb_sel_oem_record_parse (conffile_t cf,
         }
     }
 
-  if ((sel_state = ipmi_interpret_config_parse_state (cf, data->stringlist[2 + oem_data_count])) < 0)
+  if ((sel_state = interpret_config_parse_state (cf, data->stringlist[2 + oem_data_count])) < 0)
     return (-1);
   
   for (i = 0; i < ids_count; i++)
@@ -2405,8 +2546,8 @@ _fill_sel_config_options (struct conffile_option *to_options,
 
 
 int
-ipmi_interpret_sel_config_parse (ipmi_interpret_ctx_t ctx,
-                                 const char *sel_config_file)
+interpret_sel_config_parse (ipmi_interpret_ctx_t ctx,
+			    const char *sel_config_file)
 {
   int ipmi_interpret_sel_threshold_flags[ipmi_interpret_sel_threshold_config_len];
   int ipmi_interpret_sel_temperature_state_flags[ipmi_interpret_sel_temperature_state_config_len];

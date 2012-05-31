@@ -148,6 +148,16 @@ ipmi_fru_parse_ctx_create (ipmi_ctx_t ipmi_ctx)
 {
   struct ipmi_fru_parse_ctx *ctx = NULL;
 
+  /* check that ipmi_ctx is open for use if supplied */
+  if (ipmi_ctx)
+    {
+      if (ipmi_ctx_get_target (ipmi_ctx, NULL, NULL) < 0)
+	{
+	  SET_ERRNO (EINVAL);
+	  return (NULL);
+	}
+    }
+
   if (!(ctx = (ipmi_fru_parse_ctx_t)malloc (sizeof (struct ipmi_fru_parse_ctx))))
     {
       ERRNO_TRACE (errno);
@@ -412,24 +422,28 @@ _read_fru_data (ipmi_fru_parse_ctx_t ctx,
                                   count_to_read,
                                   fru_read_data_rs) < 0)
         {
-          /* if first time we've read from this device id, assume the
-           * below completion codes mean that there is no data on this
-           * device.
-           */
-          if (!num_bytes_read
-              && (ipmi_check_completion_code (fru_read_data_rs, IPMI_COMP_CODE_COMMAND_TIMEOUT) == 1
-                  || ipmi_check_completion_code (fru_read_data_rs, IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
-            {
-              FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_NO_FRU_INFORMATION);
-              goto cleanup;
-            }
+	  if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
+	    {
+	      /* if first time we've read from this device id, assume the
+	       * below completion codes mean that there is no data on this
+	       * device.
+	       */
+	      if (!num_bytes_read
+		  && (ipmi_check_completion_code (fru_read_data_rs, IPMI_COMP_CODE_COMMAND_TIMEOUT) == 1
+		      || ipmi_check_completion_code (fru_read_data_rs, IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
+		{
+		  FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_NO_FRU_INFORMATION);
+		  goto cleanup;
+		}
+	      
+	      if (ipmi_check_completion_code (fru_read_data_rs, IPMI_COMP_CODE_READ_FRU_DATA_FRU_DEVICE_BUSY) == 1)
+		{
+		  FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_DEVICE_BUSY);
+		  goto cleanup;
+		}
+	    }
 
-	  /* Consider the device busy only if we haven't read any data
-	   * yet.  If it's busy later, we'll assume there's a real
-	   * error/issue going on.
-	   */
-	  if (!num_bytes_read
-	      && ipmi_check_completion_code (fru_read_data_rs, IPMI_COMP_CODE_READ_FRU_DATA_FRU_DEVICE_BUSY) == 1)
+	  if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_MESSAGE_TIMEOUT)
 	    {
 	      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_DEVICE_BUSY);
 	      goto cleanup;
@@ -555,16 +569,25 @@ ipmi_fru_parse_open_device_id (ipmi_fru_parse_ctx_t ctx, uint8_t fru_device_id)
                                             ctx->fru_device_id,
                                             fru_get_inventory_rs) < 0)
     {
-      /* achu: Assume this completion code means we got a FRU SDR
-       * entry pointed to a device that doesn't exist on this
-       * particular mother board (b/c manufacturers may use the same
-       * SDR for multiple motherboards).
-       */
-      if (ipmi_check_completion_code (fru_get_inventory_rs, IPMI_COMP_CODE_REQUESTED_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
-        {
-          FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_NO_FRU_INFORMATION);
-          goto cleanup;
-        }
+      if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
+	{
+	  /* achu: Assume this completion code means we got a FRU SDR
+	   * entry pointed to a device that doesn't exist on this
+	   * particular mother board (b/c manufacturers may use the same
+	   * SDR for multiple motherboards).
+	   */
+	  if (ipmi_check_completion_code (fru_get_inventory_rs, IPMI_COMP_CODE_REQUESTED_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
+	    {
+	      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_NO_FRU_INFORMATION);
+	      goto cleanup;
+	    }
+	}
+
+      if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_MESSAGE_TIMEOUT)
+	{
+	  FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_DEVICE_BUSY);
+	  goto cleanup;
+	}
 
       FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_IPMI_ERROR);
       goto cleanup;
@@ -598,10 +621,10 @@ ipmi_fru_parse_open_device_id (ipmi_fru_parse_ctx_t ctx, uint8_t fru_device_id)
                       common_header_len) < 0)
     goto cleanup;
 
-  if (ipmi_fru_parse_dump_hex (ctx,
-                               frubuf,
-                               common_header_len,
-                               "Common Header") < 0)
+  if (fru_parse_dump_hex (ctx,
+			  frubuf,
+			  common_header_len,
+			  "Common Header") < 0)
     goto cleanup;
 
   if ((ret = _check_checksum (ctx,
@@ -630,9 +653,9 @@ ipmi_fru_parse_open_device_id (ipmi_fru_parse_ctx_t ctx, uint8_t fru_device_id)
       goto cleanup;
     }
 
-  if (ipmi_fru_parse_dump_obj (ctx,
-                               fru_common_header,
-                               "Common Header") < 0)
+  if (fru_parse_dump_obj (ctx,
+			  fru_common_header,
+			  "Common Header") < 0)
     goto cleanup;
 
   if (FIID_OBJ_GET (fru_common_header,
@@ -788,10 +811,10 @@ _parse_multirecord_header (ipmi_fru_parse_ctx_t ctx,
                       multirecord_header_length) < 0)
     goto cleanup;
       
-  if (ipmi_fru_parse_dump_hex (ctx,
-                               frubuf,
-                               multirecord_header_length,
-                               "MultiRecord Header") < 0)
+  if (fru_parse_dump_hex (ctx,
+			  frubuf,
+			  multirecord_header_length,
+			  "MultiRecord Header") < 0)
     goto cleanup;
 
   if ((ret = _check_checksum (ctx,
@@ -820,9 +843,9 @@ _parse_multirecord_header (ipmi_fru_parse_ctx_t ctx,
       goto cleanup;
     }
   
-  if (ipmi_fru_parse_dump_obj (ctx,
-                               fru_multirecord_header,
-                               "MultiRecord Header") < 0)
+  if (fru_parse_dump_obj (ctx,
+			  fru_multirecord_header,
+			  "MultiRecord Header") < 0)
     goto cleanup;
 
   if (record_type_id)
@@ -1063,9 +1086,9 @@ _read_info_area_data (ipmi_fru_parse_ctx_t ctx,
       goto cleanup;
     }
 
-  if (ipmi_fru_parse_dump_obj (ctx,
-                               fru_info_area_header,
-                               headerhdrstr) < 0)
+  if (fru_parse_dump_obj (ctx,
+			  fru_info_area_header,
+			  headerhdrstr) < 0)
     goto cleanup;
 
   if (FIID_OBJ_GET (fru_info_area_header,
@@ -1112,10 +1135,10 @@ _read_info_area_data (ipmi_fru_parse_ctx_t ctx,
                       info_area_length_bytes) < 0)
     goto cleanup;
   
-  if (ipmi_fru_parse_dump_hex (ctx,
-                               frubuf,
-                               info_area_length_bytes,
-                               areahdrstr) < 0)
+  if (fru_parse_dump_hex (ctx,
+			  frubuf,
+			  info_area_length_bytes,
+			  areahdrstr) < 0)
     goto cleanup;
   
   if ((ret = _check_checksum (ctx,
@@ -1215,10 +1238,10 @@ _read_multirecord_area_data (ipmi_fru_parse_ctx_t ctx,
                       record_length) < 0)
     goto cleanup;
 
-  if (ipmi_fru_parse_dump_hex (ctx,
-                               frubuf,
-                               record_length,
-                               "MultiRecord") < 0)
+  if (fru_parse_dump_hex (ctx,
+			  frubuf,
+			  record_length,
+			  "MultiRecord") < 0)
     goto cleanup;
   
   if ((ret = _check_checksum (ctx,
@@ -1560,10 +1583,10 @@ ipmi_fru_parse_type_length_field_to_string (ipmi_fru_parse_ctx_t ctx,
   memset (databuf, '\0', IPMI_FRU_PARSE_BUF_LEN+1);
   memset (strtmpbuf, '\0', IPMI_FRU_PARSE_AREA_STRING_MAX+1);
 
-  if (ipmi_fru_parse_dump_hex (ctx,
-                               type_length_buf,
-                               1,
-                               "Type/Length Field Header") < 0)
+  if (fru_parse_dump_hex (ctx,
+			  type_length_buf,
+			  1,
+			  "Type/Length Field Header") < 0)
     goto cleanup;
 
   type_length = type_length_buf[0];

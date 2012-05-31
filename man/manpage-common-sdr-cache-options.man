@@ -1,0 +1,15 @@
+.TP
+\fB\-f\fR, \fB\-\-flush\-cache\fR
+Flush a cached version of the sensor data repository (SDR) cache.  The
+SDR is typically cached for faster subsequent access.  However, it may
+need to be flushed and re-generated if the SDR has been updated on a
+system.
+.TP
+\fB\-Q\fR, \fB\-\-quiet\-cache\fR
+Do not output information about cache creation/deletion.  May be
+useful in scripting.
+.TP
+\fB\-\-sdr\-cache\-recreate\fR
+If the SDR cache is out of date or invalid, automatically recreate the
+sensor data repository (SDR) cache.  This option may be useful for
+scripting purposes.

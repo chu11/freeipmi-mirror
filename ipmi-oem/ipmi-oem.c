@@ -48,6 +48,7 @@
 #include "tool-cmdline-common.h"
 #include "tool-sdr-cache-common.h"
 #include "tool-hostrange-common.h"
+#include "tool-util-common.h"
 
 typedef int (*oem_callback)(ipmi_oem_state_data_t *);
 
@@ -1150,22 +1151,6 @@ _list (void)
 }
 
 static int
-_flush_cache (ipmi_oem_state_data_t *state_data)
-{
-  assert (state_data);
-  
-  if (sdr_cache_flush_cache (state_data->sdr_cache_ctx,
-                             state_data->pstate,
-                             state_data->prog_data->args->sdr.quiet_cache,
-                             state_data->hostname,
-                             state_data->prog_data->args->sdr.sdr_cache_directory,
-                             state_data->prog_data->args->sdr.sdr_cache_file) < 0)
-    return (-1);
-  
-  return (0);
-}
-
-static int
 _run_oem_cmd (ipmi_oem_state_data_t *state_data)
 {
   struct ipmi_oem_arguments *args;
@@ -1287,9 +1272,7 @@ run_cmd_args (ipmi_oem_state_data_t *state_data)
   assert (args->oem_id);
   assert (strcasecmp (args->oem_id, "list"));
   assert (strcasecmp (args->oem_id, "help"));
-
-  if (args->sdr.flush_cache)
-    return (_flush_cache (state_data));
+  assert (!args->common_args.flush_cache);
 
   if (_run_oem_cmd (state_data) < 0)
     goto cleanup;
@@ -1306,84 +1289,49 @@ _ipmi_oem (pstdout_state_t pstate,
 {
   ipmi_oem_state_data_t state_data;
   ipmi_oem_prog_data_t *prog_data;
-  char errmsg[IPMI_OPEN_ERRMSGLEN];
-  int exit_code = -1;
+  int exit_code = EXIT_FAILURE;
 
   assert (pstate);
   assert (arg);
 
   prog_data = (ipmi_oem_prog_data_t *)arg;
-  memset (&state_data, '\0', sizeof (ipmi_oem_state_data_t));
 
+  if (prog_data->args->common_args.flush_cache)
+    {
+      if (sdr_cache_flush_cache (pstate,
+                                 hostname,
+                                 &prog_data->args->common_args) < 0)
+	return (EXIT_FAILURE);
+      return (EXIT_SUCCESS);
+    }
+
+  memset (&state_data, '\0', sizeof (ipmi_oem_state_data_t));
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;
   state_data.hostname = (char *)hostname;
 
-  /* Special case, just flush, don't do an IPMI connection */
   /* Special case, we're going to output help info, don't do an IPMI connection */
-  if (!prog_data->args->sdr.flush_cache
-      && prog_data->args->oem_command)
+  if (prog_data->args->oem_command)
     {
       if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
 					     hostname,
-					     &(prog_data->args->common),
-					     errmsg,
-					     IPMI_OPEN_ERRMSGLEN)))
-	{
-	  pstdout_fprintf (pstate,
-			   stderr,
-			   "%s\n",
-			   errmsg);
-	  exit_code = EXIT_FAILURE;
-	  goto cleanup;
-	}
+					     &(prog_data->args->common_args),
+					     state_data.pstate)))
+	goto cleanup;
     }
 
-  if (!(state_data.sdr_cache_ctx = ipmi_sdr_cache_ctx_create ()))
+  if (!(state_data.sdr_ctx = ipmi_sdr_ctx_create ()))
     {
-      pstdout_perror (pstate, "ipmi_sdr_cache_ctx_create()");
-      exit_code = EXIT_FAILURE;
+      pstdout_perror (pstate, "ipmi_sdr_ctx_create()");
       goto cleanup;
     }
 
-  if (state_data.prog_data->args->common.debug)
-    {
-      /* Don't error out, if this fails we can still continue */
-      if (ipmi_sdr_cache_ctx_set_flags (state_data.sdr_cache_ctx,
-                                        IPMI_SDR_CACHE_FLAGS_DEBUG_DUMP) < 0)
-        pstdout_fprintf (pstate,
-                         stderr,
-                         "ipmi_sdr_cache_ctx_set_flags: %s\n",
-                         ipmi_sdr_cache_ctx_strerror (ipmi_sdr_cache_ctx_errnum (state_data.sdr_cache_ctx)));
-      
-      if (hostname)
-        {
-          if (ipmi_sdr_cache_ctx_set_debug_prefix (state_data.sdr_cache_ctx,
-                                                   hostname) < 0)
-            pstdout_fprintf (pstate,
-                             stderr,
-                             "ipmi_sdr_cache_ctx_set_debug_prefix: %s\n",
-                             ipmi_sdr_cache_ctx_strerror (ipmi_sdr_cache_ctx_errnum (state_data.sdr_cache_ctx)));
-        }
-    }
-  
-  if (!(state_data.sdr_parse_ctx = ipmi_sdr_parse_ctx_create ()))
-    {
-      pstdout_perror (pstate, "ipmi_sdr_parse_ctx_create()");
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
- 
   if (run_cmd_args (&state_data) < 0)
-    {
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
+    goto cleanup;
   
-  exit_code = 0;
+  exit_code = EXIT_SUCCESS;
  cleanup:
-  ipmi_sdr_cache_ctx_destroy (state_data.sdr_cache_ctx);
-  ipmi_sdr_parse_ctx_destroy (state_data.sdr_parse_ctx);
+  ipmi_sdr_ctx_destroy (state_data.sdr_ctx);
   ipmi_ctx_close (state_data.ipmi_ctx);
   ipmi_ctx_destroy (state_data.ipmi_ctx);
   return (exit_code);
@@ -1394,7 +1342,6 @@ main (int argc, char **argv)
 {
   ipmi_oem_prog_data_t prog_data;
   struct ipmi_oem_arguments cmd_args;
-  int exit_code;
   int hosts_count;
   int rv;
 
@@ -1413,43 +1360,30 @@ main (int argc, char **argv)
       || cmd_args.list)
     {
       if (_list () < 0)
-        {
-          exit_code = EXIT_FAILURE;
-          goto cleanup;
-        }
-      exit_code = EXIT_SUCCESS;
-      goto cleanup;
+	return (EXIT_FAILURE);
+      return (EXIT_SUCCESS);
     }
 
-  if ((hosts_count = pstdout_setup (&(prog_data.args->common.hostname),
-                                    prog_data.args->hostrange.buffer_output,
-                                    prog_data.args->hostrange.consolidate_output,
-                                    prog_data.args->hostrange.fanout,
-                                    prog_data.args->hostrange.eliminate,
-                                    prog_data.args->hostrange.always_prefix)) < 0)
-    {
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
+  if ((hosts_count = pstdout_setup (&(prog_data.args->common_args.hostname),
+				    &(prog_data.args->common_args))) < 0)
+    return (EXIT_FAILURE);
 
   if (!hosts_count)
-    {
-      exit_code = EXIT_SUCCESS;
-      goto cleanup;
-    }
+    return (EXIT_SUCCESS);
 
-  if ((rv = pstdout_launch (prog_data.args->common.hostname,
+  /* We don't want caching info to output when are doing ranged output */
+  if (hosts_count > 1)
+    prog_data.args->common_args.quiet_cache = 1;
+
+  if ((rv = pstdout_launch (prog_data.args->common_args.hostname,
                             _ipmi_oem,
                             &prog_data)) < 0)
     {
       fprintf (stderr,
                "pstdout_launch: %s\n",
                pstdout_strerror (pstdout_errnum));
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
+      return (EXIT_FAILURE);
     }
 
-  exit_code = rv;
- cleanup:
-  return (exit_code);
+  return (rv);
 }

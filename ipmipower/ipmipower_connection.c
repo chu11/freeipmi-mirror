@@ -115,12 +115,12 @@ ipmipower_connection_clear (struct ipmipower_connection *ic)
   if (cbuf_drop (ic->ipmi_in, -1) < 0)
     {
       IPMIPOWER_ERROR (("cbuf_drop: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (cbuf_drop (ic->ipmi_out, -1) < 0)
     {
       IPMIPOWER_ERROR (("cbuf_drop: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   return;
 }
@@ -153,7 +153,7 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
         }
       
       IPMIPOWER_ERROR (("socket: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if ((ic->ping_fd = socket (AF_INET, SOCK_DGRAM, 0)) < 0)
@@ -165,7 +165,7 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
         }
 
       IPMIPOWER_ERROR (("socket: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   /* Secure ephemeral ports */
@@ -177,19 +177,19 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
   if (bind (ic->ipmi_fd, &srcaddr, sizeof (struct sockaddr_in)) < 0)
     {
       IPMIPOWER_ERROR (("bind: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (bind (ic->ping_fd, &srcaddr, sizeof (struct sockaddr_in)) < 0)
     {
       IPMIPOWER_ERROR (("bind: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (!(ic->ipmi_in  = cbuf_create (IPMIPOWER_MIN_CONNECTION_BUF,
                                     IPMIPOWER_MAX_CONNECTION_BUF)))
     {
       IPMIPOWER_ERROR (("cbuf_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   cbuf_opt_set (ic->ipmi_in, CBUF_OPT_OVERWRITE, CBUF_WRAP_MANY);
 
@@ -197,7 +197,7 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
                                     IPMIPOWER_MAX_CONNECTION_BUF)))
     {
       IPMIPOWER_ERROR (("cbuf_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   cbuf_opt_set (ic->ipmi_out, CBUF_OPT_OVERWRITE, CBUF_WRAP_MANY);
 
@@ -205,7 +205,7 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
                                     IPMIPOWER_MAX_CONNECTION_BUF)))
     {
       IPMIPOWER_ERROR (("cbuf_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   cbuf_opt_set (ic->ping_in, CBUF_OPT_OVERWRITE, CBUF_WRAP_MANY);
 
@@ -213,7 +213,7 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
                                     IPMIPOWER_MAX_CONNECTION_BUF)))
     {
       IPMIPOWER_ERROR (("cbuf_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   cbuf_opt_set (ic->ping_out, CBUF_OPT_OVERWRITE, CBUF_WRAP_MANY);
   
@@ -221,14 +221,14 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
                        sizeof (ic->ipmi_requester_sequence_number_counter)) < 0)
     {
       IPMIPOWER_ERROR (("ipmi_get_random: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   
   if (ipmi_get_random (&ic->ping_sequence_number_counter,
                        sizeof (ic->ping_sequence_number_counter)) < 0)
     {
       IPMIPOWER_ERROR (("ipmi_get_random: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   memset (&ic->last_ipmi_send, '\0', sizeof (struct timeval));
@@ -253,7 +253,7 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
       if (!(hostname_first_parse_copy = strdup (hostname)))
 	{
 	  IPMIPOWER_ERROR (("strdup: %s", strerror (errno)));
-	  exit (1);
+	  exit (EXIT_FAILURE);
 	}
 
       if ((ptr = strchr (hostname_first_parse_copy, '+')))
@@ -273,7 +273,7 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
       if (!(ea = (struct ipmipower_connection_extra_arg *)malloc (sizeof (struct ipmipower_connection_extra_arg))))
 	{
 	  IPMIPOWER_ERROR (("malloc: %s", strerror (errno)));
-	  exit (1);
+	  exit (EXIT_FAILURE);
 	}
       
       if (extra_arg)
@@ -281,7 +281,7 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
 	  if (!(ea->extra_arg = strdup (extra_arg)))
             {
               IPMIPOWER_ERROR (("strdup: %s", strerror (errno)));
-              exit (1);
+              exit (EXIT_FAILURE);
             }
 	}
       else
@@ -300,7 +300,7 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
       if (!(hostname_second_parse_copy = strdup (hostname_first_parse_ptr)))
 	{
 	  IPMIPOWER_ERROR (("strdup: %s", strerror (errno)));
-	  exit (1);
+	  exit (EXIT_FAILURE);
 	}
 
       if ((ptr = strchr (hostname_second_parse_copy, ':')))
@@ -351,7 +351,7 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
 #else /* !HAVE_HSTRERROR */
           IPMIPOWER_ERROR (("gethostbyname() %s: h_errno = %d", ic->hostname, h_errno));
 #endif /* !HAVE_HSTRERROR */
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       goto cleanup;
     }
@@ -393,7 +393,7 @@ _connection_add_extra_arg_base (struct ipmipower_connection *ic, const char *ext
   if (!(ea = (struct ipmipower_connection_extra_arg *)malloc (sizeof (struct ipmipower_connection_extra_arg))))
     {
       IPMIPOWER_ERROR (("malloc: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   
   if (extra_arg)
@@ -401,7 +401,7 @@ _connection_add_extra_arg_base (struct ipmipower_connection *ic, const char *ext
       if (!(ea->extra_arg = strdup (extra_arg)))
 	{
 	  IPMIPOWER_ERROR (("strdup: %s", strerror (errno)));
-	  exit (1);
+	  exit (EXIT_FAILURE);
 	}
     }
   else
@@ -439,7 +439,7 @@ _connection_add_extra_arg (struct ipmipower_connection *ic, const char *extra_ar
 	  if (!(hitr = hostlist_iterator_create (h)))
 	    {
 	      IPMIPOWER_ERROR (("hostlist_iterator_create: %s", strerror (errno)));
-	      exit (1);
+	      exit (EXIT_FAILURE);
 	    }
 	  
 	  while ((extrastr = hostlist_next (hitr)))
@@ -497,7 +497,7 @@ _hostname_count (const char *hostname)
   if (!(h2 = hostlist_create (NULL)))
     {
       IPMIPOWER_ERROR (("hostlist_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   hostlist_uniq (h);
@@ -505,7 +505,7 @@ _hostname_count (const char *hostname)
   if (!(hitr = hostlist_iterator_create (h)))
     {
       IPMIPOWER_ERROR (("hostlist_iterator_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
       
   while ((hstr = hostlist_next (hitr)))
@@ -521,7 +521,7 @@ _hostname_count (const char *hostname)
       if (!hostlist_push (h2, hstr))
 	{
 	  IPMIPOWER_ERROR (("hostlist_push: %s", strerror(errno)));
-	  exit (1);
+	  exit (EXIT_FAILURE);
 	}
       
       free (hstr);
@@ -564,7 +564,7 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
   if (!(ics = (struct ipmipower_connection *)malloc (sizeof (struct ipmipower_connection) * host_count)))
     {
       IPMIPOWER_ERROR (("malloc: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   memset (ics, '\0', (sizeof (struct ipmipower_connection) * host_count));
@@ -587,7 +587,7 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
   if (!(hitr = hostlist_iterator_create (h)))
     {
       IPMIPOWER_ERROR (("hostlist_iterator_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   while ((hstr = hostlist_next (hitr)))
@@ -619,7 +619,7 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
       if (!(h2itr = hostlist_iterator_create (h2)))
 	{
 	  IPMIPOWER_ERROR (("hostlist_iterator_create: %s", strerror (errno)));
-	  exit (1);
+	  exit (EXIT_FAILURE);
 	}
 
       while ((h2str = hostlist_next (h2itr)))
@@ -642,7 +642,7 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
 	      if (!(h2str_copy = strdup (h2str)))
 		{
 		  IPMIPOWER_ERROR (("strdup: %s", strerror(errno)));
-		  exit (1);
+		  exit (EXIT_FAILURE);
 		}
 	      
 	      if ((ptr = strchr (h2str_copy, '+')))
@@ -681,7 +681,7 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
 	  if (index >= host_count)
 	    {
 	      IPMIPOWER_ERROR (("Invalid host count: %d", host_count));
-	      exit (1);
+	      exit (EXIT_FAILURE);
 	    }
 	  
 	  /* cleanup only at the end, gather all error outputs for

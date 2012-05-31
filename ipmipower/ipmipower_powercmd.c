@@ -188,14 +188,14 @@ ipmipower_powercmd_setup ()
   if (!pending)
     {
       IPMIPOWER_ERROR (("list_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   add_to_pending = list_create (NULL);
   if (!add_to_pending)
     {
       IPMIPOWER_ERROR (("list_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 }
 
@@ -225,7 +225,7 @@ ipmipower_powercmd_queue (ipmipower_power_cmd_t cmd,
   if (!(ip = (ipmipower_powercmd_t)malloc (sizeof (struct ipmipower_powercmd))))
     {
       IPMIPOWER_ERROR (("malloc: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   memset (ip, '\0', sizeof (struct ipmipower_powercmd));
 
@@ -240,7 +240,7 @@ ipmipower_powercmd_queue (ipmipower_power_cmd_t cmd,
   if (gettimeofday (&(ip->time_begin), NULL) < 0)
     {
       IPMIPOWER_ERROR (("gettimeofday: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 #endif
   ip->retransmission_count = 0;
@@ -252,13 +252,13 @@ ipmipower_powercmd_queue (ipmipower_power_cmd_t cmd,
 
   ip->session_inbound_count = 0;
 
-  if (cmd_args.common.driver_type == IPMI_DEVICE_LAN)
+  if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN)
     {
       if (ipmi_check_session_sequence_number_1_5_init (&(ip->highest_received_sequence_number), 
                                                        &(ip->previously_received_list)) < 0)
         {
           IPMIPOWER_ERROR (("ipmi_check_session_sequence_number_1_5_init: %s", strerror (errno)));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
     }
   else
@@ -267,13 +267,13 @@ ipmipower_powercmd_queue (ipmipower_power_cmd_t cmd,
                                                        &(ip->previously_received_list)) < 0)
         {
           IPMIPOWER_ERROR (("ipmi_check_session_sequence_number_2_0_init: %s", strerror (errno)));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
     }
 
   /* IPMI 1.5 */
 #if 0
-  if (cmd_args.common.driver_type == IPMI_DEVICE_LAN)
+  if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN)
     {
       /* ip->permsgauth_enabled is set after the Get Authentication
        * Capabilities Response and/or Activate Session Response is
@@ -284,17 +284,17 @@ ipmipower_powercmd_queue (ipmipower_power_cmd_t cmd,
 
   /* IPMI 2.0 */
 
-  if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0)
+  if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN_2_0)
     {
-      if (ipmi_cipher_suite_id_to_algorithms (cmd_args.common.cipher_suite_id,
+      if (ipmi_cipher_suite_id_to_algorithms (cmd_args.common_args.cipher_suite_id,
                                               &(ip->authentication_algorithm),
                                               &(ip->integrity_algorithm),
                                               &(ip->confidentiality_algorithm)) < 0)
         {
           IPMIPOWER_ERROR (("ipmipower_powercmd_queue: ipmi_cipher_suite_id_to_algorithms: ",
-                            "cmd_args.common.cipher_suite_id: %d: %s",
-                            cmd_args.common.cipher_suite_id, strerror (errno)));
-          exit (1);
+                            "cmd_args.common_args.cipher_suite_id: %d: %s",
+                            cmd_args.common_args.cipher_suite_id, strerror (errno)));
+          exit (EXIT_FAILURE);
         }
 
       /*
@@ -336,10 +336,10 @@ ipmipower_powercmd_queue (ipmipower_power_cmd_t cmd,
        * instead of a real privilege level.  So we must pass the actual
        * privilege we want to use.
        */
-      if (cmd_args.common.workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION
-          || cmd_args.common.workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUN_2_0_SESSION
-          || cmd_args.common.workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_OPEN_SESSION_PRIVILEGE)
-        ip->requested_maximum_privilege_level = cmd_args.common.privilege_level;
+      if (cmd_args.common_args.workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION
+          || cmd_args.common_args.workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUN_2_0_SESSION
+          || cmd_args.common_args.workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_OPEN_SESSION_PRIVILEGE)
+        ip->requested_maximum_privilege_level = cmd_args.common_args.privilege_level;
       else
         ip->requested_maximum_privilege_level = IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL;
       memset (ip->sik_key, '\0', IPMI_MAX_SIK_KEY_LENGTH);
@@ -356,7 +356,7 @@ ipmipower_powercmd_queue (ipmipower_power_cmd_t cmd,
                            sizeof (ip->initial_message_tag)) < 0)
         {
           IPMIPOWER_ERROR (("ipmi_get_random: %s", strerror (errno)));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       ip->message_tag_count = 0;
@@ -370,7 +370,7 @@ ipmipower_powercmd_queue (ipmipower_power_cmd_t cmd,
                                sizeof (ip->remote_console_session_id)) < 0)
             {
               IPMIPOWER_ERROR (("ipmi_get_random: %s", strerror (errno)));
-              exit (1);
+              exit (EXIT_FAILURE);
             }
         } while (!ip->remote_console_session_id);
 
@@ -378,7 +378,7 @@ ipmipower_powercmd_queue (ipmipower_power_cmd_t cmd,
                            IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH) < 0)
         {
           IPMIPOWER_ERROR (("ipmi_get_random: %s", strerror (errno)));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       ip->wait_until_on_state = 0;
@@ -390,162 +390,162 @@ ipmipower_powercmd_queue (ipmipower_power_cmd_t cmd,
   if (!(ip->obj_rmcp_hdr_rq = fiid_obj_create (tmpl_rmcp_hdr)))
     {
       IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (!(ip->obj_rmcp_hdr_rs = fiid_obj_create (tmpl_rmcp_hdr)))
     {
       IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (!(ip->obj_lan_session_hdr_rq = fiid_obj_create (tmpl_lan_session_hdr)))
     {
       IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (!(ip->obj_lan_session_hdr_rs = fiid_obj_create (tmpl_lan_session_hdr)))
     {
       IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (!(ip->obj_lan_msg_hdr_rq = fiid_obj_create (tmpl_lan_msg_hdr_rq)))
     {
       IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (!(ip->obj_lan_msg_hdr_rs = fiid_obj_create (tmpl_lan_msg_hdr_rs)))
     {
       IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (!(ip->obj_lan_msg_trlr_rs = fiid_obj_create (tmpl_lan_msg_trlr)))
     {
       IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (!(ip->obj_rmcpplus_session_hdr_rq = fiid_obj_create (tmpl_rmcpplus_session_hdr)))
     {
       IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (!(ip->obj_rmcpplus_session_hdr_rs = fiid_obj_create (tmpl_rmcpplus_session_hdr)))
     {
       IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (!(ip->obj_rmcpplus_payload_rs = fiid_obj_create (tmpl_rmcpplus_payload)))
     {
       IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (!(ip->obj_rmcpplus_session_trlr_rq = fiid_obj_create (tmpl_rmcpplus_session_trlr)))
     {
       IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (!(ip->obj_rmcpplus_session_trlr_rs = fiid_obj_create (tmpl_rmcpplus_session_trlr)))
     {
       IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (!(ip->obj_authentication_capabilities_rq = fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_rq)))
     {
       IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (!(ip->obj_authentication_capabilities_rs = fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_rs)))
     {
       IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (!(ip->obj_get_session_challenge_rq = fiid_obj_create (tmpl_cmd_get_session_challenge_rq)))
     {
       IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (!(ip->obj_get_session_challenge_rs = fiid_obj_create (tmpl_cmd_get_session_challenge_rs)))
     {
       IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (!(ip->obj_activate_session_rq = fiid_obj_create (tmpl_cmd_activate_session_rq)))
     {
       IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (!(ip->obj_activate_session_rs = fiid_obj_create (tmpl_cmd_activate_session_rs)))
     {
       IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (!(ip->obj_open_session_rq = fiid_obj_create (tmpl_rmcpplus_open_session_request)))
     {
       IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (!(ip->obj_open_session_rs = fiid_obj_create (tmpl_rmcpplus_open_session_response)))
     {
       IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (!(ip->obj_rakp_message_1_rq = fiid_obj_create (tmpl_rmcpplus_rakp_message_1)))
     {
       IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (!(ip->obj_rakp_message_2_rs = fiid_obj_create (tmpl_rmcpplus_rakp_message_2)))
     {
       IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (!(ip->obj_rakp_message_3_rq = fiid_obj_create (tmpl_rmcpplus_rakp_message_3)))
     {
       IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (!(ip->obj_rakp_message_4_rs = fiid_obj_create (tmpl_rmcpplus_rakp_message_4)))
     {
       IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (!(ip->obj_set_session_privilege_level_rq = fiid_obj_create (tmpl_cmd_set_session_privilege_level_rq)))
     {
       IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (!(ip->obj_set_session_privilege_level_rs = fiid_obj_create (tmpl_cmd_set_session_privilege_level_rs)))
     {
       IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (!(ip->obj_get_chassis_status_rq = fiid_obj_create (tmpl_cmd_get_chassis_status_rq)))
     {
       IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (!(ip->obj_get_chassis_status_rs = fiid_obj_create (tmpl_cmd_get_chassis_status_rs)))
     {
       IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (!(ip->obj_chassis_control_rq = fiid_obj_create (tmpl_cmd_chassis_control_rq)))
     {
       IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (!(ip->obj_chassis_control_rs = fiid_obj_create (tmpl_cmd_chassis_control_rs)))
     {
       IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (!(ip->obj_chassis_identify_rq = fiid_obj_create (tmpl_cmd_chassis_identify_rq)))
     {
       IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (!(ip->obj_chassis_identify_rs = fiid_obj_create (tmpl_cmd_chassis_identify_rs)))
     {
       IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   
   if (cmd_args.oem_power_type != IPMIPOWER_OEM_POWER_TYPE_NONE)
@@ -555,22 +555,22 @@ ipmipower_powercmd_queue (ipmipower_power_cmd_t cmd,
 	  if (!(ip->obj_c410x_get_sensor_reading_rq = fiid_obj_create (tmpl_cmd_get_sensor_reading_rq)))
 	    {
 	      IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-	      exit (1);
+	      exit (EXIT_FAILURE);
 	    }
 	  if (!(ip->obj_c410x_get_sensor_reading_rs = fiid_obj_create (tmpl_cmd_get_sensor_reading_rs)))
 	    {
 	      IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-	      exit (1);
+	      exit (EXIT_FAILURE);
 	    }
 	  if (!(ip->obj_c410x_slot_power_control_rq = fiid_obj_create (tmpl_cmd_c410x_slot_power_control_rq)))
 	    {
 	      IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-	      exit (1);
+	      exit (EXIT_FAILURE);
 	    }
 	  if (!(ip->obj_c410x_slot_power_control_rs = fiid_obj_create (tmpl_cmd_c410x_slot_power_control_rs)))
 	    {
 	      IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-	      exit (1);
+	      exit (EXIT_FAILURE);
 	    }
 	}
     }
@@ -578,18 +578,18 @@ ipmipower_powercmd_queue (ipmipower_power_cmd_t cmd,
   if (!(ip->obj_close_session_rq = fiid_obj_create (tmpl_cmd_close_session_rq)))
     {
       IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (!(ip->obj_close_session_rs = fiid_obj_create (tmpl_cmd_close_session_rs)))
     {
       IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (!(ip->sockets_to_close = list_create (NULL)))
     {
       IPMIPOWER_ERROR (("list_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (cmd_args.oem_power_type != IPMIPOWER_OEM_POWER_TYPE_NONE)
@@ -602,7 +602,7 @@ ipmipower_powercmd_queue (ipmipower_power_cmd_t cmd,
 	  if (!(ip->extra_arg = strdup (extra_arg)))
 	    {
 	      IPMIPOWER_ERROR (("strdup"));
-	      exit (1);
+	      exit (EXIT_FAILURE);
 	    }
 	}
       else
@@ -659,7 +659,7 @@ ipmipower_powercmd_queue (ipmipower_power_cmd_t cmd,
   if (!list_append (pending, ip))
     {
       IPMIPOWER_ERROR (("list_append: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 }
 
@@ -696,7 +696,7 @@ _send_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
 
   if (IPMIPOWER_PACKET_TYPE_IPMI_2_0_SETUP_RQ (pkt))
     ip->message_tag_count++;
-  else if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
+  else if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN_2_0
            && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt))
     {
       /* IPMI 2.0 is special, sequence numbers of 0 don't count */
@@ -711,13 +711,13 @@ _send_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
   if ((ret = cbuf_write (ip->ic->ipmi_out, buf, len, &dropped)) < 0)
     {
       IPMIPOWER_ERROR (("cbuf_write: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (ret != len)
     {
       IPMIPOWER_ERROR (("cbuf_write: incorrect bytes written %d", ret));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   
   if (dropped)
@@ -785,21 +785,21 @@ _send_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
       break;
     default:
       IPMIPOWER_ERROR (("_send_packet: invalid pkt type: %d", pkt));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   /* Session inbound count is incremented after the packet is sent,
    * since the first inbound sequence number is specified by the
    * activate session command.
    */
-  if (cmd_args.common.driver_type == IPMI_DEVICE_LAN
+  if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN
       && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt))
     ip->session_inbound_count++;
 
   if (gettimeofday (&(ip->ic->last_ipmi_send), NULL) < 0)
     {
       IPMIPOWER_ERROR (("gettimeofday: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 }
 
@@ -871,7 +871,7 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
           if (gettimeofday (&ip->ic->last_ipmi_recv, NULL) < 0)
             {
               IPMIPOWER_ERROR (("gettimeofday: %s", strerror (errno)));
-              exit (1);
+              exit (EXIT_FAILURE);
             }
           goto cleanup;
         }
@@ -931,7 +931,7 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
           if (gettimeofday (&ip->ic->last_ipmi_recv, NULL) < 0)
             {
               IPMIPOWER_ERROR (("gettimeofday: %s", strerror (errno)));
-              exit (1);
+              exit (EXIT_FAILURE);
             }
           goto cleanup;
         }
@@ -959,7 +959,7 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
         {
           IPMIPOWER_ERROR (("FIID_OBJ_GET: 'session_sequence_number': %s",
                             fiid_obj_errormsg (ip->obj_lan_session_hdr_rs)));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       
       ip->highest_received_sequence_number = val;
@@ -971,7 +971,7 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
        * The session sequence numbers for IPMI 1.5 are the wrong endian.
        * So we have to flip the bits to workaround it.
        */
-      if (cmd_args.common.workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER)
+      if (cmd_args.common_args.workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER)
         {
           uint32_t tmp_session_sequence_number = ip->highest_received_sequence_number;
           
@@ -982,7 +982,7 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
             | ((tmp_session_sequence_number & 0x000000FF) << 24);
         }
     }
-  else if (cmd_args.common.driver_type == IPMI_DEVICE_LAN
+  else if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN
 	   && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RS (pkt))
     {
       if (!ipmipower_check_checksum (ip, pkt))
@@ -1046,7 +1046,7 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
           if (gettimeofday (&ip->ic->last_ipmi_recv, NULL) < 0)
             {
               IPMIPOWER_ERROR (("gettimeofday: %s", strerror (errno)));
-              exit (1);
+              exit (EXIT_FAILURE);
             }
           goto cleanup;
         }
@@ -1087,7 +1087,7 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
           if (gettimeofday (&ip->ic->last_ipmi_recv, NULL) < 0)
             {
               IPMIPOWER_ERROR (("gettimeofday: %s", strerror (errno)));
-              exit (1);
+              exit (EXIT_FAILURE);
             }
           goto cleanup;
         }
@@ -1142,7 +1142,7 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
           goto cleanup;
         }
     }
-  else if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0
+  else if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN_2_0
 	   && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RS (pkt))
     {
       if (!ipmipower_check_payload_type (ip, pkt))
@@ -1222,7 +1222,7 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
           if (gettimeofday (&ip->ic->last_ipmi_recv, NULL) < 0)
             {
               IPMIPOWER_ERROR (("gettimeofday: %s", strerror (errno)));
-              exit (1);
+              exit (EXIT_FAILURE);
             }
           goto cleanup;
         }
@@ -1249,7 +1249,7 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
   if (gettimeofday (&ip->ic->last_ipmi_recv, NULL) < 0)
     {
       IPMIPOWER_ERROR (("gettimeofday: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   rv = 1;
 
@@ -1259,12 +1259,12 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
   if (fiid_obj_clear (ip->obj_lan_session_hdr_rs) < 0)
     {
       IPMIPOWER_ERROR (("fiid_obj_clear: %s", fiid_obj_errormsg (ip->obj_lan_session_hdr_rs)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (fiid_obj_clear (ip->obj_rmcpplus_session_trlr_rs) < 0)
     {
       IPMIPOWER_ERROR (("fiid_obj_clear: %s", fiid_obj_errormsg (ip->obj_rmcpplus_session_trlr_rs)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   return (rv);
 }
@@ -1288,14 +1288,14 @@ _has_timed_out (ipmipower_powercmd_t ip)
   if (gettimeofday (&cur_time, NULL) < 0)
     {
       IPMIPOWER_ERROR (("gettimeofday: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   timeval_sub (&cur_time, &(ip->time_begin), &result);
   timeval_millisecond_calc (&result, &session_timeout);
 
   /* Must use >=, otherwise we could potentially spin */
-  if (session_timeout >= cmd_args.common.session_timeout)
+  if (session_timeout >= cmd_args.common_args.session_timeout)
     {
       /* Don't bother outputting timeout if we have finished the power
          control operation */
@@ -1340,12 +1340,12 @@ _retry_packets (ipmipower_powercmd_t ip)
           && ip->cmd == IPMIPOWER_POWER_CMD_POWER_OFF))
     retransmission_timeout = cmd_args.retransmission_wait_timeout * (1 + (ip->retransmission_count/cmd_args.retransmission_backoff_count));
   else
-    retransmission_timeout = cmd_args.common.retransmission_timeout * (1 + (ip->retransmission_count/cmd_args.retransmission_backoff_count));
+    retransmission_timeout = cmd_args.common_args.retransmission_timeout * (1 + (ip->retransmission_count/cmd_args.retransmission_backoff_count));
 
   if (gettimeofday (&cur_time, NULL) < 0)
     {
       IPMIPOWER_ERROR (("gettimeofday: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   timeval_sub (&cur_time, &(ip->ic->last_ipmi_send), &result);
@@ -1355,7 +1355,7 @@ _retry_packets (ipmipower_powercmd_t ip)
     return (0);
 
   /* Do we have enough time to retransmit? */
-  timeval_add_ms (&cur_time, cmd_args.common.session_timeout, &end_time);
+  timeval_add_ms (&cur_time, cmd_args.common_args.session_timeout, &end_time);
   timeval_sub (&end_time, &cur_time, &result);
   timeval_millisecond_calc (&result, &time_left);
   if (time_left < retransmission_timeout)
@@ -1404,7 +1404,7 @@ _retry_packets (ipmipower_powercmd_t ip)
 	    if (errno != EMFILE)
 	      {
 		IPMIPOWER_ERROR (("socket: %s", strerror (errno)));
-		exit (1);
+		exit (EXIT_FAILURE);
 	      }
 	    
 	    ipmipower_output (IPMIPOWER_MSG_TYPE_RESOURCES, ip->ic->hostname, ip->extra_arg);
@@ -1419,13 +1419,13 @@ _retry_packets (ipmipower_powercmd_t ip)
 	if (bind (new_fd, &srcaddr, sizeof (struct sockaddr_in)) < 0)
 	  {
 	    IPMIPOWER_ERROR (("bind: %s", strerror (errno)));
-	    exit (1);
+	    exit (EXIT_FAILURE);
 	  }
 	
 	if (!(old_fd = (int *)malloc (sizeof (int))))
 	  {
 	    IPMIPOWER_ERROR (("malloc: %s", strerror (errno)));
-	    exit (1);
+	    exit (EXIT_FAILURE);
 	  }
 	
 	*old_fd = ip->ic->ipmi_fd;
@@ -1489,7 +1489,7 @@ _retry_packets (ipmipower_powercmd_t ip)
     default:
       IPMIPOWER_ERROR (("_retry_packets: invalid protocol state: %d\n",
 			ip->protocol_state));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   
   return (1);
@@ -1518,7 +1518,7 @@ _check_ipmi_1_5_authentication_capabilities (ipmipower_powercmd_t ip)
     {
       IPMIPOWER_ERROR (("FIID_OBJ_GET: 'authentication_status.per_message_authentication': %s",
                         fiid_obj_errormsg (ip->obj_authentication_capabilities_rs)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   authentication_status_per_message_authentication = val;
 
@@ -1530,15 +1530,15 @@ _check_ipmi_1_5_authentication_capabilities (ipmipower_powercmd_t ip)
    * vs. null vs non-null username capabilities. The workaround is to
    * skip these checks.
    */
-  if (!(cmd_args.common.workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES))
+  if (!(cmd_args.common_args.workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES))
     {
-      if ((ret = ipmi_check_authentication_capabilities_username (cmd_args.common.username,
-                                                                  cmd_args.common.password,
+      if ((ret = ipmi_check_authentication_capabilities_username (cmd_args.common_args.username,
+                                                                  cmd_args.common_args.password,
                                                                   ip->obj_authentication_capabilities_rs)) < 0)
         {
           IPMIPOWER_ERROR (("ipmi_check_authentication_capabilities_username: %s",
                             strerror (errno)));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       if (!ret)
@@ -1556,14 +1556,14 @@ _check_ipmi_1_5_authentication_capabilities (ipmipower_powercmd_t ip)
    * Authentication capabilities flags are not listed properly in the
    * response.  The workaround is to skip these checks.
    */
-  if (!(cmd_args.common.workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES))
+  if (!(cmd_args.common_args.workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES))
     {
-      if ((ret = ipmi_check_authentication_capabilities_authentication_type (cmd_args.common.authentication_type,
+      if ((ret = ipmi_check_authentication_capabilities_authentication_type (cmd_args.common_args.authentication_type,
                                                                              ip->obj_authentication_capabilities_rs)) < 0)
         {
           IPMIPOWER_ERROR (("ipmi_check_authentication_capabilities_authentication_type: %s",
                             strerror (errno)));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       
       if (!ret)
@@ -1580,7 +1580,7 @@ _check_ipmi_1_5_authentication_capabilities (ipmipower_powercmd_t ip)
    * The remote BMC ignores if permsg authentiction is enabled
    * or disabled.  So we need to force it no matter what.
    */
-  if (!(cmd_args.common.workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION))
+  if (!(cmd_args.common_args.workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION))
     {
       if (!authentication_status_per_message_authentication)
         ip->permsgauth_enabled = 1;
@@ -1611,7 +1611,7 @@ _check_ipmi_2_0_authentication_capabilities (ipmipower_powercmd_t ip)
   if ((ret = ipmi_check_authentication_capabilities_ipmi_2_0 (ip->obj_authentication_capabilities_rs)) < 0)
     {
       IPMIPOWER_ERROR (("ipmi_check_authentication_capabilities_ipmi_2_0: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (!ret)
@@ -1632,15 +1632,15 @@ _check_ipmi_2_0_authentication_capabilities (ipmipower_powercmd_t ip)
    *
    * K_g status is reported incorrectly too.  Again, skip the checks.
    */
-  if (!(cmd_args.common.workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_AUTHENTICATION_CAPABILITIES))
+  if (!(cmd_args.common_args.workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_AUTHENTICATION_CAPABILITIES))
     {
-      if ((ret = ipmi_check_authentication_capabilities_username (cmd_args.common.username,
-                                                                  cmd_args.common.password,
+      if ((ret = ipmi_check_authentication_capabilities_username (cmd_args.common_args.username,
+                                                                  cmd_args.common_args.password,
                                                                   ip->obj_authentication_capabilities_rs)) < 0)
         {
           IPMIPOWER_ERROR (("ipmi_check_authentication_capabilities_username: %s",
                             strerror (errno)));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       if (!ret)
@@ -1649,15 +1649,15 @@ _check_ipmi_2_0_authentication_capabilities (ipmipower_powercmd_t ip)
           return (-1);
         }
 
-      if (cmd_args.common.k_g_len)
-        tmp_k_g_ptr = cmd_args.common.k_g;
+      if (cmd_args.common_args.k_g_len)
+        tmp_k_g_ptr = cmd_args.common_args.k_g;
 
       if ((ret = ipmi_check_authentication_capabilities_k_g (tmp_k_g_ptr,
                                                              ip->obj_authentication_capabilities_rs)) < 0)
         {
           IPMIPOWER_ERROR (("ipmi_check_authentication_capabilities_k_g: %s",
                             strerror (errno)));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       if (!ret)
@@ -1693,11 +1693,11 @@ _check_activate_session_authentication_type (ipmipower_powercmd_t ip)
     {
       IPMIPOWER_ERROR (("FIID_OBJ_GET: 'authentication_type': %s",
                         fiid_obj_errormsg (ip->obj_activate_session_rs)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   authentication_type = val;
 
-  if (cmd_args.common.workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION)
+  if (cmd_args.common_args.workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION)
     return (0);
 
   /* IPMI Workaround (achu)
@@ -1724,7 +1724,7 @@ _check_activate_session_authentication_type (ipmipower_powercmd_t ip)
 
   if (ip->permsgauth_enabled)
     {
-      if (authentication_type != cmd_args.common.authentication_type)
+      if (authentication_type != cmd_args.common_args.authentication_type)
         {
           IPMIPOWER_DEBUG (("host = %s; p = %d; authentication_type mismatch",
                             ip->ic->hostname,
@@ -1736,7 +1736,7 @@ _check_activate_session_authentication_type (ipmipower_powercmd_t ip)
           if (gettimeofday (&ip->ic->last_ipmi_recv, NULL) < 0)
             {
               IPMIPOWER_ERROR (("gettimeofday: %s", strerror (errno)));
-              exit (1);
+              exit (EXIT_FAILURE);
             }
           return (-1);
         }
@@ -1776,21 +1776,21 @@ _calculate_cipher_keys (ipmipower_powercmd_t ip)
    * allowed.  "No Null characters (00h) are allowed in the name".
    * Table 13-11 in the IPMI 2.0 spec.
    */
-  if (cmd_args.common.workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION)
+  if (cmd_args.common_args.workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION)
     {
       memset (username_buf, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
-      if (cmd_args.common.username)
-        strcpy (username_buf, cmd_args.common.username);
+      if (cmd_args.common_args.username)
+        strcpy (username_buf, cmd_args.common_args.username);
       username = username_buf;
       username_len = IPMI_MAX_USER_NAME_LENGTH;
     }
   else
     {
-      username = cmd_args.common.username;
+      username = cmd_args.common_args.username;
       username_len = (username) ? strlen (username) : 0;
     }
 
-  password = cmd_args.common.password;
+  password = cmd_args.common_args.password;
   password_len = (password) ? strlen (password) : 0;
 
   /* IPMI Workaround (achu)
@@ -1803,13 +1803,13 @@ _calculate_cipher_keys (ipmipower_powercmd_t ip)
    * password to 16 bytes when generating keys, hashes, etc.  So we
    * have to do the same when generating keys, hashes, etc.
    */
-  if ((cmd_args.common.workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION)
+  if ((cmd_args.common_args.workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION)
       && ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
       && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
     password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
 
-  if (cmd_args.common.k_g_len)
-    k_g = cmd_args.common.k_g;
+  if (cmd_args.common_args.k_g_len)
+    k_g = cmd_args.common_args.k_g;
   else
     k_g = NULL;
 
@@ -1820,7 +1820,7 @@ _calculate_cipher_keys (ipmipower_powercmd_t ip)
     {
       IPMIPOWER_ERROR (("fiid_obj_get_data: 'managed_system_random_number': %s",
                         fiid_obj_errormsg (ip->obj_rakp_message_2_rs)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (ipmi_calculate_rmcpplus_session_keys (ip->authentication_algorithm,
@@ -1829,13 +1829,13 @@ _calculate_cipher_keys (ipmipower_powercmd_t ip)
                                             password,
                                             password_len,
                                             k_g,
-                                            (k_g) ? cmd_args.common.k_g_len : 0,
+                                            (k_g) ? cmd_args.common_args.k_g_len : 0,
                                             ip->remote_console_random_number,
                                             IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH,
                                             managed_system_random_number,
                                             managed_system_random_number_len,
                                             ip->name_only_lookup,
-                                            cmd_args.common.privilege_level,
+                                            cmd_args.common_args.privilege_level,
                                             username,
                                             username_len,
                                             &(ip->sik_key_ptr),
@@ -1847,7 +1847,7 @@ _calculate_cipher_keys (ipmipower_powercmd_t ip)
     {
       IPMIPOWER_ERROR (("_calculate_cipher_keys(%s:%d): ipmi_calculate_rmcpplus_session_keys: %s",
                         ip->ic->hostname, ip->protocol_state, strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   return (0);
@@ -1888,16 +1888,16 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
       /* Don't execute if fanout turned on and we're in the middle of too
        * many power commands.
        */
-      if (cmd_args.hostrange.fanout
-          && (executing_count >= cmd_args.hostrange.fanout))
-        return (cmd_args.common.session_timeout);
+      if (cmd_args.common_args.fanout
+          && (executing_count >= cmd_args.common_args.fanout))
+        return (cmd_args.common_args.session_timeout);
 
       _send_packet (ip, IPMIPOWER_PACKET_TYPE_AUTHENTICATION_CAPABILITIES_RQ);
 
       if (gettimeofday (&(ip->time_begin), NULL) < 0)
         {
           IPMIPOWER_ERROR (("gettimeofday: %s", strerror (errno)));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       executing_count++;
     }
@@ -1910,7 +1910,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
           goto done;
         }
       
-      if (cmd_args.common.driver_type == IPMI_DEVICE_LAN_2_0)
+      if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN_2_0)
         {
           if (_check_ipmi_2_0_authentication_capabilities (ip) < 0)
             return (-1);
@@ -2049,7 +2049,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
         {
           IPMIPOWER_ERROR (("FIID_OBJ_GET: 'current_power_state.power_is_on': %s",
                             fiid_obj_errormsg (ip->obj_get_chassis_status_rs)));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       power_state = val;
 
@@ -2102,7 +2102,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
             {
               IPMIPOWER_ERROR (("FIID_OBJ_GET: 'misc_chassis_state.chassis_identify_command_and_state_info_supported': %s",
                                 fiid_obj_errormsg (ip->obj_get_chassis_status_rs)));
-              exit (1);
+              exit (EXIT_FAILURE);
             }
           identify_status_supported = val;
 
@@ -2116,7 +2116,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
                 {
                   IPMIPOWER_ERROR (("FIID_OBJ_GET: 'misc_chassis_state.chassis_identify_state': %s",
                                     fiid_obj_errormsg (ip->obj_get_chassis_status_rs)));
-                  exit (1);
+                  exit (EXIT_FAILURE);
                 }
               identify_status = val;
 
@@ -2136,7 +2136,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
       else
         {
           IPMIPOWER_ERROR (("_process_ipmi_packets: invalid command state: %d", ip->cmd));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
     }
   else if (ip->protocol_state == IPMIPOWER_PROTOCOL_STATE_CHASSIS_CONTROL_SENT)
@@ -2212,7 +2212,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
         {
           IPMIPOWER_ERROR (("FIID_OBJ_GET: 'sensor_reading': %s",
                             fiid_obj_errormsg (ip->obj_get_chassis_status_rs)));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       sensor_reading = val;
 
@@ -2222,7 +2222,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
         {
           IPMIPOWER_ERROR (("FIID_OBJ_GET: 'reading_state': %s",
                             fiid_obj_errormsg (ip->obj_get_chassis_status_rs)));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       reading_state = val;
 
@@ -2232,7 +2232,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
         {
           IPMIPOWER_ERROR (("FIID_OBJ_GET: 'sensor_scanning': %s",
                             fiid_obj_errormsg (ip->obj_get_chassis_status_rs)));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       sensor_scanning = val;
 
@@ -2303,7 +2303,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
       else
         {
           IPMIPOWER_ERROR (("_process_ipmi_packets: invalid command state: %d", ip->cmd));
-          exit (1);
+          exit (EXIT_FAILURE);
         }
     }
   else if (ip->protocol_state == IPMIPOWER_PROTOCOL_STATE_C410X_SLOT_POWER_CONTROL_SENT)
@@ -2362,16 +2362,16 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
   else
     {
       IPMIPOWER_ERROR (("_process_ipmi_packets: invalid state: %d", ip->protocol_state));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
  done:
   if (gettimeofday (&cur_time, NULL) < 0)
     {
       IPMIPOWER_ERROR (("gettimeofday: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
-  timeval_add_ms (&(ip->time_begin), cmd_args.common.session_timeout, &end_time);
+  timeval_add_ms (&(ip->time_begin), cmd_args.common_args.session_timeout, &end_time);
   timeval_sub (&end_time, &cur_time, &result);
   timeval_millisecond_calc (&result, &timeout);
 
@@ -2385,7 +2385,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
     }
   else
     {
-      int retransmission_timeout = cmd_args.common.retransmission_timeout * (1 + (ip->retransmission_count/cmd_args.retransmission_backoff_count));
+      int retransmission_timeout = cmd_args.common_args.retransmission_timeout * (1 + (ip->retransmission_count/cmd_args.retransmission_backoff_count));
       if (timeout > retransmission_timeout)
         timeout = retransmission_timeout;
     }
@@ -2398,7 +2398,7 @@ ipmipower_powercmd_process_pending (int *timeout)
 {
   ListIterator itr;
   ipmipower_powercmd_t ip;
-  int min_timeout = cmd_args.common.session_timeout;
+  int min_timeout = cmd_args.common_args.session_timeout;
   int num_pending;
 
   assert (pending);  /* did not run ipmipower_powercmd_setup() */
@@ -2415,7 +2415,7 @@ ipmipower_powercmd_process_pending (int *timeout)
   if (!(itr = list_iterator_create (pending)))
     {
       IPMIPOWER_ERROR (("list_iterator_create: %s", strerror (errno)));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   while ((ip = (ipmipower_powercmd_t)list_next (itr)))
@@ -2431,7 +2431,7 @@ ipmipower_powercmd_process_pending (int *timeout)
 		  if (!list_append (add_to_pending, ip->next))
 		    {
 		      IPMIPOWER_ERROR (("list_append: %s", strerror (errno)));
-		      exit (1);
+		      exit (EXIT_FAILURE);
 		    }
 
 		  ip->next = NULL;
@@ -2441,7 +2441,7 @@ ipmipower_powercmd_process_pending (int *timeout)
           if (!list_delete (itr))
             {
               IPMIPOWER_ERROR (("list_delete"));
-              exit (1);
+              exit (EXIT_FAILURE);
             }
 
           executing_count--;
@@ -2460,7 +2460,7 @@ ipmipower_powercmd_process_pending (int *timeout)
       if (!(addtoitr = list_iterator_create (add_to_pending)))
 	{
 	  IPMIPOWER_ERROR (("list_iterator_create: %s", strerror (errno)));
-	  exit (1);
+	  exit (EXIT_FAILURE);
 	}
       while ((ip = list_next (addtoitr)))
 	{
@@ -2468,13 +2468,13 @@ ipmipower_powercmd_process_pending (int *timeout)
 	  if (!list_append (pending, ip))
 	    {
 	      IPMIPOWER_ERROR (("list_append: %s", strerror (errno)));
-	      exit (1);
+	      exit (EXIT_FAILURE);
 	    }
 
 	  if (!list_delete (addtoitr))
 	    {
 	      IPMIPOWER_ERROR (("list_delete"));
-	      exit (1);
+	      exit (EXIT_FAILURE);
 	    }
 	}
 
@@ -2486,8 +2486,8 @@ ipmipower_powercmd_process_pending (int *timeout)
        * retransmission timeout so it appears more normal.
        */
 
-      if (cmd_args.common.retransmission_timeout < min_timeout)
-	min_timeout = cmd_args.common.retransmission_timeout;
+      if (cmd_args.common_args.retransmission_timeout < min_timeout)
+	min_timeout = cmd_args.common_args.retransmission_timeout;
     } 
 
   if (!(num_pending = list_count (pending)))

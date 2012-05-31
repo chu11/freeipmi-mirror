@@ -52,10 +52,8 @@
 
 #include "freeipmi-portability.h"
 #include "conffile.h"
-#include "error.h"
 #include "secure.h"
 #include "tool-cmdline-common.h"
-#include "tool-common.h"
 #include "tool-config-file-common.h"
 
 const char *argp_program_version =
@@ -82,22 +80,22 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_OPTIONS_DEBUG,
     { "escape-char", ESCAPE_CHAR_KEY, "CHAR", 0,
-      "Specify an alternate escape character (default char '&')", 30},
+      "Specify an alternate escape character (default char '&')", 40},
     { "dont-steal", DONT_STEAL_KEY, 0, 0,
-      "Do not steal an SOL session if one is already detected as being in use.", 31},
+      "Do not steal an SOL session if one is already detected as being in use.", 41},
     { "deactivate", DEACTIVATE_KEY, 0, 0,
-      "Deactivate a SOL session if one is detected as being in use and exit.", 32},
+      "Deactivate a SOL session if one is detected as being in use and exit.", 42},
     { "serial-keepalive", SERIAL_KEEPALIVE_KEY, 0, 0,
-      "Occasionally send NUL characters to detect inactive serial connections.", 33},
+      "Occasionally send NUL characters to detect inactive serial connections.", 43},
     { "serial-keepalive-empty", SERIAL_KEEPALIVE_EMPTY_KEY, 0, 0,
-      "Occasionally send empty SOL packets to detect inactive serial connections.", 34},
+      "Occasionally send empty SOL packets to detect inactive serial connections.", 44},
     { "lock-memory", LOCK_MEMORY_KEY, 0, 0,
-      "Lock sensitive information (such as usernames and passwords) in memory.", 35},
+      "Lock sensitive information (such as usernames and passwords) in memory.", 45},
 #ifndef NDEBUG
     { "debugfile", DEBUGFILE_KEY, 0, 0,
-      "Output debugging to the debugfile rather than to standard output.", 36},
+      "Output debugging to the debugfile rather than to standard output.", 46},
     { "noraw", NORAW_KEY, 0, 0,
-      "Don't enter terminal raw mode.", 37},
+      "Don't enter terminal raw mode.", 47},
 #endif
     { NULL, 0, NULL, 0, NULL, 0}
   };
@@ -118,7 +116,6 @@ static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   struct ipmiconsole_arguments *cmd_args;
-  error_t ret;
 
   assert (state);
   
@@ -159,8 +156,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case ARGP_KEY_END:
       break;
     default:
-      ret = common_parse_opt (key, arg, &(cmd_args->common));
-      return (ret);
+      return (common_parse_opt (key, arg, &(cmd_args->common_args)));
     }
 
   return (0);
@@ -177,31 +173,27 @@ _ipmiconsole_config_file_parse (struct ipmiconsole_arguments *cmd_args)
           '\0',
           sizeof (struct config_file_data_ipmiconsole));
 
-  if (!cmd_args->common.config_file)
+  if (!cmd_args->common_args.config_file)
     {
       /* try legacy file first */
       if (!config_file_parse (IPMICONSOLE_CONFIG_FILE_LEGACY,
                               1,         /* do not exit if file not found */
-                              &(cmd_args->common),
-                              NULL,
-                              NULL,
+                              &(cmd_args->common_args),
                               CONFIG_FILE_OUTOFBAND,
                               CONFIG_FILE_TOOL_IPMICONSOLE,
                               &config_file_data))
         goto out;
     }
 
-  if (config_file_parse (cmd_args->common.config_file,
+  if (config_file_parse (cmd_args->common_args.config_file,
                          0,
-                         &(cmd_args->common),
-                         NULL,
-                         NULL,
+                         &(cmd_args->common_args),
                          CONFIG_FILE_OUTOFBAND,
                          CONFIG_FILE_TOOL_IPMICONSOLE,
                          &config_file_data) < 0)
     {
       fprintf (stderr, "config_file_parse: %s\n", strerror (errno));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
  out:
@@ -222,8 +214,11 @@ _ipmiconsole_args_validate (struct ipmiconsole_arguments *cmd_args)
 {
   assert (cmd_args);
 
-  if (!cmd_args->common.hostname)
-    err_exit ("hostname input required");
+  if (!cmd_args->common_args.hostname)
+    {
+      fprintf (stderr, "hostname input required\n");
+      exit (EXIT_FAILURE);
+    }
 }
 
 void
@@ -233,7 +228,12 @@ ipmiconsole_argp_parse (int argc, char **argv, struct ipmiconsole_arguments *cmd
   assert (argv);
   assert (cmd_args);
 
-  init_common_cmd_args_admin (&(cmd_args->common));
+  init_common_cmd_args_admin (&(cmd_args->common_args));
+
+  /* ipmiconsole differences */
+  cmd_args->common_args.driver_type = IPMI_DEVICE_LAN_2_0;
+  cmd_args->common_args.session_timeout = 60000;
+  cmd_args->common_args.retransmission_timeout = 500;
 
   cmd_args->escape_char = '&';
   cmd_args->dont_steal = 0;
@@ -246,16 +246,12 @@ ipmiconsole_argp_parse (int argc, char **argv, struct ipmiconsole_arguments *cmd
   cmd_args->noraw = 0;
 #endif /* NDEBUG */
 
-  /* special case to ipmiconsole, different timeout defaults */
-  cmd_args->common.session_timeout = 60000;
-  cmd_args->common.retransmission_timeout = 500;
-
   argp_parse (&cmdline_config_file_argp,
               argc,
               argv,
               ARGP_IN_ORDER,
               NULL,
-              &(cmd_args->common));
+              &(cmd_args->common_args));
 
   _ipmiconsole_config_file_parse (cmd_args);
 
@@ -266,7 +262,7 @@ ipmiconsole_argp_parse (int argc, char **argv, struct ipmiconsole_arguments *cmd
               NULL,
               cmd_args);
 
-  verify_common_cmd_args (&(cmd_args->common));
+  verify_common_cmd_args (&(cmd_args->common_args));
   _ipmiconsole_args_validate (cmd_args);
 }
 

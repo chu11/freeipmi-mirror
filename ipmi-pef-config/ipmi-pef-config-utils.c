@@ -46,7 +46,7 @@ load_lan_channel_numbers (ipmi_pef_config_state_data_t *state_data)
                                        state_data->lan_channel_numbers,
                                        CHANNEL_NUMBERS_MAX)) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_get_channel_numbers: %s\n",

@@ -46,7 +46,7 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "ipmi-sel.h"
+#include "ipmi-sel_.h"
 #include "ipmi-sel-argp.h"
 
 #include "freeipmi-portability.h"
@@ -77,75 +77,77 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL,
     ARGP_COMMON_OPTIONS_CONFIG_FILE,
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
-    ARGP_COMMON_SDR_OPTIONS,
-    ARGP_COMMON_IGNORE_SDR_OPTIONS,
+    ARGP_COMMON_SDR_CACHE_OPTIONS,
+    ARGP_COMMON_SDR_CACHE_OPTIONS_FILE_DIRECTORY,
+    ARGP_COMMON_SDR_CACHE_OPTIONS_IGNORE,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
     { "verbose",    VERBOSE_KEY,    0, 0,
-      "Increase verbosity in output.", 30},
+      "Increase verbosity in output.", 40},
     { "info",       INFO_KEY,       0, 0,
-      "Show general information about the SEL.", 31},
+      "Show general information about the SEL.", 41},
     { "display",     DISPLAY_KEY,     "RECORD-IDS-LIST", 0,
-      "Display SEL records by record ids.", 32},
+      "Display SEL records by record ids.", 42},
     { "exclude-display", EXCLUDE_DISPLAY_KEY, "RECORD-IDS-LIST", 0,
-      "Exclude display of SEL records by record ids.", 33},
+      "Exclude display of SEL records by record ids.", 43},
     { "display-range", DISPLAY_RANGE_KEY, "START-END", 0,
-      "Display SEL records from record id START to END.", 34},
+      "Display SEL records from record id START to END.", 44},
     { "exclude-display-range", EXCLUDE_DISPLAY_RANGE_KEY, "START-END", 0,
-      "Exclude display of SEL records from record id START to END.", 35},
+      "Exclude display of SEL records from record id START to END.", 45},
     { "date-range", DATE_RANGE_KEY, "MM/DD/YYYY-MM/DD/YYYY", 0,
-      "Display SEL records in the specified date range.", 36},
+      "Display SEL records in the specified date range.", 46},
     { "exclude-date-range", EXCLUDE_DATE_RANGE_KEY, "MM/DD/YYYY-MM/DD/YYYY", 0,
-      "Exclude display of SEL records in the specified date range.", 37},
+      "Exclude display of SEL records in the specified date range.", 47},
     { "sensor-types",   SENSOR_TYPES_KEY,       "SENSOR-TYPES-LIST", 0,
-      "Show sensors of a specific type.", 36},
+      "Show sensors of a specific type.", 46},
     { "exclude-sensor-types", EXCLUDE_SENSOR_TYPES_KEY, "SENSOR-TYPES-LIST", 0,
-      "Do not show sensors of a specific type.", 37},
+      "Do not show sensors of a specific type.", 47},
     { "list-sensor-types",    LIST_SENSOR_TYPES_KEY, 0, 0,
-      "List sensor types.", 38},
+      "List sensor types.", 48},
     { "tail", TAIL_KEY, "COUNT", 0,
-      "Display approximately the last count SEL records.", 39},
+      "Display approximately the last count SEL records.", 49},
     { "clear", CLEAR_KEY, 0, 0,
-      "Clear SEL.", 40},
+      "Clear SEL.", 50},
     { "post-clear", POST_CLEAR_KEY, 0, 0,
-      "Clear SEL after displaying SEL records.", 41},
+      "Clear SEL after displaying SEL records.", 51},
     /* legacy */
     { "delete-all", DELETE_ALL_KEY, 0, OPTION_HIDDEN,
-      "Delete all SEL records.", 42},
+      "Delete all SEL records.", 52},
     { "delete",     DELETE_KEY,     "RECORD-IDS-LIST", 0,
-      "Delete SEL records by record ids.", 43},
+      "Delete SEL records by record ids.", 53},
     { "delete-range", DELETE_RANGE_KEY, "START-END", 0,
-      "Delete record ids from START to END in the SEL.", 44},
+      "Delete record ids from START to END in the SEL.", 54},
     { "system-event-only", SYSTEM_EVENT_ONLY_KEY, 0, 0,
-      "Output only system event records (i.e. don't output OEM records).", 45},
+      "Output only system event records (i.e. don't output OEM records).", 55},
     { "oem-event-only", OEM_EVENT_ONLY_KEY, 0, 0,
-      "Output only OEM event records.", 46},
+      "Output only OEM event records.", 56},
     { "output-manufacturer-id", OUTPUT_MANUFACTURER_ID_KEY, 0, 0,
-      "Output manufacturer ID on OEM event records when available.", 47},
+      "Output manufacturer ID on OEM event records when available.", 57},
     { "output-event-state", OUTPUT_EVENT_STATE_KEY, 0, 0,
-      "Output event state in output.", 48},
+      "Output event state in output.", 58},
     { "event-state-config-file", EVENT_STATE_CONFIG_FILE_KEY, "FILE", 0,
-      "Specify an alternate event state configuration file.", 49},
+      "Specify an alternate event state configuration file.", 59},
     { "hex-dump",   HEX_DUMP_KEY, 0, 0,
-      "Hex-dump SEL records.", 50},
-    { "assume-system-event-records", ASSUME_SYSTEM_EVENT_RECORDS_KEY, 0, 0,
-      "Assume invalid record types are system event records.", 51},
+      "Hex-dump SEL records.", 60},
+    /* legacy */
+    { "assume-system-event-records", ASSUME_SYSTEM_EVENT_RECORDS_KEY, 0, OPTION_HIDDEN,
+      "Assume invalid record types are system event records.", 61},
     { "interpret-oem-data", INTERPRET_OEM_DATA_KEY, NULL, 0,
-      "Attempt to interpret OEM data.", 52},
+      "Attempt to interpret OEM data.", 62},
     { "output-oem-event-strings", OUTPUT_OEM_EVENT_STRINGS_KEY, NULL, 0,
-      "Attempt to output OEM event strings.", 53},
+      "Attempt to output OEM event strings.", 63},
     { "entity-sensor-names", ENTITY_SENSOR_NAMES_KEY, NULL, 0,
-      "Output sensor names with entity ids and instances.", 54},
+      "Output sensor names with entity ids and instances.", 64},
     { "no-sensor-type-output", NO_SENSOR_TYPE_OUTPUT_KEY, 0, 0,
-      "Do not show sensor type output.", 55},
+      "Do not show sensor type output.", 65},
     { "comma-separated-output", COMMA_SEPARATED_OUTPUT_KEY, 0, 0,
-      "Output fields in comma separated format.", 56},
+      "Output fields in comma separated format.", 66},
     { "no-header-output", NO_HEADER_OUTPUT_KEY, 0, 0,
-      "Do not output column headers.", 57},
+      "Do not output column headers.", 67},
     { "non-abbreviated-units", NON_ABBREVIATED_UNITS_KEY, 0, 0,
-      "Output non-abbreviated units (e.g. 'Amps' instead of 'A').", 58},
+      "Output non-abbreviated units (e.g. 'Amps' instead of 'A').", 68},
     { "legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
-      "Output in legacy format.", 59},
+      "Output in legacy format.", 69},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -190,7 +192,7 @@ _read_record_list (int *flag,
           || value >= IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
         {
           fprintf (stderr, "invalid record number: %d\n", value);
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       record_list[(*record_list_length)] = value;
@@ -222,18 +224,18 @@ _read_record_id_range (int *flag,
   if (!(range_str = strdup (arg)))
     {
       perror ("strdup");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (!(start_ptr = strchr (range_str, '-')))
     {
       /* invalid input */
       fprintf (stderr, "invalid range input\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   if (!(range2_str = strdup (start_ptr + 1)))
     {
       perror ("strdup");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   *start_ptr = '\0';
   range1_str = range_str;
@@ -248,7 +250,7 @@ _read_record_id_range (int *flag,
       || value >= IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
     {
       fprintf (stderr, "invalid range record number: %d\n", value);
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   (*range1) = value;
@@ -263,7 +265,7 @@ _read_record_id_range (int *flag,
       || value >= IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
     {
       fprintf (stderr, "invalid range record number: %d\n", value);
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   (*range2) = value;
@@ -271,7 +273,7 @@ _read_record_id_range (int *flag,
   if ((*range2) < (*range1))
     {
       fprintf (stderr, "invalid END range\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   free (range1_str);
@@ -303,7 +305,7 @@ _read_date_range (int *flag,
   if (!(range_str = strdup (arg)))
     {
       perror ("strdup");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   
   /* Count number of dashes, to see what format user input */
@@ -353,19 +355,19 @@ _read_date_range (int *flag,
   else
     {
       fprintf (stderr, "invalid range input\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (*(split_ptr + 1) == '\0')
     {
       fprintf (stderr, "invalid range input\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (!(range2_str = strdup (split_ptr + 1)))
     {
       perror ("strdup");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   *split_ptr = '\0';
   range1_str = range_str;
@@ -391,7 +393,7 @@ _read_date_range (int *flag,
                       fprintf (stderr,
                                "Invalid time specification '%s'.\n",
                                range1_str);
-                      exit (1);
+                      exit (EXIT_FAILURE);
                     }
                 }
             }
@@ -407,7 +409,7 @@ _read_date_range (int *flag,
           fprintf (stderr,
                    "Time specification '%s' cannot be represented.\n",
                    range1_str);
-          exit (1);
+          exit (EXIT_FAILURE);
         }
     }
 
@@ -434,7 +436,7 @@ _read_date_range (int *flag,
                       fprintf (stderr,
                                "Invalid time specification '%s'.\n",
                                range2_str);
-                      exit (1);
+                      exit (EXIT_FAILURE);
                     }
                 }
             }
@@ -450,7 +452,7 @@ _read_date_range (int *flag,
           fprintf (stderr,
                    "Time specification '%s' cannot be represented.\n",
                    range2_str);
-          exit (1);
+          exit (EXIT_FAILURE);
         }
     }
 
@@ -459,7 +461,7 @@ _read_date_range (int *flag,
   if ((*range2) < (*range1))
     {
       fprintf (stderr, "invalid range\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   /* Date range input means beginning of range1 date to end of range2 date
@@ -476,9 +478,7 @@ static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   struct ipmi_sel_arguments *cmd_args;
-  error_t ret;
   char *endptr;
-  char *tok;
   int value;
 
   assert (state);
@@ -530,36 +530,18 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
                         arg);
       break;
     case SENSOR_TYPES_KEY:
-      tok = strtok (arg, " ,");
-      while (tok && cmd_args->sensor_types_length < MAX_SENSOR_TYPES)
-        {
-          if (!strcasecmp (tok, SENSOR_PARSE_ALL_STRING))
-            {
-              cmd_args->sensor_types_length = 0;
-              break;
-            }
-          strncpy (cmd_args->sensor_types[cmd_args->sensor_types_length],
-                   tok,
-                   MAX_SENSOR_TYPES_STRING_LENGTH);
-          cmd_args->sensor_types_length++;
-          tok = strtok (NULL, " ,");
-        }
+      if (parse_sensor_types (SENSOR_PARSE_ALL_STRING,
+			      cmd_args->sensor_types,
+			      &(cmd_args->sensor_types_length),
+			      arg) < 0)
+	exit (EXIT_FAILURE);
       break;
     case EXCLUDE_SENSOR_TYPES_KEY:
-      tok = strtok (arg, " ,");
-      while (tok && cmd_args->exclude_sensor_types_length < MAX_SENSOR_TYPES)
-        {
-          if (!strcasecmp (tok, SENSOR_PARSE_NONE_STRING))
-            {
-              cmd_args->exclude_sensor_types_length = 0;
-              break;
-            }
-          strncpy (cmd_args->exclude_sensor_types[cmd_args->exclude_sensor_types_length],
-                   tok,
-                   MAX_SENSOR_TYPES_STRING_LENGTH);
-          cmd_args->exclude_sensor_types_length++;
-          tok = strtok (NULL, " ,");
-        }
+      if (parse_sensor_types (SENSOR_PARSE_NONE_STRING,
+			      cmd_args->exclude_sensor_types,
+			      &(cmd_args->exclude_sensor_types_length),
+			      arg) < 0)
+	exit (EXIT_FAILURE);
       break;
     case LIST_SENSOR_TYPES_KEY:
       cmd_args->list_sensor_types = 1;
@@ -575,7 +557,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           || value >= IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
         {
           fprintf (stderr, "invalid record count: %d\n", value);
-          exit (1);
+          exit (EXIT_FAILURE);
         }
 
       cmd_args->tail = 1;
@@ -616,12 +598,13 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       if (!(cmd_args->event_state_config_file = strdup (arg)))
         {
           perror ("strdup");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       break;
     case HEX_DUMP_KEY:
       cmd_args->hex_dump = 1;
       break;
+      /* legacy */
     case ASSUME_SYSTEM_EVENT_RECORDS_KEY:
       cmd_args->assume_system_event_records = 1;
       break;
@@ -656,12 +639,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case ARGP_KEY_END:
       break;
     default:
-      ret = common_parse_opt (key, arg, &(cmd_args->common));
-      if (ret == ARGP_ERR_UNKNOWN)
-        ret = sdr_parse_opt (key, arg, &(cmd_args->sdr));
-      if (ret == ARGP_ERR_UNKNOWN)
-        ret = hostrange_parse_opt (key, arg, &(cmd_args->hostrange));
-      return (ret);
+      return (common_parse_opt (key, arg, &(cmd_args->common_args)));
     }
 
   return (0);
@@ -678,17 +656,15 @@ _ipmi_sel_config_file_parse (struct ipmi_sel_arguments *cmd_args)
           '\0',
           sizeof (struct config_file_data_ipmi_sel));
 
-  if (config_file_parse (cmd_args->common.config_file,
+  if (config_file_parse (cmd_args->common_args.config_file,
                          0,
-                         &(cmd_args->common),
-                         &(cmd_args->sdr),
-                         &(cmd_args->hostrange),
+                         &(cmd_args->common_args),
                          CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_SDR | CONFIG_FILE_HOSTRANGE,
                          CONFIG_FILE_TOOL_IPMI_SEL,
                          &config_file_data) < 0)
     {
       fprintf (stderr, "config_file_parse: %s\n", strerror (errno));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (config_file_data.verbose_count_count)
@@ -729,6 +705,7 @@ _ipmi_sel_config_file_parse (struct ipmi_sel_arguments *cmd_args)
     cmd_args->output_event_state = config_file_data.output_event_state;
   if (config_file_data.event_state_config_file_count)
     cmd_args->event_state_config_file = config_file_data.event_state_config_file;
+  /* legacy */
   if (config_file_data.assume_system_event_records_count)
     cmd_args->assume_system_event_records = config_file_data.assume_system_event_records;
   if (config_file_data.interpret_oem_data_count)
@@ -756,20 +733,16 @@ _ipmi_sel_args_validate (struct ipmi_sel_arguments *cmd_args)
 
   if (cmd_args->sensor_types_length)
     {
-      if (valid_sensor_types (NULL,
-                              cmd_args->sensor_types,
-                              cmd_args->sensor_types_length,
-                              1) < 0)
-        exit (1);
+      if (valid_sensor_types (cmd_args->sensor_types,
+                              cmd_args->sensor_types_length) < 0)
+        exit (EXIT_FAILURE);
     }
   
   if (cmd_args->exclude_sensor_types_length)
     {
-      if (valid_sensor_types (NULL,
-                              cmd_args->exclude_sensor_types,
-                              cmd_args->exclude_sensor_types_length,
-                              1) < 0)
-        exit (1);
+      if (valid_sensor_types (cmd_args->exclude_sensor_types,
+                              cmd_args->exclude_sensor_types_length) < 0)
+        exit (EXIT_FAILURE);
     }
 }
 
@@ -782,9 +755,7 @@ ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
   assert (argv);
   assert (cmd_args);
 
-  init_common_cmd_args_operator (&(cmd_args->common));
-  init_sdr_cmd_args (&(cmd_args->sdr));
-  init_hostrange_cmd_args (&(cmd_args->hostrange));
+  init_common_cmd_args_operator (&(cmd_args->common_args));
 
   cmd_args->verbose_count = 0;
   cmd_args->info = 0;
@@ -843,6 +814,7 @@ ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
   cmd_args->output_event_state = 0;
   cmd_args->event_state_config_file = NULL;
   cmd_args->hex_dump = 0;
+  /* legacy */
   cmd_args->assume_system_event_records = 0;
   cmd_args->interpret_oem_data = 0;
   cmd_args->output_oem_event_strings = 0;
@@ -858,7 +830,7 @@ ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
               argv,
               ARGP_IN_ORDER,
               NULL,
-              &(cmd_args->common));
+              &(cmd_args->common_args));
 
   _ipmi_sel_config_file_parse (cmd_args);
 
@@ -869,8 +841,6 @@ ipmi_sel_argp_parse (int argc, char **argv, struct ipmi_sel_arguments *cmd_args)
               NULL,
               cmd_args);
 
-  verify_common_cmd_args (&(cmd_args->common));
-  verify_sdr_cmd_args (&(cmd_args->sdr));
-  verify_hostrange_cmd_args (&(cmd_args->hostrange));
+  verify_common_cmd_args (&(cmd_args->common_args));
   _ipmi_sel_args_validate (cmd_args);
 }

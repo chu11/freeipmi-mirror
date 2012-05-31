@@ -78,7 +78,7 @@ _get_front_panel_buttons (ipmi_chassis_config_state_data_t *state_data,
     {
       config_err_t ret;
 
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_chassis_status: %s\n",
@@ -254,7 +254,7 @@ _set_front_panel_buttons (ipmi_chassis_config_state_data_t *state_data,
     {
       config_err_t ret;
 
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_front_panel_enables: %s\n",

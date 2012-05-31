@@ -25,8 +25,6 @@
 
 config_err_t
 ipmi_sensors_config_discrete_section (ipmi_sensors_config_state_data_t *state_data,
-                                      const void *sdr_record,
-                                      unsigned int sdr_record_len,
                                       struct config_section **section_ptr);
 
 #endif /* IPMI_SENSORS_CONFIG_DISCRETE_SECTION_H */

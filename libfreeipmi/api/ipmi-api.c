@@ -117,21 +117,22 @@ static char *ipmi_errmsg[] =
     "device not open",                                                  /* 16 */
     "device not supported",                                             /* 17 */
     "device not found",                                                 /* 18 */
-    "driver timeout",                                                   /* 19 */
-    "message timeout",                                                  /* 20 */
-    "command invalid for selected interface",                           /* 21 */
-    "bad completion code",                                              /* 22 */
-    "bad rmcpplus status code",                                         /* 23 */
-    "not found",                                                        /* 24 */
-    "BMC busy",                                                         /* 25 */
-    "out of memory",                                                    /* 26 */
-    "invalid hostname",                                                 /* 27 */
-    "invalid parameters",                                               /* 28 */
-    "driver path required",                                             /* 29 */
-    "internal IPMI error",                                              /* 30 */
-    "internal system error",                                            /* 31 */
-    "internal error",                                                   /* 32 */
-    "errnum out of range",                                              /* 33 */
+    "driver busy",			                                /* 19 */
+    "driver timeout",                                                   /* 20 */
+    "message timeout",                                                  /* 21 */
+    "command invalid for selected interface",                           /* 22 */
+    "bad completion code",                                              /* 23 */
+    "bad rmcpplus status code",                                         /* 24 */
+    "not found",                                                        /* 25 */
+    "BMC busy",                                                         /* 26 */
+    "out of memory",                                                    /* 27 */
+    "invalid hostname",                                                 /* 28 */
+    "invalid parameters",                                               /* 29 */
+    "driver path required",                                             /* 30 */
+    "internal IPMI error",                                              /* 31 */
+    "internal system error",                                            /* 32 */
+    "internal error",                                                   /* 33 */
+    "errnum out of range",                                              /* 34 */
   };
 
 static void
@@ -608,8 +609,8 @@ ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
   if (_setup_socket (ctx) < 0)
     goto cleanup;
 
-  /* errnum set in ipmi_lan_open_session */
-  if (ipmi_lan_open_session (ctx) < 0)
+  /* errnum set in api_lan_open_session */
+  if (api_lan_open_session (ctx) < 0)
     goto cleanup;
 
   ctx->errnum = IPMI_ERR_SUCCESS;
@@ -827,8 +828,8 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
   if (_setup_socket (ctx) < 0)
     goto cleanup;
 
-  /* errnum set in ipmi_lan_2_0_open_session */
-  if (ipmi_lan_2_0_open_session (ctx) < 0)
+  /* errnum set in api_lan_2_0_open_session */
+  if (api_lan_2_0_open_session (ctx) < 0)
     goto cleanup;
 
   ctx->errnum = IPMI_ERR_SUCCESS;
@@ -1454,14 +1455,10 @@ ipmi_ctx_find_inband (ipmi_ctx_t ctx,
 }
 
 int
-ipmi_cmd (ipmi_ctx_t ctx,
-          uint8_t lun,
-          uint8_t net_fn,
-          fiid_obj_t obj_cmd_rq,
-          fiid_obj_t obj_cmd_rs)
+ipmi_ctx_set_target (ipmi_ctx_t ctx,
+		     uint8_t *channel_number,
+		     uint8_t *rs_addr)
 {
-  int rv = 0;
-
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
@@ -1474,13 +1471,121 @@ ipmi_cmd (ipmi_ctx_t ctx,
       return (-1);
     }
 
+  if (!channel_number && !rs_addr)
+    {
+      ctx->target.channel_number_is_set = 0;
+      ctx->target.rs_addr_is_set = 0;
+      goto out;
+    }
+  
+  /* Special case, don't want to do bridging */
+  if ((channel_number
+       && (*channel_number) == IPMI_CHANNEL_NUMBER_PRIMARY_IPMB)
+      && (rs_addr
+	  && (*rs_addr) == IPMI_SLAVE_ADDRESS_BMC))
+    {
+      ctx->target.channel_number_is_set = 0;
+      ctx->target.rs_addr_is_set = 0;
+      goto out;
+    }
+
+  if (channel_number)
+    {
+      if (!IPMI_CHANNEL_NUMBER_VALID (*channel_number))
+	{
+	  API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
+	  return (-1);
+	}
+    }
+
+  if (channel_number)
+    ctx->target.channel_number = *channel_number;
+  else
+    ctx->target.channel_number = IPMI_CHANNEL_NUMBER_PRIMARY_IPMB;
+  ctx->target.channel_number_is_set = 1;
+  
+  if (rs_addr)
+    ctx->target.rs_addr = *rs_addr;
+  else
+    ctx->target.rs_addr = IPMI_SLAVE_ADDRESS_BMC;
+  ctx->target.rs_addr_is_set = 1;
+  
+ out:
+  ctx->errnum = IPMI_ERR_SUCCESS;
+  return (0);
+}
+
+int
+ipmi_ctx_get_target (ipmi_ctx_t ctx,
+		     uint8_t *channel_number,
+		     uint8_t *rs_addr)
+{
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (ctx->type == IPMI_DEVICE_UNKNOWN)
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_NOT_OPEN);
+      return (-1);
+    }
+  
+  if (channel_number)
+    {
+      if (ctx->target.channel_number_is_set)
+	(*channel_number) = ctx->target.channel_number;
+      else
+	(*channel_number) = IPMI_CHANNEL_NUMBER_PRIMARY_IPMB;
+    }
+
+  if (rs_addr)
+    {
+      if (ctx->target.rs_addr_is_set)
+	(*rs_addr) = ctx->target.rs_addr;
+      else
+	(*rs_addr) = IPMI_SLAVE_ADDRESS_BMC;
+    }
+
+  ctx->errnum = IPMI_ERR_SUCCESS;
+  return (0);
+}
+
+int
+ipmi_cmd (ipmi_ctx_t ctx,
+          uint8_t lun,
+          uint8_t net_fn,
+          fiid_obj_t obj_cmd_rq,
+          fiid_obj_t obj_cmd_rs)
+{
+  int rv = 0;
+
+  /* achu:
+   *
+   * Thanks to the OpenIPMI folks and tcpdumps from their project. I
+   * had trouble figuring out a few chunks of the bridging code.
+   */
+
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+  
+  if (ctx->type == IPMI_DEVICE_UNKNOWN)
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_NOT_OPEN);
+      return (-1);
+    }
+  
   if (ctx->flags & IPMI_FLAGS_NOSESSION
       && ctx->type != IPMI_DEVICE_LAN)
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_NOT_OPEN);
       return (-1);
     }
-
+  
   if (ctx->type != IPMI_DEVICE_LAN
       && ctx->type != IPMI_DEVICE_LAN_2_0
       && ctx->type != IPMI_DEVICE_KCS
@@ -1491,6 +1596,20 @@ ipmi_cmd (ipmi_ctx_t ctx,
       API_SET_ERRNUM (ctx, IPMI_ERR_INTERNAL_ERROR);
       return (-1);
     }
+  
+  if (!fiid_obj_valid (obj_cmd_rq)
+      || !fiid_obj_valid (obj_cmd_rs))
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if (!fiid_obj_valid (obj_cmd_rq)
+      || !fiid_obj_valid (obj_cmd_rs))
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
 
   if (FIID_OBJ_PACKET_VALID (obj_cmd_rq) < 0)
     {
@@ -1498,8 +1617,8 @@ ipmi_cmd (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  ctx->lun = lun;
-  ctx->net_fn = net_fn;
+  ctx->target.lun = lun;
+  ctx->target.net_fn = net_fn;
 
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
     {
@@ -1524,7 +1643,7 @@ ipmi_cmd (ipmi_ctx_t ctx,
           else
             cmd = val;
 
-	  if (IPMI_NET_FN_GROUP_EXTENSION (ctx->net_fn))
+	  if (IPMI_NET_FN_GROUP_EXTENSION (ctx->target.net_fn))
 	    {
 	      /* ignore error, continue on */
 	      if (FIID_OBJ_GET (obj_cmd_rq,
@@ -1537,7 +1656,7 @@ ipmi_cmd (ipmi_ctx_t ctx,
 
           debug_hdr_cmd (DEBUG_UTIL_TYPE_INBAND,
                          DEBUG_UTIL_DIRECTION_REQUEST,
-                         ctx->net_fn,
+                         ctx->target.net_fn,
                          cmd,
 			 group_extension,
                          hdrbuf,
@@ -1564,17 +1683,67 @@ ipmi_cmd (ipmi_ctx_t ctx,
     }
 
   if (ctx->type == IPMI_DEVICE_LAN)
-    rv = ipmi_lan_cmd (ctx, obj_cmd_rq, obj_cmd_rs);
+    {
+      if (ctx->target.channel_number_is_set
+	  && ctx->target.rs_addr_is_set)
+	rv = api_lan_cmd_ipmb (ctx,
+			       obj_cmd_rq,
+			       obj_cmd_rs);
+      else
+	rv = api_lan_cmd (ctx, obj_cmd_rq, obj_cmd_rs);
+    }
   else if (ctx->type == IPMI_DEVICE_LAN_2_0)
-    rv = ipmi_lan_2_0_cmd (ctx, obj_cmd_rq, obj_cmd_rs);
+    {
+      if (ctx->target.channel_number_is_set
+	  && ctx->target.rs_addr_is_set)
+	rv = api_lan_2_0_cmd_ipmb (ctx,
+				   obj_cmd_rq,
+				   obj_cmd_rs);
+      else
+	rv = api_lan_2_0_cmd (ctx, obj_cmd_rq, obj_cmd_rs);
+    }
   else if (ctx->type == IPMI_DEVICE_KCS)
-    rv = ipmi_kcs_cmd_api (ctx, obj_cmd_rq, obj_cmd_rs);
+    {
+      if (ctx->target.channel_number_is_set
+	  && ctx->target.rs_addr_is_set)
+	rv = api_kcs_cmd_ipmb (ctx,
+			       obj_cmd_rq,
+			       obj_cmd_rs);
+      else
+	rv = api_kcs_cmd (ctx, obj_cmd_rq, obj_cmd_rs);
+    }
   else if (ctx->type == IPMI_DEVICE_SSIF)
-    rv = ipmi_ssif_cmd_api (ctx, obj_cmd_rq, obj_cmd_rs);
+    {
+      if (ctx->target.channel_number_is_set
+	  && ctx->target.rs_addr_is_set)
+	{
+	  API_SET_ERRNUM (ctx, IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE);
+	  rv = -1;
+	}
+      else
+	rv = api_ssif_cmd (ctx, obj_cmd_rq, obj_cmd_rs);
+    }
   else if (ctx->type == IPMI_DEVICE_OPENIPMI)
-    rv = ipmi_openipmi_cmd_api (ctx, obj_cmd_rq, obj_cmd_rs);
+    {
+      if (ctx->target.channel_number_is_set
+	  && ctx->target.rs_addr_is_set)
+	rv = api_openipmi_cmd_ipmb (ctx,
+				    obj_cmd_rq,
+				    obj_cmd_rs);
+      else
+	rv = api_openipmi_cmd (ctx, obj_cmd_rq, obj_cmd_rs);
+    }
   else /* ctx->type == IPMI_DEVICE_SUNBMC */
-    rv = ipmi_sunbmc_cmd_api (ctx, obj_cmd_rq, obj_cmd_rs);
+    {
+      if (ctx->target.channel_number_is_set
+	  && ctx->target.rs_addr_is_set)
+	{
+	  API_SET_ERRNUM (ctx, IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE);
+	  rv = -1;
+	}
+      else
+	rv = api_sunbmc_cmd (ctx, obj_cmd_rq, obj_cmd_rs);
+    }
 
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
     {
@@ -1599,7 +1768,7 @@ ipmi_cmd (ipmi_ctx_t ctx,
           else
             cmd = val;
 
-	  if (IPMI_NET_FN_GROUP_EXTENSION (ctx->net_fn))
+	  if (IPMI_NET_FN_GROUP_EXTENSION (ctx->target.net_fn))
 	    {
 	      /* ignore error, continue on */
 	      if (FIID_OBJ_GET (obj_cmd_rq,
@@ -1613,7 +1782,7 @@ ipmi_cmd (ipmi_ctx_t ctx,
           /* its ok to use the "request" net_fn */
           debug_hdr_cmd (DEBUG_UTIL_TYPE_INBAND,
                          DEBUG_UTIL_DIRECTION_RESPONSE,
-                         ctx->net_fn,
+                         ctx->target.net_fn,
                          cmd,
 			 group_extension,
                          hdrbuf,
@@ -1652,13 +1821,8 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
                fiid_obj_t obj_cmd_rq,
                fiid_obj_t obj_cmd_rs)
 {
+  struct ipmi_ctx_target target_save;
   int rv = 0;
-
-  /* achu:
-   *
-   * Thanks to the OpenIPMI folks and tcpdumps from their project. I
-   * had trouble figuring out a few chunks of the bridging code.
-   */
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -1672,164 +1836,18 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (ctx->type == IPMI_DEVICE_UNKNOWN)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_NOT_OPEN);
-      return (-1);
-    }
-
-  if (ctx->flags & IPMI_FLAGS_NOSESSION)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_NOT_OPEN);
-      return (-1);
-    }
-
-  if (ctx->type != IPMI_DEVICE_LAN
-      && ctx->type != IPMI_DEVICE_LAN_2_0
-      && ctx->type != IPMI_DEVICE_KCS
-      && ctx->type != IPMI_DEVICE_SSIF
-      && ctx->type != IPMI_DEVICE_OPENIPMI
-      && ctx->type != IPMI_DEVICE_SUNBMC)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_INTERNAL_ERROR);
-      return (-1);
-    }
-
-  if (FIID_OBJ_PACKET_VALID (obj_cmd_rq) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
-      return (-1);
-    }
-
-  ctx->channel_number = channel_number;
-  ctx->rs_addr = rs_addr;
-  ctx->lun = lun;
-  ctx->net_fn = net_fn;
-
-  if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
-    {
-      /* lan packets are dumped in ipmi lan code */
-      /* kcs packets are dumped in kcs code */
-      /* ssif packets are dumped in ssif code */
-      if (ctx->type != IPMI_DEVICE_LAN
-          && ctx->type != IPMI_DEVICE_LAN_2_0
-          && ctx->type != IPMI_DEVICE_KCS
-          && ctx->type != IPMI_DEVICE_SSIF)
-        {
-          char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
-          uint8_t cmd = 0;
-	  uint8_t group_extension = 0;
-          uint64_t val;
-
-          /* ignore error, continue on */
-          if (FIID_OBJ_GET (obj_cmd_rq,
-                            "cmd",
-                            &val) < 0)
-            API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
-          else
-            cmd = val;
-
-	  if (IPMI_NET_FN_GROUP_EXTENSION (ctx->net_fn))
-	    {
-	      /* ignore error, continue on */
-	      if (FIID_OBJ_GET (obj_cmd_rq,
-				"group_extension_identification",
-				&val) < 0)
-		API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
-	      else
-		group_extension = val;
-	    }
-
-          debug_hdr_cmd (DEBUG_UTIL_TYPE_INBAND,
-                         DEBUG_UTIL_DIRECTION_REQUEST,
-                         ctx->net_fn,
-                         cmd,
-			 group_extension,
-                         hdrbuf,
-                         DEBUG_UTIL_HDR_BUFLEN);
-
-          ipmi_obj_dump (STDERR_FILENO,
-                         NULL,
-                         hdrbuf,
-                         NULL,
-                         obj_cmd_rq);
-        }
-    }
-
-  if (ctx->type == IPMI_DEVICE_LAN)
-    rv = ipmi_lan_cmd_ipmb (ctx,
-			    obj_cmd_rq,
-			    obj_cmd_rs);
-  else if (ctx->type == IPMI_DEVICE_LAN_2_0)
-    rv = ipmi_lan_2_0_cmd_ipmb (ctx,
-				obj_cmd_rq,
-				obj_cmd_rs);
-  else if (ctx->type == IPMI_DEVICE_KCS)
-    rv = ipmi_kcs_cmd_api_ipmb (ctx,
-                                obj_cmd_rq,
-                                obj_cmd_rs);
-  else if (ctx->type == IPMI_DEVICE_OPENIPMI)
-    rv = ipmi_openipmi_cmd_api_ipmb (ctx,
-                                     obj_cmd_rq,
-                                     obj_cmd_rs);
-  else
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE);
-      return (-1);
-    }
-
-  if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
-    {
-      /* lan packets are dumped in ipmi lan code */
-      /* kcs packets are dumped in kcs code */
-      /* ssif packets are dumped in ssif code */
-      if (ctx->type != IPMI_DEVICE_LAN
-          && ctx->type != IPMI_DEVICE_LAN_2_0
-          && ctx->type != IPMI_DEVICE_KCS
-          && ctx->type != IPMI_DEVICE_SSIF)
-        {
-          char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
-          uint8_t cmd = 0;
-	  uint8_t group_extension = 0;
-          uint64_t val;
-
-          /* ignore error, continue on */
-          if (FIID_OBJ_GET (obj_cmd_rq,
-                            "cmd",
-                            &val) < 0)
-            API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
-          else
-            cmd = val;
-
-	  if (IPMI_NET_FN_GROUP_EXTENSION (ctx->net_fn))
-	    {
-	      /* ignore error, continue on */
-	      if (FIID_OBJ_GET (obj_cmd_rq,
-				"group_extension_identification",
-				&val) < 0)
-		API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
-	      else
-		group_extension = val;
-	    }
-
-          /* its ok to use the "request" net_fn */
-          debug_hdr_cmd (DEBUG_UTIL_TYPE_INBAND,
-                         DEBUG_UTIL_DIRECTION_RESPONSE,
-                         ctx->net_fn,
-                         cmd,
-			 group_extension,
-                         hdrbuf,
-                         DEBUG_UTIL_HDR_BUFLEN);
-
-          ipmi_obj_dump (STDERR_FILENO,
-                         NULL,
-                         hdrbuf,
-                         NULL,
-                         obj_cmd_rs);
-        }
-    }
-
-  /* errnum set in ipmi_*_cmd functions */
+  memcpy (&target_save, &ctx->target, sizeof (target_save));
+  
+  ctx->target.channel_number = channel_number;
+  ctx->target.channel_number_is_set = 1;
+  ctx->target.rs_addr = rs_addr;
+  ctx->target.rs_addr_is_set = 1;
+  
+  rv = ipmi_cmd (ctx, lun, net_fn, obj_cmd_rq, obj_cmd_rs);
+  
+  memcpy (&ctx->target, &target_save, sizeof (target_save));
+  
+  /* errnum set in ipmi_cmd() */
   return (rv);
 }
 
@@ -1888,8 +1906,8 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  ctx->lun = lun;
-  ctx->net_fn = net_fn;
+  ctx->target.lun = lun;
+  ctx->target.net_fn = net_fn;
 
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
     {
@@ -1906,7 +1924,7 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
 	  uint8_t group_extension = 0;
 
           cmd = ((uint8_t *)buf_rq)[0];
-	  if (IPMI_NET_FN_GROUP_EXTENSION (ctx->net_fn))
+	  if (IPMI_NET_FN_GROUP_EXTENSION (ctx->target.net_fn))
 	    {
 	      if (buf_rq_len > 1)
 		group_extension = ((uint8_t *)buf_rq)[1];
@@ -1914,7 +1932,7 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
     
           debug_hdr_cmd (DEBUG_UTIL_TYPE_INBAND,
                          DEBUG_UTIL_DIRECTION_REQUEST,
-                         ctx->net_fn,
+                         ctx->target.net_fn,
                          cmd,
 			 group_extension,
                          hdrbuf,
@@ -1930,17 +1948,75 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
     }
 
   if (ctx->type == IPMI_DEVICE_LAN)
-    rv = ipmi_lan_cmd_raw (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
+    {
+      if (ctx->target.channel_number_is_set
+	  && ctx->target.rs_addr_is_set)
+	rv = api_lan_cmd_raw_ipmb (ctx,
+				   buf_rq,
+				   buf_rq_len,
+				   buf_rs,
+				   buf_rs_len);
+      else
+	rv = api_lan_cmd_raw (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
+    }
   else if (ctx->type == IPMI_DEVICE_LAN_2_0)
-    rv = ipmi_lan_2_0_cmd_raw (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
+    {
+      if (ctx->target.channel_number_is_set
+	  && ctx->target.rs_addr_is_set)
+	rv = api_lan_2_0_cmd_raw_ipmb (ctx,
+				       buf_rq,
+				       buf_rq_len,
+				       buf_rs,
+				       buf_rs_len);
+      else
+	rv = api_lan_2_0_cmd_raw (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
+    }
   else if (ctx->type == IPMI_DEVICE_KCS)
-    rv = ipmi_kcs_cmd_raw_api (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
+    {
+      if (ctx->target.channel_number_is_set
+	  && ctx->target.rs_addr_is_set)
+	rv = api_kcs_cmd_raw_ipmb (ctx,
+				   buf_rq,
+				   buf_rq_len,
+				   buf_rs,
+				   buf_rs_len);
+      else
+	rv = api_kcs_cmd_raw (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
+    }
   else if (ctx->type == IPMI_DEVICE_SSIF)
-    rv = ipmi_ssif_cmd_raw_api (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
+    {
+      if (ctx->target.channel_number_is_set
+	  && ctx->target.rs_addr_is_set)
+	{
+	  API_SET_ERRNUM (ctx, IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE);
+	  rv = -1;
+	}
+      else
+	rv = api_ssif_cmd_raw (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
+    }
   else if (ctx->type == IPMI_DEVICE_OPENIPMI)
-    rv = ipmi_openipmi_cmd_raw_api (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
+    {
+      if (ctx->target.channel_number_is_set
+	  && ctx->target.rs_addr_is_set)
+	rv = api_openipmi_cmd_raw_ipmb (ctx,
+					buf_rq,
+					buf_rq_len,
+					buf_rs,
+					buf_rs_len);
+      else
+	rv = api_openipmi_cmd_raw (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
+    }
   else /* ctx->type == IPMI_DEVICE_SUNBMC */
-    rv = ipmi_sunbmc_cmd_raw_api (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
+    {
+      if (ctx->target.channel_number_is_set
+	  && ctx->target.rs_addr_is_set)
+	{
+	  API_SET_ERRNUM (ctx, IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE);
+	  rv = -1;
+	}
+      else
+	rv = api_sunbmc_cmd_raw (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
+    }
 
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP && rv >= 0)
     {
@@ -1957,7 +2033,7 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
 	  uint8_t group_extension = 0;
 
           cmd = ((uint8_t *)buf_rq)[0];
-	  if (IPMI_NET_FN_GROUP_EXTENSION (ctx->net_fn))
+	  if (IPMI_NET_FN_GROUP_EXTENSION (ctx->target.net_fn))
 	    {
 	      if (buf_rq_len > 1)
 		group_extension = ((uint8_t *)buf_rq)[1];
@@ -1966,7 +2042,7 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
           /* its ok to use the "request" net_fn */
           debug_hdr_cmd (DEBUG_UTIL_TYPE_INBAND,
                          DEBUG_UTIL_DIRECTION_RESPONSE,
-                         ctx->net_fn,
+                         ctx->target.net_fn,
                          cmd,
 			 group_extension,
                          hdrbuf,
@@ -1996,32 +2072,12 @@ ipmi_cmd_raw_ipmb (ipmi_ctx_t ctx,
 		   void *buf_rs,
 		   unsigned int buf_rs_len)
 {
+  struct ipmi_ctx_target target_save;
   int rv = 0;
-
-  /* achu:
-   *
-   * Thanks to the OpenIPMI folks and tcpdumps from their project. I
-   * had trouble figuring out a few chunks of the bridging code.
-   */
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
-      return (-1);
-    }
-
-  if (!buf_rq
-      || !buf_rq_len
-      || !buf_rs
-      || !buf_rs_len)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
-  if (!IPMI_NET_FN_RQ_VALID (net_fn))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -2031,142 +2087,24 @@ ipmi_cmd_raw_ipmb (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (ctx->type == IPMI_DEVICE_UNKNOWN)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_NOT_OPEN);
-      return (-1);
-    }
+  memcpy (&target_save, &ctx->target, sizeof (target_save));
 
-  if (ctx->flags & IPMI_FLAGS_NOSESSION)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_NOT_OPEN);
-      return (-1);
-    }
+  ctx->target.channel_number = channel_number;
+  ctx->target.channel_number_is_set = 1;
+  ctx->target.rs_addr = rs_addr;
+  ctx->target.rs_addr_is_set = 1;
 
-  if (ctx->type != IPMI_DEVICE_LAN
-      && ctx->type != IPMI_DEVICE_LAN_2_0
-      && ctx->type != IPMI_DEVICE_KCS
-      && ctx->type != IPMI_DEVICE_SSIF
-      && ctx->type != IPMI_DEVICE_OPENIPMI
-      && ctx->type != IPMI_DEVICE_SUNBMC)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_INTERNAL_ERROR);
-      return (-1);
-    }
+  rv = ipmi_cmd_raw (ctx,
+		     lun,
+		     net_fn,
+		     buf_rq,
+		     buf_rq_len,
+		     buf_rs,
+		     buf_rs_len);
 
-  ctx->channel_number = channel_number;
-  ctx->rs_addr = rs_addr;
-  ctx->lun = lun;
-  ctx->net_fn = net_fn;
+  memcpy (&ctx->target, &target_save, sizeof (target_save));
 
-  if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
-    {
-      /* lan packets are dumped in ipmi lan code */
-      /* kcs packets are dumped in kcs code */
-      /* ssif packets are dumped in ssif code */
-      if (ctx->type != IPMI_DEVICE_LAN
-          && ctx->type != IPMI_DEVICE_LAN_2_0
-          && ctx->type != IPMI_DEVICE_KCS
-          && ctx->type != IPMI_DEVICE_SSIF)
-        {
-          char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
-          uint8_t cmd = 0;
-	  uint8_t group_extension = 0;
-
-          cmd = ((uint8_t *)buf_rq)[0];
-	  if (IPMI_NET_FN_GROUP_EXTENSION (ctx->net_fn))
-	    {
-	      if (buf_rq_len > 1)
-		group_extension = ((uint8_t *)buf_rq)[1];
-	    }
-    
-          debug_hdr_cmd (DEBUG_UTIL_TYPE_INBAND,
-                         DEBUG_UTIL_DIRECTION_REQUEST,
-                         ctx->net_fn,
-                         cmd,
-			 group_extension,
-                         hdrbuf,
-                         DEBUG_UTIL_HDR_BUFLEN);
-
-          ipmi_dump_hex (STDERR_FILENO,
-                         NULL,
-                         hdrbuf,
-                         NULL,
-                         buf_rq,
-                         buf_rq_len);
-        }
-    }
-
-  if (ctx->type == IPMI_DEVICE_LAN)
-    rv = ipmi_lan_cmd_raw_ipmb (ctx,
-				buf_rq,
-				buf_rq_len,
-				buf_rs,
-				buf_rs_len);
-  else if (ctx->type == IPMI_DEVICE_LAN_2_0)
-    rv = ipmi_lan_2_0_cmd_raw_ipmb (ctx,
-				    buf_rq,
-				    buf_rq_len,
-				    buf_rs,
-				    buf_rs_len);
-  else if (ctx->type == IPMI_DEVICE_KCS)
-    rv = ipmi_kcs_cmd_raw_api_ipmb (ctx,
-				    buf_rq,
-				    buf_rq_len,
-				    buf_rs,
-				    buf_rs_len);
-  else if (ctx->type == IPMI_DEVICE_OPENIPMI)
-    rv = ipmi_openipmi_cmd_raw_api_ipmb (ctx,
-					 buf_rq,
-					 buf_rq_len,
-					 buf_rs,
-					 buf_rs_len);
-  else
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE);
-      return (-1);
-    }
-
-  if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP && rv >= 0)
-    {
-      /* lan packets are dumped in ipmi lan code */
-      /* kcs packets are dumped in kcs code */
-      /* ssif packets are dumped in ssif code */
-      if (ctx->type != IPMI_DEVICE_LAN
-          && ctx->type != IPMI_DEVICE_LAN_2_0
-          && ctx->type != IPMI_DEVICE_KCS
-          && ctx->type != IPMI_DEVICE_SSIF)
-        {
-          char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
-          uint8_t cmd = 0;
-	  uint8_t group_extension = 0;
-
-          cmd = ((uint8_t *)buf_rq)[0];
-	  if (IPMI_NET_FN_GROUP_EXTENSION (ctx->net_fn))
-	    {
-	      if (buf_rq_len > 1)
-		group_extension = ((uint8_t *)buf_rq)[1];
-	    }
-
-          /* its ok to use the "request" net_fn */
-          debug_hdr_cmd (DEBUG_UTIL_TYPE_INBAND,
-                         DEBUG_UTIL_DIRECTION_RESPONSE,
-                         ctx->net_fn,
-                         cmd,
-			 group_extension,
-                         hdrbuf,
-                         DEBUG_UTIL_HDR_BUFLEN);
-
-          ipmi_dump_hex (STDERR_FILENO,
-                         NULL,
-                         hdrbuf,
-                         NULL,
-                         buf_rs,
-                         rv);
-        }
-    }
-
-  /* errnum set in ipmi_*_cmd_raw functions */
+  /* errnum set in ipmi_cmd_raw() */
   return (rv);
 }
 
@@ -2183,7 +2121,7 @@ _ipmi_outofband_close (ipmi_ctx_t ctx)
    */
   if (!(ctx->flags & IPMI_FLAGS_NOSESSION))
     {
-      if (ipmi_lan_close_session (ctx) < 0)
+      if (api_lan_close_session (ctx) < 0)
 	goto cleanup;
     }
 
@@ -2206,7 +2144,7 @@ _ipmi_outofband_2_0_close (ipmi_ctx_t ctx)
    * fails, session will eventually timeout anyways
    */
 
-  if (ipmi_lan_2_0_close_session (ctx) < 0)
+  if (api_lan_2_0_close_session (ctx) < 0)
     goto cleanup;
 
  cleanup:
@@ -2260,6 +2198,10 @@ ipmi_ctx_close (ipmi_ctx_t ctx)
       return (-1);
     }
 
+  /* closing session - end channel/slave targeting */
+  ctx->target.channel_number_is_set = 0;
+  ctx->target.rs_addr_is_set = 0;
+  
   if (ctx->type == IPMI_DEVICE_LAN)
     _ipmi_outofband_close (ctx);
   else if (ctx->type == IPMI_DEVICE_LAN_2_0)

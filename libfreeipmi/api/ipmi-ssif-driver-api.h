@@ -23,14 +23,14 @@
 #include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/fiid/fiid.h>
 
-int ipmi_ssif_cmd_api (ipmi_ctx_t ctx,
-                       fiid_obj_t obj_cmd_rq,
-                       fiid_obj_t obj_cmd_rs);
+int api_ssif_cmd (ipmi_ctx_t ctx,
+		  fiid_obj_t obj_cmd_rq,
+		  fiid_obj_t obj_cmd_rs);
 
-int ipmi_ssif_cmd_raw_api (ipmi_ctx_t ctx,
-                           const void *buf_rq,
-                           unsigned int buf_rq_len,
-                           void *buf_rs,
-                           unsigned int buf_rs_len);
+int api_ssif_cmd_raw (ipmi_ctx_t ctx,
+		      const void *buf_rq,
+		      unsigned int buf_rq_len,
+		      void *buf_rs,
+		      unsigned int buf_rs_len);
 
 #endif /* IPMI_SSIF_DRIVER_API_H */

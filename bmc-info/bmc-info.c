@@ -38,6 +38,7 @@
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
 #include "tool-hostrange-common.h"
+#include "tool-util-common.h"
 
 typedef struct channel_info
 {
@@ -1264,8 +1265,7 @@ _bmc_info (pstdout_state_t pstate,
 {
   bmc_info_state_data_t state_data;
   bmc_info_prog_data_t *prog_data;
-  char errmsg[IPMI_OPEN_ERRMSGLEN];
-  int exit_code = -1;
+  int exit_code = EXIT_FAILURE;
 
   assert (pstate);
   assert (arg);
@@ -1278,25 +1278,14 @@ _bmc_info (pstdout_state_t pstate,
 
   if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
                                          hostname,
-                                         &(prog_data->args->common),
-                                         errmsg,
-                                         IPMI_OPEN_ERRMSGLEN)))
-    {
-      pstdout_fprintf (pstate,
-                       stderr,
-                       "%s\n",
-                       errmsg);
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
+                                         &(prog_data->args->common_args),
+					 state_data.pstate)))
+    goto cleanup;
 
   if (run_cmd_args (&state_data) < 0)
-    {
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
+    goto cleanup;
 
-  exit_code = 0;
+  exit_code = EXIT_SUCCESS;
  cleanup:
   ipmi_ctx_close (state_data.ipmi_ctx);
   ipmi_ctx_destroy (state_data.ipmi_ctx);
@@ -1308,7 +1297,6 @@ main (int argc, char **argv)
 {
   bmc_info_prog_data_t prog_data;
   struct bmc_info_arguments cmd_args;
-  int exit_code;
   int hosts_count;
   int rv;
 
@@ -1319,35 +1307,22 @@ main (int argc, char **argv)
   bmc_info_argp_parse (argc, argv, &cmd_args);
   prog_data.args = &cmd_args;
 
-  if ((hosts_count = pstdout_setup (&(prog_data.args->common.hostname),
-                                    prog_data.args->hostrange.buffer_output,
-                                    prog_data.args->hostrange.consolidate_output,
-                                    prog_data.args->hostrange.fanout,
-                                    prog_data.args->hostrange.eliminate,
-                                    prog_data.args->hostrange.always_prefix)) < 0)
-    {
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
+  if ((hosts_count = pstdout_setup (&(prog_data.args->common_args.hostname),
+                                    &(prog_data.args->common_args))) < 0)
+    return (EXIT_FAILURE);
 
   if (!hosts_count)
-    {
-      exit_code = EXIT_SUCCESS;
-      goto cleanup;
-    }
+    return (EXIT_SUCCESS);
 
-  if ((rv = pstdout_launch (prog_data.args->common.hostname,
+  if ((rv = pstdout_launch (prog_data.args->common_args.hostname,
                             _bmc_info,
                             &prog_data)) < 0)
     {
       fprintf (stderr,
                "pstdout_launch: %s\n",
                pstdout_strerror (pstdout_errnum));
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
+      return (EXIT_FAILURE);
     }
 
-  exit_code = rv;
- cleanup:
-  return (exit_code);
+  return (rv);
 }

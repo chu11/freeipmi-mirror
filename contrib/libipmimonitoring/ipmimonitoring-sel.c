@@ -102,6 +102,7 @@ char *sel_config_file = NULL;
 int reread_sdr_cache = 0;
 int interpret_oem_data = 0;
 int assume_system_event_record = 0;
+int entity_sensor_names = 0;
 
 /* Initialization flags
  * 
@@ -278,6 +279,9 @@ _ipmimonitoring (struct ipmi_monitoring_ipmi_config *ipmi_config)
 
   if (assume_system_event_record)
     sel_flags |= IPMI_MONITORING_SEL_FLAGS_ASSUME_SYSTEM_EVENT_RECORD;
+
+  if (entity_sensor_names)
+    sel_flags |= IPMI_MONITORING_SEL_FLAGS_ENTITY_SENSOR_NAMES;
 
   if (record_ids_length)
     {

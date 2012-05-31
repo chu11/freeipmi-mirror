@@ -278,7 +278,7 @@ ipmi_kcs_ctx_create (void)
   ctx->poll_interval = IPMI_KCS_SLEEP_USECS;
   ctx->io_init = 0;
 
-  if ((ctx->semid = ipmi_mutex_init ()) < 0)
+  if ((ctx->semid = driver_mutex_init ()) < 0)
     {
       ERRNO_TRACE (errno);
       goto cleanup;
@@ -826,7 +826,7 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
 
   if (!(ctx->flags & IPMI_KCS_FLAGS_NONBLOCKING))
     {
-      if (ipmi_mutex_lock (ctx->semid) < 0)
+      if (driver_mutex_lock (ctx->semid) < 0)
         {
           KCS_ERRNO_TO_KCS_ERRNUM (ctx, errno);
           goto cleanup;
@@ -834,7 +834,7 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
     }
   else
     {
-      if (ipmi_mutex_lock_interruptible (ctx->semid) < 0)
+      if (driver_mutex_lock_interruptible (ctx->semid) < 0)
         {
           KCS_ERRNO_TO_KCS_ERRNUM (ctx, errno);
           goto cleanup;
@@ -897,11 +897,12 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
   count++;
 
 #if 0
-  if (!_ipmi_kcs_test_if_state (IPMI_KCS_STATE_READ)) {
-    printf ("Not in READ state after writing last byte?\n");
-    ipmi_kcs_print_state (ipmi_kcs_get_state ());
-    exit (1);
-  }
+  if (!_ipmi_kcs_test_if_state (IPMI_KCS_STATE_READ))
+    {
+      printf ("Not in READ state after writing last byte?\n");
+      ipmi_kcs_print_state (ipmi_kcs_get_state ());
+      exit (EXIT_FAILURE);
+    }
 #endif
   
   if (count > INT_MAX)
@@ -915,7 +916,7 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
 
  cleanup:
   if (lock_flag)
-    ipmi_mutex_unlock (ctx->semid);
+    driver_mutex_unlock (ctx->semid);
   return (-1);
 }
 
@@ -1003,7 +1004,7 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
   rv = count;
  cleanup:
   if (ctx && ctx->magic == IPMI_KCS_CTX_MAGIC)
-    ipmi_mutex_unlock (ctx->semid);
+    driver_mutex_unlock (ctx->semid);
   return (rv);
 }
 

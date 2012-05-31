@@ -59,13 +59,14 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_INBAND,
     ARGP_COMMON_OPTIONS_OUTOFBAND_HOSTRANGED,
     ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE,
+    ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID,
     ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL,
     ARGP_COMMON_OPTIONS_CONFIG_FILE,
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
     { "info",       INFO_KEY,       0, 0,
-      "Show general information about PEF configuration.", 30},
+      "Show general information about PEF configuration.", 40},
     CONFIG_ARGP_COMMON_OPTIONS,
     CONFIG_ARGP_COMMON_OPTIONS_LEGACY,
     CONFIG_ARGP_LAN_CHANNEL_OPTION,
@@ -111,9 +112,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     default:
       ret = config_parse_opt (key, arg, &cmd_args->config_args);
       if (ret == ARGP_ERR_UNKNOWN)
-        ret = common_parse_opt (key, arg, &cmd_args->config_args.common);
-      if (ret == ARGP_ERR_UNKNOWN)
-        ret = hostrange_parse_opt (key, arg, &(cmd_args->config_args.hostrange));
+        ret = common_parse_opt (key, arg, &cmd_args->config_args.common_args);
       return (ret);
     }
 
@@ -131,17 +130,15 @@ _ipmi_pef_config_config_file_parse (struct ipmi_pef_config_arguments *cmd_args)
           '\0',
           sizeof (struct config_file_data_ipmi_pef_config));
   
-  if (config_file_parse (cmd_args->config_args.common.config_file,
+  if (config_file_parse (cmd_args->config_args.common_args.config_file,
                          0,
-                         &(cmd_args->config_args.common),
-                         NULL,
-                         &(cmd_args->config_args.hostrange),
+                         &(cmd_args->config_args.common_args),
                          CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE,
                          CONFIG_FILE_TOOL_IPMI_PEF_CONFIG,
                          &config_file_data) < 0)
     {
       fprintf (stderr, "config_file_parse: %s\n", strerror (errno));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (config_file_data.verbose_count_count)
@@ -159,7 +156,7 @@ _ipmi_pef_config_args_validate (struct ipmi_pef_config_arguments *cmd_args)
     {
       fprintf (stderr,
                "Exactly one of --info, --checkout, --commit, --diff, or --listsections MUST be given\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   /* make dummy argument for args validate to pass */
@@ -177,8 +174,7 @@ ipmi_pef_config_argp_parse (int argc, char **argv, struct ipmi_pef_config_argume
   assert (cmd_args);
 
   init_config_args (&(cmd_args->config_args));
-  init_common_cmd_args_admin (&(cmd_args->config_args.common));
-  init_hostrange_cmd_args (&(cmd_args->config_args.hostrange));
+  init_common_cmd_args_admin (&(cmd_args->config_args.common_args));
 
   cmd_args->info = 0;
 
@@ -187,7 +183,7 @@ ipmi_pef_config_argp_parse (int argc, char **argv, struct ipmi_pef_config_argume
               argv,
               ARGP_IN_ORDER,
               NULL,
-              &(cmd_args->config_args.common));
+              &(cmd_args->config_args.common_args));
 
   _ipmi_pef_config_config_file_parse (cmd_args);
 
@@ -198,7 +194,7 @@ ipmi_pef_config_argp_parse (int argc, char **argv, struct ipmi_pef_config_argume
               NULL,
               cmd_args);
 
-  verify_common_cmd_args (&(cmd_args->config_args.common));
+  verify_common_cmd_args (&(cmd_args->config_args.common_args));
   _ipmi_pef_config_args_validate (cmd_args);
 }
 

@@ -87,7 +87,7 @@ _get_connection_mode (bmc_config_state_data_t *state_data,
                                                                IPMI_SERIAL_MODEM_CONFIGURATION_NO_BLOCK_SELECTOR,
                                                                obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_serial_modem_configuration_connection_mode: %s\n",
@@ -184,7 +184,7 @@ _set_connection_mode (bmc_config_state_data_t *state_data,
                                                                cm->connect_mode,
                                                                obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_serial_modem_configuration_connection_mode: %s\n",
@@ -441,7 +441,7 @@ page_blackout_interval_checkout (const char *section_name,
                                                                       IPMI_SERIAL_MODEM_CONFIGURATION_NO_BLOCK_SELECTOR,
                                                                       obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_serial_modem_configuration_page_blackout_interval: %s\n",
@@ -514,7 +514,7 @@ page_blackout_interval_commit (const char *section_name,
                                                                       atoi (kv->value_input),
                                                                       obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_serial_modem_configuration_page_blackout_interval: %s\n",
@@ -575,7 +575,7 @@ call_retry_interval_checkout (const char *section_name,
                                                                    IPMI_SERIAL_MODEM_CONFIGURATION_NO_BLOCK_SELECTOR,
                                                                    obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_serial_modem_configuration_call_retry_interval: %s\n",
@@ -647,7 +647,7 @@ call_retry_interval_commit (const char *section_name,
                                                                    atoi (kv->value_input),
                                                                    obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_serial_modem_configuration_call_retry_interval: %s\n",
@@ -704,7 +704,7 @@ _get_ipmi_messaging_comm_settings (bmc_config_state_data_t *state_data,
                                                                             IPMI_SERIAL_MODEM_CONFIGURATION_NO_BLOCK_SELECTOR,
                                                                             obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_serial_modem_configuration_ipmi_messaging_comm_settings: %s\n",
@@ -790,7 +790,7 @@ _set_ipmi_messaging_comm_settings (bmc_config_state_data_t *state_data,
                                                                             cs->bit_rate,
                                                                             obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings: %s\n",

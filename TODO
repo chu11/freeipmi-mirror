@@ -4,6 +4,7 @@ ooo - priority code cleanup that should be done
 
 branches to merge
 -----------------
+intels2600jfrevision
 
 to test
 -------
@@ -35,7 +36,7 @@ FreeIPMI new stuff
 - pmbus.org
   - doable via FreeIPMI?  Can pass through Smbus to PmBus to do power control monitoring?
 - ipmi-seld (***)
-  - log sel events to syslog?
+  - log sel events to syslog/alternate log file
     - work across cluster, configure w/ range of hosts
     - need filtering thingie to remove messages you don't care about?
     - mechanism/option to clear when SEL buffer full
@@ -48,6 +49,7 @@ FreeIPMI new stuff
       - or only log new SEL events?
     - option allow user to specify format for log
       - i.e. %h: %t - %e
+    - store caches in /var/cache? or use present ones
 - server simulator
   - support testing at scale
   - test larger set of corner cases, possibilities, workarounds, etc. 
@@ -114,7 +116,6 @@ libfreeipmi-driver
 ------------------
 - ssif userspace implementation
   - see ipmiutil for example
-- (NEVER TESTED) openipmi ipmb
   
 libfreeipmi-api
 ---------------
@@ -138,10 +139,10 @@ libfreeipmi-interpret
   - QSSCS4R SMI Timeout & Power Throttled sensors 
     - same event-type/sensor-type/etc., but different interpretation??  
 
-libfreeipmi-sel-parse
----------------------
-- use else if to improve performance
+libfreeipmi-sel
+---------------
 - split vendor files into motherboard files?  Is getting big.
+- cleanup parsing functions
 
 libipmiconsole
 --------------
@@ -153,6 +154,8 @@ libipmiconsole
   conman and other console software. (***)
 - use conditional signals w/ garbage collector
   - should work, it's not like the poll loop from before
+- specify sol_payload_instance - pick between console instances (***)
+  - use case example, SOL to management controller controlling multiple devices
  
 libipmimonitoring
 -----------------
@@ -163,6 +166,8 @@ libipmimonitoring
   - also to deal w/ probability SDR's change on some mobos
 - support 'discretereading' workaround (XXX)
   - need a mobo to play with to test, lots of a breakage possibilities
+- how specify record ids w/ sharing
+- entity sensor names
 
 tools common
 ------------
@@ -197,6 +202,9 @@ ipmi-sensors
   - i.e. perhaps need to do record-id and something else, like
     -r 5.2 to indicate record id 5 and offset 2.
   - issue for libipmimonitoring too?
+- remove shared sensor option
+  - make default like it should be
+  - this really ties to many other shared sensor issues 
 - do not error out on unexpected sensor_read errors, move on? (***)
   - i.e. unexpected completion code error?
   - require rework of sensor-read lib?  How detect session timeout, etc. 
@@ -240,6 +248,13 @@ bmc-device
   - or only as needed in ipmi-oem per vendor need?
 - (NOT CONFIRMED) get auxiliary log status
 - set sensor reading (XXX)
+
+bmc-watchdog
+------------
+Log to normal syslog, not to bmc log
+- legacy from when bmc-wachdog in cron, not daemon, and would log
+  every bmc reset
+cleanup to finally use libfreeipmi or common tool functions
 
 ipmiconsole
 -----------

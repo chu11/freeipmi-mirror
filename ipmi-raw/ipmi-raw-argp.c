@@ -67,12 +67,14 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
-    { "channel-number", CHANNEL_NUMBER_KEY, "NUMBER", 0,
-      "Specify an alternate channel number to bridge raw commands to.", 30},
-    { "slave-address", SLAVE_ADDRESS_KEY, "ADDRESS", 0,
-      "Specify an alternate slave address to bridge raw commands to.", 31},
+    /* legacy - overriden by general option in inband options  */
+    { "channel-number", CHANNEL_NUMBER_KEY, "NUMBER", OPTION_HIDDEN,
+      "Specify an alternate channel number to bridge raw commands to.", 40},
+    /* legacy - overriden by general option in inband options  */
+    { "slave-address", SLAVE_ADDRESS_KEY, "ADDRESS", OPTION_HIDDEN,
+      "Specify an alternate slave address to bridge raw commands to.", 41},
     { "file", CMD_FILE_KEY, "CMD-FILE", 0,
-      "Specify a file to read command requests from.", 32},
+      "Specify a file to read command requests from.", 42},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -92,9 +94,8 @@ static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   struct ipmi_raw_arguments *cmd_args;
-  char *endptr;
-  int value;
   error_t ret;
+  char *endptr;
 
   assert (state);
   
@@ -103,35 +104,20 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   switch (key)
     {
     case CHANNEL_NUMBER_KEY:
-      errno = 0;
-      value = strtol (arg, &endptr, 0);
-      if (errno
-          || endptr[0] != '\0'
-          || !IPMI_CHANNEL_NUMBER_VALID (value))
-        {
-          fprintf (stderr, "invalid channel number\n");
-          exit (1);
-        }
-      cmd_args->channel_number_arg = (uint8_t) value;
-      cmd_args->channel_number = 1;
+      ret = common_parse_opt (ARGP_TARGET_CHANNEL_NUMBER_KEY, arg, &(cmd_args->common_args));
+      if (ret == ARGP_ERR_UNKNOWN)
+	return (ret);
       break;
     case SLAVE_ADDRESS_KEY:
-      errno = 0;
-      value = strtol (arg, &endptr, 0);
-      if (errno
-          || endptr[0] != '\0')
-        {
-          fprintf (stderr, "invalid slave address\n");
-          exit (1);
-        }
-      cmd_args->slave_address_arg = (uint8_t) value;
-      cmd_args->slave_address = 1;
+      ret = common_parse_opt (ARGP_TARGET_SLAVE_ADDRESS_KEY, arg, &(cmd_args->common_args));
+      if (ret == ARGP_ERR_UNKNOWN)
+	return (ret);
       break;
     case CMD_FILE_KEY:
       if (!(cmd_args->cmd_file = strdup (arg)))
         {
           perror ("strdup");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       break;
     case ARGP_KEY_ARG:
@@ -148,7 +134,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
         if (*arg == '\0')
           {
             fprintf (stderr, "invalid hex byte argument\n");
-            exit (1);
+            exit (EXIT_FAILURE);
           }
         
         for (i = 0; arg[i] != '\0'; i++)
@@ -156,13 +142,13 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
             if (i >= 2)
               {
                 fprintf (stderr, "invalid hex byte argument\n");
-                exit (1);
+                exit (EXIT_FAILURE);
               }
             
             if (!isxdigit (arg[i]))
               {
                 fprintf (stderr, "invalid hex byte argument\n");
-                exit (1);
+                exit (EXIT_FAILURE);
               }
           }
         
@@ -174,14 +160,14 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 		|| endptr[0] != '\0')
 	      {
 		fprintf (stderr, "invalid hex byte argument\n");
-		exit (1);
+		exit (EXIT_FAILURE);
 	      }
 	    cmd_args->cmd[cmd_args->cmd_length++] = (uint8_t) value;
 	  }
 	else
 	  {
 	    fprintf (stderr, "Too many arguments specified\n");
-	    exit (1);
+	    exit (EXIT_FAILURE);
 	  }
         
         break;
@@ -189,10 +175,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case ARGP_KEY_END:
       break;
     default:
-      ret = common_parse_opt (key, arg, &(cmd_args->common));
-      if (ret == ARGP_ERR_UNKNOWN)
-        ret = hostrange_parse_opt (key, arg, &(cmd_args->hostrange));
-      return (ret);
+      return (common_parse_opt (key, arg, &(cmd_args->common_args)));
     }
 
   return (0);
@@ -203,32 +186,15 @@ _ipmi_raw_config_file_parse (struct ipmi_raw_arguments *cmd_args)
 {
   assert (cmd_args);
 
-  if (config_file_parse (cmd_args->common.config_file,
+  if (config_file_parse (cmd_args->common_args.config_file,
                          0,
-                         &(cmd_args->common),
-                         NULL,
-                         &(cmd_args->hostrange),
+                         &(cmd_args->common_args),
                          CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE,
                          CONFIG_FILE_TOOL_IPMI_RAW,
                          NULL) < 0)
     {
       fprintf (stderr, "config_file_parse: %s\n", strerror (errno));
-      exit (1);
-    }
-}
-
-static void
-_ipmi_raw_args_validate (struct ipmi_raw_arguments *cmd_args)
-{
-  assert (cmd_args);
-
-  if ((cmd_args->channel_number
-       && !cmd_args->slave_address)
-      || (!cmd_args->channel_number
-          && cmd_args->slave_address))
-    {
-      fprintf (stderr, "must specify both channel number and slave address\n");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 }
 
@@ -239,11 +205,8 @@ ipmi_raw_argp_parse (int argc, char **argv, struct ipmi_raw_arguments *cmd_args)
   assert (argv);
   assert (cmd_args);
 
-  init_common_cmd_args_admin (&(cmd_args->common));
-  init_hostrange_cmd_args (&(cmd_args->hostrange));
+  init_common_cmd_args_admin (&(cmd_args->common_args));
 
-  cmd_args->channel_number = 0;
-  cmd_args->slave_address = 0;
   cmd_args->cmd_file = NULL;
   memset (cmd_args->cmd, '\0', sizeof (uint8_t) * IPMI_RAW_MAX_ARGS);
   cmd_args->cmd_length = 0;
@@ -253,7 +216,7 @@ ipmi_raw_argp_parse (int argc, char **argv, struct ipmi_raw_arguments *cmd_args)
               argv,
               ARGP_IN_ORDER,
               NULL,
-              &(cmd_args->common));
+              &(cmd_args->common_args));
 
   _ipmi_raw_config_file_parse (cmd_args);
 
@@ -264,7 +227,5 @@ ipmi_raw_argp_parse (int argc, char **argv, struct ipmi_raw_arguments *cmd_args)
               NULL,
               cmd_args);
 
-  verify_common_cmd_args (&(cmd_args->common));
-  verify_hostrange_cmd_args (&(cmd_args->hostrange));
-  _ipmi_raw_args_validate (cmd_args);
+  verify_common_cmd_args (&(cmd_args->common_args));
 }

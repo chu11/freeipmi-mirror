@@ -24,8 +24,8 @@
  *  with Ipmidetect.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef IPMI_DETECT_H
-#define IPMI_DETECT_H
+#ifndef IPMIDETECT_H
+#define IPMIDETECT_H
 
 #include <stdio.h>
 
@@ -181,4 +181,4 @@ int ipmidetect_is_node_detected (ipmidetect_t handle, const char *node);
  */
 int ipmidetect_is_node_undetected (ipmidetect_t handle, const char *node);
 
-#endif /* IPMI_DETECT_H */
+#endif /* IPMIDETECT_H */

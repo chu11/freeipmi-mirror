@@ -421,7 +421,7 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_capabilities_rs
     { 8,  "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
     { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
     { 8,  "max_concurrent_settings", REQUIRED, LENGTH-FIXED }
-    { 16, "max power_thermal", REQUIRED, LENGTH-FIXED }
+    { 16, "max_power_thermal", REQUIRED, LENGTH-FIXED }
     { 16, "min_power_thermal", REQUIRED, LENGTH-FIXED }
     { 32, "min_correction_time", REQUIRED, LENGTH-FIXED }
     { 32, "max_correction_time", REQUIRED, LENGTH-FIXED }

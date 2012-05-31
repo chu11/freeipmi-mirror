@@ -29,6 +29,13 @@ extern "C" {
 
 /* ERROR CODE NOTES
  *
+ * IPMI_ERR_BMC_BUSY vs IPMI_ERR_DRIVER_BUSY
+ *
+ * BMC_BUSY indicates the BMC cannot handle more requests, it is an
+ * error typically from a completion code returned from the BMC.  The
+ * DRIVER_BUSY error indicates a driver is too busy to handle
+ * additional requests, the error does not come from the BMC.
+ *
  * IPMI_ERR_MESSAGE_TIMEOUT
  *
  * message timeout is typical of bridging commands.  The
@@ -58,21 +65,22 @@ enum ipmi_errnum
     IPMI_ERR_DEVICE_NOT_OPEN = 16,
     IPMI_ERR_DEVICE_NOT_SUPPORTED = 17,
     IPMI_ERR_DEVICE_NOT_FOUND = 18,
-    IPMI_ERR_DRIVER_TIMEOUT = 19,
-    IPMI_ERR_MESSAGE_TIMEOUT = 20,
-    IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE = 21,
-    IPMI_ERR_BAD_COMPLETION_CODE = 22,
-    IPMI_ERR_BAD_RMCPPLUS_STATUS_CODE = 23,
-    IPMI_ERR_NOT_FOUND = 24,
-    IPMI_ERR_BMC_BUSY = 25,
-    IPMI_ERR_OUT_OF_MEMORY = 26,
-    IPMI_ERR_HOSTNAME_INVALID = 27,
-    IPMI_ERR_PARAMETERS = 28,
-    IPMI_ERR_DRIVER_PATH_REQUIRED = 29,
-    IPMI_ERR_IPMI_ERROR = 30,
-    IPMI_ERR_SYSTEM_ERROR = 31,
-    IPMI_ERR_INTERNAL_ERROR = 32,
-    IPMI_ERR_ERRNUMRANGE = 33,
+    IPMI_ERR_DRIVER_BUSY = 19,
+    IPMI_ERR_DRIVER_TIMEOUT = 20,
+    IPMI_ERR_MESSAGE_TIMEOUT = 21,
+    IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE = 22,
+    IPMI_ERR_BAD_COMPLETION_CODE = 23,
+    IPMI_ERR_BAD_RMCPPLUS_STATUS_CODE = 24,
+    IPMI_ERR_NOT_FOUND = 25,
+    IPMI_ERR_BMC_BUSY = 26,
+    IPMI_ERR_OUT_OF_MEMORY = 27,
+    IPMI_ERR_HOSTNAME_INVALID = 28,
+    IPMI_ERR_PARAMETERS = 29,
+    IPMI_ERR_DRIVER_PATH_REQUIRED = 30,
+    IPMI_ERR_IPMI_ERROR = 31,
+    IPMI_ERR_SYSTEM_ERROR = 32,
+    IPMI_ERR_INTERNAL_ERROR = 33,
+    IPMI_ERR_ERRNUMRANGE = 34,
   };
 typedef enum ipmi_errnum ipmi_errnum_type_t;
 
@@ -219,12 +227,36 @@ int ipmi_ctx_find_inband (ipmi_ctx_t ctx,
                           unsigned int workaround_flags,
                           unsigned int flags);
 
+/* Set target channel and slave address so all ipmi_cmd() calls and
+ * library API calls use ipmb.
+ *
+ * To set only one parameter, pass in NULL for the other parameter.
+ * When only one parameter is passed, the other will be the default
+ * target channel of IPMI_CHANNEL_NUMBER_PRIMARY_IPMB (0x0) or the
+ * default rs_addr of IPMI_SLAVE_ADDRESS_BMC (0x20).
+ *
+ * To reset to defaults, pass in NULL for both parameters.
+ *
+ * Can only be called after device opened. 
+ */ 
+int ipmi_ctx_set_target (ipmi_ctx_t ctx, 
+			 uint8_t *channel_number,
+			 uint8_t *rs_addr);
+
+int ipmi_ctx_get_target (ipmi_ctx_t ctx, 
+			 uint8_t *channel_number,
+			 uint8_t *rs_addr);
+
 int ipmi_cmd (ipmi_ctx_t ctx,
               uint8_t lun,
               uint8_t net_fn,
               fiid_obj_t obj_cmd_rq,
               fiid_obj_t obj_cmd_rs);
 
+/* convenience function to perform a single bridged IPMI command.
+ * Will effectively call ipmi_ctx_set_target(), then ipmi_cmd(), then
+ * will set targets back to prior originals.
+ */
 int ipmi_cmd_ipmb (ipmi_ctx_t ctx,
                    uint8_t channel_number,
                    uint8_t rs_addr,
@@ -244,9 +276,10 @@ int ipmi_cmd_raw (ipmi_ctx_t ctx,
                   void *buf_rs,
                   unsigned int buf_rs_len);
 
-/* for request/response, byte #1 = cmd */
-/* for response, byte #2 (typically) = completion code */
-/* returns length written into buf_fs on success, -1 on error */
+/* convenience function to perform a single bridged IPMI raw command.
+ * Will effectively call ipmi_ctx_set_target(), then ipmi_cmd_raw(),
+ * then will set targets back to prior originals.
+ */
 int ipmi_cmd_raw_ipmb (ipmi_ctx_t ctx,
 		       uint8_t channel_number,
 		       uint8_t rs_addr,

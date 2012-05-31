@@ -340,12 +340,12 @@ _dump_rmcpplus_payload_data (int fd,
       
       if (tmpl_ipmb_msg_hdr && tmpl_ipmb_cmd && ipmb_buf_len)
         {
-          if (ipmi_debug_dump_ipmb (fd,
-                                    prefix,
-                                    ipmb_buf,
-                                    ipmb_buf_len,
-                                    tmpl_ipmb_msg_hdr,
-                                    tmpl_ipmb_cmd) < 0)
+          if (debug_dump_ipmb (fd,
+			       prefix,
+			       ipmb_buf,
+			       ipmb_buf_len,
+			       tmpl_ipmb_msg_hdr,
+			       tmpl_ipmb_cmd) < 0)
             goto cleanup;
         }
 
@@ -604,7 +604,7 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128 (int fd,
           && pkt
           && ipmi_payload_len);
 
-  if ((cipher_keylen = ipmi_crypt_cipher_key_len (IPMI_CRYPT_CIPHER_AES)) < 0)
+  if ((cipher_keylen = crypt_cipher_key_len (IPMI_CRYPT_CIPHER_AES)) < 0)
     {
       ERRNO_TRACE (errno);
       goto cleanup;
@@ -618,7 +618,7 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128 (int fd,
     }
   confidentiality_key_len = IPMI_CRYPT_AES_CBC_128_KEY_LENGTH;
 
-  if ((cipher_blocklen = ipmi_crypt_cipher_block_len (IPMI_CRYPT_CIPHER_AES)) < 0)
+  if ((cipher_blocklen = crypt_cipher_block_len (IPMI_CRYPT_CIPHER_AES)) < 0)
     {
       ERRNO_TRACE (errno);
       goto cleanup;
@@ -658,14 +658,14 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128 (int fd,
       goto cleanup;
     }
 
-  if ((decrypt_len = ipmi_crypt_cipher_decrypt (IPMI_CRYPT_CIPHER_AES,
-                                                IPMI_CRYPT_CIPHER_MODE_CBC,
-                                                confidentiality_key,
-                                                confidentiality_key_len,
-                                                iv,
-                                                IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH,
-                                                payload_buf,
-                                                payload_data_len)) < 0)
+  if ((decrypt_len = crypt_cipher_decrypt (IPMI_CRYPT_CIPHER_AES,
+					   IPMI_CRYPT_CIPHER_MODE_CBC,
+					   confidentiality_key,
+					   confidentiality_key_len,
+					   iv,
+					   IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH,
+					   payload_buf,
+					   payload_data_len)) < 0)
     {
       ERRNO_TRACE (errno);
       goto cleanup;
@@ -1213,13 +1213,13 @@ _ipmi_dump_rmcpplus_packet (int fd,
                  && confidentiality_key_len)));
   assert (tmpl_cmd);
 
-  if (ipmi_debug_set_prefix (prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN, prefix) < 0)
+  if (debug_set_prefix (prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN, prefix) < 0)
     {
       ERRNO_TRACE (errno);
       goto cleanup;
     }
 
-  if (ipmi_debug_output_str (fd, prefix_buf, hdr) < 0)
+  if (debug_output_str (fd, prefix_buf, hdr) < 0)
     {
       ERRNO_TRACE (errno);
       goto cleanup;
@@ -1457,7 +1457,7 @@ _ipmi_dump_rmcpplus_packet (int fd,
         }
     }
 
-  if (ipmi_debug_output_str (fd, prefix_buf, trlr) < 0)
+  if (debug_output_str (fd, prefix_buf, trlr) < 0)
     {
       ERRNO_TRACE (errno);
       goto cleanup;

@@ -157,7 +157,7 @@ ipmi_ping_err_exit (char *fmt, ...)
   va_end (ap);
 
   _cleanup ();
-  exit (1);
+  exit (EXIT_FAILURE);
 }
 
 static void
@@ -193,7 +193,7 @@ _output_usage (const char *options)
     fprintf (stderr, "  -s   starting sequence number\n");
   if (strchr (options, 'd'))
     fprintf (stderr, "  -d   turn on debugging\n");
-  exit (1);
+  exit (EXIT_FAILURE);
 }
 
 static void
@@ -203,7 +203,7 @@ _output_version (void)
 
   fprintf (stderr, "%s %s\n", pingtool_progname, VERSION);
 
-  exit (1);
+  exit (EXIT_FAILURE);
 }
 
 static void
@@ -590,7 +590,7 @@ ipmi_ping_setup (int argc,
       if (!strchr (valid_options, c))
         {
           fprintf (stderr, "ipmi_ping_setup: invalid options listed");
-          exit (1);
+          exit (EXIT_FAILURE);
         }
       ptr++;
     }

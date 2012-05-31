@@ -23,24 +23,11 @@
 #include <freeipmi/freeipmi.h>
 
 #include "tool-cmdline-common.h"
-#include "parse-common.h"
-
-#define IPMI_OPEN_ERRMSGLEN 1024
-
-int ipmi_is_root ();
-
-void ipmi_disable_coredump (void);
+#include "pstdout.h"
 
 ipmi_ctx_t ipmi_open (const char *progname,
                       const char *hostname,
-                      struct common_cmd_args *cmd_args,
-                      char *errmsg,
-                      unsigned int errmsglen);
-
-/* Check if kg len is decent */
-int check_kg_len (const char *in);
-
-/* Turn a 20-byte binary k_g key into an output string */
-char *format_kg (char *out, unsigned int outlen, const void *k_g);
+                      struct common_cmd_args *common_args,
+		      pstdout_state_t pstate);
 
 #endif /* TOOL_COMMON_H */

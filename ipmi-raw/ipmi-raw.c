@@ -41,6 +41,7 @@
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
 #include "tool-hostrange-common.h"
+#include "tool-util-common.h"
 
 static int
 ipmi_raw_cmdline (ipmi_raw_state_data_t *state_data)
@@ -84,42 +85,19 @@ ipmi_raw_cmdline (ipmi_raw_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (state_data->prog_data->args->channel_number
-      && state_data->prog_data->args->slave_address)
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+			      bytes_rq[0],
+			      bytes_rq[1],
+			      &bytes_rq[2],
+			      send_len - 2,
+			      bytes_rs,
+			      IPMI_RAW_MAX_ARGS)) < 0)
     {
-      if ((rs_len = ipmi_cmd_raw_ipmb (state_data->ipmi_ctx,
-                                       state_data->prog_data->args->channel_number_arg,
-                                       state_data->prog_data->args->slave_address_arg,
-                                       bytes_rq[0],
-                                       bytes_rq[1],
-                                       &bytes_rq[2],
-                                       send_len - 2,
-                                       bytes_rs,
-                                       IPMI_RAW_MAX_ARGS)) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "ipmi_cmd_raw_ipmb: %s\n",
-                           ipmi_ctx_errormsg (state_data->ipmi_ctx));
-          goto cleanup;
-        }
-    }
-  else
-    {
-      if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
-                                  bytes_rq[0],
-                                  bytes_rq[1],
-                                  &bytes_rq[2],
-                                  send_len - 2,
-                                  bytes_rs,
-                                  IPMI_RAW_MAX_ARGS)) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "ipmi_cmd_raw: %s\n",
-                           ipmi_ctx_errormsg (state_data->ipmi_ctx));
-          goto cleanup;
-        }
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "ipmi_cmd_raw: %s\n",
+		       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
     }
   
   pstdout_printf (state_data->pstate, "rcvd: ");
@@ -320,43 +298,20 @@ ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
           goto cleanup;
         }
   
-      if (state_data->prog_data->args->channel_number
-          && state_data->prog_data->args->slave_address)
-        {
-          if ((rs_len = ipmi_cmd_raw_ipmb (state_data->ipmi_ctx,
-                                           state_data->prog_data->args->channel_number_arg,
-                                           state_data->prog_data->args->slave_address_arg,
-                                           bytes_rq[0],
-                                           bytes_rq[1],
-                                           &bytes_rq[2],
-                                           send_len - 2,
-                                           bytes_rs,
-                                           IPMI_RAW_MAX_ARGS)) < 0)
-            {
-              pstdout_fprintf (state_data->pstate,
-                               stderr,
-                               "ipmi_cmd_raw_ipmb: %s\n",
-                               ipmi_ctx_errormsg (state_data->ipmi_ctx));
-              goto end_loop;
-            }
-        }
-      else
-        {
-          if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
-                                      bytes_rq[0],
-                                      bytes_rq[1],
-                                      &bytes_rq[2],
-                                      send_len - 2,
-                                      bytes_rs,
-                                      IPMI_RAW_MAX_ARGS)) < 0)
-            {
-              pstdout_fprintf (state_data->pstate,
-                               stderr,
-                               "ipmi_cmd_raw: %s\n",
-                               ipmi_ctx_errormsg (state_data->ipmi_ctx));
-              goto end_loop;
-            }
-        }
+      if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+				  bytes_rq[0],
+				  bytes_rq[1],
+				  &bytes_rq[2],
+				  send_len - 2,
+				  bytes_rs,
+				  IPMI_RAW_MAX_ARGS)) < 0)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_cmd_raw: %s\n",
+			   ipmi_ctx_errormsg (state_data->ipmi_ctx));
+	  goto end_loop;
+	}
 
       pstdout_printf (state_data->pstate, "rcvd: ");
       for (i = 0; i < rs_len; i++)
@@ -428,8 +383,7 @@ _ipmi_raw (pstdout_state_t pstate,
 {
   ipmi_raw_state_data_t state_data;
   ipmi_raw_prog_data_t *prog_data;
-  char errmsg[IPMI_OPEN_ERRMSGLEN];
-  int exit_code = -1;
+  int exit_code = EXIT_FAILURE;
 
   assert (pstate);
   assert (arg);
@@ -442,25 +396,14 @@ _ipmi_raw (pstdout_state_t pstate,
 
   if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
                                          hostname,
-                                         &(prog_data->args->common),
-                                         errmsg,
-                                         IPMI_OPEN_ERRMSGLEN)))
-    {
-      pstdout_fprintf (pstate,
-                       stderr,
-                       "%s\n",
-                       errmsg);
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
+                                         &(prog_data->args->common_args),
+					 state_data.pstate)))
+    goto cleanup;
 
   if (run_cmd_args (&state_data) < 0)
-    {
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
+    goto cleanup;
 
-  exit_code = 0;
+  exit_code = EXIT_SUCCESS;
  cleanup:
   ipmi_ctx_close (state_data.ipmi_ctx);
   ipmi_ctx_destroy (state_data.ipmi_ctx);
@@ -472,7 +415,6 @@ main (int argc, char **argv)
 {
   ipmi_raw_prog_data_t prog_data;
   struct ipmi_raw_arguments cmd_args;
-  int exit_code;
   int hosts_count;
   int rv;
 
@@ -483,35 +425,22 @@ main (int argc, char **argv)
   ipmi_raw_argp_parse (argc, argv, &cmd_args);
   prog_data.args = &cmd_args;
 
-  if ((hosts_count = pstdout_setup (&(prog_data.args->common.hostname),
-                                    prog_data.args->hostrange.buffer_output,
-                                    prog_data.args->hostrange.consolidate_output,
-                                    prog_data.args->hostrange.fanout,
-                                    prog_data.args->hostrange.eliminate,
-                                    prog_data.args->hostrange.always_prefix)) < 0)
-    {
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
-    }
+  if ((hosts_count = pstdout_setup (&(prog_data.args->common_args.hostname),
+				    &(prog_data.args->common_args))) < 0)
+    return (EXIT_FAILURE);
 
   if (!hosts_count)
-    {
-      exit_code = EXIT_SUCCESS;
-      goto cleanup;
-    }
+    return (EXIT_SUCCESS);
 
-  if ((rv = pstdout_launch (prog_data.args->common.hostname,
+  if ((rv = pstdout_launch (prog_data.args->common_args.hostname,
                             _ipmi_raw,
                             &prog_data)) < 0)
     {
       fprintf (stderr,
                "pstdout_launch: %s\n",
                pstdout_strerror (pstdout_errnum));
-      exit_code = EXIT_FAILURE;
-      goto cleanup;
+      return (EXIT_FAILURE);
     }
 
-  exit_code = rv;
- cleanup:
-  return (exit_code);
+  return (rv);
 }

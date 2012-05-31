@@ -84,8 +84,10 @@ struct config_file_data_bmc_info
 
 struct config_file_data_bmc_watchdog
 {
-  char *logfile;
-  int logfile_count;
+  char *logfile;		/* deprecated */
+  int logfile_count;		/* deprecated */
+  int verbose_logging;
+  int verbose_logging_count;
   int no_logging;
   int no_logging_count;
 };
@@ -106,8 +108,10 @@ struct config_file_data_ipmi_fru
 {
   int verbose_count;
   int verbose_count_count;
-  int skip_checks;
-  int skip_checks_count;
+  int skip_checks;		/* legacy - parse for backwards compatability */
+  int skip_checks_count;	/* legacy - parse for backwards compatability */
+  int bridge_fru;
+  int bridge_fru_count;
   int interpret_oem_data;
   int interpret_oem_data_count;
 };
@@ -168,8 +172,8 @@ struct config_file_data_ipmi_sel
   int output_event_state_count;
   char *event_state_config_file;
   int event_state_config_file_count;
-  int assume_system_event_records;
-  int assume_system_event_records_count;
+  int assume_system_event_records; /* legacy - parse for backwards compatability */
+  int assume_system_event_records_count; /* legacy - parse for backwards compatability */
   int interpret_oem_data;
   int interpret_oem_data_count;
   int output_oem_event_strings;
@@ -288,9 +292,7 @@ struct config_file_data_ipmipower
 
 int config_file_parse (const char *filename,
                        int no_error_if_not_found,
-                       struct common_cmd_args *cmd_args,
-                       struct sdr_cmd_args *sdr_args,
-                       struct hostrange_cmd_args *hostrange_args,
+                       struct common_cmd_args *common_args,
                        unsigned int support,
                        unsigned int tool_support,
                        void *tool_data);

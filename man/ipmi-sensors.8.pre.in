@@ -166,7 +166,9 @@ if \fB\-\-output\-sensor\-state\fR not specified.
 Output legacy format of legacy
 .B ipmimonitoring
 tool.  Newer options may not be applicable to legacy output.
-#include <@top_srcdir@/man/manpage-common-sdr-options.man>
+#include <@top_srcdir@/man/manpage-common-sdr-cache-options-heading.man>
+#include <@top_srcdir@/man/manpage-common-sdr-cache-options.man>
+#include <@top_srcdir@/man/manpage-common-sdr-cache-file-directory.man>
 #include <@top_srcdir@/man/manpage-common-hostranged-options-header.man>
 #include <@top_srcdir@/man/manpage-common-hostranged-buffer.man>
 #include <@top_srcdir@/man/manpage-common-hostranged-consolidate.man>
@@ -246,7 +248,7 @@ Supermicro X7DB8, Supermicro X8DTN, Supermicro X7SBI-LN4, Supermicro
 X8DTH, Supermicro X8DTG, Supermicro X8DTU, Supermicro X8DT3-LN4F,
 Supermicro X8DTU-6+, Supermicro X8DTL, Supermicro X8DTL-3F, Supermicro
 X8SIL-F, Supermicro X9SCL, Supermicro X9SCM, Supermicro X8DTN+-F,
-Supermicro X8SIE, Supermicro X9SCA-F-O.
+Supermicro X8SIE, Supermicro X9SCA-F-O, Supermicro H8DGU-F.
 .SH "EXAMPLES"
 .B # ipmi-sensors 
 .PP

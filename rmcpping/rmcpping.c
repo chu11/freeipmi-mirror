@@ -259,5 +259,5 @@ main (int argc, char **argv)
 {
   ipmi_ping_setup (argc, argv, 0, RMCP_ASF_MESSAGE_TAG_MAX, "hVc:i:I:t:vs:d");
   ipmi_ping_loop (createpacket, parsepacket, latepacket, endresult);
-  exit (1);                    /* NOT REACHED */
+  exit (EXIT_FAILURE);                    /* NOT REACHED */
 }

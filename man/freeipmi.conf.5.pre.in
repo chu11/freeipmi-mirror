@@ -23,7 +23,8 @@ Currently, the tools that can be configured with the configuration file are:
 .B ipmi-chassis-config(8),
 .B ipmi-fru(8),
 .B ipmi-oem(8),
-.B ipmi-pef-config(8).
+.B ipmi-pef-config(8),
+.B ipmi-pet(8),
 .B ipmi-raw(8),
 .B ipmi-sel(8),
 .B ipmi-sensors(8),
@@ -75,8 +76,14 @@ Specify the default in-band driver address to use.
 \fBdriver\-device\fR \fIDEVICE\fR
 Specify the default in-band driver device path to use.
 .TP
-\fBregister\-spacing\fR \fIREGISTER-SPACING\fR
-Specify the default in-band driver registerspacing to use.
+\fBregister\-spacing\fR \fIREGISTER\-SPACING\fR
+Specify the default in-band driver register spacing to use.
+.TP
+\fBtarget\-channel\-number\fR \fICHANNEL\-NUMBER\FR
+Specify the default in-band driver target channel number.
+.TP
+\fBtarget\-slave\-address\fR \fISLAVE\-ADDRESS\FR
+Specify the default in-band driver target slave address.
 .TP
 \fBusername\fR \fIUSERNAME\fR
 Specify the default username to use.
@@ -353,8 +360,8 @@ Please see
 .B bmc-watchdog(8) 
 manpage for available workarounds.
 .TP
-\fBbmc\-watchdog\-logfile\fR \fIFILE\fR
-Specify the default logfile.
+\fBbmc\-watchdog\-verbose\-logging\fR \fIENABLE|DISABLE\fR
+Specify if logging will be verbose by default.
 .TP
 \fBbmc\-watchdog\-no\-logging\fR \fIENABLE|DISABLE\fR
 Specify if logging will be disabled by default.
@@ -611,9 +618,15 @@ manpage for available workarounds.
 \fBipmi\-fru\-verbose\-count\fR \fICOUNT\fR
 Specify default verbose count to use for
 .B ipmi-fru(8).
+.if 0 \{
 .TP
 \fBipmi\-fru\-skip\-checks\fR \fIENABLE|DISABLE\fR
 Specify if checksum checks will be skipped by default.
+\}
+.TP
+\fBipmi\-fru\-bridge\-fru\fR \fIENABLE|DISABLE\fR
+Specify if FRU entries on other controllers should be read by default
+or not.
 .TP
 \fBipmi\-fru\-interpret\-oem\-data\fR \fIENABLE|DISABLE\fR
 Specify if
@@ -972,6 +985,21 @@ manpage for available workarounds.
 Specify default verbose count to use for
 .B ipmi-sel(8).
 .TP
+\fBipmi\-sel\-types\fR \fITYPE-LIST\fR
+Specify default types to show SEL events for.  Multiple types can
+be specified separated by whitespace.  Users may specify sensor types
+by string or by number (decimal or hex).  Please see 
+.B ipmi-sel(8)
+\fI\-\-list\-types\fR option to see possible string input types.
+.TP
+\fBipmi\-sel\-exclude\-types\fR \fSENSOR-TYPES-LIST\fR Specify
+default sensor types to not show SEL events for.  Multiple sensor
+types can be specified separated by whitespace.  Users may specify
+sensor types by string or by number.  Please see
+.B ipmi-sel(8)
+\fI\-\-list\-types\fR option to see possible string
+input types.
+.TP
 \fBipmi\-sel\-system\-event\-only\fR \fIENABLE|DISABLE\fR
 Specify if output should only include system event records.
 .TP
@@ -989,10 +1017,12 @@ should output the event state state by default.
 .TP
 \fBipmi\-sel\-event\-state\-config\-file\fR \fIFILE\fR
 Specify the default event state configuration file.
+.if 0 \{
 .TP
 \fBipmi\-sel\-assume\-system\-event\-records\fR \fIENABLE|DISABLE\fR
 Specify if system event records should be assumed when there are
 invalid record types.
+\}
 .TP
 \fBipmi\-sel\-interpret\-oem\-data\fR \fIENABLE|DISABLE\fR
 Specify if
@@ -1104,14 +1134,14 @@ record ids can be specified separated by whitespace.
 Specify default types to show sensor outputs for.  Multiple types can
 be specified separated by whitespace.  Users may specify sensor types
 by string or by number (decimal or hex).  Please see 
-.Bipmi-sensors(8)'s
+.B ipmi-sensors(8)
 \fI\-\-list\-types\fR option to see possible string input types.
 .TP
 \fBipmi\-sensors\-exclude\-types\fR \fSENSOR-TYPES-LIST\fR Specify
 default sensor types to not show sensor outputs for.  Multiple sensor
 types can be specified separated by whitespace.  Users may specify
 sensor types by string or by number.  Please see
-.B ipmi-sensors(8)'s
+.B ipmi-sensors(8)
 \fI\-\-list\-types\fR option to see possible string
 input types.
 .TP

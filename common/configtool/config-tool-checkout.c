@@ -91,7 +91,7 @@ config_checkout_section (pstdout_state_t pstate,
                                    section->section_comment,
                                    fp) < 0)
         {
-          if (cmd_args->common.debug)
+          if (cmd_args->common_args.debug)
             pstdout_fprintf (pstate,
                              stderr,
                              "## Error: Comment output error\n");

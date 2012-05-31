@@ -65,7 +65,8 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL,
     ARGP_COMMON_OPTIONS_CONFIG_FILE,
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
-    ARGP_COMMON_SDR_OPTIONS,
+    ARGP_COMMON_SDR_CACHE_OPTIONS,
+    ARGP_COMMON_SDR_CACHE_OPTIONS_FILE_DIRECTORY,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
     { "list", LIST_KEY, 0, 0,
@@ -91,7 +92,6 @@ static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   struct ipmi_oem_arguments *cmd_args;
-  error_t ret;
 
   assert (state);
   
@@ -112,7 +112,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
             if (!(cmd_args->oem_id = strdup (arg)))
               {
                 perror ("strdup");
-                exit (1);
+                exit (EXIT_FAILURE);
               }
             break;
           }
@@ -121,7 +121,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
             if (!(cmd_args->oem_command = strdup (arg)))
               {
                 perror ("strdup");
-                exit (1);
+                exit (EXIT_FAILURE);
               }
             break;
           }
@@ -132,7 +132,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
                 if (!(cmd_args->oem_options[cmd_args->oem_options_count] = strdup (arg)))
                   {
                     perror ("strdup");
-                    exit (1);
+                    exit (EXIT_FAILURE);
                   }
                 cmd_args->oem_options_count++;
                 break;
@@ -140,7 +140,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	    else
 	      {
 		fprintf (stderr, "Too many arguments specified\n");
-		exit (1);
+		exit (EXIT_FAILURE);
 	      }
           }
         break;
@@ -148,12 +148,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case ARGP_KEY_END:
       break;
     default:
-      ret = common_parse_opt (key, arg, &(cmd_args->common));
-      if (ret == ARGP_ERR_UNKNOWN) 
-        ret = sdr_parse_opt (key, arg, &(cmd_args->sdr));
-      if (ret == ARGP_ERR_UNKNOWN)
-        ret = hostrange_parse_opt (key, arg, &(cmd_args->hostrange));
-      return (ret);
+      return (common_parse_opt (key, arg, &(cmd_args->common_args)));
     }
 
   return (0);
@@ -170,17 +165,15 @@ _ipmi_oem_config_file_parse (struct ipmi_oem_arguments *cmd_args)
           '\0',
           sizeof (struct config_file_data_ipmi_oem));
 
-  if (config_file_parse (cmd_args->common.config_file,
+  if (config_file_parse (cmd_args->common_args.config_file,
                          0,
-                         &(cmd_args->common),
-                         &(cmd_args->sdr),
-                         &(cmd_args->hostrange),
+                         &(cmd_args->common_args),
                          CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_SDR | CONFIG_FILE_HOSTRANGE,
                          CONFIG_FILE_TOOL_IPMI_OEM,
                          &config_file_data) < 0)
     {
       fprintf (stderr, "config_file_parse: %s\n", strerror (errno));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (config_file_data.verbose_count_count)
@@ -194,9 +187,7 @@ ipmi_oem_argp_parse (int argc, char **argv, struct ipmi_oem_arguments *cmd_args)
   assert (argv);
   assert (cmd_args);
 
-  init_common_cmd_args_admin (&(cmd_args->common));
-  init_sdr_cmd_args (&(cmd_args->sdr));
-  init_hostrange_cmd_args (&(cmd_args->hostrange));
+  init_common_cmd_args_admin (&(cmd_args->common_args));
 
   cmd_args->list = 0;
   cmd_args->verbose_count = 0;
@@ -212,7 +203,7 @@ ipmi_oem_argp_parse (int argc, char **argv, struct ipmi_oem_arguments *cmd_args)
               argv,
               ARGP_IN_ORDER,
               NULL,
-              &(cmd_args->common));
+              &(cmd_args->common_args));
 
   _ipmi_oem_config_file_parse (cmd_args);
 
@@ -223,8 +214,5 @@ ipmi_oem_argp_parse (int argc, char **argv, struct ipmi_oem_arguments *cmd_args)
               NULL,
               cmd_args);
 
-  verify_common_cmd_args (&(cmd_args->common));
-  verify_hostrange_cmd_args (&(cmd_args->hostrange));
+  verify_common_cmd_args (&(cmd_args->common_args));
 }
-
-

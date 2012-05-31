@@ -105,7 +105,7 @@ _get_authentication_type_support (bmc_config_state_data_t *state_data,
                                                                              IPMI_LAN_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                              obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_authentication_type_support: %s\n",
@@ -214,7 +214,7 @@ _get_authentication_type_enables (bmc_config_state_data_t *state_data,
                                                                              IPMI_LAN_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                              obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_authentication_type_enables: %s\n",
@@ -542,7 +542,7 @@ _set_authentication_type_enables (bmc_config_state_data_t *state_data,
                                                                              al->oem_level_oem_proprietary,
                                                                              obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables: %s\n",
@@ -645,7 +645,7 @@ _set_authentication_type_enables (bmc_config_state_data_t *state_data,
                                                                                      al->oem_level_oem_proprietary,
                                                                                      obj_cmd_rs) < 0)
             {
-              if (state_data->prog_data->args->config_args.common.debug)
+              if (state_data->prog_data->args->config_args.common_args.debug)
                 pstdout_fprintf (state_data->pstate,
                                  stderr,
                                  "ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables: %s\n",

@@ -68,7 +68,7 @@
     char __err[IPMIPOWER_ERROR_BUFLEN];                                         \
     int __len = 0;                                                              \
     memset (__err, '\0', IPMIPOWER_ERROR_BUFLEN);                               \
-    if (cmd_args.common.debug)                                                  \
+    if (cmd_args.common_args.debug)                                             \
       __len = snprintf (__err,                                                  \
                         IPMIPOWER_ERROR_BUFLEN,                                 \
                         "(%s, %s, %d): ",                                       \
@@ -91,7 +91,7 @@
   do {                                                                          \
     char __err[IPMIPOWER_ERROR_BUFLEN];                                         \
     int __len = 0;                                                              \
-    if (cmd_args.common.debug)                                                  \
+    if (cmd_args.common_args.debug)                                             \
       {                                                                         \
         memset (__err, '\0', IPMIPOWER_ERROR_BUFLEN);                           \
         __len = snprintf (__err,                                                \

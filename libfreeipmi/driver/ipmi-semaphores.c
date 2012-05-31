@@ -43,7 +43,7 @@ struct sembuf mutex_unlock_buf = { 0,  1, SEM_UNDO};
 #define IPMI_INBAND_DEBUG_PROJ_ID 0x03
 
 int
-ipmi_mutex_init (void)
+driver_mutex_init (void)
 {
   int semid = -1;
   key_t key;
@@ -101,7 +101,7 @@ ipmi_mutex_init (void)
 }
 
 int
-ipmi_mutex_lock (int semid)
+driver_mutex_lock (int semid)
 {
   /* achu: don't check for valid semid - responsibility of calling libs */
   do {
@@ -120,14 +120,14 @@ ipmi_mutex_lock (int semid)
 }
 
 int
-ipmi_mutex_lock_interruptible (int semid)
+driver_mutex_lock_interruptible (int semid)
 {
   /* achu: don't check for valid semid - responsibility of calling libs */
   return (semop (semid, &mutex_lock_buf_interruptible, 1));
 }
 
 int
-ipmi_mutex_unlock (int semid)
+driver_mutex_unlock (int semid)
 {
   /* achu: don't check for valid semid - responsibility of calling libs */
 

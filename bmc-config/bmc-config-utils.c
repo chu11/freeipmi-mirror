@@ -45,7 +45,7 @@ load_lan_channel_numbers (bmc_config_state_data_t *state_data)
                                        state_data->lan_channel_numbers,
                                        CHANNEL_NUMBERS_MAX)) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_get_channel_numbers: %s\n",
@@ -71,7 +71,7 @@ load_serial_channel_numbers (bmc_config_state_data_t *state_data)
                                        state_data->serial_channel_numbers,
                                        CHANNEL_NUMBERS_MAX)) < 0)
     {
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_get_channel_numbers: %s\n",
@@ -128,7 +128,7 @@ _get_sol_channel_number_for_channel (bmc_config_state_data_t *state_data,
 
   assert (state_data);
 
-  if (state_data->prog_data->args->config_args.common.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_SOL_CHANNEL_ASSUME_LAN_CHANNEL)
+  if (state_data->prog_data->args->config_args.common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_SOL_CHANNEL_ASSUME_LAN_CHANNEL)
     {
       _sol_channel_number_save (state_data, lan_channel_number, lan_channel_number);
       goto out;
@@ -159,7 +159,7 @@ _get_sol_channel_number_for_channel (bmc_config_state_data_t *state_data,
           goto out;
         }
 
-      if (state_data->prog_data->args->config_args.common.debug)
+      if (state_data->prog_data->args->config_args.common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_sol_configuration_parameters_sol_payload_channel: %s\n",

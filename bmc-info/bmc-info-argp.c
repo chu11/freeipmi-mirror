@@ -67,17 +67,17 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_DEBUG,
     /* legacy */
     { "guid", GUID_KEY, NULL, OPTION_HIDDEN,
-      "Display only device guid.", 30},
+      "Display only device guid.", 40},
     { "get-device-id", GET_DEVICE_ID_KEY, NULL, 0,
-      "Display only device ID information.", 31},
+      "Display only device ID information.", 41},
     { "get-device-guid", GET_DEVICE_GUID_KEY, NULL, 0,
-      "Display only device guid.", 32},
+      "Display only device guid.", 42},
     { "get-system-info", GET_SYSTEM_INFO_KEY, NULL, 0,
-      "Display only system information.", 33},
+      "Display only system information.", 43},
     { "get-channel-info", GET_CHANNEL_INFO_KEY, NULL, 0,
-      "Display only channel information.", 34},
-    { "interpret-oem-data", INTERPRET_OEM_DATA, NULL, 0,
-      "Attempt to interpret OEM data.", 35},
+      "Display only channel information.", 44},
+    { "interpret-oem-data", INTERPRET_OEM_DATA_KEY, NULL, 0,
+      "Attempt to interpret OEM data.", 45},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -97,7 +97,6 @@ static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   struct bmc_info_arguments *cmd_args;
-  error_t ret;
 
   assert (state);
   
@@ -119,7 +118,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case GET_CHANNEL_INFO_KEY:
       cmd_args->get_channel_info++;
       break;
-    case INTERPRET_OEM_DATA:
+    case INTERPRET_OEM_DATA_KEY:
       cmd_args->interpret_oem_data = 1;
       break;
     case ARGP_KEY_ARG:
@@ -129,10 +128,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case ARGP_KEY_END:
       break;
     default:
-      ret = common_parse_opt (key, arg, &(cmd_args->common));
-      if (ret == ARGP_ERR_UNKNOWN)
-        ret = hostrange_parse_opt (key, arg, &(cmd_args->hostrange));
-      return (ret);
+      return (common_parse_opt (key, arg, &(cmd_args->common_args)));
     }
 
   return (0);
@@ -149,17 +145,15 @@ _bmc_info_config_file_parse (struct bmc_info_arguments *cmd_args)
           '\0',
           sizeof (struct config_file_data_bmc_info));
 
-  if (config_file_parse (cmd_args->common.config_file,
+  if (config_file_parse (cmd_args->common_args.config_file,
                          0,
-                         &(cmd_args->common),
-                         NULL,
-                         &(cmd_args->hostrange),
+                         &(cmd_args->common_args),
                          CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE,
                          CONFIG_FILE_TOOL_BMC_INFO,
                          &config_file_data) < 0)
     {
       fprintf (stderr, "config_file_parse: %s\n", strerror (errno));
-      exit (1);
+      exit (EXIT_FAILURE);
     }
 
   if (config_file_data.interpret_oem_data_count)
@@ -173,8 +167,7 @@ bmc_info_argp_parse (int argc, char **argv, struct bmc_info_arguments *cmd_args)
   assert (argv);
   assert (cmd_args);
 
-  init_common_cmd_args_user (&(cmd_args->common));
-  init_hostrange_cmd_args (&(cmd_args->hostrange));
+  init_common_cmd_args_user (&(cmd_args->common_args));
 
   cmd_args->get_device_id = 0;
   cmd_args->get_device_guid = 0;
@@ -186,7 +179,7 @@ bmc_info_argp_parse (int argc, char **argv, struct bmc_info_arguments *cmd_args)
               argc,
               argv,
               ARGP_IN_ORDER, NULL,
-              &(cmd_args->common));
+              &(cmd_args->common_args));
 
   _bmc_info_config_file_parse (cmd_args);
 
@@ -197,6 +190,5 @@ bmc_info_argp_parse (int argc, char **argv, struct bmc_info_arguments *cmd_args)
               NULL,
               cmd_args);
 
-  verify_common_cmd_args (&(cmd_args->common));
-  verify_hostrange_cmd_args (&(cmd_args->hostrange));
+  verify_common_cmd_args (&(cmd_args->common_args));
 }

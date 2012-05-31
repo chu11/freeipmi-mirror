@@ -62,9 +62,8 @@ nobase_include_HEADERS = \
 	freeipmi/record-format/ipmi-sdr-record-format.h \
 	freeipmi/record-format/ipmi-sdr-oem-record-format.h \
 	freeipmi/record-format/ipmi-sel-record-format.h \
-	freeipmi/sdr-cache/ipmi-sdr-cache.h \
-	freeipmi/sdr-parse/ipmi-sdr-parse.h \
-	freeipmi/sel-parse/ipmi-sel-parse.h \
+	freeipmi/sdr/ipmi-sdr.h \
+	freeipmi/sel/ipmi-sel.h \
 	freeipmi/sensor-read/ipmi-sensor-read.h \
 	freeipmi/spec/ipmi-authentication-type-spec.h \
 	freeipmi/spec/ipmi-channel-spec.h \
@@ -151,7 +150,6 @@ nobase_include_HEADERS = \
 	freeipmi/util/ipmi-rmcpplus-util.h \
 	freeipmi/util/ipmi-sensor-and-event-code-tables-util.h \
 	freeipmi/util/ipmi-sensor-util.h \
-	freeipmi/util/ipmi-sensor-units-util.h \
 	freeipmi/util/ipmi-util.h \
 	freeipmi/util/ipmi-dcmi-util.h \
 	freeipmi/util/rmcp-util.h

@@ -14,3 +14,11 @@ probed path.
 \fB\-\-register\-spacing\fR=\fIREGISTER-SPACING\fR
 Specify the in-band driver register spacing instead of the probed
 value.  Argument is in bytes (i.e. 32bit register spacing = 4)
+.TP
+\fB\-\-target\-channel\-number\fR=\fICHANNEL\-NUMBER\FR
+Specify the in-band driver target channel number to send IPMI requests
+to.
+.TP
+\fB\-\-target\-slave\-address\fR=\fISLAVE\-ADDRESS\FR
+Specify the in-band driver target slave number to send IPMI requests
+to.

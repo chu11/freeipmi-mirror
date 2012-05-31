@@ -101,6 +101,9 @@ int bridge_sensors = 0;
 int interpret_oem_data = 0;
 int shared_sensors = 0;
 int discrete_reading = 0;
+int ignore_scanning_disabled = 0; 
+int assume_bmc_owner = 0;
+int entity_sensor_names = 0;
 
 /* Initialization flags
  * 
@@ -286,6 +289,15 @@ _ipmimonitoring (struct ipmi_monitoring_ipmi_config *ipmi_config)
 
   if (discrete_reading)
     sensor_reading_flags |= IPMI_MONITORING_SENSOR_READING_FLAGS_DISCRETE_READING;
+
+  if (ignore_scanning_disabled)
+    sensor_reading_flags |= IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_SCANNING_DISABLED;
+
+  if (assume_bmc_owner)
+    sensor_reading_flags |= IPMI_MONITORING_SENSOR_READING_FLAGS_ASSUME_BMC_OWNER;
+
+  if (entity_sensor_names)
+    sensor_reading_flags |= IPMI_MONITORING_SENSOR_READING_FLAGS_ENTITY_SENSOR_NAMES;
 
   if (!record_ids_length && !sensor_types_length)
     {
