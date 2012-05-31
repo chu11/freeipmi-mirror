@@ -1,3 +1,11 @@
+2012-05-31  Albert Chu <chu11@llnl.gov>
+
+	* common/toolcommon/tool-daemon-common.h,
+	common/toolcommon/tool-daemon-common.c (daemon_sleep): New
+	function.
+
+	* bmc-watchdog/: Use new common functions.
+	
 2012-05-30  Albert Chu <chu11@llnl.gov>
 
 	* man/, etc/: Add forgotten config entries.

@@ -26,9 +26,22 @@
 #include <string.h>
 #include <stdarg.h>
 #endif /* STDC_HEADERS */
+#if HAVE_UNISTD_H
 #include <unistd.h>
+#endif /* HAVE_UNISTD_H */
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/select.h>
+#if TIME_WITH_SYS_TIME
+#include <sys/time.h>
+#include <time.h>
+#else  /* !TIME_WITH_SYS_TIME */
+#if HAVE_SYS_TIME_H
+#include <sys/time.h>
+#else /* !HAVE_SYS_TIME_H */
+#include <time.h>
+#endif  /* !HAVE_SYS_TIME_H */
+#endif /* !TIME_WITH_SYS_TIME */
 #include <signal.h>
 #include <errno.h>
 #include <assert.h>
@@ -137,5 +150,23 @@ daemon_signal_handler_setup (sighandler_t cb)
     err_exit ("signal: %s", strerror (errno));
 
   daemon_cb = cb;
+  return (0);
+}
+
+int
+daemon_sleep (unsigned int sleep_len)
+{
+  struct timeval tv;
+  
+  if (!sleep_len)
+    return (0);
+  
+  tv.tv_sec = sleep_len;
+  tv.tv_usec = 0;
+  if (select (1, NULL, NULL, NULL, &tv) < 0)
+    {
+      if (errno != EINTR)
+        err_exit ("select: %s", strerror (errno));
+    }
   return (0);
 }
