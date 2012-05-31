@@ -61,6 +61,8 @@
 
 #define IPMISELD_OEM_NON_TIMESTAMPED_EVENT_FORMAT_STR_DEFAULT "SEL OEM Event: %I, %o"
 
+static int exit_flag = 1;
+
 /* return (-1), real error */
 static int
 _sel_parse_err_handle (ipmiseld_state_data_t *state_data, char *func)
@@ -623,6 +625,12 @@ _ipmiseld_instance (ipmiseld_prog_data_t *prog_data)
   return (exit_code);
 }
 
+static void
+_signal_handler_callback (int sig)
+{
+  exit_flag = 0;
+}
+
 static int
 _ipmiseld (ipmiseld_prog_data_t *prog_data)
 {
@@ -630,7 +638,7 @@ _ipmiseld (ipmiseld_prog_data_t *prog_data)
     return (_ipmiseld_instance (prog_data));
   else
     {
-      while (1)
+      while (exit_flag)
 	{
 	  unsigned int timeout;
 
@@ -687,7 +695,7 @@ main (int argc, char **argv)
       else
 	err_set_flags (ERROR_STDERR);
       
-      daemon_signal_handler_setup (NULL);
+      daemon_signal_handler_setup (_signal_handler_callback);
 
       /* Call after daemonization, since daemonization closes currently
        * open fds
