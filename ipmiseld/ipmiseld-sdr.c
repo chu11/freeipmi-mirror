@@ -173,14 +173,3 @@ ipmiseld_sdr_cache_create_and_load (ipmiseld_state_data_t *state_data,
   state_data->sdr_ctx = NULL;
   return (-1);
 }
-
-int
-ipmiseld_sdr_cache_unload (ipmiseld_state_data_t *state_data)
-{
-  assert (state_data);
-
-  ipmi_sdr_cache_close (state_data->sdr_ctx);
-  ipmi_sdr_ctx_destroy (state_data->sdr_ctx);
-  state_data->sdr_ctx = NULL;
-  return (0);
-}

@@ -31,6 +31,4 @@
 int ipmiseld_sdr_cache_create_and_load (ipmiseld_state_data_t *state_data,
 					const char *hostname);
 
-int ipmiseld_sdr_cache_unload (ipmiseld_state_data_t *state_data);
-
 #endif /* IPMISELD_SDR_H */
