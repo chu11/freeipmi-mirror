@@ -51,9 +51,9 @@
 #include "tool-event-common.h"
 #include "tool-util-common.h"
 
-#define IPMISELD_PIDFILE             IPMISELD_LOCALSTATEDIR "/run/ipmiseld.pid"
+#define IPMISELD_PIDFILE                                      IPMISELD_LOCALSTATEDIR "/run/ipmiseld.pid"
 
-#define IPMISELD_EVENT_OUTPUT_BUFLEN 4096
+#define IPMISELD_EVENT_OUTPUT_BUFLEN                          4096
 
 #define IPMISELD_SYSTEM_EVENT_FORMAT_STR_DEFAULT              "SEL System Event: %s, %I, %E"
 
@@ -518,7 +518,7 @@ _ipmi_setup (ipmiseld_state_data_t *state_data)
 }
 
 static int
-_ipmiseld (ipmiseld_prog_data_t *prog_data)
+_ipmiseld_instance (ipmiseld_prog_data_t *prog_data)
 {
   ipmiseld_state_data_t state_data;
   unsigned int sel_flags = 0;
@@ -621,6 +621,29 @@ _ipmiseld (ipmiseld_prog_data_t *prog_data)
   ipmi_ctx_close (state_data.ipmi_ctx);
   ipmi_ctx_destroy (state_data.ipmi_ctx);
   return (exit_code);
+}
+
+static int
+_ipmiseld (ipmiseld_prog_data_t *prog_data)
+{
+  if (prog_data->args->test_run)
+    return (_ipmiseld_instance (prog_data));
+  else
+    {
+      while (1)
+	{
+	  unsigned int timeout;
+
+	  if (_ipmiseld_instance (prog_data) < 0)
+	    timeout = prog_data->args->poll_error_interval;
+	  else
+	    timeout = prog_data->args->poll_interval;
+
+	  sleep (timeout);
+	}
+    }
+
+  return (0);
 }
 
 int
