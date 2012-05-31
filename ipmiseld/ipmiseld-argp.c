@@ -105,7 +105,7 @@ static struct argp_option cmdline_options[] =
       "Specify format for oem timestamped event outputs.", 52},
     { "oem-non-timestamped-event-format", IPMISELD_OEM_NON_TIMESTAMPED_EVENT_FORMAT_KEY, "FORMATSTRING", 0,
       "Specify format for oem non-timestamped event outputs.", 53},
-    { "poll-interval", IPMISELD_POLL_INTERVAL, "SECONDS", 0,
+    { "poll-interval", IPMISELD_POLL_INTERVAL_KEY, "SECONDS", 0,
       "Specify poll interval to check the SEL for new events.", 54},  
     { "log-facility", IPMISELD_LOG_FACILITY_KEY, "STRING", 0,
       "Specify syslog log facility.", 55},
