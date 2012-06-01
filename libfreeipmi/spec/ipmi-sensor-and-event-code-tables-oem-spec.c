@@ -480,6 +480,10 @@ const char * const ipmi_oem_intel_s2600jf_specific_opi_fatal_error[] =
   };
 unsigned int ipmi_oem_intel_s2600jf_specific_opi_fatal_error_max_index = 0x0E;
 
+#if 0
+/* achu: Intel informed me there was an error in their documentation and the following was not correct.
+ * I'll leave this here for legacy documentation
+ */ 
 const char * const ipmi_oem_intel_s2600jf_specific_opi_fatal_error_2[] =
   {
     "Illegal inbound request",
@@ -492,6 +496,19 @@ const char * const ipmi_oem_intel_s2600jf_specific_opi_fatal_error_2[] =
     NULL
   };
 unsigned int ipmi_oem_intel_s2600jf_specific_opi_fatal_error_2_max_index = 0x06;
+#else  /* !0 */
+const char * const ipmi_oem_intel_s2600jf_specific_opi_fatal_error_2[] =
+  {
+    "Illegal inbound request",
+    "IIO Write Cache Uncorrectable Data ECC Error",
+    "IIO CSR crossing 32-bit boundary Error",
+    "IIO Received XPF physical/logical redirect interrupt inbound",
+    "IIO Illegal SAD or Illegal or non-existent address or memory",
+    "IIO Write Cache Coherency Violation",
+    NULL
+  };
+unsigned int ipmi_oem_intel_s2600jf_specific_opi_fatal_error_2_max_index = 0x05;
+#endif	/* !0 */
 
 const char * const ipmi_oem_intel_s2600jf_specific_qpi_link_width_reduced[] =
   {

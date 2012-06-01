@@ -7,6 +7,8 @@ o In ipmi-sel, support Supermicro SEL OEM interpretations in
 o In bmc-config, ipmi-chassis-config, ipmi-pef-config, and
   ipmi-chassis-config, support cipher suite ID argument.
 o Support Supermicro X9DRi-F OEM sensors and events.
+o Fix Intel S2600JF/Appro 512x OEM SEL interpretations based on
+  comments from Intel.
  
 Libraries
 ---------
