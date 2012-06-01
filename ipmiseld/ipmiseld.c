@@ -520,6 +520,7 @@ run_cmd_args (ipmiseld_host_data_t *host_data)
 	  /* XXX should get from file later */
 	  if (_ipmi_sel_host_state_init (host_data) < 0)
 	    return (-1);
+	  return (0);
 	}
 
       /* XXX flag for first time
