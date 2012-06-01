@@ -49,10 +49,21 @@
 #define MAXPATHLEN 4096
 #endif /* MAXPATHLEN */
 
-#define IPMISELD_SDR_CACHE_DIRECTORY      IPMISELD_CACHE_DIRECTORY
+#define IPMISELD_CACHE_INBAND             "localhost"
 
 #define IPMISELD_SDR_CACHE_FILENAME       "ipmiseldsdrcache"
-#define IPMISELD_SDR_CACHE_INBAND         "localhost"
+
+#define IPMISELD_DATA_CACHE_FILNAME       "ipmiselddata"
+
+#define IPMISELD_DATA_CACHE_FILE_MAGIC_0 0x4A
+#define IPMISELD_DATA_CACHE_FILE_MAGIC_1 0x1B
+#define IPMISELD_DATA_CACHE_FILE_MAGIC_2 0x11
+#define IPMISELD_DATA_CACHE_FILE_MAGIC_3 0xE6
+
+#define IPMISELD_DATA_CACHE_FILE_VERSION_0 0x00
+#define IPMISELD_DATA_CACHE_FILE_VERSION_1 0x00
+#define IPMISELD_DATA_CACHE_FILE_VERSION_2 0x00
+#define IPMISELD_DATA_CACHE_FILE_VERSION_3 0x01
 
 extern uint32_t _ipmiseld_flags;
 
@@ -115,10 +126,10 @@ ipmiseld_sdr_cache_create_and_load (ipmiseld_state_data_t *state_data,
   if (state_data->prog_data->args->cache_directory)
     sdr_cache_dir = state_data->prog_data->args->cache_directory;
   else
-    sdr_cache_dir = IPMISELD_SDR_CACHE_DIRECTORY;
+    sdr_cache_dir = IPMISELD_CACHE_DIRECTORY;
   
   if (!hostname)
-    hostname = IPMISELD_SDR_CACHE_INBAND;
+    hostname = IPMISELD_CACHE_INBAND;
   
   snprintf (filename,
 	    MAXPATHLEN,
@@ -172,4 +183,68 @@ ipmiseld_sdr_cache_create_and_load (ipmiseld_state_data_t *state_data,
   ipmi_sdr_ctx_destroy (state_data->sdr_ctx);
   state_data->sdr_ctx = NULL;
   return (-1);
+}
+
+static void
+_data_cache_filename (ipmiseld_state_data_t *state_data,
+		      const char *hostname,
+		      char *filename_buf,
+		      unsigned int filename_buflen)
+{
+  char *sdr_cache_dir;
+
+  assert (state_data);
+  assert (filename_buf);
+  assert (filename_buflen);
+
+  if (state_data->prog_data->args->cache_directory)
+    sdr_cache_dir = state_data->prog_data->args->cache_directory;
+  else
+    sdr_cache_dir = IPMISELD_CACHE_DIRECTORY;
+  
+  if (!hostname)
+    hostname = IPMISELD_CACHE_INBAND;
+  
+  snprintf (filename,
+	    MAXPATHLEN,
+            "%s/%s.%s",
+            sdr_cache_dir,
+	    IPMISELD_DATA_CACHE_FILENAME,
+	    hostname);
+}
+
+int
+ipmiseld_data_cache_load (ipmiseld_state_data_t *state_data,
+			  const char *hostname,
+			  uint16_t *last_record_id_logged)
+{
+  char filename[MAXPATHLEN+1];
+  
+  assert (state_data);
+
+  memset (filename, '\0', MAXPATHLEN + 1);
+
+  _data_cache_filename (state_data,
+			hostname, 
+			filename,
+			MAXPATHLEN);
+}
+
+int
+ipmiseld_data_cache_store (ipmiseld_state_data_t *state_data,
+			   const char *hostname,
+			   uint16_t last_record_id_logged)
+{
+  char filename[MAXPATHLEN+1];
+  
+  assert (state_data);
+
+  memset (filename, '\0', MAXPATHLEN + 1);
+
+  _data_cache_filename (state_data,
+			hostname, 
+			filename,
+			MAXPATHLEN);
+
+  
 }
