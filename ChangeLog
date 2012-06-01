@@ -1,5 +1,14 @@
 2012-06-01  Albert Chu <chu11@llnl.gov>
 
+	Merge branch intels2600jfrevision
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-sensor-and-event-code-tables-oem-spec.h,
+	libfreeipmi/spec/ipmi-sensor-and-event-code-tables-oem-spec.c:
+	Update event messages for Intel S2600JF based on documentation
+	changes from Intel.
+
+2012-06-01  Albert Chu <chu11@llnl.gov>
+
 	* Add support for Supermicro X9DRi-F OEM sensors/events.
 
 2012-05-31  Albert Chu <chu11@llnl.gov>
