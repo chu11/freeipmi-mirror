@@ -113,6 +113,7 @@ typedef struct ipmiseld_sel_info
   uint16_t entries;
   uint16_t free_space;
   uint32_t most_recent_addition_timestamp;
+  uint8_t overflow_flag;
 } ipmiseld_sel_info_t; 
 
 typedef struct ipmiseld_host_state

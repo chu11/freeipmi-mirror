@@ -112,6 +112,14 @@ _ipmi_sel_info_get (ipmiseld_host_data_t *host_data, ipmiseld_sel_info_t *sel_in
     }
   sel_info->most_recent_addition_timestamp = val;
 
+  if (FIID_OBJ_GET (obj_cmd_rs, "overflow_flag", &val) < 0)
+    {
+      err_output ("fiid_obj_get: 'overflow_flag': %s",
+		  fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  sel_info->overflow_flag = val;
+
   rv = 0;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
