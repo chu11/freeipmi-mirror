@@ -1,3 +1,7 @@
+2012-06-01  Albert Chu <chu11@llnl.gov>
+
+	* Add support for Supermicro X9DRi-F OEM sensors/events.
+
 2012-05-30  Albert Chu <chu11@llnl.gov>
 
 	* man/, etc/: Add forgotten config entries.

@@ -223,6 +223,7 @@ extern "C" {
 
 /* Seen in the wild w/ proper IANA number 10876 */
 /* defined above: IPMI_SUPERMICRO_PRODUCT_ID_X9SCM */
+#define IPMI_SUPERMICRO_PRODUCT_ID_X9DRI_F     1576
 
 /* Seen in the wild w/ Magnum Technologies IANA number 5593 */
 /* defined above: IPMI_SUPERMICRO_PRODUCT_ID_X8DTL */
