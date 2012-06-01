@@ -143,14 +143,14 @@ ipmiseld_log_priority_parse (const char *str)
 }
 
 void
-ipmiseld_syslog (ipmiseld_state_data_t *state_data,
+ipmiseld_syslog (ipmiseld_host_data_t *host_data,
 		 const char *message,
 		 ...)
 {
   char buf[IPMISELD_ERR_BUFLEN + 1];
   va_list ap;
 
-  assert (state_data);
+  assert (host_data);
   assert (message);
 
   va_start(ap, message);
@@ -158,11 +158,11 @@ ipmiseld_syslog (ipmiseld_state_data_t *state_data,
   memset (buf, '\0', IPMISELD_ERR_BUFLEN + 1);
   vsnprintf(buf, IPMISELD_ERR_BUFLEN, message, ap);
 
-  if (state_data->prog_data->args->test_run
-      || state_data->prog_data->args->foreground)
+  if (host_data->prog_data->args->test_run
+      || host_data->prog_data->args->foreground)
     printf ("%s\n", buf);
   else
-    syslog (state_data->prog_data->log_priority, buf);
+    syslog (host_data->prog_data->log_priority, buf);
 	    
   va_end(ap);
 }

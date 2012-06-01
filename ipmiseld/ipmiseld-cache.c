@@ -53,7 +53,7 @@
 
 #define IPMISELD_SDR_CACHE_FILENAME       "ipmiseldsdrcache"
 
-#define IPMISELD_DATA_CACHE_FILNAME       "ipmiselddata"
+#define IPMISELD_DATA_CACHE_FILENAME      "ipmiselddata"
 
 #define IPMISELD_DATA_CACHE_FILE_MAGIC_0 0x4A
 #define IPMISELD_DATA_CACHE_FILE_MAGIC_1 0x1B
@@ -68,22 +68,23 @@
 extern uint32_t _ipmiseld_flags;
 
 static int
-_ipmiseld_sdr_cache_create (ipmiseld_state_data_t *state_data,
+_ipmiseld_sdr_cache_create (ipmiseld_host_data_t *host_data,
 			    char *filename)
 {
-  assert (state_data);
-  assert (state_data->sdr_ctx);
-  assert (state_data->ipmi_ctx);
+  assert (host_data);
+  assert (host_data->poll_data);
+  assert (host_data->poll_data->sdr_ctx);
+  assert (host_data->poll_data->ipmi_ctx);
   assert (filename && strlen (filename));
 
-  if (ipmi_sdr_cache_create (state_data->sdr_ctx,
-                             state_data->ipmi_ctx,
+  if (ipmi_sdr_cache_create (host_data->poll_data->sdr_ctx,
+                             host_data->poll_data->ipmi_ctx,
                              filename,
                              IPMI_SDR_CACHE_CREATE_FLAGS_DEFAULT,
                              NULL,
                              NULL) < 0)
     {
-      err_debug ("ipmi_sdr_cache_create: %s", ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
+      err_debug ("ipmi_sdr_cache_create: %s", ipmi_sdr_ctx_errormsg (host_data->poll_data->sdr_ctx));
       return (-1);
     }
 
@@ -91,43 +92,45 @@ _ipmiseld_sdr_cache_create (ipmiseld_state_data_t *state_data,
 }
 
 int
-ipmiseld_sdr_cache_create_and_load (ipmiseld_state_data_t *state_data,
-				    const char *hostname)
+ipmiseld_sdr_cache_create_and_load (ipmiseld_host_data_t *host_data)
 {
   char filename[MAXPATHLEN+1];
   char *sdr_cache_dir;
-  
-  assert (state_data);
-  assert (state_data->ipmi_ctx);
+  char *hostname;
+
+  assert (host_data);
+  assert (host_data->poll_data);
+  assert (host_data->poll_data->ipmi_ctx);
   
   memset (filename, '\0', MAXPATHLEN + 1);
   
-  if (!(state_data->sdr_ctx = ipmi_sdr_ctx_create ()))
+  if (!(host_data->poll_data->sdr_ctx = ipmi_sdr_ctx_create ()))
     {
       err_output ("ipmi_sdr_cache_create: %s", strerror (errno));
       goto cleanup;
     }
-
-  if (state_data->prog_data->args->foreground
-      && state_data->prog_data->args->common_args.debug)
+  
+  if (host_data->prog_data->args->foreground
+      && host_data->prog_data->args->common_args.debug)
     {
       /* Don't error out, if this fails we can still continue */
-      if (ipmi_sdr_ctx_set_flags (state_data->sdr_ctx, IPMI_SDR_FLAGS_DEBUG_DUMP) < 0)
-        err_debug ("ipmi_sdr_ctx_set_flags: %s", ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
+      if (ipmi_sdr_ctx_set_flags (host_data->poll_data->sdr_ctx, IPMI_SDR_FLAGS_DEBUG_DUMP) < 0)
+        err_debug ("ipmi_sdr_ctx_set_flags: %s", ipmi_sdr_ctx_errormsg (host_data->poll_data->sdr_ctx));
       
-      if (hostname)
+      if (host_data->hostname)
         {
-          if (ipmi_sdr_ctx_set_debug_prefix (state_data->sdr_ctx, hostname) < 0)
+          if (ipmi_sdr_ctx_set_debug_prefix (host_data->poll_data->sdr_ctx, host_data->hostname) < 0)
             err_debug("ipmi_sdr_ctx_set_debug_prefix: %s",
-		      ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
+		      ipmi_sdr_ctx_errormsg (host_data->poll_data->sdr_ctx));
         }
     }
   
-  if (state_data->prog_data->args->cache_directory)
-    sdr_cache_dir = state_data->prog_data->args->cache_directory;
+  if (host_data->prog_data->args->cache_directory)
+    sdr_cache_dir = host_data->prog_data->args->cache_directory;
   else
     sdr_cache_dir = IPMISELD_CACHE_DIRECTORY;
   
+  hostname = host_data->hostname;
   if (!hostname)
     hostname = IPMISELD_CACHE_INBAND;
   
@@ -137,40 +140,40 @@ ipmiseld_sdr_cache_create_and_load (ipmiseld_state_data_t *state_data,
             sdr_cache_dir,
 	    IPMISELD_SDR_CACHE_FILENAME,
 	    hostname);
-
-  if (ipmi_sdr_cache_open (state_data->sdr_ctx,
-                           state_data->ipmi_ctx,
+  
+  if (ipmi_sdr_cache_open (host_data->poll_data->sdr_ctx,
+                           host_data->poll_data->ipmi_ctx,
                            filename) < 0)
     {
-      if (ipmi_sdr_ctx_errnum (state_data->sdr_ctx) == IPMI_SDR_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST)
+      if (ipmi_sdr_ctx_errnum (host_data->poll_data->sdr_ctx) == IPMI_SDR_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST)
         {
-          if (_ipmiseld_sdr_cache_create (state_data, filename) < 0)
+          if (_ipmiseld_sdr_cache_create (host_data, filename) < 0)
             goto cleanup;
         }
-      else if (ipmi_sdr_ctx_errnum (state_data->sdr_ctx) == IPMI_SDR_ERR_CACHE_INVALID
-               || ipmi_sdr_ctx_errnum (state_data->sdr_ctx) == IPMI_SDR_ERR_CACHE_OUT_OF_DATE)
+      else if (ipmi_sdr_ctx_errnum (host_data->poll_data->sdr_ctx) == IPMI_SDR_ERR_CACHE_INVALID
+               || ipmi_sdr_ctx_errnum (host_data->poll_data->sdr_ctx) == IPMI_SDR_ERR_CACHE_OUT_OF_DATE)
         {
-	  if (ipmi_sdr_cache_delete (state_data->sdr_ctx, filename) < 0)
+	  if (ipmi_sdr_cache_delete (host_data->poll_data->sdr_ctx, filename) < 0)
 	    {
-	      err_debug ("ipmi_sdr_cache_delete: %s", ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
+	      err_debug ("ipmi_sdr_cache_delete: %s", ipmi_sdr_ctx_errormsg (host_data->poll_data->sdr_ctx));
 	      goto cleanup;
 	    }
-
-          if (_ipmiseld_sdr_cache_create (state_data, filename) < 0)
+	  
+          if (_ipmiseld_sdr_cache_create (host_data, filename) < 0)
             goto cleanup;
         }
       else
         {
-          err_debug ("ipmi_sdr_cache_open: %s", ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
+          err_debug ("ipmi_sdr_cache_open: %s", ipmi_sdr_ctx_errormsg (host_data->poll_data->sdr_ctx));
           goto cleanup;
         }
       
       /* 2nd try after the sdr was retrieved */
-      if (ipmi_sdr_cache_open (state_data->sdr_ctx,
-                               state_data->ipmi_ctx,
+      if (ipmi_sdr_cache_open (host_data->poll_data->sdr_ctx,
+                               host_data->poll_data->ipmi_ctx,
                                filename) < 0)
         {
-	  err_debug ("ipmi_sdr_cache_open: %s", ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
+	  err_debug ("ipmi_sdr_cache_open: %s", ipmi_sdr_ctx_errormsg (host_data->poll_data->sdr_ctx));
 	  goto cleanup;
         }
     }
@@ -179,34 +182,34 @@ ipmiseld_sdr_cache_create_and_load (ipmiseld_state_data_t *state_data,
   
  cleanup:
   if (strlen (filename))
-    ipmi_sdr_cache_delete (state_data->sdr_ctx, filename);
-  ipmi_sdr_ctx_destroy (state_data->sdr_ctx);
-  state_data->sdr_ctx = NULL;
+    ipmi_sdr_cache_delete (host_data->poll_data->sdr_ctx, filename);
+  ipmi_sdr_ctx_destroy (host_data->poll_data->sdr_ctx);
   return (-1);
 }
 
 static void
-_data_cache_filename (ipmiseld_state_data_t *state_data,
-		      const char *hostname,
+_data_cache_filename (ipmiseld_host_data_t *host_data,
 		      char *filename_buf,
 		      unsigned int filename_buflen)
 {
   char *sdr_cache_dir;
+  char *hostname;
 
-  assert (state_data);
+  assert (host_data);
   assert (filename_buf);
   assert (filename_buflen);
 
-  if (state_data->prog_data->args->cache_directory)
-    sdr_cache_dir = state_data->prog_data->args->cache_directory;
+  if (host_data->prog_data->args->cache_directory)
+    sdr_cache_dir = host_data->prog_data->args->cache_directory;
   else
     sdr_cache_dir = IPMISELD_CACHE_DIRECTORY;
   
+  hostname = host_data->hostname;
   if (!hostname)
     hostname = IPMISELD_CACHE_INBAND;
   
-  snprintf (filename,
-	    MAXPATHLEN,
+  snprintf (filename_buf,
+	    filename_buflen,
             "%s/%s.%s",
             sdr_cache_dir,
 	    IPMISELD_DATA_CACHE_FILENAME,
@@ -214,37 +217,35 @@ _data_cache_filename (ipmiseld_state_data_t *state_data,
 }
 
 int
-ipmiseld_data_cache_load (ipmiseld_state_data_t *state_data,
-			  const char *hostname,
+ipmiseld_data_cache_load (ipmiseld_host_data_t *host_data,
 			  uint16_t *last_record_id_logged)
 {
   char filename[MAXPATHLEN+1];
   
-  assert (state_data);
+  assert (host_data);
 
   memset (filename, '\0', MAXPATHLEN + 1);
 
-  _data_cache_filename (state_data,
-			hostname, 
+  _data_cache_filename (host_data,
 			filename,
 			MAXPATHLEN);
+
+  return (0);
 }
 
 int
-ipmiseld_data_cache_store (ipmiseld_state_data_t *state_data,
-			   const char *hostname,
+ipmiseld_data_cache_store (ipmiseld_host_data_t *host_data,
 			   uint16_t last_record_id_logged)
 {
   char filename[MAXPATHLEN+1];
   
-  assert (state_data);
+  assert (host_data);
 
   memset (filename, '\0', MAXPATHLEN + 1);
 
-  _data_cache_filename (state_data,
-			hostname, 
+  _data_cache_filename (host_data,
 			filename,
 			MAXPATHLEN);
 
-  
+  return (0);
 }

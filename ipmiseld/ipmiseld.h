@@ -101,15 +101,20 @@ typedef struct ipmiseld_prog_data
   struct ipmiseld_arguments *args;
 } ipmiseld_prog_data_t;
 
-typedef struct ipmiseld_state_data
+typedef struct ipmiseld_poll_data
 {
-  ipmiseld_prog_data_t *prog_data;
   ipmi_ctx_t ipmi_ctx;
-  char *hostname;
   ipmi_sdr_ctx_t sdr_ctx;
   ipmi_sel_ctx_t sel_ctx;
   ipmi_interpret_ctx_t interpret_ctx;
   struct ipmi_oem_data oem_data;
-} ipmiseld_state_data_t;
+} ipmiseld_poll_data_t;
+
+typedef struct ipmiseld_host_data
+{
+  ipmiseld_prog_data_t *prog_data;
+  char *hostname;
+  ipmiseld_poll_data_t *poll_data;
+} ipmiseld_host_data_t;
 
 #endif /* IPMISELD_H */

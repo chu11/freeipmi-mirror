@@ -39,7 +39,7 @@ int ipmiseld_log_facility_parse (const char *str);
 
 int ipmiseld_log_priority_parse (const char *str);
 
-void ipmiseld_syslog (ipmiseld_state_data_t *state_data,
+void ipmiseld_syslog (ipmiseld_host_data_t *host_data,
 		      const char *message,
 		      ...);
 

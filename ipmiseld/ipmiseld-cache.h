@@ -28,15 +28,12 @@
 
 #include "ipmiseld.h"
 
-int ipmiseld_sdr_cache_create_and_load (ipmiseld_state_data_t *state_data,
-					const char *hostname);
+int ipmiseld_sdr_cache_create_and_load (ipmiseld_host_data_t *host_data);
 
-int ipmiseld_data_cache_load (ipmiseld_state_data_t *state_data,
-			      const char *hostname,
+int ipmiseld_data_cache_load (ipmiseld_host_data_t *host_data,
 			      uint16_t *last_record_id_logged);
 
-int ipmiseld_data_cache_store (ipmiseld_state_data_t *state_data,
-			       const char *hostname,
+int ipmiseld_data_cache_store (ipmiseld_host_data_t *host_data,
 			       uint16_t last_record_id_logged);
 
 #endif /* IPMISELD_CACHE_H */
