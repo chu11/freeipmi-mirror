@@ -139,6 +139,10 @@ libfreeipmi-interpret
   - QSSCS4R SMI Timeout & Power Throttled sensors 
     - same event-type/sensor-type/etc., but different interpretation??  
 
+libfreeipmi-sdr
+---------------
+- checksum/something to ensure no disk corruption
+
 libfreeipmi-sel
 ---------------
 - split vendor files into motherboard files?  Is getting big.
