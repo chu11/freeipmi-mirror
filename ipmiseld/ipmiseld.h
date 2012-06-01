@@ -36,6 +36,13 @@
 #include "tool-oem-common.h"
 #include "tool-sensor-common.h"
 
+/* 
+XXX
+ * hostrange - differentitate debug for different hosts (debug lib wrapper layer?)
+ *
+ *  how deal w/ record id overflow? on clear goes back to 0?  appears to be
+ */
+
 #define IPMISELD_POLL_INTERVAL_DEFAULT       300
 #define IPMISELD_POLL_ERROR_INTERVAL_DEFAULT 600
 
@@ -101,20 +108,35 @@ typedef struct ipmiseld_prog_data
   struct ipmiseld_arguments *args;
 } ipmiseld_prog_data_t;
 
-typedef struct ipmiseld_poll_data
+typedef struct ipmiseld_sel_info
+{
+  uint16_t entries;
+  uint16_t free_space;
+  uint32_t most_recent_addition_timestamp;
+} ipmiseld_sel_info_t; 
+
+typedef struct ipmiseld_host_state
+{
+  uint16_t last_record_id_logged;
+  ipmiseld_sel_info_t sel_info;
+  int initialized;
+} ipmiseld_host_state_t;
+
+typedef struct ipmiseld_host_poll
 {
   ipmi_ctx_t ipmi_ctx;
   ipmi_sdr_ctx_t sdr_ctx;
   ipmi_sel_ctx_t sel_ctx;
   ipmi_interpret_ctx_t interpret_ctx;
   struct ipmi_oem_data oem_data;
-} ipmiseld_poll_data_t;
+} ipmiseld_host_poll_t;
 
 typedef struct ipmiseld_host_data
 {
   ipmiseld_prog_data_t *prog_data;
   char *hostname;
-  ipmiseld_poll_data_t *poll_data;
+  ipmiseld_host_state_t host_state;
+  ipmiseld_host_poll_t *host_poll;
 } ipmiseld_host_data_t;
 
 #endif /* IPMISELD_H */
