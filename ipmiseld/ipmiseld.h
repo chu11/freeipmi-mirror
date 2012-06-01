@@ -118,6 +118,7 @@ typedef struct ipmiseld_sel_info
 typedef struct ipmiseld_host_state
 {
   uint16_t last_record_id_logged;
+  int last_record_id_logged_loaded;
   ipmiseld_sel_info_t sel_info;
   int initialized;
 } ipmiseld_host_state_t;

@@ -138,6 +138,7 @@ _sel_record_id_last_callback (ipmi_sel_ctx_t ctx, void *callback_data)
       return (-1);
     }
   
+  host_data->host_state.last_record_id_logged_loaded = 1;
   return (0);
 }
 
@@ -150,6 +151,8 @@ _ipmi_sel_host_state_init (ipmiseld_host_data_t *host_data)
 
   /* XXX default whatever is last id now, based on options maybe not */
 
+  host_data->host_state.last_record_id_logged_loaded = 0;
+
   if (ipmi_sel_parse (host_data->host_poll->sel_ctx,
 		      IPMI_SEL_RECORD_ID_LAST,
 		      IPMI_SEL_RECORD_ID_LAST,
@@ -158,6 +161,13 @@ _ipmi_sel_host_state_init (ipmiseld_host_data_t *host_data)
     {
       err_output ("ipmi_sel_parse: %s", ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
       goto cleanup;
+    }
+
+  /* possible SEL is empty */
+  if (!host_data->host_state.last_record_id_logged_loaded)
+    {
+      host_data->host_state.last_record_id_logged = IPMI_SEL_RECORD_ID_FIRST;
+      host_data->host_state.last_record_id_logged_loaded = 1;
     }
 
   if (_ipmi_sel_info_get (host_data, &(host_data->host_state.sel_info)) < 0)
