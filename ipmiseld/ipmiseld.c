@@ -262,6 +262,16 @@ _normal_output (ipmiseld_host_data_t *host_data, uint8_t record_type)
   
   if (outbuf_len)
     ipmiseld_syslog (host_data, "%s", outbuf);
+
+  if (ipmi_sel_parse_read_record_id (host_data->host_poll->sel_ctx,
+                                     NULL,
+                                     0,
+                                     &host_data->host_state.last_record_id_logged) < 0)
+    {
+      err_output ("ipmi_sel_parse_read_record_id: %s",
+		  ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
+      return (-1);
+    }
   
   return (0);
 }
@@ -472,7 +482,7 @@ run_cmd_args (ipmiseld_host_data_t *host_data)
         }
     }
 
-  if (host_data->prog_data-args->test_run)
+  if (args->test_run)
     {
       if (ipmi_sel_parse (host_data->host_poll->sel_ctx,
 			  IPMI_SEL_RECORD_ID_FIRST,
@@ -493,9 +503,17 @@ run_cmd_args (ipmiseld_host_data_t *host_data)
 	  if (_ipmi_sel_host_state_init (host_data) < 0)
 	    return (-1);
 	}
+
+      /* XXX flag for first time
+       * XXX check for diffs
+       * XXX - overflow condition checks
+       * XXX - if SEL full handle
+       * XXX - clearing stuff
+       * XXX - warning if full
+       */
       
       if (ipmi_sel_parse (host_data->host_poll->sel_ctx,
-			  IPMI_SEL_RECORD_ID_FIRST,
+			  host_data->host_state.last_record_id_logged,
 			  IPMI_SEL_RECORD_ID_LAST,
 			  _sel_parse_callback,
 			  host_data) < 0)
@@ -504,6 +522,8 @@ run_cmd_args (ipmiseld_host_data_t *host_data)
 		      ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
 	  return (-1);
 	}
+
+      /* XXX store stuff */
     }
 
   return (0);
@@ -784,7 +804,7 @@ _ipmiseld (ipmiseld_prog_data_t *prog_data)
 	    timeout = prog_data->args->poll_interval;
 
 	  daemon_sleep (timeout);
-	}
+ 	}
     }
 
   return (0);
