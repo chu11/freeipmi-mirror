@@ -41,6 +41,8 @@ XXX
  * hostrange - differentitate debug for different hosts (debug lib wrapper layer?)
  *
  *  how deal w/ record id overflow? on clear goes back to 0?  appears to be
+ *
+ * debugging
  */
 
 #define IPMISELD_POLL_INTERVAL_DEFAULT       300
@@ -108,18 +110,25 @@ typedef struct ipmiseld_prog_data
   struct ipmiseld_arguments *args;
 } ipmiseld_prog_data_t;
 
+typedef struct ipmiseld_last_record_id
+{
+  uint16_t record_id;
+  int loaded;
+} ipmiseld_last_record_id_t;
+
 typedef struct ipmiseld_sel_info
 {
   uint16_t entries;
   uint16_t free_space;
   uint32_t most_recent_addition_timestamp;
+  uint32_t most_recent_erase_timestamp;
+  uint8_t delete_sel_command_supported;
   uint8_t overflow_flag;
 } ipmiseld_sel_info_t; 
 
 typedef struct ipmiseld_host_state
 {
-  uint16_t last_record_id_logged;
-  int last_record_id_logged_loaded;
+  ipmiseld_last_record_id_t last_record_id;
   ipmiseld_sel_info_t sel_info;
   int initialized;
 } ipmiseld_host_state_t;
