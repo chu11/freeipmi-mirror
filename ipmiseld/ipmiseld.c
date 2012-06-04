@@ -503,7 +503,9 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
   if (_ipmi_sel_info_get (host_data, &sel_info) < 0)
     return (-1);
   
-  /* XXX sel timestamp could be chnaged by bmc-deivce handle lower entries too */
+  /* XXX sel timestamp could be changed by bmc-deivce handle lower entries too */
+
+  /* XXX don't start w/ last record id + 1 b/c could loop */
   
   if (sel_info.entries == host_data->host_state.sel_info.entries)
     {
@@ -523,7 +525,7 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
       else if (sel_info.most_recent_addition_timestamp == host_data->host_state.sel_info.most_recent_addition_timestamp
 	       && sel_info.most_recent_erase_timestamp != host_data->host_state.sel_info.most_recent_erase_timestamp)
 	goto save_sel_info;
-      /* Tough case - several possibilities */
+      /* An erase and addition occured, must determine the type of action that occurred */ 
       else if (sel_info.most_recent_addition_timestamp != host_data->host_state.sel_info.most_recent_addition_timestamp
 	       && sel_info.most_recent_erase_timestamp != host_data->host_state.sel_info.most_recent_erase_timestamp)
 	{
@@ -573,10 +575,10 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
 	      && sel_info.most_recent_erase_timestamp == host_data->host_state.sel_info.most_recent_erase_timestamp */
 	{
 	  /* This shouldn't be possible and is likely a bug in the
-	   * IPMI firmware (user erased entries but timestamp
-	   * didn't update, SEL added entries and updated
-	   * timestamp but didn't update entry count, etc.)  we'll
-	   * save off the sel info for later.
+	   * IPMI firmware (user erased entries but timestamp didn't
+	   * update, SEL added entries and updated timestamp but
+	   * didn't update entry count, etc.) we'll only save off the
+	   * sel info for later.
 	   */
 	  /* XXX log */
 	  goto save_sel_info;
@@ -589,11 +591,12 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
       if (_ipmiseld_last_record_id (host_data, &last_record_id) < 0)
 	return (-1);
 	  
-      /* Small chance that the last time we got sel info, a new
-       * SEL event occurred after it, but before the call to
-       * ipmi_sel_parse().  So we check what the last record id to
-       * see if that's the case.  If it is, just save off the sel
-       * info.
+      /* There is a small race chance that the last time we got sel
+       * info, a new SEL event occurred after it, but before the call
+       * to ipmi_sel_parse().  So we check what the last record id to
+       * see if that happened.  If the last record id is the same,
+       * then we already logged it.  So no new logging needs to
+       * happen.
        */ 
       if (last_record_id.loaded
 	  && host_data->host_state.last_record_id.record_id == last_record_id.record_id)
