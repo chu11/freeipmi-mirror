@@ -657,7 +657,34 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
        */
       else if (sel_info.most_recent_addition_timestamp == host_data->host_state.sel_info.most_recent_addition_timestamp
 	       && sel_info.most_recent_erase_timestamp != host_data->host_state.sel_info.most_recent_erase_timestamp)
-	goto save_sel_info;
+	{
+	  if (sel_info.delete_sel_command_supported)
+	    {
+	      /* We don't know if the erase was for some old entries or if it was a clear.
+	       * We will look at the last_record_id to take a guess
+	       */
+	      ipmiseld_last_record_id_t last_record_id;
+	      
+	      if (_ipmiseld_last_record_id (host_data, &last_record_id) < 0)
+		return (-1);
+	      
+	      /* If new last_record_id has changed, we assume the erase was a clear */
+	      if (last_record_id.loaded
+		  && last_record_id.record_id != host_data->host_state.last_record_id.record_id)
+		{
+		  host_data->host_state.last_record_id.record_id = 0;
+		  goto save_sel_info;
+		}
+	    }
+	  else
+	    {
+	      /* If delete not supported, the erase must have been a clear.
+	       * Reset last_record_id to zero. 
+	       */
+	      host_data->host_state.last_record_id.record_id = 0;
+	      goto save_sel_info;
+	    }
+	}
       /* An erase and addition occured, must determine the type of action that occurred */ 
       else if (sel_info.most_recent_addition_timestamp != host_data->host_state.sel_info.most_recent_addition_timestamp
 	       && sel_info.most_recent_erase_timestamp != host_data->host_state.sel_info.most_recent_erase_timestamp)
@@ -687,6 +714,7 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
 	      else
 		{
 		  /* We assume a clear occurred so start from the beginning */
+		  host_data->host_state.last_record_id.record_id = 0;
 		  record_id_start = IPMI_SEL_RECORD_ID_FIRST;
 		  goto log_entries;
 		}
@@ -694,8 +722,10 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
 	  else
 	    {
 	      /* If delete not supported, the erase must have been a clear
-	       * So log all the new entries if some are available.
+	       * So log all the new entries if some are available and
+	       * reset last_record_id to zero.
 	       */
+	      host_data->host_state.last_record_id.record_id = 0;
 	      if (sel_info.entries)
 		{
 		  record_id_start = IPMI_SEL_RECORD_ID_FIRST;
@@ -766,6 +796,7 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
 	      else
 		{
 		  /* We assume a clear occurred so start from the beginning */
+		  host_data->host_state.last_record_id.record_id = 0;
 		  record_id_start = IPMI_SEL_RECORD_ID_FIRST;
 		  goto log_entries;
 		}
@@ -773,8 +804,10 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
 	  else
 	    {
 	      /* If delete not supported, the erase must have been a clear
-	       * So log all the new entries if some are available.
+	       * So log all the new entries if some are available and
+	       * reset last_record_id to zero.
 	       */
+	      host_data->host_state.last_record_id.record_id = 0;
 	      if (sel_info.entries)
 		{
 		  record_id_start = IPMI_SEL_RECORD_ID_FIRST;
@@ -789,8 +822,8 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
       if (sel_info.most_recent_erase_timestamp == host_data->host_state.sel_info.most_recent_erase_timestamp)
 	{
 	  /* This shouldn't be possible and is likely a bug in the
-	   * IPMI firmware.  Log this, but for rest of this chunk of code, we assume the erase timestamp
-	   * must have changed.
+	   * IPMI firmware.  Log this, but for rest of this chunk of
+	   * code, we assume the erase timestamp must have changed.
 	   */
 	  ipmiseld_syslog_host (host_data, "SEL timestamp error, fewer entries without erase");
 	}
@@ -825,6 +858,7 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
 	      else
 		{
 		  /* We assume a clear occurred so start from the beginning */
+		  host_data->host_state.last_record_id.record_id = 0;
 		  record_id_start = IPMI_SEL_RECORD_ID_FIRST;
 		  goto log_entries;
 		}
@@ -832,7 +866,8 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
 	  else
 	    {
 	      /* If delete not supported, the erase must have been a clear
-	       * So log all the new entries if some are available.
+	       * So log all the new entries if some are available and
+	       * reset last_record_id to zero.
 	       */
 	      if (sel_info.entries)
 		{
