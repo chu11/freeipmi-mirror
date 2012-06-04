@@ -45,8 +45,19 @@ XXX
  * debugging
  */
 
-#define IPMISELD_POLL_INTERVAL_DEFAULT       300
-#define IPMISELD_POLL_ERROR_INTERVAL_DEFAULT 600
+#define IPMISELD_WARNING_THRESHOLD_DEFAULT                              80
+
+#define IPMISELD_CLEAR_THRESHOLD_DEFAULT                                90
+
+#define IPMISELD_SYSTEM_EVENT_FORMAT_STR_DEFAULT                        "SEL System Event: %s, %I, %E"
+
+#define IPMISELD_OEM_TIMESTAMPED_EVENT_FORMAT_STR_DEFAULT               "SEL OEM Event: %I, %o"
+
+#define IPMISELD_OEM_NON_TIMESTAMPED_EVENT_FORMAT_STR_DEFAULT           "SEL OEM Event: %I, %o"
+
+#define IPMISELD_POLL_INTERVAL_DEFAULT                                  300
+
+#define IPMISELD_POLL_ERROR_INTERVAL_DEFAULT                            600
 
 enum ipmiseld_argp_option_keys
   {
@@ -61,16 +72,18 @@ enum ipmiseld_argp_option_keys
     IPMISELD_ENTITY_SENSOR_NAMES_KEY = 165,
     IPMISELD_NON_ABBREVIATED_UNITS_KEY = 166,
     IPMISELD_EVENT_STATE_FILTER_KEY = 167,
-    IPMISELD_SYSTEM_EVENT_FORMAT_KEY = 168,
-    IPMISELD_OEM_TIMESTAMPED_EVENT_FORMAT_KEY = 169,
-    IPMISELD_OEM_NON_TIMESTAMPED_EVENT_FORMAT_KEY = 170,
-    IPMISELD_POLL_INTERVAL_KEY = 171,
-    IPMISELD_POLL_ERROR_INTERVAL_KEY = 172,
-    IPMISELD_LOG_FACILITY_KEY = 173,
-    IPMISELD_LOG_PRIORITY_KEY = 174,
-    IPMISELD_CACHE_DIRECTORY_KEY = 175,
-    IPMISELD_TEST_RUN_KEY = 176,
-    IPMISELD_FOREGROUND_KEY = 177,
+    IPMISELD_WARNING_THRESHOLD_KEY = 168,
+    IPMISELD_CLEAR_THRESHOLD_KEY = 169,
+    IPMISELD_SYSTEM_EVENT_FORMAT_KEY = 170,
+    IPMISELD_OEM_TIMESTAMPED_EVENT_FORMAT_KEY = 171,
+    IPMISELD_OEM_NON_TIMESTAMPED_EVENT_FORMAT_KEY = 172,
+    IPMISELD_POLL_INTERVAL_KEY = 173,
+    IPMISELD_POLL_ERROR_INTERVAL_KEY = 174,
+    IPMISELD_LOG_FACILITY_KEY = 175,
+    IPMISELD_LOG_PRIORITY_KEY = 176,
+    IPMISELD_CACHE_DIRECTORY_KEY = 177,
+    IPMISELD_TEST_RUN_KEY = 178,
+    IPMISELD_FOREGROUND_KEY = 179,
   };
 
 struct ipmiseld_arguments
@@ -89,6 +102,8 @@ struct ipmiseld_arguments
   int entity_sensor_names;
   int non_abbreviated_units;
   char *event_state_filter_str;
+  unsigned int warning_threshold;
+  unsigned int clear_threshold;
   char *system_event_format_str;
   char *oem_timestamped_event_format_str;
   char *oem_non_timestamped_event_format_str;

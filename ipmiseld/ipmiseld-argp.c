@@ -98,26 +98,30 @@ static struct argp_option cmdline_options[] =
       "Output non-abbreviated units (e.g. 'Amps' instead of 'A').", 49},
     { "event-state-filter", IPMISELD_EVENT_STATE_FILTER_KEY, "FILTERSTRING", 0,
       "Specify event states to filter out and not log.", 50}, 
+    { "warning-threshold", IPMISELD_WARNING_THRESHOLD_KEY, "PERCENTINT", 0,
+      "Specify SEL fullness warning threshold as an integer percentage.", 51},
+    { "clear-threshold", IPMISELD_CLEAR_THRESHOLD_KEY, "PERCENTINT", 0,
+      "Specify SEL fullness clear threshold as an integer percentage.", 52},
     { "system-event-format", IPMISELD_SYSTEM_EVENT_FORMAT_KEY, "FORMATSTRING", 0,
-      "Specify format for system event outputs.", 51},
+      "Specify format for system event outputs.", 53},
     { "oem-timestamped-event-format", IPMISELD_OEM_TIMESTAMPED_EVENT_FORMAT_KEY, "FORMATSTRING", 0,
-      "Specify format for oem timestamped event outputs.", 52},
+      "Specify format for oem timestamped event outputs.", 54},
     { "oem-non-timestamped-event-format", IPMISELD_OEM_NON_TIMESTAMPED_EVENT_FORMAT_KEY, "FORMATSTRING", 0,
-      "Specify format for oem non-timestamped event outputs.", 53},
+      "Specify format for oem non-timestamped event outputs.", 55},
     { "poll-interval", IPMISELD_POLL_INTERVAL_KEY, "SECONDS", 0,
-      "Specify poll interval to check the SEL for new events.", 54},  
+      "Specify poll interval to check the SEL for new events.", 56},
     { "poll-error-interval", IPMISELD_POLL_ERROR_INTERVAL_KEY, "SECONDS", 0,
-      "Specify poll interval to check the SEL if errors occur.", 55},
+      "Specify poll interval to check the SEL if errors occur.", 57},
     { "log-facility", IPMISELD_LOG_FACILITY_KEY, "STRING", 0,
-      "Specify syslog log facility.", 56},
+      "Specify syslog log facility.", 58},
     { "log-priority", IPMISELD_LOG_PRIORITY_KEY, "STRING", 0,
-      "Specify syslog log priority.", 57},
+      "Specify syslog log priority.", 59},
     { "cache-directory", IPMISELD_CACHE_DIRECTORY_KEY, "DIRECTORY", 0,
-      "Specify alternate cache directory.", 58},
+      "Specify alternate cache directory.", 60},
     { "test-run", IPMISELD_TEST_RUN_KEY, 0, 0,
-      "Do not daemonize, output current SEL as test of current settings.", 59},
+      "Do not daemonize, output current SEL as test of current settings.", 61},
     { "foreground", IPMISELD_FOREGROUND_KEY, 0, 0,
-      "Run daemon in foreground.", 60},
+      "Run daemon in foreground.", 62},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -194,6 +198,32 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	  perror ("strdup");
 	  exit (EXIT_FAILURE);
 	}
+      break;
+    case IPMISELD_WARNING_THRESHOLD_KEY:
+      errno = 0;
+      tmp = strtol (arg, &endptr, 0);
+      if (errno
+          || endptr[0] != '\0'
+	  || tmp < 0
+	  || tmp > 100) 
+        {
+          fprintf (stderr, "invalid warning threshold\n");
+          exit (EXIT_FAILURE);
+        }
+      cmd_args->warning_threshold = tmp;
+      break;
+    case IPMISELD_CLEAR_THRESHOLD_KEY:
+      errno = 0;
+      tmp = strtol (arg, &endptr, 0);
+      if (errno
+          || endptr[0] != '\0'
+	  || tmp < 0
+	  || tmp > 100) 
+        {
+          fprintf (stderr, "invalid clear threshold\n");
+          exit (EXIT_FAILURE);
+        }
+      cmd_args->clear_threshold = tmp;
       break;
     case IPMISELD_SYSTEM_EVENT_FORMAT_KEY:
       if (!(cmd_args->system_event_format_str = strdup (arg)))
@@ -360,6 +390,10 @@ _ipmiseld_config_file_parse (struct ipmiseld_arguments *cmd_args)
     cmd_args->non_abbreviated_units = config_file_data.non_abbreviated_units;
   if (config_file_data.event_state_filter_str_count)
     cmd_args->event_state_filter_str = config_file_data.event_state_filter_str;
+  if (config_file_data.warning_threshold_count)
+    cmd_args->warning_threshold = config_file_data.warning_threshold;
+  if (config_file_data.clear_threshold_count)
+    cmd_args->clear_threshold = config_file_data.clear_threshold;
   if (config_file_data.system_event_format_str_count)
     cmd_args->system_event_format_str = config_file_data.system_event_format_str;
   if (config_file_data.oem_timestamped_event_format_str_count)
@@ -457,9 +491,11 @@ ipmiseld_argp_parse (int argc, char **argv, struct ipmiseld_arguments *cmd_args)
   cmd_args->entity_sensor_names = 0;
   cmd_args->non_abbreviated_units = 0;
   cmd_args->event_state_filter_str = NULL;
-  cmd_args->system_event_format_str = NULL;
-  cmd_args->oem_timestamped_event_format_str = NULL;
-  cmd_args->oem_non_timestamped_event_format_str = NULL;
+  cmd_args->warning_threshold = IPMISELD_WARNING_THRESHOLD_DEFAULT;
+  cmd_args->clear_threshold = IPMISELD_CLEAR_THRESHOLD_DEFAULT;
+  cmd_args->system_event_format_str = IPMISELD_SYSTEM_EVENT_FORMAT_STR_DEFAULT;
+  cmd_args->oem_timestamped_event_format_str = IPMISELD_OEM_TIMESTAMPED_EVENT_FORMAT_STR_DEFAULT;
+  cmd_args->oem_non_timestamped_event_format_str = IPMISELD_OEM_NON_TIMESTAMPED_EVENT_FORMAT_STR_DEFAULT;
   cmd_args->log_facility_str = NULL;
   cmd_args->log_priority_str = NULL;
   cmd_args->cache_directory = NULL;

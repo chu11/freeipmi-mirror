@@ -57,12 +57,6 @@
 
 #define IPMISELD_EVENT_OUTPUT_BUFLEN                                    4096
 
-#define IPMISELD_SYSTEM_EVENT_FORMAT_STR_DEFAULT                        "SEL System Event: %s, %I, %E"
-
-#define IPMISELD_OEM_TIMESTAMPED_EVENT_FORMAT_STR_DEFAULT               "SEL OEM Event: %I, %o"
-
-#define IPMISELD_OEM_NON_TIMESTAMPED_EVENT_FORMAT_STR_DEFAULT           "SEL OEM Event: %I, %o"
-
 static int exit_flag = 1;
 
 static int

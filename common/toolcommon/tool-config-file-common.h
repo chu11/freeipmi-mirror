@@ -317,6 +317,10 @@ struct config_file_data_ipmiseld
   int non_abbreviated_units_count;
   char *event_state_filter_str;
   int event_state_filter_str_count;
+  unsigned int warning_threshold;
+  int warning_threshold_count;
+  unsigned int clear_threshold;
+  int clear_threshold_count;
   char *system_event_format_str;
   int system_event_format_str_count;
   char *oem_timestamped_event_format_str;

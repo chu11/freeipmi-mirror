@@ -145,6 +145,34 @@ _config_file_positive_int (conffile_t cf,
 }
 
 static int
+_config_file_percent_int (conffile_t cf,
+			  struct conffile_data *data,
+			  char *optionname,
+			  int option_type,
+			  void *option_ptr,
+			  int option_data,
+			  void *app_ptr,
+			  int app_data)
+{
+  int *value;
+
+  assert (data);
+  assert (optionname);
+  assert (option_ptr);
+
+  value = (int *)option_ptr;
+
+  if (data->intval < 0 || data->intval > 100)
+    {
+      fprintf (stderr, "Config File Error: invalid value for %s\n", optionname);
+      exit (EXIT_FAILURE);
+    }
+
+  *value = data->intval;
+  return (0);
+}
+
+static int
 _config_file_string (conffile_t cf,
                      struct conffile_data *data,
                      char *optionname,
@@ -4628,6 +4656,28 @@ config_file_parse (const char *filename,
 	&(ipmiseld_data.event_state_filter_str_count),
 	&(ipmiseld_data.event_state_filter_str),
 	0,
+      },
+      {
+        "warning-threshold",
+        CONFFILE_OPTION_INT,
+        -1,
+	_config_file_percent_int,
+        1,
+        0,
+        &(ipmiseld_data.warning_threshold_count),
+        &(ipmiseld_data.warning_threshold),
+        0
+      },
+      {
+        "clear-threshold",
+        CONFFILE_OPTION_INT,
+        -1,
+	_config_file_percent_int,
+        1,
+        0,
+        &(ipmiseld_data.clear_threshold_count),
+        &(ipmiseld_data.clear_threshold),
+        0
       },
       {
 	"system-event-format",
