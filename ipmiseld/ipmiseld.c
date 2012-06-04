@@ -51,15 +51,17 @@
 #include "tool-event-common.h"
 #include "tool-util-common.h"
 
-#define IPMISELD_PIDFILE                                      IPMISELD_LOCALSTATEDIR "/run/ipmiseld.pid"
+#define IPMISELD_PIDFILE                                                IPMISELD_LOCALSTATEDIR "/run/ipmiseld.pid"
 
-#define IPMISELD_EVENT_OUTPUT_BUFLEN                          4096
+#define IPMISELD_FORMAT_BUFLEN                                          4096
 
-#define IPMISELD_SYSTEM_EVENT_FORMAT_STR_DEFAULT              "SEL System Event: %s, %I, %E"
+#define IPMISELD_EVENT_OUTPUT_BUFLEN                                    4096
 
-#define IPMISELD_OEM_TIMESTAMPED_EVENT_FORMAT_STR_DEFAULT     "SEL OEM Event: %I, %o"
+#define IPMISELD_SYSTEM_EVENT_FORMAT_STR_DEFAULT                        "SEL System Event: %s, %I, %E"
 
-#define IPMISELD_OEM_NON_TIMESTAMPED_EVENT_FORMAT_STR_DEFAULT "SEL OEM Event: %I, %o"
+#define IPMISELD_OEM_TIMESTAMPED_EVENT_FORMAT_STR_DEFAULT               "SEL OEM Event: %I, %o"
+
+#define IPMISELD_OEM_NON_TIMESTAMPED_EVENT_FORMAT_STR_DEFAULT           "SEL OEM Event: %I, %o"
 
 static int exit_flag = 1;
 
@@ -238,10 +240,96 @@ _sel_parse_err_handle (ipmiseld_host_data_t *host_data, char *func)
   return (-1);
 }
 
+/* returns 0 on success, 1 on success but w/ truncation */
+static int
+_snprintf (char *buf,
+	   unsigned int buflen,
+	   unsigned int *wlen,
+	   const char *fmt,
+	   ...)
+{
+  va_list ap;
+  int ret;
+
+  assert (buf);
+  assert (buflen);
+  assert (wlen);
+  assert (fmt);
+
+  va_start (ap, fmt);
+  ret = vsnprintf (buf + *wlen, buflen - *wlen, fmt, ap);
+  va_end (ap);
+  if (ret >= (buflen - *wlen))
+    {
+      (*wlen) = buflen;
+      return (1);
+    }
+  (*wlen) += ret;
+  return (0);
+}
+
+static int
+_sel_log_format (ipmiseld_host_data_t *host_data,
+		 const char *fmt_str,
+		 char *fmtbuf,
+		 unsigned int fmtbuf_len)
+{
+  unsigned int wlen = 0;
+  int percent_flag = 0;
+  char *ptr;
+
+  assert (host_data);
+  assert (fmt_str);
+
+  ptr = (char *)fmt_str;
+  while (*ptr)
+    {
+      if (*ptr == '%')
+	{
+	  if (percent_flag)
+	    {
+	      if (_snprintf (fmtbuf, fmtbuf_len, &wlen, "%%"))
+                return (0);
+              percent_flag = 0;
+	    }
+	  else
+	    percent_flag = 1;
+	  goto end_loop;
+	}
+      else if (percent_flag && *ptr == 'h')
+	{
+	  if (_snprintf (fmtbuf, fmtbuf_len, &wlen, "%s",
+			 host_data->hostname ? host_data->hostname : "localhost"))
+            return (0);
+	  percent_flag = 0;
+	}
+      else
+	{
+	  if (percent_flag)
+            {
+              if (_snprintf (fmtbuf, fmtbuf_len, &wlen, "%%%c", *ptr))
+                return (0);
+              percent_flag = 0;
+            }
+          else
+            {
+              if (_snprintf (fmtbuf, fmtbuf_len, &wlen, "%c", *ptr))
+                return (0);
+            }
+	}
+
+    end_loop:
+      ptr++;
+    }
+
+  return (0);
+}
+
 static int
 _sel_log_output (ipmiseld_host_data_t *host_data, uint8_t record_type)
 {
-  char outbuf[IPMISELD_EVENT_OUTPUT_BUFLEN+1];
+  char fmtbuf[IPMISELD_FORMAT_BUFLEN + 1];
+  char outbuf[IPMISELD_EVENT_OUTPUT_BUFLEN + 1];
   int outbuf_len;
   unsigned int flags;
   int record_type_class;
@@ -250,7 +338,8 @@ _sel_log_output (ipmiseld_host_data_t *host_data, uint8_t record_type)
 
   assert (host_data);
 
-  memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
+  memset (fmtbuf, '\0', IPMISELD_FORMAT_BUFLEN + 1);
+  memset (outbuf, '\0', IPMISELD_EVENT_OUTPUT_BUFLEN + 1);
    
   if (ipmi_sel_parse_read_record_id (host_data->host_poll->sel_ctx,
                                      NULL,
@@ -327,9 +416,15 @@ _sel_log_output (ipmiseld_host_data_t *host_data, uint8_t record_type)
 			 record_type);
       return (0);
     }
+
+  if (_sel_log_format (host_data,
+		       format_str,
+		       fmtbuf,
+		       IPMISELD_FORMAT_BUFLEN) < 0)
+    return (-1);
   
   if ((outbuf_len = ipmi_sel_parse_read_record_string (host_data->host_poll->sel_ctx,
-						       format_str,
+						       fmtbuf,
 						       NULL,
 						       0,
 						       outbuf,

@@ -168,6 +168,8 @@ output specifics of each SEL event that occurs.
 .sp
 \fIFor System, OEM timestamped, and OEM non-timestamped events\fR
 .sp
+%h - target host, useful if logging from multiple hosts 
+.sp
 %i - record ID in decimal 
 .sp
 %I - event state interpretation (NOMINAL, WARNING, or CRITICAL)
