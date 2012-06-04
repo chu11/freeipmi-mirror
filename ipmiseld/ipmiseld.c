@@ -187,10 +187,35 @@ _ipmiseld_last_record_id (ipmiseld_host_data_t *host_data,
 }
 
 static int
+_ipmiseld_calc_percent_full (ipmiseld_host_data_t *host_data,
+			     ipmiseld_sel_info_t *sel_info)
+{
+  unsigned int used_bytes;
+  unsigned int total_bytes;
+  int percent;
+
+  assert (host_data);
+  assert (sel_info);
+
+  used_bytes = (sel_info->entries * IPMI_SEL_RECORD_MAX_RECORD_LENGTH);
+  total_bytes = used_bytes + sel_info->free_space;
+  percent = used_bytes/total_bytes; 
+  if (percent > 100)
+    {
+      /* Some rounding errors could occur, we accept small ones */
+      if (percent > 105)
+	ipmiseld_syslog_host (host_data, "SEL percent calc error: %d", percent);
+      percent = 100;
+    }
+  return (percent);
+}
+
+static int
 _ipmiseld_host_state_init (ipmiseld_host_data_t *host_data)
 {
   int rv = -1;
-  
+  int percent;
+
   assert (host_data);
 
   if (_ipmiseld_last_record_id (host_data, &(host_data->host_state.last_record_id)) < 0)
@@ -205,6 +230,9 @@ _ipmiseld_host_state_init (ipmiseld_host_data_t *host_data)
   
   if (_ipmi_sel_info_get (host_data, &(host_data->host_state.sel_info)) < 0)
     goto cleanup;
+
+  percent = _ipmiseld_calc_percent_full (host_data, &(host_data->host_state.sel_info));
+  host_data->host_state.last_percent_full = percent; 
   
   host_data->host_state.initialized = 1;
   rv = 0;
@@ -382,32 +410,17 @@ _sel_log_output (ipmiseld_host_data_t *host_data, uint8_t record_type)
 
   record_type_class = ipmi_sel_record_type_class (record_type);
   if (record_type_class == IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
-    {
-      if (host_data->prog_data->args->system_event_format_str)
-	format_str = host_data->prog_data->args->system_event_format_str;
-      else
-	format_str = IPMISELD_SYSTEM_EVENT_FORMAT_STR_DEFAULT;
-    }
+    format_str = host_data->prog_data->args->system_event_format_str;
   else if (record_type_class == IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD)
-    {
-      if (host_data->prog_data->args->oem_timestamped_event_format_str)
-	format_str = host_data->prog_data->args->oem_timestamped_event_format_str;
-      else
-	format_str = IPMISELD_OEM_TIMESTAMPED_EVENT_FORMAT_STR_DEFAULT;
-    }
+    format_str = host_data->prog_data->args->oem_timestamped_event_format_str;
   else if (record_type_class == IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD)
-    {
-      if (host_data->prog_data->args->oem_non_timestamped_event_format_str)
-	format_str = host_data->prog_data->args->oem_non_timestamped_event_format_str;
-      else
-	format_str = IPMISELD_OEM_NON_TIMESTAMPED_EVENT_FORMAT_STR_DEFAULT;
-    }
+    format_str = host_data->prog_data->args->oem_non_timestamped_event_format_str;
   else
     {
       if (host_data->prog_data->args->verbose_count)
-	ipmiseld_syslog (host_data,
-			 "SEL Event: Unknown SEL Record Type: %Xh",
-			 record_type);
+	ipmiseld_syslog_host (host_data,
+			      "SEL Event: Unknown SEL Record Type: %Xh",
+			      record_type);
       return (0);
     }
 
@@ -602,6 +615,7 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
 {
   ipmiseld_sel_info_t sel_info;
   uint16_t record_id_start;
+  int percent;
 
   assert (host_data);
   assert (host_data->host_poll);
@@ -873,6 +887,20 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
 	}
     }
   
+  percent = _ipmiseld_calc_percent_full (host_data, &sel_info);
+
+  if (host_data->prog_data->args->warning_threshold)
+    {
+      if (percent > host_data->prog_data->args->warning_threshold)
+	{
+	  if (percent > host_data->host_state.last_percent_full)
+	    {
+	      ipmiseld_syslog_host ("SEL is %d%% full", percent);
+	      host_data->host_state.last_percent_full = percent;
+	    }
+	}
+    }
+  
   /* XXX - overflow condition checks
    * XXX - if SEL full handle
    * XXX - clearing stuff
@@ -893,6 +921,7 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
   
  save_sel_info:
   memcpy (&host_data->host_state.sel_info, &sel_info, sizeof (ipmiseld_sel_info_t));
+  /* XXX save disk */
   
   return (0);
 }

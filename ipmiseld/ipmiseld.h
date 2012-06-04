@@ -144,6 +144,7 @@ typedef struct ipmiseld_sel_info
 typedef struct ipmiseld_host_state
 {
   ipmiseld_last_record_id_t last_record_id;
+  unsigned int last_percent_full;
   ipmiseld_sel_info_t sel_info;
   int initialized;
 } ipmiseld_host_state_t;
