@@ -142,27 +142,66 @@ ipmiseld_log_priority_parse (const char *str)
   return (-1);
 }
 
+ 
+static void
+_ipmiseld_syslog (ipmiseld_host_data_t *host_data,
+		  const char *message,
+		  va_list ap)
+{
+  char buf[IPMISELD_ERR_BUFLEN + 1];
+  
+  memset (buf, '\0', IPMISELD_ERR_BUFLEN + 1);
+  vsnprintf(buf, IPMISELD_ERR_BUFLEN, message, ap);
+  
+    if (host_data->prog_data->args->test_run
+	|| host_data->prog_data->args->foreground)
+      printf ("%s\n", buf);
+    else
+      syslog (host_data->prog_data->log_priority, buf);
+}
+
 void
 ipmiseld_syslog (ipmiseld_host_data_t *host_data,
 		 const char *message,
 		 ...)
 {
-  char buf[IPMISELD_ERR_BUFLEN + 1];
   va_list ap;
 
   assert (host_data);
   assert (message);
 
-  va_start(ap, message);
+  va_start (ap, message);
+  _ipmiseld_syslog (host_data, message, ap);
+  va_end (ap);
+}
 
-  memset (buf, '\0', IPMISELD_ERR_BUFLEN + 1);
-  vsnprintf(buf, IPMISELD_ERR_BUFLEN, message, ap);
+void
+ipmiseld_syslog_host (ipmiseld_host_data_t *host_data,
+		      const char *message,
+		      ...)
+{
+  va_list ap;
 
-  if (host_data->prog_data->args->test_run
-      || host_data->prog_data->args->foreground)
-    printf ("%s\n", buf);
+  assert (host_data);
+  assert (message);
+
+  va_start (ap, message);
+  if (!host_data->hostname)
+    _ipmiseld_syslog (host_data, message, ap);
   else
-    syslog (host_data->prog_data->log_priority, buf);
-	    
-  va_end(ap);
+    {
+      char buf[IPMISELD_ERR_BUFLEN + 1];
+      memset (buf, '\0', IPMISELD_ERR_BUFLEN + 1);
+      vsnprintf(buf, IPMISELD_ERR_BUFLEN, message, ap);
+      
+      if (host_data->prog_data->args->test_run
+	  || host_data->prog_data->args->foreground)
+	printf ("%s: %s\n", host_data->hostname, buf);
+      else
+	syslog (host_data->prog_data->log_priority,
+		"%s: %s",
+		host_data->hostname,
+		buf);
+    }
+  va_end (ap);
 }

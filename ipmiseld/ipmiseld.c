@@ -246,11 +246,45 @@ _sel_log_output (ipmiseld_host_data_t *host_data, uint8_t record_type)
   unsigned int flags;
   int record_type_class;
   char *format_str;
+  uint16_t record_id;
 
   assert (host_data);
 
   memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
    
+  if (ipmi_sel_parse_read_record_id (host_data->host_poll->sel_ctx,
+                                     NULL,
+                                     0,
+                                     &record_id) < 0)
+    {
+      err_output ("ipmi_sel_parse_read_record_id: %s",
+		  ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
+      return (-1);
+    }
+
+  /* achu:
+   *
+   * Algorithmically we can "find" the next entry to log several ways,
+   * but there are two reasonable ways.
+   *
+   * 1) Whatever the last record id is, add 1 to it and iterate until
+   * you reach the next valid SEL record id.
+   *
+   * 2) Read the last record id, and use that to get the next record
+   * id to log.
+   *
+   * While '1' will be faster on most systems, there are a number of
+   * systems were vendors jump semi-big chunks of record ids on new
+   * events (I have no idea why, it makes no sense).  We will
+   * implement '2' as the most reasonable average solution.  So when
+   * we hit this callback with the already logged last record id, we
+   * need to not log it.  '2' is also the safer implementation, in the
+   * event there is a bug in the firmware, and we could loop endlessly
+   * looking for the next entry to log when there is none.
+   */
+  if (host_data->host_state.last_record_id.record_id == record_id)
+    return (0);
+
   flags = IPMI_SEL_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD;
   flags |= IPMI_SEL_STRING_FLAGS_OUTPUT_NOT_AVAILABLE;
   flags |= IPMI_SEL_STRING_FLAGS_DATE_MONTH_STRING;
@@ -310,15 +344,7 @@ _sel_log_output (ipmiseld_host_data_t *host_data, uint8_t record_type)
   if (outbuf_len)
     ipmiseld_syslog (host_data, "%s", outbuf);
 
-  if (ipmi_sel_parse_read_record_id (host_data->host_poll->sel_ctx,
-                                     NULL,
-                                     0,
-                                     &host_data->host_state.last_record_id.record_id) < 0)
-    {
-      err_output ("ipmi_sel_parse_read_record_id: %s",
-		  ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
-      return (-1);
-    }
+  host_data->host_state.last_record_id.record_id = record_id; 
   
   return (0);
 }
@@ -503,10 +529,22 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
   if (_ipmi_sel_info_get (host_data, &sel_info) < 0)
     return (-1);
   
-  /* XXX sel timestamp could be changed by bmc-deivce handle lower entries too */
+  if (sel_info.most_recent_addition_timestamp < host_data->host_state.sel_info.most_recent_addition_timestamp
+      || sel_info.most_recent_erase_timestamp < host_data->host_state.sel_info.most_recent_erase_timestamp)
+    {
+      /* This shouldn't be possible under normal circumstances, but
+       * could occur if the user changes the SEL timestamp or clock.
+       * Or perhaps a vendor firmware update or similar action
+       * modified the clock.
+       *
+       * Under this circumstance, we will treat the timestamps has
+       * having changed (note that all checks below are for "not equal
+       * to" and not "greater than" or "less than".  We just log to
+       * note this.
+       */
+      ipmiseld_syslog_host (host_data, "SEL timestamps modified to earlier time");
+    }
 
-  /* XXX don't start w/ last record id + 1 b/c could loop */
-  
   if (sel_info.entries == host_data->host_state.sel_info.entries)
     {
       /* Small chance entry count is the same after a
@@ -546,7 +584,7 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
 		  && last_record_id.record_id > host_data->host_state.last_record_id.record_id)
 		{
 		  if (host_data->host_state.last_record_id.record_id)
-		    record_id_start = host_data->host_state.last_record_id.record_id + 1;
+		    record_id_start = host_data->host_state.last_record_id.record_id;
 		  else
 		    record_id_start = IPMI_SEL_RECORD_ID_FIRST;
 		  goto log_entries;
@@ -580,7 +618,7 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
 	   * didn't update entry count, etc.) we'll only save off the
 	   * sel info for later.
 	   */
-	  /* XXX log */
+	  ipmiseld_syslog_host (host_data, "SEL illegal timestamp situation");
 	  goto save_sel_info;
 	}
     }
@@ -609,7 +647,7 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
 	   * and must log them.
 	   */
 	  if (host_data->host_state.last_record_id.record_id)
-	    record_id_start = host_data->host_state.last_record_id.record_id + 1;
+	    record_id_start = host_data->host_state.last_record_id.record_id;
 	  else
 	    record_id_start = IPMI_SEL_RECORD_ID_FIRST;
 	  goto log_entries;
@@ -625,7 +663,7 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
 		  && last_record_id.record_id > host_data->host_state.last_record_id.record_id)
 		{
 		  if (host_data->host_state.last_record_id.record_id)
-		    record_id_start = host_data->host_state.last_record_id.record_id + 1;
+		    record_id_start = host_data->host_state.last_record_id.record_id;
 		  else
 		    record_id_start = IPMI_SEL_RECORD_ID_FIRST;
 		  goto log_entries;
@@ -659,7 +697,7 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
 	   * IPMI firmware.  Log this, but for rest of this chunk of code, we assume the erase timestamp
 	   * must have changed.
 	   */
-	  /* XXX log */
+	  ipmiseld_syslog_host (host_data, "SEL timestamp error, fewer entries without erase");
 	}
 
       /* if no additional entries, user deleted some older entries and that was it */
@@ -684,7 +722,7 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
 		  && last_record_id.record_id > host_data->host_state.last_record_id.record_id)
 		{
 		  if (host_data->host_state.last_record_id.record_id)
-		    record_id_start = host_data->host_state.last_record_id.record_id + 1;
+		    record_id_start = host_data->host_state.last_record_id.record_id;
 		  else
 		    record_id_start = IPMI_SEL_RECORD_ID_FIRST;
 		  goto log_entries;

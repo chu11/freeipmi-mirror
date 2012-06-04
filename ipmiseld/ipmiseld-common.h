@@ -43,4 +43,8 @@ void ipmiseld_syslog (ipmiseld_host_data_t *host_data,
 		      const char *message,
 		      ...);
 
+void ipmiseld_syslog_host (ipmiseld_host_data_t *host_data,
+			   const char *message,
+			   ...);
+
 #endif /* IPMISELD_COMMON_H */
