@@ -199,7 +199,7 @@ _ipmiseld_calc_percent_full (ipmiseld_host_data_t *host_data,
 
   used_bytes = (sel_info->entries * IPMI_SEL_RECORD_MAX_RECORD_LENGTH);
   total_bytes = used_bytes + sel_info->free_space;
-  percent = used_bytes/total_bytes; 
+  percent = (int)(100 * (double)used_bytes/total_bytes); 
   if (percent > 100)
     {
       /* Some rounding errors could occur, we accept small ones */
@@ -887,6 +887,8 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
 	}
     }
   
+ log_entries:
+
   percent = _ipmiseld_calc_percent_full (host_data, &sel_info);
 
   if (host_data->prog_data->args->warning_threshold)
@@ -895,7 +897,7 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
 	{
 	  if (percent > host_data->host_state.last_percent_full)
 	    {
-	      ipmiseld_syslog_host ("SEL is %d%% full", percent);
+	      ipmiseld_syslog_host (host_data, "SEL is %d%% full", percent);
 	      host_data->host_state.last_percent_full = percent;
 	    }
 	}
@@ -905,7 +907,6 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
    * XXX - clearing stuff
    */
   
- log_entries:
   if (ipmi_sel_parse (host_data->host_poll->sel_ctx,
 		      record_id_start,
 		      IPMI_SEL_RECORD_ID_LAST,
