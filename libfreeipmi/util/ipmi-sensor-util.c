@@ -64,7 +64,7 @@ ipmi_get_threshold_message (uint8_t offset, char *buf, unsigned int buflen)
       return (-1);
     }
 
-  return (snprintf (buf, buflen, threshold_comparison_status_desc[offset]));
+  return (snprintf (buf, buflen, "%s", threshold_comparison_status_desc[offset]));
 }
 
 const char *

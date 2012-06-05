@@ -1108,7 +1108,7 @@ _get_event_message (unsigned int offset,
       return (-1);
     }
 
-  return (snprintf (buf, buflen, string_array[offset]));
+  return (snprintf (buf, buflen, "%s", string_array[offset]));
 }
 
 int
