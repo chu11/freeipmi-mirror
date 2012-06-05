@@ -36,15 +36,6 @@
 #include "tool-oem-common.h"
 #include "tool-sensor-common.h"
 
-/* 
-XXX
- * hostrange - differentitate debug for different hosts (debug lib wrapper layer?)
- *
- *  how deal w/ record id overflow? on clear goes back to 0?  appears to be
- *
- * debugging
- */
-
 #define IPMISELD_WARNING_THRESHOLD_DEFAULT                              80
 
 #define IPMISELD_CLEAR_THRESHOLD_DEFAULT                                90
@@ -138,6 +129,7 @@ typedef struct ipmiseld_sel_info
   uint32_t most_recent_addition_timestamp;
   uint32_t most_recent_erase_timestamp;
   uint8_t delete_sel_command_supported;
+  uint8_t reserve_sel_command_supported;
   uint8_t overflow_flag;
 } ipmiseld_sel_info_t; 
 
