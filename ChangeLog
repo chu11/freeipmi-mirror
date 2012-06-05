@@ -1,3 +1,11 @@
+2012-06-05  Albert Chu <chu11@llnl.gov>
+
+	* common/miscutil/conffile.c,
+	libfreeipmi/util/ipmi-sensor-and-event-code-tables-util.c,
+	libfreeipmi/util/ipmi-sensor-util.c,
+	libfreeipmi/util/ipmi-device-types-util.c, : Fix -Wformat-security
+	warnings.
+
 2012-06-04  Yaroslav Halchenko <debian@onerussian.com>
 
 	* man/ipmi-oem.8.pre.in: Minor tune ups.
