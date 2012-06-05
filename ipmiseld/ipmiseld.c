@@ -51,11 +51,11 @@
 #include "tool-event-common.h"
 #include "tool-util-common.h"
 
-#define IPMISELD_PIDFILE                                                IPMISELD_LOCALSTATEDIR "/run/ipmiseld.pid"
+#define IPMISELD_PIDFILE                IPMISELD_LOCALSTATEDIR "/run/ipmiseld.pid"
 
-#define IPMISELD_FORMAT_BUFLEN                                          4096
+#define IPMISELD_FORMAT_BUFLEN          4096
 
-#define IPMISELD_EVENT_OUTPUT_BUFLEN                                    4096
+#define IPMISELD_EVENT_OUTPUT_BUFLEN    4096
 
 static int exit_flag = 1;
 
