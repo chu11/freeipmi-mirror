@@ -982,6 +982,7 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
 	  /* XXX -1 on error? */
 	  if (_ipmi_sel_info_get (host_data, &sel_info) < 0)
 	    return (-1);
+	  host_data->host_state.last_record_id.record_id = 0;
 	}
     }
 
