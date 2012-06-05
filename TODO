@@ -27,10 +27,6 @@ FreeIPMI general
   - treat more like network busy than error?
   - option for alternate behavior?
 - update text documents to texinfo (***)
-- Best way to deal w/ -Werror=format-security
-  - util/ipmi-device-types-util.c:58:3: error: format not a string literal and no format arguments [-Werror=format-security]
-  - util/ipmi-sensor-and-event-code-tables-util.c:1111:3: error: format not a string literal and no format arguments [-Werror=format-security]
-  - util/ipmi-sensor-util.c:67:3: error: format not a string literal and no format arguments [-Werror=format-security]
 
 FreeIPMI new stuff
 ------------------
