@@ -886,6 +886,7 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
 	       * So log all the new entries if some are available and
 	       * reset last_record_id to zero.
 	       */
+	      host_data->host_state.last_record_id.record_id = 0;
 	      if (sel_info.entries)
 		{
 		  record_id_start = IPMI_SEL_RECORD_ID_FIRST;
