@@ -122,7 +122,7 @@ _ipmi_sel_info_get (ipmiseld_host_data_t *host_data, ipmiseld_sel_info_t *sel_in
 		  fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
-  sel_info->delete_sel_command_supported = val;
+ sel_info->delete_sel_command_supported = val;
 
   if (FIID_OBJ_GET (obj_cmd_rs, "reserve_sel_command_supported", &val) < 0)
     {
@@ -966,9 +966,6 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
 		err_output ("ipmi_sel_clear_sel: %s",
 			    ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
 	    }
-	  
-	  if (!ret)
-	    ipmiseld_syslog_host (host_data, "SEL cleared");
 	}
       else
 	{
@@ -976,9 +973,16 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
 	    err_output ("ipmi_sel_clear_sel: %s",
 			ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
 
-	  if (!ret)
-	    ipmiseld_syslog_host (host_data, "SEL cleared");
 	} 
+
+      if (!ret)
+	{
+	  ipmiseld_syslog_host (host_data, "SEL cleared");
+
+	  /* XXX -1 on error? */
+	  if (_ipmi_sel_info_get (host_data, &sel_info) < 0)
+	    return (-1);
+	}
     }
 
   memcpy (&host_data->host_state.sel_info, &sel_info, sizeof (ipmiseld_sel_info_t));
