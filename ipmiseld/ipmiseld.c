@@ -902,9 +902,7 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
     }
   
   /* XXX - overflow condition checks
-   * XXX - if SEL full handle
    * XXX - clearing stuff
-   * XXX - warning if full
    */
   
  log_entries:
