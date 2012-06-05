@@ -896,13 +896,12 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
       if (percent > host_data->prog_data->args->warning_threshold)
 	{
 	  if (percent > host_data->host_state.last_percent_full)
-	    {
-	      ipmiseld_syslog_host (host_data, "SEL is %d%% full", percent);
-	      host_data->host_state.last_percent_full = percent;
-	    }
+	    ipmiseld_syslog_host (host_data, "SEL is %d%% full", percent);
 	}
     }
   
+  host_data->host_state.last_percent_full = percent;
+
   /* XXX - overflow condition checks
    * XXX - clearing stuff
    */
