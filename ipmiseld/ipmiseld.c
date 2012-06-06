@@ -618,6 +618,26 @@ ipmiseld_sel_parse_test_run (ipmiseld_host_data_t *host_data)
   return (0);
 }
 
+static void
+_dump_sel_info (ipmiseld_host_data_t *host_data,
+		ipmiseld_sel_info_t *sel_info,
+		const char *prefix)
+{
+  assert (host_data);
+  assert (host_data->prog_data->args->foreground);
+  assert (host_data->prog_data->args->common_args.debug);
+  assert (sel_info);
+  assert (prefix);
+
+  err_debug ("%s: Entries %u", prefix, sel_info->entries);
+  err_debug ("%s: Free Space %u", prefix, sel_info->free_space);
+  err_debug ("%s: Most Recent Addition Timestamp %u", prefix, sel_info->most_recent_addition_timestamp);
+  err_debug ("%s: Most Recent Erase Timestamp %u", prefix, sel_info->most_recent_erase_timestamp);
+  err_debug ("%s: Delete Sel Command Supported %u", prefix, sel_info->delete_sel_command_supported);
+  err_debug ("%s: Reserve Sel Command Supported %u", prefix, sel_info->reserve_sel_command_supported);
+  err_debug ("%s: Overflow Flag %u", prefix, sel_info->overflow_flag);
+} 
+
 static int
 ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
 {
@@ -642,11 +662,23 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
       /* XXX should get from file later */
       if (_ipmiseld_host_state_init (host_data) < 0)
 	return (-1);
+      if (host_data->prog_data->args->foreground
+	  && host_data->prog_data->args->common_args.debug)
+	_dump_sel_info (host_data, &sel_info, "Initial State");
       return (0);
     }
   
   if (_ipmi_sel_info_get (host_data, &sel_info) < 0)
     return (-1);
+
+  if (host_data->prog_data->args->foreground
+      && host_data->prog_data->args->common_args.debug)
+    {
+      err_debug ("Last State: Last Record ID = %u", host_data->host_state.last_record_id.record_id);
+      err_debug ("Last State: Last Percent Full = %u", host_data->host_state.last_percent_full);
+      _dump_sel_info (host_data, &(host_data->host_state.sel_info), "Last State");
+      _dump_sel_info (host_data, &sel_info, "Current State");
+    }
   
   if (sel_info.most_recent_addition_timestamp < host_data->host_state.sel_info.most_recent_addition_timestamp
       || sel_info.most_recent_erase_timestamp < host_data->host_state.sel_info.most_recent_erase_timestamp)
@@ -1045,7 +1077,7 @@ _ipmi_setup (ipmiseld_host_data_t *host_data)
                                            common_args->session_timeout,
                                            common_args->retransmission_timeout,
                                            workaround_flags,
-                                           (common_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT) < 0)
+                                           (common_args->debug > 1) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT) < 0)
             {
 	      /* XXX deal w/ specific errors */
 	      err_output ("ipmi_ctx_open_outofband_2_0: %s", ipmi_ctx_errormsg (host_data->host_poll->ipmi_ctx));
@@ -1063,7 +1095,7 @@ _ipmi_setup (ipmiseld_host_data_t *host_data)
                                        common_args->session_timeout,
                                        common_args->retransmission_timeout,
                                        workaround_flags,
-                                       (common_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT) < 0)
+                                       (common_args->debug > 1) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT) < 0)
             {
 	      /* XXX deal w/ specific errors */
 	      err_output ("ipmi_ctx_open_outofband: %s", ipmi_ctx_errormsg (host_data->host_poll->ipmi_ctx));
@@ -1093,7 +1125,7 @@ _ipmi_setup (ipmiseld_host_data_t *host_data)
                                            common_args->register_spacing,
                                            common_args->driver_device,
                                            workaround_flags,
-                                           (common_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT)) < 0)
+                                           (common_args->debug > 1) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT)) < 0)
             {
 	      /* XXX deal w/ specific errors */
 	      err_output ("ipmi_ctx_find_inband: %s", ipmi_ctx_errormsg (host_data->host_poll->ipmi_ctx));
@@ -1116,7 +1148,7 @@ _ipmi_setup (ipmiseld_host_data_t *host_data)
                                     common_args->register_spacing,
                                     common_args->driver_device,
                                     workaround_flags,
-                                    (common_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT) < 0)
+                                    (common_args->debug > 1) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT) < 0)
             {
 	      /* XXX deal w/ specific errors */
 	      err_output ("ipmi_ctx_open_inband: %s", ipmi_ctx_errormsg (host_data->host_poll->ipmi_ctx));
@@ -1174,7 +1206,7 @@ _ipmiseld_poll (ipmiseld_host_data_t *host_data)
     }
   
   if (host_data->prog_data->args->foreground
-      && host_data->prog_data->args->common_args.debug)
+      && host_data->prog_data->args->common_args.debug > 1)
     sel_flags |= IPMI_SEL_FLAGS_DEBUG_DUMP;
   
   if (host_data->prog_data->args->common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_ASSUME_SYSTEM_EVENT)
@@ -1189,7 +1221,7 @@ _ipmiseld_poll (ipmiseld_host_data_t *host_data)
     }
 
   if (host_data->prog_data->args->foreground
-      && host_data->prog_data->args->common_args.debug
+      && host_data->prog_data->args->common_args.debug > 1
       && host_data->hostname)
     {
       if (ipmi_sel_ctx_set_debug_prefix (host_data->host_poll->sel_ctx, host_data->hostname) < 0)
@@ -1328,14 +1360,16 @@ _ipmiseld (ipmiseld_prog_data_t *prog_data)
   host_data.hostname = prog_data->args->common_args.hostname;
   host_data.host_poll = NULL;
 
-  if (prog_data->args->test_run)
+  if (host_data.prog_data->args->test_run)
     return (_ipmiseld_poll (&host_data));
   else
     {
       while (exit_flag)
 	{
-	  unsigned int timeout;
-
+	  if (host_data.prog_data->args->foreground
+	      && host_data.prog_data->args->common_args.debug)
+	    err_debug ("Poll %s", host_data.hostname ? host_data.hostname : "localhost");
+	  
 	  /* XXX vary timeout based on error? */ 
 	  _ipmiseld_poll (&host_data);
 
