@@ -384,7 +384,7 @@ _sel_log_output (ipmiseld_host_data_t *host_data, uint8_t record_type)
 
   if (host_data->prog_data->args->foreground
       && host_data->prog_data->args->common_args.debug)
-    IPMISELD_HOST_DEBUG (("SEL Record parsed: Record ID %u", record_id));
+    IPMISELD_HOST_DEBUG (("SEL Record parsed: Record ID = %u", record_id));
 
   /* achu:
    *
@@ -634,13 +634,13 @@ _dump_sel_info (ipmiseld_host_data_t *host_data,
   assert (sel_info);
   assert (prefix);
 
-  IPMISELD_HOST_DEBUG (("%s: Entries %u", prefix, sel_info->entries));
-  IPMISELD_HOST_DEBUG (("%s: Free Space %u", prefix, sel_info->free_space));
-  IPMISELD_HOST_DEBUG (("%s: Most Recent Addition Timestamp %u", prefix, sel_info->most_recent_addition_timestamp));
-  IPMISELD_HOST_DEBUG (("%s: Most Recent Erase Timestamp %u", prefix, sel_info->most_recent_erase_timestamp));
-  IPMISELD_HOST_DEBUG (("%s: Delete Sel Command Supported %u", prefix, sel_info->delete_sel_command_supported));
-  IPMISELD_HOST_DEBUG (("%s: Reserve Sel Command Supported %u", prefix, sel_info->reserve_sel_command_supported));
-  IPMISELD_HOST_DEBUG (("%s: Overflow Flag %u", prefix, sel_info->overflow_flag));
+  IPMISELD_HOST_DEBUG (("%s: Entries = %u", prefix, sel_info->entries));
+  IPMISELD_HOST_DEBUG (("%s: Free Space = %u", prefix, sel_info->free_space));
+  IPMISELD_HOST_DEBUG (("%s: Most Recent Addition Timestamp = %u", prefix, sel_info->most_recent_addition_timestamp));
+  IPMISELD_HOST_DEBUG (("%s: Most Recent Erase Timestamp = %u", prefix, sel_info->most_recent_erase_timestamp));
+  IPMISELD_HOST_DEBUG (("%s: Delete Sel Command Supported = %u", prefix, sel_info->delete_sel_command_supported));
+  IPMISELD_HOST_DEBUG (("%s: Reserve Sel Command Supported = %u", prefix, sel_info->reserve_sel_command_supported));
+  IPMISELD_HOST_DEBUG (("%s: Overflow Flag = %u", prefix, sel_info->overflow_flag));
 } 
 
 static void
@@ -681,9 +681,11 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
       /* XXX should get from file later */
       if (_ipmiseld_host_state_init (host_data) < 0)
 	return (-1);
+
       if (host_data->prog_data->args->foreground
 	  && host_data->prog_data->args->common_args.debug)
 	_dump_host_state (host_data, "Initial State");
+
       return (0);
     }
   
@@ -990,7 +992,6 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
 
   if (log_entries_flag)
     {
-      /* XXX handle reservation canceled, try again or something */
       if (ipmi_sel_parse (host_data->host_poll->sel_ctx,
 			  record_id_start,
 			  IPMI_SEL_RECORD_ID_LAST,
