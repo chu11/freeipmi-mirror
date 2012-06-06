@@ -845,10 +845,8 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
 	  ipmiseld_syslog_host (host_data, "SEL timestamp error, fewer entries without erase");
 	}
 
-      /* if no additional entries, user deleted some older entries and that was it */
-      if (sel_info.most_recent_addition_timestamp == host_data->host_state.sel_info.most_recent_addition_timestamp)
-	goto fallthrough;
-      else
+      /* if no additional entries, nothing to log */
+      if (sel_info.most_recent_addition_timestamp != host_data->host_state.sel_info.most_recent_addition_timestamp)
 	{
 	  if (sel_info.delete_sel_command_supported)
 	    {
@@ -893,6 +891,12 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
 		  log_entries_flag++;
 		}
 	    }
+	}
+      else
+	{
+	  if (!sel_info.entries)
+	    host_data->host_state.last_record_id.record_id = 0;
+	  goto fallthrough;
 	}
     }
 
