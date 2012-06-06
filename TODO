@@ -38,39 +38,12 @@ FreeIPMI new stuff
 - ipmi-seld (***)
   - log sel events to syslog/alternate log file
     - work across cluster, configure w/ range of hosts
-    - need filtering thingie to remove messages you don't care about?
-    - mechanism/option to clear when SEL buffer full
-    - detect if SEL buffer cleared "out of band"
-    - must do safely w/o racing (i.e. w/ external clear/delete)
-      - using reservation IDs
-    - option to delete recordss as logged or not
-    - clear records on full or not
-    - mechanism to log last SEL event logged or not?
-      - or only log new SEL events?
-    - option allow user to specify format for log
-      - i.e. %h: %t - %e
   - options
-    -config-file
-    -debug/foreground
-    -poll-time
-    -hosts
-    - filter??
     - log-old - flag
-    - clear on read
-    - clear on full
-    - warn on full
-    - warn on full percent
-      - warn/detect if clear/delete done out of band
-    - format to output
-    - log level
-    - log facility
-    - need to track last logged id?
-    - test/experiment option to test config/setup 
-    - store caches in /var/cache? or use present ones
-  - way to clear caches / not-recreate
-  - start record-id?
-  - not daemon by default?
-    - output to "script" instead?
+    - backoff option - delay retry poll interval on error?
+    - recreate cachd after X time no matter what
+      - possibly to deal with broken hardware
+      - OR mechanism to clear caches once in awhile
 - server simulator
   - support testing at scale
   - test larger set of corner cases, possibilities, workarounds, etc. 
