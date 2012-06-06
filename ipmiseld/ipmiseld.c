@@ -58,10 +58,12 @@
 
 #define IPMISELD_EVENT_OUTPUT_BUFLEN    4096
 
+#define IPMISELD_RETRY_ATTEMPT_MAX      3
+
 static int exit_flag = 1;
 
 static int
-_ipmi_sel_info_get (ipmiseld_host_data_t *host_data, ipmiseld_sel_info_t *sel_info)
+ipmiseld_sel_info_get (ipmiseld_host_data_t *host_data, ipmiseld_sel_info_t *sel_info)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -237,7 +239,7 @@ _ipmiseld_host_state_init (ipmiseld_host_data_t *host_data)
       host_data->host_state.last_record_id.loaded = 1;
     }
   
-  if (_ipmi_sel_info_get (host_data, &(host_data->host_state.sel_info)) < 0)
+  if (ipmiseld_sel_info_get (host_data, &(host_data->host_state.sel_info)) < 0)
     goto cleanup;
 
   percent = _ipmiseld_calc_percent_full (host_data, &(host_data->host_state.sel_info));
@@ -978,6 +980,70 @@ ipmiseld_check_thresholds (ipmiseld_host_data_t *host_data,
   return (rv);
 }
 
+/* returns 1 if reserve successful, 0 if not, -1 on error */
+static int
+ipmiseld_sel_reserve (ipmiseld_host_data_t *host_data,
+		      ipmiseld_sel_info_t *sel_info)
+{
+  assert (host_data);
+  assert (host_data->host_poll);
+  assert (host_data->host_poll->sel_ctx);
+  assert (sel_info);
+
+  if (sel_info->reserve_sel_command_supported)
+    {
+      if (ipmi_sel_ctx_register_reservation_id (host_data->host_poll->sel_ctx, NULL) < 0)
+	{
+	  /* If an IPMI error, we assume just can't do reservation, no biggie */
+	  if (ipmi_sel_ctx_errnum (host_data->host_poll->sel_ctx) == IPMI_SEL_ERR_IPMI_ERROR)
+	    return (0);
+	  
+	  err_output ("ipmi_sel_ctx_register_reservation_id: %s",
+		      ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
+	  return (-1);
+	}
+
+      return (1);
+    }
+
+  return (0);
+}
+
+static int
+ipmiseld_sel_log_entries (ipmiseld_host_data_t *host_data,
+			  uint16_t record_id_start)
+{
+  assert (host_data);
+  assert (host_data->host_poll);
+  assert (host_data->host_poll->sel_ctx);
+  
+  if (ipmi_sel_parse (host_data->host_poll->sel_ctx,
+		      record_id_start,
+		      IPMI_SEL_RECORD_ID_LAST,
+		      _sel_parse_callback,
+		      host_data) < 0)
+    {
+      err_output ("ipmi_sel_parse: %s", ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
+      return (-1);
+    }
+  
+  return (0);
+}
+
+static int
+ipmiseld_save_state (ipmiseld_host_data_t *host_data,
+		     ipmiseld_sel_info_t *sel_info)
+{
+  assert (host_data);
+  assert (sel_info);
+
+  memcpy (&host_data->host_state.sel_info, sel_info, sizeof (ipmiseld_sel_info_t));
+  /* XXX save disk */
+
+  return (0);
+}
+  
+/* return 1 - retry immediately, return 0 general success, -1 error */
 static int
 ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
 {
@@ -985,11 +1051,12 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
   uint16_t record_id_start = 0;
   int log_entries_flag = 0;
   int do_clear_flag = 0;
+  int reserve_flag = 0;
+  int retry_flag = 0;
+  int rv = -1;
   int ret;
 
   assert (host_data);
-  assert (host_data->host_poll);
-  assert (host_data->host_poll->sel_ctx);
 
   /*
     XXX go through error handling here, still ok? fallthrough for save
@@ -1000,17 +1067,17 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
     {
       /* XXX should get from file later */
       if (_ipmiseld_host_state_init (host_data) < 0)
-	return (-1);
+	goto cleanup;
 
       if (host_data->prog_data->args->foreground
 	  && host_data->prog_data->args->common_args.debug)
 	_dump_host_state (host_data, "Initial State");
 
-      return (0);
+      goto out;
     }
   
-  if (_ipmi_sel_info_get (host_data, &sel_info) < 0)
-    return (-1);
+  if (ipmiseld_sel_info_get (host_data, &sel_info) < 0)
+    goto cleanup;
 
   if (host_data->prog_data->args->foreground
       && host_data->prog_data->args->common_args.debug)
@@ -1019,92 +1086,83 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
       _dump_sel_info (host_data, &sel_info, "Current State");
     }
   
-  if ((log_entries_flag = ipmiseld_check_sel_info (host_data, &sel_info, &record_id_start)) < 0)
-    return (-1);
-
   if ((do_clear_flag = ipmiseld_check_thresholds (host_data, &sel_info)) < 0)
-    return (-1);
+    goto cleanup;
+
+  if ((log_entries_flag = ipmiseld_check_sel_info (host_data, &sel_info, &record_id_start)) < 0)
+    goto cleanup;
+
+  if (do_clear_flag)
+    {
+      if ((reserve_flag = ipmiseld_sel_reserve (host_data, &sel_info)) < 0)
+	goto cleanup;
+    }
 
   if (log_entries_flag)
     {
-      if (do_clear_flag)
-	{
-	  if (sel_info.reserve_sel_command_supported)
-	    {
-	      /* XXX best way to handle error IPMI_SEL_ERR_IPMI_ERROR */
-	      /* No error output, we can do it without it */
-	      if (ipmi_sel_ctx_register_reservation_id (host_data->host_poll->sel_ctx, NULL) < 0)
-		{
-		  err_output ("ipmi_sel_ctx_register_reservation_id: %s",
-			      ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
-		  return (-1);
-		}
-	    }
-	}
-
-      if (ipmi_sel_parse (host_data->host_poll->sel_ctx,
-			  record_id_start,
-			  IPMI_SEL_RECORD_ID_LAST,
-			  _sel_parse_callback,
-			  host_data) < 0)
-	{
-	  err_output ("ipmi_sel_parse: %s",
-		      ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
-	  /* XXX do clear? do save info? */
-	  return (-1);
-	}
+      if (ipmiseld_sel_log_entries (host_data, record_id_start) < 0)
+	goto cleanup;
     }
   
   if (do_clear_flag)
     {
-      if (sel_info.reserve_sel_command_supported)
+      if ((ret = ipmi_sel_clear_sel (host_data->host_poll->sel_ctx)) < 0)
 	{
-	  if ((ret = ipmi_sel_clear_sel (host_data->host_poll->sel_ctx)) < 0)
+	  if (reserve_flag
+	      && ipmi_sel_ctx_errnum (host_data->host_poll->sel_ctx) == IPMI_SEL_ERR_RESERVATION_CANCELED)
+	    retry_flag++;
+	  else
 	    {
-	      if (ipmi_sel_ctx_errnum (host_data->host_poll->sel_ctx) == IPMI_SEL_ERR_RESERVATION_CANCELED)
-		{
-		  /* XXX do something */
-		  /* try again later?? deal with timeouts or something to handle this */
-		}
-	      else
-		err_output ("ipmi_sel_clear_sel: %s",
-			    ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
+	      err_output ("ipmi_sel_clear_sel: %s",
+			  ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
+	      goto cleanup;
 	    }
 	}
-      else
-	{
-	  if ((ret = ipmi_sel_clear_sel (host_data->host_poll->sel_ctx)) < 0)
-	    err_output ("ipmi_sel_clear_sel: %s",
-			ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
-
-	} 
-
-      if (!ret)
-	{
-	  ipmiseld_syslog_host (host_data, "SEL cleared");
-
-	  /* XXX -1 on error? */
-	  if (_ipmi_sel_info_get (host_data, &sel_info) < 0)
-	    return (-1);
-	  host_data->host_state.last_record_id.record_id = 0;
-	}
+      
+      ipmiseld_syslog_host (host_data, "SEL cleared");
+	      
+      if (ipmiseld_sel_info_get (host_data, &sel_info) < 0)
+	goto cleanup;
+      host_data->host_state.last_record_id.record_id = 0;
     }
 
-  memcpy (&host_data->host_state.sel_info, &sel_info, sizeof (ipmiseld_sel_info_t));
-  /* XXX save disk */
+  if (ipmiseld_save_state (host_data, &sel_info) < 0)
+    goto cleanup;
   
-  return (0);
+ out:
+
+  if (retry_flag)
+    rv = 1;
+  else
+    rv = 0;
+
+ cleanup:
+  return (rv);
 }
 
 static int
 ipmiseld_sel_parse (ipmiseld_host_data_t *host_data)
 {
+  unsigned int retry_count = 0;
+  int rv;
+ 
   assert (host_data);
 
   if (host_data->prog_data->args->test_run)
     return (ipmiseld_sel_parse_test_run (host_data));
 
-  return (ipmiseld_sel_parse_log (host_data));
+  while (retry_count < IPMISELD_RETRY_ATTEMPT_MAX)
+    {
+      if ((rv = ipmiseld_sel_parse_log (host_data)) < 0)
+	break;
+
+      if (!rv)
+	break;
+
+      retry_count++;
+    }
+
+  return (rv);
 }
 
 static int
