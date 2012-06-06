@@ -43,6 +43,7 @@
 #include "ipmiseld-argp.h"
 #include "ipmiseld-cache.h"
 #include "ipmiseld-common.h"
+#include "ipmiseld-debug.h"
 
 #include "freeipmi-portability.h"
 #include "error.h"
@@ -259,7 +260,7 @@ _sel_parse_err_handle (ipmiseld_host_data_t *host_data, char *func)
     {
       /* maybe a bad SEL entry returned from remote system, don't error out */
       if (host_data->prog_data->args->common_args.debug)
-        err_debug ("Invalid SEL entry read");
+        IPMISELD_HOST_DEBUG (("Invalid SEL entry read"));
       return (0);
     }
 
@@ -383,7 +384,7 @@ _sel_log_output (ipmiseld_host_data_t *host_data, uint8_t record_type)
 
   if (host_data->prog_data->args->foreground
       && host_data->prog_data->args->common_args.debug)
-    err_debug ("SEL Record parsed: Record ID %u", record_id);
+    IPMISELD_HOST_DEBUG (("SEL Record parsed: Record ID %u", record_id));
 
   /* achu:
    *
@@ -633,13 +634,13 @@ _dump_sel_info (ipmiseld_host_data_t *host_data,
   assert (sel_info);
   assert (prefix);
 
-  err_debug ("%s: Entries %u", prefix, sel_info->entries);
-  err_debug ("%s: Free Space %u", prefix, sel_info->free_space);
-  err_debug ("%s: Most Recent Addition Timestamp %u", prefix, sel_info->most_recent_addition_timestamp);
-  err_debug ("%s: Most Recent Erase Timestamp %u", prefix, sel_info->most_recent_erase_timestamp);
-  err_debug ("%s: Delete Sel Command Supported %u", prefix, sel_info->delete_sel_command_supported);
-  err_debug ("%s: Reserve Sel Command Supported %u", prefix, sel_info->reserve_sel_command_supported);
-  err_debug ("%s: Overflow Flag %u", prefix, sel_info->overflow_flag);
+  IPMISELD_HOST_DEBUG (("%s: Entries %u", prefix, sel_info->entries));
+  IPMISELD_HOST_DEBUG (("%s: Free Space %u", prefix, sel_info->free_space));
+  IPMISELD_HOST_DEBUG (("%s: Most Recent Addition Timestamp %u", prefix, sel_info->most_recent_addition_timestamp));
+  IPMISELD_HOST_DEBUG (("%s: Most Recent Erase Timestamp %u", prefix, sel_info->most_recent_erase_timestamp));
+  IPMISELD_HOST_DEBUG (("%s: Delete Sel Command Supported %u", prefix, sel_info->delete_sel_command_supported));
+  IPMISELD_HOST_DEBUG (("%s: Reserve Sel Command Supported %u", prefix, sel_info->reserve_sel_command_supported));
+  IPMISELD_HOST_DEBUG (("%s: Overflow Flag %u", prefix, sel_info->overflow_flag));
 } 
 
 static void
@@ -651,8 +652,8 @@ _dump_host_state (ipmiseld_host_data_t *host_data,
   assert (host_data->prog_data->args->common_args.debug);
   assert (prefix);
 
-  err_debug ("%s: Last Record ID = %u", prefix, host_data->host_state.last_record_id.record_id);
-  err_debug ("%s: Last Percent Full = %u", prefix, host_data->host_state.last_percent_full);
+  IPMISELD_HOST_DEBUG (("%s: Last Record ID = %u", prefix, host_data->host_state.last_record_id.record_id));
+  IPMISELD_HOST_DEBUG (("%s: Last Percent Full = %u", prefix, host_data->host_state.last_percent_full));
   _dump_sel_info (host_data, &(host_data->host_state.sel_info), prefix);
 }
 
@@ -1384,12 +1385,12 @@ _ipmiseld (ipmiseld_prog_data_t *prog_data)
 	{
 	  if (host_data.prog_data->args->foreground
 	      && host_data.prog_data->args->common_args.debug)
-	    err_debug ("Poll %s", host_data.hostname ? host_data.hostname : "localhost");
+	    IPMISELD_DEBUG (("Poll %s", host_data.hostname ? host_data.hostname : "localhost"));
 	  
 	  /* XXX vary timeout based on error? */ 
 	  _ipmiseld_poll (&host_data);
 
-	  daemon_sleep (prog_data->args->poll_interval);
+	  daemon_sleep (host_data.prog_data->args->poll_interval);
  	}
     }
 

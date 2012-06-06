@@ -31,7 +31,9 @@ ipmiseld_SOURCES = \
 	ipmiseld-cache.c \
 	ipmiseld-cache.h \
 	ipmiseld-common.c \
-	ipmiseld-common.h
+	ipmiseld-common.h \
+	ipmiseld-debug.c \
+	ipmiseld-debug.h
 
 $(top_builddir)/common/toolcommon/libtoolcommon.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
