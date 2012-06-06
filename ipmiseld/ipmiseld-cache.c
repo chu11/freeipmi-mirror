@@ -147,6 +147,9 @@ ipmiseld_sdr_cache_create_and_load (ipmiseld_host_data_t *host_data)
     {
       if (ipmi_sdr_ctx_errnum (host_data->host_poll->sdr_ctx) == IPMI_SDR_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST)
         {
+	  if (host_data->prog_data->args->common_args.debug)
+	    err_debug ("SDR cache not available - creating");
+
           if (_ipmiseld_sdr_cache_create (host_data, filename) < 0)
             goto cleanup;
         }
@@ -154,7 +157,7 @@ ipmiseld_sdr_cache_create_and_load (ipmiseld_host_data_t *host_data)
                || ipmi_sdr_ctx_errnum (host_data->host_poll->sdr_ctx) == IPMI_SDR_ERR_CACHE_OUT_OF_DATE)
         {
 	  if (host_data->prog_data->args->common_args.debug)
-	    err_debug ("SDR cache invalid - recreated");
+	    err_debug ("SDR cache invalid - delete and recreate cache");
 	  
 	  if (ipmi_sdr_cache_delete (host_data->host_poll->sdr_ctx, filename) < 0)
 	    {
