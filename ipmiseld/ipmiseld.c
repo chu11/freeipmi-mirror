@@ -638,6 +638,20 @@ _dump_sel_info (ipmiseld_host_data_t *host_data,
   err_debug ("%s: Overflow Flag %u", prefix, sel_info->overflow_flag);
 } 
 
+static void
+_dump_host_state (ipmiseld_host_data_t *host_data,
+		  const char *prefix)
+{
+  assert (host_data);
+  assert (host_data->prog_data->args->foreground);
+  assert (host_data->prog_data->args->common_args.debug);
+  assert (prefix);
+
+  err_debug ("%s: Last Record ID = %u", prefix, host_data->host_state.last_record_id.record_id);
+  err_debug ("%s: Last Percent Full = %u", prefix, host_data->host_state.last_percent_full);
+  _dump_sel_info (host_data, &(host_data->host_state.sel_info), prefix);
+}
+
 static int
 ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
 {
@@ -664,7 +678,7 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
 	return (-1);
       if (host_data->prog_data->args->foreground
 	  && host_data->prog_data->args->common_args.debug)
-	_dump_sel_info (host_data, &sel_info, "Initial State");
+	_dump_host_state (host_data, "Initial State");
       return (0);
     }
   
@@ -674,9 +688,7 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
   if (host_data->prog_data->args->foreground
       && host_data->prog_data->args->common_args.debug)
     {
-      err_debug ("Last State: Last Record ID = %u", host_data->host_state.last_record_id.record_id);
-      err_debug ("Last State: Last Percent Full = %u", host_data->host_state.last_percent_full);
-      _dump_sel_info (host_data, &(host_data->host_state.sel_info), "Last State");
+      _dump_host_state (host_data, "Last State");
       _dump_sel_info (host_data, &sel_info, "Current State");
     }
   
