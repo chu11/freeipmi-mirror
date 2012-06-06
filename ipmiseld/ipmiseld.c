@@ -381,6 +381,10 @@ _sel_log_output (ipmiseld_host_data_t *host_data, uint8_t record_type)
       return (-1);
     }
 
+  if (host_data->prog_data->args->foreground
+      && host_data->prog_data->args->common_args.debug)
+    err_debug ("SEL Record parsed: Record ID %u", record_id);
+
   /* achu:
    *
    * Algorithmically we can "find" the next entry to log several ways,
