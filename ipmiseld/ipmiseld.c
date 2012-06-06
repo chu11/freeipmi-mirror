@@ -1336,12 +1336,10 @@ _ipmiseld (ipmiseld_prog_data_t *prog_data)
 	{
 	  unsigned int timeout;
 
-	  if (_ipmiseld_poll (&host_data) < 0)
-	    timeout = prog_data->args->poll_error_interval;
-	  else
-	    timeout = prog_data->args->poll_interval;
+	  /* XXX vary timeout based on error? */ 
+	  _ipmiseld_poll (&host_data);
 
-	  daemon_sleep (timeout);
+	  daemon_sleep (prog_data->args->poll_interval);
  	}
     }
 

@@ -110,18 +110,16 @@ static struct argp_option cmdline_options[] =
       "Specify format for oem non-timestamped event outputs.", 55},
     { "poll-interval", IPMISELD_POLL_INTERVAL_KEY, "SECONDS", 0,
       "Specify poll interval to check the SEL for new events.", 56},
-    { "poll-error-interval", IPMISELD_POLL_ERROR_INTERVAL_KEY, "SECONDS", 0,
-      "Specify poll interval to check the SEL if errors occur.", 57},
     { "log-facility", IPMISELD_LOG_FACILITY_KEY, "STRING", 0,
-      "Specify syslog log facility.", 58},
+      "Specify syslog log facility.", 57},
     { "log-priority", IPMISELD_LOG_PRIORITY_KEY, "STRING", 0,
-      "Specify syslog log priority.", 59},
+      "Specify syslog log priority.", 58},
     { "cache-directory", IPMISELD_CACHE_DIRECTORY_KEY, "DIRECTORY", 0,
-      "Specify alternate cache directory.", 60},
+      "Specify alternate cache directory.", 59},
     { "test-run", IPMISELD_TEST_RUN_KEY, 0, 0,
-      "Do not daemonize, output current SEL as test of current settings.", 61},
+      "Do not daemonize, output current SEL as test of current settings.", 60},
     { "foreground", IPMISELD_FOREGROUND_KEY, 0, 0,
-      "Run daemon in foreground.", 62},
+      "Run daemon in foreground.", 61},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -279,18 +277,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
         }
       cmd_args->poll_interval = tmp;
       break;
-    case IPMISELD_POLL_ERROR_INTERVAL_KEY:
-      errno = 0;
-      tmp = strtol (arg, &endptr, 0);
-      if (errno
-          || endptr[0] != '\0'
-	  || tmp <= 0) 
-        {
-          fprintf (stderr, "invalid poll error interval\n");
-          exit (EXIT_FAILURE);
-        }
-      cmd_args->poll_error_interval = tmp;
-      break;
     case IPMISELD_TEST_RUN_KEY:
       cmd_args->test_run = 1;
       break;
@@ -402,8 +388,6 @@ _ipmiseld_config_file_parse (struct ipmiseld_arguments *cmd_args)
     cmd_args->oem_non_timestamped_event_format_str = config_file_data.oem_non_timestamped_event_format_str;
   if (config_file_data.poll_interval_count)
     cmd_args->poll_interval = config_file_data.poll_interval;
-  if (config_file_data.poll_error_interval_count)
-    cmd_args->poll_error_interval = config_file_data.poll_error_interval;
   if (config_file_data.log_facility_str_count)
     cmd_args->log_facility_str = config_file_data.log_facility_str;
   if (config_file_data.log_priority_str_count)
@@ -500,7 +484,6 @@ ipmiseld_argp_parse (int argc, char **argv, struct ipmiseld_arguments *cmd_args)
   cmd_args->log_priority_str = NULL;
   cmd_args->cache_directory = NULL;
   cmd_args->poll_interval = IPMISELD_POLL_INTERVAL_DEFAULT;
-  cmd_args->poll_interval = IPMISELD_POLL_ERROR_INTERVAL_DEFAULT;
   cmd_args->test_run = 0;
   cmd_args->foreground = 0;
 
