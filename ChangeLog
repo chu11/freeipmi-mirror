@@ -1,3 +1,7 @@
+2012-06-06  Albert Chu <chu11@llnl.gov>
+
+	* common/toolcommon/Makefile.am: Fix build bug.
+	
 2012-06-05  Albert Chu <chu11@llnl.gov>
 
 	* common/miscutil/conffile.c,

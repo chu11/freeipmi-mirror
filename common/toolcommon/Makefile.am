@@ -8,6 +8,7 @@ libtoolcommon_la_CPPFLAGS = \
 	-I$(top_srcdir)/common/miscutil \
 	-I$(top_srcdir)/common/parsecommon \
 	-I$(top_srcdir)/common/portability \
+	-I$(top_srcdir)/libipmidetect \
 	-I$(top_srcdir)/libfreeipmi/include \
 	-D_GNU_SOURCE \
 	-D_REENTRANT
