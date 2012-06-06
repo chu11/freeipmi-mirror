@@ -966,7 +966,7 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
 
   if (!host_data->host_state.sel_info.overflow_flag
       && sel_info.overflow_flag)
-    ipmiseld_syslog_host (host_data, "SEL Overflow, events have been dropped eut ot lack of space in the SEL");
+    ipmiseld_syslog_host (host_data, "SEL Overflow, events have been dropped due to lack of space in the SEL");
   
   if (host_data->prog_data->args->clear_threshold)
     {
