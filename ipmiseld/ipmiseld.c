@@ -667,8 +667,6 @@ ipmiseld_check_sel_info (ipmiseld_host_data_t *host_data,
   int rv = -1;
 
   assert (host_data);
-  assert (host_data->host_poll);
-  assert (host_data->host_poll->sel_ctx);
   assert (sel_info);
   assert (record_id_start);
 
@@ -937,6 +935,49 @@ ipmiseld_check_sel_info (ipmiseld_host_data_t *host_data,
   return (rv);
 }
 
+/* returns 1 if clear should occur, 0 if not, -1 on error */
+static int
+ipmiseld_check_thresholds (ipmiseld_host_data_t *host_data,
+			   ipmiseld_sel_info_t *sel_info)
+{
+  int do_clear_flag = 0;
+  int percent;
+  int rv = -1;
+
+  assert (host_data);
+  assert (sel_info);
+
+  percent = _ipmiseld_calc_percent_full (host_data, sel_info);
+
+  if (host_data->prog_data->args->warning_threshold)
+    {
+      if (percent > host_data->prog_data->args->warning_threshold)
+	{
+	  if (percent > host_data->host_state.last_percent_full)
+	    ipmiseld_syslog_host (host_data, "SEL is %d%% full", percent);
+	}
+    }
+
+  if (!host_data->host_state.sel_info.overflow_flag
+      && sel_info->overflow_flag)
+    ipmiseld_syslog_host (host_data, "SEL Overflow, events have been dropped due to lack of space in the SEL");
+  
+  if (host_data->prog_data->args->clear_threshold)
+    {
+      if (percent > host_data->prog_data->args->clear_threshold)
+	do_clear_flag = 1;
+    }
+
+  host_data->host_state.last_percent_full = percent;
+
+  if (do_clear_flag)
+    rv = 1;
+  else
+    rv = 0;
+
+  return (rv);
+}
+
 static int
 ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
 {
@@ -944,7 +985,6 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
   uint16_t record_id_start = 0;
   int log_entries_flag = 0;
   int do_clear_flag = 0;
-  int percent;
   int ret;
 
   assert (host_data);
@@ -982,45 +1022,26 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
   if ((log_entries_flag = ipmiseld_check_sel_info (host_data, &sel_info, &record_id_start)) < 0)
     return (-1);
 
-  percent = _ipmiseld_calc_percent_full (host_data, &sel_info);
-
-  if (host_data->prog_data->args->warning_threshold)
-    {
-      if (percent > host_data->prog_data->args->warning_threshold)
-	{
-	  if (percent > host_data->host_state.last_percent_full)
-	    ipmiseld_syslog_host (host_data, "SEL is %d%% full", percent);
-	}
-    }
-
-  if (!host_data->host_state.sel_info.overflow_flag
-      && sel_info.overflow_flag)
-    ipmiseld_syslog_host (host_data, "SEL Overflow, events have been dropped due to lack of space in the SEL");
-  
-  if (host_data->prog_data->args->clear_threshold)
-    {
-      if (percent > host_data->prog_data->args->clear_threshold)
-	{
-	  if (sel_info.reserve_sel_command_supported)
-	    {
-	      /* No error output, we can do it without it */
-	      if (ipmi_sel_ctx_register_reservation_id (host_data->host_poll->sel_ctx, NULL) < 0)
-		err_output ("ipmi_sel_ctx_register_reservation_id: %s",
-			    ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
-	      else
-		do_clear_flag = 1;
-	    }
-	  else
-	    /* If can't reserve, gotta do the best we can */
-	    do_clear_flag = 1;
-	}
-
-    }
-
-  host_data->host_state.last_percent_full = percent;
+  if ((do_clear_flag = ipmiseld_check_thresholds (host_data, &sel_info)) < 0)
+    return (-1);
 
   if (log_entries_flag)
     {
+      if (do_clear_flag)
+	{
+	  if (sel_info.reserve_sel_command_supported)
+	    {
+	      /* XXX best way to handle error IPMI_SEL_ERR_IPMI_ERROR */
+	      /* No error output, we can do it without it */
+	      if (ipmi_sel_ctx_register_reservation_id (host_data->host_poll->sel_ctx, NULL) < 0)
+		{
+		  err_output ("ipmi_sel_ctx_register_reservation_id: %s",
+			      ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
+		  return (-1);
+		}
+	    }
+	}
+
       if (ipmi_sel_parse (host_data->host_poll->sel_ctx,
 			  record_id_start,
 			  IPMI_SEL_RECORD_ID_LAST,
