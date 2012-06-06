@@ -725,7 +725,10 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
       /* Timestamps unchanged - this is the most common/normal case, no new log entries to log. */
       if (sel_info.most_recent_addition_timestamp == host_data->host_state.sel_info.most_recent_addition_timestamp
 	  && sel_info.most_recent_erase_timestamp == host_data->host_state.sel_info.most_recent_erase_timestamp)
-	goto fallthrough;
+	{
+	  /* nothing to do */
+	  ;
+	}
       /* If erase timestamp changed but addition timestamp has
        * not.  An out-of-daemon delete/clear occurred, but
        * there are no new entries to log.
@@ -832,9 +835,11 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
        */ 
       if (last_record_id.loaded
 	  && host_data->host_state.last_record_id.record_id == last_record_id.record_id)
-	goto fallthrough;
-      
-      if (sel_info.most_recent_erase_timestamp == host_data->host_state.sel_info.most_recent_erase_timestamp)
+	{
+	  /* nothing to do */
+	  ;
+	}
+      else if (sel_info.most_recent_erase_timestamp == host_data->host_state.sel_info.most_recent_erase_timestamp)
 	{
 	  /* This is the most normal case we should expect, there
 	   * are more entries in the SEL than last time we checked
@@ -947,11 +952,8 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
 	{
 	  if (!sel_info.entries)
 	    host_data->host_state.last_record_id.record_id = 0;
-	  goto fallthrough;
 	}
     }
-
- fallthrough:
 
   percent = _ipmiseld_calc_percent_full (host_data, &sel_info);
 
