@@ -682,14 +682,14 @@ ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
         SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_INTERNAL_ERROR);
       return (-1);
     }
-
+  
   ctx->operation = IPMI_SDR_OPERATION_CREATE_CACHE;
-
-  if (cache_create_flags == IPMI_SDR_CACHE_CREATE_FLAGS_DEFAULT)
-    open_flags = O_CREAT | O_EXCL | O_WRONLY;
-  else
+  
+  if (cache_create_flags & IPMI_SDR_CACHE_CREATE_FLAGS_OVERWRITE)
     open_flags = O_CREAT | O_TRUNC | O_WRONLY;
-
+  else
+    open_flags = O_CREAT | O_EXCL | O_WRONLY;
+  
   if ((fd = open (filename, open_flags, 0644)) < 0)
     {
       if (!(cache_create_flags & IPMI_SDR_CACHE_CREATE_FLAGS_OVERWRITE)

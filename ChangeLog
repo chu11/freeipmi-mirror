@@ -1,3 +1,8 @@
+2012-06-07  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/sdr/ipmi-sdr-cache-create.c (ipmi_sdr_cache_create):
+	Fix slight logic bug with cache_create_flags.
+	
 2012-06-06  Albert Chu <chu11@llnl.gov>
 
 	* common/toolcommon/Makefile.am: Fix build bug.
