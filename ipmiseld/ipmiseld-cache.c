@@ -32,9 +32,14 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#include <sys/types.h>
+#include <sys/stat.h>
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
+#if HAVE_FCNTL_H
+#include <fcntl.h>
+#endif /* HAVE_FCNTL_H */
 #include <sys/param.h>		/* MAXPATHLEN */
 #include <assert.h>
 #include <errno.h>
@@ -45,6 +50,7 @@
 
 #include "freeipmi-portability.h"
 #include "error.h"
+#include "fd.h"
 
 #ifndef MAXPATHLEN
 #define MAXPATHLEN 4096
@@ -54,19 +60,32 @@
 
 #define IPMISELD_SDR_CACHE_FILENAME       "ipmiseldsdrcache"
 
+/* 
+ * Data Cache Format
+ *
+ * All numbers stored little endian
+ *
+ * uint32_t file_magic
+ * uint32_t file_version_ 
+ * uint16_t last_record_id
+ * uint32_t last_percent_full
+ * uint16_t entries
+ * uint16_t free_space;
+ * uint32_t most_recent_addition_timestamp;
+ * uint32_t most_recent_erase_timestamp;
+ * uint8_t delete_sel_command_supported;
+ * uint8_t reserve_sel_command_supported;
+ * uint8_t overflow_flag;
+ * uint8_t zerosumchecksum;
+ */
+
 #define IPMISELD_DATA_CACHE_FILENAME      "ipmiselddata"
 
-#define IPMISELD_DATA_CACHE_FILE_MAGIC_0 0x4A
-#define IPMISELD_DATA_CACHE_FILE_MAGIC_1 0x1B
-#define IPMISELD_DATA_CACHE_FILE_MAGIC_2 0x11
-#define IPMISELD_DATA_CACHE_FILE_MAGIC_3 0xE6
+#define IPMISELD_DATA_CACHE_FILE_MAGIC    0x4A1B11E6
 
-#define IPMISELD_DATA_CACHE_FILE_VERSION_0 0x00
-#define IPMISELD_DATA_CACHE_FILE_VERSION_1 0x00
-#define IPMISELD_DATA_CACHE_FILE_VERSION_2 0x00
-#define IPMISELD_DATA_CACHE_FILE_VERSION_3 0x01
+#define IPMISELD_DATA_CACHE_FILE_VERSION  0x00000001
 
-extern uint32_t _ipmiseld_flags;
+#define IPMISELD_DATA_CACHE_LENGTH        (4 + 4 + 2 + 4 + 2 + 2 + 4 + 4 + 1 + 1 + 1 + 1)
 
 static int
 _ipmiseld_sdr_cache_create (ipmiseld_host_data_t *host_data,
@@ -223,11 +242,59 @@ _data_cache_filename (ipmiseld_host_data_t *host_data,
 	    hostname);
 }
 
-int
-ipmiseld_data_cache_load (ipmiseld_host_data_t *host_data,
-			  uint16_t *last_record_id_logged)
+static unsigned int
+_unmarshall_uint32 (uint8_t *databuf, uint32_t *value)
 {
+  assert (databuf);
+  assert (value);
+  
+  /* stored little endian */
+  (*value) = databuf[0];
+  (*value) |= (databuf[1] << 8);
+  (*value) |= (databuf[2] << 16);
+  (*value) |= (databuf[3] << 24);
+  
+  return (sizeof (uint32_t));
+}
+
+static unsigned int
+_unmarshall_uint16 (uint8_t *databuf, uint16_t *value)
+{
+  assert (databuf);
+  assert (value);
+
+  /* stored little endian */
+  (*value) = databuf[0];
+  (*value) |= (databuf[1] << 8);
+
+  return (sizeof (uint16_t));
+}
+
+static unsigned int
+_unmarshall_uint8 (uint8_t *databuf, uint8_t *value)
+{
+  assert (databuf);
+  assert (value);
+
+  (*value) = databuf[0];
+
+  return (sizeof (uint8_t));
+}
+
+/* returns 1 on data found/loaded, 0 if not, -1 on error  */
+int
+ipmiseld_data_cache_load (ipmiseld_host_data_t *host_data)
+{
+  uint32_t file_magic;
+  uint32_t file_version;
+  uint8_t zerosumchecksum;
   char filename[MAXPATHLEN+1];
+  uint8_t databuf[IPMISELD_DATA_CACHE_LENGTH];
+  unsigned int databuf_offset = 0;
+  int databuflen;
+  unsigned int i;
+  int fd = -1;
+  int rv = -1;
   
   assert (host_data);
 
@@ -237,15 +304,138 @@ ipmiseld_data_cache_load (ipmiseld_host_data_t *host_data,
 			filename,
 			MAXPATHLEN);
 
-  return (0);
+  if (access (filename, F_OK) < 0)
+    {
+      if (errno != ENOENT)
+	{
+	  err_output ("Error finding '%s': %s", filename, strerror (errno));
+	  goto cleanup;
+	}
+
+      rv = 0;
+      goto cleanup;
+    }
+  else
+    {
+      if (access (filename, R_OK) < 0)
+	{
+	  err_output ("Error read accesing '%s': %s", filename, strerror (errno));
+	  goto cleanup;
+	}
+    }
+  
+  if ((fd = open (filename, O_RDONLY)) < 0)
+    {
+      err_output ("Error opening '%s': %s", filename, strerror (errno));
+      goto cleanup;
+    }
+
+  if ((databuflen = fd_read_n (fd, databuf, IPMISELD_DATA_CACHE_LENGTH)) < 0)
+    {
+      err_output ("fd_write_n: %s", strerror (errno));
+      goto cleanup;
+    }
+
+  if (databuflen < IPMISELD_DATA_CACHE_LENGTH)
+    {
+      err_output ("invalid read length = %d", databuflen);
+      goto cleanup;
+    } 
+
+  for (i = 0; i < databuflen; i++)
+    zerosumchecksum += databuf[i];
+
+  if (zerosumchecksum)
+    {
+      err_output ("data cache corrupted");
+      goto cleanup;
+    }
+
+  databuf_offset += _unmarshall_uint32 (databuf + databuf_offset, &file_magic);
+
+  if (file_magic != IPMISELD_DATA_CACHE_FILE_MAGIC)
+    {
+      err_output ("data cache corrupted");
+      goto cleanup;
+    }
+  
+  databuf_offset += _unmarshall_uint32 (databuf + databuf_offset, &file_version);
+
+  if (file_version != IPMISELD_DATA_CACHE_FILE_VERSION)
+    {
+      err_output ("data cache out of date");
+      goto cleanup;
+    }
+  
+  databuf_offset += _unmarshall_uint16 (databuf + databuf_offset, &host_data->host_state.last_record_id.record_id);
+  host_data->host_state.last_record_id.loaded = 1; 
+  databuf_offset += _unmarshall_uint32 (databuf + databuf_offset, &host_data->host_state.last_percent_full);
+  databuf_offset += _unmarshall_uint16 (databuf + databuf_offset, &host_data->host_state.sel_info.entries);
+  databuf_offset += _unmarshall_uint16 (databuf + databuf_offset, &host_data->host_state.sel_info.free_space);
+  databuf_offset += _unmarshall_uint32 (databuf + databuf_offset, &host_data->host_state.sel_info.most_recent_addition_timestamp);
+  databuf_offset += _unmarshall_uint32 (databuf + databuf_offset, &host_data->host_state.sel_info.most_recent_erase_timestamp);
+  databuf_offset += _unmarshall_uint8 (databuf + databuf_offset, &host_data->host_state.sel_info.delete_sel_command_supported);
+  databuf_offset += _unmarshall_uint8 (databuf + databuf_offset, &host_data->host_state.sel_info.reserve_sel_command_supported);
+  databuf_offset += _unmarshall_uint8 (databuf + databuf_offset, &host_data->host_state.sel_info.overflow_flag);
+  
+  rv = 1;
+ cleanup:
+  close (fd);
+  return (rv);
+}
+
+static unsigned int
+_marshall_uint32 (uint8_t *databuf, uint32_t value)
+{
+  assert (databuf);
+
+  /* store little endian */
+  databuf[0] = (value & 0x000000FF);
+  databuf[1] = (value & 0x0000FF00) >> 8;
+  databuf[2] = (value & 0x00FF0000) >> 16;
+  databuf[3] = (value & 0xFF000000) >> 24;
+
+  return (sizeof (uint32_t));
+}
+
+static unsigned int
+_marshall_uint16 (uint8_t *databuf, uint16_t value)
+{
+  assert (databuf);
+
+  /* store little endian */
+  databuf[0] = (value & 0x00FF);
+  databuf[1] = (value & 0xFF00) >> 8;
+
+  return (sizeof (uint16_t));
+}
+
+static unsigned int
+_marshall_uint8 (uint8_t *databuf, uint8_t value)
+{
+  assert (databuf);
+
+  databuf[0] = value;
+
+  return (sizeof (uint8_t));
 }
 
 int
-ipmiseld_data_cache_store (ipmiseld_host_data_t *host_data,
-			   uint16_t last_record_id_logged)
+ipmiseld_data_cache_store (ipmiseld_host_data_t *host_data)
 {
+  uint32_t file_magic = IPMISELD_DATA_CACHE_FILE_MAGIC;
+  uint32_t file_version = IPMISELD_DATA_CACHE_FILE_VERSION;
   char filename[MAXPATHLEN+1];
-  
+  uint8_t databuf[IPMISELD_DATA_CACHE_LENGTH];
+  unsigned int databuf_offset = 0;
+  uint8_t zerosumchecksum = 0;
+  unsigned int i;
+  int n;
+  int open_flags;
+  int file_found = 0;
+  int fd = -1;
+  int rv = -1;
+
   assert (host_data);
 
   memset (filename, '\0', MAXPATHLEN + 1);
@@ -254,5 +444,85 @@ ipmiseld_data_cache_store (ipmiseld_host_data_t *host_data,
 			filename,
 			MAXPATHLEN);
 
-  return (0);
+  if (access (filename, F_OK) < 0)
+    {
+      if (errno != ENOENT)
+	{
+	  err_output ("Error finding '%s': %s", filename, strerror (errno));
+	  goto cleanup;
+	}
+    }
+  else
+    {
+      if (access (filename, W_OK) < 0)
+	{
+	  err_output ("Error write accesing '%s': %s", filename, strerror (errno));
+	  goto cleanup;
+	}
+      
+      file_found++;
+    }
+  
+  if (file_found)
+    open_flags = O_CREAT | O_TRUNC | O_WRONLY;
+  else
+    open_flags = O_CREAT | O_EXCL | O_WRONLY;
+
+  if ((fd = open (filename, open_flags, 0644)) < 0)
+    {
+      err_output ("Error opening '%s': %s", filename, strerror (errno));
+      goto cleanup;
+    }
+
+  databuf_offset += _marshall_uint32 (databuf + databuf_offset, file_magic);
+  databuf_offset += _marshall_uint32 (databuf + databuf_offset, file_version);
+  databuf_offset += _marshall_uint16 (databuf + databuf_offset, host_data->host_state.last_record_id.record_id);
+  databuf_offset += _marshall_uint32 (databuf + databuf_offset, host_data->host_state.last_percent_full);
+  databuf_offset += _marshall_uint16 (databuf + databuf_offset, host_data->host_state.sel_info.entries);
+  databuf_offset += _marshall_uint16 (databuf + databuf_offset, host_data->host_state.sel_info.free_space);
+  databuf_offset += _marshall_uint32 (databuf + databuf_offset, host_data->host_state.sel_info.most_recent_addition_timestamp);
+  databuf_offset += _marshall_uint32 (databuf + databuf_offset, host_data->host_state.sel_info.most_recent_erase_timestamp);
+  databuf_offset += _marshall_uint8 (databuf + databuf_offset, host_data->host_state.sel_info.delete_sel_command_supported);
+  databuf_offset += _marshall_uint8 (databuf + databuf_offset, host_data->host_state.sel_info.reserve_sel_command_supported);
+  databuf_offset += _marshall_uint8 (databuf + databuf_offset, host_data->host_state.sel_info.overflow_flag);
+
+  for (i = 0; i < databuf_offset; i++)
+    zerosumchecksum += databuf[i];
+
+  databuf_offset += _marshall_uint8 (databuf + databuf_offset, (0xFF - zerosumchecksum));
+
+  assert (databuf_offset == IPMISELD_DATA_CACHE_LENGTH);
+  
+  if ((n = fd_write_n (fd, databuf, databuf_offset)) < 0)
+    {
+      err_output ("fd_write_n: %s", strerror (errno));
+      goto cleanup;
+    }
+
+  if (n != databuf_offset)
+    {
+      err_output ("incomplete write");
+      goto cleanup;
+    }
+
+  if (fsync (fd) < 0)
+    {
+      err_output ("fsync: %s", strerror (errno));
+      goto cleanup;
+    }
+
+  if (close (fd) < 0)
+    {
+      err_output ("close: %s", strerror (errno));
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  if (rv < 0)
+    {
+      unlink (filename);
+      close (fd);
+    }
+  return (rv);
 }

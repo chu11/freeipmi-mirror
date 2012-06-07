@@ -197,13 +197,13 @@ _ipmiseld_last_record_id (ipmiseld_host_data_t *host_data,
   return (0);
 }
 
-static int
+static unsigned int
 _ipmiseld_calc_percent_full (ipmiseld_host_data_t *host_data,
 			     ipmiseld_sel_info_t *sel_info)
 {
   unsigned int used_bytes;
   unsigned int total_bytes;
-  int percent;
+  unsigned int percent;
 
   assert (host_data);
   assert (sel_info);
@@ -211,21 +211,23 @@ _ipmiseld_calc_percent_full (ipmiseld_host_data_t *host_data,
   used_bytes = (sel_info->entries * IPMI_SEL_RECORD_MAX_RECORD_LENGTH);
   total_bytes = used_bytes + sel_info->free_space;
   percent = (int)(100 * (double)used_bytes/total_bytes); 
+
   if (percent > 100)
     {
       /* Some rounding errors could occur, we accept small ones */
       if (percent > 105)
-	ipmiseld_syslog_host (host_data, "SEL percent calc error: %d", percent);
+	ipmiseld_syslog_host (host_data, "SEL percent calc error: %u", percent);
       percent = 100;
     }
+
   return (percent);
 }
 
 static int
 _ipmiseld_host_state_init (ipmiseld_host_data_t *host_data)
 {
+  unsigned int percent;
   int rv = -1;
-  int percent;
 
   assert (host_data);
 
@@ -943,7 +945,7 @@ ipmiseld_check_thresholds (ipmiseld_host_data_t *host_data,
 			   ipmiseld_sel_info_t *sel_info)
 {
   int do_clear_flag = 0;
-  int percent;
+  unsigned int percent;
   int rv = -1;
 
   assert (host_data);
