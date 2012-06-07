@@ -1058,11 +1058,6 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
 
   assert (host_data);
 
-  /*
-    XXX go through error handling here, still ok? fallthrough for save
-    SEL info, what if parse fail still do clear, etc.
-   */
-
   if (!host_data->host_state.initialized)
     {
       /* XXX should get from file later */
@@ -1106,6 +1101,8 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
   
   if (do_clear_flag)
     {
+      ipmiseld_sel_info_t tmp_sel_info;
+      
       if ((ret = ipmi_sel_clear_sel (host_data->host_poll->sel_ctx)) < 0)
 	{
 	  if (reserve_flag
@@ -1115,16 +1112,20 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
 	    {
 	      err_output ("ipmi_sel_clear_sel: %s",
 			  ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
-	      goto cleanup;
+	      goto save_state_out;
 	    }
 	}
       
       ipmiseld_syslog_host (host_data, "SEL cleared");
 	      
-      if (ipmiseld_sel_info_get (host_data, &sel_info) < 0)
-	goto cleanup;
+      if (ipmiseld_sel_info_get (host_data, &tmp_sel_info) < 0)
+	goto save_state_out;
+      
+      memcpy (&sel_info, &tmp_sel_info, sizeof (ipmiseld_sel_info_t));
       host_data->host_state.last_record_id.record_id = 0;
     }
+
+ save_state_out:
 
   if (ipmiseld_save_state (host_data, &sel_info) < 0)
     goto cleanup;
