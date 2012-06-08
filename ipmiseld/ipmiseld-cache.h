@@ -30,7 +30,9 @@
 
 int ipmiseld_sdr_cache_create_and_load (ipmiseld_host_data_t *host_data);
 
-/* returns 1 on data found/loaded, 0 if not, -1 on error  */
+/* returns 1 on data found/loaded, 0 if not found, -1 on error loading
+ *  (permission, corrupted, etc.)
+ */
 int ipmiseld_data_cache_load (ipmiseld_host_data_t *host_data);
 
 int ipmiseld_data_cache_store (ipmiseld_host_data_t *host_data);

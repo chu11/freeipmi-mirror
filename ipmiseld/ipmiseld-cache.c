@@ -281,7 +281,9 @@ _unmarshall_uint8 (uint8_t *databuf, uint8_t *value)
   return (sizeof (uint8_t));
 }
 
-/* returns 1 on data found/loaded, 0 if not, -1 on error  */
+/* returns 1 on data found/loaded, 0 if not found, -1 on error loading
+ *  (permission, corrupted, etc.)
+ */
 int
 ipmiseld_data_cache_load (ipmiseld_host_data_t *host_data)
 {
@@ -377,6 +379,7 @@ ipmiseld_data_cache_load (ipmiseld_host_data_t *host_data)
   databuf_offset += _unmarshall_uint8 (databuf + databuf_offset, &host_data->last_host_state.sel_info.delete_sel_command_supported);
   databuf_offset += _unmarshall_uint8 (databuf + databuf_offset, &host_data->last_host_state.sel_info.reserve_sel_command_supported);
   databuf_offset += _unmarshall_uint8 (databuf + databuf_offset, &host_data->last_host_state.sel_info.overflow_flag);
+  host_data->last_host_state.initialized = 1;
   
   rv = 1;
  cleanup:

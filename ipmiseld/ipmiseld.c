@@ -174,8 +174,8 @@ _sel_last_record_id_callback (ipmi_sel_ctx_t ctx, void *callback_data)
 }
 
 static int
-_ipmiseld_last_record_id (ipmiseld_host_data_t *host_data,
-			  ipmiseld_last_record_id_t *last_record_id)
+ipmiseld_get_last_record_id (ipmiseld_host_data_t *host_data,
+			     ipmiseld_last_record_id_t *last_record_id)
 {
   assert (host_data);
   assert (host_data->host_poll);
@@ -190,7 +190,9 @@ _ipmiseld_last_record_id (ipmiseld_host_data_t *host_data,
 		      _sel_last_record_id_callback,
 		      last_record_id) < 0)
     {
-      err_output ("ipmi_sel_parse: %s", ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
+      /* A general IPMI error (busy, timeout, etc.) is ok, it happens */
+      if (ipmi_sel_ctx_errnum (host_data->host_poll->sel_ctx) != IPMI_SEL_ERR_IPMI_ERROR)
+	err_output ("ipmi_sel_parse: %s", ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
       return (-1);
     }
 
@@ -198,8 +200,8 @@ _ipmiseld_last_record_id (ipmiseld_host_data_t *host_data,
 }
 
 static unsigned int
-_ipmiseld_calc_percent_full (ipmiseld_host_data_t *host_data,
-			     ipmiseld_sel_info_t *sel_info)
+ipmiseld_calc_percent_full (ipmiseld_host_data_t *host_data,
+			    ipmiseld_sel_info_t *sel_info)
 {
   unsigned int used_bytes;
   unsigned int total_bytes;
@@ -227,14 +229,14 @@ _ipmiseld_calc_percent_full (ipmiseld_host_data_t *host_data,
 }
 
 static int
-_ipmiseld_host_state_init (ipmiseld_host_data_t *host_data)
+ipmiseld_host_state_init (ipmiseld_host_data_t *host_data)
 {
   unsigned int percent;
   int rv = -1;
 
   assert (host_data);
 
-  if (_ipmiseld_last_record_id (host_data, &(host_data->last_host_state.last_record_id)) < 0)
+  if (ipmiseld_get_last_record_id (host_data, &(host_data->last_host_state.last_record_id)) < 0)
     goto cleanup;
   
   /* possible SEL is empty */
@@ -247,7 +249,7 @@ _ipmiseld_host_state_init (ipmiseld_host_data_t *host_data)
   if (ipmiseld_sel_info_get (host_data, &(host_data->last_host_state.sel_info)) < 0)
     goto cleanup;
 
-  percent = _ipmiseld_calc_percent_full (host_data, &(host_data->last_host_state.sel_info));
+  percent = ipmiseld_calc_percent_full (host_data, &(host_data->last_host_state.sel_info));
   host_data->last_host_state.last_percent_full = percent; 
   
   host_data->last_host_state.initialized = 1;
@@ -266,8 +268,8 @@ _sel_parse_err_handle (ipmiseld_host_data_t *host_data, char *func)
   if (ipmi_sel_ctx_errnum (host_data->host_poll->sel_ctx) == IPMI_SEL_ERR_INVALID_SEL_ENTRY)
     {
       /* maybe a bad SEL entry returned from remote system, don't error out */
-      if (host_data->prog_data->args->common_args.debug)
-        IPMISELD_HOST_DEBUG (("Invalid SEL entry read"));
+      if (host_data->prog_data->args->verbose)
+	ipmiseld_syslog_host ("Invalid SEL entry read");
       return (0);
     }
 
@@ -622,8 +624,10 @@ ipmiseld_sel_parse_test_run (ipmiseld_host_data_t *host_data)
 		      _sel_parse_callback,
 		      host_data) < 0)
     {
-      err_output ("ipmi_sel_parse: %s",
-		  ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
+      /* A general IPMI error (busy, timeout, etc.) is ok, it happens */
+      if (ipmi_sel_ctx_errnum (host_data->host_poll->sel_ctx) != IPMI_SEL_ERR_IPMI_ERROR)
+	err_output ("ipmi_sel_parse: %s",
+		    ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
       return (-1);
     }
 
@@ -721,7 +725,7 @@ ipmiseld_check_sel_info (ipmiseld_host_data_t *host_data, uint16_t *record_id_st
 	       */
 	      ipmiseld_last_record_id_t last_record_id;
 	      
-	      if (_ipmiseld_last_record_id (host_data, &last_record_id) < 0)
+	      if (ipmiseld_get_last_record_id (host_data, &last_record_id) < 0)
 		goto cleanup;
 	      
 	      /* If new last_record_id has changed or there are no
@@ -752,7 +756,7 @@ ipmiseld_check_sel_info (ipmiseld_host_data_t *host_data, uint16_t *record_id_st
 	       */
 	      ipmiseld_last_record_id_t last_record_id;
 	      
-	      if (_ipmiseld_last_record_id (host_data, &last_record_id) < 0)
+	      if (ipmiseld_get_last_record_id (host_data, &last_record_id) < 0)
 		goto cleanup;
 	      
 	      /* If new last_record_id is greater, we assume it's some additional entries
@@ -818,7 +822,7 @@ ipmiseld_check_sel_info (ipmiseld_host_data_t *host_data, uint16_t *record_id_st
 	    ipmiseld_syslog_host (host_data, "SEL timestamp error, more entries without addition");
 	}
 
-      if (_ipmiseld_last_record_id (host_data, &last_record_id) < 0)
+      if (ipmiseld_get_last_record_id (host_data, &last_record_id) < 0)
 	goto cleanup;
 	  
       /* There is a small race chance that the last time we got sel
@@ -909,7 +913,7 @@ ipmiseld_check_sel_info (ipmiseld_host_data_t *host_data, uint16_t *record_id_st
 	       */
 	      ipmiseld_last_record_id_t last_record_id;
 	      
-	      if (_ipmiseld_last_record_id (host_data, &last_record_id) < 0)
+	      if (ipmiseld_get_last_record_id (host_data, &last_record_id) < 0)
 		goto cleanup;
 	      
 	      /* If new last_record_id is greater, we assume it's some additional entries
@@ -975,7 +979,7 @@ ipmiseld_check_thresholds (ipmiseld_host_data_t *host_data)
 
   assert (host_data);
 
-  percent = _ipmiseld_calc_percent_full (host_data, &(host_data->now_host_state.sel_info));
+  percent = ipmiseld_calc_percent_full (host_data, &(host_data->now_host_state.sel_info));
 
   if (host_data->prog_data->args->warning_threshold)
     {
@@ -1063,6 +1067,9 @@ ipmiseld_save_state (ipmiseld_host_data_t *host_data)
 	  &(host_data->now_host_state),
 	  sizeof (ipmiseld_host_state_t));
 
+  /* ignore error, continue on even if it fails */
+  ipmiseld_data_cache_store (host_data)
+
   return (0);
 }
   
@@ -1082,13 +1089,23 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
 
   if (!host_data->last_host_state.initialized)
     {
-      /* XXX should get from file later */
-      if (_ipmiseld_host_state_init (host_data) < 0)
-	goto cleanup;
+      if ((ret = ipmiseld_data_cache_load (host_data)) < 0)
+	{
+	  if (host_data->prog_data->args->verbose_count)
+	    ipmiseld_syslog_host (host_data, "Failed to load cached previous state, some SEL entries maybe missed");
+	}
 
+      if (ret <= 0)
+	{
+	  if (ipmiseld_host_state_init (host_data) < 0)
+	    goto cleanup;
+	}
+	  
       if (host_data->prog_data->args->foreground
 	  && host_data->prog_data->args->common_args.debug)
-	_dump_host_state (host_data, &(host_data->last_host_state), "Initial State");
+	_dump_host_state (host_data,
+			  &(host_data->last_host_state),
+			  ret <= 0 ? "Initial State" : "Loaded State");
 
       goto out;
     }
