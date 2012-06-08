@@ -182,7 +182,7 @@ _ipmiseld_last_record_id (ipmiseld_host_data_t *host_data,
   assert (host_data->host_poll->sel_ctx);
   assert (last_record_id);
 
-  host_data->host_state.last_record_id.loaded = 0;
+  last_record_id->loaded = 0;
 
   if (ipmi_sel_parse (host_data->host_poll->sel_ctx,
 		      IPMI_SEL_RECORD_ID_LAST,
@@ -231,23 +231,23 @@ _ipmiseld_host_state_init (ipmiseld_host_data_t *host_data)
 
   assert (host_data);
 
-  if (_ipmiseld_last_record_id (host_data, &(host_data->host_state.last_record_id)) < 0)
+  if (_ipmiseld_last_record_id (host_data, &(host_data->last_host_state.last_record_id)) < 0)
     goto cleanup;
   
   /* possible SEL is empty */
-  if (!host_data->host_state.last_record_id.loaded)
+  if (!host_data->last_host_state.last_record_id.loaded)
     {
-      host_data->host_state.last_record_id.record_id = 0;
-      host_data->host_state.last_record_id.loaded = 1;
+      host_data->last_host_state.last_record_id.record_id = 0;
+      host_data->last_host_state.last_record_id.loaded = 1;
     }
   
-  if (ipmiseld_sel_info_get (host_data, &(host_data->host_state.sel_info)) < 0)
+  if (ipmiseld_sel_info_get (host_data, &(host_data->last_host_state.sel_info)) < 0)
     goto cleanup;
 
-  percent = _ipmiseld_calc_percent_full (host_data, &(host_data->host_state.sel_info));
-  host_data->host_state.last_percent_full = percent; 
+  percent = _ipmiseld_calc_percent_full (host_data, &(host_data->last_host_state.sel_info));
+  host_data->last_host_state.last_percent_full = percent; 
   
-  host_data->host_state.initialized = 1;
+  host_data->last_host_state.initialized = 1;
   rv = 0;
  cleanup:
   return (rv);
@@ -410,7 +410,7 @@ _sel_log_output (ipmiseld_host_data_t *host_data, uint8_t record_type)
    * event there is a bug in the firmware, and we could loop endlessly
    * looking for the next entry to log when there is none.
    */
-  if (host_data->host_state.last_record_id.record_id == record_id)
+  if (host_data->now_host_state.last_record_id.record_id == record_id)
     return (0);
 
   flags = IPMI_SEL_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD;
@@ -463,7 +463,7 @@ _sel_log_output (ipmiseld_host_data_t *host_data, uint8_t record_type)
   if (outbuf_len)
     ipmiseld_syslog (host_data, "%s", outbuf);
 
-  host_data->host_state.last_record_id.record_id = record_id; 
+  host_data->now_host_state.last_record_id.record_id = record_id; 
   
   return (0);
 }
@@ -649,33 +649,32 @@ _dump_sel_info (ipmiseld_host_data_t *host_data,
 
 static void
 _dump_host_state (ipmiseld_host_data_t *host_data,
+		  ipmiseld_host_state_t *host_state,
 		  const char *prefix)
 {
   assert (host_data);
   assert (host_data->prog_data->args->foreground);
   assert (host_data->prog_data->args->common_args.debug);
+  assert (host_state);
   assert (prefix);
 
-  IPMISELD_HOST_DEBUG (("%s: Last Record ID = %u", prefix, host_data->host_state.last_record_id.record_id));
-  IPMISELD_HOST_DEBUG (("%s: Last Percent Full = %u", prefix, host_data->host_state.last_percent_full));
-  _dump_sel_info (host_data, &(host_data->host_state.sel_info), prefix);
+  IPMISELD_HOST_DEBUG (("%s: Last Record ID = %u", prefix, host_state->last_record_id.record_id));
+  IPMISELD_HOST_DEBUG (("%s: Last Percent Full = %u", prefix, host_state->last_percent_full));
+  _dump_sel_info (host_data, &(host_state->sel_info), prefix);
 }
 
 /* returns 1 to log events, 0 if not, -1 on error */
 static int
-ipmiseld_check_sel_info (ipmiseld_host_data_t *host_data,
-			 ipmiseld_sel_info_t *sel_info,
-			 uint16_t *record_id_start)
+ipmiseld_check_sel_info (ipmiseld_host_data_t *host_data, uint16_t *record_id_start)
 {
   int log_entries_flag = 0;
   int rv = -1;
 
   assert (host_data);
-  assert (sel_info);
   assert (record_id_start);
 
-  if (sel_info->most_recent_addition_timestamp < host_data->host_state.sel_info.most_recent_addition_timestamp
-      || sel_info->most_recent_erase_timestamp < host_data->host_state.sel_info.most_recent_erase_timestamp)
+  if (host_data->now_host_state.sel_info.most_recent_addition_timestamp < host_data->last_host_state.sel_info.most_recent_addition_timestamp
+      || host_data->now_host_state.sel_info.most_recent_erase_timestamp < host_data->last_host_state.sel_info.most_recent_erase_timestamp)
     {
       /* This shouldn't be possible under normal circumstances, but
        * could occur if the user changes the SEL timestamp or clock.
@@ -690,7 +689,7 @@ ipmiseld_check_sel_info (ipmiseld_host_data_t *host_data,
       ipmiseld_syslog_host (host_data, "SEL timestamps modified to earlier time");
     }
 
-  if (sel_info->entries == host_data->host_state.sel_info.entries)
+  if (host_data->now_host_state.sel_info.entries == host_data->last_host_state.sel_info.entries)
     {
       /* Small chance entry count is the same after a
        * out-of-daemon clear.  Need to do some checks to handle
@@ -698,20 +697,20 @@ ipmiseld_check_sel_info (ipmiseld_host_data_t *host_data,
        */
       
       /* Timestamps unchanged - this is the most common/normal case, no new log entries to log. */
-      if (sel_info->most_recent_addition_timestamp == host_data->host_state.sel_info.most_recent_addition_timestamp
-	  && sel_info->most_recent_erase_timestamp == host_data->host_state.sel_info.most_recent_erase_timestamp)
+      if (host_data->now_host_state.sel_info.most_recent_addition_timestamp == host_data->last_host_state.sel_info.most_recent_addition_timestamp
+	  && host_data->now_host_state.sel_info.most_recent_erase_timestamp == host_data->last_host_state.sel_info.most_recent_erase_timestamp)
 	{
-	  /* nothing to do */
-	  ;
+	  /* nothing to do except this single copy/save */
+	  host_data->now_host_state.last_record_id.record_id = host_data->last_host_state.last_record_id.record_id;
 	}
       /* If erase timestamp changed but addition timestamp has
        * not.  An out-of-daemon delete/clear occurred, but
        * there are no new entries to log.
        */
-      else if (sel_info->most_recent_addition_timestamp == host_data->host_state.sel_info.most_recent_addition_timestamp
-	       && sel_info->most_recent_erase_timestamp != host_data->host_state.sel_info.most_recent_erase_timestamp)
+      else if (host_data->now_host_state.sel_info.most_recent_addition_timestamp == host_data->last_host_state.sel_info.most_recent_addition_timestamp
+	       && host_data->now_host_state.sel_info.most_recent_erase_timestamp != host_data->last_host_state.sel_info.most_recent_erase_timestamp)
 	{
-	  if (sel_info->delete_sel_command_supported)
+	  if (host_data->now_host_state.sel_info.delete_sel_command_supported)
 	    {
 	      /* We don't know if the erase was for some old entries or if it was a clear.
 	       * We will look at the last_record_id to take a guess
@@ -721,24 +720,28 @@ ipmiseld_check_sel_info (ipmiseld_host_data_t *host_data,
 	      if (_ipmiseld_last_record_id (host_data, &last_record_id) < 0)
 		goto cleanup;
 	      
-	      /* If new last_record_id has changed, we assume the erase was a clear */
-	      if (last_record_id.loaded
-		  && last_record_id.record_id != host_data->host_state.last_record_id.record_id)
-		host_data->host_state.last_record_id.record_id = 0;
+	      /* If new last_record_id has changed or there are no
+	       * records, we assume the erase was a clear
+	       */
+	      if (!last_record_id.loaded
+		  || last_record_id.record_id != host_data->last_host_state.last_record_id.record_id)
+		host_data->now_host_state.last_record_id.record_id = 0;
+	      else
+		host_data->now_host_state.last_record_id.record_id = host_data->last_host_state.last_record_id.record_id;
 	    }
 	  else
 	    {
 	      /* If delete not supported, the erase must have been a clear.
 	       * Reset last_record_id to zero. 
 	       */
-	      host_data->host_state.last_record_id.record_id = 0;
+	      host_data->now_host_state.last_record_id.record_id = 0;
 	    }
 	}
       /* An erase and addition occured, must determine the type of action that occurred */ 
-      else if (sel_info->most_recent_addition_timestamp != host_data->host_state.sel_info.most_recent_addition_timestamp
-	       && sel_info->most_recent_erase_timestamp != host_data->host_state.sel_info.most_recent_erase_timestamp)
+      else if (host_data->now_host_state.sel_info.most_recent_addition_timestamp != host_data->last_host_state.sel_info.most_recent_addition_timestamp
+	       && host_data->now_host_state.sel_info.most_recent_erase_timestamp != host_data->last_host_state.sel_info.most_recent_erase_timestamp)
 	{
-	  if (sel_info->delete_sel_command_supported)
+	  if (host_data->now_host_state.sel_info.delete_sel_command_supported)
 	    {
 	      /* We don't know if the erase was for some old entries or if it was a clear.
 	       * We will look at the last_record_id to take a guess
@@ -752,10 +755,11 @@ ipmiseld_check_sel_info (ipmiseld_host_data_t *host_data,
 	       * and the erase was only deleting some old entries.
 	       */
 	      if (last_record_id.loaded
-		  && last_record_id.record_id > host_data->host_state.last_record_id.record_id)
+		  && last_record_id.record_id > host_data->last_host_state.last_record_id.record_id)
 		{
-		  if (host_data->host_state.last_record_id.record_id)
-		    (*record_id_start) = host_data->host_state.last_record_id.record_id;
+		  host_data->now_host_state.last_record_id.record_id = host_data->last_host_state.last_record_id.record_id;
+		  if (host_data->last_host_state.last_record_id.record_id)
+		    (*record_id_start) = host_data->last_host_state.last_record_id.record_id;
 		  else
 		    (*record_id_start) = IPMI_SEL_RECORD_ID_FIRST;
 		  log_entries_flag++;
@@ -763,7 +767,7 @@ ipmiseld_check_sel_info (ipmiseld_host_data_t *host_data,
 	      else
 		{
 		  /* We assume a clear occurred so start from the beginning */
-		  host_data->host_state.last_record_id.record_id = 0;
+		  host_data->now_host_state.last_record_id.record_id = 0;
 		  (*record_id_start) = IPMI_SEL_RECORD_ID_FIRST;
 		  log_entries_flag++;
 		}
@@ -774,30 +778,40 @@ ipmiseld_check_sel_info (ipmiseld_host_data_t *host_data,
 	       * So log all the new entries if some are available and
 	       * reset last_record_id to zero.
 	       */
-	      host_data->host_state.last_record_id.record_id = 0;
-	      if (sel_info->entries)
+	      host_data->now_host_state.last_record_id.record_id = 0;
+	      if (host_data->now_host_state.sel_info.entries)
 		{
 		  (*record_id_start) = IPMI_SEL_RECORD_ID_FIRST;
 		  log_entries_flag++;
 		}
 	    }
 	}
-      else /* sel_info->most_recent_addition_timestamp != host_data->host_state.sel_info.most_recent_addition_timestamp
-	      && sel_info->most_recent_erase_timestamp == host_data->host_state.sel_info.most_recent_erase_timestamp */
+      else /* host_data->now_host_state.sel_info.most_recent_addition_timestamp != host_data->last_host_state.sel_info.most_recent_addition_timestamp
+	      && host_data->now_host_state.sel_info.most_recent_erase_timestamp == host_data->last_host_state.sel_info.most_recent_erase_timestamp */
 	{
 	  /* This shouldn't be possible and is likely a bug in the
 	   * IPMI firmware (user erased entries but timestamp didn't
 	   * update, SEL added entries and updated timestamp but
 	   * didn't update entry count, etc.) we'll only save off the
-	   * sel info for later.
+	   * host state for later.
 	   */
 	  ipmiseld_syslog_host (host_data, "SEL illegal timestamp situation");
+	  host_data->now_host_state.last_record_id.record_id = host_data->last_host_state.last_record_id.record_id;
 	}
     }
-  else if (sel_info->entries > host_data->host_state.sel_info.entries)
+  else if (host_data->now_host_state.sel_info.entries > host_data->last_host_state.sel_info.entries)
     {
       ipmiseld_last_record_id_t last_record_id;
       
+      if (host_data->now_host_state.sel_info.most_recent_addition_timestamp == host_data->last_host_state.sel_info.most_recent_addition_timestamp)
+	{
+	  /* This shouldn't be possible and is likely a bug in the
+	   * IPMI firmware.  Log this, but for rest of this chunk of
+	   * code, we assume the addition timestamp must have changed.
+	   */
+	  ipmiseld_syslog_host (host_data, "SEL timestamp error, more entries without addition");
+	}
+
       if (_ipmiseld_last_record_id (host_data, &last_record_id) < 0)
 	goto cleanup;
 	  
@@ -809,35 +823,37 @@ ipmiseld_check_sel_info (ipmiseld_host_data_t *host_data,
        * happen.
        */ 
       if (last_record_id.loaded
-	  && host_data->host_state.last_record_id.record_id == last_record_id.record_id)
+	  && host_data->last_host_state.last_record_id.record_id == last_record_id.record_id)
 	{
-	  /* nothing to do */
-	  ;
+	  /* nothing to do except this single copy/save */
+	  host_data->now_host_state.last_record_id.record_id = host_data->last_host_state.last_record_id.record_id;
 	}
-      else if (sel_info->most_recent_erase_timestamp == host_data->host_state.sel_info.most_recent_erase_timestamp)
+      else if (host_data->now_host_state.sel_info.most_recent_erase_timestamp == host_data->last_host_state.sel_info.most_recent_erase_timestamp)
 	{
 	  /* This is the most normal case we should expect, there
 	   * are more entries in the SEL than last time we checked
 	   * and must log them.
 	   */
-	  if (host_data->host_state.last_record_id.record_id)
-	    (*record_id_start) = host_data->host_state.last_record_id.record_id;
+	  host_data->now_host_state.last_record_id.record_id = host_data->last_host_state.last_record_id.record_id;
+	  if (host_data->last_host_state.last_record_id.record_id)
+	    (*record_id_start) = host_data->last_host_state.last_record_id.record_id;
 	  else
 	    (*record_id_start) = IPMI_SEL_RECORD_ID_FIRST;
 	  log_entries_flag++;
 	}
       else
 	{
-	  if (sel_info->delete_sel_command_supported)
+	  if (host_data->now_host_state.sel_info.delete_sel_command_supported)
 	    {
 	      /* If new last_record_id is greater, we assume it's some additional entries
 	       * and the erase was only deleting some old entries.
 	       */
 	      if (last_record_id.loaded
-		  && last_record_id.record_id > host_data->host_state.last_record_id.record_id)
+		  && last_record_id.record_id > host_data->last_host_state.last_record_id.record_id)
 		{
-		  if (host_data->host_state.last_record_id.record_id)
-		    (*record_id_start) = host_data->host_state.last_record_id.record_id;
+		  host_data->now_host_state.last_record_id.record_id = host_data->last_host_state.last_record_id.record_id;
+		  if (host_data->last_host_state.last_record_id.record_id)
+		    (*record_id_start) = host_data->last_host_state.last_record_id.record_id;
 		  else
 		    (*record_id_start) = IPMI_SEL_RECORD_ID_FIRST;
 		  log_entries_flag++;
@@ -845,7 +861,7 @@ ipmiseld_check_sel_info (ipmiseld_host_data_t *host_data,
 	      else
 		{
 		  /* We assume a clear occurred so start from the beginning */
-		  host_data->host_state.last_record_id.record_id = 0;
+		  host_data->now_host_state.last_record_id.record_id = 0;
 		  (*record_id_start) = IPMI_SEL_RECORD_ID_FIRST;
 		  log_entries_flag++;
 		}
@@ -856,8 +872,8 @@ ipmiseld_check_sel_info (ipmiseld_host_data_t *host_data,
 	       * So log all the new entries if some are available and
 	       * reset last_record_id to zero.
 	       */
-	      host_data->host_state.last_record_id.record_id = 0;
-	      if (sel_info->entries)
+	      host_data->now_host_state.last_record_id.record_id = 0;
+	      if (host_data->now_host_state.sel_info.entries)
 		{
 		  (*record_id_start) = IPMI_SEL_RECORD_ID_FIRST;
 		  log_entries_flag++;
@@ -865,9 +881,9 @@ ipmiseld_check_sel_info (ipmiseld_host_data_t *host_data,
 	    }
 	}
     }
-  else /* sel_info->entries < host_data->host_state.sel_info.entries) */
+  else /* host_data->now_host_state.sel_info.entries < host_data->host_state.sel_info.entries) */
     {
-      if (sel_info->most_recent_erase_timestamp == host_data->host_state.sel_info.most_recent_erase_timestamp)
+      if (host_data->now_host_state.sel_info.most_recent_erase_timestamp == host_data->last_host_state.sel_info.most_recent_erase_timestamp)
 	{
 	  /* This shouldn't be possible and is likely a bug in the
 	   * IPMI firmware.  Log this, but for rest of this chunk of
@@ -877,9 +893,9 @@ ipmiseld_check_sel_info (ipmiseld_host_data_t *host_data,
 	}
 
       /* if no additional entries, nothing to log */
-      if (sel_info->most_recent_addition_timestamp != host_data->host_state.sel_info.most_recent_addition_timestamp)
+      if (host_data->now_host_state.sel_info.most_recent_addition_timestamp != host_data->last_host_state.sel_info.most_recent_addition_timestamp)
 	{
-	  if (sel_info->delete_sel_command_supported)
+	  if (host_data->now_host_state.sel_info.delete_sel_command_supported)
 	    {
 	      /* We don't know if the erase was for some old entries or if it was a clear.
 	       * We will look at the last_record_id to take a guess
@@ -893,10 +909,11 @@ ipmiseld_check_sel_info (ipmiseld_host_data_t *host_data,
 	       * and the erase was only deleting some old entries.
 	       */
 	      if (last_record_id.loaded
-		  && last_record_id.record_id > host_data->host_state.last_record_id.record_id)
+		  && last_record_id.record_id > host_data->last_host_state.last_record_id.record_id)
 		{
-		  if (host_data->host_state.last_record_id.record_id)
-		    (*record_id_start) = host_data->host_state.last_record_id.record_id;
+		  host_data->now_host_state.last_record_id.record_id = host_data->last_host_state.last_record_id.record_id;
+		  if (host_data->last_host_state.last_record_id.record_id)
+		    (*record_id_start) = host_data->last_host_state.last_record_id.record_id;
 		  else
 		    (*record_id_start) = IPMI_SEL_RECORD_ID_FIRST;
 		  log_entries_flag++;
@@ -904,7 +921,7 @@ ipmiseld_check_sel_info (ipmiseld_host_data_t *host_data,
 	      else
 		{
 		  /* We assume a clear occurred so start from the beginning */
-		  host_data->host_state.last_record_id.record_id = 0;
+		  host_data->now_host_state.last_record_id.record_id = 0;
 		  (*record_id_start) = IPMI_SEL_RECORD_ID_FIRST;
 		  log_entries_flag++;
 		}
@@ -915,8 +932,8 @@ ipmiseld_check_sel_info (ipmiseld_host_data_t *host_data,
 	       * So log all the new entries if some are available and
 	       * reset last_record_id to zero.
 	       */
-	      host_data->host_state.last_record_id.record_id = 0;
-	      if (sel_info->entries)
+	      host_data->now_host_state.last_record_id.record_id = 0;
+	      if (host_data->now_host_state.sel_info.entries)
 		{
 		  (*record_id_start) = IPMI_SEL_RECORD_ID_FIRST;
 		  log_entries_flag++;
@@ -925,8 +942,10 @@ ipmiseld_check_sel_info (ipmiseld_host_data_t *host_data,
 	}
       else
 	{
-	  if (!sel_info->entries)
-	    host_data->host_state.last_record_id.record_id = 0;
+	  if (!host_data->now_host_state.sel_info.entries)
+	    host_data->now_host_state.last_record_id.record_id = 0;
+	  else
+	    host_data->now_host_state.last_record_id.record_id = host_data->last_host_state.last_record_id.record_id;
 	}
     }
 
@@ -941,29 +960,27 @@ ipmiseld_check_sel_info (ipmiseld_host_data_t *host_data,
 
 /* returns 1 if clear should occur, 0 if not, -1 on error */
 static int
-ipmiseld_check_thresholds (ipmiseld_host_data_t *host_data,
-			   ipmiseld_sel_info_t *sel_info)
+ipmiseld_check_thresholds (ipmiseld_host_data_t *host_data)
 {
   int do_clear_flag = 0;
   unsigned int percent;
   int rv = -1;
 
   assert (host_data);
-  assert (sel_info);
 
-  percent = _ipmiseld_calc_percent_full (host_data, sel_info);
+  percent = _ipmiseld_calc_percent_full (host_data, &(host_data->now_host_state.sel_info));
 
   if (host_data->prog_data->args->warning_threshold)
     {
       if (percent > host_data->prog_data->args->warning_threshold)
 	{
-	  if (percent > host_data->host_state.last_percent_full)
+	  if (percent > host_data->last_host_state.last_percent_full)
 	    ipmiseld_syslog_host (host_data, "SEL is %d%% full", percent);
 	}
     }
 
-  if (!host_data->host_state.sel_info.overflow_flag
-      && sel_info->overflow_flag)
+  if (!host_data->last_host_state.sel_info.overflow_flag
+      && host_data->now_host_state.sel_info.overflow_flag)
     ipmiseld_syslog_host (host_data, "SEL Overflow, events have been dropped due to lack of space in the SEL");
   
   if (host_data->prog_data->args->clear_threshold)
@@ -972,7 +989,7 @@ ipmiseld_check_thresholds (ipmiseld_host_data_t *host_data,
 	do_clear_flag = 1;
     }
 
-  host_data->host_state.last_percent_full = percent;
+  host_data->now_host_state.last_percent_full = percent;
 
   if (do_clear_flag)
     rv = 1;
@@ -984,15 +1001,13 @@ ipmiseld_check_thresholds (ipmiseld_host_data_t *host_data,
 
 /* returns 1 if reserve successful, 0 if not, -1 on error */
 static int
-ipmiseld_sel_reserve (ipmiseld_host_data_t *host_data,
-		      ipmiseld_sel_info_t *sel_info)
+ipmiseld_sel_reserve (ipmiseld_host_data_t *host_data)
 {
   assert (host_data);
   assert (host_data->host_poll);
   assert (host_data->host_poll->sel_ctx);
-  assert (sel_info);
 
-  if (sel_info->reserve_sel_command_supported)
+  if (host_data->now_host_state.sel_info.reserve_sel_command_supported)
     {
       if (ipmi_sel_ctx_register_reservation_id (host_data->host_poll->sel_ctx, NULL) < 0)
 	{
@@ -1033,14 +1048,13 @@ ipmiseld_sel_log_entries (ipmiseld_host_data_t *host_data,
 }
 
 static int
-ipmiseld_save_state (ipmiseld_host_data_t *host_data,
-		     ipmiseld_sel_info_t *sel_info)
+ipmiseld_save_state (ipmiseld_host_data_t *host_data)
 {
   assert (host_data);
-  assert (sel_info);
 
-  memcpy (&host_data->host_state.sel_info, sel_info, sizeof (ipmiseld_sel_info_t));
-  /* XXX save disk */
+  memcpy (&(host_data->last_host_state),
+	  &(host_data->now_host_state),
+	  sizeof (ipmiseld_host_state_t));
 
   return (0);
 }
@@ -1049,7 +1063,6 @@ ipmiseld_save_state (ipmiseld_host_data_t *host_data,
 static int
 ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
 {
-  ipmiseld_sel_info_t sel_info;
   uint16_t record_id_start = 0;
   int log_entries_flag = 0;
   int do_clear_flag = 0;
@@ -1060,7 +1073,7 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
 
   assert (host_data);
 
-  if (!host_data->host_state.initialized)
+  if (!host_data->last_host_state.initialized)
     {
       /* XXX should get from file later */
       if (_ipmiseld_host_state_init (host_data) < 0)
@@ -1068,30 +1081,30 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
 
       if (host_data->prog_data->args->foreground
 	  && host_data->prog_data->args->common_args.debug)
-	_dump_host_state (host_data, "Initial State");
+	_dump_host_state (host_data, &(host_data->last_host_state), "Initial State");
 
       goto out;
     }
   
-  if (ipmiseld_sel_info_get (host_data, &sel_info) < 0)
+  if (ipmiseld_sel_info_get (host_data, &(host_data->now_host_state.sel_info)) < 0)
     goto cleanup;
 
   if (host_data->prog_data->args->foreground
       && host_data->prog_data->args->common_args.debug)
     {
-      _dump_host_state (host_data, "Last State");
-      _dump_sel_info (host_data, &sel_info, "Current State");
+      _dump_host_state (host_data, &(host_data->last_host_state), "Last State");
+      _dump_sel_info (host_data, &host_data->now_host_state.sel_info, "Current State");
     }
   
-  if ((do_clear_flag = ipmiseld_check_thresholds (host_data, &sel_info)) < 0)
+  if ((do_clear_flag = ipmiseld_check_thresholds (host_data)) < 0)
     goto cleanup;
 
-  if ((log_entries_flag = ipmiseld_check_sel_info (host_data, &sel_info, &record_id_start)) < 0)
+  if ((log_entries_flag = ipmiseld_check_sel_info (host_data, &record_id_start)) < 0)
     goto cleanup;
 
   if (do_clear_flag)
     {
-      if ((reserve_flag = ipmiseld_sel_reserve (host_data, &sel_info)) < 0)
+      if ((reserve_flag = ipmiseld_sel_reserve (host_data)) < 0)
 	goto cleanup;
     }
 
@@ -1123,13 +1136,15 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
       if (ipmiseld_sel_info_get (host_data, &tmp_sel_info) < 0)
 	goto save_state_out;
       
-      memcpy (&sel_info, &tmp_sel_info, sizeof (ipmiseld_sel_info_t));
-      host_data->host_state.last_record_id.record_id = 0;
+      memcpy (&(host_data->now_host_state.sel_info), &tmp_sel_info, sizeof (ipmiseld_sel_info_t));
+      host_data->now_host_state.last_record_id.record_id = 0;
     }
 
  save_state_out:
 
-  if (ipmiseld_save_state (host_data, &sel_info) < 0)
+  host_data->now_host_state.initialized = 1;
+
+  if (ipmiseld_save_state (host_data) < 0)
     goto cleanup;
   
  out:

@@ -287,7 +287,7 @@ ipmiseld_data_cache_load (ipmiseld_host_data_t *host_data)
 {
   uint32_t file_magic;
   uint32_t file_version;
-  uint8_t zerosumchecksum;
+  uint8_t zerosumchecksum = 0;
   char filename[MAXPATHLEN+1];
   uint8_t databuf[IPMISELD_DATA_CACHE_LENGTH];
   unsigned int databuf_offset = 0;
@@ -367,16 +367,16 @@ ipmiseld_data_cache_load (ipmiseld_host_data_t *host_data)
       goto cleanup;
     }
   
-  databuf_offset += _unmarshall_uint16 (databuf + databuf_offset, &host_data->host_state.last_record_id.record_id);
-  host_data->host_state.last_record_id.loaded = 1; 
-  databuf_offset += _unmarshall_uint32 (databuf + databuf_offset, &host_data->host_state.last_percent_full);
-  databuf_offset += _unmarshall_uint16 (databuf + databuf_offset, &host_data->host_state.sel_info.entries);
-  databuf_offset += _unmarshall_uint16 (databuf + databuf_offset, &host_data->host_state.sel_info.free_space);
-  databuf_offset += _unmarshall_uint32 (databuf + databuf_offset, &host_data->host_state.sel_info.most_recent_addition_timestamp);
-  databuf_offset += _unmarshall_uint32 (databuf + databuf_offset, &host_data->host_state.sel_info.most_recent_erase_timestamp);
-  databuf_offset += _unmarshall_uint8 (databuf + databuf_offset, &host_data->host_state.sel_info.delete_sel_command_supported);
-  databuf_offset += _unmarshall_uint8 (databuf + databuf_offset, &host_data->host_state.sel_info.reserve_sel_command_supported);
-  databuf_offset += _unmarshall_uint8 (databuf + databuf_offset, &host_data->host_state.sel_info.overflow_flag);
+  databuf_offset += _unmarshall_uint16 (databuf + databuf_offset, &host_data->last_host_state.last_record_id.record_id);
+  host_data->last_host_state.last_record_id.loaded = 1; 
+  databuf_offset += _unmarshall_uint32 (databuf + databuf_offset, &host_data->last_host_state.last_percent_full);
+  databuf_offset += _unmarshall_uint16 (databuf + databuf_offset, &host_data->last_host_state.sel_info.entries);
+  databuf_offset += _unmarshall_uint16 (databuf + databuf_offset, &host_data->last_host_state.sel_info.free_space);
+  databuf_offset += _unmarshall_uint32 (databuf + databuf_offset, &host_data->last_host_state.sel_info.most_recent_addition_timestamp);
+  databuf_offset += _unmarshall_uint32 (databuf + databuf_offset, &host_data->last_host_state.sel_info.most_recent_erase_timestamp);
+  databuf_offset += _unmarshall_uint8 (databuf + databuf_offset, &host_data->last_host_state.sel_info.delete_sel_command_supported);
+  databuf_offset += _unmarshall_uint8 (databuf + databuf_offset, &host_data->last_host_state.sel_info.reserve_sel_command_supported);
+  databuf_offset += _unmarshall_uint8 (databuf + databuf_offset, &host_data->last_host_state.sel_info.overflow_flag);
   
   rv = 1;
  cleanup:
@@ -476,15 +476,15 @@ ipmiseld_data_cache_store (ipmiseld_host_data_t *host_data)
 
   databuf_offset += _marshall_uint32 (databuf + databuf_offset, file_magic);
   databuf_offset += _marshall_uint32 (databuf + databuf_offset, file_version);
-  databuf_offset += _marshall_uint16 (databuf + databuf_offset, host_data->host_state.last_record_id.record_id);
-  databuf_offset += _marshall_uint32 (databuf + databuf_offset, host_data->host_state.last_percent_full);
-  databuf_offset += _marshall_uint16 (databuf + databuf_offset, host_data->host_state.sel_info.entries);
-  databuf_offset += _marshall_uint16 (databuf + databuf_offset, host_data->host_state.sel_info.free_space);
-  databuf_offset += _marshall_uint32 (databuf + databuf_offset, host_data->host_state.sel_info.most_recent_addition_timestamp);
-  databuf_offset += _marshall_uint32 (databuf + databuf_offset, host_data->host_state.sel_info.most_recent_erase_timestamp);
-  databuf_offset += _marshall_uint8 (databuf + databuf_offset, host_data->host_state.sel_info.delete_sel_command_supported);
-  databuf_offset += _marshall_uint8 (databuf + databuf_offset, host_data->host_state.sel_info.reserve_sel_command_supported);
-  databuf_offset += _marshall_uint8 (databuf + databuf_offset, host_data->host_state.sel_info.overflow_flag);
+  databuf_offset += _marshall_uint16 (databuf + databuf_offset, host_data->last_host_state.last_record_id.record_id);
+  databuf_offset += _marshall_uint32 (databuf + databuf_offset, host_data->last_host_state.last_percent_full);
+  databuf_offset += _marshall_uint16 (databuf + databuf_offset, host_data->last_host_state.sel_info.entries);
+  databuf_offset += _marshall_uint16 (databuf + databuf_offset, host_data->last_host_state.sel_info.free_space);
+  databuf_offset += _marshall_uint32 (databuf + databuf_offset, host_data->last_host_state.sel_info.most_recent_addition_timestamp);
+  databuf_offset += _marshall_uint32 (databuf + databuf_offset, host_data->last_host_state.sel_info.most_recent_erase_timestamp);
+  databuf_offset += _marshall_uint8 (databuf + databuf_offset, host_data->last_host_state.sel_info.delete_sel_command_supported);
+  databuf_offset += _marshall_uint8 (databuf + databuf_offset, host_data->last_host_state.sel_info.reserve_sel_command_supported);
+  databuf_offset += _marshall_uint8 (databuf + databuf_offset, host_data->last_host_state.sel_info.overflow_flag);
 
   for (i = 0; i < databuf_offset; i++)
     zerosumchecksum += databuf[i];

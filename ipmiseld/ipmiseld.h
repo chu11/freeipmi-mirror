@@ -150,7 +150,8 @@ typedef struct ipmiseld_host_data
 {
   ipmiseld_prog_data_t *prog_data;
   char *hostname;
-  ipmiseld_host_state_t host_state;
+  ipmiseld_host_state_t last_host_state;
+  ipmiseld_host_state_t now_host_state;
   ipmiseld_host_poll_t *host_poll;
 } ipmiseld_host_data_t;
 
