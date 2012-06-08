@@ -268,8 +268,8 @@ _sel_parse_err_handle (ipmiseld_host_data_t *host_data, char *func)
   if (ipmi_sel_ctx_errnum (host_data->host_poll->sel_ctx) == IPMI_SEL_ERR_INVALID_SEL_ENTRY)
     {
       /* maybe a bad SEL entry returned from remote system, don't error out */
-      if (host_data->prog_data->args->verbose)
-	ipmiseld_syslog_host ("Invalid SEL entry read");
+      if (host_data->prog_data->args->verbose_count)
+	ipmiseld_syslog_host (host_data, "Invalid SEL entry read");
       return (0);
     }
 
@@ -1068,7 +1068,7 @@ ipmiseld_save_state (ipmiseld_host_data_t *host_data)
 	  sizeof (ipmiseld_host_state_t));
 
   /* ignore error, continue on even if it fails */
-  ipmiseld_data_cache_store (host_data)
+  ipmiseld_data_cache_store (host_data);
 
   return (0);
 }
