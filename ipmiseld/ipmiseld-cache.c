@@ -492,7 +492,7 @@ ipmiseld_data_cache_store (ipmiseld_host_data_t *host_data)
   for (i = 0; i < databuf_offset; i++)
     zerosumchecksum += databuf[i];
 
-  databuf_offset += _marshall_uint8 (databuf + databuf_offset, (0xFF - zerosumchecksum));
+  databuf_offset += _marshall_uint8 (databuf + databuf_offset, 0xFF - zerosumchecksum + 1);
 
   assert (databuf_offset == IPMISELD_DATA_CACHE_LENGTH);
   

@@ -1099,15 +1099,23 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
 	{
 	  if (ipmiseld_host_state_init (host_data) < 0)
 	    goto cleanup;
-	}
-	  
-      if (host_data->prog_data->args->foreground
-	  && host_data->prog_data->args->common_args.debug)
-	_dump_host_state (host_data,
-			  &(host_data->last_host_state),
-			  ret <= 0 ? "Initial State" : "Loaded State");
 
-      goto out;
+	  if (host_data->prog_data->args->foreground
+	      && host_data->prog_data->args->common_args.debug)
+	    _dump_host_state (host_data,
+			      &(host_data->last_host_state),
+			      "Initial State");
+	  
+	  goto out;
+	}
+      else
+	{
+	  if (host_data->prog_data->args->foreground
+	      && host_data->prog_data->args->common_args.debug)
+	    _dump_host_state (host_data,
+			      &(host_data->last_host_state),
+			      "Loaded State");
+	}
     }
   
   if (ipmiseld_sel_info_get (host_data, &(host_data->now_host_state.sel_info)) < 0)
