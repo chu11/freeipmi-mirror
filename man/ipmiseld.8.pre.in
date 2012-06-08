@@ -32,16 +32,22 @@ ipmiseld \- IPMI SEL logging daemon
 .SH "DESCRIPTION"
 The
 .B ipmiseld
-daemon reads the system event log (SEL) of specified hosts and stores the
-logs into the local syslog.
+daemon reads the system event log (SEL) of specified hosts and stores
+the logs into the local syslog.  By default, the daemon will also make
+best efforts to manage the remote SEL's buffer to ensure events are
+never lost.  For example, warnings will be logged when the SEL being
+monitored passes a configured threshold, and the SEL will be cleared
+when the clear threshold has been passed.  Recent logging data will be
+cached to disk to ensure that SEL events are not missed in the event
+the client or server is rebooted.
 .LP
 Many of the options for this daemon are very similar to the
 .B ipmi-sel(8)
 tool.  It can be configured to log the local host, a remote host, or a
-range of hosts to the local syslog.
-See the
-.BR ipmiseld.conf(5)
-manpage for additional information.
+range of hosts to the local syslog.  It can be configured via the command line
+arguments listed below or via the
+@IPMISELD_CONFIG_FILE_DEFAULT@
+configuration file.
 #include <@top_srcdir@/man/manpage-common-table-of-contents.man>
 #include <@top_srcdir@/man/manpage-common-general-options-header.man>
 #include <@top_srcdir@/man/manpage-common-driver.man>
@@ -162,7 +168,8 @@ LOG_INFO, LOG_DEBUG.
 Specify an alternate cache directory location for
 .B ipmiseld
 to use.  The cache directory will be used to cache a wide variety of
-data, including the SDR.
+data, including the SDR and recent logging information to ensure log
+entries are not missed on reboots and other system failures.
 .TP
 \fB\-\-test\-run\fR
 Do not daemonize, output the current SEL of configured hosts as a test
