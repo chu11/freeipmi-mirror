@@ -216,7 +216,10 @@ _ipmiseld_calc_percent_full (ipmiseld_host_data_t *host_data,
     {
       /* Some rounding errors could occur, we accept small ones */
       if (percent > 105)
-	ipmiseld_syslog_host (host_data, "SEL percent calc error: %u", percent);
+	{
+	  if (host_data->prog_data->args->verbose_count)
+	    ipmiseld_syslog_host (host_data, "SEL percent calc error: %u", percent);
+	}
       percent = 100;
     }
 
@@ -686,7 +689,8 @@ ipmiseld_check_sel_info (ipmiseld_host_data_t *host_data, uint16_t *record_id_st
        * to" and not "greater than" or "less than".  We just log to
        * note this.
        */
-      ipmiseld_syslog_host (host_data, "SEL timestamps modified to earlier time");
+      if (host_data->prog_data->args->verbose_count)
+	ipmiseld_syslog_host (host_data, "SEL timestamps modified to earlier time");
     }
 
   if (host_data->now_host_state.sel_info.entries == host_data->last_host_state.sel_info.entries)
@@ -795,7 +799,8 @@ ipmiseld_check_sel_info (ipmiseld_host_data_t *host_data, uint16_t *record_id_st
 	   * didn't update entry count, etc.) we'll only save off the
 	   * host state for later.
 	   */
-	  ipmiseld_syslog_host (host_data, "SEL illegal timestamp situation");
+	  if (host_data->prog_data->args->verbose_count)
+	    ipmiseld_syslog_host (host_data, "SEL illegal timestamp situation");
 	  host_data->now_host_state.last_record_id.record_id = host_data->last_host_state.last_record_id.record_id;
 	}
     }
@@ -809,7 +814,8 @@ ipmiseld_check_sel_info (ipmiseld_host_data_t *host_data, uint16_t *record_id_st
 	   * IPMI firmware.  Log this, but for rest of this chunk of
 	   * code, we assume the addition timestamp must have changed.
 	   */
-	  ipmiseld_syslog_host (host_data, "SEL timestamp error, more entries without addition");
+	  if (host_data->prog_data->args->verbose_count)
+	    ipmiseld_syslog_host (host_data, "SEL timestamp error, more entries without addition");
 	}
 
       if (_ipmiseld_last_record_id (host_data, &last_record_id) < 0)
@@ -889,7 +895,8 @@ ipmiseld_check_sel_info (ipmiseld_host_data_t *host_data, uint16_t *record_id_st
 	   * IPMI firmware.  Log this, but for rest of this chunk of
 	   * code, we assume the erase timestamp must have changed.
 	   */
-	  ipmiseld_syslog_host (host_data, "SEL timestamp error, fewer entries without erase");
+	  if (host_data->prog_data->args->verbose_count)
+	    ipmiseld_syslog_host (host_data, "SEL timestamp error, fewer entries without erase");
 	}
 
       /* if no additional entries, nothing to log */
