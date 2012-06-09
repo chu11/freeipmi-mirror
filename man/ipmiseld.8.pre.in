@@ -171,6 +171,20 @@ Specify an alternate cache directory location for
 to use.  The cache directory will be used to cache a wide variety of
 data, including the SDR and recent logging information to ensure log
 entries are not missed on reboots and other system failures.
+\fB\-\-ignore\-sdr\fR
+Ignore SDR related processing.  May lead to incomplete or less useful
+information being output, however it will allow functionality for
+systems without SDRs or when the correct SDR cannot be loaded.
+\fB\-\-re\-download\-sdr\fR
+Re-download the SDR on start even if it is not out of date.  This may
+help work around systems that do not properly timestamp SDR
+modification times.
+\fB\-\-clear\-sel\fR
+On startup, clear any SEL being monitored.  May be useful the first
+time running
+.B ipmiseld
+to avoid warning messages or SEL clears until a long time in the
+future.
 .TP
 \fB\-\-test\-run\fR
 Do not daemonize, output the current SEL of configured hosts as a test
@@ -272,6 +286,7 @@ Supermicro H8DGU-F, Supermicro X9DRi-F.
 #include <@top_srcdir@/man/manpage-common-known-issues.man>
 .SH "FILES"
 @IPMISELD_CONFIG_FILE_DEFAULT@
+@IPMISELD_CACHE_DIRECTORY@
 #include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
 .SH COPYRIGHT
 Copyright (C) 2012 Lawrence Livermore National Security, LLC.

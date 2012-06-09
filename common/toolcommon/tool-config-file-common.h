@@ -335,6 +335,12 @@ struct config_file_data_ipmiseld
   int log_priority_str_count;
   char *cache_directory;
   int cache_directory_count;
+  int ignore_sdr;
+  int ignore_sdr_count;
+  int re_download_sdr;
+  int re_download_sdr_count;
+  int clear_sel;
+  int clear_sel_count;
 };
 
 int config_file_parse (const char *filename,

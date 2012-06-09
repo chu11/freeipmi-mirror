@@ -70,8 +70,11 @@ enum ipmiseld_argp_option_keys
     IPMISELD_LOG_FACILITY_KEY = 174,
     IPMISELD_LOG_PRIORITY_KEY = 175,
     IPMISELD_CACHE_DIRECTORY_KEY = 176,
-    IPMISELD_TEST_RUN_KEY = 177,
-    IPMISELD_FOREGROUND_KEY = 178,
+    IPMISELD_IGNORE_SDR_KEY = 177,
+    IPMISELD_RE_DOWNLOAD_SDR_KEY = 178,
+    IPMISELD_CLEAR_SEL_KEY = 179,
+    IPMISELD_TEST_RUN_KEY = 180,
+    IPMISELD_FOREGROUND_KEY = 181,
   };
 
 struct ipmiseld_arguments
@@ -99,6 +102,9 @@ struct ipmiseld_arguments
   char *log_facility_str;
   char *log_priority_str;
   char *cache_directory;
+  int ignore_sdr;
+  int re_download_sdr;
+  int clear_sel;
   int test_run;
   int foreground;
 };
@@ -153,6 +159,8 @@ typedef struct ipmiseld_host_data
   ipmiseld_host_state_t last_host_state;
   ipmiseld_host_state_t now_host_state;
   ipmiseld_host_poll_t *host_poll;
+  int re_download_sdr_done;
+  int clear_sel_done;
 } ipmiseld_host_data_t;
 
 #endif /* IPMISELD_H */

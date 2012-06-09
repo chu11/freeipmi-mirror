@@ -116,10 +116,16 @@ static struct argp_option cmdline_options[] =
       "Specify syslog log priority.", 58},
     { "cache-directory", IPMISELD_CACHE_DIRECTORY_KEY, "DIRECTORY", 0,
       "Specify alternate cache directory.", 59},
+    { "ignore-sdr", IPMISELD_IGNORE_SDR_KEY, 0, 0,
+      "Ignore SDR related processing.", 60},
+    { "re-download-sdr", IPMISELD_RE_DOWNLOAD_SDR_KEY, 0, 0,
+      "Re-download the SDR even if it is not out of date.", 61},
+    { "clear-sel", IPMISELD_CLEAR_SEL_KEY, 0, 0,
+      "Clear SEL on startup.", 62},
     { "test-run", IPMISELD_TEST_RUN_KEY, 0, 0,
-      "Do not daemonize, output current SEL as test of current settings.", 60},
+      "Do not daemonize, output current SEL as test of current settings.", 63},
     { "foreground", IPMISELD_FOREGROUND_KEY, 0, 0,
-      "Run daemon in foreground.", 61},
+      "Run daemon in foreground.", 64},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -265,6 +271,15 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	  exit (EXIT_FAILURE);
 	}
       break;
+    case IPMISELD_IGNORE_SDR_KEY:
+      cmd_args->ignore_sdr = 1;
+      break;
+    case IPMISELD_RE_DOWNLOAD_SDR_KEY:
+      cmd_args->re_download_sdr = 1;
+      break;
+    case IPMISELD_CLEAR_SEL_KEY:
+      cmd_args->clear_sel = 1;
+      break;
     case IPMISELD_POLL_INTERVAL_KEY:
       errno = 0;
       tmp = strtol (arg, &endptr, 0);
@@ -392,6 +407,14 @@ _ipmiseld_config_file_parse (struct ipmiseld_arguments *cmd_args)
     cmd_args->log_facility_str = config_file_data.log_facility_str;
   if (config_file_data.log_priority_str_count)
     cmd_args->log_priority_str = config_file_data.log_priority_str;
+  if (config_file_data.cache_directory_count)
+    cmd_args->cache_directory = config_file_data.cache_directory;
+  if (config_file_data.ignore_sdr_count)
+    cmd_args->ignore_sdr = config_file_data.ignore_sdr;
+  if (config_file_data.re_download_sdr_count)
+    cmd_args->re_download_sdr = config_file_data.re_download_sdr;
+  if (config_file_data.clear_sel_count)
+    cmd_args->clear_sel = config_file_data.clear_sel;
 }
 
 static void
@@ -486,6 +509,9 @@ ipmiseld_argp_parse (int argc, char **argv, struct ipmiseld_arguments *cmd_args)
   cmd_args->poll_interval = IPMISELD_POLL_INTERVAL_DEFAULT;
   cmd_args->test_run = 0;
   cmd_args->foreground = 0;
+  cmd_args->ignore_sdr = 0;
+  cmd_args->re_download_sdr = 0;
+  cmd_args->clear_sel = 0;
 
   argp_parse (&cmdline_config_file_argp,
               argc,

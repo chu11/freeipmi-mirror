@@ -180,6 +180,15 @@ Specify the log priority to use.
 .TP
 \fBcache\-directory\fR \fIDIRECTORY\fR
 Specify the cache directory to use.
+.TP
+\fBignore\-sdr\fR \fIDISABLE\fR
+Specify if the SDR should be ignored. 
+.TP
+\fBre\-download\-sdr\fR \fIDISABLE\fR
+Specify if the SDR should be re-downloaded on start. 
+.TP
+\fBclear\-sel\fR \fIDISABLE\fR
+Specify if the SEL should be cleared on start.
 .SH "FILES"
 @IPMISELD_CONFIG_FILE_DEFAULT@
 #include <@top_srcdir@/man/manpage-common-reporting-bugs.man>

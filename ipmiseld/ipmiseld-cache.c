@@ -131,7 +131,7 @@ ipmiseld_sdr_cache_create_and_load (ipmiseld_host_data_t *host_data)
     }
   
   if (host_data->prog_data->args->foreground
-      && host_data->prog_data->args->common_args.debug)
+      && host_data->prog_data->args->common_args.debug > 1)
     {
       /* Don't error out, if this fails we can still continue */
       if (ipmi_sdr_ctx_set_flags (host_data->host_poll->sdr_ctx, IPMI_SDR_FLAGS_DEBUG_DUMP) < 0)
@@ -160,6 +160,20 @@ ipmiseld_sdr_cache_create_and_load (ipmiseld_host_data_t *host_data)
             sdr_cache_dir,
 	    IPMISELD_SDR_CACHE_FILENAME,
 	    hostname);
+
+  if (host_data->prog_data->args->re_download_sdr
+      && !host_data->re_download_sdr_done)
+    {
+      if (host_data->prog_data->args->common_args.debug)
+	IPMISELD_HOST_DEBUG (("SDR cache - deleting"));
+
+      if (ipmi_sdr_cache_delete (host_data->host_poll->sdr_ctx, filename) < 0)
+	{
+	  err_output ("ipmi_sdr_cache_delete: %s", ipmi_sdr_ctx_errormsg (host_data->host_poll->sdr_ctx));
+	  goto cleanup;
+	}
+      host_data->re_download_sdr_done = 1;
+    }
   
   if (ipmi_sdr_cache_open (host_data->host_poll->sdr_ctx,
                            host_data->host_poll->ipmi_ctx,

@@ -1087,6 +1087,18 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
 
   assert (host_data);
 
+  if (host_data->prog_data->args->clear_sel
+      && !host_data->clear_sel_done)
+    {
+      if (ipmi_sel_clear_sel (host_data->host_poll->sel_ctx) < 0)
+	{
+	  err_output ("ipmi_sel_clear_sel: %s",
+		      ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
+	  goto cleanup;
+	}
+      host_data->clear_sel_done = 1;
+    }
+
   if (!host_data->last_host_state.initialized)
     {
       if ((ret = ipmiseld_data_cache_load (host_data)) < 0)
@@ -1372,8 +1384,13 @@ _ipmiseld_poll (ipmiseld_host_data_t *host_data)
   if (_ipmi_setup (host_data) < 0)
     goto cleanup;
 
-  if (ipmiseld_sdr_cache_create_and_load (host_data) < 0)
-    goto cleanup;
+  if (!host_data->prog_data->args->ignore_sdr)
+    {
+      if (ipmiseld_sdr_cache_create_and_load (host_data) < 0)
+	goto cleanup;
+    }
+  else
+    host_data->host_poll->sdr_ctx = NULL;
   
   if (!(host_data->host_poll->sel_ctx = ipmi_sel_ctx_create (host_data->host_poll->ipmi_ctx, host_data->host_poll->sdr_ctx)))
     {
@@ -1535,6 +1552,8 @@ _ipmiseld (ipmiseld_prog_data_t *prog_data)
   host_data.prog_data = prog_data;
   host_data.hostname = prog_data->args->common_args.hostname;
   host_data.host_poll = NULL;
+  host_data.re_download_sdr_done = 0;
+  host_data.clear_sel_done = 0;
 
   if (host_data.prog_data->args->test_run)
     return (_ipmiseld_poll (&host_data));
