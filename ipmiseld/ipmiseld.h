@@ -38,7 +38,7 @@
 
 #define IPMISELD_WARNING_THRESHOLD_DEFAULT                              80
 
-#define IPMISELD_CLEAR_THRESHOLD_DEFAULT                                90
+#define IPMISELD_CLEAR_THRESHOLD_DEFAULT                                0
 
 #define IPMISELD_SYSTEM_EVENT_FORMAT_STR_DEFAULT                        "SEL System Event: %s, %I, %E"
 

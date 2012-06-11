@@ -155,7 +155,6 @@ Specify SEL fullness warning threshold as an integer percentage.
 .TP
 \fB\-\-clear\-threshold\fR \fIPERCENTINT\fR
 Specify SEL fullness clear threshold as an integer percentage.
-
 .TP
 \fBsystem\-event\-format\fR \fIFORMATSTRING\fR
 Specify the format of the log output when a SEL system event is

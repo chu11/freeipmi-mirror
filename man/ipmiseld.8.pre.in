@@ -33,13 +33,11 @@ ipmiseld \- IPMI SEL logging daemon
 The
 .B ipmiseld
 daemon reads the system event log (SEL) of specified hosts and stores
-the logs into the local syslog.  By default, the daemon will also make
+the logs into the local syslog.  By default, the daemon can also make
 best efforts to manage the remote SEL's buffer to ensure events are
-never lost.  For example, warnings will be logged when the SEL being
-monitored passes a configured threshold, and the SEL will be cleared
-when the clear threshold has been passed.  Recent logging data will be
-cached to disk to ensure that SEL events are not missed in the event
-the client or server is rebooted.
+never lost.  Recent logging data will be cached to disk to ensure that
+SEL events are not missed in the event the client or server is
+rebooted.
 .LP
 Many of the options for this daemon are very similar to the
 .B ipmi-sel(8)
@@ -119,16 +117,22 @@ overriding configured defaults).
 \fB\-\-warning\-threshold\fR=\fIPERCENTINT\fR
 Specify SEL fullness warning threshold as an integer percentage.  When
 the SEL is past this percentage full, a warning will be output
-indicating that SEL is nearly full.  Defaults to 80.  Specify 0 to
-disable warning logs.
+indicating that SEL is nearly full.  Specify 0 to disable warning
+logs.  Defaults to 80.
 .TP
 \fB\-\-clear\-threshold\fR=\fIPERCENTINT\fR
 Specify SEL fullness clear threshold as an integer percentage.  When
 the SEL is past this percentage full,
 .B ipmiseld
-will attempt to clear the SEL.  Defaults to 90.  Specify 0 to disable
-clearing.  When the SEL is full, it will be the responsibility of the
-user to clear the SEL manually if clearing is disabled.
+will attempt to clear the SEL.  Specify 0 to disable clearing.  When
+the SEL is full, it will be the responsibility of the user to clear
+the SEL manually if clearing is disabled.  Defaults to 0.  If
+specified to a non-zero value, be careful that the clearing of the SEL
+could affect other applications that monitor the SEL, such as
+monitoring applications that use
+.B ipmi-sel(8)
+or  
+libipmimonitoring(3).
 .TP
 \fB\-\-system\-event\-format\fR=\fIFORMATSTRING\fR
 Specify the format of the log output when a SEL system event is
