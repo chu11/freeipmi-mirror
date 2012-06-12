@@ -16,6 +16,8 @@ libmiscutil_la_SOURCES = \
 	fd.h \
 	hash.c \
 	hash.h \
+	heap.c \
+	heap.h \
 	hostlist.c \
 	hostlist.h \
 	list.c \
