@@ -102,7 +102,7 @@
 #define LIST_ALLOC        32
 #define HEAP_MAGIC        0x12345678
 #define HEAP_SIZE_DEFAULT 64
-#define HEAP_SIZE_MINIMUM 16
+#define HEAP_SIZE_MINIMUM 4
 
 
 /****************
@@ -240,7 +240,7 @@ heap_create (int size, HeapCmpF fCmp, HeapDelF fDel)
       return (lsd_nomem_error (__FILE__, __LINE__, "heap create"));
     }
 
-  if (h->size <= 0)
+  if (size <= 0)
     h->size = HEAP_SIZE_DEFAULT;
   else
     h->size = size;
@@ -319,7 +319,7 @@ heap_is_full (Heap h)
   assert (h->magic == HEAP_MAGIC);
   n = h->count;
   heap_mutex_unlock (&h->mutex);
-  return (n == h->heap_size);
+  return (n == h->size);
 }
 
 static void *
@@ -368,8 +368,11 @@ heap_insert (Heap h, void *x)
   heap_mutex_lock (&h->mutex);
   assert (h->magic == HEAP_MAGIC);
 
-  if (h->count == h->heap_size)
-    return (NULL);
+  if (h->count == h->size)
+    {
+      errno = ENOSPC;
+      return (NULL);
+    }
 
   if (!(v = heap_node_create (h, &p, x)))
     return (NULL);
@@ -409,7 +412,7 @@ heap_pop (Heap h)
   if (!h->count)
     return (NULL);
 
-  v = heap_node_destroy (h, h->heaparray[1]);
+  v = heap_node_destroy (h, h->heaparray[0]);
 
   if (h->count == 1)
     {
