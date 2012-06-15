@@ -171,6 +171,7 @@ struct ipmi_interpret_sel {
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_button_switch_transition_severity_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_module_board_state_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_module_board_device_present_config;
+  struct ipmi_interpret_sel_config **ipmi_interpret_sel_chassis_transition_severity_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_chip_set_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_chip_set_transition_severity_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_cable_interconnect_config;
@@ -255,6 +256,7 @@ struct ipmi_interpret_sensor {
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_button_switch_transition_severity_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_module_board_state_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_module_board_device_present_config;
+  struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_chassis_transition_severity_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_chip_set_transition_severity_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_cable_interconnect_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_boot_error_config;

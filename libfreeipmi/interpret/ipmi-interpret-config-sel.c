@@ -546,6 +546,20 @@ static struct ipmi_interpret_sel_config ipmi_interpret_sel_module_board_device_p
   };
 static unsigned int ipmi_interpret_sel_module_board_device_present_config_len = 2;
 
+static struct ipmi_interpret_sel_config ipmi_interpret_sel_chassis_transition_severity_config[] =
+  {
+    { "IPMI_Chassis_Transition_Severity_Transition_To_OK", IPMI_INTERPRET_STATE_NOMINAL, IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Chassis_Transition_Severity_Transition_To_Non_Critical_From_OK", IPMI_INTERPRET_STATE_WARNING, IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_Chassis_Transition_Severity_Transition_To_Critical_From_Less_Severe", IPMI_INTERPRET_STATE_CRITICAL, IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Chassis_Transition_Severity_Transition_To_Non_Recoverable_From_Less_Severe", IPMI_INTERPRET_STATE_CRITICAL, IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Chassis_Transition_Severity_Transition_To_Non_Critical_From_More_Severe", IPMI_INTERPRET_STATE_WARNING, IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_Chassis_Transition_Severity_Transition_To_Critical_From_Non_Recoverable", IPMI_INTERPRET_STATE_CRITICAL, IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Chassis_Transition_Severity_Transition_To_Non_Recoverable", IPMI_INTERPRET_STATE_CRITICAL, IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Chassis_Transition_Severity_Monitor", IPMI_INTERPRET_STATE_WARNING, IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_Chassis_Transition_Severity_Informational", IPMI_INTERPRET_STATE_NOMINAL, IPMI_INTERPRET_STATE_NOMINAL},
+  };
+static unsigned int ipmi_interpret_sel_chassis_transition_severity_config_len = 9;
+
 static struct ipmi_interpret_sel_config ipmi_interpret_sel_chip_set_config[] =
   {
     { "IPMI_Chip_Set_Soft_Power_Control_Failure", IPMI_INTERPRET_STATE_CRITICAL, IPMI_INTERPRET_STATE_CRITICAL},
@@ -1755,6 +1769,12 @@ interpret_sel_init (ipmi_interpret_ctx_t ctx)
     goto cleanup;
 
   if (_interpret_config_sel_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_sel_chassis_transition_severity_config,
+                                  ipmi_interpret_sel_chassis_transition_severity_config,
+                                  ipmi_interpret_sel_chassis_transition_severity_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_config_sel_init (ctx,
                                   &ctx->interpret_sel.ipmi_interpret_sel_chip_set_config,
                                   ipmi_interpret_sel_chip_set_config,
                                   ipmi_interpret_sel_chip_set_config_len) < 0)
@@ -1765,7 +1785,6 @@ interpret_sel_init (ipmi_interpret_ctx_t ctx)
                                   ipmi_interpret_sel_chip_set_transition_severity_config,
                                   ipmi_interpret_sel_chip_set_transition_severity_config_len) < 0)
     goto cleanup;
-
 
   if (_interpret_config_sel_init (ctx,
                                   &ctx->interpret_sel.ipmi_interpret_sel_cable_interconnect_config,
@@ -2049,6 +2068,9 @@ interpret_sel_destroy (ipmi_interpret_ctx_t ctx)
 
   _interpret_config_sel_destroy (ctx,
                                  ctx->interpret_sel.ipmi_interpret_sel_module_board_device_present_config);
+
+  _interpret_config_sel_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_sel_chassis_transition_severity_config);
 
   _interpret_config_sel_destroy (ctx,
                                  ctx->interpret_sel.ipmi_interpret_sel_chip_set_config);
@@ -2643,6 +2665,7 @@ interpret_sel_config_parse (ipmi_interpret_ctx_t ctx,
   int ipmi_interpret_sel_button_switch_transition_severity_flags[ipmi_interpret_sel_button_switch_transition_severity_config_len];
   int ipmi_interpret_sel_module_board_state_flags[ipmi_interpret_sel_module_board_state_config_len];
   int ipmi_interpret_sel_module_board_device_present_flags[ipmi_interpret_sel_module_board_device_present_config_len];
+  int ipmi_interpret_sel_chassis_transition_severity_flags[ipmi_interpret_sel_chassis_transition_severity_config_len];
   int ipmi_interpret_sel_chip_set_flags[ipmi_interpret_sel_chip_set_config_len];
   int ipmi_interpret_sel_chip_set_transition_severity_flags[ipmi_interpret_sel_chip_set_transition_severity_config_len];
   int ipmi_interpret_sel_cable_interconnect_flags[ipmi_interpret_sel_cable_interconnect_config_len];
@@ -2936,6 +2959,12 @@ interpret_sel_config_parse (ipmi_interpret_ctx_t ctx,
                             ctx->interpret_sel.ipmi_interpret_sel_module_board_device_present_config,
                             ipmi_interpret_sel_module_board_device_present_flags,
                             ipmi_interpret_sel_module_board_device_present_config_len);
+
+  _fill_sel_config_options (config_file_options,
+                            &config_file_options_len,
+                            ctx->interpret_sel.ipmi_interpret_sel_chassis_transition_severity_config,
+                            ipmi_interpret_sel_chassis_transition_severity_flags,
+                            ipmi_interpret_sel_chassis_transition_severity_config_len);
 
   _fill_sel_config_options (config_file_options,
                             &config_file_options_len,
