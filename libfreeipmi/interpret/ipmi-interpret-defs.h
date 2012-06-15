@@ -161,6 +161,7 @@ struct ipmi_interpret_sel {
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_drive_slot_predictive_failure_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_drive_slot_device_present_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_system_firmware_progress_config;
+  struct ipmi_interpret_sel_config **ipmi_interpret_sel_system_firmware_progress_transition_severity_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_event_logging_disabled_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_system_event_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_system_event_state_config;
@@ -243,6 +244,7 @@ struct ipmi_interpret_sensor {
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_drive_slot_predictive_failure_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_drive_slot_device_present_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_system_firmware_progress_config;
+  struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_system_firmware_progress_transition_severity_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_event_logging_disabled_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_system_event_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_system_event_state_config;

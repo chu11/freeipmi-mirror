@@ -784,6 +784,9 @@ ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
           else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
                    && sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
             sel_config = ctx->interpret_sel.ipmi_interpret_sel_drive_slot_device_present_config;
+          else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
+		   && sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS)
+            sel_config = ctx->interpret_sel.ipmi_interpret_sel_system_firmware_progress_transition_severity_config;
           else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
 		   && sensor_type == IPMI_SENSOR_TYPE_SYSTEM_EVENT)
             sel_config = ctx->interpret_sel.ipmi_interpret_sel_system_event_state_config;
@@ -1237,6 +1240,9 @@ ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
                && sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_drive_slot_device_present_config;
+      else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
+	       && sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS)
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_system_firmware_progress_transition_severity_config;
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
 	       && sensor_type == IPMI_SENSOR_TYPE_SYSTEM_EVENT)
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_system_event_state_config;
@@ -1327,6 +1333,8 @@ ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_battery_config;
       else if (sensor_type == IPMI_SENSOR_TYPE_SESSION_AUDIT)
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_session_audit_config;
+      else if (sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE)
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_version_change_config;
       else if (sensor_type == IPMI_SENSOR_TYPE_FRU_STATE)
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_fru_state_config;
       else if (ctx->flags & IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA

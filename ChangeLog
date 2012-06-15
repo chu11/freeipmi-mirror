@@ -1,7 +1,8 @@
 2012-06-15  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/interpret/: Support new interpretations based on
-	sensors found on IBM X3850 X5, most notably Version Change.
+	sensors found on IBM X3850 X5: Version Change, System Firmware
+	Progress Transition Severity.
 
 	* etc/freeipmi_interpret_sel.conf,
 	etc/freeipmi_interpret_sensor.conf: Update appropriately for
