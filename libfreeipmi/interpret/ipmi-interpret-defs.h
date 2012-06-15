@@ -176,11 +176,14 @@ struct ipmi_interpret_sel {
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_chip_set_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_chip_set_transition_severity_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_cable_interconnect_config;
+  struct ipmi_interpret_sel_config **ipmi_interpret_sel_cable_interconnect_transition_severity_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_system_boot_initiated_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_boot_error_config;
+  struct ipmi_interpret_sel_config **ipmi_interpret_sel_boot_error_transition_severity_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_os_boot_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_os_critical_stop_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_slot_connector_config;
+  struct ipmi_interpret_sel_config **ipmi_interpret_sel_slot_connector_transition_severity_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_system_acpi_power_state_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_watchdog2_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_platform_alert_config;
@@ -261,8 +264,11 @@ struct ipmi_interpret_sensor {
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_chassis_transition_severity_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_chip_set_transition_severity_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_cable_interconnect_config;
+  struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_cable_interconnect_transition_severity_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_boot_error_config;
+  struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_boot_error_transition_severity_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_slot_connector_config;
+  struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_slot_connector_transition_severity_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_system_acpi_power_state_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_watchdog2_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_entity_presence_config;

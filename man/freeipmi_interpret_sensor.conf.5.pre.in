@@ -1294,6 +1294,42 @@ Defaults to Nominal.
 Defaults to Critical.
 .RE
 .TP
+.B IPMI_Cable_Interconnect_Transition_Severity
+The following states correspond to Cable/Interconnect sensors that report on
+device severity.
+.RS
+.TP
+\fBIPMI_Cable_Interconnect_Transition_Severity_No_Event\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Cable_Interconnect_Transition_Severity_Transition_To_OK\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Cable_Interconnect_Transition_Severity_Transition_To_Non_Critical_From_OK\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Cable_Interconnect_Transition_Severity_Transition_To_Critical_From_Less_Severe\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Cable_Interconnect_Transition_Severity_Transition_To_Non_Recoverable_From_Less_Severe\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Cable_Interconnect_Transition_Severity_Transition_To_Non_Critical_From_More_Severe\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Cable_Interconnect_Transition_Severity_Transition_To_Critical_From_Non_Recoverable\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Cable_Interconnect_Transition_Severity_Transition_To_Non_Recoverable\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Cable_Interconnect_Transition_Severity_Monitor\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Cable_Interconnect_Transition_Severity_Informational\fR
+Defaults to Nominal.
+.RE
+.TP
 .B IPMI_Boot_Error
 The following states correspond to Boot Error sensors w/
 Boot Error specific output states.
@@ -1316,6 +1352,42 @@ Defaults to Critical.
 .TP
 \fBIPMI_Boot_Error_Timeout_Waiting_For_User_Selection_Of_Boot_Source\fR
 Defaults to Warning.
+.RE
+.TP
+.B IPMI_Boot_Error_Transition_Severity
+The following states correspond to Boot Error sensors that report on
+device severity.
+.RS
+.TP
+\fBIPMI_Boot_Error_Transition_Severity_No_Event\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Boot_Error_Transition_Severity_Transition_To_OK\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Boot_Error_Transition_Severity_Transition_To_Non_Critical_From_OK\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Boot_Error_Transition_Severity_Transition_To_Critical_From_Less_Severe\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Boot_Error_Transition_Severity_Transition_To_Non_Recoverable_From_Less_Severe\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Boot_Error_Transition_Severity_Transition_To_Non_Critical_From_More_Severe\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Boot_Error_Transition_Severity_Transition_To_Critical_From_Non_Recoverable\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Boot_Error_Transition_Severity_Transition_To_Non_Recoverable\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Boot_Error_Transition_Severity_Monitor\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Boot_Error_Transition_Severity_Informational\fR
+Defaults to Nominal.
 .RE
 .TP
 .B IPMI_Slot_Connector
@@ -1354,6 +1426,42 @@ Defaults to Warning.
 Defaults to Warning.
 .TP
 \fBIPMI_Slot_Connector_Slot_Holds_Spare_Device\fR
+Defaults to Nominal.
+.RE
+.TP
+.B IPMI_Slot_Connector_Transition_Severity
+The following states correspond to Slot Connector sensors that report on
+device severity.
+.RS
+.TP
+\fBIPMI_Slot_Connector_Transition_Severity_No_Event\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Slot_Connector_Transition_Severity_Transition_To_OK\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Slot_Connector_Transition_Severity_Transition_To_Non_Critical_From_OK\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Slot_Connector_Transition_Severity_Transition_To_Critical_From_Less_Severe\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Slot_Connector_Transition_Severity_Transition_To_Non_Recoverable_From_Less_Severe\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Slot_Connector_Transition_Severity_Transition_To_Non_Critical_From_More_Severe\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Slot_Connector_Transition_Severity_Transition_To_Critical_From_Non_Recoverable\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Slot_Connector_Transition_Severity_Transition_To_Non_Recoverable\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Slot_Connector_Transition_Severity_Monitor\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Slot_Connector_Transition_Severity_Informational\fR
 Defaults to Nominal.
 .RE
 .TP

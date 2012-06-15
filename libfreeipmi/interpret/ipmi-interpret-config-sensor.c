@@ -629,6 +629,21 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_cable_interconn
   };
 static unsigned int ipmi_interpret_sensor_cable_interconnect_config_len = 3;
 
+static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_cable_interconnect_transition_severity_config[] =
+  {
+    { "IPMI_Cable_Interconnect_Transition_Severity_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Cable_Interconnect_Transition_Severity_Transition_To_OK", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Cable_Interconnect_Transition_Severity_Transition_To_Non_Critical_From_OK", IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_Cable_Interconnect_Transition_Severity_Transition_To_Critical_From_Less_Severe", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Cable_Interconnect_Transition_Severity_Transition_To_Non_Recoverable_From_Less_Severe", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Cable_Interconnect_Transition_Severity_Transition_To_Non_Critical_From_More_Severe", IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_Cable_Interconnect_Transition_Severity_Transition_To_Critical_From_Non_Recoverable", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Cable_Interconnect_Transition_Severity_Transition_To_Non_Recoverable", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Cable_Interconnect_Transition_Severity_Monitor", IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_Cable_Interconnect_Transition_Severity_Informational", IPMI_INTERPRET_STATE_NOMINAL},
+  };
+static unsigned int ipmi_interpret_sensor_cable_interconnect_transition_severity_config_len = 10;
+
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_boot_error_config[] =
   {
     { "IPMI_Boot_Error_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
@@ -639,6 +654,21 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_boot_error_conf
     { "IPMI_Boot_Error_Timeout_Waiting_For_User_Selection_Of_Boot_Source", IPMI_INTERPRET_STATE_WARNING},
   };
 static unsigned int ipmi_interpret_sensor_boot_error_config_len = 6;
+
+static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_boot_error_transition_severity_config[] =
+  {
+    { "IPMI_Boot_Error_Transition_Severity_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Boot_Error_Transition_Severity_Transition_To_OK", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Boot_Error_Transition_Severity_Transition_To_Non_Critical_From_OK", IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_Boot_Error_Transition_Severity_Transition_To_Critical_From_Less_Severe", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Boot_Error_Transition_Severity_Transition_To_Non_Recoverable_From_Less_Severe", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Boot_Error_Transition_Severity_Transition_To_Non_Critical_From_More_Severe", IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_Boot_Error_Transition_Severity_Transition_To_Critical_From_Non_Recoverable", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Boot_Error_Transition_Severity_Transition_To_Non_Recoverable", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Boot_Error_Transition_Severity_Monitor", IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_Boot_Error_Transition_Severity_Informational", IPMI_INTERPRET_STATE_NOMINAL},
+  };
+static unsigned int ipmi_interpret_sensor_boot_error_transition_severity_config_len = 10;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_slot_connector_config[] =
   {
@@ -655,6 +685,21 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_slot_connector_
     { "IPMI_Slot_Connector_Slot_Holds_Spare_Device", IPMI_INTERPRET_STATE_NOMINAL},
   };
 static unsigned int ipmi_interpret_sensor_slot_connector_config_len = 11;
+
+static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_slot_connector_transition_severity_config[] =
+  {
+    { "IPMI_Slot_Connector_Transition_Severity_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Slot_Connector_Transition_Severity_Transition_To_OK", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Slot_Connector_Transition_Severity_Transition_To_Non_Critical_From_OK", IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_Slot_Connector_Transition_Severity_Transition_To_Critical_From_Less_Severe", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Slot_Connector_Transition_Severity_Transition_To_Non_Recoverable_From_Less_Severe", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Slot_Connector_Transition_Severity_Transition_To_Non_Critical_From_More_Severe", IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_Slot_Connector_Transition_Severity_Transition_To_Critical_From_Non_Recoverable", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Slot_Connector_Transition_Severity_Transition_To_Non_Recoverable", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Slot_Connector_Transition_Severity_Monitor", IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_Slot_Connector_Transition_Severity_Informational", IPMI_INTERPRET_STATE_NOMINAL},
+  };
+static unsigned int ipmi_interpret_sensor_slot_connector_transition_severity_config_len = 10;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_system_acpi_power_state_config[] =
   {
@@ -1679,15 +1724,33 @@ interpret_sensor_init (ipmi_interpret_ctx_t ctx)
     goto cleanup;
 
   if (_interpret_config_sensor_init (ctx,
+                                     &ctx->interpret_sensor.ipmi_interpret_sensor_cable_interconnect_transition_severity_config,
+                                     ipmi_interpret_sensor_cable_interconnect_transition_severity_config,
+                                     ipmi_interpret_sensor_cable_interconnect_transition_severity_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_config_sensor_init (ctx,
                                      &ctx->interpret_sensor.ipmi_interpret_sensor_boot_error_config,
                                      ipmi_interpret_sensor_boot_error_config,
                                      ipmi_interpret_sensor_boot_error_config_len) < 0)
     goto cleanup;
 
   if (_interpret_config_sensor_init (ctx,
+                                     &ctx->interpret_sensor.ipmi_interpret_sensor_boot_error_transition_severity_config,
+                                     ipmi_interpret_sensor_boot_error_transition_severity_config,
+                                     ipmi_interpret_sensor_boot_error_transition_severity_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_config_sensor_init (ctx,
                                      &ctx->interpret_sensor.ipmi_interpret_sensor_slot_connector_config,
                                      ipmi_interpret_sensor_slot_connector_config,
                                      ipmi_interpret_sensor_slot_connector_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_config_sensor_init (ctx,
+                                     &ctx->interpret_sensor.ipmi_interpret_sensor_slot_connector_transition_severity_config,
+                                     ipmi_interpret_sensor_slot_connector_transition_severity_config,
+                                     ipmi_interpret_sensor_slot_connector_transition_severity_config_len) < 0)
     goto cleanup;
 
   if (_interpret_config_sensor_init (ctx,
@@ -1929,10 +1992,19 @@ interpret_sensor_destroy (ipmi_interpret_ctx_t ctx)
                                     ctx->interpret_sensor.ipmi_interpret_sensor_cable_interconnect_config);
 
   _interpret_config_sensor_destroy (ctx,
+                                    ctx->interpret_sensor.ipmi_interpret_sensor_cable_interconnect_transition_severity_config);
+
+  _interpret_config_sensor_destroy (ctx,
                                     ctx->interpret_sensor.ipmi_interpret_sensor_boot_error_config);
 
   _interpret_config_sensor_destroy (ctx,
+                                    ctx->interpret_sensor.ipmi_interpret_sensor_boot_error_transition_severity_config);
+
+  _interpret_config_sensor_destroy (ctx,
                                     ctx->interpret_sensor.ipmi_interpret_sensor_slot_connector_config);
+
+  _interpret_config_sensor_destroy (ctx,
+                                    ctx->interpret_sensor.ipmi_interpret_sensor_slot_connector_transition_severity_config);
 
   _interpret_config_sensor_destroy (ctx,
                                     ctx->interpret_sensor.ipmi_interpret_sensor_system_acpi_power_state_config);
@@ -2245,8 +2317,11 @@ interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
   int ipmi_interpret_sensor_chassis_transition_severity_flags[ipmi_interpret_sensor_chassis_transition_severity_config_len];
   int ipmi_interpret_sensor_chip_set_transition_severity_flags[ipmi_interpret_sensor_chip_set_transition_severity_config_len];
   int ipmi_interpret_sensor_cable_interconnect_flags[ipmi_interpret_sensor_cable_interconnect_config_len];
+  int ipmi_interpret_sensor_cable_interconnect_transition_severity_flags[ipmi_interpret_sensor_cable_interconnect_transition_severity_config_len];
   int ipmi_interpret_sensor_boot_error_flags[ipmi_interpret_sensor_boot_error_config_len];
+  int ipmi_interpret_sensor_boot_error_transition_severity_flags[ipmi_interpret_sensor_boot_error_transition_severity_config_len];
   int ipmi_interpret_sensor_slot_connector_flags[ipmi_interpret_sensor_slot_connector_config_len];
+  int ipmi_interpret_sensor_slot_connector_transition_severity_flags[ipmi_interpret_sensor_slot_connector_transition_severity_config_len];
   int ipmi_interpret_sensor_system_acpi_power_state_flags[ipmi_interpret_sensor_system_acpi_power_state_config_len];
   int ipmi_interpret_sensor_watchdog2_flags[ipmi_interpret_sensor_watchdog2_config_len];
   int ipmi_interpret_sensor_entity_presence_flags[ipmi_interpret_sensor_entity_presence_config_len];
@@ -2556,15 +2631,33 @@ interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
 
   _fill_sensor_config_options (config_file_options,
                                &config_file_options_len,
+                               ctx->interpret_sensor.ipmi_interpret_sensor_cable_interconnect_transition_severity_config,
+                               ipmi_interpret_sensor_cable_interconnect_transition_severity_flags,
+                               ipmi_interpret_sensor_cable_interconnect_transition_severity_config_len);
+
+  _fill_sensor_config_options (config_file_options,
+                               &config_file_options_len,
                                ctx->interpret_sensor.ipmi_interpret_sensor_boot_error_config,
                                ipmi_interpret_sensor_boot_error_flags,
                                ipmi_interpret_sensor_boot_error_config_len);
 
   _fill_sensor_config_options (config_file_options,
                                &config_file_options_len,
+                               ctx->interpret_sensor.ipmi_interpret_sensor_boot_error_transition_severity_config,
+                               ipmi_interpret_sensor_boot_error_transition_severity_flags,
+                               ipmi_interpret_sensor_boot_error_transition_severity_config_len);
+
+  _fill_sensor_config_options (config_file_options,
+                               &config_file_options_len,
                                ctx->interpret_sensor.ipmi_interpret_sensor_slot_connector_config,
                                ipmi_interpret_sensor_slot_connector_flags,
                                ipmi_interpret_sensor_slot_connector_config_len);
+
+  _fill_sensor_config_options (config_file_options,
+                               &config_file_options_len,
+                               ctx->interpret_sensor.ipmi_interpret_sensor_slot_connector_transition_severity_config,
+                               ipmi_interpret_sensor_slot_connector_transition_severity_flags,
+                               ipmi_interpret_sensor_slot_connector_transition_severity_config_len);
 
   _fill_sensor_config_options (config_file_options,
                                &config_file_options_len,
