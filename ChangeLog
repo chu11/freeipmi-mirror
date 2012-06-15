@@ -2,7 +2,7 @@
 
 	* libfreeipmi/interpret/: Support new interpretations based on
 	sensors found on IBM X3850 X5: Version Change, System Firmware
-	Progress Transition Severity.
+	Progress Transition Severity, Button/Switch Transition Severity.
 
 	* etc/freeipmi_interpret_sel.conf,
 	etc/freeipmi_interpret_sensor.conf: Update appropriately for
