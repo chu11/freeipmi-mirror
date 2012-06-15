@@ -687,6 +687,20 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_session_audit_c
   };
 static unsigned int ipmi_interpret_sensor_session_audit_config_len = 5;
 
+static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_version_change_config[] =
+  {
+    { "IPMI_Version_Change_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Version_Change_Hardware_Change_Detected_With_Associated_Entity", IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_Version_Change_Firmware_Or_Software_Change_Detected_With_Associated_Entity", IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_Version_Change_Hardware_Incompatability_Detected_With_Associated_Entity", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Version_Change_Firmware_Or_Software_Incompatability_Detected_With_Associated_Entity", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Version_Change_Entity_Is_Of_An_Invalid_Or_Unsupported_Hardware_Version", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Version_Change_Entity_Contains_An_Invalid_Or_Unsupported_Firmware_Or_Software_Version", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Version_Change_Hardware_Change_Detected_With_Associated_Entity_Was_Successful", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Version_Change_Software_Or_FW_Change_Detected_With_Associated_Entity_Was_Successful", IPMI_INTERPRET_STATE_NOMINAL},
+  };
+static unsigned int ipmi_interpret_sensor_version_change_config_len = 9;
+
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_fru_state_config[] =
   {
     { "IPMI_FRU_State_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
@@ -1641,6 +1655,12 @@ interpret_sensor_init (ipmi_interpret_ctx_t ctx)
     goto cleanup;
 
   if (_interpret_config_sensor_init (ctx,
+                                     &ctx->interpret_sensor.ipmi_interpret_sensor_version_change_config,
+                                     ipmi_interpret_sensor_version_change_config,
+                                     ipmi_interpret_sensor_version_change_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_config_sensor_init (ctx,
                                      &ctx->interpret_sensor.ipmi_interpret_sensor_fru_state_config,
                                      ipmi_interpret_sensor_fru_state_config,
                                      ipmi_interpret_sensor_fru_state_config_len) < 0)
@@ -1844,6 +1864,9 @@ interpret_sensor_destroy (ipmi_interpret_ctx_t ctx)
 
   _interpret_config_sensor_destroy (ctx,
                                     ctx->interpret_sensor.ipmi_interpret_sensor_session_audit_config);
+
+  _interpret_config_sensor_destroy (ctx,
+                                    ctx->interpret_sensor.ipmi_interpret_sensor_version_change_config);
 
   _interpret_config_sensor_destroy (ctx,
                                     ctx->interpret_sensor.ipmi_interpret_sensor_fru_state_config);
@@ -2137,6 +2160,7 @@ interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
   int ipmi_interpret_sensor_management_subsystem_health_flags[ipmi_interpret_sensor_management_subsystem_health_config_len];
   int ipmi_interpret_sensor_battery_flags[ipmi_interpret_sensor_battery_config_len];
   int ipmi_interpret_sensor_session_audit_flags[ipmi_interpret_sensor_session_audit_config_len];
+  int ipmi_interpret_sensor_version_change_flags[ipmi_interpret_sensor_version_change_config_len];
   int ipmi_interpret_sensor_fru_state_flags[ipmi_interpret_sensor_fru_state_config_len];
   int sensor_oem_bitmask_flag;
   int sensor_oem_value_flag;
@@ -2465,6 +2489,12 @@ interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
                                ctx->interpret_sensor.ipmi_interpret_sensor_session_audit_config,
                                ipmi_interpret_sensor_session_audit_flags,
                                ipmi_interpret_sensor_session_audit_config_len);
+
+  _fill_sensor_config_options (config_file_options,
+                               &config_file_options_len,
+                               ctx->interpret_sensor.ipmi_interpret_sensor_version_change_config,
+                               ipmi_interpret_sensor_version_change_flags,
+                               ipmi_interpret_sensor_version_change_config_len);
 
   _fill_sensor_config_options (config_file_options,
                                &config_file_options_len,

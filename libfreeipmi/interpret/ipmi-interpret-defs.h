@@ -262,6 +262,7 @@ struct ipmi_interpret_sensor {
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_management_subsystem_health_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_battery_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_session_audit_config;
+  struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_version_change_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_fru_state_config;
 
   hash_t sensor_oem_config;
