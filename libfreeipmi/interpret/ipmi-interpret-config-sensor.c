@@ -455,6 +455,14 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_drive_slot_devi
   };
 static unsigned int ipmi_interpret_sensor_drive_slot_device_present_config_len = 3;
 
+static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_post_memory_resize_state_config[] =
+  {
+    { "IPMI_Post_Memory_Resize_State_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Post_Memory_Resize_State_Deasserted", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Post_Memory_Resize_State_Asserted", IPMI_INTERPRET_STATE_WARNING},
+  };
+static unsigned int ipmi_interpret_sensor_post_memory_resize_state_config_len = 3;
+
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_system_firmware_progress_config[] =
   {
     { "IPMI_System_Firmware_Progress_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
@@ -1580,6 +1588,13 @@ interpret_sensor_init (ipmi_interpret_ctx_t ctx)
     goto cleanup;
 
   if (_interpret_config_sensor_init (ctx,
+                                     &ctx->interpret_sensor.ipmi_interpret_sensor_post_memory_resize_state_config,
+                                     ipmi_interpret_sensor_post_memory_resize_state_config,
+                                     ipmi_interpret_sensor_post_memory_resize_state_config_len) < 0)
+    goto cleanup;
+
+
+  if (_interpret_config_sensor_init (ctx,
                                      &ctx->interpret_sensor.ipmi_interpret_sensor_system_firmware_progress_config,
                                      ipmi_interpret_sensor_system_firmware_progress_config,
                                      ipmi_interpret_sensor_system_firmware_progress_config_len) < 0)
@@ -1867,6 +1882,9 @@ interpret_sensor_destroy (ipmi_interpret_ctx_t ctx)
 
   _interpret_config_sensor_destroy (ctx,
                                     ctx->interpret_sensor.ipmi_interpret_sensor_drive_slot_device_present_config);
+
+  _interpret_config_sensor_destroy (ctx,
+                                    ctx->interpret_sensor.ipmi_interpret_sensor_post_memory_resize_state_config);
 
   _interpret_config_sensor_destroy (ctx,
                                     ctx->interpret_sensor.ipmi_interpret_sensor_system_firmware_progress_config);
@@ -2212,6 +2230,7 @@ interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
   int ipmi_interpret_sensor_drive_slot_state_flags[ipmi_interpret_sensor_drive_slot_state_config_len];
   int ipmi_interpret_sensor_drive_slot_predictive_failure_flags[ipmi_interpret_sensor_drive_slot_predictive_failure_config_len];
   int ipmi_interpret_sensor_drive_slot_device_present_flags[ipmi_interpret_sensor_drive_slot_device_present_config_len];
+  int ipmi_interpret_sensor_post_memory_resize_state_flags[ipmi_interpret_sensor_post_memory_resize_state_config_len];
   int ipmi_interpret_sensor_system_firmware_progress_flags[ipmi_interpret_sensor_system_firmware_progress_config_len];
   int ipmi_interpret_sensor_system_firmware_progress_transition_severity_flags[ipmi_interpret_sensor_system_firmware_progress_transition_severity_config_len];
   int ipmi_interpret_sensor_event_logging_disabled_flags[ipmi_interpret_sensor_event_logging_disabled_config_len];
@@ -2444,6 +2463,12 @@ interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
                                ctx->interpret_sensor.ipmi_interpret_sensor_drive_slot_device_present_config,
                                ipmi_interpret_sensor_drive_slot_device_present_flags,
                                ipmi_interpret_sensor_drive_slot_device_present_config_len);
+
+  _fill_sensor_config_options (config_file_options,
+                               &config_file_options_len,
+                               ctx->interpret_sensor.ipmi_interpret_sensor_post_memory_resize_state_config,
+                               ipmi_interpret_sensor_post_memory_resize_state_flags,
+                               ipmi_interpret_sensor_post_memory_resize_state_config_len);
 
   _fill_sensor_config_options (config_file_options,
                                &config_file_options_len,
