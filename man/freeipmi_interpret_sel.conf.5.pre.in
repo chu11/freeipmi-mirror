@@ -134,7 +134,7 @@ Defaults to Critical.
 .TP
 .B IPMI_Temperature_Transition_Severity
 The following states correspond to Temperature sensor events that
-report on device severity.
+report on transition severity.
 .RS
 .TP
 \fBIPMI_Temperature_Transition_Severity_Transition_To_OK\fR
@@ -852,6 +852,39 @@ Defaults to Critical.
 Defaults to Nominal.
 .RE
 .TP
+.B IPMI_System_Firmware_Progress_Transition_Severity
+The following states correspond to System Firmware Progress sensor
+events that report on device severity.
+.RS
+.TP
+\fBIPMI_System_Firmware_Progress_Transition_Severity_Transition_To_OK\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_System_Firmware_Progress_Transition_Severity_Transition_To_Non_Critical_From_OK\fR
+Defaults to Warning.
+.TP
+\fBIPMI_System_Firmware_Progress_Transition_Severity_Transition_To_Critical_From_Less_Severe\fR
+Defaults to Critical.
+.TP
+\fBIPMI_System_Firmware_Progress_Transition_Severity_Transition_To_Non_Recoverable_From_Less_Severe\fR
+Defaults to Critical.
+.TP
+\fBIPMI_System_Firmware_Progress_Transition_Severity_Transition_To_Non_Critical_From_More_Severe\fR
+Defaults to Warning.
+.TP
+\fBIPMI_System_Firmware_Progress_Transition_Severity_Transition_To_Critical_From_Non_Recoverable\fR
+Defaults to Critical.
+.TP
+\fBIPMI_System_Firmware_Progress_Transition_Severity_Transition_To_Non_Recoverable\fR
+Defaults to Critical.
+.TP
+\fBIPMI_System_Firmware_Progress_Transition_Severity_Monitor\fR
+Defaults to Warning.
+.TP
+\fBIPMI_System_Firmware_Progress_Transition_Severity_Informational\fR
+Defaults to Nominal.
+.RE
+.TP
 .B IPMI_Event_Logging_Disabled
 The following states correspond to Event Logging Disabled sensor events w/
 .RS
@@ -988,6 +1021,39 @@ Defaults to Nominal.
 Defaults to Nominal.
 .RE
 .TP
+.B IPMI_Button_Switch_Transition_Severity
+The following states correspond to Button Switch  sensor events that
+report on device severity.
+.RS
+.TP
+\fBIPMI_Button_Switch_Transition_Severity_Transition_To_OK\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Button_Switch_Transition_Severity_Transition_To_Non_Critical_From_OK\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Button_Switch_Transition_Severity_Transition_To_Critical_From_Less_Severe\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Button_Switch_Transition_Severity_Transition_To_Non_Recoverable_From_Less_Severe\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Button_Switch_Transition_Severity_Transition_To_Non_Critical_From_More_Severe\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Button_Switch_Transition_Severity_Transition_To_Critical_From_Non_Recoverable\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Button_Switch_Transition_Severity_Transition_To_Non_Recoverable\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Button_Switch_Transition_Severity_Monitor\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Button_Switch_Transition_Severity_Informational\fR
+Defaults to Nominal.
+.RE
+.TP
 .B IPMI_Module_Board_State
 The following states correspond to Module/Board sensor events that report an
 assertion or deassertion.
@@ -1009,6 +1075,39 @@ device installation.
 Defaults to Critical.
 .TP
 \fBIPMI_Module_Board_Device_Present_Device_Inserted_Device_Present\fR
+Defaults to Nominal.
+.RE
+.TP
+.B IPMI_Chassis_Transition_Severity
+The following states correspond to Chassis sensor events that
+report on device severity.
+.RS
+.TP
+\fBIPMI_Chassis_Transition_Severity_Transition_To_OK\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Chassis_Transition_Severity_Transition_To_Non_Critical_From_OK\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Chassis_Transition_Severity_Transition_To_Critical_From_Less_Severe\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Chassis_Transition_Severity_Transition_To_Non_Recoverable_From_Less_Severe\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Chassis_Transition_Severity_Transition_To_Non_Critical_From_More_Severe\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Chassis_Transition_Severity_Transition_To_Critical_From_Non_Recoverable\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Chassis_Transition_Severity_Transition_To_Non_Recoverable\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Chassis_Transition_Severity_Monitor\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Chassis_Transition_Severity_Informational\fR
 Defaults to Nominal.
 .RE
 .TP
@@ -1290,6 +1389,36 @@ Defaults to Warning.
 .TP
 \fBIPMI_Session_Audit_Invalid_Password_Disable\fR
 Defaults to Critical.
+.RE
+.TP
+.B IPMI_Version_Change_Transition_Severity
+The following states correspond to Version Change sensor events that
+Version Change specific output events.
+.RS
+.TP
+\fBIPMI_Version_Change_Hardware_Change_Detected_With_Associated_Entity\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Version_Change_Firmware_Or_Software_Change_Detected_With_Associated_Entity\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Version_Change_Hardware_Incompatability_Detected_With_Associated_Entity\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Version_Change_Firmware_Or_Software_Incompatability_Detected_With_Associated_Entity\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Version_Change_Entity_Is_Of_An_Invalid_Or_Unsupported_Hardware_Version\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Version_Change_Entity_Contains_An_Invalid_Or_Unsupported_Firmware_Or_Software_Version\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Version_Change_Hardware_Change_Detected_With_Associated_Entity_Was_Successful\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Version_Change_Software_Or_FW_Change_Detected_With_Associated_Entity_Was_Successful\fR
+Defaults to Nominal.
 .RE
 .TP
 .B IPMI_FRU_State

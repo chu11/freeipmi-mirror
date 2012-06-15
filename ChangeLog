@@ -6,7 +6,7 @@
 	Chassis Transition Severity.
 
 	* etc/freeipmi_interpret_sel.conf,
-	etc/freeipmi_interpret_sensor.conf: Update appropriately for
+	etc/freeipmi_interpret_sensor.conf, man/: Update appropriately for
 	changes.
 	
 2012-06-07  Albert Chu <chu11@llnl.gov>
