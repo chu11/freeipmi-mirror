@@ -10,6 +10,8 @@
 	* etc/freeipmi_interpret_sel.conf,
 	etc/freeipmi_interpret_sensor.conf, man/: Update appropriately for
 	changes.
+
+	* etc/, man/: Add missing documentation.
 	
 2012-06-07  Albert Chu <chu11@llnl.gov>
 

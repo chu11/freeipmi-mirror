@@ -1213,6 +1213,28 @@ Defaults to Warning.
 Defaults to Nominal.
 .RE
 .TP
+.B IPMI_System_Boot_Initiated
+The following states correspond to System Boot Initiated sensor events w/
+System Boot Initiated specific output events.
+.RS
+\fBIPMI_System_Boot_Initiated_Initiated_By_Power_Up\fR
+Defaults to Nominal.
+\fBIPMI_System_Boot_Initiated_Initiated_By_Hard_Reset\fR
+Defaults to Nominal.
+\fBIPMI_System_Boot_Initiated_Initiated_By_Warm_Reset\fR
+Defaults to Nominal.
+\fBIPMI_System_Boot_Initiated_User_Requested_PXE_Boot\fR
+Defaults to Nominal.
+\fBIPMI_System_Boot_Initiated_Automatic_Boot_To_Diagnostic\fR
+Defaults to Nominal.
+\fBIPMI_System_Boot_Initiated_OS_Run_Time_Software_Initiated_Hard_Reset\fR
+Defaults to Warning.
+\fBIPMI_System_Boot_Initiated_OS_Run_Time_Software_Initiated_Warm_Reset\fR
+Defaults to Warning.
+\fBIPMI_System_Boot_Initiated_System_Restart\fR
+Defaults to Nominal.
+.RE
+.TP
 .B IPMI_Boot_Error
 The following states correspond to Boot Error sensor events w/
 Boot Error specific output events.
@@ -1265,6 +1287,44 @@ Defaults to Warning.
 .TP
 \fBIPMI_Boot_Error_Transition_Severity_Informational\fR
 Defaults to Nominal.
+.RE
+.TP
+.B IPMI_OS_Boot
+The following states correspond to OS Boot sensor events w/
+OS Boot specific output events.
+.RS
+\fBIPMI_OS_Boot_A_Boot_Completed\fR
+Defaults to Nominal.
+\fBIPMI_OS_Boot_C_Boot_Completed\fR
+Defaults to Nominal.
+\fBIPMI_OS_Boot_PXE_Boot_Completed\fR
+Defaults to Nominal.
+\fBIPMI_OS_Boot_Diagnostic_Boot_Completed\fR
+Defaults to Nominal.
+\fBIPMI_OS_Boot_CD_ROM_Boot_Completed\fR
+Defaults to Nominal.
+\fBIPMI_OS_Boot_ROM_Boot_Completed\fR
+Defaults to Nominal.
+\fBIPMI_OS_Boot_Boot_Completed_Boot_Device_Not_Specified\fR
+Defaults to Warning.
+.RE
+.TP
+.B IPMI_OS_Critical_Stop
+The following states correspond to OS Critical Stop sensor events w/
+OS Critical Stop specific output events.
+.RS
+\fBIPMI_OS_Critical_Stop_Critical_Stop_During_OS_Load\fR
+Defaults to Critical.
+\fBIPMI_OS_Critical_Stop_Run_Time_Critical_Stop\fR
+Defaults to Critical.
+\fBIPMI_OS_Critical_Stop_OS_Graceful_Stop\fR
+Defaults to Warning.
+\fBIPMI_OS_Critical_Stop_OS_Graceful_Shutdown\fR
+Defaults to Warning.
+\fBIPMI_OS_Critical_Stop_Soft_Shutdown_Initiated_By_PEF\fR
+Defaults to Warning.
+\fBIPMI_OS_Critical_Stop_Agent_Not_Responding\fR
+Defaults to Critical.
 .RE
 .TP
 .B IPMI_Slot_Connector
@@ -1418,6 +1478,20 @@ Defaults to Nominal.
 Defaults to Warning.
 .RE
 .TP
+.B IPMI_Platform_Alert
+The following states correspond to Platform Alert sensor events w/
+Platform Alert specific output events.
+.RS
+\fBIPMI_Platform_Alert_Platform_Generated_Page\fR
+Defaults to Nominal.
+\fBIPMI_Platform_Alert_Platform_Generated_LAN_Alert\fR
+Defaults to Nominal.
+\fBIPMI_Platform_Alert_Platform_Event_Trap_Generated\fR
+Defaults to Nominal.
+\fBIPMI_Platform_Alert_Platform_Generated_SNMP_Trap\fR
+Defaults to Nominal.
+.RE
+.TP
 .B IPMI_Entity_Presence
 The following states correspond to Entity Presence sensor events w/
 Entity Presence specific output events.
@@ -1443,6 +1517,16 @@ Defaults to Nominal.
 .TP
 \fBIPMI_Entity_Presence_Device_Present_Device_Inserted_Device_Present\fR
 Defaults to Nominal.
+.RE
+.TP
+.B IPMI_LAN
+The following states correspond to LAN sensor events w/ LAN specific
+output events.
+.RS
+\fBIPMI_LAN_Heartbeat\fR
+Defaults to Nominal.
+\fBIPMI_LAN_Heartbeat_Lost\fR
+Defaults to Warning.
 .RE
 .TP
 .B IPMI_Management_Subsystem_Health
