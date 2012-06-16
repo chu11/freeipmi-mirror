@@ -5,7 +5,8 @@
 	Progress Transition Severity, Button/Switch Transition Severity,
 	Chassis Transition Severity, POST Memory Resize State,
 	Cable/Interconnect Transition Severity, Boot Error Transition
-	Severity, Slot Connector Transition Severity.
+	Severity, Slot Connector Transition Severity, Memory State, and
+	Memory Transition Severity.
 
 	* etc/freeipmi_interpret_sel.conf,
 	etc/freeipmi_interpret_sensor.conf, man/: Update appropriately for

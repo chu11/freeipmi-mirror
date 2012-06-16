@@ -772,6 +772,12 @@ ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
           else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
                    && sensor_type == IPMI_SENSOR_TYPE_COOLING_DEVICE)
             sel_config = ctx->interpret_sel.ipmi_interpret_sel_cooling_device_redundancy_config;
+          else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
+                   && sensor_type == IPMI_SENSOR_TYPE_MEMORY)
+            sel_config = ctx->interpret_sel.ipmi_interpret_sel_memory_state_config;
+          else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
+                   && sensor_type == IPMI_SENSOR_TYPE_MEMORY)
+            sel_config = ctx->interpret_sel.ipmi_interpret_sel_memory_transition_severity_config;
           else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
                    && sensor_type == IPMI_SENSOR_TYPE_MEMORY)
             sel_config = ctx->interpret_sel.ipmi_interpret_sel_memory_redundancy_config;
@@ -1246,6 +1252,12 @@ ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
                && sensor_type == IPMI_SENSOR_TYPE_COOLING_DEVICE)
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_cooling_device_redundancy_config;
+      else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
+               && sensor_type == IPMI_SENSOR_TYPE_MEMORY)
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_memory_state_config;
+      else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
+               && sensor_type == IPMI_SENSOR_TYPE_MEMORY)
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_memory_transition_severity_config;
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
                && sensor_type == IPMI_SENSOR_TYPE_MEMORY)
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_memory_redundancy_config;
