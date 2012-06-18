@@ -39,20 +39,6 @@
 #include "tool-sdr-cache-common.h"
 #include "tool-sensor-common.h"
 
-#define IPMI_OEM_SUN_LED_TYPE_OK2RM    0
-#define IPMI_OEM_SUN_LED_TYPE_SERVICE  1
-#define IPMI_OEM_SUN_LED_TYPE_ACTIVITY 2
-#define IPMI_OEM_SUN_LED_TYPE_LOCATE   3
-
-#define IPMI_OEM_SUN_LED_MODE_OFF     0
-#define IPMI_OEM_SUN_LED_MODE_ON      1
-#define IPMI_OEM_SUN_LED_MODE_STANDBY 2
-#define IPMI_OEM_SUN_LED_MODE_SLOW    3
-#define IPMI_OEM_SUN_LED_MODE_FAST    4
-
-#define IPMI_OEM_SUN_LED_FORCE_GO_THRU_CONTROLLER     0
-#define IPMI_OEM_SUN_LED_FORCE_DIRECTLY_ACCESS_DEVICE 1
-
 #define IPMI_SDR_RECORD_GENERIC_DEVICE_LOCATOR_DEVICE_ACCESS_ADDRESS_INDEX 5
 #define IPMI_SDR_RECORD_GENERIC_DEVICE_LOCATOR_DEVICE_SLAVE_ADDRESS_INDEX  6
 #define IPMI_SDR_RECORD_GENERIC_DEVICE_LOCATOR_OEM_INDEX                   14
@@ -105,6 +91,10 @@ _sun_get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
    *      - Note that the IPMI command requires the entire
    *        byte of the slave address.
    * 0x?? - LED Type (see below [1])
+   *      - 0 - ok2rm
+   *      - 1 - service
+   *      - 2 - activity
+   *      - 3 - locate 
    * 0x?? - Controller Address / Device Access Address (in General Device Locator Record)
    *      - 0x20 if the LED is local
    *      - Note that the IPMI command requires the entire
@@ -454,6 +444,10 @@ ipmi_oem_sun_set_led (ipmi_oem_state_data_t *state_data)
    *      - Note that the IPMI command requires the entire
    *        byte of the slave address.
    * 0x?? - LED Type (see below [1])
+   *      - 0 - ok2rm
+   *      - 1 - service
+   *      - 2 - activity
+   *      - 3 - locate 
    * 0x?? - Controller Address / Device Access Address (in General Device Locator Record)
    *      - 0x20 if the LED is local
    *      - Note that the IPMI command requires the entire
