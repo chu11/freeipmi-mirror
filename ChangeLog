@@ -1,3 +1,19 @@
+2012-06-15  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/interpret/: Support new interpretations based on
+	sensors found on IBM X3850 X5: Version Change, System Firmware
+	Progress Transition Severity, Button/Switch Transition Severity,
+	Chassis Transition Severity, POST Memory Resize State,
+	Cable/Interconnect Transition Severity, Boot Error Transition
+	Severity, Slot Connector Transition Severity, Memory State, and
+	Memory Transition Severity.
+
+	* etc/freeipmi_interpret_sel.conf,
+	etc/freeipmi_interpret_sensor.conf, man/: Update appropriately for
+	changes.
+
+	* etc/, man/: Add missing documentation.
+	
 2012-06-07  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/sdr/ipmi-sdr-cache-create.c (ipmi_sdr_cache_create):
