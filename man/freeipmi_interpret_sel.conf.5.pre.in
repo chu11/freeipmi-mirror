@@ -134,7 +134,7 @@ Defaults to Critical.
 .TP
 .B IPMI_Temperature_Transition_Severity
 The following states correspond to Temperature sensor events that
-report on device severity.
+report on transition severity.
 .RS
 .TP
 \fBIPMI_Temperature_Transition_Severity_Transition_To_OK\fR
@@ -738,6 +738,51 @@ Defaults to Warning.
 Defaults to Critical.
 .RE
 .TP
+.B IPMI_Memory_State
+The following states correspond to Memory sensor events that report an
+assertion or deassertion.
+.RS
+.TP
+\fBIPMI_Memory_State_Deasserted\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Memory_State_Asserted\fR
+Defaults to Critical.
+.RE
+.TP
+.B IPMI_Memory_Transition_Severity
+The following states correspond to Memory sensor events that
+report on transition severity.
+.RS
+.TP
+\fBIPMI_Memory_Transition_Severity_Transition_To_OK\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Memory_Transition_Severity_Transition_To_Non_Critical_From_OK\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Memory_Transition_Severity_Transition_To_Critical_From_Less_Severe\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Memory_Transition_Severity_Transition_To_Non_Recoverable_From_Less_Severe\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Memory_Transition_Severity_Transition_To_Non_Critical_From_More_Severe\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Memory_Transition_Severity_Transition_To_Critical_From_Non_Recoverable\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Memory_Transition_Severity_Transition_To_Non_Recoverable\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Memory_Transition_Severity_Monitor\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Memory_Transition_Severity_Informational\fR
+Defaults to Nominal.
+.RE
+.TP
 .B IPMI_Memory_Redundancy
 The following states correspond to Memory sensor events that report on
 redundancy.
@@ -837,6 +882,18 @@ Defaults to Critical.
 Defaults to Nominal.
 .RE
 .TP
+.B IPMI_POST_Memory_Resize_State
+The following states correspond to POST Memory Resize sensor events
+that report an assertion or deassertion.
+.RS
+.TP
+\fBIPMI_POST_Memory_Resize_State_Deasserted\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_POST_Memory_Resize_State_Asserted\fR
+Defaults to Warning.
+.RE
+.TP
 .B IPMI_System_Firmware_Progress
 The following states correspond to System Firmware Progress sensor events w/
 System Firmware Progress specific output events.
@@ -849,6 +906,39 @@ Defaults to Critical.
 Defaults to Critical.
 .TP
 \fBIPMI_System_Firmware_Progress_System_Firmware_Progress\fR
+Defaults to Nominal.
+.RE
+.TP
+.B IPMI_System_Firmware_Progress_Transition_Severity
+The following states correspond to System Firmware Progress sensor
+events that report on device severity.
+.RS
+.TP
+\fBIPMI_System_Firmware_Progress_Transition_Severity_Transition_To_OK\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_System_Firmware_Progress_Transition_Severity_Transition_To_Non_Critical_From_OK\fR
+Defaults to Warning.
+.TP
+\fBIPMI_System_Firmware_Progress_Transition_Severity_Transition_To_Critical_From_Less_Severe\fR
+Defaults to Critical.
+.TP
+\fBIPMI_System_Firmware_Progress_Transition_Severity_Transition_To_Non_Recoverable_From_Less_Severe\fR
+Defaults to Critical.
+.TP
+\fBIPMI_System_Firmware_Progress_Transition_Severity_Transition_To_Non_Critical_From_More_Severe\fR
+Defaults to Warning.
+.TP
+\fBIPMI_System_Firmware_Progress_Transition_Severity_Transition_To_Critical_From_Non_Recoverable\fR
+Defaults to Critical.
+.TP
+\fBIPMI_System_Firmware_Progress_Transition_Severity_Transition_To_Non_Recoverable\fR
+Defaults to Critical.
+.TP
+\fBIPMI_System_Firmware_Progress_Transition_Severity_Monitor\fR
+Defaults to Warning.
+.TP
+\fBIPMI_System_Firmware_Progress_Transition_Severity_Informational\fR
 Defaults to Nominal.
 .RE
 .TP
@@ -988,6 +1078,39 @@ Defaults to Nominal.
 Defaults to Nominal.
 .RE
 .TP
+.B IPMI_Button_Switch_Transition_Severity
+The following states correspond to Button Switch  sensor events that
+report on device severity.
+.RS
+.TP
+\fBIPMI_Button_Switch_Transition_Severity_Transition_To_OK\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Button_Switch_Transition_Severity_Transition_To_Non_Critical_From_OK\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Button_Switch_Transition_Severity_Transition_To_Critical_From_Less_Severe\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Button_Switch_Transition_Severity_Transition_To_Non_Recoverable_From_Less_Severe\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Button_Switch_Transition_Severity_Transition_To_Non_Critical_From_More_Severe\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Button_Switch_Transition_Severity_Transition_To_Critical_From_Non_Recoverable\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Button_Switch_Transition_Severity_Transition_To_Non_Recoverable\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Button_Switch_Transition_Severity_Monitor\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Button_Switch_Transition_Severity_Informational\fR
+Defaults to Nominal.
+.RE
+.TP
 .B IPMI_Module_Board_State
 The following states correspond to Module/Board sensor events that report an
 assertion or deassertion.
@@ -1009,6 +1132,39 @@ device installation.
 Defaults to Critical.
 .TP
 \fBIPMI_Module_Board_Device_Present_Device_Inserted_Device_Present\fR
+Defaults to Nominal.
+.RE
+.TP
+.B IPMI_Chassis_Transition_Severity
+The following states correspond to Chassis sensor events that
+report on device severity.
+.RS
+.TP
+\fBIPMI_Chassis_Transition_Severity_Transition_To_OK\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Chassis_Transition_Severity_Transition_To_Non_Critical_From_OK\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Chassis_Transition_Severity_Transition_To_Critical_From_Less_Severe\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Chassis_Transition_Severity_Transition_To_Non_Recoverable_From_Less_Severe\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Chassis_Transition_Severity_Transition_To_Non_Critical_From_More_Severe\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Chassis_Transition_Severity_Transition_To_Critical_From_Non_Recoverable\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Chassis_Transition_Severity_Transition_To_Non_Recoverable\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Chassis_Transition_Severity_Monitor\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Chassis_Transition_Severity_Informational\fR
 Defaults to Nominal.
 .RE
 .TP
@@ -1069,6 +1225,61 @@ Defaults to Nominal.
 Defaults to Critical.
 .RE
 .TP
+.B IPMI_Cable_Interconnect_Transition_Severity
+The following states correspond to Cable/Interconnect sensor events that
+report on device severity.
+.RS
+.TP
+\fBIPMI_Cable_Interconnect_Transition_Severity_Transition_To_OK\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Cable_Interconnect_Transition_Severity_Transition_To_Non_Critical_From_OK\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Cable_Interconnect_Transition_Severity_Transition_To_Critical_From_Less_Severe\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Cable_Interconnect_Transition_Severity_Transition_To_Non_Recoverable_From_Less_Severe\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Cable_Interconnect_Transition_Severity_Transition_To_Non_Critical_From_More_Severe\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Cable_Interconnect_Transition_Severity_Transition_To_Critical_From_Non_Recoverable\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Cable_Interconnect_Transition_Severity_Transition_To_Non_Recoverable\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Cable_Interconnect_Transition_Severity_Monitor\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Cable_Interconnect_Transition_Severity_Informational\fR
+Defaults to Nominal.
+.RE
+.TP
+.B IPMI_System_Boot_Initiated
+The following states correspond to System Boot Initiated sensor events w/
+System Boot Initiated specific output events.
+.RS
+\fBIPMI_System_Boot_Initiated_Initiated_By_Power_Up\fR
+Defaults to Nominal.
+\fBIPMI_System_Boot_Initiated_Initiated_By_Hard_Reset\fR
+Defaults to Nominal.
+\fBIPMI_System_Boot_Initiated_Initiated_By_Warm_Reset\fR
+Defaults to Nominal.
+\fBIPMI_System_Boot_Initiated_User_Requested_PXE_Boot\fR
+Defaults to Nominal.
+\fBIPMI_System_Boot_Initiated_Automatic_Boot_To_Diagnostic\fR
+Defaults to Nominal.
+\fBIPMI_System_Boot_Initiated_OS_Run_Time_Software_Initiated_Hard_Reset\fR
+Defaults to Warning.
+\fBIPMI_System_Boot_Initiated_OS_Run_Time_Software_Initiated_Warm_Reset\fR
+Defaults to Warning.
+\fBIPMI_System_Boot_Initiated_System_Restart\fR
+Defaults to Nominal.
+.RE
+.TP
 .B IPMI_Boot_Error
 The following states correspond to Boot Error sensor events w/
 Boot Error specific output events.
@@ -1088,6 +1299,77 @@ Defaults to Critical.
 .TP
 \fBIPMI_Boot_Error_Timeout_Waiting_For_User_Selection_Of_Boot_Source\fR
 Defaults to Warning.
+.RE
+.TP
+.B IPMI_Boot_Error_Transition_Severity
+The following states correspond to Boot Error sensor events that
+report on device severity.
+.RS
+.TP
+\fBIPMI_Boot_Error_Transition_Severity_Transition_To_OK\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Boot_Error_Transition_Severity_Transition_To_Non_Critical_From_OK\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Boot_Error_Transition_Severity_Transition_To_Critical_From_Less_Severe\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Boot_Error_Transition_Severity_Transition_To_Non_Recoverable_From_Less_Severe\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Boot_Error_Transition_Severity_Transition_To_Non_Critical_From_More_Severe\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Boot_Error_Transition_Severity_Transition_To_Critical_From_Non_Recoverable\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Boot_Error_Transition_Severity_Transition_To_Non_Recoverable\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Boot_Error_Transition_Severity_Monitor\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Boot_Error_Transition_Severity_Informational\fR
+Defaults to Nominal.
+.RE
+.TP
+.B IPMI_OS_Boot
+The following states correspond to OS Boot sensor events w/
+OS Boot specific output events.
+.RS
+\fBIPMI_OS_Boot_A_Boot_Completed\fR
+Defaults to Nominal.
+\fBIPMI_OS_Boot_C_Boot_Completed\fR
+Defaults to Nominal.
+\fBIPMI_OS_Boot_PXE_Boot_Completed\fR
+Defaults to Nominal.
+\fBIPMI_OS_Boot_Diagnostic_Boot_Completed\fR
+Defaults to Nominal.
+\fBIPMI_OS_Boot_CD_ROM_Boot_Completed\fR
+Defaults to Nominal.
+\fBIPMI_OS_Boot_ROM_Boot_Completed\fR
+Defaults to Nominal.
+\fBIPMI_OS_Boot_Boot_Completed_Boot_Device_Not_Specified\fR
+Defaults to Warning.
+.RE
+.TP
+.B IPMI_OS_Critical_Stop
+The following states correspond to OS Critical Stop sensor events w/
+OS Critical Stop specific output events.
+.RS
+\fBIPMI_OS_Critical_Stop_Critical_Stop_During_OS_Load\fR
+Defaults to Critical.
+\fBIPMI_OS_Critical_Stop_Run_Time_Critical_Stop\fR
+Defaults to Critical.
+\fBIPMI_OS_Critical_Stop_OS_Graceful_Stop\fR
+Defaults to Warning.
+\fBIPMI_OS_Critical_Stop_OS_Graceful_Shutdown\fR
+Defaults to Warning.
+\fBIPMI_OS_Critical_Stop_Soft_Shutdown_Initiated_By_PEF\fR
+Defaults to Warning.
+\fBIPMI_OS_Critical_Stop_Agent_Not_Responding\fR
+Defaults to Critical.
 .RE
 .TP
 .B IPMI_Slot_Connector
@@ -1123,6 +1405,39 @@ Defaults to Warning.
 Defaults to Warning.
 .TP
 \fBIPMI_Slot_Connector_Slot_Holds_Spare_Device\fR
+Defaults to Nominal.
+.RE
+.TP
+.B IPMI_Slot_Connector_Transition_Severity
+The following states correspond to Slot Connector sensor events that
+report on device severity.
+.RS
+.TP
+\fBIPMI_Slot_Connector_Transition_Severity_Transition_To_OK\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Slot_Connector_Transition_Severity_Transition_To_Non_Critical_From_OK\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Slot_Connector_Transition_Severity_Transition_To_Critical_From_Less_Severe\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Slot_Connector_Transition_Severity_Transition_To_Non_Recoverable_From_Less_Severe\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Slot_Connector_Transition_Severity_Transition_To_Non_Critical_From_More_Severe\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Slot_Connector_Transition_Severity_Transition_To_Critical_From_Non_Recoverable\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Slot_Connector_Transition_Severity_Transition_To_Non_Recoverable\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Slot_Connector_Transition_Severity_Monitor\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Slot_Connector_Transition_Severity_Informational\fR
 Defaults to Nominal.
 .RE
 .TP
@@ -1208,6 +1523,20 @@ Defaults to Nominal.
 Defaults to Warning.
 .RE
 .TP
+.B IPMI_Platform_Alert
+The following states correspond to Platform Alert sensor events w/
+Platform Alert specific output events.
+.RS
+\fBIPMI_Platform_Alert_Platform_Generated_Page\fR
+Defaults to Nominal.
+\fBIPMI_Platform_Alert_Platform_Generated_LAN_Alert\fR
+Defaults to Nominal.
+\fBIPMI_Platform_Alert_Platform_Event_Trap_Generated\fR
+Defaults to Nominal.
+\fBIPMI_Platform_Alert_Platform_Generated_SNMP_Trap\fR
+Defaults to Nominal.
+.RE
+.TP
 .B IPMI_Entity_Presence
 The following states correspond to Entity Presence sensor events w/
 Entity Presence specific output events.
@@ -1233,6 +1562,16 @@ Defaults to Nominal.
 .TP
 \fBIPMI_Entity_Presence_Device_Present_Device_Inserted_Device_Present\fR
 Defaults to Nominal.
+.RE
+.TP
+.B IPMI_LAN
+The following states correspond to LAN sensor events w/ LAN specific
+output events.
+.RS
+\fBIPMI_LAN_Heartbeat\fR
+Defaults to Nominal.
+\fBIPMI_LAN_Heartbeat_Lost\fR
+Defaults to Warning.
 .RE
 .TP
 .B IPMI_Management_Subsystem_Health
@@ -1290,6 +1629,36 @@ Defaults to Warning.
 .TP
 \fBIPMI_Session_Audit_Invalid_Password_Disable\fR
 Defaults to Critical.
+.RE
+.TP
+.B IPMI_Version_Change_Transition_Severity
+The following states correspond to Version Change sensor events that
+Version Change specific output events.
+.RS
+.TP
+\fBIPMI_Version_Change_Hardware_Change_Detected_With_Associated_Entity\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Version_Change_Firmware_Or_Software_Change_Detected_With_Associated_Entity\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Version_Change_Hardware_Incompatability_Detected_With_Associated_Entity\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Version_Change_Firmware_Or_Software_Incompatability_Detected_With_Associated_Entity\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Version_Change_Entity_Is_Of_An_Invalid_Or_Unsupported_Hardware_Version\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Version_Change_Entity_Contains_An_Invalid_Or_Unsupported_Firmware_Or_Software_Version\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Version_Change_Hardware_Change_Detected_With_Associated_Entity_Was_Successful\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Version_Change_Software_Or_FW_Change_Detected_With_Associated_Entity_Was_Successful\fR
+Defaults to Nominal.
 .RE
 .TP
 .B IPMI_FRU_State
