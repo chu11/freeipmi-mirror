@@ -109,4 +109,11 @@ int ipmi_oem_thirdparty_get_bmc_services_v15 (ipmi_oem_state_data_t *state_data)
  */
 int ipmi_oem_thirdparty_set_bmc_services_v15 (ipmi_oem_state_data_t *state_data);
 
+/* Shared between:
+ * Inventec 5441/Dell Xanadu II OEM
+ * Inventec 5442/Dell Xanadu III OEM
+ * Quanta S99Q/Dell FS12-TY OEM
+ */
+int ipmi_oem_thirdparty_get_account_status (ipmi_oem_state_data_t *state_data);
+
 #endif /* IPMI_OEM_THIRDPARTY_H */
