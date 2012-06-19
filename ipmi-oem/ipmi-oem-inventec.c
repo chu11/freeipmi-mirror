@@ -1878,7 +1878,7 @@ ipmi_oem_inventec_get_dhcp_retry (ipmi_oem_state_data_t *state_data)
   assert (state_data);
   assert (!state_data->prog_data->args->oem_options_count);
 
-  /* Dell Xanadu II OEM
+  /* Inventec 5441/Dell Xanadu II
    *
    * Uses Get/Set Lan Configuration
    *
@@ -1986,8 +1986,8 @@ ipmi_oem_inventec_get_sol_inactivity_timeout (ipmi_oem_state_data_t *state_data)
   assert (state_data);
   assert (!state_data->prog_data->args->oem_options_count);
 
-  /* Dell Xanadu II OEM
-   * Dell Xanadu III OEM
+  /* Inventec 5441/Dell Xanadu II
+   * Inventec 5442/Dell Xanadu III OEM
    *
    * Uses Get/Set SOL Configuration
    *
@@ -2109,8 +2109,8 @@ ipmi_oem_inventec_set_sol_inactivity_timeout (ipmi_oem_state_data_t *state_data)
   else
     sol_inactivity_timeout = 0;
   
-  /* Dell Xanadu II OEM
-   * Dell Xanadu III OEM
+  /* Inventec 5441/Dell Xanadu II
+   * Inventec 5442/Dell Xanadu III
    *
    * From Dell Provided Docs
    *
