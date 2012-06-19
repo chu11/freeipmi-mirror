@@ -266,116 +266,19 @@
 int
 ipmi_oem_inventec_get_nic_mode (ipmi_oem_state_data_t *state_data)
 {
-  uint32_t tmpvalue;
-  int rv = -1;
-
   assert (state_data);
   assert (!state_data->prog_data->args->oem_options_count);
 
-  /* Inventec 5441/Dell Xanadu II OEM
-   * Inventec 5442/Dell Xanadu III OEM
-   *
-   * achu: Dell appears to have also implemented an additional OEM
-   * command that duplicates this behavior.  Currently, we do not
-   * implement the Dell equivalent in ipmi-oem.
-   *
-   * Get LAN Source Request
-   *
-   * 0x34 - OEM network function
-   * 0x14 - OEM cmd
-   *
-   * Get LAN Source Response
-   *
-   * 0x14 - OEM cmd
-   * 0x?? - Completion Code
-   * 0x?? - LAN Source Setting
-   *      - 00h = shared, 01h = dedicated
-   */
-
-  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
-						     IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_NIC,
-						     IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_NIC_MODE,
-						     0,
-						     1,
-						     &tmpvalue) < 0)
-    goto cleanup;
-
-  switch (tmpvalue)
-    {
-    case IPMI_OEM_INVENTEC_EXTENDED_CONFIG_NIC_MODE_SHARED:
-      pstdout_printf (state_data->pstate, "shared\n");
-      break;
-    case IPMI_OEM_INVENTEC_EXTENDED_CONFIG_NIC_MODE_DEDICATED:
-      pstdout_printf (state_data->pstate, "dedicated\n");
-      break;
-    default:
-      pstdout_printf (state_data->pstate, "unknown NIC mode: %Xh\n", tmpvalue);
-      break;
-    }
-
-  rv = 0;
- cleanup:
-  return (rv);
+  return (ipmi_oem_thirdparty_get_nic_mode (state_data));
 }
 
 int
 ipmi_oem_inventec_set_nic_mode (ipmi_oem_state_data_t *state_data)
 {
-  uint8_t mode;
-  int rv = -1;
-
   assert (state_data);
   assert (state_data->prog_data->args->oem_options_count == 1);
 
-  if (strcasecmp (state_data->prog_data->args->oem_options[0], "shared")
-      && strcasecmp (state_data->prog_data->args->oem_options[0], "dedicated"))
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "%s:%s invalid OEM option argument '%s'\n",
-                       state_data->prog_data->args->oem_id,
-                       state_data->prog_data->args->oem_command,
-                       state_data->prog_data->args->oem_options[0]);
-      goto cleanup;
-    }
-
-  /* Inventec 5441/Dell Xanadu II OEM
-   * Inventec 5442/Dell Xanadu III OEM
-   *
-   * achu: Dell appears to have also implemented an additional OEM
-   * command that duplicates this behavior.  Currently, we do not
-   * implement the Dell equivalent in ipmi-oem.
-   *
-   * Set LAN Source Request
-   *
-   * 0x34 - OEM network function
-   * 0x13 - OEM cmd
-   * 0x?? - LAN Source
-   *      - 00h = shared, 01h = dedicated
-   *
-   * Set LAN Source Response
-   *
-   * 0x13 - OEM cmd
-   * 0x?? - Completion Code
-   * 0x?? - LAN Source Setting
-   */
-
-  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "shared"))
-    mode = IPMI_OEM_INVENTEC_EXTENDED_CONFIG_NIC_MODE_SHARED;
-  else
-    mode = IPMI_OEM_INVENTEC_EXTENDED_CONFIG_NIC_MODE_DEDICATED;
-
-  if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
-						     IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_NIC,
-						     IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_NIC_MODE,
-						     0,
-						     1,
-						     (uint32_t)mode) < 0)
-    goto cleanup;
-
-  rv = 0;
- cleanup:
-  return (rv);
+  return (ipmi_oem_thirdparty_set_nic_mode (state_data));
 }
 
 int

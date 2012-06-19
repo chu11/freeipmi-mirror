@@ -53,4 +53,8 @@ int ipmi_oem_thirdparty_set_extended_config_string (ipmi_oem_state_data_t *state
 						    char *buf,
 						    unsigned int buflen);
 
+int ipmi_oem_thirdparty_get_nic_mode (ipmi_oem_state_data_t *state_data);
+
+int ipmi_oem_thirdparty_set_nic_mode (ipmi_oem_state_data_t *state_data);
+
 #endif /* IPMI_OEM_THIRDPARTY_H */
