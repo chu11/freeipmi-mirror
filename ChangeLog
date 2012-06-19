@@ -3,7 +3,8 @@
 	* libfreeipmi/include/freeipmi/spec/ipmi-oem-spec.h: New file.
 
 	* ipmi-oem/: Migrate various information into new ipmi-oem-spec.h
-	file.
+	file and
+	libfreeipmi/include/spec/ipmi-system-info-parameters-oem-spec.h.
 	
 2012-06-15  Albert Chu <chu11@llnl.gov>
 
