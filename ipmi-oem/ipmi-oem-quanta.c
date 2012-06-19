@@ -185,7 +185,7 @@ ipmi_oem_quanta_get_bmc_services (ipmi_oem_state_data_t *state_data)
   assert (state_data);
   assert (!state_data->prog_data->args->oem_options_count);
 
-  return (ipmi_oem_thirdparty_get_bmc_services_v15 (state_data));
+  return (ipmi_oem_thirdparty_get_bmc_services_v1 (state_data));
 }
 
 int
@@ -194,7 +194,7 @@ ipmi_oem_quanta_set_bmc_services (ipmi_oem_state_data_t *state_data)
   assert (state_data);
   assert (state_data->prog_data->args->oem_options_count == 2);
   
-  return (ipmi_oem_thirdparty_set_bmc_services_v15 (state_data));
+  return (ipmi_oem_thirdparty_set_bmc_services_v1 (state_data));
 }
 
 int
@@ -209,860 +209,88 @@ ipmi_oem_quanta_get_account_status (ipmi_oem_state_data_t *state_data)
 int
 ipmi_oem_quanta_get_dns_config (ipmi_oem_state_data_t *state_data)
 {
-  uint32_t tmpvalue;
-  uint8_t dnsdhcpenable;
-  uint32_t dnsserver1;
-  uint32_t dnsserver2;
-  uint8_t dnsregisterbmc;
-  char dnsbmchostname[IPMI_OEM_QUANTA_EXTENDED_CONFIG_DNS_DNS_BMC_HOST_NAME_MAX + 1];
-  uint8_t dnsdomainnamedhcpenable;
-  char dnsdomainname[IPMI_OEM_QUANTA_EXTENDED_CONFIG_DNS_DNS_DOMAIN_NAME_MAX + 1];
-  int rv = -1;
-
   assert (state_data);
   assert (!state_data->prog_data->args->oem_options_count);
 
-  memset (dnsbmchostname, '\0', IPMI_OEM_QUANTA_EXTENDED_CONFIG_DNS_DNS_BMC_HOST_NAME_MAX + 1);
-  memset (dnsdomainname, '\0', IPMI_OEM_QUANTA_EXTENDED_CONFIG_DNS_DNS_DOMAIN_NAME_MAX + 1);
-
-  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
-						     IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_DNS,
-						     IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_DNS_DNS_DHCP_ENABLE,
-						     0,
-						     1,
-						     &tmpvalue) < 0)
-    goto cleanup;
-  dnsdhcpenable = tmpvalue;
-
-  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
-						     IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_DNS,
-						     IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_DNS_DNS_SERVER1,
-						     0,
-						     4,
-						     &tmpvalue) < 0)
-    goto cleanup;
-  dnsserver1 = tmpvalue;
-
-  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
-						     IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_DNS,
-						     IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_DNS_DNS_SERVER2,
-						     0,
-						     4,
-						     &tmpvalue) < 0)
-    goto cleanup;
-  dnsserver2 = tmpvalue;
-  
-  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
-						     IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_DNS,
-						     IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_DNS_DNS_REGISTER_BMC,
-						     0,
-						     1,
-						     &tmpvalue) < 0)
-    goto cleanup;
-  dnsregisterbmc = tmpvalue;
-
-  if (ipmi_oem_thirdparty_get_extended_config_string (state_data,
-						      IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_DNS,
-						      IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_DNS_DNS_BMC_HOST_NAME,
-						      0,
-						      dnsbmchostname,
-						      IPMI_OEM_QUANTA_EXTENDED_CONFIG_DNS_DNS_BMC_HOST_NAME_MAX) < 0)
-    goto cleanup;
-
-  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
-						     IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_DNS,
-						     IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_DNS_DNS_DOMAIN_NAME_DHCP_ENABLE,
-						     0,
-						     1,
-						     &tmpvalue) < 0)
-    goto cleanup;
-  dnsdomainnamedhcpenable = tmpvalue;
-
-  if (ipmi_oem_thirdparty_get_extended_config_string (state_data,
-						      IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_DNS,
-						      IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_DNS_DNS_DOMAIN_NAME,
-						      0,
-						      dnsdomainname,
-						      IPMI_OEM_QUANTA_EXTENDED_CONFIG_DNS_DNS_DOMAIN_NAME_MAX) < 0)
-    goto cleanup;
-
-  pstdout_printf (state_data->pstate,
-		  "DNS DHCP             : %s\n",
-		  (dnsdhcpenable) ? "Enabled" : "Disabled");
-
-  pstdout_printf (state_data->pstate,
-                  "DNS Server 1         : %u.%u.%u.%u\n",
-                  (dnsserver1 & 0x000000FF),
-                  (dnsserver1 & 0x0000FF00) >> 8,
-                  (dnsserver1 & 0x00FF0000) >> 16,
-                  (dnsserver1 & 0xFF000000) >> 24);
-
-  pstdout_printf (state_data->pstate,
-                  "DNS Server 2         : %u.%u.%u.%u\n",
-                  (dnsserver2 & 0x000000FF),
-                  (dnsserver2 & 0x0000FF00) >> 8,
-                  (dnsserver2 & 0x00FF0000) >> 16,
-                  (dnsserver2 & 0xFF000000) >> 24);
-  
-  pstdout_printf (state_data->pstate,
-		  "DNS Register BMC     : %s\n",
-		  (dnsdomainnamedhcpenable) ? "Enabled" : "Disabled");
-  
-  pstdout_printf (state_data->pstate,
-                  "DNS BMC Host Name    : %s\n",
-                  dnsbmchostname);
-  
-  pstdout_printf (state_data->pstate,
-		  "DNS Domain Name DHCP : %s\n",
-		  (dnsdomainnamedhcpenable) ? "Enabled" : "Disabled");
-  
-  pstdout_printf (state_data->pstate,
-                  "DNS Domain Name      : %s\n",
-                  dnsdomainname);
-  
-  rv = 0;
- cleanup:
-  return (rv);
+  return (ipmi_oem_thirdparty_get_dns_config_v1 (state_data));
 }
 
 int
 ipmi_oem_quanta_set_dns_config (ipmi_oem_state_data_t *state_data)
 {
-  uint8_t dnsdhcpenable = 0;
-  uint32_t dnsserver1 = 0;
-  uint32_t dnsserver2 = 0;
-  uint8_t dnsregisterbmc = 0;
-  char dnsbmchostname[IPMI_OEM_QUANTA_EXTENDED_CONFIG_DNS_DNS_BMC_HOST_NAME_MAX + 1];
-  uint8_t dnsdomainnamedhcpenable = 0;
-  char dnsdomainname[IPMI_OEM_QUANTA_EXTENDED_CONFIG_DNS_DNS_DOMAIN_NAME_MAX + 1];
-  int rv = -1;
-  unsigned int i;
-
   assert (state_data);
 
-  memset (dnsbmchostname, '\0', IPMI_OEM_QUANTA_EXTENDED_CONFIG_DNS_DNS_BMC_HOST_NAME_MAX + 1);
-  memset (dnsdomainname, '\0', IPMI_OEM_QUANTA_EXTENDED_CONFIG_DNS_DNS_DOMAIN_NAME_MAX + 1);
-
-  if (!state_data->prog_data->args->oem_options_count)
-    {
-      pstdout_printf (state_data->pstate,
-		      "Option: dnsdhcp=enable|disable\n"
-                      "Option: dnsserver1=ipaddress\n"
-                      "Option: dnsserver2=ipaddress\n"
-		      "Option: dnsregisterbmc=enable|disable\n"
-                      "Option: dnsbmchostname=string\n"
-		      "Option: dnsdomainnamedhcp=enable|disable\n"
-                      "Option: dnsdomainname=string\n");
-      return (0); 
-    }
-
-  for (i = 0; i < state_data->prog_data->args->oem_options_count; i++)
-    {
-      char *key = NULL;
-      char *value = NULL;
-      
-      if (ipmi_oem_parse_key_value (state_data,
-                                    i,
-                                    &key,
-                                    &value) < 0)
-        goto cleanup;
-
-      if (!strcasecmp (key, "dnsdhcp"))
-        {
-          if (ipmi_oem_parse_enable (state_data, i, value, &dnsdhcpenable) < 0)
-            goto cleanup;
-          
-          
-          if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
-							     IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_DNS,
-							     IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_DNS_DNS_DHCP_ENABLE,
-							     0,
-							     1,
-							     (uint32_t)dnsdhcpenable) < 0)
-            goto cleanup;
-        }
-      else if (!strcasecmp (key, "dnsserver1"))
-        {
-          if (ipmi_oem_parse_ip_address (state_data, i, value, &dnsserver1) < 0)
-            goto cleanup;
-          
-          
-          if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
-							     IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_DNS,
-							     IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_DNS_DNS_SERVER1,
-							     0,
-							     4,
-							     (uint32_t)dnsserver1) < 0)
-            goto cleanup;
-        }
-      else if (!strcasecmp (key, "dnsserver2"))
-        {
-          if (ipmi_oem_parse_ip_address (state_data, i, value, &dnsserver2) < 0)
-            goto cleanup;
-          
-          
-          if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
-							     IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_DNS,
-							     IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_DNS_DNS_SERVER2,
-							     0,
-							     4,
-							     (uint32_t)dnsserver2) < 0)
-            goto cleanup;
-        }
-      else if (!strcasecmp (key, "dnsregisterbmc"))
-        {
-          if (ipmi_oem_parse_enable (state_data, i, value, &dnsregisterbmc) < 0)
-            goto cleanup;
-          
-          
-          if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
-							     IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_DNS,
-							     IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_DNS_DNS_REGISTER_BMC,
-							     0,
-							     1,
-							     (uint32_t)dnsregisterbmc) < 0)
-            goto cleanup;
-        }
-      else if (!strcasecmp (key, "dnsbmchostname"))
-        {
-          uint8_t string_length = 0;
-
-          if (ipmi_oem_parse_string (state_data,
-                                     i,
-                                     value,
-                                     &string_length,
-                                     dnsbmchostname,
-                                     IPMI_OEM_QUANTA_EXTENDED_CONFIG_DNS_DNS_BMC_HOST_NAME_MAX) < 0)
-            goto cleanup;
-          
-          if (ipmi_oem_thirdparty_set_extended_config_string (state_data,
-							      IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_DNS,
-							      IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_DNS_DNS_BMC_HOST_NAME,
-							      0,
-							      dnsbmchostname,
-							      (unsigned int)string_length) < 0)
-            goto cleanup;
-        }
-      else if (!strcasecmp (key, "dnsdomainnamedhcp"))
-        {
-          if (ipmi_oem_parse_enable (state_data, i, value, &dnsdomainnamedhcpenable) < 0)
-            goto cleanup;
-          
-          
-          if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
-							     IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_DNS,
-							     IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_DNS_DNS_DOMAIN_NAME_DHCP_ENABLE,
-							     0,
-							     1,
-							     (uint32_t)dnsdomainnamedhcpenable) < 0)
-            goto cleanup;
-        }
-      else if (!strcasecmp (key, "dnsdomainname"))
-        {
-          uint8_t string_length = 0;
-
-          if (ipmi_oem_parse_string (state_data,
-                                     i,
-                                     value,
-                                     &string_length,
-                                     dnsdomainname,
-                                     IPMI_OEM_QUANTA_EXTENDED_CONFIG_DNS_DNS_DOMAIN_NAME_MAX) < 0)
-            goto cleanup;
-          
-          if (ipmi_oem_thirdparty_set_extended_config_string (state_data,
-							      IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_DNS,
-							      IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_DNS_DNS_DOMAIN_NAME,
-							      0,
-							      dnsdomainname,
-							      (unsigned int)string_length) < 0)
-            goto cleanup;
-        }
-      else
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "%s:%s invalid OEM option argument '%s' : invalid key\n",
-                           state_data->prog_data->args->oem_id,
-                           state_data->prog_data->args->oem_command,
-                           state_data->prog_data->args->oem_options[i]);
-          goto cleanup;
-        }
-
-      free (key);
-      free (value);
-    }
-
-  rv = 0;
- cleanup:
-  return (rv);
+  return (ipmi_oem_thirdparty_set_dns_config_v1 (state_data));
 }
 
 int
 ipmi_oem_quanta_get_web_server_config (ipmi_oem_state_data_t *state_data)
 {
-  uint32_t tmpvalue;
-  uint8_t webserverenabled;
-  uint8_t maxwebsessions;
-  uint8_t activewebsessions;
-  uint32_t webservertimeout;
-  uint16_t httpportnum;
-  uint16_t httpsportnum;
-  int rv = -1;
-
   assert (state_data);
   assert (!state_data->prog_data->args->oem_options_count);
 
-  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
-						     IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
-						     IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_ENABLED,
-						     0,
-						     1,
-						     &tmpvalue) < 0)
-    goto cleanup;
-  webserverenabled = tmpvalue;
-  
-  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
-						     IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
-						     IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_MAX_WEB_SESSIONS,
-						     0,
-						     1,
-						     &tmpvalue) < 0)
-    goto cleanup;
-  maxwebsessions = tmpvalue;
-  
-  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
-						     IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
-						     IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_ACTIVE_WEB_SESSIONS,
-						     0,
-						     1,
-						     &tmpvalue) < 0)
-    goto cleanup;
-  activewebsessions = tmpvalue;
-  
-  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
-						     IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
-						     IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_TIMEOUT,
-						     0,
-						     4,
-						     &tmpvalue) < 0)
-    goto cleanup;
-  webservertimeout = tmpvalue;
-  
-  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
-						     IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
-						     IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTP_PORT_NUM,
-						     0,
-						     2,
-						     &tmpvalue) < 0)
-    goto cleanup;
-  httpportnum = tmpvalue;
-  
-  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
-						     IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
-						     IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTPS_PORT_NUM,
-						     0,
-						     2,
-						     &tmpvalue) < 0)
-    goto cleanup;
-  httpsportnum = tmpvalue;
-  
-  pstdout_printf (state_data->pstate,
-		  "Web Server          : %s\n",
-		  (webserverenabled) ? "Enabled" : "Disabled");
-  
-  pstdout_printf (state_data->pstate,
-		  "Max Web Sessions    : %u\n",
-		  maxwebsessions);
-
-  pstdout_printf (state_data->pstate,
-		  "Active Web Sessions : %u\n",
-		  activewebsessions);
-
-  pstdout_printf (state_data->pstate,
-		  "Web Server Timeout  : %u seconds\n",
-		  webservertimeout);
-
-  pstdout_printf (state_data->pstate,
-		  "http Port Number    : %u\n",
-		  httpportnum);
-
-  pstdout_printf (state_data->pstate,
-		  "https Port Number   : %u\n",
-		  httpsportnum);
-
-  rv = 0;
- cleanup:
-  return (rv);
+  return (ipmi_oem_thirdparty_get_web_server_config_v1 (state_data));
 }
 
 int
 ipmi_oem_quanta_set_web_server_config (ipmi_oem_state_data_t *state_data)
 {
-  uint8_t webserverenabled = 0;
-  uint32_t webservertimeout = 0;
-  uint16_t httpportnumber = 0;
-  uint16_t httpsportnumber = 0;
-  int rv = -1;
-  unsigned int i;
-
   assert (state_data);
 
-  if (!state_data->prog_data->args->oem_options_count)
-    {
-      pstdout_printf (state_data->pstate,
-		      "Option: webserver=enable|disable\n"
-		      "Option: webservertimeout=seconds\n"
-		      "Option: httpportnumber=num\n"
-		      "Option: httpsportnumber=num\n");
-      return (0); 
-    }
-
-  for (i = 0; i < state_data->prog_data->args->oem_options_count; i++)
-    {
-      char *key = NULL;
-      char *value = NULL;
-      
-      if (ipmi_oem_parse_key_value (state_data,
-                                    i,
-                                    &key,
-                                    &value) < 0)
-        goto cleanup;
-
-      if (!strcasecmp (key, "webserver"))
-        {
-          if (ipmi_oem_parse_enable (state_data, i, value, &webserverenabled) < 0)
-            goto cleanup;
-
-          if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
-							     IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
-							     IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_ENABLED,
-							     0,
-							     1,
-							     (uint32_t)webserverenabled) < 0)
-            goto cleanup;
-        }
-      else if (!strcasecmp (key, "webservertimeout"))
-        {
-          if (ipmi_oem_parse_4_byte_field (state_data, i, value, &webservertimeout) < 0)
-            goto cleanup;
-          
-          if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
-							     IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
-							     IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_TIMEOUT,
-							     0,
-							     4,
-							     webservertimeout) < 0)
-            goto cleanup;
-        }
-      else if (!strcasecmp (key, "httpportnumber"))
-        {
-          if (ipmi_oem_parse_2_byte_field (state_data, i, value, &httpportnumber) < 0)
-            goto cleanup;
-          
-          if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
-							     IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
-							     IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTP_PORT_NUM,
-							     0,
-							     2,
-							     (uint32_t)httpportnumber) < 0)
-            goto cleanup;
-        }
-      else if (!strcasecmp (key, "httpsportnumber"))
-        {
-          if (ipmi_oem_parse_2_byte_field (state_data, i, value, &httpsportnumber) < 0)
-            goto cleanup;
-          
-          if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
-							     IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
-							     IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTPS_PORT_NUM,
-							     0,
-							     2,
-							     (uint32_t)httpsportnumber) < 0)
-            goto cleanup;
-        }
-      else
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "%s:%s invalid OEM option argument '%s' : invalid key\n",
-                           state_data->prog_data->args->oem_id,
-                           state_data->prog_data->args->oem_command,
-                           state_data->prog_data->args->oem_options[i]);
-          goto cleanup;
-        }
-
-      free (key);
-      free (value);
-    }
-
-  rv = 0;
- cleanup:
-  return (rv);
+  return (ipmi_oem_thirdparty_set_web_server_config_v1 (state_data));
 }
 
 int
 ipmi_oem_quanta_get_power_management_config (ipmi_oem_state_data_t *state_data)
 {
-  uint32_t tmpvalue;
-  uint8_t powermanagementenable;
-  uint8_t dpnmpowermanagement;
-  uint8_t powerstaggeringacrecovery;
-  uint16_t powerondelay;
-  uint16_t minpowerondelay;
-  uint16_t maxpowerondelay;
-  int rv = -1;
-
   assert (state_data);
   assert (!state_data->prog_data->args->oem_options_count);
 
-  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
-						     IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
-						     IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_POWER_MANAGEMENT_ENABLE,
-						     0,
-						     1,
-						     &tmpvalue) < 0)
-    goto cleanup;
-  powermanagementenable = tmpvalue;
-
-  dpnmpowermanagement = (powermanagementenable & IPMI_OEM_QUANTA_EXTENDED_CONFIG_POWER_MANAGEMENT_ENABLE_DPNM_BITMASK);
-  dpnmpowermanagement >>= IPMI_OEM_QUANTA_EXTENDED_CONFIG_POWER_MANAGEMENT_ENABLE_DPNM_SHIFT;
-  
-  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
-						     IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
-						     IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_POWER_STAGGERING_AC_RECOVERY,
-						     0,
-						     1,
-						     &tmpvalue) < 0)
-    goto cleanup;
-  powerstaggeringacrecovery = tmpvalue;
-  
-  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
-						     IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
-						     IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_POWER_ON_DELAY,
-						     0,
-						     2,
-						     &tmpvalue) < 0)
-    goto cleanup;
-  powerondelay = tmpvalue;
-
-  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
-						     IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
-						     IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_MINIMUM_POWER_ON_DELAY,
-						     0,
-						     2,
-						     &tmpvalue) < 0)
-    goto cleanup;
-  minpowerondelay = tmpvalue; 
-
-  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
-						     IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
-						     IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_MAXIMUM_POWER_ON_DELAY,
-						     0,
-						     2,
-						     &tmpvalue) < 0)
-    goto cleanup;
-  maxpowerondelay = tmpvalue; 
-  
-  pstdout_printf (state_data->pstate,
-		  "DPNM Power Management        : %s\n",
-		  (dpnmpowermanagement) ? "Enabled" : "Disabled");
-  
-  if (powerstaggeringacrecovery == IPMI_OEM_QUANTA_EXTENDED_CONFIG_POWER_STAGGERING_AC_RECOVERY_IMMEDIATE)
-    pstdout_printf (state_data->pstate,
-                    "Power Staggering AC Recovery : Immediate\n");
-  else if (powerstaggeringacrecovery == IPMI_OEM_QUANTA_EXTENDED_CONFIG_POWER_STAGGERING_AC_RECOVERY_AUTO)
-    pstdout_printf (state_data->pstate,
-                    "Power Staggering AC Recovery : Auto\n");
-  else if (powerstaggeringacrecovery == IPMI_OEM_QUANTA_EXTENDED_CONFIG_POWER_STAGGERING_AC_RECOVERY_USER_DEFINED)
-    pstdout_printf (state_data->pstate,
-                    "Power Staggering AC Recovery : User Defined\n");
-  else
-    pstdout_printf (state_data->pstate,
-                    "Power Staggering AC Recovery : %Xh\n",
-                    powerstaggeringacrecovery);
-  
-  pstdout_printf (state_data->pstate,
-		  "Power On Delay               : %u seconds\n",
-                  powerondelay);
-  
-  pstdout_printf (state_data->pstate,
-		  "Minimum Power On Delay       : %u seconds\n",
-                  minpowerondelay);
-
-  pstdout_printf (state_data->pstate,
-		  "Maximum Power On Delay       : %u seconds\n",
-                  maxpowerondelay);
-
-  rv = 0;
- cleanup:
-  return (rv);
+  return (ipmi_oem_thirdparty_get_power_management_config_v1 (state_data));
 }
 
 int
 ipmi_oem_quanta_set_power_management_config (ipmi_oem_state_data_t *state_data)
 {
-  uint8_t powermanagementenable = 0;
-  uint8_t dpnmpowermanagement = 0;
-  uint8_t powerstaggeringacrecovery = 0;
-  uint16_t powerondelay = 0;
-  uint16_t maxpowerondelay = 0;
-  int rv = -1;
-  unsigned int i;
-
   assert (state_data);
 
-  if (!state_data->prog_data->args->oem_options_count)
-    {
-      pstdout_printf (state_data->pstate,
-		      "Option: dpnmpowermanagement=enable|disable\n"
-		      "Option: powerstaggeringacrecovery=immediate|auto|user\n"
-		      "Option: powerondelay=seconds\n"
-		      "Option: maxpowerondelay=seconds\n");
-      return (0); 
-    }
-
-  for (i = 0; i < state_data->prog_data->args->oem_options_count; i++)
-    {
-      char *key = NULL;
-      char *value = NULL;
-      
-      if (ipmi_oem_parse_key_value (state_data,
-                                    i,
-                                    &key,
-                                    &value) < 0)
-        goto cleanup;
-
-      if (!strcasecmp (key, "dpnmpowermanagement"))
-        {
-          if (ipmi_oem_parse_enable (state_data, i, value, &dpnmpowermanagement) < 0)
-            goto cleanup;
-
-          powermanagementenable |= (dpnmpowermanagement << IPMI_OEM_QUANTA_EXTENDED_CONFIG_POWER_MANAGEMENT_ENABLE_DPNM_SHIFT);
-          
-          if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
-							     IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
-							     IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_POWER_MANAGEMENT_ENABLE,
-							     0,
-							     1,
-							     (uint32_t)powermanagementenable) < 0)
-            goto cleanup;
-        }
-      else if (!strcasecmp (key, "powerstaggeringacrecovery"))
-        {
-          if (strcasecmp (value, "immediate")
-              && strcasecmp (value, "auto")
-              && strcasecmp (value, "user"))
-            {
-              pstdout_fprintf (state_data->pstate,
-                               stderr,
-                               "%s:%s invalid OEM option argument '%s' : invalid value\n",
-                               state_data->prog_data->args->oem_id,
-                               state_data->prog_data->args->oem_command,
-                               state_data->prog_data->args->oem_options[i]);
-              goto cleanup;
-            }
-
-          if (!strcasecmp (value, "immediate"))
-            powerstaggeringacrecovery = IPMI_OEM_QUANTA_EXTENDED_CONFIG_POWER_STAGGERING_AC_RECOVERY_IMMEDIATE;
-          else if (!strcasecmp (value, "auto"))
-            powerstaggeringacrecovery = IPMI_OEM_QUANTA_EXTENDED_CONFIG_POWER_STAGGERING_AC_RECOVERY_AUTO;
-          else /* !strcasecmp (value, "user")) */
-            powerstaggeringacrecovery = IPMI_OEM_QUANTA_EXTENDED_CONFIG_POWER_STAGGERING_AC_RECOVERY_USER_DEFINED;
-
-          if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
-							     IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
-							     IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_POWER_STAGGERING_AC_RECOVERY,
-							     0,
-							     1,
-							     (uint32_t)powerstaggeringacrecovery) < 0)
-            goto cleanup;
-        }
-      else if (!strcasecmp (key, "powerondelay"))
-        {
-          if (ipmi_oem_parse_2_byte_field (state_data, i, value, &powerondelay) < 0)
-            goto cleanup;
-          
-          if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
-							     IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
-							     IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_POWER_ON_DELAY,
-							     0,
-							     2,
-							     (uint32_t)powerondelay) < 0)
-            goto cleanup;
-        }
-      else if (!strcasecmp (key, "maxpowerondelay"))
-        {
-          if (ipmi_oem_parse_2_byte_field (state_data, i, value, &maxpowerondelay) < 0)
-            goto cleanup;
-          
-          if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
-							     IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
-							     IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_MAXIMUM_POWER_ON_DELAY,
-							     0,
-							     2,
-							     (uint32_t)maxpowerondelay) < 0)
-            goto cleanup;
-        }
-      else
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "%s:%s invalid OEM option argument '%s' : invalid key\n",
-                           state_data->prog_data->args->oem_id,
-                           state_data->prog_data->args->oem_command,
-                           state_data->prog_data->args->oem_options[i]);
-          goto cleanup;
-        }
-
-      free (key);
-      free (value);
-    }
-
-  rv = 0;
- cleanup:
-  return (rv);
+  return (ipmi_oem_thirdparty_set_power_management_config_v1 (state_data));
 }
 
 int
 ipmi_oem_quanta_get_sol_idle_timeout (ipmi_oem_state_data_t *state_data)
 {
-  uint32_t tmpvalue;
-  uint16_t timeout;
-  int rv = -1;
-
   assert (state_data);
   assert (!state_data->prog_data->args->oem_options_count);
 
-  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
-						     IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_SOL,
-						     IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_SOL_SOL_IDLE_TIMEOUT,
-						     0,
-						     2,
-						     &tmpvalue) < 0)
-    goto cleanup;
-  
-  timeout = tmpvalue;
-
-  pstdout_printf (state_data->pstate,
-                  "%u minutes\n",
-                  timeout);
-
-  rv = 0;
- cleanup:
-  return (rv);
+  return (ipmi_oem_thirdparty_get_sol_idle_timeout (state_data));
 }
 
 int
 ipmi_oem_quanta_set_sol_idle_timeout (ipmi_oem_state_data_t *state_data)
 {
-  uint16_t timeout;
-  int rv = -1;
-  
   assert (state_data);
   assert (state_data->prog_data->args->oem_options_count == 1);
-  
-  if (strcasecmp (state_data->prog_data->args->oem_options[0], "none"))
-    {
-      unsigned int temp;
-      char *endptr = NULL;
-      
-      errno = 0;
-      
-      temp = strtoul (state_data->prog_data->args->oem_options[0], &endptr, 10);
-      if (errno
-          || endptr[0] != '\0'
-          || temp > USHRT_MAX)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "%s:%s invalid OEM option argument '%s'\n",
-                           state_data->prog_data->args->oem_id,
-                           state_data->prog_data->args->oem_command,
-                           state_data->prog_data->args->oem_options[0]);
-          goto cleanup;
-        }
 
-      timeout = temp;
-    }
-  else
-    timeout = 0;
-
-  if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
-						     IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_SOL,
-						     IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_SOL_SOL_IDLE_TIMEOUT,
-						     0,
-						     2,
-						     (uint32_t)timeout) < 0)
-    goto cleanup;
-
-  rv = 0;
- cleanup:
-  return (rv);
+  return (ipmi_oem_thirdparty_set_sol_idle_timeout (state_data));
 }
 
 int
 ipmi_oem_quanta_get_telnet_ssh_redirect_status (ipmi_oem_state_data_t *state_data)
 {
-  uint32_t tmpvalue;
-  int rv = -1;
-
   assert (state_data);
   assert (!state_data->prog_data->args->oem_options_count);
 
-  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
-						     IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_SOL,
-						     IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_SSH_REDIRECT_ENABLE,
-						     0,
-						     1,
-						     &tmpvalue) < 0)
-    goto cleanup;
-  
-  pstdout_printf (state_data->pstate,
-                  "%s\n",
-                  (tmpvalue) ? "enabled" : "disabled");
-  
-  rv = 0;
- cleanup:
-  return (rv);
+  return (ipmi_oem_thirdparty_get_telnet_ssh_redirect_status (state_data));
 }
 
 int
 ipmi_oem_quanta_set_telnet_ssh_redirect_status (ipmi_oem_state_data_t *state_data)
 {
-  uint8_t enable = 0;
-  int rv = -1;
-  
   assert (state_data);
   assert (state_data->prog_data->args->oem_options_count == 1);
-  
-  if (strcasecmp (state_data->prog_data->args->oem_options[0], "enable")
-      && strcasecmp (state_data->prog_data->args->oem_options[0], "disable"))
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "%s:%s invalid OEM option argument '%s'\n",
-                       state_data->prog_data->args->oem_id,
-                       state_data->prog_data->args->oem_command,
-                       state_data->prog_data->args->oem_options[0]);
-      goto cleanup;
-    }
-  
-  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "enable"))
-    enable = 1;
-  else
-    enable = 0;
-  
-  if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
-						     IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_SOL,
-						     IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_SSH_REDIRECT_ENABLE,
-						     0,
-						     1,
-						     (uint32_t)enable) < 0)
-    goto cleanup;
 
-  rv = 0;
- cleanup:
-  return (rv);
+  return (ipmi_oem_thirdparty_set_telnet_ssh_redirect_status (state_data));
 }
 
 int

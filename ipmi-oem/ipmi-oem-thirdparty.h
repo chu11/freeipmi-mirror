@@ -79,12 +79,6 @@ int ipmi_oem_thirdparty_set_extended_config_string (ipmi_oem_state_data_t *state
  * Quanta S99Q/Dell FS12-TY OEM
  */
 int ipmi_oem_thirdparty_get_nic_mode (ipmi_oem_state_data_t *state_data);
-
-/* Shared between:
- * Inventec 5441/Dell Xanadu II OEM
- * Inventec 5442/Dell Xanadu III OEM
- * Quanta S99Q/Dell FS12-TY OEM
- */
 int ipmi_oem_thirdparty_set_nic_mode (ipmi_oem_state_data_t *state_data);
 
 /* Shared between:
@@ -100,14 +94,8 @@ int ipmi_oem_thirdparty_get_bmc_services_bitmask (ipmi_oem_state_data_t *state_d
  * Inventec 5442/Dell Xanadu III OEM
  * Quanta S99Q/Dell FS12-TY OEM
  */
-int ipmi_oem_thirdparty_get_bmc_services_v15 (ipmi_oem_state_data_t *state_data);
-
-/* Shared between:
- * Inventec 5441/Dell Xanadu II OEM
- * Inventec 5442/Dell Xanadu III OEM
- * Quanta S99Q/Dell FS12-TY OEM
- */
-int ipmi_oem_thirdparty_set_bmc_services_v15 (ipmi_oem_state_data_t *state_data);
+int ipmi_oem_thirdparty_get_bmc_services_v1 (ipmi_oem_state_data_t *state_data);
+int ipmi_oem_thirdparty_set_bmc_services_v1 (ipmi_oem_state_data_t *state_data);
 
 /* Shared between:
  * Inventec 5441/Dell Xanadu II OEM
@@ -115,5 +103,45 @@ int ipmi_oem_thirdparty_set_bmc_services_v15 (ipmi_oem_state_data_t *state_data)
  * Quanta S99Q/Dell FS12-TY OEM
  */
 int ipmi_oem_thirdparty_get_account_status (ipmi_oem_state_data_t *state_data);
+
+/* Shared between:
+ * Inventec 5441/Dell Xanadu II OEM
+ * Inventec 5442/Dell Xanadu III OEM
+ * Quanta S99Q/Dell FS12-TY OEM
+ */
+int ipmi_oem_thirdparty_get_dns_config_v1 (ipmi_oem_state_data_t *state_data);
+int ipmi_oem_thirdparty_set_dns_config_v1 (ipmi_oem_state_data_t *state_data);
+
+/* Shared between:
+ * Inventec 5441/Dell Xanadu II OEM
+ * Inventec 5442/Dell Xanadu III OEM
+ * Quanta S99Q/Dell FS12-TY OEM
+ */
+int ipmi_oem_thirdparty_get_web_server_config_v1 (ipmi_oem_state_data_t *state_data);
+int ipmi_oem_thirdparty_set_web_server_config_v1 (ipmi_oem_state_data_t *state_data);
+
+/* Shared between:
+ * Inventec 5441/Dell Xanadu II OEM
+ * Inventec 5442/Dell Xanadu III OEM
+ * Quanta S99Q/Dell FS12-TY OEM
+ */
+int ipmi_oem_thirdparty_get_power_management_config_v1 (ipmi_oem_state_data_t *state_data);
+int ipmi_oem_thirdparty_set_power_management_config_v1 (ipmi_oem_state_data_t *state_data);
+
+/* Shared between:
+ * Inventec 5441/Dell Xanadu II OEM
+ * Inventec 5442/Dell Xanadu III OEM
+ * Quanta S99Q/Dell FS12-TY OEM
+ */
+int ipmi_oem_thirdparty_get_sol_idle_timeout (ipmi_oem_state_data_t *state_data);
+int ipmi_oem_thirdparty_set_sol_idle_timeout (ipmi_oem_state_data_t *state_data);
+
+/* Shared between:
+ * Inventec 5441/Dell Xanadu II OEM
+ * Inventec 5442/Dell Xanadu III OEM
+ * Quanta S99Q/Dell FS12-TY OEM
+ */
+int ipmi_oem_thirdparty_get_telnet_ssh_redirect_status (ipmi_oem_state_data_t *state_data);
+int ipmi_oem_thirdparty_set_telnet_ssh_redirect_status (ipmi_oem_state_data_t *state_data);
 
 #endif /* IPMI_OEM_THIRDPARTY_H */
