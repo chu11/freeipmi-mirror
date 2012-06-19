@@ -5,6 +5,8 @@
 	* ipmi-oem/: Migrate various information into new ipmi-oem-spec.h
 	file and
 	libfreeipmi/include/spec/ipmi-system-info-parameters-oem-spec.h.
+
+	* ipmipower/: Use new macros in ipmi-oem-spec.h.
 	
 2012-06-15  Albert Chu <chu11@llnl.gov>
 

@@ -1855,9 +1855,9 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
 				       &bytes_len) < 0)
         goto cleanup;
 
-      if (bytes[0] == IPMI_OEM_DELL_SYSTEM_INFO_EMBEDEDDED_VIDEO_STATUS_DISABLED)
+      if (bytes[0] == IPMI_OEM_DELL_SYSTEM_INFO_EMBEDDED_VIDEO_STATUS_DISABLED)
 	embedded_video_status_str = "Disabled";
-      else if (bytes[0] == IPMI_OEM_DELL_SYSTEM_INFO_EMBEDEDDED_VIDEO_STATUS_ENABLED)
+      else if (bytes[0] == IPMI_OEM_DELL_SYSTEM_INFO_EMBEDDED_VIDEO_STATUS_ENABLED)
 	embedded_video_status_str = "Enabled";
       else
 	embedded_video_status_str = "Unknown";
