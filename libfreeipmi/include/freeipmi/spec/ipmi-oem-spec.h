@@ -427,9 +427,19 @@ extern "C" {
 #define IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_READ_LENGTH 100
 #define IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_DATA_LENGTH 100
 
+/*
+ * CSS (Customer Self Service)
+ *
+ * If the component is marked as CSS, the customer can replace it by
+ * himself without a service technican (e.g. Memory DIMM etc.)  CSS is
+ * combined with the severity information.
+ */
 #define IPMI_OEM_FUJITSU_CSS_BITMASK      0x80
 #define IPMI_OEM_FUJITSU_CSS_SHIFT        7
 
+/*
+ * Severity of a decoded event. All events should have an assigned severity.
+ */
 #define IPMI_OEM_FUJITSU_SEVERITY_BITMASK 0x70
 #define IPMI_OEM_FUJITSU_SEVERITY_SHIFT   4
 

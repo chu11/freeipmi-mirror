@@ -6,7 +6,7 @@
 	file and
 	libfreeipmi/include/spec/ipmi-system-info-parameters-oem-spec.h.
 
-	* ipmipower/: Use new macros in ipmi-oem-spec.h.
+	* ipmipower/, libfreeipmi/sel/: Use new macros in ipmi-oem-spec.h.
 
 	* ipmi-oem/ipmi-oem-thirdparty.h, ipmi-oem/ipmi-oem-thirdparty.c:
 	New files.
