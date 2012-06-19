@@ -55,7 +55,8 @@ _thirdparty_get_reservation (ipmi_oem_state_data_t *state_data,
   int rs_len;
   int rv = -1;
 
-  /* Inventec 5441/5442 OEM
+  /* Inventec 5441/Dell Xanadu II OEM
+   * Inventec 5442/Dell Xanadu III OEM
    * Quanta S99Q/Dell FS12-TY OEM
    *
    * Get Reservation Request
@@ -133,7 +134,8 @@ ipmi_oem_thirdparty_get_extended_config_value (ipmi_oem_state_data_t *state_data
   assert (IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS == IPMI_NET_FN_OEM_QUANTA_GENERIC_RS);
   assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_READ_ALL_BYTES == IPMI_OEM_QUANTA_EXTENDED_CONFIG_READ_ALL_BYTES);
 
-  /* Inventec 5441/5442 OEM
+  /* Inventec 5441/Dell Xanadu II OEM
+   * Inventec 5442/Dell Xanadu III OEM
    * Quanta S99Q/Dell FS12-TY OEM
    *
    * Get Extended Configuration Request
@@ -238,7 +240,8 @@ ipmi_oem_thirdparty_get_extended_config_string (ipmi_oem_state_data_t *state_dat
   assert (IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS == IPMI_NET_FN_OEM_QUANTA_GENERIC_RS);
   assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_READ_ALL_BYTES == IPMI_OEM_QUANTA_EXTENDED_CONFIG_READ_ALL_BYTES);
 
-  /* Inventec 5441/5442 OEM
+  /* Inventec 5441/Dell Xanadu II OEM
+   * Inventec 5442/Dell Xanadu III OEM
    * Quanta S99Q/Dell FS12-TY OEM
    *
    * Get Extended Configuration Request
@@ -357,7 +360,8 @@ ipmi_oem_thirdparty_set_extended_config_value (ipmi_oem_state_data_t *state_data
   assert (IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS == IPMI_NET_FN_OEM_QUANTA_GENERIC_RS);
   assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_READ_ALL_BYTES == IPMI_OEM_QUANTA_EXTENDED_CONFIG_READ_ALL_BYTES);
 
-  /* Inventec 5441/5442 OEM
+  /* Inventec 5441/Dell Xanadu II OEM
+   * Inventec 5442/Dell Xanadu III OEM
    * Quanta S99Q/Dell FS12-TY OEM
    *
    * Set Extended Configuration Request
@@ -457,7 +461,8 @@ ipmi_oem_thirdparty_set_extended_config_string (ipmi_oem_state_data_t *state_dat
   assert (IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS == IPMI_NET_FN_OEM_QUANTA_GENERIC_RS);
   assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_READ_ALL_BYTES == IPMI_OEM_QUANTA_EXTENDED_CONFIG_READ_ALL_BYTES);
 
-  /* Inventec 5441/5442 OEM
+  /* Inventec 5441/Dell Xanadu II OEM
+   * Inventec 5442/Dell Xanadu III OEM
    * Quanta S99Q/Dell FS12-TY OEM
    *
    * Set Extended Configuration Request
