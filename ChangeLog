@@ -7,6 +7,13 @@
 	libfreeipmi/include/spec/ipmi-system-info-parameters-oem-spec.h.
 
 	* ipmipower/: Use new macros in ipmi-oem-spec.h.
+
+	* ipmi-oem/ipmi-oem-thirdparty.h, ipmi-oem/ipmi-oem-thirdparty.c:
+	New files.
+
+	* ipmi-oem/ipmi-oem-inventec.c, ipmi-oem/ipmi-oem-quanta.c:
+	Migrate some commmon functions to ipmi-oem-thirdparty.c and
+	ipmi-oem-thirdparty.h.
 	
 2012-06-15  Albert Chu <chu11@llnl.gov>
 
