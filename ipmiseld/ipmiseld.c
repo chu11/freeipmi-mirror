@@ -54,6 +54,8 @@
 #include "ipmiseld-cache.h"
 #include "ipmiseld-common.h"
 #include "ipmiseld-debug.h"
+#include "ipmiseld-ipmi-communication.h"
+#include "ipmiseld-threadpool.h"
 
 #include "freeipmi-portability.h"
 #include "error.h"
@@ -1241,146 +1243,6 @@ ipmiseld_sel_parse (ipmiseld_host_data_t *host_data)
 }
 
 static int
-_ipmi_setup (ipmiseld_host_data_t *host_data)
-{
-  struct common_cmd_args *common_args;
-  unsigned int workaround_flags = 0;
-  int rv = -1;
-
-  assert (host_data);
-  assert (host_data->host_poll);
-
-  common_args = &(host_data->prog_data->args->common_args);
-
-  if (!(host_data->host_poll->ipmi_ctx = ipmi_ctx_create ()))
-    {
-      err_output ("ipmi_ctx_create: %s", strerror (errno));
-      goto cleanup;
-    }
-
-  if (host_data->hostname
-      && strcasecmp (host_data->hostname, "localhost") != 0
-      && strcmp (host_data->hostname, "127.0.0.1") != 0)
-    {
-      if (common_args->driver_type == IPMI_DEVICE_LAN_2_0)
-        {
-          parse_get_freeipmi_outofband_2_0_flags (common_args->workaround_flags_outofband_2_0,
-                                                  &workaround_flags);
-          
-          if (ipmi_ctx_open_outofband_2_0 (host_data->host_poll->ipmi_ctx,
-                                           host_data->hostname,
-                                           common_args->username,
-                                           common_args->password,
-                                           (common_args->k_g_len) ? common_args->k_g : NULL,
-                                           (common_args->k_g_len) ? common_args->k_g_len : 0,
-                                           common_args->privilege_level,
-                                           common_args->cipher_suite_id,
-                                           common_args->session_timeout,
-                                           common_args->retransmission_timeout,
-                                           workaround_flags,
-                                           (common_args->debug > 1) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT) < 0)
-            {
-	      /* XXX deal w/ specific errors */
-	      err_output ("ipmi_ctx_open_outofband_2_0: %s", ipmi_ctx_errormsg (host_data->host_poll->ipmi_ctx));
-              goto cleanup;
-            }
-        }
-      else
-        {
-          if (ipmi_ctx_open_outofband (host_data->host_poll->ipmi_ctx,
-                                       host_data->hostname,
-                                       common_args->username,
-                                       common_args->password,
-                                       common_args->authentication_type,
-                                       common_args->privilege_level,
-                                       common_args->session_timeout,
-                                       common_args->retransmission_timeout,
-                                       workaround_flags,
-                                       (common_args->debug > 1) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT) < 0)
-            {
-	      /* XXX deal w/ specific errors */
-	      err_output ("ipmi_ctx_open_outofband: %s", ipmi_ctx_errormsg (host_data->host_poll->ipmi_ctx));
-              goto cleanup;
-            }
-        }
-    }
-  else
-    {
-      if (!ipmi_is_root ())
-        {
-	  err_output ("%s", ipmi_ctx_strerror (IPMI_ERR_PERMISSION));
-          goto cleanup;
-        }
-
-      parse_get_freeipmi_inband_flags (common_args->workaround_flags_inband,
-                                       &workaround_flags);
-
-      if (common_args->driver_type == IPMI_DEVICE_UNKNOWN)
-        {
-          int ret;
-
-          if ((ret = ipmi_ctx_find_inband (host_data->host_poll->ipmi_ctx,
-                                           NULL,
-                                           common_args->disable_auto_probe,
-                                           common_args->driver_address,
-                                           common_args->register_spacing,
-                                           common_args->driver_device,
-                                           workaround_flags,
-                                           (common_args->debug > 1) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT)) < 0)
-            {
-	      /* XXX deal w/ specific errors */
-	      err_output ("ipmi_ctx_find_inband: %s", ipmi_ctx_errormsg (host_data->host_poll->ipmi_ctx));
-              goto cleanup;
-            }
-
-          if (!ret)
-            {
-	      /* XXX deal w/ specific errors */
-              err_output ("could not find inband device");
-              goto cleanup;
-            }
-        }
-      else
-        {
-	  if (ipmi_ctx_open_inband (host_data->host_poll->ipmi_ctx,
-                                    common_args->driver_type,
-                                    common_args->disable_auto_probe,
-                                    common_args->driver_address,
-                                    common_args->register_spacing,
-                                    common_args->driver_device,
-                                    workaround_flags,
-                                    (common_args->debug > 1) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT) < 0)
-            {
-	      /* XXX deal w/ specific errors */
-	      err_output ("ipmi_ctx_open_inband: %s", ipmi_ctx_errormsg (host_data->host_poll->ipmi_ctx));
-              goto cleanup;
-            }
-        }
-    }
-
-  if (common_args->target_channel_number_is_set
-      || common_args->target_slave_address_is_set)
-    {
-      if (ipmi_ctx_set_target (host_data->host_poll->ipmi_ctx,
-                               common_args->target_channel_number_is_set ? &common_args->target_channel_number : NULL,
-                               common_args->target_slave_address_is_set ? &common_args->target_slave_address : NULL) < 0)
-        {
-	  err_output ("ipmi_ctx_set_target: %s", ipmi_ctx_errormsg (host_data->host_poll->ipmi_ctx));
-          goto cleanup;
-        } 
-    }
-  
-  rv = 0;
- cleanup:
-  if (rv < 0)
-    {
-      ipmi_ctx_close (host_data->host_poll->ipmi_ctx);
-      ipmi_ctx_destroy (host_data->host_poll->ipmi_ctx);
-    }
-  return (rv);
-}
-
-static int
 _ipmiseld_poll (ipmiseld_host_data_t *host_data)
 {
   ipmiseld_host_poll_t host_poll;
@@ -1394,7 +1256,7 @@ _ipmiseld_poll (ipmiseld_host_data_t *host_data)
   memset (&host_poll, '\0', sizeof (ipmiseld_host_poll_t));
   host_data->host_poll = &host_poll;
 
-  if (_ipmi_setup (host_data) < 0)
+  if (ipmiseld_ipmi_setup (host_data) < 0)
     goto cleanup;
 
   if (!host_data->prog_data->args->ignore_sdr)

@@ -59,6 +59,8 @@
 
 #define IPMISELD_POLL_INTERVAL_DEFAULT                                  300
 
+#define IPMISELD_THREADPOOL_COUNT                                       8
+
 enum ipmiseld_argp_option_keys
   {
     IPMISELD_VERBOSE_KEY = 'v',
@@ -84,8 +86,9 @@ enum ipmiseld_argp_option_keys
     IPMISELD_IGNORE_SDR_KEY = 177,
     IPMISELD_RE_DOWNLOAD_SDR_KEY = 178,
     IPMISELD_CLEAR_SEL_KEY = 179,
-    IPMISELD_TEST_RUN_KEY = 180,
-    IPMISELD_FOREGROUND_KEY = 181,
+    IPMISELD_THREADPOOL_COUNT_KEY = 180,
+    IPMISELD_TEST_RUN_KEY = 181,
+    IPMISELD_FOREGROUND_KEY = 182,
   };
 
 struct ipmiseld_arguments
@@ -116,6 +119,7 @@ struct ipmiseld_arguments
   int ignore_sdr;
   int re_download_sdr;
   int clear_sel;
+  int threadpool_count;
   int test_run;
   int foreground;
 };

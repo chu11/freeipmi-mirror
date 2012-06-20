@@ -122,10 +122,12 @@ static struct argp_option cmdline_options[] =
       "Re-download the SDR even if it is not out of date.", 61},
     { "clear-sel", IPMISELD_CLEAR_SEL_KEY, 0, 0,
       "Clear SEL on startup.", 62},
+    { "threadpool-count", IPMISELD_THREADPOOL_COUNT_KEY, "NUM", 0,
+      "Specify threadpool count for parallel SEL polling.", 63},
     { "test-run", IPMISELD_TEST_RUN_KEY, 0, 0,
-      "Do not daemonize, output current SEL as test of current settings.", 63},
+      "Do not daemonize, output current SEL as test of current settings.", 64},
     { "foreground", IPMISELD_FOREGROUND_KEY, 0, 0,
-      "Run daemon in foreground.", 64},
+      "Run daemon in foreground.", 65},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -250,6 +252,18 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 	  exit (EXIT_FAILURE);
 	}
       break;
+    case IPMISELD_POLL_INTERVAL_KEY:
+      errno = 0;
+      tmp = strtol (arg, &endptr, 0);
+      if (errno
+          || endptr[0] != '\0'
+	  || tmp <= 0) 
+        {
+          fprintf (stderr, "invalid poll interval\n");
+          exit (EXIT_FAILURE);
+        }
+      cmd_args->poll_interval = tmp;
+      break;
     case IPMISELD_LOG_FACILITY_KEY:
       if (!(cmd_args->log_facility_str = strdup (arg)))
 	{
@@ -280,17 +294,17 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case IPMISELD_CLEAR_SEL_KEY:
       cmd_args->clear_sel = 1;
       break;
-    case IPMISELD_POLL_INTERVAL_KEY:
+    case IPMISELD_THREADPOOL_COUNT_KEY:
       errno = 0;
       tmp = strtol (arg, &endptr, 0);
       if (errno
           || endptr[0] != '\0'
 	  || tmp <= 0) 
         {
-          fprintf (stderr, "invalid poll interval\n");
+          fprintf (stderr, "invalid threadpool count\n");
           exit (EXIT_FAILURE);
         }
-      cmd_args->poll_interval = tmp;
+      cmd_args->threadpool_count = tmp;
       break;
     case IPMISELD_TEST_RUN_KEY:
       cmd_args->test_run = 1;
@@ -415,6 +429,8 @@ _ipmiseld_config_file_parse (struct ipmiseld_arguments *cmd_args)
     cmd_args->re_download_sdr = config_file_data.re_download_sdr;
   if (config_file_data.clear_sel_count)
     cmd_args->clear_sel = config_file_data.clear_sel;
+  if (config_file_data.threadpool_count_count)
+    cmd_args->threadpool_count = config_file_data.threadpool_count;
 }
 
 static void
@@ -503,15 +519,16 @@ ipmiseld_argp_parse (int argc, char **argv, struct ipmiseld_arguments *cmd_args)
   cmd_args->system_event_format_str = IPMISELD_SYSTEM_EVENT_FORMAT_STR_DEFAULT;
   cmd_args->oem_timestamped_event_format_str = IPMISELD_OEM_TIMESTAMPED_EVENT_FORMAT_STR_DEFAULT;
   cmd_args->oem_non_timestamped_event_format_str = IPMISELD_OEM_NON_TIMESTAMPED_EVENT_FORMAT_STR_DEFAULT;
+  cmd_args->poll_interval = IPMISELD_POLL_INTERVAL_DEFAULT;
   cmd_args->log_facility_str = NULL;
   cmd_args->log_priority_str = NULL;
   cmd_args->cache_directory = NULL;
-  cmd_args->poll_interval = IPMISELD_POLL_INTERVAL_DEFAULT;
-  cmd_args->test_run = 0;
-  cmd_args->foreground = 0;
   cmd_args->ignore_sdr = 0;
   cmd_args->re_download_sdr = 0;
   cmd_args->clear_sel = 0;
+  cmd_args->threadpool_count = IPMISELD_THREADPOOL_COUNT;
+  cmd_args->test_run = 0;
+  cmd_args->foreground = 0;
 
   argp_parse (&cmdline_config_file_argp,
               argc,
