@@ -1489,6 +1489,10 @@ _ipmiseld (ipmiseld_prog_data_t *prog_data)
   else /* inband communication, hosts_count = 1 */
     hosts_count = 1;
 
+  /* don't need more threads than hosts */
+  if (hosts_count < prog_data->args->threadpool_count)
+    prog_data->args->threadpool_count = hosts_count;
+
   if (!(host_data_heap = heap_create (hosts_count, (HeapCmpF)hostdata_timecmp, (HeapDelF)free)))
     {
       err_output ("list_create: %s", strerror (errno));
