@@ -33,6 +33,16 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#if TIME_WITH_SYS_TIME
+#include <sys/time.h>
+#include <time.h>
+#else /* !TIME_WITH_SYS_TIME */
+#if HAVE_SYS_TIME_H
+#include <sys/time.h>
+#else /* !HAVE_SYS_TIME_H */
+#include <time.h>
+#endif /* !HAVE_SYS_TIME_H */
+#endif /* !TIME_WITH_SYS_TIME */
 #include <syslog.h>
 #include <assert.h>
 #include <errno.h>
@@ -47,6 +57,9 @@
 
 #include "freeipmi-portability.h"
 #include "error.h"
+#include "heap.h"
+#include "hostlist.h"
+#include "pstdout.h"
 #include "tool-common.h"
 #include "tool-daemon-common.h"
 #include "tool-event-common.h"
@@ -1542,37 +1555,186 @@ _signal_handler_callback (int sig)
   exit_flag = 0;
 }
 
+static ipmiseld_host_data_t *
+_alloc_host_data (ipmiseld_prog_data_t *prog_data, const char *hostname)
+{
+  ipmiseld_host_data_t *host_data;
+
+  assert (prog_data);
+
+  if (!(host_data = (ipmiseld_host_data_t *) malloc (sizeof (ipmiseld_host_data_t))))
+    {
+      err_output ("malloc: %s", strerror (errno));
+      return (NULL);
+    }
+
+  memset (host_data, '\0', sizeof (ipmiseld_host_data_t));
+  host_data->prog_data = prog_data;
+  host_data->hostname = (char *)hostname;
+  host_data->host_poll = NULL;
+  host_data->re_download_sdr_done = 0;
+  host_data->clear_sel_done = 0;
+  host_data->next_poll_time = 0; /* 0 will first immediate check first time through */
+
+  return (host_data);
+}
+
+static int
+hostdata_timecmp (void *x, void *y)
+{
+  ipmiseld_host_data_t *hd1, *hd2;
+
+  assert (x);
+  assert (y);
+
+  hd1 = (ipmiseld_host_data_t *)x;
+  hd2 = (ipmiseld_host_data_t *)y;
+
+  if (hd1->next_poll_time < hd2->next_poll_time)
+    return (1);
+  else if (hd1->next_poll_time > hd2->next_poll_time)
+    return (-1);
+  return (0);
+}
+
 static int
 _ipmiseld (ipmiseld_prog_data_t *prog_data)
 {
-  ipmiseld_host_data_t host_data;
+  int hosts_count = 0;
+  Heap host_data_heap = NULL;
+  hostlist_t hlist = NULL;
+  hostlist_iterator_t hitr = NULL;
+  ipmiseld_host_data_t *host_data;
+  char *host = NULL;
+  int rv = -1;
 
-  /* XXX deal w/ hostrange later */
-  memset (&host_data, '\0', sizeof (ipmiseld_host_data_t));
-  host_data.prog_data = prog_data;
-  host_data.hostname = prog_data->args->common_args.hostname;
-  host_data.host_poll = NULL;
-  host_data.re_download_sdr_done = 0;
-  host_data.clear_sel_done = 0;
+  assert (prog_data);
 
-  if (host_data.prog_data->args->test_run)
-    return (_ipmiseld_poll (&host_data));
+  if (prog_data->args->common_args.hostname)
+    {
+      if ((hosts_count = pstdout_hostnames_count (prog_data->args->common_args.hostname)) < 0)
+        {
+	  err_output ("pstdout_hostnames_count: %s", pstdout_strerror (pstdout_errnum));
+	  goto cleanup;
+        }
+      
+      if (!hosts_count)
+        {
+	  err_output ("invalid number of hosts specified");
+	  goto cleanup;
+        }
+    }
+  else /* inband communication, hosts_count = 1 */
+    hosts_count = 1;
+
+  if (!(host_data_heap = heap_create (hosts_count, (HeapCmpF)hostdata_timecmp, (HeapDelF)free)))
+    {
+      err_output ("list_create: %s", strerror (errno));
+      goto cleanup;
+    }
+
+  if (hosts_count == 1)
+    {
+      if (!(host_data = _alloc_host_data (prog_data, prog_data->args->common_args.hostname)))
+	goto cleanup;
+
+      if (!heap_insert (host_data_heap, host_data))
+	{
+	  err_output ("heap_insert: %s", strerror (errno));
+	  goto cleanup;
+	}
+    }
   else
     {
+      if (!(hlist = hostlist_create (prog_data->args->common_args.hostname)))
+	{
+	  err_output ("hostlist_create: %s", strerror (errno));
+	  goto cleanup;
+	}
+
+      if (!(hitr = hostlist_iterator_create (hlist)))
+	{
+	  err_output ("hostlist_iterator_create: %s", strerror (errno));
+	  goto cleanup;
+	}
+
+      while ((host = hostlist_next (hitr)))
+	{
+	  if (!(host_data = _alloc_host_data (prog_data, host)))
+	    goto cleanup;
+
+	  if (!heap_insert (host_data_heap, host_data))
+	    {
+	      err_output ("heap_insert: %s", strerror (errno));
+	      goto cleanup;
+	    }
+
+	  free(host);
+	}
+      host = NULL;
+    }
+
+  if (prog_data->args->test_run)
+    {
+      while (!heap_is_empty (host_data_heap))
+	{
+	  if (!(host_data = heap_pop (host_data_heap)))
+	    {
+	      err_output ("heap_pop: %s", strerror (errno));
+	      goto cleanup;
+	    }
+
+	  _ipmiseld_poll (host_data);
+	}
+    }
+  else
+    {
+      /* create threadpools to do this tuff, not 1 loop */
       while (exit_flag)
 	{
-	  if (host_data.prog_data->args->foreground
-	      && host_data.prog_data->args->common_args.debug)
-	    IPMISELD_DEBUG (("Poll %s", host_data.hostname ? host_data.hostname : "localhost"));
-	  
-	  /* XXX vary timeout based on error? */ 
-	  _ipmiseld_poll (&host_data);
+	  struct timeval tv;
 
-	  daemon_sleep (host_data.prog_data->args->poll_interval);
+	  if (!(host_data = heap_pop (host_data_heap)))
+	    {
+	      err_output ("heap_pop: %s", strerror (errno));
+	      goto cleanup;
+	    }
+	      
+	  if (prog_data->args->foreground
+	      && prog_data->args->common_args.debug)
+	    IPMISELD_DEBUG (("Poll %s", host_data->hostname ? host_data->hostname : "localhost"));
+	      
+	  /* XXX vary timeout based on error? */ 
+	  _ipmiseld_poll (host_data);
+
+	  gettimeofday (&tv, NULL);
+	  host_data->next_poll_time = tv.tv_sec + prog_data->args->poll_interval;
+	  
+	  if (!heap_insert (host_data_heap, host_data))
+	    {
+	      err_output ("heap_insert: %s", strerror (errno));
+	      goto cleanup;
+	    }
+
+	  if (!(host_data = heap_peek (host_data_heap)))
+	    {	  
+	      err_output ("heap_peek: %s", strerror (errno));
+	      goto cleanup;
+	    }
+
+	  if (host_data->next_poll_time
+	      && (host_data->next_poll_time > tv.tv_sec)) 
+	    daemon_sleep ((host_data->next_poll_time - tv.tv_sec) + 1);
  	}
     }
 
-  return (0);
+  rv = 0;
+ cleanup:
+  heap_destroy (host_data_heap);
+  hostlist_iterator_destroy (hitr);
+  hostlist_destroy (hlist);
+  free (host);
+  return (rv);
 }
 
 int

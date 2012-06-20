@@ -30,6 +30,17 @@
 #include "config.h"
 #endif /* HAVE_CONFIG_H */
 
+#if TIME_WITH_SYS_TIME
+#include <sys/time.h>
+#include <time.h>
+#else /* !TIME_WITH_SYS_TIME */
+#if HAVE_SYS_TIME_H
+#include <sys/time.h>
+#else /* !HAVE_SYS_TIME_H */
+#include <time.h>
+#endif /* !HAVE_SYS_TIME_H */
+#endif /* !TIME_WITH_SYS_TIME */
+
 #include <freeipmi/freeipmi.h>
 
 #include "tool-cmdline-common.h"
@@ -161,6 +172,7 @@ typedef struct ipmiseld_host_data
   ipmiseld_host_poll_t *host_poll;
   int re_download_sdr_done;
   int clear_sel_done;
+  time_t next_poll_time;
 } ipmiseld_host_data_t;
 
 #endif /* IPMISELD_H */
