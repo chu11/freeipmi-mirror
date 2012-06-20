@@ -1243,14 +1243,18 @@ ipmiseld_sel_parse (ipmiseld_host_data_t *host_data)
 }
 
 static int
-_ipmiseld_poll (ipmiseld_host_data_t *host_data)
+_ipmiseld_poll (void *arg)
 {
+  ipmiseld_host_data_t *host_data;
   ipmiseld_host_poll_t host_poll;
   unsigned int sel_flags = 0;
   unsigned int interpret_flags = 0;
   int exit_code = EXIT_FAILURE;
 
-  assert (host_data);
+  assert (arg);
+
+  host_data = (ipmiseld_host_data_t *)arg;
+
   assert (!host_data->host_poll);
 
   memset (&host_poll, '\0', sizeof (ipmiseld_host_poll_t));
@@ -1577,7 +1581,7 @@ _ipmiseld (ipmiseld_prog_data_t *prog_data)
 	      _ipmiseld_poll (host_data);
 	    }
 	  else
-	      _ipmiseld_poll (host_data);
+	    _ipmiseld_poll (host_data);
 
 	  gettimeofday (&tv, NULL);
 	  host_data->next_poll_time = tv.tv_sec + prog_data->args->poll_interval;
@@ -1594,6 +1598,7 @@ _ipmiseld (ipmiseld_prog_data_t *prog_data)
 	      goto cleanup;
 	    }
 
+	  /* If next_poll_time == 0, no sleep, its the first time through */
 	  if (host_data->next_poll_time
 	      && (host_data->next_poll_time > tv.tv_sec)) 
 	    daemon_sleep ((host_data->next_poll_time - tv.tv_sec) + 1);
