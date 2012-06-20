@@ -1569,9 +1569,15 @@ _ipmiseld (ipmiseld_prog_data_t *prog_data)
 	  if (prog_data->args->foreground
 	      && prog_data->args->common_args.debug)
 	    IPMISELD_DEBUG (("Poll %s", host_data->hostname ? host_data->hostname : "localhost"));
-	      
+
+	  /* No need to lauch thread if polling only one host */
 	  /* XXX vary timeout based on error? */ 
-	  _ipmiseld_poll (host_data);
+	  if (prog_data->args->threadpool_count > 1)
+	    {
+	      _ipmiseld_poll (host_data);
+	    }
+	  else
+	      _ipmiseld_poll (host_data);
 
 	  gettimeofday (&tv, NULL);
 	  host_data->next_poll_time = tv.tv_sec + prog_data->args->poll_interval;
