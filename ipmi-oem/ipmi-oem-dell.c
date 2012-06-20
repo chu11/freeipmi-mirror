@@ -56,323 +56,11 @@
 #include "tool-sdr-cache-common.h"
 #include "tool-sensor-common.h"
 
-/*
- * Dell Xanadu II (Inventec 5441) Notes
- *
- * Dell appears to have implemented two equivalent OEM commands
- * that do the same as the Inventec get/set-nic-status commands.
- * See comments in ipmi-oem-inventec.c for information.
- *
- * Dell appears to have implemented two equivalent OEM commands
- * that do the same as the Inventec get/set of web parameters.
- * See comments in ipmi-oem-inventec.c for information.
- */
-
 /* 256 b/c length is 8 bit field */
-#define IPMI_OEM_DELL_MAX_BYTES 256
-
-#define IPMI_OEM_DELL_SYSTEM_INFO_STRING_ENCODING_BITMASK 0xF
-#define IPMI_OEM_DELL_SYSTEM_INFO_STRING_ENCODING_SHIFT   0
-
-#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_MIN_LEN 41
-
-#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IP_ADDRESS_FORMAT_IPV4 0x00
-#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IP_ADDRESS_FORMAT_IPV6 0x01
-
-#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IP_ADDRESS_CONFIG_DHCP   0x00
-#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IP_ADDRESS_CONFIG_STATIC 0x01
-
-#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_FIRMWARE_VERSION_STRING_LENGTH 20
-
-#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_10G            0x08
-#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_CMC            0x09
-#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_11G_MONOLITHIC 0x0A
-#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_11G_MODULAR    0x0B
-#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_MASER_LITE_BMC 0x0D
-/* From ipmitool, http://ipmitool.sourceforge.net/ */
-#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_12G_MONOLITHIC 0x10
-#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_IDRAC_TYPE_12G_MODULAR    0x11
-
-#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_WEB_GUI_SERVER_CONTROL_DISABLED 0x00
-#define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_WEB_GUI_SERVER_CONTROL_ENABLED  0x01
-
-#define IPMI_OEM_DELL_SYSTEM_INFO_EMBEDDED_VIDEO_STATUS_DISABLED 0x00
-#define IPMI_OEM_DELL_SYSTEM_INFO_EMBEDDED_VIDEO_STATUS_ENABLED  0x01
-
-#define IPMI_OEM_DELL_SYSTEM_INFO_CMC_IPV6_INFO_MIN_LEN 57
-
-#define IPMI_OEM_DELL_SYSTEM_INFO_CMC_IPV6_INFO_IPV6_ADDRESS_STRING_LENGTH 39
-
-#define IPMI_OEM_DELL_SYSTEM_INFO_CMC_IPV6_INFO_IPV6_STATUS_BITMASK 0x1
-#define IPMI_OEM_DELL_SYSTEM_INFO_CMC_IPV6_INFO_IPV6_STATUS_SHIFT   0
-
-#define IPMI_OEM_DELL_SYSTEM_INFO_CMC_IPV6_INFO_IPV6_STATUS_DISABLED 0
-#define IPMI_OEM_DELL_SYSTEM_INFO_CMC_IPV6_INFO_IPV6_STATUS_ENABLED  1
-
-#define IPMI_OEM_DELL_SYSTEM_INFO_CMC_IPV6_INFO_AUTOCONFIGURATION_BITMASK 0x1
-#define IPMI_OEM_DELL_SYSTEM_INFO_CMC_IPV6_INFO_AUTOCONFIGURATION_SHIFT   0
-
-#define IPMI_OEM_DELL_SYSTEM_INFO_CMC_IPV6_INFO_AUTOCONFIGURATION_DISABLED 0
-#define IPMI_OEM_DELL_SYSTEM_INFO_CMC_IPV6_INFO_AUTOCONFIGURATION_ENABLED  1
-
-#define IPMI_OEM_DELL_SYSTEM_INFO_IPV6_SNMP_TRAP_DESTINATION_ADDRESS_MIN_LEN 6
-
-#define IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_TYPE_BITMASK 0x30
-#define IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_TYPE_SHIFT   4
-
-#define IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_NIC_STATUS_BITMASK 0xC0
-#define IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_NIC_STATUS_SHIFT   6
-
-#define IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_NIC_NUMBER_BITMASK 0x1F
-#define IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_NIC_NUMBER_SHIFT   0
-
-#define IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_TYPE_ETHERNET  0
-#define IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_TYPE_ISCSI     1
-#define IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_TYPE_RESERVED  3
-
-/* achu: Dell calls an ethernet port that has been PCI disabled in the
- * BIOS, but has an active service processor "playing dead"
- */
-#define IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_STATUS_ENABLED      0
-#define IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_STATUS_DISABLED     1
-#define IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_STATUS_PLAYING_DEAD 2
-#define IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_STATUS_RESERVED     3
-
-#define IPMI_OEM_DELL_NIC_SELECTION_SHARED                           0x00
-#define IPMI_OEM_DELL_NIC_SELECTION_SHARED_WITH_FAILOVER_TO_NIC2     0x01
-#define IPMI_OEM_DELL_NIC_SELECTION_DEDICATED                        0x02
-#define IPMI_OEM_DELL_NIC_SELECTION_SHARED_WITH_FAILOVER_TO_ALL_NICS 0x03
-
-#define IPMI_OEM_DELL_GET_ACTIVE_LOM_STATUS_GET_STATUS 0x00
-
-#define IPMI_OEM_DELL_LOM_STATUS_NO_ACTIVE_LOM 0x00
-#define IPMI_OEM_DELL_LOM_STATUS_LOM_1         0x01
-#define IPMI_OEM_DELL_LOM_STATUS_LOM_2         0x02
-#define IPMI_OEM_DELL_LOM_STATUS_LOM_3         0x03
-#define IPMI_OEM_DELL_LOM_STATUS_LOM_4         0x04
-#define IPMI_OEM_DELL_LOM_STATUS_UNKNOWN       0xFF
-
-#define IPMI_OEM_DELL_MAC_ADDRESS_LENGTH             6
-
-#define IPMI_OEM_DELL_11G_OR_12G_MAC_ADDRESS_LENGTH         8 
-
-#define IPMI_OEM_DELL_TOKEN_ID_NIC_LINK_SETTING_GROUP    0x02
-#define IPMI_OEM_DELL_TOKEN_ID_RAC_USER_PRIVILEGE        0x04
-#define IPMI_OEM_DELL_TOKEN_ID_SNMP_GROUP                0x05
-#define IPMI_OEM_DELL_TOKEN_ID_DNS_AND_DDNS_GROUP        0x06
-#define IPMI_OEM_DELL_TOKEN_ID_AD_CONFIGURATION          0x07
-#define IPMI_OEM_DELL_TOKEN_ID_EMAIL_ALERT_CONFIGURATION 0x08
-#define IPMI_OEM_DELL_TOKEN_ID_SSL_CONFIGURATION         0x09
-#define IPMI_OEM_DELL_TOKEN_ID_SSH_CONFIGURATION         0x0A
-#define IPMI_OEM_DELL_TOKEN_ID_TELNET_CONFIGURATION      0x0B
-#define IPMI_OEM_DELL_TOKEN_ID_WEB_SERVER_CONFIGURATION  0x0C
-#define IPMI_OEM_DELL_TOKEN_ID_CR_CONFIGURATION          0x0D
-#define IPMI_OEM_DELL_TOKEN_ID_VM_CONFIGURATION          0x0E
-#define IPMI_OEM_DELL_TOKEN_ID_RAC_INFO                  0x0F
-#define IPMI_OEM_DELL_TOKEN_ID_RAC_FW_UPDATE             0x10
-#define IPMI_OEM_DELL_TOKEN_ID_RAC_SERIAL_SHELL          0x11
-#define IPMI_OEM_DELL_TOKEN_ID_MISC                      0x12
-#define IPMI_OEM_DELL_TOKEN_ID_OOB_SECURITY              0x13
-#define IPMI_OEM_DELL_TOKEN_ID_RAC_CONTROL               0x14
-#define IPMI_OEM_DELL_TOKEN_ID_RAC_LOG_FILES             0x15
-#define IPMI_OEM_DELL_TOKEN_ID_RAC_CERTIFICATE_FILES     0x16
-#define IPMI_OEM_DELL_TOKEN_ID_RAC_SESSION_INFO          0x17
-#define IPMI_OEM_DELL_TOKEN_ID_RAC_TIME                  0x19
-#define IPMI_OEM_DELL_TOKEN_ID_RAC_SSAD_CONFIGURATION    0x1B
-#define IPMI_OEM_DELL_TOKEN_ID_RAC_USER_CERT_FILES       0x1C
-#define IPMI_OEM_DELL_TOKEN_ID_RAC_LOCAL_CONFIGURATION   0x1D
-#define IPMI_OEM_DELL_TOKEN_ID_RAC_VKVM_CONFIGURATION    0x1E
-#define IPMI_OEM_DELL_TOKEN_ID_IPV6_EXTENDED_GROUP       0x20
-#define IPMI_OEM_DELL_TOKEN_ID_IPV6_URL_GROUP            0x23
-#define IPMI_OEM_DELL_TOKEN_ID_ACTIVE_DIRECTORY_USER_DOMAIN_GROUP 0x24
-#define IPMI_OEM_DELL_TOKEN_ID_SMART_CARD_GROUP          0x25
-#define IPMI_OEM_DELL_TOKEN_ID_VMEDIA_SHARING_VIA_CMC    0x26
-#define IPMI_OEM_DELL_TOKEN_ID_REMOTE_SYSLOG             0x28
-#define IPMI_OEM_DELL_TOKEN_ID_GENERIC_LDAP_GROUP        0x29
-#define IPMI_OEM_DELL_TOKEN_ID_LDAP_RATE_GROUP           0x2A
-#define IPMI_OEM_DELL_TOKEN_ID_SSH_PK_GROUP              0x2B
-#define IPMI_OEM_DELL_TOKEN_ID_AD_SRV_LOOKUP_GROUP       0x2D
-#define IPMI_OEM_DELL_TOKEN_ID_CLOSE_RAC_SESSION_INFO    0x2E
-
-#define IPMI_OEM_DELL_TOKEN_VERSION                  0x01
-
-#define IPMI_OEM_DELL_TOKEN_DATA_MAX                 65536
-
-#define IPMI_OEM_DELL_TOKEN_STRING_MAX               255
-
-#define IPMI_OEM_DELL_TOKEN_WRITE_MAX                128
-
-#define IPMI_OEM_DELL_TOKEN_DATA_COMMON_HEADER_LEN   5
-
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_READ_ALL_BYTES 0xFF
-
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_IN_PROGRESS    0x00
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_LAST_TOKEN     0x01
-
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_ENABLE_FIELD_MASK                        0x0001
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_TIMEOUT_FIELD_MASK                       0x0002
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_ROOT_DOMAIN_FIELD_MASK                   0x0004
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_RAC_DOMAIN_FIELD_MASK                    0x0008
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_RAC_NAME_FIELD_MASK                      0x0010
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_TYPE_FIELD_MASK                          0x0020
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_SCL_STATE_FIELD_MASK                        0x0040
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_CRL_STATE_FIELD_MASK                        0x0080
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_SSO_ENABLE_FIELD_MASK                    0x0100
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_DC_FILTER1_FIELD_MASK                    0x0200
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_DC_FILTER2_FIELD_MASK                    0x0400
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_DC_FILTER3_FIELD_MASK                    0x0800
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_GC_FILTER1_FIELD_MASK                    0x1000
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_GC_FILTER2_FIELD_MASK                    0x2000
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_GC_FILTER3_FIELD_MASK                    0x4000
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_CERTIFICATE_VALIDATION_ENABLE_FIELD_MASK 0x8000
-
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_ALL_FIELD_MASK   \
-  (IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_ENABLE_FIELD_MASK  \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_TIMEOUT_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_ROOT_DOMAIN_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_RAC_DOMAIN_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_RAC_NAME_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_TYPE_FIELD_MASK  \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_SCL_STATE_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_CRL_STATE_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_SSO_ENABLE_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_DC_FILTER1_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_DC_FILTER2_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_DC_FILTER3_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_GC_FILTER1_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_GC_FILTER2_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_GC_FILTER3_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_CERTIFICATE_VALIDATION_ENABLE_FIELD_MASK)
-
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_TYPE_EXTENDED 1
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_TYPE_STANDARD 2
-
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_CONFIGURATION_ENABLE_FIELD_MASK             0x0001
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_CONFIGURATION_MAX_CONNECTIONS_FIELD_MASK    0x0002
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_CONFIGURATION_ACTIVE_CONNECTIONS_FIELD_MASK 0x0004
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_CONFIGURATION_IDLE_TIMEOUT_FIELD_MASK       0x0008
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_CONFIGURATION_PORT_NUMBER_FIELD_MASK        0x0010
-
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_CONFIGURATION_ALL_FIELD_MASK  \
-  (IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_CONFIGURATION_ENABLE_FIELD_MASK    \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_CONFIGURATION_MAX_CONNECTIONS_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_CONFIGURATION_ACTIVE_CONNECTIONS_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_CONFIGURATION_IDLE_TIMEOUT_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_SSH_CONFIGURATION_PORT_NUMBER_FIELD_MASK);
-
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_ENABLE_FIELD_MASK          0x0001
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_MAX_SESSIONS_FIELD_MASK    0x0002
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_ACTIVE_SESSIONS_FIELD_MASK 0x0004
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_SESSION_TIMEOUT_FIELD_MASK 0x0008
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_PORT_NUMBER_FIELD_MASK     0x0010
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_7FLS_BACKSPACE_FIELD_MASK  0x0020
-
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_ALL_FIELD_MASK \
-  (IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_ENABLE_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_MAX_SESSIONS_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_ACTIVE_SESSIONS_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_SESSION_TIMEOUT_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_PORT_NUMBER_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_7FLS_BACKSPACE_FIELD_MASK)
-
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_ENABLE_FIELD_MASK            0x0001
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_MAX_SESSIONS_FIELD_MASK      0x0002
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_ACTIVE_SESSIONS_FIELD_MASK   0x0004
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_SESSION_TIMEOUT_FIELD_MASK   0x0008
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_HTTP_PORT_NUMBER_FIELD_MASK  0x0010
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_HTTPS_PORT_NUMBER_FIELD_MASK 0x0020
-
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_ALL_FIELD_MASK \
-  (IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_ENABLE_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_MAX_SESSIONS_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_ACTIVE_SESSIONS_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_SESSION_TIMEOUT_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_HTTP_PORT_NUMBER_FIELD_MASK \
-   | IPMI_OEM_DELL_EXTENDED_CONFIG_WEB_SERVER_CONFIGURATION_HTTPS_PORT_NUMBER_FIELD_MASK)
-
-#define IPMI_OEM_DELL_RESET_TO_DEFAULTS_GET_STATUS                  0x00
-#define IPMI_OEM_DELL_RESET_TO_DEFAULTS_INITIATE_RESULT_TO_DEFAULTS 0xAA
-
-#define IPMI_OEM_DELL_RESET_TO_DEFAULTS_IN_PROGRESS 0x00
-#define IPMI_OEM_DELL_RESET_TO_DEFAULTS_COMPLETE    0x01
-
-#define IPMI_OEM_DELL_RESET_POWER_CONSUMPTION_DATA_CUMULATIVE 0x01
-#define IPMI_OEM_DELL_RESET_POWER_CONSUMPTION_DATA_PEAK       0x02
-#define IPMI_OEM_DELL_RESET_POWER_CONSUMPTION_DATA_ALL        0x04
-
-#define IPMI_OEM_DELL_POWER_SUPPLY_INFO_AC 0x00
-#define IPMI_OEM_DELL_POWER_SUPPLY_INFO_DC 0x01
-
-#define IPMI_OEM_DELL_POWER_CONSUMPTION_ENTITY_INSTANCE_ALL 0x00
-
-#define IPMI_OEM_DELL_POWER_CAPACITY_UNITS_WATTS   0x00
-#define IPMI_OEM_DELL_POWER_CAPACITY_UNITS_BTUPHR  0x01
-#define IPMI_OEM_DELL_POWER_CAPACITY_UNITS_PERCENT 0x03
-
-#define IPMI_OEM_DELL_GET_POWER_CAPACITY_SYSTEM_THROTTLING_NORMAL_SYSTEM_OPERATION      0
-#define IPMI_OEM_DELL_GET_POWER_CAPACITY_SYSTEM_THROTTLING_SYSTEM_NEEDS_TO_BE_THROTTLED 1
-#define IPMI_OEM_DELL_GET_POWER_CAPACITY_SYSTEM_THROTTLING_SYSTEM_IS_OVERCONFIGURED     2
-
-#define IPMI_OEM_DELL_GET_POWER_CAPACITY_STATUS_BITMASK 0x01
-#define IPMI_OEM_DELL_GET_POWER_CAPACITY_STATUS_SHIFT   0
-
-#define IPMI_OEM_DELL_GET_POWER_CAPACITY_IS_SETTABLE_BITMASK 0x02
-#define IPMI_OEM_DELL_GET_POWER_CAPACITY_IS_SETTABLE_SHIFT   1
-
-#define IPMI_OEM_DELL_SET_POWER_CAPACITY_STATUS_ENABLE  0x01
-#define IPMI_OEM_DELL_SET_POWER_CAPACITY_STATUS_DISABLE 0x00
-
-#define IPMI_OEM_DELL_QUERY_CHASSIS_IDENTIFY_STATUS_OFF 0x00
-#define IPMI_OEM_DELL_QUERY_CHASSIS_IDENTIFY_STATUS_ON  0x01
-
-#define IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MIN 1
-#define IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MAX 16
+#define IPMI_OEM_DELL_MAX_STRING_BYTES 256
 
 /* Some slots resolve to 2.0 Watts when "off" */  
 #define IPMI_OEM_DELL_ZERO_DEGREE_EPSILON 2.5
-
-#define IPMI_OEM_DELL_PORT_MAP_GET_SET_BITMASK 0x80
-#define IPMI_OEM_DELL_PORT_MAP_GET_SET_SHIFT   7
-
-#define IPMI_OEM_DELL_PORT_MAP_GET 0
-#define IPMI_OEM_DELL_PORT_MAP_SET 1
-
-#define IPMI_OEM_DELL_PORT_MAP_CONTROL_TYPE_REQUEST_BITMASK 0x70
-#define IPMI_OEM_DELL_PORT_MAP_CONTROL_TYPE_REQUEST_SHIFT   4
-
-#define IPMI_OEM_DELL_PORT_MAP_CONTROL_TYPE_RESPONSE_BITMASK 0xF0
-#define IPMI_OEM_DELL_PORT_MAP_CONTROL_TYPE_RESPONSE_SHIFT   4
-
-#define IPMI_OEM_DELL_PORT_MAP_CONTROL_TYPE_JUMPER 1
-#define IPMI_OEM_DELL_PORT_MAP_CONTROL_TYPE_BMC    2
-
-#define IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_BITMASK 0x08
-#define IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_SHIFT   3
-
-#define IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_2_BITMASK 0x04
-#define IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_2_SHIFT   2
-
-#define IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_3_BITMASK 0x02
-#define IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_3_SHIFT   1
-
-#define IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_4_BITMASK 0x01
-#define IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_4_SHIFT   0
-
-#define IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_2 1
-#define IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_1_4 0
-
-#define IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_MIN 1
-#define IPMI_OEM_DELL_PORT_MAP_IPASS_MAPPING_MAX 16
-
-#define IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_BITMASK 0xF0
-#define IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_SHIFT   4
-
-#define IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_2_BITMASK 0x0F
-#define IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_2_SHIFT   0
-
-#define IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8_NOT_SUPPORTED 0
-#define IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_2_OR_1_4        1
-#define IPMI_OEM_DELL_PORT_MAP_SLOT_MAPPING_1_8               2
 
 /* Will call ipmi_cmd_get_system_info_parameters only once, b/c field
  * requested is defined by OEM to be < 16 bytes in length
@@ -1628,7 +1316,7 @@ _output_dell_system_info_10g_mac_addresses (ipmi_oem_state_data_t *state_data)
       goto cleanup;
     }
 
-  if ((number_of_nics * IPMI_OEM_DELL_MAC_ADDRESS_LENGTH) != (len - 1))
+  if ((number_of_nics * IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_LENGTH) != (len - 1))
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -1733,7 +1421,7 @@ _output_dell_system_info_11g_or_12g_mac_addresses (ipmi_oem_state_data_t *state_
   /* see record format below in ipmi_oem_dell_get_system_info(), record length = 8 */
   pstdout_printf (state_data->pstate,
 		  "NIC Number\tMAC Address\t\tNIC Status\n");
-  for (i = 0; i < (total_bytes / IPMI_OEM_DELL_11G_OR_12G_MAC_ADDRESS_LENGTH); i++)
+  for (i = 0; i < (total_bytes / IPMI_OEM_DELL_SYSTEM_INFO_11G_OR_12G_MAC_ADDRESS_LENGTH); i++)
     {
       uint8_t mac_type;
       
@@ -1742,8 +1430,8 @@ _output_dell_system_info_11g_or_12g_mac_addresses (ipmi_oem_state_data_t *state_
       bytes_rq[2] = IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_11G_MAC_ADDRESSES; /* parameter selector */
       bytes_rq[3] = 0x00;		/* set selector */
       bytes_rq[4] = 0x00;		/* block selector */
-      bytes_rq[5] = i * IPMI_OEM_DELL_11G_OR_12G_MAC_ADDRESS_LENGTH; /* offset */
-      bytes_rq[6] = IPMI_OEM_DELL_11G_OR_12G_MAC_ADDRESS_LENGTH; /* length */
+      bytes_rq[5] = i * IPMI_OEM_DELL_SYSTEM_INFO_11G_OR_12G_MAC_ADDRESS_LENGTH; /* offset */
+      bytes_rq[6] = IPMI_OEM_DELL_SYSTEM_INFO_11G_OR_12G_MAC_ADDRESS_LENGTH; /* length */
       
       if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
 				  0, /* lun */
@@ -1760,7 +1448,7 @@ _output_dell_system_info_11g_or_12g_mac_addresses (ipmi_oem_state_data_t *state_
 	  goto cleanup;
 	}
       
-      /* 11 = IPMI_OEM_DELL_11G_OR_12G_MAC_ADDRESS_LENGTH + 3 (for cmd, completion code, parameter revision) */
+      /* 11 = IPMI_OEM_DELL_SYSTEM_INFO_11G_OR_12G_MAC_ADDRESS_LENGTH + 3 (for cmd, completion code, parameter revision) */
       if (ipmi_oem_check_response_and_completion_code (state_data,
 						       bytes_rs,
 						       rs_len,
@@ -1821,9 +1509,9 @@ _output_dell_system_info_11g_or_12g_mac_addresses (ipmi_oem_state_data_t *state_
 int
 ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
 {
-  char string[IPMI_OEM_DELL_MAX_BYTES+1];
+  char string[IPMI_OEM_DELL_MAX_STRING_BYTES+1];
   unsigned int string_len = 0;
-  uint8_t bytes[IPMI_OEM_DELL_MAX_BYTES+1];
+  uint8_t bytes[IPMI_OEM_DELL_MAX_STRING_BYTES+1];
   unsigned int bytes_len = 0;
   int rv = -1;
 
@@ -2012,14 +1700,14 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
    *   bytes 3 - 8 - MAC address
    */
 
-  memset (string, '\0', IPMI_OEM_DELL_MAX_BYTES + 1);
+  memset (string, '\0', IPMI_OEM_DELL_MAX_STRING_BYTES + 1);
 
   if (!strcasecmp (state_data->prog_data->args->oem_options[0], "guid"))
     {
       if (_get_dell_system_info_short_string (state_data,
                                               IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_SYSTEM_GUID,
                                               string,
-                                              IPMI_OEM_DELL_MAX_BYTES,
+                                              IPMI_OEM_DELL_MAX_STRING_BYTES,
 					      &string_len) < 0)
         goto cleanup;
       
@@ -2056,7 +1744,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       if (_get_dell_system_info_short_string (state_data,
                                               IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_SYSTEM_ASSET_TAG,
                                               string,
-                                              IPMI_OEM_DELL_MAX_BYTES,
+                                              IPMI_OEM_DELL_MAX_STRING_BYTES,
 					      NULL) < 0)
         goto cleanup;
 
@@ -2069,7 +1757,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       if (_get_dell_system_info_short_string (state_data,
                                               IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_SYSTEM_SERVICE_TAG,
                                               string,
-                                              IPMI_OEM_DELL_MAX_BYTES,
+                                              IPMI_OEM_DELL_MAX_STRING_BYTES,
 					      NULL) < 0)
         goto cleanup;
 
@@ -2082,7 +1770,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       if (_get_dell_system_info_short_string (state_data,
                                               IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_CHASSIS_SERVICE_TAG,
                                               string,
-                                              IPMI_OEM_DELL_MAX_BYTES,
+                                              IPMI_OEM_DELL_MAX_STRING_BYTES,
 					      NULL) < 0)
         goto cleanup;
 
@@ -2095,7 +1783,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       if (_get_dell_system_info_short_string (state_data,
                                               IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_CHASSIS_RELATED_SERVICE_TAG,
                                               string,
-                                              IPMI_OEM_DELL_MAX_BYTES,
+                                              IPMI_OEM_DELL_MAX_STRING_BYTES,
 					      NULL) < 0)
         goto cleanup;
 
@@ -2108,7 +1796,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       if (_get_dell_system_info_short_string (state_data,
                                               IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_BOARD_REVISION,
                                               string,
-                                              IPMI_OEM_DELL_MAX_BYTES,
+                                              IPMI_OEM_DELL_MAX_STRING_BYTES,
 					      NULL) < 0)
         goto cleanup;
 
@@ -2122,7 +1810,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       if (_get_dell_system_info_long_string (state_data,
                                              IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_PLATFORM_MODEL_NAME,
                                              string,
-                                             IPMI_OEM_DELL_MAX_BYTES) < 0)
+                                             IPMI_OEM_DELL_MAX_STRING_BYTES) < 0)
         goto cleanup;
 
       pstdout_printf (state_data->pstate,
@@ -2134,7 +1822,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       if (_get_dell_system_info_long_string (state_data,
                                              IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_SLOT_NUMBER,
                                              string,
-                                             IPMI_OEM_DELL_MAX_BYTES) < 0)
+                                             IPMI_OEM_DELL_MAX_STRING_BYTES) < 0)
         goto cleanup;
       
       pstdout_printf (state_data->pstate,
@@ -2146,7 +1834,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       if (_get_dell_system_info_bytes (state_data,
 				       IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_SYSTEM_REVISION,
 				       bytes,
-				       IPMI_OEM_DELL_MAX_BYTES,
+				       IPMI_OEM_DELL_MAX_STRING_BYTES,
 				       1,
 				       &bytes_len) < 0)
         goto cleanup;
@@ -2162,14 +1850,14 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       if (_get_dell_system_info_bytes (state_data,
 				       IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_EMBEDDED_VIDEO_STATUS,
 				       bytes,
-				       IPMI_OEM_DELL_MAX_BYTES,
+				       IPMI_OEM_DELL_MAX_STRING_BYTES,
 				       1,
 				       &bytes_len) < 0)
         goto cleanup;
 
-      if (bytes[0] == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_WEB_GUI_SERVER_CONTROL_DISABLED)
+      if (bytes[0] == IPMI_OEM_DELL_SYSTEM_INFO_EMBEDDED_VIDEO_STATUS_DISABLED)
 	embedded_video_status_str = "Disabled";
-      else if (bytes[0] == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_WEB_GUI_SERVER_CONTROL_ENABLED)
+      else if (bytes[0] == IPMI_OEM_DELL_SYSTEM_INFO_EMBEDDED_VIDEO_STATUS_ENABLED)
 	embedded_video_status_str = "Enabled";
       else
 	embedded_video_status_str = "Unknown";
@@ -2188,7 +1876,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       if (_get_dell_system_info_long_string (state_data,
                                              IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_IDRAC_IPV4_URL,
                                              string,
-                                             IPMI_OEM_DELL_MAX_BYTES) < 0)
+                                             IPMI_OEM_DELL_MAX_STRING_BYTES) < 0)
         goto cleanup;
       
       pstdout_printf (state_data->pstate,
@@ -2202,7 +1890,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       if (_get_dell_system_info_bytes (state_data,
 				       IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_IDRAC_GUI_WEBSERVER_CONTROL,
 				       bytes,
-				       IPMI_OEM_DELL_MAX_BYTES,
+				       IPMI_OEM_DELL_MAX_STRING_BYTES,
 				       1,
 				       &bytes_len) < 0)
         goto cleanup;
@@ -2223,7 +1911,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       if (_get_dell_system_info_long_string (state_data,
                                              IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_CMC_IPV4_URL,
                                              string,
-                                             IPMI_OEM_DELL_MAX_BYTES) < 0)
+                                             IPMI_OEM_DELL_MAX_STRING_BYTES) < 0)
         goto cleanup;
       
       pstdout_printf (state_data->pstate,
@@ -2240,7 +1928,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       if (_get_dell_system_info_long_string (state_data,
                                              IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_CMC_IPV6_URL,
                                              string,
-                                             IPMI_OEM_DELL_MAX_BYTES) < 0)
+                                             IPMI_OEM_DELL_MAX_STRING_BYTES) < 0)
         goto cleanup;
       
       pstdout_printf (state_data->pstate,
@@ -5740,13 +5428,13 @@ ipmi_oem_dell_get_power_capacity (ipmi_oem_state_data_t *state_data)
 
   switch (system_throttling)
     {
-    case IPMI_OEM_DELL_GET_POWER_CAPACITY_SYSTEM_THROTTLING_NORMAL_SYSTEM_OPERATION:
+    case IPMI_OEM_DELL_SYSTEM_INFO_GET_POWER_CAPACITY_SYSTEM_THROTTLING_NORMAL_SYSTEM_OPERATION:
       system_throttling_str = "Normal system operation";
       break;
-    case IPMI_OEM_DELL_GET_POWER_CAPACITY_SYSTEM_THROTTLING_SYSTEM_NEEDS_TO_BE_THROTTLED:
+    case IPMI_OEM_DELL_SYSTEM_INFO_GET_POWER_CAPACITY_SYSTEM_THROTTLING_SYSTEM_NEEDS_TO_BE_THROTTLED:
       system_throttling_str = "System needs to be throttled";
       break;
-    case IPMI_OEM_DELL_GET_POWER_CAPACITY_SYSTEM_THROTTLING_SYSTEM_IS_OVERCONFIGURED:
+    case IPMI_OEM_DELL_SYSTEM_INFO_GET_POWER_CAPACITY_SYSTEM_THROTTLING_SYSTEM_IS_OVERCONFIGURED:
       system_throttling_str = "System is overconfigured";
       break;
     default:

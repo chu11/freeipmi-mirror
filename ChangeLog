@@ -1,3 +1,20 @@
+2012-06-18  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-oem-spec.h: New file.
+
+	* ipmi-oem/: Migrate various information into new ipmi-oem-spec.h
+	file and
+	libfreeipmi/include/spec/ipmi-system-info-parameters-oem-spec.h.
+
+	* ipmipower/, libfreeipmi/sel/: Use new macros in ipmi-oem-spec.h.
+
+	* ipmi-oem/ipmi-oem-thirdparty.h, ipmi-oem/ipmi-oem-thirdparty.c:
+	New files.
+
+	* ipmi-oem/ipmi-oem-inventec.c, ipmi-oem/ipmi-oem-quanta.c:
+	Migrate some commmon functions to ipmi-oem-thirdparty.c and
+	ipmi-oem-thirdparty.h.
+	
 2012-06-15  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/interpret/: Support new interpretations based on

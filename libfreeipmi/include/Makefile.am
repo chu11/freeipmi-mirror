@@ -86,6 +86,7 @@ nobase_include_HEADERS = \
 	freeipmi/spec/ipmi-lan-configuration-parameters-oem-spec.h \
 	freeipmi/spec/ipmi-netfn-spec.h \
 	freeipmi/spec/ipmi-netfn-oem-spec.h \
+	freeipmi/spec/ipmi-oem-spec.h \
 	freeipmi/spec/ipmi-pef-configuration-parameters-spec.h \
 	freeipmi/spec/ipmi-pef-configuration-parameters-oem-spec.h \
 	freeipmi/spec/ipmi-privilege-level-spec.h \
