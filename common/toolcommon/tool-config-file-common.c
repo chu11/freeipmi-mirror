@@ -89,6 +89,34 @@ _config_file_bool (conffile_t cf,
 }
 
 static int
+_config_file_uint8 (conffile_t cf,
+		    struct conffile_data *data,
+		    char *optionname,
+		    int option_type,
+		    void *option_ptr,
+		    int option_data,
+		    void *app_ptr,
+		    int app_data)
+{
+  uint8_t *value;
+
+  assert (data);
+  assert (optionname);
+  assert (option_ptr);
+
+  value = (uint8_t *)option_ptr;
+
+  if (data->intval < 0)
+    {
+      fprintf (stderr, "Config File Error: invalid value for %s\n", optionname);
+      exit (EXIT_FAILURE);
+    }
+
+  *value = data->intval;
+  return (0);
+}
+
+static int
 _config_file_non_negative_int (conffile_t cf,
                                struct conffile_data *data,
                                char *optionname,
@@ -133,6 +161,62 @@ _config_file_positive_int (conffile_t cf,
   assert (option_ptr);
 
   value = (int *)option_ptr;
+
+  if (data->intval <= 0)
+    {
+      fprintf (stderr, "Config File Error: invalid value for %s\n", optionname);
+      exit (EXIT_FAILURE);
+    }
+
+  *value = data->intval;
+  return (0);
+}
+
+static int
+_config_file_unsigned_int (conffile_t cf,
+			   struct conffile_data *data,
+			   char *optionname,
+			   int option_type,
+			   void *option_ptr,
+			   int option_data,
+			   void *app_ptr,
+			   int app_data)
+{
+  unsigned int *value;
+
+  assert (data);
+  assert (optionname);
+  assert (option_ptr);
+
+  value = (unsigned int *)option_ptr;
+
+  if (data->intval < 0)
+    {
+      fprintf (stderr, "Config File Error: invalid value for %s\n", optionname);
+      exit (EXIT_FAILURE);
+    }
+
+  *value = data->intval;
+  return (0);
+}
+
+static int
+_config_file_positive_unsigned_int (conffile_t cf,
+				    struct conffile_data *data,
+				    char *optionname,
+				    int option_type,
+				    void *option_ptr,
+				    int option_data,
+				    void *app_ptr,
+				    int app_data)
+{
+  unsigned int *value;
+
+  assert (data);
+  assert (optionname);
+  assert (option_ptr);
+
+  value = (unsigned int *)option_ptr;
 
   if (data->intval <= 0)
     {
@@ -1319,7 +1403,7 @@ config_file_parse (const char *filename,
         "register-spacing",
         CONFFILE_OPTION_INT,
         -1,
-        _config_file_positive_int,
+        _config_file_positive_unsigned_int,
         1,
         0,
         &register_spacing_count,
@@ -1330,7 +1414,7 @@ config_file_parse (const char *filename,
         "target-channel-number",
         CONFFILE_OPTION_INT,
         -1,
-        _config_file_non_negative_int,
+        _config_file_uint8,
         1,
         0,
         &target_channel_number_count,
@@ -1341,7 +1425,7 @@ config_file_parse (const char *filename,
         "target-slave-address",
         CONFFILE_OPTION_INT,
         -1,
-        _config_file_non_negative_int,
+        _config_file_uint8,
         1,
         0,
         &target_slave_address_count,
@@ -1390,7 +1474,7 @@ config_file_parse (const char *filename,
         "timeout",
         CONFFILE_OPTION_INT,
         -1,
-        _config_file_positive_int,
+        _config_file_positive_unsigned_int,
         1,
         0,
         &session_timeout_count,
@@ -1401,7 +1485,7 @@ config_file_parse (const char *filename,
         "session-timeout",
         CONFFILE_OPTION_INT,
         -1,
-        _config_file_positive_int,
+        _config_file_positive_unsigned_int,
         1,
         0,
         &session_timeout_count,
@@ -1413,7 +1497,7 @@ config_file_parse (const char *filename,
         "retry-timeout",
         CONFFILE_OPTION_INT,
         -1,
-        _config_file_positive_int,
+        _config_file_positive_unsigned_int,
         1,
         0,
         &retransmission_timeout_count,
@@ -1424,7 +1508,7 @@ config_file_parse (const char *filename,
         "retransmission-timeout",
         CONFFILE_OPTION_INT,
         -1,
-        _config_file_positive_int,
+        _config_file_positive_unsigned_int,
         1,
         0,
         &retransmission_timeout_count,
@@ -4270,7 +4354,7 @@ config_file_parse (const char *filename,
         "retry-wait-timeout",
         CONFFILE_OPTION_INT,
         -1,
-        _config_file_positive_int,
+        _config_file_positive_unsigned_int,
         1,
         0,
         &(ipmipower_data.retransmission_wait_timeout_count),
@@ -4282,7 +4366,7 @@ config_file_parse (const char *filename,
         "retransmission-wait-timeout",
         CONFFILE_OPTION_INT,
         -1,
-        _config_file_positive_int,
+        _config_file_positive_unsigned_int,
         1,
         0,
         &(ipmipower_data.retransmission_wait_timeout_count),
@@ -4293,7 +4377,7 @@ config_file_parse (const char *filename,
         "ipmipower-retransmission-wait-timeout",
         CONFFILE_OPTION_INT,
         -1,
-        _config_file_positive_int,
+        _config_file_positive_unsigned_int,
         1,
         0,
         &(ipmipower_data.retransmission_wait_timeout_count),
@@ -4305,7 +4389,7 @@ config_file_parse (const char *filename,
         "retry-backoff-count",
         CONFFILE_OPTION_INT,
         -1,
-        _config_file_positive_int,
+        _config_file_positive_unsigned_int,
         1,
         0,
         &(ipmipower_data.retransmission_backoff_count_count),
@@ -4317,7 +4401,7 @@ config_file_parse (const char *filename,
         "retransmission-backoff-count",
         CONFFILE_OPTION_INT,
         -1,
-        _config_file_positive_int,
+        _config_file_positive_unsigned_int,
         1,
         0,
         &(ipmipower_data.retransmission_backoff_count_count),
@@ -4328,7 +4412,7 @@ config_file_parse (const char *filename,
         "ipmipower-retransmission-backoff-count",
         CONFFILE_OPTION_INT,
         -1,
-        _config_file_positive_int,
+        _config_file_positive_unsigned_int,
         1,
         0,
         &(ipmipower_data.retransmission_backoff_count_count),
@@ -4340,7 +4424,7 @@ config_file_parse (const char *filename,
         "ping-interval",
         CONFFILE_OPTION_INT,
         -1,
-        _config_file_non_negative_int,
+        _config_file_unsigned_int,
         1,
         0,
         &(ipmipower_data.ping_interval_count),
@@ -4351,7 +4435,7 @@ config_file_parse (const char *filename,
         "ipmipower-ping-interval",
         CONFFILE_OPTION_INT,
         -1,
-        _config_file_non_negative_int,
+        _config_file_unsigned_int,
         1,
         0,
         &(ipmipower_data.ping_interval_count),
@@ -4363,7 +4447,7 @@ config_file_parse (const char *filename,
         "ping-timeout",
         CONFFILE_OPTION_INT,
         -1,
-        _config_file_non_negative_int,
+        _config_file_unsigned_int,
         1,
         0,
         &(ipmipower_data.ping_timeout_count),
@@ -4374,7 +4458,7 @@ config_file_parse (const char *filename,
         "ipmipower-ping-timeout",
         CONFFILE_OPTION_INT,
         -1,
-        _config_file_non_negative_int,
+        _config_file_unsigned_int,
         1,
         0,
         &(ipmipower_data.ping_timeout_count),
@@ -4386,7 +4470,7 @@ config_file_parse (const char *filename,
         "ping-packet-count",
         CONFFILE_OPTION_INT,
         -1,
-        _config_file_non_negative_int,
+        _config_file_unsigned_int,
         1,
         0,
         &(ipmipower_data.ping_packet_count_count),
@@ -4397,7 +4481,7 @@ config_file_parse (const char *filename,
         "ipmipower-ping-packet-count",
         CONFFILE_OPTION_INT,
         -1,
-        _config_file_non_negative_int,
+        _config_file_unsigned_int,
         1,
         0,
         &(ipmipower_data.ping_packet_count_count),
@@ -4409,7 +4493,7 @@ config_file_parse (const char *filename,
         "ping-percent",
         CONFFILE_OPTION_INT,
         -1,
-        _config_file_non_negative_int,
+        _config_file_unsigned_int,
         1,
         0,
         &(ipmipower_data.ping_percent_count),
@@ -4420,7 +4504,7 @@ config_file_parse (const char *filename,
         "ipmipower-ping-percent",
         CONFFILE_OPTION_INT,
         -1,
-        _config_file_non_negative_int,
+        _config_file_unsigned_int,
         1,
         0,
         &(ipmipower_data.ping_percent_count),
@@ -4432,7 +4516,7 @@ config_file_parse (const char *filename,
         "ping-consec-count",
         CONFFILE_OPTION_INT,
         -1,
-        _config_file_non_negative_int,
+        _config_file_unsigned_int,
         1,
         0,
         &(ipmipower_data.ping_consec_count_count),
@@ -4443,7 +4527,7 @@ config_file_parse (const char *filename,
         "ipmipower-ping-consec-count",
         CONFFILE_OPTION_INT,
         -1,
-        _config_file_non_negative_int,
+        _config_file_unsigned_int,
         1,
         0,
         &(ipmipower_data.ping_consec_count_count),
