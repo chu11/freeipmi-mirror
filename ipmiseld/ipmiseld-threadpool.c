@@ -39,6 +39,7 @@
 #include <freeipmi/freeipmi.h>
 
 #include "ipmiseld.h"
+#include "ipmiseld-debug.h"
 #include "ipmiseld-threadpool.h"
 
 #include "freeipmi-portability.h"
@@ -51,15 +52,19 @@ struct ipmiseld_threadpool_data
   int threadpool_num;
   IpmiSeldThreadPoolCallback callback;
   IpmiSeldThreadPoolPostProcess postprocess;
-  /* XXX flag for clean exiting */
+  int exit_flag;
 };
 
 static struct ipmiseld_threadpool_data *threadpool_data_array = NULL;
+static unsigned int threadpool_data_array_len = 0; 
 
 static List threadpool_queue = NULL;
-
 static pthread_mutex_t threadpool_queue_lock = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t threadpool_queue_cond = PTHREAD_COND_INITIALIZER;
+
+static unsigned int threadpool_count = 0;
+static pthread_mutex_t threadpool_count_lock = PTHREAD_MUTEX_INITIALIZER;
+static pthread_cond_t threadpool_count_cond = PTHREAD_COND_INITIALIZER;
 
 static void *
 _threadpool_func (void *arg)
@@ -70,14 +75,14 @@ _threadpool_func (void *arg)
 
   threadpool_data = (struct ipmiseld_threadpool_data *)arg;
 
-  while (1)
+  while (!threadpool_data->exit_flag)
     {
       void *queue_arg;
 
       pthread_mutex_lock (&threadpool_queue_lock);
 
       while (!list_count (threadpool_queue))
-	pthread_cond_wait(&threadpool_queue_cond, &threadpool_queue_lock);
+	pthread_cond_wait (&threadpool_queue_cond, &threadpool_queue_lock);
       
       if (!(queue_arg = list_dequeue (threadpool_queue)))
 	err_output ("list_dequeue: %s", strerror (errno));
@@ -86,8 +91,6 @@ _threadpool_func (void *arg)
       
       if (queue_arg)
 	{
-	  /* XXX put some debug in here */
-	  /* XXX check for errors */
 	  threadpool_data->callback (queue_arg);
 	  
 	  if (threadpool_data->postprocess)
@@ -95,6 +98,10 @@ _threadpool_func (void *arg)
 	}
     }
 
+  pthread_mutex_lock (&threadpool_count_lock);
+  threadpool_count--;
+  pthread_cond_signal (&threadpool_count_cond);
+  pthread_mutex_unlock (&threadpool_count_lock);
 
   return (NULL);
 }
@@ -138,17 +145,24 @@ ipmiseld_threadpool_init (struct ipmiseld_prog_data *prog_data,
       threadpool_data_array[i].threadpool_num = i;
       threadpool_data_array[i].callback = callback;
       threadpool_data_array[i].postprocess = postprocess;
+      threadpool_data_array[i].exit_flag = 0;
 
       if ((ret = pthread_create (&threadpool_data_array[i].tid,
 				 NULL,
 				 _threadpool_func,
-				 &threadpool_data_array[i])) < 0)
+				 &threadpool_data_array[i])))
 	{
 	  err_output ("pthread_create: %s", strerror (ret));
 	  goto cleanup;
 	}
+      
+      pthread_mutex_lock(&threadpool_count_lock);
+      threadpool_count++;
+      pthread_mutex_unlock(&threadpool_count_lock);
     }
-	  
+
+  threadpool_data_array_len = prog_data->args->threadpool_count;
+
   rv = 0;
  cleanup:
   return (rv);
@@ -157,14 +171,30 @@ ipmiseld_threadpool_init (struct ipmiseld_prog_data *prog_data,
 void
 ipmiseld_threadpool_destroy (void)
 {
+  int i;
+  int ret;
+  
   /* achu: We want any current SEL poll to complete, so we won't
    * pthread_cancel() here (and likewise won't use
    * pthread_cleanup_push/pthread_cleanup_pop).
    *
    * Instead we set this flag and wait for the threads to finish up.
    */
-  /* XXX cleanup threads */
+  for (i = 0; i < threadpool_data_array_len; i++)
+    {
+      threadpool_data_array[i].exit_flag = 1;
+
+      if ((ret = pthread_cond_signal (&threadpool_queue_cond)))
+	err_output ("pthread_cond_signal: %s", strerror (ret)); 
+    }
+
+  pthread_mutex_lock(&threadpool_count_lock);
+  while (threadpool_count > 0)
+    pthread_cond_wait(&threadpool_count_cond, &threadpool_count_lock);
+  pthread_mutex_unlock(&threadpool_count_lock);
+
   free (threadpool_data_array);
+
   if (threadpool_queue)
     list_destroy (threadpool_queue);
 }  

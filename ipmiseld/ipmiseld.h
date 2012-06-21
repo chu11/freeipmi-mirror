@@ -119,7 +119,7 @@ struct ipmiseld_arguments
   int ignore_sdr;
   int re_download_sdr;
   int clear_sel;
-  int threadpool_count;
+  unsigned int threadpool_count;
   int test_run;
   int foreground;
 };

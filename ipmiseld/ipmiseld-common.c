@@ -153,11 +153,11 @@ _ipmiseld_syslog (ipmiseld_host_data_t *host_data,
   memset (buf, '\0', IPMISELD_ERR_BUFLEN + 1);
   vsnprintf(buf, IPMISELD_ERR_BUFLEN, message, ap);
   
-    if (host_data->prog_data->args->test_run
-	|| host_data->prog_data->args->foreground)
-      printf ("%s\n", buf);
-    else
-      syslog (host_data->prog_data->log_priority, buf);
+  if (host_data->prog_data->args->test_run
+      || host_data->prog_data->args->foreground)
+    printf ("%s\n", buf);
+  else
+    syslog (host_data->prog_data->log_priority, buf);
 }
 
 void
@@ -203,5 +203,27 @@ ipmiseld_syslog_host (ipmiseld_host_data_t *host_data,
 		host_data->hostname,
 		buf);
     }
+  va_end (ap);
+}
+
+void
+ipmiseld_err_output (ipmiseld_host_data_t *host_data,
+		     const char *message,
+		     ...)
+{
+  char buf[IPMISELD_ERR_BUFLEN + 1];
+  memset (buf, '\0', IPMISELD_ERR_BUFLEN + 1);
+  va_list ap;
+
+  assert (host_data);
+  assert (message);
+
+  va_start (ap, message);
+  vsnprintf(buf, IPMISELD_ERR_BUFLEN, message, ap);
+
+  if (!host_data->hostname)
+    err_output ("%s", buf);
+  else
+    err_output ("%s: %s", host_data->hostname, buf);
   va_end (ap);
 }

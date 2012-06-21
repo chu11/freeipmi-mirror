@@ -91,20 +91,20 @@ ipmiseld_sel_info_get (ipmiseld_host_data_t *host_data, ipmiseld_sel_info_t *sel
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_sel_info_rs)))
     {
-      err_output ("fiid_obj_create: %s", strerror (errno));
+      ipmiseld_err_output (host_data, "fiid_obj_create: %s", strerror (errno));
       goto cleanup;
     }
 
   if (ipmi_cmd_get_sel_info (host_data->host_poll->ipmi_ctx, obj_cmd_rs) < 0)
     {
-      err_output ("ipmi_cmd_get_sel_info: %s",
+      ipmiseld_err_output (host_data, "ipmi_cmd_get_sel_info: %s",
 		  ipmi_ctx_errormsg (host_data->host_poll->ipmi_ctx));
       goto cleanup;
     }
 
   if (FIID_OBJ_GET (obj_cmd_rs, "entries", &val) < 0)
     {
-      err_output ("fiid_obj_get: 'entries': %s",
+      ipmiseld_err_output (host_data, "fiid_obj_get: 'entries': %s",
 		  fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -112,7 +112,7 @@ ipmiseld_sel_info_get (ipmiseld_host_data_t *host_data, ipmiseld_sel_info_t *sel
 
   if (FIID_OBJ_GET (obj_cmd_rs, "free_space", &val) < 0)
     {
-      err_output ("fiid_obj_get: 'free_space': %s",
+      ipmiseld_err_output (host_data, "fiid_obj_get: 'free_space': %s",
 		  fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -120,7 +120,7 @@ ipmiseld_sel_info_get (ipmiseld_host_data_t *host_data, ipmiseld_sel_info_t *sel
 
   if (FIID_OBJ_GET (obj_cmd_rs, "most_recent_addition_timestamp", &val) < 0)
     {
-      err_output ("fiid_obj_get: 'most_recent_addition_timestamp': %s",
+      ipmiseld_err_output (host_data, "fiid_obj_get: 'most_recent_addition_timestamp': %s",
 		  fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -128,7 +128,7 @@ ipmiseld_sel_info_get (ipmiseld_host_data_t *host_data, ipmiseld_sel_info_t *sel
 
   if (FIID_OBJ_GET (obj_cmd_rs, "most_recent_erase_timestamp", &val) < 0)
     {
-      err_output ("fiid_obj_get: 'most_recent_erase_timestamp': %s",
+      ipmiseld_err_output (host_data, "fiid_obj_get: 'most_recent_erase_timestamp': %s",
 		  fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -136,7 +136,7 @@ ipmiseld_sel_info_get (ipmiseld_host_data_t *host_data, ipmiseld_sel_info_t *sel
 
   if (FIID_OBJ_GET (obj_cmd_rs, "delete_sel_command_supported", &val) < 0)
     {
-      err_output ("fiid_obj_get: 'delete_sel_command_supported': %s",
+      ipmiseld_err_output (host_data, "fiid_obj_get: 'delete_sel_command_supported': %s",
 		  fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -144,7 +144,7 @@ ipmiseld_sel_info_get (ipmiseld_host_data_t *host_data, ipmiseld_sel_info_t *sel
 
   if (FIID_OBJ_GET (obj_cmd_rs, "reserve_sel_command_supported", &val) < 0)
     {
-      err_output ("fiid_obj_get: 'reserve_sel_command_supported': %s",
+      ipmiseld_err_output (host_data, "fiid_obj_get: 'reserve_sel_command_supported': %s",
 		  fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -152,7 +152,7 @@ ipmiseld_sel_info_get (ipmiseld_host_data_t *host_data, ipmiseld_sel_info_t *sel
 
   if (FIID_OBJ_GET (obj_cmd_rs, "overflow_flag", &val) < 0)
     {
-      err_output ("fiid_obj_get: 'overflow_flag': %s",
+      ipmiseld_err_output (host_data, "fiid_obj_get: 'overflow_flag': %s",
 		  fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -207,7 +207,7 @@ ipmiseld_get_last_record_id (ipmiseld_host_data_t *host_data,
     {
       /* A general IPMI error (busy, timeout, etc.) is ok, it happens */
       if (ipmi_sel_ctx_errnum (host_data->host_poll->sel_ctx) != IPMI_SEL_ERR_IPMI_ERROR)
-	err_output ("ipmi_sel_parse: %s", ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
+	ipmiseld_err_output (host_data, "ipmi_sel_parse: %s", ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
       return (-1);
     }
 
@@ -288,7 +288,7 @@ _sel_parse_err_handle (ipmiseld_host_data_t *host_data, char *func)
       return (0);
     }
 
-  err_output ("%s: %s",
+  ipmiseld_err_output (host_data, "%s: %s",
 	      func,
 	      ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
 
@@ -401,7 +401,7 @@ _sel_log_output (ipmiseld_host_data_t *host_data, uint8_t record_type)
                                      0,
                                      &record_id) < 0)
     {
-      err_output ("ipmi_sel_parse_read_record_id: %s",
+      ipmiseld_err_output (host_data, "ipmi_sel_parse_read_record_id: %s",
 		  ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
       return (-1);
     }
@@ -595,7 +595,7 @@ _sel_parse_callback (ipmi_sel_ctx_t ctx, void *callback_data)
 			      sel_record_len,
 			      &event_state) < 0)
 	{
-	  err_output ("ipmi_interpret_sel: %s",
+	  ipmiseld_err_output (host_data, "ipmi_interpret_sel: %s",
 		      ipmi_interpret_ctx_errormsg (host_data->host_poll->interpret_ctx));
 	  goto cleanup;
 	}
@@ -641,7 +641,7 @@ ipmiseld_sel_parse_test_run (ipmiseld_host_data_t *host_data)
     {
       /* A general IPMI error (busy, timeout, etc.) is ok, it happens */
       if (ipmi_sel_ctx_errnum (host_data->host_poll->sel_ctx) != IPMI_SEL_ERR_IPMI_ERROR)
-	err_output ("ipmi_sel_parse: %s",
+	ipmiseld_err_output (host_data, "ipmi_sel_parse: %s",
 		    ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
       return (-1);
     }
@@ -1041,7 +1041,7 @@ ipmiseld_sel_reserve (ipmiseld_host_data_t *host_data)
 	  if (ipmi_sel_ctx_errnum (host_data->host_poll->sel_ctx) == IPMI_SEL_ERR_IPMI_ERROR)
 	    return (0);
 	  
-	  err_output ("ipmi_sel_ctx_register_reservation_id: %s",
+	  ipmiseld_err_output (host_data, "ipmi_sel_ctx_register_reservation_id: %s",
 		      ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
 	  return (-1);
 	}
@@ -1066,7 +1066,7 @@ ipmiseld_sel_log_entries (ipmiseld_host_data_t *host_data,
 		      _sel_parse_callback,
 		      host_data) < 0)
     {
-      err_output ("ipmi_sel_parse: %s", ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
+      ipmiseld_err_output (host_data, "ipmi_sel_parse: %s", ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
       return (-1);
     }
   
@@ -1107,7 +1107,7 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
     {
       if (ipmi_sel_clear_sel (host_data->host_poll->sel_ctx) < 0)
 	{
-	  err_output ("ipmi_sel_clear_sel: %s",
+	  ipmiseld_err_output (host_data, "ipmi_sel_clear_sel: %s",
 		      ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
 	  goto cleanup;
 	}
@@ -1184,7 +1184,7 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
 	    retry_flag++;
 	  else
 	    {
-	      err_output ("ipmi_sel_clear_sel: %s",
+	      ipmiseld_err_output (host_data, "ipmi_sel_clear_sel: %s",
 			  ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
 	      goto save_state_out;
 	    }
@@ -1277,7 +1277,7 @@ _ipmiseld_poll (void *arg)
   
   if (!(host_data->host_poll->sel_ctx = ipmi_sel_ctx_create (host_data->host_poll->ipmi_ctx, host_data->host_poll->sdr_ctx)))
     {
-      err_output ("ipmi_sel_ctx_create: %s", strerror (errno));
+      ipmiseld_err_output (host_data, "ipmi_sel_ctx_create: %s", strerror (errno));
       goto cleanup;
     }
   
@@ -1292,7 +1292,7 @@ _ipmiseld_poll (void *arg)
     {
       /* Don't error out, if this fails we can still continue */
       if (ipmi_sel_ctx_set_flags (host_data->host_poll->sel_ctx, sel_flags) < 0)
-	err_output ("ipmi_sel_ctx_set_flags: %s",
+	ipmiseld_err_output (host_data, "ipmi_sel_ctx_set_flags: %s",
 		    ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
     }
 
@@ -1301,13 +1301,13 @@ _ipmiseld_poll (void *arg)
       && host_data->hostname)
     {
       if (ipmi_sel_ctx_set_debug_prefix (host_data->host_poll->sel_ctx, host_data->hostname) < 0)
-        err_output ("ipmi_sel_ctx_set_debug_prefix: %s",
+        ipmiseld_err_output (host_data, "ipmi_sel_ctx_set_debug_prefix: %s",
 		    ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
     }
   
   if (!(host_data->host_poll->interpret_ctx = ipmi_interpret_ctx_create ()))
     {
-      err_output ("ipmi_interpret_ctx_create: %s", strerror (errno));
+      ipmiseld_err_output (host_data, "ipmi_interpret_ctx_create: %s", strerror (errno));
       goto cleanup;
     }
 
@@ -1318,7 +1318,7 @@ _ipmiseld_poll (void *arg)
       if (!(!host_data->prog_data->args->event_state_config_file
 	    && ipmi_interpret_ctx_errnum (host_data->host_poll->interpret_ctx) == IPMI_INTERPRET_ERR_SEL_CONFIG_FILE_DOES_NOT_EXIST))
 	{
-	  err_output ("ipmi_interpret_load_sel_config: %s", ipmi_interpret_ctx_errormsg (host_data->host_poll->interpret_ctx));
+	  ipmiseld_err_output (host_data, "ipmi_interpret_load_sel_config: %s", ipmi_interpret_ctx_errormsg (host_data->host_poll->interpret_ctx));
 	  goto cleanup;
         }
     }
@@ -1330,7 +1330,7 @@ _ipmiseld_poll (void *arg)
     {
       if (ipmi_interpret_ctx_set_flags (host_data->host_poll->interpret_ctx, interpret_flags) < 0)
 	{
-	  err_output ("ipmi_interpret_ctx_set_flags: %s",
+	  ipmiseld_err_output (host_data, "ipmi_interpret_ctx_set_flags: %s",
 		      ipmi_interpret_ctx_errormsg (host_data->host_poll->interpret_ctx));
 	  goto cleanup;
 	}
@@ -1347,7 +1347,7 @@ _ipmiseld_poll (void *arg)
   
   if (ipmi_sel_ctx_set_separator (host_data->host_poll->sel_ctx, EVENT_OUTPUT_SEPARATOR) < 0)
     {
-      err_output ("ipmi_sel_parse: %s",
+      ipmiseld_err_output (host_data, "ipmi_sel_parse: %s",
 		  ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
       return (-1);
     }
@@ -1363,7 +1363,7 @@ _ipmiseld_poll (void *arg)
       if (ipmi_sel_ctx_set_manufacturer_id (host_data->host_poll->sel_ctx,
                                             host_data->host_poll->oem_data.manufacturer_id) < 0)
         {
-          err_output ("ipmi_sel_ctx_set_manufacturer_id: %s",
+          ipmiseld_err_output (host_data, "ipmi_sel_ctx_set_manufacturer_id: %s",
 		      ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
           return (-1);
         }
@@ -1371,7 +1371,7 @@ _ipmiseld_poll (void *arg)
       if (ipmi_sel_ctx_set_product_id (host_data->host_poll->sel_ctx,
                                        host_data->host_poll->oem_data.product_id) < 0)
         {
-          err_output ("ipmi_sel_ctx_set_product_id: %s",
+          ipmiseld_err_output (host_data, "ipmi_sel_ctx_set_product_id: %s",
 		      ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
           return (-1);
         }
@@ -1380,7 +1380,7 @@ _ipmiseld_poll (void *arg)
                                          host_data->host_poll->oem_data.ipmi_version_major,
                                          host_data->host_poll->oem_data.ipmi_version_minor) < 0)
         {
-          err_output ("ipmi_sel_ctx_set_ipmi_version: %s",
+          ipmiseld_err_output (host_data, "ipmi_sel_ctx_set_ipmi_version: %s",
 		      ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
           return (-1);
         }
@@ -1390,7 +1390,7 @@ _ipmiseld_poll (void *arg)
           if (ipmi_interpret_ctx_set_manufacturer_id (host_data->host_poll->interpret_ctx,
                                                       host_data->host_poll->oem_data.manufacturer_id) < 0)
             {
-              err_output ("ipmi_interpret_ctx_set_manufacturer_id: %s",
+              ipmiseld_err_output (host_data, "ipmi_interpret_ctx_set_manufacturer_id: %s",
 			  ipmi_interpret_ctx_errormsg (host_data->host_poll->interpret_ctx));
               return (-1);
             }
@@ -1398,7 +1398,7 @@ _ipmiseld_poll (void *arg)
           if (ipmi_interpret_ctx_set_product_id (host_data->host_poll->interpret_ctx,
                                                  host_data->host_poll->oem_data.product_id) < 0)
             {
-              err_output ("ipmi_interpret_ctx_set_product_id: %s",
+              ipmiseld_err_output (host_data, "ipmi_interpret_ctx_set_product_id: %s",
 			  ipmi_interpret_ctx_errormsg (host_data->host_poll->interpret_ctx));
               return (-1);
             }
