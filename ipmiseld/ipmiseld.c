@@ -1257,6 +1257,10 @@ _ipmiseld_poll (void *arg)
 
   assert (!host_data->host_poll);
 
+  if (host_data->prog_data->args->foreground
+      && host_data->prog_data->args->common_args.debug)
+    IPMISELD_DEBUG (("Poll %s", host_data->hostname ? host_data->hostname : "localhost"));
+
   memset (&host_poll, '\0', sizeof (ipmiseld_host_poll_t));
   host_data->host_poll = &host_poll;
 
@@ -1570,10 +1574,6 @@ _ipmiseld (ipmiseld_prog_data_t *prog_data)
 	      goto cleanup;
 	    }
 	      
-	  if (prog_data->args->foreground
-	      && prog_data->args->common_args.debug)
-	    IPMISELD_DEBUG (("Poll %s", host_data->hostname ? host_data->hostname : "localhost"));
-
 	  /* No need to lauch thread if polling only one host */
 	  /* XXX vary timeout based on error? */ 
 	  if (prog_data->args->threadpool_count > 1)

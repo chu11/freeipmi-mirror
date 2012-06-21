@@ -72,26 +72,26 @@ _threadpool_func (void *arg)
 
   while (1)
     {
-      struct ipmiseld_host_data *host_data = NULL;
+      void *queue_arg;
 
       pthread_mutex_lock (&threadpool_queue_lock);
 
       while (!list_count (threadpool_queue))
 	pthread_cond_wait(&threadpool_queue_cond, &threadpool_queue_lock);
       
-      if (!(host_data = list_dequeue (threadpool_queue)))
+      if (!(queue_arg = list_dequeue (threadpool_queue)))
 	err_output ("list_dequeue: %s", strerror (errno));
       
       pthread_mutex_unlock (&threadpool_queue_lock);
       
-      if (host_data)
+      if (queue_arg)
 	{
 	  /* XXX put some debug in here */
 	  /* XXX check for errors */
-	  threadpool_data->callback (host_data);
+	  threadpool_data->callback (queue_arg);
 	  
 	  if (threadpool_data->postprocess)
-	    threadpool_data->postprocess (host_data);
+	    threadpool_data->postprocess (queue_arg);
 	}
     }
 
