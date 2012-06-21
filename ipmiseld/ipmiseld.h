@@ -94,7 +94,7 @@ enum ipmiseld_argp_option_keys
 struct ipmiseld_arguments
 {
   struct common_cmd_args common_args;
-  int verbose_count;
+  unsigned int verbose_count;
   char sensor_types[MAX_SENSOR_TYPES][MAX_SENSOR_TYPES_STRING_LENGTH+1];
   unsigned int sensor_types_length;
   char exclude_sensor_types[MAX_SENSOR_TYPES][MAX_SENSOR_TYPES_STRING_LENGTH+1];
