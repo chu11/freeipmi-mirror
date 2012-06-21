@@ -1592,6 +1592,8 @@ _ipmiseld (ipmiseld_prog_data_t *prog_data)
 	      goto cleanup;
 	    }
 
+	  /* XXX deal w/ corner case of heap empty */
+
 	  if (!(host_data = heap_peek (host_data_heap)))
 	    {	  
 	      err_output ("heap_peek: %s", strerror (errno));

@@ -28,4 +28,15 @@
 
 #include "ipmiseld.h"
 
+typedef int (*IpmiSeldThreadPoolCallback)(void *arg);
+
+typedef int (*IpmiSeldThreadPoolPostProcess)(void *arg);
+
+int ipmiseld_threadpool_init (struct ipmiseld_prog_data *prog_data,
+			      IpmiSeldThreadPoolCallback callback,
+			      IpmiSeldThreadPoolPostProcess postprocess);
+
+void ipmiseld_threadpool_destroy (void);
+
+
 #endif /* IPMISELD_THREADPOOL_H */
