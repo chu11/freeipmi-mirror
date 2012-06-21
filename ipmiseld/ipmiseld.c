@@ -1501,6 +1501,7 @@ _ipmiseld (ipmiseld_prog_data_t *prog_data)
   if (hosts_count < prog_data->args->threadpool_count)
     prog_data->args->threadpool_count = hosts_count;
 
+  /* XXX make global and add lock */
   if (!(host_data_heap = heap_create (hosts_count, (HeapCmpF)hostdata_timecmp, (HeapDelF)free)))
     {
       err_output ("list_create: %s", strerror (errno));
@@ -1583,9 +1584,10 @@ _ipmiseld (ipmiseld_prog_data_t *prog_data)
 	  else
 	    _ipmiseld_poll (host_data);
 
+	  /* XXX deal with as post cleanup */
 	  gettimeofday (&tv, NULL);
 	  host_data->next_poll_time = tv.tv_sec + prog_data->args->poll_interval;
-	  
+  
 	  if (!heap_insert (host_data_heap, host_data))
 	    {
 	      err_output ("heap_insert: %s", strerror (errno));
