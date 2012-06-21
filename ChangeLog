@@ -1,3 +1,10 @@
+2012-06-21  Albert Chu <chu11@llnl.gov>
+
+	* common/toolcommon/tool-config-file-common.c: Fix casting bug w/
+	signed vs unsigned ints.
+
+	* Make all verbose_count variables in tools unsigned ints.
+	
 2012-06-18  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/spec/ipmi-oem-spec.h: New file.

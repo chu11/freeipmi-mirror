@@ -62,7 +62,7 @@ enum ipmi_sensors_argp_option_keys
 struct ipmi_sensors_arguments
 {
   struct common_cmd_args common_args;
-  int verbose_count;
+  unsigned int verbose_count;
   int sdr_info;
   int quiet_readings;
   unsigned int record_ids[MAX_SENSOR_RECORD_IDS];
