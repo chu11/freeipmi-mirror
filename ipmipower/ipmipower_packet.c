@@ -1198,8 +1198,8 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
       /* tons of error checks by now, should not error out here */
       assert (!errno);
       assert (endptr[0] == '\0');
-      assert (slot_number >= IPMIPOWER_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MIN
-	      && slot_number <= IPMIPOWER_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MAX);
+      assert (slot_number >= IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MIN
+	      && slot_number <= IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MAX);
       
       if (fill_cmd_get_sensor_reading (IPMI_SENSOR_NUMBER_OEM_DELL_C410X_PCIE_1_WATT + (slot_number - 1),
 				       ip->obj_c410x_get_sensor_reading_rq) < 0)
@@ -1224,8 +1224,8 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
       /* tons of error checks by now, should not error out here */
       assert (!errno);
       assert (endptr[0] == '\0');
-      assert (slot_number >= IPMIPOWER_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MIN
-	      && slot_number <= IPMIPOWER_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MAX);
+      assert (slot_number >= IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MIN
+	      && slot_number <= IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MAX);
 
       if (fiid_obj_set (ip->obj_c410x_slot_power_control_rq,
 			"cmd",

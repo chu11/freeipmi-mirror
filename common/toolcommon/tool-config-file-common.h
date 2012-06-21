@@ -73,7 +73,7 @@
 
 struct config_file_data_bmc_config
 {
-  int verbose_count;
+  unsigned int verbose_count;
   int verbose_count_count;
 };
 
@@ -95,7 +95,7 @@ struct config_file_data_bmc_watchdog
 
 struct config_file_data_ipmi_chassis_config
 {
-  int verbose_count;
+  unsigned int verbose_count;
   int verbose_count_count;
 };
 
@@ -107,7 +107,7 @@ struct config_file_data_ipmi_dcmi
 
 struct config_file_data_ipmi_fru
 {
-  int verbose_count;
+  unsigned int verbose_count;
   int verbose_count_count;
   int skip_checks;		/* legacy - parse for backwards compatability */
   int skip_checks_count;	/* legacy - parse for backwards compatability */
@@ -119,19 +119,19 @@ struct config_file_data_ipmi_fru
 
 struct config_file_data_ipmi_oem
 {
-  int verbose_count;
+  unsigned int verbose_count;
   int verbose_count_count;
 };
 
 struct config_file_data_ipmi_pef_config
 {
-  int verbose_count;
+  unsigned int verbose_count;
   int verbose_count_count;
 };
 
 struct config_file_data_ipmi_pet
 {
-  int verbose_count;
+  unsigned int verbose_count;
   int verbose_count_count;
   int output_event_severity;
   int output_event_severity_count;
@@ -155,7 +155,7 @@ struct config_file_data_ipmi_pet
 
 struct config_file_data_ipmi_sel
 {
-  int verbose_count;
+  unsigned int verbose_count;
   int verbose_count_count;
   char sensor_types[CONFIG_FILE_MAX_SENSOR_TYPES][CONFIG_FILE_MAX_SENSOR_TYPES_STRING_LENGTH+1];
   unsigned int sensor_types_length;
@@ -195,7 +195,7 @@ struct config_file_data_ipmi_sel
 
 struct config_file_data_ipmi_sensors
 {
-  int verbose_count;
+  unsigned int verbose_count;
   int verbose_count_count;
   int quiet_readings;
   int quiet_readings_count;
@@ -245,7 +245,7 @@ struct config_file_data_ipmi_sensors
 
 struct config_file_data_ipmi_sensors_config
 {
-  int verbose_count;
+  unsigned int verbose_count;
   int verbose_count_count;
 };
 

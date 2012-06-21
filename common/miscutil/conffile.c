@@ -149,14 +149,14 @@ conffile_errmsg(conffile_t cf, char *buf, int buflen)
 
     if (cf == NULL) 
         rv = snprintf(errbuf, CONFFILE_MAX_ERRMSGLEN, 
-                      _errmsg[CONFFILE_ERR_NULLHANDLE]);
+                      "%s", _errmsg[CONFFILE_ERR_NULLHANDLE]);
     else if (cf->magic != CONFFILE_MAGIC)
         rv = snprintf(errbuf, CONFFILE_MAX_ERRMSGLEN, 
-                      _errmsg[CONFFILE_ERR_MAGIC]);
+                      "%s", _errmsg[CONFFILE_ERR_MAGIC]);
     else if (cf->errnum < CONFFILE_ERR_SUCCESS 
              || cf->errnum > CONFFILE_ERR_ERRNUMRANGE)
         rv = snprintf(errbuf, CONFFILE_MAX_ERRMSGLEN, 
-                      _errmsg[CONFFILE_ERR_ERRNUMRANGE]);
+                      "%s", _errmsg[CONFFILE_ERR_ERRNUMRANGE]);
     else if (cf->errnum == CONFFILE_ERR_PARSE_OPTION_UNKNOWN
              || cf->errnum == CONFFILE_ERR_PARSE_ARG_MISSING
              || cf->errnum == CONFFILE_ERR_PARSE_ARG_TOOMANY
@@ -176,7 +176,7 @@ conffile_errmsg(conffile_t cf, char *buf, int buflen)
                       _errmsg[cf->errnum], cf->line_num);
     else
         rv = snprintf(errbuf, CONFFILE_MAX_ERRMSGLEN, 
-                      _errmsg[cf->errnum]);
+                      "%s", _errmsg[cf->errnum]);
 
     if (rv >= buflen)
         return -1;

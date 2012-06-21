@@ -416,11 +416,11 @@ status.  This may be accomplished by executing a cold-reset with
 .RE
 .TP
 .B IntelNM (Intel Node Manager)
-.SP
+.LP
 The following OEM commands operate on Intel chipsets with Node Manager
 support.  They all require access to the SDR.  They may work on
 multiple vendors motherboards.
-.SP
+.LP
 .RS
 .TP
 .B get-node-manager-statistics \fI[domainid=num]\fR \fI[policyid=num]\fR

@@ -33,9 +33,6 @@
  * OEM C410x
  */
 
-#define IPMIPOWER_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MIN 1
-#define IPMIPOWER_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MAX 16
-
 extern fiid_template_t tmpl_cmd_c410x_slot_power_control_rq;
 extern fiid_template_t tmpl_cmd_c410x_slot_power_control_rs;
 

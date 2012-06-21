@@ -4,7 +4,8 @@ ooo - priority code cleanup that should be done
 
 branches to merge
 -----------------
-intels2600jfrevision
+ipmiseld
+dellc6220
 
 to test
 -------
@@ -132,6 +133,10 @@ libfreeipmi-interpret
 - some sensor interpretations dependent on sensor number, way to add?
   - QSSCS4R SMI Timeout & Power Throttled sensors 
     - same event-type/sensor-type/etc., but different interpretation??  
+
+libfreeipmi-sdr
+---------------
+- checksum/something to ensure no disk corruption
 
 libfreeipmi-sel
 ---------------

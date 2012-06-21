@@ -245,8 +245,8 @@ ipmipower_oem_power_cmd_check_extra_arg (const char *extra_arg,
 	  goto cleanup;
 	}
       
-      if (tmp < IPMIPOWER_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MIN
-	  || tmp > IPMIPOWER_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MAX)
+      if (tmp < IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MIN
+	  || tmp > IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MAX)
 	{
 	  if (errbuf && errbuflen)
 	    snprintf (errbuf,

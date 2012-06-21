@@ -125,7 +125,7 @@ struct config_arguments
 
   config_action_t action;
 
-  int verbose_count;
+  unsigned int verbose_count;
   char *filename;
   uint8_t lan_channel_number;
   int lan_channel_number_set;
