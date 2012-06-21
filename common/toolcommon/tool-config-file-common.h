@@ -341,6 +341,8 @@ struct config_file_data_ipmiseld
   int re_download_sdr_count;
   int clear_sel;
   int clear_sel_count;
+  unsigned int threadpool_count;
+  int threadpool_count_count;
 };
 
 int config_file_parse (const char *filename,

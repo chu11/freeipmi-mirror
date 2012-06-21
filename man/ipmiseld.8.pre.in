@@ -153,12 +153,6 @@ LOG FORMAT STRING below for formatting details.
 Specify the poll interval to check the SEL for new events.  Defaults
 to 300 seconds (i.e. 5 minutes).
 .TP
-\fB\-\-poll\-error\-interval\fR=\fISECONDS\fR
-Specify the poll interval to check the SEL if error occurs.  Usually
-this number is larger than the \fBpoll\-interval\fR to slow down SEL
-polling in the event of a busy network, temporarily down hardware,
-firmware updates, etc.  Defaults to 600 seconds (i.e. 10 minutes).
-.TP
 \fB\-\-log\-facility\fR=\fISTRING\fR
 Specify the log facility to use.  Defaults to LOG_DAEMON.  Legal
 inputs are LOG_DAEMON, LOG_USER, LOG_LOCAL0, LOG_LOCAL1, LOG_LOCAL2,
@@ -175,20 +169,32 @@ Specify an alternate cache directory location for
 to use.  The cache directory will be used to cache a wide variety of
 data, including the SDR and recent logging information to ensure log
 entries are not missed on reboots and other system failures.
+.TP
 \fB\-\-ignore\-sdr\fR
 Ignore SDR related processing.  May lead to incomplete or less useful
 information being output, however it will allow functionality for
 systems without SDRs or when the correct SDR cannot be loaded.
+.TP
 \fB\-\-re\-download\-sdr\fR
 Re-download the SDR on start even if it is not out of date.  This may
 help work around systems that do not properly timestamp SDR
 modification times.
+.TP
 \fB\-\-clear\-sel\fR
 On startup, clear any SEL being monitored.  May be useful the first
 time running
 .B ipmiseld
 to avoid warning messages or SEL clears until a long time in the
 future.
+.TP
+\fB\-\-threadpool\-count\fR=\fINUM\fR
+Specify the number of threads for parallel SEL polling.  This option
+is very similar to the \fB\-\-fanout\fR option in
+.B ipmi-sel(8)
+but the threads are created only once on initialization for faster
+processing.  Defaults to 8, however the threadpool count will always
+be decreased if the number of nodes specified is less than the number
+of threads.
 .TP
 \fB\-\-test\-run\fR
 Do not daemonize, output the current SEL of configured hosts as a test

@@ -108,7 +108,9 @@ Heap heap_create (int size, HeapCmpF fCmp, HeapDelF fDel);
  *    <= 0, the default size is used.  Usually, the next power of 2
  *    will be used for size, but with a minimum used internally.
  *  The comparison function [fCmp] is used for comparison of items
- *    added to the heap.
+ *    added to the heap.  This heap operates as a max heap when utilizing
+ *    the HeapCmpF.  To implement a min heap, adjust the HeapCmpF function
+ *    appropriately.
  *  The deletion function [fDel] is used to deallocate memory used by items
  *    in the heap; if this is NULL, memory associated with these items
  *    will not be freed when the heap is destroyed.

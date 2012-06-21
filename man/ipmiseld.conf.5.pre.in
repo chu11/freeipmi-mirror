@@ -188,6 +188,9 @@ Specify if the SDR should be re-downloaded on start.
 .TP
 \fBclear\-sel\fR \fIDISABLE\fR
 Specify if the SEL should be cleared on start.
+.TP
+\fBthreadpool\-count\fR \fINUM\fR
+Specify the threadpool count for parallel SEL polling.
 .SH "FILES"
 @IPMISELD_CONFIG_FILE_DEFAULT@
 #include <@top_srcdir@/man/manpage-common-reporting-bugs.man>

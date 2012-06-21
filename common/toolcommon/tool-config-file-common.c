@@ -4789,6 +4789,17 @@ config_file_parse (const char *filename,
         &(ipmiseld_data.clear_sel),
         0,
       },
+      {
+        "threadpool-count",
+        CONFFILE_OPTION_INT,
+        -1,
+        _config_file_positive_int,
+        1,
+        0,
+        &(ipmiseld_data.threadpool_count_count),
+        &(ipmiseld_data.threadpool_count),
+        0
+      },
     };
 
   conffile_t cf = NULL;
