@@ -1549,11 +1549,6 @@ _ipmiseld (ipmiseld_prog_data_t *prog_data)
       goto cleanup;
     }
 
-  if (ipmiseld_threadpool_init (prog_data,
-				_ipmiseld_poll,
-				_ipmiseld_poll_postprocess) < 0)
-    goto cleanup;
-
   if (hosts_count == 1)
     {
       if (!(host_data = _alloc_host_data (prog_data, prog_data->args->common_args.hostname)))
@@ -1595,6 +1590,11 @@ _ipmiseld (ipmiseld_prog_data_t *prog_data)
       host = NULL;
     }
 
+  if (ipmiseld_threadpool_init (prog_data,
+				_ipmiseld_poll,
+				_ipmiseld_poll_postprocess) < 0)
+    goto cleanup;
+
   if (prog_data->args->test_run)
     {
       while (!heap_is_empty (host_data_heap))
@@ -1612,25 +1612,61 @@ _ipmiseld (ipmiseld_prog_data_t *prog_data)
     {
       while (exit_flag)
 	{
-	  if (!(host_data = heap_pop (host_data_heap)))
+	  pthread_mutex_lock (&host_data_heap_lock);
+
+	  host_data = heap_pop (host_data_heap);
+	  
+	  pthread_mutex_unlock (&host_data_heap_lock);
+
+	  /* empty heap, small chance of this happening, but
+	   * everything is processing and previous sleeps didn't sleep
+	   * long enough.  So we just need to wait until something
+	   * else finishes.
+	   *
+	   * There's no way to know the exact right amount of time, so
+	   * we're going to make an estimate.  What we'll do is
+	   * estimate 1/5th the time of a IPMI session timeout.  So in
+	   * the event the previous poll fully timed out, we will
+	   * interrupt and go through this loop only 5 times.
+	   */
+	  if (!host_data)
 	    {
-	      err_output ("heap_pop: %s", strerror (errno));
-	      goto cleanup;
+	      unsigned int waittime;
+
+	      if (prog_data->args->common_args.session_timeout)
+		waittime = prog_data->args->common_args.session_timeout;
+	      else
+		waittime = IPMI_SESSION_TIMEOUT_DEFAULT;
+
+	      /* session timeout is in milliseconds */
+	      waittime /= 1000;
+	      
+	      /* now take a 5th of it  */
+	      waittime /= 5;
+
+	      if (!waittime)
+		waittime = 1;
+
+	      daemon_sleep (waittime);
+	      continue;
 	    }
 	      
-	  /* XXX vary timeout based on error? */ 
 	  _ipmiseld_poll (host_data);
 
 	  _ipmiseld_poll_postprocess (host_data);
 
+	  pthread_mutex_lock (&host_data_heap_lock);
+
 	  host_data = heap_peek (host_data_heap);
+	  
+	  pthread_mutex_unlock (&host_data_heap_lock);
 
 	  /* empty heap, everything must be processing, so we'll sleep
 	   * for the poll interval, b/c no one should be scheduled
-	   * until after this time has passed.
+	   * until after this time has passed anyways.
 	   */
 	  if (!host_data)
-	    daemon_sleep (prog_data->args->poll_interval);
+	    daemon_sleep (prog_data->args->poll_interval + 1);
 	  else
 	    {
 	      struct timeval tv;
