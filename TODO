@@ -161,6 +161,10 @@ libipmiconsole
   - should work, it's not like the poll loop from before
 - specify sol_payload_instance - pick between console instances (***)
   - use case example, SOL to management controller controlling multiple devices
+- buffer character input chars and send in chunks as necessary
+  - perhaps ~100ms of character data to reduce packets send?
+  - as far as I can tell, most ssh implementations send 1 char at a time,
+    to most users that libipmiconsole will get similar interaction.
  
 libipmimonitoring
 -----------------
@@ -314,6 +318,9 @@ contributions
   - api support?
   - raw support?
 - zenoss plugin
+- powerman
+  - let ipmipower return error messages to user in some way
+    - intead of "command completed successfully" all the time
 
 RELEASE TODOS - Do on every release
 -----------------------------------
