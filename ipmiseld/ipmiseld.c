@@ -1549,6 +1549,11 @@ _ipmiseld (ipmiseld_prog_data_t *prog_data)
       goto cleanup;
     }
 
+  if (ipmiseld_threadpool_init (prog_data,
+				_ipmiseld_poll,
+				_ipmiseld_poll_postprocess) < 0)
+    goto cleanup;
+
   if (hosts_count == 1)
     {
       if (!(host_data = _alloc_host_data (prog_data, prog_data->args->common_args.hostname)))
@@ -1613,14 +1618,8 @@ _ipmiseld (ipmiseld_prog_data_t *prog_data)
 	      goto cleanup;
 	    }
 	      
-	  /* No need to lauch thread if polling only one host */
 	  /* XXX vary timeout based on error? */ 
-	  if (prog_data->args->threadpool_count > 1)
-	    {
-	      _ipmiseld_poll (host_data);
-	    }
-	  else
-	    _ipmiseld_poll (host_data);
+	  _ipmiseld_poll (host_data);
 
 	  _ipmiseld_poll_postprocess (host_data);
 
@@ -1648,6 +1647,7 @@ _ipmiseld (ipmiseld_prog_data_t *prog_data)
 
   rv = 0;
  cleanup:
+  ipmiseld_threadpool_destroy ();
   heap_destroy (host_data_heap);
   hostlist_iterator_destroy (hitr);
   hostlist_destroy (hlist);

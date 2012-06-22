@@ -81,9 +81,13 @@ _threadpool_func (void *arg)
 
       pthread_mutex_lock (&threadpool_queue_lock);
 
-      while (!list_count (threadpool_queue))
+      while (!list_count (threadpool_queue)
+	     && !threadpool_data->exit_flag)
 	pthread_cond_wait (&threadpool_queue_cond, &threadpool_queue_lock);
       
+      if (threadpool_data->exit_flag)
+	break;
+
       if (!(queue_arg = list_dequeue (threadpool_queue)))
 	err_output ("list_dequeue: %s", strerror (errno));
       
@@ -116,7 +120,7 @@ ipmiseld_threadpool_init (struct ipmiseld_prog_data *prog_data,
   int rv = -1;
 
   assert (prog_data);
-  assert (prog_data->args->threadpool_count > 1);
+  assert (prog_data->args->threadpool_count);
   assert (callback);
   /* postprocess can be NULL */
   assert (!threadpool_data_array);
@@ -180,6 +184,8 @@ ipmiseld_threadpool_destroy (void)
    *
    * Instead we set this flag and wait for the threads to finish up.
    */
+  pthread_mutex_lock (&threadpool_count_lock);
+
   for (i = 0; i < threadpool_data_array_len; i++)
     {
       threadpool_data_array[i].exit_flag = 1;
@@ -188,9 +194,9 @@ ipmiseld_threadpool_destroy (void)
 	err_output ("pthread_cond_signal: %s", strerror (ret)); 
     }
 
-  pthread_mutex_lock (&threadpool_count_lock);
   while (threadpool_count > 0)
     pthread_cond_wait (&threadpool_count_cond, &threadpool_count_lock);
+
   pthread_mutex_unlock (&threadpool_count_lock);
 
   free (threadpool_data_array);
