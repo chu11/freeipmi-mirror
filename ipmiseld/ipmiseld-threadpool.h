@@ -38,5 +38,6 @@ int ipmiseld_threadpool_init (struct ipmiseld_prog_data *prog_data,
 
 void ipmiseld_threadpool_destroy (void);
 
+int ipmiseld_threadpool_queue (void *arg);
 
 #endif /* IPMISELD_THREADPOOL_H */

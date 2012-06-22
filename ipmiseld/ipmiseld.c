@@ -44,6 +44,7 @@
 #endif /* !HAVE_SYS_TIME_H */
 #endif /* !TIME_WITH_SYS_TIME */
 #include <syslog.h>
+#include <pthread.h>
 #include <assert.h>
 #include <errno.h>
 
@@ -74,6 +75,9 @@
 #define IPMISELD_EVENT_OUTPUT_BUFLEN    4096
 
 #define IPMISELD_RETRY_ATTEMPT_MAX      3
+
+static Heap host_data_heap = NULL;
+static pthread_mutex_t host_data_heap_lock = PTHREAD_MUTEX_INITIALIZER;
 
 static int exit_flag = 1;
 
@@ -1419,6 +1423,37 @@ _ipmiseld_poll (void *arg)
   return (exit_code);
 }
 
+static int
+_ipmiseld_poll_postprocess (void *arg)
+{
+  ipmiseld_host_data_t *host_data;
+  struct timeval tv;
+  int rv = -1;
+
+  assert (arg);
+
+  host_data = (ipmiseld_host_data_t *)arg;
+
+  assert (!host_data->host_poll);
+
+  gettimeofday (&tv, NULL);
+  host_data->next_poll_time = tv.tv_sec + host_data->prog_data->args->poll_interval;
+
+  pthread_mutex_lock (&host_data_heap_lock);
+  
+  if (!heap_insert (host_data_heap, host_data))
+    {
+      pthread_mutex_unlock (&host_data_heap_lock);
+      ipmiseld_err_output (host_data, "heap_insert: %s", strerror (errno));
+      goto cleanup;
+    }
+
+  pthread_mutex_unlock (&host_data_heap_lock);
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
 static void
 _signal_handler_callback (int sig)
 {
@@ -1471,14 +1506,15 @@ static int
 _ipmiseld (ipmiseld_prog_data_t *prog_data)
 {
   int hosts_count = 0;
-  Heap host_data_heap = NULL;
   hostlist_t hlist = NULL;
   hostlist_iterator_t hitr = NULL;
   ipmiseld_host_data_t *host_data;
   char *host = NULL;
   int rv = -1;
+  int ret;
 
   assert (prog_data);
+  assert (!host_data_heap);
 
   if (prog_data->args->common_args.hostname)
     {
@@ -1501,10 +1537,15 @@ _ipmiseld (ipmiseld_prog_data_t *prog_data)
   if (hosts_count < prog_data->args->threadpool_count)
     prog_data->args->threadpool_count = hosts_count;
 
-  /* XXX make global and add lock */
   if (!(host_data_heap = heap_create (hosts_count, (HeapCmpF)hostdata_timecmp, (HeapDelF)free)))
     {
-      err_output ("list_create: %s", strerror (errno));
+      err_output ("heap_create: %s", strerror (errno));
+      goto cleanup;
+    }
+
+  if ((ret = pthread_mutex_init (&host_data_heap_lock, NULL)))
+    {
+      err_output ("pthread_mutex_init: %s", strerror (ret));
       goto cleanup;
     }
 
@@ -1564,11 +1605,8 @@ _ipmiseld (ipmiseld_prog_data_t *prog_data)
     }
   else
     {
-      /* create threadpools to do this tuff, not 1 loop */
       while (exit_flag)
 	{
-	  struct timeval tv;
-
 	  if (!(host_data = heap_pop (host_data_heap)))
 	    {
 	      err_output ("heap_pop: %s", strerror (errno));
@@ -1584,28 +1622,27 @@ _ipmiseld (ipmiseld_prog_data_t *prog_data)
 	  else
 	    _ipmiseld_poll (host_data);
 
-	  /* XXX deal with as post cleanup */
-	  gettimeofday (&tv, NULL);
-	  host_data->next_poll_time = tv.tv_sec + prog_data->args->poll_interval;
-  
-	  if (!heap_insert (host_data_heap, host_data))
+	  _ipmiseld_poll_postprocess (host_data);
+
+	  host_data = heap_peek (host_data_heap);
+
+	  /* empty heap, everything must be processing, so we'll sleep
+	   * for the poll interval, b/c no one should be scheduled
+	   * until after this time has passed.
+	   */
+	  if (!host_data)
+	    daemon_sleep (prog_data->args->poll_interval);
+	  else
 	    {
-	      err_output ("heap_insert: %s", strerror (errno));
-	      goto cleanup;
+	      struct timeval tv;
+
+	      gettimeofday (&tv, NULL);
+
+	      /* If next_poll_time == 0, no sleep, its the first time through */
+	      if (host_data->next_poll_time
+		  && (host_data->next_poll_time > tv.tv_sec)) 
+		daemon_sleep ((host_data->next_poll_time - tv.tv_sec) + 1);
 	    }
-
-	  /* XXX deal w/ corner case of heap empty */
-
-	  if (!(host_data = heap_peek (host_data_heap)))
-	    {	  
-	      err_output ("heap_peek: %s", strerror (errno));
-	      goto cleanup;
-	    }
-
-	  /* If next_poll_time == 0, no sleep, its the first time through */
-	  if (host_data->next_poll_time
-	      && (host_data->next_poll_time > tv.tv_sec)) 
-	    daemon_sleep ((host_data->next_poll_time - tv.tv_sec) + 1);
  	}
     }
 

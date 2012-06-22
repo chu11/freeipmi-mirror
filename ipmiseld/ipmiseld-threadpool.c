@@ -134,7 +134,7 @@ ipmiseld_threadpool_init (struct ipmiseld_prog_data *prog_data,
       goto cleanup;
     }
 
-  if ((ret = pthread_mutex_init(&threadpool_queue_lock, NULL)))
+  if ((ret = pthread_mutex_init (&threadpool_queue_lock, NULL)))
     {
       err_output ("pthread_mutex_init: %s", strerror (ret));
       goto cleanup;
@@ -156,9 +156,9 @@ ipmiseld_threadpool_init (struct ipmiseld_prog_data *prog_data,
 	  goto cleanup;
 	}
       
-      pthread_mutex_lock(&threadpool_count_lock);
+      pthread_mutex_lock (&threadpool_count_lock);
       threadpool_count++;
-      pthread_mutex_unlock(&threadpool_count_lock);
+      pthread_mutex_unlock (&threadpool_count_lock);
     }
 
   threadpool_data_array_len = prog_data->args->threadpool_count;
@@ -188,13 +188,29 @@ ipmiseld_threadpool_destroy (void)
 	err_output ("pthread_cond_signal: %s", strerror (ret)); 
     }
 
-  pthread_mutex_lock(&threadpool_count_lock);
+  pthread_mutex_lock (&threadpool_count_lock);
   while (threadpool_count > 0)
-    pthread_cond_wait(&threadpool_count_cond, &threadpool_count_lock);
-  pthread_mutex_unlock(&threadpool_count_lock);
+    pthread_cond_wait (&threadpool_count_cond, &threadpool_count_lock);
+  pthread_mutex_unlock (&threadpool_count_lock);
 
   free (threadpool_data_array);
 
   if (threadpool_queue)
     list_destroy (threadpool_queue);
 }  
+
+int
+ipmiseld_threadpool_queue (void *arg)
+{
+  assert (arg);
+
+  pthread_mutex_lock (&threadpool_queue_lock);
+
+  if (!list_enqueue (threadpool_queue, arg))
+    {
+      err_output ("list_enqueue: %s", strerror (errno));
+      return (-1);
+    }
+  
+  return (0);
+}
