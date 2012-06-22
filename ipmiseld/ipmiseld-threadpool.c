@@ -214,9 +214,14 @@ ipmiseld_threadpool_queue (void *arg)
 
   if (!list_enqueue (threadpool_queue, arg))
     {
+      pthread_mutex_unlock (&threadpool_queue_lock);
       err_output ("list_enqueue: %s", strerror (errno));
       return (-1);
     }
   
+  pthread_cond_signal (&threadpool_queue_cond);
+
+  pthread_mutex_unlock (&threadpool_queue_lock);
+
   return (0);
 }

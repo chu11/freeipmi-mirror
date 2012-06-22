@@ -1651,9 +1651,14 @@ _ipmiseld (ipmiseld_prog_data_t *prog_data)
 	      continue;
 	    }
 	      
-	  _ipmiseld_poll (host_data);
+	  if (ipmiseld_threadpool_queue (host_data) < 0)
+	    {
+	      pthread_mutex_lock (&host_data_heap_lock);
 
-	  _ipmiseld_poll_postprocess (host_data);
+	      if (!heap_insert (host_data_heap, host_data))
+		ipmiseld_err_output (host_data, "heap_insert: %s", strerror (errno));
+	      pthread_mutex_unlock (&host_data_heap_lock);
+	    }
 
 	  pthread_mutex_lock (&host_data_heap_lock);
 
