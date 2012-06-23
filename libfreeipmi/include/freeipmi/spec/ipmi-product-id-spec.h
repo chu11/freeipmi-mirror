@@ -228,6 +228,15 @@ extern "C" {
 /* Seen in the wild w/ Magnum Technologies IANA number 5593 */
 /* defined above: IPMI_SUPERMICRO_PRODUCT_ID_X8DTL */
 
+/******************************************* 
+ * Wistron                                 *
+ *******************************************/
+
+/* achu: technically no product name, so just using C6220 from Dell */
+#define IPMI_WISTRON_PRODUCT_ID_C6220          131
+
+#define IPMI_DELL_PRODUCT_ID_C6220             IPMI_WISTRON_PRODUCT_ID_C6220
+
 #ifdef __cplusplus
 }
 #endif
