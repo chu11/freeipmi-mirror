@@ -232,8 +232,14 @@ extern "C" {
  * Wistron                                 *
  *******************************************/
 
-/* achu: technically no product name, so just using C6220 from Dell */
+/* achu: don't know original product name, so just using C6220. 
+ * Will readjust as needed if learned later. 
+ */
 #define IPMI_WISTRON_PRODUCT_ID_C6220          131
+
+/* 
+ * Wistron derived
+ */
 
 #define IPMI_DELL_PRODUCT_ID_C6220             IPMI_WISTRON_PRODUCT_ID_C6220
 
