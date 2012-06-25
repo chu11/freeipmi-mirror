@@ -41,8 +41,6 @@ enum ipmi_pef_config_argp_option_keys
     INFO_KEY = 'i',
   };
 
-#define CHANNEL_NUMBERS_MAX 16
-
 struct ipmi_pef_config_arguments
 {
   struct config_arguments config_args;
@@ -72,7 +70,7 @@ typedef struct ipmi_pef_config_state_data
   unsigned int lan_channel_config_flags;
 
   /* For channel reading */
-  uint8_t lan_channel_numbers[CHANNEL_NUMBERS_MAX];
+  uint8_t lan_channel_numbers[IPMI_CHANNEL_NUMBERS_MAX];
   unsigned int lan_channel_numbers_count;
   unsigned int lan_channel_numbers_loaded;
 } ipmi_pef_config_state_data_t;

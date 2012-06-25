@@ -50,8 +50,6 @@ typedef struct channel_info
   uint32_t vendor_id;
 } channel_info_t;
 
-#define BMC_INFO_NUM_CHANNELS 8
-
 #define BMC_INFO_SYSTEM_INFO_STRING_MAX 512
 
 #define BMC_INFO_IANA_STRING_MAX 1024
@@ -945,7 +943,8 @@ get_channel_info_list (bmc_info_state_data_t *state_data, channel_info_t *channe
       goto cleanup;
     }
 
-  for (i = 0, ci = 0; i < BMC_INFO_NUM_CHANNELS; i++)
+  for (i = IPMI_CHANNEL_NUMBER_PRIMARY_IPMB, ci = 0;
+       i <= IPMI_CHANNEL_NUMBER_IMPLEMENTATION_SPECIFIC_MAX; i++)
     {
       if (ipmi_cmd_get_channel_info (state_data->ipmi_ctx,
                                      i,
@@ -1042,20 +1041,20 @@ get_channel_info_list (bmc_info_state_data_t *state_data, channel_info_t *channe
 static int
 display_channel_info (bmc_info_state_data_t *state_data)
 {
-  channel_info_t channel_info_list[BMC_INFO_NUM_CHANNELS];
+  channel_info_t channel_info_list[IPMI_CHANNEL_NUMBERS_MAX];
   int first_newline_output = 0;
   unsigned int i;
 
   assert (state_data);
 
-  memset (channel_info_list, '\0', sizeof (channel_info_t) * BMC_INFO_NUM_CHANNELS);
+  memset (channel_info_list, '\0', sizeof (channel_info_t) * IPMI_CHANNEL_NUMBERS_MAX);
   if (get_channel_info_list (state_data, channel_info_list) < 0)
     return (-1);
 
   if (!state_data->prog_data->args->get_channel_info)
     pstdout_printf (state_data->pstate, "Channel Information\n");
 
-  for (i = 0; i < BMC_INFO_NUM_CHANNELS; i++)
+  for (i = 0; i < IPMI_CHANNEL_NUMBERS_MAX; i++)
     {
       char *medium_type_str = NULL;
       char *protocol_type_str = NULL;

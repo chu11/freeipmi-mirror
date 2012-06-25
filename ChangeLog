@@ -1,3 +1,14 @@
+2012-06-25  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/: Move more macros to ipmi-oem-spec.h.  General code
+	cleanup.
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-channel-spec.h: Add
+	additional macros.
+
+	* bmc-info/, bmc-config/, ipmi-pef-config/: Use new macros
+	appropriately.
+	
 2012-06-21  Albert Chu <chu11@llnl.gov>
 
 	* common/toolcommon/tool-config-file-common.c: Fix casting bug w/
