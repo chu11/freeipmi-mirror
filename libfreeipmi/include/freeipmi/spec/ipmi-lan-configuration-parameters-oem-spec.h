@@ -34,6 +34,17 @@ extern "C" {
 
 #define IPMI_LAN_CONFIGURATION_PARAMETER_OEM_INVENTEC_DHCP_RETRY 192
 
+/******************************************* 
+ * Wistron                                 *
+ *******************************************/
+
+/*
+ * Wistron / Dell Poweredge C6220
+ */
+
+#define IPMI_LAN_CONFIGURATION_PARAMETER_OEM_WISTRON_DHCP_RETRY                 192
+#define IPMI_LAN_CONFIGURATION_PARAMETER_OEM_WISTRON_LINK_STATUS_CHANGE_CONTROL 193
+
 #ifdef __cplusplus
 }
 #endif

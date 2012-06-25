@@ -241,7 +241,7 @@ extern "C" {
  * Wistron derived
  */
 
-#define IPMI_DELL_PRODUCT_ID_C6220             IPMI_WISTRON_PRODUCT_ID_C6220
+#define IPMI_DELL_PRODUCT_ID_POWEREDGE_C6220   IPMI_WISTRON_PRODUCT_ID_C6220
 
 #ifdef __cplusplus
 }

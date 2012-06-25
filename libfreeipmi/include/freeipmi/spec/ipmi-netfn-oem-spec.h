@@ -120,6 +120,19 @@ extern "C" {
 #define IPMI_NET_FN_OEM_SUPERMICRO_PEPPERCON_RQ 0x3C
 #define IPMI_NET_FN_OEM_SUPERMICRO_PEPPERCON_RS 0x3D
 
+/******************************************* 
+ * Wistron                                 *
+ *******************************************/
+
+/*
+ * Wistron / Dell Poweredge C6220
+ */
+
+/* achu: not official names, named based on use context */
+#define IPMI_NET_FN_OEM_WISTRON_GENERIC_RQ 0x30
+#define IPMI_NET_FN_OEM_WISTRON_GENERIC_RS 0x31
+
+
 #ifdef __cplusplus
 }
 #endif
