@@ -1105,6 +1105,48 @@ struct ipmi_oem_command oem_wistron[] =
       ipmi_oem_wistron_set_shared_nic_selection
     },
     {
+      "get-sol-idle-timeout",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_get_sol_idle_timeout
+    },
+    {
+      "set-sol-idle-timeout",
+      "<idle-timeout>",
+      1,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_set_sol_idle_timeout
+    },
+    {
+      "get-telnet-redirect-function",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_get_telnet_redirect_function
+    },
+    {
+      "set-telnet-redirect-function",
+      "<disable|solenable|smashenable>",
+      1,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_set_telnet_redirect_function
+    },
+    {
+      "get-ssh-redirect-function",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_get_ssh_redirect_function
+    },
+    {
+      "set-ssh-redirect-function",
+      "<disable|solenable|smashenable>",
+      1,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_set_ssh_redirect_function
+    },
+    {
       NULL,
       NULL,
       0,

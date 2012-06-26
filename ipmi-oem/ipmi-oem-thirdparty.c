@@ -1856,7 +1856,9 @@ ipmi_oem_thirdparty_get_sol_idle_timeout (ipmi_oem_state_data_t *state_data)
   assert (state_data);
   assert (!state_data->prog_data->args->oem_options_count);
   assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_SOL == IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_SOL);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_SOL == IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_SOL);
   assert (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_SOL_SOL_IDLE_TIMEOUT == IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_SOL_SOL_IDLE_TIMEOUT);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_SOL_SOL_IDLE_TIMEOUT == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_SOL_IDLE_TIMEOUT);
 
   if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
 						     IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_SOL,
@@ -1867,11 +1869,11 @@ ipmi_oem_thirdparty_get_sol_idle_timeout (ipmi_oem_state_data_t *state_data)
     goto cleanup;
   
   timeout = tmpvalue;
-
+  
   pstdout_printf (state_data->pstate,
                   "%u minutes\n",
                   timeout);
-
+  
   rv = 0;
  cleanup:
   return (rv);
@@ -1886,7 +1888,9 @@ ipmi_oem_thirdparty_set_sol_idle_timeout (ipmi_oem_state_data_t *state_data)
   assert (state_data);
   assert (state_data->prog_data->args->oem_options_count == 1);
   assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_SOL == IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_SOL);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_SOL == IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_SOL);
   assert (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_SOL_SOL_IDLE_TIMEOUT == IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_SOL_SOL_IDLE_TIMEOUT);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_SOL_SOL_IDLE_TIMEOUT == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_SOL_IDLE_TIMEOUT);
 
   if (strcasecmp (state_data->prog_data->args->oem_options[0], "none"))
     {

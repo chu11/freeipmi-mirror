@@ -959,6 +959,32 @@ This OEM command will set the current NIC sharing selection.  If the
 current NIC mode is \fIdedicated\fR it is advisable to clear this
 setting with the \fIclear\fR option.  Command confirmed to work on
 Wistron / Dell Poweredge C6220.
+.TP
+.B get-sol-idle-timeout
+This OEM command will get the SOL idle timeout.  Command confirmed to
+work on Wistron / Dell Poweredge C6220.
+.TP
+.B set-sol-idle-timeout \fIidle\-timeout\fR
+This OEM command will set the SOL idle timeout.  The
+\fIidle\-timeout\fR is one-based, max of 65535, in 1 minute increments
+(e.g. 1 = 1 minute), 0 or "none" will configure no timeout.  Command
+confirmed to work on Wistron / Dell Poweredge C6220.
+.TP
+.B get-telnet-redirect-function
+This OEM command will get the telnet redirect function.  Command
+confirmed to work on Wistron / Dell Poweredge C6220.
+.TP
+.B set-telnet-redirect-function \fIdisable|solenable|smashenable\fR
+This OEM command will enable or disable telnet redirect function.
+Command confirmed to work on Wistron / Dell Poweredge C6220.
+.TP
+.B get-ssh-redirect-function
+This OEM command will get the SSH redirect function.  Command
+confirmed to work on Wistron / Dell Poweredge C6220.
+.TP
+.B set-ssh-redirect-function \fIdisable|solenable|smashenable\fR
+This OEM command will enable or disable SSH redirect function.
+Command confirmed to work on Wistron / Dell Poweredge C6220.
 .RE
 #include <@top_srcdir@/man/manpage-common-hostranged-text-main.man>
 #include <@top_srcdir@/man/manpage-common-hostranged-text-threads.man>
