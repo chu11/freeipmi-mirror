@@ -547,6 +547,11 @@ ipmi_oem_thirdparty_get_nic_mode (ipmi_oem_state_data_t *state_data)
    * Inventec 5442/Dell Xanadu III OEM
    * Quanta S99Q/Dell FS12-TY OEM
    *
+   * achu: For Inventec 5441/Dell Xanadu II, Dell appears to have also
+   * implemented an additional OEM command that duplicates this
+   * configuration.  Currently, we do not implement the Dell
+   * equivalent in ipmi-oem.  It is listed below for documentation.
+   *
    * Get LAN Source Request
    *
    * 0x34 - OEM network function
@@ -614,6 +619,11 @@ ipmi_oem_thirdparty_set_nic_mode (ipmi_oem_state_data_t *state_data)
   /* Inventec 5441/Dell Xanadu II OEM
    * Inventec 5442/Dell Xanadu III OEM
    * Quanta S99Q/Dell FS12-TY OEM
+   *
+   * achu: For Inventec 5441/Dell Xanadu II, Dell appears to have also
+   * implemented an additional OEM command that duplicates this
+   * configuration.  Currently, we do not implement the Dell
+   * equivalent in ipmi-oem.  It is listed below for documentation.
    *
    * Set LAN Source Request
    *
@@ -1342,9 +1352,10 @@ ipmi_oem_thirdparty_get_web_server_config_v1 (ipmi_oem_state_data_t *state_data)
 
   /* Inventec 5441/Dell Xanadu II OEM
    *
-   * achu: Dell appears to have also implemented an additional OEM
-   * command that duplicates this configuration.  Currently, we do not
-   * implement the Dell equivalent in ipmi-oem.
+   * achu: For Inventec 5441/Dell Xanadu II, Dell appears to have also
+   * implemented an additional OEM command that duplicates this
+   * configuration.  Currently, we do not implement the Dell
+   * equivalent in ipmi-oem.  It is listed below for documentation.
    *
    * achu: The document states "web port" and "http port".  That
    * probably means "http" vs. "https" port.  The below documents this
@@ -1467,9 +1478,10 @@ ipmi_oem_thirdparty_set_web_server_config_v1 (ipmi_oem_state_data_t *state_data)
 
   /* Inventec 5441/Dell Xanadu II OEM
    *
-   * achu: Dell appears to have also implemented an additional OEM
-   * command that duplicates this configuration.  Currently, we do not
-   * implement the Dell equivalent in ipmi-oem.
+   * achu: For Inventec 5441/Dell Xanadu II, Dell appears to have also
+   * implemented an additional OEM command that duplicates this
+   * configuration.  Currently, we do not implement the Dell
+   * equivalent in ipmi-oem.  It is listed below for documentation.
    *
    * achu: The document states "web port" and "http port".  That
    * probably means "http" vs. "https" port.  The below documents this
