@@ -1091,6 +1091,20 @@ struct ipmi_oem_command oem_wistron[] =
       ipmi_oem_wistron_set_nic_mode
     },
     {
+      "get-shared-nic-selection",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_get_shared_nic_selection
+    },
+    {
+      "set-shared-nic-selection",
+      "<nic1|nic2|nic3|nic4|reserved>",
+      1,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_set_shared_nic_selection
+    },
+    {
       NULL,
       NULL,
       0,

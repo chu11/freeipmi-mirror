@@ -24,4 +24,7 @@
 int ipmi_oem_wistron_get_nic_mode (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_wistron_set_nic_mode (ipmi_oem_state_data_t *state_data);
 
+int ipmi_oem_wistron_get_shared_nic_selection (ipmi_oem_state_data_t *state_data);
+int ipmi_oem_wistron_set_shared_nic_selection (ipmi_oem_state_data_t *state_data);
+
 #endif /* IPMI_OEM_WISTRON_H */
