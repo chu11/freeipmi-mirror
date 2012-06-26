@@ -41,6 +41,7 @@
 #include "ipmi-oem-quanta.h"
 #include "ipmi-oem-sun.h"
 #include "ipmi-oem-supermicro.h"
+#include "ipmi-oem-wistron.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
@@ -1073,6 +1074,31 @@ struct ipmi_oem_command oem_supermicro[] =
     },
   };
 
+struct ipmi_oem_command oem_wistron[] =
+  {
+    {
+      "get-nic-mode",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_get_nic_mode
+    },
+    {
+      "set-nic-mode",
+      "<dedicated|shared>",
+      1,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_set_nic_mode
+    },
+    {
+      NULL,
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      NULL
+    },
+  };
+
 struct ipmi_oem_id oem_cb[] =
   {
     {
@@ -1110,6 +1136,10 @@ struct ipmi_oem_id oem_cb[] =
     {
       "Supermicro",
       oem_supermicro
+    },
+    {
+      "Wistron",
+      oem_wistron
     },
     {
       NULL,

@@ -77,6 +77,7 @@ int ipmi_oem_thirdparty_set_extended_config_string (ipmi_oem_state_data_t *state
  * Inventec 5441/Dell Xanadu II OEM
  * Inventec 5442/Dell Xanadu III OEM
  * Quanta S99Q/Dell FS12-TY OEM
+ * Wistron/Dell Poweredge C6220
  */
 int ipmi_oem_thirdparty_get_nic_mode (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_thirdparty_set_nic_mode (ipmi_oem_state_data_t *state_data);
