@@ -1407,8 +1407,8 @@ extern "C" {
  * - DNS domain name string, read only if DNS Domain Name DHCP Enable is TRUE
  * - Stored as P-string
  *
- * DNS Registration Delay - 1-255 bytes (XXX - typo?)
- * - Delay BMC should tkae after the IPMI process is up and running.
+ * DNS Registration Delay - 1 byte (range 1-255)
+ * - Delay BMC should take after the IPMI process is up and running.
    - Default 5 seconds.
  */
 #define IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_DNS_DNS_DHCP_ENABLE             0x01
