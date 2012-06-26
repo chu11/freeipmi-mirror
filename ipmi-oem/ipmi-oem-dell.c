@@ -56,9 +56,6 @@
 #include "tool-sdr-cache-common.h"
 #include "tool-sensor-common.h"
 
-/* 256 b/c length is 8 bit field */
-#define IPMI_OEM_DELL_MAX_STRING_BYTES 256
-
 /* Some slots resolve to 2.0 Watts when "off" */  
 #define IPMI_OEM_DELL_ZERO_DEGREE_EPSILON 2.5
 
@@ -1509,9 +1506,9 @@ _output_dell_system_info_11g_or_12g_mac_addresses (ipmi_oem_state_data_t *state_
 int
 ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
 {
-  char string[IPMI_OEM_DELL_MAX_STRING_BYTES+1];
+  char string[IPMI_OEM_DELL_SYSTEM_INFO_MAX_STRING_BYTES+1];
   unsigned int string_len = 0;
-  uint8_t bytes[IPMI_OEM_DELL_MAX_STRING_BYTES+1];
+  uint8_t bytes[IPMI_OEM_DELL_SYSTEM_INFO_MAX_STRING_BYTES+1];
   unsigned int bytes_len = 0;
   int rv = -1;
 
@@ -1700,14 +1697,14 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
    *   bytes 3 - 8 - MAC address
    */
 
-  memset (string, '\0', IPMI_OEM_DELL_MAX_STRING_BYTES + 1);
+  memset (string, '\0', IPMI_OEM_DELL_SYSTEM_INFO_MAX_STRING_BYTES + 1);
 
   if (!strcasecmp (state_data->prog_data->args->oem_options[0], "guid"))
     {
       if (_get_dell_system_info_short_string (state_data,
                                               IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_SYSTEM_GUID,
                                               string,
-                                              IPMI_OEM_DELL_MAX_STRING_BYTES,
+                                              IPMI_OEM_DELL_SYSTEM_INFO_MAX_STRING_BYTES,
 					      &string_len) < 0)
         goto cleanup;
       
@@ -1744,7 +1741,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       if (_get_dell_system_info_short_string (state_data,
                                               IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_SYSTEM_ASSET_TAG,
                                               string,
-                                              IPMI_OEM_DELL_MAX_STRING_BYTES,
+                                              IPMI_OEM_DELL_SYSTEM_INFO_MAX_STRING_BYTES,
 					      NULL) < 0)
         goto cleanup;
 
@@ -1757,7 +1754,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       if (_get_dell_system_info_short_string (state_data,
                                               IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_SYSTEM_SERVICE_TAG,
                                               string,
-                                              IPMI_OEM_DELL_MAX_STRING_BYTES,
+                                              IPMI_OEM_DELL_SYSTEM_INFO_MAX_STRING_BYTES,
 					      NULL) < 0)
         goto cleanup;
 
@@ -1770,7 +1767,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       if (_get_dell_system_info_short_string (state_data,
                                               IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_CHASSIS_SERVICE_TAG,
                                               string,
-                                              IPMI_OEM_DELL_MAX_STRING_BYTES,
+                                              IPMI_OEM_DELL_SYSTEM_INFO_MAX_STRING_BYTES,
 					      NULL) < 0)
         goto cleanup;
 
@@ -1783,7 +1780,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       if (_get_dell_system_info_short_string (state_data,
                                               IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_CHASSIS_RELATED_SERVICE_TAG,
                                               string,
-                                              IPMI_OEM_DELL_MAX_STRING_BYTES,
+                                              IPMI_OEM_DELL_SYSTEM_INFO_MAX_STRING_BYTES,
 					      NULL) < 0)
         goto cleanup;
 
@@ -1796,7 +1793,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       if (_get_dell_system_info_short_string (state_data,
                                               IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_BOARD_REVISION,
                                               string,
-                                              IPMI_OEM_DELL_MAX_STRING_BYTES,
+                                              IPMI_OEM_DELL_SYSTEM_INFO_MAX_STRING_BYTES,
 					      NULL) < 0)
         goto cleanup;
 
@@ -1810,7 +1807,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       if (_get_dell_system_info_long_string (state_data,
                                              IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_PLATFORM_MODEL_NAME,
                                              string,
-                                             IPMI_OEM_DELL_MAX_STRING_BYTES) < 0)
+                                             IPMI_OEM_DELL_SYSTEM_INFO_MAX_STRING_BYTES) < 0)
         goto cleanup;
 
       pstdout_printf (state_data->pstate,
@@ -1822,7 +1819,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       if (_get_dell_system_info_long_string (state_data,
                                              IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_SLOT_NUMBER,
                                              string,
-                                             IPMI_OEM_DELL_MAX_STRING_BYTES) < 0)
+                                             IPMI_OEM_DELL_SYSTEM_INFO_MAX_STRING_BYTES) < 0)
         goto cleanup;
       
       pstdout_printf (state_data->pstate,
@@ -1834,7 +1831,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       if (_get_dell_system_info_bytes (state_data,
 				       IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_SYSTEM_REVISION,
 				       bytes,
-				       IPMI_OEM_DELL_MAX_STRING_BYTES,
+				       IPMI_OEM_DELL_SYSTEM_INFO_MAX_STRING_BYTES,
 				       1,
 				       &bytes_len) < 0)
         goto cleanup;
@@ -1850,7 +1847,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       if (_get_dell_system_info_bytes (state_data,
 				       IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_EMBEDDED_VIDEO_STATUS,
 				       bytes,
-				       IPMI_OEM_DELL_MAX_STRING_BYTES,
+				       IPMI_OEM_DELL_SYSTEM_INFO_MAX_STRING_BYTES,
 				       1,
 				       &bytes_len) < 0)
         goto cleanup;
@@ -1876,7 +1873,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       if (_get_dell_system_info_long_string (state_data,
                                              IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_IDRAC_IPV4_URL,
                                              string,
-                                             IPMI_OEM_DELL_MAX_STRING_BYTES) < 0)
+                                             IPMI_OEM_DELL_SYSTEM_INFO_MAX_STRING_BYTES) < 0)
         goto cleanup;
       
       pstdout_printf (state_data->pstate,
@@ -1890,7 +1887,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       if (_get_dell_system_info_bytes (state_data,
 				       IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_IDRAC_GUI_WEBSERVER_CONTROL,
 				       bytes,
-				       IPMI_OEM_DELL_MAX_STRING_BYTES,
+				       IPMI_OEM_DELL_SYSTEM_INFO_MAX_STRING_BYTES,
 				       1,
 				       &bytes_len) < 0)
         goto cleanup;
@@ -1911,7 +1908,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       if (_get_dell_system_info_long_string (state_data,
                                              IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_CMC_IPV4_URL,
                                              string,
-                                             IPMI_OEM_DELL_MAX_STRING_BYTES) < 0)
+                                             IPMI_OEM_DELL_SYSTEM_INFO_MAX_STRING_BYTES) < 0)
         goto cleanup;
       
       pstdout_printf (state_data->pstate,
@@ -1928,7 +1925,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       if (_get_dell_system_info_long_string (state_data,
                                              IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_CMC_IPV6_URL,
                                              string,
-                                             IPMI_OEM_DELL_MAX_STRING_BYTES) < 0)
+                                             IPMI_OEM_DELL_SYSTEM_INFO_MAX_STRING_BYTES) < 0)
         goto cleanup;
       
       pstdout_printf (state_data->pstate,

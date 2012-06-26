@@ -50,7 +50,7 @@ struct ipmi_fru_arguments
   struct common_cmd_args common_args;
   uint8_t device_id;
   int device_id_set;
-  int verbose_count;
+  unsigned int verbose_count;
   /* legacy */
   int skip_checks;
   int bridge_fru;

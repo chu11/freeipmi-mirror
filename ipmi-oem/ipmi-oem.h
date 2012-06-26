@@ -37,7 +37,7 @@ struct ipmi_oem_arguments
 {
   struct common_cmd_args common_args;
   int list;
-  int verbose_count;
+  unsigned int verbose_count;
   char *oem_id;
   char *oem_command;
   char *oem_options[IPMI_OEM_MAX_ARGS];

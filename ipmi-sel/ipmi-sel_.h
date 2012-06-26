@@ -76,7 +76,7 @@ enum ipmi_sel_argp_option_keys
 struct ipmi_sel_arguments
 {
   struct common_cmd_args common_args;
-  int verbose_count;
+  unsigned int verbose_count;
   int info;
   int display;
   uint16_t display_record_list[IPMI_SEL_MAX_RECORD];
