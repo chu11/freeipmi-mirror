@@ -929,6 +929,37 @@ BMC.  This command can be used to enable or disable non-IPMI services
 such as ssh, http, https, and vnc.  Command confirmed to work on
 Supermicro X8DTG.
 .RE
+.TP
+.B Wistron
+.RS
+.TP
+.B get-nic-mode
+This OEM command will determine the current NIC mode as dedicated or
+shared.  Dedicated indicates IPMI is only available on the dedicated
+management port.  Shared indicates IPMI is also available on one of
+the primary ethernet ports.  Command confirmed to work on Wistron /
+Dell Poweredge C6220.
+.\" XXX - is true, will reset BMC internally???
+.TP
+.B set-nic-mode \fIdedicated|shared\fR
+This OEM command will set the current NIC mode to dedicated or shared.
+(See \fIget\-nic\-mode\fR above for description on dedicated
+vs. shared mode.)  This OEM command may internally reset the BMC,
+making the BMC unusable for awhile.  Command confirmed to work on
+Wistron / Dell Poweredge C6220.
+.TP
+.B get-shared-nic-selection
+This OEM command will determine the current NIC IPMI is shared with if
+the mode is \fIshared\fR. (See \fIget\-nic\-mode\fR above for
+description on dedicated vs. shared mode.)  Command confirmed to work
+on Wistron / Dell Poweredge C6220.
+.TP
+.B set-shared-nic-selection \fInic1|nic2|nic3|nic4|clear\fR
+This OEM command will set the current NIC sharing selection.  If the
+current NIC mode is \fIdedicated\fR it is advisable to clear this
+setting with the \fIclear\fR option.  Command confirmed to work on
+Wistron / Dell Poweredge C6220.
+.RE
 #include <@top_srcdir@/man/manpage-common-hostranged-text-main.man>
 #include <@top_srcdir@/man/manpage-common-hostranged-text-threads.man>
 #include <@top_srcdir@/man/manpage-common-hostranged-text-options.man>
