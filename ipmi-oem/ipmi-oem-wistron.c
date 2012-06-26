@@ -80,7 +80,7 @@ ipmi_oem_wistron_get_shared_nic_selection (ipmi_oem_state_data_t *state_data)
   switch (tmpvalue)
     {
     case IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_NIC_SHARED_NIC_SELECTION_RESERVED:
-      pstdout_printf (state_data->pstate, "reserved\n");
+      pstdout_printf (state_data->pstate, "clear\n");
       break;
     case IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_NIC_SHARED_NIC_SELECTION_NIC_1:
       pstdout_printf (state_data->pstate, "nic1\n");
@@ -117,7 +117,7 @@ ipmi_oem_wistron_set_shared_nic_selection (ipmi_oem_state_data_t *state_data)
       && strcasecmp (state_data->prog_data->args->oem_options[0], "nic2")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "nic3")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "nic4")
-      && strcasecmp (state_data->prog_data->args->oem_options[0], "reserved"))
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "clear"))
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
