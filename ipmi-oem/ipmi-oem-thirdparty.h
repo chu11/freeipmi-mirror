@@ -29,6 +29,7 @@
  * Inventec 5441/Dell Xanadu II OEM
  * Inventec 5442/Dell Xanadu III OEM
  * Quanta S99Q/Dell FS12-TY OEM
+ * Wistron/Dell Poweredge C6220
  */
 int ipmi_oem_thirdparty_get_extended_config_value (ipmi_oem_state_data_t *state_data,
 						   uint8_t configuration_id,
@@ -41,6 +42,7 @@ int ipmi_oem_thirdparty_get_extended_config_value (ipmi_oem_state_data_t *state_
  * Inventec 5441/Dell Xanadu II OEM
  * Inventec 5442/Dell Xanadu III OEM
  * Quanta S99Q/Dell FS12-TY OEM
+ * Wistron/Dell Poweredge C6220
  */
 int ipmi_oem_thirdparty_get_extended_config_string (ipmi_oem_state_data_t *state_data,
 						    uint8_t configuration_id,
@@ -53,6 +55,7 @@ int ipmi_oem_thirdparty_get_extended_config_string (ipmi_oem_state_data_t *state
  * Inventec 5441/Dell Xanadu II OEM
  * Inventec 5442/Dell Xanadu III OEM
  * Quanta S99Q/Dell FS12-TY OEM
+ * Wistron/Dell Poweredge C6220
  */
 int ipmi_oem_thirdparty_set_extended_config_value (ipmi_oem_state_data_t *state_data,
 						   uint8_t configuration_id,
@@ -65,6 +68,7 @@ int ipmi_oem_thirdparty_set_extended_config_value (ipmi_oem_state_data_t *state_
  * Inventec 5441/Dell Xanadu II OEM
  * Inventec 5442/Dell Xanadu III OEM
  * Quanta S99Q/Dell FS12-TY OEM
+ * Wistron/Dell Poweredge C6220
  */
 int ipmi_oem_thirdparty_set_extended_config_string (ipmi_oem_state_data_t *state_data,
 						    uint8_t configuration_id,
@@ -86,6 +90,7 @@ int ipmi_oem_thirdparty_set_nic_mode (ipmi_oem_state_data_t *state_data);
  * Inventec 5441/Dell Xanadu II OEM
  * Inventec 5442/Dell Xanadu III OEM
  * Quanta S99Q/Dell FS12-TY OEM
+ * Wistron/Dell Poweredge C6220
  */
 int ipmi_oem_thirdparty_get_bmc_services_bitmask (ipmi_oem_state_data_t *state_data,
 						  uint8_t *services);
@@ -102,6 +107,7 @@ int ipmi_oem_thirdparty_set_bmc_services_v1 (ipmi_oem_state_data_t *state_data);
  * Inventec 5441/Dell Xanadu II OEM
  * Inventec 5442/Dell Xanadu III OEM
  * Quanta S99Q/Dell FS12-TY OEM
+ * Wistron/Dell Poweredge C6220
  */
 int ipmi_oem_thirdparty_get_account_status (ipmi_oem_state_data_t *state_data);
 

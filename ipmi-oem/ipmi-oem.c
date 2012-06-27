@@ -1119,6 +1119,27 @@ struct ipmi_oem_command oem_wistron[] =
       ipmi_oem_wistron_set_bmc_services
     },
     {
+      "get-account-status",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_get_account_status
+    },
+    {
+      "get-dns-config",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_get_dns_config
+    },
+    {
+      "set-dns-config",
+      "KEY=VALUE ...",
+      0,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
+      ipmi_oem_wistron_set_dns_config
+    },
+    {
       "get-sol-idle-timeout",
       NULL,
       0,

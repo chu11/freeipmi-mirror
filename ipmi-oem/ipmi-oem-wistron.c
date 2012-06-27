@@ -153,150 +153,6 @@ ipmi_oem_wistron_set_shared_nic_selection (ipmi_oem_state_data_t *state_data)
 }
 
 int
-ipmi_oem_wistron_get_sol_idle_timeout (ipmi_oem_state_data_t *state_data)
-{
-  assert (state_data);
-  assert (!state_data->prog_data->args->oem_options_count);
-
-  return (ipmi_oem_thirdparty_get_sol_idle_timeout (state_data));
-}
-
-int
-ipmi_oem_wistron_set_sol_idle_timeout (ipmi_oem_state_data_t *state_data)
-{
-  assert (state_data);
-  assert (state_data->prog_data->args->oem_options_count == 1);
-
-  return (ipmi_oem_thirdparty_set_sol_idle_timeout (state_data));
-}
-
-static int
-_wistron_get_telnet_ssh_redirect_function (ipmi_oem_state_data_t *state_data, uint8_t attribute_id)
-{
-  uint32_t tmpvalue;
-  int rv = -1;
-
-  assert (state_data);
-  assert (!state_data->prog_data->args->oem_options_count);
-  assert (attribute_id == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION
-	  || attribute_id == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_SSH_REDIRECT_FUNCTION_SELECTION);
-  assert (IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION_DISABLE == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_SSH_REDIRECT_FUNCTION_SELECTION_DISABLE);
-  assert (IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION_SOL_ENABLED == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_SSH_REDIRECT_FUNCTION_SELECTION_SOL_ENABLED);
-  assert (IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION_SMASH_ENABLED == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_SSH_REDIRECT_FUNCTION_SELECTION_SMASH_ENABLED);
-
-  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
-						     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_SOL,
-						     attribute_id,
-						     0,
-						     1,
-						     &tmpvalue) < 0)
-    goto cleanup;
-  
-  switch (tmpvalue)
-    {
-    case IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION_DISABLE:
-      pstdout_printf (state_data->pstate, "disabled\n");
-      break;
-    case IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION_SOL_ENABLED:
-      pstdout_printf (state_data->pstate, "SOL enabled\n");
-      break;
-    case IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION_SMASH_ENABLED:
-      pstdout_printf (state_data->pstate, "SMASH enabled\n");
-      break;
-    default:
-      pstdout_printf (state_data->pstate, "unknown redirect: %Xh\n", tmpvalue);
-      break;
-    }
-  
-  rv = 0;
- cleanup:
-  return (rv);
-}
-
-static int
-_wistron_set_telnet_ssh_redirect_function (ipmi_oem_state_data_t *state_data, uint8_t attribute_id)
-{
-  uint8_t tmpvalue = 0;
-  int rv = -1;
-  
-  assert (state_data);
-  assert (state_data->prog_data->args->oem_options_count == 1);
-  assert (attribute_id == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION
-	  || attribute_id == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_SSH_REDIRECT_FUNCTION_SELECTION);
-  assert (IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION_DISABLE == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_SSH_REDIRECT_FUNCTION_SELECTION_DISABLE);
-  assert (IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION_SOL_ENABLED == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_SSH_REDIRECT_FUNCTION_SELECTION_SOL_ENABLED);
-  assert (IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION_SMASH_ENABLED == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_SSH_REDIRECT_FUNCTION_SELECTION_SMASH_ENABLED);
-  
-  if (strcasecmp (state_data->prog_data->args->oem_options[0], "disable")
-      && strcasecmp (state_data->prog_data->args->oem_options[0], "solenable")
-      && strcasecmp (state_data->prog_data->args->oem_options[0], "smashenable"))
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "%s:%s invalid OEM option argument '%s'\n",
-                       state_data->prog_data->args->oem_id,
-                       state_data->prog_data->args->oem_command,
-                       state_data->prog_data->args->oem_options[0]);
-      goto cleanup;
-    }
-  
-  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "disable"))
-    tmpvalue = IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION_DISABLE;
-  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "solenable"))
-    tmpvalue = IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION_SOL_ENABLED;
-  else
-    tmpvalue = IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION_SMASH_ENABLED;
-  
-  if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
-						     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_SOL,
-						     attribute_id,
-						     0,
-						     1,
-						     (uint32_t)tmpvalue) < 0)
-    goto cleanup;
-
-  rv = 0;
- cleanup:
-  return (rv);
-}
-
-int
-ipmi_oem_wistron_get_telnet_redirect_function (ipmi_oem_state_data_t *state_data)
-{
-  assert (state_data);
-  assert (!state_data->prog_data->args->oem_options_count);
-
-  return (_wistron_get_telnet_ssh_redirect_function (state_data, IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION));
-}
-
-int
-ipmi_oem_wistron_set_telnet_redirect_function (ipmi_oem_state_data_t *state_data)
-{
-  assert (state_data);
-  assert (state_data->prog_data->args->oem_options_count == 1);
-
-  return (_wistron_set_telnet_ssh_redirect_function (state_data, IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION));
-}
-
-int
-ipmi_oem_wistron_get_ssh_redirect_function (ipmi_oem_state_data_t *state_data)
-{
-  assert (state_data);
-  assert (!state_data->prog_data->args->oem_options_count);
-
-  return (_wistron_get_telnet_ssh_redirect_function (state_data, IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_SSH_REDIRECT_FUNCTION_SELECTION));
-}
-
-int
-ipmi_oem_wistron_set_ssh_redirect_function (ipmi_oem_state_data_t *state_data)
-{
-  assert (state_data);
-  assert (state_data->prog_data->args->oem_options_count == 1);
-
-  return (_wistron_set_telnet_ssh_redirect_function (state_data, IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_SSH_REDIRECT_FUNCTION_SELECTION));
-}
-
-int
 ipmi_oem_wistron_get_bmc_services (ipmi_oem_state_data_t *state_data)
 {
   uint8_t services = 0;
@@ -453,3 +309,477 @@ ipmi_oem_wistron_set_bmc_services (ipmi_oem_state_data_t *state_data)
  cleanup:
   return (rv);
 }
+
+int
+ipmi_oem_wistron_get_account_status (ipmi_oem_state_data_t *state_data)
+{
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  return (ipmi_oem_thirdparty_get_account_status (state_data));
+}
+
+int
+ipmi_oem_wistron_get_dns_config (ipmi_oem_state_data_t *state_data)
+{
+  uint32_t tmpvalue;
+  uint8_t dnsdhcpenable;
+  uint32_t dnsserver1;
+  uint32_t dnsserver2;
+  uint8_t dnsregisterbmc;
+  char dnsbmchostname[IPMI_OEM_WISTRON_EXTENDED_CONFIG_DNS_DNS_BMC_HOST_NAME_MAX + 1];
+  uint8_t dnsdomainnamedhcpenable;
+  char dnsdomainname[IPMI_OEM_WISTRON_EXTENDED_CONFIG_DNS_DNS_DOMAIN_NAME_MAX + 1];
+  uint8_t dnsregistrationdelay;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  memset (dnsbmchostname, '\0', IPMI_OEM_WISTRON_EXTENDED_CONFIG_DNS_DNS_BMC_HOST_NAME_MAX + 1);
+  memset (dnsdomainname, '\0', IPMI_OEM_WISTRON_EXTENDED_CONFIG_DNS_DNS_DOMAIN_NAME_MAX + 1);
+
+  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
+						     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_DNS,
+						     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_DNS_DNS_DHCP_ENABLE,
+						     0,
+						     1,
+						     &tmpvalue) < 0)
+    goto cleanup;
+  dnsdhcpenable = tmpvalue;
+
+  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
+						     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_DNS,
+						     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_DNS_DNS_SERVER1,
+						     0,
+						     4,
+						     &tmpvalue) < 0)
+    goto cleanup;
+  dnsserver1 = tmpvalue;
+
+  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
+						     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_DNS,
+						     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_DNS_DNS_SERVER2,
+						     0,
+						     4,
+						     &tmpvalue) < 0)
+    goto cleanup;
+  dnsserver2 = tmpvalue;
+  
+  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
+						     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_DNS,
+						     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_DNS_DNS_REGISTER_BMC,
+						     0,
+						     1,
+						     &tmpvalue) < 0)
+    goto cleanup;
+  dnsregisterbmc = tmpvalue;
+
+  if (ipmi_oem_thirdparty_get_extended_config_string (state_data,
+						      IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_DNS,
+						      IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_DNS_DNS_BMC_HOST_NAME,
+						      0,
+						      dnsbmchostname,
+						      IPMI_OEM_WISTRON_EXTENDED_CONFIG_DNS_DNS_BMC_HOST_NAME_MAX) < 0)
+    goto cleanup;
+
+  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
+						     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_DNS,
+						     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_DNS_DNS_DOMAIN_NAME_DHCP_ENABLE,
+						     0,
+						     1,
+						     &tmpvalue) < 0)
+    goto cleanup;
+  dnsdomainnamedhcpenable = tmpvalue;
+
+  if (ipmi_oem_thirdparty_get_extended_config_string (state_data,
+						      IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_DNS,
+						      IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_DNS_DNS_DOMAIN_NAME,
+						      0,
+						      dnsdomainname,
+						      IPMI_OEM_WISTRON_EXTENDED_CONFIG_DNS_DNS_DOMAIN_NAME_MAX) < 0)
+    goto cleanup;
+
+  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
+						     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_DNS,
+						     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_DNS_DNS_REGISTRATION_DELAY,
+						     0,
+						     1,
+						     &tmpvalue) < 0)
+    goto cleanup;
+  dnsregistrationdelay = tmpvalue;
+
+  pstdout_printf (state_data->pstate,
+		  "DNS DHCP               : %s\n",
+		  (dnsdhcpenable) ? "Enabled" : "Disabled");
+
+  pstdout_printf (state_data->pstate,
+                  "DNS Server 1           : %u.%u.%u.%u\n",
+                  (dnsserver1 & 0x000000FF),
+                  (dnsserver1 & 0x0000FF00) >> 8,
+                  (dnsserver1 & 0x00FF0000) >> 16,
+                  (dnsserver1 & 0xFF000000) >> 24);
+
+  pstdout_printf (state_data->pstate,
+                  "DNS Server 2           : %u.%u.%u.%u\n",
+                  (dnsserver2 & 0x000000FF),
+                  (dnsserver2 & 0x0000FF00) >> 8,
+                  (dnsserver2 & 0x00FF0000) >> 16,
+                  (dnsserver2 & 0xFF000000) >> 24);
+  
+  pstdout_printf (state_data->pstate,
+		  "DNS Register BMC       : %s\n",
+		  (dnsdomainnamedhcpenable) ? "Enabled" : "Disabled");
+  
+  pstdout_printf (state_data->pstate,
+                  "DNS BMC Host Name      : %s\n",
+                  dnsbmchostname);
+  
+  pstdout_printf (state_data->pstate,
+		  "DNS Domain Name DHCP   : %s\n",
+		  (dnsdomainnamedhcpenable) ? "Enabled" : "Disabled");
+  
+  pstdout_printf (state_data->pstate,
+                  "DNS Domain Name        : %s\n",
+                  dnsdomainname);
+  
+  pstdout_printf (state_data->pstate,
+		  "DNS Registration Delay : %u seconds\n",
+		  dnsregistrationdelay);
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_wistron_set_dns_config (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t dnsdhcpenable = 0;
+  uint32_t dnsserver1 = 0;
+  uint32_t dnsserver2 = 0;
+  uint8_t dnsregisterbmc = 0;
+  char dnsbmchostname[IPMI_OEM_WISTRON_EXTENDED_CONFIG_DNS_DNS_BMC_HOST_NAME_MAX + 1];
+  uint8_t dnsdomainnamedhcpenable = 0;
+  char dnsdomainname[IPMI_OEM_WISTRON_EXTENDED_CONFIG_DNS_DNS_DOMAIN_NAME_MAX + 1];
+  uint8_t dnsregistrationdelay = 0;
+  int rv = -1;
+  unsigned int i;
+
+  assert (state_data);
+
+  memset (dnsbmchostname, '\0', IPMI_OEM_WISTRON_EXTENDED_CONFIG_DNS_DNS_BMC_HOST_NAME_MAX + 1);
+  memset (dnsdomainname, '\0', IPMI_OEM_WISTRON_EXTENDED_CONFIG_DNS_DNS_DOMAIN_NAME_MAX + 1);
+
+  if (!state_data->prog_data->args->oem_options_count)
+    {
+      pstdout_printf (state_data->pstate,
+		      "Option: dnsdhcp=enable|disable\n"
+                      "Option: dnsserver1=ipaddress\n"
+                      "Option: dnsserver2=ipaddress\n"
+		      "Option: dnsregisterbmc=enable|disable\n"
+                      "Option: dnsbmchostname=string\n"
+		      "Option: dnsdomainnamedhcp=enable|disable\n"
+                      "Option: dnsdomainname=string\n"
+                      "Option: dnsregistrationdelay=seconds\n");
+      return (0); 
+    }
+
+  for (i = 0; i < state_data->prog_data->args->oem_options_count; i++)
+    {
+      char *key = NULL;
+      char *value = NULL;
+      
+      if (ipmi_oem_parse_key_value (state_data,
+                                    i,
+                                    &key,
+                                    &value) < 0)
+        goto cleanup;
+
+      if (!strcasecmp (key, "dnsdhcp"))
+        {
+          if (ipmi_oem_parse_enable (state_data, i, value, &dnsdhcpenable) < 0)
+            goto cleanup;
+          
+          
+          if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
+							     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_DNS,
+							     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_DNS_DNS_DHCP_ENABLE,
+							     0,
+							     1,
+							     (uint32_t)dnsdhcpenable) < 0)
+            goto cleanup;
+        }
+      else if (!strcasecmp (key, "dnsserver1"))
+        {
+          if (ipmi_oem_parse_ip_address (state_data, i, value, &dnsserver1) < 0)
+            goto cleanup;
+          
+          
+          if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
+							     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_DNS,
+							     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_DNS_DNS_SERVER1,
+							     0,
+							     4,
+							     (uint32_t)dnsserver1) < 0)
+            goto cleanup;
+        }
+      else if (!strcasecmp (key, "dnsserver2"))
+        {
+          if (ipmi_oem_parse_ip_address (state_data, i, value, &dnsserver2) < 0)
+            goto cleanup;
+          
+          
+          if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
+							     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_DNS,
+							     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_DNS_DNS_SERVER2,
+							     0,
+							     4,
+							     (uint32_t)dnsserver2) < 0)
+            goto cleanup;
+        }
+      else if (!strcasecmp (key, "dnsregisterbmc"))
+        {
+          if (ipmi_oem_parse_enable (state_data, i, value, &dnsregisterbmc) < 0)
+            goto cleanup;
+          
+          
+          if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
+							     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_DNS,
+							     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_DNS_DNS_REGISTER_BMC,
+							     0,
+							     1,
+							     (uint32_t)dnsregisterbmc) < 0)
+            goto cleanup;
+        }
+      else if (!strcasecmp (key, "dnsbmchostname"))
+        {
+          uint8_t string_length = 0;
+
+          if (ipmi_oem_parse_string (state_data,
+                                     i,
+                                     value,
+                                     &string_length,
+                                     dnsbmchostname,
+                                     IPMI_OEM_WISTRON_EXTENDED_CONFIG_DNS_DNS_BMC_HOST_NAME_MAX) < 0)
+            goto cleanup;
+          
+          if (ipmi_oem_thirdparty_set_extended_config_string (state_data,
+							      IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_DNS,
+							      IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_DNS_DNS_BMC_HOST_NAME,
+							      0,
+							      dnsbmchostname,
+							      (unsigned int)string_length) < 0)
+            goto cleanup;
+        }
+      else if (!strcasecmp (key, "dnsdomainnamedhcp"))
+        {
+          if (ipmi_oem_parse_enable (state_data, i, value, &dnsdomainnamedhcpenable) < 0)
+            goto cleanup;
+          
+          
+          if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
+							     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_DNS,
+							     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_DNS_DNS_DOMAIN_NAME_DHCP_ENABLE,
+							     0,
+							     1,
+							     (uint32_t)dnsdomainnamedhcpenable) < 0)
+            goto cleanup;
+        }
+      else if (!strcasecmp (key, "dnsdomainname"))
+        {
+          uint8_t string_length = 0;
+
+          if (ipmi_oem_parse_string (state_data,
+                                     i,
+                                     value,
+                                     &string_length,
+                                     dnsdomainname,
+                                     IPMI_OEM_WISTRON_EXTENDED_CONFIG_DNS_DNS_DOMAIN_NAME_MAX) < 0)
+            goto cleanup;
+          
+          if (ipmi_oem_thirdparty_set_extended_config_string (state_data,
+							      IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_DNS,
+							      IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_DNS_DNS_DOMAIN_NAME,
+							      0,
+							      dnsdomainname,
+							      (unsigned int)string_length) < 0)
+            goto cleanup;
+        }
+      else if (!strcasecmp (key, "dnsregistrationdelay"))
+        {
+          if (ipmi_oem_parse_1_byte_field (state_data, i, value, &dnsregistrationdelay) < 0)
+            goto cleanup;
+          
+          if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
+							     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_DNS,
+							     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_DNS_DNS_REGISTRATION_DELAY,
+							     0,
+							     1,
+							     (uint32_t)dnsregistrationdelay) < 0)
+            goto cleanup;
+        }
+      else
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "%s:%s invalid OEM option argument '%s' : invalid key\n",
+                           state_data->prog_data->args->oem_id,
+                           state_data->prog_data->args->oem_command,
+                           state_data->prog_data->args->oem_options[i]);
+          goto cleanup;
+        }
+      
+      free (key);
+      free (value);
+    }
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_wistron_get_sol_idle_timeout (ipmi_oem_state_data_t *state_data)
+{
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  return (ipmi_oem_thirdparty_get_sol_idle_timeout (state_data));
+}
+
+int
+ipmi_oem_wistron_set_sol_idle_timeout (ipmi_oem_state_data_t *state_data)
+{
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 1);
+
+  return (ipmi_oem_thirdparty_set_sol_idle_timeout (state_data));
+}
+
+static int
+_wistron_get_telnet_ssh_redirect_function (ipmi_oem_state_data_t *state_data, uint8_t attribute_id)
+{
+  uint32_t tmpvalue;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+  assert (attribute_id == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION
+	  || attribute_id == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_SSH_REDIRECT_FUNCTION_SELECTION);
+  assert (IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION_DISABLE == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_SSH_REDIRECT_FUNCTION_SELECTION_DISABLE);
+  assert (IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION_SOL_ENABLED == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_SSH_REDIRECT_FUNCTION_SELECTION_SOL_ENABLED);
+  assert (IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION_SMASH_ENABLED == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_SSH_REDIRECT_FUNCTION_SELECTION_SMASH_ENABLED);
+
+  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
+						     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_SOL,
+						     attribute_id,
+						     0,
+						     1,
+						     &tmpvalue) < 0)
+    goto cleanup;
+  
+  switch (tmpvalue)
+    {
+    case IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION_DISABLE:
+      pstdout_printf (state_data->pstate, "disabled\n");
+      break;
+    case IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION_SOL_ENABLED:
+      pstdout_printf (state_data->pstate, "SOL enabled\n");
+      break;
+    case IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION_SMASH_ENABLED:
+      pstdout_printf (state_data->pstate, "SMASH enabled\n");
+      break;
+    default:
+      pstdout_printf (state_data->pstate, "unknown redirect: %Xh\n", tmpvalue);
+      break;
+    }
+  
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+static int
+_wistron_set_telnet_ssh_redirect_function (ipmi_oem_state_data_t *state_data, uint8_t attribute_id)
+{
+  uint8_t tmpvalue = 0;
+  int rv = -1;
+  
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 1);
+  assert (attribute_id == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION
+	  || attribute_id == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_SSH_REDIRECT_FUNCTION_SELECTION);
+  assert (IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION_DISABLE == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_SSH_REDIRECT_FUNCTION_SELECTION_DISABLE);
+  assert (IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION_SOL_ENABLED == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_SSH_REDIRECT_FUNCTION_SELECTION_SOL_ENABLED);
+  assert (IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION_SMASH_ENABLED == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_SSH_REDIRECT_FUNCTION_SELECTION_SMASH_ENABLED);
+  
+  if (strcasecmp (state_data->prog_data->args->oem_options[0], "disable")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "solenable")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "smashenable"))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[0]);
+      goto cleanup;
+    }
+  
+  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "disable"))
+    tmpvalue = IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION_DISABLE;
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "solenable"))
+    tmpvalue = IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION_SOL_ENABLED;
+  else
+    tmpvalue = IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION_SMASH_ENABLED;
+  
+  if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
+						     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_SOL,
+						     attribute_id,
+						     0,
+						     1,
+						     (uint32_t)tmpvalue) < 0)
+    goto cleanup;
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_wistron_get_telnet_redirect_function (ipmi_oem_state_data_t *state_data)
+{
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  return (_wistron_get_telnet_ssh_redirect_function (state_data, IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION));
+}
+
+int
+ipmi_oem_wistron_set_telnet_redirect_function (ipmi_oem_state_data_t *state_data)
+{
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 1);
+
+  return (_wistron_set_telnet_ssh_redirect_function (state_data, IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION));
+}
+
+int
+ipmi_oem_wistron_get_ssh_redirect_function (ipmi_oem_state_data_t *state_data)
+{
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  return (_wistron_get_telnet_ssh_redirect_function (state_data, IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_SSH_REDIRECT_FUNCTION_SELECTION));
+}
+
+int
+ipmi_oem_wistron_set_ssh_redirect_function (ipmi_oem_state_data_t *state_data)
+{
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 1);
+
+  return (_wistron_set_telnet_ssh_redirect_function (state_data, IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_SSH_REDIRECT_FUNCTION_SELECTION));
+}
+

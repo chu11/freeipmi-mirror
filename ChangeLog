@@ -1,6 +1,9 @@
 2012-06-22  Albert Chu <chu11@llnl.gov>
 
 	Support OEM extensions for Wistron / Dell Poweredge C6220.
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-oem-spec.h: Rename
+	several macros for use clarity.
 	
 2012-06-25  Albert Chu <chu11@llnl.gov>
 
