@@ -645,6 +645,12 @@ ipmi_oem_wistron_get_web_server_config (ipmi_oem_state_data_t *state_data)
   assert (state_data);
   assert (!state_data->prog_data->args->oem_options_count);
 
+  /* Wistron/Dell Poweredge C6220
+   *
+   * Web server config supports move values that v1 config, but we
+   * split that out into server services config since they don't have
+   * much related to "web".
+   */
   return (ipmi_oem_thirdparty_get_web_server_config_v1 (state_data));
 }
 
@@ -653,6 +659,12 @@ ipmi_oem_wistron_set_web_server_config (ipmi_oem_state_data_t *state_data)
 {
   assert (state_data);
 
+  /* Wistron/Dell Poweredge C6220
+   *
+   * Web server config supports move values that v1 config, but we
+   * split that out into server services config since they don't have
+   * much related to "web".
+   */
   return (ipmi_oem_thirdparty_set_web_server_config_v1 (state_data));
 }
 
