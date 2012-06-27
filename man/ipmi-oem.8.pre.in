@@ -1032,6 +1032,24 @@ the IPMI card.  The possible keys and values are
 If no key=value pairs are specifed, available pairs are output.
 Command confirmed to work on Wistron / Dell Poweredge C6220.
 .TP
+.B get-power-management-config
+This OEM command will get the current power management configuration
+on the IPMI card.  Command confirmed to work on Wistron / Dell
+Poweredge C6220.
+.TP
+.B set-power-management-config \fIKEY=VALUE ...\fR
+This OEM command will set the current power management configuration
+on the IPMI card.  The possible keys and values are
+\fIpowerstaggeringacrecovery=immediate|auto|user\fR,
+\fIpowerondelay=seconds\fR, and \fImaxpowerondelay=seconds\fR.  For
+\fIpowerstaggeringacrecovery\fR, \fIimmediate\fR specifies no delay,
+\fIauto\fR generates a delay time between the minimum and maximum
+configured, and \fIuser\fR uses the user defined time defined by
+\fIpowerondelay\fR.  \fIpowerondelay\fR must be within the minimum and
+maximum power on delay times.  Multiple key=value pairs may be
+specified.  If no key=value pairs are specifed, available pairs are
+output.  Command confirmed to work on Wistron / Dell Poweredge C6220.
+.TP
 .B get-sol-idle-timeout
 This OEM command will get the SOL idle timeout.  Command confirmed to
 work on Wistron / Dell Poweredge C6220.

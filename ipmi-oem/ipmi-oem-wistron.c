@@ -815,6 +815,193 @@ ipmi_oem_wistron_set_server_services_config (ipmi_oem_state_data_t *state_data)
 }
 
 int
+ipmi_oem_wistron_get_power_management_config (ipmi_oem_state_data_t *state_data)
+{
+  uint32_t tmpvalue;
+  uint8_t powerstaggeringacrecovery;
+  uint16_t powerondelay;
+  uint16_t minpowerondelay;
+  uint16_t maxpowerondelay;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
+						     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
+						     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_POWER_STAGGERING_AC_RECOVERY,
+						     0,
+						     1,
+						     &tmpvalue) < 0)
+    goto cleanup;
+  powerstaggeringacrecovery = tmpvalue;
+  
+  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
+						     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
+						     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_POWER_ON_DELAY,
+						     0,
+						     2,
+						     &tmpvalue) < 0)
+    goto cleanup;
+  powerondelay = tmpvalue;
+
+  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
+						     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
+						     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_MINIMUM_POWER_ON_DELAY,
+						     0,
+						     2,
+						     &tmpvalue) < 0)
+    goto cleanup;
+  minpowerondelay = tmpvalue; 
+
+  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
+						     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
+						     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_MAXIMUM_POWER_ON_DELAY,
+						     0,
+						     2,
+						     &tmpvalue) < 0)
+    goto cleanup;
+  maxpowerondelay = tmpvalue; 
+  
+  if (powerstaggeringacrecovery == IPMI_OEM_WISTRON_EXTENDED_CONFIG_POWER_STAGGERING_AC_RECOVERY_IMMEDIATE)
+    pstdout_printf (state_data->pstate,
+                    "Power Staggering AC Recovery : Immediate\n");
+  else if (powerstaggeringacrecovery == IPMI_OEM_WISTRON_EXTENDED_CONFIG_POWER_STAGGERING_AC_RECOVERY_AUTO)
+    pstdout_printf (state_data->pstate,
+                    "Power Staggering AC Recovery : Auto\n");
+  else if (powerstaggeringacrecovery == IPMI_OEM_WISTRON_EXTENDED_CONFIG_POWER_STAGGERING_AC_RECOVERY_USER_DEFINED)
+    pstdout_printf (state_data->pstate,
+                    "Power Staggering AC Recovery : User Defined\n");
+  else
+    pstdout_printf (state_data->pstate,
+                    "Power Staggering AC Recovery : %Xh\n",
+                    powerstaggeringacrecovery);
+  
+  pstdout_printf (state_data->pstate,
+		  "Power On Delay               : %u seconds\n",
+                  powerondelay);
+  
+  pstdout_printf (state_data->pstate,
+		  "Minimum Power On Delay       : %u seconds\n",
+                  minpowerondelay);
+
+  pstdout_printf (state_data->pstate,
+		  "Maximum Power On Delay       : %u seconds\n",
+                  maxpowerondelay);
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_wistron_set_power_management_config (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t powerstaggeringacrecovery = 0;
+  uint16_t powerondelay = 0;
+  uint16_t maxpowerondelay = 0;
+  int rv = -1;
+  unsigned int i;
+
+  assert (state_data);
+
+  if (!state_data->prog_data->args->oem_options_count)
+    {
+      pstdout_printf (state_data->pstate,
+		      "Option: powerstaggeringacrecovery=immediate|auto|user\n"
+		      "Option: powerondelay=seconds\n"
+		      "Option: maxpowerondelay=seconds\n");
+      return (0); 
+    }
+
+  for (i = 0; i < state_data->prog_data->args->oem_options_count; i++)
+    {
+      char *key = NULL;
+      char *value = NULL;
+      
+      if (ipmi_oem_parse_key_value (state_data,
+                                    i,
+                                    &key,
+                                    &value) < 0)
+        goto cleanup;
+
+      if (!strcasecmp (key, "powerstaggeringacrecovery"))
+        {
+          if (strcasecmp (value, "immediate")
+              && strcasecmp (value, "auto")
+              && strcasecmp (value, "user"))
+            {
+              pstdout_fprintf (state_data->pstate,
+                               stderr,
+                               "%s:%s invalid OEM option argument '%s' : invalid value\n",
+                               state_data->prog_data->args->oem_id,
+                               state_data->prog_data->args->oem_command,
+                               state_data->prog_data->args->oem_options[i]);
+              goto cleanup;
+            }
+
+          if (!strcasecmp (value, "immediate"))
+            powerstaggeringacrecovery = IPMI_OEM_WISTRON_EXTENDED_CONFIG_POWER_STAGGERING_AC_RECOVERY_IMMEDIATE;
+          else if (!strcasecmp (value, "auto"))
+            powerstaggeringacrecovery = IPMI_OEM_WISTRON_EXTENDED_CONFIG_POWER_STAGGERING_AC_RECOVERY_AUTO;
+          else /* !strcasecmp (value, "user")) */
+            powerstaggeringacrecovery = IPMI_OEM_WISTRON_EXTENDED_CONFIG_POWER_STAGGERING_AC_RECOVERY_USER_DEFINED;
+
+          if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
+							     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
+							     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_POWER_STAGGERING_AC_RECOVERY,
+							     0,
+							     1,
+							     (uint32_t)powerstaggeringacrecovery) < 0)
+            goto cleanup;
+        }
+      else if (!strcasecmp (key, "powerondelay"))
+        {
+          if (ipmi_oem_parse_2_byte_field (state_data, i, value, &powerondelay) < 0)
+            goto cleanup;
+          
+          if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
+							     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
+							     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_POWER_ON_DELAY,
+							     0,
+							     2,
+							     (uint32_t)powerondelay) < 0)
+            goto cleanup;
+        }
+      else if (!strcasecmp (key, "maxpowerondelay"))
+        {
+          if (ipmi_oem_parse_2_byte_field (state_data, i, value, &maxpowerondelay) < 0)
+            goto cleanup;
+          
+          if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
+							     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
+							     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_MAXIMUM_POWER_ON_DELAY,
+							     0,
+							     2,
+							     (uint32_t)maxpowerondelay) < 0)
+            goto cleanup;
+        }
+      else
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "%s:%s invalid OEM option argument '%s' : invalid key\n",
+                           state_data->prog_data->args->oem_id,
+                           state_data->prog_data->args->oem_command,
+                           state_data->prog_data->args->oem_options[i]);
+          goto cleanup;
+        }
+
+      free (key);
+      free (value);
+    }
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
 ipmi_oem_wistron_get_sol_idle_timeout (ipmi_oem_state_data_t *state_data)
 {
   assert (state_data);
