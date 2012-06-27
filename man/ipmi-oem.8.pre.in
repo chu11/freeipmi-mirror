@@ -1050,6 +1050,20 @@ maximum power on delay times.  Multiple key=value pairs may be
 specified.  If no key=value pairs are specifed, available pairs are
 output.  Command confirmed to work on Wistron / Dell Poweredge C6220.
 .TP
+.B get-firmware-information
+This OEM command will get current firmware information.  Command
+confirmed to work on Wistron / Dell Poweredge C6220.
+.TP
+.B user-default-setting \fIset|reset\fR
+This OEM command will allow users to customize BMC settings, store
+tham as defaults, and restore back to previous settings as desired.
+The user default settings include all OEM extended configuration
+settings (such as the ones set by \fIset\-nic\-mode\fR,
+\fIset\-web\-server\-config, and others above), IPMI user account
+settings, and IPIM lan configuration parameters.  \fIset\fR sets the
+current settings as a new default, while \fIreset\fR resets settings
+to the previously configured defaults.
+.TP
 .B get-sol-idle-timeout
 This OEM command will get the SOL idle timeout.  Command confirmed to
 work on Wistron / Dell Poweredge C6220.

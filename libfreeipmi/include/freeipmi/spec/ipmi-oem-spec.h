@@ -1478,7 +1478,7 @@ extern "C" {
  *
  * build information - 1-16 bytes (read only) 
  *
- * user default setting - 1 byte
+ * user default setting - 1 byte (write only)
  *
  */
 #define IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_NAME                 0x01

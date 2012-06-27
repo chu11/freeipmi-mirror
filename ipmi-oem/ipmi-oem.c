@@ -1182,6 +1182,20 @@ struct ipmi_oem_command oem_wistron[] =
       ipmi_oem_wistron_set_power_management_config
     },
     {
+      "get-firmware-information",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_get_firmware_information
+    },
+    {
+      "user-default-setting",
+      "<set|reset>",
+      1,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_user_default_setting
+    },
+    {
       "get-sol-idle-timeout",
       NULL,
       0,

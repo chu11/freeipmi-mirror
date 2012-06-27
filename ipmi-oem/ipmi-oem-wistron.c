@@ -1002,6 +1002,177 @@ ipmi_oem_wistron_set_power_management_config (ipmi_oem_state_data_t *state_data)
 }
 
 int
+ipmi_oem_wistron_get_firmware_information (ipmi_oem_state_data_t *state_data)
+{
+  uint32_t tmpvalue;
+  char name[IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_NAME_LEN + 1];
+  char description[IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_DESCRIPTION_LEN + 1];
+  uint8_t entity;
+  char *entity_str = NULL;
+  char product_info[IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_PRODUCT_INFO_LEN + 1];
+  char firmware_version[IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_FIRMWARE_VERSION_LEN + 1];
+  char branch[IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_BRANCH_LEN + 1];
+  char build_information[IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_BUILD_INFORMATION_LEN + 1];
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  memset (name, '\0', IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_NAME_LEN + 1);
+  memset (description, '\0', IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_DESCRIPTION_LEN + 1);
+  memset (product_info, '\0', IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_PRODUCT_INFO_LEN + 1);
+  memset (firmware_version, '\0', IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_FIRMWARE_VERSION_LEN + 1);
+  memset (branch, '\0', IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_BRANCH_LEN + 1);
+  memset (build_information, '\0', IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_BUILD_INFORMATION_LEN + 1);
+
+  if (ipmi_oem_thirdparty_get_extended_config_string (state_data,
+						      IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_FIRMWARE_INFORMATION,
+						      IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_NAME,
+						      0,
+						      name,
+						      IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_NAME_LEN) < 0)
+    goto cleanup;
+
+  if (ipmi_oem_thirdparty_get_extended_config_string (state_data,
+						      IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_FIRMWARE_INFORMATION,
+						      IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_DESCRIPTION,
+						      0,
+						      description,
+						      IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_DESCRIPTION_LEN) < 0)
+    goto cleanup;
+
+  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
+						     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_FIRMWARE_INFORMATION,
+						     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_ENTITY,
+						     0,
+						     1,
+						     &tmpvalue) < 0)
+    goto cleanup;
+  entity = tmpvalue;
+
+  if (ipmi_oem_thirdparty_get_extended_config_string (state_data,
+						      IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_FIRMWARE_INFORMATION,
+						      IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_PRODUCT_INFO,
+						      0,
+						      product_info,
+						      IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_PRODUCT_INFO_LEN) < 0)
+    goto cleanup;
+ 
+  if (ipmi_oem_thirdparty_get_extended_config_string (state_data,
+						      IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_FIRMWARE_INFORMATION,
+						      IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_FIRMWARE_VERSION,
+						      0,
+						      firmware_version,
+						      IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_FIRMWARE_VERSION_LEN) < 0)
+    goto cleanup;
+
+  if (ipmi_oem_thirdparty_get_extended_config_string (state_data,
+						      IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_FIRMWARE_INFORMATION,
+						      IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_BRANCH,
+						      0,
+						      branch,
+						      IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_BRANCH_LEN) < 0)
+    goto cleanup;
+
+  if (ipmi_oem_thirdparty_get_extended_config_string (state_data,
+						      IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_FIRMWARE_INFORMATION,
+						      IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_BUILD_INFORMATION,
+						      0,
+						      build_information,
+						      IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_BUILD_INFORMATION_LEN) < 0)
+    goto cleanup;
+
+  pstdout_printf (state_data->pstate,
+                  "BMC Name               : %s\n",
+                  name);
+
+  pstdout_printf (state_data->pstate,
+                  "Controller Description : %s\n",
+                  description);
+
+  switch (entity)
+    {
+    case IPMI_OEM_WISTRON_EXTENDED_CONFIG_FIRMWARE_INFORMATION_ENTITY_BMC:
+      entity_str = "BMC";
+      break;
+    case IPMI_OEM_WISTRON_EXTENDED_CONFIG_FIRMWARE_INFORMATION_ENTITY_SYSTEM_BIOS:
+      entity_str = "System (BIOS)";
+      break;
+    case IPMI_OEM_WISTRON_EXTENDED_CONFIG_FIRMWARE_INFORMATION_ENTITY_PDB:
+      entity_str = "PDB";
+      break;
+    case IPMI_OEM_WISTRON_EXTENDED_CONFIG_FIRMWARE_INFORMATION_ENTITY_FCB:
+      entity_str = "FCB";
+      break;
+    default:
+      entity_str = "Unrecognized";
+    }
+
+  pstdout_printf (state_data->pstate,
+                  "Controller Entity      : %s\n",
+                  entity_str);
+
+  pstdout_printf (state_data->pstate,
+                  "Product Info           : %s\n",
+                  product_info);
+
+  pstdout_printf (state_data->pstate,
+                  "Firmware Version       : %s\n",
+                  firmware_version);
+
+  pstdout_printf (state_data->pstate,
+                  "Branch                 : %s\n",
+                  branch);
+
+  pstdout_printf (state_data->pstate,
+                  "Build Information      : %s\n",
+                  build_information);
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_wistron_user_default_setting (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t setting;
+  int rv = -1;
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 1);
+
+  if (strcasecmp (state_data->prog_data->args->oem_options[0], "set")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "reset"))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[0]);
+      goto cleanup;
+    }
+
+  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "set"))
+    setting = IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_USER_DEFAULT_SETTING_SET_DEFAULT;
+  else
+    setting = IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_USER_DEFAULT_SETTING_RESTORE_DEFAULT;
+
+  if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
+						     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_FIRMWARE_INFORMATION,
+						     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_USER_DEFAULT_SETTING,
+						     0,
+						     1,
+						     (uint32_t)setting) < 0)
+    goto cleanup;
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
 ipmi_oem_wistron_get_sol_idle_timeout (ipmi_oem_state_data_t *state_data)
 {
   assert (state_data);
