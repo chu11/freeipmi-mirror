@@ -1434,9 +1434,9 @@ extern "C" {
  *
  * kvm port num - 2 bytes, default 7578
  *
- * telnet port num - default 23
+ * telnet port num - 2 bytes, default 23
  *
- * ssh port num - default 22 
+ * ssh port num - 2 bytes, default 22 
  */
 #define IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_ENABLED  0x01
 #define IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_MAX_WEB_SESSIONS    0x02

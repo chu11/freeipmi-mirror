@@ -640,6 +640,296 @@ ipmi_oem_wistron_set_dns_config (ipmi_oem_state_data_t *state_data)
 }
 
 int
+ipmi_oem_wistron_get_web_server_config (ipmi_oem_state_data_t *state_data)
+{
+  uint32_t tmpvalue;
+  uint8_t webserverenabled;
+  uint8_t maxwebsessions;
+  uint8_t activewebsessions;
+  uint32_t webservertimeout;
+  uint16_t httpportnum;
+  uint16_t httpsportnum;
+  uint16_t kvmportnum;
+  uint16_t telnetportnum;
+  uint16_t sshportnum;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
+						     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
+						     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_ENABLED,
+						     0,
+						     1,
+						     &tmpvalue) < 0)
+    goto cleanup;
+  webserverenabled = tmpvalue;
+  
+  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
+						     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
+						     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_MAX_WEB_SESSIONS,
+						     0,
+						     1,
+						     &tmpvalue) < 0)
+    goto cleanup;
+  maxwebsessions = tmpvalue;
+  
+  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
+						     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
+						     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_ACTIVE_WEB_SESSIONS,
+						     0,
+						     1,
+						     &tmpvalue) < 0)
+    goto cleanup;
+  activewebsessions = tmpvalue;
+  
+  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
+						     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
+						     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_TIMEOUT,
+						     0,
+						     4,
+						     &tmpvalue) < 0)
+    goto cleanup;
+  webservertimeout = tmpvalue;
+  
+  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
+						     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
+						     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTP_PORT_NUM,
+						     0,
+						     2,
+						     &tmpvalue) < 0)
+    goto cleanup;
+  httpportnum = tmpvalue;
+  
+  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
+						     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
+						     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTPS_PORT_NUM,
+						     0,
+						     2,
+						     &tmpvalue) < 0)
+    goto cleanup;
+  httpsportnum = tmpvalue;
+  
+  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
+						     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
+						     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_KVM_PORT_NUM,
+						     0,
+						     2,
+						     &tmpvalue) < 0)
+    goto cleanup;
+  kvmportnum = tmpvalue;
+
+  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
+						     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
+						     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_TELNET_PORT_NUM,
+						     0,
+						     2,
+						     &tmpvalue) < 0)
+    goto cleanup;
+  telnetportnum = tmpvalue;
+
+  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
+						     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
+						     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_SSH_PORT_NUM,
+						     0,
+						     2,
+						     &tmpvalue) < 0)
+    goto cleanup;
+  sshportnum = tmpvalue;
+
+  pstdout_printf (state_data->pstate,
+		  "Web Server          : %s\n",
+		  (webserverenabled) ? "Enabled" : "Disabled");
+  
+  pstdout_printf (state_data->pstate,
+		  "Max Web Sessions    : %u\n",
+		  maxwebsessions);
+
+  pstdout_printf (state_data->pstate,
+		  "Active Web Sessions : %u\n",
+		  activewebsessions);
+
+  pstdout_printf (state_data->pstate,
+		  "Web Server Timeout  : %u seconds\n",
+		  webservertimeout);
+
+  pstdout_printf (state_data->pstate,
+		  "http Port Number    : %u\n",
+		  httpportnum);
+
+  pstdout_printf (state_data->pstate,
+		  "https Port Number   : %u\n",
+		  httpsportnum);
+
+  pstdout_printf (state_data->pstate,
+		  "KVM Port Number     : %u\n",
+		  kvmportnum);
+
+  pstdout_printf (state_data->pstate,
+		  "telnet Port Number  : %u\n",
+		  telnetportnum);
+
+  pstdout_printf (state_data->pstate,
+		  "SSH Port Number     : %u\n",
+		  sshportnum);
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_wistron_set_web_server_config (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t webserverenabled = 0;
+  uint32_t webservertimeout = 0;
+  uint16_t httpportnumber = 0;
+  uint16_t httpsportnumber = 0;
+  uint16_t kvmportnumber = 0;
+  uint16_t telnetportnumber = 0;
+  uint16_t sshportnumber = 0;
+  int rv = -1;
+  unsigned int i;
+
+  assert (state_data);
+
+  if (!state_data->prog_data->args->oem_options_count)
+    {
+      pstdout_printf (state_data->pstate,
+		      "Option: webserver=enable|disable\n"
+		      "Option: webservertimeout=seconds\n"
+		      "Option: httpportnumber=num\n"
+		      "Option: httpsportnumber=num\n"
+		      "Option: kvmportnumber=num\n"
+		      "Option: telnetportnumber=num\n"
+		      "Option: sshportnumber=num\n");
+      return (0); 
+    }
+
+  for (i = 0; i < state_data->prog_data->args->oem_options_count; i++)
+    {
+      char *key = NULL;
+      char *value = NULL;
+      
+      if (ipmi_oem_parse_key_value (state_data,
+                                    i,
+                                    &key,
+                                    &value) < 0)
+        goto cleanup;
+
+      if (!strcasecmp (key, "webserver"))
+        {
+          if (ipmi_oem_parse_enable (state_data, i, value, &webserverenabled) < 0)
+            goto cleanup;
+
+          if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
+							     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
+							     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_ENABLED,
+							     0,
+							     1,
+							     (uint32_t)webserverenabled) < 0)
+            goto cleanup;
+        }
+      else if (!strcasecmp (key, "webservertimeout"))
+        {
+          if (ipmi_oem_parse_4_byte_field (state_data, i, value, &webservertimeout) < 0)
+            goto cleanup;
+          
+          if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
+							     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
+							     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_TIMEOUT,
+							     0,
+							     4,
+							     webservertimeout) < 0)
+            goto cleanup;
+        }
+      else if (!strcasecmp (key, "httpportnumber"))
+        {
+          if (ipmi_oem_parse_2_byte_field (state_data, i, value, &httpportnumber) < 0)
+            goto cleanup;
+          
+          if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
+							     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
+							     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTP_PORT_NUM,
+							     0,
+							     2,
+							     (uint32_t)httpportnumber) < 0)
+            goto cleanup;
+        }
+      else if (!strcasecmp (key, "httpsportnumber"))
+        {
+          if (ipmi_oem_parse_2_byte_field (state_data, i, value, &httpsportnumber) < 0)
+            goto cleanup;
+          
+          if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
+							     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
+							     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTPS_PORT_NUM,
+							     0,
+							     2,
+							     (uint32_t)httpsportnumber) < 0)
+            goto cleanup;
+        }
+      else if (!strcasecmp (key, "kvmportnumber"))
+        {
+          if (ipmi_oem_parse_2_byte_field (state_data, i, value, &kvmportnumber) < 0)
+            goto cleanup;
+          
+          if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
+							     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
+							     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_KVM_PORT_NUM,
+							     0,
+							     2,
+							     (uint32_t)kvmportnumber) < 0)
+            goto cleanup;
+        }
+      else if (!strcasecmp (key, "telnetportnumber"))
+        {
+          if (ipmi_oem_parse_2_byte_field (state_data, i, value, &telnetportnumber) < 0)
+            goto cleanup;
+          
+          if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
+							     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
+							     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_TELNET_PORT_NUM,
+							     0,
+							     2,
+							     (uint32_t)telnetportnumber) < 0)
+            goto cleanup;
+        }
+      else if (!strcasecmp (key, "sshportnumber"))
+        {
+          if (ipmi_oem_parse_2_byte_field (state_data, i, value, &sshportnumber) < 0)
+            goto cleanup;
+          
+          if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
+							     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
+							     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_SSH_PORT_NUM,
+							     0,
+							     2,
+							     (uint32_t)sshportnumber) < 0)
+            goto cleanup;
+        }
+      else
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "%s:%s invalid OEM option argument '%s' : invalid key\n",
+                           state_data->prog_data->args->oem_id,
+                           state_data->prog_data->args->oem_command,
+                           state_data->prog_data->args->oem_options[i]);
+          goto cleanup;
+        }
+
+      free (key);
+      free (value);
+    }
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
 ipmi_oem_wistron_get_sol_idle_timeout (ipmi_oem_state_data_t *state_data)
 {
   assert (state_data);
