@@ -1173,6 +1173,363 @@ ipmi_oem_wistron_user_default_setting (ipmi_oem_state_data_t *state_data)
 }
 
 int
+ipmi_oem_wistron_get_ipv6_settings (ipmi_oem_state_data_t *state_data)
+{
+  uint32_t tmpvalue;
+  uint8_t ipv6enable;
+  char ipv6address[IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_ADDRESS_LEN + 1];
+  char ipv6gatewayipaddress[IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_GATEWAY_IP_ADDRESS_LEN + 1];
+  uint8_t ipv6prefixlength;
+  uint8_t ipv6autoconfig;
+  char ipv6linklocaladdress[IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_LINK_LOCAL_ADDRESS_LEN + 1];
+  uint8_t ipv6autodns;
+  char ipv6dnsserver1[IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_DNS_SERVER1_LEN];
+  char ipv6dnsserver2[IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_DNS_SERVER2_LEN];
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  memset (ipv6address, '\0', IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_ADDRESS_LEN + 1);
+  memset (ipv6gatewayipaddress, '\0', IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_GATEWAY_IP_ADDRESS_LEN + 1);
+  memset (ipv6linklocaladdress, '\0', IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_LINK_LOCAL_ADDRESS_LEN + 1);
+  memset (ipv6dnsserver1, '\0', IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_DNS_SERVER1_LEN);
+  memset (ipv6dnsserver2, '\0', IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_DNS_SERVER2_LEN);
+
+  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
+						     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_IPV6_SETTING,
+						     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_ENABLE,
+						     0,
+						     1,
+						     &tmpvalue) < 0)
+    goto cleanup;
+  ipv6enable = tmpvalue;
+
+  if (ipmi_oem_thirdparty_get_extended_config_string (state_data,
+						      IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_IPV6_SETTING,
+						      IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_ADDRESS,
+						      0,
+						      ipv6address,
+						      IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_ADDRESS_LEN) < 0)
+    goto cleanup;
+
+  if (ipmi_oem_thirdparty_get_extended_config_string (state_data,
+						      IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_IPV6_SETTING,
+						      IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_GATEWAY_IP_ADDRESS,
+						      0,
+						      ipv6gatewayipaddress,
+						      IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_GATEWAY_IP_ADDRESS_LEN) < 0)
+    goto cleanup;
+
+  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
+						     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_IPV6_SETTING,
+						     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_PREFIX_LENGTH,
+						     0,
+						     1,
+						     &tmpvalue) < 0)
+    goto cleanup;
+  ipv6prefixlength = tmpvalue;
+
+  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
+						     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_IPV6_SETTING,
+						     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_AUTOCONFIG,
+						     0,
+						     1,
+						     &tmpvalue) < 0)
+    goto cleanup;
+  ipv6autoconfig = tmpvalue;
+
+  if (ipmi_oem_thirdparty_get_extended_config_string (state_data,
+						      IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_IPV6_SETTING,
+						      IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_LINK_LOCAL_ADDRESS,
+						      0,
+						      ipv6linklocaladdress,
+						      IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_LINK_LOCAL_ADDRESS_LEN) < 0)
+    goto cleanup;
+
+  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
+						     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_IPV6_SETTING,
+						     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_AUTO_DNS,
+						     0,
+						     1,
+						     &tmpvalue) < 0)
+    goto cleanup;
+  ipv6autodns = tmpvalue;
+
+  if (ipmi_oem_thirdparty_get_extended_config_string (state_data,
+						      IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_IPV6_SETTING,
+						      IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_DNS_SERVER1,
+						      0,
+						      ipv6dnsserver1,
+						      IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_DNS_SERVER1_LEN) < 0)
+    goto cleanup;
+
+  if (ipmi_oem_thirdparty_get_extended_config_string (state_data,
+						      IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_IPV6_SETTING,
+						      IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_DNS_SERVER2,
+						      0,
+						      ipv6dnsserver2,
+						      IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_DNS_SERVER2_LEN) < 0)
+    goto cleanup;
+
+  pstdout_printf (state_data->pstate,
+		  "IPv6 Enable             : %s\n",
+		  (ipv6enable == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_ENABLE_FALSE) ? "false" : "true"); 
+
+  pstdout_printf (state_data->pstate,
+		  "IPv6 Address            : %s\n",
+		  ipv6address);
+
+  pstdout_printf (state_data->pstate,
+		  "IPv6 Gateway IP Address : %s\n",
+		  ipv6gatewayipaddress);
+
+  pstdout_printf (state_data->pstate,
+		  "IPv6 Prefix Length      : %u\n",
+		  ipv6prefixlength);
+
+  pstdout_printf (state_data->pstate,
+		  "IPv6 Auto Config        : %s\n",
+		  (ipv6autoconfig == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_AUTOCONFIG_ENABLE_FALSE) ? "false" : "true"); 
+
+  pstdout_printf (state_data->pstate,
+		  "IPv6 Link Local Address : %s\n",
+		  ipv6linklocaladdress);
+
+  pstdout_printf (state_data->pstate,
+		  "IPv6 Auto DNS           : %s\n",
+		  (ipv6autodns == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_AUTO_DNS_ENABLE_FALSE) ? "false" : "true"); 
+
+  pstdout_printf (state_data->pstate,
+		  "IPv6 DNS Server 1       : %s\n",
+		  ipv6dnsserver1);
+
+  pstdout_printf (state_data->pstate,
+		  "IPv6 DNS Server 2       : %s\n",
+		  ipv6dnsserver2);
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_wistron_set_ipv6_settings (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t tmpenablevalue;
+  uint8_t ipv6enable;
+  char ipv6address[IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_ADDRESS_LEN + 1];
+  char ipv6gatewayipaddress[IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_GATEWAY_IP_ADDRESS_LEN + 1];
+  uint8_t ipv6prefixlength;
+  uint8_t ipv6autoconfig;
+  char ipv6linklocaladdress[IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_LINK_LOCAL_ADDRESS_LEN + 1];
+  uint8_t ipv6autodns;
+  char ipv6dnsserver1[IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_DNS_SERVER1_LEN];
+  char ipv6dnsserver2[IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_DNS_SERVER2_LEN];
+  int rv = -1;
+  unsigned int i;
+
+  assert (state_data);
+
+  memset (ipv6address, '\0', IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_ADDRESS_LEN + 1);
+  memset (ipv6gatewayipaddress, '\0', IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_GATEWAY_IP_ADDRESS_LEN + 1);
+  memset (ipv6linklocaladdress, '\0', IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_LINK_LOCAL_ADDRESS_LEN + 1);
+  memset (ipv6dnsserver1, '\0', IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_DNS_SERVER1_LEN);
+  memset (ipv6dnsserver2, '\0', IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_DNS_SERVER2_LEN);
+
+  if (!state_data->prog_data->args->oem_options_count)
+    {
+      pstdout_printf (state_data->pstate,
+		      "Option: ipv6=enable|disable\n"
+                      "Option: ipv6address=ipaddress\n"
+                      "Option: ipv6gatewayaddress=ipaddress\n"
+		      "Option: ipv6prefixlength=length\n"
+		      "Option: ipv6autoconfig=enable|disable\n"
+		      "Option: ipv6autodns=enable|disable\n"
+		      "Option: ipv6dnsserver1=ipaddress\n"
+                      "Option: ipv6dnsserver2=ipaddress\n");
+      return (0); 
+    }
+
+  for (i = 0; i < state_data->prog_data->args->oem_options_count; i++)
+    {
+      char *key = NULL;
+      char *value = NULL;
+      
+      if (ipmi_oem_parse_key_value (state_data,
+                                    i,
+                                    &key,
+                                    &value) < 0)
+        goto cleanup;
+
+      if (!strcasecmp (key, "ipv6"))
+        {
+          if (ipmi_oem_parse_enable (state_data, i, value, &tmpenablevalue) < 0)
+            goto cleanup;
+          
+	  if (tmpenablevalue)
+	    ipv6enable = IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_ENABLE_TRUE;
+	  else
+	    ipv6enable = IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_ENABLE_FALSE;
+	  
+          if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
+							     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_IPV6_SETTING,
+							     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_ENABLE,
+							     0,
+							     1,
+							     (uint32_t)ipv6enable) < 0)
+            goto cleanup;
+        }
+      else if (!strcasecmp (key, "ipv6address"))
+        {
+          uint8_t string_length = 0;
+
+          if (ipmi_oem_parse_string (state_data,
+                                     i,
+                                     value,
+                                     &string_length,
+                                     ipv6address,
+				     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_ADDRESS_LEN) < 0)
+            goto cleanup;
+          
+          if (ipmi_oem_thirdparty_set_extended_config_string (state_data,
+							      IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_IPV6_SETTING,
+							      IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_ADDRESS,
+							      0,
+							      ipv6address,
+							      (unsigned int)string_length) < 0)
+            goto cleanup;
+        }
+      else if (!strcasecmp (key, "ipv6gatewayipaddress"))
+        {
+          uint8_t string_length = 0;
+
+          if (ipmi_oem_parse_string (state_data,
+                                     i,
+                                     value,
+                                     &string_length,
+                                     ipv6gatewayipaddress,
+				     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_GATEWAY_IP_ADDRESS_LEN) < 0)
+            goto cleanup;
+          
+          if (ipmi_oem_thirdparty_set_extended_config_string (state_data,
+							      IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_IPV6_SETTING,
+							      IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_GATEWAY_IP_ADDRESS,
+							      0,
+							      ipv6gatewayipaddress,
+							      (unsigned int)string_length) < 0)
+            goto cleanup;
+        }
+      else if (!strcasecmp (key, "ipv6prefixlength"))
+        {
+	  if (ipmi_oem_parse_1_byte_field (state_data, i, value, &ipv6prefixlength) < 0)
+            goto cleanup;
+          
+          if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
+							     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_IPV6_SETTING,
+							     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_PREFIX_LENGTH,
+							     0,
+							     1,
+							     (uint32_t)ipv6prefixlength) < 0)
+            goto cleanup;
+        }
+      else if (!strcasecmp (key, "ipv6autoconfig"))
+        {
+          if (ipmi_oem_parse_enable (state_data, i, value, &tmpenablevalue) < 0)
+            goto cleanup;
+          
+	  if (tmpenablevalue)
+	    ipv6autoconfig = IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_AUTOCONFIG_ENABLE_TRUE;
+	  else
+	    ipv6autoconfig = IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_AUTOCONFIG_ENABLE_FALSE;
+
+          if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
+							     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_IPV6_SETTING,
+							     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_AUTOCONFIG,
+							     0,
+							     1,
+							     (uint32_t)ipv6autoconfig) < 0)
+            goto cleanup;
+        }
+      else if (!strcasecmp (key, "ipv6autodns"))
+        {
+          if (ipmi_oem_parse_enable (state_data, i, value, &tmpenablevalue) < 0)
+            goto cleanup;
+          
+	  if (tmpenablevalue)
+	    ipv6autodns = IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_AUTO_DNS_ENABLE_TRUE;
+	  else
+	    ipv6autodns = IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_AUTO_DNS_ENABLE_FALSE;
+
+          if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
+							     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_IPV6_SETTING,
+							     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_AUTO_DNS,
+							     0,
+							     1,
+							     (uint32_t)ipv6autodns) < 0)
+            goto cleanup;
+        }
+      else if (!strcasecmp (key, "ipv6dnsserver1"))
+        {
+          uint8_t string_length = 0;
+
+          if (ipmi_oem_parse_string (state_data,
+                                     i,
+                                     value,
+                                     &string_length,
+                                     ipv6dnsserver1,
+				     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_DNS_SERVER1_LEN) < 0)
+            goto cleanup;
+          
+          if (ipmi_oem_thirdparty_set_extended_config_string (state_data,
+							      IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_IPV6_SETTING,
+							      IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_DNS_SERVER1,
+							      0,
+							      ipv6dnsserver1,
+							      (unsigned int)string_length) < 0)
+            goto cleanup;
+        }
+      else if (!strcasecmp (key, "ipv6dnsserver2"))
+        {
+          uint8_t string_length = 0;
+
+          if (ipmi_oem_parse_string (state_data,
+                                     i,
+                                     value,
+                                     &string_length,
+                                     ipv6dnsserver2,
+				     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_DNS_SERVER2_LEN) < 0)
+            goto cleanup;
+          
+          if (ipmi_oem_thirdparty_set_extended_config_string (state_data,
+							      IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_IPV6_SETTING,
+							      IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_DNS_SERVER2,
+							      0,
+							      ipv6dnsserver2,
+							      (unsigned int)string_length) < 0)
+            goto cleanup;
+        }
+      else
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "%s:%s invalid OEM option argument '%s' : invalid key\n",
+                           state_data->prog_data->args->oem_id,
+                           state_data->prog_data->args->oem_command,
+                           state_data->prog_data->args->oem_options[i]);
+          goto cleanup;
+        }
+      
+      free (key);
+      free (value);
+    }
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
 ipmi_oem_wistron_get_sol_idle_timeout (ipmi_oem_state_data_t *state_data)
 {
   assert (state_data);

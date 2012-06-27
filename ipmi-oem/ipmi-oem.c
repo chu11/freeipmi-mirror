@@ -1196,6 +1196,20 @@ struct ipmi_oem_command oem_wistron[] =
       ipmi_oem_wistron_user_default_setting
     },
     {
+      "get-ipv6-settings",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_get_ipv6_settings
+    },
+    {
+      "set-ipv6-settings",
+      "KEY=VALUE ...",
+      0,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
+      ipmi_oem_wistron_set_ipv6_settings
+    },
+    {
       "get-sol-idle-timeout",
       NULL,
       0,

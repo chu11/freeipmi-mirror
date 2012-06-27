@@ -1060,9 +1060,25 @@ tham as defaults, and restore back to previous settings as desired.
 The user default settings include all OEM extended configuration
 settings (such as the ones set by \fIset\-nic\-mode\fR,
 \fIset\-web\-server\-config, and others above), IPMI user account
-settings, and IPIM lan configuration parameters.  \fIset\fR sets the
+settings, and IPMI lan configuration parameters.  \fIset\fR sets the
 current settings as a new default, while \fIreset\fR resets settings
-to the previously configured defaults.
+to the previously configured defaults.  Command confirmed to work on
+Wistron / Dell Poweredge C6220.
+.TP
+.B get-ipv6-settings
+This OEM command will get the current IPv6 settings on the
+IPMI card.  Command confirmed to work on Wistron / Dell Poweredge C6220.
+.TP
+.B set-ipv6-settings \fIKEY=VALUE ...\fR
+This OEM command will set the current IPv6 settings on the IPMI card.
+The possible keys and values are \fIipv6=enable|disable\fR,
+\fIipv6address=ipaddress\fR, \fIipv6gatewayaddress=ipaddress\fR,
+\fIipv6prefixlength=length\fR, \fIipv6autoconfig=enable|disable\fR,
+\fIipv6autodns=enable|disable\fR, \fIipv6dnsserver1=ipaddress\fR, and
+\fIipv6dnsserver2=ipaddress\fR.  If no key=value pairs are specifed,
+available pairs are output.  Some fields may be read-only on specific
+Poweredge systems.  Command confirmed to work on Wistron / Dell
+Poweredge C6220.
 .TP
 .B get-sol-idle-timeout
 This OEM command will get the SOL idle timeout.  Command confirmed to

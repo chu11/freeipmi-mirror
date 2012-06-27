@@ -48,6 +48,9 @@ int ipmi_oem_wistron_get_firmware_information (ipmi_oem_state_data_t *state_data
 
 int ipmi_oem_wistron_user_default_setting (ipmi_oem_state_data_t *state_data);
 
+int ipmi_oem_wistron_get_ipv6_settings (ipmi_oem_state_data_t *state_data);
+int ipmi_oem_wistron_set_ipv6_settings (ipmi_oem_state_data_t *state_data);
+
 int ipmi_oem_wistron_get_sol_idle_timeout (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_wistron_set_sol_idle_timeout (ipmi_oem_state_data_t *state_data);
 
