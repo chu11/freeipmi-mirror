@@ -1080,6 +1080,22 @@ available pairs are output.  Some fields may be read-only on specific
 Poweredge systems.  Command confirmed to work on Wistron / Dell
 Poweredge C6220.
 .TP
+.B get-ipv6-trap-settings
+This OEM command will get the current IPv6 SNMP trap settings on the
+IPMI card.  Command confirmed to work on Wistron / Dell Poweredge
+C6220.
+.TP
+.B set-ipv6-trap-settings \fIindex\fR \fIKEY=VALUE ...\fR
+This OEM command will set the current IPv6 SNMP trap settings on the
+IPMI card.  The \fIindex\fR indicates the index position for the
+configuration.  It is followed by a set of configuration keys and
+values.  The possible keys and values are
+\fIdestinationtype=pet|oem1|oem2\fR, \fIalertacktimeout=seconds\fR,
+\fIretries=count\fR, and \fIipv6snmptrapaddress=ipaddress\fR.  If no
+key=value pairs are specifed, available pairs are output.  Some fields
+may be read-only on specific Poweredge systems.  Command confirmed to
+work on Wistron / Dell Poweredge C6220.
+.TP
 .B get-sol-idle-timeout
 This OEM command will get the SOL idle timeout.  Command confirmed to
 work on Wistron / Dell Poweredge C6220.

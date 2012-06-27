@@ -131,6 +131,7 @@ ipmi_oem_thirdparty_get_extended_config_value (ipmi_oem_state_data_t *state_data
   assert (state_data);
   assert (value_return_length == 1
           || value_return_length == 2
+          || value_return_length == 3
           || value_return_length == 4);
   assert (value);
   assert (IPMI_CMD_OEM_INVENTEC_GET_EXTENDED_CONFIGURATION == IPMI_CMD_OEM_QUANTA_GET_EXTENDED_CONFIGURATION);
@@ -213,6 +214,12 @@ ipmi_oem_thirdparty_get_extended_config_value (ipmi_oem_state_data_t *state_data
     {
       (*value) = bytes_rs[6];
       (*value) |= (bytes_rs[7] << 8);
+    }
+  else if (value_return_length == 3)
+    {
+      (*value) = bytes_rs[6];
+      (*value) |= (bytes_rs[7] << 8);
+      (*value) |= (bytes_rs[8] << 16);
     }
   else
     {
@@ -368,6 +375,7 @@ ipmi_oem_thirdparty_set_extended_config_value (ipmi_oem_state_data_t *state_data
   assert (state_data);
   assert (value_length == 1
           || value_length == 2
+          || value_length == 3
           || value_length == 4);
   assert (IPMI_CMD_OEM_INVENTEC_SET_EXTENDED_CONFIGURATION == IPMI_CMD_OEM_QUANTA_SET_EXTENDED_CONFIGURATION);
   assert (IPMI_CMD_OEM_INVENTEC_SET_EXTENDED_CONFIGURATION == IPMI_CMD_OEM_WISTRON_SET_EXTENDED_CONFIGURATION);
@@ -421,6 +429,12 @@ ipmi_oem_thirdparty_set_extended_config_value (ipmi_oem_state_data_t *state_data
     {
       bytes_rq[8] = (value & 0x000000FF);
       bytes_rq[9] = (value & 0x0000FF00) >> 8;
+    }
+  else if (value_length == 3)
+    {
+      bytes_rq[8] = (value & 0x000000FF);
+      bytes_rq[9] = (value & 0x0000FF00) >> 8;
+      bytes_rq[10] = (value & 0x00FF0000) >> 16;
     }
   else
     {

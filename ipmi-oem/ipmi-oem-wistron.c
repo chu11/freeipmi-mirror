@@ -1530,6 +1530,304 @@ ipmi_oem_wistron_set_ipv6_settings (ipmi_oem_state_data_t *state_data)
 }
 
 int
+ipmi_oem_wistron_get_ipv6_trap_settings (ipmi_oem_state_data_t *state_data)
+{
+  uint32_t tmpvalue;
+  uint32_t ipv6snmptrapdestinationsetting;
+  uint8_t destination_type;
+  uint8_t alertacktimeout;
+  uint8_t retries;
+  char ipv6snmptrapaddress[IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SNMP_TRAP_DESTINATION_ADDRESS_LEN + 1];
+  uint8_t numberofdestinations;
+  int rv = -1;
+  int i;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  memset (ipv6snmptrapaddress, '\0', IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SNMP_TRAP_DESTINATION_ADDRESS_LEN + 1);
+
+  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
+						     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_IPV6_TRAP_SETTING,
+						     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SNMP_TRAP_DESTINATION_SETTING,
+						     0,
+						     1,
+						     &tmpvalue) < 0)
+    goto cleanup;
+  numberofdestinations = tmpvalue;
+
+  for (i = 0; i < numberofdestinations; i++)
+    {
+      if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
+							 IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_IPV6_TRAP_SETTING,
+							 IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SNMP_TRAP_DESTINATION_SETTING,
+							 i,
+							 3,
+							 &tmpvalue) < 0)
+	goto cleanup;
+      ipv6snmptrapdestinationsetting = tmpvalue;
+
+      /* achu: this is stupid, why do they return these 3 values in
+       * one int?  Why couldn't this be three fields.
+       */
+      destination_type = (ipv6snmptrapdestinationsetting & 0x000000FF);
+      alertacktimeout = (ipv6snmptrapdestinationsetting & 0x0000FF00) >> 8; 
+      retries = (ipv6snmptrapdestinationsetting & 0x00FF0000) >> 16; 
+
+      if (ipmi_oem_thirdparty_get_extended_config_string (state_data,
+							  IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_IPV6_TRAP_SETTING,
+							  IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SNMP_TRAP_DESTINATION_ADDRESS,
+							  i,
+							  ipv6snmptrapaddress,
+							  IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SNMP_TRAP_DESTINATION_ADDRESS_LEN) < 0)
+	goto cleanup;
+
+      switch (destination_type)
+	{
+	case IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SNMP_TRAP_DESTINATION_SETTING_DESTINATION_TYPE_PET:
+	  pstdout_printf (state_data->pstate,
+			  "%d: Alert Destination Type                : PET Trap\n",
+			  i);
+	  break;
+	case IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SNMP_TRAP_DESTINATION_SETTING_DESTINATION_TYPE_OEM1:
+	  pstdout_printf (state_data->pstate,
+			  "%d: Alert Destination Type                : OEM1\n",
+			  i);
+	  break;
+	case IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SNMP_TRAP_DESTINATION_SETTING_DESTINATION_TYPE_OEM2:
+	  pstdout_printf (state_data->pstate,
+			  "%d: Alert Destination Type                : OEM2\n",
+			  i);
+	  break;
+	default:
+	  pstdout_printf (state_data->pstate,
+			  "%d: Alert Destination Type                : Unknown (%Xh)\n",
+			  i,
+			  destination_type);
+	  break;
+	}
+
+      pstdout_printf (state_data->pstate,
+		      "%d: Alert Acknowledge Timeout             : %u seconds\n",
+		      i,
+		      alertacktimeout);
+
+      pstdout_printf (state_data->pstate,
+		      "%d: Alert Retries                         : %u\n",
+		      i,
+		      retries);
+
+      pstdout_printf (state_data->pstate,
+		      "%d: IPv6 SNMP Trap Destination IP Address : %s\n",
+		      i,
+		      ipv6snmptrapaddress);
+    }
+  
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_wistron_set_ipv6_trap_settings (ipmi_oem_state_data_t *state_data)
+{
+  uint32_t tmpvalue;
+  uint8_t index;
+  uint32_t ipv6snmptrapdestinationsetting;
+  uint8_t destination_type;
+  uint8_t alertacktimeout;
+  uint8_t retries;
+  char ipv6snmptrapaddress[IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SNMP_TRAP_DESTINATION_ADDRESS_LEN + 1];
+  uint8_t numberofdestinations;
+  int rv = -1;
+  unsigned int i;
+  char *key = NULL;
+  char *value = NULL;
+
+  assert (state_data);
+
+  memset (ipv6snmptrapaddress, '\0', IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SNMP_TRAP_DESTINATION_ADDRESS_LEN + 1);
+
+  if (!state_data->prog_data->args->oem_options_count
+      || state_data->prog_data->args->oem_options_count == 1) 
+    {
+      pstdout_printf (state_data->pstate,
+		      "Option: destinationtype=pet|oem1|oem2\n"
+		      "Option: alertacktimeout=seconds\n"
+		      "Option: retries=count\n"
+                      "Option: ipv6snmptrapaddress=ipaddress\n");
+      return (0); 
+    }
+
+  /* first field is the index, get that first */
+  if (ipmi_oem_parse_key_value (state_data,
+				0,
+				&key,
+				&value) < 0)
+    goto cleanup;
+
+  if (ipmi_oem_parse_1_byte_field (state_data, 0, value, &index) < 0)
+    goto cleanup;
+
+  /* now compare to the number of destinations */
+
+  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
+						     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_IPV6_TRAP_SETTING,
+						     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SNMP_TRAP_DESTINATION_SETTING,
+						     0,
+						     1,
+						     &tmpvalue) < 0)
+    goto cleanup;
+  numberofdestinations = tmpvalue;
+
+  if (index >= numberofdestinations)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s' : index out of range\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[0]);
+      return (-1);
+    } 
+
+  for (i = 1; i < state_data->prog_data->args->oem_options_count; i++)
+    {
+      if (ipmi_oem_parse_key_value (state_data,
+                                    i,
+                                    &key,
+                                    &value) < 0)
+        goto cleanup;
+      if (!strcasecmp (key, "destinationtype"))
+        {
+	  if (!strcasecmp (value, "pet"))
+	    destination_type = IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SNMP_TRAP_DESTINATION_SETTING_DESTINATION_TYPE_PET;
+	  else if (!strcasecmp (value, "oem1"))
+	    destination_type = IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SNMP_TRAP_DESTINATION_SETTING_DESTINATION_TYPE_OEM1;
+	  else if (!strcasecmp (value, "oem2"))
+	    destination_type = IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SNMP_TRAP_DESTINATION_SETTING_DESTINATION_TYPE_OEM2;
+	  else
+	    {
+	      pstdout_fprintf (state_data->pstate,
+			       stderr,
+			       "%s:%s invalid OEM option argument '%s' : invalid value\n",
+			       state_data->prog_data->args->oem_id,
+			       state_data->prog_data->args->oem_command,
+			       state_data->prog_data->args->oem_options[i]);
+	      goto cleanup;
+	    }
+
+	  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
+							     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_IPV6_TRAP_SETTING,
+							     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SNMP_TRAP_DESTINATION_SETTING,
+							     index,
+							     3,
+							     &tmpvalue) < 0)
+	    goto cleanup;
+	  ipv6snmptrapdestinationsetting = tmpvalue;
+
+	  ipv6snmptrapdestinationsetting &= (0x00FFFF00);
+	  ipv6snmptrapdestinationsetting |= destination_type;
+
+          if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
+							     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_IPV6_TRAP_SETTING,
+							     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SNMP_TRAP_DESTINATION_SETTING,
+							     index,
+							     3,
+							     (uint32_t)ipv6snmptrapdestinationsetting) < 0)
+            goto cleanup;
+        }
+      else if (!strcasecmp (key, "alertacktimeout"))
+	{
+	  if (ipmi_oem_parse_1_byte_field (state_data, i, value, &alertacktimeout) < 0)
+	    goto cleanup;
+
+	  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
+							     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_IPV6_TRAP_SETTING,
+							     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SNMP_TRAP_DESTINATION_SETTING,
+							     index,
+							     3,
+							     &tmpvalue) < 0)
+	    goto cleanup;
+	  ipv6snmptrapdestinationsetting = tmpvalue;
+
+	  ipv6snmptrapdestinationsetting &= (0x00FF00FF);
+	  ipv6snmptrapdestinationsetting |= (alertacktimeout << 8);
+
+          if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
+							     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_IPV6_TRAP_SETTING,
+							     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SNMP_TRAP_DESTINATION_SETTING,
+							     index,
+							     3,
+							     (uint32_t)ipv6snmptrapdestinationsetting) < 0)
+            goto cleanup;
+	}
+      else if (!strcasecmp (key, "retries"))
+	{
+	  if (ipmi_oem_parse_1_byte_field (state_data, i, value, &retries) < 0)
+	    goto cleanup;
+
+	  if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
+							     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_IPV6_TRAP_SETTING,
+							     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SNMP_TRAP_DESTINATION_SETTING,
+							     index,
+							     3,
+							     &tmpvalue) < 0)
+	    goto cleanup;
+	  ipv6snmptrapdestinationsetting = tmpvalue;
+
+	  ipv6snmptrapdestinationsetting &= (0x0000FFFF);
+	  ipv6snmptrapdestinationsetting |= (retries << 16);
+
+          if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
+							     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_IPV6_TRAP_SETTING,
+							     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SNMP_TRAP_DESTINATION_SETTING,
+							     index,
+							     3,
+							     (uint32_t)ipv6snmptrapdestinationsetting) < 0)
+            goto cleanup;
+	}
+      else if (!strcasecmp (key, "ipv6snmptrapaddress"))
+        {
+          uint8_t string_length = 0;
+	  
+          if (ipmi_oem_parse_string (state_data,
+                                     i,
+                                     value,
+                                     &string_length,
+				     ipv6snmptrapaddress,
+				     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SNMP_TRAP_DESTINATION_ADDRESS_LEN) < 0)
+            goto cleanup;
+          
+          if (ipmi_oem_thirdparty_set_extended_config_string (state_data,
+							      IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_IPV6_TRAP_SETTING,
+							      IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SNMP_TRAP_DESTINATION_ADDRESS,
+							      index,
+							      ipv6snmptrapaddress,
+							      (unsigned int)string_length) < 0)
+            goto cleanup;
+        }
+      else
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "%s:%s invalid OEM option argument '%s' : invalid key\n",
+                           state_data->prog_data->args->oem_id,
+                           state_data->prog_data->args->oem_command,
+                           state_data->prog_data->args->oem_options[i]);
+          goto cleanup;
+        }
+      
+      free (key);
+      free (value);
+    }
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
 ipmi_oem_wistron_get_sol_idle_timeout (ipmi_oem_state_data_t *state_data)
 {
   assert (state_data);
