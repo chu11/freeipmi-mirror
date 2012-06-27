@@ -1005,6 +1005,33 @@ and running.  Multiple key=value pairs may be specified.  If no
 key=value pairs are specifed, available pairs are output.  Command
 confirmed to work on Wistron / Dell Poweredge C6220.
 .TP
+.B get-web-server-config
+This OEM command will get the current web server configuration on the
+IPMI card.  Command confirmed to work on Wistron / Dell Poweredge
+C6220.
+.TP
+.B set-web-server-config \fIKEY=VALUE ...\fR
+This OEM command will set the current web server configuration on the
+IPMI card.  The possible keys and values are
+\fIwebserver=enable|disable\fR, \fIwebservertimeout=seconds\fR,
+\fIhttpportnumber=num\fR, and \fIhttpsportnumber=num\fR.  Multiple
+key=value pairs may be specified.  If no key=value pairs are specifed,
+available pairs are output.  Command confirmed to work on Wistron /
+Dell Poweredge C6220.
+.TP
+.B get-server-services-config
+This OEM command will get the current server services configuration on
+the IPMI card.  Command confirmed to work on Wistron / Dell Poweredge
+C6220.
+.TP
+.B set-server-services-config \fIKEY=VALUE ...\fR
+This OEM command will set the current server services configuration on
+the IPMI card.  The possible keys and values are
+\fIkvmportnumber=num\fR, \fItelnetportnumber=num\fR, and
+\fIsshportnumber=num\fR.  Multiple key=value pairs may be specified.
+If no key=value pairs are specifed, available pairs are output.
+Command confirmed to work on Wistron / Dell Poweredge C6220.
+.TP
 .B get-sol-idle-timeout
 This OEM command will get the SOL idle timeout.  Command confirmed to
 work on Wistron / Dell Poweredge C6220.

@@ -38,6 +38,9 @@ int ipmi_oem_wistron_set_dns_config (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_wistron_get_web_server_config (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_wistron_set_web_server_config (ipmi_oem_state_data_t *state_data);
 
+int ipmi_oem_wistron_get_server_services_config (ipmi_oem_state_data_t *state_data);
+int ipmi_oem_wistron_set_server_services_config (ipmi_oem_state_data_t *state_data);
+
 int ipmi_oem_wistron_get_sol_idle_timeout (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_wistron_set_sol_idle_timeout (ipmi_oem_state_data_t *state_data);
 

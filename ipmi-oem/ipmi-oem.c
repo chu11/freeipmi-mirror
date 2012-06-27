@@ -1154,6 +1154,20 @@ struct ipmi_oem_command oem_wistron[] =
       ipmi_oem_wistron_set_web_server_config
     },
     {
+      "get-server-services-config",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_get_server_services_config
+    },
+    {
+      "set-server-services-config",
+      "KEY=VALUE ...",
+      0,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
+      ipmi_oem_wistron_set_server_services_config
+    },
+    {
       "get-sol-idle-timeout",
       NULL,
       0,
