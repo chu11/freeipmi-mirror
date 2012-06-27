@@ -1,3 +1,7 @@
+2012-06-26  Albert Chu <chu11@llnl.gov>
+
+	* man/ipmi-oem.8.pre.in: Fix vendor specific documentation error.
+	
 2012-06-15  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/interpret/: Support new interpretations based on
