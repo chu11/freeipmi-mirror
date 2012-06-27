@@ -647,7 +647,7 @@ ipmi_oem_wistron_get_web_server_config (ipmi_oem_state_data_t *state_data)
 
   /* Wistron/Dell Poweredge C6220
    *
-   * Web server config supports move values that v1 config, but we
+   * Web server config supports more values that v1 config, but we
    * split that out into server services config since they don't have
    * much related to "web".
    */
@@ -661,7 +661,7 @@ ipmi_oem_wistron_set_web_server_config (ipmi_oem_state_data_t *state_data)
 
   /* Wistron/Dell Poweredge C6220
    *
-   * Web server config supports move values that v1 config, but we
+   * Web server config supports more values that v1 config, but we
    * split that out into server services config since they don't have
    * much related to "web".
    */
