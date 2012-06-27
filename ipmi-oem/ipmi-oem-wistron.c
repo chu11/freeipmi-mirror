@@ -295,3 +295,161 @@ ipmi_oem_wistron_set_ssh_redirect_function (ipmi_oem_state_data_t *state_data)
 
   return (_wistron_set_telnet_ssh_redirect_function (state_data, IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_SSH_REDIRECT_FUNCTION_SELECTION));
 }
+
+int
+ipmi_oem_wistron_get_bmc_services (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t services = 0;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  if (ipmi_oem_thirdparty_get_bmc_services_bitmask (state_data, &services) < 0)
+    goto cleanup;
+
+  if (services)
+    {
+      /* achu: it is not clear if only one bit or multiple bits can be
+       * set.  I'm assuming if the "all" bit is set, there is no need
+       * to output anything else.
+       */
+      if (services & IPMI_OEM_WISTRON_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_ALL)
+        {
+          pstdout_printf (state_data->pstate, "All services except IPMI disabled\n");
+          goto out;
+        }
+      if (services & IPMI_OEM_WISTRON_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_KVM_VIRTUAL_STORAGE)
+        pstdout_printf (state_data->pstate, "KVM/Virtual Storage disabled\n");
+      if (services & IPMI_OEM_WISTRON_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_HTTP_HTTPS)
+        pstdout_printf (state_data->pstate, "HTTP/HTTPS disabled\n");
+      if (services & IPMI_OEM_WISTRON_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SSH)
+        pstdout_printf (state_data->pstate, "SSH disabled\n");
+      if (services & IPMI_OEM_WISTRON_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SNMP_V2C_AGENT)
+        pstdout_printf (state_data->pstate, "SNMP v2c agent disabled\n");
+      if (services & IPMI_OEM_WISTRON_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_TELNET)
+        pstdout_printf (state_data->pstate, "Telnet disabled\n");
+    }
+  else
+    pstdout_printf (state_data->pstate, "All services enabled\n");
+
+ out:
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_wistron_set_bmc_services (ipmi_oem_state_data_t *state_data)
+{
+  int enable = 0;
+  uint8_t services = 0;
+  int rv = -1;
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 2);
+
+  if (strcasecmp (state_data->prog_data->args->oem_options[0], "enable")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "disable"))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[0]);
+      goto cleanup;
+    }
+
+  if (strcasecmp (state_data->prog_data->args->oem_options[1], "all")
+      && strcasecmp (state_data->prog_data->args->oem_options[1], "kvm")
+      && strcasecmp (state_data->prog_data->args->oem_options[1], "http")
+      && strcasecmp (state_data->prog_data->args->oem_options[1], "ssh")
+      && strcasecmp (state_data->prog_data->args->oem_options[1], "snmp")
+      && strcasecmp (state_data->prog_data->args->oem_options[1], "telnet"))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[1]);
+      goto cleanup;
+    }
+
+  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "enable"))
+    enable = 1;
+        
+  /* if all, it's an easy special case */
+  if (!strcasecmp (state_data->prog_data->args->oem_options[1], "all"))
+    {
+      if (enable)
+        services = IPMI_OEM_WISTRON_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_ENABLE_ALL;
+      else
+        services = IPMI_OEM_WISTRON_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_ALL;
+    }
+  else
+    {
+      if (ipmi_oem_thirdparty_get_bmc_services_bitmask (state_data, &services) < 0)
+        goto cleanup;
+
+      if (enable && (services & IPMI_OEM_WISTRON_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_ALL))
+        {
+          /* clear out "all" bit, and replace with remaining bits */
+          services &= (~IPMI_OEM_WISTRON_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_ALL);
+          services |= IPMI_OEM_WISTRON_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_KVM_VIRTUAL_STORAGE;
+          services |= IPMI_OEM_WISTRON_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_HTTP_HTTPS;
+          services |= IPMI_OEM_WISTRON_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SSH;
+          services |= IPMI_OEM_WISTRON_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SNMP_V2C_AGENT;
+          services |= IPMI_OEM_WISTRON_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_TELNET;
+        }
+
+      if (!strcasecmp (state_data->prog_data->args->oem_options[1], "kvm"))
+        {
+          if (enable)
+            services &= (~IPMI_OEM_WISTRON_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_KVM_VIRTUAL_STORAGE);
+          else
+            services |= IPMI_OEM_WISTRON_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_KVM_VIRTUAL_STORAGE;
+        }
+      else if (!strcasecmp (state_data->prog_data->args->oem_options[1], "http"))
+        {
+          if (enable)
+            services &= (~IPMI_OEM_WISTRON_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_HTTP_HTTPS);
+          else
+            services |= IPMI_OEM_WISTRON_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_HTTP_HTTPS;
+        }
+      else if (!strcasecmp (state_data->prog_data->args->oem_options[1], "ssh"))
+        {
+          if (enable)
+            services &= (~IPMI_OEM_WISTRON_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SSH);
+          else
+            services |= IPMI_OEM_WISTRON_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SSH;
+        }
+      else if (!strcasecmp (state_data->prog_data->args->oem_options[1], "snmp"))
+        {
+          if (enable)
+            services &= (~IPMI_OEM_WISTRON_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SNMP_V2C_AGENT);
+          else
+            services |= IPMI_OEM_WISTRON_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SNMP_V2C_AGENT;
+        }
+      else if (!strcasecmp (state_data->prog_data->args->oem_options[1], "telnet"))
+        {
+          if (enable)
+            services &= (~IPMI_OEM_WISTRON_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_TELNET);
+          else
+            services |= IPMI_OEM_WISTRON_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_TELNET;
+        }
+    }
+
+  if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
+						     IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_SECURITY,
+						     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SECURITY_SERVICE_DISABLED,
+						     0,
+						     1,
+						     (uint32_t)services) < 0)
+    goto cleanup;
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}

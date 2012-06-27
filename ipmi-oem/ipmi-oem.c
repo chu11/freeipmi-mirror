@@ -1105,6 +1105,20 @@ struct ipmi_oem_command oem_wistron[] =
       ipmi_oem_wistron_set_shared_nic_selection
     },
     {
+      "get-bmc-services",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_get_bmc_services
+    },
+    {
+      "set-bmc-services",
+      "<enable|disable> <all|kvm|http|ssh|snmp|telnet>",
+      2,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_set_bmc_services
+    },
+    {
       "get-sol-idle-timeout",
       NULL,
       0,
