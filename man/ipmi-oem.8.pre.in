@@ -761,8 +761,7 @@ confirmed to work on Quanta S99Q (Dell FS12-TY).
 This OEM command will output the current account status of users on
 the BMC.  This command is particularly usefor for determinining which
 users in the system may have been locked out via authentication
-failures configured via \fIset\-authentication\-config\fR.  Command
-confirmed to work on Quanta S99Q (Dell FS12-TY).
+failures.  Command confirmed to work on Quanta S99Q (Dell FS12-TY).
 .TP
 .B get-dns-config
 This OEM command will display additional OEM DNS settings.
