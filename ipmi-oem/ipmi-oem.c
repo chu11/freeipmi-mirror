@@ -1266,6 +1266,13 @@ struct ipmi_oem_command oem_wistron[] =
       ipmi_oem_wistron_set_ssh_redirect_function
     },
     {
+      "reset-to-defaults",
+      "<all|user|lan|sol|serial|pef>",
+      1,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_reset_to_defaults
+    },
+    {
       NULL,
       NULL,
       0,

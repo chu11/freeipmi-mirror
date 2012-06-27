@@ -1121,6 +1121,15 @@ confirmed to work on Wistron / Dell Poweredge C6220.
 .B set-ssh-redirect-function \fIdisable|solenable|smashenable\fR
 This OEM command will enable or disable SSH redirect function.
 Command confirmed to work on Wistron / Dell Poweredge C6220.
+.TP
+.B reset-to-defaults \fIall|user|lan|sol|serial|pef\fR
+This OEM command will reset certain BMC configuration sections back to
+default values.  The command will spin until the reset is confirmed to
+be complete.  Command confirmed to work on Wistron / Dell Poweredge
+C6220.  After running this command, the BMC must be reset to return it
+to functioning status.  This may be accomplished by executing a
+cold-reset with
+.B bmc-device(8).
 .RE
 #include <@top_srcdir@/man/manpage-common-hostranged-text-main.man>
 #include <@top_srcdir@/man/manpage-common-hostranged-text-threads.man>

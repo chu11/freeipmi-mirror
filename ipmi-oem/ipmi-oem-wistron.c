@@ -1971,3 +1971,169 @@ ipmi_oem_wistron_set_ssh_redirect_function (ipmi_oem_state_data_t *state_data)
   return (_wistron_set_telnet_ssh_redirect_function (state_data, IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_SSH_REDIRECT_FUNCTION_SELECTION));
 }
 
+int
+ipmi_oem_wistron_reset_to_defaults (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  uint8_t task_id;
+  int rs_len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 1);
+
+  if (strcasecmp (state_data->prog_data->args->oem_options[0], "all")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "user")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "lan")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "sol")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "serial")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "pef"))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[0]);
+      goto cleanup;
+    }
+
+  /* Wistron/Dell Poweredge C6220 
+   *
+   * Request Reset To Defaults
+   *
+   * 0x30 - OEM network function
+   * 0x04 - OEM cmd
+   * 0x?? - bitmask
+   *      [7:5] = 111b = restore parameters not included below
+   *            = 000b = remaining parameters stay what it is
+   *      [4] = 1b = restore PEFs to default
+   *      [3] = 1b = restore serial configuration parameters to default
+   *      [2] = 1b = restore SOL configuration parameters to default
+   *      [1] = 1b = restore LAN configuration parameters to default
+   *      [0] = 1b = restore user accounts to default
+   * 0x?? - 0xFF - restore all satellite controller settings to default
+   *
+   * Response Reset To Defaults
+   *
+   * 0x04 - OEM cmd
+   * 0x?? - Completion Code
+   *      - 0xCC - one or more configs not supported
+   * 0x?? - Task ID - used to get the restore status.  Invalid after
+   *        120 seconds.  00h = reserved.
+   *
+   * Request Get Restore Status
+   *
+   * 0x30 - OEM network function
+   * 0x05 - OEM cmd
+   * 0x?? - Task ID
+   *
+   * Response Get Restore Status
+   *
+   * 0x05 - OEM cmd
+   * 0x?? - Completion Code
+   * 0x?? - restore status
+   *      - 00h = restore in progress
+   *      - 01h = restore complete
+   *
+   * Notes: If do not want to reset any user settings, but want to
+   * reset satellite controller settings, BMC is not responsible and a
+   * task ID will not be returned.
+   */
+
+  bytes_rq[0] = IPMI_CMD_OEM_WISTRON_RESET_TO_DEFAULTS;
+
+  bytes_rq[1] = IPMI_OEM_WISTRON_RESET_TO_DEFAULTS_RESTORE_FLAG_REMAINING_PARAMETERS_STAY_WHAT_IT_IS;
+  bytes_rq[1] <<= IPMI_OEM_WISTRON_RESET_TO_DEFAULTS_RESTORE_FLAG_SHIFT;
+
+  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "all"))
+    {
+      bytes_rq[1] = IPMI_OEM_WISTRON_RESET_TO_DEFAULTS_RESTORE_FLAG_RESTORE_PARAMETERS_NOT_INCLUDED_BELOW;
+      bytes_rq[1] <<= IPMI_OEM_WISTRON_RESET_TO_DEFAULTS_RESTORE_FLAG_SHIFT;
+      bytes_rq[1] |= IPMI_OEM_WISTRON_RESET_TO_DEFAULTS_USER_ACCOUNTS_BITMASK;
+      bytes_rq[1] |= IPMI_OEM_WISTRON_RESET_TO_DEFAULTS_LAN_CONFIGURATION_BITMASK;
+      bytes_rq[1] |= IPMI_OEM_WISTRON_RESET_TO_DEFAULTS_SOL_CONFIGURATION_BITMASK;
+      bytes_rq[1] |= IPMI_OEM_WISTRON_RESET_TO_DEFAULTS_SERIAL_CONFIGURATION_BITMASK;
+      bytes_rq[1] |= IPMI_OEM_WISTRON_RESET_TO_DEFAULTS_PEF_BITMASK;
+    }
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "user"))
+    bytes_rq[1] |= IPMI_OEM_WISTRON_RESET_TO_DEFAULTS_USER_ACCOUNTS_BITMASK;
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "lan"))
+    bytes_rq[1] |= IPMI_OEM_WISTRON_RESET_TO_DEFAULTS_LAN_CONFIGURATION_BITMASK;
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "sol"))
+    bytes_rq[1] |= IPMI_OEM_WISTRON_RESET_TO_DEFAULTS_SOL_CONFIGURATION_BITMASK;
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "serial"))
+    bytes_rq[1] |= IPMI_OEM_WISTRON_RESET_TO_DEFAULTS_SERIAL_CONFIGURATION_BITMASK;
+  else  /* !strcasecmp (state_data->prog_data->args->oem_options[0], "pef" */
+    bytes_rq[1] |= IPMI_OEM_WISTRON_RESET_TO_DEFAULTS_PEF_BITMASK;
+
+  /* We are only resetting user components, don't care about satellite controllers */
+  bytes_rq[2] = 0;
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              IPMI_NET_FN_OEM_WISTRON_GENERIC_RQ, /* network function */
+                              bytes_rq, /* data */
+                              3, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   3,
+                                                   IPMI_CMD_OEM_WISTRON_RESET_TO_DEFAULTS,
+                                                   IPMI_NET_FN_OEM_WISTRON_GENERIC_RS,
+                                                   NULL) < 0)
+    goto cleanup;
+
+  task_id = bytes_rs[2];
+
+  /* don't quit until it is done */
+  while (1)
+    {
+      bytes_rq[0] = IPMI_CMD_OEM_WISTRON_GET_RESTORE_STATUS;
+      bytes_rq[1] = task_id;
+
+      if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                                  0, /* lun */
+                                  IPMI_NET_FN_OEM_WISTRON_GENERIC_RQ, /* network function */
+                                  bytes_rq, /* data */
+                                  2, /* num bytes */
+                                  bytes_rs,
+                                  IPMI_OEM_MAX_BYTES)) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_cmd_raw: %s\n",
+                           ipmi_ctx_errormsg (state_data->ipmi_ctx));
+          goto cleanup;
+        }
+
+      if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                       bytes_rs,
+                                                       rs_len,
+                                                       3,
+                                                       IPMI_CMD_OEM_WISTRON_GET_RESTORE_STATUS,
+                                                       IPMI_NET_FN_OEM_WISTRON_GENERIC_RS,
+                                                       NULL) < 0)
+        goto cleanup;
+
+      if (bytes_rs[2] == IPMI_OEM_WISTRON_GET_RESTORE_STATUS_RESTORE_COMPLETE)
+        break;
+
+      sleep (1);
+    }
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
