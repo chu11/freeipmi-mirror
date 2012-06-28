@@ -28,6 +28,7 @@
 #define IPMI_OEM_FMT_BUFLEN     1024
 #define IPMI_OEM_STR_BUFLEN     2048
 
+/* returns 1 if found OEM specific error message, 0 if not, -1 on error */
 typedef int (*Ipmi_oem_comp_code_strerror)(ipmi_oem_state_data_t *state_data,
                                            uint8_t comp_code,
                                            uint8_t cmd,

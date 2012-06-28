@@ -2101,6 +2101,295 @@ ipmi_oem_wistron_set_ssh_redirect_function (ipmi_oem_state_data_t *state_data)
   return (_wistron_set_telnet_ssh_redirect_function (state_data, IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_SSH_REDIRECT_FUNCTION_SELECTION));
 }
 
+static int
+_wistron_led_strerror (ipmi_oem_state_data_t *state_data,
+		       uint8_t comp_code,
+		       uint8_t cmd,
+		       uint8_t netfn,
+		       char *errbuf,
+		       unsigned int errbuflen)
+{
+  assert (state_data);
+  assert (comp_code != IPMI_COMP_CODE_COMMAND_SUCCESS);
+
+  switch (netfn)
+    {
+    case IPMI_NET_FN_OEM_WISTRON_GENERIC_RQ:
+    case IPMI_NET_FN_OEM_WISTRON_GENERIC_RS:
+      switch (cmd)
+	{
+	case IPMI_CMD_OEM_WISTRON_GET_CHASSIS_LED_STATUS:
+	  switch (comp_code)
+	    {
+	      case IPMI_COMP_CODE_OEM_WISTON_GET_CHASSIS_LED_STATUS_NOT_YET_RECEIVED_ANY_INFORMATION_FROM_SATELLITE_CONTROLLER:
+		snprintf (errbuf, errbuflen, "%s", IPMI_COMP_CODE_OEM_WISTON_GET_CHASSIS_LED_STATUS_NOT_YET_RECEIVED_ANY_INFORMATION_FROM_SATELLITE_CONTROLLER_STR);
+		return (1);
+		break;
+	    case IPMI_COMP_CODE_OEM_WISTON_GET_CHASSIS_LED_STATUS_SATELLITE_CONTROLLER_NOT_REPORTING_FOR_MORE_THAN_10_CONSECUTIVE_SECONDS:
+	      snprintf (errbuf, errbuflen, "%s", IPMI_COMP_CODE_OEM_WISTON_GET_CHASSIS_LED_STATUS_SATELLITE_CONTROLLER_NOT_REPORTING_FOR_MORE_THAN_10_CONSECUTIVE_SECONDS_STR);
+	      return (1);
+	      break;
+	    }
+	  break;
+	case IPMI_CMD_OEM_WISTRON_SET_CHASSIS_LED_STATUS:
+	  switch (comp_code)
+	    {
+	    case IPMI_COMP_CODE_OEM_WISTON_SET_CHASSIS_LED_STATUS_NOT_YET_RECEIVED_ANY_INFORMATION_FROM_SATELLITE_CONTROLLER:
+	      snprintf (errbuf, errbuflen, "%s", IPMI_COMP_CODE_OEM_WISTON_SET_CHASSIS_LED_STATUS_NOT_YET_RECEIVED_ANY_INFORMATION_FROM_SATELLITE_CONTROLLER_STR);
+	      return (1);
+	      break;
+	    case IPMI_COMP_CODE_OEM_WISTON_SET_CHASSIS_LED_STATUS_SATELLITE_CONTROLLER_NOT_REPORTING_FOR_MORE_THAN_10_CONSECUTIVE_SECONDS:
+	      snprintf (errbuf, errbuflen, "%s", IPMI_COMP_CODE_OEM_WISTON_SET_CHASSIS_LED_STATUS_SATELLITE_CONTROLLER_NOT_REPORTING_FOR_MORE_THAN_10_CONSECUTIVE_SECONDS_STR);
+	      return (1);
+	      break;
+	    case IPMI_COMP_CODE_OEM_WISTON_SET_CHASSIS_LED_STATUS_SATELLITE_CONTROLLER_DOES_NOT_SUPPORT_CHASSIS_LED_REQUESTED:
+	      snprintf (errbuf, errbuflen, "%s", IPMI_COMP_CODE_OEM_WISTON_SET_CHASSIS_LED_STATUS_SATELLITE_CONTROLLER_DOES_NOT_SUPPORT_CHASSIS_LED_REQUESTED_STR);
+	      return (1);
+	      break;
+	    }
+	  break;
+	}
+      break;
+    }
+
+  return (0);
+}
+
+int
+ipmi_oem_wistron_get_chassis_led_status (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  int rs_len;
+  uint8_t chassis_identification_led_supported;
+  uint8_t chassis_fault_led_supported;
+  uint8_t chassis_identification_led_status;
+  uint8_t chassis_fault_led_status;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  /* Wistron/Dell Poweredge C6220 OEM
+   * 
+   * Get Chassis LED Status Request
+   *
+   * 0x30 - OEM network function
+   * 0x1C - OEM cmd
+   *
+   * Get Chassis LED Status Response
+   *
+   * 0x1C - OEM cmd
+   * 0x?? - Completion code
+   * 0x01 - SC-BMC Communication Protocol Version
+   * 0x?? - LED Support
+   *        0 bit = chassis identification LED controlled by SC (0 = not supported, 1 = supported)
+   *        1 bit = fault LED controlled by SC (0 = not supported, 1 = supported)
+   *        2-7 = reserved 
+   * 0x?? - Chassis Identification LED Status
+   *      - 0 - off, 1 solid, 2 blink
+   * 0x?? - Chassis Fault LED Status
+   *      - 0 - off, 1 solid, 2 blink
+   */
+  
+  /* achu: we won't bother checking if there are any remote
+   * connections, just check the connection indicated by the user
+   */
+
+  bytes_rq[0] = IPMI_CMD_OEM_WISTRON_GET_CHASSIS_LED_STATUS;
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              IPMI_NET_FN_OEM_WISTRON_GENERIC_RQ, /* network function */
+                              bytes_rq, /* data */
+                              1, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+  
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   6,
+						   IPMI_CMD_OEM_WISTRON_GET_CHASSIS_LED_STATUS,
+                                                   IPMI_NET_FN_OEM_WISTRON_GENERIC_RS,
+                                                   _wistron_led_strerror) < 0)
+    goto cleanup;
+
+  chassis_identification_led_supported = bytes_rs[3] & IPMI_OEM_WISTRON_CHASSIS_IDENTIFICATION_LED_CONTROLLED_BY_SC_BITMASK;
+  chassis_identification_led_supported >>= IPMI_OEM_WISTRON_CHASSIS_IDENTIFICATION_LED_CONTROLLED_BY_SC_SHIFT;
+
+  chassis_fault_led_supported = bytes_rs[3] & IPMI_OEM_WISTRON_CHASSIS_FAULT_LED_CONTROLLED_BY_SC_BITMASK;
+  chassis_fault_led_supported >>= IPMI_OEM_WISTRON_CHASSIS_FAULT_LED_CONTROLLED_BY_SC_SHIFT;
+
+  chassis_identification_led_status = bytes_rs[4];
+
+  chassis_fault_led_status = bytes_rs[5];
+
+  if (chassis_identification_led_supported)
+    {
+      switch (chassis_identification_led_status)
+	{
+	case IPMI_OEM_WISTRON_CHASSIS_LED_OFF:
+	  pstdout_printf (state_data->pstate,
+			  "Chassis Identification LED Status : Off\n");
+	  break;
+	case IPMI_OEM_WISTRON_CHASSIS_LED_SOLID_ON:
+	  pstdout_printf (state_data->pstate,
+			  "Chassis Identification LED Status : Solid\n");
+	  break;
+	case IPMI_OEM_WISTRON_CHASSIS_LED_BLINK_ON:
+	  pstdout_printf (state_data->pstate,
+			  "Chassis Identification LED Status : Blink\n");
+	  break;
+	default:
+	  pstdout_printf (state_data->pstate,
+			  "Chassis Identification LED Status : Unspecified (%Xh)\n",
+			  chassis_identification_led_status);
+	  break;
+	}
+    }
+
+  if (chassis_fault_led_supported)
+    {
+      switch (chassis_fault_led_status)
+	{
+	case IPMI_OEM_WISTRON_CHASSIS_LED_OFF:
+	  pstdout_printf (state_data->pstate,
+			  "Chassis Fault LED Status          : Off\n");
+	  break;
+	case IPMI_OEM_WISTRON_CHASSIS_LED_SOLID_ON:
+	  pstdout_printf (state_data->pstate,
+			  "Chassis Fault LED Status          : Solid\n");
+	  break;
+	case IPMI_OEM_WISTRON_CHASSIS_LED_BLINK_ON:
+	  pstdout_printf (state_data->pstate,
+			  "Chassis Fault LED Status          : Blink\n");
+	  break;
+	default:
+	  pstdout_printf (state_data->pstate,
+			  "Chassis Fault LED Status          : Unspecified (%Xh)\n",
+			  chassis_fault_led_status);
+	  break;
+	}
+    }
+  
+  rv = 0;
+    cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_wistron_set_chassis_led_status (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  int rs_len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 2);
+  
+  if (strcasecmp (state_data->prog_data->args->oem_options[0], "identify-off")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "identify-solid")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "identify-blink"))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[0]);
+      goto cleanup;
+    }
+
+  if (strcasecmp (state_data->prog_data->args->oem_options[1], "fault-off")
+      && strcasecmp (state_data->prog_data->args->oem_options[1], "fault-solid")
+      && strcasecmp (state_data->prog_data->args->oem_options[1], "fault-blink"))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[1]);
+      goto cleanup;
+    }
+
+  /* Wistron/Dell Poweredge C6220 OEM
+   * 
+   * Set Chassis LED Status Request
+   *
+   * 0x30 - OEM network function
+   * 0x1B - OEM cmd
+   * 0x01 - SC-BMC Communication Protocol Version
+   * 0x?? - Chassis Identification LED Status
+   *      - 0 - off, 1 solid, 2 blink
+   * 0x?? - Chassis Fault LED Status
+   *      - 0 - off, 1 solid, 2 blink
+   *
+   * Get Chassis LED Status Response
+   *
+   * 0x1C - OEM cmd
+   * 0x?? - Completion code
+   */
+  
+  /* achu: we won't bother checking if there are any remote
+   * connections, just check the connection indicated by the user
+   */
+
+  bytes_rq[0] = IPMI_CMD_OEM_WISTRON_SET_CHASSIS_LED_STATUS;
+  bytes_rq[1] = IPMI_OEM_WISTRON_SC_BMC_COMMUNICATION_PROTOCOL_VERSION;
+
+  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "identify-off"))
+    bytes_rq[2] =  IPMI_OEM_WISTRON_CHASSIS_LED_OFF;
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "identify-solid"))
+    bytes_rq[2] =  IPMI_OEM_WISTRON_CHASSIS_LED_SOLID_ON;
+  else
+    bytes_rq[2] =  IPMI_OEM_WISTRON_CHASSIS_LED_BLINK_ON;
+
+  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "fault-off"))
+    bytes_rq[3] =  IPMI_OEM_WISTRON_CHASSIS_LED_OFF;
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "fault-solid"))
+    bytes_rq[3] =  IPMI_OEM_WISTRON_CHASSIS_LED_SOLID_ON;
+  else
+    bytes_rq[3] =  IPMI_OEM_WISTRON_CHASSIS_LED_BLINK_ON;
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              IPMI_NET_FN_OEM_WISTRON_GENERIC_RQ, /* network function */
+                              bytes_rq, /* data */
+                              4, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+  
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   2,
+						   IPMI_CMD_OEM_WISTRON_GET_CHASSIS_LED_STATUS,
+                                                   IPMI_NET_FN_OEM_WISTRON_GENERIC_RS,
+                                                   _wistron_led_strerror) < 0)
+    goto cleanup;
+  
+  rv = 0;
+    cleanup:
+  return (rv);
+}
+
 int
 ipmi_oem_wistron_reset_to_defaults (ipmi_oem_state_data_t *state_data)
 {

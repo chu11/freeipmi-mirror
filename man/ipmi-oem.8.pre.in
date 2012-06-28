@@ -1127,6 +1127,20 @@ confirmed to work on Wistron / Dell Poweredge C6220.
 .B set-ssh-redirect-function \fIdisable|solenable|smashenable\fR
 This OEM command will enable or disable SSH redirect function.
 Command confirmed to work on Wistron / Dell Poweredge C6220.
+.TP
+.B get-chassis-led-status
+This OEM command will output the current chassis identification and/or
+chassis fault LED status.  \fIoff\fR indicates the LED is off,
+\fIsolid\fR indicates the LED is on and steady, \fIblink\fR indicates
+the LED is on and blinking.  Command confirmed to work on Wistron /
+Dell Poweredge C6220.
+.\" XXX - is true, set off ifnot there? 
+.TP
+.B set-chassis-led-status <identify-off|identify-solid|identify-blink> <fault-off|fault-solid|fault-blink>
+This OEM command will set the chassis identification and chassis fault
+LEDs to a state of \fIoff\fR, \fIsolid\fR, or \fIblink\fR.  If an LED
+is not available on the chassis, it should be set to \fIoff\fR.
+Command confirmed to work on Wistron / Dell Poweredge C6220.
 .\" XXX - is true, will reset BMC internally???
 .TP
 .B reset-to-defaults \fIall|user|lan|sol|serial|pef\fR

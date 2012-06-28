@@ -1273,6 +1273,20 @@ struct ipmi_oem_command oem_wistron[] =
       ipmi_oem_wistron_set_ssh_redirect_function
     },
     {
+      "get-chassis-led-status",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_get_chassis_led_status
+    },
+    {
+      "set-chassis-led-status",
+      "<identify-off|identify-solid|identify-blink> <fault-off|fault-solid|fault-blink>",
+      2,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_set_chassis_led_status
+    },
+    {
       "reset-to-defaults",
       "<all|user|lan|sol|serial|pef>",
       1,
