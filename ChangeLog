@@ -1,3 +1,8 @@
+2012-06-28  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/ipmi-oem-dell.c (ipmi_oem_dell_get_system_info): Fix
+	error output corner case.
+	
 2012-06-26  Albert Chu <chu11@llnl.gov>
 
 	* man/ipmi-oem.8.pre.in: Fix vendor specific documentation error.
