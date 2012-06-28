@@ -21,6 +21,8 @@
 
 #include "ipmi-oem.h"
 
+int ipmi_oem_wistron_get_system_info (ipmi_oem_state_data_t *state_data);
+
 int ipmi_oem_wistron_get_nic_mode (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_wistron_set_nic_mode (ipmi_oem_state_data_t *state_data);
 
@@ -62,5 +64,7 @@ int ipmi_oem_wistron_set_telnet_redirect_function (ipmi_oem_state_data_t *state_
 
 int ipmi_oem_wistron_get_ssh_redirect_function (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_wistron_set_ssh_redirect_function (ipmi_oem_state_data_t *state_data);
+
+int ipmi_oem_wistron_reset_to_defaults (ipmi_oem_state_data_t *state_data);
 
 #endif /* IPMI_OEM_WISTRON_H */

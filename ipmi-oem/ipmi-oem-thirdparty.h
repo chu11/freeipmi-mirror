@@ -26,6 +26,31 @@
  */
 
 /* Shared between:
+ * Dell Poweredge Systems
+ * Wistron/Dell Poweredge C6220
+ *
+ * String format is:
+ *
+ * Set Selector 0:
+ *
+ * 1st byte = set selector
+ * 2nd byte
+ * - 7:4 - reserved
+ * - 3:0 - string encoding, 0 = printable ascii  
+ * 3rd byte = string length
+ * ? bytes = string
+ *
+ * Set Selector > 0
+ *
+ * 1st byte = set selector
+ * ? bytes = string
+ */
+int ipmi_oem_thirdparty_get_system_info_block_pstring (ipmi_oem_state_data_t *state_data,
+						       uint8_t parameter_selector,
+						       char *string,
+						       unsigned int string_len);
+
+/* Shared between:
  * Inventec 5441/Dell Xanadu II OEM
  * Inventec 5442/Dell Xanadu III OEM
  * Quanta S99Q/Dell FS12-TY OEM

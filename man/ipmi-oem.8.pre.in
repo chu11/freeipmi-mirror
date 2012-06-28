@@ -933,6 +933,12 @@ Supermicro X8DTG.
 .B Wistron
 .RS
 .TP
+.B get-system-info \fIKEY\fR
+This OEM command can retrieve the motherboard system information.
+Valid keys are \fIasset\-tag\fR, \fIservice\-tag\fR,
+\fIproduct\-name\fR.  Command confirmed to work on Wistron / Dell
+Poweredge C6220.
+.TP
 .B get-nic-mode
 This OEM command will determine the current NIC mode as dedicated or
 shared.  Dedicated indicates IPMI is only available on the dedicated
@@ -1121,6 +1127,7 @@ confirmed to work on Wistron / Dell Poweredge C6220.
 .B set-ssh-redirect-function \fIdisable|solenable|smashenable\fR
 This OEM command will enable or disable SSH redirect function.
 Command confirmed to work on Wistron / Dell Poweredge C6220.
+.\" XXX - is true, will reset BMC internally???
 .TP
 .B reset-to-defaults \fIall|user|lan|sol|serial|pef\fR
 This OEM command will reset certain BMC configuration sections back to

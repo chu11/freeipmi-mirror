@@ -1077,6 +1077,13 @@ struct ipmi_oem_command oem_supermicro[] =
 struct ipmi_oem_command oem_wistron[] =
   {
     {
+      "get-system-info",
+      "<KEY>",
+      0,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
+      ipmi_oem_wistron_get_system_info
+    },
+    {
       "get-nic-mode",
       NULL,
       0,

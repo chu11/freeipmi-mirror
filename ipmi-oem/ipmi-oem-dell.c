@@ -50,6 +50,7 @@
 #include "ipmi-oem-argp.h"
 #include "ipmi-oem-common.h"
 #include "ipmi-oem-dell.h"
+#include "ipmi-oem-thirdparty.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
@@ -181,193 +182,15 @@ _get_dell_system_info_long_string (ipmi_oem_state_data_t *state_data,
                                    char *string,
                                    unsigned int string_len)
 {
-  fiid_obj_t obj_cmd_rs = NULL;
-  uint8_t configuration_parameter_data[IPMI_OEM_MAX_BYTES];
-  uint8_t set_selector = 0;
-  uint8_t string_length = 0;
-  unsigned int string_count = 0;
-  uint8_t string_encoding;
-  int len;
-  int rv = -1;
-
   assert (state_data);
   assert (string);
   assert (string_len);
   assert (state_data->prog_data->args->oem_options_count == 1);
-
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_system_info_parameters_rs)))
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_create: %s\n",
-                       strerror (errno));
-      goto cleanup;
-    }
-
-  if (ipmi_cmd_get_system_info_parameters (state_data->ipmi_ctx,
-                                           IPMI_GET_SYSTEM_INFO_PARAMETER,
-                                           parameter_selector,
-                                           set_selector,
-                                           IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
-                                           obj_cmd_rs) < 0)
-    {
-      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-	  && ((ipmi_check_completion_code (obj_cmd_rs,
-					   IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1)
-	      || (ipmi_check_completion_code (obj_cmd_rs,
-					      IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1)))
-	{
-	  pstdout_fprintf (state_data->pstate,
-			   stderr,
-			   "%s:%s '%s' option not supported on this system\n",
-			   state_data->prog_data->args->oem_id,
-			   state_data->prog_data->args->oem_command,
-			   state_data->prog_data->args->oem_options[0]);
-	  goto cleanup;
-	}
-
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "ipmi_cmd_get_system_info_parameters: %s\n",
-                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      goto cleanup;
-    }
-
-  if ((len = fiid_obj_get_data (obj_cmd_rs,
-                                "configuration_parameter_data",
-                                configuration_parameter_data,
-                                IPMI_OEM_MAX_BYTES)) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_get_data: 'configuration_parameter_data': %s\n",
-                       fiid_obj_errormsg (obj_cmd_rs));
-      goto cleanup;
-    }
-
-  if (len < 3)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "ipmi_cmd_get_system_info_parameters: invalid buffer length returned: %d\n",
-                       len);
-      goto cleanup;
-    }
-
-  /* configuration_parameter_data[0] is the set selector, we don't care */
-
-  string_encoding = (configuration_parameter_data[1] & IPMI_OEM_DELL_SYSTEM_INFO_STRING_ENCODING_BITMASK);
-  string_encoding >>= IPMI_OEM_DELL_SYSTEM_INFO_STRING_ENCODING_SHIFT;
-
-  if (string_encoding != IPMI_SYSTEM_INFO_ENCODING_ASCII_LATIN1)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "Cannot handle non-ASCII encoding: %Xh\n",
-                       configuration_parameter_data[0]);
-      goto cleanup;
-    }
-
-  string_length = configuration_parameter_data[2];
-
-  if (!string_length)
-    goto out;
-
-  /* -3 b/c of set selector, encoding, and string length bytes */
-
-  if (len - 3)
-    {
-      if ((len - 3) > (string_len - string_count))
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "internal buffer overflow\n");
-          goto cleanup;
-        }
-
-      memcpy (string + string_count,
-              &(configuration_parameter_data[3]),
-              (len - 3));
-      string_count += (len - 3);
-    }
-
-  /* string_length is 8 bits, so we should not call >= 17 times,
-   *
-   * ceiling ( (255 - 14) / 16 ) + 1 = 17
-   *
-   */
-
-  set_selector++;
-  while (string_count < string_length && set_selector < 17)
-    {
-      if (fiid_obj_clear (obj_cmd_rs) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "fiid_obj_clear: %s\n",
-                           fiid_obj_errormsg (obj_cmd_rs));
-          goto cleanup;
-        }
-      
-      if (ipmi_cmd_get_system_info_parameters (state_data->ipmi_ctx,
-                                               IPMI_GET_SYSTEM_INFO_PARAMETER,
-                                               parameter_selector,
-                                               set_selector,
-                                               IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
-                                               obj_cmd_rs) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "ipmi_cmd_get_system_info_parameters: %s\n",
-                           ipmi_ctx_errormsg (state_data->ipmi_ctx));
-          goto cleanup;
-        }
-      
-      if ((len = fiid_obj_get_data (obj_cmd_rs,
-                                    "configuration_parameter_data",
-                                    configuration_parameter_data,
-                                    IPMI_OEM_MAX_BYTES)) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "fiid_obj_get_data: 'configuration_parameter_data': %s\n",
-                           fiid_obj_errormsg (obj_cmd_rs));
-          goto cleanup;
-        }
-      
-      if (len < 2)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "ipmi_cmd_get_system_info_parameters: invalid buffer length returned: %d\n",
-                           len);
-          goto cleanup;
-        }
-      
-      /* configuration_parameter_data[0] is the set selector, we don't care */
-
-      if ((string_count + (len - 1)) > (string_len - string_count))
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "internal buffer overflow\n");
-          goto cleanup;
-        }
-      
-      memcpy (string + string_count,
-              &(configuration_parameter_data[1]),
-              (len - 1));
-      
-      string_count += (len - 1);
-      
-      set_selector++;
-    }
-
- out:
-  rv = 0;
- cleanup:
-  fiid_obj_destroy (obj_cmd_rs);
-  return (rv);
+  
+  return (ipmi_oem_thirdparty_get_system_info_block_pstring (state_data,
+							     parameter_selector,
+							     string,
+							     string_len));
 }
 
 static int

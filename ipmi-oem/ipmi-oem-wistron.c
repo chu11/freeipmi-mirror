@@ -43,6 +43,136 @@
 #include "pstdout.h"
 
 int
+ipmi_oem_wistron_get_system_info (ipmi_oem_state_data_t *state_data)
+{
+  char assettag[IPMI_SYSTEM_INFO_PARAMETER_OEM_WISTRON_ASSET_TAG_MAX_LEN + 1];
+  char servicetag[IPMI_SYSTEM_INFO_PARAMETER_OEM_WISTRON_SERVICE_TAG_MAX_LEN + 1];
+  char productname[IPMI_OEM_WISTRON_SYSTEM_INFO_MAX_STRING_BYTES + 1];
+  int rv = -1;
+
+  assert (state_data);
+
+  if (!state_data->prog_data->args->oem_options_count)
+    {
+      pstdout_printf (state_data->pstate,
+                      "Option: asset-tag\n"
+                      "Option: service-tag\n"
+		      "Option: product-name\n");
+      return (0);
+    }
+
+  if (state_data->prog_data->args->oem_options_count != 1)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s please specify one get-system-info KEY\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command);
+      goto cleanup;
+    }
+
+  if (strcasecmp (state_data->prog_data->args->oem_options[0], "asset-tag")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "service-tag")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "product-name"))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[0]);
+      goto cleanup;
+    }
+  
+  /* Wistron/Dell Poweredge C6220
+   *
+   * Some from Dell Provided Docs
+   *
+   * Uses Get System Info command
+   *
+   * Format #1)
+   *
+   * asset-tag parameter = 196 - max length 20 bytes
+   * service-tag parameter = 197 - max length 7 bytes
+   *
+   * Parameter data response formatted:
+   *
+   * ? bytes = string/buf
+   *
+   * Format #2)
+   *
+   * product-name parameter = 209
+   *
+   * Parameter data response formatted:
+   *
+   * Set Selector 0:
+   *
+   * 1st byte = set selector
+   * 2nd byte
+   * - 7:4 - reserved
+   * - 3:0 - string encoding, 0 = printable ascii  
+   * 3rd byte = string length
+   * ? bytes = string
+   *
+   * Set Selector > 0
+   *
+   * 1st byte = set selector
+   * ? bytes = string
+   */
+
+  memset (assettag, '\0', IPMI_SYSTEM_INFO_PARAMETER_OEM_WISTRON_ASSET_TAG_MAX_LEN + 1);
+  memset (servicetag, '\0', IPMI_SYSTEM_INFO_PARAMETER_OEM_WISTRON_SERVICE_TAG_MAX_LEN + 1);
+  memset (productname, '\0', IPMI_OEM_WISTRON_SYSTEM_INFO_MAX_STRING_BYTES + 1);
+
+  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "asset-tag"))
+    {
+      if (ipmi_oem_get_system_info_string (state_data,
+					   IPMI_SYSTEM_INFO_PARAMETER_OEM_WISTRON_ASSET_TAG,
+					   IPMI_SYSTEM_INFO_PARAMETERS_NO_SET_SELECTOR,
+					   IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
+					   assettag,
+					   IPMI_SYSTEM_INFO_PARAMETER_OEM_WISTRON_ASSET_TAG_MAX_LEN,
+					   NULL) < 0)
+        goto cleanup;
+
+      pstdout_printf (state_data->pstate,
+		      "%s\n",
+		      assettag);
+    }
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "service-tag"))
+    {
+      if (ipmi_oem_get_system_info_string (state_data,
+					   IPMI_SYSTEM_INFO_PARAMETER_OEM_WISTRON_SERVICE_TAG,
+					   IPMI_SYSTEM_INFO_PARAMETERS_NO_SET_SELECTOR,
+					   IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
+					   servicetag,
+					   IPMI_SYSTEM_INFO_PARAMETER_OEM_WISTRON_SERVICE_TAG_MAX_LEN,
+					   NULL) < 0)
+        goto cleanup;
+
+      pstdout_printf (state_data->pstate,
+		      "%s\n",
+		      servicetag);
+    }
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "product-name"))
+    {
+      if (ipmi_oem_thirdparty_get_system_info_block_pstring (state_data,
+							     IPMI_SYSTEM_INFO_PARAMETER_OEM_WISTRON_PRODUCT_NAME,
+							     productname,
+							     IPMI_OEM_WISTRON_SYSTEM_INFO_MAX_STRING_BYTES) < 0)
+        goto cleanup;
+      
+      pstdout_printf (state_data->pstate,
+		      "%s\n",
+		      productname);
+    }
+ 
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
 ipmi_oem_wistron_get_nic_mode (ipmi_oem_state_data_t *state_data)
 {
   assert (state_data);
