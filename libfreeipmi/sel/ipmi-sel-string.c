@@ -71,6 +71,7 @@
 #include "ipmi-sel-string-quanta.h"
 #include "ipmi-sel-string-sun.h"
 #include "ipmi-sel-string-supermicro.h"
+#include "ipmi-sel-string-wistron.h"
 #include "ipmi-sel-trace.h"
 #include "ipmi-sel-util.h"
 
