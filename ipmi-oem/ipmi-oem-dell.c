@@ -1545,7 +1545,9 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "%s:%s please specify one get-system-info KEY\n");
+                       "%s:%s please specify one get-system-info KEY\n",
+		       state_data->prog_data->args->oem_id,
+		       state_data->prog_data->args->oem_command);
       goto cleanup;
     }
 
