@@ -65,6 +65,8 @@ int ipmi_oem_wistron_set_telnet_redirect_function (ipmi_oem_state_data_t *state_
 int ipmi_oem_wistron_get_ssh_redirect_function (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_wistron_set_ssh_redirect_function (ipmi_oem_state_data_t *state_data);
 
+int ipmi_oem_wistron_get_chassis_power_readings (ipmi_oem_state_data_t *state_data);
+
 int ipmi_oem_wistron_get_chassis_led_status (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_wistron_set_chassis_led_status (ipmi_oem_state_data_t *state_data);
 

@@ -28,6 +28,16 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
+#if TIME_WITH_SYS_TIME
+#include <sys/time.h>
+#include <time.h>
+#else  /* !TIME_WITH_SYS_TIME */
+#if HAVE_SYS_TIME_H
+#include <sys/time.h>
+#else /* !HAVE_SYS_TIME_H */
+#include <time.h>
+#endif  /* !HAVE_SYS_TIME_H */
+#endif /* !TIME_WITH_SYS_TIME */
 #include <limits.h>
 #include <assert.h>
 
@@ -2102,7 +2112,7 @@ ipmi_oem_wistron_set_ssh_redirect_function (ipmi_oem_state_data_t *state_data)
 }
 
 static int
-_wistron_led_strerror (ipmi_oem_state_data_t *state_data,
+_wistron_oem_strerror (ipmi_oem_state_data_t *state_data,
 		       uint8_t comp_code,
 		       uint8_t cmd,
 		       uint8_t netfn,
@@ -2148,11 +2158,138 @@ _wistron_led_strerror (ipmi_oem_state_data_t *state_data,
 	      break;
 	    }
 	  break;
+	case IPMI_CMD_OEM_WISTRON_GET_CHASSIS_POWER_READINGS:
+	  switch (comp_code)
+	    {
+	    case IPMI_COMP_CODE_OEM_WISTRON_GET_CHASSIS_POWER_READINGS_BMC_HAS_NOT_YET_RECEIVED_ANY_COMMANDS_FROM_SC:
+	      snprintf (errbuf, errbuflen, "%s", IPMI_COMP_CODE_OEM_WISTRON_GET_CHASSIS_POWER_READINGS_BMC_HAS_NOT_YET_RECEIVED_ANY_COMMANDS_FROM_SC_STR);
+	      return (1);
+	      break;
+	    case IPMI_COMP_CODE_OEM_WISTRON_GET_CHASSIS_POWER_READINGS_SC_HAS_TIMEDOUT:
+	      snprintf (errbuf, errbuflen, "%s", IPMI_COMP_CODE_OEM_WISTRON_GET_CHASSIS_POWER_READINGS_SC_HAS_TIMEDOUT_STR);
+	      return (1);
+	      break;
+	    }
+	  break;
 	}
       break;
     }
 
   return (0);
+}
+
+int
+ipmi_oem_wistron_get_chassis_power_readings (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  int rs_len;
+  uint32_t ipmitimestamp;
+  uint8_t totalpowerconsumption_supported;
+  uint8_t coolingpowerconsumption_supported;
+  uint16_t totalpowerconsumption;
+  uint16_t coolingpowerconsumption;
+  time_t timetmp;
+  struct tm time_tm;
+  char time_buf[IPMI_OEM_TIME_BUFLEN + 1];
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  /* Wistron/Dell Poweredge C6220 OEM
+   * 
+   * Get Chassis Power Reading Request
+   *
+   * 0x30 - OEM network function
+   * 0x2E - OEM cmd
+   *
+   * Get Chassis Power Reading Response
+   *
+   * 0x2E - OEM cmd
+   * 0x?? - Completion code
+   * bytes 2-5 - IPMI Timestamp when statistics collected
+   * byte 6 - support bitmask
+   *        - 0 - chassis total power consumption available
+   *        - 1 - chassis cooling power consumption available
+   *        - 2-7 - reserved
+   * bytes 7-8 - chassis total power consumption in watts (LSB first)
+   * bytes 9-10  - chassis cooling power consumption in watts (LSB first)
+   * bytes 11-14 - reserved 
+   */
+  
+  bytes_rq[0] = IPMI_CMD_OEM_WISTRON_GET_CHASSIS_POWER_READINGS;
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              IPMI_NET_FN_OEM_WISTRON_GENERIC_RQ, /* network function */
+                              bytes_rq, /* data */
+                              1, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+  
+  /* don't care about reserved bytes, saying only require 11 bytes */
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   11,
+						   IPMI_CMD_OEM_WISTRON_GET_CHASSIS_POWER_READINGS,
+                                                   IPMI_NET_FN_OEM_WISTRON_GENERIC_RS,
+                                                   _wistron_oem_strerror) < 0)
+    goto cleanup;
+
+  ipmitimestamp = bytes_rs[2];
+  ipmitimestamp |= (bytes_rs[3] << 8);
+  ipmitimestamp |= (bytes_rs[4] << 16);
+  ipmitimestamp |= (bytes_rs[5] << 24);
+  
+  totalpowerconsumption_supported = bytes_rs[6] & IPMI_OEM_WISTRON_CHASSIS_TOTAL_POWER_CONSUMPTION_AVAILABLE_BITMASK;
+  totalpowerconsumption_supported >>= IPMI_OEM_WISTRON_CHASSIS_TOTAL_POWER_CONSUMPTION_AVAILABLE_SHIFT;
+
+  coolingpowerconsumption_supported = bytes_rs[6] & IPMI_OEM_WISTRON_CHASSIS_COOLING_POWER_CONSUMPTION_AVAILABLE_BITMASK;
+  coolingpowerconsumption_supported >>= IPMI_OEM_WISTRON_CHASSIS_COOLING_POWER_CONSUMPTION_AVAILABLE_SHIFT;
+
+  totalpowerconsumption = bytes_rs[7];
+  totalpowerconsumption |= (bytes_rs[8] << 8); 
+
+  coolingpowerconsumption = bytes_rs[9];
+  coolingpowerconsumption |= (bytes_rs[10] << 8);
+  
+  /* Posix says individual calls need not clear/set all portions of
+   * 'struct tm', thus passing 'struct tm' between functions could
+   * have issues.  So we need to memset.
+   */
+  memset (&time_tm, '\0', sizeof(struct tm));
+
+  timetmp = ipmitimestamp;
+  localtime_r (&timetmp, &time_tm);
+  memset (time_buf, '\0', IPMI_OEM_TIME_BUFLEN + 1);
+  strftime (time_buf, IPMI_OEM_TIME_BUFLEN, "%b-%d-%Y | %H:%M:%S", &time_tm);
+
+  pstdout_printf (state_data->pstate,
+		  "IPMI Timestamp of Collection      : %s\n",
+		  time_buf);
+
+  if (totalpowerconsumption_supported)
+    pstdout_printf (state_data->pstate,
+		    "Chassis Total Power Consumption   : %u Watts\n",
+		    totalpowerconsumption);
+  
+  if (coolingpowerconsumption_supported)
+    pstdout_printf (state_data->pstate,
+		    "Chassis Cooling Power Consumption : %u Watts\n",
+		    coolingpowerconsumption);
+
+  rv = 0;
+ cleanup:
+  return (rv);
 }
 
 int
@@ -2192,10 +2329,6 @@ ipmi_oem_wistron_get_chassis_led_status (ipmi_oem_state_data_t *state_data)
    *      - 0 - off, 1 solid, 2 blink
    */
   
-  /* achu: we won't bother checking if there are any remote
-   * connections, just check the connection indicated by the user
-   */
-
   bytes_rq[0] = IPMI_CMD_OEM_WISTRON_GET_CHASSIS_LED_STATUS;
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
@@ -2219,7 +2352,7 @@ ipmi_oem_wistron_get_chassis_led_status (ipmi_oem_state_data_t *state_data)
                                                    6,
 						   IPMI_CMD_OEM_WISTRON_GET_CHASSIS_LED_STATUS,
                                                    IPMI_NET_FN_OEM_WISTRON_GENERIC_RS,
-                                                   _wistron_led_strerror) < 0)
+                                                   _wistron_oem_strerror) < 0)
     goto cleanup;
 
   chassis_identification_led_supported = bytes_rs[3] & IPMI_OEM_WISTRON_CHASSIS_IDENTIFICATION_LED_CONTROLLED_BY_SC_BITMASK;
@@ -2334,16 +2467,12 @@ ipmi_oem_wistron_set_chassis_led_status (ipmi_oem_state_data_t *state_data)
    * 0x?? - Chassis Fault LED Status
    *      - 0 - off, 1 solid, 2 blink
    *
-   * Get Chassis LED Status Response
+   * Set Chassis LED Status Response
    *
    * 0x1C - OEM cmd
    * 0x?? - Completion code
    */
   
-  /* achu: we won't bother checking if there are any remote
-   * connections, just check the connection indicated by the user
-   */
-
   bytes_rq[0] = IPMI_CMD_OEM_WISTRON_SET_CHASSIS_LED_STATUS;
   bytes_rq[1] = IPMI_OEM_WISTRON_SC_BMC_COMMUNICATION_PROTOCOL_VERSION;
 
@@ -2380,9 +2509,9 @@ ipmi_oem_wistron_set_chassis_led_status (ipmi_oem_state_data_t *state_data)
                                                    bytes_rs,
                                                    rs_len,
                                                    2,
-						   IPMI_CMD_OEM_WISTRON_GET_CHASSIS_LED_STATUS,
+						   IPMI_CMD_OEM_WISTRON_SET_CHASSIS_LED_STATUS,
                                                    IPMI_NET_FN_OEM_WISTRON_GENERIC_RS,
-                                                   _wistron_led_strerror) < 0)
+                                                   _wistron_oem_strerror) < 0)
     goto cleanup;
   
   rv = 0;

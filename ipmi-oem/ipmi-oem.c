@@ -1273,6 +1273,13 @@ struct ipmi_oem_command oem_wistron[] =
       ipmi_oem_wistron_set_ssh_redirect_function
     },
     {
+      "get-chassis-power-readings",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_get_chassis_power_readings
+    },
+    {
       "get-chassis-led-status",
       NULL,
       0,

@@ -196,6 +196,16 @@ extern "C" {
 #define IPMI_COMP_CODE_OEM_WISTON_SET_CHASSIS_LED_STATUS_SATELLITE_CONTROLLER_DOES_NOT_SUPPORT_CHASSIS_LED_REQUESTED_STR \
   "Satellite Controller does not support one or many chassis LED requested"
 
+/* IPMI_CMD_OEM_WISTRON_GET_CHASSIS_POWER_READINGS */
+#define IPMI_COMP_CODE_OEM_WISTRON_GET_CHASSIS_POWER_READINGS_BMC_HAS_NOT_YET_RECEIVED_ANY_COMMANDS_FROM_SC 0x81
+#define IPMI_COMP_CODE_OEM_WISTRON_GET_CHASSIS_POWER_READINGS_BMC_HAS_NOT_YET_RECEIVED_ANY_COMMANDS_FROM_SC_STR \
+  "BMC has not yet received any commands from SC"
+
+/* achu: spec says "timeout" I'm going to say "timedout" */
+#define IPMI_COMP_CODE_OEM_WISTRON_GET_CHASSIS_POWER_READINGS_SC_HAS_TIMEDOUT 0x82
+#define IPMI_COMP_CODE_OEM_WISTRON_GET_CHASSIS_POWER_READINGS_SC_HAS_TIMEDOUT_STR \
+  "BMC has received Set Chassis Power Readings/Set Sensor Info from SC, but SC has timedout and is considered offline now."
+
 #ifdef __cplusplus
 }
 #endif
