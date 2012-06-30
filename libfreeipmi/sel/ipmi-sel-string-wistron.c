@@ -68,3 +68,268 @@
 
 #include "freeipmi-portability.h"
 
+/* return (0) - no OEM match
+ * return (1) - OEM match
+ * return (-1) - error, cleanup and return error
+ *
+ * in oem_rv, return
+ * 0 - continue on
+ * 1 - buffer full, return full buffer to user
+ */
+int
+sel_string_output_wistron_sensor_name (ipmi_sel_ctx_t ctx,
+				       struct ipmi_sel_entry *sel_entry,
+				       uint8_t sel_record_type,
+				       char *buf,
+				       unsigned int buflen,
+				       unsigned int flags,
+				       unsigned int *wlen,
+				       struct ipmi_sel_system_event_record_data *system_event_record_data,
+				       int *oem_rv)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_WISTRON);
+  assert (sel_entry);
+  assert (buf);
+  assert (buflen);
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (wlen);
+  assert (system_event_record_data);
+  assert (oem_rv);
+
+  /* OEM Interpretation
+   *
+   * Wistron / Dell Poweredge C6220
+   */
+  if (ctx->product_id == IPMI_WISTRON_PRODUCT_ID_C6220)
+    {
+    }
+
+  return (0);
+}
+
+/* return (0) - no OEM match
+ * return (1) - OEM match
+ * return (-1) - error, cleanup and return error
+ */
+int
+sel_string_output_wistron_event_data1_class_oem (ipmi_sel_ctx_t ctx,
+						 struct ipmi_sel_entry *sel_entry,
+						 uint8_t sel_record_type,
+						 char *tmpbuf,
+						 unsigned int tmpbuflen,
+						 unsigned int flags,
+						 unsigned int *wlen,
+						 struct ipmi_sel_system_event_record_data *system_event_record_data)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_WISTRON);
+  assert (sel_entry);
+  assert (tmpbuf);
+  assert (tmpbuflen);
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (wlen);
+  assert (system_event_record_data);
+
+  /* OEM Interpretation
+   *
+   * Wistron / Dell Poweredge C6220
+   */
+  if (ctx->product_id == IPMI_WISTRON_PRODUCT_ID_C6220)
+    {
+    }
+
+  return (0);
+}
+
+/* return (0) - no OEM match
+ * return (1) - OEM match
+ * return (-1) - error, cleanup and return error
+ */
+int
+sel_string_output_wistron_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
+						    struct ipmi_sel_entry *sel_entry,
+						    uint8_t sel_record_type,
+						    char *tmpbuf,
+						    unsigned int tmpbuflen,
+						    unsigned int flags,
+						    unsigned int *wlen,
+						    struct ipmi_sel_system_event_record_data *system_event_record_data)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_WISTRON);
+  assert (sel_entry);
+  assert (tmpbuf);
+  assert (tmpbuflen);
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (wlen);
+  assert (system_event_record_data);
+  assert (system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
+
+  /* OEM Interpretation
+   *
+   * Wistron / Dell Poweredge C6220
+   */
+  if (ctx->product_id == IPMI_WISTRON_PRODUCT_ID_C6220)
+    {
+    }
+
+  return (0);
+}
+
+/* return (0) - no OEM match
+ * return (1) - OEM match
+ * return (-1) - error, cleanup and return error
+ */
+int
+sel_string_output_wistron_event_data2_class_oem (ipmi_sel_ctx_t ctx,
+						 struct ipmi_sel_entry *sel_entry,
+						 uint8_t sel_record_type,
+						 char *tmpbuf,
+						 unsigned int tmpbuflen,
+						 unsigned int flags,
+						 unsigned int *wlen,
+						 struct ipmi_sel_system_event_record_data *system_event_record_data)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_WISTRON);
+  assert (sel_entry);
+  assert (tmpbuf);
+  assert (tmpbuflen);
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (wlen);
+  assert (system_event_record_data);
+
+  /* OEM Interpretation
+   *
+   * Wistron / Dell Poweredge C6220
+   */
+  if (ctx->product_id == IPMI_WISTRON_PRODUCT_ID_C6220)
+    {
+    }
+
+  return (0);
+}
+
+/* return (0) - no OEM match
+ * return (1) - OEM match
+ * return (-1) - error, cleanup and return error
+ */
+int
+sel_string_output_wistron_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
+						    struct ipmi_sel_entry *sel_entry,
+						    uint8_t sel_record_type,
+						    char *tmpbuf,
+						    unsigned int tmpbuflen,
+						    unsigned int flags,
+						    unsigned int *wlen,
+						    struct ipmi_sel_system_event_record_data *system_event_record_data)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_WISTRON);
+  assert (sel_entry);
+  assert (tmpbuf);
+  assert (tmpbuflen);
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (wlen);
+  assert (system_event_record_data);
+  assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
+
+  /* OEM Interpretation
+   *
+   * Wistron / Dell Poweredge C6220
+   */
+  if (ctx->product_id == IPMI_WISTRON_PRODUCT_ID_C6220)
+    {
+    }
+
+  return (0);
+}
+
+/* return (0) - no OEM match
+ * return (1) - OEM match
+ * return (-1) - error, cleanup and return error
+ */
+int
+sel_string_output_wistron_event_data3_class_oem (ipmi_sel_ctx_t ctx,
+						 struct ipmi_sel_entry *sel_entry,
+						 uint8_t sel_record_type,
+						 char *tmpbuf,
+						 unsigned int tmpbuflen,
+						 unsigned int flags,
+						 unsigned int *wlen,
+						 struct ipmi_sel_system_event_record_data *system_event_record_data)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_WISTRON);
+  assert (sel_entry);
+  assert (tmpbuf);
+  assert (tmpbuflen);
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (wlen);
+  assert (system_event_record_data);
+
+  /* OEM Interpretation
+   *
+   * Wistron / Dell Poweredge C6220
+   */
+  if (ctx->product_id == IPMI_WISTRON_PRODUCT_ID_C6220)
+    {
+    }
+  
+  return (0);
+}
+
+/* return (0) - no OEM match
+ * return (1) - OEM match
+ * return (-1) - error, cleanup and return error
+ *
+ * in oem_rv, return
+ * 0 - continue on
+ * 1 - buffer full, return full buffer to user
+ */
+int
+sel_string_output_wistron_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
+						   struct ipmi_sel_entry *sel_entry,
+						   uint8_t sel_record_type,
+						   char *buf,
+						   unsigned int buflen,
+						   unsigned int flags,
+						   unsigned int *wlen,
+						   struct ipmi_sel_system_event_record_data *system_event_record_data,
+						   int *oem_rv)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_WISTRON);
+  assert (sel_entry);
+  assert (buf);
+  assert (buflen);
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (wlen);
+  assert (system_event_record_data);
+  assert (oem_rv);
+
+  /* OEM Interpretation
+   *
+   * Wistron / Dell Poweredge C6220
+   */
+  if (ctx->product_id == IPMI_WISTRON_PRODUCT_ID_C6220)
+    {
+    }
+
+  return (0);
+}
