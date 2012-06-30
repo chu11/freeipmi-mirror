@@ -26,6 +26,8 @@ o Globally support Cipher Suite ID 15 and 16 based on comments from
 o In ipmi-sel, support new --post-clear option.
 o In bmc-device, support new --set-sensor-reading-and-event-status
   option.
+o In ipmi-oem, support Wistron OEM commands extensions.
+o In ipmi-sel, support Wistron OEM SEL interpretations.
 
 Tools - Bug Fixes/Minor Changes
 -------------------------------
