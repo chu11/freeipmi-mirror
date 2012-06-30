@@ -14,6 +14,8 @@
 	* ipmi-oem/ipmi-oem-dell.c (_get_dell_system_info_long_string):
 	Use new common function
 	ipmi_oem_thirdparty_get_system_info_block_pstring.
+
+	* ipmi-sensors/: Support OEM SDR record output details.
 	
 2012-06-25  Albert Chu <chu11@llnl.gov>
 
