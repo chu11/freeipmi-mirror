@@ -200,13 +200,13 @@ sel_string_output_wistron_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
       if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS 
 	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PROCESSOR
 	  && system_event_record_data->sensor_number == 0 /* XXX */
+	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
           && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_PROCESSOR_IERR
 	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_PROCESSOR_THERMAL_TRIP
 	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_PROCESSOR_FRB1_BIST_FAILURE
 	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_PROCESSOR_FRB2_HANG_IN_POST_FAILURE
 	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_PROCESSOR_FRB3_PROCESSOR_STARTUP_INITIALIZATION_FAILURE
-	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_PROCESSOR_PROCESSOR_AUTOMATICALLY_THROTTLED)
-	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC)
+	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_PROCESSOR_PROCESSOR_AUTOMATICALLY_THROTTLED))
 	{
 	  uint8_t processor;
 	  char *processor_str = NULL;
@@ -239,12 +239,12 @@ sel_string_output_wistron_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
       if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS 
 	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
 	  && system_event_record_data->sensor_number == 0 /* XXX */
+	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
 	  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_PERR
 	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_SERR
 	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_CORRECTABLE_ERROR
 	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_UNCORRECTABLE_ERROR
-	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_FATAL_ERROR)
-	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC)
+	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_FATAL_ERROR))
 	{
 	  uint8_t device, function;
 	  
@@ -266,9 +266,9 @@ sel_string_output_wistron_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
       if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS 
 	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
 	  && system_event_record_data->sensor_number == 0 /* XXX */
+	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
 	  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_CORRECTABLE_ERROR
-	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_UNCORRECTABLE_ERROR)
-	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC)
+	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_UNCORRECTABLE_ERROR))
 	{
 	  uint8_t local_error_bit;
 	  char *local_error_bit_str = NULL;
@@ -311,8 +311,8 @@ sel_string_output_wistron_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
       if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS 
 	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_EVENT
 	  && system_event_record_data->sensor_number == 0 /* XXX */
-	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_SYSTEM_EVENT_OEM_SYSTEM_BOOT_EVENT
-	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC)
+	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_SYSTEM_EVENT_OEM_SYSTEM_BOOT_EVENT)
 	{
 	  uint8_t boot_type;
 	  char *boot_type_str = NULL;
@@ -375,8 +375,8 @@ sel_string_output_wistron_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
       if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS 
 	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_EVENT
 	  && system_event_record_data->sensor_number == 0 /* XXX */
-	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_SYSTEM_EVENT_OEM_SYSTEM_BOOT_EVENT
-	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC)
+	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_SYSTEM_EVENT_OEM_SYSTEM_BOOT_EVENT)
 	{
 	  uint8_t bios_recover_event;
 	  char *bios_recover_event_str = NULL;
@@ -577,12 +577,12 @@ sel_string_output_wistron_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
       if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS 
 	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
 	  && system_event_record_data->sensor_number == 0 /* XXX */
+	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
 	  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CORRECTABLE_MEMORY_ERROR
 	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_UNCORRECTABLE_MEMORY_ERROR
 	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_MEMORY_SCRUB_FAILED
 	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_MEMORY_DEVICE_DISABLED
-	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_SPARE)
-	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC)
+	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_SPARE))
 	{
 	  uint8_t threshold;
 	  char *threshold_str = NULL;
@@ -677,8 +677,8 @@ sel_string_output_wistron_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
       if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS 
 	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_EVENT
 	  && system_event_record_data->sensor_number == 0 /* XXX */
-	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_SYSTEM_EVENT_OEM_SYSTEM_BOOT_EVENT
-	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC)
+	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_SYSTEM_EVENT_OEM_SYSTEM_BOOT_EVENT)
 	{
 	  uint8_t first_field;
 	  uint8_t second_field;
@@ -716,8 +716,8 @@ sel_string_output_wistron_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
       if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS 
 	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS
 	  && system_event_record_data->sensor_number == 0 /* XXX */
-	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_SYSTEM_FIRMWARE_ERROR
-	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC)
+	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_SYSTEM_FIRMWARE_ERROR)
 	{
 	  uint16_t error_code;
 	  char *error_code_str = NULL;
