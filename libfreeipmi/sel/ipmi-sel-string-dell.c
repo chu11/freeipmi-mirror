@@ -72,7 +72,6 @@ sel_string_output_dell_event_data1_class_sensor_specific_discrete (ipmi_sel_ctx_
 								   unsigned int flags,
 								   unsigned int *wlen,
 								   struct ipmi_sel_system_event_record_data *system_event_record_data)
-
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
