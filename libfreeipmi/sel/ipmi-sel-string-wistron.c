@@ -68,80 +68,19 @@
 
 #include "freeipmi-portability.h"
 
-#if 0
-
-#define IPMI_SENSOR_TYPE_IOH_CORE_ERROR_OEM_WISTRON_CORE      0x07
-#define IPMI_SENSOR_TYPE_IOH_CORE_ERROR_OEM_WISTRON_NON_FATAL 0x08
-#define IPMI_SENSOR_TYPE_IOH_CORE_ERROR_OEM_WISTRON_FATAL     0x0A
-
-#define IPMI_SENSOR_TYPE_IOH_CORE_ERROR_EVENT_DATA3_OEM_WISTRON_QPI0_ERROR          0x00
-#define IPMI_SENSOR_TYPE_IOH_CORE_ERROR_EVENT_DATA3_OEM_WISTRON_QPI1_ERROR          0x01
-#define IPMI_SENSOR_TYPE_IOH_CORE_ERROR_EVENT_DATA3_OEM_WISTRON_QPI2_ERROR          0x02
-#define IPMI_SENSOR_TYPE_IOH_CORE_ERROR_EVENT_DATA3_OEM_WISTRON_QPI3_ERROR          0x03
-#define IPMI_SENSOR_TYPE_IOH_CORE_ERROR_EVENT_DATA3_OEM_WISTRON_QPI0_PROTOCOL_ERROR 0x04
-#define IPMI_SENSOR_TYPE_IOH_CORE_ERROR_EVENT_DATA3_OEM_WISTRON_QPI1_PROTOCOL_ERROR 0x05
-#define IPMI_SENSOR_TYPE_IOH_CORE_ERROR_EVENT_DATA3_OEM_WISTRON_QPI2_PROTOCOL_ERROR 0x06
-#define IPMI_SENSOR_TYPE_IOH_CORE_ERROR_EVENT_DATA3_OEM_WISTRON_QPI3_PROTOCOL_ERROR 0x07
-#define IPMI_SENSOR_TYPE_IOH_CORE_ERROR_EVENT_DATA3_OEM_WISTRON_MISCELLANEOUS_ERROR 0x23
-#define IPMI_SENSOR_TYPE_IOH_CORE_ERROR_EVENT_DATA3_OEM_WISTRON_IOH_CORE_ERROR      0x24
-
-#endif
-
-/* return (0) - no OEM match
- * return (1) - OEM match
- * return (-1) - error, cleanup and return error
- *
- * in oem_rv, return
- * 0 - continue on
- * 1 - buffer full, return full buffer to user
- */
-int
-sel_string_output_wistron_sensor_name (ipmi_sel_ctx_t ctx,
-				       struct ipmi_sel_entry *sel_entry,
-				       uint8_t sel_record_type,
-				       char *buf,
-				       unsigned int buflen,
-				       unsigned int flags,
-				       unsigned int *wlen,
-				       struct ipmi_sel_system_event_record_data *system_event_record_data,
-				       int *oem_rv)
-{
-  assert (ctx);
-  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
-  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_WISTRON);
-  assert (sel_entry);
-  assert (buf);
-  assert (buflen);
-  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
-  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
-  assert (wlen);
-  assert (system_event_record_data);
-  assert (oem_rv);
-
-  /* OEM Interpretation
-   *
-   * Wistron / Dell Poweredge C6220
-   */
-  if (ctx->product_id == IPMI_WISTRON_PRODUCT_ID_C6220)
-    {
-    }
-
-  return (0);
-}
-
 /* return (0) - no OEM match
  * return (1) - OEM match
  * return (-1) - error, cleanup and return error
  */
 int
-sel_string_output_wistron_event_data1_class_oem (ipmi_sel_ctx_t ctx,
-						 struct ipmi_sel_entry *sel_entry,
-						 uint8_t sel_record_type,
-						 char *tmpbuf,
-						 unsigned int tmpbuflen,
-						 unsigned int flags,
-						 unsigned int *wlen,
-						 struct ipmi_sel_system_event_record_data *system_event_record_data)
+sel_string_output_wistron_event_data1_class_sensor_specific_discrete (ipmi_sel_ctx_t ctx,
+								      struct ipmi_sel_entry *sel_entry,
+								      uint8_t sel_record_type,
+								      char *tmpbuf,
+								      unsigned int tmpbuflen,
+								      unsigned int flags,
+								      unsigned int *wlen,
+								      struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -153,15 +92,28 @@ sel_string_output_wistron_event_data1_class_oem (ipmi_sel_ctx_t ctx,
   assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
+  assert (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC);
 
   /* OEM Interpretation
    *
    * Wistron / Dell Poweredge C6220
    */
-  if (ctx->product_id == IPMI_WISTRON_PRODUCT_ID_C6220)
+  if (ctx->product_id == IPMI_WISTRON_PRODUCT_ID_C6220
+      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_WISTRON_IOH_CORE_ERROR)
     {
-    }
+      int ret;
 
+      ret = ipmi_get_oem_sensor_type_message (ctx->manufacturer_id,
+                                              ctx->product_id,
+                                              system_event_record_data->sensor_type,
+                                              system_event_record_data->offset_from_event_reading_type_code,
+                                              tmpbuf,
+                                              tmpbuflen);
+      
+      if (ret > 0)
+        return (1);
+    }
+  
   return (0);
 }
 
@@ -260,6 +212,18 @@ sel_string_output_wistron_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 		    device,
 		    function);
 	
+	  return (1);
+	}
+
+      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS 
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_WISTRON_IOH_CORE_ERROR
+	  && system_event_record_data->sensor_number == 0 /* XXX */
+	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+	  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_IOH_CORE_ERROR_OEM_WISTRON_CORE
+	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_IOH_CORE_ERROR_OEM_WISTRON_NON_FATAL
+	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_IOH_CORE_ERROR_OEM_WISTRON_FATAL))
+	{
+	  snprintf (tmpbuf, tmpbuflen, "Local Error Bit = %02Xh", system_event_record_data->event_data2);
 	  return (1);
 	}
 
@@ -405,52 +369,17 @@ sel_string_output_wistron_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 	
 	  return (1);
 	}
+
       if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS 
 	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_EVENT
 	  && system_event_record_data->sensor_number == 0 /* XXX */
-	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_SYSTEM_EVENT_OEM_SYSTEM_BOOT_EVENT
 	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_SYSTEM_EVENT_OEM_SYSTEM_BOOT_EVENT
 	  && system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_SYSTEM_EVENT_EVENT_DATA2_OEM_WISTRON_ME_FAIL)
 	{
 	  snprintf (tmpbuf, tmpbuflen, "ME Fail");
 	  return (1);
 	}
-    }
-
-  return (0);
-}
-
-/* return (0) - no OEM match
- * return (1) - OEM match
- * return (-1) - error, cleanup and return error
- */
-int
-sel_string_output_wistron_event_data2_class_oem (ipmi_sel_ctx_t ctx,
-						 struct ipmi_sel_entry *sel_entry,
-						 uint8_t sel_record_type,
-						 char *tmpbuf,
-						 unsigned int tmpbuflen,
-						 unsigned int flags,
-						 unsigned int *wlen,
-						 struct ipmi_sel_system_event_record_data *system_event_record_data)
-{
-  assert (ctx);
-  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
-  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_WISTRON);
-  assert (sel_entry);
-  assert (tmpbuf);
-  assert (tmpbuflen);
-  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
-  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
-  assert (wlen);
-  assert (system_event_record_data);
-
-  /* OEM Interpretation
-   *
-   * Wistron / Dell Poweredge C6220
-   */
-  if (ctx->product_id == IPMI_WISTRON_PRODUCT_ID_C6220)
-    {
     }
 
   return (0);
@@ -488,6 +417,15 @@ sel_string_output_wistron_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
    */
   if (ctx->product_id == IPMI_WISTRON_PRODUCT_ID_C6220)
     {
+      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS 
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
+	  && system_event_record_data->sensor_number == 0 /* XXX */
+	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+	  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_PERR
+	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_SERR
+	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_CORRECTABLE_ERROR
+	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_UNCORRECTABLE_ERROR
+	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_FATAL_ERROR))
       {
 	snprintf (tmpbuf,
 		  tmpbuflen,
@@ -496,44 +434,66 @@ sel_string_output_wistron_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
           
 	return (1);
       }
+
+      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS 
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_WISTRON_IOH_CORE_ERROR
+	  && system_event_record_data->sensor_number == 0 /* XXX */
+	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+	  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_IOH_CORE_ERROR_OEM_WISTRON_CORE
+	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_IOH_CORE_ERROR_OEM_WISTRON_NON_FATAL
+	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_IOH_CORE_ERROR_OEM_WISTRON_FATAL))
+ 	{
+	  uint8_t error;
+	  char *error_str =  NULL;
+
+	  error = system_event_record_data->event_data3;
+
+	  switch (error)
+	    {
+	    case IPMI_SENSOR_TYPE_IOH_CORE_ERROR_EVENT_DATA3_OEM_WISTRON_QPI0_ERROR:
+	      error_str = "QPI[0] Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_IOH_CORE_ERROR_EVENT_DATA3_OEM_WISTRON_QPI1_ERROR:
+	      error_str = "QPI[1] Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_IOH_CORE_ERROR_EVENT_DATA3_OEM_WISTRON_QPI2_ERROR:
+	      error_str = "QPI[2] Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_IOH_CORE_ERROR_EVENT_DATA3_OEM_WISTRON_QPI3_ERROR:
+	      error_str = "QPI[3] Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_IOH_CORE_ERROR_EVENT_DATA3_OEM_WISTRON_QPI0_PROTOCOL_ERROR:
+	      error_str = "QPI[0] Protocol Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_IOH_CORE_ERROR_EVENT_DATA3_OEM_WISTRON_QPI1_PROTOCOL_ERROR:
+	      error_str = "QPI[1] Protocol Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_IOH_CORE_ERROR_EVENT_DATA3_OEM_WISTRON_QPI2_PROTOCOL_ERROR:
+	      error_str = "QPI[2] Protocol Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_IOH_CORE_ERROR_EVENT_DATA3_OEM_WISTRON_QPI3_PROTOCOL_ERROR:
+	      error_str = "QPI[3] Protocol Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_IOH_CORE_ERROR_EVENT_DATA3_OEM_WISTRON_MISCELLANEOUS_ERROR:
+	      error_str = "Miscellaneous Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_IOH_CORE_ERROR_EVENT_DATA3_OEM_WISTRON_IOH_CORE_ERROR:
+	      error_str = "IOH Core Error";
+	      break;
+	    default:
+	      error_str = "Unspecified Error";
+	    }
+	  
+	  snprintf (tmpbuf,
+		    tmpbuflen,
+		    "%s",
+		    error_str);
+	  
+	  return (1);
+	}
+      
     }
 
-  return (0);
-}
-
-/* return (0) - no OEM match
- * return (1) - OEM match
- * return (-1) - error, cleanup and return error
- */
-int
-sel_string_output_wistron_event_data3_class_oem (ipmi_sel_ctx_t ctx,
-						 struct ipmi_sel_entry *sel_entry,
-						 uint8_t sel_record_type,
-						 char *tmpbuf,
-						 unsigned int tmpbuflen,
-						 unsigned int flags,
-						 unsigned int *wlen,
-						 struct ipmi_sel_system_event_record_data *system_event_record_data)
-{
-  assert (ctx);
-  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
-  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_WISTRON);
-  assert (sel_entry);
-  assert (tmpbuf);
-  assert (tmpbuflen);
-  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
-  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
-  assert (wlen);
-  assert (system_event_record_data);
-
-  /* OEM Interpretation
-   *
-   * Wistron / Dell Poweredge C6220
-   */
-  if (ctx->product_id == IPMI_WISTRON_PRODUCT_ID_C6220)
-    {
-    }
-  
   return (0);
 }
 

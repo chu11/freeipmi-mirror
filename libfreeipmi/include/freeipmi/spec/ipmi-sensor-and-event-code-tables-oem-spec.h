@@ -1640,6 +1640,13 @@ extern unsigned int ipmi_oem_intel_s2600jf_specific_qpi_link_width_reduced_max_i
 
 #define IPMI_SENSOR_TYPE_SYSTEM_EVENT_EVENT_DATA2_OEM_WISTRON_ME_FAIL 0x1
 
+/*
+ * String arrays for above
+ */
+
+extern const char * const ipmi_sensor_type_oem_wistron_ioh_core_error[];
+extern unsigned int ipmi_sensor_type_oem_wistron_ioh_core_error_max_index;
+
 #ifdef __cplusplus
 }
 #endif
