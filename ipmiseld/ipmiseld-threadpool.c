@@ -86,7 +86,10 @@ _threadpool_func (void *arg)
 	pthread_cond_wait (&threadpool_queue_cond, &threadpool_queue_lock);
       
       if (threadpool_data->exit_flag)
-	break;
+	{
+	  pthread_mutex_unlock (&threadpool_queue_lock);
+	  break;
+	}
 
       if (!(queue_arg = list_dequeue (threadpool_queue)))
 	err_output ("list_dequeue: %s", strerror (errno));
@@ -187,9 +190,10 @@ ipmiseld_threadpool_destroy (void)
   pthread_mutex_lock (&threadpool_count_lock);
 
   for (i = 0; i < threadpool_data_array_len; i++)
-    {
-      threadpool_data_array[i].exit_flag = 1;
+    threadpool_data_array[i].exit_flag = 1;
 
+  for (i = 0; i < threadpool_data_array_len; i++)
+    {
       if ((ret = pthread_cond_signal (&threadpool_queue_cond)))
 	err_output ("pthread_cond_signal: %s", strerror (ret)); 
     }

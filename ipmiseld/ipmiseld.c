@@ -1675,6 +1675,7 @@ _ipmiseld (ipmiseld_prog_data_t *prog_data)
 
 	      if (!heap_insert (host_data_heap, host_data))
 		ipmiseld_err_output (host_data, "heap_insert: %s", strerror (errno));
+
 	      pthread_mutex_unlock (&host_data_heap_lock);
 	    }
 
@@ -1695,7 +1696,7 @@ _ipmiseld (ipmiseld_prog_data_t *prog_data)
 	      struct timeval tv;
 
 	      gettimeofday (&tv, NULL);
-
+	      
 	      /* If next_poll_time == 0, no sleep, its the first time through */
 	      if (host_data->next_poll_time
 		  && (host_data->next_poll_time > tv.tv_sec)) 
@@ -1703,7 +1704,7 @@ _ipmiseld (ipmiseld_prog_data_t *prog_data)
 	    }
  	}
     }
-
+  
   rv = 0;
  cleanup:
   ipmiseld_threadpool_destroy ();
