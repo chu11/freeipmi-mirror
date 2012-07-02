@@ -151,7 +151,7 @@ sel_string_output_wistron_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
     {
       if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS 
 	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PROCESSOR
-	  && system_event_record_data->sensor_number == 0 /* XXX */
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_WISTRON_PROCESSOR
 	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
           && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_PROCESSOR_IERR
 	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_PROCESSOR_THERMAL_TRIP
@@ -190,7 +190,7 @@ sel_string_output_wistron_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 
       if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS 
 	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
-	  && system_event_record_data->sensor_number == 0 /* XXX */
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_WISTRON_PCI_SENSOR_ID
 	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
 	  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_PERR
 	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_SERR
@@ -217,7 +217,8 @@ sel_string_output_wistron_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 
       if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS 
 	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_WISTRON_IOH_CORE_ERROR
-	  && system_event_record_data->sensor_number == 0 /* XXX */
+	  && (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_WISTRON_QPI_SENSOR_ID
+	      || system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_WISTRON_INT_SENSOR_ID)
 	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
 	  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_IOH_CORE_ERROR_OEM_WISTRON_CORE
 	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_IOH_CORE_ERROR_OEM_WISTRON_NON_FATAL
@@ -229,7 +230,7 @@ sel_string_output_wistron_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 
       if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS 
 	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
-	  && system_event_record_data->sensor_number == 0 /* XXX */
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_WISTRON_SB_SENSOR_ID
 	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
 	  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_CORRECTABLE_ERROR
 	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_UNCORRECTABLE_ERROR))
@@ -274,7 +275,7 @@ sel_string_output_wistron_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
       
       if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS 
 	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_EVENT
-	  && system_event_record_data->sensor_number == 0 /* XXX */
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_WISTRON_POST_END
 	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
 	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_SYSTEM_EVENT_OEM_SYSTEM_BOOT_EVENT)
 	{
@@ -338,7 +339,7 @@ sel_string_output_wistron_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 
       if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS 
 	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_EVENT
-	  && system_event_record_data->sensor_number == 0 /* XXX */
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_WISTRON_BIOS_RECOVERY_FAIL
 	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
 	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_SYSTEM_EVENT_OEM_SYSTEM_BOOT_EVENT)
 	{
@@ -372,7 +373,7 @@ sel_string_output_wistron_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 
       if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS 
 	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_EVENT
-	  && system_event_record_data->sensor_number == 0 /* XXX */
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_WISTRON_ME_FAIL
 	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
 	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_SYSTEM_EVENT_OEM_SYSTEM_BOOT_EVENT
 	  && system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_SYSTEM_EVENT_EVENT_DATA2_OEM_WISTRON_ME_FAIL)
@@ -419,7 +420,7 @@ sel_string_output_wistron_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
     {
       if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS 
 	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
-	  && system_event_record_data->sensor_number == 0 /* XXX */
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_WISTRON_PCI_SENSOR_ID
 	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
 	  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_PERR
 	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_SERR
@@ -437,7 +438,8 @@ sel_string_output_wistron_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 
       if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS 
 	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_WISTRON_IOH_CORE_ERROR
-	  && system_event_record_data->sensor_number == 0 /* XXX */
+	  && (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_WISTRON_QPI_SENSOR_ID
+	      || system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_WISTRON_INT_SENSOR_ID)
 	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
 	  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_IOH_CORE_ERROR_OEM_WISTRON_CORE
 	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_IOH_CORE_ERROR_OEM_WISTRON_NON_FATAL
@@ -536,7 +538,7 @@ sel_string_output_wistron_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
     {
       if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS 
 	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
-	  && system_event_record_data->sensor_number == 0 /* XXX */
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_WISTRON_MEMORY
 	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
 	  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CORRECTABLE_MEMORY_ERROR
 	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_UNCORRECTABLE_MEMORY_ERROR
@@ -636,7 +638,7 @@ sel_string_output_wistron_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 
       if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS 
 	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_EVENT
-	  && system_event_record_data->sensor_number == 0 /* XXX */
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_WISTRON_POST_START
 	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
 	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_SYSTEM_EVENT_OEM_SYSTEM_BOOT_EVENT)
 	{
@@ -675,7 +677,7 @@ sel_string_output_wistron_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 
       if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS 
 	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS
-	  && system_event_record_data->sensor_number == 0 /* XXX */
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_WISTRON_POST_ERROR
 	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
 	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_SYSTEM_FIRMWARE_ERROR)
 	{
