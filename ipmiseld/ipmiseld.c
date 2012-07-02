@@ -1460,6 +1460,18 @@ _signal_handler_callback (int sig)
   exit_flag = 0;
 }
 
+static void
+_free_host_data (void *x)
+{
+  ipmiseld_host_data_t *host_data;;
+  
+  assert (x);
+
+  host_data = (ipmiseld_host_data_t *)x;
+  free (host_data->hostname);
+  free (host_data);
+}
+
 static ipmiseld_host_data_t *
 _alloc_host_data (ipmiseld_prog_data_t *prog_data, const char *hostname)
 {
@@ -1475,7 +1487,11 @@ _alloc_host_data (ipmiseld_prog_data_t *prog_data, const char *hostname)
 
   memset (host_data, '\0', sizeof (ipmiseld_host_data_t));
   host_data->prog_data = prog_data;
-  host_data->hostname = (char *)hostname;
+  if (!(host_data->hostname = strdup (hostname)))
+    {
+      err_output ("strdup: %s", strerror (errno));
+      return (NULL);
+    }
   host_data->host_poll = NULL;
   host_data->re_download_sdr_done = 0;
   host_data->clear_sel_done = 0;
@@ -1537,7 +1553,9 @@ _ipmiseld (ipmiseld_prog_data_t *prog_data)
   if (hosts_count < prog_data->args->threadpool_count)
     prog_data->args->threadpool_count = hosts_count;
 
-  if (!(host_data_heap = heap_create (hosts_count, (HeapCmpF)hostdata_timecmp, (HeapDelF)free)))
+  if (!(host_data_heap = heap_create (hosts_count,
+				      (HeapCmpF)hostdata_timecmp,
+				      (HeapDelF)_free_host_data)))
     {
       err_output ("heap_create: %s", strerror (errno));
       goto cleanup;
