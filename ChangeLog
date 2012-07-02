@@ -15,6 +15,10 @@
 
 	* man/, freeipmi.spec.in, configure.ac: Update appropriately for
 	new tool.
+
+	* libfreeipmi/include/freeipmi/api/ipmi-api.h,
+	libfreeipmi/api/ipmi-api.c: Move some internal macros to
+	ipmi-api.h so apps know default values.
 	
 2012-06-21  Albert Chu <chu11@llnl.gov>
 

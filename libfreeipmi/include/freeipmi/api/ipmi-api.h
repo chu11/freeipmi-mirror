@@ -98,6 +98,9 @@ enum ipmi_driver_type
 };
 typedef enum ipmi_driver_type ipmi_driver_type_t;
 
+#define IPMI_SESSION_TIMEOUT_DEFAULT                                        20000
+#define IPMI_RETRANSMISSION_TIMEOUT_DEFAULT                                 1000
+
 #define IPMI_WORKAROUND_FLAGS_DEFAULT                                       0x00000000
 
 /* For use w/ ipmi_ctx_open_outofband() */
