@@ -451,11 +451,41 @@ _sel_log_output (ipmiseld_host_data_t *host_data, uint8_t record_type)
 
   record_type_class = ipmi_sel_record_type_class (record_type);
   if (record_type_class == IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
-    format_str = host_data->prog_data->args->system_event_format_str;
+    {
+      if (host_data->prog_data->args->system_event_format_str)
+	format_str = host_data->prog_data->args->system_event_format_str;
+      else
+	{
+	  if (host_data->hostname)
+	    format_str = IPMISELD_SYSTEM_EVENT_FORMAT_OUTOFBAND_STR_DEFAULT;
+	  else
+	    format_str = IPMISELD_SYSTEM_EVENT_FORMAT_STR_DEFAULT;
+	}
+    }
   else if (record_type_class == IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD)
-    format_str = host_data->prog_data->args->oem_timestamped_event_format_str;
+    {
+      if (host_data->prog_data->args->oem_timestamped_event_format_str)
+	format_str = host_data->prog_data->args->oem_timestamped_event_format_str;
+      else
+	{
+	  if (host_data->hostname)
+	    format_str = IPMISELD_OEM_TIMESTAMPED_EVENT_FORMAT_OUTOFBAND_STR_DEFAULT;
+	  else
+	    format_str = IPMISELD_OEM_TIMESTAMPED_EVENT_FORMAT_STR_DEFAULT;
+	}
+    }
   else if (record_type_class == IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD)
-    format_str = host_data->prog_data->args->oem_non_timestamped_event_format_str;
+    {
+      if (host_data->prog_data->args->oem_non_timestamped_event_format_str)
+	format_str = host_data->prog_data->args->oem_non_timestamped_event_format_str;
+      else
+	{
+	  if (host_data->hostname)
+	    format_str = IPMISELD_OEM_NON_TIMESTAMPED_EVENT_FORMAT_OUTOFBAND_STR_DEFAULT;
+	  else
+	    format_str = IPMISELD_OEM_NON_TIMESTAMPED_EVENT_FORMAT_STR_DEFAULT;
+	}
+    }
   else
     {
       if (host_data->prog_data->args->verbose_count)
@@ -1487,11 +1517,16 @@ _alloc_host_data (ipmiseld_prog_data_t *prog_data, const char *hostname)
 
   memset (host_data, '\0', sizeof (ipmiseld_host_data_t));
   host_data->prog_data = prog_data;
-  if (!(host_data->hostname = strdup (hostname)))
+  if (hostname)
     {
-      err_output ("strdup: %s", strerror (errno));
-      return (NULL);
+      if (!(host_data->hostname = strdup (hostname)))
+	{
+	  err_output ("strdup: %s", strerror (errno));
+	  return (NULL);
+	}
     }
+  else
+    host_data->hostname = NULL;
   host_data->host_poll = NULL;
   host_data->re_download_sdr_done = 0;
   host_data->clear_sel_done = 0;

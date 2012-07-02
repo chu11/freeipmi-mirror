@@ -516,9 +516,9 @@ ipmiseld_argp_parse (int argc, char **argv, struct ipmiseld_arguments *cmd_args)
   cmd_args->event_state_filter_str = NULL;
   cmd_args->warning_threshold = IPMISELD_WARNING_THRESHOLD_DEFAULT;
   cmd_args->clear_threshold = IPMISELD_CLEAR_THRESHOLD_DEFAULT;
-  cmd_args->system_event_format_str = IPMISELD_SYSTEM_EVENT_FORMAT_STR_DEFAULT;
-  cmd_args->oem_timestamped_event_format_str = IPMISELD_OEM_TIMESTAMPED_EVENT_FORMAT_STR_DEFAULT;
-  cmd_args->oem_non_timestamped_event_format_str = IPMISELD_OEM_NON_TIMESTAMPED_EVENT_FORMAT_STR_DEFAULT;
+  cmd_args->system_event_format_str = NULL;
+  cmd_args->oem_timestamped_event_format_str = NULL;
+  cmd_args->oem_non_timestamped_event_format_str = NULL;
   cmd_args->poll_interval = IPMISELD_POLL_INTERVAL_DEFAULT;
   cmd_args->log_facility_str = NULL;
   cmd_args->log_priority_str = NULL;

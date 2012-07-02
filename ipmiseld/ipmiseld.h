@@ -57,6 +57,12 @@
 
 #define IPMISELD_OEM_NON_TIMESTAMPED_EVENT_FORMAT_STR_DEFAULT           "SEL OEM Event: %I, %o"
 
+#define IPMISELD_SYSTEM_EVENT_FORMAT_OUTOFBAND_STR_DEFAULT              "SEL System Event(%h): %s, %I, %E"
+
+#define IPMISELD_OEM_TIMESTAMPED_EVENT_FORMAT_OUTOFBAND_STR_DEFAULT     "SEL OEM Event(%h): %I, %o"
+
+#define IPMISELD_OEM_NON_TIMESTAMPED_EVENT_FORMAT_OUTOFBAND_STR_DEFAULT "SEL OEM Event(%h): %I, %o"
+
 #define IPMISELD_POLL_INTERVAL_DEFAULT                                  300
 
 #define IPMISELD_THREADPOOL_COUNT                                       8

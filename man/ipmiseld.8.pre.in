@@ -136,18 +136,22 @@ libipmimonitoring(3).
 .TP
 \fB\-\-system\-event\-format\fR=\fIFORMATSTRING\fR
 Specify the format of the log output when a SEL system event is
-encountered.  Defaults to "SEL System Event: %s, %I, %E".  See SEL LOG
-FORMAT STRING below for formatting details.
+encountered.  Defaults to "SEL System Event: %s, %I, %E" if logging
+locally, "SEL System Event(%h): %s, %I, %E" if logging outofband or
+with hostranges.  See SEL LOG FORMAT STRING below for formatting
+details.
 .TP
 \fB\-\-oem\-timestamped\-event\-format\fR=\fIFORMATSTRING\fR
 Specify the format of the log output when a SEL OEM timestamped event
-is encountered.  Defaults to "SEL OEM Event: %I, %o".  See SEL LOG
-FORMAT STRING below for formatting details.
+is encountered.  Defaults to "SEL OEM Event: %I, %o" if logging
+locally, "SEL OEM Event(%h): %I, %o" if logging outofband or with
+hostranges..  See SEL LOG FORMAT STRING below for formatting details.
 .TP
 \fB\-\-oem\-non\-timestamped\-event\-format\fR=\fIFORMATSTRING\fR
 Specify the format of the log output when a SEL OEM non-timestamped
-event is encountered.  Defaults to "SEL OEM Event: %I, %o".  See SEL
-LOG FORMAT STRING below for formatting details.
+event is encountered.  Defaults to "SEL OEM Event: %I, %o" if logging
+locally, "SEL OEM Event(%h): %I, %o" if logging outofband or with
+hostranges..  See SEL LOG FORMAT STRING below for formatting details.
 .TP
 \fB\-\-poll\-interval\fR=\fISECONDS\fR
 Specify the poll interval to check the SEL for new events.  Defaults
