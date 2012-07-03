@@ -1531,6 +1531,8 @@ _alloc_host_data (ipmiseld_prog_data_t *prog_data, const char *hostname)
   host_data->re_download_sdr_done = 0;
   host_data->clear_sel_done = 0;
   host_data->next_poll_time = 0; /* 0 will first immediate check first time through */
+  host_data->last_ipmi_errnum = 0;
+  host_data->last_ipmi_errnum_count = 0;
 
   return (host_data);
 }

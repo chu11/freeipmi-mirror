@@ -67,6 +67,8 @@
 
 #define IPMISELD_THREADPOOL_COUNT                                       8
 
+#define IPMISELD_ERROR_OUTPUT_LIMIT                                     10
+
 enum ipmiseld_argp_option_keys
   {
     IPMISELD_VERBOSE_KEY = 'v',
@@ -183,6 +185,8 @@ typedef struct ipmiseld_host_data
   int re_download_sdr_done;
   int clear_sel_done;
   time_t next_poll_time;
+  int last_ipmi_errnum;
+  unsigned int last_ipmi_errnum_count;
 } ipmiseld_host_data_t;
 
 #endif /* IPMISELD_H */
