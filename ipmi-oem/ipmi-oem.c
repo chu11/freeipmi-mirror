@@ -1308,6 +1308,21 @@ struct ipmi_oem_command oem_wistron[] =
       ipmi_oem_wistron_set_dhcp_retry
     },
     {
+      "get-link-status-change-control",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_get_link_status_change_control
+    },
+    {
+      "set-link-status-change-control",
+      "<link_resilience|dhcp_rediscovery>",
+      1,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_set_link_status_change_control
+    },
+
+    {
       "reset-to-defaults",
       "<all|user|lan|sol|serial|pef>",
       1,

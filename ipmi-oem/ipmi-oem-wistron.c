@@ -2751,6 +2751,190 @@ ipmi_oem_wistron_set_dhcp_retry (ipmi_oem_state_data_t *state_data)
 }
 
 int
+ipmi_oem_wistron_get_link_status_change_control (ipmi_oem_state_data_t *state_data)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t configuration_parameter_data[IPMI_OEM_MAX_BYTES];
+  uint8_t lan_channel_number;
+  uint8_t status;
+  int len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  /* Wistron 5441/Dell Poweredge C6220
+   *
+   * Uses Get/Set Lan Configuration
+   *
+   * parameter = 193
+   *
+   * Data format
+   *
+   * 1st byte = 7b - 1b = link down resilience enabled
+   *                 0b = dhcp re-discovery enabled
+   *                 default = 0b
+   *            0:6 - reserved  
+   */
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_lan_configuration_parameters_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (ipmi_get_channel_number (state_data->ipmi_ctx,
+                               IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3,
+                               &lan_channel_number) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_get_channel_number: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+  
+  if (ipmi_cmd_get_lan_configuration_parameters (state_data->ipmi_ctx,
+                                                 lan_channel_number,
+                                                 IPMI_GET_LAN_PARAMETER,
+						 IPMI_LAN_CONFIGURATION_PARAMETER_OEM_WISTRON_LINK_STATUS_CHANGE_CONTROL,
+                                                 0,
+                                                 0,
+                                                 obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_lan_configuration_parameters: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if ((len = fiid_obj_get_data (obj_cmd_rs,
+                                "configuration_parameter_data",
+                                configuration_parameter_data,
+                                IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'configuration_parameter_data': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
+  if (!len)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_lan_configuration_parameters: invalid buffer length returned: %d\n",
+                       len);
+      goto cleanup;
+    }
+
+  status = (configuration_parameter_data[0] & IPMI_LAN_CONFIGURATION_PARAMETER_OEM_WISTRON_LINK_STATUS_CHANGE_CONTROL_BITMASK);
+  status >>= IPMI_LAN_CONFIGURATION_PARAMETER_OEM_WISTRON_LINK_STATUS_CHANGE_CONTROL_SHIFT;
+
+  if (status == IPMI_LAN_CONFIGURATION_PARAMETER_OEM_WISTRON_LINK_STATUS_CHANGE_CONTROL_LINK_DOWN_RESILIENCE_ENABLED)
+    pstdout_printf (state_data->pstate, "Link Down Resilience Enabled\n");
+  else
+    pstdout_printf (state_data->pstate, "DHCP Re-Discovery Enabled\n");
+                  
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+int
+ipmi_oem_wistron_set_link_status_change_control (ipmi_oem_state_data_t *state_data)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t configuration_parameter_data[IPMI_OEM_MAX_BYTES];
+  uint8_t lan_channel_number;
+  uint8_t status;
+  int rs_len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 1);
+
+  if (strcasecmp (state_data->prog_data->args->oem_options[0], "link_resilience")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "dhcp_rediscovery"))
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "%s:%s invalid OEM option argument '%s'\n",
+		       state_data->prog_data->args->oem_id,
+		       state_data->prog_data->args->oem_command,
+		       state_data->prog_data->args->oem_options[0]);
+      goto cleanup;
+    }
+
+  /* Wistron 5441/Dell Poweredge C6220
+   *
+   * Uses Get/Set Lan Configuration
+   *
+   * parameter = 193
+   *
+   * Data format
+   *
+   * 1st byte = 7b - 1b = link down resilience enabled
+   *                 0b = dhcp re-discovery enabled
+   *                 default = 0b
+   *            0:6 - reserved  
+   */
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_lan_configuration_parameters_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (ipmi_get_channel_number (state_data->ipmi_ctx,
+                               IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3,
+                               &lan_channel_number) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_get_channel_number: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "link_resilience"))
+    status = IPMI_LAN_CONFIGURATION_PARAMETER_OEM_WISTRON_LINK_STATUS_CHANGE_CONTROL_LINK_DOWN_RESILIENCE_ENABLED;
+  else
+    status = IPMI_LAN_CONFIGURATION_PARAMETER_OEM_WISTRON_LINK_STATUS_CHANGE_CONTROL_DHCP_RE_DISCOVERY_ENABLED;
+
+  configuration_parameter_data[0] = 0;
+  configuration_parameter_data[0] |= (status << IPMI_LAN_CONFIGURATION_PARAMETER_OEM_WISTRON_LINK_STATUS_CHANGE_CONTROL_SHIFT);
+  
+  if (ipmi_cmd_set_lan_configuration_parameters (state_data->ipmi_ctx,
+                                                 lan_channel_number,
+						 IPMI_LAN_CONFIGURATION_PARAMETER_OEM_WISTRON_LINK_STATUS_CHANGE_CONTROL,
+						 configuration_parameter_data,
+						 1,
+                                                 obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_set_lan_configuration_parameters: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+int
 ipmi_oem_wistron_reset_to_defaults (ipmi_oem_state_data_t *state_data)
 {
   uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];

@@ -1141,7 +1141,7 @@ the LED is on and blinking.  Command confirmed to work on Wistron /
 Dell Poweredge C6220.
 .\" XXX - is true, set off ifnot there? 
 .TP
-.B set-chassis-led-status <identify-off|identify-solid|identify-blink> <fault-off|fault-solid|fault-blink>
+.B set-chassis-led-status \fIidentify-off|identify-solid|identify-blink\fR \fIfault-off|fault-solid|fault-blink\fR
 This OEM command will set the chassis identification and chassis fault
 LEDs to a state of \fIoff\fR, \fIsolid\fR, or \fIblink\fR.  If an LED
 is not available on the chassis, it should be set to \fIoff\fR.
@@ -1159,6 +1159,20 @@ retries.  The \fIretry\-interval\fR is one-based, in 10 second
 increments (e.g. 1 = 10 seconds).  The \fIretry\-timeout\fR is
 one-based, in 1 minute increments (e.g. 1 = 1 minute).  Command
 confirmed to work on Wistron / Dell Poweredge C6220..
+.TP
+.B get-link-status-change-control
+This OEM command will get the current link status change control.  If
+it reports "Link Down Resilience Enabled", BMC firmware will do
+nothing upon detecting Link Status Change until the DHCP lease is
+expired.  If it reports "DHCP Re-Discovery Enabled", BMC firmware will
+perform DHCP Discovery upon detecting link status going down than back
+up.  Command confirmed to work on Wistron / Dell Poweredge C6220..
+.TP
+.B set-link-status-change-control \fIlink_resilience|dhcp_rediscovery\fR
+This OEM command will set the current NIC link status change control
+setting.  (See \fIset\-link\-status\-change\-control\fR above for
+description of arguments).  Command confirmed to work on Wistron /
+Dell Poweredge C6220.
 .\" XXX - is true, will reset BMC internally???
 .TP
 .B reset-to-defaults \fIall|user|lan|sol|serial|pef\fR

@@ -73,6 +73,9 @@ int ipmi_oem_wistron_set_chassis_led_status (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_wistron_get_dhcp_retry (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_wistron_set_dhcp_retry (ipmi_oem_state_data_t *state_data);
 
+int ipmi_oem_wistron_get_link_status_change_control (ipmi_oem_state_data_t *state_data);
+int ipmi_oem_wistron_set_link_status_change_control (ipmi_oem_state_data_t *state_data);
+
 int ipmi_oem_wistron_reset_to_defaults (ipmi_oem_state_data_t *state_data);
 
 #endif /* IPMI_OEM_WISTRON_H */
