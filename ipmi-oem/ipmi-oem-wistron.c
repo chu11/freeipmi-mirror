@@ -2520,6 +2520,237 @@ ipmi_oem_wistron_set_chassis_led_status (ipmi_oem_state_data_t *state_data)
 }
 
 int
+ipmi_oem_wistron_get_dhcp_retry (ipmi_oem_state_data_t *state_data)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t configuration_parameter_data[IPMI_OEM_MAX_BYTES];
+  uint8_t lan_channel_number;
+  int len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  /* Wistron 5441/Dell Poweredge C6220
+   *
+   * Uses Get/Set Lan Configuration
+   *
+   * parameter = 192
+   *
+   * Data format
+   *
+   * 1st byte = retry count, 1 based, 0h = no retries, ffh = infinite
+   * 2nd byte = retry interval, 1 based, 10 second increments
+   * 3rd byte = retry timeout, 1 based, 1 minute increments
+   *
+   */
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_lan_configuration_parameters_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (ipmi_get_channel_number (state_data->ipmi_ctx,
+                               IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3,
+                               &lan_channel_number) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_get_channel_number: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+  
+  if (ipmi_cmd_get_lan_configuration_parameters (state_data->ipmi_ctx,
+                                                 lan_channel_number,
+                                                 IPMI_GET_LAN_PARAMETER,
+						 IPMI_LAN_CONFIGURATION_PARAMETER_OEM_WISTRON_DHCP_RETRY,
+                                                 0,
+                                                 0,
+                                                 obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_lan_configuration_parameters: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if ((len = fiid_obj_get_data (obj_cmd_rs,
+                                "configuration_parameter_data",
+                                configuration_parameter_data,
+                                IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'configuration_parameter_data': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
+  if (len < 3)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_lan_configuration_parameters: invalid buffer length returned: %d\n",
+                       len);
+      goto cleanup;
+    }
+
+  if (configuration_parameter_data[0] == IPMI_LAN_CONFIGURATION_PARAMETER_OEM_WISTRON_DHCP_RETRY_NO_RETRIES)
+    pstdout_printf (state_data->pstate, "Retry Count    : no retries\n");
+  else if (configuration_parameter_data[0] == IPMI_LAN_CONFIGURATION_PARAMETER_OEM_WISTRON_DHCP_RETRY_INDEFINITE_RETRY)
+    pstdout_printf (state_data->pstate, "Retry Count    : infinite retries\n");
+  else
+    pstdout_printf (state_data->pstate, "Retry Count    : %u\n", configuration_parameter_data[0]);
+  pstdout_printf (state_data->pstate, "Retry Interval : %u seconds\n", configuration_parameter_data[1] * 10);
+  pstdout_printf (state_data->pstate, "Retry Timeout  : %u minutes\n", configuration_parameter_data[2]);
+                  
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+int
+ipmi_oem_wistron_set_dhcp_retry (ipmi_oem_state_data_t *state_data)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t configuration_parameter_data[IPMI_OEM_MAX_BYTES];
+  uint8_t lan_channel_number;
+  char *endptr = NULL;
+  unsigned int value;
+  uint8_t retry_count;
+  uint8_t retry_interval;
+  uint8_t retry_timeout;
+  int rs_len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 3);
+
+
+  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "none"))
+    retry_count = IPMI_LAN_CONFIGURATION_PARAMETER_OEM_WISTRON_DHCP_RETRY_NO_RETRIES;
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "indefinite"))
+    retry_count = IPMI_LAN_CONFIGURATION_PARAMETER_OEM_WISTRON_DHCP_RETRY_INDEFINITE_RETRY;
+  else
+    {
+      errno = 0;
+      value = strtoul (state_data->prog_data->args->oem_options[0], &endptr, 0);
+      if (errno
+	  || endptr[0] != '\0'
+	  || value > UCHAR_MAX)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "%s:%s invalid OEM option argument '%s'\n",
+			   state_data->prog_data->args->oem_id,
+			   state_data->prog_data->args->oem_command,
+			   state_data->prog_data->args->oem_options[0]);
+	  goto cleanup;
+	}
+
+      retry_count = value;
+    }
+
+  errno = 0;
+  value = strtoul (state_data->prog_data->args->oem_options[1], &endptr, 0);
+  if (errno
+      || endptr[0] != '\0'
+      || value > UCHAR_MAX)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "%s:%s invalid OEM option argument '%s'\n",
+		       state_data->prog_data->args->oem_id,
+		       state_data->prog_data->args->oem_command,
+		       state_data->prog_data->args->oem_options[1]);
+      goto cleanup;
+    }
+  
+  retry_interval = value;
+
+  errno = 0;
+  value = strtoul (state_data->prog_data->args->oem_options[1], &endptr, 0);
+  if (errno
+      || endptr[0] != '\0'
+      || value > UCHAR_MAX)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "%s:%s invalid OEM option argument '%s'\n",
+		       state_data->prog_data->args->oem_id,
+		       state_data->prog_data->args->oem_command,
+		       state_data->prog_data->args->oem_options[1]);
+      goto cleanup;
+    }
+  
+  retry_timeout = value;
+
+  /* Wistron 5441/Dell Poweredge C6220
+   *
+   * Uses Get/Set Lan Configuration
+   *
+   * parameter = 192
+   *
+   * Data format
+   *
+   * 1st byte = retry count, 1 based, 0h = no retries, ffh = infinite
+   * 2nd byte = retry interval, 1 based, 10 second increments
+   * 3rd byte = retry timeout, 1 based, 1 minute increments
+   *
+   */
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_lan_configuration_parameters_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (ipmi_get_channel_number (state_data->ipmi_ctx,
+                               IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3,
+                               &lan_channel_number) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_get_channel_number: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  configuration_parameter_data[0] = retry_count;
+  configuration_parameter_data[1] = retry_interval;
+  configuration_parameter_data[2] = retry_timeout;
+  
+  if (ipmi_cmd_set_lan_configuration_parameters (state_data->ipmi_ctx,
+                                                 lan_channel_number,
+						 IPMI_LAN_CONFIGURATION_PARAMETER_OEM_WISTRON_DHCP_RETRY,
+						 configuration_parameter_data,
+						 3,
+                                                 obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_set_lan_configuration_parameters: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+int
 ipmi_oem_wistron_reset_to_defaults (ipmi_oem_state_data_t *state_data)
 {
   uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];

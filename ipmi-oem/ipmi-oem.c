@@ -1294,6 +1294,20 @@ struct ipmi_oem_command oem_wistron[] =
       ipmi_oem_wistron_set_chassis_led_status
     },
     {
+      "get-dhcp-retry",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_get_dhcp_retry
+    },
+    {
+      "set-dhcp-retry",
+      "<retry-count> <retry-interval> <retry-timeout>",
+      3,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_set_dhcp_retry
+    },
+    {
       "reset-to-defaults",
       "<all|user|lan|sol|serial|pef>",
       1,
