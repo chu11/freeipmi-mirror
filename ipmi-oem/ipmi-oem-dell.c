@@ -5727,7 +5727,7 @@ ipmi_oem_dell_get_chassis_identify_status (ipmi_oem_state_data_t *state_data)
   if (ipmi_oem_check_response_and_completion_code (state_data,
                                                    bytes_rs,
                                                    rs_len,
-                                                   2,
+                                                   3,
                                                    IPMI_CMD_OEM_DELL_QUERY_CHASSIS_IDENTIFY_STATUS,
                                                    IPMI_NET_FN_OEM_DELL_GENERIC_RS,
                                                    NULL) < 0)
