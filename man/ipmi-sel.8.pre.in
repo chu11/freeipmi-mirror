@@ -232,6 +232,7 @@ event interpretation configuration file.  Please see
 #include <@top_srcdir@/man/manpage-common-workaround-outofband-common-text.man>
 #include <@top_srcdir@/man/manpage-common-workaround-outofband-15-text.man>
 #include <@top_srcdir@/man/manpage-common-workaround-outofband-20-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-sdr-text.man>
 .LP
 \fIassumesystemevent\fR - This workaround option will assume invalid SEL
 record types are system event records.  Records may be formatted

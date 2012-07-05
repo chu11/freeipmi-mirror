@@ -549,6 +549,7 @@ _ipmi_monitoring_sel (ipmi_monitoring_ctx_t c,
                       unsigned int *date_begin,
                       unsigned int *date_end)
 {
+  unsigned int sdr_create_flags = IPMI_SDR_CACHE_CREATE_FLAGS_DEFAULT;
   int rv = -1;
 
   assert (c);
@@ -578,7 +579,10 @@ _ipmi_monitoring_sel (ipmi_monitoring_ctx_t c,
         goto cleanup;
     }
 
-  if (ipmi_monitoring_sdr_cache_load (c, hostname) < 0)
+  if (sel_flags & IPMI_MONITORING_SEL_FLAGS_ASSUME_MAX_SDR_RECORD_COUNT)
+    sdr_create_flags |= IPMI_SDR_CACHE_CREATE_FLAGS_ASSUME_MAX_SDR_RECORD_COUNT;
+
+  if (ipmi_monitoring_sdr_cache_load (c, hostname, sdr_create_flags) < 0)
     goto cleanup;
 
   if (ipmi_monitoring_sel_init (c) < 0)
@@ -1401,6 +1405,7 @@ _ipmi_monitoring_sensor_readings_by_record_id (ipmi_monitoring_ctx_t c,
                                                unsigned int *record_ids,
                                                unsigned int record_ids_len)
 {
+  unsigned int sdr_create_flags = IPMI_SDR_CACHE_CREATE_FLAGS_DEFAULT;
   int rv = -1;
 
   assert (c);
@@ -1422,7 +1427,10 @@ _ipmi_monitoring_sensor_readings_by_record_id (ipmi_monitoring_ctx_t c,
                                                      sensor_reading_flags) < 0)
     goto cleanup;
 
-  if (ipmi_monitoring_sdr_cache_load (c, hostname) < 0)
+  if (sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_ASSUME_MAX_SDR_RECORD_COUNT)
+    sdr_create_flags |= IPMI_SDR_CACHE_CREATE_FLAGS_ASSUME_MAX_SDR_RECORD_COUNT;
+
+  if (ipmi_monitoring_sdr_cache_load (c, hostname, sdr_create_flags) < 0)
     goto cleanup;
 
   if (!record_ids)
@@ -1575,6 +1583,7 @@ _ipmi_monitoring_sensor_readings_by_sensor_type (ipmi_monitoring_ctx_t c,
                                                  unsigned int *sensor_types,
                                                  unsigned int sensor_types_len)
 {
+  unsigned int sdr_create_flags = IPMI_SDR_CACHE_CREATE_FLAGS_DEFAULT;
   struct ipmi_monitoring_sdr_callback sdr_callback_arg;
   int rv = -1;
 
@@ -1598,7 +1607,10 @@ _ipmi_monitoring_sensor_readings_by_sensor_type (ipmi_monitoring_ctx_t c,
                                                      sensor_reading_flags) < 0)
     goto cleanup;
 
-  if (ipmi_monitoring_sdr_cache_load (c, hostname) < 0)
+  if (sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_ASSUME_MAX_SDR_RECORD_COUNT)
+    sdr_create_flags |= IPMI_SDR_CACHE_CREATE_FLAGS_ASSUME_MAX_SDR_RECORD_COUNT;
+
+  if (ipmi_monitoring_sdr_cache_load (c, hostname, sdr_create_flags) < 0)
     goto cleanup;
 
   sdr_callback_arg.c = c;

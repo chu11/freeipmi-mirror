@@ -259,13 +259,17 @@ enum ipmi_monitoring_workaround_flags
  *
  * ENTITY_SENSOR_NAMES - Return sensor names with appropriate entity
  * id and instance prefixed when appropriate.
+ *
+ * ASSUME_MAX_SDR_RECORD_COUNT - If motherboard does not implement SDR
+ * record reading properly, do not fail out.  Assume a max count.
  */
 enum ipmi_monitoring_sel_flags
   {
-    IPMI_MONITORING_SEL_FLAGS_REREAD_SDR_CACHE           = 0x00000001,
-    IPMI_MONITORING_SEL_FLAGS_INTERPRET_OEM_DATA         = 0x00000002,
-    IPMI_MONITORING_SEL_FLAGS_ASSUME_SYSTEM_EVENT_RECORD = 0x00000004,
-    IPMI_MONITORING_SEL_FLAGS_ENTITY_SENSOR_NAMES        = 0x00000008,
+    IPMI_MONITORING_SEL_FLAGS_REREAD_SDR_CACHE            = 0x00000001,
+    IPMI_MONITORING_SEL_FLAGS_INTERPRET_OEM_DATA          = 0x00000002,
+    IPMI_MONITORING_SEL_FLAGS_ASSUME_SYSTEM_EVENT_RECORD  = 0x00000004,
+    IPMI_MONITORING_SEL_FLAGS_ENTITY_SENSOR_NAMES         = 0x00000008,
+    IPMI_MONITORING_SEL_FLAGS_ASSUME_MAX_SDR_RECORD_COUNT = 0x00000010,
   };
 
 /* REREAD_SDR_CACHE - Re-read the SDR cache
@@ -294,6 +298,10 @@ enum ipmi_monitoring_sel_flags
  *
  * ENTITY_SENSOR_NAMES - Return sensor names with appropriate entity
  *                       id and instance prefixed when appropriate.
+ *
+ * ASSUME_MAX_SDR_RECORD_COUNT - If motherboard does not implement SDR
+ *                               record reading properly, do not fail
+ *                               out.  Assume a max count.
  */
 enum ipmi_monitoring_sensor_reading_flags
   {
@@ -306,6 +314,7 @@ enum ipmi_monitoring_sensor_reading_flags
     IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_SCANNING_DISABLED         = 0x00000040,	
     IPMI_MONITORING_SENSOR_READING_FLAGS_ASSUME_BMC_OWNER                 = 0x00000080,
     IPMI_MONITORING_SENSOR_READING_FLAGS_ENTITY_SENSOR_NAMES              = 0x00000100,
+    IPMI_MONITORING_SENSOR_READING_FLAGS_ASSUME_MAX_SDR_RECORD_COUNT      = 0x00000200,
     IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_UNREADABLE_SENSORS        = 0x00000002, /* legacy macro */
   };
 

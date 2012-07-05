@@ -194,6 +194,7 @@ sensor interpretation configuration file.  Please see
 #include <@top_srcdir@/man/manpage-common-workaround-outofband-common-text.man>
 #include <@top_srcdir@/man/manpage-common-workaround-outofband-15-text.man>
 #include <@top_srcdir@/man/manpage-common-workaround-outofband-20-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-sdr-text.man>
 .LP
 \fIdiscretereading\fR - This workaround option will allow analog
 sensor readings (i.e. rpm, degrees, etc.) to be read even if the

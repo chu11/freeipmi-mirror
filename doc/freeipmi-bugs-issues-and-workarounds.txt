@@ -473,6 +473,16 @@ SDR Issue #3: [COMPLIANCE]
   Resolution: Workaround added to adjust and handle the correct length
   of the record.
 
+SDR Issue #4: [COMPLIANCE]
+
+  When reading SDR records, the SDR last record id record is not
+  implemented, leading to errors when reading the SDR.
+
+  Seen on: Unspecified Inspur motherboard
+
+  Resolution: Workaround added to stop reading records after
+  recognized max.
+
 ----------------------------------------------------------------------
 
 --------------------------

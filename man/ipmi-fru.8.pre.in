@@ -103,6 +103,7 @@ types.
 #include <@top_srcdir@/man/manpage-common-workaround-outofband-common-text.man>
 #include <@top_srcdir@/man/manpage-common-workaround-outofband-15-text.man>
 #include <@top_srcdir@/man/manpage-common-workaround-outofband-20-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-sdr-text.man>
 .LP
 \fIskipchecks\fR - This workaround option will skip FRU checksum
 checks.  Some FRUs have incorrect checksums, but the FRU data is

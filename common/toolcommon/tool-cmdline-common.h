@@ -239,6 +239,7 @@ struct common_cmd_args
   unsigned int workaround_flags_outofband;
   unsigned int workaround_flags_outofband_2_0;
   unsigned int workaround_flags_inband;
+  unsigned int workaround_flags_sdr;
   unsigned int section_specific_workaround_flags;
   int debug;
 

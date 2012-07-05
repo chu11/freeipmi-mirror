@@ -121,11 +121,11 @@ specified separated by whitespace.  Please see tool manpages for
 details about available workarounds for each tool.  The following
 workarounds are supported: assumeio, spinpoll, idzero, forcepermsg,
 unexpectedauth, endianseq, authcap, intel20, supermicro20, sun20,
-opensesspriv, integritycheckvalue, solpayloadsize, solport, solstatus,
-skipchecks, assumesystemevent, discretereading,
-ignorescanningdisabled, assumebmcowner, ignoreauthcode, slowcommit,
-veryslowcommit, solchannelassumelanchannel, ignorestateflag,
-malformedack.
+opensesspriv, integritycheckvalue, assumemaxsdrrecordcount,
+solpayloadsize, solport, solstatus, skipchecks, assumesystemevent,
+discretereading, ignorescanningdisabled, assumebmcowner,
+ignoreauthcode, slowcommit, veryslowcommit,
+solchannelassumelanchannel, ignorestateflag, malformedack.
 
 .SH "SDR OPTIONS"
 The following options are specific to tools that use the sensor 
