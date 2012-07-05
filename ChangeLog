@@ -1,5 +1,9 @@
 2012-07-05  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/: Tweak logic of Ipmi_oem_comp_code_strerror callback.
+	
+2012-07-05  Albert Chu <chu11@llnl.gov>
+
 	* Add support for assume max record sdr record count.
 	
 2012-07-03  Albert Chu <chu11@llnl.gov>

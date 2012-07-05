@@ -75,16 +75,22 @@ ipmi_oem_check_response_and_completion_code (ipmi_oem_state_data_t *state_data,
 
       if (comp_code_strerror)
         {
-          if (comp_code_strerror (state_data,
-                                  bytes_rs_ptr[1], /* completion code */
-                                  cmd,
-                                  netfn,
-                                  errbuf,
-                                  IPMI_OEM_ERR_BUFLEN) < 0)
+	  int ret;
+
+          if ((ret = comp_code_strerror (state_data,
+					 bytes_rs_ptr[1], /* completion code */
+					 cmd,
+					 netfn,
+					 errbuf,
+					 IPMI_OEM_ERR_BUFLEN)) < 0)
             snprintf (errbuf, IPMI_OEM_ERR_BUFLEN, "completion-code = 0x%X", bytes_rs_ptr[1]);
+	  
+	  if (!ret)
+	    goto standard_output_comp_code_error;
         }
       else
         {
+	standard_output_comp_code_error:
           if (ipmi_completion_code_strerror_r (cmd, /* cmd */
                                                netfn, /* network function */
                                                bytes_rs_ptr[1], /* completion code */
