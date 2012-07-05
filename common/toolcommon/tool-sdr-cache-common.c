@@ -559,6 +559,9 @@ _sdr_cache_create (ipmi_sdr_ctx_t ctx,
   else
     cache_create_flags = IPMI_SDR_CACHE_CREATE_FLAGS_DEFAULT;
 
+  if (common_args->workaround_flags_sdr & IPMI_PARSE_WORKAROUND_FLAGS_SDR_ASSUME_MAX_SDR_RECORD_COUNT)
+    cache_create_flags |= IPMI_SDR_CACHE_CREATE_FLAGS_ASSUME_MAX_SDR_RECORD_COUNT;
+
   if (ipmi_sdr_cache_create (ctx,
                              ipmi_ctx,
                              cachefilenamebuf,

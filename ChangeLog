@@ -1,3 +1,7 @@
+2012-07-05  Albert Chu <chu11@llnl.gov>
+
+	* Add support for assume max record sdr record count.
+	
 2012-07-03  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/spec/ipmi-oem.h: Add additional

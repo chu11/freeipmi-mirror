@@ -76,6 +76,7 @@ MANS_COMMON = \
 	manpage-common-workaround-outofband-common-text.man \
 	manpage-common-workaround-outofband-15-text.man \
 	manpage-common-workaround-outofband-20-text.man \
+	manpage-common-workaround-sdr-text.man \
 	manpage-common-workaround-config-tool.man \
 	manpage-common-debug.man \
 	manpage-common-misc.man \

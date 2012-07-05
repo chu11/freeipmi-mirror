@@ -137,6 +137,7 @@ _parse_workaround_flags (const char *str,
 			 unsigned int *workaround_flags_outofband,
 			 unsigned int *workaround_flags_outofband_2_0,
 			 unsigned int *workaround_flags_inband,
+			 unsigned int *workaround_flags_sdr,
 			 unsigned int *section_specific_workaround_flags,
 			 int command_line_flag)
 {
@@ -154,6 +155,8 @@ _parse_workaround_flags (const char *str,
     (*workaround_flags_outofband_2_0) = 0;
   if (workaround_flags_inband)
     (*workaround_flags_inband) = 0;
+  if (workaround_flags_sdr)
+    (*workaround_flags_sdr) = 0;
   if (section_specific_workaround_flags)
     (*section_specific_workaround_flags) = 0;
 
@@ -169,6 +172,8 @@ _parse_workaround_flags (const char *str,
 	    (*workaround_flags_outofband_2_0) = 0;
 	  if (workaround_flags_inband)
 	    (*workaround_flags_inband) = 0;
+	  if (workaround_flags_sdr)
+	    (*workaround_flags_sdr) = 0;
 	  if (section_specific_workaround_flags)
 	    (*section_specific_workaround_flags) = 0;
 	  break;
@@ -215,12 +220,15 @@ _parse_workaround_flags (const char *str,
       else if (workaround_flags_outofband_2_0
                && !strcasecmp (tok, IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_NON_EMPTY_INTEGRITY_CHECK_VALUE_STR))
         (*workaround_flags_outofband_2_0) |= IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_NON_EMPTY_INTEGRITY_CHECK_VALUE;
-      else if (workaround_flags_outofband_2_0
+      else if (workaround_flags_inband
                && !strcasecmp (tok, IPMI_PARSE_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS_STR))
         (*workaround_flags_inband) |= IPMI_PARSE_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS;
-      else if (workaround_flags_outofband_2_0
+      else if (workaround_flags_inband
                && !strcasecmp (tok, IPMI_PARSE_WORKAROUND_FLAGS_INBAND_SPIN_POLL_STR))
         (*workaround_flags_inband) |= IPMI_PARSE_WORKAROUND_FLAGS_INBAND_SPIN_POLL;
+      else if (workaround_flags_sdr
+               && !strcasecmp (tok, IPMI_PARSE_WORKAROUND_FLAGS_SDR_ASSUME_MAX_SDR_RECORD_COUNT_STR))
+        (*workaround_flags_sdr) |= IPMI_PARSE_WORKAROUND_FLAGS_SDR_ASSUME_MAX_SDR_RECORD_COUNT;
       else if (section_specific_workaround_flags
                && !strcasecmp (tok, IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_SOL_PAYLOAD_SIZE_STR))
         (*section_specific_workaround_flags) |= IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_SOL_PAYLOAD_SIZE;
@@ -276,12 +284,14 @@ parse_workaround_flags (const char *str,
 			unsigned int *workaround_flags_outofband,
 			unsigned int *workaround_flags_outofband_2_0,
 			unsigned int *workaround_flags_inband,
+			unsigned int *workaround_flags_sdr,
 			unsigned int *section_specific_workaround_flags)
 {
   return (_parse_workaround_flags (str,
 				   workaround_flags_outofband,
 				   workaround_flags_outofband_2_0,
 				   workaround_flags_inband,
+				   workaround_flags_sdr,
 				   section_specific_workaround_flags,
 				   0));
 }
@@ -291,12 +301,14 @@ parse_workaround_flags_tool (const char *str,
 			     unsigned int *workaround_flags_outofband,
 			     unsigned int *workaround_flags_outofband_2_0,
 			     unsigned int *workaround_flags_inband,
+			     unsigned int *workaround_flags_sdr,
 			     unsigned int *section_specific_workaround_flags)
 {
   return (_parse_workaround_flags (str,
 				   workaround_flags_outofband,
 				   workaround_flags_outofband_2_0,
 				   workaround_flags_inband,
+				   workaround_flags_sdr,
 				   section_specific_workaround_flags,
 				   1));
 }

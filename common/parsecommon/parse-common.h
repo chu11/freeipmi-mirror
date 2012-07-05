@@ -58,6 +58,8 @@
 #define IPMI_PARSE_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS                 0x00000001
 #define IPMI_PARSE_WORKAROUND_FLAGS_INBAND_SPIN_POLL                              0x00000002
 
+#define IPMI_PARSE_WORKAROUND_FLAGS_SDR_ASSUME_MAX_SDR_RECORD_COUNT               0x00000001
+
 #define IPMI_PARSE_WORKAROUND_FLAGS_NONE_STR                                          "none"
 
 #define IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES_STR         "authcap"
@@ -75,6 +77,8 @@
 
 #define IPMI_PARSE_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS_STR                 "assumeio"
 #define IPMI_PARSE_WORKAROUND_FLAGS_INBAND_SPIN_POLL_STR                              "spinpoll"
+
+#define IPMI_PARSE_WORKAROUND_FLAGS_SDR_ASSUME_MAX_SDR_RECORD_COUNT_STR               "assumemaxsdrrecordcount"
 
 /* ipmiconsole */
 #define IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_SOL_PAYLOAD_SIZE        0x00000001
@@ -150,6 +154,7 @@ int parse_workaround_flags (const char *str,
                             unsigned int *workaround_flags_outofband,
                             unsigned int *workaround_flags_outofband_2_0,
                             unsigned int *workaround_flags_inband,
+			    unsigned int *workaround_flags_sdr,
                             unsigned int *tool_specific_workaround_flags);
 
 /* returns 0 on success, -1 on error, flags set in in/out parameters */
@@ -158,6 +163,7 @@ int parse_workaround_flags_tool (const char *str,
 				 unsigned int *workaround_flags_outofband,
 				 unsigned int *workaround_flags_outofband_2_0,
 				 unsigned int *workaround_flags_inband,
+				 unsigned int *workaround_flags_sdr,
 				 unsigned int *tool_specific_workaround_flags);
 
 /* Turn an input string into a 20-byte binary k_g key, length written

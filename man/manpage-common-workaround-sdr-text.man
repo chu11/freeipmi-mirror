@@ -1,0 +1,7 @@
+.LP
+\fIassumemaxsdrrecordcount\fR - This workaround will inform SDR
+reading to stop reading after a known maximum numer of SDR records
+have been read.  This will work around systems that have
+mis-implemented SDR reading functions that.  Those hitting this issue
+may see "SDR record count invalid" errors.  Issue observed on
+unspecified Inspur motherboard.

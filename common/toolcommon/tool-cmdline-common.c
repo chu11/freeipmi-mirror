@@ -98,7 +98,7 @@ common_parse_opt (int key,
 {
   char *endptr;
   int tmp;
-  unsigned int outofband_flags, outofband_2_0_flags, inband_flags, section_flags;
+  unsigned int outofband_flags, outofband_2_0_flags, inband_flags, sdr_flags, section_flags;
   int n;
 
   assert (common_args);
@@ -390,6 +390,7 @@ common_parse_opt (int key,
 				       &outofband_flags,
 				       &outofband_2_0_flags,
 				       &inband_flags,
+				       &sdr_flags,
 				       &section_flags) < 0)
         {
           fprintf (stderr, "invalid workaround flags\n");
@@ -398,6 +399,7 @@ common_parse_opt (int key,
       common_args->workaround_flags_outofband = outofband_flags;
       common_args->workaround_flags_outofband_2_0 = outofband_2_0_flags;
       common_args->workaround_flags_inband = inband_flags;
+      common_args->workaround_flags_sdr = sdr_flags;
       common_args->section_specific_workaround_flags = section_flags;
       break;
     case ARGP_DEBUG_KEY:

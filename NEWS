@@ -63,6 +63,8 @@ o Re-work shared sensors name output to more properly meet IPMI
   ipmi-sensors, ipmi-sel, or ipmi-pet.
 o In ipmi-fru, deprecate --skip-checks option in favor of "skipchecks"
   workaround flag.
+o Support "assumemaxsdrrecordcount" workaround in all tools that use
+  SDR.
 
 Libraries
 ---------
