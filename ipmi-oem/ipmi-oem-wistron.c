@@ -2627,7 +2627,6 @@ ipmi_oem_wistron_set_dhcp_retry (ipmi_oem_state_data_t *state_data)
   uint8_t retry_count;
   uint8_t retry_interval;
   uint8_t retry_timeout;
-  int rs_len;
   int rv = -1;
 
   assert (state_data);
@@ -2854,7 +2853,6 @@ ipmi_oem_wistron_set_link_status_change_control (ipmi_oem_state_data_t *state_da
   uint8_t configuration_parameter_data[IPMI_OEM_MAX_BYTES];
   uint8_t lan_channel_number;
   uint8_t status;
-  int rs_len;
   int rv = -1;
 
   assert (state_data);
