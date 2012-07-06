@@ -97,7 +97,9 @@ ipmi_oem_check_response_and_completion_code (ipmi_oem_state_data_t *state_data,
                                                errbuf,
                                                IPMI_OEM_ERR_BUFLEN) < 0)
             {
+#if 0
               pstdout_perror (state_data->pstate, "ipmi_completion_code_strerror_r");
+#endif
               snprintf (errbuf, IPMI_OEM_ERR_BUFLEN, "completion-code = 0x%X", bytes_rs_ptr[1]);
             }
         }
