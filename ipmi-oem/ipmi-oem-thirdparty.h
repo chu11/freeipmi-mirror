@@ -26,7 +26,6 @@
  */
 
 /* Shared between:
- * Dell Poweredge Systems
  * Wistron/Dell Poweredge C6220
  *
  * String format is:
