@@ -78,6 +78,7 @@ MANS_COMMON = \
 	manpage-common-workaround-outofband-common-text.man \
 	manpage-common-workaround-outofband-15-text.man \
 	manpage-common-workaround-outofband-20-text.man \
+	manpage-common-workaround-sdr-text.man \
 	manpage-common-workaround-config-tool.man \
 	manpage-common-debug.man \
 	manpage-common-misc.man \
@@ -91,7 +92,7 @@ MANS_COMMON = \
 	manpage-common-hostranged-text-options.man \
 	manpage-common-hostranged-text-localhost.man \
 	manpage-common-hostranged-text-threads.man \
-	manpage-common-sdr-cache-option-heading.man \
+	manpage-common-sdr-cache-options-heading.man \
 	manpage-common-sdr-cache-options.man \
 	manpage-common-sdr-cache-file-directory.man \
 	manpage-common-sdr-cache-ignore.man \

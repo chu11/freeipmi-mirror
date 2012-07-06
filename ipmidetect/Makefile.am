@@ -20,7 +20,7 @@ ipmidetect_LDADD = \
 
 ipmidetect_SOURCES = \
 	ipmidetect.c \
-	ipmidetect.h \
+	ipmidetect_.h \
 	ipmidetect-argp.c \
 	ipmidetect-argp.h
 

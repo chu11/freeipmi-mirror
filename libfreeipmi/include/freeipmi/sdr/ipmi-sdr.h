@@ -87,10 +87,15 @@ extern "C" {
  * OVERWRITE - overwrite any previously created cache.
  *
  * DUPLICATE_RECORD_ID - check for duplicate record IDs and return error if one is found. 
+ *
+ * ASSUME_MAX_SDR_RECORD_COUNT - If motherboard does not implement SDR
+ * record reading properly, this workaround will allow code to not
+ * fail out.
  */
-#define IPMI_SDR_CACHE_CREATE_FLAGS_DEFAULT             0x0
-#define IPMI_SDR_CACHE_CREATE_FLAGS_OVERWRITE           0x1
-#define IPMI_SDR_CACHE_CREATE_FLAGS_DUPLICATE_RECORD_ID 0x2
+#define IPMI_SDR_CACHE_CREATE_FLAGS_DEFAULT                     0x00
+#define IPMI_SDR_CACHE_CREATE_FLAGS_OVERWRITE                   0x01
+#define IPMI_SDR_CACHE_CREATE_FLAGS_DUPLICATE_RECORD_ID         0x02
+#define IPMI_SDR_CACHE_CREATE_FLAGS_ASSUME_MAX_SDR_RECORD_COUNT 0x04
 
 #define IPMI_SDR_SENSOR_NAME_FLAGS_DEFAULT                       0x00000000
 #define IPMI_SDR_SENSOR_NAME_FLAGS_IGNORE_SHARED_SENSORS         0x00000001

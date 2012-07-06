@@ -20,6 +20,39 @@
 	libfreeipmi/api/ipmi-api.c: Move some internal macros to
 	ipmi-api.h so apps know default values.
 	
+2012-07-05  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/: Tweak logic of Ipmi_oem_comp_code_strerror callback.
+	
+2012-07-05  Albert Chu <chu11@llnl.gov>
+
+	* Add support for assume max record sdr record count.
+	
+2012-07-03  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-oem.h: Add additional
+	Poweredge details.
+	
+2012-06-28  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/ipmi-oem-dell.c (ipmi_oem_dell_get_system_info): Fix
+	error output corner case.
+	
+2012-06-26  Albert Chu <chu11@llnl.gov>
+
+	* man/ipmi-oem.8.pre.in: Fix vendor specific documentation error.
+	
+2012-06-25  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/: Move more macros to ipmi-oem-spec.h.  General code
+	cleanup.
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-channel-spec.h: Add
+	additional macros.
+
+	* bmc-info/, bmc-config/, ipmi-pef-config/: Use new macros
+	appropriately.
+	
 2012-06-21  Albert Chu <chu11@llnl.gov>
 
 	* common/toolcommon/tool-config-file-common.c: Fix casting bug w/

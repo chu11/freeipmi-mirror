@@ -62,6 +62,7 @@ struct common_cmd_args_config
   unsigned int workaround_flags_outofband;
   unsigned int workaround_flags_outofband_2_0;
   unsigned int workaround_flags_inband;
+  unsigned int workaround_flags_sdr;
   unsigned int section_specific_workaround_flags;
   int workaround_flags_set;
   int tool_option_workaround_flags_set; /* for internal parsing check */
@@ -567,16 +568,18 @@ _config_file_workaround_flags (conffile_t cf,
   common_cmd_args_config->workaround_flags_outofband = 0;
   common_cmd_args_config->workaround_flags_outofband_2_0 = 0;
   common_cmd_args_config->workaround_flags_inband = 0;
+  common_cmd_args_config->workaround_flags_sdr = 0;
   common_cmd_args_config->section_specific_workaround_flags = 0;
 
   for (i = 0; i < data->stringlist_len; i++)
     {
-      unsigned int outofband_flags, outofband_2_0_flags, inband_flags, section_flags;
+      unsigned int outofband_flags, outofband_2_0_flags, inband_flags, sdr_flags, section_flags;
 
       if (parse_workaround_flags (data->stringlist[i],
 				  &outofband_flags,
 				  &outofband_2_0_flags,
 				  &inband_flags,
+				  &sdr_flags,
 				  &section_flags) < 0)
         {
           fprintf (stderr, "Config File Error: invalid value for %s\n", optionname);
@@ -586,11 +589,13 @@ _config_file_workaround_flags (conffile_t cf,
       if (outofband_flags
           || outofband_2_0_flags
           || inband_flags
+          || sdr_flags
           || section_flags)
         {
           common_cmd_args_config->workaround_flags_outofband |= outofband_flags;
           common_cmd_args_config->workaround_flags_outofband_2_0 |= outofband_2_0_flags;
           common_cmd_args_config->workaround_flags_inband |= inband_flags;
+          common_cmd_args_config->workaround_flags_sdr |= sdr_flags;
           common_cmd_args_config->section_specific_workaround_flags |= section_flags;
           common_cmd_args_config->workaround_flags_set++;
         }
@@ -836,16 +841,18 @@ _config_file_tool_option_workaround_flags (conffile_t cf,
   common_cmd_args_config->workaround_flags_outofband = 0;
   common_cmd_args_config->workaround_flags_outofband_2_0 = 0;
   common_cmd_args_config->workaround_flags_inband = 0;
+  common_cmd_args_config->workaround_flags_sdr = 0;
   common_cmd_args_config->section_specific_workaround_flags = 0;
 
   for (i = 0; i < data->stringlist_len; i++)
     {
-      unsigned int outofband_flags, outofband_2_0_flags, inband_flags, section_flags;
+      unsigned int outofband_flags, outofband_2_0_flags, inband_flags, sdr_flags, section_flags;
 
       if (parse_workaround_flags (data->stringlist[i],
                                   &outofband_flags,
                                   &outofband_2_0_flags,
                                   &inband_flags,
+                                  &sdr_flags,
                                   &section_flags) < 0)
         {
           fprintf (stderr, "Config File Error: invalid value for %s\n", optionname);
@@ -855,11 +862,13 @@ _config_file_tool_option_workaround_flags (conffile_t cf,
       if (outofband_flags
           || outofband_2_0_flags
           || inband_flags
+          || sdr_flags
           || section_flags)
         {
           common_cmd_args_config->workaround_flags_outofband |= outofband_flags;
           common_cmd_args_config->workaround_flags_outofband_2_0 |= outofband_2_0_flags;
           common_cmd_args_config->workaround_flags_inband |= inband_flags;
+          common_cmd_args_config->workaround_flags_sdr |= sdr_flags;
           common_cmd_args_config->section_specific_workaround_flags |= section_flags;
           common_cmd_args_config->workaround_flags_set++;
           common_cmd_args_config->tool_option_workaround_flags_set++;
@@ -5300,6 +5309,7 @@ config_file_parse (const char *filename,
       common_args->workaround_flags_outofband = common_cmd_args_config.workaround_flags_outofband;
       common_args->workaround_flags_outofband_2_0 = common_cmd_args_config.workaround_flags_outofband_2_0;
       common_args->workaround_flags_inband = common_cmd_args_config.workaround_flags_inband;
+      common_args->workaround_flags_sdr = common_cmd_args_config.workaround_flags_sdr;
       common_args->section_specific_workaround_flags = common_cmd_args_config.section_specific_workaround_flags;
     }
 

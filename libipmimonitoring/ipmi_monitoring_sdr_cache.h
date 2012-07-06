@@ -30,7 +30,8 @@
 #include "ipmi_monitoring.h"
 
 int ipmi_monitoring_sdr_cache_load (ipmi_monitoring_ctx_t c,
-                                    const char *hostname);
+                                    const char *hostname,
+				    unsigned int sdr_create_flags);
 
 int ipmi_monitoring_sdr_cache_unload (ipmi_monitoring_ctx_t c);
 

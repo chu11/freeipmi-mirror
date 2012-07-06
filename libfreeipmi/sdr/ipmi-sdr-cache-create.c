@@ -654,7 +654,8 @@ ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
   uint16_t *record_ids = NULL;
   unsigned int record_ids_count = 0;
   unsigned int cache_create_flags_mask = (IPMI_SDR_CACHE_CREATE_FLAGS_OVERWRITE
-					  | IPMI_SDR_CACHE_CREATE_FLAGS_DUPLICATE_RECORD_ID);
+					  | IPMI_SDR_CACHE_CREATE_FLAGS_DUPLICATE_RECORD_ID
+					  | IPMI_SDR_CACHE_CREATE_FLAGS_ASSUME_MAX_SDR_RECORD_COUNT);
   int fd = -1;
   int rv = -1;
 
@@ -766,6 +767,20 @@ ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
 
       if (record_count_written >= ctx->record_count)
         {
+	  /* IPMI Workaround
+	   *
+	   * Discovered on unspecified Inspur motherboard
+	   *
+	   * SDR record reading is broken, the IPMI_SDR_RECORD_ID_LAST
+	   * record id never occurs.  So this workaround allows the
+	   * user to not error out and avoids this loop from looping
+	   * infinitely.
+	   *
+	   */
+
+	  if (cache_create_flags & IPMI_SDR_CACHE_CREATE_FLAGS_ASSUME_MAX_SDR_RECORD_COUNT)
+	    break;
+
           SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_CACHE_CREATE_INVALID_RECORD_COUNT);
           goto cleanup;
         }
@@ -839,14 +854,12 @@ ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
        * The record_count listed from the Get SDR Repository Info command
        * is not consistent with the length of SDR records stored.
        *
-       * We will assume that if we reached the end of the SDR record list
-       * (i.e. next_record_id == 0xFFFF), a non-zero number of records
-       * were written, and it is less than the record_count given, it's ok
-       * and we can continue on.
+       * We will assume that if we reached the end of the SDR record
+       * list (i.e. next_record_id == 0xFFFF), a non-zero number of
+       * records were written, it's ok and we can continue on.
        */
       if (next_record_id == IPMI_SDR_RECORD_ID_LAST
-          && record_count_written
-          && record_count_written < ctx->record_count)
+          && record_count_written)
         {
           unsigned int total_bytes_written_temp = 0;
 

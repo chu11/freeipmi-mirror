@@ -308,6 +308,7 @@ _config_file_workaround_flags (conffile_t cf,
                                   NULL,
                                   &outofband_2_0_flags,
                                   NULL,
+				  NULL,
                                   &section_flags) < 0)
         {
           IPMICONSOLE_DEBUG (("libipmiconsole config file workaround flag invalid"));

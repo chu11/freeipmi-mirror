@@ -204,7 +204,8 @@ _ipmi_monitoring_sdr_cache_filename (ipmi_monitoring_ctx_t c,
 static int
 _ipmi_monitoring_sdr_cache_retrieve (ipmi_monitoring_ctx_t c,
                                      const char *hostname,
-                                     char *filename)
+                                     char *filename,
+				     unsigned int sdr_create_flags)
 {
   assert (c);
   assert (c->magic == IPMI_MONITORING_MAGIC);
@@ -215,7 +216,7 @@ _ipmi_monitoring_sdr_cache_retrieve (ipmi_monitoring_ctx_t c,
   if (ipmi_sdr_cache_create (c->sdr_ctx,
                              c->ipmi_ctx,
                              filename,
-                             IPMI_SDR_CACHE_CREATE_FLAGS_DEFAULT,
+			     sdr_create_flags,
                              NULL,
                              NULL) < 0)
     {
@@ -263,7 +264,8 @@ _ipmi_monitoring_sdr_cache_delete (ipmi_monitoring_ctx_t c,
 
 int
 ipmi_monitoring_sdr_cache_load (ipmi_monitoring_ctx_t c,
-                                const char *hostname)
+                                const char *hostname,
+				unsigned int sdr_create_flags)
 {
   char filename[MAXPATHLEN+1];
 
@@ -285,7 +287,7 @@ ipmi_monitoring_sdr_cache_load (ipmi_monitoring_ctx_t c,
     {
       if (ipmi_sdr_ctx_errnum (c->sdr_ctx) == IPMI_SDR_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST)
         {
-          if (_ipmi_monitoring_sdr_cache_retrieve (c, hostname, filename) < 0)
+          if (_ipmi_monitoring_sdr_cache_retrieve (c, hostname, filename, sdr_create_flags) < 0)
             goto cleanup;
         }
       else if (ipmi_sdr_ctx_errnum (c->sdr_ctx) == IPMI_SDR_ERR_CACHE_INVALID
@@ -294,7 +296,7 @@ ipmi_monitoring_sdr_cache_load (ipmi_monitoring_ctx_t c,
           if (_ipmi_monitoring_sdr_cache_delete (c, hostname, filename) < 0)
             goto cleanup;
 
-          if (_ipmi_monitoring_sdr_cache_retrieve (c, hostname, filename) < 0)
+          if (_ipmi_monitoring_sdr_cache_retrieve (c, hostname, filename, sdr_create_flags) < 0)
             goto cleanup;
         }
       else if (ipmi_sdr_ctx_errnum (c->sdr_ctx) == IPMI_SDR_ERR_FILESYSTEM)
