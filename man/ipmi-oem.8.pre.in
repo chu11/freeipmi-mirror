@@ -1024,6 +1024,7 @@ IPMI card.  The possible keys and values are
 key=value pairs may be specified.  If no key=value pairs are specifed,
 available pairs are output.  Command confirmed to work on Wistron /
 Dell Poweredge C6220.
+.if 0 \{
 .TP
 .B get-server-services-config
 This OEM command will get the current server services configuration on
@@ -1037,6 +1038,7 @@ the IPMI card.  The possible keys and values are
 \fIsshportnumber=num\fR.  Multiple key=value pairs may be specified.
 If no key=value pairs are specifed, available pairs are output.
 Command confirmed to work on Wistron / Dell Poweredge C6220.
+\}
 .TP
 .B get-power-management-config
 This OEM command will get the current power management configuration
@@ -1055,10 +1057,13 @@ configured, and \fIuser\fR uses the user defined time defined by
 maximum power on delay times.  Multiple key=value pairs may be
 specified.  If no key=value pairs are specifed, available pairs are
 output.  Command confirmed to work on Wistron / Dell Poweredge C6220.
+.if 0 \{
 .TP
 .B get-firmware-information
 This OEM command will get current firmware information.  Command
 confirmed to work on Wistron / Dell Poweredge C6220.
+\}
+.if 0 \{
 .TP
 .B user-default-setting \fIset|reset\fR
 This OEM command will allow users to customize BMC settings, store
@@ -1070,6 +1075,7 @@ settings, and IPMI lan configuration parameters.  \fIset\fR sets the
 current settings as a new default, while \fIreset\fR resets settings
 to the previously configured defaults.  Command confirmed to work on
 Wistron / Dell Poweredge C6220.
+\}
 .TP
 .B get-ipv6-settings
 This OEM command will get the current IPv6 settings on the
@@ -1119,6 +1125,7 @@ confirmed to work on Wistron / Dell Poweredge C6220.
 .B set-telnet-redirect-function \fIdisable|solenable|smashenable\fR
 This OEM command will enable or disable telnet redirect function.
 Command confirmed to work on Wistron / Dell Poweredge C6220.
+.if 0 \{
 .TP
 .B get-ssh-redirect-function
 This OEM command will get the SSH redirect function.  Command
@@ -1127,10 +1134,13 @@ confirmed to work on Wistron / Dell Poweredge C6220.
 .B set-ssh-redirect-function \fIdisable|solenable|smashenable\fR
 This OEM command will enable or disable SSH redirect function.
 Command confirmed to work on Wistron / Dell Poweredge C6220.
+\}
+.if 0 \{
 .TP
 .B get-chassis-power-readings
 This OEM command will output the current chassis power readings.
 Command confirmed to work on Wistron / Dell Poweredge C6220.
+\}
 .TP
 .B get-chassis-led-status
 This OEM command will output the current chassis identification and/or

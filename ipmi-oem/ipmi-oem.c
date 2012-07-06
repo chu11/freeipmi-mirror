@@ -1160,6 +1160,8 @@ struct ipmi_oem_command oem_wistron[] =
       IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
       ipmi_oem_wistron_set_web_server_config
     },
+#if 0
+/* can't verify - doesn't appear to work */
     {
       "get-server-services-config",
       NULL,
@@ -1174,6 +1176,7 @@ struct ipmi_oem_command oem_wistron[] =
       IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
       ipmi_oem_wistron_set_server_services_config
     },
+#endif
     {
       "get-power-management-config",
       NULL,
@@ -1188,6 +1191,8 @@ struct ipmi_oem_command oem_wistron[] =
       IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
       ipmi_oem_wistron_set_power_management_config
     },
+#if 0
+/* can't verify - doesn't appear to work */
     {
       "get-firmware-information",
       NULL,
@@ -1195,6 +1200,9 @@ struct ipmi_oem_command oem_wistron[] =
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_wistron_get_firmware_information
     },
+#endif
+#if 0
+/* can't verify - doesn't appear to work */
     {
       "user-default-setting",
       "<set|reset>",
@@ -1203,6 +1211,7 @@ struct ipmi_oem_command oem_wistron[] =
       ipmi_oem_wistron_user_default_setting
     },
     {
+#endif
       "get-ipv6-settings",
       NULL,
       0,
@@ -1258,6 +1267,8 @@ struct ipmi_oem_command oem_wistron[] =
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_wistron_set_telnet_redirect_function
     },
+#if 0
+/* can't verify - doesn't appear to work */
     {
       "get-ssh-redirect-function",
       NULL,
@@ -1272,6 +1283,9 @@ struct ipmi_oem_command oem_wistron[] =
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_wistron_set_ssh_redirect_function
     },
+#endif
+#if 0
+/* can't verify - doesn't appear to work */
     {
       "get-chassis-power-readings",
       NULL,
@@ -1279,6 +1293,7 @@ struct ipmi_oem_command oem_wistron[] =
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_wistron_get_chassis_power_readings
     },
+#endif
     {
       "get-chassis-led-status",
       NULL,

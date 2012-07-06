@@ -40,15 +40,24 @@ int ipmi_oem_wistron_set_dns_config (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_wistron_get_web_server_config (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_wistron_set_web_server_config (ipmi_oem_state_data_t *state_data);
 
+#if 0
+/* can't verify - doesn't appear to work */
 int ipmi_oem_wistron_get_server_services_config (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_wistron_set_server_services_config (ipmi_oem_state_data_t *state_data);
+#endif
 
 int ipmi_oem_wistron_get_power_management_config (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_wistron_set_power_management_config (ipmi_oem_state_data_t *state_data);
 
+#if 0
+/* can't verify - doesn't appear to work */
 int ipmi_oem_wistron_get_firmware_information (ipmi_oem_state_data_t *state_data);
+#endif
 
+#if 0
+/* can't verify - doesn't appear to work */
 int ipmi_oem_wistron_user_default_setting (ipmi_oem_state_data_t *state_data);
+#endif
 
 int ipmi_oem_wistron_get_ipv6_settings (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_wistron_set_ipv6_settings (ipmi_oem_state_data_t *state_data);
@@ -62,10 +71,16 @@ int ipmi_oem_wistron_set_sol_idle_timeout (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_wistron_get_telnet_redirect_function (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_wistron_set_telnet_redirect_function (ipmi_oem_state_data_t *state_data);
 
+#if 0
+/* can't verify - doesn't appear to work */
 int ipmi_oem_wistron_get_ssh_redirect_function (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_wistron_set_ssh_redirect_function (ipmi_oem_state_data_t *state_data);
+#endif
 
+#if 0
+/* can't verify - doesn't appear to work */
 int ipmi_oem_wistron_get_chassis_power_readings (ipmi_oem_state_data_t *state_data);
+#endif
 
 int ipmi_oem_wistron_get_chassis_led_status (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_wistron_set_chassis_led_status (ipmi_oem_state_data_t *state_data);

@@ -808,6 +808,8 @@ ipmi_oem_wistron_set_web_server_config (ipmi_oem_state_data_t *state_data)
   return (ipmi_oem_thirdparty_set_web_server_config_v1 (state_data));
 }
 
+#if 0
+/* can't verify - doesn't appear to work */
 int
 ipmi_oem_wistron_get_server_services_config (ipmi_oem_state_data_t *state_data)
 {
@@ -953,6 +955,7 @@ ipmi_oem_wistron_set_server_services_config (ipmi_oem_state_data_t *state_data)
  cleanup:
   return (rv);
 }
+#endif	/* 0 */
 
 int
 ipmi_oem_wistron_get_power_management_config (ipmi_oem_state_data_t *state_data)
@@ -1141,6 +1144,8 @@ ipmi_oem_wistron_set_power_management_config (ipmi_oem_state_data_t *state_data)
   return (rv);
 }
 
+#if 0
+/* can't verify - doesn't appear to work */
 int
 ipmi_oem_wistron_get_firmware_information (ipmi_oem_state_data_t *state_data)
 {
@@ -1272,7 +1277,10 @@ ipmi_oem_wistron_get_firmware_information (ipmi_oem_state_data_t *state_data)
  cleanup:
   return (rv);
 }
+#endif
 
+#if 0
+/* can't verify - doesn't appear to work */
 int
 ipmi_oem_wistron_user_default_setting (ipmi_oem_state_data_t *state_data)
 {
@@ -1311,6 +1319,7 @@ ipmi_oem_wistron_user_default_setting (ipmi_oem_state_data_t *state_data)
  cleanup:
   return (rv);
 }
+#endif
 
 int
 ipmi_oem_wistron_get_ipv6_settings (ipmi_oem_state_data_t *state_data)
@@ -2093,6 +2102,8 @@ ipmi_oem_wistron_set_telnet_redirect_function (ipmi_oem_state_data_t *state_data
   return (_wistron_set_telnet_ssh_redirect_function (state_data, IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION));
 }
 
+#if 0
+/* can't verify - doesn't appear to work */
 int
 ipmi_oem_wistron_get_ssh_redirect_function (ipmi_oem_state_data_t *state_data)
 {
@@ -2110,6 +2121,7 @@ ipmi_oem_wistron_set_ssh_redirect_function (ipmi_oem_state_data_t *state_data)
 
   return (_wistron_set_telnet_ssh_redirect_function (state_data, IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_SSH_REDIRECT_FUNCTION_SELECTION));
 }
+#endif	/* 0 */
 
 static int
 _wistron_oem_strerror (ipmi_oem_state_data_t *state_data,
@@ -2178,6 +2190,8 @@ _wistron_oem_strerror (ipmi_oem_state_data_t *state_data,
   return (0);
 }
 
+#if 0
+/* can't verify - doesn't appear to work */
 int
 ipmi_oem_wistron_get_chassis_power_readings (ipmi_oem_state_data_t *state_data)
 {
@@ -2291,6 +2305,7 @@ ipmi_oem_wistron_get_chassis_power_readings (ipmi_oem_state_data_t *state_data)
  cleanup:
   return (rv);
 }
+#endif	/* 0 */
 
 int
 ipmi_oem_wistron_get_chassis_led_status (ipmi_oem_state_data_t *state_data)
