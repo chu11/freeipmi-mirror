@@ -1,3 +1,8 @@
+FreeIPMI 1.1.7 - 06/28/12
+-------------------------
+o In ipmi-sensors and ipmi-sel, fix units output corner case.
+o In bmc-info, detect unsupported system info corner case.
+
 FreeIPMI 1.1.6 - 06/28/12
 -------------------------
 Tools
