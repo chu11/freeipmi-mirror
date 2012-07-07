@@ -1,3 +1,11 @@
+2012-07-06  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/util/ipmi-sensor-util.c (ipmi_sensor_units_string):
+	Fix units output corner case.
+
+	* bmc-info/bmc-info.c (display_system_info_common): Fix
+	not-supported completion code detection.
+	
 2012-07-05  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Tweak logic of Ipmi_oem_comp_code_strerror callback.

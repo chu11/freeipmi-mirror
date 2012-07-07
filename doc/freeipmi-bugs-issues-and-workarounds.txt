@@ -1353,6 +1353,16 @@ Sensors Issue #19: [COMPLIANCE] [SENSORS-1]
 
   Resolution: Workaround added to assume sensor not available.
 
+Sensors Issue #20: [IMPLEMENTATION]
+
+  Some sensors are given a unit modifier (i.e. A / B, or A * B) but a
+  modifier unit of unspecified.  This leads to sensors with units
+  like: "C / unspecified".
+
+  Seen on: Wistron / Dell Poweredge C6220
+
+  Resolution: Workaround added to handle corner case.
+
 ----------------------------------------------------------------------
 
 ---------------------------------
