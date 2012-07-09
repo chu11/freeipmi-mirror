@@ -322,9 +322,8 @@ fi
 %dir %{_includedir}/freeipmi/locate
 %dir %{_includedir}/freeipmi/payload
 %dir %{_includedir}/freeipmi/record-format
-%dir %{_includedir}/freeipmi/sdr-cache
-%dir %{_includedir}/freeipmi/sdr-parse
-%dir %{_includedir}/freeipmi/sel-parse
+%dir %{_includedir}/freeipmi/sdr
+%dir %{_includedir}/freeipmi/sel
 %dir %{_includedir}/freeipmi/sensor-read
 %dir %{_includedir}/freeipmi/spec
 %dir %{_includedir}/freeipmi/templates
@@ -344,9 +343,8 @@ fi
 %{_includedir}/freeipmi/locate/*.h
 %{_includedir}/freeipmi/payload/*.h
 %{_includedir}/freeipmi/record-format/*.h
-%{_includedir}/freeipmi/sdr-cache/*.h
-%{_includedir}/freeipmi/sdr-parse/*.h
-%{_includedir}/freeipmi/sel-parse/*.h
+%{_includedir}/freeipmi/sdr/*.h
+%{_includedir}/freeipmi/sel/*.h
 %{_includedir}/freeipmi/sensor-read/*.h
 %{_includedir}/freeipmi/spec/*.h
 %{_includedir}/freeipmi/templates/*.h
