@@ -570,7 +570,7 @@ Serial-Over-LAN Issue #6: [COMPLIANCE]
   5441/Dell Xanadu II, Inventec 5442/Dell Xanadu III, Dell Poweredge
   R610, Dell Poweredge R710, Quanta S99Q/Dell FS12-TY, Supermicro
   X8DTG, Supermicro X8DTU, Intel S2600JF/Appro 512X, Quanta
-  QSSC-S4R/Appro GB812X-CN
+  QSSC-S4R/Appro GB812X-CN, Wistron / Dell Poweredge C6220. 
  
   Resolution: None
 
