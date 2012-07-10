@@ -3545,7 +3545,7 @@ sel_format_record_string (ipmi_sel_ctx_t ctx,
             goto out;
           percent_flag = 0;
         }
-      else if (percent_flag && *fmt == 's') /* event data3 severity */
+      else if (percent_flag && *fmt == 'S') /* event data3 severity */
         {
           if ((ret = _output_event_data2_severity (ctx,
                                                    &sel_entry,

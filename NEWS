@@ -78,6 +78,8 @@ o In libfreeipmi, support SEL string output format '%E' for combined
   event data1, data2, and data3 output.
 o In libfreeipmi, support SEL string output format '%I' for
   interpretation event output.
+o In libfreeipmi, fix bug in SEL string output in which both sensor
+  name and severity used '%s'.  Severity now uses '%S'.
 o In libfreeipmi, support ability to config interpret config file and
   sel library and receive appropriate error.
 o In libfreeipmi, support reservation-id registration and clearing in

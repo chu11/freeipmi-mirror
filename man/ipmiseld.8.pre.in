@@ -248,7 +248,7 @@ output specifics of each SEL event that occurs.
 .sp
 %p - event data 2 previous state string
 .sp
-%s - event data 2 severity string
+%S - event data 2 severity string
 .sp
 %E - combined event data 1, 2, and 3 string
 .sp

@@ -352,7 +352,7 @@ int ipmi_sel_parse_read_oem (ipmi_sel_ctx_t ctx,
  * %h - event data 3 string
  * %c - combined event data 2 and event data 3 string [3]
  * %p - event data 2 previous state string [4]
- * %s - event data 2 severity string [4]
+ * %S - event data 2 severity string [4]
  * %E - combined event data 1, 2, and 3 string [5]
  * %k - event direction
  *
