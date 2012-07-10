@@ -105,9 +105,17 @@ _ipmiseld_sdr_cache_create (ipmiseld_host_data_t *host_data,
                              NULL,
                              NULL) < 0)
     {
-      ipmiseld_err_output (host_data,
-			   "ipmi_sdr_cache_create: %s",
-			   ipmi_sdr_ctx_errormsg (host_data->host_poll->sdr_ctx));
+      if (ipmi_sdr_ctx_errnum (host_data->host_poll->sdr_ctx) == IPMI_SDR_ERR_FILENAME_INVALID
+	  || ipmi_sdr_ctx_errnum (host_data->host_poll->sdr_ctx) == IPMI_SDR_ERR_FILESYSTEM
+	  || ipmi_sdr_ctx_errnum (host_data->host_poll->sdr_ctx) == IPMI_SDR_ERR_PERMISSION)
+	ipmiseld_err_output (host_data,
+			     "Error creating SDR cache  '%s': %s",
+			     filename,
+			     ipmi_sdr_ctx_errormsg (host_data->host_poll->sdr_ctx));
+      else
+	ipmiseld_err_output (host_data,
+			     "ipmi_sdr_cache_create: %s",
+			     ipmi_sdr_ctx_errormsg (host_data->host_poll->sdr_ctx));
       return (-1);
     }
 
@@ -129,7 +137,7 @@ ipmiseld_sdr_cache_create_and_load (ipmiseld_host_data_t *host_data)
   
   if (!(host_data->host_poll->sdr_ctx = ipmi_sdr_ctx_create ()))
     {
-      ipmiseld_err_output (host_data, "ipmi_sdr_cache_create: %s", strerror (errno));
+      ipmiseld_err_output (host_data, "ipmi_sdr_ctx_create: %s", strerror (errno));
       goto cleanup;
     }
   
