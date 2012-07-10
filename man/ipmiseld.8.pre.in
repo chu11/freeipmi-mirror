@@ -138,16 +138,17 @@ libipmimonitoring(3).
 .TP
 \fB\-\-system\-event\-format\fR=\fIFORMATSTRING\fR
 Specify the format of the log output when a SEL system event is
-encountered.  Defaults to "SEL System Event: %s, %I, %E" if logging
-locally, "SEL System Event(%h): %s, %I, %E" if logging outofband or
-with hostranges.  See SEL LOG FORMAT STRING below for formatting
-details.
+encountered.  Defaults to "SEL System Event: %d, %t, %s, %I, %E" if
+logging locally, "SEL System Event(%h): %d, %t, %s, %I, %E" if logging
+outofband or with hostranges.  See SEL LOG FORMAT STRING below for
+formatting details.
 .TP
 \fB\-\-oem\-timestamped\-event\-format\fR=\fIFORMATSTRING\fR
 Specify the format of the log output when a SEL OEM timestamped event
-is encountered.  Defaults to "SEL OEM Event: %I, %o" if logging
-locally, "SEL OEM Event(%h): %I, %o" if logging outofband or with
-hostranges..  See SEL LOG FORMAT STRING below for formatting details.
+is encountered.  Defaults to "SEL OEM Event: %d, %t, %I, %o" if
+logging locally, "SEL OEM Event(%h): %d, %t, %I, %o" if logging
+outofband or with hostranges..  See SEL LOG FORMAT STRING below for
+formatting details.
 .TP
 \fB\-\-oem\-non\-timestamped\-event\-format\fR=\fIFORMATSTRING\fR
 Specify the format of the log output when a SEL OEM non-timestamped

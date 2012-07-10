@@ -51,15 +51,15 @@
 
 #define IPMISELD_CLEAR_THRESHOLD_DEFAULT                                0
 
-#define IPMISELD_SYSTEM_EVENT_FORMAT_STR_DEFAULT                        "SEL System Event: %s, %I, %E"
+#define IPMISELD_SYSTEM_EVENT_FORMAT_STR_DEFAULT                        "SEL System Event: %d, %t, %s, %I, %E"
 
-#define IPMISELD_OEM_TIMESTAMPED_EVENT_FORMAT_STR_DEFAULT               "SEL OEM Event: %I, %o"
+#define IPMISELD_OEM_TIMESTAMPED_EVENT_FORMAT_STR_DEFAULT               "SEL OEM Event: %d, %t, %I, %o"
 
 #define IPMISELD_OEM_NON_TIMESTAMPED_EVENT_FORMAT_STR_DEFAULT           "SEL OEM Event: %I, %o"
 
-#define IPMISELD_SYSTEM_EVENT_FORMAT_OUTOFBAND_STR_DEFAULT              "SEL System Event(%h): %s, %I, %E"
+#define IPMISELD_SYSTEM_EVENT_FORMAT_OUTOFBAND_STR_DEFAULT              "SEL System Event(%h): %d, %t, %s, %I, %E"
 
-#define IPMISELD_OEM_TIMESTAMPED_EVENT_FORMAT_OUTOFBAND_STR_DEFAULT     "SEL OEM Event(%h): %I, %o"
+#define IPMISELD_OEM_TIMESTAMPED_EVENT_FORMAT_OUTOFBAND_STR_DEFAULT     "SEL OEM Event(%h): %d, %t, %I, %o"
 
 #define IPMISELD_OEM_NON_TIMESTAMPED_EVENT_FORMAT_OUTOFBAND_STR_DEFAULT "SEL OEM Event(%h): %I, %o"
 
