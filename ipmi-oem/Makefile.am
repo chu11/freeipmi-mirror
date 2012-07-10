@@ -44,7 +44,9 @@ ipmi_oem_SOURCES = \
 	ipmi-oem-supermicro.c \
 	ipmi-oem-supermicro.h \
 	ipmi-oem-thirdparty.c \
-	ipmi-oem-thirdparty.h
+	ipmi-oem-thirdparty.h \
+	ipmi-oem-wistron.c \
+	ipmi-oem-wistron.h
 
 $(top_builddir)/common/toolcommon/libtoolcommon.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`

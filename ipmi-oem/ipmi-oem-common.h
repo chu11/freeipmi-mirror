@@ -93,4 +93,12 @@ int ipmi_oem_parse_string (ipmi_oem_state_data_t *state_data,
                            char *stringbuf,
                            unsigned int stringbuflen);
 
+int ipmi_oem_get_system_info_string (ipmi_oem_state_data_t *state_data,
+				     uint8_t parameter_selector,
+				     uint8_t set_selector,
+				     uint8_t block_selector,
+				     char *string,
+				     unsigned int string_len,
+				     unsigned int *string_len_ret);
+
 #endif /* IPMI_OEM_COMMON_H */

@@ -142,6 +142,16 @@ extern "C" {
 /* achu: not official names, named based on use context */
 #define IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP 0xC0 
 
+/******************************************* 
+ * Wistron                                 *
+ *******************************************/
+
+/*
+ * Wistron / Dell Poweredge C6220
+ */
+
+#define IPMI_SENSOR_TYPE_OEM_WISTRON_IOH_CORE_ERROR 0xC0
+
 #ifdef __cplusplus
 }
 #endif

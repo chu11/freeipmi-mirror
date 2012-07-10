@@ -35,6 +35,8 @@ ipmi_sensors_SOURCES = \
 	ipmi-sensors-oem-inventec.h \
 	ipmi-sensors-oem-quanta.c \
 	ipmi-sensors-oem-quanta.h \
+	ipmi-sensors-oem-wistron.c \
+	ipmi-sensors-oem-wistron.h \
 	ipmi-sensors-output-common.c \
 	ipmi-sensors-output-common.h \
 	ipmi-sensors-simple-output.c \

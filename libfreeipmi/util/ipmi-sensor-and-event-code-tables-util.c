@@ -1980,6 +1980,24 @@ ipmi_get_oem_sensor_type_message (uint32_t manufacturer_id,
         }
     }
 
+  /* OEM Interpretation
+   *
+   * Wistron / Dell Poweredge C6220
+   */
+  if (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_WISTRON
+      && product_id == IPMI_WISTRON_PRODUCT_ID_C6220)
+    {
+      switch (sensor_type)
+        {
+	case IPMI_SENSOR_TYPE_OEM_WISTRON_IOH_CORE_ERROR:
+          return (_get_event_message (offset,
+                                      buf,
+                                      buflen,
+                                      ipmi_sensor_type_oem_wistron_ioh_core_error_max_index,
+                                      ipmi_sensor_type_oem_wistron_ioh_core_error));
+        }
+    }
+
   SET_ERRNO (EINVAL);
   return (-1);
 }

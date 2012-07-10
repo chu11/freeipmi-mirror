@@ -46,6 +46,203 @@
  * b/c they share a common third party firmware
  */
 
+int
+ipmi_oem_thirdparty_get_system_info_block_pstring (ipmi_oem_state_data_t *state_data,
+						   uint8_t parameter_selector,
+						   char *string,
+						   unsigned int string_len)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t configuration_parameter_data[IPMI_OEM_MAX_BYTES];
+  uint8_t set_selector = 0;
+  uint8_t string_length = 0;
+  unsigned int string_count = 0;
+  uint8_t string_encoding;
+  int len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (string);
+  assert (string_len);
+  assert (IPMI_OEM_DELL_SYSTEM_INFO_STRING_ENCODING_BITMASK == IPMI_OEM_WISTRON_SYSTEM_INFO_STRING_ENCODING_BITMASK);
+  assert (IPMI_OEM_DELL_SYSTEM_INFO_STRING_ENCODING_SHIFT == IPMI_OEM_WISTRON_SYSTEM_INFO_STRING_ENCODING_SHIFT);
+  assert (IPMI_SYSTEM_INFO_ENCODING_ASCII_LATIN1 == IPMI_OEM_WISTRON_SYSTEM_INFO_STRING_ENCODING_PRINTABLE_ASCII);
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_system_info_parameters_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_system_info_parameters (state_data->ipmi_ctx,
+                                           IPMI_GET_SYSTEM_INFO_PARAMETER,
+                                           parameter_selector,
+                                           set_selector,
+                                           IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
+                                           obj_cmd_rs) < 0)
+    {
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+	  && ((ipmi_check_completion_code (obj_cmd_rs,
+					   IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1)
+	      || (ipmi_check_completion_code (obj_cmd_rs,
+					      IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1)))
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "%s:%s '%s' option not supported on this system\n",
+			   state_data->prog_data->args->oem_id,
+			   state_data->prog_data->args->oem_command,
+			   state_data->prog_data->args->oem_options[0]);
+	  goto cleanup;
+	}
+      
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_system_info_parameters: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if ((len = fiid_obj_get_data (obj_cmd_rs,
+                                "configuration_parameter_data",
+                                configuration_parameter_data,
+                                IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'configuration_parameter_data': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
+  if (len < 3)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_system_info_parameters: invalid buffer length returned: %d\n",
+                       len);
+      goto cleanup;
+    }
+
+  /* configuration_parameter_data[0] is the set selector, we don't care */
+
+  string_encoding = (configuration_parameter_data[1] & IPMI_OEM_DELL_SYSTEM_INFO_STRING_ENCODING_BITMASK);
+  string_encoding >>= IPMI_OEM_DELL_SYSTEM_INFO_STRING_ENCODING_SHIFT;
+
+  if (string_encoding != IPMI_SYSTEM_INFO_ENCODING_ASCII_LATIN1)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "Cannot handle non-ASCII encoding: %Xh\n",
+                       configuration_parameter_data[0]);
+      goto cleanup;
+    }
+
+  string_length = configuration_parameter_data[2];
+
+  if (!string_length)
+    goto out;
+
+  /* -3 b/c of set selector, encoding, and string length bytes */
+
+  if (len - 3)
+    {
+      if ((len - 3) > (string_len - string_count))
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "internal buffer overflow\n");
+          goto cleanup;
+        }
+
+      memcpy (string + string_count,
+              &(configuration_parameter_data[3]),
+              (len - 3));
+      string_count += (len - 3);
+    }
+
+  /* string_length is 8 bits, so we should not call >= 17 times,
+   *
+   * ceiling ( (255 - 14) / 16 ) + 1 = 17
+   *
+   */
+
+  set_selector++;
+  while (string_count < string_length && set_selector < 17)
+    {
+      if (fiid_obj_clear (obj_cmd_rs) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_clear: %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+      
+      if (ipmi_cmd_get_system_info_parameters (state_data->ipmi_ctx,
+                                               IPMI_GET_SYSTEM_INFO_PARAMETER,
+                                               parameter_selector,
+                                               set_selector,
+                                               IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
+                                               obj_cmd_rs) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_cmd_get_system_info_parameters: %s\n",
+                           ipmi_ctx_errormsg (state_data->ipmi_ctx));
+          goto cleanup;
+        }
+      
+      if ((len = fiid_obj_get_data (obj_cmd_rs,
+                                    "configuration_parameter_data",
+                                    configuration_parameter_data,
+                                    IPMI_OEM_MAX_BYTES)) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get_data: 'configuration_parameter_data': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+      
+      if (len < 2)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_cmd_get_system_info_parameters: invalid buffer length returned: %d\n",
+                           len);
+          goto cleanup;
+        }
+      
+      /* configuration_parameter_data[0] is the set selector, we don't care */
+
+      if ((string_count + (len - 1)) > (string_len - string_count))
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "internal buffer overflow\n");
+          goto cleanup;
+        }
+      
+      memcpy (string + string_count,
+              &(configuration_parameter_data[1]),
+              (len - 1));
+      
+      string_count += (len - 1);
+      
+      set_selector++;
+    }
+
+ out:
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
 static int
 _thirdparty_get_reservation (ipmi_oem_state_data_t *state_data,
 			     uint8_t *reservation_id)
@@ -58,6 +255,7 @@ _thirdparty_get_reservation (ipmi_oem_state_data_t *state_data,
   /* Inventec 5441/Dell Xanadu II OEM
    * Inventec 5442/Dell Xanadu III OEM
    * Quanta S99Q/Dell FS12-TY OEM
+   * Wistron/Dell Poweredge C6220
    *
    * Get Reservation Request
    *
@@ -74,8 +272,11 @@ _thirdparty_get_reservation (ipmi_oem_state_data_t *state_data,
   assert (state_data);
   assert (reservation_id);
   assert (IPMI_CMD_OEM_INVENTEC_RESERVED_EXTENDED_CONFIGURATION == IPMI_CMD_OEM_QUANTA_RESERVED_EXTENDED_CONFIGURATION);
+  assert (IPMI_CMD_OEM_INVENTEC_RESERVED_EXTENDED_CONFIGURATION == IPMI_CMD_OEM_WISTRON_RESERVED_EXTENDED_CONFIGURATION);
   assert (IPMI_NET_FN_OEM_INVENTEC_GENERIC_RQ == IPMI_NET_FN_OEM_QUANTA_GENERIC_RQ);
+  assert (IPMI_NET_FN_OEM_INVENTEC_GENERIC_RQ == IPMI_NET_FN_OEM_WISTRON_GENERIC_RQ);
   assert (IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS == IPMI_NET_FN_OEM_QUANTA_GENERIC_RS);
+  assert (IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS == IPMI_NET_FN_OEM_WISTRON_GENERIC_RS);
 
   bytes_rq[0] = IPMI_CMD_OEM_INVENTEC_RESERVED_EXTENDED_CONFIGURATION;
 
@@ -127,16 +328,22 @@ ipmi_oem_thirdparty_get_extended_config_value (ipmi_oem_state_data_t *state_data
   assert (state_data);
   assert (value_return_length == 1
           || value_return_length == 2
+          || value_return_length == 3
           || value_return_length == 4);
   assert (value);
   assert (IPMI_CMD_OEM_INVENTEC_GET_EXTENDED_CONFIGURATION == IPMI_CMD_OEM_QUANTA_GET_EXTENDED_CONFIGURATION);
+  assert (IPMI_CMD_OEM_INVENTEC_GET_EXTENDED_CONFIGURATION == IPMI_CMD_OEM_WISTRON_GET_EXTENDED_CONFIGURATION);
   assert (IPMI_NET_FN_OEM_INVENTEC_GENERIC_RQ == IPMI_NET_FN_OEM_QUANTA_GENERIC_RQ);
+  assert (IPMI_NET_FN_OEM_INVENTEC_GENERIC_RQ == IPMI_NET_FN_OEM_WISTRON_GENERIC_RQ);
   assert (IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS == IPMI_NET_FN_OEM_QUANTA_GENERIC_RS);
+  assert (IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS == IPMI_NET_FN_OEM_WISTRON_GENERIC_RS);
   assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_READ_ALL_BYTES == IPMI_OEM_QUANTA_EXTENDED_CONFIG_READ_ALL_BYTES);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_READ_ALL_BYTES == IPMI_OEM_WISTRON_EXTENDED_CONFIG_READ_ALL_BYTES);
 
   /* Inventec 5441/Dell Xanadu II OEM
    * Inventec 5442/Dell Xanadu III OEM
    * Quanta S99Q/Dell FS12-TY OEM
+   * Wistron/Dell Poweredge C6220
    *
    * Get Extended Configuration Request
    *
@@ -205,6 +412,12 @@ ipmi_oem_thirdparty_get_extended_config_value (ipmi_oem_state_data_t *state_data
       (*value) = bytes_rs[6];
       (*value) |= (bytes_rs[7] << 8);
     }
+  else if (value_return_length == 3)
+    {
+      (*value) = bytes_rs[6];
+      (*value) |= (bytes_rs[7] << 8);
+      (*value) |= (bytes_rs[8] << 16);
+    }
   else
     {
       (*value) = bytes_rs[6];
@@ -236,13 +449,18 @@ ipmi_oem_thirdparty_get_extended_config_string (ipmi_oem_state_data_t *state_dat
   assert (buf);
   assert (buflen);
   assert (IPMI_CMD_OEM_INVENTEC_GET_EXTENDED_CONFIGURATION == IPMI_CMD_OEM_QUANTA_GET_EXTENDED_CONFIGURATION);
+  assert (IPMI_CMD_OEM_INVENTEC_GET_EXTENDED_CONFIGURATION == IPMI_CMD_OEM_WISTRON_GET_EXTENDED_CONFIGURATION);
   assert (IPMI_NET_FN_OEM_INVENTEC_GENERIC_RQ == IPMI_NET_FN_OEM_QUANTA_GENERIC_RQ);
+  assert (IPMI_NET_FN_OEM_INVENTEC_GENERIC_RQ == IPMI_NET_FN_OEM_WISTRON_GENERIC_RQ);
   assert (IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS == IPMI_NET_FN_OEM_QUANTA_GENERIC_RS);
+  assert (IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS == IPMI_NET_FN_OEM_WISTRON_GENERIC_RS);
   assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_READ_ALL_BYTES == IPMI_OEM_QUANTA_EXTENDED_CONFIG_READ_ALL_BYTES);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_READ_ALL_BYTES == IPMI_OEM_WISTRON_EXTENDED_CONFIG_READ_ALL_BYTES);
 
   /* Inventec 5441/Dell Xanadu II OEM
    * Inventec 5442/Dell Xanadu III OEM
    * Quanta S99Q/Dell FS12-TY OEM
+   * Wistron/Dell Poweredge C6220
    *
    * Get Extended Configuration Request
    *
@@ -354,15 +572,21 @@ ipmi_oem_thirdparty_set_extended_config_value (ipmi_oem_state_data_t *state_data
   assert (state_data);
   assert (value_length == 1
           || value_length == 2
+          || value_length == 3
           || value_length == 4);
   assert (IPMI_CMD_OEM_INVENTEC_SET_EXTENDED_CONFIGURATION == IPMI_CMD_OEM_QUANTA_SET_EXTENDED_CONFIGURATION);
+  assert (IPMI_CMD_OEM_INVENTEC_SET_EXTENDED_CONFIGURATION == IPMI_CMD_OEM_WISTRON_SET_EXTENDED_CONFIGURATION);
   assert (IPMI_NET_FN_OEM_INVENTEC_GENERIC_RQ == IPMI_NET_FN_OEM_QUANTA_GENERIC_RQ);
+  assert (IPMI_NET_FN_OEM_INVENTEC_GENERIC_RQ == IPMI_NET_FN_OEM_WISTRON_GENERIC_RQ);
   assert (IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS == IPMI_NET_FN_OEM_QUANTA_GENERIC_RS);
+  assert (IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS == IPMI_NET_FN_OEM_WISTRON_GENERIC_RS);
   assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_READ_ALL_BYTES == IPMI_OEM_QUANTA_EXTENDED_CONFIG_READ_ALL_BYTES);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_READ_ALL_BYTES == IPMI_OEM_WISTRON_EXTENDED_CONFIG_READ_ALL_BYTES);
 
   /* Inventec 5441/Dell Xanadu II OEM
    * Inventec 5442/Dell Xanadu III OEM
    * Quanta S99Q/Dell FS12-TY OEM
+   * Wistron/Dell Poweredge C6220
    *
    * Set Extended Configuration Request
    *
@@ -402,6 +626,12 @@ ipmi_oem_thirdparty_set_extended_config_value (ipmi_oem_state_data_t *state_data
     {
       bytes_rq[8] = (value & 0x000000FF);
       bytes_rq[9] = (value & 0x0000FF00) >> 8;
+    }
+  else if (value_length == 3)
+    {
+      bytes_rq[8] = (value & 0x000000FF);
+      bytes_rq[9] = (value & 0x0000FF00) >> 8;
+      bytes_rq[10] = (value & 0x00FF0000) >> 16;
     }
   else
     {
@@ -457,13 +687,18 @@ ipmi_oem_thirdparty_set_extended_config_string (ipmi_oem_state_data_t *state_dat
   assert (state_data);
   assert (buf);
   assert (IPMI_CMD_OEM_INVENTEC_SET_EXTENDED_CONFIGURATION == IPMI_CMD_OEM_QUANTA_SET_EXTENDED_CONFIGURATION);
+  assert (IPMI_CMD_OEM_INVENTEC_SET_EXTENDED_CONFIGURATION == IPMI_CMD_OEM_WISTRON_SET_EXTENDED_CONFIGURATION);
   assert (IPMI_NET_FN_OEM_INVENTEC_GENERIC_RQ == IPMI_NET_FN_OEM_QUANTA_GENERIC_RQ);
+  assert (IPMI_NET_FN_OEM_INVENTEC_GENERIC_RQ == IPMI_NET_FN_OEM_WISTRON_GENERIC_RQ);
   assert (IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS == IPMI_NET_FN_OEM_QUANTA_GENERIC_RS);
+  assert (IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS == IPMI_NET_FN_OEM_WISTRON_GENERIC_RS);
   assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_READ_ALL_BYTES == IPMI_OEM_QUANTA_EXTENDED_CONFIG_READ_ALL_BYTES);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_READ_ALL_BYTES == IPMI_OEM_WISTRON_EXTENDED_CONFIG_READ_ALL_BYTES);
 
   /* Inventec 5441/Dell Xanadu II OEM
    * Inventec 5442/Dell Xanadu III OEM
    * Quanta S99Q/Dell FS12-TY OEM
+   * Wistron/Dell Poweredge C6220
    *
    * Set Extended Configuration Request
    *
@@ -539,13 +774,18 @@ ipmi_oem_thirdparty_get_nic_mode (ipmi_oem_state_data_t *state_data)
   assert (state_data);
   assert (!state_data->prog_data->args->oem_options_count);
   assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_NIC == IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_NIC);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_NIC == IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_NIC);
   assert (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_NIC_MODE == IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_NIC_MODE);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_NIC_MODE == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_NIC_SELECTION);
   assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_NIC_MODE_SHARED == IPMI_OEM_QUANTA_EXTENDED_CONFIG_NIC_MODE_SHARED);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_NIC_MODE_SHARED == IPMI_OEM_WISTRON_EXTENDED_CONFIG_NIC_MODE_SHARED);
   assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_NIC_MODE_DEDICATED == IPMI_OEM_QUANTA_EXTENDED_CONFIG_NIC_MODE_DEDICATED);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_NIC_MODE_DEDICATED == IPMI_OEM_WISTRON_EXTENDED_CONFIG_NIC_MODE_DEDICATED);
 
   /* Inventec 5441/Dell Xanadu II OEM
    * Inventec 5442/Dell Xanadu III OEM
    * Quanta S99Q/Dell FS12-TY OEM
+   * Wistron/Dell Poweredge C6220
    *
    * achu: For Inventec 5441/Dell Xanadu II, Dell appears to have also
    * implemented an additional OEM command that duplicates this
@@ -600,9 +840,13 @@ ipmi_oem_thirdparty_set_nic_mode (ipmi_oem_state_data_t *state_data)
   assert (state_data);
   assert (state_data->prog_data->args->oem_options_count == 1);
   assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_NIC == IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_NIC);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_NIC == IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_NIC);
   assert (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_NIC_MODE == IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_NIC_MODE);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_NIC_MODE == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_NIC_SELECTION);
   assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_NIC_MODE_SHARED == IPMI_OEM_QUANTA_EXTENDED_CONFIG_NIC_MODE_SHARED);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_NIC_MODE_SHARED == IPMI_OEM_WISTRON_EXTENDED_CONFIG_NIC_MODE_SHARED);
   assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_NIC_MODE_DEDICATED == IPMI_OEM_QUANTA_EXTENDED_CONFIG_NIC_MODE_DEDICATED);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_NIC_MODE_DEDICATED == IPMI_OEM_WISTRON_EXTENDED_CONFIG_NIC_MODE_DEDICATED);
 
   if (strcasecmp (state_data->prog_data->args->oem_options[0], "shared")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "dedicated"))
@@ -619,6 +863,7 @@ ipmi_oem_thirdparty_set_nic_mode (ipmi_oem_state_data_t *state_data)
   /* Inventec 5441/Dell Xanadu II OEM
    * Inventec 5442/Dell Xanadu III OEM
    * Quanta S99Q/Dell FS12-TY OEM
+   * Wistron/Dell Poweredge C6220
    *
    * achu: For Inventec 5441/Dell Xanadu II, Dell appears to have also
    * implemented an additional OEM command that duplicates this
@@ -667,7 +912,9 @@ ipmi_oem_thirdparty_get_bmc_services_bitmask (ipmi_oem_state_data_t *state_data,
   assert (state_data);
   assert (services);
   assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_SECURITY == IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_SECURITY);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_SECURITY == IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_SECURITY);
   assert (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_SECURITY_SERVICE_DISABLED == IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_SECURITY_SERVICE_DISABLED);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_SECURITY_SERVICE_DISABLED == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SECURITY_SERVICE_DISABLED);
 
   if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
 						     IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_SECURITY,
@@ -693,9 +940,9 @@ ipmi_oem_thirdparty_get_bmc_services_v1 (ipmi_oem_state_data_t *state_data)
   assert (state_data);
   assert (!state_data->prog_data->args->oem_options_count);
   assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_ALL == IPMI_OEM_QUANTA_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_ALL);
-  assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_KVM == IPMI_OEM_QUANTA_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_KVM);
-  assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_HTTP == IPMI_OEM_QUANTA_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_HTTP);
-  assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SSH == IPMI_OEM_QUANTA_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SSH);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_KVM_VIRTUAL_STORAGE == IPMI_OEM_QUANTA_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_KVM_VIRTUAL_STORAGE);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_HTTP_HTTPS == IPMI_OEM_QUANTA_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_HTTP_HTTPS);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SSH_TELNET == IPMI_OEM_QUANTA_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SSH_TELNET);
 
   if (ipmi_oem_thirdparty_get_bmc_services_bitmask (state_data, &services) < 0)
     goto cleanup;
@@ -711,11 +958,11 @@ ipmi_oem_thirdparty_get_bmc_services_v1 (ipmi_oem_state_data_t *state_data)
           pstdout_printf (state_data->pstate, "All services except IPMI disabled\n");
           goto out;
         }
-      if (services & IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_KVM)
+      if (services & IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_KVM_VIRTUAL_STORAGE)
         pstdout_printf (state_data->pstate, "KVM/Virtual Storage disabled\n");
-      if (services & IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_HTTP)
+      if (services & IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_HTTP_HTTPS)
         pstdout_printf (state_data->pstate, "HTTP/HTTPS disabled\n");
-      if (services & IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SSH)
+      if (services & IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SSH_TELNET)
         pstdout_printf (state_data->pstate, "SSH/Telnet disabled\n");
     }
   else
@@ -738,9 +985,9 @@ ipmi_oem_thirdparty_set_bmc_services_v1 (ipmi_oem_state_data_t *state_data)
   assert (state_data->prog_data->args->oem_options_count == 2);
   assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_ENABLE_ALL == IPMI_OEM_QUANTA_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_ENABLE_ALL);
   assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_ALL == IPMI_OEM_QUANTA_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_ALL);
-  assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_KVM == IPMI_OEM_QUANTA_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_KVM);
-  assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_HTTP == IPMI_OEM_QUANTA_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_HTTP);
-  assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SSH == IPMI_OEM_QUANTA_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SSH);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_KVM_VIRTUAL_STORAGE == IPMI_OEM_QUANTA_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_KVM_VIRTUAL_STORAGE);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_HTTP_HTTPS == IPMI_OEM_QUANTA_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_HTTP_HTTPS);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SSH_TELNET == IPMI_OEM_QUANTA_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SSH_TELNET);
   assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_SECURITY == IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_SECURITY);
   assert (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_SECURITY_SERVICE_DISABLED == IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_SECURITY_SERVICE_DISABLED);
 
@@ -790,31 +1037,31 @@ ipmi_oem_thirdparty_set_bmc_services_v1 (ipmi_oem_state_data_t *state_data)
         {
           /* clear out "all" bit, and replace with remaining bits */
           services &= (~IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_ALL);
-          services |= IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_KVM;
-          services |= IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_HTTP;
-          services |= IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SSH;
+          services |= IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_KVM_VIRTUAL_STORAGE;
+          services |= IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_HTTP_HTTPS;
+          services |= IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SSH_TELNET;
         }
 
       if (!strcasecmp (state_data->prog_data->args->oem_options[1], "kvm"))
         {
           if (enable)
-            services &= (~IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_KVM);
+            services &= (~IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_KVM_VIRTUAL_STORAGE);
           else
-            services |= IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_KVM;
+            services |= IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_KVM_VIRTUAL_STORAGE;
         }
       else if (!strcasecmp (state_data->prog_data->args->oem_options[1], "http"))
         {
           if (enable)
-            services &= (~IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_HTTP);
+            services &= (~IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_HTTP_HTTPS);
           else
-            services |= IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_HTTP;
+            services |= IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_HTTP_HTTPS;
         }
       else /* !strcasecmp (state_data->prog_data->args->oem_options[1], "ssh") */
         {
           if (enable)
-            services &= (~IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SSH);
+            services &= (~IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SSH_TELNET);
           else
-            services |= IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SSH;
+            services |= IPMI_OEM_INVENTEC_EXTENDED_CONFIG_SECURITY_SERVICES_DISABLED_BITMASK_SSH_TELNET;
         }
     }
 
@@ -846,12 +1093,19 @@ ipmi_oem_thirdparty_get_account_status (ipmi_oem_state_data_t *state_data)
   assert (state_data);
   assert (!state_data->prog_data->args->oem_options_count);
   assert (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_ACCOUNT_STATUS_USER_NAME == IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_ACCOUNT_STATUS_USER_NAME);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_ACCOUNT_STATUS_USER_NAME == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_ACCOUNT_STATUS_USER_NAME);
   assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_ACCOUNT_STATUS == IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_ACCOUNT_STATUS);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_ACCOUNT_STATUS == IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_ACCOUNT_STATUS);
   assert (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_ACCOUNT_STATUS_ACCOUNT_STATUS == IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_ACCOUNT_STATUS_ACCOUNT_STATUS);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_ACCOUNT_STATUS_ACCOUNT_STATUS == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_ACCOUNT_STATUS_ACCOUNT_STATUS);
   assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_ACCOUNT_STATUS_UNSPECIFIED == IPMI_OEM_QUANTA_EXTENDED_CONFIG_ACCOUNT_STATUS_UNSPECIFIED);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_ACCOUNT_STATUS_UNSPECIFIED == IPMI_OEM_WISTRON_EXTENDED_CONFIG_ACCOUNT_STATUS_UNSPECIFIED);
   assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_ACCOUNT_STATUS_ENABLED == IPMI_OEM_QUANTA_EXTENDED_CONFIG_ACCOUNT_STATUS_ENABLED);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_ACCOUNT_STATUS_ENABLED == IPMI_OEM_WISTRON_EXTENDED_CONFIG_ACCOUNT_STATUS_ENABLED);
   assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_ACCOUNT_STATUS_DISABLED == IPMI_OEM_QUANTA_EXTENDED_CONFIG_ACCOUNT_STATUS_DISABLED);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_ACCOUNT_STATUS_DISABLED == IPMI_OEM_WISTRON_EXTENDED_CONFIG_ACCOUNT_STATUS_DISABLED);
   assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_ACCOUNT_STATUS_LOCKOUT == IPMI_OEM_QUANTA_EXTENDED_CONFIG_ACCOUNT_STATUS_LOCKOUT);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIG_ACCOUNT_STATUS_LOCKOUT == IPMI_OEM_WISTRON_EXTENDED_CONFIG_ACCOUNT_STATUS_LOCKOUT);
 
   /* achu:
    *
@@ -1343,12 +1597,19 @@ ipmi_oem_thirdparty_get_web_server_config_v1 (ipmi_oem_state_data_t *state_data)
   assert (state_data);
   assert (!state_data->prog_data->args->oem_options_count);
   assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION == IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION == IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION);
   assert (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_ENABLED == IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_ENABLED);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_ENABLED == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_ENABLED);
   assert (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_MAX_WEB_SESSIONS == IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_MAX_WEB_SESSIONS);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_MAX_WEB_SESSIONS == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_MAX_WEB_SESSIONS);
   assert (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_ACTIVE_WEB_SESSIONS == IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_ACTIVE_WEB_SESSIONS);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_ACTIVE_WEB_SESSIONS == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_ACTIVE_WEB_SESSIONS);
   assert (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_TIMEOUT == IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_TIMEOUT);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_TIMEOUT == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_TIMEOUT);
   assert (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTP_PORT_NUM == IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTP_PORT_NUM);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTP_PORT_NUM == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTP_PORT_NUM);
   assert (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTPS_PORT_NUM == IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTPS_PORT_NUM);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTPS_PORT_NUM == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTPS_PORT_NUM);
 
   /* Inventec 5441/Dell Xanadu II OEM
    *
@@ -1471,10 +1732,15 @@ ipmi_oem_thirdparty_set_web_server_config_v1 (ipmi_oem_state_data_t *state_data)
 
   assert (state_data);
   assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION == IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION == IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION);
   assert (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_ENABLED == IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_ENABLED);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_ENABLED == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_ENABLED);
   assert (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_TIMEOUT == IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_TIMEOUT);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_TIMEOUT == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_WEB_SERVER_TIMEOUT);
   assert (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTP_PORT_NUM == IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTP_PORT_NUM);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTP_PORT_NUM == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTP_PORT_NUM);
   assert (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTPS_PORT_NUM == IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTPS_PORT_NUM);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTPS_PORT_NUM == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_HTTPS_PORT_NUM);
 
   /* Inventec 5441/Dell Xanadu II OEM
    *
@@ -1846,7 +2112,9 @@ ipmi_oem_thirdparty_get_sol_idle_timeout (ipmi_oem_state_data_t *state_data)
   assert (state_data);
   assert (!state_data->prog_data->args->oem_options_count);
   assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_SOL == IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_SOL);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_SOL == IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_SOL);
   assert (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_SOL_SOL_IDLE_TIMEOUT == IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_SOL_SOL_IDLE_TIMEOUT);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_SOL_SOL_IDLE_TIMEOUT == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_SOL_IDLE_TIMEOUT);
 
   if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
 						     IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_SOL,
@@ -1857,11 +2125,11 @@ ipmi_oem_thirdparty_get_sol_idle_timeout (ipmi_oem_state_data_t *state_data)
     goto cleanup;
   
   timeout = tmpvalue;
-
+  
   pstdout_printf (state_data->pstate,
                   "%u minutes\n",
                   timeout);
-
+  
   rv = 0;
  cleanup:
   return (rv);
@@ -1876,7 +2144,9 @@ ipmi_oem_thirdparty_set_sol_idle_timeout (ipmi_oem_state_data_t *state_data)
   assert (state_data);
   assert (state_data->prog_data->args->oem_options_count == 1);
   assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_SOL == IPMI_OEM_QUANTA_EXTENDED_CONFIGURATION_ID_SOL);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_SOL == IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_SOL);
   assert (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_SOL_SOL_IDLE_TIMEOUT == IPMI_OEM_QUANTA_EXTENDED_ATTRIBUTE_ID_SOL_SOL_IDLE_TIMEOUT);
+  assert (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_SOL_SOL_IDLE_TIMEOUT == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_SOL_IDLE_TIMEOUT);
 
   if (strcasecmp (state_data->prog_data->args->oem_options[0], "none"))
     {
