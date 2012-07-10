@@ -82,8 +82,11 @@ int ipmi_oem_wistron_set_ssh_redirect_function (ipmi_oem_state_data_t *state_dat
 int ipmi_oem_wistron_get_chassis_power_readings (ipmi_oem_state_data_t *state_data);
 #endif
 
+#if 0
+/* can't verify - doesn't appear to work */
 int ipmi_oem_wistron_get_chassis_led_status (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_wistron_set_chassis_led_status (ipmi_oem_state_data_t *state_data);
+#endif
 
 int ipmi_oem_wistron_get_dhcp_retry (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_wistron_set_dhcp_retry (ipmi_oem_state_data_t *state_data);
@@ -91,6 +94,9 @@ int ipmi_oem_wistron_set_dhcp_retry (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_wistron_get_link_status_change_control (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_wistron_set_link_status_change_control (ipmi_oem_state_data_t *state_data);
 
+#if 0
+/* can't verify - doesn't appear to work */
 int ipmi_oem_wistron_reset_to_defaults (ipmi_oem_state_data_t *state_data);
+#endif
 
 #endif /* IPMI_OEM_WISTRON_H */

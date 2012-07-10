@@ -1781,6 +1781,8 @@ int
 ipmi_oem_wistron_set_ipv6_trap_settings (ipmi_oem_state_data_t *state_data)
 {
   uint32_t tmpvalue;
+  char *endptr = NULL;
+  unsigned int indextmp;
   uint8_t index;
   uint32_t ipv6snmptrapdestinationsetting;
   uint8_t destination_type;
@@ -1809,14 +1811,22 @@ ipmi_oem_wistron_set_ipv6_trap_settings (ipmi_oem_state_data_t *state_data)
     }
 
   /* first field is the index, get that first */
-  if (ipmi_oem_parse_key_value (state_data,
-				0,
-				&key,
-				&value) < 0)
-    goto cleanup;
+  errno = 0;
+  indextmp = strtoul (state_data->prog_data->args->oem_options[0], &endptr, 0);
+  if (errno
+      || endptr[0] != '\0'
+      || indextmp > UCHAR_MAX)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "%s:%s invalid OEM option argument '%s'\n",
+		       state_data->prog_data->args->oem_id,
+		       state_data->prog_data->args->oem_command,
+		       state_data->prog_data->args->oem_options[0]);
+      goto cleanup;
+    }
 
-  if (ipmi_oem_parse_1_byte_field (state_data, 0, value, &index) < 0)
-    goto cleanup;
+  index = indextmp;
 
   /* now compare to the number of destinations */
 
@@ -2690,7 +2700,7 @@ ipmi_oem_wistron_set_dhcp_retry (ipmi_oem_state_data_t *state_data)
   retry_interval = value;
 
   errno = 0;
-  value = strtoul (state_data->prog_data->args->oem_options[1], &endptr, 0);
+  value = strtoul (state_data->prog_data->args->oem_options[2], &endptr, 0);
   if (errno
       || endptr[0] != '\0'
       || value > UCHAR_MAX)
@@ -2700,7 +2710,7 @@ ipmi_oem_wistron_set_dhcp_retry (ipmi_oem_state_data_t *state_data)
 		       "%s:%s invalid OEM option argument '%s'\n",
 		       state_data->prog_data->args->oem_id,
 		       state_data->prog_data->args->oem_command,
-		       state_data->prog_data->args->oem_options[1]);
+		       state_data->prog_data->args->oem_options[2]);
       goto cleanup;
     }
   
@@ -3045,13 +3055,16 @@ ipmi_oem_wistron_reset_to_defaults (ipmi_oem_state_data_t *state_data)
     bytes_rq[1] |= IPMI_OEM_WISTRON_RESET_TO_DEFAULTS_PEF_BITMASK;
 
   /* We are only resetting user components, don't care about satellite controllers */
+#if 0
+  /* achu: guess shouldn't set? */
   bytes_rq[2] = 0;
+#endif
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
                               IPMI_NET_FN_OEM_WISTRON_GENERIC_RQ, /* network function */
                               bytes_rq, /* data */
-                              3, /* num bytes */
+                              2, /* num bytes */
                               bytes_rs,
                               IPMI_OEM_MAX_BYTES)) < 0)
     {

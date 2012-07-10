@@ -1294,6 +1294,8 @@ struct ipmi_oem_command oem_wistron[] =
       ipmi_oem_wistron_get_chassis_power_readings
     },
 #endif
+#if 0
+/* can't verify - doesn't appear to work */
     {
       "get-chassis-led-status",
       NULL,
@@ -1308,6 +1310,7 @@ struct ipmi_oem_command oem_wistron[] =
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_wistron_set_chassis_led_status
     },
+#endif
     {
       "get-dhcp-retry",
       NULL,
@@ -1336,7 +1339,8 @@ struct ipmi_oem_command oem_wistron[] =
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_wistron_set_link_status_change_control
     },
-
+#if 0
+/* can't verify - doesn't appear to work */
     {
       "reset-to-defaults",
       "<all|user|lan|sol|serial|pef>",
@@ -1344,6 +1348,7 @@ struct ipmi_oem_command oem_wistron[] =
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_wistron_reset_to_defaults
     },
+#endif
     {
       NULL,
       NULL,
