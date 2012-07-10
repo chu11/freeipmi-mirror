@@ -1210,8 +1210,8 @@ struct ipmi_oem_command oem_wistron[] =
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_wistron_user_default_setting
     },
-    {
 #endif
+    {
       "get-ipv6-settings",
       NULL,
       0,
