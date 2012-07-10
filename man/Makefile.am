@@ -15,6 +15,7 @@ man5_MANS = \
 	ipmipower.conf.5 \
 	ipmimonitoring_sensors.conf.5 \
 	ipmimonitoring.conf.5 \
+	ipmiseld.conf.5 \
 	ipmi_monitoring_sensors.conf.5 \
 	libipmiconsole.conf.5 \
 	libipmimonitoring.conf.5
@@ -44,6 +45,7 @@ man8_MANS = \
 	ipmidetectd.8 \
 	ipmiping.8 \
 	ipmipower.8 \
+	ipmiseld.8 \
 	rmcpping.8 \
 	ipmi-console.8 \
 	ipmi-detect.8 \
