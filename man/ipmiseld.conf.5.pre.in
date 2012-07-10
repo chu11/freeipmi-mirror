@@ -1,0 +1,205 @@
+.\"#############################################################################
+.\"$Id: ipmiseld.conf.5.pre.in,v 1.15 2010-02-08 22:02:30 chu11 Exp $
+.\"#############################################################################
+.\"  Copyright (C) 2012 Lawrence Livermore National Security, LLC.
+.\"  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
+.\"  Written by Albert Chu <chu11@llnl.gov>
+.\"  LLNL-CODE-559172
+.\"  
+.\"  This file is part of Ipmiseld, an IPMI SEL syslog logging daemon.
+.\"  For details, see http://www.llnl.gov/linux/.
+.\"
+.\"  Ipmiseld is free software; you can redistribute it and/or modify it under
+.\"  the terms of the GNU General Public License as published by the Free
+.\"  Software Foundation; either version 3 of the License, or (at your option)
+.\"  any later version.
+.\"  
+.\"  Ipmiseld is distributed in the hope that it will be useful, but WITHOUT 
+.\"  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+.\"  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License 
+.\"  for more details.
+.\"  
+.\"  You should have received a copy of the GNU General Public License along
+.\"  with Ipmiseld.  If not, see <http://www.gnu.org/licenses/>.
+.\"#############################################################################
+.TH ipmiseld.conf 5 "@ISODATE@" "ipmiseld.conf @VERSION@" "ipmiseld.conf"
+.SH "NAME"
+ipmiseld.conf \- ipmiseld configuration file
+.SH "DESCRIPTION"
+The 
+.B ipmiseld
+configuration file configures the 
+.B ipmiseld
+daemon.
+.LP
+The default configuration file loaded is @IPMISELD_CONFIG_FILE_DEFAULT@. 
+.LP
+The configuration options that can be specified in the configuration
+file are listed below.  Each configuration option must be listed on a
+separate line.  Arguments for an option are separated by any amount of
+whitespace.  Multiple arguments are also separated by whitespace.
+Comments can be marked by using the pound sign ("#") character, and
+lines can be continued on the next using backslash ("\\").
+.LP
+Note that it is possible to list the username, password and other
+potentially sensitive information in the configuration file.  If this
+data is stored in a configuration file, system administrators should
+limit access to this file.
+
+.SH "IPMISELD CONFIGURATION OPTIONS"
+.TP
+\fBdriver\-type\fR \fIIPMIDRIVER\fR
+Specify the driver type to use.  
+.TP
+\fBdisable\-auto\-probe\fR \fIENABLE|DISABLE\fR
+Specify if IPMI devices should be probed for settings.
+.TP
+\fBdriver\-address\fR \fIDRIVER-ADDRESS\fR
+Specify the in-band driver address to use.
+.TP
+\fBdriver\-device\fR \fIDEVICE\fR
+Specify the in-band driver device path to use.
+.TP
+\fBregister\-spacing\fR \fIREGISTER\-SPACING\fR
+Specify the in-band driver register spacing to use.
+.TP
+\fBtarget\-channel\-number\fR \fICHANNEL\-NUMBER\FR
+Specify the in-band driver target channel number.
+.TP
+\fBtarget\-slave\-address\fR \fISLAVE\-ADDRESS\FR
+Specify the in-band driver target slave address.
+.TP
+\fBhostname\fR \fIIPMIHOST1,IPMIHOST2,...\fR
+Specify the remote host(s) to communicate with.  Multiple hostnames may
+be separated by comma or may be specified in a range format.
+.TP
+\fBusername\fR \fIUSERNAME\fR
+Specify the username to use.
+.TP
+\fBpassword\fR \fIPASSWORD\fR
+Specify the password to use.
+.TP
+\fBk_g\fR \fIstr\fR
+Specify the BMC key (K_g) to use.  Prefix with '0x' to enter
+the key in hex.
+.TP
+\fBsession\-timeout\fR \fIMILLISECONDS\fR
+Specify the session timeout length to use in milliseconds.
+.TP
+\fBretransmission\-timeout\fR \fIMILLISECONDS\fR
+Specify the retransmission timeout length to use in
+milliseconds.
+.TP
+\fBauthentication\-type\fR \fIAUTHENTICATION\-TYPE\fR
+Specify the authentication type to use.  The following
+authentication types are supported: NONE, STRAIGHT_PASSWORD_KEY, MD2,
+and MD5.
+.TP
+\fBcipher\-suite\-id\fR \fICIPHER\-SUITE\-ID\fR
+Specify the cipher suite id to use.  The following cipher suite
+ids are supported: 0, 1, 2, 3, 6, 7, 8, 11, 12.
+.TP
+\fBprivilege\-level\fR \fIPRIVILEGE\-LEVEL\fR
+Specify the privilege type to use.  The following privilege
+levels are supported: USER, OPERATOR, ADMIN.
+.TP
+\fBworkaround\-flags\fR \fIWORKAROUNDS\fR
+Specify workaround flags to use.  Multiple workarounds can be
+specified separated by whitespace.  Please see tool manpages for
+details about available workarounds for each tool.  The following
+workarounds are supported: assumeio, spinpoll, idzero, forcepermsg,
+unexpectedauth, endianseq, authcap, intel20, supermicro20, sun20,
+opensesspriv, integritycheckvalue, assumesystemevent.
+.TP
+\fBverbose\-count\fR \fICOUNT\fR
+Specify default verbose count to use for
+.B ipmi-sel(8).
+.TP
+\fIsensors\-types\fR \fITYPE-LIST\fR
+Specify sensor types of SEL events to log.  Multiple types can be
+specified separated by whitespace.  Users may specify sensor types by
+string or by number (decimal or hex).  Please see
+.B ipmi-sel(8)
+\fI\-\-list\-types\fR option to see possible string input types.
+.TP
+\fIexclude\-sensor\-types\fR \fSENSOR-TYPES-LIST\fR
+Specify sensor types of SEL events to not log.  default sensor types
+to not show sensor outputs for.  Multiple sensor types can be
+specified separated by whitespace.  Users may specify sensor types by
+string or by number.  Please see
+.B ipmi-sel(8)
+\fI\-\-list\-types\fR option to see possible string input types.
+.TP
+\fBsystem\-event\-only\fR \fIENABLE|DISABLE\fR
+Specify if output should only include system event records.
+.TP
+\fBoem\-event\-only\fR \fIENABLE|DISABLE\fR
+Specify if output should only include OEM event records.
+.TP
+\fBevent\-state\-config\-file\fR \fIFILE\fR
+Specify the event state configuration file.
+.TP
+\fBinterpret\-oem\-data\fR \fIENABLE|DISABLE\fR
+Specify if
+.B ipmiseld
+should attempt to interpret OEM data or not.
+.TP
+\fBentity\-sensor\-names\fR \fIENABLE|DISABLE\fR
+Specify if output of sensor names should include entity ids and
+instances or not.
+.TP
+\fBnon\-abbreviated\-units\fR \fIENABLE|DISABLE\fR
+Specify if output should have units abbreviated by default or not.
+.TP
+\fBevent\-state\-filter\fR \fIFILTERSTRING\fR
+Specify event states to be filtered out and not logged.
+.TP
+\fB\-\-warning\-threshold\fR \fIPERCENTINT\fR
+Specify SEL fullness warning threshold as an integer percentage.
+.TP
+\fB\-\-clear\-threshold\fR \fIPERCENTINT\fR
+Specify SEL fullness clear threshold as an integer percentage.
+.TP
+\fBsystem\-event\-format\fR \fIFORMATSTRING\fR
+Specify the format of the log output when a SEL system event is
+encountered.
+.TP
+\fBoem\-timestamped\-event\-format\fR \fIFORMATSTRING\fR
+Specify the format of the log output when a SEL OEM timestamped event
+is encountered.
+.TP
+\fBoem\-non\-timestamped\-event\-format\fR \fIFORMATSTRING\fR
+Specify the format of the log output when a SEL OEM non-timestamped
+event is encountered.
+.TP
+\fBpoll\-interval\fR \fISECONDS\fR
+Specify the poll interval to check the SEL for new events.
+.TP
+\fBlog\-facility\fR \fISTRING\fR
+Specify the log facility to use.
+.TP
+\fBlog\-priority\fR \fISTRING\fR
+Specify the log priority to use.
+.TP
+\fBcache\-directory\fR \fIDIRECTORY\fR
+Specify the cache directory to use.
+.TP
+\fBignore\-sdr\fR \fIDISABLE\fR
+Specify if the SDR should be ignored. 
+.TP
+\fBre\-download\-sdr\fR \fIDISABLE\fR
+Specify if the SDR should be re-downloaded on start. 
+.TP
+\fBclear\-sel\fR \fIDISABLE\fR
+Specify if the SEL should be cleared on start.
+.TP
+\fBthreadpool\-count\fR \fINUM\fR
+Specify the threadpool count for parallel SEL polling.
+.SH "FILES"
+@IPMISELD_CONFIG_FILE_DEFAULT@
+#include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
+.SH COPYRIGHT
+Copyright (C) 2012 Lawrence Livermore National Security, LLC.
+.SH "SEE ALSO"
+ipmiseld(8), ipmi-sel(8)
+#include <@top_srcdir@/man/manpage-common-homepage.man>

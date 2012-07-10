@@ -4,7 +4,6 @@ ooo - priority code cleanup that should be done
 
 branches to merge
 -----------------
-ipmiseld
 
 to test
 -------
@@ -35,21 +34,6 @@ FreeIPMI new stuff
   - http://www.picmg.org/v2internal/specifications.htm
 - pmbus.org
   - doable via FreeIPMI?  Can pass through Smbus to PmBus to do power control monitoring?
-- ipmi-seld (***)
-  - log sel events to syslog/alternate log file
-    - work across cluster, configure w/ range of hosts
-    - need filtering thingie to remove messages you don't care about?
-    - mechanism/option to clear when SEL buffer full
-    - detect if SEL buffer cleared "out of band"
-    - must do safely w/o racing (i.e. w/ external clear/delete)
-      - using reservation IDs
-    - option to delete recordss as logged or not
-    - clear records on full or not
-    - mechanism to log last SEL event logged or not?
-      - or only log new SEL events?
-    - option allow user to specify format for log
-      - i.e. %h: %t - %e
-    - store caches in /var/cache? or use present ones
 - server simulator
   - support testing at scale
   - test larger set of corner cases, possibilities, workarounds, etc. 

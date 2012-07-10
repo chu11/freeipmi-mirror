@@ -89,11 +89,9 @@
 #include "debug-util.h"
 #include "secure.h"
 
-#define IPMI_SESSION_TIMEOUT         20000
-#define IPMI_RETRANSMISSION_TIMEOUT  1000
-#define IPMI_POLL_INTERVAL_USECS     10
+#define IPMI_POLL_INTERVAL_USECS             10
 
-#define GETHOSTBYNAME_AUX_BUFLEN     1024
+#define GETHOSTBYNAME_AUX_BUFLEN             1024
 extern int h_errno;
 
 static char *ipmi_errmsg[] =
@@ -549,8 +547,8 @@ ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
             password,
             strlen (password));
   ctx->io.outofband.privilege_level = privilege_level;
-  ctx->io.outofband.session_timeout = (session_timeout ? session_timeout : IPMI_SESSION_TIMEOUT);
-  ctx->io.outofband.retransmission_timeout = (retransmission_timeout ? retransmission_timeout : IPMI_RETRANSMISSION_TIMEOUT);
+  ctx->io.outofband.session_timeout = (session_timeout ? session_timeout : IPMI_SESSION_TIMEOUT_DEFAULT);
+  ctx->io.outofband.retransmission_timeout = (retransmission_timeout ? retransmission_timeout : IPMI_RETRANSMISSION_TIMEOUT_DEFAULT);
 
   if (ctx->io.outofband.retransmission_timeout >= ctx->io.outofband.session_timeout)
     {
@@ -704,8 +702,8 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
             strlen (password));
 
   ctx->io.outofband.privilege_level = privilege_level;
-  ctx->io.outofband.session_timeout = (session_timeout ? session_timeout : IPMI_SESSION_TIMEOUT);
-  ctx->io.outofband.retransmission_timeout = (retransmission_timeout ? retransmission_timeout : IPMI_RETRANSMISSION_TIMEOUT);
+  ctx->io.outofband.session_timeout = (session_timeout ? session_timeout : IPMI_SESSION_TIMEOUT_DEFAULT);
+  ctx->io.outofband.retransmission_timeout = (retransmission_timeout ? retransmission_timeout : IPMI_RETRANSMISSION_TIMEOUT_DEFAULT);
 
   if (ctx->io.outofband.retransmission_timeout >= ctx->io.outofband.session_timeout)
     {

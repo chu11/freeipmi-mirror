@@ -57,6 +57,15 @@ Requires(preun): /sbin/chkconfig
 IPMI node detection daemon.  Regularly IPMI-pings remote nodes to
 provide data for a number of IPMI detection tools and features.
 
+%package ipmiseld
+Summary: IPMI SEL syslog logging daemon
+Group: Applications/System
+Requires: freeipmi = %{version}-%{release}
+Requires(post): /sbin/chkconfig
+Requires(preun): /sbin/chkconfig
+%description ipmiseld
+IPMI SEL syslog logging daemon.
+
 %if %{?_with_debug:1}%{!?_with_debug:0}
   %define _enable_debug --enable-debug --enable-trace
 %endif
@@ -80,6 +89,7 @@ if [[ "%{_sysconfdir}/init.d" != "%{_initrddir}" ]]
 then
 mv $RPM_BUILD_ROOT/%{_sysconfdir}/init.d/bmc-watchdog $RPM_BUILD_ROOT/%{_initrddir}/bmc-watchdog
 mv $RPM_BUILD_ROOT/%{_sysconfdir}/init.d/ipmidetectd $RPM_BUILD_ROOT/%{_initrddir}/ipmidetectd
+mv $RPM_BUILD_ROOT/%{_sysconfdir}/init.d/ipmiseld $RPM_BUILD_ROOT/%{_initrddir}/ipmiseld
 fi
 rm -f %{buildroot}%{_infodir}/dir
 # kludge to get around rpmlint complaining about 0 length semephore file
@@ -164,6 +174,36 @@ if [ "$1" = 0 ]; then
           %{_initrddir}/ipmidetectd stop
        fi
        /sbin/chkconfig --del ipmidetectd
+    fi
+fi
+
+%post ipmiseld
+if [ "$1" = 1 ]; then
+   if [ -x %{_initrddir}/ipmiseld ]; then
+      /sbin/chkconfig --add ipmiseld
+      /sbin/chkconfig ipmiseld off
+   fi
+fi
+if [ $1 -ge 1 ]; then
+   if [ -x %{_initrddir}/ipmiseld ]; then
+      if %{_initrddir}/ipmiseld status | grep -q running; then
+         %{_initrddir}/ipmiseld restart
+      else
+         %{_initrddir}/ipmiseld condrestart
+      fi
+   fi
+fi
+
+%preun ipmiseld
+#
+# Stop ipmiseld if it is running 
+#
+if [ "$1" = 0 ]; then
+    if [ -x %{_initrddir}/ipmiseld ]; then
+       if %{_initrddir}/ipmiseld status | grep -q running; then
+          %{_initrddir}/ipmiseld stop
+       fi
+       /sbin/chkconfig --del ipmiseld
     fi
 fi
 
@@ -369,7 +409,22 @@ fi
 %{_mandir}/man5/ipmidetectd.conf.5*
 %{_mandir}/man8/ipmidetectd.8*
 
+%files ipmiseld
+%defattr(-,root,root)
+%doc %{_datadir}/doc/%{name}/COPYING.ipmiseld
+%doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmiseld
+%config(noreplace) %{_initrddir}/ipmiseld
+%attr(0600,root,root) %config(noreplace) %{_sysconfdir}/freeipmi/ipmiseld.conf
+%{_sbindir}/ipmiseld
+%{_mandir}/man5/ipmiseld.conf.5*
+%{_mandir}/man8/ipmiseld.8*
+%dir %{_localstatedir}/cache/ipmiseld
+
 %changelog
+* Tue Jul 10 2012 Albert Chu <chu11@llnl.gov> 1.2.1
+- Add ipmiseld daemon and subpackage.
+- Update paths for libfreeipmi changes.
+
 * Mon May 3 2012 Albert Chu <chu11@llnl.gov> 1.2.1
 - Remove bmc-watchdog logrotate file.
 

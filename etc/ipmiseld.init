@@ -1,0 +1,113 @@
+#!/bin/sh
+# $Id: ipmiseld.init,v 1.1 2009-10-01 18:09:57 chu11 Exp $
+#
+# chkconfig: - 70 40
+# description: ipmiseld startup script
+#
+### BEGIN INIT INFO
+# Provides: ipmiseld
+# Required-Start: $network $remote_fs $syslog
+# Required-Stop:  $network $remote_fs $syslog
+# Default-Start:  3 5
+# Default-Stop:   0 1 2 6
+# Short-Description: Start and stop ipmidetectd
+# Description: IPMI SEL sylog logging daemon
+### END INIT INFO
+
+IPMISELD=/usr/sbin/ipmiseld
+IPMISELD_CONF=/etc/freeipmi/ipmiseld.conf
+LOCKFILE=/var/lock/subsys/ipmiseld
+
+[ -f $IPMISELD ] || exit 5
+[ -f $IPMISELD_CONF ] || exit 6
+
+# Load Redhat or Suse appropriate libs
+if [ -f /etc/rc.d/init.d/functions ] ; then
+    . /etc/rc.d/init.d/functions
+    Xstart() {
+        daemon $IPMISELD
+        RETVAL=$?
+        echo
+        [ $RETVAL -eq 0 ] && touch $LOCKFILE
+    }
+    Xstop() {
+        killproc ipmiseld -TERM
+        RETVAL=$?
+        echo
+        [ $RETVAL -eq 0 ] && rm -f $LOCKFILE
+    }
+    Xstatus() {
+        status ipmiseld
+        RETVAL=$?
+        return $RETVAL
+    }
+    Xcondrestart() {
+        if test -e $LOCKFILE; then
+            $0 stop
+            $0 start
+            RETVAL=$?
+        fi
+    }
+    Xexit() {
+        exit $RETVAL
+    }
+elif [ -f /etc/rc.status ] ; then
+    . /etc/rc.status
+    Xstart() {
+        startproc $IPMISELD
+        rc_status -v
+    }
+    Xstop() {
+        killproc -TERM $IPMISELD
+        rc_status -v
+    }
+    Xstatus() {
+        echo -n "Checking for ipmiseld: "
+        checkproc $IPMISELD
+        rc_status -v
+    }
+    Xcondrestart() {
+        $0 status
+        if test $? = 0; then
+            $0 restart
+        else
+            rc_reset
+        fi
+        rc_status
+    }
+    Xexit() {
+        rc_exit
+    }
+else
+    echo "Unknown distribution type"
+    exit 1
+fi
+
+RETVAL=0
+
+case "$1" in
+   start)
+        echo -n "Starting ipmiseld: "
+        Xstatus >/dev/null 2>&1 && exit 0
+        Xstart
+        ;;
+  stop)
+        echo -n "Shutting down ipmiseld: "
+        Xstop
+        ;;
+  restart)
+        $0 stop
+        $0 start
+        RETVAL=$?
+        ;;
+  status)
+        Xstatus
+        ;;
+  condrestart|try-restart|force-reload)
+        Xcondrestart
+        ;;
+  *)
+        echo "Usage: $0 {start|stop|restart|status|condrestart|try-restart|force-reload}"
+        exit 2
+esac
+exit $RETVAL

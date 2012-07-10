@@ -174,6 +174,34 @@ _config_file_positive_int (conffile_t cf,
 }
 
 static int
+_config_file_percent_int (conffile_t cf,
+			  struct conffile_data *data,
+			  char *optionname,
+			  int option_type,
+			  void *option_ptr,
+			  int option_data,
+			  void *app_ptr,
+			  int app_data)
+{
+  unsigned int *value;
+
+  assert (data);
+  assert (optionname);
+  assert (option_ptr);
+
+  value = (unsigned int *)option_ptr;
+
+  if (data->intval < 0 || data->intval > 100)
+    {
+      fprintf (stderr, "Config File Error: invalid value for %s\n", optionname);
+      exit (EXIT_FAILURE);
+    }
+
+  *value = data->intval;
+  return (0);
+}
+
+static int
 _config_file_unsigned_int (conffile_t cf,
 			   struct conffile_data *data,
 			   char *optionname,
@@ -1154,6 +1182,54 @@ _config_file_ipmipower_ipmi_version (conffile_t cf,
   return (0);
 }
 
+static int
+_config_file_ipmiseld_sensor_types (conffile_t cf,
+                                    struct conffile_data *data,
+                                    char *optionname,
+                                    int option_type,
+                                    void *option_ptr,
+                                    int option_data,
+                                    void *app_ptr,
+                                    int app_data)
+{
+  struct config_file_data_ipmiseld *config_file_data;
+
+  assert (data);
+  assert (optionname);
+  assert (option_ptr);
+
+  config_file_data = (struct config_file_data_ipmiseld *)option_ptr;
+
+  return (_config_file_sensor_types (data,
+                                     optionname,
+                                     config_file_data->sensor_types,
+                                     &(config_file_data->sensor_types_length)));
+}
+
+static int
+_config_file_ipmiseld_exclude_sensor_types (conffile_t cf,
+                                            struct conffile_data *data,
+                                            char *optionname,
+                                            int option_type,
+                                            void *option_ptr,
+                                            int option_data,
+                                            void *app_ptr,
+                                            int app_data)
+{
+  struct config_file_data_ipmiseld *config_file_data;
+
+  assert (data);
+  assert (optionname);
+  assert (option_ptr);
+
+  config_file_data = (struct config_file_data_ipmiseld *)option_ptr;
+
+  return (_config_file_sensor_types (data,
+                                     optionname,
+                                     config_file_data->exclude_sensor_types,
+                                     &(config_file_data->exclude_sensor_types_length)));
+}
+
 static void
 _ignore_options (struct conffile_option *options, unsigned int options_len)
 {
@@ -1344,6 +1420,9 @@ config_file_parse (const char *filename,
 
   struct config_file_data_ipmipower ipmipower_data;
   struct config_file_data_ipmipower *ipmipower_data_ptr;
+
+  struct config_file_data_ipmiseld ipmiseld_data;
+  struct config_file_data_ipmiseld *ipmiseld_data_ptr;
 
   struct common_cmd_args_config common_cmd_args_config;
 
@@ -4545,6 +4624,287 @@ config_file_parse (const char *filename,
       },
     };
 
+  /*
+   * Ipmiseld
+   */
+  struct conffile_option ipmiseld_options[] =
+    {
+      {
+	"hostname",
+	CONFFILE_OPTION_STRING,
+        -1,
+        _config_file_string,
+        1,
+        0,
+        &(ipmiseld_data.hostname_count),
+        &(ipmiseld_data.hostname),
+      },
+      {
+        "verbose-count",
+        CONFFILE_OPTION_INT,
+        -1,
+        _config_file_unsigned_int,
+        1,
+        0,
+        &(ipmiseld_data.verbose_count_count),
+        &(ipmiseld_data.verbose_count),
+        0,
+      },
+      {
+        "sensor-types",
+        CONFFILE_OPTION_LIST_STRING,
+        -1,
+        _config_file_ipmiseld_sensor_types,
+        1,
+        0,
+        &(ipmiseld_data.sensor_types_count),
+        &(ipmiseld_data),
+        0,
+      },
+      {
+        "exclude-sensor-types",
+        CONFFILE_OPTION_LIST_STRING,
+        -1,
+        _config_file_ipmiseld_exclude_sensor_types,
+        1,
+        0,
+        &(ipmiseld_data.exclude_sensor_types_count),
+        &(ipmiseld_data),
+        0,
+      },
+      {
+        "system-event-only",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        _config_file_bool,
+        1,
+        0,
+        &(ipmiseld_data.system_event_only_count),
+        &(ipmiseld_data.system_event_only),
+        0,
+      },
+      {
+        "oem-event-only",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        _config_file_bool,
+        1,
+        0,
+        &(ipmiseld_data.oem_event_only_count),
+        &(ipmiseld_data.oem_event_only),
+        0,
+      },
+      {
+        "event-state-config-file",
+        CONFFILE_OPTION_STRING,
+        -1,
+        _config_file_string,
+        1,
+        0,
+        &(ipmiseld_data.event_state_config_file_count),
+        &(ipmiseld_data.event_state_config_file),
+        0,
+      },
+      {
+        "interpret-oem-data",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        _config_file_bool,
+        1,
+        0,
+        &(ipmiseld_data.interpret_oem_data_count),
+        &(ipmiseld_data.interpret_oem_data),
+        0,
+      },
+      {
+        "output-oem-event-strings",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        _config_file_bool,
+        1,
+        0,
+        &(ipmiseld_data.output_oem_event_strings_count),
+        &(ipmiseld_data.output_oem_event_strings),
+        0,
+      },
+      {
+        "entity-sensor-names",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        _config_file_bool,
+        1,
+        0,
+        &(ipmiseld_data.entity_sensor_names_count),
+        &(ipmiseld_data.entity_sensor_names),
+        0,
+      },
+      {
+        "non-abbreviated-units",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        _config_file_bool,
+        1,
+        0,
+        &(ipmiseld_data.non_abbreviated_units_count),
+        &(ipmiseld_data.non_abbreviated_units),
+        0,
+      },
+      {
+	"event-state-filter",
+	CONFFILE_OPTION_STRING,
+	-1,
+	_config_file_string,
+	1,
+	0,
+	&(ipmiseld_data.event_state_filter_str_count),
+	&(ipmiseld_data.event_state_filter_str),
+	0,
+      },
+      {
+        "warning-threshold",
+        CONFFILE_OPTION_INT,
+        -1,
+	_config_file_percent_int,
+        1,
+        0,
+        &(ipmiseld_data.warning_threshold_count),
+        &(ipmiseld_data.warning_threshold),
+        0
+      },
+      {
+        "clear-threshold",
+        CONFFILE_OPTION_INT,
+        -1,
+	_config_file_percent_int,
+        1,
+        0,
+        &(ipmiseld_data.clear_threshold_count),
+        &(ipmiseld_data.clear_threshold),
+        0
+      },
+      {
+	"system-event-format",
+	CONFFILE_OPTION_STRING,
+	-1,
+	_config_file_string,
+	1,
+	0,
+	&(ipmiseld_data.system_event_format_str_count),
+	&(ipmiseld_data.system_event_format_str),
+	0,
+      },
+      {
+	"oem-timestamped-event-format",
+	CONFFILE_OPTION_STRING,
+	-1,
+	_config_file_string,
+	1,
+	0,
+	&(ipmiseld_data.oem_timestamped_event_format_str_count),
+	&(ipmiseld_data.oem_timestamped_event_format_str),
+	0,
+      },
+      {
+	"oem-non-timestamped-event-format",
+	CONFFILE_OPTION_STRING,
+	-1,
+	_config_file_string,
+	1,
+	0,
+	&(ipmiseld_data.oem_non_timestamped_event_format_str_count),
+	&(ipmiseld_data.oem_non_timestamped_event_format_str),
+	0,
+      },
+      {
+        "poll-interval",
+        CONFFILE_OPTION_INT,
+        -1,
+        _config_file_positive_unsigned_int,
+        1,
+        0,
+        &(ipmiseld_data.poll_interval_count),
+        &(ipmiseld_data.poll_interval),
+        0
+      },
+      {
+	"log-facility",
+	CONFFILE_OPTION_STRING,
+	-1,
+	_config_file_string,
+	1,
+	0,
+	&(ipmiseld_data.log_facility_str_count),
+	&(ipmiseld_data.log_facility_str),
+	0,
+      },
+      {
+	"log-priority",
+	CONFFILE_OPTION_STRING,
+	-1,
+	_config_file_string,
+	1,
+	0,
+	&(ipmiseld_data.log_priority_str_count),
+	&(ipmiseld_data.log_priority_str),
+	0,
+      },
+      {
+	"cache-directory",
+	CONFFILE_OPTION_STRING,
+	-1,
+	_config_file_string,
+	1,
+	0,
+	&(ipmiseld_data.cache_directory_count),
+	&(ipmiseld_data.cache_directory),
+	0,
+      },
+      {
+        "ignore-sdr",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        _config_file_bool,
+        1,
+        0,
+        &(ipmiseld_data.ignore_sdr_count),
+        &(ipmiseld_data.ignore_sdr),
+        0,
+      },
+      {
+        "re-download-sdr",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        _config_file_bool,
+        1,
+        0,
+        &(ipmiseld_data.re_download_sdr_count),
+        &(ipmiseld_data.re_download_sdr),
+        0,
+      },
+      {
+        "clear-sel",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        _config_file_bool,
+        1,
+        0,
+        &(ipmiseld_data.clear_sel_count),
+        &(ipmiseld_data.clear_sel),
+        0,
+      },
+      {
+        "threadpool-count",
+        CONFFILE_OPTION_INT,
+        -1,
+        _config_file_positive_unsigned_int,
+        1,
+        0,
+        &(ipmiseld_data.threadpool_count_count),
+        &(ipmiseld_data.threadpool_count),
+        0
+      },
+    };
+
   conffile_t cf = NULL;
   int rv = -1;
   int options_len;
@@ -4572,7 +4932,8 @@ config_file_parse (const char *filename,
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_SENSORS) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_SENSORS_CONFIG) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMICONSOLE) && tool_data)
-              || ((tool_support & CONFIG_FILE_TOOL_IPMIPOWER) && tool_data)));
+              || ((tool_support & CONFIG_FILE_TOOL_IPMIPOWER) && tool_data)
+              || ((tool_support & CONFIG_FILE_TOOL_IPMISELD) && tool_data)));
 
   memset (config_file_options, '\0', sizeof (struct conffile_option));
 
@@ -4830,6 +5191,17 @@ config_file_parse (const char *filename,
 
   config_file_options_len += options_len;
 
+  options_len = sizeof (ipmiseld_options)/sizeof (struct conffile_option);
+  if (!(tool_support & CONFIG_FILE_TOOL_IPMISELD))
+    _ignore_options (ipmiseld_options, options_len);
+
+  _copy_options (config_file_options,
+                 config_file_options_len,
+                 ipmiseld_options,
+                 options_len);
+
+  config_file_options_len += options_len;
+
   /* clear out config file data */
 
   memset (&bmc_config_data, '\0', sizeof (struct config_file_data_bmc_config));
@@ -4846,6 +5218,7 @@ config_file_parse (const char *filename,
   memset (&ipmi_sensors_config_data, '\0', sizeof (struct config_file_data_ipmi_sensors_config));
   memset (&ipmiconsole_data, '\0', sizeof (struct config_file_data_ipmiconsole));
   memset (&ipmipower_data, '\0', sizeof (struct config_file_data_ipmipower));
+  memset (&ipmiseld_data, '\0', sizeof (struct config_file_data_ipmiseld));
   memset (&common_cmd_args_config, '\0', sizeof (struct common_cmd_args_config));
 
   if (!(cf = conffile_handle_create ()))
@@ -5049,6 +5422,13 @@ config_file_parse (const char *filename,
       memcpy (ipmipower_data_ptr,
               &ipmipower_data,
               sizeof (struct config_file_data_ipmipower));
+    }
+  else if (tool_support & CONFIG_FILE_TOOL_IPMISELD)
+    {
+      ipmiseld_data_ptr = (struct config_file_data_ipmiseld *)tool_data;
+      memcpy (ipmiseld_data_ptr,
+              &ipmiseld_data,
+              sizeof (struct config_file_data_ipmiseld));
     }
 
  out:

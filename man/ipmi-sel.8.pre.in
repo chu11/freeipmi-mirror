@@ -210,23 +210,7 @@ systems.
 #include <@top_srcdir@/man/manpage-common-troubleshooting-outofband.man>
 #include <@top_srcdir@/man/manpage-common-troubleshooting-inband.man>
 .SH "IPMI-SEL TROUBLESHOOTING"
-Some timestamps in the SEL may report a date of 1-Jan-1970, the epoch
-for SEL timestamps.  This timestamp is not necessarily incorrect.  It
-usually indicates a hardware event that occurred before a timestamp in
-firmware has been initialized.  For example, certain hardware
-components will have their internal clocks reset during a power cycle.
-.LP
-However, if the internal clock of the SEL appears to be regularly
-incorrect, you may need to set the SEL time.  This can be done using
-.B bmc-device(8).
-.LP
-The following are common issues for error messages in
-.B ipmi-sel.
-.LP
-"sel config file parse error" - A parse error was found in the sel
-event interpretation configuration file.  Please see
-.B freeipmi_interpret_sel.conf(5).
-
+#include <@top_srcdir@/man/manpage-common-troubleshooting-sel.man>
 #include <@top_srcdir@/man/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/man/manpage-common-workaround-inband-text.man>
 #include <@top_srcdir@/man/manpage-common-workaround-outofband-common-text.man>
@@ -287,5 +271,6 @@ Delete SEL entries in the range 12 to 42 on the local machine.
 Copyright \(co 2003-2012 FreeIPMI Core Team.  
 #include <@top_srcdir@/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
-freeipmi(7), bmc-config(8), bmc-device(8), freeipmi_interpret_sel.conf(5)
+freeipmi(7), ipmiseld(8), bmc-config(8), bmc-device(8),
+freeipmi_interpret_sel.conf(5)
 #include <@top_srcdir@/man/manpage-common-homepage.man>

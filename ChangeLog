@@ -1,5 +1,27 @@
 2012-07-10  Albert Chu <chu11@llnl.gov>
 
+	Add new tool ipmiseld.
+
+	* ipmiseld/: New tool.
+
+	* common/, etc/, man/: Add new manpage entries, init scripts,
+	config files, as needed.
+
+	* man/manpage-common-troubleshooting-sel.man: Create new common
+	SEL troubleshooting common manpage.
+
+	* config/ac_ipmiseld_cache_dir.m4,
+	config/ac_ipmiseld_config_file.m4: New files.
+
+	* man/, freeipmi.spec.in, configure.ac: Update appropriately for
+	new tool.
+
+	* libfreeipmi/include/freeipmi/api/ipmi-api.h,
+	libfreeipmi/api/ipmi-api.c: Move some internal macros to
+	ipmi-api.h so apps know default values.
+	
+2012-07-10  Albert Chu <chu11@llnl.gov>
+
 	Support OEM extensions for Wistron / Dell Poweredge C6220.
 
 	* libfreeipmi/include/freeipmi/spec/ipmi-oem-spec.h: Rename
@@ -150,7 +172,7 @@
 	* bmc-watchdog/: Use new common functions.
 
 	* ipmidetectd/ipmidetectd.c: Shutdown cleanly on signals.
-	
+
 2012-05-30  Albert Chu <chu11@llnl.gov>
 
 	* man/, etc/: Add forgotten config entries.
@@ -171,6 +193,12 @@
 
 	* bmc-watchdog/, common/toolcommon/: Use new convenience functions
 	appropriately.
+	
+2012-05-26  Albert Chu <chu11@llnl.gov>
+
+	* man/manpage-common-troubleshooting-sel.man: New file.
+
+	* man/ipmi-sel.8.pre.in: Update for new common file.
 	
 2012-05-26  Albert Chu <chu11@llnl.gov>
 
@@ -734,6 +762,28 @@
 	* ipmidetectd/ipmidetectd.c: Create pidfile on daemon startup.
 	Support debugging in production build.  Fix segfault corner case.
 	Handle signals SIGINT, SIGTERM, and SIGQUIT.  Code cleanup.
+	
+2012-04-19  Albert Chu <chu11@llnl.gov>
+
+	Merge branch seld
+
+	Create new ipmiseld daemon.
+
+	* ipmiseld/: New files.
+
+	* man/ipmiseld.8.pre.in, man/ipmiseld.conf.5.pre.in: New files.
+
+	* etc/ipmiseld.conf, etc/ipmiseld.init: New files.
+
+	* config/ac_ipmiseld_config_file.m4: New file.
+
+	* configure.ac, Makefile.am, etc/Makefile.am, man/Makefile.am,
+	freeipmi.spec.in: Update appropriately for new files and
+	directories.
+
+	* common/daemonutil: New common files for daemon common functions.
+
+	* ipmidetectd/: Use new daemonutil functions when appropriate.
 	
 2012-04-19  Albert Chu <chu11@llnl.gov>
 
