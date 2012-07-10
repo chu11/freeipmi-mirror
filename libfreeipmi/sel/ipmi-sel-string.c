@@ -71,6 +71,7 @@
 #include "ipmi-sel-string-quanta.h"
 #include "ipmi-sel-string-sun.h"
 #include "ipmi-sel-string-supermicro.h"
+#include "ipmi-sel-string-wistron.h"
 #include "ipmi-sel-trace.h"
 #include "ipmi-sel-util.h"
 
@@ -982,6 +983,22 @@ _output_oem_event_data1_class_sensor_specific_discrete (ipmi_sel_ctx_t ctx,
         return (1);
     }
 
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_WISTRON)
+    {
+      if ((ret = sel_string_output_wistron_event_data1_class_sensor_specific_discrete (ctx,
+										       sel_entry,
+										       sel_record_type,
+										       tmpbuf,
+										       tmpbuflen,
+										       flags,
+										       wlen,
+										       system_event_record_data)) < 0)
+        return (-1);
+      
+      if (ret)
+        return (1);
+    }
+
   return (0);
 }
 
@@ -1405,6 +1422,22 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 								    flags,
 								    wlen,
 								    system_event_record_data)) < 0)
+	return (-1);
+  
+      if (ret)
+	return (1);
+    }
+
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_WISTRON)
+    {
+      if ((ret = sel_string_output_wistron_event_data2_discrete_oem (ctx,
+								     sel_entry,
+								     sel_record_type,
+								     tmpbuf,
+								     tmpbuflen,
+								     flags,
+								     wlen,
+								     system_event_record_data)) < 0)
 	return (-1);
   
       if (ret)
@@ -2035,6 +2068,22 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 	return (1);
     }
 
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_WISTRON)
+    {
+      if ((ret = sel_string_output_wistron_event_data3_discrete_oem (ctx,
+								     sel_entry,
+								     sel_record_type,
+								     tmpbuf,
+								     tmpbuflen,
+								     flags,
+								     wlen,
+								     system_event_record_data)) < 0)
+	return (-1);
+  
+      if (ret)
+	return (1);
+    }
+
   return (0);
 }
 
@@ -2527,6 +2576,23 @@ _output_oem_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 								     wlen,
 								     system_event_record_data,
 								     oem_rv)) < 0)
+	return (-1);
+      
+      if (ret)
+	return (1);
+    }
+
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_WISTRON)
+    {
+      if ((ret = sel_string_output_wistron_event_data2_event_data3 (ctx,
+								    sel_entry,
+								    sel_record_type,
+								    buf,
+								    buflen,
+								    flags,
+								    wlen,
+								    system_event_record_data,
+								    oem_rv)) < 0)
 	return (-1);
       
       if (ret)

@@ -34,6 +34,16 @@ extern "C" {
 
 #define IPMI_SOL_CONFIGURATION_PARAMETER_OEM_INVENTEC_SOL_TIMEOUT 192
 
+/******************************************* 
+ * Wistron                                 *
+ *******************************************/
+
+/*
+ * Wistron / Dell Poweredge C6220
+ */
+
+#define IPMI_SOL_CONFIGURATION_PARAMETER_OEM_WISTRON_SOL_TIMEOUT  192
+
 #ifdef __cplusplus
 }
 #endif

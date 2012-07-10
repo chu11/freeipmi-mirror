@@ -69,6 +69,19 @@ extern "C" {
 /* achu: not official names, named based on use context */
 #define IPMI_GENERATOR_ID_OEM_QUANTA_ERROR           0x01
 
+/******************************************* 
+ * Wistron                                 *
+ *******************************************/
+
+/*
+ * Wistron / Dell Poweredge C6220
+ */
+
+/* achu: not official names, named based on use context */
+#define IPMI_GENERATOR_ID_OEM_WISTRON_BIOS            0x01
+#define IPMI_GENERATOR_ID_OEM_WISTRON_SMI             0x21
+#define IPMI_GENERATOR_ID_OEM_WISTRON_ME              0x2C
+
 #ifdef __cplusplus
 }
 #endif

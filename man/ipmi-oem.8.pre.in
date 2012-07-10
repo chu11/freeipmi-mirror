@@ -680,7 +680,8 @@ work on Inventec 5441/5442 (Dell Xanadu II/III).
 .if 0 \{
 .TP
 .B get-dhcp-retry
-This OEM command will retrieve DHCP retry information.
+This OEM command will retrieve DHCP retry information.  Command
+confirmed to work on Inventec 5441/Dell Xanadu II.
 .TP
 .B set-dhcp-retry \fIretry-count\fR \fIretry-interval\fR \fIretry-timeout\fR
 This OEM command will set DHCP retry information.  The
@@ -927,6 +928,282 @@ This OEM command will enable or disable all non-IPMI services on the
 BMC.  This command can be used to enable or disable non-IPMI services
 such as ssh, http, https, and vnc.  Command confirmed to work on
 Supermicro X8DTG.
+.RE
+.TP
+.B Wistron
+.RS
+.TP
+.B get-system-info \fIKEY\fR
+This OEM command can retrieve the motherboard system information.
+Valid keys are \fIasset\-tag\fR, \fIservice\-tag\fR,
+\fIproduct\-name\fR.  Command confirmed to work on Wistron / Dell
+Poweredge C6220.
+.TP
+.B get-nic-mode
+This OEM command will determine the current NIC mode as dedicated or
+shared.  Dedicated indicates IPMI is only available on the dedicated
+management port.  Shared indicates IPMI is also available on one of
+the primary ethernet ports.  Command confirmed to work on Wistron /
+Dell Poweredge C6220.
+.TP
+.B set-nic-mode \fIdedicated|shared\fR
+This OEM command will set the current NIC mode to dedicated or shared.
+(See \fIget\-nic\-mode\fR above for description on dedicated
+vs. shared mode.)  After running this command, the BMC may need to be
+reset to finalize the configuration.  This may be accomplished by
+executing a cold-reset with
+.B bmc-device(8).
+Command confirmed to work on Wistron / Dell Poweredge C6220.
+.TP
+.B get-shared-nic-selection
+This OEM command will determine the current NIC IPMI is shared with if
+the mode is \fIshared\fR. (See \fIget\-nic\-mode\fR above for
+description on dedicated vs. shared mode.)  Command confirmed to work
+on Wistron / Dell Poweredge C6220.
+.TP
+.B set-shared-nic-selection \fInic1|nic2|nic3|nic4|clear\fR
+This OEM command will set the current NIC sharing selection.  If the
+current NIC mode is \fIdedicated\fR it is advisable to clear this
+setting with the \fIclear\fR option.  Command confirmed to work on
+Wistron / Dell Poweredge C6220.
+.TP
+.B get-bmc-services
+This OEM command will display the currently enabled BMC services.
+Command confirmed to work on Wistron / Dell Poweredge C6220.
+.TP
+.B set-bmc-services \fIenable|disable\fR \fIall|kvm|http|ssh|snmp|telnet\fR
+This OEM command will enable or disable other BMC services besides
+IPMI.  \fIall\fR can be specified to enable/disable all services,
+\fIkvm\fR specifies KVM and Virtual Storage, \fIhttp\fR specifies HTTP
+and HTTPS.  Command confirmed to work on Wistron / Dell Poweredge
+C6220.
+.TP
+.B get-account-status
+This OEM command will output the current account status of users on
+the BMC.  This command is particularly usefor for determinining which
+users in the system may have been locked out via authentication
+failures.  Command confirmed to work on Wistron / Dell Poweredge
+C6220.
+.TP
+.B get-dns-config
+This OEM command will display additional OEM DNS settings.
+(See \fIset\-dns\-config\fR below for description on
+outputs.)  Command confirmed to work on Wistron / Dell Poweredge C6220.
+.TP
+.B set-dns-config \fIKEY=VALUE ...\fR
+This OEM command will set additional OEM DNS settings on the IPMI
+card.  The possible keys and values are \fIdnsdhcp=enable|disable\fR,
+\fIdnsserver1=ipaddress\fR, \fIdnsserver2=ipaddress\fR,
+\fIdnsregisterbmc=enable|disable\fR, \fIdnsbmchostname=string\fR,
+\fIdnsdomainnamedhcp=enable|disable\fR, \fIdnsdomainname=string\fR,
+and \fIdnsregistrationdelay=seconds\fR.  \fIdnsdhcp\fR specifies if
+the DNS server IP addresses should be assigned from the DHCP server.
+\fIdnsserver1\fR and \fIdnsserver2\fR specify the IP addess for server
+1 and 2 respectively.  These fields are read only if \fIdnsdhcp\fR and
+DHCP are enabled.  \fIdnsregisterbmc\fR specifies if the BMC host name
+is registered via the DNS server.  \fIdnsbmchostname\fR specifies the
+BMC host name.  This field is read only if \fIdnsregisterbmc\fR is
+enabled.  \fIdnsdomainnamedhcp\fR specifies if the DNS domainname
+should be assigned from the DHCP server.  \fIdnsdomainname\fR
+specifies the DNS domain name string.  This field is read only if
+\fIdnsdomainnamedhcp\fR is enabled.  \fIdnsregistrationdelay\fR
+specifies the delay the BMC should take after the IPMI process is up
+and running.  Multiple key=value pairs may be specified.  If no
+key=value pairs are specifed, available pairs are output.  Command
+confirmed to work on Wistron / Dell Poweredge C6220.
+.TP
+.B get-web-server-config
+This OEM command will get the current web server configuration on the
+IPMI card.  Command confirmed to work on Wistron / Dell Poweredge
+C6220.
+.TP
+.B set-web-server-config \fIKEY=VALUE ...\fR
+This OEM command will set the current web server configuration on the
+IPMI card.  The possible keys and values are
+\fIwebserver=enable|disable\fR, \fIwebservertimeout=seconds\fR,
+\fIhttpportnumber=num\fR, and \fIhttpsportnumber=num\fR.  Multiple
+key=value pairs may be specified.  If no key=value pairs are specifed,
+available pairs are output.  Command confirmed to work on Wistron /
+Dell Poweredge C6220.
+.if 0 \{
+.TP
+.B get-server-services-config
+This OEM command will get the current server services configuration on
+the IPMI card.  Command confirmed to work on Wistron / Dell Poweredge
+C6220.
+.TP
+.B set-server-services-config \fIKEY=VALUE ...\fR
+This OEM command will set the current server services configuration on
+the IPMI card.  The possible keys and values are
+\fIkvmportnumber=num\fR, \fItelnetportnumber=num\fR, and
+\fIsshportnumber=num\fR.  Multiple key=value pairs may be specified.
+If no key=value pairs are specifed, available pairs are output.
+Command confirmed to work on Wistron / Dell Poweredge C6220.
+\}
+.TP
+.B get-power-management-config
+This OEM command will get the current power management configuration
+on the IPMI card.  Command confirmed to work on Wistron / Dell
+Poweredge C6220.
+.TP
+.B set-power-management-config \fIKEY=VALUE ...\fR
+This OEM command will set the current power management configuration
+on the IPMI card.  The possible keys and values are
+\fIpowerstaggeringacrecovery=immediate|auto|user\fR,
+\fIpowerondelay=seconds\fR, and \fImaxpowerondelay=seconds\fR.  For
+\fIpowerstaggeringacrecovery\fR, \fIimmediate\fR specifies no delay,
+\fIauto\fR generates a delay time between the minimum and maximum
+configured, and \fIuser\fR uses the user defined time defined by
+\fIpowerondelay\fR.  \fIpowerondelay\fR must be within the minimum and
+maximum power on delay times.  Multiple key=value pairs may be
+specified.  If no key=value pairs are specifed, available pairs are
+output.  Command confirmed to work on Wistron / Dell Poweredge C6220.
+.if 0 \{
+.TP
+.B get-firmware-information
+This OEM command will get current firmware information.  Command
+confirmed to work on Wistron / Dell Poweredge C6220.
+\}
+.if 0 \{
+.TP
+.B user-default-setting \fIset|reset\fR
+This OEM command will allow users to customize BMC settings, store
+tham as defaults, and restore back to previous settings as desired.
+The user default settings include all OEM extended configuration
+settings (such as the ones set by \fIset\-nic\-mode\fR,
+\fIset\-web\-server\-config, and others above), IPMI user account
+settings, and IPMI lan configuration parameters.  \fIset\fR sets the
+current settings as a new default, while \fIreset\fR resets settings
+to the previously configured defaults.  Command confirmed to work on
+Wistron / Dell Poweredge C6220.
+\}
+.TP
+.B get-ipv6-settings
+This OEM command will get the current IPv6 settings on the
+IPMI card.  Command confirmed to work on Wistron / Dell Poweredge C6220.
+.TP
+.B set-ipv6-settings \fIKEY=VALUE ...\fR
+This OEM command will set the current IPv6 settings on the IPMI card.
+The possible keys and values are \fIipv6=enable|disable\fR,
+\fIipv6address=ipaddress\fR, \fIipv6gatewayaddress=ipaddress\fR,
+\fIipv6prefixlength=length\fR, \fIipv6autoconfig=enable|disable\fR,
+\fIipv6autodns=enable|disable\fR, \fIipv6dnsserver1=ipaddress\fR, and
+\fIipv6dnsserver2=ipaddress\fR.  If no key=value pairs are specifed,
+available pairs are output.  Some fields may be read-only on specific
+Poweredge systems.  Command confirmed to work on Wistron / Dell
+Poweredge C6220.
+.TP
+.B get-ipv6-trap-settings
+This OEM command will get the current IPv6 SNMP trap settings on the
+IPMI card.  Command confirmed to work on Wistron / Dell Poweredge
+C6220.
+.TP
+.B set-ipv6-trap-settings \fIindex\fR \fIKEY=VALUE ...\fR
+This OEM command will set the current IPv6 SNMP trap settings on the
+IPMI card.  The \fIindex\fR indicates the index position for the
+configuration.  It is followed by a set of configuration keys and
+values.  The possible keys and values are
+\fIdestinationtype=pet|oem1|oem2\fR, \fIalertacktimeout=seconds\fR,
+\fIretries=count\fR, and \fIipv6snmptrapaddress=ipaddress\fR.  If no
+key=value pairs are specifed, available pairs are output.  Some fields
+may be read-only on specific Poweredge systems.  Command confirmed to
+work on Wistron / Dell Poweredge C6220.
+.TP
+.B get-sol-idle-timeout
+This OEM command will get the SOL idle timeout.  Command confirmed to
+work on Wistron / Dell Poweredge C6220.
+.TP
+.B set-sol-idle-timeout \fIidle\-timeout\fR
+This OEM command will set the SOL idle timeout.  The
+\fIidle\-timeout\fR is one-based, max of 65535, in 1 minute increments
+(e.g. 1 = 1 minute), 0 or "none" will configure no timeout.  Command
+confirmed to work on Wistron / Dell Poweredge C6220.
+.TP
+.B get-telnet-redirect-function
+This OEM command will get the telnet redirect function.  Command
+confirmed to work on Wistron / Dell Poweredge C6220.
+.TP
+.B set-telnet-redirect-function \fIdisable|solenable|smashenable\fR
+This OEM command will enable or disable telnet redirect function.
+Command confirmed to work on Wistron / Dell Poweredge C6220.
+.if 0 \{
+.TP
+.B get-ssh-redirect-function
+This OEM command will get the SSH redirect function.  Command
+confirmed to work on Wistron / Dell Poweredge C6220.
+.TP
+.B set-ssh-redirect-function \fIdisable|solenable|smashenable\fR
+This OEM command will enable or disable SSH redirect function.
+Command confirmed to work on Wistron / Dell Poweredge C6220.
+\}
+.if 0 \{
+.TP
+.B get-chassis-power-readings
+This OEM command will output the current chassis power readings.
+Command confirmed to work on Wistron / Dell Poweredge C6220.
+\}
+.if 0 \{
+.TP
+.B get-chassis-led-status
+This OEM command will output the current chassis identification and/or
+chassis fault LED status.  \fIoff\fR indicates the LED is off,
+\fIsolid\fR indicates the LED is on and steady, \fIblink\fR indicates
+the LED is on and blinking.  Command confirmed to work on Wistron /
+Dell Poweredge C6220.
+.\" XXX - is true, set off ifnot there? 
+.TP
+.B set-chassis-led-status \fIidentify-off|identify-solid|identify-blink\fR \fIfault-off|fault-solid|fault-blink\fR
+This OEM command will set the chassis identification and chassis fault
+LEDs to a state of \fIoff\fR, \fIsolid\fR, or \fIblink\fR.  If an LED
+is not available on the chassis, it should be set to \fIoff\fR.
+Command confirmed to work on Wistron / Dell Poweredge C6220.
+\}
+.TP
+.B get-dhcp-retry
+This OEM command will retrieve DHCP retry information.  Wistron / Dell
+Poweredge C6220.
+.TP
+.B set-dhcp-retry \fIretry-count\fR \fIretry-interval\fR \fIretry-timeout\fR
+This OEM command will set DHCP retry information.  The
+\fIretry\-count\fR is one-based, max of 254, 0 or "none" will
+configure no retries, 255 or "indefinite" will configure constant
+retries.  The \fIretry\-interval\fR is one-based, in 10 second
+increments (e.g. 1 = 10 seconds).  The \fIretry\-timeout\fR is
+one-based, in 1 minute increments (e.g. 1 = 1 minute).
+After running this command, the BMC may need to be reset to finalize
+the configuration.  This may be accomplished by executing a cold-reset
+with
+.B bmc-device(8).
+Command confirmed to work on Wistron / Dell Poweredge C6220.
+.TP
+.B get-link-status-change-control
+This OEM command will get the current link status change control.  If
+it reports "Link Down Resilience Enabled", BMC firmware will do
+nothing upon detecting Link Status Change until the DHCP lease is
+expired.  If it reports "DHCP Re-Discovery Enabled", BMC firmware will
+perform DHCP Discovery upon detecting link status going down than back
+up.  Command confirmed to work on Wistron / Dell Poweredge C6220..
+.TP
+.B set-link-status-change-control \fIlink_resilience|dhcp_rediscovery\fR
+This OEM command will set the current NIC link status change control
+setting.  (See \fIset\-link\-status\-change\-control\fR above for
+description of arguments).  After running this command, the BMC may need to be
+reset to finalize the configuration.  This may be accomplished by
+executing a cold-reset with
+.B bmc-device(8).
+Command confirmed to work on Wistron / Dell Poweredge C6220.
+.if 0 \{
+.\" XXX - is true, will reset BMC internally???
+.TP
+.B reset-to-defaults \fIall|user|lan|sol|serial|pef\fR
+This OEM command will reset certain BMC configuration sections back to
+default values.  The command will spin until the reset is confirmed to
+be complete.  Command confirmed to work on Wistron / Dell Poweredge
+C6220.  After running this command, the BMC must be reset to return it
+to functioning status.  This may be accomplished by executing a
+cold-reset with
+.B bmc-device(8).
+\}
 .RE
 #include <@top_srcdir@/man/manpage-common-hostranged-text-main.man>
 #include <@top_srcdir@/man/manpage-common-hostranged-text-threads.man>

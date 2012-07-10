@@ -255,6 +255,26 @@ extern "C" {
 #define IPMI_SENSOR_NUMBER_OEM_QUANTA_INT_SENSORID        0x83
 #define IPMI_SENSOR_NUMBER_OEM_QUANTA_SOFTWARE_NMI        0xA5
 
+/******************************************* 
+ * Wistron                                 *
+ *******************************************/
+
+/*
+ * Wistron / Dell Poweredge C6220
+ */
+
+#define IPMI_SENSOR_NUMBER_OEM_WISTRON_PROCESSOR          0x04
+#define IPMI_SENSOR_NUMBER_OEM_WISTRON_MEMORY             0x60
+#define IPMI_SENSOR_NUMBER_OEM_WISTRON_QPI_SENSOR_ID      0x71
+#define IPMI_SENSOR_NUMBER_OEM_WISTRON_INT_SENSOR_ID      0x72
+#define IPMI_SENSOR_NUMBER_OEM_WISTRON_PCI_SENSOR_ID      0x73
+#define IPMI_SENSOR_NUMBER_OEM_WISTRON_SB_SENSOR_ID       0x77
+#define IPMI_SENSOR_NUMBER_OEM_WISTRON_POST_START         0x81
+#define IPMI_SENSOR_NUMBER_OEM_WISTRON_POST_END           0x85 
+#define IPMI_SENSOR_NUMBER_OEM_WISTRON_POST_ERROR         0x86 
+#define IPMI_SENSOR_NUMBER_OEM_WISTRON_BIOS_RECOVERY_FAIL 0x89
+#define IPMI_SENSOR_NUMBER_OEM_WISTRON_ME_FAIL            0x8A
+
 #ifdef __cplusplus
 }
 #endif

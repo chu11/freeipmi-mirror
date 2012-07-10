@@ -41,6 +41,7 @@
 #include "ipmi-oem-quanta.h"
 #include "ipmi-oem-sun.h"
 #include "ipmi-oem-supermicro.h"
+#include "ipmi-oem-wistron.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
@@ -1073,6 +1074,290 @@ struct ipmi_oem_command oem_supermicro[] =
     },
   };
 
+struct ipmi_oem_command oem_wistron[] =
+  {
+    {
+      "get-system-info",
+      "<KEY>",
+      0,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
+      ipmi_oem_wistron_get_system_info
+    },
+    {
+      "get-nic-mode",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_get_nic_mode
+    },
+    {
+      "set-nic-mode",
+      "<dedicated|shared>",
+      1,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_set_nic_mode
+    },
+    {
+      "get-shared-nic-selection",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_get_shared_nic_selection
+    },
+    {
+      "set-shared-nic-selection",
+      "<nic1|nic2|nic3|nic4|clear>",
+      1,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_set_shared_nic_selection
+    },
+    {
+      "get-bmc-services",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_get_bmc_services
+    },
+    {
+      "set-bmc-services",
+      "<enable|disable> <all|kvm|http|ssh|snmp|telnet>",
+      2,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_set_bmc_services
+    },
+    {
+      "get-account-status",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_get_account_status
+    },
+    {
+      "get-dns-config",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_get_dns_config
+    },
+    {
+      "set-dns-config",
+      "KEY=VALUE ...",
+      0,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
+      ipmi_oem_wistron_set_dns_config
+    },
+    {
+      "get-web-server-config",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_get_web_server_config
+    },
+    {
+      "set-web-server-config",
+      "KEY=VALUE ...",
+      0,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
+      ipmi_oem_wistron_set_web_server_config
+    },
+#if 0
+/* can't verify - doesn't appear to work */
+    {
+      "get-server-services-config",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_get_server_services_config
+    },
+    {
+      "set-server-services-config",
+      "KEY=VALUE ...",
+      0,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
+      ipmi_oem_wistron_set_server_services_config
+    },
+#endif
+    {
+      "get-power-management-config",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_get_power_management_config
+    },
+    {
+      "set-power-management-config",
+      "KEY=VALUE ...",
+      0,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
+      ipmi_oem_wistron_set_power_management_config
+    },
+#if 0
+/* can't verify - doesn't appear to work */
+    {
+      "get-firmware-information",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_get_firmware_information
+    },
+#endif
+#if 0
+/* can't verify - doesn't appear to work */
+    {
+      "user-default-setting",
+      "<set|reset>",
+      1,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_user_default_setting
+    },
+#endif
+    {
+      "get-ipv6-settings",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_get_ipv6_settings
+    },
+    {
+      "set-ipv6-settings",
+      "KEY=VALUE ...",
+      0,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
+      ipmi_oem_wistron_set_ipv6_settings
+    },
+    {
+      "get-ipv6-trap-settings",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_get_ipv6_trap_settings
+    },
+    {
+      "set-ipv6-trap-settings",
+      "index KEY=VALUE ...",
+      0,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
+      ipmi_oem_wistron_set_ipv6_trap_settings
+    },
+    {
+      "get-sol-idle-timeout",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_get_sol_idle_timeout
+    },
+    {
+      "set-sol-idle-timeout",
+      "<idle-timeout>",
+      1,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_set_sol_idle_timeout
+    },
+    {
+      "get-telnet-redirect-function",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_get_telnet_redirect_function
+    },
+    {
+      "set-telnet-redirect-function",
+      "<disable|solenable|smashenable>",
+      1,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_set_telnet_redirect_function
+    },
+#if 0
+/* can't verify - doesn't appear to work */
+    {
+      "get-ssh-redirect-function",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_get_ssh_redirect_function
+    },
+    {
+      "set-ssh-redirect-function",
+      "<disable|solenable|smashenable>",
+      1,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_set_ssh_redirect_function
+    },
+#endif
+#if 0
+/* can't verify - doesn't appear to work */
+    {
+      "get-chassis-power-readings",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_get_chassis_power_readings
+    },
+#endif
+#if 0
+/* can't verify - doesn't appear to work */
+    {
+      "get-chassis-led-status",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_get_chassis_led_status
+    },
+    {
+      "set-chassis-led-status",
+      "<identify-off|identify-solid|identify-blink> <fault-off|fault-solid|fault-blink>",
+      2,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_set_chassis_led_status
+    },
+#endif
+    {
+      "get-dhcp-retry",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_get_dhcp_retry
+    },
+    {
+      "set-dhcp-retry",
+      "<retry-count> <retry-interval> <retry-timeout>",
+      3,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_set_dhcp_retry
+    },
+    {
+      "get-link-status-change-control",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_get_link_status_change_control
+    },
+    {
+      "set-link-status-change-control",
+      "<link_resilience|dhcp_rediscovery>",
+      1,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_set_link_status_change_control
+    },
+#if 0
+/* can't verify - doesn't appear to work */
+    {
+      "reset-to-defaults",
+      "<all|user|lan|sol|serial|pef>",
+      1,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_reset_to_defaults
+    },
+#endif
+    {
+      NULL,
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      NULL
+    },
+  };
+
 struct ipmi_oem_id oem_cb[] =
   {
     {
@@ -1110,6 +1395,10 @@ struct ipmi_oem_id oem_cb[] =
     {
       "Supermicro",
       oem_supermicro
+    },
+    {
+      "Wistron",
+      oem_wistron
     },
     {
       NULL,

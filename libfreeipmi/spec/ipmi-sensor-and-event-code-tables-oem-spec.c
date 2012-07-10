@@ -518,3 +518,29 @@ const char * const ipmi_oem_intel_s2600jf_specific_qpi_link_width_reduced[] =
     NULL
   };
 unsigned int ipmi_oem_intel_s2600jf_specific_qpi_link_width_reduced_max_index = 0x02;
+
+/******************************************* 
+ * Wistron                                 *
+ *******************************************/
+
+/*
+ * Wistron / Dell Poweredge C6220
+ */
+
+const char * const ipmi_sensor_type_oem_wistron_ioh_core_error[] =
+  {
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "core",
+    "non-fatal",
+    "reserved",
+    "fatal",
+    NULL
+  };
+unsigned int ipmi_sensor_type_oem_wistron_ioh_core_error_max_index = 0x0A;
+

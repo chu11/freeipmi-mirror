@@ -1915,7 +1915,7 @@ ipmi_oem_inventec_get_dhcp_retry (ipmi_oem_state_data_t *state_data)
   if (ipmi_cmd_get_lan_configuration_parameters (state_data->ipmi_ctx,
                                                  lan_channel_number,
                                                  IPMI_GET_LAN_PARAMETER,
-                                                 IPMI_LAN_PARAMETER_OEM_INVENTEC_DHCP_RETRY,
+						 IPMI_LAN_CONFIGURATION_PARAMETER_OEM_INVENTEC_DHCP_RETRY,
                                                  0,
                                                  0,
                                                  obj_cmd_rs) < 0)
@@ -1948,9 +1948,9 @@ ipmi_oem_inventec_get_dhcp_retry (ipmi_oem_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (!configuration_parameter_data[0])
+  if (configuration_parameter_data[0] == IPMI_LAN_CONFIGURATION_PARAMETER_OEM_INVENTEC_DHCP_RETRY_NO_RETRIES)
     pstdout_printf (state_data->pstate, "Retry Count    : no retries\n");
-  else if (configuration_parameter_data[0] == 0xFF)
+  else if (configuration_parameter_data[0] == IPMI_LAN_CONFIGURATION_PARAMETER_OEM_INVENTEC_DHCP_RETRY_INDEFINITE_RETRY)
     pstdout_printf (state_data->pstate, "Retry Count    : infinite retries\n");
   else
     pstdout_printf (state_data->pstate, "Retry Count    : %u\n", configuration_parameter_data[0]);

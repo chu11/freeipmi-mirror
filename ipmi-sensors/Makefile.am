@@ -7,6 +7,7 @@ ipmi_sensors_CPPFLAGS = \
 	-I$(top_srcdir)/common/miscutil \
 	-I$(top_srcdir)/common/parsecommon \
 	-I$(top_srcdir)/common/portability \
+	-I$(top_builddir)/libfreeipmi/include \
 	-I$(top_srcdir)/libfreeipmi/include \
 	-D_GNU_SOURCE \
 	-D_REENTRANT
@@ -34,6 +35,8 @@ ipmi_sensors_SOURCES = \
 	ipmi-sensors-oem-inventec.h \
 	ipmi-sensors-oem-quanta.c \
 	ipmi-sensors-oem-quanta.h \
+	ipmi-sensors-oem-wistron.c \
+	ipmi-sensors-oem-wistron.h \
 	ipmi-sensors-output-common.c \
 	ipmi-sensors-output-common.h \
 	ipmi-sensors-simple-output.c \

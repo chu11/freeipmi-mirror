@@ -5,6 +5,7 @@ ipmi_oem_CPPFLAGS = \
 	-I$(top_srcdir)/common/miscutil \
 	-I$(top_srcdir)/common/parsecommon \
 	-I$(top_srcdir)/common/portability \
+	-I$(top_builddir)/libfreeipmi/include \
 	-I$(top_srcdir)/libfreeipmi/include \
 	-D_GNU_SOURCE \
 	-D_REENTRANT 
@@ -43,7 +44,9 @@ ipmi_oem_SOURCES = \
 	ipmi-oem-supermicro.c \
 	ipmi-oem-supermicro.h \
 	ipmi-oem-thirdparty.c \
-	ipmi-oem-thirdparty.h
+	ipmi-oem-thirdparty.h \
+	ipmi-oem-wistron.c \
+	ipmi-oem-wistron.h
 
 $(top_builddir)/common/toolcommon/libtoolcommon.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`

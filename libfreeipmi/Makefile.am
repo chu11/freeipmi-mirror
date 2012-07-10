@@ -20,6 +20,7 @@ libfreeipmi_la_CPPFLAGS = \
 	-I$(top_srcdir)/common/debugutil \
 	-I$(top_srcdir)/common/miscutil \
 	-I$(top_srcdir)/common/portability \
+	-I$(top_builddir)/libfreeipmi/include \
 	-I$(top_srcdir)/libfreeipmi/include \
 	-I$(top_srcdir)/libfreeipmi \
 	-DIPMI_IPCKEY=\"$(localstatedir)/lib/$(PACKAGE_NAME)/ipckey\" \
@@ -194,6 +195,8 @@ libfreeipmi_la_SOURCES = \
 	sel/ipmi-sel-string-sun.h \
 	sel/ipmi-sel-string-supermicro.c \
 	sel/ipmi-sel-string-supermicro.h \
+	sel/ipmi-sel-string-wistron.c \
+	sel/ipmi-sel-string-wistron.h \
 	sel/ipmi-sel-trace.h \
 	sel/ipmi-sel-util.c \
 	sel/ipmi-sel-util.h \

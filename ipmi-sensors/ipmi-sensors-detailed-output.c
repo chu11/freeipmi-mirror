@@ -34,6 +34,7 @@
 #include "ipmi-sensors-oem-intel.h"
 #include "ipmi-sensors-oem-inventec.h"
 #include "ipmi-sensors-oem-quanta.h"
+#include "ipmi-sensors-oem-wistron.h"
 #include "ipmi-sensors-output-common.h"
 
 #include "freeipmi-portability.h"
@@ -2303,6 +2304,18 @@ _detailed_output_oem_record (ipmi_sensors_state_data_t *state_data)
 								manufacturer_id,
 								oem_data,
 								len)) < 0)
+	    return (-1);
+
+	  if (ret)
+	    goto out;
+	}
+
+      if (state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_WISTRON)
+	{
+	  if ((ret = ipmi_sensors_oem_wistron_output_oem_record (state_data,
+								 manufacturer_id,
+								 oem_data,
+								 len)) < 0)
 	    return (-1);
 
 	  if (ret)
