@@ -1169,8 +1169,12 @@ This OEM command will set DHCP retry information.  The
 configure no retries, 255 or "indefinite" will configure constant
 retries.  The \fIretry\-interval\fR is one-based, in 10 second
 increments (e.g. 1 = 10 seconds).  The \fIretry\-timeout\fR is
-one-based, in 1 minute increments (e.g. 1 = 1 minute).  Command
-confirmed to work on Wistron / Dell Poweredge C6220..
+one-based, in 1 minute increments (e.g. 1 = 1 minute).
+After running this command, the BMC may need to be reset to finalize
+the configuration.  This may be accomplished by executing a cold-reset
+with
+.B bmc-device(8).
+Command confirmed to work on Wistron / Dell Poweredge C6220.
 .TP
 .B get-link-status-change-control
 This OEM command will get the current link status change control.  If
@@ -1183,8 +1187,11 @@ up.  Command confirmed to work on Wistron / Dell Poweredge C6220..
 .B set-link-status-change-control \fIlink_resilience|dhcp_rediscovery\fR
 This OEM command will set the current NIC link status change control
 setting.  (See \fIset\-link\-status\-change\-control\fR above for
-description of arguments).  Command confirmed to work on Wistron /
-Dell Poweredge C6220.
+description of arguments).  After running this command, the BMC may need to be
+reset to finalize the configuration.  This may be accomplished by
+executing a cold-reset with
+.B bmc-device(8).
+Command confirmed to work on Wistron / Dell Poweredge C6220.
 .if 0 \{
 .\" XXX - is true, will reset BMC internally???
 .TP

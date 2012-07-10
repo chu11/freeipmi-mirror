@@ -238,18 +238,29 @@ ipmi_sensor_units_string (uint8_t sensor_units_percentage,
   
   /* else sensor_units_modifier != IPMI_SDR_MODIFIER_UNIT_NONE */
 
-  if (sensor_units_modifier == IPMI_SDR_MODIFIER_UNIT_DIVIDE)
-    rv = snprintf (buf + offset,
-                   buflen,
-                   "%s / %s",
-                   sensor_units[sensor_base_unit_type],
-                   sensor_units[sensor_modifier_unit_type]);
+  /* achu: corner case, some vendors messed up */
+  if (sensor_modifier_unit_type == IPMI_SENSOR_UNIT_UNSPECIFIED)
+    {
+      rv = snprintf (buf + offset,
+		     buflen,
+		     "%s",
+		     sensor_units[sensor_base_unit_type]);
+    }
   else
-    rv = snprintf (buf + offset,
-                   buflen,
-                   "%s * %s",
-                   sensor_units[sensor_base_unit_type],
-                   sensor_units[sensor_modifier_unit_type]);
+    {
+      if (sensor_units_modifier == IPMI_SDR_MODIFIER_UNIT_DIVIDE)
+	rv = snprintf (buf + offset,
+		       buflen,
+		       "%s / %s",
+		       sensor_units[sensor_base_unit_type],
+		       sensor_units[sensor_modifier_unit_type]);
+      else
+	rv = snprintf (buf + offset,
+		       buflen,
+		       "%s * %s",
+		       sensor_units[sensor_base_unit_type],
+		       sensor_units[sensor_modifier_unit_type]);
+    }
 
   return (rv);
 }

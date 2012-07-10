@@ -7,7 +7,7 @@ VERSION_SCRIPT = $(srcdir)/ipmidetect.map
 OTHER_FLAGS = -Wl,--version-script=$(VERSION_SCRIPT)
 endif
 
-include_HEADERS = ipmidetect.h
+nodist_include_HEADERS = ipmidetect.h
 
 lib_LTLIBRARIES = libipmidetect.la 
 

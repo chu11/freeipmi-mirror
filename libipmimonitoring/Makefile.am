@@ -16,13 +16,19 @@ noinst_HEADERS = \
 	ipmi_monitoring_sel.h \
 	ipmi_monitoring_sensor_reading.h
 
-include_HEADERS = ipmi_monitoring.h ipmi_monitoring_bitmasks.h ipmi_monitoring_offsets.h
+nodist_include_HEADERS = \
+	ipmi_monitoring.h
+
+include_HEADERS = \
+	ipmi_monitoring_bitmasks.h \
+	ipmi_monitoring_offsets.h
 
 lib_LTLIBRARIES = libipmimonitoring.la
 
 libipmimonitoring_la_CPPFLAGS = \
 	-I$(top_srcdir)/common/miscutil \
 	-I$(top_srcdir)/common/portability \
+	-I$(top_builddir)/libfreeipmi/include \
 	-I$(top_srcdir)/libfreeipmi/include \
 	-D_GNU_SOURCE \
 	-D_REENTRANT
