@@ -7,7 +7,7 @@ VERSION_SCRIPT = $(srcdir)/ipmiconsole.map
 OTHER_FLAGS = -Wl,--version-script=$(VERSION_SCRIPT)
 endif
 
-include_HEADERS = ipmiconsole.h
+nodist_include_HEADERS = ipmiconsole.h
 
 lib_LTLIBRARIES = libipmiconsole.la
 
@@ -18,6 +18,7 @@ libipmiconsole_la_CPPFLAGS = \
 	-I$(top_srcdir)/common/miscutil \
 	-I$(top_srcdir)/common/parsecommon \
 	-I$(top_srcdir)/common/portability \
+        -I$(top_builddir)/libfreeipmi/include \
         -I$(top_srcdir)/libfreeipmi/include \
 	-DWITH_PTHREADS=1 \
 	-D_GNU_SOURCE \

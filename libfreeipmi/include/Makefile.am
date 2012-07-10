@@ -2,8 +2,10 @@
 ## $Id: Makefile.am,v 1.63 2010-07-29 20:20:49 chu11 Exp $
 ##*****************************************************************************
 
+nobase_nodist_include_HEADERS = \
+	freeipmi/freeipmi.h
+
 nobase_include_HEADERS = \
-	freeipmi/freeipmi.h \
 	freeipmi/api/ipmi-api.h \
 	freeipmi/api/ipmi-chassis-cmds-api.h \
 	freeipmi/api/ipmi-dcmi-cmds-api.h \
