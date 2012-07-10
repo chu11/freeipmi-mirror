@@ -418,6 +418,7 @@ fi
 %{_sbindir}/ipmiseld
 %{_mandir}/man5/ipmiseld.conf.5*
 %{_mandir}/man8/ipmiseld.8*
+%dir %{_localstatedir}/cache/ipmiseld
 
 %changelog
 * Thu May 5 2012 Albert Chu <chu11@llnl.gov> 1.2.1

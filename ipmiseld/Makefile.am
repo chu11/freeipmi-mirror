@@ -57,3 +57,8 @@ $(top_builddir)/libfreeipmi/libfreeipmi.la : force-dependency-check
 
 force-dependency-check:
 
+IPMISELDCACHEdir = $(IPMISELD_CACHE_DIRECTORY)
+
+install-data-local:
+	$(INSTALL) -m 755 -d $(DESTDIR)$(IPMISELDCACHEdir)
+
