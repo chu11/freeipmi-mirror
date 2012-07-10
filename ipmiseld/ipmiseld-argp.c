@@ -361,6 +361,10 @@ _ipmiseld_config_file_parse (struct ipmiseld_arguments *cmd_args)
                          &config_file_data) < 0)
     return;
 
+  /* normally require user to input on command line, but because this
+   * is a daemon, we allow hostname config */
+  if (config_file_data.hostname_count)
+    cmd_args->common_args.hostname = config_file_data.hostname;
   if (config_file_data.verbose_count_count)
     cmd_args->verbose_count = config_file_data.verbose_count;
   if (config_file_data.sensor_types_count && config_file_data.sensor_types_length)

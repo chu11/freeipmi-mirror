@@ -293,6 +293,8 @@ struct config_file_data_ipmipower
 
 struct config_file_data_ipmiseld
 {
+  char *hostname;
+  int hostname_count;
   unsigned int verbose_count;
   int verbose_count_count;
   char sensor_types[CONFIG_FILE_MAX_SENSOR_TYPES][CONFIG_FILE_MAX_SENSOR_TYPES_STRING_LENGTH+1];

@@ -4630,6 +4630,16 @@ config_file_parse (const char *filename,
   struct conffile_option ipmiseld_options[] =
     {
       {
+	"hostname",
+	CONFFILE_OPTION_STRING,
+        -1,
+        _config_file_string,
+        1,
+        0,
+        &(ipmiseld_data.hostname_count),
+        &(ipmiseld_data.hostname),
+      },
+      {
         "verbose-count",
         CONFFILE_OPTION_INT,
         -1,
