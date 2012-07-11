@@ -75,7 +75,7 @@ on ambiguous SEL entries or SEL records.  For example, it will output
 Generator ID hex codes for sensors without names.  Additional
 non-critical SEL errors or issues will also be logged.  Somewhat
 common errors, such as timeouts or invalid hostnames, will output with
-increased with increased verbosity.
+increased verbosity.
 .TP
 \fB\-t\fR \fISENSOR\-TYPE\-LIST\fR, \fB\-\-sensor\-types\fR=\fISENSOR\-TYPE\-LIST\fR
 Specify sensor types of SEL events to log.  By default, all sensor
