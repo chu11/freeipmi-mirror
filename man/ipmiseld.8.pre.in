@@ -134,7 +134,7 @@ could affect other applications that monitor the SEL, such as
 monitoring applications that use
 .B ipmi-sel(8)
 or  
-libipmimonitoring(3).
+.B libipmimonitoring(3).
 .TP
 \fB\-\-system\-event\-format\fR=\fIFORMATSTRING\fR
 Specify the format of the log output when a SEL system event is
