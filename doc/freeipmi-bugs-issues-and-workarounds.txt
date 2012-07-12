@@ -742,7 +742,8 @@ BMC/IPMI Configuration Issue #2: [COMPLIANCE]
 
   Users cannot be enabled/disabled via Set User Password.
 
-  Seen on: Supermicro H8QME with SIMSO daughter card
+  Seen on: Supermicro H8QME with SIMSO daughter card, Wistron / Dell
+  Poweredge C6220
 
   Resolution: None
 
@@ -1073,6 +1074,15 @@ BMC/IPMI Configuration Issue #31: [IMPLEMENTATION]
 
   Notes: A cold reset of the BMC is sufficient to resolve this issue
   on Inventec 5441/Dell Xanadu II without rebooting the machine.
+
+BMC/IPMI Configuration Issue #32: [COMPLIANCE]
+
+  Motherboard errors out with unspecified password when trying to set
+  a new user password (completion code 0x8F).
+
+  Seen on: Wistron / Dell Poweredge C6220 
+
+  Resolution: None
 
 ----------------------------------------------------------------------
 
