@@ -3,7 +3,10 @@
 	* libfreeipmi/include/freeipmi/sdr/ipmi-sdr-oem.h,
 	libfreeipmi/sdr/ipmi-sdr-oem.c: New files.
 
-	* ipmi-sensors/, ipmi-oem/: Use new
+	* ipmi-sensors/ipmi-sensors.c,
+	ipmi-sensors/ipmi-sensors-oem-intel-node-manager.c,
+	ipmi-oem/ipmi-oem-intelnm.c,
+	libfreeipmi/sel/ipmi-sel-string-intel-node-manager.c: Use new
 	ipmi_sdr_oem_parse_intel_node_manager.
 
 	* libfreeipmi/api/: Increase default ipmb timeout.
