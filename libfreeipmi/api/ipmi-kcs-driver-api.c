@@ -642,7 +642,7 @@ api_kcs_cmd_ipmb (ipmi_ctx_t ctx,
                 }
 
 	      /* Wait a little bit to avoid spinning and killing the
-	       * controller.  Observed on the Quanta QSSC-S4R/Approp
+	       * controller.  Observed on the Quanta QSSC-S4R/Appro
 	       * GB812X-CN that when bridging FRU reads, this allowed
 	       * records to be read more successfully.
 	       */
