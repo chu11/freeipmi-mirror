@@ -21,19 +21,6 @@
 
 #include "ipmi-sensors.h"
 
-/* return (1) - is oem intel node manager, fully parsed
- * return (0) - is not oem intel node manager
- * return (-1) - error
- */
-int ipmi_sensors_oem_parse_intel_node_manager (ipmi_sensors_state_data_t *state_data,
-                                               uint8_t *nm_device_slave_address,
-                                               uint8_t *sensor_owner_lun,
-                                               uint8_t *channel_number,
-                                               uint8_t *nm_health_event_sensor_number,
-                                               uint8_t *nm_exception_event_sensor_number,
-                                               uint8_t *nm_operational_capabilities_sensor_number,
-                                               uint8_t *node_manager_alert_threshold_exceeded_sensor_number);
-
 /* return (0) - no OEM match
  * return (1) - OEM match
  * return (-1) - error, cleanup and return error

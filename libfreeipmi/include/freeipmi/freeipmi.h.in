@@ -82,6 +82,7 @@ extern "C" {
 #include <freeipmi/record-format/ipmi-sdr-oem-record-format.h>
 #include <freeipmi/record-format/ipmi-sel-record-format.h>
 #include <freeipmi/sdr/ipmi-sdr.h>
+#include <freeipmi/sdr/ipmi-sdr-oem.h>
 #include <freeipmi/sel/ipmi-sel.h>
 #include <freeipmi/sensor-read/ipmi-sensor-read.h>
 #include <freeipmi/spec/ipmi-authentication-type-spec.h>

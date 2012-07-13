@@ -221,6 +221,8 @@ int ipmi_sdr_stats_entity_instance_unique (ipmi_sdr_ctx_t ctx, uint8_t entity_id
  * (i.e. ipmi_sdr_cache_open() has been called), if sdr_record is NULL
  * and sdr_record_len is 0, the current sdr record in the iterator
  * will be used in parsing.
+ *
+ * See ipmi-sdr-oem.h for parsing OEM records.
  */
 
 /* For all SDR records */

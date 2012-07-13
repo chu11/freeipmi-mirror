@@ -1,3 +1,10 @@
+2012-07-13  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/sdr/ipmi-sdr-oem.h,
+	libfreeipmi/sdr/ipmi-sdr-oem.c: New files.
+
+	* ipmi-sensors/: Use new ipmi_sdr_oem_parse_intel_node_manager.
+	
 2012-07-10  Albert Chu <chu11@llnl.gov>
 
 	Add new tool ipmiseld.

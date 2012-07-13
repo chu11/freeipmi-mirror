@@ -1079,14 +1079,16 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
 
           for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (state_data->sdr_ctx))
             {
-              if ((ret = ipmi_sensors_oem_parse_intel_node_manager (state_data,
-                                                                    NULL,
-                                                                    NULL,
-                                                                    NULL,
-                                                                    &state_data->intel_node_manager.nm_health_event_sensor_number,
-                                                                    &state_data->intel_node_manager.nm_exception_event_sensor_number,
-                                                                    &state_data->intel_node_manager.nm_operational_capabilities_sensor_number,
-                                                                    &state_data->intel_node_manager.nm_alert_threshold_exceeded_sensor_number)) < 0)
+              if ((ret = ipmi_sdr_oem_parse_intel_node_manager (state_data->sdr_ctx,
+								NULL,
+								0,
+								NULL,
+								NULL,
+								NULL,
+								&state_data->intel_node_manager.nm_health_event_sensor_number,
+								&state_data->intel_node_manager.nm_exception_event_sensor_number,
+								&state_data->intel_node_manager.nm_operational_capabilities_sensor_number,
+								&state_data->intel_node_manager.nm_alert_threshold_exceeded_sensor_number)) < 0)
                 goto cleanup;
               
               if (ret)
