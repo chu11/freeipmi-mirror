@@ -63,9 +63,12 @@
  *
  * achu: On Inventec 5441/Dell Xanadu II 10 seemed too low, so upped it to
  * 32.
+ *
+ * achu: On Wistron / Dell Poweredge C6220 32 seemed too low, so upped
+ * it to 64.
  */
-#define IPMI_KCS_IPMB_RETRANSMISSION_COUNT   32
-#define IPMI_KCS_IPMB_REREAD_COUNT           32
+#define IPMI_KCS_IPMB_RETRANSMISSION_COUNT   64
+#define IPMI_KCS_IPMB_REREAD_COUNT           64
 #define IPMI_KCS_IPMB_REREAD_WAIT            1000
 
 fiid_template_t tmpl_kcs_raw =
