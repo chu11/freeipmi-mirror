@@ -742,8 +742,7 @@ BMC/IPMI Configuration Issue #2: [COMPLIANCE]
 
   Users cannot be enabled/disabled via Set User Password.
 
-  Seen on: Supermicro H8QME with SIMSO daughter card, Wistron / Dell
-  Poweredge C6220
+  Seen on: Supermicro H8QME with SIMSO daughter card
 
   Resolution: None
 
@@ -908,7 +907,8 @@ BMC/IPMI Configuration Issue #16: [IMPLEMENTATION]
   User cannot be enabled/disabled until after a non-null password has
   been configured.
 
-  Seen on: Dell Poweredge R610, Dell Poweredge R710
+  Seen on: Dell Poweredge R610, Dell Poweredge R710, Wistron / Dell
+  Poweredge C6220.
 
   Resolution: Workaround added to re-try enable/disable user after
   password set.
@@ -1083,6 +1083,9 @@ BMC/IPMI Configuration Issue #32: [COMPLIANCE]
   Seen on: Wistron / Dell Poweredge C6220 
 
   Resolution: None
+
+  Notes: Motherboard has internal password requirements leading to
+  error.
 
 ----------------------------------------------------------------------
 
