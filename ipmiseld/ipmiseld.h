@@ -67,7 +67,7 @@
 
 #define IPMISELD_THREADPOOL_COUNT                                       8
 
-#define IPMISELD_ERROR_OUTPUT_LIMIT                                     10
+#define IPMISELD_ERROR_OUTPUT_LIMIT                                     20
 
 enum ipmiseld_argp_option_keys
   {
