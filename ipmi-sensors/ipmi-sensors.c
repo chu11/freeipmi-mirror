@@ -1089,7 +1089,13 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
 								&state_data->intel_node_manager.nm_exception_event_sensor_number,
 								&state_data->intel_node_manager.nm_operational_capabilities_sensor_number,
 								&state_data->intel_node_manager.nm_alert_threshold_exceeded_sensor_number)) < 0)
-                goto cleanup;
+		{
+		  pstdout_fprintf (state_data->pstate,
+				   stderr,
+				   "ipmi_sdr_oem_parse_intel_node_manager: %s\n",
+				   ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
+		  goto cleanup;
+		}
               
               if (ret)
                 {

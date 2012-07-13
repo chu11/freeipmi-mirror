@@ -69,7 +69,13 @@ ipmi_sensors_oem_intel_node_manager_output_oem_record (ipmi_sensors_state_data_t
 							&nm_exception_event_sensor_number,
 							&nm_operational_capabilities_sensor_number,
 							&nm_alert_threshold_exceeded_sensor_number)) < 0)
-        return (-1);
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_sdr_oem_parse_intel_node_manager: %s\n",
+			   ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
+	  return (-1);
+	}
       
       if (ret)
 	{
