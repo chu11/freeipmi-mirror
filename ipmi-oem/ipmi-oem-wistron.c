@@ -2957,6 +2957,8 @@ ipmi_oem_wistron_set_link_status_change_control (ipmi_oem_state_data_t *state_da
   return (rv);
 }
 
+#if 0
+/* can't verify - doesn't appear to work */
 int
 ipmi_oem_wistron_reset_to_defaults (ipmi_oem_state_data_t *state_data)
 {
@@ -3126,3 +3128,4 @@ ipmi_oem_wistron_reset_to_defaults (ipmi_oem_state_data_t *state_data)
  cleanup:
   return (rv);
 }
+#endif
