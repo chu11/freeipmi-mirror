@@ -1,3 +1,8 @@
+2012-07-16  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/ipmi-oem-intelnm.c (_ipmi_oem_intelnm_bad_completion_code):
+	Handle bad completion code commonly for all Intel NM.
+	
 2012-07-13  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/sdr/ipmi-sdr-oem.h,
