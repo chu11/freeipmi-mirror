@@ -69,7 +69,7 @@
  */
 #define IPMI_KCS_IPMB_RETRANSMISSION_COUNT   64
 #define IPMI_KCS_IPMB_REREAD_COUNT           64
-#define IPMI_KCS_IPMB_REREAD_WAIT            1000
+#define IPMI_KCS_IPMB_REREAD_WAIT            5000
 
 fiid_template_t tmpl_kcs_raw =
   {
