@@ -2,6 +2,8 @@
 
 	* ipmi-oem/ipmi-oem-intelnm.c (_ipmi_oem_intelnm_bad_completion_code):
 	Handle bad completion code commonly for all Intel NM.
+
+	* ipmi-oem/: Support Wistron get/set-password-policy.
 	
 2012-07-13  Albert Chu <chu11@llnl.gov>
 
