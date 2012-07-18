@@ -1194,18 +1194,14 @@ executing a cold-reset with
 Command confirmed to work on Wistron / Dell Poweredge C6220.
 .if 0 \{
 .TP
-.B get-password-policy
-This OEM command will get the current state of password policy
-enforcement.  If password policy is enabled, BMC passwords must meet
-the following requirements: Not contain the user's name, be 8-14
-characters long, and contain three of the following four, an English
-uppercase character (A-Z), an English lowercase character (a-z), a
-digit (0-9), a special character (!, $, #, %, etc.).  Command
-confirmed to work on Wistron / Dell Poweredge C6220.
-.TP
 .B set-password-policy <enable|disable>
-This OEM command will set the current password policy enforcement.
-Command confirmed to work on Wistron / Dell Poweredge C6220.
+This OEM command will set the current password policy enforcement.  If
+password policy is enabled, BMC passwords must meet the following
+requirements: Not contain the user's name, be 8-14 characters long,
+and contain three of the following four, an English uppercase
+character (A-Z), an English lowercase character (a-z), a digit (0-9),
+a special character (!, $, #, %, etc.).  Command confirmed to work on
+Wistron / Dell Poweredge C6220.
 \}
 .if 0 \{
 .\" XXX - is true, will reset BMC internally???

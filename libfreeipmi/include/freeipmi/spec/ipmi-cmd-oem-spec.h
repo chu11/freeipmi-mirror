@@ -312,8 +312,6 @@ extern "C" {
 #define IPMI_CMD_OEM_WISTRON_GET_SC_SC_BMC_PROTOCOL_VERSION      0x2D
 #define IPMI_CMD_OEM_WISTRON_GET_CHASSIS_POWER_READINGS          0x2E
 #define IPMI_CMD_OEM_WISTRON_SET_CHASSIS_POWER_READINGS          0x2F
-/* achu: complete guess that "get" is 0x50, 0x51 confirmed from vendor for "set" */
-#define IPMI_CMD_OEM_WISTRON_GET_PASSWORD_POLICY                 0x50
 #define IPMI_CMD_OEM_WISTRON_SET_PASSWORD_POLICY                 0x51
 
 #ifdef __cplusplus

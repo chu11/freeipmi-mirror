@@ -2957,66 +2957,8 @@ ipmi_oem_wistron_set_link_status_change_control (ipmi_oem_state_data_t *state_da
   return (rv);
 }
 
-int
-ipmi_oem_wistron_get_password_policy (ipmi_oem_state_data_t *state_data)
-{
-  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
-  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
-  int rs_len;
-  int rv = -1;
-
-  assert (state_data);
-  assert (!state_data->prog_data->args->oem_options_count);
-
-  /* Get Password Policy Request
-   *
-   * 0x30 - OEM network function
-   * 0x50 - OEM cmd
-   * 
-   * Get Password Policy Response
-   *
-   * 0x50 - OEM cmd
-   * 0x?? - Completion Code
-   * 0x?? - 0x00 = disabled
-   *      - 0x01 = enabled
-   */
-
-  bytes_rq[0] = IPMI_CMD_OEM_WISTRON_GET_PASSWORD_POLICY;
-
-  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
-                              0, /* lun */
-                              IPMI_NET_FN_OEM_WISTRON_GENERIC_RQ, /* network function */
-                              bytes_rq, /* data */
-                              1, /* num bytes */
-                              bytes_rs,
-                              IPMI_OEM_MAX_BYTES)) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "ipmi_cmd_raw: %s\n",
-                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      goto cleanup;
-    }
-
-  if (ipmi_oem_check_response_and_completion_code (state_data,
-                                                   bytes_rs,
-                                                   rs_len,
-                                                   3,
-						   IPMI_CMD_OEM_WISTRON_GET_PASSWORD_POLICY,
-                                                   IPMI_NET_FN_OEM_WISTRON_GENERIC_RS,
-                                                   NULL) < 0)
-    goto cleanup;
-
-  if (bytes_rs[2] == IPMI_CMD_OEM_WISTRON_PASSWORD_POLICY_DISABLE)
-    pstdout_printf (state_data->pstate, "disabled\n");
-  else
-    pstdout_printf (state_data->pstate, "enabled\n");
-  
-  rv = 0;
- cleanup:
-  return (rv);
-}
-
+#if 0
+/* can't verify - need newer firmware */
 int
 ipmi_oem_wistron_set_password_policy (ipmi_oem_state_data_t *state_data)
 {
@@ -3088,6 +3030,7 @@ ipmi_oem_wistron_set_password_policy (ipmi_oem_state_data_t *state_data)
  cleanup:
   return (rv);
 }
+#endif
 
 #if 0
 /* can't verify - doesn't appear to work */

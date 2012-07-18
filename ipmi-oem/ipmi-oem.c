@@ -1342,13 +1342,6 @@ struct ipmi_oem_command oem_wistron[] =
 #if 0
 /* can't verify - need newer firmware */
     {
-      "get-password-policy",
-      NULL,
-      0,
-      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
-      ipmi_oem_wistron_get_password_policy
-    },
-    {
       "set-password-policy",
       "<enable|disable>",
       1,

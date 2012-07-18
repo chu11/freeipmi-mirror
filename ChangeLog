@@ -1,3 +1,7 @@
+2012-07-18  Albert Chu <chu11@llnl.gov>
+	
+	* ipmi-oem/: Remove Wistron get-password-policy.
+	
 2012-07-16  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/ipmi-oem-intelnm.c (_ipmi_oem_intelnm_bad_completion_code):
