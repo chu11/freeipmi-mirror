@@ -1339,8 +1339,6 @@ struct ipmi_oem_command oem_wistron[] =
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_wistron_set_link_status_change_control
     },
-#if 0
-/* can't verify - need newer firmware */
     {
       "set-password-policy",
       "<enable|disable>",
@@ -1348,7 +1346,6 @@ struct ipmi_oem_command oem_wistron[] =
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_wistron_set_password_policy
     },
-#endif
 #if 0
 /* can't verify - doesn't appear to work */
     {

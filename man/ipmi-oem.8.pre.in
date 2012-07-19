@@ -1192,7 +1192,6 @@ reset to finalize the configuration.  This may be accomplished by
 executing a cold-reset with
 .B bmc-device(8).
 Command confirmed to work on Wistron / Dell Poweredge C6220.
-.if 0 \{
 .TP
 .B set-password-policy <enable|disable>
 This OEM command will set the current password policy enforcement.  If
@@ -1202,7 +1201,6 @@ and contain three of the following four, an English uppercase
 character (A-Z), an English lowercase character (a-z), a digit (0-9),
 a special character (!, $, #, %, etc.).  Command confirmed to work on
 Wistron / Dell Poweredge C6220.
-\}
 .if 0 \{
 .\" XXX - is true, will reset BMC internally???
 .TP

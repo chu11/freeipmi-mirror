@@ -2957,8 +2957,6 @@ ipmi_oem_wistron_set_link_status_change_control (ipmi_oem_state_data_t *state_da
   return (rv);
 }
 
-#if 0
-/* can't verify - need newer firmware */
 int
 ipmi_oem_wistron_set_password_policy (ipmi_oem_state_data_t *state_data)
 {
@@ -2970,8 +2968,8 @@ ipmi_oem_wistron_set_password_policy (ipmi_oem_state_data_t *state_data)
   assert (state_data);
   assert (state_data->prog_data->args->oem_options_count == 1);
 
-  if (strcasecmp (state_data->prog_data->args->oem_options[0], "enabled")
-      && strcasecmp (state_data->prog_data->args->oem_options[0], "disabled"))
+  if (strcasecmp (state_data->prog_data->args->oem_options[0], "enable")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "disable"))
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -2997,7 +2995,7 @@ ipmi_oem_wistron_set_password_policy (ipmi_oem_state_data_t *state_data)
 
   bytes_rq[0] = IPMI_CMD_OEM_WISTRON_SET_PASSWORD_POLICY;
 
-  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "enabled"))
+  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "enable"))
     bytes_rq[1] = IPMI_CMD_OEM_WISTRON_PASSWORD_POLICY_ENABLE;
   else 
     bytes_rq[1] = IPMI_CMD_OEM_WISTRON_PASSWORD_POLICY_DISABLE;
@@ -3030,7 +3028,6 @@ ipmi_oem_wistron_set_password_policy (ipmi_oem_state_data_t *state_data)
  cleanup:
   return (rv);
 }
-#endif
 
 #if 0
 /* can't verify - doesn't appear to work */
