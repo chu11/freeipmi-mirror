@@ -87,7 +87,7 @@ static uint32_t T[64] =
 #define D               ctx->d
 #define M               ctx->m
 #define Mlen            ctx->mlen
-#define MD5_MAGIC  0xcafebabe
+#define MD5_MAGIC       0x0xfb0fdb0d
 
 #define F(x,y,z)  (((x) & (y)) | ((~(x)) & (z)))
 #define G(x,y,z)  (((x) & (z)) | ((y) & (~(z))))
