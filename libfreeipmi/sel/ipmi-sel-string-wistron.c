@@ -704,8 +704,8 @@ sel_string_output_wistron_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_WISTRON_POST_ERROR_CODE_ISA_IO_RESOURCE_CONFLICT:
 	      error_code_str = "ISA IO Resource Conflict";
 	      break;
-	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_WISTRON_POST_ERROR_CODE_ISA_IO_OUTPUT_ERROR:
-	      error_code_str = "ISA IO Output Error";
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_WISTRON_POST_ERROR_CODE_ISA_IO_CONTROLLER_ERROR2:
+	      error_code_str = "ISA IO Controller Error";
 	      break;
 	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_WISTRON_POST_ERROR_CODE_ISA_FLOPPY_CONTROLLER_ERROR:
 	      error_code_str = "ISA Floppy Controller Error";
