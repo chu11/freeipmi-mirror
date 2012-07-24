@@ -24,6 +24,33 @@ extern "C" {
 #endif
 
 /******************************************* 
+ * Dell                                    *
+ *******************************************/
+  
+/*
+ * Dell Poweredge R720
+ */
+
+/* w/ IPMI_CMD_OEM_DELL_GET_EXTENDED_CONFIGURATION
+ * IPMI_CMD_OEM_DELL_SET_EXTENDED_CONFIGURATION
+ * IPMI_CMD_OEM_DELL_SET_NIC_SELECTION_FAILOVER
+ * IPMI_CMD_OEM_DELL_POWER_MONITORING_OVER_A_SPECIFIED_AVERAGING_INTERVAL2
+ * IPMI_CMD_OEM_DELL_POWER_MONITORING_AVERAGING_INTERVAL_RANGE2
+ * IPMI_CMD_SET_SYSTEM_INFO_PARAMETERS
+ * IPMI_CMD_GET_SYSTEM_INFO_PARAMETERS
+ */   
+#define IPMI_COMP_CODE_OEM_DELL_NOT_LICENSED 0x6F
+#define IPMI_COMP_CODE_OEM_DELL_NOT_LICENSED_STR \
+  "Not licensed"
+
+/* w/ IPMI_CMD_OEM_DELL_POWER_MONITORING_OVER_A_SPECIFIED_AVERAGING_INTERVAL2
+ * IPMI_CMD_OEM_DELL_POWER_MONITORING_AVERAGING_INTERVAL_RANGE2
+ */
+#define IPMI_COMP_CODE_OEM_DELL_SUBSYSTEM_LEVEL_POWER_IS_NOT_SUPPORTED 0x81
+#define IPMI_COMP_CODE_OEM_DELL_SUBSYSTEM_LEVEL_POWER_IS_NOT_SUPPORTED_STR \
+  "subsystem-level power is not supported"
+
+/******************************************* 
  * Fujitsu                                 *
  *******************************************/
 

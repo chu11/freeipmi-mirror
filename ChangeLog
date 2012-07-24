@@ -1,5 +1,18 @@
 2012-07-24  Albert Chu <chu11@llnl.gov>
 
+	Add OEM extension support for Dell Poweredge R720
+
+	* ipmi-oem/: Support Dell get-nic-selection-failover,
+	set-nic-selection-failover, power-monitoring-over-interval,
+	power-monitoring-interval-range, get-blade-slot-info,
+	get-last-post-code.  Support new version of active-lom-status for
+	R720.  Support Dell specific OEM completion codes.
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-oem-spec.h: Add updates
+	based on Dell documentation.
+
+2012-07-24  Albert Chu <chu11@llnl.gov>
+
 	* Fix error output message after confirmation from vendor on text.
 	
 2012-07-23  Albert Chu <chu11@llnl.gov>

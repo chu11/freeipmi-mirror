@@ -26,6 +26,17 @@ o Globally support Cipher Suite ID 15 and 16 based on comments from
 o In ipmi-sel, support new --post-clear option.
 o In bmc-device, support new --set-sensor-reading-and-event-status
   option.
+o In ipmi-oem, support new Dell R720 OEM commands extensions,
+  including:
+  - get-nic-selection-failover
+  - set-nic-selection-failover
+  - power-monitoring-over-interval
+  - power-monitoring-interval-range
+  - get-blade-slot-info
+  - get-last-post-code
+o In ipmi-oem, update active-lom-status for Dell R720.
+o In ipmi-oem, support new Dell R720 get-system-info option
+  'cmc-info'.
 o In ipmi-oem, support Wistron OEM commands extensions.
 o In ipmi-sel, support Wistron OEM SEL interpretations.
 
@@ -67,6 +78,8 @@ o In ipmi-fru, deprecate --skip-checks option in favor of "skipchecks"
   workaround flag.
 o Support "assumemaxsdrrecordcount" workaround in all tools that use
   SDR.
+o In ipmi-oem, Dell get-system-info "slot-number" key changed to
+  "blade-slot-info".  Legacy option still supported.
 
 Libraries
 ---------
