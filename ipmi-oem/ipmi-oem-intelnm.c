@@ -655,23 +655,24 @@ ipmi_oem_intelnm_get_node_manager_statistics (ipmi_oem_state_data_t *state_data)
                                                                    policyid,
                                                                    obj_cmd_rs) < 0)
         {
-          if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-              && ipmi_check_completion_code (obj_cmd_rs,
-                                             IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_INVALID_POLICY_ID))
-            pstdout_fprintf (state_data->pstate,
-                             stderr,
-                             "invalid policy id specified\n");
-          else if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-                   && ipmi_check_completion_code (obj_cmd_rs,
-                                                  IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_INVALID_DOMAIN_ID))
-            pstdout_fprintf (state_data->pstate,
-                             stderr,
-                             "invalid domain id specified\n");
-          else
-            pstdout_fprintf (state_data->pstate,
-                             stderr,
-                             "ipmi_cmd_oem_intel_node_manager_get_node_manager_policy: %s\n",
-                             ipmi_ctx_errormsg (state_data->ipmi_ctx));
+	  if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
+	    {
+	      int eret;
+	      
+	      if ((eret = _ipmi_oem_intelnm_bad_completion_code (state_data, obj_cmd_rs)) < 0)
+		goto cleanup;
+	      
+	      if (!eret)
+		goto efallthrough;
+	    }
+	  else
+	    {
+	    efallthrough:
+	      pstdout_fprintf (state_data->pstate,
+			       stderr,
+			       "ipmi_cmd_oem_intel_node_manager_get_node_manager_policy: %s\n",
+			       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+	    }
           goto cleanup;
         }
 
