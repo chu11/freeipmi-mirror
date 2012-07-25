@@ -554,6 +554,13 @@ struct ipmi_oem_command oem_intelnm[] =
       ipmi_oem_intelnm_reset_node_manager_statistics
     },
     {
+      "get-node-manager-capabilities",
+      "[domainid=num] [policytrigger=none|inlet] [policytype=powercontrol]",
+      0,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
+      ipmi_oem_intelnm_get_node_manager_capabilities
+    },
+    {
       "get-node-manager-version",
       NULL,
       0,

@@ -1,5 +1,13 @@
 2012-07-19  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/: Add intelnm get-node-manager-capabilities.
+
+	* libfreeipmi/: Adjust some intel NM fields/macro names for
+	correctness based on Intel NM spec.  Fix several bugs in Intel NM
+	implementation.
+	
+2012-07-19  Albert Chu <chu11@llnl.gov>
+
 	* ipmi-oem/: Fix and support Wistron set-password-policy.
 	
 2012-07-18  Albert Chu <chu11@llnl.gov>

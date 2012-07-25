@@ -384,7 +384,6 @@ fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_capabilities_rq
     { 4,  "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4,  "policy_trigger_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4,  "policy_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "policy_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
   };
 
@@ -400,8 +399,8 @@ fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_capabilities_rs
     { 32, "max_correction_time", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 16, "min_statistics_reporting_period", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 16, "max_statistics_reporting_period", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 7,  "domain_limiting_scope", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "limiting_based_on", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 7,  "domain_limiting_scope.limiting_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1,  "domain_limiting_scope.limiting_based_on", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
   };
 
