@@ -42,7 +42,7 @@ extern "C" {
 #define IPMI_SENSOR_NUMBER_OEM_DELL_UNKNOWN_ERROR                                       0x08
 #define IPMI_SENSOR_NUMBER_OEM_DELL_CPU_INTERNAL_ERROR                                  0x09
 #define IPMI_SENSOR_NUMBER_OEM_DELL_CPU_PROTOCOL_ERROR                                  0x0A
-#define IPMI_SENSOR_NUMBER_OEM_DELL_CPU_BUSS_PERR                                       0x0B
+#define IPMI_SENSOR_NUMBER_OEM_DELL_CPU_BUS_PERR                                        0x0B
 #define IPMI_SENSOR_NUMBER_OEM_DELL_CPU_BUS_INITIALIZATION_ERROR                        0x0C
 #define IPMI_SENSOR_NUMBER_OEM_DELL_CPU_MACHINE_CHECK_ERROR                             0x0D
 #define IPMI_SENSOR_NUMBER_OEM_DELL_MEMORY_SPARE                                        0x11
