@@ -492,7 +492,7 @@ sel_string_output_dell_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 
   /* achu: I don't know what motherboards this applies to, probably very old ones */
 #if 0
-  /* OEM Interpretation
+  /* OEM Interpretation   
    *
    * From Dell Spec and Dell Code
    */
@@ -664,7 +664,8 @@ sel_string_output_dell_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
        */
       if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
           && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
-          && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_VERSION_CHANGE_HARDWARE_CHANGE_DETECTED_WITH_ASSOCIATED_ENTITY_WAS_SUCCESSFUL)
+          && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_VERSION_CHANGE_HARDWARE_CHANGE_DETECTED_WITH_ASSOCIATED_ENTITY_WAS_SUCCESSFUL
+	  && system_event_record_data->event_direction == IPMI_SEL_RECORD_DEASSERTION_EVENT)
         {
           uint8_t option_rom;
           
