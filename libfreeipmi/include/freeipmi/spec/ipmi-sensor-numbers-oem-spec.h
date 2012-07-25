@@ -69,6 +69,9 @@ extern "C" {
 #define IPMI_SENSOR_NUMBER_OEM_DELL_NON_FATAL_PCI_EXPRESS_ERRORS                        0x26
 #define IPMI_SENSOR_NUMBER_OEM_DELL_FATAL_IO_ERROR                                      0x27
 #define IPMI_SENSOR_NUMBER_OEM_DELL_MSR_INFO_LOG                                        0x28
+#define IPMI_SENSOR_NUMBER_OEM_DELL_QPI_LINK_ERROR_SENSOR                               0x29
+#define IPMI_SENSOR_NUMBER_OEM_DELL_TXT_SX_SENTER_COMMAND_ERROR                         0x2A
+#define IPMI_SENSOR_NUMBER_OEM_DELL_IDPT_MEMORY_ONLINE_FAILURE                          0x2B
 
 /*
  * Dell Poweredge C410x
