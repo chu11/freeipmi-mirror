@@ -561,6 +561,13 @@ struct ipmi_oem_command oem_intelnm[] =
       ipmi_oem_intelnm_get_node_manager_capabilities
     },
     {
+      "node-manager-policy-control",
+      "<enable|disable> [domainid=num] [policyid=num]",
+      1,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
+      ipmi_oem_intelnm_node_manager_policy_control
+    },
+    {
       "get-node-manager-version",
       NULL,
       0,

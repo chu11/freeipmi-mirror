@@ -1373,7 +1373,7 @@ ipmi_oem_intelnm_get_node_manager_capabilities (ipmi_oem_state_data_t *state_dat
 		{
                   pstdout_fprintf (state_data->pstate,
                                    stderr,
-                                   "%s:%s invalid OEM option argument '%s' : invalid domain id\n",
+                                   "%s:%s invalid OEM option argument '%s' : invalid policy trigger type\n",
                                    state_data->prog_data->args->oem_id,
                                    state_data->prog_data->args->oem_command,
                                    state_data->prog_data->args->oem_options[i]);
@@ -1394,7 +1394,7 @@ ipmi_oem_intelnm_get_node_manager_capabilities (ipmi_oem_state_data_t *state_dat
 		{
                   pstdout_fprintf (state_data->pstate,
                                    stderr,
-                                   "%s:%s invalid OEM option argument '%s' : invalid domain id\n",
+                                   "%s:%s invalid OEM option argument '%s' : invalid policy type\n",
                                    state_data->prog_data->args->oem_id,
                                    state_data->prog_data->args->oem_command,
                                    state_data->prog_data->args->oem_options[i]);
@@ -1454,6 +1454,181 @@ ipmi_oem_intelnm_get_node_manager_capabilities (ipmi_oem_state_data_t *state_dat
 
   rv = 0;
  cleanup:
+  return (rv); 
+}
+
+int
+ipmi_oem_intelnm_node_manager_policy_control (ipmi_oem_state_data_t *state_data)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t target_channel_number = 0;
+  uint8_t target_slave_address = 0;
+  uint8_t target_lun = 0;
+  uint8_t domainid = 0;
+  uint8_t domainid_specified = 0;
+  uint8_t policyid = 0;
+  int policyid_specified = 0;
+  uint8_t policy_enable_disable;
+  int rv = -1;
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count >= 1); 
+
+  if (strcasecmp (state_data->prog_data->args->oem_options[0], "enable")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "disable"))
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "%s:%s invalid OEM option argument '%s'\n",
+		       state_data->prog_data->args->oem_id,
+		       state_data->prog_data->args->oem_command,
+		       state_data->prog_data->args->oem_options[0]);
+      goto cleanup;
+    }
+
+  
+  if (state_data->prog_data->args->oem_options_count > 1)
+    {
+      int i;
+      
+      for (i = 1; i < state_data->prog_data->args->oem_options_count; i++)
+        {
+          char *key = NULL;
+          char *value = NULL;
+
+          if (ipmi_oem_parse_key_value (state_data,
+                                        i,
+                                        &key,
+                                        &value) < 0)
+            goto cleanup;
+
+          if (!strcasecmp (key, "domainid"))
+            {
+	      uint8_t domainid_tmp;
+
+              if (ipmi_oem_parse_1_byte_field (state_data,
+                                               i,
+                                               value,
+                                               &domainid_tmp) < 0)
+                goto cleanup;
+
+              if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domainid_tmp))
+                {
+                  pstdout_fprintf (state_data->pstate,
+                                   stderr,
+                                   "%s:%s invalid OEM option argument '%s' : invalid domain id\n",
+                                   state_data->prog_data->args->oem_id,
+                                   state_data->prog_data->args->oem_command,
+                                   state_data->prog_data->args->oem_options[i]);
+                  goto cleanup;
+                }
+              
+              domainid = domainid_tmp;
+            }
+          else if (!strcasecmp (key, "policyid"))
+            {
+	      uint8_t policyid_tmp;
+
+              if (ipmi_oem_parse_1_byte_field (state_data,
+                                               i,
+                                               value,
+                                               &policyid_tmp) < 0)
+                goto cleanup;
+
+              policyid = policyid_tmp;
+              policyid_specified++;
+            }
+          else
+            {
+              pstdout_fprintf (state_data->pstate,
+                               stderr,
+                               "%s:%s invalid OEM option argument '%s' : invalid option\n",
+                               state_data->prog_data->args->oem_id,
+                               state_data->prog_data->args->oem_command,
+                               state_data->prog_data->args->oem_options[i]);
+              goto cleanup;
+            }
+
+          free (key);
+          free (value);
+        }
+    }
+
+  if (_ipmi_oem_intelnm_node_manager_init (state_data,
+                                           &target_channel_number,
+                                           &target_slave_address,
+                                           &target_lun) < 0)
+    goto cleanup;
+
+  if (!domainid_specified)
+    {
+      if (!strcasecmp (state_data->prog_data->args->oem_options[0], "enable"))
+	policy_enable_disable = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_ENABLE_DISABLE_GLOBAL_ENABLE_NODE_MANAGER_POLICY_CONTROL;
+      else
+	policy_enable_disable = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_ENABLE_DISABLE_GLOBAL_DISABLE_NODE_MANAGER_POLICY_CONTROL;
+    }
+  else
+    {
+      if (!policyid_specified)
+	{
+	  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "enable"))
+	    policy_enable_disable = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_ENABLE_DISABLE_PER_DOMAIN_ENABLE_NODE_MANAGER_POLITICES;
+	  else
+	    policy_enable_disable = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_ENABLE_DISABLE_PER_DOMAIN_DISABLE_NODE_MANAGER_POLICIES;
+	}
+      else
+	{
+	  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "enable"))
+	    policy_enable_disable = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_ENABLE_DISABLE_PER_POLICY_ENABLE_NODE_MANAGER_POLITICES;
+	  else
+	    policy_enable_disable = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_ENABLE_DISABLE_PER_POLICY_DISABLE_NODE_MANAGER_POLICIES;
+	}
+    }
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_oem_intel_node_manager_enable_disable_node_manager_policy_control_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "fiid_obj_create: %s\n",
+		       strerror (errno));
+      goto cleanup;
+    }
+  
+  if (ipmi_cmd_oem_intel_node_manager_enable_disable_node_manager_policy_control (state_data->ipmi_ctx,
+										  target_channel_number,
+										  target_slave_address,
+										  target_lun,
+										  policy_enable_disable,
+										  domainid,
+										  policyid,
+										  obj_cmd_rs) < 0)
+    {
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
+	{
+	  int eret;
+	  
+	  if ((eret = _ipmi_oem_intelnm_bad_completion_code (state_data,
+							     NULL,
+							     obj_cmd_rs)) < 0)
+	    goto cleanup;
+	  
+	  if (!eret)
+	    goto efallthrough;
+	}
+      else
+	{
+	efallthrough:
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_cmd_oem_intel_node_manager_enable_disable_node_manager_policy_control: %s\n",
+			   ipmi_ctx_errormsg (state_data->ipmi_ctx));
+	  goto cleanup;
+	}
+    }
+  
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
   return (rv); 
 }
 

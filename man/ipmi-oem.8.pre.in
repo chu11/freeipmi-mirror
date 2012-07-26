@@ -452,6 +452,15 @@ the remaining options will be used in an attempt to output all
 capabilities of the system.  Command confirmed to work on Intel
 S2600JF (Appro 512X).
 .TP
+.B node-manager-policy-control \fI<enable|disable>\fR \fI[domainid=num]\fR \fI[policyid=num]\fR
+This OEM command will enable or disable the current global, domain, or
+policies used by the Intel Node Manager.  If no \fIdomainid\fR is
+specified, then the Node Manager will be enabled or globally disabled.
+If a \fIdomainid\fR is specified, only that domain will be enabled or
+disabled.  If both a \fIdomainid\fR and \fIpolicyid\fR are specified,
+only that specific policy within the domain will be specified.
+Command confirmed to work on Intel S2600JF (Appro 512X).
+.TP
 .B get-node-manager-version
 This OEM command will output the current Intel Node Manager version
 information.  Command confirmed to work on Intel S5500WB (Penguin
