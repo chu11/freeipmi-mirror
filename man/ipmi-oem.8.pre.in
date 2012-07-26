@@ -430,7 +430,7 @@ default \fIdomainid\fR is 0.  If a \fIpolicyid\fR is specified, per
 policy statistics will be output, otherwise global statistics will be
 output.  Command confirmed to work on Intel S5500WB (Penguin Computing
 Relion 700), Inventec 5441/5442 (Dell Xanadu II/III), Quanta S99Q
-(Dell FS12-TY), Quanta QSSC-S4R (Appro GB812X-CN).
+(Dell FS12-TY), Quanta QSSC-S4R (Appro GB812X-CN), Supermicro X9DRi-F.
 .TP
 .B reset-node-manager-statistics \fI[domainid=num]\fR \fI[policyid=num]\fR
 This OEM command will reset the Intel Node Manager statistics.  The
@@ -439,7 +439,7 @@ default \fIdomainid\fR is 0.  If a \fIpolicyid\fR is specified, per
 policy statistics will be reset, otherwise global statistics will be
 reset.  Command confirmed to work on Intel S5500WB (Penguin Computing
 Relion 700), Inventec 5441/5442 (Dell Xanadu II/III), Quanta S99Q
-(Dell FS12-TY), Quanta QSSC-S4R (Appro GB812X-CN).
+(Dell FS12-TY), Quanta QSSC-S4R (Appro GB812X-CN), Supermicro X9DRi-F.
 .TP
 .B get-node-manager-version
 This OEM command will output the current Intel Node Manager version

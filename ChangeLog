@@ -1,3 +1,7 @@
+2012-07-26  Albert Chu <chu11@llnl.gov>
+
+	* man/ipmi-oem.8.pre.in: Add motherboard support information.
+	
 2012-07-24  Albert Chu <chu11@llnl.gov>
 
 	* Fix error output message after confirmation from vendor on text.
