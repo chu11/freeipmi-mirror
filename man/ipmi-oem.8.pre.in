@@ -461,6 +461,15 @@ disabled.  If both a \fIdomainid\fR and \fIpolicyid\fR are specified,
 only that specific policy within the domain will be specified.
 Command confirmed to work on Intel S2600JF (Appro 512X).
 .TP
+.B get-node-manager-policy \fI[domainid=num]\fR \fI[policyid=num]\fR
+This OEM command will get the current node manager policy.  If no
+\fIdomainid\fR is specified, all domain IDs and policy Ids will be
+attempted to be output.  If a \fIdomainid\fR is specified but a
+\fIpolicyid\fR is not, all policies within a domain will be attempted
+to be output.  If the verbose option is set, additional error messages
+will be output as valid policies are being searched for.  Command
+confirmed to work on Intel S2600JF (Appro 512X).
+.TP
 .B get-node-manager-version
 This OEM command will output the current Intel Node Manager version
 information.  Command confirmed to work on Intel S5500WB (Penguin

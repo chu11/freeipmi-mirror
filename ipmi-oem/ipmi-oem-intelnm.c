@@ -671,7 +671,9 @@ ipmi_oem_intelnm_get_node_manager_statistics (ipmi_oem_state_data_t *state_data)
 	    {
 	      int eret;
 	      
-	      if ((eret = _ipmi_oem_intelnm_bad_completion_code (state_data, obj_cmd_rs)) < 0)
+	      if ((eret = _ipmi_oem_intelnm_bad_completion_code (state_data,
+								 NULL,
+								 obj_cmd_rs)) < 0)
 		goto cleanup;
 	      
 	      if (!eret)
@@ -1065,7 +1067,7 @@ _ipmi_oem_intelnm_get_node_manager_capabilities_common (ipmi_oem_state_data_t *s
     }
 
   pstdout_printf (state_data->pstate,
-		  "Capabilities for DomainID = %u, Policy Trigger Type = %s, Policy Type = %s\n\n",
+		  "Capabilities for Domain ID = %u, Policy Trigger Type = %s, Policy Type = %s\n\n",
 		  domain_id,
 		  policy_trigger_type_str,
 		  policy_type_str);
@@ -1295,21 +1297,21 @@ ipmi_oem_intelnm_get_node_manager_capabilities (ipmi_oem_state_data_t *state_dat
   uint8_t target_slave_address = 0;
   uint8_t target_lun = 0;
   uint8_t domainid_defaults[] = {0};
-  uint8_t domainid_defaults_len = 1;
+  unsigned int domainid_defaults_len = 1;
   uint8_t policytrigger_defaults[] = {IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_NO_POLICY_TRIGGER,
 				      IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_INLET_TEMPERATURE_LIMIT_POLICY_TRIGGER};
-  uint8_t policytrigger_defaults_len = 2;
+  unsigned int policytrigger_defaults_len = 2;
   uint8_t policytype_defaults[] = {IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TYPE_POWER_CONTROL_POLICY};
-  uint8_t policytype_defaults_len = 1;
+  unsigned int policytype_defaults_len = 1;
   uint8_t domainid_input[1];
   uint8_t policytrigger_input[1];
   uint8_t policytype_input[1];
   uint8_t *domainid_array;
-  uint8_t domainid_array_len;
+  unsigned int domainid_array_len;
   uint8_t *policytrigger_array;
-  uint8_t policytrigger_array_len;
+  unsigned int policytrigger_array_len;
   uint8_t *policytype_array;
-  uint8_t policytype_array_len;
+  unsigned int policytype_array_len;
   unsigned int i, j, k;
   int first_output_flag = 0;
   int rv = -1;
@@ -1466,7 +1468,7 @@ ipmi_oem_intelnm_node_manager_policy_control (ipmi_oem_state_data_t *state_data)
   uint8_t target_slave_address = 0;
   uint8_t target_lun = 0;
   uint8_t domainid = 0;
-  uint8_t domainid_specified = 0;
+  int domainid_specified = 0;
   uint8_t policyid = 0;
   int policyid_specified = 0;
   uint8_t policy_enable_disable;
@@ -1538,7 +1540,7 @@ ipmi_oem_intelnm_node_manager_policy_control (ipmi_oem_state_data_t *state_data)
 
               policyid = policyid_tmp;
               policyid_specified++;
-            }
+	    }
           else
             {
               pstdout_fprintf (state_data->pstate,
@@ -1630,6 +1632,450 @@ ipmi_oem_intelnm_node_manager_policy_control (ipmi_oem_state_data_t *state_data)
   rv = 0;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
+  return (rv); 
+}
+
+static void
+_ipmi_oem_intelnm_get_node_manager_policy_output_header (ipmi_oem_state_data_t *state_data,
+							 uint8_t domain_id,
+							 uint8_t policy_id)
+{
+  assert (state_data);
+
+  pstdout_printf (state_data->pstate,
+		  "Capabilities for Domain ID = %u, Policy ID = %u\n\n",
+		  domain_id,
+		  policy_id);
+}
+
+static int
+_ipmi_oem_intelnm_get_node_manager_policy_common (ipmi_oem_state_data_t *state_data,
+						  uint8_t target_channel_number,
+						  uint8_t target_slave_address,
+						  uint8_t target_lun,
+						  uint8_t domain_id,
+						  uint8_t policy_id,
+						  int searching_domain_id,
+						  int searching_policy_id)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t policy_enabled;
+  uint8_t per_domain_node_manager_policy_control_enabled;
+  uint8_t global_node_manager_policy_control_enabled;
+  uint8_t policy_trigger_type;
+  uint8_t policy_type;
+  uint8_t policy_exception_actions_send_alert;
+  uint8_t policy_exception_actions_shutdown_system;
+  uint16_t power_limit;
+  uint32_t correction_time_limit;
+  uint16_t policy_trigger_limit;
+  uint16_t statistics_reporting_period;
+  char *policy_trigger_type_str = NULL;
+  char *policy_trigger_type_units_str = NULL;
+  char *policy_type_str = NULL;
+  uint64_t val;
+  int rv = -1;
+
+  assert (state_data);
+  assert (IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domain_id));
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "fiid_obj_create: %s\n",
+		       strerror (errno));
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_oem_intel_node_manager_get_node_manager_policy (state_data->ipmi_ctx,
+							       target_channel_number,
+							       target_slave_address,
+							       target_lun,
+							       domain_id,
+							       policy_id,
+							       obj_cmd_rs) < 0)
+    {
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
+	{
+	  int eret;
+
+	  if (!state_data->prog_data->args->verbose_count)
+	    {
+	      if (searching_domain_id
+		  && ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_INVALID_DOMAIN_ID) == 1)
+		goto cleanup;
+	      
+	      if (searching_policy_id
+		  && ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_INVALID_POLICY_ID) == 1)
+		goto cleanup;
+	    }
+
+	  _ipmi_oem_intelnm_get_node_manager_policy_output_header (state_data, domain_id, policy_id);
+
+	  if ((eret = _ipmi_oem_intelnm_bad_completion_code (state_data,
+							     "Error",
+							     obj_cmd_rs)) < 0)
+	    goto cleanup;
+	  
+	  if (!eret)
+	    goto efallthrough;
+	}
+      else
+	{
+	efallthrough:
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_cmd_oem_intel_node_manager_get_node_manager_policy: %s\n",
+			   ipmi_ctx_errormsg (state_data->ipmi_ctx));
+	}
+
+      if ((searching_domain_id
+	   || searching_policy_id)
+	  && state_data->prog_data->args->verbose_count)
+	rv = 0; 
+
+      goto cleanup;
+    }
+  
+  if (FIID_OBJ_GET (obj_cmd_rs,
+		    "policy_enabled",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "FIID_OBJ_GET: 'policy_enabled': %s\n",
+		       fiid_obj_errormsg (obj_cmd_rs));
+      return (-1);
+    }
+  policy_enabled = val;
+
+  if (FIID_OBJ_GET (obj_cmd_rs,
+		    "per_domain_node_manager_policy_control_enabled",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "FIID_OBJ_GET: 'per_domain_node_manager_policy_control_enabled': %s\n",
+		       fiid_obj_errormsg (obj_cmd_rs));
+      return (-1);
+    }
+  per_domain_node_manager_policy_control_enabled = val;
+
+  if (FIID_OBJ_GET (obj_cmd_rs,
+		    "global_node_manager_policy_control_enabled",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "FIID_OBJ_GET: 'global_node_manager_policy_control_enabled': %s\n",
+		       fiid_obj_errormsg (obj_cmd_rs));
+      return (-1);
+    }
+  global_node_manager_policy_control_enabled = val;
+
+  if (FIID_OBJ_GET (obj_cmd_rs,
+		    "policy_trigger_type",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "FIID_OBJ_GET: 'policy_trigger_type': %s\n",
+		       fiid_obj_errormsg (obj_cmd_rs));
+      return (-1);
+    }
+  policy_trigger_type = val;
+
+  if (FIID_OBJ_GET (obj_cmd_rs,
+		    "policy_type",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "FIID_OBJ_GET: 'policy_type': %s\n",
+		       fiid_obj_errormsg (obj_cmd_rs));
+      return (-1);
+    }
+  policy_type = val;
+
+  if (FIID_OBJ_GET (obj_cmd_rs,
+		    "policy_exception_actions.send_alert",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "FIID_OBJ_GET: 'policy_exception_actions.send_alert': %s\n",
+		       fiid_obj_errormsg (obj_cmd_rs));
+      return (-1);
+    }
+  policy_exception_actions_send_alert = val;
+
+  if (FIID_OBJ_GET (obj_cmd_rs,
+		    "policy_exception_actions.shutdown_system",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "FIID_OBJ_GET: 'policy_exception_actions.shutdown_system': %s\n",
+		       fiid_obj_errormsg (obj_cmd_rs));
+      return (-1);
+    }
+  policy_exception_actions_shutdown_system = val;
+
+  if (FIID_OBJ_GET (obj_cmd_rs,
+		    "power_limit",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "FIID_OBJ_GET: 'power_limit': %s\n",
+		       fiid_obj_errormsg (obj_cmd_rs));
+      return (-1);
+    }
+  power_limit = val;
+
+  if (FIID_OBJ_GET (obj_cmd_rs,
+		    "correction_time_limit",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "FIID_OBJ_GET: 'correction_time_limit': %s\n",
+		       fiid_obj_errormsg (obj_cmd_rs));
+      return (-1);
+    }
+  correction_time_limit = val;
+
+  if (FIID_OBJ_GET (obj_cmd_rs,
+		    "policy_trigger_limit",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "FIID_OBJ_GET: 'policy_trigger_limit': %s\n",
+		       fiid_obj_errormsg (obj_cmd_rs));
+      return (-1);
+    }
+  policy_trigger_limit = val;
+
+  if (FIID_OBJ_GET (obj_cmd_rs,
+		    "statistics_reporting_period",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "FIID_OBJ_GET: 'statistics_reporting_period': %s\n",
+		       fiid_obj_errormsg (obj_cmd_rs));
+      return (-1);
+    }
+  statistics_reporting_period = val;
+
+  switch (policy_trigger_type)
+    {
+    case IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_NO_POLICY_TRIGGER:
+      policy_trigger_type_str = "No Policy Trigger";
+      break;
+    case IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_INLET_TEMPERATURE_LIMIT_POLICY_TRIGGER:
+      policy_trigger_type_str = "Inlet Temperature Limit Policy Trigger";
+      break;
+    default:
+      policy_trigger_type_str = "Unknown";
+      break;
+    }
+
+  switch (policy_type)
+    {
+    case IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TYPE_POWER_CONTROL_POLICY:
+      policy_type_str = "Power Control Policy";
+      break;
+    default:
+      policy_type_str = "Unknown";
+      break;
+    }
+
+  _ipmi_oem_intelnm_get_node_manager_policy_output_header (state_data, domain_id, policy_id);
+
+  pstdout_printf (state_data->pstate,
+		  "Policy                                  : %s\n",
+		  (policy_enabled == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_ENABLED) ? "enabled" : "disabled");
+  
+  pstdout_printf (state_data->pstate,
+		  "Per Domain Node Manager Policy Control  : %s\n",
+		  (per_domain_node_manager_policy_control_enabled == IPMI_OEM_INTEL_NODE_MANAGER_PER_DOMAIN_NODE_MANAGER_POLICY_CONTROL_ENABLED) ? "enabled" : "disabled");
+
+  pstdout_printf (state_data->pstate,
+		  "Global Noe Manager Policy Control       : %s\n",
+		  (global_node_manager_policy_control_enabled == IPMI_OEM_INTEL_NODE_MANAGER_GLOBAL_NODE_MANAGER_POLICY_CONTROL_ENABLED) ? "enabled" : "disabled");
+
+  pstdout_printf (state_data->pstate,
+		  "Policy Trigger Type                     : %s\n",
+		  policy_trigger_type_str);
+
+  pstdout_printf (state_data->pstate,
+		  "Policy Type                             : %s\n",
+		  policy_type_str);
+  
+  pstdout_printf (state_data->pstate,
+		  "Policy Exception Send Alert Action      : %s\n",
+		  (policy_exception_actions_send_alert == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_EXCEPTION_ACTION_ENABLE) ? "enabled" : "disabled");
+
+  pstdout_printf (state_data->pstate,
+		  "Policy Exception Shutdown System Action : %s\n",
+		  (policy_exception_actions_send_alert == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_EXCEPTION_ACTION_ENABLE) ? "enabled" : "disabled");
+		  
+  pstdout_printf (state_data->pstate,
+		  "Power Limit                             : %u W\n",
+		  power_limit);
+
+  pstdout_printf (state_data->pstate,
+		  "Correction Time Limit                   : %u ms\n",
+		  correction_time_limit);
+
+  switch (policy_trigger_type)
+    {
+    case IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_NO_POLICY_TRIGGER:
+      policy_trigger_type_units_str = "W";
+      break;
+    case IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_INLET_TEMPERATURE_LIMIT_POLICY_TRIGGER:
+      policy_trigger_type_units_str = "C";
+      break;
+    default:
+      policy_trigger_type_units_str = "?";
+      break;
+    }
+  
+  pstdout_printf (state_data->pstate,
+		  "Policy Trigger Limit                    : %u %s\n",
+		  policy_trigger_limit,
+		  policy_trigger_type_units_str);
+  
+  pstdout_printf (state_data->pstate,
+		  "Statistics Reporting Period             : %u s\n",
+		  statistics_reporting_period);
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv); 
+}
+
+int
+ipmi_oem_intelnm_get_node_manager_policy (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t target_channel_number = 0;
+  uint8_t target_slave_address = 0;
+  uint8_t target_lun = 0;
+  uint8_t domainid_min = 0;
+  uint8_t domainid_max = 0;
+  uint8_t policyid_min = 0;
+  uint8_t policyid_max = 255;
+  int domainid_specified = 0;
+  int policyid_specified = 0;
+  unsigned int i, j;
+  int first_output_flag = 0;
+  int rv = -1;
+
+  assert (state_data);
+  
+  if (state_data->prog_data->args->oem_options_count)
+    {
+      int i;
+      
+      for (i = 0; i < state_data->prog_data->args->oem_options_count; i++)
+        {
+          char *key = NULL;
+          char *value = NULL;
+
+          if (ipmi_oem_parse_key_value (state_data,
+                                        i,
+                                        &key,
+                                        &value) < 0)
+            goto cleanup;
+
+          if (!strcasecmp (key, "domainid"))
+            {
+	      uint8_t domainid_tmp;
+
+              if (ipmi_oem_parse_1_byte_field (state_data,
+                                               i,
+                                               value,
+                                               &domainid_tmp) < 0)
+                goto cleanup;
+
+              if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domainid_tmp))
+                {
+                  pstdout_fprintf (state_data->pstate,
+                                   stderr,
+                                   "%s:%s invalid OEM option argument '%s' : invalid domain id\n",
+                                   state_data->prog_data->args->oem_id,
+                                   state_data->prog_data->args->oem_command,
+                                   state_data->prog_data->args->oem_options[i]);
+                  goto cleanup;
+                }
+              
+	      domainid_min = domainid_tmp;
+	      domainid_max = domainid_tmp;
+	      domainid_specified++;
+		}
+          else if (!strcasecmp (key, "policyid"))
+            {
+	      uint8_t policyid_tmp;
+
+              if (ipmi_oem_parse_1_byte_field (state_data,
+                                               i,
+                                               value,
+                                               &policyid_tmp) < 0)
+                goto cleanup;
+              
+	      policyid_min = policyid_tmp;
+	      policyid_max = policyid_tmp;
+	      policyid_specified++;
+            }
+          else
+            {
+              pstdout_fprintf (state_data->pstate,
+                               stderr,
+                               "%s:%s invalid OEM option argument '%s' : invalid option\n",
+                               state_data->prog_data->args->oem_id,
+                               state_data->prog_data->args->oem_command,
+                               state_data->prog_data->args->oem_options[i]);
+              goto cleanup;
+            }
+
+          free (key);
+          free (value);
+        }
+    }
+
+  if (_ipmi_oem_intelnm_node_manager_init (state_data,
+                                           &target_channel_number,
+                                           &target_slave_address,
+                                           &target_lun) < 0)
+    goto cleanup;
+
+  for (i = domainid_min; i <= domainid_max; i++)
+    {
+      for (j = policyid_min; j <= policyid_max; j++)
+	{
+	  if (first_output_flag)
+	    pstdout_printf (state_data->pstate, "\n");
+
+	  if (_ipmi_oem_intelnm_get_node_manager_policy_common (state_data,
+								target_channel_number,
+								target_slave_address,
+								target_lun,
+								i,
+								j,
+								domainid_specified ? 0 : 1,
+								policyid_specified ? 0 : 1) < 0)
+	    goto cleanup;
+	  
+	  first_output_flag++;
+	}
+    }
+
+  rv = 0;
+ cleanup:
   return (rv); 
 }
 

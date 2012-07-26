@@ -29,6 +29,8 @@ int ipmi_oem_intelnm_get_node_manager_capabilities (ipmi_oem_state_data_t *state
 
 int ipmi_oem_intelnm_node_manager_policy_control (ipmi_oem_state_data_t *state_data);
 
+int ipmi_oem_intelnm_get_node_manager_policy (ipmi_oem_state_data_t *state_data);
+
 int ipmi_oem_intelnm_get_node_manager_version (ipmi_oem_state_data_t *state_data);
 
 #endif /* IPMI_OEM_INTELNM_H */
