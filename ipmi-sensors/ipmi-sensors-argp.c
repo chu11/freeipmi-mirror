@@ -127,19 +127,21 @@ static struct argp_option cmdline_options[] =
       "Specify an alternate sensor state configuration  file.", 62},
     { "entity-sensor-names", ENTITY_SENSOR_NAMES_KEY, NULL, 0,
       "Output sensor names with entity ids and instances.", 63},
+    { "output-sensor-thresholds", OUTPUT_SENSOR_THRESHOLDS_KEY, NULL, 0,
+      "Output sensor thresholds in output.", 64},
     { "no-sensor-type-output", NO_SENSOR_TYPE_OUTPUT_KEY, 0, 0,
-      "Do not show sensor type output.", 64},
+      "Do not show sensor type output.", 65},
     { "comma-separated-output", COMMA_SEPARATED_OUTPUT_KEY, 0, 0,
-      "Output fields in comma separated format.", 65},
+      "Output fields in comma separated format.", 66},
     { "no-header-output", NO_HEADER_OUTPUT_KEY, 0, 0,
-      "Do not output column headers.", 66},
+      "Do not output column headers.", 67},
     { "non-abbreviated-units", NON_ABBREVIATED_UNITS_KEY, 0, 0,
-      "Output non-abbreviated units (e.g. 'Amps' insetead of 'A').", 67},
+      "Output non-abbreviated units (e.g. 'Amps' insetead of 'A').", 68},
     { "legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
-      "Output in legacy format.", 68},
+      "Output in legacy format.", 69},
     /* ipmimonitoring legacy support */
     { "ipmimonitoring-legacy-output", IPMIMONITORING_LEGACY_OUTPUT_KEY, 0, 0,
-      "Output in ipmimonitoring legacy format.", 68},
+      "Output in ipmimonitoring legacy format.", 70},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -294,6 +296,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case ENTITY_SENSOR_NAMES_KEY:
       cmd_args->entity_sensor_names = 1;
       break;
+    case OUTPUT_SENSOR_THRESHOLDS_KEY:
+      cmd_args->output_sensor_thresholds = 1;
+      break;
     case NO_SENSOR_TYPE_OUTPUT_KEY:
       cmd_args->no_sensor_type_output = 1;
       break;
@@ -415,6 +420,8 @@ _ipmi_sensors_config_file_parse (struct ipmi_sensors_arguments *cmd_args)
     cmd_args->sensor_state_config_file = config_file_data.sensor_state_config_file;
   if (config_file_data.entity_sensor_names_count)
     cmd_args->entity_sensor_names = config_file_data.entity_sensor_names;
+  if (config_file_data.output_sensor_thresholds_count)
+    cmd_args->output_sensor_thresholds = config_file_data.output_sensor_thresholds;
   if (config_file_data.no_sensor_type_output_count)
     cmd_args->no_sensor_type_output = config_file_data.no_sensor_type_output;
   if (config_file_data.comma_separated_output_count)
@@ -497,6 +504,7 @@ ipmi_sensors_argp_parse (int argc, char **argv, struct ipmi_sensors_arguments *c
   cmd_args->output_sensor_state = 0;
   cmd_args->sensor_state_config_file = NULL;
   cmd_args->entity_sensor_names = 0;
+  cmd_args->output_sensor_thresholds = 0;
   cmd_args->no_sensor_type_output = 0;
   cmd_args->comma_separated_output = 0;
   cmd_args->no_header_output = 0;
