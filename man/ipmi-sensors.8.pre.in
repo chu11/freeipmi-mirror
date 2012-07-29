@@ -156,6 +156,12 @@ previously output by
 Specify an alternate sensor state configuration file.  Option ignored
 if \fB\-\-output\-sensor\-state\fR not specified.
 #include <@top_srcdir@/man/manpage-common-entity-sensor-names.man>
+.TP
+\fB\-\-output\-sensor\-thresholds\fR
+Output sensor thresholds in output.  This will add columns to the
+default output for lower non-recoverable, lower critical, lower
+non-critical, upper non-critical, upper critical, and upper
+non-recoverable thresholds.
 #include <@top_srcdir@/man/manpage-common-no-sensor-type-output.man>
 #include <@top_srcdir@/man/manpage-common-comma-separated-output.man>
 #include <@top_srcdir@/man/manpage-common-no-header-output.man>

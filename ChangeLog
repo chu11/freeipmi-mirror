@@ -1,3 +1,7 @@
+2012-07-27  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/: Support --output-sensor-thresholds.
+	
 2012-07-26  Albert Chu <chu11@llnl.gov>
 
 	* man/ipmi-oem.8.pre.in: Add motherboard support information.

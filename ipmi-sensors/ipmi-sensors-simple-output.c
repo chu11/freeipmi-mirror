@@ -683,6 +683,12 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
 {
   char fmt[IPMI_SENSORS_FMT_BUFLEN + 1];
   uint8_t event_reading_type_code;
+  double *lower_non_critical_threshold = NULL;
+  double *upper_non_critical_threshold = NULL;
+  double *lower_critical_threshold = NULL;
+  double *upper_critical_threshold = NULL;
+  double *lower_non_recoverable_threshold = NULL;
+  double *upper_non_recoverable_threshold = NULL;
   int rv = -1;
 
   assert (state_data);
@@ -760,6 +766,98 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
             }
         }
 
+      if (state_data->prog_data->args->output_sensor_thresholds)
+	{
+	  char thresholdfmt[IPMI_SENSORS_FMT_BUFLEN + 1];
+	  char nafmt[IPMI_SENSORS_FMT_BUFLEN + 1];
+
+          if (ipmi_sensors_get_thresholds (state_data,
+                                           &lower_non_critical_threshold,
+                                           &lower_critical_threshold,
+                                           &lower_non_recoverable_threshold,
+                                           &upper_non_critical_threshold,
+                                           &upper_critical_threshold,
+                                           &upper_non_recoverable_threshold) < 0)
+            goto cleanup;
+
+          memset (fmt, '\0', IPMI_SENSORS_FMT_BUFLEN + 1);
+
+	  if (state_data->prog_data->args->comma_separated_output)
+	    {
+	      snprintf (thresholdfmt,
+			IPMI_SENSORS_FMT_BUFLEN,
+			",%%.2f");
+
+	      snprintf (nafmt,
+			IPMI_SENSORS_FMT_BUFLEN,
+			",%%s");
+	    }
+	  else
+	    {
+	      snprintf (thresholdfmt,
+			IPMI_SENSORS_FMT_BUFLEN,
+			" | %%-10.2f");
+
+	      snprintf (nafmt,
+			IPMI_SENSORS_FMT_BUFLEN,
+			" | %%-10s");
+	    }
+
+	  if (lower_non_recoverable_threshold)
+	    pstdout_printf (state_data->pstate,
+			    thresholdfmt,
+			    *lower_non_recoverable_threshold);
+	  else
+	    pstdout_printf (state_data->pstate,
+			    nafmt,
+			    IPMI_SENSORS_NA_STRING);
+
+	  if (lower_critical_threshold)
+	    pstdout_printf (state_data->pstate,
+			    thresholdfmt,
+			    *lower_critical_threshold);
+	  else
+	    pstdout_printf (state_data->pstate,
+			    nafmt,
+			    IPMI_SENSORS_NA_STRING);
+
+	  if (lower_non_critical_threshold)
+	    pstdout_printf (state_data->pstate,
+			    thresholdfmt,
+			    *lower_non_critical_threshold);
+	  else
+	    pstdout_printf (state_data->pstate,
+			    nafmt,
+			    IPMI_SENSORS_NA_STRING);
+			  
+	  if (upper_non_critical_threshold)
+	    pstdout_printf (state_data->pstate,
+			    thresholdfmt,
+			    *upper_non_critical_threshold);
+	  else
+	    pstdout_printf (state_data->pstate,
+			    nafmt,
+			    IPMI_SENSORS_NA_STRING);
+
+	  if (upper_critical_threshold)
+	    pstdout_printf (state_data->pstate,
+			    thresholdfmt,
+			    *upper_critical_threshold);
+	  else
+	    pstdout_printf (state_data->pstate,
+			    nafmt,
+			    IPMI_SENSORS_NA_STRING);
+
+	  if (upper_non_recoverable_threshold)
+	    pstdout_printf (state_data->pstate,
+			    thresholdfmt,
+			    *upper_non_recoverable_threshold);
+	  else
+	    pstdout_printf (state_data->pstate,
+			    nafmt,
+			    IPMI_SENSORS_NA_STRING);
+	}
+
       if (state_data->prog_data->args->comma_separated_output)
         pstdout_printf (state_data->pstate, ",");
       else
@@ -799,11 +897,11 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
 	      if (state_data->prog_data->args->comma_separated_output)
 		snprintf (fmt,
 			  IPMI_SENSORS_FMT_BUFLEN,
-			  ",%%.2f,%%s,");
+			  ",%%.2f,%%s");
 	      else
 		snprintf (fmt,
 			  IPMI_SENSORS_FMT_BUFLEN,
-			  " | %%-10.2f | %%-%ds | ",
+			  " | %%-10.2f | %%-%ds",
 			  state_data->column_width.sensor_units);
 		  
 	      pstdout_printf (state_data->pstate,
@@ -818,11 +916,11 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
 	      if (state_data->prog_data->args->comma_separated_output)
 		snprintf (fmt,
 			  IPMI_SENSORS_FMT_BUFLEN,
-			  ",%%s,%%s,");
+			  ",%%s,%%s");
 	      else
 		snprintf (fmt,
 			  IPMI_SENSORS_FMT_BUFLEN,
-			  " | %%-10s | %%-%ds | ",
+			  " | %%-10s | %%-%ds",
 			  state_data->column_width.sensor_units);
 	      
 	      pstdout_printf (state_data->pstate,
@@ -831,14 +929,34 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
 			      IPMI_SENSORS_NA_STRING);
 	    }
         }
-      else
-        {
-          if (state_data->prog_data->args->comma_separated_output)
-            pstdout_printf (state_data->pstate, ",");
-          else
-            pstdout_printf (state_data->pstate, " | ");
-        }
 
+      if (state_data->prog_data->args->output_sensor_thresholds)
+	{
+	  if (state_data->prog_data->args->comma_separated_output)
+	    pstdout_printf (state_data->pstate,
+			    ",%s,%s,%s,%s,%s,%s",
+			    IPMI_SENSORS_NA_STRING,
+			    IPMI_SENSORS_NA_STRING,
+			    IPMI_SENSORS_NA_STRING,
+			    IPMI_SENSORS_NA_STRING,
+			    IPMI_SENSORS_NA_STRING,
+			    IPMI_SENSORS_NA_STRING);
+	  else
+	    pstdout_printf (state_data->pstate,
+			    " | %-10s | %-10s | %-10s | %-10s | %-10s | %-10s",
+			    IPMI_SENSORS_NA_STRING,
+			    IPMI_SENSORS_NA_STRING,
+			    IPMI_SENSORS_NA_STRING,
+			    IPMI_SENSORS_NA_STRING,
+			    IPMI_SENSORS_NA_STRING,
+			    IPMI_SENSORS_NA_STRING);
+	}
+ 
+      if (state_data->prog_data->args->comma_separated_output)
+	pstdout_printf (state_data->pstate, ",");
+      else
+	pstdout_printf (state_data->pstate, " | ");
+      
       if (ipmi_sensors_output_event_message_list (state_data,
                                                   event_message_output_type,
                                                   sensor_event_bitmask,
@@ -852,6 +970,12 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
 
   rv = 0;
  cleanup:
+  free (lower_non_critical_threshold);
+  free (upper_non_critical_threshold);
+  free (lower_critical_threshold);
+  free (upper_critical_threshold);
+  free (lower_non_recoverable_threshold);
+  free (upper_non_recoverable_threshold);
   return (rv);
 }
 
@@ -883,11 +1007,11 @@ _simple_output_compact_record (ipmi_sensors_state_data_t *state_data,
       if (state_data->prog_data->args->comma_separated_output)
         snprintf (fmt,
                   IPMI_SENSORS_FMT_BUFLEN,
-                  ",%%s,%%s,");
+                  ",%%s,%%s");
       else
         snprintf (fmt,
                   IPMI_SENSORS_FMT_BUFLEN,
-                  " | %%-10s | %%-%ds | ",
+                  " | %%-10s | %%-%ds",
                   state_data->column_width.sensor_units);
 
       pstdout_printf (state_data->pstate,
@@ -895,13 +1019,33 @@ _simple_output_compact_record (ipmi_sensors_state_data_t *state_data,
                       IPMI_SENSORS_NA_STRING,
                       IPMI_SENSORS_NA_STRING);
     }
-  else
+
+  if (state_data->prog_data->args->output_sensor_thresholds)
     {
       if (state_data->prog_data->args->comma_separated_output)
-        pstdout_printf (state_data->pstate, ",");
+	pstdout_printf (state_data->pstate,
+			",%s,%s,%s,%s,%s,%s",
+			IPMI_SENSORS_NA_STRING,
+			IPMI_SENSORS_NA_STRING,
+			IPMI_SENSORS_NA_STRING,
+			IPMI_SENSORS_NA_STRING,
+			IPMI_SENSORS_NA_STRING,
+			IPMI_SENSORS_NA_STRING);
       else
-        pstdout_printf (state_data->pstate, " | ");
+	pstdout_printf (state_data->pstate,
+			" | %-10s | %-10s | %-10s | %-10s | %-10s | %-10s",
+			IPMI_SENSORS_NA_STRING,
+			IPMI_SENSORS_NA_STRING,
+			IPMI_SENSORS_NA_STRING,
+			IPMI_SENSORS_NA_STRING,
+			IPMI_SENSORS_NA_STRING,
+			IPMI_SENSORS_NA_STRING);
     }
+ 
+  if (state_data->prog_data->args->comma_separated_output)
+    pstdout_printf (state_data->pstate, ",");
+  else
+    pstdout_printf (state_data->pstate, " | ");
 
   if (ipmi_sensors_output_event_message_list (state_data,
                                               event_message_output_type,
@@ -1025,6 +1169,16 @@ _output_headers (ipmi_sensors_state_data_t *state_data)
       pstdout_printf (state_data->pstate,
                       fmt,
                       SENSORS_HEADER_UNITS_STR);
+    }
+
+  if (state_data->prog_data->args->output_sensor_thresholds)
+    {
+      if (state_data->prog_data->args->comma_separated_output)
+        pstdout_printf (state_data->pstate,
+			",Lower NR,Lower C,Lower NC,Upper NC,Upper C,Upper NR");
+      else
+        pstdout_printf (state_data->pstate,
+			" | Lower NR   | Lower C    | Lower NC   | Upper NC   | Upper C    | Upper NR  ");
     }
 
   if (state_data->prog_data->args->comma_separated_output)
