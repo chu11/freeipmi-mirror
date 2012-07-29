@@ -23,6 +23,8 @@ o In bmc-config, add configuration support for
   Maximum_Privilege_Cipher_Suite_Id_15 under RMCPplus_Conf_Privilege.
 o Globally support Cipher Suite ID 15 and 16 based on comments from
   Intel.
+o In ipmi-sensors, support --output-sensor-thresholds, to allow
+  outputting of sensor thresholds in default output for scripting.
 o In ipmi-sel, support new --post-clear option.
 o In bmc-device, support new --set-sensor-reading-and-event-status
   option.
