@@ -1087,6 +1087,16 @@ BMC/IPMI Configuration Issue #32: [COMPLIANCE]
   Notes: Motherboard has internal password requirements leading to
   error.
 
+BMC/IPMI Configuration Issue #33: [COMPLIANCE]
+
+  When retrieving boot flags via Get System Boot Options, the response
+  payload under IPMI 2.0 contains an extra 12 bytes of
+  unknown/unspecified data.
+
+  Seen on: HP DL380 G5
+
+  Resolution: None 
+
 ----------------------------------------------------------------------
 
 -------------------------------------------------------
