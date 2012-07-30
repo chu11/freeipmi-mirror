@@ -242,6 +242,11 @@ Ipmidetect/Ipmidetectd
 
 A tool and daemon for IPMI node detection.
 
+Ipmiseld
+
+A daemon that regularly polls the SEL and stores the events to the
+local syslog.
+
 Additional information, examples, and general trouble-shooting can be
 found in each of the tool manpages.
 
