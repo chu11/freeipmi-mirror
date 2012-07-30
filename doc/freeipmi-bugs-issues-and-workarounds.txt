@@ -429,7 +429,7 @@ LAN Session Issue #7: [COMPLIANCE]
   IPMI 1.5 sessions are not supported, only IPMI 2.0 sessions are
   supported despite IPMI 1.5 being required for IPMI 2.0 systems.
 
-  Seen on: HP Proliant DL 145 server
+  Seen on: HP Proliant DL 145 server, HP DL380 G5
 
   Resolution: None
 
