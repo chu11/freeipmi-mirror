@@ -1,6 +1,10 @@
 2012-07-30  Albert Chu <chu11@llnl.gov>
 
 	* configure.ac: Prep for beta release.
+
+	* README, man/freeipmi.7.pre.in: Update with ipmiseld information.
+
+	* libfreeipmi/include/Makefile.am: Add missing files.
 	
 2012-07-27  Albert Chu <chu11@llnl.gov>
 
