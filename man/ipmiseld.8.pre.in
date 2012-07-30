@@ -32,7 +32,7 @@ ipmiseld \- IPMI SEL logging daemon
 .SH "DESCRIPTION"
 The
 .B ipmiseld
-daemon reads the system event log (SEL) of specified hosts and stores
+daemon polls the system event log (SEL) of specified hosts and stores
 the logs into the local syslog.  By default, the daemon can also make
 best efforts to manage the remote SEL's buffer to ensure events are
 never lost.  Recent logging data will be cached to disk to ensure that
