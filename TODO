@@ -325,6 +325,10 @@ Workaround for CVE
 
 perl -pe 's/perm -777 -exec chmod a\+rwx/perm -755 -exec chmod  755 /' Makefile.in > Makefile.in.new
 
+Workaround for CVE 2012-3386
+
+perl -pe 's/chmod a\+w \$\(distdir\)/chmod u\+w \$\(distdir\)/' Makefile.in > Makefile.in.new
+
 info-gnu@gnu.org template e-mail 
 
 FreeIPMI X.X.X has been released. It can be downloaded at:
