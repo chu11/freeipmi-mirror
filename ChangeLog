@@ -1,3 +1,7 @@
+2012-07-30  Albert Chu <chu11@llnl.gov>
+
+	* configure.ac: Prep for beta release.
+	
 2012-07-27  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/: Support --output-sensor-thresholds.
