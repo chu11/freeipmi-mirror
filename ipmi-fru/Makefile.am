@@ -23,6 +23,8 @@ ipmi_fru_SOURCES = \
 	ipmi-fru.h \
 	ipmi-fru-argp.c \
 	ipmi-fru-argp.h \
+	ipmi-fru-oem-wistron.c \
+	ipmi-fru-oem-wistron.h \
 	ipmi-fru-output.c \
 	ipmi-fru-output.h
 

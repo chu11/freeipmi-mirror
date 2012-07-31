@@ -4,6 +4,8 @@
 	Fix macro naming.
 
 	* ipmi-oem/: Support Wistron read/write/clear-proprietary-string.
+
+	* ipmi-fru/: Support Wistron OEM FRU record. 
 	
 2012-07-30  Albert Chu <chu11@llnl.gov>
 

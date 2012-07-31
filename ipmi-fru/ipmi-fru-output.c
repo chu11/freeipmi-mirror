@@ -50,6 +50,7 @@
 
 #include "ipmi-fru.h"
 #include "ipmi-fru-output.h"
+#include "ipmi-fru-oem-wistron.h"
 
 #include "freeipmi-portability.h"
 
@@ -1111,6 +1112,21 @@ ipmi_fru_output_oem_record (ipmi_fru_state_data_t *state_data,
     pstdout_printf (state_data->pstate,
                     "  FRU OEM Manufacturer ID: %Xh\n",
                     manufacturer_id);
+
+  if (state_data->prog_data->args->interpret_oem_data)
+    {
+      if (state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_WISTRON)
+	{
+	  if ((ret = ipmi_fru_oem_wistron_oem_record (state_data,
+						      manufacturer_id,
+						      oem_data,
+						      oem_data_len)) < 0)
+	    return (-1);
+
+	  if (ret)
+	    return (0);
+	}
+    }
 
   if (oem_data_len)
     {

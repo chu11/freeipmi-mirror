@@ -115,7 +115,7 @@ motherboards.
 #include <@top_srcdir@/man/manpage-common-workaround-extra-text.man>
 #include <@top_srcdir@/man/manpage-common-oem-interpretation.man>
 .LP
-Currently None
+Wistron/Dell Poweredge C6220
 .SH "EXAMPLES"
 .B # ipmi-fru 
 .PP
