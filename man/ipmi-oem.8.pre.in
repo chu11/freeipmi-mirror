@@ -470,6 +470,32 @@ to be output.  If the verbose option is set, additional error messages
 will be output as valid policies are being searched for.  Command
 confirmed to work on Intel S2600JF (Appro 512X).
 .TP
+.B set-node-manager-policy \fIdomainid=num\fR \fIpolicyid=num\fR \fIpolicytrigger=none|inlet\fR \fIpolicytriggerlimit=num\fR \fIpowerlimit=watts\fR \fIcorrectiontimelimit=ms\fR \fIstatisticsreportingperiod=seconds\fR [\fpolicystate=enable|disable]\fR [\fIpolicyexceptionaction=alert|shutdown\fR]
+This OEM command will add or modify an indicated policy ID from the
+domain ID.  Most of the fields above are required, although they can
+be listed in any order.  By default any created/modified policy will
+be enabled, however this can be overridden by \fIpolicystate\fR.
+\fIpolicyexceptionaction\fR may be specified multiple times to
+configure multiple actions or can be skipped to configure no actions.
+The units of the \fIpolicytriggerlimit\fR will depend on the
+\fIpolicytrigger\fR selected.  Most notably, if the
+\fIpolicytrigger\fR or \fIinlet\fR, which refers to inlet temperature,
+the units of \fRpolicytriggerlimit\fR will be in Celsius.  If the
+\fIpolicytrigger\fR is \fInone\fR, the \fIpolicytriggerlimit\fR will
+be ignored and the the power limit specified by \fIpowerlimit\fR will
+be used as the policy trigger limit.  The \fIcorrectiontimelimit\fR
+specifies the time the Node Manager must take corrective actions to
+bring back the system within limits before taking the actions
+specified in \fIpolicyexceptionaction\fR.
+\fIstatisticsreportingperiod\fR is the number of seconds that measured
+power will be averaged for reporting.  Command confirmed to work on
+Intel S2600JF (Appro 512X).
+.TP
+.B remove-node-manager-policy \fIdomainid=num\fR \fIpolicyid=num\fR
+This OEM command will remove the indicated policy ID from the domain
+ID.  Both the \fIdomainid\fR and \fIpolicyid\fR are required.  Command
+confirmed to work on Intel S2600JF (Appro 512X).
+.TP
 .B get-node-manager-version
 This OEM command will output the current Intel Node Manager version
 information.  Command confirmed to work on Intel S5500WB (Penguin
