@@ -1346,6 +1346,27 @@ struct ipmi_oem_command oem_wistron[] =
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_wistron_set_password_policy
     },
+    {
+      "read-proprietary-string",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_read_proprietary_string
+    },
+    {
+      "write-proprietary-string",
+      "<string>",
+      1,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_write_proprietary_string
+    },
+    {
+      "clear-proprietary-string",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_wistron_clear_proprietary_string
+    },
 #if 0
 /* can't verify - doesn't appear to work */
     {

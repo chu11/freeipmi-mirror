@@ -1201,6 +1201,22 @@ and contain three of the following four, an English uppercase
 character (A-Z), an English lowercase character (a-z), a digit (0-9),
 a special character (!, $, #, %, etc.).  Command confirmed to work on
 Wistron / Dell Poweredge C6220.
+.TP
+.B read-proprietary-string
+This OEM command will read the proprietary string stored in the FRU.
+The proprietary string is a string the user may set for any management
+purpose.  It can also be read via
+.B ipmi-fru.
+Command confirmed to work on Wistron / Dell Poweredge C6220.
+.TP
+.B set-proprietary-string <string>
+This OEM command will write the proprietary string stored in the FRU.
+The maximum length string is 80 characters.  Command confirmed to work
+on Wistron / Dell Poweredge C6220.
+.TP
+.B clear-proprietary-string
+This OEM command will clear the proprietary string stored in the FRU.
+Command confirmed to work on Wistron / Dell Poweredge C6220.
 .if 0 \{
 .\" XXX - is true, will reset BMC internally???
 .TP

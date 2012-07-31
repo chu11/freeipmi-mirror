@@ -30,6 +30,7 @@ o In bmc-device, support new --set-sensor-reading-and-event-status
   option.
 o In ipmi-oem, support Wistron OEM commands extensions.
 o In ipmi-sel, support Wistron OEM SEL interpretations.
+o In ipmi-fru, support Wistron OEM FRU records.
 
 Tools - Bug Fixes/Minor Changes
 -------------------------------

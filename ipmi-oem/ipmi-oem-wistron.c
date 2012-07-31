@@ -2133,6 +2133,7 @@ ipmi_oem_wistron_set_ssh_redirect_function (ipmi_oem_state_data_t *state_data)
 }
 #endif	/* 0 */
 
+#if 0
 static int
 _wistron_oem_strerror (ipmi_oem_state_data_t *state_data,
 		       uint8_t comp_code,
@@ -2199,6 +2200,7 @@ _wistron_oem_strerror (ipmi_oem_state_data_t *state_data,
 
   return (0);
 }
+#endif	/* 0 */
 
 #if 0
 /* can't verify - doesn't appear to work */
@@ -3024,6 +3026,223 @@ ipmi_oem_wistron_set_password_policy (ipmi_oem_state_data_t *state_data)
                                                    2,
                                                    IPMI_CMD_OEM_WISTRON_SET_PASSWORD_POLICY,
                                                    IPMI_NET_FN_OEM_WISTRON_GENERIC_RS,
+                                                   NULL) < 0)
+    goto cleanup;
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_wistron_read_proprietary_string (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  char string[IPMI_OEM_WISTRON_PROPRIETARY_STRING_MAX + 1];
+  int rs_len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  /* Read Proprietary String Request
+   *
+   * 0x08 - network function (firmware)
+   * 0x0B - OEM cmd
+   * 0x?? - offset of the string
+   * 0x?? - byte cont
+   * 
+   * Read Proprietary String Response
+   *
+   * 0x0B - cmd
+   * 0x?? - Completion Code
+   * 0x?? - offset of the string
+   * 0x?? - byte cont
+   * 0x??-0x?? - proprietary string 
+   */
+
+  bytes_rq[0] = IPMI_CMD_OEM_WISTRON_READ_PROPRIETARY_STRING;
+  bytes_rq[1] = 0;
+  bytes_rq[2] = IPMI_OEM_WISTRON_PROPRIETARY_STRING_MAX; 
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              IPMI_NET_FN_FIRMWARE_RQ, /* network function */
+                              bytes_rq, /* data */
+                              3, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   4,
+                                                   IPMI_CMD_OEM_WISTRON_READ_PROPRIETARY_STRING,
+						   IPMI_NET_FN_FIRMWARE_RS,
+                                                   NULL) < 0)
+    goto cleanup;
+
+  /* no string */
+  if (!bytes_rs[3])
+    goto out;
+
+  if (bytes_rs[3] > IPMI_OEM_WISTRON_PROPRIETARY_STRING_MAX)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "invalid length string returned\n");
+      goto cleanup;
+    }
+
+  memset (string, '\0', IPMI_OEM_WISTRON_PROPRIETARY_STRING_MAX + 1);
+  memcpy (string, &bytes_rs[4], bytes_rs[3]);
+
+  pstdout_printf (state_data->pstate,
+		  "%s\n",
+		  string);
+
+ out:
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_wistron_write_proprietary_string (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  unsigned int i;
+  unsigned int len;
+  int rs_len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 1);
+
+  /* Write Proprietary String Request
+   *
+   * 0x08 - network function (firmware)
+   * 0x0C - OEM cmd
+   * 0x?? - offset of the string
+   * 0x?? - byte cont
+   * 0x?? - 0x?? - string
+   * 
+   * Write Proprietary String Response
+   *
+   * 0x0C - cmd
+   * 0x?? - Completion Code
+   */
+
+  if (strlen (state_data->prog_data->args->oem_options[0]) > IPMI_OEM_WISTRON_PROPRIETARY_STRING_MAX)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s' : string too long\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[0]);
+      goto cleanup;
+    }
+
+  len = strlen (state_data->prog_data->args->oem_options[0]);
+  
+  for (i = 0; i < ((len - 1) / IPMI_OEM_WISTRON_PROPRIETARY_STRING_BLOCK) + 1; i++)
+    {
+      bytes_rq[0] = IPMI_CMD_OEM_WISTRON_WRITE_PROPRIETARY_STRING;
+      bytes_rq[1] = i * IPMI_OEM_WISTRON_PROPRIETARY_STRING_BLOCK;
+      if (len > ((i + 1) * IPMI_OEM_WISTRON_PROPRIETARY_STRING_BLOCK))
+	bytes_rq[2] = IPMI_OEM_WISTRON_PROPRIETARY_STRING_BLOCK;
+      else
+	bytes_rq[2] = len - (i * IPMI_OEM_WISTRON_PROPRIETARY_STRING_BLOCK);
+
+      memcpy (&bytes_rq[3],
+	      state_data->prog_data->args->oem_options[0] + (i * IPMI_OEM_WISTRON_PROPRIETARY_STRING_BLOCK),
+	      bytes_rq[2]);
+            
+      if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+				  0, /* lun */
+				  IPMI_NET_FN_FIRMWARE_RQ, /* network function */
+				  bytes_rq, /* data */
+				  3 + bytes_rq[2], /* num bytes */
+				  bytes_rs,
+				  IPMI_OEM_MAX_BYTES)) < 0)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_cmd_raw: %s\n",
+			   ipmi_ctx_errormsg (state_data->ipmi_ctx));
+	  goto cleanup;
+	}
+      
+      if (ipmi_oem_check_response_and_completion_code (state_data,
+						       bytes_rs,
+						       rs_len,
+						       2,
+						       IPMI_CMD_OEM_WISTRON_WRITE_PROPRIETARY_STRING,
+						       IPMI_NET_FN_FIRMWARE_RS,
+						       NULL) < 0)
+	goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_wistron_clear_proprietary_string (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  int rs_len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  /* Clear Proprietary String Request
+   *
+   * 0x08 - network function (firmware)
+   * 0x0D - OEM cmd
+   * 
+   * Clear Proprietary String Response
+   *
+   * 0x0D - cmd
+   * 0x?? - Completion Code
+   */
+
+  bytes_rq[0] = IPMI_CMD_OEM_WISTRON_CLEAR_PROPRIETARY_STRING;
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+                              IPMI_NET_FN_FIRMWARE_RQ, /* network function */
+                              bytes_rq, /* data */
+                              1, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+                                                   2,
+                                                   IPMI_CMD_OEM_WISTRON_READ_PROPRIETARY_STRING,
+						   IPMI_NET_FN_FIRMWARE_RS,
                                                    NULL) < 0)
     goto cleanup;
 

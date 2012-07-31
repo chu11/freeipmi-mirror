@@ -1,3 +1,10 @@
+2012-07-31  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-oem-spec.h, ipmi-oem/:
+	Fix macro naming.
+
+	* ipmi-oem/: Support Wistron read/write/clear-proprietary-string.
+	
 2012-07-30  Albert Chu <chu11@llnl.gov>
 
 	* configure.ac: Prep for beta release.
