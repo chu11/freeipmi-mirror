@@ -1117,7 +1117,7 @@ ipmi_fru_output_oem_record (ipmi_fru_state_data_t *state_data,
       unsigned int i;
 
       pstdout_printf (state_data->pstate,
-                      "  FRU OEM Code Mask:");
+                      "  FRU OEM Data:");
 
       for (i = 0; i < oem_data_len; i++)
         {
