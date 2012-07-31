@@ -103,13 +103,14 @@ static char *ipmi_fru_parse_errmsgs[] =
     "FRU language code not supported",    /* 19 */
     "FRU invalid BCD encoding",           /* 20 */
     "FRU sentinel value not found",       /* 21 */
-    "buffer too small to hold result",    /* 22 */
-    "out of memory",                      /* 23 */
-    "device busy",                        /* 24 */
-    "internal IPMI error",                /* 25 */
-    "internal system error",              /* 26 */
-    "internal error",                     /* 27 */
-    "errnum out of range",                /* 28 */
+    "not available for this record",	  /* 22 */
+    "buffer too small to hold result",    /* 23 */
+    "out of memory",                      /* 24 */
+    "device busy",                        /* 25 */
+    "internal IPMI error",                /* 26 */
+    "internal system error",              /* 27 */
+    "internal error",                     /* 28 */
+    "errnum out of range",                /* 29*/
     NULL
   };
 
@@ -1359,6 +1360,64 @@ ipmi_fru_parse_read_data_area (ipmi_fru_parse_ctx_t ctx,
   return (rv);
 }
 
+int
+ipmi_fru_parse_read_multirecord_record_type (ipmi_fru_parse_ctx_t ctx,
+					     uint8_t *record_type_id)
+{
+  int rv = -1;
+
+  if (!ctx || ctx->magic != IPMI_FRU_PARSE_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_fru_parse_ctx_errormsg (ctx), ipmi_fru_parse_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!ctx->ipmi_ctx)
+    {
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_IPMI_ERROR);
+      return (-1);
+    }
+
+  if (!record_type_id)
+    {
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if ((ctx->chassis_info_area_starting_offset && !ctx->chassis_info_area_parsed)
+      || (ctx->board_info_area_starting_offset && !ctx->board_info_area_parsed)
+      || (ctx->product_info_area_starting_offset && !ctx->product_info_area_parsed))
+    {
+      FRU_PARSE_SET_ERRNUM (ctx, IPMI_FRU_PARSE_ERR_NOT_AVAILABLE_FOR_THIS_RECORD);
+      goto cleanup;
+    }
+
+  if (ctx->multirecord_area_starting_offset && !ctx->multirecord_area_parsed)
+    {
+      unsigned int record_type_id_tmp;
+
+      if (!ctx->multirecord_area_offset_in_bytes)
+	ctx->multirecord_area_offset_in_bytes = ctx->multirecord_area_starting_offset * 8;
+      
+      if (_parse_multirecord_header (ctx,
+				     NULL,
+				     &record_type_id_tmp,
+				     NULL,
+				     NULL,
+				     NULL,
+				     NULL) < 0)
+	goto cleanup;
+
+      (*record_type_id) = record_type_id_tmp;
+
+      goto out;
+    }
+
+ out:
+  rv = 0;
+ cleanup:
+  return (rv);
+}
 
 static int
 _get_type_length_bytes (ipmi_fru_parse_ctx_t ctx,

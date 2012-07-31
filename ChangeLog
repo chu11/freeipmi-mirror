@@ -6,6 +6,12 @@
 	* ipmi-oem/: Support Wistron read/write/clear-proprietary-string.
 
 	* ipmi-fru/: Support Wistron OEM FRU record. 
+
+	* libfreeipmi/fru-parse/ipmi-fru-parse.c,
+	libfreeipmi/include/freeipmi/fru-parse/ipmi-fru-parse.h (ipmi_fru_parse_read_multirecord_record_type):
+	New function.
+
+	* libfreeipmi/include/freeipmi/record-format/ipmi-fru-oem-record-format.h: New file.
 	
 2012-07-30  Albert Chu <chu11@llnl.gov>
 

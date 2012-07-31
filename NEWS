@@ -109,6 +109,8 @@ o In libfreeipmi, support stats functions and new utility functions in
   sdr sub-library.
 o In libfreeipmi, sel sub-library now supports the output of entity
   sensor names.
+o In libfreeipmi, fru-parse sub library now supports new function to
+  determine multirecord type.
 o In libipmimonitoring, support entity sensor name output options.
 o In libfreeipmi, create new 'sdr' sub-library which is merger of the
   earlier 'sdr-cache' and 'sdr-parse' libraries.

@@ -1064,6 +1064,7 @@ ipmi_fru_output_oem_record (ipmi_fru_state_data_t *state_data,
   uint8_t oem_data[IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX + 1];
   unsigned int oem_data_len = IPMI_FRU_PARSE_AREA_TYPE_LENGTH_FIELD_MAX;
   char iana_buf[IPMI_FRU_STR_BUFLEN + 1];
+  uint8_t record_type_id;
   int ret;
 
   assert (state_data);
@@ -1115,9 +1116,28 @@ ipmi_fru_output_oem_record (ipmi_fru_state_data_t *state_data,
 
   if (state_data->prog_data->args->interpret_oem_data)
     {
+      if (ipmi_fru_parse_read_multirecord_record_type (state_data->fru_parse_ctx,
+						       &record_type_id) < 0)
+	{
+	  if (IPMI_FRU_PARSE_ERRNUM_IS_NON_FATAL_ERROR (state_data->fru_parse_ctx))
+	    {
+	      pstdout_printf (state_data->pstate,
+			      "  FRU Multirecord OEM Record Error: %s\n",
+			      ipmi_fru_parse_ctx_errormsg (state_data->fru_parse_ctx));
+	      return (0);
+	    }
+	  
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_fru_parse_multirecord_oem_record: %s\n",
+			   ipmi_fru_parse_ctx_errormsg (state_data->fru_parse_ctx));
+	  return (-1);
+	}
+
       if (state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_WISTRON)
 	{
 	  if ((ret = ipmi_fru_oem_wistron_oem_record (state_data,
+						      record_type_id,
 						      manufacturer_id,
 						      oem_data,
 						      oem_data_len)) < 0)

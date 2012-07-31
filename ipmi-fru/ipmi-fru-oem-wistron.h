@@ -34,6 +34,7 @@
 
 /* Returns 1 on interpretation, 0 if not, -1 on error */
 int ipmi_fru_oem_wistron_oem_record (ipmi_fru_state_data_t *state_data,
+				     uint8_t record_type_id,
 				     uint32_t manufacturer_id,
 				     uint8_t *oem_data,
 				     unsigned int oem_data_len);
