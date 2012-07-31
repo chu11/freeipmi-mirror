@@ -2999,9 +2999,9 @@ ipmi_oem_wistron_set_password_policy (ipmi_oem_state_data_t *state_data)
   bytes_rq[0] = IPMI_CMD_OEM_WISTRON_SET_PASSWORD_POLICY;
 
   if (!strcasecmp (state_data->prog_data->args->oem_options[0], "enable"))
-    bytes_rq[1] = IPMI_CMD_OEM_WISTRON_PASSWORD_POLICY_ENABLE;
+    bytes_rq[1] = IPMI_OEM_WISTRON_PASSWORD_POLICY_ENABLE;
   else 
-    bytes_rq[1] = IPMI_CMD_OEM_WISTRON_PASSWORD_POLICY_DISABLE;
+    bytes_rq[1] = IPMI_OEM_WISTRON_PASSWORD_POLICY_DISABLE;
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
