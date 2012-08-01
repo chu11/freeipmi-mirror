@@ -31,6 +31,8 @@ o In ipmi-oem, support additional Intel Node Manager commands,
   - get-node-manager-capabilities
   - node-manager-policy-control 
   - get-node-manager-policy
+  - set-node-manager-policy
+  - remove-node-manager-policy
 o In ipmi-oem, support Wistron OEM commands extensions.
 o In ipmi-sel, support Wistron OEM SEL interpretations.
 

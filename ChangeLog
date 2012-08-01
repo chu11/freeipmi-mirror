@@ -1,3 +1,9 @@
+2012-XX-XX  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/: Add IntelNM get-node-manager-capabilities,
+	node-manager-policy-control, get-node-manager-policy,
+	set-node-manager-policy, remove-node-manager-policy.
+	
 2012-07-24  Albert Chu <chu11@llnl.gov>
 
 	* Fix error output message after confirmation from vendor on text.
