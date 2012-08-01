@@ -2082,6 +2082,303 @@ ipmi_oem_intelnm_get_node_manager_policy (ipmi_oem_state_data_t *state_data)
 int
 ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
 {
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t target_channel_number = 0;
+  uint8_t target_slave_address = 0;
+  uint8_t target_lun = 0;
+  uint8_t domainid = 0;
+  int domainid_specified = 0;
+  uint8_t policyid = 0;
+  int policyid_specified = 0;
+  uint8_t policytrigger = 0;
+  int policytrigger_specified = 0;
+  uint16_t powerlimit = 0;
+  int powerlimit_specified = 0;
+  uint32_t correctiontimelimit = 0;
+  int correctiontimelimit_specified = 0;
+  uint16_t policytriggerlimit = 0;
+  int policytriggerlimit_specified = 0;
+  uint16_t statisticsreportingperiod = 0;
+  int statisticsreportingperiod_specified = 0;
+  uint8_t policystate = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_ENABLED;
+  uint8_t policyexceptionaction_alert = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_EXCEPTION_ACTION_DISABLE;
+  uint8_t policyexceptionaction_shutdown = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_EXCEPTION_ACTION_DISABLE;
+  int rv = -1;
+
+  assert (state_data);
+
+  if (state_data->prog_data->args->oem_options_count)
+    {
+      int i;
+      
+      for (i = 0; i < state_data->prog_data->args->oem_options_count; i++)
+        {
+          char *key = NULL;
+          char *value = NULL;
+
+          if (ipmi_oem_parse_key_value (state_data,
+                                        i,
+                                        &key,
+                                        &value) < 0)
+            goto cleanup;
+
+          if (!strcasecmp (key, "domainid"))
+            {
+	      uint8_t domainid_tmp;
+
+              if (ipmi_oem_parse_1_byte_field (state_data,
+                                               i,
+                                               value,
+                                               &domainid_tmp) < 0)
+                goto cleanup;
+
+              if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domainid_tmp))
+                {
+                  pstdout_fprintf (state_data->pstate,
+                                   stderr,
+                                   "%s:%s invalid OEM option argument '%s' : invalid domain id\n",
+                                   state_data->prog_data->args->oem_id,
+                                   state_data->prog_data->args->oem_command,
+                                   state_data->prog_data->args->oem_options[i]);
+                  goto cleanup;
+                }
+              
+	      domainid = domainid_tmp;
+	      domainid_specified++;
+		}
+          else if (!strcasecmp (key, "policyid"))
+            {
+	      uint8_t policyid_tmp;
+
+              if (ipmi_oem_parse_1_byte_field (state_data,
+                                               i,
+                                               value,
+                                               &policyid_tmp) < 0)
+                goto cleanup;
+              
+	      policyid = policyid_tmp;
+	      policyid_specified++;
+            }
+	  else if (!strcasecmp (key, "policytrigger"))
+	    {
+	      if (strcasecmp (value, "none")
+		  || strcasecmp (value, "inlet"))
+		{
+                  pstdout_fprintf (state_data->pstate,
+                                   stderr,
+                                   "%s:%s invalid OEM option argument '%s' : invalid policy trigger type\n",
+                                   state_data->prog_data->args->oem_id,
+                                   state_data->prog_data->args->oem_command,
+                                   state_data->prog_data->args->oem_options[i]);
+                  goto cleanup;
+		}
+
+	      if (!strcasecmp (value, "none"))
+		policytrigger = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_NO_POLICY_TRIGGER;
+	      else
+		policytrigger = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_INLET_TEMPERATURE_LIMIT_POLICY_TRIGGER;
+
+	      policytrigger_specified++;
+	    }
+	  else if (!strcasecmp (key, "powerlimit"))
+	    {
+	      if (ipmi_oem_parse_2_byte_field (state_data, i, value, &powerlimit) < 0)
+		goto cleanup;
+
+	      powerlimit_specified++;
+	    }
+	  else if (!strcasecmp (key, "correctiontimelimit"))
+	    {
+	      if (ipmi_oem_parse_4_byte_field (state_data, i, value, &correctiontimelimit) < 0)
+		goto cleanup;
+
+	      correctiontimelimit_specified++;
+	    }
+	  else if (!strcasecmp (key, "policytriggerlimit"))
+	    {
+	      if (ipmi_oem_parse_2_byte_field (state_data, i, value, &policytriggerlimit) < 0)
+		goto cleanup;
+
+	      policytriggerlimit_specified++;
+	    }
+	  else if (!strcasecmp (key, "statisticsreportingperiod"))
+	    {
+	      if (ipmi_oem_parse_2_byte_field (state_data, i, value, &statisticsreportingperiod) < 0)
+		goto cleanup;
+
+	      statisticsreportingperiod_specified++;
+	    }
+	  else if (!strcasecmp (key, "policystate"))
+	    {
+	      if (strcasecmp (value, "enable")
+		  && strcasecmp (value, "remove"))
+		{
+		  pstdout_fprintf (state_data->pstate,
+				   stderr,
+				   "%s:%s invalid OEM option argument '%s' : invalid policy state\n",
+				   state_data->prog_data->args->oem_id,
+				   state_data->prog_data->args->oem_command,
+				   state_data->prog_data->args->oem_options[i]);
+		  goto cleanup;
+		}
+	      
+	      if (!strcasecmp (value, "enable"))
+		policystate = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_ENABLED;
+	      else
+		policystate = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_DISABLED;
+	      
+	    }
+	  else if (!strcasecmp (key, "policyexceptionaction"))
+	    {
+	      if (strcasecmp (value, "alert")
+		  && strcasecmp (value, "shutdown"))
+		{
+		  pstdout_fprintf (state_data->pstate,
+				   stderr,
+				   "%s:%s invalid OEM option argument '%s' : invalid policy exception action\n",
+				   state_data->prog_data->args->oem_id,
+				   state_data->prog_data->args->oem_command,
+				   state_data->prog_data->args->oem_options[i]);
+		  goto cleanup;
+		}
+
+	      if (!strcasecmp (value, "alert"))
+		policyexceptionaction_alert = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_EXCEPTION_ACTION_ENABLE; 
+
+	      if (!strcasecmp (value, "shutdown"))
+		policyexceptionaction_shutdown = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_EXCEPTION_ACTION_ENABLE; 
+	    }
+          else
+            {
+	      pstdout_fprintf (state_data->pstate,
+                               stderr,
+                               "%s:%s invalid OEM option argument '%s' : invalid option\n",
+                               state_data->prog_data->args->oem_id,
+                               state_data->prog_data->args->oem_command,
+                               state_data->prog_data->args->oem_options[i]);
+              goto cleanup;
+            }
+
+          free (key);
+          free (value);
+        }
+    }
+
+  if (!domainid_specified)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "domain ID must be specified\n");
+      goto cleanup;
+    }
+
+  if (!policyid_specified)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "policy ID must be specified\n");
+      goto cleanup;
+    }
+
+  if (!policytrigger_specified)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "policy trigger type must be specified\n");
+      goto cleanup;
+    }
+
+  if (!powerlimit_specified)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "power limit must be specified\n");
+      goto cleanup;
+    }
+
+  if (!correctiontimelimit_specified)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "correction time limit must be specified\n");
+      goto cleanup;
+    }
+
+  if (!policytriggerlimit_specified)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "policy trigger limit must be specified\n");
+      goto cleanup;
+    }
+
+  if (!statisticsreportingperiod_specified)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "statistics reporting period must be specified\n");
+      goto cleanup;
+    }
+
+  if (_ipmi_oem_intelnm_node_manager_init (state_data,
+                                           &target_channel_number,
+                                           &target_slave_address,
+                                           &target_lun) < 0)
+    goto cleanup;
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_oem_intel_node_manager_set_node_manager_policy (state_data->ipmi_ctx,
+							       target_channel_number,
+							       target_slave_address,
+							       target_lun,
+							       domainid,
+							       policystate,
+							       policyid,
+							       policytrigger,
+							       IPMI_OEM_INTEL_NODE_MANAGER_POLICY_CONFIGURATION_ACTION_ADD_POWER_POLICY,
+							       policyexceptionaction_alert,
+							       policyexceptionaction_shutdown,
+							       powerlimit,
+							       correctiontimelimit,
+							       policytriggerlimit,
+							       statisticsreportingperiod,
+							       obj_cmd_rs) < 0)
+    {
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
+	{
+	  int eret;
+	  
+	  if ((eret = _ipmi_oem_intelnm_bad_completion_code (state_data,
+							     NULL,
+							     obj_cmd_rs)) < 0)
+	    goto cleanup;
+	  
+	  if (!eret)
+	    goto efallthrough;
+	}
+      else
+	{
+	efallthrough:
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_cmd_oem_intel_node_manager_set_node_manager_policy: %s\n",
+			   ipmi_ctx_errormsg (state_data->ipmi_ctx));
+	}
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
 }
 
 int

@@ -576,7 +576,7 @@ struct ipmi_oem_command oem_intelnm[] =
     },
     {
       "set-node-manager-policy",
-      "domainid=num policyid=num policytrigger=none|inlet policytriggerlimit=num powerlimit=watts correctiontimelimit=ms statisticsreportingperiod=seconds [policystate=enable|disable] [policyexceptionaction=alert|shutdown]",
+      "domainid=num policyid=num policytrigger=none|inlet powerlimit=watts correctiontimelimit=ms policytriggerlimit=num statisticsreportingperiod=seconds [policystate=enable|disable] [policyexceptionaction=alert|shutdown]",
       0,
       IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
       ipmi_oem_intelnm_set_node_manager_policy

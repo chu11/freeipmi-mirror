@@ -470,7 +470,7 @@ to be output.  If the verbose option is set, additional error messages
 will be output as valid policies are being searched for.  Command
 confirmed to work on Intel S2600JF (Appro 512X).
 .TP
-.B set-node-manager-policy \fIdomainid=num\fR \fIpolicyid=num\fR \fIpolicytrigger=none|inlet\fR \fIpolicytriggerlimit=num\fR \fIpowerlimit=watts\fR \fIcorrectiontimelimit=ms\fR \fIstatisticsreportingperiod=seconds\fR [\fpolicystate=enable|disable]\fR [\fIpolicyexceptionaction=alert|shutdown\fR]
+.B set-node-manager-policy \fIdomainid=num\fR \fIpolicyid=num\fR \fIpolicytrigger=none|inlet\fR \fIpowerlimit=watts\fR \fIcorrectiontimelimit=ms\fR \fIpolicytriggerlimit=num\fR \fIstatisticsreportingperiod=seconds\fR [\fIpolicystate=enable|disable]\fR [\fIpolicyexceptionaction=alert|shutdown\fR]
 This OEM command will add or modify an indicated policy ID from the
 domain ID.  Most of the fields above are required, although they can
 be listed in any order.  By default any created/modified policy will
@@ -479,7 +479,7 @@ be enabled, however this can be overridden by \fIpolicystate\fR.
 configure multiple actions or can be skipped to configure no actions.
 The units of the \fIpolicytriggerlimit\fR will depend on the
 \fIpolicytrigger\fR selected.  Most notably, if the
-\fIpolicytrigger\fR or \fIinlet\fR, which refers to inlet temperature,
+\fIpolicytrigger\fR is \fIinlet\fR, which refers to inlet temperature,
 the units of \fRpolicytriggerlimit\fR will be in Celsius.  If the
 \fIpolicytrigger\fR is \fInone\fR, the \fIpolicytriggerlimit\fR will
 be ignored and the the power limit specified by \fIpowerlimit\fR will
