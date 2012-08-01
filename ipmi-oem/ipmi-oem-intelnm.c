@@ -1372,7 +1372,7 @@ ipmi_oem_intelnm_get_node_manager_capabilities (ipmi_oem_state_data_t *state_dat
           else if (!strcasecmp (key, "policytrigger"))
             {
 	      if (strcasecmp (value, "none")
-		  || strcasecmp (value, "inlet"))
+		  && strcasecmp (value, "inlet"))
 		{
                   pstdout_fprintf (state_data->pstate,
                                    stderr,
@@ -2162,7 +2162,7 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
 	  else if (!strcasecmp (key, "policytrigger"))
 	    {
 	      if (strcasecmp (value, "none")
-		  || strcasecmp (value, "inlet"))
+		  && strcasecmp (value, "inlet"))
 		{
                   pstdout_fprintf (state_data->pstate,
                                    stderr,
