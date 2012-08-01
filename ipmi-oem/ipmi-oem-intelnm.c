@@ -1904,7 +1904,7 @@ _ipmi_oem_intelnm_get_node_manager_policy_common (ipmi_oem_state_data_t *state_d
 		  (per_domain_node_manager_policy_control_enabled == IPMI_OEM_INTEL_NODE_MANAGER_PER_DOMAIN_NODE_MANAGER_POLICY_CONTROL_ENABLED) ? "enabled" : "disabled");
 
   pstdout_printf (state_data->pstate,
-		  "Global Noe Manager Policy Control       : %s\n",
+		  "Global Node Manager Policy Control      : %s\n",
 		  (global_node_manager_policy_control_enabled == IPMI_OEM_INTEL_NODE_MANAGER_GLOBAL_NODE_MANAGER_POLICY_CONTROL_ENABLED) ? "enabled" : "disabled");
 
   pstdout_printf (state_data->pstate,
