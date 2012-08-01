@@ -760,7 +760,7 @@ ipmi_oem_intelnm_get_node_manager_statistics (ipmi_oem_state_data_t *state_data)
 	  if (policyid_specified)
 	    {
 	      pstdout_printf (state_data->pstate,
-			      "Power Policy Administrative State           : %s\n",
+			      "Power Policy Administrative State             : %s\n",
 			      (policy_global_administrative_state == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_GLOBAL_ADMINISTRATIVE_STATE_ENABLED) ? "Enabled" : "Disabled");
 	      
 	      pstdout_printf (state_data->pstate,
