@@ -3,6 +3,8 @@
 	* ipmi-oem/: Add IntelNM get-node-manager-capabilities,
 	node-manager-policy-control, get-node-manager-policy,
 	set-node-manager-policy, remove-node-manager-policy.
+
+	* libfreeipmi/: Fix Intel NM bugs.
 	
 2012-07-24  Albert Chu <chu11@llnl.gov>
 
