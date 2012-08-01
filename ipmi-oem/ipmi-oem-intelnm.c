@@ -1489,7 +1489,6 @@ ipmi_oem_intelnm_node_manager_policy_control (ipmi_oem_state_data_t *state_data)
       goto cleanup;
     }
 
-  
   if (state_data->prog_data->args->oem_options_count > 1)
     {
       int i;
@@ -1527,6 +1526,7 @@ ipmi_oem_intelnm_node_manager_policy_control (ipmi_oem_state_data_t *state_data)
                 }
               
               domainid = domainid_tmp;
+	      domainid_specified++;
             }
           else if (!strcasecmp (key, "policyid"))
             {
