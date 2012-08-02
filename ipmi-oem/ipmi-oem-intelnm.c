@@ -2222,7 +2222,7 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
       else if (!strcasecmp (key, "policystate"))
 	{
 	  if (strcasecmp (value, "enable")
-	      && strcasecmp (value, "remove"))
+	      && strcasecmp (value, "disable"))
 	    {
 	      pstdout_fprintf (state_data->pstate,
 			       stderr,
