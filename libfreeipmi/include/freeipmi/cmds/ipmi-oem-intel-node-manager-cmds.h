@@ -257,9 +257,9 @@ int fill_cmd_oem_intel_node_manager_get_node_manager_policy (uint8_t domain_id,
 
 int fill_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds (uint8_t domain_id,
                                                                        uint8_t policy_id,
-                                                                       uint8_t *alert_threshold1,
-                                                                       uint8_t *alert_threshold2,
-                                                                       uint8_t *alert_threshold3,
+                                                                       uint16_t *alert_threshold1,
+                                                                       uint16_t *alert_threshold2,
+                                                                       uint16_t *alert_threshold3,
                                                                        fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds (uint8_t domain_id,
