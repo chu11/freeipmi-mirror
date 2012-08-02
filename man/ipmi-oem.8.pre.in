@@ -458,19 +458,22 @@ policies used by the Intel Node Manager.  If no \fIdomainid\fR is
 specified, then the Node Manager will be enabled or globally disabled.
 If a \fIdomainid\fR is specified, only that domain will be enabled or
 disabled.  If both a \fIdomainid\fR and \fIpolicyid\fR are specified,
-only that specific policy within the domain will be specified.
-Command confirmed to work on Intel S2600JF (Appro 512X).
+only that specific policy within the domain will be specified.  This
+OEM command will be required to enable or disable policies before many
+of the commands below can be used for configuration or use.  Command
+confirmed to work on Intel S2600JF (Appro 512X).
 .TP
 .B get-node-manager-policy \fI[domainid=num]\fR \fI[policyid=num]\fR
 This OEM command will get the current node manager policy.  If no
-\fIdomainid\fR is specified, all domain IDs and policy Ids will be
-attempted to be output.  If a \fIdomainid\fR is specified but a
-\fIpolicyid\fR is not, all policies within a domain will be attempted
-to be output.  If the verbose option is set, additional error messages
-will be output as valid policies are being searched for.  Command
-confirmed to work on Intel S2600JF (Appro 512X).
+\fIdomainid\fR is specified, all policies for all domain IDs and
+policy Ids will be attempted to be output.  If a \fIdomainid\fR is
+specified but a \fIpolicyid\fR is not, all policies within a domain
+will be attempted to be output.  If the verbose option is set,
+additional error messages will be output as valid policies are being
+searched for.  Command confirmed to work on Intel S2600JF (Appro
+512X).
 .TP
-.B set-node-manager-policy \fIdomainid=num\fR \fIpolicyid=num\fR \fIpolicytrigger=none|inlet\fR \fIpowerlimit=watts\fR \fIcorrectiontimelimit=ms\fR \fIpolicytriggerlimit=num\fR \fIstatisticsreportingperiod=seconds\fR [\fIpolicystate=enable|disable]\fR [\fIpolicyexceptionaction=alert|shutdown\fR]
+.B set-node-manager-policy \fIdomainid=num\fR \fIpolicyid=num\fR \fIpolicytrigger=none|inlet\fR \fIpowerlimit=watts\fR \fIcorrectiontimelimit=ms\fR \fIpolicytriggerlimit=num\fR \fIstatisticsreportingperiod=seconds\fR \fI[policystate=enable|disable]\fR \fI[policyexceptionaction=alert|shutdown]\fR
 This OEM command will add or modify an indicated policy ID from the
 domain ID.  Most of the fields above are required, although they can
 be listed in any order.  By default any created/modified policy will
@@ -488,13 +491,34 @@ specifies the time the Node Manager must take corrective actions to
 bring back the system within limits before taking the actions
 specified in \fIpolicyexceptionaction\fR.
 \fIstatisticsreportingperiod\fR is the number of seconds that measured
-power will be averaged for reporting.  Command confirmed to work on
+power will be averaged for reporting.  Please see
+\fBget\-node\-manager\-policy\fR to determine proper ranges for
+\fIpowerlimit\fR, \fIcorrectiontimelimit\fR, \fIpolicytriggerlimit\fR,
+and \fIstatisticsreportingperiod\fR.  Command confirmed to work on
 Intel S2600JF (Appro 512X).
 .TP
 .B remove-node-manager-policy \fIdomainid=num\fR \fIpolicyid=num\fR
 This OEM command will remove the indicated policy ID from the domain
 ID.  Both the \fIdomainid\fR and \fIpolicyid\fR are required.  Command
 confirmed to work on Intel S2600JF (Appro 512X).
+.TP
+.B get-node-manager-alert-thresholds \fI[domainid=num]\fR \fI[policyid=num]\fR 
+This OEM command will get the current alert thresholds.  If no
+\fIdomainid\fR is specified, all alert thresholds for domain IDs and
+policy Ids will be attempted to be output.  If a \fIdomainid\fR is
+specified but a \fIpolicyid\fR is not, all policies within a domain
+will be attempted to be output.  The units of the thresholds will
+depend on the configuration of the current policy.  If the verbose
+option is set, additional error messages will be output as valid
+policies are being searched for.  Command confirmed to work on Intel
+S2600JF (Appro 512X).
+.TP
+.B set-node-manager-alert-thresholds \fIdomainid=num\fR \fIpolicyid=num\fR \fI[threshold1=num]\fR \fI[threshold2=num]\fR \fI[threshold3=num]\fR
+This OEM command will set the current alert thresholds for a given
+domain ID and policy ID.  Up to three thresholds can be specified, The
+units of the thresholds will depend on the configuration of the
+current policy.  Command confirmed to work on Intel S2600JF (Appro
+512X).
 .TP
 .B get-node-manager-version
 This OEM command will output the current Intel Node Manager version

@@ -33,6 +33,8 @@ o In ipmi-oem, support additional Intel Node Manager commands,
   - get-node-manager-policy
   - set-node-manager-policy
   - remove-node-manager-policy
+  - get-node-manager-alert-thresholds
+  - set-node-manager-alert-thresholds
 o In ipmi-oem, support Wistron OEM commands extensions.
 o In ipmi-sel, support Wistron OEM SEL interpretations.
 
@@ -113,6 +115,8 @@ o In libfreeipmi, support stats functions and new utility functions in
   sdr sub-library.
 o In libfreeipmi, sel sub-library now supports the output of entity
   sensor names.
+o In libfreeipmi, fix argument size bugs with Intel Node Manager
+  functions.
 o In libipmimonitoring, support entity sensor name output options.
 o In libfreeipmi, create new 'sdr' sub-library which is merger of the
   earlier 'sdr-cache' and 'sdr-parse' libraries.
