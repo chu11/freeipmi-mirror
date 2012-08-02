@@ -1934,7 +1934,7 @@ _ipmi_oem_intelnm_get_node_manager_policy_common (ipmi_oem_state_data_t *state_d
 
   pstdout_printf (state_data->pstate,
 		  "Policy Exception Shutdown System Action : %s\n",
-		  (policy_exception_actions_send_alert == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_EXCEPTION_ACTION_ENABLE) ? "enabled" : "disabled");
+		  (policy_exception_actions_shutdown_system == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_EXCEPTION_ACTION_ENABLE) ? "enabled" : "disabled");
 		  
   pstdout_printf (state_data->pstate,
 		  "Power Limit                             : %u W\n",
