@@ -2958,7 +2958,179 @@ ipmi_oem_intelnm_get_node_manager_alert_thresholds (ipmi_oem_state_data_t *state
 int
 ipmi_oem_intelnm_set_node_manager_alert_thresholds (ipmi_oem_state_data_t *state_data)
 {
-  return (0);
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t target_channel_number = 0;
+  uint8_t target_slave_address = 0;
+  uint8_t target_lun = 0;
+  uint8_t domainid = 0;
+  int domainid_specified = 0;
+  uint8_t policyid = 0;
+  int policyid_specified = 0;
+  uint16_t threshold1 = 0;
+  int threshold1_specified = 0;
+  uint16_t threshold2 = 0;
+  int threshold2_specified = 0;
+  uint16_t threshold3 = 0;
+  int threshold3_specified = 0;
+  int rv = -1;
+  int i;
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count >= 2);
+
+  for (i = 0; i < state_data->prog_data->args->oem_options_count; i++)
+    {
+      char *key = NULL;
+      char *value = NULL;
+      
+      if (ipmi_oem_parse_key_value (state_data,
+				    i,
+				    &key,
+				    &value) < 0)
+	goto cleanup;
+
+      if (!strcasecmp (key, "domainid"))
+	{
+	  uint8_t domainid_tmp;
+	  
+	  if (ipmi_oem_parse_1_byte_field (state_data,
+					   i,
+					   value,
+					   &domainid_tmp) < 0)
+	    goto cleanup;
+	  
+	  if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domainid_tmp))
+	    {
+	      pstdout_fprintf (state_data->pstate,
+			       stderr,
+			       "%s:%s invalid OEM option argument '%s' : invalid domain id\n",
+			       state_data->prog_data->args->oem_id,
+			       state_data->prog_data->args->oem_command,
+			       state_data->prog_data->args->oem_options[i]);
+	      goto cleanup;
+	    }
+	  
+	  domainid = domainid_tmp;
+	  domainid_specified++;
+	}
+      else if (!strcasecmp (key, "policyid"))
+	{
+	  uint8_t policyid_tmp;
+	  
+	  if (ipmi_oem_parse_1_byte_field (state_data,
+					   i,
+					   value,
+					   &policyid_tmp) < 0)
+	    goto cleanup;
+	  
+	  policyid = policyid_tmp;
+	  policyid_specified++;
+	}
+      else if (!strcasecmp (key, "threshold1"))
+	{
+	  if (ipmi_oem_parse_2_byte_field (state_data, i, value, &threshold1) < 0)
+	    goto cleanup;
+	  
+	  threshold1_specified++;
+	}
+      else if (!strcasecmp (key, "threshold2"))
+	{
+	  if (ipmi_oem_parse_2_byte_field (state_data, i, value, &threshold2) < 0)
+	    goto cleanup;
+	  
+	  threshold2_specified++;
+	}
+      else if (!strcasecmp (key, "threshold3"))
+	{
+	  if (ipmi_oem_parse_2_byte_field (state_data, i, value, &threshold3) < 0)
+	    goto cleanup;
+	  
+	  threshold3_specified++;
+	}
+      else
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "%s:%s invalid OEM option argument '%s' : invalid option\n",
+			   state_data->prog_data->args->oem_id,
+			   state_data->prog_data->args->oem_command,
+			   state_data->prog_data->args->oem_options[i]);
+	  goto cleanup;
+	}
+      
+      free (key);
+      free (value);
+    }
+
+  if (!domainid_specified)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "domain ID must be specified\n");
+      goto cleanup;
+    }
+
+  if (!policyid_specified)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "policy ID must be specified\n");
+      goto cleanup;
+    }
+
+  if (_ipmi_oem_intelnm_node_manager_init (state_data,
+                                           &target_channel_number,
+                                           &target_slave_address,
+                                           &target_lun) < 0)
+    goto cleanup;
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds (state_data->ipmi_ctx,
+									 target_channel_number,
+									 target_slave_address,
+									 target_lun,
+									 domainid,
+									 policyid,
+									 threshold1_specified ? &threshold1 : NULL,
+									 threshold2_specified ? &threshold2 : NULL,
+									 threshold3_specified ? &threshold3 : NULL,
+									 obj_cmd_rs) < 0)
+    {
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
+	{
+	  int eret;
+	  
+	  if ((eret = _ipmi_oem_intelnm_bad_completion_code (state_data,
+							     NULL,
+							     obj_cmd_rs)) < 0)
+	    goto cleanup;
+	  
+	  if (!eret)
+	    goto efallthrough;
+	}
+      else
+	{
+	efallthrough:
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_cmd_oem_intel_node_manager_set_node_manager_policy: %s\n",
+			   ipmi_ctx_errormsg (state_data->ipmi_ctx));
+	}
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
 }
 
 int
