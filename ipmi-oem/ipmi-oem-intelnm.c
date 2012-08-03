@@ -3650,9 +3650,438 @@ ipmi_oem_intelnm_get_node_manager_policy_suspend_periods (ipmi_oem_state_data_t 
   return (rv); 
 }
 
+static int
+_parse_suspend_period_number (ipmi_oem_state_data_t *state_data,
+			      unsigned int option_num,
+			      const char *str,
+			      unsigned int *suspend_period_number)
+{
+  unsigned int temp;
+  char *ptr = NULL;
+
+  assert (state_data);
+  assert (str);
+  assert (suspend_period_number);
+
+  errno = 0;
+
+  temp = strtoul (str, &ptr, 10);
+
+  if (errno
+      || ptr[0] != '\0'
+      || !temp
+      || temp > IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_PERIODS_MAX)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM suspend period number '%s' in '%s', max allowed '%u'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+		       str,
+                       state_data->prog_data->args->oem_options[option_num],
+		       IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_PERIODS_MAX);
+      return (-1);
+    }
+
+  (*suspend_period_number) = temp;
+  return (0);
+}
+
+static int
+_parse_suspend_period_time (ipmi_oem_state_data_t *state_data,
+			    unsigned int option_num,
+			    const char *value,
+			    uint8_t *suspend_period_time)
+{
+  char buf[IPMI_OEM_STR_BUFLEN + 1];
+  unsigned int hours;
+  unsigned int minutes;
+  char *minutes_ptr = NULL;
+  char *ptr = NULL;
+
+  assert (state_data);
+  assert (value);
+  assert (suspend_period_time);
+
+  memset (buf, '\0', IPMI_OEM_STR_BUFLEN + 1); 
+
+  strncpy (buf, value, IPMI_OEM_STR_BUFLEN);
+
+  if (!(minutes_ptr = strchr (buf, ':')))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid time specified '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+		       value);
+      return (-1);
+    }
+
+  (*minutes_ptr) = '\0';
+  minutes_ptr++;
+
+  errno = 0;
+  hours = strtoul (buf, &ptr, 10);
+
+  if (errno
+      || ptr[0] != '\0'
+      || hours > 23)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid hours specified in '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+		       value);
+      return (-1);
+    }
+
+  errno = 0;
+  minutes = strtoul (buf, &ptr, 10);
+
+  if (errno
+      || ptr[0] != '\0'
+      || minutes > 59)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid minutes specified in '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+		       value);
+      return (-1);
+    }
+
+  /* encoded by dividing minutes since midnight by 6 */
+  (*suspend_period_time) = ((hours * 60) + minutes) / 6;
+  return (0);
+}
+
 int
 ipmi_oem_intelnm_set_node_manager_policy_suspend_periods (ipmi_oem_state_data_t *state_data)
 {
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t target_channel_number = 0;
+  uint8_t target_slave_address = 0;
+  uint8_t target_lun = 0;
+  uint8_t domainid = 0;
+  int domainid_specified = 0;
+  uint8_t policyid = 0;
+  int policyid_specified = 0;
+  uint8_t policy_suspend_start_time[IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_PERIODS_MAX];
+  int policy_suspend_start_time_specified[IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_PERIODS_MAX];
+  uint8_t policy_suspend_stop_time[IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_PERIODS_MAX];
+  int policy_suspend_stop_time_specified[IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_PERIODS_MAX];
+  uint8_t policy_suspend_period_recurrence_monday[IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_PERIODS_MAX];
+  uint8_t policy_suspend_period_recurrence_tuesday[IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_PERIODS_MAX];
+  uint8_t policy_suspend_period_recurrence_wednesday[IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_PERIODS_MAX];
+  uint8_t policy_suspend_period_recurrence_thursday[IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_PERIODS_MAX];
+  uint8_t policy_suspend_period_recurrence_friday[IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_PERIODS_MAX];
+  uint8_t policy_suspend_period_recurrence_saturday[IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_PERIODS_MAX];
+  uint8_t policy_suspend_period_recurrence_sunday[IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_PERIODS_MAX];
+  unsigned int suspend_period_number;
+  int rv = -1;
+  unsigned int i;
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count >= 2);
+
+  /* initialize */
+  
+  memset (policy_suspend_start_time_specified, '\0', sizeof (int) * IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_PERIODS_MAX);
+  memset (policy_suspend_stop_time_specified, '\0', sizeof (int) * IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_PERIODS_MAX);
+
+  for (i = 0; i < IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_PERIODS_MAX; i++)
+    {
+      policy_suspend_period_recurrence_monday[i] = IPMI_OEM_INTEL_NODE_MANAGER_DO_NOT_REPEAT_THE_SUSPEND_PERIOD;
+      policy_suspend_period_recurrence_tuesday[i] = IPMI_OEM_INTEL_NODE_MANAGER_DO_NOT_REPEAT_THE_SUSPEND_PERIOD;
+      policy_suspend_period_recurrence_wednesday[i] = IPMI_OEM_INTEL_NODE_MANAGER_DO_NOT_REPEAT_THE_SUSPEND_PERIOD;
+      policy_suspend_period_recurrence_thursday[i] = IPMI_OEM_INTEL_NODE_MANAGER_DO_NOT_REPEAT_THE_SUSPEND_PERIOD;
+      policy_suspend_period_recurrence_friday[i] = IPMI_OEM_INTEL_NODE_MANAGER_DO_NOT_REPEAT_THE_SUSPEND_PERIOD;
+      policy_suspend_period_recurrence_saturday[i] = IPMI_OEM_INTEL_NODE_MANAGER_DO_NOT_REPEAT_THE_SUSPEND_PERIOD;
+      policy_suspend_period_recurrence_sunday[i] = IPMI_OEM_INTEL_NODE_MANAGER_DO_NOT_REPEAT_THE_SUSPEND_PERIOD;
+    }
+
+  for (i = 0; i < state_data->prog_data->args->oem_options_count; i++)
+    {
+      char *key = NULL;
+      char *value = NULL;
+      
+      if (ipmi_oem_parse_key_value (state_data,
+				    i,
+				    &key,
+				    &value) < 0)
+	goto cleanup;
+
+      if (!strcasecmp (key, "domainid"))
+	{
+	  uint8_t domainid_tmp;
+	  
+	  if (ipmi_oem_parse_1_byte_field (state_data,
+					   i,
+					   value,
+					   &domainid_tmp) < 0)
+	    goto cleanup;
+	  
+	  if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domainid_tmp))
+	    {
+	      pstdout_fprintf (state_data->pstate,
+			       stderr,
+			       "%s:%s invalid OEM option argument '%s' : invalid domain id\n",
+			       state_data->prog_data->args->oem_id,
+			       state_data->prog_data->args->oem_command,
+			       state_data->prog_data->args->oem_options[i]);
+	      goto cleanup;
+	    }
+	  
+	  domainid = domainid_tmp;
+	  domainid_specified++;
+	}
+      else if (!strcasecmp (key, "policyid"))
+	{
+	  uint8_t policyid_tmp;
+	  
+	  if (ipmi_oem_parse_1_byte_field (state_data,
+					   i,
+					   value,
+					   &policyid_tmp) < 0)
+	    goto cleanup;
+	  
+	  policyid = policyid_tmp;
+	  policyid_specified++;
+	}
+      else if (!strncasecmp (key, "suspendperiodstart", 18))
+	{
+	  if (_parse_suspend_period_number (state_data,
+					    i,
+					    key + 18,
+					    &suspend_period_number) < 0)
+	    goto cleanup;
+
+	  if (_parse_suspend_period_time (state_data,
+					  i,
+					  value,
+					  &policy_suspend_start_time[suspend_period_number - 1]) < 0)
+	    goto cleanup;
+
+	  policy_suspend_start_time_specified[suspend_period_number - 1]++;
+	}
+      else if (!strncasecmp (key, "suspendperiodstop", 17))
+	{
+	  if (_parse_suspend_period_number (state_data,
+					    i,
+					    key + 17,
+					    &suspend_period_number) < 0)
+	    goto cleanup;
+
+	  if (_parse_suspend_period_time (state_data,
+					  i,
+					  value,
+					  &policy_suspend_stop_time[suspend_period_number - 1]) < 0)
+	    goto cleanup;
+
+	  policy_suspend_stop_time_specified[suspend_period_number - 1]++;
+	}
+      else if (!strncasecmp (key, "suspendperiodrepeat", 19))
+	{
+	  if (_parse_suspend_period_number (state_data,
+					    i,
+					    key + 19,
+					    &suspend_period_number) < 0)
+	    goto cleanup;
+
+	  if (strcasecmp (value, "monday")
+	      && strcasecmp (value, "tuesday")
+	      && strcasecmp (value, "wednesday")
+	      && strcasecmp (value, "thursday")
+	      && strcasecmp (value, "friday")
+	      && strcasecmp (value, "saturday")
+	      && strcasecmp (value, "sunday"))
+	    {
+	      pstdout_fprintf (state_data->pstate,
+			       stderr,
+			       "%s:%s invalid OEM option argument '%s' : invalid day\n",
+			       state_data->prog_data->args->oem_id,
+			       state_data->prog_data->args->oem_command,
+			       state_data->prog_data->args->oem_options[i]);
+	      goto cleanup;
+	    }
+	  
+	  if (!strcasecmp (value, "monday"))
+	    policy_suspend_period_recurrence_monday[suspend_period_number - 1] = IPMI_OEM_INTEL_NODE_MANAGER_REPEAT_THE_SUSPEND_PERIOD;
+	  else if (! strcasecmp (value, "tuesday"))
+	    policy_suspend_period_recurrence_tuesday[suspend_period_number - 1] = IPMI_OEM_INTEL_NODE_MANAGER_REPEAT_THE_SUSPEND_PERIOD;
+	  else if (! strcasecmp (value, "wednesday"))
+	    policy_suspend_period_recurrence_wednesday[suspend_period_number - 1] = IPMI_OEM_INTEL_NODE_MANAGER_REPEAT_THE_SUSPEND_PERIOD;
+	  else if (! strcasecmp (value, "thursday"))
+	    policy_suspend_period_recurrence_thursday[suspend_period_number - 1] = IPMI_OEM_INTEL_NODE_MANAGER_REPEAT_THE_SUSPEND_PERIOD;
+	  else if (! strcasecmp (value, "friday"))
+	    policy_suspend_period_recurrence_friday[suspend_period_number - 1] = IPMI_OEM_INTEL_NODE_MANAGER_REPEAT_THE_SUSPEND_PERIOD;
+	  else if (! strcasecmp (value, "saturday"))
+	    policy_suspend_period_recurrence_saturday[suspend_period_number - 1] = IPMI_OEM_INTEL_NODE_MANAGER_REPEAT_THE_SUSPEND_PERIOD;
+	  else /* strcasecmp (value, "sunday") */
+	    policy_suspend_period_recurrence_sunday[suspend_period_number - 1] = IPMI_OEM_INTEL_NODE_MANAGER_REPEAT_THE_SUSPEND_PERIOD;
+	}
+      else
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "%s:%s invalid OEM option argument '%s' : invalid option\n",
+			   state_data->prog_data->args->oem_id,
+			   state_data->prog_data->args->oem_command,
+			   state_data->prog_data->args->oem_options[i]);
+	  goto cleanup;
+	}
+      
+      free (key);
+      free (value);
+    }
+
+  if (!domainid_specified)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "domain ID must be specified\n");
+      goto cleanup;
+    }
+
+  if (!policyid_specified)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "policy ID must be specified\n");
+      goto cleanup;
+    }
+
+  /* various error checks */
+
+  for (i = 0; i < IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_PERIODS_MAX; i++)
+    {
+      if ((policy_suspend_start_time_specified[i]
+	   && !policy_suspend_stop_time_specified[i])
+	  || (!policy_suspend_start_time_specified[i]
+	      && policy_suspend_stop_time_specified[i]))
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "%s:%s invalid setup, must specify start and stop suspend time for suspend policy '%u'\n",
+			   state_data->prog_data->args->oem_id,
+			   state_data->prog_data->args->oem_command,
+			   i + 1);
+	  goto cleanup;
+	}
+
+      if (policy_suspend_stop_time[i] < policy_suspend_start_time[i])
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "%s:%s invalid setup, must specify stop time after start time for suspend policy '%u'\n",
+			   state_data->prog_data->args->oem_id,
+			   state_data->prog_data->args->oem_command,
+			   i + 1);
+	  goto cleanup;
+	}
+    }
+
+  if (_ipmi_oem_intelnm_node_manager_init (state_data,
+                                           &target_channel_number,
+                                           &target_slave_address,
+                                           &target_lun) < 0)
+    goto cleanup;
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_suspend_periods_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  /* We've done error checks already, so we will use policy_suspend_start_time_specified[] as the flag
+   * for all determinations if we pass a pointer argument or NULL
+   */
+  if (ipmi_cmd_oem_intel_node_manager_set_node_manager_policy_suspend_periods (state_data->ipmi_ctx,
+									       target_channel_number,
+									       target_slave_address,
+									       target_lun,
+									       domainid,
+									       policyid,
+									       policy_suspend_start_time_specified[0] ? &policy_suspend_start_time[0] : NULL,
+									       policy_suspend_start_time_specified[0] ? &policy_suspend_stop_time[0] : NULL,
+									       policy_suspend_start_time_specified[0] ? &policy_suspend_period_recurrence_monday[0] : NULL,
+									       policy_suspend_start_time_specified[0] ? &policy_suspend_period_recurrence_tuesday[0] : NULL,
+									       policy_suspend_start_time_specified[0] ? &policy_suspend_period_recurrence_wednesday[0] : NULL,
+									       policy_suspend_start_time_specified[0] ? &policy_suspend_period_recurrence_thursday[0] : NULL,
+									       policy_suspend_start_time_specified[0] ? &policy_suspend_period_recurrence_friday[0] : NULL,
+									       policy_suspend_start_time_specified[0] ? &policy_suspend_period_recurrence_saturday[0] : NULL,
+									       policy_suspend_start_time_specified[0] ? &policy_suspend_period_recurrence_sunday[0] : NULL,
+									       policy_suspend_start_time_specified[1] ? &policy_suspend_start_time[1] : NULL,
+									       policy_suspend_start_time_specified[1] ? &policy_suspend_stop_time[1] : NULL,
+									       policy_suspend_start_time_specified[1] ? &policy_suspend_period_recurrence_monday[1] : NULL,
+									       policy_suspend_start_time_specified[1] ? &policy_suspend_period_recurrence_tuesday[1] : NULL,
+									       policy_suspend_start_time_specified[1] ? &policy_suspend_period_recurrence_wednesday[1] : NULL,
+									       policy_suspend_start_time_specified[1] ? &policy_suspend_period_recurrence_thursday[1] : NULL,
+									       policy_suspend_start_time_specified[1] ? &policy_suspend_period_recurrence_friday[1] : NULL,
+									       policy_suspend_start_time_specified[1] ? &policy_suspend_period_recurrence_saturday[1] : NULL,
+									       policy_suspend_start_time_specified[1] ? &policy_suspend_period_recurrence_sunday[1] : NULL,
+									       policy_suspend_start_time_specified[2] ? &policy_suspend_start_time[2] : NULL,
+									       policy_suspend_start_time_specified[2] ? &policy_suspend_stop_time[2] : NULL,
+									       policy_suspend_start_time_specified[2] ? &policy_suspend_period_recurrence_monday[2] : NULL,
+									       policy_suspend_start_time_specified[2] ? &policy_suspend_period_recurrence_tuesday[2] : NULL,
+									       policy_suspend_start_time_specified[2] ? &policy_suspend_period_recurrence_wednesday[2] : NULL,
+									       policy_suspend_start_time_specified[2] ? &policy_suspend_period_recurrence_thursday[2] : NULL,
+									       policy_suspend_start_time_specified[2] ? &policy_suspend_period_recurrence_friday[2] : NULL,
+									       policy_suspend_start_time_specified[2] ? &policy_suspend_period_recurrence_saturday[2] : NULL,
+									       policy_suspend_start_time_specified[2] ? &policy_suspend_period_recurrence_sunday[2] : NULL,
+									       policy_suspend_start_time_specified[3] ? &policy_suspend_start_time[3] : NULL,
+									       policy_suspend_start_time_specified[3] ? &policy_suspend_stop_time[3] : NULL,
+									       policy_suspend_start_time_specified[3] ? &policy_suspend_period_recurrence_monday[3] : NULL,
+									       policy_suspend_start_time_specified[3] ? &policy_suspend_period_recurrence_tuesday[3] : NULL,
+									       policy_suspend_start_time_specified[3] ? &policy_suspend_period_recurrence_wednesday[3] : NULL,
+									       policy_suspend_start_time_specified[3] ? &policy_suspend_period_recurrence_thursday[3] : NULL,
+									       policy_suspend_start_time_specified[3] ? &policy_suspend_period_recurrence_friday[3] : NULL,
+									       policy_suspend_start_time_specified[3] ? &policy_suspend_period_recurrence_saturday[3] : NULL,
+									       policy_suspend_start_time_specified[3] ? &policy_suspend_period_recurrence_sunday[3] : NULL,
+									       policy_suspend_start_time_specified[4] ? &policy_suspend_start_time[4] : NULL,
+									       policy_suspend_start_time_specified[4] ? &policy_suspend_stop_time[4] : NULL,
+									       policy_suspend_start_time_specified[4] ? &policy_suspend_period_recurrence_monday[4] : NULL,
+									       policy_suspend_start_time_specified[4] ? &policy_suspend_period_recurrence_tuesday[4] : NULL,
+									       policy_suspend_start_time_specified[4] ? &policy_suspend_period_recurrence_wednesday[4] : NULL,
+									       policy_suspend_start_time_specified[4] ? &policy_suspend_period_recurrence_thursday[4] : NULL,
+									       policy_suspend_start_time_specified[4] ? &policy_suspend_period_recurrence_friday[4] : NULL,
+									       policy_suspend_start_time_specified[4] ? &policy_suspend_period_recurrence_saturday[4] : NULL,
+									       policy_suspend_start_time_specified[4] ? &policy_suspend_period_recurrence_sunday[4] : NULL,
+									       obj_cmd_rs) < 0)
+    {
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
+	{
+	  int eret;
+	  
+	  if ((eret = _ipmi_oem_intelnm_bad_completion_code (state_data,
+							     NULL,
+							     obj_cmd_rs)) < 0)
+	    goto cleanup;
+	  
+	  if (!eret)
+	    goto efallthrough;
+	}
+      else
+	{
+	efallthrough:
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_cmd_oem_intel_node_manager_set_node_manager_policy_suspend_periods: %s\n",
+			   ipmi_ctx_errormsg (state_data->ipmi_ctx));
+	}
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
 }
 
 int
