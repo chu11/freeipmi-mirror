@@ -48,6 +48,15 @@ FreeIPMI new stuff
 - config tools for (***)
   - dcmi (***)
   - intel node manager (***)
+    - maybe not?  Intel NM does not configure via a standard
+      checkout/commit fashion.  Policies are created, then removed.
+      In addition, policies must be disabled before they can be
+      reconfigured.
+    
+      some of these mechanisms could be hidden (i.e. if user changed
+      any configuration, disable policy, then re-configure it, then
+      re-enable it), but some would require blatant assumptions, such
+      as number of policies to output into the --checkout .conf file.
   - firmware firewall
   - other config options in ipmi-oem
   - inventec mac/shared nic stuff
