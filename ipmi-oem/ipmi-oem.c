@@ -610,6 +610,13 @@ struct ipmi_oem_command oem_intelnm[] =
       ipmi_oem_intelnm_get_node_manager_policy_suspend_periods
     },
     {
+      "set-node-manager-policy-suspend-periods",
+      "domainid=num policyid=num suspendperiodstartX=time suspendperiodstopX=time suspendperiodrepeatX=monday|tuesday|wednesday|thursday|friday|saturday|sunday",
+      2,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
+      ipmi_oem_intelnm_set_node_manager_policy_suspend_periods
+    },
+    {
       "get-node-manager-version",
       NULL,
       0,

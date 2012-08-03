@@ -514,14 +514,14 @@ policies are being searched for.  Command confirmed to work on Intel
 S2600JF (Appro 512X).
 .TP
 .B set-node-manager-alert-thresholds \fIdomainid=num\fR \fIpolicyid=num\fR \fI[threshold1=num]\fR \fI[threshold2=num]\fR \fI[threshold3=num]\fR
-This OEM command will set the current alert thresholds for a given
+This OEM command will set the alert thresholds for a given
 domain ID and policy ID.  Up to three thresholds can be specified, The
 units of the thresholds will depend on the configuration of the
 current policy.  Command confirmed to work on Intel S2600JF (Appro
 512X).
 .TP
 .B get-node-manager-policy-suspend-periods \fI[domainid=num]\fR \fI[policyid=num]\fR 
-This OEM command will get the current suspend periods.  Suspend
+This OEM command will get the current policy suspend periods.  Suspend
 periods will temporarily disable Intel Node Manager policies at
 configured times.  If no \fIdomainid\fR is specified, all suspend
 periods for domain IDs and policy Ids will be attempted to be output.
@@ -530,6 +530,22 @@ suspend periods within a domain will be attempted to be output.  If
 the verbose option is set, additional error messages will be output as
 valid policies are being searched for.  Suspend start and stop times
 are output in 24 hour format.  Command confirmed to work on Intel
+S2600JF (Appro 512X).
+.TP
+.B set-node-manager-policy-suspend-periods \fIdomainid=num\fR \fIpolicyid=num\fR \fIsuspendperiodstart1=time\fR \fIsuspendperiodstop1=time\fR \fIsuspendperiodrepeat1=monday|tuesday|wednesday|thursday|friday|saturday|sunday\fR ...
+This OEM command will set the policy suspend periods for a policy.
+Suspend periods will temporarily disable Intel Node Manager policies
+at configured times.  Up to 5 suspend periods can be specified by
+\fIsuspendperiodstartX\fR, \fIsuspendperiodstopX\fR,
+\fIsuspendperiodrepeatX\fR.  \fIsuspendperiodstart\fR and
+\fIsuspendperiodstop\fR specify the start and stop time since midnight
+for a suspend period.  The time should be specified in 24 hour format
+(i.e. 02:00 or 13:40).  Note that suspend periods are configured in
+multiples of 6 minutes, therefore the stored configuration may be
+rounded to a slightly alternate configuration.
+\fIsuspendperiodrepeat\fR indicates the days in which the suspend
+period shall be enabled.  The option can be specified multiple times
+to configure multiple times.  Command confirmed to work on Intel
 S2600JF (Appro 512X).
 .TP
 .B get-node-manager-version

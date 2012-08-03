@@ -3651,6 +3651,11 @@ ipmi_oem_intelnm_get_node_manager_policy_suspend_periods (ipmi_oem_state_data_t 
 }
 
 int
+ipmi_oem_intelnm_set_node_manager_policy_suspend_periods (ipmi_oem_state_data_t *state_data)
+{
+}
+
+int
 ipmi_oem_intelnm_get_node_manager_version (ipmi_oem_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
