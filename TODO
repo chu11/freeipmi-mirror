@@ -28,6 +28,9 @@ FreeIPMI general
   - treat more like network busy than error?
   - option for alternate behavior?
 - update text documents to texinfo (***)
+- OEM extensions generalized
+  - generalize "+" syntax in ipmipower to all FreeIPMI tools?
+  - or use extra option?
 
 FreeIPMI new stuff
 ------------------
