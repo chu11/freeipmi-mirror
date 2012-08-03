@@ -506,7 +506,7 @@ confirmed to work on Intel S2600JF (Appro 512X).
 This OEM command will get the current alert thresholds.  If no
 \fIdomainid\fR is specified, all alert thresholds for domain IDs and
 policy Ids will be attempted to be output.  If a \fIdomainid\fR is
-specified but a \fIpolicyid\fR is not, all policies within a domain
+specified but a \fIpolicyid\fR is not, all alert thresholds within a domain
 will be attempted to be output.  The units of the thresholds will
 depend on the configuration of the current policy.  If the verbose
 option is set, additional error messages will be output as valid
@@ -519,6 +519,18 @@ domain ID and policy ID.  Up to three thresholds can be specified, The
 units of the thresholds will depend on the configuration of the
 current policy.  Command confirmed to work on Intel S2600JF (Appro
 512X).
+.TP
+.B get-node-manager-policy-suspend-periods \fI[domainid=num]\fR \fI[policyid=num]\fR 
+This OEM command will get the current suspend periods.  Suspend
+periods will temporarily disable Intel Node Manager policies at
+configured times.  If no \fIdomainid\fR is specified, all suspend
+periods for domain IDs and policy Ids will be attempted to be output.
+If a \fIdomainid\fR is specified but a \fIpolicyid\fR is not, all
+suspend periods within a domain will be attempted to be output.  If
+the verbose option is set, additional error messages will be output as
+valid policies are being searched for.  Suspend start and stop times
+are output in 24 hour format.  Command confirmed to work on Intel
+S2600JF (Appro 512X).
 .TP
 .B get-node-manager-version
 This OEM command will output the current Intel Node Manager version

@@ -4,7 +4,8 @@
 	node-manager-policy-control, get-node-manager-policy,
 	set-node-manager-policy, remove-node-manager-policy,
 	get-node-manager-alert-thresholds,
-	set-node-manager-alert-thresholds.
+	set-node-manager-alert-thresholds,
+	get-node-manager-policy-suspend-periods.
 
 	* libfreeipmi/: Fix Intel NM bugs.
 	

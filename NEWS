@@ -35,6 +35,7 @@ o In ipmi-oem, support additional Intel Node Manager commands,
   - remove-node-manager-policy
   - get-node-manager-alert-thresholds
   - set-node-manager-alert-thresholds
+  - get-node-manager-policy-suspend-periods
 o In ipmi-oem, support Wistron OEM commands extensions.
 o In ipmi-sel, support Wistron OEM SEL interpretations.
 
