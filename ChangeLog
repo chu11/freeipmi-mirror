@@ -1,3 +1,7 @@
+2012-08-03  Albert Chu <chu11@llnl.gov>
+
+	* doc/freeipmi-faq.texi: Add Wistron to OEM list.
+	
 2012-07-31  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/spec/ipmi-oem-spec.h, ipmi-oem/:
