@@ -10,6 +10,9 @@
 	set-node-manager-power-draw-range.
 
 	* libfreeipmi/: Fix Intel NM bugs.
+
+	* ipmi-pef-config/: Support volatile alert string 0 and lan alert
+	destination 0.
 	
 2012-07-24  Albert Chu <chu11@llnl.gov>
 

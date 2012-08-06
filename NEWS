@@ -40,6 +40,8 @@ o In ipmi-oem, support additional Intel Node Manager commands,
   - set-node-manager-power-draw-range
 o In ipmi-oem, support Wistron OEM commands extensions.
 o In ipmi-sel, support Wistron OEM SEL interpretations.
+o In ipmi-pef-config, support configuration volatile Alert String 0
+  and Lan Alert Destination 0.
 
 Tools - Bug Fixes/Minor Changes
 -------------------------------
