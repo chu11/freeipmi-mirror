@@ -4204,6 +4204,160 @@ ipmi_oem_intelnm_set_node_manager_power_draw_range (ipmi_oem_state_data_t *state
 }
 
 int
+ipmi_oem_intelnm_get_node_manager_alert_destination (ipmi_oem_state_data_t *state_data)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t target_channel_number = 0;
+  uint8_t target_slave_address = 0;
+  uint8_t target_lun = 0;
+  uint8_t channel_number;
+  uint8_t destination_information_operation;
+  uint8_t destination_selector;
+  uint8_t alert_string_selector;
+  uint8_t send_alert_string;
+  uint64_t val;
+  int rv = -1;
+
+  assert (state_data);
+  assert (!state_data->prog_data->args->oem_options_count);
+
+  if (_ipmi_oem_intelnm_node_manager_init (state_data,
+                                           &target_channel_number,
+                                           &target_slave_address,
+                                           &target_lun) < 0)
+    goto cleanup;
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_destination_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_oem_intel_node_manager_get_node_manager_alert_destination (state_data->ipmi_ctx,
+									  target_channel_number,
+									  target_slave_address,
+									  target_lun,
+									  obj_cmd_rs) < 0)
+    {
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
+	{
+	  int eret;
+	  
+	  if ((eret = _ipmi_oem_intelnm_bad_completion_code (state_data,
+							     NULL,
+							     obj_cmd_rs)) < 0)
+	    goto cleanup;
+	  
+	  if (!eret)
+	    goto efallthrough;
+	}
+      else
+	{
+	efallthrough:
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_cmd_oem_intel_node_manager_get_node_manager_alert_destination: %s\n",
+			   ipmi_ctx_errormsg (state_data->ipmi_ctx));
+	}
+      goto cleanup;
+    }
+
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "channel_number",
+                    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "FIID_OBJ_GET: 'channel_number': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  channel_number = val;
+
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "destination_information_operation",
+                    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "FIID_OBJ_GET: 'destination_information_operation': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  destination_information_operation = val;
+
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "destination_selector",
+                    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "FIID_OBJ_GET: 'destination_selector': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  destination_selector = val;
+
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "alert_string_selector",
+                    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "FIID_OBJ_GET: 'alert_string_selector': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  alert_string_selector = val;
+
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "send_alert_string",
+                    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "FIID_OBJ_GET: 'send_alert_string': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  send_alert_string = val;
+
+  pstdout_printf (state_data->pstate,
+                  "Channel Number        : %u\n",
+		  channel_number);
+
+  pstdout_printf (state_data->pstate,
+                  "Alert Receiver        : %s\n",
+		  destination_information_operation == IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_INFORMATION_OPERATION_REGISTER_ALERT_RECEIVER ? "Registered" : "Unregistered");
+
+  pstdout_printf (state_data->pstate,
+                  "Destination Selector  : %u\n",
+		  destination_selector);
+
+  pstdout_printf (state_data->pstate,
+                  "Alert String Selector : %u\n",
+		  alert_string_selector);
+
+  pstdout_printf (state_data->pstate,
+                  "Send Alert String     : %s\n",
+		  send_alert_string == IPMI_OEM_INTEL_NODE_MANAGER_DONT_SEND_AN_ALERT_STRING ? "No" : "Yes"); 
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+int
+ipmi_oem_intelnm_set_node_manager_alert_destination (ipmi_oem_state_data_t *state_data)
+{
+  return (0);
+}
+
+int
 ipmi_oem_intelnm_get_node_manager_version (ipmi_oem_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;

@@ -555,6 +555,16 @@ outside of this range will be disabled as needed.  The current power
 draw range can be read via the \fBget\-node\-manager\-capabilities\fR
 above.  Command confirmed to work on Intel S2600JF (Appro 512X).
 .TP
+.B get-node-manager-alert-destination
+This OEM command will get the current alert destination information.
+Some of the configuration information output by this command will need
+to be correlated to BMC device channel and PEF configuration.  BMC
+device channel information can be viewed via
+.B bmc-info(8).
+PEF configuration can be viewed via
+.B ipmi-pef-config(8).
+Command confirmed to work on Intel S2600JF (Appro 512X).
+.TP
 .B get-node-manager-version
 This OEM command will output the current Intel Node Manager version
 information.  Command confirmed to work on Intel S5500WB (Penguin
@@ -1354,5 +1364,6 @@ cold-reset with
 Copyright \(co 2008-2012 FreeIPMI Core Team
 #include <@top_srcdir@/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
-freeipmi(7), bmc-config(8), bmc-device(8), ipmi-raw(8)
+freeipmi(7), bmc-config(8), bmc-device(8), ipmi-pef-config(8),
+ipmi-raw(8)
 #include <@top_srcdir@/man/manpage-common-homepage.man>

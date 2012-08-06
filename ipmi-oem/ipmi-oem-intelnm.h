@@ -41,6 +41,9 @@ int ipmi_oem_intelnm_set_node_manager_policy_suspend_periods (ipmi_oem_state_dat
 
 int ipmi_oem_intelnm_set_node_manager_power_draw_range (ipmi_oem_state_data_t *state_data);
 
+int ipmi_oem_intelnm_get_node_manager_alert_destination (ipmi_oem_state_data_t *state_data);
+int ipmi_oem_intelnm_set_node_manager_alert_destination (ipmi_oem_state_data_t *state_data);
+
 int ipmi_oem_intelnm_get_node_manager_version (ipmi_oem_state_data_t *state_data);
 
 #endif /* IPMI_OEM_INTELNM_H */
