@@ -341,8 +341,8 @@ int fill_cmd_oem_intel_node_manager_get_node_manager_capabilities (uint8_t domai
 int fill_cmd_oem_intel_node_manager_get_node_manager_version (fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_oem_intel_node_manager_set_node_manager_power_draw_range (uint8_t domain_id,
-                                                                       uint8_t minimum_power_draw,
-                                                                       uint8_t maximum_power_draw,
+                                                                       uint16_t minimum_power_draw,
+                                                                       uint16_t maximum_power_draw,
                                                                        fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_oem_intel_node_manager_set_node_manager_alert_destination (uint8_t channel_number,

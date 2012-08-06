@@ -617,6 +617,13 @@ struct ipmi_oem_command oem_intelnm[] =
       ipmi_oem_intelnm_set_node_manager_policy_suspend_periods
     },
     {
+      "set-node-manager-power-draw-range",
+      "domainid=num minpowerdrawrange=watts maxpowerdrawrange=watts",
+      3,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_intelnm_set_node_manager_power_draw_range
+    },
+    {
       "get-node-manager-version",
       NULL,
       0,

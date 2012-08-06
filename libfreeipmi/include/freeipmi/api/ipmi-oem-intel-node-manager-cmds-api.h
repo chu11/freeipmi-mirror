@@ -202,8 +202,8 @@ int ipmi_cmd_oem_intel_node_manager_set_node_manager_power_draw_range (ipmi_ctx_
                                                                        uint8_t target_slave_address,
                                                                        uint8_t target_lun,
                                                                        uint8_t domain_id,
-                                                                       uint8_t minimum_power_draw,
-                                                                       uint8_t maximum_power_draw,
+                                                                       uint16_t minimum_power_draw,
+                                                                       uint16_t maximum_power_draw,
                                                                        fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_oem_intel_node_manager_set_node_manager_alert_destination (ipmi_ctx_t ctx,

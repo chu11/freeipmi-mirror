@@ -548,6 +548,13 @@ period shall be enabled.  The option can be specified multiple times
 to configure multiple times.  Command confirmed to work on Intel
 S2600JF (Appro 512X).
 .TP
+.B set-node-manager-power-draw-range \fIdomainid=num\fR \fIminpowerdrawrange=watts\fR \fImaxpowerdrawrange=watts\fR
+This OEM command will set the power draw range for a given domain ID.
+After this configuration, any policies within the domain ID that are
+outside of this range will be disabled as needed.  The current power
+draw range can be read via the \fBget\-node\-manager\-capabilities\fR
+above.  Command confirmed to work on Intel S2600JF (Appro 512X).
+.TP
 .B get-node-manager-version
 This OEM command will output the current Intel Node Manager version
 information.  Command confirmed to work on Intel S5500WB (Penguin

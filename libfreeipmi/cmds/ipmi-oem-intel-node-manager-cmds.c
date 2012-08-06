@@ -1161,8 +1161,8 @@ fill_cmd_oem_intel_node_manager_get_node_manager_version (fiid_obj_t obj_cmd_rq)
 
 int
 fill_cmd_oem_intel_node_manager_set_node_manager_power_draw_range (uint8_t domain_id,
-                                                                   uint8_t minimum_power_draw,
-                                                                   uint8_t maximum_power_draw,
+                                                                   uint16_t minimum_power_draw,
+                                                                   uint16_t maximum_power_draw,
                                                                    fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domain_id)
