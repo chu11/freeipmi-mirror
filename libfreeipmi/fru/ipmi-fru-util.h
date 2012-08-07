@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef IPMI_FRU_PARSE_UTIL_H
-#define IPMI_FRU_PARSE_UTIL_H
+#ifndef IPMI_FRU_UTIL_H
+#define IPMI_FRU_UTIL_H
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -32,12 +32,12 @@
 
 #include "freeipmi/api/ipmi-api.h"
 #include "freeipmi/fiid/fiid.h"
-#include "freeipmi/fru-parse/ipmi-fru-parse.h"
+#include "freeipmi/fru/ipmi-fru.h"
 
-#include "ipmi-fru-parse-defs.h"
+#include "ipmi-fru-defs.h"
 
-void fru_parse_set_fru_parse_errnum_by_errno (ipmi_fru_parse_ctx_t ctx, int __errno);
+void fru_set_fru_errnum_by_errno (ipmi_fru_ctx_t ctx, int __errno);
 
-void fru_parse_set_fru_parse_errnum_by_fiid_object (ipmi_fru_parse_ctx_t ctx, fiid_obj_t obj);
+void fru_set_fru_errnum_by_fiid_object (ipmi_fru_ctx_t ctx, fiid_obj_t obj);
 
-#endif /* IPMI_FRU_PARSE_UTIL_H */
+#endif /* IPMI_FRU_UTIL_H */

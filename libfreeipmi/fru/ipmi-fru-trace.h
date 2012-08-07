@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef IPMI_FRU_PARSE_TRACE_H
-#define IPMI_FRU_PARSE_TRACE_H
+#ifndef IPMI_FRU_TRACE_H
+#define IPMI_FRU_TRACE_H
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -32,22 +32,22 @@
 
 #include "libcommon/ipmi-trace.h"
 
-#define FRU_PARSE_SET_ERRNUM(__ctx, __errnum)                               \
+#define FRU_SET_ERRNUM(__ctx, __errnum)                                     \
   do {                                                                      \
     (__ctx)->errnum = (__errnum);                                           \
-    TRACE_MSG_OUT (ipmi_fru_parse_ctx_errormsg ((__ctx)), (__errnum));      \
+    TRACE_MSG_OUT (ipmi_fru_ctx_errormsg ((__ctx)), (__errnum));            \
   } while (0)
 
-#define FRU_PARSE_ERRNO_TO_FRU_PARSE_ERRNUM(__ctx, __errno)                 \
+#define FRU_ERRNO_TO_FRU_ERRNUM(__ctx, __errno)                             \
   do {                                                                      \
-    fru_parse_set_fru_parse_errnum_by_errno ((__ctx), (__errno));           \
+    fru_set_fru_errnum_by_errno ((__ctx), (__errno));                       \
     TRACE_ERRNO_OUT ((__errno));                                            \
   } while (0)
 
-#define FRU_PARSE_FIID_OBJECT_ERROR_TO_FRU_PARSE_ERRNUM(__ctx, __obj)       \
+#define FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM(__ctx, __obj)                   \
   do {                                                                      \
-    fru_parse_set_fru_parse_errnum_by_fiid_object ((__ctx), (__obj));       \
+    fru_set_fru_errnum_by_fiid_object ((__ctx), (__obj));                   \
     TRACE_MSG_OUT (fiid_obj_errormsg ((__obj)), fiid_obj_errnum ((__obj))); \
   } while (0)
 
-#endif /* IPMI_FRU_PARSE_TRACE_H */
+#endif /* IPMI_FRU_TRACE_H */

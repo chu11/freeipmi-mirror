@@ -20,7 +20,7 @@ ipmi_fru_LDADD = \
 
 ipmi_fru_SOURCES = \
 	ipmi-fru.c \
-	ipmi-fru.h \
+	ipmi-fru_.h \
 	ipmi-fru-argp.c \
 	ipmi-fru-argp.h \
 	ipmi-fru-oem-wistron.c \

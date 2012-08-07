@@ -1,3 +1,16 @@
+2012-08-07  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/: For consistency to other changes, rename
+	'fru-parse' sub-library in libfreeipmi to 'fru' library.  All
+	appropriately function names, macros, etc. updated appropriately.
+
+	* ipmi-pet/, ipmi-fru/: Update appropriately.
+
+	* libfreeipmi/fru/ipmi-fru.c,
+	libfreeipmi/include/freeipmi/fru/ipmi-fru.h (ipmi_fru_read_multirecord_record_type_id):
+	New function.  Rename from
+	ipmi_fru_read_multirecord_record_type.
+	
 2012-08-06  Albert Chu <chu11@llnl.gov>
 
 	* Merge intelnm15 branch.

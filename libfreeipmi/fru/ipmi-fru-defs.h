@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef IPMI_FRU_PARSE_DEFS_H
-#define IPMI_FRU_PARSE_DEFS_H
+#ifndef IPMI_FRU_DEFS_H
+#define IPMI_FRU_DEFS_H
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -25,18 +25,18 @@
 
 #include <stdint.h>
 
-#include "freeipmi/fru-parse/ipmi-fru-parse.h"
+#include "freeipmi/fru/ipmi-fru.h"
 
-#define IPMI_FRU_PARSE_CTX_MAGIC 0x12CD1DBF
+#define IPMI_FRU_CTX_MAGIC 0x12CD1DBF
 
-#define IPMI_FRU_PARSE_FLAGS_MASK \
-  (IPMI_FRU_PARSE_FLAGS_DEBUG_DUMP \
-   | IPMI_FRU_PARSE_FLAGS_SKIP_CHECKSUM_CHECKS \
-   | IPMI_FRU_PARSE_FLAGS_INTERPRET_OEM_DATA)
+#define IPMI_FRU_FLAGS_MASK \
+  (IPMI_FRU_FLAGS_DEBUG_DUMP \
+   | IPMI_FRU_FLAGS_SKIP_CHECKSUM_CHECKS \
+   | IPMI_FRU_FLAGS_INTERPRET_OEM_DATA)
 
-#define IPMI_FRU_PARSE_BUF_LEN 2048
+#define IPMI_FRU_BUF_LEN 2048
 
-struct ipmi_fru_parse_ctx {
+struct ipmi_fru_ctx {
   uint32_t magic;
   int errnum;
   unsigned int flags;

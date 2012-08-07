@@ -38,7 +38,7 @@
 
 #include <freeipmi/freeipmi.h>
 
-#include "ipmi-fru.h"
+#include "ipmi-fru_.h"
 #include "ipmi-fru-argp.h"
 #include "ipmi-fru-output.h"
 
@@ -96,67 +96,67 @@ _output_fru (ipmi_fru_state_data_t *state_data,
                   device_id_str,
                   device_id);
 
-  if (ipmi_fru_parse_open_device_id (state_data->fru_parse_ctx, device_id) < 0)
+  if (ipmi_fru_open_device_id (state_data->fru_ctx, device_id) < 0)
     {
-      if (IPMI_FRU_PARSE_ERRNUM_IS_NON_FATAL_ERROR (state_data->fru_parse_ctx))
+      if (IPMI_FRU_ERRNUM_IS_NON_FATAL_ERROR (state_data->fru_ctx))
         {
           /* Special case, not really an "error" */
-          if (ipmi_fru_parse_ctx_errnum (state_data->fru_parse_ctx) != IPMI_FRU_PARSE_ERR_NO_FRU_INFORMATION)
+          if (ipmi_fru_ctx_errnum (state_data->fru_ctx) != IPMI_FRU_ERR_NO_FRU_INFORMATION)
             {
               pstdout_printf (state_data->pstate, "\n");
               pstdout_printf (state_data->pstate,
                               "  FRU Error: %s\n",
-                              ipmi_fru_parse_ctx_errormsg (state_data->fru_parse_ctx));
+                              ipmi_fru_ctx_errormsg (state_data->fru_ctx));
             }
           goto out;
         }
       
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "ipmi_fru_parse_open_device_id: %s\n",
-                       ipmi_fru_parse_ctx_errormsg (state_data->fru_parse_ctx));
+                       "ipmi_fru_open_device_id: %s\n",
+                       ipmi_fru_ctx_errormsg (state_data->fru_ctx));
       goto cleanup;
     }
 
-  if (ipmi_fru_parse_first (state_data->fru_parse_ctx) < 0)
+  if (ipmi_fru_first (state_data->fru_ctx) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "ipmi_fru_parse_first: %s\n",
-                       ipmi_fru_parse_ctx_errormsg (state_data->fru_parse_ctx));
+                       "ipmi_fru_first: %s\n",
+                       ipmi_fru_ctx_errormsg (state_data->fru_ctx));
       goto cleanup;
     }
 
   do 
     {
-      uint8_t areabuf[IPMI_FRU_PARSE_AREA_SIZE_MAX+1];
+      uint8_t areabuf[IPMI_FRU_AREA_SIZE_MAX+1];
       unsigned int area_type = 0;
       unsigned int area_length = 0;
       
-      memset (areabuf, '\0', IPMI_FRU_PARSE_AREA_SIZE_MAX + 1);
-      if (ipmi_fru_parse_read_data_area (state_data->fru_parse_ctx,
-                                         &area_type,
-                                         &area_length,
-                                         areabuf,
-                                         IPMI_FRU_PARSE_AREA_SIZE_MAX) < 0)
+      memset (areabuf, '\0', IPMI_FRU_AREA_SIZE_MAX + 1);
+      if (ipmi_fru_read_data_area (state_data->fru_ctx,
+				   &area_type,
+				   &area_length,
+				   areabuf,
+				   IPMI_FRU_AREA_SIZE_MAX) < 0)
         {
-          if (IPMI_FRU_PARSE_ERRNUM_IS_NON_FATAL_ERROR (state_data->fru_parse_ctx))
+          if (IPMI_FRU_ERRNUM_IS_NON_FATAL_ERROR (state_data->fru_ctx))
             {
               /* Special case, not really an "error" */
-              if (ipmi_fru_parse_ctx_errnum (state_data->fru_parse_ctx) != IPMI_FRU_PARSE_ERR_NO_FRU_INFORMATION)
+              if (ipmi_fru_ctx_errnum (state_data->fru_ctx) != IPMI_FRU_ERR_NO_FRU_INFORMATION)
                 {
                   pstdout_printf (state_data->pstate, "\n");
                   pstdout_printf (state_data->pstate,
                                   "  FRU Error: %s\n",
-                                  ipmi_fru_parse_ctx_errormsg (state_data->fru_parse_ctx));
+                                  ipmi_fru_ctx_errormsg (state_data->fru_ctx));
                 }
               goto next;
             }
           
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "ipmi_fru_parse_read_data_area: %s\n",
-                           ipmi_fru_parse_ctx_errormsg (state_data->fru_parse_ctx));
+                           "ipmi_fru_read_data_area: %s\n",
+                           ipmi_fru_ctx_errormsg (state_data->fru_ctx));
           goto cleanup;
         }
 
@@ -166,61 +166,61 @@ _output_fru (ipmi_fru_state_data_t *state_data,
 
           switch (area_type)
             {
-            case IPMI_FRU_PARSE_AREA_TYPE_CHASSIS_INFO_AREA:
+            case IPMI_FRU_AREA_TYPE_CHASSIS_INFO_AREA:
               if (ipmi_fru_output_chassis_info_area (state_data,
                                                      areabuf,
                                                      area_length) < 0)
                 goto cleanup;
               break;
-            case IPMI_FRU_PARSE_AREA_TYPE_BOARD_INFO_AREA:
+            case IPMI_FRU_AREA_TYPE_BOARD_INFO_AREA:
               if (ipmi_fru_output_board_info_area (state_data,
                                                    areabuf,
                                                    area_length) < 0)
                 goto cleanup;
               break;
-            case IPMI_FRU_PARSE_AREA_TYPE_PRODUCT_INFO_AREA:
+            case IPMI_FRU_AREA_TYPE_PRODUCT_INFO_AREA:
               if (ipmi_fru_output_product_info_area (state_data,
                                                      areabuf,
                                                      area_length) < 0)
                 goto cleanup;
               break;
-            case IPMI_FRU_PARSE_AREA_TYPE_MULTIRECORD_POWER_SUPPLY_INFORMATION:
+            case IPMI_FRU_AREA_TYPE_MULTIRECORD_POWER_SUPPLY_INFORMATION:
               if (ipmi_fru_output_power_supply_information (state_data,
                                                             areabuf,
                                                             area_length) < 0)
                 goto cleanup;
               break;
-            case IPMI_FRU_PARSE_AREA_TYPE_MULTIRECORD_DC_OUTPUT:
+            case IPMI_FRU_AREA_TYPE_MULTIRECORD_DC_OUTPUT:
               if (ipmi_fru_output_dc_output (state_data,
                                              areabuf,
                                              area_length) < 0)
                 goto cleanup;
               break;
-            case IPMI_FRU_PARSE_AREA_TYPE_MULTIRECORD_DC_LOAD:
+            case IPMI_FRU_AREA_TYPE_MULTIRECORD_DC_LOAD:
               if (ipmi_fru_output_dc_load (state_data,
                                            areabuf,
                                            area_length) < 0)
                 goto cleanup;
               break;
-            case IPMI_FRU_PARSE_AREA_TYPE_MULTIRECORD_MANAGEMENT_ACCESS_RECORD:
+            case IPMI_FRU_AREA_TYPE_MULTIRECORD_MANAGEMENT_ACCESS_RECORD:
               if (ipmi_fru_output_management_access_record (state_data,
                                                             areabuf,
                                                             area_length) < 0)
                 goto cleanup;
               break;
-            case IPMI_FRU_PARSE_AREA_TYPE_MULTIRECORD_BASE_COMPATABILITY_RECORD:
+            case IPMI_FRU_AREA_TYPE_MULTIRECORD_BASE_COMPATABILITY_RECORD:
               if (ipmi_fru_output_base_compatibility_record (state_data,
                                                              areabuf,
                                                              area_length) < 0)
                 goto cleanup;
               break;
-            case IPMI_FRU_PARSE_AREA_TYPE_MULTIRECORD_EXTENDED_COMPATABILITY_RECORD:
+            case IPMI_FRU_AREA_TYPE_MULTIRECORD_EXTENDED_COMPATABILITY_RECORD:
               if (ipmi_fru_output_extended_compatibility_record (state_data,
                                                                  areabuf,
                                                                  area_length) < 0)
                 goto cleanup;
               break;
-            case IPMI_FRU_PARSE_AREA_TYPE_MULTIRECORD_OEM:
+            case IPMI_FRU_AREA_TYPE_MULTIRECORD_OEM:
               if (ipmi_fru_output_oem_record (state_data,
                                               areabuf,
                                               area_length) < 0)
@@ -238,21 +238,21 @@ _output_fru (ipmi_fru_state_data_t *state_data,
 
     next:
       ;
-    } while ((ret = ipmi_fru_parse_next (state_data->fru_parse_ctx)) == 1);
+    } while ((ret = ipmi_fru_next (state_data->fru_ctx)) == 1);
     
   if (ret < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "ipmi_fru_parse_next: %s\n",
-                       ipmi_fru_parse_ctx_errormsg (state_data->fru_parse_ctx));
+                       "ipmi_fru_next: %s\n",
+                       ipmi_fru_ctx_errormsg (state_data->fru_ctx));
       goto cleanup;
     }
 
  out:
   rv = 0;
  cleanup:
-  ipmi_fru_parse_close_device_id (state_data->fru_parse_ctx);
+  ipmi_fru_close_device_id (state_data->fru_ctx);
   return (rv);
 }
 
@@ -608,23 +608,23 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
                              &state_data->oem_data) < 0)
         goto cleanup;
 
-      if (ipmi_fru_parse_ctx_set_manufacturer_id (state_data->fru_parse_ctx,
-                                                  state_data->oem_data.manufacturer_id) < 0)
+      if (ipmi_fru_ctx_set_manufacturer_id (state_data->fru_ctx,
+					    state_data->oem_data.manufacturer_id) < 0)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "ipmi_fru_parse_ctx_set_manufacturer_id: %s\n",
-                           ipmi_fru_parse_ctx_errormsg (state_data->fru_parse_ctx));
+                           "ipmi_fru_ctx_set_manufacturer_id: %s\n",
+                           ipmi_fru_ctx_errormsg (state_data->fru_ctx));
           goto cleanup;
         }
 
-      if (ipmi_fru_parse_ctx_set_product_id (state_data->fru_parse_ctx,
-                                             state_data->oem_data.product_id) < 0)
+      if (ipmi_fru_ctx_set_product_id (state_data->fru_ctx,
+				       state_data->oem_data.product_id) < 0)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "ipmi_fru_parse_ctx_set_product_id: %s\n",
-                           ipmi_fru_parse_ctx_errormsg (state_data->fru_parse_ctx));
+                           "ipmi_fru_ctx_set_product_id: %s\n",
+                           ipmi_fru_ctx_errormsg (state_data->fru_ctx));
           goto cleanup;
         }
     }
@@ -733,37 +733,37 @@ _ipmi_fru (pstdout_state_t pstate,
 					 state_data.pstate)))
     goto cleanup;
 
-  if (!(state_data.fru_parse_ctx = ipmi_fru_parse_ctx_create (state_data.ipmi_ctx)))
+  if (!(state_data.fru_ctx = ipmi_fru_ctx_create (state_data.ipmi_ctx)))
     {
-      pstdout_perror (pstate, "ipmi_fru_parse_ctx_create()");
+      pstdout_perror (pstate, "ipmi_fru_ctx_create()");
       goto cleanup;
     }
   
   if (hostname)
     {
-      if (ipmi_fru_parse_ctx_set_debug_prefix (state_data.fru_parse_ctx,
-					       hostname) < 0)
+      if (ipmi_fru_ctx_set_debug_prefix (state_data.fru_ctx,
+					 hostname) < 0)
 	pstdout_fprintf (pstate,
 			 stderr,
-			 "ipmi_fru_parse_ctx_set_debug_prefix: %s\n",
-			 ipmi_fru_parse_ctx_errormsg (state_data.fru_parse_ctx));
+			 "ipmi_fru_ctx_set_debug_prefix: %s\n",
+			 ipmi_fru_ctx_errormsg (state_data.fru_ctx));
     }
       
   if (state_data.prog_data->args->common_args.debug)
-    flags |= IPMI_FRU_PARSE_FLAGS_DEBUG_DUMP;
+    flags |= IPMI_FRU_FLAGS_DEBUG_DUMP;
   if (state_data.prog_data->args->skip_checks)
-    flags |= IPMI_FRU_PARSE_FLAGS_SKIP_CHECKSUM_CHECKS;
+    flags |= IPMI_FRU_FLAGS_SKIP_CHECKSUM_CHECKS;
   if (state_data.prog_data->args->interpret_oem_data)
-    flags |= IPMI_FRU_PARSE_FLAGS_INTERPRET_OEM_DATA;
+    flags |= IPMI_FRU_FLAGS_INTERPRET_OEM_DATA;
   
   if (flags)
     {
-      if (ipmi_fru_parse_ctx_set_flags (state_data.fru_parse_ctx, flags) < 0)
+      if (ipmi_fru_ctx_set_flags (state_data.fru_ctx, flags) < 0)
 	{
 	  pstdout_fprintf (pstate,
 			   stderr,
-			   "ipmi_fru_parse_ctx_set_flags: %s\n",
-			   ipmi_fru_parse_ctx_strerror (ipmi_fru_parse_ctx_errnum (state_data.fru_parse_ctx)));
+			   "ipmi_fru_ctx_set_flags: %s\n",
+			   ipmi_fru_ctx_strerror (ipmi_fru_ctx_errnum (state_data.fru_ctx)));
 	  goto cleanup;
 	}
     }
@@ -779,7 +779,7 @@ _ipmi_fru (pstdout_state_t pstate,
 
   exit_code = EXIT_SUCCESS;
  cleanup:
-  ipmi_fru_parse_ctx_destroy (state_data.fru_parse_ctx);
+  ipmi_fru_ctx_destroy (state_data.fru_ctx);
   ipmi_sdr_ctx_destroy (state_data.sdr_ctx);
   ipmi_ctx_close (state_data.ipmi_ctx);
   ipmi_ctx_destroy (state_data.ipmi_ctx);

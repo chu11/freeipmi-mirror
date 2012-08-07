@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-fru.h,v 1.17 2010-02-08 22:20:58 chu11 Exp $
+ *  $Id: ipmi-fru_.h,v 1.17 2010-02-08 22:20:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2007-2012 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2007 The Regents of the University of California.
@@ -25,8 +25,17 @@
  *  with Ipmi-fru.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef IPMI_FRU_H
-#define IPMI_FRU_H
+/* file is named ipmi-fru_.h to differentiate itself from the
+ * library ipmi-fru_.h.
+ *
+ * I am scared of the portability of the #include_next directive, so
+ * that's why I'm doing it this way.
+ */
+
+/* file is "ipmi-fru_.h", so double underscore */
+
+#ifndef IPMI_FRU__H
+#define IPMI_FRU__H
 
 #include <stdint.h>
 #include <freeipmi/freeipmi.h>
@@ -35,7 +44,7 @@
 #include "tool-oem-common.h"
 #include "pstdout.h"
 
-enum ipmi_sel_argp_option_keys
+enum ipmi_fru_argp_option_keys
   {
     DEVICE_ID_KEY = 'e',
     VERBOSE_KEY = 'v',
@@ -69,9 +78,9 @@ typedef struct ipmi_fru_state_data
   ipmi_ctx_t ipmi_ctx;
   pstdout_state_t pstate;
   char *hostname;
-  ipmi_fru_parse_ctx_t fru_parse_ctx;
+  ipmi_fru_ctx_t fru_ctx;
   ipmi_sdr_ctx_t sdr_ctx;
   struct ipmi_oem_data oem_data;
 } ipmi_fru_state_data_t;
 
-#endif /* IPMI_FRU_H */
+#endif /* IPMI_FRU__H */

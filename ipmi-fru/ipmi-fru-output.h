@@ -30,26 +30,26 @@
 
 #include <freeipmi/freeipmi.h>
 
-#include "ipmi-fru.h"
+#include "ipmi-fru_.h"
 
-#define IPMI_FRU_PARSE_ERRNUM_IS_NON_FATAL_ERROR(__ipmi_fru_parse_ctx) \
-  ((ipmi_fru_parse_ctx_errnum ((__ipmi_fru_parse_ctx)) == IPMI_FRU_PARSE_ERR_NO_FRU_INFORMATION \
-    || ipmi_fru_parse_ctx_errnum ((__ipmi_fru_parse_ctx)) == IPMI_FRU_PARSE_ERR_FRU_AREA_LENGTH_INVALID \
-    || ipmi_fru_parse_ctx_errnum ((__ipmi_fru_parse_ctx)) == IPMI_FRU_PARSE_ERR_COMMON_HEADER_CHECKSUM_INVALID \
-    || ipmi_fru_parse_ctx_errnum ((__ipmi_fru_parse_ctx)) == IPMI_FRU_PARSE_ERR_CHASSIS_INFO_AREA_CHECKSUM_INVALID \
-    || ipmi_fru_parse_ctx_errnum ((__ipmi_fru_parse_ctx)) == IPMI_FRU_PARSE_ERR_BOARD_INFO_AREA_CHECKSUM_INVALID \
-    || ipmi_fru_parse_ctx_errnum ((__ipmi_fru_parse_ctx)) == IPMI_FRU_PARSE_ERR_PRODUCT_INFO_AREA_CHECKSUM_INVALID \
-    || ipmi_fru_parse_ctx_errnum ((__ipmi_fru_parse_ctx)) == IPMI_FRU_PARSE_ERR_MULTIRECORD_AREA_CHECKSUM_INVALID \
-    || ipmi_fru_parse_ctx_errnum ((__ipmi_fru_parse_ctx)) == IPMI_FRU_PARSE_ERR_COMMON_HEADER_FORMAT_INVALID \
-    || ipmi_fru_parse_ctx_errnum ((__ipmi_fru_parse_ctx)) == IPMI_FRU_PARSE_ERR_CHASSIS_INFO_AREA_FORMAT_INVALID \
-    || ipmi_fru_parse_ctx_errnum ((__ipmi_fru_parse_ctx)) == IPMI_FRU_PARSE_ERR_BOARD_INFO_AREA_FORMAT_INVALID \
-    || ipmi_fru_parse_ctx_errnum ((__ipmi_fru_parse_ctx)) == IPMI_FRU_PARSE_ERR_PRODUCT_INFO_AREA_FORMAT_INVALID \
-    || ipmi_fru_parse_ctx_errnum ((__ipmi_fru_parse_ctx)) == IPMI_FRU_PARSE_ERR_MULTIRECORD_AREA_FORMAT_INVALID \
-    || ipmi_fru_parse_ctx_errnum ((__ipmi_fru_parse_ctx)) == IPMI_FRU_PARSE_ERR_FRU_INFORMATION_INCONSISTENT \
-    || ipmi_fru_parse_ctx_errnum ((__ipmi_fru_parse_ctx)) == IPMI_FRU_PARSE_ERR_FRU_LANGUAGE_CODE_NOT_SUPPORTED \
-    || ipmi_fru_parse_ctx_errnum ((__ipmi_fru_parse_ctx)) == IPMI_FRU_PARSE_ERR_FRU_INVALID_BCD_ENCODING \
-    || ipmi_fru_parse_ctx_errnum ((__ipmi_fru_parse_ctx)) == IPMI_FRU_PARSE_ERR_FRU_SENTINEL_VALUE_NOT_FOUND \
-    || ipmi_fru_parse_ctx_errnum ((__ipmi_fru_parse_ctx)) == IPMI_FRU_PARSE_ERR_DEVICE_BUSY) ? 1 : 0)
+#define IPMI_FRU_ERRNUM_IS_NON_FATAL_ERROR(__ipmi_fru_ctx) \
+  ((ipmi_fru_ctx_errnum ((__ipmi_fru_ctx)) == IPMI_FRU_ERR_NO_FRU_INFORMATION \
+    || ipmi_fru_ctx_errnum ((__ipmi_fru_ctx)) == IPMI_FRU_ERR_FRU_AREA_LENGTH_INVALID \
+    || ipmi_fru_ctx_errnum ((__ipmi_fru_ctx)) == IPMI_FRU_ERR_COMMON_HEADER_CHECKSUM_INVALID \
+    || ipmi_fru_ctx_errnum ((__ipmi_fru_ctx)) == IPMI_FRU_ERR_CHASSIS_INFO_AREA_CHECKSUM_INVALID \
+    || ipmi_fru_ctx_errnum ((__ipmi_fru_ctx)) == IPMI_FRU_ERR_BOARD_INFO_AREA_CHECKSUM_INVALID \
+    || ipmi_fru_ctx_errnum ((__ipmi_fru_ctx)) == IPMI_FRU_ERR_PRODUCT_INFO_AREA_CHECKSUM_INVALID \
+    || ipmi_fru_ctx_errnum ((__ipmi_fru_ctx)) == IPMI_FRU_ERR_MULTIRECORD_AREA_CHECKSUM_INVALID \
+    || ipmi_fru_ctx_errnum ((__ipmi_fru_ctx)) == IPMI_FRU_ERR_COMMON_HEADER_FORMAT_INVALID \
+    || ipmi_fru_ctx_errnum ((__ipmi_fru_ctx)) == IPMI_FRU_ERR_CHASSIS_INFO_AREA_FORMAT_INVALID \
+    || ipmi_fru_ctx_errnum ((__ipmi_fru_ctx)) == IPMI_FRU_ERR_BOARD_INFO_AREA_FORMAT_INVALID \
+    || ipmi_fru_ctx_errnum ((__ipmi_fru_ctx)) == IPMI_FRU_ERR_PRODUCT_INFO_AREA_FORMAT_INVALID \
+    || ipmi_fru_ctx_errnum ((__ipmi_fru_ctx)) == IPMI_FRU_ERR_MULTIRECORD_AREA_FORMAT_INVALID \
+    || ipmi_fru_ctx_errnum ((__ipmi_fru_ctx)) == IPMI_FRU_ERR_FRU_INFORMATION_INCONSISTENT \
+    || ipmi_fru_ctx_errnum ((__ipmi_fru_ctx)) == IPMI_FRU_ERR_FRU_LANGUAGE_CODE_NOT_SUPPORTED \
+    || ipmi_fru_ctx_errnum ((__ipmi_fru_ctx)) == IPMI_FRU_ERR_FRU_INVALID_BCD_ENCODING \
+    || ipmi_fru_ctx_errnum ((__ipmi_fru_ctx)) == IPMI_FRU_ERR_FRU_SENTINEL_VALUE_NOT_FOUND \
+    || ipmi_fru_ctx_errnum ((__ipmi_fru_ctx)) == IPMI_FRU_ERR_DEVICE_BUSY) ? 1 : 0)
 
 int ipmi_fru_output_chassis_info_area (ipmi_fru_state_data_t *state_data,
                                        const void *areabuf,
