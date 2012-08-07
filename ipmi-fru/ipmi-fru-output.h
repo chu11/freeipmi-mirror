@@ -30,7 +30,7 @@
 
 #include <freeipmi/freeipmi.h>
 
-#include "ipmi-fru.h"
+#include "ipmi-fru_.h"
 
 #define IPMI_FRU_PARSE_ERRNUM_IS_NON_FATAL_ERROR(__ipmi_fru_parse_ctx) \
   ((ipmi_fru_parse_ctx_errnum ((__ipmi_fru_parse_ctx)) == IPMI_FRU_PARSE_ERR_NO_FRU_INFORMATION \

@@ -28,7 +28,7 @@
 #ifndef IPMI_FRU_ARGP_H
 #define IPMI_FRU_ARGP_H
 
-#include "ipmi-fru.h"
+#include "ipmi-fru_.h"
 
 void ipmi_fru_argp_parse (int argc, char **argv, struct ipmi_fru_arguments *cmd_args);
 

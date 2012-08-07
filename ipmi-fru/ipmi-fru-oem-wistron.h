@@ -30,7 +30,7 @@
 
 #include <freeipmi/freeipmi.h>
 
-#include "ipmi-fru.h"
+#include "ipmi-fru_.h"
 
 /* Returns 1 on interpretation, 0 if not, -1 on error */
 int ipmi_fru_oem_wistron_oem_record (ipmi_fru_state_data_t *state_data,

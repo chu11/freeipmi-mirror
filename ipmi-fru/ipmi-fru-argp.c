@@ -45,7 +45,7 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "ipmi-fru.h"
+#include "ipmi-fru_.h"
 #include "ipmi-fru-argp.h"
 
 #include "freeipmi-portability.h"

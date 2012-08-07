@@ -38,7 +38,7 @@
 
 #include <freeipmi/freeipmi.h>
 
-#include "ipmi-fru.h"
+#include "ipmi-fru_.h"
 #include "ipmi-fru-argp.h"
 #include "ipmi-fru-output.h"
 
