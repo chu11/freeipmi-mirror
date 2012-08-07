@@ -356,7 +356,7 @@ fi
 %dir %{_includedir}/freeipmi/debug
 %dir %{_includedir}/freeipmi/driver
 %dir %{_includedir}/freeipmi/fiid
-%dir %{_includedir}/freeipmi/fru-parse
+%dir %{_includedir}/freeipmi/fru
 %dir %{_includedir}/freeipmi/interface
 %dir %{_includedir}/freeipmi/interpret
 %dir %{_includedir}/freeipmi/locate
@@ -377,7 +377,7 @@ fi
 %{_includedir}/freeipmi/debug/*.h
 %{_includedir}/freeipmi/driver/*.h
 %{_includedir}/freeipmi/fiid/*.h
-%{_includedir}/freeipmi/fru-parse/*.h
+%{_includedir}/freeipmi/fru/*.h
 %{_includedir}/freeipmi/interface/*.h
 %{_includedir}/freeipmi/interpret/*.h
 %{_includedir}/freeipmi/locate/*.h
