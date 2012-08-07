@@ -135,7 +135,7 @@ power off actually taking place.  This option will force
 to regularly query the remote BMC and return only after the machine
 has powered off.
 .TP
-\fB\-\-oem\-power\-type\fR=\fRIOEM\-POWER\-TYPE\fR
+\fB\-\-oem\-power\-type\fR=\fIOEM\-POWER\-TYPE\fR
 This option informs
 .B ipmipower
 to initiate power control operations via an IPMI OEM specific power
