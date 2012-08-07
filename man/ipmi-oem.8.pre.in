@@ -554,6 +554,7 @@ After this configuration, any policies within the domain ID that are
 outside of this range will be disabled as needed.  The current power
 draw range can be read via the \fBget\-node\-manager\-capabilities\fR
 above.  Command confirmed to work on Intel S2600JF (Appro 512X).
+.if 0 \{
 .TP
 .B get-node-manager-alert-destination
 This OEM command will get the current alert destination information.
@@ -564,6 +565,23 @@ device channel information can be viewed via
 PEF configuration can be viewed via
 .B ipmi-pef-config(8).
 Command confirmed to work on Intel S2600JF (Appro 512X).
+.TP
+.B set-node-manager-alert-destination \fI[channelnumber=num]\fR \fI[slaveaddress=address]\fR \fI[destinationselector=num]\fR \fI[alertstringselector=num]\fR \fI[sendalertstring=yes|no]\fR \fI[register=yes|no]\fR 
+This OEM command will set the current alert receiver.  By default,
+this command will attempt to register an alert (identical to
+\fIregister=yes\fR).  When registering an alert receiver the
+\fIchannelnumber\fR, \fIalertstringselector\fR, and
+\fIsendalertstring\fR options must be specified.  The
+\fIslaveaddress\fR or \fIdestinationselector\fR must also be
+specified, depending on the channel number specified.  If
+\fIregister=no\fR, most of these options are not required.
+Appropriate channel number input can be determined via
+.B bmc-info(8).
+Destination selector and alert string selector information can be
+determined via
+.B ipmi-pef-config(8).
+Command confirmed to work on Intel S2600JF (Appro 512X).
+\}
 .TP
 .B get-node-manager-version
 This OEM command will output the current Intel Node Manager version

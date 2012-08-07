@@ -4203,6 +4203,8 @@ ipmi_oem_intelnm_set_node_manager_power_draw_range (ipmi_oem_state_data_t *state
   return (rv);
 }
 
+#if 0
+/* can't verify */
 int
 ipmi_oem_intelnm_get_node_manager_alert_destination (ipmi_oem_state_data_t *state_data)
 {
@@ -4354,8 +4356,275 @@ ipmi_oem_intelnm_get_node_manager_alert_destination (ipmi_oem_state_data_t *stat
 int
 ipmi_oem_intelnm_set_node_manager_alert_destination (ipmi_oem_state_data_t *state_data)
 {
-  return (0);
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t target_channel_number = 0;
+  uint8_t target_slave_address = 0;
+  uint8_t target_lun = 0;
+  uint8_t channelnumber= 0;
+  int channelnumber_specified= 0;
+  /* registerX b/c register is a C keyword */
+  uint8_t registerX = IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_INFORMATION_OPERATION_REGISTER_ALERT_RECEIVER;
+  int registerX_specified= 0;
+  uint8_t slaveaddress= 0;
+  int slaveaddress_specified= 0;
+  uint8_t destinationselector= 0;
+  int destinationselector_specified= 0;
+  uint8_t alertstringselector= 0;
+  int alertstringselector_specified= 0;
+  uint8_t sendalertstring= 0;
+  int sendalertstring_specified= 0;
+  int rv = -1;
+  int ret;
+  unsigned int i;
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count >= 1);
+
+  for (i = 0; i < state_data->prog_data->args->oem_options_count; i++)
+    {
+      char *key = NULL;
+      char *value = NULL;
+      
+      if (ipmi_oem_parse_key_value (state_data,
+				    i,
+				    &key,
+				    &value) < 0)
+	goto cleanup;
+
+      if (!strcasecmp (key, "channelnumber"))
+	{
+	  if (ipmi_oem_parse_1_byte_field (state_data,
+					   i,
+					   value,
+					   &channelnumber) < 0)
+	    goto cleanup;
+
+	  if (!IPMI_CHANNEL_NUMBER_VALID (channelnumber))
+	    {
+	      pstdout_fprintf (state_data->pstate,
+			       stderr,
+			       "%s:%s invalid OEM option argument '%s' : invalid channel number\n",
+			       state_data->prog_data->args->oem_id,
+			       state_data->prog_data->args->oem_command,
+			       state_data->prog_data->args->oem_options[i]);
+	      goto cleanup;
+	    }
+	  
+	  channelnumber_specified++;
+	}
+      else if (!strcasecmp (key, "slaveaddress"))
+	{
+	  if (ipmi_oem_parse_1_byte_field (state_data,
+					   i,
+					   value,
+					   &slaveaddress) < 0)
+	    goto cleanup;
+	  
+	  slaveaddress_specified++;
+	}
+      else if (!strcasecmp (key, "destinationselector"))
+	{
+	  if (ipmi_oem_parse_1_byte_field (state_data,
+					   i,
+					   value,
+					   &destinationselector) < 0)
+	    goto cleanup;
+	  
+	  destinationselector_specified++;
+	}
+      else if (!strcasecmp (key, "alertstringselector"))
+	{
+	  if (ipmi_oem_parse_1_byte_field (state_data,
+					   i,
+					   value,
+					   &alertstringselector) < 0)
+	    goto cleanup;
+	  
+	  alertstringselector_specified++;
+	}
+      else if (!strcasecmp (key, "register"))
+	{
+	  if (strcasecmp (value, "yes")
+	      && strcasecmp (value, "no"))
+	    {
+	      pstdout_fprintf (state_data->pstate,
+			       stderr,
+			       "%s:%s invalid OEM option argument '%s' : invalid value - specify yes or not\n",
+			       state_data->prog_data->args->oem_id,
+			       state_data->prog_data->args->oem_command,
+			       state_data->prog_data->args->oem_options[i]);
+	      goto cleanup;
+	    }
+	  
+	  if (!strcasecmp (value, "yes"))
+	    registerX = IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_INFORMATION_OPERATION_REGISTER_ALERT_RECEIVER;
+	  else
+	    registerX = IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_INFORMATION_OPERATION_UNREGISTER_ALERT_RECEIVER;
+	  
+	  registerX_specified++;
+	}
+      else if (!strcasecmp (key, "sendalertstring"))
+	{
+	  if (strcasecmp (value, "yes")
+	      && strcasecmp (value, "no"))
+	    {
+	      pstdout_fprintf (state_data->pstate,
+			       stderr,
+			       "%s:%s invalid OEM option argument '%s' : invalid value - specify yes or not\n",
+			       state_data->prog_data->args->oem_id,
+			       state_data->prog_data->args->oem_command,
+			       state_data->prog_data->args->oem_options[i]);
+	      goto cleanup;
+	    }
+	  
+	  if (!strcasecmp (value, "yes"))
+	    sendalertstring = IPMI_OEM_INTEL_NODE_MANAGER_SEND_ALERT_STRING_IDENTIFIED_BY_STRING_SELECTOR;
+	  else
+	    sendalertstring = IPMI_OEM_INTEL_NODE_MANAGER_DONT_SEND_AN_ALERT_STRING;
+	  
+	  sendalertstring_specified++;
+	}
+      else
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "%s:%s invalid OEM option argument '%s' : invalid option\n",
+			   state_data->prog_data->args->oem_id,
+			   state_data->prog_data->args->oem_command,
+			   state_data->prog_data->args->oem_options[i]);
+	  goto cleanup;
+	}
+      
+      free (key);
+      free (value);
+    }
+
+  if (registerX == IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_INFORMATION_OPERATION_REGISTER_ALERT_RECEIVER)
+    {
+      if (!channelnumber_specified)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "channel number must be specified if registering alert receiver\n");
+	  goto cleanup;
+	}
+
+      if (!alertstringselector_specified)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "alert string selector must be specified if registering alert receiver\n");
+	  goto cleanup;
+	}
+
+      if (!sendalertstring_specified)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "send alert string must be specified if registering alert receiver\n");
+	  goto cleanup;
+	}
+
+      if (!slaveaddress_specified && !destinationselector_specified)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "slave address or destination selector must be specified\n");
+	  goto cleanup;
+	}
+
+      if (slaveaddress_specified && destinationselector_specified)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "only one of slave address and destination selector can be specified\n");
+	  goto cleanup;
+	}
+    }
+
+  if (_ipmi_oem_intelnm_node_manager_init (state_data,
+                                           &target_channel_number,
+                                           &target_slave_address,
+                                           &target_lun) < 0)
+    goto cleanup;
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_destination_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (registerX == IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_INFORMATION_OPERATION_UNREGISTER_ALERT_RECEIVER)
+    ret = ipmi_cmd_oem_intel_node_manager_set_node_manager_alert_destination (state_data->ipmi_ctx,
+									      target_channel_number,
+									      target_slave_address,
+									      target_lun,
+									      0,
+									      registerX,
+									      0,
+									      0,
+									      0,
+									      obj_cmd_rs);
+  else
+    {
+      if (destinationselector_specified)
+	ret = ipmi_cmd_oem_intel_node_manager_set_node_manager_alert_destination_ipmb (state_data->ipmi_ctx,
+										       target_channel_number,
+										       target_slave_address,
+										       target_lun,
+										       channelnumber,
+										       registerX,
+										       destinationselector,
+										       alertstringselector,
+										       sendalertstring,
+										       obj_cmd_rs);
+      else
+	ret = ipmi_cmd_oem_intel_node_manager_set_node_manager_alert_destination_ipmb (state_data->ipmi_ctx,
+										       target_channel_number,
+										       target_slave_address,
+										       target_lun,
+										       channelnumber,
+										       registerX,
+										       slaveaddress,
+										       alertstringselector,
+										       sendalertstring,
+										       obj_cmd_rs);
+    }
+  
+  if (ret < 0)
+    {
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
+	{
+	  int eret;
+	  
+	  if ((eret = _ipmi_oem_intelnm_bad_completion_code (state_data,
+							     NULL,
+							     obj_cmd_rs)) < 0)
+	    goto cleanup;
+	  
+	  if (!eret)
+	    goto efallthrough;
+	}
+      else
+	{
+	efallthrough:
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_cmd_oem_intel_node_manager_set_node_manager_alert_destination: %s\n",
+			   ipmi_ctx_errormsg (state_data->ipmi_ctx));
+	}
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
 }
+#endif	/* 0 */
 
 int
 ipmi_oem_intelnm_get_node_manager_version (ipmi_oem_state_data_t *state_data)
