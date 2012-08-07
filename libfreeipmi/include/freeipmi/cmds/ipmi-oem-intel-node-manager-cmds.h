@@ -102,6 +102,8 @@ extern "C" {
 #define IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TYPE_VALID(__val)            \
   (((__val) == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TYPE_POWER_CONTROL_POLICY) ? 1 : 0)
 
+#define IPMI_OEM_INTEL_NODE_MANAGER_ALERT_THRESHOLDS_MAX 3
+
 #define IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_START_TIME_MIN 0
 #define IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_START_TIME_MAX 239
 
@@ -123,6 +125,8 @@ extern "C" {
 #define IPMI_OEM_INTEL_NODE_MANAGER_SUSPEND_PERIOD_VALID(__val)         \
   (((__val) == IPMI_OEM_INTEL_NODE_MANAGER_REPEAT_THE_SUSPEND_PERIOD    \
     || (__val) == IPMI_OEM_INTEL_NODE_MANAGER_DO_NOT_REPEAT_THE_SUSPEND_PERIOD) ? 1 : 0)
+
+#define IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_PERIODS_MAX 5
 
 #define IPMI_OEM_INTEL_NODE_MANAGER_RESET_MODE_RESET_GLOBAL_STATISTICS 0x00
 #define IPMI_OEM_INTEL_NODE_MANAGER_RESET_MODE_PER_POLICY_STATISTICS   0x01
@@ -154,8 +158,8 @@ extern "C" {
 #define IPMI_OEM_INTEL_NODE_MANAGER_POLICY_ACTIVATION_STATE_TRIGGERED_AND_ACTIVELY_LIMITING_TARGET 0x1
 #define IPMI_OEM_INTEL_NODE_MANAGER_POLICY_ACTIVATION_STATE_NOT_TRIGGERED                          0x0
 
-#define IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_LIMITING_SCOPE_PLATFORM_POWER_LIMITING 0
-#define IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_LIMITING_SCOPE_CPU_POWER_LIMITING      1
+#define IPMI_OEM_INTEL_NODE_MANAGER_LIMITING_TYPE_PLATFORM_POWER_LIMITING 0
+#define IPMI_OEM_INTEL_NODE_MANAGER_LIMITING_TYPE_CPU_POWER_LIMITING      1
 
 #define IPMI_OEM_INTEL_NODE_MANAGER_LIMITING_BASED_ON_WALL_INPUT_POWER_PSU_INPUT_POWER           0
 #define IPMI_OEM_INTEL_NODE_MANAGER_LIMITING_BASED_ON_DC_POWER_PSU_OUTPUT_POWER_OR_BLADED_SYSTEM 1
@@ -245,10 +249,10 @@ int fill_cmd_oem_intel_node_manager_set_node_manager_policy (uint8_t domain_id,
                                                              uint8_t policy_configuration_action,
                                                              uint8_t policy_exception_actions_send_alert,
                                                              uint8_t policy_exception_actions_shutdown_system,
-                                                             uint8_t power_limit,
-                                                             uint8_t correction_time_limit,
-                                                             uint8_t policy_trigger_limit,
-                                                             uint8_t statistics_reporting_period,
+                                                             uint16_t power_limit,
+                                                             uint32_t correction_time_limit,
+                                                             uint16_t policy_trigger_limit,
+                                                             uint16_t statistics_reporting_period,
                                                              fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_oem_intel_node_manager_get_node_manager_policy (uint8_t domain_id,
@@ -257,9 +261,9 @@ int fill_cmd_oem_intel_node_manager_get_node_manager_policy (uint8_t domain_id,
 
 int fill_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds (uint8_t domain_id,
                                                                        uint8_t policy_id,
-                                                                       uint8_t *alert_threshold1,
-                                                                       uint8_t *alert_threshold2,
-                                                                       uint8_t *alert_threshold3,
+                                                                       uint16_t *alert_threshold1,
+                                                                       uint16_t *alert_threshold2,
+                                                                       uint16_t *alert_threshold3,
                                                                        fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds (uint8_t domain_id,
@@ -337,8 +341,8 @@ int fill_cmd_oem_intel_node_manager_get_node_manager_capabilities (uint8_t domai
 int fill_cmd_oem_intel_node_manager_get_node_manager_version (fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_oem_intel_node_manager_set_node_manager_power_draw_range (uint8_t domain_id,
-                                                                       uint8_t minimum_power_draw,
-                                                                       uint8_t maximum_power_draw,
+                                                                       uint16_t minimum_power_draw,
+                                                                       uint16_t maximum_power_draw,
                                                                        fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_oem_intel_node_manager_set_node_manager_alert_destination (uint8_t channel_number,

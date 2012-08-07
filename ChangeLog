@@ -1,3 +1,23 @@
+2012-08-06  Albert Chu <chu11@llnl.gov>
+
+	* Merge intelnm15 branch.
+
+	* ipmi-oem/: Add IntelNM get-node-manager-capabilities,
+	node-manager-policy-control, get-node-manager-policy,
+	set-node-manager-policy, remove-node-manager-policy,
+	get-node-manager-alert-thresholds,
+	set-node-manager-alert-thresholds,
+ 	get-node-manager-policy-suspend-periods,
+ 	set-node-manager-policy-suspend-periods,
+	set-node-manager-power-draw-range,
+	get-node-manager-alert-destination,
+	set-node-manager-alert-destination.
+
+	* libfreeipmi/: Fix Intel NM bugs.
+
+	* ipmi-pef-config/: Support volatile alert string 0 and lan alert
+	destination 0.
+	
 2012-08-03  Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-faq.texi: Add Wistron to OEM list.
@@ -42,6 +62,14 @@
 	* ipmi-oem/ipmi-oem-intelnm.c: Use
 	_ipmi_oem_intelnm_bad_completion_code in additional situation.
 
+2012-07-19  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/: Add intelnm get-node-manager-capabilities.
+
+	* libfreeipmi/: Adjust some intel NM fields/macro names for
+	correctness based on Intel NM spec.  Fix several bugs in Intel NM
+	implementation.
+	
 2012-07-19  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Fix and support Wistron set-password-policy.

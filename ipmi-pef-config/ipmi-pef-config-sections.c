@@ -367,10 +367,11 @@ ipmi_pef_config_sections_create (ipmi_pef_config_state_data_t *state_data)
 
   /* Lan_Alert_Destination Section(s) */
 
-  for (i = 0; i < number_of_lan_alert_destinations; i++)
+
+  for (i = 0; i <= number_of_lan_alert_destinations; i++)
     {
       if (!(section = ipmi_pef_config_lan_alert_destination_section_get (state_data,
-									 i + 1,
+									 i,
 									 state_data->lan_base_config_flags,
 									 -1)))
         goto cleanup;
@@ -397,9 +398,9 @@ ipmi_pef_config_sections_create (ipmi_pef_config_state_data_t *state_data)
 
   /* Alert_String Section(s) */
 
-  for (i = 0; i < number_of_alert_strings; i++)
+  for (i = 0; i <= number_of_alert_strings; i++)
     {
-      if (!(section = ipmi_pef_config_alert_string_section_get (state_data, i + 1)))
+      if (!(section = ipmi_pef_config_alert_string_section_get (state_data, i)))
         goto cleanup;
       if (config_section_append (&sections, section) < 0)
         goto cleanup;

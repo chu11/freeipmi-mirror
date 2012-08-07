@@ -811,7 +811,6 @@ ipmi_pef_config_lan_alert_destination_section_get (ipmi_pef_config_state_data_t 
   char section_name_base[CONFIG_MAX_SECTION_NAME_LEN];
 
   assert (state_data);
-  assert (num);
 
   snprintf (section_name_base, CONFIG_MAX_SECTION_NAME_LEN, "Lan_Alert_Destination_%u", num);
 

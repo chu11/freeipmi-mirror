@@ -430,7 +430,8 @@ default \fIdomainid\fR is 0.  If a \fIpolicyid\fR is specified, per
 policy statistics will be output, otherwise global statistics will be
 output.  Command confirmed to work on Intel S5500WB (Penguin Computing
 Relion 700), Inventec 5441/5442 (Dell Xanadu II/III), Quanta S99Q
-(Dell FS12-TY), Quanta QSSC-S4R (Appro GB812X-CN), Supermicro X9DRi-F.
+(Dell FS12-TY), Quanta QSSC-S4R (Appro GB812X-CN), Supermicro X9DRi-F,
+Intel S2600JF (Appro 512X).
 .TP
 .B reset-node-manager-statistics \fI[domainid=num]\fR \fI[policyid=num]\fR
 This OEM command will reset the Intel Node Manager statistics.  The
@@ -439,13 +440,155 @@ default \fIdomainid\fR is 0.  If a \fIpolicyid\fR is specified, per
 policy statistics will be reset, otherwise global statistics will be
 reset.  Command confirmed to work on Intel S5500WB (Penguin Computing
 Relion 700), Inventec 5441/5442 (Dell Xanadu II/III), Quanta S99Q
-(Dell FS12-TY), Quanta QSSC-S4R (Appro GB812X-CN), Supermicro X9DRi-F.
+(Dell FS12-TY), Quanta QSSC-S4R (Appro GB812X-CN), Supermicro X9DRi-F,
+Intel S2600JF (Appro 512X).
+.TP
+.B get-node-manager-capabilities \fI[domainid=num]\fR \fI[policytrigger=none|inlet]\fR \fI[policytype=powercontrol]\fR
+This OEM command will output the current capabilities of the Intel
+Node manager.  The user may optionally specify a \fIdomainid\fR,
+\fIpolicytrigger\fR, or \fIpolicytype\fR.  The default \fIdomainid\fR
+is 0.  If any particular option is not specified, all permutations of
+the remaining options will be used in an attempt to output all
+capabilities of the system.  Command confirmed to work on Intel
+S2600JF (Appro 512X).
+.TP
+.B node-manager-policy-control \fI<enable|disable>\fR \fI[domainid=num]\fR \fI[policyid=num]\fR
+This OEM command will enable or disable the current global, domain, or
+policies used by the Intel Node Manager.  If no \fIdomainid\fR is
+specified, then the Node Manager will be enabled or globally disabled.
+If a \fIdomainid\fR is specified, only that domain will be enabled or
+disabled.  If both a \fIdomainid\fR and \fIpolicyid\fR are specified,
+only that specific policy within the domain will be specified.  This
+OEM command will be required to enable or disable policies before many
+of the commands below can be used for configuration or use.  Command
+confirmed to work on Intel S2600JF (Appro 512X).
+.TP
+.B get-node-manager-policy \fI[domainid=num]\fR \fI[policyid=num]\fR
+This OEM command will get the current node manager policy.  If no
+\fIdomainid\fR is specified, all policies for all domain IDs and
+policy Ids will be attempted to be output.  If a \fIdomainid\fR is
+specified but a \fIpolicyid\fR is not, all policies within a domain
+will be attempted to be output.  If the verbose option is set,
+additional error messages will be output as valid policies are being
+searched for.  Command confirmed to work on Intel S2600JF (Appro
+512X).
+.TP
+.B set-node-manager-policy \fIdomainid=num\fR \fIpolicyid=num\fR \fIpolicytrigger=none|inlet\fR \fIpowerlimit=watts\fR \fIcorrectiontimelimit=ms\fR \fIpolicytriggerlimit=num\fR \fIstatisticsreportingperiod=seconds\fR \fI[policystate=enable|disable]\fR \fI[policyexceptionaction=alert|shutdown]\fR
+This OEM command will add or modify an indicated policy ID from the
+domain ID.  Most of the fields above are required, although they can
+be listed in any order.  By default any created/modified policy will
+be enabled, however this can be overridden by \fIpolicystate\fR.
+\fIpolicyexceptionaction\fR may be specified multiple times to
+configure multiple actions or can be skipped to configure no actions.
+The units of the \fIpolicytriggerlimit\fR will depend on the
+\fIpolicytrigger\fR selected.  Most notably, if the
+\fIpolicytrigger\fR is \fIinlet\fR, which refers to inlet temperature,
+the units of \fRpolicytriggerlimit\fR will be in Celsius.  If the
+\fIpolicytrigger\fR is \fInone\fR, the \fIpolicytriggerlimit\fR will
+be ignored and the the power limit specified by \fIpowerlimit\fR will
+be used as the policy trigger limit.  The \fIcorrectiontimelimit\fR
+specifies the time the Node Manager must take corrective actions to
+bring back the system within limits before taking the actions
+specified in \fIpolicyexceptionaction\fR.
+\fIstatisticsreportingperiod\fR is the number of seconds that measured
+power will be averaged for reporting.  Please see
+\fBget\-node\-manager\-policy\fR to determine proper ranges for
+\fIpowerlimit\fR, \fIcorrectiontimelimit\fR, \fIpolicytriggerlimit\fR,
+and \fIstatisticsreportingperiod\fR.  Command confirmed to work on
+Intel S2600JF (Appro 512X).
+.TP
+.B remove-node-manager-policy \fIdomainid=num\fR \fIpolicyid=num\fR
+This OEM command will remove the indicated policy ID from the domain
+ID.  Both the \fIdomainid\fR and \fIpolicyid\fR are required.  Command
+confirmed to work on Intel S2600JF (Appro 512X).
+.TP
+.B get-node-manager-alert-thresholds \fI[domainid=num]\fR \fI[policyid=num]\fR 
+This OEM command will get the current alert thresholds.  If no
+\fIdomainid\fR is specified, all alert thresholds for domain IDs and
+policy Ids will be attempted to be output.  If a \fIdomainid\fR is
+specified but a \fIpolicyid\fR is not, all alert thresholds within a domain
+will be attempted to be output.  The units of the thresholds will
+depend on the configuration of the current policy.  If the verbose
+option is set, additional error messages will be output as valid
+policies are being searched for.  Command confirmed to work on Intel
+S2600JF (Appro 512X).
+.TP
+.B set-node-manager-alert-thresholds \fIdomainid=num\fR \fIpolicyid=num\fR \fI[threshold1=num]\fR \fI[threshold2=num]\fR \fI[threshold3=num]\fR
+This OEM command will set the alert thresholds for a given
+domain ID and policy ID.  Up to three thresholds can be specified, The
+units of the thresholds will depend on the configuration of the
+current policy.  Command confirmed to work on Intel S2600JF (Appro
+512X).
+.TP
+.B get-node-manager-policy-suspend-periods \fI[domainid=num]\fR \fI[policyid=num]\fR 
+This OEM command will get the current policy suspend periods.  Suspend
+periods will temporarily disable Intel Node Manager policies at
+configured times.  If no \fIdomainid\fR is specified, all suspend
+periods for domain IDs and policy Ids will be attempted to be output.
+If a \fIdomainid\fR is specified but a \fIpolicyid\fR is not, all
+suspend periods within a domain will be attempted to be output.  If
+the verbose option is set, additional error messages will be output as
+valid policies are being searched for.  Suspend start and stop times
+are output in 24 hour format.  Command confirmed to work on Intel
+S2600JF (Appro 512X).
+.TP
+.B set-node-manager-policy-suspend-periods \fIdomainid=num\fR \fIpolicyid=num\fR \fIsuspendperiodstart1=time\fR \fIsuspendperiodstop1=time\fR \fIsuspendperiodrepeat1=monday|tuesday|wednesday|thursday|friday|saturday|sunday\fR ...
+This OEM command will set the policy suspend periods for a policy.
+Suspend periods will temporarily disable Intel Node Manager policies
+at configured times.  Up to 5 suspend periods can be specified by
+\fIsuspendperiodstartX\fR, \fIsuspendperiodstopX\fR,
+\fIsuspendperiodrepeatX\fR.  \fIsuspendperiodstart\fR and
+\fIsuspendperiodstop\fR specify the start and stop time since midnight
+for a suspend period.  The time should be specified in 24 hour format
+(i.e. 02:00 or 13:40).  Note that suspend periods are configured in
+multiples of 6 minutes, therefore the stored configuration may be
+rounded to a slightly alternate configuration.
+\fIsuspendperiodrepeat\fR indicates the days in which the suspend
+period shall be enabled.  The option can be specified multiple times
+to configure multiple times.  Command confirmed to work on Intel
+S2600JF (Appro 512X).
+.TP
+.B set-node-manager-power-draw-range \fIdomainid=num\fR \fIminpowerdrawrange=watts\fR \fImaxpowerdrawrange=watts\fR
+This OEM command will set the power draw range for a given domain ID.
+After this configuration, any policies within the domain ID that are
+outside of this range will be disabled as needed.  The current power
+draw range can be read via the \fBget\-node\-manager\-capabilities\fR
+above.  Command confirmed to work on Intel S2600JF (Appro 512X).
+.if 0 \{
+.TP
+.B get-node-manager-alert-destination
+This OEM command will get the current alert destination information.
+Some of the configuration information output by this command will need
+to be correlated to BMC device channel and PEF configuration.  BMC
+device channel information can be viewed via
+.B bmc-info(8).
+PEF configuration can be viewed via
+.B ipmi-pef-config(8).
+Command confirmed to work on Intel S2600JF (Appro 512X).
+.TP
+.B set-node-manager-alert-destination \fI[channelnumber=num]\fR \fI[slaveaddress=address]\fR \fI[destinationselector=num]\fR \fI[alertstringselector=num]\fR \fI[sendalertstring=yes|no]\fR \fI[register=yes|no]\fR 
+This OEM command will set the current alert receiver.  By default,
+this command will attempt to register an alert (identical to
+\fIregister=yes\fR).  When registering an alert receiver the
+\fIchannelnumber\fR, \fIalertstringselector\fR, and
+\fIsendalertstring\fR options must be specified.  The
+\fIslaveaddress\fR or \fIdestinationselector\fR must also be
+specified, depending on the channel number specified.  If
+\fIregister=no\fR, most of these options are not required.
+Appropriate channel number input can be determined via
+.B bmc-info(8).
+Destination selector and alert string selector information can be
+determined via
+.B ipmi-pef-config(8).
+Command confirmed to work on Intel S2600JF (Appro 512X).
+\}
 .TP
 .B get-node-manager-version
 This OEM command will output the current Intel Node Manager version
 information.  Command confirmed to work on Intel S5500WB (Penguin
 Computing Relion 700), Inventec 5441/5442 (Dell Xanadu II/III), Quanta
-S99Q (Dell FS12-TY), Quanta QSSC-S4R (Appro GB812X-CN).
+S99Q (Dell FS12-TY), Quanta QSSC-S4R (Appro GB812X-CN), Intel S2600JF
+(Appro 512X).
 .RE
 .TP
 .B Inventec
@@ -1255,5 +1398,6 @@ cold-reset with
 Copyright \(co 2008-2012 FreeIPMI Core Team
 #include <@top_srcdir@/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
-freeipmi(7), bmc-config(8), bmc-device(8), ipmi-raw(8)
+freeipmi(7), bmc-config(8), bmc-device(8), ipmi-pef-config(8),
+ipmi-raw(8)
 #include <@top_srcdir@/man/manpage-common-homepage.man>

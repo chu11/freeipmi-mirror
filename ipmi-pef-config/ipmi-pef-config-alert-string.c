@@ -494,20 +494,15 @@ alert_string_validate (const char *section_name,
 }
 
 struct config_section *
-ipmi_pef_config_alert_string_section_get (ipmi_pef_config_state_data_t *state_data, int num)
+ipmi_pef_config_alert_string_section_get (ipmi_pef_config_state_data_t *state_data,
+					  unsigned int num)
 {
   struct config_section *section = NULL;
   char buf[CONFIG_MAX_SECTION_NAME_LEN];
 
-  if (num <= 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "Invalid Num = %d\n", num);
-      return (NULL);
-    }
+  assert (state_data);
 
-  snprintf (buf, CONFIG_MAX_SECTION_NAME_LEN, "Alert_String_%d", num);
+  snprintf (buf, CONFIG_MAX_SECTION_NAME_LEN, "Alert_String_%u", num);
 
   if (!(section = config_section_create (state_data->pstate,
                                          buf,

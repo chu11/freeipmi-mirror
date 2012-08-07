@@ -70,10 +70,10 @@ int ipmi_cmd_oem_intel_node_manager_set_node_manager_policy (ipmi_ctx_t ctx,
                                                              uint8_t policy_configuration_action,
                                                              uint8_t policy_exception_actions_send_alert,
                                                              uint8_t policy_exception_actions_shutdown_system,
-                                                             uint8_t power_limit,
-                                                             uint8_t correction_time_limit,
-                                                             uint8_t policy_trigger_limit,
-                                                             uint8_t statistics_reporting_period,
+                                                             uint16_t power_limit,
+                                                             uint32_t correction_time_limit,
+                                                             uint16_t policy_trigger_limit,
+                                                             uint16_t statistics_reporting_period,
                                                              fiid_obj_t obj_cmd_rs);
   
 int ipmi_cmd_oem_intel_node_manager_get_node_manager_policy (ipmi_ctx_t ctx,
@@ -90,9 +90,9 @@ int ipmi_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds (ipmi_ctx_
                                                                        uint8_t target_lun,
                                                                        uint8_t domain_id,
                                                                        uint8_t policy_id,
-                                                                       uint8_t *alert_threshold1,
-                                                                       uint8_t *alert_threshold2,
-                                                                       uint8_t *alert_threshold3,
+                                                                       uint16_t *alert_threshold1,
+                                                                       uint16_t *alert_threshold2,
+                                                                       uint16_t *alert_threshold3,
                                                                        fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds (ipmi_ctx_t ctx,
@@ -202,8 +202,8 @@ int ipmi_cmd_oem_intel_node_manager_set_node_manager_power_draw_range (ipmi_ctx_
                                                                        uint8_t target_slave_address,
                                                                        uint8_t target_lun,
                                                                        uint8_t domain_id,
-                                                                       uint8_t minimum_power_draw,
-                                                                       uint8_t maximum_power_draw,
+                                                                       uint16_t minimum_power_draw,
+                                                                       uint16_t maximum_power_draw,
                                                                        fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_oem_intel_node_manager_set_node_manager_alert_destination (ipmi_ctx_t ctx,

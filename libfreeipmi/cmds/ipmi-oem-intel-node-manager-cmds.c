@@ -384,7 +384,6 @@ fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_capabilities_rq
     { 4,  "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4,  "policy_trigger_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4,  "policy_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "policy_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
   };
 
@@ -400,8 +399,8 @@ fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_capabilities_rs
     { 32, "max_correction_time", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 16, "min_statistics_reporting_period", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 16, "max_statistics_reporting_period", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 7,  "domain_limiting_scope", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "limiting_based_on", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 7,  "domain_limiting_scope.limiting_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1,  "domain_limiting_scope.limiting_based_on", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
   };
 
@@ -556,10 +555,10 @@ fill_cmd_oem_intel_node_manager_set_node_manager_policy (uint8_t domain_id,
                                                          uint8_t policy_configuration_action,
                                                          uint8_t policy_exception_actions_send_alert,
                                                          uint8_t policy_exception_actions_shutdown_system,
-                                                         uint8_t power_limit,
-                                                         uint8_t correction_time_limit,
-                                                         uint8_t policy_trigger_limit,
-                                                         uint8_t statistics_reporting_period,
+                                                         uint16_t power_limit,
+                                                         uint32_t correction_time_limit,
+                                                         uint16_t policy_trigger_limit,
+                                                         uint16_t statistics_reporting_period,
                                                          fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domain_id)
@@ -633,9 +632,9 @@ fill_cmd_oem_intel_node_manager_get_node_manager_policy (uint8_t domain_id,
 int
 fill_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds (uint8_t domain_id,
                                                                    uint8_t policy_id,
-                                                                   uint8_t *alert_threshold1,
-                                                                   uint8_t *alert_threshold2,
-                                                                   uint8_t *alert_threshold3,
+                                                                   uint16_t *alert_threshold1,
+                                                                   uint16_t *alert_threshold2,
+                                                                   uint16_t *alert_threshold3,
                                                                    fiid_obj_t obj_cmd_rq)
 {
   uint8_t number_of_alert_thresholds = 0;
@@ -1162,8 +1161,8 @@ fill_cmd_oem_intel_node_manager_get_node_manager_version (fiid_obj_t obj_cmd_rq)
 
 int
 fill_cmd_oem_intel_node_manager_set_node_manager_power_draw_range (uint8_t domain_id,
-                                                                   uint8_t minimum_power_draw,
-                                                                   uint8_t maximum_power_draw,
+                                                                   uint16_t minimum_power_draw,
+                                                                   uint16_t maximum_power_draw,
                                                                    fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domain_id)

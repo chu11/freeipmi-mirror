@@ -554,6 +554,93 @@ struct ipmi_oem_command oem_intelnm[] =
       ipmi_oem_intelnm_reset_node_manager_statistics
     },
     {
+      "get-node-manager-capabilities",
+      "[domainid=num] [policytrigger=none|inlet] [policytype=powercontrol]",
+      0,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
+      ipmi_oem_intelnm_get_node_manager_capabilities
+    },
+    {
+      "node-manager-policy-control",
+      "<enable|disable> [domainid=num] [policyid=num]",
+      1,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
+      ipmi_oem_intelnm_node_manager_policy_control
+    },
+    {
+      "get-node-manager-policy",
+      "[domainid=num] [policyid=num]",
+      0,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
+      ipmi_oem_intelnm_get_node_manager_policy
+    },
+    {
+      "set-node-manager-policy",
+      "domainid=num policyid=num policytrigger=none|inlet powerlimit=watts correctiontimelimit=ms policytriggerlimit=num statisticsreportingperiod=seconds [policystate=enable|disable] [policyexceptionaction=alert|shutdown]",
+      7,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
+      ipmi_oem_intelnm_set_node_manager_policy
+    },
+    {
+      "remove-node-manager-policy",
+      "domainid=num policyid=num",
+      2,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_intelnm_remove_node_manager_policy
+    },
+    {
+      "get-node-manager-alert-thresholds",
+      "[domainid=num] [policyid=num]",
+      0,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
+      ipmi_oem_intelnm_get_node_manager_alert_thresholds
+    },
+    {
+      "set-node-manager-alert-thresholds",
+      "domainid=num policyid=num [threshold1=num] [threshold2=num] [threshold3=num]",
+      2,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
+      ipmi_oem_intelnm_set_node_manager_alert_thresholds
+    },
+    {
+      "get-node-manager-policy-suspend-periods",
+      "[domainid=num] [policyid=num]",
+      0,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
+      ipmi_oem_intelnm_get_node_manager_policy_suspend_periods
+    },
+    {
+      "set-node-manager-policy-suspend-periods",
+      "domainid=num policyid=num suspendperiodstartX=time suspendperiodstopX=time suspendperiodrepeatX=monday|tuesday|wednesday|thursday|friday|saturday|sunday",
+      2,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
+      ipmi_oem_intelnm_set_node_manager_policy_suspend_periods
+    },
+    {
+      "set-node-manager-power-draw-range",
+      "domainid=num minpowerdrawrange=watts maxpowerdrawrange=watts",
+      3,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_intelnm_set_node_manager_power_draw_range
+    },
+#if 0
+    /* can't verify */
+    {
+      "get-node-manager-alert-destination",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_intelnm_get_node_manager_alert_destination
+    },
+    {
+      "set-node-manager-alert-destination",
+      "[channelnumber=num] [slaveaddress=address] [destinationselector=num] [alertstringselector=num] [sendalertstring=yes|no] [register=yes|no]",
+      1,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
+      ipmi_oem_intelnm_set_node_manager_alert_destination
+    },
+#endif
+    {
       "get-node-manager-version",
       NULL,
       0,

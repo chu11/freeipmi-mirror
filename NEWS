@@ -28,9 +28,23 @@ o In ipmi-sensors, support --output-sensor-thresholds, to allow
 o In ipmi-sel, support new --post-clear option.
 o In bmc-device, support new --set-sensor-reading-and-event-status
   option.
+o In ipmi-oem, support additional Intel Node Manager commands,
+  including:
+  - get-node-manager-capabilities
+  - node-manager-policy-control 
+  - get-node-manager-policy
+  - set-node-manager-policy
+  - remove-node-manager-policy
+  - get-node-manager-alert-thresholds
+  - set-node-manager-alert-thresholds
+  - get-node-manager-policy-suspend-periods
+  - set-node-manager-policy-suspend-periods
+  - set-node-manager-power-draw-range
 o In ipmi-oem, support Wistron OEM commands extensions.
 o In ipmi-sel, support Wistron OEM SEL interpretations.
 o In ipmi-fru, support Wistron OEM FRU records.
+o In ipmi-pef-config, support configuration volatile Alert String 0
+  and Lan Alert Destination 0.
 
 Tools - Bug Fixes/Minor Changes
 -------------------------------
@@ -111,6 +125,8 @@ o In libfreeipmi, sel sub-library now supports the output of entity
   sensor names.
 o In libfreeipmi, fru-parse sub library now supports new function to
   determine multirecord type.
+o In libfreeipmi, fix argument size bugs with Intel Node Manager
+  functions.
 o In libipmimonitoring, support entity sensor name output options.
 o In libfreeipmi, create new 'sdr' sub-library which is merger of the
   earlier 'sdr-cache' and 'sdr-parse' libraries.

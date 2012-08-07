@@ -410,7 +410,6 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_capabilities_rq
     { 4,  "reserved", REQUIRED, LENGTH-FIXED }
     { 4,  "policy_trigger_type", REQUIRED, LENGTH-FIXED }
     { 4,  "policy_type", REQUIRED, LENGTH-FIXED }
-    { 8,  "policy_id", REQUIRED, LENGTH-FIXED }
 
 Get Node Manager Capabilities Response
 --------------------------------------
@@ -427,8 +426,8 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_capabilities_rs
     { 32, "max_correction_time", REQUIRED, LENGTH-FIXED }
     { 16, "min_statistics_reporting_period", REQUIRED, LENGTH-FIXED }
     { 16, "max_statistics_reporting_period", REQUIRED, LENGTH-FIXED }
-    { 7,  "domain_limiting_scope", REQUIRED, LENGTH-FIXED }
-    { 1,  "limiting_based_on", REQUIRED, LENGTH-FIXED }
+    { 7,  "domain_limiting_scope.limiting_type", REQUIRED, LENGTH-FIXED }
+    { 1,  "domain_limiting_scope.limiting_based_on", REQUIRED, LENGTH-FIXED }
 
 Get Node Manager Version Request
 --------------------------------
