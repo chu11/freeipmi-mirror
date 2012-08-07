@@ -151,6 +151,16 @@ o In libfreeipmi, create new 'sel' sub-library which replaces the
     ipmi_sel_parse_ctx_destroy() -> ipmi_sel_ctx_destroy()
     IPMI_SEL_PARSE_ERR_PARAMETERS -> IPMI_SEL_ERR_PARAMETERS
   - Please see the new ipmi-sel.h header file for full changes.
+o In libfreeipmi, create new 'fru' sub-library which replaces the
+  'fru-parse' library.
+  - This results in an ABI change.  Generally speaking, all 
+    ipmi_fru_parse" functions, types, and macros
+    are changed to "ipmi_fru", although some minor exceptions exist. 
+  - For example:
+    ipmi_fru_parse_ctx_t -> ipmi_fru_ctx_t
+    ipmi_fru_parse_ctx_destroy() -> ipmi_fru_ctx_destroy()
+    IPMI_FRU_PARSE_ERR_PARAMETERS -> IPMI_FRU_ERR_PARAMETERS
+  - Please see the new ipmi-fru.h header file for full changes.
 
 Misc
 ----

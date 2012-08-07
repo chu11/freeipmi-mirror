@@ -1116,8 +1116,8 @@ ipmi_fru_output_oem_record (ipmi_fru_state_data_t *state_data,
 
   if (state_data->prog_data->args->interpret_oem_data)
     {
-      if (ipmi_fru_parse_read_multirecord_record_type (state_data->fru_parse_ctx,
-						       &record_type_id) < 0)
+      if (ipmi_fru_parse_read_multirecord_record_type_id (state_data->fru_parse_ctx,
+							  &record_type_id) < 0)
 	{
 	  if (IPMI_FRU_PARSE_ERRNUM_IS_NON_FATAL_ERROR (state_data->fru_parse_ctx))
 	    {

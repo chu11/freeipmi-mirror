@@ -1361,8 +1361,8 @@ ipmi_fru_parse_read_data_area (ipmi_fru_parse_ctx_t ctx,
 }
 
 int
-ipmi_fru_parse_read_multirecord_record_type (ipmi_fru_parse_ctx_t ctx,
-					     uint8_t *record_type_id)
+ipmi_fru_parse_read_multirecord_record_type_id (ipmi_fru_parse_ctx_t ctx,
+						uint8_t *record_type_id)
 {
   int rv = -1;
 
