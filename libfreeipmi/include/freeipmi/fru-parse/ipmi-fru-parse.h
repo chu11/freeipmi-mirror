@@ -48,13 +48,14 @@ extern "C" {
 #define IPMI_FRU_PARSE_ERR_FRU_LANGUAGE_CODE_NOT_SUPPORTED        19
 #define IPMI_FRU_PARSE_ERR_FRU_INVALID_BCD_ENCODING               20
 #define IPMI_FRU_PARSE_ERR_FRU_SENTINEL_VALUE_NOT_FOUND           21
-#define IPMI_FRU_PARSE_ERR_OVERFLOW                               22
-#define IPMI_FRU_PARSE_ERR_OUT_OF_MEMORY                          23
-#define IPMI_FRU_PARSE_ERR_DEVICE_BUSY                            24 
-#define IPMI_FRU_PARSE_ERR_IPMI_ERROR                             25
-#define IPMI_FRU_PARSE_ERR_SYSTEM_ERROR                           26
-#define IPMI_FRU_PARSE_ERR_INTERNAL_ERROR                         27
-#define IPMI_FRU_PARSE_ERR_ERRNUMRANGE                            28
+#define IPMI_FRU_PARSE_ERR_NOT_AVAILABLE_FOR_THIS_RECORD          22
+#define IPMI_FRU_PARSE_ERR_OVERFLOW                               23
+#define IPMI_FRU_PARSE_ERR_OUT_OF_MEMORY                          24
+#define IPMI_FRU_PARSE_ERR_DEVICE_BUSY                            25
+#define IPMI_FRU_PARSE_ERR_IPMI_ERROR                             26
+#define IPMI_FRU_PARSE_ERR_SYSTEM_ERROR                           27
+#define IPMI_FRU_PARSE_ERR_INTERNAL_ERROR                         28
+#define IPMI_FRU_PARSE_ERR_ERRNUMRANGE                            29
 
 #define IPMI_FRU_PARSE_FLAGS_DEFAULT                              0x0000
 #define IPMI_FRU_PARSE_FLAGS_DEBUG_DUMP                           0x0001
@@ -138,6 +139,10 @@ int ipmi_fru_parse_read_data_area (ipmi_fru_parse_ctx_t ctx,
                                    unsigned int *area_length,
                                    void *areabuf,
                                    unsigned int areabuflen);
+
+/* most useful for OEM record handling, will error if not at a multirecord area */
+int ipmi_fru_parse_read_multirecord_record_type_id (ipmi_fru_parse_ctx_t ctx,
+						    uint8_t *record_type_id);
                          
 /* FRU area parsing */
 /* Functions assume record headers have been stripped out */
@@ -265,6 +270,7 @@ int ipmi_fru_parse_multirecord_oem_record (ipmi_fru_parse_ctx_t ctx,
                                            uint32_t *manufacturer_id,
                                            void *oem_data,
                                            unsigned int *oem_data_len);
+
 
 
 /* FRU utility functions */

@@ -1184,6 +1184,11 @@ Specify the default sensor state configuration file.
 Specify if output of sensor names should include entity ids and
 instances by default or not.
 .TP
+\fBipmi\-sensors\-output\-sensor\-thresholds\fR \fIENABLE|DISABLE\fR
+Specify if
+.B ipmi-sensors
+should output sensor thresholds by default.
+.TP
 \fBipmi\-sensors\-no\-sensor\-type\-output\fR \fIENABLE|DISABLE\fR
 Specify if output of the sensor type should be output by default or
 not.

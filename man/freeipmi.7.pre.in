@@ -261,6 +261,11 @@ An IPMI tool for OEM specific commands.
 .PP
 A tool and daemon for IPMI node detection.
 .PP
+.B Ipmiseld
+.PP
+A daemon that regularly polls the SEL and stores the events to the
+local syslog.
+.PP
 Additional information, examples, and general trouble-shooting can be
 found in each of the tool manpages.
 

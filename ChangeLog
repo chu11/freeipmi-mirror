@@ -1,4 +1,4 @@
-2012-XX-XX  Albert Chu <chu11@llnl.gov>
+2012-08-06  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Add IntelNM get-node-manager-capabilities,
 	node-manager-policy-control, get-node-manager-policy,
@@ -15,6 +15,41 @@
 
 	* ipmi-pef-config/: Support volatile alert string 0 and lan alert
 	destination 0.
+	
+2012-08-03  Albert Chu <chu11@llnl.gov>
+
+	* doc/freeipmi-faq.texi: Add Wistron to OEM list.
+	
+2012-07-31  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-oem-spec.h, ipmi-oem/:
+	Fix macro naming.
+
+	* ipmi-oem/: Support Wistron read/write/clear-proprietary-string.
+
+	* ipmi-fru/: Support Wistron OEM FRU record. 
+
+	* libfreeipmi/fru-parse/ipmi-fru-parse.c,
+	libfreeipmi/include/freeipmi/fru-parse/ipmi-fru-parse.h (ipmi_fru_parse_read_multirecord_record_type):
+	New function.
+
+	* libfreeipmi/include/freeipmi/record-format/ipmi-fru-oem-record-format.h: New file.
+	
+2012-07-30  Albert Chu <chu11@llnl.gov>
+
+	* configure.ac: Prep for beta release.
+
+	* README, man/freeipmi.7.pre.in: Update with ipmiseld information.
+
+	* libfreeipmi/include/Makefile.am: Add missing files.
+	
+2012-07-27  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/: Support --output-sensor-thresholds.
+	
+2012-07-26  Albert Chu <chu11@llnl.gov>
+
+	* man/ipmi-oem.8.pre.in: Add motherboard support information.
 	
 2012-07-24  Albert Chu <chu11@llnl.gov>
 

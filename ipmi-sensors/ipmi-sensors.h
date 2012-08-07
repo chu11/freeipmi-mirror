@@ -51,12 +51,13 @@ enum ipmi_sensors_argp_option_keys
     OUTPUT_SENSOR_STATE_KEY = 169,
     SENSOR_STATE_CONFIG_FILE_KEY = 170,
     ENTITY_SENSOR_NAMES_KEY = 171,
-    NO_SENSOR_TYPE_OUTPUT_KEY = 172,
-    COMMA_SEPARATED_OUTPUT_KEY = 173,
-    NO_HEADER_OUTPUT_KEY = 174,
-    NON_ABBREVIATED_UNITS_KEY = 175,
-    LEGACY_OUTPUT_KEY = 176,
-    IPMIMONITORING_LEGACY_OUTPUT_KEY = 177,
+    OUTPUT_SENSOR_THRESHOLDS_KEY = 172,
+    NO_SENSOR_TYPE_OUTPUT_KEY = 173,
+    COMMA_SEPARATED_OUTPUT_KEY = 174,
+    NO_HEADER_OUTPUT_KEY = 175,
+    NON_ABBREVIATED_UNITS_KEY = 176,
+    LEGACY_OUTPUT_KEY = 177,
+    IPMIMONITORING_LEGACY_OUTPUT_KEY = 178,
   };
 
 struct ipmi_sensors_arguments
@@ -83,6 +84,7 @@ struct ipmi_sensors_arguments
   int output_sensor_state;
   char *sensor_state_config_file;
   int entity_sensor_names;
+  int output_sensor_thresholds;
   int no_sensor_type_output;
   int comma_separated_output;
   int no_header_output;

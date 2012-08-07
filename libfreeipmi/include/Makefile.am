@@ -60,11 +60,13 @@ nobase_include_HEADERS = \
 	freeipmi/payload/ipmi-sol-payload.h \
 	freeipmi/record-format/ipmi-cipher-suite-record-format.h \
 	freeipmi/record-format/ipmi-fru-information-record-format.h \
+	freeipmi/record-format/ipmi-fru-oem-record-format.h \
 	freeipmi/record-format/ipmi-platform-event-trap-record-format.h \
 	freeipmi/record-format/ipmi-sdr-record-format.h \
 	freeipmi/record-format/ipmi-sdr-oem-record-format.h \
 	freeipmi/record-format/ipmi-sel-record-format.h \
 	freeipmi/sdr/ipmi-sdr.h \
+	freeipmi/sdr/ipmi-sdr-oem.h \
 	freeipmi/sel/ipmi-sel.h \
 	freeipmi/sensor-read/ipmi-sensor-read.h \
 	freeipmi/spec/ipmi-authentication-type-spec.h \

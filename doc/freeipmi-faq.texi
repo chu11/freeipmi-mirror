@@ -292,11 +292,11 @@ temporarily removed for servicing.
 FreeIPMI contains support for a number of OEM extensions and OEM
 sensors and/or events.  @command{Ipmi-oem} currently supports OEM
 command extensions for motherboards made by Dell, Fujitsu, IBM, Intel,
-Inventec, Quanta, Sun Microsystems, and Supermicro.
+Inventec, Quanta, Sun Microsystems, Supermicro, and Wistron.
 @command{Ipmi-sensors} and @command{ipmi-sel} support OEM sensors
 and/or events for motherboards made from Dell, Fujitsu, Intel,
-Inventec, Quanta, Sun Microsystems, and Supermicro.  (Some of the
-motherboards may have been rebranded by vendors, see manpages for
+Inventec, Quanta, Sun Microsystems, Supermicro, and Wistron.  (Some of
+the motherboards may have been rebranded by vendors, see manpages for
 official list of confirmed supported motherboards.)
 
 3) Additional flexibility and features

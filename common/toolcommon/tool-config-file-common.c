@@ -3592,7 +3592,6 @@ config_file_parse (const char *filename,
         &(ipmi_sensors_data.sensor_state_config_file),
         0
       },
-
       {
         "ipmi-sensors-entity-sensor-names",
         CONFFILE_OPTION_BOOL,
@@ -3602,6 +3601,17 @@ config_file_parse (const char *filename,
         0,
         &(ipmi_sensors_data.entity_sensor_names_count),
         &(ipmi_sensors_data.entity_sensor_names),
+        0,
+      },
+      {
+        "ipmi-sensors-output-sensor-thresholds",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        _config_file_bool,
+        1,
+        0,
+        &(ipmi_sensors_data.output_sensor_thresholds_count),
+        &(ipmi_sensors_data.output_sensor_thresholds),
         0,
       },
       {

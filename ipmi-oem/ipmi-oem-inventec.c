@@ -1264,7 +1264,7 @@ ipmi_oem_inventec_update_firmware (ipmi_oem_state_data_t *state_data)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "%s:%s invalid OEM option argument '%s' : invalid option\n",
+                           "%s:%s invalid OEM option argument '%s' : invalid key\n",
                            state_data->prog_data->args->oem_id,
                            state_data->prog_data->args->oem_command,
                            state_data->prog_data->args->oem_options[i]);
