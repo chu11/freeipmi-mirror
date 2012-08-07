@@ -2164,7 +2164,8 @@ _check_sol_activated (ipmiconsole_ctx_t c)
 
   /* IPMI Workaround
    *
-   * Discovered on XXX
+   * Discovered on Dell Poweredge M605, Dell Poweredge M610, and Dell
+   * Poweredge M915
    *
    * The sol_instance_capacity is always 0.  We will make the
    * assumption that 0 means 1, or in other words, the vendor simply
