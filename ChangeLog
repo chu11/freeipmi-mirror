@@ -4,7 +4,7 @@
 	'fru-parse' sub-library in libfreeipmi to 'fru' library.  All
 	appropriately function names, macros, etc. updated appropriately.
 
-	* ipmi-fru/: Update appropriately.
+	* ipmi-pet/, ipmi-fru/: Update appropriately.
 
 	* libfreeipmi/fru/ipmi-fru.c,
 	libfreeipmi/include/freeipmi/fru/ipmi-fru.h (ipmi_fru_parse_read_multirecord_record_type_id):

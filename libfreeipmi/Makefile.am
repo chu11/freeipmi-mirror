@@ -108,14 +108,14 @@ libfreeipmi_la_SOURCES = \
 	driver/ipmi-sunbmc-driver.c \
 	driver/ipmi-ssif-driver.c \
 	fiid/fiid.c \
-	fru-parse/ipmi-fru-parse.c \
-	fru-parse/ipmi-fru-parse-common.c \
-	fru-parse/ipmi-fru-parse-common.h \
-	fru-parse/ipmi-fru-parse-data.c \
-	fru-parse/ipmi-fru-parse-defs.h \
-	fru-parse/ipmi-fru-parse-trace.h \
-	fru-parse/ipmi-fru-parse-util.c \
-	fru-parse/ipmi-fru-parse-util.h \
+	fru/ipmi-fru.c \
+	fru/ipmi-fru-common.c \
+	fru/ipmi-fru-common.h \
+	fru/ipmi-fru-data.c \
+	fru/ipmi-fru-defs.h \
+	fru/ipmi-fru-trace.h \
+	fru/ipmi-fru-util.c \
+	fru/ipmi-fru-util.h \
 	interface/ipmi-ipmb-interface.c \
 	interface/ipmi-kcs-interface.c \
 	interface/ipmi-lan-interface.c \

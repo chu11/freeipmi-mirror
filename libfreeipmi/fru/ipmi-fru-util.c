@@ -28,57 +28,57 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "freeipmi/fru-parse/ipmi-fru-parse.h"
+#include "freeipmi/fru/ipmi-fru.h"
 #include "freeipmi/fiid/fiid.h"
 
-#include "ipmi-fru-parse-defs.h"
-#include "ipmi-fru-parse-trace.h"
-#include "ipmi-fru-parse-util.h"
+#include "ipmi-fru-defs.h"
+#include "ipmi-fru-trace.h"
+#include "ipmi-fru-util.h"
 
 #include "freeipmi-portability.h"
 
 void
-fru_parse_set_fru_parse_errnum_by_errno (ipmi_fru_parse_ctx_t ctx, int __errno)
+fru_set_fru_errnum_by_errno (ipmi_fru_ctx_t ctx, int __errno)
 {
-  assert (ctx && ctx->magic == IPMI_FRU_PARSE_CTX_MAGIC);
+  assert (ctx && ctx->magic == IPMI_FRU_CTX_MAGIC);
 
   switch (__errno)
     {
     case 0:
-      ctx->errnum = IPMI_FRU_PARSE_ERR_SUCCESS;
+      ctx->errnum = IPMI_FRU_ERR_SUCCESS;
       break;
     case ENOMEM:
-      ctx->errnum = IPMI_FRU_PARSE_ERR_OUT_OF_MEMORY;
+      ctx->errnum = IPMI_FRU_ERR_OUT_OF_MEMORY;
       break;
     default:
-      ctx->errnum = IPMI_FRU_PARSE_ERR_INTERNAL_ERROR;
+      ctx->errnum = IPMI_FRU_ERR_INTERNAL_ERROR;
     }
 }
 
 void
-fru_parse_set_fru_parse_errnum_by_fiid_object (ipmi_fru_parse_ctx_t ctx, fiid_obj_t obj)
+fru_set_fru_errnum_by_fiid_object (ipmi_fru_ctx_t ctx, fiid_obj_t obj)
 {
-  assert (ctx && ctx->magic == IPMI_FRU_PARSE_CTX_MAGIC);
+  assert (ctx && ctx->magic == IPMI_FRU_CTX_MAGIC);
 
   switch (fiid_obj_errnum (obj))
     {
     case FIID_ERR_SUCCESS:
-      ctx->errnum = IPMI_FRU_PARSE_ERR_SUCCESS;
+      ctx->errnum = IPMI_FRU_ERR_SUCCESS;
       break;
     case FIID_ERR_OUT_OF_MEMORY:
-      ctx->errnum = IPMI_FRU_PARSE_ERR_OUT_OF_MEMORY;
+      ctx->errnum = IPMI_FRU_ERR_OUT_OF_MEMORY;
       break;
     case FIID_ERR_DATA_NOT_AVAILABLE:
-      ctx->errnum = IPMI_FRU_PARSE_ERR_SYSTEM_ERROR;
+      ctx->errnum = IPMI_FRU_ERR_SYSTEM_ERROR;
       break;
     case FIID_ERR_FIELD_NOT_FOUND:
     case FIID_ERR_DATA_NOT_BYTE_ALIGNED:
     case FIID_ERR_REQUIRED_FIELD_MISSING:
     case FIID_ERR_FIXED_LENGTH_FIELD_INVALID:
     case FIID_ERR_NOT_IDENTICAL:
-      ctx->errnum = IPMI_FRU_PARSE_ERR_PARAMETERS;
+      ctx->errnum = IPMI_FRU_ERR_PARAMETERS;
       break;
     default:
-      ctx->errnum = IPMI_FRU_PARSE_ERR_INTERNAL_ERROR;
+      ctx->errnum = IPMI_FRU_ERR_INTERNAL_ERROR;
     }
 }

@@ -1173,27 +1173,27 @@ _output_oem_custom (ipmi_pet_state_data_t *state_data,
 	  break;
 	}
 
-      if (ipmi_fru_parse_type_length_field_to_string (state_data->fru_parse_ctx,
+      if (ipmi_fru_type_length_field_to_string (state_data->fru_ctx,
 						      &data->oem_custom[index],
 						      number_of_data_bytes + 1,
 						      data->language_code,
 						      tmpbuf,
 						      &tmpbuflen) < 0)
 	{
-	  if (ipmi_fru_parse_ctx_errnum (state_data->fru_parse_ctx) == IPMI_FRU_PARSE_ERR_FRU_INFORMATION_INCONSISTENT
-	      || ipmi_fru_parse_ctx_errnum (state_data->fru_parse_ctx) == IPMI_FRU_PARSE_ERR_FRU_LANGUAGE_CODE_NOT_SUPPORTED
-	      || ipmi_fru_parse_ctx_errnum (state_data->fru_parse_ctx) == IPMI_FRU_PARSE_ERR_FRU_INVALID_BCD_ENCODING)
+	  if (ipmi_fru_ctx_errnum (state_data->fru_ctx) == IPMI_FRU_ERR_FRU_INFORMATION_INCONSISTENT
+	      || ipmi_fru_ctx_errnum (state_data->fru_ctx) == IPMI_FRU_ERR_FRU_LANGUAGE_CODE_NOT_SUPPORTED
+	      || ipmi_fru_ctx_errnum (state_data->fru_ctx) == IPMI_FRU_ERR_FRU_INVALID_BCD_ENCODING)
 	    {
 	      if (state_data->prog_data->args->common_args.debug)
 		fprintf (stderr,
 			 "Invalid OEM Custom Field: %s\n",
-			 ipmi_fru_parse_ctx_errormsg (state_data->fru_parse_ctx));
+			 ipmi_fru_ctx_errormsg (state_data->fru_ctx));
 	      break;
 	    }
 	  
 	  fprintf (stderr,
-		   "ipmi_fru_parse_type_length_field_to_string: %s\n",
-		   ipmi_fru_parse_ctx_errormsg (state_data->fru_parse_ctx));
+		   "ipmi_fru_type_length_field_to_string: %s\n",
+		   ipmi_fru_ctx_errormsg (state_data->fru_ctx));
 	  goto cleanup;
 	}
 
@@ -2172,9 +2172,9 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
     }
   
   /* Only for outputting type/length fields */
-  if (!(state_data.fru_parse_ctx = ipmi_fru_parse_ctx_create (NULL)))
+  if (!(state_data.fru_ctx = ipmi_fru_ctx_create (NULL)))
     {
-      perror ("ipmi_fru_parse_ctx_create()");
+      perror ("ipmi_fru_ctx_create()");
       goto cleanup;
     }
 
@@ -2223,7 +2223,7 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
 
   exit_code = EXIT_SUCCESS;
  cleanup:
-  ipmi_fru_parse_ctx_destroy (state_data.fru_parse_ctx);
+  ipmi_fru_ctx_destroy (state_data.fru_ctx);
   ipmi_interpret_ctx_destroy (state_data.interpret_ctx);
   ipmi_sel_ctx_destroy (state_data.sel_ctx);
   ipmi_sdr_ctx_destroy (state_data.sdr_ctx);

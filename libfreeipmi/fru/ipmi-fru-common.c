@@ -57,31 +57,31 @@
 #include <errno.h>
 #include <assert.h>
 
-#include "freeipmi/fru-parse/ipmi-fru-parse.h"
+#include "freeipmi/fru/ipmi-fru.h"
 #include "freeipmi/debug/ipmi-debug.h"
 #include "freeipmi/fiid/fiid.h"
 
-#include "ipmi-fru-parse-common.h"
-#include "ipmi-fru-parse-defs.h"
-#include "ipmi-fru-parse-trace.h"
-#include "ipmi-fru-parse-util.h"
+#include "ipmi-fru-common.h"
+#include "ipmi-fru-defs.h"
+#include "ipmi-fru-trace.h"
+#include "ipmi-fru-util.h"
 
 #include "freeipmi-portability.h"
 #include "debug-util.h"
 
 int
-fru_parse_dump_hex (ipmi_fru_parse_ctx_t ctx,
-		    const void *frubuf,
-		    unsigned int length_in_bytes,
-		    const char *debug_hdr)
+fru_dump_hex (ipmi_fru_ctx_t ctx,
+	      const void *frubuf,
+	      unsigned int length_in_bytes,
+	      const char *debug_hdr)
 {
   assert (ctx);
-  assert (ctx->magic == IPMI_FRU_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_FRU_CTX_MAGIC);
   assert (frubuf);
   assert (length_in_bytes);
   assert (debug_hdr);
 
-  if (ctx->flags & IPMI_FRU_PARSE_FLAGS_DEBUG_DUMP)
+  if (ctx->flags & IPMI_FRU_FLAGS_DEBUG_DUMP)
     {
       char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
 
@@ -99,7 +99,7 @@ fru_parse_dump_hex (ipmi_fru_parse_ctx_t ctx,
                          frubuf,
                          length_in_bytes) < 0)
         {
-          FRU_PARSE_ERRNO_TO_FRU_PARSE_ERRNUM (ctx, errno);
+          FRU_ERRNO_TO_FRU_ERRNUM (ctx, errno);
           return (-1);
         }
     }
@@ -108,16 +108,16 @@ fru_parse_dump_hex (ipmi_fru_parse_ctx_t ctx,
 }
 
 int
-fru_parse_dump_obj (ipmi_fru_parse_ctx_t ctx,
-		    fiid_obj_t obj,
-		    const char *debug_hdr)
+fru_dump_obj (ipmi_fru_ctx_t ctx,
+	      fiid_obj_t obj,
+	      const char *debug_hdr)
 {
   assert (ctx);
-  assert (ctx->magic == IPMI_FRU_PARSE_CTX_MAGIC);
+  assert (ctx->magic == IPMI_FRU_CTX_MAGIC);
   assert (obj);
   assert (debug_hdr);
 
-  if (ctx->flags & IPMI_FRU_PARSE_FLAGS_DEBUG_DUMP)
+  if (ctx->flags & IPMI_FRU_FLAGS_DEBUG_DUMP)
     {
       char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
 
@@ -134,7 +134,7 @@ fru_parse_dump_obj (ipmi_fru_parse_ctx_t ctx,
                          NULL,
                          obj) < 0)
         {
-          FRU_PARSE_ERRNO_TO_FRU_PARSE_ERRNUM (ctx, errno);
+          FRU_ERRNO_TO_FRU_ERRNUM (ctx, errno);
           return (-1);
         }
     }
