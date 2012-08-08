@@ -179,7 +179,9 @@ differences between the projects:
 
 In our eyes, there are several reasons why FreeIPMI is particularly special.
 
-1) Support for HPC and large data centers
+@enumerate
+
+@item Support for HPC and large data centers
 
 A number of features have been added into the tools to support HPC
 and/or large data centers.  Much of this original support was added to
@@ -288,7 +290,7 @@ desired configuration has been properly stored to firmware.
 input by eliminating those nodes in the cluster that have been
 temporarily removed for servicing.
 
-2) Additional @acronym{OEM} support
+@item Additional @acronym{OEM} support
 
 FreeIPMI contains support for a number of @acronym{OEM} extensions and @acronym{OEM}
 sensors and/or events.  @command{Ipmi-oem} currently supports @acronym{OEM}
@@ -300,7 +302,7 @@ Inventec, Quanta, Sun Microsystems, Supermicro, and Wistron.  (Some of
 the motherboards may have been rebranded by vendors, see manpages for
 official list of confirmed supported motherboards.)
 
-3) Additional flexibility and features
+@item Additional flexibility and features
 
 By implementing various @acronym{IPMI} sub-sections into multiple
 tools, each tool is capable of providing the user with more
@@ -308,7 +310,7 @@ flexibility and ultimately more features in addition to those listed
 above.  It may not be as easy (or architecturally possible) to do in
 an all-in-one tool.
 
-4) Extra @acronym{IPMI} support
+@item Extra @acronym{IPMI} support
 
 In addition to the features listed above, FreeIPMI also supports
 specifications related to @acronym{IPMI}.  The Data Center Management
@@ -316,16 +318,18 @@ Interface, or @acronym{DCMI}, is supported via the FreeIPMI tool
 @command{ipmi-dcmi}.  Some aspects of the Intel Power Node Manager are
 supported in @command{ipmi-oem}.
 
-5) Easy setup
+@item Easy setup
 
 By implementing drivers in userspace libraries, there is no need to
 build/setup/manage any kernel modules/drivers.
 
-6) Portability
+@item Portability
 
 Likewise, by implementing everything in userspace libraries and tools,
 portability to multiple operating systems and architectures should be
 easier.
+
+@end enumerate
 
 @node Does my system support IPMI?, How do I compile FreeIPMI?, What is special about FreeIPMI?, Top
 @section Does my system support IPMI?
@@ -334,7 +338,10 @@ Unfortunately, there are no universally defined mechanisms for
 determining if a system supports @acronym{IPMI}.  The following may
 provide hints.
 
-1) FreeIPMI's @command{ipmi-locate} can be used to determine if
+@enumerate
+
+@item
+FreeIPMI's @command{ipmi-locate} can be used to determine if
 @acronym{IPMI} can be found on your system.  Users are cautioned
 though, the failure to discover @acronym{IPMI} via
 @command{ipmi-locate} is not sufficient to disprove that
@@ -342,7 +349,8 @@ though, the failure to discover @acronym{IPMI} via
 such information or may expect clients to communicate at default
 locations.
 
-2) @command{dmidecode} may be similarly used to probe for devices that
+@item
+@command{dmidecode} may be similarly used to probe for devices that
 support @acronym{IPMI} on your system.  You may grep for
 @acronym{IPMI} or specifying the @acronym{IPMI} DMI type on the
 command line.
@@ -361,6 +369,8 @@ IPMI Device Information
         Base Address: 0x0000000000000CA2 (I/O)
         Register Spacing: Successive Byte Boundaries
 @end example
+
+@end enumerate
 
 Again, the failure to find an @acronym{IPMI} supported device is not
 sufficient to show lack of @acronym{IPMI} support.
@@ -422,64 +432,85 @@ if you have problems building from the port.
 Good question, here are some terms and acronyms with general
 definition you might want to know.
 
-@strong{BMC} stands for @strong{Baseboard Management Controller}.  The
-@acronym{BMC} is the management chip on the system that is responsible
-for @acronym{IPMI}.  It is common to refer to configuring the
-``@acronym{BMC}'' as synonymous for configuring @acronym{IPMI}.
+@table @strong
+
+@item BMC
+
+The @strong{Baseboard Management Controller} is the management chip on
+the system that is responsible for @acronym{IPMI}.  It is common to
+refer to configuring the ``@acronym{BMC}'' as synonymous for
+configuring @acronym{IPMI}.
+
+@item inband
 
 @strong{inband} @acronym{IPMI} communication refers to communication
 on a system locally (i.e. not over a network).
 
+@item outofband
+
 @strong{outofband} and @strong{IPMI over LAN} refer to @acronym{IPMI}
 communication over a network, typically ethernet.
 
-@strong{SDR} stands for @strong{Sensor Data Repository}.  The
-@acronym{SDR} is a database of system information that is needed by
-many other @acronym{IPMI} functions.  It is commonly read before some
-@acronym{IPMI} action can be taken.  For example, it contains a list
-of all sensors on a system, so it must be downloaded before sensors on
-a system can be read.  In FreeIPMI, the @acronym{SDR} is cached in a
-common location and can be used by a number of tools, such as
-@command{ipmi-sensors}, @command{ipmi-sel}, and @command{ipmi-fru}.
+@item SDR
 
-@strong{SEL} stands for @strong{System Event Log}.  The @acronym{SEL}
-is a log of events stored on the system for later diagnostics.  In
-FreeIPMI, @command{ipmi-sel} can be used to read the @acronym{SEL}.
+The @strong{Sensor Data Repository} is a database of system
+information that is needed by many other @acronym{IPMI} functions.  It
+is commonly read before some @acronym{IPMI} action can be taken.  For
+example, it contains a list of all sensors on a system, so it must be
+downloaded before sensors on a system can be read.  In FreeIPMI, the
+@acronym{SDR} is cached in a common location and can be used by a
+number of tools, such as @command{ipmi-sensors}, @command{ipmi-sel},
+and @command{ipmi-fru}.
 
-@strong{FRU} stands for @strong{Field Replaceable Unit}.  While
-@acronym{FRU} is a general computing term refering to a replaceable
-unit of electronics, in @acronym{IPMI} is is common to refer to the
-``@acronym{FRU}'' as the database of all @acronym{FRU} components on a
-system.  In FreeIPMI, @command{ipmi-fru} can be used to read the
-@acronym{FRU} components on a system.
+@item SEL
 
-@strong{PEF} stands for @strong{Platform Event Filtering}.
-@acronym{PEF} refers to the rules that determine when PETs are
-generated and where they are sent.  In FreeIPMI, @acronym{PEF} can be
-configured via @command{ipmi-pef-config}.
+The @strong{System Event Log} is a log of events stored on the system
+for later diagnostics.  In FreeIPMI, @command{ipmi-sel} can be used to
+read the @acronym{SEL}.
 
-@strong{PET} stands for @strong{Platform Event Trap}.  @acronym{PET}
-refers to a trap that can be sent by a system to an SNMP agent to
-indicate an event has occurred on the system.  In FreeIPMI, a
-@acronym{PET} trap can be interpreted via @command{ipmi-pet}.
+@item FRU
 
-@strong{DCMI} stands for @strong{Data Center Management Interface}.
-@acronym{DCMI} is a management interface defined by a group of vendors
-that use @acronym{IPMI} as the backend for their system management
-definition.  In FreeIPMI, @command{ipmi-dcmi} can be used to
-read/configuring @acronym{DCMI}.
+The @strong{Field Replaceable Unit} is a general computing term
+refering to a replaceable unit of electronics.  In @acronym{IPMI} it is
+common to refer to the ``@acronym{FRU}'' as the database of all
+@acronym{FRU} components on a system.  In FreeIPMI, @command{ipmi-fru}
+can be used to read the @acronym{FRU} components on a system.
 
-@strong{SOL} stands for @strong{Serial over LAN}.  @acronym{SOL}
-refers to the forwarding of serial system traffic over a network,
-typically an ethernet network.  It is typically used to access a
-remote system console.  In FreeIPMI, ipmiconsole is used to access a
-remote console via @acronym{SOL}.
+@item PEF
 
-@strong{RMCP} stands for @strong{Remote Management Control Protocol}.
-The @acronym{RMCP} protocol is another remote management protocol
-which @acronym{IPMI} is defined within for outofband communication.
-For most @acronym{IPMI} users, you will never need to know about
-@acronym{RMCP}.
+@strong{Platform Event Filtering} refers to the rules that determine
+when PETs are generated and where they are sent.  In FreeIPMI,
+@acronym{PEF} can be configured via @command{ipmi-pef-config}.
+
+@item PET
+
+@strong{Platform Event Trap} refers to a trap that can be sent by a
+system to an SNMP agent to indicate an event has occurred on the
+system.  In FreeIPMI, a @acronym{PET} trap can be interpreted via
+@command{ipmi-pet}.
+
+@item DCMI
+
+The @strong{Data Center Management Interface} is a management
+interface defined by a group of vendors that use @acronym{IPMI} as the
+backend for their system management definition.  In FreeIPMI,
+@command{ipmi-dcmi} can be used to read/configuring @acronym{DCMI}.
+
+@item SOL
+
+@strong{Serial over LAN} refers to the forwarding of serial system
+traffic over a network, typically an ethernet network.  It is
+typically used to access a remote system console.  In FreeIPMI,
+ipmiconsole is used to access a remote console via @acronym{SOL}.
+
+@item RMCP
+
+The @strong{Remote Management Control Protocol} protocol is another
+remote management protocol which @acronym{IPMI} is defined within for
+outofband communication.  For most @acronym{IPMI} users, you will
+never need to know about @acronym{RMCP}.
+
+@end table
 
 @node What setup is needed for FreeIPMI to communicate over LAN?, What setup is needed for Serial over LAN (SOL) or Ipmiconsole?, What are some IPMI terminology or acronyms I should be aware of?, Top
 @section What setup is needed for FreeIPMI to communicate over LAN?
@@ -495,7 +526,10 @@ The setup of Serial-over-LAN (@acronym{SOL}) and/or
 @command{Ipmiconsole} is highly dependent on your system.  However,
 most motherboardss require the following:
 
-1) Adjust the BIOS COM port for serial redirection over @acronym{SOL}
+@enumerate
+
+@item
+Adjust the BIOS COM port for serial redirection over @acronym{SOL}
 instead of the normal serial port and set the appropriate baud rate.
 If you do not know which port is the @acronym{SOL} port, you may need
 to play around and guess.  It is likely a non-default setting, since
@@ -503,7 +537,8 @@ many manufacturers may still assume the default redirection is out of
 the normal serial port.  If you do not have a serial port on your
 motherboard, this part can probably be skipped.
 
-2) Configure @acronym{IPMI} on the motherboard to use @acronym{SOL}.
+@item
+Configure @acronym{IPMI} on the motherboard to use @acronym{SOL}.
 Many motherboards may have this enabled by default, however you may
 wish to verify with FreeIPMI's @command{bmc-config}.  More information
 can be found in the bmc-config.conf(5) manpage on the settings.
@@ -512,13 +547,16 @@ enable @acronym{SOL} for individual users, and select the appropriate
 baud.  On many motherboards, the selected baud must match what is
 configured in the BIOS.
 
-3) Adjust your operating systems serial console settings to use the
+@item
+Adjust your operating systems serial console settings to use the
 appropriate COM port.  For Linux, the following guide
 (@uref{http://www.vanemery.com/Linux/Serial/serial-console.html})
 provides a pretty good overview of setting of a serial console on
 Linux.  The only difference for setting up a serial console with
 @command{Ipmiconsole} or @acronym{SOL}, is the ttySX terminal may need to be
 changed.
+
+@end enumerate
 
 @node Do I need to install or configure a driver to perform IPMI inband?, SSIF Driver Configuration, What setup is needed for Serial over LAN (SOL) or Ipmiconsole?, Top 
 @section Do I need to install or configure a driver to perform IPMI inband?
