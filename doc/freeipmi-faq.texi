@@ -74,7 +74,7 @@ release @value{VERSION} of the FreeIPMI.
 * How do you setup Conman with ipmiconsole or libipmiconsole?::
 * How do you setup Ganglia or Nagios to monitor IPMI sensors via FreeIPMI?::
 * Why is the IPMI kernel driver faster than the KCS driver?::
-* Why is the output from FreeIPMI different than another softwrae?::
+* Why is the output from FreeIPMI different than another software?::
 * Why are there so many IPMI compliance bugs?::
 * How do I get around an IPMI compliance bug on my motherboard?::
 * How do I program with the FreeIPMI libraries?::
@@ -753,7 +753,7 @@ have been developed and are downloadable on the FreeIPMI homepage
 (@uref{http://www.gnu.org/software/freeipmi/download.html}).
 Instructions for setup can be found at the top of the scripts.
 
-@node Why is the IPMI kernel driver faster than the KCS driver?, Why is the output from FreeIPMI different than another softwrae?, How do you setup Ganglia or Nagios to monitor IPMI sensors via FreeIPMI?, Top
+@node Why is the IPMI kernel driver faster than the KCS driver?, Why is the output from FreeIPMI different than another software?, How do you setup Ganglia or Nagios to monitor IPMI sensors via FreeIPMI?, Top
 @section Why is the IPMI kernel driver faster than the KCS driver?
 
 Internally the @acronym{IPMI} kernel driver chooses to spin while
@@ -768,8 +768,8 @@ provide better overall system use.  To force the @acronym{KCS} driver
 to have similar wall clock response time to the @acronym{IPMI} kernel
 driver, users can specify the 'spinpoll' workaround.
 
-@node Why is the output from FreeIPMI different than another softwrae?, Why are there so many IPMI compliance bugs?, Why is the IPMI kernel driver faster than the KCS driver?, Top
-@section Why is the output from FreeIPMI different than another softwrae?
+@node Why is the output from FreeIPMI different than another software?, Why are there so many IPMI compliance bugs?, Why is the IPMI kernel driver faster than the KCS driver?, Top
+@section Why is the output from FreeIPMI different than another software?
 
 Due to minor implementation differences and or incorrect IPMI firmware, the resulting output from FreeIPMI tools can differ from other software.  Here are some of the more common inconsistencies that have been seen before.  More inconsistencies can be seen/fixed by specifying a number of the workarounds available to many of the FreeIPMI tools.
 
@@ -815,7 +815,7 @@ In FreeIPMI's @command{ipmi-fru}, @acronym{FRU} record checksums are automatical
 
 @end itemize
 
-@node Why are there so many IPMI compliance bugs?, How do I get around an IPMI compliance bug on my motherboard?, Why is the output from FreeIPMI different than another softwrae?, Top
+@node Why are there so many IPMI compliance bugs?, How do I get around an IPMI compliance bug on my motherboard?, Why is the output from FreeIPMI different than another software?, Top
 @section Why are there so many IPMI compliance bugs? 
 
 The @acronym{IPMI} specification is very large.  At last check, the
