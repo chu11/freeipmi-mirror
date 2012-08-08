@@ -74,6 +74,7 @@ release @value{VERSION} of the FreeIPMI.
 * How do you setup Conman with ipmiconsole or libipmiconsole?::
 * How do you setup Ganglia or Nagios to monitor IPMI sensors via FreeIPMI?::
 * Why is the IPMI kernel driver faster than the KCS driver?::
+* Why is the output from FreeIPMI different than another softwrae?::
 * Why are there so many IPMI compliance bugs?::
 * How do I get around an IPMI compliance bug on my motherboard?::
 * How do I program with the FreeIPMI libraries?::
@@ -287,13 +288,13 @@ desired configuration has been properly stored to firmware.
 input by eliminating those nodes in the cluster that have been
 temporarily removed for servicing.
 
-2) Additional OEM support
+2) Additional @acronym{OEM} support
 
-FreeIPMI contains support for a number of OEM extensions and OEM
-sensors and/or events.  @command{Ipmi-oem} currently supports OEM
+FreeIPMI contains support for a number of @acronym{OEM} extensions and @acronym{OEM}
+sensors and/or events.  @command{Ipmi-oem} currently supports @acronym{OEM}
 command extensions for motherboards made by Dell, Fujitsu, IBM, Intel,
 Inventec, Quanta, Sun Microsystems, Supermicro, and Wistron.
-@command{Ipmi-sensors} and @command{ipmi-sel} support OEM sensors
+@command{Ipmi-sensors} and @command{ipmi-sel} support @acronym{OEM} sensors
 and/or events for motherboards made from Dell, Fujitsu, Intel,
 Inventec, Quanta, Sun Microsystems, Supermicro, and Wistron.  (Some of
 the motherboards may have been rebranded by vendors, see manpages for
@@ -620,13 +621,13 @@ node "primaryname[0-10]"  "ipmi0" "altname[0-10]"
 @end example
 
 Configuration can be trickier if you want to configure Powerman to use
-ipmipower with an OEM extension specified through
-@option{--oem-power-type}.  Many OEM extensions in ipmipower must
+ipmipower with an @acronym{OEM} extension specified through
+@option{--oem-power-type}.  Many @acronym{OEM} extensions in ipmipower must
 include additional arguments, which can be passed in via the node
 argument.  In addition, while @command{ipmipower} can take a host
 range as an additional argument, Powerman may not.
 
-For example, the following would be suitable to configure OEM
+For example, the following would be suitable to configure @acronym{OEM}
 extension support the Dell Poweredge C410x.  A specific node
 identifier is used to map to a specific node and additional argument
 (i.e. mynodes0-1 maps to mynodes0+1).
@@ -714,7 +715,7 @@ have been developed and are downloadable on the FreeIPMI homepage
 (@uref{http://www.gnu.org/software/freeipmi/download.html}).
 Instructions for setup can be found at the top of the scripts.
 
-@node Why is the IPMI kernel driver faster than the KCS driver?, Why are there so many IPMI compliance bugs?, How do you setup Ganglia or Nagios to monitor IPMI sensors via FreeIPMI?, Top
+@node Why is the IPMI kernel driver faster than the KCS driver?, Why is the output from FreeIPMI different than another softwrae?, How do you setup Ganglia or Nagios to monitor IPMI sensors via FreeIPMI?, Top
 @section Why is the IPMI kernel driver faster than the KCS driver?
 
 Internally the @acronym{IPMI} kernel driver chooses to spin while
@@ -729,13 +730,64 @@ provide better overall system use.  To force the @acronym{KCS} driver
 to have similar wall clock response time to the @acronym{IPMI} kernel
 driver, users can specify the 'spinpoll' workaround.
 
-@node Why are there so many IPMI compliance bugs?, How do I get around an IPMI compliance bug on my motherboard?, Why is the IPMI kernel driver faster than the KCS driver?, Top
+@node Why is the output from FreeIPMI different than another softwrae?, Why are there so many IPMI compliance bugs?, Why is the IPMI kernel driver faster than the KCS driver?, Top
+@section Why is the output from FreeIPMI different than another softwrae?
+
+Due to minor implementation differences and or incorrect IPMI firmware, the resulting output from FreeIPMI tools can differ from other software.  Here are some of the more common inconsistencies that have been seen before.  More inconsistencies can be seen/fixed by specifying a number of the workarounds available to many of the FreeIPMI tools.
+
+@item
+In FreeIPMI's @command{ipmi-sel} and @command{ipmi-sensors} there are options for FreeIPMI to interpret the @acronym{SEL} or sensor readings and give them a NOMINAL, WARNING, or CRITICAL status.  Other IPMI software may have different interpretations for their sensors and/or @acronym{SEL} readings that map to NOMINAL, WARNING, or CRITICAL differently.  These interpretations are configurable in FreeIPMI via the @file{freeipmi_interpret_sel.conf} and @file{freeipmi_interpret_sensor.conf} configuration files.
+@end
+
+@item
+In some @acronym{IPMI} software, sensor and/or @acronym{FRU} records are bridged by default and read off satellite controllers.  In FreeIPMI they are not due to the discovery that many vendors do not implement their bridging correctly or publish invalid slave addresses in the @acronym{SDR}.  In order to bridge sensors the @option{--bridge-sensors} option must be specified in @command{ipmi-sensors}.  In order to bridge @acronym{FRU} records, the @option{--bridge-fru} must be specified in @command{ipmi-fru}.
+@end
+
+@item
+In some @acornym{IPMI} software, shared sensors may be read by default.  In FreeIPMI's @command{ipmi-sensors}, they are not read by default due to discovery that too many systems implement this incorrectly.  Shared sensors can be read by specifying the @option{--shared-sensors} option.
+@end
+
+@item
+In vendor provided @acronym{IPMI} software, @acronym{OEM} specific sensors, @acronym{SEL} records, or FRU records may be output correctly because the vendor is aware of how to properly read/output @acronym{OEM} specific information.  FreeIPMI may not be able to do this by default.  For the motherboards in which @acronym{OEM} information is known, it can be output using the @option{--interpret-oem-data}.  This option is available in @command{ipmi-sensors}, @command{ipmi-sel}, and @command{ipmi-fru}.
+@end
+
+@item
+In some vendor @acronym{IPMI} software, sensor ``names'' are constructured through a combination of the multiple data in the @acronym{SDR}, rather than just the device name listed in the SDR.  This can lead to different sensor names listed in tools like @command{ipmi-sensors} and @command{ipmi-sel}.  In both tools, this can be alleviated through the use of the @option{--entity-sensor-names} option.
+@end
+
+@item
+On several HP systems (observed on HP Proliant DL380 G7 and HP ProLiant ML310 G5), the SDR lists sensors using inconsistent information.  Some analog sensors are listed as discrete sensors or vice versa.  This inconsistency, and implementation differences between @command{ipmi-sensors} and other @acronym{IPMI} software lead to different outputs.  For example, this is one such sensor that was seen in @command{ipmi-sensors}:
+
+@example
+2  | Power Supply 1  | Power Supply | N/A        | N/A   | 'Presence detected'
+@end
+
+but this same sensor was see in @command{ipmitool} as
+
+@example
+Power Supply 1   | 120 Watts         | nc
+@end
+
+In this example, @command{ipmi-sensors} did not output a Watts reading but outputs the proper "Presence Detected" state.  @command{Ipmitool} outputs the correct watts reading, but outputs the invalid non-critical "nc" state.
+
+In FreeIPMI, this problem can be worked around using the 'discretereading' workaround flag.
+@end
+
+@item
+In FreeIPMI's @command{ipmi-fru}, all multirecord @acronym{FRU} entries are output by default.  In @command{ipmitool} and perhaps other software, they are not.  The resulting output from @command{ipmi-fru} is much larger than other software.  To get similar output in @command{ipmitool}, the @option{-v} option must be set.
+@end
+
+@item
+In FreeIPMI's @command{ipmi-fru}, @acronym{FRU} record checksums are automatically checked and errors are output if a @acronym{FRU} record cannot assumed to be valid due to a failed checksum check.  Other @acronym{IPMI} software has been shown to ignore the checksums and assume records are valid.  If your system has invalid checksummed @acronym{FRU} entries, the 'skipchecks' workaround can be used to get around them.
+@end
+
+@node Why are there so many IPMI compliance bugs?, How do I get around an IPMI compliance bug on my motherboard?, Why is the output from FreeIPMI different than another softwrae?, Top
 @section Why are there so many IPMI compliance bugs? 
 
 The @acronym{IPMI} specification is very large.  At last check, the
 @acronym{IPMI} specification was 601 pages.  This does not count the
 various side specifications related to @acronym{IPMI}, including
-@acronym{DCMI}, @acronym{PET}, @acronym{FRU}, and the various OEM
+@acronym{DCMI}, @acronym{PET}, @acronym{FRU}, and the various @acronym{OEM}
 extension specifications (e.g. Intel Node Manager).  Many sections of
 text can be ambiguous.  Many components of @acronym{IPMI} are optional
 and aren't required to be implemented.  There is some leeway for

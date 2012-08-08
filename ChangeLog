@@ -1,3 +1,7 @@
+2012-08-08  Albert Chu <chu11@llnl.gov>
+
+	* doc/freeipmi-faq.texi: Add section on common differences.
+	
 2012-08-07  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/: For consistency to other changes, rename
