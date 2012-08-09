@@ -1,3 +1,7 @@
+2012-08-09  Albert Chu <chu11@llnl.gov>
+
+	* man/ipmi-oem.8.pre.in: Clarify configuration in IntelNM.
+	
 2012-08-08  Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-faq.texi: Add section on common differences.

@@ -480,22 +480,26 @@ be listed in any order.  By default any created/modified policy will
 be enabled, however this can be overridden by \fIpolicystate\fR.
 \fIpolicyexceptionaction\fR may be specified multiple times to
 configure multiple actions or can be skipped to configure no actions.
-The units of the \fIpolicytriggerlimit\fR will depend on the
-\fIpolicytrigger\fR selected.  Most notably, if the
+When the \fIpolicytrigger\fR is configured as \fInone\fR, the trigger
+that will lead to exception actions is the value specified by the
+\fIpowerlimit\fR.  When the \fIpolicytrigger\fR is \fIinlet\fR, the
+tigger that will lead to exception actions is the value specified by
+\fIpolicytriggerlimit\fR.  The units of the \fIpolicytriggerlimit\fR
+will depend on the \fIpolicytrigger\fR selected.  Most notably, if the
 \fIpolicytrigger\fR is \fIinlet\fR, which refers to inlet temperature,
-the units of \fRpolicytriggerlimit\fR will be in Celsius.  If the
-\fIpolicytrigger\fR is \fInone\fR, the \fIpolicytriggerlimit\fR will
-be ignored and the the power limit specified by \fIpowerlimit\fR will
-be used as the policy trigger limit.  The \fIcorrectiontimelimit\fR
-specifies the time the Node Manager must take corrective actions to
-bring back the system within limits before taking the actions
-specified in \fIpolicyexceptionaction\fR.
-\fIstatisticsreportingperiod\fR is the number of seconds that measured
-power will be averaged for reporting.  Please see
-\fBget\-node\-manager\-policy\fR to determine proper ranges for
-\fIpowerlimit\fR, \fIcorrectiontimelimit\fR, \fIpolicytriggerlimit\fR,
-and \fIstatisticsreportingperiod\fR.  Command confirmed to work on
-Intel S2600JF (Appro 512X).
+the units of \fRpolicytriggerlimit\fR will be in Celsius.  When the
+\fIpolicytrigger\fR is \fInone\fR, the \fIpolicytriggerlimit\fR is
+ignored internally by the Intel Node Manager, but a value must still
+be specified for configuration.  Typically configuring it to 0 is more
+than sufficient.  The \fIcorrectiontimelimit\fR specifies the time the
+Node Manager must take corrective actions to bring back the system
+within limits before taking the actions specified in
+\fIpolicyexceptionaction\fR.  \fIstatisticsreportingperiod\fR is the
+number of seconds that measured power will be averaged for reporting.
+Please see \fBget\-node\-manager\-policy\fR to determine proper ranges
+for \fIpowerlimit\fR, \fIcorrectiontimelimit\fR,
+\fIpolicytriggerlimit\fR, and \fIstatisticsreportingperiod\fR.
+Command confirmed to work on Intel S2600JF (Appro 512X).
 .TP
 .B remove-node-manager-policy \fIdomainid=num\fR \fIpolicyid=num\fR
 This OEM command will remove the indicated policy ID from the domain
