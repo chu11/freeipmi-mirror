@@ -1432,7 +1432,7 @@ System Event Log Issue #4: [COMPLIANCE]
 
 System Event Log Issue #5: [COMPLIANCE]
 
-  Some SEL records report illegal report types.
+  Some SEL records report illegal record types.
 
   Seen on: HP DL 380 G5, Intel S2600JF/Appro 512X
 
