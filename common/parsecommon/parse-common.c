@@ -199,6 +199,9 @@ _parse_workaround_flags (const char *str,
       else if (workaround_flags_outofband
                && !strcasecmp (tok, IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER_STR))
         (*workaround_flags_outofband) |= IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER;
+      else if (workaround_flags_outofband
+               && !strcasecmp (tok, IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_NO_AUTH_CODE_CHECK_STR))
+        (*workaround_flags_outofband) |= IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_NO_AUTH_CODE_CHECK;
 #if 0
       /* handled above w/ special case */
       else if (workaround_flags_outofband_2_0
@@ -384,6 +387,8 @@ parse_get_freeipmi_outofband_flags (unsigned int parse_workaround_flags_outofban
     (*freeipmi_workaround_flags_outofband) |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_CHECK_UNEXPECTED_AUTHCODE;
   if (parse_workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER)
     (*freeipmi_workaround_flags_outofband) |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER;
+  if (parse_workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_NO_AUTH_CODE_CHECK)
+    (*freeipmi_workaround_flags_outofband) |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_NO_AUTH_CODE_CHECK;
   if (parse_workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES)
     (*freeipmi_workaround_flags_outofband) |= IPMI_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES;
 }

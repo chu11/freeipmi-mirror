@@ -7,6 +7,14 @@
 	boot, System Event Transition State, Platform Alert State, Boot
 	Error State, and OS Critical Stop State.
 
+	* Globally support "noauthcodecheck" workaround to deal with
+	issues on Xyratex HB-F8-SRAY.
+
+	* Globally handle
+	IPMIPOWER_MSG_TYPE_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED error when
+	returned from activate session to deal with issues on Xyratex
+	HB-F8-SRAY.
+
 2012-08-09  Albert Chu <chu11@llnl.gov>
 
 	* man/ipmi-oem.8.pre.in: Clarify configuration in IntelNM.

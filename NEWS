@@ -84,8 +84,13 @@ o In ipmi-fru, deprecate --skip-checks option in favor of "skipchecks"
   workaround flag.
 o Support "assumemaxsdrrecordcount" workaround in all tools that use
   SDR.
+o Support "noauthcodecheck" workaround in all tools that use IPMI 1.5.
 o Support workaround to load SDR properly on systems which return
   invalid lengthed SDR records.  Noticed on Xyratex HB-F8-SRAY.
+o Support workaround handling of
+  IPMIPOWER_MSG_TYPE_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED completion
+  code when returned from activate session command.  Noticed on
+  Xyratex HB-F8-SRAY.
 
 Libraries
 ---------

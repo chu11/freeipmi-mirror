@@ -359,13 +359,14 @@ LAN Authentication Issue #24: [COMPLIANCE]
 
 LAN Authentication Issue #24: [COMPLIANCE]
 
-  When activating a session using 'straight password key', the
-  response from an activate session request contains a blank
-  authentication code.
+  When authenticating with the 'straight password key' authentication
+  type, all responses from a session contain an empty authentication
+  code.
 
   Seen on: Xyratex HB-F8-SRAY
 
-  Resolution: None
+  Resolution: Workaround added to ignore these invalid authentication
+  codes.
 
 LAN Authentication Issue #25: [COMPLIANCE]
 
@@ -753,6 +754,20 @@ Serial-Over-LAN Issue #17: [COMPLIANCE] or [IMPLEMENTATION]
   is allowed in IPMI (see Table 15-2 [2]), I am not sure if it is
   required.  So I'm listing this as [COMPLIANCE] or [IMPLEMENTATION].
   This is similar to issue #5 above.
+
+Serial-Over-LAN Issue #18: [COMPLIANCE]
+
+  SOL is always reported to have an active session in progress, so no
+  SOL session can be created.  This includes after a deactivate
+  payload completes successfully.
+
+  It is possible this motherboard does not support SOL.  However, it
+  should indicate that early in the session setup (perhaps via the Get
+  Channel Payload Support request).
+
+  Seen on: Xyratex HB-F8-SRAY
+
+  Resolution: None
 
 ----------------------------------------------------------------------
 

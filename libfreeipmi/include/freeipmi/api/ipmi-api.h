@@ -109,6 +109,7 @@ typedef enum ipmi_driver_type ipmi_driver_type_t;
 #define IPMI_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION         0x00000004
 #define IPMI_WORKAROUND_FLAGS_OUTOFBAND_CHECK_UNEXPECTED_AUTHCODE           0x00000008
 #define IPMI_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER          0x00000010
+#define IPMI_WORKAROUND_FLAGS_OUTOFBAND_NO_AUTH_CODE_CHECK                  0x00000020
 
 /* For use w/ ipmi_ctx_open_outofband_2_0() */
 #define IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_AUTHENTICATION_CAPABILITIES     0x00000001
@@ -155,6 +156,11 @@ typedef enum ipmi_driver_type ipmi_driver_type_t;
  * IGNORE_AUTHENTICATION_CODE - for IPMI 1.5 packets, do not check the
  * authentication code on response packets.  Useful to workaround
  * around non-compliant motherboards implementing invalid code/hashes.
+ * Note that this is different than
+ * IPMI_WORKAROUND_FLAGS_OUTOFBAND_NO_AUTH_CODE_CHECK above.  With the
+ * workaround flag, all authentication codes will be ignored during
+ * the entire IPMI session.  With this flag, specific packets can have
+ * their authentication codes ignored.
  */
 
 #define IPMI_FLAGS_DEFAULT                    0x00000000

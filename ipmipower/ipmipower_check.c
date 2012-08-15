@@ -92,6 +92,19 @@ ipmipower_check_authentication_code (ipmipower_powercmd_t ip,
       uint8_t authentication_type;
       int check_authcode_retry_flag = 0;
 
+      /* IPMI Workaround (achu)
+       *
+       * Discovered on Xyratex HB-F8-SRAY
+       *
+       * For some reason, the authentication code is always blank when
+       * using "Straight Password Key".
+       */
+      if (cmd_args.common_args.workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_NO_AUTH_CODE_CHECK)
+	{
+	  rv = 1;
+	  goto out;
+	}
+
       if (pkt == IPMIPOWER_PACKET_TYPE_ACTIVATE_SESSION_RS)
         authentication_type = cmd_args.common_args.authentication_type;
       else /* IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RS (pkt) */
@@ -181,6 +194,8 @@ ipmipower_check_authentication_code (ipmipower_powercmd_t ip,
           exit (EXIT_FAILURE);
         }
     }
+
+ out:
 
   if (!rv)
     IPMIPOWER_DEBUG (("host = %s; p = %d; authentication code check failed",

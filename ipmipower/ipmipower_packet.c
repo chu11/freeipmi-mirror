@@ -1407,6 +1407,20 @@ ipmipower_packet_errmsg (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
                    || comp_code == IPMI_COMP_CODE_ACTIVATE_SESSION_NO_SLOT_AVAILABLE_FOR_GIVEN_USER
                    || comp_code == IPMI_COMP_CODE_ACTIVATE_SESSION_NO_SLOT_AVAILABLE_TO_SUPPORT_USER))
         return (IPMIPOWER_MSG_TYPE_BMC_BUSY);
+      /*
+       * IPMI Workaround
+       * 
+       * Discovered on Xyratex HB-F8-SRAY
+       *
+       * For some reason on this system, if you do not specify a
+       * privilege level of Admin, this completion code will always be
+       * returned.  Reason unknown.  This isn't the best/right error
+       * to return, but it will atleast point the user to a way to
+       * work around the problem.
+       */
+      else if (pkt == IPMIPOWER_PACKET_TYPE_ACTIVATE_SESSION_RS
+	       && comp_code == IPMI_COMP_CODE_INSUFFICIENT_PRIVILEGE_LEVEL)
+	return (IPMIPOWER_MSG_TYPE_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
       else if (pkt == IPMIPOWER_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS
                && (comp_code == IPMI_COMP_CODE_SET_SESSION_PRIVILEGE_LEVEL_REQUESTED_LEVEL_NOT_AVAILABLE_FOR_USER
                    || comp_code == IPMI_COMP_CODE_SET_SESSION_PRIVILEGE_LEVEL_REQUESTED_LEVEL_EXCEEDS_USER_PRIVILEGE_LIMIT

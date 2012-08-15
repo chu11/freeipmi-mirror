@@ -394,13 +394,14 @@ _cmd_workaround_flags (char **argv)
     }
   else
     ipmipower_cbuf_printf (ttyout,
-                           "workaround_flags must be specified: %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n",
+                           "workaround_flags must be specified: %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n",
 			   IPMI_PARSE_WORKAROUND_FLAGS_NONE_STR,
                            IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES_STR,
                            IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_ACCEPT_SESSION_ID_ZERO_STR,
                            IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION_STR,
                            IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_CHECK_UNEXPECTED_AUTHCODE_STR,
                            IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER_STR,
+                           IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_NO_AUTH_CODE_CHECK_STR,
                            IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_INTEL_2_0_SESSION_STR,
                            IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUPERMICRO_2_0_SESSION_STR,
                            IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUN_2_0_SESSION_STR,
@@ -949,6 +950,11 @@ _cmd_config (void)
                        cmd_args.common_args.workaround_flags_outofband,
                        IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER,
                        IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER_STR,
+                       &is_first);
+  _workarounds_strcat (strbuf,
+                       cmd_args.common_args.workaround_flags_outofband,
+                       IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_NO_AUTH_CODE_CHECK,
+                       IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_NO_AUTH_CODE_CHECK_STR,
                        &is_first);
   /* This is a duplicate of the IPMI 1.5 version */
 #if 0

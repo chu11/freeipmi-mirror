@@ -763,8 +763,23 @@ _api_lan_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
         ;
       else
         {
-          rv = 0;
-          goto cleanup;
+
+	  /*
+	   * IPMI Workaround
+	   * 
+	   * Discovered on Xyratex HB-F8-SRAY
+	   *
+	   * The session ID is zero if there is an error.  So if there
+	   * is a bad completion code, we'd rather fall through and
+	   * continue.  So return "bad packet" if the completion code
+	   * is < 0 or 1.
+	   */
+	  ret = ipmi_check_completion_code_success (obj_cmd_rs);
+	  if (ret)
+	    {
+	      rv = 0;
+	      goto cleanup;
+	    }
         }
     }
 
@@ -782,7 +797,17 @@ _api_lan_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  if (check_authentication_code && !(ctx->flags & IPMI_FLAGS_IGNORE_AUTHENTICATION_CODE))
+  /* IPMI Workaround (achu)
+   *
+   * Discovered on Xyratex HB-F8-SRAY
+   *
+   * For some reason, the authentication code is always blank when
+   * using "Straight Password Key".
+   */
+
+  if (check_authentication_code
+      && !(ctx->flags & IPMI_FLAGS_IGNORE_AUTHENTICATION_CODE)
+      && !(ctx->workaround_flags_outofband & IPMI_WORKAROUND_FLAGS_OUTOFBAND_NO_AUTH_CODE_CHECK))
     {
       if ((ret = ipmi_lan_check_session_authentication_code (ctx->io.outofband.rs.obj_lan_session_hdr,
                                                              ctx->io.outofband.rs.obj_lan_msg_hdr,
@@ -1723,6 +1748,19 @@ api_lan_open_session (ipmi_ctx_t ctx)
        else if (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1)
 	API_SET_ERRNUM (ctx, IPMI_ERR_PASSWORD_INVALID);
 #endif
+      /*
+       * IPMI Workaround
+       * 
+       * Discovered on Xyratex HB-F8-SRAY
+       *
+       * For some reason on this system, if you do not specify a
+       * privilege level of Admin, this completion code will always be
+       * returned.  Reason unknown.  This isn't the best/right error
+       * to return, but it will atleast point the user to a way to
+       * work around the problem.
+       */
+       else if (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_INSUFFICIENT_PRIVILEGE_LEVEL) == 1)
+	 API_SET_ERRNUM (ctx, IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
       else
         API_BAD_RESPONSE_TO_API_ERRNUM (ctx, obj_cmd_rs);
       goto cleanup;

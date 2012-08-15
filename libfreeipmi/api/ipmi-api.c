@@ -498,7 +498,8 @@ ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
                                         | IPMI_WORKAROUND_FLAGS_OUTOFBAND_ACCEPT_SESSION_ID_ZERO
                                         | IPMI_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION
                                         | IPMI_WORKAROUND_FLAGS_OUTOFBAND_CHECK_UNEXPECTED_AUTHCODE
-                                        | IPMI_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER);
+                                        | IPMI_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER
+					| IPMI_WORKAROUND_FLAGS_OUTOFBAND_NO_AUTH_CODE_CHECK);
   unsigned int flags_mask = (IPMI_FLAGS_NOSESSION
 			     | IPMI_FLAGS_DEBUG_DUMP
                              | IPMI_FLAGS_NO_VALID_CHECK
