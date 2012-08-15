@@ -535,6 +535,15 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_system_event_co
   };
 static unsigned int ipmi_interpret_sensor_system_event_config_len = 7;
 
+static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_system_event_transition_state_config[] =
+  {
+    { "IPMI_System_Event_Transition_State_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_System_Event_Transition_State_Idle", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_System_Event_Transition_State_Active", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_System_Event_Transition_State_Busy", IPMI_INTERPRET_STATE_NOMINAL},
+  };
+static unsigned int ipmi_interpret_sensor_system_event_transition_state_config_len = 4;
+
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_system_event_state_config[] =
   {
     { "IPMI_System_Event_State_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
@@ -678,6 +687,14 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_boot_error_conf
   };
 static unsigned int ipmi_interpret_sensor_boot_error_config_len = 6;
 
+static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_boot_error_state_config[] =
+  {
+    { "IPMI_Boot_Error_State_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Boot_Error_State_Deasserted", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Boot_Error_State_Asserted", IPMI_INTERPRET_STATE_CRITICAL},
+  };
+static unsigned int ipmi_interpret_sensor_boot_error_state_config_len = 3;
+
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_boot_error_transition_severity_config[] =
   {
     { "IPMI_Boot_Error_Transition_Severity_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
@@ -692,6 +709,27 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_boot_error_tran
     { "IPMI_Boot_Error_Transition_Severity_Informational", IPMI_INTERPRET_STATE_NOMINAL},
   };
 static unsigned int ipmi_interpret_sensor_boot_error_transition_severity_config_len = 10;
+
+static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_os_boot_config[] =
+  {
+    { "IPMI_OS_Boot_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_OS_Boot_A_Boot_Completed", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_OS_Boot_C_Boot_Completed", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_OS_Boot_PXE_Boot_Completed", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_OS_Boot_Diagnostic_Boot_Completed", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_OS_Boot_CD_ROM_Boot_Completed", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_OS_Boot_ROM_Boot_Completed", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_OS_Boot_Boot_Completed_Boot_Device_Not_Specified", IPMI_INTERPRET_STATE_WARNING},
+  };
+static unsigned int ipmi_interpret_sensor_os_boot_config_len = 8;
+
+static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_os_critical_stop_state_config[] =
+  {
+    { "IPMI_OS_Critical_Stop_State_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_OS_Critical_Stop_State_Deasserted", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_OS_Critical_Stop_State_Asserted", IPMI_INTERPRET_STATE_CRITICAL},
+  };
+static unsigned int ipmi_interpret_sensor_os_critical_stop_state_config_len = 3;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_slot_connector_config[] =
   {
@@ -759,6 +797,14 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_watchdog2_confi
     { "IPMI_Watchdog2_Timer_Interrupt", IPMI_INTERPRET_STATE_WARNING},
   };
 static unsigned int ipmi_interpret_sensor_watchdog2_config_len = 10;
+
+static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_platform_alert_state_config[] =
+  {
+    { "IPMI_Platform_Alert_State_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Platform_Alert_State_Deasserted", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Platform_Alert_State_Asserted", IPMI_INTERPRET_STATE_CRITICAL},
+  };
+static unsigned int ipmi_interpret_sensor_platform_alert_state_config_len = 3;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_entity_presence_config[] =
   {
@@ -1699,6 +1745,12 @@ interpret_sensor_init (ipmi_interpret_ctx_t ctx)
     goto cleanup;
 
   if (_interpret_config_sensor_init (ctx,
+                                     &ctx->interpret_sensor.ipmi_interpret_sensor_system_event_transition_state_config,
+                                     ipmi_interpret_sensor_system_event_transition_state_config,
+                                     ipmi_interpret_sensor_system_event_transition_state_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_config_sensor_init (ctx,
                                      &ctx->interpret_sensor.ipmi_interpret_sensor_system_event_state_config,
                                      ipmi_interpret_sensor_system_event_state_config,
                                      ipmi_interpret_sensor_system_event_state_config_len) < 0)
@@ -1771,9 +1823,27 @@ interpret_sensor_init (ipmi_interpret_ctx_t ctx)
     goto cleanup;
 
   if (_interpret_config_sensor_init (ctx,
+                                     &ctx->interpret_sensor.ipmi_interpret_sensor_boot_error_state_config,
+                                     ipmi_interpret_sensor_boot_error_state_config,
+                                     ipmi_interpret_sensor_boot_error_state_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_config_sensor_init (ctx,
                                      &ctx->interpret_sensor.ipmi_interpret_sensor_boot_error_transition_severity_config,
                                      ipmi_interpret_sensor_boot_error_transition_severity_config,
                                      ipmi_interpret_sensor_boot_error_transition_severity_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_config_sensor_init (ctx,
+                                     &ctx->interpret_sensor.ipmi_interpret_sensor_os_boot_config,
+                                     ipmi_interpret_sensor_os_boot_config,
+                                     ipmi_interpret_sensor_os_boot_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_config_sensor_init (ctx,
+                                     &ctx->interpret_sensor.ipmi_interpret_sensor_os_critical_stop_state_config,
+                                     ipmi_interpret_sensor_os_critical_stop_state_config,
+                                     ipmi_interpret_sensor_os_critical_stop_state_config_len) < 0)
     goto cleanup;
 
   if (_interpret_config_sensor_init (ctx,
@@ -1798,6 +1868,12 @@ interpret_sensor_init (ipmi_interpret_ctx_t ctx)
                                      &ctx->interpret_sensor.ipmi_interpret_sensor_watchdog2_config,
                                      ipmi_interpret_sensor_watchdog2_config,
                                      ipmi_interpret_sensor_watchdog2_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_config_sensor_init (ctx,
+                                     &ctx->interpret_sensor.ipmi_interpret_sensor_platform_alert_state_config,
+                                     ipmi_interpret_sensor_platform_alert_state_config,
+                                     ipmi_interpret_sensor_platform_alert_state_config_len) < 0)
     goto cleanup;
 
   if (_interpret_config_sensor_init (ctx,
@@ -2003,6 +2079,9 @@ interpret_sensor_destroy (ipmi_interpret_ctx_t ctx)
                                     ctx->interpret_sensor.ipmi_interpret_sensor_system_event_config);
 
   _interpret_config_sensor_destroy (ctx,
+                                    ctx->interpret_sensor.ipmi_interpret_sensor_system_event_transition_state_config);
+
+  _interpret_config_sensor_destroy (ctx,
                                     ctx->interpret_sensor.ipmi_interpret_sensor_system_event_state_config);
 
   _interpret_config_sensor_destroy (ctx,
@@ -2039,7 +2118,16 @@ interpret_sensor_destroy (ipmi_interpret_ctx_t ctx)
                                     ctx->interpret_sensor.ipmi_interpret_sensor_boot_error_config);
 
   _interpret_config_sensor_destroy (ctx,
+                                    ctx->interpret_sensor.ipmi_interpret_sensor_boot_error_state_config);
+
+  _interpret_config_sensor_destroy (ctx,
                                     ctx->interpret_sensor.ipmi_interpret_sensor_boot_error_transition_severity_config);
+
+  _interpret_config_sensor_destroy (ctx,
+                                    ctx->interpret_sensor.ipmi_interpret_sensor_os_boot_config);
+
+  _interpret_config_sensor_destroy (ctx,
+                                    ctx->interpret_sensor.ipmi_interpret_sensor_os_critical_stop_state_config);
 
   _interpret_config_sensor_destroy (ctx,
                                     ctx->interpret_sensor.ipmi_interpret_sensor_slot_connector_config);
@@ -2052,6 +2140,9 @@ interpret_sensor_destroy (ipmi_interpret_ctx_t ctx)
 
   _interpret_config_sensor_destroy (ctx,
                                     ctx->interpret_sensor.ipmi_interpret_sensor_watchdog2_config);
+
+  _interpret_config_sensor_destroy (ctx,
+                                    ctx->interpret_sensor.ipmi_interpret_sensor_platform_alert_state_config);
 
   _interpret_config_sensor_destroy (ctx,
                                     ctx->interpret_sensor.ipmi_interpret_sensor_entity_presence_config);
@@ -2350,6 +2441,7 @@ interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
   int ipmi_interpret_sensor_system_firmware_progress_transition_severity_flags[ipmi_interpret_sensor_system_firmware_progress_transition_severity_config_len];
   int ipmi_interpret_sensor_event_logging_disabled_flags[ipmi_interpret_sensor_event_logging_disabled_config_len];
   int ipmi_interpret_sensor_system_event_flags[ipmi_interpret_sensor_system_event_config_len];
+  int ipmi_interpret_sensor_system_event_transition_state_flags[ipmi_interpret_sensor_system_event_transition_state_config_len];
   int ipmi_interpret_sensor_system_event_state_flags[ipmi_interpret_sensor_system_event_state_config_len];
   int ipmi_interpret_sensor_critical_interrupt_flags[ipmi_interpret_sensor_critical_interrupt_config_len];
   int ipmi_interpret_sensor_button_switch_flags[ipmi_interpret_sensor_button_switch_config_len];
@@ -2362,11 +2454,15 @@ interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
   int ipmi_interpret_sensor_cable_interconnect_flags[ipmi_interpret_sensor_cable_interconnect_config_len];
   int ipmi_interpret_sensor_cable_interconnect_transition_severity_flags[ipmi_interpret_sensor_cable_interconnect_transition_severity_config_len];
   int ipmi_interpret_sensor_boot_error_flags[ipmi_interpret_sensor_boot_error_config_len];
+  int ipmi_interpret_sensor_boot_error_state_flags[ipmi_interpret_sensor_boot_error_state_config_len];
   int ipmi_interpret_sensor_boot_error_transition_severity_flags[ipmi_interpret_sensor_boot_error_transition_severity_config_len];
+  int ipmi_interpret_sensor_os_boot_flags[ipmi_interpret_sensor_os_boot_config_len];
+  int ipmi_interpret_sensor_os_critical_stop_state_flags[ipmi_interpret_sensor_os_critical_stop_state_config_len];
   int ipmi_interpret_sensor_slot_connector_flags[ipmi_interpret_sensor_slot_connector_config_len];
   int ipmi_interpret_sensor_slot_connector_transition_severity_flags[ipmi_interpret_sensor_slot_connector_transition_severity_config_len];
   int ipmi_interpret_sensor_system_acpi_power_state_flags[ipmi_interpret_sensor_system_acpi_power_state_config_len];
   int ipmi_interpret_sensor_watchdog2_flags[ipmi_interpret_sensor_watchdog2_config_len];
+  int ipmi_interpret_sensor_platform_alert_state_flags[ipmi_interpret_sensor_platform_alert_state_config_len];
   int ipmi_interpret_sensor_entity_presence_flags[ipmi_interpret_sensor_entity_presence_config_len];
   int ipmi_interpret_sensor_entity_presence_device_present_flags[ipmi_interpret_sensor_entity_presence_device_present_config_len];
   int ipmi_interpret_sensor_management_subsystem_health_flags[ipmi_interpret_sensor_management_subsystem_health_config_len];
@@ -2626,6 +2722,12 @@ interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
 
   _fill_sensor_config_options (config_file_options,
                                &config_file_options_len,
+                               ctx->interpret_sensor.ipmi_interpret_sensor_system_event_transition_state_config,
+                               ipmi_interpret_sensor_system_event_transition_state_flags,
+                               ipmi_interpret_sensor_system_event_transition_state_config_len);
+
+  _fill_sensor_config_options (config_file_options,
+                               &config_file_options_len,
                                ctx->interpret_sensor.ipmi_interpret_sensor_system_event_state_config,
                                ipmi_interpret_sensor_system_event_state_flags,
                                ipmi_interpret_sensor_system_event_state_config_len);
@@ -2698,9 +2800,27 @@ interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
 
   _fill_sensor_config_options (config_file_options,
                                &config_file_options_len,
+                               ctx->interpret_sensor.ipmi_interpret_sensor_boot_error_state_config,
+                               ipmi_interpret_sensor_boot_error_state_flags,
+                               ipmi_interpret_sensor_boot_error_state_config_len);
+
+  _fill_sensor_config_options (config_file_options,
+                               &config_file_options_len,
                                ctx->interpret_sensor.ipmi_interpret_sensor_boot_error_transition_severity_config,
                                ipmi_interpret_sensor_boot_error_transition_severity_flags,
                                ipmi_interpret_sensor_boot_error_transition_severity_config_len);
+
+  _fill_sensor_config_options (config_file_options,
+                               &config_file_options_len,
+                               ctx->interpret_sensor.ipmi_interpret_sensor_os_boot_config,
+                               ipmi_interpret_sensor_os_boot_flags,
+                               ipmi_interpret_sensor_os_boot_config_len);
+
+  _fill_sensor_config_options (config_file_options,
+                               &config_file_options_len,
+                               ctx->interpret_sensor.ipmi_interpret_sensor_os_critical_stop_state_config,
+                               ipmi_interpret_sensor_os_critical_stop_state_flags,
+                               ipmi_interpret_sensor_os_critical_stop_state_config_len);
 
   _fill_sensor_config_options (config_file_options,
                                &config_file_options_len,
@@ -2725,6 +2845,12 @@ interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
                                ctx->interpret_sensor.ipmi_interpret_sensor_watchdog2_config,
                                ipmi_interpret_sensor_watchdog2_flags,
                                ipmi_interpret_sensor_watchdog2_config_len);
+
+  _fill_sensor_config_options (config_file_options,
+                               &config_file_options_len,
+                               ctx->interpret_sensor.ipmi_interpret_sensor_platform_alert_state_config,
+                               ipmi_interpret_sensor_platform_alert_state_flags,
+                               ipmi_interpret_sensor_platform_alert_state_config_len);
 
   _fill_sensor_config_options (config_file_options,
                                &config_file_options_len,

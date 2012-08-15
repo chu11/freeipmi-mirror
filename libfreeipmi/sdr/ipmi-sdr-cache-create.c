@@ -293,7 +293,6 @@ _sdr_cache_get_record (ipmi_sdr_ctx_t ctx,
    */
  
   reservation_id_retry_count = 0;
-  
   while (!offset_into_record)
     {
       if (ipmi_cmd_get_sdr (ipmi_ctx,
@@ -343,6 +342,21 @@ _sdr_cache_get_record (ipmi_sdr_ctx_t ctx,
       /* Assume this is an "IPMI Error", fall through to partial reads */
       if (sdr_record_len < sdr_record_header_length)
         goto partial_read;
+
+      /* 
+       * IPMI Workaround (achu)
+       *
+       * Discovered on Xyratex HB-F8-SRAY
+       *
+       * For some reason reading the entire SDR record (with
+       * IPMI_SDR_READ_ENTIRE_RECORD_BYTES_TO_READ) the response
+       * returns fewer bytes than the actual length of the record.
+       * However, when reading with partial reads things ultimately
+       * succeed.  If we notice the length is off, we fall out and do
+       * a partial read.
+       */
+      if ((((uint8_t)temp_record_buf[IPMI_SDR_RECORD_LENGTH_INDEX]) + IPMI_SDR_RECORD_HEADER_LENGTH) > sdr_record_len)
+	goto partial_read;
   
       if (sdr_record_len > record_buf_len)
 	{

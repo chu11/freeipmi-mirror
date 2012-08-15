@@ -344,6 +344,38 @@ LAN Authentication Issue #23: [COMPLIANCE]
 
   Seen on: Supermicro X8DTG-D 
 
+LAN Authentication Issue #24: [COMPLIANCE]
+
+  When activating a session, the remote system requires that the
+  "maximum privilege requested" specified in the request be identical
+  to the maximum set for a user.  It cannot be less than it.  When
+  this occurs, an error of 0xD4 ("Cannot execute command due to
+  insufficient privilege level") is unexpectedly returned.
+
+  Seen on: Xyratex HB-F8-SRAY
+
+  Resolution: Specify specific privilege level to workaround this
+  issue.
+
+LAN Authentication Issue #24: [COMPLIANCE]
+
+  When activating a session using 'straight password key', the
+  response from an activate session request contains a blank
+  authentication code.
+
+  Seen on: Xyratex HB-F8-SRAY
+
+  Resolution: None
+
+LAN Authentication Issue #25: [COMPLIANCE]
+
+  Cannot authenticate with a user without assigning privilege limit of
+  Administrator.
+
+  Seen on: Xyratex HB-F8-SRAY
+
+  Resolution: None
+
 ----------------------------------------------------------------------
 
 ----------------------
@@ -424,15 +456,6 @@ LAN Session Issue #6: [COMPLIANCE]
   Resolution: Workaround option added to inform software to handle
   incorrect endian sequence numbers.
 
-LAN Session Issue #7: [COMPLIANCE]
-
-  IPMI 1.5 sessions are not supported, only IPMI 2.0 sessions are
-  supported despite IPMI 1.5 being required for IPMI 2.0 systems.
-
-  Seen on: HP Proliant DL 145 server, HP DL380 G5
-
-  Resolution: None
-
 ----------------------------------------------------------------------
 
 --------------
@@ -482,6 +505,19 @@ SDR Issue #4: [COMPLIANCE]
 
   Resolution: Workaround added to stop reading records after
   recognized max.
+
+SDR Issue #5: [COMPLIANCE]
+
+  When reading an entire SDR record (with
+  IPMI_SDR_READ_ENTIRE_RECORD_BYTES_TO_READ) the response returns
+  fewer bytes than the actual length of the record.  This leads to
+  issues later during SDR caching.  When reading SDR records with
+  partial reads, things work correctly.
+
+  Seen on: Xyratex HB-F8-SRAY
+
+  Resolution: Workaround added to detect issue and do parital reads
+  instead.
 
 ----------------------------------------------------------------------
 
@@ -1096,6 +1132,17 @@ BMC/IPMI Configuration Issue #33: [COMPLIANCE]
   Seen on: HP DL380 G5
 
   Resolution: None 
+
+BMC/IPMI Configuration Issue #34: [COMPLIANCE]
+
+  Many configuration options return "Parameter Not Supported" (0x80)
+  when attempting to set a value, but do not when the parameter is
+  being read.  It is likely the firmware writers meant that the
+  parameter was read only (0x82).
+
+  Seen on: Xyratex HB-F8-SRAY
+
+  Resolution: None
 
 ----------------------------------------------------------------------
 

@@ -1,3 +1,12 @@
+2012-08-15  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/sdr/ipmi-sdr-cache-create.c (_sdr_cache_get_record):
+	Add workaround for Xyratex motherboard issue.
+
+	* libfreeipmi/interpret/: Add sensor/sel interpretations for OS
+	boot, System Event Transition State, Platform Alert State, Boot
+	Error State, and OS Critical Stop State.
+
 2012-08-09  Albert Chu <chu11@llnl.gov>
 
 	* man/ipmi-oem.8.pre.in: Clarify configuration in IntelNM.

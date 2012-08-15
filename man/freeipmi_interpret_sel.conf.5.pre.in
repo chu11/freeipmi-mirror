@@ -992,6 +992,21 @@ Defaults to Nominal.
 Defaults to Warning.
 .RE
 .TP
+.B IPMI_System_Event_Transition_State
+The following states correspond to System Event sensor events that report a
+transition state.
+.RS
+.TP
+\fBIPMI_System_Event_Transition_State_Active\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_System_Event_Transition_State_Idle\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_System_Event_Transition_State_Busy\fR
+Defaults to Nominal.
+.RE
+.TP
 .B IPMI_System_Event_State
 The following states correspond to System Event sensor events that report an
 assertion or deassertion.
@@ -1301,6 +1316,18 @@ Defaults to Critical.
 Defaults to Warning.
 .RE
 .TP
+.B IPMI_Boot_Error_State
+The following states correspond to Boot Error sensor events that
+report an assertion or deassertion.
+.RS
+.TP
+\fBIPMI_Boot_Error_State_Deasserted\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Boot_Error_State_Asserted\fR
+Defaults to Critical.
+.RE
+.TP
 .B IPMI_Boot_Error_Transition_Severity
 The following states correspond to Boot Error sensor events that
 report on device severity.
@@ -1369,6 +1396,18 @@ Defaults to Warning.
 \fBIPMI_OS_Critical_Stop_Soft_Shutdown_Initiated_By_PEF\fR
 Defaults to Warning.
 \fBIPMI_OS_Critical_Stop_Agent_Not_Responding\fR
+Defaults to Critical.
+.RE
+.TP
+.B IPMI_OS_Critical_Stop_State
+The following states correspond to OS Critical Stop sensor events that
+report an assertion or deassertion.
+.RS
+.TP
+\fBIPMI_OS_Critical_Stop_State_Deasserted\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_OS_Critical_Stop_State_Asserted\fR
 Defaults to Critical.
 .RE
 .TP
@@ -1535,6 +1574,18 @@ Defaults to Nominal.
 Defaults to Nominal.
 \fBIPMI_Platform_Alert_Platform_Generated_SNMP_Trap\fR
 Defaults to Nominal.
+.RE
+.TP
+.B IPMI_Platform_Alert_State
+The following states correspond to Platform Alert sensor events that
+report an assertion or deassertion.
+.RS
+.TP
+\fBIPMI_Platform_Alert_State_Deasserted\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Platform_Alert_State_Asserted\fR
+Defaults to Critical.
 .RE
 .TP
 .B IPMI_Entity_Presence

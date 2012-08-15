@@ -84,6 +84,8 @@ o In ipmi-fru, deprecate --skip-checks option in favor of "skipchecks"
   workaround flag.
 o Support "assumemaxsdrrecordcount" workaround in all tools that use
   SDR.
+o Support workaround to load SDR properly on systems which return
+  invalid lengthed SDR records.  Noticed on Xyratex HB-F8-SRAY.
 
 Libraries
 ---------
@@ -140,6 +142,13 @@ o In libfreeipmi, condense sel record parsing functions.  One
   set of functions now handles the previous case of both sets.
 o In libfreeipmi, fru sub-library now supports
   ipmi_fru_parse_read_multirecord_record_type_id function.
+o In libfreeipmi, support additional sensor/SEL interpretations,
+  including:
+  - OS Boot
+  - OS Critical State State
+  - Platform Alert State
+  - Boot Error State
+  - System Event Transition State 
 o In libfreeipmi, add missing macro definitions.
 o In libipmimonitoring, support Cipher Suite ID 15, 16, and 17.
 o In libfreeipmi, libipmiconsole, libipmimonitoring, support ability

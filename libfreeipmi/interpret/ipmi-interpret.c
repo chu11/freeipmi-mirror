@@ -796,6 +796,9 @@ ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
           else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
 		   && sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS)
             sel_config = ctx->interpret_sel.ipmi_interpret_sel_system_firmware_progress_transition_severity_config;
+          else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_STATE
+		   && sensor_type == IPMI_SENSOR_TYPE_SYSTEM_EVENT)
+            sel_config = ctx->interpret_sel.ipmi_interpret_sel_system_event_transition_state_config;
           else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
 		   && sensor_type == IPMI_SENSOR_TYPE_SYSTEM_EVENT)
             sel_config = ctx->interpret_sel.ipmi_interpret_sel_system_event_state_config;
@@ -820,12 +823,21 @@ ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
           else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
 		   && sensor_type == IPMI_SENSOR_TYPE_CABLE_INTERCONNECT)
             sel_config = ctx->interpret_sel.ipmi_interpret_sel_cable_interconnect_transition_severity_config;
+          else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
+		   && sensor_type == IPMI_SENSOR_TYPE_BOOT_ERROR)
+            sel_config = ctx->interpret_sel.ipmi_interpret_sel_boot_error_state_config;
           else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
 		   && sensor_type == IPMI_SENSOR_TYPE_BOOT_ERROR)
             sel_config = ctx->interpret_sel.ipmi_interpret_sel_boot_error_transition_severity_config;
+          else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
+		   && sensor_type == IPMI_SENSOR_TYPE_OS_CRITICAL_STOP)
+            sel_config = ctx->interpret_sel.ipmi_interpret_sel_os_critical_stop_state_config;
           else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
 		   && sensor_type == IPMI_SENSOR_TYPE_SLOT_CONNECTOR)
             sel_config = ctx->interpret_sel.ipmi_interpret_sel_slot_connector_transition_severity_config;
+	  else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
+                   && sensor_type == IPMI_SENSOR_TYPE_PLATFORM_ALERT)
+            sel_config = ctx->interpret_sel.ipmi_interpret_sel_platform_alert_state_config;
           else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
                    && sensor_type == IPMI_SENSOR_TYPE_ENTITY_PRESENCE)
             sel_config = ctx->interpret_sel.ipmi_interpret_sel_entity_presence_device_present_config;
@@ -1276,6 +1288,9 @@ ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
 	       && sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS)
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_system_firmware_progress_transition_severity_config;
+      else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_STATE
+	       && sensor_type == IPMI_SENSOR_TYPE_SYSTEM_EVENT)
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_system_event_transition_state_config;
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
 	       && sensor_type == IPMI_SENSOR_TYPE_SYSTEM_EVENT)
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_system_event_state_config;
@@ -1300,12 +1315,21 @@ ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
 	       && sensor_type == IPMI_SENSOR_TYPE_CABLE_INTERCONNECT)
 	sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_cable_interconnect_transition_severity_config;
+      else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
+               && sensor_type == IPMI_SENSOR_TYPE_BOOT_ERROR)
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_boot_error_state_config;
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
 	       && sensor_type == IPMI_SENSOR_TYPE_BOOT_ERROR)
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_boot_error_transition_severity_config;
+      else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
+               && sensor_type == IPMI_SENSOR_TYPE_OS_CRITICAL_STOP)
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_os_critical_stop_state_config;
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
 	       && sensor_type == IPMI_SENSOR_TYPE_SLOT_CONNECTOR)
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_slot_connector_transition_severity_config;
+      else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
+               && sensor_type == IPMI_SENSOR_TYPE_PLATFORM_ALERT)
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_platform_alert_state_config;
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
                && sensor_type == IPMI_SENSOR_TYPE_ENTITY_PRESENCE)
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_entity_presence_device_present_config;
@@ -1367,6 +1391,8 @@ ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_cable_interconnect_config;
       else if (sensor_type == IPMI_SENSOR_TYPE_BOOT_ERROR)
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_boot_error_config;
+      else if (sensor_type == IPMI_SENSOR_TYPE_OS_BOOT)
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_os_boot_config;
       else if (sensor_type == IPMI_SENSOR_TYPE_SLOT_CONNECTOR)
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_slot_connector_config;
       else if (sensor_type == IPMI_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE)

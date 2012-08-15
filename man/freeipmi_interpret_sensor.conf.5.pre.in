@@ -1094,6 +1094,24 @@ Defaults to Nominal.
 Defaults to Warning.
 .RE
 .TP
+.B IPMI_System_Event_Transition_State
+The following states correspond to System Event sensors that report a
+transition state.
+.RS
+.TP
+\fBIPMI_System_Event_Transition_State_No_Event\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_System_Event_Transition_State_Active\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_System_Event_Transition_State_Idle\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_System_Event_Transition_State_Busy\fR
+Defaults to Nominal.
+.RE
+.TP
 .B IPMI_System_Event_State
 The following states correspond to System Event sensors that report an
 assertion or deassertion.
@@ -1405,6 +1423,21 @@ Defaults to Critical.
 Defaults to Warning.
 .RE
 .TP
+.B IPMI_Boot_Error_State
+The following states correspond to Boot Error sensors that report an
+assertion or deassertion.
+.RS
+.TP
+\fBIPMI_Boot_Error_State_No_Event\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Boot_Error_State_Deasserted\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Boot_Error_State_Asserted\fR
+Defaults to Critical.
+.RE
+.TP
 .B IPMI_Boot_Error_Transition_Severity
 The following states correspond to Boot Error sensors that report on
 device severity.
@@ -1439,6 +1472,43 @@ Defaults to Warning.
 .TP
 \fBIPMI_Boot_Error_Transition_Severity_Informational\fR
 Defaults to Nominal.
+.RE
+.TP
+.B IPMI_OS_Boot
+The following states correspond to OS Boot sensors w/ OS Boot specific
+output events.
+.RS
+\fBIPMI_OS_Boot_No_Event\fR
+Defaults to Nominal.
+\fBIPMI_OS_Boot_A_Boot_Completed\fR
+Defaults to Nominal.
+\fBIPMI_OS_Boot_C_Boot_Completed\fR
+Defaults to Nominal.
+\fBIPMI_OS_Boot_PXE_Boot_Completed\fR
+Defaults to Nominal.
+\fBIPMI_OS_Boot_Diagnostic_Boot_Completed\fR
+Defaults to Nominal.
+\fBIPMI_OS_Boot_CD_ROM_Boot_Completed\fR
+Defaults to Nominal.
+\fBIPMI_OS_Boot_ROM_Boot_Completed\fR
+Defaults to Nominal.
+\fBIPMI_OS_Boot_Boot_Completed_Boot_Device_Not_Specified\fR
+Defaults to Warning.
+.RE
+.TP
+.B IPMI_OS_Critical_Stop_State
+The following states correspond to OS Critical Stop sensors that report an
+assertion or deassertion.
+.RS
+.TP
+\fBIPMI_OS_Critical_Stop_State_No_Event\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_OS_Critical_Stop_State_Deasserted\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_OS_Critical_Stop_State_Asserted\fR
+Defaults to Critical.
 .RE
 .TP
 .B IPMI_Slot_Connector
@@ -1602,6 +1672,21 @@ Defaults to Nominal.
 .TP
 \fBIPMI_Watchdog2_Timer_Interrupt\fR
 Defaults to Warning.
+.RE
+.TP
+.B IPMI_Platform_Alert_State
+The following states correspond to Platform Alert sensors that report an
+assertion or deassertion.
+.RS
+.TP
+\fBIPMI_Platform_Alert_State_No_Event\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Platform_Alert_State_Deasserted\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Platform_Alert_State_Asserted\fR
+Defaults to Critical.
 .RE
 .TP
 .B IPMI_Entity_Presence
