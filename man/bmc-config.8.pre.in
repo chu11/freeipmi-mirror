@@ -178,7 +178,7 @@ accomplished through a cold-reset.  A cold-reset can be executed via
 #include <@top_srcdir@/man/manpage-common-workaround-extra-text.man>
 #include <@top_srcdir@/man/manpage-common-workaround-config-tool.man>
 .LP
-"solchannelassumelanchannel" - This workaround will force
+\fIsolchannelassumelanchannel\fR - This workaround will force
 .B bmc-config
 to assume that the channel used SOL is identical to the channel used
 for LAN.  On some motherboards, the SOL channel is reported
