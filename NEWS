@@ -182,6 +182,172 @@ Misc
 ----
 o Add diagnostic/exit-value information to most manpages. 
 
+FreeIPMI 1.1.7 - 07/30/12
+-------------------------
+o In ipmi-sensors and ipmi-sel, fix units output corner case.
+o In bmc-info, detect unsupported system info corner case.
+o Update documentation with motherboard support.
+
+FreeIPMI 1.1.6 - 06/28/12
+-------------------------
+Tools
+------
+o In ipmi-sel, support Supermicro SEL OEM interpretations in
+  --output-event-state.
+o In ipmi-sel and ipmi-sensors, support additional sensor/SEL
+  interpretations including:
+  - Version Change
+  - System Firmware Progress Transition Severity
+  - Button/Switch Transition Severity
+  - Chassis Transition Severity
+  - POST Memory Resize State
+  - Cable/Interconnect Transition Severity
+  - Boot Error Transition Severity
+  - Slot Connector Transition Severity
+  - Memory State
+  - Memory Transition Severity
+o In bmc-config, ipmi-chassis-config, ipmi-pef-config, and
+  ipmi-chassis-config, support cipher suite ID argument.
+o Support Supermicro X9DRi-F OEM sensors and events.
+o Fix Intel S2600JF/Appro 512x OEM SEL interpretations based on
+  comments from Intel.
+ 
+Libraries
+---------
+o Support Supermicro SEL OEM interpretations.
+o Support new sensor/SEL interpretations.
+
+Misc
+----
+o Various documentation updates and fixes.
+
+
+FreeIPMI 1.1.5 - 05/17/12
+-------------------------
+Tools
+------
+o Support Supermicro OEM sensors/SEL on H8DGU-F motherboards.
+o In ipmiconsole, fix password length check bug.
+o In bmc-watchdog, fix --start-if-stopped and --reset-if-running
+  options.
+o In ipmidetectd, fix usage output typos.
+o In ipmi-sensors-config, fix several parallel output corner cases.
+o For consistency to other tools, turn on quiet-caching if
+  communicating with multiple hosts in bmc-device and ipmi-oem.
+o In ipmi-sensors, fix bug in which multiple workarounds could not be
+  used or used in combination with bridging.
+o Fix start run levels in ipmidetectd init script. 
+
+Libraries
+---------
+o In libfreeipmi fru-parse API, handle additional device busy errors.
+
+Misc
+----
+o Various documentation updates.
+
+FreeIPMI 1.1.4 - 04/19/12
+-------------------------
+Tools
+------
+o In ipmi-oem, fix error message output in several Supermicro OEM
+  commands.
+o In ipmi-oem, add Intel --get-power-restore-delay and
+  --set-power-restore-delay support.
+o In ipmi-sel, support Intel S2600JF/Appro 512x OEM SEL
+  interpretations.
+
+Libraries
+----------
+o In libfreeipmi, support new sensor and SEL event interpretations,
+  including Session Audit, Voltage Limits.
+o In libfreeipmi, support new OEM interpretations for Intel S5000PAL
+  NMI State and SMI timeout sensors/SEL events.
+o In libfreeipmi, support Intel S2600JF/Appro 512x OEM SEL
+  interpretations.
+
+Misc
+----
+o Various documentation updates.
+
+FreeIPMI 1.1.3 - 03/06/12
+-------------------------
+Tools
+------
+o Support Supermicro CPU temperature SEL events.
+o In ipmi-oem, fix corner case with Dell C410x power control
+  calculation.
+o In all tools, fix error messages to differentiate between invalid
+  and unsupported cipher suite IDs.
+o In bmc-config, fix a Cipher Suite Privilege configuration
+  corner case in the workaround for an HP DL145 workaround.
+o In bmc-config, add workaround for Cipher Suite Privilege
+  configuration on Intel S2600JF/Appro 512X.
+o Various documentation updates.
+
+Libraries
+----------
+o In libfreeipmi, fix incorrect packet layout for the Get Lan
+  Configuration Parameters RMCPplus Messaging Cipher Suite Entry Support
+  response.
+o In libipmimonitoring, properly return connection timeout error on
+  connection timeout.
+
+Misc
+----
+o Fix build when using --docdir. 
+o Various documentation updates.
+
+FreeIPMI 1.1.2 - 02/06/12
+-------------------------
+Tools
+------
+o In ipmi-oem, support new Dell C410x OEM extensions
+  slot-power-toggle, slot-power-control, get-port-map, set-port-map.
+o Fix daemon setup race condition in ipmidetectd and bmc-watchdog that
+  can affect systemd.
+o In ipmiconsole, support new --serial-keepalive-empty option.
+o In bmc-device, support new --rearm-sensor option.
+o In ipmi-oem, add additional Dell get-system-info options
+  - slot-number
+  - system-revision
+  - embedded-video-status
+  - idrac-info
+  - idrac-ipv4-url
+  - idrac-gui-webserver-control
+  - cmc-ipv4-url,
+  - cmc-ipv6-info
+  - cmc-ipv6-url
+o In ipmi-oem, support Dell 12G mac addresses under get-system-info.   
+o In ipmi-sensors, some sensors that reported "Unknown" may now report
+  "N/A" due to an interpretation change of several IPMI error codes.
+o In ipmi-sensors, workaround sensor reading issue on Sun Blade x6250
+  and Sun Blade 6000M2.
+o Fix several freeipmi.conf config file parsing bugs.
+
+Libraries
+----------
+o In libipmiconsole, fix serial keepalive timeout calculation bug that
+  can lead to excessive packets retransmitted.
+o In libipmiconsole, support new SERIAL_KEEPALIVE_EMPTY engine flag.
+o In libipmiconsole, do not deactivate a SOL payload if it appears the
+  SOL payload has been stolen, but we did not receive a SOL deactivating
+  flag.
+o In libipmiconsole, fix corner case in which session not closed
+  cleanly when DEACTIVATE_ONLY flag specified.
+o In libipmiconsole, workaround bug in Dell Poweredge M605, M610, and
+  M915 where instance count of SOL is always returned as 0.
+o In libfreeipmi, add functions for re-arm sensor events IPMI payload. 
+o In libfreeipmi/sensor-read, under some error conditions return error
+  of "unavailable" instead of "cannot be obtained" error code.
+o In libfreeipmi/sensor-read, add workarounds to handle issues on Sun
+  Blade x6250 and Sun Blade 6000M2.
+
+Misc
+----
+o Various documentation updates.
+o Redo formattig of include/freeipmi/templates/ documents.
+
 FreeIPMI 1.1.1 - 01/03/12
 -------------------------
 
