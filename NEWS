@@ -1,8 +1,10 @@
-FreeIPMI 1.2.1 - XX/XX/XX
+FreeIPMI 1.2.1 - 08/22/12
 -------------------------
 
 Tools - New Features
 --------------------
+o Support new ipmiseld daemon, a daemon that regularly polls the SEL
+  and stores the events to the local syslog.
 o In ipmipower, support --oem-power-type option to support OEM
   specific power control operations.  Included in this support were
   the follow changes to ipmipower:
