@@ -1,3 +1,9 @@
+2012-08-22  Albert Chu <chu11@llnl.gov>
+
+        * NEWS, configure.ac: Update for release.
+
+        * Tagged Release-1_2_1.
+	
 2012-08-15  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/sdr/ipmi-sdr-cache-create.c (_sdr_cache_get_record):
