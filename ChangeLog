@@ -1,3 +1,8 @@
+2012-09-07  Claudio Cesar Sanchez Tejeda <demonccc@gmail.com>
+
+	* ipmiseld/ipmiseld-common.c: Fix "format not a string literal and
+	no format arguments" issue.
+	
 2012-08-15  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/sdr/ipmi-sdr-cache-create.c (_sdr_cache_get_record):

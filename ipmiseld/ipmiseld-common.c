@@ -157,7 +157,7 @@ _ipmiseld_syslog (ipmiseld_host_data_t *host_data,
       || host_data->prog_data->args->foreground)
     printf ("%s\n", buf);
   else
-    syslog (host_data->prog_data->log_priority, buf);
+    syslog (host_data->prog_data->log_priority, "%s", buf);
 }
 
 void
