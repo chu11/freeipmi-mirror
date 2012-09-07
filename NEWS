@@ -1,4 +1,4 @@
-FreeIPMI 1.2.1 - 09/07/12
+FreeIPMI 1.2.2 - 09/07/12
 -------------------------
 o Fix ipmiseld compile issue with -Werror=format-security.
 
