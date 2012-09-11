@@ -188,6 +188,10 @@ typedef enum
 #define IPMI_SESSION_INITIAL_OUTBOUND_SEQUENCE_NUMBER              1
 #define IPMI_SOL_SESSION_INITIAL_PACKET_SEQUENCE_NUMBER            1
 
+/* API magic determines if the context has been destroyed by the user
+ * and can no longer be used.  However, it may not necessarily have
+ * been garbage cleaned up by the libipmiconsole engine library.
+ */
 #define IPMICONSOLE_CTX_MAGIC                 0x74AB8831
 #define IPMICONSOLE_CTX_API_MAGIC             0x83FB9202
 
