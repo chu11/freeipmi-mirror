@@ -582,6 +582,25 @@ struct ipmiconsole_engine_config
   unsigned int debug_flags;
 };
 
+/*
+ * Context Config Option
+ *
+ * Used for setting or getting advanced configuration options.  See
+ * ipmiconsole_ctx_set_config_option() and
+ * ipmiconsole_ctx_get_config_option().
+ *
+ * SOL_INSTANCE
+ *
+ * The SOL instance number to be used.  Defaults to 1.  Range of 1 to
+ * 15.
+ *
+ */
+enum ipmiconsole_ctx_config_option
+{
+  IPMICONSOLE_CTX_CONFIG_OPTION_SOL_INSTANCE = 0,
+};
+typedef enum ipmiconsole_ctx_config_option ipmiconsole_ctx_config_option_t;
+
 #define IPMICONSOLE_THREAD_COUNT_MAX       32
 
 typedef struct ipmiconsole_ctx *ipmiconsole_ctx_t;
