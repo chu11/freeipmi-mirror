@@ -369,6 +369,7 @@ fill_cmd_activate_payload (uint8_t payload_type,
                            fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_PAYLOAD_TYPE_VALID (payload_type)
+      || !IPMI_PAYLOAD_INSTANCE_VALID (payload_instance)
       || !auxiliary_request_data
       || !auxiliary_request_data_len
       || !fiid_obj_valid (obj_cmd_rq))
@@ -408,6 +409,7 @@ fill_cmd_activate_payload_sol (uint8_t payload_type,
                                fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_PAYLOAD_TYPE_VALID (payload_type)
+      || !IPMI_PAYLOAD_INSTANCE_VALID (payload_instance)
       || !IPMI_SOL_STARTUP_HANDSHAKE_CTS_AND_DCD_SDR_VALID (sol_startup_handshake)
       || !IPMI_SERIAL_MODEM_ALERTS_VALID (shared_serial_alert_behavior)
       || !IPMI_TEST_MODE_VALID (test_mode)
@@ -450,6 +452,7 @@ fill_cmd_deactivate_payload (uint8_t payload_type,
                              fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_PAYLOAD_TYPE_VALID (payload_type)
+      || !IPMI_PAYLOAD_INSTANCE_VALID (payload_instance)
       || !fiid_obj_valid (obj_cmd_rq))
     {
       SET_ERRNO (EINVAL);
@@ -480,6 +483,7 @@ fill_cmd_suspend_resume_payload_encryption (uint8_t payload_type,
                                             fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_PAYLOAD_TYPE_VALID (payload_type)
+      || !IPMI_PAYLOAD_INSTANCE_VALID (payload_instance)
       || !IPMI_SUSPEND_RESUME_PAYLOAD_ENCRYPTION_OPERATION_VALID (operation)
       || !fiid_obj_valid (obj_cmd_rq))
     {
@@ -535,6 +539,7 @@ fill_cmd_get_payload_instance_info (uint8_t payload_type,
                                     fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_PAYLOAD_TYPE_VALID (payload_type)
+      || !IPMI_PAYLOAD_INSTANCE_VALID (payload_instance)
       || !fiid_obj_valid (obj_cmd_rq))
     {
       SET_ERRNO (EINVAL);

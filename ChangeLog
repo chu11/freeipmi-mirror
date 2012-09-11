@@ -1,3 +1,15 @@
+2012-09-07  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/cmds/ipmi-rmcpplus-support-and-payload-cmds.h:
+	Create payload instance macros.
+
+	* libfreeipmi/cmds/ipmi-rmcpplus-support-and-payload-cmds.c (fill_cmd_activate_payload)
+	(fill_cmd_activate_payload_sol, fill_cmd_deactivate_payload)
+	(fill_cmd_suspend_resume_payload_encryption)
+	(fill_cmd_get_payload_instance_info): Add payload instance
+	parameter check.
+	
+	
 2012-09-07  Claudio Cesar Sanchez Tejeda <demonccc@gmail.com>
 
 	* ipmiseld/ipmiseld-common.c: Fix "format not a string literal and
