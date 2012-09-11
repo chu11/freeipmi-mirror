@@ -734,8 +734,8 @@ void ipmiconsole_engine_teardown (int cleanup_sol_sessions);
  * into the ipmiconsole engine (via ipmiconsole_engine_submit() or
  * ipmiconsole_engine_submit_block()) to establish a SOL session.  The
  * context cannot be submitted to the ipmiconsole engine more than
- * once.  After it has been submitted to the ipmiconsole, it cannot be
- * reused.
+ * once.  After it has been submitted to the ipmiconsole engine, it
+ * cannot be reused.
  *
  * Parameters:
  *

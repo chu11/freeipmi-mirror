@@ -1,3 +1,7 @@
+2012-09-11  Albert Chu <chu11@llnl.gov>
+
+	* libipmiconsole/ipmiconsole.h.in: Fix comment English.
+
 2012-09-07  Claudio Cesar Sanchez Tejeda <demonccc@gmail.com>
 
 	* ipmiseld/ipmiseld-common.c: Fix "format not a string literal and
