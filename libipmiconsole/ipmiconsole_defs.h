@@ -259,6 +259,9 @@ struct ipmiconsole_ctx_config {
   unsigned int behavior_flags;
   unsigned int debug_flags;
 
+  /* advanced config */
+  unsigned int sol_payload_instance;
+
   /* Data based on Configuration Parameters */
   uint8_t authentication_algorithm;
   uint8_t integrity_algorithm;
@@ -384,7 +387,6 @@ struct ipmiconsole_ctx_session {
   void *confidentiality_key_ptr;
   unsigned int confidentiality_key_len;
 
-  uint8_t sol_payload_instance;
   uint32_t sol_instance_capacity;
   uint8_t sol_instances_activated[IPMI_INSTANCES_ACTIVATED_LENGTH];
   uint32_t sol_instances_activated_count;

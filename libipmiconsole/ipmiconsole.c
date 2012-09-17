@@ -668,6 +668,7 @@ _ipmiconsole_defaults_setup (void)
   default_config.retransmission_keepalive_timeout_len = IPMICONSOLE_RETRANSMISSION_KEEPALIVE_TIMEOUT_LENGTH_DEFAULT;
   default_config.acceptable_packet_errors_count = IPMICONSOLE_ACCEPTABLE_PACKET_ERRORS_COUNT_DEFAULT;
   default_config.maximum_retransmission_count = IPMICONSOLE_MAXIMUM_RETRANSMISSION_COUNT_DEFAULT;
+  default_config.sol_payload_instance = IPMI_PAYLOAD_INSTANCE_DEFAULT;
 
   if (!(cf = conffile_handle_create ()))
     {
@@ -1263,13 +1264,15 @@ ipmiconsole_ctx_set_config (ipmiconsole_ctx_t c,
 			    ipmiconsole_ctx_config_option_t config_option,
 			    void *config_option_value)
 {
+  unsigned int *tmpptr;
+
   if (!c
       || c->magic != IPMICONSOLE_CTX_MAGIC
       || c->api_magic != IPMICONSOLE_CTX_API_MAGIC)
     return (-1);
 
-  if ((config_option != IPMICONSOLE_CTX_CONFIG_OPTION_SOL_INSTANCE)
-      || config_option_value)
+  if ((config_option != IPMICONSOLE_CTX_CONFIG_OPTION_SOL_PAYLOAD_INSTANCE)
+      || !config_option_value)
     {
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_PARAMETERS);
       return (-1);
@@ -1283,7 +1286,14 @@ ipmiconsole_ctx_set_config (ipmiconsole_ctx_t c,
 
   switch (config_option)
     {
-    case IPMICONSOLE_CTX_CONFIG_OPTION_SOL_INSTANCE:
+    case IPMICONSOLE_CTX_CONFIG_OPTION_SOL_PAYLOAD_INSTANCE:
+      tmpptr = (unsigned int *)config_option_value;
+      if (!IPMI_PAYLOAD_INSTANCE_VALID((*tmpptr)))
+	{
+	  ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_PARAMETERS);
+	  return (-1);
+	}
+      c->config.sol_payload_instance = *(tmpptr);
       break;
     default:
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
@@ -1299,13 +1309,15 @@ ipmiconsole_ctx_get_config (ipmiconsole_ctx_t c,
 			    ipmiconsole_ctx_config_option_t config_option,
 			    void *config_option_value)
 {
+  unsigned int *tmpptr;
+
   if (!c
       || c->magic != IPMICONSOLE_CTX_MAGIC
       || c->api_magic != IPMICONSOLE_CTX_API_MAGIC)
     return (-1);
 
-  if ((config_option != IPMICONSOLE_CTX_CONFIG_OPTION_SOL_INSTANCE)
-      || config_option_value)
+  if ((config_option != IPMICONSOLE_CTX_CONFIG_OPTION_SOL_PAYLOAD_INSTANCE)
+      || !config_option_value)
     {
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_PARAMETERS);
       return (-1);
@@ -1313,7 +1325,9 @@ ipmiconsole_ctx_get_config (ipmiconsole_ctx_t c,
 
   switch (config_option)
     {
-    case IPMICONSOLE_CTX_CONFIG_OPTION_SOL_INSTANCE:
+    case IPMICONSOLE_CTX_CONFIG_OPTION_SOL_PAYLOAD_INSTANCE:
+      tmpptr = (unsigned int *)config_option_value;
+      (*tmpptr) = c->config.sol_payload_instance;
       break;
     default:
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);

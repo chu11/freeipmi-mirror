@@ -276,6 +276,8 @@ ipmiconsole_ctx_config_setup (ipmiconsole_ctx_t c,
   else
     c->config.debug_flags = default_config.debug_flags;
 
+  c->config.sol_payload_instance = default_config.sol_payload_instance;
+
   /* Data based on Configuration Parameters */
 
   if (ipmi_cipher_suite_id_to_algorithms (c->config.cipher_suite_id,
@@ -1267,8 +1269,6 @@ ipmiconsole_ctx_session_setup (ipmiconsole_ctx_t c)
   memset (c->session.confidentiality_key, '\0', IPMI_MAX_CONFIDENTIALITY_KEY_LENGTH);
   c->session.confidentiality_key_ptr = c->session.confidentiality_key;
   c->session.confidentiality_key_len = IPMI_MAX_CONFIDENTIALITY_KEY_LENGTH;
-
-  c->session.sol_payload_instance = IPMI_PAYLOAD_INSTANCE_DEFAULT;
 
   /* Following 3 will be calculated during session setup.  We only
    * memset/clear it here
