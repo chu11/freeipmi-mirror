@@ -1259,6 +1259,72 @@ ipmiconsole_ctx_create (const char *hostname,
 }
 
 int
+ipmiconsole_ctx_set_config (ipmiconsole_ctx_t c,
+			    ipmiconsole_ctx_config_option_t config_option,
+			    void *config_option_value)
+{
+  if (!c
+      || c->magic != IPMICONSOLE_CTX_MAGIC
+      || c->api_magic != IPMICONSOLE_CTX_API_MAGIC)
+    return (-1);
+
+  if ((config_option != IPMICONSOLE_CTX_CONFIG_OPTION_SOL_INSTANCE)
+      || config_option_value)
+    {
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if (c->session_submitted)
+    {
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_CTX_IS_SUBMITTED);
+      return (-1);
+    }
+
+  switch (config_option)
+    {
+    case IPMICONSOLE_CTX_CONFIG_OPTION_SOL_INSTANCE:
+      break;
+    default:
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
+      return (-1);
+    }
+
+  ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SUCCESS);
+  return (0);
+}
+
+int
+ipmiconsole_ctx_get_config (ipmiconsole_ctx_t c,
+			    ipmiconsole_ctx_config_option_t config_option,
+			    void *config_option_value)
+{
+  if (!c
+      || c->magic != IPMICONSOLE_CTX_MAGIC
+      || c->api_magic != IPMICONSOLE_CTX_API_MAGIC)
+    return (-1);
+
+  if ((config_option != IPMICONSOLE_CTX_CONFIG_OPTION_SOL_INSTANCE)
+      || config_option_value)
+    {
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  switch (config_option)
+    {
+    case IPMICONSOLE_CTX_CONFIG_OPTION_SOL_INSTANCE:
+      break;
+    default:
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
+      return (-1);
+    }
+
+  ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SUCCESS);
+  return (0);
+}
+
+int
 ipmiconsole_ctx_errnum (ipmiconsole_ctx_t c)
 {
   if (!c)
