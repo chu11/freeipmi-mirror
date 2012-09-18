@@ -454,6 +454,34 @@ _config_file_debug_flags (conffile_t cf,
 }
 
 static int
+_config_file_sol_payload_instance (conffile_t cf,
+				   struct conffile_data *data,
+				   char *optionname,
+				   int option_type,
+				   void *option_ptr,
+				   int option_data,
+				   void *app_ptr,
+				   int app_data)
+{
+  unsigned int *value;
+
+  assert (data);
+  assert (option_ptr);
+
+  value = (unsigned int *)option_ptr;
+  
+  if (data->intval <= 0
+      || !IPMI_PAYLOAD_INSTANCE_VALID (data->intval))
+    {
+      IPMICONSOLE_DEBUG (("libipmiconsole config file %s invalid", optionname));
+      return (0);
+    }
+
+  *value = (unsigned int)data->intval;
+  return (0);
+}
+
+static int
 _ipmiconsole_defaults_setup (void)
 {
   int libipmiconsole_context_username_count = 0, libipmiconsole_context_password_count = 0,
@@ -469,7 +497,8 @@ _ipmiconsole_defaults_setup (void)
     libipmiconsole_context_maximum_retransmission_count_count = 0,
     libipmiconsole_context_engine_flags_count = 0,
     libipmiconsole_context_behavior_flags_count = 0,
-    libipmiconsole_context_debug_flags_count = 0;
+    libipmiconsole_context_debug_flags_count = 0,
+    libipmiconsole_context_sol_payload_instance_count = 0;
 
   struct conffile_option libipmiconsole_options[] =
     {
@@ -648,6 +677,17 @@ _ipmiconsole_defaults_setup (void)
         &libipmiconsole_context_debug_flags_count,
         NULL,
         0,
+      },
+      {
+        "libipmiconsole-context-sol-payload-instance",
+        CONFFILE_OPTION_INT,
+        -1,
+	_config_file_sol_payload_instance,
+        1,
+        0,
+        &libipmiconsole_context_sol_payload_instance_count,
+        &(default_config.sol_payload_instance),
+        0
       },
     };
 
