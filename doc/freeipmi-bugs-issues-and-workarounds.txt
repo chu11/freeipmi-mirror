@@ -457,6 +457,15 @@ LAN Session Issue #6: [COMPLIANCE]
   Resolution: Workaround option added to inform software to handle
   incorrect endian sequence numbers.
 
+LAN Session Issue #7: [COMPLIANCE]
+
+  LAN session headers contain invalid checksums.
+
+  Seen on: Supermicro X9SCM-iiF, Supermicro X9DRi-F
+
+  Resolution: Workaround option added to inform software to ignore bad
+  checksums.
+
 ----------------------------------------------------------------------
 
 --------------
