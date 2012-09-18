@@ -3244,7 +3244,7 @@ _process_protocol_state_activate_payload_sent (ipmiconsole_ctx_t c)
    *
    * There are several possible races here.
    *
-   * 1) It's possible we get a SOL packet before we get a activate
+   * 1) It's possible we get a SOL packet before we get an activate
    * payload response.  For example, the packets are received out
    * of order, or perhaps the activate payload response is lost on
    * the network.
