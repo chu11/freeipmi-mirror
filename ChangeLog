@@ -1,3 +1,11 @@
+2012-09-18  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/, libipmiconsole/, libipmimonitoring/,
+	common/parsecommon/, man/: Support new
+	NO_CHECKSUM_CHECK/nochecksumcheck workaround to deal with
+	Supermicro motherboards that incorrectly calculate packet
+	checksums.
+	
 2012-09-11  Albert Chu <chu11@llnl.gov>
 
 	* libipmiconsole/ipmiconsole.h.in: Fix comment English.

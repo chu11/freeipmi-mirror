@@ -28,7 +28,7 @@ endian).
 .LP
 \fInoauthcodecheck\fR - This workaround flag will tell FreeIPMI to not
 check the authentication codes returned from IPMI 1.5 command
-responses.  It works around systems to return invalid authentication
+responses.  It works around systems that return invalid authentication
 codes due to hashing or implementation errors.  Users are cautioned on
 the use of this option, as it removes an authentication check
 verifying the validity of a packet.  However, in most organizations,

@@ -783,18 +783,27 @@ _api_lan_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
         }
     }
 
-  if ((ret = ipmi_lan_check_checksum (ctx->io.outofband.rs.obj_lan_msg_hdr,
-                                      obj_cmd_rs,
-                                      ctx->io.outofband.rs.obj_lan_msg_trlr)) < 0)
+  /* IPMI Workaround (achu)
+   *
+   * Discovered on Supermicro X9SCM-iiF, Supermicro X9DRi-F
+   *
+   * Checksums are computed incorrectly.
+   */
+  if (!(ctx->workaround_flags_outofband & IPMI_WORKAROUND_FLAGS_OUTOFBAND_NO_CHECKSUM_CHECK))
     {
-      API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (!ret)
-    {
-      rv = 0;
-      goto cleanup;
+      if ((ret = ipmi_lan_check_checksum (ctx->io.outofband.rs.obj_lan_msg_hdr,
+					  obj_cmd_rs,
+					  ctx->io.outofband.rs.obj_lan_msg_trlr)) < 0)
+	{
+	  API_ERRNO_TO_API_ERRNUM (ctx, errno);
+	  goto cleanup;
+	}
+      
+      if (!ret)
+	{
+	  rv = 0;
+	  goto cleanup;
+	}
     }
 
   /* IPMI Workaround (achu)
@@ -2512,19 +2521,28 @@ _api_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
           goto cleanup;
         }
 
-      if ((ret = ipmi_lan_check_checksum (ctx->io.outofband.rs.obj_lan_msg_hdr,
-                                          obj_cmd_rs,
-                                          ctx->io.outofband.rs.obj_lan_msg_trlr)) < 0)
-        {
-          API_ERRNO_TO_API_ERRNUM (ctx, errno);
-          goto cleanup;
-        }
-
-      if (!ret)
-        {
-          rv = 0;
-          goto cleanup;
-        }
+      /* IPMI Workaround (achu)
+       *
+       * Discovered on Supermicro X9SCM-iiF, Supermicro X9DRi-F
+       *
+       * Checksums are computed incorrectly.
+       */
+      if (!(ctx->workaround_flags_outofband_2_0 & IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_NO_CHECKSUM_CHECK))
+	{
+	  if ((ret = ipmi_lan_check_checksum (ctx->io.outofband.rs.obj_lan_msg_hdr,
+					      obj_cmd_rs,
+					      ctx->io.outofband.rs.obj_lan_msg_trlr)) < 0)
+	    {
+	      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+	      goto cleanup;
+	    }
+	  
+	  if (!ret)
+	    {
+	      rv = 0;
+	      goto cleanup;
+	    }
+	}
 
       if ((ret = ipmi_rmcpplus_check_packet_session_authentication_code (integrity_algorithm,
                                                                          pkt,

@@ -55,6 +55,16 @@ ipmipower_check_checksum (ipmipower_powercmd_t ip,
   assert (IPMIPOWER_PACKET_TYPE_IPMI_1_5_SETUP_RS (pkt)
 	  || IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RS (pkt)); /* 1.5 or 2.0 */
 
+  /* IPMI Workaround (achu)
+   *
+   * Discovered on Supermicro X9SCM-iiF, Supermicro X9DRi-F
+   *
+   * Checksums are computed incorrectly.
+   */
+  if (cmd_args.common_args.workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_NO_CHECKSUM_CHECK
+      || cmd_args.common_args.workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_NO_CHECKSUM_CHECK)
+    return (1);
+
   obj_cmd = ipmipower_packet_cmd_obj (ip, pkt);
   if ((rv = ipmi_lan_check_checksum (ip->obj_lan_msg_hdr_rs,
                                      obj_cmd,
