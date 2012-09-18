@@ -1448,6 +1448,16 @@ Sensors Issue #20: [IMPLEMENTATION]
 
   Resolution: Workaround added to handle corner case.
 
+Sensors Issue #21: [IMPLEMENTATION]
+
+  Some SDR entries report RPM thresholds that are inconsistent
+  and illogical.  For example, a upper critical threshold will be
+  reported that is below the nominal reading.
+
+  Seen on: HP DL140 G3 and HP ML160 G6
+
+  Resolution: None
+
 ----------------------------------------------------------------------
 
 ---------------------------------
