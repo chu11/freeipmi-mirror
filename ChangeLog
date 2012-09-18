@@ -8,6 +8,13 @@
 	(fill_cmd_suspend_resume_payload_encryption)
 	(fill_cmd_get_payload_instance_info): Add payload instance
 	parameter check.
+
+	* libipmiconsole/ (ipmiconsole_ctx_set_config)
+	(ipmiconsole_ctx_get_config): New functions.
+
+	* libipmiconsole/: Support
+	IPMICONSOLE_CTX_CONFIG_OPTION_SOL_PAYLOAD_INSTANCE configuration
+	option.
 	
 2012-09-07  Claudio Cesar Sanchez Tejeda <demonccc@gmail.com>
 
