@@ -2125,6 +2125,39 @@ _check_sol_supported (ipmiconsole_ctx_t c)
 }
 
 /*
+ * Return 1 if instance activated
+ * Return 0 if instance not activated
+ * Return -1 on error
+ */
+static int
+_check_sol_instance_activated (ipmiconsole_ctx_t c, uint8_t instance)
+{
+  char fieldstr[64];
+  uint64_t val;
+
+  assert (c);
+  assert (c->magic == IPMICONSOLE_CTX_MAGIC);
+  assert (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_PAYLOAD_ACTIVATION_STATUS_SENT);
+  assert (!c->session.deactivate_payload_instances_and_try_again_flag);
+	  
+  memset (fieldstr, '\0', 64);
+  snprintf (fieldstr, 64, "instance_%d", instance);
+
+  if (FIID_OBJ_GET (c->connection.obj_get_payload_activation_status_rs,
+		    fieldstr,
+		    &val) < 0)
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: '%s': %s",
+				 fieldstr,
+				 fiid_obj_errormsg (c->connection.obj_get_payload_activation_status_rs)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
+      return (-1);
+    }
+	  
+  return ((int)val);
+}
+
+/*
  * Return 1 if SOL is activated
  * Return 0 if SOL is not activated
  * Return -1 on error
@@ -2134,6 +2167,7 @@ _check_sol_activated (ipmiconsole_ctx_t c)
 {
   uint64_t val;
   unsigned int i;
+  int ret;
 
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
@@ -2182,29 +2216,30 @@ _check_sol_activated (ipmiconsole_ctx_t c)
       return (-1);
     }
 
-  for (i = 0; i < c->session.sol_instance_capacity; i++)
+  if (0)
     {
-      char fieldstr[64];
+      for (i = 0; i < c->session.sol_instance_capacity; i++)
+	{
+	  if ((ret = _check_sol_instance_activated (c, i + 1)) < 0)
+	    return (-1);
 
-      memset (fieldstr, '\0', 64);
-      snprintf (fieldstr, 64, "instance_%d", i+1);
+	  if (ret)
+	    {
+	      c->session.sol_instances_activated[c->session.sol_instances_activated_count] = i+1;
+	      c->session.sol_instances_activated_count++;
+	    }
+	}
+    }
+  else
+    {
+      if ((ret = _check_sol_instance_activated (c, c->config.sol_payload_instance)) < 0)
+	return (-1);
 
-      if (FIID_OBJ_GET (c->connection.obj_get_payload_activation_status_rs,
-                        fieldstr,
-                        &val) < 0)
-        {
-          IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: '%s': %s",
-                                     fieldstr,
-                                     fiid_obj_errormsg (c->connection.obj_get_payload_activation_status_rs)));
-          ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-          return (-1);
-        }
-      
-      if (val)
-        {
-          c->session.sol_instances_activated[c->session.sol_instances_activated_count] = i+1;
-          c->session.sol_instances_activated_count++;
-        }
+      if (ret)
+	{
+	  c->session.sol_instances_activated[c->session.sol_instances_activated_count] = c->config.sol_payload_instance;
+	  c->session.sol_instances_activated_count++;
+	}
     }
   
   if (c->config.behavior_flags & IPMICONSOLE_BEHAVIOR_ERROR_ON_SOL_INUSE
