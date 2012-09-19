@@ -123,7 +123,7 @@ outputonsolestablished, lockmemory, serialkeepalive.
 \fBlibipmiconsole\-context\-behavior\-flags\fR \fIFLAGS\fR
 Specify default behavior flags to use.  Multiple flags can be
 specified separated by whitespace.  The following flags are supported:
-erroronsolinuse, deactivateonly.
+erroronsolinuse, deactivateonly, deactivateallinstances.
 .TP
 \fBlibipmiconsole\-context\-debug\-flags\fR \fIFLAGS\fR
 Specify default debug flags to use.  Multiple flags can be specified

@@ -14,7 +14,8 @@
 
 	* libipmiconsole/: Support
 	IPMICONSOLE_CTX_CONFIG_OPTION_SOL_PAYLOAD_INSTANCE configuration
-	option.
+	option.  Support IPMICONSOLE_BEHAVIOR_DEACTIVATE_ALL_INSTANCES
+	behavior flag.
 	
 2012-09-07  Claudio Cesar Sanchez Tejeda <demonccc@gmail.com>
 

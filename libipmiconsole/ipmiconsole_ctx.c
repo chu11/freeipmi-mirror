@@ -1200,6 +1200,7 @@ ipmiconsole_ctx_session_setup (ipmiconsole_ctx_t c)
   c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_START;
   c->session.close_session_flag = 0;
   c->session.try_new_port_flag = 0;
+  c->session.deactivate_payload_instances = 0;
   c->session.deactivate_payload_instances_and_try_again_flag = 0;
   c->session.close_timeout_flag = 0;
   c->session.deactivate_only_succeeded_flag = 0;

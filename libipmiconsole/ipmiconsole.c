@@ -113,14 +113,15 @@ static char *ipmiconsole_errmsgs[] =
     NULL
   };
 
-#define IPMICONSOLE_ENGINE_CLOSE_FD_STR                  "closefd"
-#define IPMICONSOLE_ENGINE_OUTPUT_ON_SOL_ESTABLISHED_STR "outputonsolestablished"
-#define IPMICONSOLE_ENGINE_LOCK_MEMORY_STR               "lockmemory"
-#define IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE_STR          "serialkeepalive"
-#define IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE_EMPTY_STR    "serialkeepaliveempty"
+#define IPMICONSOLE_ENGINE_CLOSE_FD_STR                   "closefd"
+#define IPMICONSOLE_ENGINE_OUTPUT_ON_SOL_ESTABLISHED_STR  "outputonsolestablished"
+#define IPMICONSOLE_ENGINE_LOCK_MEMORY_STR                "lockmemory"
+#define IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE_STR           "serialkeepalive"
+#define IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE_EMPTY_STR     "serialkeepaliveempty"
 
-#define IPMICONSOLE_BEHAVIOR_ERROR_ON_SOL_INUSE_STR      "erroronsolinuse"
-#define IPMICONSOLE_BEHAVIOR_DEACTIVATE_ONLY_STR         "deactivateonly"
+#define IPMICONSOLE_BEHAVIOR_ERROR_ON_SOL_INUSE_STR       "erroronsolinuse"
+#define IPMICONSOLE_BEHAVIOR_DEACTIVATE_ONLY_STR          "deactivateonly"
+#define IPMICONSOLE_BEHAVIOR_DEACTIVATE_ALL_INSTANCES_STR "deactivateallinstances"
 
 #define IPMICONSOLE_DEBUG_STDOUT_STR                     "stdout"
 #define IPMICONSOLE_DEBUG_STDERR_STR                     "stderr"
@@ -406,6 +407,8 @@ _config_file_behavior_flags (conffile_t cf,
         behavior_flags |= IPMICONSOLE_BEHAVIOR_ERROR_ON_SOL_INUSE;
       else if (!strcasecmp (data->stringlist[i], IPMICONSOLE_BEHAVIOR_DEACTIVATE_ONLY_STR))
         behavior_flags |= IPMICONSOLE_BEHAVIOR_DEACTIVATE_ONLY;
+      else if (!strcasecmp (data->stringlist[i], IPMICONSOLE_BEHAVIOR_DEACTIVATE_ALL_INSTANCES_STR))
+        behavior_flags |= IPMICONSOLE_BEHAVIOR_DEACTIVATE_ALL_INSTANCES;
       else
         IPMICONSOLE_DEBUG (("libipmiconsole config file behavior flag invalid"));
     }
