@@ -729,6 +729,25 @@ ipmiconsole, authenticating with SOL1, verify tool:
 
 Test)
 
+Establish a SOL session with SOL payload instance 1
+(--sol-payload-instance=1).
+
+While a session is currently active, in a different window, execute
+ipmiconsole, using a different payload instance
+(i.e. --sol-payload-instance=2):
+
+If multiple SOL instances are support, verify tool:
+- Establishes a SOL session by outputting "[SOL established]" in the
+  second session.
+- The original SOL session has not been terminated, and continues to
+  work.
+
+If multiple SOL instances are not supported, verify tool:
+- Errors out appropriately.  Most likely/best error message
+  "BMC Busy."
+
+Test)
+
 Configure "pristine" configuration.
 
 Execute ipmiconsole, authentication with SOL1, with option -I 0
