@@ -775,8 +775,7 @@ Serial-Over-LAN Issue #19: [COMPLIANCE]
   Deactivate of SOL payload instance #X may deactivate a different SOL
   payload instance #Y.
 
-  Seen on: Supermicro X8DTG-D
-
+  Seen on: Supermicro X8DTG-D, Inventec 5442/Dell Xanadu III
   Resolution: None 
 
 ----------------------------------------------------------------------
