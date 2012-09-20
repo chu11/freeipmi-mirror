@@ -1,7 +1,27 @@
 FreeIPMI 1.2.2 - 09/07/12
 -------------------------
+Tools
+------
+o Support new --sol-payload-instance and --deactivate-all-instances
+  options in ipmiconsole.
 o Fix ipmiseld compile issue with -Werror=format-security.
+ 
+Libraries
+---------
+o In libipmiconsole, add new ipmiconsole_ctx_set_config() and
+  ipmiconsole_ctx_get_config() functions.
+o In libipmiconsole, add support for specifying and handling different
+  SOL payload instances.  This support includes:
+  - Support new IPMICONSOLE_CTX_CONFIG_OPTION_SOL_PAYLOAD_INSTANCE
+    configuration option.
+  - In libipmiconsole, support new
+    IPMICONSOLE_BEHAVIOR_DEACTIVATE_ALL_INSTANCES behavior flag.
+  - Return more appropriate error codes when activation limits are
+    discovered.
 
+Misc
+----
+o Various documentation updates and fixes.
 
 FreeIPMI 1.2.1 - 08/22/12
 -------------------------
