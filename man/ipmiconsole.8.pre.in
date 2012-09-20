@@ -129,6 +129,16 @@ risk regularly sending a NUL character byte may have.  However, some
 systems may not ACK a SOL packet without character data in it, meaning
 these keepalive packets do nothing. 
 .TP
+\fB\-\-sol\-payload\-instance\fR=\fINUM\fR
+Specify the SOL payload instance number.  The default value is 1,
+valid values range from 1 to 15.  Most systems only support a single
+instance, however a few allow users to access multiple.
+.TP
+\fB\-\-deactivate\-all\-instances\fR
+When deactivating SOL sessions, either by stealing a session or through the
+\fB\-\-deactivate\fR option, deactivate all active instances instead of 
+just the configured payload instance.
+.TP
 \fB\-\-lock-memory\fR
 Lock sensitive information (such as usernames and passwords) in
 memory.
@@ -141,7 +151,6 @@ Output debugging to the debugfile rather than to standard output.
 Don't enter terminal raw mode.
 \}
 .LP
-
 .SH "ESCAPE CHARACTERS"
 The following escape sequences are supported.  The default supported
 escape character is '&', but can be changed with the 

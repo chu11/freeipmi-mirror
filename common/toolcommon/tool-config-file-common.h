@@ -261,6 +261,10 @@ struct config_file_data_ipmiconsole
   int serial_keepalive_count;
   int serial_keepalive_empty;
   int serial_keepalive_empty_count;
+  int sol_payload_instance;
+  int sol_payload_instance_count;
+  int deactivate_all_instances;
+  int deactivate_all_instances_count;
   int lock_memory;
   int lock_memory_count;
 };
