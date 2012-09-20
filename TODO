@@ -307,6 +307,10 @@ ipmi-oem
 --------
 dell poweredge lcd support?
 
+ipmiseld
+--------
+send e-mail on alert noticed/received?
+
 contributions
 -------------
 - perl extensions
