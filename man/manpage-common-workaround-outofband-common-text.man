@@ -17,5 +17,6 @@ use of this option, as it removes validation of packet integrity in a
 number of circumstances.  However, it is unlikely to be an issue in
 most situations.  Those hitting this issue may see "connection
 timeout", "session timeout", or "password verification timeout"
-errors.  Issue observed on Supermicro X9SCM-iiF and Supermicro
-X9DRi-F.
+errors.  On IPMI 1.5 connections, the "noauthcodecheck" workaround may
+also needed too.  Issue observed on Supermicro X9SCM-iiF and
+Supermicro X9DRi-F.
