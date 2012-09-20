@@ -1214,7 +1214,7 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
         encryption_activation = IPMI_ACTIVATE_PAYLOAD_WITH_ENCRYPTION;
 
       if (fill_cmd_activate_payload_sol (IPMI_PAYLOAD_TYPE_SOL,
-                                         c->session.sol_payload_instance,
+                                         (uint8_t)c->config.sol_payload_instance,
                                          sol_startup_handshake,
                                          IPMI_SERIAL_MODEM_ALERTS_FAIL_WHILE_SOL_ACTIVE,
                                          IPMI_TEST_MODE_DEACTIVATED,
@@ -1246,10 +1246,10 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
     {
       uint8_t payload_instance;
 
-      if (c->session.deactivate_payload_instances_and_try_again_flag)
+      if (c->session.deactivate_payload_instances)
         payload_instance = c->session.sol_instances_activated[c->session.sol_instances_deactivated_count];
       else
-        payload_instance = c->session.sol_payload_instance;
+        payload_instance = (uint8_t)c->config.sol_payload_instance;
 
       if (fill_cmd_deactivate_payload (IPMI_PAYLOAD_TYPE_SOL,
                                        payload_instance,

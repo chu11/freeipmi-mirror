@@ -358,6 +358,8 @@ main (int argc, char **argv)
     engine_config.behavior_flags |= IPMICONSOLE_BEHAVIOR_ERROR_ON_SOL_INUSE;
   if (cmd_args.deactivate)
     engine_config.behavior_flags |= IPMICONSOLE_BEHAVIOR_DEACTIVATE_ONLY;
+  if (cmd_args.deactivate_all_instances)
+    engine_config.behavior_flags |= IPMICONSOLE_BEHAVIOR_DEACTIVATE_ALL_INSTANCES;
   engine_config.debug_flags = debug_flags;
 
   if (!(c = ipmiconsole_ctx_create (cmd_args.common_args.hostname,
@@ -367,6 +369,17 @@ main (int argc, char **argv)
     {
       perror ("ipmiconsole_ctx_create");
       goto cleanup;
+    }
+
+  if (cmd_args.sol_payload_instance)
+    {
+      if (ipmiconsole_ctx_set_config (c,
+				      IPMICONSOLE_CTX_CONFIG_OPTION_SOL_PAYLOAD_INSTANCE,
+				      &(cmd_args.sol_payload_instance)) < 0)
+	{
+	  fprintf (stderr, "ipmiconsole_submit_block: %s\r\n", ipmiconsole_ctx_errormsg (c));
+	  goto cleanup;
+	}
     }
 
   if (ipmiconsole_engine_submit_block (c) < 0)

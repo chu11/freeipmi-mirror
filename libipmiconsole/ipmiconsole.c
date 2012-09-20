@@ -113,14 +113,15 @@ static char *ipmiconsole_errmsgs[] =
     NULL
   };
 
-#define IPMICONSOLE_ENGINE_CLOSE_FD_STR                  "closefd"
-#define IPMICONSOLE_ENGINE_OUTPUT_ON_SOL_ESTABLISHED_STR "outputonsolestablished"
-#define IPMICONSOLE_ENGINE_LOCK_MEMORY_STR               "lockmemory"
-#define IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE_STR          "serialkeepalive"
-#define IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE_EMPTY_STR    "serialkeepaliveempty"
+#define IPMICONSOLE_ENGINE_CLOSE_FD_STR                   "closefd"
+#define IPMICONSOLE_ENGINE_OUTPUT_ON_SOL_ESTABLISHED_STR  "outputonsolestablished"
+#define IPMICONSOLE_ENGINE_LOCK_MEMORY_STR                "lockmemory"
+#define IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE_STR           "serialkeepalive"
+#define IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE_EMPTY_STR     "serialkeepaliveempty"
 
-#define IPMICONSOLE_BEHAVIOR_ERROR_ON_SOL_INUSE_STR      "erroronsolinuse"
-#define IPMICONSOLE_BEHAVIOR_DEACTIVATE_ONLY_STR         "deactivateonly"
+#define IPMICONSOLE_BEHAVIOR_ERROR_ON_SOL_INUSE_STR       "erroronsolinuse"
+#define IPMICONSOLE_BEHAVIOR_DEACTIVATE_ONLY_STR          "deactivateonly"
+#define IPMICONSOLE_BEHAVIOR_DEACTIVATE_ALL_INSTANCES_STR "deactivateallinstances"
 
 #define IPMICONSOLE_DEBUG_STDOUT_STR                     "stdout"
 #define IPMICONSOLE_DEBUG_STDERR_STR                     "stderr"
@@ -406,6 +407,8 @@ _config_file_behavior_flags (conffile_t cf,
         behavior_flags |= IPMICONSOLE_BEHAVIOR_ERROR_ON_SOL_INUSE;
       else if (!strcasecmp (data->stringlist[i], IPMICONSOLE_BEHAVIOR_DEACTIVATE_ONLY_STR))
         behavior_flags |= IPMICONSOLE_BEHAVIOR_DEACTIVATE_ONLY;
+      else if (!strcasecmp (data->stringlist[i], IPMICONSOLE_BEHAVIOR_DEACTIVATE_ALL_INSTANCES_STR))
+        behavior_flags |= IPMICONSOLE_BEHAVIOR_DEACTIVATE_ALL_INSTANCES;
       else
         IPMICONSOLE_DEBUG (("libipmiconsole config file behavior flag invalid"));
     }
@@ -454,6 +457,34 @@ _config_file_debug_flags (conffile_t cf,
 }
 
 static int
+_config_file_sol_payload_instance (conffile_t cf,
+				   struct conffile_data *data,
+				   char *optionname,
+				   int option_type,
+				   void *option_ptr,
+				   int option_data,
+				   void *app_ptr,
+				   int app_data)
+{
+  unsigned int *value;
+
+  assert (data);
+  assert (option_ptr);
+
+  value = (unsigned int *)option_ptr;
+  
+  if (data->intval <= 0
+      || !IPMI_PAYLOAD_INSTANCE_VALID (data->intval))
+    {
+      IPMICONSOLE_DEBUG (("libipmiconsole config file %s invalid", optionname));
+      return (0);
+    }
+
+  *value = (unsigned int)data->intval;
+  return (0);
+}
+
+static int
 _ipmiconsole_defaults_setup (void)
 {
   int libipmiconsole_context_username_count = 0, libipmiconsole_context_password_count = 0,
@@ -469,7 +500,8 @@ _ipmiconsole_defaults_setup (void)
     libipmiconsole_context_maximum_retransmission_count_count = 0,
     libipmiconsole_context_engine_flags_count = 0,
     libipmiconsole_context_behavior_flags_count = 0,
-    libipmiconsole_context_debug_flags_count = 0;
+    libipmiconsole_context_debug_flags_count = 0,
+    libipmiconsole_context_sol_payload_instance_count = 0;
 
   struct conffile_option libipmiconsole_options[] =
     {
@@ -649,6 +681,17 @@ _ipmiconsole_defaults_setup (void)
         NULL,
         0,
       },
+      {
+        "libipmiconsole-context-sol-payload-instance",
+        CONFFILE_OPTION_INT,
+        -1,
+	_config_file_sol_payload_instance,
+        1,
+        0,
+        &libipmiconsole_context_sol_payload_instance_count,
+        &(default_config.sol_payload_instance),
+        0
+      },
     };
 
   conffile_t cf = NULL;
@@ -668,6 +711,7 @@ _ipmiconsole_defaults_setup (void)
   default_config.retransmission_keepalive_timeout_len = IPMICONSOLE_RETRANSMISSION_KEEPALIVE_TIMEOUT_LENGTH_DEFAULT;
   default_config.acceptable_packet_errors_count = IPMICONSOLE_ACCEPTABLE_PACKET_ERRORS_COUNT_DEFAULT;
   default_config.maximum_retransmission_count = IPMICONSOLE_MAXIMUM_RETRANSMISSION_COUNT_DEFAULT;
+  default_config.sol_payload_instance = IPMI_PAYLOAD_INSTANCE_DEFAULT;
 
   if (!(cf = conffile_handle_create ()))
     {
@@ -1256,6 +1300,85 @@ ipmiconsole_ctx_create (const char *hostname,
   else
     free (c);
   return (NULL);
+}
+
+int
+ipmiconsole_ctx_set_config (ipmiconsole_ctx_t c,
+			    ipmiconsole_ctx_config_option_t config_option,
+			    void *config_option_value)
+{
+  unsigned int *tmpptr;
+
+  if (!c
+      || c->magic != IPMICONSOLE_CTX_MAGIC
+      || c->api_magic != IPMICONSOLE_CTX_API_MAGIC)
+    return (-1);
+
+  if ((config_option != IPMICONSOLE_CTX_CONFIG_OPTION_SOL_PAYLOAD_INSTANCE)
+      || !config_option_value)
+    {
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if (c->session_submitted)
+    {
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_CTX_IS_SUBMITTED);
+      return (-1);
+    }
+
+  switch (config_option)
+    {
+    case IPMICONSOLE_CTX_CONFIG_OPTION_SOL_PAYLOAD_INSTANCE:
+      tmpptr = (unsigned int *)config_option_value;
+      if (!IPMI_PAYLOAD_INSTANCE_VALID((*tmpptr)))
+	{
+	  ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_PARAMETERS);
+	  return (-1);
+	}
+      c->config.sol_payload_instance = *(tmpptr);
+      break;
+    default:
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
+      return (-1);
+    }
+
+  ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SUCCESS);
+  return (0);
+}
+
+int
+ipmiconsole_ctx_get_config (ipmiconsole_ctx_t c,
+			    ipmiconsole_ctx_config_option_t config_option,
+			    void *config_option_value)
+{
+  unsigned int *tmpptr;
+
+  if (!c
+      || c->magic != IPMICONSOLE_CTX_MAGIC
+      || c->api_magic != IPMICONSOLE_CTX_API_MAGIC)
+    return (-1);
+
+  if ((config_option != IPMICONSOLE_CTX_CONFIG_OPTION_SOL_PAYLOAD_INSTANCE)
+      || !config_option_value)
+    {
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  switch (config_option)
+    {
+    case IPMICONSOLE_CTX_CONFIG_OPTION_SOL_PAYLOAD_INSTANCE:
+      tmpptr = (unsigned int *)config_option_value;
+      (*tmpptr) = c->config.sol_payload_instance;
+      break;
+    default:
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
+      return (-1);
+    }
+
+  ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SUCCESS);
+  return (0);
 }
 
 int

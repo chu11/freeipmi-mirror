@@ -26,6 +26,18 @@ extern "C" {
 #include <stdint.h>
 #include <freeipmi/fiid/fiid.h>
 
+/* achu: 4 bit field is 1 based
+ *
+ * note that Get Payload Activation Status returns instance status for
+ * 16 instances, which is not possible.
+ */
+#define IPMI_PAYLOAD_INSTANCE_MIN 1
+#define IPMI_PAYLOAD_INSTANCE_MAX 15
+
+#define IPMI_PAYLOAD_INSTANCE_VALID(__val) \
+  (((__val) >= IPMI_PAYLOAD_INSTANCE_MIN   \
+    || (__val) <= IPMI_PAYLOAD_INSTANCE_MAX) ? 1 : 0)
+
 #define IPMI_SOL_STARTUP_HANDSHAKE_CTS_AND_DCD_SDR_ASSERTED   0x0
 #define IPMI_SOL_STARTUP_HANDSHAKE_CTS_AND_DCD_SDR_DEASSERTED 0x1
 

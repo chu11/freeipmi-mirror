@@ -123,13 +123,15 @@ outputonsolestablished, lockmemory, serialkeepalive.
 \fBlibipmiconsole\-context\-behavior\-flags\fR \fIFLAGS\fR
 Specify default behavior flags to use.  Multiple flags can be
 specified separated by whitespace.  The following flags are supported:
-erroronsolinuse, deactivateonly.
+erroronsolinuse, deactivateonly, deactivateallinstances.
 .TP
 \fBlibipmiconsole\-context\-debug\-flags\fR \fIFLAGS\fR
 Specify default debug flags to use.  Multiple flags can be specified
 separated by whitespace.  The following flags are supported: stdout,
 stderr, syslog, file, ipmipackets.
-
+.TP
+\fBlibipmiconsole\-context\-sol\-payload\-instance\fR \fINUM\fR
+Specify default SOL payload instance.  Has range of 1 to 15.
 .SH "FILES"
 @LIBIPMICONSOLE_CONFIG_FILE_DEFAULT@
 

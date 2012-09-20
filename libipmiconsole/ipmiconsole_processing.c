@@ -2125,6 +2125,40 @@ _check_sol_supported (ipmiconsole_ctx_t c)
 }
 
 /*
+ * Return 1 if instance activated
+ * Return 0 if instance not activated
+ * Return -1 on error
+ */
+static int
+_check_sol_instance_activated (ipmiconsole_ctx_t c, uint8_t instance)
+{
+  char fieldstr[64];
+  uint64_t val;
+
+  assert (c);
+  assert (c->magic == IPMICONSOLE_CTX_MAGIC);
+  assert (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_PAYLOAD_ACTIVATION_STATUS_SENT);
+  assert (!c->session.deactivate_payload_instances);
+  assert (!c->session.deactivate_payload_instances_and_try_again_flag);
+	  
+  memset (fieldstr, '\0', 64);
+  snprintf (fieldstr, 64, "instance_%d", instance);
+
+  if (FIID_OBJ_GET (c->connection.obj_get_payload_activation_status_rs,
+		    fieldstr,
+		    &val) < 0)
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: '%s': %s",
+				 fieldstr,
+				 fiid_obj_errormsg (c->connection.obj_get_payload_activation_status_rs)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
+      return (-1);
+    }
+	  
+  return ((int)val);
+}
+
+/*
  * Return 1 if SOL is activated
  * Return 0 if SOL is not activated
  * Return -1 on error
@@ -2134,10 +2168,12 @@ _check_sol_activated (ipmiconsole_ctx_t c)
 {
   uint64_t val;
   unsigned int i;
+  int ret;
 
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
   assert (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_PAYLOAD_ACTIVATION_STATUS_SENT);
+  assert (!c->session.deactivate_payload_instances);
   assert (!c->session.deactivate_payload_instances_and_try_again_flag);
 
   /* May not be 0, see notes in _process_ctx() */
@@ -2182,29 +2218,31 @@ _check_sol_activated (ipmiconsole_ctx_t c)
       return (-1);
     }
 
-  for (i = 0; i < c->session.sol_instance_capacity; i++)
+  if (c->config.behavior_flags & IPMICONSOLE_BEHAVIOR_DEACTIVATE_ONLY
+      && c->config.behavior_flags & IPMICONSOLE_BEHAVIOR_DEACTIVATE_ALL_INSTANCES)
     {
-      char fieldstr[64];
+      for (i = 0; i < c->session.sol_instance_capacity; i++)
+	{
+	  if ((ret = _check_sol_instance_activated (c, i + 1)) < 0)
+	    return (-1);
 
-      memset (fieldstr, '\0', 64);
-      snprintf (fieldstr, 64, "instance_%d", i+1);
+	  if (ret)
+	    {
+	      c->session.sol_instances_activated[c->session.sol_instances_activated_count] = i+1;
+	      c->session.sol_instances_activated_count++;
+	    }
+	}
+    }
+  else
+    {
+      if ((ret = _check_sol_instance_activated (c, c->config.sol_payload_instance)) < 0)
+	return (-1);
 
-      if (FIID_OBJ_GET (c->connection.obj_get_payload_activation_status_rs,
-                        fieldstr,
-                        &val) < 0)
-        {
-          IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: '%s': %s",
-                                     fieldstr,
-                                     fiid_obj_errormsg (c->connection.obj_get_payload_activation_status_rs)));
-          ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-          return (-1);
-        }
-      
-      if (val)
-        {
-          c->session.sol_instances_activated[c->session.sol_instances_activated_count] = i+1;
-          c->session.sol_instances_activated_count++;
-        }
+      if (ret)
+	{
+	  c->session.sol_instances_activated[c->session.sol_instances_activated_count] = c->config.sol_payload_instance;
+	  c->session.sol_instances_activated_count++;
+	}
     }
   
   if (c->config.behavior_flags & IPMICONSOLE_BEHAVIOR_ERROR_ON_SOL_INUSE
@@ -2243,8 +2281,7 @@ _check_sol_activated2 (ipmiconsole_ctx_t c)
     }
   comp_code = val;
 
-  if (comp_code == IPMI_COMP_CODE_ACTIVATE_PAYLOAD_PAYLOAD_ALREADY_ACTIVE_ON_ANOTHER_SESSION
-      || comp_code == IPMI_COMP_CODE_ACTIVATE_PAYLOAD_PAYLOAD_ACTIVATION_LIMIT_REACHED)
+  if (comp_code == IPMI_COMP_CODE_ACTIVATE_PAYLOAD_PAYLOAD_ALREADY_ACTIVE_ON_ANOTHER_SESSION)
     {
       if (c->config.behavior_flags & IPMICONSOLE_BEHAVIOR_ERROR_ON_SOL_INUSE)
         {
@@ -2253,6 +2290,13 @@ _check_sol_activated2 (ipmiconsole_ctx_t c)
         }
 
       return (1);
+    }
+
+  if (comp_code == IPMI_COMP_CODE_ACTIVATE_PAYLOAD_PAYLOAD_ACTIVATION_LIMIT_REACHED)
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("SOL limit reached"));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_BMC_BUSY);
+      return (-1);
     }
 
   if (comp_code == IPMI_COMP_CODE_ACTIVATE_PAYLOAD_PAYLOAD_TYPE_IS_DISABLED)
@@ -3179,6 +3223,7 @@ _process_protocol_state_get_payload_activation_status_sent (ipmiconsole_ctx_t c)
     {
       if (ret)
         {
+	  c->session.deactivate_payload_instances++;
           if (_send_ipmi_packet (c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
             {
               c->session.close_session_flag++;
@@ -3203,6 +3248,7 @@ _process_protocol_state_get_payload_activation_status_sent (ipmiconsole_ctx_t c)
 
   if (ret)
     {
+      c->session.deactivate_payload_instances++;
       c->session.deactivate_payload_instances_and_try_again_flag++;
       if (_send_ipmi_packet (c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
         {
@@ -3700,12 +3746,29 @@ _process_protocol_state_deactivate_payload_sent (ipmiconsole_ctx_t c)
 
   if (c->config.behavior_flags & IPMICONSOLE_BEHAVIOR_DEACTIVATE_ONLY)
     {
-      c->session.deactivate_only_succeeded_flag++;
-      c->session.close_session_flag++;
-      if (_send_ipmi_packet (c, IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) < 0)
-        return (-1);
-      c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
-      return (0);
+      c->session.sol_instances_deactivated_count++;
+      if (c->session.sol_instances_activated_count == c->session.sol_instances_deactivated_count)
+	{
+	  c->session.deactivate_only_succeeded_flag++;
+	  c->session.close_session_flag++;
+	  if (_send_ipmi_packet (c, IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) < 0)
+	    return (-1);
+	  c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
+	  return (0);
+	}
+      else
+	{
+          if (_send_ipmi_packet (c, IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RQ) < 0)
+            {
+              c->session.close_session_flag++;
+              if (_send_ipmi_packet (c, IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) < 0)
+                return (-1);
+              c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_CLOSE_SESSION_SENT;
+              return (0);
+            }
+          c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_DEACTIVATE_PAYLOAD_SENT;
+          return (0);
+	}
     }
 
   if (c->session.close_session_flag || c->session.try_new_port_flag)
@@ -3720,6 +3783,7 @@ _process_protocol_state_deactivate_payload_sent (ipmiconsole_ctx_t c)
       c->session.sol_instances_deactivated_count++;
       if (c->session.sol_instances_activated_count == c->session.sol_instances_deactivated_count)
         {
+	  c->session.deactivate_payload_instances = 0; 
           c->session.deactivate_payload_instances_and_try_again_flag = 0;
           c->session.deactivate_active_payloads_count++;
 

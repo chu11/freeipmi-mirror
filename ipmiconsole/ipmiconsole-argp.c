@@ -89,13 +89,17 @@ static struct argp_option cmdline_options[] =
       "Occasionally send NUL characters to detect inactive serial connections.", 43},
     { "serial-keepalive-empty", SERIAL_KEEPALIVE_EMPTY_KEY, 0, 0,
       "Occasionally send empty SOL packets to detect inactive serial connections.", 44},
+    { "sol-payload-instance", SOL_PAYLOAD_INSTANCE_KEY, "NUM", 0,
+      "Specify SOL payload instance number.", 45},
+    { "deactivate-all-instances", DEACTIVATE_ALL_INSTANCES_KEY, 0, 0,
+      "Deactivate all payload instances instead of just the configured payload instance.", 46},
     { "lock-memory", LOCK_MEMORY_KEY, 0, 0,
-      "Lock sensitive information (such as usernames and passwords) in memory.", 45},
+      "Lock sensitive information (such as usernames and passwords) in memory.", 47},
 #ifndef NDEBUG
     { "debugfile", DEBUGFILE_KEY, 0, 0,
-      "Output debugging to the debugfile rather than to standard output.", 46},
+      "Output debugging to the debugfile rather than to standard output.", 48},
     { "noraw", NORAW_KEY, 0, 0,
-      "Don't enter terminal raw mode.", 47},
+      "Don't enter terminal raw mode.", 49},
 #endif
     { NULL, 0, NULL, 0, NULL, 0}
   };
@@ -116,6 +120,8 @@ static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   struct ipmiconsole_arguments *cmd_args;
+  char *endptr;
+  int tmp;
 
   assert (state);
   
@@ -137,6 +143,21 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case SERIAL_KEEPALIVE_EMPTY_KEY:       /* --serial-keepalive-empty */
       cmd_args->serial_keepalive_empty++;
+      break;
+    case SOL_PAYLOAD_INSTANCE_KEY: /* --sol-payload-instance */
+      errno = 0;
+      tmp = strtol (arg, &endptr, 0);
+      if (errno
+          || endptr[0] != '\0'
+	  || !IPMI_PAYLOAD_INSTANCE_VALID (tmp))
+        {
+	  fprintf (stderr, "invalid sol payload instance\n");
+          exit (EXIT_FAILURE);
+        }
+      cmd_args->sol_payload_instance = tmp;
+      break;
+    case DEACTIVATE_ALL_INSTANCES_KEY: /* --deactivate-all-instances */
+      cmd_args->deactivate_all_instances++;
       break;
     case LOCK_MEMORY_KEY:       /* --lock-memory */
       cmd_args->lock_memory++;
@@ -240,6 +261,8 @@ ipmiconsole_argp_parse (int argc, char **argv, struct ipmiconsole_arguments *cmd
   cmd_args->deactivate = 0;
   cmd_args->serial_keepalive = 0;
   cmd_args->serial_keepalive_empty = 0;
+  cmd_args->sol_payload_instance = 0;
+  cmd_args->deactivate_all_instances = 0;
   cmd_args->lock_memory = 0;
 #ifndef NDEBUG
   cmd_args->debugfile = 0;

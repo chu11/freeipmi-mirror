@@ -1346,6 +1346,12 @@ Specify if serial keepalive should be enabled by default.
 \fBipmiconsole\-serial\-keepalive\-empty\fR \fIENABLE|DISABLE\fR
 Specify if serial keepalive empty should be enabled by default.
 .TP
+\fBipmiconsole\-sol\-payload\-instance\fR \fINUM\fR
+Specify the default SOL payload instance.
+.TP
+\fBipmiconsole\-deactivate\-all\-instances\fR \fIENABLE|DISABLE\fR
+Specify if SOL deactivate should deactivate all instances by default.
+.TP
 \fBipmiconsole\-lock\-memory\fR \fIENABLE|DISABLE\fR
 Specify if memory should be locked by default.
 

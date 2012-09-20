@@ -5,6 +5,8 @@
     ipmiconsole_engine_submit_block;
     ipmiconsole_engine_teardown;
     ipmiconsole_ctx_create;
+    ipmiconsole_ctx_set_config;
+    ipmiconsole_ctx_get_config;
     ipmiconsole_ctx_errnum;
     ipmiconsole_ctx_strerror;
     ipmiconsole_ctx_errormsg;

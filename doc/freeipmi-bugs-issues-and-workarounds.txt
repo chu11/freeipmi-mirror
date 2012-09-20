@@ -778,6 +778,15 @@ Serial-Over-LAN Issue #18: [COMPLIANCE]
 
   Resolution: None
 
+Serial-Over-LAN Issue #19: [COMPLIANCE]
+
+  SOL payload instances are not completely independent of each other.
+  Deactivate of SOL payload instance #X may deactivate a different SOL
+  payload instance #Y.
+
+  Seen on: Supermicro X8DTG-D, Inventec 5442/Dell Xanadu III
+  Resolution: None 
+
 ----------------------------------------------------------------------
 
 ---------------------------------
