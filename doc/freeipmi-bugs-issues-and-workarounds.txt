@@ -769,6 +769,18 @@ Serial-Over-LAN Issue #18: [COMPLIANCE]
 
   Resolution: None
 
+Serial-Over-LAN Issue #19: [COMPLIANCE]
+
+  The deactivation of any SOL payload instance will always deactivate
+  payload instance #1. For example, deactivating payload instance #3
+  will deactivate payload instance #1.  This results in the firmware
+  being confused about what payload instances are currently active
+  vs. inactive.
+
+  Seen on: Supermicro X8DTG-D
+
+  Resolution: None 
+
 ----------------------------------------------------------------------
 
 ---------------------------------
