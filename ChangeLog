@@ -16,6 +16,9 @@
 	IPMICONSOLE_CTX_CONFIG_OPTION_SOL_PAYLOAD_INSTANCE configuration
 	option.  Support IPMICONSOLE_BEHAVIOR_DEACTIVATE_ALL_INSTANCES
 	behavior flag.
+
+	* ipmiconsole/: Add --sol-payload-instance and
+	--deactivate-all-instances options.
 	
 2012-09-07  Claudio Cesar Sanchez Tejeda <demonccc@gmail.com>
 
