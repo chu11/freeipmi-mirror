@@ -2218,7 +2218,8 @@ _check_sol_activated (ipmiconsole_ctx_t c)
       return (-1);
     }
 
-  if (c->config.behavior_flags & IPMICONSOLE_BEHAVIOR_DEACTIVATE_ALL_INSTANCES)
+  if (c->config.behavior_flags & IPMICONSOLE_BEHAVIOR_DEACTIVATE_ONLY
+      && c->config.behavior_flags & IPMICONSOLE_BEHAVIOR_DEACTIVATE_ALL_INSTANCES)
     {
       for (i = 0; i < c->session.sol_instance_capacity; i++)
 	{

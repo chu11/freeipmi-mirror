@@ -345,17 +345,12 @@ extern "C" {
  *
  * DEACTIVATE_ALL_INSTANCES
  *
- * Be default, when a SOL session is detected as in use,
- * libipmiconsole will deactivate the earlier SOL session, then
- * attempt to activate a new session.  By default, only the configured
- * SOL payload instance will be deactivated, not any other instance.
- * This flag will inform libipmiconsole to deactivate all presently
- * activated instances.  This may be useful in some environments in
- * which a single console manager should be responsible for all SOL
- * sessions and does not wish to not allow any other instances.
- *
- * This flag can be used alongside the DEACTIVATE_ONLY flag to
- * deactivate all present instances.
+ * When a SOL session is deactivated via the DEACTIVATE_ONLY flag,
+ * only the currently configured SOL payload instance will be
+ * deactivated, not any other instance.  This flag will inform
+ * libipmiconsole to deactivate all presently activated instances.
+ * This may be useful in a few circumstances where a user might want
+ * to deactivate all current sessions.
  * 
  * DEFAULT
  *
