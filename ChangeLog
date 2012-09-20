@@ -1,3 +1,32 @@
+2012-09-20  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/cmds/ipmi-rmcpplus-support-and-payload-cmds.h:
+	Create payload instance macros.
+
+	* libfreeipmi/cmds/ipmi-rmcpplus-support-and-payload-cmds.c (fill_cmd_activate_payload)
+	(fill_cmd_activate_payload_sol, fill_cmd_deactivate_payload)
+	(fill_cmd_suspend_resume_payload_encryption)
+	(fill_cmd_get_payload_instance_info): Add payload instance
+	parameter check.
+
+	* libipmiconsole/ (ipmiconsole_ctx_set_config)
+	(ipmiconsole_ctx_get_config): New functions.
+
+	* libipmiconsole/: Support
+	IPMICONSOLE_CTX_CONFIG_OPTION_SOL_PAYLOAD_INSTANCE configuration
+	option.  Support IPMICONSOLE_BEHAVIOR_DEACTIVATE_ALL_INSTANCES
+	behavior flag.
+
+	* libipmiconsole/: Report BMC_BUSY if SOL activation limit
+	reached.
+
+	* ipmiconsole/: Add --sol-payload-instance and
+	--deactivate-all-instances options.
+
+	* doc/freeipmi-testing.txt,
+	doc/freeipmi-bugs-issues-and-workarounds.txt: Update with SOL
+	instance discoveries.
+	
 2012-09-11  Albert Chu <chu11@llnl.gov>
 
 	* libipmiconsole/ipmiconsole.h.in: Fix comment English.

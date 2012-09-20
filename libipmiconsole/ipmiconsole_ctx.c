@@ -276,6 +276,8 @@ ipmiconsole_ctx_config_setup (ipmiconsole_ctx_t c,
   else
     c->config.debug_flags = default_config.debug_flags;
 
+  c->config.sol_payload_instance = default_config.sol_payload_instance;
+
   /* Data based on Configuration Parameters */
 
   if (ipmi_cipher_suite_id_to_algorithms (c->config.cipher_suite_id,
@@ -1198,6 +1200,7 @@ ipmiconsole_ctx_session_setup (ipmiconsole_ctx_t c)
   c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_START;
   c->session.close_session_flag = 0;
   c->session.try_new_port_flag = 0;
+  c->session.deactivate_payload_instances = 0;
   c->session.deactivate_payload_instances_and_try_again_flag = 0;
   c->session.close_timeout_flag = 0;
   c->session.deactivate_only_succeeded_flag = 0;
@@ -1267,8 +1270,6 @@ ipmiconsole_ctx_session_setup (ipmiconsole_ctx_t c)
   memset (c->session.confidentiality_key, '\0', IPMI_MAX_CONFIDENTIALITY_KEY_LENGTH);
   c->session.confidentiality_key_ptr = c->session.confidentiality_key;
   c->session.confidentiality_key_len = IPMI_MAX_CONFIDENTIALITY_KEY_LENGTH;
-
-  c->session.sol_payload_instance = IPMI_PAYLOAD_INSTANCE_DEFAULT;
 
   /* Following 3 will be calculated during session setup.  We only
    * memset/clear it here

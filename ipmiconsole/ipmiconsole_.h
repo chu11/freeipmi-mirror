@@ -45,11 +45,13 @@ enum ipmiconsole_argp_option_keys
     DEACTIVATE_KEY = 161,
     SERIAL_KEEPALIVE_KEY = 162,
     SERIAL_KEEPALIVE_EMPTY_KEY = 163,
-    LOCK_MEMORY_KEY = 164,
+    SOL_PAYLOAD_INSTANCE_KEY = 164,
+    DEACTIVATE_ALL_INSTANCES_KEY = 165,
+    LOCK_MEMORY_KEY = 166,
     ESCAPE_CHAR_KEY = 'e',
-    DEBUG_KEY = 165,
-    DEBUGFILE_KEY = 166,
-    NORAW_KEY = 167,
+    DEBUG_KEY = 167,
+    DEBUGFILE_KEY = 168,
+    NORAW_KEY = 169,
   };
 
 struct ipmiconsole_arguments
@@ -60,6 +62,8 @@ struct ipmiconsole_arguments
   int deactivate;
   int serial_keepalive;
   int serial_keepalive_empty;
+  unsigned int sol_payload_instance;
+  int deactivate_all_instances;
   int lock_memory;
 #ifndef NDEBUG
   int debugfile;

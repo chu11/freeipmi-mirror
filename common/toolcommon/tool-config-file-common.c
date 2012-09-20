@@ -1150,6 +1150,34 @@ _config_file_ipmiconsole_escape_char (conffile_t cf,
 }
 
 static int
+_config_file_ipmiconsole_sol_payload_instance (conffile_t cf,
+					       struct conffile_data *data,
+					       char *optionname,
+					       int option_type,
+					       void *option_ptr,
+					       int option_data,
+					       void *app_ptr,
+					       int app_data)
+{
+  unsigned int *value;
+
+  assert (data);
+  assert (optionname);
+  assert (option_ptr);
+
+  value = (unsigned int *)option_ptr;
+
+  if (!IPMI_PAYLOAD_INSTANCE_VALID (data->intval))
+    {
+      fprintf (stderr, "Config File Error: invalid value for %s\n", optionname);
+      exit (EXIT_FAILURE);
+    }
+  
+  *value = data->intval;
+  return (0);
+}
+
+static int
 _config_file_ipmipower_ipmi_version (conffile_t cf,
                                      struct conffile_data *data,
                                      char *optionname,
@@ -4245,6 +4273,28 @@ config_file_parse (const char *filename,
         0,
         &(ipmiconsole_data.serial_keepalive_empty_count),
         &(ipmiconsole_data.serial_keepalive_empty),
+        0,
+      },
+      {
+        "ipmiconsole-sol-payload-instance",
+        CONFFILE_OPTION_STRING,
+        -1,
+        _config_file_ipmiconsole_sol_payload_instance,
+        1,
+        0,
+        &(ipmiconsole_data.sol_payload_instance_count),
+        &(ipmiconsole_data.sol_payload_instance),
+        0
+      },
+      {
+        "ipmiconsole-deactivate-all-instances",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        _config_file_bool,
+        1,
+        0,
+        &(ipmiconsole_data.deactivate_all_instances_count),
+        &(ipmiconsole_data.deactivate_all_instances),
         0,
       },
       /* legacy - no ipmiconsole prefix */

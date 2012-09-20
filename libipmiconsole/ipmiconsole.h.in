@@ -343,14 +343,24 @@ extern "C" {
  * Only attempt to deactivate the SOL session.  If an SOL session is
  * not active, do nothing.
  *
+ * DEACTIVATE_ALL_INSTANCES
+ *
+ * When a SOL session is deactivated via the DEACTIVATE_ONLY flag,
+ * only the currently configured SOL payload instance will be
+ * deactivated, not any other instance.  This flag will inform
+ * libipmiconsole to deactivate all presently activated instances.
+ * This may be useful in a few circumstances where a user might want
+ * to deactivate all current sessions.
+ * 
  * DEFAULT
  *
  * Informs library to use default, may it be the standard default or
  * a default configured via libipmiconsole.conf.
  */
-#define IPMICONSOLE_BEHAVIOR_ERROR_ON_SOL_INUSE 0x00000001
-#define IPMICONSOLE_BEHAVIOR_DEACTIVATE_ONLY    0x00000002
-#define IPMICONSOLE_BEHAVIOR_DEFAULT            0xFFFFFFFF
+#define IPMICONSOLE_BEHAVIOR_ERROR_ON_SOL_INUSE       0x00000001
+#define IPMICONSOLE_BEHAVIOR_DEACTIVATE_ONLY          0x00000002
+#define IPMICONSOLE_BEHAVIOR_DEACTIVATE_ALL_INSTANCES 0x00000004
+#define IPMICONSOLE_BEHAVIOR_DEFAULT                  0xFFFFFFFF
 
 /*
  * Context Status
@@ -582,6 +592,31 @@ struct ipmiconsole_engine_config
   unsigned int debug_flags;
 };
 
+/*
+ * Context Config Option
+ *
+ * Used for setting or getting advanced configuration options.  See
+ * ipmiconsole_ctx_set_config_option() and
+ * ipmiconsole_ctx_get_config_option().
+ *
+ * SOL_PAYLOAD_INSTANCE
+ *
+ * The SOL payload instance number to be used.  Defaults to 1 and has
+ * range of 1 to 15.  Most systems only support a single instance,
+ * however a few allow users to access multiple.  They could be used
+ * to allow multiple users to see the same serial session, or allow
+ * users to access different serial sessions behind a device.  It is
+ * not commonly available or necessary when communicating via SOL to a
+ * single server.  The SOL payload instance number is specified and
+ * retrieved via a pointer to an unsigned int.
+ *
+ */
+enum ipmiconsole_ctx_config_option
+{
+  IPMICONSOLE_CTX_CONFIG_OPTION_SOL_PAYLOAD_INSTANCE = 0,
+};
+typedef enum ipmiconsole_ctx_config_option ipmiconsole_ctx_config_option_t;
+
 #define IPMICONSOLE_THREAD_COUNT_MAX       32
 
 typedef struct ipmiconsole_ctx *ipmiconsole_ctx_t;
@@ -768,6 +803,39 @@ ipmiconsole_ctx_t ipmiconsole_ctx_create (const char *hostname,
                                           struct ipmiconsole_ipmi_config *ipmi_config,
                                           struct ipmiconsole_protocol_config *protocol_config,
                                           struct ipmiconsole_engine_config *engine_config);
+
+/*
+ * ipmiconsole_ctx_set_config
+ *
+ * Set the value of an advanced configuration value.  This
+ * configuration value must be set prior to a context being submitted
+ * to the ipmiconsole engine (via ipmiconsole_engine_submit() or
+ * ipmiconsole_engine_submit_block()).  After it has been submitted to
+ * the ipmiconsole engine, it cannot be changed.
+ *
+ * See enum ipmiconsole_ctx_config_option above for config options and
+ * pointer types expected by this function.
+ *
+ * Returns 0 on success, -1 on error.  ipmiconsole_ctx_errnum() can be
+ * called to determine the cause of the error.
+ */
+int ipmiconsole_ctx_set_config (ipmiconsole_ctx_t c,
+				ipmiconsole_ctx_config_option_t config_option,
+                                void *config_option_value);
+/*
+ * ipmiconsole_ctx_get_config
+ *
+ * Get the value of an advanced configuration value.
+ *
+ * See enum ipmiconsole_ctx_config_option above for config options and
+ * pointer types expected by this function.
+ *
+ * Returns 0 on success, -1 on error.  ipmiconsole_ctx_errnum() can be
+ * called to determine the cause of the error.
+ */
+int ipmiconsole_ctx_get_config (ipmiconsole_ctx_t c,
+				ipmiconsole_ctx_config_option_t config_option,
+                                void *config_option_value);
 
 /*
  * ipmiconsole_ctx_errnum

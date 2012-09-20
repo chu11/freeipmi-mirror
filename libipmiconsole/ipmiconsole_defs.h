@@ -229,7 +229,8 @@ typedef enum
 
 #define IPMICONSOLE_BEHAVIOR_MASK           \
   (IPMICONSOLE_BEHAVIOR_ERROR_ON_SOL_INUSE  \
-   | IPMICONSOLE_BEHAVIOR_DEACTIVATE_ONLY)
+   | IPMICONSOLE_BEHAVIOR_DEACTIVATE_ONLY   \
+   | IPMICONSOLE_BEHAVIOR_DEACTIVATE_ALL_INSTANCES)
 
 #define IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_ESTABLISHED 0x1
 #define IPMICONSOLE_BLOCKING_NOTIFICATION_SOL_SESSION_ERROR       0x2
@@ -262,6 +263,9 @@ struct ipmiconsole_ctx_config {
   unsigned int engine_flags;
   unsigned int behavior_flags;
   unsigned int debug_flags;
+
+  /* advanced config */
+  unsigned int sol_payload_instance;
 
   /* Data based on Configuration Parameters */
   uint8_t authentication_algorithm;
@@ -355,6 +359,11 @@ struct ipmiconsole_ctx_session {
   ipmiconsole_protocol_state_t protocol_state;
   int close_session_flag;
   int try_new_port_flag;
+  int deactivate_payload_instances;
+  /* if deactivate_payload_instances_and_try_again_flag set,
+   * deactivate_payload_instances should always be set, but not vice
+   * versa
+   */
   int deactivate_payload_instances_and_try_again_flag;
   int close_timeout_flag;
   int deactivate_only_succeeded_flag;
@@ -388,7 +397,6 @@ struct ipmiconsole_ctx_session {
   void *confidentiality_key_ptr;
   unsigned int confidentiality_key_len;
 
-  uint8_t sol_payload_instance;
   uint32_t sol_instance_capacity;
   uint8_t sol_instances_activated[IPMI_INSTANCES_ACTIVATED_LENGTH];
   uint32_t sol_instances_activated_count;

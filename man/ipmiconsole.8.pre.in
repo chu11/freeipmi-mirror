@@ -102,7 +102,7 @@ This default behavior exists for several reasons, most notably that
 earlier SOL sessions may have not been able to be deactivate properly.
 .TP
 \fB\-\-deactivate\fR
-Deactivate a SOL session if one is detected as being in use and exit.
+Deactivate SOL session if one is detected as being in use and exit.
 .TP
 \fB\-\-serial\-keepalive\fR
 Occasionally send NUL characters to detect inactive serial
@@ -129,6 +129,16 @@ risk regularly sending a NUL character byte may have.  However, some
 systems may not ACK a SOL packet without character data in it, meaning
 these keepalive packets do nothing. 
 .TP
+\fB\-\-sol\-payload\-instance\fR=\fINUM\fR
+Specify the SOL payload instance number.  The default value is 1,
+valid values range from 1 to 15.  Most systems only support a single
+instance, however a few allow users to access multiple.
+.TP
+\fB\-\-deactivate\-all\-instances\fR
+When used along with the \fB\-\-deactivate\fR option, will deactivate
+all active SOL instances instead of just the currently configured
+payload instance.
+.TP
 \fB\-\-lock-memory\fR
 Lock sensitive information (such as usernames and passwords) in
 memory.
@@ -141,7 +151,6 @@ Output debugging to the debugfile rather than to standard output.
 Don't enter terminal raw mode.
 \}
 .LP
-
 .SH "ESCAPE CHARACTERS"
 The following escape sequences are supported.  The default supported
 escape character is '&', but can be changed with the 

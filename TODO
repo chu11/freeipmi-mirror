@@ -5,7 +5,6 @@ ooo - priority code cleanup that should be done
 branches to merge
 -----------------
 dellr720
-solinstance
 ignorechecksum
 
 to test
@@ -157,8 +156,6 @@ libipmiconsole
   conman and other console software. (***)
 - use conditional signals w/ garbage collector
   - should work, it's not like the poll loop from before
-- specify sol_payload_instance - pick between console instances (***)
-  - use case example, SOL to management controller controlling multiple devices
 - buffer character input chars and send in chunks as necessary (nagle like)
   - perhaps ~100ms of character data to reduce packets send?
   - as far as I can tell, most ssh implementations send 1 char at a time,
