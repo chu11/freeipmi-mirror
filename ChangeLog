@@ -17,8 +17,15 @@
 	option.  Support IPMICONSOLE_BEHAVIOR_DEACTIVATE_ALL_INSTANCES
 	behavior flag.
 
+	* libipmiconsole/: Report BMC_BUSY if SOL activation limit
+	reached.
+
 	* ipmiconsole/: Add --sol-payload-instance and
 	--deactivate-all-instances options.
+
+	* doc/freeipmi-testing.txt,
+	doc/freeipmi-bugs-issues-and-workarounds.txt: Update with SOL
+	instance discoveries.
 	
 2012-09-07  Claudio Cesar Sanchez Tejeda <demonccc@gmail.com>
 

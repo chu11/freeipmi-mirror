@@ -2281,8 +2281,7 @@ _check_sol_activated2 (ipmiconsole_ctx_t c)
     }
   comp_code = val;
 
-  if (comp_code == IPMI_COMP_CODE_ACTIVATE_PAYLOAD_PAYLOAD_ALREADY_ACTIVE_ON_ANOTHER_SESSION
-      || comp_code == IPMI_COMP_CODE_ACTIVATE_PAYLOAD_PAYLOAD_ACTIVATION_LIMIT_REACHED)
+  if (comp_code == IPMI_COMP_CODE_ACTIVATE_PAYLOAD_PAYLOAD_ALREADY_ACTIVE_ON_ANOTHER_SESSION)
     {
       if (c->config.behavior_flags & IPMICONSOLE_BEHAVIOR_ERROR_ON_SOL_INUSE)
         {
@@ -2291,6 +2290,13 @@ _check_sol_activated2 (ipmiconsole_ctx_t c)
         }
 
       return (1);
+    }
+
+  if (comp_code == IPMI_COMP_CODE_ACTIVATE_PAYLOAD_PAYLOAD_ACTIVATION_LIMIT_REACHED)
+    {
+      IPMICONSOLE_CTX_DEBUG (c, ("SOL limit reached"));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_BMC_BUSY);
+      return (-1);
     }
 
   if (comp_code == IPMI_COMP_CODE_ACTIVATE_PAYLOAD_PAYLOAD_TYPE_IS_DISABLED)
