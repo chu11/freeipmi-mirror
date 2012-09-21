@@ -1834,6 +1834,9 @@ fiid_obj_get (fiid_obj_t obj,
   if (field_len > 64)
     field_len = 64;
 
+  if (field_len > obj->field_data[key_index].set_field_len)
+    field_len = obj->field_data[key_index].set_field_len;
+
   byte_pos = start_bit_pos / 8;
 
   /* in byte_pos, start_bit_pos is  */

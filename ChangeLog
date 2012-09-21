@@ -1,3 +1,11 @@
+2012-09-21  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/debug/ipmi-debug.c (ipmi_obj_dump): Always output
+	SDR and SEL record data in byte array format.
+
+	* libfreeipmi/fiid/fiid.c (fiid_obj_get): Fix value retrieval
+	corner case, most notably coming up in debug output.
+	
 2012-09-20  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/cmds/ipmi-rmcpplus-support-and-payload-cmds.h:

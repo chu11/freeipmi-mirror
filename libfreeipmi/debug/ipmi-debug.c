@@ -140,7 +140,8 @@ ipmi_obj_dump (int fd,
       if (field_len <= 64
           && strcasecmp (key, "raw_data")
           && strcasecmp (key, "user_name")
-          && strcasecmp (key, "payload_data"))
+          && strcasecmp (key, "payload_data")
+	  && strcasecmp (key, "record_data"))
         {
           uint64_t val = 0;
 
