@@ -18,6 +18,8 @@ o In libipmiconsole, add support for specifying and handling different
     IPMICONSOLE_BEHAVIOR_DEACTIVATE_ALL_INSTANCES behavior flag.
   - Return more appropriate error codes when activation limits are
     discovered.
+o In libfreeipmi, fix debug output corner case when outputting byte
+  arrays.
 
 Misc
 ----
