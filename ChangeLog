@@ -1,3 +1,7 @@
+2012-09-27  Albert Chu <chu11@llnl.gov>
+
+	* man/manpage-common-workaround-extra-text.man: Fix typo.
+	
 2012-09-21  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/debug/ipmi-debug.c (ipmi_obj_dump): Always output
