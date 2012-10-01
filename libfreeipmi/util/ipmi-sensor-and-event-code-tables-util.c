@@ -1848,10 +1848,12 @@ ipmi_get_oem_sensor_type_message (uint32_t manufacturer_id,
    *
    * Dell Poweredge R610
    * Dell Poweredge R710
+   * Dell Poweredge R720
    */
   if (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && (product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-          || product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710))
+          || product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710
+	  || product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R720))
     {
       switch (sensor_type)
         {

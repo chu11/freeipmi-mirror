@@ -93,7 +93,8 @@ sel_string_output_dell_event_data1_class_sensor_specific_discrete (ipmi_sel_ctx_
    * Dell Poweredge R710
    */
   if ((ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-       || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
+       || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710
+       || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R720)
       && (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS
           || system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING
           || system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_NON_FATAL_ERROR
@@ -490,6 +491,47 @@ sel_string_output_dell_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 
     }
 
+  /* OEM Interpretation
+   *
+   * Dell Poweredge R720
+   */
+  if (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R720)
+    {
+      /* From Dell Spec */
+      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_NON_FATAL_ERROR
+	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_OEM_DELL_NON_FATAL_ERROR_QPI_LINK_DEGRADE
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_DELL_QPI_LINK_ERROR_SENSOR)
+        {
+	  uint8_t reporting_agent_id;
+	  uint8_t reporting_agent_link_id;
+	  uint8_t partner_agent_id;
+	  uint8_t partner_link_id;
+
+	  reporting_agent_id = (system_event_record_data->event_data2 & IPMI_OEM_DELL_EVENT_DATA2_QPI_LINK_ERROR_REPORTING_AGENT_ID_BITMASK);
+	  reporting_agent_id >>= IPMI_OEM_DELL_EVENT_DATA2_QPI_LINK_ERROR_REPORTING_AGENT_ID_SHIFT;
+
+	  reporting_agent_link_id = (system_event_record_data->event_data2 & IPMI_OEM_DELL_EVENT_DATA2_QPI_LINK_ERROR_REPORTING_AGENT_LINK_ID_BITMASK);
+	  reporting_agent_link_id >>= IPMI_OEM_DELL_EVENT_DATA2_QPI_LINK_ERROR_REPORTING_AGENT_LINK_ID_SHIFT;
+
+	  partner_agent_id = (system_event_record_data->event_data2 & IPMI_OEM_DELL_EVENT_DATA2_QPI_LINK_ERROR_PARTNER_AGENT_ID_BITMASK);
+	  partner_agent_id >>= IPMI_OEM_DELL_EVENT_DATA2_QPI_LINK_ERROR_PARTNER_AGENT_ID_SHIFT;
+
+	  partner_link_id = (system_event_record_data->event_data2 & IPMI_OEM_DELL_EVENT_DATA2_QPI_LINK_ERROR_PARTNER_LINK_ID_BITMASK);
+	  partner_link_id >>= IPMI_OEM_DELL_EVENT_DATA2_QPI_LINK_ERROR_PARTNER_LINK_ID_SHIFT;
+
+	  snprintf (tmpbuf,
+		    tmpbuflen,
+		    "Reporting Agent ID %u, Reporting Agent Link ID %u, Partner Agent ID %u, Partner Link ID %u",
+		    reporting_agent_id,
+		    reporting_agent_link_id,
+		    partner_agent_id,
+		    partner_link_id);
+
+	  return (1);
+        }
+    }
+
   /* achu: I don't know what motherboards this applies to, probably very old ones */
 #if 0
   /* OEM Interpretation   
@@ -706,6 +748,81 @@ sel_string_output_dell_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
                     system_event_record_data->event_data3);
           
           return (1);
+        }
+    }
+
+  /* OEM Interpretation
+   *
+   * Dell Poweredge R720
+   */
+  if (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R720)
+    {
+      /* From Dell Spec */
+      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_NON_FATAL_ERROR
+	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_OEM_DELL_NON_FATAL_ERROR_QPI_LINK_DEGRADE
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_DELL_QPI_LINK_ERROR_SENSOR)
+        {
+	  uint8_t reporting_agent_type;
+	  uint8_t partner_agent_type;
+	  uint8_t error_type;
+	  char *reporting_agent_type_str;
+	  char *partner_agent_type_str;
+	  char *error_type_str;
+
+	  reporting_agent_type = (system_event_record_data->event_data3 & IPMI_OEM_DELL_EVENT_DATA3_QPI_LINK_ERROR_REPORTING_AGENT_TYPE_BITMASK);
+	  reporting_agent_type >>= IPMI_OEM_DELL_EVENT_DATA3_QPI_LINK_ERROR_REPORTING_AGENT_TYPE_SHIFT;
+
+	  partner_agent_type = (system_event_record_data->event_data3 & IPMI_OEM_DELL_EVENT_DATA3_QPI_LINK_ERROR_PARTNER_AGENT_TYPE_BITMASK);
+	  partner_agent_type >>= IPMI_OEM_DELL_EVENT_DATA3_QPI_LINK_ERROR_PARTNER_AGENT_TYPE_SHIFT;
+
+	  error_type = (system_event_record_data->event_data3 & IPMI_OEM_DELL_EVENT_DATA3_QPI_LINK_ERROR_ERROR_TYPE_BITMASK);
+	  error_type >>= IPMI_OEM_DELL_EVENT_DATA3_QPI_LINK_ERROR_ERROR_TYPE_SHIFT;
+
+	  switch (reporting_agent_type)
+	    {
+	    case IPMI_OEM_DELL_EVENT_DATA3_QPI_LINK_ERROR_AGENT_TYPE_CPU:
+	      reporting_agent_type_str = "CPU";
+	      break;
+	    case IPMI_OEM_DELL_EVENT_DATA3_QPI_LINK_ERROR_AGENT_TYPE_IOH:
+	      reporting_agent_type_str = "IOH";
+	      break;
+	    default:
+	      reporting_agent_type_str = "Unknown";
+	      break;
+	    }
+
+	  switch (partner_agent_type)
+	    {
+	    case IPMI_OEM_DELL_EVENT_DATA3_QPI_LINK_ERROR_AGENT_TYPE_CPU:
+	      partner_agent_type_str = "CPU";
+	      break;
+	    case IPMI_OEM_DELL_EVENT_DATA3_QPI_LINK_ERROR_AGENT_TYPE_IOH:
+	      partner_agent_type_str = "IOH";
+	      break;
+	    default:
+	      partner_agent_type_str = "Unknown";
+	      break;
+	    }
+
+	  switch (error_type)
+	    {
+	    case IPMI_OEM_DELL_EVENT_DATA3_QPI_LINK_ERROR_ERROR_TYPE_LINK_WIDTH_DEGRADED:
+	      error_type_str = "Link Width Degraded";
+	      break;
+	    default:
+	      error_type_str = "Unknown";
+	      break;
+	    }
+
+	  snprintf (tmpbuf,
+		    tmpbuflen,
+		    "Reporting Agent Type = %s, Partner Agent Type = %s, Error Type = %s",
+		    reporting_agent_type_str,
+		    partner_agent_type_str,
+		    error_type_str);
+	  
+	  return (1);
         }
     }
 

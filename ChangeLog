@@ -8,8 +8,18 @@
 	get-last-post-code.  Support new version of active-lom-status for
 	R720.  Support Dell specific OEM completion codes.
 
-	* libfreeipmi/include/freeipmi/spec/ipmi-oem-spec.h: Add updates
-	based on Dell documentation.
+	* libfreeipmi/include/freeipmi/spec/ipmi-oem-spec.h,
+	libfreeipmi/include/freeipmi/spec/ipmi-sensor-and-event-code-tables-oem-spec.h:
+	Add updates based on Dell documentation.
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-product-id-spec.h: Update
+	for new R720.
+
+	* libfreeipmi/util/ipmi-sensor-and-event-code-tables-util.c (ipmi_get_oem_sensor_type_message):
+	Support Dell R720.
+
+	* libfreeipmi/sel/ipmi-sel-string-dell.c: Update for new SEL
+	events in Dell R720.
 
 2012-07-24  Albert Chu <chu11@llnl.gov>
 
