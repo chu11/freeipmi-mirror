@@ -42,6 +42,12 @@ extern "C" {
 /* achu: names taken from code, are correct names? */
 #define IPMI_EVENT_READING_TYPE_CODE_OEM_DELL_OEM_DIAGNOSTIC_EVENT_DATA 0x7E
 
+/*
+ * Dell Poweredge R720
+ */
+
+#define IPMI_EVENT_READING_TYPE_CODE_OEM_DELL_FAILURE                   0x8A
+
 /*******************************************
  * Intel                                   *
  *******************************************/

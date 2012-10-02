@@ -45,6 +45,12 @@
  * Dell
  */
 
+/*
+ * Dell Poweredge R610
+ * Dell Poweredge R710
+ * Dell Poweredge R720
+ */
+
 const char * const ipmi_generic_event_reading_type_code_oem_dell_status[] =
   {
     "Absent",
@@ -59,6 +65,20 @@ const char * const ipmi_generic_event_reading_type_code_oem_dell_status[] =
     NULL
   };
 unsigned int ipmi_generic_event_reading_type_code_oem_dell_status_max_index = 0x08;
+
+/*
+ * Dell Poweredge R720
+ */
+
+const char * const ipmi_generic_event_reading_type_code_oem_dell_failure[] =
+  {
+    "undocumented",		/* not known yet */
+    "undocumented",		/* not known yet */
+    "undocumented",		/* not known yet */
+    "Memory failed to transition to Online",
+    NULL
+  };
+unsigned int ipmi_generic_event_reading_type_code_oem_dell_failure_max_index = 0x03;
 
 /*****************************
  * Sensor Type Strings (OEM) *
