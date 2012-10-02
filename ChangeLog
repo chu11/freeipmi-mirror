@@ -1,3 +1,9 @@
+2012-10-02  Albert Chu <chu11@llnl.gov>
+
+        * NEWS, configure.ac: Update for release.
+
+        * Tagged Release-1_2_2.
+
 2012-09-27  Albert Chu <chu11@llnl.gov>
 
 	* man/manpage-common-workaround-extra-text.man: Fix typo.
