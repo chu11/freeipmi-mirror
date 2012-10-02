@@ -1552,6 +1552,120 @@ _dell_version_change_entity_string (uint8_t data_entity)
 }
 #endif
 
+static int
+_dell_calculate_dimm_location (ipmi_sel_ctx_t ctx,
+			       struct ipmi_sel_entry *sel_entry,
+			       uint8_t sel_record_type,
+			       char *buf,
+			       unsigned int buflen,
+			       unsigned int flags,
+			       unsigned int *wlen,
+			       struct ipmi_sel_system_event_record_data *system_event_record_data,
+			       int *oem_rv,
+			       uint8_t dimms_per_node)
+{
+  char dimmstr[DELL_EVENT_BUFFER_LENGTH + 1];
+  uint8_t dimm_counter = 0;
+  unsigned int offset = 0;
+  int found = 0;
+  int len;
+  int i;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL);
+  assert (sel_entry);
+  assert (buf);
+  assert (buflen);
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (wlen);
+  assert (system_event_record_data);
+  assert (oem_rv);
+  assert (dimms_per_node);
+
+  /* achu:
+   * 
+   * DIMM locations can be thought of in this mapping, lets
+   * say dimms per node is 4.
+   *
+   * Dimm # = Location
+   * 1 = A1
+   * 2 = A2
+   * 3 = A3
+   * 4 = A4
+   * 5 = B1
+   * 6 = B2
+   * ...
+   * 
+   * lets say dimms per node is 9
+   *
+   * Dimm # = Location
+   * 1 = A1
+   * ...
+   * 8 = A8
+   * 9 = A9
+   * 10 = B1
+   * ...
+   */
+  
+  memset (dimmstr, '\0', DELL_EVENT_BUFFER_LENGTH + 1);
+
+  dimm_counter = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_DIMM_COUNTER_BITMASK);
+  dimm_counter >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_DIMM_COUNTER_SHIFT;
+  dimm_counter *= 8;
+
+  for (i = 0; i < 8; i++)
+    {
+      if (system_event_record_data->event_data3 & (0x1 << i))
+	{
+	  uint8_t node;
+	  uint8_t dimmnum;
+                      
+	  node = (dimm_counter + i) / dimms_per_node;
+          
+	  dimmnum  = ((dimm_counter + i) % dimms_per_node) + 1;
+          
+	  if (!found)
+	    len = snprintf (dimmstr + offset,
+			    DELL_EVENT_BUFFER_LENGTH - offset,
+			    "DIMM %c%u",
+			    'A' + node,
+			    dimmnum);
+	  else
+	    len = snprintf (dimmstr + offset,
+			    DELL_EVENT_BUFFER_LENGTH - offset,
+			    ", DIMM %c%u",
+			    'A' + node,
+			    dimmnum);
+                      
+	  offset += len;
+	  found++;
+
+	  if (offset >= DELL_EVENT_BUFFER_LENGTH)
+	    break;
+	  
+	  break;
+	}
+    }
+  
+  if (found)
+    {
+      if (sel_string_snprintf (buf,
+			       buflen,
+			       wlen,
+			       "%s",
+			       dimmstr))
+	(*oem_rv) = 1;
+      else
+	(*oem_rv) = 0;
+      
+      return (1);
+    }
+
+  return (0);
+}
+
 /* return (0) - no OEM match
  * return (1) - OEM match
  * return (-1) - error, cleanup and return error
@@ -1658,7 +1772,6 @@ sel_string_output_dell_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
        * e.g. Increment = 1
        *      DIMM bitmap = 00000001b = DIMM 9
        */
-      /* XXX R720 TODO  */
       if (((system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
             && ((system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
                  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CORRECTABLE_MEMORY_ERROR
@@ -1684,23 +1797,10 @@ sel_string_output_dell_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
           && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
           && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
         {
-          char dimmstr[DELL_EVENT_BUFFER_LENGTH + 1];
           uint8_t memory_card;
-          uint8_t dimm_counter = 0;
-          unsigned int offset = 0;
-          int len;
 
-          memset (dimmstr, '\0', DELL_EVENT_BUFFER_LENGTH + 1);
-          
           memory_card = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_MEMORY_CARD_BITMASK);
           memory_card >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_MEMORY_CARD_SHIFT;
-          
-          if (memory_card != IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_NO_CARD)
-            {
-              dimm_counter = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_DIMM_COUNTER_BITMASK);
-              dimm_counter >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_DIMM_COUNTER_SHIFT;
-              dimm_counter *= 8;
-            }
           
           if (memory_card == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_4_DIMMS_PER_NODE
               || memory_card == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_6_DIMMS_PER_NODE
@@ -1710,9 +1810,7 @@ sel_string_output_dell_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 	      || memory_card == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_24_DIMMS_PER_NODE)
             {
               uint8_t dimms_per_node;
-              int found = 0;
-              int i;
-              
+
               if (memory_card == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_4_DIMMS_PER_NODE)
                 dimms_per_node = 4;
               else if (memory_card == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_6_DIMMS_PER_NODE)
@@ -1723,87 +1821,36 @@ sel_string_output_dell_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
                 dimms_per_node = 9;
               else if (memory_card == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_12_DIMMS_PER_NODE)
                 dimms_per_node = 12;
-              else if (memory_card == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_24_DIMMS_PER_NODE)
+              else /* memory_card == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_24_DIMMS_PER_NODE */
                 dimms_per_node = 24;
               
-              /* achu:
-               * 
-               * DIMM locations can be thought of in this mapping, lets
-               * say dimms per node is 4.
-               *
-               * Dimm # = Location
-               * 1 = A1
-               * 2 = A2
-               * 3 = A3
-               * 4 = A4
-               * 5 = B1
-               * 6 = B2
-               * ...
-               * 
-               * lets say dimms per node is 9
-               *
-               * Dimm # = Location
-               * 1 = A1
-               * ...
-               * 8 = A8
-               * 9 = A9
-               * 10 = B1
-               * ...
-               */
-              
-              for (i = 0; i < 8; i++)
-                {
-                  if (system_event_record_data->event_data3 & (0x1 << i))
-                    {
-                      uint8_t node;
-                      uint8_t dimmnum;
-                      
-                      node = (dimm_counter + i) / dimms_per_node;
-                      
-                      dimmnum  = ((dimm_counter + i) % dimms_per_node) + 1;
-                      
-                      if (!found)
-                        len = snprintf (dimmstr + offset,
-                                        DELL_EVENT_BUFFER_LENGTH - offset,
-                                        "DIMM %c%u",
-                                        'A' + node,
-                                        dimmnum);
-                      else
-                        len = snprintf (dimmstr + offset,
-                                        DELL_EVENT_BUFFER_LENGTH - offset,
-                                        ", DIMM %c%u",
-                                        'A' + node,
-                                        dimmnum);
-                      
-                      offset += len;
-                      found++;
-
-                      if (offset >= DELL_EVENT_BUFFER_LENGTH)
-                        break;
-
-                      break;
-                    }
-                }
-              
-              if (found)
-                {
-                  if (sel_string_snprintf (buf,
-					   buflen,
-					   wlen,
-					   "%s",
-					   dimmstr))
-                    (*oem_rv) = 1;
-                  else
-                    (*oem_rv) = 0;
-                  
-                  return (1);
-                }
+	      if (_dell_calculate_dimm_location (ctx,
+						 sel_entry,
+						 sel_record_type,
+						 buf,
+						 buflen,
+						 flags,
+						 wlen,
+						 system_event_record_data,
+						 oem_rv,
+						 dimms_per_node) > 0)
+		return (1);
             }
           else
             {
+	      char dimmstr[DELL_EVENT_BUFFER_LENGTH + 1];
+	      unsigned int offset = 0;
+	      uint8_t dimm_counter = 0;
               int found = 0;
+	      int len;
               int i;
-              
+             
+	      memset (dimmstr, '\0', DELL_EVENT_BUFFER_LENGTH + 1);
+
+              dimm_counter = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_DIMM_COUNTER_BITMASK);
+              dimm_counter >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_DIMM_COUNTER_SHIFT;
+              dimm_counter *= 8;
+	      
               for (i = 0; i < 8; i++)
                 {
                   if (system_event_record_data->event_data3 & (0x1 << i))
@@ -2082,6 +2129,77 @@ sel_string_output_dell_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
           return (1);
         }
 
+    }
+
+  /* OEM Interpretation
+   *
+   * Dell Poweredge R720
+   */
+  if (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R720)
+    {
+      /* From Dell Spec and Dell Code
+       *
+       * Data2
+       * [7:4] - 0Eh = Use upper Nibble of Data1
+       * [3:0] - 0h - 0Fh = Bitmask Increment in Data3
+       *
+       * Data3
+       * [7:0] - 00h - FFh = DIMM bitmap
+       *
+       * e.g. Increment = 0
+       *      DIMM bitmap = 00000001b = DIMM 1
+       * e.g. Increment = 1
+       *      DIMM bitmap = 00000001b = DIMM 9
+       */
+      if (((system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+	    && ((system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+		 && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CORRECTABLE_MEMORY_ERROR
+		     || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_UNCORRECTABLE_MEMORY_ERROR
+		     || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_PRESENCE_DETECTED
+		     || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CONFIGURATION_ERROR
+		     || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CRITICAL_OVERTEMPERATURE))
+		|| (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED
+		    && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED_CORRECTABLE_MEMORY_ERROR_LOGGING_DISABLED)))
+	   || (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
+	       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+	       && (system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_FULLY_REDUNDANT
+		   || system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_REDUNDANCY_LOST))
+	   || (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
+	       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+	       && (system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY_TRANSITION_TO_NON_CRITICAL_FROM_OK
+		   || system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY_TRANSITION_TO_CRITICAL_FROM_LESS_SEVERE))
+	   || (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_DELL_FAILURE
+	       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+	       && system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_OEM_DELL_FAILURE_MEMORY_FAILED_TO_TRANSITION_TO_ONLINE))
+	  && (((system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_MEMORY_CARD_BITMASK) >> IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_MEMORY_CARD_SHIFT) == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_USE_DATA1_UPPER_NIBBLE)
+	  && ctx->ipmi_version_major == IPMI_2_0_MAJOR_VERSION
+          && ctx->ipmi_version_minor == IPMI_2_0_MINOR_VERSION)
+        {
+          uint8_t memory_card;
+
+          memory_card = (system_event_record_data->event_data2_flag << 2) | system_event_record_data->event_data3_flag;
+
+          if (memory_card == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA1_OEM_DELL_DIMMS_PER_PACKAGE_3)
+            {
+              uint8_t dimms_per_node;
+
+	      /* For future expansion, I know it looks silly right now */
+              if (memory_card == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA1_OEM_DELL_DIMMS_PER_PACKAGE_3)
+                dimms_per_node = 3;
+              
+	      if (_dell_calculate_dimm_location (ctx,
+						 sel_entry,
+						 sel_record_type,
+						 buf,
+						 buflen,
+						 flags,
+						 wlen,
+						 system_event_record_data,
+						 oem_rv,
+						 dimms_per_node) > 0)
+		return (1);
+            }
+        }
     }
 
   /* achu: I don't know what motherboards this applies to */
