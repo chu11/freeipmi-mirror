@@ -91,6 +91,7 @@ sel_string_output_dell_event_data1_class_sensor_specific_discrete (ipmi_sel_ctx_
    *
    * Dell Poweredge R610
    * Dell Poweredge R710
+   * Dell Poweredge R720
    */
   if ((ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
        || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710
@@ -174,11 +175,13 @@ sel_string_output_dell_event_data1_class_oem (ipmi_sel_ctx_t ctx,
    * Dell Poweredge 2950
    * Dell Poweredge R610
    * Dell Poweredge R710
+   * Dell Poweredge R720
    */
   if ((ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2900
        || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2950
        || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-       || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
+       || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710
+       || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R720)
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_DELL_OEM_DIAGNOSTIC_EVENT_DATA
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING)
     {
@@ -223,12 +226,12 @@ sel_string_output_dell_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
    * Dell Poweredge R610
    * Dell Poweredge R710
    */
-  if ((ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-       || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710))
+  if (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+      || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
     {
       /* From Dell Engineer and Dell code */
       if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
-          && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY)
+          && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY) /* XXX ON R720? */
         {
           if (system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY_INTRUSION_WHILE_SYSTEM_ON)
             {
@@ -252,10 +255,10 @@ sel_string_output_dell_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
       if ((system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
            && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PROCESSOR
            && system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY_TRANSITION_TO_NON_RECOVERABLE
-           && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_DELL_CPU_MACHINE_CHECK_ERROR)
+           && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_DELL_CPU_MACHINE_CHECK_ERROR) /* R720 */
           || (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
               && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PROCESSOR
-              && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_PROCESSOR_IERR))
+              && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_PROCESSOR_IERR)) /* R720 */
         {
           unsigned int num = 0;
           int found = 0;
@@ -286,7 +289,7 @@ sel_string_output_dell_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
       if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
           && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PROCESSOR
           && system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY_TRANSITION_TO_NON_RECOVERABLE
-          && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_DELL_CPU_PROTOCOL_ERROR)
+          && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_DELL_CPU_PROTOCOL_ERROR) /* R720 */
         {
           unsigned int num = 0;
           int found = 0;
@@ -323,7 +326,7 @@ sel_string_output_dell_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
               || system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA2_OEM_DELL_UNDER_VOLTAGE_FAULT
               || system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA2_OEM_DELL_OVER_VOLTAGE_FAULT
               || system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA2_OEM_DELL_OVER_CURRENT_FAULT
-              || system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA2_OEM_DELL_FAN_FAULT))
+              || system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA2_OEM_DELL_FAN_FAULT)) /* XXX ON R720? */
         {
 	  char *str;
 
@@ -362,7 +365,7 @@ sel_string_output_dell_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
       /* From Dell Spec */
       if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
           && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
-          && system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_FULLY_REDUNDANT)
+          && system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_FULLY_REDUNDANT) /* R720 */
         {
           char *str = NULL;
           
@@ -384,7 +387,7 @@ sel_string_output_dell_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
       /* From Dell Spec */
       if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
           && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS
-          && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_DELL_POST_FATAL_ERROR)
+          && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_DELL_POST_FATAL_ERROR) /* R720 */
         {
           char *error_code_str = NULL;
 
@@ -467,10 +470,10 @@ sel_string_output_dell_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
       /* From Dell Spec and Dell Code */
       if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
           && ((system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING
-               && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING_FAILED_TO_PROGRAM_VIRTUAL_MAC_ADDRESS)
+               && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING_FAILED_TO_PROGRAM_VIRTUAL_MAC_ADDRESS) /* R720 */
               || (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
                   && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_PERR
-                  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_DELL_CHIPSET_ERROR)))
+                  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_DELL_CHIPSET_ERROR))) /* R720 */
         {
           uint8_t device, function;
           
@@ -619,6 +622,7 @@ sel_string_output_dell_event_data2_class_oem (ipmi_sel_ctx_t ctx,
    * Dell Poweredge 2950
    * Dell Poweredge R610
    * Dell Poweredge R710
+   * Dell Poweredge R720
    *
    * offset_from_event_reading_type_code = register offset 11:8
    * data2 = register offset 0:7
@@ -626,7 +630,8 @@ sel_string_output_dell_event_data2_class_oem (ipmi_sel_ctx_t ctx,
   if ((ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2900
        || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2950
        || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-       || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
+       || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710
+       || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R720)
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_DELL_OEM_DIAGNOSTIC_EVENT_DATA
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING)
     {
@@ -683,11 +688,11 @@ sel_string_output_dell_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
       /* From Dell Spec */
       if ((system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
            && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PROCESSOR
-           && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_PROCESSOR_IERR)
+           && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_PROCESSOR_IERR) /* R720 */
           || (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
               && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PROCESSOR
               && system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY_TRANSITION_TO_NON_RECOVERABLE
-              && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_DELL_CPU_MACHINE_CHECK_ERROR))
+              && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_DELL_CPU_MACHINE_CHECK_ERROR)) /* R720 */
         {
           snprintf (tmpbuf,
                     tmpbuflen,
@@ -707,7 +712,7 @@ sel_string_output_dell_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
       if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
           && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
           && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_VERSION_CHANGE_HARDWARE_CHANGE_DETECTED_WITH_ASSOCIATED_ENTITY_WAS_SUCCESSFUL
-	  && system_event_record_data->event_direction == IPMI_SEL_RECORD_DEASSERTION_EVENT)
+	  && system_event_record_data->event_direction == IPMI_SEL_RECORD_DEASSERTION_EVENT) /* R720 */
         {
           uint8_t option_rom;
           
@@ -737,10 +742,10 @@ sel_string_output_dell_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
       /* From Dell Spec and Dell Code */
       if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
           && ((system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING
-               && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING_FAILED_TO_PROGRAM_VIRTUAL_MAC_ADDRESS)
+               && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING_FAILED_TO_PROGRAM_VIRTUAL_MAC_ADDRESS) /* R720 */
               || (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
                   && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_PERR
-                  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_DELL_CHIPSET_ERROR)))
+                  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_DELL_CHIPSET_ERROR))) /* R720 */
         {
           snprintf (tmpbuf,
                     tmpbuflen,
@@ -887,11 +892,13 @@ sel_string_output_dell_event_data3_class_oem (ipmi_sel_ctx_t ctx,
    * Dell Poweredge 2950
    * Dell Poweredge R610
    * Dell Poweredge R710
+   * Dell Poweredge R720
    */
   if ((ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2900
        || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2950
        || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-       || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
+       || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710
+       || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R720)
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_DELL_OEM_DIAGNOSTIC_EVENT_DATA
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING)
     {
@@ -970,7 +977,7 @@ sel_string_output_dell_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
           && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY
           && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_POWER_SUPPLY_CONFIGURATION_ERROR
           && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
-          && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+          && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE) /* XXX on R720? */ 
         {
           uint8_t event_data3_error_type;
 
@@ -1043,7 +1050,7 @@ sel_string_output_dell_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
           && ctx->ipmi_version_major == IPMI_2_0_MAJOR_VERSION
           && ctx->ipmi_version_minor == IPMI_2_0_MINOR_VERSION
           && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
-          && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+          && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE) /* XXX R720 TODO  */
         {
           char dimmstr[DELL_EVENT_BUFFER_LENGTH + 1];
           uint8_t memory_card;
@@ -1230,13 +1237,13 @@ sel_string_output_dell_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
       if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
           && ((system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
                && ((system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_PERR
-                    && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_DELL_PCI_PARITY_ERROR)
-                   || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_SERR
-                   || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_FATAL_ERROR))
+                    && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_DELL_PCI_PARITY_ERROR) /* R720 */
+                   || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_SERR /* R720 */
+                   || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_FATAL_ERROR)) /* R720 */
               || (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_NON_FATAL_ERROR
-                  && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_OEM_DELL_NON_FATAL_ERROR_PCIE_ERROR)
+                  && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_OEM_DELL_NON_FATAL_ERROR_PCIE_ERROR) /* R720 */
               || (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_FATAL_IO_ERROR
-                  && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_OEM_DELL_FATAL_IO_ERROR_FATAL_IO_ERROR))
+                  && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_OEM_DELL_FATAL_IO_ERROR_FATAL_IO_ERROR)) /* R720 */
           && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
           && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
         {
@@ -1297,7 +1304,7 @@ sel_string_output_dell_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
           && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
           && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_VERSION_CHANGE_HARDWARE_INCOMPATABILITY_DETECTED_WITH_ASSOCIATED_ENTITY
           && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
-          && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+          && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE) /* R720 */
         {
           if (system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_VERSION_CHANGE_EVENT_DATA2_OEM_DELL_MANAGEMENT_CONTROLLER_FIRMWARE_REVISION)
             {
@@ -1354,7 +1361,7 @@ sel_string_output_dell_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
           && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING
           && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING_DEVICE_OPTION_ROM_FAILED_TO_SUPPORT_LINK_TUNING_OR_FLEX_ADDRESS
           && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
-          && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+          && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE) /* R720 */
         {
           uint8_t option_rom;
           
