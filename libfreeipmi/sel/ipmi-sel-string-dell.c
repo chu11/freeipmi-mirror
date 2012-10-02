@@ -1676,7 +1676,7 @@ sel_string_output_dell_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
                && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
                && (system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY_TRANSITION_TO_NON_CRITICAL_FROM_OK
                    || system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY_TRANSITION_TO_CRITICAL_FROM_LESS_SEVERE))
-	   || (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_DELL_IDPT_MEMORY_ONLINE_FAILURE
+	   || (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_DELL_FAILURE
 	       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
 	       && system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_OEM_DELL_FAILURE_MEMORY_FAILED_TO_TRANSITION_TO_ONLINE))
           && ctx->ipmi_version_major == IPMI_2_0_MAJOR_VERSION
