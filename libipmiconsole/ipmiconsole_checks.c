@@ -68,6 +68,15 @@ ipmiconsole_check_checksum (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
           || p == IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS
           || p == IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS);
 
+  /* IPMI Workaround
+   *
+   * Discovered on Supermicro X9SCM-iiF, Supermicro X9DRi-F
+   *
+   * Checksums are computed incorrectly.
+   */
+  if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_NO_CHECKSUM_CHECK)
+    return (1);
+
   obj_cmd = ipmiconsole_packet_object (c, p);
   if ((rv = ipmi_lan_check_checksum (c->connection.obj_lan_msg_hdr_rs,
                                      obj_cmd,

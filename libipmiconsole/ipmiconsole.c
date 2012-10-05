@@ -330,6 +330,8 @@ _config_file_workaround_flags (conffile_t cf,
             workaround_flags |= IPMICONSOLE_WORKAROUND_OPEN_SESSION_PRIVILEGE;
           if (outofband_2_0_flags & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_NON_EMPTY_INTEGRITY_CHECK_VALUE)
             workaround_flags |= IPMICONSOLE_WORKAROUND_NON_EMPTY_INTEGRITY_CHECK_VALUE;
+          if (outofband_2_0_flags & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_NO_CHECKSUM_CHECK)
+            workaround_flags |= IPMICONSOLE_WORKAROUND_NO_CHECKSUM_CHECK;
         }
 
       if (section_flags)

@@ -184,6 +184,14 @@ extern "C" {
  * Suite ID 0.  The integrity check value should be 0 length, however
  * the remote motherboard responds with a non-empty field.
  *
+ * NO_CHECKSUM_CHECK
+ *
+ * This workaround option will work around motheboards that calculate
+ * checksums incorrectly in IPMI command responses, but the packet is
+ * otherwise valid.  Users are cautioned on the use of this option, as
+ * it removes some validation of packet integrity.  However, it is
+ * unlikely to be an issue in most situations.
+ *
  * IGNORE_SOL_PAYLOAD_SIZE
  *
  * This workaround flag will not check for valid SOL payload sizes and
@@ -216,6 +224,7 @@ extern "C" {
 #define IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION                 0x00000008
 #define IPMICONSOLE_WORKAROUND_OPEN_SESSION_PRIVILEGE          0x00000010
 #define IPMICONSOLE_WORKAROUND_NON_EMPTY_INTEGRITY_CHECK_VALUE 0x00000020
+#define IPMICONSOLE_WORKAROUND_NO_CHECKSUM_CHECK               0x00000040
 #define IPMICONSOLE_WORKAROUND_IGNORE_SOL_PAYLOAD_SIZE         0x01000000
 #define IPMICONSOLE_WORKAROUND_IGNORE_SOL_PORT                 0x02000000
 #define IPMICONSOLE_WORKAROUND_SKIP_SOL_ACTIVATION_STATUS      0x04000000
