@@ -6994,6 +6994,8 @@ ipmi_oem_dell_power_monitoring_interval_range (ipmi_oem_state_data_t *state_data
   return (rv);
 }
 
+#if 0
+/* cannot verify */
 int
 ipmi_oem_dell_get_blade_slot_id (ipmi_oem_state_data_t *state_data)
 {
@@ -7102,6 +7104,7 @@ ipmi_oem_dell_get_blade_slot_id (ipmi_oem_state_data_t *state_data)
  cleanup:
   return (rv);
 }
+#endif
 
 int
 ipmi_oem_dell_get_last_post_code (ipmi_oem_state_data_t *state_data)

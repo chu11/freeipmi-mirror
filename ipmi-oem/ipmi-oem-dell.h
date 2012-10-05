@@ -74,7 +74,10 @@ int ipmi_oem_dell_get_chassis_identify_status (ipmi_oem_state_data_t *state_data
 int ipmi_oem_dell_power_monitoring_over_interval (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_dell_power_monitoring_interval_range (ipmi_oem_state_data_t *state_data);
 
+#if 0
+/* cannot verify */
 int ipmi_oem_dell_get_blade_slot_id (ipmi_oem_state_data_t *state_data);
+#endif
 
 int ipmi_oem_dell_get_last_post_code (ipmi_oem_state_data_t *state_data);
 

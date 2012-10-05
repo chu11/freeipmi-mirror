@@ -374,6 +374,8 @@ struct ipmi_oem_command oem_dell[] =
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_power_monitoring_interval_range
     },
+#if 0
+/* cannot verify */
     {
       "get-blade-slot-id",
       NULL,
@@ -381,6 +383,7 @@ struct ipmi_oem_command oem_dell[] =
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_get_blade_slot_id
     },
+#endif
     { 
       "get-last-post-code",
       NULL,

@@ -279,10 +279,12 @@ Poweredge R720 (Dell 12G Poweredge systems).
 .TP
 .B power-monitoring-interval-range \fIsystempower|cpu1|cpu2|cpu3|cpu4|memory1|memory2|memory3|memory4|drives|fans|pciecards|gpucables\fR
 This OEM command will retrieve the monitoring intervals for a specified subsystem.  Command confirmed to work on Dell Poweredge R720 (Dell 12G Poweredge systems).
+.if 0 \{
 .TP
 .B get-blade-slot-id
 This OEM command will retrieve the current blade slot ID.  Command
 confirmed to work on Dell Poweredge R720.
+\}
 .TP
 .B get-last-post-code
 This OEM command will retrieve the last POST code and error string for
