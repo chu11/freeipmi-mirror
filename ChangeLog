@@ -6,6 +6,30 @@
 	Supermicro motherboards that incorrectly calculate packet
 	checksums.
 	
+2012-10-04  Albert Chu <chu11@llnl.gov>
+
+	Add OEM extension support for Dell Poweredge R720
+
+	* ipmi-oem/: Support Dell get-nic-selection-failover,
+	set-nic-selection-failover, power-monitoring-over-interval,
+	power-monitoring-interval-range, get-blade-slot-info,
+	get-last-post-code.  Support new version of active-lom-status for
+	R720.  Support Dell specific OEM completion codes.
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-oem-spec.h,
+	libfreeipmi/include/freeipmi/spec/ipmi-sensor-and-event-code-tables-oem-spec.h:
+	Add updates based on Dell documentation.
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-product-id-spec.h: Update
+	for new R720.
+
+	* libfreeipmi/util/ipmi-sensor-and-event-code-tables-util.c (ipmi_get_oem_sensor_type_message):
+	Support Dell R720.
+
+	* libfreeipmi/sel/ipmi-sel-string-dell.c: Update for new SEL
+	events in Dell R720.  Handle a few additional R610/R710 cases that
+	were missed in earlier changes.
+
 2012-09-27  Albert Chu <chu11@llnl.gov>
 
 	* man/manpage-common-workaround-extra-text.man: Fix typo.
@@ -149,30 +173,6 @@
 
 	* man/ipmi-oem.8.pre.in: Add motherboard support information.
 	
-2012-07-24  Albert Chu <chu11@llnl.gov>
-
-	Add OEM extension support for Dell Poweredge R720
-
-	* ipmi-oem/: Support Dell get-nic-selection-failover,
-	set-nic-selection-failover, power-monitoring-over-interval,
-	power-monitoring-interval-range, get-blade-slot-info,
-	get-last-post-code.  Support new version of active-lom-status for
-	R720.  Support Dell specific OEM completion codes.
-
-	* libfreeipmi/include/freeipmi/spec/ipmi-oem-spec.h,
-	libfreeipmi/include/freeipmi/spec/ipmi-sensor-and-event-code-tables-oem-spec.h:
-	Add updates based on Dell documentation.
-
-	* libfreeipmi/include/freeipmi/spec/ipmi-product-id-spec.h: Update
-	for new R720.
-
-	* libfreeipmi/util/ipmi-sensor-and-event-code-tables-util.c (ipmi_get_oem_sensor_type_message):
-	Support Dell R720.
-
-	* libfreeipmi/sel/ipmi-sel-string-dell.c: Update for new SEL
-	events in Dell R720.  Handle a few additional R610/R710 cases that
-	were missed in earlier changes.
-
 2012-07-24  Albert Chu <chu11@llnl.gov>
 
 	* Fix error output message after confirmation from vendor on text.
