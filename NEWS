@@ -2,24 +2,26 @@ FreeIPMI 1.2.3 - 10/02/12
 -------------------------
 Tools
 ------
-o In ipmi-oem, support new Dell R720 OEM commands extensions,
+o In ipmi-oem, support new Dell Poweredge R720 OEM commands extensions,
   including:
   - get-nic-selection-failover
   - set-nic-selection-failover
   - power-monitoring-over-interval
   - power-monitoring-interval-range
-  - get-blade-slot-info
   - get-last-post-code
-o In ipmi-oem, update active-lom-status for Dell R720.
-o In ipmi-oem, support new Dell R720 get-system-info option
+o In ipmi-oem, update active-lom-status for Dell Poweredge R720.
+o In ipmi-oem, support new Dell Poweredge R720 get-system-info option
   'cmc-info'.
 o In ipmi-oem, Dell get-system-info "slot-number" key changed to
   "blade-slot-info".  Legacy option still supported.
-o In ipmi-sel, support Dell R720 OEM SEL extensions.
+o In ipmi-sel, support Dell Poweredge R720 OEM SEL extensions.
+o In all tools, support nochecksumcheck workaround option.
 
 Libraries
 ---------
 o In libfreeipmi, support Dell R720 OEM extension intepretations.
+o In libfreeipmi, libipmimonitoring, and libipmiconsole, support
+  NO_CHECKSUM_CHECK workaround flag.
 
 Misc
 ----
