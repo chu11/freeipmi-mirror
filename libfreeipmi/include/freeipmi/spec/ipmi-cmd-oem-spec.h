@@ -30,6 +30,7 @@ extern "C" {
 /*
  * Dell Poweredge R610
  * Dell Poweredge R710
+ * Dell Poweredge R720
  */
 
 /* IPMI_NET_FN_OEM_GROUP_RQ / IPMI_NET_FN_OEM_GROUP_RS */
@@ -49,7 +50,9 @@ extern "C" {
 #define IPMI_CMD_OEM_DELL_POWER_MONITORING_OVER_A_SPECIFIED_AVERAGING_INTERVAL 0xB1
 #define IPMI_CMD_OEM_DELL_POWER_MONITORING_AVERAGING_INTERVAL_RANGE            0xB2
 #define IPMI_CMD_OEM_DELL_POWER_CONSUMPTION                                    0xB3
-#define IPMI_CMD_OEM_DELL_LCD_INFO                                             0xB5
+#define IPMI_CMD_OEM_DELL_FRONT_PANEL_INFO                                     0xB5
+/* renamed "front panel info" in 12g */
+#define IPMI_CMD_OEM_DELL_LCD_INFO                                             IPMI_CMD_OEM_DELL_FRONT_PANEL_INFO
 /* achu: this one is taken from code, is correct name? */
 #define IPMI_CMD_OEM_DELL_POWER_CAPACITY_STATUS                                0xBA
 #define IPMI_CMD_OEM_DELL_GET_POWER_HEAD_ROOM                                  0xBB
@@ -57,6 +60,18 @@ extern "C" {
 #define IPMI_CMD_OEM_DELL_GET_IDRAC_FIRMWARE_VERSION_NUMBER                    0xBF
 #define IPMI_CMD_OEM_DELL_GET_ACTIVE_LOM_STATUS                                0xC1
 #define IPMI_CMD_OEM_DELL_IDRAC_VIRTUAL_MAC                                    0xC9
+
+/*
+ * Dell Poweredge R720
+ */
+
+#define IPMI_CMD_OEM_DELL_GET_BLADE_SLOT_ID                                     0x18
+#define IPMI_CMD_OEM_DELL_SET_NIC_SELECTION_FAILOVER                            0x28
+#define IPMI_CMD_OEM_DELL_GET_NIC_SELECTION_FAILOVER                            0x29
+#define IPMI_CMD_OEM_DELL_FRESH_AIR                                             0x35
+#define IPMI_CMD_OEM_DELL_GET_LAST_POST_CODE                                    0x99
+#define IPMI_CMD_OEM_DELL_POWER_MONITORING_OVER_A_SPECIFIED_AVERAGING_INTERVAL2 0xCC
+#define IPMI_CMD_OEM_DELL_POWER_MONITORING_AVERAGING_INTERVAL_RANGE2            0xCD
 
 /*
  * Dell Poweredge C410x

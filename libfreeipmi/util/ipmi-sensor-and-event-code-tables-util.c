@@ -1810,10 +1810,12 @@ ipmi_get_oem_generic_event_message (uint32_t manufacturer_id,
    *
    * Dell Poweredge R610
    * Dell Poweredge R710
+   * Dell Poweredge R720
    */
   if (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && (product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-          || product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710))
+          || product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710
+          || product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R720))
     {
       switch (event_reading_type_code)
         {
@@ -1823,6 +1825,12 @@ ipmi_get_oem_generic_event_message (uint32_t manufacturer_id,
                                       buflen,
                                       ipmi_generic_event_reading_type_code_oem_dell_status_max_index,
                                       ipmi_generic_event_reading_type_code_oem_dell_status));
+        case IPMI_EVENT_READING_TYPE_CODE_OEM_DELL_FAILURE:
+          return (_get_event_message (offset,
+                                      buf,
+                                      buflen,
+                                      ipmi_generic_event_reading_type_code_oem_dell_failure_max_index,
+                                      ipmi_generic_event_reading_type_code_oem_dell_failure));
         }
     }
 
@@ -1848,10 +1856,12 @@ ipmi_get_oem_sensor_type_message (uint32_t manufacturer_id,
    *
    * Dell Poweredge R610
    * Dell Poweredge R710
+   * Dell Poweredge R720
    */
   if (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && (product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
-          || product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710))
+          || product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710
+	  || product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R720))
     {
       switch (sensor_type)
         {

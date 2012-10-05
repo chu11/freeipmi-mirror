@@ -30,6 +30,7 @@ extern "C" {
 /*
  * Dell Poweredge R610
  * Dell Poweredge R710
+ * Dell Poweredge R720
  */
 
 /* achu: names taken from code, are correct names? */

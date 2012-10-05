@@ -45,6 +45,12 @@
  * Dell
  */
 
+/*
+ * Dell Poweredge R610
+ * Dell Poweredge R710
+ * Dell Poweredge R720
+ */
+
 const char * const ipmi_generic_event_reading_type_code_oem_dell_status[] =
   {
     "Absent",
@@ -60,6 +66,20 @@ const char * const ipmi_generic_event_reading_type_code_oem_dell_status[] =
   };
 unsigned int ipmi_generic_event_reading_type_code_oem_dell_status_max_index = 0x08;
 
+/*
+ * Dell Poweredge R720
+ */
+
+const char * const ipmi_generic_event_reading_type_code_oem_dell_failure[] =
+  {
+    "undocumented",		/* not known yet */
+    "undocumented",		/* not known yet */
+    "undocumented",		/* not known yet */
+    "Memory failed to transition to Online",
+    NULL
+  };
+unsigned int ipmi_generic_event_reading_type_code_oem_dell_failure_max_index = 0x03;
+
 /*****************************
  * Sensor Type Strings (OEM) *
  *****************************/
@@ -71,6 +91,7 @@ unsigned int ipmi_generic_event_reading_type_code_oem_dell_status_max_index = 0x
 /*
  * Dell Poweredge R610
  * Dell Poweredge R710
+ * Dell Poweredge R720
  */
 /* achu:
  *
@@ -106,9 +127,10 @@ unsigned int ipmi_sensor_type_oem_dell_link_tuning_max_index = 0x03;
 const char * const ipmi_sensor_type_oem_dell_non_fatal_error[] =
   {
     "PCIe error",
-    NULL
+    "undocumented",		/* not known yet */
+    "QPI Link Degrade",
   };
-unsigned int ipmi_sensor_type_oem_dell_non_fatal_error_max_index = 0x00;
+unsigned int ipmi_sensor_type_oem_dell_non_fatal_error_max_index = 0x02;
 
 const char * const ipmi_sensor_type_oem_dell_fatal_io_error[] =
   {

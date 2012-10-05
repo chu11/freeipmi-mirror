@@ -96,10 +96,24 @@ struct ipmi_oem_command oem_dell[] =
       ipmi_oem_dell_set_nic_selection
     },
     {
-      "get-active-lom-status",
+      "get-nic-selection-failover",
       NULL,
       0,
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_dell_get_nic_selection_failover
+    },
+    {
+      "set-nic-selection-failover",
+      "<dedicated|lom1|lom2|lom3|lom4> <none|lom1|lom2|lom3|lom4|all>",
+      2,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_dell_set_nic_selection_failover
+    },
+    {
+      "get-active-lom-status",
+      "[v1|v2]",
+      0,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
       ipmi_oem_dell_get_active_lom_status
     },
     {
@@ -345,6 +359,34 @@ struct ipmi_oem_command oem_dell[] =
       1,
       IPMI_OEM_COMMAND_FLAGS_HIDDEN,
       ipmi_oem_inventec_set_sol_inactivity_timeout
+    },
+    {
+      "power-monitoring-over-interval",
+      "<interval> <systempower|cpu1|cpu2|cpu3|cpu4|memory1|memory2|memory3|memory4|drives|fans|pciecards|gpucables>",
+      2,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_dell_power_monitoring_over_interval
+    },
+    {
+      "power-monitoring-interval-range",
+      "<systempower|cpu1|cpu2|cpu3|cpu4|memory1|memory2|memory3|memory4|drives|fans|pciecards|gpucables>",
+      1,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_dell_power_monitoring_interval_range
+    },
+    {
+      "get-blade-slot-id",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_dell_get_blade_slot_id
+    },
+    { 
+      "get-last-post-code",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_dell_get_last_post_code
     },
     {
       "slot-power-toggle",

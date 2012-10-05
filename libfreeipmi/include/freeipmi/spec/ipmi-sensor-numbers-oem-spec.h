@@ -42,7 +42,7 @@ extern "C" {
 #define IPMI_SENSOR_NUMBER_OEM_DELL_UNKNOWN_ERROR                                       0x08
 #define IPMI_SENSOR_NUMBER_OEM_DELL_CPU_INTERNAL_ERROR                                  0x09
 #define IPMI_SENSOR_NUMBER_OEM_DELL_CPU_PROTOCOL_ERROR                                  0x0A
-#define IPMI_SENSOR_NUMBER_OEM_DELL_CPU_BUSS_PERR                                       0x0B
+#define IPMI_SENSOR_NUMBER_OEM_DELL_CPU_BUS_PERR                                        0x0B
 #define IPMI_SENSOR_NUMBER_OEM_DELL_CPU_BUS_INITIALIZATION_ERROR                        0x0C
 #define IPMI_SENSOR_NUMBER_OEM_DELL_CPU_MACHINE_CHECK_ERROR                             0x0D
 #define IPMI_SENSOR_NUMBER_OEM_DELL_MEMORY_SPARE                                        0x11
@@ -69,6 +69,9 @@ extern "C" {
 #define IPMI_SENSOR_NUMBER_OEM_DELL_NON_FATAL_PCI_EXPRESS_ERRORS                        0x26
 #define IPMI_SENSOR_NUMBER_OEM_DELL_FATAL_IO_ERROR                                      0x27
 #define IPMI_SENSOR_NUMBER_OEM_DELL_MSR_INFO_LOG                                        0x28
+#define IPMI_SENSOR_NUMBER_OEM_DELL_QPI_LINK_ERROR_SENSOR                               0x29
+#define IPMI_SENSOR_NUMBER_OEM_DELL_TXT_SX_SENTER_COMMAND_ERROR                         0x2A
+#define IPMI_SENSOR_NUMBER_OEM_DELL_IDPT_MEMORY_ONLINE_FAILURE                          0x2B
 
 /*
  * Dell Poweredge C410x

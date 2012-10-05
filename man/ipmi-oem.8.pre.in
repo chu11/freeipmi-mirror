@@ -80,13 +80,13 @@ This OEM command can retrieve the motherboard system information.
 Valid keys are \fIguid\fR, \fIasset\-tag\fR, \fIservice\-tag\fR,
 \fIchassis\-service\-tag\fR, \fIchassis\-related\-service\-tag\fR,
 \fIboard\-revision\fR, \fIplatform\-model\-name\fR,
-\fIslot\-number\fR, \fIsystem\-revision\fR, \fIidrac\-info\fR,
+\fIblade\-slot\-info\fR, \fIsystem\-revision\fR, \fIidrac\-info\fR,
 \fIidrac\-ipv4\-url\fR, \fIidrac\-gui\-webserver\-control\fR,
-\fIcmc\-ipv4\-url\fR, \fIcmc\-ipv6\-info\fR, \fIcmc\-ipv6\-url\fR,
-\fImac\-addresses\fR.  Command confirmed to work on Dell Poweredge
-2900, 2950, R610, R710, M600, M610, M610X, M910, and R905.  However,
-individual system information options may not be readable or available
-on every system.
+\fIcmc\-info\fR, \fIcmc\-ipv4\-url\fR, \fIcmc\-ipv6\-info\fR,
+\fIcmc\-ipv6\-url\fR, \fImac\-addresses\fR.  Command confirmed to work
+on Dell Poweredge 2900, 2950, R610, R710, R720, M600, M610, M610X,
+M910, and R905.  However, individual system information options may
+not be readable or available on every system.
 .TP
 .B get-nic-selection
 This OEM command will determine the current NIC selection for IPMI as
@@ -107,10 +107,25 @@ Poweredge systems, \fIshared_failover_nic2\fR may have been documented
 as just \fIfailover\fR.  Command confirmed to work on Dell Poweredge
 2900, 2950, R610, R710, and R905.
 .TP
-.B get-active-lom-status
+.B get-nic-selection-failover
+This OEM command will determine the current NIC selection for IPMI and
+the failover NIC.  Command confirmed to work on Dell Poweredge R720
+(Dell 12G Poweredge systems).
+.TP
+.B set-nic-section-failover \fIdedicated|lom1|lom2|lom3|lom4\fR \fInone|lom1|lom2|lom3|lom4|all\fR
+This OEM command will set the current NIC selection for IPMI and the
+failover NIC.  The first option sets the IPMI NIC and the second
+option the failover NIC.  Command confirmed to work on Dell Poweredge
+R720 (Dell 12G Poweredge systems).
+.TP
+.B get-active-lom-status \fI[v1|v2]\fR
 This OEM command will get the current NIC being used for out of band
-management.  Command confirmed to work on Dell Poweredge R610 and R710
-(Dell 11G Poweredge systems).
+management and possibly additional information.  Users may specify if
+version 1 or version 2 of this extension should be executed.  If no
+version is specified, version 1 is exectued.  Version 1 of this
+command confirmed to work on Dell Poweredge R610 and R710 (Dell 11G
+Poweredge systems).  Version 2 of this command confirmed to work on
+Dell Poweredge R720 (Dell 12G Poweredge systems).
 .TP
 .B get-ssh-config
 This OEM command will get the current SSH configuration on the IPMI
@@ -251,6 +266,27 @@ and R710 (Dell 11G Poweredge systems).
 This OEM command will retrieve the current chassis identify (i.e. LED)
 status.  Command confirmed to work on Dell Poweredge 2900, 2950, R610,
 R710, R905, M600, M610, M610x, and M910.
+.TP
+.B power-monitoring-over-interval \fIinterval\fR \fIsystempower|cpu1|cpu2|cpu3|cpu4|memory1|memory2|memory3|memory4|drives|fans|pciecards|gpucables\fR
+This OEM command will retrieve power consumption information from a
+specified subsystem for a specified interval time.  If the interval is
+between 30 and 900s, the average, minimum, and maximum power value can
+also be retrieved.  If the interval is between 5 and 30 seconds, only
+the average power consumption can be returned.  See
+\fIpower\-monitoring\-interval\-range\fR below to determine legal
+intervals for each subsystem.  Command confirmed to work on Dell
+Poweredge R720 (Dell 12G Poweredge systems).
+.TP
+.B power-monitoring-interval-range \fIsystempower|cpu1|cpu2|cpu3|cpu4|memory1|memory2|memory3|memory4|drives|fans|pciecards|gpucables\fR
+This OEM command will retrieve the monitoring intervals for a specified subsystem.  Command confirmed to work on Dell Poweredge R720 (Dell 12G Poweredge systems).
+.TP
+.B get-blade-slot-id
+This OEM command will retrieve the current blade slot ID.  Command
+confirmed to work on Dell Poweredge R720.
+.TP
+.B get-last-post-code
+This OEM command will retrieve the last POST code and error string for
+it.  Command confirmed to work on Dell Poweredge R720.
 .TP
 .B slot-power-toggle \fIslot-number\fR
 This OEM command will perform a power toggle on a PCIe slot.  The PCIe
