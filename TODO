@@ -112,8 +112,12 @@ libfreeipmi-fiid
 
 libfreeipmi-driver
 ------------------
+- kcs/ssif/etc
+  - how to deal with servers w/ multiple BMCs (***)
+  - need knew inband option on tools? 
 - ssif userspace implementation
   - see ipmiutil for example
+
   
 libfreeipmi-api
 ---------------
