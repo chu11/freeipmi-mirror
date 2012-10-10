@@ -16,6 +16,8 @@ o In ipmi-oem, Dell get-system-info "slot-number" key changed to
   "blade-slot-info".  Legacy option still supported.
 o In ipmi-sel, support Dell Poweredge R720 OEM SEL extensions.
 o In all tools, support nochecksumcheck workaround option.
+o In all daemons (ipmiseld, ipmidetectd, bmc-watchdog), check for
+  syscall errors during daemon setup.
 
 Libraries
 ---------
