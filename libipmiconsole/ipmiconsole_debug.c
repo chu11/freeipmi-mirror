@@ -78,13 +78,19 @@ ipmiconsole_debug_setup (uint32_t debug_flags)
   if (console_debug_flags & IPMICONSOLE_DEBUG_FILE)
     {
       char filename[MAXPATHLEN];
+      pid_t pid;
+
+      pid = getpid();
+
       snprintf (filename,
                 MAXPATHLEN,
-                "%s/%s",
-                IPMICONSOLE_DEBUG_DIRECTORY,
-                IPMICONSOLE_DEBUG_FILENAME);
+                "%s.%d",
+                IPMICONSOLE_DEBUG_FILENAME,
+		pid);
 
-      if ((console_debug_fd = open (filename, O_CREAT | O_APPEND | O_WRONLY, 0600)) < 0)
+      if ((console_debug_fd = open (filename,
+				    O_CREAT | O_APPEND | O_WRONLY | O_EXCL,
+				    0600)) < 0)
         {
           console_debug_flags &= ~IPMICONSOLE_DEBUG_FILE;
           IPMICONSOLE_DEBUG (("open: %s", strerror (errno)));

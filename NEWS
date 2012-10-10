@@ -24,6 +24,9 @@ Libraries
 o In libfreeipmi, support Dell R720 OEM extension intepretations.
 o In libfreeipmi, libipmimonitoring, and libipmiconsole, support
   NO_CHECKSUM_CHECK workaround flag.
+o In libipmiconsole, IPMICONSOLE_DEBUG_FILE logs debug to files in
+  current working directory and not /var/log.  PID is also appended to
+  debug files.
 
 Misc
 ----

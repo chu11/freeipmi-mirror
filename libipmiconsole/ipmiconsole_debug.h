@@ -34,11 +34,6 @@
 #include "ipmiconsole.h"
 #include "ipmiconsole_defs.h"
 
-#ifndef NDEBUG
-#define IPMICONSOLE_DEBUG_DIRECTORY    "/tmp"
-#else  /* !NDEBUG */
-#define IPMICONSOLE_DEBUG_DIRECTORY    "/var/log/ipmiconsole"
-#endif /* !NDEBUG */
 #define IPMICONSOLE_DEBUG_FILENAME     "ipmiconsole_debug"
 
 #define IPMICONSOLE_DEBUG_ERROR_BUFLEN 4096

@@ -108,7 +108,7 @@ extern "C" {
  * STDOUT       - Output debugging to stdout
  * STDERR       - Output debugging to stderr
  * SYSLOG       - Output debugging to the Syslog
- * FILE         - Output debugging to the default debug file
+ * FILE         - Output debugging to files in current working directory
  * IPMI_PACKETS - Dump IPMI Packets too
  * DEFAULT      - Informs library to use default, may it be standard
  *                or configured via libipmiconsole.conf.
