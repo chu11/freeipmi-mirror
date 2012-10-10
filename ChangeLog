@@ -1,3 +1,8 @@
+2012-10-09  Dave Walker <DaveWalker@ubuntu.com>,
+
+	* common/toolcommon/tool-daemon-common.c (daemonize_common): Check
+	read and write for errors.
+	
 2012-10-05  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/, libipmiconsole/, libipmimonitoring/,

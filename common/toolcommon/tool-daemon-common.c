@@ -75,7 +75,8 @@ daemonize_common (const char *pidfile)
     {
       /* parent terminates */
       char buf;
-      read(fds[0], &buf, 1);
+      if (read(fds[0], &buf, 1) < 0)
+	err_exit ("read: %s", strerror (errno));
       close(fds[1]);
       close(fds[0]);
       exit (0);
@@ -113,7 +114,8 @@ daemonize_common (const char *pidfile)
 
   umask (0);
 
-  write(fds[1], "a", 1);
+  if (write(fds[1], "a", 1) < 0)
+    err_exit ("write: %s", strerror (errno));
   close(fds[1]);
   close(fds[0]);
   for (i = 0; i < 64; i++)
