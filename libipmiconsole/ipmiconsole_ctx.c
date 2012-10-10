@@ -350,15 +350,19 @@ ipmiconsole_ctx_debug_setup (ipmiconsole_ctx_t c)
   if (c->config.debug_flags & IPMICONSOLE_DEBUG_FILE)
     {
       char filename[MAXPATHLEN];
+      pid_t pid;
+
+      pid = getpid();
+
       snprintf (filename,
                 MAXPATHLEN,
-                "%s/%s.%s",
-                IPMICONSOLE_DEBUG_DIRECTORY,
+                "%s.%s.%d",
                 IPMICONSOLE_DEBUG_FILENAME,
-                c->config.hostname);
+                c->config.hostname,
+		pid);
 
       if ((c->debug.debug_fd = open (filename,
-                                     O_CREAT | O_APPEND | O_WRONLY,
+                                     O_CREAT | O_APPEND | O_WRONLY | O_EXCL,
                                      0600)) < 0)
         {
           c->config.debug_flags &= ~IPMICONSOLE_DEBUG_FILE;
