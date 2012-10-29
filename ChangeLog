@@ -1,3 +1,7 @@
+2012-10-29  Albert Chu <chu11@llnl.gov>
+
+	* man/: Fix typos.
+	
 2012-10-10  Albert Chu <chu11@llnl.gov>
 
 	* libipmiconsole/: IPMICONSOLE_DEBUG_FILE now dumps to current

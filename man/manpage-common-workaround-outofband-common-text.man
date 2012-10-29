@@ -9,7 +9,7 @@ unavailable for attempted privilege level", or "k_g invalid" errors.
 Issue observed on Asus P5M2/P5MT-R/RS162-E4/RX4, Intel SR1520ML/X38ML,
 and Sun Fire 2200/4150/4450 with ELOM.
 .LP
-\fnochecksumcheck\fR - This workaround flag will tell FreeIPMI to not
+\fInochecksumcheck\fR - This workaround flag will tell FreeIPMI to not
 check the checksums returned from IPMI command responses.  It works
 around systems that return invalid checksums due to implementation
 errors, but the packet is otherwise valid.  Users are cautioned on the

@@ -29,7 +29,7 @@ connection stage.  Those hitting this issue may see "password
 invalid", "k_g invalid", or "bad rmcpplus status code" errors.  Issue
 observed on Sun Fire 4100/4200/4500 with ILOM, Inventec 5441/Dell
 Xanadu II, Supermicro X8DTH, Supermicro X8DTG, Intel S5500WBV/Penguin
-Relion 700, Intel S2600JF/Appro 512X, and Quanta QSSC-S4R//Appro
+Relion 700, Intel S2600JF/Appro 512X, and Quanta QSSC-S4R/Appro
 GB812X-CN.  This workaround is automatically triggered with the
 "sun20" workaround.
 .LP
