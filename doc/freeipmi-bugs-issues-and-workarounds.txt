@@ -461,7 +461,7 @@ LAN Session Issue #7: [COMPLIANCE]
 
   LAN session headers contain invalid checksums.
 
-  Seen on: Supermicro X9SCM-iiF, Supermicro X9DRi-F
+  Seen on: Supermicro X9SCM-iiF, Supermicro X9DRi-F, Supermicro X9DRFR
 
   Resolution: Workaround option added to inform software to ignore bad
   checksums.
@@ -1706,7 +1706,7 @@ Misc IPMI Issue #2: [COMPLIANCE]
   The Get System Info Parameters command returns insufficient
   privilege level (0xD4) even when the privilege level is sufficient.
 
-  Seen on: Supermicro X8DTL-3F
+  Seen on: Supermicro X8DTL-3F, Supermicro X9DRFR
 
   Resolution: None, user should attempt to authenticate at a higher
   privilege level.
