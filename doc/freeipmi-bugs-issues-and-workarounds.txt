@@ -1250,7 +1250,7 @@ Sensors Issue #2: [COMPLIANCE]
   sensor state of 0x40 is returned, but 0x1 through 0x20 are the only
   legal ones.
 
-  Seen on: Dell 2950
+  Seen on: Dell 2950, SuperMicro X9DRI-LN4F+
 
   Resolution: Workaround added to ignore invalid sensor states.
 
