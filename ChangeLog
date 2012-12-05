@@ -1,3 +1,7 @@
+2012-12-05  Albert Chu <chu11@llnl.gov>
+
+	* Add support for Supermicro X9DRI-LN4F+ OEM sensors/events.
+	
 2012-10-29  Albert Chu <chu11@llnl.gov>
 
 	* man/: Fix typos.
