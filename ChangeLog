@@ -2,6 +2,12 @@
 
 	* Add support for Supermicro X9DRI-LN4F+ OEM sensors/events.
 	
+2012-11-14  Albert Chu <chu11@llnl.gov>
+
+        * NEWS, configure.ac: Update for release.
+
+        * Tagged Release-1_2_3.
+
 2012-10-29  Albert Chu <chu11@llnl.gov>
 
 	* man/: Fix typos.
