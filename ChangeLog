@@ -1,3 +1,10 @@
+2012-01-09  Albert Chu <chu11@llnl.gov>
+
+	* common/miscutil/heap.c (heap_insert, heap_pop): Fix mutex unlock
+	corner case on error cases.
+
+	* common/miscutil/heap.c: Remove unused legacy code.
+	
 2012-12-05  Albert Chu <chu11@llnl.gov>
 
 	* Add support for Supermicro X9DRI-LN4F+ OEM sensors/events.

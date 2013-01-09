@@ -99,7 +99,6 @@
  *  Constants  *
  ***************/
 
-#define LIST_ALLOC        32
 #define HEAP_MAGIC        0x12345678
 #define HEAP_SIZE_DEFAULT 64
 #define HEAP_SIZE_MINIMUM 4
@@ -128,35 +127,6 @@ struct heap
   unsigned int          magic;        /* sentinel for asserting validity   */
 #endif /* !NDEBUG */
 };
-
-typedef struct listNode * ListNode;
-
-
-/****************
- *  Prototypes  *
- ****************/
-
-#if 0
-static void * list_node_create (List l, ListNode *pp, void *x);
-static void * list_node_destroy (List l, ListNode *pp);
-static List list_alloc (void);
-static void list_free (List l);
-static ListNode list_node_alloc (void);
-static void list_node_free (ListNode p);
-static ListIterator list_iterator_alloc (void);
-static void list_iterator_free (ListIterator i);
-static void * list_alloc_aux (int size, void *pfreelist);
-static void list_free_aux (void *x, void *pfreelist);
-#endif
-
-/***************
- *  Variables  *
- ***************/
-
-#ifdef WITH_PTHREADS
-static pthread_mutex_t list_free_lock = PTHREAD_MUTEX_INITIALIZER;
-#endif /* WITH_PTHREADS */
-
 
 /************
  *  Macros  *
@@ -371,16 +341,21 @@ heap_insert (Heap h, void *x)
   if (h->count == h->size)
     {
       errno = ENOSPC;
+      heap_mutex_unlock (&h->mutex);
       return (NULL);
     }
 
   if (!(v = heap_node_create (h, &p, x)))
-    return (NULL);
+    {
+      heap_mutex_unlock (&h->mutex);
+      return (NULL);
+    }
 
   if (!h->count)
     {
       h->heaparray[0] = p;
       h->count++;
+      heap_mutex_unlock (&h->mutex);
       return (v);
     }
 
@@ -410,7 +385,10 @@ heap_pop (Heap h)
   assert (h->magic == HEAP_MAGIC);
 
   if (!h->count)
-    return (NULL);
+    {
+      heap_mutex_unlock (&h->mutex);
+      return (NULL);
+    }
 
   v = heap_node_destroy (h, h->heaparray[0]);
 
@@ -418,6 +396,7 @@ heap_pop (Heap h)
     {
       h->heaparray[0] = NULL;
       h->count--;
+      heap_mutex_unlock (&h->mutex);
       return (v);
     }
 
