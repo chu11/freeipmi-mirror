@@ -1381,8 +1381,12 @@ ipmi_cmd_alert_immediate (ipmi_ctx_t ctx,
     }
 
   /* remaining parameter checks in fill function */
-  if (!fiid_obj_valid (obj_cmd_rs)) ;
-
+  if (!fiid_obj_valid (obj_cmd_rs))
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
+  
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
                                  tmpl_cmd_alert_immediate_rs) < 0)
     {

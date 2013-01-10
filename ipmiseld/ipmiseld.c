@@ -1522,6 +1522,7 @@ _alloc_host_data (ipmiseld_prog_data_t *prog_data, const char *hostname)
       if (!(host_data->hostname = strdup (hostname)))
 	{
 	  err_output ("strdup: %s", strerror (errno));
+	  free (host_data);
 	  return (NULL);
 	}
     }

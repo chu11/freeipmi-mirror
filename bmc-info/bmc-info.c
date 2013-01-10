@@ -1163,6 +1163,7 @@ display_channel_info (bmc_info_state_data_t *state_data)
 	  break;
 	case IPMI_SESSION_SUPPORT_SESSION_BASED:
 	  session_support_str = "session-based";
+	  break;
 	default:
 	  session_support_str = "unknown";
 	}

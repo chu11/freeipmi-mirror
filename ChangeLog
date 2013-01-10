@@ -1,3 +1,41 @@
+2013-01-09  Albert Chu <chu11@llnl.gov>
+
+	Fix bugs found by static code analysis done by Redhat/Fedora.
+
+	* ipmidetect/ipmidetect-argp.c (_read_nodes_from_stdin): Fix
+	potential NUL termination corner case.
+
+	* libfreeipmi/sel/ipmi-sel-string-intel.c (sel_string_output_intel_event_data3_discrete_oem)
+	(sel_string_output_intel_event_data2_event_data3): Fix potential
+	initialization bug.
+
+	* libfreeipmi/interface/rmcp-interface.c (assemble_rmcp_pkt): Fix
+	copy and paste error output.
+
+	* libfreeipmi/api/ipmi-pef-and-alerting-cmds-api.c (ipmi_cmd_alert_immediate):
+	Fix cut and paste bug.
+
+	* libfreeipmi/api/ipmi-api.c (ipmi_ctx_destroy): Fix memset size
+	bug.
+
+	* libfreeipmi/api/ipmi-lan-session-common.c (api_lan_2_0_cmd_wrapper):
+	Add assert to protect against potential API mis-call and
+	subsequent segfault.
+
+	* libfreeipmi/util/ipmi-util.c (ipmi_get_random): Fix potential fd leak.
+
+	* bmc-info/bmc-info.c (display_channel_info): Add missing break.
+
+	* ipmi-pet/ipmi-pet.c (_ipmi_pet_form_sel_record): Fix unsigned vs
+	signed int mis-assignment.
+
+	* ipmiseld/ipmiseld.c (_alloc_host_data): Fix error case mem-leak.
+
+	* bmc-watchdog/bmc-watchdog-argp.c (cmdline_parse): Add missing break;
+
+	* ipmi-oem/ipmi-oem-intel.c (ipmi_oem_intel_set_power_restore_delay):
+	Fix invalid shift.
+
 2012-01-09  Albert Chu <chu11@llnl.gov>
 
 	* common/miscutil/heap.c (heap_insert, heap_pop): Fix mutex unlock
