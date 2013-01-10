@@ -1,4 +1,4 @@
-FreeIPMI 1.2.4 - 01/10/12
+FreeIPMI 1.2.4 - 01/10/13
 -------------------------
 o Support Supermicro X9DRI-LN4F+ OEM sensors and events.
 o Fix output corner case for "session-based" channels.
