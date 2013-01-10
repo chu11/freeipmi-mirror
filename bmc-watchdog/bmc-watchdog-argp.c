@@ -460,6 +460,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case START_IF_STOPPED_KEY:
       cmd_args->start_if_stopped++;
+      break;
     case RESET_IF_RUNNING_KEY:
       cmd_args->reset_if_running++;
       break;

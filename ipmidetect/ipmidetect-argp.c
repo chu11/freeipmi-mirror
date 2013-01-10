@@ -119,6 +119,8 @@ _read_nodes_from_stdin (struct ipmidetect_arguments *cmd_args)
 
   assert (cmd_args);
 
+  memset (buf, '\0', IPMIDETECT_STDIN_BUFFERLEN);
+
   if ((n = fd_read_n (STDIN_FILENO, buf, IPMIDETECT_STDIN_BUFFERLEN)) < 0)
     err_exit ("error reading from standard input: %s", strerror (errno));
 

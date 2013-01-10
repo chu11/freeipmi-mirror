@@ -1314,8 +1314,8 @@ sel_string_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 	  uint8_t channel_number;
 	  uint8_t dimm_slot_id;
 	  char *processor_socket_str;
-	  char *channel_number_str;
-	  char channel_number_char = 0;	/* remove warning */
+	  char channel_number_str[INTEL_EVENT_BUFFER_LENGTH + 1];
+	  char channel_number_char = 0;
 	  char *dimm_slot_id_str;
 	  int processor_socket_valid = 0;
 	  int channel_number_valid = 0;
@@ -1358,15 +1358,24 @@ sel_string_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 	      channel_number_char = 'C';
 	      channel_number_valid++;
 	    }
-	  else
-	    channel_number_str = "Unknown";
-	  
+
 	  if (processor_socket_valid && channel_number_valid)
 	    {
 	      /* If we're on socket #2, the DIMMs jump from A-C, to D-F */
 	      if (processor_socket == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_PROCESSOR_SOCKET_2)
 		channel_number_char += 3;
 	    }
+
+	  memset (channel_number_str, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
+	  if (channel_number_valid && channel_number_char)
+	    snprintf(channel_number_str,
+		     INTEL_EVENT_BUFFER_LENGTH,
+		     "%c",
+		     channel_number_char);
+	  else
+	    snprintf(channel_number_str,
+		     INTEL_EVENT_BUFFER_LENGTH,
+		     "Unknown");
 
 	  if (dimm_slot_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_DIMM_SOCKET_1)
 	    {
@@ -1385,8 +1394,8 @@ sel_string_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 	    {
 	      snprintf (tmpbuf,
 			tmpbuflen,
-			"DIMM = %c%s",
-			channel_number_char,
+			"DIMM = %s%s",
+			channel_number_str,
 			dimm_slot_id_str);
 	    }
 	  else
@@ -2324,8 +2333,8 @@ sel_string_output_intel_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 	  uint8_t dimm_slot_id;
 	  char *error_type_str;
 	  char *processor_socket_str;
-	  char *channel_number_str;
-	  char channel_number_char = 0;	/* remove warning */
+	  char channel_number_str[INTEL_EVENT_BUFFER_LENGTH];
+	  char channel_number_char = 0;
 	  char *dimm_slot_id_str;
 	  int processor_socket_valid = 0;
 	  int channel_number_valid = 0;
@@ -2386,11 +2395,7 @@ sel_string_output_intel_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 		  channel_number_char = 'C';
 		  channel_number_valid++;
 		}
-	      else
-		channel_number_str = "Unknown";
 	    }
-	  else
-	    channel_number_str = "Unknown";
 
 	  if (processor_socket_valid && channel_number_valid)
             {
@@ -2398,6 +2403,17 @@ sel_string_output_intel_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
               if (processor_socket == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_PROCESSOR_SOCKET_2)
                 channel_number_char += 3;
             }
+
+	  memset (channel_number_str, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
+	  if (channel_number_valid && channel_number_char)
+	    snprintf(channel_number_str, 
+		     INTEL_EVENT_BUFFER_LENGTH,
+		     "%c",
+		     channel_number_char);
+	  else
+	    snprintf(channel_number_str, 
+		     INTEL_EVENT_BUFFER_LENGTH,
+		     "Unknown");
 
 	  if (dimm_information_validity == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_DIMM_INFORMATION_VALID)
 	    {
@@ -2422,9 +2438,9 @@ sel_string_output_intel_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 	      if (sel_string_snprintf (buf,
 				       buflen,
 				       wlen,
-				       "Error Type = %s, DIMM = %c%s",
+				       "Error Type = %s, DIMM = %s%s",
 				       error_type_str,
-				       channel_number_char,
+				       channel_number_str,
 				       dimm_slot_id_str))
 		(*oem_rv) = 1;
 	      else

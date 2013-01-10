@@ -1,6 +1,12 @@
 FreeIPMI 1.2.4 - 12/XX/12
 -------------------------
 o Support Supermicro X9DRI-LN4F+ OEM sensors and events.
+o Fix output corner case for "session-based" channels.
+o Fix ipmi-oem set-power-restore-delay corner case in time settings.
+o Fix ipmiseld memleak.
+o Fix libfreeipmi potential fd leak when generating random numbers.
+o Fix libfreeipmi error output bug in RMCP interface.
+o Fix several minor corner cases discovered by static code analysis.
 
 FreeIPMI 1.2.3 - 11/14/12
 -------------------------

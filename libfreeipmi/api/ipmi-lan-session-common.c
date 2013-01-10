@@ -2850,6 +2850,10 @@ api_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
               || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3)
           && IPMI_PAYLOAD_AUTHENTICATED_FLAG_VALID (payload_authenticated)
           && IPMI_PAYLOAD_ENCRYPTED_FLAG_VALID (payload_encrypted)
+	  && (!message_tag
+	      || (payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST
+		  || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1
+		  || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3))
           && IPMI_AUTHENTICATION_ALGORITHM_SUPPORTED (authentication_algorithm)
           && IPMI_INTEGRITY_ALGORITHM_SUPPORTED (integrity_algorithm)
           && IPMI_CONFIDENTIALITY_ALGORITHM_SUPPORTED (confidentiality_algorithm)

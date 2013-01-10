@@ -1233,7 +1233,7 @@ ipmi_oem_intel_set_power_restore_delay (ipmi_oem_state_data_t *state_data)
    */
 
   bytes_rq[0] = IPMI_CMD_OEM_INTEL_SET_POWER_RESTORE_DELAY;
-  bytes_rq[1] = (delay & IPMI_OEM_INTEL_POWER_RESTORE_DELAY_MSB_MASK) >> 8;
+  bytes_rq[1] = (delay >> 8) & IPMI_OEM_INTEL_POWER_RESTORE_DELAY_MSB_MASK;
   bytes_rq[2] = (delay & IPMI_OEM_INTEL_POWER_RESTORE_DELAY_LSB_MASK);
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,

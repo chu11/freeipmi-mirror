@@ -2227,6 +2227,6 @@ ipmi_ctx_destroy (ipmi_ctx_t ctx)
   if (ctx->type != IPMI_DEVICE_UNKNOWN)
     ipmi_ctx_close (ctx);
 
-  secure_memset (ctx, '\0', sizeof (ipmi_ctx_t));
+  secure_memset (ctx, '\0', sizeof (struct ipmi_ctx));
   free (ctx);
 }

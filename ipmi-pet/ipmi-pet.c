@@ -394,6 +394,7 @@ _ipmi_pet_form_sel_record (ipmi_pet_state_data_t *state_data,
 {
   fiid_obj_t sel_system_event_record = NULL;
   int rv = -1;
+  int len;
 
   assert (state_data);
   assert (data);
@@ -573,9 +574,9 @@ _ipmi_pet_form_sel_record (ipmi_pet_state_data_t *state_data,
       goto cleanup;
     }
 
-  if ((sel_record_len = fiid_obj_get_all (sel_system_event_record,
-					  sel_record,
-					  IPMI_SEL_RECORD_MAX_RECORD_LENGTH)) < 0)
+  if ((len = fiid_obj_get_all (sel_system_event_record,
+			       sel_record,
+			       sel_record_len)) < 0)
     {
       fprintf (stderr,
                "fiid_obj_get_all: %s\n",
@@ -583,7 +584,7 @@ _ipmi_pet_form_sel_record (ipmi_pet_state_data_t *state_data,
       goto cleanup;
     }
   
-  if (sel_record_len != IPMI_SEL_RECORD_MAX_RECORD_LENGTH)
+  if (len != IPMI_SEL_RECORD_MAX_RECORD_LENGTH)
     {
       fprintf (stderr,
                "Invalid length SEL record: %u\n",
