@@ -221,6 +221,19 @@ int pstdout_hostnames_count(const char *hostnames);
  */
 int pstdout_printf(pstdout_state_t pstate, const char *format, ...);
 
+/* pstdout_vprintf
+ *
+ * Parallel standard output.  Should only be called by a thread
+ * executed by 'pstdout_launch'.
+ *
+ * Returns number of characters printed, -1 on error.
+ *
+ * Note that the return value of number of characters printed may be
+ * 0, because data is being buffered for output on a later
+ * pstdout_printf call.
+ */
+int pstdout_vprintf(pstdout_state_t pstate, const char *format, va_list ap);
+
 /* pstdout_fprintf
  *
  * Parallel file stream output.  Should only be called by a thread
@@ -234,6 +247,21 @@ int pstdout_printf(pstdout_state_t pstate, const char *format, ...);
  * pstdout_fprintf call.
  */
 int pstdout_fprintf(pstdout_state_t pstate, FILE *stream, const char *format, ...);
+
+/* pstdout_vfprintf
+ *
+ * Parallel file stream output.  Should only be called by a thread
+ * executed by 'pstdout_launch'.  Currently will only work with stdout
+ * and stderr.
+ *
+ * Returns number of characters printed, -1 on error.
+ *
+ * Note that the return value of number of characters printed may be
+ * 0, because data is being buffered for output on a later
+ * pstdout_fprintf call.
+ */
+int pstdout_vfprintf(pstdout_state_t pstate, FILE *stream, const char *format,
+		     va_list ap);
 
 /* pstdout_perror
  *

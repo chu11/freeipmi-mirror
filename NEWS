@@ -1,3 +1,9 @@
+FreeIPMI 1.2.5 - 01/10/13
+-------------------------
+o In all config tools, fix bug when user specifies --checkout and
+  --filename option and no data outputs to file.
+
+
 FreeIPMI 1.2.4 - 01/10/13
 -------------------------
 o Support Supermicro X9DRI-LN4F+ OEM sensors and events.

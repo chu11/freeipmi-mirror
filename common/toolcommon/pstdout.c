@@ -738,6 +738,39 @@ pstdout_printf(pstdout_state_t pstate, const char *format, ...)
   return rv;
 }
 
+int
+pstdout_vprintf(pstdout_state_t pstate, const char *format, va_list ap)
+{
+  int rv;
+
+  if (!pstdout_initialized)
+    {
+      pstdout_errnum = PSTDOUT_ERR_UNINITIALIZED;
+      return -1;
+    }
+
+  if (!pstate || pstate->magic != PSTDOUT_STATE_MAGIC)
+    {
+      pstdout_errnum = PSTDOUT_ERR_PARAMETERS;
+      return -1;
+    }
+
+  if (!format)
+    {
+      pstdout_errnum = PSTDOUT_ERR_PARAMETERS;
+      return -1;
+    }
+
+  if (!ap)
+    {
+      pstdout_errnum = PSTDOUT_ERR_PARAMETERS;
+      return -1;
+    }
+
+  rv = _pstdout_print(pstate, 0, stdout, format, ap);
+  return rv;
+}
+
 int 
 pstdout_fprintf(pstdout_state_t pstate, FILE *stream, const char *format, ...)
 {
@@ -771,6 +804,40 @@ pstdout_fprintf(pstdout_state_t pstate, FILE *stream, const char *format, ...)
   va_start(ap, format);
   rv = _pstdout_print(pstate, 0, stream, format, ap);
   va_end(ap);
+  return rv;
+}
+
+int 
+pstdout_vfprintf(pstdout_state_t pstate, FILE *stream, const char *format,
+		 va_list ap)
+{
+  int rv;
+
+  if (!pstdout_initialized)
+    {
+      pstdout_errnum = PSTDOUT_ERR_UNINITIALIZED;
+      return -1;
+    }
+
+  if (!pstate || pstate->magic != PSTDOUT_STATE_MAGIC)
+    {
+      pstdout_errnum = PSTDOUT_ERR_PARAMETERS;
+      return -1;
+    }
+
+  if (!stream || !format)
+    {
+      pstdout_errnum = PSTDOUT_ERR_PARAMETERS;
+      return -1;
+    }
+
+  if (stream != stdout && stream != stderr)
+    {
+      pstdout_errnum = PSTDOUT_ERR_PARAMETERS;
+      return -1;
+    }
+  
+  rv = _pstdout_print(pstate, 0, stream, format, ap);
   return rv;
 }
 
