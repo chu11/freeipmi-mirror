@@ -1,5 +1,10 @@
 2013-01-22  Albert Chu <chu11@llnl.gov>
 
+	* man/manpage-common-config-tool-options.man: Add clarification
+	about use w/ hostranges and hostrange options.
+	
+2013-01-22  Albert Chu <chu11@llnl.gov>
+
 	* common/toolcommon/pstdout.h,
 	common/toolcommon/pstdout.c (pstdout_vprintf, pstdout_vfprintf):
 	New functions.
