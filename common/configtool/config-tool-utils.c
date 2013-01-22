@@ -524,3 +524,25 @@ config_is_config_param_non_fatal_error (ipmi_ctx_t ipmi_ctx,
 
   return (0);
 }
+
+int
+config_pstdout_fprintf (pstdout_state_t pstate, FILE *stream, const char *format, ...)
+{
+  va_list ap;
+  int rv; 
+
+  /* special case b/c pstdout doesn't handle non-stdout/non-stderr
+   * assume proper checks in tools if stream != stdout || != stderr
+   */
+
+  va_start (ap, format);
+
+  if (stream == stdout || stream == stderr)
+    rv = pstdout_vfprintf (pstate, stream, format, ap);
+  else
+    rv = vfprintf (stream, format, ap);
+
+  va_end (ap);
+
+  return rv;
+}

@@ -31,6 +31,7 @@
 #include "config-tool-checkout.h"
 #include "config-tool-comment.h"
 #include "config-tool-section.h"
+#include "config-tool-utils.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
@@ -102,10 +103,10 @@ config_checkout_section (pstdout_state_t pstate,
   if (!line_length)
     line_length = CONFIG_CHECKOUT_LINE_LEN;
 
-  pstdout_fprintf (pstate,
-                   fp,
-                   "Section %s\n",
-                   section->section_name);
+  config_pstdout_fprintf (pstate,
+			  fp,
+			  "Section %s\n",
+			  section->section_name);
 
 
   kv = section->keyvalues;
@@ -135,17 +136,17 @@ config_checkout_section (pstdout_state_t pstate,
           if (cmd_args->verbose_count > 1)
             {
               if (this_ret == CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED)
-                pstdout_fprintf (pstate,
-                                 fp,
-                                 "\t## Unable to checkout %s:%s : Not Supported\n",
-                                 section->section_name,
-                                 kv->key->key_name);
+                config_pstdout_fprintf (pstate,
+					fp,
+					"\t## Unable to checkout %s:%s : Not Supported\n",
+					section->section_name,
+					kv->key->key_name);
               else
-                pstdout_fprintf (pstate,
-                                 fp,
-                                 "\t## Unable to checkout %s:%s\n",
-                                 section->section_name,
-                                 kv->key->key_name);
+                config_pstdout_fprintf (pstate,
+					fp,
+					"\t## Unable to checkout %s:%s\n",
+					section->section_name,
+					kv->key->key_name);
             }
           ret = CONFIG_ERR_NON_FATAL_ERROR;
         }
@@ -160,31 +161,31 @@ config_checkout_section (pstdout_state_t pstate,
               char *cptr;
 
               cptr = kv->key->description;
-              pstdout_fprintf (pstate,
-                               fp,
-                               "\t## ");
+              config_pstdout_fprintf (pstate,
+				      fp,
+				      "\t## ");
               while (*cptr)
                 {
                   if (*cptr == '\n')
-                    pstdout_fprintf (pstate,
-                                     fp,
-                                     "\n\t## ");
+                    config_pstdout_fprintf (pstate,
+					    fp,
+					    "\n\t## ");
                   else
-                    pstdout_fprintf (pstate,
-                                     fp,
-                                     "%c",
-                                     *cptr);
+                    config_pstdout_fprintf (pstate,
+					    fp,
+					    "%c",
+					    *cptr);
                   cptr++;
                 }
-              pstdout_fprintf (pstate,
-                               fp,
-                               "\n");
+              config_pstdout_fprintf (pstate,
+				      fp,
+				      "\n");
             }
           else
-            pstdout_fprintf (pstate,
-                             fp,
-                             "\t## %s\n",
-                             kv->key->description);
+            config_pstdout_fprintf (pstate,
+				    fp,
+				    "\t## %s\n",
+				    kv->key->description);
 
           /* achu: Certain keys should have their checked out
            * value automatically commented out.  Sometimes (in the
@@ -219,31 +220,31 @@ config_checkout_section (pstdout_state_t pstate,
                                 "\t%s",
                                 kv->key->key_name);
 
-          pstdout_fprintf (pstate,
-                           fp,
-                           "%s",
-                           obuf);
+          config_pstdout_fprintf (pstate,
+				  fp,
+				  "%s",
+				  obuf);
 
           while (key_len <= line_length)
             {
-              pstdout_fprintf (pstate,
-                               fp,
-                               " ");
+              config_pstdout_fprintf (pstate,
+				      fp,
+				      " ");
               key_len++;
             }
 
-          pstdout_fprintf (pstate,
-                           fp,
-                           " %s\n",
-                           kv->value_output);
+          config_pstdout_fprintf (pstate,
+				  fp,
+				  " %s\n",
+				  kv->value_output);
         }
 
       kv = kv->next;
     }
 
-  pstdout_fprintf (pstate,
-                   fp,
-                   "EndSection\n");
+  config_pstdout_fprintf (pstate,
+			  fp,
+			  "EndSection\n");
   rv = ret;
  cleanup:
   return (rv);

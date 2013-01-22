@@ -1,3 +1,19 @@
+2013-01-22  Albert Chu <chu11@llnl.gov>
+
+	* common/toolcommon/pstdout.h,
+	common/toolcommon/pstdout.c (pstdout_vprintf, pstdout_vfprintf):
+	New functions.
+
+	* common/configtool/config-tool-utils.h,
+	common/configtool/config-tool-utils.c (config_pstdout_fprintf):
+	New function.
+
+	* common/configtool/config-tool-checkout.c,
+	common/configtool/config-tool-comment.c: Call
+	config_pstdout_fprintf instead of pstdout_fprintf to deal with
+	corner case when user specifys filename with --filename option in
+	config tools.
+	
 2013-01-09  Albert Chu <chu11@llnl.gov>
 
 	Fix bugs found by static code analysis done by Redhat/Fedora.
