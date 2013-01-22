@@ -70,6 +70,9 @@
 #define CONFIG_MAX_KEY_NAME_LEN                            128
 #define CONFIG_MAX_DESCRIPTION_LEN                         1024
 
+#define CONFIG_NON_FATAL_EXIT_VALUE                        1
+#define CONFIG_FATAL_EXIT_VALUE                            2
+
 #define same(a,b) (strcasecmp (a,b) == 0)
 
 typedef enum

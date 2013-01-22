@@ -280,8 +280,17 @@ _ipmi_sensors_config (pstdout_state_t pstate,
       break;
     }
 
-  if (ret == CONFIG_ERR_FATAL_ERROR || ret == CONFIG_ERR_NON_FATAL_ERROR)
-    goto cleanup;
+  if (ret == CONFIG_ERR_FATAL_ERROR)
+    {
+      exit_code = CONFIG_FATAL_EXIT_VALUE;
+      goto cleanup;
+    }
+  
+  if (ret == CONFIG_ERR_NON_FATAL_ERROR)
+    {
+      exit_code = CONFIG_NON_FATAL_EXIT_VALUE;
+      goto cleanup;
+    }
 
   exit_code = EXIT_SUCCESS;
  cleanup:

@@ -1,5 +1,20 @@
 2013-01-22  Albert Chu <chu11@llnl.gov>
 
+	* bmc-config/bmc-config.c (_bmc_config),
+	ipmi-pef-config/ipmi-pef-config.c (_ipmi_pef_config),
+	ipmi-chassis-config/ipmi-chassis-config.c (_ipmi_chassis_config),
+	ipmi-sensors-config/ipmi-sensors-config.c (_ipmi_sensors_config):
+	If only non-fatal errors occurred during operation, exit with
+	status 1.  Exit with status 2 on fatal errors.
+
+	* man/manpage-common-config-diagnostics.man: New file.
+
+	* man/bmc-config.8.pre.in, man/ipmi-sensors-config.8.pre.in,
+	man/ipmi-chassis-config.8.pre.in, man/ipmi-pef-config.8.pre.in:
+	Update for changes in exit value behavior.
+	
+2013-01-22  Albert Chu <chu11@llnl.gov>
+
 	* man/manpage-common-config-tool-options.man: Add clarification
 	about use w/ hostranges and hostrange options.
 	
