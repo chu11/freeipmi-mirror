@@ -150,6 +150,7 @@ extern "C" {
  * Supermicro H8DGU-F (H8DGU_F)
  * Supermicro X9DRi-F (X9DRI_F)
  * Supermicro X9DRI-LN4F+ (X9DRI_LN4F_PLUS)
+ * Supermicro X9SPU-F-O (X9SPU_F_O)
  */
 
 /* achu: not official names, named based on use context */
