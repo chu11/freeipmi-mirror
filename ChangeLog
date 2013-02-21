@@ -1,3 +1,10 @@
+2013-02-21  Albert Chu <chu11@llnl.gov>
+
+	* Add support for Supermicro X9SPU-F-0 OEM sensors/events.
+
+	* Add support for Supermicro X9DRI-LN4F+ OEM
+	interpretations (forgotten earlier).
+	
 2013-01-22  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/bmc-config.c (_bmc_config),

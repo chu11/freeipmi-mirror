@@ -6,6 +6,9 @@ o In all config tools (bmc-config, ipmi-pef-config,
   file.
 o In all config tools, exit with value 1 when non-fatal errors occur.
   Exit with value 2 when fatal errors occur.
+o Support Supermicro X9SPU-F-O OEM sensors and events.
+o Support Supermicro X9DRI-LN4F+ OEM intepretations (previously
+  forgotten).
 o Clarify use of --filename in config tool manpages.
 
 FreeIPMI 1.2.4 - 01/10/13

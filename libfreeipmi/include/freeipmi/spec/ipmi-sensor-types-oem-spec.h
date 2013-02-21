@@ -140,6 +140,7 @@ extern "C" {
  * Supermicro H8DGU-F (H8DGU_F)
  * Supermicro X9DRi-F (X9DRI_F)
  * Supermicro X9DRI-LN4F+ (X9DRI_LN4F_PLUS)
+ * Supermicro X9SPU-F-O (X9SPU-F-O)
  */
 /* achu: not official names, named based on use context */
 #define IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP 0xC0 
