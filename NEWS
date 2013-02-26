@@ -1,4 +1,4 @@
-FreeIPMI 1.2.5 - 01/10/13
+FreeIPMI 1.2.5 - 02/26/13
 -------------------------
 o In all config tools (bmc-config, ipmi-pef-config,
   ipmi-chassis-config, ipmi-sensors-config), fix bug when user
