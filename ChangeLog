@@ -1,3 +1,8 @@
+2013-02-28  Anonymous <anonymous@anonymous.com>
+
+	* libfreeipmi/sel/ipmi-sel-string-intel.c (sel_string_output_intel_event_data2_event_data3):
+	Fix string overflow.
+	
 2013-02-21  Albert Chu <chu11@llnl.gov>
 
 	* Add support for Supermicro X9SPU-F-0 OEM sensors/events.

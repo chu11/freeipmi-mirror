@@ -2333,7 +2333,7 @@ sel_string_output_intel_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 	  uint8_t dimm_slot_id;
 	  char *error_type_str;
 	  char *processor_socket_str;
-	  char channel_number_str[INTEL_EVENT_BUFFER_LENGTH];
+	  char channel_number_str[INTEL_EVENT_BUFFER_LENGTH + 1];
 	  char channel_number_char = 0;
 	  char *dimm_slot_id_str;
 	  int processor_socket_valid = 0;
