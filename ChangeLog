@@ -1,3 +1,7 @@
+2013-03-08  Albert Chu <chu11@llnl.gov>
+
+	* man/ipmi-sensors.8.pre.in: Fix typo (Found by Werner Fischer).
+	
 2013-02-28  Anonymous <anonymous@anonymous.com>
 
 	* libfreeipmi/sel/ipmi-sel-string-intel.c (sel_string_output_intel_event_data2_event_data3):
