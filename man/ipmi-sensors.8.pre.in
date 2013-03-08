@@ -27,7 +27,7 @@ sensor reading cannot be read.  This is typical of a sensor that is
 busy or a reading that cannot be calculated.  If sensors report
 "Unrecognized State", it is indicative of an unkown sensor type,
 typically an OEM sensor.  If the sensor OEM interpretation is
-available, the \fB\-\-intepret\-oem\-data\fR may be able to report
+available, the \fB\-\-interpret\-oem\-data\fR may be able to report
 the appropriate sensor state.  Sensors need not always report a sensor
 event.  When a sensor event is not present, "OK" is typically
 reported.
