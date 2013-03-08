@@ -1,5 +1,6 @@
 FreeIPMI 1.2.6 - 02/26/13
 -------------------------
+o Support Supermicro X9SCM-iiF OEM sensors and events.
 o Fix Intel OEM SEL buffer overflow.
 
 FreeIPMI 1.2.5 - 02/26/13
