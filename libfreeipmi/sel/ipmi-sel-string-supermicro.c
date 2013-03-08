@@ -120,6 +120,7 @@ sel_string_output_supermicro_event_data1_class_oem (ipmi_sel_ctx_t ctx,
    * Supermicro X9DRi-F (X9DRI_F)
    * Supermicro X9DRI-LN4F+ (X9DRI_LN4F_PLUS)
    * Supermicro X9SPU-F-O (X9SPU_F_O) 
+   * Supermicro X9SCM-iiF (X9SCM_IIF)
    *    
    * Note: Early Supermicro motherboards used the "Peppercon" Manufacturer ID 
    * Note: Some Supermicro motherboards are rebranded with random manufacturer IDs    
@@ -154,7 +155,8 @@ sel_string_output_supermicro_event_data1_class_oem (ipmi_sel_ctx_t ctx,
 	       || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8DGU_F
 	       || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9DRI_F
 	       || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9DRI_LN4F_PLUS
-	       || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SPU_F_O))
+	       || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SPU_F_O
+	       || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCM_IIF))
        || (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_MAGNUM_TECHNOLOGIES
 	   && ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL))
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_SUPERMICRO_GENERIC

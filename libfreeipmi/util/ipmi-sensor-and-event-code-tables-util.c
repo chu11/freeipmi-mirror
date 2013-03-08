@@ -2154,6 +2154,7 @@ _supermicro_oem_temp_level_sensor_supported (uint32_t manufacturer_id, uint16_t 
    * Supermicro X9DRi-F (X9DRI_F)
    * Supermicro X9DRI-LN4F+ (X9DRI_LN4F_PLUS)
    * Supermicro X9SPU-F-O (X9SPU_F_O)
+   * Supermicro X9SCM-iiF (X9SCM_IIF)
    *
    * Event Reading Type Code = IPMI_EVENT_READING_TYPE_CODE_OEM_SUPERMICRO_GENERIC
    * Sensor Type = IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP
@@ -2189,7 +2190,8 @@ _supermicro_oem_temp_level_sensor_supported (uint32_t manufacturer_id, uint16_t 
 	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8DGU_F
 	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9DRI_F
 	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9DRI_LN4F_PLUS
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SPU_F_O))
+	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SPU_F_O
+	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCM_IIF))
       || (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_MAGNUM_TECHNOLOGIES
 	  && product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL))
     return (1);

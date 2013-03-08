@@ -1208,7 +1208,7 @@ _interpret_sensor_oem_supermicro_discrete_cpu_temp (ipmi_interpret_ctx_t ctx)
   
   /* Supermicro CPU Temperature Sensor
    * X7DBR-3/X7DB8/X8DTN/X7SBI-LN4/X8DTH/X8DTG/X8DTU/X8DT3-LN4F/X8DTU-6+/X8DTL/X8DTL-3F
-   * X8SIL-F/X9SCL/X9SCM/X8DTN+-F/X8SIE/X9SCA-F-O/H8DGU-F/X9DRi-F/X9DRI-LN4F+/X9SPU-F-O
+   * X8SIL-F/X9SCL/X9SCM/X8DTN+-F/X8SIE/X9SCA-F-O/H8DGU-F/X9DRi-F/X9DRI-LN4F+/X9SPU-F-O/X9SCM-iiF
    *
    * Manufacturer ID = 10876 (Supermicro), 10437 (Peppercon, IPMI card manufacturer),
    *                   47488 (Supermicro, not IANA number, special case)
@@ -1216,7 +1216,8 @@ _interpret_sensor_oem_supermicro_discrete_cpu_temp (ipmi_interpret_ctx_t ctx)
    * Product ID = 4 (X7DBR-3 / X7DBR_3, X7DB8, X8DTN, X7SBI-LN4 / X7SBI_LN4), 43707 (X8DTH, X8DTG, X8DTU, X8DT3-LN4F / X8DT3_LN4F),
    *              1549 (X8DTU-6+ / X8DTU_6PLUS), 6 (X8DTL, X8DTL-3F / X8DTL_3F), 1541 (X8SIL-F / X8SIL_F), 1572 (X9SCL, X9SCM),
    *              1551 (X8DTN+-F / X8DTNPLUS_F), 1037 (X8SIE), 1585 (X9SCA-F-O / X9SCA_F_O), 43025 (H8DGU-F / H8DGU_F),
-   *              1576 (X9DRi-F, X9DRI_F), 1574 (X9DRI-LN4F+ / X9DRI_LN4F_PLUS), 1603 (X9SPU-F-O / X9SPU_F_O)
+   *              1576 (X9DRi-F, X9DRI_F), 1574 (X9DRI-LN4F+ / X9DRI_LN4F_PLUS), 1603 (X9SPU-F-O / X9SPU_F_O),
+   *              1600 (X9SCM-iiF / X9SCM_IIF)
    * Event/Reading Type Code = 70h (OEM)
    * Sensor Type = C0h (OEM)
    * Value 0x0000 = "Low"
@@ -1244,6 +1245,11 @@ _interpret_sensor_oem_supermicro_discrete_cpu_temp (ipmi_interpret_ctx_t ctx)
   if (_interpret_sensor_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
 								  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO,
 								  IPMI_SUPERMICRO_PRODUCT_ID_X9SPU_F_O) < 0)
+    return (-1);
+
+  if (_interpret_sensor_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
+								  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO,
+								  IPMI_SUPERMICRO_PRODUCT_ID_X9SCM_IIF) < 0)
     return (-1);
 
   if (_interpret_sensor_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
