@@ -1708,6 +1708,7 @@ extern unsigned int ipmi_oem_intel_s2600jf_specific_qpi_link_width_reduced_max_i
  * Supermicro X9DRi-F (X9DRI_F)
  * Supermicro X9DRI-LN4F+ (X9DRI_LN4F_PLUS)
  * Supermicro X9SPU-F-O (X9SPU_F_O)
+ * Supermicro X9SCM-iiF (X9SCM_IIF)
  */
 /* achu: not official names, named based on use context */
 #define IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP_LOW           0x00

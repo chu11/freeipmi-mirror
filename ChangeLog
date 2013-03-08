@@ -1,5 +1,9 @@
 2013-03-08  Albert Chu <chu11@llnl.gov>
 
+	* Add support for Supermicro X9SCM-iiF OEM sensors/events.
+	
+2013-03-08  Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-sensors.8.pre.in: Fix typo (Found by Werner Fischer).
 	
 2013-02-28  Anonymous <anonymous@anonymous.com>

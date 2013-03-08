@@ -257,7 +257,8 @@ X8DTU, Supermicro X8DT3-LN4F, Supermicro X8DTU-6+, Supermicro X8DTL,
 Supermicro X8DTL-3F, Supermicro X8SIL-F, Supermicro X9SCL, Supermicro
 X9SCM, Supermicro X8DTN+-F, Supermicro X8SIE, Supermicro X9SCA-F-O,
 Supermicro H8DGU-F, Supermicro X9DRi-F, Supermicro X9DRI-LN4F+,
-Supermicro X9SPU-F-O, Wistron/Dell Poweredge C6220.
+Supermicro X9SPU-F-O, Supermicro X9SCM-iiF, Wistron/Dell Poweredge
+C6220.
 .SH "EXAMPLES"
 .B # ipmi-sensors 
 .PP
