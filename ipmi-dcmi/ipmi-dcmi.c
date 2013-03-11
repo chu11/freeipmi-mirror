@@ -578,6 +578,30 @@ _mandatory_platform_attributes (ipmi_dcmi_state_data_t *state_data)
                       val ? "At least 1 present" : "Not present");
     }
 
+  /* In DCMI v1.1 */
+  if (parameter_revision >= 0x02)
+    {
+      int flag;
+
+      if ((flag = fiid_obj_get (obj_cmd_rs,
+				"temperature_monitoring.sampling_period",
+				&val)) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get: 'temperature_monitoring.sampling_period': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+
+      if (flag)
+        {
+          pstdout_printf (state_data->pstate,
+                      "Sampling frequency for Temperature Monitoring      : Every %u Second(s)\n",
+                      val);
+        }
+    }
+
   rv = 1;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);

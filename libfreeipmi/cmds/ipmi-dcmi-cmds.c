@@ -145,6 +145,8 @@ fiid_template_t tmpl_cmd_dcmi_get_dcmi_capability_info_mandatory_platform_attrib
     /* in parameter revision >= 02h, reserved */
     { 1, "temperature_monitoring.baseboard_temperature", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 5, "temperature_monitoring.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    /* in parameter revision >= 02h */
+    { 8, "temperature_monitoring.sampling_period", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
   };
 

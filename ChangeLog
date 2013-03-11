@@ -1,3 +1,11 @@
+2013-03-11  Holger Liebig <holger.liebig@ts.fujitsu.com>
+
+	* ipmi-dcmi/: Output temperature sampling period appropriately.
+
+	* libfreeipmi/cmds/ipmi-dcmi-cmds.c: Update
+	tmpl_cmd_dcmi_get_dcmi_capability_info_mandatory_platform_attributes_rs
+	with newer optional fields.
+
 2013-03-08  Albert Chu <chu11@llnl.gov>
 
 	* Add support for Supermicro X9SCM-iiF OEM sensors/events.
