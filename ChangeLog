@@ -1,3 +1,7 @@
+2013-03-25  Peter Volkov <pva@gentoo.org>
+
+	* Fix out of trunk source build.
+
 2013-03-11  Holger Liebig <holger.liebig@ts.fujitsu.com>
 
 	* ipmi-dcmi/: Output temperature sampling period appropriately.
