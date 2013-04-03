@@ -77,6 +77,7 @@ release @value{VERSION} of the FreeIPMI.
 * Why is the output from FreeIPMI different than another software?::
 * Why are there so many IPMI compliance bugs?::
 * How do I get around an IPMI compliance bug on my motherboard?::
+* Why am I seeing so many 'internal IPMI error' messages?::
 * How do I program with the FreeIPMI libraries?::
 * Where can I get additional help or support?:: 
 @end menu
@@ -833,7 +834,7 @@ in the freeipmi-bugs-issues-and-workarounds.txt document (you can find
 it on the website here:
 @uref{http://www.gnu.org/software/freeipmi/freeipmi-bugs-issues-and-workarounds.txt}).
 
-@node How do I get around an IPMI compliance bug on my motherboard?, How do I program with the FreeIPMI libraries?, Why are there so many IPMI compliance bugs?, Top
+@node How do I get around an IPMI compliance bug on my motherboard?, Why am I seeing so many 'internal IPMI error' messages?, Why are there so many IPMI compliance bugs?, Top
 @section How do I get around an IPMI compliance bug on my motherboard?
 
 Most of the FreeIPMI tools and libraries have flags to workaround a
@@ -845,7 +846,65 @@ If you believe there is a compliance issue on your motherboard that
 has not yet been implemented, please contact the maintainers on the
 @email{freeipmi-devel@@gnu.org} mailing list.
 
-@node How do I program with the FreeIPMI libraries?, Where can I get additional help or support?, How do I get around an IPMI compliance bug on my motherboard?, Top
+@node Why am I seeing so many 'internal IPMI error' messages?, How do I program with the FreeIPMI libraries?, How do I get around an IPMI compliance bug on my motherboard?, Top
+@section Why am I seeing so many 'internal IPMI error' messages?
+
+In some Linux distributions (atleast with Redhat Enterprise Linux 6.4
+/ RHEL 6.4), the distributions began compiling the IPMI kernel driver
+(i.e. ipmi_msghandler and ipmi_si modules) into the kernel instead of
+as loadable modules.  This was apparently due to a need for the IPMI
+kernel drivers to work with ACPI.
+
+Due to compiling the IPMI kernel driver into the kernel, there is the
+potential for inband IPMI communication to occur in the kernel w/o any
+knowledge of it from outside software in userspace.  Normally, the
+IPMI service (i.e. /etc/init.d/ipmi) is started to create a device
+file (i.e. /dev/ipmi0) so that userspace software will know to
+communicate through this device.  However, some of these distros
+disable the ipmi service so that a device file is never created.
+
+Because of this, multiple IPMI software can communicate inband to the
+BMC simultaneously, subsequently racing with each other.  Ultimately,
+this can lead to communication problems.  In FreeIPMI, this is most
+commonly seen through 'internal IPMI error' messages.
+
+There are several possible solutions for this in FreeIPMI.  If you
+start the ipmi service (i.e. /etc/init.d/ipmi start), a device file
+will be created which FreeIPMI will recognize.  FreeIPMI will
+subsequently communicate via inband IPMI through this device file,
+thus eliminating racing with the IPMI occurring in the kernel.
+
+The other option is to disable the IPMI kernel thread so that FreeIPMI
+can perform inband communication with the BMC through its own
+mechanisms.  The following is from the Linux kernel documentation.
+ 
+@example
+When compiled into the kernel, the parameters can be specified on the
+kernel command line as:
+
+  ipmi_si.type=<type1>,<type2>...
+       ipmi_si.ports=<port1>,<port2>... ipmi_si.addrs=<addr1>,<addr2>...
+       ipmi_si.irqs=<irq1>,<irq2>... ipmi_si.trydefaults=[0|1]
+       ipmi_si.regspacings=<sp1>,<sp2>,...
+       ipmi_si.regsizes=<size1>,<size2>,...
+       ipmi_si.regshifts=<shift1>,<shift2>,...
+       ipmi_si.slave_addrs=<addr1>,<addr2>,...
+       ipmi_si.force_kipmid=<enable1>,<enable2>,...
+       ipmi_si.kipmid_max_busy_us=<ustime1>,<ustime2>,...
+
+...     
+    
+If your IPMI interface does not support interrupts and is a KCS or
+SMIC interface, the IPMI driver will start a kernel thread for the
+interface to help speed things up.  This is a low-priority kernel
+thread that constantly polls the IPMI driver while an IPMI operation
+is in progress.  The force_kipmid module parameter will all the user to
+force this thread on or off.  If you force it off and don't have
+interrupts, the driver will run VERY slowly.  Don't blame me,
+these interfaces suck.
+@end example
+
+@node How do I program with the FreeIPMI libraries?, Where can I get additional help or support?, Why am I seeing so many 'internal IPMI error' messages?, Top
 @section How do I program with the FreeIPMI libraries?
 
 If you are looking for a high level library to do Serial-over-LAN
