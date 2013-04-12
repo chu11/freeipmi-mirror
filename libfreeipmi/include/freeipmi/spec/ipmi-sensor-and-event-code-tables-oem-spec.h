@@ -542,6 +542,32 @@ extern const char * const ipmi_sensor_type_oem_fujitsu_config_backup[];
 extern unsigned int ipmi_sensor_type_oem_fujitsu_config_backup_max_index;
 
 /*******************************************
+ * HP                                      *
+ *******************************************/
+
+/*
+ * HP Proliant DL160 G8
+ */
+
+#define IPMI_OEM_HP_UID_LIGHT_ON       0x00
+#define IPMI_OEM_HP_UID_LIGHT_OFF      0x01
+#define IPMI_OEM_HP_UID_LIGHT_BLINKING 0x02
+
+#define IPMI_OEM_HP_HEALTH_LED_GREEN   0x00
+#define IPMI_OEM_HP_HEALTH_LED_AMBER   0x01 
+#define IPMI_OEM_HP_HEALTH_LED_RED     0x02 
+
+/*
+ * String arrays for above
+ */
+
+extern const char * const ipmi_oem_hp_uid_light[];
+extern unsigned int ipmi_oem_hp_uid_light_max_index;
+
+extern const char * const ipmi_oem_hp_health_led[];
+extern unsigned int ipmi_oem_hp_health_led_max_index;
+
+/*******************************************
  * Intel                                    *
  *******************************************/
 

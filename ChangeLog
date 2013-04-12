@@ -1,3 +1,7 @@
+2013-04-12  Albert Chu <chu11@llnl.gov>
+
+	* Support HP Proliant DL160 G8 OEM sensors.
+	
 2013-04-03  Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-faq.texi: Note kernel driver issue.
