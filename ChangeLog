@@ -1,3 +1,8 @@
+2013-04-18  Albert Chu <chu11@llnl.gov>
+
+	* libipmiconsole/ipmiconsole_processing.c (_process_protocol_state_activate_payload_sent):
+	Change "BMC Error" to "SOL Inuse" error message.
+	
 2013-04-03  Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-faq.texi: Note kernel driver issue.

@@ -191,7 +191,8 @@ specify the
 .I --dont-steal
 option, 
 .B ipmiconsole
-will attempt to steal the SOL session away from the other session.
+will attempt to steal the SOL session away from the other session.  Not
+all BMCs support the ability to steal away a SOL session.
 .LP
 "SOL session stolen" - Your SOL session has been stolen by another
 session.  You may wish to try and steal the session back by reconnecting.

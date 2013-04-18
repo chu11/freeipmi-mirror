@@ -3349,7 +3349,7 @@ _process_protocol_state_activate_payload_sent (ipmiconsole_ctx_t c)
       if (c->session.activate_payloads_count > c->config.acceptable_packet_errors_count + 1)
         {
           IPMICONSOLE_CTX_DEBUG (c, ("closing with excessive activate payload attempts"));
-          ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_BMC_ERROR);
+          ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SOL_INUSE);
 
           c->session.close_session_flag++;
           if (_send_ipmi_packet (c, IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ) < 0)
