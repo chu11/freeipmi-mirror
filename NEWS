@@ -4,6 +4,7 @@ o Support Supermicro X9SCM-iiF OEM sensors and events.
 o Support output of temperature sampling period to ipmi-dcmi.
 o Clarify error message when SOL session cannot be stolen in
   ipmiconsole/libipmiconsole.
+o Fix dcmi rolling average time period output error
 o Fix Intel OEM SEL buffer overflow.
 o Fix out of trunk source build.
 
