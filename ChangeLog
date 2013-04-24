@@ -1,5 +1,10 @@
 2013-04-24  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-dcmi/ipmi-dcmi.c (_sensor_info_output): Fix output
+	calculation errors.
+	
+2013-04-24  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/cmds/ipmi-dcmi-cmds.c: Fix null terminator on
 	tmpl_dcmi_rolling_average_time_period.
 	

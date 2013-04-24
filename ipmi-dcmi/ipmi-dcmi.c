@@ -1583,22 +1583,22 @@ _sensor_info_output (ipmi_dcmi_state_data_t *state_data,
           goto cleanup;
         }
 
-      if (number_of_record_ids_in_this_response != (sdr_record_ids_len / 2))
+      if (number_of_record_ids_in_this_response > (sdr_record_ids_len / 2))
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "invalid sdr_record_ids returned: %u != %u\n",
+                           "invalid sdr_record_ids returned: %u > %u\n",
                            number_of_record_ids_in_this_response,
                            (sdr_record_ids_len / 2));
           goto cleanup;
         }
 
-      for (i = 0; i < (sdr_record_ids_len / 2); i += 2)
+      for (i = 0; i < (number_of_record_ids_in_this_response * 2); i += 2)
         {
           uint16_t record_id = 0;
           
-          record_id |= sdr_record_ids[0];
-          record_id |= (sdr_record_ids[1] << 8);
+          record_id |= sdr_record_ids[i];
+          record_id |= (sdr_record_ids[i+1] << 8);
           
           pstdout_printf (state_data->pstate,
                           "%u\n",
