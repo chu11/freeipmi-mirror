@@ -6,7 +6,8 @@
 2013-04-24  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/cmds/ipmi-dcmi-cmds.c: Fix null terminator on
-	tmpl_dcmi_rolling_average_time_period.
+	tmpl_dcmi_rolling_average_time_period (Recommended fix by Michael
+	Winiarski - michael dot winiarski at hp dot com).
 	
 2013-04-18  Albert Chu <chu11@llnl.gov>
 
