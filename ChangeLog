@@ -1,3 +1,8 @@
+2013-04-24  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/cmds/ipmi-dcmi-cmds.c: Fix null terminator on
+	tmpl_dcmi_rolling_average_time_period.
+	
 2013-04-18  Albert Chu <chu11@llnl.gov>
 
 	* libipmiconsole/ipmiconsole_processing.c (_process_protocol_state_activate_payload_sent):

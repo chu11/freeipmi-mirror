@@ -66,6 +66,7 @@ fiid_template_t tmpl_dcmi_rolling_average_time_period =
   {
     { 6, "time_duration", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 2, "time_duration_units", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
   };
 
 fiid_template_t tmpl_cmd_dcmi_get_dcmi_capability_info_rq =
