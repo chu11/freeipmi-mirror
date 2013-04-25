@@ -117,7 +117,12 @@ ipmipower_connection_clear (struct ipmipower_connection *ic)
       IPMIPOWER_ERROR (("cbuf_drop: %s", strerror (errno)));
       exit (EXIT_FAILURE);
     }
-  if (cbuf_drop (ic->ipmi_out, -1) < 0)
+  if (cbuf_drop (ic->ipmi_lan_out, -1) < 0)
+    {
+      IPMIPOWER_ERROR (("cbuf_drop: %s", strerror (errno)));
+      exit (EXIT_FAILURE);
+    }
+  if (cbuf_drop (ic->ipmi_rmcpplus_out, -1) < 0)
     {
       IPMIPOWER_ERROR (("cbuf_drop: %s", strerror (errno)));
       exit (EXIT_FAILURE);
@@ -193,13 +198,21 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
     }
   cbuf_opt_set (ic->ipmi_in, CBUF_OPT_OVERWRITE, CBUF_WRAP_MANY);
 
-  if (!(ic->ipmi_out = cbuf_create (IPMIPOWER_MIN_CONNECTION_BUF,
-                                    IPMIPOWER_MAX_CONNECTION_BUF)))
+  if (!(ic->ipmi_lan_out = cbuf_create (IPMIPOWER_MIN_CONNECTION_BUF,
+					IPMIPOWER_MAX_CONNECTION_BUF)))
     {
       IPMIPOWER_ERROR (("cbuf_create: %s", strerror (errno)));
       exit (EXIT_FAILURE);
     }
-  cbuf_opt_set (ic->ipmi_out, CBUF_OPT_OVERWRITE, CBUF_WRAP_MANY);
+  cbuf_opt_set (ic->ipmi_lan_out, CBUF_OPT_OVERWRITE, CBUF_WRAP_MANY);
+
+  if (!(ic->ipmi_rmcpplus_out = cbuf_create (IPMIPOWER_MIN_CONNECTION_BUF,
+					     IPMIPOWER_MAX_CONNECTION_BUF)))
+    {
+      IPMIPOWER_ERROR (("cbuf_create: %s", strerror (errno)));
+      exit (EXIT_FAILURE);
+    }
+  cbuf_opt_set (ic->ipmi_rmcpplus_out, CBUF_OPT_OVERWRITE, CBUF_WRAP_MANY);
 
   if (!(ic->ping_in  = cbuf_create (IPMIPOWER_MIN_CONNECTION_BUF,
                                     IPMIPOWER_MAX_CONNECTION_BUF)))
@@ -730,8 +743,10 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
           close (ics[i].ping_fd);
           if (ics[i].ipmi_in)
             cbuf_destroy (ics[i].ipmi_in);
-          if (ics[i].ipmi_out)
-            cbuf_destroy (ics[i].ipmi_out);
+          if (ics[i].ipmi_lan_out)
+            cbuf_destroy (ics[i].ipmi_lan_out);
+          if (ics[i].ipmi_rmcpplus_out)
+            cbuf_destroy (ics[i].ipmi_rmcpplus_out);
           if (ics[i].ping_in)
             cbuf_destroy (ics[i].ping_in);
           if (ics[i].ping_out)
@@ -778,7 +793,8 @@ ipmipower_connection_array_destroy (struct ipmipower_connection *ics,
       /* ignore potential error, cleanup path */
       close (ics[i].ping_fd);
       cbuf_destroy (ics[i].ipmi_in);
-      cbuf_destroy (ics[i].ipmi_out);
+      cbuf_destroy (ics[i].ipmi_lan_out);
+      cbuf_destroy (ics[i].ipmi_rmcpplus_out);
       cbuf_destroy (ics[i].ping_in);
       cbuf_destroy (ics[i].ping_out);
       if (cmd_args.oem_power_type != IPMIPOWER_OEM_POWER_TYPE_NONE)

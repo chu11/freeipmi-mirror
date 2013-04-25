@@ -51,6 +51,7 @@
 #include <sys/stat.h>
 #include <sys/resource.h>
 #include <sys/types.h>
+#include <sys/socket.h>
 #if HAVE_FCNTL_H
 #include <fcntl.h>
 #endif /* HAVE_FCNTL_H */
@@ -208,7 +209,8 @@ _eliminate_nodes (void)
 }
 
 static void
-_sendto (cbuf_t cbuf, int fd, struct sockaddr_in *destaddr)
+_sendto (cbuf_t cbuf, int fd, struct sockaddr_in *destaddr,
+	 ssize_t (*sendto_cb)(int, const void *, size_t, int, const struct sockaddr *, socklen_t))
 {
   int n, rv;
   uint8_t buf[IPMIPOWER_PACKET_BUFLEN];
@@ -227,17 +229,17 @@ _sendto (cbuf_t cbuf, int fd, struct sockaddr_in *destaddr)
 
   do 
     {
-      rv = ipmi_lan_sendto (fd,
-                            buf,
-                            n,
-                            0,
-                            (struct sockaddr *)destaddr,
-                            sizeof (struct sockaddr_in));
+      rv = sendto_cb (fd,
+		      buf,
+		      n,
+		      0,
+		      (struct sockaddr *)destaddr,
+		      sizeof (struct sockaddr_in));
     } while (rv < 0 && errno == EINTR);
 
   if (rv < 0)
     {
-      IPMIPOWER_ERROR (("ipmi_lan_sendto: %s", strerror (errno)));
+      IPMIPOWER_ERROR (("sendto_cb: %s", strerror (errno)));
       exit (EXIT_FAILURE);
     }
 
@@ -259,6 +261,10 @@ _recvfrom (cbuf_t cbuf, int fd, struct sockaddr_in *srcaddr)
 
   do
     {
+      /* For receive side, ipmi_lan_recvfrom and
+       * ipmi_rmcpplus_recvfrom are identical.  So we just use
+       * ipmi_lan_recvfrom for both.
+       */
       rv = ipmi_lan_recvfrom (fd,
                               buf,
                               IPMIPOWER_PACKET_BUFLEN,
@@ -434,7 +440,8 @@ _poll_loop (int non_interactive)
           pfds[i*2].revents = pfds[i*2+1].revents = 0;
 
           pfds[i*2].events |= POLLIN;
-          if (!cbuf_is_empty (ics[i].ipmi_out))
+          if (!cbuf_is_empty (ics[i].ipmi_lan_out)
+	      || !cbuf_is_empty (ics[i].ipmi_rmcpplus_out))
             pfds[i*2].events |= POLLOUT;
 
           if (!cmd_args.ping_interval)
@@ -474,7 +481,18 @@ _poll_loop (int non_interactive)
                 _recvfrom (ics[i].ipmi_in, ics[i].ipmi_fd, &(ics[i].destaddr));
               
               if (pfds[i*2].revents & POLLOUT)
-                _sendto (ics[i].ipmi_out, ics[i].ipmi_fd, &(ics[i].destaddr));
+		{
+		  if (!cbuf_is_empty (ics[i].ipmi_lan_out))
+		    _sendto (ics[i].ipmi_lan_out,
+			     ics[i].ipmi_fd,
+			     &(ics[i].destaddr),
+			     ipmi_lan_sendto);
+		  else
+		    _sendto (ics[i].ipmi_rmcpplus_out,
+			     ics[i].ipmi_fd,
+			     &(ics[i].destaddr),
+			     ipmi_rmcpplus_sendto);
+		}
             }
 
           if (!cmd_args.ping_interval)
@@ -491,7 +509,10 @@ _poll_loop (int non_interactive)
                 _recvfrom (ics[i].ping_in, ics[i].ping_fd, &(ics[i].destaddr));
               
               if (pfds[i*2+1].revents & POLLOUT)
-                _sendto (ics[i].ping_out, ics[i].ping_fd, &(ics[i].destaddr));
+                _sendto (ics[i].ping_out,
+			 ics[i].ping_fd,
+			 &(ics[i].destaddr),
+			 ipmi_lan_sendto);
             }
         }
 

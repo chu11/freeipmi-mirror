@@ -26,6 +26,9 @@ extern "C" {
 #include <stdint.h>
 #include <freeipmi/fiid/fiid.h>
 
+#include <sys/types.h>
+#include <sys/socket.h>
+
 /**************************
 * IPMI 2.0 Payload Types *
 **************************/
@@ -313,6 +316,24 @@ int unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                                   fiid_obj_t obj_lan_msg_trlr,
                                   fiid_obj_t obj_rmcpplus_session_trlr,
 				  unsigned int flags);
+
+/* returns length sent on success, -1 on error */
+/* A few extra error checks, but nearly identical to system sendto() */
+ssize_t ipmi_rmcpplus_sendto (int s,
+			      const void *buf,
+			      size_t len,
+			      int flags,
+			      const struct sockaddr *to,
+			      socklen_t tolen);
+
+/* returns length received on success, 0 on orderly shutdown, -1 on error */
+/* A few extra error checks, but nearly identical to system recvfrom() */
+ssize_t ipmi_rmcpplus_recvfrom (int s,
+				void *buf,
+				size_t len,
+				int flags,
+				struct sockaddr *from,
+				socklen_t *fromlen);
 
 #ifdef __cplusplus
 }

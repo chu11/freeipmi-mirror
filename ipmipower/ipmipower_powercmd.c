@@ -708,7 +708,14 @@ _send_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
   len = ipmipower_packet_create (ip, pkt, buf, IPMIPOWER_PACKET_BUFLEN);
   ipmipower_packet_dump (ip, pkt, buf, len);
 
-  if ((ret = cbuf_write (ip->ic->ipmi_out, buf, len, &dropped)) < 0)
+  if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN
+      || (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN_2_0
+	  && pkt == IPMIPOWER_PACKET_TYPE_AUTHENTICATION_CAPABILITIES_RQ))
+    ret = cbuf_write (ip->ic->ipmi_lan_out, buf, len, &dropped);
+  else
+    ret = cbuf_write (ip->ic->ipmi_rmcpplus_out, buf, len, &dropped);
+
+  if (ret < 0)
     {
       IPMIPOWER_ERROR (("cbuf_write: %s", strerror (errno)));
       exit (EXIT_FAILURE);

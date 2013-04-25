@@ -276,6 +276,10 @@ _api_lan_recvfrom (ipmi_ctx_t ctx,
 
   do
     {
+      /* For receive side, ipmi_lan_recvfrom and
+       * ipmi_rmcpplus_recvfrom are identical.  So we just use
+       * ipmi_lan_recvfrom for both.
+       */
       recv_len = ipmi_lan_recvfrom (ctx->io.outofband.sockfd,
                                     pkt,
                                     pkt_len,
@@ -2304,12 +2308,12 @@ _api_lan_2_0_cmd_send (ipmi_ctx_t ctx,
 
   do
     {
-      ret = ipmi_lan_sendto (ctx->io.outofband.sockfd,
-                             pkt,
-                             send_len,
-                             0,
-                             (struct sockaddr *)&(ctx->io.outofband.remote_host),
-                             sizeof (struct sockaddr_in));
+      ret = ipmi_rmcpplus_sendto (ctx->io.outofband.sockfd,
+				  pkt,
+				  send_len,
+				  0,
+				  (struct sockaddr *)&(ctx->io.outofband.remote_host),
+				  sizeof (struct sockaddr_in));
     } while (ret < 0 && errno == EINTR);
   
   if (ret < 0)

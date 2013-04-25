@@ -1,5 +1,18 @@
 2013-04-25  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/interface/ipmi-rmcpplus-interface.h,
+	libfreeipmi/interface/ipmi-rmcpplus-interface.c (ipmi_rmcpplus_sendto,
+	ipmi_rmcpplus_recvfrom): New functions to handle non-legacy pad in
+	IPMI 2.0.
+
+	* libfreeipmi/api/ipmi-lan-session-common.c (_api_lan_2_0_cmd_send):
+	Use new ipmi_rmcpplus_sendto.
+
+	* ipmipower/: Support sending packets via ipmi_lan_sendto or
+	ipmi_rmcpplus_sendto.
+
+2013-04-25  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/interface/ipmi-rmcpplus-interface.c (_construct_payload_confidentiality_aes_cbc_128):
 	Fix confidentiality trailer pad calculation corner case.  (Bug
 	location found by Rob Swindell - swindell at broadcom dot com).
