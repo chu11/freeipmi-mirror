@@ -2029,12 +2029,34 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
   
   /* OEM Interpretation
    *
+   * HP Proliant DL160 G8
+   */
+  if (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_HP)
+    {
+      if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_HP_UID_LIGHT
+	  && sensor_type == IPMI_SENSOR_TYPE_OEM_HP_LED)
+	return (_get_event_message (offset,
+				    buf,
+				    buflen,
+				    ipmi_oem_hp_uid_light_max_index,
+				    ipmi_oem_hp_uid_light));
+      
+      if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_HP_HEALTH_LED
+	  && sensor_type == IPMI_SENSOR_TYPE_OEM_HP_LED)
+	return (_get_event_message (offset,
+				    buf,
+				    buflen,
+				    ipmi_oem_hp_health_led_max_index,
+				    ipmi_oem_hp_health_led));
+    }
+  /* OEM Interpretation
+   *
    * Intel S5500WB/Penguin Computing Relion 700
    * Quanta QSSC-S4R/Appro GB812X-CN
    * (Quanta motherboard maintains Intel manufacturer ID)
    * Intel S2600JF/Appro 512X
    */
-  if (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL)
+  else if (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL)
     {
       if (product_id == IPMI_INTEL_PRODUCT_ID_S5500WB)
 	{
@@ -2493,7 +2515,7 @@ ipmi_get_event_messages (uint8_t event_reading_type_code,
                                                 buf,
                                                 EVENT_BUFLEN);
       
-      if (len)
+      if (len > 0)
         {
           if (!(tmp_event_messages[tmp_event_messages_count] = strdup (buf)))
             {
@@ -2505,6 +2527,45 @@ ipmi_get_event_messages (uint8_t event_reading_type_code,
         }
       else
         goto oem_default_output;
+    }
+  /* OEM Interpretation
+   *
+   * HP Proliant DL160 G8
+   */
+  else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM
+	   && (sensor_type == IPMI_SENSOR_TYPE_OEM_HP_LED
+	       && (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_HP_UID_LIGHT
+		   || event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_HP_HEALTH_LED)))
+    {
+      for (i = 0; i < IPMI_MAX_SENSOR_AND_EVENT_OFFSET; i++)
+        {
+          bitmask = 0x1 << i;
+
+          if (event_bitmask & bitmask)
+            {
+	      len = ipmi_get_oem_specific_message (manufacturer_id,
+						   product_id,
+						   event_reading_type_code,
+						   sensor_type,
+						   i,
+						   buf,
+						   EVENT_BUFLEN);
+
+	      if (len > 0)
+		{
+		  if (!(tmp_event_messages[tmp_event_messages_count] = strdup (buf)))
+		    {
+		      SET_ERRNO (ENOMEM);
+		      goto cleanup;
+		    }
+		  
+		  tmp_event_messages_count++;
+		  break;
+		}
+	      else
+		goto oem_default_output;
+	    }
+	}
     }
   else /* OEM Event */
     {

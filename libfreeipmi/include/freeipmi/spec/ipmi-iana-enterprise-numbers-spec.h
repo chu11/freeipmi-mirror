@@ -25,6 +25,7 @@ extern "C" {
 
 /* Convenience macros, will be added as needed in code */
 #define IPMI_IANA_ENTERPRISE_ID_IBM                       2
+#define IPMI_IANA_ENTERPRISE_ID_HP                       11
 #define IPMI_IANA_ENTERPRISE_ID_SUN_MICROSYSTEMS         42
 #define IPMI_IANA_ENTERPRISE_ID_INTEL                   343
 #define IPMI_IANA_ENTERPRISE_ID_DELL                    674

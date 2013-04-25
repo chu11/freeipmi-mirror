@@ -1,3 +1,7 @@
+2013-04-25  Albert Chu <chu11@llnl.gov>
+
+	* Support HP Proliant DL160 G8 OEM sensors.
+	
 2013-04-24  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-dcmi/ipmi-dcmi.c (_sensor_info_output): Fix output
