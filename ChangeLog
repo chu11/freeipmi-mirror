@@ -5,7 +5,8 @@
 2013-04-24  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-dcmi/ipmi-dcmi.c (_sensor_info_output): Fix output
-	calculation errors.
+	calculation errors.  (Bug location found by Michael Winiarski -
+	michael dot winiarski at hp dot com).
 	
 2013-04-24  Albert Chu <chu11@llnl.gov>
 
