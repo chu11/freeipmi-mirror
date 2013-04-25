@@ -1,5 +1,11 @@
 2013-04-25  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/interface/ipmi-rmcpplus-interface.c (_construct_payload_confidentiality_aes_cbc_128):
+	Fix confidentiality trailer pad calculation corner case.  (Bug
+	location found by Rob Swindell - swindell at broadcom dot com).
+
+2013-04-25  Albert Chu <chu11@llnl.gov>
+
 	* Support HP Proliant DL160 G8 OEM sensors.
 	
 2013-04-24  Albert Chu <chu11@llnl.gov>
