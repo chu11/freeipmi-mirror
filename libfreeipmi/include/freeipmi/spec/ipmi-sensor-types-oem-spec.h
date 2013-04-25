@@ -66,6 +66,16 @@ extern "C" {
 #define IPMI_SENSOR_TYPE_OEM_FUJITSU_CONFIG_BACKUP              0xEF
 
 /*******************************************
+ * HP                                      *
+ *******************************************/
+
+/*
+ * HP Proliant DL160 G8
+ */
+
+#define IPMI_SENSOR_TYPE_OEM_HP_LED                             0xC0
+
+/*******************************************
  * Intel                                   *
  *******************************************/
 

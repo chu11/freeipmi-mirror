@@ -334,6 +334,30 @@ unsigned int ipmi_sensor_type_oem_fujitsu_config_backup_max_index = 0x0F;
  * OEM Specific              *
  *****************************/
 
+/*******************************************
+ * HP                                      *
+ *******************************************/
+
+/*
+ * HP Proliant DL160 G8
+ */
+
+const char * const ipmi_oem_hp_uid_light[] =
+  {
+    "on",
+    "off",
+    "blinking",
+  };
+unsigned int ipmi_oem_hp_uid_light_max_index = 0x02;
+
+extern const char * const ipmi_oem_hp_health_led[] =
+  {
+    "green",
+    "amber",
+    "red",
+  };
+unsigned int ipmi_oem_hp_health_led_max_index = 0x02;
+
 /*
  * Intel
  */

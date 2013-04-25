@@ -49,6 +49,17 @@ extern "C" {
 #define IPMI_EVENT_READING_TYPE_CODE_OEM_DELL_FAILURE                   0x8A
 
 /*******************************************
+ * HP                                      *
+ *******************************************/
+
+/*
+ * HP Proliant DL160 G8
+ */
+
+#define IPMI_EVENT_READING_TYPE_CODE_OEM_HP_UID_LIGHT                  0x70
+#define IPMI_EVENT_READING_TYPE_CODE_OEM_HP_HEALTH_LED                 0x71
+
+/*******************************************
  * Intel                                   *
  *******************************************/
 
