@@ -350,7 +350,7 @@ const char * const ipmi_oem_hp_uid_light[] =
   };
 unsigned int ipmi_oem_hp_uid_light_max_index = 0x02;
 
-extern const char * const ipmi_oem_hp_health_led[] =
+const char * const ipmi_oem_hp_health_led[] =
   {
     "green",
     "amber",
