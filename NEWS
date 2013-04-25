@@ -7,6 +7,9 @@ o Clarify error message when SOL session cannot be stolen in
   ipmiconsole/libipmiconsole.
 o Fix dcmi rolling average time period output error
 o Fix ipmi-dcmi output errors with --get-dcmi-sensor-info.
+o Fix corner case in calculation of confidentiality pad length with
+  AES-CBC-128 encryption.  Incorrect pad effects some vendor firmware
+  implementations.
 o Fix Intel OEM SEL buffer overflow.
 o Fix out of trunk source build.
 

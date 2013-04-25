@@ -739,7 +739,7 @@ _construct_payload_confidentiality_aes_cbc_128 (uint8_t payload_type,
   uint8_t iv[IPMI_CRYPT_AES_CBC_128_IV_LENGTH];
   int iv_len;
   uint8_t payload_buf[IPMI_MAX_PAYLOAD_LENGTH];
-  uint8_t pad_len;
+  uint8_t pad_len, pad_tmp;
   int payload_len, cipher_keylen, cipher_blocklen, encrypt_len;
 
   /* Note: Confidentiality Key for AES_CBS_128 is K2 */
@@ -808,7 +808,11 @@ _construct_payload_confidentiality_aes_cbc_128 (uint8_t payload_type,
   /* Pad the data appropriately */
 
   /* +1 is for the pad length field */
-  pad_len = IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH - ((payload_len + 1) % IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH);
+  pad_tmp = ((payload_len + 1) % IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH);
+  if (pad_tmp)
+    pad_len = IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH - pad_tmp;
+  else
+    pad_len = 0;
 
   if ((payload_len + pad_len + 1) > IPMI_MAX_PAYLOAD_LENGTH)
     {
@@ -821,8 +825,8 @@ _construct_payload_confidentiality_aes_cbc_128 (uint8_t payload_type,
       unsigned int i;
       for (i = 0; i < pad_len; i++)
         payload_buf[payload_len + i] = i + 1;
-      payload_buf[payload_len + pad_len] = pad_len;
     }
+  payload_buf[payload_len + pad_len] = pad_len;
 
   /* +1 for pad length field */
   if ((encrypt_len = crypt_cipher_encrypt (IPMI_CRYPT_CIPHER_AES,
