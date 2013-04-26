@@ -43,6 +43,7 @@
 #include "freeipmi/util/ipmi-rmcpplus-util.h"
 #include "freeipmi/util/ipmi-util.h"
 
+#include "ipmi-network.h"
 #include "libcommon/ipmi-crypt.h"
 #include "libcommon/ipmi-fiid-util.h"
 #include "libcommon/ipmi-fill-util.h"
@@ -2690,20 +2691,5 @@ ipmi_rmcpplus_recvfrom (int s,
 			struct sockaddr *from,
 			socklen_t *fromlen)
 {
-  ssize_t rv;
-
-  if (!buf
-      || !len)
-    {
-      SET_ERRNO (EINVAL);
-      return (-1);
-    }
-
-  if ((rv = recvfrom (s, buf, len, flags, from, fromlen)) < 0)
-    {
-      ERRNO_TRACE (errno);
-      return (-1);
-    }
-  
-  return (rv);
+  return (ipmi_network_recvfrom (s, buf, len, flags, from, fromlen));
 }
