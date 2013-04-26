@@ -8,8 +8,8 @@
 	* libfreeipmi/api/ipmi-lan-session-common.c (_api_lan_2_0_cmd_send):
 	Use new ipmi_rmcpplus_sendto.
 
-	* ipmipower/: Support sending packets via ipmi_lan_sendto or
-	ipmi_rmcpplus_sendto.
+	* ipmipower/, libipmiconsole/ : Support sending packets via
+	ipmi_lan_sendto or ipmi_rmcpplus_sendto.
 
 2013-04-25  Albert Chu <chu11@llnl.gov>
 

@@ -279,6 +279,10 @@ _api_lan_recvfrom (ipmi_ctx_t ctx,
       /* For receive side, ipmi_lan_recvfrom and
        * ipmi_rmcpplus_recvfrom are identical.  So we just use
        * ipmi_lan_recvfrom for both.
+       *
+       * In event of future change, should use util functions
+       * ipmi_is_ipmi_1_5_packet or ipmi_is_ipmi_2_0_packet
+       * appropriately.
        */
       recv_len = ipmi_lan_recvfrom (ctx->io.outofband.sockfd,
                                     pkt,

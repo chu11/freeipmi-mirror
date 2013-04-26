@@ -491,6 +491,14 @@ _ipmi_recvfrom (ipmiconsole_ctx_t c)
 
   do
     {
+      /* For receive side, ipmi_lan_recvfrom and
+       * ipmi_rmcpplus_recvfrom are identical.  So we just use
+       * ipmi_lan_recvfrom for both.
+       *
+       * In event of future change, should use util functions
+       * ipmi_is_ipmi_1_5_packet or ipmi_is_ipmi_2_0_packet
+       * appropriately.
+       */
       len = ipmi_lan_recvfrom (c->connection.ipmi_fd,
                                buffer,
                                IPMICONSOLE_PACKET_BUFLEN,
@@ -618,15 +626,30 @@ _ipmi_sendto (ipmiconsole_ctx_t c)
       return (-1);
     }
 
-  do
+  if (ipmi_is_ipmi_1_5_packet (buffer, n))
     {
-      len = ipmi_lan_sendto (c->connection.ipmi_fd,
-                             buffer,
-                             n,
-                             0,
-                             (struct sockaddr *)&(c->session.addr),
-                             sizeof (struct sockaddr_in));
-    } while (len < 0 && errno == EINTR);
+      do
+	{
+	  len = ipmi_lan_sendto (c->connection.ipmi_fd,
+				 buffer,
+				 n,
+				 0,
+				 (struct sockaddr *)&(c->session.addr),
+				 sizeof (struct sockaddr_in));
+	} while (len < 0 && errno == EINTR);
+    }
+  else
+    {
+      do
+	{
+	  len = ipmi_rmcpplus_sendto (c->connection.ipmi_fd,
+				      buffer,
+				      n,
+				      0,
+				      (struct sockaddr *)&(c->session.addr),
+				      sizeof (struct sockaddr_in));
+	} while (len < 0 && errno == EINTR);
+    }
 
   if (len < 0)
     {
