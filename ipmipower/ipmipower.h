@@ -447,8 +447,7 @@ struct ipmipower_connection
   int ipmi_fd;
   int ping_fd;
   cbuf_t ipmi_in;
-  cbuf_t ipmi_lan_out;
-  cbuf_t ipmi_rmcpplus_out;
+  cbuf_t ipmi_out;
   cbuf_t ping_in;
   cbuf_t ping_out;
   unsigned int ipmi_requester_sequence_number_counter;
