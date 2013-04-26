@@ -281,6 +281,10 @@ _recvfrom (cbuf_t cbuf, int fd, struct sockaddr_in *srcaddr)
       /* For receive side, ipmi_lan_recvfrom and
        * ipmi_rmcpplus_recvfrom are identical.  So we just use
        * ipmi_lan_recvfrom for both.
+       *
+       * In event of future change, should use util functions
+       * ipmi_is_ipmi_1_5_packet or ipmi_is_ipmi_2_0_packet
+       * appropriately.
        */
       rv = ipmi_lan_recvfrom (fd,
                               buf,
