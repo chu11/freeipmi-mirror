@@ -43,6 +43,7 @@
 #include "freeipmi/util/ipmi-rmcpplus-util.h"
 #include "freeipmi/util/ipmi-util.h"
 
+#include "ipmi-network.h"
 #include "libcommon/ipmi-crypt.h"
 #include "libcommon/ipmi-fiid-util.h"
 #include "libcommon/ipmi-fill-util.h"
@@ -2650,4 +2651,45 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
     }
 
   return (0);
+}
+
+ssize_t
+ipmi_rmcpplus_sendto (int s,
+		      const void *buf,
+		      size_t len,
+		      int flags,
+		      const struct sockaddr *to,
+		      socklen_t tolen)
+{
+  ssize_t rv;
+
+  /* achu: Per specification table 13-8, no legacy padding for IPMI
+   * 2.0 packets
+   */
+
+  if (!buf
+      || !len)
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if ((rv = sendto (s, buf, len, flags, to, tolen)) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  return (rv);
+}
+
+ssize_t
+ipmi_rmcpplus_recvfrom (int s,
+			void *buf,
+			size_t len,
+			int flags,
+			struct sockaddr *from,
+			socklen_t *fromlen)
+{
+  return (ipmi_network_recvfrom (s, buf, len, flags, from, fromlen));
 }

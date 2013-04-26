@@ -1,5 +1,32 @@
 2013-04-26  Albert Chu <chu11@llnl.gov>
 
+	Merge branch 'sendto'
+
+	Modify architecture to send IPMI 1.5 network packets via one
+	function and IPMI 2.0 network packets via another function.  IPMI
+	1.5 packets must be padded for legacy reasons, however IPMI 2.0
+	packets should not be padded.
+	(Issue discovered by Rob Swindell - swindell at broadcom dot com).
+	
+	* libfreeipmi/include/freeipmi/interface/ipmi-rmcpplus-interface.h,
+	libfreeipmi/interface/ipmi-rmcpplus-interface.c (ipmi_rmcpplus_sendto,
+	ipmi_rmcpplus_recvfrom): New functions to handle non-legacy pad in
+	IPMI 2.0.
+
+	* libfreeipmi/interface/ipmi-network.h,
+	libfreeipmi/interface/ipmi-network.c: New files.
+
+	* libfreeipmi/interface/ipmi-lan-interface.c (ipmi_lan_recvfrom):
+	Adjust to use new common function.
+
+	* libfreeipmi/api/ipmi-lan-session-common.c (_api_lan_2_0_cmd_send):
+	Use new ipmi_rmcpplus_sendto.
+
+	* ipmipower/, libipmiconsole/ : Support sending packets via
+	ipmi_lan_sendto or ipmi_rmcpplus_sendto.
+
+2013-04-26  Albert Chu <chu11@llnl.gov>
+
 	* Globally fix copyright years from ending in 2012 to ending in
 	2013.
 	

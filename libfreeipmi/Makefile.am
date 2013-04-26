@@ -119,6 +119,8 @@ libfreeipmi_la_SOURCES = \
 	interface/ipmi-ipmb-interface.c \
 	interface/ipmi-kcs-interface.c \
 	interface/ipmi-lan-interface.c \
+	interface/ipmi-network.c \
+	interface/ipmi-network.h \
 	interface/ipmi-rmcpplus-interface.c \
 	interface/rmcp-interface.c \
 	interpret/ipmi-interpret.c \
