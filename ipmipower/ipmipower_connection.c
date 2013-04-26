@@ -194,7 +194,7 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
   cbuf_opt_set (ic->ipmi_in, CBUF_OPT_OVERWRITE, CBUF_WRAP_MANY);
 
   if (!(ic->ipmi_out = cbuf_create (IPMIPOWER_MIN_CONNECTION_BUF,
-				    IPMIPOWER_MAX_CONNECTION_BUF)))
+                                    IPMIPOWER_MAX_CONNECTION_BUF)))
     {
       IPMIPOWER_ERROR (("cbuf_create: %s", strerror (errno)));
       exit (EXIT_FAILURE);

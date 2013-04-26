@@ -501,7 +501,7 @@ _poll_loop (int non_interactive)
                 _recvfrom (ics[i].ipmi_in, ics[i].ipmi_fd, &(ics[i].destaddr));
               
               if (pfds[i*2].revents & POLLOUT)
-		_sendto (ics[i].ipmi_out, ics[i].ipmi_fd, &(ics[i].destaddr));
+                _sendto (ics[i].ipmi_out, ics[i].ipmi_fd, &(ics[i].destaddr));
             }
 
           if (!cmd_args.ping_interval)
