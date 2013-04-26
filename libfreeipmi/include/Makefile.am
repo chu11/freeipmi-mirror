@@ -113,6 +113,7 @@ nobase_include_HEADERS = \
 	freeipmi/spec/ipmi-system-info-parameters-spec.h \
 	freeipmi/spec/ipmi-system-info-parameters-oem-spec.h \
 	freeipmi/spec/ipmi-system-software-id-spec.h \
+	freeipmi/spec/ipmi-timestamp-spec.h \
 	freeipmi/templates/ipmi-bmc-watchdog-timer-cmds-templates.h \
 	freeipmi/templates/ipmi-chassis-cmds-templates.h \
 	freeipmi/templates/ipmi-dcmi-cmds-templates.h \

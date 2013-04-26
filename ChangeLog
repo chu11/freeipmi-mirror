@@ -1,5 +1,9 @@
 2013-04-26  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/spec/ipmi-timestamp-spec.h: New file.
+
+2013-04-26  Albert Chu <chu11@llnl.gov>
+
 	Merge branch 'sendto'
 
 	Modify architecture to send IPMI 1.5 network packets via one
