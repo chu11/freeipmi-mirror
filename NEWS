@@ -13,6 +13,10 @@ o Fix corner case in calculation of confidentiality pad length with
 o Fix Intel OEM SEL buffer overflow.
 o Fix out of trunk source build.
 
+Libraries
+---------
+o Support new HP Proliant DL160 G8 OEM sensor events.
+
 FreeIPMI 1.2.5 - 02/26/13
 -------------------------
 o In all config tools (bmc-config, ipmi-pef-config,
