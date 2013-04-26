@@ -188,7 +188,7 @@ Power on a remote machine using IPMI over LAN.
 #include <@top_srcdir@/man/manpage-common-known-issues.man>
 #include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
 .SH "COPYRIGHT"
-Copyright \(co 2007-2012 FreeIPMI Core Team
+Copyright \(co 2007-2013 FreeIPMI Core Team
 #include <@top_srcdir@/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
 freeipmi(7), bmc-config(8), bmc-device(8), ipmi-chassis-config(8), ipmipower(8)

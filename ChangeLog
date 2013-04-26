@@ -1,3 +1,8 @@
+2013-04-26  Albert Chu <chu11@llnl.gov>
+
+	* Globally fix copyright years from ending in 2012 to ending in
+	2013.
+	
 2013-04-25  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/interface/ipmi-rmcpplus-interface.c (_construct_payload_confidentiality_aes_cbc_128):

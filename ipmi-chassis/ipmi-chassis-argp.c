@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007-2012 FreeIPMI Core Team
+ * Copyright (C) 2007-2013 FreeIPMI Core Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@
 
 const char *argp_program_version =
   "ipmi-chassis - " PACKAGE_VERSION "\n"
-  "Copyright (C) 2007-2012 FreeIPMI Core Team\n"
+  "Copyright (C) 2007-2013 FreeIPMI Core Team\n"
   "This program is free software; you may redistribute it under the terms of\n"
   "the GNU General Public License.  This program has absolutely no warranty.";
 

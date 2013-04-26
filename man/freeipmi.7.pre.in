@@ -296,7 +296,7 @@ A library for IPMI node detection.
 #include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
 
 .SH "COPYRIGHT"
-Copyright \(co 2003-2012 FreeIPMI Core Team.  
+Copyright \(co 2003-2013 FreeIPMI Core Team.  
 #include <@top_srcdir@/man/manpage-common-gpl-freeipmi-text.man>
 
 .SH "SEE ALSO"

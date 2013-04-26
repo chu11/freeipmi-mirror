@@ -1,7 +1,7 @@
 .\"#############################################################################
 .\"$Id: ipmiping.8.pre.in,v 1.18 2010-06-30 21:56:36 chu11 Exp $
 .\"#############################################################################
-.\"  Copyright (C) 2007-2012 Lawrence Livermore National Security, LLC.
+.\"  Copyright (C) 2007-2013 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2003-2007 The Regents of the University of California.
 .\"  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
 .\"  Written by Albert Chu <chu11@llnl.gov>
@@ -51,7 +51,7 @@ depending on user choice.
 #include <@top_srcdir@/man/manpage-common-known-issues-ping.man>
 #include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
 .SH COPYRIGHT
-Copyright (C) 2007-2012 Lawrence Livermore National Security, LLC.
+Copyright (C) 2007-2013 Lawrence Livermore National Security, LLC.
 .br
 Copyright (C) 2003-2007 The Regents of the University of California.
 #include <@top_srcdir@/man/manpage-common-gpl-program-text.man>
