@@ -51,6 +51,7 @@
 #include <sys/stat.h>
 #include <sys/resource.h>
 #include <sys/types.h>
+#include <sys/socket.h>
 #if HAVE_FCNTL_H
 #include <fcntl.h>
 #endif /* HAVE_FCNTL_H */
@@ -227,17 +228,35 @@ _sendto (cbuf_t cbuf, int fd, struct sockaddr_in *destaddr)
 
   do 
     {
-      rv = ipmi_lan_sendto (fd,
-                            buf,
-                            n,
-                            0,
-                            (struct sockaddr *)destaddr,
-                            sizeof (struct sockaddr_in));
+      if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN)
+	rv = ipmi_lan_sendto (fd,
+			      buf,
+			      n,
+			      0,
+			      (struct sockaddr *)destaddr,
+			      sizeof (struct sockaddr_in));
+      else
+	{
+	  if (ipmi_is_ipmi_1_5_packet (buf, n))
+	    rv = ipmi_lan_sendto (fd,
+				  buf,
+				  n,
+				  0,
+				  (struct sockaddr *)destaddr,
+				  sizeof (struct sockaddr_in));
+	  else
+	    rv = ipmi_rmcpplus_sendto (fd,
+				       buf,
+				       n,
+				       0,
+				       (struct sockaddr *)destaddr,
+				       sizeof (struct sockaddr_in));
+	}
     } while (rv < 0 && errno == EINTR);
 
   if (rv < 0)
     {
-      IPMIPOWER_ERROR (("ipmi_lan_sendto: %s", strerror (errno)));
+      IPMIPOWER_ERROR (("ipmi_lan/rmcpplus_sendto: %s", strerror (errno)));
       exit (EXIT_FAILURE);
     }
 
@@ -259,6 +278,14 @@ _recvfrom (cbuf_t cbuf, int fd, struct sockaddr_in *srcaddr)
 
   do
     {
+      /* For receive side, ipmi_lan_recvfrom and
+       * ipmi_rmcpplus_recvfrom are identical.  So we just use
+       * ipmi_lan_recvfrom for both.
+       *
+       * In event of future change, should use util functions
+       * ipmi_is_ipmi_1_5_packet or ipmi_is_ipmi_2_0_packet
+       * appropriately.
+       */
       rv = ipmi_lan_recvfrom (fd,
                               buf,
                               IPMIPOWER_PACKET_BUFLEN,

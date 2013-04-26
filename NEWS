@@ -10,11 +10,15 @@ o Fix ipmi-dcmi output errors with --get-dcmi-sensor-info.
 o Fix corner case in calculation of confidentiality pad length with
   AES-CBC-128 encryption.  Incorrect pad effects some vendor firmware
   implementations.
+o Send IPMI 2.0 packets differently than IPMI 1.5 packets, as the
+  former does not require legacy pad data to be appended to payloads.
 o Fix Intel OEM SEL buffer overflow.
 o Fix out of trunk source build.
 
 Libraries
 ---------
+o Support new ipmi_rmcpplus_sendto() and ipmi_rmcpplus_recvfrom()
+  functions.
 o Support new HP Proliant DL160 G8 OEM sensor events.
 
 FreeIPMI 1.2.5 - 02/26/13
