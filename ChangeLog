@@ -2,6 +2,9 @@
 
 	* libfreeipmi/include/freeipmi/spec/ipmi-timestamp-spec.h: New file.
 
+	* libfreeipmi/include/freeipmi/util/ipmi-timestamp-util.h,
+	libfreeipmi/util/ipmi-timestamp-util.c: New timestamp utility files.
+
 2013-04-26  Albert Chu <chu11@llnl.gov>
 
 	Merge branch 'sendto'

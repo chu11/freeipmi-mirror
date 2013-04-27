@@ -156,6 +156,7 @@ nobase_include_HEADERS = \
 	freeipmi/util/ipmi-rmcpplus-util.h \
 	freeipmi/util/ipmi-sensor-and-event-code-tables-util.h \
 	freeipmi/util/ipmi-sensor-util.h \
+	freeipmi/util/ipmi-timestamp-util.h \
 	freeipmi/util/ipmi-util.h \
 	freeipmi/util/ipmi-dcmi-util.h \
 	freeipmi/util/rmcp-util.h
