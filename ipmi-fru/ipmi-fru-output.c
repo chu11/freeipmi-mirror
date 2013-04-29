@@ -202,9 +202,6 @@ ipmi_fru_output_board_info_area (ipmi_fru_state_data_t *state_data,
   ipmi_fru_field_t board_part_number;
   ipmi_fru_field_t board_fru_file_id;
   ipmi_fru_field_t board_custom_fields[IPMI_FRU_CUSTOM_FIELDS];
-  time_t timetmp;
-  struct tm mfg_date_time_tm;
-  char mfg_date_time_buf[IPMI_FRU_STR_BUFLEN + 1];
   unsigned int i;
 
   assert (state_data);
@@ -259,21 +256,31 @@ ipmi_fru_output_board_info_area (ipmi_fru_state_data_t *state_data,
                         language_code);
     }
 
-  /* Posix says individual calls need not clear/set all portions of
-   * 'struct tm', thus passing 'struct tm' between functions could
-   * have issues.  So we need to memset.
-   */
-  memset (&mfg_date_time_tm, '\0', sizeof (struct tm));
+  if (mfg_date_time != IPMI_FRU_MFG_DATE_TIME_UNSPECIFIED)
+    {
+      time_t timetmp;
+      struct tm mfg_date_time_tm;
+      char mfg_date_time_buf[IPMI_FRU_STR_BUFLEN + 1];
+      
+      /* Posix says individual calls need not clear/set all portions of
+       * 'struct tm', thus passing 'struct tm' between functions could
+       * have issues.  So we need to memset.
+       */
+      memset (&mfg_date_time_tm, '\0', sizeof (struct tm));
 
-  timetmp = mfg_date_time;
-  localtime_r (&timetmp, &mfg_date_time_tm);
-  memset (mfg_date_time_buf, '\0', IPMI_FRU_STR_BUFLEN + 1);
-  strftime (mfg_date_time_buf, IPMI_FRU_STR_BUFLEN, "%D - %T", &mfg_date_time_tm);
+      timetmp = mfg_date_time;
+      localtime_r (&timetmp, &mfg_date_time_tm);
+      memset (mfg_date_time_buf, '\0', IPMI_FRU_STR_BUFLEN + 1);
+      strftime (mfg_date_time_buf, IPMI_FRU_STR_BUFLEN, "%D - %T", &mfg_date_time_tm);
 
-  pstdout_printf (state_data->pstate,
-                  "  FRU Board Manufacturing Date/Time: %s\n",
-                  mfg_date_time_buf);
-
+      pstdout_printf (state_data->pstate,
+		      "  FRU Board Manufacturing Date/Time: %s\n",
+		      mfg_date_time_buf);
+    }
+  else
+    pstdout_printf (state_data->pstate,
+		    "  FRU Board Manufacturing Date/Time: unspecified\n");
+  
   if (_output_field (state_data,
                      language_code,
                      &board_manufacturer,
