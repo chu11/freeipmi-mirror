@@ -143,6 +143,11 @@ libfreeipmi-sdr
 ---------------
 - checksum/something to ensure no disk corruption
 
+libfreeipmi-fru
+---------------
+- ddr3 sdram (***)
+- fru 1.2 support (***)
+
 libfreeipmi-sel
 ---------------
 - split vendor files into motherboard files?  Is getting big.
@@ -249,6 +254,8 @@ ipmi-fru
 - write FRU data option
   - for OEM integrators
   - or should be in bmc-device?
+- ddr3 sdram (***)
+- fru 1.2 support (***)
 
 bmc-device
 --------
@@ -257,6 +264,7 @@ bmc-device
   - or only as needed in ipmi-oem per vendor need?
 - (NOT CONFIRMED) get auxiliary log status
 - set sensor reading (XXX)
+- get/set UTC offset (***)
 
 bmc-watchdog
 ------------
