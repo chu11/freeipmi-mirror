@@ -85,6 +85,7 @@ fiid_template_t tmpl_fru_power_supply_information =
     { 16, "high_end_input_voltage_range_2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8, "low_end_input_frequency_range", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8, "high_end_input_frequency_range", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    /* FRU Revision 1.2 renames this "Input dropout tolerance in ms", keep legacy name */
     { 8, "ac_dropout_tolerance", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "predictive_fail_support", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "power_factor_correction", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},

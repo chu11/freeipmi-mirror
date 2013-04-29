@@ -6,8 +6,8 @@ Tools - New Features
 
 Tools - Bug Fixes/Minor Changes
 -------------------------------
-o In ipmi-fru, output "unspecified" for manufacturing date/time as
-  appropriate (per FRU Revision 1.2 update).
+o In ipmi-fru, output "unspecified" for manufacturing date/time or
+  peak capacity as appropriate (per FRU Revision 1.2 update).
 
 Libraries
 ---------

@@ -611,9 +611,15 @@ ipmi_fru_output_power_supply_information (ipmi_fru_state_data_t *state_data,
                   "  FRU Power Supply Hot Swap Support: %s\n",
                   (hot_swap_support) ? "Yes" : "No");
 
-  pstdout_printf (state_data->pstate,
-                  "  FRU Power Supply Peak Capacity: %u Watts\n",
-                  peak_capacity);
+  if (peak_capacity != IPMI_FRU_PEAK_CAPACITY_UNSPECIFIED)
+    pstdout_printf (state_data->pstate,
+		    "  FRU Power Supply Peak Capacity: %u Watts\n",
+		    peak_capacity);
+  else
+    pstdout_printf (state_data->pstate,
+		    "  FRU Power Supply Peak Capacity: unspecified\n",
+		    peak_capacity);
+
   pstdout_printf (state_data->pstate,
                   "  FRU Power Supply Hold Up Time: %u s\n",
                   hold_up_time);
