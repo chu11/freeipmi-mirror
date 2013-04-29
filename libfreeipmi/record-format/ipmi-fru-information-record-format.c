@@ -108,7 +108,9 @@ fiid_template_t tmpl_fru_dc_output =
     { 3, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "standby", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 16, "nominal_voltage", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    /* FRU Revision 1.2 renames this "Maximum negative voltage", keep legacy name */
     { 16, "maximum_negative_voltage_deviation", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    /* FRU Revision 1.2 renames this "Maximum positive voltage", keep legacy name */
     { 16, "maximum_positive_voltage_deviation", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 16, "ripple_and_noise_pk_pk", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 16, "minimum_current_draw", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},

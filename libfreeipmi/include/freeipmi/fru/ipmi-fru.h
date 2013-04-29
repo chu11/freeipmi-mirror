@@ -190,6 +190,7 @@ int ipmi_fru_product_info_area (ipmi_fru_ctx_t ctx,
 				unsigned int product_custom_fields_len);
 
 /* 10 mV multipliers factored in return voltages */
+/* FRU Revision 1.2 renamed ac_dropout_tolerance to input_dropout_tolerance, are identical */
 int ipmi_fru_multirecord_power_supply_information (ipmi_fru_ctx_t ctx,
 						   const void *areabuf,
 						   unsigned int areabuflen,
