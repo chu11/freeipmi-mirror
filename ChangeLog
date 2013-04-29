@@ -11,6 +11,10 @@
 	* libfreeipmi/include/freeipmi/spec/ipmi-fru-chassis-types-spec.h,
 	libfreeipmi/spec/ipmi-fru-chassis-types-spec.c: Add new chassis
 	types.
+
+	* libfreeipmi/include/freeipmi/fru/ipmi-fru.h,
+	libfreeipmi/include/freeipmi/record-format/ipmi-fru-information-record-format.h,
+	libfreeipmi/fru/ipmi-fru.c (_read_multirecord_area_data): Update
 	
 2013-04-24  Albert Chu <chu11@llnl.gov>
 

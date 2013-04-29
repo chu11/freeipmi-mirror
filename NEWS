@@ -11,9 +11,10 @@ o In ipmi-fru, output "unspecified" for manufacturing date/time as
 
 Libraries
 ---------
-o In libfreeipmi's 'fru' sub-library, support additional chassis types
-  (per FRU Revision 1.2 update).
-
+o In libfreeipmi, support additional chassis types (per FRU Revision
+  1.2 update).
+o In libfreeipmi, support new FRU multirecord types (per FRU Revision
+  1.2 update).
 
 FreeIPMI 1.2.1 - 08/22/12
 -------------------------
