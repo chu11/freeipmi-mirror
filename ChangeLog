@@ -7,6 +7,10 @@
 
 	* ipmi-fru/ipmi-fru-output.c (ipmi_fru_output_board_info_area):
 	Output manufacturing time as unspecified as appropriate.
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-fru-chassis-types-spec.h,
+	libfreeipmi/spec/ipmi-fru-chassis-types-spec.c: Add new chassis
+	types.
 	
 2013-04-24  Albert Chu <chu11@llnl.gov>
 
