@@ -146,7 +146,6 @@ libfreeipmi-sdr
 libfreeipmi-fru
 ---------------
 - ddr3 sdram (***)
-- fru 1.2 support (***)
 
 libfreeipmi-sel
 ---------------
@@ -167,9 +166,6 @@ libipmiconsole
   - perhaps ~100ms of character data to reduce packets send?
   - as far as I can tell, most ssh implementations send 1 char at a time,
     to most users that libipmiconsole will get similar interaction.
-- With SOL instance support, its conceivable multiple
-  Conmans/etc. could run simultaneously, and now debug dumps to the
-  same directory may not work.  Must deal with this somehow.  (***)
  
 libipmimonitoring
 -----------------
@@ -255,7 +251,6 @@ ipmi-fru
   - for OEM integrators
   - or should be in bmc-device?
 - ddr3 sdram (***)
-- fru 1.2 support (***)
 
 bmc-device
 --------
