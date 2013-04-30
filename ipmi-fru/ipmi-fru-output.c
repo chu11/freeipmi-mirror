@@ -480,10 +480,10 @@ ipmi_fru_output_power_supply_information (ipmi_fru_state_data_t *state_data,
   unsigned int peak_va;
   unsigned int inrush_current;
   unsigned int inrush_interval;
-  unsigned int low_end_input_voltage_range_1;
-  unsigned int high_end_input_voltage_range_1;
-  unsigned int low_end_input_voltage_range_2;
-  unsigned int high_end_input_voltage_range_2;
+  int low_end_input_voltage_range_1;
+  int high_end_input_voltage_range_1;
+  int low_end_input_voltage_range_2;
+  int high_end_input_voltage_range_2;
   unsigned int low_end_input_frequency_range;
   unsigned int high_end_input_frequency_range;
   unsigned int ac_dropout_tolerance;
@@ -557,16 +557,16 @@ ipmi_fru_output_power_supply_information (ipmi_fru_state_data_t *state_data,
                   "  FRU Power Supply Inrush Interval: %u ms\n",
                   inrush_interval);
   pstdout_printf (state_data->pstate,
-                  "  FRU Power Supply Low End Input Voltage 1: %u mV\n",
+                  "  FRU Power Supply Low End Input Voltage 1: %d mV\n",
                   low_end_input_voltage_range_1);
   pstdout_printf (state_data->pstate,
-                  "  FRU Power Supply High End Input Voltage 1: %u mV\n",
+                  "  FRU Power Supply High End Input Voltage 1: %d mV\n",
                   high_end_input_voltage_range_1);
   pstdout_printf (state_data->pstate,
-                  "  FRU Power Supply Low End Input Voltage 2: %u mV\n",
+                  "  FRU Power Supply Low End Input Voltage 2: %d mV\n",
                   low_end_input_voltage_range_2);
   pstdout_printf (state_data->pstate,
-                  "  FRU Power Supply High End Input Voltage 2: %u mV\n",
+                  "  FRU Power Supply High End Input Voltage 2: %d mV\n",
                   high_end_input_voltage_range_2);
   pstdout_printf (state_data->pstate,
                   "  FRU Power Supply Low End Acceptable Frequency: %u Hz\n",

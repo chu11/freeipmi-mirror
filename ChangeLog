@@ -18,6 +18,12 @@
 	* libfreeipmi/include/freeipmi/fru/ipmi-fru.h,
 	libfreeipmi/include/freeipmi/record-format/ipmi-fru-information-record-format.h,
 	libfreeipmi/fru/ipmi-fru.c (_read_multirecord_area_data): Update
+
+	* libfreeipmi/include/freeipmi/fru/ipmi-fru.h,
+	libfreeipmi/fru/ipmi-fru-data.c (ipmi_fru_multirecord_power_supply_information):
+	Return low/high end input voltage ranges as signed integers.
+
+	* ipmi-fru/: Output low/high end voltage ranges as signed integers.
 	
 2013-04-24  Albert Chu <chu11@llnl.gov>
 

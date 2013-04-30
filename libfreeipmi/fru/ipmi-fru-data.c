@@ -696,10 +696,10 @@ ipmi_fru_multirecord_power_supply_information (ipmi_fru_ctx_t ctx,
 					       unsigned int *peak_va,
 					       unsigned int *inrush_current,
 					       unsigned int *inrush_interval,
-					       unsigned int *low_end_input_voltage_range_1,
-					       unsigned int *high_end_input_voltage_range_1,
-					       unsigned int *low_end_input_voltage_range_2,
-					       unsigned int *high_end_input_voltage_range_2,
+					       int *low_end_input_voltage_range_1,
+					       int *high_end_input_voltage_range_1,
+					       int *low_end_input_voltage_range_2,
+					       int *high_end_input_voltage_range_2,
 					       unsigned int *low_end_input_frequency_range,
 					       unsigned int *high_end_input_frequency_range,
 					       unsigned int *ac_dropout_tolerance,
@@ -717,6 +717,7 @@ ipmi_fru_multirecord_power_supply_information (ipmi_fru_ctx_t ctx,
 {
   fiid_obj_t obj_record = NULL;
   int tmpl_record_length;
+  int16_t tmp16;
   uint64_t val;
   int rv = -1;
 
@@ -816,7 +817,9 @@ ipmi_fru_multirecord_power_supply_information (ipmi_fru_ctx_t ctx,
           FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*low_end_input_voltage_range_1) = (((unsigned int)val) * 10);
+      /* field is signed and 16bits */
+      tmp16 = (val & 0xFFFF);
+      (*low_end_input_voltage_range_1) = ((int)tmp16 * 10);
     }
   if (high_end_input_voltage_range_1)
     {
@@ -827,7 +830,9 @@ ipmi_fru_multirecord_power_supply_information (ipmi_fru_ctx_t ctx,
           FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*high_end_input_voltage_range_1) = (((unsigned int)val) * 10);
+      /* field is signed and 16bits */
+      tmp16 = (val & 0xFFFF);
+      (*high_end_input_voltage_range_1) = ((int)tmp16 * 10);
     }
   if (low_end_input_voltage_range_2)
     {
@@ -838,7 +843,9 @@ ipmi_fru_multirecord_power_supply_information (ipmi_fru_ctx_t ctx,
           FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*low_end_input_voltage_range_2) = (((unsigned int)val) * 10);
+      /* field is signed and 16bits */
+      tmp16 = (val & 0xFFFF);
+      (*low_end_input_voltage_range_2) = ((int)tmp16 * 10);
     }
   if (high_end_input_voltage_range_2)
     {
@@ -849,7 +856,9 @@ ipmi_fru_multirecord_power_supply_information (ipmi_fru_ctx_t ctx,
           FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*high_end_input_voltage_range_2) = (((unsigned int)val) * 10);
+      /* field is signed and 16bits */
+      tmp16 = (val & 0xFFFF);
+      (*high_end_input_voltage_range_2) = ((int)tmp16 * 10);
     }
   if (low_end_input_frequency_range)
     {
