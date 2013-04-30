@@ -202,9 +202,6 @@ ipmi_fru_output_board_info_area (ipmi_fru_state_data_t *state_data,
   ipmi_fru_field_t board_part_number;
   ipmi_fru_field_t board_fru_file_id;
   ipmi_fru_field_t board_custom_fields[IPMI_FRU_CUSTOM_FIELDS];
-  time_t timetmp;
-  struct tm mfg_date_time_tm;
-  char mfg_date_time_buf[IPMI_FRU_STR_BUFLEN + 1];
   unsigned int i;
 
   assert (state_data);
@@ -259,21 +256,31 @@ ipmi_fru_output_board_info_area (ipmi_fru_state_data_t *state_data,
                         language_code);
     }
 
-  /* Posix says individual calls need not clear/set all portions of
-   * 'struct tm', thus passing 'struct tm' between functions could
-   * have issues.  So we need to memset.
-   */
-  memset (&mfg_date_time_tm, '\0', sizeof (struct tm));
+  if (mfg_date_time != IPMI_FRU_MFG_DATE_TIME_UNSPECIFIED)
+    {
+      time_t timetmp;
+      struct tm mfg_date_time_tm;
+      char mfg_date_time_buf[IPMI_FRU_STR_BUFLEN + 1];
+      
+      /* Posix says individual calls need not clear/set all portions of
+       * 'struct tm', thus passing 'struct tm' between functions could
+       * have issues.  So we need to memset.
+       */
+      memset (&mfg_date_time_tm, '\0', sizeof (struct tm));
 
-  timetmp = mfg_date_time;
-  localtime_r (&timetmp, &mfg_date_time_tm);
-  memset (mfg_date_time_buf, '\0', IPMI_FRU_STR_BUFLEN + 1);
-  strftime (mfg_date_time_buf, IPMI_FRU_STR_BUFLEN, "%D - %T", &mfg_date_time_tm);
+      timetmp = mfg_date_time;
+      localtime_r (&timetmp, &mfg_date_time_tm);
+      memset (mfg_date_time_buf, '\0', IPMI_FRU_STR_BUFLEN + 1);
+      strftime (mfg_date_time_buf, IPMI_FRU_STR_BUFLEN, "%D - %T", &mfg_date_time_tm);
 
-  pstdout_printf (state_data->pstate,
-                  "  FRU Board Manufacturing Date/Time: %s\n",
-                  mfg_date_time_buf);
-
+      pstdout_printf (state_data->pstate,
+		      "  FRU Board Manufacturing Date/Time: %s\n",
+		      mfg_date_time_buf);
+    }
+  else
+    pstdout_printf (state_data->pstate,
+		    "  FRU Board Manufacturing Date/Time: unspecified\n");
+  
   if (_output_field (state_data,
                      language_code,
                      &board_manufacturer,
@@ -473,10 +480,10 @@ ipmi_fru_output_power_supply_information (ipmi_fru_state_data_t *state_data,
   unsigned int peak_va;
   unsigned int inrush_current;
   unsigned int inrush_interval;
-  unsigned int low_end_input_voltage_range_1;
-  unsigned int high_end_input_voltage_range_1;
-  unsigned int low_end_input_voltage_range_2;
-  unsigned int high_end_input_voltage_range_2;
+  int low_end_input_voltage_range_1;
+  int high_end_input_voltage_range_1;
+  int low_end_input_voltage_range_2;
+  int high_end_input_voltage_range_2;
   unsigned int low_end_input_frequency_range;
   unsigned int high_end_input_frequency_range;
   unsigned int ac_dropout_tolerance;
@@ -550,16 +557,16 @@ ipmi_fru_output_power_supply_information (ipmi_fru_state_data_t *state_data,
                   "  FRU Power Supply Inrush Interval: %u ms\n",
                   inrush_interval);
   pstdout_printf (state_data->pstate,
-                  "  FRU Power Supply Low End Input Voltage 1: %u mV\n",
+                  "  FRU Power Supply Low End Input Voltage 1: %d mV\n",
                   low_end_input_voltage_range_1);
   pstdout_printf (state_data->pstate,
-                  "  FRU Power Supply High End Input Voltage 1: %u mV\n",
+                  "  FRU Power Supply High End Input Voltage 1: %d mV\n",
                   high_end_input_voltage_range_1);
   pstdout_printf (state_data->pstate,
-                  "  FRU Power Supply Low End Input Voltage 2: %u mV\n",
+                  "  FRU Power Supply Low End Input Voltage 2: %d mV\n",
                   low_end_input_voltage_range_2);
   pstdout_printf (state_data->pstate,
-                  "  FRU Power Supply High End Input Voltage 2: %u mV\n",
+                  "  FRU Power Supply High End Input Voltage 2: %d mV\n",
                   high_end_input_voltage_range_2);
   pstdout_printf (state_data->pstate,
                   "  FRU Power Supply Low End Acceptable Frequency: %u Hz\n",
@@ -604,9 +611,15 @@ ipmi_fru_output_power_supply_information (ipmi_fru_state_data_t *state_data,
                   "  FRU Power Supply Hot Swap Support: %s\n",
                   (hot_swap_support) ? "Yes" : "No");
 
-  pstdout_printf (state_data->pstate,
-                  "  FRU Power Supply Peak Capacity: %u Watts\n",
-                  peak_capacity);
+  if (peak_capacity != IPMI_FRU_PEAK_CAPACITY_UNSPECIFIED)
+    pstdout_printf (state_data->pstate,
+		    "  FRU Power Supply Peak Capacity: %u Watts\n",
+		    peak_capacity);
+  else
+    pstdout_printf (state_data->pstate,
+		    "  FRU Power Supply Peak Capacity: unspecified\n",
+		    peak_capacity);
+
   pstdout_printf (state_data->pstate,
                   "  FRU Power Supply Hold Up Time: %u s\n",
                   hold_up_time);
@@ -625,6 +638,7 @@ ipmi_fru_output_power_supply_information (ipmi_fru_state_data_t *state_data,
 
 int
 ipmi_fru_output_dc_output (ipmi_fru_state_data_t *state_data,
+			   unsigned int area_type,
                            const void *areabuf,
                            uint8_t area_length)
 {
@@ -638,34 +652,69 @@ ipmi_fru_output_dc_output (ipmi_fru_state_data_t *state_data,
   unsigned int maximum_current_draw;
 
   assert (state_data);
+  assert (area_type == IPMI_FRU_AREA_TYPE_MULTIRECORD_DC_OUTPUT
+	  || area_type == IPMI_FRU_AREA_TYPE_MULTIRECORD_EXTENDED_DC_OUTPUT);
   assert (areabuf);
   assert (area_length);
 
-  if (ipmi_fru_multirecord_dc_output (state_data->fru_ctx,
-				      areabuf,
-				      area_length,
-				      &output_number,
-				      &standby,
-				      &nominal_voltage,
-				      &maximum_negative_voltage_deviation,
-				      &maximum_positive_voltage_deviation,
-				      &ripple_and_noise_pk_pk,
-				      &minimum_current_draw,
-				      &maximum_current_draw) < 0)
+  if (area_type == IPMI_FRU_AREA_TYPE_MULTIRECORD_DC_OUTPUT)
     {
-      if (IPMI_FRU_ERRNUM_IS_NON_FATAL_ERROR (state_data->fru_ctx))
-        {
-          pstdout_printf (state_data->pstate,
-                          "  FRU Multirecord DC Output Error: %s\n",
-                          ipmi_fru_ctx_errormsg (state_data->fru_ctx));
-          return (0);
-        }
+      if (ipmi_fru_multirecord_dc_output (state_data->fru_ctx,
+					  areabuf,
+					  area_length,
+					  &output_number,
+					  &standby,
+					  &nominal_voltage,
+					  &maximum_negative_voltage_deviation,
+					  &maximum_positive_voltage_deviation,
+					  &ripple_and_noise_pk_pk,
+					  &minimum_current_draw,
+					  &maximum_current_draw) < 0)
+	{
+	  if (IPMI_FRU_ERRNUM_IS_NON_FATAL_ERROR (state_data->fru_ctx))
+	    {
+	      pstdout_printf (state_data->pstate,
+			      "  FRU Multirecord DC Output Error: %s\n",
+			      ipmi_fru_ctx_errormsg (state_data->fru_ctx));
+	      return (0);
+	    }
       
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "ipmi_fru_multirecord_dc_output: %s\n",
-                       ipmi_fru_ctx_errormsg (state_data->fru_ctx));
-      return (-1);
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_fru_multirecord_dc_output: %s\n",
+			   ipmi_fru_ctx_errormsg (state_data->fru_ctx));
+	  return (-1);
+	}
+    }
+  else
+    {
+      if (ipmi_fru_multirecord_extended_dc_output (state_data->fru_ctx,
+						   areabuf,
+						   area_length,
+						   &output_number,
+						   NULL, /* don't need the current_units */
+						   &standby,
+						   &nominal_voltage,
+						   &maximum_negative_voltage_deviation,
+						   &maximum_positive_voltage_deviation,
+						   &ripple_and_noise_pk_pk,
+						   &minimum_current_draw,
+						   &maximum_current_draw) < 0)
+	{
+	  if (IPMI_FRU_ERRNUM_IS_NON_FATAL_ERROR (state_data->fru_ctx))
+	    {
+	      pstdout_printf (state_data->pstate,
+			      "  FRU Multirecord Extended DC Output Error: %s\n",
+			      ipmi_fru_ctx_errormsg (state_data->fru_ctx));
+	      return (0);
+	    }
+	  
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_fru_multirecord_extended_dc_output: %s\n",
+			   ipmi_fru_ctx_errormsg (state_data->fru_ctx));
+	  return (-1);
+	}
     }
 
   pstdout_printf (state_data->pstate,
@@ -698,6 +747,7 @@ ipmi_fru_output_dc_output (ipmi_fru_state_data_t *state_data,
 
 int
 ipmi_fru_output_dc_load (ipmi_fru_state_data_t *state_data,
+			 unsigned int area_type,
                          const void *areabuf,
                          uint8_t area_length)
 {
@@ -711,34 +761,69 @@ ipmi_fru_output_dc_load (ipmi_fru_state_data_t *state_data,
   unsigned int maximum_current_load;
 
   assert (state_data);
+  assert (area_type == IPMI_FRU_AREA_TYPE_MULTIRECORD_DC_LOAD
+	  || area_type == IPMI_FRU_AREA_TYPE_MULTIRECORD_EXTENDED_DC_LOAD);
   assert (areabuf);
   assert (area_length);
 
-  if (ipmi_fru_multirecord_dc_load (state_data->fru_ctx,
-				    areabuf,
-				    area_length,
-				    &output_number,
-				    &standby,
-				    &nominal_voltage,
-				    &specd_minimum_voltage,
-				    &specd_maximum_voltage,
-				    &specd_ripple_and_noise_pk_pk,
-				    &minimum_current_load,
-				    &maximum_current_load) < 0)
+  if (area_type == IPMI_FRU_AREA_TYPE_MULTIRECORD_DC_LOAD)
     {
-      if (IPMI_FRU_ERRNUM_IS_NON_FATAL_ERROR (state_data->fru_ctx))
-        {
-          pstdout_printf (state_data->pstate,
-                          "  FRU Multirecord DC Load Error: %s\n",
-                          ipmi_fru_ctx_errormsg (state_data->fru_ctx));
-          return (0);
-        }
-      
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "ipmi_fru_multirecord_dc_load: %s\n",
-                       ipmi_fru_ctx_errormsg (state_data->fru_ctx));
-      return (-1);
+      if (ipmi_fru_multirecord_dc_load (state_data->fru_ctx,
+					areabuf,
+					area_length,
+					&output_number,
+					&standby,
+					&nominal_voltage,
+					&specd_minimum_voltage,
+					&specd_maximum_voltage,
+					&specd_ripple_and_noise_pk_pk,
+					&minimum_current_load,
+					&maximum_current_load) < 0)
+	{
+	  if (IPMI_FRU_ERRNUM_IS_NON_FATAL_ERROR (state_data->fru_ctx))
+	    {
+	      pstdout_printf (state_data->pstate,
+			      "  FRU Multirecord DC Load Error: %s\n",
+			      ipmi_fru_ctx_errormsg (state_data->fru_ctx));
+	      return (0);
+	    }
+	  
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_fru_multirecord_dc_load: %s\n",
+			   ipmi_fru_ctx_errormsg (state_data->fru_ctx));
+	  return (-1);
+	}
+    }
+  else
+    {
+      if (ipmi_fru_multirecord_extended_dc_load (state_data->fru_ctx,
+						 areabuf,
+						 area_length,
+						 &output_number,
+						 NULL, /* don't need the current_units */
+						 &standby,
+						 &nominal_voltage,
+						 &specd_minimum_voltage,
+						 &specd_maximum_voltage,
+						 &specd_ripple_and_noise_pk_pk,
+						 &minimum_current_load,
+						 &maximum_current_load) < 0)
+	{
+	  if (IPMI_FRU_ERRNUM_IS_NON_FATAL_ERROR (state_data->fru_ctx))
+	    {
+	      pstdout_printf (state_data->pstate,
+			      "  FRU Multirecord Extended DC Load Error: %s\n",
+			      ipmi_fru_ctx_errormsg (state_data->fru_ctx));
+	      return (0);
+	    }
+	  
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_fru_multirecord_extended_dc_load: %s\n",
+			   ipmi_fru_ctx_errormsg (state_data->fru_ctx));
+	  return (-1);
+	}
     }
 
   pstdout_printf (state_data->pstate,

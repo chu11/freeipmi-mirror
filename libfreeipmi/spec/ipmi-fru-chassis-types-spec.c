@@ -62,5 +62,11 @@ const char *const ipmi_fru_chassis_types[] =
     "Peripheral Chassis",
     "RAID Chassis",
     "Rack Mount Chassis",
+    "Sealed-case PC",
+    "Multi-system chassis",
+    "Compact PCI",
+    "Advanced TCA",
+    "Blade",
+    "Blade Enclosure",
     NULL
   };

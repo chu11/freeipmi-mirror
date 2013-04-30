@@ -1,3 +1,43 @@
+2013-04-29  Albert Chu <chu11@llnl.gov>
+
+	Merge branch 'fru12'
+
+	Update for FRU Storage Definition Revision 1.2.
+
+	* libfreeipmi/include/freeipmi/record-format/ipmi-fru-information-record-format.h:
+	Define new macro IPMI_FRU_MFG_DATE_TIME_UNSPECIFIED and IPMI_FRU_PEAK_CAPACITY_UNSPECIFIED.
+
+	* ipmi-fru/ipmi-fru-output.c (ipmi_fru_output_board_info_area):
+	Output manufacturing time as unspecified as appropriate.
+
+	* ipmi-fru/ipmi-fru-output.c (ipmi_fru_output_power_supply_information):
+	Output peak capacity as unspecified as appropriate.
+	
+	* libfreeipmi/include/freeipmi/spec/ipmi-fru-chassis-types-spec.h,
+	libfreeipmi/spec/ipmi-fru-chassis-types-spec.c: Add new chassis
+	types.
+
+	* libfreeipmi/include/freeipmi/fru/ipmi-fru.h,
+	libfreeipmi/include/freeipmi/record-format/ipmi-fru-information-record-format.h,
+	libfreeipmi/fru/ipmi-fru.c (_read_multirecord_area_data): Update
+
+	* libfreeipmi/include/freeipmi/fru/ipmi-fru.h,
+	libfreeipmi/fru/ipmi-fru-data.c (ipmi_fru_multirecord_power_supply_information):
+	Return low/high end input voltage ranges as signed integers.
+
+	* ipmi-fru/: Output low/high end voltage ranges as signed integers.
+
+	* libfreeipmi/include/freeipmi/record-format/ipmi-fru-information-record-format.h,
+	libfreeipmi/record-format/ipmi-fru-information-record-format.c:
+	Support tmpl_fru_extended_dc_output and tmpl_fru_extended_dc_load
+	templates.
+
+	* libfreeipmi/include/freeipmi/fru/ipmi-fru.h,
+	libfreeipmi/fru/ipmi-fru-data.c (ipmi_fru_multirecord_extended_dc_output,
+	ipmi_fru_multirecord_extended_dc_load): New functions.
+
+	* ipmi-fru/: Support output of extended DC output and extended dc load.
+
 2013-04-26  Albert Chu <chu11@llnl.gov>
 
 	Merge branch 'sendto'

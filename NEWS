@@ -1,3 +1,26 @@
+FreeIPMI 1.3.1 - 08/22/12
+-------------------------
+
+Tools - New Features
+--------------------
+
+Tools - Bug Fixes/Minor Changes
+-------------------------------
+o In ipmi-fru, support output of new FRU multirecords, most notably
+  extended DC output and extended DC load (per FRU Revision 1.2
+  update).
+o In ipmi-fru, report power supply low/high end voltage ranges as
+  signed numbers (per FRU Revision 1.2 update).
+o In ipmi-fru, output "unspecified" for manufacturing date/time or
+  peak capacity as appropriate (per FRU Revision 1.2 update).
+
+Libraries
+---------
+o In libfreeipmi, support additional chassis types (per FRU Revision
+  1.2 update).
+o In libfreeipmi, support new FRU multirecord types (per FRU Revision
+  1.2 update).
+
 FreeIPMI 1.2.1 - 08/22/12
 -------------------------
 

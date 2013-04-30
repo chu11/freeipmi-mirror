@@ -696,10 +696,10 @@ ipmi_fru_multirecord_power_supply_information (ipmi_fru_ctx_t ctx,
 					       unsigned int *peak_va,
 					       unsigned int *inrush_current,
 					       unsigned int *inrush_interval,
-					       unsigned int *low_end_input_voltage_range_1,
-					       unsigned int *high_end_input_voltage_range_1,
-					       unsigned int *low_end_input_voltage_range_2,
-					       unsigned int *high_end_input_voltage_range_2,
+					       int *low_end_input_voltage_range_1,
+					       int *high_end_input_voltage_range_1,
+					       int *low_end_input_voltage_range_2,
+					       int *high_end_input_voltage_range_2,
 					       unsigned int *low_end_input_frequency_range,
 					       unsigned int *high_end_input_frequency_range,
 					       unsigned int *ac_dropout_tolerance,
@@ -816,7 +816,7 @@ ipmi_fru_multirecord_power_supply_information (ipmi_fru_ctx_t ctx,
           FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*low_end_input_voltage_range_1) = (((unsigned int)val) * 10);
+      (*low_end_input_voltage_range_1) = ((int16_t)val * 10);
     }
   if (high_end_input_voltage_range_1)
     {
@@ -827,7 +827,7 @@ ipmi_fru_multirecord_power_supply_information (ipmi_fru_ctx_t ctx,
           FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*high_end_input_voltage_range_1) = (((unsigned int)val) * 10);
+      (*high_end_input_voltage_range_1) = ((int16_t)val * 10);
     }
   if (low_end_input_voltage_range_2)
     {
@@ -838,7 +838,7 @@ ipmi_fru_multirecord_power_supply_information (ipmi_fru_ctx_t ctx,
           FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*low_end_input_voltage_range_2) = (((unsigned int)val) * 10);
+      (*low_end_input_voltage_range_2) = ((int16_t)val * 10);
     }
   if (high_end_input_voltage_range_2)
     {
@@ -849,7 +849,7 @@ ipmi_fru_multirecord_power_supply_information (ipmi_fru_ctx_t ctx,
           FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      (*high_end_input_voltage_range_2) = (((unsigned int)val) * 10);
+      (*high_end_input_voltage_range_2) = ((int16_t)val * 10);
     }
   if (low_end_input_frequency_range)
     {
@@ -1027,6 +1027,7 @@ ipmi_fru_multirecord_dc_output (ipmi_fru_ctx_t ctx,
 {
   fiid_obj_t obj_record = NULL;
   int tmpl_record_length;
+  int16_t tmp16;
   uint64_t val;
   int rv = -1;
 
@@ -1104,6 +1105,9 @@ ipmi_fru_multirecord_dc_output (ipmi_fru_ctx_t ctx,
           FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
+      /* field is signed and 16bits */
+      tmp16 = (val & 0xFFFF);
+      
       (*nominal_voltage) = ((int16_t)val * 10);
     }
   if (maximum_negative_voltage_deviation)
@@ -1183,6 +1187,7 @@ ipmi_fru_multirecord_dc_load (ipmi_fru_ctx_t ctx,
 {
   fiid_obj_t obj_record = NULL;
   int tmpl_record_length;
+  int16_t tmp16;
   uint64_t val;
   int rv = -1;
 
@@ -1672,6 +1677,359 @@ ipmi_fru_multirecord_extended_compatibility_record (ipmi_fru_ctx_t ctx,
   return (rv);
 }
 
+int
+ipmi_fru_multirecord_extended_dc_output (ipmi_fru_ctx_t ctx,
+					 const void *areabuf,
+					 unsigned int areabuflen,
+					 unsigned int *output_number,
+					 unsigned int *current_units,
+					 unsigned int *standby,
+					 int *nominal_voltage,
+					 int *maximum_negative_voltage_deviation,
+					 int *maximum_positive_voltage_deviation,
+					 unsigned int *ripple_and_noise_pk_pk,
+					 unsigned int *minimum_current_draw,
+					 unsigned int *maximum_current_draw)
+{
+  fiid_obj_t obj_record = NULL;
+  int tmpl_record_length;
+  uint64_t local_current_units;
+  uint64_t val;
+  int rv = -1;
+
+  if (!ctx || ctx->magic != IPMI_FRU_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_fru_ctx_errormsg (ctx), ipmi_fru_ctx_errnum (ctx));
+      return (-1);
+    }
+  
+  if (!areabuf || !areabuflen)
+    {
+      FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if ((tmpl_record_length = fiid_template_len_bytes (tmpl_fru_extended_dc_output)) < 0)
+    {
+      FRU_ERRNO_TO_FRU_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (tmpl_record_length != areabuflen)
+    {
+      FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_PARAMETERS);
+      goto cleanup;
+    }
+
+  if (!(obj_record = fiid_obj_create (tmpl_fru_extended_dc_output)))
+    {
+      FRU_ERRNO_TO_FRU_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (fiid_obj_set_all (obj_record,
+                        areabuf,
+                        areabuflen) < 0)
+    {
+      FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, obj_record);
+      goto cleanup;
+    }
+
+  if (fru_dump_obj (ctx,
+		    obj_record,
+		    "FRU Extended DC Output") < 0)
+    goto cleanup;
+
+  if (output_number)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "output_number",
+                        &val) < 0)
+        {
+          FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*output_number) = val;
+    }
+  if (current_units || minimum_current_draw || maximum_current_draw)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "current_units",
+                        &val) < 0)
+        {
+          FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      if (current_units)
+	(*current_units) = val;
+      local_current_units = val;
+    }
+  if (standby)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "standby",
+                        &val) < 0)
+        {
+          FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*standby) = val;
+    }
+  if (nominal_voltage)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "nominal_voltage",
+                        &val) < 0)
+        {
+          FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*nominal_voltage) = ((int16_t)val * 10);
+    }
+  if (maximum_negative_voltage_deviation)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "maximum_negative_voltage_deviation",
+                        &val) < 0)
+        {
+          FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*maximum_negative_voltage_deviation) = ((int16_t)val * 10);
+    }
+  if (maximum_positive_voltage_deviation)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "maximum_positive_voltage_deviation",
+                        &val) < 0)
+        {
+          FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*maximum_positive_voltage_deviation) = ((int16_t)val * 10);
+    }
+  if (ripple_and_noise_pk_pk)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "ripple_and_noise_pk_pk",
+                        &val) < 0)
+        {
+          FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*ripple_and_noise_pk_pk) = val;
+    }
+  if (minimum_current_draw)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "minimum_current_draw",
+                        &val) < 0)
+        {
+          FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      if (local_current_units == IPMI_FRU_CURRENT_UNITS_10MA)
+	(*minimum_current_draw) = (val * 10);
+      else
+	(*minimum_current_draw) = (val * 100);
+    }
+  if (maximum_current_draw)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "maximum_current_draw",
+                        &val) < 0)
+        {
+          FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      if (local_current_units == IPMI_FRU_CURRENT_UNITS_10MA)
+	(*maximum_current_draw) = (val * 10);
+      else
+	(*maximum_current_draw) = (val * 100);
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_record);
+  return (rv);
+}
+
+int
+ipmi_fru_multirecord_extended_dc_load (ipmi_fru_ctx_t ctx,
+				       const void *areabuf,
+				       unsigned int areabuflen,
+				       unsigned int *output_number,
+				       unsigned int *current_units,
+				       unsigned int *standby,
+				       int *nominal_voltage,
+				       int *specd_minimum_voltage,
+				       int *specd_maximum_voltage,
+				       unsigned int *specd_ripple_and_noise_pk_pk,
+				       unsigned int *minimum_current_load,
+				       unsigned int *maximum_current_load)
+{
+  fiid_obj_t obj_record = NULL;
+  int tmpl_record_length;
+  uint64_t local_current_units;
+  uint64_t val;
+  int rv = -1;
+
+  if (!ctx || ctx->magic != IPMI_FRU_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_fru_ctx_errormsg (ctx), ipmi_fru_ctx_errnum (ctx));
+      return (-1);
+    }
+  
+  if (!areabuf || !areabuflen)
+    {
+      FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if ((tmpl_record_length = fiid_template_len_bytes (tmpl_fru_extended_dc_load)) < 0)
+    {
+      FRU_ERRNO_TO_FRU_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (tmpl_record_length != areabuflen)
+    {
+      FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_PARAMETERS);
+      goto cleanup;
+    }
+
+  if (!(obj_record = fiid_obj_create (tmpl_fru_extended_dc_load)))
+    {
+      FRU_ERRNO_TO_FRU_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (fiid_obj_set_all (obj_record,
+                        areabuf,
+                        areabuflen) < 0)
+    {
+      FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, obj_record);
+      goto cleanup;
+    }
+
+  if (fru_dump_obj (ctx,
+		    obj_record,
+		    "FRU Extended DC Load") < 0)
+    goto cleanup;
+
+  if (output_number)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "output_number",
+                        &val) < 0)
+        {
+          FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*output_number) = val;
+    }
+  if (current_units || minimum_current_load || maximum_current_load)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "current_units",
+                        &val) < 0)
+        {
+          FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      if (current_units)
+	(*current_units) = val;
+      local_current_units = val;
+    }
+  if (standby)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "standby",
+                        &val) < 0)
+        {
+          FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*standby) = val;
+    }
+  if (nominal_voltage)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "nominal_voltage",
+                        &val) < 0)
+        {
+          FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*nominal_voltage) = ((int16_t)val * 10);
+    }
+  if (specd_minimum_voltage)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "specd_minimum_voltage",
+                        &val) < 0)
+        {
+          FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*specd_minimum_voltage) = ((int16_t)val * 10);
+    }
+  if (specd_maximum_voltage)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "specd_maximum_voltage",
+                        &val) < 0)
+        {
+          FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*specd_maximum_voltage) = ((int16_t)val * 10);
+    }
+  if (specd_ripple_and_noise_pk_pk)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "specd_ripple_and_noise_pk_pk",
+                        &val) < 0)
+        {
+          FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      (*specd_ripple_and_noise_pk_pk) = val;
+    }
+  if (minimum_current_load)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "minimum_current_load",
+                        &val) < 0)
+        {
+          FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      if (local_current_units == IPMI_FRU_CURRENT_UNITS_10MA)
+	(*minimum_current_load) = (val * 10);
+      else
+	(*minimum_current_load) = (val * 100);
+    }
+  if (maximum_current_load)
+    {
+      if (FIID_OBJ_GET (obj_record,
+                        "maximum_current_load",
+                        &val) < 0)
+        {
+          FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, obj_record);
+          goto cleanup;
+        }
+      if (local_current_units == IPMI_FRU_CURRENT_UNITS_10MA)
+	(*maximum_current_load) = (val * 10);
+      else
+	(*maximum_current_load) = (val * 100);
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_record);
+  return (rv);
+}
 int
 ipmi_fru_multirecord_oem_record (ipmi_fru_ctx_t ctx,
 				 const void *areabuf,
