@@ -6,6 +6,9 @@ Tools - New Features
 
 Tools - Bug Fixes/Minor Changes
 -------------------------------
+o In ipmi-fru, support output of new FRU multirecords, most notably
+  extended DC output and extended DC load (per FRU Revision 1.2
+  update).
 o In ipmi-fru, report power supply low/high end voltage ranges as
   signed numbers (per FRU Revision 1.2 update).
 o In ipmi-fru, output "unspecified" for manufacturing date/time or

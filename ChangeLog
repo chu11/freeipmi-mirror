@@ -29,6 +29,12 @@
 	libfreeipmi/record-format/ipmi-fru-information-record-format.c:
 	Support tmpl_fru_extended_dc_output and tmpl_fru_extended_dc_load
 	templates.
+
+	* libfreeipmi/include/freeipmi/fru/ipmi-fru.h,
+	libfreeipmi/fru/ipmi-fru-data.c (ipmi_fru_multirecord_extended_dc_output,
+	ipmi_fru_multirecord_extended_dc_load): New functions.
+
+	* ipmi-fru/: Support output of extended DC output and extended dc load.
 	
 2013-04-24  Albert Chu <chu11@llnl.gov>
 

@@ -270,6 +270,36 @@ int ipmi_fru_multirecord_extended_compatibility_record (ipmi_fru_ctx_t ctx,
 							uint8_t *code_range_mask,
 							unsigned int *code_range_mask_len);
 
+/* 10 mV multipliers factored in return voltages */
+/* draw in mA units, already factoring in current_units */
+int ipmi_fru_multirecord_extended_dc_output (ipmi_fru_ctx_t ctx,
+					     const void *areabuf,
+					     unsigned int areabuflen,
+					     unsigned int *output_number,
+					     unsigned int *current_units,
+					     unsigned int *standby,
+					     int *nominal_voltage,
+					     int *maximum_negative_voltage_deviation,
+					     int *maximum_positive_voltage_deviation,
+					     unsigned int *ripple_and_noise_pk_pk,
+					     unsigned int *minimum_current_draw,
+					     unsigned int *maximum_current_draw);
+
+/* 10 mV multipliers factored in return voltages */
+/* load in mA units, already factoring in current_units */
+int ipmi_fru_multirecord_extended_dc_load (ipmi_fru_ctx_t ctx,
+					   const void *areabuf,
+					   unsigned int areabuflen,
+					   unsigned int *output_number,
+					   unsigned int *current_units,
+					   unsigned int *standby,
+					   int *nominal_voltage,
+					   int *specd_minimum_voltage,
+					   int *specd_maximum_voltage,
+					   unsigned int *specd_ripple_and_noise_pk_pk,
+					   unsigned int *minimum_current_load,
+					   unsigned int *maximum_current_load);
+
 int ipmi_fru_multirecord_oem_record (ipmi_fru_ctx_t ctx,
 				     const void *areabuf,
 				     unsigned int areabuflen,
