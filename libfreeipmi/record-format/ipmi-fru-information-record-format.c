@@ -162,6 +162,36 @@ fiid_template_t tmpl_fru_extended_compatibility_record =
     { 0, "", 0}
   };
 
+fiid_template_t tmpl_fru_extended_dc_output =
+  {
+    { 4, "output_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "current_units", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 2, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "standby", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 16, "nominal_voltage", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 16, "maximum_negative_voltage_deviation", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 16, "maximum_positive_voltage_deviation", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 16, "ripple_and_noise_pk_pk", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 16, "minimum_current_draw", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 16, "maximum_current_draw", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_fru_extended_dc_load =
+  {
+    { 4, "output_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "current_units", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 3, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 16, "nominal_voltage", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    /* Spec abbreviates specified to 'spec'd', so we keep it */
+    { 16, "specd_minimum_voltage", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 16, "specd_maximum_voltage", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 16, "specd_ripple_and_noise_pk_pk", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 16, "minimum_current_load", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 16, "maximum_current_load", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
 fiid_template_t tmpl_fru_oem_record =
   {
     { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},

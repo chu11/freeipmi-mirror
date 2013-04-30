@@ -98,6 +98,9 @@ extern "C" {
 
 #define IPMI_FRU_PREDICTIVE_FAIL_PIN_IS_PASS_FAIL 0x0
 
+#define IPMI_FRU_CURRENT_UNITS_10MA  0x0
+#define IPMI_FRU_CURRENT_UNITS_100MA 0x1
+
 #define IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_MANAGEMENT_URL     0x01
 #define IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_NAME               0x02
 #define IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_PING_ADDRESS       0x03
@@ -139,6 +142,8 @@ extern fiid_template_t tmpl_fru_dc_load;
 extern fiid_template_t tmpl_fru_management_access_record;
 extern fiid_template_t tmpl_fru_base_compatibility_record;
 extern fiid_template_t tmpl_fru_extended_compatibility_record;
+extern fiid_template_t tmpl_fru_extended_dc_output;
+extern fiid_template_t tmpl_fru_extended_dc_load;
 extern fiid_template_t tmpl_fru_oem_record;
 
 #ifdef __cplusplus

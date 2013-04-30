@@ -24,6 +24,11 @@
 	Return low/high end input voltage ranges as signed integers.
 
 	* ipmi-fru/: Output low/high end voltage ranges as signed integers.
+
+	* libfreeipmi/include/freeipmi/record-format/ipmi-fru-information-record-format.h,
+	libfreeipmi/record-format/ipmi-fru-information-record-format.c:
+	Support tmpl_fru_extended_dc_output and tmpl_fru_extended_dc_load
+	templates.
 	
 2013-04-24  Albert Chu <chu11@llnl.gov>
 
