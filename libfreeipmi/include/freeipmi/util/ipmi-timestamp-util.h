@@ -23,6 +23,27 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
+
+#define IPMI_TIMESTAMP_FLAG_DEFAULT         0x00
+/* Special string abbreviations
+ * "Unspecified" will be abbreviated "Unspec."
+ * "Post-Init X s" will be abbreviated to just "PostInit"
+ */
+#define IPMI_TIMESTAMP_FLAG_ABBREVIATE      0x01
+
+/* Handles special case timestamps in IPMI, most notably unspecified
+ * timestamps and timestamps in the range of initialization of the
+ * BMC.  In those respective cases, an appropriate string will
+ * written into the buffer instead of the actual time/date.
+ */
+
+/* format uses format from strftime(), pass NULL for default one */
+int ipmi_timestamp_string (uint32_t timestamp,
+			   unsigned int flags,
+			   const char *format,
+			   char *buf,
+			   unsigned int buflen);
 
 #ifdef __cplusplus
 }

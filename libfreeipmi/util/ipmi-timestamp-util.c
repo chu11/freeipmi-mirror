@@ -44,3 +44,60 @@
 
 #include "freeipmi-portability.h"
 
+#define IPMI_TIMESTAMP_FLAG_MASK \
+  (IPMI_TIMESTAMP_FLAG_ABBREVIATE)
+
+int
+ipmi_timestamp_string (uint32_t timestamp,
+		       unsigned int flags,
+		       const char *format,
+		       char *buf,
+		       unsigned int buflen)
+{
+  struct tm tm;
+  time_t t;
+
+  if ((flags & ~IPMI_TIMESTAMP_FLAG_MASK) || !buf || !buflen)
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  /* Timestamp Special Cases */
+
+  if (timestamp == IPMI_TIMESTAMP_UNSPECIFIED)
+    {
+      if (flags & IPMI_TIMESTAMP_FLAG_ABBREVIATE)
+	snprintf (buf, buflen, "Unspec.");
+      else
+	snprintf (buf, buflen, "Unspecified");
+      return (0);
+    }
+
+  if (IPMI_TIMESTAMP_POST_INIT (timestamp))
+    {
+      if (flags & IPMI_TIMESTAMP_FLAG_ABBREVIATE)
+	snprintf (buf, buflen, "PostInit");
+      else
+	snprintf (buf, buflen, "Post-Init %u s", timestamp);
+      return (0);
+    }
+
+  /* Posix says individual calls need not clear/set all portions of
+   * 'struct tm', thus passing 'struct tm' between functions could
+   * have issues.  So we need to memset.
+   */
+  memset (&tm, '\0', sizeof (struct tm));
+
+  t = timestamp;
+
+  /* XXX needs to be fixed */
+  localtime_r (&t, &tm);
+
+  if (format)
+    strftime (buf, buflen, format, &tm);
+  else
+    strftime (buf, buflen, "%m/%d/%Y - %H:%M:%S", &tm);
+
+  return (0);
+}
