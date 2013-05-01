@@ -302,6 +302,67 @@ _output_fru_with_sdr (ipmi_fru_state_data_t *state_data,
 }
 
 static int
+_is_logical_fru (uint8_t device_type, uint8_t device_type_modifier)
+{
+  /* achu: All this code and checks could be shortened if we abuse
+   * knowledge of the actual values of these macros, but we list all
+   * of this to be clear what we're doing.
+   */
+  if ((device_type == IPMI_DEVICE_TYPE_EEPROM_24C01_OR_EQUIVALENT
+       && device_type_modifier == IPMI_DEVICE_TYPE_MODIFIER_EEPROM_24C01_OR_EQUIVALENT_IPMI_FRU_INVENTORY)
+      || (device_type == IPMI_DEVICE_TYPE_EEPROM_24C02_OR_EQUIVALENT
+	  && device_type_modifier == IPMI_DEVICE_TYPE_MODIFIER_EEPROM_24C02_OR_EQUIVALENT_IPMI_FRU_INVENTORY)
+      || (device_type == IPMI_DEVICE_TYPE_EEPROM_24C04_OR_EQUIVALENT
+	  && device_type_modifier == IPMI_DEVICE_TYPE_MODIFIER_EEPROM_24C04_OR_EQUIVALENT_IPMI_FRU_INVENTORY)
+      || (device_type == IPMI_DEVICE_TYPE_EEPROM_24C08_OR_EQUIVALENT
+	  && device_type_modifier == IPMI_DEVICE_TYPE_MODIFIER_EEPROM_24C08_OR_EQUIVALENT_IPMI_FRU_INVENTORY)
+      || (device_type == IPMI_DEVICE_TYPE_EEPROM_24C16_OR_EQUIVALENT
+	  && device_type_modifier == IPMI_DEVICE_TYPE_MODIFIER_EEPROM_24C16_OR_EQUIVALENT_IPMI_FRU_INVENTORY)
+      || (device_type == IPMI_DEVICE_TYPE_EEPROM_24C17_OR_EQUIVALENT
+	  && device_type_modifier == IPMI_DEVICE_TYPE_MODIFIER_EEPROM_24C17_OR_EQUIVALENT_IPMI_FRU_INVENTORY)
+      || (device_type == IPMI_DEVICE_TYPE_EEPROM_24C32_OR_EQUIVALENT
+	  && device_type_modifier == IPMI_DEVICE_TYPE_MODIFIER_EEPROM_24C32_OR_EQUIVALENT_IPMI_FRU_INVENTORY)
+      || (device_type == IPMI_DEVICE_TYPE_EEPROM_24C64_OR_EQUIVALENT
+	  && device_type_modifier == IPMI_DEVICE_TYPE_MODIFIER_EEPROM_24C64_OR_EQUIVALENT_IPMI_FRU_INVENTORY)
+      || (device_type == IPMI_DEVICE_TYPE_FRU_INVENTORY_DEVICE_BEHIND_MANAGEMENT_CONTROLLER
+	  && (device_type_modifier == IPMI_DEVICE_TYPE_MODIFIER_FRU_INVENTORY_DEVICE_BEHIND_MANAGEMENT_CONTROLLER_IPMI_FRU_INVENTORY_BACKWARDS_COMPATABILITY
+	      || device_type_modifier == IPMI_DEVICE_TYPE_MODIFIER_FRU_INVENTORY_DEVICE_BEHIND_MANAGEMENT_CONTROLLER_IPMI_FRU_INVENTORY)))
+    return (1);
+
+  return (0);
+}
+
+static int
+_is_dimm_fru (uint8_t device_type, uint8_t device_type_modifier)
+{
+  /* achu: All this code and checks could be shortened if we abuse
+   * knowledge of the actual values of these macros, but we list all
+   * of this to be clear what we're doing.
+   */
+  if ((device_type == IPMI_DEVICE_TYPE_EEPROM_24C01_OR_EQUIVALENT
+       && device_type_modifier == IPMI_DEVICE_TYPE_MODIFIER_EEPROM_24C01_OR_EQUIVALENT_DIMM_MEMORY_ID)
+      || (device_type == IPMI_DEVICE_TYPE_EEPROM_24C02_OR_EQUIVALENT
+	  && device_type_modifier == IPMI_DEVICE_TYPE_MODIFIER_EEPROM_24C02_OR_EQUIVALENT_DIMM_MEMORY_ID)
+      || (device_type == IPMI_DEVICE_TYPE_EEPROM_24C04_OR_EQUIVALENT
+	  && device_type_modifier == IPMI_DEVICE_TYPE_MODIFIER_EEPROM_24C04_OR_EQUIVALENT_DIMM_MEMORY_ID)
+      || (device_type == IPMI_DEVICE_TYPE_EEPROM_24C08_OR_EQUIVALENT
+	  && device_type_modifier == IPMI_DEVICE_TYPE_MODIFIER_EEPROM_24C08_OR_EQUIVALENT_DIMM_MEMORY_ID)
+      || (device_type == IPMI_DEVICE_TYPE_EEPROM_24C16_OR_EQUIVALENT
+	  && device_type_modifier == IPMI_DEVICE_TYPE_MODIFIER_EEPROM_24C16_OR_EQUIVALENT_DIMM_MEMORY_ID)
+      || (device_type == IPMI_DEVICE_TYPE_EEPROM_24C17_OR_EQUIVALENT
+	  && device_type_modifier == IPMI_DEVICE_TYPE_MODIFIER_EEPROM_24C17_OR_EQUIVALENT_DIMM_MEMORY_ID)
+      || (device_type == IPMI_DEVICE_TYPE_EEPROM_24C32_OR_EQUIVALENT
+	  && device_type_modifier == IPMI_DEVICE_TYPE_MODIFIER_EEPROM_24C32_OR_EQUIVALENT_DIMM_MEMORY_ID)
+      || (device_type == IPMI_DEVICE_TYPE_EEPROM_24C64_OR_EQUIVALENT
+	  && device_type_modifier == IPMI_DEVICE_TYPE_MODIFIER_EEPROM_24C64_OR_EQUIVALENT_DIMM_MEMORY_ID)
+      || (device_type == IPMI_DEVICE_TYPE_FRU_INVENTORY_DEVICE_BEHIND_MANAGEMENT_CONTROLLER
+	  && device_type_modifier == IPMI_DEVICE_TYPE_MODIFIER_FRU_INVENTORY_DEVICE_BEHIND_MANAGEMENT_CONTROLLER_DIMM_MEMORY_ID))
+    return (1);
+
+  return (0);
+}
+
+static int
 _print_except_default_fru_cb (ipmi_fru_state_data_t *state_data,
 			      unsigned int *output_count,
 			      const void *sdr_record,
@@ -322,6 +383,7 @@ _print_except_default_fru_cb (ipmi_fru_state_data_t *state_data,
     {
       uint8_t logical_physical_fru_device, logical_fru_device_device_slave_address;
       uint8_t device_access_address, channel_number;
+      uint8_t device_type, device_type_modifier;
 
       if (ipmi_sdr_parse_fru_device_locator_parameters (state_data->sdr_ctx,
 							sdr_record,
@@ -340,6 +402,19 @@ _print_except_default_fru_cb (ipmi_fru_state_data_t *state_data,
 	  goto cleanup;
 	}
 
+      if (ipmi_sdr_parse_device_type (state_data->sdr_ctx,
+				      sdr_record,
+				      sdr_record_len,
+				      &device_type,
+				      &device_type_modifier) < 0)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_sdr_parse_device_type: %s\n",
+			   ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
+	  goto cleanup;
+	}
+
       /* stored in 7-bit form, unlike sensor owner ids, need to shift */
       device_access_address <<= 1;
 
@@ -349,12 +424,19 @@ _print_except_default_fru_cb (ipmi_fru_state_data_t *state_data,
 
 	  if (device_access_address == IPMI_SLAVE_ADDRESS_BMC)
 	    {
-	      if (_output_fru_with_sdr (state_data,
-					output_count,
-					sdr_record,
-					sdr_record_len,
-					logical_fru_device_device_slave_address) < 0)
-		goto cleanup;
+	      if (_is_logical_fru (device_type, device_type_modifier))
+		{
+		  if (_output_fru_with_sdr (state_data,
+					    output_count,
+					    sdr_record,
+					    sdr_record_len,
+					    logical_fru_device_device_slave_address) < 0)
+		    goto cleanup;
+		}
+	      else if (_is_dimm_fru (device_type, device_type_modifier))
+		{
+		  /* FILL IN LATER */
+		}
 	    }
 	  else
 	    {
@@ -371,12 +453,19 @@ _print_except_default_fru_cb (ipmi_fru_state_data_t *state_data,
 		      goto cleanup;
 		    }
 
-		  if (_output_fru_with_sdr (state_data,
-					    output_count,
-					    sdr_record,
-					    sdr_record_len,
-					    logical_fru_device_device_slave_address) < 0)
-		    goto cleanup;
+		  if (_is_logical_fru (device_type, device_type_modifier))
+		    {
+		      if (_output_fru_with_sdr (state_data,
+						output_count,
+						sdr_record,
+						sdr_record_len,
+						logical_fru_device_device_slave_address) < 0)
+			goto cleanup;
+		    }
+		  else if (_is_dimm_fru (device_type, device_type_modifier))
+		    {
+		      /* FILL IN LATER */
+		    }
 		  
 		  if (ipmi_ctx_set_target (state_data->ipmi_ctx, NULL, NULL) < 0)
 		    {
