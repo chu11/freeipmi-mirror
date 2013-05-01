@@ -5058,8 +5058,6 @@ ipmi_oem_dell_get_power_consumption_data (ipmi_oem_state_data_t *state_data)
   uint16_t peak_watt_reading;
   double cumulative_reading_val;
   double peak_amp_reading_val;
-  time_t timetmp;
-  struct tm time_tm;
   char time_buf[IPMI_OEM_TIME_BUFLEN + 1];
   int rs_len;
   int rv = -1;
@@ -5153,16 +5151,20 @@ ipmi_oem_dell_get_power_consumption_data (ipmi_oem_state_data_t *state_data)
 
   cumulative_reading_val = ((double)cumulative_reading) / 1000.0;
 
-  /* Posix says individual calls need not clear/set all portions of
-   * 'struct tm', thus passing 'struct tm' between functions could
-   * have issues.  So we need to memset.
-   */
-  memset (&time_tm, '\0', sizeof(struct tm));
-
-  timetmp = cumulative_start_time;
-  localtime_r (&timetmp, &time_tm);
   memset (time_buf, '\0', IPMI_OEM_TIME_BUFLEN + 1);
-  strftime (time_buf, IPMI_OEM_TIME_BUFLEN, "%D - %T", &time_tm);
+
+  if (ipmi_timestamp_string (cumulative_start_time,
+			     IPMI_TIMESTAMP_FLAG_DEFAULT,
+			     "%D - %T",
+			     time_buf,
+			     IPMI_OEM_TIME_BUFLEN) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "ipmi_timestamp_string: %s\n",
+		       strerror (errno));
+      goto cleanup;
+    }
 
   pstdout_printf (state_data->pstate,
                   "Cumulative Energy Start Time : %s\n",
@@ -5174,16 +5176,20 @@ ipmi_oem_dell_get_power_consumption_data (ipmi_oem_state_data_t *state_data)
 
   peak_amp_reading_val = ((double)peak_amp_reading) / 10.0;
 
-  /* Posix says individual calls need not clear/set all portions of
-   * 'struct tm', thus passing 'struct tm' between functions could
-   * have issues.  So we need to memset.
-   */
-  memset (&time_tm, '\0', sizeof(struct tm));
-
-  timetmp = peak_amp_time;
-  localtime_r (&timetmp, &time_tm);
   memset (time_buf, '\0', IPMI_OEM_TIME_BUFLEN + 1);
-  strftime (time_buf, IPMI_OEM_TIME_BUFLEN, "%D - %T", &time_tm);
+
+  if (ipmi_timestamp_string (peak_amp_time,
+			     IPMI_TIMESTAMP_FLAG_DEFAULT,
+			     "%D - %T",
+			     time_buf,
+			     IPMI_OEM_TIME_BUFLEN) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "ipmi_timestamp_string: %s\n",
+		       strerror (errno));
+      goto cleanup;
+    }
 
   pstdout_printf (state_data->pstate,
                   "Peak Amp Time                : %s\n",
@@ -5193,16 +5199,20 @@ ipmi_oem_dell_get_power_consumption_data (ipmi_oem_state_data_t *state_data)
                   "Peak Amp                     : %.2f A\n",
                   peak_amp_reading_val);
 
-  /* Posix says individual calls need not clear/set all portions of
-   * 'struct tm', thus passing 'struct tm' between functions could
-   * have issues.  So we need to memset.
-   */
-  memset (&time_tm, '\0', sizeof(struct tm));
-
-  timetmp = peak_watt_time;
-  localtime_r (&timetmp, &time_tm);
   memset (time_buf, '\0', IPMI_OEM_TIME_BUFLEN + 1);
-  strftime (time_buf, IPMI_OEM_TIME_BUFLEN, "%D - %T", &time_tm);
+
+  if (ipmi_timestamp_string (peak_watt_time,
+			     IPMI_TIMESTAMP_FLAG_DEFAULT,
+			     "%D - %T",
+			     time_buf,
+			     IPMI_OEM_TIME_BUFLEN) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "ipmi_timestamp_string: %s\n",
+		       strerror (errno));
+      goto cleanup;
+    }
 
   pstdout_printf (state_data->pstate,
                   "Peak Watt Time               : %s\n",
@@ -5755,8 +5765,6 @@ ipmi_oem_dell_get_power_consumption_statistics (ipmi_oem_state_data_t *state_dat
   uint32_t last_hour_power_time = 0;
   uint32_t last_day_power_time = 0;
   uint32_t last_week_power_time = 0;
-  time_t timetmp;
-  struct tm time_tm;
   char time_buf[IPMI_OEM_TIME_BUFLEN + 1];
   int len;
   uint8_t system_info_parameter;
@@ -5935,16 +5943,20 @@ ipmi_oem_dell_get_power_consumption_statistics (ipmi_oem_state_data_t *state_dat
   if (system_info_parameter == IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_MAX_POWER_CONSUMPTION_STATISTICS
       || system_info_parameter == IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_MIN_POWER_CONSUMPTION_STATISTICS)
     {
-      /* Posix says individual calls need not clear/set all portions of
-       * 'struct tm', thus passing 'struct tm' between functions could
-       * have issues.  So we need to memset.
-       */
-      memset (&time_tm, '\0', sizeof(struct tm));
-      
-      timetmp = last_minute_power_time;
-      localtime_r (&timetmp, &time_tm);
       memset (time_buf, '\0', IPMI_OEM_TIME_BUFLEN + 1);
-      strftime (time_buf, IPMI_OEM_TIME_BUFLEN, "%D - %T", &time_tm);
+
+      if (ipmi_timestamp_string (last_minute_power_time,
+				 IPMI_TIMESTAMP_FLAG_DEFAULT,
+				 "%D - %T",
+				 time_buf,
+				 IPMI_OEM_TIME_BUFLEN) < 0)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_timestamp_string: %s\n",
+			   strerror (errno));
+	  goto cleanup;
+	}
       
       pstdout_printf (state_data->pstate,
 		      "Last Minute %s Power Time : %s\n",
@@ -5960,17 +5972,21 @@ ipmi_oem_dell_get_power_consumption_statistics (ipmi_oem_state_data_t *state_dat
   if (system_info_parameter == IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_MAX_POWER_CONSUMPTION_STATISTICS
       || system_info_parameter == IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_MIN_POWER_CONSUMPTION_STATISTICS)
     {
-      /* Posix says individual calls need not clear/set all portions of
-       * 'struct tm', thus passing 'struct tm' between functions could
-       * have issues.  So we need to memset.
-       */
-      memset (&time_tm, '\0', sizeof(struct tm));
-
-      timetmp = last_hour_power_time;
-      localtime_r (&timetmp, &time_tm);
       memset (time_buf, '\0', IPMI_OEM_TIME_BUFLEN + 1);
-      strftime (time_buf, IPMI_OEM_TIME_BUFLEN, "%D - %T", &time_tm);
-      
+
+      if (ipmi_timestamp_string (last_hour_power_time,
+				 IPMI_TIMESTAMP_FLAG_DEFAULT,
+				 "%D - %T",
+				 time_buf,
+				 IPMI_OEM_TIME_BUFLEN) < 0)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_timestamp_string: %s\n",
+			   strerror (errno));
+	  goto cleanup;
+	}
+
       pstdout_printf (state_data->pstate,
 		      "Last Hour %s Power Time   : %s\n",
 		      system_info_string,
@@ -5985,16 +6001,20 @@ ipmi_oem_dell_get_power_consumption_statistics (ipmi_oem_state_data_t *state_dat
   if (system_info_parameter == IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_MAX_POWER_CONSUMPTION_STATISTICS
       || system_info_parameter == IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_MIN_POWER_CONSUMPTION_STATISTICS)
     {
-      /* Posix says individual calls need not clear/set all portions of
-       * 'struct tm', thus passing 'struct tm' between functions could
-       * have issues.  So we need to memset.
-       */
-      memset (&time_tm, '\0', sizeof(struct tm));
-
-      timetmp = last_day_power_time;
-      localtime_r (&timetmp, &time_tm);
       memset (time_buf, '\0', IPMI_OEM_TIME_BUFLEN + 1);
-      strftime (time_buf, IPMI_OEM_TIME_BUFLEN, "%D - %T", &time_tm);
+
+      if (ipmi_timestamp_string (last_day_power_time,
+				 IPMI_TIMESTAMP_FLAG_DEFAULT,
+				 "%D - %T",
+				 time_buf,
+				 IPMI_OEM_TIME_BUFLEN) < 0)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_timestamp_string: %s\n",
+			   strerror (errno));
+	  goto cleanup;
+	}
 
       pstdout_printf (state_data->pstate,
 		      "Last Day %s Power Time    : %s\n",
@@ -6010,17 +6030,21 @@ ipmi_oem_dell_get_power_consumption_statistics (ipmi_oem_state_data_t *state_dat
   if (system_info_parameter == IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_MAX_POWER_CONSUMPTION_STATISTICS
       || system_info_parameter == IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_MIN_POWER_CONSUMPTION_STATISTICS)
     {
-      /* Posix says individual calls need not clear/set all portions of
-       * 'struct tm', thus passing 'struct tm' between functions could
-       * have issues.  So we need to memset.
-       */
-      memset (&time_tm, '\0', sizeof(struct tm));
-
-      timetmp = last_week_power_time;
-      localtime_r (&timetmp, &time_tm);
       memset (time_buf, '\0', IPMI_OEM_TIME_BUFLEN + 1);
-      strftime (time_buf, IPMI_OEM_TIME_BUFLEN, "%D - %T", &time_tm);
-      
+
+      if (ipmi_timestamp_string (last_week_power_time,
+				 IPMI_TIMESTAMP_FLAG_DEFAULT,
+				 "%D - %T",
+				 time_buf,
+				 IPMI_OEM_TIME_BUFLEN) < 0)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_timestamp_string: %s\n",
+			   strerror (errno));
+	  goto cleanup;
+	}
+
       pstdout_printf (state_data->pstate,
 		      "Last Week %s Power Time   : %s\n",
 		      system_info_string,

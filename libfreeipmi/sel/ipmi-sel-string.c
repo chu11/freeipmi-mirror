@@ -59,6 +59,7 @@
 #include "freeipmi/util/ipmi-iana-enterprise-numbers-util.h"
 #include "freeipmi/util/ipmi-sensor-and-event-code-tables-util.h"
 #include "freeipmi/util/ipmi-sensor-util.h"
+#include "freeipmi/util/ipmi-timestamp-util.h"
 #include "freeipmi/util/ipmi-util.h"
 
 #include "ipmi-sel-common.h"
@@ -583,10 +584,8 @@ _output_time (ipmi_sel_ctx_t ctx,
               unsigned int flags,
               unsigned int *wlen)
 {
-  char tmpbuf[SEL_BUFFER_LENGTH];
+  char tmpbuf[SEL_BUFFER_LENGTH + 1];
   uint32_t timestamp;
-  struct tm tmp;
-  time_t t;
 
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -603,15 +602,17 @@ _output_time (ipmi_sel_ctx_t ctx,
   if (sel_get_timestamp (ctx, sel_entry, &timestamp) < 0)
     return (-1);
 
-  /* Posix says individual calls need not clear/set all portions of
-   * 'struct tm', thus passing 'struct tm' between functions could
-   * have issues.  So we need to memset.
-   */
-  memset (&tmp, '\0', sizeof (struct tm));
+  memset (tmpbuf, '\0', SEL_BUFFER_LENGTH + 1);
 
-  t = timestamp;
-  localtime_r (&t, &tmp);
-  strftime (tmpbuf, SEL_BUFFER_LENGTH, "%H:%M:%S", &tmp);
+  if (ipmi_timestamp_string (timestamp,
+			     IPMI_TIMESTAMP_FLAG_ABBREVIATE,
+			     "%H:%M:%S",
+			     tmpbuf,
+			     SEL_BUFFER_LENGTH) < 0)
+    {
+      SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERNAL_ERROR);
+      return (-1);
+    }
 
   if (sel_string_snprintf (buf, buflen, wlen, "%s", tmpbuf))
     return (1);
@@ -634,8 +635,7 @@ _output_date (ipmi_sel_ctx_t ctx,
 {
   char tmpbuf[SEL_BUFFER_LENGTH];
   uint32_t timestamp;
-  struct tm tmp;
-  time_t t;
+  char *date_format = NULL;
 
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -652,34 +652,38 @@ _output_date (ipmi_sel_ctx_t ctx,
   if (sel_get_timestamp (ctx, sel_entry, &timestamp) < 0)
     return (-1);
 
-  /* Posix says individual calls need not clear/set all portions of
-   * 'struct tm', thus passing 'struct tm' between functions could
-   * have issues.  So we need to memset.
-   */
-  memset (&tmp, '\0', sizeof (struct tm));
-
-  t = timestamp;
-  localtime_r (&t, &tmp);
   if (flags & IPMI_SEL_STRING_FLAGS_LEGACY)
-    strftime (tmpbuf, SEL_BUFFER_LENGTH, "%d-%b-%Y", &tmp);
+    date_format = "%d-%b-%Y";
   else
     {
       if (flags & IPMI_SEL_STRING_FLAGS_DATE_MONTH_STRING)
         {
           if (flags & IPMI_SEL_STRING_FLAGS_DATE_USE_SLASH)
-            strftime (tmpbuf, SEL_BUFFER_LENGTH, "%b/%d/%Y", &tmp);
+            date_format = "%b/%d/%Y";
           else
-            strftime (tmpbuf, SEL_BUFFER_LENGTH, "%b-%d-%Y", &tmp);
+            date_format = "%b-%d-%Y";
         }
       else
         {
           if (flags & IPMI_SEL_STRING_FLAGS_DATE_USE_SLASH)
-            strftime (tmpbuf, SEL_BUFFER_LENGTH, "%m/%d/%Y", &tmp);
+            date_format = "%m/%d/%Y";
           else
-            strftime (tmpbuf, SEL_BUFFER_LENGTH, "%m-%d-%Y", &tmp);
+            date_format = "%m-%d-%Y";
         }
     }
 
+  memset (tmpbuf, '\0', SEL_BUFFER_LENGTH + 1);
+  
+  if (ipmi_timestamp_string (timestamp,
+			     IPMI_TIMESTAMP_FLAG_ABBREVIATE,
+			     date_format,
+			     tmpbuf,
+			     SEL_BUFFER_LENGTH) < 0)
+    {
+      SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERNAL_ERROR);
+      return (-1);
+    }
+  
   if (sel_string_snprintf (buf, buflen, wlen, "%s", tmpbuf))
     return (1);
   return (0);

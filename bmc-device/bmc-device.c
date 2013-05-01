@@ -73,6 +73,8 @@ typedef int (*Bmc_device_system_info)(ipmi_ctx_t ctx,
 
 #define BMC_DEVICE_SET_SENSOR_READING_AND_EVENT_STATUS_ARGS 11
 
+#define BMC_DEVICE_TIME_BUFLEN 512
+
 static int
 cold_reset (bmc_device_state_data_t *state_data)
 {
@@ -1112,10 +1114,8 @@ get_sdr_repository_time (bmc_device_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  char timestr[512];
+  char timestr[BMC_DEVICE_TIME_BUFLEN + 1];
   int rv = -1;
-  time_t t;
-  struct tm tm;
 
   assert (state_data);
 
@@ -1146,15 +1146,21 @@ get_sdr_repository_time (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  /* Posix says individual calls need not clear/set all portions of
-   * 'struct tm', thus passing 'struct tm' between functions could
-   * have issues.  So we need to memset.
-   */
-  memset (&tm, '\0', sizeof(struct tm));
+  memset (timestr, '\0', BMC_DEVICE_TIME_BUFLEN + 1);
 
-  t = val;
-  localtime_r (&t, &tm);
-  strftime (timestr, sizeof (timestr), "%m/%d/%Y - %H:%M:%S", &tm);
+  if (ipmi_timestamp_string ((uint32_t)val,
+			     IPMI_TIMESTAMP_FLAG_DEFAULT,
+			     "%m/%d/%Y - %H:%M:%S",
+			     timestr,
+			     BMC_DEVICE_TIME_BUFLEN) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_timestamp_string: %s\n",
+		       strerror (errno));
+      goto cleanup;
+    }
+			     
   pstdout_printf (state_data->pstate,
                   "SDR Repository Time : %s\n",
                   timestr);
@@ -1240,10 +1246,8 @@ get_sel_time (bmc_device_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  char timestr[512];
+  char timestr[BMC_DEVICE_TIME_BUFLEN + 1];
   int rv = -1;
-  time_t t;
-  struct tm tm;
 
   assert (state_data);
 
@@ -1274,15 +1278,21 @@ get_sel_time (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  /* Posix says individual calls need not clear/set all portions of
-   * 'struct tm', thus passing 'struct tm' between functions could
-   * have issues.  So we need to memset.
-   */
-  memset (&tm, '\0', sizeof(struct tm));
+  memset (timestr, '\0', BMC_DEVICE_TIME_BUFLEN + 1);
 
-  t = val;
-  localtime_r (&t, &tm);
-  strftime (timestr, sizeof (timestr), "%m/%d/%Y - %H:%M:%S", &tm);
+  if (ipmi_timestamp_string ((uint32_t)val,
+			     IPMI_TIMESTAMP_FLAG_DEFAULT,
+			     "%m/%d/%Y - %H:%M:%S",
+			     timestr,
+			     BMC_DEVICE_TIME_BUFLEN) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_timestamp_string: %s\n",
+		       strerror (errno));
+      goto cleanup;
+    }
+
   pstdout_printf (state_data->pstate,
                   "SEL Time : %s\n",
                   timestr);
@@ -1848,7 +1858,7 @@ get_mca_auxiliary_log_status (bmc_device_state_data_t *state_data)
   fiid_obj_t mca_obj_cmd_rs = NULL;
   uint32_t mca_log_entry_count;
   uint64_t val;
-  char timestr[512];
+  char timestr[BMC_DEVICE_TIME_BUFLEN + 1];
   int rv = -1;
   time_t t;
   struct tm tm;
@@ -1894,6 +1904,8 @@ get_mca_auxiliary_log_status (bmc_device_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
+
+  memset (timestr, '\0', BMC_DEVICE_TIME_BUFLEN + 1);
 
   /* Posix says individual calls need not clear/set all portions of
    * 'struct tm', thus passing 'struct tm' between functions could

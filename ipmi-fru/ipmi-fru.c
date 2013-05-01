@@ -191,13 +191,17 @@ _output_fru (ipmi_fru_state_data_t *state_data,
                 goto cleanup;
               break;
             case IPMI_FRU_AREA_TYPE_MULTIRECORD_DC_OUTPUT:
+            case IPMI_FRU_AREA_TYPE_MULTIRECORD_EXTENDED_DC_OUTPUT:
               if (ipmi_fru_output_dc_output (state_data,
+					     area_type,
                                              areabuf,
                                              area_length) < 0)
                 goto cleanup;
               break;
             case IPMI_FRU_AREA_TYPE_MULTIRECORD_DC_LOAD:
+            case IPMI_FRU_AREA_TYPE_MULTIRECORD_EXTENDED_DC_LOAD:
               if (ipmi_fru_output_dc_load (state_data,
+					   area_type,
                                            areabuf,
                                            area_length) < 0)
                 goto cleanup;
