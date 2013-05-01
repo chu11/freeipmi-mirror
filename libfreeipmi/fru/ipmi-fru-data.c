@@ -1027,7 +1027,6 @@ ipmi_fru_multirecord_dc_output (ipmi_fru_ctx_t ctx,
 {
   fiid_obj_t obj_record = NULL;
   int tmpl_record_length;
-  int16_t tmp16;
   uint64_t val;
   int rv = -1;
 
@@ -1105,9 +1104,6 @@ ipmi_fru_multirecord_dc_output (ipmi_fru_ctx_t ctx,
           FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, obj_record);
           goto cleanup;
         }
-      /* field is signed and 16bits */
-      tmp16 = (val & 0xFFFF);
-      
       (*nominal_voltage) = ((int16_t)val * 10);
     }
   if (maximum_negative_voltage_deviation)
@@ -1187,7 +1183,6 @@ ipmi_fru_multirecord_dc_load (ipmi_fru_ctx_t ctx,
 {
   fiid_obj_t obj_record = NULL;
   int tmpl_record_length;
-  int16_t tmp16;
   uint64_t val;
   int rv = -1;
 
@@ -1693,7 +1688,7 @@ ipmi_fru_multirecord_extended_dc_output (ipmi_fru_ctx_t ctx,
 {
   fiid_obj_t obj_record = NULL;
   int tmpl_record_length;
-  uint64_t local_current_units;
+  uint64_t local_current_units = 0;
   uint64_t val;
   int rv = -1;
 
@@ -1870,7 +1865,7 @@ ipmi_fru_multirecord_extended_dc_load (ipmi_fru_ctx_t ctx,
 {
   fiid_obj_t obj_record = NULL;
   int tmpl_record_length;
-  uint64_t local_current_units;
+  uint64_t local_current_units = 0;
   uint64_t val;
   int rv = -1;
 
