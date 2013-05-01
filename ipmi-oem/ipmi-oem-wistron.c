@@ -2215,8 +2215,6 @@ ipmi_oem_wistron_get_chassis_power_readings (ipmi_oem_state_data_t *state_data)
   uint8_t coolingpowerconsumption_supported;
   uint16_t totalpowerconsumption;
   uint16_t coolingpowerconsumption;
-  time_t timetmp;
-  struct tm time_tm;
   char time_buf[IPMI_OEM_TIME_BUFLEN + 1];
   int rv = -1;
 
@@ -2288,16 +2286,20 @@ ipmi_oem_wistron_get_chassis_power_readings (ipmi_oem_state_data_t *state_data)
   coolingpowerconsumption = bytes_rs[9];
   coolingpowerconsumption |= (bytes_rs[10] << 8);
   
-  /* Posix says individual calls need not clear/set all portions of
-   * 'struct tm', thus passing 'struct tm' between functions could
-   * have issues.  So we need to memset.
-   */
-  memset (&time_tm, '\0', sizeof(struct tm));
-
-  timetmp = ipmitimestamp;
-  localtime_r (&timetmp, &time_tm);
   memset (time_buf, '\0', IPMI_OEM_TIME_BUFLEN + 1);
-  strftime (time_buf, IPMI_OEM_TIME_BUFLEN, "%b-%d-%Y | %H:%M:%S", &time_tm);
+  
+  if (ipmi_timestamp_string (ipmitimestamp,
+			     IPMI_TIMESTAMP_FLAG_DEFAULT,
+			     "%b-%d-%Y | %H:%M:%S",
+			     time_buf,
+			     IPMI_OEM_TIME_BUFLEN) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "ipmi_timestamp_string: %s\n",
+		       strerror (errno));
+      goto cleanup;
+    }
 
   pstdout_printf (state_data->pstate,
 		  "IPMI Timestamp of Collection      : %s\n",

@@ -1,3 +1,18 @@
+2013-04-30  Albert Chu <chu11@llnl.gov>
+
+	Merge branch 'timestampspecial'
+
+	Handle special case timestamps such as 0xFFFFFFFF and timestamps <
+	0x2000000, per chapter 37 of IPMI specification.
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-timestamp-spec.h: New file.
+
+	* libfreeipmi/include/freeipmi/util/ipmi-timestamp-util.h,
+	libfreeipmi/util/ipmi-timestamp-util.c: New timestamp utility files.
+
+	* ipmi-fru/, bmc-device/, ipmi-sel/, ipmi-sensors/, ipmi-dcmi/,
+	ipmi-oem/, libfreeipmi/sel/: Use new timestamp utility function.
+
 2013-04-29  Albert Chu <chu11@llnl.gov>
 
 	Merge branch 'fru12'

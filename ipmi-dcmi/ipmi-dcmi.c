@@ -64,6 +64,8 @@
 
 #define IPMI_DCMI_ERROR_BUFLEN          1024
 
+#define IPMI_DCMI_TIME_BUFLEN           512
+
 /* return 1 on output success, 0 on no output, -1 on error */
 static int
 _dcmi_specification_conformance (ipmi_dcmi_state_data_t *state_data, uint8_t *parameter_revision)
@@ -1673,9 +1675,7 @@ _output_power_statistics (ipmi_dcmi_state_data_t *state_data,
   uint32_t statistics_reporting_time_period;
   uint8_t power_measurement;
   uint64_t val;
-  char timestr[512];
-  time_t t;
-  struct tm tm;
+  char timestr[IPMI_DCMI_TIME_BUFLEN + 1];
   int rv = -1;
 
   assert (state_data);
@@ -1801,15 +1801,20 @@ _output_power_statistics (ipmi_dcmi_state_data_t *state_data,
                   "Average Power over sampling duration : %u watts\n",
                   average_power_over_sampling_duration);
 
-  /* Posix says individual calls need not clear/set all portions of
-   * 'struct tm', thus passing 'struct tm' between functions could
-   * have issues.  So we need to memset.
-   */
-  memset (&tm, '\0', sizeof(struct tm));
+  memset (timestr, '\0', IPMI_DCMI_TIME_BUFLEN + 1);
 
-  t = time_stamp;
-  localtime_r (&t, &tm);
-  strftime (timestr, sizeof (timestr), "%m/%d/%Y - %H:%M:%S", &tm);
+  if (ipmi_timestamp_string (time_stamp,
+			     IPMI_TIMESTAMP_FLAG_DEFAULT,
+			     "%m/%d/%Y - %H:%M:%S",
+			     timestr,
+			     IPMI_DCMI_TIME_BUFLEN) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "ipmi_timestamp_string: %s\n",
+		       strerror (errno));
+      goto cleanup;
+    }
 
   pstdout_printf (state_data->pstate,
                   "Time Stamp                           : %s\n",
