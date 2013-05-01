@@ -13,6 +13,7 @@ o In ipmi-fru, report power supply low/high end voltage ranges as
   signed numbers (per FRU Revision 1.2 update).
 o In ipmi-fru, output "unspecified" for manufacturing date/time or
   peak capacity as appropriate (per FRU Revision 1.2 update).
+o In ipmi-fru, bridge additional FRU entries as appropriate. 
 
 Libraries
 ---------

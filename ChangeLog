@@ -1,5 +1,10 @@
 2013-04-30  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-fru/ipmi-fru.c (_print_except_default_fru_cb): Add
+	additional bridging case.
+	
+2013-04-30  Albert Chu <chu11@llnl.gov>
+
 	Merge branch 'timestampspecial'
 
 	Handle special case timestamps such as 0xFFFFFFFF and timestamps <

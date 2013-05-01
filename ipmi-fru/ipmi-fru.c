@@ -321,16 +321,17 @@ _print_except_default_fru_cb (ipmi_fru_state_data_t *state_data,
   if (record_type == IPMI_SDR_FORMAT_FRU_DEVICE_LOCATOR_RECORD)
     {
       uint8_t logical_physical_fru_device, logical_fru_device_device_slave_address;
+      uint8_t device_access_address, channel_number;
 
       if (ipmi_sdr_parse_fru_device_locator_parameters (state_data->sdr_ctx,
 							sdr_record,
 							sdr_record_len,
-							NULL,
+							&device_access_address,
 							&logical_fru_device_device_slave_address,
 							NULL,
 							NULL,
 							&logical_physical_fru_device,
-							NULL) < 0)
+							&channel_number) < 0)
 	{
 	  pstdout_fprintf (state_data->pstate,
 			   stderr,
@@ -339,15 +340,54 @@ _print_except_default_fru_cb (ipmi_fru_state_data_t *state_data,
 	  goto cleanup;
 	}
 
+      /* stored in 7-bit form, unlike sensor owner ids, need to shift */
+      device_access_address <<= 1;
+
       if (logical_physical_fru_device
 	  && logical_fru_device_device_slave_address != IPMI_FRU_DEVICE_ID_DEFAULT)
 	{
-	  if (_output_fru_with_sdr (state_data,
-				    output_count,
-				    sdr_record,
-				    sdr_record_len,
-				    logical_fru_device_device_slave_address) < 0)
-	    goto cleanup;
+
+	  if (device_access_address == IPMI_SLAVE_ADDRESS_BMC)
+	    {
+	      if (_output_fru_with_sdr (state_data,
+					output_count,
+					sdr_record,
+					sdr_record_len,
+					logical_fru_device_device_slave_address) < 0)
+		goto cleanup;
+	    }
+	  else
+	    {
+	      if (state_data->prog_data->args->bridge_fru)
+		{
+		  if (ipmi_ctx_set_target (state_data->ipmi_ctx,
+					   &channel_number,
+					   &device_access_address) < 0)
+		    {
+		      pstdout_fprintf (state_data->pstate,
+				       stderr,
+				       "ipmi_ctx_set_target: %s\n",
+				       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+		      goto cleanup;
+		    }
+
+		  if (_output_fru_with_sdr (state_data,
+					    output_count,
+					    sdr_record,
+					    sdr_record_len,
+					    logical_fru_device_device_slave_address) < 0)
+		    goto cleanup;
+		  
+		  if (ipmi_ctx_set_target (state_data->ipmi_ctx, NULL, NULL) < 0)
+		    {
+		      pstdout_fprintf (state_data->pstate,
+				       stderr,
+				       "ipmi_ctx_set_target: %s\n",
+				       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+		      goto cleanup;
+		    }
+		}
+	    }
 	}
     }
   else
