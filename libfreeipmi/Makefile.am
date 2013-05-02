@@ -214,6 +214,7 @@ libfreeipmi_la_SOURCES = \
 	spec/ipmi-fru-chassis-types-spec.c \
 	spec/ipmi-fru-language-codes-spec.c \
 	spec/ipmi-iana-enterprise-numbers-spec.c \
+	spec/ipmi-jedec-manufacturer-identification-code-spec.c \
 	spec/ipmi-sensor-and-event-code-tables-spec.c \
 	spec/ipmi-sensor-and-event-code-tables-oem-spec.c \
 	spec/ipmi-sensor-types-spec.c \
@@ -227,6 +228,7 @@ libfreeipmi_la_SOURCES = \
 	util/ipmi-error-util.c \
 	util/ipmi-iana-enterprise-numbers-util.c \
 	util/ipmi-ipmb-util.c \
+	util/ipmi-jedec-manufacturer-identification-code-util.c \
 	util/ipmi-lan-util.c \
 	util/ipmi-outofband-util.c \
 	util/ipmi-rmcpplus-util.c \

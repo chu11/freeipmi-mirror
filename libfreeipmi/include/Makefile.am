@@ -87,6 +87,7 @@ nobase_include_HEADERS = \
 	freeipmi/spec/ipmi-fru-language-codes-spec.h \
 	freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h \
 	freeipmi/spec/ipmi-ipmb-lun-spec.h \
+	freeipmi/spec/ipmi-jedec-manufacturer-identification-code-spec.h \
 	freeipmi/spec/ipmi-lan-configuration-parameters-spec.h \
 	freeipmi/spec/ipmi-lan-configuration-parameters-oem-spec.h \
 	freeipmi/spec/ipmi-netfn-spec.h \
@@ -152,6 +153,7 @@ nobase_include_HEADERS = \
 	freeipmi/util/ipmi-error-dcmi-util.h \
 	freeipmi/util/ipmi-iana-enterprise-numbers-util.h \
 	freeipmi/util/ipmi-ipmb-util.h \
+	freeipmi/util/ipmi-jedec-manufacturer-identification-code-util.h \
 	freeipmi/util/ipmi-lan-util.h \
 	freeipmi/util/ipmi-outofband-util.h \
 	freeipmi/util/ipmi-rmcpplus-util.h \
