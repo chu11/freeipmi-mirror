@@ -1,3 +1,9 @@
+2013-05-02  Albert Chu <chu11@llnl.gov>
+	
+	* libfreeipmi/sel/ipmi-sel-string.c (_output_date): Fix memory
+	buffer overrun (Bug location found by Rob Swindell - swindell at
+	broadcom dot com).
+
 2013-04-30  Albert Chu <chu11@llnl.gov>
 
 	Merge branch 'timestampspecial'

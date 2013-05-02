@@ -633,7 +633,7 @@ _output_date (ipmi_sel_ctx_t ctx,
               unsigned int flags,
               unsigned int *wlen)
 {
-  char tmpbuf[SEL_BUFFER_LENGTH];
+  char tmpbuf[SEL_BUFFER_LENGTH + 1];
   uint32_t timestamp;
   char *date_format = NULL;
 
