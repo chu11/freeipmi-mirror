@@ -158,6 +158,7 @@ libfreeipmi_la_SOURCES = \
 	locate/ipmi-locate-util.h \
 	payload/ipmi-sol-payload.c \
 	record-format/ipmi-cipher-suite-record-format.c \
+	record-format/ipmi-fru-dimmspd-record-format.c \
 	record-format/ipmi-fru-information-record-format.c \
 	record-format/ipmi-sdr-record-format.c \
 	record-format/ipmi-sdr-oem-record-format.c \

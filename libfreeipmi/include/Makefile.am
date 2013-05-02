@@ -59,6 +59,7 @@ nobase_include_HEADERS = \
 	freeipmi/locate/ipmi-locate.h \
 	freeipmi/payload/ipmi-sol-payload.h \
 	freeipmi/record-format/ipmi-cipher-suite-record-format.h \
+	freeipmi/record-format/ipmi-fru-dimmspd-record-format.h \
 	freeipmi/record-format/ipmi-fru-information-record-format.h \
 	freeipmi/record-format/ipmi-fru-oem-record-format.h \
 	freeipmi/record-format/ipmi-platform-event-trap-record-format.h \

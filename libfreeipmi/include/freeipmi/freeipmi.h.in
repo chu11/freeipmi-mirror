@@ -76,6 +76,7 @@ extern "C" {
 #include <freeipmi/locate/ipmi-locate.h>
 #include <freeipmi/payload/ipmi-sol-payload.h>
 #include <freeipmi/record-format/ipmi-cipher-suite-record-format.h>
+#include <freeipmi/record-format/ipmi-fru-dimmspd-record-format.h>
 #include <freeipmi/record-format/ipmi-fru-information-record-format.h>
 #include <freeipmi/record-format/ipmi-fru-oem-record-format.h>
 #include <freeipmi/record-format/ipmi-platform-event-trap-record-format.h>

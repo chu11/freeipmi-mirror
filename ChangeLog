@@ -1,8 +1,12 @@
 2013-04-30  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/record-format/ipmi-fru-dimmspd-record-format.h,
+	libfreeipmi/record-format/ipmi-fru-dimmspd-record-format.c: New
+	files.
+
 	* ipmi-fru/ipmi-fru.c (_print_except_default_fru_cb): Add
 	additional bridging case.
-	
+
 2013-04-30  Albert Chu <chu11@llnl.gov>
 
 	Merge branch 'timestampspecial'
