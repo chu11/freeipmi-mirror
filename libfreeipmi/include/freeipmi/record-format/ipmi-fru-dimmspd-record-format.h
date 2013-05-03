@@ -184,8 +184,6 @@ extern "C" {
 #define IPMI_FRU_DIMMSPD_SDRAM_DEVICE_TYPE_STANDARD_MONOLITHIC_DRAM_DEVICE 0x0
 #define IPMI_FRU_DIMMSPD_SDRAM_DEVICE_TYPE_NON_STANDARD_DEVICE             0x1
 
-
-
 extern fiid_template_t tmpl_fru_dimm_spd_ddr3_record;
 
 #ifdef __cplusplus
