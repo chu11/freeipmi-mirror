@@ -56,7 +56,7 @@ ipmi_jedec_manufacturer_id_search (uint8_t continuation_codes_count, uint8_t id)
   if (IPMI_JEDEC_MANUFACTURER_CONTINUATION_CODES_VALID (continuation_codes_count))
     {
       SET_ERRNO (EINVAL);
-      return (-1);
+      return (NULL);
     }
 
   switch (continuation_codes_count)
