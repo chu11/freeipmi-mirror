@@ -61,6 +61,12 @@ extern "C" {
 #define IPMI_FRU_FLAGS_DEBUG_DUMP                           0x0001
 #define IPMI_FRU_FLAGS_SKIP_CHECKSUM_CHECKS                 0x0002
 #define IPMI_FRU_FLAGS_INTERPRET_OEM_DATA                   0x0004
+/* Do not parse FRU inventory information like normal
+ * - iterator functions no longer serve purpose
+ * - ipmi_fru_read_data_area will read as much data as in 
+ *   can into buffer.
+ */
+#define IPMI_FRU_FLAGS_READ_RAW                             0x0008
 
 #define IPMI_FRU_AREA_TYPE_CHASSIS_INFO_AREA                          0
 #define IPMI_FRU_AREA_TYPE_BOARD_INFO_AREA                            1
@@ -78,6 +84,7 @@ extern "C" {
 #define IPMI_FRU_AREA_TYPE_MULTIRECORD_EXTENDED_DC_LOAD              13
 #define IPMI_FRU_AREA_TYPE_MULTIRECORD_OEM                           14
 #define IPMI_FRU_AREA_TYPE_MULTIRECORD_UNKNOWN                       15
+#define IPMI_FRU_AREA_TYPE_RAW_DATA                                  16
 
 /* multirecord length field is 1 byte => max 256 chars.  Round up to
  * 512 for good measure.
@@ -139,6 +146,10 @@ int ipmi_fru_next (ipmi_fru_ctx_t ctx);
 
 /* area read will not include record headers */
 /* utiliize area_type and area_length in/out parameters for later parsing */
+/* if reading in raw mode, read as much data as you can into buffer
+ * - area_length will return total size of data that exists
+ * - area_type will return IPMI_FRU_AREA_TYPE_RAW_DATA
+ */
 int ipmi_fru_read_data_area (ipmi_fru_ctx_t ctx,
 			     unsigned int *area_type,
 			     unsigned int *area_length,
