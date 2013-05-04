@@ -76,6 +76,7 @@ extern "C" {
 #include <freeipmi/locate/ipmi-locate.h>
 #include <freeipmi/payload/ipmi-sol-payload.h>
 #include <freeipmi/record-format/ipmi-cipher-suite-record-format.h>
+#include <freeipmi/record-format/ipmi-fru-dimmspd-record-format.h>
 #include <freeipmi/record-format/ipmi-fru-information-record-format.h>
 #include <freeipmi/record-format/ipmi-fru-oem-record-format.h>
 #include <freeipmi/record-format/ipmi-platform-event-trap-record-format.h>
@@ -103,6 +104,7 @@ extern "C" {
 #include <freeipmi/spec/ipmi-fru-language-codes-spec.h>
 #include <freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h>
 #include <freeipmi/spec/ipmi-ipmb-lun-spec.h>
+#include <freeipmi/spec/ipmi-jedec-manufacturer-identification-code-spec.h>
 #include <freeipmi/spec/ipmi-lan-configuration-parameters-spec.h>
 #include <freeipmi/spec/ipmi-lan-configuration-parameters-oem-spec.h>
 #include <freeipmi/spec/ipmi-netfn-spec.h>
@@ -138,6 +140,7 @@ extern "C" {
 #include <freeipmi/util/ipmi-error-dcmi-util.h>
 #include <freeipmi/util/ipmi-iana-enterprise-numbers-util.h>
 #include <freeipmi/util/ipmi-ipmb-util.h>
+#include <freeipmi/util/ipmi-jedec-manufacturer-identification-code-util.h>
 #include <freeipmi/util/ipmi-lan-util.h>
 #include <freeipmi/util/ipmi-outofband-util.h>
 #include <freeipmi/util/ipmi-rmcpplus-util.h>

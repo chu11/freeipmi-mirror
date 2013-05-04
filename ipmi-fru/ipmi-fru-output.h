@@ -93,4 +93,8 @@ int ipmi_fru_output_oem_record (ipmi_fru_state_data_t *state_data,
                                 const void *areabuf,
                                 uint8_t area_length);
 
+int ipmi_fru_output_dimm (ipmi_fru_state_data_t *state_data,
+			  const void *areabuf,
+			  uint8_t area_length);
+
 #endif /* IPMI_FRU_OUTPUT_H */

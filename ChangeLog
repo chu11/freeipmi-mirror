@@ -1,3 +1,30 @@
+2013-05-03  Albert Chu <chu11@llnl.gov>
+
+	Merge 9651:9663 branch 'ddr3'
+	
+	Add support to interpret DDR3 SDRAM memory modules
+
+	* libfreeipmi/include/freeipmi/record-format/ipmi-fru-dimmspd-record-format.h,
+	libfreeipmi/record-format/ipmi-fru-dimmspd-record-format.c,
+	libfreeipmi/include/freeipmi/templates/ipmi-fru-dimmspd-record-format-templates.h:
+	New files.
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-jedec-manufacturer-identifcation-code-spec.h,
+	libfreeipmi/spec/ipmi-jedec-manufacturer-identifcation-code-spec.c,
+	libfreeipmi/include/freeipmi/util/ipmi-jedec-manufacturer-identifcation-code-util.h,
+	libfreeipmi/util/ipmi-jedec-manufacturer-identifcation-code-util.c:
+	New files.
+
+	* libfreeipmi/include/freeipmi/fru/ipmi-fru.h,
+	libfreeipmi/fru/ipmi-fru.c, libfreeipmi/fru/ipmi-fru-defs.h:
+	Support IPMI_FRU_FLAGS_READ_RAW flag and
+	IPMI_FRU_AREA_TYPE_RAW_DATA.
+
+	* ipmi-fru/ipmi-fru.c (_print_except_default_fru_cb): Add
+	additional bridging case.
+
+	* ipmi-fru/: Support FRU output of DDR3 SDRAM dimms. 
+
 2013-05-02  Albert Chu <chu11@llnl.gov>
 	
 	* libfreeipmi/sel/ipmi-sel-string.c (_output_date): Fix memory

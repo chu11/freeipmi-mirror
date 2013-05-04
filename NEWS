@@ -3,16 +3,18 @@ FreeIPMI 1.3.1 - 08/22/12
 
 Tools - New Features
 --------------------
-
-Tools - Bug Fixes/Minor Changes
--------------------------------
+o In ipmi-fru, support output of DDR3 SDRAM modules.
 o In ipmi-fru, support output of new FRU multirecords, most notably
   extended DC output and extended DC load (per FRU Revision 1.2
   update).
+
+Tools - Bug Fixes/Minor Changes
+-------------------------------
 o In ipmi-fru, report power supply low/high end voltage ranges as
   signed numbers (per FRU Revision 1.2 update).
 o In ipmi-fru, output "unspecified" for manufacturing date/time or
   peak capacity as appropriate (per FRU Revision 1.2 update).
+o In ipmi-fru, bridge additional FRU entries as appropriate. 
 
 Libraries
 ---------
@@ -20,6 +22,11 @@ o In libfreeipmi, support additional chassis types (per FRU Revision
   1.2 update).
 o In libfreeipmi, support new FRU multirecord types (per FRU Revision
   1.2 update).
+o In libfreeipmi, support new IPMI_FRU_FLAGS_READ_RAW 'fru'
+  sub-library flag to read data from the FRU raw without parsing
+  headers/records.
+o In libfreeipmi, add support for DDR3 SDRAM FRU entries and JEDEC
+  manufacturer IDs.
 
 FreeIPMI 1.2.1 - 08/22/12
 -------------------------
