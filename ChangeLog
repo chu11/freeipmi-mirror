@@ -1,3 +1,7 @@
+2013-05-06 Peter Volkov <pva@gentoo.org>
+
+	* configure.ac: Update for autoconf 1.14. 
+	
 2013-04-29  Albert Chu <chu11@llnl.gov>
 
         * NEWS, configure.ac: Update for release.

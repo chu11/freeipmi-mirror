@@ -22,7 +22,7 @@ AC_CONFIG_SRCDIR([ChangeLog.0])
 AM_INIT_AUTOMAKE([tar-ustar subdir-objects 1.9])
 
 dnl create a config.h file
-AM_CONFIG_HEADER([config/config.h])
+AC_CONFIG_HEADERS([config/config.h])
 
 dnl define output files
 AC_CONFIG_FILES([
