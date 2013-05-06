@@ -68,19 +68,28 @@ extern "C" {
 #define IPMI_FRU_MULTIRECORD_AREA_TYPE_MANAGEMENT_ACCESS_RECORD       0x03
 #define IPMI_FRU_MULTIRECORD_AREA_TYPE_BASE_COMPATIBILITY_RECORD      0x04
 #define IPMI_FRU_MULTIRECORD_AREA_TYPE_EXTENDED_COMPATIBILITY_RECORD  0x05
+#define IPMI_FRU_MULTIRECORD_AREA_TYPE_ASF_FIXED_SMBUS_DEVICE_RECORD  0x06
+#define IPMI_FRU_MULTIRECORD_AREA_TYPE_ASF_LEGACY_DEVICE_ALERTS       0x07
+#define IPMI_FRU_MULTIRECORD_AREA_TYPE_ASF_REMOTE_CONTROL             0x08
+#define IPMI_FRU_MULTIRECORD_AREA_TYPE_EXTENDED_DC_OUTPUT             0x09
+#define IPMI_FRU_MULTIRECORD_AREA_TYPE_EXTENDED_DC_LOAD               0x0A
 #define IPMI_FRU_MULTIRECORD_AREA_TYPE_OEM_MIN                        0xC0
 #define IPMI_FRU_MULTIRECORD_AREA_TYPE_OEM_MAX                        0xFF
 
 #define IPMI_FRU_MULTIRECORD_AREA_TYPE_VALID(__multirecord_area_type)                    \
   (((__multirecord_area_type) >= IPMI_FRU_MULTIRECORD_AREA_TYPE_POWER_SUPPLY_INFORMATION \
-    && (__multirecord_area_type) <= IPMI_FRU_MULTIRECORD_AREA_TYPE_EXTENDED_COMPATIBILITY_RECORD) ? 1 : 0)
+    && (__multirecord_area_type) <= IPMI_FRU_MULTIRECORD_AREA_TYPE_EXTENDED_DC_LOAD) ? 1 : 0)
 
 #define IPMI_FRU_MULTIRECORD_AREA_TYPE_IS_OEM(__multirecord_area_type)  \
   (((__multirecord_area_type) >= IPMI_FRU_MULTIRECORD_AREA_TYPE_OEM_MIN \
     && (__multirecord_area_type) <= IPMI_FRU_MULTIRECORD_AREA_TYPE_OEM_MAX) ? 1 : 0)
 
+#define IPMI_FRU_MFG_DATE_TIME_UNSPECIFIED 0x000000 
+
 #define IPMI_FRU_ONE_PULSE_PER_ROTATION  0x0
 #define IPMI_FRU_TWO_PULSES_PER_ROTATION 0x1
+
+#define IPMI_FRU_PEAK_CAPACITY_UNSPECIFIED 0xFFF
 
 #define IPMI_FRU_VOLTAGE_12V      0x0
 #define IPMI_FRU_VOLTAGE_MINUS12V 0x1
@@ -88,6 +97,9 @@ extern "C" {
 #define IPMI_FRU_VOLTAGE_3_3V     0x3
 
 #define IPMI_FRU_PREDICTIVE_FAIL_PIN_IS_PASS_FAIL 0x0
+
+#define IPMI_FRU_CURRENT_UNITS_10MA  0x0
+#define IPMI_FRU_CURRENT_UNITS_100MA 0x1
 
 #define IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_MANAGEMENT_URL     0x01
 #define IPMI_FRU_SUB_RECORD_TYPE_SYSTEM_NAME               0x02
@@ -130,6 +142,8 @@ extern fiid_template_t tmpl_fru_dc_load;
 extern fiid_template_t tmpl_fru_management_access_record;
 extern fiid_template_t tmpl_fru_base_compatibility_record;
 extern fiid_template_t tmpl_fru_extended_compatibility_record;
+extern fiid_template_t tmpl_fru_extended_dc_output;
+extern fiid_template_t tmpl_fru_extended_dc_load;
 extern fiid_template_t tmpl_fru_oem_record;
 
 #ifdef __cplusplus

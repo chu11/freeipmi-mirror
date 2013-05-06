@@ -58,6 +58,8 @@
 
 #define IPMI_SENSORS_MESSAGE_LENGTH 1024
 
+#define IPMI_SENSORS_TIME_BUFLEN    512
+
 static int
 _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
 {
@@ -65,9 +67,7 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
   uint8_t major, minor;
   uint16_t record_count, free_space;
   uint64_t val;
-  char timestr[512];
-  time_t t;
-  struct tm tmp;
+  char timestr[IPMI_SENSORS_TIME_BUFLEN + 1];
   char *str;
   int rv = -1;
   uint8_t allocation_supported = 0;
@@ -154,15 +154,21 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
       goto cleanup;
     }
 
-  /* Posix says individual calls need not clear/set all portions of
-   * 'struct tm', thus passing 'struct tm' between functions could
-   * have issues.  So we need to memset.
-   */
-  memset (&tmp, '\0', sizeof(struct tm));
+  memset (timestr, '\0', IPMI_SENSORS_TIME_BUFLEN + 1);
+  
+  if (ipmi_timestamp_string ((uint32_t)val,
+			     IPMI_TIMESTAMP_FLAG_DEFAULT,
+			     "%m/%d/%Y - %H:%M:%S",
+			     timestr,
+			     IPMI_SENSORS_TIME_BUFLEN) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "ipmi_timestamp_string: %s\n",
+		       strerror (errno));
+      goto cleanup;
+    }
 
-  t = val;
-  localtime_r (&t, &tmp);
-  strftime (timestr, sizeof (timestr), "%m/%d/%Y - %H:%M:%S", &tmp);
   pstdout_printf (state_data->pstate,
                   "Most recent addition timestamp                    : %s\n",
                   timestr);
@@ -176,15 +182,21 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
       goto cleanup;
     }
 
-  /* Posix says individual calls need not clear/set all portions of
-   * 'struct tm', thus passing 'struct tm' between functions could
-   * have issues.  So we need to memset.
-   */
-  memset (&tmp, '\0', sizeof(struct tm));
+  memset (timestr, '\0', IPMI_SENSORS_TIME_BUFLEN + 1);
+  
+  if (ipmi_timestamp_string ((uint32_t)val,
+			     IPMI_TIMESTAMP_FLAG_DEFAULT,
+			     "%m/%d/%Y - %H:%M:%S",
+			     timestr,
+			     IPMI_SENSORS_TIME_BUFLEN) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "ipmi_timestamp_string: %s\n",
+		       strerror (errno));
+      goto cleanup;
+    }
 
-  t = val;
-  localtime_r (&t, &tmp);
-  strftime (timestr, sizeof (timestr), "%m/%d/%Y - %H:%M:%S", &tmp);
   pstdout_printf (state_data->pstate,
                   "Most recent erase timestamp                       : %s\n",
                   timestr);

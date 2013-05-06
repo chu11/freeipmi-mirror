@@ -609,115 +609,118 @@ ipmi_fru_open_device_id (ipmi_fru_ctx_t ctx, uint8_t fru_device_id)
       goto cleanup;
     }
 
-  if ((common_header_len = fiid_template_len_bytes (tmpl_fru_common_header)) < 0)
+  if (!(ctx->flags & IPMI_FRU_FLAGS_READ_RAW))
     {
-      FRU_ERRNO_TO_FRU_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
+      if ((common_header_len = fiid_template_len_bytes (tmpl_fru_common_header)) < 0)
+	{
+	  FRU_ERRNO_TO_FRU_ERRNUM (ctx, errno);
+	  goto cleanup;
+	}
   
-  if (_read_fru_data (ctx,
-                      frubuf,
-                      IPMI_FRU_INVENTORY_AREA_SIZE_MAX,
-                      0,
-                      common_header_len) < 0)
-    goto cleanup;
+      if (_read_fru_data (ctx,
+			  frubuf,
+			  IPMI_FRU_INVENTORY_AREA_SIZE_MAX,
+			  0,
+			  common_header_len) < 0)
+	goto cleanup;
+      
+      if (fru_dump_hex (ctx,
+			frubuf,
+			common_header_len,
+			"Common Header") < 0)
+	goto cleanup;
 
-  if (fru_dump_hex (ctx,
-		    frubuf,
-		    common_header_len,
-		    "Common Header") < 0)
-    goto cleanup;
+      if ((ret = _check_checksum (ctx,
+				  frubuf,
+				  common_header_len,
+				  0)) < 0)
+	goto cleanup;
 
-  if ((ret = _check_checksum (ctx,
-                              frubuf,
-                              common_header_len,
-                              0)) < 0)
-    goto cleanup;
+      if (!ret)
+	{
+	  FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_COMMON_HEADER_CHECKSUM_INVALID);
+	  goto cleanup;
+	}
 
-  if (!ret)
-    {
-      FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_COMMON_HEADER_CHECKSUM_INVALID);
-      goto cleanup;
-    }
+      if (!(fru_common_header = fiid_obj_create (tmpl_fru_common_header)))
+	{
+	  FRU_ERRNO_TO_FRU_ERRNUM (ctx, errno);
+	  goto cleanup;
+	}
 
-  if (!(fru_common_header = fiid_obj_create (tmpl_fru_common_header)))
-    {
-      FRU_ERRNO_TO_FRU_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
+      if (fiid_obj_set_all (fru_common_header,
+			    frubuf,
+			    common_header_len) < 0)
+	{
+	  FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, fru_common_header);
+	  goto cleanup;
+	}
 
-  if (fiid_obj_set_all (fru_common_header,
-                        frubuf,
-                        common_header_len) < 0)
-    {
-      FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, fru_common_header);
-      goto cleanup;
-    }
+      if (fru_dump_obj (ctx,
+			fru_common_header,
+			"Common Header") < 0)
+	goto cleanup;
 
-  if (fru_dump_obj (ctx,
-		    fru_common_header,
-		    "Common Header") < 0)
-    goto cleanup;
+      if (FIID_OBJ_GET (fru_common_header,
+			"format_version",
+			&val) < 0)
+	{
+	  FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, fru_common_header);
+	  goto cleanup;
+	}
+      format_version = val;
+      
+      if (FIID_OBJ_GET (fru_common_header,
+			"chassis_info_area_starting_offset",
+			&val) < 0)
+	{
+	  FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, fru_common_header);
+	  goto cleanup;
+	}
+      ctx->chassis_info_area_starting_offset = val;
+      
+      if (FIID_OBJ_GET (fru_common_header,
+			"board_info_area_starting_offset",
+			&val) < 0)
+	{
+	  FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, fru_common_header);
+	  goto cleanup;
+	}
+      ctx->board_info_area_starting_offset = val;
+      
+      if (FIID_OBJ_GET (fru_common_header,
+			"product_info_area_starting_offset",
+			&val) < 0)
+	{
+	  FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, fru_common_header);
+	  goto cleanup;
+	}
+      ctx->product_info_area_starting_offset = val;
 
-  if (FIID_OBJ_GET (fru_common_header,
-                    "format_version",
-                    &val) < 0)
-    {
-      FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, fru_common_header);
-      goto cleanup;
-    }
-  format_version = val;
+      if (FIID_OBJ_GET (fru_common_header,
+			"multirecord_area_starting_offset",
+			&val) < 0)
+	{
+	  FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, fru_common_header);
+	  goto cleanup;
+	}
+      ctx->multirecord_area_starting_offset = val;
 
-  if (FIID_OBJ_GET (fru_common_header,
-                    "chassis_info_area_starting_offset",
-                    &val) < 0)
-    {
-      FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, fru_common_header);
-      goto cleanup;
-    }
-  ctx->chassis_info_area_starting_offset = val;
+      /* Special corner case, found on Dell Poweredge R710 */
+      if (!ctx->chassis_info_area_starting_offset
+	  && !ctx->board_info_area_starting_offset
+	  && !ctx->product_info_area_starting_offset
+	  && !ctx->multirecord_area_starting_offset)
+	{
+	  FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_NO_FRU_INFORMATION);
+	  goto cleanup;
+	}
 
-  if (FIID_OBJ_GET (fru_common_header,
-                    "board_info_area_starting_offset",
-                    &val) < 0)
-    {
-      FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, fru_common_header);
-      goto cleanup;
-    }
-  ctx->board_info_area_starting_offset = val;
-
-  if (FIID_OBJ_GET (fru_common_header,
-                    "product_info_area_starting_offset",
-                    &val) < 0)
-    {
-      FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, fru_common_header);
-      goto cleanup;
-    }
-  ctx->product_info_area_starting_offset = val;
-
-  if (FIID_OBJ_GET (fru_common_header,
-                    "multirecord_area_starting_offset",
-                    &val) < 0)
-    {
-      FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, fru_common_header);
-      goto cleanup;
-    }
-  ctx->multirecord_area_starting_offset = val;
-
-  /* Special corner case, found on Dell Poweredge R710 */
-  if (!ctx->chassis_info_area_starting_offset
-      && !ctx->board_info_area_starting_offset
-      && !ctx->product_info_area_starting_offset
-      && !ctx->multirecord_area_starting_offset)
-    {
-      FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_NO_FRU_INFORMATION);
-      goto cleanup;
-    }
-
-  if (format_version != IPMI_FRU_COMMON_HEADER_FORMAT_VERSION)
-    {
-      FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_COMMON_HEADER_FORMAT_INVALID);
-      goto cleanup;
+      if (format_version != IPMI_FRU_COMMON_HEADER_FORMAT_VERSION)
+	{
+	  FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_COMMON_HEADER_FORMAT_INVALID);
+	  goto cleanup;
+	}
     }
 
   rv = 0;
@@ -1283,6 +1286,21 @@ _read_multirecord_area_data (ipmi_fru_ctx_t ctx,
     case IPMI_FRU_MULTIRECORD_AREA_TYPE_EXTENDED_COMPATIBILITY_RECORD:
       (*area_type) = IPMI_FRU_AREA_TYPE_MULTIRECORD_EXTENDED_COMPATABILITY_RECORD;
       break;
+    case IPMI_FRU_MULTIRECORD_AREA_TYPE_ASF_FIXED_SMBUS_DEVICE_RECORD:
+      (*area_type) = IPMI_FRU_AREA_TYPE_MULTIRECORD_ASF_FIXED_SMBUS_DEVICE_RECORD;
+      break;
+    case IPMI_FRU_MULTIRECORD_AREA_TYPE_ASF_LEGACY_DEVICE_ALERTS:
+      (*area_type) = IPMI_FRU_AREA_TYPE_MULTIRECORD_ASF_LEGACY_DEVICE_ALERTS;
+      break;
+    case IPMI_FRU_MULTIRECORD_AREA_TYPE_ASF_REMOTE_CONTROL:
+      (*area_type) = IPMI_FRU_AREA_TYPE_MULTIRECORD_ASF_REMOTE_CONTROL;
+      break;
+    case IPMI_FRU_MULTIRECORD_AREA_TYPE_EXTENDED_DC_OUTPUT:
+      (*area_type) = IPMI_FRU_AREA_TYPE_MULTIRECORD_EXTENDED_DC_OUTPUT;
+      break;
+    case IPMI_FRU_MULTIRECORD_AREA_TYPE_EXTENDED_DC_LOAD:
+      (*area_type) = IPMI_FRU_AREA_TYPE_MULTIRECORD_EXTENDED_DC_LOAD;
+      break;
     default:
       if (IPMI_FRU_MULTIRECORD_AREA_TYPE_IS_OEM (record_type_id))
 	(*area_type) = IPMI_FRU_AREA_TYPE_MULTIRECORD_OEM;
@@ -1292,6 +1310,53 @@ _read_multirecord_area_data (ipmi_fru_ctx_t ctx,
     
   (*area_length) = record_length;
   memcpy (areabuf, frubuf, record_length);
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+static int
+_read_raw_data (ipmi_fru_ctx_t ctx,
+		unsigned int *area_type,
+		unsigned int *area_length,
+		void *areabuf,
+		unsigned int areabuflen)
+{
+  uint8_t frubuf[IPMI_FRU_INVENTORY_AREA_SIZE_MAX+1];
+  unsigned int len = 0;
+  int rv = -1;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_FRU_CTX_MAGIC);
+  assert (ctx->ipmi_ctx);
+  assert (area_type);
+  assert (area_length);
+  assert (areabuf);
+  assert (areabuflen);
+  assert (ctx->flags & IPMI_FRU_FLAGS_READ_RAW);
+
+  if (areabuflen < ctx->fru_inventory_area_size)
+    len = areabuflen;
+  else
+    len = ctx->fru_inventory_area_size;
+
+  if (_read_fru_data (ctx,
+                      frubuf,
+                      IPMI_FRU_INVENTORY_AREA_SIZE_MAX,
+		      0,
+		      len) < 0)
+    goto cleanup;
+
+  if (fru_dump_hex (ctx,
+		    frubuf,
+		    len,
+		    "Raw") < 0)
+    goto cleanup;
+  
+  (*area_type) = IPMI_FRU_AREA_TYPE_RAW_DATA;
+  (*area_length) = ctx->fru_inventory_area_size;
+  memcpy (areabuf, frubuf, len);
 
   rv = 0;
  cleanup:
@@ -1328,28 +1393,42 @@ ipmi_fru_read_data_area (ipmi_fru_ctx_t ctx,
       return (-1);
     }
 
-  if ((ctx->chassis_info_area_starting_offset && !ctx->chassis_info_area_parsed)
-      || (ctx->board_info_area_starting_offset && !ctx->board_info_area_parsed)
-      || (ctx->product_info_area_starting_offset && !ctx->product_info_area_parsed))
+  if (!(ctx->flags & IPMI_FRU_FLAGS_READ_RAW))
     {
-      if (_read_info_area_data (ctx,
-                                area_type,
-                                area_length,
-                                areabuf,
-                                areabuflen) < 0)
-        goto cleanup;
-
-      goto out;
+      if ((ctx->chassis_info_area_starting_offset && !ctx->chassis_info_area_parsed)
+	  || (ctx->board_info_area_starting_offset && !ctx->board_info_area_parsed)
+	  || (ctx->product_info_area_starting_offset && !ctx->product_info_area_parsed))
+	{
+	  if (_read_info_area_data (ctx,
+				    area_type,
+				    area_length,
+				    areabuf,
+				    areabuflen) < 0)
+	    goto cleanup;
+	  
+	  goto out;
+	}
+      
+      if (ctx->multirecord_area_starting_offset && !ctx->multirecord_area_parsed)
+	{
+	  if (_read_multirecord_area_data (ctx,
+					   area_type,
+					   area_length,
+					   areabuf,
+					   areabuflen) < 0)
+	    goto cleanup;
+	  
+	  goto out;
+	}
     }
-
-  if (ctx->multirecord_area_starting_offset && !ctx->multirecord_area_parsed)
+  else
     {
-      if (_read_multirecord_area_data (ctx,
-                                       area_type,
-                                       area_length,
-                                       areabuf,
-                                       areabuflen) < 0)
-        goto cleanup;
+      if (_read_raw_data (ctx,
+			  area_type,
+			  area_length,
+			  areabuf,
+			  areabuflen) < 0)
+	    goto cleanup;
 
       goto out;
     }
