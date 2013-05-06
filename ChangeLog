@@ -1,3 +1,7 @@
+2013-05-06 Peter Volkov <pva@gentoo.org>
+
+	* configure.ac: Update for autoconf 1.14. 
+	
 2013-05-03  Albert Chu <chu11@llnl.gov>
 
 	Merge 9651:9663 branch 'ddr3'
