@@ -17,9 +17,9 @@ o In ipmi-fru, report power supply low/high end voltage ranges as
 o In ipmi-fru, output "unspecified" for manufacturing date/time or
   peak capacity as appropriate (per FRU Revision 1.2 update).
 o In ipmi-fru, bridge additional FRU entries as appropriate. 
-o In all tools (ipmi-sel, ipmi-fru, ipmi-oem, bmc-device,
-  ipmi-sensors, ipmi-dcmi), special timestamps such as Post-Init and
-  Unspecified will now be output.
+o In all tools reporting time (ipmi-sel, ipmi-fru, ipmi-oem,
+  bmc-device, ipmi-sensors, ipmi-dcmi), special timestamps such as
+  Post-Init and Unspecified will now be output.
 
 Libraries
 ---------
