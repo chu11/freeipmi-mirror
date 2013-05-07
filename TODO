@@ -145,7 +145,6 @@ libfreeipmi-sdr
 
 libfreeipmi-fru
 ---------------
-- ddr3 sdram (***)
 
 libfreeipmi-sel
 ---------------
@@ -250,7 +249,6 @@ ipmi-fru
 - write FRU data option
   - for OEM integrators
   - or should be in bmc-device?
-- ddr3 sdram (***)
 
 bmc-device
 --------
@@ -259,7 +257,6 @@ bmc-device
   - or only as needed in ipmi-oem per vendor need?
 - (NOT CONFIRMED) get auxiliary log status
 - set sensor reading (XXX)
-- get/set UTC offset (***)
 
 bmc-watchdog
 ------------
