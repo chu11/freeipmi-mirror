@@ -152,7 +152,8 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
   memset (timestr, '\0', IPMI_SEL_TIME_BUFLEN + 1);
   
   if (ipmi_timestamp_string ((uint32_t)val,
-			     IPMI_TIMESTAMP_FLAG_DEFAULT,
+			     get_timestamp_flags (&(state_data->prog_data->args->common_args),
+						  IPMI_TIMESTAMP_FLAG_DEFAULT), 
 			     "%m/%d/%Y - %H:%M:%S",
 			     timestr,
 			     IPMI_SEL_TIME_BUFLEN) < 0)
@@ -180,7 +181,8 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
   memset (timestr, '\0', IPMI_SEL_TIME_BUFLEN + 1);
   
   if (ipmi_timestamp_string ((uint32_t)val,
-			     IPMI_TIMESTAMP_FLAG_DEFAULT,
+			     get_timestamp_flags (&(state_data->prog_data->args->common_args),
+						  IPMI_TIMESTAMP_FLAG_DEFAULT), 
 			     "%m/%d/%Y - %H:%M:%S",
 			     timestr,
 			     IPMI_SEL_TIME_BUFLEN) < 0)
@@ -1235,6 +1237,10 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
     flags |= IPMI_SEL_STRING_FLAGS_NON_ABBREVIATED_UNITS;
   if (state_data->prog_data->args->interpret_oem_data)
     flags |= IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA;
+  if (state_data->prog_data->args->common_args.utc_to_localtime)
+    flags |= IPMI_SEL_STRING_FLAGS_UTC_TO_LOCALTIME;
+  if (state_data->prog_data->args->common_args.localtime_to_utc)
+    flags |= IPMI_SEL_STRING_FLAGS_LOCALTIME_TO_UTC;
 
   /* IPMI Workaround
    *

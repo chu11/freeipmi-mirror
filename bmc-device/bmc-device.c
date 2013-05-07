@@ -1203,7 +1203,8 @@ get_sdr_repository_time (bmc_device_state_data_t *state_data)
   memset (timestr, '\0', BMC_DEVICE_TIME_BUFLEN + 1);
 
   if (ipmi_timestamp_string ((uint32_t)val,
-			     IPMI_TIMESTAMP_FLAG_DEFAULT,
+			     get_timestamp_flags (&(state_data->prog_data->args->common_args),
+						  IPMI_TIMESTAMP_FLAG_DEFAULT), 
 			     "%m/%d/%Y - %H:%M:%S",
 			     timestr,
 			     BMC_DEVICE_TIME_BUFLEN) < 0)
@@ -1335,7 +1336,8 @@ get_sel_time (bmc_device_state_data_t *state_data)
   memset (timestr, '\0', BMC_DEVICE_TIME_BUFLEN + 1);
 
   if (ipmi_timestamp_string ((uint32_t)val,
-			     IPMI_TIMESTAMP_FLAG_DEFAULT,
+			     get_timestamp_flags (&(state_data->prog_data->args->common_args),
+						  IPMI_TIMESTAMP_FLAG_DEFAULT), 
 			     "%m/%d/%Y - %H:%M:%S",
 			     timestr,
 			     BMC_DEVICE_TIME_BUFLEN) < 0)

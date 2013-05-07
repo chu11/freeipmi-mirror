@@ -1,3 +1,23 @@
+2013-05-07  Albert Chu <chu11@llnl.gov>
+
+	Merge branch 'utcoffsetcmd'
+
+	* libfreeipmi/util/ipmi-timestamp-util.c (ipmi_timestamp_string):
+	Make default output unconverted.
+
+	* libfreeipmi/util/ipmi-timestamp-util.c (ipmi_timestamp_string):
+	Support UTC_TO_LOCALTIME and LOCALTIME_TO_UTC flag to allow user
+	to specify if time is actually UTC.
+
+	* ipmi-fru/, bmc-device/, ipmi-sel/, ipmi-sensors/, ipmi-dcmi/,
+	ipmi-oem/: Support new --utc-to-localtime and --localtime-to-utc
+	options.
+	
+	* common/toolcommon/: Support new options and config file options
+	appropriately.
+
+	* man/: Update for new options.
+
 2013-05-06  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/: Get SEL Time UTC Offset and Set SEL Time UTC

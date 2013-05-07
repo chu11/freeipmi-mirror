@@ -45,7 +45,9 @@
 #include "freeipmi-portability.h"
 
 #define IPMI_TIMESTAMP_FLAG_MASK \
-  (IPMI_TIMESTAMP_FLAG_ABBREVIATE)
+  (IPMI_TIMESTAMP_FLAG_ABBREVIATE \
+   | IPMI_TIMESTAMP_FLAG_UTC_TO_LOCALTIME \
+   | IPMI_TIMESTAMP_FLAG_LOCALTIME_TO_UTC)
 
 int
 ipmi_timestamp_string (uint32_t timestamp,
@@ -91,8 +93,42 @@ ipmi_timestamp_string (uint32_t timestamp,
 
   t = timestamp;
 
-  /* XXX needs to be fixed */
-  localtime_r (&t, &tm);
+  if (flags & IPMI_TIMESTAMP_FLAG_UTC_TO_LOCALTIME)
+    localtime_r (&t, &tm);
+  else if (flags & IPMI_TIMESTAMP_FLAG_LOCALTIME_TO_UTC)
+    {
+      /* In order for this to be threadsafe, we won't modify the TZ
+       * environment variable.  We'll calculate the offset manually.
+       *
+       * XXX: This may be called alot via tools like ipmi-sel, should
+       * find some way to cache this or something if we care about
+       * performance later on.
+       */
+      struct tm gmtm;
+      struct tm localtm;
+      time_t gmt, localt;
+      time_t offset;
+      time_t utc_timestamp;
+
+      gmtime_r (&t, &gmtm);
+      localtime_r (&t, &localtm);
+
+      gmt = mktime (&gmtm);
+      localt = mktime (&localtm);
+
+      /* Notes:
+       * localtime = UTC + offset
+       * UTC = localtime - offset
+       * soo ...
+       */
+      offset = localt - gmt;
+
+      utc_timestamp = t - offset;
+
+      gmtime_r (&utc_timestamp, &tm);
+    }
+  else
+    gmtime_r (&t, &tm);
 
   if (format)
     strftime (buf, buflen, format, &tm);

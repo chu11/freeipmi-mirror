@@ -1322,6 +1322,8 @@ config_file_parse (const char *filename,
 
   int quiet_cache_count = 0, sdr_cache_directory_count = 0;
 
+  int utc_to_localtime_count = 0, localtime_to_utc_count = 0;
+
   int buffer_output_count = 0, consolidate_output_count = 0,
     fanout_count = 0, eliminate_count = 0, always_prefix_count = 0;
 
@@ -1712,6 +1714,33 @@ config_file_parse (const char *filename,
         0,
         &sdr_cache_directory_count,
         &(common_args->sdr_cache_directory),
+        0
+      },
+    };
+
+  struct conffile_option time_options[] =
+    {
+      {
+        "utc-to-localtime",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        _config_file_bool,
+        1,
+        0,
+        &utc_to_localtime_count,
+        &(common_args->utc_to_localtime),
+        0
+      },
+
+      {
+        "localtime-to-utc",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        _config_file_bool,
+        1,
+        0,
+        &localtime_to_utc_count,
+        &(common_args->localtime_to_utc),
         0
       },
     };
@@ -4974,6 +5003,7 @@ config_file_parse (const char *filename,
            || (((support & CONFIG_FILE_INBAND)
                 || (support & CONFIG_FILE_OUTOFBAND)
 		|| (support & CONFIG_FILE_SDR)
+		|| (support & CONFIG_FILE_TIME)
 		|| (support & CONFIG_FILE_HOSTRANGE))
                && common_args))
           && (((tool_support & CONFIG_FILE_TOOL_BMC_CONFIG) && tool_data)
@@ -5045,6 +5075,15 @@ config_file_parse (const char *filename,
   _copy_options (config_file_options,
                  config_file_options_len,
                  sdr_options,
+                 options_len);
+
+  options_len = sizeof (time_options)/sizeof (struct conffile_option);
+  if (!(support & CONFIG_FILE_TIME))
+    _ignore_options (time_options, options_len);
+
+  _copy_options (config_file_options,
+                 config_file_options_len,
+                 time_options,
                  options_len);
 
   config_file_options_len += options_len;

@@ -29,6 +29,7 @@ FreeIPMI general
 - OEM extensions generalized
   - generalize "+" syntax in ipmipower to all FreeIPMI tools?
   - or use extra option?
+- utc-offset option to flat out specify utc offset
 
 FreeIPMI new stuff
 ------------------

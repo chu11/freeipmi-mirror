@@ -72,6 +72,7 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL,
     ARGP_COMMON_OPTIONS_CONFIG_FILE,
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
+    ARGP_COMMON_TIME_OPTIONS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
     { "get-dcmi-capability-info", GET_DCMI_CAPABILITY_INFO, NULL, 0,
@@ -318,7 +319,7 @@ _ipmi_dcmi_config_file_parse (struct ipmi_dcmi_arguments *cmd_args)
   if (config_file_parse (cmd_args->common_args.config_file,
                          0,
                          &(cmd_args->common_args),
-                         CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE,
+                         CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_TIME | CONFIG_FILE_HOSTRANGE,
                          CONFIG_FILE_TOOL_IPMI_DCMI,
                          &config_file_data) < 0)
     {

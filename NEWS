@@ -3,6 +3,15 @@ FreeIPMI 1.3.1 - 08/22/12
 
 Tools - New Features
 --------------------
+o In all tools reporting time (ipmi-sel, ipmi-fru, ipmi-oem,
+  bmc-device, ipmi-sensors, ipmi-dcmi), timestamps are now reporting
+  under the assumption the timestamp is already in localtime (compared
+  to being in UTC time and converted to localtime).  This is by
+  definition in the IPMI specification.
+o In all tools reporting time (ipmi-sel, ipmi-fru, ipmi-oem,
+  bmc-device, ipmi-sensors, ipmi-dcmi), support --utc-to-localtime and
+  --localtime-to-utc options to allow motherboards that adjust
+  timestamps as needed for certain environments.
 o In ipmi-fru, support output of DDR3 SDRAM modules.
 o In ipmi-fru, support output of new FRU multirecords, most notably
   extended DC output and extended DC load (per FRU Revision 1.2
@@ -34,6 +43,9 @@ o In libfreeipmi, add support for DDR3 SDRAM FRU entries and JEDEC
   manufacturer IDs.
 o In libfreeipmi, add support for Get SEL Time UTC Offset and Set SEL
   Time UTC Offset payloads.
+o In libfreeipmi 'sel' sub-library, support
+  IPMI_SEL_STRING_FLAGS_UTC_TO_LOCALTIME and
+  IPMI_SEL_STRING_FLAGS_LOCALTIME_TO_UTC flags.
 
 FreeIPMI 1.2.1 - 08/22/12
 -------------------------

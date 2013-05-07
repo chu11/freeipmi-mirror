@@ -25,17 +25,24 @@ extern "C" {
 
 #include <stdint.h>
 
-#define IPMI_TIMESTAMP_FLAG_DEFAULT         0x00
+#define IPMI_TIMESTAMP_FLAG_DEFAULT          0x00
 /* Special string abbreviations
  * "Unspecified" will be abbreviated "Unspec."
  * "Post-Init X s" will be abbreviated to just "PostInit"
  */
-#define IPMI_TIMESTAMP_FLAG_ABBREVIATE      0x01
+#define IPMI_TIMESTAMP_FLAG_ABBREVIATE       0x01
+/* Assume timestamp is UTC instead of localtime, convert to localtime.
+ */
+#define IPMI_TIMESTAMP_FLAG_UTC_TO_LOCALTIME 0x02
+/* Assume timestamp is localtime, convert to UTC
+ */
+#define IPMI_TIMESTAMP_FLAG_LOCALTIME_TO_UTC 0x04
 
-/* Handles special case timestamps in IPMI, most notably unspecified
+/* Handles special case timestamps in IPMI and timestamp
+ * conversations.  Special case timestamps most notably unspecified
  * timestamps and timestamps in the range of initialization of the
- * BMC.  In those respective cases, an appropriate string will
- * written into the buffer instead of the actual time/date.
+ * BMC.  In those respective cases, an appropriate string will written
+ * into the buffer instead of the actual time/date.
  */
 
 /* format uses format from strftime(), pass NULL for default one */

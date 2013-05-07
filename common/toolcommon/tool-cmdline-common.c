@@ -439,6 +439,16 @@ common_parse_opt (int key,
       break;
 
       /* 
+       * time options
+       */
+    case ARGP_UTC_TO_LOCALTIME_KEY:
+      common_args->utc_to_localtime = 1;
+      break;
+    case ARGP_LOCALTIME_TO_UTC_KEY:
+      common_args->localtime_to_utc = 1;
+      break;
+
+      /* 
        * hostrange options
        */
     case ARGP_BUFFER_OUTPUT_KEY:
@@ -513,6 +523,9 @@ _init_common_cmd_args (struct common_cmd_args *common_args)
   common_args->sdr_cache_file = NULL;
   common_args->sdr_cache_directory = NULL;
   common_args->ignore_sdr_cache = 0;
+
+  common_args->utc_to_localtime = 0;
+  common_args->localtime_to_utc = 0;
 
   common_args->buffer_output = 0;
   common_args->consolidate_output = 0;
@@ -641,3 +654,4 @@ verify_common_cmd_args (struct common_cmd_args *common_args)
       exit (EXIT_FAILURE);
     }
 }
+
