@@ -73,6 +73,7 @@ release @value{VERSION} of the FreeIPMI.
 * How do you setup Powerman with ipmipower?::
 * How do you setup Conman with ipmiconsole or libipmiconsole?::
 * How do you setup Ganglia or Nagios to monitor IPMI sensors via FreeIPMI?::
+* Why are times reported by FreeIPMI tools wrong?:: 
 * Why is the IPMI kernel driver faster than the KCS driver?::
 * Why is the output from FreeIPMI different than another software?::
 * Why are there so many IPMI compliance bugs?::
@@ -746,15 +747,33 @@ One of the additional advantages of configuring Conman to use the
 libipmiconsole library natively is that Conman is able to detect and
 manage additional @acronym{IPMI} error cases.
 
-@node How do you setup Ganglia or Nagios to monitor IPMI sensors via FreeIPMI?, Why is the IPMI kernel driver faster than the KCS driver?, How do you setup Conman with ipmiconsole or libipmiconsole?, Top
-@section How do you setup Ganglia or Nagios to monitor IPMI sensors via FreeIPMI?,
+@node How do you setup Ganglia or Nagios to monitor IPMI sensors via FreeIPMI?, Why are times reported by FreeIPMI tools wrong?, How do you setup Conman with ipmiconsole or libipmiconsole?, Top
+@section How do you setup Ganglia or Nagios to monitor IPMI sensors via FreeIPMI?
 
 Scripts to monitor @acronym{IPMI} via FreeIPMI in Ganglia and Nagios
 have been developed and are downloadable on the FreeIPMI homepage
 (@uref{http://www.gnu.org/software/freeipmi/download.html}).
 Instructions for setup can be found at the top of the scripts.
 
-@node Why is the IPMI kernel driver faster than the KCS driver?, Why is the output from FreeIPMI different than another software?, How do you setup Ganglia or Nagios to monitor IPMI sensors via FreeIPMI?, Top
+@node Why are times reported by FreeIPMI tools wrong?, Why is the IPMI kernel driver faster than the KCS driver?, How do you setup Ganglia or Nagios to monitor IPMI sensors via FreeIPMI?, Top
+@section Why are times reported by FreeIPMI tools wrong?
+
+Times reported by various FreeIPMI tools (such as @command{ipmi-sel})
+are reported under the assumption that timestamps are written in
+localtime.  This is by definition in the IPMI specification.
+
+Whether or not a system truly stored the timestamps in localtime
+varies on many factors, such as the vendor, BIOS, and operating
+system.
+
+If the times reported by the tool are off, there is a strong
+likelihood the time may be stored in GMT/UTC and needs to be converted
+into localtime.  In FreeIPMI tools that have time outputs, the
+@option{--utc-to-localtime} option can be specified or the
+@option{utc-to-localtime} option can be specified in
+@file{freeipmi.conf}.
+
+@node Why is the IPMI kernel driver faster than the KCS driver?, Why is the output from FreeIPMI different than another software?, Why are times reported by FreeIPMI tools wrong?, Top
 @section Why is the IPMI kernel driver faster than the KCS driver?
 
 Internally the @acronym{IPMI} kernel driver chooses to spin while
