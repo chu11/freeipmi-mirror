@@ -51,6 +51,7 @@
 #include "ipmi-fru_.h"
 #include "ipmi-fru-output.h"
 #include "ipmi-fru-oem-wistron.h"
+#include "tool-util-common.h"
 
 #include "freeipmi-portability.h"
 
@@ -262,7 +263,8 @@ ipmi_fru_output_board_info_area (ipmi_fru_state_data_t *state_data,
       memset (mfg_date_time_buf, '\0', IPMI_FRU_STR_BUFLEN + 1);
 
       if (ipmi_timestamp_string (mfg_date_time,
-				 IPMI_TIMESTAMP_FLAG_DEFAULT,
+				 get_timestamp_flags (&(state_data->prog_data->args->common_args),
+						      IPMI_TIMESTAMP_FLAG_DEFAULT), 
 				 "%D - %T",
 				 mfg_date_time_buf,
 				 IPMI_FRU_STR_BUFLEN) < 0)

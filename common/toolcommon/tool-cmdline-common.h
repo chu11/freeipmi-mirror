@@ -71,12 +71,14 @@ enum argp_common_option_keys
     ARGP_SDR_CACHE_FILE_KEY = 148,
     ARGP_SDR_CACHE_DIRECTORY_KEY = 150,
     ARGP_IGNORE_SDR_CACHE_KEY = 151,
+    /* timestamp options */
+    ARGP_UTC_TO_LOCALTIME_KEY = 152,
     /* hostrange options */
     ARGP_BUFFER_OUTPUT_KEY = 'B',
     ARGP_CONSOLIDATE_OUTPUT_KEY = 'C',
     ARGP_FANOUT_KEY = 'F',
     ARGP_ELIMINATE_KEY = 'E',
-    ARGP_ALWAYS_PREFIX_KEY = 152,
+    ARGP_ALWAYS_PREFIX_KEY = 153,
   };
 
 /*
@@ -190,17 +192,21 @@ enum argp_common_option_keys
   { "ignore-sdr-cache", ARGP_IGNORE_SDR_CACHE_KEY, 0, 0,                                                        \
       "Ignore all SDR cache related processing.", 25}
 
+#define ARGP_COMMON_TIMESTAMP_OPTIONS                                                                           \
+  { "utc-to-localtime", ARGP_UTC_TO_LOCALTIME_KEY, 0, 0,                                                        \
+      "Assume timestamps UTC, convert to localtime.", 26}
+
 #define ARGP_COMMON_HOSTRANGED_OPTIONS                                                                          \
   { "buffer-output", ARGP_BUFFER_OUTPUT_KEY, 0, 0,                                                              \
-      "Buffer hostranged output.", 26},                                                                         \
+      "Buffer hostranged output.", 27},                                                                         \
   { "consolidate-output", ARGP_CONSOLIDATE_OUTPUT_KEY, 0, 0,                                                    \
-      "Consolidate hostranged output.", 27},                                                                    \
+      "Consolidate hostranged output.", 28},                                                                    \
   { "fanout", ARGP_FANOUT_KEY, "NUM", 0,                                                                        \
-      "Specify multiple host fanout.", 28},                                                                     \
+      "Specify multiple host fanout.", 29},                                                                     \
   { "eliminate", ARGP_ELIMINATE_KEY, 0, 0,                                                                      \
-      "Eliminate undetected nodes.", 29},                                                                       \
+      "Eliminate undetected nodes.", 30},                                                                       \
   { "always-prefix", ARGP_ALWAYS_PREFIX_KEY, 0, 0,                                                              \
-      "Always prefix output.", 30}
+      "Always prefix output.", 31}
 
 #define ARGP_COMMON_OPTIONS_DEBUG                                                                               \
   { "debug",     ARGP_DEBUG_KEY, 0, 0,                                                                          \
@@ -250,6 +256,9 @@ struct common_cmd_args
   char *sdr_cache_file;
   char *sdr_cache_directory;
   int ignore_sdr_cache;
+
+  /* timestamp options */
+  int utc_to_localtime;
 
   /* hostrange options */
   int buffer_output;

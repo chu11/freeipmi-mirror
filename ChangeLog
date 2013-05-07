@@ -2,6 +2,13 @@
 
 	* libfreeipmi/util/ipmi-timestamp-util.c (ipmi_timestamp_string):
 	Make default output unconverted.
+
+	* libfreeipmi/util/ipmi-timestamp-util.c (ipmi_timestamp_string):
+	Support UTC_TO_LOCALTIME flag to allow user to specify if time is
+	actually UTC.
+
+	* ipmi-fru/, bmc-device/, ipmi-sel/, ipmi-sensors/, ipmi-dcmi/,
+	ipmi-oem/: Support new --utc-to-localtime option.
 	
 2013-05-06  Albert Chu <chu11@llnl.gov>
 

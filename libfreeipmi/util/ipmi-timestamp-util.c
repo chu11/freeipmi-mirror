@@ -45,7 +45,8 @@
 #include "freeipmi-portability.h"
 
 #define IPMI_TIMESTAMP_FLAG_MASK \
-  (IPMI_TIMESTAMP_FLAG_ABBREVIATE)
+  (IPMI_TIMESTAMP_FLAG_ABBREVIATE \
+   | IPMI_TIMESTAMP_FLAG_UTC_TO_LOCALTIME)
 
 int
 ipmi_timestamp_string (uint32_t timestamp,
@@ -91,9 +92,10 @@ ipmi_timestamp_string (uint32_t timestamp,
 
   t = timestamp;
 
-  /* XXX needs to be fixed */
-  gmtime_r (&t, &tm);
-  /* localtime_r (&t, &tm); */
+  if (flags & IPMI_TIMESTAMP_FLAG_UTC_TO_LOCALTIME)
+    localtime_r (&t, &tm);
+  else
+    gmtime_r (&t, &tm);
 
   if (format)
     strftime (buf, buflen, format, &tm);

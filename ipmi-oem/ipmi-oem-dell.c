@@ -55,6 +55,7 @@
 #include "pstdout.h"
 #include "tool-sdr-cache-common.h"
 #include "tool-sensor-common.h"
+#include "tool-util-common.h"
 
 /* Some slots resolve to 2.0 Watts when "off" */  
 #define IPMI_OEM_DELL_ZERO_DEGREE_EPSILON 2.5
@@ -5154,7 +5155,8 @@ ipmi_oem_dell_get_power_consumption_data (ipmi_oem_state_data_t *state_data)
   memset (time_buf, '\0', IPMI_OEM_TIME_BUFLEN + 1);
 
   if (ipmi_timestamp_string (cumulative_start_time,
-			     IPMI_TIMESTAMP_FLAG_DEFAULT,
+			     get_timestamp_flags (&(state_data->prog_data->args->common_args),
+						  IPMI_TIMESTAMP_FLAG_DEFAULT), 
 			     "%D - %T",
 			     time_buf,
 			     IPMI_OEM_TIME_BUFLEN) < 0)
@@ -5179,7 +5181,8 @@ ipmi_oem_dell_get_power_consumption_data (ipmi_oem_state_data_t *state_data)
   memset (time_buf, '\0', IPMI_OEM_TIME_BUFLEN + 1);
 
   if (ipmi_timestamp_string (peak_amp_time,
-			     IPMI_TIMESTAMP_FLAG_DEFAULT,
+			     get_timestamp_flags (&(state_data->prog_data->args->common_args),
+						  IPMI_TIMESTAMP_FLAG_DEFAULT), 
 			     "%D - %T",
 			     time_buf,
 			     IPMI_OEM_TIME_BUFLEN) < 0)
@@ -5202,7 +5205,8 @@ ipmi_oem_dell_get_power_consumption_data (ipmi_oem_state_data_t *state_data)
   memset (time_buf, '\0', IPMI_OEM_TIME_BUFLEN + 1);
 
   if (ipmi_timestamp_string (peak_watt_time,
-			     IPMI_TIMESTAMP_FLAG_DEFAULT,
+			     get_timestamp_flags (&(state_data->prog_data->args->common_args),
+						  IPMI_TIMESTAMP_FLAG_DEFAULT), 
 			     "%D - %T",
 			     time_buf,
 			     IPMI_OEM_TIME_BUFLEN) < 0)
@@ -5946,7 +5950,8 @@ ipmi_oem_dell_get_power_consumption_statistics (ipmi_oem_state_data_t *state_dat
       memset (time_buf, '\0', IPMI_OEM_TIME_BUFLEN + 1);
 
       if (ipmi_timestamp_string (last_minute_power_time,
-				 IPMI_TIMESTAMP_FLAG_DEFAULT,
+				 get_timestamp_flags (&(state_data->prog_data->args->common_args),
+						      IPMI_TIMESTAMP_FLAG_DEFAULT), 
 				 "%D - %T",
 				 time_buf,
 				 IPMI_OEM_TIME_BUFLEN) < 0)
@@ -5975,7 +5980,8 @@ ipmi_oem_dell_get_power_consumption_statistics (ipmi_oem_state_data_t *state_dat
       memset (time_buf, '\0', IPMI_OEM_TIME_BUFLEN + 1);
 
       if (ipmi_timestamp_string (last_hour_power_time,
-				 IPMI_TIMESTAMP_FLAG_DEFAULT,
+				 get_timestamp_flags (&(state_data->prog_data->args->common_args),
+						      IPMI_TIMESTAMP_FLAG_DEFAULT), 
 				 "%D - %T",
 				 time_buf,
 				 IPMI_OEM_TIME_BUFLEN) < 0)
@@ -6004,7 +6010,8 @@ ipmi_oem_dell_get_power_consumption_statistics (ipmi_oem_state_data_t *state_dat
       memset (time_buf, '\0', IPMI_OEM_TIME_BUFLEN + 1);
 
       if (ipmi_timestamp_string (last_day_power_time,
-				 IPMI_TIMESTAMP_FLAG_DEFAULT,
+				 get_timestamp_flags (&(state_data->prog_data->args->common_args),
+						      IPMI_TIMESTAMP_FLAG_DEFAULT), 
 				 "%D - %T",
 				 time_buf,
 				 IPMI_OEM_TIME_BUFLEN) < 0)
@@ -6033,7 +6040,8 @@ ipmi_oem_dell_get_power_consumption_statistics (ipmi_oem_state_data_t *state_dat
       memset (time_buf, '\0', IPMI_OEM_TIME_BUFLEN + 1);
 
       if (ipmi_timestamp_string (last_week_power_time,
-				 IPMI_TIMESTAMP_FLAG_DEFAULT,
+				 get_timestamp_flags (&(state_data->prog_data->args->common_args),
+						      IPMI_TIMESTAMP_FLAG_DEFAULT), 
 				 "%D - %T",
 				 time_buf,
 				 IPMI_OEM_TIME_BUFLEN) < 0)
