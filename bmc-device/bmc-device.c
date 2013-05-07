@@ -790,13 +790,49 @@ clear_lan_statistics (bmc_device_state_data_t *state_data)
 }
 
 static int
+parse_check_hex (bmc_device_state_data_t *state_data,
+		 char *from,
+		 char *str,
+		 unsigned int max_len_bytes)
+{
+  unsigned int i;
+
+  assert (state_data);
+  assert (from);
+  assert (str);
+  assert (max_len_bytes);
+
+  for (i = 0; from[i] != '\0'; i++)
+    {
+      if (i >= (max_len_bytes * 2))
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "invalid hex length for %s\n",
+			   str);
+	  return (-1);
+	}
+
+      if (!isxdigit (from[i]))
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "invalid hex byte argument for %s\n",
+			   str);
+	  return (-1);
+	}
+    }
+
+  return (0);
+}
+
+static int
 parse_uint16 (bmc_device_state_data_t *state_data,
 	      char *from,
 	      uint16_t *to,
 	      char *str)
 {
   char *endptr;
-  int i;
 
   assert (state_data);
   assert (from);
@@ -807,17 +843,8 @@ parse_uint16 (bmc_device_state_data_t *state_data,
     {
       if (!strncmp (from, "0x", 2))
 	{
-	  for (i = 2; from[i] != '\0'; i++)
-	    {
-	      if (!isxdigit (from[i]))
-		{
-		  pstdout_fprintf (state_data->pstate,
-				   stderr,
-				   "invalid hex byte argument for %s\n",
-				   str);
-		  return (-1);
-		}
-	    }
+	  if (parse_check_hex (state_data, from + 2, str, 2) < 0)
+	    return (-1);
 	}
     }
 
@@ -843,7 +870,6 @@ parse_hex_uint16 (bmc_device_state_data_t *state_data,
 		  char *str)
 {
   char *endptr;
-  int i;
 
   assert (state_data);
   assert (from);
@@ -865,17 +891,8 @@ parse_hex_uint16 (bmc_device_state_data_t *state_data,
       return (-1);
     }
   
-  for (i = 0; from[i] != '\0'; i++)
-    {
-      if (!isxdigit (from[i]))
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "invalid hex byte argument for %s\n",
-                           str);
-          return (-1);
-        }
-    }
+  if (parse_check_hex (state_data, from, str, 2) < 0)
+    return (-1);
   
   errno = 0;
   (*to) = strtol (from, &endptr, 16);
@@ -885,6 +902,43 @@ parse_hex_uint16 (bmc_device_state_data_t *state_data,
       pstdout_fprintf (state_data->pstate,
 		       stderr,
 		       "invalid hex byte argument for %s\n",
+		       str);
+      return (-1);
+    }
+
+  return (0);
+}
+
+static int
+parse_int16 (bmc_device_state_data_t *state_data,
+	     char *from,
+	     int16_t *to,
+	     char *str)
+{
+  char *endptr;
+
+  assert (state_data);
+  assert (from);
+  assert (to);
+  assert (str);
+
+  if (strlen (from) >= 2)
+    {
+      if (!strncmp (from, "0x", 2))
+	{
+	  if (parse_check_hex (state_data, from + 2, str, 2) < 0)
+	    return (-1);
+	}
+    }
+
+  errno = 0;
+  (*to) = strtol (from, &endptr, 0);
+  if (errno
+      || endptr[0] != '\0')
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "invalid argument for %s\n",
 		       str);
       return (-1);
     }
@@ -1374,13 +1428,111 @@ set_sel_time (bmc_device_state_data_t *state_data)
 }
 
 static int
+get_sel_time_utc_offset (bmc_device_state_data_t *state_data)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  int16_t offset;
+  uint64_t val;
+  int rv = -1;
+
+  assert (state_data);
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_sel_time_utc_offset_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_sel_time_utc_offset (state_data->ipmi_ctx, obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_sel_time_utc_offset: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (FIID_OBJ_GET (obj_cmd_rs, "offset", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'offset': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  offset = (int16_t)val;
+
+  if (offset == IPMI_SEL_TIME_UTC_OFFSET_UNSPECIFIED)
+    pstdout_printf (state_data->pstate,
+		    "SEL Time : Unspecified\n",
+		    offset);
+  else
+    pstdout_printf (state_data->pstate,
+		    "SEL Time : %d minutes\n",
+		    offset);
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+static int
+set_sel_time_utc_offset (bmc_device_state_data_t *state_data)
+{
+  struct bmc_device_arguments *args;
+  fiid_obj_t obj_cmd_rs = NULL;
+  int16_t offset;
+  int rv = -1;
+
+  assert (state_data);
+
+  args = state_data->prog_data->args;
+
+  if (!strcasecmp (args->set_sel_time_utc_offset_arg, "none"))
+    offset = IPMI_SEL_TIME_UTC_OFFSET_UNSPECIFIED;
+  else
+    {
+      if (parse_int16 (state_data,
+		       args->set_sel_time_utc_offset_arg,
+		       &offset,
+		       "offset") < 0)
+	goto cleanup;
+    }
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_sel_time_utc_offset_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_sel_time_utc_offset (state_data->ipmi_ctx, offset, obj_cmd_rs) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_set_sel_time_utc_offset: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+static int
 parse_hex_byte (bmc_device_state_data_t *state_data,
                 char *from,
                 uint8_t *to,
                 char *str)
 {
   char *endptr;
-  int i;
 
   assert (state_data);
   assert (from);
@@ -1402,26 +1554,8 @@ parse_hex_byte (bmc_device_state_data_t *state_data,
       return (-1);
     }
   
-  for (i = 0; from[i] != '\0'; i++)
-    {
-      if (i >= 2)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "invalid hex byte argument for %s\n",
-                           str);
-          return (-1);
-        }
-      
-      if (!isxdigit (from[i]))
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "invalid hex byte argument for %s\n",
-                           str);
-          return (-1);
-        }
-    }
+  if (parse_check_hex (state_data, from, str, 1) < 0)
+    return (-1);
 
   errno = 0;
   (*to) = strtol (from, &endptr, 16);
@@ -2591,6 +2725,12 @@ run_cmd_args (bmc_device_state_data_t *state_data)
 
   if (args->set_sel_time)
     return (set_sel_time (state_data));
+
+  if (args->get_sel_time_utc_offset)
+    return (get_sel_time_utc_offset (state_data));
+
+  if (args->set_sel_time_utc_offset)
+    return (set_sel_time_utc_offset (state_data));
 
   if (args->platform_event)
     return (platform_event (state_data));

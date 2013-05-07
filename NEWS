@@ -7,6 +7,8 @@ o In ipmi-fru, support output of DDR3 SDRAM modules.
 o In ipmi-fru, support output of new FRU multirecords, most notably
   extended DC output and extended DC load (per FRU Revision 1.2
   update).
+o In bmc-device, support --get-sel-time-utc-offset and
+  --set-sel-time-utc-offset.
 
 Tools - Bug Fixes/Minor Changes
 -------------------------------
@@ -27,6 +29,8 @@ o In libfreeipmi, support new IPMI_FRU_FLAGS_READ_RAW 'fru'
   headers/records.
 o In libfreeipmi, add support for DDR3 SDRAM FRU entries and JEDEC
   manufacturer IDs.
+o In libfreeipmi, add support for Get SEL Time UTC Offset and Set SEL
+  Time UTC Offset payloads.
 
 FreeIPMI 1.2.1 - 08/22/12
 -------------------------

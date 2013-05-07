@@ -1,3 +1,11 @@
+2013-05-06  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/: Get SEL Time UTC Offset and Set SEL Time UTC
+	Offset payloads.
+
+	* bmc-device/: Support --get-sel-time-utc-offset and
+	-set-sel-time-utc-offset.
+
 2013-05-06 Peter Volkov <pva@gentoo.org>
 
 	* configure.ac: Update for autoconf 1.14. 

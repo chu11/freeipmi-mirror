@@ -98,6 +98,14 @@ Set SEL time.  Input format = "MM/DD/YYYY - HH:MM:SS".  Note that
 hours are input in 24 hour form.  Alternatively, the local
 system time can be specified with "now".
 .TP
+\fB\-\-get\-sel\-time\-utc\-offset\fR
+Get SEL time UTC offset.
+.TP
+\fB\-\-set\-sel\-time\-utc\-offset\fR=\fIMINUTES\fR
+Set SEL time UTC offset.  Input is in minutes difference from UTC
+time, ranging from -1440 to 1440 minutes.  A special case value of
+"none" can be specified so no UTC offset is specified. 
+.TP
 \fB\-\-platform\-event\fR=\fI"[generator_id] <event_message_format_version> <sensor_type> <sensor_number> <event_type> <event_direction> <event_data1> <event_data2> <event_data3>"\fR
 Instruct the BMC to process the specified event data.  Typically, this
 data will be logged to the System Event Log (SEL), but depending on
