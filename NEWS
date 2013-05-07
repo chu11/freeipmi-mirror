@@ -3,9 +3,6 @@ FreeIPMI 1.3.1 - 08/22/12
 
 Tools - New Features
 --------------------
-o In all tools (ipmi-sel, ipmi-fru, ipmi-oem, bmc-device,
-  ipmi-sensors, ipmi-dcmi), special timestamps such as Post-Init and
-  Unspecified will now be output.
 o In ipmi-fru, support output of DDR3 SDRAM modules.
 o In ipmi-fru, support output of new FRU multirecords, most notably
   extended DC output and extended DC load (per FRU Revision 1.2
@@ -20,6 +17,9 @@ o In ipmi-fru, report power supply low/high end voltage ranges as
 o In ipmi-fru, output "unspecified" for manufacturing date/time or
   peak capacity as appropriate (per FRU Revision 1.2 update).
 o In ipmi-fru, bridge additional FRU entries as appropriate. 
+o In all tools (ipmi-sel, ipmi-fru, ipmi-oem, bmc-device,
+  ipmi-sensors, ipmi-dcmi), special timestamps such as Post-Init and
+  Unspecified will now be output.
 
 Libraries
 ---------
