@@ -585,6 +585,7 @@ _output_time (ipmi_sel_ctx_t ctx,
               unsigned int *wlen)
 {
   char tmpbuf[SEL_BUFFER_LENGTH + 1];
+  unsigned int timestamp_flags;
   uint32_t timestamp;
 
   assert (ctx);
@@ -604,8 +605,12 @@ _output_time (ipmi_sel_ctx_t ctx,
 
   memset (tmpbuf, '\0', SEL_BUFFER_LENGTH + 1);
 
+  timestamp_flags = IPMI_TIMESTAMP_FLAG_ABBREVIATE;
+  if (flags & IPMI_SEL_STRING_FLAGS_UTC_TO_LOCALTIME)
+    timestamp_flags |= IPMI_TIMESTAMP_FLAG_UTC_TO_LOCALTIME;
+
   if (ipmi_timestamp_string (timestamp,
-			     IPMI_TIMESTAMP_FLAG_ABBREVIATE,
+			     timestamp_flags,
 			     "%H:%M:%S",
 			     tmpbuf,
 			     SEL_BUFFER_LENGTH) < 0)
@@ -634,6 +639,7 @@ _output_date (ipmi_sel_ctx_t ctx,
               unsigned int *wlen)
 {
   char tmpbuf[SEL_BUFFER_LENGTH + 1];
+  unsigned int timestamp_flags;
   uint32_t timestamp;
   char *date_format = NULL;
 
@@ -674,8 +680,12 @@ _output_date (ipmi_sel_ctx_t ctx,
 
   memset (tmpbuf, '\0', SEL_BUFFER_LENGTH + 1);
   
+  timestamp_flags = IPMI_TIMESTAMP_FLAG_ABBREVIATE;
+  if (flags & IPMI_SEL_STRING_FLAGS_UTC_TO_LOCALTIME)
+    timestamp_flags |= IPMI_TIMESTAMP_FLAG_UTC_TO_LOCALTIME;
+
   if (ipmi_timestamp_string (timestamp,
-			     IPMI_TIMESTAMP_FLAG_ABBREVIATE,
+			     timestamp_flags,
 			     date_format,
 			     tmpbuf,
 			     SEL_BUFFER_LENGTH) < 0)
