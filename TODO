@@ -22,10 +22,10 @@ FreeIPMI general
 - consider moving #defines to #enums globally for easier debugging w/
   gdb
 - event handling api/mechanism
-- loop/try again on NODE_BUSY errors (XXX)
+- loop/try again on NODE_BUSY errors (***)
   - treat more like network busy than error?
   - option for alternate behavior?
-- update text documents to texinfo (***)
+- update text documents to texinfo (ooo)
 - OEM extensions generalized
   - generalize "+" syntax in ipmipower to all FreeIPMI tools?
   - or use extra option?
@@ -173,7 +173,7 @@ libipmimonitoring
   - but some mobos have sensor name == each other, so what is the purpose?
   - would need to also add sensor number with it??
   - also to deal w/ probability SDR's change on some mobos
-- support 'discretereading' workaround (XXX)
+- support 'discretereading' workaround (***)
   - need a mobo to play with to test, lots of a breakage possibilities
 - how specify record ids w/ sharing
 - entity sensor names
@@ -207,7 +207,7 @@ ipmi-sensors
   - some mobos seem to set flags incorrectly
 - column for sensor number?
   - useful for shared sensor output?
-- how to select specific shared sensor on commad line, can't do normally (XXX)
+- how to select specific shared sensor on commad line, can't do normally (***)
   - i.e. perhaps need to do record-id and something else, like
     -r 5.2 to indicate record id 5 and offset 2.
   - issue for libipmimonitoring too?
@@ -231,7 +231,7 @@ ipmi-sel
 - non-uncommon for motherboards to output events both directions of
   crossing threshold.  Can be confusing b/c assert/deassert not output
   by default.  Should alter output in these cases?
-- --delete-date-range (XXX)
+- --delete-date-range (***)
 - ganglia plugin?
 - nagios plugin?
 
@@ -256,7 +256,7 @@ bmc-device
   - really should be done by firmware or distro
   - or only as needed in ipmi-oem per vendor need?
 - (NOT CONFIRMED) get auxiliary log status
-- set sensor reading (XXX)
+- set sensor reading (***)
 
 bmc-watchdog
 ------------
