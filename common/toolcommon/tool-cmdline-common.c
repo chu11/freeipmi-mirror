@@ -439,7 +439,7 @@ common_parse_opt (int key,
       break;
 
       /* 
-       * timestamp options
+       * time options
        */
     case ARGP_UTC_TO_LOCALTIME_KEY:
       common_args->utc_to_localtime = 1;

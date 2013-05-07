@@ -71,7 +71,7 @@ enum argp_common_option_keys
     ARGP_SDR_CACHE_FILE_KEY = 148,
     ARGP_SDR_CACHE_DIRECTORY_KEY = 150,
     ARGP_IGNORE_SDR_CACHE_KEY = 151,
-    /* timestamp options */
+    /* time options */
     ARGP_UTC_TO_LOCALTIME_KEY = 152,
     /* hostrange options */
     ARGP_BUFFER_OUTPUT_KEY = 'B',
@@ -192,9 +192,9 @@ enum argp_common_option_keys
   { "ignore-sdr-cache", ARGP_IGNORE_SDR_CACHE_KEY, 0, 0,                                                        \
       "Ignore all SDR cache related processing.", 25}
 
-#define ARGP_COMMON_TIMESTAMP_OPTIONS                                                                           \
+#define ARGP_COMMON_TIME_OPTIONS                                                                                \
   { "utc-to-localtime", ARGP_UTC_TO_LOCALTIME_KEY, 0, 0,                                                        \
-      "Assume timestamps stored UTC, convert to localtime.", 26}
+      "Assume times stored UTC, convert to localtime.", 26}
 
 #define ARGP_COMMON_HOSTRANGED_OPTIONS                                                                          \
   { "buffer-output", ARGP_BUFFER_OUTPUT_KEY, 0, 0,                                                              \
@@ -257,7 +257,7 @@ struct common_cmd_args
   char *sdr_cache_directory;
   int ignore_sdr_cache;
 
-  /* timestamp options */
+  /* time options */
   int utc_to_localtime;
 
   /* hostrange options */
