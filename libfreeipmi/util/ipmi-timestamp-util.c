@@ -92,7 +92,8 @@ ipmi_timestamp_string (uint32_t timestamp,
   t = timestamp;
 
   /* XXX needs to be fixed */
-  localtime_r (&t, &tm);
+  gmtime_r (&t, &tm);
+  /* localtime_r (&t, &tm); */
 
   if (format)
     strftime (buf, buflen, format, &tm);

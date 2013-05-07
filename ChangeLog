@@ -1,3 +1,8 @@
+2013-05-07  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/util/ipmi-timestamp-util.c (ipmi_timestamp_string):
+	Make default output unconverted.
+	
 2013-05-06  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/: Get SEL Time UTC Offset and Set SEL Time UTC
