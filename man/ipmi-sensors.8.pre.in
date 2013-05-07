@@ -175,6 +175,8 @@ tool.  Newer options may not be applicable to legacy output.
 #include <@top_srcdir@/man/manpage-common-sdr-cache-options-heading.man>
 #include <@top_srcdir@/man/manpage-common-sdr-cache-options.man>
 #include <@top_srcdir@/man/manpage-common-sdr-cache-file-directory.man>
+#include <@top_srcdir@/man/manpage-common-time-options-heading.man>
+#include <@top_srcdir@/man/manpage-common-time-options.man>
 #include <@top_srcdir@/man/manpage-common-hostranged-options-header.man>
 #include <@top_srcdir@/man/manpage-common-hostranged-buffer.man>
 #include <@top_srcdir@/man/manpage-common-hostranged-consolidate.man>

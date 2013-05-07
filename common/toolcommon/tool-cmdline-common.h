@@ -194,7 +194,7 @@ enum argp_common_option_keys
 
 #define ARGP_COMMON_TIMESTAMP_OPTIONS                                                                           \
   { "utc-to-localtime", ARGP_UTC_TO_LOCALTIME_KEY, 0, 0,                                                        \
-      "Assume timestamps UTC, convert to localtime.", 26}
+      "Assume timestamps stored UTC, convert to localtime.", 26}
 
 #define ARGP_COMMON_HOSTRANGED_OPTIONS                                                                          \
   { "buffer-output", ARGP_BUFFER_OUTPUT_KEY, 0, 0,                                                              \

@@ -140,6 +140,8 @@ the \fB\-\-set\-power\-limit\fR option.
 \fB\-\-activate\-deactivate\-power\-limit\fR=\fIOPERATION\fR
 Activate or deactivate power limit.  Allowed values: ACTIVATE, DEACTIVATE.
 #include <@top_srcdir@/man/manpage-common-interpret-oem-data.man>
+#include <@top_srcdir@/man/manpage-common-time-options-heading.man>
+#include <@top_srcdir@/man/manpage-common-time-options.man>
 #include <@top_srcdir@/man/manpage-common-hostranged-options-header.man>
 #include <@top_srcdir@/man/manpage-common-hostranged-buffer.man>
 #include <@top_srcdir@/man/manpage-common-hostranged-consolidate.man>

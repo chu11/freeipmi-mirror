@@ -1,0 +1,9 @@
+.SH "TIME OPTIONS"
+By IPMI definition, all IPMI times and timestamps are stored in
+localtime.  However, in many situations, the timestamps will not be
+stored in localtime.  Whether or not a system truly stored the
+timestamps in localtime varies on many factors, such as the vendor,
+BIOS, and operating system.
+
+The following options will allow the user to adjust the interpretation
+of the stored timestamps and how they should be output.

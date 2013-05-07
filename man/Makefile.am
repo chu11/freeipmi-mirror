@@ -149,6 +149,8 @@ MANS_COMMON = \
 	manpage-common-hostranged-text-options.man \
 	manpage-common-hostranged-text-localhost.man \
 	manpage-common-hostranged-text-threads.man \
+	manpage-common-time-options-heading.man \
+	manpage-common-time-options.man \
 	manpage-common-sdr-cache-options-heading.man \
 	manpage-common-sdr-cache-options.man \
 	manpage-common-sdr-cache-file-directory.man \

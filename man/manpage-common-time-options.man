@@ -1,0 +1,4 @@
+.TP
+\fB\-\-utc\-to\-localtime\fR
+Assume all times are reported in UTC time and convert the time to
+localtime before being output.
