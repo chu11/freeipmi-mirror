@@ -34,6 +34,9 @@ extern "C" {
 /* Assume timestamp is UTC instead of localtime, convert to localtime.
  */
 #define IPMI_TIMESTAMP_FLAG_UTC_TO_LOCALTIME 0x02
+/* Assume timestamp is localtime, convert to UTC
+ */
+#define IPMI_TIMESTAMP_FLAG_LOCALTIME_TO_UTC 0x04
 
 /* Handles special case timestamps in IPMI and timestamp
  * conversations.  Special case timestamps most notably unspecified

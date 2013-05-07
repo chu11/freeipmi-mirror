@@ -168,5 +168,8 @@ get_timestamp_flags (struct common_cmd_args *common_args, unsigned int defaultfl
   if (common_args->utc_to_localtime)
     timestamp_flags |= IPMI_TIMESTAMP_FLAG_UTC_TO_LOCALTIME;
 
+  if (common_args->localtime_to_utc)
+    timestamp_flags |= IPMI_TIMESTAMP_FLAG_LOCALTIME_TO_UTC;
+
   return (timestamp_flags);
 } 

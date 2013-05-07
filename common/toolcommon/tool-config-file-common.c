@@ -1322,7 +1322,7 @@ config_file_parse (const char *filename,
 
   int quiet_cache_count = 0, sdr_cache_directory_count = 0;
 
-  int utc_to_localtime_count = 0;
+  int utc_to_localtime_count = 0, localtime_to_utc_count = 0;
 
   int buffer_output_count = 0, consolidate_output_count = 0,
     fanout_count = 0, eliminate_count = 0, always_prefix_count = 0;
@@ -1729,6 +1729,18 @@ config_file_parse (const char *filename,
         0,
         &utc_to_localtime_count,
         &(common_args->utc_to_localtime),
+        0
+      },
+
+      {
+        "localtime-to-utc",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        _config_file_bool,
+        1,
+        0,
+        &localtime_to_utc_count,
+        &(common_args->localtime_to_utc),
         0
       },
     };

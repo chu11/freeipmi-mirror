@@ -608,6 +608,8 @@ _output_time (ipmi_sel_ctx_t ctx,
   timestamp_flags = IPMI_TIMESTAMP_FLAG_ABBREVIATE;
   if (flags & IPMI_SEL_STRING_FLAGS_UTC_TO_LOCALTIME)
     timestamp_flags |= IPMI_TIMESTAMP_FLAG_UTC_TO_LOCALTIME;
+  if (flags & IPMI_SEL_STRING_FLAGS_LOCALTIME_TO_UTC)
+    timestamp_flags |= IPMI_TIMESTAMP_FLAG_LOCALTIME_TO_UTC;
 
   if (ipmi_timestamp_string (timestamp,
 			     timestamp_flags,
@@ -683,6 +685,8 @@ _output_date (ipmi_sel_ctx_t ctx,
   timestamp_flags = IPMI_TIMESTAMP_FLAG_ABBREVIATE;
   if (flags & IPMI_SEL_STRING_FLAGS_UTC_TO_LOCALTIME)
     timestamp_flags |= IPMI_TIMESTAMP_FLAG_UTC_TO_LOCALTIME;
+  if (flags & IPMI_SEL_STRING_FLAGS_LOCALTIME_TO_UTC)
+    timestamp_flags |= IPMI_TIMESTAMP_FLAG_LOCALTIME_TO_UTC;
 
   if (ipmi_timestamp_string (timestamp,
 			     timestamp_flags,

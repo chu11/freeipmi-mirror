@@ -73,12 +73,13 @@ enum argp_common_option_keys
     ARGP_IGNORE_SDR_CACHE_KEY = 151,
     /* time options */
     ARGP_UTC_TO_LOCALTIME_KEY = 152,
+    ARGP_LOCALTIME_TO_UTC_KEY = 153,
     /* hostrange options */
     ARGP_BUFFER_OUTPUT_KEY = 'B',
     ARGP_CONSOLIDATE_OUTPUT_KEY = 'C',
     ARGP_FANOUT_KEY = 'F',
     ARGP_ELIMINATE_KEY = 'E',
-    ARGP_ALWAYS_PREFIX_KEY = 153,
+    ARGP_ALWAYS_PREFIX_KEY = 154,
   };
 
 /*
@@ -194,19 +195,21 @@ enum argp_common_option_keys
 
 #define ARGP_COMMON_TIME_OPTIONS                                                                                \
   { "utc-to-localtime", ARGP_UTC_TO_LOCALTIME_KEY, 0, 0,                                                        \
-      "Assume times stored UTC, convert to localtime.", 26}
+      "Assume times stored UTC, convert to localtime.", 26},                                                    \
+  { "localtime-to-utc", ARGP_LOCALTIME_TO_UTC_KEY, 0, 0,                                                        \
+      "Assume times stored in localtime, convert to UTC.", 27}
 
 #define ARGP_COMMON_HOSTRANGED_OPTIONS                                                                          \
   { "buffer-output", ARGP_BUFFER_OUTPUT_KEY, 0, 0,                                                              \
-      "Buffer hostranged output.", 27},                                                                         \
+      "Buffer hostranged output.", 28},                                                                         \
   { "consolidate-output", ARGP_CONSOLIDATE_OUTPUT_KEY, 0, 0,                                                    \
-      "Consolidate hostranged output.", 28},                                                                    \
+      "Consolidate hostranged output.", 29},                                                                    \
   { "fanout", ARGP_FANOUT_KEY, "NUM", 0,                                                                        \
-      "Specify multiple host fanout.", 29},                                                                     \
+      "Specify multiple host fanout.", 30},                                                                     \
   { "eliminate", ARGP_ELIMINATE_KEY, 0, 0,                                                                      \
-      "Eliminate undetected nodes.", 30},                                                                       \
+      "Eliminate undetected nodes.", 31},                                                                       \
   { "always-prefix", ARGP_ALWAYS_PREFIX_KEY, 0, 0,                                                              \
-      "Always prefix output.", 31}
+      "Always prefix output.", 32}
 
 #define ARGP_COMMON_OPTIONS_DEBUG                                                                               \
   { "debug",     ARGP_DEBUG_KEY, 0, 0,                                                                          \
@@ -259,6 +262,7 @@ struct common_cmd_args
 
   /* time options */
   int utc_to_localtime;
+  int localtime_to_utc;
 
   /* hostrange options */
   int buffer_output;

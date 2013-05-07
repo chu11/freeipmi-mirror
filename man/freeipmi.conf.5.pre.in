@@ -143,8 +143,10 @@ The following options are specific to tools that may output time
 values.  They will be ignored by all other tools.
 .TP
 \fButc\-to\-localtime\fR \fIENABLE|DISABLE\fR 
-\fBquiet\-cache\fR \fIENABLE|DISABLE\fR
 Specify if time should be converted from assumed UTC to localtime by default.
+.TP
+\fBlocaltime\-to\-utc\fR \fIENABLE|DISABLE\fR 
+Specify if time should be converted from localtime to UTC by default.
 
 .SH "HOSTRANGED OPTIONS"
 The following options are specific to tools that support hostranged

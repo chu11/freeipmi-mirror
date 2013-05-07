@@ -1239,6 +1239,8 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
     flags |= IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA;
   if (state_data->prog_data->args->common_args.utc_to_localtime)
     flags |= IPMI_SEL_STRING_FLAGS_UTC_TO_LOCALTIME;
+  if (state_data->prog_data->args->common_args.localtime_to_utc)
+    flags |= IPMI_SEL_STRING_FLAGS_LOCALTIME_TO_UTC;
 
   /* IPMI Workaround
    *

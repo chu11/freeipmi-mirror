@@ -68,6 +68,10 @@ extern "C" {
  * one wishes to output in localtime, this flag will do so.
  */
 #define IPMI_SEL_STRING_FLAGS_UTC_TO_LOCALTIME              0x0200
+/* Convert localtimes to UTC times, as it may be convenient
+ * for certain purposes.
+ */
+#define IPMI_SEL_STRING_FLAGS_LOCALTIME_TO_UTC              0x0400
 #define IPMI_SEL_STRING_FLAGS_LEGACY                        0x1000
 
 #define IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD               0x0
