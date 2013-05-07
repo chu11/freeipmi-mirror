@@ -660,7 +660,7 @@ _ipmi_sel_config_file_parse (struct ipmi_sel_arguments *cmd_args)
   if (config_file_parse (cmd_args->common_args.config_file,
                          0,
                          &(cmd_args->common_args),
-                         CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_SDR | CONFIG_FILE_HOSTRANGE,
+                         CONFIG_FILE_INBAND | CONFIG_FILE_OUTOFBAND | CONFIG_FILE_SDR | CONFIG_FILE_TIME | CONFIG_FILE_HOSTRANGE,
                          CONFIG_FILE_TOOL_IPMI_SEL,
                          &config_file_data) < 0)
     {

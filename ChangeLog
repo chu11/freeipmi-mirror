@@ -18,6 +18,11 @@
 	* bmc-device/: Support --get-sel-time-utc-offset and
 	-set-sel-time-utc-offset.
 
+	* common/toolcommon/: Support new options and config file options
+	appropriately.
+
+	* man/: Update for new options.
+
 2013-05-06 Peter Volkov <pva@gentoo.org>
 
 	* configure.ac: Update for autoconf 1.14. 
