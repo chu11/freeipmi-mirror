@@ -175,6 +175,34 @@ fiid_template_t tmpl_cmd_set_sel_time_rs =
     { 0, "", 0}
   };
 
+fiid_template_t tmpl_cmd_get_sel_time_utc_offset_rq =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_get_sel_time_utc_offset_rs =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 16, "offset", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},  /* LS byte first */
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_set_sel_time_utc_offset_rq =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 16, "offset", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},  /* LS byte first */
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_set_sel_time_utc_offset_rs =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 0, "", 0}
+  };
+
 fiid_template_t tmpl_cmd_get_auxiliary_log_status_rq =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -410,6 +438,50 @@ fill_cmd_set_sel_time (uint32_t time, fiid_obj_t obj_cmd_rq)
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SEL_TIME);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "time", time);
+
+  return (0);
+}
+
+int
+fill_cmd_get_sel_time_utc_offset (fiid_obj_t obj_cmd_rq)
+{
+  if (!fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_sel_time_utc_offset_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SEL_TIME_UTC_OFFSET);
+
+  return (0);
+}
+
+int
+fill_cmd_set_sel_time_utc_offset (int16_t offset, fiid_obj_t obj_cmd_rq)
+{
+  if (!IPMI_SEL_TIME_UTC_OFFSET_VALID (offset)
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_sel_time_utc_offset_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SEL_TIME_UTC_OFFSET);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "offset", (uint64_t)offset);
 
   return (0);
 }

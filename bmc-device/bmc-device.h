@@ -38,18 +38,20 @@ enum bmc_device_argp_option_keys
     SET_SDR_REPOSITORY_TIME_KEY = 169,
     GET_SEL_TIME_KEY = 170,
     SET_SEL_TIME_KEY = 171,
-    PLATFORM_EVENT_KEY = 172,
-    SET_SENSOR_READING_AND_EVENT_STATUS_KEY = 173,
-    GET_MCA_AUXILIARY_LOG_STATUS_KEY = 174,
-    GET_SSIF_INTERFACE_CAPABILITIES_KEY = 175,
-    GET_KCS_INTERFACE_CAPABILITIES_KEY = 176,
-    GET_BT_INTERFACE_CAPABILITIES_KEY = 177,
-    GET_BMC_GLOBAL_ENABLES_KEY = 178,
-    SET_SYSTEM_FIRMWARE_VERSION_KEY = 179,
-    SET_SYSTEM_NAME_KEY = 180, 
-    SET_PRIMARY_OPERATING_SYSTEM_NAME_KEY = 181,
-    SET_OPERATING_SYSTEM_NAME_KEY = 182,
-    VERBOSE_KEY = 183,
+    GET_SEL_TIME_UTC_OFFSET_KEY = 172,
+    SET_SEL_TIME_UTC_OFFSET_KEY = 173,
+    PLATFORM_EVENT_KEY = 174,
+    SET_SENSOR_READING_AND_EVENT_STATUS_KEY = 175,
+    GET_MCA_AUXILIARY_LOG_STATUS_KEY = 176,
+    GET_SSIF_INTERFACE_CAPABILITIES_KEY = 177,
+    GET_KCS_INTERFACE_CAPABILITIES_KEY = 178,
+    GET_BT_INTERFACE_CAPABILITIES_KEY = 179,
+    GET_BMC_GLOBAL_ENABLES_KEY = 180,
+    SET_SYSTEM_FIRMWARE_VERSION_KEY = 181,
+    SET_SYSTEM_NAME_KEY = 182, 
+    SET_PRIMARY_OPERATING_SYSTEM_NAME_KEY = 183,
+    SET_OPERATING_SYSTEM_NAME_KEY = 184,
+    VERBOSE_KEY = 185,
   };
 
 enum bmc_device_set_acpi_power_state_options
@@ -85,6 +87,9 @@ struct bmc_device_arguments
   int get_sel_time;
   int set_sel_time;
   char *set_sel_time_arg;
+  int get_sel_time_utc_offset;
+  int set_sel_time_utc_offset;
+  char *set_sel_time_utc_offset_arg;
   int platform_event;
   char *platform_event_arg;
   int set_sensor_reading_and_event_status;
