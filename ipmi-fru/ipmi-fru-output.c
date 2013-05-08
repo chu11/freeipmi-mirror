@@ -478,7 +478,7 @@ _voltage_str (uint8_t voltage)
 int
 ipmi_fru_output_power_supply_information (ipmi_fru_state_data_t *state_data,
                                           const void *areabuf,
-                                          uint8_t area_length)
+                                          unsigned int area_length)
 {
   unsigned int overall_capacity;
   unsigned int peak_va;
@@ -644,7 +644,7 @@ int
 ipmi_fru_output_dc_output (ipmi_fru_state_data_t *state_data,
 			   unsigned int area_type,
                            const void *areabuf,
-                           uint8_t area_length)
+                           unsigned int area_length)
 {
   unsigned int output_number;
   unsigned int standby;
@@ -753,7 +753,7 @@ int
 ipmi_fru_output_dc_load (ipmi_fru_state_data_t *state_data,
 			 unsigned int area_type,
                          const void *areabuf,
-                         uint8_t area_length)
+                         unsigned int area_length)
 {
   unsigned int output_number;
   unsigned int standby;
@@ -858,7 +858,7 @@ ipmi_fru_output_dc_load (ipmi_fru_state_data_t *state_data,
 int
 ipmi_fru_output_management_access_record (ipmi_fru_state_data_t *state_data,
                                           const void *areabuf,
-                                          uint8_t area_length)
+                                          unsigned int area_length)
 {
   uint8_t sub_record_type;
   uint8_t sub_record_data[IPMI_FRU_AREA_TYPE_LENGTH_FIELD_MAX + 1];
@@ -955,7 +955,7 @@ ipmi_fru_output_management_access_record (ipmi_fru_state_data_t *state_data,
 int
 ipmi_fru_output_base_compatibility_record (ipmi_fru_state_data_t *state_data,
                                            const void *areabuf,
-                                           uint8_t area_length)
+                                           unsigned int area_length)
 {
   uint32_t manufacturer_id;
   unsigned int entity_id_code;
@@ -1051,7 +1051,7 @@ ipmi_fru_output_base_compatibility_record (ipmi_fru_state_data_t *state_data,
 int
 ipmi_fru_output_extended_compatibility_record (ipmi_fru_state_data_t *state_data,
                                                const void *areabuf,
-                                               uint8_t area_length)
+                                               unsigned int area_length)
 {
   uint32_t manufacturer_id;
   unsigned int entity_id_code;
@@ -1147,7 +1147,7 @@ ipmi_fru_output_extended_compatibility_record (ipmi_fru_state_data_t *state_data
 int
 ipmi_fru_output_oem_record (ipmi_fru_state_data_t *state_data,
                             const void *areabuf,
-                            uint8_t area_length)
+                            unsigned int area_length)
 {
   uint32_t manufacturer_id;
   uint8_t oem_data[IPMI_FRU_AREA_TYPE_LENGTH_FIELD_MAX + 1];
@@ -1262,7 +1262,7 @@ ipmi_fru_output_oem_record (ipmi_fru_state_data_t *state_data,
 int
 ipmi_fru_output_dimm (ipmi_fru_state_data_t *state_data,
 		      const void *areabuf,
-		      uint8_t area_length)
+		      unsigned int area_length)
 {
   fiid_obj_t obj_record = NULL;
   uint8_t dram_device_type;
