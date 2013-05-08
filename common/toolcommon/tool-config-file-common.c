@@ -888,7 +888,7 @@ _config_file_utc_offset (conffile_t cf,
 			 void *app_ptr,
 			 int app_data)
 {
-  unsigned int *value;
+  int *value;
 
   assert (data);
   assert (optionname);

@@ -54,6 +54,7 @@ extern "C" {
 #define IPMI_SEL_FLAGS_ASSUME_SYTEM_EVENT_RECORDS           0x0002
 
 #define IPMI_SEL_PARAMETER_INTERPRET_CONTEXT                0x0001
+#define IPMI_SEL_PARAMETER_UTC_OFFSET                       0x0002
 
 #define IPMI_SEL_STRING_FLAGS_DEFAULT                       0x0000
 #define IPMI_SEL_STRING_FLAGS_VERBOSE                       0x0001
@@ -123,11 +124,14 @@ int ipmi_sel_ctx_set_ipmi_version (ipmi_sel_ctx_t ctx,
  *
  * INTERPRET_CONTEXT - for use with %I - see below.  interpret_ctx
  * assumed loaded with whatever config desired for interpretation
+ *
+ * UTC_OFFSET - specific UTC offset to apply to timestamps (int)
  */
 int ipmi_sel_ctx_get_parameter (ipmi_sel_ctx_t ctx,
 				unsigned int parameter,
-				void **ptr);
+				void *ptr);
 
+/* Pass NULL as ptr for default value */
 int ipmi_sel_ctx_set_parameter (ipmi_sel_ctx_t ctx,
 				unsigned int parameter,
 				const void *ptr);

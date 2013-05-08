@@ -2301,7 +2301,21 @@ _ipmi_sel (pstdout_state_t pstate,
 	{
 	  pstdout_fprintf (pstate,
 			   stderr,
-			   "ipmi_sel_ctx_set_interpret: %s\n",
+			   "ipmi_sel_ctx_set_parameter: %s\n",
+			   ipmi_sel_ctx_errormsg (state_data.sel_ctx));
+	  goto cleanup;
+	}
+    }
+
+  if (prog_data->args->common_args.utc_offset)
+    {
+      if (ipmi_sel_ctx_set_parameter (state_data.sel_ctx,
+				      IPMI_SEL_PARAMETER_UTC_OFFSET,
+				      &(prog_data->args->common_args.utc_offset)) < 0)
+	{
+	  pstdout_fprintf (pstate,
+			   stderr,
+			   "ipmi_sel_ctx_set_parameter: %s\n",
 			   ipmi_sel_ctx_errormsg (state_data.sel_ctx));
 	  goto cleanup;
 	}

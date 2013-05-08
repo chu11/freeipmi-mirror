@@ -94,6 +94,7 @@ struct ipmi_sel_ctx {
   ipmi_ctx_t ipmi_ctx;
   ipmi_sdr_ctx_t sdr_ctx;
   ipmi_interpret_ctx_t interpret_ctx;
+  int utc_offset;
 
   int sel_entries_loaded;
   List sel_entries;
