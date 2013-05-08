@@ -84,7 +84,7 @@ fiid_template_t tmpl_fru_dimm_spd_ddr3_record =
     { 8, "minimum_sdram_cycle_time", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8, "reserved7", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* Byte 14-15: CAS Latencies Supported */
-    { 16, "", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 16, "cas_latencies_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* Byte 16: Minimum CAS Latency Time (t_aa min) (MTB Units) */
     { 8, "minimum_sdram_cas_latency_time", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* Byte 17: Minimum Write Recovery Time (t_wr min) (MTB Units) */
@@ -103,7 +103,7 @@ fiid_template_t tmpl_fru_dimm_spd_ddr3_record =
     /* Byte 23: Minimum Active to Active/Refresh Delay Time (t_rc min), LSB (MTB Units) */
     { 8, "minimum_active_to_active_refresh_time", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* Byte 24-25: Minimum Refresh Recovery Delay Time (t_rfc min) (MTB Units) */
-    { 16, "", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 16, "minimum_refresh_recovery_delay_time", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* Byte 26: Minimum Internal Write to Read Command Delay Time (t_wtr min) (MTB Units) */
     { 8, "internal_write_to_read_delay_time", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* Byte 27: Minimum Internal Read to Precharge Command Delay Time (t_rtp min) (MTB Units) */

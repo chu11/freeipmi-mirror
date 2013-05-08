@@ -1,5 +1,11 @@
 2013-05-08  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/record-format/ipmi-fru-dimmspd-record-format.c,
+	libfreeipmi/include/freeipmi/templates/ipmi-fru-dimmspd-record-format-templates.h:
+	Fix typos in tmpl_fru_dimm_spd_ddr3_record template.
+
+2013-05-08  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/util/ipmi-timestamp-util.h,
 	libfreeipmi/util/ipmi-timestamp-util.c (ipmi_timestamp_string):
 	Support specific UTC offset being specified.
