@@ -2661,28 +2661,12 @@ ipmi_rmcpplus_sendto (int s,
 		      const struct sockaddr *to,
 		      socklen_t tolen)
 {
-  ssize_t rv;
-
   /* achu: Per specification table 13-8, no legacy padding for IPMI
-   * 2.0 packets
+   * 2.0 packets, so call common sendto.
    */
-
-  if (!buf
-      || !len)
-    {
-      SET_ERRNO (EINVAL);
-      return (-1);
-    }
-
-  if ((rv = sendto (s, buf, len, flags, to, tolen)) < 0)
-    {
-      ERRNO_TRACE (errno);
-      return (-1);
-    }
-
-  return (rv);
+  return (ipmi_network_sendto (s, buf, len, flags, to, tolen));
 }
-
+ 
 ssize_t
 ipmi_rmcpplus_recvfrom (int s,
 			void *buf,

@@ -33,6 +33,32 @@
 #include "freeipmi-portability.h"
 
 ssize_t
+ipmi_network_sendto (int s,
+		     const void *buf,
+		     size_t len,
+		     int flags,
+		     const struct sockaddr *to,
+		     socklen_t tolen)
+{
+  ssize_t rv;
+
+  if (!buf
+      || !len)
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if ((rv = sendto (s, buf, len, flags, to, tolen)) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  return (rv);
+}
+
+ssize_t
 ipmi_network_recvfrom (int s,
 		       void *buf,
 		       size_t len,

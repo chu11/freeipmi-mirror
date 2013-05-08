@@ -81,9 +81,7 @@ int unassemble_ipmi_lan_pkt (const void *pkt,
 			     unsigned int flags);
 
 /* returns length sent on success, -1 on error */
-/* Compared to system sendto(), handles several IPMI padding issues,
- * should be used in favor of system sendto().
- */
+/* A few extra error checks, but nearly identical to system sendto() */
 ssize_t ipmi_lan_sendto (int s,
                          const void *buf,
                          size_t len,

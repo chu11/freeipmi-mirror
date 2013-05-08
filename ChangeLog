@@ -1,5 +1,17 @@
 2013-05-08  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/interface/ipmi-network.h,
+	libfreeipmi/interface/ipmi-network.c (ipmi_network_sendto): New
+	function.
+
+	* libfreeipmi/interface/ipmi-rmcpplus-interface.c (ipmi_rmcpplus_sendto):
+	Call ipmi_network_sendto common function.
+
+	* libfreeipmi/interface/ipmi-lan-interface.c (ipmi_lan_sendto):
+	Call ipmi_network_sendto common function, do not pad legacy byte.
+	
+2013-05-08  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/record-format/ipmi-fru-dimmspd-record-format.c,
 	libfreeipmi/include/freeipmi/templates/ipmi-fru-dimmspd-record-format-templates.h:
 	Fix mistakes in tmpl_fru_dimm_spd_ddr3_record template.
