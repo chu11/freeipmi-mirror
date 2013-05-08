@@ -44,8 +44,9 @@ o In libfreeipmi, add support for DDR3 SDRAM FRU entries and JEDEC
 o In libfreeipmi, add support for Get SEL Time UTC Offset and Set SEL
   Time UTC Offset payloads.
 o In libfreeipmi 'sel' sub-library, support
-  IPMI_SEL_STRING_FLAGS_UTC_TO_LOCALTIME and
-  IPMI_SEL_STRING_FLAGS_LOCALTIME_TO_UTC flags.
+  IPMI_SEL_PARAMETER_UTC_OFFSET,
+  IPMI_SEL_STRING_FLAGS_UTC_TO_LOCALTIME, and
+  IPMI_SEL_STRING_FLAGS_LOCALTIME_TO_UTC options/flags.
 
 FreeIPMI 1.2.1 - 08/22/12
 -------------------------
