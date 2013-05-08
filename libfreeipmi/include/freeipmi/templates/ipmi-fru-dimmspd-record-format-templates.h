@@ -180,7 +180,7 @@ FIID Template: tmpl_fru_dimm_spd_ddr3_record
     /* Bytes 126-127: SPD Cyclical Redundancy Code (CRC) */
     { 16, "crc", REQUIRED, LENGTH-FIXED }
     /* Bytes 128-145: Module Part Number */
-    { 136, "module_part_number", REQUIRED, LENGTH-FIXED } /* ASCII */
+    { 144, "module_part_number", REQUIRED, LENGTH-FIXED } /* ASCII */
     /* Bytes 146-147: Module Revision Code */
     { 16, "module_revision_code", REQUIRED, LENGTH-FIXED }
     /* Bytes 148-149: DRAM Manufacturer ID Code */

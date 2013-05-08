@@ -2,8 +2,17 @@
 
 	* libfreeipmi/record-format/ipmi-fru-dimmspd-record-format.c,
 	libfreeipmi/include/freeipmi/templates/ipmi-fru-dimmspd-record-format-templates.h:
-	Fix typos in tmpl_fru_dimm_spd_ddr3_record template.
+	Fix mistakes in tmpl_fru_dimm_spd_ddr3_record template.
 
+	* ipmi-fru/ipmi-fru-output.h, ipmi-fru/ipmi-fru-output.c: Fix area
+	length from uint8_t to unsigned int globally.
+
+	* ipmi-fru/ipmi-fru-output.c (ipmi_fru_output_dimm): Fix object
+	creation corner case.
+
+	* libfreeipmi/util/ipmi-jedec-manufacturer-identification-code-util.c (ipmi_jedec_manufacturer_id_search):
+	Fix parameter check corner case.
+	
 2013-05-08  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/util/ipmi-timestamp-util.h,
