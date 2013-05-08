@@ -447,6 +447,18 @@ common_parse_opt (int key,
     case ARGP_LOCALTIME_TO_UTC_KEY:
       common_args->localtime_to_utc = 1;
       break;
+    case ARGP_UTC_OFFSET_KEY:
+      errno = 0;
+      tmp = strtol (arg, &endptr, 0);
+      if (errno
+	  || endptr[0] != '\0'
+	  || !IPMI_UTC_OFFSET_VALID (tmp))
+        {
+          fprintf (stderr, "invalid UTC offset\n");
+          exit (EXIT_FAILURE);
+        }
+      common_args->utc_offset = tmp;
+      break;
 
       /* 
        * hostrange options
@@ -526,6 +538,7 @@ _init_common_cmd_args (struct common_cmd_args *common_args)
 
   common_args->utc_to_localtime = 0;
   common_args->localtime_to_utc = 0;
+  common_args->utc_offset = 0;
 
   common_args->buffer_output = 0;
   common_args->consolidate_output = 0;

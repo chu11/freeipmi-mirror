@@ -9,9 +9,9 @@ o In all tools reporting time (ipmi-sel, ipmi-fru, ipmi-oem,
   to being in UTC time and converted to localtime).  This is by
   definition in the IPMI specification.
 o In all tools reporting time (ipmi-sel, ipmi-fru, ipmi-oem,
-  bmc-device, ipmi-sensors, ipmi-dcmi), support --utc-to-localtime and
-  --localtime-to-utc options to allow motherboards that adjust
-  timestamps as needed for certain environments.
+  bmc-device, ipmi-sensors, ipmi-dcmi), support --utc-to-localtime,
+  --localtime-to-utc, and --utc-offset options to allow users to
+  adjust timestamps as needed for certain environments.
 o In ipmi-fru, support output of DDR3 SDRAM modules.
 o In ipmi-fru, support output of new FRU multirecords, most notably
   extended DC output and extended DC load (per FRU Revision 1.2

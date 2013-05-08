@@ -263,6 +263,7 @@ ipmi_fru_output_board_info_area (ipmi_fru_state_data_t *state_data,
       memset (mfg_date_time_buf, '\0', IPMI_FRU_STR_BUFLEN + 1);
 
       if (ipmi_timestamp_string (mfg_date_time,
+				 state_data->prog_data->args->common_args.utc_offset,
 				 get_timestamp_flags (&(state_data->prog_data->args->common_args),
 						      IPMI_TIMESTAMP_FLAG_DEFAULT), 
 				 "%D - %T",

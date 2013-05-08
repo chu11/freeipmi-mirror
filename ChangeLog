@@ -1,3 +1,17 @@
+2013-05-08  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/util/ipmi-timestamp-util.h,
+	libfreeipmi/util/ipmi-timestamp-util.c (ipmi_timestamp_string):
+	Support specific UTC offset being specified.
+
+	* ipmi-fru/, bmc-device/, ipmi-sel/, ipmi-sensors/, ipmi-dcmi/,
+	ipmi-oem/: Support new --utc-offset option.
+
+	* common/toolcommon/: Support new options and config file options
+	appropriately.
+
+	* man/: Update for new option.
+
 2013-05-07  Albert Chu <chu11@llnl.gov>
 
 	Merge branch 'utcoffsetcmd'

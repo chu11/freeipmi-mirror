@@ -152,6 +152,7 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
   memset (timestr, '\0', IPMI_SEL_TIME_BUFLEN + 1);
   
   if (ipmi_timestamp_string ((uint32_t)val,
+			     state_data->prog_data->args->common_args.utc_offset,
 			     get_timestamp_flags (&(state_data->prog_data->args->common_args),
 						  IPMI_TIMESTAMP_FLAG_DEFAULT), 
 			     "%m/%d/%Y - %H:%M:%S",
@@ -181,6 +182,7 @@ _display_sel_info (ipmi_sel_state_data_t *state_data)
   memset (timestr, '\0', IPMI_SEL_TIME_BUFLEN + 1);
   
   if (ipmi_timestamp_string ((uint32_t)val,
+			     state_data->prog_data->args->common_args.utc_offset,
 			     get_timestamp_flags (&(state_data->prog_data->args->common_args),
 						  IPMI_TIMESTAMP_FLAG_DEFAULT), 
 			     "%m/%d/%Y - %H:%M:%S",

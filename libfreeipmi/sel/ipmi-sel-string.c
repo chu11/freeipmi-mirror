@@ -612,6 +612,7 @@ _output_time (ipmi_sel_ctx_t ctx,
     timestamp_flags |= IPMI_TIMESTAMP_FLAG_LOCALTIME_TO_UTC;
 
   if (ipmi_timestamp_string (timestamp,
+			     0,
 			     timestamp_flags,
 			     "%H:%M:%S",
 			     tmpbuf,
@@ -689,6 +690,7 @@ _output_date (ipmi_sel_ctx_t ctx,
     timestamp_flags |= IPMI_TIMESTAMP_FLAG_LOCALTIME_TO_UTC;
 
   if (ipmi_timestamp_string (timestamp,
+			     0,
 			     timestamp_flags,
 			     date_format,
 			     tmpbuf,

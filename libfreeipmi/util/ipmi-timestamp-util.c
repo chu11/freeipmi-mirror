@@ -51,6 +51,7 @@
 
 int
 ipmi_timestamp_string (uint32_t timestamp,
+		       int utc_offset,
 		       unsigned int flags,
 		       const char *format,
 		       char *buf,
@@ -92,6 +93,9 @@ ipmi_timestamp_string (uint32_t timestamp,
   memset (&tm, '\0', sizeof (struct tm));
 
   t = timestamp;
+
+  if (utc_offset)
+    t += utc_offset;
 
   if (flags & IPMI_TIMESTAMP_FLAG_UTC_TO_LOCALTIME)
     localtime_r (&t, &tm);

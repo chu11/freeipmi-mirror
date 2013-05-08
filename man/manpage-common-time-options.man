@@ -5,3 +5,7 @@ localtime before being output.
 .TP
 \fB\-\-localtime\-to\-utc\fR
 Convert all localtime timestamps to UTC before being output.
+.TP
+\fB\-\-utc\-offset\fR=\fISECONDS\fR
+Specify a specific UTC offset in seconds to be added to timestamps.
+Value can range for -86400 to 86400 seconds. Defaults to 0.

@@ -879,6 +879,34 @@ _config_file_tool_option_workaround_flags (conffile_t cf,
 }
 
 static int
+_config_file_utc_offset (conffile_t cf,
+			 struct conffile_data *data,
+			 char *optionname,
+			 int option_type,
+			 void *option_ptr,
+			 int option_data,
+			 void *app_ptr,
+			 int app_data)
+{
+  unsigned int *value;
+
+  assert (data);
+  assert (optionname);
+  assert (option_ptr);
+
+  value = (int *)option_ptr;
+
+  if (!IPMI_UTC_OFFSET_VALID (data->intval))
+    {
+      fprintf (stderr, "Config File Error: invalid value for %s\n", optionname);
+      exit (EXIT_FAILURE);
+    }
+
+  *value = data->intval;
+  return (0);
+}
+
+static int
 _config_file_fanout (conffile_t cf,
                      struct conffile_data *data,
                      char *optionname,
@@ -1322,7 +1350,8 @@ config_file_parse (const char *filename,
 
   int quiet_cache_count = 0, sdr_cache_directory_count = 0;
 
-  int utc_to_localtime_count = 0, localtime_to_utc_count = 0;
+  int utc_to_localtime_count = 0, localtime_to_utc_count = 0,
+    utc_offset_count = 0;
 
   int buffer_output_count = 0, consolidate_output_count = 0,
     fanout_count = 0, eliminate_count = 0, always_prefix_count = 0;
@@ -1731,7 +1760,6 @@ config_file_parse (const char *filename,
         &(common_args->utc_to_localtime),
         0
       },
-
       {
         "localtime-to-utc",
         CONFFILE_OPTION_BOOL,
@@ -1741,6 +1769,17 @@ config_file_parse (const char *filename,
         0,
         &localtime_to_utc_count,
         &(common_args->localtime_to_utc),
+        0
+      },
+      {
+        "utc-offset",
+        CONFFILE_OPTION_BOOL,
+        -1,
+        _config_file_utc_offset,
+        1,
+        0,
+        &utc_offset_count,
+        &(common_args->utc_offset),
         0
       },
     };

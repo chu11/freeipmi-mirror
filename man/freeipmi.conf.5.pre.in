@@ -147,6 +147,9 @@ Specify if time should be converted from assumed UTC to localtime by default.
 .TP
 \fBlocaltime\-to\-utc\fR \fIENABLE|DISABLE\fR 
 Specify if time should be converted from localtime to UTC by default.
+.TP
+\fButc\-offset\-fR \fISECONDS\fR
+Specify a default UTC offset to be added to timestamps.
 
 .SH "HOSTRANGED OPTIONS"
 The following options are specific to tools that support hostranged

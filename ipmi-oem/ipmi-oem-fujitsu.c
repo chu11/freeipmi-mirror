@@ -1428,6 +1428,7 @@ ipmi_oem_fujitsu_get_sel_entry_long_text (ipmi_oem_state_data_t *state_data)
   memset (time_buf, '\0', IPMI_OEM_TIME_BUFLEN + 1);
   
   if (ipmi_timestamp_string (timestamp,
+			     state_data->prog_data->args->common_args.utc_offset,
 			     get_timestamp_flags (&(state_data->prog_data->args->common_args),
 						  IPMI_TIMESTAMP_FLAG_DEFAULT), 
 			     "%b-%d-%Y | %H:%M:%S",

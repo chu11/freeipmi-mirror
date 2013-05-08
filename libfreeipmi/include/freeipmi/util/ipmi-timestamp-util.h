@@ -38,6 +38,13 @@ extern "C" {
  */
 #define IPMI_TIMESTAMP_FLAG_LOCALTIME_TO_UTC 0x04
 
+#define IPMI_UTC_OFFSET_SECONDS_MIN -86400
+#define IPMI_UTC_OFFSET_SECONDS_MAX  86400
+
+#define IPMI_UTC_OFFSET_VALID(__val) \
+  (((__val) >= IPMI_UTC_OFFSET_SECONDS_MIN \
+    && (__val) <= IPMI_UTC_OFFSET_SECONDS_MAX) ? 1 : 0)
+
 /* Handles special case timestamps in IPMI and timestamp
  * conversations.  Special case timestamps most notably unspecified
  * timestamps and timestamps in the range of initialization of the
@@ -47,6 +54,7 @@ extern "C" {
 
 /* format uses format from strftime(), pass NULL for default one */
 int ipmi_timestamp_string (uint32_t timestamp,
+			   int utc_offset,
 			   unsigned int flags,
 			   const char *format,
 			   char *buf,
