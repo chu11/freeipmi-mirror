@@ -837,6 +837,9 @@ ipmi_lan_sendto (int s,
    * In addition, it is difficult to calculate if a pad is necessary
    * b/c it appears the pad should be for the ethernet frame, not the
    * IP packet.
+   *
+   * Why not just remove this function?  Leave just in case a legacy
+   * pad situation pops up and we gotta implement something.
    */ 
   return (ipmi_network_sendto (s, buf, len, flags, to, tolen));
 }
