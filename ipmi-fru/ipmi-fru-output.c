@@ -1308,7 +1308,7 @@ ipmi_fru_output_dimm (ipmi_fru_state_data_t *state_data,
   assert (areabuf);
   assert (area_length);
 
-  if ((obj_record = fiid_obj_create (tmpl_fru_dimm_spd_ddr3_record)))
+  if (!(obj_record = fiid_obj_create (tmpl_fru_dimm_spd_ddr3_record)))
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
