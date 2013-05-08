@@ -53,7 +53,7 @@ _find_str (uint8_t id, const struct ipmi_jedec_manufacturer_id_pair *pairs)
 char *
 ipmi_jedec_manufacturer_id_search (uint8_t continuation_codes_count, uint8_t id)
 {
-  if (IPMI_JEDEC_MANUFACTURER_CONTINUATION_CODES_VALID (continuation_codes_count))
+  if (!IPMI_JEDEC_MANUFACTURER_CONTINUATION_CODES_VALID (continuation_codes_count))
     {
       SET_ERRNO (EINVAL);
       return (NULL);
