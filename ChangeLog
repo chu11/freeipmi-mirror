@@ -1,3 +1,8 @@
+2013-05-09  Albert Chu <chu11@llnl.gov>
+
+	* bmc-device/bmc-device.c (get_sel_time_utc_offset): Fix output
+	string error.
+	
 2013-05-08  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/interface/ipmi-network.h,

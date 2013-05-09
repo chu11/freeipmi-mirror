@@ -1471,11 +1471,11 @@ get_sel_time_utc_offset (bmc_device_state_data_t *state_data)
 
   if (offset == IPMI_SEL_TIME_UTC_OFFSET_UNSPECIFIED)
     pstdout_printf (state_data->pstate,
-		    "SEL Time : Unspecified\n",
+		    "SEL UTC Offset : Unspecified\n",
 		    offset);
   else
     pstdout_printf (state_data->pstate,
-		    "SEL Time : %d minutes\n",
+		    "SEL UTC Offset : %d minutes\n",
 		    offset);
   rv = 0;
  cleanup:
