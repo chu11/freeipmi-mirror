@@ -142,7 +142,7 @@ libfreeipmi-interpret
 
 libfreeipmi-sdr
 ---------------
-- checksum/something to ensure no disk corruption
+- checksum/something to ensure no disk corruption (***)
 
 libfreeipmi-fru
 ---------------
