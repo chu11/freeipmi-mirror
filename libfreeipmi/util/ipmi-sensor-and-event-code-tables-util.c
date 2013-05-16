@@ -2534,6 +2534,8 @@ ipmi_get_event_messages (uint8_t event_reading_type_code,
    */
   else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM
            && flags & IPMI_GET_EVENT_MESSAGES_FLAGS_INTERPRET_OEM_DATA
+	   && manufacturer_id == IPMI_IANA_ENTERPRISE_ID_HP
+	   && product_id == IPMI_HP_PRODUCT_ID_PROLIANT_DL160_G8
 	   && (sensor_type == IPMI_SENSOR_TYPE_OEM_HP_LED
 	       && (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_HP_UID_LIGHT
 		   || event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_HP_HEALTH_LED)))
