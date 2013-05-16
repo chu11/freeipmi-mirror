@@ -1,6 +1,6 @@
 FreeIPMI 1.2.7 - 05/16/13
 -------------------------
-o Fix sensor output corner case with OEM sensors.
+o Fix sensor output errors with OEM sensors.
 
 FreeIPMI 1.2.6 - 04/29/13
 -------------------------
