@@ -28,6 +28,10 @@ extern "C" {
 
 uint8_t ipmi_checksum (const void *buf, unsigned int buflen);
 
+uint8_t ipmi_checksum_incremental (const void *buf, unsigned int buflen, uint8_t checksum_initial);
+/* Can pass NULL/0 for final */
+uint8_t ipmi_checksum_final (const void *buf, unsigned int buflen, uint8_t checksum_initial);
+
 /* returns 1 on pass, 0 on fail, -1 on error */
 int ipmi_check_cmd (fiid_obj_t obj_cmd, uint8_t cmd);
 

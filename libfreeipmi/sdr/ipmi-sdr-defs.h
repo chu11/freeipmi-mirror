@@ -84,10 +84,15 @@
 #define IPMI_SDR_CACHE_FILE_MAGIC_2 0x9D
 #define IPMI_SDR_CACHE_FILE_MAGIC_3 0x1F
 
-#define IPMI_SDR_CACHE_FILE_VERSION_0 0x00
-#define IPMI_SDR_CACHE_FILE_VERSION_1 0x00
-#define IPMI_SDR_CACHE_FILE_VERSION_2 0x00
-#define IPMI_SDR_CACHE_FILE_VERSION_3 0x01
+#define IPMI_SDR_CACHE_FILE_VERSION_1_0 0x00
+#define IPMI_SDR_CACHE_FILE_VERSION_1_1 0x00
+#define IPMI_SDR_CACHE_FILE_VERSION_1_2 0x00
+#define IPMI_SDR_CACHE_FILE_VERSION_1_3 0x01
+
+#define IPMI_SDR_CACHE_FILE_VERSION_1_2_0 0x00
+#define IPMI_SDR_CACHE_FILE_VERSION_1_2_1 0x01
+#define IPMI_SDR_CACHE_FILE_VERSION_1_2_2 0x00
+#define IPMI_SDR_CACHE_FILE_VERSION_1_2_3 0x02
 
 #define IPMI_MAX_ENTITY_IDS          256
 #define IPMI_MAX_ENTITY_ID_INSTANCES 256
@@ -118,6 +123,7 @@ struct ipmi_sdr_ctx {
   int fd;
   off_t file_size;
   off_t records_start_offset;
+  off_t records_end_offset;
   uint8_t *sdr_cache;
   struct ipmi_sdr_offset current_offset;
   int callback_lock;

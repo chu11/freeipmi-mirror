@@ -49,6 +49,10 @@ o In libfreeipmi 'sel' sub-library, support
   IPMI_SEL_STRING_FLAGS_LOCALTIME_TO_UTC options/flags.
 o In libfreeipmi, do not pad legacy byte on IPMI 1.5 packets.  Legacy
   byte should be padded on ethernet frame, not IP packet.
+o In libfreeipmi, 'sdr' sub-library, when creating SDR cache, add
+  checksums to cache to ensure data in cache is not corrupted.  Older
+  caches without checksums still backwards compatible supported.
+  
 
 FreeIPMI 1.2.1 - 08/22/12
 -------------------------

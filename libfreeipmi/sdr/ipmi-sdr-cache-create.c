@@ -51,6 +51,7 @@
 #include "freeipmi/debug/ipmi-debug.h"
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
 #include "freeipmi/spec/ipmi-comp-code-spec.h"
+#include "freeipmi/util/ipmi-util.h"
 
 #include "ipmi-sdr-common.h"
 #include "ipmi-sdr-defs.h"
@@ -87,6 +88,9 @@ _sdr_cache_header_write (ipmi_sdr_ctx_t ctx,
   char record_count_buf[2];
   char most_recent_addition_timestamp_buf[4];
   char most_recent_erase_timestamp_buf[4];
+  uint8_t header_checksum_buf[512];
+  unsigned int header_checksum_buf_len = 0;
+  uint8_t header_checksum;
   ssize_t n;
 
   assert (ctx);
@@ -112,10 +116,13 @@ _sdr_cache_header_write (ipmi_sdr_ctx_t ctx,
     }
   (*total_bytes_written) += 4;
 
-  sdr_cache_version_buf[0] = IPMI_SDR_CACHE_FILE_VERSION_0;
-  sdr_cache_version_buf[1] = IPMI_SDR_CACHE_FILE_VERSION_1;
-  sdr_cache_version_buf[2] = IPMI_SDR_CACHE_FILE_VERSION_2;
-  sdr_cache_version_buf[3] = IPMI_SDR_CACHE_FILE_VERSION_3;
+  memcpy(&header_checksum_buf[header_checksum_buf_len], sdr_cache_magic_buf, 4);
+  header_checksum_buf_len += 4;
+
+  sdr_cache_version_buf[0] = IPMI_SDR_CACHE_FILE_VERSION_1_2_0;
+  sdr_cache_version_buf[1] = IPMI_SDR_CACHE_FILE_VERSION_1_2_1;
+  sdr_cache_version_buf[2] = IPMI_SDR_CACHE_FILE_VERSION_1_2_2;
+  sdr_cache_version_buf[3] = IPMI_SDR_CACHE_FILE_VERSION_1_2_3;
 
   if ((n = fd_write_n (fd, sdr_cache_version_buf, 4)) < 0)
     {
@@ -129,6 +136,9 @@ _sdr_cache_header_write (ipmi_sdr_ctx_t ctx,
     }
   (*total_bytes_written) += 4;
 
+  memcpy(&header_checksum_buf[header_checksum_buf_len], sdr_cache_version_buf, 4);
+  header_checksum_buf_len += 4;
+
   if ((n = fd_write_n (fd, (char *)&sdr_version, 1)) < 0)
     {
       SDR_ERRNO_TO_SDR_ERRNUM (ctx, errno);
@@ -140,6 +150,9 @@ _sdr_cache_header_write (ipmi_sdr_ctx_t ctx,
       return (-1);
     }
   (*total_bytes_written) += 1;
+
+  memcpy(&header_checksum_buf[header_checksum_buf_len], &sdr_version, 1);
+  header_checksum_buf_len += 1;
 
   /* Store record count little-endian */
   record_count_buf[0] = (record_count & 0x00FF);
@@ -156,6 +169,9 @@ _sdr_cache_header_write (ipmi_sdr_ctx_t ctx,
       return (-1);
     }
   (*total_bytes_written) += 2;
+
+  memcpy(&header_checksum_buf[header_checksum_buf_len], record_count_buf, 2);
+  header_checksum_buf_len += 2;
 
   /* Store most recent addition timestamp little-endian */
   most_recent_addition_timestamp_buf[0] = (most_recent_addition_timestamp & 0x000000FF);
@@ -175,6 +191,9 @@ _sdr_cache_header_write (ipmi_sdr_ctx_t ctx,
     }
   (*total_bytes_written) += 4;
 
+  memcpy(&header_checksum_buf[header_checksum_buf_len], most_recent_addition_timestamp_buf, 4);
+  header_checksum_buf_len += 4;
+
   /* Store most recent erase timestamp little-endian */
   most_recent_erase_timestamp_buf[0] = (most_recent_erase_timestamp & 0x000000FF);
   most_recent_erase_timestamp_buf[1] = (most_recent_erase_timestamp & 0x0000FF00) >> 8;
@@ -192,6 +211,74 @@ _sdr_cache_header_write (ipmi_sdr_ctx_t ctx,
       return (-1);
     }
   (*total_bytes_written) += 4;
+
+  memcpy(&header_checksum_buf[header_checksum_buf_len], most_recent_erase_timestamp_buf, 4);
+  header_checksum_buf_len += 4;
+
+  header_checksum = ipmi_checksum (header_checksum_buf, header_checksum_buf_len);
+
+  if ((n = fd_write_n (fd, (char *)&header_checksum, 1)) < 0)
+    {
+      SDR_ERRNO_TO_SDR_ERRNUM (ctx, errno);
+      return (-1);
+    }
+  if (n != 1)
+    {
+      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_SYSTEM_ERROR);
+      return (-1);
+    }
+  (*total_bytes_written) += 1;
+
+  return (0);
+}
+
+static int
+_sdr_cache_trailer_write (ipmi_sdr_ctx_t ctx,
+			  ipmi_ctx_t ipmi_ctx,
+			  int fd,
+			  unsigned int total_bytes_written,
+			  uint8_t trailer_checksum)
+{
+  char total_bytes_written_buf[4];
+  ssize_t n;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_SDR_CTX_MAGIC);
+  assert (ipmi_ctx);
+  assert (fd);
+
+  /* + 4 for this value, + 1 for checksum at end */
+  total_bytes_written += 4;
+  total_bytes_written += 1;
+
+  total_bytes_written_buf[0] = (total_bytes_written & 0x000000FF);
+  total_bytes_written_buf[1] = (total_bytes_written & 0x0000FF00) >> 8;
+  total_bytes_written_buf[2] = (total_bytes_written & 0x00FF0000) >> 16;
+  total_bytes_written_buf[3] = (total_bytes_written & 0xFF000000) >> 24;
+
+  if ((n = fd_write_n (fd, total_bytes_written_buf, 4)) < 0)
+    {
+      SDR_ERRNO_TO_SDR_ERRNUM (ctx, errno);
+      return (-1);
+    }
+  if (n != 4)
+    {
+      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_SYSTEM_ERROR);
+      return (-1);
+    }
+
+  trailer_checksum = ipmi_checksum_final (total_bytes_written_buf, 4, trailer_checksum);
+
+  if ((n = fd_write_n (fd, (char *)&trailer_checksum, 1)) < 0)
+    {
+      SDR_ERRNO_TO_SDR_ERRNUM (ctx, errno);
+      return (-1);
+    }
+  if (n != 1)
+    {
+      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_SYSTEM_ERROR);
+      return (-1);
+    }
 
   return (0);
 }
@@ -570,7 +657,8 @@ _sdr_cache_record_write (ipmi_sdr_ctx_t ctx,
                          uint16_t *record_ids,
                          unsigned int *record_ids_count,
                          uint8_t *buf,
-                         unsigned int buflen)
+                         unsigned int buflen,
+			 uint8_t *trailer_checksum)
 {
   ssize_t n;
 
@@ -581,6 +669,7 @@ _sdr_cache_record_write (ipmi_sdr_ctx_t ctx,
   assert (!record_ids || (record_ids && record_ids_count));
   assert (buf);
   assert (buflen);
+  assert (trailer_checksum);
 
   /* Record header bytes are 5 bytes */
   if (buflen < IPMI_SDR_RECORD_HEADER_LENGTH)
@@ -647,6 +736,8 @@ _sdr_cache_record_write (ipmi_sdr_ctx_t ctx,
     }
   (*total_bytes_written) += buflen;
 
+  (*trailer_checksum) = ipmi_checksum_incremental (buf, buflen, (*trailer_checksum));
+
   return (0);
 
 }
@@ -670,6 +761,7 @@ ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
   unsigned int cache_create_flags_mask = (IPMI_SDR_CACHE_CREATE_FLAGS_OVERWRITE
 					  | IPMI_SDR_CACHE_CREATE_FLAGS_DUPLICATE_RECORD_ID
 					  | IPMI_SDR_CACHE_CREATE_FLAGS_ASSUME_MAX_SDR_RECORD_COUNT);
+  uint8_t trailer_checksum = 0;
   int fd = -1;
   int rv = -1;
 
@@ -843,7 +935,8 @@ ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
                                        record_ids,
                                        &record_ids_count,
                                        record_buf,
-                                       record_len) < 0)
+                                       record_len,
+				       &trailer_checksum) < 0)
             goto cleanup;
 
           record_count_written++;
@@ -906,6 +999,13 @@ ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
           goto cleanup;
         }
     }
+
+  if (_sdr_cache_trailer_write (ctx,
+				ipmi_ctx,
+				fd,
+				total_bytes_written,
+				trailer_checksum) < 0)
+            goto cleanup;
 
   if (fsync (fd) < 0)
     {
