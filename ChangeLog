@@ -1,5 +1,10 @@
 2013-05-16  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/util/ipmi-sensor-and-event-code-tables-util.c (ipmi_get_event_messages):
+	Fix sensor event message corner case w/ OEM sensors.
+	
+2013-05-16  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/util/ipmi-util.h,
 	libfreeipmi/util/ipmi-util.c (ipmi_checksum_incremental, ipmi_checksum_final): New
 	function.
