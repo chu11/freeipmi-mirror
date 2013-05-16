@@ -84,10 +84,34 @@
 #define IPMI_SDR_CACHE_FILE_MAGIC_2 0x9D
 #define IPMI_SDR_CACHE_FILE_MAGIC_3 0x1F
 
+/* Cache Version 0.1 format
+ *
+ * magic bytes (4 bytes)
+ * version bytes (4)
+ * sdr version (1)
+ * record count (2)
+ * most recent addition timestamp (4)
+ * most recent erase timestamp (4)
+ * records (variable)
+ */
 #define IPMI_SDR_CACHE_FILE_VERSION_1_0 0x00
 #define IPMI_SDR_CACHE_FILE_VERSION_1_1 0x00
 #define IPMI_SDR_CACHE_FILE_VERSION_1_2 0x00
 #define IPMI_SDR_CACHE_FILE_VERSION_1_3 0x01
+
+/* Cache Version 1.2 format
+ *
+ * magic bytes (4 bytes)
+ * version bytes (4)
+ * sdr version (1)
+ * record count (2)
+ * most recent addition timestamp (4)
+ * most recent erase timestamp (4)
+ * header checksum (1) [all bytes above]
+ * records (variable)
+ * total bytes of file (4)
+ * trailer checksum (1) [records + total bytes of file]
+ */
 
 #define IPMI_SDR_CACHE_FILE_VERSION_1_2_0 0x00
 #define IPMI_SDR_CACHE_FILE_VERSION_1_2_1 0x01
