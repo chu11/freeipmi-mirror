@@ -1,3 +1,7 @@
+FreeIPMI 1.2.7 - 05/16/13
+-------------------------
+o Fix sensor output corner case with OEM sensors.
+
 FreeIPMI 1.2.6 - 04/29/13
 -------------------------
 o Support HP Proliant DL160 G8 OEM sensors.

@@ -1,3 +1,8 @@
+2013-05-16  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/util/ipmi-sensor-and-event-code-tables-util.c (ipmi_get_event_messages):
+	Fix sensor event message corner case w/ OEM sensors.
+	
 2013-05-06 Peter Volkov <pva@gentoo.org>
 
 	* configure.ac: Update for autoconf 1.14. 
