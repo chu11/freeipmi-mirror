@@ -28,8 +28,9 @@ extern "C" {
 
 uint8_t ipmi_checksum (const void *buf, unsigned int buflen);
 
+/* Call first time w/ checksum_initial 0, pass in result for subsequent calls */
 uint8_t ipmi_checksum_incremental (const void *buf, unsigned int buflen, uint8_t checksum_initial);
-/* Can pass NULL/0 for final */
+/* Can pass NULL/0 for final buf/buflen */
 uint8_t ipmi_checksum_final (const void *buf, unsigned int buflen, uint8_t checksum_initial);
 
 /* returns 1 on pass, 0 on fail, -1 on error */
