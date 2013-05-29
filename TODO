@@ -173,8 +173,6 @@ libipmimonitoring
   - but some mobos have sensor name == each other, so what is the purpose?
   - would need to also add sensor number with it??
   - also to deal w/ probability SDR's change on some mobos
-- support 'discretereading' workaround (***)
-  - need a mobo to play with to test, lots of a breakage possibilities
 - how specify record ids w/ sharing
 - entity sensor names
 
