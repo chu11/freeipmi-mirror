@@ -1,6 +1,8 @@
 2013-05-29  Albert Chu <chu11@llnl.gov>
 
 	* man/manpage-common-time-options.man: Fix typo.
+
+	* configure.ac, NEWS: Update for release.
 	
 2013-05-16  Albert Chu <chu11@llnl.gov>
 
