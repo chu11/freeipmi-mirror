@@ -46,8 +46,8 @@ issues are handled within 'fiid'.  Fiid objects are used throughout
 libfreeipmi, including the 'api' sub-section, 'cmds' sub-sections,
 and various tools.
 
-fru-parse - Provides an API for parsing Field Replaceable Unit (FRU)
-records.  Utilized by tools such as ipmi-fru(8).
+fru - Provides an API for reading and parsing Field Replaceable Unit
+(FRU) records.  Utilized by tools such as ipmi-fru(8).
 
 interface - Provides 'assemble' and 'disassemble' functions for
 building packets for individual in-band or out-of-band protocols.
@@ -56,31 +56,29 @@ other utility functions necessary to communicate on an IPMI
 interface.  Utilized by the 'api' sub-section and tools such as
 ipmipower(8) and ipmiconsole(8).
 
-interpret - Provides an API for interpreting sensor events by mapping
-them into Nominal, Warning, or Critical states.  Utilized by FreeIPMI
-tools and libraries, such as ipmi-sensors(8) and libipmimonitoring(3).
+interpret - Provides an API for interpreting sensor or SEL events by
+mapping them into Nominal, Warning, or Critical states.  Utilized by
+FreeIPMI tools and libraries, such as ipmi-sensors(8), ipmi-sel(8),
+and libipmimonitoring(3).
 
 locate - Provides an API to probe several standards to find default
 values for in-band IPMI communication.  Utilized by the 'api'
 sub-section and the ipmi-locate(8) tool.
 
-payload - Provides macros, fiid-templates, and information on paylod
-sused in IPMI.  Used predominantly by ipmiconsole(8) and other
+payload - Provides macros, fiid-templates, and information on paylods
+used in IPMI.  Used predominantly by ipmiconsole(8) and other
 serial-over-LAN (SOL) related code.
 
 record-format - Provides macros, fiid-templates, and information on
-records used in IPMI.  Utilized by the 'sdr-cache' subsection and
-tools like ipmi-sensors(8).
+records used in IPMI.  Utilized by the 'fru' and 'sdr' subsection and
+tools like ipmi-sensors(8) and ipmi-fru(8).
 
-sdr-cache - Provides an API for creating, caching, reading, and
-parsing a sensor data repository (SDR).  Utilized by tools such as
-ipmi-fru(8) and ipmi-sensors(8).
+sdr - Provides an API for creating, caching, reading, and parsing a
+sensor data repository (SDR) and the SDR records within it.  Utilized
+by tools such as ipmi-fru(8) and ipmi-sensors(8).
 
-sdr-parse - Provides an API for parsing SDR records.  Utilized by
-tools such as ipmi-fru(8) and ipmi-sensors(8).
-
-sel-parse - Provides an API for reading and parsing System Event Log
-(SEL) entries.  Utilized by tools such as ipmi-sel(8).
+sel - Provides an API for reading and parsing System Event Log (SEL)
+entries.  Utilized by tools such as ipmi-sel(8).
 
 sensor-read - Provides an API for reading a sensor.  Utilized by tools
 such as ipmi-sensors(8).
@@ -112,7 +110,7 @@ Libipmidetect
 
 Libipmidetect implements a high level API for determing which nodes in
 a cluster do or do-not support IPMI.  This library is primarily useful
-for detecting whe nodes are removed from a cluster for servicing, so
+for detecting when nodes are removed from a cluster for servicing, so
 that IPMI applications can avoid unnecessary timeouts.  The library
 interacts with the ipmidetectd(8) daemon.
 
