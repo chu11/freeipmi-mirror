@@ -53,6 +53,116 @@ o In libfreeipmi, 'sdr' sub-library, when creating SDR cache, add
   checksums to cache to ensure data in cache is not corrupted.  Older
   caches without checksums still backwards compatible supported.
   
+FreeIPMI 1.2.7 - 05/16/13
+-------------------------
+o Fix sensor output errors with OEM sensors.
+
+FreeIPMI 1.2.6 - 04/29/13
+-------------------------
+o Support HP Proliant DL160 G8 OEM sensors.
+o Support Supermicro X9SCM-iiF OEM sensors and events.
+o Support output of temperature sampling period to ipmi-dcmi.
+o Clarify error message when SOL session cannot be stolen in
+  ipmiconsole/libipmiconsole.
+o Fix dcmi rolling average time period output error
+o Fix ipmi-dcmi output errors with --get-dcmi-sensor-info.
+o Fix corner case in calculation of confidentiality pad length with
+  AES-CBC-128 encryption.  Incorrect pad effects some vendor firmware
+  implementations.
+o Send IPMI 2.0 packets differently than IPMI 1.5 packets, as the
+  former does not require legacy pad data to be appended to payloads.
+o Fix Intel OEM SEL buffer overflow.
+o Fix out of trunk source build.
+
+Libraries
+---------
+o Support new ipmi_rmcpplus_sendto() and ipmi_rmcpplus_recvfrom()
+  functions.
+o Support new HP Proliant DL160 G8 OEM sensor events.
+
+FreeIPMI 1.2.5 - 02/26/13
+-------------------------
+o In all config tools (bmc-config, ipmi-pef-config,
+  ipmi-chassis-config, ipmi-sensors-config), fix bug when user
+  specifies --checkout and --filename option and no data outputs to
+  file.
+o In all config tools, exit with value 1 when non-fatal errors occur.
+  Exit with value 2 when fatal errors occur.
+o Support Supermicro X9SPU-F-O OEM sensors and events.
+o Support Supermicro X9DRI-LN4F+ OEM intepretations (previously
+  forgotten).
+o Clarify use of --filename in config tool manpages.
+
+FreeIPMI 1.2.4 - 01/10/13
+-------------------------
+o Support Supermicro X9DRI-LN4F+ OEM sensors and events.
+o Fix output corner case for "session-based" channels.
+o Fix ipmi-oem set-power-restore-delay corner case in time settings.
+o Fix ipmiseld memleak.
+o Fix libfreeipmi potential fd leak when generating random numbers.
+o Fix libfreeipmi error output bug in RMCP interface.
+o Fix several minor corner cases discovered by static code analysis.
+
+FreeIPMI 1.2.3 - 11/14/12
+-------------------------
+Tools
+------
+o In ipmi-oem, support new Dell Poweredge R720 OEM commands extensions,
+  including:
+  - get-nic-selection-failover
+  - set-nic-selection-failover
+  - power-monitoring-over-interval
+  - power-monitoring-interval-range
+  - get-last-post-code
+o In ipmi-oem, update active-lom-status for Dell Poweredge R720.
+o In ipmi-oem, support new Dell Poweredge R720 get-system-info option
+  'cmc-info'.
+o In ipmi-oem, Dell get-system-info "slot-number" key changed to
+  "blade-slot-info".  Legacy option still supported.
+o In ipmi-sel, support Dell Poweredge R720 OEM SEL extensions.
+o In all tools, support nochecksumcheck workaround option.
+o In all daemons (ipmiseld, ipmidetectd, bmc-watchdog), check for
+  syscall errors during daemon setup.
+
+Libraries
+---------
+o In libfreeipmi, support Dell R720 OEM extension intepretations.
+o In libfreeipmi, libipmimonitoring, and libipmiconsole, support
+  NO_CHECKSUM_CHECK workaround flag.
+o In libipmiconsole, IPMICONSOLE_DEBUG_FILE logs debug to files in
+  current working directory and not /var/log.  PID is also appended to
+  debug files.
+
+Misc
+----
+o Various documentation updates and fixes.
+
+FreeIPMI 1.2.2 - 10/02/12
+-------------------------
+Tools
+------
+o Support new --sol-payload-instance and --deactivate-all-instances
+  options in ipmiconsole.
+o Fix ipmiseld compile issue with -Werror=format-security.
+ 
+Libraries
+---------
+o In libipmiconsole, add new ipmiconsole_ctx_set_config() and
+  ipmiconsole_ctx_get_config() functions.
+o In libipmiconsole, add support for specifying and handling different
+  SOL payload instances.  This support includes:
+  - Support new IPMICONSOLE_CTX_CONFIG_OPTION_SOL_PAYLOAD_INSTANCE
+    configuration option.
+  - In libipmiconsole, support new
+    IPMICONSOLE_BEHAVIOR_DEACTIVATE_ALL_INSTANCES behavior flag.
+  - Return more appropriate error codes when activation limits are
+    discovered.
+o In libfreeipmi, fix debug output corner case when outputting byte
+  arrays.
+
+Misc
+----
+o Various documentation updates and fixes.
 
 FreeIPMI 1.2.1 - 08/22/12
 -------------------------
