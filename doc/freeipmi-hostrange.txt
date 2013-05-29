@@ -18,7 +18,7 @@ threads complete, the new threads launch the command on other hosts
 until the command has been executed on all hosts specified.
 
 It is utilized at Lawrence Livermore National Laboratory (LLNL) on
-clusters ranging from 4 to 2000 nodes.  Commands are capable of being
+clusters ranging from 4 to 3000 nodes.  Commands are capable of being
 executed across the entire cluster in the matter of seconds rather
 then minutes it would take to execute serially in a shell prompt.
 
@@ -81,7 +81,9 @@ wopr3: baz=/etc
 wopr3: xyzzy=static
 wopr3:
 
-It's beginning to get pretty long and perhaps a bit hard to digest.
+As you can see, it's beginning to get pretty long and perhaps a bit
+hard to digest.
+
 Pdsh also comes with a tool called dshbak for buffering this output to
 make it more human readable.
 
@@ -101,7 +103,30 @@ wopr3
  bar=/tmp
  baz=/etc
  xyzzy=static
-<snip - more of the same stuff>
+
+----------------
+wopr5
+----------------
+ foo=/usr
+ bar=/tmp
+ baz=/etc
+ xyzzy=static
+
+----------------
+wopr2
+----------------
+ foo=/usr
+ bar=/tmp
+ baz=/etc
+ xyzzy=dynamic
+
+----------------
+wopr4
+----------------
+ foo=/usr
+ bar=/tmp
+ baz=/etc
+ xyzzy=static
 
 This is a much nicer output to read.  However, if you have a much
 larger cluster (or possibly much larger output), this type of output
@@ -437,4 +462,7 @@ Additional Notes
 [1] Why doesn't FreeIPMI just use whatsup?  Whatsup defines "up" to
 typically mean that an OS up running healthily.  IPMI can operate
 without the OS running, even when the node is "powered off."
-Therefore, an alternate tool had to be developed.
+Therefore, an alternate tool had to be developed.  A plugin for
+whatsup could have been developed to determine "up vs. down" using
+IPMI, but the authors of FreeIPMI did not want FreeIPMI to become
+dependent on whatsup.
