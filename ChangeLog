@@ -1,3 +1,8 @@
+2013-05-30  Ales Ledvinka <aledvink@redhat.com>
+
+	* common/toolcommon/pstdout.c (pstdout_vprintf): Fix portability
+	bug, va_list is not a pointer type.
+	
 2013-05-29  Albert Chu <chu11@llnl.gov>
 
 	* man/manpage-common-time-options.man: Fix typo.
