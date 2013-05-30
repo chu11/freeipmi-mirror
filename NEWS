@@ -1,3 +1,7 @@
+FreeIPMI 1.2.8 - 05/30/13
+-------------------------
+o Fix portability build bug on ARM systems.
+
 FreeIPMI 1.2.7 - 05/16/13
 -------------------------
 o Fix sensor output errors with OEM sensors.

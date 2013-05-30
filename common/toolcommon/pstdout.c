@@ -761,11 +761,10 @@ pstdout_vprintf(pstdout_state_t pstate, const char *format, va_list ap)
       return -1;
     }
 
-  if (!ap)
-    {
-      pstdout_errnum = PSTDOUT_ERR_PARAMETERS;
-      return -1;
-    }
+  /* achu: va_list is defined by C standard as an object type, not
+   * necessarily pointer type.  So can't do NULL on ap type.  No known
+   * portable macro to test for validity of input.
+   */
 
   rv = _pstdout_print(pstate, 0, stdout, format, ap);
   return rv;
