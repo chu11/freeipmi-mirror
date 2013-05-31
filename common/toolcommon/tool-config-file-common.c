@@ -1383,6 +1383,11 @@ config_file_parse (const char *filename,
     ipmi_chassis_config_cipher_suite_id_count = 0, ipmi_chassis_config_privilege_level_count = 0,
     ipmi_chassis_config_workaround_flags_count = 0;
 
+  int ipmi_config_username_count = 0, ipmi_config_password_count = 0,
+    ipmi_config_k_g_count = 0, ipmi_config_authentication_type_count = 0,
+    ipmi_config_cipher_suite_id_count = 0, ipmi_config_privilege_level_count = 0,
+    ipmi_config_workaround_flags_count = 0;
+
   int ipmi_dcmi_username_count = 0, ipmi_dcmi_password_count = 0,
     ipmi_dcmi_k_g_count = 0, ipmi_dcmi_authentication_type_count = 0,
     ipmi_dcmi_cipher_suite_id_count = 0, ipmi_dcmi_privilege_level_count = 0,
@@ -1449,6 +1454,9 @@ config_file_parse (const char *filename,
 
   struct config_file_data_ipmi_chassis_config ipmi_chassis_config_data;
   struct config_file_data_ipmi_chassis_config *ipmi_chassis_config_data_ptr;
+
+  struct config_file_data_ipmi_config ipmi_config_data;
+  struct config_file_data_ipmi_config *ipmi_config_data_ptr;
 
   struct config_file_data_ipmi_dcmi ipmi_dcmi_data;
   struct config_file_data_ipmi_dcmi *ipmi_dcmi_data_ptr;
@@ -2349,6 +2357,101 @@ config_file_parse (const char *filename,
         0,
         &(ipmi_chassis_config_data.verbose_count_count),
         &(ipmi_chassis_config_data.verbose_count),
+        0,
+      },
+    };
+
+  /*
+   * Ipmi-config
+   */
+  struct conffile_option ipmi_config_options[] =
+    {
+      {
+        "ipmi-config-username",
+        CONFFILE_OPTION_STRING,
+        -1,
+        _config_file_tool_option_username,
+        1,
+        0,
+        &ipmi_config_username_count,
+        &common_cmd_args_config,
+        0,
+      },
+      {
+        "ipmi-config-password",
+        CONFFILE_OPTION_STRING,
+        -1,
+        _config_file_tool_option_password,
+        1,
+        0,
+        &ipmi_config_password_count,
+        &common_cmd_args_config,
+        0,
+      },
+      {
+        "ipmi-config-k_g",
+        CONFFILE_OPTION_STRING,
+        -1,
+        _config_file_tool_option_k_g,
+        1,
+        0,
+        &ipmi_config_k_g_count,
+        &common_cmd_args_config,
+        0,
+      },
+      {
+        "ipmi-config-authentication-type",
+        CONFFILE_OPTION_STRING,
+        -1,
+        _config_file_tool_option_authentication_type,
+        1,
+        0,
+        &ipmi_config_authentication_type_count,
+        &common_cmd_args_config,
+        0,
+      },
+      {
+        "ipmi-config-cipher-suite-id",
+        CONFFILE_OPTION_INT,
+        -1,
+        _config_file_tool_option_cipher_suite_id,
+        1,
+        0,
+        &ipmi_config_cipher_suite_id_count,
+        &common_cmd_args_config,
+        0,
+      },
+      {
+        "ipmi-config-privilege-level",
+        CONFFILE_OPTION_STRING,
+        -1,
+        _config_file_tool_option_privilege_level,
+        1,
+        0,
+        &ipmi_config_privilege_level_count,
+        &common_cmd_args_config,
+        0,
+      },
+      {
+        "ipmi-config-workaround-flags",
+        CONFFILE_OPTION_LIST_STRING,
+        -1,
+        _config_file_tool_option_workaround_flags,
+        1,
+        0,
+        &ipmi_config_workaround_flags_count,
+        &common_cmd_args_config,
+        0
+      },
+      {
+        "ipmi-config-verbose-count",
+        CONFFILE_OPTION_INT,
+        -1,
+        _config_file_unsigned_int,
+        1,
+        0,
+        &(ipmi_config_data.verbose_count_count),
+        &(ipmi_config_data.verbose_count),
         0,
       },
     };
@@ -5051,6 +5154,7 @@ config_file_parse (const char *filename,
               || ((tool_support & CONFIG_FILE_TOOL_BMC_WATCHDOG) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_CHASSIS) && !tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_CHASSIS_CONFIG) && tool_data)
+              || ((tool_support & CONFIG_FILE_TOOL_IPMI_CONFIG) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_DCMI) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_FRU) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_OEM) && tool_data)
@@ -5208,6 +5312,17 @@ config_file_parse (const char *filename,
 
   config_file_options_len += options_len;
 
+  options_len = sizeof (ipmi_config_options)/sizeof (struct conffile_option);
+  if (!(tool_support & CONFIG_FILE_TOOL_IPMI_CONFIG))
+    _ignore_options (ipmi_config_options, options_len);
+
+  _copy_options (config_file_options,
+                 config_file_options_len,
+                 ipmi_config_options,
+                 options_len);
+
+  config_file_options_len += options_len;
+
   options_len = sizeof (ipmi_dcmi_options)/sizeof (struct conffile_option);
   if (!(tool_support & CONFIG_FILE_TOOL_IPMI_DCMI))
     _ignore_options (ipmi_dcmi_options, options_len);
@@ -5346,6 +5461,7 @@ config_file_parse (const char *filename,
   memset (&bmc_info_data, '\0', sizeof (struct config_file_data_bmc_info));
   memset (&bmc_watchdog_data, '\0', sizeof (struct config_file_data_bmc_watchdog));
   memset (&ipmi_chassis_config_data, '\0', sizeof (struct config_file_data_ipmi_chassis_config));
+  memset (&ipmi_config_data, '\0', sizeof (struct config_file_data_ipmi_config));
   memset (&ipmi_dcmi_data, '\0', sizeof (struct config_file_data_ipmi_dcmi));
   memset (&ipmi_fru_data, '\0', sizeof (struct config_file_data_ipmi_fru));
   memset (&ipmi_oem_data, '\0', sizeof (struct config_file_data_ipmi_oem));
@@ -5490,6 +5606,13 @@ config_file_parse (const char *filename,
       memcpy (ipmi_chassis_config_data_ptr,
               &ipmi_chassis_config_data,
               sizeof (struct config_file_data_ipmi_chassis_config));
+    }
+  else if (tool_support & CONFIG_FILE_TOOL_IPMI_CONFIG)
+    {
+      ipmi_config_data_ptr = (struct config_file_data_ipmi_config *)tool_data;
+      memcpy (ipmi_config_data_ptr,
+              &ipmi_config_data,
+              sizeof (struct config_file_data_ipmi_config));
     }
   else if (tool_support & CONFIG_FILE_TOOL_IPMI_DCMI)
     {

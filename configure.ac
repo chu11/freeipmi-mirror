@@ -45,6 +45,7 @@ AC_CONFIG_FILES([
         etc/Makefile
         ipmi-chassis/Makefile
         ipmi-chassis-config/Makefile 
+	ipmi-config/Makefile
         ipmi-dcmi/Makefile
         ipmi-fru/Makefile
         ipmi-locate/Makefile

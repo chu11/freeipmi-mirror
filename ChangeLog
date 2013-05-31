@@ -1,3 +1,7 @@
+2013-05-31  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-config/: New tool.
+	
 2013-05-30  Ales Ledvinka <aledvink@redhat.com>
 
 	* common/toolcommon/pstdout.c (pstdout_vprintf): Fix portability
