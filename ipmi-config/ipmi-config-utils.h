@@ -79,8 +79,8 @@ int ipmi_config_is_config_param_non_fatal_error (ipmi_ctx_t ipmi_ctx,
                                                  ipmi_config_err_t *non_fatal_err);
 
 int ipmi_config_pstdout_fprintf (ipmi_config_state_data_t *state_data,
-				 FILE *stream,
-				 const char *format, ...);
+                                 FILE *stream,
+                                 const char *format, ...);
 
 ipmi_config_err_t load_lan_channel_numbers (ipmi_config_state_data_t *state_data);
 

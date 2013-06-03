@@ -531,8 +531,8 @@ ipmi_config_is_config_param_non_fatal_error (ipmi_ctx_t ipmi_ctx,
 
 int
 ipmi_config_pstdout_fprintf (ipmi_config_state_data_t *state_data,
-			     FILE *stream,
-			     const char *format, ...)
+                             FILE *stream,
+                             const char *format, ...)
 {
   va_list ap;
   int rv; 
