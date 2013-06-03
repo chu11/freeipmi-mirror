@@ -181,7 +181,7 @@ _get_channel_access (ipmi_config_state_data_t *state_data,
                          "ipmi_cmd_get_channel_access: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (ipmi_errnum_is_non_fatal (state_data->ipmi_ctx,
+      if (ipmi_errnum_is_non_fatal (state_data,
                                     obj_cmd_rs,
                                     &ret))
         rv = ret;
@@ -322,7 +322,7 @@ _set_channel_access (ipmi_config_state_data_t *state_data,
           (*comp_code) = val;
         }
 
-      if (ipmi_errnum_is_non_fatal (state_data->ipmi_ctx,
+      if (ipmi_errnum_is_non_fatal (state_data,
                                     obj_cmd_rs,
                                     &ret))
         rv = ret;

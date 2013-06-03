@@ -101,7 +101,7 @@ enable_sol_checkout (const char *section_name,
                          "ipmi_cmd_get_sol_configuration_parameters_sol_enable: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (ipmi_config_param_errnum_is_non_fatal (state_data->ipmi_ctx,
+      if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
@@ -172,7 +172,7 @@ enable_sol_commit (const char *section_name,
                          "ipmi_cmd_set_sol_configuration_parameters_sol_enable: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (ipmi_config_param_errnum_is_non_fatal (state_data->ipmi_ctx,
+      if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
@@ -229,7 +229,7 @@ _get_sol_sol_authentication (ipmi_config_state_data_t *state_data,
                          "ipmi_cmd_get_sol_configuration_parameters_sol_authentication: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (ipmi_config_param_errnum_is_non_fatal (state_data->ipmi_ctx,
+      if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
@@ -315,7 +315,7 @@ _set_sol_sol_authentication (ipmi_config_state_data_t *state_data,
                          "ipmi_cmd_set_sol_configuration_parameters_sol_authentication: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (ipmi_config_param_errnum_is_non_fatal (state_data->ipmi_ctx,
+      if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
@@ -519,7 +519,7 @@ _get_sol_character_accumulate_interval_and_send_threshold (ipmi_config_state_dat
                          "ipmi_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send_threshold: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (ipmi_config_param_errnum_is_non_fatal (state_data->ipmi_ctx,
+      if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
@@ -594,7 +594,7 @@ _set_sol_character_accumulate_interval_and_send_threshold (ipmi_config_state_dat
                          "ipmi_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send_threshold: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (ipmi_config_param_errnum_is_non_fatal (state_data->ipmi_ctx,
+      if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
@@ -749,7 +749,7 @@ _get_sol_sol_retry (ipmi_config_state_data_t *state_data,
                          "ipmi_cmd_get_sol_configuration_parameters_sol_retry: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (ipmi_config_param_errnum_is_non_fatal (state_data->ipmi_ctx,
+      if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
@@ -824,7 +824,7 @@ _set_sol_sol_retry (ipmi_config_state_data_t *state_data,
                          "ipmi_cmd_set_sol_configuration_parameters_sol_retry: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (ipmi_config_param_errnum_is_non_fatal (state_data->ipmi_ctx,
+      if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
@@ -984,7 +984,7 @@ non_volatile_bit_rate_checkout (const char *section_name,
                          "ipmi_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (ipmi_config_param_errnum_is_non_fatal (state_data->ipmi_ctx,
+      if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
@@ -1056,7 +1056,7 @@ non_volatile_bit_rate_commit (const char *section_name,
                          "ipmi_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (ipmi_config_param_errnum_is_non_fatal (state_data->ipmi_ctx,
+      if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
@@ -1117,7 +1117,7 @@ volatile_bit_rate_checkout (const char *section_name,
                          "ipmi_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (ipmi_config_param_errnum_is_non_fatal (state_data->ipmi_ctx,
+      if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
@@ -1189,7 +1189,7 @@ volatile_bit_rate_commit (const char *section_name,
                          "ipmi_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (ipmi_config_param_errnum_is_non_fatal (state_data->ipmi_ctx,
+      if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
@@ -1250,7 +1250,7 @@ sol_payload_port_checkout (const char *section_name,
                          "ipmi_cmd_get_sol_configuration_parameters_sol_payload_port_number: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (ipmi_config_param_errnum_is_non_fatal (state_data->ipmi_ctx,
+      if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
@@ -1322,7 +1322,7 @@ sol_payload_port_commit (const char *section_name,
                          "ipmi_cmd_set_sol_configuration_parameters_sol_payload_port_number: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (ipmi_config_param_errnum_is_non_fatal (state_data->ipmi_ctx,
+      if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;

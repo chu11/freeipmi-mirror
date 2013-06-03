@@ -113,7 +113,7 @@ static struct argp cmdline_config_file_argp = { cmdline_options,
                                                 cmdline_args_doc,
                                                 cmdline_doc };
 
-static void
+static int
 _ipmi_config_parse_channel_number (char *arg,
                                    uint8_t *channel_number,
                                    int *channel_number_set)
@@ -130,15 +130,269 @@ _ipmi_config_parse_channel_number (char *arg,
       || endptr[0] != '\0')
     {
       fprintf (stderr, "invalid channel number\n");
-      exit (EXIT_FAILURE);
+      return (-1);
     }
   if (!IPMI_CHANNEL_NUMBER_VALID (tmp))
     {
       fprintf (stderr, "invalid channel number\n");
-      exit(1);
+      return (-1);
     }
   (*channel_number) = (uint8_t)tmp;
   (*channel_number_set)++;
+  return (0);
+}
+
+static int
+_ipmi_config_keypair_parse_string (const char *str,
+				   char **section_name,
+				   char **key_name,
+				   char **value)
+{
+  char *str_temp = NULL;
+  char *section_name_tok = NULL;
+  char *key_name_tok = NULL;
+  char *value_tok = NULL;
+  char *ptr;
+  char *buf;
+  int rv = -1;
+
+  assert (str);
+  assert (section_name);
+  assert (key_name);
+  assert (value);
+
+  *section_name = NULL;
+  *key_name = NULL;
+  *value = NULL;
+
+  if (!(str_temp = strdup (str)))
+    {
+      perror ("strdup");
+      goto cleanup;
+    }
+
+  section_name_tok = strtok_r (str_temp, ":", &buf);
+  key_name_tok = strtok_r (NULL, "=", &buf);
+  value_tok = strtok_r (NULL, "\0", &buf);
+
+  if (!(section_name_tok && key_name_tok))
+    {
+      fprintf (stderr,
+               "Improperly input keypair '%s'\n",
+               str);
+      goto cleanup;
+    }
+
+  /* get rid of spaces stuck in the string */
+  if (section_name_tok)
+    section_name_tok = strtok_r (section_name_tok, " \t", &buf);
+  if (key_name_tok)
+    key_name_tok = strtok_r (key_name_tok, " \t", &buf);
+  if (value_tok)
+    value_tok = strtok_r (value_tok, " \t", &buf);
+
+  if (section_name_tok)
+    {
+      if (!(ptr = strdup (section_name_tok)))
+        {
+          perror ("strdup");
+          goto cleanup;
+        }
+      *section_name = ptr;
+    }
+  if (key_name_tok)
+    {
+      if (!(ptr = strdup (key_name_tok)))
+        {
+          perror ("strdup");
+          goto cleanup;
+        }
+      *key_name = ptr;
+    }
+  if (value_tok)
+    {
+      if (!(ptr = strdup (value_tok)))
+        {
+          perror ("strdup");
+          goto cleanup;
+        }
+      *value = ptr;
+    }
+  else
+    {
+      /* values can be empty strings */
+      if (!(ptr = strdup ("")))
+        {
+          perror ("strdup");
+          goto cleanup;
+        }
+      *value = ptr;
+    }
+
+  rv = 0;
+ cleanup:
+  free (str_temp);
+  if (rv < 0)
+    {
+      free (*section_name);
+      *section_name = NULL;
+      free (*key_name);
+      *key_name = NULL;
+      free (*value);
+      *value = NULL;
+    }
+  return (rv);
+}
+
+static int
+_ipmi_config_keypair_append (struct ipmi_config_keypair **keypairs,
+			     struct ipmi_config_keypair *keypair)
+{
+  assert (keypairs);
+  assert (keypair);
+
+  if (*keypairs)
+    {
+      struct ipmi_config_keypair *kp;
+
+      kp = *keypairs;
+      while (kp)
+        {
+          if (!strcasecmp (kp->section_name, keypair->section_name)
+              && !strcasecmp (kp->key_name, keypair->key_name))
+            {
+              fprintf (stderr,
+                       "Duplicate section:key pair '%s:%s' specified\n",
+                       kp->section_name, kp->key_name);
+              return (-1);
+            }
+          kp = kp->next;
+        }
+
+      kp = *keypairs;
+      while (kp->next)
+        kp = kp->next;
+      kp->next = keypair;
+    }
+  else
+    *keypairs = keypair;
+
+  return (0);
+}
+
+static struct ipmi_config_keypair *
+_ipmi_config_keypair_create (const char *section_name,
+			     const char *key_name,
+			     const char *value_input)
+{
+  struct ipmi_config_keypair *keypair = NULL;
+
+  assert (section_name);
+  assert (key_name);
+
+  if (!(keypair = (struct ipmi_config_keypair *)malloc (sizeof (struct ipmi_config_keypair))))
+    {
+      perror ("malloc");
+      goto cleanup;
+    }
+  memset (keypair, '\0', sizeof (struct ipmi_config_keypair));
+
+  if (!(keypair->section_name = strdup (section_name)))
+    {
+      perror ("strdup");
+      goto cleanup;
+    }
+
+  if (!(keypair->key_name = strdup (key_name)))
+    {
+      perror ("strdup");
+      goto cleanup;
+    }
+
+  if (value_input)
+    {
+      if (!(keypair->value_input = strdup (value_input)))
+        {
+          perror ("strdup");
+          goto cleanup;
+        }
+    }
+
+  return (keypair);
+
+ cleanup:
+  if (keypair)
+    {
+      free (keypair->section_name);
+      free (keypair->key_name);
+      free (keypair->value_input);
+      free (keypair);
+    }
+  return (NULL);
+}
+
+static struct ipmi_config_section_str *
+_ipmi_config_section_str_create (const char *section_name)
+{
+  struct ipmi_config_section_str *sstr = NULL;
+
+  if (!(sstr = (struct ipmi_config_section_str *)malloc (sizeof (struct ipmi_config_section_str))))
+    {
+      perror ("malloc");
+      goto cleanup;
+    }
+
+  if (!(sstr->section_name = strdup (section_name)))
+    {
+      perror ("strdup");
+      goto cleanup;
+    }
+  sstr->next = NULL;
+
+  return (sstr);
+
+ cleanup:
+  if (sstr)
+    {
+      free (sstr->section_name);
+      free (sstr);
+    }
+  return (NULL);
+}
+
+static int
+_ipmi_config_section_str_append (struct ipmi_config_section_str **section_strs,
+				 struct ipmi_config_section_str *section_str)
+{
+  assert (section_strs);
+  assert (section_str);
+
+  if (*section_strs)
+    {
+      struct ipmi_config_section_str *sstr;
+
+      sstr = *section_strs;
+      while (sstr)
+        {
+          if (!strcasecmp (sstr->section_name, section_str->section_name))
+            {
+              fprintf (stderr,
+                       "Duplicate section '%s' specified\n",
+                       sstr->section_name);
+              return (-1);
+            }
+          sstr = sstr->next;
+        }
+
+      sstr = *section_strs;
+      while (sstr->next)
+        sstr = sstr->next;
+      sstr->next = section_str;
+    }
+  else
+    *section_strs = section_str;
+
+  return (0);
 }
 
 /* Parse a single option. */
@@ -186,45 +440,33 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
         }
       break;
     case IPMI_CONFIG_ARGP_KEYPAIR_KEY:
-      if (ipmi_config_keypair_parse_string (arg,
-                                            &section_name,
-                                            &key_name,
-                                            &value) < 0)
-        {
-          /* error printed in function call */
-          exit (EXIT_FAILURE);
-        }
-      if (!(kp = ipmi_config_keypair_create (section_name,
-                                             key_name,
-                                             value)))
-        {
-          fprintf (stderr,
-                   "ipmi_config_keypair_create error\n");
-          exit (EXIT_FAILURE);
-        }
-      if (ipmi_config_keypair_append (&(cmd_args->keypairs),
-                                      kp) < 0)
-        {
-          /* error printed in function call */
-          exit (EXIT_FAILURE);
-        }
+      if (_ipmi_config_keypair_parse_string (arg,
+					     &section_name,
+					     &key_name,
+					     &value) < 0)
+	exit (EXIT_FAILURE);
+
+      if (!(kp = _ipmi_config_keypair_create (section_name,
+					      key_name,
+					      value)))
+	exit (EXIT_FAILURE);
+
+      if (_ipmi_config_keypair_append (&(cmd_args->keypairs),
+				       kp) < 0)
+	exit (EXIT_FAILURE);
+
       free (section_name);
       free (key_name);
       free (value);
       break;
     case IPMI_CONFIG_ARGP_SECTIONS_KEY:
-      if (!(sstr = ipmi_config_section_str_create (arg)))
-        {
-          fprintf (stderr,
-                   "ipmi_config_section_str_create error\n");
-          exit (EXIT_FAILURE);
-        }
-      if (ipmi_config_section_str_append (&(cmd_args->section_strs),
-                                          sstr) < 0)
-        {
-          /* error printed in function call */
-          exit (EXIT_FAILURE);
-        }
+      if (!(sstr = _ipmi_config_section_str_create (arg)))
+	exit (EXIT_FAILURE);
+
+      if (_ipmi_config_section_str_append (&(cmd_args->section_strs),
+					   sstr) < 0)
+	exit (EXIT_FAILURE);
+
       sstr = NULL;
       break;
     case IPMI_CONFIG_ARGP_LIST_SECTIONS_KEY:
@@ -237,19 +479,22 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       cmd_args->verbose_count++;
       break;
     case IPMI_CONFIG_ARGP_LAN_CHANNEL_NUMBER_KEY:
-      _ipmi_config_parse_channel_number (arg,
-                                         &(cmd_args->lan_channel_number),
-                                         &(cmd_args->lan_channel_number_set));
+      if (_ipmi_config_parse_channel_number (arg,
+					     &(cmd_args->lan_channel_number),
+					     &(cmd_args->lan_channel_number_set)) < 0)
+	exit (EXIT_FAILURE);
       break;
     case IPMI_CONFIG_ARGP_SERIAL_CHANNEL_NUMBER_KEY:
-      _ipmi_config_parse_channel_number (arg,
-                                         &(cmd_args->serial_channel_number),
-                                         &(cmd_args->serial_channel_number_set));
+      if (_ipmi_config_parse_channel_number (arg,
+					     &(cmd_args->serial_channel_number),
+					     &(cmd_args->serial_channel_number_set)) < 0)
+	exit (EXIT_FAILURE);
       break;
     case IPMI_CONFIG_ARGP_SOL_CHANNEL_NUMBER_KEY:
-      _ipmi_config_parse_channel_number (arg,
-                                         &(cmd_args->sol_channel_number),
-                                         &(cmd_args->sol_channel_number_set));
+      if (_ipmi_config_parse_channel_number (arg,
+					     &(cmd_args->sol_channel_number),
+					     &(cmd_args->sol_channel_number_set)) < 0)
+	exit (EXIT_FAILURE);
       break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */

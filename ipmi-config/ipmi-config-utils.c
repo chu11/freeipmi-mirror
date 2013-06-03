@@ -34,282 +34,6 @@
 #include "pstdout.h"
 
 int
-ipmi_config_keypair_parse_string (const char *str,
-                                  char **section_name,
-                                  char **key_name,
-                                  char **value)
-{
-  char *str_temp = NULL;
-  char *section_name_tok = NULL;
-  char *key_name_tok = NULL;
-  char *value_tok = NULL;
-  char *ptr;
-  char *buf;
-  int rv = -1;
-
-  assert (str);
-  assert (section_name);
-  assert (key_name);
-  assert (value);
-
-  *section_name = NULL;
-  *key_name = NULL;
-  *value = NULL;
-
-  if (!(str_temp = strdup (str)))
-    {
-      perror ("strdup");
-      goto cleanup;
-    }
-
-  section_name_tok = strtok_r (str_temp, ":", &buf);
-  key_name_tok = strtok_r (NULL, "=", &buf);
-  value_tok = strtok_r (NULL, "\0", &buf);
-
-  if (!(section_name_tok && key_name_tok))
-    {
-      fprintf (stderr,
-               "Improperly input keypair '%s'\n",
-               str);
-      goto cleanup;
-    }
-
-  /* get rid of spaces stuck in the string */
-  if (section_name_tok)
-    section_name_tok = strtok_r (section_name_tok, " \t", &buf);
-  if (key_name_tok)
-    key_name_tok = strtok_r (key_name_tok, " \t", &buf);
-  if (value_tok)
-    value_tok = strtok_r (value_tok, " \t", &buf);
-
-  if (section_name_tok)
-    {
-      if (!(ptr = strdup (section_name_tok)))
-        {
-          perror ("strdup");
-          goto cleanup;
-        }
-      *section_name = ptr;
-    }
-  if (key_name_tok)
-    {
-      if (!(ptr = strdup (key_name_tok)))
-        {
-          perror ("strdup");
-          goto cleanup;
-        }
-      *key_name = ptr;
-    }
-  if (value_tok)
-    {
-      if (!(ptr = strdup (value_tok)))
-        {
-          perror ("strdup");
-          goto cleanup;
-        }
-      *value = ptr;
-    }
-  else
-    {
-      /* values can be empty strings */
-      if (!(ptr = strdup ("")))
-        {
-          perror ("strdup");
-          goto cleanup;
-        }
-      *value = ptr;
-    }
-
-  rv = 0;
- cleanup:
-  free (str_temp);
-  if (rv < 0)
-    {
-      free (*section_name);
-      *section_name = NULL;
-      free (*key_name);
-      *key_name = NULL;
-      free (*value);
-      *value = NULL;
-    }
-  return (rv);
-}
-
-int
-ipmi_config_keypair_append (struct ipmi_config_keypair **keypairs,
-                            struct ipmi_config_keypair *keypair)
-{
-  assert (keypairs);
-  assert (keypair);
-
-  if (*keypairs)
-    {
-      struct ipmi_config_keypair *kp;
-
-      kp = *keypairs;
-      while (kp)
-        {
-          if (!strcasecmp (kp->section_name, keypair->section_name)
-              && !strcasecmp (kp->key_name, keypair->key_name))
-            {
-              fprintf (stderr,
-                       "Duplicate section:key pair '%s:%s' specified\n",
-                       kp->section_name, kp->key_name);
-              return (-1);
-            }
-          kp = kp->next;
-        }
-
-      kp = *keypairs;
-      while (kp->next)
-        kp = kp->next;
-      kp->next = keypair;
-    }
-  else
-    *keypairs = keypair;
-
-  return (0);
-}
-
-void
-ipmi_config_keypairs_destroy (struct ipmi_config_keypair *keypairs)
-{
-  while (keypairs)
-    {
-      struct ipmi_config_keypair *kp_next = keypairs->next;
-      ipmi_config_keypair_destroy (keypairs);
-      keypairs = kp_next;
-    }
-}
-
-struct ipmi_config_keypair *
-ipmi_config_keypair_create (const char *section_name,
-                            const char *key_name,
-                            const char *value_input)
-{
-  struct ipmi_config_keypair *keypair = NULL;
-
-  assert (section_name);
-  assert (key_name);
-
-  if (!(keypair = (struct ipmi_config_keypair *)malloc (sizeof (struct ipmi_config_keypair))))
-    {
-      perror ("malloc");
-      goto cleanup;
-    }
-  memset (keypair, '\0', sizeof (struct ipmi_config_keypair));
-
-  if (!(keypair->section_name = strdup (section_name)))
-    {
-      perror ("strdup");
-      goto cleanup;
-    }
-
-  if (!(keypair->key_name = strdup (key_name)))
-    {
-      perror ("strdup");
-      goto cleanup;
-    }
-
-  if (value_input)
-    {
-      if (!(keypair->value_input = strdup (value_input)))
-        {
-          perror ("strdup");
-          goto cleanup;
-        }
-    }
-
-  return (keypair);
-
- cleanup:
-  ipmi_config_keypair_destroy (keypair);
-  return (NULL);
-}
-
-void
-ipmi_config_keypair_destroy (struct ipmi_config_keypair *keypair)
-{
-  if (keypair)
-    {
-      free (keypair->section_name);
-      free (keypair->key_name);
-      free (keypair->value_input);
-      free (keypair);
-    }
-}
-
-struct ipmi_config_section_str *
-ipmi_config_section_str_create (const char *section_name)
-{
-  struct ipmi_config_section_str *sstr = NULL;
-
-  if (!(sstr = (struct ipmi_config_section_str *)malloc (sizeof (struct ipmi_config_section_str))))
-    {
-      perror ("malloc");
-      goto cleanup;
-    }
-
-  if (!(sstr->section_name = strdup (section_name)))
-    {
-      perror ("strdup");
-      goto cleanup;
-    }
-  sstr->next = NULL;
-
-  return (sstr);
-
- cleanup:
-  ipmi_config_section_str_destroy (sstr);
-  return (NULL);
-}
-
-int
-ipmi_config_section_str_append (struct ipmi_config_section_str **section_strs,
-                                struct ipmi_config_section_str *section_str)
-{
-  assert (section_strs);
-  assert (section_str);
-
-  if (*section_strs)
-    {
-      struct ipmi_config_section_str *sstr;
-
-      sstr = *section_strs;
-      while (sstr)
-        {
-          if (!strcasecmp (sstr->section_name, section_str->section_name))
-            {
-              fprintf (stderr,
-                       "Duplicate section '%s' specified\n",
-                       sstr->section_name);
-              return (-1);
-            }
-          sstr = sstr->next;
-        }
-
-      sstr = *section_strs;
-      while (sstr->next)
-        sstr = sstr->next;
-      sstr->next = section_str;
-    }
-  else
-    *section_strs = section_str;
-
-  return (0);
-}
-
-void
-ipmi_config_section_str_destroy (struct ipmi_config_section_str *section_str)
-{
-  if (section_str)
-    {
-      free (section_str->section_name);
-      free (section_str);
-    }
-}
-
-int
 ipv4_address_string2int (ipmi_config_state_data_t *state_data,
                          const char *src,
                          uint32_t *dest)
@@ -460,18 +184,18 @@ ipmi_config_find_keyvalue (struct ipmi_config_section *section,
 }
 
 int
-ipmi_errnum_is_non_fatal (ipmi_ctx_t ipmi_ctx,
+ipmi_errnum_is_non_fatal (ipmi_config_state_data_t *state_data,
                           fiid_obj_t obj_cmd_rs,
                           ipmi_config_err_t *non_fatal_err)
 {
-  assert (ipmi_ctx);
+  assert (state_data);
   assert (obj_cmd_rs);
   assert (fiid_obj_valid (obj_cmd_rs));
   assert (non_fatal_err);
 
-  if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR (ipmi_ctx))
+  if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
     {
-      if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
           && (ipmi_check_completion_code (obj_cmd_rs,
                                           IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1
               || ipmi_check_completion_code (obj_cmd_rs,
@@ -486,11 +210,11 @@ ipmi_errnum_is_non_fatal (ipmi_ctx_t ipmi_ctx,
 }
 
 int
-ipmi_config_param_errnum_is_non_fatal (ipmi_ctx_t ipmi_ctx,
+ipmi_config_param_errnum_is_non_fatal (ipmi_config_state_data_t *state_data,
                                        fiid_obj_t obj_cmd_rs,
                                        ipmi_config_err_t *non_fatal_err)
 {
-  assert (ipmi_ctx);
+  assert (state_data);
   assert (obj_cmd_rs);
   assert (fiid_obj_valid (obj_cmd_rs));
   assert (non_fatal_err);
@@ -505,17 +229,17 @@ ipmi_config_param_errnum_is_non_fatal (ipmi_ctx_t ipmi_ctx,
   assert (IPMI_COMP_CODE_SET_LAN_CONFIGURATION_PARAMETERS_WRITE_READ_ONLY_PARAMETER == IPMI_COMP_CODE_SET_SOL_CONFIGURATION_PARAMETERS_WRITE_READ_ONLY_PARAMETER);
   assert (IPMI_COMP_CODE_SET_LAN_CONFIGURATION_PARAMETERS_WRITE_READ_ONLY_PARAMETER == IPMI_COMP_CODE_SET_BOOT_OPTIONS_WRITE_READ_ONLY_PARAMETER);
   
-  if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR (ipmi_ctx))
+  if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
     {
-      if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
           && ipmi_check_completion_code (obj_cmd_rs,
                                          IPMI_COMP_CODE_SET_LAN_CONFIGURATION_PARAMETERS_WRITE_READ_ONLY_PARAMETER) == 1)
         (*non_fatal_err) = IPMI_CONFIG_ERR_NON_FATAL_ERROR_READ_ONLY;
-      else if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+      else if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
                && ipmi_check_completion_code (obj_cmd_rs,
                                               IPMI_COMP_CODE_SET_LAN_CONFIGURATION_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1)
         (*non_fatal_err) = IPMI_CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED;
-      else if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+      else if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
                && (ipmi_check_completion_code (obj_cmd_rs,
                                                IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1
                    || ipmi_check_completion_code (obj_cmd_rs,
@@ -687,7 +411,7 @@ _get_sol_channel_number_for_channel (ipmi_config_state_data_t *state_data,
                          "ipmi_cmd_get_sol_configuration_parameters_sol_payload_channel: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
       
-      if (ipmi_config_param_errnum_is_non_fatal (state_data->ipmi_ctx,
+      if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
