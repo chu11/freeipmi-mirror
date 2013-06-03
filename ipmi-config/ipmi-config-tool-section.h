@@ -26,90 +26,90 @@
 /* no ipmi_config_sections_create, responsibility of config tool to create list */
 
 int ipmi_config_section_append (struct ipmi_config_section **sections,
-				struct ipmi_config_section *section);
+                                struct ipmi_config_section *section);
 
 void ipmi_config_sections_destroy (struct ipmi_config_section *sections);
 
 struct ipmi_config_section *ipmi_config_section_create (pstdout_state_t pstate,
-							const char *section_name,
-							const char *section_comment_section_name,
-							const char *section_comment,
-							unsigned int flags,
-							Section_Pre_Commit section_pre_commit,
-							Section_Post_Commit section_post_commit);
+                                                        const char *section_name,
+                                                        const char *section_comment_section_name,
+                                                        const char *section_comment,
+                                                        unsigned int flags,
+                                                        Section_Pre_Commit section_pre_commit,
+                                                        Section_Post_Commit section_post_commit);
 
 /* -1 for channel index indicates do nothing, do same as ipmi_config_section_create */
 struct ipmi_config_section *ipmi_config_section_multi_channel_create (pstdout_state_t pstate,
-								      const char *section_name_base_str,
-								      const char *section_comment,
-								      Section_Pre_Commit section_pre_commit,
-								      Section_Post_Commit section_post_commit,
-								      unsigned int config_flags,
-								      int channel_index,
-								      uint8_t *channel_numbers,
-								      unsigned int channel_numbers_count);
+                                                                      const char *section_name_base_str,
+                                                                      const char *section_comment,
+                                                                      Section_Pre_Commit section_pre_commit,
+                                                                      Section_Post_Commit section_post_commit,
+                                                                      unsigned int config_flags,
+                                                                      int channel_index,
+                                                                      uint8_t *channel_numbers,
+                                                                      unsigned int channel_numbers_count);
 
 void ipmi_config_section_destroy (struct ipmi_config_section *section);
 
 int ipmi_config_section_add_key (pstdout_state_t pstate,
-				 struct ipmi_config_section *section,
-				 const char *key_name,
-				 const char *description,
-				 unsigned int flags,
-				 Key_Checkout checkout,
-				 Key_Commit commit,
-				 Key_Validate validate);
+                                 struct ipmi_config_section *section,
+                                 const char *key_name,
+                                 const char *description,
+                                 unsigned int flags,
+                                 Key_Checkout checkout,
+                                 Key_Commit commit,
+                                 Key_Validate validate);
 
 /* -1 for channel index indicates do nothing, do same as ipmi_config_section_add_key */
 int ipmi_config_section_multi_channel_add_key (pstdout_state_t pstate,
-					       struct ipmi_config_section *section,
-					       const char *key_name_base_str,
-					       const char *description,
-					       unsigned int flags,
-					       Key_Checkout checkout,
-					       Key_Commit commit,
-					       Key_Validate validate,
-					       int channel_index,
-					       uint8_t *channel_numbers,
-					       unsigned int channel_numbers_count);
+                                               struct ipmi_config_section *section,
+                                               const char *key_name_base_str,
+                                               const char *description,
+                                               unsigned int flags,
+                                               Key_Checkout checkout,
+                                               Key_Commit commit,
+                                               Key_Validate validate,
+                                               int channel_index,
+                                               uint8_t *channel_numbers,
+                                               unsigned int channel_numbers_count);
 
 int ipmi_config_section_add_keyvalue (pstdout_state_t pstate,
-				      struct ipmi_config_section *section,
-				      struct ipmi_config_key *key,
-				      const char *value_input,
-				      const char *value_output);
+                                      struct ipmi_config_section *section,
+                                      struct ipmi_config_key *key,
+                                      const char *value_input,
+                                      const char *value_output);
 
 int ipmi_config_section_update_keyvalue_input (pstdout_state_t pstate,
-					       struct ipmi_config_keyvalue *keyvalue,
-					       const char *value_input);
+                                               struct ipmi_config_keyvalue *keyvalue,
+                                               const char *value_input);
 
 int ipmi_config_section_update_keyvalue_output (pstdout_state_t pstate,
-						struct ipmi_config_keyvalue *keyvalue,
-						const char *value_output);
+                                                struct ipmi_config_keyvalue *keyvalue,
+                                                const char *value_output);
 
 int ipmi_config_section_update_keyvalue_output_unsigned_int (pstdout_state_t pstate,
-							     struct ipmi_config_keyvalue *keyvalue,
-							     unsigned int value_output);
+                                                             struct ipmi_config_keyvalue *keyvalue,
+                                                             unsigned int value_output);
 
 int ipmi_config_section_update_keyvalue_output_hex (pstdout_state_t pstate,
-						    struct ipmi_config_keyvalue *keyvalue,
-						    unsigned int value_output);
+                                                    struct ipmi_config_keyvalue *keyvalue,
+                                                    unsigned int value_output);
 
 int ipmi_config_section_update_keyvalue_output_double (pstdout_state_t pstate,
-						       struct ipmi_config_keyvalue *keyvalue,
-						       double value_output);
+                                                       struct ipmi_config_keyvalue *keyvalue,
+                                                       double value_output);
 
 /* returns -1 on error, number of non-valid values otherwise */
 int ipmi_config_sections_validate_keyvalue_inputs (pstdout_state_t pstate,
-						   struct ipmi_config_section *sections,
-						   void *arg);
+                                                   struct ipmi_config_section *sections,
+                                                   void *arg);
 
 /* returns -1 on error, 0 on success */
 int ipmi_config_sections_insert_keyvalues (pstdout_state_t pstate,
-					   struct ipmi_config_section *sections,
-					   struct ipmi_config_keypair *keypairs);
+                                           struct ipmi_config_section *sections,
+                                           struct ipmi_config_keypair *keypairs);
 
 ipmi_config_err_t ipmi_config_output_sections_list (pstdout_state_t pstate,
-						    struct ipmi_config_section *sections);
+                                                    struct ipmi_config_section *sections);
 
 #endif /* IPMI_CONFIG_TOOL_SECTION_H */

@@ -72,8 +72,8 @@ power_restore_policy_checkout (const char *section_name,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_non_fatal_error (state_data->ipmi_ctx,
-					  obj_cmd_rs,
-					  &ret))
+                                          obj_cmd_rs,
+                                          &ret))
         rv = ret;
 
       goto cleanup;
@@ -92,8 +92,8 @@ power_restore_policy_checkout (const char *section_name,
   power_restore_policy = val;
 
   if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
-                                             kv,
-                                             power_restore_policy_string (power_restore_policy)) < 0)
+                                                  kv,
+                                                  power_restore_policy_string (power_restore_policy)) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
@@ -139,8 +139,8 @@ power_restore_policy_commit (const char *section_name,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_non_fatal_error (state_data->ipmi_ctx,
-					  obj_cmd_rs,
-					  &ret))
+                                          obj_cmd_rs,
+                                          &ret))
         rv = ret;
 
       goto cleanup;
@@ -170,22 +170,22 @@ ipmi_config_misc_section_get (ipmi_config_state_data_t *state_data)
   assert (state_data);
 
   if (!(section = ipmi_config_section_create (state_data->pstate,
-                                         "Misc",
-                                         "Misc",
-                                         section_comment,
-                                         IPMI_CONFIG_DO_NOT_CHECKOUT | IPMI_CONFIG_DO_NOT_LIST,
-                                         NULL,
-                                         NULL)))
+                                              "Misc",
+                                              "Misc",
+                                              section_comment,
+                                              IPMI_CONFIG_DO_NOT_CHECKOUT | IPMI_CONFIG_DO_NOT_LIST,
+                                              NULL,
+                                              NULL)))
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Power_Restore_Policy",
-                              "Possible values: Off_State_AC_Apply/Restore_State_AC_Apply/On_State_AC_Apply",
-                              IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
-                              power_restore_policy_checkout,
-                              power_restore_policy_commit,
-                              power_restore_policy_number_validate) < 0)
+                                   section,
+                                   "Power_Restore_Policy",
+                                   "Possible values: Off_State_AC_Apply/Restore_State_AC_Apply/On_State_AC_Apply",
+                                   IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                                   power_restore_policy_checkout,
+                                   power_restore_policy_commit,
+                                   power_restore_policy_number_validate) < 0)
     goto cleanup;
 
   return (section);

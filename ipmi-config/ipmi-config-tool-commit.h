@@ -23,13 +23,13 @@
 #include "pstdout.h"
 
 ipmi_config_err_t ipmi_config_commit_section (pstdout_state_t pstate,
-					      struct ipmi_config_section *section,
-					      struct ipmi_config_arguments *cmd_args,
-					      void *arg);
+                                              struct ipmi_config_section *section,
+                                              struct ipmi_config_arguments *cmd_args,
+                                              void *arg);
 
 ipmi_config_err_t ipmi_config_commit (pstdout_state_t pstate,
-				      struct ipmi_config_section *sections,
-				      struct ipmi_config_arguments *cmd_args,
-				      void *arg);
+                                      struct ipmi_config_section *sections,
+                                      struct ipmi_config_arguments *cmd_args,
+                                      void *arg);
 
 #endif /* IPMI_CONFIG_TOOL_COMMIT_H */

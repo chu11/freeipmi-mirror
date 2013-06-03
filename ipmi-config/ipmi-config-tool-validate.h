@@ -24,57 +24,57 @@
 #include "ipmi-config.h"
 
 ipmi_config_validate_t ipmi_config_yes_no_validate (const char *section_name,
-						    const char *key_name,
-						    const char *value,
-						    void *arg);
+                                                    const char *key_name,
+                                                    const char *value,
+                                                    void *arg);
 
 ipmi_config_validate_t ipmi_config_check_number_range (const char *value,
-						       int min,
-						       int max);
+                                                       int min,
+                                                       int max);
 
 ipmi_config_validate_t ipmi_config_number_range_three_bits (const char *section_name,
-							    const char *key_name,
-							    const char *value,
-							    void *arg);
+                                                            const char *key_name,
+                                                            const char *value,
+                                                            void *arg);
 
 ipmi_config_validate_t ipmi_config_number_range_four_bits (const char *section_name,
-							   const char *key_name,
-							   const char *value,
-							   void *arg);
+                                                           const char *key_name,
+                                                           const char *value,
+                                                           void *arg);
 
 ipmi_config_validate_t ipmi_config_number_range_seven_bits (const char *section_name,
-							    const char *key_name,
-							    const char *value,
-							    void *arg);
+                                                            const char *key_name,
+                                                            const char *value,
+                                                            void *arg);
 
 ipmi_config_validate_t ipmi_config_number_range_twelve_bits (const char *section_name,
-							     const char *key_name,
-							     const char *value,
-							     void *arg);
+                                                             const char *key_name,
+                                                             const char *value,
+                                                             void *arg);
 
 ipmi_config_validate_t ipmi_config_number_range_one_byte (const char *section_name,
-							  const char *key_name,
-							  const char *value,
-							  void *arg);
+                                                          const char *key_name,
+                                                          const char *value,
+                                                          void *arg);
 
 ipmi_config_validate_t ipmi_config_number_range_one_byte_non_zero (const char *section_name,
-								   const char *key_name,
-								   const char *value,
-								   void *arg);
+                                                                   const char *key_name,
+                                                                   const char *value,
+                                                                   void *arg);
 
 ipmi_config_validate_t ipmi_config_number_range_two_bytes (const char *section_name,
-							   const char *key_name,
-							   const char *value,
-							   void *arg);
+                                                           const char *key_name,
+                                                           const char *value,
+                                                           void *arg);
 
 ipmi_config_validate_t ipmi_config_ip_address_validate (const char *section_name,
-							const char *key_name,
-							const char *value,
-							void *arg);
+                                                        const char *key_name,
+                                                        const char *value,
+                                                        void *arg);
 
 ipmi_config_validate_t ipmi_config_mac_address_validate (const char *section_name,
-							 const char *key_name,
-							 const char *value,
-							 void *arg);
+                                                         const char *key_name,
+                                                         const char *value,
+                                                         void *arg);
 
 #endif /* IPMI_CONFIG_TOOL_VALIDATE_H */

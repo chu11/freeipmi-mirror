@@ -35,9 +35,9 @@
 
 ipmi_config_err_t
 ipmi_config_parse (pstdout_state_t pstate,
-		   struct ipmi_config_section *sections,
-		   struct ipmi_config_arguments *cmd_args,
-		   FILE *fp)
+                   struct ipmi_config_section *sections,
+                   struct ipmi_config_arguments *cmd_args,
+                   FILE *fp)
 {
   char buf[IPMI_CONFIG_PARSE_BUFLEN];
   int line_num = 0;
@@ -86,7 +86,7 @@ ipmi_config_parse (pstdout_state_t pstate,
             }
 
           if (!(section = ipmi_config_find_section (sections,
-						    tok)))
+                                                    tok)))
             {
               pstdout_fprintf (pstate,
                                stderr,
@@ -137,7 +137,7 @@ ipmi_config_parse (pstdout_state_t pstate,
         }
 
       if (!(key = ipmi_config_find_key (section,
-					str)))
+                                        str)))
         {
           pstdout_fprintf (pstate,
                            stderr,
@@ -160,7 +160,7 @@ ipmi_config_parse (pstdout_state_t pstate,
                          tok);
 
       if (ipmi_config_find_keyvalue (section,
-                                key->key_name))
+                                     key->key_name))
         {
           pstdout_fprintf (pstate,
                            stderr,
@@ -171,10 +171,10 @@ ipmi_config_parse (pstdout_state_t pstate,
         }
 
       if (ipmi_config_section_add_keyvalue (pstate,
-					    section,
-					    key,
-					    tok,
-					    NULL) < 0)
+                                            section,
+                                            key,
+                                            tok,
+                                            NULL) < 0)
         goto cleanup;
     }
 

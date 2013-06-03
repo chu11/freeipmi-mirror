@@ -49,7 +49,7 @@ struct bad_password_threshold
 
 static ipmi_config_err_t
 _get_bad_password_threshold (ipmi_config_state_data_t *state_data,
-			     const char *section_name,
+                             const char *section_name,
                              struct bad_password_threshold *bpt)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -91,8 +91,8 @@ _get_bad_password_threshold (ipmi_config_state_data_t *state_data,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
       
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
       
       goto cleanup;
@@ -146,7 +146,7 @@ _get_bad_password_threshold (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 _set_bad_password_threshold (ipmi_config_state_data_t *state_data,
-			     const char *section_name,
+                             const char *section_name,
                              struct bad_password_threshold *bpt)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -188,8 +188,8 @@ _set_bad_password_threshold (ipmi_config_state_data_t *state_data,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -204,8 +204,8 @@ _set_bad_password_threshold (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 bad_password_threshold_checkout (const char *section_name,
-				 struct ipmi_config_keyvalue *kv,
-				 void *arg)
+                                 struct ipmi_config_keyvalue *kv,
+                                 void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct bad_password_threshold bpt;
@@ -221,8 +221,8 @@ bad_password_threshold_checkout (const char *section_name,
     return (ret);
   
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
-                                                          kv,
-                                                          bpt.bad_password_threshold_number) < 0)
+                                                               kv,
+                                                               bpt.bad_password_threshold_number) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
   
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -230,8 +230,8 @@ bad_password_threshold_checkout (const char *section_name,
 
 static ipmi_config_err_t
 bad_password_threshold_commit (const char *section_name,
-                                                const struct ipmi_config_keyvalue *kv,
-                                                void *arg)
+                               const struct ipmi_config_keyvalue *kv,
+                               void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct bad_password_threshold bpt;
@@ -269,8 +269,8 @@ attempt_count_reset_interval_checkout (const char *section_name,
     return (ret);
   
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
-                                                          kv,
-                                                          bpt.attempt_count_reset_interval) < 0)
+                                                               kv,
+                                                               bpt.attempt_count_reset_interval) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
   
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -317,8 +317,8 @@ user_lockout_interval_checkout (const char *section_name,
     return (ret);
   
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
-                                                          kv,
-                                                          bpt.user_lockout_interval) < 0)
+                                                               kv,
+                                                               bpt.user_lockout_interval) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
   
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -365,8 +365,8 @@ enable_event_message_when_user_disabled_checkout (const char *section_name,
     return (ret);
   
   if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
-                                             kv,
-                                             bpt.user_disabled_event_message ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  bpt.user_disabled_event_message ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
   
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -396,8 +396,8 @@ enable_event_message_when_user_disabled_commit (const char *section_name,
 
 struct ipmi_config_section *
 ipmi_config_lan_conf_user_security_section_get (ipmi_config_state_data_t *state_data,
-					       unsigned int config_flags,
-					       int channel_index)
+                                                unsigned int config_flags,
+                                                int channel_index)
 {
   struct ipmi_config_section *section = NULL;
   char *section_comment =
@@ -418,56 +418,56 @@ ipmi_config_lan_conf_user_security_section_get (ipmi_config_state_data_t *state_
   assert (state_data);
 
   if (!(section = ipmi_config_section_multi_channel_create (state_data->pstate,
-						       section_name_base_str,
-						       section_comment,
-						       NULL,
-						       NULL,
-						       config_flags,
-						       channel_index,
-						       state_data->lan_channel_numbers,
-						       state_data->lan_channel_numbers_count)))
+                                                            section_name_base_str,
+                                                            section_comment,
+                                                            NULL,
+                                                            NULL,
+                                                            config_flags,
+                                                            channel_index,
+                                                            state_data->lan_channel_numbers,
+                                                            state_data->lan_channel_numbers_count)))
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Bad_Password_Threshold",
-                              "Possible values: 0-255, 0 indicates no limit",
-                              0,
-                              bad_password_threshold_checkout,
-                              bad_password_threshold_commit,
-                              ipmi_config_number_range_one_byte) < 0)
+                                   section,
+                                   "Bad_Password_Threshold",
+                                   "Possible values: 0-255, 0 indicates no limit",
+                                   0,
+                                   bad_password_threshold_checkout,
+                                   bad_password_threshold_commit,
+                                   ipmi_config_number_range_one_byte) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Attempt_Count_Reset_Interval",
-                              "Possible values: 0-65535, in 10 second increments (e.g. 2 = 20 sec)\n"
-                              "                 0 indicates no interval (i.e. don't reset counter)",
-                              0,
-                              attempt_count_reset_interval_checkout,
-                              attempt_count_reset_interval_commit,
-                              ipmi_config_number_range_two_bytes) < 0)
+                                   section,
+                                   "Attempt_Count_Reset_Interval",
+                                   "Possible values: 0-65535, in 10 second increments (e.g. 2 = 20 sec)\n"
+                                   "                 0 indicates no interval (i.e. don't reset counter)",
+                                   0,
+                                   attempt_count_reset_interval_checkout,
+                                   attempt_count_reset_interval_commit,
+                                   ipmi_config_number_range_two_bytes) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "User_Lockout_Interval",
-                              "Possible values: 0-65535, in 10 second increments (e.g. 2 = 20 sec)\n"
-                              "                 0 indicates no interval (i.e. don't re-enable user)",
-                              0,
-                              user_lockout_interval_checkout,
-                              user_lockout_interval_commit,
-				   ipmi_config_number_range_two_bytes) < 0)
+                                   section,
+                                   "User_Lockout_Interval",
+                                   "Possible values: 0-65535, in 10 second increments (e.g. 2 = 20 sec)\n"
+                                   "                 0 indicates no interval (i.e. don't re-enable user)",
+                                   0,
+                                   user_lockout_interval_checkout,
+                                   user_lockout_interval_commit,
+                                   ipmi_config_number_range_two_bytes) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Enable_Event_Message_When_User_Disabled",
-                              "Possible values: Yes/No",
-                              0,
-                              enable_event_message_when_user_disabled_checkout,
-                              enable_event_message_when_user_disabled_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "Enable_Event_Message_When_User_Disabled",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   enable_event_message_when_user_disabled_checkout,
+                                   enable_event_message_when_user_disabled_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   return (section);

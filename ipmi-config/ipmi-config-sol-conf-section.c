@@ -104,8 +104,8 @@ enable_sol_checkout (const char *section_name,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -121,8 +121,8 @@ enable_sol_checkout (const char *section_name,
     }
 
   if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
-                                             kv,
-                                             val ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  val ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
@@ -175,8 +175,8 @@ enable_sol_commit (const char *section_name,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -190,7 +190,7 @@ enable_sol_commit (const char *section_name,
 
 static ipmi_config_err_t
 _get_sol_sol_authentication (ipmi_config_state_data_t *state_data,
-			     const char *section_name,
+                             const char *section_name,
                              struct sol_authentication *sa)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -232,8 +232,8 @@ _get_sol_sol_authentication (ipmi_config_state_data_t *state_data,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -277,7 +277,7 @@ _get_sol_sol_authentication (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 _set_sol_sol_authentication (ipmi_config_state_data_t *state_data,
-			     const char *section_name,
+                             const char *section_name,
                              struct sol_authentication *sa)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -318,8 +318,8 @@ _set_sol_sol_authentication (ipmi_config_state_data_t *state_data,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -350,8 +350,8 @@ sol_privilege_level_checkout (const char *section_name,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
-                                             kv,
-                                             privilege_level_string (sa.sol_privilege_level)) < 0)
+                                                  kv,
+                                                  privilege_level_string (sa.sol_privilege_level)) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -399,8 +399,8 @@ force_sol_payload_authentication_checkout (const char *section_name,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
-                                             kv,
-                                             sa.force_sol_payload_authentication ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  sa.force_sol_payload_authentication ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -448,8 +448,8 @@ force_sol_payload_encryption_checkout (const char *section_name,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
-                                             kv,
-                                             sa.force_sol_payload_encryption ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  sa.force_sol_payload_encryption ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -480,7 +480,7 @@ force_sol_payload_encryption_commit (const char *section_name,
 
 static ipmi_config_err_t
 _get_sol_character_accumulate_interval_and_send_threshold (ipmi_config_state_data_t *state_data,
-							   const char *section_name,
+                                                           const char *section_name,
                                                            struct interval_and_threshold *it)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -522,8 +522,8 @@ _get_sol_character_accumulate_interval_and_send_threshold (ipmi_config_state_dat
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -557,7 +557,7 @@ _get_sol_character_accumulate_interval_and_send_threshold (ipmi_config_state_dat
 
 static ipmi_config_err_t
 _set_sol_character_accumulate_interval_and_send_threshold (ipmi_config_state_data_t *state_data,
-							   const char *section_name,
+                                                           const char *section_name,
                                                            struct interval_and_threshold *it)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -597,8 +597,8 @@ _set_sol_character_accumulate_interval_and_send_threshold (ipmi_config_state_dat
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -629,8 +629,8 @@ character_accumulate_interval_checkout (const char *section_name,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
-                                                          kv,
-                                                          it.character_accumulate_interval) < 0)
+                                                               kv,
+                                                               it.character_accumulate_interval) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -678,8 +678,8 @@ character_send_threshold_checkout (const char *section_name,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
-                                                          kv,
-                                                          it.character_send_threshold) < 0)
+                                                               kv,
+                                                               it.character_send_threshold) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -710,7 +710,7 @@ character_send_threshold_commit (const char *section_name,
 
 static ipmi_config_err_t
 _get_sol_sol_retry (ipmi_config_state_data_t *state_data,
-		    const char *section_name,
+                    const char *section_name,
                     struct sol_retry *sr)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -752,8 +752,8 @@ _get_sol_sol_retry (ipmi_config_state_data_t *state_data,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -787,7 +787,7 @@ _get_sol_sol_retry (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 _set_sol_sol_retry (ipmi_config_state_data_t *state_data,
-		    const char *section_name,
+                    const char *section_name,
                     struct sol_retry *sr)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -827,8 +827,8 @@ _set_sol_sol_retry (ipmi_config_state_data_t *state_data,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -859,8 +859,8 @@ sol_retry_count_checkout (const char *section_name,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
-                                                          kv,
-                                                          sr.retry_count) < 0)
+                                                               kv,
+                                                               sr.retry_count) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -909,8 +909,8 @@ sol_retry_interval_checkout (const char *section_name,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
-                                                          kv,
-                                                          sr.retry_interval) < 0)
+                                                               kv,
+                                                               sr.retry_interval) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -987,8 +987,8 @@ non_volatile_bit_rate_checkout (const char *section_name,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -1005,8 +1005,8 @@ non_volatile_bit_rate_checkout (const char *section_name,
   bit_rate = val;
 
   if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
-                                             kv,
-                                             sol_bit_rate_string (bit_rate)) < 0)
+                                                  kv,
+                                                  sol_bit_rate_string (bit_rate)) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
@@ -1059,8 +1059,8 @@ non_volatile_bit_rate_commit (const char *section_name,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -1120,8 +1120,8 @@ volatile_bit_rate_checkout (const char *section_name,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -1138,8 +1138,8 @@ volatile_bit_rate_checkout (const char *section_name,
   bit_rate = val;
 
   if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
-                                             kv,
-                                             sol_bit_rate_string (bit_rate)) < 0)
+                                                  kv,
+                                                  sol_bit_rate_string (bit_rate)) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
@@ -1192,8 +1192,8 @@ volatile_bit_rate_commit (const char *section_name,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -1253,8 +1253,8 @@ sol_payload_port_checkout (const char *section_name,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -1271,8 +1271,8 @@ sol_payload_port_checkout (const char *section_name,
   port_number = val;
 
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
-                                                          kv,
-                                                          port_number) < 0)
+                                                               kv,
+                                                               port_number) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
@@ -1325,8 +1325,8 @@ sol_payload_port_commit (const char *section_name,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -1340,8 +1340,8 @@ sol_payload_port_commit (const char *section_name,
 
 struct ipmi_config_section *
 ipmi_config_sol_conf_section_get (ipmi_config_state_data_t *state_data,
-				 unsigned int config_flags,
-                                 int channel_index)
+                                  unsigned int config_flags,
+                                  int channel_index)
 {
   struct ipmi_config_section * section = NULL;
   char *section_comment =
@@ -1364,124 +1364,124 @@ ipmi_config_sol_conf_section_get (ipmi_config_state_data_t *state_data,
   assert (state_data);
 
   if (!(section = ipmi_config_section_multi_channel_create (state_data->pstate,
-						       section_name_base_str,
-						       section_comment,
-						       NULL,
-						       NULL,
-						       config_flags,
-						       channel_index,
-						       state_data->sol_channel_numbers_unique,
-						       state_data->sol_channel_numbers_unique_count)))
+                                                            section_name_base_str,
+                                                            section_comment,
+                                                            NULL,
+                                                            NULL,
+                                                            config_flags,
+                                                            channel_index,
+                                                            state_data->sol_channel_numbers_unique,
+                                                            state_data->sol_channel_numbers_unique_count)))
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Enable_SOL",
-                              "Possible values: Yes/No",
-                              0,
-                              enable_sol_checkout,
-                              enable_sol_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "Enable_SOL",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   enable_sol_checkout,
+                                   enable_sol_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "SOL_Privilege_Level",
-                              "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary",
-                              0,
-                              sol_privilege_level_checkout,
-                              sol_privilege_level_commit,
-                              privilege_level_number_validate) < 0)
+                                   section,
+                                   "SOL_Privilege_Level",
+                                   "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary",
+                                   0,
+                                   sol_privilege_level_checkout,
+                                   sol_privilege_level_commit,
+                                   privilege_level_number_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Force_SOL_Payload_Authentication",
-                              "Possible values: Yes/No",
-                              0,
-                              force_sol_payload_authentication_checkout,
-                              force_sol_payload_authentication_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "Force_SOL_Payload_Authentication",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   force_sol_payload_authentication_checkout,
+                                   force_sol_payload_authentication_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Force_SOL_Payload_Encryption",
-                              "Possible values: Yes/No",
-                              0,
-                              force_sol_payload_encryption_checkout,
-                              force_sol_payload_encryption_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "Force_SOL_Payload_Encryption",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   force_sol_payload_encryption_checkout,
+                                   force_sol_payload_encryption_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Character_Accumulate_Interval",
-                              "Give a non-zero valid integer. Each unit is 5ms",
-                              0,
-                              character_accumulate_interval_checkout,
-                              character_accumulate_interval_commit,
-                              ipmi_config_number_range_one_byte_non_zero) < 0)
+                                   section,
+                                   "Character_Accumulate_Interval",
+                                   "Give a non-zero valid integer. Each unit is 5ms",
+                                   0,
+                                   character_accumulate_interval_checkout,
+                                   character_accumulate_interval_commit,
+                                   ipmi_config_number_range_one_byte_non_zero) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Character_Send_Threshold",
-                              "Give a valid number",
-                              0,
-                              character_send_threshold_checkout,
-                              character_send_threshold_commit,
-                              ipmi_config_number_range_one_byte) < 0)
+                                   section,
+                                   "Character_Send_Threshold",
+                                   "Give a valid number",
+                                   0,
+                                   character_send_threshold_checkout,
+                                   character_send_threshold_commit,
+                                   ipmi_config_number_range_one_byte) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "SOL_Retry_Count",
-                              "Give a valid integer",
-                              0,
-                              sol_retry_count_checkout,
-                              sol_retry_count_commit,
-                              ipmi_config_number_range_three_bits) < 0)
+                                   section,
+                                   "SOL_Retry_Count",
+                                   "Give a valid integer",
+                                   0,
+                                   sol_retry_count_checkout,
+                                   sol_retry_count_commit,
+                                   ipmi_config_number_range_three_bits) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "SOL_Retry_Interval",
-                              "Give a valid integer. Interval unit is 10ms",
-                              0,
-                              sol_retry_interval_checkout,
-                              sol_retry_interval_commit,
-                              ipmi_config_number_range_one_byte) < 0)
+                                   section,
+                                   "SOL_Retry_Interval",
+                                   "Give a valid integer. Interval unit is 10ms",
+                                   0,
+                                   sol_retry_interval_checkout,
+                                   sol_retry_interval_commit,
+                                   ipmi_config_number_range_one_byte) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Non_Volatile_Bit_Rate",
-                              "Possible values: Serial/9600/19200/38400/57600/115200",
-                              0,
-                              non_volatile_bit_rate_checkout,
-                              non_volatile_bit_rate_commit,
-                              sol_bit_rate_number_validate) < 0)
+                                   section,
+                                   "Non_Volatile_Bit_Rate",
+                                   "Possible values: Serial/9600/19200/38400/57600/115200",
+                                   0,
+                                   non_volatile_bit_rate_checkout,
+                                   non_volatile_bit_rate_commit,
+                                   sol_bit_rate_number_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Volatile_Bit_Rate",
-                              "Possible values: Serial/9600/19200/38400/57600/115200",
-                              0,
-                              volatile_bit_rate_checkout,
-                              volatile_bit_rate_commit,
-                              sol_bit_rate_number_validate) < 0)
+                                   section,
+                                   "Volatile_Bit_Rate",
+                                   "Possible values: Serial/9600/19200/38400/57600/115200",
+                                   0,
+                                   volatile_bit_rate_checkout,
+                                   volatile_bit_rate_commit,
+                                   sol_bit_rate_number_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "SOL_Payload_Port_Number",
-                              "Give a valid port number",
-                              IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
-                              sol_payload_port_checkout,
-                              sol_payload_port_commit,
-                              ipmi_config_number_range_two_bytes) < 0)
+                                   section,
+                                   "SOL_Payload_Port_Number",
+                                   "Give a valid port number",
+                                   IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
+                                   sol_payload_port_checkout,
+                                   sol_payload_port_commit,
+                                   ipmi_config_number_range_two_bytes) < 0)
     goto cleanup;
 
   return (section);

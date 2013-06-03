@@ -35,8 +35,8 @@
 
 struct ipmi_config_section *
 ipmi_config_lan_channel_section_get (ipmi_config_state_data_t *state_data,
-                                    unsigned int config_flags,
-				    int channel_index)
+                                     unsigned int config_flags,
+                                     int channel_index)
 {
   struct ipmi_config_section * section = NULL;
   char *section_comment =
@@ -60,18 +60,18 @@ ipmi_config_lan_channel_section_get (ipmi_config_state_data_t *state_data,
   assert (state_data);
 
   if (!(section = ipmi_config_section_multi_channel_create (state_data->pstate,
-							    section_name_base_str,
-							    section_comment,
-							    NULL,
-							    NULL,
-							    config_flags,
-							    channel_index,
-							    state_data->lan_channel_numbers,
-							    state_data->lan_channel_numbers_count)))
+                                                            section_name_base_str,
+                                                            section_comment,
+                                                            NULL,
+                                                            NULL,
+                                                            config_flags,
+                                                            channel_index,
+                                                            state_data->lan_channel_numbers,
+                                                            state_data->lan_channel_numbers_count)))
     goto cleanup;
 
   if (ipmi_config_channel_common_section_get (state_data,
-                                             section) < 0)
+                                              section) < 0)
     goto cleanup;
 
   return (section);

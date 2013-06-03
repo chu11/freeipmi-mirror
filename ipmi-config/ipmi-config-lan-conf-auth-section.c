@@ -68,7 +68,7 @@ struct bmc_authentication_level {
 
 static ipmi_config_err_t
 _get_authentication_type_support (ipmi_config_state_data_t *state_data,
-				  const char *section_name)
+                                  const char *section_name)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -115,8 +115,8 @@ _get_authentication_type_support (ipmi_config_state_data_t *state_data,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-						       obj_cmd_rs,
-						       &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -182,7 +182,7 @@ _get_authentication_type_support (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 _get_authentication_type_enables (ipmi_config_state_data_t *state_data,
-				  const char *section_name,
+                                  const char *section_name,
                                   struct bmc_authentication_level *al)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -224,8 +224,8 @@ _get_authentication_type_enables (ipmi_config_state_data_t *state_data,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-						       obj_cmd_rs,
-						       &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -489,7 +489,7 @@ _get_authentication_type_enables (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 _set_authentication_type_enables (ipmi_config_state_data_t *state_data,
-				  const char *section_name,
+                                  const char *section_name,
                                   struct bmc_authentication_level *al)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -584,39 +584,39 @@ _set_authentication_type_enables (ipmi_config_state_data_t *state_data,
             goto cleanup;
           
           if ((kv = ipmi_config_find_keyvalue (section,
-					       "Callback_Enable_Auth_Type_OEM_Proprietary")))
+                                               "Callback_Enable_Auth_Type_OEM_Proprietary")))
             al->callback_level_oem_proprietary = same (kv->value_input, "yes");
           
           if ((kv = ipmi_config_find_keyvalue (section,
-					       "User_Enable_Auth_Type_OEM_Proprietary")))
+                                               "User_Enable_Auth_Type_OEM_Proprietary")))
             al->user_level_oem_proprietary = same (kv->value_input, "yes");
           
           if ((kv = ipmi_config_find_keyvalue (section,
-					       "Operator_Enable_Auth_Type_OEM_Proprietary")))
+                                               "Operator_Enable_Auth_Type_OEM_Proprietary")))
             al->operator_level_oem_proprietary = same (kv->value_input, "yes");
           
           if ((kv = ipmi_config_find_keyvalue (section,
-					       "Admin_Enable_Auth_Type_OEM_Proprietary")))
+                                               "Admin_Enable_Auth_Type_OEM_Proprietary")))
             al->admin_level_oem_proprietary = same (kv->value_input, "yes");
           
           if ((kv = ipmi_config_find_keyvalue (section,
-					       "OEM_Enable_Auth_Type_None")))
+                                               "OEM_Enable_Auth_Type_None")))
             al->oem_level_none = same (kv->value_input, "yes");
           
           if ((kv = ipmi_config_find_keyvalue (section,
-					       "OEM_Enable_Auth_Type_MD2")))
+                                               "OEM_Enable_Auth_Type_MD2")))
             al->oem_level_md2 = same (kv->value_input, "yes");
           
           if ((kv = ipmi_config_find_keyvalue (section,
-					       "OEM_Enable_Auth_Type_MD5")))
+                                               "OEM_Enable_Auth_Type_MD5")))
             al->oem_level_md5 = same (kv->value_input, "yes");
           
           if ((kv = ipmi_config_find_keyvalue (section,
-					       "OEM_Enable_Auth_Type_Straight_Password")))
+                                               "OEM_Enable_Auth_Type_Straight_Password")))
             al->oem_level_straight_password = same (kv->value_input, "yes");
           
           if ((kv = ipmi_config_find_keyvalue (section,
-					       "OEM_Enable_Auth_Type_OEM_Proprietary")))
+                                               "OEM_Enable_Auth_Type_OEM_Proprietary")))
             al->oem_level_oem_proprietary = same (kv->value_input, "yes");
           
           if (ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables (state_data->ipmi_ctx,
@@ -655,8 +655,8 @@ _set_authentication_type_enables (ipmi_config_state_data_t *state_data,
                                  ipmi_ctx_errormsg (state_data->ipmi_ctx));
               
               if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-							       obj_cmd_rs,
-							       &ret))
+                                                               obj_cmd_rs,
+                                                               &ret))
                 rv = ret;
               
               goto cleanup;
@@ -666,8 +666,8 @@ _set_authentication_type_enables (ipmi_config_state_data_t *state_data,
           goto out;
         }
       else if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-							    obj_cmd_rs,
-							    &ret))
+                                                            obj_cmd_rs,
+                                                            &ret))
         rv = ret;
 
       goto cleanup;
@@ -816,7 +816,7 @@ _authentication_level_checkout (const char *section_name,
   state_data = (ipmi_config_state_data_t *)arg;
 
   if ((ret = _get_authentication_type_enables (state_data,
-					       section_name,
+                                               section_name,
                                                &al)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
@@ -837,8 +837,8 @@ _authentication_level_checkout (const char *section_name,
         return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
       if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
-                                                 kv,
-                                                 *al_ptr ? "Yes" : "No") < 0)
+                                                      kv,
+                                                      *al_ptr ? "Yes" : "No") < 0)
         return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
       return (IPMI_CONFIG_ERR_SUCCESS);
@@ -864,7 +864,7 @@ _authentication_level_commit (const char *section_name,
   state_data = (ipmi_config_state_data_t *)arg;
 
   if ((ret = _get_authentication_type_enables (state_data,
-					       section_name,
+                                               section_name,
                                                &al)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
@@ -877,7 +877,7 @@ _authentication_level_commit (const char *section_name,
   *flag = same (kv->value_input, "yes");
 
   if ((ret = _set_authentication_type_enables (state_data,
-					       section_name,
+                                               section_name,
                                                &al)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
@@ -886,8 +886,8 @@ _authentication_level_commit (const char *section_name,
 
 struct ipmi_config_section *
 ipmi_config_lan_conf_auth_section_get (ipmi_config_state_data_t *state_data,
-				      unsigned int config_flags,
-				      int channel_index)
+                                       unsigned int config_flags,
+                                       int channel_index)
 {
   struct ipmi_config_section *section = NULL;
   char *section_comment =
@@ -904,264 +904,264 @@ ipmi_config_lan_conf_auth_section_get (ipmi_config_state_data_t *state_data,
   assert (state_data);
 
   if (!(section = ipmi_config_section_multi_channel_create (state_data->pstate,
-							    section_name_base_str,
-							    section_comment,
-							    NULL,
-							    NULL,
-							    config_flags,
-							    channel_index,
-							    state_data->lan_channel_numbers,
-							    state_data->lan_channel_numbers_count)))
+                                                            section_name_base_str,
+                                                            section_comment,
+                                                            NULL,
+                                                            NULL,
+                                                            config_flags,
+                                                            channel_index,
+                                                            state_data->lan_channel_numbers,
+                                                            state_data->lan_channel_numbers_count)))
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-				   section,
-				   "Callback_Enable_Auth_Type_None",
-				   "Possible values: Yes/No",
-				   0,
-				   _authentication_level_checkout,
-				   _authentication_level_commit,
-				   ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "Callback_Enable_Auth_Type_None",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   _authentication_level_checkout,
+                                   _authentication_level_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Callback_Enable_Auth_Type_MD2",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "Callback_Enable_Auth_Type_MD2",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   _authentication_level_checkout,
+                                   _authentication_level_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Callback_Enable_Auth_Type_MD5",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "Callback_Enable_Auth_Type_MD5",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   _authentication_level_checkout,
+                                   _authentication_level_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Callback_Enable_Auth_Type_Straight_Password",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "Callback_Enable_Auth_Type_Straight_Password",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   _authentication_level_checkout,
+                                   _authentication_level_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Callback_Enable_Auth_Type_OEM_Proprietary",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "Callback_Enable_Auth_Type_OEM_Proprietary",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   _authentication_level_checkout,
+                                   _authentication_level_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "User_Enable_Auth_Type_None",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "User_Enable_Auth_Type_None",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   _authentication_level_checkout,
+                                   _authentication_level_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "User_Enable_Auth_Type_MD2",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "User_Enable_Auth_Type_MD2",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   _authentication_level_checkout,
+                                   _authentication_level_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "User_Enable_Auth_Type_MD5",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "User_Enable_Auth_Type_MD5",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   _authentication_level_checkout,
+                                   _authentication_level_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "User_Enable_Auth_Type_Straight_Password",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "User_Enable_Auth_Type_Straight_Password",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   _authentication_level_checkout,
+                                   _authentication_level_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "User_Enable_Auth_Type_OEM_Proprietary",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "User_Enable_Auth_Type_OEM_Proprietary",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   _authentication_level_checkout,
+                                   _authentication_level_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Operator_Enable_Auth_Type_None",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "Operator_Enable_Auth_Type_None",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   _authentication_level_checkout,
+                                   _authentication_level_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Operator_Enable_Auth_Type_MD2",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "Operator_Enable_Auth_Type_MD2",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   _authentication_level_checkout,
+                                   _authentication_level_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Operator_Enable_Auth_Type_MD5",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "Operator_Enable_Auth_Type_MD5",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   _authentication_level_checkout,
+                                   _authentication_level_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Operator_Enable_Auth_Type_Straight_Password",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "Operator_Enable_Auth_Type_Straight_Password",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   _authentication_level_checkout,
+                                   _authentication_level_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Operator_Enable_Auth_Type_OEM_Proprietary",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "Operator_Enable_Auth_Type_OEM_Proprietary",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   _authentication_level_checkout,
+                                   _authentication_level_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Admin_Enable_Auth_Type_None",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "Admin_Enable_Auth_Type_None",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   _authentication_level_checkout,
+                                   _authentication_level_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Admin_Enable_Auth_Type_MD2",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "Admin_Enable_Auth_Type_MD2",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   _authentication_level_checkout,
+                                   _authentication_level_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Admin_Enable_Auth_Type_MD5",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "Admin_Enable_Auth_Type_MD5",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   _authentication_level_checkout,
+                                   _authentication_level_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Admin_Enable_Auth_Type_Straight_Password",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "Admin_Enable_Auth_Type_Straight_Password",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   _authentication_level_checkout,
+                                   _authentication_level_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Admin_Enable_Auth_Type_OEM_Proprietary",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "Admin_Enable_Auth_Type_OEM_Proprietary",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   _authentication_level_checkout,
+                                   _authentication_level_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "OEM_Enable_Auth_Type_None",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "OEM_Enable_Auth_Type_None",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   _authentication_level_checkout,
+                                   _authentication_level_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "OEM_Enable_Auth_Type_MD2",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "OEM_Enable_Auth_Type_MD2",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   _authentication_level_checkout,
+                                   _authentication_level_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "OEM_Enable_Auth_Type_MD5",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "OEM_Enable_Auth_Type_MD5",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   _authentication_level_checkout,
+                                   _authentication_level_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "OEM_Enable_Auth_Type_Straight_Password",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "OEM_Enable_Auth_Type_Straight_Password",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   _authentication_level_checkout,
+                                   _authentication_level_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "OEM_Enable_Auth_Type_OEM_Proprietary",
-                              "Possible values: Yes/No",
-                              0,
-                              _authentication_level_checkout,
-                              _authentication_level_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "OEM_Enable_Auth_Type_OEM_Proprietary",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   _authentication_level_checkout,
+                                   _authentication_level_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   return (section);

@@ -23,7 +23,7 @@
 #include "ipmi-config-sections.h"
 
 struct ipmi_config_section * ipmi_config_lan_conf_security_keys_section_get (ipmi_config_state_data_t *state_data,
-								       unsigned int config_flags,
-								       int channel_index);
+                                                                             unsigned int config_flags,
+                                                                             int channel_index);
 
 #endif /* IPMI_CONFIG_LAN_CONF_SECURITY_KEYS_SECTION_H */

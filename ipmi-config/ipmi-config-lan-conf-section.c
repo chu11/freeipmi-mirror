@@ -85,8 +85,8 @@ ip_address_source_checkout (const char *section_name,
     }
 
   if ((ret = get_lan_channel_number (state_data,
-				     section_name,
-				     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
+                                     section_name,
+                                     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -106,8 +106,8 @@ ip_address_source_checkout (const char *section_name,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -124,8 +124,8 @@ ip_address_source_checkout (const char *section_name,
   ip_address_source = val;
   
   if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
-                                             kv,
-                                             ip_address_source_string (ip_address_source)) < 0)
+                                                  kv,
+                                                  ip_address_source_string (ip_address_source)) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
@@ -161,8 +161,8 @@ ip_address_source_commit (const char *section_name,
     }
 
   if ((ret = get_lan_channel_number (state_data,
-				     section_name,
-				     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
+                                     section_name,
+                                     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -180,8 +180,8 @@ ip_address_source_commit (const char *section_name,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -222,8 +222,8 @@ ip_address_checkout (const char *section_name,
     }
 
   if ((ret = get_lan_channel_number (state_data,
-				     section_name,
-				     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
+                                     section_name,
+                                     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -243,8 +243,8 @@ ip_address_checkout (const char *section_name,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -272,8 +272,8 @@ ip_address_checkout (const char *section_name,
             ip_address_bytes[3]);
 
   if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
-                                             kv,
-                                             ip_address_str) < 0)
+                                                  kv,
+                                                  ip_address_str) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
@@ -301,8 +301,8 @@ ip_address_commit (const char *section_name,
   state_data = (ipmi_config_state_data_t *)arg;
 
   if (ipmi_config_ipv4_address_string2int (state_data->pstate,
-					   kv->value_input,
-					   &ip_address_val) < 0)
+                                           kv->value_input,
+                                           &ip_address_val) < 0)
     goto cleanup;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_lan_configuration_parameters_rs)))
@@ -315,8 +315,8 @@ ip_address_commit (const char *section_name,
     }
 
   if ((ret = get_lan_channel_number (state_data,
-				     section_name,
-				     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
+                                     section_name,
+                                     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -334,8 +334,8 @@ ip_address_commit (const char *section_name,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -376,8 +376,8 @@ mac_address_checkout (const char *section_name,
     }
 
   if ((ret = get_lan_channel_number (state_data,
-				     section_name,
-				     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
+                                     section_name,
+                                     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -397,8 +397,8 @@ mac_address_checkout (const char *section_name,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -428,8 +428,8 @@ mac_address_checkout (const char *section_name,
             mac_address_bytes[5]);
 
   if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
-                                             kv,
-                                             mac_address_str) < 0)
+                                                  kv,
+                                                  mac_address_str) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
@@ -458,8 +458,8 @@ mac_address_commit (const char *section_name,
   state_data = (ipmi_config_state_data_t *)arg;
 
   if (ipmi_config_mac_address_string2int (state_data->pstate,
-                                     kv->value_input,
-                                     &mac_address_val) < 0)
+                                          kv->value_input,
+                                          &mac_address_val) < 0)
     goto cleanup;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_lan_configuration_parameters_rs)))
@@ -472,8 +472,8 @@ mac_address_commit (const char *section_name,
     }
 
   if ((ret = get_lan_channel_number (state_data,
-				     section_name,
-				     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
+                                     section_name,
+                                     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -491,8 +491,8 @@ mac_address_commit (const char *section_name,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -533,8 +533,8 @@ subnet_mask_checkout (const char *section_name,
     }
 
   if ((ret = get_lan_channel_number (state_data,
-				     section_name,
-				     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
+                                     section_name,
+                                     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -554,8 +554,8 @@ subnet_mask_checkout (const char *section_name,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -583,8 +583,8 @@ subnet_mask_checkout (const char *section_name,
             subnet_mask_bytes[3]);
 
   if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
-                                             kv,
-                                             subnet_mask_str) < 0)
+                                                  kv,
+                                                  subnet_mask_str) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
@@ -612,8 +612,8 @@ subnet_mask_commit (const char *section_name,
   state_data = (ipmi_config_state_data_t *)arg;
 
   if (ipmi_config_ipv4_address_string2int (state_data->pstate,
-                                      kv->value_input,
-                                      &subnet_mask_val) < 0)
+                                           kv->value_input,
+                                           &subnet_mask_val) < 0)
     goto cleanup;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_lan_configuration_parameters_rs)))
@@ -626,8 +626,8 @@ subnet_mask_commit (const char *section_name,
     }
 
   if ((ret = get_lan_channel_number (state_data,
-				     section_name,
-				     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
+                                     section_name,
+                                     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -645,8 +645,8 @@ subnet_mask_commit (const char *section_name,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -687,8 +687,8 @@ default_gateway_address_checkout (const char *section_name,
     }
 
   if ((ret = get_lan_channel_number (state_data,
-				     section_name,
-				     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
+                                     section_name,
+                                     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -708,8 +708,8 @@ default_gateway_address_checkout (const char *section_name,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -737,8 +737,8 @@ default_gateway_address_checkout (const char *section_name,
             ip_address_bytes[3]);
 
   if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
-                                             kv,
-                                             ip_address_str) < 0)
+                                                  kv,
+                                                  ip_address_str) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
@@ -767,8 +767,8 @@ default_gateway_address_commit (const char *section_name,
   state_data = (ipmi_config_state_data_t *)arg;
 
   if (ipmi_config_ipv4_address_string2int (state_data->pstate,
-                                      kv->value_input,
-                                      &ip_address_val) < 0)
+                                           kv->value_input,
+                                           &ip_address_val) < 0)
     goto cleanup;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_lan_configuration_parameters_rs)))
@@ -781,8 +781,8 @@ default_gateway_address_commit (const char *section_name,
     }
 
   if ((ret = get_lan_channel_number (state_data,
-				     section_name,
-				     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
+                                     section_name,
+                                     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -800,8 +800,8 @@ default_gateway_address_commit (const char *section_name,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -842,8 +842,8 @@ default_gateway_mac_address_checkout (const char *section_name,
     }
 
   if ((ret = get_lan_channel_number (state_data,
-				     section_name,
-				     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
+                                     section_name,
+                                     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -863,8 +863,8 @@ default_gateway_mac_address_checkout (const char *section_name,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -894,8 +894,8 @@ default_gateway_mac_address_checkout (const char *section_name,
             mac_address_bytes[5]);
 
   if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
-                                             kv,
-                                             mac_address_str) < 0)
+                                                  kv,
+                                                  mac_address_str) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
@@ -924,8 +924,8 @@ default_gateway_mac_address_commit (const char *section_name,
   state_data = (ipmi_config_state_data_t *)arg;
 
   if (ipmi_config_mac_address_string2int (state_data->pstate,
-                                     kv->value_input,
-                                     &mac_address_val) < 0)
+                                          kv->value_input,
+                                          &mac_address_val) < 0)
     goto cleanup;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_lan_configuration_parameters_rs)))
@@ -938,8 +938,8 @@ default_gateway_mac_address_commit (const char *section_name,
     }
 
   if ((ret = get_lan_channel_number (state_data,
-				     section_name,
-				     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
+                                     section_name,
+                                     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -957,8 +957,8 @@ default_gateway_mac_address_commit (const char *section_name,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -999,8 +999,8 @@ backup_gateway_address_checkout (const char *section_name,
     }
 
   if ((ret = get_lan_channel_number (state_data,
-				     section_name,
-				     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
+                                     section_name,
+                                     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -1020,8 +1020,8 @@ backup_gateway_address_checkout (const char *section_name,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -1049,8 +1049,8 @@ backup_gateway_address_checkout (const char *section_name,
             ip_address_bytes[3]);
 
   if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
-                                             kv,
-                                             ip_address_str) < 0)
+                                                  kv,
+                                                  ip_address_str) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
@@ -1078,8 +1078,8 @@ backup_gateway_address_commit (const char *section_name,
   state_data = (ipmi_config_state_data_t *)arg;
 
   if (ipmi_config_ipv4_address_string2int (state_data->pstate,
-                                      kv->value_input,
-                                      &ip_address_val) < 0)
+                                           kv->value_input,
+                                           &ip_address_val) < 0)
     goto cleanup;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_lan_configuration_parameters_rs)))
@@ -1092,8 +1092,8 @@ backup_gateway_address_commit (const char *section_name,
     }
 
   if ((ret = get_lan_channel_number (state_data,
-				     section_name,
-				     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
+                                     section_name,
+                                     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -1111,8 +1111,8 @@ backup_gateway_address_commit (const char *section_name,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -1153,8 +1153,8 @@ backup_gateway_mac_address_checkout (const char *section_name,
     }
 
   if ((ret = get_lan_channel_number (state_data,
-				     section_name,
-				     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
+                                     section_name,
+                                     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -1174,8 +1174,8 @@ backup_gateway_mac_address_checkout (const char *section_name,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -1205,8 +1205,8 @@ backup_gateway_mac_address_checkout (const char *section_name,
             mac_address_bytes[5]);
 
   if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
-                                             kv,
-                                             mac_address_str) < 0)
+                                                  kv,
+                                                  mac_address_str) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
@@ -1234,8 +1234,8 @@ backup_gateway_mac_address_commit (const char *section_name,
   state_data = (ipmi_config_state_data_t *)arg;
 
   if (ipmi_config_mac_address_string2int (state_data->pstate,
-                                     kv->value_input,
-                                     &mac_address_val) < 0)
+                                          kv->value_input,
+                                          &mac_address_val) < 0)
     goto cleanup;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_lan_configuration_parameters_rs)))
@@ -1248,8 +1248,8 @@ backup_gateway_mac_address_commit (const char *section_name,
     }
 
   if ((ret = get_lan_channel_number (state_data,
-				     section_name,
-				     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
+                                     section_name,
+                                     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -1267,8 +1267,8 @@ backup_gateway_mac_address_commit (const char *section_name,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -1282,7 +1282,7 @@ backup_gateway_mac_address_commit (const char *section_name,
 
 static ipmi_config_err_t
 _get_vlan_id (ipmi_config_state_data_t *state_data,
-	      const char *section_name,
+              const char *section_name,
               struct vlan_id *vi)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -1305,8 +1305,8 @@ _get_vlan_id (ipmi_config_state_data_t *state_data,
     }
 
   if ((ret = get_lan_channel_number (state_data,
-				     section_name,
-				     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
+                                     section_name,
+                                     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -1326,8 +1326,8 @@ _get_vlan_id (ipmi_config_state_data_t *state_data,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -1361,7 +1361,7 @@ _get_vlan_id (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 _set_vlan_id (ipmi_config_state_data_t *state_data,
-	      const char *section_name,
+              const char *section_name,
               struct vlan_id *vi)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -1383,8 +1383,8 @@ _set_vlan_id (ipmi_config_state_data_t *state_data,
     }
 
   if ((ret = get_lan_channel_number (state_data,
-				     section_name,
-				     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
+                                     section_name,
+                                     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -1403,8 +1403,8 @@ _set_vlan_id (ipmi_config_state_data_t *state_data,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -1435,8 +1435,8 @@ vlan_id_checkout (const char *section_name,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
-                                                          kv,
-                                                          vi.vlan_id) < 0)
+                                                               kv,
+                                                               vi.vlan_id) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -1497,8 +1497,8 @@ vlan_id_enable_checkout (const char *section_name,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
-                                             kv,
-                                             vi.vlan_id_enable ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  vi.vlan_id_enable ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -1556,8 +1556,8 @@ vlan_priority_checkout (const char *section_name,
     }
 
   if ((ret = get_lan_channel_number (state_data,
-				     section_name,
-				     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
+                                     section_name,
+                                     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -1577,8 +1577,8 @@ vlan_priority_checkout (const char *section_name,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -1595,8 +1595,8 @@ vlan_priority_checkout (const char *section_name,
   vlan_priority = val;
 
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
-                                                          kv,
-                                                          val) < 0)
+                                                               kv,
+                                                               val) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
@@ -1632,8 +1632,8 @@ vlan_priority_commit (const char *section_name,
     }
 
   if ((ret = get_lan_channel_number (state_data,
-				     section_name,
-				     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
+                                     section_name,
+                                     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -1651,8 +1651,8 @@ vlan_priority_commit (const char *section_name,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -1689,8 +1689,8 @@ _get_ipv4_header_parameters (ipmi_config_state_data_t *state_data,
     }
   
   if ((ret = get_lan_channel_number (state_data,
-				     section_name,
-				     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
+                                     section_name,
+                                     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -1710,8 +1710,8 @@ _get_ipv4_header_parameters (ipmi_config_state_data_t *state_data,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
       
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
       
       goto cleanup;
@@ -1787,8 +1787,8 @@ _set_ipv4_header_parameters (ipmi_config_state_data_t *state_data,
     }
 
   if ((ret = get_lan_channel_number (state_data,
-				     section_name,
-				     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
+                                     section_name,
+                                     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -1809,8 +1809,8 @@ _set_ipv4_header_parameters (ipmi_config_state_data_t *state_data,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
       
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
       
       goto cleanup;
@@ -1841,8 +1841,8 @@ ipv4_header_time_to_live_checkout (const char *section_name,
     return (ret);
   
   if (ipmi_config_section_update_keyvalue_output_hex (state_data->pstate,
-                                                 kv,
-                                                 ihp.time_to_live) < 0)
+                                                      kv,
+                                                      ihp.time_to_live) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -1891,8 +1891,8 @@ ipv4_header_flags_checkout (const char *section_name,
     return (ret);
   
   if (ipmi_config_section_update_keyvalue_output_hex (state_data->pstate,
-                                                 kv,
-                                                 ihp.flags) < 0)
+                                                      kv,
+                                                      ihp.flags) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -1941,8 +1941,8 @@ ipv4_header_type_of_service_checkout (const char *section_name,
     return (ret);
   
   if (ipmi_config_section_update_keyvalue_output_hex (state_data->pstate,
-                                                 kv,
-                                                 ihp.type_of_service) < 0)
+                                                      kv,
+                                                      ihp.type_of_service) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -1991,8 +1991,8 @@ ipv4_header_precedence_checkout (const char *section_name,
     return (ret);
   
   if (ipmi_config_section_update_keyvalue_output_hex (state_data->pstate,
-                                                 kv,
-                                                 ihp.precedence) < 0)
+                                                      kv,
+                                                      ihp.precedence) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -2070,8 +2070,8 @@ primary_rmcp_port_checkout (const char *section_name,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
       
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
       
       goto cleanup;
@@ -2088,8 +2088,8 @@ primary_rmcp_port_checkout (const char *section_name,
   primary_rmcp_port_number = val;
 
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
-                                                          kv,
-                                                          primary_rmcp_port_number) < 0)
+                                                               kv,
+                                                               primary_rmcp_port_number) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
@@ -2142,8 +2142,8 @@ primary_rmcp_port_commit (const char *section_name,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
       
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
       
       goto cleanup;
@@ -2203,8 +2203,8 @@ secondary_rmcp_port_checkout (const char *section_name,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
       
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
       
       goto cleanup;
@@ -2221,8 +2221,8 @@ secondary_rmcp_port_checkout (const char *section_name,
   secondary_rmcp_port_number = val;
 
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
-                                                          kv,
-                                                          secondary_rmcp_port_number) < 0)
+                                                               kv,
+                                                               secondary_rmcp_port_number) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
@@ -2275,8 +2275,8 @@ secondary_rmcp_port_commit (const char *section_name,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
       
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
       
       goto cleanup;
@@ -2290,8 +2290,8 @@ secondary_rmcp_port_commit (const char *section_name,
 
 struct ipmi_config_section *
 ipmi_config_lan_conf_section_get (ipmi_config_state_data_t *state_data,
-                                 unsigned int config_flags,
-                                 int channel_index)
+                                  unsigned int config_flags,
+                                  int channel_index)
 {
   struct ipmi_config_section *section = NULL;
   char *section_comment =
@@ -2310,185 +2310,185 @@ ipmi_config_lan_conf_section_get (ipmi_config_state_data_t *state_data,
     verbose_option_config_flags = IPMI_CONFIG_DO_NOT_CHECKOUT;
 
   if (!(section = ipmi_config_section_multi_channel_create (state_data->pstate,
-						       section_name_base_str,
-						       section_comment,
-						       NULL,
-						       NULL,
-						       config_flags,
-						       channel_index,
-						       state_data->lan_channel_numbers,
-						       state_data->lan_channel_numbers_count)))
+                                                            section_name_base_str,
+                                                            section_comment,
+                                                            NULL,
+                                                            NULL,
+                                                            config_flags,
+                                                            channel_index,
+                                                            state_data->lan_channel_numbers,
+                                                            state_data->lan_channel_numbers_count)))
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "IP_Address_Source",
-                              "Possible values: Unspecified/Static/Use_DHCP/Use_BIOS/Use_Others",
-                              0,
-                              ip_address_source_checkout,
-                              ip_address_source_commit,
-                              ip_address_source_number_validate) < 0)
+                                   section,
+                                   "IP_Address_Source",
+                                   "Possible values: Unspecified/Static/Use_DHCP/Use_BIOS/Use_Others",
+                                   0,
+                                   ip_address_source_checkout,
+                                   ip_address_source_commit,
+                                   ip_address_source_number_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "IP_Address",
-                              "Give valid IP address",
-                              0,
-                              ip_address_checkout,
-                              ip_address_commit,
-				   ipmi_config_ip_address_validate) < 0)
+                                   section,
+                                   "IP_Address",
+                                   "Give valid IP address",
+                                   0,
+                                   ip_address_checkout,
+                                   ip_address_commit,
+                                   ipmi_config_ip_address_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "MAC_Address",
-                              "Give valid MAC address",
-                              0,
-                              mac_address_checkout,
-                              mac_address_commit,
-                              ipmi_config_mac_address_validate) < 0)
+                                   section,
+                                   "MAC_Address",
+                                   "Give valid MAC address",
+                                   0,
+                                   mac_address_checkout,
+                                   mac_address_commit,
+                                   ipmi_config_mac_address_validate) < 0)
     goto cleanup;
 
   /* TODO: XXX: checking valid netmask is not same as checking valid IP? */
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Subnet_Mask",
-                              "Give valid Subnet Mask",
-                              0,
-                              subnet_mask_checkout,
-                              subnet_mask_commit,
-                              ipmi_config_ip_address_validate) < 0)
+                                   section,
+                                   "Subnet_Mask",
+                                   "Give valid Subnet Mask",
+                                   0,
+                                   subnet_mask_checkout,
+                                   subnet_mask_commit,
+                                   ipmi_config_ip_address_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Default_Gateway_IP_Address",
-                              "Give valid IP address",
-                              0,
-                              default_gateway_address_checkout,
-                              default_gateway_address_commit,
-                              ipmi_config_ip_address_validate) < 0)
+                                   section,
+                                   "Default_Gateway_IP_Address",
+                                   "Give valid IP address",
+                                   0,
+                                   default_gateway_address_checkout,
+                                   default_gateway_address_commit,
+                                   ipmi_config_ip_address_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Default_Gateway_MAC_Address",
-                              "Give valid MAC address",
-                              0,
-                              default_gateway_mac_address_checkout,
-                              default_gateway_mac_address_commit,
-                              ipmi_config_mac_address_validate) < 0)
+                                   section,
+                                   "Default_Gateway_MAC_Address",
+                                   "Give valid MAC address",
+                                   0,
+                                   default_gateway_mac_address_checkout,
+                                   default_gateway_mac_address_commit,
+                                   ipmi_config_mac_address_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Backup_Gateway_IP_Address",
-                              "Give valid IP address",
-                              0,
-                              backup_gateway_address_checkout,
-                              backup_gateway_address_commit,
-                              ipmi_config_ip_address_validate) < 0)
+                                   section,
+                                   "Backup_Gateway_IP_Address",
+                                   "Give valid IP address",
+                                   0,
+                                   backup_gateway_address_checkout,
+                                   backup_gateway_address_commit,
+                                   ipmi_config_ip_address_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Backup_Gateway_MAC_Address",
-                              "Give valid MAC address",
-                              0,
-                              backup_gateway_mac_address_checkout,
-                              backup_gateway_mac_address_commit,
-                              ipmi_config_mac_address_validate) < 0)
+                                   section,
+                                   "Backup_Gateway_MAC_Address",
+                                   "Give valid MAC address",
+                                   0,
+                                   backup_gateway_mac_address_checkout,
+                                   backup_gateway_mac_address_commit,
+                                   ipmi_config_mac_address_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Vlan_id",
-                              "Give valid unsigned number",
-                              verbose_option_config_flags,
-                              vlan_id_checkout,
-                              vlan_id_commit,
-                              vlan_id_validate) < 0)
+                                   section,
+                                   "Vlan_id",
+                                   "Give valid unsigned number",
+                                   verbose_option_config_flags,
+                                   vlan_id_checkout,
+                                   vlan_id_commit,
+                                   vlan_id_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Vlan_Id_Enable",
-                              "Possible values: Yes/No",
-                              verbose_option_config_flags,
-                              vlan_id_enable_checkout,
-                              vlan_id_enable_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "Vlan_Id_Enable",
+                                   "Possible values: Yes/No",
+                                   verbose_option_config_flags,
+                                   vlan_id_enable_checkout,
+                                   vlan_id_enable_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Vlan_Priority",
-                              "Give valid unsigned number",
-                              verbose_option_config_flags,
-                              vlan_priority_checkout,
-                              vlan_priority_commit,
-                              ipmi_config_number_range_one_byte) < 0)
+                                   section,
+                                   "Vlan_Priority",
+                                   "Give valid unsigned number",
+                                   verbose_option_config_flags,
+                                   vlan_priority_checkout,
+                                   vlan_priority_commit,
+                                   ipmi_config_number_range_one_byte) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "IPv4_Header_Time_To_Live",
-                              "Give valid hex number",
-                              verbose_option_config_flags | IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
-                              ipv4_header_time_to_live_checkout,
-                              ipv4_header_time_to_live_commit,
-                              ipmi_config_number_range_one_byte) < 0)
+                                   section,
+                                   "IPv4_Header_Time_To_Live",
+                                   "Give valid hex number",
+                                   verbose_option_config_flags | IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
+                                   ipv4_header_time_to_live_checkout,
+                                   ipv4_header_time_to_live_commit,
+                                   ipmi_config_number_range_one_byte) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "IPv4_Header_Flags",
-                              "Give valid hex number",
-                              verbose_option_config_flags | IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
-                              ipv4_header_flags_checkout,
-                              ipv4_header_flags_commit,
-                              ipmi_config_number_range_three_bits) < 0)
+                                   section,
+                                   "IPv4_Header_Flags",
+                                   "Give valid hex number",
+                                   verbose_option_config_flags | IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
+                                   ipv4_header_flags_checkout,
+                                   ipv4_header_flags_commit,
+                                   ipmi_config_number_range_three_bits) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "IPv4_Header_Type_Of_Service",
-                              "Give valid hex number",
-                              verbose_option_config_flags | IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
-                              ipv4_header_type_of_service_checkout,
-                              ipv4_header_type_of_service_commit,
-                              ipmi_config_number_range_four_bits) < 0)
+                                   section,
+                                   "IPv4_Header_Type_Of_Service",
+                                   "Give valid hex number",
+                                   verbose_option_config_flags | IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
+                                   ipv4_header_type_of_service_checkout,
+                                   ipv4_header_type_of_service_commit,
+                                   ipmi_config_number_range_four_bits) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "IPv4_Header_Precedence",
-                              "Give valid hex number",
-                              verbose_option_config_flags | IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
-                              ipv4_header_precedence_checkout,
-                              ipv4_header_precedence_commit,
-                              ipmi_config_number_range_three_bits) < 0)
+                                   section,
+                                   "IPv4_Header_Precedence",
+                                   "Give valid hex number",
+                                   verbose_option_config_flags | IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
+                                   ipv4_header_precedence_checkout,
+                                   ipv4_header_precedence_commit,
+                                   ipmi_config_number_range_three_bits) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Primary_RMCP_Port",
-                              "Give valid number",
-                              verbose_option_config_flags | IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
-                              primary_rmcp_port_checkout,
-                              primary_rmcp_port_commit,
-                              ipmi_config_number_range_two_bytes) < 0)
+                                   section,
+                                   "Primary_RMCP_Port",
+                                   "Give valid number",
+                                   verbose_option_config_flags | IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
+                                   primary_rmcp_port_checkout,
+                                   primary_rmcp_port_commit,
+                                   ipmi_config_number_range_two_bytes) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Secondary_RMCP_Port",
-                              "Give valid number",
-                              verbose_option_config_flags | IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
-                              secondary_rmcp_port_checkout,
-                              secondary_rmcp_port_commit,
-                              ipmi_config_number_range_two_bytes) < 0)
+                                   section,
+                                   "Secondary_RMCP_Port",
+                                   "Give valid number",
+                                   verbose_option_config_flags | IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
+                                   secondary_rmcp_port_checkout,
+                                   secondary_rmcp_port_commit,
+                                   ipmi_config_number_range_two_bytes) < 0)
     goto cleanup;
 
   return (section);

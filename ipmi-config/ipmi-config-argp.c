@@ -115,8 +115,8 @@ static struct argp cmdline_config_file_argp = { cmdline_options,
 
 static void
 _ipmi_config_parse_channel_number (char *arg,
-				   uint8_t *channel_number,
-				   int *channel_number_set)
+                                   uint8_t *channel_number,
+                                   int *channel_number_set)
 {
   char *endptr;
   int tmp;
@@ -187,23 +187,23 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case IPMI_CONFIG_ARGP_KEYPAIR_KEY:
       if (ipmi_config_keypair_parse_string (arg,
-					    &section_name,
-					    &key_name,
-					    &value) < 0)
+                                            &section_name,
+                                            &key_name,
+                                            &value) < 0)
         {
           /* error printed in function call */
           exit (EXIT_FAILURE);
         }
       if (!(kp = ipmi_config_keypair_create (section_name,
-					     key_name,
-					     value)))
+                                             key_name,
+                                             value)))
         {
           fprintf (stderr,
                    "ipmi_config_keypair_create error\n");
           exit (EXIT_FAILURE);
         }
       if (ipmi_config_keypair_append (&(cmd_args->keypairs),
-				      kp) < 0)
+                                      kp) < 0)
         {
           /* error printed in function call */
           exit (EXIT_FAILURE);
@@ -220,7 +220,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           exit (EXIT_FAILURE);
         }
       if (ipmi_config_section_str_append (&(cmd_args->section_strs),
-                                     sstr) < 0)
+                                          sstr) < 0)
         {
           /* error printed in function call */
           exit (EXIT_FAILURE);
@@ -238,18 +238,18 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case IPMI_CONFIG_ARGP_LAN_CHANNEL_NUMBER_KEY:
       _ipmi_config_parse_channel_number (arg,
-					 &(cmd_args->lan_channel_number),
-					 &(cmd_args->lan_channel_number_set));
+                                         &(cmd_args->lan_channel_number),
+                                         &(cmd_args->lan_channel_number_set));
       break;
     case IPMI_CONFIG_ARGP_SERIAL_CHANNEL_NUMBER_KEY:
       _ipmi_config_parse_channel_number (arg,
-					 &(cmd_args->serial_channel_number),
-					 &(cmd_args->serial_channel_number_set));
+                                         &(cmd_args->serial_channel_number),
+                                         &(cmd_args->serial_channel_number_set));
       break;
     case IPMI_CONFIG_ARGP_SOL_CHANNEL_NUMBER_KEY:
       _ipmi_config_parse_channel_number (arg,
-					 &(cmd_args->sol_channel_number),
-					 &(cmd_args->sol_channel_number_set));
+                                         &(cmd_args->sol_channel_number),
+                                         &(cmd_args->sol_channel_number_set));
       break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */

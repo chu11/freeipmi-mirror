@@ -29,12 +29,12 @@
 /* note: keypair and section_str functions for argp parsing, no pstate involved */
 
 int ipmi_config_keypair_parse_string (const char *str,
-				      char **section_name,
-				      char **key_name,
-				      char **value);
+                                      char **section_name,
+                                      char **key_name,
+                                      char **value);
 
 int ipmi_config_keypair_append (struct ipmi_config_keypair **keypairs,
-				struct ipmi_config_keypair *keypair);
+                                struct ipmi_config_keypair *keypair);
 
 /* XXX */
 /* no config_keypairs_create, responsibility of config tool to create list */
@@ -42,8 +42,8 @@ int ipmi_config_keypair_append (struct ipmi_config_keypair **keypairs,
 void ipmi_config_keypairs_destroy (struct ipmi_config_keypair *keypairs);
 
 struct ipmi_config_keypair *ipmi_config_keypair_create (const char *section_name,
-							const char *key_name,
-							const char *value_pair);
+                                                        const char *key_name,
+                                                        const char *value_pair);
 
 void ipmi_config_keypair_destroy (struct ipmi_config_keypair *keypair);
 
@@ -53,34 +53,34 @@ void ipmi_config_keypair_destroy (struct ipmi_config_keypair *keypair);
 struct ipmi_config_section_str *ipmi_config_section_str_create (const char *section_name);
 
 int ipmi_config_section_str_append (struct ipmi_config_section_str **section_strs,
-				    struct ipmi_config_section_str *section_str);
+                                    struct ipmi_config_section_str *section_str);
 
 void ipmi_config_section_str_destroy (struct ipmi_config_section_str *section_str);
 
 int ipmi_config_ipv4_address_string2int (pstdout_state_t pstate,
-					 const char *src,
-					 uint32_t *dest);
+                                         const char *src,
+                                         uint32_t *dest);
 
 int ipmi_config_mac_address_string2int (pstdout_state_t pstate,
-					const char *src,
-					uint64_t *dest);
+                                        const char *src,
+                                        uint64_t *dest);
 
 struct ipmi_config_section *ipmi_config_find_section (struct ipmi_config_section *sections,
-						      const char *section_name);
+                                                      const char *section_name);
 
 struct ipmi_config_key *ipmi_config_find_key (struct ipmi_config_section *section,
-					      const char *key_name);
+                                              const char *key_name);
 
 struct ipmi_config_keyvalue *ipmi_config_find_keyvalue (struct ipmi_config_section *section,
-							const char *key_name);
+                                                        const char *key_name);
 
 int ipmi_config_is_non_fatal_error (ipmi_ctx_t ipmi_ctx,
-				    fiid_obj_t obj_cmd_rs,
-				    ipmi_config_err_t *non_fatal_err);
+                                    fiid_obj_t obj_cmd_rs,
+                                    ipmi_config_err_t *non_fatal_err);
 
 int ipmi_config_is_config_param_non_fatal_error (ipmi_ctx_t ipmi_ctx,
-						 fiid_obj_t obj_cmd_rs,
-						 ipmi_config_err_t *non_fatal_err);
+                                                 fiid_obj_t obj_cmd_rs,
+                                                 ipmi_config_err_t *non_fatal_err);
 
 int ipmi_config_pstdout_fprintf (pstdout_state_t pstate, FILE *stream, const char *format, ...);
 

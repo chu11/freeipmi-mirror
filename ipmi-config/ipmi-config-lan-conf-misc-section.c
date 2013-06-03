@@ -47,7 +47,7 @@ struct bmc_generated_arp_control
 
 static ipmi_config_err_t
 _get_bmc_generated_arp_control (ipmi_config_state_data_t *state_data,
-				const char *section_name,
+                                const char *section_name,
                                 struct bmc_generated_arp_control *ac)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -89,8 +89,8 @@ _get_bmc_generated_arp_control (ipmi_config_state_data_t *state_data,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-						       obj_cmd_rs,
-						       &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -124,7 +124,7 @@ _get_bmc_generated_arp_control (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 _set_bmc_generated_arp_control (ipmi_config_state_data_t *state_data,
-				const char *section_name,
+                                const char *section_name,
                                 struct bmc_generated_arp_control *ac)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -164,8 +164,8 @@ _set_bmc_generated_arp_control (ipmi_config_state_data_t *state_data,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-						       obj_cmd_rs,
-						       &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -197,8 +197,8 @@ enable_gratuitous_arps_checkout (const char *section_name,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
-						  kv,
-						  ac.bmc_generated_gratuitous_arps ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  ac.bmc_generated_gratuitous_arps ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -245,8 +245,8 @@ enable_arp_response_checkout (const char *section_name,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
-						  kv,
-						  ac.bmc_generated_arp_responses ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  ac.bmc_generated_arp_responses ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -322,8 +322,8 @@ gratuitous_arp_interval_checkout (const char *section_name,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-						       obj_cmd_rs,
-						       &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -340,8 +340,8 @@ gratuitous_arp_interval_checkout (const char *section_name,
   gratuitous_arp_interval = val;
 
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
-							       kv,
-							       gratuitous_arp_interval) < 0)
+                                                               kv,
+                                                               gratuitous_arp_interval) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
@@ -394,8 +394,8 @@ gratuitous_arp_interval_commit (const char *section_name,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-						       obj_cmd_rs,
-						       &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -410,8 +410,8 @@ gratuitous_arp_interval_commit (const char *section_name,
 
 struct ipmi_config_section *
 ipmi_config_lan_conf_misc_section_get (ipmi_config_state_data_t *state_data,
-				      unsigned int config_flags,
-				      int channel_index)
+                                       unsigned int config_flags,
+                                       int channel_index)
 {
   struct ipmi_config_section *section = NULL;
   char *section_comment =
@@ -434,44 +434,44 @@ ipmi_config_lan_conf_misc_section_get (ipmi_config_state_data_t *state_data,
   assert (state_data);
 
   if (!(section = ipmi_config_section_multi_channel_create (state_data->pstate,
-						       section_name_base_str,
-						       section_comment,
-						       NULL,
-						       NULL,
-						       config_flags,
-						       channel_index,
-						       state_data->lan_channel_numbers,
-						       state_data->lan_channel_numbers_count)))
+                                                            section_name_base_str,
+                                                            section_comment,
+                                                            NULL,
+                                                            NULL,
+                                                            config_flags,
+                                                            channel_index,
+                                                            state_data->lan_channel_numbers,
+                                                            state_data->lan_channel_numbers_count)))
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Enable_Gratuitous_ARPs",
-                              "Possible values: Yes/No",
-                              0,
-                              enable_gratuitous_arps_checkout,
-                              enable_gratuitous_arps_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "Enable_Gratuitous_ARPs",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   enable_gratuitous_arps_checkout,
+                                   enable_gratuitous_arps_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Enable_ARP_Response",
-                              "Possible values: Yes/No",
-                              0,
-                              enable_arp_response_checkout,
-                              enable_arp_response_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "Enable_ARP_Response",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   enable_arp_response_checkout,
+                                   enable_arp_response_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Gratuitous_ARP_Interval",
-                              "Possible values: 0-255, in 500ms increments (e.g. 2 = 1000ms)",
-                              0,
-                              gratuitous_arp_interval_checkout,
-                              gratuitous_arp_interval_commit,
-                              ipmi_config_number_range_one_byte) < 0)
+                                   section,
+                                   "Gratuitous_ARP_Interval",
+                                   "Possible values: 0-255, in 500ms increments (e.g. 2 = 1000ms)",
+                                   0,
+                                   gratuitous_arp_interval_checkout,
+                                   gratuitous_arp_interval_commit,
+                                   ipmi_config_number_range_one_byte) < 0)
     goto cleanup;
 
   return (section);

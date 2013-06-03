@@ -115,9 +115,9 @@ _format_comment (pstdout_state_t pstate,
 
 int
 ipmi_config_section_comments (pstdout_state_t pstate,
-			      const char *section_name,
-			      const char *in,
-			      FILE *fp)
+                              const char *section_name,
+                              const char *in,
+                              FILE *fp)
 {
   char section_name_buf[FORMAT_COMMENT_BUFLEN];
   char buf[FORMAT_COMMENT_BUFLEN];
@@ -134,8 +134,8 @@ ipmi_config_section_comments (pstdout_state_t pstate,
     goto cleanup;
 
   ipmi_config_pstdout_fprintf (pstate,
-			  fp,
-			  "#\n");
+                               fp,
+                               "#\n");
 
   /* XXX: assume no overrun */
   snprintf (section_name_buf,
@@ -149,12 +149,12 @@ ipmi_config_section_comments (pstdout_state_t pstate,
                        FORMAT_COMMENT_BUFLEN) < 0)
     goto cleanup;
   ipmi_config_pstdout_fprintf (pstate,
-			       fp,
-			       "%s",
-			       buf);
+                               fp,
+                               "%s",
+                               buf);
   ipmi_config_pstdout_fprintf (pstate,
-			       fp,
-			       "#\n");
+                               fp,
+                               "#\n");
   
   tok = strtok_r (inbuf, "\n", &tokbuf);
   while (tok)
@@ -165,12 +165,12 @@ ipmi_config_section_comments (pstdout_state_t pstate,
                            FORMAT_COMMENT_BUFLEN) < 0)
         goto cleanup;
       ipmi_config_pstdout_fprintf (pstate,
-				   fp,
-				   "%s",
-				   buf);
+                                   fp,
+                                   "%s",
+                                   buf);
       ipmi_config_pstdout_fprintf (pstate,
-				   fp,
-				   "#\n");
+                                   fp,
+                                   "#\n");
 
       tok = strtok_r (NULL, "\n", &tokbuf);
     }

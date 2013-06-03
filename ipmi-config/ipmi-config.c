@@ -47,8 +47,8 @@
 
 static int
 _ipmi_config (pstdout_state_t pstate,
-             const char *hostname,
-             void *arg)
+              const char *hostname,
+              void *arg)
 {
   ipmi_config_state_data_t state_data;
   ipmi_config_prog_data_t *prog_data;
@@ -69,7 +69,7 @@ _ipmi_config (pstdout_state_t pstate,
   if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
                                          hostname,
                                          &(prog_data->args->common_args),
-					 state_data.pstate)))
+                                         state_data.pstate)))
     goto cleanup;
 
   if (!(state_data.sections = ipmi_config_sections_create (&state_data)))
@@ -127,10 +127,10 @@ _ipmi_config (pstdout_state_t pstate,
           && !prog_data->args->keypairs))
     {
       if (ipmi_config_parse (pstate,
-			     state_data.sections,
-			     prog_data->args,
-			     fp) < 0)
-	goto cleanup;
+                             state_data.sections,
+                             prog_data->args,
+                             fp) < 0)
+        goto cleanup;
     }
   
   /* note: argp validation catches if user specified keypair and
@@ -142,9 +142,9 @@ _ipmi_config (pstdout_state_t pstate,
       && prog_data->args->keypairs)
     {
       if (ipmi_config_sections_insert_keyvalues (pstate,
-						 state_data.sections,
-						 prog_data->args->keypairs) < 0)
-	goto cleanup;
+                                                 state_data.sections,
+                                                 prog_data->args->keypairs) < 0)
+        goto cleanup;
     }
 
   if (prog_data->args->action == IPMI_CONFIG_ACTION_COMMIT
@@ -153,13 +153,13 @@ _ipmi_config (pstdout_state_t pstate,
       int num;
 
       if ((num = ipmi_config_sections_validate_keyvalue_inputs (pstate,
-								state_data.sections,
-								&state_data)) < 0)
-	goto cleanup;
+                                                                state_data.sections,
+                                                                &state_data)) < 0)
+        goto cleanup;
 
       /* some errors found */
       if (num)
-	goto cleanup;
+        goto cleanup;
     }
 
   if (prog_data->args->action == IPMI_CONFIG_ACTION_CHECKOUT
@@ -171,7 +171,7 @@ _ipmi_config (pstdout_state_t pstate,
       while (sstr)
         {
           if (!ipmi_config_find_section (state_data.sections,
-					 sstr->section_name))
+                                         sstr->section_name))
             {
               pstdout_fprintf (pstate,
                                stderr,
@@ -222,7 +222,7 @@ _ipmi_config (pstdout_state_t pstate,
                   if (userid < user_count)
                     {
                       if ((kv = ipmi_config_find_keyvalue (section,
-							   "Enable_User")))
+                                                           "Enable_User")))
                         enable_user_found = 1;
                     }
                 }
@@ -255,10 +255,10 @@ _ipmi_config (pstdout_state_t pstate,
       struct ipmi_config_section *section;
 
       if ((section = ipmi_config_find_section (state_data.sections,
-					       "Lan_Conf")))
+                                               "Lan_Conf")))
         {
           if (ipmi_config_find_keyvalue (section,
-					 "IP_Address"))
+                                         "IP_Address"))
             {
               pstdout_fprintf (pstate,
                                stderr,
@@ -267,7 +267,7 @@ _ipmi_config (pstdout_state_t pstate,
             }
 
           if (ipmi_config_find_keyvalue (section,
-					 "MAC_Address"))
+                                         "MAC_Address"))
             {
               pstdout_fprintf (pstate,
                                stderr,
@@ -281,71 +281,71 @@ _ipmi_config (pstdout_state_t pstate,
     {
     case IPMI_CONFIG_ACTION_CHECKOUT:
       if (prog_data->args->section_strs)
-	{
-	  struct ipmi_config_section_str *sstr;
-	  
-	  /* note: argp validation catches if user specified --section
-	   * and --keypair, so all_keys_if_none_specified should be '1'.
-	   */
+        {
+          struct ipmi_config_section_str *sstr;
+          
+          /* note: argp validation catches if user specified --section
+           * and --keypair, so all_keys_if_none_specified should be '1'.
+           */
 
-	  sstr = prog_data->args->section_strs;
-	  while (sstr)
-	    {
-	      struct ipmi_config_section *s;
-	      ipmi_config_err_t this_ret;
+          sstr = prog_data->args->section_strs;
+          while (sstr)
+            {
+              struct ipmi_config_section *s;
+              ipmi_config_err_t this_ret;
 
-	      if (!(s = ipmi_config_find_section (state_data.sections,
-						  sstr->section_name)))
-		{
-		  pstdout_fprintf (pstate,
-				   stderr,
-				   "## FATAL: Cannot checkout section '%s'\n",
-				   sstr->section_name);
-		  continue;
-		}
+              if (!(s = ipmi_config_find_section (state_data.sections,
+                                                  sstr->section_name)))
+                {
+                  pstdout_fprintf (pstate,
+                                   stderr,
+                                   "## FATAL: Cannot checkout section '%s'\n",
+                                   sstr->section_name);
+                  continue;
+                }
 
-	      this_ret = ipmi_config_checkout_section (pstate,
-						       s,
-						       prog_data->args,
-						       1,
-						       fp,
-						       0,
-						       &state_data);
-	      if (this_ret != IPMI_CONFIG_ERR_SUCCESS)
-		ret = this_ret;
-	      if (ret == IPMI_CONFIG_ERR_FATAL_ERROR)
-		break;
+              this_ret = ipmi_config_checkout_section (pstate,
+                                                       s,
+                                                       prog_data->args,
+                                                       1,
+                                                       fp,
+                                                       0,
+                                                       &state_data);
+              if (this_ret != IPMI_CONFIG_ERR_SUCCESS)
+                ret = this_ret;
+              if (ret == IPMI_CONFIG_ERR_FATAL_ERROR)
+                break;
 
-	      sstr = sstr->next;
-	    }
-	}
+              sstr = sstr->next;
+            }
+        }
       else
-	{
-	  int all_keys_if_none_specified = 0;
+        {
+          int all_keys_if_none_specified = 0;
 
-	  if (!prog_data->args->keypairs)
-	    all_keys_if_none_specified++;
+          if (!prog_data->args->keypairs)
+            all_keys_if_none_specified++;
 
-	  ret = ipmi_config_checkout (pstate,
-				      state_data.sections,
-				      prog_data->args,
-				      all_keys_if_none_specified,
-				      fp,
-				      0,
-				      &state_data);
-	}
+          ret = ipmi_config_checkout (pstate,
+                                      state_data.sections,
+                                      prog_data->args,
+                                      all_keys_if_none_specified,
+                                      fp,
+                                      0,
+                                      &state_data);
+        }
       break;
     case IPMI_CONFIG_ACTION_COMMIT:
       ret = ipmi_config_commit (pstate,
-				state_data.sections,
-				prog_data->args,
-				&state_data);
+                                state_data.sections,
+                                prog_data->args,
+                                &state_data);
       break;
     case IPMI_CONFIG_ACTION_DIFF:
       ret = ipmi_config_diff (pstate,
-			      state_data.sections,
-			      prog_data->args,
-			      &state_data);
+                              state_data.sections,
+                              prog_data->args,
+                              &state_data);
       break;
     case IPMI_CONFIG_ACTION_LIST_SECTIONS:
       ret = ipmi_config_output_sections_list (pstate, state_data.sections);
@@ -391,7 +391,7 @@ main (int argc, char *argv[])
   prog_data.args = &cmd_args;
 
   if ((hosts_count = pstdout_setup (&(prog_data.args->common_args.hostname),
-				    &(prog_data.args->common_args))) < 0)
+                                    &(prog_data.args->common_args))) < 0)
     return (EXIT_FAILURE);
 
   if (!hosts_count)

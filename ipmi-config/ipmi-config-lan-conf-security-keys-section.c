@@ -39,7 +39,7 @@
 
 static ipmi_config_err_t
 _get_key (ipmi_config_state_data_t *state_data,
-	  const char *section_name,
+          const char *section_name,
           uint8_t key_type,
           void *key,
           unsigned int key_len)
@@ -120,7 +120,7 @@ _get_key (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 _set_key (ipmi_config_state_data_t *state_data,
-	  const char *section_name,
+          const char *section_name,
           uint8_t key_type,
           const void *key,
           unsigned int key_len)
@@ -193,7 +193,7 @@ k_r_checkout (const char *section_name,
   memset (k_r, 0, IPMI_MAX_K_R_LENGTH + 1);
   
   if ((ret = _get_key (state_data,
-		       section_name,
+                       section_name,
                        IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_R,
                        k_r,
                        IPMI_MAX_K_R_LENGTH)) != IPMI_CONFIG_ERR_SUCCESS)
@@ -202,8 +202,8 @@ k_r_checkout (const char *section_name,
   k_r[IPMI_MAX_K_R_LENGTH] = '\0';
   
   if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
-                                             kv,
-                                             (char *)k_r) < 0)
+                                                  kv,
+                                                  (char *)k_r) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -223,7 +223,7 @@ k_r_commit (const char *section_name,
   state_data = (ipmi_config_state_data_t *)arg;
 
   return (_set_key (state_data,
-		    section_name,
+                    section_name,
                     IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_R,
                     kv->value_input,
                     strlen (kv->value_input)));
@@ -263,7 +263,7 @@ k_g_checkout (const char *section_name,
   memset (k_g, 0, IPMI_MAX_K_G_LENGTH);
 
   if ((ret = _get_key (state_data,
-		       section_name,
+                       section_name,
                        IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_G,
                        k_g,
                        IPMI_MAX_K_G_LENGTH)) != IPMI_CONFIG_ERR_SUCCESS)
@@ -285,8 +285,8 @@ k_g_checkout (const char *section_name,
       if (!memcmp (kv_k_g, k_g, IPMI_MAX_K_G_LENGTH))
         {
           if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
-                                                     kv,
-                                                     kv->value_input) < 0)
+                                                          kv,
+                                                          kv->value_input) < 0)
             return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
           return (IPMI_CONFIG_ERR_SUCCESS);
@@ -299,8 +299,8 @@ k_g_checkout (const char *section_name,
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
-                                             kv,
-                                             k_g_str) < 0)
+                                                  kv,
+                                                  k_g_str) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -327,7 +327,7 @@ k_g_commit (const char *section_name,
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (_set_key (state_data,
-		    section_name,
+                    section_name,
                     IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_G,
                     k_g,
                     k_g_len));
@@ -352,8 +352,8 @@ k_g_validate (const char *section_name,
 
 struct ipmi_config_section *
 ipmi_config_lan_conf_security_keys_section_get (ipmi_config_state_data_t *state_data,
-					       unsigned int config_flags,
-					       int channel_index)
+                                                unsigned int config_flags,
+                                                int channel_index)
 {
   struct ipmi_config_section *section = NULL;
   char *section_comment =
@@ -366,34 +366,34 @@ ipmi_config_lan_conf_security_keys_section_get (ipmi_config_state_data_t *state_
   assert (state_data);
 
   if (!(section = ipmi_config_section_multi_channel_create (state_data->pstate,
-						       section_name_base_str,
-						       section_comment,
-						       NULL,
-						       NULL,
-						       config_flags,
-						       channel_index,
-						       state_data->lan_channel_numbers,
-						       state_data->lan_channel_numbers_count)))
+                                                            section_name_base_str,
+                                                            section_comment,
+                                                            NULL,
+                                                            NULL,
+                                                            config_flags,
+                                                            channel_index,
+                                                            state_data->lan_channel_numbers,
+                                                            state_data->lan_channel_numbers_count)))
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "K_R",
-                              "Give string or blank to clear. Max 20 chars",
-                              0,
-                              k_r_checkout,
-                              k_r_commit,
-                              k_r_validate) < 0)
+                                   section,
+                                   "K_R",
+                                   "Give string or blank to clear. Max 20 chars",
+                                   0,
+                                   k_r_checkout,
+                                   k_r_commit,
+                                   k_r_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "K_G",
-                              "Give string or blank to clear. Max 20 bytes, prefix with 0x to enter hex",
-                              0,
-                              k_g_checkout,
-                              k_g_commit,
-                              k_g_validate) < 0)
+                                   section,
+                                   "K_G",
+                                   "Give string or blank to clear. Max 20 bytes, prefix with 0x to enter hex",
+                                   0,
+                                   k_g_checkout,
+                                   k_g_commit,
+                                   k_g_validate) < 0)
     goto cleanup;
 
   return (section);

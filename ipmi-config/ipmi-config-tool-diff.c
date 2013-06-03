@@ -35,9 +35,9 @@
 
 ipmi_config_err_t
 ipmi_config_diff (pstdout_state_t pstate,
-		  struct ipmi_config_section *sections,
-		  struct ipmi_config_arguments *cmd_args,
-		  void *arg)
+                  struct ipmi_config_section *sections,
+                  struct ipmi_config_arguments *cmd_args,
+                  void *arg)
 {
   struct ipmi_config_section *s;
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;

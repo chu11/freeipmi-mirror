@@ -151,27 +151,27 @@ struct ipmi_config_keyvalue {
 
 /* Fills in kv->value_output as a printable string  */
 typedef ipmi_config_err_t (*Key_Checkout)(const char *section_name,
-					  struct ipmi_config_keyvalue *kv,
-					  void *arg);
+                                          struct ipmi_config_keyvalue *kv,
+                                          void *arg);
 
 /* Takes kv->value_input and commits it */
 typedef ipmi_config_err_t (*Key_Commit)(const char *section_name,
-					const struct ipmi_config_keyvalue *kv,
-					void *arg);
+                                        const struct ipmi_config_keyvalue *kv,
+                                        void *arg);
 
 /* Determines if an inputted value is valid */
 typedef ipmi_config_validate_t (*Key_Validate)(const char *section_name,
-					       const char *key_name,
-					       const char *value,
-					       void *arg);
+                                               const char *key_name,
+                                               const char *value,
+                                               void *arg);
 
 /* Sectional pre commit call */
 typedef ipmi_config_err_t (*Section_Pre_Commit)(const char *section_name,
-						void *arg);
+                                                void *arg);
 
 /* Sectional post commit call */
 typedef ipmi_config_err_t (*Section_Post_Commit)(const char *section_name,
-						 void *arg);
+                                                 void *arg);
 
 struct ipmi_config_key {
   char *key_name;

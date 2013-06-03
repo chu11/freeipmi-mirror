@@ -55,7 +55,7 @@ struct ipmi_messaging_comm_settings {
 
 static ipmi_config_err_t
 _get_connection_mode (ipmi_config_state_data_t *state_data,
-		      const char *section_name,
+                      const char *section_name,
                       struct connection_mode *cm)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -97,8 +97,8 @@ _get_connection_mode (ipmi_config_state_data_t *state_data,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -152,7 +152,7 @@ _get_connection_mode (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 _set_connection_mode (ipmi_config_state_data_t *state_data,
-		      const char *section_name,
+                      const char *section_name,
                       struct connection_mode *cm)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -194,8 +194,8 @@ _set_connection_mode (ipmi_config_state_data_t *state_data,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -226,8 +226,8 @@ enable_basic_mode_checkout (const char *section_name,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
-                                             kv,
-                                             cm.basic_mode ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  cm.basic_mode ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -275,8 +275,8 @@ enable_ppp_mode_checkout (const char *section_name,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
-                                             kv,
-                                             cm.ppp_mode ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  cm.ppp_mode ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -324,8 +324,8 @@ enable_terminal_mode_checkout (const char *section_name,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
-                                             kv,
-                                             cm.terminal_mode ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  cm.terminal_mode ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -373,8 +373,8 @@ connect_mode_checkout (const char *section_name,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
-                                             kv,
-                                             connect_mode_string (cm.connect_mode)) < 0)
+                                                  kv,
+                                                  connect_mode_string (cm.connect_mode)) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -451,8 +451,8 @@ page_blackout_interval_checkout (const char *section_name,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -469,8 +469,8 @@ page_blackout_interval_checkout (const char *section_name,
   page_blackout_interval = val;
 
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
-                                                          kv,
-                                                          page_blackout_interval) < 0)
+                                                               kv,
+                                                               page_blackout_interval) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
@@ -524,8 +524,8 @@ page_blackout_interval_commit (const char *section_name,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -585,8 +585,8 @@ call_retry_interval_checkout (const char *section_name,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -603,8 +603,8 @@ call_retry_interval_checkout (const char *section_name,
   call_retry_interval = val;
 
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
-                                                          kv,
-                                                          call_retry_interval) < 0)
+                                                               kv,
+                                                               call_retry_interval) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
@@ -657,8 +657,8 @@ call_retry_interval_commit (const char *section_name,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -672,7 +672,7 @@ call_retry_interval_commit (const char *section_name,
 
 static ipmi_config_err_t
 _get_ipmi_messaging_comm_settings (ipmi_config_state_data_t *state_data,
-				   const char *section_name,
+                                   const char *section_name,
                                    struct ipmi_messaging_comm_settings *cs)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -714,8 +714,8 @@ _get_ipmi_messaging_comm_settings (ipmi_config_state_data_t *state_data,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -759,7 +759,7 @@ _get_ipmi_messaging_comm_settings (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 _set_ipmi_messaging_comm_settings (ipmi_config_state_data_t *state_data,
-				   const char *section_name,
+                                   const char *section_name,
                                    struct ipmi_messaging_comm_settings *cs)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -800,8 +800,8 @@ _set_ipmi_messaging_comm_settings (ipmi_config_state_data_t *state_data,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -832,8 +832,8 @@ enable_dtr_hangup_checkout (const char *section_name,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
-                                             kv,
-                                             cs.dtr_hangup ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  cs.dtr_hangup ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -881,8 +881,8 @@ flow_control_checkout (const char *section_name,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
-                                             kv,
-                                             flow_control_string (cs.flow_control)) < 0)
+                                                  kv,
+                                                  flow_control_string (cs.flow_control)) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -930,8 +930,8 @@ bit_rate_checkout (const char *section_name,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
-                                             kv,
-                                             bit_rate_string (cs.bit_rate)) < 0)
+                                                  kv,
+                                                  bit_rate_string (cs.bit_rate)) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -962,8 +962,8 @@ bit_rate_commit (const char *section_name,
 
 struct ipmi_config_section *
 ipmi_config_serial_conf_section_get (ipmi_config_state_data_t *state_data,
-				    unsigned int config_flags,
-				    int channel_index)
+                                     unsigned int config_flags,
+                                     int channel_index)
 {
   struct ipmi_config_section *section = NULL;
   char *section_comment =
@@ -982,115 +982,115 @@ ipmi_config_serial_conf_section_get (ipmi_config_state_data_t *state_data,
     config_flags |= IPMI_CONFIG_DO_NOT_CHECKOUT;
 
   if (!(section = ipmi_config_section_multi_channel_create (state_data->pstate,
-						       section_name_base_str,
-						       section_comment,
-						       NULL,
-						       NULL,
-						       config_flags,
-						       channel_index,
-						       state_data->serial_channel_numbers,
-						       state_data->serial_channel_numbers_count)))
+                                                            section_name_base_str,
+                                                            section_comment,
+                                                            NULL,
+                                                            NULL,
+                                                            config_flags,
+                                                            channel_index,
+                                                            state_data->serial_channel_numbers,
+                                                            state_data->serial_channel_numbers_count)))
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Enable_Basic_Mode",
-                              "Possible values: Yes/No",
-                              0,
-                              enable_basic_mode_checkout,
-                              enable_basic_mode_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "Enable_Basic_Mode",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   enable_basic_mode_checkout,
+                                   enable_basic_mode_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Enable_PPP_Mode",
-                              "Possible values: Yes/No",
-                              0,
-                              enable_ppp_mode_checkout,
-                              enable_ppp_mode_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "Enable_PPP_Mode",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   enable_ppp_mode_checkout,
+                                   enable_ppp_mode_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Enable_Terminal_Mode",
-                              "Possible values: Yes/No",
-                              0,
-                              enable_terminal_mode_checkout,
-                              enable_terminal_mode_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "Enable_Terminal_Mode",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   enable_terminal_mode_checkout,
+                                   enable_terminal_mode_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Connect_Mode",
-                              "Possible values: Modem_Connect/Direct_Connect",
-                              0,
-                              connect_mode_checkout,
-                              connect_mode_commit,
-                              connect_mode_number_validate) < 0)
+                                   section,
+                                   "Connect_Mode",
+                                   "Possible values: Modem_Connect/Direct_Connect",
+                                   0,
+                                   connect_mode_checkout,
+                                   connect_mode_commit,
+                                   connect_mode_number_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Page_Blackout_Interval",
-                              "Give a valid number",
-                              0,
-                              page_blackout_interval_checkout,
-                              page_blackout_interval_commit,
-                              ipmi_config_number_range_one_byte) < 0)
+                                   section,
+                                   "Page_Blackout_Interval",
+                                   "Give a valid number",
+                                   0,
+                                   page_blackout_interval_checkout,
+                                   page_blackout_interval_commit,
+                                   ipmi_config_number_range_one_byte) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Call_Retry_Interval",
-                              "Give a valid number",
-                              0,
-                              call_retry_interval_checkout,
-                              call_retry_interval_commit,
-                              ipmi_config_number_range_one_byte) < 0)
+                                   section,
+                                   "Call_Retry_Interval",
+                                   "Give a valid number",
+                                   0,
+                                   call_retry_interval_checkout,
+                                   call_retry_interval_commit,
+                                   ipmi_config_number_range_one_byte) < 0)
     goto cleanup;
 
   /* achu: For backwards compatability to ipmi-config in 0.2.0 */
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Call_Retry_Time",
-                              "Give a valid number",
-                              IPMI_CONFIG_DO_NOT_CHECKOUT,
-                              call_retry_interval_checkout,
-				   call_retry_interval_commit,
-                              ipmi_config_number_range_one_byte) < 0)
+                                   section,
+                                   "Call_Retry_Time",
+                                   "Give a valid number",
+                                   IPMI_CONFIG_DO_NOT_CHECKOUT,
+                                   call_retry_interval_checkout,
+                                   call_retry_interval_commit,
+                                   ipmi_config_number_range_one_byte) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Enable_DTR_Hangup",
-                              "Possible values: Yes/No",
-                              0,
-                              enable_dtr_hangup_checkout,
-                              enable_dtr_hangup_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "Enable_DTR_Hangup",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   enable_dtr_hangup_checkout,
+                                   enable_dtr_hangup_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Flow_Control",
-                              "Possible values: No_Flow_Control/RTS_CTS/XON_XOFF",
-                              0,
-                              flow_control_checkout,
-                              flow_control_commit,
-                              flow_control_number_validate) < 0)
+                                   section,
+                                   "Flow_Control",
+                                   "Possible values: No_Flow_Control/RTS_CTS/XON_XOFF",
+                                   0,
+                                   flow_control_checkout,
+                                   flow_control_commit,
+                                   flow_control_number_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Bit_Rate",
-                              "Possible values: 9600/19200/38400/57600/115200",
-                              0,
-                              bit_rate_checkout,
-                              bit_rate_commit,
-                              bit_rate_number_validate) < 0)
+                                   section,
+                                   "Bit_Rate",
+                                   "Possible values: 9600/19200/38400/57600/115200",
+                                   0,
+                                   bit_rate_checkout,
+                                   bit_rate_commit,
+                                   bit_rate_number_validate) < 0)
     goto cleanup;
 
   return (section);

@@ -88,8 +88,8 @@ load_serial_channel_numbers (ipmi_config_state_data_t *state_data)
 
 static void
 _sol_channel_number_save (ipmi_config_state_data_t *state_data,
-			  uint8_t lan_channel_number,
-			  uint8_t sol_channel_number)
+                          uint8_t lan_channel_number,
+                          uint8_t sol_channel_number)
 {
   unsigned int i;
   int found = 0;
@@ -100,10 +100,10 @@ _sol_channel_number_save (ipmi_config_state_data_t *state_data,
   for (i = 0; i < state_data->sol_channel_numbers_count; i++)
     {
       if (state_data->sol_channel_numbers_sol_channel[i] == sol_channel_number)
-	{
-	  found++;
-	  break;
-	}
+        {
+          found++;
+          break;
+        }
     }
 
   if (!found)
@@ -120,7 +120,7 @@ _sol_channel_number_save (ipmi_config_state_data_t *state_data,
 
 ipmi_config_err_t
 _get_sol_channel_number_for_channel (ipmi_config_state_data_t *state_data,
-				     uint8_t lan_channel_number)
+                                     uint8_t lan_channel_number)
 {
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   ipmi_config_err_t ret;
@@ -156,7 +156,7 @@ _get_sol_channel_number_for_channel (ipmi_config_state_data_t *state_data,
           && (ipmi_check_completion_code (obj_cmd_rs,
                                           IPMI_COMP_CODE_SET_SOL_CONFIGURATION_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1))
         {
-	  _sol_channel_number_save (state_data, lan_channel_number, lan_channel_number);
+          _sol_channel_number_save (state_data, lan_channel_number, lan_channel_number);
           goto out;
         }
 
@@ -167,8 +167,8 @@ _get_sol_channel_number_for_channel (ipmi_config_state_data_t *state_data,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
       
       if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-						       obj_cmd_rs,
-						       &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
       
       goto cleanup;
@@ -208,9 +208,9 @@ load_sol_channel_numbers (ipmi_config_state_data_t *state_data)
     {
       for (channelindex = 0; channelindex < state_data->lan_channel_numbers_count; channelindex++)
         {
-  	  if (_get_sol_channel_number_for_channel (state_data,
-						   state_data->lan_channel_numbers[channelindex]) == IPMI_CONFIG_ERR_FATAL_ERROR)
-	    return (IPMI_CONFIG_ERR_FATAL_ERROR);
+          if (_get_sol_channel_number_for_channel (state_data,
+                                                   state_data->lan_channel_numbers[channelindex]) == IPMI_CONFIG_ERR_FATAL_ERROR)
+            return (IPMI_CONFIG_ERR_FATAL_ERROR);
         }
       state_data->sol_channel_numbers_loaded++;
     }
@@ -220,8 +220,8 @@ load_sol_channel_numbers (ipmi_config_state_data_t *state_data)
 
 ipmi_config_err_t
 get_lan_channel_number (ipmi_config_state_data_t *state_data,
-			const char *section_name,
-			uint8_t *channel_number)
+                        const char *section_name,
+                        uint8_t *channel_number)
 {
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   ipmi_config_err_t ret;
@@ -238,17 +238,17 @@ get_lan_channel_number (ipmi_config_state_data_t *state_data,
 
       /* Special case for Lan_Channel_Channel_X */
       if ((ptr = stristr (section_name, "Channel_Channel_")))
-	{
-	  (*channel_number) = atoi (ptr + strlen ("Channel_Channel_"));
-	  return (IPMI_CONFIG_ERR_SUCCESS);
-	}
+        {
+          (*channel_number) = atoi (ptr + strlen ("Channel_Channel_"));
+          return (IPMI_CONFIG_ERR_SUCCESS);
+        }
 
       /* For all other sections with a channel number at the end of the section name */
       if ((ptr = stristr (section_name, "Channel_")))
-	{
-	  (*channel_number) = atoi (ptr + strlen ("Channel_"));
-	  return (IPMI_CONFIG_ERR_SUCCESS);
-	}
+        {
+          (*channel_number) = atoi (ptr + strlen ("Channel_"));
+          return (IPMI_CONFIG_ERR_SUCCESS);
+        }
     }
 
   /* for single-channel, channel is first one found */
@@ -256,19 +256,19 @@ get_lan_channel_number (ipmi_config_state_data_t *state_data,
   if (!state_data->prog_data->args->lan_channel_number_set)
     {
       if (!state_data->lan_channel_numbers_loaded)
-	{
-	  if ((ret = load_lan_channel_numbers (state_data)) != IPMI_CONFIG_ERR_SUCCESS)
-	    {
-	      rv = ret;
-	      goto cleanup;
-	    }
-	}
+        {
+          if ((ret = load_lan_channel_numbers (state_data)) != IPMI_CONFIG_ERR_SUCCESS)
+            {
+              rv = ret;
+              goto cleanup;
+            }
+        }
 
       if (!state_data->lan_channel_numbers_count)
-	{
-	  rv = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
-	  goto cleanup;
-	}
+        {
+          rv = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
+          goto cleanup;
+        }
 
       (*channel_number) = state_data->lan_channel_numbers[0];
     }
@@ -282,8 +282,8 @@ get_lan_channel_number (ipmi_config_state_data_t *state_data,
 
 ipmi_config_err_t
 get_serial_channel_number (ipmi_config_state_data_t *state_data,
-			   const char *section_name,
-			   uint8_t *channel_number)
+                           const char *section_name,
+                           uint8_t *channel_number)
 {
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   ipmi_config_err_t ret;
@@ -300,17 +300,17 @@ get_serial_channel_number (ipmi_config_state_data_t *state_data,
 
       /* Special case for Serial_Channel_Channel_X */
       if ((ptr = stristr (section_name, "Channel_Channel_")))
-	{
-	  (*channel_number) = atoi (ptr + strlen ("Channel_Channel_"));
-	  return (IPMI_CONFIG_ERR_SUCCESS);
-	}
+        {
+          (*channel_number) = atoi (ptr + strlen ("Channel_Channel_"));
+          return (IPMI_CONFIG_ERR_SUCCESS);
+        }
 
       /* For all other sections with a channel number at the end of the section name */
       if ((ptr = stristr (section_name, "Channel_")))
-	{
-	  (*channel_number) = atoi (ptr + strlen ("Channel_"));
-	  return (IPMI_CONFIG_ERR_SUCCESS);
-	}
+        {
+          (*channel_number) = atoi (ptr + strlen ("Channel_"));
+          return (IPMI_CONFIG_ERR_SUCCESS);
+        }
     }
 
   /* for single-channel, channel is first one found */
@@ -318,19 +318,19 @@ get_serial_channel_number (ipmi_config_state_data_t *state_data,
   if (!state_data->prog_data->args->serial_channel_number_set)
     {
       if (!state_data->serial_channel_numbers_loaded)
-	{
-	  if ((ret = load_serial_channel_numbers (state_data)) != IPMI_CONFIG_ERR_SUCCESS)
-	    {
-	      rv = ret;
-	      goto cleanup;
-	    }
-	}
+        {
+          if ((ret = load_serial_channel_numbers (state_data)) != IPMI_CONFIG_ERR_SUCCESS)
+            {
+              rv = ret;
+              goto cleanup;
+            }
+        }
 
       if (!state_data->serial_channel_numbers_count)
-	{
-	  rv = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
-	  goto cleanup;
-	}
+        {
+          rv = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
+          goto cleanup;
+        }
 
       (*channel_number) = state_data->serial_channel_numbers[0];
     }
@@ -344,8 +344,8 @@ get_serial_channel_number (ipmi_config_state_data_t *state_data,
 
 ipmi_config_err_t
 get_sol_channel_number (ipmi_config_state_data_t *state_data,
-			const char *section_name,
-			uint8_t *channel_number)
+                        const char *section_name,
+                        uint8_t *channel_number)
 {
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   ipmi_config_err_t ret;
@@ -362,10 +362,10 @@ get_sol_channel_number (ipmi_config_state_data_t *state_data,
 
       /* Sections with a channel number at the end of the section name */
       if ((ptr = stristr (section_name, "Channel_")))
-	{
-	  (*channel_number) = atoi (ptr + strlen ("Channel_"));
-	  return (IPMI_CONFIG_ERR_SUCCESS);
-	}
+        {
+          (*channel_number) = atoi (ptr + strlen ("Channel_"));
+          return (IPMI_CONFIG_ERR_SUCCESS);
+        }
     }
 
   /* for single-channel, channel is first one found */
@@ -373,19 +373,19 @@ get_sol_channel_number (ipmi_config_state_data_t *state_data,
   if (!state_data->prog_data->args->sol_channel_number_set)
     {
       if (!state_data->sol_channel_numbers_loaded)
-	{
-	  if ((ret = load_sol_channel_numbers (state_data)) != IPMI_CONFIG_ERR_SUCCESS)
-	    {
-	      rv = ret;
-	      goto cleanup;
-	    }
-	}
+        {
+          if ((ret = load_sol_channel_numbers (state_data)) != IPMI_CONFIG_ERR_SUCCESS)
+            {
+              rv = ret;
+              goto cleanup;
+            }
+        }
       
       if (!state_data->sol_channel_numbers_count)
-	{
-	  rv = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
-	  goto cleanup;
-	}
+        {
+          rv = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
+          goto cleanup;
+        }
       
       (*channel_number) = state_data->sol_channel_numbers_unique[0];
     }

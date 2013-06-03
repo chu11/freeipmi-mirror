@@ -95,8 +95,8 @@ _get_pef_control (pstdout_state_t pstate,
                          ipmi_ctx_errormsg (ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -187,8 +187,8 @@ _set_pef_control (pstdout_state_t pstate,
                          ipmi_ctx_errormsg (ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -221,8 +221,8 @@ enable_pef_checkout (pstdout_state_t pstate,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (pstate,
-                                             kv,
-                                             pc.enable_pef ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  pc.enable_pef ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -272,8 +272,8 @@ enable_pef_event_messages_checkout (pstdout_state_t pstate,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (pstate,
-                                             kv,
-                                             pc.enable_pef_event_messages ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  pc.enable_pef_event_messages ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -323,8 +323,8 @@ enable_pef_startup_delay_checkout (pstdout_state_t pstate,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (pstate,
-                                             kv,
-                                             pc.enable_pef_startup_delay ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  pc.enable_pef_startup_delay ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -374,8 +374,8 @@ enable_pef_alert_startup_delay_checkout (pstdout_state_t pstate,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (pstate,
-                                             kv,
-                                             pc.enable_pef_alert_startup_delay ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  pc.enable_pef_alert_startup_delay ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -444,8 +444,8 @@ _get_pef_action_global_control (pstdout_state_t pstate,
                          ipmi_ctx_errormsg (ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -558,8 +558,8 @@ _set_pef_action_global_control (pstdout_state_t pstate,
                          ipmi_ctx_errormsg (ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -592,8 +592,8 @@ enable_alert_action_checkout (pstdout_state_t pstate,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (pstate,
-                                             kv,
-                                             gc.enable_alert_action ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  gc.enable_alert_action ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -643,8 +643,8 @@ enable_power_down_action_checkout (pstdout_state_t pstate,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (pstate,
-                                             kv,
-                                             gc.enable_power_down_action ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  gc.enable_power_down_action ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -694,8 +694,8 @@ enable_reset_action_checkout (pstdout_state_t pstate,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (pstate,
-                                             kv,
-                                             gc.enable_reset_action ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  gc.enable_reset_action ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -745,8 +745,8 @@ enable_power_cycle_action_checkout (pstdout_state_t pstate,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (pstate,
-                                             kv,
-                                             gc.enable_power_cycle_action ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  gc.enable_power_cycle_action ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -796,8 +796,8 @@ enable_oem_action_checkout (pstdout_state_t pstate,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (pstate,
-                                             kv,
-                                             gc.enable_oem_action ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  gc.enable_oem_action ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -847,8 +847,8 @@ enable_diagnostic_interrupt_checkout (pstdout_state_t pstate,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (pstate,
-                                             kv,
-                                             gc.enable_diagnostic_interrupt ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  gc.enable_diagnostic_interrupt ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -917,8 +917,8 @@ pef_startup_delay_checkout (pstdout_state_t pstate,
                          ipmi_ctx_errormsg (ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -935,8 +935,8 @@ pef_startup_delay_checkout (pstdout_state_t pstate,
   pef_startup_delay = val;
 
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (pstate,
-                                                          kv,
-                                                          pef_startup_delay) < 0)
+                                                               kv,
+                                                               pef_startup_delay) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
@@ -981,8 +981,8 @@ pef_startup_delay_commit (pstdout_state_t pstate,
                          ipmi_ctx_errormsg (ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -1034,8 +1034,8 @@ pef_alert_startup_delay_checkout (pstdout_state_t pstate,
                          ipmi_ctx_errormsg (ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;
@@ -1052,8 +1052,8 @@ pef_alert_startup_delay_checkout (pstdout_state_t pstate,
   pef_alert_startup_delay = val;
 
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (pstate,
-                                                          kv,
-                                                          val) < 0)
+                                                               kv,
+                                                               val) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
@@ -1098,8 +1098,8 @@ pef_alert_startup_delay_commit (pstdout_state_t pstate,
                          ipmi_ctx_errormsg (ipmi_ctx));
 
       if (ipmi_config_is_config_param_non_fatal_error (ipmi_ctx,
-						       obj_cmd_rs,
-						       &ret))
+                                                       obj_cmd_rs,
+                                                       &ret))
         rv = ret;
 
       goto cleanup;

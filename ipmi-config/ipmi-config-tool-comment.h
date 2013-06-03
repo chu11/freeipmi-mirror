@@ -24,8 +24,8 @@
 #include "pstdout.h"
 
 int ipmi_config_section_comments (pstdout_state_t pstate,
-				  const char *section_name,
-				  const char *in,
-				  FILE *fp);
+                                  const char *section_name,
+                                  const char *in,
+                                  FILE *fp);
 
 #endif /* IPMI_CONFIG_TOOL_COMMENT_H */

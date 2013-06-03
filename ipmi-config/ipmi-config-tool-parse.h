@@ -23,8 +23,8 @@
 #include "pstdout.h"
 
 ipmi_config_err_t ipmi_config_parse (pstdout_state_t pstate,
-				     struct ipmi_config_section *sections,
-				     struct ipmi_config_arguments *cmd_args,
-				     FILE *fp);
+                                     struct ipmi_config_section *sections,
+                                     struct ipmi_config_arguments *cmd_args,
+                                     FILE *fp);
 
 #endif /* IPMI_CONFIG_TOOL_PARSE_H */

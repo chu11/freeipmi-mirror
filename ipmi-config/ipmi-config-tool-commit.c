@@ -39,9 +39,9 @@
 
 ipmi_config_err_t
 ipmi_config_commit_section (pstdout_state_t pstate,
-			    struct ipmi_config_section *section,
-			    struct ipmi_config_arguments *cmd_args,
-			    void *arg)
+                            struct ipmi_config_section *section,
+                            struct ipmi_config_arguments *cmd_args,
+                            void *arg)
 {
   struct ipmi_config_keyvalue *kv;
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
@@ -82,21 +82,21 @@ ipmi_config_commit_section (pstdout_state_t pstate,
             goto cleanup;
 
           if (this_ret == IPMI_CONFIG_ERR_SUCCESS)
-	    {
-	      /* Discovered on Quanta S99Q/Dell FS12-TY
-	       *
-	       * A number of values on this motherboard appear to take
-	       * a reasonable amount of time to store, causing the BMC
-	       * to return BUSY errors for a bit.  In some cases, the
-	       * BMC eventually hangs or subsequent writes are
-	       * ignored.  We want to try to avoid this.
-	       */
-	      
-	      if (cmd_args->common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_VERY_SLOW_COMMIT)
-		sleep (1);
-	      
-	      commit_count++;
-	    }
+            {
+              /* Discovered on Quanta S99Q/Dell FS12-TY
+               *
+               * A number of values on this motherboard appear to take
+               * a reasonable amount of time to store, causing the BMC
+               * to return BUSY errors for a bit.  In some cases, the
+               * BMC eventually hangs or subsequent writes are
+               * ignored.  We want to try to avoid this.
+               */
+              
+              if (cmd_args->common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_VERY_SLOW_COMMIT)
+                sleep (1);
+              
+              commit_count++;
+            }
 
           if (IPMI_CONFIG_IS_NON_FATAL_ERROR (this_ret))
             {
@@ -163,9 +163,9 @@ ipmi_config_commit_section (pstdout_state_t pstate,
 
 ipmi_config_err_t
 ipmi_config_commit (pstdout_state_t pstate,
-		    struct ipmi_config_section *sections,
-		    struct ipmi_config_arguments *cmd_args,
-		    void *arg)
+                    struct ipmi_config_section *sections,
+                    struct ipmi_config_arguments *cmd_args,
+                    void *arg)
 {
   struct ipmi_config_section *s;
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_SUCCESS;
@@ -178,9 +178,9 @@ ipmi_config_commit (pstdout_state_t pstate,
   while (s)
     {
       if ((ret = ipmi_config_commit_section (pstate,
-                                        s,
-                                        cmd_args,
-                                        arg)) != IPMI_CONFIG_ERR_SUCCESS)
+                                             s,
+                                             cmd_args,
+                                             arg)) != IPMI_CONFIG_ERR_SUCCESS)
         {
           if (ret == IPMI_CONFIG_ERR_FATAL_ERROR)
             {
@@ -209,8 +209,8 @@ ipmi_config_commit (pstdout_state_t pstate,
        */
 
       if (cmd_args->common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_SLOW_COMMIT
-	  || cmd_args->common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_VERY_SLOW_COMMIT)
-	sleep (1);
+          || cmd_args->common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_VERY_SLOW_COMMIT)
+        sleep (1);
 
       s = s->next;
     }

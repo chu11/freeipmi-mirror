@@ -500,132 +500,132 @@ ipmi_config_pef_conf_section_get (ipmi_config_state_data_t *state_data)
   assert (state_data);
 
   if (!(section = ipmi_config_section_create (state_data->pstate,
-                                         "PEF_Conf",
-                                         NULL,
-                                         NULL,
-                                         IPMI_CONFIG_DO_NOT_CHECKOUT | IPMI_CONFIG_DO_NOT_LIST,
-                                         NULL,
-                                         NULL)))
+                                              "PEF_Conf",
+                                              NULL,
+                                              NULL,
+                                              IPMI_CONFIG_DO_NOT_CHECKOUT | IPMI_CONFIG_DO_NOT_LIST,
+                                              NULL,
+                                              NULL)))
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Enable_PEF",
-                              "Possible values: Yes/No",
-                              0,
-                              _enable_pef_checkout,
-                              _enable_pef_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "Enable_PEF",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   _enable_pef_checkout,
+                                   _enable_pef_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Enable_PEF_Event_Messages",
-                              "Possible values: Yes/No",
-                              0,
-                              _enable_pef_event_messages_checkout,
-                              _enable_pef_event_messages_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "Enable_PEF_Event_Messages",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   _enable_pef_event_messages_checkout,
+                                   _enable_pef_event_messages_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Enable_PEF_Startup_Delay",
-                              "Possible values: Yes/No",
-                              0,
-                              _enable_pef_startup_delay_checkout,
-                              _enable_pef_startup_delay_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "Enable_PEF_Startup_Delay",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   _enable_pef_startup_delay_checkout,
+                                   _enable_pef_startup_delay_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Enable_PEF_Alert_Startup_Delay",
-                              "Possible values: Yes/No",
-                              0,
-                              _enable_pef_alert_startup_delay_checkout,
-                              _enable_pef_alert_startup_delay_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "Enable_PEF_Alert_Startup_Delay",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   _enable_pef_alert_startup_delay_checkout,
+                                   _enable_pef_alert_startup_delay_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Enable_Alert_Action",
-                              "Possible values: Yes/No",
-                              0,
-                              _enable_alert_action_checkout,
-                              _enable_alert_action_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "Enable_Alert_Action",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   _enable_alert_action_checkout,
+                                   _enable_alert_action_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Enable_Power_Down_Action",
-                              "Possible values: Yes/No",
-                              0,
-                              _enable_power_down_action_checkout,
-                              _enable_power_down_action_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "Enable_Power_Down_Action",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   _enable_power_down_action_checkout,
+                                   _enable_power_down_action_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Enable_Reset_Action",
-                              "Possible values: Yes/No",
-                              0,
-                              _enable_reset_action_checkout,
-                              _enable_reset_action_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "Enable_Reset_Action",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   _enable_reset_action_checkout,
+                                   _enable_reset_action_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Enable_Power_Cycle_Action",
-                              "Possible values: Yes/No",
-                              0,
-                              _enable_power_cycle_action_checkout,
-                              _enable_power_cycle_action_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "Enable_Power_Cycle_Action",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   _enable_power_cycle_action_checkout,
+                                   _enable_power_cycle_action_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Enable_OEM_Action",
-                              "Possible values: Yes/No",
-                              0,
-                              _enable_oem_action_checkout,
-                              _enable_oem_action_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "Enable_OEM_Action",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   _enable_oem_action_checkout,
+                                   _enable_oem_action_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "Enable_Diagnostic_Interrupt",
-                              "Possible values: Yes/No",
-                              0,
-                              _enable_diagnostic_interrupt_checkout,
-                              _enable_diagnostic_interrupt_commit,
-                              ipmi_config_yes_no_validate) < 0)
+                                   section,
+                                   "Enable_Diagnostic_Interrupt",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   _enable_diagnostic_interrupt_checkout,
+                                   _enable_diagnostic_interrupt_commit,
+                                   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "PEF_Startup_Delay",
-                              "Give value in seconds",
-                              0,
-                              _pef_startup_delay_checkout,
-                              _pef_startup_delay_commit,
-                              ipmi_config_number_range_one_byte) < 0)
+                                   section,
+                                   "PEF_Startup_Delay",
+                                   "Give value in seconds",
+                                   0,
+                                   _pef_startup_delay_checkout,
+                                   _pef_startup_delay_commit,
+                                   ipmi_config_number_range_one_byte) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
-                              section,
-                              "PEF_Alert_Startup_Delay",
-                              "Give value in seconds",
-                              0,
-                              _pef_alert_startup_delay_checkout,
-                              _pef_alert_startup_delay_commit,
-				   ipmi_config_number_range_one_byte) < 0)
+                                   section,
+                                   "PEF_Alert_Startup_Delay",
+                                   "Give value in seconds",
+                                   0,
+                                   _pef_alert_startup_delay_checkout,
+                                   _pef_alert_startup_delay_commit,
+                                   ipmi_config_number_range_one_byte) < 0)
     goto cleanup;
 
   return (section);
