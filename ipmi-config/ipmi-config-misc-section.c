@@ -72,9 +72,9 @@ power_restore_policy_checkout (const char *section_name,
                          "ipmi_cmd_get_chassis_status: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (ipmi_config_is_non_fatal_error (state_data->ipmi_ctx,
-                                          obj_cmd_rs,
-                                          &ret))
+      if (ipmi_errnum_is_non_fatal (state_data->ipmi_ctx,
+                                    obj_cmd_rs,
+                                    &ret))
         rv = ret;
 
       goto cleanup;
@@ -139,9 +139,9 @@ power_restore_policy_commit (const char *section_name,
                          "ipmi_cmd_set_power_restore_policy: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (ipmi_config_is_non_fatal_error (state_data->ipmi_ctx,
-                                          obj_cmd_rs,
-                                          &ret))
+      if (ipmi_errnum_is_non_fatal (state_data->ipmi_ctx,
+                                    obj_cmd_rs,
+                                    &ret))
         rv = ret;
 
       goto cleanup;

@@ -112,9 +112,9 @@ _get_authentication_type_support (ipmi_config_state_data_t *state_data,
                          "ipmi_cmd_get_lan_configuration_parameters_authentication_type_support: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                       obj_cmd_rs,
-                                                       &ret))
+      if (ipmi_config_param_errnum_is_non_fatal (state_data->ipmi_ctx,
+                                                 obj_cmd_rs,
+                                                 &ret))
         rv = ret;
 
       goto cleanup;
@@ -221,9 +221,9 @@ _get_authentication_type_enables (ipmi_config_state_data_t *state_data,
                          "ipmi_cmd_get_lan_configuration_parameters_authentication_type_enables: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                       obj_cmd_rs,
-                                                       &ret))
+      if (ipmi_config_param_errnum_is_non_fatal (state_data->ipmi_ctx,
+                                                 obj_cmd_rs,
+                                                 &ret))
         rv = ret;
 
       goto cleanup;
@@ -652,9 +652,9 @@ _set_authentication_type_enables (ipmi_config_state_data_t *state_data,
                                  "ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables: %s\n",
                                  ipmi_ctx_errormsg (state_data->ipmi_ctx));
               
-              if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                               obj_cmd_rs,
-                                                               &ret))
+              if (ipmi_config_param_errnum_is_non_fatal (state_data->ipmi_ctx,
+                                                         obj_cmd_rs,
+                                                         &ret))
                 rv = ret;
               
               goto cleanup;
@@ -663,9 +663,9 @@ _set_authentication_type_enables (ipmi_config_state_data_t *state_data,
           /* success!! */
           goto out;
         }
-      else if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                            obj_cmd_rs,
-                                                            &ret))
+      else if (ipmi_config_param_errnum_is_non_fatal (state_data->ipmi_ctx,
+                                                      obj_cmd_rs,
+                                                      &ret))
         rv = ret;
 
       goto cleanup;

@@ -310,9 +310,9 @@ ipmi_config_section_str_destroy (struct ipmi_config_section_str *section_str)
 }
 
 int
-ipmi_config_ipv4_address_string2int (ipmi_config_state_data_t *state_data,
-                                     const char *src,
-                                     uint32_t *dest)
+ipv4_address_string2int (ipmi_config_state_data_t *state_data,
+                         const char *src,
+                         uint32_t *dest)
 {
   unsigned int b1, b2, b3, b4;
   uint64_t val;
@@ -337,7 +337,7 @@ ipmi_config_ipv4_address_string2int (ipmi_config_state_data_t *state_data,
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "ipmi_config_ipv4_address_string2int: Invalid src input: %s\n",
+                       "ipv4_address_string2int: Invalid src input: %s\n",
                        src);
       return (-1);
     }
@@ -353,9 +353,9 @@ ipmi_config_ipv4_address_string2int (ipmi_config_state_data_t *state_data,
 }
 
 int
-ipmi_config_mac_address_string2int (ipmi_config_state_data_t *state_data,
-                                    const char *src,
-                                    uint64_t *dest)
+mac_address_string2int (ipmi_config_state_data_t *state_data,
+                        const char *src,
+                        uint64_t *dest)
 {
   unsigned int b1, b2, b3, b4, b5, b6;
   uint64_t val;
@@ -382,7 +382,7 @@ ipmi_config_mac_address_string2int (ipmi_config_state_data_t *state_data,
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "ipmi_config_mac_address_string2int: Invalid src input: %s\n",
+                       "mac_address_string2int: Invalid src input: %s\n",
                        src);
       return (-1);
     }
@@ -460,9 +460,9 @@ ipmi_config_find_keyvalue (struct ipmi_config_section *section,
 }
 
 int
-ipmi_config_is_non_fatal_error (ipmi_ctx_t ipmi_ctx,
-                                fiid_obj_t obj_cmd_rs,
-                                ipmi_config_err_t *non_fatal_err)
+ipmi_errnum_is_non_fatal (ipmi_ctx_t ipmi_ctx,
+                          fiid_obj_t obj_cmd_rs,
+                          ipmi_config_err_t *non_fatal_err)
 {
   assert (ipmi_ctx);
   assert (obj_cmd_rs);
@@ -486,9 +486,9 @@ ipmi_config_is_non_fatal_error (ipmi_ctx_t ipmi_ctx,
 }
 
 int
-ipmi_config_is_config_param_non_fatal_error (ipmi_ctx_t ipmi_ctx,
-                                             fiid_obj_t obj_cmd_rs,
-                                             ipmi_config_err_t *non_fatal_err)
+ipmi_config_param_errnum_is_non_fatal (ipmi_ctx_t ipmi_ctx,
+                                       fiid_obj_t obj_cmd_rs,
+                                       ipmi_config_err_t *non_fatal_err)
 {
   assert (ipmi_ctx);
   assert (obj_cmd_rs);
@@ -687,9 +687,9 @@ _get_sol_channel_number_for_channel (ipmi_config_state_data_t *state_data,
                          "ipmi_cmd_get_sol_configuration_parameters_sol_payload_channel: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
       
-      if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                       obj_cmd_rs,
-                                                       &ret))
+      if (ipmi_config_param_errnum_is_non_fatal (state_data->ipmi_ctx,
+                                                 obj_cmd_rs,
+                                                 &ret))
         rv = ret;
       
       goto cleanup;

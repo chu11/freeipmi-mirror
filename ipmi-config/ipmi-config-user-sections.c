@@ -189,9 +189,9 @@ _get_user_access (ipmi_config_state_data_t *state_data,
                                               IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
             (*username_not_set_yet) = 1;
           
-          if (ipmi_config_is_non_fatal_error (state_data->ipmi_ctx,
-                                              obj_cmd_rs,
-                                              &ret))
+          if (ipmi_errnum_is_non_fatal (state_data->ipmi_ctx,
+                                        obj_cmd_rs,
+                                        &ret))
             rv = ret;
           
           goto cleanup;
@@ -202,9 +202,9 @@ _get_user_access (ipmi_config_state_data_t *state_data,
 
   if (node_busy_retry_count >= NODE_BUSY_RETRY_COUNT)
     {
-      if (ipmi_config_is_non_fatal_error (state_data->ipmi_ctx,
-                                          obj_cmd_rs,
-                                          &ret))
+      if (ipmi_errnum_is_non_fatal (state_data->ipmi_ctx,
+                                    obj_cmd_rs,
+                                    &ret))
         rv = ret;
 
       goto cleanup;
@@ -387,9 +387,9 @@ _set_user_access (ipmi_config_state_data_t *state_data,
           (*comp_code) = val;
         }
 
-      if (ipmi_config_is_non_fatal_error (state_data->ipmi_ctx,
-                                          obj_cmd_rs,
-                                          &ret))
+      if (ipmi_errnum_is_non_fatal (state_data->ipmi_ctx,
+                                    obj_cmd_rs,
+                                    &ret))
         rv = ret;
 
       goto cleanup;
@@ -465,9 +465,9 @@ username_checkout (const char *section_name,
           goto got_data;
         }
 
-      if (ipmi_config_is_non_fatal_error (state_data->ipmi_ctx,
-                                          obj_cmd_rs,
-                                          &ret))
+      if (ipmi_errnum_is_non_fatal (state_data->ipmi_ctx,
+                                    obj_cmd_rs,
+                                    &ret))
         rv = ret;
 
       goto cleanup;
@@ -626,9 +626,9 @@ username_commit (const char *section_name,
         }
 
     error_out:
-      if (ipmi_config_is_non_fatal_error (state_data->ipmi_ctx,
-                                          obj_cmd_rs,
-                                          &ret))
+      if (ipmi_errnum_is_non_fatal (state_data->ipmi_ctx,
+                                    obj_cmd_rs,
+                                    &ret))
         rv = ret;
 
       goto cleanup;
@@ -731,9 +731,9 @@ _check_bmc_user_password (ipmi_config_state_data_t *state_data,
                              "ipmi_cmd_set_user_password: %s\n",
                              ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-          if (ipmi_config_is_non_fatal_error (state_data->ipmi_ctx,
-                                              obj_cmd_rs,
-                                              &ret))
+          if (ipmi_errnum_is_non_fatal (state_data->ipmi_ctx,
+                                        obj_cmd_rs,
+                                        &ret))
             rv = ret;
         }
       goto cleanup;
@@ -856,9 +856,9 @@ password_commit (const char *section_name,
                              "ipmi_cmd_set_user_password: %s\n",
                              ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-          if (ipmi_config_is_non_fatal_error (state_data->ipmi_ctx,
-                                              obj_cmd_rs,
-                                              &ret))
+          if (ipmi_errnum_is_non_fatal (state_data->ipmi_ctx,
+                                        obj_cmd_rs,
+                                        &ret))
             rv = ret;
 
           goto cleanup;
@@ -880,9 +880,9 @@ password_commit (const char *section_name,
                              "ipmi_cmd_set_user_password: %s\n",
                              ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-          if (ipmi_config_is_non_fatal_error (state_data->ipmi_ctx,
-                                              obj_cmd_rs,
-                                              &ret))
+          if (ipmi_errnum_is_non_fatal (state_data->ipmi_ctx,
+                                        obj_cmd_rs,
+                                        &ret))
             rv = ret;
 
           goto cleanup;
@@ -1075,9 +1075,9 @@ password20_commit (const char *section_name,
                          "ipmi_cmd_set_user_password: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (ipmi_config_is_non_fatal_error (state_data->ipmi_ctx,
-                                          obj_cmd_rs,
-                                          &ret))
+      if (ipmi_errnum_is_non_fatal (state_data->ipmi_ctx,
+                                    obj_cmd_rs,
+                                    &ret))
         rv = ret;
 
       goto cleanup;
@@ -1307,9 +1307,9 @@ enable_user_commit (const char *section_name,
                                      "ipmi_cmd: %s\n",
                                      ipmi_ctx_errormsg (state_data->ipmi_ctx));
                   
-                  if (ipmi_config_is_non_fatal_error (state_data->ipmi_ctx,
-                                                      obj_cmd_rs,
-                                                      &ret))
+                  if (ipmi_errnum_is_non_fatal (state_data->ipmi_ctx,
+                                                obj_cmd_rs,
+                                                &ret))
                     rv = ret;
                   
                   goto cleanup;
@@ -1318,9 +1318,9 @@ enable_user_commit (const char *section_name,
               if (ipmi_check_completion_code_success (obj_cmd_rs) != 1)
                 {
                   
-                  if (ipmi_config_is_non_fatal_error (state_data->ipmi_ctx,
-                                                      obj_cmd_rs,
-                                                      &ret))
+                  if (ipmi_errnum_is_non_fatal (state_data->ipmi_ctx,
+                                                obj_cmd_rs,
+                                                &ret))
                     rv = ret;
                   
                   goto cleanup;
@@ -1347,18 +1347,18 @@ enable_user_commit (const char *section_name,
                   state_data->enable_user_after_password[userid-1].kv = (struct ipmi_config_keyvalue *)kv;
                 }
               
-              if (ipmi_config_is_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+              if (ipmi_errnum_is_non_fatal (state_data->ipmi_ctx,
+                                            obj_cmd_rs,
+                                            &ret))
                 rv = ret;
               
               goto cleanup;
             }
           else
             {
-              if (ipmi_config_is_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+              if (ipmi_errnum_is_non_fatal (state_data->ipmi_ctx,
+                                            obj_cmd_rs,
+                                            &ret))
                 rv = ret;
 
               goto cleanup;
@@ -1370,9 +1370,9 @@ enable_user_commit (const char *section_name,
 
   if (node_busy_retry_count >= NODE_BUSY_RETRY_COUNT)
     {
-      if (ipmi_config_is_non_fatal_error (state_data->ipmi_ctx,
-                                          obj_cmd_rs,
-                                          &ret))
+      if (ipmi_errnum_is_non_fatal (state_data->ipmi_ctx,
+                                    obj_cmd_rs,
+                                    &ret))
         rv = ret;
 
       goto cleanup;
@@ -1820,9 +1820,9 @@ sol_payload_access_checkout (const char *section_name,
           goto out;
         }
       
-      if (ipmi_config_is_non_fatal_error (state_data->ipmi_ctx,
-                                          obj_cmd_rs,
-                                          &ret))
+      if (ipmi_errnum_is_non_fatal (state_data->ipmi_ctx,
+                                    obj_cmd_rs,
+                                    &ret))
         rv = ret;
 
       goto cleanup;
@@ -1917,9 +1917,9 @@ sol_payload_access_commit (const char *section_name,
                          "ipmi_cmd_set_user_payload_access: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (ipmi_config_is_non_fatal_error (state_data->ipmi_ctx,
-                                          obj_cmd_rs,
-                                          &ret))
+      if (ipmi_errnum_is_non_fatal (state_data->ipmi_ctx,
+                                    obj_cmd_rs,
+                                    &ret))
         rv = ret;
 
       goto cleanup;
