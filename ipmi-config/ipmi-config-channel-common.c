@@ -29,8 +29,11 @@
 
 #include "ipmi-config.h"
 #include "ipmi-config-map.h"
-#include "ipmi-config-validate.h"
+#include "ipmi-config-tool-section.h"
+#include "ipmi-config-tool-utils.h"
+#include "ipmi-config-tool-validate.h"
 #include "ipmi-config-utils.h"
+#include "ipmi-config-validate.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
@@ -45,12 +48,12 @@ struct channel_access
   uint8_t channel_privilege_limit;
 };
 
-static config_err_t
+static ipmi_config_err_t
 _channel_info (ipmi_config_state_data_t *state_data,
                const char *section_name,
                uint8_t *channel_number)
 {
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (state_data);
   assert (section_name);
@@ -60,28 +63,28 @@ _channel_info (ipmi_config_state_data_t *state_data,
     {
       if ((ret = get_lan_channel_number (state_data,
 					 section_name,
-					 channel_number)) != CONFIG_ERR_SUCCESS)
+					 channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
 	return (ret);
     }
   else
     {
       if ((ret = get_serial_channel_number (state_data,
 					    section_name,
-					    channel_number)) != CONFIG_ERR_SUCCESS)
+					    channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
 	return (ret);
     }
   
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
-static config_err_t
+static ipmi_config_err_t
 _get_key_info (ipmi_config_state_data_t *state_data,
                const char *section_name,
                const char *key_name,
                uint8_t *channel_number,
                uint8_t *access_type)
 {
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (state_data);
   assert (section_name);
@@ -91,7 +94,7 @@ _get_key_info (ipmi_config_state_data_t *state_data,
 
   if ((ret = _channel_info (state_data,
                             section_name,
-                            channel_number)) != CONFIG_ERR_SUCCESS)
+                            channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
   /* Must check for Non_Volatile b/c Volatile is a substring of the former */
@@ -100,17 +103,17 @@ _get_key_info (ipmi_config_state_data_t *state_data,
   else
     *access_type = IPMI_CHANNEL_ACCESS_GET_VOLATILE;
 
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
-static config_err_t
+static ipmi_config_err_t
 _set_key_info (ipmi_config_state_data_t *state_data,
                const char *section_name,
                const char *key_name,
                uint8_t *channel_number,
                uint8_t *access_type)
 {
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (state_data);
   assert (section_name);
@@ -120,7 +123,7 @@ _set_key_info (ipmi_config_state_data_t *state_data,
 
   if ((ret = _channel_info (state_data,
                             section_name,
-                            channel_number)) != CONFIG_ERR_SUCCESS)
+                            channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
   /* Must check for Non_Volatile b/c Volatile is a substring of the former */
@@ -129,18 +132,18 @@ _set_key_info (ipmi_config_state_data_t *state_data,
   else
     *access_type = IPMI_CHANNEL_ACCESS_SET_VOLATILE;
 
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
-static config_err_t
+static ipmi_config_err_t
 _get_channel_access (ipmi_config_state_data_t *state_data,
                      const char *section_name,
                      const char *key_name,
                      struct channel_access *ch)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t ret;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t ret;
   uint8_t channel_number;
   uint8_t access_type;
   uint64_t val;
@@ -154,7 +157,7 @@ _get_channel_access (ipmi_config_state_data_t *state_data,
                             section_name,
                             key_name,
                             &channel_number,
-                            &access_type)) != CONFIG_ERR_SUCCESS)
+                            &access_type)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -174,15 +177,15 @@ _get_channel_access (ipmi_config_state_data_t *state_data,
                                    access_type,
                                    obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common_args.debug)
+      if (state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_channel_access: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (ipmi_config_is_non_fatal_error (state_data->ipmi_ctx,
+					  obj_cmd_rs,
+					  &ret))
         rv = ret;
 
       goto cleanup;
@@ -241,13 +244,13 @@ _get_channel_access (ipmi_config_state_data_t *state_data,
     }
   ch->channel_privilege_limit = val;
 
-  rv = CONFIG_ERR_SUCCESS;
+  rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
-static config_err_t
+static ipmi_config_err_t
 _set_channel_access (ipmi_config_state_data_t *state_data,
                      const char *section_name,
                      const char *key_name,
@@ -255,8 +258,8 @@ _set_channel_access (ipmi_config_state_data_t *state_data,
                      uint8_t *comp_code)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t ret;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t ret;
   uint8_t channel_number;
   uint8_t set_type;
   uint64_t val;
@@ -270,7 +273,7 @@ _set_channel_access (ipmi_config_state_data_t *state_data,
                             section_name,
                             key_name,
                             &channel_number,
-                            &set_type)) != CONFIG_ERR_SUCCESS)
+                            &set_type)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -300,7 +303,7 @@ _set_channel_access (ipmi_config_state_data_t *state_data,
                                     : IPMI_PRIVILEGE_LEVEL_LIMIT_SET_NON_VOLATILE),
                                    obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common_args.debug)
+      if (state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_channel_access: %s\n",
@@ -321,28 +324,28 @@ _set_channel_access (ipmi_config_state_data_t *state_data,
           (*comp_code) = val;
         }
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (ipmi_config_is_non_fatal_error (state_data->ipmi_ctx,
+					  obj_cmd_rs,
+					  &ret))
         rv = ret;
 
       goto cleanup;
     }
 
-  rv = CONFIG_ERR_SUCCESS;
+  rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
-static config_err_t
+static ipmi_config_err_t
 _access_mode_checkout (const char *section_name,
-                       struct config_keyvalue *kv,
+                       struct ipmi_config_keyvalue *kv,
                        void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct channel_access ch;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -353,25 +356,25 @@ _access_mode_checkout (const char *section_name,
   if ((ret = _get_channel_access (state_data,
                                   section_name,
                                   kv->key->key_name,
-                                  &ch)) != CONFIG_ERR_SUCCESS)
+                                  &ch)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              channel_access_mode_string (ch.access_mode)) < 0)
-    return (CONFIG_ERR_FATAL_ERROR);
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
-static config_err_t
+static ipmi_config_err_t
 _access_mode_commit (const char *section_name,
-                     const struct config_keyvalue *kv,
+                     const struct ipmi_config_keyvalue *kv,
                      void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct channel_access ch;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -382,7 +385,7 @@ _access_mode_commit (const char *section_name,
   if ((ret = _get_channel_access (state_data,
                                   section_name,
                                   kv->key->key_name,
-                                  &ch)) != CONFIG_ERR_SUCCESS)
+                                  &ch)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
   ch.access_mode = channel_access_mode (kv->value_input);
@@ -391,20 +394,20 @@ _access_mode_commit (const char *section_name,
                                   section_name,
                                   kv->key->key_name,
                                   &ch,
-                                  NULL)) != CONFIG_ERR_SUCCESS)
+                                  NULL)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
-static config_err_t
+static ipmi_config_err_t
 _enable_user_level_authentication_checkout (const char *section_name,
-                                            struct config_keyvalue *kv,
+                                            struct ipmi_config_keyvalue *kv,
                                             void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct channel_access ch;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -415,26 +418,26 @@ _enable_user_level_authentication_checkout (const char *section_name,
   if ((ret = _get_channel_access (state_data,
                                   section_name,
                                   kv->key->key_name,
-                                  &ch)) != CONFIG_ERR_SUCCESS)
+                                  &ch)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
   /* achu: Backwards values in this command are handled above */
-  if (config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              ch.user_level_authentication ? "Yes" : "No") < 0)
-    return (CONFIG_ERR_FATAL_ERROR);
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
-static config_err_t
+static ipmi_config_err_t
 _enable_user_level_authentication_commit (const char *section_name,
-                                          const struct config_keyvalue *kv,
+                                          const struct ipmi_config_keyvalue *kv,
                                           void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct channel_access ch;
-  config_err_t ret;
+  ipmi_config_err_t ret;
   uint8_t comp_code = 0;
 
   assert (section_name);
@@ -446,7 +449,7 @@ _enable_user_level_authentication_commit (const char *section_name,
   if ((ret = _get_channel_access (state_data,
                                   section_name,
                                   kv->key->key_name,
-                                  &ch)) != CONFIG_ERR_SUCCESS)
+                                  &ch)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
   ch.user_level_authentication = same (kv->value_input, "yes");
@@ -460,25 +463,25 @@ _enable_user_level_authentication_commit (const char *section_name,
                                   section_name,
                                   kv->key->key_name,
                                   &ch,
-                                  &comp_code)) != CONFIG_ERR_SUCCESS)
+                                  &comp_code)) != IPMI_CONFIG_ERR_SUCCESS)
     {
-      if (ret == CONFIG_ERR_NON_FATAL_ERROR_INVALID_UNSUPPORTED_CONFIG
+      if (ret == IPMI_CONFIG_ERR_NON_FATAL_ERROR_INVALID_UNSUPPORTED_CONFIG
           && comp_code == IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST)
-        ret = CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED;
+        ret = IPMI_CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED;
       return (ret);
     }
 
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
-static config_err_t
+static ipmi_config_err_t
 _enable_per_message_authentication_checkout (const char *section_name,
-                                             struct config_keyvalue *kv,
+                                             struct ipmi_config_keyvalue *kv,
                                              void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct channel_access ch;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -489,26 +492,26 @@ _enable_per_message_authentication_checkout (const char *section_name,
   if ((ret = _get_channel_access (state_data,
                                   section_name,
                                   kv->key->key_name,
-                                  &ch)) != CONFIG_ERR_SUCCESS)
+                                  &ch)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
   /* achu: Backwards values in this command are handled above */
-  if (config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              ch.per_message_authentication ? "Yes" : "No") < 0)
-    return (CONFIG_ERR_FATAL_ERROR);
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
-static config_err_t
+static ipmi_config_err_t
 _enable_per_message_authentication_commit (const char *section_name,
-                                           const struct config_keyvalue *kv,
+                                           const struct ipmi_config_keyvalue *kv,
                                            void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct channel_access ch;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -519,7 +522,7 @@ _enable_per_message_authentication_commit (const char *section_name,
   if ((ret = _get_channel_access (state_data,
                                   section_name,
                                   kv->key->key_name,
-                                  &ch)) != CONFIG_ERR_SUCCESS)
+                                  &ch)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
   ch.per_message_authentication = same (kv->value_input, "yes");
@@ -528,20 +531,20 @@ _enable_per_message_authentication_commit (const char *section_name,
                                   section_name,
                                   kv->key->key_name,
                                   &ch,
-                                  NULL)) != CONFIG_ERR_SUCCESS)
+                                  NULL)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
-static config_err_t
+static ipmi_config_err_t
 _enable_pef_alerting_checkout (const char *section_name,
-                               struct config_keyvalue *kv,
+                               struct ipmi_config_keyvalue *kv,
                                void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct channel_access ch;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -552,26 +555,26 @@ _enable_pef_alerting_checkout (const char *section_name,
   if ((ret = _get_channel_access (state_data,
                                   section_name,
                                   kv->key->key_name,
-                                  &ch)) != CONFIG_ERR_SUCCESS)
+                                  &ch)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
   /* achu: Backwards values in this command are handled above */
-  if (config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              ch.pef_alerting ? "Yes" : "No") < 0)
-    return (CONFIG_ERR_FATAL_ERROR);
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
-static config_err_t
+static ipmi_config_err_t
 _enable_pef_alerting_commit (const char *section_name,
-                             const struct config_keyvalue *kv,
+                             const struct ipmi_config_keyvalue *kv,
                              void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct channel_access ch;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -582,7 +585,7 @@ _enable_pef_alerting_commit (const char *section_name,
   if ((ret = _get_channel_access (state_data,
                                   section_name,
                                   kv->key->key_name,
-                                  &ch)) != CONFIG_ERR_SUCCESS)
+                                  &ch)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
   ch.pef_alerting = same (kv->value_input, "yes");
@@ -591,20 +594,20 @@ _enable_pef_alerting_commit (const char *section_name,
                                   section_name,
                                   kv->key->key_name,
                                   &ch,
-                                  NULL)) != CONFIG_ERR_SUCCESS)
+                                  NULL)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
-static config_err_t
+static ipmi_config_err_t
 _channel_privilege_limit_checkout (const char *section_name,
-                                   struct config_keyvalue *kv,
+                                   struct ipmi_config_keyvalue *kv,
                                    void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct channel_access ch;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -615,25 +618,25 @@ _channel_privilege_limit_checkout (const char *section_name,
   if ((ret = _get_channel_access (state_data,
                                   section_name,
                                   kv->key->key_name,
-                                  &ch)) != CONFIG_ERR_SUCCESS)
+                                  &ch)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              privilege_level_string (ch.channel_privilege_limit)) < 0)
-    return (CONFIG_ERR_FATAL_ERROR);
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
-static config_err_t
+static ipmi_config_err_t
 _channel_privilege_limit_commit (const char *section_name,
-                                 const struct config_keyvalue *kv,
+                                 const struct ipmi_config_keyvalue *kv,
                                  void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct channel_access ch;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -644,7 +647,7 @@ _channel_privilege_limit_commit (const char *section_name,
   if ((ret = _get_channel_access (state_data,
                                   section_name,
                                   kv->key->key_name,
-                                  &ch)) != CONFIG_ERR_SUCCESS)
+                                  &ch)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
   ch.channel_privilege_limit = privilege_level_number (kv->value_input);
@@ -653,20 +656,20 @@ _channel_privilege_limit_commit (const char *section_name,
                                   section_name,
                                   kv->key->key_name,
                                   &ch,
-                                  NULL)) != CONFIG_ERR_SUCCESS)
+                                  NULL)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
 int
 ipmi_config_channel_common_section_get (ipmi_config_state_data_t *state_data,
-                                       struct config_section *channel_section)
+                                       struct ipmi_config_section *channel_section)
 {
   assert (state_data);
   assert (channel_section);
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               channel_section,
                               "Volatile_Access_Mode",
                               "Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared",
@@ -676,37 +679,37 @@ ipmi_config_channel_common_section_get (ipmi_config_state_data_t *state_data,
                               channel_access_mode_validate) < 0)
     return (-1);
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               channel_section,
                               "Volatile_Enable_User_Level_Auth",
                               "Possible values: Yes/No",
                               0,
                               _enable_user_level_authentication_checkout,
                               _enable_user_level_authentication_commit,
-                              config_yes_no_validate) < 0)
+                              ipmi_config_yes_no_validate) < 0)
     return (-1);
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               channel_section,
                               "Volatile_Enable_Per_Message_Auth",
                               "Possible values: Yes/No",
                               0,
                               _enable_per_message_authentication_checkout,
                               _enable_per_message_authentication_commit,
-                              config_yes_no_validate) < 0)
+                              ipmi_config_yes_no_validate) < 0)
     return (-1);
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               channel_section,
                               "Volatile_Enable_Pef_Alerting",
                               "Possible values: Yes/No",
                               0,
                               _enable_pef_alerting_checkout,
                               _enable_pef_alerting_commit,
-                              config_yes_no_validate) < 0)
+                              ipmi_config_yes_no_validate) < 0)
     return (-1);
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               channel_section,
                               "Volatile_Channel_Privilege_Limit",
                               "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary",
@@ -716,7 +719,7 @@ ipmi_config_channel_common_section_get (ipmi_config_state_data_t *state_data,
                               privilege_level_number_validate) < 0)
     return (-1);
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               channel_section,
                               "Non_Volatile_Access_Mode",
                               "Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared",
@@ -726,37 +729,37 @@ ipmi_config_channel_common_section_get (ipmi_config_state_data_t *state_data,
                               channel_access_mode_validate) < 0)
     return (-1);
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               channel_section,
                               "Non_Volatile_Enable_User_Level_Auth",
                               "Possible values: Yes/No",
                               0,
                               _enable_user_level_authentication_checkout,
                               _enable_user_level_authentication_commit,
-                              config_yes_no_validate) < 0)
+                              ipmi_config_yes_no_validate) < 0)
     return (-1);
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               channel_section,
                               "Non_Volatile_Enable_Per_Message_Auth",
                               "Possible values: Yes/No",
                               0,
                               _enable_per_message_authentication_checkout,
                               _enable_per_message_authentication_commit,
-                              config_yes_no_validate) < 0)
+                              ipmi_config_yes_no_validate) < 0)
     return (-1);
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               channel_section,
                               "Non_Volatile_Enable_Pef_Alerting",
                               "Possible values: Yes/No",
                               0,
                               _enable_pef_alerting_checkout,
                               _enable_pef_alerting_commit,
-                              config_yes_no_validate) < 0)
+                              ipmi_config_yes_no_validate) < 0)
     return (-1);
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               channel_section,
                               "Non_Volatile_Channel_Privilege_Limit",
                               "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary",

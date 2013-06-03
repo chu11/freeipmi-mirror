@@ -29,8 +29,11 @@
 
 #include "ipmi-config.h"
 #include "ipmi-config-map.h"
-#include "ipmi-config-validate.h"
+#include "ipmi-config-tool-section.h"
+#include "ipmi-config-tool-utils.h"
+#include "ipmi-config-tool-validate.h"
 #include "ipmi-config-utils.h"
+#include "ipmi-config-validate.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
@@ -44,15 +47,15 @@ struct bad_password_threshold
   uint16_t user_lockout_interval;
 };
 
-static config_err_t
+static ipmi_config_err_t
 _get_bad_password_threshold (ipmi_config_state_data_t *state_data,
 			     const char *section_name,
                              struct bad_password_threshold *bpt)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t ret;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t ret;
   uint8_t channel_number;
 
   assert (state_data);
@@ -68,7 +71,7 @@ _get_bad_password_threshold (ipmi_config_state_data_t *state_data,
       goto cleanup;
     }
   
-  if ((ret = get_lan_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number (state_data, section_name, &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -81,13 +84,13 @@ _get_bad_password_threshold (ipmi_config_state_data_t *state_data,
                                                                         IPMI_LAN_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                         obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common_args.debug)
+      if (state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_bad_password_threshold: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
       
-      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+      if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
                                                   obj_cmd_rs,
                                                   &ret))
         rv = ret;
@@ -135,20 +138,20 @@ _get_bad_password_threshold (ipmi_config_state_data_t *state_data,
     }
   bpt->user_lockout_interval = val;
 
-  rv = CONFIG_ERR_SUCCESS;
+  rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
-static config_err_t
+static ipmi_config_err_t
 _set_bad_password_threshold (ipmi_config_state_data_t *state_data,
 			     const char *section_name,
                              struct bad_password_threshold *bpt)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t ret;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t ret;
   uint8_t channel_number;
 
   assert (state_data);
@@ -164,7 +167,7 @@ _set_bad_password_threshold (ipmi_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number (state_data, section_name, &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -178,13 +181,13 @@ _set_bad_password_threshold (ipmi_config_state_data_t *state_data,
                                                                         bpt->user_lockout_interval,
                                                                         obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common_args.debug)
+      if (state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_bad_password_threshold: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+      if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
                                                   obj_cmd_rs,
                                                   &ret))
         rv = ret;
@@ -192,21 +195,21 @@ _set_bad_password_threshold (ipmi_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  rv = CONFIG_ERR_SUCCESS;
+  rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 
 }
 
-static config_err_t
+static ipmi_config_err_t
 bad_password_threshold_checkout (const char *section_name,
-				 struct config_keyvalue *kv,
+				 struct ipmi_config_keyvalue *kv,
 				 void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct bad_password_threshold bpt;
-  config_err_t ret;
+  ipmi_config_err_t ret;
   
   assert (section_name);
   assert (kv);
@@ -214,25 +217,25 @@ bad_password_threshold_checkout (const char *section_name,
   
   state_data = (ipmi_config_state_data_t *)arg;
 
-  if ((ret = _get_bad_password_threshold (state_data, section_name, &bpt)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_bad_password_threshold (state_data, section_name, &bpt)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
   
-  if (config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
                                                           kv,
                                                           bpt.bad_password_threshold_number) < 0)
-    return (CONFIG_ERR_FATAL_ERROR);
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
   
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
-static config_err_t
+static ipmi_config_err_t
 bad_password_threshold_commit (const char *section_name,
-                                                const struct config_keyvalue *kv,
+                                                const struct ipmi_config_keyvalue *kv,
                                                 void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct bad_password_threshold bpt;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -240,21 +243,21 @@ bad_password_threshold_commit (const char *section_name,
   
   state_data = (ipmi_config_state_data_t *)arg;
 
-  if ((ret = _get_bad_password_threshold (state_data, section_name, &bpt)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_bad_password_threshold (state_data, section_name, &bpt)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
   
   bpt.bad_password_threshold_number = atoi (kv->value_input);
   return (_set_bad_password_threshold (state_data, section_name, &bpt));
 }
 
-static config_err_t
+static ipmi_config_err_t
 attempt_count_reset_interval_checkout (const char *section_name,
-                                       struct config_keyvalue *kv,
+                                       struct ipmi_config_keyvalue *kv,
                                        void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct bad_password_threshold bpt;
-  config_err_t ret;
+  ipmi_config_err_t ret;
   
   assert (section_name);
   assert (kv);
@@ -262,25 +265,25 @@ attempt_count_reset_interval_checkout (const char *section_name,
   
   state_data = (ipmi_config_state_data_t *)arg;
 
-  if ((ret = _get_bad_password_threshold (state_data, section_name, &bpt)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_bad_password_threshold (state_data, section_name, &bpt)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
   
-  if (config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
                                                           kv,
                                                           bpt.attempt_count_reset_interval) < 0)
-    return (CONFIG_ERR_FATAL_ERROR);
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
   
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
-static config_err_t
+static ipmi_config_err_t
 attempt_count_reset_interval_commit (const char *section_name,
-                                     const struct config_keyvalue *kv,
+                                     const struct ipmi_config_keyvalue *kv,
                                      void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct bad_password_threshold bpt;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -288,21 +291,21 @@ attempt_count_reset_interval_commit (const char *section_name,
   
   state_data = (ipmi_config_state_data_t *)arg;
 
-  if ((ret = _get_bad_password_threshold (state_data, section_name, &bpt)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_bad_password_threshold (state_data, section_name, &bpt)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
   
   bpt.attempt_count_reset_interval = atoi (kv->value_input);
   return (_set_bad_password_threshold (state_data, section_name, &bpt));
 }
 
-static config_err_t
+static ipmi_config_err_t
 user_lockout_interval_checkout (const char *section_name,
-                                struct config_keyvalue *kv,
+                                struct ipmi_config_keyvalue *kv,
                                 void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct bad_password_threshold bpt;
-  config_err_t ret;
+  ipmi_config_err_t ret;
   
   assert (section_name);
   assert (kv);
@@ -310,25 +313,25 @@ user_lockout_interval_checkout (const char *section_name,
   
   state_data = (ipmi_config_state_data_t *)arg;
 
-  if ((ret = _get_bad_password_threshold (state_data, section_name, &bpt)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_bad_password_threshold (state_data, section_name, &bpt)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
   
-  if (config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
                                                           kv,
                                                           bpt.user_lockout_interval) < 0)
-    return (CONFIG_ERR_FATAL_ERROR);
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
   
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
-static config_err_t
+static ipmi_config_err_t
 user_lockout_interval_commit (const char *section_name,
-                              const struct config_keyvalue *kv,
+                              const struct ipmi_config_keyvalue *kv,
                               void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct bad_password_threshold bpt;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -336,21 +339,21 @@ user_lockout_interval_commit (const char *section_name,
   
   state_data = (ipmi_config_state_data_t *)arg;
 
-  if ((ret = _get_bad_password_threshold (state_data, section_name, &bpt)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_bad_password_threshold (state_data, section_name, &bpt)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
   
   bpt.user_lockout_interval = atoi (kv->value_input);
   return (_set_bad_password_threshold (state_data, section_name, &bpt));
 }
 
-static config_err_t
+static ipmi_config_err_t
 enable_event_message_when_user_disabled_checkout (const char *section_name,
-                                                  struct config_keyvalue *kv,
+                                                  struct ipmi_config_keyvalue *kv,
                                                   void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct bad_password_threshold bpt;
-  config_err_t ret;
+  ipmi_config_err_t ret;
   
   assert (section_name);
   assert (kv);
@@ -358,25 +361,25 @@ enable_event_message_when_user_disabled_checkout (const char *section_name,
   
   state_data = (ipmi_config_state_data_t *)arg;
 
-  if ((ret = _get_bad_password_threshold (state_data, section_name, &bpt)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_bad_password_threshold (state_data, section_name, &bpt)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
   
-  if (config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              bpt.user_disabled_event_message ? "Yes" : "No") < 0)
-    return (CONFIG_ERR_FATAL_ERROR);
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
   
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
-static config_err_t
+static ipmi_config_err_t
 enable_event_message_when_user_disabled_commit (const char *section_name,
-                                                const struct config_keyvalue *kv,
+                                                const struct ipmi_config_keyvalue *kv,
                                                 void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct bad_password_threshold bpt;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -384,19 +387,19 @@ enable_event_message_when_user_disabled_commit (const char *section_name,
   
   state_data = (ipmi_config_state_data_t *)arg;
 
-  if ((ret = _get_bad_password_threshold (state_data, section_name, &bpt)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_bad_password_threshold (state_data, section_name, &bpt)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
   
   bpt.user_disabled_event_message = same (kv->value_input, "yes");
   return (_set_bad_password_threshold (state_data, section_name, &bpt));
 }
 
-struct config_section *
+struct ipmi_config_section *
 ipmi_config_lan_conf_user_security_section_get (ipmi_config_state_data_t *state_data,
 					       unsigned int config_flags,
 					       int channel_index)
 {
-  struct config_section *section = NULL;
+  struct ipmi_config_section *section = NULL;
   char *section_comment =
     "The following user security configuration options are optionally "
     "implemented by the vendor.  They may not be available your system and "
@@ -414,7 +417,7 @@ ipmi_config_lan_conf_user_security_section_get (ipmi_config_state_data_t *state_
 
   assert (state_data);
 
-  if (!(section = config_section_multi_channel_create (state_data->pstate,
+  if (!(section = ipmi_config_section_multi_channel_create (state_data->pstate,
 						       section_name_base_str,
 						       section_comment,
 						       NULL,
@@ -425,17 +428,17 @@ ipmi_config_lan_conf_user_security_section_get (ipmi_config_state_data_t *state_
 						       state_data->lan_channel_numbers_count)))
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               section,
                               "Bad_Password_Threshold",
                               "Possible values: 0-255, 0 indicates no limit",
                               0,
                               bad_password_threshold_checkout,
                               bad_password_threshold_commit,
-                              config_number_range_one_byte) < 0)
+                              ipmi_config_number_range_one_byte) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               section,
                               "Attempt_Count_Reset_Interval",
                               "Possible values: 0-65535, in 10 second increments (e.g. 2 = 20 sec)\n"
@@ -443,10 +446,10 @@ ipmi_config_lan_conf_user_security_section_get (ipmi_config_state_data_t *state_
                               0,
                               attempt_count_reset_interval_checkout,
                               attempt_count_reset_interval_commit,
-                              config_number_range_two_bytes) < 0)
+                              ipmi_config_number_range_two_bytes) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               section,
                               "User_Lockout_Interval",
                               "Possible values: 0-65535, in 10 second increments (e.g. 2 = 20 sec)\n"
@@ -454,23 +457,23 @@ ipmi_config_lan_conf_user_security_section_get (ipmi_config_state_data_t *state_
                               0,
                               user_lockout_interval_checkout,
                               user_lockout_interval_commit,
-                              config_number_range_two_bytes) < 0)
+				   ipmi_config_number_range_two_bytes) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               section,
                               "Enable_Event_Message_When_User_Disabled",
                               "Possible values: Yes/No",
                               0,
                               enable_event_message_when_user_disabled_checkout,
                               enable_event_message_when_user_disabled_commit,
-                              config_yes_no_validate) < 0)
+                              ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   return (section);
 
  cleanup:
   if (section)
-    config_section_destroy (section);
+    ipmi_config_section_destroy (section);
   return (NULL);
 }

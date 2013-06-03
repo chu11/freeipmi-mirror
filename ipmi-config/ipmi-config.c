@@ -30,6 +30,12 @@
 
 #include "ipmi-config.h"
 #include "ipmi-config-argp.h"
+#include "ipmi-config-tool-checkout.h"
+#include "ipmi-config-tool-commit.h"
+#include "ipmi-config-tool-diff.h"
+#include "ipmi-config-tool-parse.h"
+#include "ipmi-config-tool-section.h"
+#include "ipmi-config-tool-utils.h"
 #include "ipmi-config-sections.h"
 
 #include "freeipmi-portability.h"
@@ -47,7 +53,7 @@ _ipmi_config (pstdout_state_t pstate,
   ipmi_config_state_data_t state_data;
   ipmi_config_prog_data_t *prog_data;
   int exit_code = EXIT_FAILURE;
-  config_err_t ret = 0;
+  ipmi_config_err_t ret = 0;
   int file_opened = 0;
   FILE *fp = NULL;              /* init NULL to remove warnings */
 
@@ -62,16 +68,16 @@ _ipmi_config (pstdout_state_t pstate,
 
   if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
                                          hostname,
-                                         &(prog_data->args->config_args.common_args),
+                                         &(prog_data->args->common_args),
 					 state_data.pstate)))
     goto cleanup;
 
   if (!(state_data.sections = ipmi_config_sections_create (&state_data)))
     goto cleanup;
 
-  if (prog_data->args->config_args.action == CONFIG_ACTION_CHECKOUT)
+  if (prog_data->args->action == IPMI_CONFIG_ACTION_CHECKOUT)
     {
-      if (prog_data->args->config_args.filename)
+      if (prog_data->args->filename)
         {
           if (prog_data->hosts_count > 1)
             {
@@ -81,7 +87,7 @@ _ipmi_config (pstdout_state_t pstate,
               goto cleanup;
             }
 
-          if (!(fp = fopen (prog_data->args->config_args.filename, "w")))
+          if (!(fp = fopen (prog_data->args->filename, "w")))
             {
               pstdout_perror (pstate, "fopen");
               goto cleanup;
@@ -91,13 +97,13 @@ _ipmi_config (pstdout_state_t pstate,
       else
         fp = stdout;
     }
-  else if (prog_data->args->config_args.action == CONFIG_ACTION_COMMIT
-           || prog_data->args->config_args.action == CONFIG_ACTION_DIFF)
+  else if (prog_data->args->action == IPMI_CONFIG_ACTION_COMMIT
+           || prog_data->args->action == IPMI_CONFIG_ACTION_DIFF)
     {
-      if (prog_data->args->config_args.filename
-          && strcmp (prog_data->args->config_args.filename, "-"))
+      if (prog_data->args->filename
+          && strcmp (prog_data->args->filename, "-"))
         {
-          if (!(fp = fopen (prog_data->args->config_args.filename, "r")))
+          if (!(fp = fopen (prog_data->args->filename, "r")))
             {
               pstdout_perror (pstate, "fopen");
               goto cleanup;
@@ -109,46 +115,46 @@ _ipmi_config (pstdout_state_t pstate,
     }
 
   /* parse if there is an input file or no pairs at all */
-  if ((prog_data->args->config_args.action == CONFIG_ACTION_COMMIT
-       && prog_data->args->config_args.filename)
-      || (prog_data->args->config_args.action == CONFIG_ACTION_COMMIT
-          && !prog_data->args->config_args.filename
-          && !prog_data->args->config_args.keypairs)
-      || (prog_data->args->config_args.action == CONFIG_ACTION_DIFF
-          && prog_data->args->config_args.filename)
-      || (prog_data->args->config_args.action == CONFIG_ACTION_DIFF
-          && !prog_data->args->config_args.filename
-          && !prog_data->args->config_args.keypairs))
+  if ((prog_data->args->action == IPMI_CONFIG_ACTION_COMMIT
+       && prog_data->args->filename)
+      || (prog_data->args->action == IPMI_CONFIG_ACTION_COMMIT
+          && !prog_data->args->filename
+          && !prog_data->args->keypairs)
+      || (prog_data->args->action == IPMI_CONFIG_ACTION_DIFF
+          && prog_data->args->filename)
+      || (prog_data->args->action == IPMI_CONFIG_ACTION_DIFF
+          && !prog_data->args->filename
+          && !prog_data->args->keypairs))
     {
-      if (config_parse (pstate,
-                        state_data.sections,
-                        &(prog_data->args->config_args),
-                        fp) < 0)
+      if (ipmi_config_parse (pstate,
+			     state_data.sections,
+			     prog_data->args,
+			     fp) < 0)
 	goto cleanup;
     }
   
   /* note: argp validation catches if user specified keypair and
      filename for a diff
   */
-  if ((prog_data->args->config_args.action == CONFIG_ACTION_CHECKOUT
-       || prog_data->args->config_args.action == CONFIG_ACTION_COMMIT
-       || prog_data->args->config_args.action == CONFIG_ACTION_DIFF)
-      && prog_data->args->config_args.keypairs)
+  if ((prog_data->args->action == IPMI_CONFIG_ACTION_CHECKOUT
+       || prog_data->args->action == IPMI_CONFIG_ACTION_COMMIT
+       || prog_data->args->action == IPMI_CONFIG_ACTION_DIFF)
+      && prog_data->args->keypairs)
     {
-      if (config_sections_insert_keyvalues (pstate,
-                                            state_data.sections,
-                                            prog_data->args->config_args.keypairs) < 0)
+      if (ipmi_config_sections_insert_keyvalues (pstate,
+						 state_data.sections,
+						 prog_data->args->keypairs) < 0)
 	goto cleanup;
     }
 
-  if (prog_data->args->config_args.action == CONFIG_ACTION_COMMIT
-      || prog_data->args->config_args.action == CONFIG_ACTION_DIFF)
+  if (prog_data->args->action == IPMI_CONFIG_ACTION_COMMIT
+      || prog_data->args->action == IPMI_CONFIG_ACTION_DIFF)
     {
       int num;
 
-      if ((num = config_sections_validate_keyvalue_inputs (pstate,
-                                                           state_data.sections,
-                                                           &state_data)) < 0)
+      if ((num = ipmi_config_sections_validate_keyvalue_inputs (pstate,
+								state_data.sections,
+								&state_data)) < 0)
 	goto cleanup;
 
       /* some errors found */
@@ -156,16 +162,16 @@ _ipmi_config (pstdout_state_t pstate,
 	goto cleanup;
     }
 
-  if (prog_data->args->config_args.action == CONFIG_ACTION_CHECKOUT
-      && prog_data->args->config_args.section_strs)
+  if (prog_data->args->action == IPMI_CONFIG_ACTION_CHECKOUT
+      && prog_data->args->section_strs)
     {
-      struct config_section_str *sstr;
+      struct ipmi_config_section_str *sstr;
 
-      sstr = prog_data->args->config_args.section_strs;
+      sstr = prog_data->args->section_strs;
       while (sstr)
         {
-          if (!config_find_section (state_data.sections,
-                                    sstr->section_name))
+          if (!ipmi_config_find_section (state_data.sections,
+					 sstr->section_name))
             {
               pstdout_fprintf (pstate,
                                stderr,
@@ -183,9 +189,9 @@ _ipmi_config (pstdout_state_t pstate,
    * "Password" configure.  So we store information for this fact.
    * See workaround details in user section code.
    */
-  if (prog_data->args->config_args.action == CONFIG_ACTION_COMMIT)
+  if (prog_data->args->action == IPMI_CONFIG_ACTION_COMMIT)
     {
-      struct config_section *section;
+      struct ipmi_config_section *section;
       unsigned int user_count = 0;
 
       /* First, see how many user sections there are */
@@ -205,7 +211,7 @@ _ipmi_config (pstdout_state_t pstate,
           section = state_data.sections;
           while (section)
             {
-              struct config_keyvalue *kv;
+              struct ipmi_config_keyvalue *kv;
 
               if (stristr (section->section_name, "User"))
                 {
@@ -215,8 +221,8 @@ _ipmi_config (pstdout_state_t pstate,
 
                   if (userid < user_count)
                     {
-                      if ((kv = config_find_keyvalue (section,
-                                                      "Enable_User")))
+                      if ((kv = ipmi_config_find_keyvalue (section,
+							   "Enable_User")))
                         enable_user_found = 1;
                     }
                 }
@@ -243,16 +249,16 @@ _ipmi_config (pstdout_state_t pstate,
    * in parallel.  Reject input if user attempts to configure the same
    * IP or MAC on multiple hosts.
    */
-  if (prog_data->args->config_args.action == CONFIG_ACTION_COMMIT
+  if (prog_data->args->action == IPMI_CONFIG_ACTION_COMMIT
       && prog_data->hosts_count > 1)
     {
-      struct config_section *section;
+      struct ipmi_config_section *section;
 
-      if ((section = config_find_section (state_data.sections,
-                                          "Lan_Conf")))
+      if ((section = ipmi_config_find_section (state_data.sections,
+					       "Lan_Conf")))
         {
-          if (config_find_keyvalue (section,
-                                    "IP_Address"))
+          if (ipmi_config_find_keyvalue (section,
+					 "IP_Address"))
             {
               pstdout_fprintf (pstate,
                                stderr,
@@ -260,8 +266,8 @@ _ipmi_config (pstdout_state_t pstate,
               goto cleanup;
             }
 
-          if (config_find_keyvalue (section,
-                                    "MAC_Address"))
+          if (ipmi_config_find_keyvalue (section,
+					 "MAC_Address"))
             {
               pstdout_fprintf (pstate,
                                stderr,
@@ -271,25 +277,25 @@ _ipmi_config (pstdout_state_t pstate,
         }
     }
 
-  switch (prog_data->args->config_args.action)
+  switch (prog_data->args->action)
     {
-    case CONFIG_ACTION_CHECKOUT:
-      if (prog_data->args->config_args.section_strs)
+    case IPMI_CONFIG_ACTION_CHECKOUT:
+      if (prog_data->args->section_strs)
 	{
-	  struct config_section_str *sstr;
+	  struct ipmi_config_section_str *sstr;
 	  
 	  /* note: argp validation catches if user specified --section
 	   * and --keypair, so all_keys_if_none_specified should be '1'.
 	   */
 
-	  sstr = prog_data->args->config_args.section_strs;
+	  sstr = prog_data->args->section_strs;
 	  while (sstr)
 	    {
-	      struct config_section *s;
-	      config_err_t this_ret;
+	      struct ipmi_config_section *s;
+	      ipmi_config_err_t this_ret;
 
-	      if (!(s = config_find_section (state_data.sections,
-					     sstr->section_name)))
+	      if (!(s = ipmi_config_find_section (state_data.sections,
+						  sstr->section_name)))
 		{
 		  pstdout_fprintf (pstate,
 				   stderr,
@@ -298,16 +304,16 @@ _ipmi_config (pstdout_state_t pstate,
 		  continue;
 		}
 
-	      this_ret = config_checkout_section (pstate,
-						  s,
-						  &(prog_data->args->config_args),
-						  1,
-						  fp,
-						  0,
-						  &state_data);
-	      if (this_ret != CONFIG_ERR_SUCCESS)
+	      this_ret = ipmi_config_checkout_section (pstate,
+						       s,
+						       prog_data->args,
+						       1,
+						       fp,
+						       0,
+						       &state_data);
+	      if (this_ret != IPMI_CONFIG_ERR_SUCCESS)
 		ret = this_ret;
-	      if (ret == CONFIG_ERR_FATAL_ERROR)
+	      if (ret == IPMI_CONFIG_ERR_FATAL_ERROR)
 		break;
 
 	      sstr = sstr->next;
@@ -317,44 +323,44 @@ _ipmi_config (pstdout_state_t pstate,
 	{
 	  int all_keys_if_none_specified = 0;
 
-	  if (!prog_data->args->config_args.keypairs)
+	  if (!prog_data->args->keypairs)
 	    all_keys_if_none_specified++;
 
-	  ret = config_checkout (pstate,
-				 state_data.sections,
-				 &(prog_data->args->config_args),
-				 all_keys_if_none_specified,
-				 fp,
-				 0,
-				 &state_data);
+	  ret = ipmi_config_checkout (pstate,
+				      state_data.sections,
+				      prog_data->args,
+				      all_keys_if_none_specified,
+				      fp,
+				      0,
+				      &state_data);
 	}
       break;
-    case CONFIG_ACTION_COMMIT:
-      ret = config_commit (pstate,
-			   state_data.sections,
-			   &(prog_data->args->config_args),
-			   &state_data);
+    case IPMI_CONFIG_ACTION_COMMIT:
+      ret = ipmi_config_commit (pstate,
+				state_data.sections,
+				prog_data->args,
+				&state_data);
       break;
-    case CONFIG_ACTION_DIFF:
-      ret = config_diff (pstate,
-			 state_data.sections,
-			 &(prog_data->args->config_args),
-			 &state_data);
+    case IPMI_CONFIG_ACTION_DIFF:
+      ret = ipmi_config_diff (pstate,
+			      state_data.sections,
+			      prog_data->args,
+			      &state_data);
       break;
-    case CONFIG_ACTION_LIST_SECTIONS:
-      ret = config_output_sections_list (pstate, state_data.sections);
+    case IPMI_CONFIG_ACTION_LIST_SECTIONS:
+      ret = ipmi_config_output_sections_list (pstate, state_data.sections);
       break;
     }
 
-  if (ret == CONFIG_ERR_FATAL_ERROR)
+  if (ret == IPMI_CONFIG_ERR_FATAL_ERROR)
     {
-      exit_code = CONFIG_FATAL_EXIT_VALUE;
+      exit_code = IPMI_CONFIG_FATAL_EXIT_VALUE;
       goto cleanup;
     }
 
-  if (ret == CONFIG_ERR_NON_FATAL_ERROR)
+  if (ret == IPMI_CONFIG_ERR_NON_FATAL_ERROR)
     {
-      exit_code = CONFIG_NON_FATAL_EXIT_VALUE;
+      exit_code = IPMI_CONFIG_NON_FATAL_EXIT_VALUE;
       goto cleanup;
     }
 
@@ -362,7 +368,7 @@ _ipmi_config (pstdout_state_t pstate,
  cleanup:
   ipmi_ctx_close (state_data.ipmi_ctx);
   ipmi_ctx_destroy (state_data.ipmi_ctx);
-  config_sections_destroy (state_data.sections);
+  ipmi_config_sections_destroy (state_data.sections);
   if (file_opened)
     fclose (fp);
   return (exit_code);
@@ -384,8 +390,8 @@ main (int argc, char *argv[])
 
   prog_data.args = &cmd_args;
 
-  if ((hosts_count = pstdout_setup (&(prog_data.args->config_args.common_args.hostname),
-				    &(prog_data.args->config_args.common_args))) < 0)
+  if ((hosts_count = pstdout_setup (&(prog_data.args->common_args.hostname),
+				    &(prog_data.args->common_args))) < 0)
     return (EXIT_FAILURE);
 
   if (!hosts_count)
@@ -393,7 +399,7 @@ main (int argc, char *argv[])
 
   prog_data.hosts_count = hosts_count;
 
-  if ((rv = pstdout_launch (prog_data.args->config_args.common_args.hostname,
+  if ((rv = pstdout_launch (prog_data.args->common_args.hostname,
                             _ipmi_config,
                             &prog_data)) < 0)
     {

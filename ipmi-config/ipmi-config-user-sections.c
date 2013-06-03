@@ -29,8 +29,11 @@
 
 #include "ipmi-config.h"
 #include "ipmi-config-map.h"
-#include "ipmi-config-validate.h"
+#include "ipmi-config-tool-section.h"
+#include "ipmi-config-tool-utils.h"
+#include "ipmi-config-tool-validate.h"
 #include "ipmi-config-utils.h"
+#include "ipmi-config-validate.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
@@ -47,17 +50,17 @@ struct user_access {
 
 #define NODE_BUSY_RETRY_COUNT 10
 
-static config_err_t enable_user_commit (const char *section_name,
-					const struct config_keyvalue *kv,
-					void *arg);
+static ipmi_config_err_t enable_user_commit (const char *section_name,
+					     const struct ipmi_config_keyvalue *kv,
+					     void *arg);
 
-static config_err_t
+static ipmi_config_err_t
 _channel_info (ipmi_config_state_data_t *state_data,
 	       const char *section_name,
                const char *key_name,
                uint8_t *channel_number)
 {
-  config_err_t ret;
+  ipmi_config_err_t ret;
   char *ptr;
 
   assert (state_data);
@@ -68,7 +71,7 @@ _channel_info (ipmi_config_state_data_t *state_data,
   if ((ptr = stristr (key_name, "Channel_")))
     {
       (*channel_number) = atoi (ptr + strlen ("Channel_"));
-      return (CONFIG_ERR_SUCCESS);
+      return (IPMI_CONFIG_ERR_SUCCESS);
     }
 
   if (stristr (key_name, "Lan")
@@ -77,21 +80,21 @@ _channel_info (ipmi_config_state_data_t *state_data,
     {
       if ((ret = get_lan_channel_number (state_data,
 					 section_name,
-                                         channel_number)) != CONFIG_ERR_SUCCESS)
+                                         channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
         return (ret);
     }
   else
     {
       if ((ret = get_serial_channel_number (state_data,
 					    section_name,
-                                            channel_number)) != CONFIG_ERR_SUCCESS)
+                                            channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
         return (ret);
     }
 
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
-static config_err_t
+static ipmi_config_err_t
 _get_user_access (ipmi_config_state_data_t *state_data,
                   const char *section_name,
                   const char *key_name,
@@ -102,8 +105,8 @@ _get_user_access (ipmi_config_state_data_t *state_data,
   uint8_t channel_number;
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t ret;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t ret;
   int node_busy_retry_count = 0;
 
   assert (state_data);
@@ -117,7 +120,7 @@ _get_user_access (ipmi_config_state_data_t *state_data,
   if ((ret = _channel_info (state_data,
 			    section_name,
                             key_name,
-                            &channel_number)) != CONFIG_ERR_SUCCESS)
+                            &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_user_access_rs)))
@@ -156,7 +159,7 @@ _get_user_access (ipmi_config_state_data_t *state_data,
                                     userid,
                                     obj_cmd_rs) < 0)
         {
-          if (state_data->prog_data->args->config_args.common_args.debug)
+          if (state_data->prog_data->args->common_args.debug)
             pstdout_fprintf (state_data->pstate,
                              stderr,
                              "ipmi_cmd_get_user_access: %s\n",
@@ -188,9 +191,9 @@ _get_user_access (ipmi_config_state_data_t *state_data,
                                               IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
             (*username_not_set_yet) = 1;
           
-          if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                         obj_cmd_rs,
-                                         &ret))
+          if (ipmi_config_is_non_fatal_error (state_data->ipmi_ctx,
+					      obj_cmd_rs,
+					      &ret))
             rv = ret;
           
           goto cleanup;
@@ -201,9 +204,9 @@ _get_user_access (ipmi_config_state_data_t *state_data,
 
   if (node_busy_retry_count >= NODE_BUSY_RETRY_COUNT)
     {
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (ipmi_config_is_non_fatal_error (state_data->ipmi_ctx,
+					  obj_cmd_rs,
+					  &ret))
         rv = ret;
 
       goto cleanup;
@@ -262,13 +265,13 @@ _get_user_access (ipmi_config_state_data_t *state_data,
     }
   ua->user_id_enable_status = val;
 
-  rv = CONFIG_ERR_SUCCESS;
+  rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
-static config_err_t
+static ipmi_config_err_t
 _set_user_access (ipmi_config_state_data_t *state_data,
                   const char *section_name,
                   const char *key_name,
@@ -279,10 +282,10 @@ _set_user_access (ipmi_config_state_data_t *state_data,
   uint8_t channel_number;
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  struct config_section *section;
-  struct config_keyvalue *kvtmp;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t ret;
+  struct ipmi_config_section *section;
+  struct ipmi_config_keyvalue *kvtmp;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t ret;
 
   assert (state_data);
   assert (section_name);
@@ -295,7 +298,7 @@ _set_user_access (ipmi_config_state_data_t *state_data,
   if ((ret = _channel_info (state_data,
 			    section_name,
                             key_name,
-                            &channel_number)) != CONFIG_ERR_SUCCESS)
+                            &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_user_access_rs)))
@@ -311,14 +314,14 @@ _set_user_access (ipmi_config_state_data_t *state_data,
    * retrieved.  So if we're committing, we have to get the session
    * limit value and commit it each time.
    */
-  if ((section = config_find_section (state_data->sections,
+  if ((section = ipmi_config_find_section (state_data->sections,
                                       section_name)))
     {
-      char keynametmp[CONFIG_MAX_KEY_NAME_LEN + 1];
+      char keynametmp[IPMI_CONFIG_MAX_KEY_NAME_LEN + 1];
       int channel_flag = 0;
       int lan_flag = 0;
 
-      memset (keynametmp, '\0', CONFIG_MAX_KEY_NAME_LEN + 1);
+      memset (keynametmp, '\0', IPMI_CONFIG_MAX_KEY_NAME_LEN + 1);
               
       if (stristr (key_name, "Channel_"))
         channel_flag++;
@@ -328,17 +331,17 @@ _set_user_access (ipmi_config_state_data_t *state_data,
 
       if (channel_flag)
         snprintf (keynametmp,
-                  CONFIG_MAX_KEY_NAME_LEN,
+                  IPMI_CONFIG_MAX_KEY_NAME_LEN,
                   "%s_Session_Limit_Channel_%u",
                   (lan_flag) ? "Lan" : "Serial",
                   channel_number);
       else
         snprintf (keynametmp,
-                  CONFIG_MAX_KEY_NAME_LEN,
+                  IPMI_CONFIG_MAX_KEY_NAME_LEN,
                   "%s_Session_Limit",
                   (lan_flag) ? "Lan" : "Serial");
       
-      if ((kvtmp = config_find_keyvalue (section, keynametmp)))
+      if ((kvtmp = ipmi_config_find_keyvalue (section, keynametmp)))
         ua->session_limit = atoi (kvtmp->value_input);
     }
   else
@@ -346,7 +349,7 @@ _set_user_access (ipmi_config_state_data_t *state_data,
       /* This is a fatal error, we're already in this section,
        * it should be findable
        */
-      if (state_data->prog_data->args->config_args.common_args.debug)
+      if (state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "Cannot find section '%s'\n",
@@ -366,7 +369,7 @@ _set_user_access (ipmi_config_state_data_t *state_data,
                                 ua->session_limit,
                                 obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common_args.debug)
+      if (state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_user_access: %s\n",
@@ -387,30 +390,30 @@ _set_user_access (ipmi_config_state_data_t *state_data,
           (*comp_code) = val;
         }
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (ipmi_config_is_non_fatal_error (state_data->ipmi_ctx,
+					  obj_cmd_rs,
+					  &ret))
         rv = ret;
 
       goto cleanup;
     }
 
-  rv = CONFIG_ERR_SUCCESS;
+  rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
-static config_err_t
+static ipmi_config_err_t
 username_checkout (const char *section_name,
-                   struct config_keyvalue *kv,
+                   struct ipmi_config_keyvalue *kv,
                    void *arg)
 {
   ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   uint8_t userid;
-  /* achu: *2 b/c of CONFIG_USERNAME_NOT_SET_YET_STR length */
+  /* achu: *2 b/c of IPMI_CONFIG_USERNAME_NOT_SET_YET_STR length */
   char username[IPMI_MAX_USER_NAME_LENGTH*2+1];
 
   assert (section_name);
@@ -430,16 +433,16 @@ username_checkout (const char *section_name,
       goto cleanup;
     }
 
-  /* achu: *2 b/c of CONFIG_USERNAME_NOT_SET_YET_STR */
+  /* achu: *2 b/c of IPMI_CONFIG_USERNAME_NOT_SET_YET_STR */
   memset (username, '\0', IPMI_MAX_USER_NAME_LENGTH*2+1);
 
   if (ipmi_cmd_get_user_name (state_data->ipmi_ctx,
                               userid,
                               obj_cmd_rs) < 0)
     {
-      config_err_t ret;
+      ipmi_config_err_t ret;
 
-      if (state_data->prog_data->args->config_args.common_args.debug)
+      if (state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_user_name: %s\n",
@@ -461,13 +464,13 @@ username_checkout (const char *section_name,
           && (ipmi_check_completion_code (obj_cmd_rs,
                                           IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
         {
-          strcpy (username, CONFIG_USERNAME_NOT_SET_YET_STR);
+          strcpy (username, IPMI_CONFIG_USERNAME_NOT_SET_YET_STR);
           goto got_data;
         }
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (ipmi_config_is_non_fatal_error (state_data->ipmi_ctx,
+					  obj_cmd_rs,
+					  &ret))
         rv = ret;
 
       goto cleanup;
@@ -494,39 +497,39 @@ username_checkout (const char *section_name,
  got_data:
 
   /* for backwards compatability with older ipmi-configs */
-  if (state_data->prog_data->args->config_args.action == CONFIG_ACTION_DIFF
+  if (state_data->prog_data->args->action == IPMI_CONFIG_ACTION_DIFF
       && userid == 1
       && same (kv->value_input, "anonymous"))
     {
-      if (config_section_update_keyvalue_output (state_data->pstate,
+      if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                                  kv,
                                                  "anonymous") < 0)
-        return (CONFIG_ERR_FATAL_ERROR);
+        return (IPMI_CONFIG_ERR_FATAL_ERROR);
     }
   else
     {
-      if (config_section_update_keyvalue_output (state_data->pstate,
+      if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                                  kv,
                                                  username) < 0)
-        return (CONFIG_ERR_FATAL_ERROR);
+        return (IPMI_CONFIG_ERR_FATAL_ERROR);
     }
 
-  rv = CONFIG_ERR_SUCCESS;
+  rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
-static config_err_t
+static ipmi_config_err_t
 username_commit (const char *section_name,
-                 const struct config_keyvalue *kv,
+                 const struct ipmi_config_keyvalue *kv,
                  void *arg)
 {
   ipmi_config_state_data_t *state_data;
   uint8_t userid;
   fiid_obj_t obj_cmd_rs = NULL;
   fiid_obj_t obj_get_user_name_cmd_rs = NULL;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
 
   assert (section_name);
   assert (kv);
@@ -541,9 +544,9 @@ username_commit (const char *section_name,
       /* anonymous for backwards compatability */
       if (same (kv->value_input, "NULL")
           || same (kv->value_input, "anonymous"))
-        return (CONFIG_ERR_SUCCESS);
+        return (IPMI_CONFIG_ERR_SUCCESS);
       else
-        return (CONFIG_ERR_NON_FATAL_ERROR_READ_ONLY);
+        return (IPMI_CONFIG_ERR_NON_FATAL_ERROR_READ_ONLY);
     }
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_user_name_rs)))
@@ -561,9 +564,9 @@ username_commit (const char *section_name,
                               strlen (kv->value_input),
                               obj_cmd_rs) < 0)
     {
-      config_err_t ret;
+      ipmi_config_err_t ret;
 
-      if (state_data->prog_data->args->config_args.common_args.debug)
+      if (state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_user_name: %s\n",
@@ -601,7 +604,7 @@ username_commit (const char *section_name,
 				      userid,
 				      obj_get_user_name_cmd_rs) < 0)
 	    {
-	      if (state_data->prog_data->args->config_args.common_args.debug)
+	      if (state_data->prog_data->args->common_args.debug)
 		pstdout_fprintf (state_data->pstate,
 				 stderr,
 				 "ipmi_cmd_get_user_name: %s\n",
@@ -626,23 +629,23 @@ username_commit (const char *section_name,
         }
 
     error_out:
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (ipmi_config_is_non_fatal_error (state_data->ipmi_ctx,
+					  obj_cmd_rs,
+					  &ret))
         rv = ret;
 
       goto cleanup;
     }
 
  out:
-  rv = CONFIG_ERR_SUCCESS;
+  rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   fiid_obj_destroy (obj_get_user_name_cmd_rs);
   return (rv);
 }
 
-static config_validate_t
+static ipmi_config_validate_t
 username_validate (const char *section_name,
                    const char *key_name,
                    const char *value,
@@ -659,17 +662,17 @@ username_validate (const char *section_name,
   if (userid == 1)
     {
       if (!value || same (value, "null") || same (value, "anonymous"))
-        return (CONFIG_VALIDATE_VALID_VALUE);
+        return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
       else
-        return (CONFIG_VALIDATE_INVALID_VALUE);
+        return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
     }
 
   if (!value || strlen (value) > IPMI_MAX_USER_NAME_LENGTH)
-    return (CONFIG_VALIDATE_INVALID_VALUE);
-  return (CONFIG_VALIDATE_VALID_VALUE);
+    return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
+  return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
 }
 
-static config_err_t
+static ipmi_config_err_t
 _check_bmc_user_password (ipmi_config_state_data_t *state_data,
                           uint8_t userid,
                           char *password,
@@ -677,7 +680,7 @@ _check_bmc_user_password (ipmi_config_state_data_t *state_data,
                           int *is_same)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
 
   assert (state_data);
   assert (password);
@@ -723,17 +726,17 @@ _check_bmc_user_password (ipmi_config_state_data_t *state_data,
         }
       else
         {
-          config_err_t ret;
+          ipmi_config_err_t ret;
 
-          if (state_data->prog_data->args->config_args.common_args.debug)
+          if (state_data->prog_data->args->common_args.debug)
             pstdout_fprintf (state_data->pstate,
                              stderr,
                              "ipmi_cmd_set_user_password: %s\n",
                              ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-          if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                         obj_cmd_rs,
-                                         &ret))
+          if (ipmi_config_is_non_fatal_error (state_data->ipmi_ctx,
+					      obj_cmd_rs,
+					      &ret))
             rv = ret;
         }
       goto cleanup;
@@ -742,15 +745,15 @@ _check_bmc_user_password (ipmi_config_state_data_t *state_data,
     *is_same = 1;
 
  done:
-  rv = CONFIG_ERR_SUCCESS;
+  rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
-static config_err_t
+static ipmi_config_err_t
 password_checkout (const char *section_name,
-                   struct config_keyvalue *kv,
+                   struct ipmi_config_keyvalue *kv,
                    void *arg)
 {
   ipmi_config_state_data_t *state_data;
@@ -762,11 +765,11 @@ password_checkout (const char *section_name,
   
   state_data = (ipmi_config_state_data_t *)arg;
 
-  if (state_data->prog_data->args->config_args.action == CONFIG_ACTION_DIFF)
+  if (state_data->prog_data->args->action == IPMI_CONFIG_ACTION_DIFF)
     {
       uint8_t userid;
       int is_same;
-      config_err_t ret;
+      ipmi_config_err_t ret;
 
       userid = atoi (section_name + strlen ("User"));
 
@@ -783,7 +786,7 @@ password_checkout (const char *section_name,
                                                userid,
                                                kv->value_input,
                                                IPMI_PASSWORD_SIZE_20_BYTES,
-                                               &is_same)) != CONFIG_ERR_SUCCESS)
+                                               &is_same)) != IPMI_CONFIG_ERR_SUCCESS)
             return (ret);
         }
       else
@@ -792,7 +795,7 @@ password_checkout (const char *section_name,
                                                userid,
                                                kv->value_input,
                                                IPMI_PASSWORD_SIZE_16_BYTES,
-                                               &is_same)) != CONFIG_ERR_SUCCESS)
+                                               &is_same)) != IPMI_CONFIG_ERR_SUCCESS)
             return (ret);
         }
 
@@ -802,24 +805,24 @@ password_checkout (const char *section_name,
         str = "<something else>";
     }
 
-  if (config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              str) < 0)
-    return (CONFIG_ERR_FATAL_ERROR);
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
-static config_err_t
+static ipmi_config_err_t
 password_commit (const char *section_name,
-                 const struct config_keyvalue *kv,
+                 const struct ipmi_config_keyvalue *kv,
                  void *arg)
 {
   ipmi_config_state_data_t *state_data;
   uint8_t userid;
   fiid_obj_t obj_cmd_rs = NULL;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t ret;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -848,17 +851,17 @@ password_commit (const char *section_name,
                                       strlen (kv->value_input),
                                       obj_cmd_rs) < 0)
         {
-          config_err_t ret;
+          ipmi_config_err_t ret;
 
-          if (state_data->prog_data->args->config_args.common_args.debug)
+          if (state_data->prog_data->args->common_args.debug)
             pstdout_fprintf (state_data->pstate,
                              stderr,
                              "ipmi_cmd_set_user_password: %s\n",
                              ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-          if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                         obj_cmd_rs,
-                                         &ret))
+          if (ipmi_config_is_non_fatal_error (state_data->ipmi_ctx,
+					      obj_cmd_rs,
+					      &ret))
             rv = ret;
 
           goto cleanup;
@@ -874,15 +877,15 @@ password_commit (const char *section_name,
                                       strlen (kv->value_input),
                                       obj_cmd_rs) < 0)
         {
-          if (state_data->prog_data->args->config_args.common_args.debug)
+          if (state_data->prog_data->args->common_args.debug)
             pstdout_fprintf (state_data->pstate,
                              stderr,
                              "ipmi_cmd_set_user_password: %s\n",
                              ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-          if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                         obj_cmd_rs,
-                                         &ret))
+          if (ipmi_config_is_non_fatal_error (state_data->ipmi_ctx,
+					      obj_cmd_rs,
+					      &ret))
             rv = ret;
 
           goto cleanup;
@@ -892,18 +895,18 @@ password_commit (const char *section_name,
   if (state_data->enable_user_after_password_len
       && state_data->enable_user_after_password[userid-1].enable_user_failed)
     {
-      config_err_t ret;
+      ipmi_config_err_t ret;
 
       /* ignore non-fatal error, consider success */
       ret = enable_user_commit (section_name,
                                 state_data->enable_user_after_password[userid-1].kv,
                                 state_data);
-      if (ret == CONFIG_ERR_FATAL_ERROR)
+      if (ret == IPMI_CONFIG_ERR_FATAL_ERROR)
         {
-          rv = CONFIG_ERR_FATAL_ERROR;
+          rv = IPMI_CONFIG_ERR_FATAL_ERROR;
           goto cleanup;
         }
-      if (ret == CONFIG_ERR_SUCCESS)
+      if (ret == IPMI_CONFIG_ERR_SUCCESS)
         {
           /* now it has passed, reset to 0 just in case */
           state_data->enable_user_after_password[userid-1].enable_user_failed  = 0;
@@ -915,13 +918,13 @@ password_commit (const char *section_name,
         }
     }
 
-  rv = CONFIG_ERR_SUCCESS;
+  rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
-static config_validate_t
+static ipmi_config_validate_t
 password_validate (const char *section_name,
                    const char *key_name,
                    const char *value,
@@ -937,12 +940,12 @@ password_validate (const char *section_name,
   state_data = (ipmi_config_state_data_t *)arg;
 
   if (strlen (value) > IPMI_2_0_MAX_PASSWORD_LENGTH)
-    return (CONFIG_VALIDATE_INVALID_VALUE);
+    return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
   
   if (strlen (value) > IPMI_1_5_MAX_PASSWORD_LENGTH)
     {
       uint8_t userid;
-      config_err_t ret;
+      ipmi_config_err_t ret;
       int is_same;
 
       userid = atoi (section_name + strlen ("User"));
@@ -954,27 +957,27 @@ password_validate (const char *section_name,
                                            userid,
                                            "foobar",
                                            IPMI_PASSWORD_SIZE_20_BYTES,
-                                           &is_same)) != CONFIG_ERR_SUCCESS)
-        return (CONFIG_VALIDATE_INVALID_VALUE);
+                                           &is_same)) != IPMI_CONFIG_ERR_SUCCESS)
+        return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
 
-      return (CONFIG_VALIDATE_VALID_VALUE);
+      return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
     }
 
   if (strlen (value) <= IPMI_1_5_MAX_PASSWORD_LENGTH)
-    return (CONFIG_VALIDATE_VALID_VALUE);
+    return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
 
-  return (CONFIG_VALIDATE_INVALID_VALUE);
+  return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
 }
 
-static config_err_t
+static ipmi_config_err_t
 password20_checkout (const char *section_name,
-                     struct config_keyvalue *kv,
+                     struct ipmi_config_keyvalue *kv,
                      void *arg)
 {
   ipmi_config_state_data_t *state_data;
   uint8_t userid;
   char *str = "";
-  config_err_t ret;
+  ipmi_config_err_t ret;
   int is_same;
 
   assert (section_name);
@@ -1002,10 +1005,10 @@ password20_checkout (const char *section_name,
                                        userid,
                                        "foobar",
                                        IPMI_PASSWORD_SIZE_20_BYTES,
-                                       &is_same)) != CONFIG_ERR_SUCCESS)
+                                       &is_same)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (state_data->prog_data->args->config_args.action == CONFIG_ACTION_DIFF)
+  if (state_data->prog_data->args->action == IPMI_CONFIG_ACTION_DIFF)
     {
       /* special case for diff, since we can't get the password, and
        * return it, we'll check to see if the password is the same.
@@ -1016,7 +1019,7 @@ password20_checkout (const char *section_name,
                                            userid,
                                            kv->value_input,
                                            IPMI_PASSWORD_SIZE_20_BYTES,
-                                           &is_same)) != CONFIG_ERR_SUCCESS)
+                                           &is_same)) != IPMI_CONFIG_ERR_SUCCESS)
         return (ret);
 
       if (is_same)
@@ -1025,23 +1028,23 @@ password20_checkout (const char *section_name,
         str = "<something else>";
     }
 
-  if (config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              str) < 0)
-    return (CONFIG_ERR_FATAL_ERROR);
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
-static config_err_t
+static ipmi_config_err_t
 password20_commit (const char *section_name,
-                   const struct config_keyvalue *kv,
+                   const struct ipmi_config_keyvalue *kv,
                    void *arg)
 {
   ipmi_config_state_data_t *state_data;
   uint8_t userid;
   fiid_obj_t obj_cmd_rs = NULL;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
 
   assert (section_name);
   assert (kv);
@@ -1067,30 +1070,30 @@ password20_commit (const char *section_name,
                                   strlen (kv->value_input),
                                   obj_cmd_rs) < 0)
     {
-      config_err_t ret;
+      ipmi_config_err_t ret;
 
-      if (state_data->prog_data->args->config_args.common_args.debug)
+      if (state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_user_password: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (ipmi_config_is_non_fatal_error (state_data->ipmi_ctx,
+					  obj_cmd_rs,
+					  &ret))
         rv = ret;
 
       goto cleanup;
     }
 
-  rv = CONFIG_ERR_SUCCESS;
+  rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 
 }
 
-static config_validate_t
+static ipmi_config_validate_t
 password20_validate (const char *section_name,
                      const char *key_name,
                      const char *value,
@@ -1101,19 +1104,19 @@ password20_validate (const char *section_name,
   assert (value);
 
   if (strlen (value) <= IPMI_2_0_MAX_PASSWORD_LENGTH)
-    return (CONFIG_VALIDATE_VALID_VALUE);
-  return (CONFIG_VALIDATE_INVALID_VALUE);
+    return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
+  return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
 }
 
-static config_err_t
+static ipmi_config_err_t
 enable_user_checkout (const char *section_name,
-                      struct config_keyvalue *kv,
+                      struct ipmi_config_keyvalue *kv,
                       void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct user_access ua;
   unsigned int username_not_set_yet = 0;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -1125,7 +1128,7 @@ enable_user_checkout (const char *section_name,
                                section_name,
                                kv->key->key_name,
                                &ua,
-                               &username_not_set_yet)) != CONFIG_ERR_SUCCESS)
+                               &username_not_set_yet)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       if (username_not_set_yet)
         ua.user_id_enable_status = IPMI_USER_ID_ENABLE_STATUS_UNSPECIFIED;
@@ -1140,32 +1143,32 @@ enable_user_checkout (const char *section_name,
    */
   if (ua.user_id_enable_status == IPMI_USER_ID_ENABLE_STATUS_ENABLED)
     {
-      if (config_section_update_keyvalue_output (state_data->pstate,
+      if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                                  kv,
                                                  "Yes") < 0)
-        return (CONFIG_ERR_FATAL_ERROR);
+        return (IPMI_CONFIG_ERR_FATAL_ERROR);
     }
   else if (ua.user_id_enable_status == IPMI_USER_ID_ENABLE_STATUS_DISABLED)
     {
-      if (config_section_update_keyvalue_output (state_data->pstate,
+      if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                                  kv,
                                                  "No") < 0)
-        return (CONFIG_ERR_FATAL_ERROR);
+        return (IPMI_CONFIG_ERR_FATAL_ERROR);
     }
   else /* ua.user_id_enable_status == IPMI_USER_ID_ENABLE_STATUS_UNSPECIFIED */
     {
-      if (config_section_update_keyvalue_output (state_data->pstate,
+      if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                                  kv,
                                                  "") < 0)
-        return (CONFIG_ERR_FATAL_ERROR);
+        return (IPMI_CONFIG_ERR_FATAL_ERROR);
     }
 
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
-static config_err_t
+static ipmi_config_err_t
 enable_user_commit (const char *section_name,
-                    const struct config_keyvalue *kv,
+                    const struct ipmi_config_keyvalue *kv,
                     void *arg)
 {
   ipmi_config_state_data_t *state_data;
@@ -1174,8 +1177,8 @@ enable_user_commit (const char *section_name,
   fiid_obj_t obj_cmd_rs = NULL;
   char password[IPMI_1_5_MAX_PASSWORD_LENGTH];
   uint8_t user_status;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t ret;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t ret;
   int node_busy_retry_count = 0;
 
   assert (section_name);
@@ -1230,7 +1233,7 @@ enable_user_commit (const char *section_name,
                                       0,
                                       obj_cmd_rs) < 0)
         {
-          if (state_data->prog_data->args->config_args.common_args.debug)
+          if (state_data->prog_data->args->common_args.debug)
             pstdout_fprintf (state_data->pstate,
                              stderr,
                              "ipmi_cmd_set_user_password: %s\n",
@@ -1260,7 +1263,7 @@ enable_user_commit (const char *section_name,
               && (ipmi_check_completion_code (obj_cmd_rs,
                                               IPMI_COMP_CODE_REQUEST_DATA_LENGTH_INVALID) == 1))
             {
-              if (state_data->prog_data->args->config_args.common_args.debug)
+              if (state_data->prog_data->args->common_args.debug)
                 pstdout_fprintf (state_data->pstate,
                                  stderr,
                                  "ipmi_cmd_set_user_password: attempting workaround\n");
@@ -1301,15 +1304,15 @@ enable_user_commit (const char *section_name,
                             obj_cmd_rq,
                             obj_cmd_rs) < 0)
                 {
-                  if (state_data->prog_data->args->config_args.common_args.debug)
+                  if (state_data->prog_data->args->common_args.debug)
                     pstdout_fprintf (state_data->pstate,
                                      stderr,
                                      "ipmi_cmd: %s\n",
                                      ipmi_ctx_errormsg (state_data->ipmi_ctx));
                   
-                  if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                                 obj_cmd_rs,
-                                                 &ret))
+                  if (ipmi_config_is_non_fatal_error (state_data->ipmi_ctx,
+						      obj_cmd_rs,
+						      &ret))
                     rv = ret;
                   
                   goto cleanup;
@@ -1318,9 +1321,9 @@ enable_user_commit (const char *section_name,
               if (ipmi_check_completion_code_success (obj_cmd_rs) != 1)
                 {
                   
-                  if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                                 obj_cmd_rs,
-                                                 &ret))
+                  if (ipmi_config_is_non_fatal_error (state_data->ipmi_ctx,
+						      obj_cmd_rs,
+						      &ret))
                     rv = ret;
                   
                   goto cleanup;
@@ -1344,21 +1347,21 @@ enable_user_commit (const char *section_name,
               if (state_data->enable_user_after_password_len)
                 {
                   state_data->enable_user_after_password[userid-1].enable_user_failed = 1;
-                  state_data->enable_user_after_password[userid-1].kv = (struct config_keyvalue *)kv;
+                  state_data->enable_user_after_password[userid-1].kv = (struct ipmi_config_keyvalue *)kv;
                 }
               
-              if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                             obj_cmd_rs,
-                                             &ret))
+              if (ipmi_config_is_non_fatal_error (state_data->ipmi_ctx,
+						  obj_cmd_rs,
+						  &ret))
                 rv = ret;
               
               goto cleanup;
             }
           else
             {
-              if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                             obj_cmd_rs,
-                                             &ret))
+              if (ipmi_config_is_non_fatal_error (state_data->ipmi_ctx,
+						  obj_cmd_rs,
+						  &ret))
                 rv = ret;
 
               goto cleanup;
@@ -1370,30 +1373,30 @@ enable_user_commit (const char *section_name,
 
   if (node_busy_retry_count >= NODE_BUSY_RETRY_COUNT)
     {
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (ipmi_config_is_non_fatal_error (state_data->ipmi_ctx,
+					  obj_cmd_rs,
+					  &ret))
         rv = ret;
 
       goto cleanup;
     }
 
-  rv = CONFIG_ERR_SUCCESS;
+  rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rq);
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
-static config_err_t
+static ipmi_config_err_t
 lan_enable_ipmi_messaging_checkout (const char *section_name,
-                                    struct config_keyvalue *kv,
+                                    struct ipmi_config_keyvalue *kv,
                                     void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct user_access ua;
   unsigned int username_not_set_yet = 0;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -1405,37 +1408,37 @@ lan_enable_ipmi_messaging_checkout (const char *section_name,
                                section_name,
                                kv->key->key_name,
                                &ua,
-                               &username_not_set_yet)) != CONFIG_ERR_SUCCESS)
+                               &username_not_set_yet)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       if (username_not_set_yet)
         {
-          if (config_section_update_keyvalue_output (state_data->pstate,
+          if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                                      kv,
-                                                     CONFIG_USERNAME_NOT_SET_YET_STR) < 0)
-            return (CONFIG_ERR_FATAL_ERROR);
-          return (CONFIG_ERR_SUCCESS);
+                                                     IPMI_CONFIG_USERNAME_NOT_SET_YET_STR) < 0)
+            return (IPMI_CONFIG_ERR_FATAL_ERROR);
+          return (IPMI_CONFIG_ERR_SUCCESS);
         }
       else
         return (ret);
     }
 
-  if (config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              ua.user_ipmi_messaging ? "Yes" : "No") < 0)
-    return (CONFIG_ERR_FATAL_ERROR);
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
-static config_err_t
+static ipmi_config_err_t
 lan_enable_ipmi_messaging_commit (const char *section_name,
-                                  const struct config_keyvalue *kv,
+                                  const struct ipmi_config_keyvalue *kv,
                                   void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct user_access ua;
   unsigned int username_not_set_yet = 0;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -1447,7 +1450,7 @@ lan_enable_ipmi_messaging_commit (const char *section_name,
                                section_name,
                                kv->key->key_name,
                                &ua,
-                               &username_not_set_yet)) != CONFIG_ERR_SUCCESS)
+                               &username_not_set_yet)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
   ua.user_ipmi_messaging = same (kv->value_input, "yes");
@@ -1459,15 +1462,15 @@ lan_enable_ipmi_messaging_commit (const char *section_name,
                             NULL));
 }
 
-static config_err_t
+static ipmi_config_err_t
 lan_enable_link_auth_checkout (const char *section_name,
-                               struct config_keyvalue *kv,
+                               struct ipmi_config_keyvalue *kv,
                                void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct user_access ua;
   unsigned int username_not_set_yet = 0;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -1479,37 +1482,37 @@ lan_enable_link_auth_checkout (const char *section_name,
                                section_name,
                                kv->key->key_name,
                                &ua,
-                               &username_not_set_yet)) != CONFIG_ERR_SUCCESS)
+                               &username_not_set_yet)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       if (username_not_set_yet)
         {
-          if (config_section_update_keyvalue_output (state_data->pstate,
+          if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                                      kv,
-                                                     CONFIG_USERNAME_NOT_SET_YET_STR) < 0)
-            return (CONFIG_ERR_FATAL_ERROR);
-          return (CONFIG_ERR_SUCCESS);
+                                                     IPMI_CONFIG_USERNAME_NOT_SET_YET_STR) < 0)
+            return (IPMI_CONFIG_ERR_FATAL_ERROR);
+          return (IPMI_CONFIG_ERR_SUCCESS);
         }
       else
         return (ret);
     }
 
-  if (config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              ua.user_link_authentication ? "Yes" : "No") < 0)
-    return (CONFIG_ERR_FATAL_ERROR);
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
-static config_err_t
+static ipmi_config_err_t
 lan_enable_link_auth_commit (const char *section_name,
-                             const struct config_keyvalue *kv,
+                             const struct ipmi_config_keyvalue *kv,
                              void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct user_access ua;
   unsigned int username_not_set_yet = 0;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -1525,7 +1528,7 @@ lan_enable_link_auth_commit (const char *section_name,
                                section_name,
                                kv->key->key_name,
                                &ua,
-                               &username_not_set_yet)) != CONFIG_ERR_SUCCESS)
+                               &username_not_set_yet)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
   ua.user_link_authentication = same (kv->value_input, "yes");
@@ -1537,15 +1540,15 @@ lan_enable_link_auth_commit (const char *section_name,
                             NULL));
 }
 
-static config_err_t
+static ipmi_config_err_t
 lan_enable_restricted_to_callback_checkout (const char *section_name,
-                                            struct config_keyvalue *kv,
+                                            struct ipmi_config_keyvalue *kv,
                                             void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct user_access ua;
   unsigned int username_not_set_yet = 0;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -1557,37 +1560,37 @@ lan_enable_restricted_to_callback_checkout (const char *section_name,
                                section_name,
                                kv->key->key_name,
                                &ua,
-                               &username_not_set_yet)) != CONFIG_ERR_SUCCESS)
+                               &username_not_set_yet)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       if (username_not_set_yet)
         {
-          if (config_section_update_keyvalue_output (state_data->pstate,
+          if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                                      kv,
-                                                     CONFIG_USERNAME_NOT_SET_YET_STR) < 0)
-            return (CONFIG_ERR_FATAL_ERROR);
-          return (CONFIG_ERR_SUCCESS);
+                                                     IPMI_CONFIG_USERNAME_NOT_SET_YET_STR) < 0)
+            return (IPMI_CONFIG_ERR_FATAL_ERROR);
+          return (IPMI_CONFIG_ERR_SUCCESS);
         }
       else
         return (ret);
     }
 
-  if (config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              ua.user_restricted_to_callback ? "Yes" : "No") < 0)
-    return (CONFIG_ERR_FATAL_ERROR);
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
-static config_err_t
+static ipmi_config_err_t
 lan_enable_restricted_to_callback_commit (const char *section_name,
-                                          const struct config_keyvalue *kv,
+                                          const struct ipmi_config_keyvalue *kv,
                                           void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct user_access ua;
   unsigned int username_not_set_yet = 0;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -1603,7 +1606,7 @@ lan_enable_restricted_to_callback_commit (const char *section_name,
                                section_name,
                                kv->key->key_name,
                                &ua,
-                               &username_not_set_yet)) != CONFIG_ERR_SUCCESS)
+                               &username_not_set_yet)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
   ua.user_restricted_to_callback = same (kv->value_input, "yes");
@@ -1615,15 +1618,15 @@ lan_enable_restricted_to_callback_commit (const char *section_name,
                             NULL));
 }
 
-static config_err_t
+static ipmi_config_err_t
 lan_privilege_limit_checkout (const char *section_name,
-                              struct config_keyvalue *kv,
+                              struct ipmi_config_keyvalue *kv,
                               void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct user_access ua;
   unsigned int username_not_set_yet = 0;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -1635,37 +1638,37 @@ lan_privilege_limit_checkout (const char *section_name,
                                section_name,
                                kv->key->key_name,
                                &ua,
-                               &username_not_set_yet)) != CONFIG_ERR_SUCCESS)
+                               &username_not_set_yet)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       if (username_not_set_yet)
         {
-          if (config_section_update_keyvalue_output (state_data->pstate,
+          if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                                      kv,
-                                                     CONFIG_USERNAME_NOT_SET_YET_STR) < 0)
-            return (CONFIG_ERR_FATAL_ERROR);
-          return (CONFIG_ERR_SUCCESS);
+                                                     IPMI_CONFIG_USERNAME_NOT_SET_YET_STR) < 0)
+            return (IPMI_CONFIG_ERR_FATAL_ERROR);
+          return (IPMI_CONFIG_ERR_SUCCESS);
         }
       else
         return (ret);
     }
 
-  if (config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              get_privilege_limit_string (ua.privilege_limit)) < 0)
-    return (CONFIG_ERR_FATAL_ERROR);
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
-static config_err_t
+static ipmi_config_err_t
 lan_privilege_limit_commit (const char *section_name,
-                            const struct config_keyvalue *kv,
+                            const struct ipmi_config_keyvalue *kv,
                             void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct user_access ua;
   unsigned int username_not_set_yet = 0;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -1681,7 +1684,7 @@ lan_privilege_limit_commit (const char *section_name,
                                section_name,
                                kv->key->key_name,
                                &ua,
-                               &username_not_set_yet)) != CONFIG_ERR_SUCCESS)
+                               &username_not_set_yet)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
   ua.privilege_limit = get_privilege_limit_number (kv->value_input);
@@ -1693,9 +1696,9 @@ lan_privilege_limit_commit (const char *section_name,
                             NULL));
 }
 
-static config_err_t
+static ipmi_config_err_t
 lan_session_limit_checkout (const char *section_name,
-                            struct config_keyvalue *kv,
+                            struct ipmi_config_keyvalue *kv,
                             void *arg)
 {
   ipmi_config_state_data_t *state_data;
@@ -1707,23 +1710,23 @@ lan_session_limit_checkout (const char *section_name,
   state_data = (ipmi_config_state_data_t *)arg;
 
   /* Special case: There is no way to check out this value */
-  if (config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              "") < 0)
-    return (CONFIG_ERR_FATAL_ERROR);
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
-static config_err_t
+static ipmi_config_err_t
 lan_session_limit_commit (const char *section_name,
-                          const struct config_keyvalue *kv,
+                          const struct ipmi_config_keyvalue *kv,
                           void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct user_access ua;
   unsigned int username_not_set_yet = 0;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -1739,7 +1742,7 @@ lan_session_limit_commit (const char *section_name,
                                section_name,
                                kv->key->key_name,
                                &ua,
-                               &username_not_set_yet)) != CONFIG_ERR_SUCCESS)
+                               &username_not_set_yet)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
   /* Session limit field will be grabbed/set in _set_user_access */
@@ -1750,17 +1753,17 @@ lan_session_limit_commit (const char *section_name,
                             NULL));
 }
 
-static config_err_t
+static ipmi_config_err_t
 sol_payload_access_checkout (const char *section_name,
-                             struct config_keyvalue *kv,
+                             struct ipmi_config_keyvalue *kv,
                              void *arg)
 {
   ipmi_config_state_data_t *state_data;
   uint8_t userid;
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t ret;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t ret;
   uint8_t channel_number;
 
   assert (section_name);
@@ -1773,7 +1776,7 @@ sol_payload_access_checkout (const char *section_name,
   if ((ret = _channel_info (state_data,
 			    section_name,
                             kv->key->key_name,
-                            &channel_number)) != CONFIG_ERR_SUCCESS)
+                            &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_user_payload_access_rs)))
@@ -1790,7 +1793,7 @@ sol_payload_access_checkout (const char *section_name,
                                         userid,
                                         obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common_args.debug)
+      if (state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_user_payload_access: %s\n",
@@ -1813,16 +1816,16 @@ sol_payload_access_checkout (const char *section_name,
           && (ipmi_check_completion_code (obj_cmd_rs,
                                           IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
         {
-          if (config_section_update_keyvalue_output (state_data->pstate,
+          if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                                      kv,
-                                                     CONFIG_USERNAME_NOT_SET_YET_STR) < 0)
-            return (CONFIG_ERR_FATAL_ERROR);
+                                                     IPMI_CONFIG_USERNAME_NOT_SET_YET_STR) < 0)
+            return (IPMI_CONFIG_ERR_FATAL_ERROR);
           goto out;
         }
       
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (ipmi_config_is_non_fatal_error (state_data->ipmi_ctx,
+					  obj_cmd_rs,
+					  &ret))
         rv = ret;
 
       goto cleanup;
@@ -1838,28 +1841,28 @@ sol_payload_access_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if (config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              val ? "Yes" : "No") < 0)
-    return (CONFIG_ERR_FATAL_ERROR);
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
  out:
-  rv = CONFIG_ERR_SUCCESS;
+  rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
-static config_err_t
+static ipmi_config_err_t
 sol_payload_access_commit (const char *section_name,
-                           const struct config_keyvalue *kv,
+                           const struct ipmi_config_keyvalue *kv,
                            void *arg)
 {
   ipmi_config_state_data_t *state_data;
   uint8_t userid;
   fiid_obj_t obj_cmd_rs = NULL;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t ret;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t ret;
   uint8_t channel_number;
   uint8_t operation;
 
@@ -1873,7 +1876,7 @@ sol_payload_access_commit (const char *section_name,
   if ((ret = _channel_info (state_data,
 			    section_name,
                             kv->key->key_name,
-                            &channel_number)) != CONFIG_ERR_SUCCESS)
+                            &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_user_payload_access_rs)))
@@ -1911,35 +1914,35 @@ sol_payload_access_commit (const char *section_name,
                                         0,
                                         obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common_args.debug)
+      if (state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_user_payload_access: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (ipmi_config_is_non_fatal_error (state_data->ipmi_ctx,
+					  obj_cmd_rs,
+					  &ret))
         rv = ret;
 
       goto cleanup;
     }
 
-  rv = CONFIG_ERR_SUCCESS;
+  rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
-static config_err_t
+static ipmi_config_err_t
 serial_enable_ipmi_messaging_checkout (const char *section_name,
-                                       struct config_keyvalue *kv,
+                                       struct ipmi_config_keyvalue *kv,
                                        void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct user_access ua;
   unsigned int username_not_set_yet = 0;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -1951,37 +1954,37 @@ serial_enable_ipmi_messaging_checkout (const char *section_name,
                                section_name,
                                kv->key->key_name,
                                &ua,
-                               &username_not_set_yet)) != CONFIG_ERR_SUCCESS)
+                               &username_not_set_yet)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       if (username_not_set_yet)
         {
-          if (config_section_update_keyvalue_output (state_data->pstate,
+          if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                                      kv,
-                                                     CONFIG_USERNAME_NOT_SET_YET_STR) < 0)
-            return (CONFIG_ERR_FATAL_ERROR);
-          return (CONFIG_ERR_SUCCESS);
+                                                     IPMI_CONFIG_USERNAME_NOT_SET_YET_STR) < 0)
+            return (IPMI_CONFIG_ERR_FATAL_ERROR);
+          return (IPMI_CONFIG_ERR_SUCCESS);
         }
       else
         return (ret);
     }
 
-  if (config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              ua.user_ipmi_messaging ? "Yes" : "No") < 0)
-    return (CONFIG_ERR_FATAL_ERROR);
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
-static config_err_t
+static ipmi_config_err_t
 serial_enable_ipmi_messaging_commit (const char *section_name,
-                                     const struct config_keyvalue *kv,
+                                     const struct ipmi_config_keyvalue *kv,
                                      void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct user_access ua;
   unsigned int username_not_set_yet = 0;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -1997,7 +2000,7 @@ serial_enable_ipmi_messaging_commit (const char *section_name,
                                section_name,
                                kv->key->key_name,
                                &ua,
-                               &username_not_set_yet)) != CONFIG_ERR_SUCCESS)
+                               &username_not_set_yet)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
   ua.user_ipmi_messaging = same (kv->value_input, "yes");
@@ -2009,15 +2012,15 @@ serial_enable_ipmi_messaging_commit (const char *section_name,
                             NULL));
 }
 
-static config_err_t
+static ipmi_config_err_t
 serial_enable_link_auth_checkout (const char *section_name,
-                                  struct config_keyvalue *kv,
+                                  struct ipmi_config_keyvalue *kv,
                                   void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct user_access ua;
   unsigned int username_not_set_yet = 0;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -2029,37 +2032,37 @@ serial_enable_link_auth_checkout (const char *section_name,
                                section_name,
                                kv->key->key_name,
                                &ua,
-                               &username_not_set_yet)) != CONFIG_ERR_SUCCESS)
+                               &username_not_set_yet)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       if (username_not_set_yet)
         {
-          if (config_section_update_keyvalue_output (state_data->pstate,
+          if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                                      kv,
-                                                     CONFIG_USERNAME_NOT_SET_YET_STR) < 0)
-            return (CONFIG_ERR_FATAL_ERROR);
-          return (CONFIG_ERR_SUCCESS);
+                                                     IPMI_CONFIG_USERNAME_NOT_SET_YET_STR) < 0)
+            return (IPMI_CONFIG_ERR_FATAL_ERROR);
+          return (IPMI_CONFIG_ERR_SUCCESS);
         }
       else
         return (ret);
     }
 
-  if (config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              ua.user_link_authentication ? "Yes" : "No") < 0)
-    return (CONFIG_ERR_FATAL_ERROR);
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
-static config_err_t
+static ipmi_config_err_t
 serial_enable_link_auth_commit (const char *section_name,
-                                const struct config_keyvalue *kv,
+                                const struct ipmi_config_keyvalue *kv,
                                 void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct user_access ua;
   unsigned int username_not_set_yet = 0;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -2075,7 +2078,7 @@ serial_enable_link_auth_commit (const char *section_name,
                                section_name,
                                kv->key->key_name,
                                &ua,
-                               &username_not_set_yet)) != CONFIG_ERR_SUCCESS)
+                               &username_not_set_yet)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
   ua.user_link_authentication = same (kv->value_input, "yes");
@@ -2087,15 +2090,15 @@ serial_enable_link_auth_commit (const char *section_name,
                             NULL));
 }
 
-static config_err_t
+static ipmi_config_err_t
 serial_enable_restricted_to_callback_checkout (const char *section_name,
-                                               struct config_keyvalue *kv,
+                                               struct ipmi_config_keyvalue *kv,
                                                void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct user_access ua;
   unsigned int username_not_set_yet = 0;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -2107,37 +2110,37 @@ serial_enable_restricted_to_callback_checkout (const char *section_name,
                                section_name,
                                kv->key->key_name,
                                &ua,
-                               &username_not_set_yet)) != CONFIG_ERR_SUCCESS)
+                               &username_not_set_yet)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       if (username_not_set_yet)
         {
-          if (config_section_update_keyvalue_output (state_data->pstate,
+          if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                                      kv,
-                                                     CONFIG_USERNAME_NOT_SET_YET_STR) < 0)
-            return (CONFIG_ERR_FATAL_ERROR);
-          return (CONFIG_ERR_SUCCESS);
+                                                     IPMI_CONFIG_USERNAME_NOT_SET_YET_STR) < 0)
+            return (IPMI_CONFIG_ERR_FATAL_ERROR);
+          return (IPMI_CONFIG_ERR_SUCCESS);
         }
       else
         return (ret);
     }
 
-  if (config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              ua.user_restricted_to_callback ? "Yes" : "No") < 0)
-    return (CONFIG_ERR_FATAL_ERROR);
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
-static config_err_t
+static ipmi_config_err_t
 serial_enable_restricted_to_callback_commit (const char *section_name,
-                                             const struct config_keyvalue *kv,
+                                             const struct ipmi_config_keyvalue *kv,
                                              void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct user_access ua;
   unsigned int username_not_set_yet = 0;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -2153,7 +2156,7 @@ serial_enable_restricted_to_callback_commit (const char *section_name,
                                section_name,
                                kv->key->key_name,
                                &ua,
-                               &username_not_set_yet)) != CONFIG_ERR_SUCCESS)
+                               &username_not_set_yet)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
   ua.user_restricted_to_callback = same (kv->value_input, "yes");
@@ -2165,15 +2168,15 @@ serial_enable_restricted_to_callback_commit (const char *section_name,
                             NULL));
 }
 
-static config_err_t
+static ipmi_config_err_t
 serial_privilege_limit_checkout (const char *section_name,
-                                 struct config_keyvalue *kv,
+                                 struct ipmi_config_keyvalue *kv,
                                  void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct user_access ua;
   unsigned int username_not_set_yet = 0;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -2185,37 +2188,37 @@ serial_privilege_limit_checkout (const char *section_name,
                                section_name,
                                kv->key->key_name,
                                &ua,
-                               &username_not_set_yet)) != CONFIG_ERR_SUCCESS)
+                               &username_not_set_yet)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       if (username_not_set_yet)
         {
-          if (config_section_update_keyvalue_output (state_data->pstate,
+          if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                                      kv,
-                                                     CONFIG_USERNAME_NOT_SET_YET_STR) < 0)
-            return (CONFIG_ERR_FATAL_ERROR);
-          return (CONFIG_ERR_SUCCESS);
+                                                     IPMI_CONFIG_USERNAME_NOT_SET_YET_STR) < 0)
+            return (IPMI_CONFIG_ERR_FATAL_ERROR);
+          return (IPMI_CONFIG_ERR_SUCCESS);
         }
       else
         return (ret);
     }
 
-  if (config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              get_privilege_limit_string (ua.privilege_limit)) < 0)
-    return (CONFIG_ERR_FATAL_ERROR);
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
-static config_err_t
+static ipmi_config_err_t
 serial_privilege_limit_commit (const char *section_name,
-                               const struct config_keyvalue *kv,
+                               const struct ipmi_config_keyvalue *kv,
                                void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct user_access ua;
   unsigned int username_not_set_yet = 0;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -2231,7 +2234,7 @@ serial_privilege_limit_commit (const char *section_name,
                                section_name,
                                kv->key->key_name,
                                &ua,
-                               &username_not_set_yet)) != CONFIG_ERR_SUCCESS)
+                               &username_not_set_yet)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
   ua.privilege_limit = get_privilege_limit_number (kv->value_input);
@@ -2243,9 +2246,9 @@ serial_privilege_limit_commit (const char *section_name,
                             NULL));
 }
 
-static config_err_t
+static ipmi_config_err_t
 serial_session_limit_checkout (const char *section_name,
-                               struct config_keyvalue *kv,
+                               struct ipmi_config_keyvalue *kv,
                                void *arg)
 {
   ipmi_config_state_data_t *state_data;
@@ -2257,23 +2260,23 @@ serial_session_limit_checkout (const char *section_name,
   state_data = (ipmi_config_state_data_t *)arg;
 
   /* Special case: There is no way to check out this value */
-  if (config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              "") < 0)
-    return (CONFIG_ERR_FATAL_ERROR);
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
-static config_err_t
+static ipmi_config_err_t
 serial_session_limit_commit (const char *section_name,
-                             const struct config_keyvalue *kv,
+                             const struct ipmi_config_keyvalue *kv,
                              void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct user_access ua;
   unsigned int username_not_set_yet = 0;
-  config_err_t ret;
+  ipmi_config_err_t ret;
   uint8_t comp_code = 0;
 
   assert (section_name);
@@ -2290,7 +2293,7 @@ serial_session_limit_commit (const char *section_name,
                                section_name,
                                kv->key->key_name,
                                &ua,
-                               &username_not_set_yet)) != CONFIG_ERR_SUCCESS)
+                               &username_not_set_yet)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
   /* Session limit field will be grabbed/set in _set_user_access */
@@ -2303,22 +2306,22 @@ serial_session_limit_commit (const char *section_name,
                                section_name,
                                kv->key->key_name,
                                &ua,
-                               &comp_code)) != CONFIG_ERR_SUCCESS)
+                               &comp_code)) != IPMI_CONFIG_ERR_SUCCESS)
     {
-      if (ret == CONFIG_ERR_NON_FATAL_ERROR_INVALID_UNSUPPORTED_CONFIG
+      if (ret == IPMI_CONFIG_ERR_NON_FATAL_ERROR_INVALID_UNSUPPORTED_CONFIG
           && comp_code == IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST)
-        ret = CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED;
+        ret = IPMI_CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED;
       return (ret);
     }
 
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
-struct config_section *
+struct ipmi_config_section *
 ipmi_config_user_section_get (ipmi_config_state_data_t *state_data, unsigned int userid)
 {
-  struct config_section *section = NULL;
-  char section_name[CONFIG_MAX_SECTION_NAME_LEN];
+  struct ipmi_config_section *section = NULL;
+  char section_name[IPMI_CONFIG_MAX_SECTION_NAME_LEN];
   char *section_comment_text =
     "In the following User sections, users should configure usernames, "
     "passwords, and access rights for IPMI over LAN communication.  "
@@ -2357,7 +2360,7 @@ ipmi_config_user_section_get (ipmi_config_state_data_t *state_data, unsigned int
   assert (state_data);
   assert (userid);
 
-  snprintf (section_name, CONFIG_MAX_SECTION_NAME_LEN, "User%u", userid);
+  snprintf (section_name, IPMI_CONFIG_MAX_SECTION_NAME_LEN, "User%u", userid);
 
   if (userid == 1)
     {
@@ -2366,78 +2369,78 @@ ipmi_config_user_section_get (ipmi_config_state_data_t *state_data, unsigned int
       snprintf (section_comment,
                 4096,
                 section_comment_text,
-                CONFIG_USERNAME_NOT_SET_YET_STR);
+                IPMI_CONFIG_USERNAME_NOT_SET_YET_STR);
 
-      if (!(section = config_section_create (state_data->pstate,
-                                             section_name,
-                                             "UserX",
-                                             section_comment,
-                                             0,
-                                             NULL,
-                                             NULL)))
+      if (!(section = ipmi_config_section_create (state_data->pstate,
+						  section_name,
+						  "UserX",
+						  section_comment,
+						  0,
+						  NULL,
+						  NULL)))
         goto cleanup;
     }
   else
     {
-      if (!(section = config_section_create (state_data->pstate,
-                                             section_name,
-                                             NULL,
-                                             NULL,
-                                             0,
-                                             NULL,
-                                             NULL)))
+      if (!(section = ipmi_config_section_create (state_data->pstate,
+						  section_name,
+						  NULL,
+						  NULL,
+						  0,
+						  NULL,
+						  NULL)))
         goto cleanup;
     }
 
   /* serial not checked out by default */
 
-  if (!state_data->prog_data->args->config_args.verbose_count)
-    serial_config_flags = CONFIG_DO_NOT_CHECKOUT;
+  if (!state_data->prog_data->args->verbose_count)
+    serial_config_flags = IPMI_CONFIG_DO_NOT_CHECKOUT;
 
   /* userid 1 is the NULL username, so comment it out by default */
-  if (config_section_add_key (state_data->pstate,
-                              section,
-                              "Username",
-                              "Give Username",
-                              (userid == 1) ? (CONFIG_CHECKOUT_KEY_COMMENTED_OUT | CONFIG_READABLE_ONLY) : CONFIG_USERNAME_NOT_SET_YET,
-                              username_checkout,
-                              username_commit,
-                              username_validate) < 0)
+  if (ipmi_config_section_add_key (state_data->pstate,
+				   section,
+				   "Username",
+				   "Give Username",
+				   (userid == 1) ? (IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT | IPMI_CONFIG_READABLE_ONLY) : IPMI_CONFIG_USERNAME_NOT_SET_YET,
+				   username_checkout,
+				   username_commit,
+				   username_validate) < 0)
     goto cleanup;
 
   /* config Password before Enable_User, to remove the off-chance a
    * user is configured "on" before a password is set, allowing a null
    * connection to be established.
    */
-  if (config_section_add_key (state_data->pstate,
-                              section,
-                              "Password",
-                              "Give password or blank to clear. MAX 16 chars (20 chars if IPMI 2.0 supported).",
-                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
-                              password_checkout,
-                              password_commit,
-                              password_validate) < 0)
+  if (ipmi_config_section_add_key (state_data->pstate,
+				   section,
+				   "Password",
+				   "Give password or blank to clear. MAX 16 chars (20 chars if IPMI 2.0 supported).",
+				   IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
+				   password_checkout,
+				   password_commit,
+				   password_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
-                              section,
-                              "Enable_User",
-                              "Possible values: Yes/No or blank to not set",
-                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
-                              enable_user_checkout,
-                              enable_user_commit,
-                              config_yes_no_validate) < 0)
+  if (ipmi_config_section_add_key (state_data->pstate,
+				   section,
+				   "Enable_User",
+				   "Possible values: Yes/No or blank to not set",
+				   IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+				   enable_user_checkout,
+				   enable_user_commit,
+				   ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
   /* achu: For backwards compatability to earlier ipmi-config, now "absorbed" into Password */
-  if (config_section_add_key (state_data->pstate,
-                              section,
-                              "Password20",
-                              "Give password for IPMI 2.0 or blank to clear. MAX 20 chars.",
-                              CONFIG_DO_NOT_CHECKOUT | CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
-                              password20_checkout,
-                              password20_commit,
-                              password20_validate) < 0)
+  if (ipmi_config_section_add_key (state_data->pstate,
+				   section,
+				   "Password20",
+				   "Give password for IPMI 2.0 or blank to clear. MAX 20 chars.",
+				   IPMI_CONFIG_DO_NOT_CHECKOUT | IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
+				   password20_checkout,
+				   password20_commit,
+				   password20_validate) < 0)
     goto cleanup;
 
   /* b/c loop goes from -1 and up, need to make unsigned int an int
@@ -2459,96 +2462,96 @@ ipmi_config_user_section_get (ipmi_config_state_data_t *state_data, unsigned int
       else
 	config_flags = state_data->lan_channel_config_flags;
 
-      if (config_section_multi_channel_add_key (state_data->pstate,
-						section,
-						"Lan_Enable_IPMI_Msgs",
-						"Possible values: Yes/No",
-						config_flags | CONFIG_USERNAME_NOT_SET_YET,
-						lan_enable_ipmi_messaging_checkout,
-						lan_enable_ipmi_messaging_commit,
-						config_yes_no_validate,
-						i,
-						state_data->lan_channel_numbers,
-						state_data->lan_channel_numbers_count) < 0)
+      if (ipmi_config_section_multi_channel_add_key (state_data->pstate,
+						     section,
+						     "Lan_Enable_IPMI_Msgs",
+						     "Possible values: Yes/No",
+						     config_flags | IPMI_CONFIG_USERNAME_NOT_SET_YET,
+						     lan_enable_ipmi_messaging_checkout,
+						     lan_enable_ipmi_messaging_commit,
+						     ipmi_config_yes_no_validate,
+						     i,
+						     state_data->lan_channel_numbers,
+						     state_data->lan_channel_numbers_count) < 0)
 	goto cleanup;
 
-      if (config_section_multi_channel_add_key (state_data->pstate,
-						section,
-						"Lan_Enable_Link_Auth",
-						"Possible values: Yes/No",
-						config_flags | CONFIG_USERNAME_NOT_SET_YET,
-						lan_enable_link_auth_checkout,
-						lan_enable_link_auth_commit,
-						config_yes_no_validate,
-						i,
-						state_data->lan_channel_numbers,
-						state_data->lan_channel_numbers_count) < 0)
+      if (ipmi_config_section_multi_channel_add_key (state_data->pstate,
+						     section,
+						     "Lan_Enable_Link_Auth",
+						     "Possible values: Yes/No",
+						     config_flags | IPMI_CONFIG_USERNAME_NOT_SET_YET,
+						     lan_enable_link_auth_checkout,
+						     lan_enable_link_auth_commit,
+						     ipmi_config_yes_no_validate,
+						     i,
+						     state_data->lan_channel_numbers,
+						     state_data->lan_channel_numbers_count) < 0)
 	goto cleanup;
 
-      if (config_section_multi_channel_add_key (state_data->pstate,
-						section,
-						"Lan_Enable_Restricted_to_Callback",
-						"Possible values: Yes/No",
-						config_flags | CONFIG_USERNAME_NOT_SET_YET,
-						lan_enable_restricted_to_callback_checkout,
-						lan_enable_restricted_to_callback_commit,
-						config_yes_no_validate,
-						i,
-						state_data->lan_channel_numbers,
-						state_data->lan_channel_numbers_count) < 0)
+      if (ipmi_config_section_multi_channel_add_key (state_data->pstate,
+						     section,
+						     "Lan_Enable_Restricted_to_Callback",
+						     "Possible values: Yes/No",
+						     config_flags | IPMI_CONFIG_USERNAME_NOT_SET_YET,
+						     lan_enable_restricted_to_callback_checkout,
+						     lan_enable_restricted_to_callback_commit,
+						     ipmi_config_yes_no_validate,
+						     i,
+						     state_data->lan_channel_numbers,
+						     state_data->lan_channel_numbers_count) < 0)
 	goto cleanup;
       
       /* achu: For backwards compatability to ipmi-config in 0.2.0 */
-      if (config_section_multi_channel_add_key (state_data->pstate,
-						section,
-						"Lan_Enable_Restrict_to_Callback",
-						"Possible values: Yes/No",
-						config_flags | CONFIG_DO_NOT_CHECKOUT | CONFIG_USERNAME_NOT_SET_YET,
-						lan_enable_restricted_to_callback_checkout,
-						lan_enable_restricted_to_callback_commit,
-						config_yes_no_validate,
-						i,
-						state_data->lan_channel_numbers,
-						state_data->lan_channel_numbers_count) < 0)
+      if (ipmi_config_section_multi_channel_add_key (state_data->pstate,
+						     section,
+						     "Lan_Enable_Restrict_to_Callback",
+						     "Possible values: Yes/No",
+						     config_flags | IPMI_CONFIG_DO_NOT_CHECKOUT | IPMI_CONFIG_USERNAME_NOT_SET_YET,
+						     lan_enable_restricted_to_callback_checkout,
+						     lan_enable_restricted_to_callback_commit,
+						     ipmi_config_yes_no_validate,
+						     i,
+						     state_data->lan_channel_numbers,
+						     state_data->lan_channel_numbers_count) < 0)
 	goto cleanup;
 
-      if (config_section_multi_channel_add_key (state_data->pstate,
-						section,
-						"Lan_Privilege_Limit",
-						"Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access",
-						config_flags | CONFIG_USERNAME_NOT_SET_YET,
-						lan_privilege_limit_checkout,
-						lan_privilege_limit_commit,
-						get_privilege_limit_number_validate,
-						i,
-						state_data->lan_channel_numbers,
-						state_data->lan_channel_numbers_count) < 0)
+      if (ipmi_config_section_multi_channel_add_key (state_data->pstate,
+						     section,
+						     "Lan_Privilege_Limit",
+						     "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access",
+						     config_flags | IPMI_CONFIG_USERNAME_NOT_SET_YET,
+						     lan_privilege_limit_checkout,
+						     lan_privilege_limit_commit,
+						     get_privilege_limit_number_validate,
+						     i,
+						     state_data->lan_channel_numbers,
+						     state_data->lan_channel_numbers_count) < 0)
 	goto cleanup;
       
-      if (config_section_multi_channel_add_key (state_data->pstate,
-						section,
-						"Lan_Session_Limit",
-						"Possible values: 0-17, 0 is unlimited; May be reset to 0 if not specified",
-						config_flags | CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY | CONFIG_USERNAME_NOT_SET_YET,
-						lan_session_limit_checkout,
-						lan_session_limit_commit,
-						config_number_range_four_bits,
-						i,
-						state_data->lan_channel_numbers,
-						state_data->lan_channel_numbers_count) < 0)
+      if (ipmi_config_section_multi_channel_add_key (state_data->pstate,
+						     section,
+						     "Lan_Session_Limit",
+						     "Possible values: 0-17, 0 is unlimited; May be reset to 0 if not specified",
+						     config_flags | IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY | IPMI_CONFIG_USERNAME_NOT_SET_YET,
+						     lan_session_limit_checkout,
+						     lan_session_limit_commit,
+						     ipmi_config_number_range_four_bits,
+						     i,
+						     state_data->lan_channel_numbers,
+						     state_data->lan_channel_numbers_count) < 0)
 	goto cleanup;
       
-      if (config_section_multi_channel_add_key (state_data->pstate,
-						section,
-						"SOL_Payload_Access",
-						"Possible values: Yes/No",
-						config_flags | CONFIG_USERNAME_NOT_SET_YET,
-						sol_payload_access_checkout,
-						sol_payload_access_commit,
-						config_yes_no_validate,
-						i,
-						state_data->lan_channel_numbers,
-						state_data->lan_channel_numbers_count) < 0)
+      if (ipmi_config_section_multi_channel_add_key (state_data->pstate,
+						     section,
+						     "SOL_Payload_Access",
+						     "Possible values: Yes/No",
+						     config_flags | IPMI_CONFIG_USERNAME_NOT_SET_YET,
+						     sol_payload_access_checkout,
+						     sol_payload_access_commit,
+						     ipmi_config_yes_no_validate,
+						     i,
+						     state_data->lan_channel_numbers,
+						     state_data->lan_channel_numbers_count) < 0)
 	goto cleanup;
     }
 
@@ -2571,83 +2574,83 @@ ipmi_config_user_section_get (ipmi_config_state_data_t *state_data, unsigned int
       else
         config_flags = serial_config_flags | state_data->serial_channel_config_flags;
 
-      if (config_section_multi_channel_add_key (state_data->pstate,
-						section,
-						"Serial_Enable_IPMI_Msgs",
-						"Possible values: Yes/No",
-						config_flags | CONFIG_USERNAME_NOT_SET_YET,
-						serial_enable_ipmi_messaging_checkout,
-						serial_enable_ipmi_messaging_commit,
-						config_yes_no_validate,
-						i,
-						state_data->serial_channel_numbers,
-						state_data->serial_channel_numbers_count) < 0)
+      if (ipmi_config_section_multi_channel_add_key (state_data->pstate,
+						     section,
+						     "Serial_Enable_IPMI_Msgs",
+						     "Possible values: Yes/No",
+						     config_flags | IPMI_CONFIG_USERNAME_NOT_SET_YET,
+						     serial_enable_ipmi_messaging_checkout,
+						     serial_enable_ipmi_messaging_commit,
+						     ipmi_config_yes_no_validate,
+						     i,
+						     state_data->serial_channel_numbers,
+						     state_data->serial_channel_numbers_count) < 0)
 	goto cleanup;
 
-      if (config_section_multi_channel_add_key (state_data->pstate,
-						section,
-						"Serial_Enable_Link_Auth",
-						"Possible values: Yes/No",
-						config_flags | CONFIG_USERNAME_NOT_SET_YET,
-						serial_enable_link_auth_checkout,
-						serial_enable_link_auth_commit,
-						config_yes_no_validate,
-						i,
-						state_data->serial_channel_numbers,
-						state_data->serial_channel_numbers_count) < 0)
+      if (ipmi_config_section_multi_channel_add_key (state_data->pstate,
+						     section,
+						     "Serial_Enable_Link_Auth",
+						     "Possible values: Yes/No",
+						     config_flags | IPMI_CONFIG_USERNAME_NOT_SET_YET,
+						     serial_enable_link_auth_checkout,
+						     serial_enable_link_auth_commit,
+						     ipmi_config_yes_no_validate,
+						     i,
+						     state_data->serial_channel_numbers,
+						     state_data->serial_channel_numbers_count) < 0)
 	goto cleanup;
       
-      if (config_section_multi_channel_add_key (state_data->pstate,
-						section,
-						"Serial_Enable_Restricted_to_Callback",
-						"Possible values: Yes/No",
-						config_flags | CONFIG_USERNAME_NOT_SET_YET,
-						serial_enable_restricted_to_callback_checkout,
-						serial_enable_restricted_to_callback_commit,
-						config_yes_no_validate,
-						i,
-						state_data->serial_channel_numbers,
-						state_data->serial_channel_numbers_count) < 0)
+      if (ipmi_config_section_multi_channel_add_key (state_data->pstate,
+						     section,
+						     "Serial_Enable_Restricted_to_Callback",
+						     "Possible values: Yes/No",
+						     config_flags | IPMI_CONFIG_USERNAME_NOT_SET_YET,
+						     serial_enable_restricted_to_callback_checkout,
+						     serial_enable_restricted_to_callback_commit,
+						     ipmi_config_yes_no_validate,
+						     i,
+						     state_data->serial_channel_numbers,
+						     state_data->serial_channel_numbers_count) < 0)
 	goto cleanup;
 
       /* achu: For backwards compatability to ipmi-config in 0.2.0 */
-      if (config_section_multi_channel_add_key (state_data->pstate,
-						section,
-						"Serial_Enable_Restrict_to_Callback",
-						"Possible values: Yes/No",
-						config_flags | CONFIG_DO_NOT_CHECKOUT | CONFIG_USERNAME_NOT_SET_YET,
-						serial_enable_restricted_to_callback_checkout,
-						serial_enable_restricted_to_callback_commit,
-						config_yes_no_validate,
-						i,
-						state_data->serial_channel_numbers,
-						state_data->serial_channel_numbers_count) < 0)
+      if (ipmi_config_section_multi_channel_add_key (state_data->pstate,
+						     section,
+						     "Serial_Enable_Restrict_to_Callback",
+						     "Possible values: Yes/No",
+						     config_flags | IPMI_CONFIG_DO_NOT_CHECKOUT | IPMI_CONFIG_USERNAME_NOT_SET_YET,
+						     serial_enable_restricted_to_callback_checkout,
+						     serial_enable_restricted_to_callback_commit,
+						     ipmi_config_yes_no_validate,
+						     i,
+						     state_data->serial_channel_numbers,
+						     state_data->serial_channel_numbers_count) < 0)
 	goto cleanup;
 
-      if (config_section_multi_channel_add_key (state_data->pstate,
-						section,
-						"Serial_Privilege_Limit",
-						"Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access",
-						config_flags | CONFIG_USERNAME_NOT_SET_YET,
-						serial_privilege_limit_checkout,
-						serial_privilege_limit_commit,
-						get_privilege_limit_number_validate,
-						i,
-						state_data->serial_channel_numbers,
-						state_data->serial_channel_numbers_count) < 0)
+      if (ipmi_config_section_multi_channel_add_key (state_data->pstate,
+						     section,
+						     "Serial_Privilege_Limit",
+						     "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access",
+						     config_flags | IPMI_CONFIG_USERNAME_NOT_SET_YET,
+						     serial_privilege_limit_checkout,
+						     serial_privilege_limit_commit,
+						     get_privilege_limit_number_validate,
+						     i,
+						     state_data->serial_channel_numbers,
+						     state_data->serial_channel_numbers_count) < 0)
 	goto cleanup;
       
-      if (config_section_multi_channel_add_key (state_data->pstate,
-						section,
-						"Serial_Session_Limit",
-						"Possible values: 0-17, 0 is unlimited; May be reset to 0 if not specified",
-						config_flags | CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY | CONFIG_USERNAME_NOT_SET_YET,
-						serial_session_limit_checkout,
-						serial_session_limit_commit,
-						config_number_range_one_byte,
-						i,
-						state_data->serial_channel_numbers,
-						state_data->serial_channel_numbers_count) < 0)
+      if (ipmi_config_section_multi_channel_add_key (state_data->pstate,
+						     section,
+						     "Serial_Session_Limit",
+						     "Possible values: 0-17, 0 is unlimited; May be reset to 0 if not specified",
+						     config_flags | IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY | IPMI_CONFIG_USERNAME_NOT_SET_YET,
+						     serial_session_limit_checkout,
+						     serial_session_limit_commit,
+						     ipmi_config_number_range_one_byte,
+						     i,
+						     state_data->serial_channel_numbers,
+						     state_data->serial_channel_numbers_count) < 0)
 	goto cleanup;
     }
 
@@ -2655,6 +2658,6 @@ ipmi_config_user_section_get (ipmi_config_state_data_t *state_data, unsigned int
 
  cleanup:
   if (section)
-    config_section_destroy (section);
+    ipmi_config_section_destroy (section);
   return (NULL);
 }

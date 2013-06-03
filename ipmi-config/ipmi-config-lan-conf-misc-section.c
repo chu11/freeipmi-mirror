@@ -29,8 +29,11 @@
 
 #include "ipmi-config.h"
 #include "ipmi-config-map.h"
-#include "ipmi-config-validate.h"
+#include "ipmi-config-tool-section.h"
+#include "ipmi-config-tool-utils.h"
+#include "ipmi-config-tool-validate.h"
 #include "ipmi-config-utils.h"
+#include "ipmi-config-validate.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
@@ -42,15 +45,15 @@ struct bmc_generated_arp_control
   uint8_t bmc_generated_arp_responses;
 };
 
-static config_err_t
+static ipmi_config_err_t
 _get_bmc_generated_arp_control (ipmi_config_state_data_t *state_data,
 				const char *section_name,
                                 struct bmc_generated_arp_control *ac)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t ret;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t ret;
   uint8_t channel_number;
 
   assert (state_data);
@@ -66,7 +69,7 @@ _get_bmc_generated_arp_control (ipmi_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number (state_data, section_name, &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -79,15 +82,15 @@ _get_bmc_generated_arp_control (ipmi_config_state_data_t *state_data,
                                                                            IPMI_LAN_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                            obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common_args.debug)
+      if (state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_bmc_generated_arp_control: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+      if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+						       obj_cmd_rs,
+						       &ret))
         rv = ret;
 
       goto cleanup;
@@ -113,20 +116,20 @@ _get_bmc_generated_arp_control (ipmi_config_state_data_t *state_data,
     }
   ac->bmc_generated_arp_responses = val;
 
-  rv = CONFIG_ERR_SUCCESS;
+  rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
-static config_err_t
+static ipmi_config_err_t
 _set_bmc_generated_arp_control (ipmi_config_state_data_t *state_data,
 				const char *section_name,
                                 struct bmc_generated_arp_control *ac)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t ret;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t ret;
   uint8_t channel_number;
 
   assert (state_data);
@@ -142,7 +145,7 @@ _set_bmc_generated_arp_control (ipmi_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number (state_data, section_name, &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -154,35 +157,35 @@ _set_bmc_generated_arp_control (ipmi_config_state_data_t *state_data,
                                                                            ac->bmc_generated_arp_responses,
                                                                            obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common_args.debug)
+      if (state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_bmc_generated_arp_control: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+      if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+						       obj_cmd_rs,
+						       &ret))
         rv = ret;
 
       goto cleanup;
     }
 
-  rv = CONFIG_ERR_SUCCESS;
+  rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 
 }
 
-static config_err_t
+static ipmi_config_err_t
 enable_gratuitous_arps_checkout (const char *section_name,
-                                 struct config_keyvalue *kv,
+                                 struct ipmi_config_keyvalue *kv,
                                  void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct bmc_generated_arp_control ac;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -190,25 +193,25 @@ enable_gratuitous_arps_checkout (const char *section_name,
 
   state_data = (ipmi_config_state_data_t *)arg;
 
-  if ((ret = _get_bmc_generated_arp_control (state_data, section_name, &ac)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_bmc_generated_arp_control (state_data, section_name, &ac)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (config_section_update_keyvalue_output (state_data->pstate,
-                                             kv,
-                                             ac.bmc_generated_gratuitous_arps ? "Yes" : "No") < 0)
-    return (CONFIG_ERR_FATAL_ERROR);
+  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+						  kv,
+						  ac.bmc_generated_gratuitous_arps ? "Yes" : "No") < 0)
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
-static config_err_t
+static ipmi_config_err_t
 enable_gratuitous_arps_commit (const char *section_name,
-                               const struct config_keyvalue *kv,
+                               const struct ipmi_config_keyvalue *kv,
                                void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct bmc_generated_arp_control ac;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -216,21 +219,21 @@ enable_gratuitous_arps_commit (const char *section_name,
 
   state_data = (ipmi_config_state_data_t *)arg;
 
-  if ((ret = _get_bmc_generated_arp_control (state_data, section_name, &ac)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_bmc_generated_arp_control (state_data, section_name, &ac)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
   ac.bmc_generated_gratuitous_arps = same (kv->value_input, "yes");
   return (_set_bmc_generated_arp_control (state_data, section_name, &ac));
 }
 
-static config_err_t
+static ipmi_config_err_t
 enable_arp_response_checkout (const char *section_name,
-                              struct config_keyvalue *kv,
+                              struct ipmi_config_keyvalue *kv,
                               void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct bmc_generated_arp_control ac;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -238,25 +241,25 @@ enable_arp_response_checkout (const char *section_name,
 
   state_data = (ipmi_config_state_data_t *)arg;
 
-  if ((ret = _get_bmc_generated_arp_control (state_data, section_name, &ac)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_bmc_generated_arp_control (state_data, section_name, &ac)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (config_section_update_keyvalue_output (state_data->pstate,
-                                             kv,
-                                             ac.bmc_generated_arp_responses ? "Yes" : "No") < 0)
-    return (CONFIG_ERR_FATAL_ERROR);
+  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+						  kv,
+						  ac.bmc_generated_arp_responses ? "Yes" : "No") < 0)
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
-static config_err_t
+static ipmi_config_err_t
 enable_arp_response_commit (const char *section_name,
-                            const struct config_keyvalue *kv,
+                            const struct ipmi_config_keyvalue *kv,
                             void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct bmc_generated_arp_control ac;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -264,22 +267,22 @@ enable_arp_response_commit (const char *section_name,
 
   state_data = (ipmi_config_state_data_t *)arg;
 
-  if ((ret = _get_bmc_generated_arp_control (state_data, section_name, &ac)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_bmc_generated_arp_control (state_data, section_name, &ac)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
   ac.bmc_generated_arp_responses = same (kv->value_input, "yes");
   return (_set_bmc_generated_arp_control (state_data, section_name, &ac));
 }
 
-static config_err_t
+static ipmi_config_err_t
 gratuitous_arp_interval_checkout (const char *section_name,
-                                  struct config_keyvalue *kv,
+                                  struct ipmi_config_keyvalue *kv,
                                   void *arg)
 {
   ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t ret;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t ret;
   uint8_t channel_number;
   uint8_t gratuitous_arp_interval;
   uint64_t val;
@@ -299,7 +302,7 @@ gratuitous_arp_interval_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number (state_data, section_name, &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -312,15 +315,15 @@ gratuitous_arp_interval_checkout (const char *section_name,
                                                                          IPMI_LAN_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                          obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common_args.debug)
+      if (state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_gratuitous_arp_interval: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+      if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+						       obj_cmd_rs,
+						       &ret))
         rv = ret;
 
       goto cleanup;
@@ -336,26 +339,26 @@ gratuitous_arp_interval_checkout (const char *section_name,
     }
   gratuitous_arp_interval = val;
 
-  if (config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
-                                                          kv,
-                                                          gratuitous_arp_interval) < 0)
-    return (CONFIG_ERR_FATAL_ERROR);
+  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+							       kv,
+							       gratuitous_arp_interval) < 0)
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
-  rv = CONFIG_ERR_SUCCESS;
+  rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
-static config_err_t
+static ipmi_config_err_t
 gratuitous_arp_interval_commit (const char *section_name,
-                                const struct config_keyvalue *kv,
+                                const struct ipmi_config_keyvalue *kv,
                                 void *arg)
 {
   ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t ret;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t ret;
   uint8_t channel_number;
 
   assert (section_name);
@@ -373,7 +376,7 @@ gratuitous_arp_interval_commit (const char *section_name,
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number (state_data, section_name, &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -384,33 +387,33 @@ gratuitous_arp_interval_commit (const char *section_name,
                                                                          atoi (kv->value_input),
                                                                          obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common_args.debug)
+      if (state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_gratuitous_arp_interval: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
-                                                  obj_cmd_rs,
-                                                  &ret))
+      if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+						       obj_cmd_rs,
+						       &ret))
         rv = ret;
 
       goto cleanup;
     }
 
-  rv = CONFIG_ERR_SUCCESS;
+  rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 
 }
 
-struct config_section *
+struct ipmi_config_section *
 ipmi_config_lan_conf_misc_section_get (ipmi_config_state_data_t *state_data,
 				      unsigned int config_flags,
 				      int channel_index)
 {
-  struct config_section *section = NULL;
+  struct ipmi_config_section *section = NULL;
   char *section_comment =
     "The following miscellaneous configuration options are optionally "
     "implemented by the vendor.  They may not be available your system and "
@@ -430,7 +433,7 @@ ipmi_config_lan_conf_misc_section_get (ipmi_config_state_data_t *state_data,
 
   assert (state_data);
 
-  if (!(section = config_section_multi_channel_create (state_data->pstate,
+  if (!(section = ipmi_config_section_multi_channel_create (state_data->pstate,
 						       section_name_base_str,
 						       section_comment,
 						       NULL,
@@ -441,40 +444,40 @@ ipmi_config_lan_conf_misc_section_get (ipmi_config_state_data_t *state_data,
 						       state_data->lan_channel_numbers_count)))
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               section,
                               "Enable_Gratuitous_ARPs",
                               "Possible values: Yes/No",
                               0,
                               enable_gratuitous_arps_checkout,
                               enable_gratuitous_arps_commit,
-                              config_yes_no_validate) < 0)
+                              ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               section,
                               "Enable_ARP_Response",
                               "Possible values: Yes/No",
                               0,
                               enable_arp_response_checkout,
                               enable_arp_response_commit,
-                              config_yes_no_validate) < 0)
+                              ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               section,
                               "Gratuitous_ARP_Interval",
                               "Possible values: 0-255, in 500ms increments (e.g. 2 = 1000ms)",
                               0,
                               gratuitous_arp_interval_checkout,
                               gratuitous_arp_interval_commit,
-                              config_number_range_one_byte) < 0)
+                              ipmi_config_number_range_one_byte) < 0)
     goto cleanup;
 
   return (section);
 
  cleanup:
   if (section)
-    config_section_destroy (section);
+    ipmi_config_section_destroy (section);
   return (NULL);
 }

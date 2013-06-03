@@ -38,7 +38,7 @@
 
 #include "freeipmi-portability.h"
 
-config_validate_t
+ipmi_config_validate_t
 channel_access_mode_validate (const char *section_name,
                               const char *key_name,
                               const char *value,
@@ -49,11 +49,11 @@ channel_access_mode_validate (const char *section_name,
   assert (value);
 
   if (channel_access_mode (value) >= 0)
-    return (CONFIG_VALIDATE_VALID_VALUE);
-  return (CONFIG_VALIDATE_INVALID_VALUE);
+    return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
+  return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
 }
 
-config_validate_t
+ipmi_config_validate_t
 get_privilege_limit_number_validate (const char *section_name,
                                      const char *key_name,
                                      const char *value,
@@ -64,11 +64,11 @@ get_privilege_limit_number_validate (const char *section_name,
   assert (value);
 
   if (get_privilege_limit_number (value) > 0)
-    return (CONFIG_VALIDATE_VALID_VALUE);
-  return (CONFIG_VALIDATE_INVALID_VALUE);
+    return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
+  return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
 }
 
-config_validate_t
+ipmi_config_validate_t
 privilege_level_number_validate (const char *section_name,
                                  const char *key_name,
                                  const char *value,
@@ -79,11 +79,11 @@ privilege_level_number_validate (const char *section_name,
   assert (value);
 
   if (privilege_level_number (value) > 0)
-    return (CONFIG_VALIDATE_VALID_VALUE);
-  return (CONFIG_VALIDATE_INVALID_VALUE);
+    return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
+  return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
 }
 
-config_validate_t
+ipmi_config_validate_t
 rmcpplus_priv_number_validate (const char *section_name,
                                const char *key_name,
                                const char *value,
@@ -94,11 +94,11 @@ rmcpplus_priv_number_validate (const char *section_name,
   assert (value);
 
   if (rmcpplus_priv_number (value) >= 0)
-    return (CONFIG_VALIDATE_VALID_VALUE);
-  return (CONFIG_VALIDATE_INVALID_VALUE);
+    return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
+  return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
 }
 
-config_validate_t
+ipmi_config_validate_t
 ip_address_source_number_validate (const char *section_name,
                                    const char *key_name,
                                    const char *value,
@@ -109,11 +109,11 @@ ip_address_source_number_validate (const char *section_name,
   assert (value);
 
   if (ip_address_source_number (value) >= 0)
-    return (CONFIG_VALIDATE_VALID_VALUE);
-  return (CONFIG_VALIDATE_INVALID_VALUE);
+    return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
+  return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
 }
 
-config_validate_t
+ipmi_config_validate_t
 power_restore_policy_number_validate (const char *section_name,
                                       const char *key_name,
                                       const char *value,
@@ -124,11 +124,11 @@ power_restore_policy_number_validate (const char *section_name,
   assert (value);
 
   if (power_restore_policy_number (value) != -1)
-    return (CONFIG_VALIDATE_VALID_VALUE);
-  return (CONFIG_VALIDATE_INVALID_VALUE);
+    return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
+  return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
 }
 
-config_validate_t
+ipmi_config_validate_t
 connect_mode_number_validate (const char *section_name,
                               const char *key_name,
                               const char *value,
@@ -139,11 +139,11 @@ connect_mode_number_validate (const char *section_name,
   assert (value);
 
   if (connect_mode_number (value) != -1)
-    return (CONFIG_VALIDATE_VALID_VALUE);
-  return (CONFIG_VALIDATE_INVALID_VALUE);
+    return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
+  return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
 }
 
-config_validate_t
+ipmi_config_validate_t
 flow_control_number_validate (const char *section_name,
                               const char *key_name,
                               const char *value,
@@ -154,11 +154,11 @@ flow_control_number_validate (const char *section_name,
   assert (value);
 
   if (flow_control_number (value) > -1)
-    return (CONFIG_VALIDATE_VALID_VALUE);
-  return (CONFIG_VALIDATE_INVALID_VALUE);
+    return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
+  return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
 }
 
-config_validate_t
+ipmi_config_validate_t
 bit_rate_number_validate (const char *section_name,
                           const char *key_name,
                           const char *value,
@@ -169,11 +169,11 @@ bit_rate_number_validate (const char *section_name,
   assert (value);
 
   if (bit_rate_number (value) > -1)
-    return (CONFIG_VALIDATE_VALID_VALUE);
-  return (CONFIG_VALIDATE_INVALID_VALUE);
+    return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
+  return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
 }
 
-config_validate_t
+ipmi_config_validate_t
 sol_bit_rate_number_validate (const char *section_name,
                               const char *key_name,
                               const char *value,
@@ -184,11 +184,11 @@ sol_bit_rate_number_validate (const char *section_name,
   assert (value);
 
   if (sol_bit_rate_number (value) != -1)
-    return (CONFIG_VALIDATE_VALID_VALUE);
-  return (CONFIG_VALIDATE_INVALID_VALUE);
+    return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
+  return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
 }
 
-config_validate_t
+ipmi_config_validate_t
 alert_destination_type_number_validate (const char *section_name,
                                         const char *key_name,
                                         const char *value,
@@ -199,11 +199,11 @@ alert_destination_type_number_validate (const char *section_name,
   assert (value);
 
   if (alert_destination_type_number (value) != -1)
-    return (CONFIG_VALIDATE_VALID_VALUE);
-  return (CONFIG_VALIDATE_INVALID_VALUE);
+    return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
+  return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
 }
 
-config_validate_t
+ipmi_config_validate_t
 alert_gateway_number_validate (const char *section_name,
                                const char *key_name,
                                const char *value,
@@ -214,6 +214,6 @@ alert_gateway_number_validate (const char *section_name,
   assert (value);
 
   if (alert_gateway_number (value) != -1)
-    return (CONFIG_VALIDATE_VALID_VALUE);
-  return (CONFIG_VALIDATE_INVALID_VALUE);
+    return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
+  return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
 }

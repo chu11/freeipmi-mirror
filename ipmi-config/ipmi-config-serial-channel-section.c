@@ -29,16 +29,17 @@
 
 #include "ipmi-config.h"
 #include "ipmi-config-channel-common.h"
+#include "ipmi-config-tool-section.h"
 #include "ipmi-config-utils.h"
 
 #include "freeipmi-portability.h"
 
-struct config_section *
+struct ipmi_config_section *
 ipmi_config_serial_channel_section_get (ipmi_config_state_data_t *state_data,
                                        unsigned int config_flags,
 				       int channel_index)
 {
-  struct config_section * section = NULL;
+  struct ipmi_config_section * section = NULL;
   char *section_comment =
     "In the Serial_Channel section, IPMI over Serial communication can be "
     "enabled or disabled.  "
@@ -59,16 +60,16 @@ ipmi_config_serial_channel_section_get (ipmi_config_state_data_t *state_data,
    * achu: section not checked out by default.
    */
 
-  if (!state_data->prog_data->args->config_args.verbose_count)
-    config_flags |= CONFIG_DO_NOT_CHECKOUT;
+  if (!state_data->prog_data->args->verbose_count)
+    config_flags |= IPMI_CONFIG_DO_NOT_CHECKOUT;
 
-  if (!(section = config_section_multi_channel_create (state_data->pstate,
-						       section_name_base_str,
-						       section_comment,
-						       NULL,
-						       NULL,
-						       config_flags,
-						       channel_index,
+  if (!(section = ipmi_config_section_multi_channel_create (state_data->pstate,
+							    section_name_base_str,
+							    section_comment,
+							    NULL,
+							    NULL,
+							    config_flags,
+							    channel_index,
 						       state_data->serial_channel_numbers,
 						       state_data->serial_channel_numbers_count)))
     goto cleanup;
@@ -81,7 +82,7 @@ ipmi_config_serial_channel_section_get (ipmi_config_state_data_t *state_data,
 
  cleanup:
   if (section)
-    config_section_destroy (section);
+    ipmi_config_section_destroy (section);
   return (NULL);
 }
 

@@ -22,7 +22,7 @@
 #include "ipmi-config.h"
 #include "ipmi-config-sections.h"
 
-struct config_section * ipmi_config_sol_conf_section_get (ipmi_config_state_data_t *state_data,
-							 unsigned int config_flags,
-							 int channel_index);
+struct ipmi_config_section * ipmi_config_sol_conf_section_get (ipmi_config_state_data_t *state_data,
+							       unsigned int config_flags,
+							       int channel_index);
 #endif /* IPMI_CONFIG_SOL_CONF_SECTION_H */

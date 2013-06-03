@@ -33,12 +33,12 @@
 
 #include "freeipmi-portability.h"
 
-struct config_section *
+struct ipmi_config_section *
 ipmi_config_lan_channel_section_get (ipmi_config_state_data_t *state_data,
                                     unsigned int config_flags,
 				    int channel_index)
 {
-  struct config_section * section = NULL;
+  struct ipmi_config_section * section = NULL;
   char *section_comment =
     "In the Lan_Channel section, general IPMI over LAN can be enabled for "
     "disabled.  In the below, \"Volatile\" configurations are immediately "
@@ -59,15 +59,15 @@ ipmi_config_lan_channel_section_get (ipmi_config_state_data_t *state_data,
 
   assert (state_data);
 
-  if (!(section = config_section_multi_channel_create (state_data->pstate,
-						       section_name_base_str,
-						       section_comment,
-						       NULL,
-						       NULL,
-						       config_flags,
-						       channel_index,
-						       state_data->lan_channel_numbers,
-						       state_data->lan_channel_numbers_count)))
+  if (!(section = ipmi_config_section_multi_channel_create (state_data->pstate,
+							    section_name_base_str,
+							    section_comment,
+							    NULL,
+							    NULL,
+							    config_flags,
+							    channel_index,
+							    state_data->lan_channel_numbers,
+							    state_data->lan_channel_numbers_count)))
     goto cleanup;
 
   if (ipmi_config_channel_common_section_get (state_data,
@@ -78,7 +78,7 @@ ipmi_config_lan_channel_section_get (ipmi_config_state_data_t *state_data,
 
  cleanup:
   if (section)
-    config_section_destroy (section);
+    ipmi_config_section_destroy (section);
   return (NULL);
 }
 

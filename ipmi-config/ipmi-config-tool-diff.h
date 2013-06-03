@@ -16,13 +16,15 @@
  * 
  */
 
-
-#ifndef IPMI_CONFIG_MISC_SECTION_H
-#define IPMI_CONFIG_MISC_SECTION_H
+#ifndef IPMI_CONFIG_TOOL_DIFF_H
+#define IPMI_CONFIG_TOOL_DIFF_H
 
 #include "ipmi-config.h"
-#include "ipmi-config-sections.h"
+#include "pstdout.h"
 
-struct ipmi_config_section * ipmi_config_misc_section_get (ipmi_config_state_data_t *state_data);
+ipmi_config_err_t ipmi_config_diff (pstdout_state_t pstate,
+				    struct ipmi_config_section *sections,
+				    struct ipmi_config_arguments *cmd_args,
+				    void *arg);
 
-#endif /* IPMI_CONFIG_MISC_SECTION_H */
+#endif /* IPMI_CONFIG_TOOL_DIFF_H */

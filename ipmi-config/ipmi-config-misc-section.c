@@ -29,19 +29,20 @@
 
 #include "ipmi-config.h"
 #include "ipmi-config-map.h"
+#include "ipmi-config-tool-section.h"
 #include "ipmi-config-validate.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
 
-static config_err_t
+static ipmi_config_err_t
 power_restore_policy_checkout (const char *section_name,
-                               struct config_keyvalue *kv,
+                               struct ipmi_config_keyvalue *kv,
                                void *arg)
 {
   ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   uint8_t power_restore_policy;
   uint64_t val;
 
@@ -62,17 +63,17 @@ power_restore_policy_checkout (const char *section_name,
 
   if (ipmi_cmd_get_chassis_status (state_data->ipmi_ctx, obj_cmd_rs) < 0)
     {
-      config_err_t ret;
+      ipmi_config_err_t ret;
 
-      if (state_data->prog_data->args->config_args.common_args.debug)
+      if (state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_chassis_status: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (ipmi_config_is_non_fatal_error (state_data->ipmi_ctx,
+					  obj_cmd_rs,
+					  &ret))
         rv = ret;
 
       goto cleanup;
@@ -90,24 +91,24 @@ power_restore_policy_checkout (const char *section_name,
     }
   power_restore_policy = val;
 
-  if (config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              power_restore_policy_string (power_restore_policy)) < 0)
-    return (CONFIG_ERR_FATAL_ERROR);
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
-  rv = CONFIG_ERR_SUCCESS;
+  rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
-static config_err_t
+static ipmi_config_err_t
 power_restore_policy_commit (const char *section_name,
-                             const struct config_keyvalue *kv,
+                             const struct ipmi_config_keyvalue *kv,
                              void *arg)
 {
   ipmi_config_state_data_t *state_data;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   fiid_obj_t obj_cmd_rs = NULL;
 
   assert (section_name);
@@ -129,32 +130,32 @@ power_restore_policy_commit (const char *section_name,
                                          power_restore_policy_number (kv->value_input),
                                          obj_cmd_rs) < 0)
     {
-      config_err_t ret;
+      ipmi_config_err_t ret;
 
-      if (state_data->prog_data->args->config_args.common_args.debug)
+      if (state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_power_restore_policy: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_non_fatal_error (state_data->ipmi_ctx,
-                                     obj_cmd_rs,
-                                     &ret))
+      if (ipmi_config_is_non_fatal_error (state_data->ipmi_ctx,
+					  obj_cmd_rs,
+					  &ret))
         rv = ret;
 
       goto cleanup;
     }
 
-  rv = CONFIG_ERR_SUCCESS;
+  rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
-struct config_section *
+struct ipmi_config_section *
 ipmi_config_misc_section_get (ipmi_config_state_data_t *state_data)
 {
-  struct config_section *section = NULL;
+  struct ipmi_config_section *section = NULL;
   char *section_comment =
     "The following miscellaneous configuration options are optionally "
     "implemented by the vendor.  They may not be available your system and "
@@ -168,20 +169,20 @@ ipmi_config_misc_section_get (ipmi_config_state_data_t *state_data)
 
   assert (state_data);
 
-  if (!(section = config_section_create (state_data->pstate,
+  if (!(section = ipmi_config_section_create (state_data->pstate,
                                          "Misc",
                                          "Misc",
                                          section_comment,
-                                         CONFIG_DO_NOT_CHECKOUT | CONFIG_DO_NOT_LIST,
+                                         IPMI_CONFIG_DO_NOT_CHECKOUT | IPMI_CONFIG_DO_NOT_LIST,
                                          NULL,
                                          NULL)))
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               section,
                               "Power_Restore_Policy",
                               "Possible values: Off_State_AC_Apply/Restore_State_AC_Apply/On_State_AC_Apply",
-                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                              IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
                               power_restore_policy_checkout,
                               power_restore_policy_commit,
                               power_restore_policy_number_validate) < 0)
@@ -191,6 +192,6 @@ ipmi_config_misc_section_get (ipmi_config_state_data_t *state_data)
 
  cleanup:
   if (section)
-    config_section_destroy (section);
+    ipmi_config_section_destroy (section);
   return (NULL);
 }

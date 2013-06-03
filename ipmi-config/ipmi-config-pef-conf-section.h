@@ -22,6 +22,6 @@
 #include "ipmi-config.h"
 #include "ipmi-config-sections.h"
 
-struct config_section * ipmi_config_pef_conf_section_get (ipmi_config_state_data_t *state_data);
+struct ipmi_config_section * ipmi_config_pef_conf_section_get (ipmi_config_state_data_t *state_data);
 
 #endif /* IPMI_CONFIG_PEF_CONF_SECTION_H */

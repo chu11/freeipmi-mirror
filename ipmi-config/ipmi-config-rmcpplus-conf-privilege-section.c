@@ -29,8 +29,10 @@
 
 #include "ipmi-config.h"
 #include "ipmi-config-map.h"
-#include "ipmi-config-validate.h"
+#include "ipmi-config-tool-section.h"
+#include "ipmi-config-tool-utils.h"
 #include "ipmi-config-utils.h"
+#include "ipmi-config-validate.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
@@ -41,7 +43,7 @@
 
 #define IPMI_CONFIG_CIPHER_SUITE_INCORRECT_RANGE_LEN 16
 
-static config_err_t
+static ipmi_config_err_t
 _rmcpplus_cipher_suite_id_privilege_setup (ipmi_config_state_data_t *state_data,
 					   const char *section_name)
 {
@@ -49,15 +51,15 @@ _rmcpplus_cipher_suite_id_privilege_setup (ipmi_config_state_data_t *state_data,
   fiid_obj_t obj_cmd_id_rs = NULL;
   fiid_obj_t obj_cmd_priv_rs = NULL;
   uint64_t val;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t ret;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t ret;
   uint8_t channel_number;
   unsigned int i;
 
   assert (state_data);
   assert (section_name);
 
-  if ((ret = get_lan_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number (state_data, section_name, &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -67,7 +69,7 @@ _rmcpplus_cipher_suite_id_privilege_setup (ipmi_config_state_data_t *state_data,
       && state_data->cipher_suite_id_supported_set
       && state_data->cipher_suite_priv_set
       && state_data->cipher_suite_channel_number == channel_number)
-    return (CONFIG_ERR_SUCCESS);
+    return (IPMI_CONFIG_ERR_SUCCESS);
 
   state_data->cipher_suite_entry_count = 0;
   state_data->cipher_suite_entry_count_set = 0;
@@ -96,13 +98,13 @@ _rmcpplus_cipher_suite_id_privilege_setup (ipmi_config_state_data_t *state_data,
                                                                                                    IPMI_LAN_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                                                    obj_cmd_count_rs) < 0)
         {
-          if (state_data->prog_data->args->config_args.common_args.debug)
+          if (state_data->prog_data->args->common_args.debug)
             pstdout_fprintf (state_data->pstate,
                              stderr,
                              "ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support: %s\n",
                              ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-          if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+          if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
                                                       obj_cmd_count_rs,
                                                       &ret))
             rv = ret;
@@ -121,8 +123,8 @@ _rmcpplus_cipher_suite_id_privilege_setup (ipmi_config_state_data_t *state_data,
 
       state_data->cipher_suite_entry_count = val;
 
-      if (state_data->cipher_suite_entry_count > CIPHER_SUITE_LEN)
-        state_data->cipher_suite_entry_count = CIPHER_SUITE_LEN;
+      if (state_data->cipher_suite_entry_count > IPMI_CONFIG_CIPHER_SUITE_LEN)
+        state_data->cipher_suite_entry_count = IPMI_CONFIG_CIPHER_SUITE_LEN;
 
       state_data->cipher_suite_entry_count_set++;
     }
@@ -145,13 +147,13 @@ _rmcpplus_cipher_suite_id_privilege_setup (ipmi_config_state_data_t *state_data,
                                                                                              IPMI_LAN_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                                              obj_cmd_id_rs) < 0)
         {
-          if (state_data->prog_data->args->config_args.common_args.debug)
+          if (state_data->prog_data->args->common_args.debug)
             pstdout_fprintf (state_data->pstate,
                              stderr,
                              "ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries: %s\n",
                              ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-          if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+          if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
                                                       obj_cmd_id_rs,
                                                       &ret))
             rv = ret;
@@ -232,13 +234,13 @@ _rmcpplus_cipher_suite_id_privilege_setup (ipmi_config_state_data_t *state_data,
                                                                                                       IPMI_LAN_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                                                       obj_cmd_priv_rs) < 0)
         {
-          if (state_data->prog_data->args->config_args.common_args.debug)
+          if (state_data->prog_data->args->common_args.debug)
             pstdout_fprintf (state_data->pstate,
                              stderr,
                              "ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_level: %s\n",
                              ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-          if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+          if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
                                                       obj_cmd_priv_rs,
                                                       &ret))
             rv = ret;
@@ -246,7 +248,7 @@ _rmcpplus_cipher_suite_id_privilege_setup (ipmi_config_state_data_t *state_data,
           goto cleanup;
         }
 
-      for (i = 0; i < CIPHER_SUITE_LEN; i++)
+      for (i = 0; i < IPMI_CONFIG_CIPHER_SUITE_LEN; i++)
         {
           char field[IPMI_CONFIG_FIELD_LENGTH_MAX + 1];
           
@@ -313,7 +315,7 @@ _rmcpplus_cipher_suite_id_privilege_setup (ipmi_config_state_data_t *state_data,
       state_data->cipher_suite_priv_set++;
     }
 
-  rv = CONFIG_ERR_SUCCESS;
+  rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_count_rs);
   fiid_obj_destroy (obj_cmd_id_rs);
@@ -321,14 +323,14 @@ _rmcpplus_cipher_suite_id_privilege_setup (ipmi_config_state_data_t *state_data,
   return (rv);
 }
 
-static config_err_t
+static ipmi_config_err_t
 id_checkout (const char *section_name,
-             struct config_keyvalue *kv,
+             struct ipmi_config_keyvalue *kv,
              void *arg,
              int id)
 {
   ipmi_config_state_data_t *state_data;
-  config_err_t ret;
+  ipmi_config_err_t ret;
   uint8_t privilege;
   unsigned int i;
   int id_found = 0;
@@ -339,7 +341,7 @@ id_checkout (const char *section_name,
   
   state_data = (ipmi_config_state_data_t *)arg;
 
-  if ((ret = _rmcpplus_cipher_suite_id_privilege_setup (state_data, section_name)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _rmcpplus_cipher_suite_id_privilege_setup (state_data, section_name)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
   for (i = 0; i < state_data->cipher_suite_entry_count; i++)
@@ -363,42 +365,42 @@ id_checkout (const char *section_name,
        */
       if (privilege != IPMI_CONFIG_PRIVILEGE_LEVEL_SUPPORTED_BUT_NOT_READABLE)
         {
-          if (config_section_update_keyvalue_output (state_data->pstate,
+          if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                                      kv,
                                                      rmcpplus_priv_string (privilege)) < 0)
-            return (CONFIG_ERR_FATAL_ERROR);
+            return (IPMI_CONFIG_ERR_FATAL_ERROR);
         }
       else
         {
           /* output empty string, will match with
-           * CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY flag to
+           * IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY flag to
            * output commented out section.
            */
-          if (config_section_update_keyvalue_output (state_data->pstate,
+          if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                                      kv,
                                                      "") < 0)
-            return (CONFIG_ERR_FATAL_ERROR);
+            return (IPMI_CONFIG_ERR_FATAL_ERROR);
         }
 
-      return (CONFIG_ERR_SUCCESS);
+      return (IPMI_CONFIG_ERR_SUCCESS);
     }
 
   /* if ID not found, return non-fatal error, will not output at all */
-  return (CONFIG_ERR_NON_FATAL_ERROR);
+  return (IPMI_CONFIG_ERR_NON_FATAL_ERROR);
 }
 
-static config_err_t
+static ipmi_config_err_t
 id_commit (const char *section_name,
-           const struct config_keyvalue *kv,
+           const struct ipmi_config_keyvalue *kv,
            void *arg,
            int id)
 {
   ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t ret;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t ret;
   uint8_t channel_number;
-  uint8_t privs[CIPHER_SUITE_LEN];
+  uint8_t privs[IPMI_CONFIG_CIPHER_SUITE_LEN];
   uint8_t privilege;
   unsigned int i;
 
@@ -408,7 +410,7 @@ id_commit (const char *section_name,
   
   state_data = (ipmi_config_state_data_t *)arg;
 
-  if ((ret = _rmcpplus_cipher_suite_id_privilege_setup (state_data, section_name)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _rmcpplus_cipher_suite_id_privilege_setup (state_data, section_name)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_lan_configuration_parameters_rs)))
@@ -420,7 +422,7 @@ id_commit (const char *section_name,
       goto cleanup;
     }
 
-  if ((ret = get_lan_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_lan_channel_number (state_data, section_name, &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -428,8 +430,8 @@ id_commit (const char *section_name,
 
   privilege = rmcpplus_priv_number (kv->value_input);
 
-  memset (privs, '\0', CIPHER_SUITE_LEN);
-  memcpy (privs, state_data->cipher_suite_priv, CIPHER_SUITE_LEN);
+  memset (privs, '\0', IPMI_CONFIG_CIPHER_SUITE_LEN);
+  memcpy (privs, state_data->cipher_suite_priv, IPMI_CONFIG_CIPHER_SUITE_LEN);
   /* achu: NOT A BUG.
    *
    * IPMI spec is_supported does not map to privileges array, you want to index at [id] not a searched [i]
@@ -451,26 +453,26 @@ id_commit (const char *section_name,
    * luck, we need to return an error.
    */
 
-  for (i = 0; i < CIPHER_SUITE_LEN; i++)
+  for (i = 0; i < IPMI_CONFIG_CIPHER_SUITE_LEN; i++)
     {
       if (privs[i] == IPMI_CONFIG_PRIVILEGE_LEVEL_SUPPORTED_BUT_NOT_READABLE)
         {
-          struct config_section *section;
+          struct ipmi_config_section *section;
 	  	  
-          if ((section = config_find_section (state_data->sections,
+          if ((section = ipmi_config_find_section (state_data->sections,
                                               section_name)))
             {
-              char keynametmp[CONFIG_MAX_KEY_NAME_LEN + 1];
-              struct config_keyvalue *kvtmp;
+              char keynametmp[IPMI_CONFIG_MAX_KEY_NAME_LEN + 1];
+              struct ipmi_config_keyvalue *kvtmp;
               
-              memset (keynametmp, '\0', CONFIG_MAX_KEY_NAME_LEN + 1);
+              memset (keynametmp, '\0', IPMI_CONFIG_MAX_KEY_NAME_LEN + 1);
               
               snprintf (keynametmp,
-                        CONFIG_MAX_KEY_NAME_LEN,
+                        IPMI_CONFIG_MAX_KEY_NAME_LEN,
                         "Maximum_Privilege_Cipher_Suite_Id_%u",
                         i);
 
-              if ((kvtmp = config_find_keyvalue (section, keynametmp)))
+              if ((kvtmp = ipmi_config_find_keyvalue (section, keynametmp)))
                 {
 		  uint8_t privilege_tmp;
                   privilege_tmp = rmcpplus_priv_number (kvtmp->value_input);
@@ -483,7 +485,7 @@ id_commit (const char *section_name,
 				   "ERROR: '%s:%s' Field Required\n",
 				   section_name,
 				   keynametmp);
-                  rv = CONFIG_ERR_NON_FATAL_ERROR;
+                  rv = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
                   goto cleanup;
                 }
             }
@@ -492,7 +494,7 @@ id_commit (const char *section_name,
               /* This is a fatal error, we're already in this section,
                * it should be findable
                */
-              if (state_data->prog_data->args->config_args.common_args.debug)
+              if (state_data->prog_data->args->common_args.debug)
                 pstdout_fprintf (state_data->pstate,
                                  stderr,
                                  "Cannot find section '%s'\n",
@@ -523,13 +525,13 @@ id_commit (const char *section_name,
                                                                                                   privs[15],
                                                                                                   obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common_args.debug)
+      if (state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+      if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
                                                   obj_cmd_rs,
                                                   &ret))
         rv = ret;
@@ -542,37 +544,37 @@ id_commit (const char *section_name,
    * IPMI spec is_supported does not map to privileges array, you want to index at [id] not [i]
    */
   state_data->cipher_suite_priv[id] = privilege;
-  rv = CONFIG_ERR_SUCCESS;
+  rv = IPMI_CONFIG_ERR_SUCCESS;
 
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
-static config_err_t
+static ipmi_config_err_t
 id_checkout_cb (const char *section_name,
-                struct config_keyvalue *kv,
+                struct ipmi_config_keyvalue *kv,
                 void *arg)
 {
   uint8_t id = atoi (kv->key->key_name + strlen ("Maximum_Privilege_Cipher_Suite_Id_"));
   return (id_checkout (section_name, kv, arg, id));
 }
 
-static config_err_t
+static ipmi_config_err_t
 id_commit_cb (const char *section_name,
-              const struct config_keyvalue *kv,
+              const struct ipmi_config_keyvalue *kv,
               void *arg)
 {
   uint8_t id = atoi (kv->key->key_name + strlen ("Maximum_Privilege_Cipher_Suite_Id_"));
   return (id_commit (section_name, kv, arg, id));
 }
 
-struct config_section *
+struct ipmi_config_section *
 ipmi_config_rmcpplus_conf_privilege_section_get (ipmi_config_state_data_t *state_data,
 						unsigned int config_flags,
 						int channel_index)
 {
-  struct config_section *section = NULL;
+  struct ipmi_config_section *section = NULL;
   char *section_comment =
     "If your system supports IPMI 2.0 and Serial-over-LAN (SOL),"
     "cipher suite IDs may be configurable below.  In the "
@@ -587,7 +589,7 @@ ipmi_config_rmcpplus_conf_privilege_section_get (ipmi_config_state_data_t *state
 
   assert (state_data);
   
-  if (!(section = config_section_multi_channel_create (state_data->pstate,
+  if (!(section = ipmi_config_section_multi_channel_create (state_data->pstate,
 						       section_name_base_str,
 						       section_comment,
 						       NULL,
@@ -598,161 +600,161 @@ ipmi_config_rmcpplus_conf_privilege_section_get (ipmi_config_state_data_t *state
 						       state_data->lan_channel_numbers_count)))
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               section,
                               "Maximum_Privilege_Cipher_Suite_Id_0",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                              IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
                               id_checkout_cb,
                               id_commit_cb,
                               rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               section,
                               "Maximum_Privilege_Cipher_Suite_Id_1",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                              IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
                               id_checkout_cb,
                               id_commit_cb,
                               rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               section,
                               "Maximum_Privilege_Cipher_Suite_Id_2",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                              IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
                               id_checkout_cb,
                               id_commit_cb,
                               rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               section,
                               "Maximum_Privilege_Cipher_Suite_Id_3",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                              IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
                               id_checkout_cb,
                               id_commit_cb,
                               rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               section,
                               "Maximum_Privilege_Cipher_Suite_Id_4",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                              IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
                               id_checkout_cb,
                               id_commit_cb,
                               rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               section,
                               "Maximum_Privilege_Cipher_Suite_Id_5",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                              IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
                               id_checkout_cb,
                               id_commit_cb,
                               rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               section,
                               "Maximum_Privilege_Cipher_Suite_Id_6",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                              IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
                               id_checkout_cb,
                               id_commit_cb,
                               rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               section,
                               "Maximum_Privilege_Cipher_Suite_Id_7",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                              IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
                               id_checkout_cb,
                               id_commit_cb,
                               rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               section,
                               "Maximum_Privilege_Cipher_Suite_Id_8",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                              IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
                               id_checkout_cb,
                               id_commit_cb,
                               rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               section,
                               "Maximum_Privilege_Cipher_Suite_Id_9",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                              IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
                               id_checkout_cb,
                               id_commit_cb,
                               rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               section,
                               "Maximum_Privilege_Cipher_Suite_Id_10",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                              IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
                               id_checkout_cb,
                               id_commit_cb,
                               rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               section,
                               "Maximum_Privilege_Cipher_Suite_Id_11",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                              IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
                               id_checkout_cb,
                               id_commit_cb,
                               rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               section,
                               "Maximum_Privilege_Cipher_Suite_Id_12",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                              IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
                               id_checkout_cb,
                               id_commit_cb,
                               rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               section,
                               "Maximum_Privilege_Cipher_Suite_Id_13",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                              IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
                               id_checkout_cb,
                               id_commit_cb,
                               rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               section,
                               "Maximum_Privilege_Cipher_Suite_Id_14",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                              IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
                               id_checkout_cb,
                               id_commit_cb,
                               rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               section,
                               "Maximum_Privilege_Cipher_Suite_Id_15",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                              IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
                               id_checkout_cb,
                               id_commit_cb,
                               rmcpplus_priv_number_validate) < 0)
@@ -762,41 +764,41 @@ ipmi_config_rmcpplus_conf_privilege_section_get (ipmi_config_state_data_t *state
 
   /* achu: Can't support this config until IPMI spec is updated.  Yeah, it sucks */
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               section,
                               "Maximum_Privilege_Cipher_Suite_Id_16",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                              IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
                               id_checkout_cb,
                               id_commit_cb,
                               rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               section,
                               "Maximum_Privilege_Cipher_Suite_Id_17",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                              IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
                               id_checkout_cb,
                               id_commit_cb,
                               rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               section,
                               "Maximum_Privilege_Cipher_Suite_Id_18",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                              IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
                               id_checkout_cb,
                               id_commit_cb,
                               rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               section,
                               "Maximum_Privilege_Cipher_Suite_Id_19",
                               "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
-                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                              IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
                               id_checkout_cb,
                               id_commit_cb,
                               rmcpplus_priv_number_validate) < 0)
@@ -807,7 +809,7 @@ ipmi_config_rmcpplus_conf_privilege_section_get (ipmi_config_state_data_t *state
 
  cleanup:
   if (section)
-    config_section_destroy (section);
+    ipmi_config_section_destroy (section);
   return (NULL);
 }
 

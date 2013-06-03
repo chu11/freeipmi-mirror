@@ -16,13 +16,16 @@
  * 
  */
 
+#ifndef IPMI_CONFIG_TOOL_COMMENT_H
+#define IPMI_CONFIG_TOOL_COMMENT_H
 
-#ifndef IPMI_CONFIG_MISC_SECTION_H
-#define IPMI_CONFIG_MISC_SECTION_H
+#include <stdio.h>
 
-#include "ipmi-config.h"
-#include "ipmi-config-sections.h"
+#include "pstdout.h"
 
-struct ipmi_config_section * ipmi_config_misc_section_get (ipmi_config_state_data_t *state_data);
+int ipmi_config_section_comments (pstdout_state_t pstate,
+				  const char *section_name,
+				  const char *in,
+				  FILE *fp);
 
-#endif /* IPMI_CONFIG_MISC_SECTION_H */
+#endif /* IPMI_CONFIG_TOOL_COMMENT_H */

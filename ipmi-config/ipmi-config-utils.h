@@ -21,22 +21,22 @@
 
 #include "ipmi-config.h"
 
-config_err_t load_lan_channel_numbers (ipmi_config_state_data_t *state_data);
+ipmi_config_err_t load_lan_channel_numbers (ipmi_config_state_data_t *state_data);
 
-config_err_t load_serial_channel_numbers (ipmi_config_state_data_t *state_data);
+ipmi_config_err_t load_serial_channel_numbers (ipmi_config_state_data_t *state_data);
 
-config_err_t load_sol_channel_numbers (ipmi_config_state_data_t *state_data);
+ipmi_config_err_t load_sol_channel_numbers (ipmi_config_state_data_t *state_data);
 
-config_err_t get_lan_channel_number (ipmi_config_state_data_t *state_data,
-				     const char *section_name,
-				     uint8_t *channel_number);
+ipmi_config_err_t get_lan_channel_number (ipmi_config_state_data_t *state_data,
+					  const char *section_name,
+					  uint8_t *channel_number);
 
-config_err_t get_serial_channel_number (ipmi_config_state_data_t *state_data,
-					const char *section_name,
-					uint8_t *channel_number);
+ipmi_config_err_t get_serial_channel_number (ipmi_config_state_data_t *state_data,
+					     const char *section_name,
+					     uint8_t *channel_number);
 
-config_err_t get_sol_channel_number (ipmi_config_state_data_t *state_data,
-				     const char *section_name,
-				     uint8_t *channel_number);
+ipmi_config_err_t get_sol_channel_number (ipmi_config_state_data_t *state_data,
+					  const char *section_name,
+					  uint8_t *channel_number);
 
 #endif /* IPMI_CONFIG_UTILS_H */

@@ -29,8 +29,11 @@
 
 #include "ipmi-config.h"
 #include "ipmi-config-map.h"
-#include "ipmi-config-validate.h"
+#include "ipmi-config-tool-section.h"
+#include "ipmi-config-tool-utils.h"
+#include "ipmi-config-tool-validate.h"
 #include "ipmi-config-utils.h"
+#include "ipmi-config-validate.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
@@ -54,16 +57,16 @@ struct sol_retry {
   uint8_t retry_interval;
 };
 
-static config_err_t
+static ipmi_config_err_t
 enable_sol_checkout (const char *section_name,
-                     struct config_keyvalue *kv,
+                     struct ipmi_config_keyvalue *kv,
                      void *arg)
 {
   ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t ret;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t ret;
   uint8_t channel_number;
 
   assert (section_name);
@@ -81,7 +84,7 @@ enable_sol_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -94,13 +97,13 @@ enable_sol_checkout (const char *section_name,
                                                             IPMI_SOL_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                             obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common_args.debug)
+      if (state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_sol_configuration_parameters_sol_enable: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+      if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
                                                   obj_cmd_rs,
                                                   &ret))
         rv = ret;
@@ -117,26 +120,26 @@ enable_sol_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if (config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              val ? "Yes" : "No") < 0)
-    return (CONFIG_ERR_FATAL_ERROR);
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
-  rv = CONFIG_ERR_SUCCESS;
+  rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
-static config_err_t
+static ipmi_config_err_t
 enable_sol_commit (const char *section_name,
-                   const struct config_keyvalue *kv,
+                   const struct ipmi_config_keyvalue *kv,
                    void *arg)
 {
   ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t ret;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t ret;
   uint8_t channel_number;
 
   assert (section_name);
@@ -154,7 +157,7 @@ enable_sol_commit (const char *section_name,
       goto cleanup;
     }
 
-  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -165,13 +168,13 @@ enable_sol_commit (const char *section_name,
                                                             same (kv->value_input, "yes"),
                                                             obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common_args.debug)
+      if (state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_sol_configuration_parameters_sol_enable: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+      if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
                                                   obj_cmd_rs,
                                                   &ret))
         rv = ret;
@@ -179,21 +182,21 @@ enable_sol_commit (const char *section_name,
       goto cleanup;
     }
 
-  rv = CONFIG_ERR_SUCCESS;
+  rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
-static config_err_t
+static ipmi_config_err_t
 _get_sol_sol_authentication (ipmi_config_state_data_t *state_data,
 			     const char *section_name,
                              struct sol_authentication *sa)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t ret;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t ret;
   uint8_t channel_number;
 
   assert (state_data);
@@ -209,7 +212,7 @@ _get_sol_sol_authentication (ipmi_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -222,13 +225,13 @@ _get_sol_sol_authentication (ipmi_config_state_data_t *state_data,
                                                                     IPMI_SOL_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                     obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common_args.debug)
+      if (state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_sol_configuration_parameters_sol_authentication: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+      if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
                                                   obj_cmd_rs,
                                                   &ret))
         rv = ret;
@@ -266,20 +269,20 @@ _get_sol_sol_authentication (ipmi_config_state_data_t *state_data,
     }
   sa->force_sol_payload_encryption = val;
 
-  rv = CONFIG_ERR_SUCCESS;
+  rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
-static config_err_t
+static ipmi_config_err_t
 _set_sol_sol_authentication (ipmi_config_state_data_t *state_data,
 			     const char *section_name,
                              struct sol_authentication *sa)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t ret;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t ret;
   uint8_t channel_number;
 
   assert (state_data);
@@ -295,7 +298,7 @@ _set_sol_sol_authentication (ipmi_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -308,13 +311,13 @@ _set_sol_sol_authentication (ipmi_config_state_data_t *state_data,
                                                                     sa->force_sol_payload_encryption,
                                                                     obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common_args.debug)
+      if (state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_sol_configuration_parameters_sol_authentication: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+      if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
                                                   obj_cmd_rs,
                                                   &ret))
         rv = ret;
@@ -322,20 +325,20 @@ _set_sol_sol_authentication (ipmi_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  rv = CONFIG_ERR_SUCCESS;
+  rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
-static config_err_t
+static ipmi_config_err_t
 sol_privilege_level_checkout (const char *section_name,
-                              struct config_keyvalue *kv,
+                              struct ipmi_config_keyvalue *kv,
                               void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct sol_authentication sa;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -343,25 +346,25 @@ sol_privilege_level_checkout (const char *section_name,
   
   state_data = (ipmi_config_state_data_t *)arg;
 
-  if ((ret = _get_sol_sol_authentication (state_data, section_name, &sa)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_sol_sol_authentication (state_data, section_name, &sa)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              privilege_level_string (sa.sol_privilege_level)) < 0)
-    return (CONFIG_ERR_FATAL_ERROR);
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
-static config_err_t
+static ipmi_config_err_t
 sol_privilege_level_commit (const char *section_name,
-                            const struct config_keyvalue *kv,
+                            const struct ipmi_config_keyvalue *kv,
                             void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct sol_authentication sa;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -369,7 +372,7 @@ sol_privilege_level_commit (const char *section_name,
   
   state_data = (ipmi_config_state_data_t *)arg;
 
-  if ((ret = _get_sol_sol_authentication (state_data, section_name, &sa)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_sol_sol_authentication (state_data, section_name, &sa)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
   sa.sol_privilege_level = privilege_level_number (kv->value_input);
@@ -377,14 +380,14 @@ sol_privilege_level_commit (const char *section_name,
   return (_set_sol_sol_authentication (state_data, section_name, &sa));
 }
 
-static config_err_t
+static ipmi_config_err_t
 force_sol_payload_authentication_checkout (const char *section_name,
-                                           struct config_keyvalue *kv,
+                                           struct ipmi_config_keyvalue *kv,
                                            void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct sol_authentication sa;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -392,25 +395,25 @@ force_sol_payload_authentication_checkout (const char *section_name,
   
   state_data = (ipmi_config_state_data_t *)arg;
 
-  if ((ret = _get_sol_sol_authentication (state_data, section_name, &sa)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_sol_sol_authentication (state_data, section_name, &sa)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              sa.force_sol_payload_authentication ? "Yes" : "No") < 0)
-    return (CONFIG_ERR_FATAL_ERROR);
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
-static config_err_t
+static ipmi_config_err_t
 force_sol_payload_authentication_commit (const char *section_name,
-                                         const struct config_keyvalue *kv,
+                                         const struct ipmi_config_keyvalue *kv,
                                          void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct sol_authentication sa;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -418,7 +421,7 @@ force_sol_payload_authentication_commit (const char *section_name,
   
   state_data = (ipmi_config_state_data_t *)arg;
 
-  if ((ret = _get_sol_sol_authentication (state_data, section_name, &sa)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_sol_sol_authentication (state_data, section_name, &sa)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
   sa.force_sol_payload_authentication = same (kv->value_input, "yes") ? 1 : 0;
@@ -426,14 +429,14 @@ force_sol_payload_authentication_commit (const char *section_name,
   return (_set_sol_sol_authentication (state_data, section_name, &sa));
 }
 
-static config_err_t
+static ipmi_config_err_t
 force_sol_payload_encryption_checkout (const char *section_name,
-                                       struct config_keyvalue *kv,
+                                       struct ipmi_config_keyvalue *kv,
                                        void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct sol_authentication sa;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -441,25 +444,25 @@ force_sol_payload_encryption_checkout (const char *section_name,
   
   state_data = (ipmi_config_state_data_t *)arg;
 
-  if ((ret = _get_sol_sol_authentication (state_data, section_name, &sa)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_sol_sol_authentication (state_data, section_name, &sa)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              sa.force_sol_payload_encryption ? "Yes" : "No") < 0)
-    return (CONFIG_ERR_FATAL_ERROR);
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
-static config_err_t
+static ipmi_config_err_t
 force_sol_payload_encryption_commit (const char *section_name,
-                                     const struct config_keyvalue *kv,
+                                     const struct ipmi_config_keyvalue *kv,
                                      void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct sol_authentication sa;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -467,7 +470,7 @@ force_sol_payload_encryption_commit (const char *section_name,
   
   state_data = (ipmi_config_state_data_t *)arg;
 
-  if ((ret = _get_sol_sol_authentication (state_data, section_name, &sa)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_sol_sol_authentication (state_data, section_name, &sa)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
   sa.force_sol_payload_encryption = same (kv->value_input, "yes") ? 1 : 0;
@@ -475,15 +478,15 @@ force_sol_payload_encryption_commit (const char *section_name,
   return (_set_sol_sol_authentication (state_data, section_name, &sa));
 }
 
-static config_err_t
+static ipmi_config_err_t
 _get_sol_character_accumulate_interval_and_send_threshold (ipmi_config_state_data_t *state_data,
 							   const char *section_name,
                                                            struct interval_and_threshold *it)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t ret;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t ret;
   uint8_t channel_number;
 
   assert (state_data);
@@ -499,7 +502,7 @@ _get_sol_character_accumulate_interval_and_send_threshold (ipmi_config_state_dat
       goto cleanup;
     }
 
-  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -512,13 +515,13 @@ _get_sol_character_accumulate_interval_and_send_threshold (ipmi_config_state_dat
                                                                                                   IPMI_SOL_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                                                   obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common_args.debug)
+      if (state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send_threshold: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+      if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
                                                   obj_cmd_rs,
                                                   &ret))
         rv = ret;
@@ -546,20 +549,20 @@ _get_sol_character_accumulate_interval_and_send_threshold (ipmi_config_state_dat
     }
   it->character_send_threshold = val;
 
-  rv = CONFIG_ERR_SUCCESS;
+  rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
-static config_err_t
+static ipmi_config_err_t
 _set_sol_character_accumulate_interval_and_send_threshold (ipmi_config_state_data_t *state_data,
 							   const char *section_name,
                                                            struct interval_and_threshold *it)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t ret;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t ret;
   uint8_t channel_number;
 
   assert (state_data);
@@ -575,7 +578,7 @@ _set_sol_character_accumulate_interval_and_send_threshold (ipmi_config_state_dat
       goto cleanup;
     }
 
-  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -587,13 +590,13 @@ _set_sol_character_accumulate_interval_and_send_threshold (ipmi_config_state_dat
                                                                                                   it->character_send_threshold,
                                                                                                   obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common_args.debug)
+      if (state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send_threshold: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+      if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
                                                   obj_cmd_rs,
                                                   &ret))
         rv = ret;
@@ -601,20 +604,20 @@ _set_sol_character_accumulate_interval_and_send_threshold (ipmi_config_state_dat
       goto cleanup;
     }
 
-  rv = CONFIG_ERR_SUCCESS;
+  rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
-static config_err_t
+static ipmi_config_err_t
 character_accumulate_interval_checkout (const char *section_name,
-                                        struct config_keyvalue *kv,
+                                        struct ipmi_config_keyvalue *kv,
                                         void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct interval_and_threshold it;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -622,25 +625,25 @@ character_accumulate_interval_checkout (const char *section_name,
   
   state_data = (ipmi_config_state_data_t *)arg;
 
-  if ((ret = _get_sol_character_accumulate_interval_and_send_threshold (state_data, section_name, &it)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_sol_character_accumulate_interval_and_send_threshold (state_data, section_name, &it)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
                                                           kv,
                                                           it.character_accumulate_interval) < 0)
-    return (CONFIG_ERR_FATAL_ERROR);
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
-static config_err_t
+static ipmi_config_err_t
 character_accumulate_interval_commit (const char *section_name,
-                                      const struct config_keyvalue *kv,
+                                      const struct ipmi_config_keyvalue *kv,
                                       void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct interval_and_threshold it;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -648,7 +651,7 @@ character_accumulate_interval_commit (const char *section_name,
   
   state_data = (ipmi_config_state_data_t *)arg;
 
-  if ((ret = _get_sol_character_accumulate_interval_and_send_threshold (state_data, section_name, &it)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_sol_character_accumulate_interval_and_send_threshold (state_data, section_name, &it)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
   it.character_accumulate_interval = atoi (kv->value_input);
@@ -656,14 +659,14 @@ character_accumulate_interval_commit (const char *section_name,
   return (_set_sol_character_accumulate_interval_and_send_threshold (state_data, section_name, &it));
 }
 
-static config_err_t
+static ipmi_config_err_t
 character_send_threshold_checkout (const char *section_name,
-                                   struct config_keyvalue *kv,
+                                   struct ipmi_config_keyvalue *kv,
                                    void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct interval_and_threshold it;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -671,25 +674,25 @@ character_send_threshold_checkout (const char *section_name,
   
   state_data = (ipmi_config_state_data_t *)arg;
 
-  if ((ret = _get_sol_character_accumulate_interval_and_send_threshold (state_data, section_name, &it)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_sol_character_accumulate_interval_and_send_threshold (state_data, section_name, &it)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
                                                           kv,
                                                           it.character_send_threshold) < 0)
-    return (CONFIG_ERR_FATAL_ERROR);
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
-static config_err_t
+static ipmi_config_err_t
 character_send_threshold_commit (const char *section_name,
-                                 const struct config_keyvalue *kv,
+                                 const struct ipmi_config_keyvalue *kv,
                                  void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct interval_and_threshold it;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -697,7 +700,7 @@ character_send_threshold_commit (const char *section_name,
   
   state_data = (ipmi_config_state_data_t *)arg;
 
-  if ((ret = _get_sol_character_accumulate_interval_and_send_threshold (state_data, section_name, &it)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_sol_character_accumulate_interval_and_send_threshold (state_data, section_name, &it)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
   it.character_send_threshold = atoi (kv->value_input);
@@ -705,15 +708,15 @@ character_send_threshold_commit (const char *section_name,
   return (_set_sol_character_accumulate_interval_and_send_threshold (state_data, section_name, &it));
 }
 
-static config_err_t
+static ipmi_config_err_t
 _get_sol_sol_retry (ipmi_config_state_data_t *state_data,
 		    const char *section_name,
                     struct sol_retry *sr)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t ret;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t ret;
   uint8_t channel_number;
 
   assert (state_data);
@@ -729,7 +732,7 @@ _get_sol_sol_retry (ipmi_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -742,13 +745,13 @@ _get_sol_sol_retry (ipmi_config_state_data_t *state_data,
                                                            IPMI_SOL_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                            obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common_args.debug)
+      if (state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_sol_configuration_parameters_sol_retry: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+      if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
                                                   obj_cmd_rs,
                                                   &ret))
         rv = ret;
@@ -776,20 +779,20 @@ _get_sol_sol_retry (ipmi_config_state_data_t *state_data,
     }
   sr->retry_interval = val;
 
-  rv = CONFIG_ERR_SUCCESS;
+  rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
-static config_err_t
+static ipmi_config_err_t
 _set_sol_sol_retry (ipmi_config_state_data_t *state_data,
 		    const char *section_name,
                     struct sol_retry *sr)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t ret;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t ret;
   uint8_t channel_number;
 
   assert (state_data);
@@ -805,7 +808,7 @@ _set_sol_sol_retry (ipmi_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -817,13 +820,13 @@ _set_sol_sol_retry (ipmi_config_state_data_t *state_data,
                                                            sr->retry_interval,
                                                            obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common_args.debug)
+      if (state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_sol_configuration_parameters_sol_retry: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+      if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
                                                   obj_cmd_rs,
                                                   &ret))
         rv = ret;
@@ -831,20 +834,20 @@ _set_sol_sol_retry (ipmi_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  rv = CONFIG_ERR_SUCCESS;
+  rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
-static config_err_t
+static ipmi_config_err_t
 sol_retry_count_checkout (const char *section_name,
-                          struct config_keyvalue *kv,
+                          struct ipmi_config_keyvalue *kv,
                           void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct sol_retry sr;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -852,26 +855,26 @@ sol_retry_count_checkout (const char *section_name,
   
   state_data = (ipmi_config_state_data_t *)arg;
 
-  if ((ret = _get_sol_sol_retry (state_data, section_name, &sr)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_sol_sol_retry (state_data, section_name, &sr)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
                                                           kv,
                                                           sr.retry_count) < 0)
-    return (CONFIG_ERR_FATAL_ERROR);
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
 
-static config_err_t
+static ipmi_config_err_t
 sol_retry_count_commit (const char *section_name,
-                        const struct config_keyvalue *kv,
+                        const struct ipmi_config_keyvalue *kv,
                         void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct sol_retry sr;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -879,7 +882,7 @@ sol_retry_count_commit (const char *section_name,
   
   state_data = (ipmi_config_state_data_t *)arg;
 
-  if ((ret = _get_sol_sol_retry (state_data, section_name, &sr)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_sol_sol_retry (state_data, section_name, &sr)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
   sr.retry_count = atoi (kv->value_input);
@@ -887,14 +890,14 @@ sol_retry_count_commit (const char *section_name,
   return (_set_sol_sol_retry (state_data, section_name, &sr));
 }
 
-static config_err_t
+static ipmi_config_err_t
 sol_retry_interval_checkout (const char *section_name,
-                             struct config_keyvalue *kv,
+                             struct ipmi_config_keyvalue *kv,
                              void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct sol_retry sr;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -902,25 +905,25 @@ sol_retry_interval_checkout (const char *section_name,
   
   state_data = (ipmi_config_state_data_t *)arg;
 
-  if ((ret = _get_sol_sol_retry (state_data, section_name, &sr)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_sol_sol_retry (state_data, section_name, &sr)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
                                                           kv,
                                                           sr.retry_interval) < 0)
-    return (CONFIG_ERR_FATAL_ERROR);
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
-  return (CONFIG_ERR_SUCCESS);
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
-static config_err_t
+static ipmi_config_err_t
 sol_retry_interval_commit (const char *section_name,
-                           const struct config_keyvalue *kv,
+                           const struct ipmi_config_keyvalue *kv,
                            void *arg)
 {
   ipmi_config_state_data_t *state_data;
   struct sol_retry sr;
-  config_err_t ret;
+  ipmi_config_err_t ret;
 
   assert (section_name);
   assert (kv);
@@ -928,7 +931,7 @@ sol_retry_interval_commit (const char *section_name,
   
   state_data = (ipmi_config_state_data_t *)arg;
 
-  if ((ret = _get_sol_sol_retry (state_data, section_name, &sr)) != CONFIG_ERR_SUCCESS)
+  if ((ret = _get_sol_sol_retry (state_data, section_name, &sr)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
   sr.retry_interval = atoi (kv->value_input);
@@ -936,17 +939,17 @@ sol_retry_interval_commit (const char *section_name,
   return (_set_sol_sol_retry (state_data, section_name, &sr));
 }
 
-static config_err_t
+static ipmi_config_err_t
 non_volatile_bit_rate_checkout (const char *section_name,
-                                struct config_keyvalue *kv,
+                                struct ipmi_config_keyvalue *kv,
                                 void *arg)
 {
   ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t bit_rate;
   uint64_t val;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t ret;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t ret;
   uint8_t channel_number;
 
   assert (section_name);
@@ -964,7 +967,7 @@ non_volatile_bit_rate_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -977,13 +980,13 @@ non_volatile_bit_rate_checkout (const char *section_name,
                                                                            IPMI_SOL_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                            obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common_args.debug)
+      if (state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+      if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
                                                   obj_cmd_rs,
                                                   &ret))
         rv = ret;
@@ -1001,26 +1004,26 @@ non_volatile_bit_rate_checkout (const char *section_name,
     }
   bit_rate = val;
 
-  if (config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              sol_bit_rate_string (bit_rate)) < 0)
-    return (CONFIG_ERR_FATAL_ERROR);
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
-  rv = CONFIG_ERR_SUCCESS;
+  rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
-static config_err_t
+static ipmi_config_err_t
 non_volatile_bit_rate_commit (const char *section_name,
-                              const struct config_keyvalue *kv,
+                              const struct ipmi_config_keyvalue *kv,
                               void *arg)
 {
   ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t ret;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t ret;
   uint8_t channel_number;
 
   assert (section_name);
@@ -1038,7 +1041,7 @@ non_volatile_bit_rate_commit (const char *section_name,
       goto cleanup;
     }
 
-  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -1049,13 +1052,13 @@ non_volatile_bit_rate_commit (const char *section_name,
                                                                            sol_bit_rate_number (kv->value_input),
                                                                            obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common_args.debug)
+      if (state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+      if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
                                                   obj_cmd_rs,
                                                   &ret))
         rv = ret;
@@ -1063,23 +1066,23 @@ non_volatile_bit_rate_commit (const char *section_name,
       goto cleanup;
     }
 
-  rv = CONFIG_ERR_SUCCESS;
+  rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
-static config_err_t
+static ipmi_config_err_t
 volatile_bit_rate_checkout (const char *section_name,
-                            struct config_keyvalue *kv,
+                            struct ipmi_config_keyvalue *kv,
                             void *arg)
 {
   ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t bit_rate;
   uint64_t val;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t ret;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t ret;
   uint8_t channel_number;
 
   assert (section_name);
@@ -1097,7 +1100,7 @@ volatile_bit_rate_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -1110,13 +1113,13 @@ volatile_bit_rate_checkout (const char *section_name,
                                                                        IPMI_SOL_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                        obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common_args.debug)
+      if (state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+      if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
                                                   obj_cmd_rs,
                                                   &ret))
         rv = ret;
@@ -1134,26 +1137,26 @@ volatile_bit_rate_checkout (const char *section_name,
     }
   bit_rate = val;
 
-  if (config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
                                              kv,
                                              sol_bit_rate_string (bit_rate)) < 0)
-    return (CONFIG_ERR_FATAL_ERROR);
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
-  rv = CONFIG_ERR_SUCCESS;
+  rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
-static config_err_t
+static ipmi_config_err_t
 volatile_bit_rate_commit (const char *section_name,
-                          const struct config_keyvalue *kv,
+                          const struct ipmi_config_keyvalue *kv,
                           void *arg)
 {
   ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t ret;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t ret;
   uint8_t channel_number;
 
   assert (section_name);
@@ -1171,7 +1174,7 @@ volatile_bit_rate_commit (const char *section_name,
       goto cleanup;
     }
 
-  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -1182,13 +1185,13 @@ volatile_bit_rate_commit (const char *section_name,
                                                                        sol_bit_rate_number (kv->value_input),
                                                                        obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common_args.debug)
+      if (state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+      if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
                                                   obj_cmd_rs,
                                                   &ret))
         rv = ret;
@@ -1196,23 +1199,23 @@ volatile_bit_rate_commit (const char *section_name,
       goto cleanup;
     }
 
-  rv = CONFIG_ERR_SUCCESS;
+  rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
-static config_err_t
+static ipmi_config_err_t
 sol_payload_port_checkout (const char *section_name,
-                           struct config_keyvalue *kv,
+                           struct ipmi_config_keyvalue *kv,
                            void *arg)
 {
   ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   uint16_t port_number;
   uint64_t val;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t ret;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t ret;
   uint8_t channel_number;
 
   assert (section_name);
@@ -1230,7 +1233,7 @@ sol_payload_port_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -1243,13 +1246,13 @@ sol_payload_port_checkout (const char *section_name,
                                                                          IPMI_SOL_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                          obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common_args.debug)
+      if (state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_sol_configuration_parameters_sol_payload_port_number: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+      if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
                                                   obj_cmd_rs,
                                                   &ret))
         rv = ret;
@@ -1267,26 +1270,26 @@ sol_payload_port_checkout (const char *section_name,
     }
   port_number = val;
 
-  if (config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
                                                           kv,
                                                           port_number) < 0)
-    return (CONFIG_ERR_FATAL_ERROR);
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
-  rv = CONFIG_ERR_SUCCESS;
+  rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
-static config_err_t
+static ipmi_config_err_t
 sol_payload_port_commit (const char *section_name,
-                         const struct config_keyvalue *kv,
+                         const struct ipmi_config_keyvalue *kv,
                          void *arg)
 {
   ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
-  config_err_t rv = CONFIG_ERR_FATAL_ERROR;
-  config_err_t ret;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t ret;
   uint8_t channel_number;
 
   assert (section_name);
@@ -1304,7 +1307,7 @@ sol_payload_port_commit (const char *section_name,
       goto cleanup;
     }
 
-  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != CONFIG_ERR_SUCCESS)
+  if ((ret = get_sol_channel_number (state_data, section_name, &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -1315,13 +1318,13 @@ sol_payload_port_commit (const char *section_name,
                                                                          atoi (kv->value_input),
                                                                          obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->config_args.common_args.debug)
+      if (state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_sol_configuration_parameters_sol_payload_port_number: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
+      if (ipmi_config_is_config_param_non_fatal_error (state_data->ipmi_ctx,
                                                   obj_cmd_rs,
                                                   &ret))
         rv = ret;
@@ -1329,18 +1332,18 @@ sol_payload_port_commit (const char *section_name,
       goto cleanup;
     }
 
-  rv = CONFIG_ERR_SUCCESS;
+  rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
-struct config_section *
+struct ipmi_config_section *
 ipmi_config_sol_conf_section_get (ipmi_config_state_data_t *state_data,
 				 unsigned int config_flags,
                                  int channel_index)
 {
-  struct config_section * section = NULL;
+  struct ipmi_config_section * section = NULL;
   char *section_comment =
     "If your system supports IPMI 2.0 and Serial-over-LAN (SOL), the "
     "following configuration options will allow SOL configuration."
@@ -1360,7 +1363,7 @@ ipmi_config_sol_conf_section_get (ipmi_config_state_data_t *state_data,
 
   assert (state_data);
 
-  if (!(section = config_section_multi_channel_create (state_data->pstate,
+  if (!(section = ipmi_config_section_multi_channel_create (state_data->pstate,
 						       section_name_base_str,
 						       section_comment,
 						       NULL,
@@ -1371,17 +1374,17 @@ ipmi_config_sol_conf_section_get (ipmi_config_state_data_t *state_data,
 						       state_data->sol_channel_numbers_unique_count)))
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               section,
                               "Enable_SOL",
                               "Possible values: Yes/No",
                               0,
                               enable_sol_checkout,
                               enable_sol_commit,
-                              config_yes_no_validate) < 0)
+                              ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               section,
                               "SOL_Privilege_Level",
                               "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary",
@@ -1391,67 +1394,67 @@ ipmi_config_sol_conf_section_get (ipmi_config_state_data_t *state_data,
                               privilege_level_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               section,
                               "Force_SOL_Payload_Authentication",
                               "Possible values: Yes/No",
                               0,
                               force_sol_payload_authentication_checkout,
                               force_sol_payload_authentication_commit,
-                              config_yes_no_validate) < 0)
+                              ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               section,
                               "Force_SOL_Payload_Encryption",
                               "Possible values: Yes/No",
                               0,
                               force_sol_payload_encryption_checkout,
                               force_sol_payload_encryption_commit,
-                              config_yes_no_validate) < 0)
+                              ipmi_config_yes_no_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               section,
                               "Character_Accumulate_Interval",
                               "Give a non-zero valid integer. Each unit is 5ms",
                               0,
                               character_accumulate_interval_checkout,
                               character_accumulate_interval_commit,
-                              config_number_range_one_byte_non_zero) < 0)
+                              ipmi_config_number_range_one_byte_non_zero) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               section,
                               "Character_Send_Threshold",
                               "Give a valid number",
                               0,
                               character_send_threshold_checkout,
                               character_send_threshold_commit,
-                              config_number_range_one_byte) < 0)
+                              ipmi_config_number_range_one_byte) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               section,
                               "SOL_Retry_Count",
                               "Give a valid integer",
                               0,
                               sol_retry_count_checkout,
                               sol_retry_count_commit,
-                              config_number_range_three_bits) < 0)
+                              ipmi_config_number_range_three_bits) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               section,
                               "SOL_Retry_Interval",
                               "Give a valid integer. Interval unit is 10ms",
                               0,
                               sol_retry_interval_checkout,
                               sol_retry_interval_commit,
-                              config_number_range_one_byte) < 0)
+                              ipmi_config_number_range_one_byte) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               section,
                               "Non_Volatile_Bit_Rate",
                               "Possible values: Serial/9600/19200/38400/57600/115200",
@@ -1461,7 +1464,7 @@ ipmi_config_sol_conf_section_get (ipmi_config_state_data_t *state_data,
                               sol_bit_rate_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               section,
                               "Volatile_Bit_Rate",
                               "Possible values: Serial/9600/19200/38400/57600/115200",
@@ -1471,20 +1474,20 @@ ipmi_config_sol_conf_section_get (ipmi_config_state_data_t *state_data,
                               sol_bit_rate_number_validate) < 0)
     goto cleanup;
 
-  if (config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data->pstate,
                               section,
                               "SOL_Payload_Port_Number",
                               "Give a valid port number",
-                              CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
+                              IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
                               sol_payload_port_checkout,
                               sol_payload_port_commit,
-                              config_number_range_two_bytes) < 0)
+                              ipmi_config_number_range_two_bytes) < 0)
     goto cleanup;
 
   return (section);
 
  cleanup:
   if (section)
-    config_section_destroy (section);
+    ipmi_config_section_destroy (section);
   return (NULL);
 }

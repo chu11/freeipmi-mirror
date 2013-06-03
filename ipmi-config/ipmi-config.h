@@ -25,22 +25,194 @@
 #include "tool-cmdline-common.h"
 #include "pstdout.h"
 
-#include "config-tool-argp.h"
-#include "config-tool-common.h"
-#include "config-tool-comment.h"
-#include "config-tool-checkout.h"
-#include "config-tool-commit.h"
-#include "config-tool-diff.h"
-#include "config-tool-parse.h"
-#include "config-tool-section.h"
-#include "config-tool-utils.h"
-#include "config-tool-validate.h"
+#define IPMI_CONFIG_CIPHER_SUITE_LEN 16
 
-#define CIPHER_SUITE_LEN 16
+enum ipmi_config_argp_option_keys
+  {
+    IPMI_CONFIG_ARGP_CHECKOUT_KEY = 'o',
+    IPMI_CONFIG_ARGP_COMMIT_KEY = 'c',
+    IPMI_CONFIG_ARGP_DIFF_KEY = 'd',
+    IPMI_CONFIG_ARGP_FILENAME_KEY_LEGACY = 'f',
+    IPMI_CONFIG_ARGP_FILENAME_KEY = 'n',
+    IPMI_CONFIG_ARGP_KEYPAIR_KEY = 'e',
+    IPMI_CONFIG_ARGP_SECTIONS_KEY = 'S',
+    IPMI_CONFIG_ARGP_LIST_SECTIONS_KEY = 'L',
+    IPMI_CONFIG_ARGP_VERBOSE_KEY = 'v',
+    IPMI_CONFIG_ARGP_LAN_CHANNEL_NUMBER_KEY = 200,
+    IPMI_CONFIG_ARGP_SERIAL_CHANNEL_NUMBER_KEY = 201,
+    IPMI_CONFIG_ARGP_SOL_CHANNEL_NUMBER_KEY = 202,
+  };
+
+#define IPMI_CTX_ERRNUM_IS_FATAL_ERROR(__ipmi_ctx)                      \
+  (((ipmi_ctx_errnum ((__ipmi_ctx))) == IPMI_ERR_CTX_NULL               \
+    || (ipmi_ctx_errnum ((__ipmi_ctx))) == IPMI_ERR_CTX_INVALID         \
+    || (ipmi_ctx_errnum ((__ipmi_ctx))) == IPMI_ERR_PERMISSION          \
+    || (ipmi_ctx_errnum ((__ipmi_ctx))) == IPMI_ERR_USERNAME_INVALID    \
+    || (ipmi_ctx_errnum ((__ipmi_ctx))) == IPMI_ERR_PASSWORD_INVALID    \
+    || (ipmi_ctx_errnum ((__ipmi_ctx))) == IPMI_ERR_K_G_INVALID         \
+    || (ipmi_ctx_errnum ((__ipmi_ctx))) == IPMI_ERR_AUTHENTICATION_TYPE_UNAVAILABLE \
+    || (ipmi_ctx_errnum ((__ipmi_ctx))) == IPMI_ERR_CIPHER_SUITE_ID_UNAVAILABLE \
+    || (ipmi_ctx_errnum ((__ipmi_ctx))) == IPMI_ERR_PASSWORD_VERIFICATION_TIMEOUT \
+    || (ipmi_ctx_errnum ((__ipmi_ctx))) == IPMI_ERR_IPMI_2_0_UNAVAILABLE \
+    || (ipmi_ctx_errnum ((__ipmi_ctx))) == IPMI_ERR_CONNECTION_TIMEOUT  \
+    || (ipmi_ctx_errnum ((__ipmi_ctx))) == IPMI_ERR_SESSION_TIMEOUT     \
+    || (ipmi_ctx_errnum ((__ipmi_ctx))) == IPMI_ERR_DEVICE_ALREADY_OPEN \
+    || (ipmi_ctx_errnum ((__ipmi_ctx))) == IPMI_ERR_DEVICE_NOT_OPEN     \
+    || (ipmi_ctx_errnum ((__ipmi_ctx))) == IPMI_ERR_DEVICE_NOT_SUPPORTED \
+    || (ipmi_ctx_errnum ((__ipmi_ctx))) == IPMI_ERR_DEVICE_NOT_FOUND    \
+    || (ipmi_ctx_errnum ((__ipmi_ctx))) == IPMI_ERR_DRIVER_TIMEOUT      \
+    || (ipmi_ctx_errnum ((__ipmi_ctx))) == IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE \
+    || (ipmi_ctx_errnum ((__ipmi_ctx))) == IPMI_ERR_BAD_RMCPPLUS_STATUS_CODE \
+    || (ipmi_ctx_errnum ((__ipmi_ctx))) == IPMI_ERR_OUT_OF_MEMORY       \
+    || (ipmi_ctx_errnum ((__ipmi_ctx))) == IPMI_ERR_HOSTNAME_INVALID    \
+    || (ipmi_ctx_errnum ((__ipmi_ctx))) == IPMI_ERR_PARAMETERS          \
+    || (ipmi_ctx_errnum ((__ipmi_ctx))) == IPMI_ERR_DRIVER_PATH_REQUIRED \
+    || (ipmi_ctx_errnum ((__ipmi_ctx))) == IPMI_ERR_IPMI_ERROR          \
+    || (ipmi_ctx_errnum ((__ipmi_ctx))) == IPMI_ERR_SYSTEM_ERROR        \
+    || (ipmi_ctx_errnum ((__ipmi_ctx))) == IPMI_ERR_INTERNAL_ERROR) ? 1 : 0)
+
+#define IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT                       0x01
+#define IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY        0x02
+#define IPMI_CONFIG_DO_NOT_CHECKOUT                                  0x04
+#define IPMI_CONFIG_READABLE_ONLY                                    0x08
+#define IPMI_CONFIG_UNDEFINED                                        0x10
+#define IPMI_CONFIG_USERNAME_NOT_SET_YET                             0x20
+#define IPMI_CONFIG_DO_NOT_LIST                                      0x40
+
+#define IPMI_CONFIG_USERNAME_NOT_SET_YET_STR     "<username-not-set-yet>"
+
+#define IPMI_CONFIG_CHECKOUT_LINE_LEN                           45
+
+#define IPMI_CONFIG_PARSE_BUFLEN                                4096
+#define IPMI_CONFIG_OUTPUT_BUFLEN                               8192
+
+#define IPMI_CONFIG_MAX_SECTION_NAME_LEN                        128
+#define IPMI_CONFIG_MAX_KEY_NAME_LEN                            128
+#define IPMI_CONFIG_MAX_DESCRIPTION_LEN                         1024
+
+#define IPMI_CONFIG_NON_FATAL_EXIT_VALUE                        1
+#define IPMI_CONFIG_FATAL_EXIT_VALUE                            2
+
+#define same(a,b) (strcasecmp (a,b) == 0)
+
+typedef enum
+  {
+    IPMI_CONFIG_ACTION_CHECKOUT = 1,
+    IPMI_CONFIG_ACTION_COMMIT,
+    IPMI_CONFIG_ACTION_DIFF,
+    IPMI_CONFIG_ACTION_LIST_SECTIONS,
+  } ipmi_config_action_t;
+
+typedef enum
+  {
+    IPMI_CONFIG_ERR_FATAL_ERROR = -5,
+    IPMI_CONFIG_ERR_NON_FATAL_ERROR = -4,
+    IPMI_CONFIG_ERR_NON_FATAL_ERROR_READ_ONLY = -3,
+    IPMI_CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED = -2,
+    IPMI_CONFIG_ERR_NON_FATAL_ERROR_INVALID_UNSUPPORTED_CONFIG = -1,
+    IPMI_CONFIG_ERR_SUCCESS = 0,
+  } ipmi_config_err_t;
+
+typedef enum
+  {
+    IPMI_CONFIG_VALIDATE_FATAL_ERROR = -4,
+    IPMI_CONFIG_VALIDATE_NON_FATAL_ERROR = -3,
+    IPMI_CONFIG_VALIDATE_OUT_OF_RANGE_VALUE = -2,
+    IPMI_CONFIG_VALIDATE_INVALID_VALUE = -1,
+    IPMI_CONFIG_VALIDATE_VALID_VALUE = 0,
+  } ipmi_config_validate_t;
+
+#define IPMI_CONFIG_IS_NON_FATAL_ERROR(__ret)                           \
+  (((__ret) == IPMI_CONFIG_ERR_NON_FATAL_ERROR                          \
+    || (__ret) == IPMI_CONFIG_ERR_NON_FATAL_ERROR_READ_ONLY             \
+    || (__ret) == IPMI_CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED         \
+    || (__ret) == IPMI_CONFIG_ERR_NON_FATAL_ERROR_INVALID_UNSUPPORTED_CONFIG) ? 1 : 0)
+
+struct ipmi_config_keypair
+{
+  char *section_name;
+  char *key_name;
+  char *value_input;
+  struct ipmi_config_keypair *next;
+};
+
+struct ipmi_config_section_str
+{
+  char *section_name;
+  struct ipmi_config_section_str *next;
+};
+
+struct ipmi_config_keyvalue {
+  struct ipmi_config_key *key;
+  char *value_input;
+  char *value_output;
+  struct ipmi_config_keyvalue *next;
+};
+
+/* Fills in kv->value_output as a printable string  */
+typedef ipmi_config_err_t (*Key_Checkout)(const char *section_name,
+					  struct ipmi_config_keyvalue *kv,
+					  void *arg);
+
+/* Takes kv->value_input and commits it */
+typedef ipmi_config_err_t (*Key_Commit)(const char *section_name,
+					const struct ipmi_config_keyvalue *kv,
+					void *arg);
+
+/* Determines if an inputted value is valid */
+typedef ipmi_config_validate_t (*Key_Validate)(const char *section_name,
+					       const char *key_name,
+					       const char *value,
+					       void *arg);
+
+/* Sectional pre commit call */
+typedef ipmi_config_err_t (*Section_Pre_Commit)(const char *section_name,
+						void *arg);
+
+/* Sectional post commit call */
+typedef ipmi_config_err_t (*Section_Post_Commit)(const char *section_name,
+						 void *arg);
+
+struct ipmi_config_key {
+  char *key_name;
+  char *description;
+  unsigned int flags;
+  Key_Checkout checkout;
+  Key_Commit commit;
+  Key_Validate validate;
+  struct ipmi_config_key *next;
+};
+
+struct ipmi_config_section {
+  char *section_name;
+  char *section_comment_section_name;
+  char *section_comment;
+  unsigned int flags;
+  Section_Pre_Commit section_pre_commit;
+  Section_Post_Commit section_post_commit;
+  /* keys in this section */
+  struct ipmi_config_key *keys;
+  /* key and values for checkout/commit/diff */
+  struct ipmi_config_keyvalue *keyvalues;
+  struct ipmi_config_section *next;
+};
 
 struct ipmi_config_arguments
 {
-  struct config_arguments config_args;
+  struct common_cmd_args common_args;
+
+  ipmi_config_action_t action;
+
+  unsigned int verbose_count;
+  char *filename;
+  uint8_t lan_channel_number;
+  int lan_channel_number_set;
+  uint8_t serial_channel_number;
+  int serial_channel_number_set;
+  uint8_t sol_channel_number;
+  int sol_channel_number_set;
+  struct ipmi_config_keypair *keypairs;
+  struct ipmi_config_section_str *section_strs;
 };
 
 typedef struct ipmi_config_prog_data
@@ -53,7 +225,7 @@ typedef struct ipmi_config_prog_data
 typedef struct ipmi_config_enable_user_after_password
 {
   int enable_user_failed;
-  struct config_keyvalue *kv;
+  struct ipmi_config_keyvalue *kv;
 } ipmi_config_enable_user_after_password_t;
 
 typedef struct ipmi_config_state_data
@@ -61,7 +233,7 @@ typedef struct ipmi_config_state_data
   ipmi_config_prog_data_t *prog_data;
   ipmi_ctx_t ipmi_ctx;
   pstdout_state_t pstate;
-  struct config_section *sections;
+  struct ipmi_config_section *sections;
 
   /* achu: workaround for OEM compliance issue, see user section */
   int enable_user_after_password_len;
@@ -79,9 +251,9 @@ typedef struct ipmi_config_state_data
   /* achu: caching to make rmcpplus priv go faster */
   uint8_t cipher_suite_entry_count;
   int cipher_suite_entry_count_set;
-  uint8_t cipher_suite_id_supported[CIPHER_SUITE_LEN];
+  uint8_t cipher_suite_id_supported[IPMI_CONFIG_CIPHER_SUITE_LEN];
   int cipher_suite_id_supported_set;
-  uint8_t cipher_suite_priv[CIPHER_SUITE_LEN];
+  uint8_t cipher_suite_priv[IPMI_CONFIG_CIPHER_SUITE_LEN];
   int cipher_suite_priv_set;
   uint8_t cipher_suite_channel_number;
 

@@ -21,6 +21,6 @@
 
 #include "ipmi-config.h"
 
-struct config_section *ipmi_config_sections_create (ipmi_config_state_data_t *state_data);
+struct ipmi_config_section *ipmi_config_sections_create (ipmi_config_state_data_t *state_data);
 
 #endif /* IPMI_CONFIG_SECTIONS_H */
