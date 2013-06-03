@@ -799,7 +799,7 @@ pef_startup_delay_checkout (ipmi_config_state_data_t *state_data,
     }
   pef_startup_delay = val;
 
-  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
                                                                kv,
                                                                pef_startup_delay) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -910,7 +910,7 @@ pef_alert_startup_delay_checkout (ipmi_config_state_data_t *state_data,
     }
   pef_alert_startup_delay = val;
 
-  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
                                                                kv,
                                                                val) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);

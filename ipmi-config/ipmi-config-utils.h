@@ -21,14 +21,6 @@
 
 #include "ipmi-config.h"
 
-int ipv4_address_string2int (ipmi_config_state_data_t *state_data,
-                             const char *src,
-                             uint32_t *dest);
-
-int mac_address_string2int (ipmi_config_state_data_t *state_data,
-                            const char *src,
-                            uint64_t *dest);
-
 struct ipmi_config_section *ipmi_config_find_section (ipmi_config_state_data_t *state_data,
                                                       const char *section_name);
 
@@ -37,6 +29,15 @@ struct ipmi_config_key *ipmi_config_find_key (struct ipmi_config_section *sectio
 
 struct ipmi_config_keyvalue *ipmi_config_find_keyvalue (struct ipmi_config_section *section,
                                                         const char *key_name);
+
+
+int ipv4_address_string2int (ipmi_config_state_data_t *state_data,
+                             const char *src,
+                             uint32_t *dest);
+
+int mac_address_string2int (ipmi_config_state_data_t *state_data,
+                            const char *src,
+                            uint64_t *dest);
 
 int ipmi_errnum_is_non_fatal (ipmi_config_state_data_t *state_data,
                               fiid_obj_t obj_cmd_rs,

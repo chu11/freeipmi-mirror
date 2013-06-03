@@ -33,6 +33,66 @@
 #include "freeipmi-portability.h"
 #include "pstdout.h"
 
+struct ipmi_config_section *
+ipmi_config_find_section (ipmi_config_state_data_t *state_data,
+                          const char *section_name)
+{
+  struct ipmi_config_section *s = NULL;
+
+  assert (state_data);
+  assert (section_name);
+
+  s = state_data->sections;
+  while (s)
+    {
+      if (!strcasecmp (section_name, s->section_name))
+        break;
+      s = s->next;
+    }
+
+  return (s);
+}
+
+struct ipmi_config_key *
+ipmi_config_find_key (struct ipmi_config_section *section,
+                      const char *key_name)
+{
+  struct ipmi_config_key *k = NULL;
+
+  assert (section);
+  assert (key_name);
+
+  k = section->keys;
+  while (k)
+    {
+      if (!strcasecmp (key_name, k->key_name))
+        break;
+      k = k->next;
+    }
+
+  return (k);
+}
+
+struct ipmi_config_keyvalue *
+ipmi_config_find_keyvalue (struct ipmi_config_section *section,
+                           const char *key_name)
+{
+  struct ipmi_config_keyvalue *kv = NULL;
+
+  assert (section);
+  assert (key_name);
+
+  kv = section->keyvalues;
+  while (kv)
+    {
+      if (!strcasecmp (key_name, kv->key->key_name))
+        break;
+      kv = kv->next;
+    }
+
+  return (kv);
+}
+
 int
 ipv4_address_string2int (ipmi_config_state_data_t *state_data,
                          const char *src,
@@ -121,66 +181,6 @@ mac_address_string2int (ipmi_config_state_data_t *state_data,
 
   *dest = val;
   return (0);
-}
-
-struct ipmi_config_section *
-ipmi_config_find_section (ipmi_config_state_data_t *state_data,
-                          const char *section_name)
-{
-  struct ipmi_config_section *s = NULL;
-
-  assert (state_data);
-  assert (section_name);
-
-  s = state_data->sections;
-  while (s)
-    {
-      if (!strcasecmp (section_name, s->section_name))
-        break;
-      s = s->next;
-    }
-
-  return (s);
-}
-
-struct ipmi_config_key *
-ipmi_config_find_key (struct ipmi_config_section *section,
-                      const char *key_name)
-{
-  struct ipmi_config_key *k = NULL;
-
-  assert (section);
-  assert (key_name);
-
-  k = section->keys;
-  while (k)
-    {
-      if (!strcasecmp (key_name, k->key_name))
-        break;
-      k = k->next;
-    }
-
-  return (k);
-}
-
-struct ipmi_config_keyvalue *
-ipmi_config_find_keyvalue (struct ipmi_config_section *section,
-                           const char *key_name)
-{
-  struct ipmi_config_keyvalue *kv = NULL;
-
-  assert (section);
-  assert (key_name);
-
-  kv = section->keyvalues;
-  while (kv)
-    {
-      if (!strcasecmp (key_name, kv->key->key_name))
-        break;
-      kv = kv->next;
-    }
-
-  return (kv);
 }
 
 int
