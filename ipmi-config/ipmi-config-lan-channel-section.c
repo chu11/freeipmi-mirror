@@ -29,6 +29,8 @@
 
 #include "ipmi-config.h"
 #include "ipmi-config-channel-common.h"
+#include "ipmi-config-tool-section.h"
+#include "ipmi-config-tool-utils.h"
 #include "ipmi-config-utils.h"
 
 #include "freeipmi-portability.h"

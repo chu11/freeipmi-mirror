@@ -30,6 +30,7 @@
 #include "ipmi-config.h"
 #include "ipmi-config-map.h"
 #include "ipmi-config-tool-section.h"
+#include "ipmi-config-tool-utils.h"
 #include "ipmi-config-validate.h"
 
 #include "freeipmi-portability.h"
