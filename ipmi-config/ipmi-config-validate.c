@@ -40,9 +40,9 @@
 
 ipmi_config_validate_t
 yes_no_validate (const char *section_name,
-                             const char *key_name,
-                             const char *value,
-                             void *arg)
+                 const char *key_name,
+                 const char *value,
+                 void *arg)
 {
   assert (section_name);
   assert (key_name);
@@ -55,8 +55,8 @@ yes_no_validate (const char *section_name,
 
 ipmi_config_validate_t
 check_number_range (const char *value,
-                                int min,
-                                int max)
+                    int min,
+                    int max)
 {
   long int conv;
   char *endptr;
@@ -78,9 +78,9 @@ check_number_range (const char *value,
 
 ipmi_config_validate_t
 number_range_three_bits_validate (const char *section_name,
-                                     const char *key_name,
-                                     const char *value,
-                                     void *arg)
+                                  const char *key_name,
+                                  const char *value,
+                                  void *arg)
 {
   assert (section_name);
   assert (key_name);
@@ -91,9 +91,9 @@ number_range_three_bits_validate (const char *section_name,
 
 ipmi_config_validate_t
 number_range_four_bits_validate (const char *section_name,
-                                    const char *key_name,
-                                    const char *value,
-                                    void *arg)
+                                 const char *key_name,
+                                 const char *value,
+                                 void *arg)
 {
   assert (section_name);
   assert (key_name);
@@ -104,9 +104,9 @@ number_range_four_bits_validate (const char *section_name,
 
 ipmi_config_validate_t
 number_range_seven_bits_validate (const char *section_name,
-                                     const char *key_name,
-                                     const char *value,
-                                     void *arg)
+                                  const char *key_name,
+                                  const char *value,
+                                  void *arg)
 {
   assert (section_name);
   assert (key_name);
@@ -117,9 +117,9 @@ number_range_seven_bits_validate (const char *section_name,
 
 ipmi_config_validate_t
 number_range_twelve_bits_validate (const char *section_name,
-                                      const char *key_name,
-                                      const char *value,
-                                      void *arg)
+                                   const char *key_name,
+                                   const char *value,
+                                   void *arg)
 {
   assert (section_name);
   assert (key_name);
@@ -130,9 +130,9 @@ number_range_twelve_bits_validate (const char *section_name,
 
 ipmi_config_validate_t
 number_range_one_byte_validate (const char *section_name,
-                                   const char *key_name,
-                                   const char *value,
-                                   void *arg)
+                                const char *key_name,
+                                const char *value,
+                                void *arg)
 {
   assert (section_name);
   assert (key_name);
@@ -143,9 +143,9 @@ number_range_one_byte_validate (const char *section_name,
 
 ipmi_config_validate_t
 number_range_one_byte_non_zero_validate (const char *section_name,
-                                            const char *key_name,
-                                            const char *value,
-                                            void *arg)
+                                         const char *key_name,
+                                         const char *value,
+                                         void *arg)
 {
   assert (section_name);
   assert (key_name);
@@ -156,9 +156,9 @@ number_range_one_byte_non_zero_validate (const char *section_name,
 
 ipmi_config_validate_t
 number_range_two_bytes_validate (const char *section_name,
-                                    const char *key_name,
-                                    const char *value,
-                                    void *arg)
+                                 const char *key_name,
+                                 const char *value,
+                                 void *arg)
 {
   assert (section_name);
   assert (key_name);
@@ -169,9 +169,9 @@ number_range_two_bytes_validate (const char *section_name,
 
 ipmi_config_validate_t
 ip_address_validate (const char *section_name,
-                                 const char *key_name,
-                                 const char *value,
-                                 void *arg)
+                     const char *key_name,
+                     const char *value,
+                     void *arg)
 {
   struct in_addr a;
 
@@ -186,9 +186,9 @@ ip_address_validate (const char *section_name,
 
 ipmi_config_validate_t
 mac_address_validate (const char *section_name,
-                                  const char *key_name,
-                                  const char *value,
-                                  void *arg)
+                      const char *key_name,
+                      const char *value,
+                      void *arg)
 {
   unsigned int foo;
 
