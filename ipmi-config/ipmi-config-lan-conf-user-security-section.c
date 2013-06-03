@@ -30,7 +30,6 @@
 #include "ipmi-config.h"
 #include "ipmi-config-map.h"
 #include "ipmi-config-tool-section.h"
-#include "ipmi-config-tool-utils.h"
 #include "ipmi-config-utils.h"
 #include "ipmi-config-validate.h"
 
@@ -219,7 +218,7 @@ bad_password_threshold_checkout (const char *section_name,
   if ((ret = _get_bad_password_threshold (state_data, section_name, &bpt)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
   
-  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
                                                                kv,
                                                                bpt.bad_password_threshold_number) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -267,7 +266,7 @@ attempt_count_reset_interval_checkout (const char *section_name,
   if ((ret = _get_bad_password_threshold (state_data, section_name, &bpt)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
   
-  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
                                                                kv,
                                                                bpt.attempt_count_reset_interval) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -315,7 +314,7 @@ user_lockout_interval_checkout (const char *section_name,
   if ((ret = _get_bad_password_threshold (state_data, section_name, &bpt)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
   
-  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
                                                                kv,
                                                                bpt.user_lockout_interval) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -363,7 +362,7 @@ enable_event_message_when_user_disabled_checkout (const char *section_name,
   if ((ret = _get_bad_password_threshold (state_data, section_name, &bpt)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
   
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   bpt.user_disabled_event_message ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);

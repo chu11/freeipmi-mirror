@@ -30,7 +30,6 @@
 #include "ipmi-config.h"
 #include "ipmi-config-map.h"
 #include "ipmi-config-tool-section.h"
-#include "ipmi-config-tool-utils.h"
 #include "ipmi-config-utils.h"
 #include "ipmi-config-validate.h"
 
@@ -119,7 +118,7 @@ enable_sol_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   val ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -348,7 +347,7 @@ sol_privilege_level_checkout (const char *section_name,
   if ((ret = _get_sol_sol_authentication (state_data, section_name, &sa)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   privilege_level_string (sa.sol_privilege_level)) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -397,7 +396,7 @@ force_sol_payload_authentication_checkout (const char *section_name,
   if ((ret = _get_sol_sol_authentication (state_data, section_name, &sa)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   sa.force_sol_payload_authentication ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -446,7 +445,7 @@ force_sol_payload_encryption_checkout (const char *section_name,
   if ((ret = _get_sol_sol_authentication (state_data, section_name, &sa)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   sa.force_sol_payload_encryption ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -627,7 +626,7 @@ character_accumulate_interval_checkout (const char *section_name,
   if ((ret = _get_sol_character_accumulate_interval_and_send_threshold (state_data, section_name, &it)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
                                                                kv,
                                                                it.character_accumulate_interval) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -676,7 +675,7 @@ character_send_threshold_checkout (const char *section_name,
   if ((ret = _get_sol_character_accumulate_interval_and_send_threshold (state_data, section_name, &it)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
                                                                kv,
                                                                it.character_send_threshold) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -857,7 +856,7 @@ sol_retry_count_checkout (const char *section_name,
   if ((ret = _get_sol_sol_retry (state_data, section_name, &sr)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
                                                                kv,
                                                                sr.retry_count) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -907,7 +906,7 @@ sol_retry_interval_checkout (const char *section_name,
   if ((ret = _get_sol_sol_retry (state_data, section_name, &sr)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
                                                                kv,
                                                                sr.retry_interval) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -1003,7 +1002,7 @@ non_volatile_bit_rate_checkout (const char *section_name,
     }
   bit_rate = val;
 
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   sol_bit_rate_string (bit_rate)) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -1136,7 +1135,7 @@ volatile_bit_rate_checkout (const char *section_name,
     }
   bit_rate = val;
 
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   sol_bit_rate_string (bit_rate)) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -1269,7 +1268,7 @@ sol_payload_port_checkout (const char *section_name,
     }
   port_number = val;
 
-  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
                                                                kv,
                                                                port_number) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);

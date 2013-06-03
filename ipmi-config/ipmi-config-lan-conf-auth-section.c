@@ -30,7 +30,6 @@
 #include "ipmi-config.h"
 #include "ipmi-config-validate.h"
 #include "ipmi-config-tool-section.h"
-#include "ipmi-config-tool-utils.h"
 #include "ipmi-config-utils.h"
 
 #include "freeipmi-portability.h"
@@ -835,7 +834,7 @@ _authentication_level_checkout (const char *section_name,
                                                 &al)))
         return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
-      if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+      if (ipmi_config_section_update_keyvalue_output (state_data,
                                                       kv,
                                                       *al_ptr ? "Yes" : "No") < 0)
         return (IPMI_CONFIG_ERR_FATAL_ERROR);

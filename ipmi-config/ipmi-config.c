@@ -35,8 +35,8 @@
 #include "ipmi-config-tool-diff.h"
 #include "ipmi-config-tool-parse.h"
 #include "ipmi-config-tool-section.h"
-#include "ipmi-config-tool-utils.h"
 #include "ipmi-config-sections.h"
+#include "ipmi-config-utils.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
@@ -126,10 +126,7 @@ _ipmi_config (pstdout_state_t pstate,
           && !prog_data->args->filename
           && !prog_data->args->keypairs))
     {
-      if (ipmi_config_parse (pstate,
-                             state_data.sections,
-                             prog_data->args,
-                             fp) < 0)
+      if (ipmi_config_parse (&state_data, fp) < 0)
         goto cleanup;
     }
   
@@ -141,8 +138,7 @@ _ipmi_config (pstdout_state_t pstate,
        || prog_data->args->action == IPMI_CONFIG_ACTION_DIFF)
       && prog_data->args->keypairs)
     {
-      if (ipmi_config_sections_insert_keyvalues (pstate,
-                                                 state_data.sections,
+      if (ipmi_config_sections_insert_keyvalues (&state_data,
                                                  prog_data->args->keypairs) < 0)
         goto cleanup;
     }
@@ -170,8 +166,7 @@ _ipmi_config (pstdout_state_t pstate,
       sstr = prog_data->args->section_strs;
       while (sstr)
         {
-          if (!ipmi_config_find_section (state_data.sections,
-                                         sstr->section_name))
+          if (!ipmi_config_find_section (&state_data, sstr->section_name))
             {
               pstdout_fprintf (pstate,
                                stderr,
@@ -254,8 +249,7 @@ _ipmi_config (pstdout_state_t pstate,
     {
       struct ipmi_config_section *section;
 
-      if ((section = ipmi_config_find_section (state_data.sections,
-                                               "Lan_Conf")))
+      if ((section = ipmi_config_find_section (&state_data, "Lan_Conf")))
         {
           if (ipmi_config_find_keyvalue (section,
                                          "IP_Address"))
@@ -294,8 +288,7 @@ _ipmi_config (pstdout_state_t pstate,
               struct ipmi_config_section *s;
               ipmi_config_err_t this_ret;
 
-              if (!(s = ipmi_config_find_section (state_data.sections,
-                                                  sstr->section_name)))
+              if (!(s = ipmi_config_find_section (&state_data, sstr->section_name)))
                 {
                   pstdout_fprintf (pstate,
                                    stderr,
@@ -304,9 +297,8 @@ _ipmi_config (pstdout_state_t pstate,
                   continue;
                 }
 
-              this_ret = ipmi_config_checkout_section (pstate,
+              this_ret = ipmi_config_checkout_section (&state_data,
                                                        s,
-                                                       prog_data->args,
                                                        1,
                                                        fp,
                                                        0,
@@ -326,9 +318,7 @@ _ipmi_config (pstdout_state_t pstate,
           if (!prog_data->args->keypairs)
             all_keys_if_none_specified++;
 
-          ret = ipmi_config_checkout (pstate,
-                                      state_data.sections,
-                                      prog_data->args,
+          ret = ipmi_config_checkout (&state_data,
                                       all_keys_if_none_specified,
                                       fp,
                                       0,

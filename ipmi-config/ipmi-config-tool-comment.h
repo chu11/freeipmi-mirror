@@ -21,9 +21,9 @@
 
 #include <stdio.h>
 
-#include "pstdout.h"
+#include "ipmi-config.h"
 
-int ipmi_config_section_comments (pstdout_state_t pstate,
+int ipmi_config_section_comments (ipmi_config_state_data_t *state_data,
                                   const char *section_name,
                                   const char *in,
                                   FILE *fp);

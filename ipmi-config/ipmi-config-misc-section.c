@@ -30,7 +30,7 @@
 #include "ipmi-config.h"
 #include "ipmi-config-map.h"
 #include "ipmi-config-tool-section.h"
-#include "ipmi-config-tool-utils.h"
+#include "ipmi-config-utils.h"
 #include "ipmi-config-validate.h"
 
 #include "freeipmi-portability.h"
@@ -92,7 +92,7 @@ power_restore_policy_checkout (const char *section_name,
     }
   power_restore_policy = val;
 
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   power_restore_policy_string (power_restore_policy)) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);

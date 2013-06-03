@@ -42,7 +42,7 @@
 
 #include "ipmi-config.h"
 #include "ipmi-config-argp.h"
-#include "ipmi-config-tool-utils.h"
+#include "ipmi-config-utils.h"
 
 #include "freeipmi-portability.h"
 #include "tool-cmdline-common.h"

@@ -20,19 +20,15 @@
 #define IPMI_CONFIG_TOOL_CHECKOUT_H
 
 #include "ipmi-config.h"
-#include "pstdout.h"
 
-ipmi_config_err_t ipmi_config_checkout_section (pstdout_state_t pstate,
+ipmi_config_err_t ipmi_config_checkout_section (ipmi_config_state_data_t *state_data,
                                                 struct ipmi_config_section *section,
-                                                struct ipmi_config_arguments *cmd_args,
                                                 int all_keys_if_none_specified,
                                                 FILE *fp,
                                                 unsigned int line_length,
                                                 void *arg);
 
-ipmi_config_err_t ipmi_config_checkout (pstdout_state_t pstate,
-                                        struct ipmi_config_section *sections,
-                                        struct ipmi_config_arguments *cmd_args,
+ipmi_config_err_t ipmi_config_checkout (ipmi_config_state_data_t *state_data,
                                         int all_keys_if_none_specified,
                                         FILE *fp,
                                         unsigned int line_length,

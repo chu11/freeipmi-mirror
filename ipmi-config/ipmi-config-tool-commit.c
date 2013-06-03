@@ -32,7 +32,7 @@
 #include <assert.h>
 
 #include "ipmi-config-tool-commit.h"
-#include "ipmi-config-tool-utils.h"
+#include "ipmi-config-utils.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"

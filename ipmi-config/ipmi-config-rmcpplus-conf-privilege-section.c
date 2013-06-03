@@ -30,7 +30,6 @@
 #include "ipmi-config.h"
 #include "ipmi-config-map.h"
 #include "ipmi-config-tool-section.h"
-#include "ipmi-config-tool-utils.h"
 #include "ipmi-config-utils.h"
 #include "ipmi-config-validate.h"
 
@@ -365,7 +364,7 @@ id_checkout (const char *section_name,
        */
       if (privilege != IPMI_CONFIG_PRIVILEGE_LEVEL_SUPPORTED_BUT_NOT_READABLE)
         {
-          if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+          if (ipmi_config_section_update_keyvalue_output (state_data,
                                                           kv,
                                                           rmcpplus_priv_string (privilege)) < 0)
             return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -376,7 +375,7 @@ id_checkout (const char *section_name,
            * IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY flag to
            * output commented out section.
            */
-          if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+          if (ipmi_config_section_update_keyvalue_output (state_data,
                                                           kv,
                                                           "") < 0)
             return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -459,7 +458,7 @@ id_commit (const char *section_name,
         {
           struct ipmi_config_section *section;
                   
-          if ((section = ipmi_config_find_section (state_data->sections,
+          if ((section = ipmi_config_find_section (state_data,
                                                    section_name)))
             {
               char keynametmp[IPMI_CONFIG_MAX_KEY_NAME_LEN + 1];

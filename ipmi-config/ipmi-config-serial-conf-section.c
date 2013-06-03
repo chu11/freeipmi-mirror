@@ -30,7 +30,6 @@
 #include "ipmi-config.h"
 #include "ipmi-config-map.h"
 #include "ipmi-config-tool-section.h"
-#include "ipmi-config-tool-utils.h"
 #include "ipmi-config-utils.h"
 #include "ipmi-config-validate.h"
 
@@ -224,7 +223,7 @@ enable_basic_mode_checkout (const char *section_name,
   if ((ret = _get_connection_mode (state_data, section_name, &cm)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   cm.basic_mode ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -273,7 +272,7 @@ enable_ppp_mode_checkout (const char *section_name,
   if ((ret = _get_connection_mode (state_data, section_name, &cm)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   cm.ppp_mode ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -322,7 +321,7 @@ enable_terminal_mode_checkout (const char *section_name,
   if ((ret = _get_connection_mode (state_data, section_name, &cm)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   cm.terminal_mode ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -371,7 +370,7 @@ connect_mode_checkout (const char *section_name,
   if ((ret = _get_connection_mode (state_data, section_name, &cm)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   connect_mode_string (cm.connect_mode)) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -467,7 +466,7 @@ page_blackout_interval_checkout (const char *section_name,
     }
   page_blackout_interval = val;
 
-  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
                                                                kv,
                                                                page_blackout_interval) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -601,7 +600,7 @@ call_retry_interval_checkout (const char *section_name,
     }
   call_retry_interval = val;
 
-  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
                                                                kv,
                                                                call_retry_interval) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -830,7 +829,7 @@ enable_dtr_hangup_checkout (const char *section_name,
   if ((ret = _get_ipmi_messaging_comm_settings (state_data, section_name, &cs)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   cs.dtr_hangup ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -879,7 +878,7 @@ flow_control_checkout (const char *section_name,
   if ((ret = _get_ipmi_messaging_comm_settings (state_data, section_name, &cs)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   flow_control_string (cs.flow_control)) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -928,7 +927,7 @@ bit_rate_checkout (const char *section_name,
   if ((ret = _get_ipmi_messaging_comm_settings (state_data, section_name, &cs)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   bit_rate_string (cs.bit_rate)) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);

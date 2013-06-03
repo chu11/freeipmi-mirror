@@ -30,7 +30,6 @@
 #include "ipmi-config.h"
 #include "ipmi-config-map.h"
 #include "ipmi-config-tool-section.h"
-#include "ipmi-config-tool-utils.h"
 #include "ipmi-config-utils.h"
 #include "ipmi-config-validate.h"
 
@@ -195,7 +194,7 @@ enable_gratuitous_arps_checkout (const char *section_name,
   if ((ret = _get_bmc_generated_arp_control (state_data, section_name, &ac)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   ac.bmc_generated_gratuitous_arps ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -243,7 +242,7 @@ enable_arp_response_checkout (const char *section_name,
   if ((ret = _get_bmc_generated_arp_control (state_data, section_name, &ac)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   ac.bmc_generated_arp_responses ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -338,7 +337,7 @@ gratuitous_arp_interval_checkout (const char *section_name,
     }
   gratuitous_arp_interval = val;
 
-  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
                                                                kv,
                                                                gratuitous_arp_interval) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);

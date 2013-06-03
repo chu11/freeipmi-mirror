@@ -29,7 +29,7 @@
 #include <assert.h>
 
 #include "ipmi-config-tool-section.h"
-#include "ipmi-config-tool-utils.h"
+#include "ipmi-config-utils.h"
 
 #include "freeipmi-portability.h"
 
@@ -365,7 +365,7 @@ ipmi_config_section_multi_channel_add_key (pstdout_state_t pstate,
 }
 
 int
-ipmi_config_section_add_keyvalue (pstdout_state_t pstate,
+ipmi_config_section_add_keyvalue (ipmi_config_state_data_t *state_data,
                                   struct ipmi_config_section *section,
                                   struct ipmi_config_key *key,
                                   const char *value_input,
@@ -373,12 +373,13 @@ ipmi_config_section_add_keyvalue (pstdout_state_t pstate,
 {
   struct ipmi_config_keyvalue *kv = NULL;
 
+  assert (state_data);
   assert (section);
   assert (key);
 
   if (!(kv = malloc (sizeof (struct ipmi_config_keyvalue))))
     {
-      pstdout_perror (pstate, "malloc");
+      pstdout_perror (state_data->pstate, "malloc");
       goto cleanup;
     }
   memset (kv, '\0', sizeof (struct ipmi_config_keyvalue));
@@ -390,7 +391,7 @@ ipmi_config_section_add_keyvalue (pstdout_state_t pstate,
     {
       if (!(kv->value_input = strdup (value_input)))
         {
-          pstdout_perror (pstate, "strdup");
+          pstdout_perror (state_data->pstate, "strdup");
           goto cleanup;
         }
     }
@@ -399,7 +400,7 @@ ipmi_config_section_add_keyvalue (pstdout_state_t pstate,
     {
       if (!(kv->value_output = strdup (value_output)))
         {
-          pstdout_perror (pstate, "strdup");
+          pstdout_perror (state_data->pstate, "strdup");
           goto cleanup;
         }
     }
@@ -448,10 +449,11 @@ ipmi_config_section_update_keyvalue_input (pstdout_state_t pstate,
 }
 
 int
-ipmi_config_section_update_keyvalue_output (pstdout_state_t pstate,
+ipmi_config_section_update_keyvalue_output (ipmi_config_state_data_t *state_data,
                                             struct ipmi_config_keyvalue *keyvalue,
                                             const char *value_output)
 {
+  assert (state_data);
   assert (keyvalue);
   assert (!keyvalue->value_output);
 
@@ -459,7 +461,7 @@ ipmi_config_section_update_keyvalue_output (pstdout_state_t pstate,
     {
       if (!(keyvalue->value_output = strdup (value_output)))
         {
-          pstdout_perror (pstate, "strdup");
+          pstdout_perror (state_data->pstate, "strdup");
           return (-1);
         }
     }
@@ -468,12 +470,13 @@ ipmi_config_section_update_keyvalue_output (pstdout_state_t pstate,
 }
 
 int
-ipmi_config_section_update_keyvalue_output_unsigned_int (pstdout_state_t pstate,
+ipmi_config_section_update_keyvalue_output_unsigned_int (ipmi_config_state_data_t *state_data,
                                                          struct ipmi_config_keyvalue *keyvalue,
                                                          unsigned int value_output)
 {
   char buf[IPMI_CONFIG_PARSE_BUFLEN];
 
+  assert (state_data);
   assert (keyvalue);
   assert (!keyvalue->value_output);
 
@@ -481,7 +484,7 @@ ipmi_config_section_update_keyvalue_output_unsigned_int (pstdout_state_t pstate,
 
   if (!(keyvalue->value_output = strdup (buf)))
     {
-      pstdout_perror (pstate, "strdup");
+      pstdout_perror (state_data->pstate, "strdup");
       return (-1);
     }
 
@@ -489,12 +492,13 @@ ipmi_config_section_update_keyvalue_output_unsigned_int (pstdout_state_t pstate,
 }
 
 int
-ipmi_config_section_update_keyvalue_output_hex (pstdout_state_t pstate,
+ipmi_config_section_update_keyvalue_output_hex (ipmi_config_state_data_t *state_data,
                                                 struct ipmi_config_keyvalue *keyvalue,
                                                 unsigned int value_output)
 {
   char buf[IPMI_CONFIG_PARSE_BUFLEN];
 
+  assert (state_data);
   assert (keyvalue);
   assert (!keyvalue->value_output);
 
@@ -502,7 +506,7 @@ ipmi_config_section_update_keyvalue_output_hex (pstdout_state_t pstate,
 
   if (!(keyvalue->value_output = strdup (buf)))
     {
-      pstdout_perror (pstate, "strdup");
+      pstdout_perror (state_data->pstate, "strdup");
       return (-1);
     }
 
@@ -510,12 +514,13 @@ ipmi_config_section_update_keyvalue_output_hex (pstdout_state_t pstate,
 }
 
 int
-ipmi_config_section_update_keyvalue_output_double (pstdout_state_t pstate,
+ipmi_config_section_update_keyvalue_output_double (ipmi_config_state_data_t *state_data,
                                                    struct ipmi_config_keyvalue *keyvalue,
                                                    double value_output)
 {
   char buf[IPMI_CONFIG_PARSE_BUFLEN];
 
+  assert (state_data);
   assert (keyvalue);
   assert (!keyvalue->value_output);
 
@@ -523,7 +528,7 @@ ipmi_config_section_update_keyvalue_output_double (pstdout_state_t pstate,
 
   if (!(keyvalue->value_output = strdup (buf)))
     {
-      pstdout_perror (pstate, "strdup");
+      pstdout_perror (state_data->pstate, "strdup");
       return (-1);
     }
 
@@ -626,8 +631,7 @@ ipmi_config_sections_validate_keyvalue_inputs (pstdout_state_t pstate,
 }
 
 int
-ipmi_config_sections_insert_keyvalues (pstdout_state_t pstate,
-                                       struct ipmi_config_section *sections,
+ipmi_config_sections_insert_keyvalues (ipmi_config_state_data_t *state_data,
                                        struct ipmi_config_keypair *keypairs)
 {
   struct ipmi_config_section *s;
@@ -636,15 +640,15 @@ ipmi_config_sections_insert_keyvalues (pstdout_state_t pstate,
   struct ipmi_config_keypair *kp;
   int rv = 0;
 
-  assert (sections);
+  assert (state_data);
   assert (keypairs);
 
   kp = keypairs;
   while (kp)
     {
-      if (!(s = ipmi_config_find_section (sections, kp->section_name)))
+      if (!(s = ipmi_config_find_section (state_data, kp->section_name)))
         {
-          pstdout_fprintf (pstate,
+          pstdout_fprintf (state_data->pstate,
                            stderr,
                            "Unknown section `%s'\n",
                            kp->section_name);
@@ -654,7 +658,7 @@ ipmi_config_sections_insert_keyvalues (pstdout_state_t pstate,
 
       if (!(k = ipmi_config_find_key (s, kp->key_name)))
         {
-          pstdout_fprintf (pstate,
+          pstdout_fprintf (state_data->pstate,
                            stderr,
                            "Unknown key `%s' in section `%s'\n",
                            kp->key_name,
@@ -665,7 +669,7 @@ ipmi_config_sections_insert_keyvalues (pstdout_state_t pstate,
 
       if ((kv = ipmi_config_find_keyvalue (s, kp->key_name)))
         {
-          if (ipmi_config_section_update_keyvalue_input (pstate,
+          if (ipmi_config_section_update_keyvalue_input (state_data->pstate,
                                                          kv,
                                                          kp->value_input) < 0)
             {
@@ -675,7 +679,7 @@ ipmi_config_sections_insert_keyvalues (pstdout_state_t pstate,
         }
       else
         {
-          if (ipmi_config_section_add_keyvalue (pstate,
+          if (ipmi_config_section_add_keyvalue (state_data,
                                                 s,
                                                 k,
                                                 kp->value_input,

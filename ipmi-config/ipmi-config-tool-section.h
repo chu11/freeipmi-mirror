@@ -73,7 +73,7 @@ int ipmi_config_section_multi_channel_add_key (pstdout_state_t pstate,
                                                uint8_t *channel_numbers,
                                                unsigned int channel_numbers_count);
 
-int ipmi_config_section_add_keyvalue (pstdout_state_t pstate,
+int ipmi_config_section_add_keyvalue (ipmi_config_state_data_t *state_data,
                                       struct ipmi_config_section *section,
                                       struct ipmi_config_key *key,
                                       const char *value_input,
@@ -83,19 +83,19 @@ int ipmi_config_section_update_keyvalue_input (pstdout_state_t pstate,
                                                struct ipmi_config_keyvalue *keyvalue,
                                                const char *value_input);
 
-int ipmi_config_section_update_keyvalue_output (pstdout_state_t pstate,
+int ipmi_config_section_update_keyvalue_output (ipmi_config_state_data_t *state_data,
                                                 struct ipmi_config_keyvalue *keyvalue,
                                                 const char *value_output);
 
-int ipmi_config_section_update_keyvalue_output_unsigned_int (pstdout_state_t pstate,
+int ipmi_config_section_update_keyvalue_output_unsigned_int (ipmi_config_state_data_t *state_data,
                                                              struct ipmi_config_keyvalue *keyvalue,
                                                              unsigned int value_output);
 
-int ipmi_config_section_update_keyvalue_output_hex (pstdout_state_t pstate,
+int ipmi_config_section_update_keyvalue_output_hex (ipmi_config_state_data_t *state_data,
                                                     struct ipmi_config_keyvalue *keyvalue,
                                                     unsigned int value_output);
 
-int ipmi_config_section_update_keyvalue_output_double (pstdout_state_t pstate,
+int ipmi_config_section_update_keyvalue_output_double (ipmi_config_state_data_t *state_data,
                                                        struct ipmi_config_keyvalue *keyvalue,
                                                        double value_output);
 
@@ -105,8 +105,7 @@ int ipmi_config_sections_validate_keyvalue_inputs (pstdout_state_t pstate,
                                                    void *arg);
 
 /* returns -1 on error, 0 on success */
-int ipmi_config_sections_insert_keyvalues (pstdout_state_t pstate,
-                                           struct ipmi_config_section *sections,
+int ipmi_config_sections_insert_keyvalues (ipmi_config_state_data_t *state_data,
                                            struct ipmi_config_keypair *keypairs);
 
 ipmi_config_err_t ipmi_config_output_sections_list (pstdout_state_t pstate,

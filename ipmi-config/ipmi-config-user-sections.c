@@ -30,7 +30,6 @@
 #include "ipmi-config.h"
 #include "ipmi-config-map.h"
 #include "ipmi-config-tool-section.h"
-#include "ipmi-config-tool-utils.h"
 #include "ipmi-config-utils.h"
 #include "ipmi-config-validate.h"
 
@@ -313,8 +312,7 @@ _set_user_access (ipmi_config_state_data_t *state_data,
    * retrieved.  So if we're committing, we have to get the session
    * limit value and commit it each time.
    */
-  if ((section = ipmi_config_find_section (state_data->sections,
-                                           section_name)))
+  if ((section = ipmi_config_find_section (state_data, section_name)))
     {
       char keynametmp[IPMI_CONFIG_MAX_KEY_NAME_LEN + 1];
       int channel_flag = 0;
@@ -500,14 +498,14 @@ username_checkout (const char *section_name,
       && userid == 1
       && same (kv->value_input, "anonymous"))
     {
-      if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+      if (ipmi_config_section_update_keyvalue_output (state_data,
                                                       kv,
                                                       "anonymous") < 0)
         return (IPMI_CONFIG_ERR_FATAL_ERROR);
     }
   else
     {
-      if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+      if (ipmi_config_section_update_keyvalue_output (state_data,
                                                       kv,
                                                       username) < 0)
         return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -804,7 +802,7 @@ password_checkout (const char *section_name,
         str = "<something else>";
     }
 
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   str) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -1027,7 +1025,7 @@ password20_checkout (const char *section_name,
         str = "<something else>";
     }
 
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   str) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -1142,21 +1140,21 @@ enable_user_checkout (const char *section_name,
    */
   if (ua.user_id_enable_status == IPMI_USER_ID_ENABLE_STATUS_ENABLED)
     {
-      if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+      if (ipmi_config_section_update_keyvalue_output (state_data,
                                                       kv,
                                                       "Yes") < 0)
         return (IPMI_CONFIG_ERR_FATAL_ERROR);
     }
   else if (ua.user_id_enable_status == IPMI_USER_ID_ENABLE_STATUS_DISABLED)
     {
-      if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+      if (ipmi_config_section_update_keyvalue_output (state_data,
                                                       kv,
                                                       "No") < 0)
         return (IPMI_CONFIG_ERR_FATAL_ERROR);
     }
   else /* ua.user_id_enable_status == IPMI_USER_ID_ENABLE_STATUS_UNSPECIFIED */
     {
-      if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+      if (ipmi_config_section_update_keyvalue_output (state_data,
                                                       kv,
                                                       "") < 0)
         return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -1411,7 +1409,7 @@ lan_enable_ipmi_messaging_checkout (const char *section_name,
     {
       if (username_not_set_yet)
         {
-          if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+          if (ipmi_config_section_update_keyvalue_output (state_data,
                                                           kv,
                                                           IPMI_CONFIG_USERNAME_NOT_SET_YET_STR) < 0)
             return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -1421,7 +1419,7 @@ lan_enable_ipmi_messaging_checkout (const char *section_name,
         return (ret);
     }
 
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   ua.user_ipmi_messaging ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -1485,7 +1483,7 @@ lan_enable_link_auth_checkout (const char *section_name,
     {
       if (username_not_set_yet)
         {
-          if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+          if (ipmi_config_section_update_keyvalue_output (state_data,
                                                           kv,
                                                           IPMI_CONFIG_USERNAME_NOT_SET_YET_STR) < 0)
             return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -1495,7 +1493,7 @@ lan_enable_link_auth_checkout (const char *section_name,
         return (ret);
     }
 
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   ua.user_link_authentication ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -1563,7 +1561,7 @@ lan_enable_restricted_to_callback_checkout (const char *section_name,
     {
       if (username_not_set_yet)
         {
-          if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+          if (ipmi_config_section_update_keyvalue_output (state_data,
                                                           kv,
                                                           IPMI_CONFIG_USERNAME_NOT_SET_YET_STR) < 0)
             return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -1573,7 +1571,7 @@ lan_enable_restricted_to_callback_checkout (const char *section_name,
         return (ret);
     }
 
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   ua.user_restricted_to_callback ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -1641,7 +1639,7 @@ lan_privilege_limit_checkout (const char *section_name,
     {
       if (username_not_set_yet)
         {
-          if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+          if (ipmi_config_section_update_keyvalue_output (state_data,
                                                           kv,
                                                           IPMI_CONFIG_USERNAME_NOT_SET_YET_STR) < 0)
             return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -1651,7 +1649,7 @@ lan_privilege_limit_checkout (const char *section_name,
         return (ret);
     }
 
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   get_privilege_limit_string (ua.privilege_limit)) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -1709,7 +1707,7 @@ lan_session_limit_checkout (const char *section_name,
   state_data = (ipmi_config_state_data_t *)arg;
 
   /* Special case: There is no way to check out this value */
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   "") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -1815,7 +1813,7 @@ sol_payload_access_checkout (const char *section_name,
           && (ipmi_check_completion_code (obj_cmd_rs,
                                           IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
         {
-          if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+          if (ipmi_config_section_update_keyvalue_output (state_data,
                                                           kv,
                                                           IPMI_CONFIG_USERNAME_NOT_SET_YET_STR) < 0)
             return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -1840,7 +1838,7 @@ sol_payload_access_checkout (const char *section_name,
       goto cleanup;
     }
 
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   val ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -1957,7 +1955,7 @@ serial_enable_ipmi_messaging_checkout (const char *section_name,
     {
       if (username_not_set_yet)
         {
-          if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+          if (ipmi_config_section_update_keyvalue_output (state_data,
                                                           kv,
                                                           IPMI_CONFIG_USERNAME_NOT_SET_YET_STR) < 0)
             return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -1967,7 +1965,7 @@ serial_enable_ipmi_messaging_checkout (const char *section_name,
         return (ret);
     }
 
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   ua.user_ipmi_messaging ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -2035,7 +2033,7 @@ serial_enable_link_auth_checkout (const char *section_name,
     {
       if (username_not_set_yet)
         {
-          if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+          if (ipmi_config_section_update_keyvalue_output (state_data,
                                                           kv,
                                                           IPMI_CONFIG_USERNAME_NOT_SET_YET_STR) < 0)
             return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -2045,7 +2043,7 @@ serial_enable_link_auth_checkout (const char *section_name,
         return (ret);
     }
 
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   ua.user_link_authentication ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -2113,7 +2111,7 @@ serial_enable_restricted_to_callback_checkout (const char *section_name,
     {
       if (username_not_set_yet)
         {
-          if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+          if (ipmi_config_section_update_keyvalue_output (state_data,
                                                           kv,
                                                           IPMI_CONFIG_USERNAME_NOT_SET_YET_STR) < 0)
             return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -2123,7 +2121,7 @@ serial_enable_restricted_to_callback_checkout (const char *section_name,
         return (ret);
     }
 
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   ua.user_restricted_to_callback ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -2191,7 +2189,7 @@ serial_privilege_limit_checkout (const char *section_name,
     {
       if (username_not_set_yet)
         {
-          if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+          if (ipmi_config_section_update_keyvalue_output (state_data,
                                                           kv,
                                                           IPMI_CONFIG_USERNAME_NOT_SET_YET_STR) < 0)
             return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -2201,7 +2199,7 @@ serial_privilege_limit_checkout (const char *section_name,
         return (ret);
     }
 
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   get_privilege_limit_string (ua.privilege_limit)) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -2259,7 +2257,7 @@ serial_session_limit_checkout (const char *section_name,
   state_data = (ipmi_config_state_data_t *)arg;
 
   /* Special case: There is no way to check out this value */
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   "") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);

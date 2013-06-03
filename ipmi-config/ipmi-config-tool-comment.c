@@ -30,7 +30,7 @@
 #include <assert.h>
 
 #include "ipmi-config-tool-comment.h"
-#include "ipmi-config-tool-utils.h"
+#include "ipmi-config-utils.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
@@ -43,8 +43,7 @@
 #define FORMAT_COMMENT_COLUMN_WIDTH 80
 
 static int
-_format_comment (pstdout_state_t pstate,
-                 char *in,
+_format_comment (char *in,
                  char *out,
                  unsigned int outsize)
 {
@@ -114,7 +113,7 @@ _format_comment (pstdout_state_t pstate,
 }
 
 int
-ipmi_config_section_comments (pstdout_state_t pstate,
+ipmi_config_section_comments (ipmi_config_state_data_t *state_data,
                               const char *section_name,
                               const char *in,
                               FILE *fp)
@@ -126,6 +125,7 @@ ipmi_config_section_comments (pstdout_state_t pstate,
   char *tok;
   int rv = -1;
 
+  assert (state_data);
   assert (section_name);
   assert (in);
   assert (fp);
@@ -133,7 +133,7 @@ ipmi_config_section_comments (pstdout_state_t pstate,
   if (!(inbuf = strdup (in)))
     goto cleanup;
 
-  ipmi_config_pstdout_fprintf (pstate,
+  ipmi_config_pstdout_fprintf (state_data,
                                fp,
                                "#\n");
 
@@ -143,32 +143,30 @@ ipmi_config_section_comments (pstdout_state_t pstate,
             "Section %s Comments",
             section_name);
 
-  if (_format_comment (pstate,
-                       section_name_buf,
+  if (_format_comment (section_name_buf,
                        buf,
                        FORMAT_COMMENT_BUFLEN) < 0)
     goto cleanup;
-  ipmi_config_pstdout_fprintf (pstate,
+  ipmi_config_pstdout_fprintf (state_data,
                                fp,
                                "%s",
                                buf);
-  ipmi_config_pstdout_fprintf (pstate,
+  ipmi_config_pstdout_fprintf (state_data,
                                fp,
                                "#\n");
   
   tok = strtok_r (inbuf, "\n", &tokbuf);
   while (tok)
     {
-      if (_format_comment (pstate,
-                           tok,
+      if (_format_comment (tok,
                            buf,
                            FORMAT_COMMENT_BUFLEN) < 0)
         goto cleanup;
-      ipmi_config_pstdout_fprintf (pstate,
+      ipmi_config_pstdout_fprintf (state_data,
                                    fp,
                                    "%s",
                                    buf);
-      ipmi_config_pstdout_fprintf (pstate,
+      ipmi_config_pstdout_fprintf (state_data,
                                    fp,
                                    "#\n");
 

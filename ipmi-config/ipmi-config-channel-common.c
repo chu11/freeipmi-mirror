@@ -30,7 +30,6 @@
 #include "ipmi-config.h"
 #include "ipmi-config-map.h"
 #include "ipmi-config-tool-section.h"
-#include "ipmi-config-tool-utils.h"
 #include "ipmi-config-utils.h"
 #include "ipmi-config-validate.h"
 
@@ -358,7 +357,7 @@ _access_mode_checkout (const char *section_name,
                                   &ch)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   channel_access_mode_string (ch.access_mode)) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -421,7 +420,7 @@ _enable_user_level_authentication_checkout (const char *section_name,
     return (ret);
 
   /* achu: Backwards values in this command are handled above */
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   ch.user_level_authentication ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -495,7 +494,7 @@ _enable_per_message_authentication_checkout (const char *section_name,
     return (ret);
 
   /* achu: Backwards values in this command are handled above */
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   ch.per_message_authentication ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -558,7 +557,7 @@ _enable_pef_alerting_checkout (const char *section_name,
     return (ret);
 
   /* achu: Backwards values in this command are handled above */
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   ch.pef_alerting ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -620,7 +619,7 @@ _channel_privilege_limit_checkout (const char *section_name,
                                   &ch)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   privilege_level_string (ch.channel_privilege_limit)) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);

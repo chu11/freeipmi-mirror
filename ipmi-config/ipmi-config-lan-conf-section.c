@@ -30,7 +30,6 @@
 #include "ipmi-config.h"
 #include "ipmi-config-map.h"
 #include "ipmi-config-tool-section.h"
-#include "ipmi-config-tool-utils.h"
 #include "ipmi-config-utils.h"
 #include "ipmi-config-validate.h"
 
@@ -122,7 +121,7 @@ ip_address_source_checkout (const char *section_name,
     }
   ip_address_source = val;
   
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   ip_address_source_string (ip_address_source)) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -270,7 +269,7 @@ ip_address_checkout (const char *section_name,
             ip_address_bytes[2],
             ip_address_bytes[3]);
 
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   ip_address_str) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -299,7 +298,7 @@ ip_address_commit (const char *section_name,
   
   state_data = (ipmi_config_state_data_t *)arg;
 
-  if (ipmi_config_ipv4_address_string2int (state_data->pstate,
+  if (ipmi_config_ipv4_address_string2int (state_data,
                                            kv->value_input,
                                            &ip_address_val) < 0)
     goto cleanup;
@@ -426,7 +425,7 @@ mac_address_checkout (const char *section_name,
             mac_address_bytes[4],
             mac_address_bytes[5]);
 
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   mac_address_str) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -456,7 +455,7 @@ mac_address_commit (const char *section_name,
   
   state_data = (ipmi_config_state_data_t *)arg;
 
-  if (ipmi_config_mac_address_string2int (state_data->pstate,
+  if (ipmi_config_mac_address_string2int (state_data,
                                           kv->value_input,
                                           &mac_address_val) < 0)
     goto cleanup;
@@ -581,7 +580,7 @@ subnet_mask_checkout (const char *section_name,
             subnet_mask_bytes[2],
             subnet_mask_bytes[3]);
 
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   subnet_mask_str) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -610,7 +609,7 @@ subnet_mask_commit (const char *section_name,
   
   state_data = (ipmi_config_state_data_t *)arg;
 
-  if (ipmi_config_ipv4_address_string2int (state_data->pstate,
+  if (ipmi_config_ipv4_address_string2int (state_data,
                                            kv->value_input,
                                            &subnet_mask_val) < 0)
     goto cleanup;
@@ -735,7 +734,7 @@ default_gateway_address_checkout (const char *section_name,
             ip_address_bytes[2],
             ip_address_bytes[3]);
 
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   ip_address_str) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -765,7 +764,7 @@ default_gateway_address_commit (const char *section_name,
   
   state_data = (ipmi_config_state_data_t *)arg;
 
-  if (ipmi_config_ipv4_address_string2int (state_data->pstate,
+  if (ipmi_config_ipv4_address_string2int (state_data,
                                            kv->value_input,
                                            &ip_address_val) < 0)
     goto cleanup;
@@ -892,7 +891,7 @@ default_gateway_mac_address_checkout (const char *section_name,
             mac_address_bytes[4],
             mac_address_bytes[5]);
 
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   mac_address_str) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -922,7 +921,7 @@ default_gateway_mac_address_commit (const char *section_name,
   
   state_data = (ipmi_config_state_data_t *)arg;
 
-  if (ipmi_config_mac_address_string2int (state_data->pstate,
+  if (ipmi_config_mac_address_string2int (state_data,
                                           kv->value_input,
                                           &mac_address_val) < 0)
     goto cleanup;
@@ -1047,7 +1046,7 @@ backup_gateway_address_checkout (const char *section_name,
             ip_address_bytes[2],
             ip_address_bytes[3]);
 
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   ip_address_str) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -1076,7 +1075,7 @@ backup_gateway_address_commit (const char *section_name,
   
   state_data = (ipmi_config_state_data_t *)arg;
 
-  if (ipmi_config_ipv4_address_string2int (state_data->pstate,
+  if (ipmi_config_ipv4_address_string2int (state_data,
                                            kv->value_input,
                                            &ip_address_val) < 0)
     goto cleanup;
@@ -1203,7 +1202,7 @@ backup_gateway_mac_address_checkout (const char *section_name,
             mac_address_bytes[4],
             mac_address_bytes[5]);
 
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   mac_address_str) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -1232,7 +1231,7 @@ backup_gateway_mac_address_commit (const char *section_name,
   
   state_data = (ipmi_config_state_data_t *)arg;
 
-  if (ipmi_config_mac_address_string2int (state_data->pstate,
+  if (ipmi_config_mac_address_string2int (state_data,
                                           kv->value_input,
                                           &mac_address_val) < 0)
     goto cleanup;
@@ -1433,7 +1432,7 @@ vlan_id_checkout (const char *section_name,
   if ((ret = _get_vlan_id (state_data, section_name, &vi)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
                                                                kv,
                                                                vi.vlan_id) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -1495,7 +1494,7 @@ vlan_id_enable_checkout (const char *section_name,
   if ((ret = _get_vlan_id (state_data, section_name, &vi)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   vi.vlan_id_enable ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -1593,7 +1592,7 @@ vlan_priority_checkout (const char *section_name,
     }
   vlan_priority = val;
 
-  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
                                                                kv,
                                                                val) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -1839,7 +1838,7 @@ ipv4_header_time_to_live_checkout (const char *section_name,
   if ((ret = _get_ipv4_header_parameters (state_data, section_name, &ihp)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
   
-  if (ipmi_config_section_update_keyvalue_output_hex (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output_hex (state_data,
                                                       kv,
                                                       ihp.time_to_live) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -1889,7 +1888,7 @@ ipv4_header_flags_checkout (const char *section_name,
   if ((ret = _get_ipv4_header_parameters (state_data, section_name, &ihp)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
   
-  if (ipmi_config_section_update_keyvalue_output_hex (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output_hex (state_data,
                                                       kv,
                                                       ihp.flags) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -1939,7 +1938,7 @@ ipv4_header_type_of_service_checkout (const char *section_name,
   if ((ret = _get_ipv4_header_parameters (state_data, section_name, &ihp)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
   
-  if (ipmi_config_section_update_keyvalue_output_hex (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output_hex (state_data,
                                                       kv,
                                                       ihp.type_of_service) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -1989,7 +1988,7 @@ ipv4_header_precedence_checkout (const char *section_name,
   if ((ret = _get_ipv4_header_parameters (state_data, section_name, &ihp)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
   
-  if (ipmi_config_section_update_keyvalue_output_hex (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output_hex (state_data,
                                                       kv,
                                                       ihp.precedence) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -2086,7 +2085,7 @@ primary_rmcp_port_checkout (const char *section_name,
     }
   primary_rmcp_port_number = val;
 
-  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
                                                                kv,
                                                                primary_rmcp_port_number) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -2219,7 +2218,7 @@ secondary_rmcp_port_checkout (const char *section_name,
     }
   secondary_rmcp_port_number = val;
 
-  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
                                                                kv,
                                                                secondary_rmcp_port_number) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);

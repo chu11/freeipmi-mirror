@@ -25,18 +25,17 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#include <assert.h>
 
 #include "ipmi-config-tool-parse.h"
 #include "ipmi-config-tool-section.h"
-#include "ipmi-config-tool-utils.h"
+#include "ipmi-config-utils.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
 
 ipmi_config_err_t
-ipmi_config_parse (pstdout_state_t pstate,
-                   struct ipmi_config_section *sections,
-                   struct ipmi_config_arguments *cmd_args,
+ipmi_config_parse (ipmi_config_state_data_t *state_data,
                    FILE *fp)
 {
   char buf[IPMI_CONFIG_PARSE_BUFLEN];
@@ -45,6 +44,8 @@ ipmi_config_parse (pstdout_state_t pstate,
   struct ipmi_config_key *key;
   char *str, *tok;
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+
+  assert (state_data);
 
   while (fgets (buf, IPMI_CONFIG_PARSE_BUFLEN, fp))
     {
@@ -56,8 +57,8 @@ ipmi_config_parse (pstdout_state_t pstate,
 
       if (!str)
         {
-          if (cmd_args->common_args.debug)
-            pstdout_fprintf (pstate,
+          if (state_data->prog_data->args->common_args.debug)
+            pstdout_fprintf (state_data->pstate,
                              stderr,
                              "%d: empty line\n",
                              line_num);
@@ -66,8 +67,8 @@ ipmi_config_parse (pstdout_state_t pstate,
 
       if (str[0] == '#')
         {
-          if (cmd_args->common_args.debug)
-            pstdout_fprintf (pstate,
+          if (state_data->prog_data->args->common_args.debug)
+            pstdout_fprintf (state_data->pstate,
                              stderr,
                              "Comment on line %d\n",
                              line_num);
@@ -78,25 +79,25 @@ ipmi_config_parse (pstdout_state_t pstate,
         {
           if (!(tok = strtok (NULL, " \t\n")))
             {
-              pstdout_fprintf (pstate,
+              pstdout_fprintf (state_data->pstate,
                                stderr,
                                "FATAL: Error parsing line number %d\n",
                                line_num);
               goto cleanup;
             }
 
-          if (!(section = ipmi_config_find_section (sections,
+          if (!(section = ipmi_config_find_section (state_data,
                                                     tok)))
             {
-              pstdout_fprintf (pstate,
+              pstdout_fprintf (state_data->pstate,
                                stderr,
                                "Unknown section `%s'\n",
                                tok);
               goto cleanup;
             }
 
-          if (cmd_args->common_args.debug)
-            pstdout_fprintf (pstate,
+          if (state_data->prog_data->args->common_args.debug)
+            pstdout_fprintf (state_data->pstate,
                              stderr,
                              "Entering section `%s'\n",
                              section->section_name);
@@ -109,15 +110,15 @@ ipmi_config_parse (pstdout_state_t pstate,
         {
           if (!section)
             {
-              pstdout_fprintf (pstate,
+              pstdout_fprintf (state_data->pstate,
                                stderr,
                                "FATAL: encountered `%s' without a matching Section\n",
                                str);
               goto cleanup;
             }
 
-          if (cmd_args->common_args.debug)
-            pstdout_fprintf (pstate,
+          if (state_data->prog_data->args->common_args.debug)
+            pstdout_fprintf (state_data->pstate,
                              stderr,
                              "Leaving section `%s'\n",
                              section->section_name);
@@ -129,7 +130,7 @@ ipmi_config_parse (pstdout_state_t pstate,
 
       if (!section)
         {
-          pstdout_fprintf (pstate,
+          pstdout_fprintf (state_data->pstate,
                            stderr,
                            "FATAL: Key `%s' not inside a valid Section\n",
                            str);
@@ -139,7 +140,7 @@ ipmi_config_parse (pstdout_state_t pstate,
       if (!(key = ipmi_config_find_key (section,
                                         str)))
         {
-          pstdout_fprintf (pstate,
+          pstdout_fprintf (state_data->pstate,
                            stderr,
                            "Unknown key `%s' in section `%s'\n",
                            str,
@@ -151,8 +152,8 @@ ipmi_config_parse (pstdout_state_t pstate,
       if (!tok)
         tok = "";
 
-      if (cmd_args->common_args.debug)
-        pstdout_fprintf (pstate,
+      if (state_data->prog_data->args->common_args.debug)
+        pstdout_fprintf (state_data->pstate,
                          stderr,
                          "Parsed `%s:%s=%s'\n",
                          section->section_name,
@@ -162,7 +163,7 @@ ipmi_config_parse (pstdout_state_t pstate,
       if (ipmi_config_find_keyvalue (section,
                                      key->key_name))
         {
-          pstdout_fprintf (pstate,
+          pstdout_fprintf (state_data->pstate,
                            stderr,
                            "Key '%s' specified twice in section '%s'\n",
                            key->key_name,
@@ -170,7 +171,7 @@ ipmi_config_parse (pstdout_state_t pstate,
           goto cleanup;
         }
 
-      if (ipmi_config_section_add_keyvalue (pstate,
+      if (ipmi_config_section_add_keyvalue (state_data,
                                             section,
                                             key,
                                             tok,

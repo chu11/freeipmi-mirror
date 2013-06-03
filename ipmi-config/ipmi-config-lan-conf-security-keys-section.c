@@ -201,7 +201,7 @@ k_r_checkout (const char *section_name,
   
   k_r[IPMI_MAX_K_R_LENGTH] = '\0';
   
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   (char *)k_r) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -284,7 +284,7 @@ k_g_checkout (const char *section_name,
 
       if (!memcmp (kv_k_g, k_g, IPMI_MAX_K_G_LENGTH))
         {
-          if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+          if (ipmi_config_section_update_keyvalue_output (state_data,
                                                           kv,
                                                           kv->value_input) < 0)
             return (IPMI_CONFIG_ERR_FATAL_ERROR);
@@ -298,7 +298,7 @@ k_g_checkout (const char *section_name,
   if (!format_kg (k_g_str, IPMI_MAX_K_G_LENGTH*2+3, k_g))
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
-  if (ipmi_config_section_update_keyvalue_output (state_data->pstate,
+  if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   k_g_str) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);

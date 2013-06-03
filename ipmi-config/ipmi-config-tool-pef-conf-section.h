@@ -22,126 +22,77 @@
 #include <freeipmi/freeipmi.h>
 
 #include "ipmi-config.h"
-#include "pstdout.h"
 
-ipmi_config_err_t enable_pef_checkout (pstdout_state_t pstate,
-                                       struct ipmi_config_keyvalue *kv,
-                                       ipmi_ctx_t ipmi_ctx,
-                                       struct ipmi_config_arguments *cmd_args);
+ipmi_config_err_t enable_pef_checkout (ipmi_config_state_data_t *state_data,
+                                       struct ipmi_config_keyvalue *kv);
 
-ipmi_config_err_t enable_pef_commit (pstdout_state_t pstate,
-                                     const struct ipmi_config_keyvalue *kv,
-                                     ipmi_ctx_t ipmi_ctx,
-                                     struct ipmi_config_arguments *cmd_args);
+ipmi_config_err_t enable_pef_commit (ipmi_config_state_data_t *state_data,
+                                     const struct ipmi_config_keyvalue *kv);
 
-ipmi_config_err_t enable_pef_event_messages_checkout (pstdout_state_t pstate,
-                                                      struct ipmi_config_keyvalue *kv,
-                                                      ipmi_ctx_t ipmi_ctx,
-                                                      struct ipmi_config_arguments *cmd_args);
+ipmi_config_err_t enable_pef_event_messages_checkout (ipmi_config_state_data_t *state_data,
+                                                      struct ipmi_config_keyvalue *kv);
 
-ipmi_config_err_t enable_pef_event_messages_commit (pstdout_state_t pstate,
-                                                    const struct ipmi_config_keyvalue *kv,
-                                                    ipmi_ctx_t ipmi_ctx,
-                                                    struct ipmi_config_arguments *cmd_args);
+ipmi_config_err_t enable_pef_event_messages_commit (ipmi_config_state_data_t *state_data,
+                                                    const struct ipmi_config_keyvalue *kv);
 
-ipmi_config_err_t enable_pef_startup_delay_checkout (pstdout_state_t pstate,
-                                                     struct ipmi_config_keyvalue *kv,
-                                                     ipmi_ctx_t ipmi_ctx,
-                                                     struct ipmi_config_arguments *cmd_args);
+ipmi_config_err_t enable_pef_startup_delay_checkout (ipmi_config_state_data_t *state_data,
+                                                     struct ipmi_config_keyvalue *kv);
 
-ipmi_config_err_t enable_pef_startup_delay_commit (pstdout_state_t pstate,
-                                                   const struct ipmi_config_keyvalue *kv,
-                                                   ipmi_ctx_t ipmi_ctx,
-                                                   struct ipmi_config_arguments *cmd_args);
+ipmi_config_err_t enable_pef_startup_delay_commit (ipmi_config_state_data_t *state_data,
+                                                   const struct ipmi_config_keyvalue *kv);
 
-ipmi_config_err_t enable_pef_alert_startup_delay_checkout (pstdout_state_t pstate,
-                                                           struct ipmi_config_keyvalue *kv,
-                                                           ipmi_ctx_t ipmi_ctx,
-                                                           struct ipmi_config_arguments *cmd_args);
+ipmi_config_err_t enable_pef_alert_startup_delay_checkout (ipmi_config_state_data_t *state_data,
+                                                           struct ipmi_config_keyvalue *kv);
 
-ipmi_config_err_t enable_pef_alert_startup_delay_commit (pstdout_state_t pstate,
-                                                         const struct ipmi_config_keyvalue *kv,
-                                                         ipmi_ctx_t ipmi_ctx,
-                                                         struct ipmi_config_arguments *cmd_args);
+ipmi_config_err_t enable_pef_alert_startup_delay_commit (ipmi_config_state_data_t *state_data,
+                                                         const struct ipmi_config_keyvalue *kv);
 
-ipmi_config_err_t enable_alert_action_checkout (pstdout_state_t pstate,
-                                                struct ipmi_config_keyvalue *kv,
-                                                ipmi_ctx_t ipmi_ctx,
-                                                struct ipmi_config_arguments *cmd_args);
+ipmi_config_err_t enable_alert_action_checkout (ipmi_config_state_data_t *state_data,
+                                                struct ipmi_config_keyvalue *kv);
 
-ipmi_config_err_t enable_alert_action_commit (pstdout_state_t pstate,
-                                              const struct ipmi_config_keyvalue *kv,
-                                              ipmi_ctx_t ipmi_ctx,
-                                              struct ipmi_config_arguments *cmd_args);
+ipmi_config_err_t enable_alert_action_commit (ipmi_config_state_data_t *state_data,
+                                              const struct ipmi_config_keyvalue *kv);
 
-ipmi_config_err_t enable_power_down_action_checkout (pstdout_state_t pstate,
-                                                     struct ipmi_config_keyvalue *kv,
-                                                     ipmi_ctx_t ipmi_ctx,
-                                                     struct ipmi_config_arguments *cmd_args);
+ipmi_config_err_t enable_power_down_action_checkout (ipmi_config_state_data_t *state_data,
+                                                     struct ipmi_config_keyvalue *kv);
 
-ipmi_config_err_t enable_power_down_action_commit (pstdout_state_t pstate,
-                                                   const struct ipmi_config_keyvalue *kv,
-                                                   ipmi_ctx_t ipmi_ctx,
-                                                   struct ipmi_config_arguments *cmd_args);
+ipmi_config_err_t enable_power_down_action_commit (ipmi_config_state_data_t *state_data,
+                                                   const struct ipmi_config_keyvalue *kv);
 
-ipmi_config_err_t enable_reset_action_checkout (pstdout_state_t pstate,
-                                                struct ipmi_config_keyvalue *kv,
-                                                ipmi_ctx_t ipmi_ctx,
-                                                struct ipmi_config_arguments *cmd_args);
+ipmi_config_err_t enable_reset_action_checkout (ipmi_config_state_data_t *state_data,
+                                                struct ipmi_config_keyvalue *kv);
 
-ipmi_config_err_t enable_reset_action_commit (pstdout_state_t pstate,
-                                              const struct ipmi_config_keyvalue *kv,
-                                              ipmi_ctx_t ipmi_ctx,
-                                              struct ipmi_config_arguments *cmd_args);
+ipmi_config_err_t enable_reset_action_commit (ipmi_config_state_data_t *state_data,
+                                              const struct ipmi_config_keyvalue *kv);
 
-ipmi_config_err_t enable_power_cycle_action_checkout (pstdout_state_t pstate,
-                                                      struct ipmi_config_keyvalue *kv,
-                                                      ipmi_ctx_t ipmi_ctx,
-                                                      struct ipmi_config_arguments *cmd_args);
+ipmi_config_err_t enable_power_cycle_action_checkout (ipmi_config_state_data_t *state_data,
+                                                      struct ipmi_config_keyvalue *kv);
 
-ipmi_config_err_t enable_power_cycle_action_commit (pstdout_state_t pstate,
-                                                    const struct ipmi_config_keyvalue *kv,
-                                                    ipmi_ctx_t ipmi_ctx,
-                                                    struct ipmi_config_arguments *cmd_args);
+ipmi_config_err_t enable_power_cycle_action_commit (ipmi_config_state_data_t *state_data,
+                                                    const struct ipmi_config_keyvalue *kv);
 
-ipmi_config_err_t enable_oem_action_checkout (pstdout_state_t pstate,
-                                              struct ipmi_config_keyvalue *kv,
-                                              ipmi_ctx_t ipmi_ctx,
-                                              struct ipmi_config_arguments *cmd_args);
+ipmi_config_err_t enable_oem_action_checkout (ipmi_config_state_data_t *state_data,
+                                              struct ipmi_config_keyvalue *kv);
 
-ipmi_config_err_t enable_oem_action_commit (pstdout_state_t pstate,
-                                            const struct ipmi_config_keyvalue *kv,
-                                            ipmi_ctx_t ipmi_ctx,
-                                            struct ipmi_config_arguments *cmd_args);
+ipmi_config_err_t enable_oem_action_commit (ipmi_config_state_data_t *state_data,
+                                            const struct ipmi_config_keyvalue *kv);
 
-ipmi_config_err_t enable_diagnostic_interrupt_checkout (pstdout_state_t pstate,
-                                                        struct ipmi_config_keyvalue *kv,
-                                                        ipmi_ctx_t ipmi_ctx,
-                                                        struct ipmi_config_arguments *cmd_args);
+ipmi_config_err_t enable_diagnostic_interrupt_checkout (ipmi_config_state_data_t *state_data,
+                                                        struct ipmi_config_keyvalue *kv);
 
-ipmi_config_err_t enable_diagnostic_interrupt_commit (pstdout_state_t pstate,
-                                                      const struct ipmi_config_keyvalue *kv,
-                                                      ipmi_ctx_t ipmi_ctx,
-                                                      struct ipmi_config_arguments *cmd_args);
+ipmi_config_err_t enable_diagnostic_interrupt_commit (ipmi_config_state_data_t *state_data,
+                                                      const struct ipmi_config_keyvalue *kv);
 
-ipmi_config_err_t pef_startup_delay_checkout (pstdout_state_t pstate,
-                                              struct ipmi_config_keyvalue *kv,
-                                              ipmi_ctx_t ipmi_ctx,
-                                              struct ipmi_config_arguments *cmd_args);
+ipmi_config_err_t pef_startup_delay_checkout (ipmi_config_state_data_t *state_data,
+                                              struct ipmi_config_keyvalue *kv);
 
-ipmi_config_err_t pef_startup_delay_commit (pstdout_state_t pstate,
-                                            const struct ipmi_config_keyvalue *kv,
-                                            ipmi_ctx_t ipmi_ctx,
-                                            struct ipmi_config_arguments *cmd_args);
+ipmi_config_err_t pef_startup_delay_commit (ipmi_config_state_data_t *state_data,
+                                            const struct ipmi_config_keyvalue *kv);
 
-ipmi_config_err_t pef_alert_startup_delay_checkout (pstdout_state_t pstate,
-                                                    struct ipmi_config_keyvalue *kv,
-                                                    ipmi_ctx_t ipmi_ctx,
-                                                    struct ipmi_config_arguments *cmd_args);
+ipmi_config_err_t pef_alert_startup_delay_checkout (ipmi_config_state_data_t *state_data,
+                                                    struct ipmi_config_keyvalue *kv);
 
-ipmi_config_err_t pef_alert_startup_delay_commit (pstdout_state_t pstate,
-                                                  const struct ipmi_config_keyvalue *kv,
-                                                  ipmi_ctx_t ipmi_ctx,
-                                                  struct ipmi_config_arguments *cmd_args);
+ipmi_config_err_t pef_alert_startup_delay_commit (ipmi_config_state_data_t *state_data,
+                                                  const struct ipmi_config_keyvalue *kv);
 
 #endif /* IPMI_CONFIG_TOOL_PEF_CONF_SECTION_H */

@@ -31,15 +31,14 @@
 #include "ipmi-config-tool-checkout.h"
 #include "ipmi-config-tool-comment.h"
 #include "ipmi-config-tool-section.h"
-#include "ipmi-config-tool-utils.h"
+#include "ipmi-config-utils.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
 
 ipmi_config_err_t
-ipmi_config_checkout_section (pstdout_state_t pstate,
+ipmi_config_checkout_section (ipmi_config_state_data_t *state_data,
                               struct ipmi_config_section *section,
-                              struct ipmi_config_arguments *cmd_args,
                               int all_keys_if_none_specified,
                               FILE *fp,
                               unsigned int line_length,
@@ -50,8 +49,8 @@ ipmi_config_checkout_section (pstdout_state_t pstate,
   ipmi_config_err_t ret = IPMI_CONFIG_ERR_SUCCESS;
   ipmi_config_err_t this_ret;
 
+  assert (state_data);
   assert (section);
-  assert (cmd_args);
   assert (fp);
 
   /* if no keyvalues specified by user, we want to checkout all keys,
@@ -66,7 +65,7 @@ ipmi_config_checkout_section (pstdout_state_t pstate,
         {
           if (!(k->flags & IPMI_CONFIG_DO_NOT_CHECKOUT))
             {
-              if (ipmi_config_section_add_keyvalue (pstate,
+              if (ipmi_config_section_add_keyvalue (state_data,
                                                     section,
                                                     k,
                                                     NULL,
@@ -87,13 +86,13 @@ ipmi_config_checkout_section (pstdout_state_t pstate,
       && section->section_comment
       && all_keys_if_none_specified)
     {
-      if (ipmi_config_section_comments (pstate,
+      if (ipmi_config_section_comments (state_data,
                                         section->section_comment_section_name,
                                         section->section_comment,
                                         fp) < 0)
         {
-          if (cmd_args->common_args.debug)
-            pstdout_fprintf (pstate,
+          if (state_data->prog_data->args->common_args.debug)
+            pstdout_fprintf (state_data->pstate,
                              stderr,
                              "## Error: Comment output error\n");
           ret = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
@@ -103,7 +102,7 @@ ipmi_config_checkout_section (pstdout_state_t pstate,
   if (!line_length)
     line_length = IPMI_CONFIG_CHECKOUT_LINE_LEN;
 
-  ipmi_config_pstdout_fprintf (pstate,
+  ipmi_config_pstdout_fprintf (state_data,
                                fp,
                                "Section %s\n",
                                section->section_name);
@@ -116,7 +115,7 @@ ipmi_config_checkout_section (pstdout_state_t pstate,
 
       if (kv->key->flags & IPMI_CONFIG_UNDEFINED)
         {
-          if (ipmi_config_section_update_keyvalue_output (pstate,
+          if (ipmi_config_section_update_keyvalue_output (state_data,
                                                           kv,
                                                           "Undefined") < 0)
             this_ret = IPMI_CONFIG_ERR_FATAL_ERROR;
@@ -133,16 +132,16 @@ ipmi_config_checkout_section (pstdout_state_t pstate,
 
       if (IPMI_CONFIG_IS_NON_FATAL_ERROR (this_ret))
         {
-          if (cmd_args->verbose_count > 1)
+          if (state_data->prog_data->args->verbose_count > 1)
             {
               if (this_ret == IPMI_CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED)
-                ipmi_config_pstdout_fprintf (pstate,
+                ipmi_config_pstdout_fprintf (state_data,
                                              fp,
                                              "\t## Unable to checkout %s:%s : Not Supported\n",
                                              section->section_name,
                                              kv->key->key_name);
               else
-                ipmi_config_pstdout_fprintf (pstate,
+                ipmi_config_pstdout_fprintf (state_data,
                                              fp,
                                              "\t## Unable to checkout %s:%s\n",
                                              section->section_name,
@@ -161,28 +160,28 @@ ipmi_config_checkout_section (pstdout_state_t pstate,
               char *cptr;
 
               cptr = kv->key->description;
-              ipmi_config_pstdout_fprintf (pstate,
+              ipmi_config_pstdout_fprintf (state_data,
                                            fp,
                                            "\t## ");
               while (*cptr)
                 {
                   if (*cptr == '\n')
-                    ipmi_config_pstdout_fprintf (pstate,
+                    ipmi_config_pstdout_fprintf (state_data,
                                                  fp,
                                                  "\n\t## ");
                   else
-                    ipmi_config_pstdout_fprintf (pstate,
+                    ipmi_config_pstdout_fprintf (state_data,
                                                  fp,
                                                  "%c",
                                                  *cptr);
                   cptr++;
                 }
-              ipmi_config_pstdout_fprintf (pstate,
+              ipmi_config_pstdout_fprintf (state_data,
                                            fp,
                                            "\n");
             }
           else
-            ipmi_config_pstdout_fprintf (pstate,
+            ipmi_config_pstdout_fprintf (state_data,
                                          fp,
                                          "\t## %s\n",
                                          kv->key->description);
@@ -220,20 +219,20 @@ ipmi_config_checkout_section (pstdout_state_t pstate,
                                 "\t%s",
                                 kv->key->key_name);
 
-          ipmi_config_pstdout_fprintf (pstate,
+          ipmi_config_pstdout_fprintf (state_data,
                                        fp,
                                        "%s",
                                        obuf);
 
           while (key_len <= line_length)
             {
-              ipmi_config_pstdout_fprintf (pstate,
+              ipmi_config_pstdout_fprintf (state_data,
                                            fp,
                                            " ");
               key_len++;
             }
 
-          ipmi_config_pstdout_fprintf (pstate,
+          ipmi_config_pstdout_fprintf (state_data,
                                        fp,
                                        " %s\n",
                                        kv->value_output);
@@ -242,7 +241,7 @@ ipmi_config_checkout_section (pstdout_state_t pstate,
       kv = kv->next;
     }
 
-  ipmi_config_pstdout_fprintf (pstate,
+  ipmi_config_pstdout_fprintf (state_data,
                                fp,
                                "EndSection\n");
   rv = ret;
@@ -251,9 +250,7 @@ ipmi_config_checkout_section (pstdout_state_t pstate,
 }
 
 ipmi_config_err_t
-ipmi_config_checkout (pstdout_state_t pstate,
-                      struct ipmi_config_section *sections,
-                      struct ipmi_config_arguments *cmd_args,
+ipmi_config_checkout (ipmi_config_state_data_t *state_data,
                       int all_keys_if_none_specified,
                       FILE *fp,
                       unsigned int line_length,
@@ -263,19 +260,17 @@ ipmi_config_checkout (pstdout_state_t pstate,
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_SUCCESS;
   ipmi_config_err_t ret;
 
-  assert (sections);
-  assert (cmd_args);
+  assert (state_data);
   assert (fp);
 
-  s = sections;
+  s = state_data->sections;
   while (s)
     {
       if (!(s->flags & IPMI_CONFIG_DO_NOT_CHECKOUT)
           || !all_keys_if_none_specified)
         {
-          if ((ret = ipmi_config_checkout_section (pstate,
+          if ((ret = ipmi_config_checkout_section (state_data,
                                                    s,
-                                                   cmd_args,
                                                    all_keys_if_none_specified,
                                                    fp,
                                                    line_length,
