@@ -31,7 +31,6 @@
 #include "ipmi-config-map.h"
 #include "ipmi-config-tool-section.h"
 #include "ipmi-config-tool-utils.h"
-#include "ipmi-config-tool-validate.h"
 #include "ipmi-config-utils.h"
 #include "ipmi-config-validate.h"
 
@@ -1475,7 +1474,7 @@ vlan_id_validate (const char *section_name,
   assert (key_name);
   assert (value);
 
-  return (ipmi_config_check_number_range (value, 0, 4095));
+  return (check_number_range (value, 0, 4095));
 }
 
 static ipmi_config_err_t
@@ -2337,7 +2336,7 @@ ipmi_config_lan_conf_section_get (ipmi_config_state_data_t *state_data,
                                    0,
                                    ip_address_checkout,
                                    ip_address_commit,
-                                   ipmi_config_ip_address_validate) < 0)
+                                   ip_address_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
@@ -2347,7 +2346,7 @@ ipmi_config_lan_conf_section_get (ipmi_config_state_data_t *state_data,
                                    0,
                                    mac_address_checkout,
                                    mac_address_commit,
-                                   ipmi_config_mac_address_validate) < 0)
+                                   mac_address_validate) < 0)
     goto cleanup;
 
   /* TODO: XXX: checking valid netmask is not same as checking valid IP? */
@@ -2358,7 +2357,7 @@ ipmi_config_lan_conf_section_get (ipmi_config_state_data_t *state_data,
                                    0,
                                    subnet_mask_checkout,
                                    subnet_mask_commit,
-                                   ipmi_config_ip_address_validate) < 0)
+                                   ip_address_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
@@ -2368,7 +2367,7 @@ ipmi_config_lan_conf_section_get (ipmi_config_state_data_t *state_data,
                                    0,
                                    default_gateway_address_checkout,
                                    default_gateway_address_commit,
-                                   ipmi_config_ip_address_validate) < 0)
+                                   ip_address_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
@@ -2378,7 +2377,7 @@ ipmi_config_lan_conf_section_get (ipmi_config_state_data_t *state_data,
                                    0,
                                    default_gateway_mac_address_checkout,
                                    default_gateway_mac_address_commit,
-                                   ipmi_config_mac_address_validate) < 0)
+                                   mac_address_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
@@ -2388,7 +2387,7 @@ ipmi_config_lan_conf_section_get (ipmi_config_state_data_t *state_data,
                                    0,
                                    backup_gateway_address_checkout,
                                    backup_gateway_address_commit,
-                                   ipmi_config_ip_address_validate) < 0)
+                                   ip_address_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
@@ -2398,7 +2397,7 @@ ipmi_config_lan_conf_section_get (ipmi_config_state_data_t *state_data,
                                    0,
                                    backup_gateway_mac_address_checkout,
                                    backup_gateway_mac_address_commit,
-                                   ipmi_config_mac_address_validate) < 0)
+                                   mac_address_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
@@ -2418,7 +2417,7 @@ ipmi_config_lan_conf_section_get (ipmi_config_state_data_t *state_data,
                                    verbose_option_config_flags,
                                    vlan_id_enable_checkout,
                                    vlan_id_enable_commit,
-                                   ipmi_config_yes_no_validate) < 0)
+                                   yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
@@ -2428,7 +2427,7 @@ ipmi_config_lan_conf_section_get (ipmi_config_state_data_t *state_data,
                                    verbose_option_config_flags,
                                    vlan_priority_checkout,
                                    vlan_priority_commit,
-                                   ipmi_config_number_range_one_byte) < 0)
+                                   number_range_one_byte_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
@@ -2438,7 +2437,7 @@ ipmi_config_lan_conf_section_get (ipmi_config_state_data_t *state_data,
                                    verbose_option_config_flags | IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
                                    ipv4_header_time_to_live_checkout,
                                    ipv4_header_time_to_live_commit,
-                                   ipmi_config_number_range_one_byte) < 0)
+                                   number_range_one_byte_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
@@ -2448,7 +2447,7 @@ ipmi_config_lan_conf_section_get (ipmi_config_state_data_t *state_data,
                                    verbose_option_config_flags | IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
                                    ipv4_header_flags_checkout,
                                    ipv4_header_flags_commit,
-                                   ipmi_config_number_range_three_bits) < 0)
+                                   number_range_three_bits_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
@@ -2458,7 +2457,7 @@ ipmi_config_lan_conf_section_get (ipmi_config_state_data_t *state_data,
                                    verbose_option_config_flags | IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
                                    ipv4_header_type_of_service_checkout,
                                    ipv4_header_type_of_service_commit,
-                                   ipmi_config_number_range_four_bits) < 0)
+                                   number_range_four_bits_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
@@ -2468,7 +2467,7 @@ ipmi_config_lan_conf_section_get (ipmi_config_state_data_t *state_data,
                                    verbose_option_config_flags | IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
                                    ipv4_header_precedence_checkout,
                                    ipv4_header_precedence_commit,
-                                   ipmi_config_number_range_three_bits) < 0)
+                                   number_range_three_bits_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
@@ -2478,7 +2477,7 @@ ipmi_config_lan_conf_section_get (ipmi_config_state_data_t *state_data,
                                    verbose_option_config_flags | IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
                                    primary_rmcp_port_checkout,
                                    primary_rmcp_port_commit,
-                                   ipmi_config_number_range_two_bytes) < 0)
+                                   number_range_two_bytes_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
@@ -2488,7 +2487,7 @@ ipmi_config_lan_conf_section_get (ipmi_config_state_data_t *state_data,
                                    verbose_option_config_flags | IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
                                    secondary_rmcp_port_checkout,
                                    secondary_rmcp_port_commit,
-                                   ipmi_config_number_range_two_bytes) < 0)
+                                   number_range_two_bytes_validate) < 0)
     goto cleanup;
 
   return (section);

@@ -31,7 +31,6 @@
 #include "ipmi-config-map.h"
 #include "ipmi-config-tool-section.h"
 #include "ipmi-config-tool-utils.h"
-#include "ipmi-config-tool-validate.h"
 #include "ipmi-config-utils.h"
 #include "ipmi-config-validate.h"
 
@@ -451,7 +450,7 @@ ipmi_config_lan_conf_misc_section_get (ipmi_config_state_data_t *state_data,
                                    0,
                                    enable_gratuitous_arps_checkout,
                                    enable_gratuitous_arps_commit,
-                                   ipmi_config_yes_no_validate) < 0)
+                                   yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
@@ -461,7 +460,7 @@ ipmi_config_lan_conf_misc_section_get (ipmi_config_state_data_t *state_data,
                                    0,
                                    enable_arp_response_checkout,
                                    enable_arp_response_commit,
-                                   ipmi_config_yes_no_validate) < 0)
+                                   yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
@@ -471,7 +470,7 @@ ipmi_config_lan_conf_misc_section_get (ipmi_config_state_data_t *state_data,
                                    0,
                                    gratuitous_arp_interval_checkout,
                                    gratuitous_arp_interval_commit,
-                                   ipmi_config_number_range_one_byte) < 0)
+                                   number_range_one_byte_validate) < 0)
     goto cleanup;
 
   return (section);

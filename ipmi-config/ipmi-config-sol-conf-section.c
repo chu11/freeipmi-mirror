@@ -31,7 +31,6 @@
 #include "ipmi-config-map.h"
 #include "ipmi-config-tool-section.h"
 #include "ipmi-config-tool-utils.h"
-#include "ipmi-config-tool-validate.h"
 #include "ipmi-config-utils.h"
 #include "ipmi-config-validate.h"
 
@@ -1381,7 +1380,7 @@ ipmi_config_sol_conf_section_get (ipmi_config_state_data_t *state_data,
                                    0,
                                    enable_sol_checkout,
                                    enable_sol_commit,
-                                   ipmi_config_yes_no_validate) < 0)
+                                   yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
@@ -1401,7 +1400,7 @@ ipmi_config_sol_conf_section_get (ipmi_config_state_data_t *state_data,
                                    0,
                                    force_sol_payload_authentication_checkout,
                                    force_sol_payload_authentication_commit,
-                                   ipmi_config_yes_no_validate) < 0)
+                                   yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
@@ -1411,7 +1410,7 @@ ipmi_config_sol_conf_section_get (ipmi_config_state_data_t *state_data,
                                    0,
                                    force_sol_payload_encryption_checkout,
                                    force_sol_payload_encryption_commit,
-                                   ipmi_config_yes_no_validate) < 0)
+                                   yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
@@ -1421,7 +1420,7 @@ ipmi_config_sol_conf_section_get (ipmi_config_state_data_t *state_data,
                                    0,
                                    character_accumulate_interval_checkout,
                                    character_accumulate_interval_commit,
-                                   ipmi_config_number_range_one_byte_non_zero) < 0)
+                                   number_range_one_byte_non_zero_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
@@ -1431,7 +1430,7 @@ ipmi_config_sol_conf_section_get (ipmi_config_state_data_t *state_data,
                                    0,
                                    character_send_threshold_checkout,
                                    character_send_threshold_commit,
-                                   ipmi_config_number_range_one_byte) < 0)
+                                   number_range_one_byte_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
@@ -1441,7 +1440,7 @@ ipmi_config_sol_conf_section_get (ipmi_config_state_data_t *state_data,
                                    0,
                                    sol_retry_count_checkout,
                                    sol_retry_count_commit,
-                                   ipmi_config_number_range_three_bits) < 0)
+                                   number_range_three_bits_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
@@ -1451,7 +1450,7 @@ ipmi_config_sol_conf_section_get (ipmi_config_state_data_t *state_data,
                                    0,
                                    sol_retry_interval_checkout,
                                    sol_retry_interval_commit,
-                                   ipmi_config_number_range_one_byte) < 0)
+                                   number_range_one_byte_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
@@ -1481,7 +1480,7 @@ ipmi_config_sol_conf_section_get (ipmi_config_state_data_t *state_data,
                                    IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
                                    sol_payload_port_checkout,
                                    sol_payload_port_commit,
-                                   ipmi_config_number_range_two_bytes) < 0)
+                                   number_range_two_bytes_validate) < 0)
     goto cleanup;
 
   return (section);

@@ -31,7 +31,6 @@
 #include "ipmi-config-map.h"
 #include "ipmi-config-tool-section.h"
 #include "ipmi-config-tool-utils.h"
-#include "ipmi-config-tool-validate.h"
 #include "ipmi-config-utils.h"
 #include "ipmi-config-validate.h"
 
@@ -999,7 +998,7 @@ ipmi_config_serial_conf_section_get (ipmi_config_state_data_t *state_data,
                                    0,
                                    enable_basic_mode_checkout,
                                    enable_basic_mode_commit,
-                                   ipmi_config_yes_no_validate) < 0)
+                                   yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
@@ -1009,7 +1008,7 @@ ipmi_config_serial_conf_section_get (ipmi_config_state_data_t *state_data,
                                    0,
                                    enable_ppp_mode_checkout,
                                    enable_ppp_mode_commit,
-                                   ipmi_config_yes_no_validate) < 0)
+                                   yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
@@ -1019,7 +1018,7 @@ ipmi_config_serial_conf_section_get (ipmi_config_state_data_t *state_data,
                                    0,
                                    enable_terminal_mode_checkout,
                                    enable_terminal_mode_commit,
-                                   ipmi_config_yes_no_validate) < 0)
+                                   yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
@@ -1039,7 +1038,7 @@ ipmi_config_serial_conf_section_get (ipmi_config_state_data_t *state_data,
                                    0,
                                    page_blackout_interval_checkout,
                                    page_blackout_interval_commit,
-                                   ipmi_config_number_range_one_byte) < 0)
+                                   number_range_one_byte_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
@@ -1049,7 +1048,7 @@ ipmi_config_serial_conf_section_get (ipmi_config_state_data_t *state_data,
                                    0,
                                    call_retry_interval_checkout,
                                    call_retry_interval_commit,
-                                   ipmi_config_number_range_one_byte) < 0)
+                                   number_range_one_byte_validate) < 0)
     goto cleanup;
 
   /* achu: For backwards compatability to ipmi-config in 0.2.0 */
@@ -1060,7 +1059,7 @@ ipmi_config_serial_conf_section_get (ipmi_config_state_data_t *state_data,
                                    IPMI_CONFIG_DO_NOT_CHECKOUT,
                                    call_retry_interval_checkout,
                                    call_retry_interval_commit,
-                                   ipmi_config_number_range_one_byte) < 0)
+                                   number_range_one_byte_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
@@ -1070,7 +1069,7 @@ ipmi_config_serial_conf_section_get (ipmi_config_state_data_t *state_data,
                                    0,
                                    enable_dtr_hangup_checkout,
                                    enable_dtr_hangup_commit,
-                                   ipmi_config_yes_no_validate) < 0)
+                                   yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,

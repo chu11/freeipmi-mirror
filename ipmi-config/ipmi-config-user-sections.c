@@ -31,7 +31,6 @@
 #include "ipmi-config-map.h"
 #include "ipmi-config-tool-section.h"
 #include "ipmi-config-tool-utils.h"
-#include "ipmi-config-tool-validate.h"
 #include "ipmi-config-utils.h"
 #include "ipmi-config-validate.h"
 
@@ -2429,7 +2428,7 @@ ipmi_config_user_section_get (ipmi_config_state_data_t *state_data, unsigned int
                                    IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
                                    enable_user_checkout,
                                    enable_user_commit,
-                                   ipmi_config_yes_no_validate) < 0)
+                                   yes_no_validate) < 0)
     goto cleanup;
 
   /* achu: For backwards compatability to earlier ipmi-config, now "absorbed" into Password */
@@ -2469,7 +2468,7 @@ ipmi_config_user_section_get (ipmi_config_state_data_t *state_data, unsigned int
                                                      config_flags | IPMI_CONFIG_USERNAME_NOT_SET_YET,
                                                      lan_enable_ipmi_messaging_checkout,
                                                      lan_enable_ipmi_messaging_commit,
-                                                     ipmi_config_yes_no_validate,
+                                                     yes_no_validate,
                                                      i,
                                                      state_data->lan_channel_numbers,
                                                      state_data->lan_channel_numbers_count) < 0)
@@ -2482,7 +2481,7 @@ ipmi_config_user_section_get (ipmi_config_state_data_t *state_data, unsigned int
                                                      config_flags | IPMI_CONFIG_USERNAME_NOT_SET_YET,
                                                      lan_enable_link_auth_checkout,
                                                      lan_enable_link_auth_commit,
-                                                     ipmi_config_yes_no_validate,
+                                                     yes_no_validate,
                                                      i,
                                                      state_data->lan_channel_numbers,
                                                      state_data->lan_channel_numbers_count) < 0)
@@ -2495,7 +2494,7 @@ ipmi_config_user_section_get (ipmi_config_state_data_t *state_data, unsigned int
                                                      config_flags | IPMI_CONFIG_USERNAME_NOT_SET_YET,
                                                      lan_enable_restricted_to_callback_checkout,
                                                      lan_enable_restricted_to_callback_commit,
-                                                     ipmi_config_yes_no_validate,
+                                                     yes_no_validate,
                                                      i,
                                                      state_data->lan_channel_numbers,
                                                      state_data->lan_channel_numbers_count) < 0)
@@ -2509,7 +2508,7 @@ ipmi_config_user_section_get (ipmi_config_state_data_t *state_data, unsigned int
                                                      config_flags | IPMI_CONFIG_DO_NOT_CHECKOUT | IPMI_CONFIG_USERNAME_NOT_SET_YET,
                                                      lan_enable_restricted_to_callback_checkout,
                                                      lan_enable_restricted_to_callback_commit,
-                                                     ipmi_config_yes_no_validate,
+                                                     yes_no_validate,
                                                      i,
                                                      state_data->lan_channel_numbers,
                                                      state_data->lan_channel_numbers_count) < 0)
@@ -2535,7 +2534,7 @@ ipmi_config_user_section_get (ipmi_config_state_data_t *state_data, unsigned int
                                                      config_flags | IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY | IPMI_CONFIG_USERNAME_NOT_SET_YET,
                                                      lan_session_limit_checkout,
                                                      lan_session_limit_commit,
-                                                     ipmi_config_number_range_four_bits,
+                                                     number_range_four_bits_validate,
                                                      i,
                                                      state_data->lan_channel_numbers,
                                                      state_data->lan_channel_numbers_count) < 0)
@@ -2548,7 +2547,7 @@ ipmi_config_user_section_get (ipmi_config_state_data_t *state_data, unsigned int
                                                      config_flags | IPMI_CONFIG_USERNAME_NOT_SET_YET,
                                                      sol_payload_access_checkout,
                                                      sol_payload_access_commit,
-                                                     ipmi_config_yes_no_validate,
+                                                     yes_no_validate,
                                                      i,
                                                      state_data->lan_channel_numbers,
                                                      state_data->lan_channel_numbers_count) < 0)
@@ -2581,7 +2580,7 @@ ipmi_config_user_section_get (ipmi_config_state_data_t *state_data, unsigned int
                                                      config_flags | IPMI_CONFIG_USERNAME_NOT_SET_YET,
                                                      serial_enable_ipmi_messaging_checkout,
                                                      serial_enable_ipmi_messaging_commit,
-                                                     ipmi_config_yes_no_validate,
+                                                     yes_no_validate,
                                                      i,
                                                      state_data->serial_channel_numbers,
                                                      state_data->serial_channel_numbers_count) < 0)
@@ -2594,7 +2593,7 @@ ipmi_config_user_section_get (ipmi_config_state_data_t *state_data, unsigned int
                                                      config_flags | IPMI_CONFIG_USERNAME_NOT_SET_YET,
                                                      serial_enable_link_auth_checkout,
                                                      serial_enable_link_auth_commit,
-                                                     ipmi_config_yes_no_validate,
+                                                     yes_no_validate,
                                                      i,
                                                      state_data->serial_channel_numbers,
                                                      state_data->serial_channel_numbers_count) < 0)
@@ -2607,7 +2606,7 @@ ipmi_config_user_section_get (ipmi_config_state_data_t *state_data, unsigned int
                                                      config_flags | IPMI_CONFIG_USERNAME_NOT_SET_YET,
                                                      serial_enable_restricted_to_callback_checkout,
                                                      serial_enable_restricted_to_callback_commit,
-                                                     ipmi_config_yes_no_validate,
+                                                     yes_no_validate,
                                                      i,
                                                      state_data->serial_channel_numbers,
                                                      state_data->serial_channel_numbers_count) < 0)
@@ -2621,7 +2620,7 @@ ipmi_config_user_section_get (ipmi_config_state_data_t *state_data, unsigned int
                                                      config_flags | IPMI_CONFIG_DO_NOT_CHECKOUT | IPMI_CONFIG_USERNAME_NOT_SET_YET,
                                                      serial_enable_restricted_to_callback_checkout,
                                                      serial_enable_restricted_to_callback_commit,
-                                                     ipmi_config_yes_no_validate,
+                                                     yes_no_validate,
                                                      i,
                                                      state_data->serial_channel_numbers,
                                                      state_data->serial_channel_numbers_count) < 0)
@@ -2647,7 +2646,7 @@ ipmi_config_user_section_get (ipmi_config_state_data_t *state_data, unsigned int
                                                      config_flags | IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY | IPMI_CONFIG_USERNAME_NOT_SET_YET,
                                                      serial_session_limit_checkout,
                                                      serial_session_limit_commit,
-                                                     ipmi_config_number_range_one_byte,
+                                                     number_range_one_byte_validate,
                                                      i,
                                                      state_data->serial_channel_numbers,
                                                      state_data->serial_channel_numbers_count) < 0)

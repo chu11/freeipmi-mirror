@@ -31,7 +31,6 @@
 #include "ipmi-config-map.h"
 #include "ipmi-config-tool-section.h"
 #include "ipmi-config-tool-utils.h"
-#include "ipmi-config-tool-validate.h"
 #include "ipmi-config-utils.h"
 #include "ipmi-config-validate.h"
 
@@ -686,7 +685,7 @@ ipmi_config_channel_common_section_get (ipmi_config_state_data_t *state_data,
                                    0,
                                    _enable_user_level_authentication_checkout,
                                    _enable_user_level_authentication_commit,
-                                   ipmi_config_yes_no_validate) < 0)
+                                   yes_no_validate) < 0)
     return (-1);
 
   if (ipmi_config_section_add_key (state_data->pstate,
@@ -696,7 +695,7 @@ ipmi_config_channel_common_section_get (ipmi_config_state_data_t *state_data,
                                    0,
                                    _enable_per_message_authentication_checkout,
                                    _enable_per_message_authentication_commit,
-                                   ipmi_config_yes_no_validate) < 0)
+                                   yes_no_validate) < 0)
     return (-1);
 
   if (ipmi_config_section_add_key (state_data->pstate,
@@ -706,7 +705,7 @@ ipmi_config_channel_common_section_get (ipmi_config_state_data_t *state_data,
                                    0,
                                    _enable_pef_alerting_checkout,
                                    _enable_pef_alerting_commit,
-                                   ipmi_config_yes_no_validate) < 0)
+                                   yes_no_validate) < 0)
     return (-1);
 
   if (ipmi_config_section_add_key (state_data->pstate,
@@ -736,7 +735,7 @@ ipmi_config_channel_common_section_get (ipmi_config_state_data_t *state_data,
                                    0,
                                    _enable_user_level_authentication_checkout,
                                    _enable_user_level_authentication_commit,
-                                   ipmi_config_yes_no_validate) < 0)
+                                   yes_no_validate) < 0)
     return (-1);
 
   if (ipmi_config_section_add_key (state_data->pstate,
@@ -746,7 +745,7 @@ ipmi_config_channel_common_section_get (ipmi_config_state_data_t *state_data,
                                    0,
                                    _enable_per_message_authentication_checkout,
                                    _enable_per_message_authentication_commit,
-                                   ipmi_config_yes_no_validate) < 0)
+                                   yes_no_validate) < 0)
     return (-1);
 
   if (ipmi_config_section_add_key (state_data->pstate,
@@ -756,7 +755,7 @@ ipmi_config_channel_common_section_get (ipmi_config_state_data_t *state_data,
                                    0,
                                    _enable_pef_alerting_checkout,
                                    _enable_pef_alerting_commit,
-                                   ipmi_config_yes_no_validate) < 0)
+                                   yes_no_validate) < 0)
     return (-1);
 
   if (ipmi_config_section_add_key (state_data->pstate,

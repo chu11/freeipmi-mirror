@@ -22,6 +22,60 @@
 #include "ipmi-config.h"
 #include "ipmi-config-sections.h"
 
+ipmi_config_validate_t yes_no_validate (const char *section_name,
+                                                    const char *key_name,
+                                                    const char *value,
+                                                    void *arg);
+
+ipmi_config_validate_t check_number_range (const char *value,
+					   int min,
+					   int max);
+
+ipmi_config_validate_t number_range_three_bits_validate (const char *section_name,
+                                                            const char *key_name,
+                                                            const char *value,
+                                                            void *arg);
+
+ipmi_config_validate_t number_range_four_bits_validate (const char *section_name,
+                                                           const char *key_name,
+                                                           const char *value,
+                                                           void *arg);
+
+ipmi_config_validate_t number_range_seven_bits_validate (const char *section_name,
+                                                            const char *key_name,
+                                                            const char *value,
+                                                            void *arg);
+
+ipmi_config_validate_t number_range_twelve_bits_validate (const char *section_name,
+                                                             const char *key_name,
+                                                             const char *value,
+                                                             void *arg);
+
+ipmi_config_validate_t number_range_one_byte_validate (const char *section_name,
+                                                          const char *key_name,
+                                                          const char *value,
+                                                          void *arg);
+
+ipmi_config_validate_t number_range_one_byte_non_zero_validate (const char *section_name,
+                                                                   const char *key_name,
+                                                                   const char *value,
+                                                                   void *arg);
+
+ipmi_config_validate_t number_range_two_bytes_validate (const char *section_name,
+						      const char *key_name,
+						      const char *value,
+						      void *arg);
+
+ipmi_config_validate_t ip_address_validate (const char *section_name,
+						   const char *key_name,
+						   const char *value,
+						   void *arg);
+
+ipmi_config_validate_t mac_address_validate (const char *section_name,
+						    const char *key_name,
+						    const char *value,
+						    void *arg);
+
 ipmi_config_validate_t channel_access_mode_validate (const char *section_name,
                                                      const char *key_name,
                                                      const char *value,

@@ -31,7 +31,6 @@
 #include "ipmi-config-map.h"
 #include "ipmi-config-tool-section.h"
 #include "ipmi-config-tool-utils.h"
-#include "ipmi-config-tool-validate.h"
 #include "ipmi-config-utils.h"
 #include "ipmi-config-validate.h"
 
@@ -435,7 +434,7 @@ ipmi_config_lan_conf_user_security_section_get (ipmi_config_state_data_t *state_
                                    0,
                                    bad_password_threshold_checkout,
                                    bad_password_threshold_commit,
-                                   ipmi_config_number_range_one_byte) < 0)
+                                   number_range_one_byte_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
@@ -446,7 +445,7 @@ ipmi_config_lan_conf_user_security_section_get (ipmi_config_state_data_t *state_
                                    0,
                                    attempt_count_reset_interval_checkout,
                                    attempt_count_reset_interval_commit,
-                                   ipmi_config_number_range_two_bytes) < 0)
+                                   number_range_two_bytes_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
@@ -457,7 +456,7 @@ ipmi_config_lan_conf_user_security_section_get (ipmi_config_state_data_t *state_
                                    0,
                                    user_lockout_interval_checkout,
                                    user_lockout_interval_commit,
-                                   ipmi_config_number_range_two_bytes) < 0)
+                                   number_range_two_bytes_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data->pstate,
@@ -467,7 +466,7 @@ ipmi_config_lan_conf_user_security_section_get (ipmi_config_state_data_t *state_
                                    0,
                                    enable_event_message_when_user_disabled_checkout,
                                    enable_event_message_when_user_disabled_commit,
-                                   ipmi_config_yes_no_validate) < 0)
+                                   yes_no_validate) < 0)
     goto cleanup;
 
   return (section);

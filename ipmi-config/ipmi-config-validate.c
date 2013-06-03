@@ -39,6 +39,176 @@
 #include "freeipmi-portability.h"
 
 ipmi_config_validate_t
+yes_no_validate (const char *section_name,
+                             const char *key_name,
+                             const char *value,
+                             void *arg)
+{
+  assert (section_name);
+  assert (key_name);
+  assert (value);
+
+  if (!strcasecmp (value, "yes") || !strcasecmp (value, "no"))
+    return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
+  return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
+}
+
+ipmi_config_validate_t
+check_number_range (const char *value,
+                                int min,
+                                int max)
+{
+  long int conv;
+  char *endptr;
+
+  assert (value);
+
+  errno = 0;
+  conv = strtol (value, &endptr, 0);
+
+  if (errno
+      || endptr[0] != '\0')
+    return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
+
+  if (conv < min || conv > max)
+    return (IPMI_CONFIG_VALIDATE_OUT_OF_RANGE_VALUE);
+
+  return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
+}
+
+ipmi_config_validate_t
+number_range_three_bits_validate (const char *section_name,
+                                     const char *key_name,
+                                     const char *value,
+                                     void *arg)
+{
+  assert (section_name);
+  assert (key_name);
+  assert (value);
+
+  return (check_number_range (value, 0, 7));
+}
+
+ipmi_config_validate_t
+number_range_four_bits_validate (const char *section_name,
+                                    const char *key_name,
+                                    const char *value,
+                                    void *arg)
+{
+  assert (section_name);
+  assert (key_name);
+  assert (value);
+
+  return (check_number_range (value, 0, 15));
+}
+
+ipmi_config_validate_t
+number_range_seven_bits_validate (const char *section_name,
+                                     const char *key_name,
+                                     const char *value,
+                                     void *arg)
+{
+  assert (section_name);
+  assert (key_name);
+  assert (value);
+
+  return (check_number_range (value, 0, 127));
+}
+
+ipmi_config_validate_t
+number_range_twelve_bits_validate (const char *section_name,
+                                      const char *key_name,
+                                      const char *value,
+                                      void *arg)
+{
+  assert (section_name);
+  assert (key_name);
+  assert (value);
+
+  return (check_number_range (value, 0, 4095));
+}
+
+ipmi_config_validate_t
+number_range_one_byte_validate (const char *section_name,
+                                   const char *key_name,
+                                   const char *value,
+                                   void *arg)
+{
+  assert (section_name);
+  assert (key_name);
+  assert (value);
+
+  return (check_number_range (value, 0, 255));
+}
+
+ipmi_config_validate_t
+number_range_one_byte_non_zero_validate (const char *section_name,
+                                            const char *key_name,
+                                            const char *value,
+                                            void *arg)
+{
+  assert (section_name);
+  assert (key_name);
+  assert (value);
+
+  return (check_number_range (value, 1, 255));
+}
+
+ipmi_config_validate_t
+number_range_two_bytes_validate (const char *section_name,
+                                    const char *key_name,
+                                    const char *value,
+                                    void *arg)
+{
+  assert (section_name);
+  assert (key_name);
+  assert (value);
+
+  return (check_number_range (value, 0, 65535));
+}
+
+ipmi_config_validate_t
+ip_address_validate (const char *section_name,
+                                 const char *key_name,
+                                 const char *value,
+                                 void *arg)
+{
+  struct in_addr a;
+
+  assert (section_name);
+  assert (key_name);
+  assert (value);
+
+  if (inet_aton (value, &a))
+    return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
+  return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
+}
+
+ipmi_config_validate_t
+mac_address_validate (const char *section_name,
+                                  const char *key_name,
+                                  const char *value,
+                                  void *arg)
+{
+  unsigned int foo;
+
+  assert (section_name);
+  assert (key_name);
+  assert (value);
+
+  if (sscanf (value,
+              "%02x:%02x:%02x:%02x:%02x:%02x",
+              &foo,
+              &foo,
+              &foo,
+              &foo,
+              &foo,
+              &foo) == 6)
+    return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
+  return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
+}
+
+ipmi_config_validate_t
 channel_access_mode_validate (const char *section_name,
                               const char *key_name,
                               const char *value,
