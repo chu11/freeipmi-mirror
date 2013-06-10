@@ -144,9 +144,9 @@ _ipmi_config_parse_channel_number (char *arg,
 
 static int
 _ipmi_config_keypair_parse_string (const char *str,
-				   char **section_name,
-				   char **key_name,
-				   char **value)
+                                   char **section_name,
+                                   char **key_name,
+                                   char **value)
 {
   char *str_temp = NULL;
   char *section_name_tok = NULL;
@@ -246,7 +246,7 @@ _ipmi_config_keypair_parse_string (const char *str,
 
 static int
 _ipmi_config_keypair_append (struct ipmi_config_keypair **keypairs,
-			     struct ipmi_config_keypair *keypair)
+                             struct ipmi_config_keypair *keypair)
 {
   assert (keypairs);
   assert (keypair);
@@ -282,8 +282,8 @@ _ipmi_config_keypair_append (struct ipmi_config_keypair **keypairs,
 
 static struct ipmi_config_keypair *
 _ipmi_config_keypair_create (const char *section_name,
-			     const char *key_name,
-			     const char *value_input)
+                             const char *key_name,
+                             const char *value_input)
 {
   struct ipmi_config_keypair *keypair = NULL;
 
@@ -362,7 +362,7 @@ _ipmi_config_section_str_create (const char *section_name)
 
 static int
 _ipmi_config_section_str_append (struct ipmi_config_section_str **section_strs,
-				 struct ipmi_config_section_str *section_str)
+                                 struct ipmi_config_section_str *section_str)
 {
   assert (section_strs);
   assert (section_str);
@@ -441,19 +441,19 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case IPMI_CONFIG_ARGP_KEYPAIR_KEY:
       if (_ipmi_config_keypair_parse_string (arg,
-					     &section_name,
-					     &key_name,
-					     &value) < 0)
-	exit (EXIT_FAILURE);
+                                             &section_name,
+                                             &key_name,
+                                             &value) < 0)
+        exit (EXIT_FAILURE);
 
       if (!(kp = _ipmi_config_keypair_create (section_name,
-					      key_name,
-					      value)))
-	exit (EXIT_FAILURE);
+                                              key_name,
+                                              value)))
+        exit (EXIT_FAILURE);
 
       if (_ipmi_config_keypair_append (&(cmd_args->keypairs),
-				       kp) < 0)
-	exit (EXIT_FAILURE);
+                                       kp) < 0)
+        exit (EXIT_FAILURE);
 
       free (section_name);
       free (key_name);
@@ -461,11 +461,11 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case IPMI_CONFIG_ARGP_SECTIONS_KEY:
       if (!(sstr = _ipmi_config_section_str_create (arg)))
-	exit (EXIT_FAILURE);
+        exit (EXIT_FAILURE);
 
       if (_ipmi_config_section_str_append (&(cmd_args->section_strs),
-					   sstr) < 0)
-	exit (EXIT_FAILURE);
+                                           sstr) < 0)
+        exit (EXIT_FAILURE);
 
       sstr = NULL;
       break;
@@ -480,21 +480,21 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case IPMI_CONFIG_ARGP_LAN_CHANNEL_NUMBER_KEY:
       if (_ipmi_config_parse_channel_number (arg,
-					     &(cmd_args->lan_channel_number),
-					     &(cmd_args->lan_channel_number_set)) < 0)
-	exit (EXIT_FAILURE);
+                                             &(cmd_args->lan_channel_number),
+                                             &(cmd_args->lan_channel_number_set)) < 0)
+        exit (EXIT_FAILURE);
       break;
     case IPMI_CONFIG_ARGP_SERIAL_CHANNEL_NUMBER_KEY:
       if (_ipmi_config_parse_channel_number (arg,
-					     &(cmd_args->serial_channel_number),
-					     &(cmd_args->serial_channel_number_set)) < 0)
-	exit (EXIT_FAILURE);
+                                             &(cmd_args->serial_channel_number),
+                                             &(cmd_args->serial_channel_number_set)) < 0)
+        exit (EXIT_FAILURE);
       break;
     case IPMI_CONFIG_ARGP_SOL_CHANNEL_NUMBER_KEY:
       if (_ipmi_config_parse_channel_number (arg,
-					     &(cmd_args->sol_channel_number),
-					     &(cmd_args->sol_channel_number_set)) < 0)
-	exit (EXIT_FAILURE);
+                                             &(cmd_args->sol_channel_number),
+                                             &(cmd_args->sol_channel_number_set)) < 0)
+        exit (EXIT_FAILURE);
       break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */
