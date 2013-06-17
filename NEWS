@@ -2,6 +2,7 @@ FreeIPMI 1.2.8 - 05/30/13
 -------------------------
 o Fix portability build bug on ARM systems.
 o Add 'internal IPMI error' troubleshooting to manpages.
+o Fix bmc-info corner case on Bull 510 systems.
 
 FreeIPMI 1.2.7 - 05/16/13
 -------------------------

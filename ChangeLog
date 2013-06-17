@@ -1,5 +1,10 @@
 2013-06-17  Albert Chu <chu11@llnl.gov>
 
+	* bmc-info/bmc-info.c (display_system_info_common): Workaround
+	issue on Bull 510 systems.
+	
+2013-06-17  Albert Chu <chu11@llnl.gov>
+
 	* man/manpage-common-troubleshooting-inband-outofband.man: New
 	common manpage.
 
