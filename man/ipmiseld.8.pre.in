@@ -272,6 +272,7 @@ output specifics of each SEL event that occurs.
 #include <@top_srcdir@/man/manpage-common-troubleshooting-heading-end.man>
 #include <@top_srcdir@/man/manpage-common-troubleshooting-outofband.man>
 #include <@top_srcdir@/man/manpage-common-troubleshooting-inband.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-inband-outofband.man>
 .SH "IPMISELD TROUBLESHOOTING"
 #include <@top_srcdir@/man/manpage-common-troubleshooting-sel.man>
 #include <@top_srcdir@/man/manpage-common-workaround-heading-text.man>

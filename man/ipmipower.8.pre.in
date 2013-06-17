@@ -454,6 +454,7 @@ Hard reset nodes foo[0-2] with non-null username and password
 #include <@top_srcdir@/man/manpage-common-troubleshooting-heading-outofband.man>
 #include <@top_srcdir@/man/manpage-common-troubleshooting-heading-end.man>
 #include <@top_srcdir@/man/manpage-common-troubleshooting-outofband.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-inband-outofband.man>
 
 .SH "IPMIPOWER TROUBLESHOOTING"
 When powering on a powered off machine, the client must have a means
