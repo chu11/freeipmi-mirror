@@ -1721,6 +1721,18 @@ Misc IPMI Issue #3: [COMPLIANCE]
   Resolution: Workaround added to recognize special case IANA number
   as belonging to a specific manufacturer.
 
+Misc IPMI Issue #4: [INTERPRETATION]
+
+  When retrieving the operating system name via Get System Info
+  Parameters, the 'set_selector', 'encoding', or 'string_length'
+  fields in the response is not set.  It is not clear if this is an
+  error in their packet for indicating an unsupported field or an
+  empty field.
+
+  Seen on: Bull 510 Blade.
+
+  Resolution: Workaround added to bmc-info to handle special case.
+
 ----------------------------------------------------------------------
 
 ------------

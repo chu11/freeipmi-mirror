@@ -644,7 +644,8 @@ display_system_info_common (bmc_info_state_data_t *state_data,
   uint64_t val;
   uint8_t set_selector = 0;
   unsigned int string_count = 0;
-  int len;
+  unsigned int orig_flags = 0;
+  int ret, len;
   int rv = -1;
 
   assert (state_data);
@@ -678,6 +679,33 @@ display_system_info_common (bmc_info_state_data_t *state_data,
       goto cleanup;
     }
 
+  /* IPMI Workaround
+   *
+   * Bull 510 Blade
+   *
+   * The first call to retrieve the Operating System name does not
+   * return a set_selector, encoding, or string_length.  If it does
+   * not, we assume the string is empty.
+   */
+
+  if (ipmi_ctx_get_flags (state_data->ipmi_ctx, &orig_flags) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_ctx_get_flags: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (ipmi_ctx_set_flags (state_data->ipmi_ctx, orig_flags | IPMI_FLAGS_NO_VALID_CHECK) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_ctx_set_flags: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
   if (func_cmd_first_set (state_data->ipmi_ctx,
                           IPMI_GET_SYSTEM_INFO_PARAMETER,
                           set_selector,
@@ -704,9 +732,9 @@ display_system_info_common (bmc_info_state_data_t *state_data,
       goto cleanup;
     }
   
-  if (FIID_OBJ_GET (obj_cmd_first_set_rs,
-                    "encoding",
-                    &val) < 0)
+  if ((ret = fiid_obj_get (obj_cmd_first_set_rs,
+			   "encoding",
+			   &val)) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -714,11 +742,15 @@ display_system_info_common (bmc_info_state_data_t *state_data,
                        fiid_obj_errormsg (obj_cmd_first_set_rs));
       goto cleanup;
     }
+  
+  if (!ret)
+    goto output;
+
   encoding = val;
   
-  if (FIID_OBJ_GET (obj_cmd_first_set_rs,
-                    "string_length",
-                    &val) < 0)
+  if ((ret = fiid_obj_get (obj_cmd_first_set_rs,
+			   "string_length",
+			   &val)) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -726,6 +758,10 @@ display_system_info_common (bmc_info_state_data_t *state_data,
                        fiid_obj_errormsg (obj_cmd_first_set_rs));
       goto cleanup;
     }
+
+  if (!ret)
+    goto output;
+
   string_length = val;
 
   /* no string */
@@ -816,6 +852,11 @@ display_system_info_common (bmc_info_state_data_t *state_data,
 
   rv = 1;
  cleanup:
+  if (ipmi_ctx_set_flags (state_data->ipmi_ctx, orig_flags) < 0)
+    pstdout_fprintf (state_data->pstate,
+		     stderr,
+		     "ipmi_ctx_set_flags: %s\n",
+		     ipmi_ctx_errormsg (state_data->ipmi_ctx));
   fiid_obj_destroy (obj_cmd_first_set_rs);
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
