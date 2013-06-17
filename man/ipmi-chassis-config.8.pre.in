@@ -86,6 +86,7 @@ always be blank.
 #include <@top_srcdir@/man/manpage-common-troubleshooting-heading-end.man>
 #include <@top_srcdir@/man/manpage-common-troubleshooting-outofband.man>
 #include <@top_srcdir@/man/manpage-common-troubleshooting-inband.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-inband-outofband.man>
 #include <@top_srcdir@/man/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/man/manpage-common-workaround-inband-text.man>
 #include <@top_srcdir@/man/manpage-common-workaround-outofband-common-text.man>

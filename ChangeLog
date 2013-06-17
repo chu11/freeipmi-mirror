@@ -1,3 +1,11 @@
+2013-06-17  Albert Chu <chu11@llnl.gov>
+
+	* man/manpage-common-troubleshooting-inband-outofband.man: New
+	common manpage.
+
+	* man/: Add inband & outofband common troubleshooting to most
+	FreeIPMI tool manpages.
+	
 2013-05-30  Ales Ledvinka <aledvink@redhat.com>
 
 	* common/toolcommon/pstdout.c (pstdout_vprintf): Fix portability

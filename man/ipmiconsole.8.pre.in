@@ -176,6 +176,7 @@ Send a single escape character.
 #include <@top_srcdir@/man/manpage-common-troubleshooting-heading-outofband.man>
 #include <@top_srcdir@/man/manpage-common-troubleshooting-heading-end.man>
 #include <@top_srcdir@/man/manpage-common-troubleshooting-outofband.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-inband-outofband.man>
 .SH "IPMICONSOLE TROUBLESHOOTING"
 The following are common issues for error messages in
 .B ipmiconsole.

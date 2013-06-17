@@ -169,6 +169,7 @@ MANS_COMMON = \
 	manpage-common-troubleshooting-heading-start.man \
 	manpage-common-troubleshooting-inband.man \
 	manpage-common-troubleshooting-outofband.man \
+	manpage-common-troubleshooting-inband-outofband.man \
 	manpage-common-troubleshooting-sel.man \
 	manpage-common-diagnostics.man \
 	manpage-common-diagnostics-hostranged-text.man \

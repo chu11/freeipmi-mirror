@@ -1,0 +1,4 @@
+.LP
+"internal IPMI error" - An IPMI error has occurred that FreeIPMI does
+not know how to handle.  Please e-mail <freeipmi\-users@gnu.org> to
+report the issue.
