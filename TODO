@@ -29,6 +29,8 @@ FreeIPMI general
 - OEM extensions generalized
   - generalize "+" syntax in ipmipower to all FreeIPMI tools?
   - or use extra option?
+- output more clear errors on bmc completion code errors (***)
+  - i.e. command not supported
 
 FreeIPMI new stuff
 ------------------
