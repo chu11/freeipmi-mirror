@@ -1,4 +1,4 @@
-FreeIPMI 1.2.8 - 05/30/13
+FreeIPMI 1.2.8 - 06/21/13
 -------------------------
 o Fix portability build bug on ARM systems.
 o Add 'internal IPMI error' troubleshooting to manpages.
