@@ -52,6 +52,8 @@ o In libfreeipmi, do not pad legacy byte on IPMI 1.5 packets.  Legacy
 o In libfreeipmi, 'sdr' sub-library, when creating SDR cache, add
   checksums to cache to ensure data in cache is not corrupted.  Older
   caches without checksums still backwards compatible supported.
+o In libfreeipmi, support new IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
+  error code for IPMI commands that are invalid or unsupported.
   
 FreeIPMI 1.2.7 - 05/16/13
 -------------------------

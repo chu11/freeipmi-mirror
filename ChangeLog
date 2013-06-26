@@ -1,3 +1,9 @@
+2013-06-25  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/api/ipmi-api-util.c (api_set_api_errnum_by_bad_response),
+	libfreeipmi/api/ipmi-api.c. libfreeipmi/include/freeipmi/api/ipmi-api.h:
+	Support new IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED error code.
+	
 2013-06-17  Albert Chu <chu11@llnl.gov>
 
 	* bmc-info/bmc-info.c (display_system_info_common): Workaround

@@ -119,18 +119,19 @@ static char *ipmi_errmsg[] =
     "driver timeout",                                                   /* 20 */
     "message timeout",                                                  /* 21 */
     "command invalid for selected interface",                           /* 22 */
-    "bad completion code",                                              /* 23 */
-    "bad rmcpplus status code",                                         /* 24 */
-    "not found",                                                        /* 25 */
-    "BMC busy",                                                         /* 26 */
-    "out of memory",                                                    /* 27 */
-    "invalid hostname",                                                 /* 28 */
-    "invalid parameters",                                               /* 29 */
-    "driver path required",                                             /* 30 */
-    "internal IPMI error",                                              /* 31 */
-    "internal system error",                                            /* 32 */
-    "internal error",                                                   /* 33 */
-    "errnum out of range",                                              /* 34 */
+    "command invalid or unsupported",                                   /* 23 */
+    "bad completion code",                                              /* 24 */
+    "bad rmcpplus status code",                                         /* 25 */
+    "not found",                                                        /* 26 */
+    "BMC busy",                                                         /* 27 */
+    "out of memory",                                                    /* 28 */
+    "invalid hostname",                                                 /* 29 */
+    "invalid parameters",                                               /* 30 */
+    "driver path required",                                             /* 31 */
+    "internal IPMI error",                                              /* 32 */
+    "internal system error",                                            /* 33 */
+    "internal error",                                                   /* 34 */
+    "errnum out of range",                                              /* 35 */
   };
 
 static void
