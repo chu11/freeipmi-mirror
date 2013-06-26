@@ -160,7 +160,7 @@ enum ipmi_monitoring_sensor_type
     IPMI_MONITORING_SENSOR_TYPE_OEM_MIN                             = 0xC0,
     IPMI_MONITORING_SENSOR_TYPE_OEM_MAX                             = 0xFF,
     IPMI_MONITORING_SENSOR_TYPE_UNKNOWN                             = 0xFFFF,
-  } ipmi_monitoring_sensor_type_t;
+  };
 
 enum ipmi_monitoring_sel_event_direction
   {
