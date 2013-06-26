@@ -1,3 +1,7 @@
+2013-06-26  Mario Jungwirth <mario.jungwirth@ocilion.com>
+
+	* libipmimonitoring/ipmi_monitoring.h.in: Remove invalid declaration. 
+	
 2013-06-25  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/api/ipmi-api-util.c (api_set_api_errnum_by_bad_response),
