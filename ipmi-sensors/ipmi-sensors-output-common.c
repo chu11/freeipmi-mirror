@@ -451,8 +451,24 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (threshold_access_support == IPMI_SDR_NO_THRESHOLDS_SUPPORT
-      || threshold_access_support == IPMI_SDR_FIXED_UNREADABLE_THRESHOLDS_SUPPORT)
+  /* threshold access support is very confusing.  From the spec:
+   *
+   * Sensor Threshold Access Support
+   * [3:2] - 00b = no thresholds.
+   *    01b = thresholds are readable, per Reading Mask, below.
+   *    10b = thresholds are readable and settable per Reading Mask and
+   *          Settable Threshold Mask, respectively.
+   *    11b = Fixed, unreadable, thresholds. Which thresholds are supported is
+   *          reflected by the Reading Mask. The threshold value fields report
+   *          the values that hard-coded in the sensor.
+   *
+   * The 11b case is very hard to interpret.  Right now, the code
+   * assumes the this means that the thresholds are not readable from
+   * the "Get Sensor Threshold" command.  They are only readable from
+   * the SDR.  So that's what the code below assumes.
+   */
+
+  if (threshold_access_support == IPMI_SDR_NO_THRESHOLDS_SUPPORT)
     {
       rv = 0;
       goto cleanup;
@@ -541,6 +557,15 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
                        "fiid_obj_create: %s\n",
                        strerror (errno));
       goto cleanup;
+    }
+
+
+  if (threshold_access_support == IPMI_SDR_FIXED_UNREADABLE_THRESHOLDS_SUPPORT)
+    {
+      if (_get_sdr_sensor_thresholds (state_data, obj_cmd_rs) < 0)
+	goto cleanup;
+
+      goto continue_get_sensor_thresholds;
     }
 
   if (ipmi_cmd_get_sensor_thresholds (state_data->ipmi_ctx,
