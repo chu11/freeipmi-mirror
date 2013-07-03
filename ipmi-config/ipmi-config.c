@@ -148,8 +148,7 @@ _ipmi_config (pstdout_state_t pstate,
     {
       int num;
 
-      if ((num = ipmi_config_sections_validate_keyvalue_inputs (pstate,
-                                                                state_data.sections,
+      if ((num = ipmi_config_sections_validate_keyvalue_inputs (&state_data,
                                                                 &state_data)) < 0)
         goto cleanup;
 
@@ -334,7 +333,7 @@ _ipmi_config (pstdout_state_t pstate,
                               &state_data);
       break;
     case IPMI_CONFIG_ACTION_LIST_SECTIONS:
-      ret = ipmi_config_output_sections_list (pstate, state_data.sections);
+      ret = ipmi_config_output_sections_list (&state_data);
       break;
     }
 

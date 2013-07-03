@@ -1361,7 +1361,7 @@ ipmi_config_sol_conf_section_get (ipmi_config_state_data_t *state_data,
 
   assert (state_data);
 
-  if (!(section = ipmi_config_section_multi_channel_create (state_data->pstate,
+  if (!(section = ipmi_config_section_multi_channel_create (state_data,
                                                             section_name_base_str,
                                                             section_comment,
                                                             NULL,
@@ -1372,7 +1372,7 @@ ipmi_config_sol_conf_section_get (ipmi_config_state_data_t *state_data,
                                                             state_data->sol_channel_numbers_unique_count)))
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Enable_SOL",
                                    "Possible values: Yes/No",
@@ -1382,7 +1382,7 @@ ipmi_config_sol_conf_section_get (ipmi_config_state_data_t *state_data,
                                    yes_no_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "SOL_Privilege_Level",
                                    "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary",
@@ -1392,7 +1392,7 @@ ipmi_config_sol_conf_section_get (ipmi_config_state_data_t *state_data,
                                    privilege_level_number_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Force_SOL_Payload_Authentication",
                                    "Possible values: Yes/No",
@@ -1402,7 +1402,7 @@ ipmi_config_sol_conf_section_get (ipmi_config_state_data_t *state_data,
                                    yes_no_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Force_SOL_Payload_Encryption",
                                    "Possible values: Yes/No",
@@ -1412,7 +1412,7 @@ ipmi_config_sol_conf_section_get (ipmi_config_state_data_t *state_data,
                                    yes_no_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Character_Accumulate_Interval",
                                    "Give a non-zero valid integer. Each unit is 5ms",
@@ -1422,7 +1422,7 @@ ipmi_config_sol_conf_section_get (ipmi_config_state_data_t *state_data,
                                    number_range_one_byte_non_zero_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Character_Send_Threshold",
                                    "Give a valid number",
@@ -1432,7 +1432,7 @@ ipmi_config_sol_conf_section_get (ipmi_config_state_data_t *state_data,
                                    number_range_one_byte_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "SOL_Retry_Count",
                                    "Give a valid integer",
@@ -1442,7 +1442,7 @@ ipmi_config_sol_conf_section_get (ipmi_config_state_data_t *state_data,
                                    number_range_three_bits_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "SOL_Retry_Interval",
                                    "Give a valid integer. Interval unit is 10ms",
@@ -1452,7 +1452,7 @@ ipmi_config_sol_conf_section_get (ipmi_config_state_data_t *state_data,
                                    number_range_one_byte_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Non_Volatile_Bit_Rate",
                                    "Possible values: Serial/9600/19200/38400/57600/115200",
@@ -1462,7 +1462,7 @@ ipmi_config_sol_conf_section_get (ipmi_config_state_data_t *state_data,
                                    sol_bit_rate_number_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Volatile_Bit_Rate",
                                    "Possible values: Serial/9600/19200/38400/57600/115200",
@@ -1472,7 +1472,7 @@ ipmi_config_sol_conf_section_get (ipmi_config_state_data_t *state_data,
                                    sol_bit_rate_number_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "SOL_Payload_Port_Number",
                                    "Give a valid port number",

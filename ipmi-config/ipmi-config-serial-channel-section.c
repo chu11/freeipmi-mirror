@@ -63,7 +63,7 @@ ipmi_config_serial_channel_section_get (ipmi_config_state_data_t *state_data,
   if (!state_data->prog_data->args->verbose_count)
     config_flags |= IPMI_CONFIG_DO_NOT_CHECKOUT;
 
-  if (!(section = ipmi_config_section_multi_channel_create (state_data->pstate,
+  if (!(section = ipmi_config_section_multi_channel_create (state_data,
                                                             section_name_base_str,
                                                             section_comment,
                                                             NULL,

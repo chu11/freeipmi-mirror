@@ -979,7 +979,7 @@ ipmi_config_serial_conf_section_get (ipmi_config_state_data_t *state_data,
   if (!state_data->prog_data->args->verbose_count)
     config_flags |= IPMI_CONFIG_DO_NOT_CHECKOUT;
 
-  if (!(section = ipmi_config_section_multi_channel_create (state_data->pstate,
+  if (!(section = ipmi_config_section_multi_channel_create (state_data,
                                                             section_name_base_str,
                                                             section_comment,
                                                             NULL,
@@ -990,7 +990,7 @@ ipmi_config_serial_conf_section_get (ipmi_config_state_data_t *state_data,
                                                             state_data->serial_channel_numbers_count)))
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Enable_Basic_Mode",
                                    "Possible values: Yes/No",
@@ -1000,7 +1000,7 @@ ipmi_config_serial_conf_section_get (ipmi_config_state_data_t *state_data,
                                    yes_no_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Enable_PPP_Mode",
                                    "Possible values: Yes/No",
@@ -1010,7 +1010,7 @@ ipmi_config_serial_conf_section_get (ipmi_config_state_data_t *state_data,
                                    yes_no_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Enable_Terminal_Mode",
                                    "Possible values: Yes/No",
@@ -1020,7 +1020,7 @@ ipmi_config_serial_conf_section_get (ipmi_config_state_data_t *state_data,
                                    yes_no_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Connect_Mode",
                                    "Possible values: Modem_Connect/Direct_Connect",
@@ -1030,7 +1030,7 @@ ipmi_config_serial_conf_section_get (ipmi_config_state_data_t *state_data,
                                    connect_mode_number_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Page_Blackout_Interval",
                                    "Give a valid number",
@@ -1040,7 +1040,7 @@ ipmi_config_serial_conf_section_get (ipmi_config_state_data_t *state_data,
                                    number_range_one_byte_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Call_Retry_Interval",
                                    "Give a valid number",
@@ -1051,7 +1051,7 @@ ipmi_config_serial_conf_section_get (ipmi_config_state_data_t *state_data,
     goto cleanup;
 
   /* achu: For backwards compatability to ipmi-config in 0.2.0 */
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Call_Retry_Time",
                                    "Give a valid number",
@@ -1061,7 +1061,7 @@ ipmi_config_serial_conf_section_get (ipmi_config_state_data_t *state_data,
                                    number_range_one_byte_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Enable_DTR_Hangup",
                                    "Possible values: Yes/No",
@@ -1071,7 +1071,7 @@ ipmi_config_serial_conf_section_get (ipmi_config_state_data_t *state_data,
                                    yes_no_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Flow_Control",
                                    "Possible values: No_Flow_Control/RTS_CTS/XON_XOFF",
@@ -1081,7 +1081,7 @@ ipmi_config_serial_conf_section_get (ipmi_config_state_data_t *state_data,
                                    flow_control_number_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Bit_Rate",
                                    "Possible values: 9600/19200/38400/57600/115200",

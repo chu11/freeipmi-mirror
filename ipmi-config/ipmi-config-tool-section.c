@@ -65,7 +65,7 @@ ipmi_config_sections_destroy (struct ipmi_config_section *sections)
 }
 
 struct ipmi_config_section *
-ipmi_config_section_create (pstdout_state_t pstate,
+ipmi_config_section_create (ipmi_config_state_data_t *state_data,
                             const char *section_name,
                             const char *section_comment_section_name,
                             const char *section_comment,
@@ -75,18 +75,19 @@ ipmi_config_section_create (pstdout_state_t pstate,
 {
   struct ipmi_config_section *section = NULL;
 
+  assert (state_data);
   assert (section_name);
 
   if (!(section = (struct ipmi_config_section *)malloc (sizeof (struct ipmi_config_section))))
     {
-      pstdout_perror (pstate, "malloc");
+      pstdout_perror (state_data->pstate, "malloc");
       goto cleanup;
     }
   memset (section, '\0', sizeof (struct ipmi_config_section));
 
   if (!(section->section_name = strdup (section_name)))
     {
-      pstdout_perror (pstate, "strdup");
+      pstdout_perror (state_data->pstate, "strdup");
       goto cleanup;
     }
 
@@ -94,7 +95,7 @@ ipmi_config_section_create (pstdout_state_t pstate,
     {
       if (!(section->section_comment_section_name = strdup (section_comment_section_name)))
         {
-          pstdout_perror (pstate, "strdup");
+          pstdout_perror (state_data->pstate, "strdup");
           goto cleanup;
         }
     }
@@ -103,7 +104,7 @@ ipmi_config_section_create (pstdout_state_t pstate,
     {
       if (!(section->section_comment = strdup (section_comment)))
         {
-          pstdout_perror (pstate, "strdup");
+          pstdout_perror (state_data->pstate, "strdup");
           goto cleanup;
         }
     }
@@ -120,7 +121,7 @@ ipmi_config_section_create (pstdout_state_t pstate,
 }
 
 struct ipmi_config_section *
-ipmi_config_section_multi_channel_create (pstdout_state_t pstate,
+ipmi_config_section_multi_channel_create (ipmi_config_state_data_t *state_data,
                                           const char *section_name_base_str,
                                           const char *section_comment,
                                           Section_Pre_Commit section_pre_commit,
@@ -132,13 +133,14 @@ ipmi_config_section_multi_channel_create (pstdout_state_t pstate,
 {
   struct ipmi_config_section *section = NULL;
 
+  assert (state_data);
   assert (section_name_base_str);
   assert (channel_numbers);
   assert (channel_index < (int)channel_numbers_count);
 
   if (channel_index < 0)
     {
-      if (!(section = ipmi_config_section_create (pstate,
+      if (!(section = ipmi_config_section_create (state_data,
                                                   section_name_base_str,
                                                   section_name_base_str,
                                                   section_comment,
@@ -170,7 +172,7 @@ ipmi_config_section_multi_channel_create (pstdout_state_t pstate,
 
       if (!channel_index)
         {
-          if (!(section = ipmi_config_section_create (pstate,
+          if (!(section = ipmi_config_section_create (state_data,
                                                       section_name,
                                                       section_comment_section_name_ptr,
                                                       section_comment,
@@ -181,7 +183,7 @@ ipmi_config_section_multi_channel_create (pstdout_state_t pstate,
         }
       else
         {
-          if (!(section = ipmi_config_section_create (pstate,
+          if (!(section = ipmi_config_section_create (state_data,
                                                       section_name,
                                                       NULL,
                                                       NULL,
@@ -249,7 +251,7 @@ ipmi_config_section_destroy (struct ipmi_config_section *section)
 }
 
 int
-ipmi_config_section_add_key (pstdout_state_t pstate,
+ipmi_config_section_add_key (ipmi_config_state_data_t *state_data,
                              struct ipmi_config_section *section,
                              const char *key_name,
                              const char *description,
@@ -260,6 +262,7 @@ ipmi_config_section_add_key (pstdout_state_t pstate,
 {
   struct ipmi_config_key *k = NULL;
 
+  assert (state_data);
   assert (section);
   assert (key_name);
   assert (description);
@@ -269,19 +272,19 @@ ipmi_config_section_add_key (pstdout_state_t pstate,
 
   if (!(k = (struct ipmi_config_key *)malloc (sizeof (struct ipmi_config_key))))
     {
-      pstdout_perror (pstate, "malloc");
+      pstdout_perror (state_data->pstate, "malloc");
       goto cleanup;
     }
   memset (k, '\0', sizeof (struct ipmi_config_key));
 
   if (!(k->key_name = strdup (key_name)))
     {
-      pstdout_perror (pstate, "strdup");
+      pstdout_perror (state_data->pstate, "strdup");
       goto cleanup;
     }
   if (!(k->description = strdup (description)))
     {
-      pstdout_perror (pstate, "strdup");
+      pstdout_perror (state_data->pstate, "strdup");
       goto cleanup;
     }
   k->flags = flags;
@@ -307,7 +310,7 @@ ipmi_config_section_add_key (pstdout_state_t pstate,
 }
 
 int
-ipmi_config_section_multi_channel_add_key (pstdout_state_t pstate,
+ipmi_config_section_multi_channel_add_key (ipmi_config_state_data_t *state_data,
                                            struct ipmi_config_section *section,
                                            const char *key_name_base_str,
                                            const char *description,
@@ -319,6 +322,7 @@ ipmi_config_section_multi_channel_add_key (pstdout_state_t pstate,
                                            uint8_t *channel_numbers,
                                            unsigned int channel_numbers_count)
 {
+  assert (state_data);
   assert (section);
   assert (key_name_base_str);
   assert (description);
@@ -330,7 +334,7 @@ ipmi_config_section_multi_channel_add_key (pstdout_state_t pstate,
 
   if (channel_index < 0)
     {
-      if (ipmi_config_section_add_key (pstate,
+      if (ipmi_config_section_add_key (state_data,
                                        section,
                                        key_name_base_str,
                                        description,
@@ -350,7 +354,7 @@ ipmi_config_section_multi_channel_add_key (pstdout_state_t pstate,
                 key_name_base_str,
                 channel_numbers[channel_index]);
 
-      if (ipmi_config_section_add_key (pstate,
+      if (ipmi_config_section_add_key (state_data,
                                        section,
                                        key_name,
                                        description,
@@ -425,10 +429,11 @@ ipmi_config_section_add_keyvalue (ipmi_config_state_data_t *state_data,
 }
 
 int
-ipmi_config_section_update_keyvalue_input (pstdout_state_t pstate,
+ipmi_config_section_update_keyvalue_input (ipmi_config_state_data_t *state_data,
                                            struct ipmi_config_keyvalue *keyvalue,
                                            const char *value_input)
 {
+  assert (state_data);
   assert (keyvalue);
 
   if (value_input)
@@ -440,7 +445,7 @@ ipmi_config_section_update_keyvalue_input (pstdout_state_t pstate,
 
       if (!(keyvalue->value_input = strdup (value_input)))
         {
-          pstdout_perror (pstate, "strdup");
+          pstdout_perror (state_data->pstate, "strdup");
           return (-1);
         }
     }
@@ -536,17 +541,16 @@ ipmi_config_section_update_keyvalue_output_double (ipmi_config_state_data_t *sta
 }
 
 int
-ipmi_config_sections_validate_keyvalue_inputs (pstdout_state_t pstate,
-                                               struct ipmi_config_section *sections,
+ipmi_config_sections_validate_keyvalue_inputs (ipmi_config_state_data_t *state_data,
                                                void *arg)
 {
   struct ipmi_config_section *s;
   int nonvalid_count = 0;
   int rv = -1;
 
-  assert (sections);
+  assert (state_data);
 
-  s = sections;
+  s = state_data->sections;
   while (s)
     {
       struct ipmi_config_keyvalue *kv;
@@ -556,7 +560,7 @@ ipmi_config_sections_validate_keyvalue_inputs (pstdout_state_t pstate,
         {
           if (!kv->value_input)
             {
-              pstdout_fprintf (pstate,
+              pstdout_fprintf (state_data->pstate,
                                stderr,
                                "Value not specified for key '%s' in section '%s'\n",
                                kv->key->key_name,
@@ -571,7 +575,7 @@ ipmi_config_sections_validate_keyvalue_inputs (pstdout_state_t pstate,
 
               if (!strcasecmp (kv->value_input, IPMI_CONFIG_USERNAME_NOT_SET_YET_STR))
                 {
-                  pstdout_fprintf (pstate,
+                  pstdout_fprintf (state_data->pstate,
                                    stderr,
                                    "Invalid value '%s' for key '%s' in section '%s'\n",
                                    kv->value_input,
@@ -589,7 +593,7 @@ ipmi_config_sections_validate_keyvalue_inputs (pstdout_state_t pstate,
 
               if (v == IPMI_CONFIG_VALIDATE_NON_FATAL_ERROR)
                 {
-                  pstdout_fprintf (pstate,
+                  pstdout_fprintf (state_data->pstate,
                                    stderr,
                                    "Error validating value '%s' for key '%s' in section '%s'\n",
                                    kv->value_input,
@@ -599,7 +603,7 @@ ipmi_config_sections_validate_keyvalue_inputs (pstdout_state_t pstate,
                 }
               if (v == IPMI_CONFIG_VALIDATE_OUT_OF_RANGE_VALUE)
                 {
-                  pstdout_fprintf (pstate,
+                  pstdout_fprintf (state_data->pstate,
                                    stderr,
                                    "Out of Range value '%s' for key '%s' in section '%s'\n",
                                    kv->value_input,
@@ -609,7 +613,7 @@ ipmi_config_sections_validate_keyvalue_inputs (pstdout_state_t pstate,
                 }
               if (v == IPMI_CONFIG_VALIDATE_INVALID_VALUE)
                 {
-                  pstdout_fprintf (pstate,
+                  pstdout_fprintf (state_data->pstate,
                                    stderr,
                                    "Invalid value '%s' for key '%s' in section '%s'\n",
                                    kv->value_input,
@@ -669,7 +673,7 @@ ipmi_config_sections_insert_keyvalues (ipmi_config_state_data_t *state_data,
 
       if ((kv = ipmi_config_find_keyvalue (s, kp->key_name)))
         {
-          if (ipmi_config_section_update_keyvalue_input (state_data->pstate,
+          if (ipmi_config_section_update_keyvalue_input (state_data,
                                                          kv,
                                                          kp->value_input) < 0)
             {
@@ -699,16 +703,17 @@ ipmi_config_sections_insert_keyvalues (ipmi_config_state_data_t *state_data,
 }
 
 ipmi_config_err_t
-ipmi_config_output_sections_list (pstdout_state_t pstate,
-                                  struct ipmi_config_section *sections)
+ipmi_config_output_sections_list (ipmi_config_state_data_t *state_data)
 {
   struct ipmi_config_section *s;
 
-  s = sections;
+  assert (state_data);
+
+  s = state_data->sections;
   while (s)
     {
       if (!(s->flags & IPMI_CONFIG_DO_NOT_LIST))
-        pstdout_printf (pstate,
+        pstdout_printf (state_data->pstate,
                         "%s\n",
                         s->section_name);
       s = s->next;

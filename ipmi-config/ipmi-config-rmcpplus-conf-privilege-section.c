@@ -588,7 +588,7 @@ ipmi_config_rmcpplus_conf_privilege_section_get (ipmi_config_state_data_t *state
 
   assert (state_data);
   
-  if (!(section = ipmi_config_section_multi_channel_create (state_data->pstate,
+  if (!(section = ipmi_config_section_multi_channel_create (state_data,
                                                             section_name_base_str,
                                                             section_comment,
                                                             NULL,
@@ -599,7 +599,7 @@ ipmi_config_rmcpplus_conf_privilege_section_get (ipmi_config_state_data_t *state
                                                             state_data->lan_channel_numbers_count)))
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Maximum_Privilege_Cipher_Suite_Id_0",
                                    "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
@@ -609,7 +609,7 @@ ipmi_config_rmcpplus_conf_privilege_section_get (ipmi_config_state_data_t *state
                                    rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Maximum_Privilege_Cipher_Suite_Id_1",
                                    "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
@@ -619,7 +619,7 @@ ipmi_config_rmcpplus_conf_privilege_section_get (ipmi_config_state_data_t *state
                                    rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Maximum_Privilege_Cipher_Suite_Id_2",
                                    "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
@@ -629,7 +629,7 @@ ipmi_config_rmcpplus_conf_privilege_section_get (ipmi_config_state_data_t *state
                                    rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Maximum_Privilege_Cipher_Suite_Id_3",
                                    "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
@@ -639,7 +639,7 @@ ipmi_config_rmcpplus_conf_privilege_section_get (ipmi_config_state_data_t *state
                                    rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Maximum_Privilege_Cipher_Suite_Id_4",
                                    "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
@@ -649,7 +649,7 @@ ipmi_config_rmcpplus_conf_privilege_section_get (ipmi_config_state_data_t *state
                                    rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Maximum_Privilege_Cipher_Suite_Id_5",
                                    "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
@@ -659,7 +659,7 @@ ipmi_config_rmcpplus_conf_privilege_section_get (ipmi_config_state_data_t *state
                                    rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Maximum_Privilege_Cipher_Suite_Id_6",
                                    "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
@@ -669,7 +669,7 @@ ipmi_config_rmcpplus_conf_privilege_section_get (ipmi_config_state_data_t *state
                                    rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Maximum_Privilege_Cipher_Suite_Id_7",
                                    "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
@@ -679,7 +679,7 @@ ipmi_config_rmcpplus_conf_privilege_section_get (ipmi_config_state_data_t *state
                                    rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Maximum_Privilege_Cipher_Suite_Id_8",
                                    "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
@@ -689,7 +689,7 @@ ipmi_config_rmcpplus_conf_privilege_section_get (ipmi_config_state_data_t *state
                                    rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Maximum_Privilege_Cipher_Suite_Id_9",
                                    "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
@@ -699,7 +699,7 @@ ipmi_config_rmcpplus_conf_privilege_section_get (ipmi_config_state_data_t *state
                                    rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Maximum_Privilege_Cipher_Suite_Id_10",
                                    "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
@@ -709,7 +709,7 @@ ipmi_config_rmcpplus_conf_privilege_section_get (ipmi_config_state_data_t *state
                                    rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Maximum_Privilege_Cipher_Suite_Id_11",
                                    "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
@@ -719,7 +719,7 @@ ipmi_config_rmcpplus_conf_privilege_section_get (ipmi_config_state_data_t *state
                                    rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Maximum_Privilege_Cipher_Suite_Id_12",
                                    "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
@@ -729,7 +729,7 @@ ipmi_config_rmcpplus_conf_privilege_section_get (ipmi_config_state_data_t *state
                                    rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Maximum_Privilege_Cipher_Suite_Id_13",
                                    "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
@@ -739,7 +739,7 @@ ipmi_config_rmcpplus_conf_privilege_section_get (ipmi_config_state_data_t *state
                                    rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Maximum_Privilege_Cipher_Suite_Id_14",
                                    "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
@@ -749,7 +749,7 @@ ipmi_config_rmcpplus_conf_privilege_section_get (ipmi_config_state_data_t *state
                                    rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Maximum_Privilege_Cipher_Suite_Id_15",
                                    "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
@@ -763,7 +763,7 @@ ipmi_config_rmcpplus_conf_privilege_section_get (ipmi_config_state_data_t *state
 
   /* achu: Can't support this config until IPMI spec is updated.  Yeah, it sucks */
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Maximum_Privilege_Cipher_Suite_Id_16",
                                    "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
@@ -773,7 +773,7 @@ ipmi_config_rmcpplus_conf_privilege_section_get (ipmi_config_state_data_t *state
                                    rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Maximum_Privilege_Cipher_Suite_Id_17",
                                    "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
@@ -783,7 +783,7 @@ ipmi_config_rmcpplus_conf_privilege_section_get (ipmi_config_state_data_t *state
                                    rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Maximum_Privilege_Cipher_Suite_Id_18",
                                    "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",
@@ -793,7 +793,7 @@ ipmi_config_rmcpplus_conf_privilege_section_get (ipmi_config_state_data_t *state
                                    rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Maximum_Privilege_Cipher_Suite_Id_19",
                                    "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary",

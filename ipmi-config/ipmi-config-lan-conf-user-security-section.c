@@ -415,7 +415,7 @@ ipmi_config_lan_conf_user_security_section_get (ipmi_config_state_data_t *state_
 
   assert (state_data);
 
-  if (!(section = ipmi_config_section_multi_channel_create (state_data->pstate,
+  if (!(section = ipmi_config_section_multi_channel_create (state_data,
                                                             section_name_base_str,
                                                             section_comment,
                                                             NULL,
@@ -426,7 +426,7 @@ ipmi_config_lan_conf_user_security_section_get (ipmi_config_state_data_t *state_
                                                             state_data->lan_channel_numbers_count)))
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Bad_Password_Threshold",
                                    "Possible values: 0-255, 0 indicates no limit",
@@ -436,7 +436,7 @@ ipmi_config_lan_conf_user_security_section_get (ipmi_config_state_data_t *state_
                                    number_range_one_byte_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Attempt_Count_Reset_Interval",
                                    "Possible values: 0-65535, in 10 second increments (e.g. 2 = 20 sec)\n"
@@ -447,7 +447,7 @@ ipmi_config_lan_conf_user_security_section_get (ipmi_config_state_data_t *state_
                                    number_range_two_bytes_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "User_Lockout_Interval",
                                    "Possible values: 0-65535, in 10 second increments (e.g. 2 = 20 sec)\n"
@@ -458,7 +458,7 @@ ipmi_config_lan_conf_user_security_section_get (ipmi_config_state_data_t *state_
                                    number_range_two_bytes_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Enable_Event_Message_When_User_Disabled",
                                    "Possible values: Yes/No",

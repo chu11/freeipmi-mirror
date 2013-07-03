@@ -170,7 +170,7 @@ ipmi_config_misc_section_get (ipmi_config_state_data_t *state_data)
 
   assert (state_data);
 
-  if (!(section = ipmi_config_section_create (state_data->pstate,
+  if (!(section = ipmi_config_section_create (state_data,
                                               "Misc",
                                               "Misc",
                                               section_comment,
@@ -179,7 +179,7 @@ ipmi_config_misc_section_get (ipmi_config_state_data_t *state_data)
                                               NULL)))
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Power_Restore_Policy",
                                    "Possible values: Off_State_AC_Apply/Restore_State_AC_Apply/On_State_AC_Apply",

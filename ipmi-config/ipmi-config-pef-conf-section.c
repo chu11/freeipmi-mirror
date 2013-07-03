@@ -426,7 +426,7 @@ ipmi_config_pef_conf_section_get (ipmi_config_state_data_t *state_data)
 
   assert (state_data);
 
-  if (!(section = ipmi_config_section_create (state_data->pstate,
+  if (!(section = ipmi_config_section_create (state_data,
                                               "PEF_Conf",
                                               NULL,
                                               NULL,
@@ -435,7 +435,7 @@ ipmi_config_pef_conf_section_get (ipmi_config_state_data_t *state_data)
                                               NULL)))
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Enable_PEF",
                                    "Possible values: Yes/No",
@@ -445,7 +445,7 @@ ipmi_config_pef_conf_section_get (ipmi_config_state_data_t *state_data)
                                    yes_no_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Enable_PEF_Event_Messages",
                                    "Possible values: Yes/No",
@@ -455,7 +455,7 @@ ipmi_config_pef_conf_section_get (ipmi_config_state_data_t *state_data)
                                    yes_no_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Enable_PEF_Startup_Delay",
                                    "Possible values: Yes/No",
@@ -465,7 +465,7 @@ ipmi_config_pef_conf_section_get (ipmi_config_state_data_t *state_data)
                                    yes_no_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Enable_PEF_Alert_Startup_Delay",
                                    "Possible values: Yes/No",
@@ -475,7 +475,7 @@ ipmi_config_pef_conf_section_get (ipmi_config_state_data_t *state_data)
                                    yes_no_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Enable_Alert_Action",
                                    "Possible values: Yes/No",
@@ -485,7 +485,7 @@ ipmi_config_pef_conf_section_get (ipmi_config_state_data_t *state_data)
                                    yes_no_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Enable_Power_Down_Action",
                                    "Possible values: Yes/No",
@@ -495,7 +495,7 @@ ipmi_config_pef_conf_section_get (ipmi_config_state_data_t *state_data)
                                    yes_no_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Enable_Reset_Action",
                                    "Possible values: Yes/No",
@@ -505,7 +505,7 @@ ipmi_config_pef_conf_section_get (ipmi_config_state_data_t *state_data)
                                    yes_no_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Enable_Power_Cycle_Action",
                                    "Possible values: Yes/No",
@@ -515,7 +515,7 @@ ipmi_config_pef_conf_section_get (ipmi_config_state_data_t *state_data)
                                    yes_no_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Enable_OEM_Action",
                                    "Possible values: Yes/No",
@@ -525,7 +525,7 @@ ipmi_config_pef_conf_section_get (ipmi_config_state_data_t *state_data)
                                    yes_no_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Enable_Diagnostic_Interrupt",
                                    "Possible values: Yes/No",
@@ -535,7 +535,7 @@ ipmi_config_pef_conf_section_get (ipmi_config_state_data_t *state_data)
                                    yes_no_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "PEF_Startup_Delay",
                                    "Give value in seconds",
@@ -545,7 +545,7 @@ ipmi_config_pef_conf_section_get (ipmi_config_state_data_t *state_data)
                                    number_range_one_byte_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "PEF_Alert_Startup_Delay",
                                    "Give value in seconds",

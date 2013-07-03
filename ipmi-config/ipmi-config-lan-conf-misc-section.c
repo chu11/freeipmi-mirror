@@ -431,7 +431,7 @@ ipmi_config_lan_conf_misc_section_get (ipmi_config_state_data_t *state_data,
 
   assert (state_data);
 
-  if (!(section = ipmi_config_section_multi_channel_create (state_data->pstate,
+  if (!(section = ipmi_config_section_multi_channel_create (state_data,
                                                             section_name_base_str,
                                                             section_comment,
                                                             NULL,
@@ -442,7 +442,7 @@ ipmi_config_lan_conf_misc_section_get (ipmi_config_state_data_t *state_data,
                                                             state_data->lan_channel_numbers_count)))
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Enable_Gratuitous_ARPs",
                                    "Possible values: Yes/No",
@@ -452,7 +452,7 @@ ipmi_config_lan_conf_misc_section_get (ipmi_config_state_data_t *state_data,
                                    yes_no_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Enable_ARP_Response",
                                    "Possible values: Yes/No",
@@ -462,7 +462,7 @@ ipmi_config_lan_conf_misc_section_get (ipmi_config_state_data_t *state_data,
                                    yes_no_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Gratuitous_ARP_Interval",
                                    "Possible values: 0-255, in 500ms increments (e.g. 2 = 1000ms)",

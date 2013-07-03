@@ -365,7 +365,7 @@ ipmi_config_lan_conf_security_keys_section_get (ipmi_config_state_data_t *state_
 
   assert (state_data);
 
-  if (!(section = ipmi_config_section_multi_channel_create (state_data->pstate,
+  if (!(section = ipmi_config_section_multi_channel_create (state_data,
                                                             section_name_base_str,
                                                             section_comment,
                                                             NULL,
@@ -376,7 +376,7 @@ ipmi_config_lan_conf_security_keys_section_get (ipmi_config_state_data_t *state_
                                                             state_data->lan_channel_numbers_count)))
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "K_R",
                                    "Give string or blank to clear. Max 20 chars",
@@ -386,7 +386,7 @@ ipmi_config_lan_conf_security_keys_section_get (ipmi_config_state_data_t *state_
                                    k_r_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "K_G",
                                    "Give string or blank to clear. Max 20 bytes, prefix with 0x to enter hex",

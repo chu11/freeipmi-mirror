@@ -2368,7 +2368,7 @@ ipmi_config_user_section_get (ipmi_config_state_data_t *state_data, unsigned int
                 section_comment_text,
                 IPMI_CONFIG_USERNAME_NOT_SET_YET_STR);
 
-      if (!(section = ipmi_config_section_create (state_data->pstate,
+      if (!(section = ipmi_config_section_create (state_data,
                                                   section_name,
                                                   "UserX",
                                                   section_comment,
@@ -2379,7 +2379,7 @@ ipmi_config_user_section_get (ipmi_config_state_data_t *state_data, unsigned int
     }
   else
     {
-      if (!(section = ipmi_config_section_create (state_data->pstate,
+      if (!(section = ipmi_config_section_create (state_data,
                                                   section_name,
                                                   NULL,
                                                   NULL,
@@ -2395,7 +2395,7 @@ ipmi_config_user_section_get (ipmi_config_state_data_t *state_data, unsigned int
     serial_config_flags = IPMI_CONFIG_DO_NOT_CHECKOUT;
 
   /* userid 1 is the NULL username, so comment it out by default */
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Username",
                                    "Give Username",
@@ -2409,7 +2409,7 @@ ipmi_config_user_section_get (ipmi_config_state_data_t *state_data, unsigned int
    * user is configured "on" before a password is set, allowing a null
    * connection to be established.
    */
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Password",
                                    "Give password or blank to clear. MAX 16 chars (20 chars if IPMI 2.0 supported).",
@@ -2419,7 +2419,7 @@ ipmi_config_user_section_get (ipmi_config_state_data_t *state_data, unsigned int
                                    password_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Enable_User",
                                    "Possible values: Yes/No or blank to not set",
@@ -2430,7 +2430,7 @@ ipmi_config_user_section_get (ipmi_config_state_data_t *state_data, unsigned int
     goto cleanup;
 
   /* achu: For backwards compatability to earlier ipmi-config, now "absorbed" into Password */
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Password20",
                                    "Give password for IPMI 2.0 or blank to clear. MAX 20 chars.",
@@ -2459,7 +2459,7 @@ ipmi_config_user_section_get (ipmi_config_state_data_t *state_data, unsigned int
       else
         config_flags = state_data->lan_channel_config_flags;
 
-      if (ipmi_config_section_multi_channel_add_key (state_data->pstate,
+      if (ipmi_config_section_multi_channel_add_key (state_data,
                                                      section,
                                                      "Lan_Enable_IPMI_Msgs",
                                                      "Possible values: Yes/No",
@@ -2472,7 +2472,7 @@ ipmi_config_user_section_get (ipmi_config_state_data_t *state_data, unsigned int
                                                      state_data->lan_channel_numbers_count) < 0)
         goto cleanup;
 
-      if (ipmi_config_section_multi_channel_add_key (state_data->pstate,
+      if (ipmi_config_section_multi_channel_add_key (state_data,
                                                      section,
                                                      "Lan_Enable_Link_Auth",
                                                      "Possible values: Yes/No",
@@ -2485,7 +2485,7 @@ ipmi_config_user_section_get (ipmi_config_state_data_t *state_data, unsigned int
                                                      state_data->lan_channel_numbers_count) < 0)
         goto cleanup;
 
-      if (ipmi_config_section_multi_channel_add_key (state_data->pstate,
+      if (ipmi_config_section_multi_channel_add_key (state_data,
                                                      section,
                                                      "Lan_Enable_Restricted_to_Callback",
                                                      "Possible values: Yes/No",
@@ -2499,7 +2499,7 @@ ipmi_config_user_section_get (ipmi_config_state_data_t *state_data, unsigned int
         goto cleanup;
       
       /* achu: For backwards compatability to ipmi-config in 0.2.0 */
-      if (ipmi_config_section_multi_channel_add_key (state_data->pstate,
+      if (ipmi_config_section_multi_channel_add_key (state_data,
                                                      section,
                                                      "Lan_Enable_Restrict_to_Callback",
                                                      "Possible values: Yes/No",
@@ -2512,7 +2512,7 @@ ipmi_config_user_section_get (ipmi_config_state_data_t *state_data, unsigned int
                                                      state_data->lan_channel_numbers_count) < 0)
         goto cleanup;
 
-      if (ipmi_config_section_multi_channel_add_key (state_data->pstate,
+      if (ipmi_config_section_multi_channel_add_key (state_data,
                                                      section,
                                                      "Lan_Privilege_Limit",
                                                      "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access",
@@ -2525,7 +2525,7 @@ ipmi_config_user_section_get (ipmi_config_state_data_t *state_data, unsigned int
                                                      state_data->lan_channel_numbers_count) < 0)
         goto cleanup;
       
-      if (ipmi_config_section_multi_channel_add_key (state_data->pstate,
+      if (ipmi_config_section_multi_channel_add_key (state_data,
                                                      section,
                                                      "Lan_Session_Limit",
                                                      "Possible values: 0-17, 0 is unlimited; May be reset to 0 if not specified",
@@ -2538,7 +2538,7 @@ ipmi_config_user_section_get (ipmi_config_state_data_t *state_data, unsigned int
                                                      state_data->lan_channel_numbers_count) < 0)
         goto cleanup;
       
-      if (ipmi_config_section_multi_channel_add_key (state_data->pstate,
+      if (ipmi_config_section_multi_channel_add_key (state_data,
                                                      section,
                                                      "SOL_Payload_Access",
                                                      "Possible values: Yes/No",
@@ -2571,7 +2571,7 @@ ipmi_config_user_section_get (ipmi_config_state_data_t *state_data, unsigned int
       else
         config_flags = serial_config_flags | state_data->serial_channel_config_flags;
 
-      if (ipmi_config_section_multi_channel_add_key (state_data->pstate,
+      if (ipmi_config_section_multi_channel_add_key (state_data,
                                                      section,
                                                      "Serial_Enable_IPMI_Msgs",
                                                      "Possible values: Yes/No",
@@ -2584,7 +2584,7 @@ ipmi_config_user_section_get (ipmi_config_state_data_t *state_data, unsigned int
                                                      state_data->serial_channel_numbers_count) < 0)
         goto cleanup;
 
-      if (ipmi_config_section_multi_channel_add_key (state_data->pstate,
+      if (ipmi_config_section_multi_channel_add_key (state_data,
                                                      section,
                                                      "Serial_Enable_Link_Auth",
                                                      "Possible values: Yes/No",
@@ -2597,7 +2597,7 @@ ipmi_config_user_section_get (ipmi_config_state_data_t *state_data, unsigned int
                                                      state_data->serial_channel_numbers_count) < 0)
         goto cleanup;
       
-      if (ipmi_config_section_multi_channel_add_key (state_data->pstate,
+      if (ipmi_config_section_multi_channel_add_key (state_data,
                                                      section,
                                                      "Serial_Enable_Restricted_to_Callback",
                                                      "Possible values: Yes/No",
@@ -2611,7 +2611,7 @@ ipmi_config_user_section_get (ipmi_config_state_data_t *state_data, unsigned int
         goto cleanup;
 
       /* achu: For backwards compatability to ipmi-config in 0.2.0 */
-      if (ipmi_config_section_multi_channel_add_key (state_data->pstate,
+      if (ipmi_config_section_multi_channel_add_key (state_data,
                                                      section,
                                                      "Serial_Enable_Restrict_to_Callback",
                                                      "Possible values: Yes/No",
@@ -2624,7 +2624,7 @@ ipmi_config_user_section_get (ipmi_config_state_data_t *state_data, unsigned int
                                                      state_data->serial_channel_numbers_count) < 0)
         goto cleanup;
 
-      if (ipmi_config_section_multi_channel_add_key (state_data->pstate,
+      if (ipmi_config_section_multi_channel_add_key (state_data,
                                                      section,
                                                      "Serial_Privilege_Limit",
                                                      "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access",
@@ -2637,7 +2637,7 @@ ipmi_config_user_section_get (ipmi_config_state_data_t *state_data, unsigned int
                                                      state_data->serial_channel_numbers_count) < 0)
         goto cleanup;
       
-      if (ipmi_config_section_multi_channel_add_key (state_data->pstate,
+      if (ipmi_config_section_multi_channel_add_key (state_data,
                                                      section,
                                                      "Serial_Session_Limit",
                                                      "Possible values: 0-17, 0 is unlimited; May be reset to 0 if not specified",

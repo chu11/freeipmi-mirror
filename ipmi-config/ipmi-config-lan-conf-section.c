@@ -2307,7 +2307,7 @@ ipmi_config_lan_conf_section_get (ipmi_config_state_data_t *state_data,
   if (!state_data->prog_data->args->verbose_count)
     verbose_option_config_flags = IPMI_CONFIG_DO_NOT_CHECKOUT;
 
-  if (!(section = ipmi_config_section_multi_channel_create (state_data->pstate,
+  if (!(section = ipmi_config_section_multi_channel_create (state_data,
                                                             section_name_base_str,
                                                             section_comment,
                                                             NULL,
@@ -2318,7 +2318,7 @@ ipmi_config_lan_conf_section_get (ipmi_config_state_data_t *state_data,
                                                             state_data->lan_channel_numbers_count)))
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "IP_Address_Source",
                                    "Possible values: Unspecified/Static/Use_DHCP/Use_BIOS/Use_Others",
@@ -2328,7 +2328,7 @@ ipmi_config_lan_conf_section_get (ipmi_config_state_data_t *state_data,
                                    ip_address_source_number_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "IP_Address",
                                    "Give valid IP address",
@@ -2338,7 +2338,7 @@ ipmi_config_lan_conf_section_get (ipmi_config_state_data_t *state_data,
                                    ip_address_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "MAC_Address",
                                    "Give valid MAC address",
@@ -2349,7 +2349,7 @@ ipmi_config_lan_conf_section_get (ipmi_config_state_data_t *state_data,
     goto cleanup;
 
   /* TODO: XXX: checking valid netmask is not same as checking valid IP? */
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Subnet_Mask",
                                    "Give valid Subnet Mask",
@@ -2359,7 +2359,7 @@ ipmi_config_lan_conf_section_get (ipmi_config_state_data_t *state_data,
                                    ip_address_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Default_Gateway_IP_Address",
                                    "Give valid IP address",
@@ -2369,7 +2369,7 @@ ipmi_config_lan_conf_section_get (ipmi_config_state_data_t *state_data,
                                    ip_address_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Default_Gateway_MAC_Address",
                                    "Give valid MAC address",
@@ -2379,7 +2379,7 @@ ipmi_config_lan_conf_section_get (ipmi_config_state_data_t *state_data,
                                    mac_address_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Backup_Gateway_IP_Address",
                                    "Give valid IP address",
@@ -2389,7 +2389,7 @@ ipmi_config_lan_conf_section_get (ipmi_config_state_data_t *state_data,
                                    ip_address_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Backup_Gateway_MAC_Address",
                                    "Give valid MAC address",
@@ -2399,7 +2399,7 @@ ipmi_config_lan_conf_section_get (ipmi_config_state_data_t *state_data,
                                    mac_address_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Vlan_id",
                                    "Give valid unsigned number",
@@ -2409,7 +2409,7 @@ ipmi_config_lan_conf_section_get (ipmi_config_state_data_t *state_data,
                                    vlan_id_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Vlan_Id_Enable",
                                    "Possible values: Yes/No",
@@ -2419,7 +2419,7 @@ ipmi_config_lan_conf_section_get (ipmi_config_state_data_t *state_data,
                                    yes_no_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Vlan_Priority",
                                    "Give valid unsigned number",
@@ -2429,7 +2429,7 @@ ipmi_config_lan_conf_section_get (ipmi_config_state_data_t *state_data,
                                    number_range_one_byte_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "IPv4_Header_Time_To_Live",
                                    "Give valid hex number",
@@ -2439,7 +2439,7 @@ ipmi_config_lan_conf_section_get (ipmi_config_state_data_t *state_data,
                                    number_range_one_byte_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "IPv4_Header_Flags",
                                    "Give valid hex number",
@@ -2449,7 +2449,7 @@ ipmi_config_lan_conf_section_get (ipmi_config_state_data_t *state_data,
                                    number_range_three_bits_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "IPv4_Header_Type_Of_Service",
                                    "Give valid hex number",
@@ -2459,7 +2459,7 @@ ipmi_config_lan_conf_section_get (ipmi_config_state_data_t *state_data,
                                    number_range_four_bits_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "IPv4_Header_Precedence",
                                    "Give valid hex number",
@@ -2469,7 +2469,7 @@ ipmi_config_lan_conf_section_get (ipmi_config_state_data_t *state_data,
                                    number_range_three_bits_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Primary_RMCP_Port",
                                    "Give valid number",
@@ -2479,7 +2479,7 @@ ipmi_config_lan_conf_section_get (ipmi_config_state_data_t *state_data,
                                    number_range_two_bytes_validate) < 0)
     goto cleanup;
 
-  if (ipmi_config_section_add_key (state_data->pstate,
+  if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Secondary_RMCP_Port",
                                    "Give valid number",

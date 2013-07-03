@@ -60,7 +60,7 @@ ipmi_config_lan_channel_section_get (ipmi_config_state_data_t *state_data,
 
   assert (state_data);
 
-  if (!(section = ipmi_config_section_multi_channel_create (state_data->pstate,
+  if (!(section = ipmi_config_section_multi_channel_create (state_data,
                                                             section_name_base_str,
                                                             section_comment,
                                                             NULL,
