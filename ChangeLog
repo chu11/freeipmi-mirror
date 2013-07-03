@@ -1,3 +1,7 @@
+2013-07-03  John Gilmore <gnu@toad.com>
+
+	* Fix compiler issues w/ gcc-2.96.
+
 2013-07-03  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/ipmi-sensors-output-common.c (ipmi_sensors_get_thresholds):

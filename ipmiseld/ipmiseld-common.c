@@ -212,11 +212,11 @@ ipmiseld_err_output (ipmiseld_host_data_t *host_data,
 		     ...)
 {
   char buf[IPMISELD_ERR_BUFLEN + 1];
-  memset (buf, '\0', IPMISELD_ERR_BUFLEN + 1);
   va_list ap;
 
   assert (host_data);
   assert (message);
+  memset (buf, '\0', IPMISELD_ERR_BUFLEN + 1);
 
   va_start (ap, message);
   vsnprintf(buf, IPMISELD_ERR_BUFLEN, message, ap);
