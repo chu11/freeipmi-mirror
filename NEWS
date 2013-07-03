@@ -2,6 +2,7 @@ FreeIPMI 1.2.9 - 06/26/13
 -------------------------
 o Fix threshold output corner case in ipmi-sensors.
 o Fix invalid declaration in libipmimonitoring header.
+o Fix older compiler build problems.
 
 FreeIPMI 1.2.8 - 06/21/13
 -------------------------
