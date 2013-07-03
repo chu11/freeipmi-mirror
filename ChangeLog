@@ -1,3 +1,14 @@
+2013-07-03  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/ipmi-sensors-output-common.c (ipmi_sensors_get_thresholds):
+	When thresholds access reported by SDR is fixed/unreadable, the
+	prior interpretation was that thresholds were not available.  The
+	apparent correct interpretation is that thresholds are only
+	unreadable via the get threshold command, but thresholds can still
+	be read in the SDR.  Code has been altered to meet this
+	assumption.  Issue discovered and proper interpretation determined
+	by Holger Liebig <holger.liebig@ts.fujitsu.com>.
+
 2013-06-26  Mario Jungwirth <mario.jungwirth@ocilion.com>
 
 	* libipmimonitoring/ipmi_monitoring.h.in: Remove invalid declaration. 
