@@ -20,11 +20,8 @@
 #define IPMI_CONFIG_TOOL_DIFF_H
 
 #include "ipmi-config.h"
-#include "pstdout.h"
 
-ipmi_config_err_t ipmi_config_diff (pstdout_state_t pstate,
-                                    struct ipmi_config_section *sections,
-                                    struct ipmi_config_arguments *cmd_args,
+ipmi_config_err_t ipmi_config_diff (ipmi_config_state_data_t *state_data,
                                     void *arg);
 
 #endif /* IPMI_CONFIG_TOOL_DIFF_H */

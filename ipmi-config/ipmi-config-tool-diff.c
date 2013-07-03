@@ -34,9 +34,7 @@
 #include "pstdout.h"
 
 ipmi_config_err_t
-ipmi_config_diff (pstdout_state_t pstate,
-                  struct ipmi_config_section *sections,
-                  struct ipmi_config_arguments *cmd_args,
+ipmi_config_diff (ipmi_config_state_data_t *state_data,
                   void *arg)
 {
   struct ipmi_config_section *s;
@@ -44,10 +42,9 @@ ipmi_config_diff (pstdout_state_t pstate,
   ipmi_config_err_t ret = IPMI_CONFIG_ERR_SUCCESS;
   ipmi_config_err_t this_ret;
 
-  assert (sections);
-  assert (cmd_args);
+  assert (state_data);
 
-  s = sections;
+  s = state_data->sections;
   while (s)
     {
       struct ipmi_config_keyvalue *kv = s->keyvalues;
@@ -63,7 +60,7 @@ ipmi_config_diff (pstdout_state_t pstate,
           if (this_ret == IPMI_CONFIG_ERR_SUCCESS)
             {
               if (!same (kv->value_input, kv->value_output))
-                pstdout_printf (pstate,
+                pstdout_printf (state_data->pstate,
                                 "%s:%s - input=`%s':actual=`%s'\n",
                                 s->section_name,
                                 kv->key->key_name,
@@ -72,7 +69,7 @@ ipmi_config_diff (pstdout_state_t pstate,
             }
           else
             {
-              pstdout_printf (pstate,
+              pstdout_printf (state_data->pstate,
                               "\t## ERROR: Unable to checkout %s:%s\n",
                               s->section_name,
                               kv->key->key_name);

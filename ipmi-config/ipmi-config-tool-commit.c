@@ -37,11 +37,10 @@
 #include "freeipmi-portability.h"
 #include "pstdout.h"
 
-ipmi_config_err_t
-ipmi_config_commit_section (pstdout_state_t pstate,
-                            struct ipmi_config_section *section,
-                            struct ipmi_config_arguments *cmd_args,
-                            void *arg)
+static ipmi_config_err_t
+_ipmi_config_commit_section (ipmi_config_state_data_t *state_data,
+			     struct ipmi_config_section *section,
+			     void *arg)
 {
   struct ipmi_config_keyvalue *kv;
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
@@ -49,8 +48,8 @@ ipmi_config_commit_section (pstdout_state_t pstate,
   ipmi_config_err_t this_ret;
   unsigned int commit_count = 0;
 
+  assert (state_data);
   assert (section);
-  assert (cmd_args);
 
   if (section->section_pre_commit)
     {
@@ -60,7 +59,7 @@ ipmi_config_commit_section (pstdout_state_t pstate,
 
       if (IPMI_CONFIG_IS_NON_FATAL_ERROR (this_ret))
         {
-          pstdout_fprintf (pstate,
+          pstdout_fprintf (state_data->pstate,
                            stderr,
                            "ERROR: Section pre-commit `%s'\n",
                            section->section_name);
@@ -92,7 +91,7 @@ ipmi_config_commit_section (pstdout_state_t pstate,
                * ignored.  We want to try to avoid this.
                */
               
-              if (cmd_args->common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_VERY_SLOW_COMMIT)
+              if (state_data->prog_data->args->common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_VERY_SLOW_COMMIT)
                 sleep (1);
               
               commit_count++;
@@ -101,25 +100,25 @@ ipmi_config_commit_section (pstdout_state_t pstate,
           if (IPMI_CONFIG_IS_NON_FATAL_ERROR (this_ret))
             {
               if (this_ret == IPMI_CONFIG_ERR_NON_FATAL_ERROR_READ_ONLY)
-                pstdout_fprintf (pstate,
+                pstdout_fprintf (state_data->pstate,
                                  stderr,
                                  "ERROR: Failed to commit `%s:%s': Read Only Field\n",
                                  section->section_name,
                                  kv->key->key_name);
               else if (this_ret == IPMI_CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED)
-                pstdout_fprintf (pstate,
+                pstdout_fprintf (state_data->pstate,
                                  stderr,
                                  "ERROR: Failed to commit `%s:%s': Not Supported\n",
                                  section->section_name,
                                  kv->key->key_name);
               else if (this_ret == IPMI_CONFIG_ERR_NON_FATAL_ERROR_INVALID_UNSUPPORTED_CONFIG)
-                pstdout_fprintf (pstate,
+                pstdout_fprintf (state_data->pstate,
                                  stderr,
                                  "ERROR: Failed to commit `%s:%s': Invalid/Unsupported Config\n",
                                  section->section_name,
                                  kv->key->key_name);
               else
-                pstdout_fprintf (pstate,
+                pstdout_fprintf (state_data->pstate,
                                  stderr,
                                  "ERROR: Failed to commit `%s:%s'\n",
                                  section->section_name,
@@ -129,7 +128,7 @@ ipmi_config_commit_section (pstdout_state_t pstate,
         }
       else
         {
-          pstdout_fprintf (pstate,
+          pstdout_fprintf (state_data->pstate,
                            stderr,
                            "ERROR: `%s:%s' is not writeable\n",
                            section->section_name,
@@ -148,7 +147,7 @@ ipmi_config_commit_section (pstdout_state_t pstate,
 
       if (IPMI_CONFIG_IS_NON_FATAL_ERROR (this_ret))
         {
-          pstdout_fprintf (pstate,
+          pstdout_fprintf (state_data->pstate,
                            stderr,
                            "ERROR: Section post-commit `%s'\n",
                            section->section_name);
@@ -162,25 +161,21 @@ ipmi_config_commit_section (pstdout_state_t pstate,
 }
 
 ipmi_config_err_t
-ipmi_config_commit (pstdout_state_t pstate,
-                    struct ipmi_config_section *sections,
-                    struct ipmi_config_arguments *cmd_args,
+ipmi_config_commit (ipmi_config_state_data_t *state_data,
                     void *arg)
 {
   struct ipmi_config_section *s;
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_SUCCESS;
   ipmi_config_err_t ret;
 
-  assert (sections);
-  assert (cmd_args);
+  assert (state_data);
 
-  s = sections;
+  s = state_data->sections;
   while (s)
     {
-      if ((ret = ipmi_config_commit_section (pstate,
-                                             s,
-                                             cmd_args,
-                                             arg)) != IPMI_CONFIG_ERR_SUCCESS)
+      if ((ret = _ipmi_config_commit_section (state_data,
+					      s,
+					      arg)) != IPMI_CONFIG_ERR_SUCCESS)
         {
           if (ret == IPMI_CONFIG_ERR_FATAL_ERROR)
             {
@@ -208,8 +203,8 @@ ipmi_config_commit (pstdout_state_t pstate,
        * ignored.  We want to try to avoid this.
        */
 
-      if (cmd_args->common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_SLOW_COMMIT
-          || cmd_args->common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_VERY_SLOW_COMMIT)
+      if (state_data->prog_data->args->common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_SLOW_COMMIT
+          || state_data->prog_data->args->common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_VERY_SLOW_COMMIT)
         sleep (1);
 
       s = s->next;

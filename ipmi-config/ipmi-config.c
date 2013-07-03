@@ -326,15 +326,11 @@ _ipmi_config (pstdout_state_t pstate,
         }
       break;
     case IPMI_CONFIG_ACTION_COMMIT:
-      ret = ipmi_config_commit (pstate,
-                                state_data.sections,
-                                prog_data->args,
+      ret = ipmi_config_commit (&state_data,
                                 &state_data);
       break;
     case IPMI_CONFIG_ACTION_DIFF:
-      ret = ipmi_config_diff (pstate,
-                              state_data.sections,
-                              prog_data->args,
+      ret = ipmi_config_diff (&state_data,
                               &state_data);
       break;
     case IPMI_CONFIG_ACTION_LIST_SECTIONS:
