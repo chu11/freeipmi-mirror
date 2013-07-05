@@ -148,8 +148,7 @@ _ipmi_config (pstdout_state_t pstate,
     {
       int num;
 
-      if ((num = ipmi_config_sections_validate_keyvalue_inputs (&state_data,
-                                                                &state_data)) < 0)
+      if ((num = ipmi_config_sections_validate_keyvalue_inputs (&state_data)) < 0)
         goto cleanup;
 
       /* some errors found */

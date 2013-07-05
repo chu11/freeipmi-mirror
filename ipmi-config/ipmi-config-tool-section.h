@@ -99,8 +99,7 @@ int ipmi_config_section_update_keyvalue_output_double (ipmi_config_state_data_t 
                                                        double value_output);
 
 /* returns -1 on error, number of non-valid values otherwise */
-int ipmi_config_sections_validate_keyvalue_inputs (ipmi_config_state_data_t *state_data,
-                                                   void *arg);
+int ipmi_config_sections_validate_keyvalue_inputs (ipmi_config_state_data_t *state_data);
 
 /* returns -1 on error, 0 on success */
 int ipmi_config_sections_insert_keyvalues (ipmi_config_state_data_t *state_data,

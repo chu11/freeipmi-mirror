@@ -638,13 +638,14 @@ username_commit (ipmi_config_state_data_t *state_data,
 }
 
 static ipmi_config_validate_t
-username_validate (const char *section_name,
+username_validate (ipmi_config_state_data_t *state_data,
+		   const char *section_name,
                    const char *key_name,
-                   const char *value,
-                   void *arg)
+                   const char *value)
 {
   uint8_t userid;
 
+  assert (state_data);
   assert (section_name);
   assert (key_name);
   assert (value);
@@ -912,19 +913,15 @@ password_commit (ipmi_config_state_data_t *state_data,
 }
 
 static ipmi_config_validate_t
-password_validate (const char *section_name,
+password_validate (ipmi_config_state_data_t *state_data,
+		   const char *section_name,
                    const char *key_name,
-                   const char *value,
-                   void *arg)
+                   const char *value)
 {
-  ipmi_config_state_data_t *state_data;
-      
+  assert (state_data);
   assert (section_name);
   assert (key_name);
   assert (value);
-  assert (arg);
-
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if (strlen (value) > IPMI_2_0_MAX_PASSWORD_LENGTH)
     return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
@@ -1077,11 +1074,12 @@ password20_commit (ipmi_config_state_data_t *state_data,
 }
 
 static ipmi_config_validate_t
-password20_validate (const char *section_name,
+password20_validate (ipmi_config_state_data_t *state_data,
+		     const char *section_name,
                      const char *key_name,
-                     const char *value,
-                     void *arg)
+                     const char *value)
 {
+  assert (state_data);
   assert (section_name);
   assert (key_name);
   assert (value);

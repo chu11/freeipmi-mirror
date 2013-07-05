@@ -223,11 +223,12 @@ k_r_commit (ipmi_config_state_data_t *state_data,
 }
 
 static ipmi_config_validate_t
-k_r_validate (const char *section_name,
+k_r_validate (ipmi_config_state_data_t *state_data,
+	      const char *section_name,
               const char *key_name,
-              const char *value,
-              void *arg)
+              const char *value)
 {
+  assert (state_data);
   assert (section_name);
   assert (key_name);
   assert (value);
@@ -321,13 +322,14 @@ k_g_commit (ipmi_config_state_data_t *state_data,
 }
 
 static ipmi_config_validate_t
-k_g_validate (const char *section_name,
+k_g_validate (ipmi_config_state_data_t *state_data,
+	      const char *section_name,
               const char *key_name,
-              const char *value,
-              void *arg)
+              const char *value)
 {
   uint8_t k_g[IPMI_MAX_K_G_LENGTH+1];
 
+  assert (state_data);
   assert (section_name);
   assert (key_name);
   assert (value);

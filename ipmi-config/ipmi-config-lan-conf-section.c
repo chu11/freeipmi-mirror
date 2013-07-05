@@ -1410,11 +1410,12 @@ vlan_id_commit (ipmi_config_state_data_t *state_data,
 }
 
 static ipmi_config_validate_t
-vlan_id_validate (const char *section_name,
+vlan_id_validate (ipmi_config_state_data_t *state_data,
+		  const char *section_name,
                   const char *key_name,
-                  const char *value,
-                  void *arg)
+                  const char *value)
 {
+  assert (state_data);
   assert (section_name);
   assert (key_name);
   assert (value);

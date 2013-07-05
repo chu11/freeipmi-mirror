@@ -541,8 +541,7 @@ ipmi_config_section_update_keyvalue_output_double (ipmi_config_state_data_t *sta
 }
 
 int
-ipmi_config_sections_validate_keyvalue_inputs (ipmi_config_state_data_t *state_data,
-                                               void *arg)
+ipmi_config_sections_validate_keyvalue_inputs (ipmi_config_state_data_t *state_data)
 {
   struct ipmi_config_section *s;
   int nonvalid_count = 0;
@@ -585,10 +584,10 @@ ipmi_config_sections_validate_keyvalue_inputs (ipmi_config_state_data_t *state_d
                   goto next_kv;
                 }
 
-              if ((v = kv->key->validate (s->section_name,
+              if ((v = kv->key->validate (state_data,
+					  s->section_name,
                                           kv->key->key_name,
-                                          kv->value_input,
-                                          arg)) == IPMI_CONFIG_VALIDATE_FATAL_ERROR)
+                                          kv->value_input)) == IPMI_CONFIG_VALIDATE_FATAL_ERROR)
                 goto cleanup;
 
               if (v == IPMI_CONFIG_VALIDATE_NON_FATAL_ERROR)
