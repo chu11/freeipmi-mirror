@@ -35,294 +35,6 @@
 #include "freeipmi-portability.h"
 #include "ipmi-config-tool-pef-conf-section.h"
 
-static ipmi_config_err_t
-_enable_pef_checkout (ipmi_config_state_data_t *state_data,
-		      const char *section_name,
-                      struct ipmi_config_keyvalue *kv)
-{
-  assert (state_data);
-  assert (section_name);
-  assert (kv);
-  
-  return (enable_pef_checkout (state_data, kv));
-}
-
-static ipmi_config_err_t
-_enable_pef_commit (ipmi_config_state_data_t *state_data,
-		    const char *section_name,
-                    const struct ipmi_config_keyvalue *kv)
-{
-  assert (state_data);
-  assert (section_name);
-  assert (kv);
-
-  return (enable_pef_commit (state_data, kv));
-}
-
-static ipmi_config_err_t
-_enable_pef_event_messages_checkout (ipmi_config_state_data_t *state_data,
-				     const char *section_name,
-                                     struct ipmi_config_keyvalue *kv)
-{
-  assert (state_data);
-  assert (section_name);
-  assert (kv);
-
-  return (enable_pef_event_messages_checkout (state_data, kv));
-}
-
-static ipmi_config_err_t
-_enable_pef_event_messages_commit (ipmi_config_state_data_t *state_data,
-				   const char *section_name,
-                                   const struct ipmi_config_keyvalue *kv)
-{
-  assert (state_data);
-  assert (section_name);
-  assert (kv);
-  
-  return (enable_pef_event_messages_commit (state_data, kv));
-}
-
-static ipmi_config_err_t
-_enable_pef_startup_delay_checkout (ipmi_config_state_data_t *state_data,
-				    const char *section_name,
-                                    struct ipmi_config_keyvalue *kv)
-{
-  assert (state_data);
-  assert (section_name);
-  assert (kv);
-
-  return (enable_pef_startup_delay_checkout (state_data, kv));
-}
-
-static ipmi_config_err_t
-_enable_pef_startup_delay_commit (ipmi_config_state_data_t *state_data,
-				  const char *section_name,
-                                  const struct ipmi_config_keyvalue *kv)
-{
-  assert (state_data);
-  assert (section_name);
-  assert (kv);
-
-  return (enable_pef_startup_delay_commit (state_data, kv));
-}
-
-static ipmi_config_err_t
-_enable_pef_alert_startup_delay_checkout (ipmi_config_state_data_t *state_data,
-					  const char *section_name,
-                                          struct ipmi_config_keyvalue *kv)
-{
-  assert (state_data);
-  assert (section_name);
-  assert (kv);
-
-  return (enable_pef_alert_startup_delay_checkout (state_data, kv));
-}
-
-static ipmi_config_err_t
-_enable_pef_alert_startup_delay_commit (ipmi_config_state_data_t *state_data,
-					const char *section_name,
-                                        const struct ipmi_config_keyvalue *kv)
-{
-  assert (state_data);
-  assert (section_name);
-  assert (kv);
-
-  return (enable_pef_alert_startup_delay_commit (state_data, kv));
-}
-
-static ipmi_config_err_t
-_enable_alert_action_checkout (ipmi_config_state_data_t *state_data,
-			       const char *section_name,
-                               struct ipmi_config_keyvalue *kv)
-{
-  assert (state_data);
-  assert (section_name);
-  assert (kv);
-
-  return (enable_alert_action_checkout (state_data, kv));
-}
-
-static ipmi_config_err_t
-_enable_alert_action_commit (ipmi_config_state_data_t *state_data,
-			     const char *section_name,
-                             const struct ipmi_config_keyvalue *kv)
-{
-  assert (state_data);
-  assert (section_name);
-  assert (kv);
-
-  return (enable_alert_action_commit (state_data, kv));
-}
-
-static ipmi_config_err_t
-_enable_power_down_action_checkout (ipmi_config_state_data_t *state_data,
-				    const char *section_name,
-                                    struct ipmi_config_keyvalue *kv)
-{
-  assert (state_data);
-  assert (section_name);
-  assert (kv);
-
-  return (enable_power_down_action_checkout (state_data, kv));
-}
-
-static ipmi_config_err_t
-_enable_power_down_action_commit (ipmi_config_state_data_t *state_data,
-				  const char *section_name,
-                                  const struct ipmi_config_keyvalue *kv)
-{
-  assert (state_data);
-  assert (section_name);
-  assert (kv);
-
-  return (enable_power_down_action_commit (state_data, kv));
-}
-
-static ipmi_config_err_t
-_enable_reset_action_checkout (ipmi_config_state_data_t *state_data,
-			       const char *section_name,
-                               struct ipmi_config_keyvalue *kv)
-{
-  assert (state_data);
-  assert (section_name);
-  assert (kv);
-
-  return (enable_reset_action_checkout (state_data, kv));
-}
-
-static ipmi_config_err_t
-_enable_reset_action_commit (ipmi_config_state_data_t *state_data,
-			     const char *section_name,
-                             const struct ipmi_config_keyvalue *kv)
-{
-  assert (state_data);
-  assert (section_name);
-  assert (kv);
-
-  return (enable_reset_action_commit (state_data, kv));
-}
-
-static ipmi_config_err_t
-_enable_power_cycle_action_checkout (ipmi_config_state_data_t *state_data,
-				     const char *section_name,
-                                     struct ipmi_config_keyvalue *kv)
-{
-  assert (state_data);
-  assert (section_name);
-  assert (kv);
-
-  return (enable_power_cycle_action_checkout (state_data, kv));
-}
-
-static ipmi_config_err_t
-_enable_power_cycle_action_commit (ipmi_config_state_data_t *state_data,
-				   const char *section_name,
-                                   const struct ipmi_config_keyvalue *kv)
-{
-  assert (state_data);
-  assert (section_name);
-  assert (kv);
-
-  return (enable_power_cycle_action_commit (state_data, kv));
-}
-
-static ipmi_config_err_t
-_enable_oem_action_checkout (ipmi_config_state_data_t *state_data,
-			     const char *section_name,
-                             struct ipmi_config_keyvalue *kv)
-{
-  assert (state_data);
-  assert (section_name);
-  assert (kv);
-
-  return (enable_oem_action_checkout (state_data, kv));
-}
-
-static ipmi_config_err_t
-_enable_oem_action_commit (ipmi_config_state_data_t *state_data,
-			   const char *section_name,
-                           const struct ipmi_config_keyvalue *kv)
-{
-  assert (state_data);
-  assert (section_name);
-  assert (kv);
-
-  return (enable_oem_action_commit (state_data, kv));
-}
-
-static ipmi_config_err_t
-_enable_diagnostic_interrupt_checkout (ipmi_config_state_data_t *state_data,
-				       const char *section_name,
-                                       struct ipmi_config_keyvalue *kv)
-{
-  assert (state_data);
-  assert (section_name);
-  assert (kv);
-
-  return (enable_diagnostic_interrupt_checkout (state_data, kv));
-}
-
-static ipmi_config_err_t
-_enable_diagnostic_interrupt_commit (ipmi_config_state_data_t *state_data,
-				     const char *section_name,
-                                     const struct ipmi_config_keyvalue *kv)
-{
-  assert (state_data);
-  assert (section_name);
-  assert (kv);
-
-  return (enable_diagnostic_interrupt_commit (state_data, kv));
-}
-
-static ipmi_config_err_t
-_pef_startup_delay_checkout (ipmi_config_state_data_t *state_data,
-			     const char *section_name,
-                             struct ipmi_config_keyvalue *kv)
-{
-  assert (state_data);
-  assert (section_name);
-  assert (kv);
-
-  return (pef_startup_delay_checkout (state_data, kv));
-}
-
-static ipmi_config_err_t
-_pef_startup_delay_commit (ipmi_config_state_data_t *state_data,
-			   const char *section_name,
-                           const struct ipmi_config_keyvalue *kv)
-{
-  assert (state_data);
-  assert (section_name);
-  assert (kv);
-
-  return (pef_startup_delay_commit (state_data, kv));
-}
-
-static ipmi_config_err_t
-_pef_alert_startup_delay_checkout (ipmi_config_state_data_t *state_data,
-				   const char *section_name,
-                                   struct ipmi_config_keyvalue *kv)
-{
-  assert (state_data);
-  assert (section_name);
-  assert (kv);
-
-  return (pef_alert_startup_delay_checkout (state_data, kv));
-}
-
-static ipmi_config_err_t 
-_pef_alert_startup_delay_commit (ipmi_config_state_data_t *state_data,
-				 const char *section_name,
-                                 const struct ipmi_config_keyvalue *kv)
-{
-  assert (state_data);
-  assert (section_name);
-  assert (kv);
-
-  return (pef_alert_startup_delay_commit (state_data, kv));
-}
-
 struct ipmi_config_section *
 ipmi_config_pef_conf_section_get (ipmi_config_state_data_t *state_data)
 {
@@ -344,8 +56,8 @@ ipmi_config_pef_conf_section_get (ipmi_config_state_data_t *state_data)
                                    "Enable_PEF",
                                    "Possible values: Yes/No",
                                    0,
-                                   _enable_pef_checkout,
-                                   _enable_pef_commit,
+                                   enable_pef_checkout,
+                                   enable_pef_commit,
                                    yes_no_validate) < 0)
     goto cleanup;
 
@@ -354,8 +66,8 @@ ipmi_config_pef_conf_section_get (ipmi_config_state_data_t *state_data)
                                    "Enable_PEF_Event_Messages",
                                    "Possible values: Yes/No",
                                    0,
-                                   _enable_pef_event_messages_checkout,
-                                   _enable_pef_event_messages_commit,
+                                   enable_pef_event_messages_checkout,
+                                   enable_pef_event_messages_commit,
                                    yes_no_validate) < 0)
     goto cleanup;
 
@@ -364,8 +76,8 @@ ipmi_config_pef_conf_section_get (ipmi_config_state_data_t *state_data)
                                    "Enable_PEF_Startup_Delay",
                                    "Possible values: Yes/No",
                                    0,
-                                   _enable_pef_startup_delay_checkout,
-                                   _enable_pef_startup_delay_commit,
+                                   enable_pef_startup_delay_checkout,
+                                   enable_pef_startup_delay_commit,
                                    yes_no_validate) < 0)
     goto cleanup;
 
@@ -374,8 +86,8 @@ ipmi_config_pef_conf_section_get (ipmi_config_state_data_t *state_data)
                                    "Enable_PEF_Alert_Startup_Delay",
                                    "Possible values: Yes/No",
                                    0,
-                                   _enable_pef_alert_startup_delay_checkout,
-                                   _enable_pef_alert_startup_delay_commit,
+                                   enable_pef_alert_startup_delay_checkout,
+                                   enable_pef_alert_startup_delay_commit,
                                    yes_no_validate) < 0)
     goto cleanup;
 
@@ -384,8 +96,8 @@ ipmi_config_pef_conf_section_get (ipmi_config_state_data_t *state_data)
                                    "Enable_Alert_Action",
                                    "Possible values: Yes/No",
                                    0,
-                                   _enable_alert_action_checkout,
-                                   _enable_alert_action_commit,
+                                   enable_alert_action_checkout,
+                                   enable_alert_action_commit,
                                    yes_no_validate) < 0)
     goto cleanup;
 
@@ -394,8 +106,8 @@ ipmi_config_pef_conf_section_get (ipmi_config_state_data_t *state_data)
                                    "Enable_Power_Down_Action",
                                    "Possible values: Yes/No",
                                    0,
-                                   _enable_power_down_action_checkout,
-                                   _enable_power_down_action_commit,
+                                   enable_power_down_action_checkout,
+                                   enable_power_down_action_commit,
                                    yes_no_validate) < 0)
     goto cleanup;
 
@@ -404,8 +116,8 @@ ipmi_config_pef_conf_section_get (ipmi_config_state_data_t *state_data)
                                    "Enable_Reset_Action",
                                    "Possible values: Yes/No",
                                    0,
-                                   _enable_reset_action_checkout,
-                                   _enable_reset_action_commit,
+                                   enable_reset_action_checkout,
+                                   enable_reset_action_commit,
                                    yes_no_validate) < 0)
     goto cleanup;
 
@@ -414,8 +126,8 @@ ipmi_config_pef_conf_section_get (ipmi_config_state_data_t *state_data)
                                    "Enable_Power_Cycle_Action",
                                    "Possible values: Yes/No",
                                    0,
-                                   _enable_power_cycle_action_checkout,
-                                   _enable_power_cycle_action_commit,
+                                   enable_power_cycle_action_checkout,
+                                   enable_power_cycle_action_commit,
                                    yes_no_validate) < 0)
     goto cleanup;
 
@@ -424,8 +136,8 @@ ipmi_config_pef_conf_section_get (ipmi_config_state_data_t *state_data)
                                    "Enable_OEM_Action",
                                    "Possible values: Yes/No",
                                    0,
-                                   _enable_oem_action_checkout,
-                                   _enable_oem_action_commit,
+                                   enable_oem_action_checkout,
+                                   enable_oem_action_commit,
                                    yes_no_validate) < 0)
     goto cleanup;
 
@@ -434,8 +146,8 @@ ipmi_config_pef_conf_section_get (ipmi_config_state_data_t *state_data)
                                    "Enable_Diagnostic_Interrupt",
                                    "Possible values: Yes/No",
                                    0,
-                                   _enable_diagnostic_interrupt_checkout,
-                                   _enable_diagnostic_interrupt_commit,
+                                   enable_diagnostic_interrupt_checkout,
+                                   enable_diagnostic_interrupt_commit,
                                    yes_no_validate) < 0)
     goto cleanup;
 
@@ -444,8 +156,8 @@ ipmi_config_pef_conf_section_get (ipmi_config_state_data_t *state_data)
                                    "PEF_Startup_Delay",
                                    "Give value in seconds",
                                    0,
-                                   _pef_startup_delay_checkout,
-                                   _pef_startup_delay_commit,
+                                   pef_startup_delay_checkout,
+                                   pef_startup_delay_commit,
                                    number_range_one_byte_validate) < 0)
     goto cleanup;
 
@@ -454,8 +166,8 @@ ipmi_config_pef_conf_section_get (ipmi_config_state_data_t *state_data)
                                    "PEF_Alert_Startup_Delay",
                                    "Give value in seconds",
                                    0,
-                                   _pef_alert_startup_delay_checkout,
-                                   _pef_alert_startup_delay_commit,
+                                   pef_alert_startup_delay_checkout,
+                                   pef_alert_startup_delay_commit,
                                    number_range_one_byte_validate) < 0)
     goto cleanup;
 
