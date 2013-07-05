@@ -34,8 +34,7 @@
 #include "pstdout.h"
 
 ipmi_config_err_t
-ipmi_config_diff (ipmi_config_state_data_t *state_data,
-                  void *arg)
+ipmi_config_diff (ipmi_config_state_data_t *state_data)
 {
   struct ipmi_config_section *s;
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
@@ -52,9 +51,9 @@ ipmi_config_diff (ipmi_config_state_data_t *state_data,
         {
           assert (kv->value_input);
 
-          if ((this_ret = kv->key->checkout (s->section_name,
-                                             kv,
-                                             arg)) == IPMI_CONFIG_ERR_FATAL_ERROR)
+          if ((this_ret = kv->key->checkout (state_data,
+					     s->section_name,
+                                             kv)) == IPMI_CONFIG_ERR_FATAL_ERROR)
             goto cleanup;
 
           if (this_ret == IPMI_CONFIG_ERR_SUCCESS)

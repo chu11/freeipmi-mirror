@@ -337,19 +337,16 @@ _set_channel_access (ipmi_config_state_data_t *state_data,
 }
 
 static ipmi_config_err_t
-_access_mode_checkout (const char *section_name,
-                       struct ipmi_config_keyvalue *kv,
-                       void *arg)
+_access_mode_checkout (ipmi_config_state_data_t *state_data,
+		       const char *section_name,
+                       struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct channel_access ch;
   ipmi_config_err_t ret;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if ((ret = _get_channel_access (state_data,
                                   section_name,
@@ -366,19 +363,16 @@ _access_mode_checkout (const char *section_name,
 }
 
 static ipmi_config_err_t
-_access_mode_commit (const char *section_name,
-                     const struct ipmi_config_keyvalue *kv,
-                     void *arg)
+_access_mode_commit (ipmi_config_state_data_t *state_data,
+		     const char *section_name,
+                     const struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct channel_access ch;
   ipmi_config_err_t ret;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if ((ret = _get_channel_access (state_data,
                                   section_name,
@@ -399,19 +393,16 @@ _access_mode_commit (const char *section_name,
 }
 
 static ipmi_config_err_t
-_enable_user_level_authentication_checkout (const char *section_name,
-                                            struct ipmi_config_keyvalue *kv,
-                                            void *arg)
+_enable_user_level_authentication_checkout (ipmi_config_state_data_t *state_data,
+					    const char *section_name,
+                                            struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct channel_access ch;
   ipmi_config_err_t ret;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if ((ret = _get_channel_access (state_data,
                                   section_name,
@@ -429,20 +420,17 @@ _enable_user_level_authentication_checkout (const char *section_name,
 }
 
 static ipmi_config_err_t
-_enable_user_level_authentication_commit (const char *section_name,
-                                          const struct ipmi_config_keyvalue *kv,
-                                          void *arg)
+_enable_user_level_authentication_commit (ipmi_config_state_data_t *state_data,
+					  const char *section_name,
+                                          const struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct channel_access ch;
   ipmi_config_err_t ret;
   uint8_t comp_code = 0;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if ((ret = _get_channel_access (state_data,
                                   section_name,
@@ -473,19 +461,16 @@ _enable_user_level_authentication_commit (const char *section_name,
 }
 
 static ipmi_config_err_t
-_enable_per_message_authentication_checkout (const char *section_name,
-                                             struct ipmi_config_keyvalue *kv,
-                                             void *arg)
+_enable_per_message_authentication_checkout (ipmi_config_state_data_t *state_data,
+					     const char *section_name,
+                                             struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct channel_access ch;
   ipmi_config_err_t ret;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if ((ret = _get_channel_access (state_data,
                                   section_name,
@@ -503,19 +488,16 @@ _enable_per_message_authentication_checkout (const char *section_name,
 }
 
 static ipmi_config_err_t
-_enable_per_message_authentication_commit (const char *section_name,
-                                           const struct ipmi_config_keyvalue *kv,
-                                           void *arg)
+_enable_per_message_authentication_commit (ipmi_config_state_data_t *state_data,
+					   const char *section_name,
+                                           const struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct channel_access ch;
   ipmi_config_err_t ret;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if ((ret = _get_channel_access (state_data,
                                   section_name,
@@ -536,19 +518,16 @@ _enable_per_message_authentication_commit (const char *section_name,
 }
 
 static ipmi_config_err_t
-_enable_pef_alerting_checkout (const char *section_name,
-                               struct ipmi_config_keyvalue *kv,
-                               void *arg)
+_enable_pef_alerting_checkout (ipmi_config_state_data_t *state_data,
+			       const char *section_name,
+                               struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct channel_access ch;
   ipmi_config_err_t ret;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if ((ret = _get_channel_access (state_data,
                                   section_name,
@@ -566,19 +545,16 @@ _enable_pef_alerting_checkout (const char *section_name,
 }
 
 static ipmi_config_err_t
-_enable_pef_alerting_commit (const char *section_name,
-                             const struct ipmi_config_keyvalue *kv,
-                             void *arg)
+_enable_pef_alerting_commit (ipmi_config_state_data_t *state_data,
+			     const char *section_name,
+                             const struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct channel_access ch;
   ipmi_config_err_t ret;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if ((ret = _get_channel_access (state_data,
                                   section_name,
@@ -599,19 +575,16 @@ _enable_pef_alerting_commit (const char *section_name,
 }
 
 static ipmi_config_err_t
-_channel_privilege_limit_checkout (const char *section_name,
-                                   struct ipmi_config_keyvalue *kv,
-                                   void *arg)
+_channel_privilege_limit_checkout (ipmi_config_state_data_t *state_data,
+				   const char *section_name,
+                                   struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct channel_access ch;
   ipmi_config_err_t ret;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if ((ret = _get_channel_access (state_data,
                                   section_name,
@@ -628,19 +601,16 @@ _channel_privilege_limit_checkout (const char *section_name,
 }
 
 static ipmi_config_err_t
-_channel_privilege_limit_commit (const char *section_name,
-                                 const struct ipmi_config_keyvalue *kv,
-                                 void *arg)
+_channel_privilege_limit_commit (ipmi_config_state_data_t *state_data,
+				 const char *section_name,
+                                 const struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct channel_access ch;
   ipmi_config_err_t ret;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if ((ret = _get_channel_access (state_data,
                                   section_name,

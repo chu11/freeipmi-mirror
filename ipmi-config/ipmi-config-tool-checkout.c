@@ -41,8 +41,7 @@ ipmi_config_checkout_section (ipmi_config_state_data_t *state_data,
                               struct ipmi_config_section *section,
                               int all_keys_if_none_specified,
                               FILE *fp,
-                              unsigned int line_length,
-                              void *arg)
+                              unsigned int line_length)
 {
   struct ipmi_config_keyvalue *kv;
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
@@ -124,9 +123,9 @@ ipmi_config_checkout_section (ipmi_config_state_data_t *state_data,
         }
       else
         {
-          if ((this_ret = kv->key->checkout (section->section_name,
-                                             kv,
-                                             arg)) == IPMI_CONFIG_ERR_FATAL_ERROR)
+          if ((this_ret = kv->key->checkout (state_data,
+					     section->section_name,
+                                             kv)) == IPMI_CONFIG_ERR_FATAL_ERROR)
             goto cleanup;
         }
 
@@ -253,8 +252,7 @@ ipmi_config_err_t
 ipmi_config_checkout (ipmi_config_state_data_t *state_data,
                       int all_keys_if_none_specified,
                       FILE *fp,
-                      unsigned int line_length,
-                      void *arg)
+                      unsigned int line_length)
 {
   struct ipmi_config_section *s;
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_SUCCESS;
@@ -273,8 +271,7 @@ ipmi_config_checkout (ipmi_config_state_data_t *state_data,
                                                    s,
                                                    all_keys_if_none_specified,
                                                    fp,
-                                                   line_length,
-                                                   arg)) != IPMI_CONFIG_ERR_SUCCESS)
+                                                   line_length)) != IPMI_CONFIG_ERR_SUCCESS)
             {
               if (ret == IPMI_CONFIG_ERR_FATAL_ERROR)
                 {

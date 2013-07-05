@@ -797,21 +797,18 @@ _authentication_type_enable_available (ipmi_config_state_data_t *state_data,
 }
 
 static ipmi_config_err_t
-_authentication_level_checkout (const char *section_name,
-                                struct ipmi_config_keyvalue *kv,
-                                void *arg)
+_authentication_level_checkout (ipmi_config_state_data_t *state_data,
+				const char *section_name,
+                                struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct bmc_authentication_level al;
   ipmi_config_err_t ret;
   unsigned int available_flag = 1; /* default is to always allow checkout */
   uint8_t *al_ptr;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if ((ret = _get_authentication_type_enables (state_data,
                                                section_name,
@@ -846,20 +843,17 @@ _authentication_level_checkout (const char *section_name,
 }
 
 static ipmi_config_err_t
-_authentication_level_commit (const char *section_name,
-                              const struct ipmi_config_keyvalue *kv,
-                              void *arg)
+_authentication_level_commit (ipmi_config_state_data_t *state_data,
+			      const char *section_name,
+                              const struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct bmc_authentication_level al;
   ipmi_config_err_t ret;
   uint8_t *flag;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if ((ret = _get_authentication_type_enables (state_data,
                                                section_name,

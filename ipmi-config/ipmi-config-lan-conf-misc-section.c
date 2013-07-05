@@ -177,19 +177,16 @@ _set_bmc_generated_arp_control (ipmi_config_state_data_t *state_data,
 }
 
 static ipmi_config_err_t
-enable_gratuitous_arps_checkout (const char *section_name,
-                                 struct ipmi_config_keyvalue *kv,
-                                 void *arg)
+enable_gratuitous_arps_checkout (ipmi_config_state_data_t *state_data,
+				 const char *section_name,
+                                 struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct bmc_generated_arp_control ac;
   ipmi_config_err_t ret;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if ((ret = _get_bmc_generated_arp_control (state_data, section_name, &ac)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
@@ -203,19 +200,16 @@ enable_gratuitous_arps_checkout (const char *section_name,
 }
 
 static ipmi_config_err_t
-enable_gratuitous_arps_commit (const char *section_name,
-                               const struct ipmi_config_keyvalue *kv,
-                               void *arg)
+enable_gratuitous_arps_commit (ipmi_config_state_data_t *state_data,
+			       const char *section_name,
+                               const struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct bmc_generated_arp_control ac;
   ipmi_config_err_t ret;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if ((ret = _get_bmc_generated_arp_control (state_data, section_name, &ac)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
@@ -225,19 +219,16 @@ enable_gratuitous_arps_commit (const char *section_name,
 }
 
 static ipmi_config_err_t
-enable_arp_response_checkout (const char *section_name,
-                              struct ipmi_config_keyvalue *kv,
-                              void *arg)
+enable_arp_response_checkout (ipmi_config_state_data_t *state_data,
+			      const char *section_name,
+                              struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct bmc_generated_arp_control ac;
   ipmi_config_err_t ret;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if ((ret = _get_bmc_generated_arp_control (state_data, section_name, &ac)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
@@ -251,19 +242,16 @@ enable_arp_response_checkout (const char *section_name,
 }
 
 static ipmi_config_err_t
-enable_arp_response_commit (const char *section_name,
-                            const struct ipmi_config_keyvalue *kv,
-                            void *arg)
+enable_arp_response_commit (ipmi_config_state_data_t *state_data,
+			    const char *section_name,
+                            const struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct bmc_generated_arp_control ac;
   ipmi_config_err_t ret;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if ((ret = _get_bmc_generated_arp_control (state_data, section_name, &ac)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
@@ -273,11 +261,10 @@ enable_arp_response_commit (const char *section_name,
 }
 
 static ipmi_config_err_t
-gratuitous_arp_interval_checkout (const char *section_name,
-                                  struct ipmi_config_keyvalue *kv,
-                                  void *arg)
+gratuitous_arp_interval_checkout (ipmi_config_state_data_t *state_data,
+				  const char *section_name,
+                                  struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   ipmi_config_err_t ret;
@@ -285,11 +272,9 @@ gratuitous_arp_interval_checkout (const char *section_name,
   uint8_t gratuitous_arp_interval;
   uint64_t val;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_lan_configuration_parameters_gratuitous_arp_interval_rs)))
     {
@@ -349,21 +334,18 @@ gratuitous_arp_interval_checkout (const char *section_name,
 }
 
 static ipmi_config_err_t
-gratuitous_arp_interval_commit (const char *section_name,
-                                const struct ipmi_config_keyvalue *kv,
-                                void *arg)
+gratuitous_arp_interval_commit (ipmi_config_state_data_t *state_data,
+				const char *section_name,
+                                const struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   ipmi_config_err_t ret;
   uint8_t channel_number;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_lan_configuration_parameters_rs)))
     {

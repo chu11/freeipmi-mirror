@@ -300,8 +300,7 @@ _ipmi_config (pstdout_state_t pstate,
                                                        s,
                                                        1,
                                                        fp,
-                                                       0,
-                                                       &state_data);
+                                                       0);
               if (this_ret != IPMI_CONFIG_ERR_SUCCESS)
                 ret = this_ret;
               if (ret == IPMI_CONFIG_ERR_FATAL_ERROR)
@@ -320,17 +319,14 @@ _ipmi_config (pstdout_state_t pstate,
           ret = ipmi_config_checkout (&state_data,
                                       all_keys_if_none_specified,
                                       fp,
-                                      0,
-                                      &state_data);
+                                      0);
         }
       break;
     case IPMI_CONFIG_ACTION_COMMIT:
-      ret = ipmi_config_commit (&state_data,
-                                &state_data);
+      ret = ipmi_config_commit (&state_data);
       break;
     case IPMI_CONFIG_ACTION_DIFF:
-      ret = ipmi_config_diff (&state_data,
-                              &state_data);
+      ret = ipmi_config_diff (&state_data);
       break;
     case IPMI_CONFIG_ACTION_LIST_SECTIONS:
       ret = ipmi_config_output_sections_list (&state_data);

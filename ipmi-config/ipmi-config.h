@@ -149,15 +149,19 @@ struct ipmi_config_keyvalue {
   struct ipmi_config_keyvalue *next;
 };
 
+/* forward declare */
+struct ipmi_config_state_data;
+typedef struct ipmi_config_state_data ipmi_config_state_data_t;
+
 /* Fills in kv->value_output as a printable string  */
-typedef ipmi_config_err_t (*Key_Checkout)(const char *section_name,
-                                          struct ipmi_config_keyvalue *kv,
-                                          void *arg);
+typedef ipmi_config_err_t (*Key_Checkout)(ipmi_config_state_data_t *state_data,
+					  const char *section_name,
+                                          struct ipmi_config_keyvalue *kv);
 
 /* Takes kv->value_input and commits it */
-typedef ipmi_config_err_t (*Key_Commit)(const char *section_name,
-                                        const struct ipmi_config_keyvalue *kv,
-                                        void *arg);
+typedef ipmi_config_err_t (*Key_Commit)(ipmi_config_state_data_t *state_data,
+					const char *section_name,
+                                        const struct ipmi_config_keyvalue *kv);
 
 /* Determines if an inputted value is valid */
 typedef ipmi_config_validate_t (*Key_Validate)(const char *section_name,
@@ -166,12 +170,12 @@ typedef ipmi_config_validate_t (*Key_Validate)(const char *section_name,
                                                void *arg);
 
 /* Sectional pre commit call */
-typedef ipmi_config_err_t (*Section_Pre_Commit)(const char *section_name,
-                                                void *arg);
+typedef ipmi_config_err_t (*Section_Pre_Commit)(ipmi_config_state_data_t *state_data,
+						const char *section_name);
 
 /* Sectional post commit call */
-typedef ipmi_config_err_t (*Section_Post_Commit)(const char *section_name,
-                                                 void *arg);
+typedef ipmi_config_err_t (*Section_Post_Commit)(ipmi_config_state_data_t *state_data,
+						 const char *section_name);
 
 struct ipmi_config_key {
   char *key_name;
@@ -228,7 +232,7 @@ typedef struct ipmi_config_enable_user_after_password
   struct ipmi_config_keyvalue *kv;
 } ipmi_config_enable_user_after_password_t;
 
-typedef struct ipmi_config_state_data
+struct ipmi_config_state_data
 {
   ipmi_config_prog_data_t *prog_data;
   ipmi_ctx_t ipmi_ctx;
@@ -284,6 +288,6 @@ typedef struct ipmi_config_state_data
   uint8_t sol_channel_numbers_unique[IPMI_CHANNEL_NUMBERS_MAX];
   unsigned int sol_channel_numbers_unique_count;
   unsigned int sol_channel_numbers_loaded;
-} ipmi_config_state_data_t;
+};
 
 #endif /* IPMI_CONFIG_H */

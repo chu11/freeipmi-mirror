@@ -323,23 +323,20 @@ _rmcpplus_cipher_suite_id_privilege_setup (ipmi_config_state_data_t *state_data,
 }
 
 static ipmi_config_err_t
-id_checkout (const char *section_name,
+id_checkout (ipmi_config_state_data_t *state_data,
+	     const char *section_name,
              struct ipmi_config_keyvalue *kv,
-             void *arg,
              int id)
 {
-  ipmi_config_state_data_t *state_data;
   ipmi_config_err_t ret;
   uint8_t privilege;
   unsigned int i;
   int id_found = 0;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
   
-  state_data = (ipmi_config_state_data_t *)arg;
-
   if ((ret = _rmcpplus_cipher_suite_id_privilege_setup (state_data, section_name)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
@@ -389,12 +386,11 @@ id_checkout (const char *section_name,
 }
 
 static ipmi_config_err_t
-id_commit (const char *section_name,
+id_commit (ipmi_config_state_data_t *state_data,
+	   const char *section_name,
            const struct ipmi_config_keyvalue *kv,
-           void *arg,
            int id)
 {
-  ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   ipmi_config_err_t ret;
@@ -403,12 +399,10 @@ id_commit (const char *section_name,
   uint8_t privilege;
   unsigned int i;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
   
-  state_data = (ipmi_config_state_data_t *)arg;
-
   if ((ret = _rmcpplus_cipher_suite_id_privilege_setup (state_data, section_name)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
@@ -551,21 +545,21 @@ id_commit (const char *section_name,
 }
 
 static ipmi_config_err_t
-id_checkout_cb (const char *section_name,
-                struct ipmi_config_keyvalue *kv,
-                void *arg)
+id_checkout_cb (ipmi_config_state_data_t *state_data,
+		const char *section_name,
+                struct ipmi_config_keyvalue *kv)
 {
   uint8_t id = atoi (kv->key->key_name + strlen ("Maximum_Privilege_Cipher_Suite_Id_"));
-  return (id_checkout (section_name, kv, arg, id));
+  return (id_checkout (state_data, section_name, kv, id));
 }
 
 static ipmi_config_err_t
-id_commit_cb (const char *section_name,
-              const struct ipmi_config_keyvalue *kv,
-              void *arg)
+id_commit_cb (ipmi_config_state_data_t *state_data,
+	      const char *section_name,
+              const struct ipmi_config_keyvalue *kv)
 {
   uint8_t id = atoi (kv->key->key_name + strlen ("Maximum_Privilege_Cipher_Suite_Id_"));
-  return (id_commit (section_name, kv, arg, id));
+  return (id_commit (state_data, section_name, kv, id));
 }
 
 struct ipmi_config_section *

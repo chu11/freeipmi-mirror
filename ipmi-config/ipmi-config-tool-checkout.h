@@ -25,13 +25,11 @@ ipmi_config_err_t ipmi_config_checkout_section (ipmi_config_state_data_t *state_
                                                 struct ipmi_config_section *section,
                                                 int all_keys_if_none_specified,
                                                 FILE *fp,
-                                                unsigned int line_length,
-                                                void *arg);
+                                                unsigned int line_length);
 
 ipmi_config_err_t ipmi_config_checkout (ipmi_config_state_data_t *state_data,
                                         int all_keys_if_none_specified,
                                         FILE *fp,
-                                        unsigned int line_length,
-                                        void *arg);
+                                        unsigned int line_length);
 
 #endif /* IPMI_CONFIG_TOOL_CHECKOUT_H */

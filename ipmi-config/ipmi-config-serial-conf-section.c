@@ -206,19 +206,16 @@ _set_connection_mode (ipmi_config_state_data_t *state_data,
 }
 
 static ipmi_config_err_t
-enable_basic_mode_checkout (const char *section_name,
-                            struct ipmi_config_keyvalue *kv,
-                            void *arg)
+enable_basic_mode_checkout (ipmi_config_state_data_t *state_data,
+			    const char *section_name,
+                            struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct connection_mode cm;
   ipmi_config_err_t ret;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if ((ret = _get_connection_mode (state_data, section_name, &cm)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
@@ -232,19 +229,16 @@ enable_basic_mode_checkout (const char *section_name,
 }
 
 static ipmi_config_err_t
-enable_basic_mode_commit (const char *section_name,
-                          const struct ipmi_config_keyvalue *kv,
-                          void *arg)
+enable_basic_mode_commit (ipmi_config_state_data_t *state_data,
+			  const char *section_name,
+                          const struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct connection_mode cm;
   ipmi_config_err_t ret;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if ((ret = _get_connection_mode (state_data, section_name, &cm)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
@@ -255,19 +249,16 @@ enable_basic_mode_commit (const char *section_name,
 }
 
 static ipmi_config_err_t
-enable_ppp_mode_checkout (const char *section_name,
-                          struct ipmi_config_keyvalue *kv,
-                          void *arg)
+enable_ppp_mode_checkout (ipmi_config_state_data_t *state_data,
+			  const char *section_name,
+                          struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct connection_mode cm;
   ipmi_config_err_t ret;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if ((ret = _get_connection_mode (state_data, section_name, &cm)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
@@ -281,19 +272,16 @@ enable_ppp_mode_checkout (const char *section_name,
 }
 
 static ipmi_config_err_t
-enable_ppp_mode_commit (const char *section_name,
-                        const struct ipmi_config_keyvalue *kv,
-                        void *arg)
+enable_ppp_mode_commit (ipmi_config_state_data_t *state_data,
+			const char *section_name,
+                        const struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct connection_mode cm;
   ipmi_config_err_t ret;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if ((ret = _get_connection_mode (state_data, section_name, &cm)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
@@ -304,19 +292,16 @@ enable_ppp_mode_commit (const char *section_name,
 }
 
 static ipmi_config_err_t
-enable_terminal_mode_checkout (const char *section_name,
-                               struct ipmi_config_keyvalue *kv,
-                               void *arg)
+enable_terminal_mode_checkout (ipmi_config_state_data_t *state_data,
+			       const char *section_name,
+                               struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct connection_mode cm;
   ipmi_config_err_t ret;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if ((ret = _get_connection_mode (state_data, section_name, &cm)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
@@ -330,19 +315,16 @@ enable_terminal_mode_checkout (const char *section_name,
 }
 
 static ipmi_config_err_t
-enable_terminal_mode_commit (const char *section_name,
-                             const struct ipmi_config_keyvalue *kv,
-                             void *arg)
+enable_terminal_mode_commit (ipmi_config_state_data_t *state_data,
+			     const char *section_name,
+                             const struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct connection_mode cm;
   ipmi_config_err_t ret;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if ((ret = _get_connection_mode (state_data, section_name, &cm)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
@@ -353,19 +335,16 @@ enable_terminal_mode_commit (const char *section_name,
 }
 
 static ipmi_config_err_t
-connect_mode_checkout (const char *section_name,
-                       struct ipmi_config_keyvalue *kv,
-                       void *arg)
+connect_mode_checkout (ipmi_config_state_data_t *state_data,
+		       const char *section_name,
+                       struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct connection_mode cm;
   ipmi_config_err_t ret;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if ((ret = _get_connection_mode (state_data, section_name, &cm)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
@@ -379,19 +358,16 @@ connect_mode_checkout (const char *section_name,
 }
 
 static ipmi_config_err_t
-connect_mode_commit (const char *section_name,
-                     const struct ipmi_config_keyvalue *kv,
-                     void *arg)
+connect_mode_commit (ipmi_config_state_data_t *state_data,
+		     const char *section_name,
+                     const struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct connection_mode cm;
   ipmi_config_err_t ret;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if ((ret = _get_connection_mode (state_data, section_name, &cm)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
@@ -402,11 +378,10 @@ connect_mode_commit (const char *section_name,
 }
 
 static ipmi_config_err_t
-page_blackout_interval_checkout (const char *section_name,
-                                 struct ipmi_config_keyvalue *kv,
-                                 void *arg)
+page_blackout_interval_checkout (ipmi_config_state_data_t *state_data,
+				 const char *section_name,
+                                 struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t page_blackout_interval;
   uint64_t val;
@@ -414,11 +389,9 @@ page_blackout_interval_checkout (const char *section_name,
   ipmi_config_err_t ret;
   uint8_t channel_number;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_serial_modem_configuration_page_blackout_interval_rs)))
     {
@@ -479,21 +452,18 @@ page_blackout_interval_checkout (const char *section_name,
 }
 
 static ipmi_config_err_t
-page_blackout_interval_commit (const char *section_name,
-                               const struct ipmi_config_keyvalue *kv,
-                               void *arg)
+page_blackout_interval_commit (ipmi_config_state_data_t *state_data,
+			       const char *section_name,
+                               const struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   ipmi_config_err_t ret;
   uint8_t channel_number;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_serial_modem_configuration_rs)))
     {
@@ -536,11 +506,10 @@ page_blackout_interval_commit (const char *section_name,
 }
 
 static ipmi_config_err_t
-call_retry_interval_checkout (const char *section_name,
-                              struct ipmi_config_keyvalue *kv,
-                              void *arg)
+call_retry_interval_checkout (ipmi_config_state_data_t *state_data,
+			      const char *section_name,
+                              struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t call_retry_interval;
   uint64_t val;
@@ -548,11 +517,9 @@ call_retry_interval_checkout (const char *section_name,
   ipmi_config_err_t ret;
   uint8_t channel_number;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_serial_modem_configuration_call_retry_interval_rs)))
     {
@@ -612,21 +579,18 @@ call_retry_interval_checkout (const char *section_name,
 }
 
 static ipmi_config_err_t
-call_retry_interval_commit (const char *section_name,
-                            const struct ipmi_config_keyvalue *kv,
-                            void *arg)
+call_retry_interval_commit (ipmi_config_state_data_t *state_data,
+			    const char *section_name,
+                            const struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   ipmi_config_err_t ret;
   uint8_t channel_number;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_serial_modem_configuration_rs)))
     {
@@ -812,19 +776,16 @@ _set_ipmi_messaging_comm_settings (ipmi_config_state_data_t *state_data,
 }
 
 static ipmi_config_err_t
-enable_dtr_hangup_checkout (const char *section_name,
-                            struct ipmi_config_keyvalue *kv,
-                            void *arg)
+enable_dtr_hangup_checkout (ipmi_config_state_data_t *state_data,
+			    const char *section_name,
+                            struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct ipmi_messaging_comm_settings cs;
   ipmi_config_err_t ret;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if ((ret = _get_ipmi_messaging_comm_settings (state_data, section_name, &cs)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
@@ -838,19 +799,16 @@ enable_dtr_hangup_checkout (const char *section_name,
 }
 
 static ipmi_config_err_t
-enable_dtr_hangup_commit (const char *section_name,
-                          const struct ipmi_config_keyvalue *kv,
-                          void *arg)
+enable_dtr_hangup_commit (ipmi_config_state_data_t *state_data,
+			  const char *section_name,
+                          const struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct ipmi_messaging_comm_settings cs;
   ipmi_config_err_t ret;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if ((ret = _get_ipmi_messaging_comm_settings (state_data, section_name, &cs)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
@@ -861,19 +819,16 @@ enable_dtr_hangup_commit (const char *section_name,
 }
 
 static ipmi_config_err_t
-flow_control_checkout (const char *section_name,
-                       struct ipmi_config_keyvalue *kv,
-                       void *arg)
+flow_control_checkout (ipmi_config_state_data_t *state_data,
+		       const char *section_name,
+                       struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct ipmi_messaging_comm_settings cs;
   ipmi_config_err_t ret;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if ((ret = _get_ipmi_messaging_comm_settings (state_data, section_name, &cs)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
@@ -887,19 +842,16 @@ flow_control_checkout (const char *section_name,
 }
 
 static ipmi_config_err_t
-flow_control_commit (const char *section_name,
-                     const struct ipmi_config_keyvalue *kv,
-                     void *arg)
+flow_control_commit (ipmi_config_state_data_t *state_data,
+		     const char *section_name,
+                     const struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct ipmi_messaging_comm_settings cs;
   ipmi_config_err_t ret;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if ((ret = _get_ipmi_messaging_comm_settings (state_data, section_name, &cs)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
@@ -910,19 +862,16 @@ flow_control_commit (const char *section_name,
 }
 
 static ipmi_config_err_t
-bit_rate_checkout (const char *section_name,
-                   struct ipmi_config_keyvalue *kv,
-                   void *arg)
+bit_rate_checkout (ipmi_config_state_data_t *state_data,
+		   const char *section_name,
+                   struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct ipmi_messaging_comm_settings cs;
   ipmi_config_err_t ret;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if ((ret = _get_ipmi_messaging_comm_settings (state_data, section_name, &cs)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
@@ -936,19 +885,16 @@ bit_rate_checkout (const char *section_name,
 }
 
 static ipmi_config_err_t
-bit_rate_commit (const char *section_name,
-                 const struct ipmi_config_keyvalue *kv,
-                 void *arg)
+bit_rate_commit (ipmi_config_state_data_t *state_data,
+		 const char *section_name,
+                 const struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct ipmi_messaging_comm_settings cs;
   ipmi_config_err_t ret;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if ((ret = _get_ipmi_messaging_comm_settings (state_data, section_name, &cs)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);

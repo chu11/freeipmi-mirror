@@ -39,8 +39,7 @@
 
 static ipmi_config_err_t
 _ipmi_config_commit_section (ipmi_config_state_data_t *state_data,
-			     struct ipmi_config_section *section,
-			     void *arg)
+			     struct ipmi_config_section *section)
 {
   struct ipmi_config_keyvalue *kv;
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
@@ -53,8 +52,8 @@ _ipmi_config_commit_section (ipmi_config_state_data_t *state_data,
 
   if (section->section_pre_commit)
     {
-      if ((this_ret = section->section_pre_commit (section->section_name,
-                                                   arg)) == IPMI_CONFIG_ERR_FATAL_ERROR)
+      if ((this_ret = section->section_pre_commit (state_data,
+						   section->section_name)) == IPMI_CONFIG_ERR_FATAL_ERROR)
         goto cleanup;
 
       if (IPMI_CONFIG_IS_NON_FATAL_ERROR (this_ret))
@@ -75,9 +74,9 @@ _ipmi_config_commit_section (ipmi_config_state_data_t *state_data,
       if (!(kv->key->flags & IPMI_CONFIG_READABLE_ONLY)
           && !(kv->key->flags & IPMI_CONFIG_UNDEFINED))
         {
-          if ((this_ret = kv->key->commit (section->section_name,
-                                           kv,
-                                           arg)) == IPMI_CONFIG_ERR_FATAL_ERROR)
+          if ((this_ret = kv->key->commit (state_data,
+					   section->section_name,
+                                           kv)) == IPMI_CONFIG_ERR_FATAL_ERROR)
             goto cleanup;
 
           if (this_ret == IPMI_CONFIG_ERR_SUCCESS)
@@ -141,8 +140,8 @@ _ipmi_config_commit_section (ipmi_config_state_data_t *state_data,
 
   if (commit_count && section->section_post_commit)
     {
-      if ((this_ret = section->section_post_commit (section->section_name,
-                                                    arg)) == IPMI_CONFIG_ERR_FATAL_ERROR)
+      if ((this_ret = section->section_post_commit (state_data,
+						    section->section_name)) == IPMI_CONFIG_ERR_FATAL_ERROR)
         goto cleanup;
 
       if (IPMI_CONFIG_IS_NON_FATAL_ERROR (this_ret))
@@ -161,8 +160,7 @@ _ipmi_config_commit_section (ipmi_config_state_data_t *state_data,
 }
 
 ipmi_config_err_t
-ipmi_config_commit (ipmi_config_state_data_t *state_data,
-                    void *arg)
+ipmi_config_commit (ipmi_config_state_data_t *state_data)
 {
   struct ipmi_config_section *s;
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_SUCCESS;
@@ -174,8 +172,7 @@ ipmi_config_commit (ipmi_config_state_data_t *state_data,
   while (s)
     {
       if ((ret = _ipmi_config_commit_section (state_data,
-					      s,
-					      arg)) != IPMI_CONFIG_ERR_SUCCESS)
+					      s)) != IPMI_CONFIG_ERR_SUCCESS)
         {
           if (ret == IPMI_CONFIG_ERR_FATAL_ERROR)
             {

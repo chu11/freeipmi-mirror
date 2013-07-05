@@ -55,11 +55,10 @@ struct ipv4_header_parameters
 };
 
 static ipmi_config_err_t
-ip_address_source_checkout (const char *section_name,
-                            struct ipmi_config_keyvalue *kv,
-                            void *arg)
+ip_address_source_checkout (ipmi_config_state_data_t *state_data,
+			    const char *section_name,
+                            struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t ip_address_source;
   uint64_t val;
@@ -67,11 +66,9 @@ ip_address_source_checkout (const char *section_name,
   ipmi_config_err_t ret;
   uint8_t channel_number;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_lan_configuration_parameters_ip_address_source_rs)))
     {
@@ -133,21 +130,18 @@ ip_address_source_checkout (const char *section_name,
 }
 
 static ipmi_config_err_t
-ip_address_source_commit (const char *section_name,
-                          const struct ipmi_config_keyvalue *kv,
-                          void *arg)
+ip_address_source_commit (ipmi_config_state_data_t *state_data,
+			  const char *section_name,
+                          const struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   ipmi_config_err_t ret;
   uint8_t channel_number;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_lan_configuration_parameters_rs)))
     {
@@ -192,11 +186,10 @@ ip_address_source_commit (const char *section_name,
 }
 
 static ipmi_config_err_t
-ip_address_checkout (const char *section_name,
-                     struct ipmi_config_keyvalue *kv,
-                     void *arg)
+ip_address_checkout (ipmi_config_state_data_t *state_data,
+		     const char *section_name,
+                     struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   char ip_address_str[BMC_MAXIPADDRLEN + 1];
   uint8_t ip_address_bytes[4];
@@ -204,11 +197,9 @@ ip_address_checkout (const char *section_name,
   ipmi_config_err_t ret;
   uint8_t channel_number;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_lan_configuration_parameters_ip_address_rs)))
     {
@@ -281,22 +272,19 @@ ip_address_checkout (const char *section_name,
 }
 
 static ipmi_config_err_t
-ip_address_commit (const char *section_name,
-                   const struct ipmi_config_keyvalue *kv,
-                   void *arg)
+ip_address_commit (ipmi_config_state_data_t *state_data,
+		   const char *section_name,
+                   const struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   uint32_t ip_address_val = 0;
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   ipmi_config_err_t ret;
   uint8_t channel_number;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if (ipv4_address_string2int (state_data,
                                kv->value_input,
@@ -346,11 +334,10 @@ ip_address_commit (const char *section_name,
 }
 
 static ipmi_config_err_t
-mac_address_checkout (const char *section_name,
-                      struct ipmi_config_keyvalue *kv,
-                      void *arg)
+mac_address_checkout (ipmi_config_state_data_t *state_data,
+		      const char *section_name,
+                      struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   char mac_address_str[BMC_MAXMACADDRLEN+1];
   uint8_t mac_address_bytes[6];
@@ -358,11 +345,9 @@ mac_address_checkout (const char *section_name,
   ipmi_config_err_t ret;
   uint8_t channel_number;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_lan_configuration_parameters_mac_address_rs)))
     {
@@ -438,22 +423,19 @@ mac_address_checkout (const char *section_name,
 }
 
 static ipmi_config_err_t
-mac_address_commit (const char *section_name,
-                    const struct ipmi_config_keyvalue *kv,
-                    void *arg)
+mac_address_commit (ipmi_config_state_data_t *state_data,
+		    const char *section_name,
+                    const struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t mac_address_val = 0;
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   ipmi_config_err_t ret;
   uint8_t channel_number;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if (mac_address_string2int (state_data,
                               kv->value_input,
@@ -503,11 +485,10 @@ mac_address_commit (const char *section_name,
 }
 
 static ipmi_config_err_t
-subnet_mask_checkout (const char *section_name,
-                      struct ipmi_config_keyvalue *kv,
-                      void *arg)
+subnet_mask_checkout (ipmi_config_state_data_t *state_data,
+		      const char *section_name,
+                      struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   char subnet_mask_str[BMC_MAXIPADDRLEN + 1];
   uint8_t subnet_mask_bytes[4];
@@ -515,11 +496,9 @@ subnet_mask_checkout (const char *section_name,
   ipmi_config_err_t ret;
   uint8_t channel_number;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_lan_configuration_parameters_subnet_mask_rs)))
     {
@@ -592,22 +571,19 @@ subnet_mask_checkout (const char *section_name,
 }
 
 static ipmi_config_err_t
-subnet_mask_commit (const char *section_name,
-                    const struct ipmi_config_keyvalue *kv,
-                    void *arg)
+subnet_mask_commit (ipmi_config_state_data_t *state_data,
+		    const char *section_name,
+                    const struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   uint32_t subnet_mask_val = 0;
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   ipmi_config_err_t ret;
   uint8_t channel_number;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if (ipv4_address_string2int (state_data,
                                kv->value_input,
@@ -657,11 +633,10 @@ subnet_mask_commit (const char *section_name,
 }
 
 static ipmi_config_err_t
-default_gateway_address_checkout (const char *section_name,
-                                  struct ipmi_config_keyvalue *kv,
-                                  void *arg)
+default_gateway_address_checkout (ipmi_config_state_data_t *state_data,
+				  const char *section_name,
+                                  struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   char ip_address_str[BMC_MAXIPADDRLEN + 1];
   uint8_t ip_address_bytes[4];
@@ -669,11 +644,9 @@ default_gateway_address_checkout (const char *section_name,
   ipmi_config_err_t ret;
   uint8_t channel_number;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_lan_configuration_parameters_default_gateway_address_rs)))
     {
@@ -747,22 +720,19 @@ default_gateway_address_checkout (const char *section_name,
 }
 
 static ipmi_config_err_t
-default_gateway_address_commit (const char *section_name,
-                                const struct ipmi_config_keyvalue *kv,
-                                void *arg)
+default_gateway_address_commit (ipmi_config_state_data_t *state_data,
+				const char *section_name,
+                                const struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   uint32_t ip_address_val = 0;
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   ipmi_config_err_t ret;
   uint8_t channel_number;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if (ipv4_address_string2int (state_data,
                                kv->value_input,
@@ -812,11 +782,10 @@ default_gateway_address_commit (const char *section_name,
 }
 
 static ipmi_config_err_t
-default_gateway_mac_address_checkout (const char *section_name,
-                                      struct ipmi_config_keyvalue *kv,
-                                      void *arg)
+default_gateway_mac_address_checkout (ipmi_config_state_data_t *state_data,
+				      const char *section_name,
+                                      struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   char mac_address_str[BMC_MAXMACADDRLEN+1];
   uint8_t mac_address_bytes[6];
@@ -824,11 +793,9 @@ default_gateway_mac_address_checkout (const char *section_name,
   ipmi_config_err_t ret;
   uint8_t channel_number;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_lan_configuration_parameters_default_gateway_mac_address_rs)))
     {
@@ -904,22 +871,19 @@ default_gateway_mac_address_checkout (const char *section_name,
 }
 
 static ipmi_config_err_t
-default_gateway_mac_address_commit (const char *section_name,
-                                    const struct ipmi_config_keyvalue *kv,
-                                    void *arg)
+default_gateway_mac_address_commit (ipmi_config_state_data_t *state_data,
+				    const char *section_name,
+                                    const struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t mac_address_val = 0;
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   ipmi_config_err_t ret;
   uint8_t channel_number;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if (mac_address_string2int (state_data,
                               kv->value_input,
@@ -969,11 +933,10 @@ default_gateway_mac_address_commit (const char *section_name,
 }
 
 static ipmi_config_err_t
-backup_gateway_address_checkout (const char *section_name,
-                                 struct ipmi_config_keyvalue *kv,
-                                 void *arg)
+backup_gateway_address_checkout (ipmi_config_state_data_t *state_data,
+				 const char *section_name,
+                                 struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   char ip_address_str[BMC_MAXIPADDRLEN + 1];
   uint8_t ip_address_bytes[4];
@@ -981,11 +944,9 @@ backup_gateway_address_checkout (const char *section_name,
   ipmi_config_err_t ret;
   uint8_t channel_number;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_lan_configuration_parameters_backup_gateway_address_rs)))
     {
@@ -1058,22 +1019,19 @@ backup_gateway_address_checkout (const char *section_name,
 }
 
 static ipmi_config_err_t
-backup_gateway_address_commit (const char *section_name,
-                               const struct ipmi_config_keyvalue *kv,
-                               void *arg)
+backup_gateway_address_commit (ipmi_config_state_data_t *state_data,
+			       const char *section_name,
+                               const struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   uint32_t ip_address_val = 0;
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   ipmi_config_err_t ret;
   uint8_t channel_number;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if (ipv4_address_string2int (state_data,
                                kv->value_input,
@@ -1123,11 +1081,10 @@ backup_gateway_address_commit (const char *section_name,
 }
 
 static ipmi_config_err_t
-backup_gateway_mac_address_checkout (const char *section_name,
-                                     struct ipmi_config_keyvalue *kv,
-                                     void *arg)
+backup_gateway_mac_address_checkout (ipmi_config_state_data_t *state_data,
+				     const char *section_name,
+                                     struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   char mac_address_str[BMC_MAXMACADDRLEN+1];
   uint8_t mac_address_bytes[6];
@@ -1135,11 +1092,9 @@ backup_gateway_mac_address_checkout (const char *section_name,
   ipmi_config_err_t ret;
   uint8_t channel_number;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_lan_configuration_parameters_backup_gateway_mac_address_rs)))
     {
@@ -1214,22 +1169,19 @@ backup_gateway_mac_address_checkout (const char *section_name,
 }
 
 static ipmi_config_err_t
-backup_gateway_mac_address_commit (const char *section_name,
-                                   const struct ipmi_config_keyvalue *kv,
-                                   void *arg)
+backup_gateway_mac_address_commit (ipmi_config_state_data_t *state_data,
+				   const char *section_name,
+                                   const struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t mac_address_val = 0;
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   ipmi_config_err_t ret;
   uint8_t channel_number;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if (mac_address_string2int (state_data,
                               kv->value_input,
@@ -1415,19 +1367,16 @@ _set_vlan_id (ipmi_config_state_data_t *state_data,
 }
 
 static ipmi_config_err_t
-vlan_id_checkout (const char *section_name,
-                  struct ipmi_config_keyvalue *kv,
-                  void *arg)
+vlan_id_checkout (ipmi_config_state_data_t *state_data,
+		  const char *section_name,
+                  struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct vlan_id vi;
   ipmi_config_err_t ret;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if ((ret = _get_vlan_id (state_data, section_name, &vi)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
@@ -1441,19 +1390,16 @@ vlan_id_checkout (const char *section_name,
 }
 
 static ipmi_config_err_t
-vlan_id_commit (const char *section_name,
-                const struct ipmi_config_keyvalue *kv,
-                void *arg)
+vlan_id_commit (ipmi_config_state_data_t *state_data,
+		const char *section_name,
+                const struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct vlan_id vi;
   ipmi_config_err_t ret;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if ((ret = _get_vlan_id (state_data, section_name, &vi)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
@@ -1477,19 +1423,16 @@ vlan_id_validate (const char *section_name,
 }
 
 static ipmi_config_err_t
-vlan_id_enable_checkout (const char *section_name,
-                         struct ipmi_config_keyvalue *kv,
-                         void *arg)
+vlan_id_enable_checkout (ipmi_config_state_data_t *state_data,
+			 const char *section_name,
+                         struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct vlan_id vi;
   ipmi_config_err_t ret;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if ((ret = _get_vlan_id (state_data, section_name, &vi)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
@@ -1503,19 +1446,16 @@ vlan_id_enable_checkout (const char *section_name,
 }
 
 static ipmi_config_err_t
-vlan_id_enable_commit (const char *section_name,
-                       const struct ipmi_config_keyvalue *kv,
-                       void *arg)
+vlan_id_enable_commit (ipmi_config_state_data_t *state_data,
+		       const char *section_name,
+                       const struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct vlan_id vi;
   ipmi_config_err_t ret;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if ((ret = _get_vlan_id (state_data, section_name, &vi)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
@@ -1526,11 +1466,10 @@ vlan_id_enable_commit (const char *section_name,
 }
 
 static ipmi_config_err_t
-vlan_priority_checkout (const char *section_name,
-                        struct ipmi_config_keyvalue *kv,
-                        void *arg)
+vlan_priority_checkout (ipmi_config_state_data_t *state_data,
+			const char *section_name,
+                        struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t vlan_priority;
   uint64_t val;
@@ -1538,11 +1477,9 @@ vlan_priority_checkout (const char *section_name,
   ipmi_config_err_t ret;
   uint8_t channel_number;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_lan_configuration_parameters_vlan_priority_rs)))
     {
@@ -1604,21 +1541,18 @@ vlan_priority_checkout (const char *section_name,
 }
 
 static ipmi_config_err_t
-vlan_priority_commit (const char *section_name,
-                      const struct ipmi_config_keyvalue *kv,
-                      void *arg)
+vlan_priority_commit (ipmi_config_state_data_t *state_data,
+		      const char *section_name,
+                      const struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   ipmi_config_err_t ret;
   uint8_t channel_number;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_lan_configuration_parameters_rs)))
     {
@@ -1821,19 +1755,16 @@ _set_ipv4_header_parameters (ipmi_config_state_data_t *state_data,
 }
 
 static ipmi_config_err_t
-ipv4_header_time_to_live_checkout (const char *section_name,
-                                   struct ipmi_config_keyvalue *kv,
-                                   void *arg)
+ipv4_header_time_to_live_checkout (ipmi_config_state_data_t *state_data,
+				   const char *section_name,
+                                   struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct ipv4_header_parameters ihp;
   ipmi_config_err_t ret;
   
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
   
   if ((ret = _get_ipv4_header_parameters (state_data, section_name, &ihp)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
@@ -1847,19 +1778,16 @@ ipv4_header_time_to_live_checkout (const char *section_name,
 }
 
 static ipmi_config_err_t
-ipv4_header_time_to_live_commit (const char *section_name,
-                                 const struct ipmi_config_keyvalue *kv,
-                                 void *arg)
+ipv4_header_time_to_live_commit (ipmi_config_state_data_t *state_data,
+				 const char *section_name,
+                                 const struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct ipv4_header_parameters ihp;
   ipmi_config_err_t ret;
   
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
   
   if ((ret = _get_ipv4_header_parameters (state_data, section_name, &ihp)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
@@ -1871,19 +1799,16 @@ ipv4_header_time_to_live_commit (const char *section_name,
 }
 
 static ipmi_config_err_t
-ipv4_header_flags_checkout (const char *section_name,
-                            struct ipmi_config_keyvalue *kv,
-                            void *arg)
+ipv4_header_flags_checkout (ipmi_config_state_data_t *state_data,
+			    const char *section_name,
+                            struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct ipv4_header_parameters ihp;
   ipmi_config_err_t ret;
   
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
   
   if ((ret = _get_ipv4_header_parameters (state_data, section_name, &ihp)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
@@ -1897,19 +1822,16 @@ ipv4_header_flags_checkout (const char *section_name,
 }
 
 static ipmi_config_err_t
-ipv4_header_flags_commit (const char *section_name,
-                          const struct ipmi_config_keyvalue *kv,
-                          void *arg)
+ipv4_header_flags_commit (ipmi_config_state_data_t *state_data,
+			  const char *section_name,
+                          const struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct ipv4_header_parameters ihp;
   ipmi_config_err_t ret;
   
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
   
   if ((ret = _get_ipv4_header_parameters (state_data, section_name, &ihp)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
@@ -1921,19 +1843,16 @@ ipv4_header_flags_commit (const char *section_name,
 }
 
 static ipmi_config_err_t
-ipv4_header_type_of_service_checkout (const char *section_name,
-                                      struct ipmi_config_keyvalue *kv,
-                                      void *arg)
+ipv4_header_type_of_service_checkout (ipmi_config_state_data_t *state_data,
+				      const char *section_name,
+                                      struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct ipv4_header_parameters ihp;
   ipmi_config_err_t ret;
   
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
   
   if ((ret = _get_ipv4_header_parameters (state_data, section_name, &ihp)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
@@ -1947,19 +1866,16 @@ ipv4_header_type_of_service_checkout (const char *section_name,
 }
 
 static ipmi_config_err_t
-ipv4_header_type_of_service_commit (const char *section_name,
-                                    const struct ipmi_config_keyvalue *kv,
-                                    void *arg)
+ipv4_header_type_of_service_commit (ipmi_config_state_data_t *state_data,
+				    const char *section_name,
+                                    const struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct ipv4_header_parameters ihp;
   ipmi_config_err_t ret;
   
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
   
   if ((ret = _get_ipv4_header_parameters (state_data, section_name, &ihp)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
@@ -1971,19 +1887,16 @@ ipv4_header_type_of_service_commit (const char *section_name,
 }
 
 static ipmi_config_err_t
-ipv4_header_precedence_checkout (const char *section_name,
-                                 struct ipmi_config_keyvalue *kv,
-                                 void *arg)
+ipv4_header_precedence_checkout (ipmi_config_state_data_t *state_data,
+				 const char *section_name,
+                                 struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct ipv4_header_parameters ihp;
   ipmi_config_err_t ret;
   
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
   
   if ((ret = _get_ipv4_header_parameters (state_data, section_name, &ihp)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
@@ -1997,19 +1910,16 @@ ipv4_header_precedence_checkout (const char *section_name,
 }
 
 static ipmi_config_err_t
-ipv4_header_precedence_commit (const char *section_name,
-                               const struct ipmi_config_keyvalue *kv,
-                               void *arg)
+ipv4_header_precedence_commit (ipmi_config_state_data_t *state_data,
+			       const char *section_name,
+                               const struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   struct ipv4_header_parameters ihp;
   ipmi_config_err_t ret;
   
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
   
   if ((ret = _get_ipv4_header_parameters (state_data, section_name, &ihp)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
@@ -2021,11 +1931,10 @@ ipv4_header_precedence_commit (const char *section_name,
 }
 
 static ipmi_config_err_t
-primary_rmcp_port_checkout (const char *section_name,
-                            struct ipmi_config_keyvalue *kv,
-                            void *arg)
+primary_rmcp_port_checkout (ipmi_config_state_data_t *state_data,
+			    const char *section_name,
+                            struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   uint16_t primary_rmcp_port_number;
   uint64_t val;
@@ -2033,11 +1942,9 @@ primary_rmcp_port_checkout (const char *section_name,
   ipmi_config_err_t ret;
   uint8_t channel_number;
   
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
   
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_lan_configuration_parameters_primary_rmcp_port_number_rs)))
     {
@@ -2097,21 +2004,18 @@ primary_rmcp_port_checkout (const char *section_name,
 }
 
 static ipmi_config_err_t
-primary_rmcp_port_commit (const char *section_name,
-                          const struct ipmi_config_keyvalue *kv,
-                          void *arg)
+primary_rmcp_port_commit (ipmi_config_state_data_t *state_data,
+			  const char *section_name,
+                          const struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   ipmi_config_err_t ret;
   uint8_t channel_number;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
   
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_lan_configuration_parameters_rs)))
     {
@@ -2154,11 +2058,10 @@ primary_rmcp_port_commit (const char *section_name,
 }
 
 static ipmi_config_err_t
-secondary_rmcp_port_checkout (const char *section_name,
-                              struct ipmi_config_keyvalue *kv,
-                              void *arg)
+secondary_rmcp_port_checkout (ipmi_config_state_data_t *state_data,
+			      const char *section_name,
+                              struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   uint16_t secondary_rmcp_port_number;
   uint64_t val;
@@ -2166,11 +2069,9 @@ secondary_rmcp_port_checkout (const char *section_name,
   ipmi_config_err_t ret;
   uint8_t channel_number;
   
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
   
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_lan_configuration_parameters_secondary_rmcp_port_number_rs)))
     {
@@ -2230,21 +2131,18 @@ secondary_rmcp_port_checkout (const char *section_name,
 }
 
 static ipmi_config_err_t
-secondary_rmcp_port_commit (const char *section_name,
-                            const struct ipmi_config_keyvalue *kv,
-                            void *arg)
+secondary_rmcp_port_commit (ipmi_config_state_data_t *state_data,
+			    const char *section_name,
+                            const struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   ipmi_config_err_t ret;
   uint8_t channel_number;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
   
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_lan_configuration_parameters_rs)))
     {

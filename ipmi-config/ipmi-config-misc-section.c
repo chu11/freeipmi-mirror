@@ -37,21 +37,18 @@
 #include "pstdout.h"
 
 static ipmi_config_err_t
-power_restore_policy_checkout (const char *section_name,
-                               struct ipmi_config_keyvalue *kv,
-                               void *arg)
+power_restore_policy_checkout (ipmi_config_state_data_t *state_data,
+			       const char *section_name,
+                               struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   fiid_obj_t obj_cmd_rs = NULL;
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   uint8_t power_restore_policy;
   uint64_t val;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_chassis_status_rs)))
     {
@@ -104,19 +101,16 @@ power_restore_policy_checkout (const char *section_name,
 }
 
 static ipmi_config_err_t
-power_restore_policy_commit (const char *section_name,
-                             const struct ipmi_config_keyvalue *kv,
-                             void *arg)
+power_restore_policy_commit (ipmi_config_state_data_t *state_data,
+			     const char *section_name,
+                             const struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   fiid_obj_t obj_cmd_rs = NULL;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_power_restore_policy_rs)))
     {

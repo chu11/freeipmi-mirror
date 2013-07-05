@@ -21,7 +21,6 @@
 
 #include "ipmi-config.h"
 
-ipmi_config_err_t ipmi_config_diff (ipmi_config_state_data_t *state_data,
-                                    void *arg);
+ipmi_config_err_t ipmi_config_diff (ipmi_config_state_data_t *state_data);
 
 #endif /* IPMI_CONFIG_TOOL_DIFF_H */

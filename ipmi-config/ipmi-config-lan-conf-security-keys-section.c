@@ -176,19 +176,16 @@ _set_key (ipmi_config_state_data_t *state_data,
 }
 
 static ipmi_config_err_t
-k_r_checkout (const char *section_name,
-              struct ipmi_config_keyvalue *kv,
-              void *arg)
+k_r_checkout (ipmi_config_state_data_t *state_data,
+	      const char *section_name,
+              struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   uint8_t k_r[IPMI_MAX_K_R_LENGTH + 1];
   ipmi_config_err_t ret;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   memset (k_r, 0, IPMI_MAX_K_R_LENGTH + 1);
   
@@ -210,17 +207,13 @@ k_r_checkout (const char *section_name,
 }
 
 static ipmi_config_err_t
-k_r_commit (const char *section_name,
-            const struct ipmi_config_keyvalue *kv,
-            void *arg)
+k_r_commit (ipmi_config_state_data_t *state_data,
+	    const char *section_name,
+            const struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
-
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   return (_set_key (state_data,
                     section_name,
@@ -245,20 +238,17 @@ k_r_validate (const char *section_name,
 }
 
 static ipmi_config_err_t
-k_g_checkout (const char *section_name,
-              struct ipmi_config_keyvalue *kv,
-              void *arg)
+k_g_checkout (ipmi_config_state_data_t *state_data,
+	      const char *section_name,
+              struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   uint8_t k_g[IPMI_MAX_K_G_LENGTH];
   char k_g_str[IPMI_MAX_K_G_LENGTH*2+3];
   ipmi_config_err_t ret;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   memset (k_g, 0, IPMI_MAX_K_G_LENGTH);
 
@@ -307,19 +297,16 @@ k_g_checkout (const char *section_name,
 }
 
 static ipmi_config_err_t
-k_g_commit (const char *section_name,
-            const struct ipmi_config_keyvalue *kv,
-            void *arg)
+k_g_commit (ipmi_config_state_data_t *state_data,
+	    const char *section_name,
+            const struct ipmi_config_keyvalue *kv)
 {
-  ipmi_config_state_data_t *state_data;
   uint8_t k_g[IPMI_MAX_K_G_LENGTH+1];
   int k_g_len;
 
+  assert (state_data);
   assert (section_name);
   assert (kv);
-  assert (arg);
-  
-  state_data = (ipmi_config_state_data_t *)arg;
 
   memset (k_g, 0, IPMI_MAX_K_G_LENGTH + 1);
 
