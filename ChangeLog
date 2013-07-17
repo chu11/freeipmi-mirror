@@ -1,3 +1,9 @@
+2013-07-17  Albert Chu <chu11@llnl.gov>
+
+        * NEWS, configure.ac: Update for release.
+
+        * Tagged Release-1_2_9.
+
 2013-07-03  John Gilmore <gnu@toad.com>
 
 	* Fix compiler issues w/ gcc-2.96.
