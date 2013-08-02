@@ -1,3 +1,7 @@
+FreeIPMI 1.2.10 - 07/17/13
+--------------------------
+o Fix output corner case with entity sensor names in various tools.
+
 FreeIPMI 1.2.9 - 07/17/13
 -------------------------
 o Fix threshold output corner case in ipmi-sensors.
