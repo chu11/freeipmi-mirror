@@ -1,3 +1,8 @@
+2013-08-02  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/sdr/ipmi-sdr-parse-util.c (ipmi_sdr_parse_entity_sensor_name):
+	Handle special corner case w/ double printed name.
+
 2013-07-03  John Gilmore <gnu@toad.com>
 
 	* Fix compiler issues w/ gcc-2.96.
