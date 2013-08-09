@@ -4,6 +4,7 @@ by
 
 Albert Chu
 chu11@llnl.gov
+Last Updated: May 18, 2012
 
 The following is a short summary of the libraries and APIs available for
 use in FreeIPMI.

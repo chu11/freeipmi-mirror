@@ -4,8 +4,7 @@ by
 
 Albert Chu
 chu11@llnl.gov
-
-Updated: 12/08/09 for FreeIPMI 0.8.1
+Last Updated: September 20, 2012
 
 The following is a list of tests I've (semi) regularly done to measure
 the compliance of a motherboard to IPMI as well as FreeIPMI's

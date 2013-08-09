@@ -4,6 +4,7 @@ by
 
 Albert Chu
 chu11@llnl.gov
+Last Updated: January 20, 2011
 
 These are some notes on various design decisions made in FreeIPMI.
 
