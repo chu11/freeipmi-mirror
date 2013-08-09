@@ -4,6 +4,7 @@ by
 
 Albert Chu
 chu11@llnl.gov
+Last Updated: June 17, 2013
 
 The following are some short descriptions of the issues I've found
 while developing FreeIPMI on various motherboards.  The descriptions

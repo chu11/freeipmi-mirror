@@ -4,6 +4,7 @@ by
 
 Albert Chu
 chu11@llnl.gov
+Last Updated: February 8, 2012
 
 These are some short descriptions on coding style, API style, other
 thoughts for those interested in developing for FreeIPMI.

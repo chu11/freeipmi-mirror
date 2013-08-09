@@ -1,3 +1,7 @@
+2013-08-09  Albert Chu <chu11@llnl.gov>
+
+	* doc/: Update all docs w/ dates.
+	
 2013-08-02  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/sdr/ipmi-sdr-parse-util.c (ipmi_sdr_parse_entity_sensor_name):
