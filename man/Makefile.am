@@ -9,6 +9,7 @@ man5_MANS = \
 	freeipmi.conf.5 \
 	freeipmi_interpret_sel.conf.5 \
 	freeipmi_interpret_sensor.conf.5 \
+	ipmi-config.conf.5 \
 	ipmiconsole.conf.5 \
 	ipmidetect.conf.5 \
 	ipmidetectd.conf.5 \
@@ -30,6 +31,7 @@ man8_MANS = \
 	bmc-watchdog.8 \
 	ipmi-chassis.8 \
 	ipmi-chassis-config.8 \
+	ipmi-config.8 \
 	ipmi-dcmi.8 \
 	ipmi-fru.8 \
 	ipmi-locate.8 \
@@ -63,6 +65,8 @@ MANS_CPP = \
 	bmc-watchdog.8 \
 	ipmi-chassis.8 \
 	ipmi-chassis-config.8 \
+	ipmi-config.8 \
+	ipmi-config.conf.5 \
 	ipmi-dcmi.8 \
 	ipmi-fru.8 \
 	ipmi-locate.8 \

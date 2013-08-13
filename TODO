@@ -1,3 +1,10 @@
+this branch todo
+----------------
+audit/redo ipmi-config.8.pre.in
+audit/redo ipmi-config.conf.5.pre.in
+audit/redo freeipmi.conf.5.pre.in
+update README/freeipmi(7)/etc. information
+  
 *** - priority for future major release
 XXX - priority for future minor release
 ooo - priority code cleanup that should be done

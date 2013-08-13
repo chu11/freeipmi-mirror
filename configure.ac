@@ -85,6 +85,8 @@ AC_CONFIG_FILES([
         man/freeipmi.7.pre
         man/ipmi-chassis.8.pre
         man/ipmi-chassis-config.8.pre
+        man/ipmi-config.8.pre
+        man/ipmi-config.conf.5.pre
 	man/ipmi-dcmi.8.pre
 	man/ipmi-fru.8.pre
 	man/ipmi-locate.8.pre
