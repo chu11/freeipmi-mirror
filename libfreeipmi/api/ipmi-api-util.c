@@ -114,13 +114,20 @@ api_set_api_errnum_by_bad_response (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
   if (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_COMMAND_TIMEOUT) == 1)
     ctx->errnum = IPMI_ERR_MESSAGE_TIMEOUT;
   else if (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_NODE_BUSY) == 1
-      || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_OUT_OF_SPACE) == 1
-      || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_SDR_REPOSITORY_IN_UPDATE_MODE) == 1
-      || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_DEVICE_IN_FIRMWARE_UPDATE_MODE) == 1
-      || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_BMC_INITIALIZATION_IN_PROGRESS) == 1)
+	   || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_OUT_OF_SPACE) == 1
+	   || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_SDR_REPOSITORY_IN_UPDATE_MODE) == 1
+	   || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_DEVICE_IN_FIRMWARE_UPDATE_MODE) == 1
+	   || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_BMC_INITIALIZATION_IN_PROGRESS) == 1)
     ctx->errnum = IPMI_ERR_BMC_BUSY;
   else if (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_INSUFFICIENT_PRIVILEGE_LEVEL) == 1)
     ctx->errnum = IPMI_ERR_PRIVILEGE_LEVEL_INSUFFICIENT;
+  else if (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_INVALID_COMMAND) == 1
+	   || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_COMMAND_INVALID_FOR_LUN) == 1
+	   || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_REQUEST_DATA_LENGTH_INVALID) == 1
+	   || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_REQUEST_DATA_LENGTH_LIMIT_EXCEEDED) == 1
+	   || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE) == 1
+	   || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1)
+    ctx->errnum = IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED;
   else
     ctx->errnum = IPMI_ERR_BAD_COMPLETION_CODE;
 }

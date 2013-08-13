@@ -12,7 +12,7 @@ When appropriate, typical BMC configurations will be suggested.
 .LP
 The following is an example BMC configuration file partially generated
 from the
-.B bmc-config(1)
+.B bmc-config(8)
 command.  This example configuration should be sufficient for most
 users after the appropriate local IP and MAC addresses are input.
 Following this example, separate sections of this manpage will discuss
@@ -30,7 +30,7 @@ for your particular machine.
 The below configuration file and most of this manpage assume the user
 is interested in configuring a BMC for use with IPMI over LAN.
 Various configuration options from 
-.B bmc-config(1)
+.B bmc-config(8)
 have been left out or skipped because it is considered unnecessary.
 Future versions of this manpage will try to include more information.
 .LP

@@ -2,6 +2,60 @@
 
 	* ipmi-config/: New tool.
 	
+2013-08-13  Albert Chu <chu11@llnl.gov>
+
+	* man/bmc-config.conf.5.pre.in: Fix section typos.
+
+	* man/libfreeipmi.3.pre.in, man/freeipmi.7.pre.in,
+	man/freeipmi.conf.5.pre.in: Add missing tool.
+	
+2013-08-09  Albert Chu <chu11@llnl.gov>
+
+	* doc/: Update all docs w/ dates.
+	
+2013-08-02  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/sdr/ipmi-sdr-parse-util.c (ipmi_sdr_parse_entity_sensor_name):
+	Handle special corner case w/ double printed name.
+
+2013-07-03  John Gilmore <gnu@toad.com>
+
+	* Fix compiler issues w/ gcc-2.96.
+
+2013-07-03  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/ipmi-sensors-output-common.c (ipmi_sensors_get_thresholds):
+	When thresholds access reported by SDR is fixed/unreadable, the
+	prior interpretation was that thresholds were not available.  The
+	apparent correct interpretation is that thresholds are only
+	unreadable via the get threshold command, but thresholds can still
+	be read in the SDR.  Code has been altered to meet this
+	assumption.  Issue discovered and proper interpretation determined
+	by Holger Liebig <holger.liebig@ts.fujitsu.com>.
+
+2013-06-26  Mario Jungwirth <mario.jungwirth@ocilion.com>
+
+	* libipmimonitoring/ipmi_monitoring.h.in: Remove invalid declaration. 
+	
+2013-06-25  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/api/ipmi-api-util.c (api_set_api_errnum_by_bad_response),
+	libfreeipmi/api/ipmi-api.c. libfreeipmi/include/freeipmi/api/ipmi-api.h:
+	Support new IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED error code.
+	
+2013-06-17  Albert Chu <chu11@llnl.gov>
+
+	* bmc-info/bmc-info.c (display_system_info_common): Workaround
+	issue on Bull 510 systems.
+	
+2013-06-17  Albert Chu <chu11@llnl.gov>
+
+	* man/manpage-common-troubleshooting-inband-outofband.man: New
+	common manpage.
+
+	* man/: Add inband & outofband common troubleshooting to most
+	FreeIPMI tool manpages.
+	
 2013-05-30  Ales Ledvinka <aledvink@redhat.com>
 
 	* common/toolcommon/pstdout.c (pstdout_vprintf): Fix portability

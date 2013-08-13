@@ -2,6 +2,7 @@ IPMI OEM additions/extensions documentation requirements
 
 Albert Chu
 chu11@llnl.gov
+Last Updated: January 3, 2011
 
 The following is a list of the common OEM documentation requirements
 that are needed for full OEM support in FreeIPMI.

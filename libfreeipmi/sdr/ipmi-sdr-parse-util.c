@@ -49,6 +49,8 @@
 
 #define IPMI_SDR_CHARS_IN_ALPHABET 26
 
+#define IPMI_SDR_ENTITY_NAME_BUFLEN 1024
+
 static int
 _get_shared_sensor_name (ipmi_sdr_ctx_t ctx,
 			 const void *sdr_record,
@@ -274,6 +276,7 @@ ipmi_sdr_parse_entity_sensor_name (ipmi_sdr_ctx_t ctx,
 {
   char id_string[IPMI_SDR_MAX_ID_STRING_LENGTH + 1];
   char device_id_string[IPMI_SDR_MAX_DEVICE_ID_STRING_LENGTH + 1];
+  char entity_name_buf[IPMI_SDR_ENTITY_NAME_BUFLEN + 1];
   char *id_string_ptr = NULL;
   uint8_t entity_id, entity_instance, entity_instance_type;
   const char *entity_id_str;
@@ -304,6 +307,7 @@ ipmi_sdr_parse_entity_sensor_name (ipmi_sdr_ctx_t ctx,
     }
 
   memset (buf, '\0', buflen);
+  memset (entity_name_buf, '\0', IPMI_SDR_ENTITY_NAME_BUFLEN + 1);
 
   if (ipmi_sdr_parse_record_id_and_type (ctx,
 					 sdr_record,
@@ -437,39 +441,86 @@ ipmi_sdr_parse_entity_sensor_name (ipmi_sdr_ctx_t ctx,
 					   IPMI_SDR_MAX_SENSOR_NAME_LENGTH) < 0)
 		return (-1);
 
-	      snprintf (buf,
-			buflen,
-			"%s %u %s",
+	      snprintf (entity_name_buf,
+			IPMI_SDR_ENTITY_NAME_BUFLEN,
+			"%s %u",
 			entity_id_str,
-			entity_instance,
-			sensor_name_buf);
+			entity_instance);
+
+	      /* In odd chance the strings end up identical */
+	      if (!strcasecmp (entity_name_buf, sensor_name_buf))
+		snprintf (buf,
+			  buflen,
+			  "%s",
+			  sensor_name_buf);
+	      else
+		snprintf (buf,
+			  buflen,
+			  "%s %s",
+			  entity_name_buf,
+			  sensor_name_buf);
 	    }
 	  else
 	    {
 	    fallthrough:
-	      snprintf (buf,
-			buflen,
-			"%s %u %s",
+	      snprintf (entity_name_buf,
+			IPMI_SDR_ENTITY_NAME_BUFLEN,
+			"%s %u",
 			entity_id_str,
-			entity_instance,
-			id_string_ptr);
+			entity_instance);
+	      
+	      /* In odd chance the strings end up identical */
+	      if (!strcasecmp (entity_name_buf, id_string_ptr))
+		snprintf (buf,
+			  buflen,
+			  "%s",
+			  id_string_ptr);
+	      else
+		snprintf (buf,
+			  buflen,
+			  "%s %s",
+			  entity_name_buf,
+			  id_string_ptr);
 	    }
 	}
       else
 	{
 	  if (flags & IPMI_SDR_SENSOR_NAME_FLAGS_ALWAYS_OUTPUT_INSTANCE_NUMBER)
-	    snprintf (buf,
-		      buflen,
-		      "%s %u %s",
-		      entity_id_str,
-		      entity_instance,
-		      id_string_ptr);
+	    {
+	      snprintf (entity_name_buf,
+			IPMI_SDR_ENTITY_NAME_BUFLEN,
+			"%s %u",
+			entity_id_str,
+			entity_instance);
+	      
+	      /* In odd chance the strings end up identical */
+	      if (!strcasecmp (entity_name_buf, id_string_ptr))
+		snprintf (buf,
+			  buflen,
+			  "%s",
+			  id_string_ptr);
+	      else
+		snprintf (buf,
+			  buflen,
+			  "%s %s",
+			  entity_name_buf,
+			  id_string_ptr);
+	    }
 	  else
-	    snprintf (buf,
-		      buflen,
-		      "%s %s",
-		      entity_id_str,
-		      id_string_ptr);
+	    {
+	      /* In odd chance the strings end up identical */
+	      if (!strcasecmp (entity_id_str, id_string_ptr))
+		snprintf (buf,
+			  buflen,
+			  "%s",
+			  id_string_ptr);
+	      else
+		snprintf (buf,
+			  buflen,
+			  "%s %s",
+			  entity_id_str,
+			  id_string_ptr);
+	    }
 	}
     }
 
