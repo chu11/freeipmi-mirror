@@ -2,7 +2,8 @@
 
 	* man/bmc-config.conf.5.pre.in: Fix section typos.
 
-	* man/freeipmi.conf.5.pre.in: Add missing tool. 
+	* man/libfreeipmi.3.pre.in, man/freeipmi.7.pre.in,
+	man/freeipmi.conf.5.pre.in: Add missing tool.
 	
 2013-08-09  Albert Chu <chu11@llnl.gov>
 
