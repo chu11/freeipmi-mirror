@@ -31,7 +31,7 @@
 #include <errno.h>
 #include <assert.h>
 
-#include "ipmi-config-tool-commit.h"
+#include "ipmi-config-commit.h"
 #include "ipmi-config-utils.h"
 
 #include "freeipmi-portability.h"

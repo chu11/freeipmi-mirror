@@ -30,7 +30,7 @@
 
 #include "ipmi-config.h"
 #include "ipmi-config-sections.h"
-#include "ipmi-config-tool-section.h"
+#include "ipmi-config-section.h"
 #include "ipmi-config-utils.h"
 
 #include "ipmi-config-core-lan-channel-section.h"

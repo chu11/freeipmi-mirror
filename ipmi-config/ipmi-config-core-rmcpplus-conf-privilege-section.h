@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef IPMI_CONFIG_RMCPPLUS_CONF_PRIVILEGE_SECTION_H
-#define IPMI_CONFIG_RMCPPLUS_CONF_PRIVILEGE_SECTION_H
+#ifndef IPMI_CONFIG_CORE_RMCPPLUS_CONF_PRIVILEGE_SECTION_H
+#define IPMI_CONFIG_CORE_RMCPPLUS_CONF_PRIVILEGE_SECTION_H
 
 #include "ipmi-config.h"
 #include "ipmi-config-sections.h"
@@ -26,4 +26,4 @@ struct ipmi_config_section * ipmi_config_rmcpplus_conf_privilege_section_get (ip
                                                                               unsigned int config_flags,
                                                                               int channel_index);
 
-#endif /* IPMI_CONFIG_RMCPPLUS_CONF_PRIVILEGE_SECTION_H */
+#endif /* IPMI_CONFIG_CORE_RMCPPLUS_CONF_PRIVILEGE_SECTION_H */

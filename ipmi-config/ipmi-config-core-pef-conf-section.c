@@ -29,7 +29,7 @@
 
 #include "ipmi-config.h"
 #include "ipmi-config-tool-pef-conf-section.h"
-#include "ipmi-config-tool-section.h"
+#include "ipmi-config-section.h"
 #include "ipmi-config-validate.h"
 
 #include "freeipmi-portability.h"

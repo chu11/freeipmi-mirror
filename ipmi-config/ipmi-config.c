@@ -30,11 +30,11 @@
 
 #include "ipmi-config.h"
 #include "ipmi-config-argp.h"
-#include "ipmi-config-tool-checkout.h"
-#include "ipmi-config-tool-commit.h"
-#include "ipmi-config-tool-diff.h"
-#include "ipmi-config-tool-parse.h"
-#include "ipmi-config-tool-section.h"
+#include "ipmi-config-checkout.h"
+#include "ipmi-config-commit.h"
+#include "ipmi-config-diff.h"
+#include "ipmi-config-parse.h"
+#include "ipmi-config-section.h"
 #include "ipmi-config-sections.h"
 #include "ipmi-config-utils.h"
 

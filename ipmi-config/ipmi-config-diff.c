@@ -27,8 +27,8 @@
 #endif /* STDC_HEADERS */
 #include <assert.h>
 
-#include "ipmi-config-tool-diff.h"
-#include "ipmi-config-tool-checkout.h"
+#include "ipmi-config-diff.h"
+#include "ipmi-config-checkout.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"

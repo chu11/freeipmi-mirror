@@ -29,7 +29,7 @@
 
 #include "ipmi-config.h"
 #include "ipmi-config-map.h"
-#include "ipmi-config-tool-section.h"
+#include "ipmi-config-section.h"
 #include "ipmi-config-utils.h"
 #include "ipmi-config-validate.h"
 

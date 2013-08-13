@@ -28,9 +28,9 @@
 #include <errno.h>
 #include <assert.h>
 
-#include "ipmi-config-tool-checkout.h"
-#include "ipmi-config-tool-comment.h"
-#include "ipmi-config-tool-section.h"
+#include "ipmi-config-checkout.h"
+#include "ipmi-config-comment.h"
+#include "ipmi-config-section.h"
 #include "ipmi-config-utils.h"
 
 #include "freeipmi-portability.h"

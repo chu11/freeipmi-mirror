@@ -16,12 +16,16 @@
  * 
  */
 
-#ifndef IPMI_CONFIG_TOOL_PARSE_H
-#define IPMI_CONFIG_TOOL_PARSE_H
+#ifndef IPMI_CONFIG_COMMENT_H
+#define IPMI_CONFIG_COMMENT_H
+
+#include <stdio.h>
 
 #include "ipmi-config.h"
 
-ipmi_config_err_t ipmi_config_parse (ipmi_config_state_data_t *state_data,
-                                     FILE *fp);
+int ipmi_config_section_comments (ipmi_config_state_data_t *state_data,
+                                  const char *section_name,
+                                  const char *in,
+                                  FILE *fp);
 
-#endif /* IPMI_CONFIG_TOOL_PARSE_H */
+#endif /* IPMI_CONFIG_COMMENT_H */

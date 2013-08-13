@@ -23,6 +23,12 @@ ipmi_config_SOURCES = \
 	ipmi-config.h \
 	ipmi-config-argp.c \
 	ipmi-config-argp.h \
+	ipmi-config-checkout.c \
+	ipmi-config-checkout.h \
+	ipmi-config-comment.c \
+	ipmi-config-comment.h \
+	ipmi-config-commit.c \
+	ipmi-config-commit.h \
 	ipmi-config-core-channel-common.c \
 	ipmi-config-core-channel-common.h \
 	ipmi-config-core-lan-channel-section.c \
@@ -51,28 +57,22 @@ ipmi_config_SOURCES = \
 	ipmi-config-core-sol-conf-section.h \
 	ipmi-config-core-user-sections.c \
 	ipmi-config-core-user-sections.h \
+	ipmi-config-diff.c \
+	ipmi-config-diff.h \
 	ipmi-config-map.c \
 	ipmi-config-map.h \
+	ipmi-config-parse.c \
+	ipmi-config-parse.h \
+	ipmi-config-section.c \
+	ipmi-config-section.h \
 	ipmi-config-sections.c \
 	ipmi-config-sections.h \
 	ipmi-config-utils.c \
 	ipmi-config-utils.h \
 	ipmi-config-validate.c \
 	ipmi-config-validate.h \
-	ipmi-config-tool-comment.c \
-	ipmi-config-tool-comment.h \
-	ipmi-config-tool-checkout.c \
-	ipmi-config-tool-checkout.h \
-	ipmi-config-tool-commit.c \
-	ipmi-config-tool-commit.h \
-	ipmi-config-tool-diff.c \
-	ipmi-config-tool-diff.h \
-	ipmi-config-tool-parse.c \
-	ipmi-config-tool-parse.h \
 	ipmi-config-tool-pef-conf-section.c \
-	ipmi-config-tool-pef-conf-section.h \
-	ipmi-config-tool-section.c \
-	ipmi-config-tool-section.h
+	ipmi-config-tool-pef-conf-section.h
 
 $(top_builddir)/common/toolcommon/libtoolcommon.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`

@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef IPMI_CONFIG_TOOL_CHECKOUT_H
-#define IPMI_CONFIG_TOOL_CHECKOUT_H
+#ifndef IPMI_CONFIG_CHECKOUT_H
+#define IPMI_CONFIG_CHECKOUT_H
 
 #include "ipmi-config.h"
 
@@ -32,4 +32,4 @@ ipmi_config_err_t ipmi_config_checkout (ipmi_config_state_data_t *state_data,
                                         FILE *fp,
                                         unsigned int line_length);
 
-#endif /* IPMI_CONFIG_TOOL_CHECKOUT_H */
+#endif /* IPMI_CONFIG_CHECKOUT_H */

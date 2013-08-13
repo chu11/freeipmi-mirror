@@ -29,7 +29,7 @@
 #include <errno.h>
 #include <assert.h>
 
-#include "ipmi-config-tool-comment.h"
+#include "ipmi-config-comment.h"
 #include "ipmi-config-utils.h"
 
 #include "freeipmi-portability.h"

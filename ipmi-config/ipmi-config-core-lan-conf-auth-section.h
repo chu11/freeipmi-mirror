@@ -17,8 +17,8 @@
  */
 
 
-#ifndef IPMI_CONFIG_LAN_CONF_AUTH_SECTION_H
-#define IPMI_CONFIG_LAN_CONF_AUTH_SECTION_H
+#ifndef IPMI_CONFIG_CORE_LAN_CONF_AUTH_SECTION_H
+#define IPMI_CONFIG_CORE_LAN_CONF_AUTH_SECTION_H
 
 #include "ipmi-config.h"
 #include "ipmi-config-sections.h"
@@ -27,4 +27,4 @@ struct ipmi_config_section * ipmi_config_lan_conf_auth_section_get (ipmi_config_
                                                                     unsigned int config_flags,
                                                                     int channel_index);
 
-#endif /* IPMI_CONFIG_LAN_CONF_AUTH_SECTION_H */
+#endif /* IPMI_CONFIG_CORE_LAN_CONF_AUTH_SECTION_H */
