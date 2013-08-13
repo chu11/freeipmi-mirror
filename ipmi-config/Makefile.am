@@ -23,38 +23,38 @@ ipmi_config_SOURCES = \
 	ipmi-config.h \
 	ipmi-config-argp.c \
 	ipmi-config-argp.h \
-	ipmi-config-channel-common.c \
-	ipmi-config-channel-common.h \
-	ipmi-config-lan-channel-section.c \
-	ipmi-config-lan-channel-section.h \
-	ipmi-config-lan-conf-auth-section.c \
-	ipmi-config-lan-conf-auth-section.h \
-	ipmi-config-lan-conf-misc-section.c \
-	ipmi-config-lan-conf-misc-section.h \
-	ipmi-config-lan-conf-section.c \
-	ipmi-config-lan-conf-section.h \
-	ipmi-config-lan-conf-security-keys-section.c \
-	ipmi-config-lan-conf-security-keys-section.h \
-	ipmi-config-lan-conf-user-security-section.c \
-	ipmi-config-lan-conf-user-security-section.h \
+	ipmi-config-core-channel-common.c \
+	ipmi-config-core-channel-common.h \
+	ipmi-config-core-lan-channel-section.c \
+	ipmi-config-core-lan-channel-section.h \
+	ipmi-config-core-lan-conf-auth-section.c \
+	ipmi-config-core-lan-conf-auth-section.h \
+	ipmi-config-core-lan-conf-misc-section.c \
+	ipmi-config-core-lan-conf-misc-section.h \
+	ipmi-config-core-lan-conf-section.c \
+	ipmi-config-core-lan-conf-section.h \
+	ipmi-config-core-lan-conf-security-keys-section.c \
+	ipmi-config-core-lan-conf-security-keys-section.h \
+	ipmi-config-core-lan-conf-user-security-section.c \
+	ipmi-config-core-lan-conf-user-security-section.h \
+	ipmi-config-core-misc-section.c \
+	ipmi-config-core-misc-section.h \
+	ipmi-config-core-pef-conf-section.c \
+	ipmi-config-core-pef-conf-section.h \
+	ipmi-config-core-rmcpplus-conf-privilege-section.c \
+	ipmi-config-core-rmcpplus-conf-privilege-section.h \
+	ipmi-config-core-serial-channel-section.c \
+	ipmi-config-core-serial-channel-section.h \
+	ipmi-config-core-serial-conf-section.c \
+	ipmi-config-core-serial-conf-section.h \
+	ipmi-config-core-sol-conf-section.c \
+	ipmi-config-core-sol-conf-section.h \
+	ipmi-config-core-user-sections.c \
+	ipmi-config-core-user-sections.h \
 	ipmi-config-map.c \
 	ipmi-config-map.h \
-	ipmi-config-misc-section.c \
-	ipmi-config-misc-section.h \
-	ipmi-config-pef-conf-section.c \
-	ipmi-config-pef-conf-section.h \
-	ipmi-config-rmcpplus-conf-privilege-section.c \
-	ipmi-config-rmcpplus-conf-privilege-section.h \
 	ipmi-config-sections.c \
 	ipmi-config-sections.h \
-	ipmi-config-serial-channel-section.c \
-	ipmi-config-serial-channel-section.h \
-	ipmi-config-serial-conf-section.c \
-	ipmi-config-serial-conf-section.h \
-	ipmi-config-sol-conf-section.c \
-	ipmi-config-sol-conf-section.h \
-	ipmi-config-user-sections.c \
-	ipmi-config-user-sections.h \
 	ipmi-config-utils.c \
 	ipmi-config-utils.h \
 	ipmi-config-validate.c \
