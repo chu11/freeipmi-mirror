@@ -1474,7 +1474,7 @@ Copyright \(co 2003-2013 FreeIPMI Core Team.
 
 .SH "SEE ALSO"
 freeipmi(7), bmc-config(8), bmc-device(8), bmc-info(8),
-bmc-watchdog(8), ipmi-chassis(8), ipmi-fru(8), ipmi-oem(8),
-ipmi-pef-config(8), ipmi-raw(8), ipmi-sel(8), ipmi-sensors(8),
-ipmi-sensors-config(8), ipmiconsole(8), ipmipower(8)
+bmc-watchdog(8), ipmi-chassis(8), ipmi-chassis-config(8), ipmi-fru(8),
+ipmi-oem(8), ipmi-pef-config(8), ipmi-raw(8), ipmi-sel(8),
+ipmi-sensors(8), ipmi-sensors-config(8), ipmiconsole(8), ipmipower(8)
 #include <@top_srcdir@/man/manpage-common-homepage.man>
