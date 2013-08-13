@@ -135,4 +135,28 @@ ipmi_config_validate_t alert_gateway_number_validate (ipmi_config_state_data_t *
                                                       const char *key_name,
                                                       const char *value);
 
+ipmi_config_validate_t bios_boot_type_number_validate (ipmi_config_state_data_t *state_data,
+						       const char *section_name,
+						       const char *key_name,
+						       const char *value);
+
+ipmi_config_validate_t boot_device_number_validate (ipmi_config_state_data_t *state_data,
+						    const char *section_name,
+						    const char *key_name,
+						    const char *value);
+
+ipmi_config_validate_t device_instance_selector_number_validate (ipmi_config_state_data_t *state_data,
+								 const char *section_name,
+								 const char *key_name,
+								 const char *value);
+
+ipmi_config_validate_t firmware_bios_verbosity_number_validate (ipmi_config_state_data_t *state_data,
+								const char *section_name,
+								const char *key_name,
+								const char *value);
+
+ipmi_config_validate_t console_redirection_number_validate (ipmi_config_state_data_t *state_data,
+							    const char *section_name,
+							    const char *key_name,
+							    const char *value);
 #endif /* IPMI_CONFIG_VALIDATE_H */

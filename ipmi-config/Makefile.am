@@ -23,6 +23,14 @@ ipmi_config_SOURCES = \
 	ipmi-config.h \
 	ipmi-config-argp.c \
 	ipmi-config-argp.h \
+	ipmi-config-chassis-boot-flags.c \
+	ipmi-config-chassis-boot-flags.h \
+	ipmi-config-chassis-front-panel-buttons.c \
+	ipmi-config-chassis-front-panel-buttons.h \
+	ipmi-config-chassis-power-conf.c \
+	ipmi-config-chassis-power-conf.h \
+	ipmi-config-chassis-sections.c \
+	ipmi-config-chassis-sections.h \
 	ipmi-config-checkout.c \
 	ipmi-config-checkout.h \
 	ipmi-config-comment.c \

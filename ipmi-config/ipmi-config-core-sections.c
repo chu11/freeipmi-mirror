@@ -177,7 +177,7 @@ ipmi_config_core_sections_create (ipmi_config_state_data_t *state_data)
 
   for (userindex = 0; userindex < number_of_users; userindex++)
     {
-      if (!(section = ipmi_config_user_section_get (state_data, userindex + 1)))
+      if (!(section = ipmi_config_core_user_section_get (state_data, userindex + 1)))
         goto cleanup;
       if (ipmi_config_section_append (&sections, section) < 0)
         goto cleanup;
@@ -185,9 +185,9 @@ ipmi_config_core_sections_create (ipmi_config_state_data_t *state_data)
 
   /* Lan_Channel Section(s) */
 
-  if (!(section = ipmi_config_lan_channel_section_get (state_data,
-                                                       state_data->lan_base_config_flags,
-                                                       -1)))
+  if (!(section = ipmi_config_core_lan_channel_section_get (state_data,
+							    state_data->lan_base_config_flags,
+							    -1)))
     goto cleanup;
   if (ipmi_config_section_append (&sections, section) < 0)
     goto cleanup;
@@ -196,9 +196,9 @@ ipmi_config_core_sections_create (ipmi_config_state_data_t *state_data)
     {
       for (channelindex = 0; channelindex < state_data->lan_channel_numbers_count; channelindex++)
         {
-          if (!(section = ipmi_config_lan_channel_section_get (state_data,
-                                                               state_data->lan_channel_config_flags,
-                                                               channelindex)))
+          if (!(section = ipmi_config_core_lan_channel_section_get (state_data,
+								    state_data->lan_channel_config_flags,
+								    channelindex)))
             goto cleanup;
           if (ipmi_config_section_append (&sections, section) < 0)
             goto cleanup;
@@ -207,9 +207,9 @@ ipmi_config_core_sections_create (ipmi_config_state_data_t *state_data)
 
   /* Lan_Conf Section(s) */
 
-  if (!(section = ipmi_config_lan_conf_section_get (state_data,
-                                                    state_data->lan_base_config_flags,
-                                                    -1)))
+  if (!(section = ipmi_config_core_lan_conf_section_get (state_data,
+							 state_data->lan_base_config_flags,
+							 -1)))
     goto cleanup;
   if (ipmi_config_section_append (&sections, section) < 0)
     goto cleanup;
@@ -218,9 +218,9 @@ ipmi_config_core_sections_create (ipmi_config_state_data_t *state_data)
     {
       for (channelindex = 0; channelindex < state_data->lan_channel_numbers_count; channelindex++)
         {
-          if (!(section = ipmi_config_lan_conf_section_get (state_data,
-                                                            state_data->lan_channel_config_flags,
-                                                            channelindex)))
+          if (!(section = ipmi_config_core_lan_conf_section_get (state_data,
+								 state_data->lan_channel_config_flags,
+								 channelindex)))
             goto cleanup;
           if (ipmi_config_section_append (&sections, section) < 0)
             goto cleanup;
@@ -229,9 +229,9 @@ ipmi_config_core_sections_create (ipmi_config_state_data_t *state_data)
 
   /* Lan_Conf_Auth Section(s) */
 
-  if (!(section = ipmi_config_lan_conf_auth_section_get (state_data,
-                                                         state_data->lan_base_config_flags,
-                                                         -1)))
+  if (!(section = ipmi_config_core_lan_conf_auth_section_get (state_data,
+							      state_data->lan_base_config_flags,
+							      -1)))
     goto cleanup;
   if (ipmi_config_section_append (&sections, section) < 0)
     goto cleanup;
@@ -240,9 +240,9 @@ ipmi_config_core_sections_create (ipmi_config_state_data_t *state_data)
     {
       for (channelindex = 0; channelindex < state_data->lan_channel_numbers_count; channelindex++)
         {
-          if (!(section = ipmi_config_lan_conf_auth_section_get (state_data,
-                                                                 state_data->lan_channel_config_flags,
-                                                                 channelindex)))
+          if (!(section = ipmi_config_core_lan_conf_auth_section_get (state_data,
+								      state_data->lan_channel_config_flags,
+								      channelindex)))
             goto cleanup;
           if (ipmi_config_section_append (&sections, section) < 0)
             goto cleanup;
@@ -251,9 +251,9 @@ ipmi_config_core_sections_create (ipmi_config_state_data_t *state_data)
 
   /* Lan_Conf_Security_Keys Section(s) */
 
-  if (!(section = ipmi_config_lan_conf_security_keys_section_get (state_data,
-                                                                  state_data->lan_base_config_flags,
-                                                                  -1)))
+  if (!(section = ipmi_config_core_lan_conf_security_keys_section_get (state_data,
+								       state_data->lan_base_config_flags,
+								       -1)))
     goto cleanup;
   if (ipmi_config_section_append (&sections, section) < 0)
     goto cleanup;
@@ -262,9 +262,9 @@ ipmi_config_core_sections_create (ipmi_config_state_data_t *state_data)
     {
       for (channelindex = 0; channelindex < state_data->lan_channel_numbers_count; channelindex++)
         {
-          if (!(section = ipmi_config_lan_conf_security_keys_section_get (state_data,
-                                                                          state_data->lan_channel_config_flags,
-                                                                          channelindex)))
+          if (!(section = ipmi_config_core_lan_conf_security_keys_section_get (state_data,
+									       state_data->lan_channel_config_flags,
+									       channelindex)))
             goto cleanup;
           if (ipmi_config_section_append (&sections, section) < 0)
             goto cleanup;
@@ -273,9 +273,9 @@ ipmi_config_core_sections_create (ipmi_config_state_data_t *state_data)
 
   /* Lan_Conf_User_Security Section(s) */
 
-  if (!(section = ipmi_config_lan_conf_user_security_section_get (state_data,
-                                                                  state_data->lan_base_config_flags,
-                                                                  -1)))
+  if (!(section = ipmi_config_core_lan_conf_user_security_section_get (state_data,
+								       state_data->lan_base_config_flags,
+								       -1)))
     goto cleanup;
   if (ipmi_config_section_append (&sections, section) < 0)
     goto cleanup;
@@ -284,9 +284,9 @@ ipmi_config_core_sections_create (ipmi_config_state_data_t *state_data)
     {
       for (channelindex = 0; channelindex < state_data->lan_channel_numbers_count; channelindex++)
         {
-          if (!(section = ipmi_config_lan_conf_user_security_section_get (state_data,
-                                                                          state_data->lan_channel_config_flags,
-                                                                          channelindex)))
+          if (!(section = ipmi_config_core_lan_conf_user_security_section_get (state_data,
+									       state_data->lan_channel_config_flags,
+									       channelindex)))
             goto cleanup;
           if (ipmi_config_section_append (&sections, section) < 0)
             goto cleanup;
@@ -295,9 +295,9 @@ ipmi_config_core_sections_create (ipmi_config_state_data_t *state_data)
 
   /* Lan_Conf_Misc Section(s) */
 
-  if (!(section = ipmi_config_lan_conf_misc_section_get (state_data,
-                                                         state_data->lan_base_config_flags,
-                                                         -1)))
+  if (!(section = ipmi_config_core_lan_conf_misc_section_get (state_data,
+							      state_data->lan_base_config_flags,
+							      -1)))
     goto cleanup;
   if (ipmi_config_section_append (&sections, section) < 0)
     goto cleanup;
@@ -306,9 +306,9 @@ ipmi_config_core_sections_create (ipmi_config_state_data_t *state_data)
     {
       for (channelindex = 0; channelindex < state_data->lan_channel_numbers_count; channelindex++)
         {
-          if (!(section = ipmi_config_lan_conf_misc_section_get (state_data,
-                                                                 state_data->lan_channel_config_flags,
-                                                                 channelindex)))
+          if (!(section = ipmi_config_core_lan_conf_misc_section_get (state_data,
+								      state_data->lan_channel_config_flags,
+								      channelindex)))
             goto cleanup;
           if (ipmi_config_section_append (&sections, section) < 0)
             goto cleanup;
@@ -317,9 +317,9 @@ ipmi_config_core_sections_create (ipmi_config_state_data_t *state_data)
 
   /* Rmcpplus_Conf_Privilege Section(s) */
  
-  if (!(section = ipmi_config_rmcpplus_conf_privilege_section_get (state_data,
-                                                                   state_data->lan_base_config_flags,
-                                                                   -1)))
+  if (!(section = ipmi_config_core_rmcpplus_conf_privilege_section_get (state_data,
+									state_data->lan_base_config_flags,
+									-1)))
     goto cleanup;
   if (ipmi_config_section_append (&sections, section) < 0)
     goto cleanup;
@@ -328,9 +328,9 @@ ipmi_config_core_sections_create (ipmi_config_state_data_t *state_data)
     {
       for (channelindex = 0; channelindex < state_data->lan_channel_numbers_count; channelindex++)
         {
-          if (!(section = ipmi_config_rmcpplus_conf_privilege_section_get (state_data,
-                                                                           state_data->lan_channel_config_flags,
-                                                                           channelindex)))
+          if (!(section = ipmi_config_core_rmcpplus_conf_privilege_section_get (state_data,
+										state_data->lan_channel_config_flags,
+										channelindex)))
             goto cleanup;
           if (ipmi_config_section_append (&sections, section) < 0)
             goto cleanup;
@@ -339,9 +339,9 @@ ipmi_config_core_sections_create (ipmi_config_state_data_t *state_data)
 
   /* Serial_Channel Section(s) */
 
-  if (!(section = ipmi_config_serial_channel_section_get (state_data,
-                                                          state_data->serial_base_config_flags,
-                                                          -1)))
+  if (!(section = ipmi_config_core_serial_channel_section_get (state_data,
+							       state_data->serial_base_config_flags,
+							       -1)))
     goto cleanup;
   if (ipmi_config_section_append (&sections, section) < 0)
     goto cleanup;
@@ -350,9 +350,9 @@ ipmi_config_core_sections_create (ipmi_config_state_data_t *state_data)
     {
       for (channelindex = 0; channelindex < state_data->serial_channel_numbers_count; channelindex++)
         {
-          if (!(section = ipmi_config_serial_channel_section_get (state_data,
-                                                                  state_data->serial_channel_config_flags,
-                                                                  channelindex)))
+          if (!(section = ipmi_config_core_serial_channel_section_get (state_data,
+								       state_data->serial_channel_config_flags,
+								       channelindex)))
             goto cleanup;
           if (ipmi_config_section_append (&sections, section) < 0)
             goto cleanup;
@@ -361,9 +361,9 @@ ipmi_config_core_sections_create (ipmi_config_state_data_t *state_data)
 
   /* Serial_Conf Section(s) */
 
-  if (!(section = ipmi_config_serial_conf_section_get (state_data,
-                                                       state_data->serial_base_config_flags,
-                                                       -1)))
+  if (!(section = ipmi_config_core_serial_conf_section_get (state_data,
+							    state_data->serial_base_config_flags,
+							    -1)))
     goto cleanup;
   if (ipmi_config_section_append (&sections, section) < 0)
     goto cleanup;
@@ -372,9 +372,9 @@ ipmi_config_core_sections_create (ipmi_config_state_data_t *state_data)
     {
       for (channelindex = 0; channelindex < state_data->serial_channel_numbers_count; channelindex++)
         {
-          if (!(section = ipmi_config_serial_conf_section_get (state_data,
-                                                               state_data->serial_channel_config_flags,
-                                                               channelindex)))
+          if (!(section = ipmi_config_core_serial_conf_section_get (state_data,
+								    state_data->serial_channel_config_flags,
+								    channelindex)))
             goto cleanup;
           if (ipmi_config_section_append (&sections, section) < 0)
             goto cleanup;
@@ -383,16 +383,16 @@ ipmi_config_core_sections_create (ipmi_config_state_data_t *state_data)
 
   /* PEF Conf Section */
 
-  if (!(section = ipmi_config_pef_conf_section_get (state_data)))
+  if (!(section = ipmi_config_core_pef_conf_section_get (state_data)))
     goto cleanup;
   if (ipmi_config_section_append (&sections, section) < 0)
     goto cleanup;
 
   /* SOL_Conf Section(s) */
 
-  if (!(section = ipmi_config_sol_conf_section_get (state_data,
-                                                    state_data->sol_base_config_flags,
-                                                    -1)))
+  if (!(section = ipmi_config_core_sol_conf_section_get (state_data,
+							 state_data->sol_base_config_flags,
+							 -1)))
     goto cleanup;
   if (ipmi_config_section_append (&sections, section) < 0)
     goto cleanup;
@@ -401,9 +401,9 @@ ipmi_config_core_sections_create (ipmi_config_state_data_t *state_data)
     {
       for (channelindex = 0; channelindex < state_data->sol_channel_numbers_unique_count; channelindex++)
         {
-          if (!(section = ipmi_config_sol_conf_section_get (state_data,
-                                                            state_data->sol_channel_config_flags,
-                                                            channelindex)))
+          if (!(section = ipmi_config_core_sol_conf_section_get (state_data,
+								 state_data->sol_channel_config_flags,
+								 channelindex)))
             goto cleanup;
           if (ipmi_config_section_append (&sections, section) < 0)
             goto cleanup;
@@ -412,7 +412,7 @@ ipmi_config_core_sections_create (ipmi_config_state_data_t *state_data)
   
   /* Misc Section */
 
-  if (!(section = ipmi_config_misc_section_get (state_data)))
+  if (!(section = ipmi_config_core_misc_section_get (state_data)))
     goto cleanup;
   if (ipmi_config_section_append (&sections, section) < 0)
     goto cleanup;

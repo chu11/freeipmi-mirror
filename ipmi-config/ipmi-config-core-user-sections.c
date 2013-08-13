@@ -2228,7 +2228,7 @@ serial_session_limit_commit (ipmi_config_state_data_t *state_data,
 }
 
 struct ipmi_config_section *
-ipmi_config_user_section_get (ipmi_config_state_data_t *state_data, unsigned int userid)
+ipmi_config_core_user_section_get (ipmi_config_state_data_t *state_data, unsigned int userid)
 {
   struct ipmi_config_section *section = NULL;
   char section_name[IPMI_CONFIG_MAX_SECTION_NAME_LEN];

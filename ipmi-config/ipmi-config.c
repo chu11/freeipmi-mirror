@@ -37,6 +37,7 @@
 #include "ipmi-config-section.h"
 #include "ipmi-config-utils.h"
 #include "ipmi-config-core-sections.h"
+#include "ipmi-config-chassis-sections.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
@@ -75,6 +76,11 @@ _ipmi_config (pstdout_state_t pstate,
   if (prog_data->args->category_mask & IPMI_CONFIG_CATEGORY_MASK_CORE)
     {
       if (!(state_data.sections = ipmi_config_core_sections_create (&state_data)))
+	goto cleanup;
+    }
+  else if (prog_data->args->category_mask & IPMI_CONFIG_CATEGORY_MASK_CHASSIS)
+    {
+      if (!(state_data.sections = ipmi_config_chassis_sections_create (&state_data)))
 	goto cleanup;
     }
   else
@@ -184,13 +190,14 @@ _ipmi_config (pstdout_state_t pstate,
         }
     }
 
+  /*
+   * Special case(s)
+   */
   if (prog_data->args->category_mask & IPMI_CONFIG_CATEGORY_MASK_CORE)
     {
-      /* Special case(s): 
-       *
-       * On some motherboards, the "Enable_User" must come after the
-       * "Password" configure.  So we store information for this fact.
-       * See workaround details in user section code.
+      /* Special case: On some motherboards, the "Enable_User" must
+       * come after the "Password" configure.  So we store information
+       * for this fact.  See workaround details in user section code.
        */
       if (prog_data->args->action == IPMI_CONFIG_ACTION_COMMIT)
 	{
@@ -276,6 +283,55 @@ _ipmi_config (pstdout_state_t pstate,
 				   "Cannot configure Lan_Conf:MAC_Address on multiple hosts\n");
 		  goto cleanup;
 		}
+	    }
+	}
+    }
+  else if (prog_data->args->category_mask & IPMI_CONFIG_CATEGORY_MASK_CHASSIS)
+    {
+      /* Special case: There may not be a way to checkout the front panel
+       * buttons, so we have to store before hand it if we intend to
+       * commit it.
+       */
+      if (prog_data->args->action == IPMI_CONFIG_ACTION_COMMIT)
+	{
+	  struct ipmi_config_section *section;
+
+	  section = state_data.sections;
+	  while (section)
+	    {
+	      struct ipmi_config_keyvalue *kv;
+
+	      if (!strcasecmp (section->section_name, "Chassis_Front_Panel_Buttons"))
+		{
+		  if ((kv = ipmi_config_find_keyvalue (section,
+						       "Enable_Standby_Button_For_Entering_Standby")))
+		    {
+		      state_data.front_panel_enable_standby_button_for_entering_standby_initialized++;
+		      state_data.front_panel_enable_standby_button_for_entering_standby = same (kv->value_input, "yes") ? IPMI_CHASSIS_BUTTON_ENABLE : IPMI_CHASSIS_BUTTON_DISABLE;
+		    }
+		  
+		  if ((kv = ipmi_config_find_keyvalue (section,
+						       "Enable_Diagnostic_Interrupt_Button")))
+		    {
+		      state_data.front_panel_enable_diagnostic_interrupt_button_initialized++;
+		      state_data.front_panel_enable_diagnostic_interrupt_button = same (kv->value_input, "yes") ? IPMI_CHASSIS_BUTTON_ENABLE : IPMI_CHASSIS_BUTTON_DISABLE;
+		    }
+		  
+		  if ((kv = ipmi_config_find_keyvalue (section,
+						       "Enable_Reset_Button")))
+		    {
+		      state_data.front_panel_enable_reset_button_initialized++;
+		      state_data.front_panel_enable_reset_button = same (kv->value_input, "yes") ? IPMI_CHASSIS_BUTTON_ENABLE : IPMI_CHASSIS_BUTTON_DISABLE;
+		    }
+		  
+		  if ((kv = ipmi_config_find_keyvalue (section,
+						       "Enable_Power_Off_Button_For_Power_Off_Only")))
+		    {
+		      state_data.front_panel_enable_power_off_button_for_power_off_only_initialized++;
+		      state_data.front_panel_enable_power_off_button_for_power_off_only = same (kv->value_input, "yes") ? IPMI_CHASSIS_BUTTON_ENABLE : IPMI_CHASSIS_BUTTON_DISABLE;
+		    }
+		}
+	      section = section->next;
 	    }
 	}
     }

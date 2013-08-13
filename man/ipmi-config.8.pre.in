@@ -51,8 +51,12 @@ See GENERAL USE below for a description on how most will want to use
 .TP
 \fB\-g\fR \fICATEGORY\fR, \fB\-\-category\fR=\fICATEGORY\fR
 Specify the category of configuration data to configure.  Currently
-available choices include "core".  Defaults to "core" if not
-specified.
+available choices: "core", "chassis".  "core" includes all major IPMI
+configuration necessary to get IPMI to function on a sytem, such as
+configuration for users, passwords, authentication, networking, and
+serial-over-lan (SOL).  "chassis" includes all chassis relevant
+configuration including boot options, front panel buttons, and power
+behavior.  Defaults to "core" if not specified.
 #include <@top_srcdir@/man/manpage-common-config-tool-options.man>
 .TP
 \fB\-v\fR, \fB\-\-verbose\fR

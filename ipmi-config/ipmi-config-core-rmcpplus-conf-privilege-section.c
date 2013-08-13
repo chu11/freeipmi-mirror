@@ -563,9 +563,9 @@ id_commit_cb (ipmi_config_state_data_t *state_data,
 }
 
 struct ipmi_config_section *
-ipmi_config_rmcpplus_conf_privilege_section_get (ipmi_config_state_data_t *state_data,
-                                                 unsigned int config_flags,
-                                                 int channel_index)
+ipmi_config_core_rmcpplus_conf_privilege_section_get (ipmi_config_state_data_t *state_data,
+						      unsigned int config_flags,
+						      int channel_index)
 {
   struct ipmi_config_section *section = NULL;
   char *section_comment =

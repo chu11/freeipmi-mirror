@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003-2013 FreeIPMI Core Team
+ * Copyright (C) 2008-2013 FreeIPMI Core Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -70,16 +70,14 @@ power_restore_policy_checkout (ipmi_config_state_data_t *state_data,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_errnum_is_non_fatal (state_data,
-                                    obj_cmd_rs,
-                                    &ret))
+				    obj_cmd_rs,
+				    &ret))
         rv = ret;
 
       goto cleanup;
     }
 
-  if (FIID_OBJ_GET (obj_cmd_rs,
-                    "current_power_state.power_restore_policy",
-                    &val) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs, "current_power_state.power_restore_policy", &val) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -90,8 +88,8 @@ power_restore_policy_checkout (ipmi_config_state_data_t *state_data,
   power_restore_policy = val;
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
-                                                  kv,
-                                                  power_restore_policy_string (power_restore_policy)) < 0)
+						  kv,
+						  power_restore_policy_string (power_restore_policy)) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
@@ -134,8 +132,8 @@ power_restore_policy_commit (ipmi_config_state_data_t *state_data,
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_errnum_is_non_fatal (state_data,
-                                    obj_cmd_rs,
-                                    &ret))
+				    obj_cmd_rs,
+				    &ret))
         rv = ret;
 
       goto cleanup;
@@ -147,40 +145,109 @@ power_restore_policy_commit (ipmi_config_state_data_t *state_data,
   return (rv);
 }
 
+static ipmi_config_err_t
+power_cycle_interval_checkout (ipmi_config_state_data_t *state_data,
+			       const char *section_name,
+                               struct ipmi_config_keyvalue *kv)
+{
+  assert (state_data);
+  assert (section_name);
+  assert (kv);
+
+  /* achu: value cannot be checked out */
+  if (ipmi_config_section_update_keyvalue_output (state_data,
+						  kv,
+						  "") < 0)
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
+
+  return (IPMI_CONFIG_ERR_SUCCESS);
+}
+
+static ipmi_config_err_t
+power_cycle_interval_commit (ipmi_config_state_data_t *state_data,
+			     const char *section_name,
+                             const struct ipmi_config_keyvalue *kv)
+{
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+  fiid_obj_t obj_cmd_rs = NULL;
+
+  assert (state_data);
+  assert (section_name);
+  assert (kv);
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_power_cycle_interval_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_power_cycle_interval (state_data->ipmi_ctx,
+                                         atoi (kv->value_input),
+                                         obj_cmd_rs) < 0)
+    {
+      if (state_data->prog_data->args->common_args.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_set_power_cycle_interval: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
+        rv = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
+      goto cleanup;
+    }
+
+  rv = IPMI_CONFIG_ERR_SUCCESS;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
 struct ipmi_config_section *
-ipmi_config_core_misc_section_get (ipmi_config_state_data_t *state_data)
+ipmi_config_chassis_power_conf_get (ipmi_config_state_data_t *state_data)
 {
   struct ipmi_config_section *section = NULL;
   char *section_comment =
-    "The following miscellaneous configuration options are optionally "
-    "implemented by the vendor.  They may not be available your system and "
-    "may not be visible below."
+    "The following configuration options are for configuring "
+    "chassis power behavior."
     "\n"
     "The \"Power_Restore_Policy\" determines the behavior of the machine "
     "when AC power returns after a power loss.  The behavior can be set to "
     "always power on the machine (\"On_State_AC_Apply\"), power off the "
     "machine (\"Off_State_AC_Apply\"), or return the power to the state that "
-    "existed before the power loss (\"Restore_State_AC_Apply\").";
-
-  assert (state_data);
+    "existed before the power loss (\"Restore_State_AC_Apply\")."
+    "\n"
+    "The \"Power_Cycle_Interval\" determines the time the system will be "
+    "powered down following a power cycle command.";
 
   if (!(section = ipmi_config_section_create (state_data,
-                                              "Misc",
-                                              "Misc",
-                                              section_comment,
-                                              IPMI_CONFIG_DO_NOT_CHECKOUT | IPMI_CONFIG_DO_NOT_LIST,
-                                              NULL,
-                                              NULL)))
+					      "Chassis_Power_Conf",
+					      "Chassis_Power_Conf",
+					      section_comment,
+					      0,
+					      NULL,
+					      NULL)))
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-                                   section,
-                                   "Power_Restore_Policy",
-                                   "Possible values: Off_State_AC_Apply/Restore_State_AC_Apply/On_State_AC_Apply",
-                                   IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
-                                   power_restore_policy_checkout,
-                                   power_restore_policy_commit,
-                                   power_restore_policy_number_validate) < 0)
+				   section,
+				   "Power_Restore_Policy",
+				   "Possible values: Off_State_AC_Apply/Restore_State_AC_Apply/On_State_AC_Apply",
+				   IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+				   power_restore_policy_checkout,
+				   power_restore_policy_commit,
+				   power_restore_policy_number_validate) < 0)
+    goto cleanup;
+
+  if (ipmi_config_section_add_key (state_data,
+				   section,
+				   "Power_Cycle_Interval",
+				   "Give value in seconds",
+				   IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+				   power_cycle_interval_checkout,
+				   power_cycle_interval_commit,
+				   number_range_one_byte_non_zero_validate) < 0)
     goto cleanup;
 
   return (section);

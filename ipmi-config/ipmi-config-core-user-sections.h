@@ -21,6 +21,6 @@
 
 #include "ipmi-config.h"
 
-struct ipmi_config_section * ipmi_config_user_section_get (ipmi_config_state_data_t *state_data, unsigned int userid);
+struct ipmi_config_section * ipmi_config_core_user_section_get (ipmi_config_state_data_t *state_data, unsigned int userid);
 
 #endif /* IPMI_CONFIG_CORE_USER_SECTIONS_H */

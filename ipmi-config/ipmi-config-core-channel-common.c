@@ -631,8 +631,8 @@ _channel_privilege_limit_commit (ipmi_config_state_data_t *state_data,
 }
 
 int
-ipmi_config_channel_common_section_get (ipmi_config_state_data_t *state_data,
-                                        struct ipmi_config_section *channel_section)
+ipmi_config_core_channel_common_section_get (ipmi_config_state_data_t *state_data,
+					     struct ipmi_config_section *channel_section)
 {
   assert (state_data);
   assert (channel_section);

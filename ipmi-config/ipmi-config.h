@@ -129,8 +129,9 @@ typedef enum
     || (__ret) == IPMI_CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED         \
     || (__ret) == IPMI_CONFIG_ERR_NON_FATAL_ERROR_INVALID_UNSUPPORTED_CONFIG) ? 1 : 0)
 
-#define IPMI_CONFIG_CATEGORY_MASK_CORE 0x0001
-#define IPMI_CONFIG_CATEGORY_MASK_BMC  IPMI_CONFIG_CATEGORY_MASK_CORE /* legacy name */
+#define IPMI_CONFIG_CATEGORY_MASK_CORE     0x0001
+#define IPMI_CONFIG_CATEGORY_MASK_BMC      IPMI_CONFIG_CATEGORY_MASK_CORE /* legacy name */
+#define IPMI_CONFIG_CATEGORY_MASK_CHASSIS  0x0002
 
 struct ipmi_config_keypair
 {
@@ -246,6 +247,10 @@ struct ipmi_config_state_data
   pstdout_state_t pstate;
   struct ipmi_config_section *sections;
 
+  /* 
+   * For Core / BMC configuration
+   */
+
   /* achu: workaround for OEM compliance issue, see user section */
   int enable_user_after_password_len;
   ipmi_config_enable_user_after_password_t *enable_user_after_password;
@@ -295,6 +300,20 @@ struct ipmi_config_state_data
   uint8_t sol_channel_numbers_unique[IPMI_CHANNEL_NUMBERS_MAX];
   unsigned int sol_channel_numbers_unique_count;
   unsigned int sol_channel_numbers_loaded;
+
+  /* 
+   * For Chassis configuration
+   */
+
+  /* achu: workaround for IPMI limitation */
+  int front_panel_enable_standby_button_for_entering_standby_initialized;
+  uint8_t front_panel_enable_standby_button_for_entering_standby;
+  int front_panel_enable_diagnostic_interrupt_button_initialized;
+  uint8_t front_panel_enable_diagnostic_interrupt_button;
+  int front_panel_enable_reset_button_initialized;
+  uint8_t front_panel_enable_reset_button;
+  int front_panel_enable_power_off_button_for_power_off_only_initialized;
+  uint8_t front_panel_enable_power_off_button_for_power_off_only;
 };
 
 #endif /* IPMI_CONFIG_H */

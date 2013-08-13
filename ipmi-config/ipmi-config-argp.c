@@ -126,6 +126,8 @@ _ipmi_config_category (char *arg, unsigned int *category_mask)
   if (!strcasecmp (arg, "core")
       || !strcasecmp (arg, "bmc"))
     (*category_mask) = IPMI_CONFIG_CATEGORY_MASK_CORE;
+  else if (!strcasecmp (arg, "chassis"))
+    (*category_mask) = IPMI_CONFIG_CATEGORY_MASK_CHASSIS;
   else
     {
       fprintf (stderr, "invalid category specified\n");
