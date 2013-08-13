@@ -184,97 +184,100 @@ _ipmi_config (pstdout_state_t pstate,
         }
     }
 
-  /* Special case(s): 
-   *
-   * On some motherboards, the "Enable_User" must come after the
-   * "Password" configure.  So we store information for this fact.
-   * See workaround details in user section code.
-   */
-  if (prog_data->args->action == IPMI_CONFIG_ACTION_COMMIT)
+  if (prog_data->args->category_mask & IPMI_CONFIG_CATEGORY_MASK_CORE)
     {
-      struct ipmi_config_section *section;
-      unsigned int user_count = 0;
+      /* Special case(s): 
+       *
+       * On some motherboards, the "Enable_User" must come after the
+       * "Password" configure.  So we store information for this fact.
+       * See workaround details in user section code.
+       */
+      if (prog_data->args->action == IPMI_CONFIG_ACTION_COMMIT)
+	{
+	  struct ipmi_config_section *section;
+	  unsigned int user_count = 0;
+	  
+	  /* First, see how many user sections there are */
+	  section = state_data.sections;
+	  while (section)
+	    {
+	      if (stristr (section->section_name, "User"))
+		user_count++;
+	      section = section->next;
+	    }
 
-      /* First, see how many user sections there are */
-      section = state_data.sections;
-      while (section)
-        {
-          if (stristr (section->section_name, "User"))
-            user_count++;
-          section = section->next;
-        }
+	  if (user_count)
+	    {
+	      unsigned int enable_user_found = 0;
+	      unsigned int datasize;
+	      
+	      section = state_data.sections;
+	      while (section)
+		{
+		  struct ipmi_config_keyvalue *kv;
+		  
+		  if (stristr (section->section_name, "User"))
+		    {
+		      uint8_t userid;
 
-      if (user_count)
-        {
-          unsigned int enable_user_found = 0;
-          unsigned int datasize;
+		      userid = atoi (section->section_name + strlen ("User"));
+		      
+		      if (userid < user_count)
+			{
+			  if ((kv = ipmi_config_find_keyvalue (section,
+							       "Enable_User")))
+			    enable_user_found = 1;
+			}
+		    }
+		  
+		  section = section->next;
+		}
+	      
+	      if (enable_user_found)
+		{
+		  datasize = sizeof (ipmi_config_enable_user_after_password_t) * user_count;
+		  
+		  if (!(state_data.enable_user_after_password = (ipmi_config_enable_user_after_password_t *)malloc (datasize)))
+		    {
+		      pstdout_perror (pstate, "malloc");
+		      goto cleanup;
+		    }
+		  state_data.enable_user_after_password_len = user_count;
+		  memset (state_data.enable_user_after_password, '\0', datasize);
+		}
+	    }
+	}
 
-          section = state_data.sections;
-          while (section)
-            {
-              struct ipmi_config_keyvalue *kv;
-
-              if (stristr (section->section_name, "User"))
-                {
-                  uint8_t userid;
-
-                  userid = atoi (section->section_name + strlen ("User"));
-
-                  if (userid < user_count)
-                    {
-                      if ((kv = ipmi_config_find_keyvalue (section,
-                                                           "Enable_User")))
-                        enable_user_found = 1;
-                    }
-                }
-
-              section = section->next;
-            }
-
-          if (enable_user_found)
-            {
-              datasize = sizeof (ipmi_config_enable_user_after_password_t) * user_count;
-              
-              if (!(state_data.enable_user_after_password = (ipmi_config_enable_user_after_password_t *)malloc (datasize)))
-                {
-                  pstdout_perror (pstate, "malloc");
-                  goto cleanup;
-                }
-              state_data.enable_user_after_password_len = user_count;
-              memset (state_data.enable_user_after_password, '\0', datasize);
-            }
-        }
-    }
-
-  /* Special case: IP addresses and MAC addresses cannot be configured
-   * in parallel.  Reject input if user attempts to configure the same
-   * IP or MAC on multiple hosts.
-   */
-  if (prog_data->args->action == IPMI_CONFIG_ACTION_COMMIT
-      && prog_data->hosts_count > 1)
-    {
-      struct ipmi_config_section *section;
-
-      if ((section = ipmi_config_find_section (&state_data, "Lan_Conf")))
-        {
-          if (ipmi_config_find_keyvalue (section,
-                                         "IP_Address"))
-            {
-              pstdout_fprintf (pstate,
-                               stderr,
-                               "Cannot configure Lan_Conf:IP_Address on multiple hosts\n");
-              goto cleanup;
-            }
-
-          if (ipmi_config_find_keyvalue (section,
-                                         "MAC_Address"))
-            {
-              pstdout_fprintf (pstate,
-                               stderr,
-                               "Cannot configure Lan_Conf:MAC_Address on multiple hosts\n");
-              goto cleanup;
-            }
-        }
+      /* Special case: IP addresses and MAC addresses cannot be configured
+       * in parallel.  Reject input if user attempts to configure the same
+       * IP or MAC on multiple hosts.
+       */
+      if (prog_data->args->action == IPMI_CONFIG_ACTION_COMMIT
+	  && prog_data->hosts_count > 1)
+	{
+	  struct ipmi_config_section *section;
+	  
+	  if ((section = ipmi_config_find_section (&state_data, "Lan_Conf")))
+	    {
+	      if (ipmi_config_find_keyvalue (section,
+					     "IP_Address"))
+		{
+		  pstdout_fprintf (pstate,
+				   stderr,
+				   "Cannot configure Lan_Conf:IP_Address on multiple hosts\n");
+		  goto cleanup;
+		}
+	      
+	      if (ipmi_config_find_keyvalue (section,
+					     "MAC_Address"))
+		{
+		  pstdout_fprintf (pstate,
+				   stderr,
+				   "Cannot configure Lan_Conf:MAC_Address on multiple hosts\n");
+		  goto cleanup;
+		}
+	    }
+	}
     }
 
   switch (prog_data->args->action)
