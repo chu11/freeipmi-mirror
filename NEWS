@@ -1,4 +1,4 @@
-FreeIPMI 1.3.1 - 08/22/12
+FreeIPMI 1.3.1 - 08/21/13
 -------------------------
 
 Tools - New Features
@@ -29,6 +29,7 @@ o In ipmi-fru, bridge additional FRU entries as appropriate.
 o In all tools reporting time (ipmi-sel, ipmi-fru, ipmi-oem,
   bmc-device, ipmi-sensors, ipmi-dcmi), special timestamps such as
   Post-Init and Unspecified will now be output.
+o Fix output corner case with entity sensor names in various tools.
 
 Libraries
 ---------
@@ -55,6 +56,18 @@ o In libfreeipmi, 'sdr' sub-library, when creating SDR cache, add
 o In libfreeipmi, support new IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
   error code for IPMI commands that are invalid or unsupported.
   
+FreeIPMI 1.2.9 - 07/17/13
+-------------------------
+o Fix threshold output corner case in ipmi-sensors.
+o Fix invalid declaration in libipmimonitoring header.
+o Fix older compiler build problems.
+
+FreeIPMI 1.2.8 - 06/21/13
+-------------------------
+o Fix portability build bug on ARM systems.
+o Add 'internal IPMI error' troubleshooting to manpages.
+o Fix bmc-info corner case on Bull 510 systems.
+
 FreeIPMI 1.2.7 - 05/16/13
 -------------------------
 o Fix sensor output errors with OEM sensors.
