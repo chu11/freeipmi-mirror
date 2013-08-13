@@ -48,6 +48,11 @@ See GENERAL USE below for a description on how most will want to use
 #include <@top_srcdir@/man/manpage-common-workaround-flags.man>
 #include <@top_srcdir@/man/manpage-common-debug.man>
 #include <@top_srcdir@/man/manpage-common-misc.man>
+.TP
+\fB\-g\fR \fICATEGORY\fR, \fB\-\-category\fR=\fICATEGORY\fR
+Specify the category of configuration data to configure.  Currently
+available choices include "core".  Defaults to "core" if not
+specified.
 #include <@top_srcdir@/man/manpage-common-config-tool-options.man>
 .TP
 \fB\-v\fR, \fB\-\-verbose\fR

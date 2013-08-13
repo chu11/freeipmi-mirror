@@ -29,6 +29,7 @@
 
 enum ipmi_config_argp_option_keys
   {
+    IPMI_CONFIG_ARGP_CATEGORY_KEY = 'g',
     IPMI_CONFIG_ARGP_CHECKOUT_KEY = 'o',
     IPMI_CONFIG_ARGP_COMMIT_KEY = 'c',
     IPMI_CONFIG_ARGP_DIFF_KEY = 'd',
@@ -128,6 +129,9 @@ typedef enum
     || (__ret) == IPMI_CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED         \
     || (__ret) == IPMI_CONFIG_ERR_NON_FATAL_ERROR_INVALID_UNSUPPORTED_CONFIG) ? 1 : 0)
 
+#define IPMI_CONFIG_CATEGORY_MASK_CORE 0x0001
+#define IPMI_CONFIG_CATEGORY_MASK_BMC  IPMI_CONFIG_CATEGORY_MASK_CORE /* legacy name */
+
 struct ipmi_config_keypair
 {
   char *section_name;
@@ -205,6 +209,8 @@ struct ipmi_config_section {
 struct ipmi_config_arguments
 {
   struct common_cmd_args common_args;
+
+  unsigned int category_mask;
 
   ipmi_config_action_t action;
 

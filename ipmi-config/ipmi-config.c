@@ -72,8 +72,16 @@ _ipmi_config (pstdout_state_t pstate,
                                          state_data.pstate)))
     goto cleanup;
 
-  if (!(state_data.sections = ipmi_config_core_sections_create (&state_data)))
-    goto cleanup;
+  if (prog_data->args->category_mask & IPMI_CONFIG_CATEGORY_MASK_CORE)
+    {
+      if (!(state_data.sections = ipmi_config_core_sections_create (&state_data)))
+	goto cleanup;
+    }
+  else
+    {
+      fprintf (stderr, "internal error, unknown category: 0x%X\n", prog_data->args->category_mask);
+      goto cleanup;
+    }
 
   if (prog_data->args->action == IPMI_CONFIG_ACTION_CHECKOUT)
     {

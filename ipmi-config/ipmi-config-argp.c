@@ -74,30 +74,32 @@ static struct argp_option cmdline_options[] = {
   ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
   ARGP_COMMON_HOSTRANGED_OPTIONS,
   ARGP_COMMON_OPTIONS_DEBUG,
+  { "category", IPMI_CONFIG_ARGP_CATEGORY_KEY, "CATEGORY", 0,
+    "Specify category (categories) to configure.  Defaults to 'core'.", 40},
   { "checkout", IPMI_CONFIG_ARGP_CHECKOUT_KEY, 0, 0,
-    "Fetch configuration information.", 40},
+    "Fetch configuration information.", 41},
   { "commit", IPMI_CONFIG_ARGP_COMMIT_KEY, 0, 0,
-    "Update configuration information from a config file or key pairs.", 41},
+    "Update configuration information from a config file or key pairs.", 42},
   { "diff", IPMI_CONFIG_ARGP_DIFF_KEY, 0, 0,
-    "Show differences between stored information and a config file or key pairs.", 42},
+    "Show differences between stored information and a config file or key pairs.", 43},
   { "filename", IPMI_CONFIG_ARGP_FILENAME_KEY, "FILENAME", 0,
-    "Specify a config file for checkout/commit/diff.", 42},
+    "Specify a config file for checkout/commit/diff.", 44},
   { "key-pair", IPMI_CONFIG_ARGP_KEYPAIR_KEY, "KEY-PAIR", 0,
-    "Specify KEY=VALUE pairs for checkout/commit/diff.", 43},
+    "Specify KEY=VALUE pairs for checkout/commit/diff.", 45},
   { "section", IPMI_CONFIG_ARGP_SECTIONS_KEY, "SECTION", 0,
-    "Specify a SECTION for checkout.", 44},
+    "Specify a SECTION for checkout.", 46},
   { "listsections", IPMI_CONFIG_ARGP_LIST_SECTIONS_KEY, 0, 0,
-    "List available sections for checkout.", 45},
+    "List available sections for checkout.", 47},
   { "verbose", IPMI_CONFIG_ARGP_VERBOSE_KEY, 0, 0,
-    "Print additional detailed information.", 46},
+    "Print additional detailed information.", 48},
   { "lan-channel-number", IPMI_CONFIG_ARGP_LAN_CHANNEL_NUMBER_KEY, "NUMBER", 0,
-    "Use a specific LAN Channel Number.", 47},
+    "Use a specific LAN Channel Number.", 49},
   { "serial-channel-number", IPMI_CONFIG_ARGP_SERIAL_CHANNEL_NUMBER_KEY, "NUMBER", 0,
-    "Use a specific Serial Channel Number.", 48},
+    "Use a specific Serial Channel Number.", 50},
   { "sol-channel-number", IPMI_CONFIG_ARGP_SOL_CHANNEL_NUMBER_KEY, "NUMBER", 0,
-    "Use a specific SOL Channel Number.", 49},
+    "Use a specific SOL Channel Number.", 51},
   { "foobar", IPMI_CONFIG_ARGP_FILENAME_KEY_LEGACY, "FILENAME", OPTION_HIDDEN,
-    "Specify a config file for checkout/commit/diff.", 50},
+    "Specify a config file for checkout/commit/diff.", 52},
   { NULL, 0, NULL, 0, NULL, 0}
 };
 
@@ -112,6 +114,26 @@ static struct argp cmdline_config_file_argp = { cmdline_options,
                                                 cmdline_config_file_parse,
                                                 cmdline_args_doc,
                                                 cmdline_doc };
+
+static int
+_ipmi_config_category (char *arg, unsigned int *category_mask)
+{
+  assert (arg);
+  assert (category_mask);
+
+  /* XXX support multiple */
+
+  if (!strcasecmp (arg, "core")
+      || !strcasecmp (arg, "bmc"))
+    (*category_mask) = IPMI_CONFIG_CATEGORY_MASK_CORE;
+  else
+    {
+      fprintf (stderr, "invalid category specified\n");
+      return (-1);
+    }
+
+  return (0);
+}
 
 static int
 _ipmi_config_parse_channel_number (char *arg,
@@ -412,6 +434,10 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 
   switch (key)
     {
+    case IPMI_CONFIG_ARGP_CATEGORY_KEY:
+      if (_ipmi_config_category (arg, &(cmd_args->category_mask)) < 0)
+        exit (EXIT_FAILURE);
+      break;
     case IPMI_CONFIG_ARGP_CHECKOUT_KEY:
       if (!cmd_args->action)
         cmd_args->action = IPMI_CONFIG_ACTION_CHECKOUT;
@@ -637,6 +663,7 @@ ipmi_config_argp_parse (int argc, char *argv[], struct ipmi_config_arguments *cm
 
   init_common_cmd_args_admin (&(cmd_args->common_args));
 
+  cmd_args->category_mask = IPMI_CONFIG_CATEGORY_MASK_CORE;
   cmd_args->action = 0;
   cmd_args->verbose_count = 0;
   cmd_args->filename = NULL;
