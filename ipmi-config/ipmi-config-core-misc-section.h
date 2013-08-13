@@ -21,7 +21,6 @@
 #define IPMI_CONFIG_CORE_MISC_SECTION_H
 
 #include "ipmi-config.h"
-#include "ipmi-config-sections.h"
 
 struct ipmi_config_section * ipmi_config_misc_section_get (ipmi_config_state_data_t *state_data);
 

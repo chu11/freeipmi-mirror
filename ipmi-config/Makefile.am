@@ -29,6 +29,8 @@ ipmi_config_SOURCES = \
 	ipmi-config-comment.h \
 	ipmi-config-commit.c \
 	ipmi-config-commit.h \
+	ipmi-config-common-pef-conf-section.c \
+	ipmi-config-common-pef-conf-section.h \
 	ipmi-config-core-channel-common.c \
 	ipmi-config-core-channel-common.h \
 	ipmi-config-core-lan-channel-section.c \
@@ -49,6 +51,8 @@ ipmi_config_SOURCES = \
 	ipmi-config-core-pef-conf-section.h \
 	ipmi-config-core-rmcpplus-conf-privilege-section.c \
 	ipmi-config-core-rmcpplus-conf-privilege-section.h \
+	ipmi-config-core-sections.c \
+	ipmi-config-core-sections.h \
 	ipmi-config-core-serial-channel-section.c \
 	ipmi-config-core-serial-channel-section.h \
 	ipmi-config-core-serial-conf-section.c \
@@ -65,14 +69,10 @@ ipmi_config_SOURCES = \
 	ipmi-config-parse.h \
 	ipmi-config-section.c \
 	ipmi-config-section.h \
-	ipmi-config-sections.c \
-	ipmi-config-sections.h \
 	ipmi-config-utils.c \
 	ipmi-config-utils.h \
 	ipmi-config-validate.c \
-	ipmi-config-validate.h \
-	ipmi-config-tool-pef-conf-section.c \
-	ipmi-config-tool-pef-conf-section.h
+	ipmi-config-validate.h
 
 $(top_builddir)/common/toolcommon/libtoolcommon.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`

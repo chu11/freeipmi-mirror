@@ -28,12 +28,11 @@
 #include <assert.h>
 
 #include "ipmi-config.h"
-#include "ipmi-config-tool-pef-conf-section.h"
+#include "ipmi-config-common-pef-conf-section.h"
 #include "ipmi-config-section.h"
 #include "ipmi-config-validate.h"
 
 #include "freeipmi-portability.h"
-#include "ipmi-config-tool-pef-conf-section.h"
 
 struct ipmi_config_section *
 ipmi_config_pef_conf_section_get (ipmi_config_state_data_t *state_data)

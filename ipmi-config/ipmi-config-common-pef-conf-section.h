@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef IPMI_CONFIG_PEF_CONF_SECTION_H
-#define IPMI_CONFIG_PEF_CONF_SECTION_H
+#ifndef IPMI_CONFIG_COMMON_PEF_CONF_SECTION_H
+#define IPMI_CONFIG_COMMON_PEF_CONF_SECTION_H
 
 #include <freeipmi/freeipmi.h>
 
@@ -119,4 +119,4 @@ ipmi_config_err_t pef_alert_startup_delay_commit (ipmi_config_state_data_t *stat
 						  const char *section_name,
                                                   const struct ipmi_config_keyvalue *kv);
 
-#endif /* IPMI_CONFIG_PEF_CONF_SECTION_H */
+#endif /* IPMI_CONFIG_COMMON_PEF_CONF_SECTION_H */

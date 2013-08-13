@@ -35,8 +35,8 @@
 #include "ipmi-config-diff.h"
 #include "ipmi-config-parse.h"
 #include "ipmi-config-section.h"
-#include "ipmi-config-sections.h"
 #include "ipmi-config-utils.h"
+#include "ipmi-config-core-sections.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
@@ -72,7 +72,7 @@ _ipmi_config (pstdout_state_t pstate,
                                          state_data.pstate)))
     goto cleanup;
 
-  if (!(state_data.sections = ipmi_config_sections_create (&state_data)))
+  if (!(state_data.sections = ipmi_config_core_sections_create (&state_data)))
     goto cleanup;
 
   if (prog_data->args->action == IPMI_CONFIG_ACTION_CHECKOUT)

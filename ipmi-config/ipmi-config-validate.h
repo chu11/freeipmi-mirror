@@ -20,7 +20,6 @@
 #define IPMI_CONFIG_VALIDATE_H
 
 #include "ipmi-config.h"
-#include "ipmi-config-sections.h"
 
 ipmi_config_validate_t yes_no_validate (ipmi_config_state_data_t *state_data,
 					const char *section_name,

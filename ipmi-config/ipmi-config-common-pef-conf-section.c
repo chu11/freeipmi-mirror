@@ -30,7 +30,7 @@
 #include <assert.h>
 #include <freeipmi/freeipmi.h>
 
-#include "ipmi-config-tool-pef-conf-section.h"
+#include "ipmi-config-common-pef-conf-section.h"
 #include "ipmi-config-section.h"
 #include "ipmi-config-utils.h"
 

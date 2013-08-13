@@ -20,7 +20,6 @@
 #define IPMI_CONFIG_CORE_LAN_CONF_USER_SECURITY_SECTION_H
 
 #include "ipmi-config.h"
-#include "ipmi-config-sections.h"
 
 struct ipmi_config_section * ipmi_config_lan_conf_user_security_section_get (ipmi_config_state_data_t *state_data,
                                                                              unsigned int config_flags,
