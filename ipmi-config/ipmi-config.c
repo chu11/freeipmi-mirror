@@ -53,6 +53,7 @@ _ipmi_config (pstdout_state_t pstate,
 {
   ipmi_config_state_data_t state_data;
   ipmi_config_prog_data_t *prog_data;
+  struct ipmi_config_section *tmp_sections;
   int exit_code = EXIT_FAILURE;
   ipmi_config_err_t ret = 0;
   int file_opened = 0;
@@ -73,19 +74,29 @@ _ipmi_config (pstdout_state_t pstate,
                                          state_data.pstate)))
     goto cleanup;
 
+  state_data.sections = NULL;
+
   if (prog_data->args->category_mask & IPMI_CONFIG_CATEGORY_MASK_CORE)
     {
-      if (!(state_data.sections = ipmi_config_core_sections_create (&state_data)))
+      if (!(tmp_sections = ipmi_config_core_sections_create (&state_data)))
+	goto cleanup;
+
+      if (ipmi_config_section_append (&state_data.sections, tmp_sections) < 0)
 	goto cleanup;
     }
-  else if (prog_data->args->category_mask & IPMI_CONFIG_CATEGORY_MASK_CHASSIS)
+
+  if (prog_data->args->category_mask & IPMI_CONFIG_CATEGORY_MASK_CHASSIS)
     {
-      if (!(state_data.sections = ipmi_config_chassis_sections_create (&state_data)))
+      if (!(tmp_sections = ipmi_config_chassis_sections_create (&state_data)))
+	goto cleanup;
+
+      if (ipmi_config_section_append (&state_data.sections, tmp_sections) < 0)
 	goto cleanup;
     }
-  else
+
+  if (!state_data.sections)
     {
-      fprintf (stderr, "internal error, unknown category: 0x%X\n", prog_data->args->category_mask);
+      fprintf (stderr, "internal error, no sections created\n");
       goto cleanup;
     }
 

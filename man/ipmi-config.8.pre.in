@@ -50,22 +50,22 @@ See GENERAL USE below for a description on how most will want to use
 #include <@top_srcdir@/man/manpage-common-misc.man>
 .TP
 \fB\-g\fR \fICATEGORY\fR, \fB\-\-category\fR=\fICATEGORY\fR
-Specify the category of configuration data to configure.  Currently
-available choices: "core", "chassis".  "core" includes all major IPMI
-configuration necessary to get IPMI to function on a sytem, such as
-configuration for users, passwords, authentication, networking, and
-serial-over-lan (SOL).  "chassis" includes all chassis relevant
+Specify the category or categories of configuration data to configure.
+Currently available choices: \fIcore\fR, \fIchassis\fR.  Multiple
+categories can be separated by comma.  \fIcore\fR includes all major
+IPMI configuration necessary to get IPMI to function on a sytem, such
+as configuration for users, passwords, authentication, networking, and
+serial-over-lan (SOL).  \fIchassis\fR includes all chassis relevant
 configuration including boot options, front panel buttons, and power
-behavior.  Defaults to "core" if not specified.
+behavior.  Defaults to \fIcore\fR if not specified.
 #include <@top_srcdir@/man/manpage-common-config-tool-options.man>
 .TP
 \fB\-v\fR, \fB\-\-verbose\fR
 Output verbose information.  When used with \-\-checkout, additional
-uncommon sections and/or fields will be shown.  In
-.B ipmi-config,
-this includes checking out Serial Configuration parameters, Vlan
-parameters, IPv4 Header parameters, RMCP port, and sections for each
-channel on a system, if multiple channels exist.
+uncommon sections and/or fields will be shown.  In the \fIcore\fR
+category, this includes checking out Serial Configuration parameters,
+Vlan parameters, IPv4 Header parameters, RMCP port, and sections for
+each channel on a system, if multiple channels exist.
 #include <@top_srcdir@/man/manpage-common-config-tool-options-very-verbose.man>
 #include <@top_srcdir@/man/manpage-common-config-tool-options-lan-channel-number.man>
 #include <@top_srcdir@/man/manpage-common-config-tool-options-serial-channel-number.man>

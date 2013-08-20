@@ -118,22 +118,41 @@ static struct argp cmdline_config_file_argp = { cmdline_options,
 static int
 _ipmi_config_category (char *arg, unsigned int *category_mask)
 {
+  char *argtmp;
+  char *tok;
+  int rv = -1;
+
   assert (arg);
   assert (category_mask);
 
-  /* XXX support multiple */
+  (*category_mask) = 0;
 
-  if (!strcasecmp (arg, "core")
-      || !strcasecmp (arg, "bmc"))
-    (*category_mask) = IPMI_CONFIG_CATEGORY_MASK_CORE;
-  else if (!strcasecmp (arg, "chassis"))
-    (*category_mask) = IPMI_CONFIG_CATEGORY_MASK_CHASSIS;
-  else
+  if (!(argtmp = strdup (arg)))
     {
-      fprintf (stderr, "invalid category specified\n");
+      perror (arg);
       return (-1);
     }
 
+  tok = strtok (argtmp, " ,");
+  while (tok)
+    {
+      if (!strcasecmp (tok, "core")
+	  || !strcasecmp (tok, "bmc"))
+	(*category_mask) |= IPMI_CONFIG_CATEGORY_MASK_CORE;
+      else if (!strcasecmp (tok, "chassis"))
+	(*category_mask) |= IPMI_CONFIG_CATEGORY_MASK_CHASSIS;
+      else
+	{
+	  fprintf (stderr, "invalid category '%s' specified\n", tok);
+	  goto cleanup;
+	}
+
+      tok = strtok (NULL, " ,");
+    }
+
+  rv = 0;
+ cleanup:
+  free (argtmp);
   return (0);
 }
 
