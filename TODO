@@ -5,6 +5,9 @@ audit/redo ipmi-config.conf.5.pre.in
 audit/redo freeipmi.conf.5.pre.in
 update README/freeipmi(7)/etc. information
 update all bmc-config, ipmi-sensors-config, ipmi-chassis-config, ipmi-pef-config, references
+update all config-file bmc-config, ipmi-sensors-config, ipmi-chassis-config, ipmi-pef-config to point to ipmi-config config
+- handle special cases if user typed bmc-config, ipmi-sensors-config, etc. on command line  
+  - maybe need a special --legacy hidden option
   
 *** - priority for future major release
 XXX - priority for future minor release
