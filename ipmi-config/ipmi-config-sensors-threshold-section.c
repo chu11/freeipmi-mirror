@@ -244,8 +244,8 @@ threshold_checkout (ipmi_config_state_data_t *state_data,
   assert (section_name);
   assert (kv);
 
-  if ((ret = seek_to_sdr_record (state_data,
-				 section_name)) != IPMI_CONFIG_ERR_SUCCESS)
+  if ((ret = ipmi_config_sensors_seek_to_sdr_record (state_data,
+						     section_name)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -415,8 +415,8 @@ threshold_commit (ipmi_config_state_data_t *state_data,
   assert (section_name);
   assert (kv);
 
-  if ((ret = seek_to_sdr_record (state_data,
-				 section_name)) != IPMI_CONFIG_ERR_SUCCESS)
+  if ((ret = ipmi_config_sensors_seek_to_sdr_record (state_data,
+						     section_name)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -585,8 +585,8 @@ hysteresis_threshold_checkout (ipmi_config_state_data_t *state_data,
   assert (section_name);
   assert (kv);
 
-  if ((ret = seek_to_sdr_record (state_data,
-				 section_name)) != IPMI_CONFIG_ERR_SUCCESS)
+  if ((ret = ipmi_config_sensors_seek_to_sdr_record (state_data,
+						     section_name)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -694,8 +694,8 @@ hysteresis_threshold_commit (ipmi_config_state_data_t *state_data,
   assert (section_name);
   assert (kv);
 
-  if ((ret = seek_to_sdr_record (state_data,
-				 section_name)) != IPMI_CONFIG_ERR_SUCCESS)
+  if ((ret = ipmi_config_sensors_seek_to_sdr_record (state_data,
+						     section_name)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -839,8 +839,8 @@ _floating_point_in_range (ipmi_config_state_data_t *state_data,
   assert (key_name);
   assert (value);
 
-  if ((ret = seek_to_sdr_record (state_data,
-				 section_name)) != IPMI_CONFIG_ERR_SUCCESS)
+  if ((ret = ipmi_config_sensors_seek_to_sdr_record (state_data,
+						     section_name)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       if (ret == IPMI_CONFIG_ERR_NON_FATAL_ERROR)
         rv = IPMI_CONFIG_VALIDATE_NON_FATAL_ERROR;
@@ -1280,14 +1280,14 @@ ipmi_config_sensors_threshold_section (ipmi_config_state_data_t *state_data,
   assert (state_data);
   assert (section_ptr);
 
-  if ((ret = create_section_name (state_data,
-                                  section_name,
-                                  IPMI_CONFIG_MAX_SECTION_NAME_LEN)) != IPMI_CONFIG_ERR_SUCCESS)
+  if ((ret = ipmi_config_sensors_create_section_name (state_data,
+						      section_name,
+						      IPMI_CONFIG_MAX_SECTION_NAME_LEN)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       if (state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
-                         "create_section_name: %s\n",
+                         "ipmi_config_sensors_create_section_name: %s\n",
                          strerror (errno));
       rv = ret;
       goto cleanup;

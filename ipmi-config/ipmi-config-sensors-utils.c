@@ -34,9 +34,9 @@
 #include "pstdout.h"
 #include "tool-sdr-cache-common.h"
 
-ipmi_config_err_t
-convert_id_string (ipmi_config_state_data_t *state_data,
-                   char *id_string)
+static ipmi_config_err_t
+_convert_id_string (ipmi_config_state_data_t *state_data,
+		    char *id_string)
 {
   char *ptr;
 
@@ -56,9 +56,9 @@ convert_id_string (ipmi_config_state_data_t *state_data,
 }
 
 ipmi_config_err_t
-create_section_name (ipmi_config_state_data_t *state_data,
-                     char *section_name,
-                     unsigned int section_name_len)
+ipmi_config_sensors_create_section_name (ipmi_config_state_data_t *state_data,
+					 char *section_name,
+					 unsigned int section_name_len)
 {
   char id_string[IPMI_SDR_MAX_ID_STRING_LENGTH + 1];
   uint16_t record_id;
@@ -98,12 +98,13 @@ create_section_name (ipmi_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if ((ret = convert_id_string (state_data, id_string)) != IPMI_CONFIG_ERR_SUCCESS)
+  if ((ret = _convert_id_string (state_data,
+				 id_string)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       if (state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
-                         "convert_id_string: %s\n",
+                         "_convert_id_string: %s\n",
                          strerror (errno));
       rv = ret;
       goto cleanup;
@@ -134,8 +135,8 @@ create_section_name (ipmi_config_state_data_t *state_data,
 }
 
 ipmi_config_err_t
-seek_to_sdr_record (ipmi_config_state_data_t *state_data,
-		    const char *section_name)
+ipmi_config_sensors_seek_to_sdr_record (ipmi_config_state_data_t *state_data,
+					const char *section_name)
 {
   uint16_t record_id;
   char *str = NULL;

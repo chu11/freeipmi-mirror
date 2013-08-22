@@ -459,8 +459,8 @@ _get_sensor_event_enable (ipmi_config_state_data_t *state_data,
 
   memset (data, '\0', sizeof (struct sensor_event_enable_data));
 
-  if ((ret = seek_to_sdr_record (state_data,
-				 section_name)) != IPMI_CONFIG_ERR_SUCCESS)
+  if ((ret = ipmi_config_sensors_seek_to_sdr_record (state_data,
+						     section_name)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -588,8 +588,8 @@ _set_sensor_event_enable (ipmi_config_state_data_t *state_data,
   assert (section_name);
   assert (data);
 
-  if ((ret = seek_to_sdr_record (state_data,
-				 section_name)) != IPMI_CONFIG_ERR_SUCCESS)
+  if ((ret = ipmi_config_sensors_seek_to_sdr_record (state_data,
+						     section_name)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -840,8 +840,8 @@ _threshold_event_enable_verify (ipmi_config_state_data_t *state_data,
   assert (state_data);
   assert (section_name);
 
-  if ((ret = seek_to_sdr_record (state_data,
-				 section_name)) != IPMI_CONFIG_ERR_SUCCESS)
+  if ((ret = ipmi_config_sensors_seek_to_sdr_record (state_data,
+						     section_name)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -1234,8 +1234,8 @@ _generic_event_enable_verify (ipmi_config_state_data_t *state_data,
   assert (section_name);
   assert (event_reading_type_code_ptr);
 
-  if ((ret = seek_to_sdr_record (state_data,
-				 section_name)) != IPMI_CONFIG_ERR_SUCCESS)
+  if ((ret = ipmi_config_sensors_seek_to_sdr_record (state_data,
+						     section_name)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
@@ -1602,8 +1602,8 @@ _sensor_specific_event_enable_verify (ipmi_config_state_data_t *state_data,
   assert (section_name);
   assert (sensor_type_ptr);
 
-  if ((ret = seek_to_sdr_record (state_data,
-				 section_name)) != IPMI_CONFIG_ERR_SUCCESS)
+  if ((ret = ipmi_config_sensors_seek_to_sdr_record (state_data,
+						     section_name)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
