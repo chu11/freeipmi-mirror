@@ -44,6 +44,7 @@
 #include "tool-common.h"
 #include "tool-cmdline-common.h"
 #include "tool-hostrange-common.h"
+#include "tool-sdr-cache-common.h"
 #include "tool-util-common.h"
 
 static int
@@ -75,6 +76,7 @@ _ipmi_config (pstdout_state_t pstate,
     goto cleanup;
 
   state_data.sections = NULL;
+  state_data.sdr_ctx = NULL;
 
   if (prog_data->args->category_mask & IPMI_CONFIG_CATEGORY_MASK_CORE)
     {
@@ -94,12 +96,30 @@ _ipmi_config (pstdout_state_t pstate,
 	goto cleanup;
     }
 
+  if (prog_data->args->category_mask & IPMI_CONFIG_CATEGORY_MASK_SENSORS)
+    {
+      if (!(state_data.sdr_ctx = ipmi_sdr_ctx_create ()))
+	{
+	  pstdout_perror (pstate, "ipmi_sdr_ctx_create()");
+	  goto cleanup;
+	}
+
+      if (sdr_cache_create_and_load (state_data.sdr_ctx,
+				     NULL,
+				     state_data.ipmi_ctx,
+				     hostname,
+				     &(prog_data->args->common_args)) < 0)
+	goto cleanup;
+
+      /* XXX sections */
+    }
+
   if (!state_data.sections)
     {
       fprintf (stderr, "internal error, no sections created\n");
       goto cleanup;
     }
-
+  
   if (prog_data->args->action == IPMI_CONFIG_ACTION_CHECKOUT)
     {
       if (prog_data->args->filename)
@@ -424,6 +444,8 @@ _ipmi_config (pstdout_state_t pstate,
 
   exit_code = EXIT_SUCCESS;
  cleanup:
+  if (state_data.sdr_ctx)
+    ipmi_sdr_ctx_destroy (state_data.sdr_ctx);
   ipmi_ctx_close (state_data.ipmi_ctx);
   ipmi_ctx_destroy (state_data.ipmi_ctx);
   ipmi_config_sections_destroy (state_data.sections);

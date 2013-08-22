@@ -132,6 +132,7 @@ typedef enum
 #define IPMI_CONFIG_CATEGORY_MASK_CORE     0x0001
 #define IPMI_CONFIG_CATEGORY_MASK_BMC      IPMI_CONFIG_CATEGORY_MASK_CORE /* legacy name */
 #define IPMI_CONFIG_CATEGORY_MASK_CHASSIS  0x0002
+#define IPMI_CONFIG_CATEGORY_MASK_SENSORS  0x0004
 
 struct ipmi_config_keypair
 {
@@ -246,6 +247,7 @@ struct ipmi_config_state_data
   ipmi_ctx_t ipmi_ctx;
   pstdout_state_t pstate;
   struct ipmi_config_section *sections;
+  ipmi_sdr_ctx_t sdr_ctx;
 
   /* 
    * For Core / BMC configuration

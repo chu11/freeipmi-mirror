@@ -77,6 +77,8 @@ ipmi_config_SOURCES = \
 	ipmi-config-parse.h \
 	ipmi-config-section.c \
 	ipmi-config-section.h \
+	ipmi-config-sensors-utils.c \
+	ipmi-config-sensors-utils.h \
 	ipmi-config-utils.c \
 	ipmi-config-utils.h \
 	ipmi-config-validate.c \
