@@ -141,7 +141,8 @@ _ipmi_config_category (char *arg, unsigned int *category_mask)
 	(*category_mask) |= IPMI_CONFIG_CATEGORY_MASK_CORE;
       else if (!strcasecmp (tok, "chassis"))
 	(*category_mask) |= IPMI_CONFIG_CATEGORY_MASK_CHASSIS;
-      else if (!strcasecmp (tok, "sensors"))
+      else if (!strcasecmp (tok, "sensors")
+	       || !strcasecmp (tok, "sensor")) /* handle common typo */
 	(*category_mask) |= IPMI_CONFIG_CATEGORY_MASK_SENSORS;
       else
 	{
