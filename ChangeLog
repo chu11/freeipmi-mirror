@@ -1,3 +1,7 @@
+2013-08-22  Albert Chu <chu11@llnl.gov>
+
+	* configure.ac, NEWS: Update for release.
+
 2013-08-13  Albert Chu <chu11@llnl.gov>
 
 	* man/bmc-config.conf.5.pre.in: Fix section typos.
