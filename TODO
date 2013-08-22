@@ -8,6 +8,8 @@ update all bmc-config, ipmi-sensors-config, ipmi-chassis-config, ipmi-pef-config
 update all config-file bmc-config, ipmi-sensors-config, ipmi-chassis-config, ipmi-pef-config to point to ipmi-config config
 - handle special cases if user typed bmc-config, ipmi-sensors-config, etc. on command line  
   - maybe need a special --legacy hidden option
+if section name not recognized indicate bad category in error message
+- handle w/ special case output if legacy
   
 *** - priority for future major release
 XXX - priority for future minor release
