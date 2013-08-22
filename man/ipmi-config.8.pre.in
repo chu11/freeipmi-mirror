@@ -51,13 +51,13 @@ See GENERAL USE below for a description on how most will want to use
 .TP
 \fB\-g\fR \fICATEGORY\fR, \fB\-\-category\fR=\fICATEGORY\fR
 Specify the category or categories of configuration data to configure.
-Currently available choices: \fIcore\fR, \fIchassis\fR.  Multiple
-categories can be separated by comma.  \fIcore\fR includes all major
-IPMI configuration necessary to get IPMI to function on a sytem, such
-as configuration for users, passwords, authentication, networking, and
-serial-over-lan (SOL).  \fIchassis\fR includes all chassis relevant
-configuration including boot options, front panel buttons, and power
-behavior.  Defaults to \fIcore\fR if not specified.
+Currently available choices: \fIcore\fR, \fIchassis\fR, \fIsensors\fR.
+Multiple categories can be separated by comma.  \fIcore\fR includes
+all major IPMI configuration necessary to get IPMI to function on a
+sytem, such as configuration for users, passwords, authentication,
+networking, and serial-over-lan (SOL).  \fIchassis\fR includes all
+chassis relevant configuration including boot options, front panel
+buttons, and power behavior.  Defaults to \fIcore\fR if not specified.
 #include <@top_srcdir@/man/manpage-common-config-tool-options.man>
 .TP
 \fB\-v\fR, \fB\-\-verbose\fR

@@ -38,6 +38,9 @@
 #include "ipmi-config-utils.h"
 #include "ipmi-config-core-sections.h"
 #include "ipmi-config-chassis-sections.h"
+#if 0
+#include "ipmi-config-sensors-sections.h"
+#endif
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
@@ -111,7 +114,14 @@ _ipmi_config (pstdout_state_t pstate,
 				     &(prog_data->args->common_args)) < 0)
 	goto cleanup;
 
-      /* XXX sections */
+#if 0
+      /* XXX */
+      if (!(tmp_sections = ipmi_config_sensors_sections_create (&state_data)))
+	goto cleanup;
+#endif
+
+      if (ipmi_config_section_append (&state_data.sections, tmp_sections) < 0)
+	goto cleanup;
     }
 
   if (!state_data.sections)
