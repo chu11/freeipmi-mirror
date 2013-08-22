@@ -31,10 +31,8 @@
 #include "ipmi-config.h"
 #include "ipmi-config-section.h"
 #include "ipmi-config-sensors-sections.h"
-#if 0
-#include "ipmi-sensors-config-discrete-section.h"
-#include "ipmi-sensors-config-threshold-section.h"
-#endif
+#include "ipmi-config-sensors-discrete-section.h"
+#include "ipmi-config-sensors-threshold-section.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
@@ -57,6 +55,7 @@ _sections_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
   struct ipmi_config_section *section = NULL;
   uint8_t event_reading_type_code;
   int event_reading_type_code_class;
+  ipmi_config_err_t ret;
 
   assert (sdr_ctx);
   assert (sdr_record);
@@ -116,28 +115,24 @@ _sections_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 	  return (0);
 	}
 
-#if 0
       if ((ret = ipmi_config_sensors_threshold_section (state_data,
-							&section)) != CONFIG_ERR_SUCCESS)
+							&section)) != IPMI_CONFIG_ERR_SUCCESS)
 	{
 	  if (ret == IPMI_CONFIG_ERR_FATAL_ERROR)
 	    return (-1);
 	  return (0);
 	}
-#endif
     }
   else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE
 	   || event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE)
     {
-#if 0
       if ((ret = ipmi_config_sensors_discrete_section (state_data,
-						       &section)) != CONFIG_ERR_SUCCESS)
+						       &section)) != IPMI_CONFIG_ERR_SUCCESS)
 	{
 	  if (ret == IPMI_CONFIG_ERR_FATAL_ERROR)
 	    return (-1);
 	  return (0);
 	}
-#endif
     }
   else
     {

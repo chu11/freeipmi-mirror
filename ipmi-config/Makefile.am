@@ -77,8 +77,14 @@ ipmi_config_SOURCES = \
 	ipmi-config-parse.h \
 	ipmi-config-section.c \
 	ipmi-config-section.h \
+	ipmi-config-sensors-discrete-section.c \
+	ipmi-config-sensors-discrete-section.h \
 	ipmi-config-sensors-sections.c \
 	ipmi-config-sensors-sections.h \
+	ipmi-config-sensors-sensor-event-enable-common.c \
+	ipmi-config-sensors-sensor-event-enable-common.h \
+	ipmi-config-sensors-threshold-section.c \
+	ipmi-config-sensors-threshold-section.h \
 	ipmi-config-sensors-utils.c \
 	ipmi-config-sensors-utils.h \
 	ipmi-config-utils.c \
