@@ -124,6 +124,7 @@ _ipmi_config (pstdout_state_t pstate,
       if (ipmi_config_set_category (tmp_sections, IPMI_CONFIG_CATEGORY_MASK_SENSORS) < 0)
 	goto cleanup;
 
+      /* Many fields long in length, use average of 75 for this section */
       if (ipmi_config_set_line_length (tmp_sections, 75) < 0)
 	goto cleanup;
 
