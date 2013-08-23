@@ -89,4 +89,20 @@ int console_redirection_number (const char *string);
 
 char *console_redirection_string (uint8_t value);
 
+int policy_type_number (const char *source);
+
+char *policy_type_string (uint8_t source);
+
+int filter_type_number (const char *source);
+
+char *filter_type_string (uint8_t source);
+
+int event_severity_number (const char *source);
+
+char *event_severity_string (uint8_t source);
+
+int sensor_type_number (const char *source);
+
+char *sensor_type_string (uint8_t source);
+
 #endif /* IPMI_CONFIG_MAP_H */

@@ -489,3 +489,105 @@ console_redirection_number_validate (ipmi_config_state_data_t *state_data,
     return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
   return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
 }
+
+ipmi_config_validate_t
+alert_destination_type_validate (ipmi_config_state_data_t *state_data,
+				 const char *section_name,
+                                 const char *key_name,
+                                 const char *value)
+{
+  assert (state_data);
+  assert (section_name);
+  assert (key_name);
+  assert (value);
+
+  if (alert_destination_type_number (value) != -1)
+    return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
+  return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
+}
+
+ipmi_config_validate_t
+alert_gateway_validate (ipmi_config_state_data_t *state_data,
+			const char *section_name,
+                        const char *key_name,
+                        const char *value)
+{
+  assert (state_data);
+  assert (section_name);
+  assert (key_name);
+  assert (value);
+
+  if (alert_gateway_number (value) != -1)
+    return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
+  return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
+}
+
+ipmi_config_validate_t
+policy_type_validate (ipmi_config_state_data_t *state_data,
+		      const char *section_name,
+                      const char *key_name,
+                      const char *value)
+{
+  assert (state_data);
+  assert (section_name);
+  assert (key_name);
+  assert (value);
+
+  if (policy_type_number (value) != -1)
+    return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
+  return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
+}
+
+ipmi_config_validate_t
+filter_type_validate (ipmi_config_state_data_t *state_data,
+		      const char *section_name,
+                      const char *key_name,
+                      const char *value)
+{
+  assert (state_data);
+  assert (section_name);
+  assert (key_name);
+  assert (value);
+
+  if (filter_type_number (value) != -1)
+    return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
+  return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
+}
+
+ipmi_config_validate_t
+event_severity_validate (ipmi_config_state_data_t *state_data,
+			 const char *section_name,
+                         const char *key_name,
+                         const char *value)
+{
+  assert (state_data);
+  assert (section_name);
+  assert (key_name);
+  assert (value);
+
+  if (event_severity_number (value) != -1)
+    return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
+  return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
+}
+
+ipmi_config_validate_t
+sensor_type_validate (ipmi_config_state_data_t *state_data,
+		      const char *section_name,
+                      const char *key_name,
+                      const char *value)
+{
+  assert (state_data);
+  assert (section_name);
+  assert (key_name);
+  assert (value);
+
+  /* can be string or hex code */
+
+  if (sensor_type_number (value) != -1)
+    return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
+
+  return (number_range_one_byte_validate (state_data,
+					  section_name,
+					  key_name,
+					  value));
+}

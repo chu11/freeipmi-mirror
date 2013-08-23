@@ -159,4 +159,35 @@ ipmi_config_validate_t console_redirection_number_validate (ipmi_config_state_da
 							    const char *section_name,
 							    const char *key_name,
 							    const char *value);
+
+ipmi_config_validate_t alert_destination_type_validate (ipmi_config_state_data_t *state_data,
+							const char *section_name,
+                                                   const char *key_name,
+                                                   const char *value);
+
+ipmi_config_validate_t alert_gateway_validate (ipmi_config_state_data_t *state_data,
+					       const char *section_name,
+					       const char *key_name,
+					       const char *value);
+
+ipmi_config_validate_t policy_type_validate (ipmi_config_state_data_t *state_data,
+					     const char *section_name,
+					     const char *key_name,
+					     const char *value);
+
+ipmi_config_validate_t filter_type_validate (ipmi_config_state_data_t *state_data,
+					     const char *section_name,
+					     const char *key_name,
+					     const char *value);
+
+ipmi_config_validate_t event_severity_validate (ipmi_config_state_data_t *state_data,
+						const char *section_name,
+						const char *key_name,
+						const char *value);
+
+ipmi_config_validate_t sensor_type_validate (ipmi_config_state_data_t *state_data,
+					     const char *section_name,
+					     const char *key_name,
+					     const char *value);
+
 #endif /* IPMI_CONFIG_VALIDATE_H */
