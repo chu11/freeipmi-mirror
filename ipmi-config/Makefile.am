@@ -87,6 +87,8 @@ ipmi_config_SOURCES = \
 	ipmi-config-pef-lan-alert-destination.h \
 	ipmi-config-pef-pef-conf-section.c \
 	ipmi-config-pef-pef-conf-section.h \
+	ipmi-config-pef-sections.c \
+	ipmi-config-pef-sections.h \
 	ipmi-config-section.c \
 	ipmi-config-section.h \
 	ipmi-config-sensors-discrete-section.c \
