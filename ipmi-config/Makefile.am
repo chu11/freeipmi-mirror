@@ -83,6 +83,8 @@ ipmi_config_SOURCES = \
 	ipmi-config-pef-community-string.h \
 	ipmi-config-pef-event-filter-table.c \
 	ipmi-config-pef-event-filter-table.h \
+	ipmi-config-pef-info.c \
+	ipmi-config-pef-info.h \
 	ipmi-config-pef-lan-alert-destination.c \
 	ipmi-config-pef-lan-alert-destination.h \
 	ipmi-config-pef-pef-conf-section.c \
