@@ -100,6 +100,8 @@ static struct argp_option cmdline_options[] = {
     "Use a specific SOL Channel Number.", 51},
   { "foobar", IPMI_CONFIG_ARGP_FILENAME_KEY_LEGACY, "FILENAME", OPTION_HIDDEN,
     "Specify a config file for checkout/commit/diff.", 52},
+  { "info", IPMI_CONFIG_ARGP_PEF_INFO_KEY, 0, OPTION_HIDDEN,
+    "Show general information about PEF configuration.", 53},
   { NULL, 0, NULL, 0, NULL, 0}
 };
 
@@ -548,6 +550,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
                                              &(cmd_args->sol_channel_number_set)) < 0)
         exit (EXIT_FAILURE);
       break;
+    case IPMI_CONFIG_ARGP_PEF_INFO_KEY: /* legacy */
+      cmd_args->info++;
+      break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */
       argp_usage (state);
@@ -591,7 +596,8 @@ _ipmi_config_args_validate (struct ipmi_config_arguments *cmd_args)
 {
   assert (cmd_args);
 
-  if (!cmd_args->action || cmd_args->action == -1)
+  if ((!cmd_args->action || cmd_args->action == -1)
+      && !cmd_args->info)
     {
       fprintf (stderr,
                "Exactly one of --checkout, --commit, --diff, or --listsections MUST be given\n");
@@ -701,6 +707,8 @@ ipmi_config_argp_parse (int argc, char *argv[], struct ipmi_config_arguments *cm
   cmd_args->sol_channel_number_set = 0;
   cmd_args->keypairs = NULL;
   cmd_args->section_strs = NULL;
+
+  cmd_args->info = 0;
 
   argp_parse (&cmdline_config_file_argp,
               argc,

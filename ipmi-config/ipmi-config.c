@@ -40,6 +40,7 @@
 #include "ipmi-config-core-sections.h"
 #include "ipmi-config-chassis-sections.h"
 #include "ipmi-config-sensors-sections.h"
+#include "ipmi-config-pef-info.h"
 #include "ipmi-config-pef-sections.h"
 
 #include "freeipmi-portability.h"
@@ -397,6 +398,12 @@ _ipmi_config (pstdout_state_t pstate,
 	}
     }
 
+  if (prog_data->args->info)
+    {
+      ret = ipmi_config_pef_info (&state_data);
+      goto out;
+    }
+
   switch (prog_data->args->action)
     {
     case IPMI_CONFIG_ACTION_CHECKOUT:
@@ -458,6 +465,7 @@ _ipmi_config (pstdout_state_t pstate,
       break;
     }
 
+ out:
   if (ret == IPMI_CONFIG_ERR_FATAL_ERROR)
     {
       exit_code = IPMI_CONFIG_FATAL_EXIT_VALUE;

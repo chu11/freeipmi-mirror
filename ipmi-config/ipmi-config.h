@@ -39,6 +39,7 @@ enum ipmi_config_argp_option_keys
     IPMI_CONFIG_ARGP_SECTIONS_KEY = 'S',
     IPMI_CONFIG_ARGP_LIST_SECTIONS_KEY = 'L',
     IPMI_CONFIG_ARGP_VERBOSE_KEY = 'v',
+    IPMI_CONFIG_ARGP_PEF_INFO_KEY = 'i', /* legacy */
     IPMI_CONFIG_ARGP_LAN_CHANNEL_NUMBER_KEY = 200,
     IPMI_CONFIG_ARGP_SERIAL_CHANNEL_NUMBER_KEY = 201,
     IPMI_CONFIG_ARGP_SOL_CHANNEL_NUMBER_KEY = 202,
@@ -236,6 +237,11 @@ struct ipmi_config_arguments
   int sol_channel_number_set;
   struct ipmi_config_keypair *keypairs;
   struct ipmi_config_section_str *section_strs;
+
+  /* 
+   * Legacy options
+   */
+  int info;
 };
 
 typedef struct ipmi_config_prog_data
