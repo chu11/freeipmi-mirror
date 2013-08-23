@@ -36,9 +36,11 @@
 #include "ipmi-config-parse.h"
 #include "ipmi-config-section.h"
 #include "ipmi-config-utils.h"
+
 #include "ipmi-config-core-sections.h"
 #include "ipmi-config-chassis-sections.h"
 #include "ipmi-config-sensors-sections.h"
+#include "ipmi-config-pef-sections.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
@@ -65,6 +67,8 @@ _ipmi_config (pstdout_state_t pstate,
   assert (arg);
 
   prog_data = (ipmi_config_prog_data_t *)arg;
+
+  assert (!(prog_data->args->category_mask & ~IPMI_CONFIG_CATEGORY_MASK_ALL));
 
   memset (&state_data, '\0', sizeof (ipmi_config_state_data_t));
   state_data.prog_data = prog_data;
@@ -132,11 +136,19 @@ _ipmi_config (pstdout_state_t pstate,
 	goto cleanup;
     }
 
-  if (!state_data.sections)
+  if (prog_data->args->category_mask & IPMI_CONFIG_CATEGORY_MASK_PEF)
     {
-      fprintf (stderr, "internal error, no sections created\n");
-      goto cleanup;
+      if (!(tmp_sections = ipmi_config_pef_sections_create (&state_data)))
+	goto cleanup;
+
+      if (ipmi_config_set_category (tmp_sections, IPMI_CONFIG_CATEGORY_MASK_PEF) < 0)
+	goto cleanup;
+
+      if (ipmi_config_section_append (&state_data.sections, tmp_sections) < 0)
+	goto cleanup;
     }
+
+  assert (state_data.sections);
   
   if (prog_data->args->action == IPMI_CONFIG_ACTION_CHECKOUT)
     {

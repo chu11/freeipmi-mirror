@@ -144,6 +144,8 @@ _ipmi_config_category (char *arg, unsigned int *category_mask)
       else if (!strcasecmp (tok, "sensors")
 	       || !strcasecmp (tok, "sensor")) /* handle common typo */
 	(*category_mask) |= IPMI_CONFIG_CATEGORY_MASK_SENSORS;
+      else if (!strcasecmp (tok, "pef"))
+	(*category_mask) |= IPMI_CONFIG_CATEGORY_MASK_PEF;
       else
 	{
 	  fprintf (stderr, "invalid category '%s' specified\n", tok);
