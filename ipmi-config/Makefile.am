@@ -75,6 +75,18 @@ ipmi_config_SOURCES = \
 	ipmi-config-map.h \
 	ipmi-config-parse.c \
 	ipmi-config-parse.h \
+	ipmi-config-pef-alert-policy-table.c \
+	ipmi-config-pef-alert-policy-table.h \
+	ipmi-config-pef-alert-string.c \
+	ipmi-config-pef-alert-string.h \
+	ipmi-config-pef-community-string.c \
+	ipmi-config-pef-community-string.h \
+	ipmi-config-pef-event-filter-table.c \
+	ipmi-config-pef-event-filter-table.h \
+	ipmi-config-pef-lan-alert-destination.c \
+	ipmi-config-pef-lan-alert-destination.h \
+	ipmi-config-pef-pef-conf-section.c \
+	ipmi-config-pef-pef-conf-section.h \
 	ipmi-config-section.c \
 	ipmi-config-section.h \
 	ipmi-config-sensors-discrete-section.c \
