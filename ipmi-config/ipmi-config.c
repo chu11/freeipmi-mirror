@@ -84,6 +84,9 @@ _ipmi_config (pstdout_state_t pstate,
       if (!(tmp_sections = ipmi_config_core_sections_create (&state_data)))
 	goto cleanup;
 
+      if (ipmi_config_set_category (tmp_sections, IPMI_CONFIG_CATEGORY_MASK_CORE) < 0)
+	goto cleanup;
+
       if (ipmi_config_section_append (&state_data.sections, tmp_sections) < 0)
 	goto cleanup;
     }
@@ -91,6 +94,9 @@ _ipmi_config (pstdout_state_t pstate,
   if (prog_data->args->category_mask & IPMI_CONFIG_CATEGORY_MASK_CHASSIS)
     {
       if (!(tmp_sections = ipmi_config_chassis_sections_create (&state_data)))
+	goto cleanup;
+
+      if (ipmi_config_set_category (tmp_sections, IPMI_CONFIG_CATEGORY_MASK_CHASSIS) < 0)
 	goto cleanup;
 
       if (ipmi_config_section_append (&state_data.sections, tmp_sections) < 0)
@@ -113,6 +119,12 @@ _ipmi_config (pstdout_state_t pstate,
 	goto cleanup;
 
       if (!(tmp_sections = ipmi_config_sensors_sections_create (&state_data)))
+	goto cleanup;
+
+      if (ipmi_config_set_category (tmp_sections, IPMI_CONFIG_CATEGORY_MASK_SENSORS) < 0)
+	goto cleanup;
+
+      if (ipmi_config_set_line_length (tmp_sections, 75) < 0)
 	goto cleanup;
 
       if (ipmi_config_section_append (&state_data.sections, tmp_sections) < 0)
@@ -401,8 +413,7 @@ _ipmi_config (pstdout_state_t pstate,
               this_ret = ipmi_config_checkout_section (&state_data,
                                                        s,
                                                        1,
-                                                       fp,
-                                                       0);
+                                                       fp);
               if (this_ret != IPMI_CONFIG_ERR_SUCCESS)
                 ret = this_ret;
               if (ret == IPMI_CONFIG_ERR_FATAL_ERROR)
@@ -413,15 +424,14 @@ _ipmi_config (pstdout_state_t pstate,
         }
       else
         {
-          int all_keys_if_none_specified = 0;
+	  int all_keys_if_none_specified = 0;
 
           if (!prog_data->args->keypairs)
             all_keys_if_none_specified++;
 
           ret = ipmi_config_checkout (&state_data,
                                       all_keys_if_none_specified,
-                                      fp,
-                                      0);
+                                      fp);
         }
       break;
     case IPMI_CONFIG_ACTION_COMMIT:

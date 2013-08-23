@@ -112,6 +112,8 @@ ipmi_config_section_create (ipmi_config_state_data_t *state_data,
   section->flags = flags;
   section->section_pre_commit = section_pre_commit;
   section->section_post_commit = section_post_commit;
+  section->category = 0;
+  section->line_length = 0;
 
   return (section);
 
@@ -248,6 +250,41 @@ ipmi_config_section_destroy (struct ipmi_config_section *section)
 
       free (section);
     }
+}
+
+int
+ipmi_config_set_category (struct ipmi_config_section *sections, unsigned int category)
+{
+  struct ipmi_config_section *s;
+
+  assert (sections);
+  assert (IPMI_CONFIG_CATEGORY_VALID (category));
+
+  s = sections;
+  while (s)
+    {
+      s->category = category;
+      s = s->next;
+    }
+
+  return (0);
+}
+
+int
+ipmi_config_set_line_length (struct ipmi_config_section *sections, unsigned int line_length)
+{
+  struct ipmi_config_section *s;
+
+  assert (sections);
+
+  s = sections;
+  while (s)
+    {
+      s->line_length = line_length;
+      s = s->next;
+    }
+
+  return (0);
 }
 
 int

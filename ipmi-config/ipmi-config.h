@@ -134,6 +134,11 @@ typedef enum
 #define IPMI_CONFIG_CATEGORY_MASK_CHASSIS  0x0002
 #define IPMI_CONFIG_CATEGORY_MASK_SENSORS  0x0004
 
+#define IPMI_CONFIG_CATEGORY_VALID(__val) \
+  (((__val) == IPMI_CONFIG_CATEGORY_MASK_CORE \
+    || (__val) == IPMI_CONFIG_CATEGORY_MASK_CHASSIS \
+    || (__val) == IPMI_CONFIG_CATEGORY_MASK_SENSORS) ? 1 : 0)
+
 struct ipmi_config_keypair
 {
   char *section_name;
@@ -206,6 +211,8 @@ struct ipmi_config_section {
   /* key and values for checkout/commit/diff */
   struct ipmi_config_keyvalue *keyvalues;
   struct ipmi_config_section *next;
+  unsigned int category;
+  unsigned int line_length;
 };
 
 struct ipmi_config_arguments

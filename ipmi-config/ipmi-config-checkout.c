@@ -40,13 +40,13 @@ ipmi_config_err_t
 ipmi_config_checkout_section (ipmi_config_state_data_t *state_data,
                               struct ipmi_config_section *section,
                               int all_keys_if_none_specified,
-                              FILE *fp,
-                              unsigned int line_length)
+                              FILE *fp)
 {
   struct ipmi_config_keyvalue *kv;
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   ipmi_config_err_t ret = IPMI_CONFIG_ERR_SUCCESS;
   ipmi_config_err_t this_ret;
+  unsigned int line_length;
 
   assert (state_data);
   assert (section);
@@ -98,8 +98,10 @@ ipmi_config_checkout_section (ipmi_config_state_data_t *state_data,
         }
     }
 
-  if (!line_length)
+  if (!section->line_length)
     line_length = IPMI_CONFIG_CHECKOUT_LINE_LEN;
+  else
+    line_length = section->line_length;
 
   ipmi_config_pstdout_fprintf (state_data,
                                fp,
@@ -251,8 +253,7 @@ ipmi_config_checkout_section (ipmi_config_state_data_t *state_data,
 ipmi_config_err_t
 ipmi_config_checkout (ipmi_config_state_data_t *state_data,
                       int all_keys_if_none_specified,
-                      FILE *fp,
-                      unsigned int line_length)
+                      FILE *fp)
 {
   struct ipmi_config_section *s;
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_SUCCESS;
@@ -270,8 +271,7 @@ ipmi_config_checkout (ipmi_config_state_data_t *state_data,
           if ((ret = ipmi_config_checkout_section (state_data,
                                                    s,
                                                    all_keys_if_none_specified,
-                                                   fp,
-                                                   line_length)) != IPMI_CONFIG_ERR_SUCCESS)
+                                                   fp)) != IPMI_CONFIG_ERR_SUCCESS)
             {
               if (ret == IPMI_CONFIG_ERR_FATAL_ERROR)
                 {

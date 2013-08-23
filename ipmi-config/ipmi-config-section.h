@@ -50,6 +50,10 @@ struct ipmi_config_section *ipmi_config_section_multi_channel_create (ipmi_confi
 
 void ipmi_config_section_destroy (struct ipmi_config_section *section);
 
+int ipmi_config_set_category (struct ipmi_config_section *sections, unsigned int category);
+
+int ipmi_config_set_line_length (struct ipmi_config_section *sections, unsigned int line_length);
+
 int ipmi_config_section_add_key (ipmi_config_state_data_t *state_data,
                                  struct ipmi_config_section *section,
                                  const char *key_name,
