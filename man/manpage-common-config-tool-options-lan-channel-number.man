@@ -1,5 +1,0 @@
-.TP
-\fB\-\-lan\-channel\-number\fR=\fINUMBER\fR
-Use an specific channel number for LAN configuration.  Particularly
-useful if motherboard contains multiple LAN channels and a user wishes
-to use a specific one.

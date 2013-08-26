@@ -1,5 +1,0 @@
-.TP
-\fB\-\-serial\-channel\-number\fR=\fINUMBER\fR
-Use an specific channel number for serial configuration.  Particularly
-useful if motherboard contains multiple serial channels and a user
-wishes to use a specific one.

@@ -159,14 +159,6 @@ MANS_COMMON = \
 	manpage-common-sdr-cache-options.man \
 	manpage-common-sdr-cache-file-directory.man \
 	manpage-common-sdr-cache-ignore.man \
-	manpage-common-config-diagnostics.man \
-	manpage-common-config-tool-options.man \
-	manpage-common-config-tool-options-verbose.man \
-	manpage-common-config-tool-options-very-verbose.man \
-	manpage-common-config-tool-options-lan-channel-number.man \
-	manpage-common-config-tool-options-serial-channel-number.man \
-	manpage-common-config-tool-options-sol-channel-number.man \
-	manpage-common-config-tool-general-use.man \
 	manpage-common-troubleshooting-heading-end.man \
 	manpage-common-troubleshooting-heading-inband.man \
 	manpage-common-troubleshooting-heading-outofband.man \

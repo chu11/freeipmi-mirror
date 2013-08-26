@@ -1,5 +1,0 @@
-.TP
-\fB\-\-sol\-channel\-number\fR=\fINUMBER\fR
-Use an specific channel number for SOL configuration.  Particularly
-useful if motherboard contains multiple SOL channels and a user
-wishes to use a specific one.
