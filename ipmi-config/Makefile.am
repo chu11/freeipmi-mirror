@@ -23,14 +23,70 @@ ipmi_config_SOURCES = \
 	ipmi-config.h \
 	ipmi-config-argp.c \
 	ipmi-config-argp.h \
-	ipmi-config-chassis-boot-flags.c \
-	ipmi-config-chassis-boot-flags.h \
-	ipmi-config-chassis-front-panel-buttons.c \
-	ipmi-config-chassis-front-panel-buttons.h \
-	ipmi-config-chassis-power-conf.c \
-	ipmi-config-chassis-power-conf.h \
-	ipmi-config-chassis-sections.c \
-	ipmi-config-chassis-sections.h \
+	ipmi-config-category-chassis-boot-flags.c \
+	ipmi-config-category-chassis-boot-flags.h \
+	ipmi-config-category-chassis-front-panel-buttons.c \
+	ipmi-config-category-chassis-front-panel-buttons.h \
+	ipmi-config-category-chassis-power-conf.c \
+	ipmi-config-category-chassis-power-conf.h \
+	ipmi-config-category-chassis-sections.c \
+	ipmi-config-category-chassis-sections.h \
+	ipmi-config-category-core-channel-common.c \
+	ipmi-config-category-core-channel-common.h \
+	ipmi-config-category-core-lan-channel-section.c \
+	ipmi-config-category-core-lan-channel-section.h \
+	ipmi-config-category-core-lan-conf-auth-section.c \
+	ipmi-config-category-core-lan-conf-auth-section.h \
+	ipmi-config-category-core-lan-conf-misc-section.c \
+	ipmi-config-category-core-lan-conf-misc-section.h \
+	ipmi-config-category-core-lan-conf-section.c \
+	ipmi-config-category-core-lan-conf-section.h \
+	ipmi-config-category-core-lan-conf-security-keys-section.c \
+	ipmi-config-category-core-lan-conf-security-keys-section.h \
+	ipmi-config-category-core-lan-conf-user-security-section.c \
+	ipmi-config-category-core-lan-conf-user-security-section.h \
+	ipmi-config-category-core-misc-section.c \
+	ipmi-config-category-core-misc-section.h \
+	ipmi-config-category-core-pef-conf-section.c \
+	ipmi-config-category-core-pef-conf-section.h \
+	ipmi-config-category-core-rmcpplus-conf-privilege-section.c \
+	ipmi-config-category-core-rmcpplus-conf-privilege-section.h \
+	ipmi-config-category-core-sections.c \
+	ipmi-config-category-core-sections.h \
+	ipmi-config-category-core-serial-channel-section.c \
+	ipmi-config-category-core-serial-channel-section.h \
+	ipmi-config-category-core-serial-conf-section.c \
+	ipmi-config-category-core-serial-conf-section.h \
+	ipmi-config-category-core-sol-conf-section.c \
+	ipmi-config-category-core-sol-conf-section.h \
+	ipmi-config-category-core-user-sections.c \
+	ipmi-config-category-core-user-sections.h \
+	ipmi-config-category-pef-alert-policy-table.c \
+	ipmi-config-category-pef-alert-policy-table.h \
+	ipmi-config-category-pef-alert-string.c \
+	ipmi-config-category-pef-alert-string.h \
+	ipmi-config-category-pef-community-string.c \
+	ipmi-config-category-pef-community-string.h \
+	ipmi-config-category-pef-event-filter-table.c \
+	ipmi-config-category-pef-event-filter-table.h \
+	ipmi-config-category-pef-info.c \
+	ipmi-config-category-pef-info.h \
+	ipmi-config-category-pef-lan-alert-destination.c \
+	ipmi-config-category-pef-lan-alert-destination.h \
+	ipmi-config-category-pef-pef-conf-section.c \
+	ipmi-config-category-pef-pef-conf-section.h \
+	ipmi-config-category-pef-sections.c \
+	ipmi-config-category-pef-sections.h \
+	ipmi-config-category-sensors-discrete-section.c \
+	ipmi-config-category-sensors-discrete-section.h \
+	ipmi-config-category-sensors-sections.c \
+	ipmi-config-category-sensors-sections.h \
+	ipmi-config-category-sensors-sensor-event-enable-common.c \
+	ipmi-config-category-sensors-sensor-event-enable-common.h \
+	ipmi-config-category-sensors-threshold-section.c \
+	ipmi-config-category-sensors-threshold-section.h \
+	ipmi-config-category-sensors-utils.c \
+	ipmi-config-category-sensors-utils.h \
 	ipmi-config-checkout.c \
 	ipmi-config-checkout.h \
 	ipmi-config-comment.c \
@@ -39,70 +95,14 @@ ipmi_config_SOURCES = \
 	ipmi-config-commit.h \
 	ipmi-config-common-pef-conf-section.c \
 	ipmi-config-common-pef-conf-section.h \
-	ipmi-config-core-channel-common.c \
-	ipmi-config-core-channel-common.h \
-	ipmi-config-core-lan-channel-section.c \
-	ipmi-config-core-lan-channel-section.h \
-	ipmi-config-core-lan-conf-auth-section.c \
-	ipmi-config-core-lan-conf-auth-section.h \
-	ipmi-config-core-lan-conf-misc-section.c \
-	ipmi-config-core-lan-conf-misc-section.h \
-	ipmi-config-core-lan-conf-section.c \
-	ipmi-config-core-lan-conf-section.h \
-	ipmi-config-core-lan-conf-security-keys-section.c \
-	ipmi-config-core-lan-conf-security-keys-section.h \
-	ipmi-config-core-lan-conf-user-security-section.c \
-	ipmi-config-core-lan-conf-user-security-section.h \
-	ipmi-config-core-misc-section.c \
-	ipmi-config-core-misc-section.h \
-	ipmi-config-core-pef-conf-section.c \
-	ipmi-config-core-pef-conf-section.h \
-	ipmi-config-core-rmcpplus-conf-privilege-section.c \
-	ipmi-config-core-rmcpplus-conf-privilege-section.h \
-	ipmi-config-core-sections.c \
-	ipmi-config-core-sections.h \
-	ipmi-config-core-serial-channel-section.c \
-	ipmi-config-core-serial-channel-section.h \
-	ipmi-config-core-serial-conf-section.c \
-	ipmi-config-core-serial-conf-section.h \
-	ipmi-config-core-sol-conf-section.c \
-	ipmi-config-core-sol-conf-section.h \
-	ipmi-config-core-user-sections.c \
-	ipmi-config-core-user-sections.h \
 	ipmi-config-diff.c \
 	ipmi-config-diff.h \
 	ipmi-config-map.c \
 	ipmi-config-map.h \
 	ipmi-config-parse.c \
 	ipmi-config-parse.h \
-	ipmi-config-pef-alert-policy-table.c \
-	ipmi-config-pef-alert-policy-table.h \
-	ipmi-config-pef-alert-string.c \
-	ipmi-config-pef-alert-string.h \
-	ipmi-config-pef-community-string.c \
-	ipmi-config-pef-community-string.h \
-	ipmi-config-pef-event-filter-table.c \
-	ipmi-config-pef-event-filter-table.h \
-	ipmi-config-pef-info.c \
-	ipmi-config-pef-info.h \
-	ipmi-config-pef-lan-alert-destination.c \
-	ipmi-config-pef-lan-alert-destination.h \
-	ipmi-config-pef-pef-conf-section.c \
-	ipmi-config-pef-pef-conf-section.h \
-	ipmi-config-pef-sections.c \
-	ipmi-config-pef-sections.h \
 	ipmi-config-section.c \
 	ipmi-config-section.h \
-	ipmi-config-sensors-discrete-section.c \
-	ipmi-config-sensors-discrete-section.h \
-	ipmi-config-sensors-sections.c \
-	ipmi-config-sensors-sections.h \
-	ipmi-config-sensors-sensor-event-enable-common.c \
-	ipmi-config-sensors-sensor-event-enable-common.h \
-	ipmi-config-sensors-threshold-section.c \
-	ipmi-config-sensors-threshold-section.h \
-	ipmi-config-sensors-utils.c \
-	ipmi-config-sensors-utils.h \
 	ipmi-config-utils.c \
 	ipmi-config-utils.h \
 	ipmi-config-validate.c \
