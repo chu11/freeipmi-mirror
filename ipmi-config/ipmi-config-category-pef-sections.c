@@ -32,12 +32,12 @@
 #include "ipmi-config-section.h"
 #include "ipmi-config-utils.h"
 
-#include "ipmi-config-pef-alert-policy-table.h"
-#include "ipmi-config-pef-alert-string.h"
-#include "ipmi-config-pef-community-string.h"
-#include "ipmi-config-pef-event-filter-table.h"
-#include "ipmi-config-pef-lan-alert-destination.h"
-#include "ipmi-config-pef-pef-conf-section.h"
+#include "ipmi-config-category-pef-alert-policy-table.h"
+#include "ipmi-config-category-pef-alert-string.h"
+#include "ipmi-config-category-pef-community-string.h"
+#include "ipmi-config-category-pef-event-filter-table.h"
+#include "ipmi-config-category-pef-lan-alert-destination.h"
+#include "ipmi-config-category-pef-pef-conf-section.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"

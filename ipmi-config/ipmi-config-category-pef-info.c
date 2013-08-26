@@ -29,7 +29,7 @@
 #include <assert.h>
 
 #include "ipmi-config.h"
-#include "ipmi-config-pef-info.h"
+#include "ipmi-config-category-pef-info.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"

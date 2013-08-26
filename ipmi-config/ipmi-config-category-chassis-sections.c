@@ -29,12 +29,12 @@
 #include <assert.h>
 
 #include "ipmi-config.h"
-#include "ipmi-config-chassis-sections.h"
+#include "ipmi-config-category-chassis-sections.h"
 #include "ipmi-config-section.h"
 
-#include "ipmi-config-chassis-boot-flags.h"
-#include "ipmi-config-chassis-front-panel-buttons.h"
-#include "ipmi-config-chassis-power-conf.h"
+#include "ipmi-config-category-chassis-boot-flags.h"
+#include "ipmi-config-category-chassis-front-panel-buttons.h"
+#include "ipmi-config-category-chassis-power-conf.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"

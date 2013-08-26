@@ -37,11 +37,11 @@
 #include "ipmi-config-section.h"
 #include "ipmi-config-utils.h"
 
-#include "ipmi-config-core-sections.h"
-#include "ipmi-config-chassis-sections.h"
+#include "ipmi-config-category-core-sections.h"
+#include "ipmi-config-category-chassis-sections.h"
 #include "ipmi-config-sensors-sections.h"
-#include "ipmi-config-pef-info.h"
-#include "ipmi-config-pef-sections.h"
+#include "ipmi-config-category-pef-info.h"
+#include "ipmi-config-category-pef-sections.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"

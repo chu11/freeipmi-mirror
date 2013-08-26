@@ -28,7 +28,7 @@
 #include <assert.h>
 
 #include "ipmi-config.h"
-#include "ipmi-config-core-channel-common.h"
+#include "ipmi-config-category-core-channel-common.h"
 #include "ipmi-config-section.h"
 #include "ipmi-config-utils.h"
 
