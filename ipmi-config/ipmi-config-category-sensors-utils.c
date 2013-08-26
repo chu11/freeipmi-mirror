@@ -28,7 +28,7 @@
 #include <errno.h>
 #include <assert.h>
 
-#include "ipmi-config-sensors-utils.h"
+#include "ipmi-config-category-sensors-utils.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"

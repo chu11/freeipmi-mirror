@@ -69,8 +69,6 @@ ipmi_config_SOURCES = \
 	ipmi-config-category-pef-community-string.h \
 	ipmi-config-category-pef-event-filter-table.c \
 	ipmi-config-category-pef-event-filter-table.h \
-	ipmi-config-category-pef-info.c \
-	ipmi-config-category-pef-info.h \
 	ipmi-config-category-pef-lan-alert-destination.c \
 	ipmi-config-category-pef-lan-alert-destination.h \
 	ipmi-config-category-pef-pef-conf-section.c \
@@ -97,6 +95,8 @@ ipmi_config_SOURCES = \
 	ipmi-config-common-pef-conf-section.h \
 	ipmi-config-diff.c \
 	ipmi-config-diff.h \
+	ipmi-config-legacy-pef-info.c \
+	ipmi-config-legacy-pef-info.h \
 	ipmi-config-map.c \
 	ipmi-config-map.h \
 	ipmi-config-parse.c \

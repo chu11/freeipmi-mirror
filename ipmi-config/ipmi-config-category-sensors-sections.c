@@ -30,9 +30,9 @@
 
 #include "ipmi-config.h"
 #include "ipmi-config-section.h"
-#include "ipmi-config-sensors-sections.h"
-#include "ipmi-config-sensors-discrete-section.h"
-#include "ipmi-config-sensors-threshold-section.h"
+#include "ipmi-config-category-sensors-sections.h"
+#include "ipmi-config-category-sensors-discrete-section.h"
+#include "ipmi-config-category-sensors-threshold-section.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"

@@ -29,8 +29,8 @@
 
 #include "ipmi-config.h"
 #include "ipmi-config-section.h"
-#include "ipmi-config-sensors-sensor-event-enable-common.h"
-#include "ipmi-config-sensors-utils.h"
+#include "ipmi-config-category-sensors-sensor-event-enable-common.h"
+#include "ipmi-config-category-sensors-utils.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"

@@ -39,9 +39,9 @@
 
 #include "ipmi-config-category-core-sections.h"
 #include "ipmi-config-category-chassis-sections.h"
-#include "ipmi-config-sensors-sections.h"
-#include "ipmi-config-category-pef-info.h"
+#include "ipmi-config-category-sensors-sections.h"
 #include "ipmi-config-category-pef-sections.h"
+#include "ipmi-config-legacy-pef-info.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
