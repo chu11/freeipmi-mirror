@@ -1,5 +1,11 @@
 sbin_PROGRAMS = ipmi-config
 
+sbin_SCRIPTS = \
+	bmc-config \
+	ipmi-chassis-config \
+	ipmi-pef-config \
+	ipmi-sensors-config
+
 ipmi_config_CPPFLAGS = \
 	-I$(top_srcdir)/common/toolcommon \
 	-I$(top_srcdir)/common/miscutil \
@@ -108,6 +114,22 @@ ipmi_config_SOURCES = \
 	ipmi-config-validate.c \
 	ipmi-config-validate.h
 
+bmc-config: bmc-config.in
+	sed -e 's:@CONFIGSBINDIR@:$(sbindir):' $< > $@
+	chmod +x bmc-config
+
+ipmi-chassis-config: ipmi-chassis-config.in
+	sed -e 's:@CONFIGSBINDIR@:$(sbindir):' $< > $@
+	chmod +x ipmi-chassis-config
+
+ipmi-pef-config: ipmi-pef-config.in
+	sed -e 's:@CONFIGSBINDIR@:$(sbindir):' $< > $@
+	chmod +x ipmi-pef-config
+
+ipmi-sensors-config: ipmi-sensors-config.in
+	sed -e 's:@CONFIGSBINDIR@:$(sbindir):' $< > $@
+	chmod +x ipmi-sensors-config
+
 $(top_builddir)/common/toolcommon/libtoolcommon.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
@@ -127,3 +149,11 @@ $(top_builddir)/libfreeipmi/libfreeipmi.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 force-dependency-check:
+
+install-exec-hook:
+	$(install_sh) -d -m 755 $(DESTDIR)$(sbindir)
+	$(LN_S) -f $(sbindir)/ipmi-pef-config $(DESTDIR)$(sbindir)/pef-config
+
+uninstall-hook:
+	$(RM) $(DESTDIR)$(sbindir)/pef-config
+
