@@ -16,11 +16,11 @@
  * 
  */
 
-#ifndef IPMI_CONFIG_PEF_SECTIONS
-#define IPMI_CONFIG_PEF_SECTIONS
+#ifndef IPMI_CONFIG_CATEGORY_PEF_SECTIONS
+#define IPMI_CONFIG_CATEGORY_PEF_SECTIONS
 
 #include "ipmi-config.h"
 
 struct ipmi_config_section *ipmi_config_pef_sections_create (ipmi_config_state_data_t *state_data);
 
-#endif /* IPMI_CONFIG_PEF_SECTIONS */
+#endif /* IPMI_CONFIG_CATEGORY_PEF_SECTIONS */

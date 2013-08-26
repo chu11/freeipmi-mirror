@@ -16,11 +16,11 @@
  * 
  */
 
-#ifndef IPMI_CONFIG_CORE_PEF_CONF_SECTION_H
-#define IPMI_CONFIG_CORE_PEF_CONF_SECTION_H
+#ifndef IPMI_CONFIG_CATEGORY_CORE_PEF_CONF_SECTION_H
+#define IPMI_CONFIG_CATEGORY_CORE_PEF_CONF_SECTION_H
 
 #include "ipmi-config.h"
 
 struct ipmi_config_section * ipmi_config_core_pef_conf_section_get (ipmi_config_state_data_t *state_data);
 
-#endif /* IPMI_CONFIG_CORE_PEF_CONF_SECTION_H */
+#endif /* IPMI_CONFIG_CATEGORY_CORE_PEF_CONF_SECTION_H */

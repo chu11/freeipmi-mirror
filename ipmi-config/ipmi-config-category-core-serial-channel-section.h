@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef IPMI_CONFIG_CORE_SERIAL_CHANNEL_SECTION_H
-#define IPMI_CONFIG_CORE_SERIAL_CHANNEL_SECTION_H
+#ifndef IPMI_CONFIG_CATEGORY_CORE_SERIAL_CHANNEL_SECTION_H
+#define IPMI_CONFIG_CATEGORY_CORE_SERIAL_CHANNEL_SECTION_H
 
 #include "ipmi-config.h"
 
@@ -25,4 +25,4 @@ struct ipmi_config_section * ipmi_config_core_serial_channel_section_get (ipmi_c
 									  unsigned int config_flags,
 									  int channel_index);
 
-#endif /* IPMI_CONFIG_CORE_SERIAL_CHANNEL_SECTION_H */
+#endif /* IPMI_CONFIG_CATEGORY_CORE_SERIAL_CHANNEL_SECTION_H */

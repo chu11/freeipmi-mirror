@@ -16,12 +16,12 @@
  * 
  */
 
-#ifndef IPMI_CONFIG_CORE_CHANNEL_COMMON_H
-#define IPMI_CONFIG_CORE_CHANNEL_COMMON_H
+#ifndef IPMI_CONFIG_CATEGORY_CORE_CHANNEL_COMMON_H
+#define IPMI_CONFIG_CATEGORY_CORE_CHANNEL_COMMON_H
 
 #include "ipmi-config.h"
 
 int ipmi_config_core_channel_common_section_get (ipmi_config_state_data_t *state_data,
 						 struct ipmi_config_section *channel_section);
 
-#endif /* IPMI_CONFIG_CORE_CHANNEL_COMMON_H */
+#endif /* IPMI_CONFIG_CATEGORY_CORE_CHANNEL_COMMON_H */

@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef IPMI_CONFIG_SENSORS_UTILS_H
-#define IPMI_CONFIG_SENSORS_UTILS_H
+#ifndef IPMI_CONFIG_CATEGORY_SENSORS_UTILS_H
+#define IPMI_CONFIG_CATEGORY_SENSORS_UTILS_H
 
 #include "ipmi-config.h"
 
@@ -28,4 +28,4 @@ ipmi_config_err_t ipmi_config_sensors_create_section_name (ipmi_config_state_dat
 ipmi_config_err_t ipmi_config_sensors_seek_to_sdr_record (ipmi_config_state_data_t *state_data,
 							  const char *section_name);
 
-#endif /* IPMI_CONFIG_SENSORS_UTILS_H */
+#endif /* IPMI_CONFIG_CATEGORY_SENSORS_UTILS_H */

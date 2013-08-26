@@ -17,8 +17,8 @@
  */
 
 
-#ifndef IPMI_CONFIG_SENSORS_SENSOR_EVENT_ENABLE_COMMON_H
-#define IPMI_CONFIG_SENSORS_SENSOR_EVENT_ENABLE_COMMON_H
+#ifndef IPMI_CONFIG_CATEGORY_SENSORS_SENSOR_EVENT_ENABLE_COMMON_H
+#define IPMI_CONFIG_CATEGORY_SENSORS_SENSOR_EVENT_ENABLE_COMMON_H
 
 #include "ipmi-config.h"
 
@@ -41,4 +41,4 @@ ipmi_config_err_t sensor_event_enable_enable_scanning_on_this_sensor_commit (ipm
 int setup_sensor_event_enable_fields (ipmi_config_state_data_t *state_data,
                                       struct ipmi_config_section *section);
 
-#endif /* IPMI_CONFIG_SENSORS_SENSOR_EVENT_ENABLE_COMMON_H */
+#endif /* IPMI_CONFIG_CATEGORY_SENSORS_SENSOR_EVENT_ENABLE_COMMON_H */

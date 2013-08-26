@@ -17,11 +17,11 @@
  */
 
 
-#ifndef IPMI_CONFIG_PEF_EVENT_FILTER_TABLE_H
-#define IPMI_CONFIG_PEF_EVENT_FILTER_TABLE_H
+#ifndef IPMI_CONFIG_CATEGORY_PEF_EVENT_FILTER_TABLE_H
+#define IPMI_CONFIG_CATEGORY_PEF_EVENT_FILTER_TABLE_H
 
 #include "ipmi-config.h"
 
 struct ipmi_config_section * ipmi_config_pef_event_filter_table_section_get (ipmi_config_state_data_t *state_data, unsigned int num);
 
-#endif /* IPMI_CONFIG_PEF_EVENT_FILTER_TABLE_H */
+#endif /* IPMI_CONFIG_CATEGORY_PEF_EVENT_FILTER_TABLE_H */

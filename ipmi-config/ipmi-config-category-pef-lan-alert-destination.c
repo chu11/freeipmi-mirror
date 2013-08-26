@@ -36,8 +36,8 @@
 #include "freeipmi-portability.h"
 #include "pstdout.h"
 
-#define IPMI_CONFIG_PEF_MAXIPADDRLEN 16
-#define IPMI_CONFIG_PEF_MAXMACADDRLEN 24
+#define IPMI_CONFIG_CATEGORY_PEF_MAXIPADDRLEN 16
+#define IPMI_CONFIG_CATEGORY_PEF_MAXMACADDRLEN 24
 
 /* convenience structs */
 struct destination_type {
@@ -49,8 +49,8 @@ struct destination_type {
 
 struct destination_addresses {
   uint8_t alert_gateway;
-  char alert_ip[IPMI_CONFIG_PEF_MAXIPADDRLEN+1];
-  char alert_mac[IPMI_CONFIG_PEF_MAXMACADDRLEN+1];
+  char alert_ip[IPMI_CONFIG_CATEGORY_PEF_MAXIPADDRLEN+1];
+  char alert_mac[IPMI_CONFIG_CATEGORY_PEF_MAXMACADDRLEN+1];
 };
 
 static ipmi_config_err_t
@@ -502,9 +502,9 @@ _get_destination_addresses (ipmi_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  memset (da->alert_ip, '\0', IPMI_CONFIG_PEF_MAXIPADDRLEN+1);
+  memset (da->alert_ip, '\0', IPMI_CONFIG_CATEGORY_PEF_MAXIPADDRLEN+1);
   snprintf (da->alert_ip,
-            IPMI_CONFIG_PEF_MAXIPADDRLEN,
+            IPMI_CONFIG_CATEGORY_PEF_MAXIPADDRLEN,
             "%u.%u.%u.%u",
             alert_ip_address_bytes[0],
             alert_ip_address_bytes[1],
@@ -523,9 +523,9 @@ _get_destination_addresses (ipmi_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  memset (da->alert_mac, '\0', IPMI_CONFIG_PEF_MAXMACADDRLEN+1);
+  memset (da->alert_mac, '\0', IPMI_CONFIG_CATEGORY_PEF_MAXMACADDRLEN+1);
   snprintf (da->alert_mac,
-            IPMI_CONFIG_PEF_MAXMACADDRLEN,
+            IPMI_CONFIG_CATEGORY_PEF_MAXMACADDRLEN,
             "%02X:%02X:%02X:%02X:%02X:%02X",
             alert_mac_address_bytes[0],
             alert_mac_address_bytes[1],

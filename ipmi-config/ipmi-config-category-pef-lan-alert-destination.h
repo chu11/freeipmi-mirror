@@ -17,8 +17,8 @@
  */
 
 
-#ifndef IPMI_CONFIG_PEF_LAN_ALERT_DESTINATION_H
-#define IPMI_CONFIG_PEF_LAN_ALERT_DESTINATION_H
+#ifndef IPMI_CONFIG_CATEGORY_PEF_LAN_ALERT_DESTINATION_H
+#define IPMI_CONFIG_CATEGORY_PEF_LAN_ALERT_DESTINATION_H
 
 #include "ipmi-config.h"
 
@@ -27,4 +27,4 @@ struct ipmi_config_section * ipmi_config_pef_lan_alert_destination_section_get (
 									   unsigned int config_flags,
 									   int channel_index);
 
-#endif /* IPMI_CONFIG_PEF_LAN_ALERT_DESTINATION_H */
+#endif /* IPMI_CONFIG_CATEGORY_PEF_LAN_ALERT_DESTINATION_H */

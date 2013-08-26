@@ -44,7 +44,7 @@
 
 #define UNRECOGNIZED_SENSOR_TYPE "Unrecognized"
 
-#define IPMI_CONFIG_SENSORS_UNITS_BUFLEN 1024
+#define IPMI_CONFIG_CATEGORY_SENSORS_UNITS_BUFLEN 1024
 
 static ipmi_config_err_t
 _get_sdr_decoding_data (ipmi_config_state_data_t *state_data,
@@ -1273,7 +1273,7 @@ ipmi_config_sensors_threshold_section (ipmi_config_state_data_t *state_data,
   uint8_t sensor_base_unit_type;
   uint8_t sensor_modifier_unit_type;
   char description[IPMI_CONFIG_MAX_DESCRIPTION_LEN];
-  char sensor_units_buf[IPMI_CONFIG_SENSORS_UNITS_BUFLEN+1];
+  char sensor_units_buf[IPMI_CONFIG_CATEGORY_SENSORS_UNITS_BUFLEN+1];
   int sensor_units_ret;
   const char *sensor_type_str = NULL;
 
@@ -1346,14 +1346,14 @@ ipmi_config_sensors_threshold_section (ipmi_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  memset (sensor_units_buf, '\0', IPMI_CONFIG_SENSORS_UNITS_BUFLEN);
+  memset (sensor_units_buf, '\0', IPMI_CONFIG_CATEGORY_SENSORS_UNITS_BUFLEN);
   sensor_units_ret = ipmi_sensor_units_string (sensor_units_percentage,
                                                sensor_units_modifier,
                                                sensor_units_rate,
                                                sensor_base_unit_type,
                                                sensor_modifier_unit_type,
                                                sensor_units_buf,
-                                               IPMI_CONFIG_SENSORS_UNITS_BUFLEN,
+                                               IPMI_CONFIG_CATEGORY_SENSORS_UNITS_BUFLEN,
                                                0);
 
   sensor_type_str = ipmi_get_sensor_type_string (sensor_type);
