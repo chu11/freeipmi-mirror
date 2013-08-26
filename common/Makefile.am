@@ -1,5 +1,4 @@
 SUBDIRS = \
-	configtool \
 	debugutil \
 	miscutil \
 	parsecommon \

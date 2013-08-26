@@ -28,12 +28,10 @@ dnl define output files
 AC_CONFIG_FILES([
 	freeipmi.spec
         Makefile 
-        bmc-config/Makefile
         bmc-device/Makefile
         bmc-info/Makefile
         bmc-watchdog/Makefile 
         common/Makefile 
-        common/configtool/Makefile
         common/debugutil/Makefile
         common/miscutil/Makefile
         common/parsecommon/Makefile
@@ -44,18 +42,15 @@ AC_CONFIG_FILES([
         doc/Makefile 
         etc/Makefile
         ipmi-chassis/Makefile
-        ipmi-chassis-config/Makefile 
 	ipmi-config/Makefile
         ipmi-dcmi/Makefile
         ipmi-fru/Makefile
         ipmi-locate/Makefile
         ipmi-oem/Makefile
-        ipmi-pef-config/Makefile
         ipmi-pet/Makefile
         ipmi-raw/Makefile
         ipmi-sel/Makefile
         ipmi-sensors/Makefile
-        ipmi-sensors-config/Makefile
         ipmiconsole/Makefile
         ipmidetect/Makefile
         ipmidetectd/Makefile
