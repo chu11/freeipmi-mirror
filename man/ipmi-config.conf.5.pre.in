@@ -1,24 +1,25 @@
 .TH ipmi-config.conf 5 "@ISODATE@" "ipmi-config @PACKAGE_VERSION@" "System Commands"
 .SH "NAME"
-ipmi-config \- BMC configuration file format and details
+ipmi-config \- IPMI configuration file details
 .br
 .SH "DESCRIPTION"
 Before many IPMI tools can be used over a network, a machine's
 Baseboard Management Controller (BMC) must be configured.  The
-configuration of a BMC can be quite daunting for those who do not know
-much about IPMI.  This manpage hopes to provide enough information on
-BMC configuration so that you can configure the BMC for your system.
-When appropriate, typical BMC configurations will be suggested.
+configuration can be quite daunting for those who do not know much
+about IPMI.  This manpage hopes to provide enough information on BMC
+configuration so that you can configure the BMC for your system.  When
+appropriate, typical BMC configurations will be suggested.
 .LP
-The following is an example BMC configuration file partially generated
-from the
+The following is an example configuration file partially generated
+by running the \fI\-\-checkout\fR option with the
 .B ipmi-config(8)
-command.  This example configuration should be sufficient for most
-users after the appropriate local IP and MAC addresses are input.
-Following this example, separate sections of this manpage will discuss
-the different sections of the BMC configuration file in more detail
-with explanations of how the BMC can be configured for different
-environments.
+command.  This configuration comes from the \fIcore\fR category of
+configuration values (the default).  This example configuration should
+be sufficient for most users after the appropriate local IP and MAC
+addresses are input.  Following this example, separate sections of
+this manpage will discuss the different sections of the configuration
+file in more detail with explanations of how the BMC can be configured
+for different environments.
 .LP
 Note that many options may or may not be available on your particular
 machine.  For example, Serial-Over-Lan (SOL) is available only on IPMI
@@ -224,10 +225,6 @@ Future versions of this manpage will try to include more information.
      	Non_Volatile_Bit_Rate                        115200
      	## Possible values: Serial/9600/19200/38400/57600/115200
      	Volatile_Bit_Rate                            115200
-     EndSection
-     Section Misc
-     	## Possible Values: Off_State_AC_Apply/Restore_State_AC_Apply/On_State_AC_Apply
-     	Power_Restore_Policy                         Restore_State_Ac_Apply
      EndSection
 .fi
 
@@ -513,14 +510,7 @@ also be capable of connecting with SOL.  See the section
 .B "Section User1, User2, ..." 
 above for details.  
 
-.SH "Section Misc"
-The \fIPower_Restore_Policy\fR determines the behavior of the machine
-when AC power returns after a power loss.  The behavior can be set to
-always power on the machine ("On_State_AC_Apply"), power off the
-machine ("Off_State_AC_Apply"), or return the power to the state that
-existed before the power loss ("Restore_State_AC_Apply").
-
 #include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
 .SH "SEE ALSO"
-freeipmi(7), ipmi-config(8), bmc-watchdog(8), agetty(8)	
+freeipmi(7), bmc-watchdog(8), ipmi-config(8), agetty(8)	
 #include <@top_srcdir@/man/manpage-common-homepage.man>

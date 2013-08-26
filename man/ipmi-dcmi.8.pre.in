@@ -53,7 +53,7 @@ for device and globally unique ID (guid) information,
 .B ipmi-sensors(8)
 for sensor readings,
 and
-.B bmc-config(8)
+.B ipmi-config(8)
 for configuration.
 
 #include <@top_srcdir@/man/manpage-common-table-of-contents.man>
@@ -189,6 +189,6 @@ Get power limit across a cluster using IPMI over LAN.
 Copyright (C) 2009-2013 Lawrence Livermore National Security, LLC.
 #include <@top_srcdir@/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
-freeipmi(7), bmc-config(8), ipmi-chassis(8), ipmi-sel(8),
+freeipmi(7), ipmi-chassis(8), ipmi-config(8), ipmi-sel(8),
 ipmi-sensors(8), ipmiconsole(8), ipmipower(8)
 #include <@top_srcdir@/man/manpage-common-homepage.man>

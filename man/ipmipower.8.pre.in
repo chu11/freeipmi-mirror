@@ -527,5 +527,5 @@ Copyright (C) 2007-2013 Lawrence Livermore National Security, LLC.
 Copyright (C) 2003-2007 The Regents of the University of California.
 #include <@top_srcdir@/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
-freeipmi.conf(5), freeipmi(7), bmc-config(8), ipmi-oem(8)
+freeipmi.conf(5), freeipmi(7), ipmi-config(8), ipmi-oem(8)
 #include <@top_srcdir@/man/manpage-common-homepage.man>

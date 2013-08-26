@@ -607,7 +607,7 @@ to be correlated to BMC device channel and PEF configuration.  BMC
 device channel information can be viewed via
 .B bmc-info(8).
 PEF configuration can be viewed via
-.B ipmi-pef-config(8).
+.B ipmi-config(8).
 Command confirmed to work on Intel S2600JF (Appro 512X).
 .TP
 .B set-node-manager-alert-destination \fI[channelnumber=num]\fR \fI[slaveaddress=address]\fR \fI[destinationselector=num]\fR \fI[alertstringselector=num]\fR \fI[sendalertstring=yes|no]\fR \fI[register=yes|no]\fR 
@@ -623,7 +623,7 @@ Appropriate channel number input can be determined via
 .B bmc-info(8).
 Destination selector and alert string selector information can be
 determined via
-.B ipmi-pef-config(8).
+.B ipmi-config(8).
 Command confirmed to work on Intel S2600JF (Appro 512X).
 \}
 .TP
@@ -656,7 +656,7 @@ Inventec 5441/5442 (Dell Xanadu II/III).
 This command will retrieve the BMC MAC address.  This is actually not
 an OEM command, but rather the normal IPMI MAC address command
 (identical to what is used in the
-.B bmc-config(8)
+.B ipmi-config(8)
 tool).  This command is placed here for convenience.
 .TP
 .B set-mac-address \fIdedicated|shared\fR \fIMACADDR\fR
@@ -664,7 +664,7 @@ This OEM command will set the dedicated or shared BMC MAC address.
 (See \fIget\-nic\-mode\fR above for description on dedicated
 vs. shared mode.)  The BMC MAC address cannot be set through the
 normal IPMI MAC address command (what is used in the
-.B bmc-config(8)
+.B ipmi-config(8)
 tool).  The MACADDR should be specified in XX:XX:XX:XX:XX:XX form.  A
 shared BMC MAC address may conflict with normal communication ethernet
 communication on the primary ethernet port.  Users may wish to
@@ -1055,7 +1055,7 @@ a specified motherboard.  It will be written directly to the BMC
 eeprom.  (See \fIget\-nic\-mode\fR above for description on dedicated
 vs. shared mode.)  The BMC MAC address cannot be set through the
 normal IPMI MAC address command (what is used in the
-.B bmc-config(8)
+.B ipmi-config(8)
 tool).  The MACADDR should be specified in XX:XX:XX:XX:XX:XX form.  A
 shared BMC MAC address may conflict with normal communication ethernet
 communication on the primary ethernet port.  Users may wish to
@@ -1442,6 +1442,5 @@ cold-reset with
 Copyright \(co 2008-2013 FreeIPMI Core Team
 #include <@top_srcdir@/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
-freeipmi(7), bmc-config(8), bmc-device(8), ipmi-pef-config(8),
-ipmi-raw(8)
+freeipmi(7), ipmi-config(8), ipmi-raw(8)
 #include <@top_srcdir@/man/manpage-common-homepage.man>

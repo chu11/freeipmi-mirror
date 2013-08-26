@@ -34,7 +34,7 @@ reported.
 
 #include <@top_srcdir@/man/manpage-common-table-of-contents.man>
 To perform IPMI sensor configuration, please see
-.B ipmi-sensors-config(8).
+.B ipmi-config(8).
 To perform some advanced SDR management, please see
 .B bmc-device(8).
 
@@ -301,6 +301,6 @@ or \fB\-\-bridge\-sensors\fR options.
 Copyright \(co 2003-2013 FreeIPMI Core Team.  
 #include <@top_srcdir@/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
-freeipmi(7), bmc-config(8), bmc-device(8), ipmi-sensors-config(8),
+freeipmi(7), bmc-device(8), ipmi-config(8),
 freeipmi_interpret_sensor.conf(5)
 #include <@top_srcdir@/man/manpage-common-homepage.man>
