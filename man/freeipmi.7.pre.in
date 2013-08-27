@@ -121,7 +121,7 @@ for more information.
 .SH "HPC Support"
 Much of FreeIPMI was written with HPC support in mind.  
 .B Ipmi-config(8)
-come with file input/output support so that configuration can be
+comes with file input/output support so that configuration can be
 copied and verified across nodes in a cluster.  Most tools (like
 .B ipmipower(8) 
 and 
@@ -159,12 +159,6 @@ The following tools are distributed and supported by FreeIPMI.
 A tool to read information about a BMC such as device version numbers,
 device support, and globally unique IDs (guids).
 .PP
-.B Bmc-config
-.PP
-A tool to configure general BMC and IPMI information.  Supports
-configuration of usernames, passwords, networking information,
-security, Serial-over-LAN (SOL), and other core fields.
-.PP
 .B Bmc-watchdog
 .PP
 A tool/daemon to manage a BMC Watchdog. This tool is typically used
@@ -200,6 +194,14 @@ A tool for remote power control.
 .PP
 A tool for Serial-over-Lan (SOL) console access.
 .PP
+.B Ipmi-config
+.PP
+A tool to configure BMC and IPMI information.  In can be used to
+configured usernames, passwords, networking information, security,
+Serial-over-LAN (SOL), Platform Event Filtering (PEF), boot devices,
+power restoration policy, sensor thresholds, sensor events, and many
+more configuration options.
+.PP
 .B Ipmi-raw
 .PP
 A tool that provides hex input/output of IPMI commands.
@@ -209,24 +211,9 @@ A tool that provides hex input/output of IPMI commands.
 A tool that can probe for information about the location of a BMC
 device, such as device addresses.
 .PP
-.B Ipmi-chassis-config
-.PP
-A tool to configure IPMI chassis information.  Supports configuration
-of boot device, power restore policy, and other chassis related
-fields.
-.PP
-.B Ipmi-pef-config
-.PP
-A tool to configure Platform Event Filtering (PEF) information.
-.PP
 .B Ipmi-pet
 .PP
 A tool to parse and interpret Platform Event Traps (PET).
-.PP
-.B Ipmi-sensors-config
-.PP
-A tool to configure IPMI sensors.  Supports configuration of sensor
-thresholds, sensor events, and other sensor related fields.
 .PP
 .B Ipmi-dcmi
 .PP
