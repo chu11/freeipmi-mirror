@@ -88,5 +88,5 @@ Get BMC information across a cluster using IPMI over LAN.
 Copyright \(co 2003-2013 FreeIPMI Core Team.  
 #include <@top_srcdir@/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
-freeipmi.conf(5), freeipmi(7), bmc-config(8)
+freeipmi.conf(5), freeipmi(7), ipmi-config(8)
 #include <@top_srcdir@/man/manpage-common-homepage.man>
