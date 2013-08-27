@@ -37,6 +37,8 @@ ipmi_config_SOURCES = \
 	ipmi-config-category-chassis-power-conf.h \
 	ipmi-config-category-chassis-sections.c \
 	ipmi-config-category-chassis-sections.h \
+	ipmi-config-category-common-pef-conf-section.c \
+	ipmi-config-category-common-pef-conf-section.h \
 	ipmi-config-category-core-channel-common.c \
 	ipmi-config-category-core-channel-common.h \
 	ipmi-config-category-core-lan-channel-section.c \
@@ -97,8 +99,6 @@ ipmi_config_SOURCES = \
 	ipmi-config-comment.h \
 	ipmi-config-commit.c \
 	ipmi-config-commit.h \
-	ipmi-config-common-pef-conf-section.c \
-	ipmi-config-common-pef-conf-section.h \
 	ipmi-config-diff.c \
 	ipmi-config-diff.h \
 	ipmi-config-legacy-pef-info.c \

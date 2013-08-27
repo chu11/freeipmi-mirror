@@ -28,9 +28,9 @@
 #include <assert.h>
 
 #include "ipmi-config.h"
-#include "ipmi-config-common-pef-conf-section.h"
 #include "ipmi-config-section.h"
 #include "ipmi-config-validate.h"
+#include "ipmi-config-category-common-pef-conf-section.h"
 
 #include "freeipmi-portability.h"
 
