@@ -4,7 +4,7 @@ by
 
 Albert Chu
 chu11@llnl.gov
-Last Updated: September 20, 2012
+Last Updated: August 27, 2013
 
 The following is a list of tests I've (semi) regularly done to measure
 the compliance of a motherboard to IPMI as well as FreeIPMI's
@@ -66,16 +66,16 @@ SOL1 - A non-null username, with a password, the highest privilege
 this user can authenticate with is identical to the SOL privilege
 level, and SOL payload access is enabled.
 
-Bmc-config Testing
-------------------
+Ipmi-config Testing
+-------------------
 
-Goal: The goal of the bmc-config testing is to ensure that all IPMI
+Goal: The goal of the ipmi-config testing is to ensure that all IPMI
 configuration values can be read, written, and "stick" after being
 written.
 
 Test)
 
-Execute bmc-config with --checkout on a default/unmodified
+Execute ipmi-config with --checkout on a default/unmodified
 manufacturered system.
 
 Using the --commit and --filename options, commit the checked out
@@ -86,7 +86,7 @@ If it cannot, is there a "default" configuration that is "invalid"?
 
 Test)
 
-Execute bmc-config with --checkout, verify checked out configuration
+Execute ipmi-config with --checkout, verify checked out configuration
 contains all appropriate configurable fields.  At minimum, the fields
 listed below should be output:
 - For each "User" section:
@@ -162,7 +162,7 @@ possibilities.  Then for each configuration change:
 
 - Using the --diff and --filename options, verify that each field
   modified in the configuration file is indeed different than what is
-  currently stored on the BMC.  Bmc-config should output each
+  currently stored on the BMC.  ipmi-config should output each
   difference to stdout.
 
 - Using the --commit and --filename options, commit the configuration
@@ -170,7 +170,7 @@ possibilities.  Then for each configuration change:
 
 - Using the --diff and --filename options, verify that each field has
   been written to the BMC and there are no longer any differences
-  Bmc-config should not output anything to stdout.
+  ipmi-config should not output anything to stdout.
 
 - Ensure that fields can be changed once and then changed back.  For
   example for Yes/No fields, configure a "Yes" to a "No", then back
@@ -338,7 +338,7 @@ saved across a reboot.
 
 Test)
 
-If any parameters on the system are read only, does bmc-config output
+If any parameters on the system are read only, does ipmi-config output
 "Read Only Field" appropriately?
 
 If not, is the field returning the proper completion code (typically
@@ -566,7 +566,7 @@ the remote machine to accept sysrqs (in Linux, this requires
 configuration of console=ttySX on the kernel boot line).
 
 For purpose of this set of tests, consider this set of configuration
-options from bmc-config the "pristine" SOL configuration and the SOL1
+options from ipmi-config the "pristine" SOL configuration and the SOL1
 user configuration.
 
 Section UserX
@@ -863,7 +863,7 @@ Out-of-Band IPMI 1.5 Testing
 Goal: Ensure all important features function properly.
 
 For purpose of this set of tests, consider this set of configuration
-options from bmc-config the "pristine" BMC configuration and user
+options from ipmi-config the "pristine" BMC configuration and user
 configuration.
 
 Section User1
@@ -1114,7 +1114,7 @@ Out-of-Band IPMI 2.0 Testing
 Goal: Ensure all important features function properly.
 
 For purpose of this set of tests, consider this set of configuration
-options from bmc-config the "pristine" BMC configuration and user
+options from ipmi-config the "pristine" BMC configuration and user
 configuration.
 
 Section User1

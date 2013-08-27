@@ -4,7 +4,7 @@ by
 
 Albert Chu
 chu11@llnl.gov
-Last Updated: January 20, 2011
+Last Updated: August 27, 2013
 
 1) Introduction with Pdsh
 -------------------------
@@ -425,19 +425,18 @@ ipmi-raw:
 The output of ipmi-raw will likely be only 1 long line.  The
 consolidated output is likely what you're interested in using.
 
-bmc-config/ipmi-chassis-config/ipmi-pef-config/ipmi-sensors-config:
+ipmi-config:
 
-The typical use of one of the above config tools is to run w/
---checkout to checkout a configuration, modify that file with new
-configuration information, then run w/ --commit to write the new
-configuration.  I imagine most users will only run with hostrange
-support with the --commit option to configure multiple machines in
-parallel.  Note that since a significant amount of configuration must
-be done in-band before out-of-band communication can occur
-(i.e. configuring IP addresses, MAC addresses), most may elect to not
-configure a machine out of band at all.  The --diff option may be used
-across many machines to see if a configuration differs on any machine
-within a cluster.
+The typical use is to run w/ --checkout to checkout a configuration,
+modify that file with new configuration information, then run w/
+--commit to write the new configuration.  I imagine most users will
+only run with hostrange support with the --commit option to configure
+multiple machines in parallel.  Note that since a significant amount
+of configuration must be done in-band before out-of-band communication
+can occur (i.e. configuring IP addresses, MAC addresses), most may
+elect to not configure a machine out of band at all.  The --diff
+option may be used across many machines to see if a configuration
+differs on any machine within a cluster.
 
 4) Exceptions to the hostrange support in FreeIPMI
 --------------------------------------------------
@@ -446,10 +445,10 @@ The hostrange input/output is not been supported in a few situations.
 
 o Each BMC in the cluster must be configured with a different IP
 address and MAC address.  So the parallelism that the hostrange input
-gives you effectively cannot be used when trying to use bmc-config's
+gives you effectively cannot be used when trying to use ipmi-config's
 --commit option to configure a cluster using one config file.
 Therefore we prohibit hostranged input when trying to configure these
-values in bmc-config.
+values in ipmi-config.
 
 o Ipmipower was written with a different architecture than bmc-info,
 ipmi-sensors, ipmi-sel, etc. because of need for it to interact with

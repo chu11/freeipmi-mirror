@@ -4,7 +4,7 @@ by
 
 Albert Chu
 chu11@llnl.gov
-Last Updated: January 20, 2011
+Last Updated: August 27, 2013
 
 These are some notes on various design decisions made in FreeIPMI.
 
@@ -425,10 +425,8 @@ could change this viewpoint later.
 4) Configuration tool callback design
 -------------------------------------
 
-Bmc-config, Ipmi-chassis-config, Ipmi-pef-config, and
-Ipmi-sensors-config (henceforce together just called Configtools) are
-coded with a archicture that reads/writes each configurable field in
-the BMC separately.
+Ipmi-config is coded with a archicture that reads/writes each
+configurable field in the BMC separately.
 
 As an example, suppose we have the following BMC configuration file
 we'd like to commit.
@@ -442,10 +440,10 @@ FieldB.4     Value5
 Suppose FieldA is read/written using a single IPMI packet and fields
 FieldB.1-FieldB.4 can be read/written using a single IPMI packet.
 
-In the architecture that the Configtools are currently based on, the
-above would require 5 read requests to read all 5 values.  It would
-require 1 read request for FieldA, 4 read requests for
-FieldB.1-FieldB.4, and 5 write requests to write the values.
+In the architecture that ipmi-config is currently based on, the above
+would require 5 read requests to read all 5 values.  It would require
+1 read request for FieldA, 4 read requests for FieldB.1-FieldB.4, and
+5 write requests to write the values.
 
 Obviously, this sounds like (and is!) very inefficient. 
 
