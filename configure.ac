@@ -71,27 +71,22 @@ AC_CONFIG_FILES([
         libipmimonitoring/ipmi_monitoring.h
         libipmimonitoring/libipmimonitoring.pc
         man/Makefile
-        man/bmc-config.8.pre
-        man/bmc-config.conf.5.pre
         man/bmc-device.8.pre
         man/bmc-info.8.pre
         man/bmc-watchdog.8.pre
         man/freeipmi.conf.5.pre
         man/freeipmi.7.pre
         man/ipmi-chassis.8.pre
-        man/ipmi-chassis-config.8.pre
         man/ipmi-config.8.pre
         man/ipmi-config.conf.5.pre
 	man/ipmi-dcmi.8.pre
 	man/ipmi-fru.8.pre
 	man/ipmi-locate.8.pre
 	man/ipmi-oem.8.pre
-	man/ipmi-pef-config.8.pre
 	man/ipmi-pet.8.pre
 	man/ipmi-raw.8.pre
 	man/ipmi-sel.8.pre
 	man/ipmi-sensors.8.pre
-	man/ipmi-sensors-config.8.pre
 	man/ipmiconsole.8.pre
 	man/ipmidetect.8.pre
 	man/ipmidetect.conf.5.pre

@@ -10,6 +10,7 @@ update all config-file bmc-config, ipmi-sensors-config, ipmi-chassis-config, ipm
   - maybe need a special --legacy hidden option
 if section name not recognized indicate bad category in error message
 - handle w/ special case output if legacy
+deal w/ parsing workaround options
   
 *** - priority for future major release
 XXX - priority for future minor release

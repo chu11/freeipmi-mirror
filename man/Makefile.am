@@ -58,25 +58,19 @@ man8_MANS = \
 	rmcp-ping.8
 
 MANS_CPP = \
-	bmc-config.8 \
-	bmc-config.conf.5 \
 	bmc-device.8 \
 	bmc-info.8 \
 	bmc-watchdog.8 \
 	ipmi-chassis.8 \
-	ipmi-chassis-config.8 \
 	ipmi-config.8 \
-	ipmi-config.conf.5 \
 	ipmi-dcmi.8 \
 	ipmi-fru.8 \
 	ipmi-locate.8 \
 	ipmi-oem.8 \
-	ipmi-pef-config.8 \
 	ipmi-pet.8 \
 	ipmi-raw.8 \
 	ipmi-sel.8 \
 	ipmi-sensors.8 \
-	ipmi-sensors-config.8 \
 	ipmiconsole.8 \
 	ipmidetect.8 \
 	ipmidetect.conf.5 \
@@ -98,10 +92,16 @@ MANS_CPP = \
 	rmcpping.8
 
 MANS_NOCPP = \
+	bmc-config.8 \
+	bmc-config.conf.5 \
+	ipmi-chassis-config.8 \
+	ipmi-config.conf.5 \
 	ipmi-console.8 \
 	ipmi-detect.8 \
+	ipmi-pef-config.8 \
 	ipmi-ping.8 \
 	ipmi-power.8 \
+	ipmi-sensors-config.8 \
 	ipmiconsole.conf.5 \
 	ipmipower.conf.5 \
 	ipmimonitoring.8 \
