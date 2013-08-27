@@ -44,11 +44,11 @@ To use IPMI out-of-band with tools such as ipmipower(8) or
 ipmi-sensors(8), the remote machine's BMC must first be configured for
 out of band communication.  Typically, this involves setting a
 username, password, IP address, MAC address, and a few other
-parameters.  This can be done using the tool bmc-config(8).
-Additional information on how to configure with bmc-config(8) can be
-found in the bmc-config.conf(5) manpage.  Some vendors may
+parameters.  This can be done using the tool ipmi-config(8).
+Additional information on how to configure with ipmi-config(8) can be
+found in the ipmi-config.conf(5) manpage.  Some vendors may
 pre-configure their motherboards with default values so that
-bmc-config(8) can be used remotely to configure the machine.  However,
+ipmi-config(8) can be used remotely to configure the machine.  However,
 most of the time, the BMC must be configured in-band before
 out-of-band access can be allowed (for example, the correct IP address
 and MAC address must be configured).
@@ -112,20 +112,18 @@ for more information.
 HPC Support
 -----------
 
-Much of FreeIPMI was written with HPC support in mind.  The
-configuration tools (bmc-config(8), pef-config(8),
-ipmi-sensors-config(8), and ipmi-chassis-config(8), come with file
-input/output support so that configuration can be copied and verified
-across nodes in a cluster.  Most tools (like ipmipower(8) and
-ipmi-sensors(8)) come with hostrange support so multiple hosts can be
-specified on the command line at the same time and IPMI can be
-executed against the hosts in parallel.  See tool manpages for more
-information.  Also see the document freeipmi-hostrange.txt for
-detailed usage and explanation.  Ipmi-sensors(8) and the
-libipmimonitoring(3) library support the ability to interpret sensor
-readings as well as just reporting them.  By mapping sensor readings
-into NOMINAL, WARNING, or CRITICAL states, it makes monitoring sensors
-easier across large numbers of nodes.
+Much of FreeIPMI was written with HPC support in mind.  Ipmi-config(8)
+comes with file input/output support so that configuration can be
+copied and verified across nodes in a cluster.  Most tools (like
+ipmipower(8) and ipmi-sensors(8)) come with hostrange support so
+multiple hosts can be specified on the command line at the same time
+and IPMI can be executed against the hosts in parallel.  See tool
+manpages for more information.  Also see the document
+freeipmi-hostrange.txt for detailed usage and explanation.
+Ipmi-sensors(8) and the libipmimonitoring(3) library support the
+ability to interpret sensor readings as well as just reporting them.
+By mapping sensor readings into NOMINAL, WARNING, or CRITICAL states,
+it makes monitoring sensors easier across large numbers of nodes.
 
 Development
 -----------
@@ -144,12 +142,6 @@ Bmc-info
 
 A tool to read information about a BMC such as device version numbers,
 device support, and globally unique IDs (guids).
-
-Bmc-config
-
-A tool to configure general BMC and IPMI information.  Supports
-configuration of usernames, passwords, networking information,
-security, Serial-over-LAN (SOL), and other core fields.
 
 Bmc-watchdog
 
@@ -186,6 +178,14 @@ Ipmiconsole
 
 A tool for Serial-over-Lan (SOL) console access.
 
+Ipmi-config
+
+A tool to configure BMC and IPMI information.  In can be used to
+configured usernames, passwords, networking information, security,
+Serial-over-LAN (SOL), Platform Event Filtering (PEF), boot devices,
+power restoration policy, sensor thresholds, sensor events, and many
+more configuration options.
+
 Ipmi-raw
 
 A tool that provides hex input/output of IPMI commands.
@@ -195,24 +195,9 @@ Ipmi-locate
 A tool that can probe for information about the location of a BMC
 device, such as device addresses.
 
-Ipmi-chassis-config
-
-A tool to configure IPMI chassis information.  Supports configuration
-of boot device, power restore policy, and other chassis related
-fields.
-
-Ipmi-pef-config
-
-A tool to configure Platform Event Filtering (PEF) information.
-
 Ipmi-pet
 
 A tool to parse and interpret Platform Event Traps (PET).
-
-Ipmi-sensors-config
-
-A tool to configure IPMI sensors.  Supports configuration of sensor
-thresholds, sensor events, and other sensor related fields.
 
 Ipmi-dcmi
 
