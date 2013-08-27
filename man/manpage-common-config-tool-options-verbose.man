@@ -1,5 +1,0 @@
-.TP
-\fB\-v\fR, \fB\-\-verbose\fR
-Output verbose information.  When used with \-\-checkout, additional
-uncommon sections and/or fields will be shown.
-

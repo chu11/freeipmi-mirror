@@ -276,6 +276,7 @@ fi
 %{_sbindir}/bmc-config
 %{_sbindir}/bmc-info
 %{_sbindir}/bmc-device
+%{_sbindir}/ipmi-config
 %{_sbindir}/ipmi-fru
 %{_sbindir}/ipmi-locate
 %{_sbindir}/ipmi-oem
@@ -304,6 +305,7 @@ fi
 %{_mandir}/man5/bmc-config.conf.5*
 %{_mandir}/man8/bmc-info.8*
 %{_mandir}/man8/bmc-device.8*
+%{_mandir}/man8/ipmi-config.8*
 %{_mandir}/man8/ipmi-fru.8*
 %{_mandir}/man8/ipmi-locate.8*
 %{_mandir}/man8/ipmi-oem.8*
@@ -421,6 +423,9 @@ fi
 %dir %{_localstatedir}/cache/ipmiseld
 
 %changelog
+* Mon Aug 26 2013 Albert Chu <chu11@llnl.gov> 1.4.1
+- Add ipmi-config tool and manpage
+
 * Tue Jul 10 2012 Albert Chu <chu11@llnl.gov> 1.2.1
 - Add ipmiseld daemon and subpackage.
 - Update paths for libfreeipmi changes.

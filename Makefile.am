@@ -11,21 +11,18 @@ SUBDIRS = \
 	libipmimonitoring \
 	libipmidetect \
 	man \
-	bmc-config \
 	bmc-info \
 	bmc-device \
 	bmc-watchdog \
 	ipmi-chassis \
-	ipmi-chassis-config \
+	ipmi-config \
 	ipmi-dcmi \
 	ipmi-fru \
 	ipmi-oem \
-	ipmi-pef-config \
 	ipmi-pet \
 	ipmi-raw \
 	ipmi-sel \
 	ipmi-sensors \
-	ipmi-sensors-config \
 	ipmi-locate \
 	ipmiconsole \
 	ipmidetect \

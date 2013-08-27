@@ -1,3 +1,19 @@
+2013-08-27  Albert Chu <chu11@llnl.gov>
+
+	Merge branch configcollapse.
+
+	* ipmi-config/: New tool.
+
+	* bmc-config/, ipmi-pef-config/, ipmi-sensors-config/,
+	ipmi-chassis-config/: Remove tools.
+
+	* common/configtool/: Remove common files. 
+
+	* common/toolcommon/: Update config file parsing to recognize
+	ipmi-config and legacy options.
+
+	* doc/, man/: Update documentation appropriately for change.
+	
 2013-08-22  Albert Chu <chu11@llnl.gov>
 
 	* configure.ac, NEWS: Update for release.

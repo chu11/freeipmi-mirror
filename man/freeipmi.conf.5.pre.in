@@ -15,20 +15,17 @@ usernames, passwords, and other sensitive information from the
 command.
 .LP
 Currently, the tools that can be configured with the configuration file are: 
-.B bmc-config(8),
 .B bmc-device(8),
 .B bmc-info(8),
 .B bmc-watchdog(8),
 .B ipmi-chassis(8),
-.B ipmi-chassis-config(8),
+.B ipmi-config(8),
 .B ipmi-fru(8),
 .B ipmi-oem(8),
-.B ipmi-pef-config(8),
 .B ipmi-pet(8),
 .B ipmi-raw(8),
 .B ipmi-sel(8),
 .B ipmi-sensors(8),
-.B ipmi-sensors-config(8),
 .B ipmiconsole(8), 
 and
 .B ipmipower(8).
@@ -169,70 +166,6 @@ Specify if undetected hosts should be eliminated by default.
 .TP
 \fBalways\-prefix\fR \fIENABLE|DISABLE\fR
 Specify if output should be always prefixed by default.
-
-.SH "BMC-CONFIG OPTIONS"
-The following options are specific to 
-.B bmc-config(8).
-They will be ignored by other tools.
-.TP
-\fBbmc\-config\-username\fR \fIUSERNAME\fR
-Specify the default username to use for
-.B bmc-config(8).
-If specified, will override the general option 
-\fBusername\fR 
-above.
-.TP
-\fBbmc\-config\-password\fR \fIPASSWORD\fR
-Specify the default password to use for
-.B bmc-config(8).
-If specified, will override the general option 
-\fBpassword\fR 
-above.
-.TP
-\fBbmc\-config\-k_g\fR \fIstr\fR
-Specify the default BMC key (K_g) to use for
-.B bmc-config(8).  
-If specified, will override the general option 
-\fBk_g\fR 
-above.  Prefix with '0x' to enter the key in hex.
-.TP
-\fBbmc\-config\-authentication\-type\fR \fIAUTHENTICATION\-TYPE\fR
-Specify the default authentication type to use for
-.B bmc-config(8).  
-If specified, will override the general option 
-\fBauthentication-type\fR 
-above.  The following authentication types are supported: NONE,
-STRAIGHT_PASSWORD_KEY, MD2, and MD5.
-.TP
-\fBbmc\-config\-cipher\-suite\-id\fR \fICIPHER\-SUITE\-ID\fR
-Specify the default cipher suite id to use for
-.B bmc-config(8).
-If specified, will override the general option 
-\fBcipher-suite-id\fR 
-above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
-7, 8, 11, 12.
-.TP
-\fBbmc\-config\-privilege\-level\fR \fIPRIVILEGE\-LEVEL\fR
-Specify the default privilege type to use for
-.B bmc-config(8).
-If specified, will override the general option 
-\fBprivilege-level\fR 
-above.  The following privilege levels are supported: USER, OPERATOR,
-ADMIN.
-.TP
-\fBbmc\-config\-workaround\-flags\fR \fIWORKAROUNDS\fR
-Specify default workaround flags to use for
-.B bmc-config(8).  
-If specified, will override the general options
-\fBworkaround\-flags\fR
-above.  Multiple workarounds can be specified separated by whitespace.
-Please see 
-.B bmc-config(8) 
-manpage for available workarounds.
-.TP
-\fBbmc\-config\-verbose\-count\fR \fICOUNT\fR
-Specify default verbose count to use for
-.B bmc-config(8).
 
 .SH "BMC-DEVICE OPTIONS"
 The following options are specific to 
@@ -440,69 +373,69 @@ Please see
 .B ipmi-chassis(8) 
 manpage for available workarounds.
 
-.SH "IPMI-CHASSIS-CONFIG OPTIONS"
+.SH "IPMI-CONFIG OPTIONS"
 The following options are specific to 
-.B ipmi-chassis-config(8).
+.B ipmi-config(8).
 They will be ignored by other tools.
 .TP
-\fBipmi\-chassis-config\-username\fR \fIUSERNAME\fR
+\fBipmi\-config\-username\fR \fIUSERNAME\fR
 Specify the default username to use for
-.B ipmi-chassis-config(8).
+.B ipmi-config(8).
 If specified, will override the general option 
 \fBusername\fR 
 above.
 .TP
-\fBipmi\-chassis-config\-password\fR \fIPASSWORD\fR
+\fBipmi\-config\-password\fR \fIPASSWORD\fR
 Specify the default password to use for
-.B ipmi-chassis-config(8).
+.B ipmi-config(8).
 If specified, will override the general option 
 \fBpassword\fR 
 above.
 .TP
-\fBipmi\-chassis-config\-k_g\fR \fIstr\fR
-Specify the default BMC key (K_g) to use for
-.B ipmi-chassis-config(8).  
+\fBipmi\-config\-k_g\fR \fIstr\fR
+Specify the default IPMI key (K_g) to use for
+.B ipmi-config(8).  
 If specified, will override the general option 
 \fBk_g\fR 
 above.  Prefix with '0x' to enter the key in hex.
 .TP
-\fBipmi\-chassis-config\-authentication\-type\fR \fIAUTHENTICATION\-TYPE\fR
+\fBipmi\-config\-authentication\-type\fR \fIAUTHENTICATION\-TYPE\fR
 Specify the default authentication type to use for
-.B ipmi-chassis-config(8).  
+.B ipmi-config(8).  
 If specified, will override the general option 
 \fBauthentication-type\fR 
 above.  The following authentication types are supported: NONE,
 STRAIGHT_PASSWORD_KEY, MD2, and MD5.
 .TP
-\fBipmi\-chassis-config\-cipher\-suite\-id\fR \fICIPHER\-SUITE\-ID\fR
+\fBipmi\-config\-cipher\-suite\-id\fR \fICIPHER\-SUITE\-ID\fR
 Specify the default cipher suite id to use for
-.B ipmi-chassis-config(8).
+.B ipmi-config(8).
 If specified, will override the general option 
 \fBcipher-suite-id\fR 
 above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
 7, 8, 11, 12.
 .TP
-\fBipmi\-chassis-config\-privilege\-level\fR \fIPRIVILEGE\-LEVEL\fR
+\fBipmi\-config\-privilege\-level\fR \fIPRIVILEGE\-LEVEL\fR
 Specify the default privilege type to use for
-.B ipmi-chassis-config(8).
+.B ipmi-config(8).
 If specified, will override the general option 
 \fBprivilege-level\fR 
 above.  The following privilege levels are supported: USER, OPERATOR,
 ADMIN.
 .TP
-\fBipmi\-chassis-config\-workaround\-flags\fR \fIWORKAROUNDS\fR
+\fBipmi\-config\-workaround\-flags\fR \fIWORKAROUNDS\fR
 Specify default workaround flags to use for
-.B ipmi-chassis-config(8).  
+.B ipmi-config(8).  
 If specified, will override the general options
 \fBworkaround\-flags\fR
 above.  Multiple workarounds can be specified separated by whitespace.
 Please see 
-.B ipmi-chassis-config(8) 
+.B ipmi-config(8) 
 manpage for available workarounds.
 .TP
-\fBipmi\-chassis-config\-verbose\-count\fR \fICOUNT\fR
+\fBipmi\-config\-verbose\-count\fR \fICOUNT\fR
 Specify default verbose count to use for
-.B ipmi-chassis-config(8).
+.B ipmi-config(8).
 
 .SH "IPMI-DCMI OPTIONS"
 The following options are specific to 
@@ -710,70 +643,6 @@ manpage for available workarounds.
 \fBipmi\-oem\-verbose\-count\fR \fICOUNT\fR
 Specify default verbose count to use for
 .B ipmi-oem(8).
-
-.SH "IPMI-PEF-CONFIG OPTIONS"
-The following options are specific to 
-.B ipmi-pef-config(8).
-They will be ignored by other tools.
-.TP
-\fBipmi\-pef\-config\-username\fR \fIUSERNAME\fR
-Specify the default username to use for
-.B ipmi-pef-config(8).
-If specified, will override the general option 
-\fBusername\fR 
-above.
-.TP
-\fBipmi\-pef\-config\-password\fR \fIPASSWORD\fR
-Specify the default password to use for
-.B ipmi-pef-config(8).
-If specified, will override the general option 
-\fBpassword\fR 
-above.
-.TP
-\fBipmi\-pef\-config\-k_g\fR \fIstr\fR
-Specify the default BMC key (K_g) to use for
-.B ipmi-pef-config(8).  
-If specified, will override the general option 
-\fBk_g\fR 
-above.  Prefix with '0x' to enter the key in hex.
-.TP
-\fBipmi\-pef\-config\-authentication\-type\fR \fIAUTHENTICATION\-TYPE\fR
-Specify the default authentication type to use for
-.B ipmi-pef-config(8).  
-If specified, will override the general option 
-\fBauthentication-type\fR 
-above.  The following authentication types are supported: NONE,
-STRAIGHT_PASSWORD_KEY, MD2, and MD5.
-.TP
-\fBipmi\-pef\-config\-cipher\-suite\-id\fR \fICIPHER\-SUITE\-ID\fR
-Specify the default cipher suite id to use for
-.B ipmi-pef-config(8).
-If specified, will override the general option 
-\fBcipher-suite-id\fR 
-above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
-7, 8, 11, 12.
-.TP
-\fBipmi\-pef\-config\-privilege\-level\fR \fIPRIVILEGE\-LEVEL\fR
-Specify the default privilege type to use for
-.B ipmi-pef-config(8).
-If specified, will override the general option 
-\fBprivilege-level\fR 
-above.  The following privilege levels are supported: USER, OPERATOR,
-ADMIN.
-.TP
-\fBipmi\-pef\-config\-workaround\-flags\fR \fIWORKAROUNDS\fR
-Specify default workaround flags to use for
-.B ipmi-pef-config(8).  
-If specified, will override the general options
-\fBworkaround\-flags\fR
-above.  Multiple workarounds can be specified separated by whitespace.
-Please see 
-.B ipmi-pef-config(8) 
-manpage for available workarounds.
-.TP
-\fBipmi\-pef\-config\-verbose\-count\fR \fICOUNT\fR
-Specify default verbose count to use for
-.B ipmi-pef-config(8).
 
 .SH "IPMI-PET OPTIONS"
 The following options are specific to 
@@ -1224,70 +1093,6 @@ Specify if output should be in
 .B ipmimonitoring
 legacy format by default or not.
 
-.SH "IPMI-SENSORS-CONFIG OPTIONS"
-The following options are specific to 
-.B ipmi-sensors-config(8).
-They will be ignored by other tools.
-.TP
-\fBipmi\-sensors-config\-username\fR \fIUSERNAME\fR
-Specify the default username to use for
-.B ipmi-sensors-config(8).
-If specified, will override the general option 
-\fBusername\fR 
-above.
-.TP
-\fBipmi\-sensors-config\-password\fR \fIPASSWORD\fR
-Specify the default password to use for
-.B ipmi-sensors-config(8).
-If specified, will override the general option 
-\fBpassword\fR 
-above.
-.TP
-\fBipmi\-sensors-config\-k_g\fR \fIstr\fR
-Specify the default BMC key (K_g) to use for
-.B ipmi-sensors-config(8).  
-If specified, will override the general option 
-\fBk_g\fR 
-above.  Prefix with '0x' to enter the key in hex.
-.TP
-\fBipmi\-sensors-config\-authentication\-type\fR \fIAUTHENTICATION\-TYPE\fR
-Specify the default authentication type to use for
-.B ipmi-sensors-config(8).  
-If specified, will override the general option 
-\fBauthentication-type\fR 
-above.  The following authentication types are supported: NONE,
-STRAIGHT_PASSWORD_KEY, MD2, and MD5.
-.TP
-\fBipmi\-sensors-config\-cipher\-suite\-id\fR \fICIPHER\-SUITE\-ID\fR
-Specify the default cipher suite id to use for
-.B ipmi-sensors-config(8).
-If specified, will override the general option 
-\fBcipher-suite-id\fR 
-above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
-7, 8, 11, 12.
-.TP
-\fBipmi\-sensors-config\-privilege\-level\fR \fIPRIVILEGE\-LEVEL\fR
-Specify the default privilege type to use for
-.B ipmi-sensors-config(8).
-If specified, will override the general option 
-\fBprivilege-level\fR 
-above.  The following privilege levels are supported: USER, OPERATOR,
-ADMIN.
-.TP
-\fBipmi\-sensors-config\-workaround\-flags\fR \fIWORKAROUNDS\fR
-Specify default workaround flags to use for
-.B ipmi-sensors-config(8).  
-If specified, will override the general options
-\fBworkaround\-flags\fR
-above.  Multiple workarounds can be specified separated by whitespace.
-Please see 
-.B ipmi-sensors-config(8) 
-manpage for available workarounds.
-.TP
-\fBipmi\-sensors-config\-verbose\-count\fR \fICOUNT\fR
-Specify default verbose count to use for
-.B ipmi-sensors-config(8).
-
 .SH "IPMICONSOLE OPTIONS"
 The following options are specific to 
 .B ipmiconsole(8).
@@ -1473,8 +1278,8 @@ Copyright \(co 2003-2013 FreeIPMI Core Team.
 #include <@top_srcdir@/man/manpage-common-gpl-freeipmi-text.man>
 
 .SH "SEE ALSO"
-freeipmi(7), bmc-config(8), bmc-device(8), bmc-info(8),
-bmc-watchdog(8), ipmi-chassis(8), ipmi-chassis-config(8), ipmi-fru(8),
-ipmi-oem(8), ipmi-pef-config(8), ipmi-raw(8), ipmi-sel(8),
-ipmi-sensors(8), ipmi-sensors-config(8), ipmiconsole(8), ipmipower(8)
+freeipmi(7), bmc-device(8), bmc-info(8), bmc-watchdog(8),
+ipmi-chassis(8), ipmi-config(8), ipmi-fru(8), ipmi-oem(8),
+ipmi-raw(8), ipmi-sel(8), ipmi-sensors(8), ipmiconsole(8),
+ipmipower(8)
 #include <@top_srcdir@/man/manpage-common-homepage.man>

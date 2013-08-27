@@ -34,24 +34,21 @@
 #define CONFIG_FILE_HOSTRANGE   0x10
 
 #define CONFIG_FILE_TOOL_NONE                0x00000000
-#define CONFIG_FILE_TOOL_BMC_CONFIG          0x00000001
-#define CONFIG_FILE_TOOL_BMC_DEVICE          0x00000002
-#define CONFIG_FILE_TOOL_BMC_INFO            0x00000004
-#define CONFIG_FILE_TOOL_BMC_WATCHDOG        0x00000008
-#define CONFIG_FILE_TOOL_IPMI_CHASSIS        0x00000010
-#define CONFIG_FILE_TOOL_IPMI_CHASSIS_CONFIG 0x00000020
-#define CONFIG_FILE_TOOL_IPMI_DCMI           0x00000040
-#define CONFIG_FILE_TOOL_IPMI_FRU            0x00000080
-#define CONFIG_FILE_TOOL_IPMI_OEM            0x00000100
-#define CONFIG_FILE_TOOL_IPMI_PEF_CONFIG     0x00000200
-#define CONFIG_FILE_TOOL_IPMI_PET            0x00000400
-#define CONFIG_FILE_TOOL_IPMI_RAW            0x00000800
-#define CONFIG_FILE_TOOL_IPMI_SEL            0x00001000
-#define CONFIG_FILE_TOOL_IPMI_SENSORS        0x00002000
-#define CONFIG_FILE_TOOL_IPMI_SENSORS_CONFIG 0x00004000
-#define CONFIG_FILE_TOOL_IPMICONSOLE         0x00008000
-#define CONFIG_FILE_TOOL_IPMIPOWER           0x00010000
-#define CONFIG_FILE_TOOL_IPMISELD            0x00020000
+#define CONFIG_FILE_TOOL_BMC_DEVICE          0x00000001
+#define CONFIG_FILE_TOOL_BMC_INFO            0x00000002
+#define CONFIG_FILE_TOOL_BMC_WATCHDOG        0x00000004
+#define CONFIG_FILE_TOOL_IPMI_CHASSIS        0x00000008
+#define CONFIG_FILE_TOOL_IPMI_CONFIG         0x00000010
+#define CONFIG_FILE_TOOL_IPMI_DCMI           0x00000020
+#define CONFIG_FILE_TOOL_IPMI_FRU            0x00000040
+#define CONFIG_FILE_TOOL_IPMI_OEM            0x00000080
+#define CONFIG_FILE_TOOL_IPMI_PET            0x00000100
+#define CONFIG_FILE_TOOL_IPMI_RAW            0x00000200
+#define CONFIG_FILE_TOOL_IPMI_SEL            0x00000400
+#define CONFIG_FILE_TOOL_IPMI_SENSORS        0x00000800
+#define CONFIG_FILE_TOOL_IPMICONSOLE         0x00001000
+#define CONFIG_FILE_TOOL_IPMIPOWER           0x00002000
+#define CONFIG_FILE_TOOL_IPMISELD            0x00004000
 
 /* achu:
  *
@@ -72,12 +69,6 @@
 #endif /* !__CYGWIN__ */
 #define CONFIG_FILE_MAX_SENSOR_TYPES_STRING_LENGTH  256
 
-struct config_file_data_bmc_config
-{
-  unsigned int verbose_count;
-  int verbose_count_count;
-};
-
 struct config_file_data_bmc_info
 {
   int interpret_oem_data;
@@ -94,7 +85,7 @@ struct config_file_data_bmc_watchdog
   int no_logging_count;
 };
 
-struct config_file_data_ipmi_chassis_config
+struct config_file_data_ipmi_config
 {
   unsigned int verbose_count;
   int verbose_count_count;
@@ -119,12 +110,6 @@ struct config_file_data_ipmi_fru
 };
 
 struct config_file_data_ipmi_oem
-{
-  unsigned int verbose_count;
-  int verbose_count_count;
-};
-
-struct config_file_data_ipmi_pef_config
 {
   unsigned int verbose_count;
   int verbose_count_count;
@@ -244,12 +229,6 @@ struct config_file_data_ipmi_sensors
   int legacy_output_count;
   int ipmimonitoring_legacy_output;
   int ipmimonitoring_legacy_output_count;
-};
-
-struct config_file_data_ipmi_sensors_config
-{
-  unsigned int verbose_count;
-  int verbose_count_count;
 };
 
 struct config_file_data_ipmiconsole

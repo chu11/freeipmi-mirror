@@ -1,7 +1,0 @@
-.TP
-\fB\-vv\fR
-Output very verbose information.  Output additional detailed
-information about what fields can and cannot be checked out, and
-sometimes the reason why.  Sometimes output fields that are identified
-as unsupported on the motherboard.
-

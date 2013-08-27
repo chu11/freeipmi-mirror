@@ -1,0 +1,377 @@
+.TH IPMI-CONFIG 8 "@ISODATE@" "ipmi-config @PACKAGE_VERSION@" "System Commands"
+.SH "NAME"
+ipmi-config \- configure IPMI values
+.SH "SYNOPSIS"
+.B ipmi-config
+[\fIOPTION\fR...]
+.SH "DESCRIPTION"
+.B ipmi-config
+is used to get and set configuration parameters in IPMI.  In can be
+used to configured usernames, passwords, networking information,
+security, Serial-over-LAN (SOL), Platform Event Filtering (PEF), boot
+devices, power restoration policy, sensor thresholds, sensor
+events, and many more configuration options.
+
+Some configuration is typically required before most IPMI
+tools can be used to access a machine remotely.  By default,
+.B ipmi-config,
+will let you \fI\-\-checkout\fR or \fI\-\-commit\fR only the
+\fIcore\fR IPMI values necessary for IPMI configuration.  For
+additional advanced configuration fields related to Chassis
+configuration (including boot options), Platform Event Filtering
+(PEF), or Sensors, see the \fI\-\-category\fR option below.
+
+The majority of
+configuration operations require ADMIN privilege when using
+.B ipmi-config
+out-of-band.  Although connecting via a user with ADMIN privileges is
+not required for out-of-band use, the vast majority of configuration
+options will not be retrieved or set.
+
+#include <@top_srcdir@/man/manpage-common-table-of-contents.man>
+See GENERAL USE below for a description on basic use of
+.B ipmi-config.
+#include <@top_srcdir@/man/manpage-common-general-options-header.man>
+#include <@top_srcdir@/man/manpage-common-driver.man>
+#include <@top_srcdir@/man/manpage-common-inband.man>
+#include <@top_srcdir@/man/manpage-common-outofband-hostname-hostranged.man>
+#include <@top_srcdir@/man/manpage-common-outofband-username-admin.man>
+#include <@top_srcdir@/man/manpage-common-outofband-password.man>
+#include <@top_srcdir@/man/manpage-common-outofband-k-g.man>
+#include <@top_srcdir@/man/manpage-common-outofband-session-timeout.man>
+#include <@top_srcdir@/man/manpage-common-outofband-retransmission-timeout.man>
+#include <@top_srcdir@/man/manpage-common-authentication-type.man>
+#include <@top_srcdir@/man/manpage-common-cipher-suite-id-main.man>
+#include <@top_srcdir@/man/manpage-common-cipher-suite-id-details.man>
+#include <@top_srcdir@/man/manpage-common-privilege-level-admin.man>
+#include <@top_srcdir@/man/manpage-common-config-file.man>
+#include <@top_srcdir@/man/manpage-common-workaround-flags.man>
+#include <@top_srcdir@/man/manpage-common-debug.man>
+#include <@top_srcdir@/man/manpage-common-misc.man>
+.SH "IPMI-CONFIG OPTIONS"
+The following options are used to read, write, and find differences
+in configuration values.
+.TP
+\fB\-g\fR \fICATEGORY\fR, \fB\-\-category\fR=\fICATEGORY\fR
+Specify the category or categories of configuration data to configure.
+Currently available choices: \fIcore\fR, \fIchassis\fR, \fIsensors\fR,
+\fIpef\fR.  Multiple categories can be separated by comma.  \fIcore\fR
+includes all major IPMI configuration necessary to get IPMI to
+function on a sytem, such as configuration for users, passwords,
+authentication, networking, and serial-over-lan (SOL).  \fIchassis\fR
+includes all chassis relevant configuration including boot options,
+front panel buttons, and power behavior.  Defaults to \fIcore\fR if
+not specified.
+.TP
+\fB\-o\fR, \fB\-\-checkout\fR
+Fetch configuration information.
+.TP
+\fB\-c\fR, \fB\-\-commit\fR
+Update configuration information from a config file or key pairs.
+.TP
+\fB\-d\fR, \fB\-\-diff\fR
+Show differences between stored information and a config file or key pairs.
+.TP
+\fB\-n\fR \fIFILENAME\fR, \fB\-\-filename\fR=\fIFILENAME\fR
+Specify a config file for checkout/commit/diff.  If specified with checkout, cannot
+use with multiple hosts or with \fB\-\-always\-prefix\fR.
+.TP
+\fB\-e\fR \fI"KEY=VALUE"\fR, \fB\-\-key\-pair\fR=\fI"KEY=VALUE"\fR
+Specify KEY=VALUE pairs for checkout/commit/diff.  Specify KEY by
+SectionName:FieldName.  This option can be used multiple times.  On
+commit, any KEY=VALUE pairs will overwrite any pairs specified in a
+file with \fB\-\-filename\fR.
+.TP
+\fB\-S\fR \fISECTION\fR, \fB\-\-section\fR=\fISECTION\fR
+Specify a SECTION for checkout.  This option can be used multiple
+times.  The SECTION you are specifying must be within the category or
+categories specified with \fI\-\-category\fR.
+.TP
+\fB\-L\fR, \fB\-\-listsections\fR
+List available sections for checkout with respect to the category or
+categories under \fI\-\-category\fR.  Some sections in the list may
+not be checked out by default and may require verbosity to be
+increased.
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Output verbose information.  When used with \fI\-\-checkout\fR,
+additional uncommon sections and/or fields will be shown.  In the
+\fIcore\fR category, this includes checking out Serial Configuration
+parameters, Vlan parameters, IPv4 Header parameters, RMCP port, and
+sections for each channel on a system, if multiple channels exist.  In
+the \fIpef\fR category, this includes checkout out sections for each
+channel on a system, if multiple channels exist.
+.TP
+\fB\-vv\fR
+Output very verbose information.  Output additional detailed
+information about what fields can and cannot be checked out, and
+sometimes the reason why.  Sometimes output fields that are identified
+as unsupported on the motherboard.
+.TP
+\fB\-\-lan\-channel\-number\fR=\fINUMBER\fR
+Use an specific channel number for LAN configuration.  Particularly
+useful if motherboard contains multiple LAN channels and a user wishes
+to use a specific one.
+.TP
+\fB\-\-serial\-channel\-number\fR=\fINUMBER\fR
+Use an specific channel number for serial configuration.  Particularly
+useful if motherboard contains multiple serial channels and a user
+wishes to use a specific one.
+.TP
+\fB\-\-sol\-channel\-number\fR=\fINUMBER\fR
+Use an specific channel number for SOL configuration.  Particularly
+useful if motherboard contains multiple SOL channels and a user
+wishes to use a specific one.
+#include <@top_srcdir@/man/manpage-common-hostranged-options-header.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-buffer.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-consolidate.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-fanout.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-eliminate.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-always-prefix.man>
+.SH "GENERAL USE"
+Most users of will want to:
+.LP
+A) Run with \fI\-\-checkout\fR to get a copy of the current
+configuration and store it in a file.  The standard output can be
+redirected to a file or a file can be specified with the
+\fI\-\-filename\fR option.
+.LP
+B) Edit the configuration file with an editor.
+.LP
+C) Commit the configuration back using the \fI\-\-commit\fR option and
+specifying the configuration file with the \fI\-\-filename\fR option.
+The configuration can be committed to multiple hosts in parallel via
+the hostrange support.
+.LP
+Although not typically necessarily, some motherboards do not store
+configuration values in non-volatile memory.  Therefore, after system
+reboots, some configuration values may have changed.  The user may
+wish to run configuration tools on each boot to ensure configuration
+values remain.
+.LP
+Comments will be listed on occassion in checked out files with information
+on how to configure fields.
+The 
+.B ipmi-config.conf(5)
+manpage also provides additional information on the meaning of
+different fields.
+.LP
+For users with large clusters or sets of nodes, you may wish to use
+the same configuration file for all nodes.  The one problem with this
+is that the IP address and MAC address will be different on each node
+in your cluster and thus can't be configured through the same config
+file.  The IP address and MAC address in your config file may be
+overwritten on the command line using \fI\-\-key\-pair\fR option.  The
+following example could be used in a script to configure each node in
+a cluster with the same BMC config file.  The script only needs to
+determine the correct IP address and MAC address to use.
+.LP
+.B # ipmi-config --commit -k "Lan_Conf:Ip_Address=$MY_IP" -k "Lan_Conf:Mac_Address=$MY_MAC" --filename=my_bmc.conf
+.SH "CORE SPECIAL CASE CONFIGURATION INFORMATION"
+The 
+.B UserN:Password 
+fields (where N is a number) cannot be checked out on some systems,
+therefore the checked out value will always be blank.
+.LP
+The
+.B UserN:Enable_User
+field (where N is a number) cannot be checked out on older IPMI
+systems, therefore the checked out value will sometime be blank.
+.LP
+The 
+.B UserN:Lan_Session_Limit 
+and 
+.B UserN:Serial_Session_Limit
+fields (where N is a number) cannot be checked out on some systems,
+therefore the checked out value will always be blank.  If not
+specified in later commits of configurations, the field may be reset
+to 0 due to a requirement that other fields (configured along with the
+session limit) will require an input value for the session limit.
+Under most conditions, it is not necessary to set this field and most
+users may choose to ignore it.  This field is considered optional by
+IPMI standards, and may result in errors when attempting to configure
+it to a non-zero value.  If errors to occur, setting the value back to
+0 should resolve problems.
+.LP
+The fields 
+.B Lan_Conf:IP_Address 
+and 
+.B Lan_Conf:MAC_Address 
+cannot be committed in parallel via hostrange support.  Each machine
+must be configured with a unique IP Address and MAC Address tuple,
+therefore we disallow this configuration in
+.B ipmi-config.
+.LP
+On some motherboards,
+.B Lan_Conf:MAC_Address
+may be read only and the MAC address is automatically configured.
+.LP
+On some motherboards,
+.B Lan_Conf:MAC_Address
+may be read only and the MAC address is configured via an OEM command.  See
+.B ipmi-oem(8)
+to see if OEM configuration for your motherboard is supported.
+.LP
+On some motherboards, a number of user configuration fields cannot be
+read or configured until after a non-null username or non-null
+password is configured.  In some of these cases, an appropriate output
+in the config file will indicate this situation.  However, not all
+motherboard corner cases may be detected.  Users may wish to play
+around with the ordering of fields to work around these problems.
+.LP
+On some motherboards, OEM Authentication in
+.B Lan_Conf_Auth
+cannot be enabled.  However, the default motherboard settings have
+these fields enabled.  Users are advised to disable all OEM
+Authentication in this section.
+.LP
+On some motherboards, multiple channels may exist for either LAN or
+Serial IPMI communication.  If multiple channels exist, configuration
+of both channels can be viewed and ultimately configured by running
+\fI\-\-checkout\fR under verbose mode.  Each section or key name will
+be suffixed appropriately with the word \fIChannel\fR and the channel
+number.  For example, you might see a \fILan_Conf_Channel_1\fR and
+\fILan_Conf_Channel_3\fR, where you can configure LAN configuration on
+Channels 1 and 3 respectively.
+.LP
+On some motherboards, configuration changes will not be "absorbed" by
+the system until the motherboard is hard-reset.  This can be accomplished
+by physically powering off and on the system (e.g. button push), or it can be
+accomplished through a cold-reset.  A cold-reset can be executed via
+.B bmc-device.
+
+.SH "CHASSIS SPECIAL CASE CONFIGURATION INFORMATION"
+The
+.B Chassis_Front_Panel_Buttons:Enable_Standby_Button_For_Entering_Standy,
+.B Chassis_Front_Panel_Buttons:Enable_Diagnostic_Interrupt_Button
+.B Chassis_Front_Panel_Buttons:Enable_Reset_Button,
+and
+.B Chassis_Front_Panel_Buttons:Enable_Power_Off_Button_For_Power_Off_Only
+fields may not be able to be checked out on some IPMI systems, therefore
+the checked out value may be blank.  Some of these fields may be 
+disableable, while some are not.
+
+The
+.B Chassis_Power_Conf:Power_Control_Interval 
+field cannot be checked out.  Therefore the checked out value will
+always be blank.
+
+.SH "PEF SPECIAL CASE CONFIGURATION INFORMATION"
+On some motherboards, multiple channels may exist for LAN IPMI
+communication.  If multiple channels exist, configuration of both
+channels can be viewed and ultimately configured by running
+\fI\-\-checkout\fR under verbose mode.  Each section name will be
+suffixed appropriately with the word \fIChannel\fR and the channel
+number.  For example, you might see a \fICommunity_String_Channel_1\fR
+and \fICommunity_String_Channel_3\fR, where you can configure the
+Community String on Channels 1 and 3 respectively.
+
+The following are the options suitable for input for Sensor_Type in
+PEF configuration. 
+.TP
+\fBSensor_Type Options\fR 
+Reserved, Temperature, Voltage, Current, Fan, Physical_Security,
+Platform_Security_Violation_Attempt, Processor, Power_Supply,
+Power_Unit, Cooling_Device, Other_Units_Based_Sensor, Memory,
+Drive_Slot, Post_Memory_Resize, System_Firmware_Progress,
+Event_Logging_Disabled, Watchdog1, System_Event, Critical_Interrupt,
+Button_Switch, Module_Board, Microcontroller_Coprocessor, Add_In_Card,
+Chassis, Chip_Set, Other_FRU, Cable_Interconnect, Terminator,
+System_Boot_Initiated, Boot_Error, OS_Boot, OS_Critical_Stop,
+Slot_Connector, System_ACPI_Power_State, Watchdog2, Platform_Alert,
+Entity_Presence, Monitor_Asic_IC, Lan, Management_Subsystem_Health,
+Battery, Session_Audit, Version_Change, FRU_State, and Any
+
+.SH "SENSORS SPECIAL CASE CONFIGURATION INFORMATION"
+Since many configurable fields involve decimal numbers,
+precision/floating point inaccuracies may occur when configuring new
+thresholds.  The inaccuracies may not be apparent immediately.  It is
+recommend users verify their changes after configuring new thresholds.
+
+#include <@top_srcdir@/man/manpage-common-hostranged-text-main.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-text-threads.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-text-options.man>
+#include <@top_srcdir@/man/manpage-common-hostranged-text-localhost.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-start.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-outofband.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-inband.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-heading-end.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-outofband.man>
+#include <@top_srcdir@/man/manpage-common-troubleshooting-inband.man>
+#include <@top_srcdir@/man/manpage-common-workaround-heading-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-inband-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-outofband-common-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-outofband-15-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-outofband-20-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-extra-text.man>
+.LP
+\fIslowcommit\fR - This workaround will slow down commits to the BMC
+by sleeping one second between the commit of sections.  It works
+around motherboards that have BMCs that can be overwhelmed by commits.
+Those hitting this issue may see commit errors or commits not being
+written to the BMC.  Issue observed on Supermicro H8QME.
+.LP
+\fIveryslowcommit\fR - This workaround will slow down commits to the
+BMC by sleeping one second between the commit of every key.  It works
+around motherboards that have BMCs that can be overwhelmed by commits.
+Those hitting this issue may see commit errors or commits not being
+written to the BMC.  Issue observed on Quanta S99Q/Dell FS12-TY.
+.LP
+\fIsolchannelassumelanchannel\fR - This workaround will force
+.B ipmi-config
+to assume that the channel used SOL is identical to the channel used
+for LAN.  On some motherboards, the SOL channel is reported
+incorrectly, leading to incorrect configuration.  Most notably, this
+problem has come up when attempting to configure multiple channels.
+Issue observed on Intel S5500WBV/Penguin Relion 700.
+.SH "EXAMPLES"
+.B # ipmi-config --checkout 
+.PP
+Output all core configuration information to the console.
+.B # ipmi-config --checkout --category=pef
+.PP
+Output all pef configuration information to the console.
+.B # ipmi-config --checkout --category=pef,chassis
+.PP
+Output all pef and chassis configuration information to the console.
+.PP
+.B # ipmi-config --checkout --filename=bmc-data1.conf
+.PP
+Store all core configuration information in bmc-data1.conf.
+.PP
+.B # ipmi-config --diff --filename=bmc-data2.conf
+.PP
+Show all difference between the current configuration and the bmc-data2.conf file.
+.PP
+.B # ipmi-config --diff --key-pair="lan_conf_misc:gratuitous_arp_interval=8"
+.PP
+Show difference with the current configuration and the 'lan_conf_misc:gratuitous_arp_interval' of value '8'.
+.PP
+.B # ipmi-config --commit --filename=bmc-data1.conf
+.PP
+Commit all configuration values from the bmc-data1.conf file.
+.PP
+.B # ipmi-config --commit --key-pair="lan_conf_misc:gratuitous_arp_interval=4"
+.PP
+Commit key 'lan_conf_misc:gratuitous_arp_interval' of value '4'.
+.PP
+.B # ipmi-config --commit --filename=bmc-data-updt.conf --key-pair="lan_conf_misc:gratuitous_arp_interval=4"
+.PP
+Commit all configuration values from bmc-data-updt.conf and key 'lan_conf_misc:gratuitous_arp_interval' of value '4'.
+.PP
+.SH "DIAGNOSTICS"
+Upon successful execution, exit status is 0.  On non-fatal error, exit
+status is 1.  On fatal error, exit status is 2.
+.LP
+If multiple hosts are specified for communication, the exit status is
+0 if and only if all targets successfully execute.  If any non-fatal
+error occurs, exit status is 1.  If any fatal error occurs, exit
+status is 2.
+#include <@top_srcdir@/man/manpage-common-known-issues.man>
+#include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
+.SH "COPYRIGHT"
+Copyright \(co 2003-2013 FreeIPMI Core Team.  
+#include <@top_srcdir@/man/manpage-common-gpl-program-text.man>
+.SH "SEE ALSO"
+ipmi-config.conf(5), freeipmi(7), bmc-device(8)
+#include <@top_srcdir@/man/manpage-common-homepage.man>

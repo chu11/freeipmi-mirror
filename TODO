@@ -269,40 +269,20 @@ ipmiconsole
 - support other escape codes like w/ &D
 - support F1-F12 suggested by user
 
-config tools
+ipmi-config
 ------------
-- collapse into one allmighty tool (***)
-  - user must pick section
-  - bmc, pef, sensor, chassis, all
-  - makes more extensible in the future
-    - oem, dcmi, intel node manager, system info, firmware firewall, etc.
-  - --category option (bmc, sensors, chassis, pef, oem, dcmi, intel)
-  - make tools prefix sections w/ appropriate prefixes to allow
-    for checking of what sections should be used
-    - i.e. BMC, CHASSIS, PEF, etc.
-    - probably not, too much backwords compatability crap to handle.
-      Also would make code ugly as hell to make all duplicate sections.
-      should do database of what sections go to what categories
-
-bmc-config
-----------
-- support ipv4 mapped ipv6 addresses?
+- make tools prefix sections w/ appropriate prefixes to allow
+  for checking of what sections should be used??
+  - i.e. BMC, CHASSIS, PEF, etc.
+  - probably not, too much backwords compatability crap to handle.
+    Also would make code ugly as hell to make all duplicate sections.
+    should do database of what sections go to what categories
+- core: support ipv4 mapped ipv6 addresses?
   - until in spec, no point, maybe deal in ipmi-oem?
-
-ipmi-chassis-config
--------------------
-* conf.5 manpage
-(NEVER TESTED) panel button config - need hardware w/ this
-(NEVER TESTED) device instance selector
-
-ipmi-pef-config
------------
-* conf.5 manpage
-
-ipmi-sensors-config
--------------------
-* conf.5 manpage
-* instructions for each section??
+- chassis, pef & sensors: conf.5 manpage
+- chassis: (NEVER TESTED) panel button config - need hardware w/ this
+- chassis: (NEVER TESTED) device instance selector
+- sensors: instructions for each section??
 
 ipmi-oem
 --------

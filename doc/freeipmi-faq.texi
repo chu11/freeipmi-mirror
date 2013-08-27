@@ -130,7 +130,7 @@ developed by both organizations into FreeIPMI.
 
 Anand Babu, Balamurugan and Ian Zimmerman at CDC contributed the
 in-band @acronym{KCS} driver, @command{ipmi-sensors},
-@command{bmc-config}, @command{ipmi-sel}, @command{bmc-info}, and
+@command{ipmi-sel}, @command{bmc-info}, core portions of @command{ipmi-config}, and
 portions of libfreeipmi.  Albert Chu and Jim Garlick at @acronym{LLNL}
 contributed @command{ipmipower}, @command{bmc-watchdog},
 @command{ipmiping}, @command{rmcpping}, portions of libfreeipmi, and
@@ -139,12 +139,11 @@ was officially released.
 
 Since the 0.1.0 release, Z Research developers have contributed
 @command{ipmi-chassis}, @command{ipmi-raw}, @command{ipmi-locate}, and
-portions of @command{ipmi-pef-config}.  @acronym{LLNL} has contributed
+PEF portions of @command{ipmi-config}.  @acronym{LLNL} has contributed
 @acronym{IPMI} 2.0 support, hostrange support, @command{ipmiconsole},
-libipmiconsole, @command{ipmidetect}, @command{ipmi-sensors-config},
-@command{ipmi-chassis-config}, @command{bmc-device},
-@command{ipmi-oem}, @command{ipmi-dcmi}, libipmimonitoring, and
-portions of @command{ipmi-pef-config}.
+libipmiconsole, @command{ipmidetect}, @command{bmc-device},
+@command{ipmi-oem}, @command{ipmi-dcmi}, libipmimonitoring, and the
+chassis and sensor portions of @command{ipmi-config}.
 
 (Note: The original FreeIPMI developers from California Digital
 Corp. are now at Zresearch Inc.)
@@ -279,14 +278,13 @@ numbers of nodes.  Skummee
 libipmimonitoring to monitoring the @acronym{SEL} on @acronym{LLNL}
 clusters of up to 2000 nodes in size.
 
-The @command{bmc-config}, @command{ipmi-chassis-config},
-@command{ipmi-pef-config}, @command{ipmi-sensors-config}, and
-configuration file and command-line interface are used to easily copy
-the @acronym{BMC} configuration from one node to every other node in a
-cluster quickly.  It has been used to modify the @acronym{BMC}
-configuration across large @acronym{LLNL} clusters in a few minutes.
-They also have the capability to verify (via the diff option) that the
-desired configuration has been properly stored to firmware.
+The @command{ipmi-config} configuration file and command-line
+interface are used to easily copy the @acronym{BMC} configuration from
+one node to every other node in a cluster quickly.  It has been used
+to modify the @acronym{BMC} configuration across large @acronym{LLNL}
+clusters in a few minutes.  They also have the capability to verify
+(via the diff option) that the desired configuration has been properly
+stored to firmware.
 
 @command{Ipmidetect} can be used to enhance the efficiency of the hostranged
 input by eliminating those nodes in the cluster that have been
@@ -482,7 +480,7 @@ can be used to read the @acronym{FRU} components on a system.
 
 @strong{Platform Event Filtering} refers to the rules that determine
 when PETs are generated and where they are sent.  In FreeIPMI,
-@acronym{PEF} can be configured via @command{ipmi-pef-config}.
+@acronym{PEF} can be configured via @command{ipmi-config}.
 
 @item PET
 
@@ -517,9 +515,9 @@ never need to know about @acronym{RMCP}.
 @node What setup is needed for FreeIPMI to communicate over LAN?, What setup is needed for Serial over LAN (SOL) or Ipmiconsole?, What are some IPMI terminology or acronyms I should be aware of?, Top
 @section What setup is needed for FreeIPMI to communicate over LAN?
 
-Please see the bmc-config.conf(5) manpage provided with FreeIPMI for
+Please see the ipmi-config.conf(5) manpage provided with FreeIPMI for
 details, or you can read it on the FreeIPMI website's documentation
-(@uref{http://www.gnu.org/software/freeipmi/manpages/man5/bmc-config.conf.5.html}).
+(@uref{http://www.gnu.org/software/freeipmi/manpages/man5/ipmi-config.conf.5.html}).
 
 @node What setup is needed for Serial over LAN (SOL) or Ipmiconsole?, Do I need to install or configure a driver to perform IPMI inband?, What setup is needed for FreeIPMI to communicate over LAN?, Top
 @section What setup is needed for Serial over LAN (SOL) or Ipmiconsole?
@@ -542,8 +540,8 @@ motherboard, this part can probably be skipped.
 @item
 Configure @acronym{IPMI} on the motherboard to use @acronym{SOL}.
 Many motherboards may have this enabled by default, however you may
-wish to verify with FreeIPMI's @command{bmc-config}.  More information
-can be found in the bmc-config.conf(5) manpage on the settings.
+wish to verify with FreeIPMI's @command{ipmi-config}.  More information
+can be found in the ipmi-config.conf(5) manpage on the settings.
 However, the key settings are to enable @acronym{SOL} on the system,
 enable @acronym{SOL} for individual users, and select the appropriate
 baud.  On many motherboards, the selected baud must match what is

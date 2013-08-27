@@ -12,7 +12,7 @@ below for all chassis management options available.
 
 #include <@top_srcdir@/man/manpage-common-table-of-contents.man>
 To perform IPMI chassis configuration, please see
-.B ipmi-chassis-config(8).
+.B ipmi-config(8).
 To perform some advanced chassis management, please see
 .B bmc-device(8).
 For a more powerful chassis power control utility, please see
@@ -192,5 +192,5 @@ Power on a remote machine using IPMI over LAN.
 Copyright \(co 2007-2013 FreeIPMI Core Team
 #include <@top_srcdir@/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
-freeipmi(7), bmc-config(8), bmc-device(8), ipmi-chassis-config(8), ipmipower(8)
+freeipmi(7), bmc-device(8), ipmi-config(8), ipmipower(8)
 #include <@top_srcdir@/man/manpage-common-homepage.man>

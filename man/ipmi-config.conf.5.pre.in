@@ -1,0 +1,516 @@
+.TH ipmi-config.conf 5 "@ISODATE@" "ipmi-config @PACKAGE_VERSION@" "System Commands"
+.SH "NAME"
+ipmi-config \- IPMI configuration file details
+.br
+.SH "DESCRIPTION"
+Before many IPMI tools can be used over a network, a machine's
+Baseboard Management Controller (BMC) must be configured.  The
+configuration can be quite daunting for those who do not know much
+about IPMI.  This manpage hopes to provide enough information on BMC
+configuration so that you can configure the BMC for your system.  When
+appropriate, typical BMC configurations will be suggested.
+.LP
+The following is an example configuration file partially generated
+by running the \fI\-\-checkout\fR option with the
+.B ipmi-config(8)
+command.  This configuration comes from the \fIcore\fR category of
+configuration values (the default).  This example configuration should
+be sufficient for most users after the appropriate local IP and MAC
+addresses are input.  Following this example, separate sections of
+this manpage will discuss the different sections of the configuration
+file in more detail with explanations of how the BMC can be configured
+for different environments.
+.LP
+Note that many options may or may not be available on your particular
+machine.  For example, Serial-Over-Lan (SOL) is available only on IPMI
+2.0 machines.  Therefore, if you are looking to configure an IPMI 1.5
+machine, many of the SOL or IPMI 2.0 related options will be be
+unavailable to you.  The number of configurable users may also vary
+for your particular machine.
+.LP
+The below configuration file and most of this manpage assume the user
+is interested in configuring a BMC for use with IPMI over LAN.
+Various configuration options from 
+.B ipmi-config(8)
+have been left out or skipped because it is considered unnecessary.
+Future versions of this manpage will try to include more information.
+.LP
+.nf
+     Section User1
+     	## Give username
+     	## Username                                  NULL
+     	## Give password or leave it blank to clear password
+     	Password                                     mypassword
+     	## Possible values: Yes/No or blank to not set
+     	Enable_User                                  Yes
+     	## Possible values: Yes/No
+     	Lan_Enable_Ipmi_Msgs                         Yes
+     	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
+     	Lan_Privilege_Limit                          Administrator
+        ## Possible values: 0-17, 0 is unlimited; May be reset to 0 if not specified
+        ## Lan_Session_Limit
+     	## Possible values: Yes/No
+     	SOL_Payload_Access                           Yes
+     EndSection
+     Section User2
+     	## Give username
+     	Username                                     user2
+     	## Give password or leave it blank to clear password
+     	Password                                     userpass
+     	## Possible values: Yes/No or blank to not set
+     	Enable_User                                  No
+     	## Possible values: Yes/No
+     	Lan_Enable_Ipmi_Msgs                         No
+     	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
+     	Lan_Privilege_Limit                          No_Access
+        ## Possible values: 0-17, 0 is unlimited; May be reset to 0 if not specified
+        ## Lan_Session_Limit
+        ## Possible values: Yes/No
+        SOL_Payload_Access                           No
+     EndSection
+     Section Lan_Channel
+     	## Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared
+     	Volatile_Access_Mode                         Always_Available
+     	## Possible values: Yes/No
+     	Volatile_Enable_User_Level_Auth              Yes
+     	## Possible values: Yes/No
+     	Volatile_Enable_Per_Message_Auth             Yes
+     	## Possible values: Yes/No
+     	Volatile_Enable_Pef_Alerting                 No
+     	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
+     	Volatile_Channel_Privilege_Limit             Administrator
+     	## Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared
+     	Non_Volatile_Access_Mode                     Always_Available
+     	## Possible values: Yes/No
+     	Non_Volatile_Enable_User_Level_Auth          Yes
+     	## Possible values: Yes/No
+     	Non_Volatile_Enable_Per_Message_Auth         Yes
+     	## Possible values: Yes/No
+     	Non_Volatile_Enable_Pef_Alerting             No
+     	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
+     	Non_Volatile_Channel_Privilege_Limit         Administrator
+     EndSection
+     Section Lan_Conf
+     	## Possible values: Unspecified/Static/Use_DHCP/Use_BIOS/Use_Others
+     	Ip_Address_Source                            Static
+     	## Give valid IP Address
+     	Ip_Address                                   192.168.1.100
+     	## Give valid MAC Address
+     	Mac_Address                                  00:0E:0E:FF:AA:12
+     	## Give valid Subnet mask
+     	Subnet_Mask                                  255.255.255.0
+     	## Give valid IP Address
+     	Default_Gateway_Ip_Address                   192.168.1.1
+     	## Give valid MAC Address
+     	Default_Gateway_Mac_Address                  00:0E:0E:FF:AA:18
+     	## Give valid IP Address
+     	Backup_Gateway_Ip_Address                    192.168.1.2
+     	## Give valid MAC Address
+     	Backup_Gateway_Mac_Address                   00:0E:0E:FF:AA:15
+     EndSection
+     Section Lan_Conf_Auth
+     	## Possible values: Yes/No
+     	Callback_Enable_Auth_Type_None               No
+     	## Possible values: Yes/No
+     	Callback_Enable_Auth_Type_Md2                No
+     	## Possible values: Yes/No
+     	Callback_Enable_Auth_Type_Md5                No
+     	## Possible values: Yes/No
+     	Callback_Enable_Auth_Type_Straight_Password  No
+     	## Possible values: Yes/No
+     	Callback_Enable_Auth_Type_Oem_Proprietary    No
+     	## Possible values: Yes/No
+     	User_Enable_Auth_Type_None                   No
+     	## Possible values: Yes/No
+     	User_Enable_Auth_Type_Md2                    Yes
+     	## Possible values: Yes/No
+     	User_Enable_Auth_Type_Md5                    Yes
+     	## Possible values: Yes/No
+     	User_Enable_Auth_Type_Straight_Password      No
+     	## Possible values: Yes/No
+     	User_Enable_Auth_Type_Oem_Proprietary        No
+     	## Possible values: Yes/No
+     	Operator_Enable_Auth_Type_None               No
+     	## Possible values: Yes/No
+     	Operator_Enable_Auth_Type_Md2                Yes
+     	## Possible values: Yes/No
+     	Operator_Enable_Auth_Type_Md5                Yes
+     	## Possible values: Yes/No
+     	Operator_Enable_Auth_Type_Straight_Password  No
+     	## Possible values: Yes/No
+     	Operator_Enable_Auth_Type_Oem_Proprietary    No
+     	## Possible values: Yes/No
+     	Admin_Enable_Auth_Type_None                  No
+     	## Possible values: Yes/No
+     	Admin_Enable_Auth_Type_Md2                   Yes
+     	## Possible values: Yes/No
+     	Admin_Enable_Auth_Type_Md5                   Yes
+     	## Possible values: Yes/No
+     	Admin_Enable_Auth_Type_Straight_Password     No
+     	## Possible values: Yes/No
+     	Admin_Enable_Auth_Type_Oem_Proprietary       No
+     	## Possible values: Yes/No
+     	Oem_Enable_Auth_Type_None                    No
+     	## Possible values: Yes/No
+     	Oem_Enable_Auth_Type_Md2                     No
+     	## Possible values: Yes/No
+     	Oem_Enable_Auth_Type_Md5                     No
+     	## Possible values: Yes/No
+     	Oem_Enable_Auth_Type_Straight_Password       No
+     	## Possible values: Yes/No
+     	Oem_Enable_Auth_Type_Oem_Proprietary         No
+     EndSection
+     Section Lan_Conf_Security_Keys
+        ## Give string or blank to clear. Max 20 chars
+        K_G
+     EndSection
+     Section Lan_Conf_Misc
+     	## Possible values: Yes/No
+     	Enable_Gratuitous_Arps                       Yes
+     	## Possible values: Yes/No
+     	Enable_Arp_Response                          No
+     	## Give valid number. Intervals are 500 ms.
+     	Gratuitous_Arp_Interval                      4
+     EndSection
+     Section Rmcpplus_Conf_Privilege
+     	## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+     	Maximum_Privilege_Cipher_Suite_Id_0          Unused
+     	## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+     	Maximum_Privilege_Cipher_Suite_Id_1          Unused
+     	## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+     	Maximum_Privilege_Cipher_Suite_Id_2          Unused
+     	## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+     	Maximum_Privilege_Cipher_Suite_Id_3          Administrator
+     	## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+     	Maximum_Privilege_Cipher_Suite_Id_4          Administrator
+     	## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+     	Maximum_Privilege_Cipher_Suite_Id_5          Administrator
+     	## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+     	Maximum_Privilege_Cipher_Suite_Id_6          Unused
+     	## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+     	Maximum_Privilege_Cipher_Suite_Id_7          Unused
+     	## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+     	Maximum_Privilege_Cipher_Suite_Id_8          Administrator
+     	## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+     	Maximum_Privilege_Cipher_Suite_Id_9          Administrator
+     	## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+     	Maximum_Privilege_Cipher_Suite_Id_10         Administrator
+     	## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+     	Maximum_Privilege_Cipher_Suite_Id_11         Unused
+     	## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+     	Maximum_Privilege_Cipher_Suite_Id_12         Administrator
+     	## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+     	Maximum_Privilege_Cipher_Suite_Id_13         Administrator
+     	## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+     	Maximum_Privilege_Cipher_Suite_Id_14         Administrator
+     EndSection
+     Section SOL_Conf
+     	## Possible values: Yes/No
+     	Enable_SOL                                   Yes
+     	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary
+     	SOL_Privilege_Level                          Administrator
+     	## Possible values: Yes/No
+     	Force_SOL_Payload_Authentication             Yes
+     	## Possible values: Yes/No
+     	Force_SOL_Payload_Encryption                 Yes
+     	## Give a valid integer. Each unit is 5ms
+     	Character_Accumulate_Interval                50
+     	## Give a valid number
+     	Character_Send_Threshold                     100
+     	## Give a valid integer
+     	SOL_Retry_Count                              5
+     	## Give a valid integer. Interval unit is 10ms
+     	SOL_Retry_Interval                           50
+     	## Possible values: Serial/9600/19200/38400/57600/115200
+     	Non_Volatile_Bit_Rate                        115200
+     	## Possible values: Serial/9600/19200/38400/57600/115200
+     	Volatile_Bit_Rate                            115200
+     EndSection
+.fi
+
+.SH "Section User1, User2, ..."
+The \fIUser\fR sections of the BMC configuration file are for username
+configuration for IPMI over LAN communication.  The number of users
+available to be configured on your system will vary by manufacturer.
+With the exception of the Username for User1, all sections are
+identical.
+.LP
+The username(s) you wish to configure the BMC with are defined with
+\fIUsername\fR.  The first username under Section User1 is typically
+the NULL username and cannot be modified.  The password for the
+username can be specified with \fIPassword\fR.  It can be left empty
+to define a NULL password.  Each user you wish to enable must be
+enabled through the \fIEnable_User\fR configuration option.  It is
+recommended that all usernames have non-NULL passwords or be disabled
+for security reasons.
+.LP
+\fILan_Enable_Ipmi_Msgs\fR is used to enable or disable IPMI over LAN
+access for the user.  This should be set to "Yes" to allow
+IPMI over LAN tools to work.
+.LP
+\fILan_Privilege_Limit\fR specifies the maximum privilege level limit
+the user is allowed.  Different IPMI commands have different privilege
+restrictions.  For example, determining the power status of a machine
+only requires the "User" privilege level.  However, power cycling
+requires the "Operator" privilege.  Typically, you will want to assign
+atleast one user with a privilege limit of "Administrator" so that all
+system functions are available to atleast one user via IPMI over LAN.
+.LP
+\fILan_Session_Limit\fR specifies the number of simultaneous IPMI
+sessions allowed for the user.  Most users will wish to set this to
+"0" to allow unlimited simultaneous IPMI sessions.  This field is
+considered optional by IPMI standards, and may result in errors when
+attempting to configure it to a non-zero value.  If errors to occur,
+setting the value back to 0 should resolve problems.
+.LP
+\fISOL_Payload_Access\fR specifies if a particular user is allowed to
+connect with Serial-Over-LAN (SOL).  This should be set to "Yes"
+to allow this username to use SOL.
+.LP
+The example configuration above disables "User2" but enables the
+default "NULL" (i.e. anonymous) user.  Many IPMI tools (both
+open-source and vendor) do not allow the user to input a username and
+assume the NULL username by default.  If the tools you are interested
+in using allow usernames to be input, then it is recommended that one
+of the non-NULL usernames be enabled and the NULL username disabled
+for security reasons.  It is recommeneded that you disable the NULL
+username in section User1, so that users are required to specify a
+username for IPMI over LAN communication.
+.LP
+Some motherboards may require a \fIUsername\fR to be configured prior
+to other fields being read/written.  If this is the case, those fields
+will be set to \fI<username-not-set-yet>\fR.
+
+.SH "Section Lan_Channel"
+The Lan_Channel section configures a variety of IPMI over LAN
+configuration parameters.  Both \fIVolatile\fR and \fINon_Volatile\fR
+configurations can be set.  \fIVolatile\fR configurations are
+immediately configured onto the BMC and will have immediate effect on
+the system.  \fINon_Volatile\fR configurations are only available
+after the next system reset.  Generally, both the \fIVolatile\fR and
+\fINon_Volatile\fR should be configured identically.
+.LP
+The \fIAccess_Mode\fR parameter configures the availability of IPMI
+over LAN on the system.  Typically this should be set to
+"Always_Available" to enable IPMI over LAN.
+.LP
+The \fIPrivilege_Limit\fR sets the maximum privilege any user of the
+system can have when performing IPMI over LAN.  This should be set to
+the maximum privilege level configured to a username.  Typically, this
+should be set to "Administrator".
+.LP
+Typically \fIUser_Level_Auth\fR and \fIPer_Message_Auth\fR should be
+set to "Yes" for additional security. Disabling \fIUser_Level_Auth\fR
+allows "User" privileged IPMI commands to be executed without
+authentication.  Disabling \fIPer_Message_Auth\fR allows fewer
+individual IPMI messages to require authentication.
+
+.SH "Section Lan_Conf"
+Those familiar with setting up networks should find most of the fields
+in this section self explanatory.  The example BMC configuration above
+illustrates the setup of a static IP address.  The field
+\fIIP_Address_Source\fR is configured with "Static".  The IP address,
+subnet mask, and gateway IP addresses of the machine are respecitvely
+configured with the \fIIP_Address\fR, \fISubnet_Mask\fR,
+\fIDefault_Gateway_Ip_Address\fR, and \fIBackup_Gateway_Ip_Address\fR
+fields.  The respective MAC addresses for the IP addresses are
+configured under \fIMac_Address\fR, \fIDefault_Gateway_Mac_Address\fR,
+and \fIBackup_Gateway_Mac_Address\fR.
+.LP
+It is not required to setup the BMC \fIIP_Address\fR to be the same
+\fIP_Address\fR used by your operating system for that network
+interface.  However, if you choose to use a different address, an
+alternate ARP configuration may need to be setup.
+.LP
+To instead setup your BMC network information via DHCP, the field
+\fIIP_Address_Source\fR should be configured with "Use_DHCP".
+.LP
+It is recommended that static IP addresses be configured for address
+resolution reasons.  See 
+.B Lan_Conf_Misc 
+below for a more detailed explanation.
+
+.SH "Section Lan_Conf_Auth" 
+This section determines what types of password authentication
+mechanisms are allowed for users at different privilege levels under
+the IPMI 1.5 protocol.  The currently supported authentication methods
+for IPMI 1.5 are \fINone\fR (no username/password required),
+\fIStraight_Password\fR (passwords are sent in the clear), \fIMD2\fR
+(passwords are MD2 hashed), and \fIMD5\fR (passwords are MD5 hashed).
+Different usernames at different privilege levels may be allowed to
+authenticate differently through this configuration.  For example, a
+username with "User" privileges may be allowed to authenticate with a
+straight password, but a username with "Administrator" privileges may
+be allowed only authenticate with MD5.
+.LP
+The above example configuration supports \fIMD2\fR and \fIMD5\fR
+authentication for all users at the "User", "Operator", and
+"Administrator" privilege levels.  All authentication mechanisms have
+been disabled for the "Callback" privilege level.
+.LP
+Generally speaking, you do not want to allow any user to authenticate
+with \fINone\fR or \fIStraight_Password\fR for security reasons.
+\fIMD2\fR and \fIMD5\fR are digital signature algorithms that can
+minimally encrypt passwords.  If you have chosen to support the NULL
+username (enabled User1) and NULL passwords (NULL password for User1),
+you will have to enable the \fINone\fR authentication fields above to
+allow users to connect via \fINone\fR.
+
+.SH "Section Lan_Conf_Security_Keys"
+This section supports configuration of the IPMI 2.0 (including
+Serial-over-LAN) K_g key.  If your machine does not support IPMI 2.0,
+this field will not be configurable.
+.LP
+The key is used for two-key authentication in IPMI 2.0.  In most
+tools, when doing IPMI 2.0, the K_g can be optionally specified.  It
+is not required for IPMI 2.0 operation.
+.LP
+In the above example, we have elected to leave this field blank so the
+K_g key is not used.
+
+.SH "Section Lan_Conf_Misc"
+This section lists miscellaneous IPMI over LAN configuration options.
+These are optional IPMI configuration options that are not
+implemented on all BMCs.
+.LP
+Normally, a client cannot resolve the ethernet MAC address without the
+remote operating system running.  However, IPMI over LAN would not
+work when a machine is powered off or if the IP address used by the
+operating system for that network interface differs from the BMC IP
+Address.  One way to work around this is through gratuitous ARPs.
+Gratuitous ARPs are ARP packets generated by the BMC and sent out to
+advertise the BMC's IP and MAC address.  Other machines on the network
+can store this information in their local ARP cache for later
+IP/hostname resolution.  This would allow IPMI over LAN to work when
+the remote machine is powered off.  The \fIEnable_Gratuitous_Arps\fR
+option allows you to enable or disable this feature.  The
+\fIGratuitous_Arp_Interval\fR option allows you to configure the
+frequency at which gratuitous ARPs are sent onto the network.
+.LP
+Instead of gratuitous ARPs some BMCs are able to respond to ARP
+requests, even when powered off.  If offerred, this feature can be
+enabled through the \fIEnable_Arp_Response\fR option.
+.LP
+Generally speaking, turning on gratuitous ARPs is acceptable.  
+However, it will increase traffic on your network.  
+If you are using IPMI on a large cluster, the gratuitous ARPs
+may easily flood your network.  They should be tuned to occur less
+frequently or disabled.  If disabled, the remote machine's MAC address
+should be permanently stored in the local ARP cache through 
+.B arp(8).
+.LP
+See
+.B bmc-watchdog(8)
+for a method which allows gratuitous ARPs to be disabled when the
+operating system is running, but enabled when the system is down.
+
+.SH "Section Rmcpplus_Conf_Privilege"
+This section supports configuration of the IPMI 2.0 (including
+Serial-over-LAN) cipher suite IDs.  If your machine does not support
+IPMI 2.0, the fields will not be configurable.
+.LP
+Each cipher suite ID describes a combination of an authentication
+algorithm, integrity algorithm, and encryption algorithm for IPMI 2.0.
+The authentication algorithm is used for user authentication with the
+BMC.  The integrity algorithm is used for generating signatures on
+IPMI packets.  The confidentiality algorithm is used for encrypting
+data.  The configuration in this section enables certain cipher suite
+IDs to be enabled or disabled, and the maximum privilege level a
+username can authenticate with.
+.LP
+The following table shows the cipher suite ID to algorithms mapping:
+.LP
+.sp
+0 - Authentication Algorithm = None; Integrity Algorithm = None; Confidentiality Algorithm = None
+.sp
+1 - Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = None; Confidentiality Algorithm = None
+.sp
+2 - Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = None
+.sp
+3 - Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = AES-CBC-128
+.sp
+4 - Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = xRC4-128
+.sp
+5 - Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = xRC4-40
+.sp
+6 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = None; Confidentiality Algorithm = None
+.sp
+7 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = HMAC-MD5-128; Confidentiality Algorithm = None
+.sp
+8 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = HMAC-MD5-128; Confidentiality Algorithm = AES-CBC-128
+.sp
+9 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = HMAC-MD5-128; Confidentiality Algorithm = xRC4-128
+.sp
+10 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = HMAC-MD5-128; Confidentiality Algorithm = xRC4-40
+.sp
+11 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm =
+None
+.sp
+12 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm =
+AES-CBC-128
+.sp
+13 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm = xRC4-128
+.sp
+14 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm = xRC4-40
+.LP
+Generally speaking, HMAC-SHA1 based algorithms are stronger than
+HMAC-MD5, which are better than MD5-128 algorithms.  AES-CBC-128
+confidentiality algorithms are stronger than xRC4-128 algorithms,
+which are better than xRC4-40 algorithms.  Cipher suite ID 3 is
+therefore typically considered the most secure.  Some users may wish
+to set cipher suite ID 3 to a privilege level and disable all 
+remaining cipher suite IDs.
+.LP
+The above example configuration has decided to allow any user with
+"Administrator" privileges use any Cipher Suite algorithm suite which
+requires an authentication, integrity, and confidentiality algorithm.
+Typically, the maximum privilege level configured to a username should
+be set for atleast one cipher suite ID.  Typically, this is the
+"Administrator" privilege.
+.LP
+A number of cipher suite IDs are optionally implemented, so the 
+available cipher suite IDs available your system may vary.
+
+.SH "Section SOL_Conf"
+
+This section is for setting up Serial-Over-Lan (SOL) and will only be
+available for configuration on those machines.  SOL can be enabled
+with the \fIEnable_SOL\fR field.  The minimum privilege level required
+for connecting with SOL is specified by \fISOL_Privilege_Level\fR.
+This should be set to the maximum privilege level configured to a
+username that has SOL enabled.  Typically, this is the "Administrator"
+privilege. Authentication and Encryption can be forced or not using
+the fields \fIForce_SOL_Payload_Authentication\fR and
+\fIForce_SOL_Payload_Encryption\fR respectively.  It is recommended
+that these be set on.  However, forced authentication and/or
+encryption support depend on the cipher suite IDs supported.
+.LP
+The \fICharacter_Accumulate_Interval\fR,
+\fICharacter_Send_Threshold\fR , \fISOL_Retry_Count\fR and ,
+\fISOL_Retry_Interval\fR options are used to set SOL character output
+speeds. \fICharacter_Accumulate_Interval\fR determines how often
+serial data should be regularly sent and
+\fICharacter_Send_Threshold\fR indicates the character count that if
+passed, will force serial data to be sent.  \fISOL_Retry_Count\fR
+indicates how many times packets must be retransmitted if
+acknowledgements are not received.  \fISOL_Retry_Interval\fR indicates
+the timeout interval.  Generally, the manufacturer recommended numbers
+will be sufficient.  However, you may wish to experiment with these
+values for faster SOL throughput.
+.LP
+The \fINon_Volatile_Bit_Rate\fR and \fIVolatile_Bit_Rate\fR determine
+the baudrate the BMC should use.  This should match the baudrate set
+in the BIOS and operating system, such as
+.B agetty(8).  
+Generally speaking, both the \fIVolatile\fR and \fINon_Volatile\fR
+options should be set identically.
+.LP
+In addition to enabling SOL in this section, individual users most
+also be capable of connecting with SOL.  See the section 
+.B "Section User1, User2, ..." 
+above for details.  
+
+#include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
+.SH "SEE ALSO"
+freeipmi(7), bmc-watchdog(8), ipmi-config(8), agetty(8)	
+#include <@top_srcdir@/man/manpage-common-homepage.man>

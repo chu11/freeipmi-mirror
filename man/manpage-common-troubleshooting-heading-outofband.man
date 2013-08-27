@@ -6,6 +6,6 @@ mask, username, user enablement, user privilege, password, LAN
 privilege, LAN enablement, and allowed authentication type(s).  For
 IPMI 2.0 connections, double check to make sure the cipher suite
 privilege(s) and K_g key are configured properly.  The
-.B bmc-config(8)
+.B ipmi-config(8)
 tool can be used to check and/or change these configuration
 settings.

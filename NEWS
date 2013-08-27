@@ -1,3 +1,29 @@
+FreeIPMI 1.4.1 - 08/21/13
+-------------------------
+
+Tools - New Features
+--------------------
+o Support new tool ipmi-config.  Ipmi-config is a consolidated
+  configuration tool implementing everything that bmc-config,
+  ipmi-pef-config, ipmi-sensors-config, and ipmi-chassis-config into
+  one tool called ipmi-config.
+  - The consolidated tool will allow users to checkout, commit, and
+    diff sections across the four former tools using only one tool.
+  - The consolidated tool will also allow users to checkout, commit,
+    and diff new sections not yet covered in the four former tools.
+  - Legacy scripts for bmc-config, ipmi-pef-config,
+    ipmi-sensors-config, and ipmi-chassis-config will point to the new
+    tool with all appropriate options to ensure full backwards
+    compatability.
+  - The ipmi-pef-config --info option has been made legacy.  It is
+    still supported but no longer advertised as supported.
+
+Tools - Bug Fixes/Minor Changes
+-------------------------------
+
+Libraries
+---------
+
 FreeIPMI 1.3.1 - 08/22/13
 -------------------------
 

@@ -47,15 +47,15 @@ the remote machine's BMC must first be configured for out of band
 communication.  Typically, this involves setting a username, password,
 IP address, MAC address, and a few other parameters.  This can be done
 using the tool
-.B bmc-config(8).  
+.B ipmi-config(8).  
 Additional information on how to configure with
-.B bmc-config(8) 
+.B ipmi-config(8) 
 can be found
 in the
-.B bmc-config.conf(5) 
+.B ipmi-config.conf(5) 
 manpage.  Some vendors may pre-configure their motherboards with
 default values so that 
-.B bmc-config(8)
+.B ipmi-config(8)
 can be used remotely to configure the machine.  However, most of the
 time, the BMC must be configured in-band before out-of-band access can
 be allowed (for example, the correct IP address and MAC address must
@@ -119,14 +119,9 @@ tools in the FreeIPMI configuration file.  See
 for more information.
 
 .SH "HPC Support"
-Much of FreeIPMI was written with HPC support in mind.  The
-configuration tools (
-.B bmc-config(8), 
-.B ipmi-pef-config(8), 
-.B ipmi-sensors-config(8),
-and
-.B ipmi-chassis-config(8)
-) come with file input/output support so that configuration can be
+Much of FreeIPMI was written with HPC support in mind.  
+.B Ipmi-config(8)
+comes with file input/output support so that configuration can be
 copied and verified across nodes in a cluster.  Most tools (like
 .B ipmipower(8) 
 and 
@@ -164,12 +159,6 @@ The following tools are distributed and supported by FreeIPMI.
 A tool to read information about a BMC such as device version numbers,
 device support, and globally unique IDs (guids).
 .PP
-.B Bmc-config
-.PP
-A tool to configure general BMC and IPMI information.  Supports
-configuration of usernames, passwords, networking information,
-security, Serial-over-LAN (SOL), and other core fields.
-.PP
 .B Bmc-watchdog
 .PP
 A tool/daemon to manage a BMC Watchdog. This tool is typically used
@@ -205,6 +194,14 @@ A tool for remote power control.
 .PP
 A tool for Serial-over-Lan (SOL) console access.
 .PP
+.B Ipmi-config
+.PP
+A tool to configure BMC and IPMI information.  In can be used to
+configured usernames, passwords, networking information, security,
+Serial-over-LAN (SOL), Platform Event Filtering (PEF), boot devices,
+power restoration policy, sensor thresholds, sensor events, and many
+more configuration options.
+.PP
 .B Ipmi-raw
 .PP
 A tool that provides hex input/output of IPMI commands.
@@ -214,24 +211,9 @@ A tool that provides hex input/output of IPMI commands.
 A tool that can probe for information about the location of a BMC
 device, such as device addresses.
 .PP
-.B Ipmi-chassis-config
-.PP
-A tool to configure IPMI chassis information.  Supports configuration
-of boot device, power restore policy, and other chassis related
-fields.
-.PP
-.B Ipmi-pef-config
-.PP
-A tool to configure Platform Event Filtering (PEF) information.
-.PP
 .B Ipmi-pet
 .PP
 A tool to parse and interpret Platform Event Traps (PET).
-.PP
-.B Ipmi-sensors-config
-.PP
-A tool to configure IPMI sensors.  Supports configuration of sensor
-thresholds, sensor events, and other sensor related fields.
 .PP
 .B Ipmi-dcmi
 .PP
@@ -301,10 +283,9 @@ Copyright \(co 2003-2013 FreeIPMI Core Team.
 
 .SH "SEE ALSO"
 libfreeipmi(3), libipmiconsole(3), libipmidetect(3),
-libipmimonitoring(3), freeipmi.conf(5), bmc-config(8), bmc-device(8),
-bmc-info(8), bmc-watchdog(8), ipmi-chassis(8), ipmi-chassis-config(8),
-ipmi-fru(8), ipmi-locate(8), ipmi-oem(8), ipmi-pef-config(8),
-ipmi-pet(8), ipmi-raw(8), ipmi-sel(8), ipmi-sensors(8),
-ipmi-sensors-config(8), ipmiconsole(8), ipmidetect(8), ipmiping(8),
+libipmimonitoring(3), freeipmi.conf(5), bmc-device(8), bmc-info(8),
+bmc-watchdog(8), ipmi-chassis(8), ipmi-config(8), ipmi-fru(8),
+ipmi-locate(8), ipmi-oem(8), ipmi-pet(8), ipmi-raw(8), ipmi-sel(8),
+ipmi-sensors(8), ipmiconsole(8), ipmidetect(8), ipmiping(8),
 ipmipower(8), rmcpping(8)
 #include <@top_srcdir@/man/manpage-common-homepage.man>

@@ -312,6 +312,6 @@ C6220.
 Copyright (C) 2012-2013 Lawrence Livermore National Security, LLC.
 #include <@top_srcdir@/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
-freeipmi(7), ipmi-sel(8), ipmiseld.conf(5), bmc-config(8),
-bmc-device(8), freeipmi_interpret_sel.conf(5)
+freeipmi(7), ipmi-sel(8), ipmiseld.conf(5), bmc-device(8),
+ipmi-config(8), freeipmi_interpret_sel.conf(5)
 #include <@top_srcdir@/man/manpage-common-homepage.man>

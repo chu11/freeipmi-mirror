@@ -1,8 +1,0 @@
-.SH "DIAGNOSTICS"
-Upon successful execution, exit status is 0.  On non-fatal error, exit
-status is 1.  On fatal error, exit status is 2.
-.LP
-If multiple hosts are specified for communication, the exit status is
-0 if and only if all targets successfully execute.  If any non-fatal
-error occurs, exit status is 1.  If any fatal error occurs, exit
-status is 2.

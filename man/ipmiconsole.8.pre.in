@@ -39,7 +39,7 @@ communicates with a remote machine's Baseboard Management Controller
 (BMC) to establish a console session.  Before any SOL communication
 can take place, the remote machine's BMC must be configured properly.
 The FreeIPMI tool
-.B bmc-config(8) 
+.B ipmi-config(8) 
 may be used to do this configuration.
 .LP
 Often (although not always), console redirection must be also be
@@ -304,5 +304,5 @@ Copyright (C) 2007-2013 Lawrence Livermore National Security, LLC.
 Copyright (C) 2006-2007 The Regents of the University of California.
 #include <@top_srcdir@/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
-freeipmi.conf(5), freeipmi(7), bmc-config(8)
+freeipmi.conf(5), freeipmi(7), ipmi-config(8)
 #include <@top_srcdir@/man/manpage-common-homepage.man>
