@@ -244,7 +244,7 @@ _ipmi_config (pstdout_state_t pstate,
             {
               pstdout_fprintf (pstate,
                                stderr,
-                               "Unknown section `%s'\n",
+                               "Unknown section `%s', perhaps another category must be specified (see --category)\n",
                                sstr->section_name);
               goto cleanup;
             }
