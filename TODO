@@ -1,7 +1,5 @@
 this branch todo
 ----------------
-if section name not recognized indicate bad category in error message
-- handle w/ special case output if legacy
 deal w/ parsing workaround options
   
 *** - priority for future major release
