@@ -150,6 +150,18 @@ $(top_builddir)/libfreeipmi/libfreeipmi.la : force-dependency-check
 
 force-dependency-check:
 
+CLEANFILES =  \
+	bmc-config \
+	ipmi-chassis-config \
+	ipmi-pef-config \
+	ipmi-sensors-config
+
+EXTRA_DIST =  \
+	bmc-config.in \
+	ipmi-chassis-config.in \
+	ipmi-pef-config.in \
+	ipmi-sensors-config.in
+
 install-exec-hook:
 	$(install_sh) -d -m 755 $(DESTDIR)$(sbindir)
 	$(LN_S) -f $(sbindir)/ipmi-pef-config $(DESTDIR)$(sbindir)/pef-config
