@@ -44,6 +44,67 @@ extern "C" {
  * reasonable timeframe.
  */
 
+/* IPMI COMPLETION CODE / RMCPPLUS CODE MAPPING
+ *
+ * For most users, the high level error codes listed below will
+ * suffice.  However, for those who want/need to see deeper IPMI
+ * completion code or RMCPPlus errors, the following are mappings of
+ * IPMI completion codes and RMCPPlus codes to their respective error
+ * codes.
+ *
+ * Not that other factors outside of completion codes/RMCPPlus codes
+ * could also lead to these IPMI errors.  For example, depending on
+ * motherboard support of username types, a IPMI_ERR_USERNAME_INVALID
+ * could be returned even though no IPMI error occurred.  In addition,
+ * completion codes/RMCPPlus codes could map to different error codes,
+ * depending on when the error occurred (such as during session
+ * authentication vs. after authentication).
+ *
+ * (*) - Completion code is specific to an IPMI command
+ *
+ * IPMI_ERR_USERNAME_INVALID
+ * - IPMI_COMP_CODE_GET_SESSION_CHALLENGE_INVALID_USERNAME (*)
+ * - IPMI_COMP_CODE_GET_SESSION_CHALLENGE_NULL_USERNAME_NOT_ENABLED (*)
+ *
+ * IPMI_ERR_PASSWORD_INVALID
+ * - RMCPPLUS_STATUS_INVALID_INTEGRITY_CHECK_VALUE
+ *
+ * IPMI_ERR_PRIVILEGE_LEVEL_INSUFFICIENT
+ * - IPMI_COMP_CODE_INSUFFICIENT_PRIVILEGE_LEVEL
+ *
+ * IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED
+ * - IPMI_COMP_CODE_ACTIVATE_SESSION_EXCEEDS_PRIVILEGE_LEVEL (*)
+ * - IPMI_COMP_CODE_INSUFFICIENT_PRIVILEGE_LEVEL
+ * - IPMI_COMP_CODE_SET_SESSION_PRIVILEGE_LEVEL_REQUESTED_LEVEL_NOT_AVAILABLE_FOR_USER (*)
+ * - IPMI_COMP_CODE_SET_SESSION_PRIVILEGE_LEVEL_REQUESTED_LEVEL_EXCEEDS_USER_PRIVILEGE_LIMIT (*)
+ * - RMCPPLUS_STATUS_INVALID_ROLE
+ * - RMCPPLUS_STATUS_UNAUTHORIZED_ROLE_OR_PRIVILEGE_LEVEL_REQUESTED
+ *
+ * IPMI_ERR_CIPHER_SUITE_ID_UNAVAILABLE
+ * - RMCPPLUS_STATUS_NO_CIPHER_SUITE_MATCH_WITH_PROPOSED_SECURITY_ALGORITHMS
+ *
+ * IPMI_ERR_MESSAGE_TIMEOUT
+ * - IPMI_COMP_CODE_COMMAND_TIMEOUT
+ *
+ * IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
+ * - IPMI_COMP_CODE_INVALID_COMMAND
+ * - IPMI_COMP_CODE_COMMAND_INVALID_FOR_LUN  
+ * - IPMI_COMP_CODE_REQUEST_DATA_LENGTH_INVALID
+ * - IPMI_COMP_CODE_REQUEST_DATA_LENGTH_LIMIT_EXCEEDED
+ * - IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE
+ * - IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST
+ *
+ * IPMI_ERR_BMC_BUSY
+ * - IPMI_COMP_CODE_NODE_BUSY
+ * - IPMI_COMP_CODE_OUT_OF_SPACE
+ * - IPMI_COMP_CODE_SDR_REPOSITORY_IN_UPDATE_MODE
+ * - IPMI_COMP_CODE_DEVICE_IN_FIRMWARE_UPDATE_MODE
+ * - IPMI_COMP_CODE_BMC_INITIALIZATION_IN_PROGRESS
+ *
+ * All other IPMI completion codes will map to IPMI_ERR_BAD_COMPLETION_CODE.
+ * All other RMCPPlus codes will map to IPMI_ERR_BAD_RMCPPLUS_STATUS_CODE.
+ */
+
 enum ipmi_errnum
   {
     IPMI_ERR_SUCCESS = 0,

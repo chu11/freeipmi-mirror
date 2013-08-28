@@ -423,28 +423,22 @@ _read_fru_data (ipmi_fru_ctx_t ctx,
                                   count_to_read,
                                   fru_read_data_rs) < 0)
         {
-	  if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
+	  /* if first time we've read from this device id, assume the
+	   * below completion codes mean that there is no data on this
+	   * device.
+	   */
+	  if (!num_bytes_read
+	      && ((ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
+		   && ipmi_check_completion_code (fru_read_data_rs, IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1)
+		  || (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_MESSAGE_TIMEOUT
+		      && ipmi_check_completion_code (fru_read_data_rs, IPMI_COMP_CODE_COMMAND_TIMEOUT) == 1)))
 	    {
-	      /* if first time we've read from this device id, assume the
-	       * below completion codes mean that there is no data on this
-	       * device.
-	       */
-	      if (!num_bytes_read
-		  && (ipmi_check_completion_code (fru_read_data_rs, IPMI_COMP_CODE_COMMAND_TIMEOUT) == 1
-		      || ipmi_check_completion_code (fru_read_data_rs, IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
-		{
-		  FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_NO_FRU_INFORMATION);
-		  goto cleanup;
-		}
-	      
-	      if (ipmi_check_completion_code (fru_read_data_rs, IPMI_COMP_CODE_READ_FRU_DATA_FRU_DEVICE_BUSY) == 1)
-		{
-		  FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_DEVICE_BUSY);
-		  goto cleanup;
-		}
+	      FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_NO_FRU_INFORMATION);
+	      goto cleanup;
 	    }
-
-	  if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_MESSAGE_TIMEOUT)
+	  
+	  if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+	      && ipmi_check_completion_code (fru_read_data_rs, IPMI_COMP_CODE_READ_FRU_DATA_FRU_DEVICE_BUSY) == 1)
 	    {
 	      FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_DEVICE_BUSY);
 	      goto cleanup;

@@ -96,13 +96,14 @@ _get_dell_system_info_short_string (ipmi_oem_state_data_t *state_data,
                                            IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
                                            obj_cmd_rs) < 0)
     {
-      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-	  && ((ipmi_check_completion_code (obj_cmd_rs,
-					   IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1)
-	      || (ipmi_check_completion_code (obj_cmd_rs,
-					      IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1)
-	      || (ipmi_check_completion_code (obj_cmd_rs,
-					      IPMI_COMP_CODE_OEM_DELL_NOT_LICENSED) == 1)))
+      if ((ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+	   && ((ipmi_check_completion_code (obj_cmd_rs,
+					    IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1)
+	       || (ipmi_check_completion_code (obj_cmd_rs,
+					       IPMI_COMP_CODE_OEM_DELL_NOT_LICENSED) == 1)))
+	  || (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
+	      && ipmi_check_completion_code (obj_cmd_rs,
+					     IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
 	{
 	  pstdout_fprintf (state_data->pstate,
 			   stderr,
@@ -214,13 +215,14 @@ _get_dell_system_info_long_string (ipmi_oem_state_data_t *state_data,
                                            IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
                                            obj_cmd_rs) < 0)
     {
-      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-	  && ((ipmi_check_completion_code (obj_cmd_rs,
-					   IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1)
-	      || (ipmi_check_completion_code (obj_cmd_rs,
-					      IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1)
-	      || (ipmi_check_completion_code (obj_cmd_rs,
-					      IPMI_COMP_CODE_OEM_DELL_NOT_LICENSED) == 1)))
+      if ((ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+	   && ((ipmi_check_completion_code (obj_cmd_rs,
+					    IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1)
+	       || (ipmi_check_completion_code (obj_cmd_rs,
+					       IPMI_COMP_CODE_OEM_DELL_NOT_LICENSED) == 1)))
+	  || (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
+	      && ipmi_check_completion_code (obj_cmd_rs,
+					     IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
 	{
 	  pstdout_fprintf (state_data->pstate,
 			   stderr,
@@ -410,13 +412,14 @@ _get_dell_system_info_bytes (ipmi_oem_state_data_t *state_data,
                                            IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
                                            obj_cmd_rs) < 0)
     {
-      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-	  && ((ipmi_check_completion_code (obj_cmd_rs,
-					   IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1)
-	      || (ipmi_check_completion_code (obj_cmd_rs,
-					      IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1)
-	      || (ipmi_check_completion_code (obj_cmd_rs,
-					      IPMI_COMP_CODE_OEM_DELL_NOT_LICENSED) == 1)))
+      if ((ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+	   && ((ipmi_check_completion_code (obj_cmd_rs,
+					    IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1)
+	       || (ipmi_check_completion_code (obj_cmd_rs,
+					       IPMI_COMP_CODE_OEM_DELL_NOT_LICENSED) == 1)))
+	  || (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
+	      && ipmi_check_completion_code (obj_cmd_rs,
+					     IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
 	{
 	  pstdout_fprintf (state_data->pstate,
 			   stderr,
@@ -887,13 +890,14 @@ _output_dell_system_info_cmc_info (ipmi_oem_state_data_t *state_data)
 					       IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
 					       obj_cmd_rs) < 0)
 	{
-	  if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-	      && ((ipmi_check_completion_code (obj_cmd_rs,
-					       IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1)
-		  || (ipmi_check_completion_code (obj_cmd_rs,
-						  IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1)
-		  || (ipmi_check_completion_code (obj_cmd_rs,
-						  IPMI_COMP_CODE_OEM_DELL_NOT_LICENSED) == 1)))
+	  if ((ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+	       && ((ipmi_check_completion_code (obj_cmd_rs,
+						IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1)
+		   || (ipmi_check_completion_code (obj_cmd_rs,
+						   IPMI_COMP_CODE_OEM_DELL_NOT_LICENSED) == 1)))
+	      || (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
+		  && ipmi_check_completion_code (obj_cmd_rs,
+						 IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
 	    {
 	      pstdout_fprintf (state_data->pstate,
 			       stderr,
@@ -1169,13 +1173,14 @@ _output_dell_system_info_cmc_ipv6_info (ipmi_oem_state_data_t *state_data)
 					       IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
 					       obj_cmd_rs) < 0)
 	{
-	  if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-	      && ((ipmi_check_completion_code (obj_cmd_rs,
-					       IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1)
-		  || (ipmi_check_completion_code (obj_cmd_rs,
-						  IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1)
-		  || (ipmi_check_completion_code (obj_cmd_rs,
-						  IPMI_COMP_CODE_OEM_DELL_NOT_LICENSED) == 1)))
+	  if ((ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+	       && ((ipmi_check_completion_code (obj_cmd_rs,
+						IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1)
+		   || (ipmi_check_completion_code (obj_cmd_rs,
+						   IPMI_COMP_CODE_OEM_DELL_NOT_LICENSED) == 1)))
+	      || (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
+		  && ipmi_check_completion_code (obj_cmd_rs,
+						 IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
 	    {
 	      pstdout_fprintf (state_data->pstate,
 			       stderr,
@@ -1353,13 +1358,14 @@ _output_dell_system_info_snmp_ipv6_info (ipmi_oem_state_data_t *state_data)
 					   IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
 					   obj_cmd_rs) < 0)
     {
-      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-	  && ((ipmi_check_completion_code (obj_cmd_rs,
-					   IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1)
-	      || (ipmi_check_completion_code (obj_cmd_rs,
-					      IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1)
-	      || (ipmi_check_completion_code (obj_cmd_rs,
-					      IPMI_COMP_CODE_OEM_DELL_NOT_LICENSED) == 1)))
+      if ((ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+	   && ((ipmi_check_completion_code (obj_cmd_rs,
+					    IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1)
+	       || (ipmi_check_completion_code (obj_cmd_rs,
+					       IPMI_COMP_CODE_OEM_DELL_NOT_LICENSED) == 1)))
+	  || (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
+	      && ipmi_check_completion_code (obj_cmd_rs,
+					     IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
 	{
 	  pstdout_fprintf (state_data->pstate,
 			   stderr,
@@ -1445,13 +1451,14 @@ _output_dell_system_info_snmp_ipv6_info (ipmi_oem_state_data_t *state_data)
 					       IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
 					       obj_cmd_rs) < 0)
 	{
-	  if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-	      && ((ipmi_check_completion_code (obj_cmd_rs,
-					       IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1)
-		  || (ipmi_check_completion_code (obj_cmd_rs,
-						  IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1)
-		  || (ipmi_check_completion_code (obj_cmd_rs,
-						  IPMI_COMP_CODE_OEM_DELL_NOT_LICENSED) == 1)))
+	  if ((ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+	       && ((ipmi_check_completion_code (obj_cmd_rs,
+						IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1)
+		   || (ipmi_check_completion_code (obj_cmd_rs,
+						   IPMI_COMP_CODE_OEM_DELL_NOT_LICENSED) == 1)))
+	      || (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
+		  && ipmi_check_completion_code (obj_cmd_rs,
+						 IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
 	    {
 	      pstdout_fprintf (state_data->pstate,
 			       stderr,
@@ -1584,13 +1591,14 @@ _output_dell_system_info_10g_mac_addresses (ipmi_oem_state_data_t *state_data)
                                            IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
                                            obj_cmd_rs) < 0)
     {
-      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-	  && ((ipmi_check_completion_code (obj_cmd_rs,
-					   IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1)
-	      || (ipmi_check_completion_code (obj_cmd_rs,
-					      IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1)
-	      || (ipmi_check_completion_code (obj_cmd_rs,
-					      IPMI_COMP_CODE_OEM_DELL_NOT_LICENSED) == 1)))
+      if ((ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+	   && ((ipmi_check_completion_code (obj_cmd_rs,
+					    IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1)
+	       || (ipmi_check_completion_code (obj_cmd_rs,
+					       IPMI_COMP_CODE_OEM_DELL_NOT_LICENSED) == 1)))
+	  || (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
+	      && ipmi_check_completion_code (obj_cmd_rs,
+					     IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
 	{
 	  pstdout_fprintf (state_data->pstate,
 			   stderr,
@@ -5854,13 +5862,14 @@ ipmi_oem_dell_get_power_consumption_statistics (ipmi_oem_state_data_t *state_dat
                                            IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
                                            obj_cmd_rs) < 0)
     {
-      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-	  && ((ipmi_check_completion_code (obj_cmd_rs,
-					   IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1)
-	      || (ipmi_check_completion_code (obj_cmd_rs,
-					      IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1)
-	      || (ipmi_check_completion_code (obj_cmd_rs,
-					      IPMI_COMP_CODE_OEM_DELL_NOT_LICENSED) == 1)))
+      if ((ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+	   && ((ipmi_check_completion_code (obj_cmd_rs,
+					    IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1)
+	       || (ipmi_check_completion_code (obj_cmd_rs,
+					       IPMI_COMP_CODE_OEM_DELL_NOT_LICENSED) == 1)))
+	  || (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
+	      && ipmi_check_completion_code (obj_cmd_rs,
+					     IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
 	{
 	  pstdout_fprintf (state_data->pstate,
 			   stderr,
@@ -6158,13 +6167,14 @@ _get_power_capacity (ipmi_oem_state_data_t *state_data,
                                            IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
                                            obj_cmd_rs) < 0)
     {
-      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-	  && ((ipmi_check_completion_code (obj_cmd_rs,
-					   IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1)
-	      || (ipmi_check_completion_code (obj_cmd_rs,
-					      IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1)
-	      || (ipmi_check_completion_code (obj_cmd_rs,
-					      IPMI_COMP_CODE_OEM_DELL_NOT_LICENSED) == 1)))
+      if ((ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+	   && ((ipmi_check_completion_code (obj_cmd_rs,
+					    IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1)
+	       || (ipmi_check_completion_code (obj_cmd_rs,
+					       IPMI_COMP_CODE_OEM_DELL_NOT_LICENSED) == 1)))
+	  || (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
+	      && ipmi_check_completion_code (obj_cmd_rs,
+					     IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
 	{
 	  pstdout_fprintf (state_data->pstate,
 			   stderr,
@@ -6471,13 +6481,14 @@ ipmi_oem_dell_set_power_capacity (ipmi_oem_state_data_t *state_data)
 					   12,
 					   obj_cmd_rs) < 0)
     {
-      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-	  && ((ipmi_check_completion_code (obj_cmd_rs,
-					   IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1)
-	      || (ipmi_check_completion_code (obj_cmd_rs,
-					      IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1)
-	      || (ipmi_check_completion_code (obj_cmd_rs,
-					      IPMI_COMP_CODE_OEM_DELL_NOT_LICENSED) == 1)))
+      if ((ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+	   && ((ipmi_check_completion_code (obj_cmd_rs,
+					    IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1)
+	       || (ipmi_check_completion_code (obj_cmd_rs,
+					       IPMI_COMP_CODE_OEM_DELL_NOT_LICENSED) == 1)))
+	  || (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
+	      && ipmi_check_completion_code (obj_cmd_rs,
+					     IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
 	{
 	  pstdout_fprintf (state_data->pstate,
 			   stderr,
