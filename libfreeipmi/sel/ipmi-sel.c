@@ -2201,9 +2201,10 @@ ipmi_sel_delete_sel_entry (ipmi_sel_ctx_t ctx, uint16_t record_id)
                                      record_id,
                                      obj_cmd_rs) < 0)
         {
-          if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-              && (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_REQUESTED_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1
-                  || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
+          if ((ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
+	       && ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1)
+	      || (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+		  && ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_REQUESTED_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1))
             {
               SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_NOT_FOUND);
               goto cleanup;

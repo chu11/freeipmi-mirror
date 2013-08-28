@@ -307,8 +307,7 @@ _set_channel_access (ipmi_config_state_data_t *state_data,
                          "ipmi_cmd_set_channel_access: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (comp_code
-          && ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
+      if (comp_code)
         {
           (*comp_code) = 0;
           if (FIID_OBJ_GET (obj_cmd_rs, "comp_code", &val) < 0)
@@ -443,7 +442,7 @@ _enable_user_level_authentication_commit (ipmi_config_state_data_t *state_data,
   /* IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD is special case for
    * this field, see IPMI spec.  "Return CCh 'invalid data field'
    * error completion code if an attempt is made to set this bit, but
-   * hte option is not supported."
+   * the option is not supported."
    */
   if ((ret = _set_channel_access (state_data,
                                   section_name,

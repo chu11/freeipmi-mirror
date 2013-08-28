@@ -76,7 +76,7 @@ sel_get_reservation_id (ipmi_sel_ctx_t ctx,
        * IPMI spec states reservation ID 0000h should be used if Reserve SEL
        * is not supported.
        */
-      if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+      if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
           && ipmi_check_completion_code (obj_cmd_rs,
                                          IPMI_COMP_CODE_INVALID_COMMAND) == 1)
         {

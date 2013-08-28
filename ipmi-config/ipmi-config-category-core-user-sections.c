@@ -184,7 +184,7 @@ _get_user_access (ipmi_config_state_data_t *state_data,
            * to assume it's possible on some other motherboards.
            */
           
-          if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+          if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
               && (ipmi_check_completion_code (obj_cmd_rs,
                                               IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
             (*username_not_set_yet) = 1;
@@ -372,8 +372,7 @@ _set_user_access (ipmi_config_state_data_t *state_data,
                          "ipmi_cmd_set_user_access: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (comp_code
-          && ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
+      if (comp_code)
         {
           (*comp_code) = 0;
           if (FIID_OBJ_GET (obj_cmd_rs, "comp_code", &val) < 0)
@@ -454,7 +453,7 @@ username_checkout (ipmi_config_state_data_t *state_data,
        * previously.
        */
 
-      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
           && (ipmi_check_completion_code (obj_cmd_rs,
                                           IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
         {
@@ -575,7 +574,7 @@ username_commit (ipmi_config_state_data_t *state_data,
        * If configured username identical to inputted one, don't
        * output error.
        */
-      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
           && (ipmi_check_completion_code (obj_cmd_rs,
                                           IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
         {
@@ -1235,7 +1234,7 @@ enable_user_commit (ipmi_config_state_data_t *state_data,
            * ignored)
            */
           
-          if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+          if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
               && (ipmi_check_completion_code (obj_cmd_rs,
                                               IPMI_COMP_CODE_REQUEST_DATA_LENGTH_INVALID) == 1))
             {
@@ -1755,7 +1754,7 @@ sol_payload_access_checkout (ipmi_config_state_data_t *state_data,
        * to assume it's possible on some other motherboards.
        */
 
-      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
           && (ipmi_check_completion_code (obj_cmd_rs,
                                           IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
         {
@@ -2210,7 +2209,7 @@ serial_session_limit_commit (ipmi_config_state_data_t *state_data,
   /* IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD is special case for
    * this field, see IPMI spec.  "Return CCh 'invalid data field'
    * error completion code if an attempt is made to set this bit, but
-   * hte option is not supported."
+   * the option is not supported."
    */
   if ((ret = _set_user_access (state_data,
                                section_name,

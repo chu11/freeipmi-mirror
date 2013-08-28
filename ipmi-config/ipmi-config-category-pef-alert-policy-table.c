@@ -235,7 +235,7 @@ _set_alert_policy_table (struct ipmi_config_state_data *state_data,
        * compliance issue, but makes it tough to make a portable/good
        * interface.
        */
-      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
           && (ipmi_check_completion_code (obj_cmd_rs,
                                           IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
         {
