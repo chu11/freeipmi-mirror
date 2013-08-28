@@ -3,7 +3,8 @@
 	* libfreeipmi/include/freeipmi/api/ipmi-api.h: Document mapping of
 	IPMI completion codes and RMCPPlus codes to API error codes.
 
-	* Update libfreeipmi to check/use API error codes correctly.
+	* Update freeipmi libraries/tools to check/use API error codes
+	correctly.
 	
 2013-08-27  Albert Chu <chu11@llnl.gov>
 
