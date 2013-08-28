@@ -1,7 +1,7 @@
 FreeIPMI 1.3.2 - 08/22/13
 -------------------------
-o Update FreeIPMI tools to check for
-  IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED error code correctly.
+o Update FreeIPMI tools to check libfreeipmi API error codes
+  correctly.
 o Update ipmi-api.h to list mappings of IPMI completion codes and
   RMCPPlus codes to API Error codes.
 
