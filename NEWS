@@ -1,4 +1,4 @@
-FreeIPMI 1.3.2 - 08/22/13
+FreeIPMI 1.3.2 - 09/10/13
 -------------------------
 o Update FreeIPMI tools to check libfreeipmi API error codes
   correctly.

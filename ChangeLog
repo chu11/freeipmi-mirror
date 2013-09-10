@@ -1,3 +1,9 @@
+2013-09-10  Albert Chu <chu11@llnl.gov>
+
+	* NEWS, configure.ac: Update for release.
+
+	* Tagged Release-1_3_2
+	
 2013-08-28  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/api/ipmi-api.h: Document mapping of
