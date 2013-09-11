@@ -92,6 +92,14 @@ struct intel_node_manager_sdr_callback
   int found;
 };
 
+/* achu:
+ *
+ * In Intel NM 2.0 specification, sensor numbers are now fixed and you
+ * don't have to search the SDR for them.  We could check version of
+ * NM on motherboard to determine if we need to search SDR or not, but
+ * for time being we'll stick to the search SDR method b/c it will
+ * always work.
+ */
 static int
 _intel_node_manager_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 				  uint8_t record_type,
@@ -236,7 +244,7 @@ sel_string_output_intel_node_manager_sensor_name (ipmi_sel_ctx_t ctx,
        * NM Threshold
        *
        * So we'll copy them.  I've found no common name for the
-       * IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH
+       * IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_ME_FIRMWARE_HEALTH_EVENT
        * event, so we'll call it "NM Firmware".
        */
 
@@ -292,8 +300,8 @@ sel_string_output_intel_node_manager_sensor_name (ipmi_sel_ctx_t ctx,
 
           return (1);
         }
-      else if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH
-               && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH)
+      else if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_ME_FIRMWARE_HEALTH_EVENT
+               && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_ME_FIRMWARE_HEALTH_EVENT)
         {
           if (sel_string_snprintf (buf,
 				   buflen,
@@ -419,9 +427,9 @@ sel_string_output_intel_node_manager_event_data1_class_oem (ipmi_sel_ctx_t ctx,
             }
         }
 
-      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH
-	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH
-          && system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_NODE_MANAGER_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_FIRMWARE_STATUS)
+      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_ME_FIRMWARE_HEALTH_EVENT
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_ME_FIRMWARE_HEALTH_EVENT
+          && system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_FIRMWARE_STATUS)
         {
           snprintf (tmpbuf,
                     tmpbuflen,
@@ -550,9 +558,9 @@ sel_string_output_intel_node_manager_event_data2_class_oem (ipmi_sel_ctx_t ctx,
           return (1);
         }
 
-      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH
-	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH
-          && system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_NODE_MANAGER_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_FIRMWARE_STATUS)
+      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_ME_FIRMWARE_HEALTH_EVENT
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_ME_FIRMWARE_HEALTH_EVENT
+          && system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_FIRMWARE_STATUS)
         {
           uint8_t health_event;
           char *health_event_str;
@@ -561,20 +569,35 @@ sel_string_output_intel_node_manager_event_data2_class_oem (ipmi_sel_ctx_t ctx,
           
 	  switch (health_event)
 	    {
-	    case IPMI_OEM_INTEL_NODE_MANAGER_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_FORCED_GPIO_RECOVER:
-	      health_event_str = "Forced GPIO recovery";
+	    case IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_RECOVERY_GPIO_FORCED:
+	      health_event_str = "Recovery GPIO forced";
 	      break;
-	    case IPMI_OEM_INTEL_NODE_MANAGER_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_IMAGE_EXECUTION_FAILED:
+	    case IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_IMAGE_EXECUTION_FAILED:
 	      health_event_str = "Image execution failed";
 	      break;
-	    case IPMI_OEM_INTEL_NODE_MANAGER_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_FLASH_ERASE_ERROR:
+	    case IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_FLASH_ERASE_ERROR:
 	      health_event_str = "Flash erase error";
 	      break;
-	    case IPMI_OEM_INTEL_NODE_MANAGER_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_FLASH_CORRUPTED:
-	      health_event_str = "Flash corrupted";
+	    case IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_FLASH_STATE_INFORMATION:
+	      health_event_str = "Flash state information";
 	      break;
-	    case IPMI_OEM_INTEL_NODE_MANAGER_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_INTERNAL_ERROR:
+	    case IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_INTERNAL_ERROR:
 	      health_event_str = "Internal error";
+	      break;
+	    case IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_BMC_COLD_RESET_ERROR:
+	      health_event_str = "BMC did not respond to cold reset";
+	      break;
+	    case IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_DIRECT_FLASH_UPDATE:
+	      health_event_str = "Direct flash update requested by the BIOS";
+	      break;
+	    case IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_MANUFACTURING_ERROR:
+	      health_event_str = "Manufacturing error";
+	      break;
+	    case IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_PERSISTENT_STORAGE_INTEGRITY_ERROR:
+	      health_event_str = "Persistent storage integrity error";
+	      break;
+	    case IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_FIRMWARE_EXCEPTION:
+	      health_event_str = "Firmware Exception";
 	      break;
 	    default:
 	      health_event_str = "Unknown";
@@ -693,13 +716,113 @@ sel_string_output_intel_node_manager_event_data3_class_oem (ipmi_sel_ctx_t ctx,
           return (1);
         }
 
-      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH
-	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH
-          && system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_NODE_MANAGER_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_FIRMWARE_STATUS)
+      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_ME_FIRMWARE_HEALTH_EVENT
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_ME_FIRMWARE_HEALTH_EVENT
+          && system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_FIRMWARE_STATUS)
         {
+	  if (system_event_record_data->event_data2 == IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_FLASH_STATE_INFORMATION)
+	    {
+	      if (system_event_record_data->event_data3 == IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_FLASH_STATE_INFORMATION_IMAGE_CORRUPTED)
+		{
+		  snprintf (tmpbuf,
+			    tmpbuflen,
+			    "recovery bootloader image or factory presets image corrupted",
+			    system_event_record_data->event_data3);
+		  
+		  return (1);
+		}
+	      else if (system_event_record_data->event_data3 == IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_FLASH_STATE_INFORMATION_FLASH_ERASE_LIMIT_REACHED)
+		{
+		  snprintf (tmpbuf,
+			    tmpbuflen,
+			    "flash erase limit has been reached",
+			    system_event_record_data->event_data3);
+		  
+		  return (1);
+		}
+	      else if (system_event_record_data->event_data3 == IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_FLASH_STATE_INFORMATION_FLASH_WRITE_LIMIT_REACHED)
+		{
+		  snprintf (tmpbuf,
+			    tmpbuflen,
+			    "flash write limit has been reached ; writing to flash has been disabled",
+			    system_event_record_data->event_data3);
+		  
+		  return (1);
+		}
+	      else if (system_event_record_data->event_data3 == IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_FLASH_STATE_INFORMATION_WRITING_TO_FLASH_ENABLED)
+		{
+		  snprintf (tmpbuf,
+			    tmpbuflen,
+			    "writing to the flash has been enabled",
+			    system_event_record_data->event_data3);
+		  
+		  return (1);
+		}
+	    }
+	  else if (system_event_record_data->event_data2 == IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_INTERNAL_ERROR)
+	    {
+	      if (system_event_record_data->event_data3 == IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_INTERNAL_ERROR_FW_WATCHDOG_TIMEOUT)
+		{
+		  snprintf (tmpbuf,
+			    tmpbuflen,
+			    "FW Watchdog Timeout",
+			    system_event_record_data->event_data3);
+		  
+		  return (1);
+		}
+	      else if (system_event_record_data->event_data3 == IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_INTERNAL_ERROR_LOADER_MANIFEST_VALIDATION_FAILURE)
+		{
+		  snprintf (tmpbuf,
+			    tmpbuflen,
+			    "Loader manifest validation failure",
+			    system_event_record_data->event_data3);
+		  
+		  return (1);
+		}
+	      else if (system_event_record_data->event_data3 == IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_INTERNAL_ERROR_UNKNOWN_POWER_MANAGEMENT_EVENT)
+		{
+		  snprintf (tmpbuf,
+			    tmpbuflen,
+			    "Unknown power management event",
+			    system_event_record_data->event_data3);
+		  
+		  return (1);
+		}
+	      else if (system_event_record_data->event_data3 == IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_INTERNAL_ERROR_NON_GRACEFUL_PMC_RESET_EVENT)
+		{
+		  snprintf (tmpbuf,
+			    tmpbuflen,
+			    "Non graceful PMC reset event detected i.e. after Dynamic Fusing",
+			    system_event_record_data->event_data3);
+		  
+		  return (1);
+		}
+	      else if (system_event_record_data->event_data3 == IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_INTERNAL_ERROR_FLASH_WEAROUT_PROTECTION)
+		{
+		  snprintf (tmpbuf,
+			    tmpbuflen,
+			    "Flash wearout protection (EFFS wearout violation)",
+			    system_event_record_data->event_data3);
+		  
+		  return (1);
+		}
+	    }
+	  else if (system_event_record_data->event_data2 == IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_MANUFACTURING_ERROR)
+	    {
+	      if (system_event_record_data->event_data3 == IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_MANUFACTURING_ERROR_INTEL_ME_FW_CONFIGURATION_BAD)
+		{
+		  snprintf (tmpbuf,
+			    tmpbuflen,
+			    "Intel ME FW configuration is inconsistent or out of range",
+			    system_event_record_data->event_data3);
+		  
+		  return (1);
+		}
+	    }
+
           snprintf (tmpbuf,
                     tmpbuflen,
-                    "Extended error code = %02Xh",
+                    "Extended error info = %02Xh",
                     system_event_record_data->event_data3);
 	  
           return (1);
