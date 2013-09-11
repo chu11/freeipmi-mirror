@@ -42,6 +42,7 @@
 #include "freeipmi/sel/ipmi-sel.h"
 
 #include "freeipmi/cmds/ipmi-sel-cmds.h"
+#include "freeipmi/cmds/ipmi-oem-intel-node-manager-cmds.h"
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
 #include "freeipmi/record-format/ipmi-sdr-oem-record-format.h"
 #include "freeipmi/record-format/ipmi-sel-record-format.h"
@@ -91,6 +92,8 @@ struct intel_node_manager_sdr_callback
   ipmi_sel_ctx_t ctx;
   int found;
 };
+
+#define INTEL_NODE_MANAGER_EVENT_BUFFER_LENGTH 4096
 
 /* achu:
  *
@@ -443,6 +446,46 @@ sel_string_output_intel_node_manager_event_data1_class_oem (ipmi_sel_ctx_t ctx,
   return (0);
 }
 
+static void
+_sel_string_output_intel_node_manager_domain_id (ipmi_sel_ctx_t ctx,
+						 char *domain_id_str,
+						 unsigned int domain_id_str_len,
+						 uint8_t domain_id)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
+  assert (domain_id_str);
+  assert (domain_id_str_len);
+  
+  if (domain_id == IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_ENTIRE_PLATFORM)
+    snprintf (domain_id_str,
+	      domain_id_str_len,
+	      "Entire platform (%u)",
+	      domain_id);
+  else if (domain_id == IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_CPU_SUBSYSTEM)
+    snprintf (domain_id_str,
+	      domain_id_str_len,
+	      "CPU subsystem (%u)",
+	      domain_id);
+  else if (domain_id == IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_MEMORY_SUBSYSTEM)
+    snprintf (domain_id_str,
+	      domain_id_str_len,
+	      "Memory subsystem (%u)",
+	      domain_id);
+  else if (domain_id == IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_HIGH_POWER_IO_SUBSYSTEM)
+    snprintf (domain_id_str,
+	      domain_id_str_len,
+	      "High Power I/O subsystem (%u)",
+	      domain_id);
+  else
+    snprintf (domain_id_str,
+	      domain_id_str_len,
+	      "%u",
+	      domain_id);
+          
+  return;
+}
+
 /* return (0) - no OEM match
  * return (1) - OEM match
  * return (-1) - error, cleanup and return error
@@ -486,16 +529,24 @@ sel_string_output_intel_node_manager_event_data2_class_oem (ipmi_sel_ctx_t ctx,
           && node_manager_policy_event == IPMI_OEM_INTEL_NODE_MANAGER_EXCEPTION_EVENT_EVENT_DATA1_NODE_MANAGER_POLICY_EVENT_POLICY_CORRECTION_TIME_EXCEEDED)
         {
           uint8_t domain_id;
-          
+	  char domain_id_str[INTEL_NODE_MANAGER_EVENT_BUFFER_LENGTH + 1];
+
           domain_id = (system_event_record_data->event_data2 & IPMI_OEM_INTEL_NODE_MANAGER_EXCEPTION_EVENT_EVENT_DATA2_DOMAIN_ID_BITMASK);
           domain_id >>= IPMI_OEM_INTEL_NODE_MANAGER_EXCEPTION_EVENT_EVENT_DATA2_DOMAIN_ID_SHIFT;
           
+	  memset (domain_id_str, '\0', INTEL_NODE_MANAGER_EVENT_BUFFER_LENGTH + 1);
+
+	  _sel_string_output_intel_node_manager_domain_id (ctx,
+							   domain_id_str,
+							   INTEL_NODE_MANAGER_EVENT_BUFFER_LENGTH,
+							   domain_id);
+
           snprintf (tmpbuf,
                     tmpbuflen,
-                    "Domain ID = %u",
-                    domain_id);
-          
-          return (1);
+                    "Domain ID = %s",
+                    domain_id_str);
+
+	  return (1);
         }
 
       if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_NODE_MANAGER_HEALTH_EVENT
@@ -504,6 +555,7 @@ sel_string_output_intel_node_manager_event_data2_class_oem (ipmi_sel_ctx_t ctx,
         {
           uint8_t domain_id;
           uint8_t error_type;
+	  char domain_id_str[INTEL_NODE_MANAGER_EVENT_BUFFER_LENGTH + 1];
           char *error_type_str;
           
           domain_id = (system_event_record_data->event_data2 & IPMI_OEM_INTEL_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_DOMAIN_ID_BITMASK);
@@ -533,10 +585,17 @@ sel_string_output_intel_node_manager_event_data2_class_oem (ipmi_sel_ctx_t ctx,
 	      error_type_str = "Unknown";
 	    }
           
+	  memset (domain_id_str, '\0', INTEL_NODE_MANAGER_EVENT_BUFFER_LENGTH + 1);
+
+	  _sel_string_output_intel_node_manager_domain_id (ctx,
+							   domain_id_str,
+							   INTEL_NODE_MANAGER_EVENT_BUFFER_LENGTH,
+							   domain_id);
+	  
           snprintf (tmpbuf,
                     tmpbuflen,
-                    "Domain ID = %u, Error Type = %s",
-                    domain_id,
+                    "Domain ID = %s, Error Type = %s",
+                    domain_id_str,
                     error_type_str);
           
           return (1);
@@ -546,15 +605,23 @@ sel_string_output_intel_node_manager_event_data2_class_oem (ipmi_sel_ctx_t ctx,
 	  && system_event_record_data->sensor_number == ctx->intel_node_manager.nm_alert_threshold_exceeded_sensor_number)
         {
           uint8_t domain_id;
+	  char domain_id_str[INTEL_NODE_MANAGER_EVENT_BUFFER_LENGTH + 1];
           
           domain_id = (system_event_record_data->event_data2 & IPMI_OEM_INTEL_NODE_MANAGER_ALERT_THRESHOLD_EXCEEDED_EVENT_DATA2_DOMAIN_ID_BITMASK);
           domain_id >>= IPMI_OEM_INTEL_NODE_MANAGER_ALERT_THRESHOLD_EXCEEDED_EVENT_DATA2_DOMAIN_ID_SHIFT;
           
+	  memset (domain_id_str, '\0', INTEL_NODE_MANAGER_EVENT_BUFFER_LENGTH + 1);
+
+	  _sel_string_output_intel_node_manager_domain_id (ctx,
+							   domain_id_str,
+							   INTEL_NODE_MANAGER_EVENT_BUFFER_LENGTH,
+							   domain_id);
+
           snprintf (tmpbuf,
                     tmpbuflen,
-                    "Domain ID = %u",
-                    domain_id);
-          
+                    "Domain ID = %s",
+                    domain_id_str);
+
           return (1);
         }
 
@@ -726,8 +793,7 @@ sel_string_output_intel_node_manager_event_data3_class_oem (ipmi_sel_ctx_t ctx,
 		{
 		  snprintf (tmpbuf,
 			    tmpbuflen,
-			    "recovery bootloader image or factory presets image corrupted",
-			    system_event_record_data->event_data3);
+			    "recovery bootloader image or factory presets image corrupted");
 		  
 		  return (1);
 		}
@@ -735,8 +801,7 @@ sel_string_output_intel_node_manager_event_data3_class_oem (ipmi_sel_ctx_t ctx,
 		{
 		  snprintf (tmpbuf,
 			    tmpbuflen,
-			    "flash erase limit has been reached",
-			    system_event_record_data->event_data3);
+			    "flash erase limit has been reached");
 		  
 		  return (1);
 		}
@@ -744,8 +809,7 @@ sel_string_output_intel_node_manager_event_data3_class_oem (ipmi_sel_ctx_t ctx,
 		{
 		  snprintf (tmpbuf,
 			    tmpbuflen,
-			    "flash write limit has been reached ; writing to flash has been disabled",
-			    system_event_record_data->event_data3);
+			    "flash write limit has been reached ; writing to flash has been disabled");
 		  
 		  return (1);
 		}
@@ -753,8 +817,7 @@ sel_string_output_intel_node_manager_event_data3_class_oem (ipmi_sel_ctx_t ctx,
 		{
 		  snprintf (tmpbuf,
 			    tmpbuflen,
-			    "writing to the flash has been enabled",
-			    system_event_record_data->event_data3);
+			    "writing to the flash has been enabled");
 		  
 		  return (1);
 		}
@@ -765,8 +828,7 @@ sel_string_output_intel_node_manager_event_data3_class_oem (ipmi_sel_ctx_t ctx,
 		{
 		  snprintf (tmpbuf,
 			    tmpbuflen,
-			    "FW Watchdog Timeout",
-			    system_event_record_data->event_data3);
+			    "FW Watchdog Timeout");
 		  
 		  return (1);
 		}
@@ -774,8 +836,7 @@ sel_string_output_intel_node_manager_event_data3_class_oem (ipmi_sel_ctx_t ctx,
 		{
 		  snprintf (tmpbuf,
 			    tmpbuflen,
-			    "Loader manifest validation failure",
-			    system_event_record_data->event_data3);
+			    "Loader manifest validation failure");
 		  
 		  return (1);
 		}
@@ -783,8 +844,7 @@ sel_string_output_intel_node_manager_event_data3_class_oem (ipmi_sel_ctx_t ctx,
 		{
 		  snprintf (tmpbuf,
 			    tmpbuflen,
-			    "Unknown power management event",
-			    system_event_record_data->event_data3);
+			    "Unknown power management event");
 		  
 		  return (1);
 		}
@@ -792,8 +852,7 @@ sel_string_output_intel_node_manager_event_data3_class_oem (ipmi_sel_ctx_t ctx,
 		{
 		  snprintf (tmpbuf,
 			    tmpbuflen,
-			    "Non graceful PMC reset event detected i.e. after Dynamic Fusing",
-			    system_event_record_data->event_data3);
+			    "Non graceful PMC reset event detected i.e. after Dynamic Fusing");
 		  
 		  return (1);
 		}
@@ -801,8 +860,7 @@ sel_string_output_intel_node_manager_event_data3_class_oem (ipmi_sel_ctx_t ctx,
 		{
 		  snprintf (tmpbuf,
 			    tmpbuflen,
-			    "Flash wearout protection (EFFS wearout violation)",
-			    system_event_record_data->event_data3);
+			    "Flash wearout protection (EFFS wearout violation)");
 		  
 		  return (1);
 		}
@@ -813,8 +871,7 @@ sel_string_output_intel_node_manager_event_data3_class_oem (ipmi_sel_ctx_t ctx,
 		{
 		  snprintf (tmpbuf,
 			    tmpbuflen,
-			    "Intel ME FW configuration is inconsistent or out of range",
-			    system_event_record_data->event_data3);
+			    "Intel ME FW configuration is inconsistent or out of range");
 		  
 		  return (1);
 		}

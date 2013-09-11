@@ -41,6 +41,11 @@ extern "C" {
 #define IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_MIN 0x0
 #define IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_MAX 0xF
 
+#define IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_ENTIRE_PLATFORM         0x00
+#define IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_CPU_SUBSYSTEM           0x01
+#define IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_MEMORY_SUBSYSTEM        0x02
+#define IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_HIGH_POWER_IO_SUBSYSTEM 0x04
+
 /* To avoid gcc warnings, add +1 in comparison */
 /* Include checks for possible oem network functions */
 #define IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID(__val)              \
