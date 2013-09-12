@@ -1236,32 +1236,15 @@ _ipmi_oem_intelnm_get_domain_id_str (ipmi_oem_state_data_t *state_data,
     }
 }
 
-static int
-_ipmi_oem_intelnm_get_node_manager_capabilities_common (ipmi_oem_state_data_t *state_data,
-							uint8_t target_channel_number,
-							uint8_t target_slave_address,
-							uint8_t target_lun,
-							uint8_t domain_id,
-							uint8_t policy_trigger_type,
-							uint8_t policy_type)
+static void
+_ipmi_oem_intelnm_get_node_manager_get_node_manager_capabilities_header (ipmi_oem_state_data_t *state_data,
+									 uint8_t domain_id,
+									 uint8_t policy_trigger_type,
+									 uint8_t policy_type)
 {
-  fiid_obj_t obj_cmd_rs = NULL;
-  uint8_t max_concurrent_settings;
-  uint16_t max_power_thermal;
-  uint16_t min_power_thermal;
-  uint32_t min_correction_time;
-  uint32_t max_correction_time;
-  uint16_t min_statistics_reporting_period;
-  uint16_t max_statistics_reporting_period;
-  uint8_t limiting_type;
-  char *limiting_type_str;
-  uint8_t limiting_based_on;
-  char *limiting_based_on_str;
-  uint64_t val;
+  char domain_id_str[IPMI_OEM_INTELNM_STRING_MAX + 1];
   char *policy_trigger_type_str = NULL;
   char *policy_type_str = NULL;
-  char domain_id_str[IPMI_OEM_INTELNM_STRING_MAX + 1];
-  int rv = -1;
 
   assert (state_data);
   assert (IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domain_id));
@@ -1291,6 +1274,45 @@ _ipmi_oem_intelnm_get_node_manager_capabilities_common (ipmi_oem_state_data_t *s
       break;
     }
 
+  pstdout_printf (state_data->pstate,
+		  "Capabilities for Domain ID = %s, Policy Trigger Type = %s, Policy Type = %s\n\n",
+		  domain_id_str,
+		  policy_trigger_type_str,
+		  policy_type_str);
+}
+
+static int
+_ipmi_oem_intelnm_get_node_manager_capabilities_common (ipmi_oem_state_data_t *state_data,
+							uint8_t target_channel_number,
+							uint8_t target_slave_address,
+							uint8_t target_lun,
+							uint8_t domain_id,
+							uint8_t policy_trigger_type,
+							uint8_t policy_type,
+							int searching_domain_id,
+							int searching_policy_trigger_type,
+							int searching_policy_type)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t max_concurrent_settings;
+  uint16_t max_power_thermal;
+  uint16_t min_power_thermal;
+  uint32_t min_correction_time;
+  uint32_t max_correction_time;
+  uint16_t min_statistics_reporting_period;
+  uint16_t max_statistics_reporting_period;
+  uint8_t limiting_type;
+  char *limiting_type_str;
+  uint8_t limiting_based_on;
+  char *limiting_based_on_str;
+  uint64_t val;
+  int rv = -1;
+
+  assert (state_data);
+  assert (IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domain_id));
+  assert (IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_VALID (policy_trigger_type));
+  assert (IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TYPE_VALID (policy_type));
+
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_oem_intel_node_manager_get_node_manager_capabilities_rs)))
     {
       pstdout_fprintf (state_data->pstate,
@@ -1299,12 +1321,6 @@ _ipmi_oem_intelnm_get_node_manager_capabilities_common (ipmi_oem_state_data_t *s
 		       strerror (errno));
       goto cleanup;
     }
-
-  pstdout_printf (state_data->pstate,
-		  "Capabilities for Domain ID = %s, Policy Trigger Type = %s, Policy Type = %s\n\n",
-		  domain_id_str,
-		  policy_trigger_type_str,
-		  policy_type_str);
 
   if (ipmi_cmd_oem_intel_node_manager_get_node_manager_capabilities (state_data->ipmi_ctx,
 								     target_channel_number,
@@ -1319,6 +1335,29 @@ _ipmi_oem_intelnm_get_node_manager_capabilities_common (ipmi_oem_state_data_t *s
 	{
 	  int eret;
 	  
+	  if (!state_data->prog_data->args->verbose_count)
+            {
+              if (searching_domain_id
+                  && ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_INVALID_DOMAIN_ID) == 1)
+                goto cleanup;
+
+              if (searching_policy_trigger_type
+                  && ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_UNKNOWN_POLICY_TRIGGER_TYPE) == 1)
+                goto cleanup;
+
+              if (searching_policy_type
+                  && ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_UNKNOWN_POLICY_TYPE) == 1)
+                goto cleanup;
+            }
+
+          if (searching_domain_id
+              || searching_policy_trigger_type
+	      || searching_policy_type)
+            _ipmi_oem_intelnm_get_node_manager_get_node_manager_capabilities_header (state_data,
+										     domain_id,
+										     policy_trigger_type,
+										     policy_type);
+
 	  if ((eret = _ipmi_oem_intelnm_bad_completion_code (state_data,
 							     "Error",
 							     obj_cmd_rs)) < 0)
@@ -1335,6 +1374,13 @@ _ipmi_oem_intelnm_get_node_manager_capabilities_common (ipmi_oem_state_data_t *s
 			   "ipmi_cmd_oem_intel_node_manager_get_node_manager_capabilities: %s\n",
 			   ipmi_ctx_errormsg (state_data->ipmi_ctx));
 	}
+
+      if ((searching_domain_id
+	   || searching_policy_trigger_type
+	   || searching_policy_type)
+          && state_data->prog_data->args->verbose_count)
+        rv = 0;
+
       goto cleanup;
     }
   
@@ -1469,6 +1515,14 @@ _ipmi_oem_intelnm_get_node_manager_capabilities_common (ipmi_oem_state_data_t *s
       break;
     }
 
+  if (searching_domain_id
+      || searching_policy_trigger_type
+      || searching_policy_type)
+    _ipmi_oem_intelnm_get_node_manager_get_node_manager_capabilities_header (state_data,
+									     domain_id,
+									     policy_trigger_type,
+									     policy_type);
+
   pstdout_printf (state_data->pstate,
 		  "Max Concurrent Settings         : %u\n",
 		  max_concurrent_settings);
@@ -1551,6 +1605,9 @@ ipmi_oem_intelnm_get_node_manager_capabilities (ipmi_oem_state_data_t *state_dat
   unsigned int policytrigger_array_len;
   uint8_t *policytype_array;
   unsigned int policytype_array_len;
+  int domainid_specified = 0;
+  int policytrigger_specified = 0;
+  int policytype_specified = 0;
   unsigned int i, j, k;
   int first_output_flag = 0;
   uint8_t node_manager_version;
@@ -1602,6 +1659,7 @@ ipmi_oem_intelnm_get_node_manager_capabilities (ipmi_oem_state_data_t *state_dat
 
 	      domainid_array = domainid_input;
 	      domainid_array_len = 1;
+	      domainid_specified++;
             }
           else if (!strcasecmp (key, "policytrigger"))
             {
@@ -1624,6 +1682,7 @@ ipmi_oem_intelnm_get_node_manager_capabilities (ipmi_oem_state_data_t *state_dat
 
 	      policytrigger_array = policytrigger_input;
 	      policytrigger_array_len = 1;
+	      policytrigger_specified++;
             }
           else if (!strcasecmp (key, "policytype"))
             {
@@ -1643,6 +1702,7 @@ ipmi_oem_intelnm_get_node_manager_capabilities (ipmi_oem_state_data_t *state_dat
 
 	      policytype_array = policytype_input;
 	      policytype_array_len = 1;
+	      policytype_specified++;
             }
           else
             {
@@ -1666,27 +1726,30 @@ ipmi_oem_intelnm_get_node_manager_capabilities (ipmi_oem_state_data_t *state_dat
                                            &target_lun) < 0)
     goto cleanup;
 
-  if (_ipmi_oem_intelnm_get_node_manager_version_common (state_data,
-							 target_channel_number,
-							 target_slave_address,
-							 target_lun,
-							 &node_manager_version,
-							 NULL,
-							 NULL,
-							 NULL,
-							 NULL) < 0)
-    goto cleanup;
+  if (!domainid_specified)
+    {
+      if (_ipmi_oem_intelnm_get_node_manager_version_common (state_data,
+							     target_channel_number,
+							     target_slave_address,
+							     target_lun,
+							     &node_manager_version,
+							     NULL,
+							     NULL,
+							     NULL,
+							     NULL) < 0)
+	goto cleanup;
 
-  if (node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_0
-      || node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_5)
-    {
-      domainid_array = domainid_defaults_2_0;
-      domainid_array_len = domainid_defaults_2_0_len;
-    }
-  else
-    {
-      domainid_array = domainid_defaults_1_5;
-      domainid_array_len = domainid_defaults_1_5_len;
+      if (node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_0
+	  || node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_5)
+	{
+	  domainid_array = domainid_defaults_2_0;
+	  domainid_array_len = domainid_defaults_2_0_len;
+	}
+      else
+	{
+	  domainid_array = domainid_defaults_1_5;
+	  domainid_array_len = domainid_defaults_1_5_len;
+	}
     }
 
   for (i = 0; i < domainid_array_len; i++)
@@ -1704,7 +1767,10 @@ ipmi_oem_intelnm_get_node_manager_capabilities (ipmi_oem_state_data_t *state_dat
 									  target_lun,
 									  domainid_array[i],
 									  policytrigger_array[j],
-									  policytype_array[k]) < 0)
+									  policytype_array[k],
+									  domainid_specified ? 0 : 1,
+									  policytrigger_specified ? 0 : 1,
+									  policytype_specified ? 0 : 1) < 0)
 		goto cleanup;
 
 	      first_output_flag++;
@@ -2327,27 +2393,30 @@ ipmi_oem_intelnm_get_node_manager_policy (ipmi_oem_state_data_t *state_data)
     goto cleanup;
 
 
-  if (_ipmi_oem_intelnm_get_node_manager_version_common (state_data,
-							 target_channel_number,
-							 target_slave_address,
-							 target_lun,
-							 &node_manager_version,
-							 NULL,
-							 NULL,
-							 NULL,
-							 NULL) < 0)
-    goto cleanup;
-
-  if (node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_0
-      || node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_5)
+  if (!domainid_specified)
     {
-      domainid_array = domainid_defaults_2_0;
-      domainid_array_len = domainid_defaults_2_0_len;
-    }
-  else
-    {
-      domainid_array = domainid_defaults_1_5;
-      domainid_array_len = domainid_defaults_1_5_len;
+      if (_ipmi_oem_intelnm_get_node_manager_version_common (state_data,
+							     target_channel_number,
+							     target_slave_address,
+							     target_lun,
+							     &node_manager_version,
+							     NULL,
+							     NULL,
+							     NULL,
+							     NULL) < 0)
+	goto cleanup;
+      
+      if (node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_0
+	  || node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_5)
+	{
+	  domainid_array = domainid_defaults_2_0;
+	  domainid_array_len = domainid_defaults_2_0_len;
+	}
+      else
+	{
+	  domainid_array = domainid_defaults_1_5;
+	  domainid_array_len = domainid_defaults_1_5_len;
+	}
     }
 
   for (i = 0; i < domainid_array_len; i++)
@@ -3223,27 +3292,30 @@ ipmi_oem_intelnm_get_node_manager_alert_thresholds (ipmi_oem_state_data_t *state
                                            &target_lun) < 0)
     goto cleanup;
 
-  if (_ipmi_oem_intelnm_get_node_manager_version_common (state_data,
-                                                         target_channel_number,
-                                                         target_slave_address,
-                                                         target_lun,
-                                                         &node_manager_version,
-                                                         NULL,
-                                                         NULL,
-                                                         NULL,
-                                                         NULL) < 0)
-    goto cleanup;
-
-  if (node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_0
-      || node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_5)
+  if (!domainid_specified)
     {
-      domainid_array = domainid_defaults_2_0;
-      domainid_array_len = domainid_defaults_2_0_len;
-    }
-  else
-    {
-      domainid_array = domainid_defaults_1_5;
-      domainid_array_len = domainid_defaults_1_5_len;
+      if (_ipmi_oem_intelnm_get_node_manager_version_common (state_data,
+							     target_channel_number,
+							     target_slave_address,
+							     target_lun,
+							     &node_manager_version,
+							     NULL,
+							     NULL,
+							     NULL,
+							     NULL) < 0)
+	goto cleanup;
+      
+      if (node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_0
+	  || node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_5)
+	{
+	  domainid_array = domainid_defaults_2_0;
+	  domainid_array_len = domainid_defaults_2_0_len;
+	}
+      else
+	{
+	  domainid_array = domainid_defaults_1_5;
+	  domainid_array_len = domainid_defaults_1_5_len;
+	}
     }
 
   for (i = 0; i < domainid_array_len; i++)
@@ -3957,27 +4029,30 @@ ipmi_oem_intelnm_get_node_manager_policy_suspend_periods (ipmi_oem_state_data_t 
                                            &target_lun) < 0)
     goto cleanup;
 
-  if (_ipmi_oem_intelnm_get_node_manager_version_common (state_data,
-                                                         target_channel_number,
-                                                         target_slave_address,
-                                                         target_lun,
-                                                         &node_manager_version,
-                                                         NULL,
-                                                         NULL,
-                                                         NULL,
-                                                         NULL) < 0)
-    goto cleanup;
+  if (!domainid_specified)
+    {
+      if (_ipmi_oem_intelnm_get_node_manager_version_common (state_data,
+							     target_channel_number,
+							     target_slave_address,
+							     target_lun,
+							     &node_manager_version,
+							     NULL,
+							     NULL,
+							     NULL,
+							     NULL) < 0)
+	goto cleanup;
 
-  if (node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_0
-      || node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_5)
-    {
-      domainid_array = domainid_defaults_2_0;
-      domainid_array_len = domainid_defaults_2_0_len;
-    }
-  else
-    {
-      domainid_array = domainid_defaults_1_5;
-      domainid_array_len = domainid_defaults_1_5_len;
+      if (node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_0
+	  || node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_5)
+	{
+	  domainid_array = domainid_defaults_2_0;
+	  domainid_array_len = domainid_defaults_2_0_len;
+	}
+      else
+	{
+	  domainid_array = domainid_defaults_1_5;
+	  domainid_array_len = domainid_defaults_1_5_len;
+	}
     }
 
   for (i = 0; i < domainid_array_len; i++)
