@@ -2039,7 +2039,7 @@ _ipmi_oem_intelnm_get_node_manager_policy_common (ipmi_oem_state_data_t *state_d
   uint8_t policy_type;
   uint8_t policy_exception_actions_send_alert;
   uint8_t policy_exception_actions_shutdown_system;
-  uint16_t power_limit;
+  uint16_t policy_target_limit;
   uint32_t correction_time_limit;
   uint16_t policy_trigger_limit;
   uint16_t statistics_reporting_period;
@@ -2198,16 +2198,16 @@ _ipmi_oem_intelnm_get_node_manager_policy_common (ipmi_oem_state_data_t *state_d
   policy_exception_actions_shutdown_system = val;
 
   if (FIID_OBJ_GET (obj_cmd_rs,
-		    "power_limit",
+		    "policy_target_limit",
 		    &val) < 0)
     {
       pstdout_fprintf (state_data->pstate,
 		       stderr,
-		       "FIID_OBJ_GET: 'power_limit': %s\n",
+		       "FIID_OBJ_GET: 'policy_target_limit': %s\n",
 		       fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
-  power_limit = val;
+  policy_target_limit = val;
 
   if (FIID_OBJ_GET (obj_cmd_rs,
 		    "correction_time_limit",
@@ -2293,8 +2293,8 @@ _ipmi_oem_intelnm_get_node_manager_policy_common (ipmi_oem_state_data_t *state_d
 		  
   /* XXX how to output w/ boot time policy */
   pstdout_printf (state_data->pstate,
-		  "Power Limit                             : %u W\n",
-		  power_limit);
+		  "Policy Target Limit                     : %u W\n",
+		  policy_target_limit);
 
   pstdout_printf (state_data->pstate,
 		  "Correction Time Limit                   : %u ms\n",
@@ -2510,8 +2510,8 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
   int policyid_specified = 0;
   uint8_t policytrigger = 0;
   int policytrigger_specified = 0;
-  uint16_t powerlimit = 0;
-  int powerlimit_specified = 0;
+  uint16_t policytargetlimit = 0;
+  int policytargetlimit_specified = 0;
   uint32_t correctiontimelimit = 0;
   int correctiontimelimit_specified = 0;
   uint16_t policytriggerlimit = 0;
@@ -2600,12 +2600,13 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
 	    policytrigger = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_BOOT_TIME_POLICY;
 	  policytrigger_specified++;
 	}
-      else if (!strcasecmp (key, "powerlimit"))
+      else if (!strcasecmp (key, "policytargetlimit")
+	       || !strcasecmp (key, "powerlimit")) /* legacy */
 	{
-	  if (ipmi_oem_parse_2_byte_field (state_data, i, value, &powerlimit) < 0)
+	  if (ipmi_oem_parse_2_byte_field (state_data, i, value, &policytargetlimit) < 0)
 	    goto cleanup;
 	  
-	  powerlimit_specified++;
+	  policytargetlimit_specified++;
 	}
       else if (!strcasecmp (key, "correctiontimelimit"))
 	{
@@ -2707,11 +2708,11 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (!powerlimit_specified)
+  if (!policytargetlimit_specified)
     {
       pstdout_fprintf (state_data->pstate,
 		       stderr,
-		       "power limit must be specified\n");
+		       "policy target limit must be specified\n");
       goto cleanup;
     }
 
@@ -2765,7 +2766,7 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
 							       IPMI_OEM_INTEL_NODE_MANAGER_POLICY_CONFIGURATION_ACTION_ADD_POWER_POLICY,
 							       policyexceptionaction_alert,
 							       policyexceptionaction_shutdown,
-							       powerlimit,
+							       policytargetlimit,
 							       correctiontimelimit,
 							       policytriggerlimit,
 							       statisticsreportingperiod,

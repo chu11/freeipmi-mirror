@@ -514,7 +514,7 @@ additional error messages will be output as valid policies are being
 searched for.  Command confirmed to work on Intel S2600JF (Appro
 512X).
 .TP
-.B set-node-manager-policy \fIdomainid=platform|cpu|memory|highpowerio|<num>\fR \fIpolicyid=num\fR \fIpolicytrigger=none|inlettemperaturelimitpolicytrigger|missingpowerreadingtimeout|timeafterplatformresettrigger|boottimepolicy\fR \fIpowerlimit=watts\fR \fIcorrectiontimelimit=ms\fR \fIpolicytriggerlimit=num\fR \fIstatisticsreportingperiod=seconds\fR \fI[policystate=enable|disable]\fR \fI[policyexceptionaction=alert|shutdown]\fR
+.B set-node-manager-policy \fIdomainid=platform|cpu|memory|highpowerio|<num>\fR \fIpolicyid=num\fR \fIpolicytrigger=none|inlettemperaturelimitpolicytrigger|missingpowerreadingtimeout|timeafterplatformresettrigger|boottimepolicy\fR \fIpolicytargetlimit=watts\fR \fIcorrectiontimelimit=ms\fR \fIpolicytriggerlimit=num\fR \fIstatisticsreportingperiod=seconds\fR \fI[policystate=enable|disable]\fR \fI[policyexceptionaction=alert|shutdown]\fR
 This OEM command will add or modify an indicated policy ID from the
 domain ID.  Most of the fields above are required, although they can
 be listed in any order.  By default any created/modified policy will be enabled,
@@ -523,7 +523,7 @@ however this can be overridden by \fIpolicystate\fR.
 configure multiple actions or can be skipped to configure no actions.
 When the \fIpolicytrigger\fR is configured as \fInone\fR, the trigger
 that will lead to exception actions is the value specified by the
-\fIpowerlimit\fR.  When the \fIpolicytrigger\fR is \fIinlet\fR, the
+\fIpolicytargetlimit\fR.  When the \fIpolicytrigger\fR is \fIinlet\fR, the
 tigger that will lead to exception actions is the value specified by
 \fIpolicytriggerlimit\fR.  
 
@@ -542,7 +542,7 @@ within limits before taking the actions specified in
 \fIpolicyexceptionaction\fR.  \fIstatisticsreportingperiod\fR is the
 number of seconds that measured power will be averaged for reporting.
 Please see \fBget\-node\-manager\-policy\fR to determine proper ranges
-for \fIpowerlimit\fR, \fIcorrectiontimelimit\fR,
+for \fIpolicytargetlimit\fR, \fIcorrectiontimelimit\fR,
 \fIpolicytriggerlimit\fR, and \fIstatisticsreportingperiod\fR.
 Command confirmed to work on Intel S2600JF (Appro 512X).
 .TP

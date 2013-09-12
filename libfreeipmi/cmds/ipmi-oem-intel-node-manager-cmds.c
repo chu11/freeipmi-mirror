@@ -84,7 +84,7 @@ fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_rq =
     { 1,  "policy_exception_actions.send_alert", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1,  "policy_exception_actions.shutdown_system", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 6,  "policy_exception_actions.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 16, "power_limit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 16, "policy_target_limit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 32, "correction_time_limit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 16, "policy_trigger_limit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 16, "statistics_reporting_period", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -124,7 +124,11 @@ fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_rs =
     { 1,  "policy_exception_actions.send_alert", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1,  "policy_exception_actions.shutdown_system", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 6,  "policy_exception_actions.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 16, "power_limit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    /* listed as "power limit" in 2.0 spec but "policy target limit"
+     * in set version.  changing to 'policy target limit' to be
+     * consistent
+     */
+    { 16, "policy_target_limit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 32, "correction_time_limit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 16, "policy_trigger_limit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 16, "statistics_reporting_period", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -555,7 +559,7 @@ fill_cmd_oem_intel_node_manager_set_node_manager_policy (uint8_t domain_id,
                                                          uint8_t policy_configuration_action,
                                                          uint8_t policy_exception_actions_send_alert,
                                                          uint8_t policy_exception_actions_shutdown_system,
-                                                         uint16_t power_limit,
+                                                         uint16_t policy_target_limit,
                                                          uint32_t correction_time_limit,
                                                          uint16_t policy_trigger_limit,
                                                          uint16_t statistics_reporting_period,
@@ -592,7 +596,7 @@ fill_cmd_oem_intel_node_manager_set_node_manager_policy (uint8_t domain_id,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "policy_exception_actions.send_alert", policy_exception_actions_send_alert);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "policy_exception_actions.shutdown_system", policy_exception_actions_shutdown_system);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "policy_exception_actions.reserved", 0);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "power_limit", power_limit);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "policy_target_limit", policy_target_limit);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "correction_time_limit", correction_time_limit);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "policy_trigger_limit", policy_trigger_limit);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "statistics_reporting_period", statistics_reporting_period);
