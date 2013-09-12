@@ -51,6 +51,41 @@ struct ipmi_oem_intelnm_sdr_callback
   int found;
 };
 
+/* XXX - deal w/ functions that iterate through all domain IDs */
+
+static int
+_ipmi_oem_intelnm_parse_domainid (ipmi_oem_state_data_t *state_data,
+				  unsigned int option_num,
+				  const char *value,
+				  uint8_t *value_out)
+{
+  int rv = -1;
+  
+  assert (state_data);
+  assert (value);
+  assert (value_out);
+  
+  if (!strcasecmp (value, "platform"))
+    (*value_out) = IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_ENTIRE_PLATFORM;
+  else if (!strcasecmp (value, "cpu"))
+    (*value_out) = IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_CPU_SUBSYSTEM;
+  else if (!strcasecmp (value, "memory"))
+    (*value_out) = IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_MEMORY_SUBSYSTEM;
+  else if (!strcasecmp (value, "highpowerio"))
+    (*value_out) = IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_HIGH_POWER_IO_SUBSYSTEM;
+  else
+    {
+      if (ipmi_oem_parse_1_byte_field (state_data,
+				       option_num,
+				       value,
+				       value_out) < 0)
+	goto cleanup;
+    }
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
 /* achu:
  *
  * In Intel NM 2.0 specification, sensor numbers are now fixed and you
@@ -580,7 +615,7 @@ ipmi_oem_intelnm_get_node_manager_statistics (ipmi_oem_state_data_t *state_data)
   uint8_t target_channel_number = 0;
   uint8_t target_slave_address = 0;
   uint8_t target_lun = 0;
-  uint8_t domainid = 0;
+  uint8_t domainid = IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_ENTIRE_PLATFORM;
   uint8_t policyid = 0;
   int policyid_specified = 0;
   uint8_t policy_trigger_type = 0;
@@ -615,10 +650,10 @@ ipmi_oem_intelnm_get_node_manager_statistics (ipmi_oem_state_data_t *state_data)
 
           if (!strcasecmp (key, "domainid"))
             {
-              if (ipmi_oem_parse_1_byte_field (state_data,
-                                               i,
-                                               value,
-                                               &domainid) < 0)
+	      if (_ipmi_oem_intelnm_parse_domainid (state_data,
+						    i,
+						    value,
+						    &domainid) < 0)
                 goto cleanup;
 
               if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domainid))
@@ -894,7 +929,7 @@ ipmi_oem_intelnm_reset_node_manager_statistics (ipmi_oem_state_data_t *state_dat
   uint8_t target_slave_address = 0;
   uint8_t target_lun = 0;
   uint8_t mode = 0;
-  uint8_t domainid = 0;
+  uint8_t domainid = IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_ENTIRE_PLATFORM;
   uint8_t policyid = 0;
   int policyid_specified = 0;
   int rv = -1;
@@ -918,10 +953,10 @@ ipmi_oem_intelnm_reset_node_manager_statistics (ipmi_oem_state_data_t *state_dat
 
           if (!strcasecmp (key, "domainid"))
             {
-              if (ipmi_oem_parse_1_byte_field (state_data,
-                                               i,
-                                               value,
-                                               &domainid) < 0)
+              if (_ipmi_oem_intelnm_parse_domainid (state_data,
+						    i,
+						    value,
+						    &domainid) < 0)
                 goto cleanup;
 
               if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domainid))
@@ -1354,10 +1389,10 @@ ipmi_oem_intelnm_get_node_manager_capabilities (ipmi_oem_state_data_t *state_dat
             {
 	      uint8_t domainid_tmp;
 
-              if (ipmi_oem_parse_1_byte_field (state_data,
-                                               i,
-                                               value,
-                                               &domainid_tmp) < 0)
+              if (_ipmi_oem_intelnm_parse_domainid (state_data,
+						    i,
+						    value,
+						    &domainid_tmp) < 0)
                 goto cleanup;
 
               if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domainid_tmp))
@@ -1474,7 +1509,7 @@ ipmi_oem_intelnm_node_manager_policy_control (ipmi_oem_state_data_t *state_data)
   uint8_t target_channel_number = 0;
   uint8_t target_slave_address = 0;
   uint8_t target_lun = 0;
-  uint8_t domainid = 0;
+  uint8_t domainid = IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_ENTIRE_PLATFORM;
   int domainid_specified = 0;
   uint8_t policyid = 0;
   int policyid_specified = 0;
@@ -1513,10 +1548,10 @@ ipmi_oem_intelnm_node_manager_policy_control (ipmi_oem_state_data_t *state_data)
 
           if (!strcasecmp (key, "domainid"))
             {
-              if (ipmi_oem_parse_1_byte_field (state_data,
-                                               i,
-                                               value,
-                                               &domainid) < 0)
+              if (_ipmi_oem_intelnm_parse_domainid (state_data,
+						    i,
+						    value,
+						    &domainid) < 0)
                 goto cleanup;
 
               if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domainid))
@@ -1999,10 +2034,10 @@ ipmi_oem_intelnm_get_node_manager_policy (ipmi_oem_state_data_t *state_data)
             {
 	      uint8_t domainid_tmp;
 
-              if (ipmi_oem_parse_1_byte_field (state_data,
-                                               i,
-                                               value,
-                                               &domainid_tmp) < 0)
+              if (_ipmi_oem_intelnm_parse_domainid (state_data,
+						    i,
+						    value,
+						    &domainid_tmp) < 0)
                 goto cleanup;
 
               if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domainid_tmp))
@@ -2089,7 +2124,7 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
   uint8_t target_channel_number = 0;
   uint8_t target_slave_address = 0;
   uint8_t target_lun = 0;
-  uint8_t domainid = 0;
+  uint8_t domainid = IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_ENTIRE_PLATFORM;
   int domainid_specified = 0;
   uint8_t policyid = 0;
   int policyid_specified = 0;
@@ -2125,10 +2160,10 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
 
       if (!strcasecmp (key, "domainid"))
 	{
-	  if (ipmi_oem_parse_1_byte_field (state_data,
-					   i,
-					   value,
-					   &domainid) < 0)
+	  if (_ipmi_oem_intelnm_parse_domainid (state_data,
+						i,
+						value,
+						&domainid) < 0)
 	    goto cleanup;
 	  
 	  if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domainid))
@@ -2382,7 +2417,7 @@ ipmi_oem_intelnm_remove_node_manager_policy (ipmi_oem_state_data_t *state_data)
   uint8_t target_channel_number = 0;
   uint8_t target_slave_address = 0;
   uint8_t target_lun = 0;
-  uint8_t domainid = 0;
+  uint8_t domainid = IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_ENTIRE_PLATFORM;
   int domainid_specified = 0;
   uint8_t policyid = 0;
   int policyid_specified = 0;
@@ -2405,10 +2440,10 @@ ipmi_oem_intelnm_remove_node_manager_policy (ipmi_oem_state_data_t *state_data)
       
       if (!strcasecmp (key, "domainid"))
 	{
-	  if (ipmi_oem_parse_1_byte_field (state_data,
-					   i,
-					   value,
-					   &domainid) < 0)
+	  if (_ipmi_oem_intelnm_parse_domainid (state_data,
+						i,
+						value,
+						&domainid) < 0)
 	    goto cleanup;
 	  
 	  if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domainid))
@@ -2852,10 +2887,10 @@ ipmi_oem_intelnm_get_node_manager_alert_thresholds (ipmi_oem_state_data_t *state
             {
 	      uint8_t domainid_tmp;
 
-              if (ipmi_oem_parse_1_byte_field (state_data,
-                                               i,
-                                               value,
-                                               &domainid_tmp) < 0)
+              if (_ipmi_oem_intelnm_parse_domainid (state_data,
+						    i,
+						    value,
+						    &domainid_tmp) < 0)
                 goto cleanup;
 
               if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domainid_tmp))
@@ -2942,7 +2977,7 @@ ipmi_oem_intelnm_set_node_manager_alert_thresholds (ipmi_oem_state_data_t *state
   uint8_t target_channel_number = 0;
   uint8_t target_slave_address = 0;
   uint8_t target_lun = 0;
-  uint8_t domainid = 0;
+  uint8_t domainid = IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_ENTIRE_PLATFORM;
   int domainid_specified = 0;
   uint8_t policyid = 0;
   int policyid_specified = 0;
@@ -2971,10 +3006,10 @@ ipmi_oem_intelnm_set_node_manager_alert_thresholds (ipmi_oem_state_data_t *state
 
       if (!strcasecmp (key, "domainid"))
 	{
-	  if (ipmi_oem_parse_1_byte_field (state_data,
-					   i,
-					   value,
-					   &domainid) < 0)
+	  if (_ipmi_oem_intelnm_parse_domainid (state_data,
+						i,
+						value,
+						&domainid) < 0)
 	    goto cleanup;
 	  
 	  if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domainid))
@@ -3543,10 +3578,10 @@ ipmi_oem_intelnm_get_node_manager_policy_suspend_periods (ipmi_oem_state_data_t 
             {
 	      uint8_t domainid_tmp;
 
-              if (ipmi_oem_parse_1_byte_field (state_data,
-                                               i,
-                                               value,
-                                               &domainid_tmp) < 0)
+              if (_ipmi_oem_intelnm_parse_domainid (state_data,
+						    i,
+						    value,
+						    &domainid_tmp) < 0)
                 goto cleanup;
 
               if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domainid_tmp))
@@ -3741,7 +3776,7 @@ ipmi_oem_intelnm_set_node_manager_policy_suspend_periods (ipmi_oem_state_data_t 
   uint8_t target_channel_number = 0;
   uint8_t target_slave_address = 0;
   uint8_t target_lun = 0;
-  uint8_t domainid = 0;
+  uint8_t domainid = IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_ENTIRE_PLATFORM;
   int domainid_specified = 0;
   uint8_t policyid = 0;
   int policyid_specified = 0;
@@ -3792,10 +3827,10 @@ ipmi_oem_intelnm_set_node_manager_policy_suspend_periods (ipmi_oem_state_data_t 
 
       if (!strcasecmp (key, "domainid"))
 	{
-	  if (ipmi_oem_parse_1_byte_field (state_data,
-					   i,
-					   value,
-					   &domainid) < 0)
+	  if (_ipmi_oem_intelnm_parse_domainid (state_data,
+						i,
+						value,
+						&domainid) < 0)
 	    goto cleanup;
 	  
 	  if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domainid))
@@ -4061,7 +4096,7 @@ ipmi_oem_intelnm_set_node_manager_power_draw_range (ipmi_oem_state_data_t *state
   uint8_t target_channel_number = 0;
   uint8_t target_slave_address = 0;
   uint8_t target_lun = 0;
-  uint8_t domainid = 0;
+  uint8_t domainid = IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_ENTIRE_PLATFORM;
   int domainid_specified = 0;
   uint16_t minpowerdrawrange = 0;
   int minpowerdrawrange_specified = 0; 
@@ -4086,10 +4121,10 @@ ipmi_oem_intelnm_set_node_manager_power_draw_range (ipmi_oem_state_data_t *state
 
       if (!strcasecmp (key, "domainid"))
 	{
-	  if (ipmi_oem_parse_1_byte_field (state_data,
-					   i,
-					   value,
-					   &domainid) < 0)
+	  if (_ipmi_oem_intelnm_parse_domainid (state_data,
+						i,
+						value,
+						&domainid) < 0)
 	    goto cleanup;
 	  
 	  if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domainid))
