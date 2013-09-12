@@ -608,6 +608,7 @@ _ipmi_oem_intelnm_get_node_manager_statistics_common (ipmi_oem_state_data_t *sta
   return (rv);
 }
 
+/* XXX -revisit b/c of new policy trigger types */
 int
 ipmi_oem_intelnm_get_node_manager_statistics (ipmi_oem_state_data_t *state_data)
 {
@@ -1236,6 +1237,33 @@ _ipmi_oem_intelnm_get_domain_id_str (ipmi_oem_state_data_t *state_data,
     }
 }
 
+static char *
+_ipmi_oem_intelnm_get_policy_trigger_type_str (uint8_t policy_trigger_type)
+{
+  char *rv = NULL;
+
+  switch (policy_trigger_type)
+    {
+    case IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_NO_POLICY_TRIGGER:
+      rv = "No Policy Trigger";
+      break;
+    case IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_INLET_TEMPERATURE_LIMIT_POLICY_TRIGGER:
+      rv = "Inlet Temperature Limit Policy Trigger";
+      break;
+    case IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_MISSING_POWER_READING_TIMEOUT:
+      rv = "Missing Power Reading Timeout";
+      break;
+    case IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_TIME_AFTER_PLATFORM_RESET_TRIGGER:
+      rv = "Time After Platform Reset Trigger";
+      break;
+    case IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_BOOT_TIME_POLICY:
+      rv = "Boot Time Policy";
+      break;
+    }
+
+  return (rv);
+}
+
 static void
 _ipmi_oem_intelnm_get_node_manager_get_node_manager_capabilities_header (ipmi_oem_state_data_t *state_data,
 									 uint8_t domain_id,
@@ -1257,15 +1285,7 @@ _ipmi_oem_intelnm_get_node_manager_get_node_manager_capabilities_header (ipmi_oe
 				       domain_id_str,
 				       IPMI_OEM_INTELNM_STRING_MAX);
 
-  switch (policy_trigger_type)
-    {
-    case IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_NO_POLICY_TRIGGER:
-      policy_trigger_type_str = "No Policy Trigger";
-      break;
-    case IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_INLET_TEMPERATURE_LIMIT_POLICY_TRIGGER:
-      policy_trigger_type_str = "Inlet Temperature Limit Policy Trigger";
-      break;
-    }
+  policy_trigger_type_str = _ipmi_oem_intelnm_get_policy_trigger_type_str (policy_trigger_type);
 
   switch (policy_type)
     {
@@ -1591,9 +1611,15 @@ ipmi_oem_intelnm_get_node_manager_capabilities (ipmi_oem_state_data_t *state_dat
 				     IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_MEMORY_SUBSYSTEM,
 				     IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_HIGH_POWER_IO_SUBSYSTEM};
   unsigned int domainid_defaults_2_0_len = 4;
-  uint8_t policytrigger_defaults[] = {IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_NO_POLICY_TRIGGER,
-				      IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_INLET_TEMPERATURE_LIMIT_POLICY_TRIGGER};
-  unsigned int policytrigger_defaults_len = 2;
+  uint8_t policytrigger_defaults_1_5[] = {IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_NO_POLICY_TRIGGER,
+					  IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_INLET_TEMPERATURE_LIMIT_POLICY_TRIGGER};
+  unsigned int policytrigger_defaults_1_5_len = 2;
+  uint8_t policytrigger_defaults_2_0[] = {IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_NO_POLICY_TRIGGER,
+					  IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_INLET_TEMPERATURE_LIMIT_POLICY_TRIGGER,
+					  IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_MISSING_POWER_READING_TIMEOUT,
+					  IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_TIME_AFTER_PLATFORM_RESET_TRIGGER,
+					  IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_BOOT_TIME_POLICY};
+  unsigned int policytrigger_defaults_2_0_len = 5;
   uint8_t policytype_defaults[] = {IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TYPE_POWER_CONTROL_POLICY};
   unsigned int policytype_defaults_len = 1;
   uint8_t domainid_input[1];
@@ -1615,9 +1641,6 @@ ipmi_oem_intelnm_get_node_manager_capabilities (ipmi_oem_state_data_t *state_dat
 
   assert (state_data);
   
-  policytrigger_array = policytrigger_defaults;
-  policytrigger_array_len = policytrigger_defaults_len;
-
   policytype_array = policytype_defaults;
   policytype_array_len = policytype_defaults_len;
 
@@ -1664,21 +1687,32 @@ ipmi_oem_intelnm_get_node_manager_capabilities (ipmi_oem_state_data_t *state_dat
           else if (!strcasecmp (key, "policytrigger"))
             {
 	      if (strcasecmp (value, "none")
-		  && strcasecmp (value, "inlet"))
+		  && strcasecmp (value, "inlettemperaturelimitpolicytrigger")
+		  && strcasecmp (value, "inlet") /* legacy */
+		  && strcasecmp (value, "missingpowerreadingtimeout")
+		  && strcasecmp (value, "timeafterplatformresettrigger")
+		  && strcasecmp (value, "boottimepolicy"))
 		{
-                  pstdout_fprintf (state_data->pstate,
-                                   stderr,
-                                   "%s:%s invalid OEM option argument '%s' : invalid policy trigger type\n",
-                                   state_data->prog_data->args->oem_id,
-                                   state_data->prog_data->args->oem_command,
-                                   state_data->prog_data->args->oem_options[i]);
-                  goto cleanup;
+		  pstdout_fprintf (state_data->pstate,
+				   stderr,
+				   "%s:%s invalid OEM option argument '%s' : invalid policy trigger type\n",
+				   state_data->prog_data->args->oem_id,
+				   state_data->prog_data->args->oem_command,
+				   state_data->prog_data->args->oem_options[i]);
+		  goto cleanup;
 		}
-
+	      
 	      if (!strcasecmp (value, "none"))
 		policytrigger_input[0] = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_NO_POLICY_TRIGGER;
-	      else /* !strcasecmp (value, "inlet") */
+	      else if (!strcasecmp (value, "inlettemperaturelimitpolicytrigger")
+		       || !strcasecmp (value, "inlet")) /* legacy */
 		policytrigger_input[0] = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_INLET_TEMPERATURE_LIMIT_POLICY_TRIGGER;
+	      else if (!strcasecmp (value, "missingpowerreadingtimeout"))
+		policytrigger_input[0] = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_MISSING_POWER_READING_TIMEOUT;
+	      else if (!strcasecmp (value, "timeafterplatformresettrigger"))
+		policytrigger_input[0] = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_TIME_AFTER_PLATFORM_RESET_TRIGGER;
+	      else /* !strcasecmp (value, "boottimepolicy") */
+		policytrigger_input[0] = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_BOOT_TIME_POLICY;
 
 	      policytrigger_array = policytrigger_input;
 	      policytrigger_array_len = 1;
@@ -1726,29 +1760,42 @@ ipmi_oem_intelnm_get_node_manager_capabilities (ipmi_oem_state_data_t *state_dat
                                            &target_lun) < 0)
     goto cleanup;
 
-  if (!domainid_specified)
-    {
-      if (_ipmi_oem_intelnm_get_node_manager_version_common (state_data,
-							     target_channel_number,
-							     target_slave_address,
-							     target_lun,
-							     &node_manager_version,
-							     NULL,
-							     NULL,
-							     NULL,
-							     NULL) < 0)
-	goto cleanup;
+  if (_ipmi_oem_intelnm_get_node_manager_version_common (state_data,
+							 target_channel_number,
+							 target_slave_address,
+							 target_lun,
+							 &node_manager_version,
+							 NULL,
+							 NULL,
+							 NULL,
+							 NULL) < 0)
+    goto cleanup;
 
-      if (node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_0
-	  || node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_5)
+  if (node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_0
+      || node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_5)
+    {
+      if (!domainid_specified)
 	{
 	  domainid_array = domainid_defaults_2_0;
 	  domainid_array_len = domainid_defaults_2_0_len;
 	}
-      else
+      if (!policytrigger_specified)
+	{
+	  policytrigger_array = policytrigger_defaults_2_0;
+	  policytrigger_array_len = policytrigger_defaults_2_0_len;
+	}
+    }
+  else
+    {
+      if (!domainid_specified)
 	{
 	  domainid_array = domainid_defaults_1_5;
 	  domainid_array_len = domainid_defaults_1_5_len;
+	}
+      if (!policytrigger_specified)
+	{
+	  policytrigger_array = policytrigger_defaults_1_5;
+	  policytrigger_array_len = policytrigger_defaults_1_5_len;
 	}
     }
 
@@ -2198,18 +2245,9 @@ _ipmi_oem_intelnm_get_node_manager_policy_common (ipmi_oem_state_data_t *state_d
     }
   statistics_reporting_period = val;
 
-  switch (policy_trigger_type)
-    {
-    case IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_NO_POLICY_TRIGGER:
-      policy_trigger_type_str = "No Policy Trigger";
-      break;
-    case IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_INLET_TEMPERATURE_LIMIT_POLICY_TRIGGER:
-      policy_trigger_type_str = "Inlet Temperature Limit Policy Trigger";
-      break;
-    default:
-      policy_trigger_type_str = "Unknown";
-      break;
-    }
+  policy_trigger_type_str = _ipmi_oem_intelnm_get_policy_trigger_type_str (policy_trigger_type);
+  if (!policy_trigger_type_str)
+    policy_trigger_type_str = "Unknown";
 
   switch (policy_type)
     {
@@ -2253,6 +2291,7 @@ _ipmi_oem_intelnm_get_node_manager_policy_common (ipmi_oem_state_data_t *state_d
 		  "Policy Exception Shutdown System Action : %s\n",
 		  (policy_exception_actions_shutdown_system == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_EXCEPTION_ACTION_ENABLE) ? "enabled" : "disabled");
 		  
+  /* XXX how to output w/ boot time policy */
   pstdout_printf (state_data->pstate,
 		  "Power Limit                             : %u W\n",
 		  power_limit);
@@ -2269,11 +2308,24 @@ _ipmi_oem_intelnm_get_node_manager_policy_common (ipmi_oem_state_data_t *state_d
     case IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_INLET_TEMPERATURE_LIMIT_POLICY_TRIGGER:
       policy_trigger_type_units_str = "C";
       break;
+    case IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_MISSING_POWER_READING_TIMEOUT:
+      /* XXX */
+      policy_trigger_type_units_str = "";
+      break;
+    case IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_TIME_AFTER_PLATFORM_RESET_TRIGGER:
+      /* XXX */
+      policy_trigger_type_units_str = "";
+      break;
+    case IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_BOOT_TIME_POLICY:
+      /* XXX */
+      policy_trigger_type_units_str = "";
+      break;
     default:
       policy_trigger_type_units_str = "?";
       break;
     }
   
+  /* XXX how to output w/ boot time policy */
   pstdout_printf (state_data->pstate,
 		  "Policy Trigger Limit                    : %u %s\n",
 		  policy_trigger_limit,
@@ -2520,7 +2572,11 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
       else if (!strcasecmp (key, "policytrigger"))
 	{
 	  if (strcasecmp (value, "none")
-	      && strcasecmp (value, "inlet"))
+	      && strcasecmp (value, "inlettemperaturelimitpolicytrigger")
+	      && strcasecmp (value, "inlet") /* legacy */
+	      && strcasecmp (value, "missingpowerreadingtimeout")
+	      && strcasecmp (value, "timeafterplatformresettrigger")
+	      && strcasecmp (value, "boottimepolicy"))
 	    {
 	      pstdout_fprintf (state_data->pstate,
 			       stderr,
@@ -2533,9 +2589,15 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
 	  
 	  if (!strcasecmp (value, "none"))
 	    policytrigger = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_NO_POLICY_TRIGGER;
-	  else
+	  else if (!strcasecmp (value, "inlettemperaturelimitpolicytrigger")
+		   || !strcasecmp (value, "inlet")) /* legacy */
 	    policytrigger = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_INLET_TEMPERATURE_LIMIT_POLICY_TRIGGER;
-	  
+	  else if (!strcasecmp (value, "missingpowerreadingtimeout"))
+	    policytrigger = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_MISSING_POWER_READING_TIMEOUT;
+	  else if (!strcasecmp (value, "timeafterplatformresettrigger"))
+	    policytrigger = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_TIME_AFTER_PLATFORM_RESET_TRIGGER;
+	  else /* !strcasecmp (value, "boottimepolicy") */
+	    policytrigger = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_BOOT_TIME_POLICY;
 	  policytrigger_specified++;
 	}
       else if (!strcasecmp (key, "powerlimit"))
