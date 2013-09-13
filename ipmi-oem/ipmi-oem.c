@@ -671,6 +671,16 @@ struct ipmi_oem_command oem_intelnm[] =
 #if 0
     /* can't verify */
     {
+      "get-limiting-policy-id",
+      "domainid=platform|cpu|memory|<num>",
+      1,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_intelnm_get_limiting_policy_id
+    },
+#endif
+#if 0
+    /* can't verify */
+    {
       "get-node-manager-alert-destination",
       NULL,
       0,

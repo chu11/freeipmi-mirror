@@ -390,6 +390,17 @@ _ipmi_oem_intelnm_bad_completion_code (ipmi_oem_state_data_t *state_data,
 	  goto cleanup;
 	}
       break;
+    case IPMI_CMD_OEM_INTEL_NODE_MANAGER_GET_LIMITING_POLICY_ID:
+      switch (comp_code)
+	{
+	case IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_NO_POLICY_IS_CURRENTLY_LIMITING:
+	  str = IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_NO_POLICY_IS_CURRENTLY_LIMITING_STR;
+	  break;
+	default:
+	  rv = 0;
+	  goto cleanup;
+	}
+      break;
     case IPMI_CMD_OEM_INTEL_NODE_MANAGER_SET_NODE_MANAGER_ALERT_DESTINATION:
     case IPMI_CMD_OEM_INTEL_NODE_MANAGER_GET_NODE_MANAGER_ALERT_DESTINATION:
     case IPMI_CMD_OEM_INTEL_NODE_MANAGER_GET_NODE_MANAGER_VERSION:
@@ -4807,6 +4818,158 @@ ipmi_oem_intelnm_set_node_manager_power_draw_range (ipmi_oem_state_data_t *state
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
+
+#if 0
+/* can't verify */
+int
+ipmi_oem_intelnm_get_limiting_policy_id (ipmi_oem_state_data_t *state_data)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t target_channel_number = 0;
+  uint8_t target_slave_address = 0;
+  uint8_t target_lun = 0;
+  uint8_t domainid = IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_ENTIRE_PLATFORM;
+  int domainid_specified = 0;
+  uint8_t policy_id;
+  uint64_t val;
+  int rv = -1;
+  unsigned int i;
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count >= 1);
+
+  for (i = 0; i < state_data->prog_data->args->oem_options_count; i++)
+    {
+      char *key = NULL;
+      char *value = NULL;
+      
+      if (ipmi_oem_parse_key_value (state_data,
+				    i,
+				    &key,
+				    &value) < 0)
+	goto cleanup;
+
+      if (!strcasecmp (key, "domainid"))
+	{
+	  if (_ipmi_oem_intelnm_parse_domainid (state_data,
+						i,
+						value,
+						&domainid) < 0)
+	    goto cleanup;
+	  
+	  if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domainid))
+	    {
+	      pstdout_fprintf (state_data->pstate,
+			       stderr,
+			       "%s:%s invalid OEM option argument '%s' : invalid domain id\n",
+			       state_data->prog_data->args->oem_id,
+			       state_data->prog_data->args->oem_command,
+			       state_data->prog_data->args->oem_options[i]);
+	      goto cleanup;
+	    }
+	  
+	  domainid_specified++;
+	}
+      else
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "%s:%s invalid OEM option argument '%s' : invalid option\n",
+			   state_data->prog_data->args->oem_id,
+			   state_data->prog_data->args->oem_command,
+			   state_data->prog_data->args->oem_options[i]);
+	  goto cleanup;
+	}
+      
+      free (key);
+      free (value);
+    }
+
+  if (!domainid_specified)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "domain ID must be specified\n");
+      goto cleanup;
+    }
+
+  if (domainid != IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_ENTIRE_PLATFORM
+      && domainid != IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_CPU_SUBSYSTEM
+      && domainid != IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_MEMORY_SUBSYSTEM)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "domain ID illegal for this command\n");
+      goto cleanup;
+    }
+
+  if (_ipmi_oem_intelnm_node_manager_init (state_data,
+                                           &target_channel_number,
+                                           &target_slave_address,
+                                           &target_lun) < 0)
+    goto cleanup;
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_oem_intel_node_manager_get_limiting_policy_id_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_oem_intel_node_manager_get_limiting_policy_id (state_data->ipmi_ctx,
+							      target_channel_number,
+							      target_slave_address,
+							      target_lun,
+							      domainid,
+							      obj_cmd_rs) < 0)
+    {
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
+	{
+	  int eret;
+	  
+	  if ((eret = _ipmi_oem_intelnm_bad_completion_code (state_data,
+							     NULL,
+							     obj_cmd_rs)) < 0)
+	    goto cleanup;
+	  
+	  if (!eret)
+	    goto efallthrough;
+	}
+      else
+	{
+	efallthrough:
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_cmd_oem_intel_node_manager_get_limiting_policy_id: %s\n",
+			   ipmi_ctx_errormsg (state_data->ipmi_ctx));
+	}
+      goto cleanup;
+    }
+
+  if (FIID_OBJ_GET (obj_cmd_rs,
+		    "policy_id",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "FIID_OBJ_GET: 'policy_id': %s\n",
+		       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  policy_id = val;
+
+  pstdout_printf (state_data->pstate,
+		  "Limiting Policy ID: %u\n",
+		  policy_id);
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+#endif
 
 #if 0
 /* can't verify */

@@ -14,6 +14,8 @@
 	* libfreeipmi/sel/: Support changes/updates to Intel Node Manager
 	SEL events and add new events.
 
+	* ipmi-oem/: Add new IntelNM get-limiting-policy-id command.
+
 	* ipmi-oem/ipmi-oem-intelnm.c: Update with changes to OEM commands.
 
 	* ipmi-oem/ipmi-oem-intelnm.c (_ipmi_oem_intelnm_sdr_callback),

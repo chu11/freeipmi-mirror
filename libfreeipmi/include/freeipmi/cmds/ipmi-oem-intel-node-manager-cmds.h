@@ -277,6 +277,8 @@ extern fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_de
 extern fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_destination_rs;
 extern fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_destination_rq;
 extern fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_destination_rs;
+extern fiid_template_t tmpl_cmd_oem_intel_node_manager_get_limiting_policy_id_rq;
+extern fiid_template_t tmpl_cmd_oem_intel_node_manager_get_limiting_policy_id_rs;
 
 int fill_cmd_oem_intel_node_manager_enable_disable_node_manager_policy_control (uint8_t policy_enable_disable,
                                                                                 uint8_t domain_id,
@@ -408,6 +410,9 @@ int fill_cmd_oem_intel_node_manager_set_node_manager_alert_destination_lan (uint
                                                                             fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_oem_intel_node_manager_get_node_manager_alert_destination (fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_oem_intel_node_manager_get_limiting_policy_id (uint8_t domain_id,
+							    fiid_obj_t obj_cmd_rq);
 
 #ifdef __cplusplus
 }

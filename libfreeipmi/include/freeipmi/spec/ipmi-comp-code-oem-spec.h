@@ -217,6 +217,11 @@ extern "C" {
 #define IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_UNKNOWN_POLICY_TYPE_STR \
   "unknown Policy Type"
 
+/* IPMI_CMD_OEM_INTEL_NODE_MANAGER_GET_LIMITING_POLICY_ID */
+#define IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_NO_POLICY_IS_CURRENTLY_LIMITING 0xA1
+#define IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_NO_POLICY_IS_CURRENTLY_LIMITING_STR \
+  "No policy is currently limiting for the specified DomainID"
+
 /******************************************* 
  * Wistron                                 *
  *******************************************/

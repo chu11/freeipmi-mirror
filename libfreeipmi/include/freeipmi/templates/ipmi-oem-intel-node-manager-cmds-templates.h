@@ -549,6 +549,27 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_destinatio
     { 7,  "alert_string_selector", REQUIRED, LENGTH-FIXED }
     { 1,  "send_alert_string", REQUIRED, LENGTH-FIXED }
 
+Get Limiting Policy ID Request
+------------------------------
+
+FIID Template: tmpl_cmd_oem_intel_node_manager_get_limiting_policy_id_rq =
+
+    { 8,  "cmd", REQUIRED, LENGTH-FIXED }
+    { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
+    { 4,  "domain_id", REQUIRED, LENGTH-FIXED }
+    { 4,  "reserved", REQUIRED, LENGTH-FIXED }
+
+Get Limiting Policy ID Response
+-------------------------------
+
+FIID Template: tmpl_cmd_oem_intel_node_manager_get_limiting_policy_id_rs =
+
+    { 8,  "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8,  "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
+    { 8,  "policy_id", REQUIRED, LENGTH-FIXED }
+
+
 #endif  /* 0 */
 
 #ifdef __cplusplus

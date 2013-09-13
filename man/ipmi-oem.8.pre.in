@@ -605,6 +605,11 @@ draw range can be read via the \fBget\-node\-manager\-capabilities\fR
 above.  Command confirmed to work on Intel S2600JF (Appro 512X).
 .if 0 \{
 .TP
+.B get-limiting-policy-id \fIdomainid=platform|cpu|memory|<num>\fR
+This OEM command will get the policy which is currently limiting.
+\}
+.if 0 \{
+.TP
 .B get-node-manager-alert-destination
 This OEM command will get the current alert destination information.
 Some of the configuration information output by this command will need

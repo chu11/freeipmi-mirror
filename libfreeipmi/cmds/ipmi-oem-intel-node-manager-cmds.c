@@ -518,6 +518,24 @@ fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_destinati
     { 0, "", 0}
   };
 
+fiid_template_t tmpl_cmd_oem_intel_node_manager_get_limiting_policy_id_rq =
+  {
+    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4,  "domain_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4,  "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_oem_intel_node_manager_get_limiting_policy_id_rs =
+  {
+    { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8,  "policy_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
 int
 fill_cmd_oem_intel_node_manager_enable_disable_node_manager_policy_control (uint8_t policy_enable_disable,
                                                                             uint8_t domain_id,
@@ -1329,6 +1347,32 @@ fill_cmd_oem_intel_node_manager_get_node_manager_alert_destination (fiid_obj_t o
 
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_OEM_INTEL_NODE_MANAGER_GET_NODE_MANAGER_ALERT_DESTINATION);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "manufacturer_id", IPMI_IANA_ENTERPRISE_ID_INTEL);
+
+  return (0);
+}
+
+int
+fill_cmd_oem_intel_node_manager_get_limiting_policy_id (uint8_t domain_id,
+							fiid_obj_t obj_cmd_rq)
+{
+  if (!fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_oem_intel_node_manager_get_limiting_policy_id_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_OEM_INTEL_NODE_MANAGER_GET_LIMITING_POLICY_ID);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "manufacturer_id", IPMI_IANA_ENTERPRISE_ID_INTEL);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "domain_id", domain_id);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
 
   return (0);
 }
