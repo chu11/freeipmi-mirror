@@ -438,6 +438,8 @@ _ipmi_oem_intelnm_get_node_manager_statistics_common (ipmi_oem_state_data_t *sta
   int rv = -1;
 
   assert (state_data);
+  assert (IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_VALID (mode));
+  assert (IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domainid));
   assert (current);
   assert (minimum);
   assert (maximum);
@@ -609,6 +611,7 @@ _ipmi_oem_intelnm_get_node_manager_statistics_common (ipmi_oem_state_data_t *sta
 }
 
 /* XXX -revisit b/c of new policy trigger types */
+/* XXX - revisit b/c of new modes */
 int
 ipmi_oem_intelnm_get_node_manager_statistics (ipmi_oem_state_data_t *state_data)
 {
