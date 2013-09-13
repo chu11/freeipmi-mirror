@@ -598,7 +598,6 @@ After this configuration, any policies within the domain ID that are
 outside of this range will be disabled as needed.  The current power
 draw range can be read via the \fBget\-node\-manager\-capabilities\fR
 above.  Command confirmed to work on Intel S2600JF (Appro 512X).
-.if 0 \{
 .TP
 .B get-node-manager-alert-destination
 This OEM command will get the current alert destination information.
@@ -625,7 +624,6 @@ Destination selector and alert string selector information can be
 determined via
 .B ipmi-config(8).
 Command confirmed to work on Intel S2600JF (Appro 512X).
-\}
 .TP
 .B get-node-manager-version
 This OEM command will output the current Intel Node Manager version

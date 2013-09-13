@@ -1,3 +1,15 @@
+2013-09-13  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-cmd-oem-spec.h: Fix
+	invalid hex for
+	IPMI_CMD_OEM_INTEL_NODE_MANAGER_SET_NODE_MANAGER_ALERT_DESTINATION
+	and
+	IPMI_CMD_OEM_INTEL_NODE_MANAGER_GET_NODE_MANAGER_ALERT_DESTINATION.
+
+	* ipmi-oem/: Enable support of IntelNM
+	get-node-manager-alert-destination and
+	set-node-manager-alert-destination.
+	
 2013-08-28  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/api/ipmi-api.h: Document mapping of
