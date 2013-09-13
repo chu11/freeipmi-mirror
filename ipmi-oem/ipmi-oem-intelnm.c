@@ -932,6 +932,8 @@ ipmi_oem_intelnm_reset_node_manager_statistics (ipmi_oem_state_data_t *state_dat
   uint8_t mode = 0;
   uint8_t domainid = IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_ENTIRE_PLATFORM;
   uint8_t policyid = 0;
+  int mode_specified = 0;
+  int domainid_specified = 0;
   int policyid_specified = 0;
   int rv = -1;
 
@@ -952,7 +954,43 @@ ipmi_oem_intelnm_reset_node_manager_statistics (ipmi_oem_state_data_t *state_dat
                                         &value) < 0)
             goto cleanup;
 
-          if (!strcasecmp (key, "domainid"))
+	  if (!strcasecmp (key, "mode"))
+	    {
+	      if (strcasecmp (value, "global")
+		  && strcasecmp (value, "policy")
+		  && strcasecmp (value, "hostunhandledrequests")
+		  && strcasecmp (value, "hostresponsetime")
+		  && strcasecmp (value, "cputhrottling")
+		  && strcasecmp (value, "memorythrottling")
+		  && strcasecmp (value, "hostcommfailure"))
+		{
+		  pstdout_fprintf (state_data->pstate,
+				   stderr,
+				   "%s:%s invalid OEM option argument '%s' : invalid mode\n",
+				   state_data->prog_data->args->oem_id,
+				   state_data->prog_data->args->oem_command,
+				   state_data->prog_data->args->oem_options[i]);
+		  goto cleanup;
+		}
+
+	      if (!strcasecmp (value, "global"))
+		mode = IPMI_OEM_INTEL_NODE_MANAGER_RESET_MODE_RESET_GLOBAL_STATISTICS;
+	      else if (!strcasecmp (value, "policy"))
+		mode = IPMI_OEM_INTEL_NODE_MANAGER_RESET_MODE_PER_POLICY_STATISTICS;
+	      else if (!strcasecmp (value, "hostunhandledrequests"))
+		mode = IPMI_OEM_INTEL_NODE_MANAGER_RESET_MODE_GLOBAL_HOST_UNHANDLED_REQUESTS_STATISTICS;
+	      else if (!strcasecmp (value, "hostresponsetime"))
+		mode = IPMI_OEM_INTEL_NODE_MANAGER_RESET_MODE_HOST_RESPONSE_TIME_STATISTICS;
+	      else if (!strcasecmp (value, "cputhrottling"))
+		mode = IPMI_OEM_INTEL_NODE_MANAGER_RESET_MODE_CPU_THROTTLING_STATISTICS;
+	      else if (!strcasecmp (value, "memorythrottling"))
+		mode = IPMI_OEM_INTEL_NODE_MANAGER_RESET_MODE_MEMORY_THROTTLING_STATISTICS;
+	      else /* !strcasecmp (value, "hostcommfailure") */ 
+		mode = IPMI_OEM_INTEL_NODE_MANAGER_RESET_MODE_HOST_COMMUNICATION_FAILURE_STATISTICS;
+
+	      mode_specified++;
+	    }
+          else if (!strcasecmp (key, "domainid"))
             {
               if (_ipmi_oem_intelnm_parse_domainid (state_data,
 						    i,
@@ -970,6 +1008,8 @@ ipmi_oem_intelnm_reset_node_manager_statistics (ipmi_oem_state_data_t *state_dat
                                    state_data->prog_data->args->oem_options[i]);
                   goto cleanup;
                 }
+	      
+	      domainid_specified++;
             }
           else if (!strcasecmp (key, "policyid"))
             {
@@ -1012,11 +1052,41 @@ ipmi_oem_intelnm_reset_node_manager_statistics (ipmi_oem_state_data_t *state_dat
       goto cleanup;
     }
 
-  if (!policyid_specified)
-    mode = IPMI_OEM_INTEL_NODE_MANAGER_RESET_MODE_RESET_GLOBAL_STATISTICS;
+  if (!mode_specified)
+    {
+      if (!policyid_specified)
+	mode = IPMI_OEM_INTEL_NODE_MANAGER_RESET_MODE_RESET_GLOBAL_STATISTICS;
+      else
+	mode = IPMI_OEM_INTEL_NODE_MANAGER_RESET_MODE_PER_POLICY_STATISTICS;
+    }
   else
-    mode = IPMI_OEM_INTEL_NODE_MANAGER_RESET_MODE_PER_POLICY_STATISTICS;
-  
+    {
+      if ((mode == IPMI_OEM_INTEL_NODE_MANAGER_RESET_MODE_CPU_THROTTLING_STATISTICS
+	   || mode == IPMI_OEM_INTEL_NODE_MANAGER_RESET_MODE_MEMORY_THROTTLING_STATISTICS
+	   || mode == IPMI_OEM_INTEL_NODE_MANAGER_RESET_MODE_HOST_COMMUNICATION_FAILURE_STATISTICS)
+	  && domainid != IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_ENTIRE_PLATFORM)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "%s:%s domainid must be \"platform\" (or \"%u\") for indicated reset mode\n",
+			   state_data->prog_data->args->oem_id,
+			   state_data->prog_data->args->oem_command,
+			   IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_ENTIRE_PLATFORM);
+	  goto cleanup;
+	}
+
+      if (mode == IPMI_OEM_INTEL_NODE_MANAGER_RESET_MODE_PER_POLICY_STATISTICS
+	  && !policyid_specified)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "%s:%s policyid must be specified for indicated reset mode\n",
+			   state_data->prog_data->args->oem_id,
+			   state_data->prog_data->args->oem_command);
+	  goto cleanup;
+	}
+    }
+      
   if (ipmi_cmd_oem_intel_node_manager_reset_node_manager_statistics (state_data->ipmi_ctx,
                                                                      target_channel_number,
                                                                      target_slave_address,
