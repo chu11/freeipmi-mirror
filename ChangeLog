@@ -8,7 +8,11 @@
 	* libfreeipmi/include/freeipmi/spec/ipmi-sensor-and-event-code-tables-oem-spec.h,
 	libfreeipmi/include/freeipmi/spec/ipmi-event-reading-type-code-oem-spec.h,
 	libfreeipmi/include/freeipmi/spec/ipmi-sensor-numbers-oem-spec.h:
+	libfreeipmi/include/freeipmi/spec/ipmi-sensor-types-oem-spec.h:
 	Update with changes and/or additions from Intel NM 2.0 spec.
+
+	* libfreeipmi/sel/: Support changes/updates to Intel Node Manager
+	SEL events and add new events.
 
 	* ipmi-oem/ipmi-oem-intelnm.c: Update with changes to OEM commands.
 
