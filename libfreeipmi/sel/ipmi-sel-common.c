@@ -419,6 +419,7 @@ sel_get_system_event_record (ipmi_sel_ctx_t ctx,
 			     struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   fiid_obj_t obj_sel_system_event_record = NULL;
+  fiid_obj_t obj_sel_system_event_record_event_fields = NULL;
   int record_type_class;
   uint8_t record_type;
   uint8_t generator_id_type;
@@ -451,7 +452,13 @@ sel_get_system_event_record (ipmi_sel_ctx_t ctx,
       goto cleanup;
     }
 
-  if (!(obj_sel_system_event_record = fiid_obj_create (tmpl_sel_system_event_record_event_fields)))
+  if (!(obj_sel_system_event_record = fiid_obj_create (tmpl_sel_system_event_record)))
+    {
+      SEL_ERRNO_TO_SEL_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (!(obj_sel_system_event_record_event_fields = fiid_obj_create (tmpl_sel_system_event_record_event_fields)))
     {
       SEL_ERRNO_TO_SEL_ERRNUM (ctx, errno);
       goto cleanup;
@@ -462,6 +469,14 @@ sel_get_system_event_record (ipmi_sel_ctx_t ctx,
                         sel_entry->sel_event_record_len) < 0)
     {
       SEL_FIID_OBJECT_ERROR_TO_SEL_ERRNUM (ctx, obj_sel_system_event_record);
+      goto cleanup;
+    }
+
+  if (fiid_obj_set_all (obj_sel_system_event_record_event_fields,
+                        sel_entry->sel_event_record,
+                        sel_entry->sel_event_record_len) < 0)
+    {
+      SEL_FIID_OBJECT_ERROR_TO_SEL_ERRNUM (ctx, obj_sel_system_event_record_event_fields);
       goto cleanup;
     }
 
@@ -558,31 +573,13 @@ sel_get_system_event_record (ipmi_sel_ctx_t ctx,
   system_event_record_data->event_direction = val;
 
   if (FIID_OBJ_GET (obj_sel_system_event_record,
-                    "offset_from_event_reading_type_code",
+                    "event_data1",
                     &val) < 0)
     {
       SEL_FIID_OBJECT_ERROR_TO_SEL_ERRNUM (ctx, obj_sel_system_event_record);
       goto cleanup;
     }
-  system_event_record_data->offset_from_event_reading_type_code = val;
-
-  if (FIID_OBJ_GET (obj_sel_system_event_record,
-                    "event_data2_flag",
-                    &val) < 0)
-    {
-      SEL_FIID_OBJECT_ERROR_TO_SEL_ERRNUM (ctx, obj_sel_system_event_record);
-      goto cleanup;
-    }
-  system_event_record_data->event_data2_flag = val;
-
-  if (FIID_OBJ_GET (obj_sel_system_event_record,
-                    "event_data3_flag",
-                    &val) < 0)
-    {
-      SEL_FIID_OBJECT_ERROR_TO_SEL_ERRNUM (ctx, obj_sel_system_event_record);
-      goto cleanup;
-    }
-  system_event_record_data->event_data3_flag = val;
+  system_event_record_data->event_data1 = val;
 
   if (FIID_OBJ_GET (obj_sel_system_event_record,
                     "event_data2",
@@ -602,8 +599,36 @@ sel_get_system_event_record (ipmi_sel_ctx_t ctx,
     }
   system_event_record_data->event_data3 = val;
 
+  if (FIID_OBJ_GET (obj_sel_system_event_record_event_fields,
+                    "offset_from_event_reading_type_code",
+                    &val) < 0)
+    {
+      SEL_FIID_OBJECT_ERROR_TO_SEL_ERRNUM (ctx, obj_sel_system_event_record_event_fields);
+      goto cleanup;
+    }
+  system_event_record_data->offset_from_event_reading_type_code = val;
+
+  if (FIID_OBJ_GET (obj_sel_system_event_record_event_fields,
+                    "event_data2_flag",
+                    &val) < 0)
+    {
+      SEL_FIID_OBJECT_ERROR_TO_SEL_ERRNUM (ctx, obj_sel_system_event_record_event_fields);
+      goto cleanup;
+    }
+  system_event_record_data->event_data2_flag = val;
+
+  if (FIID_OBJ_GET (obj_sel_system_event_record_event_fields,
+                    "event_data3_flag",
+                    &val) < 0)
+    {
+      SEL_FIID_OBJECT_ERROR_TO_SEL_ERRNUM (ctx, obj_sel_system_event_record_event_fields);
+      goto cleanup;
+    }
+  system_event_record_data->event_data3_flag = val;
+
   rv = 0;
  cleanup:
   fiid_obj_destroy (obj_sel_system_event_record);
+  fiid_obj_destroy (obj_sel_system_event_record_event_fields);
   return (rv);
 }

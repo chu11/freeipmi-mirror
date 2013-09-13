@@ -346,6 +346,82 @@ sel_string_output_intel_node_manager_event_data1_class_oem (ipmi_sel_ctx_t ctx,
   assert (wlen);
   assert (system_event_record_data);
 
+  if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM
+      && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_SMBUS_STATUS
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_THERMAL_SENSOR_ON_DIMM)
+    {
+      uint8_t cpu0_mc0;
+      int cpu0_mc0_available;
+      uint8_t cpu0_mc1;
+      int cpu0_mc1_available;
+      uint8_t cpu1_mc0;
+      int cpu1_mc0_available;
+      uint8_t cpu1_mc1;
+      int cpu1_mc1_available;
+      uint8_t cpu2_mc0;
+      int cpu2_mc0_available;
+      uint8_t cpu2_mc1;
+      int cpu2_mc1_available;
+      uint8_t cpu3_mc0;
+      int cpu3_mc0_available;
+      uint8_t cpu3_mc1;
+      int cpu3_mc1_available;
+
+      cpu0_mc0 = system_event_record_data->event_data1 & IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_CPU_0_MEMORY_CONTROLLER_0_BITMASK;
+      cpu0_mc0 >>= IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_CPU_0_MEMORY_CONTROLLER_0_SHIFT;
+
+      cpu0_mc0_available = (cpu0_mc0 == IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_AVAILABLE) ? 1 : 0;
+
+      cpu0_mc1 = system_event_record_data->event_data1 & IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_CPU_0_MEMORY_CONTROLLER_1_BITMASK;
+      cpu0_mc1 >>= IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_CPU_0_MEMORY_CONTROLLER_1_SHIFT;
+
+      cpu0_mc1_available = (cpu0_mc0 == IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_AVAILABLE) ? 1 : 0;
+
+      cpu1_mc0 = system_event_record_data->event_data1 & IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_CPU_1_MEMORY_CONTROLLER_0_BITMASK;
+      cpu1_mc0 >>= IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_CPU_1_MEMORY_CONTROLLER_0_SHIFT;
+
+      cpu1_mc0_available = (cpu0_mc0 == IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_AVAILABLE) ? 1 : 0;
+
+      cpu1_mc1 = system_event_record_data->event_data1 & IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_CPU_1_MEMORY_CONTROLLER_1_BITMASK;
+      cpu1_mc1 >>= IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_CPU_1_MEMORY_CONTROLLER_1_SHIFT;
+
+      cpu1_mc1_available = (cpu0_mc0 == IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_AVAILABLE) ? 1 : 0;
+
+      cpu2_mc0 = system_event_record_data->event_data1 & IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_CPU_2_MEMORY_CONTROLLER_0_BITMASK;
+      cpu2_mc0 >>= IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_CPU_2_MEMORY_CONTROLLER_0_SHIFT;
+
+      cpu2_mc0_available = (cpu0_mc0 == IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_AVAILABLE) ? 1 : 0;
+
+      cpu2_mc1 = system_event_record_data->event_data1 & IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_CPU_2_MEMORY_CONTROLLER_1_BITMASK;
+      cpu2_mc1 >>= IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_CPU_2_MEMORY_CONTROLLER_1_SHIFT;
+
+      cpu2_mc1_available = (cpu0_mc0 == IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_AVAILABLE) ? 1 : 0;
+
+      cpu3_mc0 = system_event_record_data->event_data1 & IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_CPU_3_MEMORY_CONTROLLER_0_BITMASK;
+      cpu3_mc0 >>= IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_CPU_3_MEMORY_CONTROLLER_0_SHIFT;
+
+      cpu3_mc0_available = (cpu0_mc0 == IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_AVAILABLE) ? 1 : 0;
+
+      cpu3_mc1 = system_event_record_data->event_data1 & IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_CPU_3_MEMORY_CONTROLLER_1_BITMASK;
+      cpu3_mc1 >>= IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_CPU_3_MEMORY_CONTROLLER_1_SHIFT;
+
+      cpu3_mc1_available = (cpu0_mc0 == IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_AVAILABLE) ? 1 : 0;
+
+      snprintf (tmpbuf,
+		tmpbuflen,
+		"CPU0/MC0 = %s, CPU0/MC1 = %s, CPU1/MC0 = %s, CPU1/MC1 = %s, CPU2/MC0 = %s, CPU2/MC1 = %s, CPU3/MC0 = %s, CPU3/MC1 = %s",
+		cpu0_mc0_available ? "Available" : "Not Available",
+		cpu0_mc1_available ? "Available" : "Not Available",
+		cpu1_mc0_available ? "Available" : "Not Available",
+		cpu1_mc1_available ? "Available" : "Not Available",
+		cpu2_mc0_available ? "Available" : "Not Available",
+		cpu2_mc1_available ? "Available" : "Not Available",
+		cpu3_mc0_available ? "Available" : "Not Available",
+		cpu3_mc1_available ? "Available" : "Not Available");
+      
+      return (1);
+    }
+
   if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_NODE_MANAGER)
     {
       int nm_found;

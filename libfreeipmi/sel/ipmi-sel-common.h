@@ -44,6 +44,7 @@ struct ipmi_sel_system_event_record_data
   uint8_t offset_from_event_reading_type_code;
   uint8_t event_data2_flag;
   uint8_t event_data3_flag;
+  uint8_t event_data1;
   uint8_t event_data2;
   uint8_t event_data3;
 };
