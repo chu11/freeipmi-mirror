@@ -668,8 +668,6 @@ struct ipmi_oem_command oem_intelnm[] =
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_intelnm_set_node_manager_power_draw_range
     },
-#if 0
-    /* can't verify */
     {
       "get-limiting-policy-id",
       "domainid=platform|cpu|memory|<num>",
@@ -694,7 +692,6 @@ struct ipmi_oem_command oem_intelnm[] =
       IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
       ipmi_oem_intelnm_set_node_manager_alert_destination
     },
-#endif
     {
       "get-node-manager-version",
       NULL,

@@ -4819,8 +4819,6 @@ ipmi_oem_intelnm_set_node_manager_power_draw_range (ipmi_oem_state_data_t *state
   return (rv);
 }
 
-#if 0
-/* can't verify */
 int
 ipmi_oem_intelnm_get_limiting_policy_id (ipmi_oem_state_data_t *state_data)
 {
@@ -5392,7 +5390,6 @@ ipmi_oem_intelnm_set_node_manager_alert_destination (ipmi_oem_state_data_t *stat
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
-#endif	/* 0 */
 
 int
 ipmi_oem_intelnm_get_node_manager_version (ipmi_oem_state_data_t *state_data)
