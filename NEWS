@@ -1,3 +1,8 @@
+FreeIPMI 1.3.2 - 09/13/13
+-------------------------
+o Add support for intelnm get-node-manager-alert-destination and
+  set-node-manager-alert-destination in ipmi-oem.
+
 FreeIPMI 1.3.2 - 09/10/13
 -------------------------
 o Update FreeIPMI tools to check libfreeipmi API error codes
