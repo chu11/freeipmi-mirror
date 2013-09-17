@@ -425,41 +425,171 @@ _ipmi_oem_intelnm_bad_completion_code (ipmi_oem_state_data_t *state_data,
   return (rv);
 }
 
-/* Returns 1 if success, 0 if error but don't fail out, -1 on error */
-static int
-_ipmi_oem_intelnm_get_node_manager_statistics_common (ipmi_oem_state_data_t *state_data,
-                                                      uint8_t target_channel_number,
-                                                      uint8_t target_slave_address,
-                                                      uint8_t target_lun,
-                                                      uint8_t mode,
-                                                      uint8_t domainid,
-                                                      uint8_t policyid,
-                                                      uint16_t *current,
-                                                      uint16_t *minimum,
-                                                      uint16_t *maximum,
-                                                      uint16_t *average,
-                                                      uint32_t *statistics_reporting_period,
-                                                      uint8_t *policy_global_administrative_state,
-                                                      uint8_t *policy_operational_state,
-                                                      uint8_t *measurements_state,
-                                                      uint8_t *policy_activation_state)
+int
+ipmi_oem_intelnm_get_node_manager_statistics (ipmi_oem_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t target_channel_number = 0;
+  uint8_t target_slave_address = 0;
+  uint8_t target_lun = 0;
+  uint8_t mode = IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_POWER_STATISTICS;
+  int mode_specified = 0;
+  uint8_t domainid = IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_ENTIRE_PLATFORM;
+  uint8_t policyid = 0;
+  int policyid_specified = 0;
+  uint16_t current;
+  uint16_t minimum;
+  uint16_t maximum;
+  uint16_t average;
+  uint32_t statistics_reporting_period;
+  uint8_t policy_global_administrative_state;
+  uint8_t policy_operational_state;
+  uint8_t measurements_state;
+  uint8_t policy_activation_state;
   uint64_t val;
   int rv = -1;
-
+  unsigned int i;
+      
   assert (state_data);
-  assert (IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_VALID (mode));
-  assert (IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domainid));
-  assert (current);
-  assert (minimum);
-  assert (maximum);
-  assert (average);
-  assert (statistics_reporting_period);
-  assert (policy_global_administrative_state);
-  assert (policy_operational_state);
-  assert (measurements_state);
-  assert (policy_activation_state);
+  assert (state_data->prog_data->args->oem_options_count >= 1);
+
+  for (i = 0; i < state_data->prog_data->args->oem_options_count; i++)
+    {
+      char *key = NULL;
+      char *value = NULL;
+      
+      if (ipmi_oem_parse_key_value (state_data,
+				    i,
+				    &key,
+				    &value) < 0)
+	goto cleanup;
+
+      if (!strcasecmp (key, "mode"))
+	{
+	  if (strcasecmp (value, "globalpower")
+	      && strcasecmp (value, "globaltemp")
+	      && strcasecmp (value, "policypower")
+	      && strcasecmp (value, "policytrigger")
+	      && strcasecmp (value, "policythrottling")
+	      && strcasecmp (value, "hostunhandledrequests")
+	      && strcasecmp (value, "hostresponsetime")
+	      && strcasecmp (value, "cputhrottling")
+	      && strcasecmp (value, "memorythrottling")
+	      && strcasecmp (value, "hostcommfailure"))
+	    {
+	      pstdout_fprintf (state_data->pstate,
+			       stderr,
+			       "%s:%s invalid OEM option argument '%s' : invalid mode\n",
+			       state_data->prog_data->args->oem_id,
+			       state_data->prog_data->args->oem_command,
+			       state_data->prog_data->args->oem_options[i]);
+	      goto cleanup;
+	    }
+
+	  if (!strcasecmp (value, "globalpower"))
+	    mode = IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_POWER_STATISTICS;
+	  else if (!strcasecmp (value, "globaltemp"))
+	    mode = IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_INLET_TEMPERATURE_STATISTICS;
+	  else if (!strcasecmp (value, "policypower"))
+	    mode = IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_PER_POLICY_POWER_STATISTICS;
+	  else if (!strcasecmp (value, "policytrigger"))
+	    mode = IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_PER_POLICY_TRIGGER_STATISTICS;
+	  else if (!strcasecmp (value, "policythrottling"))
+	    mode = IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_PER_POLICY_THROTTLING_STATISTICS;
+	  else if (!strcasecmp (value, "hostunhandledrequests"))
+	    mode = IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_HOST_UNHANDLED_REQUESTS_STATISTICS;
+	  else if (!strcasecmp (value, "hostresponsetime"))
+	    mode = IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_HOST_RESPONSE_TIME_STATISTICS;
+	  else if (!strcasecmp (value, "cputhrottling"))
+	    mode = IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_CPU_THROTTLING_STATISTICS;
+	  else if (!strcasecmp (value, "memorythrottling"))
+	    mode = IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_MEMORY_THROTTLING_STATISTICS;
+	  else /* !strcasecmp (value, "hostcommfailure") */ 
+	    mode = IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_HOST_COMMUNICATION_FAILURE_STATISTICS;
+
+	  mode_specified++;
+	}
+      else if (!strcasecmp (key, "domainid"))
+	{
+	  if (_ipmi_oem_intelnm_parse_domainid (state_data,
+						i,
+						value,
+						&domainid) < 0)
+	    goto cleanup;
+
+	  if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domainid))
+	    {
+	      pstdout_fprintf (state_data->pstate,
+			       stderr,
+			       "%s:%s invalid OEM option argument '%s' : invalid domain id\n",
+			       state_data->prog_data->args->oem_id,
+			       state_data->prog_data->args->oem_command,
+			       state_data->prog_data->args->oem_options[i]);
+	      goto cleanup;
+	    }
+	}
+      else if (!strcasecmp (key, "policyid"))
+	{
+	  if (ipmi_oem_parse_1_byte_field (state_data,
+					   i,
+					   value,
+					   &policyid) < 0)
+	    goto cleanup;
+
+	  policyid_specified++;
+	}
+      else
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "%s:%s invalid OEM option argument '%s' : invalid option\n",
+			   state_data->prog_data->args->oem_id,
+			   state_data->prog_data->args->oem_command,
+			   state_data->prog_data->args->oem_options[i]);
+	  goto cleanup;
+	}
+
+      free (key);
+      free (value);
+    }
+
+  if (!mode_specified)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "mode must be specified\n");
+      goto cleanup;
+    }
+
+  if ((mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_PER_POLICY_POWER_STATISTICS
+       || mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_PER_POLICY_TRIGGER_STATISTICS
+       || mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_PER_POLICY_THROTTLING_STATISTICS)
+      && !policyid_specified)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "policy id must be specified for given mode\n");
+      goto cleanup;
+    }
+
+  if ((mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_HOST_UNHANDLED_REQUESTS_STATISTICS
+       || mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_HOST_RESPONSE_TIME_STATISTICS
+       || mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_CPU_THROTTLING_STATISTICS
+       || mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_MEMORY_THROTTLING_STATISTICS
+       || mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_HOST_COMMUNICATION_FAILURE_STATISTICS)
+      && domainid != IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_ENTIRE_PLATFORM)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "domain id invalid for given mode\n");
+      goto cleanup;
+    }
+
+  if (_ipmi_oem_intelnm_node_manager_init (state_data,
+                                           &target_channel_number,
+                                           &target_slave_address,
+                                           &target_lun) < 0)
+    goto cleanup;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_oem_intel_node_manager_get_node_manager_statistics_rs)))
     {
@@ -479,11 +609,7 @@ _ipmi_oem_intelnm_get_node_manager_statistics_common (ipmi_oem_state_data_t *sta
                                                                    policyid,
                                                                    obj_cmd_rs) < 0)
     {
-      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-	  && ipmi_check_completion_code (obj_cmd_rs,
-					 IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_INVALID_MODE))
-	rv = 0;
-      else if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
 	{
 	  int eret;
 
@@ -517,8 +643,8 @@ _ipmi_oem_intelnm_get_node_manager_statistics_common (ipmi_oem_state_data_t *sta
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
-  (*current) = val;
-
+  current = val;
+  
   if (FIID_OBJ_GET (obj_cmd_rs,
                     "minimum",
                     &val) < 0)
@@ -529,7 +655,7 @@ _ipmi_oem_intelnm_get_node_manager_statistics_common (ipmi_oem_state_data_t *sta
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
-  (*minimum) = val;
+  minimum = val;
 
   if (FIID_OBJ_GET (obj_cmd_rs,
                     "maximum",
@@ -541,7 +667,7 @@ _ipmi_oem_intelnm_get_node_manager_statistics_common (ipmi_oem_state_data_t *sta
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
-  (*maximum) = val;
+  maximum = val;
 
   if (FIID_OBJ_GET (obj_cmd_rs,
                     "average",
@@ -553,7 +679,7 @@ _ipmi_oem_intelnm_get_node_manager_statistics_common (ipmi_oem_state_data_t *sta
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
-  (*average) = val;
+  average = val;
 
   if (FIID_OBJ_GET (obj_cmd_rs,
                     "statistics_reporting_period",
@@ -565,7 +691,7 @@ _ipmi_oem_intelnm_get_node_manager_statistics_common (ipmi_oem_state_data_t *sta
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
-  (*statistics_reporting_period) = val;
+  statistics_reporting_period = val;
 
   if (FIID_OBJ_GET (obj_cmd_rs,
                     "policy_global_administrative_state",
@@ -577,7 +703,7 @@ _ipmi_oem_intelnm_get_node_manager_statistics_common (ipmi_oem_state_data_t *sta
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
-  (*policy_global_administrative_state) = val;
+  policy_global_administrative_state = val;
 
   if (FIID_OBJ_GET (obj_cmd_rs,
                     "policy_operational_state",
@@ -589,7 +715,7 @@ _ipmi_oem_intelnm_get_node_manager_statistics_common (ipmi_oem_state_data_t *sta
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
-  (*policy_operational_state) = val;
+  policy_operational_state = val;
 
   if (FIID_OBJ_GET (obj_cmd_rs,
                     "measurements_state",
@@ -601,7 +727,7 @@ _ipmi_oem_intelnm_get_node_manager_statistics_common (ipmi_oem_state_data_t *sta
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
-  (*measurements_state) = val;
+  measurements_state = val;
 
   if (FIID_OBJ_GET (obj_cmd_rs,
                     "policy_activation_state",
@@ -613,322 +739,126 @@ _ipmi_oem_intelnm_get_node_manager_statistics_common (ipmi_oem_state_data_t *sta
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
-  (*policy_activation_state) = val;
-
-  rv = 1;
- cleanup:
-  fiid_obj_destroy (obj_cmd_rs);
-  return (rv);
-}
-
-/* XXX -revisit b/c of new policy trigger types */
-/* XXX - revisit b/c of new modes */
-int
-ipmi_oem_intelnm_get_node_manager_statistics (ipmi_oem_state_data_t *state_data)
-{
-  fiid_obj_t obj_cmd_rs = NULL;
-  uint8_t target_channel_number = 0;
-  uint8_t target_slave_address = 0;
-  uint8_t target_lun = 0;
-  uint8_t domainid = IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_ENTIRE_PLATFORM;
-  uint8_t policyid = 0;
-  int policyid_specified = 0;
-  uint8_t policy_trigger_type = 0;
-  uint16_t current;
-  uint16_t minimum;
-  uint16_t maximum;
-  uint16_t average;
-  uint32_t statistics_reporting_period;
-  uint8_t policy_global_administrative_state;
-  uint8_t policy_operational_state;
-  uint8_t measurements_state;
-  uint8_t policy_activation_state;
-  uint64_t val;
-  int rv = -1;
-
-  assert (state_data);
-  
-  if (state_data->prog_data->args->oem_options_count)
-    {
-      unsigned int i;
+  policy_activation_state = val;
       
-      for (i = 0; i < state_data->prog_data->args->oem_options_count; i++)
-        {
-          char *key = NULL;
-          char *value = NULL;
-
-          if (ipmi_oem_parse_key_value (state_data,
-                                        i,
-                                        &key,
-                                        &value) < 0)
-            goto cleanup;
-
-          if (!strcasecmp (key, "domainid"))
-            {
-	      if (_ipmi_oem_intelnm_parse_domainid (state_data,
-						    i,
-						    value,
-						    &domainid) < 0)
-                goto cleanup;
-
-              if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domainid))
-                {
-                  pstdout_fprintf (state_data->pstate,
-                                   stderr,
-                                   "%s:%s invalid OEM option argument '%s' : invalid domain id\n",
-                                   state_data->prog_data->args->oem_id,
-                                   state_data->prog_data->args->oem_command,
-                                   state_data->prog_data->args->oem_options[i]);
-                  goto cleanup;
-                }
-            }
-          else if (!strcasecmp (key, "policyid"))
-            {
-              if (ipmi_oem_parse_1_byte_field (state_data,
-                                               i,
-                                               value,
-                                               &policyid) < 0)
-                goto cleanup;
-
-              policyid_specified++;
-            }
-          else
-            {
-              pstdout_fprintf (state_data->pstate,
-                               stderr,
-                               "%s:%s invalid OEM option argument '%s' : invalid option\n",
-                               state_data->prog_data->args->oem_id,
-                               state_data->prog_data->args->oem_command,
-                               state_data->prog_data->args->oem_options[i]);
-              goto cleanup;
-            }
-
-          free (key);
-          free (value);
-        }
+  if (mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_POWER_STATISTICS
+      || mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_PER_POLICY_POWER_STATISTICS)
+    {
+      pstdout_printf (state_data->pstate,
+		      "Current Power                                 : %u Watts\n",
+		      current);
+      
+      pstdout_printf (state_data->pstate,
+		      "Minimum Power                                 : %u Watts\n",
+		      minimum);
+      
+      pstdout_printf (state_data->pstate,
+		      "Maximum Power                                 : %u Watts\n",
+		      maximum);
+      
+      pstdout_printf (state_data->pstate,
+		      "Average Power                                 : %u Watts\n",
+		      average);
+    }
+  else if (mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_INLET_TEMPERATURE_STATISTICS
+	   || mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_PER_POLICY_TRIGGER_STATISTICS)
+    {
+      pstdout_printf (state_data->pstate,
+		      "Current Temperature                           : %u Celsius\n",
+		      current);
+    
+      pstdout_printf (state_data->pstate,
+		      "Minimum Temperature                           : %u Celsius\n",
+		      minimum);
+    
+      pstdout_printf (state_data->pstate,
+		      "Maximum Temperature                           : %u Celsius\n",
+		      maximum);
+    
+      pstdout_printf (state_data->pstate,
+		      "Average Temperature                           : %u Celsius\n",
+		      average);
+    }
+  else if (mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_PER_POLICY_THROTTLING_STATISTICS
+	   || mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_CPU_THROTTLING_STATISTICS
+	   || mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_MEMORY_THROTTLING_STATISTICS)
+    {
+      pstdout_printf (state_data->pstate,
+		      "Current Throttling Percent                    : %u%%\n",
+		      current);
+    
+      pstdout_printf (state_data->pstate,
+		      "Minimum Throttling Percent                    : %u%%\n",
+		      minimum);
+    
+      pstdout_printf (state_data->pstate,
+		      "Maximum Throttling Percent                    : %u%%\n",
+		      maximum);
+    
+      pstdout_printf (state_data->pstate,
+		      "Average Throttling Percent                    : %u%%\n",
+		      average);
+    }
+  else if (mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_HOST_UNHANDLED_REQUESTS_STATISTICS
+	   || mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_HOST_COMMUNICATION_FAILURE_STATISTICS)
+    {
+      pstdout_printf (state_data->pstate,
+		      "Current Throttling                            : %u%%\n",
+		      current);
+    
+      pstdout_printf (state_data->pstate,
+		      "Minimum Throttling                            : %u%%\n",
+		      minimum);
+    
+      pstdout_printf (state_data->pstate,
+		      "Maximum Throttling                            : %u%%\n",
+		      maximum);
+    
+      pstdout_printf (state_data->pstate,
+		      "Average Throttling                            : %u%%\n",
+		      average);
+    } 
+  else /* mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_HOST_RESPONSE_TIME_STATISTICS */
+    {
+      pstdout_printf (state_data->pstate,
+		      "Current Unhandled Requests                    : %u%%\n",
+		      current);
+    
+      pstdout_printf (state_data->pstate,
+		      "Minimum Unhandled Requests                    : %u%%\n",
+		      minimum);
+    
+      pstdout_printf (state_data->pstate,
+		      "Maximum Unhandled Requests                    : %u%%\n",
+		      maximum);
+    
+      pstdout_printf (state_data->pstate,
+		      "Average Unhandled Requests                    : %u%%\n",
+		      average);
     }
 
-  if (_ipmi_oem_intelnm_node_manager_init (state_data,
-                                           &target_channel_number,
-                                           &target_slave_address,
-                                           &target_lun) < 0)
-    goto cleanup;
+  pstdout_printf (state_data->pstate,
+		  "Statistics Reporting Period                   : %u seconds\n",
+		  statistics_reporting_period);
+  
+
+  pstdout_printf (state_data->pstate,
+		  "Policy/Global Administrative State            : %s\n",
+		  (policy_global_administrative_state == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_GLOBAL_ADMINISTRATIVE_STATE_ENABLED) ? "Enabled" : "Disabled");
+  
+  if (policyid_specified)
+    pstdout_printf (state_data->pstate,
+		    "Policy Operational State                      : %s\n",
+		    (policy_operational_state == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_OPERATIONAL_STATE_ACTIVELY_MONITORING_DEFINED_TRIGGER) ? "Active" : "Suspended");
+
+  pstdout_printf (state_data->pstate,
+		  "Measurements State                            : %s\n",
+		  (measurements_state == IPMI_OEM_INTEL_NODE_MANAGER_MEASUREMENTS_STATE_IN_PROGRESS) ? "In Progress" : "Suspended");
 
   if (policyid_specified)
-    {
-      if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_rs)))
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "fiid_obj_create: %s\n",
-                           strerror (errno));
-          goto cleanup;
-        }
-
-      if (ipmi_cmd_oem_intel_node_manager_get_node_manager_policy (state_data->ipmi_ctx,
-                                                                   target_channel_number,
-                                                                   target_slave_address,
-                                                                   target_lun,
-                                                                   domainid,
-                                                                   policyid,
-                                                                   obj_cmd_rs) < 0)
-        {
-	  if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
-	    {
-	      int eret;
-	      
-	      if ((eret = _ipmi_oem_intelnm_bad_completion_code (state_data,
-								 NULL,
-								 obj_cmd_rs)) < 0)
-		goto cleanup;
-	      
-	      if (!eret)
-		goto efallthrough;
-	    }
-	  else
-	    {
-	    efallthrough:
-	      pstdout_fprintf (state_data->pstate,
-			       stderr,
-			       "ipmi_cmd_oem_intel_node_manager_get_node_manager_policy: %s\n",
-			       ipmi_ctx_errormsg (state_data->ipmi_ctx));
-	    }
-          goto cleanup;
-        }
-
-      if (FIID_OBJ_GET (obj_cmd_rs,
-                        "policy_trigger_type",
-                        &val) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "FIID_OBJ_GET: 'policy_trigger_type': %s\n",
-                           fiid_obj_errormsg (obj_cmd_rs));
-	  goto cleanup;
-        }
-      policy_trigger_type = val;
-    }
-
-  if (!policyid_specified
-      || (policyid_specified
-	  && policy_trigger_type == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_NO_POLICY_TRIGGER))
-    {
-      uint8_t mode;
-      int ret;
-
-      if (!policyid_specified)
-        mode = IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_POWER_STATISTICS;
-      else
-        mode = IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_PER_POLICY_POWER_STATISTICS;
-
-      if ((ret = _ipmi_oem_intelnm_get_node_manager_statistics_common (state_data,
-								       target_channel_number,
-								       target_slave_address,
-								       target_lun,
-								       mode,
-								       domainid,
-								       policyid,
-								       &current,
-								       &minimum,
-								       &maximum,
-								       &average,
-								       &statistics_reporting_period,
-								       &policy_global_administrative_state,
-								       &policy_operational_state,
-								       &measurements_state,
-								       &policy_activation_state)) < 0)
-        goto cleanup;
-      
-      if (ret)
-	{
-	  pstdout_printf (state_data->pstate,
-			  "Current Power                                 : %u Watts\n",
-			  current);
-	  
-	  pstdout_printf (state_data->pstate,
-			  "Minimum Power                                 : %u Watts\n",
-			  minimum);
-	  
-	  pstdout_printf (state_data->pstate,
-			  "Maximum Power                                 : %u Watts\n",
-			  maximum);
-      
-	  pstdout_printf (state_data->pstate,
-			  "Average Power                                 : %u Watts\n",
-			  average);
-      
-	  pstdout_printf (state_data->pstate,
-			  "Power Statistics Reporting Period             : %u seconds\n",
-			  statistics_reporting_period);
-      
-	  /* achu: assume policy outputs only relevant if policy indicated */
-      
-	  if (policyid_specified)
-	    {
-	      pstdout_printf (state_data->pstate,
-			      "Power Policy Administrative State             : %s\n",
-			      (policy_global_administrative_state == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_GLOBAL_ADMINISTRATIVE_STATE_ENABLED) ? "Enabled" : "Disabled");
-	      
-	      pstdout_printf (state_data->pstate,
-			      "Power Policy Operational State                : %s\n",
-			      (policy_operational_state == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_OPERATIONAL_STATE_ACTIVELY_MONITORING_DEFINED_TRIGGER) ? "Active" : "Suspended");
-	      
-	      pstdout_printf (state_data->pstate,
-			      "Power Policy Activation State                 : %s\n",
-			      (policy_activation_state == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_ACTIVATION_STATE_TRIGGERED_AND_ACTIVELY_LIMITING_TARGET) ? "Triggered" : "Not Triggered");
-	    }
-	  else
-	    pstdout_printf (state_data->pstate,
-			    "Power Global Administrative State             : %s\n",
-			    (policy_global_administrative_state == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_GLOBAL_ADMINISTRATIVE_STATE_ENABLED) ? "Enabled" : "Disabled");
-	  
-	  pstdout_printf (state_data->pstate,
-			  "Power Measurements State                      : %s\n",
-			  (measurements_state == IPMI_OEM_INTEL_NODE_MANAGER_MEASUREMENTS_STATE_IN_PROGRESS) ? "In Progress" : "Suspended");
-	}
-    }
-
-  if (!policyid_specified
-      || (policyid_specified
-	  && policy_trigger_type == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_INLET_TEMPERATURE_LIMIT_POLICY_TRIGGER))
-    {
-      uint8_t mode;
-      int ret;
-
-      if (!policyid_specified)
-        mode = IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_INLET_TEMPERATURE_STATISTICS;
-      else
-        mode = IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_PER_POLICY_TRIGGER_STATISTICS;
-      
-      if ((ret = _ipmi_oem_intelnm_get_node_manager_statistics_common (state_data,
-								       target_channel_number,
-								       target_slave_address,
-								       target_lun,
-								       mode,
-								       domainid,
-								       policyid,
-								       &current,
-								       &minimum,
-								       &maximum,
-								       &average,
-								       &statistics_reporting_period,
-								       &policy_global_administrative_state,
-								       &policy_operational_state,
-								       &measurements_state,
-								       &policy_activation_state)) < 0)
-        goto cleanup;
-      
-      if (ret)
-	{
-	  if (!policyid_specified)
-	    pstdout_printf (state_data->pstate, "\n");
-	  
-	  pstdout_printf (state_data->pstate,
-			  "Current Inlet Temperature                     : %u Celsius\n",
-			  current);
-	  
-	  pstdout_printf (state_data->pstate,
-			  "Minimum Inlet Temperature                     : %u Celsius\n",
-			  minimum);
-	  
-	  pstdout_printf (state_data->pstate,
-			  "Maximum Inlet Temperature                     : %u Celsius\n",
-			  maximum);
-	  
-	  pstdout_printf (state_data->pstate,
-			  "Average Inlet Temperature                     : %u Celsius\n",
-			  average);
-	  
-	  pstdout_printf (state_data->pstate,
-			  "Inlet Temperature Statistics Reporting Period : %u seconds\n",
-			  statistics_reporting_period);
-	  
-	  /* achu: assume policy outputs only relevant if policy indicated */
-	  
-	  if (policyid_specified)
-	    {
-	      pstdout_printf (state_data->pstate,
-			      "Inlet Temperature Policy Administrative State : %s\n",
-			      (policy_global_administrative_state == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_GLOBAL_ADMINISTRATIVE_STATE_ENABLED) ? "Enabled" : "Disabled");
-	      
-	      pstdout_printf (state_data->pstate,
-			      "Inlet Temperature Policy Operational State    : %s\n",
-			      (policy_operational_state == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_OPERATIONAL_STATE_ACTIVELY_MONITORING_DEFINED_TRIGGER) ? "Active" : "Suspended");
-	      
-	      pstdout_printf (state_data->pstate,
-			      "Inlet Temperature Policy Activation State     : %s\n",
-			      (policy_activation_state == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_ACTIVATION_STATE_TRIGGERED_AND_ACTIVELY_LIMITING_TARGET) ? "Triggered" : "Not Triggered");
-	    }
-	  else
-	    pstdout_printf (state_data->pstate,
-			    "Inlet Temperature Global Administrative State : %s\n",
-			    (policy_global_administrative_state == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_GLOBAL_ADMINISTRATIVE_STATE_ENABLED) ? "Enabled" : "Disabled");
-	  
-	  pstdout_printf (state_data->pstate,
-			  "Inlet Temperature Measurements State          : %s\n",
-			  (measurements_state == IPMI_OEM_INTEL_NODE_MANAGER_MEASUREMENTS_STATE_IN_PROGRESS) ? "In Progress" : "Suspended");
-	}
-    }
+    pstdout_printf (state_data->pstate,
+		    "Policy Activation State                       : %s\n",
+		    (policy_activation_state == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_ACTIVATION_STATE_TRIGGERED_AND_ACTIVELY_LIMITING_TARGET) ? "Triggered" : "Not Triggered");
   
   rv = 0;
  cleanup:

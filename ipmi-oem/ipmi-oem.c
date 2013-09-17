@@ -586,8 +586,8 @@ struct ipmi_oem_command oem_intelnm[] =
   {
     {
       "get-node-manager-statistics",
-      "[domainid=platform|cpu|memory|highpowerio|<num>] [policyid=num]",
-      0,
+      "mode=globalpower|globaltemp|policypower|policytrigger|policythrottling|hostunhandledrequests|hostresponsetime|cputhrottling|memorythrottling|hostcommfailure [domainid=platform|cpu|memory|highpowerio|<num>] [policyid=num]",
+      1,
       IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
       ipmi_oem_intelnm_get_node_manager_statistics
     },
