@@ -1399,14 +1399,14 @@ _ipmi_oem_intelnm_get_node_manager_capabilities_common (ipmi_oem_state_data_t *s
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t max_concurrent_settings;
-  uint16_t max_power_thermal;
-  uint16_t min_power_thermal;
+  uint16_t max_power_thermal_time_after_reset;
+  uint16_t min_power_thermal_time_after_reset;
   uint32_t min_correction_time;
   uint32_t max_correction_time;
   uint16_t min_statistics_reporting_period;
   uint16_t max_statistics_reporting_period;
-  uint8_t limiting_type;
-  char *limiting_type_str;
+  uint8_t limiting_domain_id;
+  char *limiting_domain_id_str;
   uint8_t limiting_based_on;
   char *limiting_based_on_str;
   uint64_t val;
@@ -1501,28 +1501,28 @@ _ipmi_oem_intelnm_get_node_manager_capabilities_common (ipmi_oem_state_data_t *s
   max_concurrent_settings = val;
   
   if (FIID_OBJ_GET (obj_cmd_rs,
-		    "max_power_thermal",
+		    "max_power_thermal_time_after_reset",
 		    &val) < 0)
     {
       pstdout_fprintf (state_data->pstate,
 		       stderr,
-		       "FIID_OBJ_GET: 'max_power_thermal': %s\n",
+		       "FIID_OBJ_GET: 'max_power_thermal_time_after_reset': %s\n",
 		       fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
-  max_power_thermal = val;
+  max_power_thermal_time_after_reset = val;
 
   if (FIID_OBJ_GET (obj_cmd_rs,
-		    "min_power_thermal",
+		    "min_power_thermal_time_after_reset",
 		    &val) < 0)
     {
       pstdout_fprintf (state_data->pstate,
 		       stderr,
-		       "FIID_OBJ_GET: 'min_power_thermal': %s\n",
+		       "FIID_OBJ_GET: 'min_power_thermal_time_after_reset': %s\n",
 		       fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
-  min_power_thermal = val;
+  min_power_thermal_time_after_reset = val;
 
   if (FIID_OBJ_GET (obj_cmd_rs,
 		    "max_correction_time",
@@ -1573,16 +1573,16 @@ _ipmi_oem_intelnm_get_node_manager_capabilities_common (ipmi_oem_state_data_t *s
   min_statistics_reporting_period = val;
 
   if (FIID_OBJ_GET (obj_cmd_rs,
-		    "domain_limiting_scope.limiting_type",
+		    "domain_limiting_scope.domain_id",
 		    &val) < 0)
     {
       pstdout_fprintf (state_data->pstate,
 		       stderr,
-		       "FIID_OBJ_GET: 'domain_limiting_scope.limiting_type': %s\n",
+		       "FIID_OBJ_GET: 'domain_limiting_scope.domain_id': %s\n",
 		       fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
-  limiting_type = val;
+  limiting_domain_id = val;
 
   if (FIID_OBJ_GET (obj_cmd_rs,
 		    "domain_limiting_scope.limiting_based_on",
@@ -1596,16 +1596,25 @@ _ipmi_oem_intelnm_get_node_manager_capabilities_common (ipmi_oem_state_data_t *s
     }
   limiting_based_on = val;
 
-  switch (limiting_type)
+  /* achu: don't use ipmi_oem_intelnm_get_domain_id_str, only
+   * domain IDs listed here are valid
+   */
+  switch (limiting_domain_id)
     {
-    case IPMI_OEM_INTEL_NODE_MANAGER_LIMITING_TYPE_PLATFORM_POWER_LIMITING:
-      limiting_type_str = "platform power limiting";
+    case IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_ENTIRE_PLATFORM:
+      limiting_domain_id_str = "Entire Platform";
       break;
-    case IPMI_OEM_INTEL_NODE_MANAGER_LIMITING_TYPE_CPU_POWER_LIMITING:
-      limiting_type_str = "CPU power limiting";
+    case IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_CPU_SUBSYSTEM:
+      limiting_domain_id_str = "CPU Subsystem";
+      break;
+    case IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_MEMORY_SUBSYSTEM:
+      limiting_domain_id_str = "Memory Subsystem";
+      break;
+    case IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_HIGH_POWER_IO_SUBSYSTEM:
+      limiting_domain_id_str = "High Power I/O Subsystem";
       break;
     default:
-      limiting_type_str = "Unspecified";
+      limiting_domain_id_str = "Unspecified";
       break;
     }
 
@@ -1633,24 +1642,59 @@ _ipmi_oem_intelnm_get_node_manager_capabilities_common (ipmi_oem_state_data_t *s
 
   if (policy_trigger_type == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_NO_POLICY_TRIGGER)
     {
-      pstdout_printf (state_data->pstate,
-		      "Max Power                       : %u W\n",
-		      max_power_thermal);
+      char thermal_str[IPMI_OEM_INTELNM_STRING_MAX + 1];
       
+      memset (thermal_str, '\0', IPMI_OEM_INTELNM_STRING_MAX + 1);
+      if (!max_power_thermal_time_after_reset)
+	snprintf (thermal_str,
+		  IPMI_OEM_INTELNM_STRING_MAX,
+		  "No Limit");
+      else
+	snprintf (thermal_str,
+		  IPMI_OEM_INTELNM_STRING_MAX,
+		  "%u W",
+		  max_power_thermal_time_after_reset);
+
       pstdout_printf (state_data->pstate,
-		      "Min Power                       : %u W\n",
-		      min_power_thermal);
+		      "Max Power                       : %s\n",
+		      thermal_str);
+      
+      if (!min_power_thermal_time_after_reset)
+	snprintf (thermal_str,
+		  IPMI_OEM_INTELNM_STRING_MAX,
+		  "No Limit");
+      else
+	snprintf (thermal_str,
+		  IPMI_OEM_INTELNM_STRING_MAX,
+		  "%u W",
+		  min_power_thermal_time_after_reset);
+
+      pstdout_printf (state_data->pstate,
+		      "Min Power                       : %s\n",
+		      thermal_str);
     }
-  else	/* policy_trigger_type == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_INLET_TEMPERATURE_LIMIT_POLICY_TRIGGER */
+  else if (policy_trigger_type == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_INLET_TEMPERATURE_LIMIT_POLICY_TRIGGER)
     {
       pstdout_printf (state_data->pstate,
 		      "Max Thermal                     : %u C\n",
-		      max_power_thermal);
+		      max_power_thermal_time_after_reset);
       
       pstdout_printf (state_data->pstate,
 		      "Min Thermal                     : %u C\n",
-		      min_power_thermal);
+		      min_power_thermal_time_after_reset);
     }
+  else if (policy_trigger_type == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_MISSING_POWER_READING_TIMEOUT
+	   || policy_trigger_type == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_TIME_AFTER_PLATFORM_RESET_TRIGGER)
+    {
+      pstdout_printf (state_data->pstate,
+		      "Max Trigger Time                : %0.1f s\n",
+		      ((float)max_power_thermal_time_after_reset / 10));
+      
+      pstdout_printf (state_data->pstate,
+		      "Min Trigger Time                : %0.1f s\n",
+		      ((float)min_power_thermal_time_after_reset / 10));
+    }
+  /* policy_trigger_type == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_BOOT_TIME_POLICY not applicable */
   
   pstdout_printf (state_data->pstate,
 		  "Max Correction Time             : %u ms\n",
@@ -1669,8 +1713,8 @@ _ipmi_oem_intelnm_get_node_manager_capabilities_common (ipmi_oem_state_data_t *s
 		  min_statistics_reporting_period);
 
   pstdout_printf (state_data->pstate,
-		  "Limiting Type                   : %s\n",
-		  limiting_type_str);
+		  "Limiting Domain                 : %s\n",
+		  limiting_domain_id_str);
 
   pstdout_printf (state_data->pstate,
 		  "Limiting Source                 : %s\n",
@@ -4819,6 +4863,8 @@ ipmi_oem_intelnm_set_node_manager_power_draw_range (ipmi_oem_state_data_t *state
   return (rv);
 }
 
+#if 0
+/* can't verify */
 int
 ipmi_oem_intelnm_get_limiting_policy_id (ipmi_oem_state_data_t *state_data)
 {
@@ -4969,8 +5015,6 @@ ipmi_oem_intelnm_get_limiting_policy_id (ipmi_oem_state_data_t *state_data)
 }
 #endif
 
-#if 0
-/* can't verify */
 int
 ipmi_oem_intelnm_get_node_manager_alert_destination (ipmi_oem_state_data_t *state_data)
 {

@@ -397,13 +397,14 @@ fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_capabilities_rs
     { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8,  "max_concurrent_settings", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 16, "max_power_thermal", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 16, "min_power_thermal", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 16, "max_power_thermal_time_after_reset", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 16, "min_power_thermal_time_after_reset", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 32, "min_correction_time", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 32, "max_correction_time", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 16, "min_statistics_reporting_period", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 16, "max_statistics_reporting_period", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 7,  "domain_limiting_scope.limiting_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4,  "domain_limiting_scope.domain_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 3,  "domain_limiting_scope.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1,  "domain_limiting_scope.limiting_based_on", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
   };
