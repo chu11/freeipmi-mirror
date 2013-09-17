@@ -463,7 +463,7 @@ multiple vendors motherboards.
 .LP
 .RS
 .TP
-.B get-node-manager-statistics mode=globalpower|globaltemp|policypower|policytrigger|policythrottling|hostunhandledrequests|hostresponsetime|cputhrottling|memorythrottling|hostcommfailure \fI[domainid=platform|cpu|memory|highpowerio|<num>]\fR \fI[policyid=num]\fR
+.B get-node-manager-statistics mode=globalpower|globaltemp|policypower|policytrigger|policythrottling|hostunhandledrequests|hostresponsetime|cputhrottling|memorythrottling|hostcommfailure \fI[domainid=platform|cpu|memory|highpowerio]\fR \fI[policyid=num]\fR
 This OEM command will output Intel Node Manager statistics.  A
 \fImode\fR indicating statistics to output must be specified.  The
 user may optionally specify a \fIdomainid\fR or \fIpolicyid\fR,
@@ -473,7 +473,7 @@ S5500WB (Penguin Computing Relion 700), Inventec 5441/5442 (Dell
 Xanadu II/III), Quanta S99Q (Dell FS12-TY), Quanta QSSC-S4R (Appro
 GB812X-CN), Supermicro X9DRi-F, Intel S2600JF (Appro 512X).
 .TP
-.B reset-node-manager-statistics \fI[mode=global|policy|hostunhandledrequests|hostresponsetime|cputhrottling|memorythrottling|hostcommfailure]\fR \fI[domainid=platform|cpu|memory|highpowerio|<num>]\fR \fI[policyid=num]\fR
+.B reset-node-manager-statistics \fI[mode=global|policy|hostunhandledrequests|hostresponsetime|cputhrottling|memorythrottling|hostcommfailure]\fR \fI[domainid=platform|cpu|memory|highpowerio]\fR \fI[policyid=num]\fR
 This OEM command will reset Intel Node Manager statistics.  The
 \fImode\fR will indicate the statistics to be reset.  The user may
 optionally specify a \fIdomainid\fR or \fIpolicyid\fR.  \fIdomainid\fR
@@ -484,7 +484,7 @@ S5500WB (Penguin Computing Relion 700), Inventec 5441/5442 (Dell
 Xanadu II/III), Quanta S99Q (Dell FS12-TY), Quanta QSSC-S4R (Appro
 GB812X-CN), Supermicro X9DRi-F, Intel S2600JF (Appro 512X).
 .TP
-.B get-node-manager-capabilities \fI[domainid=platform|cpu|memory|highpowerio|<num>]\fR \fI[policytrigger=none|inlettemperaturelimitpolicytrigger|missingpowerreadingtimeout|timeafterplatformresettrigger|boottimepolicy]\fR \fI[policytype=powercontrol]\fR
+.B get-node-manager-capabilities \fI[domainid=platform|cpu|memory|highpowerio]\fR \fI[policytrigger=none|inlettemperaturelimitpolicytrigger|missingpowerreadingtimeout|timeafterplatformresettrigger|boottimepolicy]\fR \fI[policytype=powercontrol]\fR
 This OEM command will output the current capabilities of the Intel
 Node manager.  The user may optionally specify a \fIdomainid\fR,
 \fIpolicytrigger\fR, or \fIpolicytype\fR.  If any particular option is
@@ -494,7 +494,7 @@ verbose option is set, additional error messages will be output as
 valid policies are being searched for.  Command confirmed to work on
 Intel S2600JF (Appro 512X).
 .TP
-.B node-manager-policy-control \fI<enable|disable>\fR \fI[domainid=platform|cpu|memory|highpowerio|<num>]\fR \fI[policyid=num]\fR
+.B node-manager-policy-control \fI<enable|disable>\fR \fI[domainid=platform|cpu|memory|highpowerio]\fR \fI[policyid=num]\fR
 This OEM command will enable or disable the current global, domain, or
 policies used by the Intel Node Manager.  If no \fIdomainid\fR is
 specified, then the Node Manager will be enabled or globally disabled.
@@ -505,7 +505,7 @@ OEM command will be required to enable or disable policies before many
 of the commands below can be used for configuration or use.  Command
 confirmed to work on Intel S2600JF (Appro 512X).
 .TP
-.B get-node-manager-policy \fI[domainid=platform|cpu|memory|highpowerio|<num>]\fR \fI[policyid=num]\fR
+.B get-node-manager-policy \fI[domainid=platform|cpu|memory|highpowerio]\fR \fI[policyid=num]\fR
 This OEM command will get the current node manager policy.  If no
 \fIdomainid\fR is specified, all policies for all domain IDs and
 policy Ids will be attempted to be output.  If a \fIdomainid\fR is
@@ -515,7 +515,7 @@ additional error messages will be output as valid policies are being
 searched for.  Command confirmed to work on Intel S2600JF (Appro
 512X).
 .TP
-.B set-node-manager-policy \fIdomainid=platform|cpu|memory|highpowerio|<num>\fR \fIpolicyid=num\fR \fIpolicytrigger=none|inlettemperaturelimitpolicytrigger|missingpowerreadingtimeout|timeafterplatformresettrigger|boottimepolicy\fR \fIpolicytargetlimit=watts\fR \fIcorrectiontimelimit=ms\fR \fIpolicytriggerlimit=num\fR \fIstatisticsreportingperiod=seconds\fR \fI[policystate=enable|disable]\fR \fI[policyexceptionaction=alert|shutdown]\fR
+.B set-node-manager-policy \fIdomainid=platform|cpu|memory|highpowerio\fR \fIpolicyid=num\fR \fIpolicytrigger=none|inlettemperaturelimitpolicytrigger|missingpowerreadingtimeout|timeafterplatformresettrigger|boottimepolicy\fR \fIpolicytargetlimit=watts\fR \fIcorrectiontimelimit=ms\fR \fIpolicytriggerlimit=num\fR \fIstatisticsreportingperiod=seconds\fR \fI[policystate=enable|disable]\fR \fI[policyexceptionaction=alert|shutdown]\fR
 This OEM command will add or modify an indicated policy ID from the
 domain ID.  Most of the fields above are required, although they can
 be listed in any order.  By default any created/modified policy will be enabled,
@@ -547,12 +547,12 @@ for \fIpolicytargetlimit\fR, \fIcorrectiontimelimit\fR,
 \fIpolicytriggerlimit\fR, and \fIstatisticsreportingperiod\fR.
 Command confirmed to work on Intel S2600JF (Appro 512X).
 .TP
-.B remove-node-manager-policy \fIdomainid=platform|cpu|memory|highpowerio|<num>\fR \fIpolicyid=num\fR
+.B remove-node-manager-policy \fIdomainid=platform|cpu|memory|highpowerio\fR \fIpolicyid=num\fR
 This OEM command will remove the indicated policy ID from the domain
 ID.  Both the \fIdomainid\fR and \fIpolicyid\fR are required.  Command
 confirmed to work on Intel S2600JF (Appro 512X).
 .TP
-.B get-node-manager-alert-thresholds \fI[domainid=platform|cpu|memory|highpowerio|<num>]\fR \fI[policyid=num]\fR 
+.B get-node-manager-alert-thresholds \fI[domainid=platform|cpu|memory|highpowerio]\fR \fI[policyid=num]\fR 
 This OEM command will get the current alert thresholds.  If no
 \fIdomainid\fR is specified, all alert thresholds for domain IDs and
 policy Ids will be attempted to be output.  If a \fIdomainid\fR is
@@ -563,13 +563,13 @@ verbose option is set, additional error messages will be output as
 valid policies are being searched for.  Command confirmed to work on
 Intel S2600JF (Appro 512X).
 .TP
-.B set-node-manager-alert-thresholds \fIdomainid=platform|cpu|memory|highpowerio|<num>\fR \fIpolicyid=num\fR \fI[threshold1=num]\fR \fI[threshold2=num]\fR \fI[threshold3=num]\fR
+.B set-node-manager-alert-thresholds \fIdomainid=platform|cpu|memory|highpowerio\fR \fIpolicyid=num\fR \fI[threshold1=num]\fR \fI[threshold2=num]\fR \fI[threshold3=num]\fR
 This OEM command will set the alert thresholds for a given domain ID
 and policy ID.  Up to three thresholds can be specified, The units of
 the thresholds will depend on the configuration of the current policy.
 Command confirmed to work on Intel S2600JF (Appro 512X).
 .TP
-.B get-node-manager-policy-suspend-periods \fI[domainid=platform|cpu|memory|highpowerio|<num>]\fR \fI[policyid=num]\fR 
+.B get-node-manager-policy-suspend-periods \fI[domainid=platform|cpu|memory|highpowerio]\fR \fI[policyid=num]\fR 
 This OEM command will get the current policy suspend periods.  Suspend
 periods will temporarily disable Intel Node Manager policies at
 configured times.  If no \fIdomainid\fR is specified, all suspend
@@ -581,7 +581,7 @@ valid policies are being searched for.  Suspend start and stop times
 are output in 24 hour format.  Command confirmed to work on Intel
 S2600JF (Appro 512X).
 .TP
-.B set-node-manager-policy-suspend-periods \fIdomainid=platform|cpu|memory|highpowerio|<num>\fR \fIpolicyid=num\fR \fIsuspendperiodstart1=time\fR \fIsuspendperiodstop1=time\fR \fIsuspendperiodrepeat1=monday|tuesday|wednesday|thursday|friday|saturday|sunday\fR ...
+.B set-node-manager-policy-suspend-periods \fIdomainid=platform|cpu|memory|highpowerio\fR \fIpolicyid=num\fR \fIsuspendperiodstart1=time\fR \fIsuspendperiodstop1=time\fR \fIsuspendperiodrepeat1=monday|tuesday|wednesday|thursday|friday|saturday|sunday\fR ...
 This OEM command will set the policy suspend periods for a policy.
 Suspend periods will temporarily disable Intel Node Manager policies
 at configured times.  Up to 5 suspend periods can be specified by
@@ -597,17 +597,17 @@ period shall be enabled.  The option can be specified multiple times
 to configure multiple times.  Command confirmed to work on Intel
 S2600JF (Appro 512X).
 .TP
-.B set-node-manager-power-draw-range \fIdomainid=platform|cpu|memory|highpowerio|<num>\fR \fIminpowerdrawrange=watts\fR \fImaxpowerdrawrange=watts\fR
+.B set-node-manager-power-draw-range \fIdomainid=platform|cpu|memory|highpowerio\fR \fIminpowerdrawrange=watts\fR \fImaxpowerdrawrange=watts\fR
 This OEM command will set the power draw range for a given domain ID.
 After this configuration, any policies within the domain ID that are
 outside of this range will be disabled as needed.  The current power
 draw range can be read via the \fBget\-node\-manager\-capabilities\fR
 above.  Command confirmed to work on Intel S2600JF (Appro 512X).
+.if 0 \{
 .TP
-.B get-limiting-policy-id \fIdomainid=platform|cpu|memory|<num>\fR
+.B get-limiting-policy-id \fIdomainid=platform|cpu|memory\fR
 This OEM command will get the policy which is currently limiting.
 \}
-.if 0 \{
 .TP
 .B get-node-manager-alert-destination
 This OEM command will get the current alert destination information.

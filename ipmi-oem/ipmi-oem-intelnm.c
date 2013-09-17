@@ -81,6 +81,18 @@ _ipmi_oem_intelnm_parse_domainid (ipmi_oem_state_data_t *state_data,
 				       value_out) < 0)
 	goto cleanup;
     }
+
+  if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domainid))
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "%s:%s invalid OEM option argument '%s' : invalid domain id\n",
+		       state_data->prog_data->args->oem_id,
+		       state_data->prog_data->args->oem_command,
+		       state_data->prog_data->args->oem_options[option_num]);
+      goto cleanup;
+    }
+
   rv = 0;
  cleanup:
   return (rv);
@@ -516,17 +528,6 @@ ipmi_oem_intelnm_get_node_manager_statistics (ipmi_oem_state_data_t *state_data)
 						value,
 						&domainid) < 0)
 	    goto cleanup;
-
-	  if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domainid))
-	    {
-	      pstdout_fprintf (state_data->pstate,
-			       stderr,
-			       "%s:%s invalid OEM option argument '%s' : invalid domain id\n",
-			       state_data->prog_data->args->oem_id,
-			       state_data->prog_data->args->oem_command,
-			       state_data->prog_data->args->oem_options[i]);
-	      goto cleanup;
-	    }
 	}
       else if (!strcasecmp (key, "policyid"))
 	{
@@ -941,17 +942,6 @@ ipmi_oem_intelnm_reset_node_manager_statistics (ipmi_oem_state_data_t *state_dat
 						    value,
 						    &domainid) < 0)
                 goto cleanup;
-
-              if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domainid))
-                {
-                  pstdout_fprintf (state_data->pstate,
-                                   stderr,
-                                   "%s:%s invalid OEM option argument '%s' : invalid domain id\n",
-                                   state_data->prog_data->args->oem_id,
-                                   state_data->prog_data->args->oem_command,
-                                   state_data->prog_data->args->oem_options[i]);
-                  goto cleanup;
-                }
 	      
 	      domainid_specified++;
             }
@@ -1221,32 +1211,22 @@ _ipmi_oem_intelnm_get_domain_id_str (ipmi_oem_state_data_t *state_data,
     case IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_ENTIRE_PLATFORM:
       snprintf (domain_id_str,
 		domain_id_str_len,
-		"Entire Platform (%u)",
-		IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_ENTIRE_PLATFORM);
+		"Entire Platform");
       break;
     case IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_CPU_SUBSYSTEM:
       snprintf (domain_id_str,
 		domain_id_str_len,
-		"CPU Subsystem (%u)",
-		IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_CPU_SUBSYSTEM);
+		"CPU Subsyste");
       break;
     case IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_MEMORY_SUBSYSTEM:
       snprintf (domain_id_str,
 		domain_id_str_len,
-		"Memory Subsystem (%u)",
-		IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_MEMORY_SUBSYSTEM);
+		"Memory Subsystem");
       break;
     case IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_HIGH_POWER_IO_SUBSYSTEM:
       snprintf (domain_id_str,
 		domain_id_str_len,
-		"High Power I/O Subsystem (%u)",
-		IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_HIGH_POWER_IO_SUBSYSTEM);
-      break;
-    default:
-      snprintf (domain_id_str,
-		domain_id_str_len,
-		"%u",
-		domain_id);
+		"High Power I/O Subsystem");
       break;
     }
 }
@@ -1336,7 +1316,7 @@ _ipmi_oem_intelnm_get_node_manager_capabilities_common (ipmi_oem_state_data_t *s
   uint16_t min_statistics_reporting_period;
   uint16_t max_statistics_reporting_period;
   uint8_t limiting_domain_id;
-  char *limiting_domain_id_str;
+  char limiting_domain_id_str[IPMI_OEM_INTELNM_STRING_MAX + 1];
   uint8_t limiting_based_on;
   char *limiting_based_on_str;
   uint64_t val;
@@ -1526,27 +1506,16 @@ _ipmi_oem_intelnm_get_node_manager_capabilities_common (ipmi_oem_state_data_t *s
     }
   limiting_based_on = val;
 
-  /* achu: don't use ipmi_oem_intelnm_get_domain_id_str, only
-   * domain IDs listed here are valid
-   */
-  switch (limiting_domain_id)
-    {
-    case IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_ENTIRE_PLATFORM:
-      limiting_domain_id_str = "Entire Platform";
-      break;
-    case IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_CPU_SUBSYSTEM:
-      limiting_domain_id_str = "CPU Subsystem";
-      break;
-    case IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_MEMORY_SUBSYSTEM:
-      limiting_domain_id_str = "Memory Subsystem";
-      break;
-    case IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_HIGH_POWER_IO_SUBSYSTEM:
-      limiting_domain_id_str = "High Power I/O Subsystem";
-      break;
-    default:
-      limiting_domain_id_str = "Unspecified";
-      break;
-    }
+  memset (limiting_domain_id_str, '\0', IPMI_OEM_INTELNM_STRING_MAX + 1);
+  if (IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (limiting_domain_id))
+    _ipmi_oem_intelnm_get_domain_id_str (state_data,
+					 limiting_domain_id,
+					 limiting_domain_id_str,
+					 IPMI_OEM_INTELNM_STRING_MAX);
+  else
+    snprintf (limiting_domain_id_str,
+	      IPMI_OEM_INTELNM_STRING_MAX,
+	      "Unspecified");
 
   switch (limiting_based_on)
     {
@@ -1725,17 +1694,6 @@ ipmi_oem_intelnm_get_node_manager_capabilities (ipmi_oem_state_data_t *state_dat
 						    &domainid_tmp) < 0)
                 goto cleanup;
 
-              if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domainid_tmp))
-                {
-                  pstdout_fprintf (state_data->pstate,
-                                   stderr,
-                                   "%s:%s invalid OEM option argument '%s' : invalid domain id\n",
-                                   state_data->prog_data->args->oem_id,
-                                   state_data->prog_data->args->oem_command,
-                                   state_data->prog_data->args->oem_options[i]);
-                  goto cleanup;
-                }
-              
 	      domainid_input[0] = domainid_tmp;
 
 	      domainid_array = domainid_input;
@@ -1939,17 +1897,6 @@ ipmi_oem_intelnm_node_manager_policy_control (ipmi_oem_state_data_t *state_data)
 						    value,
 						    &domainid) < 0)
                 goto cleanup;
-
-              if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domainid))
-                {
-                  pstdout_fprintf (state_data->pstate,
-                                   stderr,
-                                   "%s:%s invalid OEM option argument '%s' : invalid domain id\n",
-                                   state_data->prog_data->args->oem_id,
-                                   state_data->prog_data->args->oem_command,
-                                   state_data->prog_data->args->oem_options[i]);
-                  goto cleanup;
-                }
               
 	      domainid_specified++;
             }
@@ -2449,17 +2396,6 @@ ipmi_oem_intelnm_get_node_manager_policy (ipmi_oem_state_data_t *state_data)
 						    &domainid_tmp) < 0)
                 goto cleanup;
 
-              if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domainid_tmp))
-                {
-                  pstdout_fprintf (state_data->pstate,
-                                   stderr,
-                                   "%s:%s invalid OEM option argument '%s' : invalid domain id\n",
-                                   state_data->prog_data->args->oem_id,
-                                   state_data->prog_data->args->oem_command,
-                                   state_data->prog_data->args->oem_options[i]);
-                  goto cleanup;
-                }
-              
 	      domainid_input[0] = domainid_tmp;
 
 	      domainid_array = domainid_input;
@@ -2603,17 +2539,6 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
 						value,
 						&domainid) < 0)
 	    goto cleanup;
-	  
-	  if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domainid))
-	    {
-	      pstdout_fprintf (state_data->pstate,
-			       stderr,
-			       "%s:%s invalid OEM option argument '%s' : invalid domain id\n",
-			       state_data->prog_data->args->oem_id,
-			       state_data->prog_data->args->oem_command,
-			       state_data->prog_data->args->oem_options[i]);
-	      goto cleanup;
-	    }
 	  
 	  domainid_specified++;
 	}
@@ -2894,17 +2819,6 @@ ipmi_oem_intelnm_remove_node_manager_policy (ipmi_oem_state_data_t *state_data)
 						value,
 						&domainid) < 0)
 	    goto cleanup;
-	  
-	  if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domainid))
-	    {
-	      pstdout_fprintf (state_data->pstate,
-			       stderr,
-			       "%s:%s invalid OEM option argument '%s' : invalid domain id\n",
-			       state_data->prog_data->args->oem_id,
-			       state_data->prog_data->args->oem_command,
-			       state_data->prog_data->args->oem_options[i]);
-	      goto cleanup;
-	    }
 	  
 	  domainid_specified++;
 	}
@@ -3360,17 +3274,6 @@ ipmi_oem_intelnm_get_node_manager_alert_thresholds (ipmi_oem_state_data_t *state
 						    &domainid_tmp) < 0)
                 goto cleanup;
 
-              if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domainid_tmp))
-                {
-                  pstdout_fprintf (state_data->pstate,
-                                   stderr,
-                                   "%s:%s invalid OEM option argument '%s' : invalid domain id\n",
-                                   state_data->prog_data->args->oem_id,
-                                   state_data->prog_data->args->oem_command,
-                                   state_data->prog_data->args->oem_options[i]);
-                  goto cleanup;
-                }
-              
 	      domainid_input[0] = domainid_tmp;
 
               domainid_array = domainid_input;
@@ -3506,17 +3409,6 @@ ipmi_oem_intelnm_set_node_manager_alert_thresholds (ipmi_oem_state_data_t *state
 						value,
 						&domainid) < 0)
 	    goto cleanup;
-	  
-	  if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domainid))
-	    {
-	      pstdout_fprintf (state_data->pstate,
-			       stderr,
-			       "%s:%s invalid OEM option argument '%s' : invalid domain id\n",
-			       state_data->prog_data->args->oem_id,
-			       state_data->prog_data->args->oem_command,
-			       state_data->prog_data->args->oem_options[i]);
-	      goto cleanup;
-	    }
 	  
 	  domainid_specified++;
 	}
@@ -4097,17 +3989,6 @@ ipmi_oem_intelnm_get_node_manager_policy_suspend_periods (ipmi_oem_state_data_t 
 						    &domainid_tmp) < 0)
                 goto cleanup;
 
-              if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domainid_tmp))
-                {
-                  pstdout_fprintf (state_data->pstate,
-                                   stderr,
-                                   "%s:%s invalid OEM option argument '%s' : invalid domain id\n",
-                                   state_data->prog_data->args->oem_id,
-                                   state_data->prog_data->args->oem_command,
-                                   state_data->prog_data->args->oem_options[i]);
-                  goto cleanup;
-                }
-              
 	      domainid_input[0] = domainid_tmp;
 
               domainid_array = domainid_input;
@@ -4374,17 +4255,6 @@ ipmi_oem_intelnm_set_node_manager_policy_suspend_periods (ipmi_oem_state_data_t 
 						&domainid) < 0)
 	    goto cleanup;
 	  
-	  if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domainid))
-	    {
-	      pstdout_fprintf (state_data->pstate,
-			       stderr,
-			       "%s:%s invalid OEM option argument '%s' : invalid domain id\n",
-			       state_data->prog_data->args->oem_id,
-			       state_data->prog_data->args->oem_command,
-			       state_data->prog_data->args->oem_options[i]);
-	      goto cleanup;
-	    }
-
 	  domainid_specified++;
 	}
       else if (!strcasecmp (key, "policyid"))
@@ -4668,17 +4538,6 @@ ipmi_oem_intelnm_set_node_manager_power_draw_range (ipmi_oem_state_data_t *state
 						&domainid) < 0)
 	    goto cleanup;
 	  
-	  if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domainid))
-	    {
-	      pstdout_fprintf (state_data->pstate,
-			       stderr,
-			       "%s:%s invalid OEM option argument '%s' : invalid domain id\n",
-			       state_data->prog_data->args->oem_id,
-			       state_data->prog_data->args->oem_command,
-			       state_data->prog_data->args->oem_options[i]);
-	      goto cleanup;
-	    }
-	  
 	  domainid_specified++;
 	}
       else if (!strcasecmp (key, "minpowerdrawrange"))
@@ -4830,17 +4689,6 @@ ipmi_oem_intelnm_get_limiting_policy_id (ipmi_oem_state_data_t *state_data)
 						value,
 						&domainid) < 0)
 	    goto cleanup;
-	  
-	  if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domainid))
-	    {
-	      pstdout_fprintf (state_data->pstate,
-			       stderr,
-			       "%s:%s invalid OEM option argument '%s' : invalid domain id\n",
-			       state_data->prog_data->args->oem_id,
-			       state_data->prog_data->args->oem_command,
-			       state_data->prog_data->args->oem_options[i]);
-	      goto cleanup;
-	    }
 	  
 	  domainid_specified++;
 	}
