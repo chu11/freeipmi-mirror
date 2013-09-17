@@ -82,7 +82,7 @@ _ipmi_oem_intelnm_parse_domainid (ipmi_oem_state_data_t *state_data,
 	goto cleanup;
     }
 
-  if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domainid))
+  if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID ((*value_out)))
     {
       pstdout_fprintf (state_data->pstate,
 		       stderr,
@@ -2040,8 +2040,11 @@ _ipmi_oem_intelnm_get_node_manager_policy_common (ipmi_oem_state_data_t *state_d
   uint8_t policy_enabled;
   uint8_t per_domain_node_manager_policy_control_enabled;
   uint8_t global_node_manager_policy_control_enabled;
+  uint8_t policy_created_and_managed_by_other_management;
   uint8_t policy_trigger_type;
   uint8_t policy_type;
+  uint8_t aggressive_cpu_power_correction;
+  uint8_t policy_storage_option;
   uint8_t policy_exception_actions_send_alert;
   uint8_t policy_exception_actions_shutdown_system;
   uint16_t policy_target_limit;
@@ -2049,8 +2052,10 @@ _ipmi_oem_intelnm_get_node_manager_policy_common (ipmi_oem_state_data_t *state_d
   uint16_t policy_trigger_limit;
   uint16_t statistics_reporting_period;
   char *policy_trigger_type_str = NULL;
-  char *policy_trigger_type_units_str = NULL;
+  char *policy_target_limit_units_str = NULL;
   char *policy_type_str = NULL;
+  char *aggressive_cpu_power_correction_str = NULL;
+  char *policy_storage_option_str = NULL;
   uint64_t val;
   int rv = -1;
 
@@ -2155,6 +2160,18 @@ _ipmi_oem_intelnm_get_node_manager_policy_common (ipmi_oem_state_data_t *state_d
   global_node_manager_policy_control_enabled = val;
 
   if (FIID_OBJ_GET (obj_cmd_rs,
+		    "policy_created_and_managed_by_other_management",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "FIID_OBJ_GET: 'policy_created_and_managed_by_other_management': %s\n",
+		       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  policy_created_and_managed_by_other_management = val;
+
+  if (FIID_OBJ_GET (obj_cmd_rs,
 		    "policy_trigger_type",
 		    &val) < 0)
     {
@@ -2177,6 +2194,30 @@ _ipmi_oem_intelnm_get_node_manager_policy_common (ipmi_oem_state_data_t *state_d
       goto cleanup;
     }
   policy_type = val;
+
+  if (FIID_OBJ_GET (obj_cmd_rs,
+		    "aggressive_cpu_power_correction",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "FIID_OBJ_GET: 'aggressive_cpu_power_correction': %s\n",
+		       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  aggressive_cpu_power_correction = val;
+
+  if (FIID_OBJ_GET (obj_cmd_rs,
+		    "policy_storage_option",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "FIID_OBJ_GET: 'policy_storage_option': %s\n",
+		       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  policy_storage_option = val;
 
   if (FIID_OBJ_GET (obj_cmd_rs,
 		    "policy_exception_actions.send_alert",
@@ -2264,6 +2305,35 @@ _ipmi_oem_intelnm_get_node_manager_policy_common (ipmi_oem_state_data_t *state_d
       break;
     }
 
+  switch (aggressive_cpu_power_correction)
+    {
+    case IPMI_OEM_INTEL_NODE_MANAGER_AGGRESSIVE_CPU_POWER_CORRECTION_DEPENDS_ON_EXCEPTION_ACTIONS:
+      aggressive_cpu_power_correction_str = "Depends on Exception Actions";
+      break;
+    case IPMI_OEM_INTEL_NODE_MANAGER_AGGRESSIVE_CPU_POWER_CORRECTION_T_STATES_NOT_ALLOWED:
+      aggressive_cpu_power_correction_str = "T-states Not Allowed";
+      break;
+    case IPMI_OEM_INTEL_NODE_MANAGER_AGGRESSIVE_CPU_POWER_CORRECTION_T_STATES_ALLOWED:
+      aggressive_cpu_power_correction_str = "T-states Allowed";
+      break;
+    default:
+      aggressive_cpu_power_correction_str = "Unknown";
+      break;
+    }
+
+  switch (policy_storage_option)
+    {
+    case IPMI_OEM_INTEL_NODE_MANAGER_POLICY_STORAGE_PERSISTENT_STORAGE:
+      policy_storage_option_str = "Persistent Storage";
+      break;
+    case IPMI_OEM_INTEL_NODE_MANAGER_POLICY_STORAGE_VOLATILE_MEMORY:
+      policy_storage_option_str = "Volatile Storage";
+      break;
+    default:
+      policy_storage_option_str = "Unknown";
+      break;
+    }
+
   if (searching_domain_id
       || searching_policy_id)
     _ipmi_oem_intelnm_get_node_manager_policy_output_header (state_data, domain_id, policy_id);
@@ -2281,12 +2351,24 @@ _ipmi_oem_intelnm_get_node_manager_policy_common (ipmi_oem_state_data_t *state_d
 		  (global_node_manager_policy_control_enabled == IPMI_OEM_INTEL_NODE_MANAGER_GLOBAL_NODE_MANAGER_POLICY_CONTROL_ENABLED) ? "enabled" : "disabled");
 
   pstdout_printf (state_data->pstate,
+		  "Policy Created/Managed by Other Client  : %s\n",
+		  (policy_created_and_managed_by_other_management == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_CREATED_AND_MANAGED_BY_OTHER_MANAGEMENT) ? "Yes" : "No");
+
+  pstdout_printf (state_data->pstate,
 		  "Policy Trigger Type                     : %s\n",
 		  policy_trigger_type_str);
 
   pstdout_printf (state_data->pstate,
 		  "Policy Type                             : %s\n",
 		  policy_type_str);
+
+  pstdout_printf (state_data->pstate,
+		  "Aggressive CPU Power Correction         : %s\n",
+		  aggressive_cpu_power_correction_str);
+
+  pstdout_printf (state_data->pstate,
+		  "Policy Storage Option:                  : %s\n",
+		  policy_storage_option_str);
   
   pstdout_printf (state_data->pstate,
 		  "Policy Exception Send Alert Action      : %s\n",
@@ -2296,10 +2378,32 @@ _ipmi_oem_intelnm_get_node_manager_policy_common (ipmi_oem_state_data_t *state_d
 		  "Policy Exception Shutdown System Action : %s\n",
 		  (policy_exception_actions_shutdown_system == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_EXCEPTION_ACTION_ENABLE) ? "enabled" : "disabled");
 		  
-  /* XXX how to output w/ boot time policy */
+  switch (policy_trigger_type)
+    {
+    case IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_NO_POLICY_TRIGGER:
+      policy_target_limit_units_str = " W";
+      break;
+    case IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_INLET_TEMPERATURE_LIMIT_POLICY_TRIGGER:
+      policy_target_limit_units_str = " W";
+      break;
+    case IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_MISSING_POWER_READING_TIMEOUT:
+      policy_target_limit_units_str = "%%";
+      break;
+    case IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_TIME_AFTER_PLATFORM_RESET_TRIGGER:
+      policy_target_limit_units_str = " W";
+      break;
+    case IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_BOOT_TIME_POLICY:
+      policy_target_limit_units_str = " W";
+      break;
+    default:
+      policy_target_limit_units_str = " ?";
+      break;
+    }
+
   pstdout_printf (state_data->pstate,
-		  "Policy Target Limit                     : %u W\n",
-		  policy_target_limit);
+		  "Policy Target Limit                     : %u%s\n",
+		  policy_target_limit,
+		  policy_target_limit_units_str);
 
   pstdout_printf (state_data->pstate,
 		  "Correction Time Limit                   : %u ms\n",
@@ -2308,33 +2412,25 @@ _ipmi_oem_intelnm_get_node_manager_policy_common (ipmi_oem_state_data_t *state_d
   switch (policy_trigger_type)
     {
     case IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_NO_POLICY_TRIGGER:
-      policy_trigger_type_units_str = "W";
+      pstdout_printf (state_data->pstate,
+		      "Policy Trigger Limit                    : %u W\n",
+		      policy_trigger_limit);
       break;
     case IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_INLET_TEMPERATURE_LIMIT_POLICY_TRIGGER:
-      policy_trigger_type_units_str = "C";
+      pstdout_printf (state_data->pstate,
+		      "Policy Trigger Limit                    : %u C\n",
+		      policy_trigger_limit);
       break;
     case IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_MISSING_POWER_READING_TIMEOUT:
-      /* XXX */
-      policy_trigger_type_units_str = "";
-      break;
     case IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_TIME_AFTER_PLATFORM_RESET_TRIGGER:
-      /* XXX */
-      policy_trigger_type_units_str = "";
+      pstdout_printf (state_data->pstate,
+		      "Policy Trigger Limit                    : %0.1f s\n",
+		      ((float)policy_trigger_limit / 10));
       break;
     case IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_BOOT_TIME_POLICY:
-      /* XXX */
-      policy_trigger_type_units_str = "";
-      break;
     default:
-      policy_trigger_type_units_str = "?";
       break;
     }
-  
-  /* XXX how to output w/ boot time policy */
-  pstdout_printf (state_data->pstate,
-		  "Policy Trigger Limit                    : %u %s\n",
-		  policy_trigger_limit,
-		  policy_trigger_type_units_str);
   
   pstdout_printf (state_data->pstate,
 		  "Statistics Reporting Period             : %u s\n",

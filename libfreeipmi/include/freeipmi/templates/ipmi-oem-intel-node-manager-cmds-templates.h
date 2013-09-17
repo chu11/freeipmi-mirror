@@ -143,9 +143,11 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_rs
     { 1,  "policy_enabled", REQUIRED, LENGTH-FIXED }
     { 1,  "per_domain_node_manager_policy_control_enabled", REQUIRED, LENGTH-FIXED }
     { 1,  "global_node_manager_policy_control_enabled", REQUIRED, LENGTH-FIXED }
-    { 1,  "reserved", REQUIRED, LENGTH-FIXED }
+    { 1,  "policy_created_and_managed_by_other_management", REQUIRED, LENGTH-FIXED }
     { 4,  "policy_trigger_type", REQUIRED, LENGTH-FIXED }
-    { 4,  "policy_type", REQUIRED, LENGTH-FIXED }
+    { 1,  "policy_type", REQUIRED, LENGTH-FIXED }
+    { 2,  "aggressive_cpu_power_correction", REQUIRED, LENGTH-FIXED }
+    { 1,  "policy_storage_option", REQUIRED, LENGTH-FIXED }
     { 1,  "policy_exception_actions.send_alert", REQUIRED, LENGTH-FIXED }
     { 1,  "policy_exception_actions.shutdown_system", REQUIRED, LENGTH-FIXED }
     { 6,  "policy_exception_actions.reserved", REQUIRED, LENGTH-FIXED }
