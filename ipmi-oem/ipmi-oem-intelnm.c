@@ -2307,14 +2307,14 @@ _ipmi_oem_intelnm_get_node_manager_policy_common (ipmi_oem_state_data_t *state_d
 
   switch (aggressive_cpu_power_correction)
     {
-    case IPMI_OEM_INTEL_NODE_MANAGER_AGGRESSIVE_CPU_POWER_CORRECTION_DEPENDS_ON_EXCEPTION_ACTIONS:
-      aggressive_cpu_power_correction_str = "Depends on Exception Actions";
+    case IPMI_OEM_INTEL_NODE_MANAGER_AGGRESSIVE_CPU_POWER_CORRECTION_AUTOMATIC:
+      aggressive_cpu_power_correction_str = "Automatic";
       break;
-    case IPMI_OEM_INTEL_NODE_MANAGER_AGGRESSIVE_CPU_POWER_CORRECTION_T_STATES_NOT_ALLOWED:
-      aggressive_cpu_power_correction_str = "T-states Not Allowed";
+    case IPMI_OEM_INTEL_NODE_MANAGER_AGGRESSIVE_CPU_POWER_CORRECTION_NON_AGGRESSIVE:
+      aggressive_cpu_power_correction_str = "Non-Aggressive";
       break;
-    case IPMI_OEM_INTEL_NODE_MANAGER_AGGRESSIVE_CPU_POWER_CORRECTION_T_STATES_ALLOWED:
-      aggressive_cpu_power_correction_str = "T-states Allowed";
+    case IPMI_OEM_INTEL_NODE_MANAGER_AGGRESSIVE_CPU_POWER_CORRECTION_AGGRESSIVE:
+      aggressive_cpu_power_correction_str = "Aggressive";
       break;
     default:
       aggressive_cpu_power_correction_str = "Unknown";
