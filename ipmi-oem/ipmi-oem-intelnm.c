@@ -2362,9 +2362,11 @@ _ipmi_oem_intelnm_get_node_manager_policy_common (ipmi_oem_state_data_t *state_d
 		  "Policy Type                             : %s\n",
 		  policy_type_str);
 
-  pstdout_printf (state_data->pstate,
-		  "Aggressive CPU Power Correction         : %s\n",
-		  aggressive_cpu_power_correction_str);
+  if (domain_id == IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_ENTIRE_PLATFORM
+      || domain_id == IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_CPU_SUBSYSTEM)
+    pstdout_printf (state_data->pstate,
+		    "Aggressive CPU Power Correction         : %s\n",
+		    aggressive_cpu_power_correction_str);
 
   pstdout_printf (state_data->pstate,
 		  "Policy Storage Option:                  : %s\n",
