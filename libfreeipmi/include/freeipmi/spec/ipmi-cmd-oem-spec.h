@@ -173,6 +173,7 @@ extern "C" {
 #define IPMI_CMD_OEM_INTEL_NODE_MANAGER_SET_NODE_MANAGER_POWER_DRAW_RANGE          0xCB
 #define IPMI_CMD_OEM_INTEL_NODE_MANAGER_SET_NODE_MANAGER_ALERT_DESTINATION         0xCE
 #define IPMI_CMD_OEM_INTEL_NODE_MANAGER_GET_NODE_MANAGER_ALERT_DESTINATION         0xCF
+#define IPMI_CMD_OEM_INTEL_NODE_MANAGER_GET_LIMITING_POLICY_ID                     0xF2
 
 /******************************************* 
  * Inventec                                *

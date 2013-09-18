@@ -102,11 +102,13 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_rq
     { 3,  "reserved", REQUIRED, LENGTH-FIXED }
     { 8,  "policy_id", REQUIRED, LENGTH-FIXED }
     { 4,  "policy_trigger_type", REQUIRED, LENGTH-FIXED }
-    { 4,  "policy_configuration_action", REQUIRED, LENGTH-FIXED }
+    { 1,  "policy_configuration_action", REQUIRED, LENGTH-FIXED }
+    { 2,  "aggressive_cpu_power_correction", REQUIRED, LENGTH-FIXED }
+    { 1,  "policy_storage_option", REQUIRED, LENGTH-FIXED }
     { 1,  "policy_exception_actions.send_alert", REQUIRED, LENGTH-FIXED }
     { 1,  "policy_exception_actions.shutdown_system", REQUIRED, LENGTH-FIXED }
     { 6,  "policy_exception_actions.reserved", REQUIRED, LENGTH-FIXED }
-    { 16, "power_limit", REQUIRED, LENGTH-FIXED }
+    { 16, "policy_target_limit", REQUIRED, LENGTH-FIXED }
     { 32, "correction_time_limit", REQUIRED, LENGTH-FIXED }
     { 16, "policy_trigger_limit", REQUIRED, LENGTH-FIXED }
     { 16, "statistics_reporting_period", REQUIRED, LENGTH-FIXED }
@@ -143,13 +145,15 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_rs
     { 1,  "policy_enabled", REQUIRED, LENGTH-FIXED }
     { 1,  "per_domain_node_manager_policy_control_enabled", REQUIRED, LENGTH-FIXED }
     { 1,  "global_node_manager_policy_control_enabled", REQUIRED, LENGTH-FIXED }
-    { 1,  "reserved", REQUIRED, LENGTH-FIXED }
+    { 1,  "policy_created_and_managed_by_other_management", REQUIRED, LENGTH-FIXED }
     { 4,  "policy_trigger_type", REQUIRED, LENGTH-FIXED }
-    { 4,  "policy_type", REQUIRED, LENGTH-FIXED }
+    { 1,  "policy_type", REQUIRED, LENGTH-FIXED }
+    { 2,  "aggressive_cpu_power_correction", REQUIRED, LENGTH-FIXED }
+    { 1,  "policy_storage_option", REQUIRED, LENGTH-FIXED }
     { 1,  "policy_exception_actions.send_alert", REQUIRED, LENGTH-FIXED }
     { 1,  "policy_exception_actions.shutdown_system", REQUIRED, LENGTH-FIXED }
     { 6,  "policy_exception_actions.reserved", REQUIRED, LENGTH-FIXED }
-    { 16, "power_limit", REQUIRED, LENGTH-FIXED }
+    { 16, "policy_target_limit", REQUIRED, LENGTH-FIXED }
     { 32, "correction_time_limit", REQUIRED, LENGTH-FIXED }
     { 16, "policy_trigger_limit", REQUIRED, LENGTH-FIXED }
     { 16, "statistics_reporting_period", REQUIRED, LENGTH-FIXED }
@@ -420,13 +424,14 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_capabilities_rs
     { 8,  "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
     { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
     { 8,  "max_concurrent_settings", REQUIRED, LENGTH-FIXED }
-    { 16, "max_power_thermal", REQUIRED, LENGTH-FIXED }
-    { 16, "min_power_thermal", REQUIRED, LENGTH-FIXED }
+    { 16, "max_power_thermal_time_after_reset", REQUIRED, LENGTH-FIXED }
+    { 16, "min_power_thermal_time_after_reset", REQUIRED, LENGTH-FIXED }
     { 32, "min_correction_time", REQUIRED, LENGTH-FIXED }
     { 32, "max_correction_time", REQUIRED, LENGTH-FIXED }
     { 16, "min_statistics_reporting_period", REQUIRED, LENGTH-FIXED }
     { 16, "max_statistics_reporting_period", REQUIRED, LENGTH-FIXED }
-    { 7,  "domain_limiting_scope.limiting_type", REQUIRED, LENGTH-FIXED }
+    { 4,  "domain_limiting_scope.domain_id", REQUIRED, LENGTH-FIXED }
+    { 3,  "domain_limiting_scope.reserved", REQUIRED, LENGTH-FIXED }
     { 1,  "domain_limiting_scope.limiting_based_on", REQUIRED, LENGTH-FIXED }
 
 Get Node Manager Version Request
@@ -548,6 +553,27 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_destinatio
     { 4,  "reserved2", REQUIRED, LENGTH-FIXED }
     { 7,  "alert_string_selector", REQUIRED, LENGTH-FIXED }
     { 1,  "send_alert_string", REQUIRED, LENGTH-FIXED }
+
+Get Limiting Policy ID Request
+------------------------------
+
+FIID Template: tmpl_cmd_oem_intel_node_manager_get_limiting_policy_id_rq =
+
+    { 8,  "cmd", REQUIRED, LENGTH-FIXED }
+    { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
+    { 4,  "domain_id", REQUIRED, LENGTH-FIXED }
+    { 4,  "reserved", REQUIRED, LENGTH-FIXED }
+
+Get Limiting Policy ID Response
+-------------------------------
+
+FIID Template: tmpl_cmd_oem_intel_node_manager_get_limiting_policy_id_rs =
+
+    { 8,  "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8,  "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
+    { 8,  "policy_id", REQUIRED, LENGTH-FIXED }
+
 
 #endif  /* 0 */
 

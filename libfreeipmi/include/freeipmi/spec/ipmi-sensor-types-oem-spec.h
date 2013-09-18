@@ -114,6 +114,8 @@ extern "C" {
 
 #define IPMI_SENSOR_TYPE_OEM_INTEL_NODE_MANAGER 0xDC
 
+#define IPMI_SENSOR_TYPE_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM 0x28
+
 /*******************************************
  * Inventec                                *
  *******************************************/

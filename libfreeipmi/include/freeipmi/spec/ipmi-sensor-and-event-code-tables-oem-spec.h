@@ -1497,39 +1497,97 @@ extern unsigned int ipmi_oem_intel_s2600jf_specific_qpi_link_width_reduced_max_i
 #define IPMI_OEM_INTEL_NODE_MANAGER_ALERT_THRESHOLD_EXCEEDED_EVENT_DATA2_DOMAIN_ID_BITMASK 0x0F
 #define IPMI_OEM_INTEL_NODE_MANAGER_ALERT_THRESHOLD_EXCEEDED_EVENT_DATA2_DOMAIN_ID_SHIFT   0
 
-/* Event Reading Type Code = IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH
+/* Event Reading Type Code = IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_ME_FIRMWARE_HEALTH_EVENT
  * Sensor Type = IPMI_SENSOR_TYPE_OEM_INTEL_NODE_MANAGER
  */
-#define IPMI_OEM_INTEL_NODE_MANAGER_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_FIRMWARE_STATUS 0x00
+#define IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_FIRMWARE_STATUS                 0x00 
+#define IPMI_OEM_INTEL_NODE_MANAGER_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_FIRMWARE_STATUS IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_FIRMWARE_STATUS
 
-/* Forced GPIO recovery. Recovery Image loaded due to MGPIO<n>
- * (default recovery pin is MGPIO1) pin asserted.  Repair action:
- * Deassert MGPIO1 and reset the ME
+/* Recovery GPIO forced. Recovery Image loaded due to MGPIO pin
+ * asserted.  Pin number is configurable in factory presets, Default
+ * recovery pin is MGPIO1.  Repair action: Deassert MGPIO1 and reset
+ * the Intel ME
  */
-#define IPMI_OEM_INTEL_NODE_MANAGER_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_FORCED_GPIO_RECOVER     0x00
-/* Image execution failed. Recovery Image loaded because operational
- * image is corrupted. This may be either caused by Flash device
- * corruption or failed upgrade procedure.  Repair action: Either the
- * Flash device must be replaced (if error is persistent) or the
- * upgrade procedure must be started again.
+#define IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_RECOVERY_GPIO_FORCED                   0x00 
+/* Image execution failed. Recovery Image or backup operational image
+ * loaded because operational image is corrupted. This may be caused
+ * by Flash device corruption or failed upgrade procedure.  Repair
+ * action: Either the flash device must be replaced (if error is
+ * persistent) or the upgrade procedure must be started again.
  */
-#define IPMI_OEM_INTEL_NODE_MANAGER_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_IMAGE_EXECUTION_FAILED  0x01
-/* Flash erase error. Error during Flash erases procedure probably
- * due to Flash part corruption.  Repair action: The Flash device
+#define IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_IMAGE_EXECUTION_FAILED                 0x01
+/* Flash erase error. Error during Flash erasure procedure probably
+ * due to flash part corruption.  Repair action: The flash device
  * must be replaced.
  */
-#define IPMI_OEM_INTEL_NODE_MANAGER_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_FLASH_ERASE_ERROR      0x02
-/* Flash corrupted. Error while checking Flash consistency probably
- * due to Flash part corruption.  Repair action: The Flash device
- * must be replaced (if error is persistent).
- */
-#define IPMI_OEM_INTEL_NODE_MANAGER_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_FLASH_CORRUPTED         0x03
-/* Internal error. Error during firmware execution.  Repair action:
- * FW Watchdog Timeout Operational image shall be upgraded to other
- * version or hardware board repair is needed (if error is
+#define IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_FLASH_ERASE_ERROR                      0x02
+/* Flash state information.  Repair action: Check extended info byte
+ * in Event Data 3 (byte 7) whether wearout protection is causing this
+ * event.  If so, wait until wearout protection expires; otherwise
+ * probably the flash device must be replaced (if error is
  * persistent).
  */
-#define IPMI_OEM_INTEL_NODE_MANAGER_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_INTERNAL_ERROR          0x04
+#define IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_FLASH_STATE_INFORMATION                0x03
+/* Internal error. Error during firmware execution - if Event Data 3
+ * (byte 7) contains 0 then FW Watchdog Timeout; otherwise please
+ * contact Intel representative for support.  Repair action:
+ * Operational image shall be updated to other version or hardware
+ * board repair is needed (if error is persistent).
+ */
+#define IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_INTERNAL_ERROR                         0x04
+/* BMC did not respond to cold reset request and Intel ME rebooted
+ * the platform.  Repair action: Verify the Intel NM configuration.
+ */
+#define IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_BMC_COLD_RESET_ERROR                   0x05
+/* Direct flash update requested by the BIOS.  Intel ME firmware
+ * will switch to recovery mode to perform full update from BIOS.
+ * Repair action: This is transient state.  Intel ME firmware should
+ * return to operational mode after successful image update
+ * performed b the BIOS.
+ */
+#define IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_DIRECT_FLASH_UPDATE                    0x06
+/* Manufacturing error.  Wrong manufacturing configuration detected
+ * by Intel ME firmware Repair action: The flash device must be
+ * replaced (if error is persistent).
+ */
+#define IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_MANUFACTURING_ERROR                    0x07
+/* Persistent storage integrity error.  Flash file system error
+ * detected.  Repair action.  If error is persistent, restore
+ * factory presets using "Force ME Recovery" IPMI command or by
+ * doing AC power cycle with Recovery jumper asserted.
+ */
+#define IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_PERSISTENT_STORAGE_INTEGRITY_ERROR     0x08
+/* Firmware exception.  Repair action: Restore factory presets using
+ * "Force ME Recovery" IPMI command or by doing AC power cycle with
+ * Recovery jumper asserted.  If this does not clear the issue,
+ * reflash the SPI flash.  If the issue persists, provide the
+ * content of Event Data 3 to Intel support team for interpretation.
+ * (Event Data 3 codes are not documented because they only provide
+ * clues that must be interpreted individually.
+ */
+#define IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_FIRMWARE_EXCEPTION                     0x09
+
+/* Legacy macros, changed b/c of new names in Intel NM 2.0 specification */
+#define IPMI_OEM_INTEL_NODE_MANAGER_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_FORCED_GPIO_RECOVER    IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_RECOVERY_GPIO_FORCED
+#define IPMI_OEM_INTEL_NODE_MANAGER_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_IMAGE_EXECUTION_FAILED IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_IMAGE_EXECUTION_FAILED
+#define IPMI_OEM_INTEL_NODE_MANAGER_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_FLASH_ERASE_ERROR      IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_FLASH_ERASE_ERROR
+#define IPMI_OEM_INTEL_NODE_MANAGER_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_FLASH_CORRUPTED        IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_FLASH_STATE_INFORMATION
+#define IPMI_OEM_INTEL_NODE_MANAGER_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_INTERNAL_ERROR         IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_INTERNAL_ERROR
+
+#define IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_FLASH_STATE_INFORMATION_IMAGE_CORRUPTED           0x00 
+#define IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_FLASH_STATE_INFORMATION_FLASH_ERASE_LIMIT_REACHED 0x01
+#define IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_FLASH_STATE_INFORMATION_FLASH_WRITE_LIMIT_REACHED 0x02
+#define IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_FLASH_STATE_INFORMATION_WRITING_TO_FLASH_ENABLED  0x03
+
+#define IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_INTERNAL_ERROR_FW_WATCHDOG_TIMEOUT                0x00
+#define IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_INTERNAL_ERROR_LOADER_MANIFEST_VALIDATION_FAILURE 0x1D
+#define IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_INTERNAL_ERROR_UNKNOWN_POWER_MANAGEMENT_EVENT     0x37
+/* Spec says "None graceful", assuming typo */
+#define IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_INTERNAL_ERROR_NON_GRACEFUL_PMC_RESET_EVENT       0x45
+#define IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_INTERNAL_ERROR_FLASH_WEAROUT_PROTECTION           0x8E
+
+#define IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_MANUFACTURING_ERROR_INTEL_ME_FW_CONFIGURATION_BAD 0x04
+
 
 /* Event Reading Type Code = IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_NODE_MANAGER_HEALTH_EVENT
  * Sensor Type = IPMI_SENSOR_TYPE_OEM_INTEL_NODE_MANAGER
@@ -1547,6 +1605,36 @@ extern unsigned int ipmi_oem_intel_s2600jf_specific_qpi_link_width_reduced_max_i
 #define IPMI_OEM_INTEL_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_INLET_TEMPERATURE_READING_FAILURE       0xC
 #define IPMI_OEM_INTEL_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_HOST_COMMUNICATION_ERROR                0xD
 #define IPMI_OEM_INTEL_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_REAL_TIME_CLOCK_SYNCHRONIZATION_FAILURE 0xE
+
+/* Event Reading Type Code = IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_THERMAL_SENSOR_ON_DIMM
+ * Sensor Type = IPMI_SENSOR_TYPE_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM
+ */
+#define IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_CPU_0_MEMORY_CONTROLLER_0_BITMASK 0x01
+#define IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_CPU_0_MEMORY_CONTROLLER_0_SHIFT   0
+
+#define IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_CPU_0_MEMORY_CONTROLLER_1_BITMASK 0x02
+#define IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_CPU_0_MEMORY_CONTROLLER_1_SHIFT   1
+
+#define IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_CPU_1_MEMORY_CONTROLLER_0_BITMASK 0x04
+#define IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_CPU_1_MEMORY_CONTROLLER_0_SHIFT   2
+
+#define IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_CPU_1_MEMORY_CONTROLLER_1_BITMASK 0x08
+#define IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_CPU_1_MEMORY_CONTROLLER_1_SHIFT   3
+
+#define IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_CPU_2_MEMORY_CONTROLLER_0_BITMASK 0x10
+#define IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_CPU_2_MEMORY_CONTROLLER_0_SHIFT   4
+
+#define IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_CPU_2_MEMORY_CONTROLLER_1_BITMASK 0x20
+#define IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_CPU_2_MEMORY_CONTROLLER_1_SHIFT   5
+
+#define IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_CPU_3_MEMORY_CONTROLLER_0_BITMASK 0x40
+#define IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_CPU_3_MEMORY_CONTROLLER_0_SHIFT   6
+
+#define IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_CPU_3_MEMORY_CONTROLLER_1_BITMASK 0x80
+#define IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_CPU_3_MEMORY_CONTROLLER_1_SHIFT   7
+
+#define IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_AVAILABLE     0
+#define IPMI_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_NOT_AVAILABLE 1
 
 /*******************************************
  * Inventec                                *

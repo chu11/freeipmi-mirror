@@ -68,9 +68,11 @@ int ipmi_cmd_oem_intel_node_manager_set_node_manager_policy (ipmi_ctx_t ctx,
                                                              uint8_t policy_id,
                                                              uint8_t policy_trigger_type,
                                                              uint8_t policy_configuration_action,
+							     uint8_t aggressive_cpu_power_correction,
+							     uint8_t policy_storage_option,
                                                              uint8_t policy_exception_actions_send_alert,
                                                              uint8_t policy_exception_actions_shutdown_system,
-                                                             uint16_t power_limit,
+                                                             uint16_t policy_target_limit,
                                                              uint32_t correction_time_limit,
                                                              uint16_t policy_trigger_limit,
                                                              uint16_t statistics_reporting_period,
@@ -244,6 +246,13 @@ int ipmi_cmd_oem_intel_node_manager_get_node_manager_alert_destination (ipmi_ctx
                                                                         uint8_t target_slave_address,
                                                                         uint8_t target_lun,
                                                                         fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_oem_intel_node_manager_get_limiting_policy_id (ipmi_ctx_t ctx,
+							    uint8_t target_channel_number,
+							    uint8_t target_slave_address,
+							    uint8_t target_lun,
+							    uint8_t domain_id,
+							    fiid_obj_t obj_cmd_rs);
 
 #ifdef __cplusplus
 }

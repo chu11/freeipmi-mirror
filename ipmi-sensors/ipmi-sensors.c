@@ -1093,6 +1093,14 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
               goto cleanup;
             }
 
+	  /* achu:
+	   *
+	   * In Intel NM 2.0 specification, sensor numbers are now fixed and you
+	   * don't have to search the SDR for them.  We could check version of
+	   * NM on motherboard to determine if we need to search SDR or not, but
+	   * for time being we'll stick to the search SDR method b/c it will
+	   * always work.
+	   */
           for (i = 0; i < record_count; i++, ipmi_sdr_cache_next (state_data->sdr_ctx))
             {
               if ((ret = ipmi_sdr_oem_parse_intel_node_manager (state_data->sdr_ctx,

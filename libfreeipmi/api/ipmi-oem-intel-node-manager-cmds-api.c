@@ -136,9 +136,11 @@ ipmi_cmd_oem_intel_node_manager_set_node_manager_policy (ipmi_ctx_t ctx,
                                                          uint8_t policy_id,
                                                          uint8_t policy_trigger_type,
                                                          uint8_t policy_configuration_action,
+							 uint8_t aggressive_cpu_power_correction,
+							 uint8_t policy_storage_option,
                                                          uint8_t policy_exception_actions_send_alert,
                                                          uint8_t policy_exception_actions_shutdown_system,
-                                                         uint16_t power_limit,
+                                                         uint16_t policy_target_limit,
                                                          uint32_t correction_time_limit,
                                                          uint16_t policy_trigger_limit,
                                                          uint16_t statistics_reporting_period,
@@ -178,9 +180,11 @@ ipmi_cmd_oem_intel_node_manager_set_node_manager_policy (ipmi_ctx_t ctx,
                                                                policy_id,
                                                                policy_trigger_type,
                                                                policy_configuration_action,
+							       aggressive_cpu_power_correction,
+							       policy_storage_option,
                                                                policy_exception_actions_send_alert,
                                                                policy_exception_actions_shutdown_system,
-                                                               power_limit,
+                                                               policy_target_limit,
                                                                correction_time_limit,
                                                                policy_trigger_limit,
                                                                statistics_reporting_period,
@@ -1433,6 +1437,85 @@ ipmi_cmd_oem_intel_node_manager_get_node_manager_alert_destination (ipmi_ctx_t c
     }
 
   if (fill_cmd_oem_intel_node_manager_get_node_manager_alert_destination (obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (target_channel_number == IPMI_CHANNEL_NUMBER_PRIMARY_IPMB
+      && target_slave_address == IPMI_SLAVE_ADDRESS_BMC
+      && target_lun == IPMI_BMC_IPMB_LUN_BMC)
+    {
+      if (api_ipmi_cmd (ctx,
+                        IPMI_BMC_IPMB_LUN_BMC,
+                        IPMI_NET_FN_OEM_GROUP_RQ,
+                        obj_cmd_rq,
+                        obj_cmd_rs) < 0)
+        {
+          ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+          goto cleanup;
+        }
+    }
+  else
+    {
+      if (api_ipmi_cmd_ipmb (ctx,
+                             target_channel_number,
+                             target_slave_address,
+                             target_lun,
+                             IPMI_NET_FN_OEM_GROUP_RQ,
+                             obj_cmd_rq,
+                             obj_cmd_rs) < 0)
+        {
+          ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+          goto cleanup;
+        }
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rq);
+  return (rv);
+}
+
+int
+ipmi_cmd_oem_intel_node_manager_get_limiting_policy_id (ipmi_ctx_t ctx,
+							uint8_t target_channel_number,
+							uint8_t target_slave_address,
+							uint8_t target_lun,
+							uint8_t domain_id,
+							fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int rv = -1;
+
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_oem_intel_node_manager_get_limiting_policy_id_rs) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
+      return (-1);
+    }
+
+  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_oem_intel_node_manager_get_limiting_policy_id_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (fill_cmd_oem_intel_node_manager_get_limiting_policy_id (domain_id,
+							      obj_cmd_rq) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;

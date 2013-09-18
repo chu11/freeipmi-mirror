@@ -1,3 +1,28 @@
+2013-09-18  Albert Chu <chu11@llnl.gov>
+
+	Merge branch intelnm20 ; Add support for Intel Node Manager 2.0.
+
+	* libfreeipmi/sel/ipmi-sel-string-intel-node-manager.c: Support
+	changes to Intel NM 2.0 events and add new Intel NM 2.0 events.
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-sensor-and-event-code-tables-oem-spec.h,
+	libfreeipmi/include/freeipmi/spec/ipmi-event-reading-type-code-oem-spec.h,
+	libfreeipmi/include/freeipmi/spec/ipmi-sensor-numbers-oem-spec.h,
+	libfreeipmi/include/freeipmi/spec/ipmi-sensor-types-oem-spec.h,
+	libfreeipmi/include/freeipmi/cmds/ipmi-oem-intel-node-manager-cmds.h,
+	libfreeipmi/include/freeipmi/api/ipmi-oem-intel-node-manager-cmds-api.h,
+	libfreeipmi/include/freeipmi/templates/ipmi-oem-intel-node-manager-cmds-templates.h
+	libfreeipmi/include/freeipmi/spec/ipmi-cmd-oem-spec.h,
+	libfreeipmi/include/freeipmi/spec/ipmi-comp-code-oem-spec.h:
+	Update with changes and/or additions from Intel NM 2.0 spec.
+
+	* ipmi-oem/: Support changes to commands due to Intel NM 2.0 events.
+
+	* ipmi-oem/ipmi-oem-intelnm.c (_ipmi_oem_intelnm_sdr_callback),
+	ipmi-sensors/ipmi-sensors.c (_display_sensors),
+	libfreeipmi/sel/ipmi-sel-string-intel-node-manager.c (_intel_node_manager_sdr_callback):
+	Comment on 2.0 no longer needing SDR searching.
+
 2013-09-13  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/spec/ipmi-cmd-oem-spec.h: Fix
