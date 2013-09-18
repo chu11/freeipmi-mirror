@@ -80,7 +80,9 @@ fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_rq =
     { 3,  "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8,  "policy_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4,  "policy_trigger_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "policy_configuration_action", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1,  "policy_configuration_action", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 2,  "aggressive_cpu_power_correction", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1,  "policy_storage_option", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1,  "policy_exception_actions.send_alert", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1,  "policy_exception_actions.shutdown_system", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 6,  "policy_exception_actions.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -578,6 +580,8 @@ fill_cmd_oem_intel_node_manager_set_node_manager_policy (uint8_t domain_id,
                                                          uint8_t policy_id,
                                                          uint8_t policy_trigger_type,
                                                          uint8_t policy_configuration_action,
+							 uint8_t aggressive_cpu_power_correction,
+							 uint8_t policy_storage_option,
                                                          uint8_t policy_exception_actions_send_alert,
                                                          uint8_t policy_exception_actions_shutdown_system,
                                                          uint16_t policy_target_limit,
@@ -590,6 +594,8 @@ fill_cmd_oem_intel_node_manager_set_node_manager_policy (uint8_t domain_id,
       || !IPMI_OEM_INTEL_NODE_MANAGER_POLICY_ENABLED_VALID (policy_enabled)
       || !IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_VALID (policy_trigger_type)
       || !IPMI_OEM_INTEL_NODE_MANAGER_POLICY_CONFIGURATION_ACTION_VALID (policy_configuration_action)
+      || !IPMI_OEM_INTEL_NODE_MANAGER_AGGRESSIVE_CPU_POWER_CORRECTION_VALID (aggressive_cpu_power_correction)
+      || !IPMI_OEM_INTEL_NODE_MANAGER_POLICY_STORAGE_VALID (policy_storage_option)
       || !IPMI_OEM_INTEL_NODE_MANAGER_POLICY_EXCEPTION_ACTION_VALID (policy_exception_actions_send_alert)
       || !IPMI_OEM_INTEL_NODE_MANAGER_POLICY_EXCEPTION_ACTION_VALID (policy_exception_actions_shutdown_system)
       || !fiid_obj_valid (obj_cmd_rq))
@@ -614,6 +620,8 @@ fill_cmd_oem_intel_node_manager_set_node_manager_policy (uint8_t domain_id,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "policy_id", policy_id);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "policy_trigger_type", policy_trigger_type);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "policy_configuration_action", policy_configuration_action);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "aggressive_cpu_power_correction", aggressive_cpu_power_correction);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "policy_storage_option", policy_storage_option);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "policy_exception_actions.send_alert", policy_exception_actions_send_alert);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "policy_exception_actions.shutdown_system", policy_exception_actions_shutdown_system);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "policy_exception_actions.reserved", 0);

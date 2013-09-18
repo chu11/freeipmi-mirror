@@ -116,14 +116,23 @@ extern "C" {
 #define IPMI_OEM_INTEL_NODE_MANAGER_POLICY_CREATED_AND_MANAGED_BY_OTHER_MANAGEMENT     0x1
 #define IPMI_OEM_INTEL_NODE_MANAGER_POLICY_NOT_CREATED_AND_MANAGED_BY_OTHER_MANAGEMENT 0x0
 
-#define IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TYPE_POWER_CONTROL_POLICY 0x1
-
 #define IPMI_OEM_INTEL_NODE_MANAGER_AGGRESSIVE_CPU_POWER_CORRECTION_AUTOMATIC      0x00
 #define IPMI_OEM_INTEL_NODE_MANAGER_AGGRESSIVE_CPU_POWER_CORRECTION_NON_AGGRESSIVE 0x01
 #define IPMI_OEM_INTEL_NODE_MANAGER_AGGRESSIVE_CPU_POWER_CORRECTION_AGGRESSIVE     0x02
 
+#define IPMI_OEM_INTEL_NODE_MANAGER_AGGRESSIVE_CPU_POWER_CORRECTION_VALID(__val) \
+  (((__val) == IPMI_OEM_INTEL_NODE_MANAGER_AGGRESSIVE_CPU_POWER_CORRECTION_AUTOMATIC \
+    || (__val) == IPMI_OEM_INTEL_NODE_MANAGER_AGGRESSIVE_CPU_POWER_CORRECTION_NON_AGGRESSIVE \
+    || (__val) == IPMI_OEM_INTEL_NODE_MANAGER_AGGRESSIVE_CPU_POWER_CORRECTION_AGGRESSIVE) ? 1 : 0)
+
 #define IPMI_OEM_INTEL_NODE_MANAGER_POLICY_STORAGE_PERSISTENT_STORAGE 0x0
 #define IPMI_OEM_INTEL_NODE_MANAGER_POLICY_STORAGE_VOLATILE_MEMORY    0x1
+
+#define IPMI_OEM_INTEL_NODE_MANAGER_POLICY_STORAGE_VALID(__val) \
+  (((__val) == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_STORAGE_PERSISTENT_STORAGE \
+    || (__val) == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_STORAGE_VOLATILE_MEMORY) ? 1 : 0)
+
+#define IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TYPE_POWER_CONTROL_POLICY 0x1
 
 #define IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TYPE_VALID(__val)            \
   (((__val) == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TYPE_POWER_CONTROL_POLICY) ? 1 : 0)
@@ -300,6 +309,8 @@ int fill_cmd_oem_intel_node_manager_set_node_manager_policy (uint8_t domain_id,
                                                              uint8_t policy_id,
                                                              uint8_t policy_trigger_type,
                                                              uint8_t policy_configuration_action,
+							     uint8_t aggressive_cpu_power_correction,
+							     uint8_t policy_storage_option,
                                                              uint8_t policy_exception_actions_send_alert,
                                                              uint8_t policy_exception_actions_shutdown_system,
                                                              uint16_t policy_target_limit,

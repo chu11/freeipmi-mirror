@@ -29,6 +29,7 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
+#include <limits.h>
 #include <assert.h>
 
 #include <freeipmi/freeipmi.h>
@@ -2611,6 +2612,10 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
   uint16_t statisticsreportingperiod = 0;
   int statisticsreportingperiod_specified = 0;
   uint8_t policystate = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_ENABLED;
+  uint8_t aggressivepowercorrection = IPMI_OEM_INTEL_NODE_MANAGER_AGGRESSIVE_CPU_POWER_CORRECTION_AUTOMATIC;
+  int aggressivepowercorrection_specified = 0;
+  uint8_t policystorage = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_STORAGE_PERSISTENT_STORAGE;
+  int policystorage_specified = 0;
   uint8_t policyexceptionaction_alert = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_EXCEPTION_ACTION_DISABLE;
   uint8_t policyexceptionaction_shutdown = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_EXCEPTION_ACTION_DISABLE;
   int rv = -1;
@@ -2710,6 +2715,27 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
 	  
 	  statisticsreportingperiod_specified++;
 	}
+      else if (!strcasecmp (key, "policystorage"))
+	{
+	  if (strcasecmp (value, "persistent")
+	      && strcasecmp (value, "volatile"))
+	    {
+	      pstdout_fprintf (state_data->pstate,
+			       stderr,
+			       "%s:%s invalid OEM option argument '%s' : invalid policy storage\n",
+			       state_data->prog_data->args->oem_id,
+			       state_data->prog_data->args->oem_command,
+			       state_data->prog_data->args->oem_options[i]);
+	      goto cleanup;
+	    }
+	  
+	  if (!strcasecmp (value, "persistent"))
+	    policystorage = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_STORAGE_PERSISTENT_STORAGE;
+	  else
+	    policystorage = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_STORAGE_VOLATILE_MEMORY;
+
+	  policystorage_specified++;
+	}
       else if (!strcasecmp (key, "policystate"))
 	{
 	  if (strcasecmp (value, "enable")
@@ -2750,6 +2776,30 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
 	  if (!strcasecmp (value, "shutdown"))
 	    policyexceptionaction_shutdown = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_EXCEPTION_ACTION_ENABLE; 
 	}
+      else if (!strcasecmp (key, "aggressivepowercorrection"))
+	{
+	  if (strcasecmp (value, "automatic")
+	      && strcasecmp (value, "notaggressive")
+	      && strcasecmp (value, "aggressive"))
+	    {
+	      pstdout_fprintf (state_data->pstate,
+			       stderr,
+			       "%s:%s invalid OEM option argument '%s' : invalid aggressive power correction\n",
+			       state_data->prog_data->args->oem_id,
+			       state_data->prog_data->args->oem_command,
+			       state_data->prog_data->args->oem_options[i]);
+	      goto cleanup;
+	    }
+
+	  if (!strcasecmp (value, "automatic"))
+	    aggressivepowercorrection = IPMI_OEM_INTEL_NODE_MANAGER_AGGRESSIVE_CPU_POWER_CORRECTION_AUTOMATIC;
+	  else if (!strcasecmp (value, "notaggressive"))
+	    aggressivepowercorrection = IPMI_OEM_INTEL_NODE_MANAGER_AGGRESSIVE_CPU_POWER_CORRECTION_NON_AGGRESSIVE;
+	  else /* !strcasecmp (value, "aggressive") */
+	    aggressivepowercorrection = IPMI_OEM_INTEL_NODE_MANAGER_AGGRESSIVE_CPU_POWER_CORRECTION_AGGRESSIVE;
+
+	  aggressivepowercorrection_specified++;
+	} 
       else
 	{
 	  pstdout_fprintf (state_data->pstate,
@@ -2805,20 +2855,73 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (!policytriggerlimit_specified)
-    {
-      pstdout_fprintf (state_data->pstate,
-		       stderr,
-		       "policy trigger limit must be specified\n");
-      goto cleanup;
-    }
-
   if (!statisticsreportingperiod_specified)
     {
       pstdout_fprintf (state_data->pstate,
 		       stderr,
 		       "statistics reporting period must be specified\n");
       goto cleanup;
+    }
+
+  if (!policystorage_specified)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "policy storage must be specified\n");
+      goto cleanup;
+    }
+
+  if ((policytrigger == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_INLET_TEMPERATURE_LIMIT_POLICY_TRIGGER
+       || policytrigger == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_MISSING_POWER_READING_TIMEOUT
+       || policytrigger == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_TIME_AFTER_PLATFORM_RESET_TRIGGER)
+      && !policytriggerlimit_specified)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "policy trigger limit must be specified for given policy trigger type\n");
+      goto cleanup;
+    }
+
+  if ((aggressivepowercorrection == IPMI_OEM_INTEL_NODE_MANAGER_AGGRESSIVE_CPU_POWER_CORRECTION_NON_AGGRESSIVE
+       || aggressivepowercorrection == IPMI_OEM_INTEL_NODE_MANAGER_AGGRESSIVE_CPU_POWER_CORRECTION_AGGRESSIVE)
+      && (domainid != IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_ENTIRE_PLATFORM
+	  && domainid != IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_CPU_SUBSYSTEM))
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "aggressive power correction cannot be set with given mode\n");
+      goto cleanup;
+    }
+
+  if (policytrigger == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_MISSING_POWER_READING_TIMEOUT)
+    {
+      /* User specifies in seconds, but we need to convert to 1/10th of seconds */
+      
+      if (policytargetlimit >= (USHRT_MAX / 10))
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "policy target limit out of range\n");
+	  goto cleanup;
+	} 
+
+      policytargetlimit *= 10;
+    }
+
+  if (policytrigger == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_MISSING_POWER_READING_TIMEOUT
+      || policytrigger == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_TIME_AFTER_PLATFORM_RESET_TRIGGER)
+    {
+      /* User specifies in seconds, but we need to convert to 1/10th of seconds */
+      
+      if (policytriggerlimit >= (USHRT_MAX / 10))
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "policy trigger limit out of range\n");
+	  goto cleanup;
+	} 
+
+      policytriggerlimit *= 10;
     }
 
   if (_ipmi_oem_intelnm_node_manager_init (state_data,
@@ -2845,6 +2948,8 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
 							       policyid,
 							       policytrigger,
 							       IPMI_OEM_INTEL_NODE_MANAGER_POLICY_CONFIGURATION_ACTION_ADD_POWER_POLICY,
+							       aggressivepowercorrection,
+							       policystorage,
 							       policyexceptionaction_alert,
 							       policyexceptionaction_shutdown,
 							       policytargetlimit,
@@ -2985,9 +3090,11 @@ ipmi_oem_intelnm_remove_node_manager_policy (ipmi_oem_state_data_t *state_data)
 							       policyid,
 							       IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_NO_POLICY_TRIGGER,
 							       IPMI_OEM_INTEL_NODE_MANAGER_POLICY_CONFIGURATION_ACTION_POLICY_POINTED_BY_POLICY_ID_SHALL_BE_REMOVED,
-							       /* all remaining bytes ignored, fill in with anything */
-							       0,
-							       0,
+							       /* all remaining bytes ignored, fill in with default-ish values */
+							       IPMI_OEM_INTEL_NODE_MANAGER_AGGRESSIVE_CPU_POWER_CORRECTION_AUTOMATIC,
+							       IPMI_OEM_INTEL_NODE_MANAGER_POLICY_STORAGE_PERSISTENT_STORAGE,
+							       IPMI_OEM_INTEL_NODE_MANAGER_POLICY_EXCEPTION_ACTION_DISABLE,
+							       IPMI_OEM_INTEL_NODE_MANAGER_POLICY_EXCEPTION_ACTION_DISABLE,
 							       0,
 							       0,
 							       0,

@@ -515,31 +515,46 @@ additional error messages will be output as valid policies are being
 searched for.  Command confirmed to work on Intel S2600JF (Appro
 512X).
 .TP
-.B set-node-manager-policy \fIdomainid=platform|cpu|memory|highpowerio\fR \fIpolicyid=num\fR \fIpolicytrigger=none|inlettemperaturelimitpolicytrigger|missingpowerreadingtimeout|timeafterplatformresettrigger|boottimepolicy\fR \fIpolicytargetlimit=watts\fR \fIcorrectiontimelimit=ms\fR \fIpolicytriggerlimit=num\fR \fIstatisticsreportingperiod=seconds\fR \fI[policystate=enable|disable]\fR \fI[policyexceptionaction=alert|shutdown]\fR
+.B set-node-manager-policy \fIdomainid=platform|cpu|memory|highpowerio\fR \fIpolicyid=num\fR \fIpolicytrigger=none|inlettemperaturelimitpolicytrigger|missingpowerreadingtimeout|timeafterplatformresettrigger|boottimepolicy\fR \fIpolicytargetlimit=num\fR \fIcorrectiontimelimit=ms\fR \fIstatisticsreportingperiod=seconds\fR policystorage=persistent|volatile [\fIpolicytriggerlimit=num\fR] \fI[policystate=enable|disable]\fR \fI[policyexceptionaction=alert|shutdown] [aggressivepowercorrection=automatic|notaggressive|aggressive]\fR
 This OEM command will add or modify an indicated policy ID from the
 domain ID.  Most of the fields above are required, although they can
-be listed in any order.  By default any created/modified policy will be enabled,
-however this can be overridden by \fIpolicystate\fR.
+be listed in any order.  By default any created/modified policy will
+be enabled, however this can be overridden by \fIpolicystate\fR.
 \fIpolicyexceptionaction\fR may be specified multiple times to
 configure multiple actions or can be skipped to configure no actions.
 When the \fIpolicytrigger\fR is configured as \fInone\fR, the trigger
 that will lead to exception actions is the value specified by the
-\fIpolicytargetlimit\fR.  When the \fIpolicytrigger\fR is \fIinlet\fR, the
-tigger that will lead to exception actions is the value specified by
-\fIpolicytriggerlimit\fR.  
-
-XXX deal w/ new trigger types
-
-The units of the \fIpolicytriggerlimit\fR
-will depend on the \fIpolicytrigger\fR selected.  Most notably, if the
-\fIpolicytrigger\fR is \fIinlet\fR, which refers to inlet temperature,
-the units of \fRpolicytriggerlimit\fR will be in Celsius.  When the
-\fIpolicytrigger\fR is \fInone\fR, the \fIpolicytriggerlimit\fR is
-ignored internally by the Intel Node Manager, but a value must still
-be specified for configuration.  Typically configuring it to 0 is more
-than sufficient.  The \fIcorrectiontimelimit\fR specifies the time the
-Node Manager must take corrective actions to bring back the system
-within limits before taking the actions specified in
+\fIpolicytargetlimit\fR.  When the \fIpolicytrigger\fR is
+\fIinlettemperaturelimitpolicytrigger\fR,
+\fImissingpowerreadingtimeout\fR, or
+\fItimeafterplatformresettrigger\fR, the tigger that will lead to
+exception actions is the value specified by \fIpolicytriggerlimit\fR.
+When the \fIfIpolicytrigger\fR is \fIboottimepolicy\fR, a power
+profile will simply be maintained by the value specified by
+\fIpolicytargetlimit\fR.  \fIaggressivepowercorrection\fR defaults to
+automatic.  It can only be set to \fInotaggressive\fR or
+\fIaggressive\fR if the \fIdomainid\fR is \fIplatform\fR or \fIcpu\fR.
+\fIpolicystorage\fR determines if the policy being configured can
+survive across resets of the machine.  The units of the
+\fIpolicytargetlimit\fR depend on the \fIpolicytrigger\fR selected.
+If the \fIpolicytrigger\fR is \fInone\fR,
+\fIinlettemperaturelimitpolicytrigger\fR,
+\fItimeafterplatformresettrigger\fR, or \fIboottimepolicy\fR, the
+units will be in Watts.  If the \fIpolicytrigger\fR is
+\fImissingpowerreadingtimeout\fR, the units will be in seconds.
+\fIpolicytriggerlimit\fR is sometimes required, given the input to
+\fIpolicytrigger\fR.  The units of the \fIpolicytriggerlimit\fR will
+depend on the \fIpolicytrigger\fR selected.  If the
+\fIpolicytrigger\fR is \fIinlettemperaturelimitpolicytrigger\fR, the
+units of \fRpolicytriggerlimit\fR will be in Celsius.  If the
+\fIpolicytrigger\fR is \fImissingpowerreadingtimeout\fR or
+\fItimeafterplatformresettrigger\fR, the units will be in seconds.  If
+the \fIpolicytrigger\fR is \fInone\fR or \fIboottimepolicy\fR, the
+\fIpolicytriggerlimit\fR is ignored internally by the Intel Node
+Manager and need not be specified..  Typically configuring it to 0 is
+more than sufficient.  The \fIcorrectiontimelimit\fR specifies the
+time the Node Manager must take corrective actions to bring back the
+system within limits before taking the actions specified in
 \fIpolicyexceptionaction\fR.  \fIstatisticsreportingperiod\fR is the
 number of seconds that measured power will be averaged for reporting.
 Please see \fBget\-node\-manager\-policy\fR to determine proper ranges
