@@ -1,3 +1,10 @@
+2013-09-23  Albert Chu <chu11@llnl.gov>
+	
+	* libfreeipmi/sel/ipmi-sel-string.c (_output_oem_record_data):
+	Output record type under verbose mode.
+	(Feature recommended by Rob Swindell - swindell at broadcom dot
+	com).
+
 2013-09-18  Albert Chu <chu11@llnl.gov>
 
 	Merge branch intelnm20 ; Add support for Intel Node Manager 2.0.
