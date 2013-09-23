@@ -3304,9 +3304,17 @@ _output_oem_record_data (ipmi_sel_ctx_t ctx,
   if ((oem_len = sel_get_oem (ctx, sel_entry, oem_data, SEL_BUFFER_LENGTH)) < 0)
     return (-1);
 
-  if (sel_string_snprintf (buf, buflen, wlen, "OEM defined = "))
-    return (1);
-
+  if (flags & IPMI_SEL_STRING_FLAGS_VERBOSE)
+    {
+      if (sel_string_snprintf (buf, buflen, wlen, "OEM defined (Record Type = %02Xh) = ", sel_record_type))
+	return (1);
+    }
+  else
+    {
+      if (sel_string_snprintf (buf, buflen, wlen, "OEM defined = "))
+	return (1);
+    }
+  
   for (oem_index = 0; oem_index < oem_len; oem_index++)
     {
       if (oem_index)
