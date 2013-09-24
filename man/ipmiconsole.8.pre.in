@@ -125,9 +125,9 @@ what data it may or may not be expecting.
 This option is identical to \fB\-\-serial\-keepalive\fR except that
 SOL packets will contain no NUL character data.  On some motherboards,
 this may be sufficient to deal with a hanging IPMI session without the
-risk regularly sending a NUL character byte may have.  However, some
-systems may not ACK a SOL packet without character data in it, meaning
-these keepalive packets do nothing. 
+risk of regularly sending a NUL character byte may have.  However,
+some systems may not ACK a SOL packet without character data in it,
+meaning these keepalive packets do nothing.
 .TP
 \fB\-\-sol\-payload\-instance\fR=\fINUM\fR
 Specify the SOL payload instance number.  The default value is 1,
