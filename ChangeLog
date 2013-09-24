@@ -1,3 +1,7 @@
+2013-09-24  Albert Chu <chu11@llnl.gov>
+
+	* man/ipmi-sel.8.pre.in: Add note about very verbose output.
+	
 2013-09-23  Albert Chu <chu11@llnl.gov>
 	
 	* libfreeipmi/sel/ipmi-sel-string.c (_output_oem_record_data):

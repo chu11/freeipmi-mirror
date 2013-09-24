@@ -49,9 +49,13 @@ temperature exceeds a threshold and when it goes back down below it.
 \fB\-vv\fR
 Output very verbose output.  This option will output additional
 information than verbose output.  Most notably it will output
-additional hex codes to given information on ambiguous SEL entries.
-For example, it will output Generator ID hex codes for sensors without
-names.
+additional hex codes to given information on ambiguous SEL entries,
+such as OEM codes.  For example, it will output Generator ID hex codes
+for sensors without names, event type codes for OEM events, and record
+types for OEM records.  This information may be useful if you are
+writing a parser outside of
+.B ipmi-sel
+to interpret OEM information.
 .TP
 \fB\-i\fR, \fB\-\-info\fR
 Show general information about the SEL.
