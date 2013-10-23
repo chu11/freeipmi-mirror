@@ -5,6 +5,7 @@ o Add support for intelnm get-node-manager-alert-destination and
 o Under very verbose mode, ipmi-sel will now record types for OEM
   records.  This should allow OEM parses outside of FreeIPMI to more
   effectively parse OEM specific SEL records.
+o Fix big endian portability bugs.
 
 FreeIPMI 1.3.2 - 09/10/13
 -------------------------
