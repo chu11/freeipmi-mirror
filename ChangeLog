@@ -1,4 +1,4 @@
-2013-10-23  Denys Vlasenko
+2013-10-23  Denys Vlasenko <dvlasenk@redhat.com>
 
 	* libfreeipmi/util/ipmi-rmcpplus-util.c (ipmi_calculate_sik): Fix
 	big endian bug.
