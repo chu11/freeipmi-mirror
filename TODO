@@ -31,6 +31,7 @@ FreeIPMI general
   - or use extra option?
 - output more clear errors on bmc completion code errors (***)
   - i.e. command not supported
+- audit/cleanup memsets, use sizeof() when appropriate
 
 FreeIPMI new stuff
 ------------------
