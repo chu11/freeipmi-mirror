@@ -157,15 +157,8 @@ ipmi_calculate_sik (uint8_t authentication_algorithm,
     priv_byte |= 0x10;
   priv_byte |= (requested_privilege_level & 0xF);
 
-  memcpy (hash_data + hash_data_len,
-          (void *)&priv_byte,
-          sizeof (uint8_t));
-  hash_data_len += sizeof (uint8_t);
-
-  memcpy (hash_data + hash_data_len,
-          (void *)&user_name_len,
-          sizeof (uint8_t));
-  hash_data_len += sizeof (uint8_t);
+  hash_data[hash_data_len++] = priv_byte;
+  hash_data[hash_data_len++] = user_name_len;
 
   if (user_name && user_name_len > 0)
     {
