@@ -1251,7 +1251,7 @@ ipmi_rmcpplus_check_rakp_4_integrity_check_value (uint8_t authentication_algorit
   rv = memcmp (digest, integrity_check_value, compare_len) ? 0 : 1;
  cleanup:
   secure_memset (buf, '\0', IPMI_MAX_KEY_DATA_LENGTH);
-  secure_memset (buf, '\0', IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH);
+  secure_memset (digest, '\0', IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH);
   return (rv);
 }
 
