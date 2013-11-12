@@ -60,11 +60,6 @@ extern "C" {
                 || (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128 \
                 || (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_128    \
                 || (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_40)))  \
-    /* XXX: Errata 4 defines SHA256 but not cipher suite IDs */        \
-    /* achu: Intel support says Cipher Suite 15-19 maps to 1-5 using   \
-     * SHA256 instead of SHA1 and SHA256-128 instead of SHA1-96.       \
-     */                                                                \
-    /* Cipher Suite 17 confirmed via DCMI 1.1 specification */         \
     /* Cipher Suite 15 */                                              \
     || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA256        \
         && ((__i) == IPMI_INTEGRITY_ALGORITHM_NONE                     \
@@ -105,11 +100,6 @@ extern "C" {
         && ((__i) == IPMI_INTEGRITY_ALGORITHM_MD5_128                     \
             && ((__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE              \
                 || (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128))) \
-    /* XXX: Errata 4 defines SHA256 but not cipher suite IDs */           \
-    /* achu: Intel support says Cipher Suite 15-19 maps to 1-5 using      \
-     * SHA256 instead of SHA1 and SHA256-128 instead of SHA1-96.          \
-     */                                                                   \
-    /* Cipher Suite 17 confirmed via DCMI 1.1 specification */            \
     /* Cipher Suite 15 */                                                 \
     || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA256           \
         && ((__i) == IPMI_INTEGRITY_ALGORITHM_NONE                        \
@@ -119,12 +109,6 @@ extern "C" {
         && ((__i) == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA256_128             \
             && ((__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE              \
                 || (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128))) ) ? 1 : 0)
-
-/* XXX: Errata 4 defines SHA256 but not cipher suite IDs */
-/* achu: Intel support says Cipher Suite 15-19 maps to 1-5 using
- * SHA256 instead of SHA1 and SHA256-128 instead of SHA1-96.
- */
-/* Cipher Suite 17 confirmed via DCMI 1.1 specification */
 
 /* To avoid gcc warnings, add +1 in comparison */
 /* achu: no macros here, cipher suite ids are numbers */
