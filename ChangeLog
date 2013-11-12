@@ -1,3 +1,11 @@
+2013-11-12  Albert Chu <chu11@llnl.gov>
+
+	Update with Errata 5 changes to IPMI 2.0 spec.
+
+	* libfreeipmi/cmds/ipmi-pef-and-alerting-cmds.c,
+	libfreeipmi/include/freeipmi/templates/ipmi-pef-and-alerting-cmds-templates.h:
+	Filter numbers are now 8 bit fields instead of 7 bit fields.
+
 2013-10-30  Denys Vlasenko <dvlasenk@redhat.com>
 
 	* libfreeipmi/util/ipmi-rmcpplus-util.c (ipmi_rmcpplus_check_rakp_4_integrity_check_value):
