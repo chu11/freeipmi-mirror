@@ -3,7 +3,8 @@
 	Update with Errata 5 changes to IPMI 2.0 spec.
 
 	* libfreeipmi/cmds/ipmi-pef-and-alerting-cmds.c,
-	libfreeipmi/include/freeipmi/templates/ipmi-pef-and-alerting-cmds-templates.h:
+	libfreeipmi/include/freeipmi/templates/ipmi-pef-and-alerting-cmds-templates.h,
+	ipmi-config/ipmi-config-category-pef-alert-string.c:
 	Filter numbers are now 8 bit fields instead of 7 bit fields.
 
 	* libfreeipmi/util/ipmi-cipher-suite-util.c,

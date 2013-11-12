@@ -508,7 +508,7 @@ ipmi_config_pef_alert_string_section_get (ipmi_config_state_data_t *state_data,
 				   0,
 				   event_filter_number_checkout,
 				   event_filter_number_commit,
-				   number_range_seven_bits_validate) < 0)
+				   number_range_one_byte_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
