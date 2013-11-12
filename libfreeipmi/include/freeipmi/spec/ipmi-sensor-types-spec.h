@@ -54,6 +54,7 @@ extern "C" {
 #define IPMI_SENSOR_TYPE_TERMINATOR                          0x1C
 #define IPMI_SENSOR_TYPE_SYSTEM_BOOT_INITIATED               0x1D
 #define IPMI_SENSOR_TYPE_BOOT_ERROR                          0x1E
+/* OS BOOT renamed Base OS Boot/Installation Status, but gonna keep legacy name for ease */
 #define IPMI_SENSOR_TYPE_OS_BOOT                             0x1F
 #define IPMI_SENSOR_TYPE_OS_CRITICAL_STOP                    0x20
 #define IPMI_SENSOR_TYPE_SLOT_CONNECTOR                      0x21

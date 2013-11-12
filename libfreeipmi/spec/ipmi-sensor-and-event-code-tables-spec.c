@@ -546,9 +546,13 @@ const char * const ipmi_sensor_type_os_boot[] =
     "CD-ROM boot completed",
     "ROM boot completed",
     "boot completed - boot device not specified",
+    "Base OS/Hypervisor Installation started",
+    "Base OS/Hypervisor Installation completed",
+    "Base OS/Hypervisor Installation aborted",
+    "Base OS/Hypervisor Installation failed",
     NULL
   };
-unsigned int ipmi_sensor_type_os_boot_max_index = 0x06;
+unsigned int ipmi_sensor_type_os_boot_max_index = 0x0A;
 
 /* achu: modified per errata */
 const char * const ipmi_sensor_type_os_critical_stop[] =
@@ -947,9 +951,13 @@ const char * const ipmi_sensor_type_os_boot_short[] =
     "CD-ROM boot completed",
     "ROM boot completed",
     "boot completed - boot device not specified",
+    "Base OS/Hypervisor Installation started",
+    "Base OS/Hypervisor Installation completed",
+    "Base OS/Hypervisor Installation aborted",
+    "Base OS/Hypervisor Installation failed",
     NULL
   };
-unsigned int ipmi_sensor_type_os_boot_short_max_index = 0x06;
+unsigned int ipmi_sensor_type_os_boot_short_max_index = 0x0A;
 
 /* achu: modified per errata */
 const char * const ipmi_sensor_type_os_critical_stop_short[] =
