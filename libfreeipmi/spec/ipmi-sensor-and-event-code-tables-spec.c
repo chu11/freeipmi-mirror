@@ -365,9 +365,10 @@ const char * const ipmi_sensor_type_power_supply[] =
     "Power Supply input lost or out-of-range",
     "Power Supply input out-of-range, but present",
     "Configuration error",
+    "Power Supply Inactive (in standby state)",
     NULL
   };
-unsigned int ipmi_sensor_type_power_supply_max_index = 0x06;
+unsigned int ipmi_sensor_type_power_supply_max_index = 0x07;
 
 const char * const ipmi_sensor_type_power_unit[] =
   {
@@ -765,9 +766,10 @@ const char * const ipmi_sensor_type_power_supply_short[] =
     "Power Supply input lost or out-of-range",
     "Power Supply input out-of-range, but present",
     "Configuration error",
+    "Power Supply Inactive",
     NULL
   };
-unsigned int ipmi_sensor_type_power_supply_short_max_index = 0x06;
+unsigned int ipmi_sensor_type_power_supply_short_max_index = 0x07;
 
 const char * const ipmi_sensor_type_power_unit_short[] =
   {

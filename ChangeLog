@@ -10,6 +10,18 @@
 	libfreeipmi/include/freeipmi/util/ipmi-cipher-suite-util.h: Cipher
 	Suites 15-19 now fully confirmed, remove comments
 
+	* etc/freeipmi_interpret_sensor.conf,
+	etc/freeipmi_interpret_sel.conf,
+	libipmimonitoring/ipmi_monitoring_bitmasks.h,
+	libipmimonitoring/ipmi_monitoring_offsets.h,
+	man/freeipmi_interpret_sel.conf.5.pre.in,
+	man/freeipmi_interpret_sensor.conf.5.pre.in,
+	libfreeipmi/interpret/ipmi-interpret-config-sel.c,
+	libfreeipmi/interpret/ipmi-interpret-config-sensor.c,
+	libfreeipmi/spec/ipmi-sensor-and-event-code-tables-spec.c,
+	libfreeipmi/include/freeipmi/spec/ipmi-sensor-and-event-code-tables-spec.h:
+	Support new offset for power supply sensor.
+
 2013-10-30  Denys Vlasenko <dvlasenk@redhat.com>
 
 	* libfreeipmi/util/ipmi-rmcpplus-util.c (ipmi_rmcpplus_check_rakp_4_integrity_check_value):

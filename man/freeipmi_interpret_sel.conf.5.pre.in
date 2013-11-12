@@ -520,6 +520,9 @@ Defaults to Critical/Warning.
 .TP
 \fBIPMI_Power_Supply_Configuration_Error\fR
 Defaults to Critical/Critical.
+.TP
+\fBIPMI_Power_Supply_Power_Supply_Inactive\fR
+Defaults to Warning/Warning.
 .RE
 .TP
 .B IPMI_Power_Supply_State
