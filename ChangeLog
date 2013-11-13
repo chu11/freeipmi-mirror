@@ -38,6 +38,15 @@
 	* libfreeipmi/include/freeipmi/spec/ipmi-sensor-types-spec.h:
 	Document legacy/new name choice.
 
+	* libfreeipmi/include/freeipmi/cmds/ipmi-messaging-support-cmds.h,
+	libfreeipmi/include/freeipmi/spec/ipmi-system-info-parameters-spec.h,
+	libfreeipmi/include/freeipmi/templates/ipmi-messaging-support-cmds-templates.h,
+	libfreeipmi/include/freeipmi/api/ipmi-messaging-support-cmds-api.h,
+	libfreeipmi/cmds/ipmi-messaging-support-cmds.c,
+	libfreeipmi/api/ipmi-messaging-support-cmds-api.c: Support new
+	System Info Parameters Present OS Version Number, BMC URL, and
+	Base OS/Hypervisor URL.
+
 2013-10-30  Denys Vlasenko <dvlasenk@redhat.com>
 
 	* libfreeipmi/util/ipmi-rmcpplus-util.c (ipmi_rmcpplus_check_rakp_4_integrity_check_value):

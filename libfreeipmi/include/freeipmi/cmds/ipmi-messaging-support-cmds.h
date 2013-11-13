@@ -349,10 +349,16 @@ extern fiid_template_t tmpl_cmd_set_system_info_parameters_system_firmware_versi
 extern fiid_template_t tmpl_cmd_set_system_info_parameters_system_firmware_version_rq;
 extern fiid_template_t tmpl_cmd_set_system_info_parameters_system_name_first_set_rq;
 extern fiid_template_t tmpl_cmd_set_system_info_parameters_system_name_rq;
-extern fiid_template_t tmpl_cmd_set_system_info_parameters_operating_system_name_first_set_rq;
-extern fiid_template_t tmpl_cmd_set_system_info_parameters_operating_system_name_rq;
 extern fiid_template_t tmpl_cmd_set_system_info_parameters_primary_operating_system_name_first_set_rq;
 extern fiid_template_t tmpl_cmd_set_system_info_parameters_primary_operating_system_name_rq;
+extern fiid_template_t tmpl_cmd_set_system_info_parameters_operating_system_name_first_set_rq;
+extern fiid_template_t tmpl_cmd_set_system_info_parameters_operating_system_name_rq;
+extern fiid_template_t tmpl_cmd_set_system_info_parameters_present_os_version_number_first_set_rq;
+extern fiid_template_t tmpl_cmd_set_system_info_parameters_present_os_version_number_rq;
+extern fiid_template_t tmpl_cmd_set_system_info_parameters_bmc_url_first_set_rq;
+extern fiid_template_t tmpl_cmd_set_system_info_parameters_bmc_url_rq;
+extern fiid_template_t tmpl_cmd_set_system_info_parameters_base_os_hypervisor_url_first_set_rq;
+extern fiid_template_t tmpl_cmd_set_system_info_parameters_base_os_hypervisor_url_rq;
 
 extern fiid_template_t tmpl_cmd_get_system_info_parameters_rq;
 extern fiid_template_t tmpl_cmd_get_system_info_parameters_rs;
@@ -362,10 +368,16 @@ extern fiid_template_t tmpl_cmd_get_system_info_parameters_system_firmware_versi
 extern fiid_template_t tmpl_cmd_get_system_info_parameters_system_firmware_version_rs;
 extern fiid_template_t tmpl_cmd_get_system_info_parameters_system_name_first_set_rs;
 extern fiid_template_t tmpl_cmd_get_system_info_parameters_system_name_rs;
-extern fiid_template_t tmpl_cmd_get_system_info_parameters_operating_system_name_first_set_rs;
-extern fiid_template_t tmpl_cmd_get_system_info_parameters_operating_system_name_rs;
 extern fiid_template_t tmpl_cmd_get_system_info_parameters_primary_operating_system_name_first_set_rs;
 extern fiid_template_t tmpl_cmd_get_system_info_parameters_primary_operating_system_name_rs;
+extern fiid_template_t tmpl_cmd_get_system_info_parameters_operating_system_name_first_set_rs;
+extern fiid_template_t tmpl_cmd_get_system_info_parameters_operating_system_name_rs;
+extern fiid_template_t tmpl_cmd_get_system_info_parameters_present_os_version_number_first_set_rs;
+extern fiid_template_t tmpl_cmd_get_system_info_parameters_present_os_version_number_rs;
+extern fiid_template_t tmpl_cmd_get_system_info_parameters_bmc_url_first_set_rs;
+extern fiid_template_t tmpl_cmd_get_system_info_parameters_bmc_url_rs;
+extern fiid_template_t tmpl_cmd_get_system_info_parameters_base_os_hypervisor_url_first_set_rs;
+extern fiid_template_t tmpl_cmd_get_system_info_parameters_base_os_hypervisor_url_rs;
 
 extern fiid_template_t tmpl_cmd_get_channel_cipher_suites_rq;
 extern fiid_template_t tmpl_cmd_get_channel_cipher_suites_rs;
@@ -516,6 +528,42 @@ int fill_cmd_set_system_info_parameters_operating_system_name (uint8_t set_selec
                                                                unsigned int string_block_length,
                                                                fiid_obj_t obj_cmd_rq);
 
+int fill_cmd_set_system_info_parameters_present_os_version_number_first_set (uint8_t set_selector,
+									     uint8_t encoding,
+									     uint8_t string_length,
+									     const void *string_block,
+									     unsigned int string_block_length,
+									     fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_set_system_info_parameters_present_os_version_number (uint8_t set_selector,
+								   const void *string_block,
+								   unsigned int string_block_length,
+								   fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_set_system_info_parameters_bmc_url_first_set (uint8_t set_selector,
+							   uint8_t encoding,
+							   uint8_t string_length,
+							   const void *string_block,
+							   unsigned int string_block_length,
+							   fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_set_system_info_parameters_bmc_url (uint8_t set_selector,
+						 const void *string_block,
+						 unsigned int string_block_length,
+						 fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_set_system_info_parameters_base_os_hypervisor_url_first_set (uint8_t set_selector,
+									  uint8_t encoding,
+									  uint8_t string_length,
+									  const void *string_block,
+									  unsigned int string_block_length,
+									  fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_set_system_info_parameters_base_os_hypervisor_url (uint8_t set_selector,
+								const void *string_block,
+								unsigned int string_block_length,
+								fiid_obj_t obj_cmd_rq);
+  
 int fill_cmd_get_system_info_parameters (uint8_t get_parameter,
                                          uint8_t parameter_selector,
                                          uint8_t set_selector,

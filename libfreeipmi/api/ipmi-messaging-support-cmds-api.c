@@ -1593,6 +1593,384 @@ ipmi_cmd_set_system_info_parameters_operating_system_name (ipmi_ctx_t ctx,
   return (rv);
 }
 
+int
+ipmi_cmd_set_system_info_parameters_present_os_version_number_first_set (ipmi_ctx_t ctx,
+									 uint8_t set_selector,
+									 uint8_t encoding,
+									 uint8_t string_length,
+									 const void *string_block,
+									 unsigned int string_block_length,
+									 fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int rv = -1;
+
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_system_info_parameters_rs) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
+      return (-1);
+    }
+
+  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_set_system_info_parameters_present_os_version_number_first_set_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (fill_cmd_set_system_info_parameters_present_os_version_number_first_set (set_selector,
+									       encoding,
+									       string_length,
+									       string_block,
+									       string_block_length,
+									       obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (api_ipmi_cmd (ctx,
+                    IPMI_BMC_IPMB_LUN_BMC,
+                    IPMI_NET_FN_APP_RQ,
+                    obj_cmd_rq,
+                    obj_cmd_rs) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rq);
+  return (rv);
+}
+
+int
+ipmi_cmd_set_system_info_parameters_present_os_version_number (ipmi_ctx_t ctx,
+							       uint8_t set_selector,
+							       const void *string_block,
+							       unsigned int string_block_length,
+							       fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int rv = -1;
+
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_system_info_parameters_rs) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
+      return (-1);
+    }
+
+  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_set_system_info_parameters_present_os_version_number_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (fill_cmd_set_system_info_parameters_present_os_version_number (set_selector,
+								     string_block,
+								     string_block_length,
+								     obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (api_ipmi_cmd (ctx,
+                    IPMI_BMC_IPMB_LUN_BMC,
+                    IPMI_NET_FN_APP_RQ,
+                    obj_cmd_rq,
+                    obj_cmd_rs) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rq);
+  return (rv);
+}
+
+int
+ipmi_cmd_set_system_info_parameters_bmc_url_first_set (ipmi_ctx_t ctx,
+						       uint8_t set_selector,
+						       uint8_t encoding,
+						       uint8_t string_length,
+						       const void *string_block,
+						       unsigned int string_block_length,
+						       fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int rv = -1;
+
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_system_info_parameters_rs) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
+      return (-1);
+    }
+
+  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_set_system_info_parameters_bmc_url_first_set_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (fill_cmd_set_system_info_parameters_bmc_url_first_set (set_selector,
+							     encoding,
+							     string_length,
+							     string_block,
+							     string_block_length,
+							     obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (api_ipmi_cmd (ctx,
+                    IPMI_BMC_IPMB_LUN_BMC,
+                    IPMI_NET_FN_APP_RQ,
+                    obj_cmd_rq,
+                    obj_cmd_rs) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rq);
+  return (rv);
+}
+
+int
+ipmi_cmd_set_system_info_parameters_bmc_url (ipmi_ctx_t ctx,
+					     uint8_t set_selector,
+					     const void *string_block,
+					     unsigned int string_block_length,
+					     fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int rv = -1;
+
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_system_info_parameters_rs) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
+      return (-1);
+    }
+
+  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_set_system_info_parameters_bmc_url_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (fill_cmd_set_system_info_parameters_bmc_url (set_selector,
+						   string_block,
+						   string_block_length,
+						   obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (api_ipmi_cmd (ctx,
+                    IPMI_BMC_IPMB_LUN_BMC,
+                    IPMI_NET_FN_APP_RQ,
+                    obj_cmd_rq,
+                    obj_cmd_rs) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rq);
+  return (rv);
+}
+
+int
+ipmi_cmd_set_system_info_parameters_base_os_hypervisor_url_first_set (ipmi_ctx_t ctx,
+								      uint8_t set_selector,
+								      uint8_t encoding,
+								      uint8_t string_length,
+								      const void *string_block,
+								      unsigned int string_block_length,
+								      fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int rv = -1;
+
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_system_info_parameters_rs) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
+      return (-1);
+    }
+
+  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_set_system_info_parameters_base_os_hypervisor_url_first_set_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (fill_cmd_set_system_info_parameters_base_os_hypervisor_url_first_set (set_selector,
+									    encoding,
+									    string_length,
+									    string_block,
+									    string_block_length,
+									    obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (api_ipmi_cmd (ctx,
+                    IPMI_BMC_IPMB_LUN_BMC,
+                    IPMI_NET_FN_APP_RQ,
+                    obj_cmd_rq,
+                    obj_cmd_rs) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rq);
+  return (rv);
+}
+
+int
+ipmi_cmd_set_system_info_parameters_base_os_hypervisor_url (ipmi_ctx_t ctx,
+							    uint8_t set_selector,
+							    const void *string_block,
+							    unsigned int string_block_length,
+							    fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int rv = -1;
+
+  if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  /* remaining parameter checks in fill function */
+  if (!fiid_obj_valid (obj_cmd_rs))
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
+                                 tmpl_cmd_set_system_info_parameters_rs) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
+      return (-1);
+    }
+
+  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_set_system_info_parameters_base_os_hypervisor_url_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (fill_cmd_set_system_info_parameters_base_os_hypervisor_url (set_selector,
+								  string_block,
+								  string_block_length,
+								  obj_cmd_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (api_ipmi_cmd (ctx,
+                    IPMI_BMC_IPMB_LUN_BMC,
+                    IPMI_NET_FN_APP_RQ,
+                    obj_cmd_rq,
+                    obj_cmd_rs) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rq);
+  return (rv);
+}
+
 static int
 _ipmi_cmd_get_system_info_parameters_common (ipmi_ctx_t ctx,
 					     uint8_t get_parameter,
@@ -1869,6 +2247,138 @@ ipmi_cmd_get_system_info_parameters_operating_system_name (ipmi_ctx_t ctx,
 						   obj_cmd_rs,
 						   tmpl_cmd_get_system_info_parameters_operating_system_name_rs,
 						   IPMI_SYSTEM_INFO_PARAMETER_OPERATING_SYSTEM_NAME) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
+ipmi_cmd_get_system_info_parameters_present_os_version_number_first_set (ipmi_ctx_t ctx,
+									 uint8_t get_parameter,
+									 uint8_t set_selector,
+									 uint8_t block_selector,
+									 fiid_obj_t obj_cmd_rs)
+{
+  if (_ipmi_cmd_get_system_info_parameters_common (ctx,
+						   get_parameter,
+						   set_selector,
+						   block_selector,
+						   obj_cmd_rs,
+						   tmpl_cmd_get_system_info_parameters_present_os_version_number_first_set_rs,
+						   IPMI_SYSTEM_INFO_PARAMETER_PRESENT_OS_VERSION_NUMBER) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
+ipmi_cmd_get_system_info_parameters_present_os_version_number (ipmi_ctx_t ctx,
+							       uint8_t get_parameter,
+							       uint8_t set_selector,
+							       uint8_t block_selector,
+							       fiid_obj_t obj_cmd_rs)
+{
+  if (_ipmi_cmd_get_system_info_parameters_common (ctx,
+						   get_parameter,
+						   set_selector,
+						   block_selector,
+						   obj_cmd_rs,
+						   tmpl_cmd_get_system_info_parameters_present_os_version_number_rs,
+						   IPMI_SYSTEM_INFO_PARAMETER_PRESENT_OS_VERSION_NUMBER) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
+ipmi_cmd_get_system_info_parameters_bmc_url_first_set (ipmi_ctx_t ctx,
+						       uint8_t get_parameter,
+						       uint8_t set_selector,
+						       uint8_t block_selector,
+						       fiid_obj_t obj_cmd_rs)
+{
+  if (_ipmi_cmd_get_system_info_parameters_common (ctx,
+						   get_parameter,
+						   set_selector,
+						   block_selector,
+						   obj_cmd_rs,
+						   tmpl_cmd_get_system_info_parameters_bmc_url_first_set_rs,
+						   IPMI_SYSTEM_INFO_PARAMETER_BMC_URL) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
+ipmi_cmd_get_system_info_parameters_bmc_url (ipmi_ctx_t ctx,
+					     uint8_t get_parameter,
+					     uint8_t set_selector,
+					     uint8_t block_selector,
+					     fiid_obj_t obj_cmd_rs)
+{
+  if (_ipmi_cmd_get_system_info_parameters_common (ctx,
+						   get_parameter,
+						   set_selector,
+						   block_selector,
+						   obj_cmd_rs,
+						   tmpl_cmd_get_system_info_parameters_bmc_url_rs,
+						   IPMI_SYSTEM_INFO_PARAMETER_BMC_URL) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
+ipmi_cmd_get_system_info_parameters_base_os_hypervisor_url_first_set (ipmi_ctx_t ctx,
+								      uint8_t get_parameter,
+								      uint8_t set_selector,
+								      uint8_t block_selector,
+								      fiid_obj_t obj_cmd_rs)
+{
+  if (_ipmi_cmd_get_system_info_parameters_common (ctx,
+						   get_parameter,
+						   set_selector,
+						   block_selector,
+						   obj_cmd_rs,
+						   tmpl_cmd_get_system_info_parameters_base_os_hypervisor_url_first_set_rs,
+						   IPMI_SYSTEM_INFO_PARAMETER_BASE_OS_HYPERVISOR_URL) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
+ipmi_cmd_get_system_info_parameters_base_os_hypervisor_url (ipmi_ctx_t ctx,
+							    uint8_t get_parameter,
+							    uint8_t set_selector,
+							    uint8_t block_selector,
+							    fiid_obj_t obj_cmd_rs)
+{
+  if (_ipmi_cmd_get_system_info_parameters_common (ctx,
+						   get_parameter,
+						   set_selector,
+						   block_selector,
+						   obj_cmd_rs,
+						   tmpl_cmd_get_system_info_parameters_base_os_hypervisor_url_rs,
+						   IPMI_SYSTEM_INFO_PARAMETER_BASE_OS_HYPERVISOR_URL) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
