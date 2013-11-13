@@ -152,8 +152,7 @@ fiid_template_t tmpl_cmd_set_pef_configuration_parameters_event_filter_table_rq 
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 7, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 7, "filter_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "filter_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 5, "filter_configuration.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 2, "filter_configuration.type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "filter_configuration.filter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -194,8 +193,7 @@ fiid_template_t tmpl_cmd_set_pef_configuration_parameters_event_filter_table_dat
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 7, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 7, "filter_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "filter_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 5, "filter_configuration.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 2, "filter_configuration.type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "filter_configuration.filter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -209,8 +207,8 @@ fiid_template_t tmpl_cmd_set_pef_configuration_parameters_alert_string_keys_rq =
     { 1, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 7, "string_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 7, "filter_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "reserved3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    /* Not indicated as 8 bits in E451, but all other filter number fields adjusted to 8 bits */
+    { 8, "filter_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 7, "set_number_for_string", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "reserved4", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
@@ -333,8 +331,7 @@ fiid_template_t tmpl_cmd_get_pef_configuration_parameters_number_of_event_filter
     { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 7, "number_of_event_filters", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "number_of_event_filters", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
   };
 
@@ -344,8 +341,7 @@ fiid_template_t tmpl_cmd_get_pef_configuration_parameters_event_filter_table_rs 
     { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 7, "filter_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "filter_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 5, "filter_configuration.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 2, "filter_configuration.type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "filter_configuration.filter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -387,8 +383,7 @@ fiid_template_t tmpl_cmd_get_pef_configuration_parameters_event_filter_table_dat
     { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 7, "filter_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "filter_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 5, "filter_configuration.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 2, "filter_configuration.type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "filter_configuration.filter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -427,8 +422,8 @@ fiid_template_t tmpl_cmd_get_pef_configuration_parameters_alert_string_keys_rs =
     { 4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 7, "string_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 7, "filter_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "reserved3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    /* Not indicated as 8 bits in E451, but all other filter number fields adjusted to 8 bits */
+    { 8, "filter_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 7, "set_number_for_string", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "reserved4", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
@@ -818,7 +813,6 @@ fill_cmd_set_pef_configuration_parameters_event_filter_table (uint8_t filter_num
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_PEF_CONFIGURATION_PARAMETER_EVENT_FILTER_TABLE);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "filter_number", filter_number);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "filter_configuration.reserved", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "filter_configuration.type", filter_configuration_type);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "filter_configuration.filter", filter_configuration_filter);
@@ -878,7 +872,6 @@ fill_cmd_set_pef_configuration_parameters_event_filter_table_data1 (uint8_t filt
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_PEF_CONFIGURATION_PARAMETER_EVENT_FILTER_TABLE_DATA_1);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "filter_number",  filter_number);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "filter_configuration.reserved", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "filter_configuration.type", filter_configuration_type);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "filter_configuration.filter", filter_configuration_filter);
@@ -911,7 +904,6 @@ fill_cmd_set_pef_configuration_parameters_alert_string_keys (uint8_t string_sele
   FILL_FIID_OBJ_SET (obj_cmd_rq, "string_selector", string_selector);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "filter_number", filter_number);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved3", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "set_number_for_string", set_number_for_string);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved4", 0);
   return (0);

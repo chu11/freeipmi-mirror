@@ -19,6 +19,15 @@ o Support new tool ipmi-config.  Ipmi-config is a consolidated
     compatability.
   - The ipmi-pef-config --info option has been made legacy.  It is
     still supported but no longer advertised.
+o Update FreeIPMI for changes in IPMI 2.0 Errata 5.  Include are:
+  - New sensor events for Power Supply and OS Boot sensors.  New
+    events are supported in all areas, ipmi-sensors, ipmi-sel,
+    libipmimonitoring, etc.
+  - PEF now supports 255 filter numbers, not 127.  This is supported
+    in ipmi-config (formerly ipmi-pef-config).
+  - Support get/set of new System Info Parameters Present OS Version,
+    BMC URL, and Base OS/Hypervisor URL.  This is supported in
+    bmc-info and bmc-device.
 o Update ipmi-oem Intel Node Manager OEM commands for changes listed
   in Intelligent Power Node Manager 2.0 specification.
   - Due to changes in the specification, minor text changes may exist
@@ -31,6 +40,13 @@ Tools - Bug Fixes/Minor Changes
 
 Libraries
 ---------
+
+o Update libfreeipmi and libipmimonitoring to support IPMI 2.0 Errata 
+  5. Included are:
+  - Support new sensor events for Power Supply and OS Boot sensors.
+  - Support PEF filter numbers up to 255.
+  - Support new System Info Parameters for Present OS Version, BMC
+    URL, and Base OS/Hypervisor URL.
 o Update libfreeipmi to support Intel Node Manager payloads per Intel
   Intelligent Power Node Manager 2.0 specification.
   - Due to changes in the specification, some payload fields have been

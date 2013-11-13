@@ -508,6 +508,75 @@ FIID Template: tmpl_cmd_set_system_info_parameters_operating_system_name_rq
     { 8, "set_selector", REQUIRED, LENGTH-FIXED }
     { 128, "string", REQUIRED, LENGTH-FIXED }
 
+Set System Info Parameters (Present OS Version Number First Set) Request
+------------------------------------------------------------------------
+
+FIID Template: tmpl_cmd_set_system_info_parameters_present_os_version_number_first_set_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
+    { 8, "parameter_selector", REQUIRED, LENGTH-FIXED }
+    { 8, "set_selector", REQUIRED, LENGTH-FIXED }
+    { 4, "encoding", REQUIRED, LENGTH-FIXED }
+    { 4, "reserved", REQUIRED, LENGTH-FIXED }
+    { 8, "string_length", REQUIRED, LENGTH-FIXED }
+    { 112, "string", OPTIONAL, LENGTH-VARIABLE }
+
+Set System Info Parameters (Present OS Version Number) Request
+--------------------------------------------------------------
+
+FIID Template: tmpl_cmd_set_system_info_parameters_present_os_version_number_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
+    { 8, "parameter_selector", REQUIRED, LENGTH-FIXED }
+    { 8, "set_selector", REQUIRED, LENGTH-FIXED }
+    { 128, "string", REQUIRED, LENGTH-FIXED }
+
+Set System Info Parameters (BMC URL First Set) Request
+------------------------------------------------------
+
+FIID Template: tmpl_cmd_set_system_info_parameters_bmc_url_first_set_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
+    { 8, "parameter_selector", REQUIRED, LENGTH-FIXED }
+    { 8, "set_selector", REQUIRED, LENGTH-FIXED }
+    { 4, "encoding", REQUIRED, LENGTH-FIXED }
+    { 4, "reserved", REQUIRED, LENGTH-FIXED }
+    { 8, "string_length", REQUIRED, LENGTH-FIXED }
+    { 112, "string", OPTIONAL, LENGTH-VARIABLE }
+
+Set System Info Parameters (BMC URL) Request
+--------------------------------------------
+
+FIID Template: tmpl_cmd_set_system_info_parameters_bmc_url_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
+    { 8, "parameter_selector", REQUIRED, LENGTH-FIXED }
+    { 8, "set_selector", REQUIRED, LENGTH-FIXED }
+    { 128, "string", REQUIRED, LENGTH-FIXED }
+
+Set System Info Parameters (Base OS/Hypervisor URL First Set) Request
+---------------------------------------------------------------------
+
+FIID Template: tmpl_cmd_set_system_info_parameters_base_os_hypervisor_url_first_set_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
+    { 8, "parameter_selector", REQUIRED, LENGTH-FIXED }
+    { 8, "set_selector", REQUIRED, LENGTH-FIXED }
+    { 4, "encoding", REQUIRED, LENGTH-FIXED }
+    { 4, "reserved", REQUIRED, LENGTH-FIXED }
+    { 8, "string_length", REQUIRED, LENGTH-FIXED }
+    { 112, "string", OPTIONAL, LENGTH-VARIABLE }
+
+Set System Info Parameters (Base OS/Hypervisor URL) Request
+-----------------------------------------------------------
+
+FIID Template: tmpl_cmd_set_system_info_parameters_base_os_hypervisor_url_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
+    { 8, "parameter_selector", REQUIRED, LENGTH-FIXED }
+    { 8, "set_selector", REQUIRED, LENGTH-FIXED }
+    { 128, "string", REQUIRED, LENGTH-FIXED }
+
 Get System Info Parameters Request
 ----------------------------------
 

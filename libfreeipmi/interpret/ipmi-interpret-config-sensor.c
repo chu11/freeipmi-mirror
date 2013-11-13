@@ -295,8 +295,9 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_power_supply_co
     { "IPMI_Power_Supply_Power_Supply_Input_Lost_Or_Out_Of_Range", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Power_Supply_Power_Supply_Input_Out_Of_Range_But_Present", IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Power_Supply_Configuration_Error", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Power_Supply_Power_Supply_Inactive", IPMI_INTERPRET_STATE_WARNING},
   };
-static unsigned int ipmi_interpret_sensor_power_supply_config_len = 8;
+static unsigned int ipmi_interpret_sensor_power_supply_config_len = 9;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_power_supply_state_config[] =
   {
@@ -720,8 +721,12 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_os_boot_config[
     { "IPMI_OS_Boot_CD_ROM_Boot_Completed", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_OS_Boot_ROM_Boot_Completed", IPMI_INTERPRET_STATE_NOMINAL},
     { "IPMI_OS_Boot_Boot_Completed_Boot_Device_Not_Specified", IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_OS_Boot_Base_OS_Hypervisor_Installation_Started", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_OS_Boot_Base_OS_Hypervisor_Installation_Completed", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_OS_Boot_Base_OS_Hypervisor_Installation_Aborted", IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_OS_Boot_Base_OS_Hypervisor_Installation_Failed", IPMI_INTERPRET_STATE_CRITICAL},
   };
-static unsigned int ipmi_interpret_sensor_os_boot_config_len = 8;
+static unsigned int ipmi_interpret_sensor_os_boot_config_len = 12;
 
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_os_critical_stop_state_config[] =
   {

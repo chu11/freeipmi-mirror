@@ -161,6 +161,15 @@ Set Primary Operating System Name.
 \fB\-\-set\-operating\-system\-name\fR=\fISTRING\fR
 Set Operating System Name.
 .TP
+\fB\-\-set\-present\-os\-version\-number\fR=\fISTRING\fR
+Set Present OS Version Number.
+.TP
+\fB\-\-set\-bmc\-url\fR=\fISTRING\fR
+Set BMC URL.
+.TP
+\fB\-\-set\-base\-os\-hypervisor\-url\fR=\fISTRING\fR
+Set Base OS/Hypervisor URL.
+.TP
 \fB\-\-verbose\fR
 Increase verbosity in output.
 #include <@top_srcdir@/man/manpage-common-sdr-cache-options-heading.man>

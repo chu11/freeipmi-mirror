@@ -1,3 +1,58 @@
+2013-11-13  Albert Chu <chu11@llnl.gov>
+
+	Update with Errata 5 changes to IPMI 2.0 spec.
+
+	* libfreeipmi/cmds/ipmi-pef-and-alerting-cmds.c,
+	libfreeipmi/include/freeipmi/templates/ipmi-pef-and-alerting-cmds-templates.h,
+	ipmi-config/ipmi-config-category-pef-alert-string.c:
+	Filter numbers are now 8 bit fields instead of 7 bit fields.
+
+	* libfreeipmi/util/ipmi-cipher-suite-util.c,
+	libfreeipmi/include/freeipmi/util/ipmi-cipher-suite-util.h: Cipher
+	Suites 15-19 now fully confirmed, remove comments
+
+	* etc/freeipmi_interpret_sensor.conf,
+	etc/freeipmi_interpret_sel.conf,
+	libipmimonitoring/ipmi_monitoring_bitmasks.h,
+	libipmimonitoring/ipmi_monitoring_offsets.h,
+	man/freeipmi_interpret_sel.conf.5.pre.in,
+	man/freeipmi_interpret_sensor.conf.5.pre.in,
+	libfreeipmi/interpret/ipmi-interpret-config-sel.c,
+	libfreeipmi/interpret/ipmi-interpret-config-sensor.c,
+	libfreeipmi/spec/ipmi-sensor-and-event-code-tables-spec.c,
+	libfreeipmi/include/freeipmi/spec/ipmi-sensor-and-event-code-tables-spec.h:
+	Support new offset for power supply sensor.
+
+	* etc/freeipmi_interpret_sensor.conf,
+	etc/freeipmi_interpret_sel.conf,
+	libipmimonitoring/ipmi_monitoring_bitmasks.h,
+	libipmimonitoring/ipmi_monitoring_offsets.h,
+	man/freeipmi_interpret_sel.conf.5.pre.in,
+	man/freeipmi_interpret_sensor.conf.5.pre.in,
+	libfreeipmi/interpret/ipmi-interpret-config-sel.c,
+	libfreeipmi/interpret/ipmi-interpret-config-sensor.c,
+	libfreeipmi/spec/ipmi-sensor-and-event-code-tables-spec.c,
+	libfreeipmi/include/freeipmi/spec/ipmi-sensor-and-event-code-tables-spec.h:
+	Support new offset for os boot sensor.
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-sensor-types-spec.h:
+	Document legacy/new name choice.
+
+	* libfreeipmi/include/freeipmi/cmds/ipmi-messaging-support-cmds.h,
+	libfreeipmi/include/freeipmi/spec/ipmi-system-info-parameters-spec.h,
+	libfreeipmi/include/freeipmi/templates/ipmi-messaging-support-cmds-templates.h,
+	libfreeipmi/include/freeipmi/api/ipmi-messaging-support-cmds-api.h,
+	libfreeipmi/cmds/ipmi-messaging-support-cmds.c,
+	libfreeipmi/api/ipmi-messaging-support-cmds-api.c: Support new
+	System Info Parameters Present OS Version Number, BMC URL, and
+	Base OS/Hypervisor URL.
+
+	* bmc-info/bmc-info.c: Support Present OS Version Number, BMC URL,
+	and Base OS/Hypervisor URL system info output.
+
+	* bmc-device/: Support --set-present-os-version-number,
+	--set-bmc-url, --set-base-os-hypervisor-url.
+
 2013-10-30  Denys Vlasenko <dvlasenk@redhat.com>
 
 	* libfreeipmi/util/ipmi-rmcpplus-util.c (ipmi_rmcpplus_check_rakp_4_integrity_check_value):

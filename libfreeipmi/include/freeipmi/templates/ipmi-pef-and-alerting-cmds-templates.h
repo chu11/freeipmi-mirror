@@ -186,8 +186,7 @@ FIID Template: tmpl_cmd_set_pef_configuration_parameters_event_filter_table_rq
     { 8, "cmd", REQUIRED, LENGTH-FIXED }
     { 7, "parameter_selector", REQUIRED, LENGTH-FIXED }
     { 1, "reserved1", REQUIRED, LENGTH-FIXED }
-    { 7, "filter_number", REQUIRED, LENGTH-FIXED }
-    { 1, "reserved2", REQUIRED, LENGTH-FIXED }
+    { 8, "filter_number", REQUIRED, LENGTH-FIXED }
     { 5, "filter_configuration.reserved", REQUIRED, LENGTH-FIXED }
     { 2, "filter_configuration.type", REQUIRED, LENGTH-FIXED }
     { 1, "filter_configuration.filter", REQUIRED, LENGTH-FIXED }
@@ -229,8 +228,7 @@ FIID Template: tmpl_cmd_set_pef_configuration_parameters_event_filter_table_data
     { 8, "cmd", REQUIRED, LENGTH-FIXED }
     { 7, "parameter_selector", REQUIRED, LENGTH-FIXED }
     { 1, "reserved1", REQUIRED, LENGTH-FIXED }
-    { 7, "filter_number", REQUIRED, LENGTH-FIXED }
-    { 1, "reserved2", REQUIRED, LENGTH-FIXED }
+    { 8, "filter_number", REQUIRED, LENGTH-FIXED }
     { 5, "filter_configuration.reserved", REQUIRED, LENGTH-FIXED }
     { 2, "filter_configuration.type", REQUIRED, LENGTH-FIXED }
     { 1, "filter_configuration.filter", REQUIRED, LENGTH-FIXED }
@@ -245,8 +243,8 @@ FIID Template: tmpl_cmd_set_pef_configuration_parameters_alert_string_keys_rq
     { 1, "reserved1", REQUIRED, LENGTH-FIXED }
     { 7, "string_selector", REQUIRED, LENGTH-FIXED }
     { 1, "reserved2", REQUIRED, LENGTH-FIXED }
-    { 7, "filter_number", REQUIRED, LENGTH-FIXED }
-    { 1, "reserved3", REQUIRED, LENGTH-FIXED }
+    /* Not indicated as 8 bits in E451, but all other filter number fields adjusted to 8 bits */
+    { 8, "filter_number", REQUIRED, LENGTH-FIXED }
     { 7, "set_number_for_string", REQUIRED, LENGTH-FIXED }
     { 1, "reserved4", REQUIRED, LENGTH-FIXED }
 
@@ -378,8 +376,7 @@ FIID Template: tmpl_cmd_get_pef_configuration_parameters_number_of_event_filters
     { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
     { 4, "present_revision", REQUIRED, LENGTH-FIXED }
     { 4, "oldest_revision_parameter", REQUIRED, LENGTH-FIXED }
-    { 7, "number_of_event_filters", REQUIRED, LENGTH-FIXED }
-    { 1, "reserved", REQUIRED, LENGTH-FIXED }
+    { 8, "number_of_event_filters", REQUIRED, LENGTH-FIXED }
 
   Notes: Read only field, no "set" equivalent.
 
@@ -392,8 +389,7 @@ FIID Template: tmpl_cmd_get_pef_configuration_parameters_event_filter_table_rs
     { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
     { 4, "present_revision", REQUIRED, LENGTH-FIXED }
     { 4, "oldest_revision_parameter", REQUIRED, LENGTH-FIXED }
-    { 7, "filter_number", REQUIRED, LENGTH-FIXED }
-    { 1, "reserved", REQUIRED, LENGTH-FIXED }
+    { 8, "filter_number", REQUIRED, LENGTH-FIXED }
     { 5, "filter_configuration.reserved", REQUIRED, LENGTH-FIXED }
     { 2, "filter_configuration.type", REQUIRED, LENGTH-FIXED }
     { 1, "filter_configuration.filter", REQUIRED, LENGTH-FIXED }
@@ -436,8 +432,7 @@ FIID Template: tmpl_cmd_get_pef_configuration_parameters_event_filter_table_data
     { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
     { 4, "present_revision", REQUIRED, LENGTH-FIXED }
     { 4, "oldest_revision_parameter", REQUIRED, LENGTH-FIXED }
-    { 7, "filter_number", REQUIRED, LENGTH-FIXED }
-    { 1, "reserved", REQUIRED, LENGTH-FIXED }
+    { 8, "filter_number", REQUIRED, LENGTH-FIXED }
     { 5, "filter_configuration.reserved", REQUIRED, LENGTH-FIXED }
     { 2, "filter_configuration.type", REQUIRED, LENGTH-FIXED }
     { 1, "filter_configuration.filter", REQUIRED, LENGTH-FIXED }
@@ -481,7 +476,8 @@ FIID Template: tmpl_cmd_get_pef_configuration_parameters_alert_string_keys_rs
     { 4, "oldest_revision_parameter", REQUIRED, LENGTH-FIXED }
     { 7, "string_selector", REQUIRED, LENGTH-FIXED }
     { 1, "reserved2", REQUIRED, LENGTH-FIXED }
-    { 7, "filter_number", REQUIRED, LENGTH-FIXED }
+    /* Not indicated as 8 bits in E451, but all other filter number fields adjusted to 8 bits */
+    { 8, "filter_number", REQUIRED, LENGTH-FIXED }
     { 1, "reserved3", REQUIRED, LENGTH-FIXED }
     { 7, "set_number_for_string", REQUIRED, LENGTH-FIXED }
     { 1, "reserved4", REQUIRED, LENGTH-FIXED }

@@ -38,12 +38,6 @@ ipmi_cipher_suite_id_to_algorithms (uint8_t cipher_suite_id,
 {
   uint8_t a, i, c;
 
-  /* XXX - Errata 4 defines SHA256 but not cipher suite IDs */
-  /* achu: Intel support says Cipher Suite 15-19 maps to 1-5 using
-   * SHA256 instead of SHA1 and SHA256-128 instead of SHA1-96.
-   */
-  /* Cipher Suite 17 confirmed via DCMI 1.1 specification */
-
   /* To avoid gcc warnings, add +1 to comparison */
   if (!((cipher_suite_id + 1) >= 1
 	&& cipher_suite_id <= 19))

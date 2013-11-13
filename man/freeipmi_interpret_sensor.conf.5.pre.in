@@ -598,6 +598,9 @@ Defaults to Critical.
 .TP
 \fBIPMI_Power_Supply_Configuration_Error\fR
 Defaults to Critical.
+.TP
+\fBIPMI_Power_Supply_Power_Supply_Inactive\fR
+Defaults to Warning.
 .RE
 .TP
 .B IPMI_Power_Supply_State
@@ -1494,6 +1497,14 @@ Defaults to Nominal.
 Defaults to Nominal.
 \fBIPMI_OS_Boot_Boot_Completed_Boot_Device_Not_Specified\fR
 Defaults to Warning.
+\fBIPMI_OS_Boot_Base_OS_Hypervisor_Installation_Started\fR
+Defaults to Nominal.
+\fBIPMI_OS_Boot_Base_OS_Hypervisor_Installation_Completed\fR
+Defaults to Nominal.
+\fBIPMI_OS_Boot_Base_OS_Hypervisor_Installation_Aborted\fR
+Defaults to Warning.
+\fBIPMI_OS_Boot_Base_OS_Hypervisor_Installation_Failed\fR
+Defaults to Critical.
 .RE
 .TP
 .B IPMI_OS_Critical_Stop_State

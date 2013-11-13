@@ -28,13 +28,16 @@ extern "C" {
 #define IPMI_SYSTEM_INFO_PARAMETER_SYSTEM_NAME                      2
 #define IPMI_SYSTEM_INFO_PARAMETER_PRIMARY_OPERATING_SYSTEM_NAME    3
 #define IPMI_SYSTEM_INFO_PARAMETER_OPERATING_SYSTEM_NAME            4
+#define IPMI_SYSTEM_INFO_PARAMETER_PRESENT_OS_VERSION_NUMBER        5
+#define IPMI_SYSTEM_INFO_PARAMETER_BMC_URL                          6
+#define IPMI_SYSTEM_INFO_PARAMETER_BASE_OS_HYPERVISOR_URL           7
 #define IPMI_SYSTEM_INFO_PARAMETER_OEM_MIN                          192
 #define IPMI_SYSTEM_INFO_PARAMETER_OEM_MAX                          255
 
 /* Add +1 to avoid compiler warnings */
 #define IPMI_SYSTEM_INFO_PARAMETER_SELECTOR_VALID(__parameter_selector) \
   ((((__parameter_selector) + 1) > (IPMI_SYSTEM_INFO_PARAMETER_SET_IN_PROGRESS + 1) \
-    && (__parameter_selector) <= IPMI_SYSTEM_INFO_PARAMETER_OPERATING_SYSTEM_NAME) ? 1 : 0)
+    && (__parameter_selector) <= IPMI_SYSTEM_INFO_PARAMETER_BASE_OS_HYPERVISOR_URL) ? 1 : 0)
 
 /* To avoid gcc warnings, subtract -1 in comparison */
 #define IPMI_SYSTEM_INFO_PARAMETER_SELECTOR_IS_OEM(__parameter_selector) \
