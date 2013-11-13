@@ -62,6 +62,7 @@ FreeIPMI new stuff
   - other config options in ipmi-oem
   - inventec mac/shared nic stuff
     - will reboot BMC, is big problem
+- support pch/me from Intel (e.g. /dev/dcmi or /dev/mei support) (***)
 - fru library like libipmimonitoring
 - ipmi proxy
   - capture lan and do inband, maybe useful if you have dedicated port
