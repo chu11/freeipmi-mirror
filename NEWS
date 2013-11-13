@@ -25,6 +25,9 @@ o Update FreeIPMI for changes in IPMI 2.0 Errata 5.  Include are:
     libipmimonitoring, etc.
   - PEF now supports 255 filter numbers, not 127.  This is supported
     in ipmi-config (formerly ipmi-pef-config).
+  - Support get/set of new System Info Parameters Present OS Version,
+    BMC URL, and Base OS/Hypervisor URL.  This is supported in
+    bmc-info and bmc-device.
 o Update ipmi-oem Intel Node Manager OEM commands for changes listed
   in Intelligent Power Node Manager 2.0 specification.
   - Due to changes in the specification, minor text changes may exist

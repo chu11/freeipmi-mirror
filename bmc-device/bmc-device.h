@@ -51,7 +51,10 @@ enum bmc_device_argp_option_keys
     SET_SYSTEM_NAME_KEY = 182, 
     SET_PRIMARY_OPERATING_SYSTEM_NAME_KEY = 183,
     SET_OPERATING_SYSTEM_NAME_KEY = 184,
-    VERBOSE_KEY = 185,
+    SET_PRESENT_OS_VERSION_NUMBER_KEY = 185,
+    SET_BMC_URL_KEY = 186,
+    SET_BASE_OS_HYPERVISOR_URL_KEY = 187,
+    VERBOSE_KEY = 188,
   };
 
 enum bmc_device_set_acpi_power_state_options
@@ -107,6 +110,12 @@ struct bmc_device_arguments
   char *set_primary_operating_system_name_arg;
   int set_operating_system_name;
   char *set_operating_system_name_arg;
+  int set_present_os_version_number;
+  char *set_present_os_version_number_arg;
+  int set_bmc_url;
+  char *set_bmc_url_arg;
+  int set_base_os_hypervisor_url;
+  char *set_base_os_hypervisor_url_arg;
   int verbose;
 };
 

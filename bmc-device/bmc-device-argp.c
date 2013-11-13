@@ -122,8 +122,14 @@ static struct argp_option cmdline_options[] =
       "Set Primary Operating System Name.", 63},
     { "set-operating-system-name", SET_OPERATING_SYSTEM_NAME_KEY, "STRING", 0,
       "Set Operating System Name.", 64},
+    { "set-present-os-version-number", SET_PRESENT_OS_VERSION_NUMBER_KEY, "STRING", 0,
+      "Set Present Operating System Version Number.", 65},
+    { "set-bmc-url", SET_BMC_URL_KEY, "STRING", 0,
+      "Set BMC URL.", 66},
+    { "set-base-os-hypervisor-url", SET_BASE_OS_HYPERVISOR_URL_KEY, "STRING", 0,
+      "Set Base OS/Hypervisor URL.", 67},
     { "verbose", VERBOSE_KEY, 0, 0,
-      "Increase verbosity in output.", 65},
+      "Increase verbosity in output.", 68},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -293,6 +299,18 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       cmd_args->set_operating_system_name = 1;
       cmd_args->set_operating_system_name_arg = arg;
       break;
+    case SET_PRESENT_OS_VERSION_NUMBER_KEY:
+      cmd_args->set_present_os_version_number = 1;
+      cmd_args->set_present_os_version_number_arg = arg;
+      break;
+    case SET_BMC_URL_KEY:
+      cmd_args->set_bmc_url = 1;
+      cmd_args->set_bmc_url_arg = arg;
+      break;
+    case SET_BASE_OS_HYPERVISOR_URL_KEY:
+      cmd_args->set_base_os_hypervisor_url = 1;
+      cmd_args->set_base_os_hypervisor_url_arg = arg;
+      break;
     case VERBOSE_KEY:
       cmd_args->verbose++;
       break;
@@ -356,7 +374,11 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
       && !cmd_args->set_system_firmware_version
       && !cmd_args->set_system_name
       && !cmd_args->set_primary_operating_system_name
-      && !cmd_args->set_operating_system_name)
+      && !cmd_args->set_operating_system_name
+      && !cmd_args->set_present_os_version_number
+      && !cmd_args->set_bmc_url
+      && !cmd_args->set_base_os_hypervisor_url)
+
     {
       fprintf (stderr,
                "No command specified.\n");
@@ -388,8 +410,10 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
        + cmd_args->set_system_firmware_version
        + cmd_args->set_system_name
        + cmd_args->set_primary_operating_system_name
-       + cmd_args->set_operating_system_name) > 1)
-    
+       + cmd_args->set_operating_system_name
+       + cmd_args->set_present_os_version_number
+       + cmd_args->set_bmc_url
+       + cmd_args->set_base_os_hypervisor_url) > 1)
     {
       fprintf (stderr,
                "Multiple commands specified.\n");
@@ -434,6 +458,30 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
     {
       fprintf (stderr,
 	       "operating system name string too long\n");
+      exit (EXIT_FAILURE);
+    }
+
+  if (cmd_args->set_present_os_version_number
+      && strlen (cmd_args->set_present_os_version_number_arg) > IPMI_SYSTEM_INFO_STRING_LEN_MAX)
+    {
+      fprintf (stderr,
+	       "present OS version number string too long\n");
+      exit (EXIT_FAILURE);
+    }
+
+  if (cmd_args->set_bmc_url
+      && strlen (cmd_args->set_bmc_url_arg) > IPMI_SYSTEM_INFO_STRING_LEN_MAX)
+    {
+      fprintf (stderr,
+	       "BMC URL string too long\n");
+      exit (EXIT_FAILURE);
+    }
+
+  if (cmd_args->set_base_os_hypervisor_url
+      && strlen (cmd_args->set_base_os_hypervisor_url_arg) > IPMI_SYSTEM_INFO_STRING_LEN_MAX)
+    {
+      fprintf (stderr,
+	       "Base OS/Hypervisor URL string too long\n");
       exit (EXIT_FAILURE);
     }
 }
@@ -484,6 +532,13 @@ bmc_device_argp_parse (int argc, char **argv, struct bmc_device_arguments *cmd_a
   cmd_args->set_primary_operating_system_name_arg = NULL;
   cmd_args->set_operating_system_name = 0;
   cmd_args->set_operating_system_name_arg = NULL;
+  cmd_args->set_present_os_version_number = 0;
+  cmd_args->set_present_os_version_number_arg = NULL;
+  cmd_args->set_bmc_url = 0;
+  cmd_args->set_bmc_url_arg = NULL;
+  cmd_args->set_base_os_hypervisor_url = 0;
+  cmd_args->set_base_os_hypervisor_url_arg = NULL;
+
   cmd_args->verbose = 0;
 
   argp_parse (&cmdline_config_file_argp,

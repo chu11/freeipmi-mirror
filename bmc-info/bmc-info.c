@@ -712,15 +712,14 @@ display_system_info_common (bmc_info_state_data_t *state_data,
                           IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
                           obj_cmd_first_set_rs) < 0)
     {
-      if (!state_data->prog_data->args->get_system_info
-	  && ((ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
-	       && (ipmi_check_completion_code (obj_cmd_first_set_rs,
-					       IPMI_COMP_CODE_INVALID_COMMAND) == 1
-		   || ipmi_check_completion_code (obj_cmd_first_set_rs,
-						  IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
-	      || (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-		  && ipmi_check_completion_code (obj_cmd_first_set_rs,
-						 IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1)))
+      if ((ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
+	   && (ipmi_check_completion_code (obj_cmd_first_set_rs,
+					   IPMI_COMP_CODE_INVALID_COMMAND) == 1
+	       || ipmi_check_completion_code (obj_cmd_first_set_rs,
+					      IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
+	  || (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+	      && ipmi_check_completion_code (obj_cmd_first_set_rs,
+					     IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1))
         {
           rv = 0;
           goto cleanup;
@@ -806,15 +805,14 @@ display_system_info_common (bmc_info_state_data_t *state_data,
                     IPMI_SYSTEM_INFO_PARAMETERS_NO_BLOCK_SELECTOR,
                     obj_cmd_rs) < 0)
         {
-          if (!state_data->prog_data->args->get_system_info
-	      && ((ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
-		   && (ipmi_check_completion_code (obj_cmd_first_set_rs,
-						   IPMI_COMP_CODE_INVALID_COMMAND) == 1
-		       || ipmi_check_completion_code (obj_cmd_first_set_rs,
-						      IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
-		  || (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-		      && ipmi_check_completion_code (obj_cmd_first_set_rs,
-						     IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1)))
+          if ((ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
+	       && (ipmi_check_completion_code (obj_cmd_first_set_rs,
+					       IPMI_COMP_CODE_INVALID_COMMAND) == 1
+		   || ipmi_check_completion_code (obj_cmd_first_set_rs,
+						  IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
+	      || (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+		  && ipmi_check_completion_code (obj_cmd_first_set_rs,
+						 IPMI_COMP_CODE_GET_SYSTEM_INFO_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1))
             {
               rv = 0;
               goto cleanup;
@@ -929,6 +927,53 @@ display_system_info_operating_system_name (bmc_info_state_data_t *state_data)
                                      "Operating System Name         :");
 }
 
+/* return 1 if supported, 0 if not */
+static int
+display_system_info_present_os_version_number (bmc_info_state_data_t *state_data)
+{
+  assert (state_data);
+
+  return display_system_info_common (state_data,
+                                     tmpl_cmd_get_system_info_parameters_present_os_version_number_first_set_rs,
+                                     tmpl_cmd_get_system_info_parameters_present_os_version_number_rs,
+                                     ipmi_cmd_get_system_info_parameters_present_os_version_number_first_set,
+                                     "ipmi_cmd_get_system_info_parameters_present_os_version_number_first_set",
+                                     ipmi_cmd_get_system_info_parameters_present_os_version_number,
+                                     "ipmi_cmd_get_system_info_parameters_present_os_version_number",
+                                     "Present OS Version Number     :");
+}
+
+/* return 1 if supported, 0 if not */
+static int
+display_system_info_bmc_url (bmc_info_state_data_t *state_data)
+{
+  assert (state_data);
+
+  return display_system_info_common (state_data,
+                                     tmpl_cmd_get_system_info_parameters_bmc_url_first_set_rs,
+                                     tmpl_cmd_get_system_info_parameters_bmc_url_rs,
+                                     ipmi_cmd_get_system_info_parameters_bmc_url_first_set,
+                                     "ipmi_cmd_get_system_info_parameters_bmc_url_first_set",
+                                     ipmi_cmd_get_system_info_parameters_bmc_url,
+                                     "ipmi_cmd_get_system_info_parameters_bmc_url",
+                                     "BMC URL                       :");
+}
+
+/* return 1 if supported, 0 if not */
+static int
+display_system_info_base_os_hypervisor_url (bmc_info_state_data_t *state_data)
+{
+  assert (state_data);
+
+  return display_system_info_common (state_data,
+                                     tmpl_cmd_get_system_info_parameters_base_os_hypervisor_url_first_set_rs,
+                                     tmpl_cmd_get_system_info_parameters_base_os_hypervisor_url_rs,
+                                     ipmi_cmd_get_system_info_parameters_base_os_hypervisor_url_first_set,
+                                     "ipmi_cmd_get_system_info_parameters_base_os_hypervisor_url_first_set",
+                                     ipmi_cmd_get_system_info_parameters_base_os_hypervisor_url,
+                                     "ipmi_cmd_get_system_info_parameters_base_os_hypervisor_url",
+                                     "Base OS/Hypervisor URL        :");
+}
 
 static int
 display_system_info (bmc_info_state_data_t *state_data)
@@ -947,20 +992,36 @@ display_system_info (bmc_info_state_data_t *state_data)
     return (-1);
 
   if (!ret)
-    return (0);
+    goto newline_cleanup;
 
   if ((ret = display_system_info_primary_operating_system_name (state_data)) < 0)
     return (-1);
 
   if (!ret)
-    return (0);
+    goto newline_cleanup;
 
   if ((ret = display_system_info_operating_system_name (state_data)) < 0)
     return (-1);
 
   if (!ret)
-    return (0);
+    goto newline_cleanup;
 
+  /* New, may not be supported */
+  if ((ret = display_system_info_present_os_version_number (state_data)) < 0)
+    return (-1);
+
+  if (!ret)
+    goto newline_cleanup;
+
+  /* optional - if ret == 0, can still go on */
+  if ((ret = display_system_info_bmc_url (state_data)) < 0)
+    return (-1);
+
+  /* optional - if ret == 0, can still go on */
+  if ((ret = display_system_info_base_os_hypervisor_url (state_data)) < 0)
+    return (-1);
+
+ newline_cleanup:
   /* output newline if we're outputting all sections */
   if (!state_data->prog_data->args->get_system_info)
     pstdout_printf (state_data->pstate, "\n");

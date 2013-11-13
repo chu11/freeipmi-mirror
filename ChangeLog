@@ -47,6 +47,12 @@
 	System Info Parameters Present OS Version Number, BMC URL, and
 	Base OS/Hypervisor URL.
 
+	* bmc-info/bmc-info.c: Support Present OS Version Number, BMC URL,
+	and Base OS/Hypervisor URL system info output.
+
+	* bmc-device/: Support --set-present-os-version-number,
+	--set-bmc-url, --set-base-os-hypervisor-url.
+
 2013-10-30  Denys Vlasenko <dvlasenk@redhat.com>
 
 	* libfreeipmi/util/ipmi-rmcpplus-util.c (ipmi_rmcpplus_check_rakp_4_integrity_check_value):

@@ -2681,6 +2681,45 @@ set_operating_system_name (bmc_device_state_data_t *state_data)
 				  state_data->prog_data->args->set_operating_system_name_arg));
 }
 
+static int
+set_present_os_version_number (bmc_device_state_data_t *state_data)
+{
+  assert (state_data);
+
+  return (set_system_info_common (state_data,
+				  ipmi_cmd_set_system_info_parameters_present_os_version_number_first_set,
+				  "ipmi_cmd_set_system_info_parameters_present_os_version_number_first_set",
+				  ipmi_cmd_set_system_info_parameters_present_os_version_number,
+				  "ipmi_cmd_set_system_info_parameters_present_os_version_number",
+				  state_data->prog_data->args->set_present_os_version_number_arg));
+}
+
+static int
+set_bmc_url (bmc_device_state_data_t *state_data)
+{
+  assert (state_data);
+
+  return (set_system_info_common (state_data,
+				  ipmi_cmd_set_system_info_parameters_bmc_url_first_set,
+				  "ipmi_cmd_set_system_info_parameters_bmc_url_first_set",
+				  ipmi_cmd_set_system_info_parameters_bmc_url,
+				  "ipmi_cmd_set_system_info_parameters_bmc_url",
+				  state_data->prog_data->args->set_bmc_url_arg));
+}
+
+static int
+set_base_os_hypervisor_url (bmc_device_state_data_t *state_data)
+{
+  assert (state_data);
+
+  return (set_system_info_common (state_data,
+				  ipmi_cmd_set_system_info_parameters_base_os_hypervisor_url_first_set,
+				  "ipmi_cmd_set_system_info_parameters_base_os_hypervisor_url_first_set",
+				  ipmi_cmd_set_system_info_parameters_base_os_hypervisor_url,
+				  "ipmi_cmd_set_system_info_parameters_base_os_hypervisor_url",
+				  state_data->prog_data->args->set_base_os_hypervisor_url_arg));
+}
+
 
 static int
 run_cmd_args (bmc_device_state_data_t *state_data)
@@ -2768,6 +2807,15 @@ run_cmd_args (bmc_device_state_data_t *state_data)
   
   if (args->set_operating_system_name)
     return (set_operating_system_name (state_data));
+
+  if (args->set_present_os_version_number)
+    return (set_present_os_version_number (state_data));
+
+  if (args->set_bmc_url)
+    return (set_bmc_url (state_data));
+
+  if (args->set_base_os_hypervisor_url)
+    return (set_base_os_hypervisor_url (state_data));
 
   rv = 0;
   return (rv);
