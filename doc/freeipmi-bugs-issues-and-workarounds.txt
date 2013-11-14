@@ -249,7 +249,8 @@ LAN Authentication Issue #15: [COMPLIANCE]
   Disabling a specific cipher suite ID does not prohibit a user from
   continuing to use that cipher suite ID.
 
-  Seen on: Supermicro X8DTG, Supermicro X8DTU, MSI MS-91D2
+  Seen on: Supermicro X8DTG, Supermicro X8DTU, MSI MS-91D2, Quanta
+  Winterfell
 
   Resolution: None
 
