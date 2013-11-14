@@ -820,6 +820,10 @@ _api_lan_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
    *
    * For some reason, the authentication code is always blank when
    * using "Straight Password Key".
+   *
+   * Discovered on Quanta Winterfell
+   *
+   * Hash is incorrect, unknown why calculation is incorrect.
    */
 
   if (check_authentication_code
