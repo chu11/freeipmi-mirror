@@ -992,6 +992,15 @@ ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
                                        ctx->most_recent_addition_timestamp,
                                        ctx->most_recent_erase_timestamp) < 0)
             goto cleanup;
+
+	  /* need to seek back to the end of the file to write the
+	   * trailer below
+	   */
+          if (lseek (fd, 0, SEEK_END) < 0)
+            {
+              SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_SYSTEM_ERROR);
+              goto cleanup;
+            }
         }
       else
         {
