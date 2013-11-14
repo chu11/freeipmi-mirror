@@ -342,6 +342,8 @@ _config_file_workaround_flags (conffile_t cf,
             workaround_flags |= IPMICONSOLE_WORKAROUND_IGNORE_SOL_PORT;
           if (section_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_SKIP_SOL_ACTIVATION_STATUS)
             workaround_flags |= IPMICONSOLE_WORKAROUND_SKIP_SOL_ACTIVATION_STATUS;
+          if (section_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_SKIP_CHANNEL_PAYLOAD_SUPPORT)
+            workaround_flags |= IPMICONSOLE_WORKAROUND_SKIP_CHANNEL_PAYLOAD_SUPPORT;
         }
     }
 

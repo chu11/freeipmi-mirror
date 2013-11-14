@@ -1,5 +1,8 @@
 FreeIPMI 1.3.4 - xx/xx/xx
 -------------------------
+o Support 'solchannelsupport' workraound in ipmiconsole /
+  IPMICONSOLE_WORKAROUND_SKIP_CHANNEL_PAYLOAD_SUPPORT workaround flag in
+  libipmiconsole.
 o Update documentation with additional workarounds for motherboards.
 o Fix minor bugs.
 

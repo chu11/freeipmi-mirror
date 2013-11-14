@@ -1,3 +1,10 @@
+2013-11-14  Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/, libipmiconsole/: Support solchannelsupport
+	workaround option /
+	IPMICONSOLE_WORKAROUND_SKIP_CHANNEL_PAYLOAD_SUPPORT workaround
+	flag.
+	
 2013-11-13  Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-bugs-issues-and-workarounds.txt,

@@ -210,6 +210,12 @@ extern "C" {
  * of SOL during the protocol setup.  It works around remote systems
  * that do not properly support this command.
  *
+ * SKIP_CHANNEL_PAYLOAD_SUPPORT
+ *
+ * This workaround flag will skip the portion of the protocol that
+ * checks if SOL is supported on the current channel.  It works around
+ * remote systems that do not properly support this command.
+ *
  * DEFAULT
  *
  * Informs library to use default, may it be the standard default or
@@ -228,6 +234,7 @@ extern "C" {
 #define IPMICONSOLE_WORKAROUND_IGNORE_SOL_PAYLOAD_SIZE         0x01000000
 #define IPMICONSOLE_WORKAROUND_IGNORE_SOL_PORT                 0x02000000
 #define IPMICONSOLE_WORKAROUND_SKIP_SOL_ACTIVATION_STATUS      0x04000000
+#define IPMICONSOLE_WORKAROUND_SKIP_CHANNEL_PAYLOAD_SUPPORT    0x08000000
 #define IPMICONSOLE_WORKAROUND_DEFAULT                         0xFFFFFFFF
 
 /*

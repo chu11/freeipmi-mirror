@@ -335,6 +335,8 @@ main (int argc, char **argv)
     ipmi_config.workaround_flags |= IPMICONSOLE_WORKAROUND_IGNORE_SOL_PORT;
   if (cmd_args.common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_SKIP_SOL_ACTIVATION_STATUS)
     ipmi_config.workaround_flags |= IPMICONSOLE_WORKAROUND_SKIP_SOL_ACTIVATION_STATUS;
+  if (cmd_args.common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_SKIP_CHANNEL_PAYLOAD_SUPPORT)
+    ipmi_config.workaround_flags |= IPMICONSOLE_WORKAROUND_SKIP_CHANNEL_PAYLOAD_SUPPORT;
 
   memset (&protocol_config, '\0', sizeof (struct ipmiconsole_protocol_config));
   protocol_config.session_timeout_len = cmd_args.common_args.session_timeout;
