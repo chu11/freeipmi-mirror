@@ -34,4 +34,5 @@ the use of this option, as it removes an authentication check
 verifying the validity of a packet.  However, in most organizations,
 this is unlikely to be a security issue.  Those hitting this issue may
 see "connection timeout", "session timeout", or "password verification
-timeout" errors.  Issue observed on Xyratex FB-H8-SRAY.
+timeout" errors.  Issue observed on Xyratex FB-H8-SRAY, Quanta
+Winterfell.

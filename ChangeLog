@@ -1,5 +1,11 @@
 2013-11-13  Albert Chu <chu11@llnl.gov>
 
+	* doc/freeipmi-bugs-issues-and-workarounds.txt,
+	man/manpage-common-workaround-outofband-15-text.man: Document
+	workaround for Quanta Winterfell.
+	
+2013-11-13  Albert Chu <chu11@llnl.gov>
+
 	Update with Errata 5 changes to IPMI 2.0 spec.
 
 	* libfreeipmi/cmds/ipmi-pef-and-alerting-cmds.c,
