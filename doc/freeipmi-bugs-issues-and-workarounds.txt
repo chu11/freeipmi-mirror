@@ -589,7 +589,7 @@ Serial-Over-LAN Issue #4: [COMPLIANCE]
 
   The Get Channel Payload Support command is not supported.
 
-  Seen on: Sun Fire 4100 with ILOM
+  Seen on: Sun Fire 4100 with ILOM, Quanta Winterfell
 
   Resolution: Workaround option added to inform software to skip this
   point in the SOL state machine.

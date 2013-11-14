@@ -256,6 +256,11 @@ activation status of SOL during the protocol setup.  It works around
 remote systems that do not properly support this command.  Those
 hitting this issue may see "BMC Error" errors.  Issue observed on
 Supermicro X8SIL-F.
+.LP
+\fIsolchannelsupport\fR - This workaround flag will not check if SOL
+is supported on the current channel.  It works around remote systems
+that do not properly support this command.  Those hitting this issue
+may see "BMC Error" errors.  Issue observed on Quanta Winterfell.
 #include <@top_srcdir@/man/manpage-common-known-issues.man>
 .LP
 Some motherboards define an OEM SOL inactivity timeout for SOL

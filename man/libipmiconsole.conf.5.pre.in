@@ -80,7 +80,8 @@ ids are supported: 0, 1, 2, 3, 6, 7, 8, 11, 12.
 Specify default workaround flags to use.  Multiple workarounds can be
 specified separated by whitespace.  The following workarounds are
 supported: authcap, intel20, supermicro20, sun20, opensesspriv,
-integritycheckvalue, solpayloadsize, solport, solstatus.
+integritycheckvalue, solpayloadsize, solport, solstatus,
+solchannelsupport.
 .SH "CONTEXT PROTOCOL CONFIG OPTIONS"
 Every SOL session is housed within an libipmiconsole context.  The
 following defines protocol config default values for each context created.

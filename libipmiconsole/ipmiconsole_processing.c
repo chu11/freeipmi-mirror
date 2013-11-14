@@ -3105,11 +3105,14 @@ _process_protocol_state_set_session_privilege_level_sent (ipmiconsole_ctx_t c)
   /* IPMI Workaround
    *
    * Discovered on Sun Fire 4100.
+   * Discovered on Quanta Winterfell
    *
-   * The Get Channel Payload Support isn't supported in Sun's.  Skip this
-   * part of the state machine and pray for the best I guess.
+   * The Get Channel Payload Support isn't supported.  Skip this part
+   * of the state machine and pray for the best I guess.
+   * 
    */
-  if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION)
+  if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION
+      || c->config.workaround_flags & IPMICONSOLE_WORKAROUND_SKIP_CHANNEL_PAYLOAD_SUPPORT)
     {
       if (_send_ipmi_packet (c, IPMICONSOLE_PACKET_TYPE_GET_PAYLOAD_ACTIVATION_STATUS_RQ) < 0)
         {
