@@ -492,7 +492,7 @@ SDR Issue #1: [COMPLIANCE]
   not consistent to the number of records that exist on the
   motherboard.
 
-  Seen on: Fujitsu RX 100
+  Seen on: Fujitsu RX 100, Fujitsu RX300/200-S8
 
   Resolution: Workaround added to recognize situation and adjust count.
 

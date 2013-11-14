@@ -1,5 +1,10 @@
 2013-11-14  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/sdr/ipmi-sdr-cache-create.c (ipmi_sdr_cache_create):
+	Fix bug w/ Fujitsu SDR count workaround.
+	
+2013-11-14  Albert Chu <chu11@llnl.gov>
+
 	* ipmiconsole/, libipmiconsole/: Support solchannelsupport
 	workaround option /
 	IPMICONSOLE_WORKAROUND_SKIP_CHANNEL_PAYLOAD_SUPPORT workaround
