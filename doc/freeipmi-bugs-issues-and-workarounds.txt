@@ -378,6 +378,16 @@ LAN Authentication Issue #25: [COMPLIANCE]
 
   Resolution: None
 
+LAN Authentication Issue #26: [COMPLIANCE]
+
+  Cannot authenticate with IPMI 1.5, authentication code generated
+  incorrectly.
+
+  Seen on: Quanta Winterfell
+
+  Resolution: Workaround added to ignore these invalid authentication
+  codes.
+
 ----------------------------------------------------------------------
 
 ----------------------

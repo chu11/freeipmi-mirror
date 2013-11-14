@@ -1,3 +1,9 @@
+2013-11-13  Albert Chu <chu11@llnl.gov>
+
+	* doc/freeipmi-bugs-issues-and-workarounds.txt,
+	man/manpage-common-workaround-outofband-15-text.man: Document
+	workaround for Quanta Winterfell.
+	
 2013-10-30  Denys Vlasenko <dvlasenk@redhat.com>
 
 	* libfreeipmi/util/ipmi-rmcpplus-util.c (ipmi_rmcpplus_check_rakp_4_integrity_check_value):
