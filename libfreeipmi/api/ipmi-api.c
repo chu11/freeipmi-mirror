@@ -975,7 +975,7 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
       if (!(ctx->workaround_flags_inband & IPMI_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS))
         {
           /* At this point we only support SYSTEM_IO, i.e. inb/outb style IO.
-           * If we cant find the bass address, we better exit.
+           * If we cant find the base address, we better exit.
            * -- Anand Babu
            */
 
