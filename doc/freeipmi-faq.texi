@@ -78,7 +78,7 @@ release @value{VERSION} of the FreeIPMI.
 * Why is the output from FreeIPMI different than another software?::
 * Why are there so many IPMI compliance bugs?::
 * How do I get around an IPMI compliance bug on my motherboard?::
-* Why am I seeing so many 'internal IPMI error' messages?::
+* Why am I seeing so many 'internal IPMI error' or 'driver busy' messages?::
 * How do I program with the FreeIPMI libraries?::
 * Where can I get additional help or support?:: 
 @end menu
@@ -851,7 +851,7 @@ in the freeipmi-bugs-issues-and-workarounds.txt document (you can find
 it on the website here:
 @uref{http://www.gnu.org/software/freeipmi/freeipmi-bugs-issues-and-workarounds.txt}).
 
-@node How do I get around an IPMI compliance bug on my motherboard?, Why am I seeing so many 'internal IPMI error' messages?, Why are there so many IPMI compliance bugs?, Top
+@node How do I get around an IPMI compliance bug on my motherboard?, Why am I seeing so many 'internal IPMI error' or 'driver busy' messages?, Why are there so many IPMI compliance bugs?, Top
 @section How do I get around an IPMI compliance bug on my motherboard?
 
 Most of the FreeIPMI tools and libraries have flags to workaround a
@@ -863,8 +863,8 @@ If you believe there is a compliance issue on your motherboard that
 has not yet been implemented, please contact the maintainers on the
 @email{freeipmi-devel@@gnu.org} mailing list.
 
-@node Why am I seeing so many 'internal IPMI error' messages?, How do I program with the FreeIPMI libraries?, How do I get around an IPMI compliance bug on my motherboard?, Top
-@section Why am I seeing so many 'internal IPMI error' messages?
+@node Why am I seeing so many 'internal IPMI error' or 'driver busy' messages?, How do I program with the FreeIPMI libraries?, How do I get around an IPMI compliance bug on my motherboard?, Top
+@section Why am I seeing so many 'internal IPMI error' or 'driver busy' messages?
 
 In some Linux distributions (atleast with Redhat Enterprise Linux 6.4
 / RHEL 6.4), the distributions began compiling the IPMI kernel driver
@@ -883,7 +883,7 @@ disable the ipmi service so that a device file is never created.
 Because of this, multiple IPMI software can communicate inband to the
 BMC simultaneously, subsequently racing with each other.  Ultimately,
 this can lead to communication problems.  In FreeIPMI, this is most
-commonly seen through 'internal IPMI error' messages.
+commonly seen through 'internal IPMI error' or 'driver busy' messages.
 
 There are several possible solutions for this in FreeIPMI.  If you
 start the ipmi service (i.e. /etc/init.d/ipmi start), a device file
@@ -917,11 +917,10 @@ interface to help speed things up.  This is a low-priority kernel
 thread that constantly polls the IPMI driver while an IPMI operation
 is in progress.  The force_kipmid module parameter will all the user to
 force this thread on or off.  If you force it off and don't have
-interrupts, the driver will run VERY slowly.  Don't blame me,
-these interfaces suck.
+interrupts, the driver will run VERY slowly.
 @end example
 
-@node How do I program with the FreeIPMI libraries?, Where can I get additional help or support?, Why am I seeing so many 'internal IPMI error' messages?, Top
+@node How do I program with the FreeIPMI libraries?, Where can I get additional help or support?, Why am I seeing so many 'internal IPMI error' or 'driver busy' messages?, Top
 @section How do I program with the FreeIPMI libraries?
 
 If you are looking for a high level library to do Serial-over-LAN
