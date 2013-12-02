@@ -5,6 +5,7 @@ o Support 'solchannelsupport' workraound in ipmiconsole /
   libipmiconsole.
 o Fix SDR cache workaround for motherboards with invalid SDR record
   counts listed.
+o Workaround Supermicro bug in bmc-watchdog. 
 o Update documentation with additional workarounds for motherboards.
 o Fix minor bugs.
 
