@@ -867,10 +867,10 @@ has not yet been implemented, please contact the maintainers on the
 @section Why am I seeing so many 'internal IPMI error' or 'driver busy' messages?
 
 In some Linux distributions (atleast with Redhat Enterprise Linux 6.4
-/ RHEL 6.4), the distributions began compiling the IPMI kernel driver
-(i.e. ipmi_msghandler and ipmi_si modules) into the kernel instead of
-as loadable modules.  This was apparently due to a need for the IPMI
-kernel drivers to work with ACPI.
+/ RHEL 6.4 and CentOS 6.4), the distributions began compiling the IPMI
+kernel driver (i.e. ipmi_msghandler and ipmi_si modules) into the
+kernel instead of as loadable modules.  This was apparently due to a
+need for the IPMI kernel drivers to work with ACPI.
 
 Due to compiling the IPMI kernel driver into the kernel, there is the
 potential for inband IPMI communication to occur in the kernel w/o any

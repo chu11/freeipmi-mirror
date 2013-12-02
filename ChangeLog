@@ -1,5 +1,9 @@
 2013-12-02  Albert Chu <chu11@llnl.gov>
 
+	* doc/freeipmi-faq.txi: Update with new information on OS issues.
+
+2013-12-02  Albert Chu <chu11@llnl.gov>
+
 	* bmc-watchdog/bmc-watchdog.c (_fiid_obj_get_safe): New function. 
 
 	* bmc-watchdog/bmc-watchdog.c (_get_watchdog_timer_cmd): Use
