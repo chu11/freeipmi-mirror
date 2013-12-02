@@ -1,3 +1,10 @@
+2013-12-02  Albert Chu <chu11@llnl.gov>
+
+	* bmc-watchdog/bmc-watchdog.c (_fiid_obj_get_safe): New function. 
+
+	* bmc-watchdog/bmc-watchdog.c (_get_watchdog_timer_cmd): Use
+	_fiid_obj_get_safe and do not exit on data not available errors.
+	
 2013-11-26  Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-faq.txi: Update with new information.
