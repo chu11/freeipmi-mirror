@@ -365,10 +365,9 @@ const char * const ipmi_sensor_type_power_supply[] =
     "Power Supply input lost or out-of-range",
     "Power Supply input out-of-range, but present",
     "Configuration error",
-    "Power Supply Inactive (in standby state)",
     NULL
   };
-unsigned int ipmi_sensor_type_power_supply_max_index = 0x07;
+unsigned int ipmi_sensor_type_power_supply_max_index = 0x06;
 
 const char * const ipmi_sensor_type_power_unit[] =
   {
@@ -546,13 +545,9 @@ const char * const ipmi_sensor_type_os_boot[] =
     "CD-ROM boot completed",
     "ROM boot completed",
     "boot completed - boot device not specified",
-    "Base OS/Hypervisor Installation started",
-    "Base OS/Hypervisor Installation completed",
-    "Base OS/Hypervisor Installation aborted",
-    "Base OS/Hypervisor Installation failed",
     NULL
   };
-unsigned int ipmi_sensor_type_os_boot_max_index = 0x0A;
+unsigned int ipmi_sensor_type_os_boot_max_index = 0x06;
 
 /* achu: modified per errata */
 const char * const ipmi_sensor_type_os_critical_stop[] =
@@ -770,10 +765,9 @@ const char * const ipmi_sensor_type_power_supply_short[] =
     "Power Supply input lost or out-of-range",
     "Power Supply input out-of-range, but present",
     "Configuration error",
-    "Power Supply Inactive",
     NULL
   };
-unsigned int ipmi_sensor_type_power_supply_short_max_index = 0x07;
+unsigned int ipmi_sensor_type_power_supply_short_max_index = 0x06;
 
 const char * const ipmi_sensor_type_power_unit_short[] =
   {
@@ -951,13 +945,9 @@ const char * const ipmi_sensor_type_os_boot_short[] =
     "CD-ROM boot completed",
     "ROM boot completed",
     "boot completed - boot device not specified",
-    "Base OS/Hypervisor Installation started",
-    "Base OS/Hypervisor Installation completed",
-    "Base OS/Hypervisor Installation aborted",
-    "Base OS/Hypervisor Installation failed",
     NULL
   };
-unsigned int ipmi_sensor_type_os_boot_short_max_index = 0x0A;
+unsigned int ipmi_sensor_type_os_boot_short_max_index = 0x06;
 
 /* achu: modified per errata */
 const char * const ipmi_sensor_type_os_critical_stop_short[] =

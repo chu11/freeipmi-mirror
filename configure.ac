@@ -1,11 +1,11 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT([freeipmi],[1.4.0],[freeipmi-devel@gnu.org])
+AC_INIT([freeipmi],[1.3.4],[freeipmi-devel@gnu.org])
 AC_REVISION([$Id: configure.ac,v 1.208 2010-08-06 21:02:29 chu11 Exp $])
 AC_CONFIG_MACRO_DIR([config])
 
 FREEIPMI_PACKAGE_VERSION_MAJOR=1
-FREEIPMI_PACKAGE_VERSION_MINOR=4
-FREEIPMI_PACKAGE_VERSION_PATCH=0
+FREEIPMI_PACKAGE_VERSION_MINOR=3
+FREEIPMI_PACKAGE_VERSION_PATCH=4
 
 AC_SUBST(FREEIPMI_PACKAGE_VERSION_MAJOR)
 AC_SUBST(FREEIPMI_PACKAGE_VERSION_MINOR)
@@ -28,10 +28,12 @@ dnl define output files
 AC_CONFIG_FILES([
 	freeipmi.spec
         Makefile 
+        bmc-config/Makefile
         bmc-device/Makefile
         bmc-info/Makefile
         bmc-watchdog/Makefile 
         common/Makefile 
+        common/configtool/Makefile
         common/debugutil/Makefile
         common/miscutil/Makefile
         common/parsecommon/Makefile
@@ -42,15 +44,17 @@ AC_CONFIG_FILES([
         doc/Makefile 
         etc/Makefile
         ipmi-chassis/Makefile
-	ipmi-config/Makefile
+        ipmi-chassis-config/Makefile 
         ipmi-dcmi/Makefile
         ipmi-fru/Makefile
         ipmi-locate/Makefile
         ipmi-oem/Makefile
+        ipmi-pef-config/Makefile
         ipmi-pet/Makefile
         ipmi-raw/Makefile
         ipmi-sel/Makefile
         ipmi-sensors/Makefile
+        ipmi-sensors-config/Makefile
         ipmiconsole/Makefile
         ipmidetect/Makefile
         ipmidetectd/Makefile
@@ -71,22 +75,25 @@ AC_CONFIG_FILES([
         libipmimonitoring/ipmi_monitoring.h
         libipmimonitoring/libipmimonitoring.pc
         man/Makefile
+        man/bmc-config.8.pre
+        man/bmc-config.conf.5.pre
         man/bmc-device.8.pre
         man/bmc-info.8.pre
         man/bmc-watchdog.8.pre
         man/freeipmi.conf.5.pre
         man/freeipmi.7.pre
         man/ipmi-chassis.8.pre
-        man/ipmi-config.8.pre
-        man/ipmi-config.conf.5.pre
+        man/ipmi-chassis-config.8.pre
 	man/ipmi-dcmi.8.pre
 	man/ipmi-fru.8.pre
 	man/ipmi-locate.8.pre
 	man/ipmi-oem.8.pre
+	man/ipmi-pef-config.8.pre
 	man/ipmi-pet.8.pre
 	man/ipmi-raw.8.pre
 	man/ipmi-sel.8.pre
 	man/ipmi-sensors.8.pre
+	man/ipmi-sensors-config.8.pre
 	man/ipmiconsole.8.pre
 	man/ipmidetect.8.pre
 	man/ipmidetect.conf.5.pre
@@ -123,8 +130,8 @@ AC_SUBST([ISODATE])
 # If any interfaces have been removed or changed since the last public
 # release, then set age to 0.
 #
-LIBFREEIPMI_CURRENT=16
-LIBFREEIPMI_REVISION=0
+LIBFREEIPMI_CURRENT=15
+LIBFREEIPMI_REVISION=3
 LIBFREEIPMI_AGE=0
 
 LIBFREEIPMI_VERSION=$LIBFREEIPMI_CURRENT.$LIBFREEIPMI_REVISION.$LIBFREEIPMI_AGE
@@ -144,9 +151,9 @@ AC_SUBST([LIBFREEIPMI_VERSION_INFO])
 #         incremented due to bug fixes or minor features.  Interfaces are
 #         forward and backward compatible to other PATCH versions.
 
-LIBFREEIPMI_VERSION_MAJOR=5
+LIBFREEIPMI_VERSION_MAJOR=4
 LIBFREEIPMI_VERSION_MINOR=0
-LIBFREEIPMI_VERSION_PATCH=0
+LIBFREEIPMI_VERSION_PATCH=3
 
 AC_SUBST(LIBFREEIPMI_VERSION_MAJOR)
 AC_SUBST(LIBFREEIPMI_VERSION_MINOR)

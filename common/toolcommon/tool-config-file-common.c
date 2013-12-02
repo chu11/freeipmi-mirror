@@ -1356,6 +1356,11 @@ config_file_parse (const char *filename,
   int buffer_output_count = 0, consolidate_output_count = 0,
     fanout_count = 0, eliminate_count = 0, always_prefix_count = 0;
 
+  int bmc_config_username_count = 0, bmc_config_password_count = 0,
+    bmc_config_k_g_count = 0, bmc_config_authentication_type_count = 0,
+    bmc_config_cipher_suite_id_count = 0, bmc_config_privilege_level_count = 0,
+    bmc_config_workaround_flags_count = 0;
+
   int bmc_device_username_count = 0, bmc_device_password_count = 0,
     bmc_device_k_g_count = 0, bmc_device_authentication_type_count = 0,
     bmc_device_cipher_suite_id_count = 0, bmc_device_privilege_level_count = 0,
@@ -1373,10 +1378,10 @@ config_file_parse (const char *filename,
     ipmi_chassis_cipher_suite_id_count = 0, ipmi_chassis_privilege_level_count = 0,
     ipmi_chassis_workaround_flags_count = 0;
 
-  int ipmi_config_username_count = 0, ipmi_config_password_count = 0,
-    ipmi_config_k_g_count = 0, ipmi_config_authentication_type_count = 0,
-    ipmi_config_cipher_suite_id_count = 0, ipmi_config_privilege_level_count = 0,
-    ipmi_config_workaround_flags_count = 0;
+  int ipmi_chassis_config_username_count = 0, ipmi_chassis_config_password_count = 0,
+    ipmi_chassis_config_k_g_count = 0, ipmi_chassis_config_authentication_type_count = 0,
+    ipmi_chassis_config_cipher_suite_id_count = 0, ipmi_chassis_config_privilege_level_count = 0,
+    ipmi_chassis_config_workaround_flags_count = 0;
 
   int ipmi_dcmi_username_count = 0, ipmi_dcmi_password_count = 0,
     ipmi_dcmi_k_g_count = 0, ipmi_dcmi_authentication_type_count = 0,
@@ -1392,6 +1397,11 @@ config_file_parse (const char *filename,
     ipmi_oem_k_g_count = 0, ipmi_oem_authentication_type_count = 0,
     ipmi_oem_cipher_suite_id_count = 0, ipmi_oem_privilege_level_count = 0,
     ipmi_oem_workaround_flags_count = 0;
+
+  int ipmi_pef_config_username_count = 0, ipmi_pef_config_password_count = 0,
+    ipmi_pef_config_k_g_count = 0, ipmi_pef_config_authentication_type_count = 0,
+    ipmi_pef_config_cipher_suite_id_count = 0, ipmi_pef_config_privilege_level_count = 0,
+    ipmi_pef_config_workaround_flags_count = 0;
 
   int ipmi_pet_username_count = 0, ipmi_pet_password_count = 0,
     ipmi_pet_k_g_count = 0, ipmi_pet_authentication_type_count = 0,
@@ -1413,6 +1423,11 @@ config_file_parse (const char *filename,
     ipmi_sensors_cipher_suite_id_count = 0, ipmi_sensors_privilege_level_count = 0,
     ipmi_sensors_workaround_flags_count = 0;
 
+  int ipmi_sensors_config_username_count = 0, ipmi_sensors_config_password_count = 0,
+    ipmi_sensors_config_k_g_count = 0, ipmi_sensors_config_authentication_type_count = 0,
+    ipmi_sensors_config_cipher_suite_id_count = 0, ipmi_sensors_config_privilege_level_count = 0,
+    ipmi_sensors_config_workaround_flags_count = 0;
+
   int ipmiconsole_username_count = 0, ipmiconsole_password_count = 0,
     ipmiconsole_k_g_count = 0, ipmiconsole_authentication_type_count = 0,
     ipmiconsole_cipher_suite_id_count = 0, ipmiconsole_privilege_level_count = 0,
@@ -1423,14 +1438,17 @@ config_file_parse (const char *filename,
     ipmipower_cipher_suite_id_count = 0, ipmipower_privilege_level_count = 0,
     ipmipower_workaround_flags_count = 0;
 
+  struct config_file_data_bmc_config bmc_config_data;
+  struct config_file_data_bmc_config *bmc_config_data_ptr;
+
   struct config_file_data_bmc_info bmc_info_data;
   struct config_file_data_bmc_info *bmc_info_data_ptr;
 
   struct config_file_data_bmc_watchdog bmc_watchdog_data;
   struct config_file_data_bmc_watchdog *bmc_watchdog_data_ptr;
 
-  struct config_file_data_ipmi_config ipmi_config_data;
-  struct config_file_data_ipmi_config *ipmi_config_data_ptr;
+  struct config_file_data_ipmi_chassis_config ipmi_chassis_config_data;
+  struct config_file_data_ipmi_chassis_config *ipmi_chassis_config_data_ptr;
 
   struct config_file_data_ipmi_dcmi ipmi_dcmi_data;
   struct config_file_data_ipmi_dcmi *ipmi_dcmi_data_ptr;
@@ -1441,6 +1459,9 @@ config_file_parse (const char *filename,
   struct config_file_data_ipmi_oem ipmi_oem_data;
   struct config_file_data_ipmi_oem *ipmi_oem_data_ptr;
 
+  struct config_file_data_ipmi_pef_config ipmi_pef_config_data;
+  struct config_file_data_ipmi_pef_config *ipmi_pef_config_data_ptr;
+
   struct config_file_data_ipmi_pet ipmi_pet_data;
   struct config_file_data_ipmi_pet *ipmi_pet_data_ptr;
 
@@ -1449,6 +1470,9 @@ config_file_parse (const char *filename,
 
   struct config_file_data_ipmi_sensors ipmi_sensors_data;
   struct config_file_data_ipmi_sensors *ipmi_sensors_data_ptr;
+
+  struct config_file_data_ipmi_sensors_config ipmi_sensors_config_data;
+  struct config_file_data_ipmi_sensors_config *ipmi_sensors_config_data_ptr;
 
   struct config_file_data_ipmiconsole ipmiconsole_data;
   struct config_file_data_ipmiconsole *ipmiconsole_data_ptr;
@@ -1824,6 +1848,101 @@ config_file_parse (const char *filename,
    */
 
   /*
+   * Bmc-config
+   */
+  struct conffile_option bmc_config_options[] =
+    {
+      {
+        "bmc-config-username",
+        CONFFILE_OPTION_STRING,
+        -1,
+        _config_file_tool_option_username,
+        1,
+        0,
+        &bmc_config_username_count,
+        &common_cmd_args_config,
+        0,
+      },
+      {
+        "bmc-config-password",
+        CONFFILE_OPTION_STRING,
+        -1,
+        _config_file_tool_option_password,
+        1,
+        0,
+        &bmc_config_password_count,
+        &common_cmd_args_config,
+        0,
+      },
+      {
+        "bmc-config-k_g",
+        CONFFILE_OPTION_STRING,
+        -1,
+        _config_file_tool_option_k_g,
+        1,
+        0,
+        &bmc_config_k_g_count,
+        &common_cmd_args_config,
+        0,
+      },
+      {
+        "bmc-config-authentication-type",
+        CONFFILE_OPTION_STRING,
+        -1,
+        _config_file_tool_option_authentication_type,
+        1,
+        0,
+        &bmc_config_authentication_type_count,
+        &common_cmd_args_config,
+        0,
+      },
+      {
+        "bmc-config-cipher-suite-id",
+        CONFFILE_OPTION_INT,
+        -1,
+        _config_file_tool_option_cipher_suite_id,
+        1,
+        0,
+        &bmc_config_cipher_suite_id_count,
+        &common_cmd_args_config,
+        0,
+      },
+      {
+        "bmc-config-privilege-level",
+        CONFFILE_OPTION_STRING,
+        -1,
+        _config_file_tool_option_privilege_level,
+        1,
+        0,
+        &bmc_config_privilege_level_count,
+        &common_cmd_args_config,
+        0,
+      },
+      {
+        "bmc-config-workaround-flags",
+        CONFFILE_OPTION_LIST_STRING,
+        -1,
+        _config_file_tool_option_workaround_flags,
+        1,
+        0,
+        &bmc_config_workaround_flags_count,
+        &common_cmd_args_config,
+        0
+      },
+      {
+        "bmc-config-verbose-count",
+        CONFFILE_OPTION_INT,
+        -1,
+        _config_file_unsigned_int,
+        1,
+        0,
+        &(bmc_config_data.verbose_count_count),
+        &(bmc_config_data.verbose_count),
+        0,
+      },
+    };
+
+  /*
    * Bmc-device
    */
   struct conffile_option bmc_device_options[] =
@@ -2140,195 +2259,10 @@ config_file_parse (const char *filename,
     };
 
   /*
-   * Ipmi-config
+   * Ipmi-chassis-config
    */
-  struct conffile_option ipmi_config_options[] =
+  struct conffile_option ipmi_chassis_config_options[] =
     {
-      {
-        "ipmi-config-username",
-        CONFFILE_OPTION_STRING,
-        -1,
-        _config_file_tool_option_username,
-        1,
-        0,
-        &ipmi_config_username_count,
-        &common_cmd_args_config,
-        0,
-      },
-      {
-        "ipmi-config-password",
-        CONFFILE_OPTION_STRING,
-        -1,
-        _config_file_tool_option_password,
-        1,
-        0,
-        &ipmi_config_password_count,
-        &common_cmd_args_config,
-        0,
-      },
-      {
-        "ipmi-config-k_g",
-        CONFFILE_OPTION_STRING,
-        -1,
-        _config_file_tool_option_k_g,
-        1,
-        0,
-        &ipmi_config_k_g_count,
-        &common_cmd_args_config,
-        0,
-      },
-      {
-        "ipmi-config-authentication-type",
-        CONFFILE_OPTION_STRING,
-        -1,
-        _config_file_tool_option_authentication_type,
-        1,
-        0,
-        &ipmi_config_authentication_type_count,
-        &common_cmd_args_config,
-        0,
-      },
-      {
-        "ipmi-config-cipher-suite-id",
-        CONFFILE_OPTION_INT,
-        -1,
-        _config_file_tool_option_cipher_suite_id,
-        1,
-        0,
-        &ipmi_config_cipher_suite_id_count,
-        &common_cmd_args_config,
-        0,
-      },
-      {
-        "ipmi-config-privilege-level",
-        CONFFILE_OPTION_STRING,
-        -1,
-        _config_file_tool_option_privilege_level,
-        1,
-        0,
-        &ipmi_config_privilege_level_count,
-        &common_cmd_args_config,
-        0,
-      },
-      {
-        "ipmi-config-workaround-flags",
-        CONFFILE_OPTION_LIST_STRING,
-        -1,
-        _config_file_tool_option_workaround_flags,
-        1,
-        0,
-        &ipmi_config_workaround_flags_count,
-        &common_cmd_args_config,
-        0
-      },
-      {
-        "ipmi-config-verbose-count",
-        CONFFILE_OPTION_INT,
-        -1,
-        _config_file_unsigned_int,
-        1,
-        0,
-        &(ipmi_config_data.verbose_count_count),
-        &(ipmi_config_data.verbose_count),
-        0,
-      },
-      /* legacy backwards compatability to bmc-config */
-      {
-        "bmc-config-username",
-        CONFFILE_OPTION_STRING,
-        -1,
-        _config_file_tool_option_username,
-        1,
-        0,
-        &ipmi_config_username_count,
-        &common_cmd_args_config,
-        0,
-      },
-      /* legacy backwards compatability to bmc-config */
-      {
-        "bmc-config-password",
-        CONFFILE_OPTION_STRING,
-        -1,
-        _config_file_tool_option_password,
-        1,
-        0,
-        &ipmi_config_password_count,
-        &common_cmd_args_config,
-        0,
-      },
-      /* legacy backwards compatability to bmc-config */
-      {
-        "bmc-config-k_g",
-        CONFFILE_OPTION_STRING,
-        -1,
-        _config_file_tool_option_k_g,
-        1,
-        0,
-        &ipmi_config_k_g_count,
-        &common_cmd_args_config,
-        0,
-      },
-      /* legacy backwards compatability to bmc-config */
-      {
-        "bmc-config-authentication-type",
-        CONFFILE_OPTION_STRING,
-        -1,
-        _config_file_tool_option_authentication_type,
-        1,
-        0,
-        &ipmi_config_authentication_type_count,
-        &common_cmd_args_config,
-        0,
-      },
-      /* legacy backwards compatability to bmc-config */
-      {
-        "bmc-config-cipher-suite-id",
-        CONFFILE_OPTION_INT,
-        -1,
-        _config_file_tool_option_cipher_suite_id,
-        1,
-        0,
-        &ipmi_config_cipher_suite_id_count,
-        &common_cmd_args_config,
-        0,
-      },
-      /* legacy backwards compatability to bmc-config */
-      {
-        "bmc-config-privilege-level",
-        CONFFILE_OPTION_STRING,
-        -1,
-        _config_file_tool_option_privilege_level,
-        1,
-        0,
-        &ipmi_config_privilege_level_count,
-        &common_cmd_args_config,
-        0,
-      },
-      /* legacy backwards compatability to bmc-config */
-      {
-        "bmc-config-workaround-flags",
-        CONFFILE_OPTION_LIST_STRING,
-        -1,
-        _config_file_tool_option_workaround_flags,
-        1,
-        0,
-        &ipmi_config_workaround_flags_count,
-        &common_cmd_args_config,
-        0
-      },
-      /* legacy backwards compatability to bmc-config */
-      {
-        "bmc-config-verbose-count",
-        CONFFILE_OPTION_INT,
-        -1,
-        _config_file_unsigned_int,
-        1,
-        0,
-        &(ipmi_config_data.verbose_count_count),
-        &(ipmi_config_data.verbose_count),
-        0,
-      },
-      /* legacy backwards compatability to ipmi-chassis-config */
       {
         "ipmi-chassis-config-username",
         CONFFILE_OPTION_STRING,
@@ -2336,11 +2270,10 @@ config_file_parse (const char *filename,
         _config_file_tool_option_username,
         1,
         0,
-        &ipmi_config_username_count,
+        &ipmi_chassis_config_username_count,
         &common_cmd_args_config,
         0,
       },
-      /* legacy backwards compatability to ipmi-chassis-config */
       {
         "ipmi-chassis-config-password",
         CONFFILE_OPTION_STRING,
@@ -2348,11 +2281,10 @@ config_file_parse (const char *filename,
         _config_file_tool_option_password,
         1,
         0,
-        &ipmi_config_password_count,
+        &ipmi_chassis_config_password_count,
         &common_cmd_args_config,
         0,
       },
-      /* legacy backwards compatability to ipmi-chassis-config */
       {
         "ipmi-chassis-config-k_g",
         CONFFILE_OPTION_STRING,
@@ -2360,11 +2292,10 @@ config_file_parse (const char *filename,
         _config_file_tool_option_k_g,
         1,
         0,
-        &ipmi_config_k_g_count,
+        &ipmi_chassis_config_k_g_count,
         &common_cmd_args_config,
         0,
       },
-      /* legacy backwards compatability to ipmi-chassis-config */
       {
         "ipmi-chassis-config-authentication-type",
         CONFFILE_OPTION_STRING,
@@ -2372,11 +2303,10 @@ config_file_parse (const char *filename,
         _config_file_tool_option_authentication_type,
         1,
         0,
-        &ipmi_config_authentication_type_count,
+        &ipmi_chassis_config_authentication_type_count,
         &common_cmd_args_config,
         0,
       },
-      /* legacy backwards compatability to ipmi-chassis-config */
       {
         "ipmi-chassis-config-cipher-suite-id",
         CONFFILE_OPTION_INT,
@@ -2384,11 +2314,10 @@ config_file_parse (const char *filename,
         _config_file_tool_option_cipher_suite_id,
         1,
         0,
-        &ipmi_config_cipher_suite_id_count,
+        &ipmi_chassis_config_cipher_suite_id_count,
         &common_cmd_args_config,
         0,
       },
-      /* legacy backwards compatability to ipmi-chassis-config */
       {
         "ipmi-chassis-config-privilege-level",
         CONFFILE_OPTION_STRING,
@@ -2396,11 +2325,10 @@ config_file_parse (const char *filename,
         _config_file_tool_option_privilege_level,
         1,
         0,
-        &ipmi_config_privilege_level_count,
+        &ipmi_chassis_config_privilege_level_count,
         &common_cmd_args_config,
         0,
       },
-      /* legacy backwards compatability to ipmi-chassis-config */
       {
         "ipmi-chassis-config-workaround-flags",
         CONFFILE_OPTION_LIST_STRING,
@@ -2408,11 +2336,10 @@ config_file_parse (const char *filename,
         _config_file_tool_option_workaround_flags,
         1,
         0,
-        &ipmi_config_workaround_flags_count,
+        &ipmi_chassis_config_workaround_flags_count,
         &common_cmd_args_config,
         0
       },
-      /* legacy backwards compatability to ipmi-chassis-config */
       {
         "ipmi-chassis-config-verbose-count",
         CONFFILE_OPTION_INT,
@@ -2420,296 +2347,8 @@ config_file_parse (const char *filename,
 	_config_file_unsigned_int,
         1,
         0,
-        &(ipmi_config_data.verbose_count_count),
-        &(ipmi_config_data.verbose_count),
-        0,
-      },
-      /* legacy backwards compatability to pef-config */
-      {
-        "pef-config-username",
-        CONFFILE_OPTION_STRING,
-        -1,
-        _config_file_tool_option_username,
-        1,
-        0,
-        &ipmi_config_username_count,
-        &common_cmd_args_config,
-        0,
-      },
-      /* legacy backwards compatability to pef-config */
-      {
-        "pef-config-password",
-        CONFFILE_OPTION_STRING,
-        -1,
-        _config_file_tool_option_password,
-        1,
-        0,
-        &ipmi_config_password_count,
-        &common_cmd_args_config,
-        0,
-      },
-      /* legacy backwards compatability to pef-config */
-      {
-        "pef-config-k_g",
-        CONFFILE_OPTION_STRING,
-        -1,
-        _config_file_tool_option_k_g,
-        1,
-        0,
-        &ipmi_config_k_g_count,
-        &common_cmd_args_config,
-        0,
-      },
-      /* legacy backwards compatability to pef-config */
-      {
-        "pef-config-authentication-type",
-        CONFFILE_OPTION_STRING,
-        -1,
-        _config_file_tool_option_authentication_type,
-        1,
-        0,
-        &ipmi_config_authentication_type_count,
-        &common_cmd_args_config,
-        0,
-      },
-      /* legacy backwards compatability to pef-config */
-      {
-        "pef-config-cipher-suite-id",
-        CONFFILE_OPTION_INT,
-        -1,
-        _config_file_tool_option_cipher_suite_id,
-        1,
-        0,
-        &ipmi_config_cipher_suite_id_count,
-        &common_cmd_args_config,
-        0,
-      },
-      /* legacy backwards compatability to pef-config */
-      {
-        "pef-config-privilege-level",
-        CONFFILE_OPTION_STRING,
-        -1,
-        _config_file_tool_option_privilege_level,
-        1,
-        0,
-        &ipmi_config_privilege_level_count,
-        &common_cmd_args_config,
-        0,
-      },
-      /* legacy backwards compatability to pef-config */
-      {
-        "pef-config-workaround-flags",
-        CONFFILE_OPTION_LIST_STRING,
-        -1,
-        _config_file_tool_option_workaround_flags,
-        1,
-        0,
-        &ipmi_config_workaround_flags_count,
-        &common_cmd_args_config,
-        0
-      },
-      /* legacy backwards compatability to pef-config */
-      {
-        "pef-config-verbose-count",
-        CONFFILE_OPTION_INT,
-        -1,
-	_config_file_unsigned_int,
-        1,
-        0,
-        &(ipmi_config_data.verbose_count_count),
-        &(ipmi_config_data.verbose_count),
-        0,
-      },
-      /* legacy backwards compatability to ipmi-pef-config */
-      {
-        "ipmi-pef-config-username",
-        CONFFILE_OPTION_STRING,
-        -1,
-        _config_file_tool_option_username,
-        1,
-        0,
-        &ipmi_config_username_count,
-        &common_cmd_args_config,
-        0,
-      },
-      /* legacy backwards compatability to ipmi-pef-config */
-      {
-        "ipmi-pef-config-password",
-        CONFFILE_OPTION_STRING,
-        -1,
-        _config_file_tool_option_password,
-        1,
-        0,
-        &ipmi_config_password_count,
-        &common_cmd_args_config,
-        0,
-      },
-      /* legacy backwards compatability to ipmi-pef-config */
-      {
-        "ipmi-pef-config-k_g",
-        CONFFILE_OPTION_STRING,
-        -1,
-        _config_file_tool_option_k_g,
-        1,
-        0,
-        &ipmi_config_k_g_count,
-        &common_cmd_args_config,
-        0,
-      },
-      /* legacy backwards compatability to ipmi-pef-config */
-      {
-        "ipmi-pef-config-authentication-type",
-        CONFFILE_OPTION_STRING,
-        -1,
-        _config_file_tool_option_authentication_type,
-        1,
-        0,
-        &ipmi_config_authentication_type_count,
-        &common_cmd_args_config,
-        0,
-      },
-      /* legacy backwards compatability to ipmi-pef-config */
-      {
-        "ipmi-pef-config-cipher-suite-id",
-        CONFFILE_OPTION_INT,
-        -1,
-        _config_file_tool_option_cipher_suite_id,
-        1,
-        0,
-        &ipmi_config_cipher_suite_id_count,
-        &common_cmd_args_config,
-        0,
-      },
-      /* legacy backwards compatability to ipmi-pef-config */
-      {
-        "ipmi-pef-config-privilege-level",
-        CONFFILE_OPTION_STRING,
-        -1,
-        _config_file_tool_option_privilege_level,
-        1,
-        0,
-        &ipmi_config_privilege_level_count,
-        &common_cmd_args_config,
-        0,
-      },
-      /* legacy backwards compatability to ipmi-pef-config */
-      {
-        "ipmi-pef-config-workaround-flags",
-        CONFFILE_OPTION_LIST_STRING,
-        -1,
-        _config_file_tool_option_workaround_flags,
-        1,
-        0,
-        &ipmi_config_workaround_flags_count,
-        &common_cmd_args_config,
-        0
-      },
-      /* legacy backwards compatability to ipmi-pef-config */
-      {
-        "ipmi-pef-config-verbose-count",
-        CONFFILE_OPTION_INT,
-        -1,
-	_config_file_unsigned_int,
-        1,
-        0,
-        &(ipmi_config_data.verbose_count_count),
-        &(ipmi_config_data.verbose_count),
-        0,
-      },
-      /* legacy backwards compatability to ipmi-sensors-config */
-      {
-        "ipmi-sensors-config-username",
-        CONFFILE_OPTION_STRING,
-        -1,
-        _config_file_tool_option_username,
-        1,
-        0,
-        &ipmi_config_username_count,
-        &common_cmd_args_config,
-        0,
-      },
-      /* legacy backwards compatability to ipmi-sensors-config */
-      {
-        "ipmi-sensors-config-password",
-        CONFFILE_OPTION_STRING,
-        -1,
-        _config_file_tool_option_password,
-        1,
-        0,
-        &ipmi_config_password_count,
-        &common_cmd_args_config,
-        0,
-      },
-      /* legacy backwards compatability to ipmi-sensors-config */
-      {
-        "ipmi-sensors-config-k_g",
-        CONFFILE_OPTION_STRING,
-        -1,
-        _config_file_tool_option_k_g,
-        1,
-        0,
-        &ipmi_config_k_g_count,
-        &common_cmd_args_config,
-        0,
-      },
-      /* legacy backwards compatability to ipmi-sensors-config */
-      {
-        "ipmi-sensors-config-authentication-type",
-        CONFFILE_OPTION_STRING,
-        -1,
-        _config_file_tool_option_authentication_type,
-        1,
-        0,
-        &ipmi_config_authentication_type_count,
-        &common_cmd_args_config,
-        0,
-      },
-      /* legacy backwards compatability to ipmi-sensors-config */
-      {
-        "ipmi-sensors-config-cipher-suite-id",
-        CONFFILE_OPTION_INT,
-        -1,
-        _config_file_tool_option_cipher_suite_id,
-        1,
-        0,
-        &ipmi_config_cipher_suite_id_count,
-        &common_cmd_args_config,
-        0,
-      },
-      /* legacy backwards compatability to ipmi-sensors-config */
-      {
-        "ipmi-sensors-config-privilege-level",
-        CONFFILE_OPTION_STRING,
-        -1,
-        _config_file_tool_option_privilege_level,
-        1,
-        0,
-        &ipmi_config_privilege_level_count,
-        &common_cmd_args_config,
-        0,
-      },
-      /* legacy backwards compatability to ipmi-sensors-config */
-      {
-        "ipmi-sensors-config-workaround-flags",
-        CONFFILE_OPTION_LIST_STRING,
-        -1,
-        _config_file_tool_option_workaround_flags,
-        1,
-        0,
-        &ipmi_config_workaround_flags_count,
-        &common_cmd_args_config,
-        0
-      },
-      /* legacy backwards compatability to ipmi-sensors-config */
-      {
-        "ipmi-sensors-config-verbose-count",
-        CONFFILE_OPTION_INT,
-        -1,
-	_config_file_unsigned_int,
-        1,
-        0,
-        &(ipmi_config_data.verbose_count_count),
-        &(ipmi_config_data.verbose_count),
+        &(ipmi_chassis_config_data.verbose_count_count),
+        &(ipmi_chassis_config_data.verbose_count),
         0,
       },
     };
@@ -3031,6 +2670,197 @@ config_file_parse (const char *filename,
         0,
         &(ipmi_oem_data.verbose_count_count),
         &(ipmi_oem_data.verbose_count),
+        0,
+      },
+    };
+
+  /*
+   * Ipmi-pef-config
+   */
+  struct conffile_option ipmi_pef_config_options[] =
+    {
+      /* maintained for backwards compatability */
+      {
+        "pef-config-username",
+        CONFFILE_OPTION_STRING,
+        -1,
+        _config_file_tool_option_username,
+        1,
+        0,
+        &ipmi_pef_config_username_count,
+        &common_cmd_args_config,
+        0,
+      },
+      /* maintained for backwards compatability */
+      {
+        "pef-config-password",
+        CONFFILE_OPTION_STRING,
+        -1,
+        _config_file_tool_option_password,
+        1,
+        0,
+        &ipmi_pef_config_password_count,
+        &common_cmd_args_config,
+        0,
+      },
+      /* maintained for backwards compatability */
+      {
+        "pef-config-k_g",
+        CONFFILE_OPTION_STRING,
+        -1,
+        _config_file_tool_option_k_g,
+        1,
+        0,
+        &ipmi_pef_config_k_g_count,
+        &common_cmd_args_config,
+        0,
+      },
+      /* maintained for backwards compatability */
+      {
+        "pef-config-authentication-type",
+        CONFFILE_OPTION_STRING,
+        -1,
+        _config_file_tool_option_authentication_type,
+        1,
+        0,
+        &ipmi_pef_config_authentication_type_count,
+        &common_cmd_args_config,
+        0,
+      },
+      /* maintained for backwards compatability */
+      {
+        "pef-config-cipher-suite-id",
+        CONFFILE_OPTION_INT,
+        -1,
+        _config_file_tool_option_cipher_suite_id,
+        1,
+        0,
+        &ipmi_pef_config_cipher_suite_id_count,
+        &common_cmd_args_config,
+        0,
+      },
+      /* maintained for backwards compatability */
+      {
+        "pef-config-privilege-level",
+        CONFFILE_OPTION_STRING,
+        -1,
+        _config_file_tool_option_privilege_level,
+        1,
+        0,
+        &ipmi_pef_config_privilege_level_count,
+        &common_cmd_args_config,
+        0,
+      },
+      /* maintained for backwards compatability */
+      {
+        "pef-config-workaround-flags",
+        CONFFILE_OPTION_LIST_STRING,
+        -1,
+        _config_file_tool_option_workaround_flags,
+        1,
+        0,
+        &ipmi_pef_config_workaround_flags_count,
+        &common_cmd_args_config,
+        0
+      },
+      /* maintained for backwards compatability */
+      {
+        "pef-config-verbose-count",
+        CONFFILE_OPTION_INT,
+        -1,
+	_config_file_unsigned_int,
+        1,
+        0,
+        &(ipmi_pef_config_data.verbose_count_count),
+        &(ipmi_pef_config_data.verbose_count),
+        0,
+      },
+      {
+        "ipmi-pef-config-username",
+        CONFFILE_OPTION_STRING,
+        -1,
+        _config_file_tool_option_username,
+        1,
+        0,
+        &ipmi_pef_config_username_count,
+        &common_cmd_args_config,
+        0,
+      },
+      {
+        "ipmi-pef-config-password",
+        CONFFILE_OPTION_STRING,
+        -1,
+        _config_file_tool_option_password,
+        1,
+        0,
+        &ipmi_pef_config_password_count,
+        &common_cmd_args_config,
+        0,
+      },
+      {
+        "ipmi-pef-config-k_g",
+        CONFFILE_OPTION_STRING,
+        -1,
+        _config_file_tool_option_k_g,
+        1,
+        0,
+        &ipmi_pef_config_k_g_count,
+        &common_cmd_args_config,
+        0,
+      },
+      {
+        "ipmi-pef-config-authentication-type",
+        CONFFILE_OPTION_STRING,
+        -1,
+        _config_file_tool_option_authentication_type,
+        1,
+        0,
+        &ipmi_pef_config_authentication_type_count,
+        &common_cmd_args_config,
+        0,
+      },
+      {
+        "ipmi-pef-config-cipher-suite-id",
+        CONFFILE_OPTION_INT,
+        -1,
+        _config_file_tool_option_cipher_suite_id,
+        1,
+        0,
+        &ipmi_pef_config_cipher_suite_id_count,
+        &common_cmd_args_config,
+        0,
+      },
+      {
+        "ipmi-pef-config-privilege-level",
+        CONFFILE_OPTION_STRING,
+        -1,
+        _config_file_tool_option_privilege_level,
+        1,
+        0,
+        &ipmi_pef_config_privilege_level_count,
+        &common_cmd_args_config,
+        0,
+      },
+      {
+        "ipmi-pef-config-workaround-flags",
+        CONFFILE_OPTION_LIST_STRING,
+        -1,
+        _config_file_tool_option_workaround_flags,
+        1,
+        0,
+        &ipmi_pef_config_workaround_flags_count,
+        &common_cmd_args_config,
+        0
+      },
+      {
+        "ipmi-pef-config-verbose-count",
+        CONFFILE_OPTION_INT,
+        -1,
+	_config_file_unsigned_int,
+        1,
+        0,
+        &(ipmi_pef_config_data.verbose_count_count),
+        &(ipmi_pef_config_data.verbose_count),
         0,
       },
     };
@@ -4263,6 +4093,101 @@ config_file_parse (const char *filename,
     };
 
   /*
+   * Ipmi-sensors-config
+   */
+  struct conffile_option ipmi_sensors_config_options[] =
+    {
+      {
+        "ipmi-sensors-config-username",
+        CONFFILE_OPTION_STRING,
+        -1,
+        _config_file_tool_option_username,
+        1,
+        0,
+        &ipmi_sensors_config_username_count,
+        &common_cmd_args_config,
+        0,
+      },
+      {
+        "ipmi-sensors-config-password",
+        CONFFILE_OPTION_STRING,
+        -1,
+        _config_file_tool_option_password,
+        1,
+        0,
+        &ipmi_sensors_config_password_count,
+        &common_cmd_args_config,
+        0,
+      },
+      {
+        "ipmi-sensors-config-k_g",
+        CONFFILE_OPTION_STRING,
+        -1,
+        _config_file_tool_option_k_g,
+        1,
+        0,
+        &ipmi_sensors_config_k_g_count,
+        &common_cmd_args_config,
+        0,
+      },
+      {
+        "ipmi-sensors-config-authentication-type",
+        CONFFILE_OPTION_STRING,
+        -1,
+        _config_file_tool_option_authentication_type,
+        1,
+        0,
+        &ipmi_sensors_config_authentication_type_count,
+        &common_cmd_args_config,
+        0,
+      },
+      {
+        "ipmi-sensors-config-cipher-suite-id",
+        CONFFILE_OPTION_INT,
+        -1,
+        _config_file_tool_option_cipher_suite_id,
+        1,
+        0,
+        &ipmi_sensors_config_cipher_suite_id_count,
+        &common_cmd_args_config,
+        0,
+      },
+      {
+        "ipmi-sensors-config-privilege-level",
+        CONFFILE_OPTION_STRING,
+        -1,
+        _config_file_tool_option_privilege_level,
+        1,
+        0,
+        &ipmi_sensors_config_privilege_level_count,
+        &common_cmd_args_config,
+        0,
+      },
+      {
+        "ipmi-sensors-config-workaround-flags",
+        CONFFILE_OPTION_LIST_STRING,
+        -1,
+        _config_file_tool_option_workaround_flags,
+        1,
+        0,
+        &ipmi_sensors_config_workaround_flags_count,
+        &common_cmd_args_config,
+        0
+      },
+      {
+        "ipmi-sensors-config-verbose-count",
+        CONFFILE_OPTION_INT,
+        -1,
+	_config_file_unsigned_int,
+        1,
+        0,
+        &(ipmi_sensors_config_data.verbose_count_count),
+        &(ipmi_sensors_config_data.verbose_count),
+        0,
+      },
+    };
+
+  /*
    * Ipmiconsole
    */
 
@@ -5120,18 +5045,21 @@ config_file_parse (const char *filename,
 		|| (support & CONFIG_FILE_TIME)
 		|| (support & CONFIG_FILE_HOSTRANGE))
                && common_args))
-          && (((tool_support & CONFIG_FILE_TOOL_BMC_DEVICE) && !tool_data)
+          && (((tool_support & CONFIG_FILE_TOOL_BMC_CONFIG) && tool_data)
+              || ((tool_support & CONFIG_FILE_TOOL_BMC_DEVICE) && !tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_BMC_INFO) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_BMC_WATCHDOG) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_CHASSIS) && !tool_data)
-              || ((tool_support & CONFIG_FILE_TOOL_IPMI_CONFIG) && tool_data)
+              || ((tool_support & CONFIG_FILE_TOOL_IPMI_CHASSIS_CONFIG) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_DCMI) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_FRU) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_OEM) && tool_data)
+              || ((tool_support & CONFIG_FILE_TOOL_IPMI_PEF_CONFIG) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_PET) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_RAW) && !tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_SEL) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMI_SENSORS) && tool_data)
+              || ((tool_support & CONFIG_FILE_TOOL_IPMI_SENSORS_CONFIG) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMICONSOLE) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMIPOWER) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMISELD) && tool_data)));
@@ -5214,6 +5142,17 @@ config_file_parse (const char *filename,
    * tool flags
    */
 
+  options_len = sizeof (bmc_config_options)/sizeof (struct conffile_option);
+  if (!(tool_support & CONFIG_FILE_TOOL_BMC_CONFIG))
+    _ignore_options (bmc_config_options, options_len);
+
+  _copy_options (config_file_options,
+                 config_file_options_len,
+                 bmc_config_options,
+                 options_len);
+
+  config_file_options_len += options_len;
+
   options_len = sizeof (bmc_device_options)/sizeof (struct conffile_option);
   if (!(tool_support & CONFIG_FILE_TOOL_BMC_DEVICE))
     _ignore_options (bmc_device_options, options_len);
@@ -5258,13 +5197,13 @@ config_file_parse (const char *filename,
 
   config_file_options_len += options_len;
 
-  options_len = sizeof (ipmi_config_options)/sizeof (struct conffile_option);
-  if (!(tool_support & CONFIG_FILE_TOOL_IPMI_CONFIG))
-    _ignore_options (ipmi_config_options, options_len);
+  options_len = sizeof (ipmi_chassis_config_options)/sizeof (struct conffile_option);
+  if (!(tool_support & CONFIG_FILE_TOOL_IPMI_CHASSIS_CONFIG))
+    _ignore_options (ipmi_chassis_config_options, options_len);
 
   _copy_options (config_file_options,
                  config_file_options_len,
-                 ipmi_config_options,
+                 ipmi_chassis_config_options,
                  options_len);
 
   config_file_options_len += options_len;
@@ -5298,6 +5237,17 @@ config_file_parse (const char *filename,
   _copy_options (config_file_options,
                  config_file_options_len,
                  ipmi_oem_options,
+                 options_len);
+
+  config_file_options_len += options_len;
+
+  options_len = sizeof (ipmi_pef_config_options)/sizeof (struct conffile_option);
+  if (!(tool_support & CONFIG_FILE_TOOL_IPMI_PEF_CONFIG))
+    _ignore_options (ipmi_pef_config_options, options_len);
+
+  _copy_options (config_file_options,
+                 config_file_options_len,
+                 ipmi_pef_config_options,
                  options_len);
 
   config_file_options_len += options_len;
@@ -5346,6 +5296,17 @@ config_file_parse (const char *filename,
 
   config_file_options_len += options_len;
 
+  options_len = sizeof (ipmi_sensors_config_options)/sizeof (struct conffile_option);
+  if (!(tool_support & CONFIG_FILE_TOOL_IPMI_SENSORS_CONFIG))
+    _ignore_options (ipmi_sensors_config_options, options_len);
+
+  _copy_options (config_file_options,
+                 config_file_options_len,
+                 ipmi_sensors_config_options,
+                 options_len);
+
+  config_file_options_len += options_len;
+
   options_len = sizeof (ipmiconsole_options)/sizeof (struct conffile_option);
   if (!(tool_support & CONFIG_FILE_TOOL_IPMICONSOLE))
     _ignore_options (ipmiconsole_options, options_len);
@@ -5381,15 +5342,18 @@ config_file_parse (const char *filename,
 
   /* clear out config file data */
 
+  memset (&bmc_config_data, '\0', sizeof (struct config_file_data_bmc_config));
   memset (&bmc_info_data, '\0', sizeof (struct config_file_data_bmc_info));
   memset (&bmc_watchdog_data, '\0', sizeof (struct config_file_data_bmc_watchdog));
-  memset (&ipmi_config_data, '\0', sizeof (struct config_file_data_ipmi_config));
+  memset (&ipmi_chassis_config_data, '\0', sizeof (struct config_file_data_ipmi_chassis_config));
   memset (&ipmi_dcmi_data, '\0', sizeof (struct config_file_data_ipmi_dcmi));
   memset (&ipmi_fru_data, '\0', sizeof (struct config_file_data_ipmi_fru));
   memset (&ipmi_oem_data, '\0', sizeof (struct config_file_data_ipmi_oem));
+  memset (&ipmi_pef_config_data, '\0', sizeof (struct config_file_data_ipmi_pef_config));
   memset (&ipmi_pet_data, '\0', sizeof (struct config_file_data_ipmi_pet));
   memset (&ipmi_sel_data, '\0', sizeof (struct config_file_data_ipmi_sel));
   memset (&ipmi_sensors_data, '\0', sizeof (struct config_file_data_ipmi_sensors));
+  memset (&ipmi_sensors_config_data, '\0', sizeof (struct config_file_data_ipmi_sensors_config));
   memset (&ipmiconsole_data, '\0', sizeof (struct config_file_data_ipmiconsole));
   memset (&ipmipower_data, '\0', sizeof (struct config_file_data_ipmipower));
   memset (&ipmiseld_data, '\0', sizeof (struct config_file_data_ipmiseld));
@@ -5499,7 +5463,14 @@ config_file_parse (const char *filename,
 
   /* copy tool specific stuff */
 
-  if (tool_support & CONFIG_FILE_TOOL_BMC_INFO)
+  if (tool_support & CONFIG_FILE_TOOL_BMC_CONFIG)
+    {
+      bmc_config_data_ptr = (struct config_file_data_bmc_config *)tool_data;
+      memcpy (bmc_config_data_ptr,
+              &bmc_config_data,
+              sizeof (struct config_file_data_bmc_config));
+    }
+  else if (tool_support & CONFIG_FILE_TOOL_BMC_INFO)
     {
       bmc_info_data_ptr = (struct config_file_data_bmc_info *)tool_data;
       memcpy (bmc_info_data_ptr,
@@ -5513,12 +5484,12 @@ config_file_parse (const char *filename,
               &bmc_watchdog_data,
               sizeof (struct config_file_data_bmc_watchdog));
     }
-  else if (tool_support & CONFIG_FILE_TOOL_IPMI_CONFIG)
+  else if (tool_support & CONFIG_FILE_TOOL_IPMI_CHASSIS_CONFIG)
     {
-      ipmi_config_data_ptr = (struct config_file_data_ipmi_config *)tool_data;
-      memcpy (ipmi_config_data_ptr,
-              &ipmi_config_data,
-              sizeof (struct config_file_data_ipmi_config));
+      ipmi_chassis_config_data_ptr = (struct config_file_data_ipmi_chassis_config *)tool_data;
+      memcpy (ipmi_chassis_config_data_ptr,
+              &ipmi_chassis_config_data,
+              sizeof (struct config_file_data_ipmi_chassis_config));
     }
   else if (tool_support & CONFIG_FILE_TOOL_IPMI_DCMI)
     {
@@ -5541,6 +5512,13 @@ config_file_parse (const char *filename,
               &ipmi_oem_data,
               sizeof (struct config_file_data_ipmi_oem));
     }
+  else if (tool_support & CONFIG_FILE_TOOL_IPMI_PEF_CONFIG)
+    {
+      ipmi_pef_config_data_ptr = (struct config_file_data_ipmi_pef_config *)tool_data;
+      memcpy (ipmi_pef_config_data_ptr,
+              &ipmi_pef_config_data,
+              sizeof (struct config_file_data_ipmi_pef_config));
+    }
   else if (tool_support & CONFIG_FILE_TOOL_IPMI_PET)
     {
       ipmi_pet_data_ptr = (struct config_file_data_ipmi_pet *)tool_data;
@@ -5561,6 +5539,13 @@ config_file_parse (const char *filename,
       memcpy (ipmi_sensors_data_ptr,
               &ipmi_sensors_data,
               sizeof (struct config_file_data_ipmi_sensors));
+    }
+  else if (tool_support & CONFIG_FILE_TOOL_IPMI_SENSORS_CONFIG)
+    {
+      ipmi_sensors_config_data_ptr = (struct config_file_data_ipmi_sensors_config *)tool_data;
+      memcpy (ipmi_sensors_config_data_ptr,
+              &ipmi_sensors_config_data,
+              sizeof (struct config_file_data_ipmi_sensors_config));
     }
   else if (tool_support & CONFIG_FILE_TOOL_IPMICONSOLE)
     {

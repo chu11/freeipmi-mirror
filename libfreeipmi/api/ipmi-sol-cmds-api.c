@@ -26,7 +26,6 @@
 #include <string.h>
 #endif /* STDC_HEADERS */
 #include <errno.h>
-#include <assert.h>
 
 #include "freeipmi/api/ipmi-sol-cmds-api.h"
 #include "freeipmi/cmds/ipmi-sol-cmds.h"
@@ -598,8 +597,6 @@ _ipmi_cmd_get_sol_configuration_parameters_common (ipmi_ctx_t ctx,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int rv = -1;
-
-  assert (tmpl_cmd_rs_expected);
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {

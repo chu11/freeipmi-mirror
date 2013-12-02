@@ -957,7 +957,6 @@ ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
        * IPMI Workaround (achu)
        *
        * Discovered on Fujitsu RX 100
-       * Discovered on Fujitsu RX300/200-S8
        *
        * The record_count listed from the Get SDR Repository Info command
        * is not consistent with the length of SDR records stored.
