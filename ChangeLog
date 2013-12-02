@@ -1,5 +1,9 @@
 2013-12-02  Albert Chu <chu11@llnl.gov>
 
+	* freeipmi.spec.in: Add forgotten manpage.
+	
+2013-12-02  Albert Chu <chu11@llnl.gov>
+
 	* doc/freeipmi-faq.txi: Update with new information on OS issues.
 
 2013-12-02  Albert Chu <chu11@llnl.gov>
