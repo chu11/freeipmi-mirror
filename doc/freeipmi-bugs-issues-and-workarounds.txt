@@ -1604,6 +1604,15 @@ BMC Watchdog Timer Issue #1: [COMPLIANCE]
   Notes: Confirmed fixed in newer firmware for Sun x4100, Sun x4200,
   Sun x4500.
 
+BMC Watchdog Timer Issue #2: [???]
+
+  A reply from a Get Watchdog Timer command returns a packet without
+  valid data.
+
+  Seen on: Unspecified Supermicro
+
+  Resolution: Handle special case and retry command.
+
 ----------------------------------------------------------------------
 
 ---------------
