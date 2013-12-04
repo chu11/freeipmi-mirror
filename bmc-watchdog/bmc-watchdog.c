@@ -154,6 +154,27 @@ _ipmi_err_exit (const char *str)
     err_exit ("%s: %s", str, ipmi_ctx_errormsg (ipmi_ctx));
 }
 
+/* return 0 on success, -1 on non-critical error, exits on fatal error */ 
+static int
+_fiid_obj_get_safe(fiid_obj_t obj_cmd_rs, const char *field, uint64_t *val)
+{
+  uint64_t valtemp;
+
+  if (FIID_OBJ_GET (obj_cmd_rs, field, &valtemp) < 0)
+    {
+      if (fiid_obj_errnum (obj_cmd_rs) == FIID_ERR_DATA_NOT_AVAILABLE)
+	{
+	  err_output ("fiid_obj_get: '%s': %s", field, fiid_obj_errormsg (obj_cmd_rs));
+	  return (-1);
+	}
+
+      err_exit ("fiid_obj_get: '%s': %s", field, fiid_obj_errormsg (obj_cmd_rs));
+    }
+
+  (*val) = valtemp;
+  return (0);
+}
+
 static void
 _fiid_obj_get(fiid_obj_t obj_cmd_rs, const char *field, uint64_t *val)
 {
@@ -369,79 +390,92 @@ _get_watchdog_timer_cmd (uint8_t *timer_use,
 
   if (timer_use)
     {
-      _fiid_obj_get (obj_cmd_rs, "timer_use", &val);
+      if (_fiid_obj_get_safe (obj_cmd_rs, "timer_use", &val) < 0)
+	goto cleanup;
       (*timer_use) = val;
     }
 
   if (timer_state)
     {
-      _fiid_obj_get (obj_cmd_rs, "timer_state", &val);
+      if (_fiid_obj_get_safe (obj_cmd_rs, "timer_state", &val) < 0)
+	goto cleanup;
       (*timer_state) = val;
     }
 
   if (log)
     {
-      _fiid_obj_get (obj_cmd_rs, "log", &val);
+      if (_fiid_obj_get_safe (obj_cmd_rs, "log", &val) < 0)
+	goto cleanup;
       (*log) = val;
     }
 
   if (timeout_action)
     {
-      _fiid_obj_get (obj_cmd_rs, "timeout_action", &val);
+      if (_fiid_obj_get_safe (obj_cmd_rs, "timeout_action", &val) < 0)
+	goto cleanup;
       (*timeout_action) = val;
     }
 
   if (pre_timeout_interrupt)
     {
-      _fiid_obj_get (obj_cmd_rs, "pre_timeout_interrupt", &val);
+      if (_fiid_obj_get_safe (obj_cmd_rs, "pre_timeout_interrupt", &val) < 0)
+	goto cleanup;
       (*pre_timeout_interrupt) = val;
     }
 
   if (pre_timeout_interval)
     {
-      _fiid_obj_get (obj_cmd_rs, "pre_timeout_interval", &val);
+      if (_fiid_obj_get_safe (obj_cmd_rs, "pre_timeout_interval", &val) < 0)
+	goto cleanup;
       (*pre_timeout_interval) = val;
     }
 
   if (timer_use_expiration_flag_bios_frb2)
     {
-      _fiid_obj_get (obj_cmd_rs, "timer_use_expiration_flag.bios_frb2", &val);
+      if (_fiid_obj_get_safe (obj_cmd_rs, "timer_use_expiration_flag.bios_frb2", &val) < 0)
+	goto cleanup;
       (*timer_use_expiration_flag_bios_frb2) = val;
     }
 
   if (timer_use_expiration_flag_bios_post)
     {
-      _fiid_obj_get (obj_cmd_rs, "timer_use_expiration_flag.bios_post", &val);
+      if (_fiid_obj_get_safe (obj_cmd_rs, "timer_use_expiration_flag.bios_post", &val) < 0)
+	goto cleanup;
       (*timer_use_expiration_flag_bios_post) = val;
     }
 
   if (timer_use_expiration_flag_os_load)
     {
-      _fiid_obj_get (obj_cmd_rs, "timer_use_expiration_flag.os_load", &val);
+      if (_fiid_obj_get_safe (obj_cmd_rs, "timer_use_expiration_flag.os_load", &val) < 0)
+	goto cleanup;
       (*timer_use_expiration_flag_os_load) = val;
     }
 
   if (timer_use_expiration_flag_sms_os)
     {
-      _fiid_obj_get (obj_cmd_rs, "timer_use_expiration_flag.sms_os", &val);
+      if (_fiid_obj_get_safe (obj_cmd_rs, "timer_use_expiration_flag.sms_os", &val) < 0)
+	goto cleanup;
       (*timer_use_expiration_flag_sms_os) = val;
     }
 
   if (timer_use_expiration_flag_oem)
     {
-      _fiid_obj_get (obj_cmd_rs, "timer_use_expiration_flag.oem", &val);
+      if (_fiid_obj_get_safe (obj_cmd_rs, "timer_use_expiration_flag.oem", &val) < 0)
+	goto cleanup;
       (*timer_use_expiration_flag_oem) = val;
     }
 
   if (initial_countdown_seconds)
     {
-      _fiid_obj_get (obj_cmd_rs, "initial_countdown_value", &val);
+      if (_fiid_obj_get_safe (obj_cmd_rs, "initial_countdown_value", &val) < 0)
+	goto cleanup;
       (*initial_countdown_seconds) = val / 10;
     }
 
   if (present_countdown_seconds)
     {
-      _fiid_obj_get (obj_cmd_rs, "present_countdown_value", &val);
+      if (_fiid_obj_get_safe (obj_cmd_rs, "present_countdown_value", &val) < 0)
+	goto cleanup;
       (*present_countdown_seconds) = val / 10;
     }
 
