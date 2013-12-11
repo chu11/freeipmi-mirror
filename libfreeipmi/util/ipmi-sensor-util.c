@@ -355,7 +355,7 @@ ipmi_sensor_decode_raw_value (int8_t r_exponent,
   double dval;
   uint8_t rval;
 
-  if (!value
+  if (!raw_data
       || !IPMI_SDR_ANALOG_DATA_FORMAT_VALID (analog_data_format)
       || !IPMI_SDR_LINEARIZATION_IS_LINEAR (linearization))
     {

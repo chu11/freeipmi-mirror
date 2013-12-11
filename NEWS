@@ -6,6 +6,8 @@ o Support 'solchannelsupport' workraound in ipmiconsole /
 o Fix SDR cache workaround for motherboards with invalid SDR record
   counts listed.
 o Workaround Supermicro bug in bmc-watchdog. 
+o Fix error checks in sensor decoding functions, leading to possible
+  problems in ipmi-sensors-config.
 o Update documentation with additional workarounds for motherboards.
 o Fix minor bugs.
 
