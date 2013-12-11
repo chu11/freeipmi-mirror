@@ -1,5 +1,10 @@
 2013-12-11  Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/: Re-work error message outputs so fatal error
+	messages are always output.
+	
+2013-12-11  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/util/ipmi-sensor-util.c (ipmi_sensor_decode_raw_value):
 	Fix error in input checks.
 	

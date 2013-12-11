@@ -52,12 +52,15 @@ ipmi_config_sensors_discrete_section (ipmi_config_state_data_t *state_data,
 						      section_name,
 						      IPMI_CONFIG_MAX_SECTION_NAME_LEN)) != IPMI_CONFIG_ERR_SUCCESS)
     {
-      if (state_data->prog_data->args->common_args.debug)
+      rv = ret;
+
+      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+	  || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_config_sensors_create_section_name: %s\n",
                          strerror (errno));
-      rv = ret;
+
       goto cleanup;
     }
 

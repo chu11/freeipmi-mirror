@@ -146,11 +146,10 @@ _decode_value (ipmi_config_state_data_t *state_data,
                                 value_raw,
                                 value_calc) < 0)
     {
-      if (state_data->prog_data->args->common_args.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_sensor_decode_value: %s\n",
-                         strerror (errno));
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "ipmi_sensor_decode_value: %s\n",
+		       strerror (errno));
       goto cleanup;
     }
 
@@ -193,11 +192,10 @@ _decode_value_raw (ipmi_config_state_data_t *state_data,
   if (errno
       || ptr[0] != '\0')
     {
-      if (state_data->prog_data->args->common_args.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "Invalid input: %s\n",
-                         threshold_input);
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "Invalid input: %s\n",
+		       threshold_input);
       /* fatal error, should have been validated earlier */
       goto cleanup;
     }
@@ -211,11 +209,10 @@ _decode_value_raw (ipmi_config_state_data_t *state_data,
                                     threshold_value,
                                     threshold_raw) < 0)
     {
-      if (state_data->prog_data->args->common_args.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_sensor_decode_raw_value: %s\n",
-                         strerror (errno));
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "ipmi_sensor_decode_raw_value: %s\n",
+		       strerror (errno));
       goto cleanup;
     }
 
@@ -276,12 +273,6 @@ threshold_checkout (ipmi_config_state_data_t *state_data,
                                       sensor_number,
                                       obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->common_args.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_cmd_get_sensor_thresholds: %s\n",
-                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
-
       if (ipmi_errnum_is_non_fatal (state_data,
 				    obj_cmd_rs,
 				    &ret))
@@ -302,6 +293,13 @@ threshold_checkout (ipmi_config_state_data_t *state_data,
       if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
           && ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_INVALID_COMMAND) == 1)
         rv = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
+
+      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+	  || state_data->prog_data->args->common_args.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_get_sensor_thresholds: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       goto cleanup;
     }
@@ -360,6 +358,7 @@ threshold_checkout (ipmi_config_state_data_t *state_data,
                          "%s:%s - threshold not readable\n",
                          section_name,
                          kv->key->key_name);
+
       rv = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -477,16 +476,17 @@ threshold_commit (ipmi_config_state_data_t *state_data,
                                       upper_non_recoverable_threshold_ptr,
                                       obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->common_args.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_cmd_set_sensor_thresholds: %s\n",
-                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
-
       if (ipmi_errnum_is_non_fatal (state_data,
 				    obj_cmd_rs,
 				    &ret))
         rv = ret;
+
+      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+	  || state_data->prog_data->args->common_args.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_set_sensor_thresholds: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       goto cleanup;
     }
@@ -527,16 +527,17 @@ _get_hysteresis (ipmi_config_state_data_t *state_data,
     {
       ipmi_config_err_t ret;
 
-      if (state_data->prog_data->args->common_args.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_cmd_get_sensor_hysteresis: %s\n",
-                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
-
       if (ipmi_errnum_is_non_fatal (state_data,
 				    obj_cmd_rs,
 				    &ret))
         rv = ret;
+
+      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+	  || state_data->prog_data->args->common_args.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_get_sensor_hysteresis: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       goto cleanup;
     }
@@ -785,16 +786,17 @@ hysteresis_threshold_commit (ipmi_config_state_data_t *state_data,
                                       negative_going_threshold_hysteresis_value,
                                       obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->common_args.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_cmd_set_sensor_hysteresis: %s\n",
-                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
-
       if (ipmi_errnum_is_non_fatal (state_data,
 				    obj_cmd_rs,
 				    &ret))
         rv = ret;
+
+      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+	  || state_data->prog_data->args->common_args.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_set_sensor_hysteresis: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       goto cleanup;
     }
@@ -1284,12 +1286,15 @@ ipmi_config_sensors_threshold_section (ipmi_config_state_data_t *state_data,
 						      section_name,
 						      IPMI_CONFIG_MAX_SECTION_NAME_LEN)) != IPMI_CONFIG_ERR_SUCCESS)
     {
-      if (state_data->prog_data->args->common_args.debug)
+      rv = ret;
+
+      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+	  || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_config_sensors_create_section_name: %s\n",
                          strerror (errno));
-      rv = ret;
+
       goto cleanup;
     }
 

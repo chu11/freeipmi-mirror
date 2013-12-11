@@ -407,17 +407,18 @@ _get_sol_channel_number_for_channel (ipmi_config_state_data_t *state_data,
           goto out;
         }
 
-      if (state_data->prog_data->args->common_args.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_cmd_get_sol_configuration_parameters_sol_payload_channel: %s\n",
-                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      
       if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
       
+      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+	  || state_data->prog_data->args->common_args.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_get_sol_configuration_parameters_sol_payload_channel: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
+
       goto cleanup;
     }
 

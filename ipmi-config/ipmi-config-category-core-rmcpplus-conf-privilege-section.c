@@ -97,16 +97,17 @@ _rmcpplus_cipher_suite_id_privilege_setup (ipmi_config_state_data_t *state_data,
                                                                                                    IPMI_LAN_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                                                    obj_cmd_count_rs) < 0)
         {
-          if (state_data->prog_data->args->common_args.debug)
-            pstdout_fprintf (state_data->pstate,
-                             stderr,
-                             "ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support: %s\n",
-                             ipmi_ctx_errormsg (state_data->ipmi_ctx));
-
           if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                      obj_cmd_count_rs,
                                                      &ret))
             rv = ret;
+
+	  if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+	      || state_data->prog_data->args->common_args.debug)
+            pstdout_fprintf (state_data->pstate,
+                             stderr,
+                             "ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support: %s\n",
+                             ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
           goto cleanup;
         }
@@ -146,16 +147,17 @@ _rmcpplus_cipher_suite_id_privilege_setup (ipmi_config_state_data_t *state_data,
                                                                                              IPMI_LAN_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                                              obj_cmd_id_rs) < 0)
         {
-          if (state_data->prog_data->args->common_args.debug)
-            pstdout_fprintf (state_data->pstate,
-                             stderr,
-                             "ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries: %s\n",
-                             ipmi_ctx_errormsg (state_data->ipmi_ctx));
-
           if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                      obj_cmd_id_rs,
                                                      &ret))
             rv = ret;
+
+	  if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+	      || state_data->prog_data->args->common_args.debug)
+            pstdout_fprintf (state_data->pstate,
+                             stderr,
+                             "ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries: %s\n",
+                             ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
           goto cleanup;
         }
@@ -233,16 +235,17 @@ _rmcpplus_cipher_suite_id_privilege_setup (ipmi_config_state_data_t *state_data,
                                                                                                       IPMI_LAN_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
                                                                                                       obj_cmd_priv_rs) < 0)
         {
-          if (state_data->prog_data->args->common_args.debug)
-            pstdout_fprintf (state_data->pstate,
-                             stderr,
-                             "ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_level: %s\n",
-                             ipmi_ctx_errormsg (state_data->ipmi_ctx));
-
           if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                      obj_cmd_priv_rs,
                                                      &ret))
             rv = ret;
+
+	  if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+	      || state_data->prog_data->args->common_args.debug)
+            pstdout_fprintf (state_data->pstate,
+                             stderr,
+                             "ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_level: %s\n",
+                             ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
           goto cleanup;
         }
@@ -487,11 +490,10 @@ id_commit (ipmi_config_state_data_t *state_data,
               /* This is a fatal error, we're already in this section,
                * it should be findable
                */
-              if (state_data->prog_data->args->common_args.debug)
-                pstdout_fprintf (state_data->pstate,
-                                 stderr,
-                                 "Cannot find section '%s'\n",
-                                 section_name);
+	      pstdout_fprintf (state_data->pstate,
+			       stderr,
+			       "Cannot find section '%s'\n",
+			       section_name);
               
               goto cleanup;
             }
@@ -518,16 +520,17 @@ id_commit (ipmi_config_state_data_t *state_data,
                                                                                                   privs[15],
                                                                                                   obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->common_args.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels: %s\n",
-                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
-
       if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
+
+      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+	  || state_data->prog_data->args->common_args.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       goto cleanup;
     }

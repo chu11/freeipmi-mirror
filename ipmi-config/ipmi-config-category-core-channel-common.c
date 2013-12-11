@@ -175,16 +175,17 @@ _get_channel_access (ipmi_config_state_data_t *state_data,
                                    access_type,
                                    obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->common_args.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_cmd_get_channel_access: %s\n",
-                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
-
       if (ipmi_errnum_is_non_fatal (state_data,
                                     obj_cmd_rs,
                                     &ret))
         rv = ret;
+
+      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+	  || state_data->prog_data->args->common_args.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_get_channel_access: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       goto cleanup;
     }
@@ -301,12 +302,6 @@ _set_channel_access (ipmi_config_state_data_t *state_data,
                                     : IPMI_PRIVILEGE_LEVEL_LIMIT_SET_NON_VOLATILE),
                                    obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->common_args.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_cmd_set_channel_access: %s\n",
-                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
-
       if (comp_code)
         {
           (*comp_code) = 0;
@@ -325,6 +320,13 @@ _set_channel_access (ipmi_config_state_data_t *state_data,
                                     obj_cmd_rs,
                                     &ret))
         rv = ret;
+
+      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+	  || state_data->prog_data->args->common_args.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_set_channel_access: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       goto cleanup;
     }

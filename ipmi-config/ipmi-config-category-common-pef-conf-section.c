@@ -85,16 +85,17 @@ _get_pef_control (ipmi_config_state_data_t *state_data,
     {
       ipmi_config_err_t ret;
 
-      if (state_data->prog_data->args->common_args.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_cmd_get_pef_configuration_parameters_pef_control: %s\n",
-                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
-
       if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
+
+      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+	  || state_data->prog_data->args->common_args.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_get_pef_configuration_parameters_pef_control: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       goto cleanup;
     }
@@ -174,16 +175,17 @@ _set_pef_control (ipmi_config_state_data_t *state_data,
     {
       ipmi_config_err_t ret;
 
-      if (state_data->prog_data->args->common_args.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_cmd_set_pef_configuration_parameters_pef_control: %s\n",
-                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
-
       if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
+
+      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+	  || state_data->prog_data->args->common_args.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_set_pef_configuration_parameters_pef_control: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       goto cleanup;
     }
@@ -396,16 +398,17 @@ _get_pef_action_global_control (ipmi_config_state_data_t *state_data,
     {
       ipmi_config_err_t ret;
 
-      if (state_data->prog_data->args->common_args.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_cmd_get_pef_configuration_parameters_pef_action_global_control: %s\n",
-                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
-
       if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
+
+      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+	  || state_data->prog_data->args->common_args.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_get_pef_configuration_parameters_pef_action_global_control: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       goto cleanup;
     }
@@ -507,16 +510,17 @@ _set_pef_action_global_control (ipmi_config_state_data_t *state_data,
     {
       ipmi_config_err_t ret;
 
-      if (state_data->prog_data->args->common_args.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_cmd_set_pef_configuration_parameters_pef_action_global_control: %s\n",
-                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
-
       if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
+
+      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+	  || state_data->prog_data->args->common_args.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_set_pef_configuration_parameters_pef_action_global_control: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       goto cleanup;
     }
@@ -817,16 +821,17 @@ pef_startup_delay_checkout (ipmi_config_state_data_t *state_data,
     {
       ipmi_config_err_t ret;
 
-      if (state_data->prog_data->args->common_args.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_cmd_get_pef_configuration_parameters_pef_startup_delay: %s\n",
-                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
-
       if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
+
+      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+	  || state_data->prog_data->args->common_args.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_get_pef_configuration_parameters_pef_startup_delay: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       goto cleanup;
     }
@@ -880,16 +885,17 @@ pef_startup_delay_commit (ipmi_config_state_data_t *state_data,
     {
       ipmi_config_err_t ret;
 
-      if (state_data->prog_data->args->common_args.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_cmd_set_pef_configuration_parameters_pef_startup_delay: %s\n",
-                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
-
       if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
+
+      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+	  || state_data->prog_data->args->common_args.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_set_pef_configuration_parameters_pef_startup_delay: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       goto cleanup;
     }
@@ -932,16 +938,17 @@ pef_alert_startup_delay_checkout (ipmi_config_state_data_t *state_data,
     {
       ipmi_config_err_t ret;
 
-      if (state_data->prog_data->args->common_args.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_cmd_get_pef_configuration_parameters_pef_alert_startup_delay: %s\n",
-                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
-
       if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
+
+      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+	  || state_data->prog_data->args->common_args.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_get_pef_configuration_parameters_pef_alert_startup_delay: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       goto cleanup;
     }
@@ -995,16 +1002,17 @@ pef_alert_startup_delay_commit (ipmi_config_state_data_t *state_data,
     {
       ipmi_config_err_t ret;
 
-      if (state_data->prog_data->args->common_args.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_cmd_set_pef_configuration_parameters_pef_alert_startup_delay: %s\n",
-                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
-
       if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
+
+      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+	  || state_data->prog_data->args->common_args.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_set_pef_configuration_parameters_pef_alert_startup_delay: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       goto cleanup;
     }

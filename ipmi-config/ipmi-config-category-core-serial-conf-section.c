@@ -88,16 +88,17 @@ _get_connection_mode (ipmi_config_state_data_t *state_data,
                                                                IPMI_SERIAL_MODEM_CONFIGURATION_NO_BLOCK_SELECTOR,
                                                                obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->common_args.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_cmd_get_serial_modem_configuration_connection_mode: %s\n",
-                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
-
       if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
+
+      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+	  || state_data->prog_data->args->common_args.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_get_serial_modem_configuration_connection_mode: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       goto cleanup;
     }
@@ -185,16 +186,17 @@ _set_connection_mode (ipmi_config_state_data_t *state_data,
                                                                cm->connect_mode,
                                                                obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->common_args.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_cmd_set_serial_modem_configuration_connection_mode: %s\n",
-                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
-
       if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
+
+      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+	  || state_data->prog_data->args->common_args.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_set_serial_modem_configuration_connection_mode: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       goto cleanup;
     }
@@ -415,16 +417,17 @@ page_blackout_interval_checkout (ipmi_config_state_data_t *state_data,
                                                                       IPMI_SERIAL_MODEM_CONFIGURATION_NO_BLOCK_SELECTOR,
                                                                       obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->common_args.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_cmd_get_serial_modem_configuration_page_blackout_interval: %s\n",
-                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
-
       if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
+
+      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+	  || state_data->prog_data->args->common_args.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_get_serial_modem_configuration_page_blackout_interval: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       goto cleanup;
     }
@@ -485,16 +488,17 @@ page_blackout_interval_commit (ipmi_config_state_data_t *state_data,
                                                                       atoi (kv->value_input),
                                                                       obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->common_args.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_cmd_set_serial_modem_configuration_page_blackout_interval: %s\n",
-                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
-
       if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
+
+      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+	  || state_data->prog_data->args->common_args.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_set_serial_modem_configuration_page_blackout_interval: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       goto cleanup;
     }
@@ -543,16 +547,17 @@ call_retry_interval_checkout (ipmi_config_state_data_t *state_data,
                                                                    IPMI_SERIAL_MODEM_CONFIGURATION_NO_BLOCK_SELECTOR,
                                                                    obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->common_args.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_cmd_get_serial_modem_configuration_call_retry_interval: %s\n",
-                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
-
       if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
+
+      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+	  || state_data->prog_data->args->common_args.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_get_serial_modem_configuration_call_retry_interval: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       goto cleanup;
     }
@@ -612,16 +617,17 @@ call_retry_interval_commit (ipmi_config_state_data_t *state_data,
                                                                    atoi (kv->value_input),
                                                                    obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->common_args.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_cmd_set_serial_modem_configuration_call_retry_interval: %s\n",
-                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
-
       if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
+
+      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+	  || state_data->prog_data->args->common_args.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_set_serial_modem_configuration_call_retry_interval: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       goto cleanup;
     }
@@ -669,16 +675,17 @@ _get_ipmi_messaging_comm_settings (ipmi_config_state_data_t *state_data,
                                                                             IPMI_SERIAL_MODEM_CONFIGURATION_NO_BLOCK_SELECTOR,
                                                                             obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->common_args.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_cmd_get_serial_modem_configuration_ipmi_messaging_comm_settings: %s\n",
-                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
-
       if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
+
+      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+	  || state_data->prog_data->args->common_args.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_get_serial_modem_configuration_ipmi_messaging_comm_settings: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       goto cleanup;
     }
@@ -755,16 +762,17 @@ _set_ipmi_messaging_comm_settings (ipmi_config_state_data_t *state_data,
                                                                             cs->bit_rate,
                                                                             obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->common_args.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings: %s\n",
-                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
-
       if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
+
+      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+	  || state_data->prog_data->args->common_args.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       goto cleanup;
     }

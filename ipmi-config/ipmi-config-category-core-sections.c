@@ -83,13 +83,16 @@ _get_number_of_users (ipmi_config_state_data_t *state_data, uint8_t *number_of_u
                                 1, /* user_id number */
                                 obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->common_args.debug)
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
+        rv = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
+
+      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+	  || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_user_access: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
-        rv = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
+
       goto cleanup;
     }
 

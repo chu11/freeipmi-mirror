@@ -101,12 +101,15 @@ ipmi_config_sensors_create_section_name (ipmi_config_state_data_t *state_data,
   if ((ret = _convert_id_string (state_data,
 				 id_string)) != IPMI_CONFIG_ERR_SUCCESS)
     {
-      if (state_data->prog_data->args->common_args.debug)
+      rv = ret;
+
+      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+	  || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "_convert_id_string: %s\n",
                          strerror (errno));
-      rv = ret;
+
       goto cleanup;
     }
 
@@ -149,18 +152,16 @@ ipmi_config_sensors_seek_to_sdr_record (ipmi_config_state_data_t *state_data,
 
   if (!(str = strdup (section_name)))
     {
-      if (state_data->prog_data->args->common_args.debug)
-        pstdout_perror (state_data->pstate, "strdup");
+      pstdout_perror (state_data->pstate, "strdup");
       goto cleanup;
     }
 
   if (!(ptr = strchr (str, '_')))
     {
-      if (state_data->prog_data->args->common_args.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "Invalid section_name: %s\n",
-                         section_name);
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "Invalid section_name: %s\n",
+		       section_name);
       goto cleanup;
     }
 
@@ -171,11 +172,10 @@ ipmi_config_sensors_seek_to_sdr_record (ipmi_config_state_data_t *state_data,
   if (errno
       || endptr[0] != '\0')
     {
-      if (state_data->prog_data->args->common_args.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "Invalid section_name: %s\n",
-                         section_name);
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "Invalid section_name: %s\n",
+		       section_name);
       goto cleanup;
     }
 

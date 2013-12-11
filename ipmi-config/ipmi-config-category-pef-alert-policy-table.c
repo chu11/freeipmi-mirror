@@ -80,16 +80,17 @@ _get_alert_policy_table (struct ipmi_config_state_data *state_data,
     {
       ipmi_config_err_t ret;
 
-      if (state_data->prog_data->args->common_args.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_cmd_get_pef_configuration_parameters_alert_policy_table: %s\n",
-                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
-
       if (ipmi_config_param_errnum_is_non_fatal (state_data,
 						 obj_cmd_rs,
 						 &ret))
         rv = ret;
+
+      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+	  || state_data->prog_data->args->common_args.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_get_pef_configuration_parameters_alert_policy_table: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       goto cleanup;
     }
@@ -217,12 +218,6 @@ _set_alert_policy_table (struct ipmi_config_state_data *state_data,
     {
       ipmi_config_err_t ret;
 
-      if (state_data->prog_data->args->common_args.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_cmd_set_pef_configuration_parameters_alert_policy_table: %s\n",
-                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
-
       /* IPMI Workaround
        *
        * Fujitsu RX 100 S5
@@ -282,7 +277,7 @@ _set_alert_policy_table (struct ipmi_config_state_data *state_data,
 					       "Event_Specific_Alert_String")))
             apt->event_specific_alert_string = same (kv->value_input, "yes");
 
-          if (state_data->prog_data->args->common_args.debug)
+	  if (state_data->prog_data->args->common_args.debug)
             pstdout_fprintf (state_data->pstate,
                              stderr,
                              "ipmi_cmd_set_pef_configuration_parameters_alert_policy_table: attempting workaround\n");
@@ -298,16 +293,17 @@ _set_alert_policy_table (struct ipmi_config_state_data *state_data,
                                                                             apt->event_specific_alert_string,
                                                                             obj_cmd_rs) < 0)
             {
-              if (state_data->prog_data->args->common_args.debug)
-                pstdout_fprintf (state_data->pstate,
-                                 stderr,
-                                 "ipmi_cmd_set_pef_configuration_parameters_alert_policy_table: %s\n",
-                                 ipmi_ctx_errormsg (state_data->ipmi_ctx));
-
               if (ipmi_config_param_errnum_is_non_fatal (state_data,
 							 obj_cmd_rs,
 							 &ret))
                 rv = ret;
+
+	      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+		  || state_data->prog_data->args->common_args.debug)
+                pstdout_fprintf (state_data->pstate,
+                                 stderr,
+                                 "ipmi_cmd_set_pef_configuration_parameters_alert_policy_table: %s\n",
+                                 ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
               goto cleanup;
             }
@@ -319,6 +315,13 @@ _set_alert_policy_table (struct ipmi_config_state_data *state_data,
 						      obj_cmd_rs,
 						      &ret))
         rv = ret;
+
+      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+	  || state_data->prog_data->args->common_args.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_set_pef_configuration_parameters_alert_policy_table: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       goto cleanup;
     }

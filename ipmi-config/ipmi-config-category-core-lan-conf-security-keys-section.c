@@ -81,13 +81,16 @@ _get_key (ipmi_config_state_data_t *state_data,
                                           0,
                                           obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->common_args.debug)
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
+        rv = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
+
+      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+	  || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_channel_security_keys: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
-        rv = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
+
       goto cleanup;
     }
 
@@ -159,13 +162,16 @@ _set_key (ipmi_config_state_data_t *state_data,
                                           key_len,
                                           obj_cmd_rs) < 0)
     {
-      if (state_data->prog_data->args->common_args.debug)
+      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
+        rv = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
+
+      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+	  || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_channel_security_keys: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
-        rv = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
+
       goto cleanup;
     }
 
