@@ -1,3 +1,8 @@
+2013-12-11  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-config/ipmi-config-category-sensors-threshold-section.c:
+	Fix error message cut & paste typo.
+	
 2013-12-05  Albert Chu <chu11@llnl.gov>
 
 	* ipmiseld/ipmiseld.c: Fix error message typo.
