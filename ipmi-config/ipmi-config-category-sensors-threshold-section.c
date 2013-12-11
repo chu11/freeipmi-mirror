@@ -214,7 +214,7 @@ _decode_value_raw (ipmi_config_state_data_t *state_data,
       if (state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
-                         "ipmi_sensor_decode_value: %s\n",
+                         "ipmi_sensor_decode_raw_value: %s\n",
                          strerror (errno));
       goto cleanup;
     }
