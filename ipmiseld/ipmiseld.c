@@ -1381,7 +1381,7 @@ _ipmiseld_poll (void *arg)
   
   if (ipmi_sel_ctx_set_separator (host_data->host_poll->sel_ctx, EVENT_OUTPUT_SEPARATOR) < 0)
     {
-      ipmiseld_err_output (host_data, "ipmi_sel_parse: %s",
+      ipmiseld_err_output (host_data, "ipmi_sel_ctx_set_separator: %s",
 		  ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
       return (-1);
     }
