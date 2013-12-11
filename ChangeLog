@@ -1,3 +1,8 @@
+2013-12-11  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors-config/ipmi-sensors-config-threshold-section.c: Fix
+	error message cut & paste typo.
+	
 2013-12-02  Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-faq.txi: Update with new information on OS issues.
