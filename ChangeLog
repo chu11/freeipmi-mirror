@@ -1,5 +1,10 @@
 2013-12-11  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/util/ipmi-sensor-util.c (ipmi_sensor_decode_raw_value):
+	Fix error in input checks.
+	
+2013-12-11  Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config-category-sensors-threshold-section.c:
 	Fix error message cut & paste typo.
 	
