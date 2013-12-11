@@ -9,7 +9,7 @@ o Workaround Supermicro bug in bmc-watchdog.
 o Fix error checks in sensor decoding functions, leading to possible
   problems in ipmi-sensors-config.
 o Update documentation with additional workarounds for motherboards.
-o Fix minor bugs.
+o Fix various minor bugs.
 
 FreeIPMI 1.3.3 - 10/29/13
 -------------------------

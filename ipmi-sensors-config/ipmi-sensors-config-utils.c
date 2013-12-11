@@ -148,18 +148,16 @@ seek_to_sdr_record (ipmi_sensors_config_state_data_t *state_data,
 
   if (!(str = strdup (section_name)))
     {
-      if (state_data->prog_data->args->config_args.common_args.debug)
-        pstdout_perror (state_data->pstate, "strdup");
+      pstdout_perror (state_data->pstate, "strdup");
       goto cleanup;
     }
 
   if (!(ptr = strchr (str, '_')))
     {
-      if (state_data->prog_data->args->config_args.common_args.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "Invalid section_name: %s\n",
-                         section_name);
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "Invalid section_name: %s\n",
+		       section_name);
       goto cleanup;
     }
 
@@ -170,11 +168,10 @@ seek_to_sdr_record (ipmi_sensors_config_state_data_t *state_data,
   if (errno
       || endptr[0] != '\0')
     {
-      if (state_data->prog_data->args->config_args.common_args.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "Invalid section_name: %s\n",
-                         section_name);
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "Invalid section_name: %s\n",
+		       section_name);
       goto cleanup;
     }
 

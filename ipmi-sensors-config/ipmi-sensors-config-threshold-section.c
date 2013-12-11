@@ -144,11 +144,10 @@ _decode_value (ipmi_sensors_config_state_data_t *state_data,
                                 value_raw,
                                 value_calc) < 0)
     {
-      if (state_data->prog_data->args->config_args.common_args.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_sensor_decode_value: %s\n",
-                         strerror (errno));
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "ipmi_sensor_decode_value: %s\n",
+		       strerror (errno));
       goto cleanup;
     }
 
@@ -191,11 +190,10 @@ _decode_value_raw (ipmi_sensors_config_state_data_t *state_data,
   if (errno
       || ptr[0] != '\0')
     {
-      if (state_data->prog_data->args->config_args.common_args.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "Invalid input: %s\n",
-                         threshold_input);
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "Invalid input: %s\n",
+		       threshold_input);
       /* fatal error, should have been validated earlier */
       goto cleanup;
     }
@@ -209,11 +207,10 @@ _decode_value_raw (ipmi_sensors_config_state_data_t *state_data,
                                     threshold_value,
                                     threshold_raw) < 0)
     {
-      if (state_data->prog_data->args->config_args.common_args.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_sensor_decode_raw_value: %s\n",
-                         strerror (errno));
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "ipmi_sensor_decode_raw_value: %s\n",
+		       strerror (errno));
       goto cleanup;
     }
 
