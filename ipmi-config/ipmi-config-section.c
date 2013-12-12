@@ -637,6 +637,16 @@ ipmi_config_sections_validate_keyvalue_inputs (ipmi_config_state_data_t *state_d
                                    s->section_name);
                   nonvalid_count++;
                 }
+              if (v == IPMI_CONFIG_VALIDATE_VALUE_CANNOT_BE_ENCODED_ACCURATELY)
+                {
+                  pstdout_fprintf (state_data->pstate,
+                                   stderr,
+                                   "Value '%s' for key '%s' in section '%s' cannot be encoded accurately, try another value\n",
+                                   kv->value_input,
+                                   kv->key->key_name,
+                                   s->section_name);
+                  nonvalid_count++;
+                }
               if (v == IPMI_CONFIG_VALIDATE_OUT_OF_RANGE_VALUE)
                 {
                   pstdout_fprintf (state_data->pstate,

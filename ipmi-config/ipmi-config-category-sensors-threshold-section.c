@@ -891,7 +891,7 @@ _floating_point_in_range (ipmi_config_state_data_t *state_data,
       || (value_input < 0.0
           && (value_input > threshold_range_min
               || value_input < threshold_range_max)))
-    rv = IPMI_CONFIG_VALIDATE_OUT_OF_RANGE_VALUE;
+    rv = IPMI_CONFIG_VALIDATE_VALUE_CANNOT_BE_ENCODED_ACCURATELY;
   else
     rv = IPMI_CONFIG_VALIDATE_VALID_VALUE;
 
