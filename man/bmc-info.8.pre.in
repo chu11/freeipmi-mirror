@@ -36,6 +36,9 @@ Display only device ID information.
 \fB\-\-get\-device\-guid\fR
 Display only device guid.
 .TP
+\fB\-\-get\-system\-guid\fR
+Display only system guid.
+.TP
 \fB\-\-get\-system\-info\fR
 Display only system info.
 .TP

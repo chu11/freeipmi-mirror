@@ -528,7 +528,12 @@ display_get_device_id (bmc_info_state_data_t *state_data)
 }
 
 static int
-display_get_device_guid (bmc_info_state_data_t *state_data)
+display_guid (bmc_info_state_data_t *state_data,
+	      fiid_field_t *tmpl_cmd_get_guid_rs,
+	      int (*ipmi_cmd_get_guid_func)(ipmi_ctx_t, fiid_obj_t),
+	      char *ipmi_cmd_get_guid_description,
+	      int get_guid_only_flag,
+	      char *guid_description)
 {
   uint8_t guidbuf[BMC_INFO_BUFLEN];
   fiid_obj_t obj_cmd_rs = NULL;
@@ -536,8 +541,12 @@ display_get_device_guid (bmc_info_state_data_t *state_data)
   int rv = -1;
 
   assert (state_data);
+  assert (tmpl_cmd_get_guid_rs);
+  assert (ipmi_cmd_get_guid_func);
+  assert (ipmi_cmd_get_guid_description);
+  assert (guid_description);
 
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_device_guid_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_guid_rs)))
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -546,7 +555,7 @@ display_get_device_guid (bmc_info_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_device_guid (state_data->ipmi_ctx, obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_guid_func (state_data->ipmi_ctx, obj_cmd_rs) < 0)
     {
       if (!state_data->prog_data->args->get_device_guid
           && ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
@@ -559,7 +568,8 @@ display_get_device_guid (bmc_info_state_data_t *state_data)
 
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "ipmi_cmd_get_device_guid: %s\n",
+                       "%s: %s\n",
+		       ipmi_cmd_get_guid_description,
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
@@ -585,6 +595,9 @@ display_get_device_guid (bmc_info_state_data_t *state_data)
       goto cleanup;
     }
 
+  if (!get_guid_only_flag)
+    pstdout_printf (state_data->pstate, "%s : ", guid_description);
+
   /* IPMI transfers the guid in least significant bit order and the
    * fields are reverse from the "Wired for Management
    * Specification".
@@ -594,8 +607,6 @@ display_get_device_guid (bmc_info_state_data_t *state_data)
    * supposed to be output in most significant byte order and hex
    * characters are to be output lower case.
    */
-  if (!state_data->prog_data->args->get_device_guid)
-    pstdout_printf (state_data->pstate, "GUID : ");
 
   pstdout_printf (state_data->pstate,
                   "%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x\n",
@@ -617,13 +628,35 @@ display_get_device_guid (bmc_info_state_data_t *state_data)
                   guidbuf[0]);
 
   /* output newline if we're outputting all sections */
-  if (!state_data->prog_data->args->get_device_guid)
+  if (!get_guid_only_flag)
     pstdout_printf (state_data->pstate, "\n");
 
   rv = 0;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
+}
+
+static int
+display_get_device_guid (bmc_info_state_data_t *state_data)
+{
+  return display_guid (state_data,
+		       tmpl_cmd_get_device_guid_rs,
+		       ipmi_cmd_get_device_guid,
+		       "ipmi_cmd_get_device_guid",
+		       state_data->prog_data->args->get_device_guid,
+		       "Device GUID");
+}
+
+static int
+display_get_system_guid (bmc_info_state_data_t *state_data)
+{
+  return display_guid (state_data,
+		       tmpl_cmd_get_system_guid_rs,
+		       ipmi_cmd_get_system_guid,
+		       "ipmi_cmd_get_system_guid",
+		       state_data->prog_data->args->get_system_guid,
+		       "System GUID");
 }
 
 /* return 1 if supported, 0 if not */
@@ -1339,6 +1372,9 @@ run_cmd_args (bmc_info_state_data_t *state_data)
 
   if (args->get_device_guid)
     return (display_get_device_guid (state_data));
+
+  if (args->get_system_guid)
+    return (display_get_system_guid (state_data));
  
   if (args->get_system_info)
     return (display_system_info (state_data));
@@ -1352,6 +1388,9 @@ run_cmd_args (bmc_info_state_data_t *state_data)
     goto cleanup;
 
   if (display_get_device_guid (state_data) < 0)
+    goto cleanup;
+
+  if (display_get_system_guid (state_data) < 0)
     goto cleanup;
 
   if (display_system_info (state_data) < 0)

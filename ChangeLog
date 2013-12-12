@@ -1,3 +1,15 @@
+2013-12-12  Albert Chu <chu11@llnl.gov>
+
+	* bmc-info/: Support output of System GUID by default and support
+	--get-system-guid option.
+	
+2013-12-12  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-config/: Decimal values that cannot be encoded accurately
+	now report a clearer error message through the
+	IPMI_CONFIG_VALIDATE_VALUE_CANNOT_BE_ENCODED_ACCURATELY validate
+	error code.
+	
 2013-12-11  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-config/: Re-work error message outputs so fatal error
