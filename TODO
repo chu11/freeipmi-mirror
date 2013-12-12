@@ -285,6 +285,7 @@ ipmi-config
 - chassis: (NEVER TESTED) panel button config - need hardware w/ this
 - chassis: (NEVER TESTED) device instance selector
 - sensors: instructions for each section??
+- sensors: when value cannot be encodd accurately, report numbers that can work
 
 ipmi-oem
 --------
