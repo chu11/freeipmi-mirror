@@ -641,8 +641,8 @@ display_guid (bmc_info_state_data_t *state_data,
 		    guidbuf[4],
 		    guidbuf[7],   /* time high and version */
 		    guidbuf[6],
-		    guidbuf[9],	  /* clock seq high and reserved */
-		    guidbuf[8],   /* clock seq low */
+		    guidbuf[8],	  /* clock seq high and reserved - not little endian*/
+		    guidbuf[9],   /* clock seq low */
 		    guidbuf[10],   /* node - assume sent in correct order */
 		    guidbuf[11],
 		    guidbuf[12],
