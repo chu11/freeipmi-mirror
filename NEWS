@@ -37,6 +37,9 @@ o Update ipmi-sel to support new SEL events in Intelligent Power Node
 
 Tools - Bug Fixes/Minor Changes
 -------------------------------
+o Fix bmc-info output of GUID, format was output with two bytes out of
+  order.
+  - May affect scripts parsing and using the GUID.
 o Bmc-info now supports --get-system-guid and outputs the System GUID
   as well as the Device GUID by default.
   - The Device GUID is not prefixed with the text "Device GUID"

@@ -618,8 +618,8 @@ display_guid (bmc_info_state_data_t *state_data,
 		    guidbuf[10],
 		    guidbuf[9],   /* time high and version */
 		    guidbuf[8],
-		    guidbuf[6],   /* clock seq high and reserved - comes before clock seq low */
-		    guidbuf[7],   /* clock seq low */
+		    guidbuf[7],   /* clock seq and reserved */
+		    guidbuf[6],
 		    guidbuf[5],   /* node */
 		    guidbuf[4],
 		    guidbuf[3],

@@ -1,6 +1,9 @@
 2013-12-12  Albert Chu <chu11@llnl.gov>
 
 	* bmc-info/: Support 'guidformat' workaround flag.
+
+	* bmc-info/: Fix default GUID output format, one field appears to
+	be output incorrectly.
 	
 2013-12-12  Albert Chu <chu11@llnl.gov>
 
