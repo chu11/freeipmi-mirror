@@ -66,6 +66,13 @@ Display only channel information.
 #include <@top_srcdir@/man/manpage-common-workaround-outofband-common-text.man>
 #include <@top_srcdir@/man/manpage-common-workaround-outofband-15-text.man>
 #include <@top_srcdir@/man/manpage-common-workaround-outofband-20-text.man>
+.LP
+\fIguidformat\fR - A number of vendors send the bytes of the GUID
+(such as the GUID in \fB\-\-get\-device\-guid\fR or
+\fB\-\-get\-system\-guid\fR) in an alternate format that aligns
+incorrectly with IPMI, but correctly with other standards.  This
+workaround flag will instruct \fBbmc\-info\fR to read the GUID and
+output the GUID based on this common alternate format.
 #include <@top_srcdir@/man/manpage-common-workaround-extra-text.man>
 #include <@top_srcdir@/man/manpage-common-oem-interpretation.man>
 .LP

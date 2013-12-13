@@ -42,6 +42,8 @@ o Bmc-info now supports --get-system-guid and outputs the System GUID
   - The Device GUID is not prefixed with the text "Device GUID"
     instead of just "GUID".  Any scripts scripting against this will
     need to be adjusted.
+o Bmc-info now supports a workaround of 'guidformat' to read the GUID
+  with a format a number of vendors have incorrectly used.
 o In ipmi-config's sensor configuration, decimal values that cannot be
   encoded accurately now report a clearer error message.
 

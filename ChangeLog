@@ -1,5 +1,9 @@
 2013-12-12  Albert Chu <chu11@llnl.gov>
 
+	* bmc-info/: Support 'guidformat' workaround flag.
+	
+2013-12-12  Albert Chu <chu11@llnl.gov>
+
 	* bmc-info/: Support output of System GUID by default and support
 	--get-system-guid option.
 	

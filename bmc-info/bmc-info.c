@@ -607,25 +607,48 @@ display_guid (bmc_info_state_data_t *state_data,
    * supposed to be output in most significant byte order and hex
    * characters are to be output lower case.
    */
-
-  pstdout_printf (state_data->pstate,
-                  "%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x\n",
-                  guidbuf[15],  /* time low */
-                  guidbuf[14],
-                  guidbuf[13],
-                  guidbuf[12],
-                  guidbuf[11],  /* time mid */
-                  guidbuf[10],
-                  guidbuf[9],   /* time high and version */
-                  guidbuf[8],
-                  guidbuf[6],   /* clock seq high and reserved - comes before clock seq low */
-                  guidbuf[7],   /* clock seq low */
-                  guidbuf[5],   /* node */
-                  guidbuf[4],
-                  guidbuf[3],
-                  guidbuf[2],
-                  guidbuf[1],
-                  guidbuf[0]);
+  if (!(state_data->prog_data->args->common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_GUID_FORMAT))
+    pstdout_printf (state_data->pstate,
+		    "%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x\n",
+		    guidbuf[15],  /* time low */
+		    guidbuf[14],
+		    guidbuf[13],
+		    guidbuf[12],
+		    guidbuf[11],  /* time mid */
+		    guidbuf[10],
+		    guidbuf[9],   /* time high and version */
+		    guidbuf[8],
+		    guidbuf[6],   /* clock seq high and reserved - comes before clock seq low */
+		    guidbuf[7],   /* clock seq low */
+		    guidbuf[5],   /* node */
+		    guidbuf[4],
+		    guidbuf[3],
+		    guidbuf[2],
+		    guidbuf[1],
+		    guidbuf[0]);
+  else
+    /* It appears some vendors are not sending the GUID in the right
+     * format, basically sending it in the format from the Wired for
+     * Management Specification.
+     */
+    pstdout_printf (state_data->pstate,
+		    "%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x\n",
+		    guidbuf[3],   /* time low */
+		    guidbuf[2],
+		    guidbuf[1],
+		    guidbuf[0],
+		    guidbuf[5],   /* time mid */
+		    guidbuf[4],
+		    guidbuf[7],   /* time high and version */
+		    guidbuf[6],
+		    guidbuf[9],	  /* clock seq high and reserved */
+		    guidbuf[8],   /* clock seq low */
+		    guidbuf[10],   /* node - assume sent in correct order */
+		    guidbuf[11],
+		    guidbuf[12],
+		    guidbuf[13],
+		    guidbuf[14],
+		    guidbuf[15]);
 
   /* output newline if we're outputting all sections */
   if (!get_guid_only_flag)

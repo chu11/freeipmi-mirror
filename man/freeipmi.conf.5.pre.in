@@ -123,7 +123,7 @@ assumemaxsdrrecordcount, solpayloadsize, solport, solstatus,
 solchannelsupport, skipchecks, assumesystemevent, discretereading,
 ignorescanningdisabled, assumebmcowner, ignoreauthcode, slowcommit,
 veryslowcommit, solchannelassumelanchannel, ignorestateflag,
-malformedack.
+malformedack,guidformat.
 
 .SH "SDR OPTIONS"
 The following options are specific to tools that use the sensor 
