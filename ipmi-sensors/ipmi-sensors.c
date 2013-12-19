@@ -516,7 +516,7 @@ _calculate_record_ids (ipmi_sensors_state_data_t *state_data,
           output_record_ids[(*output_record_ids_length)] = record_id;
           (*output_record_ids_length)++;
 
-	  if (output_record_ids_length >= MAX_SENSOR_RECORD_IDS)
+	  if ((*output_record_ids_length) >= MAX_SENSOR_RECORD_IDS)
 	    {
 	      pstdout_fprintf (state_data->pstate,
 			       stderr,
@@ -583,7 +583,7 @@ _calculate_record_ids (ipmi_sensors_state_data_t *state_data,
           output_record_ids[(*output_record_ids_length)] = state_data->prog_data->args->record_ids[i];
           (*output_record_ids_length)++;
 
-	  if (output_record_ids_length >= MAX_SENSOR_RECORD_IDS)
+	  if ((*output_record_ids_length) >= MAX_SENSOR_RECORD_IDS)
 	    {
 	      pstdout_fprintf (state_data->pstate,
 			       stderr,
@@ -653,7 +653,7 @@ _calculate_record_ids (ipmi_sensors_state_data_t *state_data,
           output_record_ids[(*output_record_ids_length)] = record_id;
           (*output_record_ids_length)++;
 	  
-	  if (output_record_ids_length >= MAX_SENSOR_RECORD_IDS)
+	  if ((*output_record_ids_length) >= MAX_SENSOR_RECORD_IDS)
 	    {
 	      pstdout_fprintf (state_data->pstate,
 			       stderr,
