@@ -55,7 +55,7 @@
 #define MAX_SENSOR_TYPES                    256
 #else  /* !0 */
 /* achu: pick more reasonable limits than the theoretical maxes */
-#define MAX_SENSOR_RECORD_IDS               512
+#define MAX_SENSOR_RECORD_IDS               1024
 #define MAX_SENSOR_TYPES                    64
 #endif	/* !0 */
 #endif /* !__CYGWIN__ */
