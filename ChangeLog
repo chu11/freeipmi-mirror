@@ -1,3 +1,11 @@
+2013-12-19  Dave Love  <fx@gnu.org>
+
+	* ipmi-sensors/ipmi-sensors.c (_calculate_record_ids): Check
+	record number against array length.
+
+	* common/toolcommon/tool-sensor-common.h (MAX_SENSOR_RECORD_IDS):
+	Increase to 1024.
+
 2013-12-12  Albert Chu <chu11@llnl.gov>
 
 	* bmc-info/: Support 'guidformat' workaround flag.
