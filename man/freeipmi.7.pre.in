@@ -18,8 +18,8 @@ IPMI can be used in-band (i.e. running on a machine locally) or
 out-of-band (i.e. connecting remotely).
 .PP
 Most FreeIPMI tools can operate in-band by using one of the in-band
-drivers included.  These in-band drivers include a direct KCS
-interface driver, a Linux SSIF driver through the SSIF device
+drivers included.  These in-band drivers include a userspace KCS
+interface driver, a SSIF driver through the Linux SSIF device
 (i.e. /dev/i2c-0), the OpenIPMI Linux kernel driver (i.e. /dev/ipmi0),
 and the Sun/Solaris BMC driver (i.e. /dev/bmc).  If your system
 requires the use of installed drivers, those appropriate modules must

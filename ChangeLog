@@ -1,3 +1,7 @@
+2013-12-20  Albert Chu <chu11@llnl.gov>
+
+	* man/freeipmi.7.pre.in, README: Fix some English.
+
 2013-12-19  Dave Love  <fx@gnu.org>
 
 	* ipmi-sensors/ipmi-sensors.c (_calculate_record_ids): Check
