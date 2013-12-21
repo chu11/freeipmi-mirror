@@ -43,6 +43,7 @@
 
 #include "freeipmi/cmds/ipmi-messaging-support-cmds.h"
 #include "freeipmi/fiid/fiid.h"
+#include "freeipmi/driver/ipmi-inteldcmi-driver.h"
 #include "freeipmi/driver/ipmi-kcs-driver.h"
 #include "freeipmi/driver/ipmi-openipmi-driver.h"
 #include "freeipmi/driver/ipmi-ssif-driver.h"
@@ -99,6 +100,7 @@ struct ipmi_ctx
       ipmi_ssif_ctx_t ssif_ctx;
       ipmi_openipmi_ctx_t openipmi_ctx;
       ipmi_sunbmc_ctx_t sunbmc_ctx;
+      ipmi_inteldcmi_ctx_t inteldcmi_ctx;
 
       uint8_t rq_seq;
 

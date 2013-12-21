@@ -97,4 +97,16 @@
     TRACE_ERRNO_OUT (__errno);                                              \
   } while (0)
 
+#define INTELDCMI_SET_ERRNUM(__ctx, __errnum)                               \
+  do {                                                                      \
+    (__ctx)->errnum = (__errnum);                                           \
+    TRACE_MSG_OUT (ipmi_inteldcmi_ctx_errormsg ((__ctx)), (__errnum));      \
+  } while (0)
+
+#define INTELDCMI_ERRNO_TO_INTELDCMI_ERRNUM(__ctx, __errno)                 \
+  do {                                                                      \
+    _set_inteldcmi_ctx_errnum_by_errno ((__ctx), (__errno));                \
+    TRACE_ERRNO_OUT (__errno);                                              \
+  } while (0)
+
 #endif /* IPMI_DRIVER_TRACE_H */

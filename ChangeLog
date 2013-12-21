@@ -2,6 +2,8 @@
 
 	Add 'inteldcmi' inband driver.
 
+	* libfreeipmi/: Add support for "inteldcmi" in-band driver.
+
 	* README, doc/, man/: Add documentation for inteldcmi driver.
 	
 2013-12-20  Albert Chu <chu11@llnl.gov>

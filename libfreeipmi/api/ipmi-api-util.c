@@ -31,6 +31,7 @@
 #include "freeipmi/api/ipmi-api.h"
 #include "freeipmi/locate/ipmi-locate.h"
 #include "freeipmi/spec/ipmi-comp-code-spec.h"
+#include "freeipmi/driver/ipmi-inteldcmi-driver.h"
 #include "freeipmi/driver/ipmi-kcs-driver.h"
 #include "freeipmi/driver/ipmi-openipmi-driver.h"
 #include "freeipmi/driver/ipmi-ssif-driver.h"
@@ -278,6 +279,36 @@ api_set_api_errnum_by_sunbmc_errnum (ipmi_ctx_t ctx, int sunbmc_errnum)
       ctx->errnum = IPMI_ERR_DRIVER_TIMEOUT;
       break;
     case IPMI_SUNBMC_ERR_SYSTEM_ERROR:
+      ctx->errnum = IPMI_ERR_SYSTEM_ERROR;
+      break;
+    default:
+      ctx->errnum = IPMI_ERR_INTERNAL_ERROR;
+    }
+}
+
+void
+api_set_api_errnum_by_inteldcmi_errnum (ipmi_ctx_t ctx, int inteldcmi_errnum)
+{
+  assert (ctx && ctx->magic == IPMI_CTX_MAGIC);
+
+  switch (inteldcmi_errnum)
+    {
+    case IPMI_INTELDCMI_ERR_SUCCESS:
+      ctx->errnum = IPMI_ERR_SUCCESS;
+      break;
+    case IPMI_INTELDCMI_ERR_OUT_OF_MEMORY:
+      ctx->errnum = IPMI_ERR_OUT_OF_MEMORY;
+      break;
+    case IPMI_INTELDCMI_ERR_PERMISSION:
+      ctx->errnum = IPMI_ERR_PERMISSION;
+      break;
+    case IPMI_INTELDCMI_ERR_DEVICE_NOT_FOUND:
+      ctx->errnum = IPMI_ERR_DEVICE_NOT_FOUND;
+      break;
+    case IPMI_INTELDCMI_ERR_DRIVER_TIMEOUT:
+      ctx->errnum = IPMI_ERR_DRIVER_TIMEOUT;
+      break;
+    case IPMI_INTELDCMI_ERR_SYSTEM_ERROR:
       ctx->errnum = IPMI_ERR_SYSTEM_ERROR;
       break;
     default:

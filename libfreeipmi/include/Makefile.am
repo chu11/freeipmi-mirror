@@ -43,6 +43,7 @@ nobase_include_HEADERS = \
 	freeipmi/cmds/ipmi-sol-cmds.h \
 	freeipmi/cmds/rmcp-cmds.h \
 	freeipmi/debug/ipmi-debug.h \
+	freeipmi/driver/ipmi-inteldcmi-driver.h \
 	freeipmi/driver/ipmi-kcs-driver.h \
 	freeipmi/driver/ipmi-openipmi-driver.h \
 	freeipmi/driver/ipmi-sunbmc-driver.h \
