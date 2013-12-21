@@ -32,9 +32,9 @@ and
 .B ipmiconsole(8).
 .TP
 .B driver
-Provides APIs for in-band IPMI communication.  Currently
-supported drivers are KCS, SSIF, and OpenIPMI.  The 'driver'
-subsction is used by tools such as 
+Provides APIs for in-band IPMI communication.  Currently supported
+drivers are KCS, SSIF, OpenIPMI, and SUNBMC.  The 'driver' subsction
+is used by tools such as
 .B bmc-watchdog(8) 
 and the 'api' sub-section.
 .TP

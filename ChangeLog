@@ -2,6 +2,8 @@
 
 	* man/freeipmi.7.pre.in, README: Fix some English.
 
+	* man/libfreeipmi.3.pre.in: Add forgotten driver.
+
 2013-12-19  Dave Love  <fx@gnu.org>
 
 	* ipmi-sensors/ipmi-sensors.c (_calculate_record_ids): Check
