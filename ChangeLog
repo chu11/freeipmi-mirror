@@ -1,6 +1,14 @@
 2013-12-20  Albert Chu <chu11@llnl.gov>
 
+	Add 'inteldcmi' inband driver.
+
+	* README, man/: Add documentation for inteldcmi driver.
+	
+2013-12-20  Albert Chu <chu11@llnl.gov>
+
 	* man/freeipmi.7.pre.in, README: Fix some English.
+
+	* man/libfreeipmi.3.pre.in: Add forgotten driver.
 
 2013-12-19  Dave Love  <fx@gnu.org>
 
