@@ -15,6 +15,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
+/*----------------------------------------------------------------------* 
+The BSD License 
+Copyright (c) 2002, Intel Corporation
+All rights reserved.
+Redistribution and use in source and binary forms, with or without 
+modification, are permitted provided that the following conditions are met:
+  a.. Redistributions of source code must retain the above copyright notice, 
+      this list of conditions and the following disclaimer. 
+  b.. Redistributions in binary form must reproduce the above copyright notice,
+      this list of conditions and the following disclaimer in the documentation 
+      and/or other materials provided with the distribution. 
+  c.. Neither the name of Intel Corporation nor the names of its contributors 
+      may be used to endorse or promote products derived from this software 
+      without specific prior written permission. 
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR 
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON 
+ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*----------------------------------------------------------------------*/
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -68,65 +93,14 @@
 
 #define IPMI_INTELDCMI_BUFLEN    1024
 
-#define IPMI_INTELDCMI_TIMEOUT     60
+#define IPMI_INTELDCMI_TIMEOUT   (60 * 1000 * 1000)
 
-/* XXX need to autoconf for inteldcmi */
+/* XXX need to autoconf for inteldcmi headers*/
 #if HAVE_LINUX_IPMI_H
 #include <linux/ipmi.h>
 #elif HAVE_SYS_IPMI_H
 #include <sys/ipmi.h>
 #else  /* !HAVE_LINUX_IPMI_H && !HAVE_SYS_IPMI_H */
-
-/* XXX need to fix this */
-/*
- * achu: Most of the definitions below are taken from linux/ipmi.h.
- *
- * Thanks to the ipmitool folks, who's code made it easier for me to
- * figure out the Inteldcmi interface more quickly.
- */
-
-#define IPMI_SYSTEM_INTERFACE_ADDR_TYPE 0x0c
-#define IPMI_IPMB_ADDR_TYPE             0x01
-
-struct ipmi_system_interface_addr
-{
-  int addr_type;
-  short channel;
-  unsigned char lun;
-};
-
-struct ipmi_ipmb_addr
-{
-  int addr_type;
-  short channel;
-  unsigned char slave_addr;
-  unsigned char lun;
-};
-
-struct ipmi_msg
-{
-  unsigned char netfn;
-  unsigned char cmd;
-  unsigned short data_len;
-  unsigned char  *data;
-};
-
-struct ipmi_req
-{
-  unsigned char      *addr;
-  unsigned int addr_len;
-  long msgid;
-  struct ipmi_msg msg;
-};
-
-struct ipmi_recv
-{
-  int recv_type;
-  unsigned char      *addr;
-  unsigned int addr_len;
-  long msgid;
-  struct ipmi_msg msg;
-};
 #endif /* !HAVE_LINUX_IPMI_H && !HAVE_SYS_IPMI_H */
 
 static char * ipmi_inteldcmi_ctx_errmsg[] =
@@ -159,6 +133,109 @@ struct ipmi_inteldcmi_ctx {
   int device_fd;
   int io_init;
 };
+
+fiid_template_t tmpl_inteldcmi_request =
+  {
+    /* XXX - put in h file later */
+#define NO_RESPONSE_EXPECTED    0x01    /*dont wait around for an IMB response*/
+    { 64, "flags", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 64, "timeout", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, /* in u-sec */
+    { 8, "rs_addr", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "net_fn", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "rs_lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "data_len", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    /* Max bytes = 256, 256 * 8 = 2048 */
+    { 2048, "data",  FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_inteldcmi_response =
+  {
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    /* Max bytes = 256, 256 * 8 = 2048 */
+    { 2048, "data",  FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
+    { 0, "", 0}
+  };
+
+/*
+ * Begin code from Intel Code
+ */
+
+struct inteldcmi_smi {
+  unsigned long smi_VersionNo;
+  unsigned long smi_Reserved1;
+  unsigned long smi_Reserved2;
+  void *ntstatus;		    /* address of NT status block*/
+  void *lpvInBuffer;		    /* address of buffer for input data*/
+  unsigned long  cbInBuffer;	    /* size of input buffer*/
+  void *lpvOutBuffer;		    /* address of output buffer*/
+  unsigned long cbOutBuffer;	    /* size of output buffer*/
+  unsigned long *lpcbBytesReturned; /* address of actual bytes of output */
+  void *lpoOverlapped;		    /* address of overlapped structure - set to NULL for Linux */
+};
+
+
+/*                                                                                                                                                                                         
+ * Linux drivers expect ioctls defined using macros defined in ioctl.h.                                                                                                                    
+ * So, instead of using the CTL_CODE defined for NT and UW, I define CTL_CODE                                                                                                              
+ * using these macros. That way imb_if.h, where the ioctls are defined get                                                                                                                 
+ * to use the correct ioctl command we expect.                                                                                                                                             
+ * Notes: I am using the generic _IO macro instead of the more specific                                                                                                                    
+ * ones. The macros expect 8bit entities, so I am cleaning what is sent to                                                                                                                 
+ * us from imb_if.h  - Mahendra                                                                                                                                                            
+ */
+#define IPMI_INTELDCMI_CTL_CODE(DeviceType, Function, Method, Access) \
+  _IO(DeviceType & 0x00FF, Function & 0x00FF)
+
+/*                                                                                                                                                                                         
+ Define the method codes for how buffers are passed for I/O and FS controls                                                                                                                
+*/
+#define IPMI_INTELDCMI_METHOD_BUFFERED                 0
+/*                                                                                                                                                                                         
+ Define the access check value for any access                                                                                                                                              
+ The FILE_READ_ACCESS and FILE_WRITE_ACCESS constants are also defined in                                                                                                                  
+ ntioapi.h as FILE_READ_DATA and FILE_WRITE_DATA. The values for these                                                                                                                     
+ constants *MUST* always be in sync.                                                                                                                                                       
+*/
+#define IPMI_INTELDCMI_FILE_ANY_ACCESS                 0
+
+#define IPMI_INTELDCMI_FILE_DEVICE_IMB                 0x00008010
+#define IPMI_INTELDCMI_IOCTL_IMB_BASE                  0x00000880
+#define IPMI_INTELDCMI_IOCTL_IMB_SEND_MESSAGE          IPMI_INTELDCMI_CTL_CODE(IPMI_INTELDCMI_FILE_DEVICE_IMB, (IPMI_INTELDCMI_IOCTL_IMB_BASE + 2),  IPMI_INTELDCMI_METHOD_BUFFERED, IPMI_INTELDCMI_FILE_ANY_ACCESS)
+#define IPMI_INTELDCMI_IOCTL_IMB_GET_ASYNC_MSG         IPMI_INTELDCMI_CTL_CODE(IPMI_INTELDCMI_FILE_DEVICE_IMB, (IPMI_INTELDCMI_IOCTL_IMB_BASE + 8),  IPMI_INTELDCMI_METHOD_BUFFERED, IPMI_INTELDCMI_FILE_ANY_ACCESS)
+#define IPMI_INTELDCMI_IOCTL_IMB_MAP_MEMORY            IPMI_INTELDCMI_CTL_CODE(IPMI_INTELDCMI_FILE_DEVICE_IMB, (IPMI_INTELDCMI_IOCTL_IMB_BASE + 14), IPMI_INTELDCMI_METHOD_BUFFERED, IPMI_INTELDCMI_FILE_ANY_ACCESS)
+#define IPMI_INTELDCMI_IOCTL_IMB_UNMAP_MEMORY          IPMI_INTELDCMI_CTL_CODE(IPMI_INTELDCMI_FILE_DEVICE_IMB, (IPMI_INTELDCMI_IOCTL_IMB_BASE + 16), IPMI_INTELDCMI_METHOD_BUFFERED, IPMI_INTELDCMI_FILE_ANY_ACCESS)
+#define IPMI_INTELDCMI_IOCTL_IMB_SHUTDOWN_CODE         IPMI_INTELDCMI_CTL_CODE(IPMI_INTELDCMI_FILE_DEVICE_IMB, (IPMI_INTELDCMI_IOCTL_IMB_BASE + 18), IPMI_INTELDCMI_METHOD_BUFFERED, IPMI_INTELDCMI_FILE_ANY_ACCESS)
+#define IPMI_INTELDCMI_IOCTL_IMB_REGISTER_ASYNC_OBJ    IPMI_INTELDCMI_CTL_CODE(IPMI_INTELDCMI_FILE_DEVICE_IMB, (IPMI_INTELDCMI_IOCTL_IMB_BASE + 24), IPMI_INTELDCMI_METHOD_BUFFERED, IPMI_INTELDCMI_FILE_ANY_ACCESS)
+#define IPMI_INTELDCMI_IOCTL_IMB_DEREGISTER_ASYNC_OBJ  IPMI_INTELDCMI_CTL_CODE(IPMI_INTELDCMI_FILE_DEVICE_IMB, (IPMI_INTELDCMI_IOCTL_IMB_BASE + 26), IPMI_INTELDCMI_METHOD_BUFFERED, IPMI_INTELDCMI_FILE_ANY_ACCESS)
+#define IPMI_INTELDCMI_IOCTL_IMB_CHECK_EVENT           IPMI_INTELDCMI_CTL_CODE(IPMI_INTELDCMI_FILE_DEVICE_IMB, (IPMI_INTELDCMI_IOCTL_IMB_BASE + 28), IPMI_INTELDCMI_METHOD_BUFFERED, IPMI_INTELDCMI_FILE_ANY_ACCESS)
+#define IPMI_INTELDCMI_IOCTL_IMB_POLL_ASYNC            IPMI_INTELDCMI_CTL_CODE(IPMI_INTELDCMI_FILE_DEVICE_IMB, (IPMI_INTELDCMI_IOCTL_IMB_BASE + 20), IPMI_INTELDCMI_METHOD_BUFFERED, IPMI_INTELDCMI_FILE_ANY_ACCESS)
+
+/*                                                                                                                                                                                         
+ * I2C ioctl's return NTStatus codes                                                                                                                                                       
+ */
+#define IPMI_INTELDCMI_STATUS_SUCCESS                   (0x00000000U)
+#define IPMI_INTELDCMI_STATUS_UNSUCCESSFUL              (0xC0000001U)
+#define IPMI_INTELDCMI_STATUS_DEVICE_BUSY               (0x80000011U)
+#define IPMI_INTELDCMI_STATUS_PENDING                   (0x00000103U)
+#define IPMI_INTELDCMI_STATUS_INVALID_PARAMETER         (0xC000000DU)
+#define IPMI_INTELDCMI_STATUS_INVALID_DEVICE_REQUEST    (0xC0000010U)
+#define IPMI_INTELDCMI_STATUS_BUFFER_TOO_SMALL          (0xC0000023U)
+#define IPMI_INTELDCMI_STATUS_FILE_CLOSED               (0xC0000128U)
+#define IPMI_INTELDCMI_STATUS_INSUFFICIENT_RESOURCES    (0xC000009AU)
+#define IPMI_INTELDCMI_STATUS_NO_DATA_DETECTED          (0x80000022U)
+#define IPMI_INTELDCMI_STATUS_NO_SUCH_DEVICE            (0xC000000EU)
+#define IPMI_INTELDCMI_STATUS_ALLOTTED_EXCEEDED         (0xC000000FU)
+#define IPMI_INTELDCMI_STATUS_IO_DEVICE_ERROR           (0xC0000185U)
+#define IPMI_INTELDCMI_STATUS_TOO_MANY_OPEN_FILES       (0xC000011FU)
+#define IPMI_INTELDCMI_STATUS_ACCESS_DENIED             (0xC0000022U)
+#define IPMI_INTELDCMI_STATUS_BUFFER_OVERFLOW           (0x80000005U)
+#define IPMI_INTELDCMI_STATUS_CANCELLED                 (0xC0000120U)
+
+/*
+ * End code from Intel Code
+ */
 
 static void
 _set_inteldcmi_ctx_errnum_by_errno (ipmi_inteldcmi_ctx_t ctx, int _errno)
@@ -341,7 +418,6 @@ ipmi_inteldcmi_ctx_set_flags (ipmi_inteldcmi_ctx_t ctx, unsigned int flags)
 int
 ipmi_inteldcmi_ctx_io_init (ipmi_inteldcmi_ctx_t ctx)
 {
-  unsigned int addr = IPMI_SLAVE_ADDRESS_BMC;
   char *driver_device;
 
   if (!ctx || ctx->magic != IPMI_INTELDCMI_CTX_MAGIC)
@@ -358,17 +434,7 @@ ipmi_inteldcmi_ctx_io_init (ipmi_inteldcmi_ctx_t ctx)
   else
     driver_device = IPMI_INTELDCMI_DRIVER_DEVICE_DEFAULT;
 
-  /* XXX fix this part */
-  if ((ctx->device_fd = open (driver_device,
-                              O_RDWR)) < 0)
-    {
-      INTELDCMI_ERRNO_TO_INTELDCMI_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
-  if (ioctl (ctx->device_fd,
-             IPMICTL_SET_MY_ADDRESS_CMD,
-             &addr) < 0)
+  if ((ctx->device_fd = open (driver_device, O_RDWR)) < 0)
     {
       INTELDCMI_ERRNO_TO_INTELDCMI_ERRNUM (ctx, errno);
       goto cleanup;
@@ -395,14 +461,18 @@ _inteldcmi_write (ipmi_inteldcmi_ctx_t ctx,
 		  fiid_obj_t obj_cmd_rq,
 		  unsigned int is_ipmb)
 {
-  uint8_t rq_buf_temp[IPMI_INTELDCMI_BUFLEN];
+  uint8_t rq_temp[IPMI_INTELDCMI_BUFLEN];
+  uint8_t rq_data[IPMI_INTELDCMI_BUFLEN];
   uint8_t rq_buf[IPMI_INTELDCMI_BUFLEN];
+  uint8_t rs_buf[IPMI_INTELDCMI_BUFLEN];
   uint8_t rq_cmd;
-  unsigned int rq_buf_len;
+  unsigned int rq_data_len;
   int len;
-  struct ipmi_system_interface_addr system_interface_addr;
-  struct ipmi_ipmb_addr ipmb_addr;
-  struct ipmi_req rq_packet;
+  unsigned long rs_len;
+  fiid_obj_t obj_inteldcmi_rq = NULL;
+  struct inteldcmi_smi smi_msg;
+  int rv = -1;
+  int ret;
 
   assert (ctx);
   assert (ctx->magic == IPMI_INTELDCMI_CTX_MAGIC);
@@ -412,66 +482,129 @@ _inteldcmi_write (ipmi_inteldcmi_ctx_t ctx,
   assert (fiid_obj_valid (obj_cmd_rq));
   assert (fiid_obj_packet_valid (obj_cmd_rq) == 1);
 
-  /* XXX fix this part */
+  if (!(obj_inteldcmi_rq = fiid_obj_create (tmpl_inteldcmi_request)))
+    {
+      INTELDCMI_SET_ERRNUM (ctx, IPMI_INTELDCMI_ERR_INTERNAL_ERROR);
+      goto cleanup;
+    }
 
   /* Due to API differences, we need to extract the cmd out of the
    * request.
    */
-  memset (rq_buf_temp, '\0', IPMI_INTELDCMI_BUFLEN);
+  memset (rq_temp, '\0', IPMI_INTELDCMI_BUFLEN);
 
   if ((len = fiid_obj_get_all (obj_cmd_rq,
-                               rq_buf_temp,
+                               rq_temp,
                                IPMI_INTELDCMI_BUFLEN)) <= 0)
     {
       INTELDCMI_SET_ERRNUM (ctx, IPMI_INTELDCMI_ERR_INTERNAL_ERROR);
-      return (-1);
+      goto cleanup;
     }
 
-  rq_cmd = rq_buf_temp[0];
+  rq_cmd = rq_temp[0];
   if (len > 1)
     {
       /* -1 b/c of cmd */
-      memcpy (rq_buf, &rq_buf_temp[1], len - 1);
-      rq_buf_len = len - 1;
+      memcpy (rq_buf, &rq_temp[1], len - 1);
+      rq_data_len = len - 1;
     }
   else
-    rq_buf_len = 0;
+    rq_data_len = 0;
 
-  if (!is_ipmb)
+  if (fiid_obj_set (obj_inteldcmi_rq, "flags", 0) < 0)
     {
-      system_interface_addr.addr_type = IPMI_SYSTEM_INTERFACE_ADDR_TYPE; /* inteldcmi macro */
-      system_interface_addr.channel = IPMI_CHANNEL_NUMBER_SYSTEM_INTERFACE; /* freeipmi macro */
-      system_interface_addr.lun = lun;
-
-      rq_packet.addr = (unsigned char *)&system_interface_addr;
-      rq_packet.addr_len = sizeof (struct ipmi_system_interface_addr);
-    }
-  else
-    {
-      ipmb_addr.addr_type = IPMI_IPMB_ADDR_TYPE; /* inteldcmi macro */
-      ipmb_addr.channel = channel_number;
-      ipmb_addr.slave_addr = rs_addr;
-      ipmb_addr.lun = lun;
-
-      rq_packet.addr = (unsigned char *)&ipmb_addr;
-      rq_packet.addr_len = sizeof (struct ipmi_ipmb_addr);
+      INTELDCMI_SET_ERRNUM (ctx, IPMI_INTELDCMI_ERR_INTERNAL_ERROR);
+      goto cleanup;
     }
 
-  rq_packet.msgid = 0;
-  rq_packet.msg.netfn = net_fn;
-  rq_packet.msg.cmd = rq_cmd;
-  rq_packet.msg.data_len = rq_buf_len;
-  rq_packet.msg.data = rq_buf;
+  if (fiid_obj_set (obj_inteldcmi_rq, "timeout", IPMI_INTELDCMI_TIMEOUT) < 0)
+    {
+      INTELDCMI_SET_ERRNUM (ctx, IPMI_INTELDCMI_ERR_INTERNAL_ERROR);
+      goto cleanup;
+    }
 
-  if (ioctl (ctx->device_fd,
-             IPMICTL_SEND_COMMAND,
-             &rq_packet) < 0)
+  if (fiid_obj_set (obj_inteldcmi_rq, "rs_addr", rs_addr) < 0)
+    {
+      INTELDCMI_SET_ERRNUM (ctx, IPMI_INTELDCMI_ERR_INTERNAL_ERROR);
+      goto cleanup;
+    }
+
+  if (fiid_obj_set (obj_inteldcmi_rq, "cmd", rq_cmd) < 0)
+    {
+      INTELDCMI_SET_ERRNUM (ctx, IPMI_INTELDCMI_ERR_INTERNAL_ERROR);
+      goto cleanup;
+    }
+
+  if (fiid_obj_set (obj_inteldcmi_rq, "net_fn", net_fn) < 0)
+    {
+      INTELDCMI_SET_ERRNUM (ctx, IPMI_INTELDCMI_ERR_INTERNAL_ERROR);
+      goto cleanup;
+    }
+
+  if (fiid_obj_set (obj_inteldcmi_rq, "rs_lun", lun) < 0)
+    {
+      INTELDCMI_SET_ERRNUM (ctx, IPMI_INTELDCMI_ERR_INTERNAL_ERROR);
+      goto cleanup;
+    }
+
+  if (fiid_obj_set (obj_inteldcmi_rq, "data_len", rq_data_len) < 0)
+    {
+      INTELDCMI_SET_ERRNUM (ctx, IPMI_INTELDCMI_ERR_INTERNAL_ERROR);
+      goto cleanup;
+    }
+
+  if (rq_data_len)
+    {
+      if (fiid_obj_set_data (obj_inteldcmi_rq, "data", rq_data, rq_data_len) < 0)
+	{
+	  INTELDCMI_SET_ERRNUM (ctx, IPMI_INTELDCMI_ERR_INTERNAL_ERROR);
+	  goto cleanup;
+	}
+    }
+
+  if ((len = fiid_obj_get_all (obj_inteldcmi_rq,
+			       rq_buf,
+			       IPMI_INTELDCMI_BUFLEN)) < 0)
+    {
+      INTELDCMI_SET_ERRNUM (ctx, IPMI_INTELDCMI_ERR_INTERNAL_ERROR);
+      goto cleanup;
+    }
+
+  memset (&smi_msg, '\0', sizeof (struct inteldcmi_smi));
+  smi_msg.ntstatus = NULL;
+  smi_msg.lpvInBuffer = rq_buf;
+  smi_msg.cbInBuffer = len;
+  smi_msg.lpvOutBuffer = rs_buf;
+  smi_msg.cbOutBuffer = IPMI_INTELDCMI_BUFLEN;
+  smi_msg.lpcbBytesReturned = &rs_len;
+  smi_msg.lpoOverlapped = NULL;
+
+  if ((ret = ioctl (ctx->device_fd,
+		    IPMI_INTELDCMI_IOCTL_IMB_SEND_MESSAGE,
+		    &smi_msg)) < 0)
     {
       INTELDCMI_ERRNO_TO_INTELDCMI_ERRNUM (ctx, errno);
-      return (-1);
+      goto cleanup;
     }
 
-  return (0);
+  if (ret != IPMI_INTELDCMI_STATUS_SUCCESS)
+    {
+      TRACE_MSG_OUT ("Intel DCMI ioctl status", ret);
+
+      if (ret == IPMI_INTELDCMI_STATUS_DEVICE_BUSY)
+	INTELDCMI_SET_ERRNUM (ctx, IPMI_INTELDCMI_ERR_DRIVER_TIMEOUT);
+      else
+	INTELDCMI_SET_ERRNUM (ctx, IPMI_INTELDCMI_ERR_SYSTEM_ERROR);
+
+      goto cleanup;
+    }
+
+  /* XXX deal w/ return message */
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_inteldcmi_rq);
+  return (rv);
 }
 
 static int
