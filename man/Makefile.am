@@ -29,6 +29,7 @@ man8_MANS = \
 	bmc-device.8 \
 	bmc-info.8 \
 	bmc-watchdog.8 \
+	dcmi-config.8 \
 	ipmi-chassis.8 \
 	ipmi-chassis-config.8 \
 	ipmi-config.8 \
@@ -95,6 +96,7 @@ MANS_CPP = \
 MANS_NOCPP = \
 	bmc-config.8 \
 	bmc-config.conf.5 \
+	dcmi-config.8 \
 	ipmi-chassis-config.8 \
 	ipmi-console.8 \
 	ipmi-detect.8 \

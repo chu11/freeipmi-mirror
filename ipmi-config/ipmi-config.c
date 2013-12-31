@@ -149,6 +149,18 @@ _ipmi_config (pstdout_state_t pstate,
 	goto cleanup;
     }
 
+  if (prog_data->args->category_mask & IPMI_CONFIG_CATEGORY_MASK_DCMI)
+    {
+      if (!(tmp_sections = ipmi_config_dcmi_sections_create (&state_data)))
+	goto cleanup;
+
+      if (ipmi_config_set_category (tmp_sections, IPMI_CONFIG_CATEGORY_MASK_DCMI) < 0)
+	goto cleanup;
+
+      if (ipmi_config_section_append (&state_data.sections, tmp_sections) < 0)
+	goto cleanup;
+    }
+
   assert (state_data.sections);
   
   if (prog_data->args->action == IPMI_CONFIG_ACTION_CHECKOUT)

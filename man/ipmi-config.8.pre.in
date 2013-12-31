@@ -55,13 +55,14 @@ in configuration values.
 \fB\-g\fR \fICATEGORY\fR, \fB\-\-category\fR=\fICATEGORY\fR
 Specify the category or categories of configuration data to configure.
 Currently available choices: \fIcore\fR, \fIchassis\fR, \fIsensors\fR,
-\fIpef\fR.  Multiple categories can be separated by comma.  \fIcore\fR
-includes all major IPMI configuration necessary to get IPMI to
-function on a sytem, such as configuration for users, passwords,
+\fIpef\fR, \fIdcmi\fR.  Multiple categories can be separated by comma.
+\fIcore\fR includes all major IPMI configuration necessary to get IPMI
+to function on a sytem, such as configuration for users, passwords,
 authentication, networking, and serial-over-lan (SOL).  \fIchassis\fR
 includes all chassis relevant configuration including boot options,
-front panel buttons, and power behavior.  Defaults to \fIcore\fR if
-not specified.
+front panel buttons, and power behavior.  \fIdcmi\fR includes
+specialized functions provided by the Data Center Management Interface
+(DCMI).  Defaults to \fIcore\fR if not specified.
 .TP
 \fB\-o\fR, \fB\-\-checkout\fR
 Fetch configuration information.
