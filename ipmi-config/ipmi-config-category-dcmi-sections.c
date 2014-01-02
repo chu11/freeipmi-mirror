@@ -32,8 +32,7 @@
 #include "ipmi-config-section.h"
 #include "ipmi-config-utils.h"
 
-/* XXX */
-/* #include "ipmi-config-category-dcmi-alert-policy-table.h" */
+#include "ipmi-config-category-dcmi-dcmi-conf-section.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"
@@ -47,11 +46,8 @@ ipmi_config_dcmi_sections_create (ipmi_config_state_data_t *state_data)
 
   assert (state_data);
 
-  /* XXX */
-#if 0
   if (!(section = ipmi_config_dcmi_dcmi_conf_section_get (state_data)))
     goto cleanup;
-#endif
   if (ipmi_config_section_append (&sections, section) < 0)
     goto cleanup;
 
