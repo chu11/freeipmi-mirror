@@ -1163,7 +1163,7 @@ get_asset_tag (ipmi_dcmi_state_data_t *state_data)
           && asset_tag_data[1] == IPMI_DCMI_ASSET_TAG_UTF8_BOM_BYTE1
           && asset_tag_data[2] == IPMI_DCMI_ASSET_TAG_UTF8_BOM_BYTE2)
 	/* achu: I think this is right for UTF-8 in libc and is
-	 * portable, but I would be some systems won't like this.
+	 * portable, but I would bet some systems won't like this.
 	 */
         pstdout_printf (state_data->pstate,
                         "%ls\n",
