@@ -5,7 +5,7 @@
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif /*
- * Copyright (C) 2003-2013 FreeIPMI Core Team
+ * Copyright (C) 2003-2014 FreeIPMI Core Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
