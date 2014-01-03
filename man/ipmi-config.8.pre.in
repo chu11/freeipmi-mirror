@@ -370,7 +370,7 @@ status is 2.
 #include <@top_srcdir@/man/manpage-common-known-issues.man>
 #include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
 .SH "COPYRIGHT"
-Copyright \(co 2003-2013 FreeIPMI Core Team.  
+Copyright \(co 2003-2014 FreeIPMI Core Team.  
 #include <@top_srcdir@/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
 ipmi-config.conf(5), freeipmi(7), bmc-device(8)

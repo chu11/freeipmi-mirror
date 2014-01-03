@@ -1,5 +1,9 @@
 2014-01-03  Albert Chu <chu11@llnl.gov>
 
+	* Update copyright globally.
+	
+2014-01-03  Albert Chu <chu11@llnl.gov>
+
 	* ipmi-dcmi/, man/, ipmi-config/: Fix various English and typos.
 	
 2013-12-20  Albert Chu <chu11@llnl.gov>
