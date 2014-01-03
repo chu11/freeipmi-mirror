@@ -1936,8 +1936,8 @@ _get_power_limit (ipmi_dcmi_state_data_t *state_data,
    * LIMIT' (i.e. is "set" a verb or part of a proper noun referencing
    * the DCMI command).  Confounding this issue is the fact that the
    * example implementation in Intel's DCMItool implements the former,
-   * while the DCMI Conformance test suite implements the later.  In
-   * addition to this, with the later interpretation, it need not be
+   * while the DCMI Conformance test suite implements the latter.  In
+   * addition to this, with the latter interpretation, it need not be
    * an indication of an error, but rather a flag.  So the rest of the
    * packet can be completely full of legitimate data.
    *
