@@ -485,7 +485,7 @@ management_controller_identifier_string_commit (ipmi_config_state_data_t *state_
       if (offset >= data_len)
         break;
     }
-
+  
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
@@ -494,9 +494,9 @@ management_controller_identifier_string_commit (ipmi_config_state_data_t *state_
 
 static ipmi_config_validate_t
 management_controller_identifier_string_validate (ipmi_config_state_data_t *state_data,
-                           const char *section_name,
-                           const char *key_name,
-                           const char *value)
+						  const char *section_name,
+						  const char *key_name,
+						  const char *value)
 {
   assert (state_data);
   assert (section_name);
