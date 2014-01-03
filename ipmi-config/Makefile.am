@@ -2,6 +2,7 @@ sbin_PROGRAMS = ipmi-config
 
 sbin_SCRIPTS = \
 	bmc-config \
+	dcmi-config \
 	ipmi-chassis-config \
 	ipmi-pef-config \
 	ipmi-sensors-config
@@ -121,6 +122,10 @@ ipmi_config_SOURCES = \
 bmc-config: bmc-config.in
 	sed -e 's:@CONFIGSBINDIR@:$(sbindir):' $< > $@
 	chmod +x bmc-config
+
+dcmi-config: dcmi-config.in
+	sed -e 's:@CONFIGSBINDIR@:$(sbindir):' $< > $@
+	chmod +x dcmi-config
 
 ipmi-chassis-config: ipmi-chassis-config.in
 	sed -e 's:@CONFIGSBINDIR@:$(sbindir):' $< > $@
