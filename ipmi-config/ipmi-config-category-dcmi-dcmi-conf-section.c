@@ -282,6 +282,233 @@ asset_tag_validate (ipmi_config_state_data_t *state_data,
   return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
 }
     
+static ipmi_config_err_t
+management_controller_identifier_string_checkout (ipmi_config_state_data_t *state_data,
+						  const char *section_name,
+						  struct ipmi_config_keyvalue *kv)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  char management_controller_identifier_string_data[IPMI_DCMI_MAX_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_LENGTH];
+  int data_len;
+  unsigned int offset = 0;
+  uint8_t total_length = 0;
+  uint8_t bytes_to_read = IPMI_DCMI_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_NUMBER_OF_BYTES_TO_READ_MAX;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t ret;
+
+  assert (state_data);
+  assert (section_name);
+  assert (kv);
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_dcmi_get_management_controller_identifier_string_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  memset (management_controller_identifier_string_data, '\0', IPMI_DCMI_MAX_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_LENGTH);
+
+  while (1)
+    {
+      uint64_t val;
+
+      if (!offset
+          || ((total_length - offset) >= IPMI_DCMI_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_NUMBER_OF_BYTES_TO_READ_MAX))
+        bytes_to_read = IPMI_DCMI_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_NUMBER_OF_BYTES_TO_READ_MAX;
+      else 
+        bytes_to_read = total_length - offset;
+      
+      if (ipmi_cmd_dcmi_get_management_controller_identifier_string (state_data->ipmi_ctx,
+								     offset,
+								     bytes_to_read,
+								     obj_cmd_rs) < 0)
+        {
+	  if (ipmi_config_param_errnum_is_non_fatal (state_data,
+						     obj_cmd_rs,
+						     &ret))
+	    rv = ret;
+	  
+	  if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+	      || state_data->prog_data->args->common_args.debug)
+	    pstdout_fprintf (state_data->pstate,
+			     stderr,
+			     "ipmi_cmd_dcmi_get_management_controller_identifier_string: %s\n",
+			     ipmi_ctx_errormsg (state_data->ipmi_ctx));
+
+          goto cleanup;
+        }
+      
+      if (FIID_OBJ_GET (obj_cmd_rs,
+                        "total_length",
+                        &val) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get: 'total_length': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+      total_length = val;
+
+      if (!total_length)
+        break;
+
+      if ((data_len = fiid_obj_get_data (obj_cmd_rs,
+                                         "data",
+                                         management_controller_identifier_string_data + offset,
+                                         IPMI_DCMI_MAX_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_LENGTH - offset)) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get_data: 'data': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+      offset += data_len;
+      
+      if (offset >= total_length)
+        break;
+    }
+  
+  if (ipmi_config_section_update_keyvalue_output (state_data,
+						  kv,
+						  management_controller_identifier_string_data) < 0)
+	return (IPMI_CONFIG_ERR_FATAL_ERROR);
+
+  rv = IPMI_CONFIG_ERR_SUCCESS;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+static ipmi_config_err_t
+management_controller_identifier_string_commit (ipmi_config_state_data_t *state_data,
+						const char *section_name,
+						const struct ipmi_config_keyvalue *kv)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  unsigned int offset = 0;
+  char data_buf[IPMI_DCMI_MAX_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_LENGTH];
+  unsigned int data_len;
+  uint8_t bytes_to_write = IPMI_DCMI_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_NUMBER_OF_BYTES_TO_WRITE_MAX;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t ret;
+
+  assert (state_data);
+  assert (section_name);
+  assert (kv);
+
+  /* achu:
+   *
+   * According to DCMI v1.5 draft
+   * 
+   * "The presence of the null terminator among bytes to shall be
+   * considered as indicating the last transfer of the Management
+   * Controller Identifier string"
+   *
+   * So I am assuming we don't need to write the entire buffer.  But
+   * we must include the NUL byte at the end.
+   */
+
+  /* +1 for NUL char */
+  data_len = strlen (kv->value_input) + 1;
+
+  memset (data_buf, '\0', IPMI_DCMI_MAX_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_LENGTH);
+
+  memcpy (data_buf, kv->value_input, strlen (kv->value_input));
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_dcmi_set_management_controller_identifier_string_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  while (1)
+    {
+      uint64_t val;
+
+      if ((data_len - offset) >= IPMI_DCMI_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_NUMBER_OF_BYTES_TO_WRITE_MAX)
+        bytes_to_write = IPMI_DCMI_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_NUMBER_OF_BYTES_TO_WRITE_MAX;
+      else 
+        bytes_to_write = data_len - offset;
+      
+      if (ipmi_cmd_dcmi_set_management_controller_identifier_string (state_data->ipmi_ctx,
+                                                                     offset,
+                                                                     bytes_to_write,
+                                                                     data_buf + offset,
+                                                                     data_len,
+                                                                     obj_cmd_rs) < 0)
+        {
+	  if (ipmi_config_param_errnum_is_non_fatal (state_data,
+						     obj_cmd_rs,
+						     &ret))
+	    rv = ret;
+	  
+	  if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+	      || state_data->prog_data->args->common_args.debug)
+	    pstdout_fprintf (state_data->pstate,
+			     stderr,
+			     "ipmi_cmd_dcmi_set_management_controller_identifier_string: %s\n",
+			     ipmi_ctx_errormsg (state_data->ipmi_ctx));
+          goto cleanup;
+        }
+
+      if (FIID_OBJ_GET (obj_cmd_rs,
+                        "total_length_written",
+                        &val) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get: 'total_management_controller_identifier_string_length': %s\n",
+                           fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+
+      /* DCMI 1.1 spec is unclear on "total_length_written", is it the
+       * number of bytes just written or total bytes written so far?
+       * 
+       * DCMI 1.5 spec makes it clear that this is the number of bytes
+       * written in total.  To defend against vendor mistakes, we
+       * handle both situations.
+       */
+      if (val > bytes_to_write)
+        offset += bytes_to_write;
+      else
+        offset += val;
+
+      if (offset >= data_len)
+        break;
+    }
+
+  rv = IPMI_CONFIG_ERR_SUCCESS;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+static ipmi_config_validate_t
+management_controller_identifier_string_validate (ipmi_config_state_data_t *state_data,
+                           const char *section_name,
+                           const char *key_name,
+                           const char *value)
+{
+  assert (state_data);
+  assert (section_name);
+  assert (key_name);
+  assert (value);
+
+  /* IPMI_DCMI_MAX_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_LENGTH includes NUL char, so subtract 1 in check */
+  if (!value || strlen (value) > (IPMI_DCMI_MAX_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_LENGTH - 1))
+    return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
+  return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
+}
+
 struct ipmi_config_section *
 ipmi_config_dcmi_dcmi_conf_section_get (ipmi_config_state_data_t *state_data)
 {
@@ -306,6 +533,16 @@ ipmi_config_dcmi_dcmi_conf_section_get (ipmi_config_state_data_t *state_data)
                                    asset_tag_checkout,
                                    asset_tag_commit,
                                    asset_tag_validate) < 0)
+    goto cleanup;
+
+  if (ipmi_config_section_add_key (state_data,
+                                   section,
+                                   "Management_Controller_Identifier_String",
+                                   "Give valid string",
+                                   0,
+                                   management_controller_identifier_string_checkout,
+                                   management_controller_identifier_string_commit,
+                                   management_controller_identifier_string_validate) < 0)
     goto cleanup;
 
   return (section);
