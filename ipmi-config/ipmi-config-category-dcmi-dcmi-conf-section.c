@@ -197,6 +197,10 @@ asset_tag_commit (ipmi_config_state_data_t *state_data,
    */
 
   data_len = strlen (kv->value_input);
+  
+  /* Write empty buffer */
+  if (!data_len)
+    data_len = IPMI_DCMI_MAX_ASSET_TAG_LENGTH;
 
   memset (data_buf, '\0', IPMI_DCMI_MAX_ASSET_TAG_LENGTH + 1);
 
@@ -424,6 +428,10 @@ management_controller_identifier_string_commit (ipmi_config_state_data_t *state_
 
   /* +1 for NUL char */
   data_len = strlen (kv->value_input) + 1;
+
+  /* Write NUL char */
+  if (!data_len)
+    data_len = 1;
 
   memset (data_buf, '\0', IPMI_DCMI_MAX_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_LENGTH);
 
