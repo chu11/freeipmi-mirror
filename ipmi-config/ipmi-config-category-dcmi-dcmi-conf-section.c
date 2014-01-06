@@ -615,6 +615,10 @@ _get_power_limit (ipmi_config_state_data_t *state_data,
 			 stderr,
 			 "fiid_obj_get: 'exception_actions': %s",
 			 fiid_obj_errormsg (obj_cmd_rs));
+
+      if (no_set_power_limit_error_flag)
+	rv = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
+
       goto cleanup;
     }
   gpld->exception_actions = val;
@@ -629,6 +633,10 @@ _get_power_limit (ipmi_config_state_data_t *state_data,
 			 stderr,
 			 "fiid_obj_get: 'power_limit_requested': %s",
 			 fiid_obj_errormsg (obj_cmd_rs));
+
+      if (no_set_power_limit_error_flag)
+	rv = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
+
       goto cleanup;
     }
   gpld->power_limit_requested = val;
@@ -643,6 +651,10 @@ _get_power_limit (ipmi_config_state_data_t *state_data,
 			 stderr,
 			 "fiid_obj_get: 'correction_time_limit': %s",
 			 fiid_obj_errormsg (obj_cmd_rs));
+
+      if (no_set_power_limit_error_flag)
+	rv = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
+
       goto cleanup;
     }
   gpld->correction_time_limit = val;
@@ -657,6 +669,10 @@ _get_power_limit (ipmi_config_state_data_t *state_data,
 			 stderr,
 			 "fiid_obj_get: 'management_application_statistics_sampling_period': %s",
 			 fiid_obj_errormsg (obj_cmd_rs));
+
+      if (no_set_power_limit_error_flag)
+	rv = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
+
       goto cleanup;
     }
   gpld->management_application_statistics_sampling_period = val;
