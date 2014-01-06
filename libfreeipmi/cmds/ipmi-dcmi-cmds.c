@@ -887,8 +887,8 @@ fill_cmd_dcmi_set_asset_tag (uint8_t offset_to_write,
                              fiid_obj_t obj_cmd_rq)
 {
   if (number_of_bytes_to_write > IPMI_DCMI_ASSET_TAG_NUMBER_OF_BYTES_TO_WRITE_MAX
-      || !data
-      || !data_len
+      || (!data && data_len)
+      || (data && !data_len)
       || number_of_bytes_to_write > data_len
       || !fiid_obj_valid (obj_cmd_rq))
     {
@@ -950,8 +950,8 @@ fill_cmd_dcmi_set_management_controller_identifier_string (uint8_t offset_to_wri
                                                            fiid_obj_t obj_cmd_rq)
 {
   if (number_of_bytes_to_write > IPMI_DCMI_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_NUMBER_OF_BYTES_TO_WRITE_MAX
-      || !data
-      || !data_len
+      || (!data && data_len)
+      || (data && !data_len)
       || number_of_bytes_to_write > data_len
       || !fiid_obj_valid (obj_cmd_rq))
     {
