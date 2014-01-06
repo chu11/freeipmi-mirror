@@ -176,27 +176,27 @@ struct inteldcmi_smi {
 };
 
 
-/*                                                                                                                                                                                         
- * Linux drivers expect ioctls defined using macros defined in ioctl.h.                                                                                                                    
- * So, instead of using the CTL_CODE defined for NT and UW, I define CTL_CODE                                                                                                              
- * using these macros. That way imb_if.h, where the ioctls are defined get                                                                                                                 
- * to use the correct ioctl command we expect.                                                                                                                                             
- * Notes: I am using the generic _IO macro instead of the more specific                                                                                                                    
- * ones. The macros expect 8bit entities, so I am cleaning what is sent to                                                                                                                 
- * us from imb_if.h  - Mahendra                                                                                                                                                            
+/*
+ * Linux drivers expect ioctls defined using macros defined in ioctl.h.
+ * So, instead of using the CTL_CODE defined for NT and UW, I define CTL_CODE
+ * using these macros. That way imb_if.h, where the ioctls are defined get
+ * to use the correct ioctl command we expect.
+ * Notes: I am using the generic _IO macro instead of the more specific
+ * ones. The macros expect 8bit entities, so I am cleaning what is sent to
+ * us from imb_if.h  - Mahendra
  */
 #define IPMI_INTELDCMI_CTL_CODE(DeviceType, Function, Method, Access) \
   _IO(DeviceType & 0x00FF, Function & 0x00FF)
 
-/*                                                                                                                                                                                         
- Define the method codes for how buffers are passed for I/O and FS controls                                                                                                                
+/*
+ Define the method codes for how buffers are passed for I/O and FS controls
 */
 #define IPMI_INTELDCMI_METHOD_BUFFERED                 0
-/*                                                                                                                                                                                         
- Define the access check value for any access                                                                                                                                              
- The FILE_READ_ACCESS and FILE_WRITE_ACCESS constants are also defined in                                                                                                                  
- ntioapi.h as FILE_READ_DATA and FILE_WRITE_DATA. The values for these                                                                                                                     
- constants *MUST* always be in sync.                                                                                                                                                       
+/*
+ Define the access check value for any access
+ The FILE_READ_ACCESS and FILE_WRITE_ACCESS constants are also defined in
+ ntioapi.h as FILE_READ_DATA and FILE_WRITE_DATA. The values for these
+ constants *MUST* always be in sync.
 */
 #define IPMI_INTELDCMI_FILE_ANY_ACCESS                 0
 
@@ -212,8 +212,8 @@ struct inteldcmi_smi {
 #define IPMI_INTELDCMI_IOCTL_IMB_CHECK_EVENT           IPMI_INTELDCMI_CTL_CODE(IPMI_INTELDCMI_FILE_DEVICE_IMB, (IPMI_INTELDCMI_IOCTL_IMB_BASE + 28), IPMI_INTELDCMI_METHOD_BUFFERED, IPMI_INTELDCMI_FILE_ANY_ACCESS)
 #define IPMI_INTELDCMI_IOCTL_IMB_POLL_ASYNC            IPMI_INTELDCMI_CTL_CODE(IPMI_INTELDCMI_FILE_DEVICE_IMB, (IPMI_INTELDCMI_IOCTL_IMB_BASE + 20), IPMI_INTELDCMI_METHOD_BUFFERED, IPMI_INTELDCMI_FILE_ANY_ACCESS)
 
-/*                                                                                                                                                                                         
- * I2C ioctl's return NTStatus codes                                                                                                                                                       
+/*
+ * I2C ioctl's return NTStatus codes
  */
 #define IPMI_INTELDCMI_STATUS_SUCCESS                   (0x00000000U)
 #define IPMI_INTELDCMI_STATUS_UNSUCCESSFUL              (0xC0000001U)
