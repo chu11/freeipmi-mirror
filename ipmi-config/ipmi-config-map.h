@@ -105,4 +105,8 @@ int sensor_type_number (const char *string);
 
 char *sensor_type_string (uint8_t value);
 
+int exception_actions_number (const char *source);
+
+char *exception_actions_string (uint8_t source);
+
 #endif /* IPMI_CONFIG_MAP_H */

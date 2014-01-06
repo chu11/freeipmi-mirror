@@ -38,6 +38,9 @@ an exception action, power limit, and correction time limit, power
 usage in a data center can be managed more affectively.  Please see
 \fB\-\-set\-power\-limit\fR option below for more information.
 
+DCMI can also be configured using the \fIdcmi\fR category in
+.B ipmi-config(8).
+
 The DCMI specification encompasses many traditional IPMI features that
 are not implemented directly in this tool.  Please see
 .B ipmiconsole(8)

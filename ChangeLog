@@ -1,5 +1,15 @@
 2014-01-03  Albert Chu <chu11@llnl.gov>
 
+	Add DCMI configuration support in ipmi-config.
+
+	* ipmi-config/: Add basic DCMI configuration support.
+
+	* man/: Add appropriately DCMI config subsections to manpages.
+
+	* libfreeipmi/: Fix various corner cases.
+	
+2014-01-03  Albert Chu <chu11@llnl.gov>
+
 	* Update copyright globally.
 	
 2014-01-03  Albert Chu <chu11@llnl.gov>

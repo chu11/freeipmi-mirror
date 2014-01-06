@@ -78,6 +78,29 @@ check_number_range (const char *value,
 }
 
 ipmi_config_validate_t
+check_number_range_unsigned (const char *value,
+			     unsigned int min,
+			     unsigned int max)
+{
+  unsigned long conv;
+  char *endptr;
+
+  assert (value);
+
+  errno = 0;
+  conv = strtoul (value, &endptr, 0);
+
+  if (errno
+      || endptr[0] != '\0')
+    return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
+
+  if (conv < min || conv > max)
+    return (IPMI_CONFIG_VALIDATE_OUT_OF_RANGE_VALUE);
+
+  return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
+}
+
+ipmi_config_validate_t
 number_range_three_bits_validate (ipmi_config_state_data_t *state_data,
 				  const char *section_name,
                                   const char *key_name,
@@ -173,6 +196,20 @@ number_range_two_bytes_validate (ipmi_config_state_data_t *state_data,
   assert (value);
 
   return (check_number_range (value, 0, 65535));
+}
+
+ipmi_config_validate_t
+number_range_four_bytes_validate (ipmi_config_state_data_t *state_data,
+				  const char *section_name,
+				  const char *key_name,
+				  const char *value)
+{
+  assert (state_data);
+  assert (section_name);
+  assert (key_name);
+  assert (value);
+
+  return (check_number_range_unsigned (value, 0, 4294967295));
 }
 
 ipmi_config_validate_t
@@ -590,4 +627,25 @@ sensor_type_validate (ipmi_config_state_data_t *state_data,
 					  section_name,
 					  key_name,
 					  value));
+}
+
+ipmi_config_validate_t
+exception_actions_validate (ipmi_config_state_data_t *state_data,
+			    const char *section_name,
+			    const char *key_name,
+			    const char *value)
+{
+  assert (state_data);
+  assert (section_name);
+  assert (key_name);
+  assert (value);
+
+  /* can be string or hex code, hex code range limited */
+
+  if (exception_actions_number (value) != -1)
+    return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
+
+  return (check_number_range (value,
+			      IPMI_DCMI_EXCEPTION_ACTIONS_MIN,
+			      IPMI_DCMI_EXCEPTION_ACTIONS_MAX));
 }

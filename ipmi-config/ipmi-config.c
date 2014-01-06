@@ -39,6 +39,7 @@
 
 #include "ipmi-config-category-core-sections.h"
 #include "ipmi-config-category-chassis-sections.h"
+#include "ipmi-config-category-dcmi-sections.h"
 #include "ipmi-config-category-sensors-sections.h"
 #include "ipmi-config-category-pef-sections.h"
 #include "ipmi-config-legacy-pef-info.h"
@@ -143,6 +144,22 @@ _ipmi_config (pstdout_state_t pstate,
 	goto cleanup;
 
       if (ipmi_config_set_category (tmp_sections, IPMI_CONFIG_CATEGORY_MASK_PEF) < 0)
+	goto cleanup;
+
+      if (ipmi_config_section_append (&state_data.sections, tmp_sections) < 0)
+	goto cleanup;
+    }
+
+  if (prog_data->args->category_mask & IPMI_CONFIG_CATEGORY_MASK_DCMI)
+    {
+      if (!(tmp_sections = ipmi_config_dcmi_sections_create (&state_data)))
+	goto cleanup;
+
+      if (ipmi_config_set_category (tmp_sections, IPMI_CONFIG_CATEGORY_MASK_DCMI) < 0)
+	goto cleanup;
+
+      /* Many fields long in length, use average of 60 for this section */
+      if (ipmi_config_set_line_length (tmp_sections, 60) < 0)
 	goto cleanup;
 
       if (ipmi_config_section_append (&state_data.sections, tmp_sections) < 0)

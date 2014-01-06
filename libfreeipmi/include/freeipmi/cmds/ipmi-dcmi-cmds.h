@@ -175,8 +175,8 @@ extern "C" {
 #define IPMI_DCMI_EXCEPTION_ACTION_VALID(__exception_action) \
   (((__exception_action) == IPMI_DCMI_EXCEPTION_ACTION_NO_ACTION        \
     || (__exception_action) == IPMI_DCMI_EXCEPTION_ACTION_HARD_POWER_OFF_SYSTEM \
-    || ((__exception_action) >= IPMI_DCMI_EXCEPTION_ACTION_OEM_MIN && (__exception_action) <= IPMI_DCMI_EXCEPTION_ACTION_OEM_MAX) \
-    || (__exception_action) == IPMI_DCMI_EXCEPTION_ACTION_HARD_POWER_OFF_SYSTEM) ? 1 : 0)
+    || (__exception_action) == IPMI_DCMI_EXCEPTION_ACTION_LOG_EVENT_TO_SEL_ONLY \
+    || ((__exception_action) >= IPMI_DCMI_EXCEPTION_ACTION_OEM_MIN && (__exception_action) <= IPMI_DCMI_EXCEPTION_ACTION_OEM_MAX)) ? 1 : 0)
 
 #define IPMI_DCMI_POWER_LIMIT_ACTIVATION_DEACTIVATE_POWER_LIMIT 0x0
 #define IPMI_DCMI_POWER_LIMIT_ACTIVATION_ACTIVATE_POWER_LIMIT   0x1

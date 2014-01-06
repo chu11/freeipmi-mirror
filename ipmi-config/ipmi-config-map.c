@@ -1012,3 +1012,33 @@ sensor_type_string (uint8_t value)
     }
   return "";
 }
+
+int
+exception_actions_number (const char *string)
+{
+  assert (string);
+
+  if (same (string, "NO_ACTION"))
+    return (IPMI_DCMI_EXCEPTION_ACTION_NO_ACTION);
+  if (same (string, "HARD_POWER_OFF_SYSTEM"))
+    return (IPMI_DCMI_EXCEPTION_ACTION_HARD_POWER_OFF_SYSTEM);
+  if (same (string, "LOG_EVENT_TO_SEL_ONLY"))
+    return (IPMI_DCMI_EXCEPTION_ACTION_LOG_EVENT_TO_SEL_ONLY);
+
+  return (-1);
+}
+
+char *
+exception_actions_string (uint8_t value)
+{
+  switch (value)
+    {
+    case IPMI_DCMI_EXCEPTION_ACTION_NO_ACTION:
+      return "NO_ACTION";
+    case IPMI_DCMI_EXCEPTION_ACTION_HARD_POWER_OFF_SYSTEM:
+      return "HARD_POWER_OFF_SYSTEM";
+    case IPMI_DCMI_EXCEPTION_ACTION_LOG_EVENT_TO_SEL_ONLY:
+      return "LOG_EVENT_TO_SEL_ONLY";
+    }
+  return "";
+}

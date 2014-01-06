@@ -69,6 +69,10 @@ ipmi_config_SOURCES = \
 	ipmi-config-category-core-sol-conf-section.h \
 	ipmi-config-category-core-user-sections.c \
 	ipmi-config-category-core-user-sections.h \
+	ipmi-config-category-dcmi-dcmi-conf-section.c \
+	ipmi-config-category-dcmi-dcmi-conf-section.h \
+	ipmi-config-category-dcmi-sections.c \
+	ipmi-config-category-dcmi-sections.h \
 	ipmi-config-category-pef-alert-policy-table.c \
 	ipmi-config-category-pef-alert-policy-table.h \
 	ipmi-config-category-pef-alert-string.c \
