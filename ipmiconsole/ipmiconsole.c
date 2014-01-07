@@ -1,7 +1,7 @@
 /*****************************************************************************\
  *  $Id: ipmiconsole.c,v 1.73 2010-06-10 22:18:23 chu11 Exp $
  *****************************************************************************
- *  Copyright (C) 2007-2013 Lawrence Livermore National Security, LLC.
+ *  Copyright (C) 2007-2014 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2006-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
  *  Written by Albert Chu <chu11@llnl.gov>

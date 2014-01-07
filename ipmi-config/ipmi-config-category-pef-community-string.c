@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007-2013 FreeIPMI Core Team
+ * Copyright (C) 2007-2014 FreeIPMI Core Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -95,7 +95,7 @@ community_string_checkout (ipmi_config_state_data_t *state_data,
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get_data: 'obj_cmd_rs': %s\n",
+                       "fiid_obj_get_data: 'community_string': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }

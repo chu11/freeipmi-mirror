@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003-2013 FreeIPMI Core Team
+ * Copyright (C) 2003-2014 FreeIPMI Core Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -136,13 +136,15 @@ typedef enum
 #define IPMI_CONFIG_CATEGORY_MASK_CHASSIS  0x0002
 #define IPMI_CONFIG_CATEGORY_MASK_SENSORS  0x0004
 #define IPMI_CONFIG_CATEGORY_MASK_PEF      0x0008
-#define IPMI_CONFIG_CATEGORY_MASK_ALL      0x000F
+#define IPMI_CONFIG_CATEGORY_MASK_DCMI     0x0010
+#define IPMI_CONFIG_CATEGORY_MASK_ALL      0x001F
 
 #define IPMI_CONFIG_CATEGORY_VALID(__val) \
   (((__val) == IPMI_CONFIG_CATEGORY_MASK_CORE \
     || (__val) == IPMI_CONFIG_CATEGORY_MASK_CHASSIS \
     || (__val) == IPMI_CONFIG_CATEGORY_MASK_SENSORS \
-    || (__val) == IPMI_CONFIG_CATEGORY_MASK_PEF) ? 1 : 0)
+    || (__val) == IPMI_CONFIG_CATEGORY_MASK_PEF \
+    || (__val) == IPMI_CONFIG_CATEGORY_MASK_DCMI) ? 1 : 0)
 
 struct ipmi_config_keypair
 {

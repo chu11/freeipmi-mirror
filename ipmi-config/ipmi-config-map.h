@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003-2013 FreeIPMI Core Team
+ * Copyright (C) 2003-2014 FreeIPMI Core Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -89,20 +89,24 @@ int console_redirection_number (const char *string);
 
 char *console_redirection_string (uint8_t value);
 
-int policy_type_number (const char *source);
+int policy_type_number (const char *string);
 
-char *policy_type_string (uint8_t source);
+char *policy_type_string (uint8_t value);
 
-int filter_type_number (const char *source);
+int filter_type_number (const char *string);
 
-char *filter_type_string (uint8_t source);
+char *filter_type_string (uint8_t value);
 
-int event_severity_number (const char *source);
+int event_severity_number (const char *string);
 
-char *event_severity_string (uint8_t source);
+char *event_severity_string (uint8_t value);
 
-int sensor_type_number (const char *source);
+int sensor_type_number (const char *string);
 
-char *sensor_type_string (uint8_t source);
+char *sensor_type_string (uint8_t value);
+
+int exception_actions_number (const char *source);
+
+char *exception_actions_string (uint8_t source);
 
 #endif /* IPMI_CONFIG_MAP_H */

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003-2013 FreeIPMI Core Team
+ * Copyright (C) 2003-2014 FreeIPMI Core Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,6 +29,10 @@ ipmi_config_validate_t yes_no_validate (ipmi_config_state_data_t *state_data,
 ipmi_config_validate_t check_number_range (const char *value,
                                            int min,
                                            int max);
+
+ipmi_config_validate_t check_number_range_unsigned (const char *value,
+						    unsigned int min,
+						    unsigned int max);
 
 ipmi_config_validate_t number_range_three_bits_validate (ipmi_config_state_data_t *state_data,
 							 const char *section_name,
@@ -64,6 +68,11 @@ ipmi_config_validate_t number_range_two_bytes_validate (ipmi_config_state_data_t
 							const char *section_name,
                                                         const char *key_name,
                                                         const char *value);
+
+ipmi_config_validate_t number_range_four_bytes_validate (ipmi_config_state_data_t *state_data,
+							 const char *section_name,
+							 const char *key_name,
+							 const char *value);
 
 ipmi_config_validate_t ip_address_validate (ipmi_config_state_data_t *state_data,
 					    const char *section_name,
@@ -189,5 +198,10 @@ ipmi_config_validate_t sensor_type_validate (ipmi_config_state_data_t *state_dat
 					     const char *section_name,
 					     const char *key_name,
 					     const char *value);
+
+ipmi_config_validate_t exception_actions_validate (ipmi_config_state_data_t *state_data,
+						   const char *section_name,
+						   const char *key_name,
+						   const char *value);
 
 #endif /* IPMI_CONFIG_VALIDATE_H */

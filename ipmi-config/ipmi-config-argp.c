@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003-2013 FreeIPMI Core Team
+ * Copyright (C) 2003-2014 FreeIPMI Core Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,7 +50,7 @@
 
 const char *argp_program_version =
   "ipmi-config - " PACKAGE_VERSION "\n"
-  "Copyright (C) 2003-2013 FreeIPMI Core Team\n"
+  "Copyright (C) 2003-2014 FreeIPMI Core Team\n"
   "This program is free software; you may redistribute it under the terms of\n"
   "the GNU General Public License.  This program has absolutely no warranty.";
 
@@ -148,6 +148,8 @@ _ipmi_config_category (char *arg, unsigned int *category_mask)
 	(*category_mask) |= IPMI_CONFIG_CATEGORY_MASK_SENSORS;
       else if (!strcasecmp (tok, "pef"))
 	(*category_mask) |= IPMI_CONFIG_CATEGORY_MASK_PEF;
+      else if (!strcasecmp (tok, "dcmi"))
+	(*category_mask) |= IPMI_CONFIG_CATEGORY_MASK_DCMI;
       else
 	{
 	  fprintf (stderr, "invalid category '%s' specified\n", tok);

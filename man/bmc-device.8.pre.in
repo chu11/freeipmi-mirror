@@ -218,7 +218,7 @@ Perform a cold reset across a cluster using IPMI over LAN.
 #include <@top_srcdir@/man/manpage-common-known-issues.man>
 #include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
 .SH "COPYRIGHT"
-Copyright \(co 2008-2013 FreeIPMI Core Team.  
+Copyright \(co 2008-2014 FreeIPMI Core Team.  
 #include <@top_srcdir@/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
 freeipmi.conf(5), freeipmi(7)

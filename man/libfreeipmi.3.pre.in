@@ -119,7 +119,7 @@ readings, etc.  Utilized by most of the rest of FreeIPMI.
 /usr/include/freeipmi/
 
 .SH "COPYRIGHT"
-Copyright \(co 2003-2013 FreeIPMI Core Team.  
+Copyright \(co 2003-2014 FreeIPMI Core Team.  
 #include <@top_srcdir@/man/manpage-common-gpl-library-text.man>
 
 .SH "SEE ALSO"
