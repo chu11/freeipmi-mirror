@@ -1754,6 +1754,15 @@ Misc IPMI Issue #4: [INTERPRETATION]
 
   Resolution: Workaround added to bmc-info to handle special case.
 
+Misc IPMI Issue #2: [COMPLIANCE]
+
+  The Get System Info Parameters command returns insufficient
+  privilege level (0xD4) regardless of privilege level.
+
+  Seen on: Quanta Winterfell
+
+  Resolution: None
+
 ----------------------------------------------------------------------
 
 ------------
