@@ -457,22 +457,23 @@ ipmi_inteldcmi_ctx_io_init (ipmi_inteldcmi_ctx_t ctx)
 }
 
 static int
-_inteldcmi_write (ipmi_inteldcmi_ctx_t ctx,
-		  uint8_t channel_number,
-		  uint8_t rs_addr,
-		  uint8_t lun,
-		  uint8_t net_fn,
-		  fiid_obj_t obj_cmd_rq,
-		  unsigned int is_ipmb)
+_inteldcmi_write_read (ipmi_inteldcmi_ctx_t ctx,
+		       uint8_t channel_number,
+		       uint8_t rs_addr,
+		       uint8_t lun,
+		       uint8_t net_fn,
+		       fiid_obj_t obj_cmd_rq,
+		       fiid_obj_t obj_cmd_rs)
 {
   uint8_t rq_temp[IPMI_INTELDCMI_BUFLEN];
   uint8_t rq_data[IPMI_INTELDCMI_BUFLEN];
   uint8_t rq_buf[IPMI_INTELDCMI_BUFLEN];
   uint8_t rs_buf[IPMI_INTELDCMI_BUFLEN];
+  uint8_t rs_data[IPMI_INTELDCMI_BUFLEN];
   uint8_t rq_cmd;
   unsigned int rq_data_len;
   int len;
-  unsigned long rs_len;
+  unsigned int rs_len;
   fiid_obj_t obj_inteldcmi_rq = NULL;
   struct inteldcmi_smi smi_msg;
   struct io_status_block ntstatusdummy;
@@ -486,6 +487,7 @@ _inteldcmi_write (ipmi_inteldcmi_ctx_t ctx,
   assert (IPMI_NET_FN_RQ_VALID (net_fn));
   assert (fiid_obj_valid (obj_cmd_rq));
   assert (fiid_obj_packet_valid (obj_cmd_rq) == 1);
+  assert (fiid_obj_valid (obj_cmd_rs));
 
   if (!(obj_inteldcmi_rq = fiid_obj_create (tmpl_inteldcmi_request)))
     {
@@ -638,90 +640,31 @@ _inteldcmi_write (ipmi_inteldcmi_ctx_t ctx,
       goto cleanup;
     }
 
-  /* XXX deal w/ return message */
-
-  rv = 0;
- cleanup:
-  fiid_obj_destroy (obj_inteldcmi_rq);
-  return (rv);
-}
-
-static int
-_inteldcmi_read (ipmi_inteldcmi_ctx_t ctx,
-		 fiid_obj_t obj_cmd_rs)
-{
-  uint8_t rs_buf_temp[IPMI_INTELDCMI_BUFLEN];
-  uint8_t rs_buf[IPMI_INTELDCMI_BUFLEN];
-  struct ipmi_system_interface_addr rs_addr;
-  struct ipmi_recv rs_packet;
-  fd_set read_fds;
-  struct timeval tv;
-  int n;
-
-  assert (ctx);
-  assert (ctx->magic == IPMI_INTELDCMI_CTX_MAGIC);
-  assert (fiid_obj_valid (obj_cmd_rs));
-
-  /* XXX fix this part */
-
-  rs_packet.addr = (unsigned char *)&rs_addr;
-  rs_packet.addr_len = sizeof (struct ipmi_system_interface_addr);
-  rs_packet.msg.data = rs_buf_temp;
-  rs_packet.msg.data_len = IPMI_INTELDCMI_BUFLEN;
-
-  FD_ZERO (&read_fds);
-  FD_SET (ctx->device_fd, &read_fds);
-
-  tv.tv_sec = IPMI_INTELDCMI_TIMEOUT;
-  tv.tv_usec = 0;
-
-  if ((n = select (ctx->device_fd + 1,
-                   &read_fds,
-                   NULL,
-                   NULL,
-                   &tv)) < 0)
-    {
-      INTELDCMI_ERRNO_TO_INTELDCMI_ERRNUM (ctx, errno);
-      return (-1);
-    }
-
-  if (!n)
-    {
-      /* Could be due to a different error, but we assume a timeout */
-      INTELDCMI_SET_ERRNUM (ctx, IPMI_INTELDCMI_ERR_DRIVER_TIMEOUT);
-      return (-1);
-    }
-
-  if (ioctl (ctx->device_fd,
-             IPMICTL_RECEIVE_MSG_TRUNC,
-             &rs_packet) < 0)
-    {
-      INTELDCMI_ERRNO_TO_INTELDCMI_ERRNUM (ctx, errno);
-      return (-1);
-    }
-
   /* achu: atleast the completion code should be returned */
-  if (!rs_packet.msg.data_len)
+  if (!rs_len)
     {
       INTELDCMI_SET_ERRNUM (ctx, IPMI_INTELDCMI_ERR_SYSTEM_ERROR);
       return (-1);
     }
 
-  rs_buf[0] = rs_packet.msg.cmd;
+  rs_data[0] = rq_cmd;
   /* -1 b/c of cmd */
-  if (rs_packet.msg.data_len >= (IPMI_INTELDCMI_BUFLEN - 1))
-    rs_packet.msg.data_len = IPMI_INTELDCMI_BUFLEN - 1;
-  memcpy (rs_buf + 1, rs_buf_temp, rs_packet.msg.data_len);
+  if (rs_len >= (IPMI_INTELDCMI_BUFLEN - 1))
+    rs_len = IPMI_INTELDCMI_BUFLEN - 1;
+  memcpy (rs_data + 1, rs_buf, rs_len);
 
   if (fiid_obj_set_all (obj_cmd_rs,
-                        rs_buf,
-                        rs_packet.msg.data_len + 1) < 0)
+                        rs_data,
+                        rs_len + 1) < 0)
     {
       INTELDCMI_SET_ERRNUM (ctx, IPMI_INTELDCMI_ERR_INTERNAL_ERROR);
       return (-1);
     }
 
-  return (0);
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_inteldcmi_rq);
+  return (rv);
 }
 
 int
@@ -753,16 +696,13 @@ ipmi_inteldcmi_cmd (ipmi_inteldcmi_ctx_t ctx,
       return (-1);
     }
 
-  if (_inteldcmi_write (ctx,
-			IPMI_CHANNEL_NUMBER_PRIMARY_IPMB,
-			IPMI_SLAVE_ADDRESS_BMC,
-			lun,
-			net_fn,
-			obj_cmd_rq,
-			0) < 0)
-    return (-1);
-
-  if (_inteldcmi_read (ctx, obj_cmd_rs) < 0)
+  if (_inteldcmi_write_read (ctx,
+			     IPMI_CHANNEL_NUMBER_PRIMARY_IPMB,
+			     IPMI_SLAVE_ADDRESS_BMC,
+			     lun,
+			     net_fn,
+			     obj_cmd_rq,
+			     obj_cmd_rs) < 0)
     return (-1);
 
   return (0);
@@ -800,16 +740,13 @@ ipmi_inteldcmi_cmd_ipmb (ipmi_inteldcmi_ctx_t ctx,
       return (-1);
     }
 
-  if (_inteldcmi_write (ctx,
-			channel_number,
-			rs_addr,
-			lun,
-			net_fn,
-			obj_cmd_rq,
-			1) < 0)
-    return (-1);
-
-  if (_inteldcmi_read (ctx, obj_cmd_rs) < 0)
+  if (_inteldcmi_write_read (ctx,
+			     channel_number,
+			     rs_addr,
+			     lun,
+			     net_fn,
+			     obj_cmd_rq,
+			     obj_cmd_rs) < 0)
     return (-1);
 
   return (0);
