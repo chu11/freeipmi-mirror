@@ -1248,6 +1248,7 @@ enable_user_commit (ipmi_config_state_data_t *state_data,
            *
            * Forgotten/Undocumented Motherboard
            * Sun X4140
+	   * Quanta Winterfell
            *
            * The IPMI spec says you don't have to set a password when you
            * enable/disable a user.  But some BMCs care that you pass in
@@ -1255,9 +1256,12 @@ enable_user_commit (ipmi_config_state_data_t *state_data,
            * ignored)
            */
           
-          if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
-              && (ipmi_check_completion_code (obj_cmd_rs,
-                                              IPMI_COMP_CODE_REQUEST_DATA_LENGTH_INVALID) == 1))
+          if ((ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
+	       && (ipmi_check_completion_code (obj_cmd_rs,
+					       IPMI_COMP_CODE_REQUEST_DATA_LENGTH_INVALID) == 1))
+	      || (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+		  && (ipmi_check_completion_code (obj_cmd_rs,
+						  IPMI_COMP_CODE_SET_USER_PASSWORD_COMMAND_PASSWORD_TEST_FAILED_PASSWORD_SIZE_INCORRECT))))
             {
 	      if (state_data->prog_data->args->common_args.debug)
                 pstdout_fprintf (state_data->pstate,
