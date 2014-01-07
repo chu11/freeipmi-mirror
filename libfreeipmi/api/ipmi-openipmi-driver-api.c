@@ -49,8 +49,8 @@ fiid_template_t tmpl_openipmi_raw =
 
 int
 api_openipmi_cmd (ipmi_ctx_t ctx,
-                       fiid_obj_t obj_cmd_rq,
-                       fiid_obj_t obj_cmd_rs)
+		  fiid_obj_t obj_cmd_rq,
+		  fiid_obj_t obj_cmd_rs)
 {
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
@@ -74,8 +74,8 @@ api_openipmi_cmd (ipmi_ctx_t ctx,
 
 int
 api_openipmi_cmd_ipmb (ipmi_ctx_t ctx,
-                            fiid_obj_t obj_cmd_rq,
-                            fiid_obj_t obj_cmd_rs)
+		       fiid_obj_t obj_cmd_rq,
+		       fiid_obj_t obj_cmd_rs)
 {
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
@@ -138,8 +138,8 @@ api_openipmi_cmd_raw (ipmi_ctx_t ctx,
     }
 
   if (api_openipmi_cmd (ctx,
-			     obj_cmd_rq,
-			     obj_cmd_rs) < 0)
+			obj_cmd_rq,
+			obj_cmd_rs) < 0)
     goto cleanup;
 
   if ((len = fiid_obj_get_all (obj_cmd_rs,
@@ -196,8 +196,8 @@ api_openipmi_cmd_raw_ipmb (ipmi_ctx_t ctx,
     }
 
   if (api_openipmi_cmd_ipmb (ctx,
-				  obj_cmd_rq,
-				  obj_cmd_rs) < 0)
+			     obj_cmd_rq,
+			     obj_cmd_rs) < 0)
     goto cleanup;
 
   if ((len = fiid_obj_get_all (obj_cmd_rs,
