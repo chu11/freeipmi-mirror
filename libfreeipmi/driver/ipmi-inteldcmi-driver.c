@@ -91,9 +91,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "freeipmi-portability.h"
 
-#define IPMI_INTELDCMI_BUFLEN    1024
+#define IPMI_INTELDCMI_BUFLEN       1024
 
-#define IPMI_INTELDCMI_TIMEOUT   (60 * 1000 * 1000)
+#define IPMI_INTELDCMI_TIMEOUT      (60 * 1000 * 1000)
+
+#define IPMI_INTELDCMI_MIN_RQ_BUFLEN 41
 
 /* XXX need to autoconf for inteldcmi headers*/
 #if HAVE_LINUX_IPMI_H
@@ -136,8 +138,6 @@ struct ipmi_inteldcmi_ctx {
 
 fiid_template_t tmpl_inteldcmi_request =
   {
-    /* XXX - put in h file later */
-#define NO_RESPONSE_EXPECTED    0x01    /*dont wait around for an IMB response*/
     { 32, "flags", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 32, "timeout", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, /* in u-sec */
     { 8, "rs_addr", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -579,47 +579,24 @@ _inteldcmi_write_read (ipmi_inteldcmi_ctx_t ctx,
       goto cleanup;
     }
 
-  /* XXX */
-  len = 41;
-  {
-    int i;
-    printf("len = %u\n", len);
-    for (i = 0; i < len; i++)
-      {
-	if (i % 8 == 0)
-	  printf ("\n");
-	printf ("%02X ", rq_buf[i]);
-      }
-    printf("\n");
-  }
+  /* achu:
+   * 
+   * In Intel example code, buffer is always 41.  I can't understand
+   * why, but unless I do this, it won't work.
+   */
+  assert (IPMI_INTELDCMI_MIN_RQ_BUFLEN <= IPMI_INTELDCMI_BUFLEN);
+  if (len != IPMI_INTELDCMI_MIN_RQ_BUFLEN)
+    len = IPMI_INTELDCMI_MIN_RQ_BUFLEN;
 
   memset (&smi_msg, '\0', sizeof (struct inteldcmi_smi));
   smi_msg.ntstatus = &ntstatusdummy;
   smi_msg.lpvInBuffer = rq_buf;
   smi_msg.cbInBuffer = len;
   smi_msg.lpvOutBuffer = rs_buf;
-  /* XXX */
-#if 0
   smi_msg.cbOutBuffer = IPMI_INTELDCMI_BUFLEN;
-#endif
-  smi_msg.cbOutBuffer = 64;
   smi_msg.lpcbBytesReturned = (void *)&rs_len;
   smi_msg.lpoOverlapped = NULL;
 
-  /* XXX */
-  printf("size of smi msg %lu\n", sizeof (smi_msg));
-  {
-    int i;
-    for (i = 0; i < sizeof (smi_msg) ; i++)
-      {
-	if (i % 8 == 0)
-	  printf("\n");
-	printf("%02X ", ((unsigned char *)&smi_msg)[i]);
-      }
-    printf("\n");
-  }
-  printf("ioctl command = %d\n", IPMI_INTELDCMI_IOCTL_IMB_SEND_MESSAGE);
-  printf("device fd = %d\n", ctx->device_fd);
   if ((ret = ioctl (ctx->device_fd,
 		    IPMI_INTELDCMI_IOCTL_IMB_SEND_MESSAGE,
 		    &smi_msg)) < 0)
