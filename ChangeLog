@@ -7,6 +7,11 @@
 	* man/: Add appropriately DCMI config subsections to manpages.
 
 	* libfreeipmi/: Fix various corner cases.
+
+	* ipmi-config/, ipmi-sensors/: Fix various corner cases for Quanta
+	Winterfell motherboard.
+
+	* man/: Document workarounds.
 	
 2014-01-03  Albert Chu <chu11@llnl.gov>
 
