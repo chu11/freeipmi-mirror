@@ -823,11 +823,14 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
                          "ipmi_cmd_get_sensor_hysteresis: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
-      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-          && (ipmi_check_completion_code (obj_cmd_rs,
-                                          IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE) == 1
-              || ipmi_check_completion_code (obj_cmd_rs,
-                                             IPMI_COMP_CODE_REQUESTED_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1))
+      if ((ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+	   && (ipmi_check_completion_code (obj_cmd_rs,
+					   IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE) == 1
+	       || ipmi_check_completion_code (obj_cmd_rs,
+					      IPMI_COMP_CODE_REQUESTED_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1))
+	  || (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
+	      && (ipmi_check_completion_code (obj_cmd_rs,
+					      IPMI_COMP_CODE_INVALID_COMMAND) == 1)))
         {
           /* The hysteresis cannot be gathered for one reason or
            * another, maybe b/c its a OEM sensor or something.  Output
@@ -1102,7 +1105,7 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
       if (state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
-                         "ipmi_cmd_get_sensor_hysteresis: %s\n",
+                         "ipmi_cmd_get_sensor_event_enable: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
@@ -1111,7 +1114,9 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
               || ipmi_check_completion_code (obj_cmd_rs,
                                              IPMI_COMP_CODE_REQUESTED_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1
 	      || ipmi_check_completion_code (obj_cmd_rs,
-					     IPMI_COMP_CODE_COMMAND_RESPONSE_COULD_NOT_BE_PROVIDED) == 1))
+					     IPMI_COMP_CODE_COMMAND_RESPONSE_COULD_NOT_BE_PROVIDED) == 1
+	      || ipmi_check_completion_code (obj_cmd_rs,
+					     IPMI_COMP_CODE_DESTINATION_UNAVAILABLE)))
         {
           /* The event enables cannot be gathered for one reason or
            * another, maybe b/c its a OEM sensor or something.  Just
