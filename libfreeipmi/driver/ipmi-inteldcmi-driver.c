@@ -466,12 +466,12 @@ _inteldcmi_write_read (ipmi_inteldcmi_ctx_t ctx,
 		       fiid_obj_t obj_cmd_rs)
 {
   uint8_t rq_temp[IPMI_INTELDCMI_BUFLEN];
-  uint8_t rq_data[IPMI_INTELDCMI_BUFLEN];
+  uint8_t *rq_data = NULL;
   uint8_t rq_buf[IPMI_INTELDCMI_BUFLEN];
   uint8_t rs_buf[IPMI_INTELDCMI_BUFLEN];
   uint8_t rs_data[IPMI_INTELDCMI_BUFLEN];
   uint8_t rq_cmd;
-  unsigned int rq_data_len;
+  unsigned int rq_data_len = 0;
   int len;
   unsigned int rs_len;
   fiid_obj_t obj_inteldcmi_rq = NULL;
@@ -515,10 +515,9 @@ _inteldcmi_write_read (ipmi_inteldcmi_ctx_t ctx,
     {
       /* -1 b/c of cmd */
       memcpy (rq_buf, &rq_temp[1], len - 1);
+      rq_data = &rq_temp[1];
       rq_data_len = len - 1;
     }
-  else
-    rq_data_len = 0;
 
   if (fiid_obj_set (obj_inteldcmi_rq, "flags", 0) < 0)
     {
@@ -562,7 +561,7 @@ _inteldcmi_write_read (ipmi_inteldcmi_ctx_t ctx,
       goto cleanup;
     }
 
-  if (rq_data_len)
+  if (rq_data && rq_data_len)
     {
       if (fiid_obj_set_data (obj_inteldcmi_rq, "data", rq_data, rq_data_len) < 0)
 	{
@@ -587,6 +586,18 @@ _inteldcmi_write_read (ipmi_inteldcmi_ctx_t ctx,
   assert (IPMI_INTELDCMI_MIN_RQ_BUFLEN <= IPMI_INTELDCMI_BUFLEN);
   if (len != IPMI_INTELDCMI_MIN_RQ_BUFLEN)
     len = IPMI_INTELDCMI_MIN_RQ_BUFLEN;
+
+  /* XXX */
+  {
+    int i;
+    for (i = 0; i < len; i++)
+      {
+	if (i % 8 == 0)
+	  printf("\n");
+	printf("%02X ", rq_buf[i]);
+      }
+    printf("\n");
+  }
 
   memset (&smi_msg, '\0', sizeof (struct inteldcmi_smi));
   smi_msg.ntstatus = &ntstatusdummy;
