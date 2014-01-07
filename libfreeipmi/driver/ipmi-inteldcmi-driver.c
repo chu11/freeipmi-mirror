@@ -587,18 +587,6 @@ _inteldcmi_write_read (ipmi_inteldcmi_ctx_t ctx,
   if (len != IPMI_INTELDCMI_MIN_RQ_BUFLEN)
     len = IPMI_INTELDCMI_MIN_RQ_BUFLEN;
 
-  /* XXX */
-  {
-    int i;
-    for (i = 0; i < len; i++)
-      {
-	if (i % 8 == 0)
-	  printf("\n");
-	printf("%02X ", rq_buf[i]);
-      }
-    printf("\n");
-  }
-
   memset (&smi_msg, '\0', sizeof (struct inteldcmi_smi));
   smi_msg.ntstatus = &ntstatusdummy;
   smi_msg.lpvInBuffer = rq_buf;
