@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003-2013 FreeIPMI Core Team
+ * Copyright (C) 2003-2014 FreeIPMI Core Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -138,8 +138,8 @@ fiid_template_t tmpl_inteldcmi_request =
   {
     /* XXX - put in h file later */
 #define NO_RESPONSE_EXPECTED    0x01    /*dont wait around for an IMB response*/
-    { 64, "flags", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 64, "timeout", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, /* in u-sec */
+    { 32, "flags", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 32, "timeout", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, /* in u-sec */
     { 8, "rs_addr", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8, "net_fn", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -163,18 +163,22 @@ fiid_template_t tmpl_inteldcmi_response =
  */
 
 struct inteldcmi_smi {
-  unsigned long smi_VersionNo;
-  unsigned long smi_Reserved1;
-  unsigned long smi_Reserved2;
+  unsigned int smi_VersionNo;
+  unsigned int smi_Reserved1;
+  unsigned int smi_Reserved2;
   void *ntstatus;		    /* address of NT status block*/
   void *lpvInBuffer;		    /* address of buffer for input data*/
-  unsigned long  cbInBuffer;	    /* size of input buffer*/
+  unsigned int cbInBuffer;	    /* size of input buffer*/
   void *lpvOutBuffer;		    /* address of output buffer*/
-  unsigned long cbOutBuffer;	    /* size of output buffer*/
-  unsigned long *lpcbBytesReturned; /* address of actual bytes of output */
+  unsigned int cbOutBuffer;	    /* size of output buffer*/
+  unsigned int *lpcbBytesReturned; /* address of actual bytes of output */
   void *lpoOverlapped;		    /* address of overlapped structure - set to NULL for Linux */
 };
 
+struct io_status_block {
+  unsigned long status;
+  unsigned long information;
+};
 
 /*
  * Linux drivers expect ioctls defined using macros defined in ioctl.h.
@@ -471,6 +475,7 @@ _inteldcmi_write (ipmi_inteldcmi_ctx_t ctx,
   unsigned long rs_len;
   fiid_obj_t obj_inteldcmi_rq = NULL;
   struct inteldcmi_smi smi_msg;
+  struct io_status_block ntstatusdummy;
   int rv = -1;
   int ret;
 
@@ -487,6 +492,8 @@ _inteldcmi_write (ipmi_inteldcmi_ctx_t ctx,
       INTELDCMI_SET_ERRNUM (ctx, IPMI_INTELDCMI_ERR_INTERNAL_ERROR);
       goto cleanup;
     }
+
+  memset (&ntstatusdummy, '\0', sizeof (struct io_status_block));
 
   /* Due to API differences, we need to extract the cmd out of the
    * request.
@@ -570,15 +577,47 @@ _inteldcmi_write (ipmi_inteldcmi_ctx_t ctx,
       goto cleanup;
     }
 
+  /* XXX */
+  len = 41;
+  {
+    int i;
+    printf("len = %u\n", len);
+    for (i = 0; i < len; i++)
+      {
+	if (i % 8 == 0)
+	  printf ("\n");
+	printf ("%02X ", rq_buf[i]);
+      }
+    printf("\n");
+  }
+
   memset (&smi_msg, '\0', sizeof (struct inteldcmi_smi));
-  smi_msg.ntstatus = NULL;
+  smi_msg.ntstatus = &ntstatusdummy;
   smi_msg.lpvInBuffer = rq_buf;
   smi_msg.cbInBuffer = len;
   smi_msg.lpvOutBuffer = rs_buf;
+  /* XXX */
+#if 0
   smi_msg.cbOutBuffer = IPMI_INTELDCMI_BUFLEN;
-  smi_msg.lpcbBytesReturned = &rs_len;
+#endif
+  smi_msg.cbOutBuffer = 64;
+  smi_msg.lpcbBytesReturned = (void *)&rs_len;
   smi_msg.lpoOverlapped = NULL;
 
+  /* XXX */
+  printf("size of smi msg %lu\n", sizeof (smi_msg));
+  {
+    int i;
+    for (i = 0; i < sizeof (smi_msg) ; i++)
+      {
+	if (i % 8 == 0)
+	  printf("\n");
+	printf("%02X ", ((unsigned char *)&smi_msg)[i]);
+      }
+    printf("\n");
+  }
+  printf("ioctl command = %d\n", IPMI_INTELDCMI_IOCTL_IMB_SEND_MESSAGE);
+  printf("device fd = %d\n", ctx->device_fd);
   if ((ret = ioctl (ctx->device_fd,
 		    IPMI_INTELDCMI_IOCTL_IMB_SEND_MESSAGE,
 		    &smi_msg)) < 0)
@@ -715,8 +754,8 @@ ipmi_inteldcmi_cmd (ipmi_inteldcmi_ctx_t ctx,
     }
 
   if (_inteldcmi_write (ctx,
-			0,
-			0,
+			IPMI_CHANNEL_NUMBER_PRIMARY_IPMB,
+			IPMI_SLAVE_ADDRESS_BMC,
 			lun,
 			net_fn,
 			obj_cmd_rq,

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003-2013 FreeIPMI Core Team
+ * Copyright (C) 2003-2014 FreeIPMI Core Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,19 +28,19 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "freeipmi/driver/ipmi-openipmi-driver.h"
+#include "freeipmi/driver/ipmi-inteldcmi-driver.h"
 #include "freeipmi/fiid/fiid.h"
 
 #include "ipmi-api-defs.h"
 #include "ipmi-api-trace.h"
 #include "ipmi-api-util.h"
-#include "ipmi-openipmi-driver-api.h"
+#include "ipmi-inteldcmi-driver-api.h"
 
 #include "libcommon/ipmi-fiid-util.h"
 
 #include "freeipmi-portability.h"
 
-fiid_template_t tmpl_openipmi_raw =
+fiid_template_t tmpl_inteldcmi_raw =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8192, "raw_data", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
@@ -48,24 +48,24 @@ fiid_template_t tmpl_openipmi_raw =
   };
 
 int
-api_openipmi_cmd (ipmi_ctx_t ctx,
-                       fiid_obj_t obj_cmd_rq,
-                       fiid_obj_t obj_cmd_rs)
+api_inteldcmi_cmd (ipmi_ctx_t ctx,
+		   fiid_obj_t obj_cmd_rq,
+		   fiid_obj_t obj_cmd_rs)
 {
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
-          && ctx->type == IPMI_DEVICE_OPENIPMI
+          && ctx->type == IPMI_DEVICE_INTELDCMI
           && fiid_obj_valid (obj_cmd_rq)
           && fiid_obj_packet_valid (obj_cmd_rq) == 1
           && fiid_obj_valid (obj_cmd_rs));
   
-  if (ipmi_openipmi_cmd (ctx->io.inband.openipmi_ctx,
-                         ctx->target.lun,
-                         ctx->target.net_fn,
-                         obj_cmd_rq,
-                         obj_cmd_rs) < 0)
+  if (ipmi_inteldcmi_cmd (ctx->io.inband.inteldcmi_ctx,
+			  ctx->target.lun,
+			  ctx->target.net_fn,
+			  obj_cmd_rq,
+			  obj_cmd_rs) < 0)
     {
-      API_OPENIPMI_ERRNUM_TO_API_ERRNUM (ctx, ipmi_openipmi_ctx_errnum (ctx->io.inband.openipmi_ctx));
+      API_INTELDCMI_ERRNUM_TO_API_ERRNUM (ctx, ipmi_inteldcmi_ctx_errnum (ctx->io.inband.inteldcmi_ctx));
       return (-1);
     }
 
@@ -73,26 +73,26 @@ api_openipmi_cmd (ipmi_ctx_t ctx,
 }
 
 int
-api_openipmi_cmd_ipmb (ipmi_ctx_t ctx,
-                            fiid_obj_t obj_cmd_rq,
-                            fiid_obj_t obj_cmd_rs)
+api_inteldcmi_cmd_ipmb (ipmi_ctx_t ctx,
+			fiid_obj_t obj_cmd_rq,
+			fiid_obj_t obj_cmd_rs)
 {
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
-          && ctx->type == IPMI_DEVICE_OPENIPMI
+          && ctx->type == IPMI_DEVICE_INTELDCMI
           && fiid_obj_valid (obj_cmd_rq)
           && fiid_obj_packet_valid (obj_cmd_rq) == 1
           && fiid_obj_valid (obj_cmd_rs));
 
-  if (ipmi_openipmi_cmd_ipmb (ctx->io.inband.openipmi_ctx,
-                              ctx->target.channel_number,
-                              ctx->target.rs_addr,
-                              ctx->target.lun,
-                              ctx->target.net_fn,
-                              obj_cmd_rq,
-                              obj_cmd_rs) < 0)
+  if (ipmi_inteldcmi_cmd_ipmb (ctx->io.inband.inteldcmi_ctx,
+			       ctx->target.channel_number,
+			       ctx->target.rs_addr,
+			       ctx->target.lun,
+			       ctx->target.net_fn,
+			       obj_cmd_rq,
+			       obj_cmd_rs) < 0)
     {
-      API_OPENIPMI_ERRNUM_TO_API_ERRNUM (ctx, ipmi_openipmi_ctx_errnum (ctx->io.inband.openipmi_ctx));
+      API_INTELDCMI_ERRNUM_TO_API_ERRNUM (ctx, ipmi_inteldcmi_ctx_errnum (ctx->io.inband.inteldcmi_ctx));
       return (-1);
     }
 
@@ -100,11 +100,11 @@ api_openipmi_cmd_ipmb (ipmi_ctx_t ctx,
 }
 
 int
-api_openipmi_cmd_raw (ipmi_ctx_t ctx,
-		      const void *buf_rq,
-		      unsigned int buf_rq_len,
-		      void *buf_rs,
-		      unsigned int buf_rs_len)
+api_inteldcmi_cmd_raw (ipmi_ctx_t ctx,
+		       const void *buf_rq,
+		       unsigned int buf_rq_len,
+		       void *buf_rs,
+		       unsigned int buf_rs_len)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   fiid_obj_t obj_cmd_rs = NULL;
@@ -112,18 +112,18 @@ api_openipmi_cmd_raw (ipmi_ctx_t ctx,
 
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
-          && ctx->type == IPMI_DEVICE_OPENIPMI
+          && ctx->type == IPMI_DEVICE_INTELDCMI
           && buf_rq
           && buf_rq_len
           && buf_rs
           && buf_rs_len);
 
-  if (!(obj_cmd_rq = fiid_obj_create (tmpl_openipmi_raw)))
+  if (!(obj_cmd_rq = fiid_obj_create (tmpl_inteldcmi_raw)))
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_openipmi_raw)))
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_inteldcmi_raw)))
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
@@ -137,9 +137,9 @@ api_openipmi_cmd_raw (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  if (api_openipmi_cmd (ctx,
-			     obj_cmd_rq,
-			     obj_cmd_rs) < 0)
+  if (api_inteldcmi_cmd (ctx,
+			 obj_cmd_rq,
+			 obj_cmd_rs) < 0)
     goto cleanup;
 
   if ((len = fiid_obj_get_all (obj_cmd_rs,
@@ -158,11 +158,11 @@ api_openipmi_cmd_raw (ipmi_ctx_t ctx,
 }
 
 int
-api_openipmi_cmd_raw_ipmb (ipmi_ctx_t ctx,
-			   const void *buf_rq,
-			   unsigned int buf_rq_len,
-			   void *buf_rs,
-			   unsigned int buf_rs_len)
+api_inteldcmi_cmd_raw_ipmb (ipmi_ctx_t ctx,
+			    const void *buf_rq,
+			    unsigned int buf_rq_len,
+			    void *buf_rs,
+			    unsigned int buf_rs_len)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   fiid_obj_t obj_cmd_rs = NULL;
@@ -170,18 +170,18 @@ api_openipmi_cmd_raw_ipmb (ipmi_ctx_t ctx,
 
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
-          && ctx->type == IPMI_DEVICE_OPENIPMI
+          && ctx->type == IPMI_DEVICE_INTELDCMI
           && buf_rq
           && buf_rq_len
           && buf_rs
           && buf_rs_len);
 
-  if (!(obj_cmd_rq = fiid_obj_create (tmpl_openipmi_raw)))
+  if (!(obj_cmd_rq = fiid_obj_create (tmpl_inteldcmi_raw)))
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_openipmi_raw)))
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_inteldcmi_raw)))
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
@@ -195,9 +195,9 @@ api_openipmi_cmd_raw_ipmb (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  if (api_openipmi_cmd_ipmb (ctx,
-				  obj_cmd_rq,
-				  obj_cmd_rs) < 0)
+  if (api_inteldcmi_cmd_ipmb (ctx,
+			      obj_cmd_rq,
+			      obj_cmd_rs) < 0)
     goto cleanup;
 
   if ((len = fiid_obj_get_all (obj_cmd_rs,
