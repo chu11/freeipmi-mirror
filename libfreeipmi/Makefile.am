@@ -51,6 +51,8 @@ libfreeipmi_la_SOURCES = \
 	api/ipmi-event-cmds-api.c \
 	api/ipmi-firmware-firewall-command-discovery-cmds-api.c \
 	api/ipmi-fru-inventory-device-cmds-api.c \
+	api/ipmi-inteldcmi-driver-api.c \
+	api/ipmi-inteldcmi-driver-api.h \
 	api/ipmi-kcs-driver-api.c \
 	api/ipmi-kcs-driver-api.h \
 	api/ipmi-lan-cmds-api.c \
@@ -103,6 +105,7 @@ libfreeipmi_la_SOURCES = \
 	driver/ipmi-driver-trace.h \
 	driver/ipmi-semaphores.c \
 	driver/ipmi-semaphores.h \
+	driver/ipmi-inteldcmi-driver.c \
 	driver/ipmi-kcs-driver.c \
 	driver/ipmi-openipmi-driver.c \
 	driver/ipmi-sunbmc-driver.c \

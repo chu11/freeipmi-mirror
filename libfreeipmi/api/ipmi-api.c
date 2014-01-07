@@ -50,6 +50,7 @@
 #include "freeipmi/cmds/ipmi-event-cmds.h"
 #include "freeipmi/cmds/ipmi-messaging-support-cmds.h"
 #include "freeipmi/debug/ipmi-debug.h"
+#include "freeipmi/driver/ipmi-inteldcmi-driver.h"
 #include "freeipmi/driver/ipmi-kcs-driver.h"
 #include "freeipmi/driver/ipmi-openipmi-driver.h"
 #include "freeipmi/driver/ipmi-ssif-driver.h"
@@ -75,6 +76,7 @@
 #include "ipmi-api-defs.h"
 #include "ipmi-api-trace.h"
 #include "ipmi-api-util.h"
+#include "ipmi-inteldcmi-driver-api.h"
 #include "ipmi-lan-interface-api.h"
 #include "ipmi-lan-session-common.h"
 #include "ipmi-kcs-driver-api.h"
@@ -308,6 +310,11 @@ _ipmi_inband_free (ipmi_ctx_t ctx)
     {
       ipmi_sunbmc_ctx_destroy (ctx->io.inband.sunbmc_ctx);
       ctx->io.inband.sunbmc_ctx = NULL;
+    }
+  if (ctx->type == IPMI_DEVICE_INTELDCMI)
+    {
+      ipmi_inteldcmi_ctx_destroy (ctx->io.inband.inteldcmi_ctx);
+      ctx->io.inband.inteldcmi_ctx = NULL;
     }
 
   fiid_obj_destroy (ctx->io.inband.rq.obj_hdr);
@@ -879,7 +886,8 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
        && driver_type != IPMI_DEVICE_BT
        && driver_type != IPMI_DEVICE_SSIF
        && driver_type != IPMI_DEVICE_OPENIPMI
-       && driver_type != IPMI_DEVICE_SUNBMC)
+       && driver_type != IPMI_DEVICE_SUNBMC
+       && driver_type != IPMI_DEVICE_INTELDCMI)
       || (workaround_flags & ~workaround_flags_mask)
       || (flags & ~flags_mask))
     {
@@ -1176,6 +1184,33 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
 
       break;
 
+    case IPMI_DEVICE_INTELDCMI:
+      ctx->type = driver_type;
+
+      if (!(ctx->io.inband.inteldcmi_ctx = ipmi_inteldcmi_ctx_create ()))
+        {
+          API_ERRNO_TO_API_ERRNUM (ctx, errno);
+          goto cleanup;
+        }
+
+      if (driver_device)
+        {
+          if (ipmi_inteldcmi_ctx_set_driver_device (ctx->io.inband.inteldcmi_ctx,
+						    driver_device) < 0)
+            {
+              API_INTELDCMI_ERRNUM_TO_API_ERRNUM (ctx, ipmi_inteldcmi_ctx_errnum (ctx->io.inband.inteldcmi_ctx));
+              goto cleanup;
+            }
+        }
+      
+      if (ipmi_inteldcmi_ctx_io_init (ctx->io.inband.inteldcmi_ctx) < 0)
+        {
+          API_INTELDCMI_ERRNUM_TO_API_ERRNUM (ctx, ipmi_inteldcmi_ctx_errnum (ctx->io.inband.inteldcmi_ctx));
+          goto cleanup;
+        }
+
+      break;
+
     default:
       goto cleanup;
     }
@@ -1286,11 +1321,11 @@ ipmi_ctx_find_inband (ipmi_ctx_t ctx,
 
   /* achu
    *
-   * Try OpenIPMI and SunBMC drivers first, since they cannot
-   * be found via probing.  Do it before probing for KCS/SSIF,
-   * because it is possible, even though the OpenIPMI/SunBMC
-   * driver is installed, probing may find KCS/SSIF anyways,
-   * and try to use those first/instead.
+   * Try OpenIPMI, SunBMC, and IntelDCMI drivers first, since they
+   * cannot be found via probing.  Do it before probing for KCS/SSIF,
+   * because it is possible, even though the OpenIPMI/SunBMC driver is
+   * installed, probing may find KCS/SSIF anyways, and try to use
+   * those first/instead.
    */
   if ((ret = ipmi_ctx_open_inband (ctx,
                                    IPMI_DEVICE_OPENIPMI,
@@ -1313,6 +1348,19 @@ ipmi_ctx_find_inband (ipmi_ctx_t ctx,
   
   if ((ret = ipmi_ctx_open_inband (ctx,
                                    IPMI_DEVICE_SUNBMC,
+                                   disable_auto_probe,
+                                   driver_address,
+                                   register_spacing,
+                                   driver_device,
+                                   workaround_flags,
+                                   flags)) < 0)
+    {
+      if (_is_ctx_fatal_error (ctx))
+        goto cleanup;
+    }
+
+  if ((ret = ipmi_ctx_open_inband (ctx,
+                                   IPMI_DEVICE_INTELDCMI,
                                    disable_auto_probe,
                                    driver_address,
                                    register_spacing,
@@ -1593,7 +1641,8 @@ ipmi_cmd (ipmi_ctx_t ctx,
       && ctx->type != IPMI_DEVICE_KCS
       && ctx->type != IPMI_DEVICE_SSIF
       && ctx->type != IPMI_DEVICE_OPENIPMI
-      && ctx->type != IPMI_DEVICE_SUNBMC)
+      && ctx->type != IPMI_DEVICE_SUNBMC
+      && ctx->type != IPMI_DEVICE_INTELDCMI)
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_INTERNAL_ERROR);
       return (-1);
@@ -1735,7 +1784,7 @@ ipmi_cmd (ipmi_ctx_t ctx,
       else
 	rv = api_openipmi_cmd (ctx, obj_cmd_rq, obj_cmd_rs);
     }
-  else /* ctx->type == IPMI_DEVICE_SUNBMC */
+  else if (ctx->type == IPMI_DEVICE_SUNBMC)
     {
       if (ctx->target.channel_number_is_set
 	  && ctx->target.rs_addr_is_set)
@@ -1745,6 +1794,16 @@ ipmi_cmd (ipmi_ctx_t ctx,
 	}
       else
 	rv = api_sunbmc_cmd (ctx, obj_cmd_rq, obj_cmd_rs);
+    }
+  else /* ctx->type == IPMI_DEVICE_INTELDCMI */
+    {
+      if (ctx->target.channel_number_is_set
+	  && ctx->target.rs_addr_is_set)
+	rv = api_inteldcmi_cmd_ipmb (ctx,
+				    obj_cmd_rq,
+				    obj_cmd_rs);
+      else
+	rv = api_inteldcmi_cmd (ctx, obj_cmd_rq, obj_cmd_rs);
     }
 
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
@@ -1902,7 +1961,8 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
       && ctx->type != IPMI_DEVICE_KCS
       && ctx->type != IPMI_DEVICE_SSIF
       && ctx->type != IPMI_DEVICE_OPENIPMI
-      && ctx->type != IPMI_DEVICE_SUNBMC)
+      && ctx->type != IPMI_DEVICE_SUNBMC
+      && ctx->type != IPMI_DEVICE_INTELDCMI)
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_INTERNAL_ERROR);
       return (-1);
@@ -2008,7 +2068,7 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
       else
 	rv = api_openipmi_cmd_raw (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
     }
-  else /* ctx->type == IPMI_DEVICE_SUNBMC */
+  else if (ctx->type == IPMI_DEVICE_SUNBMC)
     {
       if (ctx->target.channel_number_is_set
 	  && ctx->target.rs_addr_is_set)
@@ -2018,6 +2078,18 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
 	}
       else
 	rv = api_sunbmc_cmd_raw (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
+    }
+  else /* ctx->type == IPMI_DEVICE_INTELDCMI */
+    {
+      if (ctx->target.channel_number_is_set
+	  && ctx->target.rs_addr_is_set)
+	rv = api_inteldcmi_cmd_raw_ipmb (ctx,
+					buf_rq,
+					buf_rq_len,
+					buf_rs,
+					buf_rs_len);
+      else
+	rv = api_inteldcmi_cmd_raw (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
     }
 
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP && rv >= 0)
@@ -2167,7 +2239,8 @@ _ipmi_inband_close (ipmi_ctx_t ctx)
               || ctx->type == IPMI_DEVICE_BT
               || ctx->type == IPMI_DEVICE_SSIF
               || ctx->type == IPMI_DEVICE_OPENIPMI
-              || ctx->type == IPMI_DEVICE_SUNBMC));
+              || ctx->type == IPMI_DEVICE_SUNBMC
+              || ctx->type == IPMI_DEVICE_INTELDCMI));
 
   _ipmi_inband_free (ctx);
 }
@@ -2194,7 +2267,8 @@ ipmi_ctx_close (ipmi_ctx_t ctx)
       && ctx->type != IPMI_DEVICE_BT
       && ctx->type != IPMI_DEVICE_SSIF
       && ctx->type != IPMI_DEVICE_OPENIPMI
-      && ctx->type != IPMI_DEVICE_SUNBMC)
+      && ctx->type != IPMI_DEVICE_SUNBMC
+      && ctx->type != IPMI_DEVICE_INTELDCMI)
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_INTERNAL_ERROR);
       return (-1);

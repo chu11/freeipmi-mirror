@@ -60,6 +60,8 @@ parse_inband_driver_type (const char *str)
   else if (strcasecmp (str, IPMI_PARSE_DEVICE_SUNBMC_STR) == 0
            || strcasecmp (str, IPMI_PARSE_DEVICE_SUNBMC_STR2) == 0)
     return (IPMI_DEVICE_SUNBMC);
+  else if (strcasecmp (str, IPMI_PARSE_DEVICE_INTELDCMI_STR) == 0)
+    return (IPMI_DEVICE_INTELDCMI);
 
   return (-1);
 }

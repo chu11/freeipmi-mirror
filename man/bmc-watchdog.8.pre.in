@@ -115,10 +115,10 @@ daemon can be stopped using the \fB\-\-stop\fR command,
 #include <@top_srcdir@/man/manpage-common-general-options-header.man>
 These options are generic and can be used by any command.
 .TP 
-\fB\-D\fR \fIIPMIDRIVER\fR, \fB\-\-driver\-type\fR=\fIIPMIDRIVER\fR 
+\fB\-D\fR \fIIPMIDRIVER\fR, \fB\-\-driver\-type\fR=\fIIPMIDRIVER\fR
 Specify the driver type to use instead of doing an auto selection.
-The currently available inband drivers are KCS, SSIF, OPENIPMI, and
-SUNBMC.
+The currently available inband drivers are KCS, SSIF, OPENIPMI,
+SUNBMC, and INTELDCMI.
 #include <@top_srcdir@/man/manpage-common-inband.man>
 .TP
 \fB\-v\fR, \fB\-\-verbose\-logging\fR

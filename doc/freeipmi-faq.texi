@@ -567,8 +567,9 @@ FreeIPMI includes a userspace driver that works on most motherboards
 without any driver installation, loading, or configuration required.
 FreeIPMI also includes support of a Linux SSIF driver through the SSIF
 device (i.e. @file{/dev/i2c-0}), the OpenIPMI Linux kernel driver
-(i.e. @file{/dev/ipmi0}), and the Sun/Solaris @acronym{BMC} driver
-(i.e. @file{/dev/bmc}).  If you communicate through one of these
+(i.e. @file{/dev/ipmi0}), the Sun/Solaris @acronym{BMC} driver
+(i.e. @file{/dev/bmc}), and the Intel @acronym{DCMI}/MEI driver
+(i.e. @file{/dev/dcmi}).  If you communicate through one of these
 mechanisms, the appropriate drivers for them should be loaded.  Most
 systems should automatically load the appropriate drivers you need.
 
@@ -580,6 +581,10 @@ options to the tools.
 
 Every system is different and your situation may differ.  Please see
 your manufacturer and operating system instructions.
+
+Special note: At the time of this writing the Intel DCMI/MEI Linux
+device drivers are not distributed widely.  Please work with your
+vendor to obtain the Intel MEI and DCMI device drivers.
 
 There are some additional Linux OpenIPMI kernel driver notes here:
 @uref{http://www.gnu.org/software/freeipmi/README.openipmi}.

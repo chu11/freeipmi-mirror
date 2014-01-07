@@ -1,4 +1,4 @@
-2014-01-03  Albert Chu <chu11@llnl.gov>
+2014-01-07  Albert Chu <chu11@llnl.gov>
 
 	Add DCMI configuration support in ipmi-config.
 
@@ -7,6 +7,11 @@
 	* man/: Add appropriately DCMI config subsections to manpages.
 
 	* libfreeipmi/: Fix various corner cases.
+
+	* ipmi-config/, ipmi-sensors/: Fix various corner cases for Quanta
+	Winterfell motherboard.
+
+	* man/: Document workarounds.
 	
 2014-01-03  Albert Chu <chu11@llnl.gov>
 
@@ -15,6 +20,14 @@
 2014-01-03  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-dcmi/, man/, ipmi-config/: Fix various English and typos.
+	
+2013-12-20  Albert Chu <chu11@llnl.gov>
+
+	Add 'inteldcmi' inband driver.
+
+	* libfreeipmi/: Add support for "inteldcmi" in-band driver.
+
+	* README, doc/, man/: Add documentation for inteldcmi driver.
 	
 2013-12-20  Albert Chu <chu11@llnl.gov>
 

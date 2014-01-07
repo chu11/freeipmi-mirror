@@ -19,6 +19,11 @@ o Support new tool ipmi-config.  Ipmi-config is a consolidated
     compatability.
   - The ipmi-pef-config --info option has been made legacy.  It is
     still supported but no longer advertised.
+o Support Intel Data Center Host Interface / Management Engine as
+  optional driver type for in-band communication.
+  - Typically these are loaded as /dev/dcmi and /dev/mei drivers.
+  - This driver is identified as the "inteldcmi" type, as it is
+    specific to Intel systems.
 o Support DCMI configuration in ipmi-config.
 o Update FreeIPMI for changes in IPMI 2.0 Errata 5.  Include are:
   - New sensor events for Power Supply and OS Boot sensors.  New

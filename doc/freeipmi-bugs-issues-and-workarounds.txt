@@ -814,7 +814,7 @@ BMC/IPMI Configuration Issue #1: [COMPLIANCE]
   IPMI specification explicitly states that the password is optional
   when enabling/disabling a user.
 
-  Seen on: Sun X4140
+  Seen on: Sun X4140, Quanta Winterfell
 
   Resolution: Workaround added to detect this situation and retry with
   a dummy password.
@@ -1753,6 +1753,15 @@ Misc IPMI Issue #4: [INTERPRETATION]
   Seen on: Bull 510 Blade.
 
   Resolution: Workaround added to bmc-info to handle special case.
+
+Misc IPMI Issue #2: [COMPLIANCE]
+
+  The Get System Info Parameters command returns insufficient
+  privilege level (0xD4) regardless of privilege level.
+
+  Seen on: Quanta Winterfell
+
+  Resolution: None
 
 ----------------------------------------------------------------------
 

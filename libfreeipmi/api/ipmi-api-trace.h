@@ -106,6 +106,12 @@
     TRACE_MSG_OUT (ipmi_sunbmc_ctx_strerror ((__errnum)), (__errnum));      \
   } while (0)
 
+#define API_INTELDCMI_ERRNUM_TO_API_ERRNUM(__ctx, __errnum)                 \
+  do {                                                                      \
+    api_set_api_errnum_by_inteldcmi_errnum ((__ctx), (__errnum));           \
+    TRACE_MSG_OUT (ipmi_inteldcmi_ctx_strerror ((__errnum)), (__errnum));   \
+  } while (0)
+
 #define API_LOCATE_ERRNUM_TO_API_ERRNUM(__ctx, __errnum)                    \
   do {                                                                      \
     api_set_api_errnum_by_locate_errnum ((__ctx), (__errnum));              \

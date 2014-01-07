@@ -37,6 +37,7 @@
 #define IPMI_PARSE_DEVICE_OPENIPMI_STR2 "open"
 #define IPMI_PARSE_DEVICE_SUNBMC_STR    "sunbmc"
 #define IPMI_PARSE_DEVICE_SUNBMC_STR2   "bmc"
+#define IPMI_PARSE_DEVICE_INTELDCMI_STR "inteldcmi"
 
 #define IPMI_PARSE_WORKAROUND_FLAGS_DEFAULT                                       0x00000000
 

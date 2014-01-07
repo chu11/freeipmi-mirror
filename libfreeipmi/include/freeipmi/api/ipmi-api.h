@@ -157,6 +157,7 @@ enum ipmi_driver_type
   IPMI_DEVICE_SSIF = 6,
   IPMI_DEVICE_OPENIPMI = 7,
   IPMI_DEVICE_SUNBMC = 8,
+  IPMI_DEVICE_INTELDCMI = 9,
 };
 typedef enum ipmi_driver_type ipmi_driver_type_t;
 

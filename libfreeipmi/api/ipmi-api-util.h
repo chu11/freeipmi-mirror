@@ -53,6 +53,8 @@ void api_set_api_errnum_by_openipmi_errnum (ipmi_ctx_t ctx, int openipmi_errnum)
 
 void api_set_api_errnum_by_sunbmc_errnum (ipmi_ctx_t ctx, int sunbmc_errnum);
 
+void api_set_api_errnum_by_inteldcmi_errnum (ipmi_ctx_t ctx, int inteldcmi_errnum);
+
 int api_ipmi_cmd (ipmi_ctx_t ctx,
                   uint8_t lun,
                   uint8_t net_fn,
