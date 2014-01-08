@@ -1248,7 +1248,7 @@ enable_user_commit (ipmi_config_state_data_t *state_data,
            *
            * Forgotten/Undocumented Motherboard
            * Sun X4140
-	   * Quanta Winterfell
+	   * Wiwynn Windmill
            *
            * The IPMI spec says you don't have to set a password when you
            * enable/disable a user.  But some BMCs care that you pass in

@@ -1,3 +1,8 @@
+2014-01-08  Albert Chu <chu11@llnl.gov>
+
+	* Adjust comments/documentation for Quanta Winterfell & Wiwynn
+	Windmill.  Motherboard in use was previously misidentified.
+	
 2014-01-07  Albert Chu <chu11@llnl.gov>
 
 	Add DCMI configuration support in ipmi-config.
