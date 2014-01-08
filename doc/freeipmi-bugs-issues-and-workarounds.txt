@@ -1754,7 +1754,7 @@ Misc IPMI Issue #4: [INTERPRETATION]
 
   Resolution: Workaround added to bmc-info to handle special case.
 
-Misc IPMI Issue #2: [COMPLIANCE]
+Misc IPMI Issue #5: [COMPLIANCE]
 
   The Get System Info Parameters command returns insufficient
   privilege level (0xD4) regardless of privilege level.
@@ -1763,14 +1763,15 @@ Misc IPMI Issue #2: [COMPLIANCE]
 
   Resolution: None
 
-Misc IPMI Issue #3: [COMPLIANCE]
+Misc IPMI Issue #6: [COMPLIANCE]
 
   The Get SDR Repository Info command returns insufficient privilege
   level (0xD4) regardless of privilege level.
 
   Seen on: Wiwynn Windmill
 
-  Resolution: None
+  Resolution: None, user should attempt to authenticate at a higher
+  privilege level.
 
 ----------------------------------------------------------------------
 
