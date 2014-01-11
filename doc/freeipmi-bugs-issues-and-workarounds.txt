@@ -249,8 +249,8 @@ LAN Authentication Issue #15: [COMPLIANCE]
   Disabling a specific cipher suite ID does not prohibit a user from
   continuing to use that cipher suite ID.
 
-  Seen on: Supermicro X8DTG, Supermicro X8DTU, MSI MS-91D2, Quanta
-  Winterfell
+  Seen on: Supermicro X8DTG, Supermicro X8DTU, MSI MS-91D2, Intel
+  Windmill, Quanta Winterfell, Wiwynn Windmill
 
   Resolution: None
 
@@ -384,7 +384,7 @@ LAN Authentication Issue #26: [COMPLIANCE]
   Cannot authenticate with IPMI 1.5, authentication code generated
   incorrectly.
 
-  Seen on: Quanta Winterfell, Wiwynn Windmill
+  Seen on: Intel Windmill, Quanta Winterfell, Wiwynn Windmill
 
   Resolution: Workaround added to ignore these invalid authentication
   codes.
@@ -589,7 +589,8 @@ Serial-Over-LAN Issue #4: [COMPLIANCE]
 
   The Get Channel Payload Support command is not supported.
 
-  Seen on: Sun Fire 4100 with ILOM, Quanta Winterfell, Wiwynn Windmill
+  Seen on: Sun Fire 4100 with ILOM, Intel Windmill, Quanta Winterfell,
+  Wiwynn Windmill
 
   Resolution: Workaround option added to inform software to skip this
   point in the SOL state machine.
@@ -814,7 +815,7 @@ BMC/IPMI Configuration Issue #1: [COMPLIANCE]
   IPMI specification explicitly states that the password is optional
   when enabling/disabling a user.
 
-  Seen on: Sun X4140, Wiwynn Winterfell
+  Seen on: Sun X4140, Intel Windmill, Quanta Winterfell, Wiwynn Windmill
 
   Resolution: Workaround added to detect this situation and retry with
   a dummy password.
@@ -1759,7 +1760,7 @@ Misc IPMI Issue #5: [COMPLIANCE]
   The Get System Info Parameters command returns insufficient
   privilege level (0xD4) regardless of privilege level.
 
-  Seen on: Quanta Winterfell, Wiwynn Windmill
+  Seen on: Intel Windmill, Quanta Winterfell, Wiwynn Windmill
 
   Resolution: None
 

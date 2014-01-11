@@ -3105,8 +3105,7 @@ _process_protocol_state_set_session_privilege_level_sent (ipmiconsole_ctx_t c)
   /* IPMI Workaround
    *
    * Discovered on Sun Fire 4100.
-   * Discovered on Quanta Winterfell
-   * Discovered on Wiwynn Windmill
+   * Discovered on Intel Windmill/Quanta Winterfell/Wiwynn Windmill
    *
    * The Get Channel Payload Support isn't supported.  Skip this part
    * of the state machine and pray for the best I guess.
