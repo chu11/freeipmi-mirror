@@ -935,6 +935,19 @@ sel_string_output_intel_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 
 	  return (1);
 	}
+
+      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PROCESSOR
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_MACHINE_CHECK_ERROR_SENSOR
+          && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_PROCESSOR_MACHINE_CHECK_EXCEPTION
+	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_PROCESSOR_CORRECTABLE_MACHINE_CHECK_ERROR))
+	{
+	  snprintf (tmpbuf,
+		    tmpbuflen,
+		    "Error Code Number = %u",
+		    system_event_record_data->event_data2);
+
+	  return (1);
+	}
     }
 
   return (0);
@@ -1931,6 +1944,68 @@ sel_string_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 		    cpu_vr,
 		    channel_number,
 		    dimm);
+
+	  return (1);
+	}
+
+      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PROCESSOR
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_MACHINE_CHECK_ERROR_SENSOR
+          && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_PROCESSOR_MACHINE_CHECK_EXCEPTION
+	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_PROCESSOR_CORRECTABLE_MACHINE_CHECK_ERROR))
+	{
+	  uint8_t cpu_number;
+	  uint8_t source;
+	  uint8_t source_extra;
+	  char *source_extra_str;
+
+	  cpu_number = (system_event_record_data->event_data3 & IPMI_OEM_INTEL_WINDMILL_MACHINE_CHECK_ERROR_CPU_NUMBER_BITMASK);
+	  cpu_number >>= IPMI_OEM_INTEL_WINDMILL_MACHINE_CHECK_ERROR_CPU_NUMBER_SHIFT;
+
+	  source = (system_event_record_data->event_data3 & IPMI_OEM_INTEL_WINDMILL_MACHINE_CHECK_ERROR_SOURCE_BITMASK);
+	  source >>= IPMI_OEM_INTEL_WINDMILL_MACHINE_CHECK_ERROR_SOURCE_SHIFT;
+
+	  source_extra = (system_event_record_data->event_data3 & IPMI_OEM_INTEL_WINDMILL_MACHINE_CHECK_ERROR_SOURCE_EXTRA_BITMASK);
+	  source_extra >>= IPMI_OEM_INTEL_WINDMILL_MACHINE_CHECK_ERROR_SOURCE_EXTRA_SHIFT;
+
+	  if (source == IPMI_OEM_INTEL_WINDMILL_MACHINE_CHECK_ERROR_SOURCE_QPI)
+	    {
+	      char *qpi_str;
+
+	      switch (source_extra)
+		{
+		case IPMI_OEM_INTEL_WINDMILL_MACHINE_CHECK_ERROR_SOURCE_EXTRA_QPI0:
+		  qpi_str = "QPI0";
+		  break;
+		case IPMI_OEM_INTEL_WINDMILL_MACHINE_CHECK_ERROR_SOURCE_EXTRA_QPI1:
+		  qpi_str = "QPI1";
+		  break;
+		default:
+		  qpi_str = "Unknown QPI";
+		  break;
+		}
+
+	      snprintf (tmpbuf,
+			tmpbuflen,
+			"CPU = %u, Source = %s",
+			cpu_number, 
+			qpi_str);
+	    }
+	  else if (source == IPMI_OEM_INTEL_WINDMILL_MACHINE_CHECK_ERROR_SOURCE_LLC)
+	    {
+	      snprintf (tmpbuf,
+			tmpbuflen,
+			"CPU = %u, Core = %u",
+			cpu_number, 
+			source_extra);
+	    }
+	  else
+	    {
+	      snprintf (tmpbuf,
+			tmpbuflen,
+			"CPU = %u, Source = %s",
+			cpu_number, 
+			"Unknown");
+	    }
 
 	  return (1);
 	}
