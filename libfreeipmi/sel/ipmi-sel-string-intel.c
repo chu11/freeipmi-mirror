@@ -545,15 +545,15 @@ _sel_string_output_intel_windmill_native_vs_external_throttling (uint8_t event_d
   uint8_t noe;
   char *noe_str;
 
-  noe = (event_data & IPMI_OEM_INTEL_WINDMILL_THROTTLING_BITMASK);
-  noe >>= IPMI_OEM_INTEL_WINDMILL_THROTTLING_SHIFT;
+  noe = (event_data & IPMI_OEM_INTEL_WINDMILL_EVENT_DATA2_THROTTLING_BITMASK);
+  noe >>= IPMI_OEM_INTEL_WINDMILL_EVENT_DATA2_THROTTLING_SHIFT;
 
   switch (noe)
     {
-    case IPMI_OEM_INTEL_WINDMILL_NATIVE_THROTTLING:
+    case IPMI_OEM_INTEL_WINDMILL_EVENT_DATA2_NATIVE_THROTTLING:
       noe_str = "Native";
       break;
-    case IPMI_OEM_INTEL_WINDMILL_EXTERNAL_THROTTLING:
+    case IPMI_OEM_INTEL_WINDMILL_EVENT_DATA2_EXTERNAL_THROTTLING:
       noe_str = "External";
       break;
     default:
@@ -945,6 +945,30 @@ sel_string_output_intel_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 		    tmpbuflen,
 		    "Error Code Number = %u",
 		    system_event_record_data->event_data2);
+
+	  return (1);
+	}
+
+      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PCIE_ERROR_SENSOR
+          && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_CORRECTABLE_ERROR
+	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_UNCORRECTABLE_ERROR
+	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_FATAL_ERROR))
+	{
+	  uint8_t device;
+	  uint8_t function;
+
+	  device = (system_event_record_data->event_data2 & IPMI_OEM_INTEL_WINDMILL_EVENT_DATA2_DEVICE_NUMBER_BITMASK);
+	  device >>= IPMI_OEM_INTEL_WINDMILL_EVENT_DATA2_DEVICE_NUMBER_SHIFT;
+	  
+	  function = (system_event_record_data->event_data2 & IPMI_OEM_INTEL_WINDMILL_EVENT_DATA2_FUNCTION_NUMBER_BITMASK);
+	  function >>= IPMI_OEM_INTEL_WINDMILL_EVENT_DATA2_FUNCTION_NUMBER_SHIFT;
+	  
+	  snprintf (tmpbuf,
+		    tmpbuflen,
+		    "Device %u, Function %u",
+		    device,
+		    function);
 
 	  return (1);
 	}
@@ -1910,8 +1934,8 @@ sel_string_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 	{
 	  uint8_t cpu_vr;
 
-	  cpu_vr = (system_event_record_data->event_data3 & IPMI_OEM_INTEL_WINDMILL_THROTTLING_CPU_VR_BITMASK);
-	  cpu_vr >>= IPMI_OEM_INTEL_WINDMILL_THROTTLING_CPU_VR_SHIFT;
+	  cpu_vr = (system_event_record_data->event_data3 & IPMI_OEM_INTEL_WINDMILL_EVENT_DATA3_THROTTLING_CPU_VR_BITMASK);
+	  cpu_vr >>= IPMI_OEM_INTEL_WINDMILL_EVENT_DATA3_THROTTLING_CPU_VR_SHIFT;
 
 	  snprintf (tmpbuf,
 		    tmpbuflen,
@@ -1929,14 +1953,14 @@ sel_string_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 	  uint8_t channel_number;
 	  uint8_t dimm;
 
-	  cpu_vr = (system_event_record_data->event_data3 & IPMI_OEM_INTEL_WINDMILL_THROTTLING_CPU_VR_BITMASK);
-	  cpu_vr >>= IPMI_OEM_INTEL_WINDMILL_THROTTLING_CPU_VR_SHIFT;
+	  cpu_vr = (system_event_record_data->event_data3 & IPMI_OEM_INTEL_WINDMILL_EVENT_DATA3_THROTTLING_CPU_VR_BITMASK);
+	  cpu_vr >>= IPMI_OEM_INTEL_WINDMILL_EVENT_DATA3_THROTTLING_CPU_VR_SHIFT;
 
-	  channel_number = (system_event_record_data->event_data3 & IPMI_OEM_INTEL_WINDMILL_THROTTLING_CHANNEL_NUMBER_BITMASK);
-	  channel_number >>= IPMI_OEM_INTEL_WINDMILL_THROTTLING_CHANNEL_NUMBER_SHIFT;
+	  channel_number = (system_event_record_data->event_data3 & IPMI_OEM_INTEL_WINDMILL_EVENT_DATA3_THROTTLING_CHANNEL_NUMBER_BITMASK);
+	  channel_number >>= IPMI_OEM_INTEL_WINDMILL_EVENT_DATA3_THROTTLING_CHANNEL_NUMBER_SHIFT;
 
-	  dimm = (system_event_record_data->event_data3 & IPMI_OEM_INTEL_WINDMILL_THROTTLING_DIMM_BITMASK);
-	  dimm >>= IPMI_OEM_INTEL_WINDMILL_THROTTLING_DIMM_SHIFT;
+	  dimm = (system_event_record_data->event_data3 & IPMI_OEM_INTEL_WINDMILL_EVENT_DATA3_THROTTLING_DIMM_BITMASK);
+	  dimm >>= IPMI_OEM_INTEL_WINDMILL_EVENT_DATA3_THROTTLING_DIMM_SHIFT;
 
 	  snprintf (tmpbuf,
 		    tmpbuflen,
@@ -1958,25 +1982,25 @@ sel_string_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 	  uint8_t source_extra;
 	  char *source_extra_str;
 
-	  cpu_number = (system_event_record_data->event_data3 & IPMI_OEM_INTEL_WINDMILL_MACHINE_CHECK_ERROR_CPU_NUMBER_BITMASK);
-	  cpu_number >>= IPMI_OEM_INTEL_WINDMILL_MACHINE_CHECK_ERROR_CPU_NUMBER_SHIFT;
+	  cpu_number = (system_event_record_data->event_data3 & IPMI_OEM_INTEL_WINDMILL_EVENT_DATA2_MACHINE_CHECK_ERROR_CPU_NUMBER_BITMASK);
+	  cpu_number >>= IPMI_OEM_INTEL_WINDMILL_EVENT_DATA2_MACHINE_CHECK_ERROR_CPU_NUMBER_SHIFT;
 
-	  source = (system_event_record_data->event_data3 & IPMI_OEM_INTEL_WINDMILL_MACHINE_CHECK_ERROR_SOURCE_BITMASK);
-	  source >>= IPMI_OEM_INTEL_WINDMILL_MACHINE_CHECK_ERROR_SOURCE_SHIFT;
+	  source = (system_event_record_data->event_data3 & IPMI_OEM_INTEL_WINDMILL_EVENT_DATA2_MACHINE_CHECK_ERROR_SOURCE_BITMASK);
+	  source >>= IPMI_OEM_INTEL_WINDMILL_EVENT_DATA2_MACHINE_CHECK_ERROR_SOURCE_SHIFT;
 
-	  source_extra = (system_event_record_data->event_data3 & IPMI_OEM_INTEL_WINDMILL_MACHINE_CHECK_ERROR_SOURCE_EXTRA_BITMASK);
-	  source_extra >>= IPMI_OEM_INTEL_WINDMILL_MACHINE_CHECK_ERROR_SOURCE_EXTRA_SHIFT;
+	  source_extra = (system_event_record_data->event_data3 & IPMI_OEM_INTEL_WINDMILL_EVENT_DATA2_MACHINE_CHECK_ERROR_SOURCE_EXTRA_BITMASK);
+	  source_extra >>= IPMI_OEM_INTEL_WINDMILL_EVENT_DATA2_MACHINE_CHECK_ERROR_SOURCE_EXTRA_SHIFT;
 
-	  if (source == IPMI_OEM_INTEL_WINDMILL_MACHINE_CHECK_ERROR_SOURCE_QPI)
+	  if (source == IPMI_OEM_INTEL_WINDMILL_EVENT_DATA2_MACHINE_CHECK_ERROR_SOURCE_QPI)
 	    {
 	      char *qpi_str;
 
 	      switch (source_extra)
 		{
-		case IPMI_OEM_INTEL_WINDMILL_MACHINE_CHECK_ERROR_SOURCE_EXTRA_QPI0:
+		case IPMI_OEM_INTEL_WINDMILL_EVENT_DATA2_MACHINE_CHECK_ERROR_SOURCE_EXTRA_QPI0:
 		  qpi_str = "QPI0";
 		  break;
-		case IPMI_OEM_INTEL_WINDMILL_MACHINE_CHECK_ERROR_SOURCE_EXTRA_QPI1:
+		case IPMI_OEM_INTEL_WINDMILL_EVENT_DATA2_MACHINE_CHECK_ERROR_SOURCE_EXTRA_QPI1:
 		  qpi_str = "QPI1";
 		  break;
 		default:
@@ -1990,7 +2014,7 @@ sel_string_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 			cpu_number, 
 			qpi_str);
 	    }
-	  else if (source == IPMI_OEM_INTEL_WINDMILL_MACHINE_CHECK_ERROR_SOURCE_LLC)
+	  else if (source == IPMI_OEM_INTEL_WINDMILL_EVENT_DATA2_MACHINE_CHECK_ERROR_SOURCE_LLC)
 	    {
 	      snprintf (tmpbuf,
 			tmpbuflen,
@@ -2006,6 +2030,20 @@ sel_string_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 			cpu_number, 
 			"Unknown");
 	    }
+
+	  return (1);
+	}
+
+      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PCIE_ERROR_SENSOR
+          && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_CORRECTABLE_ERROR
+	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_UNCORRECTABLE_ERROR
+	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_FATAL_ERROR))
+	{
+	  snprintf (tmpbuf,
+		    tmpbuflen,
+		    "Bus Number = %u",
+		    system_event_record_data->event_data3);
 
 	  return (1);
 	}
