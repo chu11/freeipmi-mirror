@@ -539,6 +539,31 @@ _sel_string_output_intel_s2600jf_ras_mode (uint8_t event_data)
   return (ras_mode_str);
 }
 
+static const char *
+_sel_string_output_intel_windmill_native_vs_external_throttling (uint8_t event_data)
+{
+  uint8_t noe;
+  char *noe_str;
+
+  noe = (event_data & IPMI_OEM_INTEL_WINDMILL_THROTTLING_BITMASK);
+  noe >>= IPMI_OEM_INTEL_WINDMILL_THROTTLING_SHIFT;
+
+  switch (noe)
+    {
+    case IPMI_OEM_INTEL_WINDMILL_NATIVE_THROTTLING:
+      noe_str = "Native";
+      break;
+    case IPMI_OEM_INTEL_WINDMILL_EXTERNAL_THROTTLING:
+      noe_str = "External";
+      break;
+    default:
+      noe_str = "Unknown";
+      break;
+    }
+
+  return (noe_str);
+}
+
 /* return (0) - no OEM match
  * return (1) - OEM match
  * return (-1) - error, cleanup and return error
@@ -871,6 +896,45 @@ sel_string_output_intel_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 	}
     }
   
+  /* OEM Interpretation
+   *
+   * Intel Windmill
+   * (Quanta Winterfell)
+   * (Wiwynn Windmill)
+   */
+  if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_WINDMILL)
+    {
+      if (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PROC_HOT_EXTENDED_SENSOR
+          && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_PROCESSOR_PROCESSOR_AUTOMATICALLY_THROTTLED)
+	{
+	  const char *noe_str;
+
+	  noe_str = _sel_string_output_intel_windmill_native_vs_external_throttling (system_event_record_data->event_data2);
+
+	  snprintf (tmpbuf,
+		    tmpbuflen,
+		    "Throttling = %s",
+		    noe_str);
+
+	  return (1);
+	}
+
+      if (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_MEM_HOT_EXTENDED_SENSOR
+          && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_MEMORY_AUTOMATICALLY_THROTTLED)
+	{
+	  const char *noe_str;
+
+	  noe_str = _sel_string_output_intel_windmill_native_vs_external_throttling (system_event_record_data->event_data2);
+
+	  snprintf (tmpbuf,
+		    tmpbuflen,
+		    "Throttling = %s",
+		    noe_str);
+
+	  return (1);
+	}
+    }
+
   return (0);
 }
 
@@ -1813,6 +1877,57 @@ sel_string_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 	{
 	  _sel_string_output_intel_device_function (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
 	  
+	  return (1);
+	}
+    }
+
+  /* OEM Interpretation
+   *
+   * Intel Windmill
+   * (Quanta Winterfell)
+   * (Wiwynn Windmill)
+   */
+  if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_WINDMILL)
+    {
+      if (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PROC_HOT_EXTENDED_SENSOR
+          && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_PROCESSOR_PROCESSOR_AUTOMATICALLY_THROTTLED)
+	{
+	  uint8_t cpu_vr;
+
+	  cpu_vr = (system_event_record_data->event_data3 & IPMI_OEM_INTEL_WINDMILL_THROTTLING_CPU_VR_BITMASK);
+	  cpu_vr >>= IPMI_OEM_INTEL_WINDMILL_THROTTLING_CPU_VR_SHIFT;
+
+	  snprintf (tmpbuf,
+		    tmpbuflen,
+		    "CPU/VR = %u",
+		    cpu_vr);
+	  
+	  return (1);
+	}
+
+      if (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_MEM_HOT_EXTENDED_SENSOR
+          && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_MEMORY_AUTOMATICALLY_THROTTLED)
+	{
+	  uint8_t cpu_vr;
+	  uint8_t channel_number;
+	  uint8_t dimm;
+
+	  cpu_vr = (system_event_record_data->event_data3 & IPMI_OEM_INTEL_WINDMILL_THROTTLING_CPU_VR_BITMASK);
+	  cpu_vr >>= IPMI_OEM_INTEL_WINDMILL_THROTTLING_CPU_VR_SHIFT;
+
+	  channel_number = (system_event_record_data->event_data3 & IPMI_OEM_INTEL_WINDMILL_THROTTLING_CHANNEL_NUMBER_BITMASK);
+	  channel_number >>= IPMI_OEM_INTEL_WINDMILL_THROTTLING_CHANNEL_NUMBER_SHIFT;
+
+	  dimm = (system_event_record_data->event_data3 & IPMI_OEM_INTEL_WINDMILL_THROTTLING_DIMM_BITMASK);
+	  dimm >>= IPMI_OEM_INTEL_WINDMILL_THROTTLING_DIMM_SHIFT;
+
+	  snprintf (tmpbuf,
+		    tmpbuflen,
+		    "CPU/VR = %u, Channel Number = %u, Dimm = %u",
+		    cpu_vr,
+		    channel_number,
+		    dimm);
+
 	  return (1);
 	}
     }
