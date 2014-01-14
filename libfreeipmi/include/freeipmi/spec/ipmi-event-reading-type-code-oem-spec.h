@@ -107,6 +107,14 @@ extern "C" {
 #define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_MEMORY_ERROR_EXTENSION 0x7F
 
 /*
+ * Intel Windmill
+ * (Quanta Winterfell)
+ * (Wiwynn Windmill)
+ */
+/* achu: Like Intel Node Manager, but no Intel Node Manager on these nodes, so cut & paste to differentiate */
+#define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_WINDMILL_ME_FW_HEALTH_SENSOR 0x75
+
+/*
  * Intel Node Manager
  *
  * For Intel Chips, not just Intel Motherboards.  Confirmed for:

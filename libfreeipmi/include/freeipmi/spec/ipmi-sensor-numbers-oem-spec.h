@@ -216,6 +216,13 @@ extern "C" {
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_SYSTEM_EVENT                    0x83
 
 /*
+ * Intel Windmill
+ * (Quanta Winterfell)
+ * (Wiwynn Windmill)
+ */
+#define IPMI_SENSOR_NUMBER_OEM_INTEL_WINDMILL_ME_FW_HEALTH_SENSOR 0x17
+
+/*
  * Intel Node Manager
  *
  * For Intel Chips, not just Intel Motherboards.  Confirmed for:

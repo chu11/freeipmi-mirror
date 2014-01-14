@@ -1059,6 +1059,65 @@ sel_string_output_intel_event_data2_class_oem (ipmi_sel_ctx_t ctx,
         return (1);
     }
 
+  /* OEM Interpretation
+   *
+   * Intel Windmill
+   * (Quanta Winterfell)
+   * (Wiwynn Windmill)
+   */
+  if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_WINDMILL)
+    {
+      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_WINDMILL_ME_FW_HEALTH_SENSOR
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_WINDMILL_ME_FW_HEALTH_SENSOR
+          && system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_WINDMILL_ME_FIRMWARE_HEALTH_EVENT_FIRMWARE_STATUS)
+        {
+          uint8_t health_event;
+          char *health_event_str;
+          
+          health_event = system_event_record_data->event_data2;
+          
+	  switch (health_event)
+	    {
+	    case IPMI_OEM_INTEL_WINDMILL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_RECOVERY_GPIO_FORCED:
+	      health_event_str = "Recovery GPIO forced";
+	      break;
+	    case IPMI_OEM_INTEL_WINDMILL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_IMAGE_EXECUTION_FAILED:
+	      health_event_str = "Image execution failed";
+	      break;
+	    case IPMI_OEM_INTEL_WINDMILL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_FLASH_ERASE_ERROR:
+	      health_event_str = "Flash erase error";
+	      break;
+	    case IPMI_OEM_INTEL_WINDMILL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_FLASH_STATE_INFORMATION:
+	      health_event_str = "Flash state information";
+	      break;
+	    case IPMI_OEM_INTEL_WINDMILL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_INTERNAL_ERROR:
+	      health_event_str = "Internal error";
+	      break;
+	    case IPMI_OEM_INTEL_WINDMILL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_BMC_COLD_RESET_ERROR:
+	      health_event_str = "BMC did not respond to cold reset";
+	      break;
+	    case IPMI_OEM_INTEL_WINDMILL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_DIRECT_FLASH_UPDATE:
+	      health_event_str = "Direct flash update requested by the BIOS";
+	      break;
+	    case IPMI_OEM_INTEL_WINDMILL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_MANUFACTURING_ERROR:
+	      health_event_str = "Manufacturing error";
+	      break;
+	    case IPMI_OEM_INTEL_WINDMILL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_PERSISTENT_STORAGE_INTEGRITY_ERROR:
+	      health_event_str = "Persistent storage integrity error";
+	      break;
+	    default:
+	      health_event_str = "Unknown";
+	    }
+          
+          snprintf (tmpbuf,
+                    tmpbuflen,
+                    "Health Event = %s",
+                    health_event_str);
+          
+          return (1);
+        }
+    }
+
   return (0);
 }
 
@@ -1871,6 +1930,26 @@ sel_string_output_intel_event_data3_class_oem (ipmi_sel_ctx_t ctx,
         return (1);
     }
   
+  /* OEM Interpretation
+   *
+   * Intel Windmill
+   * (Quanta Winterfell)
+   * (Wiwynn Windmill)
+   */
+  if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_WINDMILL)
+    {
+      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_WINDMILL_ME_FW_HEALTH_SENSOR
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_WINDMILL_ME_FW_HEALTH_SENSOR
+          && system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_WINDMILL_ME_FIRMWARE_HEALTH_EVENT_FIRMWARE_STATUS)
+        {
+	  snprintf (tmpbuf,
+		    tmpbuflen,
+		    "Extended Error Info = %02X",
+		    system_event_record_data->event_data3);
+	  
+	}
+    }
+
   return (0);
 }
 

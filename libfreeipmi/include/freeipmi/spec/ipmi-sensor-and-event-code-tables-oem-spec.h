@@ -1444,6 +1444,29 @@ extern unsigned int ipmi_oem_intel_s2600jf_specific_qpi_link_width_reduced_max_i
 #define IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_DXE_BOOT_SERVICES_DRIVER_UNRECOGNIZED                                              0xB6A3
 
 /*
+ * Intel Windmill
+ * (Quanta Winterfell)
+ * (Wiwynn Windmill)
+ */
+
+/* achu: These are Intel Node Manager events, but Intel Node Manager
+ * does not exist on these boards.  So cutting & pasting into this
+ * section to differentiate
+ */
+#define IPMI_OEM_INTEL_WINDMILL_ME_FIRMWARE_HEALTH_EVENT_FIRMWARE_STATUS                                    0x00 
+
+#define IPMI_OEM_INTEL_WINDMILL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_RECOVERY_GPIO_FORCED                   0x00 
+#define IPMI_OEM_INTEL_WINDMILL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_IMAGE_EXECUTION_FAILED                 0x01
+#define IPMI_OEM_INTEL_WINDMILL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_FLASH_ERASE_ERROR                      0x02
+#define IPMI_OEM_INTEL_WINDMILL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_FLASH_STATE_INFORMATION                0x03
+#define IPMI_OEM_INTEL_WINDMILL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_INTERNAL_ERROR                         0x04
+#define IPMI_OEM_INTEL_WINDMILL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_BMC_COLD_RESET_ERROR                   0x05
+#define IPMI_OEM_INTEL_WINDMILL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_DIRECT_FLASH_UPDATE                    0x06
+#define IPMI_OEM_INTEL_WINDMILL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_MANUFACTURING_ERROR                    0x07
+#define IPMI_OEM_INTEL_WINDMILL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_PERSISTENT_STORAGE_INTEGRITY_ERROR     0x08
+/* No 0x09 - not available unlike newer Intel Node Manager */
+
+/*
  * Intel Node Manager
  *
  * For Intel Chips, not just Intel Motherboards.  Confirmed for:
