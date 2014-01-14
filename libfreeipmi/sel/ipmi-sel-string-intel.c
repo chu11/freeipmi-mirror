@@ -904,7 +904,8 @@ sel_string_output_intel_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
    */
   if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_WINDMILL)
     {
-      if (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PROC_HOT_EXTENDED_SENSOR
+      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PROCESSOR
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PROC_HOT_EXTENDED_SENSOR
           && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_PROCESSOR_PROCESSOR_AUTOMATICALLY_THROTTLED)
 	{
 	  const char *noe_str;
@@ -919,7 +920,8 @@ sel_string_output_intel_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 	  return (1);
 	}
 
-      if (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_MEM_HOT_EXTENDED_SENSOR
+      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_MEM_HOT_EXTENDED_SENSOR
           && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_MEMORY_AUTOMATICALLY_THROTTLED)
 	{
 	  const char *noe_str;
@@ -1889,7 +1891,8 @@ sel_string_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
    */
   if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_WINDMILL)
     {
-      if (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PROC_HOT_EXTENDED_SENSOR
+      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PROCESSOR
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PROC_HOT_EXTENDED_SENSOR
           && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_PROCESSOR_PROCESSOR_AUTOMATICALLY_THROTTLED)
 	{
 	  uint8_t cpu_vr;
@@ -1905,7 +1908,8 @@ sel_string_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 	  return (1);
 	}
 
-      if (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_MEM_HOT_EXTENDED_SENSOR
+      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_MEM_HOT_EXTENDED_SENSOR
           && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_MEMORY_AUTOMATICALLY_THROTTLED)
 	{
 	  uint8_t cpu_vr;
