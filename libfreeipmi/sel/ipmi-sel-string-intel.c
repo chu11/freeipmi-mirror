@@ -1041,6 +1041,24 @@ sel_string_output_intel_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 
 	  return (1);
 	}
+
+      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_WINDMILL_MEMORY_ECC_ERROR
+	  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CORRECTABLE_MEMORY_ERROR
+	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_UNCORRECTABLE_MEMORY_ERROR))
+	{
+	  uint8_t logical_rank;
+
+	  logical_rank = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_WINDMILL_LOGICAL_RANK_BITMASK);
+	  logical_rank >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_WINDMILL_LOGICAL_RANK_SHIFT;
+	  
+	  snprintf (tmpbuf,
+		    tmpbuflen,
+		    "Logical Rank = %u",
+		    logical_rank);
+
+	  return (1);
+	}
     }
 
   return (0);
@@ -2129,6 +2147,35 @@ sel_string_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 
 	  return (1);
 	}
+
+      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_WINDMILL_MEMORY_ECC_ERROR
+	  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CORRECTABLE_MEMORY_ERROR
+	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_UNCORRECTABLE_MEMORY_ERROR))
+	{
+	  uint8_t cpu_number;
+	  uint8_t channel_number;
+	  uint8_t dimm;
+
+	  cpu_number = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_WINDMILL_CPU_NUMBER_BITMASK);
+	  cpu_number >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_WINDMILL_CPU_NUMBER_SHIFT;
+
+	  channel_number = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_WINDMILL_CHANNEL_NUMBER_BITMASK);
+	  channel_number >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_WINDMILL_CHANNEL_NUMBER_SHIFT;
+
+	  dimm = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_WINDMILL_DIMM_BITMASK);
+	  dimm >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_WINDMILL_DIMM_SHIFT;
+
+	  snprintf (tmpbuf,
+		    tmpbuflen,
+		    "CPU Number = %u, Channel Number = %u, Dimm = %u",
+		    cpu_number,
+		    channel_number,
+		    dimm);
+
+	  return (1);
+	}
+
     }
   
   return (0);
