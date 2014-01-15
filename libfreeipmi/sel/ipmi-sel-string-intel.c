@@ -4231,6 +4231,7 @@ sel_string_output_intel_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
           
 	  switch (error_code)
 	    {
+	      /* These are from WiWynn doc */
 	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_WINDMILL_POST_ERROR_CODE_PEI_CPU_MISMATCH:
 	      error_code_str = "PEI CPU Mismatch";
 	      break;
@@ -4293,6 +4294,28 @@ sel_string_output_intel_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 	      break;
 	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_WINDMILL_POST_ERROR_CODE_ME_RECOVERED_VIA_GR:
 	      error_code_str = "ME Recovered via GR";
+	      break;
+	      /* These are from a Quanta doc */
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_WINDMILL_POST_ERROR_CODE_CMOS_CLEAR:
+	      error_code_str = "CMOS Clear";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_WINDMILL_POST_ERROR_CODE_THERMAL_TRIP:
+	      error_code_str = "Thermal Trip";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_WINDMILL_POST_ERROR_CODE_SYS_PWROK_DROPS_UNEXPECTEDLY:
+	      error_code_str = "SYS_PWROK Drops Unexpectedly";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_WINDMILL_POST_ERROR_CODE_AC_LOST:
+	      error_code_str = "AC Lost";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_WINDMILL_POST_ERROR_CODE_RECOVER_ME_FROM_ABNORMAL_MODE:
+	      error_code_str = "Recover ME from Abnormal Mode Successfully";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_WINDMILL_POST_ERROR_CODE_BACKUP_IMAGE_LOADED_DIRECT_FW_UPDATE_NEEDED:
+	      error_code_str = "Backup Image Loaded and a direct FW updated is needed";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_WINDMILL_POST_ERROR_CODE_ROCVER_HECI_FROM_ABNORMAL_MODE:
+	      error_code_str = "Recover HECI from Abnormal Mode Successfully";
 	      break;
 	    default:
 	      error_code_str = "Undefined Post Error";
