@@ -254,13 +254,14 @@ the \fB\-\-bridge\-sensors\fR is used.)
 Dell Poweredge R210, Dell Poweredge R610, Dell Poweredge R710, Dell
 Poweredge R720, Fujitsu iRMC S1 and iRMC S2 systems, HP Proliant DL160
 G8, Intel S5500WB/Penguin Computing Relion 700, Intel S2600JF/Appro
-512X, Intel S5000PAL, Supermicro X7DBR-3, Supermicro X7DB8, Supermicro
-X8DTN, Supermicro X7SBI-LN4, Supermicro X8DTH, Supermicro X8DTG,
-Supermicro X8DTU, Supermicro X8DT3-LN4F, Supermicro X8DTU-6+,
-Supermicro X8DTL, Supermicro X8DTL-3F, Supermicro X8SIL-F, Supermicro
-X9SCL, Supermicro X9SCM, Supermicro X8DTN+-F, Supermicro X8SIE,
-Supermicro X9SCA-F-O, Supermicro H8DGU-F, Supermicro X9DRi-F,
-Supermicro X9DRI-LN4F+, Supermicro X9SPU-F-O, Supermicro X9SCM-iiF,
+512X, Intel S5000PAL, Intel Windmill, Quanta Winterfell, Supermicro
+X7DBR-3, Supermicro X7DB8, Supermicro X8DTN, Supermicro X7SBI-LN4,
+Supermicro X8DTH, Supermicro X8DTG, Supermicro X8DTU, Supermicro
+X8DT3-LN4F, Supermicro X8DTU-6+, Supermicro X8DTL, Supermicro
+X8DTL-3F, Supermicro X8SIL-F, Supermicro X9SCL, Supermicro X9SCM,
+Supermicro X8DTN+-F, Supermicro X8SIE, Supermicro X9SCA-F-O,
+Supermicro H8DGU-F, Supermicro X9DRi-F, Supermicro X9DRI-LN4F+,
+Supermicro X9SPU-F-O, Supermicro X9SCM-iiF, Wiwynn Windmill,
 Wistron/Dell Poweredge C6220.
 .SH "EXAMPLES"
 .B # ipmi-sensors 

@@ -1,3 +1,16 @@
+2014-01-15  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/sel/, libfreeipmi/include/freeipmi/spec/, Support
+	OEM events for Intel Windmill motherboards in ipmi-sel.
+
+	* freeipmi/record-format/ipmi-sel-oem-record-format.h: New file
+
+	* libfreeipmi/include/freeipmi/util/ipmi-sensor-and-event-code-tables-util.h,
+	libfreeipmi/util/ipmi-sensor-and-event-code-tables-util.c (ipmi_get_oem_sensor_type_message,
+	ipmi_get_event_messages): Adjust API for new OEM sensors with non-standard config.
+
+	* ipmi-sensors/, libipmimonitoring/: Adjust for changes in API.
+	
 2014-01-09  Albert Chu <chu11@llnl.gov>
 
 	* Adjust comments/documentation for Quanta Winterfell & Wiwynn

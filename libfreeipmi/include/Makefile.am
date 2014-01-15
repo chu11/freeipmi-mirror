@@ -67,6 +67,7 @@ nobase_include_HEADERS = \
 	freeipmi/record-format/ipmi-sdr-record-format.h \
 	freeipmi/record-format/ipmi-sdr-oem-record-format.h \
 	freeipmi/record-format/ipmi-sel-record-format.h \
+	freeipmi/record-format/ipmi-sel-oem-record-format.h \
 	freeipmi/sdr/ipmi-sdr.h \
 	freeipmi/sdr/ipmi-sdr-oem.h \
 	freeipmi/sel/ipmi-sel.h \

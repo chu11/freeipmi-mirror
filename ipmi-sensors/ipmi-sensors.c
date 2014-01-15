@@ -812,6 +812,7 @@ _get_event_message (ipmi_sensors_state_data_t *state_data,
                     unsigned int *event_message_list_len)
 {
   uint8_t sensor_type;
+  uint8_t sensor_number;
   uint8_t event_reading_type_code;
   uint32_t manufacturer_id = 0;
   uint16_t product_id = 0;
@@ -830,6 +831,18 @@ _get_event_message (ipmi_sensors_state_data_t *state_data,
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_parse_sensor_type: %s\n",
+                       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
+      goto cleanup;
+    }
+
+  if (ipmi_sdr_parse_sensor_number (state_data->sdr_ctx,
+				    NULL,
+				    0,
+				    &sensor_number) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sdr_parse_sensor_number: %s\n",
                        ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       goto cleanup;
     }
@@ -863,6 +876,7 @@ _get_event_message (ipmi_sensors_state_data_t *state_data,
 
   if (ipmi_get_event_messages (event_reading_type_code,
                                sensor_type,
+			       sensor_number,
                                sensor_event_bitmask,
                                manufacturer_id,
                                product_id,

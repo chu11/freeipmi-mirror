@@ -37,6 +37,7 @@
 #include "freeipmi/spec/ipmi-product-id-spec.h"
 #include "freeipmi/spec/ipmi-sensor-and-event-code-tables-spec.h"
 #include "freeipmi/spec/ipmi-sensor-and-event-code-tables-oem-spec.h"
+#include "freeipmi/spec/ipmi-sensor-numbers-oem-spec.h"
 #include "freeipmi/spec/ipmi-sensor-types-spec.h"
 #include "freeipmi/spec/ipmi-sensor-types-oem-spec.h"
 #include "freeipmi/util/ipmi-sensor-util.h"
@@ -1842,6 +1843,7 @@ int
 ipmi_get_oem_sensor_type_message (uint32_t manufacturer_id,
                                   uint16_t product_id,
                                   uint8_t sensor_type,
+				  uint8_t sensor_number,
                                   unsigned int offset,
                                   char *buf,
                                   unsigned int buflen)
@@ -2006,6 +2008,105 @@ ipmi_get_oem_sensor_type_message (uint32_t manufacturer_id,
                                       ipmi_sensor_type_oem_wistron_ioh_core_error_max_index,
                                       ipmi_sensor_type_oem_wistron_ioh_core_error));
         }
+    }
+
+  /* OEM Interpretation
+   *
+   * Intel Windmill
+   * (Quanta Winterfell)
+   * (Wiwynn Windmill)
+   */
+  /* 
+   * achu: Ugh .. vendor uses same sensor type for multiple OEM
+   * sensors ... gotta use sensor number to differentiate.  This is
+   * awful.
+   */
+  if (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL
+      && product_id == IPMI_INTEL_PRODUCT_ID_WINDMILL
+      && sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_GENERIC)
+    {
+      unsigned int sensor_reading = (1 << offset);
+      if (sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_WINDMILL_CPU_SEL_STATUS)
+	{
+	  if (sensor_reading & IPMI_SENSOR_TYPE_OEM_INTEL_SEL_CLEAR_BITMASK)
+	    return (snprintf (buf, buflen, "SEL Clear"));
+	  else if (sensor_reading & IPMI_SENSOR_TYPE_OEM_INTEL_SEL_ROLLOVER_BITMASK)
+	    return (snprintf (buf, buflen, "SEL Rollover"));
+	}
+      else if (sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_WINDMILL_CHASSIS_POWER_STATUS)
+	{
+	  /* achu: A/C Lost is 4h, not 3h, so the below may not be correct.  Had to guess */  
+	  if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_CHASSIS_POWER_STATUS_POWER_DOWN))
+	    return (snprintf (buf, buflen, "Power Down"));
+	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_CHASSIS_POWER_STATUS_POWER_CYCLE_RESET))
+	    return (snprintf (buf, buflen, "Power Cycle/Reset"));
+	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_CHASSIS_POWER_STATUS_POWER_ON))
+	    return (snprintf (buf, buflen, "Power On"));
+	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_CHASSIS_POWER_STATUS_AC_LOST))
+	    return (snprintf (buf, buflen, "A/C Lost"));
+	}
+      else if (sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_LOW)
+	{
+	  if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_LOW_NONE_OF_THE_ABOVE))
+	    return (snprintf (buf, buflen, "Active status bits are waiting to be read"));
+	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_LOW_CML_ERROR))
+	    return (snprintf (buf, buflen, "An error was detected on the I2C/PMBus interface"));
+	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_LOW_VIN_UV_FAULT))
+	    return (snprintf (buf, buflen, "An undervoltage input fault was detected on the UV pin"));
+	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_LOW_IOUT_OC_FAULT))
+	    return (snprintf (buf, buflen, "The hot swap controller detected an overcurrent condition"));
+	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_LOW_HOTSWAP_OFF))
+	    return (snprintf (buf, buflen, "The hot swap gate driver output is disabled"));
+	}
+      else if (sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_HIGH)
+	{
+	  if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_HIGH_POWER_GOOD))
+	    return (snprintf (buf, buflen, "The voltage on the FLB pin is below the required threshold"));
+	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_HIGH_MFR_STATUS))
+	    return (snprintf (buf, buflen, "There are one or more active status bits to be read by STATUS_MFR_SPECIFIC"));
+	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_HIGH_INPUT_STATUS))
+	    return (snprintf (buf, buflen, "There are one or more active status bits to be read by STATUS_INPUT"));
+	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_HIGH_IOUT_STATUS))
+	    return (snprintf (buf, buflen, "There are one or more active status bits to be read by STATUS_IOUT"));
+	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_HIGH_VOUT_STATUS))
+	    return (snprintf (buf, buflen, "There are one or more active status bits to be read by STATUS_VOUT"));
+	}
+      else if (sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC)
+	{
+	  if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_IOUT_WARN2))
+	    return (snprintf (buf, buflen, "An undercurrent or overcurrent condition on the output supply detected"));
+	  /* achu: HS_SHUTDOWN_CAUSE1 & HS_SHUTDOWN_CAUSE2 list 4 error messages
+	   * with <00>, <01>, <10>, & <11> listed next to them.  I have no idea
+	   * where these other bits come from.
+	   *
+	   * So all user gets is a generic "hotswap shutdown"
+	   */
+	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_HS_SHUTDOWN_CAUSE1))
+	    return (snprintf (buf, buflen, "Hotswap shutdown"));
+	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_HS_SHUTDOWN_CAUSE2))
+	    return (snprintf (buf, buflen, "Hotswap shutdown"));
+	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_HS_INLIM))
+	    return (snprintf (buf, buflen, "The ADM1276 has actively limited current into the load"));
+	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_OV_CMP_OUT))
+	    return (snprintf (buf, buflen, "Input Voltage to OV pin is above threshold"));
+	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_UV_CMP_OUT))
+	    return (snprintf (buf, buflen, "Input voltage to UV pin is below threshold"));
+	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_FET_HEALTH_BAD))
+	    return (snprintf (buf, buflen, "FET behavior suggests that the FET may be shorted"));
+	}
+      else if (sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT)
+	{
+	  if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT_PIN_OP_WARN))
+	    return (snprintf (buf, buflen, "An overpower condition on the input supply was detected by power monitor"));
+	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT_VIN_UV_FAULT))
+	    return (snprintf (buf, buflen, "An undervoltage was detected on the UV pin"));
+	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT_VIN_UV_WARN))
+	    return (snprintf (buf, buflen, "An undervoltage condition on the input supply was detected by the power monitor"));
+	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT_VIN_OV_WARN))
+	    return (snprintf (buf, buflen, "An overvoltage condition on the input supply was detected by hte power monitor"));
+	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT_VIN_OV_FAULT))
+	    return (snprintf (buf, buflen, "An overvoltage was detected on the OV pin"));
+	}
     }
 
   SET_ERRNO (EINVAL);
@@ -2279,6 +2380,7 @@ ipmi_get_oem_event_bitmask_message (uint32_t manufacturer_id,
 int
 ipmi_get_event_messages (uint8_t event_reading_type_code,
                          uint8_t sensor_type, /* ignored if not relevant for event_reading_type_code */
+			 uint8_t sensor_number, /* ignored if not relevant for event_reading_type_code or sensor_type */
                          uint16_t event_bitmask, /* ignored if not relevant for event_reading_type_code */
                          uint32_t manufacturer_id, /* ignored if INTERPRET_OEM_DATA not set */
                          uint16_t product_id, /* ignored if INTERPRET_OEM_DATA not set */
@@ -2410,7 +2512,8 @@ ipmi_get_event_messages (uint8_t event_reading_type_code,
                                    || sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING
                                    || sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_NON_FATAL_ERROR
                                    || sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_FATAL_IO_ERROR
-                                   || sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_UPGRADE))
+                                   || sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_UPGRADE)
+			       )
                               || (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU
                                   && (product_id >= IPMI_FUJITSU_PRODUCT_ID_MIN
                                       && product_id <= IPMI_FUJITSU_PRODUCT_ID_MAX)
@@ -2428,11 +2531,19 @@ ipmi_get_event_messages (uint8_t event_reading_type_code,
                                       || sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_EVENT
                                       || sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_COMMUNICATION
                                       /* These are for events only --end */
-                                      ))))
+                                      )
+				  )
+			      || (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL
+				  && (product_id == IPMI_INTEL_PRODUCT_ID_WINDMILL)
+				  && (sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_GENERIC)
+				  )
+			      )
+			  )
                         {
                           len = ipmi_get_oem_sensor_type_message (manufacturer_id,
                                                                   product_id,
                                                                   sensor_type,
+								  sensor_number,
                                                                   i,
                                                                   buf,
                                                                   EVENT_BUFLEN);

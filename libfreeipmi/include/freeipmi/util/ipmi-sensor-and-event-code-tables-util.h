@@ -99,6 +99,7 @@ int ipmi_get_oem_generic_event_message (uint32_t manufacturer_id,
 int ipmi_get_oem_sensor_type_message (uint32_t manufacturer_id,
                                       uint16_t product_id,
                                       uint8_t sensor_type,
+				      uint8_t sensor_number,
                                       unsigned int offset,
                                       char *buf,
                                       unsigned int buflen);
@@ -167,6 +168,7 @@ int ipmi_get_oem_event_bitmask_message (uint32_t manufacturer_id,
  */ 
 int ipmi_get_event_messages (uint8_t event_reading_type_code,
                              uint8_t sensor_type, /* ignored if not relevant for event_reading_type_code */
+			     uint8_t sensor_number, /* ignored if not relevant for event_reading_type_code or sensor_type */
                              uint16_t event_bitmask,
                              uint32_t manufacturer_id, /* ignored if INTERPRET_OEM_DATA not set */
                              uint16_t product_id, /* ignored if INTERPRET_OEM_DATA not set */

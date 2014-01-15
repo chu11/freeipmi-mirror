@@ -373,6 +373,7 @@ sel_string_output_fujitsu_event_data1_class_sensor_specific_discrete (ipmi_sel_c
       ret = ipmi_get_oem_sensor_type_message (ctx->manufacturer_id,
                                               ctx->product_id,
                                               system_event_record_data->sensor_type,
+					      system_event_record_data->sensor_number,
                                               system_event_record_data->offset_from_event_reading_type_code,
                                               tmpbuf,
                                               tmpbuflen);

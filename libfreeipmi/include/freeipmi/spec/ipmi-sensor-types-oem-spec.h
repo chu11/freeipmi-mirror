@@ -100,6 +100,16 @@ extern "C" {
 #define IPMI_SENSOR_TYPE_OEM_INTEL_NMI_STATE                    0xC0
 
 /*
+ * Intel Windmill
+ * (Quanta Winterfell)
+ * (Wiwynn Windmill)
+ */
+#define IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_ME_FW_HEALTH_SENSOR 0xDC
+
+/* Used by many sensors */
+#define IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_GENERIC             0xC0
+
+/*
  * Intel Node Manager
  *
  * For Intel Chips, not just Intel Motherboards.  Confirmed for:

@@ -24,6 +24,10 @@ o Support Intel Data Center Host Interface / Management Engine as
   - Typically these are loaded as /dev/dcmi and /dev/mei drivers.
   - This driver is identified as the "inteldcmi" type, as it is
     specific to Intel systems.
+o Support OEM extensions for Intel Windmill, Wiwynn Windmill, and
+  Quanta Winterfell motherboards in ipmi-sel and ipmi-sensors.  These
+  motherboards are also know as motherboards for the Open Compute
+  Project (OCP).
 o Support DCMI configuration in ipmi-config.
 o Update FreeIPMI for changes in IPMI 2.0 Errata 5.  Include are:
   - New sensor events for Power Supply and OS Boot sensors.  New
