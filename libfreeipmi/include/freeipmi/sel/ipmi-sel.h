@@ -397,7 +397,7 @@ int ipmi_sel_parse_read_oem (ipmi_sel_ctx_t ctx,
  *
  * Available in SEL timestamped and non-timestamped OEM record types
  *
- * %o - oem data in hex
+ * %o - oem data in hex (or strings if interpreted OEM available)
  *
  * Available in all record types for certain manufacturers
  *
