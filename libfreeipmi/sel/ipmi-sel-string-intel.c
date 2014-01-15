@@ -221,6 +221,158 @@ sel_string_output_intel_event_data1_class_sensor_specific_discrete (ipmi_sel_ctx
 	  
 	  return (1);
 	}
+
+      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_GENERIC
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_LOW)
+	{
+	  char *hsc_str;
+
+	  switch (system_event_record_data->event_data1)
+	    {
+	    case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_LOW_NONE_OF_THE_ABOVE:
+	      hsc_str = "Active status bits are waiting to be read by one or more status commands.";
+	      break;
+	    case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_LOW_CML_ERROR:
+	      hsc_str = "An error was detected on the I2C/PMBus interface.";
+	      break;
+	    case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_LOW_VIN_UV_FAULT:
+	      hsc_str = "An undervoltage input fault was detected on the UV pin.";
+	      break;
+	    case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_LOW_IOUT_OC_FAULT:
+	      hsc_str = "The hot swap controller detected an overcurrent condition.";
+	      break;
+	    case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_LOW_HOTSWAP_OFF:
+	      hsc_str = "The hot swap gate driver output is disabled.";
+	      break;
+	    default:
+	      hsc_str = "Unknown";
+	      break;
+	    }
+
+	  snprintf (tmpbuf,
+		    tmpbuflen,
+		    "Status = %s",
+		    hsc_str);
+	  
+	  return (1);
+	}
+
+      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_GENERIC
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_HIGH)
+	{
+	  char *hsc_str;
+
+	  switch (system_event_record_data->event_data1)
+	    {
+	    case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_HIGH_POWER_GOOD:
+	      hsc_str = "The voltage on the FLB pin is below the required threshold.";
+	      break;
+	    case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_HIGH_MFR_STATUS:
+	      hsc_str = "There are one or more active status bits to be read by STATUS_MFR_SPECIFIC.";
+	      break;
+	    case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_HIGH_INPUT_STATUS:
+	      hsc_str = "There are one or more active status bits to be read by STATUS_INPUT.";
+	      break;
+	    case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_HIGH_IOUT_STATUS:
+	      hsc_str = "There are one or more active status bits to be read by STATUS_IOUT.";
+	      break;
+	    case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_HIGH_VOUT_STATUS:
+	      hsc_str = "There are one or more active status bits to be read by STATUS_VOUT.";
+	      break;
+	    default:
+	      hsc_str = "Unknown";
+	      break;
+	    }
+
+	  snprintf (tmpbuf,
+		    tmpbuflen,
+		    "Status = %s",
+		    hsc_str);
+	  
+	  return (1);
+	}
+
+      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_GENERIC
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC)
+	{
+	  char *hsc_str;
+
+	  switch (system_event_record_data->event_data1)
+	    {
+	    case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_IOUT_WARN2:
+	      hsc_str = "An undercurrent or overcurrent condition on the output supply detected.";
+	      break;
+	      /* achu: HS_SHUTDOWN_CAUSE1 & HS_SHUTDOWN_CAUSE2 list 4 error messages
+	       * with <00>, <01>, <10>, & <11> listed next to them.  I have no idea
+	       * where these other bits come from.
+	       *
+	       * So all user gets is a generic "hotswap shutdown"
+	       */
+	    case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_HS_SHUTDOWN_CAUSE1:
+	      hsc_str = "Hotswap shutdown";
+	      break;
+	    case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_HS_SHUTDOWN_CAUSE2:
+	      hsc_str = "Hotswap shutdown";
+	      break;
+	    case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_HS_INLIM:
+	      hsc_str = "The ADM1276 has actively limited current into the load.";
+	      break;
+	    case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_OV_CMP_OUT:
+	      hsc_str = "Input Voltage to OV pin is above threshold.";
+	      break;
+	    case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_UV_CMP_OUT:
+	      hsc_str = "Input voltage to UV pin is below threshold.";
+	      break;
+	    case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_FET_HEALTH_BAD:
+	      hsc_str = "FET behavior suggests that the FET may be shorted.";
+	      break;
+	    default:
+	      hsc_str = "Unknown";
+	      break;
+	    }
+
+	  snprintf (tmpbuf,
+		    tmpbuflen,
+		    "Status = %s",
+		    hsc_str);
+	  
+	  return (1);
+	}
+
+      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_GENERIC
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT)
+	{
+	  char *hsc_str;
+
+	  switch (system_event_record_data->event_data1)
+	    {
+	    case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT_PIN_OP_WARN:
+	      hsc_str = "An overpower condition on the input supply was detected by power monitor.";
+	      break;
+	    case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT_VIN_UV_FAULT:
+	      hsc_str = "An undervoltage was detected on the UV pin.";
+	      break;
+	    case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT_VIN_UV_WARN:
+	      hsc_str = "An undervoltage condition on the input supply was detected by the power monitor.";
+	      break;
+	    case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT_VIN_OV_WARN:
+	      hsc_str = "An overvoltage condition on the input supply was detected by hte power monitor.";
+	      break;
+	    case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT_VIN_OV_FAULT:
+	      hsc_str = "An overvoltage was detected on the OV pin.";
+	      break;
+	    default:
+	      hsc_str = "Unknown";
+	      break;
+	    }
+
+	  snprintf (tmpbuf,
+		    tmpbuflen,
+		    "Status = %s",
+		    hsc_str);
+	  
+	  return (1);
+	}
     }
 
   return (0);
