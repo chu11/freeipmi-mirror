@@ -130,6 +130,75 @@ sel_string_output_intel_sensor_name (ipmi_sel_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
+sel_string_output_intel_event_data1_class_sensor_specific_discrete (ipmi_sel_ctx_t ctx,
+								   struct ipmi_sel_entry *sel_entry,
+								   uint8_t sel_record_type,
+								   char *tmpbuf,
+								   unsigned int tmpbuflen,
+								   unsigned int flags,
+								   unsigned int *wlen,
+								   struct ipmi_sel_system_event_record_data *system_event_record_data)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL);
+  assert (sel_entry);
+  assert (tmpbuf);
+  assert (tmpbuflen);
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (wlen);
+  assert (system_event_record_data);
+  assert (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC);
+
+  /* OEM Interpretation
+   *
+   * Intel Windmill
+   * (Quanta Winterfell)
+   * (Wiwynn Windmill)
+   */
+  if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_WINDMILL)
+    {
+      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_GENERIC
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_WINDMILL_CPU_SEL_STATUS)
+	{
+	  uint8_t sel_clear;
+	  uint8_t sel_rollover;
+
+	  sel_clear = (system_event_record_data->event_data1 & IPMI_SENSOR_TYPE_OEM_INTEL_SEL_CLEAR_BITMASK);
+	  sel_clear >>= IPMI_SENSOR_TYPE_OEM_INTEL_SEL_CLEAR_SHIFT;
+
+	  sel_rollover = (system_event_record_data->event_data1 & IPMI_SENSOR_TYPE_OEM_INTEL_SEL_ROLLOVER_BITMASK);
+	  sel_rollover >>= IPMI_SENSOR_TYPE_OEM_INTEL_SEL_ROLLOVER_SHIFT;
+
+	  if (sel_clear)
+	    {
+	      snprintf (tmpbuf,
+			tmpbuflen,
+			"SEL Clear");
+	  
+	      return (1);
+	    }
+
+	  if (sel_rollover)
+	    {
+	      snprintf (tmpbuf,
+			tmpbuflen,
+			"SEL Rollover");
+	  
+	      return (1);
+	    }
+	}
+    }
+
+  return (0);
+}
+
+/* return (0) - no OEM match
+ * return (1) - OEM match
+ * return (-1) - error, cleanup and return error
+ */
+int
 sel_string_output_intel_event_data1_class_oem (ipmi_sel_ctx_t ctx,
 					       struct ipmi_sel_entry *sel_entry,
 					       uint8_t sel_record_type,

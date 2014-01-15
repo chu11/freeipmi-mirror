@@ -106,6 +106,9 @@ extern "C" {
  */
 #define IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_ME_FW_HEALTH_SENSOR 0xDC
 
+/* Used by many sensors */
+#define IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_GENERIC             0xC0
+
 /*
  * Intel Node Manager
  *

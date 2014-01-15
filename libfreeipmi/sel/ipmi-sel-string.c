@@ -1003,6 +1003,22 @@ _output_oem_event_data1_class_sensor_specific_discrete (ipmi_sel_ctx_t ctx,
         return (1);
     }
 
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL)
+    {
+      if ((ret = sel_string_output_intel_event_data1_class_sensor_specific_discrete (ctx,
+										     sel_entry,
+										     sel_record_type,
+										     tmpbuf,
+										     tmpbuflen,
+										     flags,
+										     wlen,
+										     system_event_record_data)) < 0)
+        return (-1);
+      
+      if (ret)
+        return (1);
+    }
+
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_WISTRON)
     {
       if ((ret = sel_string_output_wistron_event_data1_class_sensor_specific_discrete (ctx,
