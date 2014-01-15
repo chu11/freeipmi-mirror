@@ -103,5 +103,14 @@ int sel_string_output_intel_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 						     unsigned int *wlen,
 						     struct ipmi_sel_system_event_record_data *system_event_record_data,
 						     int *oem_rv);
+ 
+int sel_string_output_intel_oem_record_data (ipmi_sel_ctx_t ctx,
+					     struct ipmi_sel_entry *sel_entry,
+					     uint8_t sel_record_type,
+					     char *buf,
+					     unsigned int buflen,
+					     unsigned int flags,
+					     unsigned int *wlen,
+					     int *oem_rv);
 
 #endif /* IPMI_SEL_STRING_INTEL_H */

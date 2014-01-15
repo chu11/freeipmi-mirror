@@ -3266,6 +3266,22 @@ _output_oem_interpreted_record_data (ipmi_sel_ctx_t ctx,
 	return (1);
     }
 
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL)
+    {
+      if ((ret = sel_string_output_intel_oem_record_data (ctx,
+							  sel_entry,
+							  sel_record_type,
+							  tmpbuf,
+							  tmpbuflen,
+							  flags,
+							  wlen,
+							  oem_rv)) < 0)
+	return (-1);
+      
+      if (ret)
+	return (1);
+    }
+
   return (0);
 }
 

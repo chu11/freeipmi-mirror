@@ -44,6 +44,7 @@
 #include "freeipmi/cmds/ipmi-sel-cmds.h"
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
 #include "freeipmi/record-format/ipmi-sel-record-format.h"
+#include "freeipmi/record-format/ipmi-sel-oem-record-format.h"
 #include "freeipmi/spec/ipmi-event-reading-type-code-spec.h"
 #include "freeipmi/spec/ipmi-event-reading-type-code-oem-spec.h"
 #include "freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h"
@@ -4332,6 +4333,217 @@ sel_string_output_intel_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
       
 	  return (1);
 	  
+	}
+    }
+
+  return (0);
+}
+
+/* return (0) - no OEM match
+ * return (1) - OEM match
+ * return (-1) - error, cleanup and return error
+ *
+ * in oem_rv, return
+ * 0 - continue on
+ * 1 - buffer full, return full buffer to user
+ */
+int
+sel_string_output_intel_oem_record_data (ipmi_sel_ctx_t ctx,
+					 struct ipmi_sel_entry *sel_entry,
+					 uint8_t sel_record_type,
+					 char *buf,
+					 unsigned int buflen,
+					 unsigned int flags,
+					 unsigned int *wlen,
+					 int *oem_rv)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL);
+  assert (ipmi_sel_record_type_class (sel_record_type) == IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD
+          || ipmi_sel_record_type_class (sel_record_type) == IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD);
+  assert (sel_entry);
+  assert (buf);
+  assert (buflen);
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (wlen);
+  assert (oem_rv);
+
+  /* OEM Interpretation
+   *
+   * Intel Windmill
+   * (Quanta Winterfell)
+   * (Wiwynn Windmill)
+   */
+  if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_WINDMILL)
+    {
+      if (ipmi_sel_record_type_class (sel_record_type) == IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD)
+	{
+	  /* Bytes 11-12 - Device ID
+	   * Bytes 13-14 - Device Identification Number
+	   * Bytes 15-16 - Error Code
+	   *
+	   * I'm assuming little endian, hopefully I'm right.
+	   */
+	  uint16_t device_id;
+	  uint16_t device_identification_number;
+	  char *device_identification_number_str;
+	  uint16_t error_code;
+	  char *error_code_str;
+	  
+	  device_id = sel_entry->sel_event_record[IPMI_SEL_OEM_INTEL_WINDMILL_DEVICE_IDENTIFICATION_NUMBER_INDEX_LSB_INDEX];
+	  device_id |= (sel_entry->sel_event_record[IPMI_SEL_OEM_INTEL_WINDMILL_DEVICE_IDENTIFICATION_NUMBER_INDEX_MSB_INDEX] << 8);
+
+	  device_identification_number = sel_entry->sel_event_record[IPMI_SEL_OEM_INTEL_WINDMILL_DEVICE_IDENTIFICATION_NUMBER_INDEX_LSB_INDEX];
+	  device_identification_number |= (sel_entry->sel_event_record[IPMI_SEL_OEM_INTEL_WINDMILL_DEVICE_IDENTIFICATION_NUMBER_INDEX_MSB_INDEX] << 8);
+	  
+	  error_code = sel_entry->sel_event_record[IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_INDEX_LSB_INDEX];
+	  error_code |= (sel_entry->sel_event_record[IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_INDEX_MSB_INDEX] << 8);
+
+	  switch (device_identification_number)
+	    {
+	    case IPMI_SEL_OEM_INTEL_WINDMILL_DEVICE_IDENTIFICATION_NUMBER_DEVICE_0_IN_DMI_MODE:
+	      device_identification_number_str = "Device 0 in DMI Mode ";
+	      break;
+	    case IPMI_SEL_OEM_INTEL_WINDMILL_DEVICE_IDENTIFICATION_NUMBER_DMI_PORT_IN_PCIE_MODE:
+	      device_identification_number_str = "DMI Port in PCIe Mode ";
+	      break;
+	    case IPMI_SEL_OEM_INTEL_WINDMILL_DEVICE_IDENTIFICATION_NUMBER_PORT_1A:
+	      device_identification_number_str = "Port 1A";
+	      break;
+	    case IPMI_SEL_OEM_INTEL_WINDMILL_DEVICE_IDENTIFICATION_NUMBER_PORT_1B:
+	      device_identification_number_str = "Port 1B";
+	      break;
+	    case IPMI_SEL_OEM_INTEL_WINDMILL_DEVICE_IDENTIFICATION_NUMBER_PORT_2A:
+	      device_identification_number_str = "Port 2A";
+	      break;
+	    case IPMI_SEL_OEM_INTEL_WINDMILL_DEVICE_IDENTIFICATION_NUMBER_PORT_2B:
+	      device_identification_number_str = "Port 2B";
+	      break;
+	    case IPMI_SEL_OEM_INTEL_WINDMILL_DEVICE_IDENTIFICATION_NUMBER_PORT_2C:
+	      device_identification_number_str = "Port 2C";
+	      break;
+	    case IPMI_SEL_OEM_INTEL_WINDMILL_DEVICE_IDENTIFICATION_NUMBER_PORT_2D:
+	      device_identification_number_str = "Port 2D";
+	      break;
+	    case IPMI_SEL_OEM_INTEL_WINDMILL_DEVICE_IDENTIFICATION_NUMBER_PORT_3A_IN_PCIE_MODE:
+	      device_identification_number_str = "Port 3A in PCIe Mode";
+	      break;
+	    case IPMI_SEL_OEM_INTEL_WINDMILL_DEVICE_IDENTIFICATION_NUMBER_PORT_3B:
+	      device_identification_number_str = "Port 3B";
+	      break;
+	    case IPMI_SEL_OEM_INTEL_WINDMILL_DEVICE_IDENTIFICATION_NUMBER_PORT_3C:
+	      device_identification_number_str = "Port 3C";
+	      break;
+	    case IPMI_SEL_OEM_INTEL_WINDMILL_DEVICE_IDENTIFICATION_NUMBER_PORT_3D:
+	      device_identification_number_str = "Port 3D";
+	      break;
+	    case IPMI_SEL_OEM_INTEL_WINDMILL_DEVICE_IDENTIFICATION_NUMBER_IIO_NTB_SECONDARY_ENDPOINT:
+	      device_identification_number_str = "IIO NTB Secondary Endpoint";
+	      break;
+	    default:
+	      device_identification_number_str = "Unknown";
+	      break;
+	    }
+
+	  switch (error_code)
+	    {
+	    case IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_RECEIVER_ERROR:
+	      error_code_str = "Receiver Error";
+	      break;
+	    case IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_BAD_TLP:
+	      error_code_str = "Bad TLP";
+	      break;
+	    case IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_BAD_DLLP:
+	      error_code_str = "Bad DLPP";
+	      break;
+	    case IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_REPLAY_TIMEOUT:
+	      error_code_str = "Replay Time-out";
+	      break;
+	    case IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_REPLAY_NUMBER_ROLLOVER:
+	      error_code_str = "Replay Number Rollover";
+	      break;
+	    case IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_ADVISORY_NON_FATAL_ERROR:
+	      error_code_str = "Advisory Non-fatal Error";
+	      break;
+	    case IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_RECEIVED_ERR_COR_MESSAGE_FROM_DOWNSTREAM_DEVICE:
+	      error_code_str = "Received ERR_COR message from downstream device";
+	      break;
+	    case IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_PCI_EXPRESS_LINK_BANDWIDTH_CHANGED:
+	      error_code_str = "PCI Express Link Bandwidth changed";
+	      break;
+	    case IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_RECEIVED_UNSUPPORTED_REQUEST_COMPLETION_STATUS_FROM_DOWNSTREAM_DEVICE:
+	      error_code_str = "Received \"Unsupported Request\" completion status from downstream device.";
+	      break;
+	    case IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_SENT_A_PCI_EXPRESS_UNSUPPORTED_REQUEST_RESPOND_ON_INBOUND_REQUEST:
+	      error_code_str = "Sent a PCI Express \"Unsupported Request\" respond on inbound request for address decode, request type, or other reason.";
+	      break;
+	    case IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_RECEIVED_COMPLETER_ABORT_COMPLETION_STATUS_FROM_DOWNSTREAM_DEVICE:
+	      error_code_str = "Received \"Completer Abort\" completion status from downstream device.";
+	      break;
+	    case IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_SENT_A_PCI_EXPRESS_COMPLETER_ABORT_CONDITION_ON_INBOUND_REQUEST:
+	      error_code_str = "Sent a PCI Express \"Completer Abort\" condition on inbound request for address decode, request type, or other reason.";
+	      break;
+	    case IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_COMPLETION_TIMEOUT_ON_NP_TRANSACTION_OUTSTANDING_ON_PCI_EXPRESS_DMI:
+	      error_code_str = "Completion timeout on NP transaction outstanding on PCI Express/DMI.";
+	      break;
+	    case IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_RECEIVED_PCI_EXPRESS_POISONED_TLP:
+	      error_code_str = "Received PCI Express Poisoned TLP.";
+	      break;
+	    case IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_RECEIVED_PCI_EXPRESS_UNEXPECTED_COMPLETION:
+	      error_code_str = "Received PCI Express unexpected Completion.";
+	      break;
+	    case IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_PCI_EXPRESS_FLOW_CONTROL_PROTOCOL_ERROR:
+	      error_code_str = "PCI Express Flow Control Protocol Error.";
+	      break;
+	    case IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_RECEIVED_ERR_NONFATAL_MESSAGE_FROM_DOWNSTREAM_DEVICE:
+	      error_code_str = "Received ERR_NONFATAL Message from downstream device.";
+	      break;
+	    case IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_RECEIVED_A_REQUEST_FROM_A_DOWNSTREAM_COMPONENT_THAT_IS_UNSUPPORTED:
+	      error_code_str = "Received a Request from a downstream component that is unsupported.";
+	      break;
+	    case IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_RECEIVED_A_REQUEST_FROM_A_DOWNSTREAM_COMPONENT_THAT_IS_TO_BE_COMPLETER_ABORTED:
+	      error_code_str = "Received a Request from a downstream component that is to be completer aborted.";
+	      break;
+	    case IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_ACS_VIOLATION:
+	      error_code_str = "ACS Violation";
+	      break;
+	    case IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_PCI_EXPRESS_MALFORMED_TLP:
+	      error_code_str = "PCI Express Malformed TLP";
+	      break;
+	    case IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_PCI_EXPRESS_DATA_LINK_PROTOCOL_ERROR:
+	      error_code_str = "PCI Express Data Link Protocol Error";
+	      break;
+	    case IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_PCI_EXPRESS_RECEIVER_OVERFLOW:
+	      error_code_str = "PCI Express Receiver Overflow";
+	      break;
+	    case IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_SURPRISE_DOWN:
+	      error_code_str = "Surprise Down";
+	      break;
+	    case IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_RECEIVED_ERR_FATAL_MESSAGE_FROM_DOWNSTREAM_DEVICE:
+	      error_code_str = "Received ERR_FATAL message from downstream device.";
+	      break;
+	    case IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_OUTBOUND_SWITCH_HEADER_QUEUE_PARITY_ERROR:
+	      error_code_str = "Outbound switch header queue partiy error";
+	      break;
+	    default:
+	      error_code_str = "Unknown";
+	      break;
+	    }
+
+	  if (sel_string_snprintf (buf,
+				   buflen,
+				   wlen,
+				   "Devie ID = %u, Device Identification Number = %s, Error = %s",
+				   device_id,
+				   device_identification_number_str,
+				   error_code_str))
+	    (*oem_rv) = 1;
+	  else
+	    (*oem_rv) = 0;
+	  
+	  return (1);
 	}
     }
 
