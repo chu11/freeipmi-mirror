@@ -112,7 +112,8 @@ extern "C" {
  * (Wiwynn Windmill)
  */
 /* achu: Like Intel Node Manager, but no Intel Node Manager on these nodes, so cut & paste to differentiate */
-#define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_WINDMILL_ME_FW_HEALTH_SENSOR 0x75
+#define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_WINDMILL_ME_FW_HEALTH_SENSOR    0x75
+#define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_WINDMILL_OTHER_IIO_ERROR_SENSOR 0x70
 
 /*
  * Intel Node Manager

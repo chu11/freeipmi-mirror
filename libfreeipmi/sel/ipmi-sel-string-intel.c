@@ -1219,6 +1219,19 @@ sel_string_output_intel_event_data2_class_oem (ipmi_sel_ctx_t ctx,
           
           return (1);
         }
+
+      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_WINDMILL_OTHER_IIO_ERROR_SENSOR
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_WINDMILL_OTHER_IIO_ERROR_SENSOR
+          && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_FRONT_PANEL_NMI_DIAGNOSTIC_INTERRUPT)
+	{
+	  snprintf (tmpbuf,
+		    tmpbuflen,
+		    "Error ID = 0x%02X",
+		    system_event_record_data->event_data2);
+
+	  return (1);
+	}
     }
 
   return (0);
@@ -2179,6 +2192,48 @@ sel_string_output_intel_event_data3_class_oem (ipmi_sel_ctx_t ctx,
 		    "Extended Error Info = %02X",
 		    system_event_record_data->event_data3);
 	  
+	}
+
+      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_WINDMILL_OTHER_IIO_ERROR_SENSOR
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_WINDMILL_OTHER_IIO_ERROR_SENSOR
+          && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_FRONT_PANEL_NMI_DIAGNOSTIC_INTERRUPT)
+	{
+	  uint8_t cpu_number;
+	  uint8_t source;
+	  char *source_str;
+
+	  cpu_number = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA3_OEM_INTEL_WINDMILL_CPU_NUMBER_BITMASK);
+	  cpu_number >>= IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA3_OEM_INTEL_WINDMILL_CPU_NUMBER_SHIFT;
+
+	  source = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA3_OEM_INTEL_WINDMILL_SOURCE_BITMASK);
+	  source >>= IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA3_OEM_INTEL_WINDMILL_SOURCE_SHIFT;
+
+	  switch (source)
+	    {
+	    case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA3_OEM_INTEL_WINDMILL_SOURCE_IRP0:
+	      source_str = "IRP0";
+	      break;
+	    case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA3_OEM_INTEL_WINDMILL_SOURCE_IRP1:
+	      source_str = "IRP1";
+	      break;
+	    case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA3_OEM_INTEL_WINDMILL_SOURCE_IIO_CORE:
+	      source_str = "IIO-Core";
+	      break;
+	    case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA3_OEM_INTEL_WINDMILL_SOURCE_VT_D:
+	      source_str = "VT-d";
+	      break;
+	    default:
+	      source_str = "Unknown";
+	      break;
+	    }
+
+	  snprintf (tmpbuf,
+		    tmpbuflen,
+		    "Error ID = 0x%02X",
+		    system_event_record_data->event_data2);
+
+	  return (1);
 	}
     }
 
