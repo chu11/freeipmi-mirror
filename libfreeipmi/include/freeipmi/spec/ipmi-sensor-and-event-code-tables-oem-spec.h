@@ -1535,6 +1535,7 @@ extern unsigned int ipmi_oem_intel_s2600jf_specific_qpi_link_width_reduced_max_i
 #define IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA3_OEM_INTEL_WINDMILL_SOURCE_IIO_CORE 2
 #define IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA3_OEM_INTEL_WINDMILL_SOURCE_VT_D     3
 
+/* achu: doc lists bit [1], not bit [0], but given rollover is bit [8], and from testing, assuming it's bit [0] */
 #define IPMI_SENSOR_TYPE_OEM_INTEL_SEL_CLEAR_BITMASK 0x01
 #define IPMI_SENSOR_TYPE_OEM_INTEL_SEL_CLEAR_SHIFT   0
 
