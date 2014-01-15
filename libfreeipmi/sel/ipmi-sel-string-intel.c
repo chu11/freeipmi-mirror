@@ -189,6 +189,38 @@ sel_string_output_intel_event_data1_class_sensor_specific_discrete (ipmi_sel_ctx
 	      return (1);
 	    }
 	}
+
+      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_GENERIC
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_WINDMILL_CHASSIS_POWER_STATUS)
+	{
+	  char *chassis_power_status_str;
+
+	  switch (system_event_record_data->event_data1)
+	    {
+	    case IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_CHASSIS_POWER_STATUS_POWER_DOWN:
+	      chassis_power_status_str = "Power Down";
+	      break;
+	    case IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_CHASSIS_POWER_STATUS_POWER_CYCLE_RESET:
+	      chassis_power_status_str = "Power Cycle/Reset";
+	      break;
+	    case IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_CHASSIS_POWER_STATUS_POWER_ON:
+	      chassis_power_status_str = "Power On";
+	      break;
+	    case IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_CHASSIS_POWER_STATUS_AC_LOST:
+	      chassis_power_status_str = "AC Lost";
+	      break;
+	    default:
+	      chassis_power_status_str = "Unknown";
+	      break;
+	    }
+
+	  snprintf (tmpbuf,
+		    tmpbuflen,
+		    "Power Status = %s",
+		    chassis_power_status_str);
+	  
+	  return (1);
+	}
     }
 
   return (0);
