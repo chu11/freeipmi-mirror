@@ -905,7 +905,7 @@ sel_string_output_intel_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
   if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_WINDMILL)
     {
       if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PROCESSOR
-	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PROC_HOT_EXTENDED_SENSOR
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_WINDMILL_PROC_HOT_EXTENDED_SENSOR
           && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_PROCESSOR_PROCESSOR_AUTOMATICALLY_THROTTLED)
 	{
 	  const char *noe_str;
@@ -921,7 +921,7 @@ sel_string_output_intel_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 	}
 
       if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
-	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_MEM_HOT_EXTENDED_SENSOR
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_WINDMILL_MEM_HOT_EXTENDED_SENSOR
           && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_MEMORY_AUTOMATICALLY_THROTTLED)
 	{
 	  const char *noe_str;
@@ -937,7 +937,7 @@ sel_string_output_intel_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 	}
 
       if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PROCESSOR
-	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_MACHINE_CHECK_ERROR_SENSOR
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_WINDMILL_MACHINE_CHECK_ERROR_SENSOR
           && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_PROCESSOR_MACHINE_CHECK_EXCEPTION
 	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_PROCESSOR_CORRECTABLE_MACHINE_CHECK_ERROR))
 	{
@@ -950,7 +950,7 @@ sel_string_output_intel_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 	}
 
       if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
-	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PCIE_ERROR_SENSOR
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_WINDMILL_PCIE_ERROR_SENSOR
           && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_CORRECTABLE_ERROR
 	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_UNCORRECTABLE_ERROR
 	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_FATAL_ERROR))
@@ -1929,7 +1929,7 @@ sel_string_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
   if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_WINDMILL)
     {
       if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PROCESSOR
-	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PROC_HOT_EXTENDED_SENSOR
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_WINDMILL_PROC_HOT_EXTENDED_SENSOR
           && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_PROCESSOR_PROCESSOR_AUTOMATICALLY_THROTTLED)
 	{
 	  uint8_t cpu_vr;
@@ -1946,7 +1946,7 @@ sel_string_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 	}
 
       if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
-	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_MEM_HOT_EXTENDED_SENSOR
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_WINDMILL_MEM_HOT_EXTENDED_SENSOR
           && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_MEMORY_AUTOMATICALLY_THROTTLED)
 	{
 	  uint8_t cpu_vr;
@@ -1973,7 +1973,7 @@ sel_string_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 	}
 
       if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PROCESSOR
-	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_MACHINE_CHECK_ERROR_SENSOR
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_WINDMILL_MACHINE_CHECK_ERROR_SENSOR
           && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_PROCESSOR_MACHINE_CHECK_EXCEPTION
 	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_PROCESSOR_CORRECTABLE_MACHINE_CHECK_ERROR))
 	{
@@ -2035,7 +2035,7 @@ sel_string_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 	}
 
       if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
-	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PCIE_ERROR_SENSOR
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_WINDMILL_PCIE_ERROR_SENSOR
           && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_CORRECTABLE_ERROR
 	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_UNCORRECTABLE_ERROR
 	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_FATAL_ERROR))
@@ -3850,6 +3850,111 @@ sel_string_output_intel_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 	  
 	  return (1);
 	}     
+    }
+
+  /* OEM Interpretation
+   *
+   * Intel Windmill
+   * (Quanta Winterfell)
+   * (Wiwynn Windmill)
+   */
+  if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_WINDMILL)
+    {
+
+      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_WINDMILL_POST_ERROR_SENSOR
+	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_SYSTEM_FIRMWARE_ERROR
+	  && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+	  && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+        {
+	  uint16_t error_code;
+	  char *error_code_str = NULL;
+          
+	  error_code = system_event_record_data->event_data2;
+	  error_code |= (system_event_record_data->event_data3 << 8);
+          
+	  switch (error_code)
+	    {
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_WINDMILL_POST_ERROR_CODE_PEI_CPU_MISMATCH:
+	      error_code_str = "PEI CPU Mismatch";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_WINDMILL_POST_ERROR_CODE_PEI_CPU_SELF_TEST_FAILED:
+	      error_code_str = "PEI CPU Self Test Failed";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_WINDMILL_POST_ERROR_CODE_PEI_CPU_CACHE_ERROR:
+	      error_code_str = "PEI CPU Cache Error ";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_WINDMILL_POST_ERROR_CODE_PEI_CPU_MICROCODE_UPDATE_FAILED:
+	      error_code_str = "PEI CPU Microcode Update Failed";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_WINDMILL_POST_ERROR_CODE_PEI_CPU_NO_MICROCODE:
+	      error_code_str = "PEI CPU No Microcode";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_WINDMILL_POST_ERROR_CODE_PEI_CPU_INTERNAL_ERROR:
+	      error_code_str = "PEI CPU Internal Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_WINDMILL_POST_ERROR_CODE_PEI_RESET_NOT_AVAILABLE1:
+	      error_code_str = "PEI Reset Not Available";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_WINDMILL_POST_ERROR_CODE_PEI_RESET_NOT_AVAILABLE2:
+	      error_code_str = "PEI Reset Not Available";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_WINDMILL_POST_ERROR_CODE_PEI_RECOVERY_NO_CAPSULE:
+	      error_code_str = "PEI Recovery No Capsule";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_WINDMILL_POST_ERROR_CODE_PEI_SB_PWR_FLR:
+	      error_code_str = "PEI SB PWR FLR";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_WINDMILL_POST_ERROR_CODE_PEI_SB_SYSPWR_FLR:
+	      error_code_str = "PEI SB SYSPWR FLR";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_WINDMILL_POST_ERROR_CODE_DXE_CLEAR_CMOS:
+	      error_code_str = "DXE Clear CMOS ";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_WINDMILL_POST_ERROR_CODE_DXE_NB_ERROR:
+	      error_code_str = "DXE NB Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_WINDMILL_POST_ERROR_CODE_DXE_ARCH_PROTOCOL_NOT_AVAILABLE:
+	      error_code_str = "DXE Arch Protocol Not Available";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_WINDMILL_POST_ERROR_CODE_DXE_PCI_BUS_OUT_OF_RESOURCES:
+	      error_code_str = "DXE PCI Bus Out of Resources";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_WINDMILL_POST_ERROR_CODE_DXE_LEGACY_OPROM_NO_SPACE:
+	      error_code_str = "DXE Legacy OPROM No Space";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_WINDMILL_POST_ERROR_CODE_DXE_NO_CON_OUT:
+	      error_code_str = "DXE No Con Out";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_WINDMILL_POST_ERROR_CODE_DXE_NO_CON_IN:
+	      error_code_str = "DXE No Con In";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_WINDMILL_POST_ERROR_CODE_DXE_FLASH_UPDATE_FAILED:
+	      error_code_str = "DXE Flash Update Failed";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_WINDMILL_POST_ERROR_CODE_DXE_RESET_NOT_AVAILABLE:
+	      error_code_str = "DXE Reset Not Available";
+	      break;
+	    case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_WINDMILL_POST_ERROR_CODE_ME_RECOVERED_VIA_GR:
+	      error_code_str = "ME Recovered via GR";
+	      break;
+	    default:
+	      error_code_str = "Undefined Post Error";
+	    }
+
+	  if (sel_string_snprintf (buf,
+				   buflen,
+				   wlen,
+				   "%s",
+				   error_code_str))
+	    (*oem_rv) = 1;
+	  else
+	    (*oem_rv) = 0;
+      
+	  return (1);
+	  
+	}
     }
 
   return (0);
