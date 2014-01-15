@@ -1842,6 +1842,7 @@ int
 ipmi_get_oem_sensor_type_message (uint32_t manufacturer_id,
                                   uint16_t product_id,
                                   uint8_t sensor_type,
+				  uint8_t sensor_number,
                                   unsigned int offset,
                                   char *buf,
                                   unsigned int buflen)
@@ -2006,6 +2007,18 @@ ipmi_get_oem_sensor_type_message (uint32_t manufacturer_id,
                                       ipmi_sensor_type_oem_wistron_ioh_core_error_max_index,
                                       ipmi_sensor_type_oem_wistron_ioh_core_error));
         }
+    }
+
+  /* OEM Interpretation
+   *
+   * Intel Windmill
+   * (Quanta Winterfell)
+   * (Wiwynn Windmill)
+   */
+  if (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL
+      && product_id == IPMI_INTEL_PRODUCT_ID_WINDMILL
+      && sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_GENERIC)
+    {
     }
 
   SET_ERRNO (EINVAL);
@@ -2279,6 +2292,7 @@ ipmi_get_oem_event_bitmask_message (uint32_t manufacturer_id,
 int
 ipmi_get_event_messages (uint8_t event_reading_type_code,
                          uint8_t sensor_type, /* ignored if not relevant for event_reading_type_code */
+			 uint8_t sensor_number, /* ignored if not relevant for event_reading_type_code or sensor_type */
                          uint16_t event_bitmask, /* ignored if not relevant for event_reading_type_code */
                          uint32_t manufacturer_id, /* ignored if INTERPRET_OEM_DATA not set */
                          uint16_t product_id, /* ignored if INTERPRET_OEM_DATA not set */
@@ -2410,7 +2424,8 @@ ipmi_get_event_messages (uint8_t event_reading_type_code,
                                    || sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING
                                    || sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_NON_FATAL_ERROR
                                    || sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_FATAL_IO_ERROR
-                                   || sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_UPGRADE))
+                                   || sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_UPGRADE)
+			       )
                               || (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU
                                   && (product_id >= IPMI_FUJITSU_PRODUCT_ID_MIN
                                       && product_id <= IPMI_FUJITSU_PRODUCT_ID_MAX)
@@ -2428,11 +2443,19 @@ ipmi_get_event_messages (uint8_t event_reading_type_code,
                                       || sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_EVENT
                                       || sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_COMMUNICATION
                                       /* These are for events only --end */
-                                      ))))
+                                      )
+				  )
+			      || (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL
+				  && (product_id == IPMI_INTEL_PRODUCT_ID_WINDMILL)
+				  && (sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_GENERIC)
+				  )
+			      )
+			  )
                         {
                           len = ipmi_get_oem_sensor_type_message (manufacturer_id,
                                                                   product_id,
                                                                   sensor_type,
+								  sensor_number,
                                                                   i,
                                                                   buf,
                                                                   EVENT_BUFLEN);

@@ -2265,7 +2265,6 @@ sel_string_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 	  uint8_t cpu_number;
 	  uint8_t source;
 	  uint8_t source_extra;
-	  char *source_extra_str;
 
 	  cpu_number = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_PROCESSOR_EVENT_DATA2_OEM_INTEL_WINDMILL_MACHINE_CHECK_ERROR_CPU_NUMBER_BITMASK);
 	  cpu_number >>= IPMI_SENSOR_TYPE_PROCESSOR_EVENT_DATA2_OEM_INTEL_WINDMILL_MACHINE_CHECK_ERROR_CPU_NUMBER_SHIFT;

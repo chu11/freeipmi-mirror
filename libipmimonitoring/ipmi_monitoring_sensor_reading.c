@@ -450,6 +450,7 @@ _get_sensor_bitmask_strings (ipmi_monitoring_ctx_t c,
                              unsigned int sensor_reading_flags,
                              uint8_t event_reading_type_code,
                              uint8_t sensor_type,
+			     uint8_t sensor_number,
                              uint16_t sensor_event_bitmask,
                              char ***sensor_bitmask_strings)
 {
@@ -476,6 +477,7 @@ _get_sensor_bitmask_strings (ipmi_monitoring_ctx_t c,
 
   if (ipmi_get_event_messages (event_reading_type_code,
                                sensor_type,
+			       sensor_number,
                                sensor_event_bitmask,
                                manufacturer_id,
                                product_id,
@@ -589,6 +591,7 @@ _threshold_sensor_reading (ipmi_monitoring_ctx_t c,
                                    sensor_reading_flags,
                                    event_reading_type_code,
                                    sdr_sensor_type,
+				   sensor_number_base + shared_sensor_number_offset,
                                    sensor_event_bitmask,
                                    &sensor_bitmask_strings) < 0)
     return (-1);
@@ -821,6 +824,7 @@ _digital_sensor_reading (ipmi_monitoring_ctx_t c,
                                    sensor_reading_flags,
                                    event_reading_type_code,
                                    sdr_sensor_type,
+				   sensor_number_base + shared_sensor_number_offset,
                                    sensor_event_bitmask,
                                    &sensor_bitmask_strings) < 0)
     return (-1);
@@ -905,6 +909,7 @@ _specific_sensor_reading (ipmi_monitoring_ctx_t c,
                                    sensor_reading_flags,
                                    event_reading_type_code,
                                    sdr_sensor_type,
+				   sensor_number_base + shared_sensor_number_offset,
                                    sensor_event_bitmask,
                                    &sensor_bitmask_strings) < 0)
     return (-1);
@@ -989,6 +994,7 @@ _oem_sensor_reading (ipmi_monitoring_ctx_t c,
                                    sensor_reading_flags,
                                    event_reading_type_code,
                                    sdr_sensor_type,
+				   sensor_number_base + shared_sensor_number_offset,
                                    sensor_event_bitmask,
                                    &sensor_bitmask_strings) < 0)
     return (-1);
