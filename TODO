@@ -68,6 +68,9 @@ FreeIPMI new stuff
   - capture lan and do inband, maybe useful if you have dedicated port
   that can't be seen by the network, and you don't have enough switch
   ports to have both plugged up to the network.
+- OCP IPMI extensions
+  - FRU record
+  - command extensions
 
 library general
 ---------------
