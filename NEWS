@@ -1,4 +1,4 @@
-FreeIPMI 1.4.1 - 08/21/13
+FreeIPMI 1.4.1 - 02/XX/14
 -------------------------
 
 Tools - New Features
@@ -75,6 +75,35 @@ o Update libfreeipmi to support Intel Node Manager payloads per Intel
     changed.
 o Update libfreeipmi SEL sub-library to handle new event messages in
   Intelligent Power Node Manager 2.0 specification.
+
+FreeIPMI 1.3.4 - 12/12/13
+-------------------------
+o Support 'solchannelsupport' workraound in ipmiconsole /
+  IPMICONSOLE_WORKAROUND_SKIP_CHANNEL_PAYLOAD_SUPPORT workaround flag in
+  libipmiconsole.
+o Fix SDR cache workaround for motherboards with invalid SDR record
+  counts listed.
+o Workaround Supermicro bug in bmc-watchdog. 
+o Fix error checks in sensor decoding functions, leading to possible
+  problems in ipmi-sensors-config.
+o Update documentation with additional workarounds for motherboards.
+o Fix various minor bugs.
+
+FreeIPMI 1.3.3 - 10/29/13
+-------------------------
+o Add support for intelnm get-node-manager-alert-destination and
+  set-node-manager-alert-destination in ipmi-oem.
+o Under very verbose mode, ipmi-sel will now record types for OEM
+  records.  This should allow OEM parses outside of FreeIPMI to more
+  effectively parse OEM specific SEL records.
+o Fix big endian portability bugs.
+
+FreeIPMI 1.3.2 - 09/10/13
+-------------------------
+o Update FreeIPMI tools to check libfreeipmi API error codes
+  correctly.
+o Update ipmi-api.h to list mappings of IPMI completion codes and
+  RMCPPlus codes to API Error codes.
 
 FreeIPMI 1.3.1 - 08/22/13
 -------------------------
