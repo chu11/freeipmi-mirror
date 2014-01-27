@@ -1,3 +1,7 @@
+2014-01-27  Anonymous
+
+	* man/Makefile.am: Fix man pages built with cpp-4.8
+	
 2013-12-19  Dave Love  <fx@gnu.org>
 
 	* ipmi-sensors/ipmi-sensors.c (_calculate_record_ids): Check
