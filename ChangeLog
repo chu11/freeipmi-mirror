@@ -1,3 +1,7 @@
+2014-01-27  Anonymous
+
+	* man/Makefile.am: Fix man pages built with cpp-4.8
+	
 2014-01-15  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/sel/, libfreeipmi/include/freeipmi/spec/, Support
