@@ -19,8 +19,16 @@
 #ifndef TOOL_DAEMON_COMMON_H
 #define TOOL_DAEMON_COMMON_H
 
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif /* HAVE_CONFIG_H */
+
 #include <stdint.h>
 #include <signal.h>
+
+#ifndef HAVE_SIGHANDLER_T
+typedef void (*sighandler_t)(int);
+#endif /* HAVE_SIGHANDLER_T */
 
 int daemonize_common (const char *pidfile);
 

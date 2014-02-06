@@ -30,7 +30,7 @@
 #include <sys/ipc.h>
 #include <sys/sem.h>
 
-#if defined(__FreeBSD__)
+#if defined(__FreeBSD__) || defined(__APPLE__)
 /* union semun is defined by including <sys/sem.h> */
 #else
 /* according to X/OPEN we have to define it ourselves */

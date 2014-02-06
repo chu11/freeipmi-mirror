@@ -1,3 +1,18 @@
+2014-02-06  Albert Chu <chu11@llnl.gov>
+
+	* Porting issues discovered by guy here
+
+	http://theviewfrom8.blogspot.com/2012/11/how-to-build-freeipmi-on-mac-os-x.html
+
+	basic code derived from his webpage.
+
+	* libfreeipmi/driver/ipmi-semaphores.h: Union semun defined in
+	sys/sem.h for FreeBSD and APPLE.
+	
+	* configure.ac, common/toolcommon/pstdout.c,
+	common/toolcommon/tool-daemon-common.h: sighandler_t not defined
+	in signal.h, handled appropriately.
+	
 2014-01-27  Anonymous
 
 	* man/Makefile.am: Fix man pages built with cpp-4.8

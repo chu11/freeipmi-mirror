@@ -437,6 +437,7 @@ AC_CHECK_HEADERS([linux/ipmi.h], [], [],
 AC_CHECK_HEADERS([sys/ipmi.h])
 AC_CHECK_HEADERS([sys/int_types.h])
 AC_CHECK_HEADERS([bmc_intf.h])
+AC_CHECK_HEADERS([signal.h])
 
 dnl Checks for library functions.
 AC_FUNC_ALLOCA
@@ -453,6 +454,9 @@ AC_CHECK_FUNCS([flockfile fputs_unlocked fwrite_unlocked])
 AC_CHECK_FUNCS([iopl])
 AC_CHECK_FUNCS([asprintf])
 AC_CHECK_FUNCS([cbrt])
+
+dnl sighandler_t apparently not defined in Apple/OS X
+AC_CHECK_TYPES([sighandler_t], [], [], [[#include <signal.h>]])
 
 # At least on freebsd, putc_unlocked is a macro, so the standard
 # AC_CHECK_FUNCS doesn't work well.
