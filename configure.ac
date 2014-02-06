@@ -437,6 +437,7 @@ AC_CHECK_HEADERS([linux/ipmi.h], [], [],
 AC_CHECK_HEADERS([sys/ipmi.h])
 AC_CHECK_HEADERS([sys/int_types.h])
 AC_CHECK_HEADERS([bmc_intf.h])
+AC_CHECK_HEADERS([signal.h])
 
 dnl Checks for library functions.
 AC_FUNC_ALLOCA
@@ -453,6 +454,9 @@ AC_CHECK_FUNCS([flockfile fputs_unlocked fwrite_unlocked])
 AC_CHECK_FUNCS([iopl])
 AC_CHECK_FUNCS([asprintf])
 AC_CHECK_FUNCS([cbrt])
+
+dnl sighandler_t apparently not defined in Apple/OS X
+AC_CHECK_TYPES([sighandler_t], [], [], [[#include <signal.h>]])
 
 # At least on freebsd, putc_unlocked is a macro, so the standard
 # AC_CHECK_FUNCS doesn't work well.
@@ -639,12 +643,12 @@ if test "x$have_argp" = "xyes"; then
          AC_DEFINE([HAVE_ARGP_H], [1], [Define if you have argp.h]),
                    AC_MSG_ERROR([argp header cannot be found]))
 else
-dnl FreeBSD has the argp-standalone package.  If we're on FreeBSD
-dnl make them install the argp-standalone.  On non-FreeBSD, the code
-dnl will fall through and compile the internal FreeIPMI-argp
+dnl FreeBSD and Apple has the argp-standalone package.  If we're on
+dnl FreeBSD or Apple make them install the argp-standalone.  Otherwise
+dnl the code will fall through and compile the internal FreeIPMI-argp
    AC_TRY_COMPILE([#include <sys/param.h>],
                   [
-                   #ifdef __FreeBSD_version
+                   #if defined(__FreeBSD__) || defined(__APPLE__)
                    uncompilable junk syntax %$ # @
                    #endif
                   ],

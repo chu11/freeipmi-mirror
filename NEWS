@@ -44,6 +44,7 @@ o Update ipmi-oem Intel Node Manager OEM commands for changes listed
     in some output from intelnm OEM commands.
 o Update ipmi-sel to support new SEL events in Intelligent Power Node
   Manager 2.0 specification.
+o Fix portability issues for Apple / OS X.
 
 Tools - Bug Fixes/Minor Changes
 -------------------------------
