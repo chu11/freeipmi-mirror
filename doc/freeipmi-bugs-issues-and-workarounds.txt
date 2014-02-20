@@ -800,6 +800,16 @@ Serial-Over-LAN Issue #19: [COMPLIANCE]
   Seen on: Supermicro X8DTG-D, Inventec 5442/Dell Xanadu III
   Resolution: None 
 
+Serial-Over-LAN Issue #20: [COMPLIANCE]
+
+  The Activate Payload requires Serial/modem alerts to be deferred
+  instead of failed even though motherboards do not have serial/modem
+  ports to communicate over.
+
+  Seen on: Intel Windmill, Quanta Winterfell, Wiwynn Windmill
+
+  Resolution: Workaround added to defer serial alerts.
+
 ----------------------------------------------------------------------
 
 ---------------------------------

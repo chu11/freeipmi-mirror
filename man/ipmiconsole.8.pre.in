@@ -262,6 +262,13 @@ is supported on the current channel.  It works around remote systems
 that do not properly support this command.  Those hitting this issue
 may see "BMC Error" errors.  Issue observed on Intel Windmill, Quanta
 Winterfell, and Wiwynn Windmill
+.LP
+\fIserialalertsdeferred\fR - This workaround option will set serial
+alerts to be deferred instead of have them be failures.  This works
+around motherboards that perform IPMI over serial along with IPMI
+serial over LAN.  Those hitting this issue may see "excess
+retransmissions sent" when they attempt to input data via SOL.  Issue
+observed on Intel Windmill, Quanta Winterfell, and Wiwynn Windmill.
 #include <@top_srcdir@/man/manpage-common-known-issues.man>
 .LP
 Some motherboards define an OEM SOL inactivity timeout for SOL

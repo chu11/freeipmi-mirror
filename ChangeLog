@@ -1,5 +1,10 @@
 2014-02-20  Albert Chu <chu11@llnl.gov>
 
+	* libipmiconsole, ipmiconsole, common/parsecommon: Support
+	SERIAL_ALERTS_DEFERRED workaround.
+
+2014-02-20  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/templates/ipmi-rmcpplus-support-and-payload-cmds-templates.h,
 	libfreeipmi/cmds/ipmi-rmcpplus-support-and-payload-cmds.c: Fix
 	payload, two fields were flipped by accident.  Make fields required and not optional.

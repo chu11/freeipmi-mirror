@@ -192,6 +192,12 @@ extern "C" {
  * it removes some validation of packet integrity.  However, it is
  * unlikely to be an issue in most situations.
  *
+ * SERIAL_ALERTS_DEFERRED
+ *
+ * This workaround option will set serial alerts to be deferred
+ * instead of have them be failures.  This works around motherboards
+ * that perform IPMI over serial along with IPMI serial over LAN.
+ *
  * IGNORE_SOL_PAYLOAD_SIZE
  *
  * This workaround flag will not check for valid SOL payload sizes and
@@ -231,6 +237,7 @@ extern "C" {
 #define IPMICONSOLE_WORKAROUND_OPEN_SESSION_PRIVILEGE          0x00000010
 #define IPMICONSOLE_WORKAROUND_NON_EMPTY_INTEGRITY_CHECK_VALUE 0x00000020
 #define IPMICONSOLE_WORKAROUND_NO_CHECKSUM_CHECK               0x00000040
+#define IPMICONSOLE_WORKAROUND_SERIAL_ALERTS_DEFERRED          0x00000080
 #define IPMICONSOLE_WORKAROUND_IGNORE_SOL_PAYLOAD_SIZE         0x01000000
 #define IPMICONSOLE_WORKAROUND_IGNORE_SOL_PORT                 0x02000000
 #define IPMICONSOLE_WORKAROUND_SKIP_SOL_ACTIVATION_STATUS      0x04000000
