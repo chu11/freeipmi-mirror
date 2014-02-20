@@ -61,11 +61,11 @@ fiid_template_t tmpl_cmd_activate_payload_sol_rq =
     { 1, "reserved3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "sol_startup_handshake", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 2, "shared_serial_alert_behavior", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "reserved4", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1, "test_mode", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1, "authentication_activation", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 1, "encryption_activation", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    { 24, "reserved5", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    { 1, "reserved4", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "test_mode", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "authentication_activation", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "encryption_activation", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 24, "reserved5", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
   };
 
@@ -436,10 +436,10 @@ fill_cmd_activate_payload_sol (uint8_t payload_type,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved3", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "sol_startup_handshake", sol_startup_handshake);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "shared_serial_alert_behavior", shared_serial_alert_behavior);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved4", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "test_mode", test_mode);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "authentication_activation", authentication_activation);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "encryption_activation", encryption_activation);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved4", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved5", 0);
 
   return (0);

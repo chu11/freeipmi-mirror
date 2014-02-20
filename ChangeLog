@@ -2,7 +2,7 @@
 
 	* libfreeipmi/include/freeipmi/templates/ipmi-rmcpplus-support-and-payload-cmds-templates.h,
 	libfreeipmi/cmds/ipmi-rmcpplus-support-and-payload-cmds.c: Fix
-	payload, two fields were flipped by accident.
+	payload, two fields were flipped by accident.  Make fields required and not optional.
 	
 2014-02-06  Albert Chu <chu11@llnl.gov>
 
