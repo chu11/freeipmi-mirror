@@ -1,3 +1,9 @@
+2014-02-20  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/templates/ipmi-rmcpplus-support-and-payload-cmds-templates.h,
+	libfreeipmi/cmds/ipmi-rmcpplus-support-and-payload-cmds.c: Fix
+	payload, two fields were flipped by accident.
+	
 2014-02-06  Albert Chu <chu11@llnl.gov>
 
 	* Porting issues discovered by guy here

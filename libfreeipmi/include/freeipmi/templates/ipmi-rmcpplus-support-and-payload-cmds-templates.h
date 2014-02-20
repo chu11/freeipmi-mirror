@@ -82,8 +82,8 @@ FIID Template: tmpl_cmd_activate_payload_sol_rq
     { 1, "reserved3", REQUIRED, LENGTH-FIXED }
     { 1, "sol_startup_handshake", REQUIRED, LENGTH-FIXED }
     { 2, "shared_serial_alert_behavior", REQUIRED, LENGTH-FIXED }
-    { 1, "test_mode", OPTIONAL, LENGTH-FIXED }
     { 1, "reserved4", OPTIONAL, LENGTH-FIXED }
+    { 1, "test_mode", OPTIONAL, LENGTH-FIXED }
     { 1, "authentication_activation", OPTIONAL, LENGTH-FIXED }
     { 1, "encryption_activation", OPTIONAL, LENGTH-FIXED }
     { 24, "reserved5", OPTIONAL, LENGTH-FIXED }
