@@ -45,6 +45,7 @@ o Update ipmi-oem Intel Node Manager OEM commands for changes listed
 o Update ipmi-sel to support new SEL events in Intelligent Power Node
   Manager 2.0 specification.
 o Support 'serialalertsdeferred' workaround in ipmiconsole.
+o Support 'solpacketseq' workaround in ipmiconsole.
 o Fix portability issues for Apple / OS X.
 
 Tools - Bug Fixes/Minor Changes
@@ -78,6 +79,7 @@ o Update libfreeipmi to support Intel Node Manager payloads per Intel
 o Update libfreeipmi SEL sub-library to handle new event messages in
   Intelligent Power Node Manager 2.0 specification.
 o Support SERIAL_ALERTS_DEFERRED workaround in libipmiconsole.
+o Support INCREMENT_SOL_PACKET_SEQUENCE workaround in libipmiconsole.
 
 FreeIPMI 1.3.4 - 12/12/13
 -------------------------

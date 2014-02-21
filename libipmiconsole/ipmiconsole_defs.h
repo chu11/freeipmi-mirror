@@ -218,6 +218,7 @@ typedef enum
    | IPMICONSOLE_WORKAROUND_NON_EMPTY_INTEGRITY_CHECK_VALUE \
    | IPMICONSOLE_WORKAROUND_NO_CHECKSUM_CHECK               \
    | IPMICONSOLE_WORKAROUND_SERIAL_ALERTS_DEFERRED          \
+   | IPMICONSOLE_WORKAROUND_INCREMENT_SOL_PACKET_SEQUENCE   \
    | IPMICONSOLE_WORKAROUND_IGNORE_SOL_PAYLOAD_SIZE         \
    | IPMICONSOLE_WORKAROUND_IGNORE_SOL_PORT                 \
    | IPMICONSOLE_WORKAROUND_SKIP_SOL_ACTIVATION_STATUS      \
@@ -375,6 +376,7 @@ struct ipmiconsole_ctx_session {
    * Protocol Maintenance Variables
    */
   unsigned int retransmission_count;
+  unsigned int workaround_retransmission_count; /* For IPMICONSOLE_WORKAROUND_INCREMENT_SOL_PACKET_SEQUENCE */
   unsigned int errors_count;
   unsigned int session_sequence_number_errors_count;
   unsigned int activate_payloads_count;

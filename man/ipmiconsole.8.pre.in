@@ -269,6 +269,15 @@ around motherboards that perform IPMI over serial along with IPMI
 serial over LAN.  Those hitting this issue may see "excess
 retransmissions sent" when they attempt to input data via SOL.  Issue
 observed on Intel Windmill, Quanta Winterfell, and Wiwynn Windmill.
+.LP
+\fIsolpacketseq\fR - This workaround option will increment the SOL
+payload packet sequence number under dire circumstances.  Normally SOL
+should never do this, however some motherboards have shown to get
+"stuck" due to an internal bug on the motherboard.  This workaround
+can help in getting the BMC un-stuck.  Those hitting this issue may
+see "excess retransmissions sent" when they attempt to input data via
+SOL.  Issue observed on Intel Windmill, Quanta Winterfell, and Wiwynn
+Windmill.
 #include <@top_srcdir@/man/manpage-common-known-issues.man>
 .LP
 Some motherboards define an OEM SOL inactivity timeout for SOL

@@ -472,6 +472,7 @@ _receive_ipmi_packet_data_reset (ipmiconsole_ctx_t c)
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
 
   c->session.retransmission_count = 0;
+  c->session.workaround_retransmission_count = 0;
   c->session.errors_count = 0;
   c->session.session_sequence_number_errors_count = 0;
   if (gettimeofday (&(c->session.last_ipmi_packet_received), NULL) < 0)
@@ -1639,15 +1640,42 @@ _sol_retransmission_timeout (ipmiconsole_ctx_t c, int *dont_deactivate_flag)
        * deactivating.  We don't want to deactivate the SOL payload,
        * because that would kill the new session's SOL.
        */ 
+
+      /* Workaround
+       *
+       * Discovered on Intel Windmill/Quanta Winterfell/Wiwynn Windmill
+       *
+       * BMC gets stuck.  This seems to get it unstuck.
+       */
+      if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_INCREMENT_SOL_PACKET_SEQUENCE)
+	{
+	  c->session.workaround_retransmission_count++;
+
+	  if (c->session.workaround_retransmission_count < c->config.maximum_retransmission_count)
+	    {
+	      IPMICONSOLE_CTX_DEBUG (c, ("incrementing sol packet sequence number to workaround issue"));
+
+	      c->session.sol_input_packet_sequence_number++;
+	      if (c->session.sol_input_packet_sequence_number > IPMI_SOL_PACKET_SEQUENCE_NUMBER_MAX)
+		/* Sequence number 0 is special, so start at 1 */
+		c->session.sol_input_packet_sequence_number = 1;
+	      
+	      goto send_sol_packet;
+	    }
+	}
+
       (*dont_deactivate_flag) = 1;
 
       IPMICONSOLE_CTX_DEBUG (c, ("closing session due to excessive sol retransmissions"));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_EXCESS_RETRANSMISSIONS_SENT);
       return (-1);
     }
+
 #if 0
   IPMICONSOLE_CTX_DEBUG (c, ("sol retransmission: retransmission_count = %d; maximum_retransmission_count = %d; protocol_state = %d", c->session.retransmission_count, c->config.maximum_retransmission_count, c->session.protocol_state));
 #endif
+
+ send_sol_packet:
 
   if (!c->session.sol_input_waiting_for_break_ack)
     {

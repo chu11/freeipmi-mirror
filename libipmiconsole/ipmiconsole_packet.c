@@ -1214,6 +1214,13 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
       else
         encryption_activation = IPMI_ACTIVATE_PAYLOAD_WITH_ENCRYPTION;
 
+      /* Workaround
+       *
+       * Discovered on Intel Windmill/Quanta Winterfell/Wiwynn Windmill
+       *
+       * Nodes like this to be set, I have no idea why.  The boards
+       * don't even have serial ports.
+       */
       if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_SERIAL_ALERTS_DEFERRED)
 	shared_serial_alert_behavior = IPMI_SERIAL_MODEM_ALERTS_DEFERRED_WHILE_SOL_ACTIVE;
       else

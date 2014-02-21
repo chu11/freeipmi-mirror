@@ -1210,6 +1210,7 @@ ipmiconsole_ctx_session_setup (ipmiconsole_ctx_t c)
   c->session.deactivate_only_succeeded_flag = 0;
 
   c->session.retransmission_count = 0;
+  c->session.workaround_retransmission_count = 0;
   c->session.errors_count = 0;
   c->session.session_sequence_number_errors_count = 0;
   c->session.activate_payloads_count = 0;

@@ -810,6 +810,15 @@ Serial-Over-LAN Issue #20: [COMPLIANCE]
 
   Resolution: Workaround added to defer serial alerts.
 
+Serial-Over-LAN Issue #21: [COMPLIANCE]
+
+  The BMC occassionally gets stuck and an increase in the SOL packet
+  sequence number is required to get the machine unstuck.
+
+  Seen on: Intel Windmill, Quanta Winterfell, Wiwynn Windmill
+
+  Resolution: Workaround added to defer serial alerts.
+
 ----------------------------------------------------------------------
 
 ---------------------------------

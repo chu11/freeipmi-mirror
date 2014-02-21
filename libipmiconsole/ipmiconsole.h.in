@@ -198,6 +198,14 @@ extern "C" {
  * instead of have them be failures.  This works around motherboards
  * that perform IPMI over serial along with IPMI serial over LAN.
  *
+ * INCREMENT_SOL_PACKET_SEQUENCE
+ *
+ * This workaround option will increment the SOL payload packet
+ * sequence number under dire circumstances.  Normally SOL should
+ * never do this, however some motherboards have shown to get "stuck"
+ * due to an internal bug on the motherboard.  This workaround can
+ * help in getting the BMC un-stuck.
+ *
  * IGNORE_SOL_PAYLOAD_SIZE
  *
  * This workaround flag will not check for valid SOL payload sizes and
@@ -238,6 +246,7 @@ extern "C" {
 #define IPMICONSOLE_WORKAROUND_NON_EMPTY_INTEGRITY_CHECK_VALUE 0x00000020
 #define IPMICONSOLE_WORKAROUND_NO_CHECKSUM_CHECK               0x00000040
 #define IPMICONSOLE_WORKAROUND_SERIAL_ALERTS_DEFERRED          0x00000080
+#define IPMICONSOLE_WORKAROUND_INCREMENT_SOL_PACKET_SEQUENCE   0x00000100
 #define IPMICONSOLE_WORKAROUND_IGNORE_SOL_PAYLOAD_SIZE         0x01000000
 #define IPMICONSOLE_WORKAROUND_IGNORE_SOL_PORT                 0x02000000
 #define IPMICONSOLE_WORKAROUND_SKIP_SOL_ACTIVATION_STATUS      0x04000000

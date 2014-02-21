@@ -120,7 +120,7 @@ workarounds are supported: assumeio, spinpoll, idzero, forcepermsg,
 unexpectedauth, endianseq, noauthcodecheck, authcap, nochecksumcheck,
 intel20, supermicro20, sun20, opensesspriv, integritycheckvalue,
 assumemaxsdrrecordcount, solpayloadsize, solport, solstatus,
-solchannelsupport, serialalertsdeferred, skipchecks,
+solchannelsupport, serialalertsdeferred, solpacketseq, skipchecks,
 assumesystemevent, discretereading, ignorescanningdisabled,
 assumebmcowner, ignoreauthcode, slowcommit, veryslowcommit,
 solchannelassumelanchannel, ignorestateflag, malformedack,guidformat.

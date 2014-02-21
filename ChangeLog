@@ -1,7 +1,8 @@
 2014-02-20  Albert Chu <chu11@llnl.gov>
 
 	* libipmiconsole, ipmiconsole, common/parsecommon: Support
-	SERIAL_ALERTS_DEFERRED workaround.
+	SERIAL_ALERTS_DEFERRED workaround.  Support
+	INCREMENT_SOL_PACKET_SEQUENCE workaround.
 
 2014-02-20  Albert Chu <chu11@llnl.gov>
 

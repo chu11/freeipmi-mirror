@@ -339,6 +339,8 @@ main (int argc, char **argv)
     ipmi_config.workaround_flags |= IPMICONSOLE_WORKAROUND_SKIP_CHANNEL_PAYLOAD_SUPPORT;
   if (cmd_args.common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_SERIAL_ALERTS_DEFERRED)
     ipmi_config.workaround_flags |= IPMICONSOLE_WORKAROUND_SERIAL_ALERTS_DEFERRED;
+  if (cmd_args.common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_INCREMENT_SOL_PACKET_SEQUENCE)
+    ipmi_config.workaround_flags |= IPMICONSOLE_WORKAROUND_INCREMENT_SOL_PACKET_SEQUENCE;
 
   memset (&protocol_config, '\0', sizeof (struct ipmiconsole_protocol_config));
   protocol_config.session_timeout_len = cmd_args.common_args.session_timeout;
