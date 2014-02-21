@@ -1653,13 +1653,16 @@ _sol_retransmission_timeout (ipmiconsole_ctx_t c, int *dont_deactivate_flag)
 
 	  if (c->session.workaround_retransmission_count < c->config.maximum_retransmission_count)
 	    {
-	      IPMICONSOLE_CTX_DEBUG (c, ("incrementing sol packet sequence number to workaround issue"));
+	      /* Only increment at most once */
+	      if (c->session.workaround_retransmission_count == 1)
+		{
+		  IPMICONSOLE_CTX_DEBUG (c, ("incrementing sol packet sequence number to workaround issue"));
+		  c->session.sol_input_packet_sequence_number++;
+		  if (c->session.sol_input_packet_sequence_number > IPMI_SOL_PACKET_SEQUENCE_NUMBER_MAX)
+		    /* Sequence number 0 is special, so start at 1 */
+		    c->session.sol_input_packet_sequence_number = 1;
+		}
 
-	      c->session.sol_input_packet_sequence_number++;
-	      if (c->session.sol_input_packet_sequence_number > IPMI_SOL_PACKET_SEQUENCE_NUMBER_MAX)
-		/* Sequence number 0 is special, so start at 1 */
-		c->session.sol_input_packet_sequence_number = 1;
-	      
 	      goto send_sol_packet;
 	    }
 	}
