@@ -1,3 +1,8 @@
+2014-03-12  Albert Chu <chu11@llnl.gov>
+
+	* doc/freeipmi-faq.texi: Add notes on ipmi-detect for IPMI
+	discovery.
+	
 2014-02-21  Albert Chu <chu11@llnl.gov>
 
 	* libipmiconsole/ipmiconsole_processing.c (_sol_retransmission_timeout):
