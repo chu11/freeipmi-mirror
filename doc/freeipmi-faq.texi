@@ -335,8 +335,10 @@ easier.
 @section Does my system support IPMI?
 
 Unfortunately, there are no universally defined mechanisms for
-determining if a system supports @acronym{IPMI}.  The following may
-provide hints.
+determining if a system supports @acronym{IPMI} via Inband
+communication.  Assuming IPMI is set up correctly for over LAN
+communication, a fairly reliable mechanism exists out-of-band.  Here
+are some suggestions.
 
 @enumerate
 
@@ -369,6 +371,12 @@ IPMI Device Information
         Base Address: 0x0000000000000CA2 (I/O)
         Register Spacing: Successive Byte Boundaries
 @end example
+
+@item
+FreeIPMI's @command{ipmi-ping} can be used to see if a machine has an
+IPMI service at a specific host/IP address.  For more wide scale IPMI
+discovery, the @command{ipmi-detectd} daemon and @command{ipmi-detect}
+tool can be used.
 
 @end enumerate
 
