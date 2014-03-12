@@ -1138,6 +1138,18 @@ This OEM command will enable or disable all non-IPMI services on the
 BMC.  This command can be used to enable or disable non-IPMI services
 such as ssh, http, https, and vnc.  Command confirmed to work on
 Supermicro X8DTG.
+.TP
+.B get-power-supply-status \fIps_num\fR
+This OEM command will get the status of a regular power supply.
+Presently, it can get the status of power supplies 1 through 3.
+Command confirmed to work on Supermicro X8DTU, Supermicro X8STi, and
+Supermicro X9DRW.
+.TP
+.B get-pmbus-power-supply-status \fIps_num\fR
+This OEM command will get the status of a PMBus based power supply.
+Presently, it can get the status of power supplies 1 through 3.
+Command confirmed to work on Supermicro X8DTU, Supermicro X8STi, and
+Supermicro X9DRW.
 .RE
 .TP
 .B Wistron
