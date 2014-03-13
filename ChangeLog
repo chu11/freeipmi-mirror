@@ -1,3 +1,8 @@
+2014-03-13  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/: Support Supermicro get-power-supply-status
+	and get-pmbus-power-supply-status commands.
+	
 2014-03-12  Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-faq.texi: Add notes on ipmi-detect for IPMI

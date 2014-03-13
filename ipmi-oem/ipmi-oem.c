@@ -1205,6 +1205,20 @@ struct ipmi_oem_command oem_supermicro[] =
       ipmi_oem_supermicro_set_bmc_services_status
     },
     {
+      "get-power-supply-status",
+      "<ps_num>",
+      1,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_supermicro_get_power_supply_status
+    },
+    {
+      "get-pmbus-power-supply-status",
+      "<ps_num>",
+      1,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_supermicro_get_pmbus_power_supply_status
+    },
+    {
       NULL,
       NULL,
       0,

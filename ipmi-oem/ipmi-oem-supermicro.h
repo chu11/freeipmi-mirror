@@ -29,4 +29,8 @@ int ipmi_oem_supermicro_get_bmc_services_status (ipmi_oem_state_data_t *state_da
 
 int ipmi_oem_supermicro_set_bmc_services_status (ipmi_oem_state_data_t *state_data);
 
+int ipmi_oem_supermicro_get_power_supply_status (ipmi_oem_state_data_t *state_data);
+
+int ipmi_oem_supermicro_get_pmbus_power_supply_status (ipmi_oem_state_data_t *state_data);
+
 #endif /* IPMI_OEM_SUPERMICRO_H */
