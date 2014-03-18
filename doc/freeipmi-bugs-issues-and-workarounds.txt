@@ -1793,6 +1793,12 @@ Misc IPMI Issue #6: [COMPLIANCE]
   Resolution: None, user should attempt to authenticate at a higher
   privilege level.
 
+Misc IPMI Issue #7: [COMPLIANCE]
+
+  System does not support RMCP ping/pong.
+
+  Seen on: Intel Windmill, Quanta Winterfell, Wiwynn Windmill
+
 ----------------------------------------------------------------------
 
 ------------
