@@ -509,9 +509,9 @@ _get_sel_state (ipmi_interpret_ctx_t ctx,
   (*sel_state) = IPMI_INTERPRET_STATE_UNKNOWN;
 
   i = 0;
-  while (sel_config[i]
-         && i < offset_from_event_reading_type_code
-         && i < IPMI_INTERPRET_MAX_SENSOR_AND_EVENT_OFFSET)
+  while (i < offset_from_event_reading_type_code
+         && i < IPMI_INTERPRET_MAX_SENSOR_AND_EVENT_OFFSET
+	 && sel_config[i])
     i++;
 
   if (sel_config[i])
@@ -1025,7 +1025,7 @@ _get_threshold_sensor_state (ipmi_interpret_ctx_t ctx,
   sensor_event_bitmask &= IPMI_INTERPRET_THRESHOLD_SENSOR_EVENT_BITMASK_MASK;
 
   i = 0;
-  while (sensor_config[i] && i < IPMI_INTERPRET_MAX_SENSOR_AND_EVENT_OFFSET)
+  while (i < IPMI_INTERPRET_MAX_SENSOR_AND_EVENT_OFFSET && sensor_config[i])
     {
       if ((!i && !sensor_event_bitmask)
           || (sensor_event_bitmask & (0x1 << (i - 1))))
@@ -1128,7 +1128,7 @@ _get_sensor_state (ipmi_interpret_ctx_t ctx,
   sensor_event_bitmask_tmp &= ~(0x1 << IPMI_INTERPRET_MAX_SENSOR_AND_EVENT_OFFSET);
 
   i = 0;
-  while (sensor_config[i] && i < IPMI_INTERPRET_MAX_SENSOR_AND_EVENT_OFFSET)
+  while (i < IPMI_INTERPRET_MAX_SENSOR_AND_EVENT_OFFSET && sensor_config[i])
     {
       if ((!i && !sensor_event_bitmask_tmp)
           || (sensor_event_bitmask_tmp & (0x1 << (i - 1))))
