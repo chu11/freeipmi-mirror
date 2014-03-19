@@ -1,3 +1,7 @@
+2014-03-19  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/: Support 'ipmiping' workaround.
+	
 2014-03-19  David Binderman <dcb314@hotmail.com>
 	
 	* libfreeipmi/interpret/ipmi-interpret.c: Fix leap before you look

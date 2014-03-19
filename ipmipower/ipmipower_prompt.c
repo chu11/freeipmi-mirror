@@ -394,7 +394,7 @@ _cmd_workaround_flags (char **argv)
     }
   else
     ipmipower_cbuf_printf (ttyout,
-                           "workaround_flags must be specified: %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n",
+                           "workaround_flags must be specified: %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n",
 			   IPMI_PARSE_WORKAROUND_FLAGS_NONE_STR,
                            IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES_STR,
 			   IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_NO_CHECKSUM_CHECK_STR,
@@ -407,7 +407,8 @@ _cmd_workaround_flags (char **argv)
                            IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUPERMICRO_2_0_SESSION_STR,
                            IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUN_2_0_SESSION_STR,
                            IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_OPEN_SESSION_PRIVILEGE_STR,
-                           IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_NON_EMPTY_INTEGRITY_CHECK_VALUE_STR);
+                           IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_NON_EMPTY_INTEGRITY_CHECK_VALUE_STR,
+			   IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IPMIPING_STR);
 }
 
 static void
@@ -1003,6 +1004,11 @@ _cmd_config (void)
                        IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_NO_CHECKSUM_CHECK_STR,
                        &is_first);
 #endif
+  _workarounds_strcat (strbuf,
+                       cmd_args.common_args.workaround_flags_outofband_2_0,
+                       IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IPMIPING,
+                       IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IPMIPING_STR,
+                       &is_first);
 
   ipmipower_cbuf_printf (ttyout,
                          "WorkaroundFlags:              %s\n",

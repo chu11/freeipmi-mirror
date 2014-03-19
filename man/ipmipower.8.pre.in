@@ -479,6 +479,13 @@ Other methods are listed in the IPMI specification.
 #include <@top_srcdir@/man/manpage-common-workaround-outofband-common-text.man>
 #include <@top_srcdir@/man/manpage-common-workaround-outofband-15-text.man>
 #include <@top_srcdir@/man/manpage-common-workaround-outofband-20-text.man>
+.LP
+\fIipmiping\fR - This workaround option will inform
+.B ipmipower
+to use IPMI based ping packets instead of RMCP ping packets.  Some
+motherboards have been observed to not implement RMCP ping/pong
+support despite being required by the IPMI specification.  Issue
+observed on Intel Windmill, Quanta Winterfell, and Wiwynn Windmill.
 #include <@top_srcdir@/man/manpage-common-workaround-extra-text.man>
 #include <@top_srcdir@/man/manpage-common-diagnostics.man>
 #include <@top_srcdir@/man/manpage-common-diagnostics-hostranged-text.man>
