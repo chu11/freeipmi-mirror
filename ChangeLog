@@ -1,3 +1,8 @@
+2014-03-19  David Binderman <dcb314@hotmail.com>
+	
+	* libfreeipmi/interpret/ipmi-interpret.c: Fix leap before you look
+	bugs.
+	
 2014-03-13  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Support Supermicro get-power-supply-status
