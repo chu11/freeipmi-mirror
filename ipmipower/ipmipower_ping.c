@@ -68,6 +68,9 @@ static struct timeval next_ping_sends_time;
 /* force discovery sweep when user reconfigures hostnames */
 static int force_discovery_sweep;
 
+/* IPMI has a 6 bit sequence number */
+#define IPMI_RQ_SEQ_MAX  0x3F
+
 void
 ipmipower_ping_force_discovery_sweep ()
 {
@@ -109,8 +112,6 @@ ipmipower_ping_process_pings (int *timeout)
 
       if (send_pings_flag)
         {
-          fiid_obj_t rmcp_hdr = NULL;
-          fiid_obj_t rmcp_ping = NULL;
           int dropped = 0;
           
           memset (buf, '\0', IPMIPOWER_PACKET_BUFLEN);
@@ -142,64 +143,190 @@ ipmipower_ping_process_pings (int *timeout)
            */
           ics[i].ping_sequence_number_counter++;
 
-          if (!(rmcp_hdr = fiid_obj_create (tmpl_rmcp_hdr)))
-            {
-              IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-              exit (EXIT_FAILURE);
-            }
+	  /* Workaround
+	   *
+	   * Some motherboards don't support RMCP ping/pong :-(
+	   *
+	   * Discovered on Intel Windmill, Quanta Winterfell, and Wiwynn Windmill
+	   */
+	  if (cmd_args.common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IPMIPING)
+	    {
+	      fiid_obj_t obj_rmcp_hdr = NULL;
+	      fiid_obj_t obj_lan_session_hdr = NULL;
+	      fiid_obj_t obj_lan_msg_hdr = NULL;
+	      fiid_obj_t obj_cmd = NULL;
 
-          if (!(rmcp_ping = fiid_obj_create (tmpl_cmd_asf_presence_ping)))
-            {
-              IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-              exit (EXIT_FAILURE);
-            }
+	      if (!(obj_rmcp_hdr = fiid_obj_create (tmpl_rmcp_hdr)))
+		{
+		  IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
+		  exit (EXIT_FAILURE);
+		}
 
-          if (fill_rmcp_hdr_asf (rmcp_hdr) < 0)
-            {
-              IPMIPOWER_ERROR (("fill_rmcp_hdr_asf: %s", strerror (errno)));
-              exit (EXIT_FAILURE);
-            }
+	      if (!(obj_lan_session_hdr = fiid_obj_create (tmpl_lan_session_hdr)))
+		{
+		  IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
+		  exit (EXIT_FAILURE);
+		}
 
-          if (fill_cmd_asf_presence_ping ((ics[i].ping_sequence_number_counter %
-                                           (RMCP_ASF_MESSAGE_TAG_MAX + 1)),
-                                          rmcp_ping) < 0)
-            {
-              IPMIPOWER_ERROR (("fill_cmd_asf_presence_ping: %s", strerror (errno)));
-              exit (EXIT_FAILURE);
-            }
+	      if (!(obj_lan_msg_hdr = fiid_obj_create (tmpl_lan_msg_hdr_rq)))
+		{
+		  IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
+		  exit (EXIT_FAILURE);
+		}
 
-          if ((len = assemble_rmcp_pkt (rmcp_hdr,
-                                        rmcp_ping,
-                                        buf,
-                                        IPMIPOWER_PACKET_BUFLEN,
-					IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
-            {
-              IPMIPOWER_ERROR (("assemble_rmcp_pkt: %s", strerror (errno)));
-              exit (EXIT_FAILURE);
-            }
+	      if (!(obj_cmd = fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_rq)))
+		{
+		  IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
+		  exit (EXIT_FAILURE);
+		}
+
+	      if (fill_rmcp_hdr_ipmi (obj_rmcp_hdr) < 0)
+		{
+		  IPMIPOWER_ERROR (("fill_rmcp_hdr_ipmi: %s", strerror (errno)));
+		  exit (EXIT_FAILURE);
+		}
+
+	      if (fill_lan_session_hdr (IPMI_AUTHENTICATION_TYPE_NONE,
+					0,
+					0,
+					obj_lan_session_hdr) < 0)
+		{
+		  IPMIPOWER_ERROR (("fill_lan_session_hdr: %s", strerror (errno)));
+		  exit (EXIT_FAILURE);
+		}
+
+	      if (fill_lan_msg_hdr (IPMI_SLAVE_ADDRESS_BMC,
+				    IPMI_NET_FN_APP_RQ,
+				    IPMI_BMC_IPMB_LUN_BMC,
+				    (ics[i].ping_sequence_number_counter % (IPMI_RQ_SEQ_MAX + 1)),
+				    obj_lan_msg_hdr) < 0)
+		{
+		  IPMIPOWER_ERROR (("fill_lan_msg_hdr: %s", strerror (errno)));
+		  exit (EXIT_FAILURE);
+		}
+
+	      if (fill_cmd_get_channel_authentication_capabilities (IPMI_CHANNEL_NUMBER_CURRENT_CHANNEL,
+								    IPMI_PRIVILEGE_LEVEL_USER,
+								    IPMI_GET_IPMI_V15_DATA,
+								    obj_cmd) < 0)
+		{
+		  IPMIPOWER_ERROR (("fill_cmd_get_channel_authentication_capabilities: %s", strerror (errno)));
+		  exit (EXIT_FAILURE);
+		}
+
+	      if ((len = assemble_ipmi_lan_pkt (obj_rmcp_hdr,
+						obj_lan_session_hdr,
+						obj_lan_msg_hdr,
+						obj_cmd,
+						NULL,
+						0,
+						buf,
+						IPMIPOWER_PACKET_BUFLEN,
+						IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
+		{
+		  IPMIPOWER_ERROR (("assemble_ipmi_lan_pkt: %s", strerror (errno)));
+		  exit (EXIT_FAILURE);
+		}
 
 #ifndef NDEBUG
-          if (cmd_args.rmcpdump)
-            {
-              char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
+	      if (cmd_args.rmcpdump)
+		{
+		  char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
+		  const char *str_cmd = NULL;
 
-              debug_hdr_str (DEBUG_UTIL_TYPE_NONE,
-                             DEBUG_UTIL_DIRECTION_NONE,
-			     DEBUG_UTIL_FLAGS_DEFAULT,
-                             DEBUG_UTIL_RMCPPING_STR,
-                             hdrbuf,
-                             DEBUG_UTIL_HDR_BUFLEN);
+		  str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES);
 
-              if (ipmi_dump_rmcp_packet (STDERR_FILENO,
-                                         ics[i].hostname,
-                                         hdrbuf,
-                                         NULL,
-                                         buf,
-                                         len,
-                                         tmpl_cmd_asf_presence_ping) < 0)
-                IPMIPOWER_DEBUG (("ipmi_dump_rmcp_packet: %s", strerror (errno)));
-            }
+		  debug_hdr_str (DEBUG_UTIL_TYPE_IPMI_1_5,
+				 DEBUG_UTIL_DIRECTION_REQUEST,
+				 DEBUG_UTIL_FLAGS_DEFAULT,
+				 str_cmd,
+				 hdrbuf,
+				 DEBUG_UTIL_HDR_BUFLEN);
+		  
+		  if (ipmi_dump_lan_packet (STDERR_FILENO,
+					    ics[i].hostname,
+					    hdrbuf,
+					    NULL,
+					    buf,
+					    len,
+					    tmpl_lan_msg_hdr_rq,
+					    tmpl_cmd_get_channel_authentication_capabilities_rq) < 0)
+		    IPMIPOWER_DEBUG (("ipmi_dump_lan_packet: %s", strerror (errno)));
+		}
 #endif /* NDEBUG */
+
+	      fiid_obj_destroy (obj_rmcp_hdr);
+	      fiid_obj_destroy (obj_lan_session_hdr);
+	      fiid_obj_destroy (obj_lan_msg_hdr);
+	      fiid_obj_destroy (obj_cmd);
+	    }
+	  else			/* !IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IPMIPING */
+	    {
+	      fiid_obj_t rmcp_hdr = NULL;
+	      fiid_obj_t rmcp_ping = NULL;
+
+	      if (!(rmcp_hdr = fiid_obj_create (tmpl_rmcp_hdr)))
+		{
+		  IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
+		  exit (EXIT_FAILURE);
+		}
+
+	      if (!(rmcp_ping = fiid_obj_create (tmpl_cmd_asf_presence_ping)))
+		{
+		  IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
+		  exit (EXIT_FAILURE);
+		}
+
+	      if (fill_rmcp_hdr_asf (rmcp_hdr) < 0)
+		{
+		  IPMIPOWER_ERROR (("fill_rmcp_hdr_asf: %s", strerror (errno)));
+		  exit (EXIT_FAILURE);
+		}
+
+	      if (fill_cmd_asf_presence_ping ((ics[i].ping_sequence_number_counter %
+					       (RMCP_ASF_MESSAGE_TAG_MAX + 1)),
+					      rmcp_ping) < 0)
+		{
+		  IPMIPOWER_ERROR (("fill_cmd_asf_presence_ping: %s", strerror (errno)));
+		  exit (EXIT_FAILURE);
+		}
+
+	      if ((len = assemble_rmcp_pkt (rmcp_hdr,
+					    rmcp_ping,
+					    buf,
+					    IPMIPOWER_PACKET_BUFLEN,
+					    IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
+		{
+		  IPMIPOWER_ERROR (("assemble_rmcp_pkt: %s", strerror (errno)));
+		  exit (EXIT_FAILURE);
+		}
+
+#ifndef NDEBUG
+	      if (cmd_args.rmcpdump)
+		{
+		  char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
+		  
+		  debug_hdr_str (DEBUG_UTIL_TYPE_NONE,
+				 DEBUG_UTIL_DIRECTION_NONE,
+				 DEBUG_UTIL_FLAGS_DEFAULT,
+				 DEBUG_UTIL_RMCPPING_STR,
+				 hdrbuf,
+				 DEBUG_UTIL_HDR_BUFLEN);
+		  
+		  if (ipmi_dump_rmcp_packet (STDERR_FILENO,
+					     ics[i].hostname,
+					     hdrbuf,
+					     NULL,
+					     buf,
+					     len,
+					     tmpl_cmd_asf_presence_ping) < 0)
+		    IPMIPOWER_DEBUG (("ipmi_dump_rmcp_packet: %s", strerror (errno)));
+		}
+#endif /* NDEBUG */
+
+	      fiid_obj_destroy (rmcp_hdr);
+	      fiid_obj_destroy (rmcp_ping);
+	    } /* !IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IPMIPING */
 
           if ((ret = cbuf_write (ics[i].ping_out, buf, len, &dropped)) < 0)
             {
@@ -221,9 +348,6 @@ ipmipower_ping_process_pings (int *timeout)
 
           if (cmd_args.ping_packet_count && cmd_args.ping_percent)
             ics[i].ping_packet_count_send++;
-
-          fiid_obj_destroy (rmcp_hdr);
-          fiid_obj_destroy (rmcp_ping);
         }
 
       /* Did we receive something? */
@@ -231,129 +355,254 @@ ipmipower_ping_process_pings (int *timeout)
       len = ipmipower_cbuf_peek_and_drop (ics[i].ping_in, buf, IPMIPOWER_PACKET_BUFLEN);
       if (len > 0)
         {
-          fiid_obj_t rmcp_hdr = NULL;
-          fiid_obj_t rmcp_pong = NULL;
-          uint8_t message_type, ipmi_supported;
+          uint8_t message_type = 0, ipmi_supported = 0;
           uint64_t val;
 
-          if (!(rmcp_hdr = fiid_obj_create (tmpl_rmcp_hdr)))
-            {
-              IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-              exit (EXIT_FAILURE);
-            }
+	  /* Workaround
+	   *
+	   * Some motherboards don't support RMCP ping/pong :-(
+	   *
+	   * Discovered on Intel Windmill, Quanta Winterfell, and Wiwynn Windmill
+	   */
+	  if (cmd_args.common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IPMIPING)
+	    {
+	      fiid_obj_t obj_rmcp_hdr = NULL;
+	      fiid_obj_t obj_lan_session_hdr = NULL;
+	      fiid_obj_t obj_lan_msg_hdr = NULL;
+	      fiid_obj_t obj_cmd = NULL;
+	      fiid_obj_t obj_lan_msg_trlr = NULL;
+	      int checksum_ret = 0;
+	      int unassemble_ret = 0;
+	      int cmd_ret = 0;
 
-          if (!(rmcp_pong = fiid_obj_create (tmpl_cmd_asf_presence_pong)))
-            {
-              IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
-              exit (EXIT_FAILURE);
-            }
+	      if (!(obj_rmcp_hdr = fiid_obj_create (tmpl_rmcp_hdr)))
+		{
+		  IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
+		  exit (EXIT_FAILURE);
+		}
+
+	      if (!(obj_lan_session_hdr = fiid_obj_create (tmpl_lan_session_hdr)))
+		{
+		  IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
+		  exit (EXIT_FAILURE);
+		}
+
+	      if (!(obj_lan_msg_hdr = fiid_obj_create (tmpl_lan_msg_hdr_rs)))
+		{
+		  IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
+		  exit (EXIT_FAILURE);
+		}
+
+	      if (!(obj_cmd = fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_rs)))
+		{
+		  IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
+		  exit (EXIT_FAILURE);
+		}
+
+	      if (!(obj_lan_msg_trlr = fiid_obj_create (tmpl_lan_msg_trlr)))
+		{
+		  IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
+		  exit (EXIT_FAILURE);
+		}
+
+	      if (cmd_args.rmcpdump)
+		{
+		  char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
+		  const char *str_cmd = NULL;
+
+		  str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES);
+
+		  debug_hdr_str (DEBUG_UTIL_TYPE_IPMI_1_5,
+				 DEBUG_UTIL_DIRECTION_RESPONSE,
+				 DEBUG_UTIL_FLAGS_DEFAULT,
+				 str_cmd,
+				 hdrbuf,
+				 DEBUG_UTIL_HDR_BUFLEN);
+		  
+		  if (ipmi_dump_lan_packet (STDERR_FILENO,
+					    ics[i].hostname,
+					    hdrbuf,
+					    NULL,
+					    buf,
+					    len,
+					    tmpl_lan_msg_hdr_rs,
+					    tmpl_cmd_get_channel_authentication_capabilities_rs) < 0)
+		    IPMIPOWER_DEBUG (("ipmi_dump_lan_packet: %s", strerror (errno)));
+		}
+
+	      if ((checksum_ret = ipmi_lan_check_packet_checksum (buf, len)) < 0)
+		{
+		  IPMIPOWER_ERROR (("ipmi_lan_check_packet_checksum: %s", strerror (errno)));
+		  exit (EXIT_FAILURE);
+		}
+
+	      if (checksum_ret
+		  && ((unassemble_ret = unassemble_ipmi_lan_pkt (buf,
+								 len,
+								 obj_rmcp_hdr,
+								 obj_lan_session_hdr,
+								 obj_lan_msg_hdr,
+								 obj_cmd,
+								 obj_lan_msg_trlr,
+								 IPMI_INTERFACE_FLAGS_DEFAULT)) < 0))
+		{
+		  IPMIPOWER_ERROR (("unassemble_ipmi_lan_pkt: %s", strerror (errno)));
+		  exit (EXIT_FAILURE);
+		}
+
+	      /* achu: check for cmd type, but don't bother checking
+	       * sequence numbers or completion code.  The fact it
+	       * returns is sufficient.  We just need to make sure we
+	       * get something back from the BMC to ensure the machine
+	       * is still there.
+	       */
+
+	      if (checksum_ret
+		  && unassemble_ret
+		  && ((cmd_ret = ipmi_check_cmd (obj_cmd, IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES)) < 0))
+		{
+		  IPMIPOWER_ERROR (("ipmi_check_cmd: %s", strerror (errno)));
+		  exit (EXIT_FAILURE);
+		}
+	      
+	      if (checksum_ret && unassemble_ret && cmd_ret)
+		{
+		  /* We'll say this is equivalent to what pong response from RMCP */
+		  message_type = RMCP_ASF_MESSAGE_TYPE_PRESENCE_PONG;
+		  ipmi_supported = 1;
+		}
+
+	      fiid_obj_destroy (obj_rmcp_hdr);
+	      fiid_obj_destroy (obj_lan_session_hdr);
+	      fiid_obj_destroy (obj_lan_msg_hdr);
+	      fiid_obj_destroy (obj_cmd);
+	      fiid_obj_destroy (obj_lan_msg_trlr);
+	    }
+	  else			/* !IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IPMIPING */
+	    {
+	      fiid_obj_t rmcp_hdr = NULL;
+	      fiid_obj_t rmcp_pong = NULL;
+
+	      if (!(rmcp_hdr = fiid_obj_create (tmpl_rmcp_hdr)))
+		{
+		  IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
+		  exit (EXIT_FAILURE);
+		}
+
+	      if (!(rmcp_pong = fiid_obj_create (tmpl_cmd_asf_presence_pong)))
+		{
+		  IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
+		  exit (EXIT_FAILURE);
+		}
 
 #ifndef NDEBUG
-          if (cmd_args.rmcpdump)
-            {
-              char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
-
-              debug_hdr_str (DEBUG_UTIL_TYPE_NONE,
-                             DEBUG_UTIL_DIRECTION_NONE,
-			     DEBUG_UTIL_FLAGS_DEFAULT,
-                             DEBUG_UTIL_RMCPPING_STR,
-                             hdrbuf,
-                             DEBUG_UTIL_HDR_BUFLEN);
-
-              if (ipmi_dump_rmcp_packet (STDERR_FILENO,
-                                         ics[i].hostname,
-                                         hdrbuf,
-                                         NULL,
-                                         buf,
-                                         len,
-                                         tmpl_cmd_asf_presence_pong) < 0)
-                IPMIPOWER_DEBUG (("ipmi_dump_rmcp_packet: %s", strerror (errno)));
-            }
+	      if (cmd_args.rmcpdump)
+		{
+		  char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
+		  
+		  debug_hdr_str (DEBUG_UTIL_TYPE_NONE,
+				 DEBUG_UTIL_DIRECTION_NONE,
+				 DEBUG_UTIL_FLAGS_DEFAULT,
+				 DEBUG_UTIL_RMCPPING_STR,
+				 hdrbuf,
+				 DEBUG_UTIL_HDR_BUFLEN);
+		  
+		  if (ipmi_dump_rmcp_packet (STDERR_FILENO,
+					     ics[i].hostname,
+					     hdrbuf,
+					     NULL,
+					     buf,
+					     len,
+					     tmpl_cmd_asf_presence_pong) < 0)
+		    IPMIPOWER_DEBUG (("ipmi_dump_rmcp_packet: %s", strerror (errno)));
+		}
 #endif /* NDEBUG */
 
-          if ((ret = unassemble_rmcp_pkt (buf,
-                                          len,
-                                          rmcp_hdr,
-                                          rmcp_pong,
-					  IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
-            {
-              IPMIPOWER_ERROR (("unassemble_rmcp_pkt: %s", strerror (errno)));
-              exit (EXIT_FAILURE);
-            }
+	      if ((ret = unassemble_rmcp_pkt (buf,
+					      len,
+					      rmcp_hdr,
+					      rmcp_pong,
+					      IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
+		{
+		  IPMIPOWER_ERROR (("unassemble_rmcp_pkt: %s", strerror (errno)));
+		  exit (EXIT_FAILURE);
+		}
 
-          if (ret)
-            {
-              /* achu: check for ipmi_support and pong type, but don't
-               * check for message tag.  On occassion, I have witnessed
-               * BMCs send message tags "out of sync".  For example, you
-               * send 8, BMC returns 7.  You send 9, BMC returns 8.  We
-               * really don't care if the BMC is out of sync.  We just
-               * need to make sure we get something back from the BMC to
-               * ensure the machine is still there.
-               */
-              
-              if (FIID_OBJ_GET (rmcp_pong,
-                                "message_type",
-                                &val) < 0)
-                {
-                  IPMIPOWER_ERROR (("FIID_OBJ_GET: 'message_type': %s",
-                                    fiid_obj_errormsg (rmcp_pong)));
-                  exit (EXIT_FAILURE);
-                }
-              message_type = val;
-              
-              if (FIID_OBJ_GET (rmcp_pong,
-                                "supported_entities.ipmi_supported",
-                                &val) < 0)
-                {
-                  IPMIPOWER_ERROR (("FIID_OBJ_GET: 'supported_entities.ipmi_supported': %s",
-                                    fiid_obj_errormsg (rmcp_pong)));
-                  exit (EXIT_FAILURE);
-                }
-              ipmi_supported = val;
-              
-              if (message_type == RMCP_ASF_MESSAGE_TYPE_PRESENCE_PONG && ipmi_supported)
-                {
-                  if (cmd_args.ping_packet_count && cmd_args.ping_percent)
-                    ics[i].ping_packet_count_recv++;
-                  
-                  if (cmd_args.ping_consec_count)
-                    {
-                      /* Don't increment twice, its possible a previous pong
-                       * response was late, and we quickly receive two
-                       * pong responses
-                       */
-                      if (!ics[i].ping_last_packet_recv_flag)
-                        ics[i].ping_consec_count++;
-                      
-                      ics[i].ping_last_packet_recv_flag++;
-                    }
-                  
-                  if (cmd_args.ping_packet_count && cmd_args.ping_percent)
-                    {
-                      if (ics[i].link_state == IPMIPOWER_LINK_STATE_GOOD)
-                        ics[i].discover_state = IPMIPOWER_DISCOVER_STATE_DISCOVERED;
-                      else
-                        {
-                          if (cmd_args.ping_consec_count
-                              && ics[i].ping_consec_count >= cmd_args.ping_consec_count)
-                            ics[i].discover_state = IPMIPOWER_DISCOVER_STATE_DISCOVERED;
-                          else
-                            ics[i].discover_state = IPMIPOWER_DISCOVER_STATE_BADCONNECTION;
-                        }
-                    }
-                  else
-                    {
-                      ics[i].discover_state = IPMIPOWER_DISCOVER_STATE_DISCOVERED;
-                    }
-                  ics[i].last_ping_recv.tv_sec = cur_time.tv_sec;
-                  ics[i].last_ping_recv.tv_usec = cur_time.tv_usec;
-                  
-                  fiid_obj_destroy (rmcp_hdr);
-                  fiid_obj_destroy (rmcp_pong);
-                }
-            }
-        }
+	      if (ret)
+		{
+		  /* achu: check for ipmi_support and pong type, but don't
+		   * check for message tag.  On occassion, I have witnessed
+		   * BMCs send message tags "out of sync".  For example, you
+		   * send 8, BMC returns 7.  You send 9, BMC returns 8.  We
+		   * really don't care if the BMC is out of sync.  We just
+		   * need to make sure we get something back from the BMC to
+		   * ensure the machine is still there.
+		   */
+		  
+		  if (FIID_OBJ_GET (rmcp_pong,
+				    "message_type",
+				    &val) < 0)
+		    {
+		      IPMIPOWER_ERROR (("FIID_OBJ_GET: 'message_type': %s",
+					fiid_obj_errormsg (rmcp_pong)));
+		      exit (EXIT_FAILURE);
+		    }
+		  message_type = val;
+		  
+		  if (FIID_OBJ_GET (rmcp_pong,
+				    "supported_entities.ipmi_supported",
+				    &val) < 0)
+		    {
+		      IPMIPOWER_ERROR (("FIID_OBJ_GET: 'supported_entities.ipmi_supported': %s",
+					fiid_obj_errormsg (rmcp_pong)));
+		      exit (EXIT_FAILURE);
+		    }
+		  ipmi_supported = val;
+		}
+
+	      fiid_obj_destroy (rmcp_hdr);
+	      fiid_obj_destroy (rmcp_pong);
+	    }
+
+	  if (message_type == RMCP_ASF_MESSAGE_TYPE_PRESENCE_PONG && ipmi_supported)
+	    {
+	      if (cmd_args.ping_packet_count && cmd_args.ping_percent)
+		ics[i].ping_packet_count_recv++;
+	      
+	      if (cmd_args.ping_consec_count)
+		{
+		  /* Don't increment twice, its possible a previous pong
+		   * response was late, and we quickly receive two
+		   * pong responses
+		   */
+		  if (!ics[i].ping_last_packet_recv_flag)
+		    ics[i].ping_consec_count++;
+		  
+		  ics[i].ping_last_packet_recv_flag++;
+		}
+	      
+	      if (cmd_args.ping_packet_count && cmd_args.ping_percent)
+		{
+		  if (ics[i].link_state == IPMIPOWER_LINK_STATE_GOOD)
+		    ics[i].discover_state = IPMIPOWER_DISCOVER_STATE_DISCOVERED;
+		  else
+		    {
+		      if (cmd_args.ping_consec_count
+			  && ics[i].ping_consec_count >= cmd_args.ping_consec_count)
+			ics[i].discover_state = IPMIPOWER_DISCOVER_STATE_DISCOVERED;
+		      else
+			ics[i].discover_state = IPMIPOWER_DISCOVER_STATE_BADCONNECTION;
+		    }
+		}
+	      else
+		{
+		  ics[i].discover_state = IPMIPOWER_DISCOVER_STATE_DISCOVERED;
+		}
+	      ics[i].last_ping_recv.tv_sec = cur_time.tv_sec;
+	      ics[i].last_ping_recv.tv_usec = cur_time.tv_usec;
+	      
+	    }
+     	} /* !IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IPMIPING */
 
       /* Is the node gone?? */
       timeval_sub (&cur_time, &ics[i].last_ping_recv, &result);
