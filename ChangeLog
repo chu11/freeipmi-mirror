@@ -1,3 +1,9 @@
+2014-05-06  Albert Chu <chu11@llnl.gov>
+
+	* NEWS, configure.ac: Update for release.
+
+	* Tagged Release-1_4_2
+
 2014-03-19  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/: Support 'ipmiping' workaround.

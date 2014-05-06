@@ -1,4 +1,4 @@
-FreeIPMI 1.4.2 - 03/01/14
+FreeIPMI 1.4.2 - 05/06/14
 -------------------------
 o In ipmi-oem, support Supermicro get-power-supply-status and
   get-pmbus-power-supply-status commands.
