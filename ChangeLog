@@ -1,3 +1,9 @@
+2014-05-07  Albert Chu <chu11@llnl.gov>
+
+	* NEWS, configure.ac: Update for release.
+
+	* Tagged Release-1_4_3
+
 2014-05-07  Klaus Kaempf <kkaempf@suse.de>
 
 	* ipmipower/ipmipower_ping.c: Fix compile bug.
