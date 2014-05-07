@@ -405,6 +405,7 @@ ipmipower_ping_process_pings (int *timeout)
 		  exit (EXIT_FAILURE);
 		}
 
+#ifndef NDEBUG
 	      if (cmd_args.rmcpdump)
 		{
 		  char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
@@ -429,6 +430,7 @@ ipmipower_ping_process_pings (int *timeout)
 					    tmpl_cmd_get_channel_authentication_capabilities_rs) < 0)
 		    IPMIPOWER_DEBUG (("ipmi_dump_lan_packet: %s", strerror (errno)));
 		}
+#endif /* NDEBUG */
 
 	      if ((checksum_ret = ipmi_lan_check_packet_checksum (buf, len)) < 0)
 		{

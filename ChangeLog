@@ -1,3 +1,7 @@
+2014-05-07  Klaus Kaempf <kkaempf@suse.de>
+
+	* ipmipower/ipmipower_ping.c: Fix compile bug.
+	
 2014-03-19  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/: Support 'ipmiping' workaround.
