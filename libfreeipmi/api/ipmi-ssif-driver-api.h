@@ -23,6 +23,9 @@
 #include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/fiid/fiid.h>
 
+#define IPMI_SSIF_RETRY_DEFAULT       5
+#define IPMI_SSIF_TIMEOUT_DEFAULT     20000000 /* 20 ms */
+
 int api_ssif_cmd (ipmi_ctx_t ctx,
 		  fiid_obj_t obj_cmd_rq,
 		  fiid_obj_t obj_cmd_rs);

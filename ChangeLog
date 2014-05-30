@@ -1,3 +1,9 @@
+2014-05-30  Shashi Dande <Shashi.Dande@hp.com>
+
+	* libfreeipmi/api/ipmi-ssif-driver-api.h,
+	libfreeipmi/api/ipmi-ssif-driver-api.c (api_ssf_cmd): Retry reads
+	as needed.
+	
 2014-05-07  Klaus Kaempf <kkaempf@suse.de>
 
 	* ipmipower/ipmipower_ping.c: Fix compile bug.
