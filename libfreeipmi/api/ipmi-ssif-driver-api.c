@@ -319,7 +319,9 @@ api_ssif_cmd (ipmi_ctx_t ctx,
   uint8_t cmd = 0;             /* used for debugging */
   uint8_t group_extension = 0; /* used for debugging */
   uint64_t val;
-
+  struct timespec request, remain;
+  uint8_t retry = IPMI_SSIF_RETRY_DEFAULT;
+  
   assert (ctx
 	  && ctx->magic == IPMI_CTX_MAGIC
 	  && ctx->type == IPMI_DEVICE_SSIF
@@ -350,8 +352,38 @@ api_ssif_cmd (ipmi_ctx_t ctx,
   if (_ssif_cmd_write (ctx, cmd, group_extension, obj_cmd_rq) < 0)
     return (-1);
 
+  /******************************************************************************
+    12.9 SMBus NACKs and Error Recovery:
+    ====================================
+    The BMC can NACK the SMBus host controller if it is not ready to accept a new 
+    transaction. Typically, this will be exhibited by the BMC NACK'ing its slave 
+    address. 
+    
+    If the BMC NACKs a single part transaction, software can simply retry it. 
+    If a 'middle' or 'end' transaction is NACK'd, software should not retry the 
+    particular but should restart the multi-part read or write from the beginning
+    Start transaction for the transfer.
+  *******************************************************************************/
   if (_ssif_cmd_read (ctx, cmd, group_extension, obj_cmd_rs) < 0)
-    return (-1);
+    {
+      while (1)
+        {
+          request.tv_sec = 0; 
+          request.tv_nsec = IPMI_SSIF_TIMEOUT_DEFAULT;
+          if (nanosleep (&request, &remain) < 0 )
+            return (-1);
+
+          if (_ssif_cmd_read (ctx, cmd, group_extension, obj_cmd_rs) < 0)
+            {
+              if (retry == 0)
+                return (-1);
+        
+              retry--;        
+            }
+            else
+              break;
+        }
+    }
 
   return (0);
 }
