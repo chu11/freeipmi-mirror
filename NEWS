@@ -1,4 +1,4 @@
-FreeIPMI 1.4.4 - 05/07/14
+FreeIPMI 1.4.4 - 06/27/14
 -------------------------
 o Support retrys of SSIF reads to handle SSIF NACKs.
 

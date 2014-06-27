@@ -1,3 +1,9 @@
+2014-06-27  Albert Chu <chu11@llnl.gov>
+
+	* NEWS, configure.ac: Update for release.
+
+	* Tagged Release-1_4_4
+	
 2014-05-30  Albert Chu <chu11@llnl.gov>
 
 	* configure.ac: Increment libfreeipmi version appropriately.
