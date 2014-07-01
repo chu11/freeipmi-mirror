@@ -1,3 +1,9 @@
+2014-07-01  Albert Chu <chu11@llnl.gov>
+
+	* libipmiconsole/ipmiconsole_processing.c (_check_payload_sizes_legitimate):
+	Fix max_sol_character_send_size corner case calculation.  Should
+	be based on "inbound" size not "outbound" size.
+	
 2014-05-30  Shashi Dande <Shashi.Dande@hp.com>
 
 	* libfreeipmi/api/ipmi-ssif-driver-api.h,

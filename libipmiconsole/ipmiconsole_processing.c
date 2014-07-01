@@ -2439,7 +2439,7 @@ _check_payload_sizes_legitimate (ipmiconsole_ctx_t c)
           && max_outbound_payload_size >= IPMICONSOLE_MIN_CHARACTER_DATA + sol_hdr_len
           && max_outbound_payload_size <= IPMICONSOLE_MAX_CHARACTER_DATA + sol_hdr_len)
         {
-          c->session.max_sol_character_send_size = max_outbound_payload_size - sol_hdr_len;
+          c->session.max_sol_character_send_size = max_inbound_payload_size - sol_hdr_len;
           return (1);
         }
     }
