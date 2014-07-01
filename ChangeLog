@@ -1,5 +1,9 @@
 2014-07-01  Albert Chu <chu11@llnl.gov>
 
+	* configure.ac: Increment libipmiconsole version appropriately.
+
+2014-07-01  Albert Chu <chu11@llnl.gov>
+
 	* libipmiconsole/ipmiconsole_processing.c (_check_payload_sizes_legitimate):
 	Fix max_sol_character_send_size corner case calculation.  Should
 	be based on "inbound" size not "outbound" size.
