@@ -47,7 +47,6 @@ FreeIPMI new stuff
   - different SEL entries
   - all permutations of sensors, etc.
 - config tools for (***)
-  - dcmi (***)
   - intel node manager (***)
     - maybe not?  Intel NM does not configure via a standard
       checkout/commit fashion.  Policies are created, then removed.
@@ -62,7 +61,6 @@ FreeIPMI new stuff
   - other config options in ipmi-oem
   - inventec mac/shared nic stuff
     - will reboot BMC, is big problem
-- support pch/me from Intel (e.g. /dev/dcmi or /dev/mei support) (***)
 - fru library like libipmimonitoring
 - ipmi proxy
   - capture lan and do inband, maybe useful if you have dedicated port
