@@ -1,3 +1,7 @@
+2014-07-10  Albert Chu <chu11@llnl.gov>
+
+	* man/libipmiconsole.3.pre.in: Document libipmiconsole.conf manpage.
+	
 2014-07-01  Albert Chu <chu11@llnl.gov>
 
 	* libipmiconsole/ipmiconsole_processing.c (_check_payload_sizes_legitimate):
