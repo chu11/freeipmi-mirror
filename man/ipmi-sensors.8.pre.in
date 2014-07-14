@@ -25,7 +25,7 @@ is not enabled or not owned by a BMC.  Please see
 by a BMC.  Sensors may output a sensor event of "Unknown" if the
 sensor reading cannot be read.  This is typical of a sensor that is
 busy or a reading that cannot be calculated.  If sensors report
-"Unrecognized State", it is indicative of an unkown sensor type,
+"Unrecognized State", it is indicative of an unknown sensor type,
 typically an OEM sensor.  If the sensor OEM interpretation is
 available, the \fB\-\-interpret\-oem\-data\fR may be able to report
 the appropriate sensor state.  Sensors need not always report a sensor

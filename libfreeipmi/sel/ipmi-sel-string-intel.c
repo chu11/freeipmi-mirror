@@ -948,7 +948,7 @@ sel_string_output_intel_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 	      event_special_code_str = "Memory Hot-plug Timeout";
 	      break;
 	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_EVENT_SPECIAL_CODE_USER_INITIATED_CANCELATION:
-	      event_special_code_str = "User-initiated cancelation";
+	      event_special_code_str = "User-initiated cancellation";
 	      break;
 	    default:
 	      event_special_code_str = "Unknown";
