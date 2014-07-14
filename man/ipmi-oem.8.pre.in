@@ -138,7 +138,7 @@ card.  Command confirmed to work on Dell Poweredge R610 and R710 (Dell
 This OEM command will set the current SSH configuration on the IPMI
 card.  The possible keys and values are \fIssh=enable|disable\fR,
 \fIidletimeout=seconds\fR, and \fIportnumber=num\fR.  Multiple
-key=value pairs may be specified.  If no key=value pairs are specifed,
+key=value pairs may be specified.  If no key=value pairs are specified,
 available pairs are output.  Some fields may be read-only on specific
 Poweredge systems.  Command confirmed to work on Dell Poweredge R610
 and R710 (Dell 11G Poweredge systems).
@@ -153,7 +153,7 @@ This OEM command will set the current Telnet configuration on the IPMI
 card.  The possible keys and values are \fItelnet=enable|disable\fR,
 \fIsessiontimeout=seconds\fR, \fIportnumber=num\fR, and
 \fI7fls=enable|disable\fR.  Multiple key=value pairs may be specified.
-If no key=value pairs are specifed, available pairs are output.  Some
+If no key=value pairs are specified, available pairs are output.  Some
 fields may be read-only on specific Poweredge systems.  Command
 confirmed to work on Dell Poweredge R610 and R710 (Dell 11G Poweredge
 systems).
@@ -168,7 +168,7 @@ This OEM command will set the current Web Server configuration on the
 IPMI card.  The possible keys and values are
 \fIwebserver=enable|disable\fR, \fIsessiontimeout=seconds\fR,
 \fIhttpportnumber=num\fR, and \fIhttpsportnumber=num\fR.  Multiple
-key=value pairs may be specified.  If no key=value pairs are specifed,
+key=value pairs may be specified.  If no key=value pairs are specified,
 available pairs are output.  Some fields may be read-only on specific
 Poweredge systems.  Command confirmed to work on Dell Poweredge R610
 and R710 (Dell 11G Poweredge systems).
@@ -202,7 +202,7 @@ IPMI card.  The possible keys and values are
 \fIgcfilter3=string\fR,
 \}
 and \fIcertificatevalidation=enable|disable\fR.  If no key=value pairs
-are specifed, available pairs are output.  Some fields may be
+are specified, available pairs are output.  Some fields may be
 read-only on specific Poweredge systems.  Command confirmed to work on
 Dell Poweredge R610 and R710 (Dell 11G Poweredge systems).
 .TP
@@ -417,7 +417,7 @@ values are \fIsmtp=enable|disable\fR,
 \fIsubject=string\fR, \fImessagecontent=string\fR,
 \fIsenderemailaddress=string\fR, and \fIsmtphostname=string\fR.
 Multiple key=value pairs may be specified.  If no key=value pairs are
-specifed, available pairs are output.  Command confirmed to work on
+specified, available pairs are output.  Command confirmed to work on
 Intel S5500WB (Penguin Computing Relion 700) and Intel S2600JF (Appro 512X).
 .TP
 .B get-power-restore-delay 
@@ -727,7 +727,7 @@ disabled if the authentication failure count is reached.  Setting 0 to
 any of the settings will disable the lockout feature.  Each time any
 of these settings is modified, the authentication failure count of
 each enabled user is reset to 0.  Multiple key=value pairs may be
-specified.  If no key=value pairs are specifed, available pairs are
+specified.  If no key=value pairs are specified, available pairs are
 output.  Command confirmed to work on Inventec 5441/5442 (Dell Xanadu
 II/III).
 .TP
@@ -761,7 +761,7 @@ enabled.  \fIdnsdomainnamedhcp\fR specifies if the DNS domainname
 should be assigned from the DHCP server.  \fIdnsdomainname\fR
 specifies the DNS domain name string.  This field is read only if
 \fIdnsdomainnamedhcp\fR is enabled.  Multiple key=value pairs may be
-specified.  If no key=value pairs are specifed, available pairs are
+specified.  If no key=value pairs are specified, available pairs are
 output.  Command confirmed to work on Inventec 5441/5442 (Dell Xanadu
 II/III).
 .TP
@@ -775,7 +775,7 @@ This OEM command will set the current web server configuration on the
 IPMI card.  The possible keys and values are
 \fIwebserver=enable|disable\fR, \fIwebservertimeout=seconds\fR,
 \fIhttpportnumber=num\fR, and \fIhttpsportnumber=num\fR.  Multiple
-key=value pairs may be specified.  If no key=value pairs are specifed,
+key=value pairs may be specified.  If no key=value pairs are specified,
 available pairs are output.  Command confirmed to work on Inventec
 5441/5442 (Dell Xanadu II/III).
 .TP
@@ -796,7 +796,7 @@ specifies no delay, \fIauto\fR generates a delay time between the
 minimum and maximum configured, and \fIuser\fR uses the user defined
 time defined by \fIpowerondelay\fR.  \fIpowerondelay\fR must be within
 the minimum and maximum power on delay times.  Multiple key=value
-pairs may be specified.  If no key=value pairs are specifed, available
+pairs may be specified.  If no key=value pairs are specified, available
 pairs are output.  Command confirmed to work on Inventec 5441/5442
 (Dell Xanadu II/III).
 .TP
@@ -996,7 +996,7 @@ enabled.  \fIdnsdomainnamedhcp\fR specifies if the DNS domainname
 should be assigned from the DHCP server.  \fIdnsdomainname\fR
 specifies the DNS domain name string.  This field is read only if
 \fIdnsdomainnamedhcp\fR is enabled.  Multiple key=value pairs may be
-specified.  If no key=value pairs are specifed, available pairs are
+specified.  If no key=value pairs are specified, available pairs are
 output.  Command confirmed to work on Quanta S99Q (Dell FS12-TY).
 .TP
 .B get-web-server-config
@@ -1008,7 +1008,7 @@ This OEM command will set the current web server configuration on the
 IPMI card.  The possible keys and values are
 \fIwebserver=enable|disable\fR, \fIwebservertimeout=seconds\fR,
 \fIhttpportnumber=num\fR, and \fIhttpsportnumber=num\fR.  Multiple
-key=value pairs may be specified.  If no key=value pairs are specifed,
+key=value pairs may be specified.  If no key=value pairs are specified,
 available pairs are output.  Command confirmed to work on Quanta S99Q
 (Dell FS12-TY).
 .TP
@@ -1029,7 +1029,7 @@ specifies no delay, \fIauto\fR generates a delay time between the
 minimum and maximum configured, and \fIuser\fR uses the user defined
 time defined by \fIpowerondelay\fR.  \fIpowerondelay\fR must be within
 the minimum and maximum power on delay times.  Multiple key=value
-pairs may be specified.  If no key=value pairs are specifed, available
+pairs may be specified.  If no key=value pairs are specified, available
 pairs are output.  Command confirmed to work on Quanta S99Q (Dell
 FS12-TY).
 .TP

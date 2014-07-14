@@ -1133,7 +1133,7 @@ ipmi_config_chassis_boot_flags_get (ipmi_config_state_data_t *state_data)
     "boot off of.  Most users may wish to select NO-OVERRIDE to select the "
     "configuration currently determined by the BIOS.  Note that the configuration "
     "value BIOS-SETUP refers to booting *into* the BIOS Setup, not from it.  FLOPPY "
-    "may refer to any type of removeable media.  \"Device_Instance_Selector\" may "
+    "may refer to any type of removable media.  \"Device_Instance_Selector\" may "
     "be be used to select a specific device instance for booting.";
 
   assert (state_data);

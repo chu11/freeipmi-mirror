@@ -204,7 +204,7 @@ extern "C" {
 #define IPMI_COMP_CODE_SEND_MESSAGE_INVALID_SESSION_HANDLE                                                            0x80
 #define IPMI_COMP_CODE_SEND_MESSAGE_INVALID_SESSION_HANDLE_STR \
   "Invalid Session Handle.  The session handle does not match up with any " \
-  "curently active sessions for this channel."
+  "currently active sessions for this channel."
 
 #define IPMI_COMP_CODE_SEND_MESSAGE_LOST_ARBITRATION                                                                  0x81
 #define IPMI_COMP_CODE_SEND_MESSAGE_LOST_ARBITRATION_STR \
