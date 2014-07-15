@@ -2311,6 +2311,8 @@ _supermicro_oem_temp_level_sensor_supported (uint32_t manufacturer_id, uint16_t 
 	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8SIE
 	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCA_F_O
 	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8DGU_F
+	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8DGU
+	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8DG6
 	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9DRI_F
 	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9DRI_LN4F_PLUS
 	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SPU_F_O

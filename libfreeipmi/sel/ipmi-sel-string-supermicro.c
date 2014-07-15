@@ -153,6 +153,8 @@ sel_string_output_supermicro_event_data1_class_oem (ipmi_sel_ctx_t ctx,
 	       || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8SIE
 	       || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCA_F_O
 	       || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8DGU_F
+	       || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8DGU
+	       || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8DG6
 	       || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9DRI_F
 	       || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9DRI_LN4F_PLUS
 	       || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SPU_F_O
