@@ -26,7 +26,16 @@ Jan Safranek <jsafrane@redhat.com>
 Thomas Renninger <trenn@suse.de>
 Dave Love <fx@gnu.org>
 Dan Lukes <dan+freeipmi@obluda.cz>
-And others ...
+Shashi Dande <Shashi.Dande@hp.com>
+Markus Blank-Burian <burian@muenster.de>
+David Binderman <dcb314@hotmail.com>
+Denys Vlasenko <dvlasenk@redhat.com>
+Ales Ledvinka <aledvink@redhat.com>
+Klaus Kaempf <kkaempf@suse.de>
+Dick Detweiler <Dick.Detweiler@Emerson.com>
+Dave Walker <DaveWalker@ubuntu.com>,
+Claudio Cesar Sanchez Tejeda <demonccc@gmail.com>
+And probably others ...
 
 Package Maintainers:
 Dmitry Frolov <frol@nov.net> - FreeBSD
