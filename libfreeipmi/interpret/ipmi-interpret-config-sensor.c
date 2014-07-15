@@ -1308,6 +1308,16 @@ _interpret_sensor_oem_supermicro_discrete_cpu_temp (ipmi_interpret_ctx_t ctx)
     return (-1);
 
   if (_interpret_sensor_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
+								  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+								  IPMI_SUPERMICRO_PRODUCT_ID_H8DGU) < 0)
+    return (-1);
+
+  if (_interpret_sensor_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
+								  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+								  IPMI_SUPERMICRO_PRODUCT_ID_H8DG6) < 0)
+    return (-1);
+
+  if (_interpret_sensor_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
 								  IPMI_IANA_ENTERPRISE_ID_MAGNUM_TECHNOLOGIES,
 								  IPMI_SUPERMICRO_PRODUCT_ID_X8DTL_BASE) < 0)
     return (-1);

@@ -1,3 +1,7 @@
+2014-07-15  Markus Blank-Burian <burian@muenster.de>
+
+	* Support Supermicro H8DGU and H8DG6 systems.
+	
 2014-07-14  Yaroslav Halchenko <debian@onerussian.com>
 
 	* Fix various typos in code and documentation.
