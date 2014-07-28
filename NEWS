@@ -1,4 +1,4 @@
-FreeIPMI 1.4.5 - 06/27/14
+FreeIPMI 1.4.5 - 07/28/14
 -------------------------
 o Fix libipmiconsole calculation bug w/ SOL character send size.
 o Support Supermicro H8DGU and H8DG6 OEM sensors and events.
