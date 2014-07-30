@@ -31,12 +31,21 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "freeipmi/driver/ipmi-ssif-driver.h"
+#include "freeipmi/api/ipmi-messaging-support-cmds-api.h"
 #include "freeipmi/debug/ipmi-debug.h"
+#include "freeipmi/driver/ipmi-ssif-driver.h"
 #include "freeipmi/fiid/fiid.h"
 #include "freeipmi/interface/ipmi-interface.h"
+#include "freeipmi/interface/ipmi-ipmb-interface.h"
 #include "freeipmi/interface/ipmi-kcs-interface.h"
+#include "freeipmi/util/ipmi-ipmb-util.h"
+#include "freeipmi/spec/ipmi-channel-spec.h"
+#include "freeipmi/spec/ipmi-cmd-spec.h"
+#include "freeipmi/spec/ipmi-comp-code-spec.h"
+#include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
 #include "freeipmi/spec/ipmi-netfn-spec.h"
+#include "freeipmi/spec/ipmi-slave-address-spec.h"
+#include "freeipmi/util/ipmi-util.h"
 
 #include "ipmi-api-defs.h"
 #include "ipmi-api-trace.h"
@@ -47,6 +56,11 @@
 
 #include "freeipmi-portability.h"
 #include "debug-util.h"
+
+/* Values based on experiences */
+#define IPMI_SSIF_IPMB_RETRANSMISSION_COUNT   32
+#define IPMI_SSIF_IPMB_REREAD_COUNT           32
+#define IPMI_SSIF_IPMB_REREAD_WAIT            10000
 
 fiid_template_t tmpl_ssif_raw =
   {
@@ -388,6 +402,307 @@ api_ssif_cmd (ipmi_ctx_t ctx,
   return (0);
 }
 
+static int
+_api_ssif_ipmb_send (ipmi_ctx_t ctx,
+		     fiid_obj_t obj_cmd_rq)
+{
+  struct ipmi_ctx_target target_save;
+  uint8_t buf[IPMI_MAX_PKT_LEN];
+  fiid_obj_t obj_ipmb_msg_hdr_rq = NULL;
+  fiid_obj_t obj_ipmb_msg_rq = NULL;
+  fiid_obj_t obj_send_cmd_rs = NULL;
+  int len, ret, rv = -1;
+
+  assert (ctx
+          && ctx->magic == IPMI_CTX_MAGIC
+          && ctx->type == IPMI_DEVICE_SSIF
+          && fiid_obj_valid (obj_cmd_rq)
+          && fiid_obj_packet_valid (obj_cmd_rq) == 1);
+
+  if (!(obj_ipmb_msg_hdr_rq = fiid_obj_create (tmpl_ipmb_msg_hdr_rq)))
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+  if (!(obj_ipmb_msg_rq = fiid_obj_create (tmpl_ipmb_msg)))
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+  if (!(obj_send_cmd_rs = fiid_obj_create (tmpl_cmd_send_message_rs)))
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (fill_ipmb_msg_hdr (ctx->target.rs_addr,
+                         ctx->target.net_fn,
+                         ctx->target.lun,
+                         IPMI_SLAVE_ADDRESS_BMC,
+                         IPMI_BMC_IPMB_LUN_SMS_MSG_LUN,
+                         ctx->io.inband.rq_seq,
+                         obj_ipmb_msg_hdr_rq) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (assemble_ipmi_ipmb_msg (obj_ipmb_msg_hdr_rq,
+                              obj_cmd_rq,
+                              obj_ipmb_msg_rq,
+			      IPMI_INTERFACE_FLAGS_DEFAULT) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  memset (buf, '\0', IPMI_MAX_PKT_LEN);
+  if ((len = fiid_obj_get_all (obj_ipmb_msg_rq,
+                               buf,
+                               IPMI_MAX_PKT_LEN)) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_ipmb_msg_rq);
+      goto cleanup;
+    }
+
+  /* send_message will send to the BMC, so clear out target information */
+  memcpy (&target_save, &ctx->target, sizeof (target_save));
+  ctx->target.channel_number_is_set = 0;
+  ctx->target.rs_addr_is_set = 0;
+  
+  ret = ipmi_cmd_send_message (ctx,
+			       target_save.channel_number,
+			       IPMI_SEND_MESSAGE_AUTHENTICATION_NOT_REQUIRED,
+			       IPMI_SEND_MESSAGE_ENCRYPTION_NOT_REQUIRED,
+			       IPMI_SEND_MESSAGE_TRACKING_OPERATION_NO_TRACKING,
+			       buf,
+			       len,
+			       obj_send_cmd_rs);
+
+  /* restore target info */
+  memcpy (&ctx->target, &target_save, sizeof (target_save));
+
+  if (ret < 0)
+    {
+      /* assume these mean can't send message, bad slave address, etc. */
+      if (ipmi_check_completion_code (obj_send_cmd_rs, IPMI_COMP_CODE_SEND_MESSAGE_LOST_ARBITRATION) == 1
+          || ipmi_check_completion_code (obj_send_cmd_rs, IPMI_COMP_CODE_SEND_MESSAGE_BUS_ERROR) == 1
+          || ipmi_check_completion_code (obj_send_cmd_rs, IPMI_COMP_CODE_SEND_MESSAGE_NAK_ON_WRITE) == 1)
+        API_SET_ERRNUM (ctx, IPMI_ERR_MESSAGE_TIMEOUT);
+      else
+        API_BAD_RESPONSE_TO_API_ERRNUM (ctx, obj_send_cmd_rs);
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_ipmb_msg_hdr_rq);
+  fiid_obj_destroy (obj_ipmb_msg_rq);
+  fiid_obj_destroy (obj_send_cmd_rs);
+  return (rv);
+}
+
+static int
+_api_ssif_ipmb_recv (ipmi_ctx_t ctx,
+		     fiid_obj_t obj_ipmb_msg_hdr_rs,
+		     fiid_obj_t obj_ipmb_msg_trlr,
+		     fiid_obj_t obj_cmd_rs)
+{
+  struct ipmi_ctx_target target_save;
+  uint8_t buf[IPMI_MAX_PKT_LEN];
+  fiid_obj_t obj_ipmb_msg_rs = NULL;
+  fiid_obj_t obj_get_cmd_rs = NULL;
+  int len, ret, rv = -1;
+  unsigned int intf_flags = IPMI_INTERFACE_FLAGS_DEFAULT;
+
+  assert (ctx
+          && ctx->magic == IPMI_CTX_MAGIC
+          && ctx->type == IPMI_DEVICE_SSIF
+          && fiid_obj_valid (obj_ipmb_msg_hdr_rs)
+          && fiid_obj_valid (obj_ipmb_msg_trlr)
+          && fiid_obj_valid (obj_cmd_rs));
+
+  if (ctx->flags & IPMI_FLAGS_NO_LEGAL_CHECK)
+    intf_flags |= IPMI_INTERFACE_FLAGS_NO_LEGAL_CHECK;
+
+  if (!(obj_ipmb_msg_rs = fiid_obj_create (tmpl_ipmb_msg)))
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+  if (!(obj_get_cmd_rs = fiid_obj_create (tmpl_cmd_get_message_rs)))
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+  
+  /* get_message will send to the BMC, so clear out target information */
+  memcpy (&target_save, &ctx->target, sizeof (target_save));
+  ctx->target.channel_number_is_set = 0;
+  ctx->target.rs_addr_is_set = 0;
+  
+  ret = ipmi_cmd_get_message (ctx, obj_get_cmd_rs);
+
+  /* restore target info */
+  memcpy (&ctx->target, &target_save, sizeof (target_save));
+
+  if (ret < 0)
+    {
+      if (ipmi_check_completion_code (obj_get_cmd_rs, IPMI_COMP_CODE_GET_MESSAGE_DATA_NOT_AVAILABLE) == 1)
+        API_SET_ERRNUM (ctx, IPMI_ERR_MESSAGE_TIMEOUT);
+      else
+        API_BAD_RESPONSE_TO_API_ERRNUM (ctx, obj_get_cmd_rs);
+      goto cleanup;
+    }
+
+  if ((len = fiid_obj_get_data (obj_get_cmd_rs,
+                                "message_data",
+                                buf,
+                                IPMI_MAX_PKT_LEN)) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_get_cmd_rs);
+      goto cleanup;
+    }
+
+  if (fiid_obj_set_all (obj_ipmb_msg_rs,
+                        buf,
+                        len) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_ipmb_msg_rs);
+      goto cleanup;
+    }
+
+  if (unassemble_ipmi_ipmb_msg (obj_ipmb_msg_rs,
+                                obj_ipmb_msg_hdr_rs,
+                                obj_cmd_rs,
+                                obj_ipmb_msg_trlr,
+				intf_flags) < 0)
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_ipmb_msg_rs);
+  fiid_obj_destroy (obj_get_cmd_rs);
+  return (rv);
+}
+
+int
+api_ssif_cmd_ipmb (ipmi_ctx_t ctx,
+		   fiid_obj_t obj_cmd_rq,
+		   fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_ipmb_msg_hdr_rs = NULL;
+  fiid_obj_t obj_ipmb_msg_trlr = NULL;
+  unsigned retransmission_count = 0;
+  unsigned reread_count = 0;
+  int ret, rv = -1;
+
+  assert (ctx
+	  && ctx->magic == IPMI_CTX_MAGIC
+	  && ctx->type == IPMI_DEVICE_SSIF
+	  && fiid_obj_valid (obj_cmd_rq)
+	  && fiid_obj_packet_valid (obj_cmd_rq) == 1
+	  && fiid_obj_valid (obj_cmd_rs));
+
+  if (!(obj_ipmb_msg_hdr_rs = fiid_obj_create (tmpl_ipmb_msg_hdr_rs)))
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+  if (!(obj_ipmb_msg_trlr = fiid_obj_create (tmpl_ipmb_msg_trlr)))
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  /* for debugging */
+  ctx->tmpl_ipmb_cmd_rq = fiid_obj_template (obj_cmd_rq);
+  ctx->tmpl_ipmb_cmd_rs = fiid_obj_template (obj_cmd_rs);
+
+  if (_api_ssif_ipmb_send (ctx, obj_cmd_rq) < 0)
+    goto cleanup;
+
+  while (1)
+    {
+      if (_api_ssif_ipmb_recv (ctx,
+			       obj_ipmb_msg_hdr_rs,
+			       obj_ipmb_msg_trlr,
+			       obj_cmd_rs) < 0)
+        {
+          if (ctx->errnum == IPMI_ERR_MESSAGE_TIMEOUT)
+            {
+              reread_count++;
+
+              if (reread_count > IPMI_SSIF_IPMB_REREAD_COUNT)
+                {
+                  API_SET_ERRNUM (ctx, IPMI_ERR_MESSAGE_TIMEOUT);
+                  goto cleanup;
+                }
+
+	      /* Wait a little bit to avoid spinning */
+	      usleep (IPMI_SSIF_IPMB_REREAD_WAIT);
+              continue;
+            }
+          goto cleanup;
+        }
+
+      if ((ret = ipmi_ipmb_check_rq_seq (obj_ipmb_msg_hdr_rs,
+                                         ctx->io.inband.rq_seq)) < 0)
+        {
+          API_ERRNO_TO_API_ERRNUM (ctx, errno);
+          goto cleanup;
+        }
+
+      /* if it's the wrong rq_seq, get another packet */
+      if (!ret)
+        continue;
+
+      if ((ret = ipmi_ipmb_check_checksum (IPMI_SLAVE_ADDRESS_BMC,
+                                           obj_ipmb_msg_hdr_rs,
+                                           obj_cmd_rs,
+                                           obj_ipmb_msg_trlr)) < 0)
+        {
+          API_ERRNO_TO_API_ERRNUM (ctx, errno);
+          goto cleanup;
+        }
+
+      /* if the checksum is wrong, assume an error and resend */
+      if (!ret)
+        {
+          retransmission_count++;
+
+          if (retransmission_count > IPMI_SSIF_IPMB_RETRANSMISSION_COUNT)
+            {
+              API_SET_ERRNUM (ctx, IPMI_ERR_MESSAGE_TIMEOUT);
+              goto cleanup;
+            }
+
+          ctx->io.inband.rq_seq = ((ctx->io.inband.rq_seq) + 1) % (IPMI_IPMB_REQUESTER_SEQUENCE_NUMBER_MAX + 1);
+
+          if (_api_ssif_ipmb_send (ctx, obj_cmd_rq) < 0)
+            goto cleanup;
+
+          continue;
+        }
+
+      break;
+    }
+
+  rv = 0;
+ cleanup:
+  ctx->io.inband.rq_seq = ((ctx->io.inband.rq_seq) + 1) % (IPMI_IPMB_REQUESTER_SEQUENCE_NUMBER_MAX + 1);
+  fiid_obj_destroy (obj_ipmb_msg_hdr_rs);
+  fiid_obj_destroy (obj_ipmb_msg_trlr);
+  fiid_template_free (ctx->tmpl_ipmb_cmd_rq);
+  ctx->tmpl_ipmb_cmd_rq = NULL;
+  fiid_template_free (ctx->tmpl_ipmb_cmd_rs);
+  ctx->tmpl_ipmb_cmd_rs = NULL;
+  return (rv);
+}
+
 int
 api_ssif_cmd_raw (ipmi_ctx_t ctx,
 		  const void *buf_rq,
@@ -439,6 +754,64 @@ api_ssif_cmd_raw (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
+  rv = len;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rq);
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+int
+api_ssif_cmd_raw_ipmb (ipmi_ctx_t ctx,
+		       const void *buf_rq,
+		       unsigned int buf_rq_len,
+		       void *buf_rs,
+		       unsigned int buf_rs_len)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  fiid_obj_t obj_cmd_rs = NULL;
+  int len, rv = -1;
+
+  assert (ctx
+	  && ctx->magic == IPMI_CTX_MAGIC
+	  && ctx->type == IPMI_DEVICE_SSIF
+	  && buf_rq
+	  && buf_rq_len
+	  && buf_rs
+	  && buf_rs_len);
+
+  if (!(obj_cmd_rq = fiid_obj_create (tmpl_ssif_raw)))
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_ssif_raw)))
+    {
+      API_ERRNO_TO_API_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (fiid_obj_set_all (obj_cmd_rq,
+                        buf_rq,
+                        buf_rq_len) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
+      goto cleanup;
+    }
+
+  if (api_ssif_cmd_ipmb (ctx,
+			 obj_cmd_rq,
+			 obj_cmd_rs) < 0)
+    goto cleanup;
+  
+  if ((len = fiid_obj_get_all (obj_cmd_rs,
+                               buf_rs,
+                               buf_rs_len)) < 0)
+    {
+      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
+      goto cleanup;
+    }
+  
   rv = len;
  cleanup:
   fiid_obj_destroy (obj_cmd_rq);
