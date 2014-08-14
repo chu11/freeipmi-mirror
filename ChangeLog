@@ -1,3 +1,7 @@
+2014-08-14  Albert Chu <chu11@llnl.gov>
+
+	* Support SSIF IPMB bridging.
+	
 2014-07-15  Markus Blank-Burian <burian@muenster.de>
 
 	* Support Supermicro H8DGU and H8DG6 systems.
