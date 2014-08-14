@@ -1,3 +1,7 @@
+FreeIPMI 1.4.6 - 07/28/14
+-------------------------
+o Support SSIF bridging.
+
 FreeIPMI 1.4.5 - 07/28/14
 -------------------------
 o Fix libipmiconsole calculation bug w/ SOL character send size.

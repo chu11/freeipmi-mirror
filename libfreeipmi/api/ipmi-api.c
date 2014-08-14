@@ -1767,10 +1767,9 @@ ipmi_cmd (ipmi_ctx_t ctx,
     {
       if (ctx->target.channel_number_is_set
 	  && ctx->target.rs_addr_is_set)
-	{
-	  API_SET_ERRNUM (ctx, IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE);
-	  rv = -1;
-	}
+	rv = api_ssif_cmd_ipmb (ctx,
+				obj_cmd_rq,
+				obj_cmd_rs);
       else
 	rv = api_ssif_cmd (ctx, obj_cmd_rq, obj_cmd_rs);
     }
@@ -2049,10 +2048,11 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
     {
       if (ctx->target.channel_number_is_set
 	  && ctx->target.rs_addr_is_set)
-	{
-	  API_SET_ERRNUM (ctx, IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE);
-	  rv = -1;
-	}
+	rv = api_ssif_cmd_raw_ipmb (ctx,
+				    buf_rq,
+				    buf_rq_len,
+				    buf_rs,
+				    buf_rs_len);
       else
 	rv = api_ssif_cmd_raw (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
     }

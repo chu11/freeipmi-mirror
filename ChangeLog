@@ -1,3 +1,11 @@
+2014-08-14  Albert Chu <chu11@llnl.gov>
+
+	* configure.ac: Increment libfreeipmi version appropriately.
+
+2014-08-14  Albert Chu <chu11@llnl.gov>
+
+	* Support SSIF IPMB bridging.
+	
 2014-07-28  Albert Chu <chu11@llnl.gov>
 
 	* NEWS, configure.ac: Update for release.
