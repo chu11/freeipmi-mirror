@@ -1,3 +1,9 @@
+2014-08-19 Mark Rusk <mark.rusk@hp.com>
+
+	* libfreeipmi/locate/ipmi-locate-dmidecode.c: Fix multiple UEFI
+	bugs.  Remove assumption EFI only works with IA64.  Fix endline
+	parse issue.
+	
 2014-08-14  Albert Chu <chu11@llnl.gov>
 
 	* Support SSIF IPMB bridging.
