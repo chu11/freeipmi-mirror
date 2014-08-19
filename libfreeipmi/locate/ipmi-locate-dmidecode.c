@@ -47,10 +47,6 @@
 
 #include "freeipmi-portability.h"
 
-#ifdef __ia64__
-#define USE_EFI
-#endif /* __ia64__ */
-
 #define DEFAULT_MEM_DEV "/dev/mem"
 
 typedef uint8_t fipmiu8;
@@ -422,7 +418,6 @@ _smbios_decode (ipmi_locate_ctx_t ctx,
   return (-1);
 }
 
-#ifndef USE_EFI
 static int
 _legacy_decode (ipmi_locate_ctx_t ctx,
                 fipmiu8 *buf,
@@ -448,7 +443,6 @@ _legacy_decode (ipmi_locate_ctx_t ctx,
 
   return (-1);
 }
-#endif /* USE_EFI */
 
 int
 ipmi_locate_dmidecode_get_device_info (ipmi_locate_ctx_t ctx,
@@ -458,11 +452,9 @@ ipmi_locate_dmidecode_get_device_info (ipmi_locate_ctx_t ctx,
   struct ipmi_locate_info locate_info;
   int found = 0;
   size_t fp;
-#ifdef USE_EFI
   FILE *efi_systab;
   const char *filename;
   char linebuf[64];
-#endif /* USE_EFI */
   fipmiu8 *buf = NULL;
   int rv = -1;
 
@@ -479,89 +471,85 @@ ipmi_locate_dmidecode_get_device_info (ipmi_locate_ctx_t ctx,
     }
 
   memset (&locate_info, '\0', sizeof (struct ipmi_locate_info));
-#ifdef USE_EFI
   /*
    * Linux up to 2.6.6-rc2: /proc/efi/systab
    * Linux 2.6.6-rc3 and up: /sys/firmware/efi/systab
    */
-  if ((!(efi_systab = fopen (filename = "/proc/efi/systab", "r")))
-      && (!(efi_systab = fopen (filename = "/sys/firmware/efi/systab", "r"))))
+  if (((efi_systab = fopen (filename = "/proc/efi/systab", "r")))
+      || ((efi_systab = fopen (filename = "/sys/firmware/efi/systab", "r"))))
     {
-      ERRNO_TRACE (errno);
-      LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
-      return (-1);
-    }
-
-  fp = 0;
-  while ((fgets (linebuf, sizeof (linebuf) - 1, efi_systab)))
-    {
-      char *addr = memchr (linebuf, '=', strlen (linebuf));
-      *(addr++) = '\0';
-      if (!strcmp (linebuf, "SMBIOS"))
+      fp = 0;
+      while ((fgets (linebuf, sizeof (linebuf) - 1, efi_systab)))
 	{
-	  char *endptr;
-	  
-	  errno = 0;
-	  fp = strtoul (addr, &endptr, 0);
-	  if (errno
-	      || endptr[0] != '\0')
+	  char *addr =  memchr (linebuf, '=', strlen (linebuf));
+	  *(addr++) = '\0';
+	  if (!strcmp (linebuf, "SMBIOS"))
 	    {
-	      LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
-	      return (-1);
+	      char *endptr;
+	  
+	      errno = 0;
+	      fp = strtoul (addr, &endptr, 0);
+	      if (errno
+		  || ((endptr[0] != '\0') && (endptr[0] != 0x0a)))
+		{
+		  LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
+		  return (-1);
+		}
 	    }
 	}
-    }
-  fclose (efi_systab);
+      fclose (efi_systab);
 
-  if (!fp)
+      if (!fp)
+	{
+	  LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
+	  return (-1);
+	}
+
+      if (!(buf = _mem_chunk (ctx, fp, 0x20, DEFAULT_MEM_DEV)))
+	return (-1);
+
+      if (!(_smbios_decode (ctx, buf, DEFAULT_MEM_DEV, type, &locate_info) < 0))
+	found++;
+
+      free (buf);
+    }
+  else
     {
-      LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
-      return (-1);
+      if (!(buf = _mem_chunk (ctx, 0xF0000, 0x10000, DEFAULT_MEM_DEV)))
+	return (-1);
+
+      for (fp = 0; fp <= 0xFFF0; fp += 16)
+	{
+	  if ((memcmp (buf + fp, "_SM_", 4) == 0) && (fp <= 0xFFE0))
+	    {
+	      if (!(_smbios_decode (ctx,
+				    buf + fp,
+				    DEFAULT_MEM_DEV,
+				    type,
+				    &locate_info) < 0))
+		{
+		  found++;
+		  break;
+		}
+	      fp += 16;
+	    }
+	  else if (memcmp (buf + fp, "_DMI_", 5) == 0)
+	    {
+	      if (!(_legacy_decode (ctx,
+				    buf + fp,
+				    DEFAULT_MEM_DEV,
+				    type,
+				    &locate_info) < 0))
+		{
+		  found++;
+		  break;
+		}
+	    }
+	}
+
+      free (buf);
     }
-
-  if (!(buf = _mem_chunk (ctx, fp, 0x20, DEFAULT_MEM_DEV)))
-    return (-1);
-
-  if (!(_smbios_decode (ctx, buf, DEFAULT_MEM_DEV, type, &locate_info) < 0))
-    found++;
-
-  free (buf);
-#else /* USE_EFI */
-  if (!(buf = _mem_chunk (ctx, 0xF0000, 0x10000, DEFAULT_MEM_DEV)))
-    return (-1);
-
-  for (fp = 0; fp <= 0xFFF0; fp += 16)
-    {
-      if ((memcmp (buf + fp, "_SM_", 4) == 0) && (fp <= 0xFFE0))
-        {
-          if (!(_smbios_decode (ctx,
-                                buf + fp,
-                                DEFAULT_MEM_DEV,
-                                type,
-                                &locate_info) < 0))
-            {
-              found++;
-              break;
-            }
-          fp += 16;
-        }
-      else if (memcmp (buf + fp, "_DMI_", 5) == 0)
-        {
-          if (!(_legacy_decode (ctx,
-                                buf + fp,
-                                DEFAULT_MEM_DEV,
-                                type,
-                                &locate_info) < 0))
-            {
-              found++;
-              break;
-            }
-        }
-    }
-
-  free (buf);
-#endif /* USE_EFI */
-
+  
   if (found)
     {
       memcpy (info, &locate_info, sizeof (struct ipmi_locate_info));
@@ -569,6 +557,6 @@ ipmi_locate_dmidecode_get_device_info (ipmi_locate_ctx_t ctx,
     }
   else
     LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
-
+  
   return (rv);
 }
