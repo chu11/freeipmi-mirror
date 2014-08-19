@@ -1,5 +1,6 @@
 FreeIPMI 1.4.6 - 07/28/14
 -------------------------
+o Fix EFI probing on non IA64 systems.
 o Support SSIF bridging.
 
 FreeIPMI 1.4.5 - 07/28/14
