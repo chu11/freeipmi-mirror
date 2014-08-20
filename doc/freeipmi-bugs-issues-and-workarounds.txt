@@ -817,7 +817,8 @@ Serial-Over-LAN Issue #21: [COMPLIANCE]
 
   Seen on: Intel Windmill, Quanta Winterfell, Wiwynn Windmill
 
-  Resolution: Workaround added to defer serial alerts.
+  Resolution: Workaround added to increase sequence number on severe
+  situations.
 
 ----------------------------------------------------------------------
 
