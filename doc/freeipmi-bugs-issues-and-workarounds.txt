@@ -1509,6 +1509,16 @@ Sensors Issue #21: [IMPLEMENTATION]
 
   Resolution: None
 
+Sensors Issue #22: [COMPLIANCE]
+
+  Retrieving sensors results in a "IPMI Internal Error" b/c a "Get SDR
+  Repository Info" command is not supported on the motherboard
+  (completion code 0xC1).
+
+  Seen on: Artesyn ATCA-7367
+
+  Resolution: None
+
 ----------------------------------------------------------------------
 
 ---------------------------------
