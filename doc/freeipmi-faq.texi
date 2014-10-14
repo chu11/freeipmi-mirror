@@ -844,6 +844,9 @@ In FreeIPMI's @command{ipmi-fru}, all multirecord @acronym{FRU} entries are outp
 @item
 In FreeIPMI's @command{ipmi-fru}, @acronym{FRU} record checksums are automatically checked and errors are output if a @acronym{FRU} record cannot assumed to be valid due to a failed checksum check.  Other @acronym{IPMI} software has been shown to ignore the checksums and assume records are valid.  If your system has invalid checksummed @acronym{FRU} entries, the 'skipchecks' workaround can be used to get around them.
 
+@item
+In FreeIPMI's @command{ipmi-sensors}, sensors may output an ``OK'' if no events are set.  In other @acronym{IPMI} softwrae (such as @command{ipmitool} and the command ``sdr list''), ``OK'' means that a sensor was simply read correctly.  The ``OK'' may not mean that the device behind the sensor is actually functioning properly.
+
 @end itemize
 
 @node Why are there so many IPMI compliance bugs?, How do I get around an IPMI compliance bug on my motherboard?, Why is the output from FreeIPMI different than another software?, Top
