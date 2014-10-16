@@ -37,6 +37,13 @@
 
 #include "freeipmi-portability.h"
 
+/* From "Annex K: Serial Presence Detect (SPD) for DDR3 SDRAM Modules"
+ * and
+ * "Annex L: Serial Presence Detect (SPD) for DDR4 SDRAM Modules"
+ * 
+ * Released by JEDEC
+ */
+
 fiid_template_t tmpl_fru_dimm_spd_ddr3_record =
   {
     /* Byte 0: Number of Bytes Used/ Number of Bytes in SPD Device / CRC Coverage */
