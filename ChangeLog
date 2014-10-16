@@ -10,6 +10,9 @@
 	libfreeipmi/spec/jedec-raw.txt,
 	libfreeipmi/util/ipmi-jedec-manufacturer-identification-code-util.c:
 	Update jedec manufacturer listings.
+
+	* libfreeipmi/spec/ipmi-iana-enterprise-numbers-spec.c: Update
+	IANA manufacturer listings.
 	
 2014-08-19 Mark Rusk <mark.rusk@hp.com>
 
