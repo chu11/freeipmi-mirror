@@ -1,3 +1,10 @@
+2014-xx-xx Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/record-format/ipmi-fru-dimmspd-record-format.h,
+	libfreeipmi/record-format/ipmi-fru-dimmspd-record-format.c,
+	libfreeipmi/include/freeipmi/templates/ipmi-fru-dimmspd-record-format-templates.h:
+	Add DDR4 SPD FRU support.
+	
 2014-08-19 Mark Rusk <mark.rusk@hp.com>
 
 	* libfreeipmi/locate/ipmi-locate-dmidecode.c: Fix multiple UEFI
