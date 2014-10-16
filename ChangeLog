@@ -4,6 +4,12 @@
 	libfreeipmi/record-format/ipmi-fru-dimmspd-record-format.c,
 	libfreeipmi/include/freeipmi/templates/ipmi-fru-dimmspd-record-format-templates.h:
 	Add DDR4 SPD FRU support.
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-jedec-manufacturer-identification-code-spec.h,
+	libfreeipmi/spec/ipmi-jedec-manufacturer-identification-code-spec.c,
+	libfreeipmi/spec/jedec-raw.txt,
+	libfreeipmi/util/ipmi-jedec-manufacturer-identification-code-util.c:
+	Update jedec manufacturer listings.
 	
 2014-08-19 Mark Rusk <mark.rusk@hp.com>
 

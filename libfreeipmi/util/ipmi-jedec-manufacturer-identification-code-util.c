@@ -77,6 +77,8 @@ ipmi_jedec_manufacturer_id_search (uint8_t continuation_codes_count, uint8_t id)
       return (_find_str (id, ipmi_jedec_manufacturer_id_bank7));
     case 7:
       return (_find_str (id, ipmi_jedec_manufacturer_id_bank8));
+    case 8:
+      return (_find_str (id, ipmi_jedec_manufacturer_id_bank9));
     default:
       return (NULL);
     }
