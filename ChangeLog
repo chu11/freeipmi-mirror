@@ -13,6 +13,8 @@
 
 	* libfreeipmi/spec/ipmi-iana-enterprise-numbers-spec.c: Update
 	IANA manufacturer listings.
+
+	* ipmi-fru/: Support DDR4 module output.  Add extra output to DDR3 modules.
 	
 2014-08-19 Mark Rusk <mark.rusk@hp.com>
 

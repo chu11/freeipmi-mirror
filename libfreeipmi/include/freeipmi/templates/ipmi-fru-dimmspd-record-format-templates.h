@@ -56,6 +56,24 @@ field flags - flags indicating qualities of the field.  The following
   and not malformed, but not necessarily a
                               complete packet/record.
 
+DDR Header
+----------
+
+FIID Template: tmpl_fru_dimm_spd_ddr_header
+
+  /* Byte 0: Number of Bytes Used/ Number of Bytes in SPD Device / CRC Coverage */
+  { 4, "spd_bytes_used", REQUIRED, LENGTH-FIXED }
+  { 3, "spd_bytes_total", REQUIRED, LENGTH-FIXED }
+  { 1, "crc_coverage", REQUIRED, LENGTH-FIXED }
+  /* Byte 1: SPD Revision (X.Y = encoding_level.additions_level) */
+  { 4, "additions_level", REQUIRED, LENGTH-FIXED }
+  { 4, "encoding_level", REQUIRED, LENGTH-FIXED }
+  /* Byte 2: Key Byte / DRAM Device Type */
+  { 8, "dram_device_type", REQUIRED, LENGTH-FIXED }
+  /* Byte 3: Key Byte / Module Type */
+  { 4, "module_type", REQUIRED, LENGTH-FIXED }
+  { 4, "reserved", REQUIRED, LENGTH-FIXED }
+
 DDR3 SDRAM SPD
 --------------
 
@@ -221,7 +239,7 @@ FIID Template: tmpl_fru_dimm_spd_ddr4_record
     /* Byte 6: SDRAM Package Type */
     { 2, "signal_loading", REQUIRED, LENGTH-FIXED }
     { 2, "reserved4", REQUIRED, LENGTH-FIXED }
-    { 3, "die_cont", REQUIRED, LENGTH-FIXED }
+    { 3, "die_count", REQUIRED, LENGTH-FIXED }
     { 1, "sdram_package_type", REQUIRED, LENGTH-FIXED }
     /* Byte 7: SDRAM Optional Features */
     { 4, "maximum_activate_count", REQUIRED, LENGTH-FIXED }

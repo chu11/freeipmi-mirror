@@ -44,6 +44,23 @@
  * Released by JEDEC
  */
 
+fiid_template_t tmpl_fru_dimm_spd_ddr_header =
+  { 
+    /* Byte 0: Number of Bytes Used/ Number of Bytes in SPD Device / CRC Coverage */
+    { 4, "spd_bytes_used", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 3, "spd_bytes_total", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "crc_coverage", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    /* Byte 1: SPD Revision (X.Y = encoding_level.additions_level) */
+    { 4, "additions_level", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "encoding_level", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    /* Byte 2: Key Byte / DRAM Device Type */
+    { 8, "dram_device_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    /* Byte 3: Key Byte / Module Type */
+    { 4, "module_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
 fiid_template_t tmpl_fru_dimm_spd_ddr3_record =
   {
     /* Byte 0: Number of Bytes Used/ Number of Bytes in SPD Device / CRC Coverage */
@@ -205,7 +222,7 @@ fiid_template_t tmpl_fru_dimm_spd_ddr4_record =
     /* Byte 6: SDRAM Package Type */
     { 2, "signal_loading", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 2, "reserved4", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 3, "die_cont", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 3, "die_count", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "sdram_package_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* Byte 7: SDRAM Optional Features */
     { 4, "maximum_activate_count", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},

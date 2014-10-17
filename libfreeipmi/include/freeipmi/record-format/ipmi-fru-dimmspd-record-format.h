@@ -466,6 +466,7 @@ extern "C" {
 #define IPMI_FRU_DIMMSPD_DDR4_DRAM_ODT_STRENGTH_HI_IMPEDANCE    0x3
 #define IPMI_FRU_DIMMSPD_DDR4_DRAM_ODT_STRENGTH_RZQ3            0x4
 
+extern fiid_template_t tmpl_fru_dimm_spd_ddr_header;
 extern fiid_template_t tmpl_fru_dimm_spd_ddr3_record;
 extern fiid_template_t tmpl_fru_dimm_spd_ddr4_record;
 extern fiid_template_t tmpl_fru_dimm_spd_ddr4_module_specific_unbuffered_memory_module;
