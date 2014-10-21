@@ -1,6 +1,7 @@
 FreeIPMI 1.4.6 - 07/28/14
 -------------------------
 o Fix EFI probing on non IA64 systems.
+o Fix corner case in ipmi-raw w/ standard input or --file and empty lines.
 o Support SSIF bridging.
 
 FreeIPMI 1.4.5 - 07/28/14
