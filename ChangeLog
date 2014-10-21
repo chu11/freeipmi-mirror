@@ -1,3 +1,8 @@
+2014-10-21  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-raw/: Fix corner case with empty lines when inputting
+	commands via standard in or --file.
+	
 2014-10-14  Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-faq.texi: Add notes on ipmitool vs ipmi-sensors
