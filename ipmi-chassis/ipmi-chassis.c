@@ -1616,15 +1616,18 @@ run_cmd_args (ipmi_chassis_state_data_t *state_data)
   if (args->chassis_identify)
     return (chassis_identify (state_data));
 
+  /* All chassis "set" operations are legacy, see ipmi-config for chassis configuration */ 
   if (args->set_power_restore_policy)
     return (set_power_restore_policy (state_data));
 
+  /* All chassis "set" operations are legacy, see ipmi-config for chassis configuration */ 
   if (args->set_power_cycle_interval)
     return (set_power_cycle_interval (state_data));
 
   if (args->get_system_restart_cause)
     return (get_system_restart_cause (state_data));
 
+  /* All chassis "set" operations are legacy, see ipmi-config for chassis configuration */ 
   if (args->set_system_boot_options)
     return (set_boot_flags (state_data));
 

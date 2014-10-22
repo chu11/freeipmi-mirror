@@ -2,6 +2,8 @@
 
 	* ipmi-chassis/ipmi-chassis-argp.c: Options now require arguments,
 	remove OPTION_ARG_OPTIONAL flag in parsing.
+
+	* ipmi-chassis/: Add comments on legacy options.
 	
 2014-10-21  Albert Chu <chu11@llnl.gov>
 

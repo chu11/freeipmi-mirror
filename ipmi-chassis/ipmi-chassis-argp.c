@@ -82,6 +82,7 @@ static struct argp_option cmdline_options[] =
       "Control the chassis.", 42},
     { "chassis-identify", CHASSIS_IDENTIFY_KEY, "IDENTIFY", 0,
       "Set chassis Identification.", 43},
+    /* All chassis "set" operations are legacy, see ipmi-config for chassis configuration */ 
     { "set-power-restore-policy", SET_POWER_RESTORE_POLICY_KEY, "POLICY", OPTION_HIDDEN,
       "Set power restore policy.", 44},
     { "set-power-cycle-interval", SET_POWER_CYCLE_INTERVAL_KEY, "SECONDS", OPTION_HIDDEN,
@@ -131,6 +132,7 @@ static struct argp cmdline_config_file_argp = { cmdline_options,
 
 static error_t boot_flag_parse (int key, char *arg, struct argp_state *state);
 
+/* All chassis "set" operations are legacy, see ipmi-config for chassis configuration */ 
 static error_t
 boot_flag_parse (int key, char *arg, struct argp_state *state)
 {
@@ -464,6 +466,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
 
     default:
+      /* All chassis "set" operations are legacy, see ipmi-config for chassis configuration */ 
       ret = boot_flag_parse (key, arg, state);
       if (ret == ARGP_ERR_UNKNOWN)
         ret = common_parse_opt (key, arg, &(cmd_args->common_args));
