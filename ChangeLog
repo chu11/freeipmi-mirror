@@ -1,3 +1,8 @@
+2014-10-22  Albert Chu <chu11@llnl.gov>
+
+	* ipmi-chassis/ipmi-chassis-argp.c: Options now require arguments,
+	remove OPTION_ARG_OPTIONAL flag in parsing.
+	
 2014-10-21  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-raw/: Fix corner case with empty lines when inputting
