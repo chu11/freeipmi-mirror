@@ -1,3 +1,9 @@
+2014-10-29  Albert Chu <chu11@llnl.gov>
+
+	* NEWS, configure.ac: Update for release.
+
+	* Tagged Release-1_4_6
+
 2014-10-29 Albert Chu <chu11@llnl.gov>
 
 	Merge branch ddr4
