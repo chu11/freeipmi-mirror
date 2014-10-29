@@ -1,3 +1,23 @@
+2014-10-29 Albert Chu <chu11@llnl.gov>
+
+	Merge branch ddr4
+
+	* libfreeipmi/include/freeipmi/record-format/ipmi-fru-dimmspd-record-format.h,
+	libfreeipmi/record-format/ipmi-fru-dimmspd-record-format.c,
+	libfreeipmi/include/freeipmi/templates/ipmi-fru-dimmspd-record-format-templates.h:
+	Add DDR4 SPD FRU support.
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-jedec-manufacturer-identification-code-spec.h,
+	libfreeipmi/spec/ipmi-jedec-manufacturer-identification-code-spec.c,
+	libfreeipmi/spec/jedec-raw.txt,
+	libfreeipmi/util/ipmi-jedec-manufacturer-identification-code-util.c:
+	Update jedec manufacturer listings.
+
+	* libfreeipmi/spec/ipmi-iana-enterprise-numbers-spec.c: Update
+	IANA manufacturer listings.
+
+	* ipmi-fru/: Support DDR4 module output.  Add extra output to DDR3 modules.
+	
 2014-10-22  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-chassis/ipmi-chassis-argp.c: Options now require arguments,

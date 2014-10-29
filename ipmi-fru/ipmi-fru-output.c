@@ -1259,14 +1259,12 @@ ipmi_fru_output_oem_record (ipmi_fru_state_data_t *state_data,
   return (0);
 }
 
-int
-ipmi_fru_output_dimm (ipmi_fru_state_data_t *state_data,
-		      const void *areabuf,
-		      unsigned int area_length)
+static int
+_ipmi_fru_output_dimm_ddr3 (ipmi_fru_state_data_t *state_data,
+			    const void *areabuf,
+			    unsigned int area_length)
 {
   fiid_obj_t obj_record = NULL;
-  uint8_t dram_device_type;
-  char *dram_device_type_str = NULL;
   uint8_t total_sdram_capacity;
   char *total_sdram_capacity_str = NULL;
   uint32_t total_sdram_capacity_val = 0; 
@@ -1288,8 +1286,14 @@ ipmi_fru_output_dimm (ipmi_fru_state_data_t *state_data,
   char *primary_bus_width_str = NULL;
   uint32_t primary_bus_width_val = 0; 
   uint8_t primary_bus_width_valid;
+  uint8_t bus_width_extension;
+  char *bus_width_extension_str;
   uint32_t total_memory_capacity;
   char *total_memory_capacity_units_str = NULL;
+  uint8_t die_count;
+  char *die_count_str;
+  uint8_t sdram_device_type;
+  char *sdram_device_type_str;
   uint8_t number_of_continuation_codes_module_manufacturer;
   uint8_t last_non_zero_module_manufacturer;
   char *module_manufacturer_str;
@@ -1298,16 +1302,18 @@ ipmi_fru_output_dimm (ipmi_fru_state_data_t *state_data,
   uint32_t module_serial_number;
   char module_part_number[IPMI_FRU_STR_BUFLEN + 1];
   int module_part_number_len;
+  uint16_t module_revision_code;
   uint8_t number_of_continuation_codes_dram_manufacturer;
   uint8_t last_non_zero_dram_manufacturer;
   char *dram_manufacturer_str;
   uint64_t val;
+  int block_len;
   int rv = -1;
 
   assert (state_data);
   assert (areabuf);
   assert (area_length);
-
+ 
   if (!(obj_record = fiid_obj_create (tmpl_fru_dimm_spd_ddr3_record)))
     {
       pstdout_fprintf (state_data->pstate,
@@ -1328,64 +1334,25 @@ ipmi_fru_output_dimm (ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (FIID_OBJ_GET (obj_record,
-		    "dram_device_type",
-		    &val) < 0)
+  if ((block_len = fiid_template_block_len_bytes (tmpl_fru_dimm_spd_ddr3_record,
+						  "spd_bytes_used",
+						  "last_non_zero_dram_manufacturer")) < 0)
     {
       pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_get: 'dram_device_type': %s\n",
-                       fiid_obj_errormsg (obj_record));
+		       stderr,
+		       "fiid_template_block_len_bytes: %s\n",
+		       strerror (errno));
       goto cleanup;
     }
-  dram_device_type = val;
 
-  switch (dram_device_type)
+  if (area_length < block_len)
     {
-    case IPMI_FRU_DIMMSPD_DRAM_DEVICE_TYPE_STANDARD_FPM_DRAM:
-      dram_device_type_str = "Standard FPM DRAM";
-      break;
-    case IPMI_FRU_DIMMSPD_DRAM_DEVICE_TYPE_EDO:
-      dram_device_type_str = "EDO";
-      break;
-    case IPMI_FRU_DIMMSPD_DRAM_DEVICE_TYPE_PIPELINED_NIBBLE:
-      dram_device_type_str = "Pipelined Nibble";
-      break;
-    case IPMI_FRU_DIMMSPD_DRAM_DEVICE_TYPE_SDRAM:
-      dram_device_type_str = "SDRAM";
-      break;
-    case IPMI_FRU_DIMMSPD_DRAM_DEVICE_TYPE_ROM:
-      dram_device_type_str = "ROM";
-      break;
-    case IPMI_FRU_DIMMSPD_DRAM_DEVICE_TYPE_DDR_SGRAM:
-      dram_device_type_str = "DDR SGRAM";
-      break;
-    case IPMI_FRU_DIMMSPD_DRAM_DEVICE_TYPE_DDR_SDRAM:
-      dram_device_type_str = "DDR SDRAM";
-      break;
-    case IPMI_FRU_DIMMSPD_DRAM_DEVICE_TYPE_DDR2_SDRAM:
-      dram_device_type_str = "DDR2 SDRAM";
-      break;
-    case IPMI_FRU_DIMMSPD_DRAM_DEVICE_TYPE_DDR2_SDRAM_FB_DIMM:
-      dram_device_type_str = "DDR2 SDRAM FB-DIMM";
-      break;
-    case IPMI_FRU_DIMMSPD_DRAM_DEVICE_TYPE_DDR2_SDRAM_FB_DIMM_PROBE:
-      dram_device_type_str = "DDR2 SDRAM FB-DIMM PROBE";
-      break;
-    case IPMI_FRU_DIMMSPD_DRAM_DEVICE_TYPE_DDR3_SDRAM:
-      dram_device_type_str = "DDR3 SDRAM";
-      break;
-    default:
-      dram_device_type_str = "Unrecognized";
-      break;
+      pstdout_printf (state_data->pstate, "\n");
+      pstdout_printf (state_data->pstate,
+                      "  FRU Error: %s\n",
+                      ipmi_fru_ctx_strerror (IPMI_FRU_ERR_FRU_AREA_LENGTH_INVALID));
+      goto out;
     }
-  
-  pstdout_printf (state_data->pstate,
-		  "  FRU DRAM Device Type: %s\n",
-		  dram_device_type_str);
-		    
-  if (dram_device_type != IPMI_FRU_DIMMSPD_DRAM_DEVICE_TYPE_DDR3_SDRAM)
-    goto out;
 
   if (FIID_OBJ_GET (obj_record,
 		    "total_sdram_capacity",
@@ -1671,6 +1638,35 @@ ipmi_fru_output_dimm (ipmi_fru_state_data_t *state_data,
 		  "  FRU Primary Bus Width : %s\n",
 		  primary_bus_width_str);
 
+  if (FIID_OBJ_GET (obj_record,
+		    "bus_width_extension",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'bus_width_extension': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  bus_width_extension = val;
+
+  switch (bus_width_extension)
+    {
+    case IPMI_FRU_DIMMSPD_BUS_WIDTH_EXTENSION_0_BITS:
+      bus_width_extension_str = "0 bits";
+      break;
+    case IPMI_FRU_DIMMSPD_BUS_WIDTH_EXTENSION_8_BITS:
+      bus_width_extension_str = "8 bits";
+      break;
+    default:
+      bus_width_extension_str = "Unknown";
+      break;
+    }
+
+  pstdout_printf (state_data->pstate,
+		  "  FRU Bus Width Extension : %s\n",
+		  bus_width_extension_str);
+
   if (total_sdram_capacity_valid
       && sdram_device_width_valid
       && number_of_ranks_valid
@@ -1681,6 +1677,775 @@ ipmi_fru_output_dimm (ipmi_fru_state_data_t *state_data,
        * SDRAM CAPCITY / 8 * PRIMARY BUS WIDTH / SDRAM WIDTH * RANKS 
        */
       total_memory_capacity = (total_sdram_capacity_val / 8) * (primary_bus_width_val / sdram_device_width_val) * number_of_ranks_val;
+
+      pstdout_printf (state_data->pstate,
+		      "  FRU Total Memory Capacity : %u %s\n",
+		      total_memory_capacity,
+		      total_memory_capacity_units_str);
+    }
+  else
+    pstdout_printf (state_data->pstate,
+		    "  FRU Total Memory Capacity : Unknown\n");
+
+  if (FIID_OBJ_GET (obj_record,
+		    "die_count",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'die_count': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  die_count = val;
+
+  switch (die_count)
+    {
+    case IPMI_FRU_DIMMSPD_DIE_COUNT_NOT_SPECIFIED:
+      die_count_str = "Not Specified";
+      break;
+    case IPMI_FRU_DIMMSPD_DIE_COUNT_SINGLE_DIE:
+      die_count_str = "Single die";
+      break;
+    case IPMI_FRU_DIMMSPD_DIE_COUNT_2_DIE:
+      die_count_str = "2 die";
+      break;
+    case IPMI_FRU_DIMMSPD_DIE_COUNT_4_DIE:
+      die_count_str = "4 die";
+      break;
+    case IPMI_FRU_DIMMSPD_DIE_COUNT_8_DIE:
+      die_count_str = "8 die";
+      break;
+    default:
+      die_count_str = "Unknown";
+      break;
+    } 
+
+  pstdout_printf (state_data->pstate,
+		  "  FRU Die Count : %s\n",
+		  die_count_str);
+
+  if (FIID_OBJ_GET (obj_record,
+		    "sdram_device_type",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'sdram_device_type': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  sdram_device_type = val;
+
+  switch (sdram_device_type)
+    {
+    case IPMI_FRU_DIMMSPD_SDRAM_DEVICE_TYPE_STANDARD_MONOLITHIC_DRAM_DEVICE:
+      sdram_device_type_str = "Standard Monolithic DRAM Device";
+      break;
+    case IPMI_FRU_DIMMSPD_SDRAM_DEVICE_TYPE_NON_STANDARD_DEVICE:
+      sdram_device_type_str = "Non-Standard Device";
+      break;
+    default:
+      sdram_device_type_str = "Unknown";
+      break;
+    }
+
+  pstdout_printf (state_data->pstate,
+		  "  FRU SDRAM Device Type : %s\n",
+		  sdram_device_type_str);
+  
+  if (FIID_OBJ_GET (obj_record,
+		    "number_of_continuation_codes_module_manufacturer",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'number_of_continuation_codes_module_manufacturer': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  number_of_continuation_codes_module_manufacturer = val;
+
+  if (FIID_OBJ_GET (obj_record,
+		    "last_non_zero_module_manufacturer",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'last_non_zero_module_manufacturer': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  last_non_zero_module_manufacturer = val;
+
+  module_manufacturer_str = ipmi_jedec_manufacturer_id_search (number_of_continuation_codes_module_manufacturer,
+							       last_non_zero_module_manufacturer);
+  if (module_manufacturer_str)
+    pstdout_printf (state_data->pstate,
+		    "  FRU Module Manufacturer : %s\n",
+		    module_manufacturer_str);
+  else
+    pstdout_printf (state_data->pstate,
+		    "  FRU Module Manufacturer : Unrecognized\n");
+
+  if (FIID_OBJ_GET (obj_record,
+		    "module_manufacturing_date.year",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'module_manufacturing_date.year': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  module_manufacturing_date_year = val;
+
+  if (FIID_OBJ_GET (obj_record,
+		    "module_manufacturing_date.week",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'module_manufacturing_date.week': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  module_manufacturing_date_week = val;
+
+  pstdout_printf (state_data->pstate,
+		  "  FRU Module Manufacturing Date : Year 20%02X Week %02X\n",
+		  module_manufacturing_date_year,
+		  module_manufacturing_date_week);
+
+  if (FIID_OBJ_GET (obj_record,
+		    "module_serial_number",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'module_serial_number': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  module_serial_number = val;
+
+  /* Serial number stored little endian, so output in that order */
+  pstdout_printf (state_data->pstate,
+		  "  FRU Module Serial Number : %02X%02X%02X%02X\n",
+		  module_serial_number & 0x000000FF,
+		  (module_serial_number & 0x0000FF00) >> 8,
+		  (module_serial_number & 0x00FF0000) >> 16,
+		  (module_serial_number & 0xFF000000) >> 24);
+
+  memset (module_part_number, '\0', IPMI_FRU_STR_BUFLEN + 1);
+
+  if ((module_part_number_len = fiid_obj_get_data (obj_record,
+						   "module_part_number",
+						   module_part_number,
+						   IPMI_FRU_STR_BUFLEN)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'module_part_number': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+
+  pstdout_printf (state_data->pstate,
+		  "  FRU Module Part Number : %s\n",
+		  module_part_number);
+
+  if (FIID_OBJ_GET (obj_record,
+		    "module_revision_code",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'module_revision_code': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  module_revision_code = val;
+
+  /* Revision Code vendor defined, so just output hex  */
+  pstdout_printf (state_data->pstate,
+		  "  FRU Module Revision Code : 0x%04X\n",
+		  module_revision_code);
+
+  if (FIID_OBJ_GET (obj_record,
+		    "number_of_continuation_codes_dram_manufacturer",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'number_of_continuation_codes_dram_manufacturer': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  number_of_continuation_codes_dram_manufacturer = val;
+
+  if (FIID_OBJ_GET (obj_record,
+		    "last_non_zero_dram_manufacturer",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'last_non_zero_dram_manufacturer': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  last_non_zero_dram_manufacturer = val;
+
+  dram_manufacturer_str = ipmi_jedec_manufacturer_id_search (number_of_continuation_codes_dram_manufacturer,
+							     last_non_zero_dram_manufacturer);
+  if (dram_manufacturer_str)
+    pstdout_printf (state_data->pstate,
+		    "  FRU DRAM Manufacturer : %s\n",
+		    dram_manufacturer_str);
+  else
+    pstdout_printf (state_data->pstate,
+		    "  FRU DRAM Manufacturer : Unrecognized\n");
+
+ out:
+  rv = 0;
+
+ cleanup:
+  fiid_obj_destroy (obj_record);
+  return (rv);
+}
+
+static int
+_ipmi_fru_output_dimm_ddr4 (ipmi_fru_state_data_t *state_data,
+			    const void *areabuf,
+			    unsigned int area_length)
+{
+  fiid_obj_t obj_record = NULL;
+  uint8_t total_sdram_capacity;
+  char *total_sdram_capacity_str = NULL;
+  uint32_t total_sdram_capacity_val = 0; 
+  uint8_t total_sdram_capacity_valid;
+  uint8_t bank_address_bits;
+  char *bank_address_bits_str = NULL;
+  uint8_t bank_group_bits;
+  char *bank_group_bits_str = NULL;
+  uint8_t die_count;
+  char *die_count_str;
+  uint8_t sdram_package_type;
+  char *sdram_package_type_str;
+  uint8_t module_nominal_voltage_1_2;
+  uint8_t module_nominal_voltage_TBD1;
+  uint8_t module_nominal_voltage_TBD2;
+  uint8_t sdram_device_width;
+  char *sdram_device_width_str = NULL;
+  uint32_t sdram_device_width_val = 0; 
+  uint8_t sdram_device_width_valid;
+  uint8_t number_of_package_ranks_per_dimm;
+  char *number_of_package_ranks_per_dimm_str = NULL;
+  uint32_t number_of_package_ranks_per_dimm_val = 0; 
+  uint8_t number_of_package_ranks_per_dimm_valid;
+  uint8_t primary_bus_width;
+  char *primary_bus_width_str = NULL;
+  uint32_t primary_bus_width_val = 0; 
+  uint8_t primary_bus_width_valid;
+  uint8_t bus_width_extension;
+  char *bus_width_extension_str;
+  uint32_t total_memory_capacity;
+  char *total_memory_capacity_units_str = NULL;
+  uint8_t number_of_continuation_codes_module_manufacturer;
+  uint8_t last_non_zero_module_manufacturer;
+  char *module_manufacturer_str;
+  uint8_t module_manufacturing_date_year;
+  uint8_t module_manufacturing_date_week;
+  uint32_t module_serial_number;
+  char module_part_number[IPMI_FRU_STR_BUFLEN + 1];
+  int module_part_number_len;
+  uint16_t module_revision_code;
+  uint8_t number_of_continuation_codes_dram_manufacturer;
+  uint8_t last_non_zero_dram_manufacturer;
+  char *dram_manufacturer_str;
+  uint8_t dram_stepping;
+  uint64_t val;
+  int block_len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (areabuf);
+  assert (area_length);
+ 
+  if (!(obj_record = fiid_obj_create (tmpl_fru_dimm_spd_ddr4_record)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+		       strerror (errno));
+      goto cleanup;
+    }
+
+  if (fiid_obj_set_all (obj_record,
+			areabuf,
+			area_length) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_set_all: %s\n",
+		       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+
+  if ((block_len = fiid_template_block_len_bytes (tmpl_fru_dimm_spd_ddr4_record,
+						  "spd_bytes_used",
+						  "dram_stepping")) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "fiid_template_block_len_bytes: %s\n",
+		       strerror (errno));
+      goto cleanup;
+    }
+
+  if (area_length < block_len)
+    {
+      pstdout_printf (state_data->pstate, "\n");
+      pstdout_printf (state_data->pstate,
+                      "  FRU Error: %s\n",
+                      ipmi_fru_ctx_strerror (IPMI_FRU_ERR_FRU_AREA_LENGTH_INVALID));
+      goto out;
+    }
+
+  if (FIID_OBJ_GET (obj_record,
+		    "total_sdram_capacity",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'total_sdram_capacity': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  total_sdram_capacity = val;
+  
+  switch (total_sdram_capacity)
+    {
+    case IPMI_FRU_DIMMSPD_DDR4_TOTAL_SDRAM_CAPACITY_256_MB:
+      total_sdram_capacity_str = "256 Mb";
+      total_sdram_capacity_val = 256;
+      total_sdram_capacity_valid = 1;
+      total_memory_capacity_units_str = "MB";
+      break;
+    case IPMI_FRU_DIMMSPD_DDR4_TOTAL_SDRAM_CAPACITY_512_MB:
+      total_sdram_capacity_str = "512 Mb";
+      total_sdram_capacity_val = 512;
+      total_sdram_capacity_valid = 1;
+      total_memory_capacity_units_str = "MB";
+      break;
+    case IPMI_FRU_DIMMSPD_DDR4_TOTAL_SDRAM_CAPACITY_1_GB:
+      total_sdram_capacity_str = "1 Gb";
+      total_sdram_capacity_val = 1024;
+      total_sdram_capacity_valid = 1;
+      total_memory_capacity_units_str = "GB";
+      break;
+    case IPMI_FRU_DIMMSPD_DDR4_TOTAL_SDRAM_CAPACITY_2_GB:
+      total_sdram_capacity_str = "2 Gb";
+      total_sdram_capacity_val = 2048;
+      total_sdram_capacity_valid = 1; 
+      total_memory_capacity_units_str = "GB";
+     break;
+    case IPMI_FRU_DIMMSPD_DDR4_TOTAL_SDRAM_CAPACITY_4_GB:
+      total_sdram_capacity_str = "4 Gb";
+      total_sdram_capacity_val = 4096;
+      total_sdram_capacity_valid = 1;
+      total_memory_capacity_units_str = "GB";
+      break;
+    case IPMI_FRU_DIMMSPD_DDR4_TOTAL_SDRAM_CAPACITY_8_GB:
+      total_sdram_capacity_str = "8 Gb";
+      total_sdram_capacity_val = 8192;
+      total_sdram_capacity_valid = 1;
+      total_memory_capacity_units_str = "GB";
+      break;
+    case IPMI_FRU_DIMMSPD_DDR4_TOTAL_SDRAM_CAPACITY_16_GB:
+      total_sdram_capacity_str = "16 Gb";
+      total_sdram_capacity_val = 16384;
+      total_sdram_capacity_valid = 1;
+      total_memory_capacity_units_str = "GB";
+      break;
+    case IPMI_FRU_DIMMSPD_DDR4_TOTAL_SDRAM_CAPACITY_32_GB:
+      total_sdram_capacity_str = "32 Gb";
+      total_sdram_capacity_val = 32768;
+      total_sdram_capacity_valid = 1;
+      total_memory_capacity_units_str = "GB";
+      break;
+    default:
+      total_sdram_capacity_str = "Unknown";
+      total_sdram_capacity_valid = 0;
+      break;
+    }
+
+  pstdout_printf (state_data->pstate,
+		  "  FRU Total SDRAM Capacity : %s\n",
+		  total_sdram_capacity_str);
+
+  if (FIID_OBJ_GET (obj_record,
+		    "bank_address_bits",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'bank_address_bits': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  bank_address_bits = val;
+
+  switch (bank_address_bits)
+    {
+    case IPMI_FRU_DIMMSPD_DDR4_BANK_ADDRESS_BITS_2:
+      bank_address_bits_str = "4 Banks";
+      break;
+    case IPMI_FRU_DIMMSPD_DDR4_BANK_ADDRESS_BITS_3:
+      bank_address_bits_str = "8 Banks";
+      break;
+    default:
+      bank_address_bits_str = "Unknown";
+      break;
+    }
+
+  pstdout_printf (state_data->pstate,
+		  "  FRU Memory Banks : %s\n",
+		  bank_address_bits_str);
+
+  if (FIID_OBJ_GET (obj_record,
+		    "bank_group_bits",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'bank_group_bits': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  bank_group_bits = val;
+
+  switch (bank_group_bits)
+    {
+    case IPMI_FRU_DIMMSPD_DDR4_BANK_GROUP_BITS_0:
+      bank_group_bits_str = "0 bank groups";
+      break;
+    case IPMI_FRU_DIMMSPD_DDR4_BANK_GROUP_BITS_1:
+      bank_group_bits_str = "2 bank groups";
+      break;
+    case IPMI_FRU_DIMMSPD_DDR4_BANK_GROUP_BITS_2:
+      bank_group_bits_str = "4 bank groups";
+      break;
+    default:
+      bank_group_bits_str = "Unknown";
+      break;
+    }
+
+  pstdout_printf (state_data->pstate,
+		  "  FRU Memory Bank Groups : %s\n",
+		  bank_group_bits_str);
+
+  if (FIID_OBJ_GET (obj_record,
+		    "die_count",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'die_count': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  die_count = val;
+
+  switch (die_count)
+    {
+    case IPMI_FRU_DIMMSPD_DDR4_DIE_COUNT_SINGLE_DIE:
+      die_count_str = "Single die";
+      break;
+    case IPMI_FRU_DIMMSPD_DDR4_DIE_COUNT_2_DIE:
+      die_count_str = "2 die";
+      break;
+    case IPMI_FRU_DIMMSPD_DDR4_DIE_COUNT_3_DIE:
+      die_count_str = "3 die";
+      break;
+    case IPMI_FRU_DIMMSPD_DDR4_DIE_COUNT_4_DIE:
+      die_count_str = "4 die";
+      break;
+    case IPMI_FRU_DIMMSPD_DDR4_DIE_COUNT_5_DIE:
+      die_count_str = "5 die";
+      break;
+    case IPMI_FRU_DIMMSPD_DDR4_DIE_COUNT_6_DIE:
+      die_count_str = "6 die";
+      break;
+    case IPMI_FRU_DIMMSPD_DDR4_DIE_COUNT_7_DIE:
+      die_count_str = "7 die";
+      break;
+    case IPMI_FRU_DIMMSPD_DDR4_DIE_COUNT_8_DIE:
+      die_count_str = "8 die";
+      break;
+    default:
+      die_count_str = "Unknown";
+      break;
+    } 
+
+  pstdout_printf (state_data->pstate,
+		  "  FRU Die Count : %s\n",
+		  die_count_str);
+
+  if (FIID_OBJ_GET (obj_record,
+		    "sdram_package_type",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'sdram_package_type': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  sdram_package_type = val;
+
+  switch (sdram_package_type)
+    {
+    case IPMI_FRU_DIMMSPD_DDR4_SDRAM_PACKAGE_TYPE_MONOLITHIC_DRAM_DEVICE:
+      sdram_package_type_str = "Monolithic DRAM Device";
+      break;
+    case IPMI_FRU_DIMMSPD_DDR4_SDRAM_PACKAGE_TYPE_NON_MONOLITHIC_DRAM_DEVICE:
+      sdram_package_type_str = "Non-Monolithic Device";
+      break;
+    default:
+      sdram_package_type_str = "Unknown";
+      break;
+    }
+
+  pstdout_printf (state_data->pstate,
+		  "  FRU SDRAM Package Type : %s\n",
+		  sdram_package_type_str);
+  
+  if (FIID_OBJ_GET (obj_record,
+		    "module_nominal_voltage.dram_vdd.1_2_operable",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'module_nominal_voltage.dram_vdd.1_2_operable': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  module_nominal_voltage_1_2 = val;
+
+  pstdout_printf (state_data->pstate,
+		  "  FRU Module Nominal Voltage 1.2 V : %s\n",
+		  (module_nominal_voltage_1_2 == IPMI_FRU_DIMMSPD_DDR4_VDD_1_2_OPERABLE) ? "Operable" : "Not Operable");
+
+  if (FIID_OBJ_GET (obj_record,
+		    "module_nominal_voltage.dram_vdd.TBD1_operable",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'module_nominal_voltage.dram_vdd.TBD1_operable': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  module_nominal_voltage_TBD1 = val;
+
+  pstdout_printf (state_data->pstate,
+		  "  FRU Module Nominal Voltage TBD1 V : %s\n",
+		  (module_nominal_voltage_TBD1 == IPMI_FRU_DIMMSPD_DDR4_VDD_TBD1_OPERABLE) ? "Operable" : "Not Operable");
+
+  if (FIID_OBJ_GET (obj_record,
+		    "module_nominal_voltage.dram_vdd.TBD2_operable",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'module_nominal_voltage.dram_vdd.TBD2_operable': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  module_nominal_voltage_TBD2 = val;
+
+  pstdout_printf (state_data->pstate,
+		  "  FRU Module Nominal Voltage TBD2 V : %s\n",
+		  (module_nominal_voltage_TBD2 == IPMI_FRU_DIMMSPD_DDR4_VDD_TBD2_OPERABLE) ? "Operable" : "Not Operable");
+
+
+
+
+  if (FIID_OBJ_GET (obj_record,
+		    "sdram_device_width",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'sdram_device_width': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  sdram_device_width = val;
+
+  switch (sdram_device_width)
+    {
+    case IPMI_FRU_DIMMSPD_DDR4_DEVICE_WIDTH_4_BITS:
+      sdram_device_width_str = "4 bits";
+      sdram_device_width_val = 4;
+      sdram_device_width_valid = 1;
+      break;
+    case IPMI_FRU_DIMMSPD_DDR4_DEVICE_WIDTH_8_BITS:
+      sdram_device_width_str = "8 bits";
+      sdram_device_width_val = 8;
+      sdram_device_width_valid = 1;
+      break;
+    case IPMI_FRU_DIMMSPD_DDR4_DEVICE_WIDTH_16_BITS:
+      sdram_device_width_str = "16 bits";
+      sdram_device_width_val = 16;
+      sdram_device_width_valid = 1;
+      break;
+    case IPMI_FRU_DIMMSPD_DDR4_DEVICE_WIDTH_32_BITS:
+      sdram_device_width_str = "32 bits";
+      sdram_device_width_val = 32;
+      sdram_device_width_valid = 1;
+      break;
+    default:
+      sdram_device_width_str = "Unknown";
+      sdram_device_width_valid = 0;
+      break;
+    }
+
+  pstdout_printf (state_data->pstate,
+		  "  FRU SDRAM Device Width : %s\n",
+		  sdram_device_width_str);
+
+  if (FIID_OBJ_GET (obj_record,
+		    "number_of_package_ranks_per_dimm",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'number_of_package_ranks_per_dimm': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  number_of_package_ranks_per_dimm = val;
+
+  /* achu: Yeah, a lot of unnecessary code here, but gonna keep
+   * code style pattern the same as the above.
+   */
+  switch (number_of_package_ranks_per_dimm)
+    {
+    case IPMI_FRU_DIMMSPD_DDR4_NUMBER_OF_PACKAGE_RANKS_1:
+      number_of_package_ranks_per_dimm_str = "1";
+      number_of_package_ranks_per_dimm_val = 1;
+      number_of_package_ranks_per_dimm_valid = 1;
+      break;
+    case IPMI_FRU_DIMMSPD_DDR4_NUMBER_OF_PACKAGE_RANKS_2:
+      number_of_package_ranks_per_dimm_str = "2";
+      number_of_package_ranks_per_dimm_val = 2;
+      number_of_package_ranks_per_dimm_valid = 1;
+      break;
+    case IPMI_FRU_DIMMSPD_DDR4_NUMBER_OF_PACKAGE_RANKS_3:
+      number_of_package_ranks_per_dimm_str = "3";
+      number_of_package_ranks_per_dimm_val = 3;
+      number_of_package_ranks_per_dimm_valid = 1;
+      break;
+    case IPMI_FRU_DIMMSPD_DDR4_NUMBER_OF_PACKAGE_RANKS_4:
+      number_of_package_ranks_per_dimm_str = "4";
+      number_of_package_ranks_per_dimm_val = 4;
+      number_of_package_ranks_per_dimm_valid = 1;
+      break;
+    default:
+      number_of_package_ranks_per_dimm_str = "Unknown";
+      number_of_package_ranks_per_dimm_valid = 0;
+      break;
+    }
+
+  pstdout_printf (state_data->pstate,
+		  "  FRU Number of Package Ranks : %s\n",
+		  number_of_package_ranks_per_dimm_str);
+
+  if (FIID_OBJ_GET (obj_record,
+		    "primary_bus_width",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'primary_bus_width': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  primary_bus_width = val;
+
+  switch (primary_bus_width)
+    {
+    case IPMI_FRU_DIMMSPD_DDR4_PRIMARY_BUS_WIDTH_8_BITS:
+      primary_bus_width_str = "8 bits";
+      primary_bus_width_val = 8;
+      primary_bus_width_valid = 1;
+      break;
+    case IPMI_FRU_DIMMSPD_DDR4_PRIMARY_BUS_WIDTH_16_BITS:
+      primary_bus_width_str = "16 bits";
+      primary_bus_width_val = 16;
+      primary_bus_width_valid = 1;
+      break;
+    case IPMI_FRU_DIMMSPD_DDR4_PRIMARY_BUS_WIDTH_32_BITS:
+      primary_bus_width_str = "32 bits";
+      primary_bus_width_val = 32;
+      primary_bus_width_valid = 1;
+      break;
+    case IPMI_FRU_DIMMSPD_DDR4_PRIMARY_BUS_WIDTH_64_BITS:
+      primary_bus_width_str = "64 bits";
+      primary_bus_width_val = 64;
+      primary_bus_width_valid = 1;
+      break;
+    default:
+      primary_bus_width_str = "Unknown";
+      primary_bus_width_valid = 0;
+      break;
+    }
+
+  pstdout_printf (state_data->pstate,
+		  "  FRU Primary Bus Width : %s\n",
+		  primary_bus_width_str);
+
+  if (FIID_OBJ_GET (obj_record,
+		    "bus_width_extension",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'bus_width_extension': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  bus_width_extension = val;
+
+  switch (bus_width_extension)
+    {
+    case IPMI_FRU_DIMMSPD_DDR4_BUS_WIDTH_EXTENSION_0_BITS:
+      bus_width_extension_str = "0 bits";
+      break;
+    case IPMI_FRU_DIMMSPD_DDR4_BUS_WIDTH_EXTENSION_8_BITS:
+      bus_width_extension_str = "8 bits";
+      break;
+    default:
+      bus_width_extension_str = "Unknown";
+      break;
+    }
+
+  pstdout_printf (state_data->pstate,
+		  "  FRU Bus Width Extension : %s\n",
+		  bus_width_extension_str);
+
+  if (total_sdram_capacity_valid
+      && sdram_device_width_valid
+      && number_of_package_ranks_per_dimm_valid
+      && primary_bus_width_valid)
+    {
+      /* Per JEDEC document, in section "Byte 8"
+       *
+       * SDRAM CAPCITY / 8 * PRIMARY BUS WIDTH / SDRAM WIDTH * RANKS 
+       */
+      total_memory_capacity = (total_sdram_capacity_val / 8) * (primary_bus_width_val / sdram_device_width_val) * number_of_package_ranks_per_dimm_val;
 
       pstdout_printf (state_data->pstate,
 		      "  FRU Total Memory Capacity : %u %s\n",
@@ -1754,7 +2519,6 @@ ipmi_fru_output_dimm (ipmi_fru_state_data_t *state_data,
 		  module_manufacturing_date_year,
 		  module_manufacturing_date_week);
 
-
   if (FIID_OBJ_GET (obj_record,
 		    "module_serial_number",
 		    &val) < 0)
@@ -1794,6 +2558,23 @@ ipmi_fru_output_dimm (ipmi_fru_state_data_t *state_data,
 		  module_part_number);
 
   if (FIID_OBJ_GET (obj_record,
+		    "module_revision_code",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'module_revision_code': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  module_revision_code = val;
+
+  /* Revision Code vendor defined, so just output hex  */
+  pstdout_printf (state_data->pstate,
+		  "  FRU Module Revision Code : 0x%04X\n",
+		  module_revision_code);
+
+  if (FIID_OBJ_GET (obj_record,
 		    "number_of_continuation_codes_dram_manufacturer",
 		    &val) < 0)
     {
@@ -1827,9 +2608,137 @@ ipmi_fru_output_dimm (ipmi_fru_state_data_t *state_data,
     pstdout_printf (state_data->pstate,
 		    "  FRU DRAM Manufacturer : Unrecognized\n");
 
+  if (FIID_OBJ_GET (obj_record,
+		    "dram_stepping",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'dram_stepping': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  dram_stepping = val;
+
+  /* Revision Code vendor defined, so just output hex  */
+  pstdout_printf (state_data->pstate,
+		  "  FRU Dram Stepping : 0x%02X\n",
+		  dram_stepping);
+
  out:
   rv = 0;
 
+ cleanup:
+  fiid_obj_destroy (obj_record);
+  return (rv);
+}
+
+int
+ipmi_fru_output_dimm (ipmi_fru_state_data_t *state_data,
+		      const void *areabuf,
+		      unsigned int area_length)
+{
+  fiid_obj_t obj_record = NULL;
+  uint8_t dram_device_type;
+  char *dram_device_type_str = NULL;
+  uint64_t val;
+  int rv = -1;
+
+  assert (state_data);
+  assert (areabuf);
+  assert (area_length);
+
+  if (!(obj_record = fiid_obj_create (tmpl_fru_dimm_spd_ddr_header)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+		       strerror (errno));
+      goto cleanup;
+    }
+
+  if (fiid_obj_set_all (obj_record,
+			areabuf,
+			area_length) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_set_all: %s\n",
+		       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+
+  if (FIID_OBJ_GET (obj_record,
+		    "dram_device_type",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'dram_device_type': %s\n",
+                       fiid_obj_errormsg (obj_record));
+      goto cleanup;
+    }
+  dram_device_type = val;
+
+  switch (dram_device_type)
+    {
+    case IPMI_FRU_DIMMSPD_DRAM_DEVICE_TYPE_STANDARD_FPM_DRAM:
+      dram_device_type_str = "Standard FPM DRAM";
+      break;
+    case IPMI_FRU_DIMMSPD_DRAM_DEVICE_TYPE_EDO:
+      dram_device_type_str = "EDO";
+      break;
+    case IPMI_FRU_DIMMSPD_DRAM_DEVICE_TYPE_PIPELINED_NIBBLE:
+      dram_device_type_str = "Pipelined Nibble";
+      break;
+    case IPMI_FRU_DIMMSPD_DRAM_DEVICE_TYPE_SDRAM:
+      dram_device_type_str = "SDRAM";
+      break;
+    case IPMI_FRU_DIMMSPD_DRAM_DEVICE_TYPE_ROM:
+      dram_device_type_str = "ROM";
+      break;
+    case IPMI_FRU_DIMMSPD_DRAM_DEVICE_TYPE_DDR_SGRAM:
+      dram_device_type_str = "DDR SGRAM";
+      break;
+    case IPMI_FRU_DIMMSPD_DRAM_DEVICE_TYPE_DDR_SDRAM:
+      dram_device_type_str = "DDR SDRAM";
+      break;
+    case IPMI_FRU_DIMMSPD_DRAM_DEVICE_TYPE_DDR2_SDRAM:
+      dram_device_type_str = "DDR2 SDRAM";
+      break;
+    case IPMI_FRU_DIMMSPD_DRAM_DEVICE_TYPE_DDR2_SDRAM_FB_DIMM:
+      dram_device_type_str = "DDR2 SDRAM FB-DIMM";
+      break;
+    case IPMI_FRU_DIMMSPD_DRAM_DEVICE_TYPE_DDR2_SDRAM_FB_DIMM_PROBE:
+      dram_device_type_str = "DDR2 SDRAM FB-DIMM PROBE";
+      break;
+    case IPMI_FRU_DIMMSPD_DRAM_DEVICE_TYPE_DDR3_SDRAM:
+      dram_device_type_str = "DDR3 SDRAM";
+      break;
+    case IPMI_FRU_DIMMSPD_DRAM_DEVICE_TYPE_DDR4_SDRAM:
+      dram_device_type_str = "DDR4 SDRAM";
+      break;
+    default:
+      dram_device_type_str = "Unrecognized";
+      break;
+    }
+  
+  pstdout_printf (state_data->pstate,
+		  "  FRU DRAM Device Type: %s\n",
+		  dram_device_type_str);
+		    
+  if (dram_device_type == IPMI_FRU_DIMMSPD_DRAM_DEVICE_TYPE_DDR3_SDRAM)
+    {
+      if (_ipmi_fru_output_dimm_ddr3 (state_data, areabuf, area_length) < 0)
+	goto cleanup;
+    }
+  else if (dram_device_type == IPMI_FRU_DIMMSPD_DRAM_DEVICE_TYPE_DDR4_SDRAM)
+    {
+      if (_ipmi_fru_output_dimm_ddr4 (state_data, areabuf, area_length) < 0)
+	goto cleanup;
+    }
+
+  rv = 0;
  cleanup:
   fiid_obj_destroy (obj_record);
   return (rv);

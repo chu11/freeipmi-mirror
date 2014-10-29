@@ -26,7 +26,7 @@ extern "C" {
 #include <stdint.h>
 
 #define IPMI_JEDEC_MANUFACTURER_CONTINUATION_CODES_MIN 0
-#define IPMI_JEDEC_MANUFACTURER_CONTINUATION_CODES_MAX 7
+#define IPMI_JEDEC_MANUFACTURER_CONTINUATION_CODES_MAX 8
 
 /* To avoid gcc warnings, add +1 in comparison */
 #define IPMI_JEDEC_MANUFACTURER_CONTINUATION_CODES_VALID(__manufacturer_continuation_codes) \
@@ -46,6 +46,7 @@ extern const struct ipmi_jedec_manufacturer_id_pair ipmi_jedec_manufacturer_id_b
 extern const struct ipmi_jedec_manufacturer_id_pair ipmi_jedec_manufacturer_id_bank6[];
 extern const struct ipmi_jedec_manufacturer_id_pair ipmi_jedec_manufacturer_id_bank7[];
 extern const struct ipmi_jedec_manufacturer_id_pair ipmi_jedec_manufacturer_id_bank8[];
+extern const struct ipmi_jedec_manufacturer_id_pair ipmi_jedec_manufacturer_id_bank9[];
 
 #ifdef __cplusplus
 }

@@ -29,7 +29,7 @@
 29 Lucent (AT&T) 1 0 0 1 1 1 0 1 9D
 30 Exel 1 0 0 1 1 1 1 0 9E
 31 Atmel 0 0 0 1 1 1 1 1 1F
-32 SGS/Thomson 0 0 1 0 0 0 0 0 20
+32 STMicroelectronics 0 0 1 0 0 0 0 0 20
 33 Lattice Semi. 1 0 1 0 0 0 0 1 A1
 34 NCR 1 0 1 0 0 0 1 0 A2
 35 Wafer Scale Integration 0 0 1 0 0 0 1 1 23
@@ -195,8 +195,8 @@
 67 Suwa Electronics 0 1 0 0 0 0 1 1 43
 68 Transmeta 1 1 0 0 0 1 0 0 C4
 69 Micron CMS 0 1 0 0 0 1 0 1 45
-70 American Computer & Digital Components Inc 0 1 0 0 0 1 1 0 46
-71 Enhance 3000 Inc 1 1 0 0 0 1 1 1 C7
+70 American Computer & Digital Components Inc. 0 1 0 0 0 1 1 0 46
+71 Enhance 3000 Inc. 1 1 0 0 0 1 1 1 C7
 72 Tower Semiconductor 1 1 0 0 1 0 0 0 C8
 73 CPU Design 0 1 0 0 1 0 0 1 49
 74 Price Point 0 1 0 0 1 0 1 0 4A
@@ -296,7 +296,7 @@
 41 ADTEC Corporation 0 0 1 0 1 0 0 1 29
 42 Kentron Technologies 0 0 1 0 1 0 1 0 2A
 43 Win Technologies 1 0 1 0 1 0 1 1 AB
-44 Tachyon Semiconductor (ASIC) 0 0 1 0 1 1 0 0 2C
+44 Tezzaron Semiconductor 0 0 1 0 1 1 0 0 2C
 45 Extreme Packet Devices 1 0 1 0 1 1 0 1 AD
 46 RF Micro Devices 1 0 1 0 1 1 1 0 AE
 47 Siemens AG 0 0 1 0 1 1 1 1 2F
@@ -507,7 +507,6 @@
 125 Dot Hill Systems 1 1 1 1 1 1 0 1 FD
 126 TeraChip 1 1 1 1 1 1 1 0 FE
 
-
 1 T-RAM Incorporated 0 0 0 0 0 0 0 1 01
 2 Innovics Wireless 0 0 0 0 0 0 1 0 02
 3 Teknovus 1 0 0 0 0 0 1 1 83
@@ -537,7 +536,7 @@
 27 Phonex Broadband 1 0 0 1 1 0 1 1 9B
 28 Skyworks Solutions 0 0 0 1 1 1 0 0 1C
 29 Entropic Communications 1 0 0 1 1 1 0 1 9D
-30 Pacific Force Technology 1 0 0 1 1 1 1 0 9E
+30 M Intelligent Memory Ltd. 1 0 0 1 1 1 1 0 9E
 31 Zensys A/S 0 0 0 1 1 1 1 1 1F
 32 Legend Silicon Corp. 0 0 1 0 0 0 0 0 20
 33 Sci-worx GmbH 1 0 1 0 0 0 0 1 A1
@@ -804,7 +803,6 @@
 40 Silicon Integrated Systems 1 0 1 0 1 0 0 0 A8
 41 I-O Data Device, Inc. 0 0 1 0 1 0 0 1 29
 42 NDS Americas Inc. 0 0 1 0 1 0 1 0 2A
-
 43 Solomon Systech Limited 1 0 1 0 1 0 1 1 AB
 44 On Demand Microelectronics 0 0 1 0 1 1 0 0 2C
 45 Amicus Wireless Inc. 1 0 1 0 1 1 0 1 AD
@@ -825,7 +823,7 @@
 60 Gingle Technology Co. Ltd. 1 0 1 1 1 1 0 0 BC
 61 Space Micro Inc. 0 0 1 1 1 1 0 1 3D
 62 Wilocity 0 0 1 1 1 1 1 0 3E
-63 Novafora, Ic. 1 0 1 1 1 1 1 1 BF
+63 Novafora, Inc. 1 0 1 1 1 1 1 1 BF
 64 iKoa Corporation 0 1 0 0 0 0 0 0 40
 65 ASint Technology 1 1 0 0 0 0 0 1 C1
 66 Ramtron 1 1 0 0 0 0 1 0 C2
@@ -1003,3 +1001,57 @@
 111 Zentel Electronics Corporation 1 1 1 0 1 1 1 1 EF
 112 Panram International Corporation 0 1 1 1 0 0 0 0 70
 113 Silicon Space Technology 1 1 1 1 0 0 0 1 F1
+114 LITE-ON IT Corporation 1 1 1 1 0 0 1 0 F2
+115 Inuitive 0 1 1 1 0 0 1 1 73
+116 HMicro 1 1 1 1 0 1 0 0 F4
+117 BittWare, Inc. 0 1 1 1 0 1 0 1 75
+118 GLOBALFOUNDRIES 0 1 1 1 0 1 1 0 76
+119 ACPI Digital Co. Ltd. 1 1 1 1 0 1 1 1 F7
+120 Annapurna Labs 1 1 1 1 1 0 0 0 F8
+121 AcSiP Technology Corporation 0 1 1 1 1 0 0 1 79
+122 Idea! Electronic Systems 0 1 1 1 1 0 1 0 7A
+123 Gowe Technology Co. Ltd. 1 1 1 1 1 0 1 1 FB
+124 Hermes Testing Solutions, Inc. 0 1 1 1 1 1 0 0 7C
+125 Positivo BGH 1 1 1 1 1 1 0 1 FD
+126 Intelligence Silicon Technology 1 1 1 1 1 1 1 0 FE
+
+1 3D PLUS 0 0 0 0 0 0 0 1 01
+2 Diehl Aerospace 0 0 0 0 0 0 1 0 02
+3 Fairchild 1 0 0 0 0 0 1 1 83
+4 Mercury Systems 0 0 0 0 0 1 0 0 04
+5 Sonics, Inc. 1 0 0 0 0 1 0 1 85
+6 GE Intelligent Platforms GmbH & Co. 1 0 0 0 0 1 1 0 86
+7 Shenzhen Jinge Information Co. Ltd. 0 0 0 0 0 1 1 1 07
+8 SCWW 0 0 0 0 1 0 0 0 08
+9 Silicon Motion Inc. 1 0 0 0 1 0 0 1 89
+10 Anurag 1 0 0 0 1 0 1 0 8A
+11 King Kong 0 0 0 0 1 0 1 1 0B
+12 FROM30 Co. Ltd. 1 0 0 0 1 1 0 0 8C
+13 Gowin Semiconductor Corp 0 0 0 0 1 1 0 1 0D
+14 Fremont Micro Devices Ltd. 0 0 0 0 1 1 1 0 0E
+15 Ericsson Modems 1 0 0 0 1 1 1 1 8F
+16 Exelis 0 0 0 1 0 0 0 0 10
+17 Satixfy Ltd. 1 0 0 1 0 0 0 1 91
+18 Galaxy Microsystems Ltd. 1 0 0 1 0 0 1 0 92
+19 Gloway International Co. Ltd. 0 0 0 1 0 0 1 1 13
+20 Lab 1 0 0 1 0 1 0 0 94
+21 Smart Energy Instruments 0 0 0 1 0 1 0 1 15
+22 Approved Memory Corporation 0 0 0 1 0 1 1 0 16
+23 Axell Corporation 1 0 0 1 0 1 1 1 97
+24 ISD Technology Limited 1 0 0 1 1 0 0 0 98
+25 Phytium 0 0 0 1 1 0 0 1 19
+26 an SinoChip Semiconductor 0 0 0 1 1 0 1 0 1A
+27 Ambiq Micro 1 0 0 1 1 0 1 1 9B
+28 eveRAM Technology, Inc. 0 0 0 1 1 1 0 0 1C
+29 Infomax 1 0 0 1 1 1 0 1 9D
+30 Butterfly Network, Inc. 1 0 0 1 1 1 1 0 9E
+31 Shenzhen City Gcai Electronics 0 0 0 1 1 1 1 1 1F
+32 Stack Devices Corporation 0 0 1 0 0 0 0 0 20
+33 ADK Media Group 1 0 1 0 0 0 0 1 A1
+34 TSP Global Co., Ltd. 1 0 1 0 0 0 1 0 A2
+35 HighX 0 0 1 0 0 0 1 1 23
+36 Shenzhen Elicks Technology 1 0 1 0 0 1 0 0 A4
+37 ISSI/Chingis 0 0 1 0 0 1 0 1 25
+38 Google, Inc. 0 0 1 0 0 1 1 0 26
+39 Dasima International Development 1 0 1 0 0 1 1 1 A7
+40 Leahkinn Technology Limited 1 0 1 0 1 0 0 0 A8
