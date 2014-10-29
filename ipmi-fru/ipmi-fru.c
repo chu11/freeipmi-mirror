@@ -402,9 +402,9 @@ _output_dimm (ipmi_fru_state_data_t *state_data,
       goto out;
     }
 
-  if ((block_len = fiid_template_block_len_bytes (tmpl_fru_dimm_spd_ddr3_record,
+  if ((block_len = fiid_template_block_len_bytes (tmpl_fru_dimm_spd_ddr_header,
 						  "spd_bytes_used",
-						  "last_non_zero_dram_manufacturer")) < 0)
+						  "reserved")) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,

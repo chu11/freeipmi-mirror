@@ -1,7 +1,9 @@
 FreeIPMI 1.4.6 - 07/28/14
 -------------------------
+o In ipmi-fru, support output of DDR4 SDRAM modules.
 o Fix EFI probing on non IA64 systems.
 o Fix corner case in ipmi-raw w/ standard input or --file and empty lines.
+o Fix parsing corner case in ipmi-chassis.
 o Support SSIF bridging.
 
 FreeIPMI 1.4.5 - 07/28/14
