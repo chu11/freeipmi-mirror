@@ -251,8 +251,8 @@ for power control on clusters ranging from sizes of 4 to 2000.  It has
 been used to determine power status or power control @acronym{LLNL}'s largest
 clusters in under a second.
 
-@command{Ipmiconsole} is currently supported by Conman
-(@uref{http://conman.googlecode.com/}) for scalable console management.
+@command{libipmiconsole} is currently supported by Conman
+(@uref{http://conman.googlecode.com/}) and Conserver (@uref{http://www.conserver.com/}) for scalable console management.
 
 @command{Ipmi-sensors} and libipmimonitoring are capable of
 interpreting sensor readings as well as just reporting them.  It can
@@ -289,6 +289,8 @@ stored to firmware.
 @command{Ipmidetect} can be used to enhance the efficiency of the hostranged
 input by eliminating those nodes in the cluster that have been
 temporarily removed for servicing.
+
+FreeIPMI is supported within Slurm for energy consumption monitoring.
 
 @item Additional @acronym{OEM} support
 
