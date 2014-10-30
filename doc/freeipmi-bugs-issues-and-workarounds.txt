@@ -1517,7 +1517,8 @@ Sensors Issue #22: [COMPLIANCE]
 
   Seen on: Artesyn ATCA-7367
 
-  Resolution: None
+  Resolution: Workaround option added to inform software to skip Get
+  SDR Repository Info and handle the special case.
 
 ----------------------------------------------------------------------
 
