@@ -5,3 +5,11 @@ have been read.  This will work around systems that have
 mis-implemented SDR reading functions that.  Those hitting this issue
 may see "SDR record count invalid" errors.  Issue observed on
 unspecified Inspur motherboard.
+.LP
+\fInosdrinfo\fR - This workarond will inform SDR to not use the Get
+SDR Info Repository IPMI command.  This will work around systems that
+did not implement the Get SDR Info Repository command, which is a
+mandatory command according to the IPMI specification.  Those hitting
+this issue may see "internal IPMI error" errors.  Issue observed on
+Artesyn ATCA-7367 motherboard.
+

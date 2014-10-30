@@ -63,6 +63,7 @@
 #define IPMI_PARSE_WORKAROUND_FLAGS_INBAND_SPIN_POLL                              0x00000002
 
 #define IPMI_PARSE_WORKAROUND_FLAGS_SDR_ASSUME_MAX_SDR_RECORD_COUNT               0x00000001
+#define IPMI_PARSE_WORKAROUND_FLAGS_SDR_NO_SDR_INFO                               0x00000002
 
 #define IPMI_PARSE_WORKAROUND_FLAGS_NONE_STR                                          "none"
 
@@ -86,6 +87,7 @@
 #define IPMI_PARSE_WORKAROUND_FLAGS_INBAND_SPIN_POLL_STR                              "spinpoll"
 
 #define IPMI_PARSE_WORKAROUND_FLAGS_SDR_ASSUME_MAX_SDR_RECORD_COUNT_STR               "assumemaxsdrrecordcount"
+#define IPMI_PARSE_WORKAROUND_FLAGS_SDR_NO_SDR_INFO_STR                               "nosdrinfo"
 
 /* ipmiconsole */
 #define IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_SOL_PAYLOAD_SIZE        0x00000001

@@ -242,6 +242,9 @@ _parse_workaround_flags (const char *str,
       else if (workaround_flags_sdr
                && !strcasecmp (tok, IPMI_PARSE_WORKAROUND_FLAGS_SDR_ASSUME_MAX_SDR_RECORD_COUNT_STR))
         (*workaround_flags_sdr) |= IPMI_PARSE_WORKAROUND_FLAGS_SDR_ASSUME_MAX_SDR_RECORD_COUNT;
+      else if (workaround_flags_sdr
+               && !strcasecmp (tok, IPMI_PARSE_WORKAROUND_FLAGS_SDR_NO_SDR_INFO_STR))
+        (*workaround_flags_sdr) |= IPMI_PARSE_WORKAROUND_FLAGS_SDR_NO_SDR_INFO;
       else if (section_specific_workaround_flags
                && !strcasecmp (tok, IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_SOL_PAYLOAD_SIZE_STR))
         (*section_specific_workaround_flags) |= IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_SOL_PAYLOAD_SIZE;

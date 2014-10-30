@@ -1,5 +1,11 @@
 2014-10-30 Albert Chu <chu11@llnl.gov>
 
+	* common/parsecommon/, common/toolcommon/, libfreeipmi/: Support
+	"nosdrinfo" workaround / IPMI_SDR_CACHE_CREATE_FLAGS_NO_SDR_INFO
+	libfreeipmi flag to ignore Get SDR Repository Info command.
+	
+2014-10-30 Albert Chu <chu11@llnl.gov>
+
 	* doc/freeipmi-faq.texi: Fix typo and update with examples.  Add
 	support updates.
 	

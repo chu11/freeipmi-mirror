@@ -562,6 +562,9 @@ _sdr_cache_create (ipmi_sdr_ctx_t ctx,
   if (common_args->workaround_flags_sdr & IPMI_PARSE_WORKAROUND_FLAGS_SDR_ASSUME_MAX_SDR_RECORD_COUNT)
     cache_create_flags |= IPMI_SDR_CACHE_CREATE_FLAGS_ASSUME_MAX_SDR_RECORD_COUNT;
 
+  if (common_args->workaround_flags_sdr & IPMI_PARSE_WORKAROUND_FLAGS_SDR_NO_SDR_INFO)
+    cache_create_flags |= IPMI_SDR_CACHE_CREATE_FLAGS_NO_SDR_INFO;
+
   if (ipmi_sdr_cache_create (ctx,
                              ipmi_ctx,
                              cachefilenamebuf,
@@ -612,9 +615,10 @@ sdr_cache_create_and_load (ipmi_sdr_ctx_t sdr_ctx,
     goto cleanup;
 
   /* If user specifies cache file, don't check timestamps, just load it */
+  /* If user specifies no sdr info workaround, don't check timestamps either, just load it */
 
   if (ipmi_sdr_cache_open (sdr_ctx,
-                           common_args->sdr_cache_file ? NULL : ipmi_ctx,
+                           (common_args->sdr_cache_file || (common_args->workaround_flags_sdr & IPMI_PARSE_WORKAROUND_FLAGS_SDR_NO_SDR_INFO))? NULL : ipmi_ctx,
                            cachefilenamebuf) < 0)
     {
       if (ipmi_sdr_ctx_errnum (sdr_ctx) != IPMI_SDR_ERR_CACHE_READ_CACHE_DOES_NOT_EXIST
@@ -664,7 +668,7 @@ sdr_cache_create_and_load (ipmi_sdr_ctx_t sdr_ctx,
         goto cleanup;
 
       if (ipmi_sdr_cache_open (sdr_ctx,
-			       common_args->sdr_cache_file ? NULL : ipmi_ctx,
+			       (common_args->sdr_cache_file || (common_args->workaround_flags_sdr & IPMI_PARSE_WORKAROUND_FLAGS_SDR_NO_SDR_INFO))? NULL : ipmi_ctx,
                                cachefilenamebuf) < 0)
         {
           PSTDOUT_FPRINTF (pstate,
