@@ -1,3 +1,7 @@
+2014-10-30 Albert Chu <chu11@llnl.gov>
+
+	* doc/freeipmi-faq.texi: Fix typo and update with examples.
+	
 2014-10-29 Albert Chu <chu11@llnl.gov>
 
 	Merge branch ddr4

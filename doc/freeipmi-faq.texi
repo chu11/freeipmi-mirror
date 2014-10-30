@@ -845,7 +845,17 @@ In FreeIPMI's @command{ipmi-fru}, all multirecord @acronym{FRU} entries are outp
 In FreeIPMI's @command{ipmi-fru}, @acronym{FRU} record checksums are automatically checked and errors are output if a @acronym{FRU} record cannot assumed to be valid due to a failed checksum check.  Other @acronym{IPMI} software has been shown to ignore the checksums and assume records are valid.  If your system has invalid checksummed @acronym{FRU} entries, the 'skipchecks' workaround can be used to get around them.
 
 @item
-In FreeIPMI's @command{ipmi-sensors}, sensors may output an ``OK'' if no events are set.  In other @acronym{IPMI} softwrae (such as @command{ipmitool} and the command ``sdr list''), ``OK'' means that a sensor was simply read correctly.  The ``OK'' may not mean that the device behind the sensor is actually functioning properly.
+In FreeIPMI's @command{ipmi-sensors}, sensors may output an ``OK'' if no events are set.  In other @acronym{IPMI} software (such as @command{ipmitool} and the command ``sdr list''), ``OK'' means that a sensor was simply read correctly.  The ``OK'' may not mean that the device behind the sensor is actually functioning properly.  For example, here is an output from an @command{ipmitool} sdr list entry.
+
+@example
+PSU 1 Status     | 0x0b              | ok
+@end example
+
+The 0x0b indicates that the power supply has errors (you normally want to see 0x00 or 0x01), however the sensor outputs ``ok'' because the sensor reading was read correctly.  When using FreeIPMI's @command{ipmi-sensors}, the 0x0b is properly converted into the event messages indicating an error.
+
+@example
+54  | PSU 1 Status | Power Supply | N/A | N/A | 'Presence detected' 'Power Supply Failure detected' 'Power Supply input lost (AC/DC)'
+@end example
 
 @end itemize
 
