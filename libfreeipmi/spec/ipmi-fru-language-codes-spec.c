@@ -153,7 +153,8 @@ const char *const ipmi_fru_language_codes[] =
     "Swedish",
     "Swahili",
     "Tamil",
-    "Tegulu",
+    /* Spec has "Tegulu", likely a typo */
+    "Telugu",
     "Tajik",
     "Thai",
     "Tigrinya",

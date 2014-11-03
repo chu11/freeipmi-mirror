@@ -1,3 +1,7 @@
+FreeIPMI 1.4.7 - 10/29/14
+-------------------------
+o Fix typo from FRU spec, language "Tegulu" is actually "Telugu".
+
 FreeIPMI 1.4.6 - 10/29/14
 -------------------------
 o In ipmi-fru, support output of DDR4 SDRAM modules.
