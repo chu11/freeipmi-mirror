@@ -1,3 +1,10 @@
+2014-11-03 Albert Chu <chu11@llnl.gov>
+
+	* Found by Satya Nishtala <satya at drivescale dot com>
+
+	Fix typo throughout with "Tegulu" language, which should be
+	"Telugu".  Typo exists in originally FRU specification.
+	
 2014-10-30 Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-faq.texi: Fix typo and update with examples.  Add
