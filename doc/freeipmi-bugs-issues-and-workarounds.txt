@@ -541,6 +541,26 @@ SDR Issue #5: [COMPLIANCE]
   Resolution: Workaround added to detect issue and do parital reads
   instead.
 
+SDR Issue #6: [COMPLIANCE]
+
+  Retrieving sensors results in a "IPMI Internal Error" b/c a "Get SDR
+  Repository Info" command is not supported on the motherboard
+  (completion code 0xC1).
+
+  Seen on: Artesyn ATCA-7367
+
+  Resolution: None
+
+SDR Issue #7: [COMPLIANCE]
+
+  Retrieving sensors results in a "IPMI Internal Error" b/c a "Reserve
+  SDR Repository" command is not supported on the motherboard
+  (completion code 0xC1).
+
+  Seen on: Artesyn ATCA-7367
+
+  Resolution: None
+
 ----------------------------------------------------------------------
 
 --------------------------
@@ -1506,16 +1526,6 @@ Sensors Issue #21: [IMPLEMENTATION]
   reported that is below the nominal reading.
 
   Seen on: HP DL140 G3 and HP ML160 G6
-
-  Resolution: None
-
-Sensors Issue #22: [COMPLIANCE]
-
-  Retrieving sensors results in a "IPMI Internal Error" b/c a "Get SDR
-  Repository Info" command is not supported on the motherboard
-  (completion code 0xC1).
-
-  Seen on: Artesyn ATCA-7367
 
   Resolution: None
 
