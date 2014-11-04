@@ -38,9 +38,14 @@
 #include "freeipmi/sdr/ipmi-sdr.h"
 #include "freeipmi/debug/ipmi-debug.h"
 #include "freeipmi/fiid/fiid.h"
+#include "freeipmi/api/ipmi-device-global-cmds-api.h"
 #include "freeipmi/api/ipmi-sdr-repository-cmds-api.h"
+#include "freeipmi/api/ipmi-sensor-cmds-api.h"
+#include "freeipmi/cmds/ipmi-device-global-cmds.h"
 #include "freeipmi/cmds/ipmi-sdr-repository-cmds.h"
+#include "freeipmi/cmds/ipmi-sensor-cmds.h"
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
+#include "freeipmi/spec/ipmi-comp-code-spec.h"
 
 #include "ipmi-sdr-common.h"
 #include "ipmi-sdr-defs.h"
@@ -78,6 +83,137 @@ sdr_init_ctx (ipmi_sdr_ctx_t ctx)
   memset (ctx->entity_counts,
 	  '\0',
 	  sizeof (struct ipmi_sdr_entity_count) * IPMI_MAX_ENTITY_IDS); 
+
+  ctx->operation_device_sdr = 0;
+}
+
+static int
+_device_sdr_info (ipmi_sdr_ctx_t ctx,
+		  ipmi_ctx_t ipmi_ctx,
+		  uint8_t *sdr_version,
+		  uint16_t *record_count,
+		  uint32_t *most_recent_addition_timestamp,
+		  uint32_t *most_recent_erase_timestamp)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val;
+  int rv = -1;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_SDR_CTX_MAGIC);
+  assert (ipmi_ctx);
+  assert (sdr_version);
+  assert (record_count);
+  assert (most_recent_addition_timestamp);
+  assert (most_recent_erase_timestamp);
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_device_sdr_info_rs)))
+    {
+      SDR_ERRNO_TO_SDR_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_device_sdr_info (ipmi_ctx,
+				    IPMI_SENSOR_GET_SDR_COUNT,
+				    obj_cmd_rs) < 0)
+    {
+      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_IPMI_ERROR);
+      goto cleanup;
+    }
+
+  /* No SDR version w/ the workaround or timestamps, so all zero */
+  *sdr_version = 0;
+  *most_recent_addition_timestamp = 0;
+  *most_recent_erase_timestamp = 0;
+
+  *record_count = 0;
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "number",
+                    &val) < 0)
+    {
+      SDR_FIID_OBJECT_ERROR_TO_SDR_ERRNUM (ctx, obj_cmd_rs);
+      goto cleanup;
+    }
+  *record_count = val;
+
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+static int
+_device_sdr_info_workaround (ipmi_sdr_ctx_t ctx,
+			     ipmi_ctx_t ipmi_ctx,
+			     uint8_t *sdr_version,
+			     uint16_t *record_count,
+			     uint32_t *most_recent_addition_timestamp,
+			     uint32_t *most_recent_erase_timestamp)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t sensor_device = 0;
+  uint8_t sdr_repository_device = 0;
+  uint64_t val;
+  int rv = -1;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_SDR_CTX_MAGIC);
+  assert (ipmi_ctx);
+  assert (sdr_version);
+  assert (record_count);
+  assert (most_recent_addition_timestamp);
+  assert (most_recent_erase_timestamp);
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_device_id_rq)))
+    {
+      SDR_ERRNO_TO_SDR_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_device_id (ipmi_ctx, obj_cmd_rs) < 0)
+    {
+      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_IPMI_ERROR);
+      goto cleanup;
+    }
+  
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "additional_device_support.sensor_device",
+                    &val) < 0)
+    {
+      SDR_FIID_OBJECT_ERROR_TO_SDR_ERRNUM (ctx, obj_cmd_rs);
+      goto cleanup;
+    }
+  sensor_device = val;
+
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "additional_device_support.sdr_repository_device",
+                    &val) < 0)
+    {
+      SDR_FIID_OBJECT_ERROR_TO_SDR_ERRNUM (ctx, obj_cmd_rs);
+      goto cleanup;
+    }
+  sdr_repository_device = val;
+
+  /* If no normal SDR, try device SDR  */
+  if (!sdr_repository_device && sensor_device)
+    {
+      if (_device_sdr_info (ctx,
+			    ipmi_ctx,
+			    sdr_version,
+			    record_count,
+			    most_recent_addition_timestamp,
+			    most_recent_erase_timestamp) < 0)
+	goto cleanup;
+
+      ctx->operation_device_sdr = 1;
+    }
+
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
 }
 
 int
@@ -106,10 +242,45 @@ sdr_info (ipmi_sdr_ctx_t ctx,
       goto cleanup;
     }
 
-  if (ipmi_cmd_get_sdr_repository_info (ipmi_ctx, obj_cmd_rs) < 0)
+  if (ctx->operation_device_sdr)
     {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_IPMI_ERROR);
-      goto cleanup;
+      if (_device_sdr_info (ctx,
+			    ipmi_ctx,
+			    sdr_version,
+			    record_count,
+			    most_recent_addition_timestamp,
+			    most_recent_erase_timestamp) < 0)
+	goto cleanup;
+    }
+  else
+    {
+      if (ipmi_cmd_get_sdr_repository_info (ipmi_ctx, obj_cmd_rs) < 0)
+	{
+	  /* IPMI Workaround
+	   *
+	   * Discovered on Artesyn ATCA-7367
+	   *
+	   * For some reason, they need "Device SDR" instead of normal.
+	   * This is only supposed to be used for Dynamic SDRs.  #confused
+	   */
+	  if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
+	      && ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_INVALID_COMMAND) == 1)
+	    {
+	      if (!(_device_sdr_info_workaround (ctx,
+						 ipmi_ctx,
+						 sdr_version,
+						 record_count,
+						 most_recent_addition_timestamp,
+						 most_recent_erase_timestamp) < 0))
+		{
+		  rv = 0;
+		  goto cleanup;
+		} 
+	    }
+
+	  SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_IPMI_ERROR);
+	  goto cleanup;
+	}
     }
 
   *sdr_version = 0;

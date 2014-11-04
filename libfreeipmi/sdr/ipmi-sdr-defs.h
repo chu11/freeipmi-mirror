@@ -158,6 +158,9 @@ struct ipmi_sdr_ctx {
   /* Stats */
   int stats_compiled;
   struct ipmi_sdr_entity_count entity_counts[IPMI_MAX_ENTITY_IDS];
+
+  /* Misc */
+  int operation_device_sdr;
 };
 
 #endif /* IPMI_SDR_DEFS_H */

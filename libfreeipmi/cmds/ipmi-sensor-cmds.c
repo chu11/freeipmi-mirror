@@ -71,8 +71,23 @@ fiid_template_t tmpl_cmd_get_device_sdr_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 16, "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4096, "requested_bytes", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
+    { 16, "next_record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    /* 2040 = 255 * 8, 255 b/c bytes_to_read field in request is 1 byte long */
+    { 2040, "record_data", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_reserve_device_sdr_repository_rq =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_reserve_device_sdr_repository_rs =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
+    { 16, "reservation_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},  /* LS byte first */
     { 0, "", 0}
   };
 
@@ -942,6 +957,78 @@ fiid_template_t tmpl_cmd_set_sensor_reading_and_event_status_rs =
     { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 0, "", 0}
   };
+
+int
+fill_cmd_get_device_sdr_info (uint8_t operation,
+			      fiid_obj_t obj_cmd_rq)
+{
+  if (!IPMI_SENSOR_GET_SDR_INFO_OPERATION_VALID (operation)
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_device_sdr_info_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_DEVICE_SDR_INFO);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "operation", operation);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  return (0);
+}
+
+int
+fill_cmd_get_device_sdr (uint16_t reservation_id,
+			 uint16_t record_id,
+			 uint8_t offset_into_record,
+			 uint8_t bytes_to_read,
+			 fiid_obj_t obj_cmd_rq)
+{
+  if (!fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_device_sdr_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_DEVICE_SDR);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reservation_id", reservation_id);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "record_id", record_id);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "offset_into_record", offset_into_record);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "bytes_to_read", bytes_to_read);
+  return (0);
+}
+
+int
+fill_cmd_reserve_device_sdr_repository (fiid_obj_t obj_cmd_rq)
+{
+  if (!fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_reserve_device_sdr_repository_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_RESERVE_DEVICE_SDR_REPOSITORY);
+  return (0);
+}
 
 /* achu: as of IPMI 2.0 hysteresis_mask reserved for future - write as 0xFF */
 int

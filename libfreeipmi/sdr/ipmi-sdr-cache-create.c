@@ -46,7 +46,9 @@
 
 #include "freeipmi/sdr/ipmi-sdr.h"
 #include "freeipmi/api/ipmi-sdr-repository-cmds-api.h"
+#include "freeipmi/api/ipmi-sensor-cmds-api.h"
 #include "freeipmi/cmds/ipmi-sdr-repository-cmds.h"
+#include "freeipmi/cmds/ipmi-sensor-cmds.h"
 #include "freeipmi/fiid/fiid.h"
 #include "freeipmi/debug/ipmi-debug.h"
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
@@ -297,16 +299,33 @@ _sdr_cache_reservation_id (ipmi_sdr_ctx_t ctx,
   assert (ipmi_ctx);
   assert (reservation_id);
 
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_reserve_sdr_repository_rs)))
+  if (ctx->operation_device_sdr)
     {
-      SDR_ERRNO_TO_SDR_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
+      if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_reserve_device_sdr_repository_rs)))
+	{
+	  SDR_ERRNO_TO_SDR_ERRNUM (ctx, errno);
+	  goto cleanup;
+	}
 
-  if (ipmi_cmd_reserve_sdr_repository (ipmi_ctx, obj_cmd_rs) < 0)
+      if (ipmi_cmd_reserve_device_sdr_repository (ipmi_ctx, obj_cmd_rs) < 0)
+	{
+	  SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_IPMI_ERROR);
+	  goto cleanup;
+	}
+    }
+  else
     {
-      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_IPMI_ERROR);
-      goto cleanup;
+      if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_reserve_sdr_repository_rs)))
+	{
+	  SDR_ERRNO_TO_SDR_ERRNUM (ctx, errno);
+	  goto cleanup;
+	}
+
+      if (ipmi_cmd_reserve_sdr_repository (ipmi_ctx, obj_cmd_rs) < 0)
+	{
+	  SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_IPMI_ERROR);
+	  goto cleanup;
+	}
     }
 
   *reservation_id = 0;
@@ -323,6 +342,36 @@ _sdr_cache_reservation_id (ipmi_sdr_ctx_t ctx,
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
+}
+
+static int
+_ipmi_cmd_get_sdr_wrapper (ipmi_sdr_ctx_t ctx,
+			   ipmi_ctx_t ipmi_ctx,
+			   uint16_t reservation_id,
+			   uint16_t record_id,
+			   uint8_t offset_into_record,
+			   uint8_t bytes_to_read,
+			   fiid_obj_t obj_cmd_rs)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_SDR_CTX_MAGIC);
+  assert (ipmi_ctx);
+  assert (obj_cmd_rs);
+
+  if (ctx->operation_device_sdr)
+    return ipmi_cmd_get_device_sdr (ipmi_ctx,
+				    reservation_id,
+				    record_id,
+				    offset_into_record,
+				    bytes_to_read,
+				    obj_cmd_rs);
+
+  return ipmi_cmd_get_sdr (ipmi_ctx,
+			   reservation_id,
+			   record_id,
+			   offset_into_record,
+			   bytes_to_read,
+			   obj_cmd_rs);
 }
 
 static int
@@ -354,10 +403,21 @@ _sdr_cache_get_record (ipmi_sdr_ctx_t ctx,
   assert (reservation_id);
   assert (next_record_id);
 
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_sdr_rs)))
+  if (ctx->operation_device_sdr)
     {
-      SDR_ERRNO_TO_SDR_ERRNUM (ctx, errno);
-      goto cleanup;
+      if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_device_sdr_rs)))
+	{
+	  SDR_ERRNO_TO_SDR_ERRNUM (ctx, errno);
+	  goto cleanup;
+	}
+    }
+  else
+    {
+      if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_sdr_rs)))
+	{
+	  SDR_ERRNO_TO_SDR_ERRNUM (ctx, errno);
+	  goto cleanup;
+	}
     }
 
   if (!(obj_sdr_record_header = fiid_obj_create (tmpl_sdr_record_header)))
@@ -382,12 +442,13 @@ _sdr_cache_get_record (ipmi_sdr_ctx_t ctx,
   reservation_id_retry_count = 0;
   while (!offset_into_record)
     {
-      if (ipmi_cmd_get_sdr (ipmi_ctx,
-			    *reservation_id,
-			    record_id,
-			    0,
-			    IPMI_SDR_READ_ENTIRE_RECORD_BYTES_TO_READ,
-			    obj_cmd_rs) < 0)
+      if (_ipmi_cmd_get_sdr_wrapper (ctx,
+				     ipmi_ctx,
+				     *reservation_id,
+				     record_id,
+				     0,
+				     IPMI_SDR_READ_ENTIRE_RECORD_BYTES_TO_READ,
+				     obj_cmd_rs) < 0)
 	{
           if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
 	    {
@@ -473,12 +534,13 @@ _sdr_cache_get_record (ipmi_sdr_ctx_t ctx,
       uint8_t record_header_buf[IPMI_SDR_MAX_RECORD_LENGTH];
       int sdr_record_header_len;
 
-      if (ipmi_cmd_get_sdr (ipmi_ctx,
-                            *reservation_id,
-                            record_id,
-                            0,
-                            sdr_record_header_length,
-                            obj_cmd_rs) < 0)
+      if (_ipmi_cmd_get_sdr_wrapper (ctx,
+				     ipmi_ctx,
+				     *reservation_id,
+				     record_id,
+				     0,
+				     sdr_record_header_length,
+				     obj_cmd_rs) < 0)
         {
           if (ipmi_ctx_errnum (ipmi_ctx) != IPMI_ERR_BAD_COMPLETION_CODE)
             {
@@ -515,7 +577,7 @@ _sdr_cache_get_record (ipmi_sdr_ctx_t ctx,
         }
 
       if ((sdr_record_header_len = fiid_obj_get_data (obj_cmd_rs,
-                                                      "record_data",
+						      "record_data",
                                                       record_header_buf,
                                                       IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
         {
@@ -564,7 +626,7 @@ _sdr_cache_get_record (ipmi_sdr_ctx_t ctx,
     }
 
   if (FIID_OBJ_GET (obj_cmd_rs,
-                    "next_record_id",
+		    "next_record_id",
                     &val) < 0)
     {
       SDR_FIID_OBJECT_ERROR_TO_SDR_ERRNUM (ctx, obj_cmd_rs);
@@ -580,12 +642,13 @@ _sdr_cache_get_record (ipmi_sdr_ctx_t ctx,
       if ((record_length - offset_into_record) < bytes_to_read)
         bytes_to_read = record_length - offset_into_record;
 
-      if (ipmi_cmd_get_sdr (ipmi_ctx,
-                            *reservation_id,
-                            record_id,
-                            offset_into_record,
-                            bytes_to_read,
-                            obj_cmd_rs) < 0)
+      if (_ipmi_cmd_get_sdr_wrapper (ctx,
+				     ipmi_ctx,
+				     *reservation_id,
+				     record_id,
+				     offset_into_record,
+				     bytes_to_read,
+				     obj_cmd_rs) < 0)
         {
           if (ipmi_ctx_errnum (ipmi_ctx) != IPMI_ERR_BAD_COMPLETION_CODE)
             {
@@ -631,7 +694,7 @@ _sdr_cache_get_record (ipmi_sdr_ctx_t ctx,
         }
 
       if ((record_data_len = fiid_obj_get_data (obj_cmd_rs,
-                                                "record_data",
+						"record_data",
                                                 record_buf + offset_into_record,
                                                 record_buf_len - offset_into_record)) < 0)
         {
@@ -791,7 +854,7 @@ ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
     }
   
   ctx->operation = IPMI_SDR_OPERATION_CREATE_CACHE;
-  
+
   if (cache_create_flags & IPMI_SDR_CACHE_CREATE_FLAGS_OVERWRITE)
     open_flags = O_CREAT | O_TRUNC | O_WRONLY;
   else
