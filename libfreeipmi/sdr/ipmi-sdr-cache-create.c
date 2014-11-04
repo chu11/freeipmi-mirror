@@ -760,8 +760,7 @@ ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
   unsigned int record_ids_count = 0;
   unsigned int cache_create_flags_mask = (IPMI_SDR_CACHE_CREATE_FLAGS_OVERWRITE
 					  | IPMI_SDR_CACHE_CREATE_FLAGS_DUPLICATE_RECORD_ID
-					  | IPMI_SDR_CACHE_CREATE_FLAGS_ASSUME_MAX_SDR_RECORD_COUNT
-					  | IPMI_SDR_CACHE_CREATE_FLAGS_NO_SDR_INFO);
+					  | IPMI_SDR_CACHE_CREATE_FLAGS_ASSUME_MAX_SDR_RECORD_COUNT);
   uint8_t trailer_checksum = 0;
   int fd = -1;
   int rv = -1;
@@ -821,34 +820,18 @@ ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
       goto cleanup;
     }
 
-  /* IPMI Workaround (achu)
-   *
-   * Discovered on Artesyn ATCA-7367
-   *
-   * Get SDR Repository Info is not supported even though it is a mandatory requirement.
-   */
-  if (cache_create_flags & IPMI_SDR_CACHE_CREATE_FLAGS_NO_SDR_INFO)
-    {
-      sdr_version = 0;
-      record_count = USHRT_MAX;	/* two byte field, do max, will be fixed later */
-      most_recent_addition_timestamp = 0;
-      most_recent_erase_timestamp = 0;
-    }
-  else
-    {
-      if (sdr_info (ctx,
-		    ipmi_ctx,
-		    &sdr_version,
-		    &record_count,
-		    &most_recent_addition_timestamp,
-		    &most_recent_erase_timestamp) < 0)
-	goto cleanup;
+  if (sdr_info (ctx,
+		ipmi_ctx,
+		&sdr_version,
+		&record_count,
+		&most_recent_addition_timestamp,
+		&most_recent_erase_timestamp) < 0)
+    goto cleanup;
 
-      if (!record_count)
-	{
-	  SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_CACHE_CREATE_INVALID_RECORD_COUNT);
-	  goto cleanup;
-	}
+  if (!record_count)
+    {
+      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_CACHE_CREATE_INVALID_RECORD_COUNT);
+      goto cleanup;
     }
 
   if (_sdr_cache_header_write (ctx,
@@ -968,8 +951,7 @@ ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
         }
     }
 
-  if (record_count_written != ctx->record_count
-      || cache_create_flags & IPMI_SDR_CACHE_CREATE_FLAGS_NO_SDR_INFO)
+  if (record_count_written != ctx->record_count)
     {
       /*
        * IPMI Workaround (achu)
@@ -983,16 +965,7 @@ ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
        * We will assume that if we reached the end of the SDR record
        * list (i.e. next_record_id == 0xFFFF), a non-zero number of
        * records were written, it's ok and we can continue on.
-       *
        */
-
-      /* IPMI Workaround (achu)
-       *
-       * Discovered on Artesyn ATCA-7367
-       *
-       * Must fix record count for prior workaround assumptions here.
-       */
-
       if (next_record_id == IPMI_SDR_RECORD_ID_LAST
           && record_count_written)
         {
