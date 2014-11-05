@@ -165,7 +165,7 @@ _device_sdr_info_workaround (ipmi_sdr_ctx_t ctx,
   assert (most_recent_addition_timestamp);
   assert (most_recent_erase_timestamp);
 
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_device_id_rq)))
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_device_id_rs)))
     {
       SDR_ERRNO_TO_SDR_ERRNUM (ctx, errno);
       goto cleanup;
