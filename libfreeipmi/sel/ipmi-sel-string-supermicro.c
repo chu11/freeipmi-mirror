@@ -73,6 +73,64 @@
  * return (-1) - error, cleanup and return error
  */
 int
+sel_string_output_supermicro_event_data1_class_sensor_specific_discrete (ipmi_sel_ctx_t ctx,
+									 struct ipmi_sel_entry *sel_entry,
+									 uint8_t sel_record_type,
+									 char *tmpbuf,
+									 unsigned int tmpbuflen,
+									 unsigned int flags,
+									 unsigned int *wlen,
+									 struct ipmi_sel_system_event_record_data *system_event_record_data)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUPERMICRO
+	  || ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND);
+  assert (sel_entry);
+  assert (tmpbuf);
+  assert (tmpbuflen);
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (wlen);
+  assert (system_event_record_data);
+  assert (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC);
+
+  /* OEM Interpretation
+   *
+   * Supermicro X9SCM-F (X9SCM_F)
+   */
+  if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCM_F)
+    {
+      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_SUPERMICRO_AC_POWER)
+        {
+	  char *ac_power_str;
+
+	  switch (system_event_record_data->event_data1)
+	    {
+	    case IPMI_SENSOR_TYPE_OEM_SUPERMICRO_AC_POWER_ON:
+	      ac_power_str = "AC Power On";
+	    default:
+	      ac_power_str = "Unknown";
+	      break;
+	    }
+
+          snprintf (tmpbuf,
+                    tmpbuflen,
+                    "%s",
+		    ac_power_str);
+          
+          return (1);
+        }
+    }
+
+  return (0);
+}
+
+/* return (0) - no OEM match
+ * return (1) - OEM match
+ * return (-1) - error, cleanup and return error
+ */
+int
 sel_string_output_supermicro_event_data1_class_oem (ipmi_sel_ctx_t ctx,
 						    struct ipmi_sel_entry *sel_entry,
 						    uint8_t sel_record_type,
@@ -174,4 +232,3 @@ sel_string_output_supermicro_event_data1_class_oem (ipmi_sel_ctx_t ctx,
 
   return (0);
 }
-

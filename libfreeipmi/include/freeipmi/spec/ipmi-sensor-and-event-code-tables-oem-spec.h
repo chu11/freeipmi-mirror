@@ -1990,6 +1990,11 @@ extern unsigned int ipmi_oem_intel_s2600jf_specific_qpi_link_width_reduced_max_i
 /* achu: Different for SEL, I don't know why */
 #define IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP_SEL_OVERHEAT  0x02
 
+/*
+ * Supermicro X9SCM-F (X9SCM_F)
+ */
+#define IPMI_SENSOR_TYPE_OEM_SUPERMICRO_AC_POWER_ON            0x00
+
 /******************************************* 
  * Wistron                                 *
  *******************************************/

@@ -1,5 +1,17 @@
 2014-11-07 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/spec/ipmi-sensor-types-oem-spec.h,
+	libfreeipmi/include/freeipmi/spec/ipmi-sensor-and-event-code-tables-oem-spec.h,
+	libfreeipmi/sel/ipmi-sel-string.c,
+	libfreeipmi/sel/ipmi-sel-string-supermicro.h,
+	libfreeipmi/sel/ipmi-sel-string-supermicro.c: Support Supermicro
+	X9SCM-F AC Power On SEL event.
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-product-id-spec.h: Add
+	Supermicro X9SCM-F motherboard.
+	
+2014-11-07 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/spec/ipmi-sensor-and-event-code-tables-spec.c: Fix
 	typo. (Found by Werner Fischer).
 	

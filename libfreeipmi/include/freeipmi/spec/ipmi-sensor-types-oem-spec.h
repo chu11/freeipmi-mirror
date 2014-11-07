@@ -166,7 +166,13 @@ extern "C" {
  * Supermicro X9SCM-iiF (X9SCM_IIF)
  */
 /* achu: not official names, named based on use context */
+
 #define IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP 0xC0 
+
+/*
+ * Supermicro X9SCM-F (X9SCM_F)
+ */
+#define IPMI_SENSOR_TYPE_OEM_SUPERMICRO_AC_POWER 0xC8
 
 /******************************************* 
  * Wistron                                 *
