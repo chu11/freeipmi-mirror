@@ -1,3 +1,8 @@
+2014-11-07 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/spec/ipmi-sensor-and-event-code-tables-spec.c: Fix
+	typo. (Found by Werner Fischer).
+	
 2014-11-03 Albert Chu <chu11@llnl.gov>
 
 	* Found by Satya Nishtala <satya at drivescale dot com>
