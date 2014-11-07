@@ -1077,7 +1077,7 @@ const char * const ipmi_sensor_type_session_audit_short[] =
   {
     "Session Activated",
     "Session Deactivated",
-    "Invalid Username of Password",
+    "Invalid Username or Password",
     "Invalid Password Disable",
     NULL
   };
