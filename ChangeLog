@@ -3,7 +3,7 @@
 	* libfreeipmi/driver/ipmi-sunbmc-driver.c,
 	libfreeipmi/driver/ipmi-ssif-driver.c,
 	libfreeipmi/driver/ipmi-openipmi-driver.c: Loop on select() call
-	if interrupted by EINTR.
+	if interrupted by EINTR.  Issue found by Robin Geyer (robin dot geyer at tu-dresden dot de)
 	
 2014-11-07 Albert Chu <chu11@llnl.gov>
 
