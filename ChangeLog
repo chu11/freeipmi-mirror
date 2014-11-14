@@ -1,9 +1,14 @@
+2014-11-14 Albert Chu <chu11@llnl.gov>
+
+	* bmc-info/bmc-info.c (display_system_info_common): Fix cut &
+	paste error handling bug.
+
 2014-11-07 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/spec/ipmi-sensor-and-event-code-tables-spec.c: Fix
 	typo. (Found by Werner Fischer).
 	
-2014-11-03  Albert Chu <chu11@llnl.gov>
+2014-11-03 Albert Chu <chu11@llnl.gov>
 
 	* configure.ac: Increment libfreeipmi version appropriately.
 
