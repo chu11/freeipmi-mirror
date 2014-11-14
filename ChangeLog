@@ -1,3 +1,10 @@
+2014-11-14 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/driver/ipmi-sunbmc-driver.c,
+	libfreeipmi/driver/ipmi-ssif-driver.c,
+	libfreeipmi/driver/ipmi-openipmi-driver.c: Loop on select() call
+	if interrupted by EINTR.
+	
 2014-11-07 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/spec/ipmi-sensor-and-event-code-tables-spec.c: Fix
