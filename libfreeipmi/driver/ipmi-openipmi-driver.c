@@ -489,7 +489,7 @@ _openipmi_read (ipmi_openipmi_ctx_t ctx,
   struct ipmi_system_interface_addr rs_addr;
   struct ipmi_recv rs_packet;
   fd_set read_fds;
-  struct timeval tv;
+  struct timeval tv, tv_orig, start, end, delta;
   int n;
 
   assert (ctx);
@@ -507,15 +507,40 @@ _openipmi_read (ipmi_openipmi_ctx_t ctx,
   tv.tv_sec = IPMI_OPENIPMI_TIMEOUT;
   tv.tv_usec = 0;
 
-  if ((n = select (ctx->device_fd + 1,
-                   &read_fds,
-                   NULL,
-                   NULL,
-                   &tv)) < 0)
+  tv_orig.tv_sec = tv.tv_sec;
+  tv_orig.tv_usec = tv.tv_usec;
+
+  if (gettimeofday (&start, NULL) < 0)
     {
       OPENIPMI_ERRNO_TO_OPENIPMI_ERRNUM (ctx, errno);
       return (-1);
     }
+
+  do {
+    if ((n = select (ctx->device_fd + 1,
+		     &read_fds,
+		     NULL,
+		     NULL,
+		     &tv)) < 0)
+      {
+	if (errno != EINTR)
+	  {
+	    OPENIPMI_ERRNO_TO_OPENIPMI_ERRNUM (ctx, errno);
+	    return (-1);
+	  }
+
+	if (gettimeofday (&end, NULL) < 0)
+	  {
+	    OPENIPMI_ERRNO_TO_OPENIPMI_ERRNUM (ctx, errno);
+	    return (-1);
+	  }
+	
+	/* delta = end - start */
+	timersub (&end, &start, &delta);
+	/* tv = tv_orig - delta */
+	timersub (&tv_orig, &delta, &tv);
+      }
+  } while (n < 0);
 
   if (!n)
     {
