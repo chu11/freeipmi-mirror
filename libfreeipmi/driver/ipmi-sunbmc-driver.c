@@ -489,7 +489,7 @@ _sunbmc_read (ipmi_sunbmc_ctx_t ctx,
   unsigned int rs_buf_len = 0;
 #endif /* !defined(HAVE_SYS_STROPTS_H) */
   fd_set read_fds;
-  struct timeval tv;
+  struct timeval tv, tv_orig, start, end, delta;
   int n;
 
   assert (ctx);
@@ -515,15 +515,40 @@ _sunbmc_read (ipmi_sunbmc_ctx_t ctx,
   tv.tv_sec = IPMI_SUNBMC_TIMEOUT;
   tv.tv_usec = 0;
 
-  if ((n = select (ctx->device_fd + 1,
-                   &read_fds,
-                   NULL,
-                   NULL,
-                   &tv)) < 0)
+  tv_orig.tv_sec = tv.tv_sec;
+  tv_orig.tv_usec = tv.tv_usec;
+
+  if (gettimeofday (&start, NULL) < 0)
     {
       SUNBMC_ERRNO_TO_SUNBMC_ERRNUM (ctx, errno);
       return (-1);
     }
+
+  do {
+    if ((n = select (ctx->device_fd + 1,
+		     &read_fds,
+		     NULL,
+		     NULL,
+		     &tv)) < 0)
+      {
+	if (errno != EINTR)
+	  {
+	    SUNBMC_ERRNO_TO_SUNBMC_ERRNUM (ctx, errno);
+	    return (-1);
+	  }
+
+	if (gettimeofday (&end, NULL) < 0)
+	  {
+	    SUNBMC_ERRNO_TO_SUNBMC_ERRNUM (ctx, errno);
+	    return (-1);
+	  }
+
+	/* delta = end - start */
+	timersub (&end, &start, &delta);
+	/* tv = tv_orig - delta */
+	timersub (&tv_orig, &delta, &tv);
+      }
+  } while (n < 0);
 
   if (!n)
     {
