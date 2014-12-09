@@ -1,5 +1,12 @@
 2014-12-09 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config-category-core-lan-conf-section.c: Fix
+	vlan_id from uint8_t to uint16_t.
+
+	Found by jbd at jbdenis dot net
+	
+2014-12-09 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/: Support Get Device SDR Info, Get Device SDR, and
 	Reserve Device SDR Repository commands in API as needed.
 
