@@ -1,3 +1,17 @@
+FreeIPMI 1.5.1 - 03/01/14
+-------------------------
+Tools - New Features
+--------------------
+
+Tools - Bug Fixes/Minor Changes
+-------------------------------
+
+Libraries
+---------
+
+o Support Get Device SDR Info, Get Device SDR, and Reserve Device SDR
+  Repository commands in libfreeipmi.
+
 FreeIPMI 1.4.1 - 03/01/14
 -------------------------
 

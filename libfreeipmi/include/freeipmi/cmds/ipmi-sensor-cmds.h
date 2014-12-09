@@ -29,6 +29,10 @@ extern "C" {
 #define IPMI_SENSOR_GET_SENSOR_COUNT  0x00
 #define IPMI_SENSOR_GET_SDR_COUNT     0x01
 
+#define IPMI_SENSOR_GET_SDR_INFO_OPERATION_VALID(__val) \
+  (((__val) == IPMI_SENSOR_GET_SENSOR_COUNT \
+    || (__val) == IPMI_SENSOR_GET_SDR_COUNT) ? 1 : 0)
+
 #define IPMI_SENSOR_STATIC_SENSOR_POPULATION  0x0
 #define IPMI_SENSOR_DYNAMIC_SENSOR_POPULATION 0x1
 
@@ -122,6 +126,9 @@ extern fiid_template_t tmpl_cmd_get_device_sdr_info_rs;
 extern fiid_template_t tmpl_cmd_get_device_sdr_rq;
 extern fiid_template_t tmpl_cmd_get_device_sdr_rs;
 
+extern fiid_template_t tmpl_cmd_reserve_device_sdr_repository_rq;
+extern fiid_template_t tmpl_cmd_reserve_device_sdr_repository_rs;
+
 extern fiid_template_t tmpl_cmd_get_sensor_reading_factors_rq;
 extern fiid_template_t tmpl_cmd_get_sensor_reading_factors_rs;
 
@@ -175,6 +182,17 @@ extern fiid_template_t tmpl_cmd_set_sensor_reading_and_event_status_event_fields
 extern fiid_template_t tmpl_cmd_set_sensor_reading_and_event_status_threshold_event_fields_rq;
 extern fiid_template_t tmpl_cmd_set_sensor_reading_and_event_status_discrete_event_fields_rq;
 extern fiid_template_t tmpl_cmd_set_sensor_reading_and_event_status_rs;
+
+int fill_cmd_get_device_sdr_info (uint8_t operation,
+				  fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_get_device_sdr (uint16_t reservation_id,
+			     uint16_t record_id,
+			     uint8_t offset_into_record,
+			     uint8_t bytes_to_read,
+			     fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_reserve_device_sdr_repository (fiid_obj_t obj_cmd_rq);
 
 /* achu: as of IPMI 2.0 hysteresis_mask reserved for future - write as 0xFF */
 int fill_cmd_set_sensor_hysteresis (uint8_t sensor_number,

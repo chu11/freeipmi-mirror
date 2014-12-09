@@ -99,8 +99,25 @@ FIID Template: tmpl_cmd_get_device_sdr_rs
 
     { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
     { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
-    { 16, "record_id", REQUIRED, LENGTH-FIXED }
-    { 4096, "requested_bytes", OPTIONAL, LENGTH-VARIABLE }
+    { 16, "next_record_id", REQUIRED, LENGTH-FIXED }
+    /* 2040 = 255 * 8, 255 b/c bytes_to_read field in request is 1 byte long */
+    { 2040, "record_data", REQUIRED, LENGTH-VARIABLE }
+
+Reserve Device SDR Repository Request
+-------------------------------------
+
+FIID Template: tmpl_cmd_reserve_device_sdr_repository_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED },
+
+Reserve Device SDR Repository Response
+--------------------------------------
+
+FIID Template: tmpl_cmd_reserve_device_sdr_repository_rs
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT },
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT },
+    { 16, "reservation_id", REQUIRED, LENGTH-FIXED },  /* LS byte first */
 
 Get Sensor Reading Factors Request
 ----------------------------------
