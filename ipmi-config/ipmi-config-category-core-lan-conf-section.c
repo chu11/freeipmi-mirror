@@ -42,7 +42,7 @@
 /* convenience struct */
 struct vlan_id
 {
-  uint8_t vlan_id;
+  uint16_t vlan_id;
   uint8_t vlan_id_enable;
 };
 
