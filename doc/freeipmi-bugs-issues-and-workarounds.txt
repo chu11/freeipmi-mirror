@@ -4,7 +4,7 @@ by
 
 Albert Chu
 chu11@llnl.gov
-Last Updated: June 17, 2013
+Last Updated: December 10, 2014
 
 The following are some short descriptions of the issues I've found
 while developing FreeIPMI on various motherboards.  The descriptions
@@ -1227,6 +1227,22 @@ BMC/IPMI Configuration Issue #34: [COMPLIANCE]
   parameter was read only (0x82).
 
   Seen on: Xyratex HB-F8-SRAY
+
+  Resolution: None
+
+BMC/IPMI Configuration Issue #35: [COMPLIANCE]
+
+  User #1 cannot be enabled/disabled.  It is permanently enabled.
+
+  Seen on: Supermicro X10DDW-i 
+
+  Resolution: None
+
+BMC/IPMI Configuration Issue #36: [COMPLIANCE]
+
+  Users > 2 cannot be enabled to use IPMI over LAN.
+
+  Seen on: Supermicro X10DDW-i 
 
   Resolution: None
 
