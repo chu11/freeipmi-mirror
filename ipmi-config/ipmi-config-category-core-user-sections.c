@@ -373,6 +373,33 @@ _set_user_access (ipmi_config_state_data_t *state_data,
                                 ua->session_limit,
                                 obj_cmd_rs) < 0)
     {
+      /* IPMI Workaround
+       *
+       * Supermicro X10DDW-i
+       *
+       * The motherboard contains an illegal starting privilege limit,
+       * leading to an input error on this function.  Grab it and try
+       * again.
+       */
+
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_PARAMETERS)
+	{
+	  if ((kvtmp = ipmi_config_find_keyvalue (section, "Lan_Privilege_Limit")))
+	    ua->privilege_limit = get_privilege_limit_number (kvtmp->value_input);
+	  
+	  if (!(ipmi_cmd_set_user_access (state_data->ipmi_ctx,
+					  channel_number,
+					  ua->user_ipmi_messaging,
+					  ua->user_link_authentication,
+					  ua->user_restricted_to_callback,
+					  IPMI_CHANGE_BITS_YES,
+					  userid,
+					  ua->privilege_limit,
+					  ua->session_limit,
+					  obj_cmd_rs) < 0))
+	    goto out;
+	}
+
       if (comp_code)
         {
           (*comp_code) = 0;
@@ -402,6 +429,7 @@ _set_user_access (ipmi_config_state_data_t *state_data,
       goto cleanup;
     }
 
+ out:
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);

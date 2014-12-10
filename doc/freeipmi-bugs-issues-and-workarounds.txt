@@ -1238,6 +1238,16 @@ BMC/IPMI Configuration Issue #35: [COMPLIANCE]
 
   Resolution: None
 
+BMC/IPMI Configuration Issue #36: [COMPLIANCE] [CONFIG-1]
+
+  Default user privilege limit is RESERVED.  Attempts to
+  modify sub-fields "piecemeal" within the Set User Access command
+  fail.
+
+  Seen on: Supermicro X10DDW-i
+
+  Resolution: Workaround added to work around this situation.
+
 ----------------------------------------------------------------------
 
 -------------------------------------------------------

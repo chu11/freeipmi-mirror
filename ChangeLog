@@ -1,5 +1,10 @@
 2014-12-10 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config-category-core-user-sections.c (_set_user_access):
+	Workaround issue on Supermicro X10DDW-i.
+
+2014-12-10 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config-category-pef-alert-policy-table.c (_set_alert_policy_table):
 	Use convenience function ipmi_config_find_section appropriately.
 	
