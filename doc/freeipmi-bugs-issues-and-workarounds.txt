@@ -1238,14 +1238,6 @@ BMC/IPMI Configuration Issue #35: [COMPLIANCE]
 
   Resolution: None
 
-BMC/IPMI Configuration Issue #36: [COMPLIANCE]
-
-  Users > 2 cannot be enabled to use IPMI over LAN.
-
-  Seen on: Supermicro X10DDW-i 
-
-  Resolution: None
-
 ----------------------------------------------------------------------
 
 -------------------------------------------------------
