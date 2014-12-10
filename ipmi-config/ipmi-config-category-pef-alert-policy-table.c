@@ -237,17 +237,15 @@ _set_alert_policy_table (struct ipmi_config_state_data *state_data,
           struct ipmi_config_section *section;
           struct ipmi_config_keyvalue *kv;
           
-          section = state_data->sections;
-          while (section)
-            {
-              if (!strcasecmp (section_name, section->section_name))
-                break;
-              section = section->next;
-            }
-
-          /* shouldn't be possible */
-          if (!section)
-            goto cleanup;
+	  if (!(section = ipmi_config_find_section (state_data, section_name)))
+	    {
+	      /* This should be impossible */
+	      pstdout_fprintf (state_data->pstate,
+			       stderr,
+			       "Cannot find section '%s'\n",
+			       section_name);
+	      goto cleanup;
+	    }
           
           if ((kv = ipmi_config_find_keyvalue (section,
 					       "Policy_Type")))
