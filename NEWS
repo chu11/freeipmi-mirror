@@ -6,6 +6,7 @@ o Fix typo in SEL session output, "Invalid Username of Password" to
 o Loop on select() call if interrupted by EINTR in openipmi, ssif, and
   sunbmc inband drivers.
 o Fix integer overflow bug in ipmi-config when configure vlan ID > 255.
+o Add workaround for ipmi-config issue on Supermicro X10DDW-i.
 o Fix error handling bug in bmc-info.
 
 FreeIPMI 1.4.6 - 10/29/14

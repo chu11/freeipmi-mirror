@@ -1,3 +1,8 @@
+2014-12-10 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-config/ipmi-config-category-core-user-sections.c (_set_user_access):
+	Workaround issue on Supermicro X10DDW-i.
+
 2014-12-09 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-config/ipmi-config-category-core-lan-conf-section.c: Fix
