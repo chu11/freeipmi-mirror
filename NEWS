@@ -1,4 +1,4 @@
-FreeIPMI 1.4.7 - 10/29/14
+FreeIPMI 1.4.7 - 12/10/14
 -------------------------
 o Fix typo from FRU spec, language "Tegulu" is actually "Telugu".
 o Fix typo in SEL session output, "Invalid Username of Password" to
