@@ -1248,6 +1248,21 @@ BMC/IPMI Configuration Issue #36: [COMPLIANCE] [CONFIG-1]
 
   Resolution: Workaround added to work around this situation.
 
+BMC/IPMI Configuration Issue #37: [COMPLIANCE]
+
+  IPMI LAN session w/ IPMI 1.5 times out after changing a user
+  password within the LAN session.  It is assumed that the new
+  Password is incorrectly being used to hash new authentication codes.
+
+  Seen on: Unknown motherboard specified on mailing list
+
+  Resolution: It appeared for this specific motherboard that it was
+  still accepting request packets using the old Password for the
+  authentication hash but was responding with packets using the new
+  Password for the hash.  Ignoring the authentication code of response
+  packets was sufficient to work around the problem.  It was also
+  discovered that IPMI 2.0 did not have this problem.
+
 ----------------------------------------------------------------------
 
 -------------------------------------------------------
