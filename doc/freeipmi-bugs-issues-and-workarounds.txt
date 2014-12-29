@@ -4,7 +4,7 @@ by
 
 Albert Chu
 chu11@llnl.gov
-Last Updated: December 10, 2014
+Last Updated: December 29, 2014
 
 The following are some short descriptions of the issues I've found
 while developing FreeIPMI on various motherboards.  The descriptions
@@ -1251,17 +1251,16 @@ BMC/IPMI Configuration Issue #36: [COMPLIANCE] [CONFIG-1]
 BMC/IPMI Configuration Issue #37: [COMPLIANCE]
 
   IPMI LAN session w/ IPMI 1.5 times out after changing a user
-  password within the LAN session.  It is assumed that the new
-  Password is incorrectly being used to hash new authentication codes.
+  password within the LAN session.
 
-  Seen on: Unknown motherboard specified on mailing list
+  Seen on: Supermicro X9DRT-HF+
 
-  Resolution: It appeared for this specific motherboard that it was
-  still accepting request packets using the old Password for the
-  authentication hash but was responding with packets using the new
-  Password for the hash.  Ignoring the authentication code of response
-  packets was sufficient to work around the problem.  It was also
-  discovered that IPMI 2.0 did not have this problem.
+  Resolution: It appeared that this motherboard was still accepting
+  request packets using the old Password for the authentication hash
+  but was responding with packets using the new Password for the hash.
+  Ignoring the authentication code of response packets was sufficient
+  to work around the problem.  It was also discovered communicating
+  with IPMI 2.0 worked and did not exhibit this problem.
 
 ----------------------------------------------------------------------
 
