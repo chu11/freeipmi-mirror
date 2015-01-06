@@ -5,12 +5,17 @@
 	version of libgcrypt cannot handle entering this function
 	simulatenously by multiple threads, leading to segfaults.
 
+2015-01-06 Albert Chu <chu11@llnl.gov>
+
+	* common/toolcommon/tool-cmdline-common.c: Fix parsing corner case
+	with --fanout option.
+
 2014-12-10  Albert Chu <chu11@llnl.gov>
 
 	* NEWS, configure.ac: Update for release.
 
 	* Tagged Release-1_4_7
-	
+
 2014-12-10 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-config/ipmi-config-category-core-user-sections.c (_set_user_access):
