@@ -470,6 +470,7 @@ common_parse_opt (int key,
       common_args->consolidate_output = 1;
       break;
     case ARGP_FANOUT_KEY:
+      errno = 0;
       tmp = strtol (arg, &endptr, 10);
       if (errno
 	  || endptr[0] != '\0'
