@@ -1,5 +1,6 @@
 FreeIPMI 1.4.8 - 12/10/14
 -------------------------
+o Fix segfault in crypt code with libgcrypt versions >= 1.6.0.
 o Fix --fanout command line parse bug.
 
 FreeIPMI 1.4.7 - 12/10/14
