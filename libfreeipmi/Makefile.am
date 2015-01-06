@@ -31,6 +31,7 @@ libfreeipmi_la_CPPFLAGS = \
 libfreeipmi_la_LDFLAGS = \
 	-version-info @LIBFREEIPMI_VERSION_INFO@ $(VERSION_FLAGS) \
 	$(OTHER_FLAGS) \
+        $(PTHREAD_LIBS) \
 	@GCRYPT_LIBS@ \
 	-lm 
 
