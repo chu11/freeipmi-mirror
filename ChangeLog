@@ -1,3 +1,10 @@
+2015-01-06 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/libcommon/ipmi-crypt.c (crypt_init): Only call
+	gcry_control w/ GCRYCTL_SET_THREAD_CBS once.  It appears newer
+	version of libgcrypt cannot handle entering this function
+	simulatenously by multiple threads, leading to segfaults.
+	
 2014-12-10 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-config/ipmi-config-category-core-user-sections.c (_set_user_access):

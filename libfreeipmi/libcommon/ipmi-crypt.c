@@ -43,6 +43,11 @@ GCRY_THREAD_OPTION_PTHREAD_IMPL;
 static int crypt_initialized = 0;
 
 #ifdef WITH_ENCRYPTION
+static pthread_mutex_t gcrypt_thread_initialized_mutex = PTHREAD_MUTEX_INITIALIZER;
+static int gcrypt_thread_initialized = 0;
+#endif /* !WITH_ENCRYPTION */
+
+#ifdef WITH_ENCRYPTION
 static int
 _gpg_error_to_errno (gcry_error_t e)
 {
@@ -59,11 +64,35 @@ crypt_init (void)
 {
 #ifdef WITH_ENCRYPTION
   gcry_error_t e;
-
-  if ((e = gcry_control (GCRYCTL_SET_THREAD_CBS, &gcry_threads_pthread)) != GPG_ERR_NO_ERROR)
+  int perr;
+  
+  /* achu:
+   *
+   * For reasons that are unclear to me, gcry_control and
+   * GCRYCTL_SET_THREAD_CBS are no longer reentrant starting with
+   * libgcrypt 1.6.0.  Calling it simultaneously leads to segfaults.
+   *
+   */
+  if ((perr = pthread_mutex_lock (&gcrypt_thread_initialized_mutex)))
     {
-      ERR_TRACE (gcry_strerror (e), e);
-      SET_ERRNO (_gpg_error_to_errno (e));
+      errno = perr;
+      return (-1);
+    }
+
+  if (!gcrypt_thread_initialized)
+    {
+      if ((e = gcry_control (GCRYCTL_SET_THREAD_CBS, &gcry_threads_pthread)) != GPG_ERR_NO_ERROR)
+	{
+	  ERR_TRACE (gcry_strerror (e), e);
+	  SET_ERRNO (_gpg_error_to_errno (e));
+	  return (-1);
+	}
+      gcrypt_thread_initialized++;
+    }
+
+  if ((perr = pthread_mutex_unlock (&gcrypt_thread_initialized_mutex)))
+    {
+      errno = perr;
       return (-1);
     }
 
