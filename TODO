@@ -68,6 +68,10 @@ FreeIPMI new stuff
   - FRU record
   - command extensions
 
+FreeIPMI maybe stuff
+--------------------
+redo ipmipower/ipmiconole using phi accrual failure detector algorithm?
+
 library general
 ---------------
 - merge all libs into one?  would aid debian packaging.
