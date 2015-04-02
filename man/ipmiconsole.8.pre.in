@@ -301,7 +301,6 @@ place to handle this.  The session must be closed and restarted.
 .PP
 Establish a console sesssion with a remote host.
 .PP
-#include <@top_srcdir@/man/manpage-common-known-issues.man>
 
 .if @WITH_DEBUG@ \{
 
