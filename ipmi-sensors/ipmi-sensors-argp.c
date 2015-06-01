@@ -187,13 +187,13 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       tok = strtok (arg, " ,");
       while (tok && cmd_args->record_ids_length < MAX_SENSOR_RECORD_IDS)
         {
-          errno = 0;
           if (!strcasecmp (tok, SENSOR_PARSE_ALL_STRING))
             {
               cmd_args->record_ids_length = 0;
               break;
             }
 
+          errno = 0;
           value = strtol (tok, &endptr, 10);
 
           if (errno
@@ -215,13 +215,13 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       tok = strtok (arg, " ,");
       while (tok && cmd_args->exclude_record_ids_length < MAX_SENSOR_RECORD_IDS)
         {
-          errno = 0;
           if (!strcasecmp (tok, SENSOR_PARSE_NONE_STRING))
             {
               cmd_args->exclude_record_ids_length = 0;
               break;
             }
 
+          errno = 0;
           value = strtol (tok, &endptr, 10);
 
           if (errno

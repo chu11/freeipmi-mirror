@@ -1,3 +1,7 @@
+2015-06-01 Albert Chu <chu11@llnl.gov>
+
+	* Audit and fix all strtol parse corner cases.
+
 2015-06-01 James Buren <ryu0@ymail.com>
 
 	* ipmi-config/ipmi-config-argp.c (_ipmi_config_parse_channel_number):
