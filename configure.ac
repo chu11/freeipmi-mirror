@@ -1,11 +1,11 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT([freeipmi],[1.4.8],[freeipmi-devel@gnu.org])
+AC_INIT([freeipmi],[1.4.9],[freeipmi-devel@gnu.org])
 AC_REVISION([$Id: configure.ac,v 1.208 2010-08-06 21:02:29 chu11 Exp $])
 AC_CONFIG_MACRO_DIR([config])
 
 FREEIPMI_PACKAGE_VERSION_MAJOR=1
 FREEIPMI_PACKAGE_VERSION_MINOR=4
-FREEIPMI_PACKAGE_VERSION_PATCH=8
+FREEIPMI_PACKAGE_VERSION_PATCH=9
 
 AC_SUBST(FREEIPMI_PACKAGE_VERSION_MAJOR)
 AC_SUBST(FREEIPMI_PACKAGE_VERSION_MINOR)
