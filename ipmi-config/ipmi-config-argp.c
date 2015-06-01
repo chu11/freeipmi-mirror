@@ -177,6 +177,7 @@ _ipmi_config_parse_channel_number (char *arg,
   assert (channel_number);
   assert (channel_number_set);
 
+  errno = 0;
   tmp = strtol (arg, &endptr, 0);
   if (errno
       || endptr[0] != '\0')

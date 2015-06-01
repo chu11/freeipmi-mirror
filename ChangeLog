@@ -1,3 +1,8 @@
+2015-06-01 James Buren <ryu0@ymail.com>
+
+	* ipmi-config/ipmi-config-argp.c (_ipmi_config_parse_channel_number):
+	Fix strtol parse corner case.
+	
 2015-04-02 Albert Chu <chu11@llnl.gov>
 
 	* man/ipmiconsole.8.pre.in: Remove duplicate information.  (bug
