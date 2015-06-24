@@ -1474,7 +1474,7 @@ cold-reset with
 #include <@top_srcdir@/man/manpage-common-known-issues.man>
 #include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
 .SH "COPYRIGHT"
-Copyright \(co 2008-2014 FreeIPMI Core Team
+Copyright \(co 2008-2015 FreeIPMI Core Team
 #include <@top_srcdir@/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
 freeipmi(7), ipmi-config(8), ipmi-raw(8)

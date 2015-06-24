@@ -90,7 +90,7 @@ Read LUN, NETFN, command and request data from file as standard input.
 #include <@top_srcdir@/man/manpage-common-known-issues.man>
 #include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
 .SH "COPYRIGHT"
-Copyright \(co 2005-2014 FreeIPMI Core Team
+Copyright \(co 2005-2015 FreeIPMI Core Team
 #include <@top_srcdir@/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
 freeipmi.conf(5), freeipmi(7), ipmi-config(8), ipmi-oem(8)

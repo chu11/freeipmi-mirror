@@ -1,7 +1,7 @@
 /*****************************************************************************\
  *  $Id: ipmiseld.h,v 1.11 2010-02-08 22:02:30 chu11 Exp $
  *****************************************************************************
- *  Copyright (C) 2012-2014 Lawrence Livermore National Security, LLC.
+ *  Copyright (C) 2012-2015 Lawrence Livermore National Security, LLC.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
  *  Written by Albert Chu <chu11@llnl.gov>
  *  LLNL-CODE-559172

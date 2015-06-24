@@ -1,3 +1,7 @@
+2015-06-24 Albert Chu <chu11@llnl.gov>
+
+	* Update copyright year globally.
+	
 2015-06-01 Albert Chu <chu11@llnl.gov>
 
 	* Audit and fix all strtol parse corner cases.

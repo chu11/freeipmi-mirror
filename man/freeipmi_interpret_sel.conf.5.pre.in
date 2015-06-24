@@ -1810,7 +1810,7 @@ to match or the keyword \fIANY\fR to match anything.
 
 #include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
 .SH "COPYRIGHT"
-Copyright (C) 2007-2014 Lawrence Livermore National Security, LLC.
+Copyright (C) 2007-2015 Lawrence Livermore National Security, LLC.
 #include <@top_srcdir@/man/manpage-common-gpl-library-text.man>
 
 .SH "SEE ALSO"

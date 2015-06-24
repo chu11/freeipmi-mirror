@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003-2014 FreeIPMI Core Team
+ * Copyright (C) 2003-2015 FreeIPMI Core Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,7 +46,7 @@
 
 const char *argp_program_version =
   "ipmi-sensors - " PACKAGE_VERSION "\n"
-  "Copyright (C) 2003-2014 FreeIPMI Core Team\n"
+  "Copyright (C) 2003-2015 FreeIPMI Core Team\n"
   "This program is free software; you may redistribute it under the terms of\n"
   "the GNU General Public License.  This program has absolutely no warranty.";
 

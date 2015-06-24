@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003-2014 FreeIPMI Core Team
+ * Copyright (C) 2003-2015 FreeIPMI Core Team
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 /*****************************************************************************\
  *  $Id: ipmi-dcmi-cmds.c,v 1.7 2010-07-28 21:19:56 chu11 Exp $
  *****************************************************************************
- *  Copyright (C) 2009-2014 Lawrence Livermore National Security, LLC.
+ *  Copyright (C) 2009-2015 Lawrence Livermore National Security, LLC.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
  *  Written by Albert Chu <chu11@llnl.gov>
  *  LLNL-CODE-413270

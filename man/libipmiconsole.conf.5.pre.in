@@ -1,7 +1,7 @@
 .\"#############################################################################
 .\"$Id: ipmiconsole.8.pre.in,v 1.52 2010-06-30 21:56:36 chu11 Exp $
 .\"#############################################################################
-.\"  Copyright (C) 2007-2014 Lawrence Livermore National Security, LLC.
+.\"  Copyright (C) 2007-2015 Lawrence Livermore National Security, LLC.
 .\"  Copyright (C) 2006-2007 The Regents of the University of California.
 .\"  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
 .\"  Written by Albert Chu <chu11@llnl.gov>
@@ -138,7 +138,7 @@ Specify default SOL payload instance.  Has range of 1 to 15.
 
 #include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
 .SH COPYRIGHT
-Copyright (C) 2007-2014 Lawrence Livermore National Security, LLC.
+Copyright (C) 2007-2015 Lawrence Livermore National Security, LLC.
 .br
 Copyright (C) 2006-2007 The Regents of the University of California.
 #include <@top_srcdir@/man/manpage-common-gpl-freeipmi-text.man>

@@ -199,7 +199,7 @@ Instead of outputting trap interpretation, send a PET acknowledge using the trap
 #include <@top_srcdir@/man/manpage-common-known-issues.man>
 #include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
 .SH "COPYRIGHT"
-Copyright \(co 2011-2014 FreeIPMI Core Team
+Copyright \(co 2011-2015 FreeIPMI Core Team
 #include <@top_srcdir@/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
 freeipmi(7), bmc-info(8), ipmi-config(8), ipmi-sel(8),
