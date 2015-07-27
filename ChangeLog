@@ -1,3 +1,8 @@
+2015-07-27 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-config/ipmi-config-category-chassis-boot-flags.c (_get_boot_flags):
+	Fix debug message output error.
+	
 2015-06-24 Albert Chu <chu11@llnl.gov>
 
 	* Update copyright year globally.
