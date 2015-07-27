@@ -103,7 +103,7 @@ _get_boot_flags (ipmi_config_state_data_t *state_data,
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: '': %s\n",
+                       "fiid_obj_get: 'boot_flags_persistent': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
