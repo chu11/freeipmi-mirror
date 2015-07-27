@@ -1757,6 +1757,16 @@ DCMI Issue #3: [INTERPRETATION]
   overwritten everytime the string is modified.  This seems to be the
   safest approach.
 
+DCMI Issue #4: [COMPLIANCE]
+
+  The Set Asset Tag command does not return the length of the asset
+  tag written.
+
+  Seen on: Unspecified Supermicro Motherboard
+
+  Resolution: Workaround added to detect this specific situation and
+  adjust appropriately.
+
 ----------------------------------------------------------------------
 
 ------------------------------------

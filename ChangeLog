@@ -1,5 +1,10 @@
 2015-07-27 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config/ipmi-config-category-dcmi-dcmi-conf-section.c (asset_tag_commit):
+	Add workaround for Supermicro motherboard.
+	
+2015-07-27 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config-category-chassis-boot-flags.c (_get_boot_flags):
 	Fix debug message output error.
 	
