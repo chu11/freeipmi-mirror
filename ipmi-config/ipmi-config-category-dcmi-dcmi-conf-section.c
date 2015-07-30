@@ -237,39 +237,6 @@ asset_tag_commit (ipmi_config_state_data_t *state_data,
 	    rv = ret;
 	  
 	  if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	      && ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_IPMI_ERROR
-	      && (ipmi_check_completion_code_success (obj_cmd_rs) == 1))
-	    {
-	      int flag1, flag2;
-
-	      /* IPMI Workaround
-	       *
-	       * On some Supermicro motherboards, the tag length isn't
-	       * returned.
-	       *
-	       * Assume the entire tag has been written below if the
-	       * situation has been seen.
-	       */
-	      
-	      /* Use fiid_obj_get here instead of FIID_OBJ_GET, we
-	       * want to see if the data is available or not
-	       */
-
-	      flag1 = fiid_obj_get (obj_cmd_rs, "group_extension_identification", &val);
-	      flag2 = fiid_obj_get (obj_cmd_rs, "total_asset_tag_length_written", &val);
-
-	      /* achu: If group_extension_identification is
-		 returned but total_asset_tag_length_written
-		 isn't, we assume that the IPMI internal error is
-		 because the motherboard did not return the
-		 total_asset_tag_length_written.  We just assume
-		 all is good.  This code makes me sad .. :'-( */
-	      
-	      if (flag1 == 1 && flag2 == 0)
-		goto done;
-	    }
-
-	  if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
 	      || state_data->prog_data->args->common_args.debug)
 	    pstdout_fprintf (state_data->pstate,
 			     stderr,
@@ -306,7 +273,6 @@ asset_tag_commit (ipmi_config_state_data_t *state_data,
         break;
     }
 
- done:
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
