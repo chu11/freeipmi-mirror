@@ -1764,8 +1764,7 @@ DCMI Issue #4: [COMPLIANCE]
 
   Seen on: Unspecified Supermicro Motherboard
 
-  Resolution: Workaround added to detect this specific situation and
-  adjust appropriately.
+  Resolution: None
 
 ----------------------------------------------------------------------
 
