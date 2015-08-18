@@ -1,3 +1,9 @@
+2015-08-18 Albert Chu <chu11@llnl.gov>
+
+	 * ipmi-sensors/ipmi-sensors-output-common.c (ipmi_sensors_get_thresholds):
+	Handle several additional error cases with getting sensor
+	thresholds.
+	
 2015-07-30 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-config/ipmi-config/ipmi-config-category-dcmi-dcmi-conf-section.c (asset_tag_commit):

@@ -591,6 +591,24 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
           goto cleanup;
         }
 
+      /* Likely error from failed bridge or something similar.  Fall through to SDR */
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+	  && (ipmi_check_completion_code (obj_cmd_rs,
+					  IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE) == 1
+	      || ipmi_check_completion_code (obj_cmd_rs,
+					     IPMI_COMP_CODE_UNSPECIFIED_ERROR) == 1))
+	{
+          if (state_data->prog_data->args->common_args.debug)
+            pstdout_fprintf (state_data->pstate,
+                             stderr,
+                             "Get Sensor Thresholds failed, using SDR information\n");
+	  
+          if (_get_sdr_sensor_thresholds (state_data, obj_cmd_rs) < 0)
+            goto cleanup;
+	  
+          goto continue_get_sensor_thresholds;
+	}
+
       /* IPMI Workaround 
        *
        * HP DL 585
