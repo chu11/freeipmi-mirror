@@ -1,5 +1,6 @@
 FreeIPMI 1.4.10 - XX/XX/15
 --------------------------
+o Handle several error handling corner cases in ipmi-sensors.
 
 FreeIPMI 1.4.9 - 06/01/15
 -------------------------
