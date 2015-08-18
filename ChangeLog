@@ -1,3 +1,8 @@
+2015-08-18 Craig <agspoon@gmail.com>
+
+	* ipmi-sensors/ipmi-sensors-output-common.c (ipmi_sensors_get_thresholds):
+	Handle additional corner case reading sensor thresholds.
+	
 2015-08-18 Albert Chu <chu11@llnl.gov>
 
 	 * ipmi-sensors/ipmi-sensors-output-common.c (ipmi_sensors_get_thresholds):

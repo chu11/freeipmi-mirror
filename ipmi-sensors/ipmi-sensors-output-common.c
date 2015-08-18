@@ -615,10 +615,15 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
        *
        * Get Sensor Thresholds is an optional IPMI command.  If it's
        * not supported, use the SDR information.
+       *
+       * Unspecified Motherboard
+       *
+       * Similar to HP but w/ Parameter out of Range error
        */
       if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
-          && (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_INVALID_COMMAND) == 1))
-        {
+          && (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_INVALID_COMMAND) == 1
+	      || ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE) == 1))
+	{
           if (state_data->prog_data->args->common_args.debug)
             pstdout_fprintf (state_data->pstate,
                              stderr,
