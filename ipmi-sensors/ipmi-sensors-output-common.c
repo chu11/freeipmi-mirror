@@ -616,7 +616,7 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
        * Get Sensor Thresholds is an optional IPMI command.  If it's
        * not supported, use the SDR information.
        *
-       * Unspecified Motherboard
+       * Vadatech VT001 BMC w/ ATCA blades
        *
        * Similar to HP but w/ Parameter out of Range error
        */
