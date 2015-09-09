@@ -1145,6 +1145,11 @@ Presently, it can get the status of power supplies 1 through 3.
 Command confirmed to work on Supermicro X8DTU, Supermicro X8STi, and
 Supermicro X9DRW.
 .TP
+.B get-power-supply-status2 \fIps_num\fR
+This OEM command will get the status of a regular power supply.
+Presently, it can get the status of power supplies 1 and 2.  Command
+confirmed to work on Supermicro X10DRU-i+.
+.TP
 .B get-pmbus-power-supply-status \fIps_num\fR
 This OEM command will get the status of a PMBus based power supply.
 Presently, it can get the status of power supplies 1 through 3.

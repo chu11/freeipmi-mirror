@@ -453,6 +453,96 @@ ipmi_oem_supermicro_get_power_supply_status (ipmi_oem_state_data_t *state_data)
 }
 
 int
+ipmi_oem_supermicro_get_power_supply_status2 (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  int rs_len;
+  int rv = -1;
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 1);
+
+  if (strcasecmp (state_data->prog_data->args->oem_options[0], "1")
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "2"))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s'\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[0]);
+      goto cleanup;
+    }
+
+  /* Supermicro OEM
+   * From Supermicro Engineer 
+   *
+   * Request 
+   *
+   * 0x06 - network function
+   * 0x52 - cmd (master read/write)
+   * 0x07 - (channel = 0, bus id = 3, bus type = private) 
+   * 0x?? - slave address
+   *      - 0xb0 - ps 1 
+   *      - 0xb2 - ps 2 
+   * 0x01 - read count
+   * 0x0c - data to write ... no idea why 0x0c
+   *
+   * Response 
+   *
+   * 0x52 - cmd
+   * 0x?? - Completion Code
+   * 0x?? - 0x01 - good
+   *      - 0x00 - bad
+   */
+  
+  bytes_rq[0] = IPMI_CMD_MASTER_WRITE_READ;
+  bytes_rq[1] = IPMI_OEM_SUPERMICRO_GET_POWER_SUPPLY_STATUS2_CHANNEL;
+  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "1"))
+    bytes_rq[2] = IPMI_OEM_SUPERMICRO_GET_POWER_SUPPLY_STATUS2_PS1;
+  else /* (!strcasecmp (state_data->prog_data->args->oem_options[0], "2")) */
+    bytes_rq[2] = IPMI_OEM_SUPERMICRO_GET_POWER_SUPPLY_STATUS2_PS2;
+  bytes_rq[3] = 1;
+  bytes_rq[4] = IPMI_OEM_SUPERMICRO_GET_POWER_SUPPLY_STATUS2_MAGIC;
+
+  if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                              0, /* lun */
+			      IPMI_NET_FN_APP_RQ,
+                              bytes_rq, /* data */
+                              5, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                   bytes_rs,
+                                                   rs_len,
+						   3,
+                                                   IPMI_CMD_MASTER_WRITE_READ,
+                                                   IPMI_NET_FN_APP_RQ,
+                                                   NULL) < 0)
+    goto cleanup;
+
+  if (bytes_rs[2] == IPMI_OEM_SUPERMICRO_GET_POWER_SUPPLY_STATUS2_GOOD)
+    pstdout_printf (state_data->pstate, "good\n");
+  else if (bytes_rs[2] == IPMI_OEM_SUPERMICRO_GET_POWER_SUPPLY_STATUS2_BAD)
+    pstdout_printf (state_data->pstate, "bad\n");
+  else
+    pstdout_printf (state_data->pstate, "unknown\n");
+  
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
 ipmi_oem_supermicro_get_pmbus_power_supply_status (ipmi_oem_state_data_t *state_data)
 {
   uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];

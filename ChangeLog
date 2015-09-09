@@ -1,3 +1,10 @@
+2015-09-09 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/: Support get-power-supply-status2 on Supermicro.
+
+	* libfreeipmi/util/ipmi-error-util.c (ipmi_completion_code_strerror_r):
+	Support Master read/write specific error codes.
+
 2015-08-18 Craig <agspoon@gmail.com>
 
 	* ipmi-sensors/ipmi-sensors-output-common.c (ipmi_sensors_get_thresholds):
