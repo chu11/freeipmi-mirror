@@ -82,9 +82,10 @@ extern "C" {
 #define IPMI_FRU_AREA_TYPE_MULTIRECORD_ASF_REMOTE_CONTROL            11
 #define IPMI_FRU_AREA_TYPE_MULTIRECORD_EXTENDED_DC_OUTPUT            12
 #define IPMI_FRU_AREA_TYPE_MULTIRECORD_EXTENDED_DC_LOAD              13
-#define IPMI_FRU_AREA_TYPE_MULTIRECORD_OEM                           14
-#define IPMI_FRU_AREA_TYPE_MULTIRECORD_UNKNOWN                       15
-#define IPMI_FRU_AREA_TYPE_RAW_DATA                                  16
+#define IPMI_FRU_AREA_TYPE_MULTIRECORD_NVM_EXPRESS                   14
+#define IPMI_FRU_AREA_TYPE_MULTIRECORD_OEM                           15
+#define IPMI_FRU_AREA_TYPE_MULTIRECORD_UNKNOWN                       16
+#define IPMI_FRU_AREA_TYPE_RAW_DATA                                  17
 
 /* multirecord length field is 1 byte => max 256 chars.  Round up to
  * 512 for good measure.

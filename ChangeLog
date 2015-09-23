@@ -1,3 +1,9 @@
+2015-09-23 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/record-format/ipmi-fru-information-record-format.h,
+	libfreeipmi/fru/: Update FRU Multirecord Area for NVM Express
+	record range (IPMI Errata 7).
+	
 2015-09-15 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Update get-power-supply-status2 on Supermicro based

@@ -1296,7 +1296,9 @@ _read_multirecord_area_data (ipmi_fru_ctx_t ctx,
       (*area_type) = IPMI_FRU_AREA_TYPE_MULTIRECORD_EXTENDED_DC_LOAD;
       break;
     default:
-      if (IPMI_FRU_MULTIRECORD_AREA_TYPE_IS_OEM (record_type_id))
+      if (IPMI_FRU_MULTIRECORD_AREA_TYPE_IS_NVM_EXPRESS (record_type_id))
+	(*area_type) = IPMI_FRU_AREA_TYPE_MULTIRECORD_NVM_EXPRESS;
+      else if (IPMI_FRU_MULTIRECORD_AREA_TYPE_IS_OEM (record_type_id))
 	(*area_type) = IPMI_FRU_AREA_TYPE_MULTIRECORD_OEM;
       else
 	(*area_type) = IPMI_FRU_AREA_TYPE_MULTIRECORD_UNKNOWN;

@@ -6,9 +6,11 @@ Tools - New Features
 Tools - Bug Fixes/Minor Changes
 -------------------------------
 
+
 Libraries
 ---------
-
+o Update for IPMI 2.0 Errata 7.
+  - Support/handle FRU Multirecord NVM Express type.
 o Support Get Device SDR Info, Get Device SDR, and Reserve Device SDR
   Repository commands in libfreeipmi.
 

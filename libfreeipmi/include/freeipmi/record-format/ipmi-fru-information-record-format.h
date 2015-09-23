@@ -73,12 +73,18 @@ extern "C" {
 #define IPMI_FRU_MULTIRECORD_AREA_TYPE_ASF_REMOTE_CONTROL             0x08
 #define IPMI_FRU_MULTIRECORD_AREA_TYPE_EXTENDED_DC_OUTPUT             0x09
 #define IPMI_FRU_MULTIRECORD_AREA_TYPE_EXTENDED_DC_LOAD               0x0A
+#define IPMI_FRU_MULTIRECORD_AREA_TYPE_NVM_EXPRESS_MIN                0x0B
+#define IPMI_FRU_MULTIRECORD_AREA_TYPE_NVM_EXPRESS_MAX                0x0F
 #define IPMI_FRU_MULTIRECORD_AREA_TYPE_OEM_MIN                        0xC0
 #define IPMI_FRU_MULTIRECORD_AREA_TYPE_OEM_MAX                        0xFF
 
 #define IPMI_FRU_MULTIRECORD_AREA_TYPE_VALID(__multirecord_area_type)                    \
   (((__multirecord_area_type) >= IPMI_FRU_MULTIRECORD_AREA_TYPE_POWER_SUPPLY_INFORMATION \
     && (__multirecord_area_type) <= IPMI_FRU_MULTIRECORD_AREA_TYPE_EXTENDED_DC_LOAD) ? 1 : 0)
+
+#define IPMI_FRU_MULTIRECORD_AREA_TYPE_IS_NVM_EXPRESS(__multirecord_area_type)  \
+  (((__multirecord_area_type) >= IPMI_FRU_MULTIRECORD_AREA_TYPE_NVM_EXPRESS_MIN \
+    && (__multirecord_area_type) <= IPMI_FRU_MULTIRECORD_AREA_TYPE_NVM_EXPRESS_MAX) ? 1 : 0)
 
 #define IPMI_FRU_MULTIRECORD_AREA_TYPE_IS_OEM(__multirecord_area_type)  \
   (((__multirecord_area_type) >= IPMI_FRU_MULTIRECORD_AREA_TYPE_OEM_MIN \
