@@ -1,3 +1,8 @@
+2015-09-24 
+
+	* ipmi-locate/ipmi-locate.c (main): Fix probing issue on arm64
+	systems.
+	
 2015-09-23 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/record-format/ipmi-fru-information-record-format.h,

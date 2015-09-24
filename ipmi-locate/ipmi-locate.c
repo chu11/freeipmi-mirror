@@ -537,9 +537,11 @@ main (int argc, char **argv)
       exit (EXIT_FAILURE);
     }
 
+#ifndef __aarch64__
   dmidecode_probe_display (ctx);
   smbios_probe_display (ctx);
   acpi_probe_display (ctx);
+#endif
   pci_probe_display (ctx);
   if (cmd_args.defaults)
     defaults_display (ctx);
