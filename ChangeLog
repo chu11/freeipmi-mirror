@@ -1,3 +1,8 @@
+2015-09-24 
+
+	* ipmi-locate/ipmi-locate.c (main): Fix probing issue on arm64
+	systems.
+	
 2015-09-15 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/: Update get-power-supply-status2 on Supermicro based

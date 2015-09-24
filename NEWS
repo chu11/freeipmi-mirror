@@ -1,6 +1,7 @@
 FreeIPMI 1.4.10 - XX/XX/15
 --------------------------
 o In ipmi-oem, support Supermicro get-power-supply-status2.
+o In ipmi-locate, fix probing issue on arm64.
 o Handle several additional completion code error message in libfreeipmi.
 o Handle several error handling corner cases in ipmi-sensors.
 
