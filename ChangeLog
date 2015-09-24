@@ -1,6 +1,6 @@
-2015-09-24 
+2015-09-24 Newell Jensen <newell.jensen@gmail.com>
 
-	* ipmi-locate/ipmi-locate.c (main): Fix probing issue on arm64
+	* ipmi-locate/ipmi-locate.c (main): Fix probing issue on arm32 & arm64
 	systems.
 	
 2015-09-23 Albert Chu <chu11@llnl.gov>
