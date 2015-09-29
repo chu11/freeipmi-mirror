@@ -513,6 +513,7 @@ ipmi_locate_dmidecode_get_device_info (ipmi_locate_ctx_t ctx,
 
       free (buf);
     }
+#if !defined(__arm__) && !defined(__aarch64__)
   else
     {
       if (!(buf = _mem_chunk (ctx, 0xF0000, 0x10000, DEFAULT_MEM_DEV)))
@@ -549,6 +550,7 @@ ipmi_locate_dmidecode_get_device_info (ipmi_locate_ctx_t ctx,
 
       free (buf);
     }
+#endif
   
   if (found)
     {

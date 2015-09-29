@@ -434,6 +434,9 @@ ipmi_locate_smbios_get_device_info (ipmi_locate_ctx_t ctx,
   uint64_t strobed;
   struct ipmi_locate_info linfo;
 
+#if defined(__arm__) || defined(__aarch64__)
+  return (-1);
+#else
   if (!ctx || ctx->magic != IPMI_LOCATE_CTX_MAGIC)
     {
       ERR_TRACE (ipmi_locate_ctx_errormsg (ctx), ipmi_locate_ctx_errnum (ctx));
@@ -513,4 +516,5 @@ ipmi_locate_smbios_get_device_info (ipmi_locate_ctx_t ctx,
  cleanup:
   free (bufp);
   return (-1);
+#endif
 }

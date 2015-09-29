@@ -1483,6 +1483,9 @@ ipmi_locate_acpi_spmi_get_device_info (ipmi_locate_ctx_t ctx,
   uint64_t val;
   int rv = -1;
 
+#if defined(__arm__) || defined(__aarch64__)
+  return (-1);
+#else
   if (!ctx || ctx->magic != IPMI_LOCATE_CTX_MAGIC)
     {
       ERR_TRACE (ipmi_locate_ctx_errormsg (ctx), ipmi_locate_ctx_errnum (ctx));
@@ -1666,4 +1669,5 @@ ipmi_locate_acpi_spmi_get_device_info (ipmi_locate_ctx_t ctx,
   fiid_obj_destroy (obj_acpi_table_hdr);
   fiid_obj_destroy (obj_acpi_spmi_table_descriptor);
   return (rv);
+#endif /* defined(__arm__) || defined(__aarch64__) */
 }
