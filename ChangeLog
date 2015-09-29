@@ -1,3 +1,11 @@
+2015-09-29 Newell Jensen <newell.jensen@gmail.com>
+
+	* ipmi-locate/ipmi-locate.c (main),
+	libfreeipmi/locate/ipmi-locate-smbios.c (ipmi_locate_smbios_get_device_info),
+	libfreeipmi/locate/ipmi-locate-acpi-spmi.c (ipmi_locate_acpi_spmi_get_device_info),
+	libfreeipmi/locate/ipmi-locate-dmidecode.c (ipmi_locate_dmidecode_get_device_info):
+	Fix ipmi locate probing on arm32 & arm64.
+
 2015-09-24 Newell Jensen <newell.jensen@gmail.com>
 
 	* ipmi-locate/ipmi-locate.c (main): Fix probing issue on arm32 & arm64
