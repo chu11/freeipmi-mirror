@@ -101,10 +101,16 @@ sel_string_output_intel_sensor_name (ipmi_sel_ctx_t ctx,
    * Intel S2600JF/Appro 512X
    * Quanta QSSC-S4R/Appro GB812X-CN
    * (Quanta motherboard maintains Intel manufacturer ID)
+   * Intel S2600KP
+   * Intel S2600WT2
+   * Intel S2600WTT
    */
   if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB
       || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600JF
-      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R)
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600KP
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT)
     {
       int nmret;
 
@@ -486,10 +492,16 @@ sel_string_output_intel_event_data1_class_oem (ipmi_sel_ctx_t ctx,
    * Intel S2600JF/Appro 512X
    * Quanta QSSC-S4R/Appro GB812X-CN
    * (Quanta motherboard maintains Intel manufacturer ID)
+   * Intel S2600KP
+   * Intel S2600WT2
+   * Intel S2600WTT
    */
   if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB
       || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600JF
-      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R)
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600KP
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT)
     {
       int nmret;
 
@@ -1413,10 +1425,16 @@ sel_string_output_intel_event_data2_class_oem (ipmi_sel_ctx_t ctx,
    * Intel S2600JF/Appro 512X
    * Quanta QSSC-S4R/Appro GB812X-CN
    * (Quanta motherboard maintains Intel manufacturer ID)
+   * Intel S2600KP
+   * Intel S2600WT2
+   * Intel S2600WTT
    */
   if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB
       || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600JF
-      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R)
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600KP
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT)
     {
       int nmret;
 
@@ -2454,10 +2472,16 @@ sel_string_output_intel_event_data3_class_oem (ipmi_sel_ctx_t ctx,
    * Intel S2600JF/Appro 512X
    * Quanta QSSC-S4R/Appro GB812X-CN
    * (Quanta motherboard maintains Intel manufacturer ID)
+   * Intel S2600KP
+   * Intel S2600WT2
+   * Intel S2600WTT
    */
   if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB
       || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600JF
-      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R)
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600KP
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT)
     {
       int nmret;
 

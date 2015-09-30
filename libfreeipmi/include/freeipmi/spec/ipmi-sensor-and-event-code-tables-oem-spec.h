@@ -1610,6 +1610,9 @@ extern unsigned int ipmi_oem_intel_s2600jf_specific_qpi_link_width_reduced_max_i
  * Inventec 5442/Dell Xanadu III
  * Quanta S99Q/Dell FS12-TY
  * Quanta QSSC-S4R/Appro GB812X-CN
+ * Intel S2600KP
+ * Intel S2600WT2
+ * Intel S2600WTT
  */
 
 /* Event Reading Type Code = IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_NODE_MANAGER_EXCEPTION_EVENT

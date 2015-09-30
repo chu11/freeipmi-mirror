@@ -2,6 +2,9 @@
 
 	* libfreeipmi/include/freeipmi/spec/ipmi-product-id-spec.h: Add
 	Intel product id's for S2600KP, S2600WT2, S2600WTT.
+
+	* libfreeipmi/sel/ipmi-sel-string-intel.c: Support Intel Node
+	Manager SEL events on Intel S2600KP, S2600WT2, S2600WTT.
 	
 2015-09-29 Newell Jensen <newell.jensen@gmail.com>
 
