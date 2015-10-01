@@ -5,6 +5,9 @@
 
 	* libfreeipmi/sel/ipmi-sel-string-intel.c: Support Intel Node
 	Manager SEL events on Intel S2600KP, S2600WT2, S2600WTT.
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-sensor-numbers-oem-spec.h:
+	Add sensor numbers for Intel S2600KP, S2600WT2, S2600WTT.
 	
 2015-09-29 Newell Jensen <newell.jensen@gmail.com>
 
