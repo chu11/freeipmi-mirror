@@ -2,6 +2,7 @@ FreeIPMI 1.5.1 - 03/01/14
 -------------------------
 Tools - New Features
 --------------------
+o Support ipmi-sel OEM interpretation of Linux kernel panics.
 
 Tools - Bug Fixes/Minor Changes
 -------------------------------

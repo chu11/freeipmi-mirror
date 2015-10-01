@@ -1,3 +1,12 @@
+2015-09-30 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-slave-address-spec.h,
+	libfreeipmi/include/freeipmi/record-format/ipmi-sel-oem-record-format.h,
+	libfreeipmi/sel/ipmi-sel-string.c,
+	libfreeipmi/sel/ipmi-sel-string-linux-kernel.h,
+	libfreeipmi/sel/ipmi-sel-string-linux-kernel.c: Support Linux
+	kernel panics in SEL.
+
 2015-09-29 Newell Jensen <newell.jensen@gmail.com>
 
 	* ipmi-locate/ipmi-locate.c (main),

@@ -197,6 +197,8 @@ libfreeipmi_la_SOURCES = \
 	sel/ipmi-sel-string-intel-node-manager.h \
 	sel/ipmi-sel-string-inventec.c \
 	sel/ipmi-sel-string-inventec.h \
+	sel/ipmi-sel-string-linux-kernel.c \
+	sel/ipmi-sel-string-linux-kernel.h \
 	sel/ipmi-sel-string-quanta.c \
 	sel/ipmi-sel-string-quanta.h \
 	sel/ipmi-sel-string-sun.c \

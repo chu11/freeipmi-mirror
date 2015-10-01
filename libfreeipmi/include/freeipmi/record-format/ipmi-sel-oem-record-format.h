@@ -83,6 +83,12 @@ extern "C" {
 #define IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_RECEIVED_ERR_FATAL_MESSAGE_FROM_DOWNSTREAM_DEVICE                              0x94
 #define IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_OUTBOUND_SWITCH_HEADER_QUEUE_PARITY_ERROR                                      0x97
 
+/******************************************* 
+ * Linux Kernel                            *
+ *******************************************/
+
+#define IPMI_SEL_RECORD_TYPE_NON_TIMESTAMPED_OEM_LINUX_KERNEL_PANIC 0xF0
+
 #ifdef __cplusplus
 }
 #endif

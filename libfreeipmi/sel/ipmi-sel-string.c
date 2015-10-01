@@ -45,6 +45,7 @@
 #include "freeipmi/interpret/ipmi-interpret.h"
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
 #include "freeipmi/record-format/ipmi-sel-record-format.h"
+#include "freeipmi/record-format/ipmi-sel-oem-record-format.h"
 #include "freeipmi/sdr/ipmi-sdr.h"
 #include "freeipmi/spec/ipmi-event-reading-type-code-spec.h"
 #include "freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h"
@@ -69,6 +70,7 @@
 #include "ipmi-sel-string-fujitsu.h"
 #include "ipmi-sel-string-intel.h"
 #include "ipmi-sel-string-inventec.h"
+#include "ipmi-sel-string-linux-kernel.h"
 #include "ipmi-sel-string-quanta.h"
 #include "ipmi-sel-string-sun.h"
 #include "ipmi-sel-string-supermicro.h"
@@ -2550,6 +2552,28 @@ _output_oem_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data);
   assert (oem_rv);
 
+  /* Linux kernel case is special, not vendor specific */
+  if (system_event_record_data->generator_id == IPMI_SLAVE_ADDRESS_LINUX_KERNEL
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OS_CRITICAL_STOP
+      && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+      && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+    {
+      if ((ret = sel_string_output_linux_kernel_event_data2_event_data3 (ctx,
+									 sel_entry,
+									 sel_record_type,
+									 buf,
+									 buflen,
+									 flags,
+									 wlen,
+									 system_event_record_data,
+									 oem_rv)) < 0)
+	return (-1);
+      
+      if (ret)
+	return (1);
+    }
+      
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL)
     {
       if ((ret = sel_string_output_dell_event_data2_event_data3 (ctx,
@@ -3249,6 +3273,26 @@ _output_oem_interpreted_record_data (ipmi_sel_ctx_t ctx,
   assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (oem_rv);
+
+  /* Linux kernel case is special, not vendor specific
+   *
+   * achu: hoping no vendor violates this
+   */
+  if (sel_record_type == IPMI_SEL_RECORD_TYPE_NON_TIMESTAMPED_OEM_LINUX_KERNEL_PANIC)
+    {
+      if ((ret = sel_string_output_linux_kernel_oem_record_data (ctx,
+								 sel_entry,
+								 sel_record_type,
+								 tmpbuf,
+								 tmpbuflen,
+								 flags,
+								 wlen,
+								 oem_rv)) < 0)
+	return (-1);
+      
+      if (ret)
+	return (1);
+    }
 
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU)
     {

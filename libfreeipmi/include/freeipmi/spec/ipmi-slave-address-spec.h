@@ -51,6 +51,8 @@ extern "C" {
 
 #define IPMI_LAN_SOFTWARE_ID_REMOTE_CONSOLE_SOFTWARE    0x81
 
+#define IPMI_SLAVE_ADDRESS_LINUX_KERNEL                 0x21
+
 #ifdef __cplusplus
 }
 #endif
