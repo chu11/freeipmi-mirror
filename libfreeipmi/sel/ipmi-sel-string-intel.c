@@ -1271,121 +1271,115 @@ sel_string_output_intel_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
       if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY
 	  && (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_POWER_SUPPLY1_STATUS
 	      || system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_POWER_SUPPLY2_STATUS)
-	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
-	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_POWER_SUPPLY_POWER_SUPPLY_FAILURE_DETECTED)
+	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC)
 	{
-	  char *power_supply_status_str;
-
-	  switch (system_event_record_data->event_data2)
+	  if (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_POWER_SUPPLY_POWER_SUPPLY_FAILURE_DETECTED)
 	    {
-	    case IPMI_SENSOR_TYPE_POWER_SUPPLY_POWER_SUPPLY_FAILURE_DETECTED_EVENT_DATA2_OUTPUT_VOLTAGE_FAULT:
-	      power_supply_status_str = "Output voltage fault";
-	      break;
-	    case IPMI_SENSOR_TYPE_POWER_SUPPLY_POWER_SUPPLY_FAILURE_DETECTED_EVENT_DATA2_OUTPUT_POWER_FAULT:
-	      power_supply_status_str = "Output power fault";
-	      break;
-	    case IPMI_SENSOR_TYPE_POWER_SUPPLY_POWER_SUPPLY_FAILURE_DETECTED_EVENT_DATA2_OUTPUT_OVER_CURRENT_FAULT:
-	      power_supply_status_str = "Output over-current fault";
-	      break;
-	    case IPMI_SENSOR_TYPE_POWER_SUPPLY_POWER_SUPPLY_FAILURE_DETECTED_EVENT_DATA2_OVER_TEMPERATURE_FAULT:
-	      power_supply_status_str = "Over-temperature fault";
-	      break;
-	    case IPMI_SENSOR_TYPE_POWER_SUPPLY_POWER_SUPPLY_FAILURE_DETECTED_EVENT_DATA2_FAN_FAULT:
-	      power_supply_status_str = "Fan fault";
-	      break;
-	    default:
-	      power_supply_status_str = "Unknown";
+	      char *power_supply_status_str;
+
+	      switch (system_event_record_data->event_data2)
+		{
+		case IPMI_SENSOR_TYPE_POWER_SUPPLY_POWER_SUPPLY_FAILURE_DETECTED_EVENT_DATA2_OUTPUT_VOLTAGE_FAULT:
+		  power_supply_status_str = "Output voltage fault";
+		  break;
+		case IPMI_SENSOR_TYPE_POWER_SUPPLY_POWER_SUPPLY_FAILURE_DETECTED_EVENT_DATA2_OUTPUT_POWER_FAULT:
+		  power_supply_status_str = "Output power fault";
+		  break;
+		case IPMI_SENSOR_TYPE_POWER_SUPPLY_POWER_SUPPLY_FAILURE_DETECTED_EVENT_DATA2_OUTPUT_OVER_CURRENT_FAULT:
+		  power_supply_status_str = "Output over-current fault";
+		  break;
+		case IPMI_SENSOR_TYPE_POWER_SUPPLY_POWER_SUPPLY_FAILURE_DETECTED_EVENT_DATA2_OVER_TEMPERATURE_FAULT:
+		  power_supply_status_str = "Over-temperature fault";
+		  break;
+		case IPMI_SENSOR_TYPE_POWER_SUPPLY_POWER_SUPPLY_FAILURE_DETECTED_EVENT_DATA2_FAN_FAULT:
+		  power_supply_status_str = "Fan fault";
+		  break;
+		default:
+		  power_supply_status_str = "Unknown";
+		}
+
+	      snprintf (tmpbuf,
+			tmpbuflen,
+			"%s",
+			power_supply_status_str);
+	  
+	      return (1);
 	    }
 
-	  snprintf (tmpbuf,
-		    tmpbuflen,
-		    "%s",
-		    power_supply_status_str);
-	  
-	  return (1);
-	}
-
-      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY
-	  && (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_POWER_SUPPLY1_STATUS
-	      || system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_POWER_SUPPLY2_STATUS)
-	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
-	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_POWER_SUPPLY_PREDICTIVE_FAILURE)
-	{
-	  char *power_supply_status_str;
-
-	  switch (system_event_record_data->event_data2)
+	  if (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_POWER_SUPPLY_PREDICTIVE_FAILURE)
 	    {
-	    case IPMI_SENSOR_TYPE_POWER_SUPPLY_PREDICTIVE_FAILURE_EVENT_DATA2_OUTPUT_VOLTAGE_WARNING:
-	      power_supply_status_str = "Output voltage warning";
-	      break;
-	    case IPMI_SENSOR_TYPE_POWER_SUPPLY_PREDICTIVE_FAILURE_EVENT_DATA2_OUTPUT_POWER_WARNING:
-	      power_supply_status_str = "Output power warning";
-	      break;
-	    case IPMI_SENSOR_TYPE_POWER_SUPPLY_PREDICTIVE_FAILURE_EVENT_DATA2_OUTPUT_OVER_CURRENT_WARNING:
-	      power_supply_status_str = "Output over-current warning";
-	      break;
-	    case IPMI_SENSOR_TYPE_POWER_SUPPLY_PREDICTIVE_FAILURE_EVENT_DATA2_OVER_TEMPERATURE_WARNING:
-	      power_supply_status_str = "Over-temperature warning";
-	      break;
-	    case IPMI_SENSOR_TYPE_POWER_SUPPLY_PREDICTIVE_FAILURE_EVENT_DATA2_FAN_WARNING:
-	      power_supply_status_str = "Fan warning";
-	      break;
-	    case IPMI_SENSOR_TYPE_POWER_SUPPLY_PREDICTIVE_FAILURE_EVENT_DATA2_INPUT_UNDER_VOLTAGE_WARNING:
-	      power_supply_status_str = "Input under-voltage warning";
-	      break;
-	    case IPMI_SENSOR_TYPE_POWER_SUPPLY_PREDICTIVE_FAILURE_EVENT_DATA2_INPUT_OVER_CURRENT_WARNING:
-	      power_supply_status_str = "Input over-current warning";
-	      break;
-	    case IPMI_SENSOR_TYPE_POWER_SUPPLY_PREDICTIVE_FAILURE_EVENT_DATA2_INPUT_OVER_POWER_WARNING:
-	      power_supply_status_str = "Input over-power warning";
-	      break;
-	    default:
-	      power_supply_status_str = "Unknown";
+	      char *power_supply_status_str;
+
+	      switch (system_event_record_data->event_data2)
+		{
+		case IPMI_SENSOR_TYPE_POWER_SUPPLY_PREDICTIVE_FAILURE_EVENT_DATA2_OUTPUT_VOLTAGE_WARNING:
+		  power_supply_status_str = "Output voltage warning";
+		  break;
+		case IPMI_SENSOR_TYPE_POWER_SUPPLY_PREDICTIVE_FAILURE_EVENT_DATA2_OUTPUT_POWER_WARNING:
+		  power_supply_status_str = "Output power warning";
+		  break;
+		case IPMI_SENSOR_TYPE_POWER_SUPPLY_PREDICTIVE_FAILURE_EVENT_DATA2_OUTPUT_OVER_CURRENT_WARNING:
+		  power_supply_status_str = "Output over-current warning";
+		  break;
+		case IPMI_SENSOR_TYPE_POWER_SUPPLY_PREDICTIVE_FAILURE_EVENT_DATA2_OVER_TEMPERATURE_WARNING:
+		  power_supply_status_str = "Over-temperature warning";
+		  break;
+		case IPMI_SENSOR_TYPE_POWER_SUPPLY_PREDICTIVE_FAILURE_EVENT_DATA2_FAN_WARNING:
+		  power_supply_status_str = "Fan warning";
+		  break;
+		case IPMI_SENSOR_TYPE_POWER_SUPPLY_PREDICTIVE_FAILURE_EVENT_DATA2_INPUT_UNDER_VOLTAGE_WARNING:
+		  power_supply_status_str = "Input under-voltage warning";
+		  break;
+		case IPMI_SENSOR_TYPE_POWER_SUPPLY_PREDICTIVE_FAILURE_EVENT_DATA2_INPUT_OVER_CURRENT_WARNING:
+		  power_supply_status_str = "Input over-current warning";
+		  break;
+		case IPMI_SENSOR_TYPE_POWER_SUPPLY_PREDICTIVE_FAILURE_EVENT_DATA2_INPUT_OVER_POWER_WARNING:
+		  power_supply_status_str = "Input over-power warning";
+		  break;
+		default:
+		  power_supply_status_str = "Unknown";
+		}
+
+	      snprintf (tmpbuf,
+			tmpbuflen,
+			"%s",
+			power_supply_status_str);
+	  
+	      return (1);
 	    }
 
-	  snprintf (tmpbuf,
-		    tmpbuflen,
-		    "%s",
-		    power_supply_status_str);
-	  
-	  return (1);
-	}
-
-      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY
-	  && (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_POWER_SUPPLY1_STATUS
-	      || system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_POWER_SUPPLY2_STATUS)
-	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
-	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_POWER_SUPPLY_CONFIGURATION_ERROR)
-	{
-	  char *power_supply_status_str;
-
-	  switch (system_event_record_data->event_data2)
+	  if (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_POWER_SUPPLY_CONFIGURATION_ERROR)
 	    {
-	    case IPMI_SENSOR_TYPE_POWER_SUPPLY_CONFIGURATION_ERROR_EVENT_DATA2_BMC_CANNOT_ACCESS_PMBUS:
-	      power_supply_status_str = "The BMC cannot access the PMBus device on the PSU but its FRU device is responding";
-	      break;
-	    case IPMI_SENSOR_TYPE_POWER_SUPPLY_CONFIGURATION_ERROR_EVENT_DATA2_PMBUS_REVISION_NOT_SUPPORTED:
-	      power_supply_status_str = "The PMBUS_REVISION command returns a version number that is not supported";
-	      break;
-	    case IPMI_SENSOR_TYPE_POWER_SUPPLY_CONFIGURATION_ERROR_EVENT_DATA2_PMBUS_REVISION_ERROR:
-	      power_supply_status_str = "The PMBus device does not successfully respond to the PMBUS_REVISION command";
-	      break;
-	    case IPMI_SENSOR_TYPE_POWER_SUPPLY_CONFIGURATION_ERROR_EVENT_DATA2_PSU_INCOMPATIBLE:
-	      power_supply_status_str = "ThE PSU is incompatible with one or more PSUs that are present in the system";
-	      break;
-	    case IPMI_SENSOR_TYPE_POWER_SUPPLY_CONFIGURATION_ERROR_EVENT_DATA2_PSU_FW_DEGRADED:
-	      power_supply_status_str = "The PSU FW is operating in a degraded mode (likely due to a failed firmware update)";
-	      break;
-	    default:
-	      power_supply_status_str = "Unknown";
-	    }
+	      char *power_supply_status_str;
 
-	  snprintf (tmpbuf,
-		    tmpbuflen,
-		    "%s",
-		    power_supply_status_str);
+	      switch (system_event_record_data->event_data2)
+		{
+		case IPMI_SENSOR_TYPE_POWER_SUPPLY_CONFIGURATION_ERROR_EVENT_DATA2_BMC_CANNOT_ACCESS_PMBUS:
+		  power_supply_status_str = "The BMC cannot access the PMBus device on the PSU but its FRU device is responding";
+		  break;
+		case IPMI_SENSOR_TYPE_POWER_SUPPLY_CONFIGURATION_ERROR_EVENT_DATA2_PMBUS_REVISION_NOT_SUPPORTED:
+		  power_supply_status_str = "The PMBUS_REVISION command returns a version number that is not supported";
+		  break;
+		case IPMI_SENSOR_TYPE_POWER_SUPPLY_CONFIGURATION_ERROR_EVENT_DATA2_PMBUS_REVISION_ERROR:
+		  power_supply_status_str = "The PMBus device does not successfully respond to the PMBUS_REVISION command";
+		  break;
+		case IPMI_SENSOR_TYPE_POWER_SUPPLY_CONFIGURATION_ERROR_EVENT_DATA2_PSU_INCOMPATIBLE:
+		  power_supply_status_str = "ThE PSU is incompatible with one or more PSUs that are present in the system";
+		  break;
+		case IPMI_SENSOR_TYPE_POWER_SUPPLY_CONFIGURATION_ERROR_EVENT_DATA2_PSU_FW_DEGRADED:
+		  power_supply_status_str = "The PSU FW is operating in a degraded mode (likely due to a failed firmware update)";
+		  break;
+		default:
+		  power_supply_status_str = "Unknown";
+		}
+
+	      snprintf (tmpbuf,
+			tmpbuflen,
+			"%s",
+			power_supply_status_str);
 	  
-	  return (1);
+	      return (1);
+	    }
 	}
     }
 
