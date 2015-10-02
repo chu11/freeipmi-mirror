@@ -1279,19 +1279,19 @@ sel_string_output_intel_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 
 	      switch (system_event_record_data->event_data2)
 		{
-		case IPMI_SENSOR_TYPE_POWER_SUPPLY_POWER_SUPPLY_FAILURE_DETECTED_EVENT_DATA2_OUTPUT_VOLTAGE_FAULT:
+		case IPMI_SENSOR_TYPE_POWER_SUPPLY_POWER_SUPPLY_FAILURE_DETECTED_EVENT_DATA2_OEM_INTEL_E52600V3_OUTPUT_VOLTAGE_FAULT:
 		  power_supply_status_str = "Output voltage fault";
 		  break;
-		case IPMI_SENSOR_TYPE_POWER_SUPPLY_POWER_SUPPLY_FAILURE_DETECTED_EVENT_DATA2_OUTPUT_POWER_FAULT:
+		case IPMI_SENSOR_TYPE_POWER_SUPPLY_POWER_SUPPLY_FAILURE_DETECTED_EVENT_DATA2_OEM_INTEL_E52600V3_OUTPUT_POWER_FAULT:
 		  power_supply_status_str = "Output power fault";
 		  break;
-		case IPMI_SENSOR_TYPE_POWER_SUPPLY_POWER_SUPPLY_FAILURE_DETECTED_EVENT_DATA2_OUTPUT_OVER_CURRENT_FAULT:
+		case IPMI_SENSOR_TYPE_POWER_SUPPLY_POWER_SUPPLY_FAILURE_DETECTED_EVENT_DATA2_OEM_INTEL_E52600V3_OUTPUT_OVER_CURRENT_FAULT:
 		  power_supply_status_str = "Output over-current fault";
 		  break;
-		case IPMI_SENSOR_TYPE_POWER_SUPPLY_POWER_SUPPLY_FAILURE_DETECTED_EVENT_DATA2_OVER_TEMPERATURE_FAULT:
+		case IPMI_SENSOR_TYPE_POWER_SUPPLY_POWER_SUPPLY_FAILURE_DETECTED_EVENT_DATA2_OEM_INTEL_E52600V3_OVER_TEMPERATURE_FAULT:
 		  power_supply_status_str = "Over-temperature fault";
 		  break;
-		case IPMI_SENSOR_TYPE_POWER_SUPPLY_POWER_SUPPLY_FAILURE_DETECTED_EVENT_DATA2_FAN_FAULT:
+		case IPMI_SENSOR_TYPE_POWER_SUPPLY_POWER_SUPPLY_FAILURE_DETECTED_EVENT_DATA2_OEM_INTEL_E52600V3_FAN_FAULT:
 		  power_supply_status_str = "Fan fault";
 		  break;
 		default:
@@ -1312,28 +1312,28 @@ sel_string_output_intel_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 
 	      switch (system_event_record_data->event_data2)
 		{
-		case IPMI_SENSOR_TYPE_POWER_SUPPLY_PREDICTIVE_FAILURE_EVENT_DATA2_OUTPUT_VOLTAGE_WARNING:
+		case IPMI_SENSOR_TYPE_POWER_SUPPLY_PREDICTIVE_FAILURE_EVENT_DATA2_OEM_INTEL_E52600V3_OUTPUT_VOLTAGE_WARNING:
 		  power_supply_status_str = "Output voltage warning";
 		  break;
-		case IPMI_SENSOR_TYPE_POWER_SUPPLY_PREDICTIVE_FAILURE_EVENT_DATA2_OUTPUT_POWER_WARNING:
+		case IPMI_SENSOR_TYPE_POWER_SUPPLY_PREDICTIVE_FAILURE_EVENT_DATA2_OEM_INTEL_E52600V3_OUTPUT_POWER_WARNING:
 		  power_supply_status_str = "Output power warning";
 		  break;
-		case IPMI_SENSOR_TYPE_POWER_SUPPLY_PREDICTIVE_FAILURE_EVENT_DATA2_OUTPUT_OVER_CURRENT_WARNING:
+		case IPMI_SENSOR_TYPE_POWER_SUPPLY_PREDICTIVE_FAILURE_EVENT_DATA2_OEM_INTEL_E52600V3_OUTPUT_OVER_CURRENT_WARNING:
 		  power_supply_status_str = "Output over-current warning";
 		  break;
-		case IPMI_SENSOR_TYPE_POWER_SUPPLY_PREDICTIVE_FAILURE_EVENT_DATA2_OVER_TEMPERATURE_WARNING:
+		case IPMI_SENSOR_TYPE_POWER_SUPPLY_PREDICTIVE_FAILURE_EVENT_DATA2_OEM_INTEL_E52600V3_OVER_TEMPERATURE_WARNING:
 		  power_supply_status_str = "Over-temperature warning";
 		  break;
-		case IPMI_SENSOR_TYPE_POWER_SUPPLY_PREDICTIVE_FAILURE_EVENT_DATA2_FAN_WARNING:
+		case IPMI_SENSOR_TYPE_POWER_SUPPLY_PREDICTIVE_FAILURE_EVENT_DATA2_OEM_INTEL_E52600V3_FAN_WARNING:
 		  power_supply_status_str = "Fan warning";
 		  break;
-		case IPMI_SENSOR_TYPE_POWER_SUPPLY_PREDICTIVE_FAILURE_EVENT_DATA2_INPUT_UNDER_VOLTAGE_WARNING:
+		case IPMI_SENSOR_TYPE_POWER_SUPPLY_PREDICTIVE_FAILURE_EVENT_DATA2_OEM_INTEL_E52600V3_INPUT_UNDER_VOLTAGE_WARNING:
 		  power_supply_status_str = "Input under-voltage warning";
 		  break;
-		case IPMI_SENSOR_TYPE_POWER_SUPPLY_PREDICTIVE_FAILURE_EVENT_DATA2_INPUT_OVER_CURRENT_WARNING:
+		case IPMI_SENSOR_TYPE_POWER_SUPPLY_PREDICTIVE_FAILURE_EVENT_DATA2_OEM_INTEL_E52600V3_INPUT_OVER_CURRENT_WARNING:
 		  power_supply_status_str = "Input over-current warning";
 		  break;
-		case IPMI_SENSOR_TYPE_POWER_SUPPLY_PREDICTIVE_FAILURE_EVENT_DATA2_INPUT_OVER_POWER_WARNING:
+		case IPMI_SENSOR_TYPE_POWER_SUPPLY_PREDICTIVE_FAILURE_EVENT_DATA2_OEM_INTEL_E52600V3_INPUT_OVER_POWER_WARNING:
 		  power_supply_status_str = "Input over-power warning";
 		  break;
 		default:
@@ -1354,19 +1354,19 @@ sel_string_output_intel_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 
 	      switch (system_event_record_data->event_data2)
 		{
-		case IPMI_SENSOR_TYPE_POWER_SUPPLY_CONFIGURATION_ERROR_EVENT_DATA2_BMC_CANNOT_ACCESS_PMBUS:
+		case IPMI_SENSOR_TYPE_POWER_SUPPLY_CONFIGURATION_ERROR_EVENT_DATA2_OEM_INTEL_E52600V3_BMC_CANNOT_ACCESS_PMBUS:
 		  power_supply_status_str = "The BMC cannot access the PMBus device on the PSU but its FRU device is responding";
 		  break;
-		case IPMI_SENSOR_TYPE_POWER_SUPPLY_CONFIGURATION_ERROR_EVENT_DATA2_PMBUS_REVISION_NOT_SUPPORTED:
+		case IPMI_SENSOR_TYPE_POWER_SUPPLY_CONFIGURATION_ERROR_EVENT_DATA2_OEM_INTEL_E52600V3_PMBUS_REVISION_NOT_SUPPORTED:
 		  power_supply_status_str = "The PMBUS_REVISION command returns a version number that is not supported";
 		  break;
-		case IPMI_SENSOR_TYPE_POWER_SUPPLY_CONFIGURATION_ERROR_EVENT_DATA2_PMBUS_REVISION_ERROR:
+		case IPMI_SENSOR_TYPE_POWER_SUPPLY_CONFIGURATION_ERROR_EVENT_DATA2_OEM_INTEL_E52600V3_PMBUS_REVISION_ERROR:
 		  power_supply_status_str = "The PMBus device does not successfully respond to the PMBUS_REVISION command";
 		  break;
-		case IPMI_SENSOR_TYPE_POWER_SUPPLY_CONFIGURATION_ERROR_EVENT_DATA2_PSU_INCOMPATIBLE:
+		case IPMI_SENSOR_TYPE_POWER_SUPPLY_CONFIGURATION_ERROR_EVENT_DATA2_OEM_INTEL_E52600V3_PSU_INCOMPATIBLE:
 		  power_supply_status_str = "ThE PSU is incompatible with one or more PSUs that are present in the system";
 		  break;
-		case IPMI_SENSOR_TYPE_POWER_SUPPLY_CONFIGURATION_ERROR_EVENT_DATA2_PSU_FW_DEGRADED:
+		case IPMI_SENSOR_TYPE_POWER_SUPPLY_CONFIGURATION_ERROR_EVENT_DATA2_OEM_INTEL_E52600V3_PSU_FW_DEGRADED:
 		  power_supply_status_str = "The PSU FW is operating in a degraded mode (likely due to a failed firmware update)";
 		  break;
 		default:
@@ -1380,6 +1380,60 @@ sel_string_output_intel_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 	  
 	      return (1);
 	    }
+	}
+
+      /* Document "System Event Log Troubleshooting Guide for PCSD Platforms Based on Intel Xeon Processor E5 2600 V3 Product Families"
+       *
+       * says 90h = SSB Thermal Trip
+       *
+       * But SSB Thermal Trip is 0x0D while 0x90 is VRD Over Temperature
+       *
+       * Given context, I believe it is VRD Over Temperature
+       */
+      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_TEMPERATURE
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_VRD_OVER_TEMPERATURE
+	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_LIMIT
+	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_LIMIT_EXCEEDED)
+	{
+	  char cpu_str[INTEL_EVENT_BUFFER_LENGTH + 1];
+	  uint8_t cpu_bitmask;
+	  unsigned int wlen = 0;
+
+	  memset (cpu_str, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
+
+	  cpu_bitmask = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_TEMPERATURE_EVENT_DATA2_OEM_INTEL_E52600V3_PROCESSOR_VRD_HOT_BITMAP_BITMASK);
+	  cpu_bitmask >>= IPMI_SENSOR_TYPE_TEMPERATURE_EVENT_DATA2_OEM_INTEL_E52600V3_PROCESSOR_VRD_HOT_BITMAP_SHIFT;
+
+	  if (cpu_bitmask & IPMI_SENSOR_TYPE_TEMPERATURE_EVENT_DATA2_OEM_INTEL_E52600V3_PROCESSOR_VRD_HOT_BITMAP_CPU1)
+	    {
+	      if (sel_string_strcat_comma_separate (cpu_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "CPU1"))
+		return (1);
+	    }
+
+	  if (cpu_bitmask & IPMI_SENSOR_TYPE_TEMPERATURE_EVENT_DATA2_OEM_INTEL_E52600V3_PROCESSOR_VRD_HOT_BITMAP_CPU2)
+	    {
+	      if (sel_string_strcat_comma_separate (cpu_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "CPU2"))
+		return (1);
+	    }
+
+	  if (cpu_bitmask & IPMI_SENSOR_TYPE_TEMPERATURE_EVENT_DATA2_OEM_INTEL_E52600V3_PROCESSOR_VRD_HOT_BITMAP_CPU3)
+	    {
+	      if (sel_string_strcat_comma_separate (cpu_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "CPU3"))
+		return (1);
+	    }
+
+	  if (cpu_bitmask & IPMI_SENSOR_TYPE_TEMPERATURE_EVENT_DATA2_OEM_INTEL_E52600V3_PROCESSOR_VRD_HOT_BITMAP_CPU4)
+	    {
+	      if (sel_string_strcat_comma_separate (cpu_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "CPU4"))
+		return (1);
+	    }
+	  
+	  snprintf (tmpbuf,
+                    tmpbuflen,
+		    "CPU = %s",
+		    cpu_str);
+	  
+	  return (1);
 	}
     }
 
@@ -2505,6 +2559,184 @@ sel_string_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 
     }
   
+   /* OEM Interpretation
+    *
+    * Intel S2600KP
+    * Intel S2600WT2
+    * Intel S2600WTT
+    */
+  if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600KP
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT)
+    {
+      /* Document "System Event Log Troubleshooting Guide for PCSD Platforms Based on Intel Xeon Processor E5 2600 V3 Product Families"
+       *
+       * says 90h = SSB Thermal Trip
+       *
+       * But SSB Thermal Trip is 0x0D while 0x90 is VRD Over Temperature
+       *
+       * Given context, I believe it is VRD Over Temperature
+       */
+      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_TEMPERATURE
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_VRD_OVER_TEMPERATURE
+	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_LIMIT
+	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_LIMIT_EXCEEDED)
+	{
+	  char memory_str[INTEL_EVENT_BUFFER_LENGTH + 1];
+	  uint8_t memory_bitmask;
+	  unsigned int wlen = 0;
+
+	  memset (memory_str, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
+
+	  memory_bitmask = system_event_record_data->event_data3;
+
+	  if (memory_bitmask & IPMI_SENSOR_TYPE_TEMPERATURE_EVENT_DATA3_OEM_INTEL_E52600V3_MEMORY_VRD_HOT_BITMAP_CPU1_DIMM_CHANNEL_1_2)
+	    {
+	      if (sel_string_strcat_comma_separate (memory_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "CPU1 - DIMM Channel 1/2"))
+		return (1);
+	    }
+
+	  if (memory_bitmask & IPMI_SENSOR_TYPE_TEMPERATURE_EVENT_DATA3_OEM_INTEL_E52600V3_MEMORY_VRD_HOT_BITMAP_CPU1_DIMM_CHANNEL_3_4)
+	    {
+	      if (sel_string_strcat_comma_separate (memory_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "CPU1 - DIMM Channel 3/4"))
+		return (1);
+	    }
+
+	  if (memory_bitmask & IPMI_SENSOR_TYPE_TEMPERATURE_EVENT_DATA3_OEM_INTEL_E52600V3_MEMORY_VRD_HOT_BITMAP_CPU2_DIMM_CHANNEL_1_2)
+	    {
+	      if (sel_string_strcat_comma_separate (memory_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "CPU2 - DIMM Channel 1/2"))
+		return (1);
+	    }
+
+	  if (memory_bitmask & IPMI_SENSOR_TYPE_TEMPERATURE_EVENT_DATA3_OEM_INTEL_E52600V3_MEMORY_VRD_HOT_BITMAP_CPU2_DIMM_CHANNEL_3_4)
+	    {
+	      if (sel_string_strcat_comma_separate (memory_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "CPU2 - DIMM Channel 3/4"))
+		return (1);
+	    }
+	  
+	  if (memory_bitmask & IPMI_SENSOR_TYPE_TEMPERATURE_EVENT_DATA3_OEM_INTEL_E52600V3_MEMORY_VRD_HOT_BITMAP_CPU3_DIMM_CHANNEL_1_2)
+	    {
+	      if (sel_string_strcat_comma_separate (memory_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "CPU3 - DIMM Channel 1/2"))
+		return (1);
+	    }
+
+	  if (memory_bitmask & IPMI_SENSOR_TYPE_TEMPERATURE_EVENT_DATA3_OEM_INTEL_E52600V3_MEMORY_VRD_HOT_BITMAP_CPU3_DIMM_CHANNEL_3_4)
+	    {
+	      if (sel_string_strcat_comma_separate (memory_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "CPU3 - DIMM Channel 3/4"))
+		return (1);
+	    }
+
+	  if (memory_bitmask & IPMI_SENSOR_TYPE_TEMPERATURE_EVENT_DATA3_OEM_INTEL_E52600V3_MEMORY_VRD_HOT_BITMAP_CPU4_DIMM_CHANNEL_1_2)
+	    {
+	      if (sel_string_strcat_comma_separate (memory_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "CPU4 - DIMM Channel 1/2"))
+		return (1);
+	    }
+
+	  if (memory_bitmask & IPMI_SENSOR_TYPE_TEMPERATURE_EVENT_DATA3_OEM_INTEL_E52600V3_MEMORY_VRD_HOT_BITMAP_CPU4_DIMM_CHANNEL_3_4)
+	    {
+	      if (sel_string_strcat_comma_separate (memory_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "CPU4 - DIMM Channel 3/4"))
+		return (1);
+	    }
+
+	  snprintf (tmpbuf,
+                    tmpbuflen,
+		    "Memory = %s",
+		    memory_str);
+	  
+	  return (1);
+	}
+
+      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+	  && (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PROCESSOR1_THERMAL_TRIP
+	      || system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PROCESSOR2_THERMAL_TRIP
+	      || system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PROCESSOR3_THERMAL_TRIP
+	      || system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PROCESSOR4_THERMAL_TRIP)
+	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CRITICAL_OVERTEMPERATURE)
+	{
+	  uint8_t socket_id;
+	  uint8_t channel;
+	  uint8_t dimm;
+	  char *cpu_str;
+	  char channel_char;
+	  char *dimm_str;
+
+	  socket_id = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_E52600V3_SOCKET_ID_BITMASK);
+	  socket_id >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_E52600V3_SOCKET_ID_SHIFT;
+
+	  channel = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_E52600V3_CHANNEL_BITMASK);
+	  channel >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_E52600V3_CHANNEL_SHIFT;
+
+	  dimm = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_E52600V3_DIMM_BITMASK);
+	  dimm >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_E52600V3_DIMM_SHIFT;
+
+	  switch (socket_id)
+	    {
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_E52600V3_SOCKET_ID_CPU1:
+	      cpu_str = "CPU1";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_E52600V3_SOCKET_ID_CPU2:
+	      cpu_str = "CPU2";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_E52600V3_SOCKET_ID_CPU3:
+	      cpu_str = "CPU3";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_E52600V3_SOCKET_ID_CPU4:
+	      cpu_str = "CPU4";
+	      break;
+	    default:
+	      cpu_str = "Unknown";
+	      break;
+	    }
+
+	  /* channel 0-3 maps to A-D for CPU1, E-H for CPU2, J-M for CPU3, N, P, R, T for CPU4 */
+	  switch (socket_id)
+	    {
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_E52600V3_SOCKET_ID_CPU1:
+	      channel_char = 'A' + channel;
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_E52600V3_SOCKET_ID_CPU2:
+	      channel_char = 'E' + channel;
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_E52600V3_SOCKET_ID_CPU3:
+	      channel_char = 'J' + channel;
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_E52600V3_SOCKET_ID_CPU4:
+	      /* For some reason it skips chars around here */
+	      channel_char = 'N' + channel * 2;
+	      break;
+	    default:
+	      channel_char = '?';
+	      break;
+	    }
+	  
+	  switch (dimm)
+	    {
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_E52600V3_DIMM_1:
+	      dimm_str = "Dimm 1";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_E52600V3_DIMM_2:
+	      dimm_str = "Dimm 2";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_E52600V3_DIMM_3:
+	      dimm_str = "Dimm 3";
+	      break;
+	    default:
+	      dimm_str = "Unknown";
+	      break;
+	    }
+
+	  snprintf (tmpbuf,
+		    tmpbuflen,
+		    "CPU = %s, Channel = %c, Dimm = %s",
+		    cpu_str,
+		    channel_char,
+		    dimm_str);
+
+	  return (1);
+	}
+    }
+
   return (0);
 }
 
