@@ -1268,7 +1268,8 @@ sel_string_output_intel_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
       || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
       || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT)
     {
-      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY
+      if (system_event_record_data->generator_id == IPMI_SLAVE_ADDRESS_BMC
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY
 	  && (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_POWER_SUPPLY1_STATUS
 	      || system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_POWER_SUPPLY2_STATUS)
 	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC)
@@ -1390,7 +1391,8 @@ sel_string_output_intel_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
        *
        * Given context, I believe it is VRD Over Temperature
        */
-      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_TEMPERATURE
+      if (system_event_record_data->generator_id == IPMI_SLAVE_ADDRESS_BMC
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_TEMPERATURE
 	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_VRD_OVER_TEMPERATURE
 	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_LIMIT
 	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_LIMIT_EXCEEDED)
@@ -1436,7 +1438,8 @@ sel_string_output_intel_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 	  return (1);
 	}
 
-      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PROCESSOR
+      if (system_event_record_data->generator_id == IPMI_SLAVE_ADDRESS_BMC
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PROCESSOR
 	  && (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PROCESSOR1_STATUS
 	      || system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PROCESSOR2_STATUS
 	      || system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PROCESSOR3_STATUS
@@ -1466,7 +1469,8 @@ sel_string_output_intel_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 	  return (1);
 	}
 
-      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PROCESSOR
+      if (system_event_record_data->generator_id == IPMI_SLAVE_ADDRESS_BMC
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PROCESSOR
 	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_INTERNAL_ERROR
 	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
 	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED)
@@ -1500,7 +1504,8 @@ sel_string_output_intel_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 	  return (1);
 	}
 
-      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PROCESSOR
+      if (system_event_record_data->generator_id == IPMI_SLAVE_ADDRESS_BMC
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PROCESSOR
 	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PROCESSOR_ERR2_TIMEOUT
 	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
 	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED)
@@ -2679,7 +2684,8 @@ sel_string_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
        *
        * Given context, I believe it is VRD Over Temperature
        */
-      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_TEMPERATURE
+      if (system_event_record_data->generator_id == IPMI_SLAVE_ADDRESS_BMC
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_TEMPERATURE
 	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_VRD_OVER_TEMPERATURE
 	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_LIMIT
 	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_LIMIT_EXCEEDED)
@@ -2748,7 +2754,8 @@ sel_string_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 	  return (1);
 	}
 
-      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+      if (system_event_record_data->generator_id == IPMI_SLAVE_ADDRESS_BMC
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
 	  && (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PROCESSOR1_THERMAL_TRIP
 	      || system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PROCESSOR2_THERMAL_TRIP
 	      || system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PROCESSOR3_THERMAL_TRIP
@@ -2838,7 +2845,8 @@ sel_string_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 	  return (1);
 	}
 
-      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PROCESSOR
+      if (system_event_record_data->generator_id == IPMI_SLAVE_ADDRESS_BMC
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PROCESSOR
 	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_INTERNAL_ERROR
 	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
 	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED
@@ -2874,7 +2882,8 @@ sel_string_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 	  return (1);
 	}
 
-      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH
+      if (system_event_record_data->generator_id == IPMI_SLAVE_ADDRESS_BMC
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH
 	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_AUTO_CONFIG_STATUS
 	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
 	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED)
