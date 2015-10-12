@@ -1465,6 +1465,39 @@ sel_string_output_intel_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 	  
 	  return (1);
 	}
+
+      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PROCESSOR
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_INTERNAL_ERROR
+	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE)
+	{
+	  char *str;
+
+	  switch (system_event_record_data->event_data2)
+	    {
+	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_E52600V3_UNKNOWN:
+	      str = "Unknown";
+	      break;
+	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_E52600V3_CATERR:
+	      str = "CATERR";
+	      break;
+	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_E52600V3_CPU_CORE_ERROR:
+	      str = "CPU Core Error";
+	      break;
+	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_E52600V3_MSID_MISMATCH:
+	      str = "MSID Mismatch";
+	      break;
+	    default:
+	      str = "Unknown OEM code"; /* to differentiate from above */
+	      break;
+	    }
+
+	  snprintf (tmpbuf,
+                    tmpbuflen,
+		    "%s",
+		    str);
+	  
+	  return (1);
+	}
     }
 
   return (0);
@@ -2763,6 +2796,41 @@ sel_string_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 		    channel_char,
 		    dimm_str);
 
+	  return (1);
+	}
+
+      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PROCESSOR
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_INTERNAL_ERROR
+	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
+	  && system_event_record_data->event_data2 == IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_E52600V3_CATERR)
+	{
+	  char *str;
+
+	  /* If technically a bitmap, but documentation indicates only one bit can be set, we'll just use a switch for clarity */
+	  switch (system_event_record_data->event_data3)
+	    {
+	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA3_OEM_INTEL_CPU1:
+	      str = "CPU1";
+	      break;
+	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA3_OEM_INTEL_CPU2:
+	      str = "CPU2";
+	      break;
+	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA3_OEM_INTEL_CPU3:
+	      str = "CPU3";
+	      break;
+	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA3_OEM_INTEL_CPU4:
+	      str = "CPU4";
+	      break;
+	    default:
+	      str = "Unknown";
+	      break;
+	    }
+
+	  snprintf (tmpbuf,
+                    tmpbuflen,
+		    "%s caused CATERR",
+		    str);
+	  
 	  return (1);
 	}
     }
