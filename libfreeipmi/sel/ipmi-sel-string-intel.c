@@ -2873,6 +2873,47 @@ sel_string_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 	  
 	  return (1);
 	}
+
+      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_AUTO_CONFIG_STATUS
+	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
+	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED)
+	{
+	  uint8_t auto_config_error_bitmask;
+	  char *str;
+
+	  auto_config_error_bitmask = (system_event_record_data->event_data3 & IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_MANAGEMENT_HEALTH_AUTO_CONFIG_ERROR_EVENT_DATA3_BITMASK);
+	  auto_config_error_bitmask >>= IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_MANAGEMENT_HEALTH_AUTO_CONFIG_ERROR_EVENT_DATA3_SHIFT;
+
+	  switch (auto_config_error_bitmask)
+	    {
+	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_MANAGEMENT_HEALTH_AUTO_CONFIG_ERROR_EVENT_DATA3_CFG_SYNTAX_ERROR:
+	      str = "CFG syntax error";
+	      break;
+	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_MANAGEMENT_HEALTH_AUTO_CONFIG_ERROR_EVENT_DATA3_CHASSIS_AUTO_DETECT_ERROR:
+	      str = "Chassis auto-detect error";
+	      break;
+	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_MANAGEMENT_HEALTH_AUTO_CONFIG_ERROR_EVENT_DATA3_SDR_CFG_FILE_MISMATCH:
+	      str = "SDR/CFG file mismatch";
+	      break;
+	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_MANAGEMENT_HEALTH_AUTO_CONFIG_ERROR_EVENT_DATA3_SDR_OR_CFG_FILE_CORRUPTED:
+	      str = "SDR or CFG file corrupted";
+	      break;
+	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_MANAGEMENT_HEALTH_AUTO_CONFIG_ERROR_EVENT_DATA3_SDR_SYNTAX_ERROR:
+	      str = "SDR syntax error";
+	      break;
+	    default:
+	      str = "Unknown";
+	      break;
+	    }
+
+	  snprintf (tmpbuf,
+                    tmpbuflen,
+		    "Auto Config Error = %s",
+		    str);
+	  
+	  return (1);
+	}
     }
 
   return (0);
