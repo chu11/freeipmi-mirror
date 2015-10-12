@@ -1468,7 +1468,8 @@ sel_string_output_intel_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 
       if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PROCESSOR
 	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_INTERNAL_ERROR
-	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE)
+	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
+	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED)
 	{
 	  char *str;
 
@@ -1488,6 +1489,44 @@ sel_string_output_intel_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 	      break;
 	    default:
 	      str = "Unknown OEM code"; /* to differentiate from above */
+	      break;
+	    }
+
+	  snprintf (tmpbuf,
+                    tmpbuflen,
+		    "%s",
+		    str);
+	  
+	  return (1);
+	}
+
+      if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PROCESSOR
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PROCESSOR_ERR2_TIMEOUT
+	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
+	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED)
+	{
+	  uint8_t cpu_bitmask;
+	  char *str;
+
+	  cpu_bitmask = (system_event_record_data->event_data2 & IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_BITMASK);
+	  cpu_bitmask >>= IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_SHIFT;
+
+	  switch (cpu_bitmask)
+	    {
+	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_CPU1:
+	      str = "CPU1";
+	      break;
+	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_CPU2:
+	      str = "CPU2";
+	      break;
+	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_CPU3:
+	      str = "CPU3";
+	      break;
+	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_CPU4:
+	      str = "CPU4";
+	      break;
+	    default:
+	      str = "Unknown";
 	      break;
 	    }
 
@@ -2802,6 +2841,7 @@ sel_string_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
       if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PROCESSOR
 	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_INTERNAL_ERROR
 	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
+	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED
 	  && system_event_record_data->event_data2 == IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_E52600V3_CATERR)
 	{
 	  char *str;
