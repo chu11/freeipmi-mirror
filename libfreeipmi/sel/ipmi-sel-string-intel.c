@@ -806,6 +806,36 @@ _sel_string_output_intel_s2600jf_ras_mode (uint8_t event_data)
 }
 
 static const char *
+_sel_string_output_intel_e52600v3_ras_mode (uint8_t event_data) 
+{
+  uint8_t ras_mode;
+  char *ras_mode_str;
+
+  ras_mode = (event_data & IPMI_SENSOR_MEMORY_DEVICE_ENABLED_EVENT_DATA2_OR_EVENT_DATA3_OEM_INTEL_E52600V3_RAS_MODE_BITMASK);
+  ras_mode >>= IPMI_SENSOR_MEMORY_DEVICE_ENABLED_EVENT_DATA2_OR_EVENT_DATA3_OEM_INTEL_E52600V3_RAS_MODE_SHIFT;
+	  
+  switch (ras_mode)
+    {
+    case IPMI_SENSOR_MEMORY_DEVICE_ENABLED_EVENT_DATA2_OR_EVENT_DATA3_OEM_INTEL_E52600V3_RAS_MODE_NONE:
+      ras_mode_str = "None (Independent Channel Mode)"; 
+      break;
+    case IPMI_SENSOR_MEMORY_DEVICE_ENABLED_EVENT_DATA2_OR_EVENT_DATA3_OEM_INTEL_E52600V3_RAS_MODE_MIRRORING:
+      ras_mode_str = "Mirroring Mode";
+      break;
+    case IPMI_SENSOR_MEMORY_DEVICE_ENABLED_EVENT_DATA2_OR_EVENT_DATA3_OEM_INTEL_E52600V3_RAS_MODE_LOCKSTEP:
+      ras_mode_str = "Lockstep Mode";
+      break;
+    case IPMI_SENSOR_MEMORY_DEVICE_ENABLED_EVENT_DATA2_OR_EVENT_DATA3_OEM_INTEL_E52600V3_RAS_MODE_RANK_SPARING:
+      ras_mode_str = "Rank Sparing Mode";
+      break;
+    default:
+      ras_mode_str = "Unknown";
+    }
+
+  return (ras_mode_str);
+}
+
+static const char *
 _sel_string_output_intel_windmill_native_vs_external_throttling (uint8_t event_data)
 {
   uint8_t noe;
@@ -1513,21 +1543,21 @@ sel_string_output_intel_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 	  uint8_t cpu_bitmask;
 	  char *str;
 
-	  cpu_bitmask = (system_event_record_data->event_data2 & IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_BITMASK);
-	  cpu_bitmask >>= IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_SHIFT;
+	  cpu_bitmask = (system_event_record_data->event_data2 & IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_E52600V3_BITMASK);
+	  cpu_bitmask >>= IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_E52600V3_SHIFT;
 
 	  switch (cpu_bitmask)
 	    {
-	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_CPU1:
+	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_E52600V3_CPU1:
 	      str = "CPU1";
 	      break;
-	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_CPU2:
+	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_E52600V3_CPU2:
 	      str = "CPU2";
 	      break;
-	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_CPU3:
+	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_E52600V3_CPU3:
 	      str = "CPU3";
 	      break;
-	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_CPU4:
+	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_E52600V3_CPU4:
 	      str = "CPU4";
 	      break;
 	    default:
@@ -1539,6 +1569,58 @@ sel_string_output_intel_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
                     tmpbuflen,
 		    "%s",
 		    str);
+	  
+	  return (1);
+	}
+
+      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_E52600V3_BIOS_POST
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_POST_MEMORY_RAS_CONFIGURATION_STATUS
+	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_ENABLED
+	  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_DEVICE_ENABLED_DEVICE_DISABLED
+	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_DEVICE_ENABLED_DEVICE_ENABLED))
+	{
+	  uint8_t config_error;
+	  char *config_error_str;
+	  
+	  config_error = (system_event_record_data->event_data2 & IPMI_SENSOR_MEMORY_DEVICE_ENABLED_EVENT_DATA2_OEM_INTEL_E52600V3_CONFIG_ERROR_BITMASK);
+	  config_error >>= IPMI_SENSOR_MEMORY_DEVICE_ENABLED_EVENT_DATA2_OEM_INTEL_E52600V3_CONFIG_ERROR_SHIFT;
+	  
+	  switch (config_error)
+	    {
+	    case IPMI_SENSOR_MEMORY_DEVICE_ENABLED_EVENT_DATA2_OEM_INTEL_E52600V3_CONFIG_ERROR_NONE:
+	      config_error_str = "None"; 
+	      break;
+	    case IPMI_SENSOR_MEMORY_DEVICE_ENABLED_EVENT_DATA2_OEM_INTEL_E52600V3_CONFIG_ERROR_INVALID_DIMM_CONFIGURATION_FOR_RAS_MODE:
+	      config_error_str = "Invalid DIMM Configuration for RAS Mode";
+	      break;
+	    default:
+	      config_error_str = "Unknown";
+	    }
+	  
+	  snprintf (tmpbuf,
+		    tmpbuflen,
+		    "Config Error = %s",
+		    config_error_str);
+
+	  return (1);
+	}
+
+      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_E52600V3_BIOS_POST
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_POST_MEMORY_RAS_MODE_SELECT
+	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_ENABLED
+	  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_DEVICE_ENABLED_DEVICE_DISABLED
+	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_DEVICE_ENABLED_DEVICE_ENABLED))
+	{
+	  const char *ras_mode_str;
+		   
+	  ras_mode_str = _sel_string_output_intel_e52600v3_ras_mode (system_event_record_data->event_data2);
+	  
+	  snprintf (tmpbuf,
+		    tmpbuflen,
+		    "Prior RAS Mode = %s",
+		    ras_mode_str);
 	  
 	  return (1);
 	}
@@ -2857,16 +2939,16 @@ sel_string_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 	  /* If technically a bitmap, but documentation indicates only one bit can be set, we'll just use a switch for clarity */
 	  switch (system_event_record_data->event_data3)
 	    {
-	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA3_OEM_INTEL_CPU1:
+	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_E52600V3_CPU1:
 	      str = "CPU1";
 	      break;
-	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA3_OEM_INTEL_CPU2:
+	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_E52600V3_CPU2:
 	      str = "CPU2";
 	      break;
-	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA3_OEM_INTEL_CPU3:
+	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_E52600V3_CPU3:
 	      str = "CPU3";
 	      break;
-	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA3_OEM_INTEL_CPU4:
+	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_E52600V3_CPU4:
 	      str = "CPU4";
 	      break;
 	    default:
@@ -2891,24 +2973,24 @@ sel_string_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 	  uint8_t auto_config_error_bitmask;
 	  char *str;
 
-	  auto_config_error_bitmask = (system_event_record_data->event_data3 & IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_MANAGEMENT_HEALTH_AUTO_CONFIG_ERROR_EVENT_DATA3_BITMASK);
-	  auto_config_error_bitmask >>= IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_MANAGEMENT_HEALTH_AUTO_CONFIG_ERROR_EVENT_DATA3_SHIFT;
+	  auto_config_error_bitmask = (system_event_record_data->event_data3 & IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_MANAGEMENT_HEALTH_AUTO_CONFIG_ERROR_EVENT_DATA3_OEM_INTEL_E52600V3_BITMASK);
+	  auto_config_error_bitmask >>= IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_MANAGEMENT_HEALTH_AUTO_CONFIG_ERROR_EVENT_DATA3_OEM_INTEL_E52600V3_SHIFT;
 
 	  switch (auto_config_error_bitmask)
 	    {
-	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_MANAGEMENT_HEALTH_AUTO_CONFIG_ERROR_EVENT_DATA3_CFG_SYNTAX_ERROR:
+	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_MANAGEMENT_HEALTH_AUTO_CONFIG_ERROR_EVENT_DATA3_OEM_INTEL_E52600V3_CFG_SYNTAX_ERROR:
 	      str = "CFG syntax error";
 	      break;
-	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_MANAGEMENT_HEALTH_AUTO_CONFIG_ERROR_EVENT_DATA3_CHASSIS_AUTO_DETECT_ERROR:
+	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_MANAGEMENT_HEALTH_AUTO_CONFIG_ERROR_EVENT_DATA3_OEM_INTEL_E52600V3_CHASSIS_AUTO_DETECT_ERROR:
 	      str = "Chassis auto-detect error";
 	      break;
-	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_MANAGEMENT_HEALTH_AUTO_CONFIG_ERROR_EVENT_DATA3_SDR_CFG_FILE_MISMATCH:
+	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_MANAGEMENT_HEALTH_AUTO_CONFIG_ERROR_EVENT_DATA3_OEM_INTEL_E52600V3_SDR_CFG_FILE_MISMATCH:
 	      str = "SDR/CFG file mismatch";
 	      break;
-	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_MANAGEMENT_HEALTH_AUTO_CONFIG_ERROR_EVENT_DATA3_SDR_OR_CFG_FILE_CORRUPTED:
+	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_MANAGEMENT_HEALTH_AUTO_CONFIG_ERROR_EVENT_DATA3_OEM_INTEL_E52600V3_SDR_OR_CFG_FILE_CORRUPTED:
 	      str = "SDR or CFG file corrupted";
 	      break;
-	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_MANAGEMENT_HEALTH_AUTO_CONFIG_ERROR_EVENT_DATA3_SDR_SYNTAX_ERROR:
+	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_MANAGEMENT_HEALTH_AUTO_CONFIG_ERROR_EVENT_DATA3_OEM_INTEL_E52600V3_SDR_SYNTAX_ERROR:
 	      str = "SDR syntax error";
 	      break;
 	    default:
@@ -2920,6 +3002,44 @@ sel_string_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
                     tmpbuflen,
 		    "Auto Config Error = %s",
 		    str);
+	  
+	  return (1);
+	}
+
+      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_E52600V3_BIOS_POST
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_POST_MEMORY_RAS_CONFIGURATION_STATUS
+	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_ENABLED
+	  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_DEVICE_ENABLED_DEVICE_DISABLED
+	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_DEVICE_ENABLED_DEVICE_ENABLED))
+	{
+	  const char *ras_mode_str;
+
+	  ras_mode_str = _sel_string_output_intel_e52600v3_ras_mode (system_event_record_data->event_data3);
+	  
+	  snprintf (tmpbuf,
+		    tmpbuflen,
+		    "RAS Mode Configured = %s",
+		    ras_mode_str);
+	  
+	  return (1);
+	}
+
+      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_E52600V3_BIOS_POST
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_POST_MEMORY_RAS_MODE_SELECT
+	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_ENABLED
+	  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_DEVICE_ENABLED_DEVICE_DISABLED
+	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_DEVICE_ENABLED_DEVICE_ENABLED))
+	{
+	  const char *ras_mode_str;
+	  
+	  ras_mode_str = _sel_string_output_intel_e52600v3_ras_mode (system_event_record_data->event_data3);
+	  
+	  snprintf (tmpbuf,
+		    tmpbuflen,
+		    "Selected RAS Mode = %s",
+		    ras_mode_str);
 	  
 	  return (1);
 	}
