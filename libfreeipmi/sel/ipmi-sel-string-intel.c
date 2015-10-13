@@ -749,6 +749,53 @@ sel_string_output_intel_event_data1_class_oem (ipmi_sel_ctx_t ctx,
 	}
     }
 
+  /* OEM Interpretation
+   *
+   * Intel S2600KP
+   * Intel S2600WT2
+   * Intel S2600WTT
+   */
+  if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600KP
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT)
+    {
+      if ((system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_E52600V3_BIOS_POST
+	   && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
+	   && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_POST_INTEL_QUICK_PATH_INTERFACE_LINK_WIDTH_REDUCED
+	   && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_QPI_LINK_WIDTH_REDUCED)
+	  || (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_E52600V3_BIOS_SMI_HANDLER
+	      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
+	      && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_INTEL_QUICK_PATH_INTERFACE_FATAL_ERROR
+	      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_QPI_FATAL_ERROR))
+	{
+	  int ret;
+	  
+	  ret = ipmi_get_oem_specific_message (ctx->manufacturer_id,
+					       ctx->product_id,
+					       system_event_record_data->event_type_code,
+					       system_event_record_data->sensor_type,
+					       system_event_record_data->offset_from_event_reading_type_code,
+					       tmpbuf,
+					       tmpbuflen);
+	  
+	  if (ret > 0)
+	    return (1);
+	}
+
+      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_E52600V3_BIOS_SMI_HANDLER
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_INTEL_QUICK_PATH_INTERFACE_CORRECTABLE_ERROR
+	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_QPI_CORRECTABLE_ERROR)
+	{
+	  snprintf (tmpbuf,
+		    tmpbuflen,
+		    "QPI Correctable Error Event = %02Xh",
+		    system_event_record_data->offset_from_event_reading_type_code);
+	  
+	  return (1);
+	}
+    }
+
   return (0);
 }
 
@@ -1311,12 +1358,12 @@ sel_string_output_intel_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 	}
     }
 
-   /* OEM Interpretation
-    *
-    * Intel S2600KP
-    * Intel S2600WT2
-    * Intel S2600WTT
-    */
+  /* OEM Interpretation
+   *
+   * Intel S2600KP
+   * Intel S2600WT2
+   * Intel S2600WTT
+   */
   if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600KP
       || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
       || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT)
@@ -1923,6 +1970,61 @@ sel_string_output_intel_event_data2_class_oem (ipmi_sel_ctx_t ctx,
 		    "Error ID = 0x%02X",
 		    system_event_record_data->event_data2);
 
+	  return (1);
+	}
+    }
+
+  /* OEM Interpretation
+   *
+   * Intel S2600KP
+   * Intel S2600WT2
+   * Intel S2600WTT
+   */
+  if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600KP
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT)
+    {
+      if ((system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_E52600V3_BIOS_POST
+	   && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
+	   && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_POST_INTEL_QUICK_PATH_INTERFACE_LINK_WIDTH_REDUCED
+	   && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_QPI_LINK_WIDTH_REDUCED)
+	  || (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_E52600V3_BIOS_SMI_HANDLER
+	      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
+	      && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_INTEL_QUICK_PATH_INTERFACE_CORRECTABLE_ERROR
+	      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_QPI_CORRECTABLE_ERROR)
+	  || (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_E52600V3_BIOS_SMI_HANDLER
+	      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
+	      && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_INTEL_QUICK_PATH_INTERFACE_FATAL_ERROR
+	      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_QPI_FATAL_ERROR))
+	{
+	  uint8_t cpu;
+	  char *cpu_str;
+	  
+	  cpu = system_event_record_data->event_data2;
+	  
+	  switch (cpu)
+	    {
+	    case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA2_OEM_INTEL_E52600V3_CPU_1:
+	      cpu_str = "1";
+	      break;
+	    case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA2_OEM_INTEL_E52600V3_CPU_2:
+	      cpu_str = "2";
+	      break;
+	    case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA2_OEM_INTEL_E52600V3_CPU_3:
+	      cpu_str = "3";
+	      break;
+	    case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA2_OEM_INTEL_E52600V3_CPU_4:
+	      cpu_str = "4";
+	      break;
+	    default:
+	      cpu_str = "Unknown";
+	    }
+	  
+	  snprintf (tmpbuf,
+		    tmpbuflen,
+		    "CPU = %s",
+		    cpu_str);
+	  
 	  return (1);
 	}
     }
@@ -2783,12 +2885,12 @@ sel_string_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 
     }
   
-   /* OEM Interpretation
-    *
-    * Intel S2600KP
-    * Intel S2600WT2
-    * Intel S2600WTT
-    */
+  /* OEM Interpretation
+   *
+   * Intel S2600KP
+   * Intel S2600WT2
+   * Intel S2600WTT
+   */
   if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600KP
       || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
       || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT)
@@ -5083,12 +5185,12 @@ sel_string_output_intel_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 	}
     }
 
-   /* OEM Interpretation
-    *
-    * Intel S2600KP
-    * Intel S2600WT2
-    * Intel S2600WTT
-    */
+  /* OEM Interpretation
+   *
+   * Intel S2600KP
+   * Intel S2600WT2
+   * Intel S2600WTT
+   */
   if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600KP
       || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
       || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT)

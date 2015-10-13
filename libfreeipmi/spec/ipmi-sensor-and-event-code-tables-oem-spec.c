@@ -565,6 +565,42 @@ const char * const ipmi_oem_intel_s2600jf_specific_qpi_link_width_reduced[] =
   };
 unsigned int ipmi_oem_intel_s2600jf_specific_qpi_link_width_reduced_max_index = 0x02;
 
+/*
+ * Intel S2600KP                                                                                                                                                                                   
+ * Intel S2600WT2                                                                                                                                                                                  
+ * Intel S2600WTT  
+ */
+
+const char * const ipmi_oem_intel_e52600v3_specific_qpi_fatal_error[] =
+  {
+    "Link Layer Uncorrectable ECC Error",
+    "Protocol Layer Poisoned Packet Reception Error",
+    "LINK/PHY Init Failure with resultant degradation in link width",
+    "PHY Layer detected drift buffer alarm",
+    "PHY detected latency buffer rollover",
+    "PHY Init Failure",
+    "Link Layer generic control error (buffer overflow/underflow, credit underflow, and so on.)",
+    "Parity error in link or PHY layer",
+    "Protocol layer timeout detected",
+    "Protocol layer failed response",
+    "Protocol layer illegal packet field, target Node ID, and so on.",
+    "Protocol Layer Queue/table overflow/underflow",
+    "Viral Error",
+    "Protocol Layer parity error",
+    "Routing Table Error",
+    NULL
+  };
+unsigned int ipmi_oem_intel_e52600v3_specific_qpi_fatal_error_max_index = 0x0E;
+
+const char * const ipmi_oem_intel_e52600v3_specific_qpi_link_width_reduced[] =
+  {
+    "reserved",
+    "Reduced to 1/2 width",
+    "Reduced to 1/4 width",
+    NULL
+  };
+unsigned int ipmi_oem_intel_e52600v3_specific_qpi_link_width_reduced_max_index = 0x02;
+
 /******************************************* 
  * Wistron                                 *
  *******************************************/
