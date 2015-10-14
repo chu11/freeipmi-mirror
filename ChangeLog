@@ -1,3 +1,8 @@
+2015-10-14 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/: Update get-power-supply-status2 on Supermicro based
+	on mailing list discussion.
+
 2015-09-29 Newell Jensen <newell.jensen@gmail.com>
 
 	* ipmi-locate/ipmi-locate.c (main),
