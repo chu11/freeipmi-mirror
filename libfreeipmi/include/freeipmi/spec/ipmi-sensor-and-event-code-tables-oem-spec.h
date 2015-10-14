@@ -1953,6 +1953,20 @@ extern unsigned int ipmi_oem_intel_s2600jf_specific_qpi_link_width_reduced_max_i
 #define IPMI_OEM_INTEL_E52600V3_SPECIFIC_QPI_LINK_WIDTH_REDUCED_QUARTER_WIDTH 0x02
 
 /*
+ * Event Reading Type Code = IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_BIOS_RECOVERY_START
+ * Sensor Type = IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS
+ */
+/* achu: not a typo, no 0x00 offset */
+#define IPMI_OEM_INTEL_E52600V3_SPECIFIC_BIOS_RECOVERY_START 0x01
+
+/*
+ * Event Reading Type Code = IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_BIOS_RECOVERY_FINISH
+ * Sensor Type = IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS
+ */
+/* achu: not a typo, no 0x00 offset */
+#define IPMI_OEM_INTEL_E52600V3_SPECIFIC_BIOS_RECOVERY_FINISH 0x01
+
+/*
  * String arrays for above
  */
 
@@ -1964,6 +1978,12 @@ extern unsigned int ipmi_oem_intel_e52600v3_specific_qpi_fatal_error_2_max_index
 
 extern const char * const ipmi_oem_intel_e52600v3_specific_qpi_link_width_reduced[];
 extern unsigned int ipmi_oem_intel_e52600v3_specific_qpi_link_width_reduced_max_index;
+
+extern const char * const ipmi_oem_intel_e52600v3_specific_bios_recovery_start[];
+extern unsigned int ipmi_oem_intel_e52600v3_specific_bios_recovery_start_max_index;
+
+extern const char * const ipmi_oem_intel_e52600v3_specific_bios_recovery_finish[];
+extern unsigned int ipmi_oem_intel_e52600v3_specific_bios_recovery_finish_max_index;
 
 #define IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA2_OEM_INTEL_E52600V3_CPU_1 0
 #define IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA2_OEM_INTEL_E52600V3_CPU_2 1

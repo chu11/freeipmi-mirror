@@ -613,6 +613,24 @@ const char * const ipmi_oem_intel_e52600v3_specific_qpi_link_width_reduced[] =
   };
 unsigned int ipmi_oem_intel_e52600v3_specific_qpi_link_width_reduced_max_index = 0x02;
 
+const char * const ipmi_oem_intel_e52600v3_specific_bios_recovery_start[] =
+  {
+    "reserved",
+    "BIOS Recovery Start",
+    NULL
+  };
+
+unsigned int ipmi_oem_intel_e52600v3_specific_bios_recovery_start_max_index = 0x01;
+
+const char * const ipmi_oem_intel_e52600v3_specific_bios_recovery_finish[] =
+  {
+    "reserved",
+    "BIOS Recovery Finish",
+    NULL
+  };
+
+unsigned int ipmi_oem_intel_e52600v3_specific_bios_recovery_finish_max_index = 0x01;
+
 /******************************************* 
  * Wistron                                 *
  *******************************************/
