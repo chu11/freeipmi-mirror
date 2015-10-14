@@ -613,6 +613,66 @@ const char * const ipmi_oem_intel_e52600v3_specific_qpi_link_width_reduced[] =
   };
 unsigned int ipmi_oem_intel_e52600v3_specific_qpi_link_width_reduced_max_index = 0x02;
 
+const char * const ipmi_oem_intel_e52600v3_specific_pci_express_fatal_errors[] =
+  {
+    "Data Link Layer Protocol Error",
+    "Surprise Link Down Error",
+    "Completer Abort",
+    "Unsupported Request",
+    "Poisoned TLP",
+    "Flow Control Protocol",
+    "Completion Timeout",
+    "Receiver Buffer Overflow",
+    "ACS Violation",
+    "Malformed TLP",
+    "ECRC Error",
+    "Received Fatal Message From Downstream",
+    "Unexpected Completion",
+    "Received ERR_NONFATAL Message",
+    "Uncorrectable Internal",
+    "MC Blocked TLP",
+    NULL
+  };
+unsigned int ipmi_oem_intel_e52600v3_specific_pci_express_fatal_errors_max_index = 0x0F;
+
+const char * const ipmi_oem_intel_e52600v3_specific_pci_express_fatal_errors_2[] =
+  {
+    "Atomic Egress Blocked",
+    "TLP Prefix Blocked",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "Unspecified Non-AER Fatal Error",
+    NULL
+  };
+unsigned int ipmi_oem_intel_e52600v3_specific_pci_express_fatal_errors_2_max_index = 0x0F;
+
+const char * const ipmi_oem_intel_e52600v3_specific_pci_express_correctable_errors[] =
+  {
+    "Receiver Error",
+    "Bad DLLP",
+    "Bad TLP",
+    "Replay Num Rollover",
+    "Replay Timer timeout",
+    "Advisory Non-fatal",
+    "Link BW Changed",
+    "Correctable Internal",
+    "Header Log Overflow",
+    NULL
+  };
+unsigned int ipmi_oem_intel_e52600v3_specific_pci_express_correctable_errors_max_index = 0x08;
+
+
 const char * const ipmi_oem_intel_e52600v3_specific_firmware_update_status_sensor[] =
   {
     "Update started",

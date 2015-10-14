@@ -2273,6 +2273,30 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
 					ipmi_oem_intel_e52600v3_specific_qpi_link_width_reduced_max_index,
 					ipmi_oem_intel_e52600v3_specific_qpi_link_width_reduced));
 
+	  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_PCI_EXPRESS_FATAL_ERRORS
+	      && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+	    return (_get_event_message (offset,
+					buf,
+					buflen,
+					ipmi_oem_intel_e52600v3_specific_pci_express_fatal_errors_max_index,
+					ipmi_oem_intel_e52600v3_specific_pci_express_fatal_errors));
+
+	  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_PCI_EXPRESS_FATAL_ERRORS_2
+	      && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+	    return (_get_event_message (offset,
+					buf,
+					buflen,
+					ipmi_oem_intel_e52600v3_specific_pci_express_fatal_errors_2_max_index,
+					ipmi_oem_intel_e52600v3_specific_pci_express_fatal_errors_2));
+	    
+	  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_PCI_EXPRESS_CORRECTABLE_ERRORS
+	      && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+	    return (_get_event_message (offset,
+					buf,
+					buflen,
+					ipmi_oem_intel_e52600v3_specific_pci_express_correctable_errors_max_index,
+					ipmi_oem_intel_e52600v3_specific_pci_express_correctable_errors));
+ 
 	  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_FIRMWARE_UPDATE_STATUS_SENSOR
 	      && sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE)
 	    return (_get_event_message (offset,
