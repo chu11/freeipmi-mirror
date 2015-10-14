@@ -494,7 +494,6 @@ ipmi_oem_supermicro_get_power_supply_status2 (ipmi_oem_state_data_t *state_data)
    * 0x52 - cmd
    * 0x?? - Completion Code
    * 0x?? - 0x00 or 0x02 good, anything else bad
-   * 0x?? - 0x00 or 0x02 good, anything else bad
    */
   
   bytes_rq[0] = IPMI_CMD_MASTER_WRITE_READ;
@@ -524,16 +523,14 @@ ipmi_oem_supermicro_get_power_supply_status2 (ipmi_oem_state_data_t *state_data)
   if (ipmi_oem_check_response_and_completion_code (state_data,
                                                    bytes_rs,
                                                    rs_len,
-						   4,
+						   3,
                                                    IPMI_CMD_MASTER_WRITE_READ,
                                                    IPMI_NET_FN_APP_RQ,
                                                    NULL) < 0)
     goto cleanup;
 
-  if ((bytes_rs[2] == IPMI_OEM_SUPERMICRO_GET_POWER_SUPPLY_STATUS2_GOOD1
-       || bytes_rs[2] == IPMI_OEM_SUPERMICRO_GET_POWER_SUPPLY_STATUS2_GOOD2)
-      && (bytes_rs[3] == IPMI_OEM_SUPERMICRO_GET_POWER_SUPPLY_STATUS2_GOOD1
-	  || bytes_rs[3] == IPMI_OEM_SUPERMICRO_GET_POWER_SUPPLY_STATUS2_GOOD2))
+  if (bytes_rs[2] == IPMI_OEM_SUPERMICRO_GET_POWER_SUPPLY_STATUS2_GOOD1
+      || bytes_rs[2] == IPMI_OEM_SUPERMICRO_GET_POWER_SUPPLY_STATUS2_GOOD2)
     pstdout_printf (state_data->pstate, "good\n");
   else 
     pstdout_printf (state_data->pstate, "bad\n");
