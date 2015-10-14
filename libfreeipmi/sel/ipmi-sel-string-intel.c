@@ -2455,7 +2455,9 @@ _sel_string_output_intel_e52600v3_memory_dimm (ipmi_sel_ctx_t ctx,
 					       char *tmpbuf,
 					       unsigned int tmpbuflen,
 					       unsigned int flags,
-					       struct ipmi_sel_system_event_record_data *system_event_record_data)
+					       struct ipmi_sel_system_event_record_data *system_event_record_data,
+					       int channel_valid,
+					       int dimm_valid)
 {
   uint8_t socket_id, channel, dimm;
   char *socket_id_str, *channel_str, *dimm_str;
@@ -2483,103 +2485,128 @@ _sel_string_output_intel_e52600v3_memory_dimm (ipmi_sel_ctx_t ctx,
     {
     case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_SOCKET_ID_CPU1:
       socket_id_str = "1";
-      switch (channel)
+      if (channel_valid)
 	{
-	case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_CHANNEL_A:
-	  channel_str = "A";
-	  break;
-	case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_CHANNEL_B:
-	  channel_str = "B";
-	  break;
-	case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_CHANNEL_C:
-	  channel_str = "C";
-	  break;
-	case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_CHANNEL_D:
-	  channel_str = "D";
-	  break;
-	default:
-	  channel_str = "Unknown";
+	  switch (channel)
+	    {
+	    case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_CHANNEL_A:
+	      channel_str = "A";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_CHANNEL_B:
+	      channel_str = "B";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_CHANNEL_C:
+	      channel_str = "C";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_CHANNEL_D:
+	      channel_str = "D";
+	      break;
+	    default:
+	      channel_str = "Unknown";
+	    }
 	}
+      else
+	channel_str = "Indeterminate";
       break;
     case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_SOCKET_ID_CPU2:
       socket_id_str = "2";
-      switch (channel)
+      if (channel_valid)
 	{
-	case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_CHANNEL_E:
-	  channel_str = "E";
-	  break;
-	case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_CHANNEL_F:
-	  channel_str = "F";
-	  break;
-	case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_CHANNEL_G:
-	  channel_str = "G";
-	  break;
-	case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_CHANNEL_H:
-	  channel_str = "H";
-	  break;
-	default:
-	  channel_str = "Unknown";
+	  switch (channel)
+	    {
+	    case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_CHANNEL_E:
+	      channel_str = "E";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_CHANNEL_F:
+	      channel_str = "F";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_CHANNEL_G:
+	      channel_str = "G";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_CHANNEL_H:
+	      channel_str = "H";
+	      break;
+	    default:
+	      channel_str = "Unknown";
+	    }
 	}
+      else
+	channel_str = "Indeterminate";
       break;
     case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_SOCKET_ID_CPU3:
       socket_id_str = "3";
-      switch (channel)
+      if (channel_valid)
 	{
-	case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_CHANNEL_J:
-	  channel_str = "J";
-	  break;
-	case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_CHANNEL_K:
-	  channel_str = "K";
-	  break;
-	case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_CHANNEL_L:
-	  channel_str = "L";
-	  break;
-	case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_CHANNEL_M:
-	  channel_str = "M";
-	  break;
-	default:
-	  channel_str = "Unknown";
+	  switch (channel)
+	    {
+	    case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_CHANNEL_J:
+	      channel_str = "J";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_CHANNEL_K:
+	      channel_str = "K";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_CHANNEL_L:
+	      channel_str = "L";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_CHANNEL_M:
+	      channel_str = "M";
+	      break;
+	    default:
+	      channel_str = "Unknown";
+	    }
 	}
-      break;
+      else
+	channel_str = "Indeterminate"; 
+     break;
     case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_SOCKET_ID_CPU4:
       socket_id_str = "4";
-      switch (channel)
+      if (channel_valid)
 	{
-	case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_CHANNEL_N:
-	  channel_str = "N";
-	  break;
-	case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_CHANNEL_P:
-	  channel_str = "P";
-	  break;
-	case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_CHANNEL_R:
-	  channel_str = "R";
-	  break;
-	case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_CHANNEL_T:
-	  channel_str = "T";
-	  break;
-	default:
-	  channel_str = "Unknown";
+	  switch (channel)
+	    {
+	    case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_CHANNEL_N:
+	      channel_str = "N";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_CHANNEL_P:
+	      channel_str = "P";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_CHANNEL_R:
+	      channel_str = "R";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_CHANNEL_T:
+	      channel_str = "T";
+	      break;
+	    default:
+	      channel_str = "Unknown";
+	    }
 	}
+      else
+	channel_str = "Indeterminate";
       break;
     default:
       socket_id_str = "Unknown";
       channel_str = "Unknown";
     }
 
-  switch (dimm)
+  if (dimm_valid)
     {
-    case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_DIMM_1:
-      dimm_str = "1";
-      break;
-    case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_DIMM_2:
-      dimm_str = "2";
-      break;
-    case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_DIMM_3:
-      dimm_str = "3";
-      break;
-    default:
-      dimm_str = "Unknown";
+      switch (dimm)
+	{
+	case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_DIMM_1:
+	  dimm_str = "1";
+	  break;
+	case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_DIMM_2:
+	  dimm_str = "2";
+	  break;
+	case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_DIMM_3:
+	  dimm_str = "3";
+	  break;
+	default:
+	  dimm_str = "Unknown";
+	}
     }
+  else
+    dimm_str = "Indeterminate";
 
   snprintf (tmpbuf,
 	    tmpbuflen,
@@ -3560,7 +3587,7 @@ sel_string_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 	  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_FULLY_REDUNDANT
 	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_REDUNDANCY_DEGRADED))
 	{
-	  _sel_string_output_intel_e52600v3_memory_dimm (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
+	  _sel_string_output_intel_e52600v3_memory_dimm (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data, 1, 1);
 
 	  return (1);
 	}
@@ -3572,7 +3599,7 @@ sel_string_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 	  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_FULLY_REDUNDANT
 	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_REDUNDANCY_DEGRADED))
 	{
-	  _sel_string_output_intel_e52600v3_memory_dimm (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
+	  _sel_string_output_intel_e52600v3_memory_dimm (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data, 1, 1);
 
 	  return (1);
 	}
@@ -3584,7 +3611,7 @@ sel_string_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 	  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CORRECTABLE_MEMORY_ERROR
 	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_UNCORRECTABLE_MEMORY_ERROR))
 	{
-	  _sel_string_output_intel_e52600v3_memory_dimm (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
+	  _sel_string_output_intel_e52600v3_memory_dimm (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data, 1, 1);
 
 	  return (1);
 	}
@@ -6227,6 +6254,71 @@ sel_string_output_intel_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
       
 	  return (1);
 	}
+
+      /* achu: Documentation states only
+       * IPMI_SENSOR_TYPE_MEMORY_MEMORY_SCRUB_FAILED, but I think
+       * that's a typo. It should be IPMI_SENSOR_TYPE_MEMORY_PARITY.
+       * Gonna check for both 
+       */
+      if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_E52600V3_BIOS_SMI_HANDLER
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_MEMORY_PARITY_ERROR
+	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+	  && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_MEMORY_SCRUB_FAILED
+	      || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_PARITY)
+	  && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+	  && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+	{
+	  uint8_t channel_information_validity_check, dimm_information_validity_check, error_type;
+	  char *error_type_str;
+	  char dimm_str[INTEL_EVENT_BUFFER_LENGTH + 1];
+	  
+	  memset (dimm_str, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
+
+	  channel_information_validity_check = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA2_CHANNEL_INFORMATON_VALIDITY_CHECK_BITMASK);
+	  channel_information_validity_check >>= IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA2_CHANNEL_INFORMATON_VALIDITY_CHECK_SHIFT;
+
+	  dimm_information_validity_check = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA2_DIMM_INFORMATON_VALIDITY_CHECK_BITMASK);
+	  dimm_information_validity_check >>= IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA2_DIMM_INFORMATON_VALIDITY_CHECK_SHIFT;
+
+	  error_type = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA2_ERROR_TYPE_BITMASK);
+	  error_type >>= IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA2_ERROR_TYPE_SHIFT;
+
+	  switch (error_type)
+	    {
+	    case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA2_ERROR_TYPE_PARITY_ERROR_TYPE_NOT_KNOWN:
+	      error_type_str = "Parity Error Type not known";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA2_ERROR_TYPE_DATA_PARITY_ERROR:
+	      error_type_str = "Data Parity Error";
+	      break;
+	    case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA2_ERROR_TYPE_COMMAND_AND_ADDRESS_PARITY_ERROR:
+	      error_type_str = "Command and Address Parity Error";
+	      break;
+	    default:
+	      error_type_str = "Unknown";
+	    }
+
+	  _sel_string_output_intel_e52600v3_memory_dimm (ctx,
+							 dimm_str,
+							 INTEL_EVENT_BUFFER_LENGTH,
+							 flags,
+							 system_event_record_data,
+							 channel_information_validity_check,
+							 dimm_information_validity_check);
+	    
+	  if (sel_string_snprintf (buf,
+				   buflen,
+				   wlen,
+				   "Error Type = %s, %s",
+				   error_type_str,
+				   dimm_str))
+	    (*oem_rv) = 1;
+	  else
+	    (*oem_rv) = 0;
+      
+	  return (1);
+      }
     }
 
   return (0);
