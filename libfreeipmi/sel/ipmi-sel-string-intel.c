@@ -775,7 +775,11 @@ sel_string_output_intel_event_data1_class_oem (ipmi_sel_ctx_t ctx,
 	      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS
 	      && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_BIOS_RECOVERY
 	      && (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_BIOS_RECOVERY_START
-		  || system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_BIOS_RECOVERY_FINISH)))
+		  || system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_BIOS_RECOVERY_FINISH))
+	  || (system_event_record_data->generator_id == IPMI_SLAVE_ADDRESS_BMC
+	      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
+	      && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_FIRMWARE_UPDATE_STATUS
+	      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_FIRMWARE_UPDATE_STATUS_SENSOR))
 	{
 	  int ret;
 	  
@@ -2040,6 +2044,46 @@ sel_string_output_intel_event_data2_class_oem (ipmi_sel_ctx_t ctx,
 	  
 	  return (1);
 	}
+
+      /* achu: In document technically unclear if this */
+      if (system_event_record_data->generator_id == IPMI_SLAVE_ADDRESS_BMC
+	  && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_FIRMWARE_UPDATE_STATUS
+	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_FIRMWARE_UPDATE_STATUS_SENSOR)
+	{
+	  uint8_t target_of_update;
+	  uint8_t target_instance;
+	  char *target_of_update_str;
+
+	  target_of_update = (system_event_record_data->event_data2 & IPMI_OEM_INTEL_E52600V3_SPECIFIC_FIRMWARE_UPDATE_STATUS_SENSOR_EVENT_DATA2_TARGET_OF_UPDATE_BITMASK);
+	  target_of_update >>= IPMI_OEM_INTEL_E52600V3_SPECIFIC_FIRMWARE_UPDATE_STATUS_SENSOR_EVENT_DATA2_TARGET_OF_UPDATE_SHIFT;
+
+	  target_instance = (system_event_record_data->event_data2 & IPMI_OEM_INTEL_E52600V3_SPECIFIC_FIRMWARE_UPDATE_STATUS_SENSOR_EVENT_DATA2_TARGET_INSTANCE_BITMASK);
+	  target_instance >>= IPMI_OEM_INTEL_E52600V3_SPECIFIC_FIRMWARE_UPDATE_STATUS_SENSOR_EVENT_DATA2_TARGET_INSTANCE_SHIFT;
+
+	  switch (target_of_update)
+	    {
+	    case IPMI_OEM_INTEL_E52600V3_SPECIFIC_FIRMWARE_UPDATE_STATUS_SENSOR_EVENT_DATA2_TARGET_OF_UPDATE_BMC:
+	      target_of_update_str = "";
+	      break;
+	    case IPMI_OEM_INTEL_E52600V3_SPECIFIC_FIRMWARE_UPDATE_STATUS_SENSOR_EVENT_DATA2_TARGET_OF_UPDATE_BIOS:
+	      target_of_update_str = "";
+	      break;
+	    case IPMI_OEM_INTEL_E52600V3_SPECIFIC_FIRMWARE_UPDATE_STATUS_SENSOR_EVENT_DATA2_TARGET_OF_UPDATE_ME:
+	      target_of_update_str = "";
+	      break;
+	    default:
+	      target_of_update_str = "Unknown";
+	    }
+
+	  snprintf (tmpbuf,
+		    tmpbuflen,
+		    "Target of update = %s, Instance = %u",
+		    target_of_update_str, target_instance);
+	  
+	  return (1);
+	}
+
     }
 
   return (0);

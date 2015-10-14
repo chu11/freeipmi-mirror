@@ -592,7 +592,7 @@ const char * const ipmi_oem_intel_e52600v3_specific_qpi_fatal_error[] =
   };
 unsigned int ipmi_oem_intel_e52600v3_specific_qpi_fatal_error_max_index = 0x0E;
 
-const char * const ipmi_oem_intel_s2600jf_specific_opi_fatal_error_2[] =
+const char * const ipmi_oem_intel_e52600v3_specific_qpi_fatal_error_2[] =
   {
     "Illegal inbound request",
     "IIO Write Cache Uncorrectable Data ECC Error",
@@ -602,7 +602,7 @@ const char * const ipmi_oem_intel_s2600jf_specific_opi_fatal_error_2[] =
     "IIO Write Cache Coherency Violation",
     NULL
   };
-unsigned int ipmi_oem_intel_s2600jf_specific_opi_fatal_error_2_max_index = 0x05;
+unsigned int ipmi_oem_intel_e52600v3_specific_qpi_fatal_error_2_max_index = 0x05;
 
 const char * const ipmi_oem_intel_e52600v3_specific_qpi_link_width_reduced[] =
   {
@@ -612,6 +612,16 @@ const char * const ipmi_oem_intel_e52600v3_specific_qpi_link_width_reduced[] =
     NULL
   };
 unsigned int ipmi_oem_intel_e52600v3_specific_qpi_link_width_reduced_max_index = 0x02;
+
+const char * const ipmi_oem_intel_e52600v3_specific_firmware_update_status_sensor[] =
+  {
+    "Update started",
+    "Update completed successfully",
+    "Update failure",
+    NULL
+  };
+
+unsigned int ipmi_oem_intel_e52600v3_specific_firmware_update_status_sensor_max_index = 0x02;
 
 const char * const ipmi_oem_intel_e52600v3_specific_bios_recovery_start[] =
   {

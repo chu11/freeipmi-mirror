@@ -1953,6 +1953,25 @@ extern unsigned int ipmi_oem_intel_s2600jf_specific_qpi_link_width_reduced_max_i
 #define IPMI_OEM_INTEL_E52600V3_SPECIFIC_QPI_LINK_WIDTH_REDUCED_QUARTER_WIDTH 0x02
 
 /*
+ * Event Reading Type Code = IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_FIRMWARE_UPDATE_STATUS_SENSOR
+ * Sensor Type = IPMI_SENSOR_TYPE_VERSION_CHANGE
+ */
+/* achu: not a typo, no 0x00 offset */
+#define IPMI_OEM_INTEL_E52600V3_SPECIFIC_FIRMWARE_UPDATE_STATUS_SENSOR_UPDATE_STARTED                0x00
+#define IPMI_OEM_INTEL_E52600V3_SPECIFIC_FIRMWARE_UPDATE_STATUS_SENSOR_UPDATE_COMPLETED_SUCCESSFULLY 0x01
+#define IPMI_OEM_INTEL_E52600V3_SPECIFIC_FIRMWARE_UPDATE_STATUS_SENSOR_UPDATE_FAILURE                0x02
+
+#define IPMI_OEM_INTEL_E52600V3_SPECIFIC_FIRMWARE_UPDATE_STATUS_SENSOR_EVENT_DATA2_TARGET_OF_UPDATE_BITMASK 0xF0
+#define IPMI_OEM_INTEL_E52600V3_SPECIFIC_FIRMWARE_UPDATE_STATUS_SENSOR_EVENT_DATA2_TARGET_OF_UPDATE_SHIFT   4
+
+#define IPMI_OEM_INTEL_E52600V3_SPECIFIC_FIRMWARE_UPDATE_STATUS_SENSOR_EVENT_DATA2_TARGET_OF_UPDATE_BMC  0x0
+#define IPMI_OEM_INTEL_E52600V3_SPECIFIC_FIRMWARE_UPDATE_STATUS_SENSOR_EVENT_DATA2_TARGET_OF_UPDATE_BIOS 0x1
+#define IPMI_OEM_INTEL_E52600V3_SPECIFIC_FIRMWARE_UPDATE_STATUS_SENSOR_EVENT_DATA2_TARGET_OF_UPDATE_ME   0x2
+
+#define IPMI_OEM_INTEL_E52600V3_SPECIFIC_FIRMWARE_UPDATE_STATUS_SENSOR_EVENT_DATA2_TARGET_INSTANCE_BITMASK 0x0C
+#define IPMI_OEM_INTEL_E52600V3_SPECIFIC_FIRMWARE_UPDATE_STATUS_SENSOR_EVENT_DATA2_TARGET_INSTANCE_SHIFT   2
+
+/*
  * Event Reading Type Code = IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_BIOS_RECOVERY_START
  * Sensor Type = IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS
  */
@@ -1978,6 +1997,9 @@ extern unsigned int ipmi_oem_intel_e52600v3_specific_qpi_fatal_error_2_max_index
 
 extern const char * const ipmi_oem_intel_e52600v3_specific_qpi_link_width_reduced[];
 extern unsigned int ipmi_oem_intel_e52600v3_specific_qpi_link_width_reduced_max_index;
+
+extern const char * const ipmi_oem_intel_e52600v3_specific_firmware_update_status_sensor[];
+extern unsigned int ipmi_oem_intel_e52600v3_specific_firmware_update_status_sensor_max_index;
 
 extern const char * const ipmi_oem_intel_e52600v3_specific_bios_recovery_start[];
 extern unsigned int ipmi_oem_intel_e52600v3_specific_bios_recovery_start_max_index;
