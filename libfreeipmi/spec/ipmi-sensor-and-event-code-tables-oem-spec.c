@@ -592,6 +592,18 @@ const char * const ipmi_oem_intel_e52600v3_specific_qpi_fatal_error[] =
   };
 unsigned int ipmi_oem_intel_e52600v3_specific_qpi_fatal_error_max_index = 0x0E;
 
+const char * const ipmi_oem_intel_s2600jf_specific_opi_fatal_error_2[] =
+  {
+    "Illegal inbound request",
+    "IIO Write Cache Uncorrectable Data ECC Error",
+    "IIO CSR crossing 32-bit boundary Error",
+    "IIO Received XPF physical/logical redirect interrupt inbound",
+    "IIO Illegal SAD or Illegal or non-existent address or memory",
+    "IIO Write Cache Coherency Violation",
+    NULL
+  };
+unsigned int ipmi_oem_intel_s2600jf_specific_opi_fatal_error_2_max_index = 0x05;
+
 const char * const ipmi_oem_intel_e52600v3_specific_qpi_link_width_reduced[] =
   {
     "reserved",

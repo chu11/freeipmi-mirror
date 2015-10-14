@@ -1934,6 +1934,17 @@ extern unsigned int ipmi_oem_intel_s2600jf_specific_qpi_link_width_reduced_max_i
 #define IPMI_OEM_INTEL_E52600V3_SPECIFIC_QPI_FATAL_ERROR_ROUTING_TABLE_ERROR                                            0x0E
 
 /*
+ * Event Reading Type Code = IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_QPI_FATAL_ERROR_2
+ * Sensor Type = IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
+ */
+#define IPMI_OEM_INTEL_E52600V3_SPECIFIC_QPI_FATAL_ERROR_2_ILLEGAL_INBOUND_REQUEST                                      0x00
+#define IPMI_OEM_INTEL_E52600V3_SPECIFIC_QPI_FATAL_ERROR_2_IIO_WRITE_CACHE_UNCORRECTABLE_DATA_ECC_ERROR                 0x01
+#define IPMI_OEM_INTEL_E52600V3_SPECIFIC_QPI_FATAL_ERROR_2_IIO_CSR_CROSSING_32_BIT_BOUNDARY_ERROR                       0x02
+#define IPMI_OEM_INTEL_E52600V3_SPECIFIC_QPI_FATAL_ERROR_2_IIO_RECEIVED_XPF_PHYSICAL_LOGICAL_REDIRECT_INTERRUPT_INBOUND 0x03
+#define IPMI_OEM_INTEL_E52600V3_SPECIFIC_QPI_FATAL_ERROR_2_IIO_ILLEGAL_SAD_OR_ILLEGAL_OR_NON_EXISTENT_ADDRESS_OR_MEMORY 0x04 
+#define IPMI_OEM_INTEL_E52600V3_SPECIFIC_QPI_FATAL_ERROR_2_IIO_WRITE_CACHE_COHERENCY_VIOLATION                          0x05
+
+/*
  * Event Reading Type Code = IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_QPI_LINK_WIDTH_REDUCED
  * Sensor Type = IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
  */
@@ -1947,6 +1958,9 @@ extern unsigned int ipmi_oem_intel_s2600jf_specific_qpi_link_width_reduced_max_i
 
 extern const char * const ipmi_oem_intel_e52600v3_specific_qpi_fatal_error[];
 extern unsigned int ipmi_oem_intel_e52600v3_specific_qpi_fatal_error_max_index;
+
+extern const char * const ipmi_oem_intel_e52600v3_specific_qpi_fatal_error_2[];
+extern unsigned int ipmi_oem_intel_e52600v3_specific_qpi_fatal_error_2_max_index;
 
 extern const char * const ipmi_oem_intel_e52600v3_specific_qpi_link_width_reduced[];
 extern unsigned int ipmi_oem_intel_e52600v3_specific_qpi_link_width_reduced_max_index;

@@ -2257,6 +2257,14 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
 					ipmi_oem_intel_e52600v3_specific_qpi_fatal_error_max_index,
 					ipmi_oem_intel_e52600v3_specific_qpi_fatal_error));
 
+	  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_QPI_FATAL_ERROR_2
+	      && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+	    return (_get_event_message (offset,
+					buf,
+					buflen,
+					ipmi_oem_intel_e52600v3_specific_qpi_fatal_error_2_max_index,
+					ipmi_oem_intel_e52600v3_specific_qpi_fatal_error_2));
+
 	  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_QPI_LINK_WIDTH_REDUCED
 	      && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
 	    return (_get_event_message (offset,
