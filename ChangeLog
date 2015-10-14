@@ -1,5 +1,10 @@
 2015-10-14 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/spec/ipmi-sensor-and-event-code-tables-oem-spec.c:
+	Fix typo taret -> target.
+
+2015-10-14 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-oem/: Update get-power-supply-status2 on Supermicro based
 	on mailing list discussion.
 

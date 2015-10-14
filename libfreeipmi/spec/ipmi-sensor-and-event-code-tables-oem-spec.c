@@ -517,7 +517,7 @@ const char * const ipmi_oem_intel_s2600jf_specific_opi_fatal_error[] =
     "Parity error in link or PHY layer",
     "Protocol layer timeout detected",
     "Protocol layer failed response",
-    "Protocol layer illegal packet field, taret Node ID and so on.",
+    "Protocol layer illegal packet field, target Node ID and so on.",
     "Protocol Layer Queue/table overflow/underflow",
     "Viral Error",
     "Protocol Layer parity error",
