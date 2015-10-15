@@ -2183,13 +2183,13 @@ sel_string_output_intel_event_data2_class_oem (ipmi_sel_ctx_t ctx,
 	  switch (target_of_update)
 	    {
 	    case IPMI_OEM_INTEL_E52600V3_SPECIFIC_FIRMWARE_UPDATE_STATUS_SENSOR_EVENT_DATA2_TARGET_OF_UPDATE_BMC:
-	      target_of_update_str = "";
+	      target_of_update_str = "BMC";
 	      break;
 	    case IPMI_OEM_INTEL_E52600V3_SPECIFIC_FIRMWARE_UPDATE_STATUS_SENSOR_EVENT_DATA2_TARGET_OF_UPDATE_BIOS:
-	      target_of_update_str = "";
+	      target_of_update_str = "BIOS";
 	      break;
 	    case IPMI_OEM_INTEL_E52600V3_SPECIFIC_FIRMWARE_UPDATE_STATUS_SENSOR_EVENT_DATA2_TARGET_OF_UPDATE_ME:
-	      target_of_update_str = "";
+	      target_of_update_str = "ME";
 	      break;
 	    default:
 	      target_of_update_str = "Unknown";
@@ -3516,32 +3516,46 @@ sel_string_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 	  && system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED
 	  && system_event_record_data->event_data2 == IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_E52600V3_CATERR)
 	{
-	  char *str;
+	  char cpu_str[INTEL_EVENT_BUFFER_LENGTH + 1];
+	  uint8_t cpu;
+	  unsigned int wlen = 0;
 
-	  /* If technically a bitmap, but documentation indicates only one bit can be set, we'll just use a switch for clarity */
-	  switch (system_event_record_data->event_data3)
+	  memset (cpu_str, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
+
+	  if (system_event_record_data->event_data3 & IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_E52600V3_CPU1)
 	    {
-	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_E52600V3_CPU1:
-	      str = "CPU1";
-	      break;
-	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_E52600V3_CPU2:
-	      str = "CPU2";
-	      break;
-	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_E52600V3_CPU3:
-	      str = "CPU3";
-	      break;
-	    case IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_E52600V3_CPU4:
-	      str = "CPU4";
-	      break;
-	    default:
-	      str = "Unknown";
-	      break;
+	      if (sel_string_strcat_comma_separate (cpu_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "CPU1"))
+		return (1);
+	    }
+
+	  if (system_event_record_data->event_data3 & IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_E52600V3_CPU2)
+	    {
+	      if (sel_string_strcat_comma_separate (cpu_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "CPU2"))
+		return (1);
+	    }
+
+	  if (system_event_record_data->event_data3 & IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_E52600V3_CPU3)
+	    {
+	      if (sel_string_strcat_comma_separate (cpu_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "CPU3"))
+		return (1);
+	    }
+
+	  if (system_event_record_data->event_data3 & IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_E52600V3_CPU4)
+	    {
+	      if (sel_string_strcat_comma_separate (cpu_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "CPU4"))
+		return (1);
+	    }
+
+	  if (!strlen (cpu_str))
+	    {
+	      if (sel_string_strcat_comma_separate (cpu_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "Unknown CPU"))
+		return (1);
 	    }
 
 	  snprintf (tmpbuf,
                     tmpbuflen,
 		    "%s caused CATERR",
-		    str);
+		    cpu_str);
 	  
 	  return (1);
 	}
