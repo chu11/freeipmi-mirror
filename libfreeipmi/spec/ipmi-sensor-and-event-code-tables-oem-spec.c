@@ -701,6 +701,14 @@ const char * const ipmi_oem_intel_e52600v3_specific_bios_recovery_finish[] =
 
 unsigned int ipmi_oem_intel_e52600v3_specific_bios_recovery_finish_max_index = 0x01;
 
+const char * const ipmi_oem_intel_e52600v3_specific_ierr_recovery_dump_info[] =
+  {
+    "reserved",
+    "Dump failed",
+    NULL,
+  };
+unsigned int ipmi_oem_intel_e52600v3_specific_ierr_recovery_dump_info_max_index = 0x01;
+
 /******************************************* 
  * Wistron                                 *
  *******************************************/

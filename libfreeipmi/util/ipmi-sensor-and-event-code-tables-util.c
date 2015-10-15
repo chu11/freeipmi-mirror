@@ -2320,6 +2320,14 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
 					buflen,
 					ipmi_oem_intel_e52600v3_specific_bios_recovery_finish_max_index,
 					ipmi_oem_intel_e52600v3_specific_bios_recovery_finish));
+
+	  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_IERR_RECOVERY_DUMP_INFO
+	      && sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_E52600V3_IERR_RECOVERY_DUMP_INFO)
+	    return (_get_event_message (offset,
+					buf,
+					buflen,
+					ipmi_oem_intel_e52600v3_specific_ierr_recovery_dump_info_max_index,
+					ipmi_oem_intel_e52600v3_specific_ierr_recovery_dump_info));
 	}
     }
   

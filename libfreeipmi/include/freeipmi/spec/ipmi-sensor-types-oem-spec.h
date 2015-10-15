@@ -110,6 +110,14 @@ extern "C" {
 #define IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_GENERIC             0xC0
 
 /*
+ * Intel S2600KP                                                                                                                                                                                   
+ * Intel S2600WT2                                                                                                                                                                                  
+ * Intel S2600WTT  
+ */
+#define IPMI_SENSOR_TYPE_OEM_INTEL_E52600V3_IERR_RECOVERY_DUMP_INFO 0xD1
+
+
+/*
  * Intel Node Manager
  *
  * For Intel Chips, not just Intel Motherboards.  Confirmed for:
