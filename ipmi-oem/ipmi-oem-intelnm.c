@@ -840,7 +840,7 @@ ipmi_oem_intelnm_get_node_manager_statistics (ipmi_oem_state_data_t *state_data)
 		      "Average Time                                  : %u ms\n",
 		      average * 10);
     } 
-  else /* mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_HOST_UNHANDLED_REQUESTS_STATISTICS */
+  else if (mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_HOST_UNHANDLED_REQUESTS_STATISTICS)
     {
       pstdout_printf (state_data->pstate,
 		      "Current Unhandled Requests                    : %u\n",
@@ -849,6 +849,25 @@ ipmi_oem_intelnm_get_node_manager_statistics (ipmi_oem_state_data_t *state_data)
       pstdout_printf (state_data->pstate,
 		      "Maximum Unhandled Requests                    : %u\n",
 		      maximum);
+    }
+  else /* mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_VOLUMETRIC_AIRFLOW_STATISTICS */
+    {
+      /* In units of 1/10 CFM, so divide by 10 to get CFM */
+      pstdout_printf (state_data->pstate,
+		      "Current CFM                                   : %d CFM\n",
+		      (double)current / 10);
+    
+      pstdout_printf (state_data->pstate,
+		      "Minimum CFM                                   : %d CFM\n",
+		      (double)minimum / 10);
+    
+      pstdout_printf (state_data->pstate,
+		      "Maximum CFM                                   : %d CFM\n",
+		      (double)maximum / 10);
+    
+      pstdout_printf (state_data->pstate,
+		      "Average CFM                                   : %d CFM\n",
+		      (double)average / 10);
     }
 
   pstdout_printf (state_data->pstate,
