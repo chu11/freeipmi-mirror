@@ -345,26 +345,19 @@ iPass 5 will not be used.
 .TP
 .B get-power-on-source
 This OEM command will return the reason for the most recent Power On.
+Command confirmed to work on Fujitsu RX100 S5.  .TP .B
+get-power-off-source This OEM command will return the reason for the
+most recent Power Off.  Command confirmed to work on Fujitsu RX100 S5.
+.TP .B get-remote-storage-status \fIconnection_number\fR This OEM
+command will return the connection and/or status of remote storage.
+\fIconnection_number\fR currently supports a range of 0-1.  Command
+confirmed to work on Fujitsu RX100 S5.  .TP .B get-system-status This
+OEM command will return the current system status.  Command confirmed
+to work on Fujitsu RX100 S5.  .TP .B get-eeprom-version-info
+\fIeeprom_number\fR This OEM command will return the current version
+info for various hardware elements, including firmware, SDR, and boot
+revision.  \fIeeprom_number\fR currently supports a range of 0-1.
 Command confirmed to work on Fujitsu RX100 S5.
-.TP
-.B get-power-off-source
-This OEM command will return the reason for the most recent Power Off.
-Command confirmed to work on Fujitsu RX100 S5.
-.TP
-.B get-remote-storage-status \fIconnection_number\fR
-This OEM command will return the connection and/or status of remote
-storage.  \fIconnection_number\fR currently supports a range of 0-1.
-Command confirmed to work on Fujitsu RX100 S5.
-.TP
-.B get-system-status
-This OEM command will return the current system status.  Command
-confirmed to work on Fujitsu RX100 S5.
-.TP
-.B get-eeprom-version-info \fIeeprom_number\fR
-This OEM command will return the current version info for various
-hardware elements, including firmware, SDR, and boot revision.
-\fIeeprom_number\fR currently supports a range of 0-1.  Command
-confirmed to work on Fujitsu RX100 S5.
 .TP
 .B get-identify-led
 This OEM command will get the current identify LED status.  Command
@@ -382,10 +375,9 @@ confirmed to work on Fujitsu RX100 S5.
 This OEM command will retrieve the Fujitsu specific string
 interpretation of a SEL record.  This command may be useful for
 interpreting Fujitsu OEM hex codes found in the SEL.  A specific SEL
-record ID must be specified.  Please see
-.B ipmi-sel(8),
-for retrieving SEL records.  Command confirmed to work on Fujitsu
-RX100 S5.
+record ID must be specified.  Please see .B ipmi-sel(8), for
+retrieving SEL records.  Command confirmed to work on Fujitsu RX100
+S5.
 .RE
 .TP
 .B IBM
@@ -404,9 +396,10 @@ This OEM command will get the current SMTP configuration on the IPMI
 card.  By default, configuration for every LAN channel will be output.
 If a \fIchannel\-number\fR is specified, only that specific channel
 number's configuration will be output.  Command confirmed to work on
-Intel S5500WB (Penguin Computing Relion 700) and Intel S2600JF (Appro 512X).
+Intel S5500WB (Penguin Computing Relion 700) and Intel S2600JF (Appro
+512X).
 .TP
-.B set-smtp-config \fI[channel\-number]\fR \fIKEY=VALUE ...\fR
+.B set-smtp-config \fI[channel\-number]\fR \fIKEY=VALUE...\fR
 This OEM command will set the current SMTP configuration on the IPMI
 card.  By default, configuration will be done for all LAN channels.
 If a \fIchannel\-number\fR is specified, only that specific channel
@@ -418,9 +411,10 @@ values are \fIsmtp=enable|disable\fR,
 \fIsenderemailaddress=string\fR, and \fIsmtphostname=string\fR.
 Multiple key=value pairs may be specified.  If no key=value pairs are
 specified, available pairs are output.  Command confirmed to work on
-Intel S5500WB (Penguin Computing Relion 700) and Intel S2600JF (Appro 512X).
+Intel S5500WB (Penguin Computing Relion 700) and Intel S2600JF (Appro
+512X).
 .TP
-.B get-power-restore-delay 
+.B get-power-restore-delay
 This OEM command will retrieve the power on delay.  The power on delay
 is a delay that occurs whenever the BMC turns on the system according
 to the Power Restore Policy setting.  It does not take effect
@@ -439,7 +433,8 @@ This OEM command will get the current status of BMC services such as
 ssh, http, and kvm.  Command confirmed to work on Intel S2600JF (Appro
 512X).
 .TP
-.B set-bmc-service-status \fIenable|disable\fR \fIssh|http|kvm\fR
+.B
+set-bmc-service-status \fIenable|disable\fR \fIssh|http|kvm\fR
 This OEM command will enable or disable BMC services besides IPMI.
 Note that \fIhttp\fR refers to both http and https.  Command confirmed
 to work on Intel S2600JF (Appro 512X).
@@ -451,13 +446,14 @@ values.  The command will spin until the restore is confirmed to be
 complete.  Command configured to work on Intel S5500WB (Penguin
 Computing Relion 700) and Intel S2600JF (Appro 512X).  After running
 this command, the BMC must be reset to return it to functioning
-status.  This may be accomplished by executing a cold-reset with
-.B bmc-device(8).
+status.  This may be accomplished by executing a cold-reset with .B
+bmc-device(8).
 .RE
 .TP
 .B IntelNM (Intel Node Manager)
 .LP
-The following OEM commands operate on Intel chipsets with Node Manager
+The
+following OEM commands operate on Intel chipsets with Node Manager
 support.  They all require access to the SDR.  They may work on
 multiple vendors motherboards.
 .LP
@@ -473,7 +469,8 @@ S5500WB (Penguin Computing Relion 700), Inventec 5441/5442 (Dell
 Xanadu II/III), Quanta S99Q (Dell FS12-TY), Quanta QSSC-S4R (Appro
 GB812X-CN), Supermicro X9DRi-F, Intel S2600JF (Appro 512X).
 .TP
-.B reset-node-manager-statistics \fI[mode=global|policy|hostunhandledrequests|hostresponsetime|cputhrottling|memorythrottling|hostcommfailure]\fR \fI[domainid=platform|cpu|memory|highpowerio]\fR \fI[policyid=num]\fR
+.B reset-node-manager-statistics \fI[mode=global|policy|hostunhandledrequests|hostresponsetime|cputhrottling|memorythrottling|hostcommfailure]\fR
+\fI[domainid=platform|cpu|memory|highpowerio]\fR \fI[policyid=num]\fR
 This OEM command will reset Intel Node Manager statistics.  The
 \fImode\fR will indicate the statistics to be reset.  The user may
 optionally specify a \fIdomainid\fR or \fIpolicyid\fR.  \fIdomainid\fR
@@ -494,7 +491,7 @@ verbose option is set, additional error messages will be output as
 valid policies are being searched for.  Command confirmed to work on
 Intel S2600JF (Appro 512X).
 .TP
-.B node-manager-policy-control \fI<enable|disable>\fR \fI[domainid=platform|cpu|memory|highpowerio]\fR \fI[policyid=num]\fR
+.B node-manager-policy-control \fI<enable|disable>\fR \fI[domainid=platform|cpu|memory|highpowerio]\fR \fI[policyid=num]\fR 
 This OEM command will enable or disable the current global, domain, or
 policies used by the Intel Node Manager.  If no \fIdomainid\fR is
 specified, then the Node Manager will be enabled or globally disabled.
@@ -515,7 +512,7 @@ additional error messages will be output as valid policies are being
 searched for.  Command confirmed to work on Intel S2600JF (Appro
 512X).
 .TP
-.B set-node-manager-policy \fIdomainid=platform|cpu|memory|highpowerio\fR \fIpolicyid=num\fR \fIpolicytrigger=none|inlettemperaturelimitpolicytrigger|missingpowerreadingtimeout|timeafterplatformresettrigger|boottimepolicy\fR \fIpolicytargetlimit=num\fR \fIcorrectiontimelimit=ms\fR \fIstatisticsreportingperiod=seconds\fR policystorage=persistent|volatile [\fIpolicytriggerlimit=num\fR] \fI[policystate=enable|disable]\fR \fI[policyexceptionaction=alert|shutdown] [aggressivepowercorrection=automatic|notaggressive|aggressive]\fR
+.B set-node-manager-policy \fIdomainid=platform|cpu|memory|highpowerio\fR \fIpolicyid=num\fR \fIpolicytrigger=none|inlettemperaturelimitpolicytrigger|missingpowerreadingtimeout|timeafterplatformresettrigger|boottimepolicy\fR \fIpolicytargetlimit=num\fR [platformbootingmode=performance|power] \fIcorrectiontimelimit=ms\fR \fIstatisticsreportingperiod=seconds\fR policystorage=persistent|volatile [\fIpolicytriggerlimit=num\fR] \fI[policystate=enable|disable]\fR \fI[policyexceptionaction=alert|shutdown] [aggressivepowercorrection=automatic|notaggressive|aggressive]\fR
 This OEM command will add or modify an indicated policy ID from the
 domain ID.  Most of the fields above are required, although they can
 be listed in any order.  By default any created/modified policy will
@@ -536,12 +533,15 @@ automatic.  It can only be set to \fInotaggressive\fR or
 \fIaggressive\fR if the \fIdomainid\fR is \fIplatform\fR or \fIcpu\fR.
 \fIpolicystorage\fR determines if the policy being configured can
 survive across resets of the machine.  The units of the
-\fIpolicytargetlimit\fR depend on the \fIpolicytrigger\fR selected.
+\fIpolicytargetlimit\fR depends on the \fIpolicytrigger\fR selected.
 If the \fIpolicytrigger\fR is \fInone\fR,
-\fIinlettemperaturelimitpolicytrigger\fR,
-\fItimeafterplatformresettrigger\fR, or \fIboottimepolicy\fR, the
-units will be in Watts.  If the \fIpolicytrigger\fR is
-\fImissingpowerreadingtimeout\fR, the units will be in seconds.
+\fIinlettemperaturelimitpolicytrigger\fR, or
+\fItimeafterplatformresettrigger\fR, the units will be in Watts.  If
+the \fIpolicytrigger\fR is \fImissingpowerreadingtimeout\fR, the units
+will be in percent, where 100 means maximum throttling.  If the
+\fIpolicytrigger\fR is \fIboottimepolicy\fR, the units is number of
+CPUs.  In addition, \fIplatformbootingmode\fR must be set to
+performance or power to indicate optimization mode.
 \fIpolicytriggerlimit\fR is sometimes required, given the input to
 \fIpolicytrigger\fR.  The units of the \fIpolicytriggerlimit\fR will
 depend on the \fIpolicytrigger\fR selected.  If the
@@ -567,7 +567,7 @@ This OEM command will remove the indicated policy ID from the domain
 ID.  Both the \fIdomainid\fR and \fIpolicyid\fR are required.  Command
 confirmed to work on Intel S2600JF (Appro 512X).
 .TP
-.B get-node-manager-alert-thresholds \fI[domainid=platform|cpu|memory|highpowerio]\fR \fI[policyid=num]\fR 
+.B get-node-manager-alert-thresholds \fI[domainid=platform|cpu|memory|highpowerio]\fR \fI[policyid=num]\fR
 This OEM command will get the current alert thresholds.  If no
 \fIdomainid\fR is specified, all alert thresholds for domain IDs and
 policy Ids will be attempted to be output.  If a \fIdomainid\fR is
@@ -584,7 +584,7 @@ and policy ID.  Up to three thresholds can be specified, The units of
 the thresholds will depend on the configuration of the current policy.
 Command confirmed to work on Intel S2600JF (Appro 512X).
 .TP
-.B get-node-manager-policy-suspend-periods \fI[domainid=platform|cpu|memory|highpowerio]\fR \fI[policyid=num]\fR 
+.B get-node-manager-policy-suspend-periods \fI[domainid=platform|cpu|memory|highpowerio]\fR \fI[policyid=num]\fR
 This OEM command will get the current policy suspend periods.  Suspend
 periods will temporarily disable Intel Node Manager policies at
 configured times.  If no \fIdomainid\fR is specified, all suspend
@@ -628,13 +628,11 @@ This OEM command will get the policy which is currently limiting.
 This OEM command will get the current alert destination information.
 Some of the configuration information output by this command will need
 to be correlated to BMC device channel and PEF configuration.  BMC
-device channel information can be viewed via
-.B bmc-info(8).
-PEF configuration can be viewed via
-.B ipmi-config(8).
-Command confirmed to work on Intel S2600JF (Appro 512X).
+device channel information can be viewed via .B bmc-info(8).  PEF
+configuration can be viewed via .B ipmi-config(8).  Command confirmed
+to work on Intel S2600JF (Appro 512X).
 .TP
-.B set-node-manager-alert-destination \fI[channelnumber=num]\fR \fI[slaveaddress=address]\fR \fI[destinationselector=num]\fR \fI[alertstringselector=num]\fR \fI[sendalertstring=yes|no]\fR \fI[register=yes|no]\fR 
+.B set-node-manager-alert-destination \fI[channelnumber=num]\fR \fI[slaveaddress=address]\fR \fI[destinationselector=num]\fR \fI[alertstringselector=num]\fR \fI[sendalertstring=yes|no]\fR \fI[register=yes|no]\fR
 This OEM command will set the current alert receiver.  By default,
 this command will attempt to register an alert (identical to
 \fIregister=yes\fR).  When registering an alert receiver the
@@ -660,8 +658,7 @@ S99Q (Dell FS12-TY), Quanta QSSC-S4R (Appro GB812X-CN), Intel S2600JF
 .TP
 .B Inventec
 .RS
-.TP
-.B get-nic-mode
+.TP .B get-nic-mode
 This OEM command will determine the current NIC mode as dedicated or
 shared.  Dedicated indicates IPMI is only available on the dedicated
 management port.  Shared indicates IPMI is also available on one of
@@ -669,8 +666,8 @@ the primary ethernet ports.  Command confirmed to work on Inventec
 5441/5442 (Dell Xanadu II/III).
 .TP
 .B set-nic-mode \fIdedicated|shared\fR
-This OEM command will set the current NIC mode to dedicated or
-shared.  (See \fIget\-nic\-mode\fR above for description on dedicated
+This OEM command will set the current NIC mode to dedicated or shared.
+(See \fIget\-nic\-mode\fR above for description on dedicated
 vs. shared mode.)  This OEM command may internally reset the BMC,
 making the BMC unusable for awhile.  Command confirmed to work on
 Inventec 5441/5442 (Dell Xanadu II/III).
@@ -686,8 +683,7 @@ tool).  This command is placed here for convenience.
 This OEM command will set the dedicated or shared BMC MAC address.
 (See \fIget\-nic\-mode\fR above for description on dedicated
 vs. shared mode.)  The BMC MAC address cannot be set through the
-normal IPMI MAC address command (what is used in the
-.B ipmi-config(8)
+normal IPMI MAC address command (what is used in the .B ipmi-config(8)
 tool).  The MACADDR should be specified in XX:XX:XX:XX:XX:XX form.  A
 shared BMC MAC address may conflict with normal communication ethernet
 communication on the primary ethernet port.  Users may wish to
@@ -739,10 +735,9 @@ failures configured via \fIset\-authentication\-config\fR.  Command
 confirmed to work on Inventec 5441/5442 (Dell Xanadu II/III).
 .TP
 .B get-dns-config
-This OEM command will display additional OEM DNS settings.
-(See \fIset\-dns\-config\fR below for description on
-outputs.)  Command confirmed to work on Inventec 5441/5442 (Dell
-Xanadu II/III).
+This OEM command will display additional OEM DNS settings.  (See
+\fIset\-dns\-config\fR below for description on outputs.)  Command
+confirmed to work on Inventec 5441/5442 (Dell Xanadu II/III).
 .TP
 .B set-dns-config \fIKEY=VALUE ...\fR
 This OEM command will set additional OEM DNS settings on the IPMI
@@ -775,9 +770,9 @@ This OEM command will set the current web server configuration on the
 IPMI card.  The possible keys and values are
 \fIwebserver=enable|disable\fR, \fIwebservertimeout=seconds\fR,
 \fIhttpportnumber=num\fR, and \fIhttpsportnumber=num\fR.  Multiple
-key=value pairs may be specified.  If no key=value pairs are specified,
-available pairs are output.  Command confirmed to work on Inventec
-5441/5442 (Dell Xanadu II/III).
+key=value pairs may be specified.  If no key=value pairs are
+specified, available pairs are output.  Command confirmed to work on
+Inventec 5441/5442 (Dell Xanadu II/III).
 .TP
 .B get-power-management-config
 This OEM command will get the current power management configuration
@@ -796,9 +791,9 @@ specifies no delay, \fIauto\fR generates a delay time between the
 minimum and maximum configured, and \fIuser\fR uses the user defined
 time defined by \fIpowerondelay\fR.  \fIpowerondelay\fR must be within
 the minimum and maximum power on delay times.  Multiple key=value
-pairs may be specified.  If no key=value pairs are specified, available
-pairs are output.  Command confirmed to work on Inventec 5441/5442
-(Dell Xanadu II/III).
+pairs may be specified.  If no key=value pairs are specified,
+available pairs are output.  Command confirmed to work on Inventec
+5441/5442 (Dell Xanadu II/III).
 .TP
 .B get-sol-idle-timeout
 This OEM command will get the SOL idle timeout.  Command confirmed to
@@ -811,8 +806,8 @@ This OEM command will set the SOL idle timeout.  The
 confirmed to work on Inventec 5441/5442 (Dell Xanadu II/III).
 .TP
 .B get-telnet-ssh-redirect-status
-This OEM command will get the telnet/SSH redirect status.
-Command confirmed to work on Inventec 5442 (Dell Xanadu III).
+This OEM command will get the telnet/SSH redirect status.  Command
+confirmed to work on Inventec 5442 (Dell Xanadu III).
 .TP
 .B set-telnet-ssh-redirect-status \fIenable|disable\fR
 This OEM command will enable or disable telnet/SSH redirect status.
@@ -837,10 +832,10 @@ the IPMI card.  The possible keys and values are
 \fIdelaytime\fR specifies the number of seconds to wait before
 connecting.  If set to zero, the connection is immeadite.  If the user
 specifies \fIrandom\fR, a random time between 5 and 10 seconds is
-chosen.  Command confirmed to work on Inventec 5441/5442 (Dell Xanadu II/III).
-After setting these configuration parameters,
-typically a user will want to execute the \fIupdate-firmware\fR command
-listed below.
+chosen.  Command confirmed to work on Inventec 5441/5442 (Dell Xanadu
+II/III).  After setting these configuration parameters, typically a
+user will want to execute the \fIupdate-firmware\fR command listed
+below.
 \}
 .if 0 \{
 .TP
@@ -858,9 +853,9 @@ has completed or an error has occurred.  \fItftp\fR, \fIftp\fR, and
 following it depend on the specific motherboard for availability,
 support, or possibly requirement.  The
 \fIconfig=preserve|nopreserve\fR is currently supported on the Dell
-Xanadu II/III.  If the verbose option is set, progress will be output with
-information that is available.  Command confirmed to work on Inventec
-5441/5442 (Dell Xanadu II/III).
+Xanadu II/III.  If the verbose option is set, progress will be output
+with information that is available.  Command confirmed to work on
+Inventec 5441/5442 (Dell Xanadu II/III).
 \}
 .TP
 .B get-board-id
@@ -930,8 +925,7 @@ on Inventec 5441 (Dell Xanadu II).
 .TP
 .B read-eeprom \fIat24c256n\fR
 This OEM command will read the specified eeprom. Command confirmed to
-work on Inventec 5441 (Dell Xanadu II) for
-\fIat24c256\fR.
+work on Inventec 5441 (Dell Xanadu II) for \fIat24c256\fR.
 .TP
 .B clear-eeprom \fIat24c256n\fR
 This OEM command will clear the specified eeprom, overwriting all
@@ -975,9 +969,9 @@ users in the system may have been locked out via authentication
 failures.  Command confirmed to work on Quanta S99Q (Dell FS12-TY).
 .TP
 .B get-dns-config
-This OEM command will display additional OEM DNS settings.
-(See \fIset\-dns\-config\fR below for description on
-outputs.)  Command confirmed to work on Quanta S99Q (Dell FS12-TY).
+This OEM command will display additional OEM DNS settings.  (See
+\fIset\-dns\-config\fR below for description on outputs.)  Command
+confirmed to work on Quanta S99Q (Dell FS12-TY).
 .TP
 .B set-dns-config \fIKEY=VALUE ...\fR
 This OEM command will set additional OEM DNS settings on the IPMI
@@ -1003,14 +997,14 @@ output.  Command confirmed to work on Quanta S99Q (Dell FS12-TY).
 This OEM command will get the current web server configuration on the
 IPMI card.  Command confirmed to work on Quanta S99Q (Dell FS12-TY).
 .TP
-.B set-web-server-config \fIKEY=VALUE ...\fR
+.B set-web-server-config \fIKEY=VALUE...\fR
 This OEM command will set the current web server configuration on the
 IPMI card.  The possible keys and values are
 \fIwebserver=enable|disable\fR, \fIwebservertimeout=seconds\fR,
 \fIhttpportnumber=num\fR, and \fIhttpsportnumber=num\fR.  Multiple
-key=value pairs may be specified.  If no key=value pairs are specified,
-available pairs are output.  Command confirmed to work on Quanta S99Q
-(Dell FS12-TY).
+key=value pairs may be specified.  If no key=value pairs are
+specified, available pairs are output.  Command confirmed to work on
+Quanta S99Q (Dell FS12-TY).
 .TP
 .B get-power-management-config
 This OEM command will get the current power management configuration
@@ -1029,9 +1023,9 @@ specifies no delay, \fIauto\fR generates a delay time between the
 minimum and maximum configured, and \fIuser\fR uses the user defined
 time defined by \fIpowerondelay\fR.  \fIpowerondelay\fR must be within
 the minimum and maximum power on delay times.  Multiple key=value
-pairs may be specified.  If no key=value pairs are specified, available
-pairs are output.  Command confirmed to work on Quanta S99Q (Dell
-FS12-TY).
+pairs may be specified.  If no key=value pairs are specified,
+available pairs are output.  Command confirmed to work on Quanta S99Q
+(Dell FS12-TY).
 .TP
 .B get-sol-idle-timeout
 This OEM command will get the SOL idle timeout.  Command confirmed to
@@ -1077,8 +1071,7 @@ This OEM command will set the dedicated or shared BMC MAC address for
 a specified motherboard.  It will be written directly to the BMC
 eeprom.  (See \fIget\-nic\-mode\fR above for description on dedicated
 vs. shared mode.)  The BMC MAC address cannot be set through the
-normal IPMI MAC address command (what is used in the
-.B ipmi-config(8)
+normal IPMI MAC address command (what is used in the .B ipmi-config(8)
 tool).  The MACADDR should be specified in XX:XX:XX:XX:XX:XX form.  A
 shared BMC MAC address may conflict with normal communication ethernet
 communication on the primary ethernet port.  Users may wish to
@@ -1086,21 +1079,23 @@ configuration an alternate MAC address instead.  After configuration
 of the MAC address, the BMC must be reset.  This may be accomplished
 by executing a cold-reset with
 .B bmc-device(8).
-Command confirmed to work on Quanta S99Q (Dell FS12-TY) for \fIs99q\fR.
+Command confirmed to work on Quanta S99Q (Dell FS12-TY) for
+\fIs99q\fR.
 .RE
 .TP
 .B Sun
 .RS
 .TP
 .B get-led
-This OEM command will output current LED mode.  \fIoff\fR
-indicates the LED is steady off, \fIon\fR indicates the LED is steady
-on, \fIstandby\fR indicates the LED blinks at a 100ms on, 2900ms off
-rate, \fIslow\fR indicates the LED is blinking at 1Hz, and \fIfast\fR
-indicates the LED is blinking at 4Hz.
-If the verbose option is set, sensor names will be output with their
-entity ID and instance when appropriate.  (Similar to the
-\fI\-\-entity\-sensor\-names\fR option in
+
+This OEM command will output current LED mode.  \fIoff\fR indicates
+the LED is steady off, \fIon\fR indicates the LED is steady on,
+\fIstandby\fR indicates the LED blinks at a 100ms on, 2900ms off rate,
+\fIslow\fR indicates the LED is blinking at 1Hz, and \fIfast\fR
+indicates the LED is blinking at 4Hz.  If the verbose option is set,
+sensor names will be output with their entity ID and instance when
+appropriate.  (Similar to the \fI\-\-entity\-sensor\-names\fR option
+in
 .B ipmi-sensors.)
 This OEM command requires access to the SDR.  Command confirmed to
 work on Sun Fire 4140 with ILOM.
@@ -1118,7 +1113,7 @@ the SDR.  Command confirmed to work on Sun Fire 4140 with ILOM.
 This OEM command will output additional firmware version information.
 Command confirmed to work on Supermicro H8QME.
 .TP
-.B reset-intrusion 
+.B reset-intrusion
 This OEM command will reset the motherboard intrusion flag after it
 has been triggered.  For example, in
 .B ipmi-sensors
@@ -1213,9 +1208,9 @@ failures.  Command confirmed to work on Wistron / Dell Poweredge
 C6220.
 .TP
 .B get-dns-config
-This OEM command will display additional OEM DNS settings.
-(See \fIset\-dns\-config\fR below for description on
-outputs.)  Command confirmed to work on Wistron / Dell Poweredge C6220.
+This OEM command will display additional OEM DNS settings.  (See
+\fIset\-dns\-config\fR below for description on outputs.)  Command
+confirmed to work on Wistron / Dell Poweredge C6220.
 .TP
 .B set-dns-config \fIKEY=VALUE ...\fR
 This OEM command will set additional OEM DNS settings on the IPMI
@@ -1244,7 +1239,7 @@ This OEM command will get the current web server configuration on the
 IPMI card.  Command confirmed to work on Wistron / Dell Poweredge
 C6220.
 .TP
-.B set-web-server-config \fIKEY=VALUE ...\fR
+.B set-web-server-config \fIKEY=VALUE...\fR
 This OEM command will set the current web server configuration on the
 IPMI card.  The possible keys and values are
 \fIwebserver=enable|disable\fR, \fIwebservertimeout=seconds\fR,
@@ -1306,8 +1301,8 @@ Wistron / Dell Poweredge C6220.
 \}
 .TP
 .B get-ipv6-settings
-This OEM command will get the current IPv6 settings on the
-IPMI card.  Command confirmed to work on Wistron / Dell Poweredge C6220.
+This OEM command will get the current IPv6 settings on the IPMI card.
+Command confirmed to work on Wistron / Dell Poweredge C6220.
 .TP
 .B set-ipv6-settings \fIKEY=VALUE ...\fR
 This OEM command will set the current IPv6 settings on the IPMI card.
@@ -1377,7 +1372,7 @@ chassis fault LED status.  \fIoff\fR indicates the LED is off,
 \fIsolid\fR indicates the LED is on and steady, \fIblink\fR indicates
 the LED is on and blinking.  Command confirmed to work on Wistron /
 Dell Poweredge C6220.
-.\" XXX - is true, set off ifnot there? 
+.\" XXX - is true, set off ifnot there?
 .TP
 .B set-chassis-led-status \fIidentify-off|identify-solid|identify-blink\fR \fIfault-off|fault-solid|fault-blink\fR
 This OEM command will set the chassis identification and chassis fault
@@ -1396,9 +1391,9 @@ This OEM command will set DHCP retry information.  The
 configure no retries, 255 or "indefinite" will configure constant
 retries.  The \fIretry\-interval\fR is one-based, in 10 second
 increments (e.g. 1 = 10 seconds).  The \fIretry\-timeout\fR is
-one-based, in 1 minute increments (e.g. 1 = 1 minute).
-After running this command, the BMC may need to be reset to finalize
-the configuration.  This may be accomplished by executing a cold-reset
+one-based, in 1 minute increments (e.g. 1 = 1 minute).  After running
+this command, the BMC may need to be reset to finalize the
+configuration.  This may be accomplished by executing a cold-reset
 with
 .B bmc-device(8).
 Command confirmed to work on Wistron / Dell Poweredge C6220.
@@ -1414,9 +1409,9 @@ up.  Command confirmed to work on Wistron / Dell Poweredge C6220..
 .B set-link-status-change-control \fIlink_resilience|dhcp_rediscovery\fR
 This OEM command will set the current NIC link status change control
 setting.  (See \fIset\-link\-status\-change\-control\fR above for
-description of arguments).  After running this command, the BMC may need to be
-reset to finalize the configuration.  This may be accomplished by
-executing a cold-reset with
+description of arguments).  After running this command, the BMC may
+need to be reset to finalize the configuration.  This may be
+accomplished by executing a cold-reset with
 .B bmc-device(8).
 Command confirmed to work on Wistron / Dell Poweredge C6220.
 .TP
@@ -1454,7 +1449,8 @@ be complete.  Command confirmed to work on Wistron / Dell Poweredge
 C6220.  After running this command, the BMC must be reset to return it
 to functioning status.  This may be accomplished by executing a
 cold-reset with
-.B bmc-device(8).
+.B
+bmc-device(8).
 \}
 .RE
 #include <@top_srcdir@/man/manpage-common-hostranged-text-main.man>

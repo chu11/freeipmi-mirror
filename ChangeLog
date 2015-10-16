@@ -2,6 +2,17 @@
 
 	* ipmi-oem/ipmi-oem-intelnm.c (ipmi_oem_intelnm_get_node_manager_statistics):
 	Fix errors in units in output.
+
+	* ipmi-oem/ipmi-oem-intelnm.c (ipmi_oem_intelnm_set_node_manager_policy):
+	Fix error in setting logic.
+
+	* libfreeipmi/include/freeipmi/api/ipmi-oem-intel-node-manager-cmds-api.h,
+	ipmi_cmd_oem_intel_node_manager_set_node_manager_policy_boot_time_policy (ipmi_cmd_oem_intel_node_manager_set_node_manager_policy_boot_time_policy):
+	New function.
+
+	* libfreeipmi/include/freeipmi/cmds/ipmi-oem-intel-node-manager-cmds.h,
+	libfreeipmi/cmds/ipmi-oem-intel-node-manager-cmds.c (fill_cmd_oem_intel_node_manager_set_node_manager_policy_boot_time_policy):
+	New function.
 	
 2015-09-30 Albert Chu <chu11@llnl.gov>
 
