@@ -5,6 +5,7 @@ o In ipmi-locate, fix probing issue on arm32 & 64.
 o Handle several additional completion code error message in libfreeipmi.
 o Handle several error handling corner cases in ipmi-sensors.
 o Support Intel E5 2600 V3 motherboard OEM SEL events.
+o Fix several errors in ipmi-oem intelnm get-node-manager-statistics output.
 
 FreeIPMI 1.4.9 - 06/01/15
 -------------------------
