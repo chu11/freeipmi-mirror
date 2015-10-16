@@ -486,7 +486,7 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_destinatio
     { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
     { 4,  "channel_number", REQUIRED, LENGTH-FIXED }
     { 3,  "reserved1", REQUIRED, LENGTH-FIXED }
-    { 1,  "destination_information_operation", REQUIRED, LENGTH-FIXED }
+    { 1,  "alert_receiver_deactivation", REQUIRED, LENGTH-FIXED }
     { 8,  "destination_information", REQUIRED, LENGTH-FIXED }
     { 7,  "alert_string_selector", REQUIRED, LENGTH-FIXED }
     { 1,  "send_alert_string", REQUIRED, LENGTH-FIXED }
@@ -500,7 +500,7 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_destinatio
     { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
     { 4,  "channel_number", REQUIRED, LENGTH-FIXED }
     { 3,  "reserved1", REQUIRED, LENGTH-FIXED }
-    { 1,  "destination_information_operation", REQUIRED, LENGTH-FIXED }
+    { 1,  "alert_receiver_deactivation", REQUIRED, LENGTH-FIXED }
     { 1,  "reserved2", REQUIRED, LENGTH-FIXED }
     { 7,  "slave_address", REQUIRED, LENGTH-FIXED }
     { 7,  "alert_string_selector", REQUIRED, LENGTH-FIXED }
@@ -515,7 +515,7 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_destinatio
     { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
     { 4,  "channel_number", REQUIRED, LENGTH-FIXED }
     { 3,  "reserved1", REQUIRED, LENGTH-FIXED }
-    { 1,  "destination_information_operation", REQUIRED, LENGTH-FIXED }
+    { 1,  "alert_receiver_deactivation", REQUIRED, LENGTH-FIXED }
     { 4,  "destination_selector", REQUIRED, LENGTH-FIXED }
     { 4,  "reserved2", REQUIRED, LENGTH-FIXED }
     { 7,  "alert_string_selector", REQUIRED, LENGTH-FIXED }
@@ -548,7 +548,7 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_destinatio
     { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
     { 4,  "channel_number", REQUIRED, LENGTH-FIXED }
     { 3,  "reserved1", REQUIRED, LENGTH-FIXED }
-    { 1,  "destination_information_operation", REQUIRED, LENGTH-FIXED }
+    { 1,  "alert_receiver_deactivation", REQUIRED, LENGTH-FIXED }
     { 4,  "destination_selector", REQUIRED, LENGTH-FIXED }
     { 4,  "reserved2", REQUIRED, LENGTH-FIXED }
     { 7,  "alert_string_selector", REQUIRED, LENGTH-FIXED }

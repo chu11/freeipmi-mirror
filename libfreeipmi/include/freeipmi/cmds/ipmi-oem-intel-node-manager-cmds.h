@@ -231,12 +231,19 @@ extern "C" {
 #define IPMI_OEM_INTEL_NODE_MANAGER_IPMI_INTERFACE_VERSION_2_0 0x02
 #define IPMI_OEM_INTEL_NODE_MANAGER_IPMI_INTERFACE_VERSION_3_0 0x03
 
-#define IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_INFORMATION_OPERATION_REGISTER_ALERT_RECEIVER   0x0
-#define IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_INFORMATION_OPERATION_UNREGISTER_ALERT_RECEIVER 0x1
+#define IPMI_OEM_INTEL_NODE_MANAGER_ALERT_RECEIVER_DEACTIVATION_REGISTER_ALERT_RECEIVER   0x0
+#define IPMI_OEM_INTEL_NODE_MANAGER_ALERT_RECEIVER_DEACTIVATION_UNREGISTER_ALERT_RECEIVER 0x1
+
+#define IPMI_OEM_INTEL_NODE_MANAGER_ALERT_RECEIVER_DEACTIVATION_VALID(__val) \
+  (((__val) == IPMI_OEM_INTEL_NODE_MANAGER_ALERT_RECEIVER_DEACTIVATION_REGISTER_ALERT_RECEIVER \
+    || (__val) == IPMI_OEM_INTEL_NODE_MANAGER_ALERT_RECEIVER_DEACTIVATION_UNREGISTER_ALERT_RECEIVER) ? 1 : 0)
+
+/* legacy names */
+#define IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_INFORMATION_OPERATION_REGISTER_ALERT_RECEIVER   IPMI_OEM_INTEL_NODE_MANAGER_ALERT_RECEIVER_DEACTIVATION_REGISTER_ALERT_RECEIVER
+#define IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_INFORMATION_OPERATION_UNREGISTER_ALERT_RECEIVER IPMI_OEM_INTEL_NODE_MANAGER_ALERT_RECEIVER_DEACTIVATION_UNREGISTER_ALERT_RECEIVER
 
 #define IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_INFORMATION_OPERATION_VALID(__val) \
-  (((__val) == IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_INFORMATION_OPERATION_REGISTER_ALERT_RECEIVER \
-    || (__val) == IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_INFORMATION_OPERATION_UNREGISTER_ALERT_RECEIVER) ? 1 : 0)
+  IPMI_OEM_INTEL_NODE_MANAGER_ALERT_RECEIVER_DEACTIVATION_VALID((__val))
 
 #define IPMI_OEM_INTEL_NODE_MANAGER_ALERT_STRING_SELECTOR_USE_VOLATILE_ALERT_STRING 0x00
 
@@ -254,8 +261,12 @@ extern "C" {
   (((__val) == IPMI_OEM_INTEL_NODE_MANAGER_DONT_SEND_AN_ALERT_STRING    \
     || (__val) == IPMI_OEM_INTEL_NODE_MANAGER_SEND_ALERT_STRING_IDENTIFIED_BY_STRING_SELECTOR) ? 1 : 0)
 
-#define IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_INFORMATION_OPERATION_CONFIGURATION_VALID   0x0
-#define IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_INFORMATION_OPERATION_CONFIGURATION_INVALID 0x1
+#define IPMI_OEM_INTEL_NODE_MANAGER_ALERT_RECEIVER_DEACTIVATION_CONFIGURATION_VALID   0x0
+#define IPMI_OEM_INTEL_NODE_MANAGER_ALERT_RECEIVER_DEACTIVATION_CONFIGURATION_INVALID 0x1
+
+/* legacy names */
+#define IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_INFORMATION_OPERATION_CONFIGURATION_VALID   IPMI_OEM_INTEL_NODE_MANAGER_ALERT_RECEIVER_DEACTIVATION_CONFIGURATION_VALID
+#define IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_INFORMATION_OPERATION_CONFIGURATION_INVALID IPMI_OEM_INTEL_NODE_MANAGER_ALERT_RECEIVER_DEACTIVATION_CONFIGURATION_INVALID
 
 #define IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_SELECTOR_OPERATOR_USE_VOLATILE_DESTINATION_INFO 0x0
 
@@ -412,21 +423,21 @@ int fill_cmd_oem_intel_node_manager_set_node_manager_power_draw_range (uint8_t d
                                                                        fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_oem_intel_node_manager_set_node_manager_alert_destination (uint8_t channel_number,
-                                                                        uint8_t destination_information_operation,
+                                                                        uint8_t alert_receiver_deactivation,
                                                                         uint8_t destination_information,
                                                                         uint8_t alert_string_selector,
                                                                         uint8_t send_alert_string,
                                                                         fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_oem_intel_node_manager_set_node_manager_alert_destination_ipmb (uint8_t channel_number,
-                                                                             uint8_t destination_information_operation,
+                                                                             uint8_t alert_receiver_deactivation,
                                                                              uint8_t slave_address,
                                                                              uint8_t alert_string_selector,
                                                                              uint8_t send_alert_string,
                                                                              fiid_obj_t obj_cmd_rq);
   
 int fill_cmd_oem_intel_node_manager_set_node_manager_alert_destination_lan (uint8_t channel_number,
-                                                                            uint8_t destination_information_operation,
+                                                                            uint8_t alert_receiver_deactivation,
                                                                             uint8_t destination_selector,
                                                                             uint8_t alert_string_selector,
                                                                             uint8_t send_alert_string,

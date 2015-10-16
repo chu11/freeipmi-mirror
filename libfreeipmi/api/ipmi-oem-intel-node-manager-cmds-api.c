@@ -1145,7 +1145,7 @@ ipmi_cmd_oem_intel_node_manager_set_node_manager_alert_destination (ipmi_ctx_t c
                                                                     uint8_t target_slave_address,
                                                                     uint8_t target_lun,
                                                                     uint8_t channel_number,
-                                                                    uint8_t destination_information_operation,
+                                                                    uint8_t alert_receiver_deactivation,
                                                                     uint8_t destination_information,
                                                                     uint8_t alert_string_selector,
                                                                     uint8_t send_alert_string,
@@ -1181,7 +1181,7 @@ ipmi_cmd_oem_intel_node_manager_set_node_manager_alert_destination (ipmi_ctx_t c
     }
 
   if (fill_cmd_oem_intel_node_manager_set_node_manager_alert_destination (channel_number,
-                                                                          destination_information_operation,
+                                                                          alert_receiver_deactivation,
                                                                           destination_information,
                                                                           alert_string_selector,
                                                                           send_alert_string,
@@ -1232,7 +1232,7 @@ ipmi_cmd_oem_intel_node_manager_set_node_manager_alert_destination_ipmb (ipmi_ct
                                                                          uint8_t target_slave_address,
                                                                          uint8_t target_lun,
                                                                          uint8_t channel_number,
-                                                                         uint8_t destination_information_operation,
+                                                                         uint8_t alert_receiver_deactivation,
                                                                          uint8_t slave_address,
                                                                          uint8_t alert_string_selector,
                                                                          uint8_t send_alert_string,
@@ -1268,7 +1268,7 @@ ipmi_cmd_oem_intel_node_manager_set_node_manager_alert_destination_ipmb (ipmi_ct
     }
 
   if (fill_cmd_oem_intel_node_manager_set_node_manager_alert_destination_ipmb (channel_number,
-                                                                               destination_information_operation,
+                                                                               alert_receiver_deactivation,
                                                                                slave_address,
                                                                                alert_string_selector,
                                                                                send_alert_string,
@@ -1319,7 +1319,7 @@ ipmi_cmd_oem_intel_node_manager_set_node_manager_alert_destination_lan (ipmi_ctx
                                                                         uint8_t target_slave_address,
                                                                         uint8_t target_lun,
                                                                         uint8_t channel_number,
-                                                                        uint8_t destination_information_operation,
+                                                                        uint8_t alert_receiver_deactivation,
                                                                         uint8_t destination_selector,
                                                                         uint8_t alert_string_selector,
                                                                         uint8_t send_alert_string,
@@ -1355,7 +1355,7 @@ ipmi_cmd_oem_intel_node_manager_set_node_manager_alert_destination_lan (ipmi_ctx
     }
 
   if (fill_cmd_oem_intel_node_manager_set_node_manager_alert_destination_lan (channel_number,
-                                                                              destination_information_operation,
+                                                                              alert_receiver_deactivation,
                                                                               destination_selector,
                                                                               alert_string_selector,
                                                                               send_alert_string,

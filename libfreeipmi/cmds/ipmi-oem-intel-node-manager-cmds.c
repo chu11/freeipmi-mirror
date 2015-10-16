@@ -458,7 +458,7 @@ fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_destinati
     { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4,  "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 3,  "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "destination_information_operation", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1,  "alert_receiver_deactivation", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8,  "destination_information", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 7,  "alert_string_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1,  "send_alert_string", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -471,7 +471,7 @@ fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_destinati
     { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4,  "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 3,  "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "destination_information_operation", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1,  "alert_receiver_deactivation", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1,  "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 7,  "slave_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 7,  "alert_string_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -485,7 +485,7 @@ fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_destinati
     { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4,  "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 3,  "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "destination_information_operation", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1,  "alert_receiver_deactivation", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4,  "destination_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4,  "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 7,  "alert_string_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -515,7 +515,7 @@ fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_destinati
     { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4,  "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 3,  "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1,  "destination_information_operation", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1,  "alert_receiver_deactivation", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4,  "destination_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4,  "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 7,  "alert_string_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -1225,14 +1225,14 @@ fill_cmd_oem_intel_node_manager_set_node_manager_power_draw_range (uint8_t domai
 
 int
 fill_cmd_oem_intel_node_manager_set_node_manager_alert_destination (uint8_t channel_number,
-                                                                    uint8_t destination_information_operation,
+                                                                    uint8_t alert_receiver_deactivation,
                                                                     uint8_t destination_information,
                                                                     uint8_t alert_string_selector,
                                                                     uint8_t send_alert_string,
                                                                     fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_INFORMATION_OPERATION_VALID (destination_information_operation)
+      || !IPMI_OEM_INTEL_NODE_MANAGER_ALERT_RECEIVER_DEACTIVATION_VALID (alert_receiver_deactivation)
       || !IPMI_OEM_INTEL_NODE_MANAGER_ALERT_STRING_SELECTOR_VALID (alert_string_selector)
       || !IPMI_OEM_INTEL_NODE_MANAGER_SEND_ALERT_STRING_VALID (send_alert_string)
       || !fiid_obj_valid (obj_cmd_rq))
@@ -1253,7 +1253,7 @@ fill_cmd_oem_intel_node_manager_set_node_manager_alert_destination (uint8_t chan
   FILL_FIID_OBJ_SET (obj_cmd_rq, "manufacturer_id", IPMI_IANA_ENTERPRISE_ID_INTEL);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "destination_information_operation", destination_information_operation);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "alert_receiver_deactivation", alert_receiver_deactivation);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "destination_information", destination_information);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "alert_string_selector", alert_string_selector);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "send_alert_string", send_alert_string);
@@ -1263,14 +1263,14 @@ fill_cmd_oem_intel_node_manager_set_node_manager_alert_destination (uint8_t chan
 
 int
 fill_cmd_oem_intel_node_manager_set_node_manager_alert_destination_ipmb (uint8_t channel_number,
-                                                                         uint8_t destination_information_operation,
+                                                                         uint8_t alert_receiver_deactivation,
                                                                          uint8_t slave_address,
                                                                          uint8_t alert_string_selector,
                                                                          uint8_t send_alert_string,
                                                                          fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_INFORMATION_OPERATION_VALID (destination_information_operation)
+      || !IPMI_OEM_INTEL_NODE_MANAGER_ALERT_RECEIVER_DEACTIVATION_VALID (alert_receiver_deactivation)
       || !IPMI_OEM_INTEL_NODE_MANAGER_ALERT_STRING_SELECTOR_VALID (alert_string_selector)
       || !IPMI_OEM_INTEL_NODE_MANAGER_SEND_ALERT_STRING_VALID (send_alert_string)
       || !fiid_obj_valid (obj_cmd_rq))
@@ -1291,7 +1291,7 @@ fill_cmd_oem_intel_node_manager_set_node_manager_alert_destination_ipmb (uint8_t
   FILL_FIID_OBJ_SET (obj_cmd_rq, "manufacturer_id", IPMI_IANA_ENTERPRISE_ID_INTEL);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "destination_information_operation", destination_information_operation);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "alert_receiver_deactivation", alert_receiver_deactivation);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "slave_address", slave_address);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "alert_string_selector", alert_string_selector);
@@ -1302,14 +1302,14 @@ fill_cmd_oem_intel_node_manager_set_node_manager_alert_destination_ipmb (uint8_t
   
 int
 fill_cmd_oem_intel_node_manager_set_node_manager_alert_destination_lan (uint8_t channel_number,
-                                                                        uint8_t destination_information_operation,
+                                                                        uint8_t alert_receiver_deactivation,
                                                                         uint8_t destination_selector,
                                                                         uint8_t alert_string_selector,
                                                                         uint8_t send_alert_string,
                                                                         fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
-      || !IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_INFORMATION_OPERATION_VALID (destination_information_operation)
+      || !IPMI_OEM_INTEL_NODE_MANAGER_ALERT_RECEIVER_DEACTIVATION_VALID (alert_receiver_deactivation)
       || !IPMI_OEM_INTEL_NODE_MANAGER_ALERT_STRING_SELECTOR_VALID (alert_string_selector)
       || !IPMI_OEM_INTEL_NODE_MANAGER_SEND_ALERT_STRING_VALID (send_alert_string)
       || !fiid_obj_valid (obj_cmd_rq))
@@ -1330,7 +1330,7 @@ fill_cmd_oem_intel_node_manager_set_node_manager_alert_destination_lan (uint8_t 
   FILL_FIID_OBJ_SET (obj_cmd_rq, "manufacturer_id", IPMI_IANA_ENTERPRISE_ID_INTEL);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "destination_information_operation", destination_information_operation);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "alert_receiver_deactivation", alert_receiver_deactivation);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "destination_selector", destination_selector);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "alert_string_selector", alert_string_selector);

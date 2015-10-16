@@ -5006,7 +5006,7 @@ ipmi_oem_intelnm_get_node_manager_alert_destination (ipmi_oem_state_data_t *stat
   uint8_t target_slave_address = 0;
   uint8_t target_lun = 0;
   uint8_t channel_number;
-  uint8_t destination_information_operation;
+  uint8_t alert_receiver_deactivation;
   uint8_t destination_selector;
   uint8_t alert_string_selector;
   uint8_t send_alert_string;
@@ -5073,16 +5073,16 @@ ipmi_oem_intelnm_get_node_manager_alert_destination (ipmi_oem_state_data_t *stat
   channel_number = val;
 
   if (FIID_OBJ_GET (obj_cmd_rs,
-                    "destination_information_operation",
+                    "alert_receiver_deactivation",
                     &val) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "FIID_OBJ_GET: 'destination_information_operation': %s\n",
+                       "FIID_OBJ_GET: 'alert_receiver_deactivation': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
-  destination_information_operation = val;
+  alert_receiver_deactivation = val;
 
   if (FIID_OBJ_GET (obj_cmd_rs,
                     "destination_selector",
@@ -5126,7 +5126,7 @@ ipmi_oem_intelnm_get_node_manager_alert_destination (ipmi_oem_state_data_t *stat
 
   pstdout_printf (state_data->pstate,
                   "Alert Receiver        : %s\n",
-		  destination_information_operation == IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_INFORMATION_OPERATION_REGISTER_ALERT_RECEIVER ? "Registered" : "Unregistered");
+		  alert_receiver_deactivation == IPMI_OEM_INTEL_NODE_MANAGER_ALERT_RECEIVER_DEACTIVATION_REGISTER_ALERT_RECEIVER ? "Registered" : "Unregistered");
 
   pstdout_printf (state_data->pstate,
                   "Destination Selector  : %u\n",
@@ -5156,7 +5156,7 @@ ipmi_oem_intelnm_set_node_manager_alert_destination (ipmi_oem_state_data_t *stat
   uint8_t channelnumber= 0;
   int channelnumber_specified= 0;
   /* registerX b/c register is a C keyword */
-  uint8_t registerX = IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_INFORMATION_OPERATION_REGISTER_ALERT_RECEIVER;
+  uint8_t registerX = IPMI_OEM_INTEL_NODE_MANAGER_ALERT_RECEIVER_DEACTIVATION_REGISTER_ALERT_RECEIVER;
   int registerX_specified= 0;
   uint8_t slaveaddress= 0;
   int slaveaddress_specified= 0;
@@ -5250,9 +5250,9 @@ ipmi_oem_intelnm_set_node_manager_alert_destination (ipmi_oem_state_data_t *stat
 	    }
 	  
 	  if (!strcasecmp (value, "yes"))
-	    registerX = IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_INFORMATION_OPERATION_REGISTER_ALERT_RECEIVER;
+	    registerX = IPMI_OEM_INTEL_NODE_MANAGER_ALERT_RECEIVER_DEACTIVATION_REGISTER_ALERT_RECEIVER;
 	  else
-	    registerX = IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_INFORMATION_OPERATION_UNREGISTER_ALERT_RECEIVER;
+	    registerX = IPMI_OEM_INTEL_NODE_MANAGER_ALERT_RECEIVER_DEACTIVATION_UNREGISTER_ALERT_RECEIVER;
 	  
 	  registerX_specified++;
 	}
@@ -5292,7 +5292,7 @@ ipmi_oem_intelnm_set_node_manager_alert_destination (ipmi_oem_state_data_t *stat
       free (value);
     }
 
-  if (registerX == IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_INFORMATION_OPERATION_REGISTER_ALERT_RECEIVER)
+  if (registerX == IPMI_OEM_INTEL_NODE_MANAGER_ALERT_RECEIVER_DEACTIVATION_REGISTER_ALERT_RECEIVER)
     {
       if (!channelnumber_specified)
 	{
@@ -5350,7 +5350,7 @@ ipmi_oem_intelnm_set_node_manager_alert_destination (ipmi_oem_state_data_t *stat
       goto cleanup;
     }
 
-  if (registerX == IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_INFORMATION_OPERATION_UNREGISTER_ALERT_RECEIVER)
+  if (registerX == IPMI_OEM_INTEL_NODE_MANAGER_ALERT_RECEIVER_DEACTIVATION_UNREGISTER_ALERT_RECEIVER)
     ret = ipmi_cmd_oem_intel_node_manager_set_node_manager_alert_destination (state_data->ipmi_ctx,
 									      target_channel_number,
 									      target_slave_address,
