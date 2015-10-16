@@ -39,6 +39,15 @@ int sel_string_snprintf (char *buf,
 			 const char *fmt,
 			 ...);
 
+/* returns 0 on success, 1 on success but w/ truncation
+ * 
+ * Just like sel_string_snprintf, but just appends and does non-zero check beforehand
+ */
+int sel_string_strcat_comma_separate (char *buf,
+				      unsigned int buflen,
+				      unsigned int *wlen,
+				      const char *str);
+
 int sel_format_record_string (ipmi_sel_ctx_t ctx,
 			      const char *fmt,
 			      const void *sel_record,

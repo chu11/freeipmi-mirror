@@ -1,3 +1,25 @@
+2015-09-30 Albert Chu <chu11@llnl.gov>
+
+	Merge branch intel2600v3.
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-product-id-spec.h: Add
+	Intel product id's for S2600KP, S2600WT2, S2600WTT.
+
+	* libfreeipmi/sel/ipmi-sel-string-intel.c: Support Intel Node
+	Manager SEL events on Intel S2600KP, S2600WT2, S2600WTT.
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-sensor-numbers-oem-spec.h:
+	Add sensor numbers for Intel S2600KP, S2600WT2, S2600WTT.
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-slave-address-oem-spec.h:
+	Add slave addresses for Intel S2600KP, S2600WT2, S2600WTT.
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-sensor-and-event-code-tables-oem-spec.h,
+	libfreeipmi/sel/ipmi-sel-string-intel.c: Support OEM sel events
+	for Intel S2600KP, S2600WT2, S2600WTT.
+
+	* man/ipmi-sel.8.pre.in: Update motherboard support list.
+	
 2015-10-14 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/spec/ipmi-sensor-and-event-code-tables-oem-spec.c:
