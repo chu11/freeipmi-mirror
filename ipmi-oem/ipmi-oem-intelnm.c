@@ -5463,6 +5463,9 @@ ipmi_oem_intelnm_get_node_manager_version (ipmi_oem_state_data_t *state_data)
   else if (node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_5)
     pstdout_printf (state_data->pstate,
 		    "Node Manager Version   : 2.5\n");
+  else if (node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_3_0)
+    pstdout_printf (state_data->pstate,
+		    "Node Manager Version   : 3.0\n");
   else
     pstdout_printf (state_data->pstate,
                     "Node Manager Version   : %02Xh\n",
@@ -5474,6 +5477,9 @@ ipmi_oem_intelnm_get_node_manager_version (ipmi_oem_state_data_t *state_data)
   else if (ipmi_interface_version == IPMI_OEM_INTEL_NODE_MANAGER_IPMI_INTERFACE_VERSION_2_0)
     pstdout_printf (state_data->pstate,
                     "IPMI Interface Version : 2.0\n");
+  else if (ipmi_interface_version == IPMI_OEM_INTEL_NODE_MANAGER_IPMI_INTERFACE_VERSION_3_0)
+    pstdout_printf (state_data->pstate,
+                    "IPMI Interface Version : 3.0\n");
   else
     pstdout_printf (state_data->pstate,
                     "IPMI Interface Version : %02Xh\n",
