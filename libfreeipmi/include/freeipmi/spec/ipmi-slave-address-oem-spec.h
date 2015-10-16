@@ -46,6 +46,14 @@ extern "C" {
 #define IPMI_GENERATOR_ID_OEM_INTEL_S2600JF_BIOS_POST          0x01
 #define IPMI_GENERATOR_ID_OEM_INTEL_S2600JF_BIOS_SMI_HANDLER   0x33
 
+/*
+ * Intel S2600KP                                                                                                                                                                                   
+ * Intel S2600WT2                                                                                                                                                                                  
+ * Intel S2600WTT  
+ */
+#define IPMI_GENERATOR_ID_OEM_INTEL_E52600V3_BIOS_POST          0x01
+#define IPMI_GENERATOR_ID_OEM_INTEL_E52600V3_BIOS_SMI_HANDLER   0x33
+
 /*******************************************
  * Inventec                                *
  *******************************************/

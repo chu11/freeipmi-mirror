@@ -118,6 +118,26 @@ sel_string_snprintf (char *buf,
   return (0);
 }
 
+int
+sel_string_strcat_comma_separate (char *buf,
+				  unsigned int buflen,
+				  unsigned int *wlen,
+				  const char *str)
+{
+  assert (buf);
+  assert (buflen);
+  assert (wlen);
+  assert (str); 
+
+  if (strlen (buf) > 0)
+    {
+      if (sel_string_snprintf (buf, buflen, wlen, ", "))
+	return (1);
+    }
+
+  return (sel_string_snprintf (buf, buflen, wlen, "%s", str));
+}
+
 static int
 _invalid_sel_entry_common (ipmi_sel_ctx_t ctx,
                            char *buf,
