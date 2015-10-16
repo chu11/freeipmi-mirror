@@ -745,6 +745,18 @@ sel_string_output_intel_node_manager_event_data2_class_oem (ipmi_sel_ctx_t ctx,
 	    case IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_FIRMWARE_EXCEPTION:
 	      health_event_str = "Firmware Exception";
 	      break;
+	    case IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_FLASH_WEAR_OUT_PROTECTION_WARNING:
+	      health_event_str = "Flash Wear-Out Protection Warning";
+	      break;
+	    case IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_PECI_OVER_DMI_INTERFACE_ERROR:
+	      health_event_str = "PECI over DMI interface error";
+	      break;
+	    case IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_MCTP_INTERFACE_ERROR:
+	      health_event_str = "MCTP interface error";
+	      break;
+	    case IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_AUTO_CONFIGURATION_FINISHED:
+	      health_event_str = "Auto-configuration finished";
+	      break;
 	    default:
 	      health_event_str = "Unknown";
 	    }
@@ -872,7 +884,7 @@ sel_string_output_intel_node_manager_event_data3_class_oem (ipmi_sel_ctx_t ctx,
 		{
 		  snprintf (tmpbuf,
 			    tmpbuflen,
-			    "recovery bootloader image or factory presets image corrupted");
+			    "flash partition table, recovery image or factory presets image corrupted");
 		  
 		  return (1);
 		}
@@ -946,11 +958,214 @@ sel_string_output_intel_node_manager_event_data3_class_oem (ipmi_sel_ctx_t ctx,
 	    }
 	  else if (system_event_record_data->event_data2 == IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_MANUFACTURING_ERROR)
 	    {
-	      if (system_event_record_data->event_data3 == IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_MANUFACTURING_ERROR_INTEL_ME_FW_CONFIGURATION_BAD)
+	      if (system_event_record_data->event_data3 == IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_MANUFACTURING_ERROR_GENERIC_ERROR)
+		{
+		  snprintf (tmpbuf,
+			    tmpbuflen,
+			    "Generic error");
+		  
+		  return (1);
+		}
+	      else if (system_event_record_data->event_data3 == IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_MANUFACTURING_ERROR_WRONG_OR_MISSING_VSCC_TABLE)
+		{
+		  snprintf (tmpbuf,
+			    tmpbuflen,
+			    "Wrong or missing VSCC table");
+		  
+		  return (1);
+		}
+	      else if (system_event_record_data->event_data3 == IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_MANUFACTURING_ERROR_WRONG_SENSOR_SCANNING_PERIOD_IN_PIA)
+		{
+		  snprintf (tmpbuf,
+			    tmpbuflen,
+			    "Wrong sensor scanning period in PIA");
+		  
+		  return (1);
+		}
+	      else if (system_event_record_data->event_data3 == IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_MANUFACTURING_ERROR_WRONG_DEVICE_DEFINITION_IN_PIA)
+		{
+		  snprintf (tmpbuf,
+			    tmpbuflen,
+			    "Wrong device definition in PIA");
+		  
+		  return (1);
+		}
+	      else if (system_event_record_data->event_data3 == IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_MANUFACTURING_ERROR_WRONG_SMART_CLST_CONFIGURATION)
+		{
+		  snprintf (tmpbuf,
+			    tmpbuflen,
+			    "Wrong SMART/CLST configuration");
+		  
+		  return (1);
+		}
+	      else if (system_event_record_data->event_data3 == IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_MANUFACTURING_ERROR_INTEL_ME_FW_CONFIGURATION_IS_INCONSISTENT_OR_OUT_OF_RANGE)
 		{
 		  snprintf (tmpbuf,
 			    tmpbuflen,
 			    "Intel ME FW configuration is inconsistent or out of range");
+		  
+		  return (1);
+		}
+	      else if (system_event_record_data->event_data3 == IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_MANUFACTURING_ERROR_PERCENTAGE_OF_FLASH_WRITE_OPERATIONS_WHICH_HAVE_BEEN_CONDUCTED)
+		{
+		  snprintf (tmpbuf,
+			    tmpbuflen,
+			    "percentage of flash write operations which have been conducted");
+		  
+		  return (1);
+		}
+	    }
+	  else if (system_event_record_data->event_data2 == IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_PECI_OVER_DMI_INTERFACE_ERROR)
+	    {
+	      if (system_event_record_data->event_data3 == IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_DRAM_INIT_DONE_EVENT_NOT_RECEIVED)
+		{
+		  snprintf (tmpbuf,
+			    tmpbuflen,
+			    "DRAM Init Done event not received");
+		  
+		  return (1);
+		}
+	      else if (system_event_record_data->event_data3 == IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_MCTP_SAD_REGISTER_NOT_CORRECTLY_CONFIGURED_BY_BIOS)
+		{
+		  snprintf (tmpbuf,
+			    tmpbuflen,
+			    "MCTP SAD Register not correctly configured by BIOS");
+		  
+		  return (1);
+		}
+	      else if (system_event_record_data->event_data3 == IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_DMI_TIMEOUT_OF_PECI_REQUEST)
+		{
+		  snprintf (tmpbuf,
+			    tmpbuflen,
+			    "DMI timeout of PECI request");
+		  
+		  return (1);
+		}
+	    }
+	  else if (system_event_record_data->event_data2 == IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_AUTO_CONFIGURATION_FINISHED)
+	    {
+	      uint8_t auto_configuration_finished_result;
+
+	      auto_configuration_finished_result = (system_event_record_data->event_data3 & IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_AUTO_CONFIGURATION_FINISHED_RESULT_BITMASK);
+	      auto_configuration_finished_result >>= IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_AUTO_CONFIGURATION_FINISHED_RESULT_SHIFT;
+
+	      if (auto_configuration_finished_result == IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_AUTO_CONFIGURATION_FINISHED_RESULT_SUCCESS)
+		{
+		  uint8_t dc_power_source, chassis_power_input_source, psu_efficiency_source, unmanaged_power_source;
+		  char *dc_power_source_str, *chassis_power_input_source_str, *psu_efficiency_source_str, *unmanaged_power_source_str;
+
+		  dc_power_source = (system_event_record_data->event_data3 & IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_AUTO_CONFIGURATION_FINISHED_RESULT_SUCCESS_DC_POWER_SOURCE_BITMASK);
+		  dc_power_source >>= IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_AUTO_CONFIGURATION_FINISHED_RESULT_SUCCESS_DC_POWER_SOURCE_SHIFT;
+
+		  switch (dc_power_source)
+		    {
+		    case IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_AUTO_CONFIGURATION_FINISHED_RESULT_SUCCESS_DC_POWER_SOURCE_BMC:
+		      dc_power_source_str = "BMC";
+		      break;
+		    case IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_AUTO_CONFIGURATION_FINISHED_RESULT_SUCCESS_DC_POWER_SOURCE_PSU:
+		      dc_power_source_str = "PSU";
+		      break;
+		    case IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_AUTO_CONFIGURATION_FINISHED_RESULT_SUCCESS_DC_POWER_SOURCE_ON_BOARD_POWER_SENSOR:
+		      dc_power_source_str = "On-board power sensor";
+		      break;
+		    default:
+		      dc_power_source_str = "Unknown";
+		    }
+
+		  chassis_power_input_source = (system_event_record_data->event_data3 & IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_AUTO_CONFIGURATION_FINISHED_RESULT_SUCCESS_CHASSIS_POWER_INPUT_SOURCE_BITMASK);
+		  chassis_power_input_source >>= IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_AUTO_CONFIGURATION_FINISHED_RESULT_SUCCESS_CHASSIS_POWER_INPUT_SOURCE_SHIFT;
+
+		  switch (chassis_power_input_source)
+		    {
+		    case IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_AUTO_CONFIGURATION_FINISHED_RESULT_SUCCESS_CHASSIS_POWER_INPUT_SOURCE_BMC:
+		      chassis_power_input_source_str = "BMC";
+		      break;
+		    case IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_AUTO_CONFIGURATION_FINISHED_RESULT_SUCCESS_CHASSIS_POWER_INPUT_SOURCE_PSU:
+		      chassis_power_input_source_str = "PSU";
+		      break;
+		    case IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_AUTO_CONFIGURATION_FINISHED_RESULT_SUCCESS_CHASSIS_POWER_INPUT_SOURCE_ON_BOARD_POWER_SENSOR_PSU_EFFICIENCY:
+		      chassis_power_input_source_str = "On-board power sensor / PSU efficiency";
+		      break;
+		    case IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_AUTO_CONFIGURATION_FINISHED_RESULT_SUCCESS_CHASSIS_POWER_INPUT_SOURCE_NOT_SUPPORTED:
+		      chassis_power_input_source_str = "not supported";
+		      break;
+		    default:
+		      chassis_power_input_source_str = "Unknown";
+		    }
+
+		  psu_efficiency_source = (system_event_record_data->event_data3 & IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_AUTO_CONFIGURATION_FINISHED_RESULT_SUCCESS_PSU_EFFICIENCY_SOURCE_BITMASK);
+		  psu_efficiency_source >>= IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_AUTO_CONFIGURATION_FINISHED_RESULT_SUCCESS_PSU_EFFICIENCY_SOURCE_SHIFT;
+
+		  switch (psu_efficiency_source)
+		    {
+		    case IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_AUTO_CONFIGURATION_FINISHED_RESULT_SUCCESS_PSU_EFFICIENCY_SOURCE_BMC:
+		      psu_efficiency_source_str = "BMC";
+		      break;
+		    case IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_AUTO_CONFIGURATION_FINISHED_RESULT_SUCCESS_PSU_EFFICIENCY_SOURCE_PSU:
+		      psu_efficiency_source_str = "PSU";
+		      break;
+		    case IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_AUTO_CONFIGURATION_FINISHED_RESULT_SUCCESS_PSU_EFFICIENCY_SOURCE_NOT_SUPPORTED:
+		      psu_efficiency_source_str = "not supported";
+		      break;
+		    default:
+		      psu_efficiency_source_str = "Unknown";
+		    }
+
+		  unmanaged_power_source = (system_event_record_data->event_data3 & IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_AUTO_CONFIGURATION_FINISHED_RESULT_SUCCESS_UNMANAGED_POWER_SOURCE_BITMASK);
+		  unmanaged_power_source >>= IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_AUTO_CONFIGURATION_FINISHED_RESULT_SUCCESS_UNMANAGED_POWER_SOURCE_SHIFT;
+
+		  switch (unmanaged_power_source)
+		    {
+		    case IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_AUTO_CONFIGURATION_FINISHED_RESULT_SUCCESS_UNMANAGED_POWER_SOURCE_BMC:
+		      unmanaged_power_source_str = "BMC";
+		      break;
+		    case IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_AUTO_CONFIGURATION_FINISHED_RESULT_SUCCESS_UNMANAGED_POWER_SOURCE_ESTIMATED:
+		      unmanaged_power_source_str = "estimated";
+		      break;
+		    default:
+		      unmanaged_power_source_str = "Unknown";
+		    }
+
+		  snprintf (tmpbuf,
+			    tmpbuflen,
+			    "Auto Configuration Success - DC Power Source = %s, Chassis Power input source = %s, PSU efficiency source = %s, Unmanaged power source = %s",
+			    dc_power_source_str,
+			    chassis_power_input_source_str,
+			    psu_efficiency_source_str,
+			    unmanaged_power_source_str);
+		  
+		  return (1);
+		}
+	      else /* auto_configuration_finished_result == IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_AUTO_CONFIGURATION_FINISHED_RESULT_FAILURE */
+		{
+		  uint8_t failure;
+		  char *failure_str;
+
+		  failure = (system_event_record_data->event_data3 & IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_AUTO_CONFIGURATION_FINISHED_RESULT_FAILURE_FAILURE_BITMASK);
+		  failure >>= IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_AUTO_CONFIGURATION_FINISHED_RESULT_FAILURE_FAILURE_SHIFT;
+
+		  switch (failure)
+		    {
+		    case IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_AUTO_CONFIGURATION_FINISHED_RESULT_FAILURE_FAILURE_BMC_DISCOVERY_FAILURE:
+		      failure_str = "BMC discovery failure";
+		      break;
+		    case IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_AUTO_CONFIGURATION_FINISHED_RESULT_FAILURE_FAILURE_INSUFFICIENT_FACTORY_CONFIGURATION:
+		      failure_str = "Insufficient factory configuration";
+		      break;
+		    case IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_AUTO_CONFIGURATION_FINISHED_RESULT_FAILURE_FAILURE_UNKNOWN_SENSOR_TYPE:
+		      failure_str = "Unknown sensor type";
+		      break;
+		    case IPMI_OEM_INTEL_NODE_MANAGER_INTEL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA3_AUTO_CONFIGURATION_FINISHED_RESULT_FAILURE_FAILURE_OTHER_ERROR_ENCOUNTERED:
+		      failure_str = "Other error encountered";
+		      break;
+		    default:
+		      failure_str = "Unknown";
+		    }
+
+		  snprintf (tmpbuf,
+			    tmpbuflen,
+			    "Auto Configuration Failure - %s",
+			    failure_str);
 		  
 		  return (1);
 		}
