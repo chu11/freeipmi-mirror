@@ -463,7 +463,7 @@ multiple vendors motherboards.
 .LP
 .RS
 .TP
-.B get-node-manager-statistics mode=globalpower|globaltemp|policypower|policytrigger|policythrottling|hostunhandledrequests|hostresponsetime|cputhrottling|memorythrottling|hostcommfailure \fI[domainid=platform|cpu|memory|highpowerio]\fR \fI[policyid=num]\fR
+.B get-node-manager-statistics mode=globalpower|globaltemp|globalthrottling|globalvolumetricairflow|globaltempairflow|globalchassispower|policypower|policytrigger|policythrottling|hostunhandledrequests|hostresponsetime|cputhrottling|memorythrottling|hostcommfailure \fI[domainid=platform|cpu|memory|highpowerio]\fR \fI[policyid=num]\fR
 This OEM command will output Intel Node Manager statistics.  A
 \fImode\fR indicating statistics to output must be specified.  The
 user may optionally specify a \fIdomainid\fR or \fIpolicyid\fR,

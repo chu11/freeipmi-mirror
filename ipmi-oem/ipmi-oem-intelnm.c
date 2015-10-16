@@ -484,6 +484,10 @@ ipmi_oem_intelnm_get_node_manager_statistics (ipmi_oem_state_data_t *state_data)
 	{
 	  if (strcasecmp (value, "globalpower")
 	      && strcasecmp (value, "globaltemp")
+	      && strcasecmp (value, "globalthrottling")
+	      && strcasecmp (value, "globalvolumetricairflow")
+	      && strcasecmp (value, "globaltempairflow")
+	      && strcasecmp (value, "globalchassispower")
 	      && strcasecmp (value, "policypower")
 	      && strcasecmp (value, "policytrigger")
 	      && strcasecmp (value, "policythrottling")
@@ -506,6 +510,14 @@ ipmi_oem_intelnm_get_node_manager_statistics (ipmi_oem_state_data_t *state_data)
 	    mode = IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_POWER_STATISTICS;
 	  else if (!strcasecmp (value, "globaltemp"))
 	    mode = IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_INLET_TEMPERATURE_STATISTICS;
+	  else if (!strcasecmp (value, "globalthrottling"))
+	    mode = IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_THROTTLING_STATISTICS;
+	  else if (!strcasecmp (value, "globalvolumetricairflow"))
+	    mode = IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_VOLUMETRIC_AIRFLOW_STATISTICS;
+	  else if (!strcasecmp (value, "globaltempairflow"))
+	    mode = IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_OUTLET_AIRFLOW_TEMPERATURE_STATISTICS;
+	  else if (!strcasecmp (value, "globalchassispower"))
+	    mode = IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_CHASSIS_POWER_STATISTICS;
 	  else if (!strcasecmp (value, "policypower"))
 	    mode = IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_PER_POLICY_POWER_STATISTICS;
 	  else if (!strcasecmp (value, "policytrigger"))
@@ -747,6 +759,7 @@ ipmi_oem_intelnm_get_node_manager_statistics (ipmi_oem_state_data_t *state_data)
   policy_activation_state = val;
       
   if (mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_POWER_STATISTICS
+      || mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_CHASSIS_POWER_STATISTICS
       || mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_PER_POLICY_POWER_STATISTICS)
     {
       pstdout_printf (state_data->pstate,
@@ -766,6 +779,7 @@ ipmi_oem_intelnm_get_node_manager_statistics (ipmi_oem_state_data_t *state_data)
 		      average);
     }
   else if (mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_INLET_TEMPERATURE_STATISTICS
+	   || mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_OUTLET_AIRFLOW_TEMPERATURE_STATISTICS
 	   || mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_PER_POLICY_TRIGGER_STATISTICS)
     {
       pstdout_printf (state_data->pstate,
@@ -784,7 +798,8 @@ ipmi_oem_intelnm_get_node_manager_statistics (ipmi_oem_state_data_t *state_data)
 		      "Average Temperature                           : %u Celsius\n",
 		      average);
     }
-  else if (mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_PER_POLICY_THROTTLING_STATISTICS
+  else if (mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_THROTTLING_STATISTICS
+	   || mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_PER_POLICY_THROTTLING_STATISTICS
 	   || mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_CPU_THROTTLING_STATISTICS
 	   || mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_MEMORY_THROTTLING_STATISTICS)
     {
