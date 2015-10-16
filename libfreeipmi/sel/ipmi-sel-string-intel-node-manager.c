@@ -528,6 +528,31 @@ sel_string_output_intel_node_manager_event_data1_class_oem (ipmi_sel_ctx_t ctx,
 	  
           return (1);
         }
+
+      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_NODE_MANAGER_CUPS_EVENT
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_NODE_MANAGER_CUPS_EVENT_SENSOR)
+        {
+	  uint8_t cups_event;
+
+          cups_event = system_event_record_data->offset_from_event_reading_type_code & IPMI_OEM_INTEL_NODE_MANAGER_CUPS_EVENT_EVENT_DATA1_CUPS_POLICY_EVENT_BITMASK;
+          cups_event >>= IPMI_OEM_INTEL_NODE_MANAGER_CUPS_EVENT_EVENT_DATA1_CUPS_POLICY_EVENT_SHIFT;
+
+          if (cups_event == IPMI_OEM_INTEL_NODE_MANAGER_CUPS_EVENT_EVENT_DATA1_CUPS_EVENT_EVENT_THRESHOLD_EXCEEDED)
+            {
+              uint8_t threshold_number;
+
+              threshold_number = system_event_record_data->offset_from_event_reading_type_code & IPMI_OEM_INTEL_NODE_MANAGER_CUPS_EVENT_EVENT_DATA1_THRESHOLD_NUMBER_BITMASK;
+              threshold_number >>= IPMI_OEM_INTEL_NODE_MANAGER_CUPS_EVENT_EVENT_DATA1_THRESHOLD_NUMBER_SHIFT;
+
+              snprintf (tmpbuf,
+                        tmpbuflen,
+                        "Threshold Exceeded, Threshold Number = %u",
+                        threshold_number);
+
+              return (1);
+              
+            }
+        }
     }
 
  out:
@@ -786,6 +811,60 @@ sel_string_output_intel_node_manager_event_data2_class_oem (ipmi_sel_ctx_t ctx,
           
           return (1);
         }
+
+      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_NODE_MANAGER_CUPS_EVENT
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_NODE_MANAGER_CUPS_EVENT_SENSOR)
+        {
+          uint8_t domain_id;
+	  char domain_id_str[INTEL_NODE_MANAGER_EVENT_BUFFER_LENGTH + 1];
+          
+          domain_id = (system_event_record_data->event_data2 & IPMI_OEM_INTEL_NODE_MANAGER_CUPS_EVENT_EVENT_DATA2_DOMAIN_ID_BITMASK);
+          domain_id >>= IPMI_OEM_INTEL_NODE_MANAGER_CUPS_EVENT_EVENT_DATA2_DOMAIN_ID_SHIFT;
+          
+	  memset (domain_id_str, '\0', INTEL_NODE_MANAGER_EVENT_BUFFER_LENGTH + 1);
+
+	  _sel_string_output_intel_node_manager_domain_id (ctx,
+							   domain_id_str,
+							   INTEL_NODE_MANAGER_EVENT_BUFFER_LENGTH,
+							   domain_id);
+
+          snprintf (tmpbuf,
+                    tmpbuflen,
+                    "Domain ID = %s",
+                    domain_id_str);
+
+          return (1);
+        }
+
+      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_NODE_MANAGER_NM_SMART_CLST_SENSOR
+	  && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_PREVIOUS_STATE_OR_SEVERITY)
+        {
+	  uint8_t offset;
+	  char severity_str[INTEL_NODE_MANAGER_EVENT_BUFFER_LENGTH + 1];
+          int ret;
+	  
+	  memset (severity_str, '\0', INTEL_NODE_MANAGER_EVENT_BUFFER_LENGTH + 1);
+
+	  offset = (system_event_record_data->event_data2 & IPMI_OEM_INTEL_NODE_MANAGER_NM_SMART_CLST_SENSOR_EVENT_DATA2_OFFSET_FROM_SEVERITY_BITMASK);
+	  offset >>= IPMI_OEM_INTEL_NODE_MANAGER_NM_SMART_CLST_SENSOR_EVENT_DATA2_OFFSET_FROM_SEVERITY_SHIFT;
+
+	  ret = ipmi_get_generic_event_message (IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY,
+						offset,
+						severity_str,
+						INTEL_NODE_MANAGER_EVENT_BUFFER_LENGTH);
+
+	  if (ret > 0)
+	    {
+	      snprintf (tmpbuf,
+			tmpbuflen,
+			"%s",
+			severity_str);
+	      
+	      return (1);
+	    }
+	    
+	}
     }
 
  out:
@@ -1197,6 +1276,34 @@ sel_string_output_intel_node_manager_event_data3_class_oem (ipmi_sel_ctx_t ctx,
 	  
           return (1);
         }
+
+      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_NODE_MANAGER_CUPS_EVENT
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_NODE_MANAGER_CUPS_EVENT_SENSOR)
+        {
+          snprintf (tmpbuf,
+                    tmpbuflen,
+                    "Policy ID = %u",
+                    system_event_record_data->event_data3);
+          
+          return (1);
+	}
+
+      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
+	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_NODE_MANAGER_NM_SMART_CLST_SENSOR
+	  && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+        {
+	  if (system_event_record_data->event_data3 == IPMI_OEM_INTEL_NODE_MANAGER_NM_SMART_CLST_SENSOR_EVENT_DATA3_EXTERNAL)
+	    snprintf (tmpbuf,
+		      tmpbuflen,
+		      "Source of assertion is external");
+	    else
+	      snprintf (tmpbuf,
+			tmpbuflen,
+			"Power Supply Status Number = %u",
+			system_event_record_data->event_data3);
+          
+          return (1);
+	}
     }
   
  out:

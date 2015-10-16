@@ -434,6 +434,10 @@ extern "C" {
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_NODE_MANAGER_ALERT_THRESHOLD_EXCEEDED_SENSOR     0x1B
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_NODE_MANAGER_THERMAL_SENSOR_ON_DIMM_SMBUS_STATUS 0x6E
 
+/* Defined in Spec 3.0 */
+#define IPMI_SENSOR_NUMBER_OEM_INTEL_NODE_MANAGER_NM_SMART_CLST_SENSOR                0xB2
+#define IPMI_SENSOR_NUMBER_OEM_INTEL_NODE_MANAGER_CUPS_EVENT_SENSOR                   0xC1
+
 /*******************************************
  * Inventec                                *
  *******************************************/
