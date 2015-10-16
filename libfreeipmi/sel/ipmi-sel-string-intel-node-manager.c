@@ -476,6 +476,15 @@ sel_string_output_intel_node_manager_event_data1_class_oem (ipmi_sel_ctx_t ctx,
 
           power_limiting_capability = system_event_record_data->offset_from_event_reading_type_code & IPMI_OEM_INTEL_NODE_MANAGER_OPERATIONAL_CAPABILITIES_CHANGE_EVENT_EVENT_DATA1_POWER_LIMITING_CAPABILITY_BITMASK;
           power_limiting_capability >>= IPMI_OEM_INTEL_NODE_MANAGER_OPERATIONAL_CAPABILITIES_CHANGE_EVENT_EVENT_DATA1_POWER_LIMITING_CAPABILITY_SHIFT;
+
+          snprintf (tmpbuf,
+                    tmpbuflen,
+                    "Policy Interface = %s, Monitoring = %s, Power Limiting = %s",
+		    policy_interface_capability ? "Available" : "Not Available",
+		    monitoring_capability ? "Available" : "Not Available",
+		    power_limiting_capability ? "Available" : "Not Available");
+	  
+          return (1);
         }
 
       if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_NODE_MANAGER_ALERT_THRESHOLD_EXCEEDED
@@ -645,6 +654,12 @@ sel_string_output_intel_node_manager_event_data2_class_oem (ipmi_sel_ctx_t ctx,
           
 	  switch (error_type)
 	    {
+	    case IPMI_OEM_INTEL_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_OUTLET_TEMPERATURE_READING_FAILURE:
+ 	      error_type_str = "Outlet Temperature Reading Failure";
+	      break;
+	    case IPMI_OEM_INTEL_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_VOLUMETRIC_AIRFLOW_READING_FAILURE:
+ 	      error_type_str = "Volumetric Airflow Reading Failure";
+	      break;
 	    case IPMI_OEM_INTEL_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_POLICY_MISCONFIGURATION:
 	      error_type_str = "Policy Misconfiguration";
 	      break;
@@ -659,6 +674,9 @@ sel_string_output_intel_node_manager_event_data2_class_oem (ipmi_sel_ctx_t ctx,
 	      break;
 	    case IPMI_OEM_INTEL_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_REAL_TIME_CLOCK_SYNCHRONIZATION_FAILURE:
 	      error_type_str = "Real-time clock synchronization failure";
+	      break;
+	    case IPMI_OEM_INTEL_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_PLATFORM_SHUTDOWN_INITIATED_BY_INTEL_NM_POLICY:
+	      error_type_str = "Platform shutdown initiated by Intel NM policy";
 	      break;
 	    default:
 	      error_type_str = "Unknown";
@@ -834,7 +852,8 @@ sel_string_output_intel_node_manager_event_data3_class_oem (ipmi_sel_ctx_t ctx,
           error_type = (system_event_record_data->event_data2 & IPMI_OEM_INTEL_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_BITMASK);
           error_type >>= IPMI_OEM_INTEL_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_SHIFT;
           
-          if (error_type == IPMI_OEM_INTEL_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_POLICY_MISCONFIGURATION)
+          if (error_type == IPMI_OEM_INTEL_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_POLICY_MISCONFIGURATION
+	      || error_type == IPMI_OEM_INTEL_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_ERROR_TYPE_PLATFORM_SHUTDOWN_INITIATED_BY_INTEL_NM_POLICY)
             {
               snprintf (tmpbuf,
                         tmpbuflen,
