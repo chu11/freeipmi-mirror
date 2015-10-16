@@ -1791,6 +1791,7 @@ ipmi_oem_intelnm_get_node_manager_capabilities (ipmi_oem_state_data_t *state_dat
 							 NULL) < 0)
     goto cleanup;
 
+  /* XXX */
   if (node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_0
       || node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_5)
     {
@@ -2554,6 +2555,7 @@ ipmi_oem_intelnm_get_node_manager_policy (ipmi_oem_state_data_t *state_data)
 							     NULL) < 0)
 	goto cleanup;
       
+      /* XXX */
       if (node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_0
 	  || node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_5)
 	{
@@ -3538,7 +3540,8 @@ ipmi_oem_intelnm_get_node_manager_policy_alert_thresholds (ipmi_oem_state_data_t
 	goto cleanup;
       
       if (node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_0
-	  || node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_5)
+	  || node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_5
+	  || node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_3_0)
 	{
 	  domainid_array = domainid_defaults_2_0;
 	  domainid_array_len = domainid_defaults_2_0_len;
@@ -4253,7 +4256,8 @@ ipmi_oem_intelnm_get_node_manager_policy_suspend_periods (ipmi_oem_state_data_t 
 	goto cleanup;
 
       if (node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_0
-	  || node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_5)
+	  || node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_5
+	  || node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_3_0)
 	{
 	  domainid_array = domainid_defaults_2_0;
 	  domainid_array_len = domainid_defaults_2_0_len;
