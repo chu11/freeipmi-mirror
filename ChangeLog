@@ -6,6 +6,12 @@
 
 	* libfreeipmi/include/freeipmi/spec/ipmi-sensor-numbers-oem-spec.h:
 	Add new sensor numbers.
+
+	* libfreeipmi/include/freeipmi/cmds/ipmi-oem-intel-node-manager-cmds.h,
+	libfreeipmi/include/freeipmi/api/ipmi-oem-intel-node-manager-api.h
+	* libfreeipmi/cmds/ipmi-oem-intel-node-manager-cmds.c,
+	libfreeipmi/api/ipmi-oem-intel-node-manager-api.c,
+	ipmi-oem/ipmi-oem-intelnm.c: Update for Intel NM 3.0 changes.
 	
 2015-10-16 Albert Chu <chu11@llnl.gov>
 
