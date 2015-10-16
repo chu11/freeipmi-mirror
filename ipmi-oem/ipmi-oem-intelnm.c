@@ -2893,21 +2893,6 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (policytrigger == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_MISSING_POWER_READING_TIMEOUT)
-    {
-      /* User specifies in seconds, but we need to convert to 1/10th of seconds */
-      
-      if (policytargetlimit >= (USHRT_MAX / 10))
-	{
-	  pstdout_fprintf (state_data->pstate,
-			   stderr,
-			   "policy target limit out of range\n");
-	  goto cleanup;
-	} 
-
-      policytargetlimit *= 10;
-    }
-
   if (policytrigger == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_MISSING_POWER_READING_TIMEOUT
       || policytrigger == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_TIME_AFTER_PLATFORM_RESET_TRIGGER)
     {
