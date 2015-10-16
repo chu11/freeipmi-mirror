@@ -137,7 +137,7 @@ extern "C" {
 #define IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TYPE_VALID(__val)            \
   (((__val) == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TYPE_POWER_CONTROL_POLICY) ? 1 : 0)
 
-#define IPMI_OEM_INTEL_NODE_MANAGER_ALERT_THRESHOLDS_MAX 3
+#define IPMI_OEM_INTEL_NODE_MANAGER_POLICY_ALERT_THRESHOLDS_MAX 3
 
 #define IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_START_TIME_MIN 0
 #define IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_START_TIME_MAX 239
@@ -285,10 +285,10 @@ extern fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_r
 extern fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_rs;
 extern fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_rq;
 extern fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_rs;
-extern fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds_rq;
-extern fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds_rs;
-extern fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds_rq;
-extern fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds_rs;
+extern fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_alert_thresholds_rq;
+extern fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_alert_thresholds_rs;
+extern fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_alert_thresholds_rq;
+extern fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_alert_thresholds_rs;
 extern fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_suspend_periods_rq;
 extern fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_suspend_periods_rs;
 extern fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_suspend_periods_rq;
@@ -336,16 +336,16 @@ int fill_cmd_oem_intel_node_manager_get_node_manager_policy (uint8_t domain_id,
                                                              uint8_t policy_id,
                                                              fiid_obj_t obj_cmd_rq);
 
-int fill_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds (uint8_t domain_id,
-                                                                       uint8_t policy_id,
-                                                                       uint16_t *alert_threshold1,
-                                                                       uint16_t *alert_threshold2,
-                                                                       uint16_t *alert_threshold3,
-                                                                       fiid_obj_t obj_cmd_rq);
-
-int fill_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds (uint8_t domain_id,
-                                                                       uint8_t policy_id,
-                                                                       fiid_obj_t obj_cmd_rq);
+int fill_cmd_oem_intel_node_manager_set_node_manager_policy_alert_thresholds (uint8_t domain_id,
+									      uint8_t policy_id,
+									      uint16_t *alert_threshold1,
+									      uint16_t *alert_threshold2,
+									      uint16_t *alert_threshold3,
+									      fiid_obj_t obj_cmd_rq);
+ 
+int fill_cmd_oem_intel_node_manager_get_node_manager_policy_alert_thresholds (uint8_t domain_id,
+									      uint8_t policy_id,
+									      fiid_obj_t obj_cmd_rq);
   
 int fill_cmd_oem_intel_node_manager_set_node_manager_policy_suspend_periods (uint8_t domain_id,
                                                                              uint8_t policy_id,

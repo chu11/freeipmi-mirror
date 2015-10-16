@@ -255,7 +255,7 @@ _ipmi_oem_intelnm_bad_completion_code (ipmi_oem_state_data_t *state_data,
     {
     case IPMI_CMD_OEM_INTEL_NODE_MANAGER_ENABLE_DISABLE_NODE_MANAGER_POLICY_CONTROL:
     case IPMI_CMD_OEM_INTEL_NODE_MANAGER_GET_NODE_MANAGER_POLICY:
-    case IPMI_CMD_OEM_INTEL_NODE_MANAGER_GET_NODE_MANAGER_ALERT_THRESHOLDS:
+    case IPMI_CMD_OEM_INTEL_NODE_MANAGER_GET_NODE_MANAGER_POLICY_ALERT_THRESHOLDS:
     case IPMI_CMD_OEM_INTEL_NODE_MANAGER_GET_NODE_MANAGER_POLICY_SUSPEND_PERIODS:
       switch (comp_code)
 	{
@@ -308,7 +308,7 @@ _ipmi_oem_intelnm_bad_completion_code (ipmi_oem_state_data_t *state_data,
 	  goto cleanup;
 	}
       break;
-    case IPMI_CMD_OEM_INTEL_NODE_MANAGER_SET_NODE_MANAGER_ALERT_THRESHOLDS:
+    case IPMI_CMD_OEM_INTEL_NODE_MANAGER_SET_NODE_MANAGER_POLICY_ALERT_THRESHOLDS:
       switch (comp_code)
 	{
 	case IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_INVALID_POLICY_ID:
@@ -317,14 +317,17 @@ _ipmi_oem_intelnm_bad_completion_code (ipmi_oem_state_data_t *state_data,
 	case IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_INVALID_DOMAIN_ID:
 	  str = IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_INVALID_DOMAIN_ID_STR;
 	  break;
+	case IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_UNKNOWN_OR_UNSUPPORTED_POLICY_TRIGGER_TYPE:
+	  str = IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_UNKNOWN_OR_UNSUPPORTED_POLICY_TRIGGER_TYPE_STR;
+	  break;
 	case IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_LIMIT_IN_ONE_OF_THRESHOLDS_IS_INVALID:
 	  str = IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_LIMIT_IN_ONE_OF_THRESHOLDS_IS_INVALID_STR;
 	  break;
-	case IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_INVALID_NUMBER_OF_POLICY_THRESHOLDS:
-	  str = IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_INVALID_NUMBER_OF_POLICY_THRESHOLDS_STR;
+	case IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_NUMBER_OF_THRESHOLDS_IS_TOO_LARGE_OR_POWER_LIMITS_ARE_INVALID:
+	  str = IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_NUMBER_OF_THRESHOLDS_IS_TOO_LARGE_OR_POWER_LIMITS_ARE_INVALID_STR;
 	  break;
-	case IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_SET_NODE_MANAGER_ALERT_THRESHOLDS_REQUEST_PARAMETER_NOT_SUPPORTED:
-	  str = IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_SET_NODE_MANAGER_ALERT_THRESHOLDS_REQUEST_PARAMETER_NOT_SUPPORTED_STR;
+	case IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_SET_NODE_MANAGER_POLICY_ALERT_THRESHOLDS_REQUEST_PARAMETER_NOT_SUPPORTED:
+	  str = IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_SET_NODE_MANAGER_POLICY_ALERT_THRESHOLDS_REQUEST_PARAMETER_NOT_SUPPORTED_STR;
 	  break;
 	default:
 	  rv = 0;
@@ -3131,9 +3134,9 @@ ipmi_oem_intelnm_remove_node_manager_policy (ipmi_oem_state_data_t *state_data)
 }
 
 static void
-_ipmi_oem_intelnm_get_node_manager_alert_thresholds_output_header (ipmi_oem_state_data_t *state_data,
-								   uint8_t domain_id,
-								   uint8_t policy_id)
+_ipmi_oem_intelnm_get_node_manager_policy_alert_thresholds_output_header (ipmi_oem_state_data_t *state_data,
+									  uint8_t domain_id,
+									  uint8_t policy_id)
 {
   char domain_id_str[IPMI_OEM_INTELNM_STRING_MAX + 1];
 
@@ -3153,14 +3156,14 @@ _ipmi_oem_intelnm_get_node_manager_alert_thresholds_output_header (ipmi_oem_stat
 }
 
 static int
-_ipmi_oem_intelnm_get_node_manager_alert_thresholds_common (ipmi_oem_state_data_t *state_data,
-							    uint8_t target_channel_number,
-							    uint8_t target_slave_address,
-							    uint8_t target_lun,
-							    uint8_t domain_id,
-							    uint8_t policy_id,
-							    int searching_domain_id,
-							    int searching_policy_id)
+_ipmi_oem_intelnm_get_node_manager_policy_alert_thresholds_common (ipmi_oem_state_data_t *state_data,
+								   uint8_t target_channel_number,
+								   uint8_t target_slave_address,
+								   uint8_t target_lun,
+								   uint8_t domain_id,
+								   uint8_t policy_id,
+								   int searching_domain_id,
+								   int searching_policy_id)
 {
   fiid_obj_t alert_threshold_obj_cmd_rs = NULL;
   fiid_obj_t policy_obj_cmd_rs = NULL;
@@ -3176,7 +3179,7 @@ _ipmi_oem_intelnm_get_node_manager_alert_thresholds_common (ipmi_oem_state_data_
   assert (state_data);
   assert (IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domain_id));
 
-  if (!(alert_threshold_obj_cmd_rs = fiid_obj_create (tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds_rs)))
+  if (!(alert_threshold_obj_cmd_rs = fiid_obj_create (tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_alert_thresholds_rs)))
     {
       pstdout_fprintf (state_data->pstate,
 		       stderr,
@@ -3185,13 +3188,13 @@ _ipmi_oem_intelnm_get_node_manager_alert_thresholds_common (ipmi_oem_state_data_
       goto cleanup;
     }
 
-  if (ipmi_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds (state_data->ipmi_ctx,
-									 target_channel_number,
-									 target_slave_address,
-									 target_lun,
-									 domain_id,
-									 policy_id,
-									 alert_threshold_obj_cmd_rs) < 0)
+  if (ipmi_cmd_oem_intel_node_manager_get_node_manager_policy_alert_thresholds (state_data->ipmi_ctx,
+										target_channel_number,
+										target_slave_address,
+										target_lun,
+										domain_id,
+										policy_id,
+										alert_threshold_obj_cmd_rs) < 0)
     {
       if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
 	{
@@ -3210,7 +3213,7 @@ _ipmi_oem_intelnm_get_node_manager_alert_thresholds_common (ipmi_oem_state_data_
 
 	  if (searching_domain_id
 	      || searching_policy_id)
-	    _ipmi_oem_intelnm_get_node_manager_alert_thresholds_output_header (state_data, domain_id, policy_id);
+	    _ipmi_oem_intelnm_get_node_manager_policy_alert_thresholds_output_header (state_data, domain_id, policy_id);
 
 	  if ((eret = _ipmi_oem_intelnm_bad_completion_code (state_data,
 							     "Error",
@@ -3225,7 +3228,7 @@ _ipmi_oem_intelnm_get_node_manager_alert_thresholds_common (ipmi_oem_state_data_
 	efallthrough_alert_thresholds:
 	  pstdout_fprintf (state_data->pstate,
 			   stderr,
-			   "ipmi_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds: %s\n",
+			   "ipmi_cmd_oem_intel_node_manager_get_node_manager_policy_alert_thresholds: %s\n",
 			   ipmi_ctx_errormsg (state_data->ipmi_ctx));
 	}
       
@@ -3250,8 +3253,8 @@ _ipmi_oem_intelnm_get_node_manager_alert_thresholds_common (ipmi_oem_state_data_
   number_of_alert_thresholds = val;
   
   /* just in case */
-  if (number_of_alert_thresholds > IPMI_OEM_INTEL_NODE_MANAGER_ALERT_THRESHOLDS_MAX)
-    number_of_alert_thresholds = IPMI_OEM_INTEL_NODE_MANAGER_ALERT_THRESHOLDS_MAX;
+  if (number_of_alert_thresholds > IPMI_OEM_INTEL_NODE_MANAGER_POLICY_ALERT_THRESHOLDS_MAX)
+    number_of_alert_thresholds = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_ALERT_THRESHOLDS_MAX;
 
   if (number_of_alert_thresholds)
     {
@@ -3334,7 +3337,7 @@ _ipmi_oem_intelnm_get_node_manager_alert_thresholds_common (ipmi_oem_state_data_
 	      
 	      if (searching_domain_id
 		  || searching_policy_id)
-		_ipmi_oem_intelnm_get_node_manager_alert_thresholds_output_header (state_data, domain_id, policy_id);
+		_ipmi_oem_intelnm_get_node_manager_policy_alert_thresholds_output_header (state_data, domain_id, policy_id);
 	      
 	      if ((eret = _ipmi_oem_intelnm_bad_completion_code (state_data,
 								 "Error",
@@ -3389,7 +3392,7 @@ _ipmi_oem_intelnm_get_node_manager_alert_thresholds_common (ipmi_oem_state_data_
       
   if (searching_domain_id
       || searching_policy_id)
-    _ipmi_oem_intelnm_get_node_manager_alert_thresholds_output_header (state_data, domain_id, policy_id);
+    _ipmi_oem_intelnm_get_node_manager_policy_alert_thresholds_output_header (state_data, domain_id, policy_id);
   
   pstdout_printf (state_data->pstate,
 		  "Number of Alert Thresholds : %u\n",
@@ -3430,7 +3433,7 @@ _ipmi_oem_intelnm_get_node_manager_alert_thresholds_common (ipmi_oem_state_data_
 }
 
 int
-ipmi_oem_intelnm_get_node_manager_alert_thresholds (ipmi_oem_state_data_t *state_data)
+ipmi_oem_intelnm_get_node_manager_policy_alert_thresholds (ipmi_oem_state_data_t *state_data)
 {
   uint8_t target_channel_number = 0;
   uint8_t target_slave_address = 0;
@@ -3554,14 +3557,14 @@ ipmi_oem_intelnm_get_node_manager_alert_thresholds (ipmi_oem_state_data_t *state
 	  if (first_output_flag)
 	    pstdout_printf (state_data->pstate, "\n");
 	  
-	  if (_ipmi_oem_intelnm_get_node_manager_alert_thresholds_common (state_data,
-									  target_channel_number,
-									  target_slave_address,
-									  target_lun,
-									  domainid_array[i],
-									  j,
-									  domainid_specified ? 0 : 1,
-									  policyid_specified ? 0 : 1) < 0)
+	  if (_ipmi_oem_intelnm_get_node_manager_policy_alert_thresholds_common (state_data,
+										 target_channel_number,
+										 target_slave_address,
+										 target_lun,
+										 domainid_array[i],
+										 j,
+										 domainid_specified ? 0 : 1,
+										 policyid_specified ? 0 : 1) < 0)
 	    goto cleanup;
 	  
 	  first_output_flag++;
@@ -3574,7 +3577,7 @@ ipmi_oem_intelnm_get_node_manager_alert_thresholds (ipmi_oem_state_data_t *state
 }
 
 int
-ipmi_oem_intelnm_set_node_manager_alert_thresholds (ipmi_oem_state_data_t *state_data)
+ipmi_oem_intelnm_set_node_manager_policy_alert_thresholds (ipmi_oem_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t target_channel_number = 0;
@@ -3685,7 +3688,7 @@ ipmi_oem_intelnm_set_node_manager_alert_thresholds (ipmi_oem_state_data_t *state
                                            &target_lun) < 0)
     goto cleanup;
 
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_alert_thresholds_rs)))
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -3694,16 +3697,16 @@ ipmi_oem_intelnm_set_node_manager_alert_thresholds (ipmi_oem_state_data_t *state
       goto cleanup;
     }
 
-  if (ipmi_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds (state_data->ipmi_ctx,
-									 target_channel_number,
-									 target_slave_address,
-									 target_lun,
-									 domainid,
-									 policyid,
-									 threshold1_specified ? &threshold1 : NULL,
-									 threshold2_specified ? &threshold2 : NULL,
-									 threshold3_specified ? &threshold3 : NULL,
-									 obj_cmd_rs) < 0)
+  if (ipmi_cmd_oem_intel_node_manager_set_node_manager_policy_alert_thresholds (state_data->ipmi_ctx,
+										target_channel_number,
+										target_slave_address,
+										target_lun,
+										domainid,
+										policyid,
+										threshold1_specified ? &threshold1 : NULL,
+										threshold2_specified ? &threshold2 : NULL,
+										threshold3_specified ? &threshold3 : NULL,
+										obj_cmd_rs) < 0)
     {
       if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
 	{
@@ -3722,7 +3725,7 @@ ipmi_oem_intelnm_set_node_manager_alert_thresholds (ipmi_oem_state_data_t *state
 	efallthrough:
 	  pstdout_fprintf (state_data->pstate,
 			   stderr,
-			   "ipmi_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds: %s\n",
+			   "ipmi_cmd_oem_intel_node_manager_set_node_manager_policy_alert_thresholds: %s\n",
 			   ipmi_ctx_errormsg (state_data->ipmi_ctx));
 	}
       goto cleanup;

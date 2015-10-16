@@ -143,7 +143,7 @@ fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_rs =
  * threshold is 2 bytes and there is a max of 3, so I list as the
  * entries and make them optional
  */
-fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds_rq =
+fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_alert_thresholds_rq =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -157,7 +157,7 @@ fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_threshold
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds_rs =
+fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_alert_thresholds_rs =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
@@ -165,7 +165,7 @@ fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_threshold
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds_rq =
+fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_alert_thresholds_rq =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -179,7 +179,7 @@ fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_threshold
  * threshold is 2 bytes and there is a max of 3, so I list the
  * entries and make them optional
  */
-fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds_rs =
+fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_alert_thresholds_rs =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
@@ -663,12 +663,12 @@ fill_cmd_oem_intel_node_manager_get_node_manager_policy (uint8_t domain_id,
 }
 
 int
-fill_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds (uint8_t domain_id,
-                                                                   uint8_t policy_id,
-                                                                   uint16_t *alert_threshold1,
-                                                                   uint16_t *alert_threshold2,
-                                                                   uint16_t *alert_threshold3,
-                                                                   fiid_obj_t obj_cmd_rq)
+fill_cmd_oem_intel_node_manager_set_node_manager_policy_alert_thresholds (uint8_t domain_id,
+									  uint8_t policy_id,
+									  uint16_t *alert_threshold1,
+									  uint16_t *alert_threshold2,
+									  uint16_t *alert_threshold3,
+									  fiid_obj_t obj_cmd_rq)
 {
   uint8_t number_of_alert_thresholds = 0;
 
@@ -679,7 +679,7 @@ fill_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds (uint8_t domai
       return (-1);
     }
 
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_alert_thresholds_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -687,7 +687,7 @@ fill_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds (uint8_t domai
 
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
 
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_OEM_INTEL_NODE_MANAGER_SET_NODE_MANAGER_ALERT_THRESHOLDS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_OEM_INTEL_NODE_MANAGER_SET_NODE_MANAGER_POLICY_ALERT_THRESHOLDS);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "manufacturer_id", IPMI_IANA_ENTERPRISE_ID_INTEL);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "domain_id", domain_id);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
@@ -716,9 +716,9 @@ fill_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds (uint8_t domai
 }
 
 int
-fill_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds (uint8_t domain_id,
-                                                                   uint8_t policy_id,
-                                                                   fiid_obj_t obj_cmd_rq)
+fill_cmd_oem_intel_node_manager_get_node_manager_policy_alert_thresholds (uint8_t domain_id,
+									  uint8_t policy_id,
+									  fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domain_id)
       || !fiid_obj_valid (obj_cmd_rq))
@@ -727,7 +727,7 @@ fill_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds (uint8_t domai
       return (-1);
     }
 
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_alert_thresholds_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -735,7 +735,7 @@ fill_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds (uint8_t domai
 
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
 
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_OEM_INTEL_NODE_MANAGER_GET_NODE_MANAGER_ALERT_THRESHOLDS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_OEM_INTEL_NODE_MANAGER_GET_NODE_MANAGER_POLICY_ALERT_THRESHOLDS);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "manufacturer_id", IPMI_IANA_ENTERPRISE_ID_INTEL);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "domain_id", domain_id);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);

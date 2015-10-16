@@ -86,24 +86,24 @@ int ipmi_cmd_oem_intel_node_manager_get_node_manager_policy (ipmi_ctx_t ctx,
                                                              uint8_t policy_id,
                                                              fiid_obj_t obj_cmd_rs);
 
-int ipmi_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds (ipmi_ctx_t ctx,
-                                                                       uint8_t target_channel_number,
-                                                                       uint8_t target_slave_address,
-                                                                       uint8_t target_lun,
-                                                                       uint8_t domain_id,
-                                                                       uint8_t policy_id,
-                                                                       uint16_t *alert_threshold1,
-                                                                       uint16_t *alert_threshold2,
-                                                                       uint16_t *alert_threshold3,
-                                                                       fiid_obj_t obj_cmd_rs);
+int ipmi_cmd_oem_intel_node_manager_set_node_manager_policy_alert_thresholds (ipmi_ctx_t ctx,
+									      uint8_t target_channel_number,
+									      uint8_t target_slave_address,
+									      uint8_t target_lun,
+									      uint8_t domain_id,
+									      uint8_t policy_id,
+									      uint16_t *alert_threshold1,
+									      uint16_t *alert_threshold2,
+									      uint16_t *alert_threshold3,
+									      fiid_obj_t obj_cmd_rs);
 
-int ipmi_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds (ipmi_ctx_t ctx,
-                                                                       uint8_t target_channel_number,
-                                                                       uint8_t target_slave_address,
-                                                                       uint8_t target_lun,
-                                                                       uint8_t domain_id,
-                                                                       uint8_t policy_id,
-                                                                       fiid_obj_t obj_cmd_rs);
+int ipmi_cmd_oem_intel_node_manager_get_node_manager_policy_alert_thresholds (ipmi_ctx_t ctx,
+									      uint8_t target_channel_number,
+									      uint8_t target_slave_address,
+									      uint8_t target_lun,
+									      uint8_t domain_id,
+									      uint8_t policy_id,
+									      fiid_obj_t obj_cmd_rs);
   
 int ipmi_cmd_oem_intel_node_manager_set_node_manager_policy_suspend_periods (ipmi_ctx_t ctx,
                                                                              uint8_t target_channel_number,

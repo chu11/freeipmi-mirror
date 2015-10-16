@@ -161,7 +161,7 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_rs
 Set Node Manager Alert Thresholds Request
 -----------------------------------------
 
-FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds_rq
+FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_alert_thresholds_rq
 
     { 8,  "cmd", REQUIRED, LENGTH-FIXED }
     { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
@@ -176,7 +176,7 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds
 Set Node Manager Alert Thresholds Response
 ------------------------------------------
 
-FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds_rs
+FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_alert_thresholds_rs
 
     { 8,  "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
     { 8,  "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
@@ -185,7 +185,7 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds
 Get Node Manager Alert Thresholds Request
 -----------------------------------------
 
-FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds_rq
+FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_alert_thresholds_rq
 
     { 8,  "cmd", REQUIRED, LENGTH-FIXED }
     { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
@@ -196,7 +196,7 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds
 Get Node Manager Alert Thresholds Response
 ------------------------------------------
 
-FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds_rs
+FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_alert_thresholds_rs
 
     { 8,  "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
     { 8,  "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }

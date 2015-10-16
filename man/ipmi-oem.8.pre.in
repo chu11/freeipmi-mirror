@@ -567,7 +567,7 @@ This OEM command will remove the indicated policy ID from the domain
 ID.  Both the \fIdomainid\fR and \fIpolicyid\fR are required.  Command
 confirmed to work on Intel S2600JF (Appro 512X).
 .TP
-.B get-node-manager-alert-thresholds \fI[domainid=platform|cpu|memory|highpowerio]\fR \fI[policyid=num]\fR 
+.B get-node-manager-policy-alert-thresholds \fI[domainid=platform|cpu|memory|highpowerio]\fR \fI[policyid=num]\fR 
 This OEM command will get the current alert thresholds.  If no
 \fIdomainid\fR is specified, all alert thresholds for domain IDs and
 policy Ids will be attempted to be output.  If a \fIdomainid\fR is
@@ -578,7 +578,7 @@ verbose option is set, additional error messages will be output as
 valid policies are being searched for.  Command confirmed to work on
 Intel S2600JF (Appro 512X).
 .TP
-.B set-node-manager-alert-thresholds \fIdomainid=platform|cpu|memory|highpowerio\fR \fIpolicyid=num\fR \fI[threshold1=num]\fR \fI[threshold2=num]\fR \fI[threshold3=num]\fR
+.B set-node-manager-policy-alert-thresholds \fIdomainid=platform|cpu|memory|highpowerio\fR \fIpolicyid=num\fR \fI[threshold1=num]\fR \fI[threshold2=num]\fR \fI[threshold3=num]\fR
 This OEM command will set the alert thresholds for a given domain ID
 and policy ID.  Up to three thresholds can be specified, The units of
 the thresholds will depend on the configuration of the current policy.

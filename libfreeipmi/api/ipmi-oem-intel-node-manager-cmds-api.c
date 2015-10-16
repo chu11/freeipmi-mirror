@@ -311,16 +311,16 @@ ipmi_cmd_oem_intel_node_manager_get_node_manager_policy (ipmi_ctx_t ctx,
 }
 
 int
-ipmi_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds (ipmi_ctx_t ctx,
-                                                                   uint8_t target_channel_number,
-                                                                   uint8_t target_slave_address,
-                                                                   uint8_t target_lun,
-                                                                   uint8_t domain_id,
-                                                                   uint8_t policy_id,
-                                                                   uint16_t *alert_threshold1,
-                                                                   uint16_t *alert_threshold2,
-                                                                   uint16_t *alert_threshold3,
-                                                                   fiid_obj_t obj_cmd_rs)
+ipmi_cmd_oem_intel_node_manager_set_node_manager_policy_alert_thresholds (ipmi_ctx_t ctx,
+									  uint8_t target_channel_number,
+									  uint8_t target_slave_address,
+									  uint8_t target_lun,
+									  uint8_t domain_id,
+									  uint8_t policy_id,
+									  uint16_t *alert_threshold1,
+									  uint16_t *alert_threshold2,
+									  uint16_t *alert_threshold3,
+									  fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int rv = -1;
@@ -339,24 +339,24 @@ ipmi_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds (ipmi_ctx_t ct
     }
 
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
-                                 tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds_rs) < 0)
+                                 tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_alert_thresholds_rs) < 0)
     {
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
-  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds_rq)))
+  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_alert_thresholds_rq)))
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
 
-  if (fill_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds (domain_id,
-                                                                         policy_id,
-                                                                         alert_threshold1,
-                                                                         alert_threshold2,
-                                                                         alert_threshold3,
-                                                                         obj_cmd_rq) < 0)
+  if (fill_cmd_oem_intel_node_manager_set_node_manager_policy_alert_thresholds (domain_id,
+										policy_id,
+										alert_threshold1,
+										alert_threshold2,
+										alert_threshold3,
+										obj_cmd_rq) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
@@ -398,13 +398,13 @@ ipmi_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds (ipmi_ctx_t ct
 }
 
 int
-ipmi_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds (ipmi_ctx_t ctx,
-                                                                   uint8_t target_channel_number,
-                                                                   uint8_t target_slave_address,
-                                                                   uint8_t target_lun,
-                                                                   uint8_t domain_id,
-                                                                   uint8_t policy_id,
-                                                                   fiid_obj_t obj_cmd_rs)
+ipmi_cmd_oem_intel_node_manager_get_node_manager_policy_alert_thresholds (ipmi_ctx_t ctx,
+									  uint8_t target_channel_number,
+									  uint8_t target_slave_address,
+									  uint8_t target_lun,
+									  uint8_t domain_id,
+									  uint8_t policy_id,
+									  fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int rv = -1;
@@ -423,21 +423,21 @@ ipmi_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds (ipmi_ctx_t ct
     }
 
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
-                                 tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds_rs) < 0)
+                                 tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_alert_thresholds_rs) < 0)
     {
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
 
-  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds_rq)))
+  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_alert_thresholds_rq)))
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
 
-  if (fill_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds (domain_id,
-                                                                         policy_id,
-                                                                         obj_cmd_rq) < 0)
+  if (fill_cmd_oem_intel_node_manager_get_node_manager_policy_alert_thresholds (domain_id,
+										policy_id,
+										obj_cmd_rq) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
