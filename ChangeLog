@@ -1,3 +1,8 @@
+2015-10-16 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/ipmi-oem-intelnm.c (ipmi_oem_intelnm_get_node_manager_statistics):
+	Fix errors in units in output.
+	
 2015-09-30 Albert Chu <chu11@llnl.gov>
 
 	Merge branch intel2600v3.

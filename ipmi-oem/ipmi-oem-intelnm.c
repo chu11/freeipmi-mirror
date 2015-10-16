@@ -801,42 +801,36 @@ ipmi_oem_intelnm_get_node_manager_statistics (ipmi_oem_state_data_t *state_data)
 		      "Average Throttling Percent                    : %u%%\n",
 		      average);
     }
-  else if (mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_HOST_UNHANDLED_REQUESTS_STATISTICS
+  else if (mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_HOST_RESPONSE_TIME_STATISTICS
 	   || mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_HOST_COMMUNICATION_FAILURE_STATISTICS)
     {
+      /* Time is in 1/100 increments, multiply by 10 to get milliseconds */
+
       pstdout_printf (state_data->pstate,
-		      "Current Throttling                            : %u%%\n",
-		      current);
+		      "Current Time                                  : %u ms\n",
+		      current * 10);
     
       pstdout_printf (state_data->pstate,
-		      "Minimum Throttling                            : %u%%\n",
-		      minimum);
+		      "Minimum Time                                  : %u ms\n",
+		      minimum * 10);
     
       pstdout_printf (state_data->pstate,
-		      "Maximum Throttling                            : %u%%\n",
-		      maximum);
+		      "Maximum Time                                  : %u ms\n",
+		      maximum * 10);
     
       pstdout_printf (state_data->pstate,
-		      "Average Throttling                            : %u%%\n",
-		      average);
+		      "Average Time                                  : %u ms\n",
+		      average * 10);
     } 
-  else /* mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_HOST_RESPONSE_TIME_STATISTICS */
+  else /* mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_HOST_UNHANDLED_REQUESTS_STATISTICS */
     {
       pstdout_printf (state_data->pstate,
-		      "Current Unhandled Requests                    : %u%%\n",
+		      "Current Unhandled Requests                    : %u\n",
 		      current);
     
       pstdout_printf (state_data->pstate,
-		      "Minimum Unhandled Requests                    : %u%%\n",
-		      minimum);
-    
-      pstdout_printf (state_data->pstate,
-		      "Maximum Unhandled Requests                    : %u%%\n",
+		      "Maximum Unhandled Requests                    : %u\n",
 		      maximum);
-    
-      pstdout_printf (state_data->pstate,
-		      "Average Unhandled Requests                    : %u%%\n",
-		      average);
     }
 
   pstdout_printf (state_data->pstate,
