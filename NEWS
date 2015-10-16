@@ -6,6 +6,7 @@ o Handle several additional completion code error message in libfreeipmi.
 o Handle several error handling corner cases in ipmi-sensors.
 o Support Intel E5 2600 V3 motherboard OEM SEL events.
 o Fix several errors in ipmi-oem intelnm get-node-manager-statistics output.
+o Fix logic errors in ipmi-oem intelnm set-node-manager-policy.
 
 FreeIPMI 1.4.9 - 06/01/15
 -------------------------
