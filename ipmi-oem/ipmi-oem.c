@@ -621,7 +621,7 @@ struct ipmi_oem_command oem_intelnm[] =
     },
     {
       "set-node-manager-policy",
-      "domainid=platform|cpu|memory|highpowerio policyid=num policytrigger=none|inlettemperaturelimitpolicytrigger|missingpowerreadingtimeout|timeafterplatformresettrigger|boottimepolicy policytargetlimit=num correctiontimelimit=ms statisticsreportingperiod=seconds policystorage=persistent|volatile [policytriggerlimit=num] [policystate=enable|disable] [policyexceptionaction=alert|shutdown] [aggressivepowercorrection=automatic|notaggressive|aggressive]",
+      "domainid=platform|cpu|memory|highpowerio policyid=num policytrigger=none|inlettemperaturelimitpolicytrigger|missingpowerreadingtimeout|timeafterplatformresettrigger|boottimepolicy policytargetlimit=num [platformbootingmode=performance|power] correctiontimelimit=ms statisticsreportingperiod=seconds policystorage=persistent|volatile [policytriggerlimit=num] [policystate=enable|disable] [policyexceptionaction=alert|shutdown] [aggressivepowercorrection=automatic|notaggressive|aggressive]",
       7,
       IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
       ipmi_oem_intelnm_set_node_manager_policy

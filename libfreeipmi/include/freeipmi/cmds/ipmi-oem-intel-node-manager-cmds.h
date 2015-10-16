@@ -32,6 +32,7 @@ extern "C" {
  * For Intel Chips, not just Intel Motherboards.  Confirmed for:
  *
  * Intel S5500WB/Penguin Computing Relion 700
+ * Intel S2600JF/Appro 512X
  * Inventec 5441/Dell Xanadu II
  * Inventec 5442/Dell Xanadu III
  * Quanta S99Q/Dell FS12-TY
@@ -131,6 +132,13 @@ extern "C" {
 #define IPMI_OEM_INTEL_NODE_MANAGER_POLICY_STORAGE_VALID(__val) \
   (((__val) == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_STORAGE_PERSISTENT_STORAGE \
     || (__val) == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_STORAGE_VOLATILE_MEMORY) ? 1 : 0)
+
+#define IPMI_OEM_INTEL_NODE_MANAGER_PLATFORM_BOOTING_MODE_BOOT_IN_POWER_OPTIMIZED_MODE       0
+#define IPMI_OEM_INTEL_NODE_MANAGER_PLATFORM_BOOTING_MODE_BOOT_IN_PERFORMANCE_OPTIMIZED_MODE 1
+
+#define IPMI_OEM_INTEL_NODE_MANAGER_PLATFORM_BOOTING_MODE_VALID(__val) \
+  (((__val) == IPMI_OEM_INTEL_NODE_MANAGER_PLATFORM_BOOTING_MODE_BOOT_IN_POWER_OPTIMIZED_MODE \
+    || (__val) == IPMI_OEM_INTEL_NODE_MANAGER_PLATFORM_BOOTING_MODE_BOOT_IN_PERFORMANCE_OPTIMIZED_MODE) ? 1 : 0)
 
 #define IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TYPE_POWER_CONTROL_POLICY 0x1
 
@@ -269,6 +277,8 @@ extern "C" {
 extern fiid_template_t tmpl_cmd_oem_intel_node_manager_enable_disable_node_manager_policy_control_rq;
 extern fiid_template_t tmpl_cmd_oem_intel_node_manager_enable_disable_node_manager_policy_control_rs;
 extern fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_rq;
+extern fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_boot_time_policy_rq;
+extern fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_rs;
 extern fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_rs;
 extern fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_rq;
 extern fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_rs;
@@ -318,6 +328,22 @@ int fill_cmd_oem_intel_node_manager_set_node_manager_policy (uint8_t domain_id,
                                                              uint16_t policy_trigger_limit,
                                                              uint16_t statistics_reporting_period,
                                                              fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_oem_intel_node_manager_set_node_manager_policy_boot_time_policy (uint8_t domain_id,
+									      uint8_t policy_enabled,
+									      uint8_t policy_id,
+									      uint8_t policy_trigger_type,
+									      uint8_t policy_configuration_action,
+									      uint8_t aggressive_cpu_power_correction,
+									      uint8_t policy_storage_option,
+									      uint8_t policy_exception_actions_send_alert,
+									      uint8_t policy_exception_actions_shutdown_system,
+									      uint8_t platform_booting_mode,
+									      uint8_t cores_disabled,
+									      uint32_t correction_time_limit,
+									      uint16_t policy_trigger_limit,
+									      uint16_t statistics_reporting_period,
+									      fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_oem_intel_node_manager_get_node_manager_policy (uint8_t domain_id,
                                                              uint8_t policy_id,
