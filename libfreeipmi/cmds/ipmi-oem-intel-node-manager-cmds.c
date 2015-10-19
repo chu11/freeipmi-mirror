@@ -40,17 +40,6 @@
  * Intel                                   *
  *******************************************/
 
-/*
- * Intel Node Manager
- *
- * For Intel Chips, not just Intel Motherboards.  Confirmed for:
- *
- * Intel S5500WB/Penguin Computing Relion 700
- * Inventec 5441/Dell Xanadu II
- * Inventec 5442/Dell Xanadu III
- * Quanta S99Q/Dell FS12-TY
- */
-
 fiid_template_t tmpl_cmd_oem_intel_node_manager_enable_disable_node_manager_policy_control_rq =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -152,7 +141,8 @@ fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_rs =
     { 1,  "policy_storage_option", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1,  "policy_exception_actions.send_alert", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1,  "policy_exception_actions.shutdown_system", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 6,  "policy_exception_actions.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 5,  "policy_exception_actions.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1,  "policy_power_domain", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* listed as "power limit" in 2.0 spec but "policy target limit"
      * in set version.  changing to 'policy target limit' to be
      * consistent

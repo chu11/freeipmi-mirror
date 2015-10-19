@@ -2206,6 +2206,7 @@ _ipmi_oem_intelnm_get_node_manager_policy_common (ipmi_oem_state_data_t *state_d
   uint8_t policy_storage_option;
   uint8_t policy_exception_actions_send_alert;
   uint8_t policy_exception_actions_shutdown_system;
+  uint8_t policy_power_domain;
   uint16_t policy_target_limit;
   uint32_t correction_time_limit;
   uint16_t policy_trigger_limit;
@@ -2215,6 +2216,7 @@ _ipmi_oem_intelnm_get_node_manager_policy_common (ipmi_oem_state_data_t *state_d
   char *policy_type_str = NULL;
   char *aggressive_cpu_power_correction_str = NULL;
   char *policy_storage_option_str = NULL;
+  char *policy_power_domain_str = NULL;
   uint64_t val;
   int rv = -1;
 
@@ -2403,6 +2405,18 @@ _ipmi_oem_intelnm_get_node_manager_policy_common (ipmi_oem_state_data_t *state_d
   policy_exception_actions_shutdown_system = val;
 
   if (FIID_OBJ_GET (obj_cmd_rs,
+		    "policy_power_domain",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "FIID_OBJ_GET: 'policy_power_domain': %s\n",
+		       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  policy_power_domain = val;
+
+  if (FIID_OBJ_GET (obj_cmd_rs,
 		    "policy_target_limit",
 		    &val) < 0)
     {
@@ -2493,6 +2507,19 @@ _ipmi_oem_intelnm_get_node_manager_policy_common (ipmi_oem_state_data_t *state_d
       break;
     }
 
+  switch (policy_power_domain)
+    {
+    case IPMI_OEM_INTEL_NODE_MANAGER_POLICY_POWER_DOMAIN_POWER_PRIMARY_SIDE_POWER_DOMAIN:
+      policy_power_domain_str = "Primary";
+      break;
+    case IPMI_OEM_INTEL_NODE_MANAGER_POLICY_POWER_DOMAIN_POWER_PRIMARY_SIDE_POWER_DOMAIN:
+      policy_power_domain_str = "Secondary";
+      break;
+    default:
+      policy_power_domain_str = "Unknown";
+      break;
+    }
+
   if (searching_domain_id
       || searching_policy_id)
     _ipmi_oem_intelnm_get_node_manager_policy_output_header (state_data, domain_id, policy_id);
@@ -2538,6 +2565,11 @@ _ipmi_oem_intelnm_get_node_manager_policy_common (ipmi_oem_state_data_t *state_d
   pstdout_printf (state_data->pstate,
 		  "Policy Exception Shutdown System Action : %s\n",
 		  (policy_exception_actions_shutdown_system == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_EXCEPTION_ACTION_ENABLE) ? "enabled" : "disabled");
+
+  if (domain_id == IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_ENTIRE_PLATFORM)
+    pstdout_printf (state_data->pstate,
+		    "Policy Power Domain                     : %s\n",
+		    policy_power_domain_str);
 		  
   switch (policy_trigger_type)
     {
@@ -2709,9 +2741,9 @@ ipmi_oem_intelnm_get_node_manager_policy (ipmi_oem_state_data_t *state_data)
 							     NULL) < 0)
 	goto cleanup;
       
-      /* XXX */
       if (node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_0
-	  || node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_5)
+	  || node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_5
+	  ||node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_3_0)
 	{
 	  domainid_array = domainid_defaults_2_0;
 	  domainid_array_len = domainid_defaults_2_0_len;
