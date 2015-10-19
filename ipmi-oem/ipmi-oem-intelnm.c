@@ -884,19 +884,19 @@ ipmi_oem_intelnm_get_node_manager_statistics (ipmi_oem_state_data_t *state_data)
     {
       /* In units of 1/10 CFM, so divide by 10 to get CFM */
       pstdout_printf (state_data->pstate,
-		      "Current CFM                                   : %d CFM\n",
+		      "Current CFM                                   : %0.1f CFM\n",
 		      (double)current / 10);
     
       pstdout_printf (state_data->pstate,
-		      "Minimum CFM                                   : %d CFM\n",
+		      "Minimum CFM                                   : %01.f CFM\n",
 		      (double)minimum / 10);
     
       pstdout_printf (state_data->pstate,
-		      "Maximum CFM                                   : %d CFM\n",
+		      "Maximum CFM                                   : %01.f CFM\n",
 		      (double)maximum / 10);
     
       pstdout_printf (state_data->pstate,
-		      "Average CFM                                   : %d CFM\n",
+		      "Average CFM                                   : %01.f CFM\n",
 		      (double)average / 10);
     }
 
