@@ -416,7 +416,8 @@ fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_capabilities_rq
     { 4,  "domain_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4,  "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4,  "policy_trigger_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4,  "policy_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 3,  "policy_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1,  "policy_power_domain", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
   };
 
@@ -1263,11 +1264,13 @@ int
 fill_cmd_oem_intel_node_manager_get_node_manager_capabilities (uint8_t domain_id,
                                                                uint8_t policy_trigger_type,
                                                                uint8_t policy_type,
+							       uint8_t policy_power_domain,
                                                                fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domain_id)
       || !IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_VALID (policy_trigger_type)
       || !IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TYPE_VALID (policy_type)
+      || !IPMI_OEM_INTEL_NODE_MANAGER_POLICY_POWER_DOMAIN_VALID (policy_power_domain)
       || !fiid_obj_valid (obj_cmd_rq))
     {
       SET_ERRNO (EINVAL);
@@ -1288,6 +1291,7 @@ fill_cmd_oem_intel_node_manager_get_node_manager_capabilities (uint8_t domain_id
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "policy_trigger_type", policy_trigger_type);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "policy_type", policy_type);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "policy_power_domain", policy_power_domain);
 
   return (0);
 }

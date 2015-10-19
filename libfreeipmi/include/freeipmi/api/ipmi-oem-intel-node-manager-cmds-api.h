@@ -211,6 +211,7 @@ int ipmi_cmd_oem_intel_node_manager_get_node_manager_capabilities (ipmi_ctx_t ct
                                                                    uint8_t domain_id,
                                                                    uint8_t policy_trigger_type,
                                                                    uint8_t policy_type,
+								   uint8_t policy_power_domain,
                                                                    fiid_obj_t obj_cmd_rs);
   
 int ipmi_cmd_oem_intel_node_manager_get_node_manager_version (ipmi_ctx_t ctx,

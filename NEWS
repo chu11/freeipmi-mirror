@@ -7,6 +7,7 @@ o Update Intel Node Manager support for 3.0 specification.
   - Support new OEM SEL events
   - Update ipmi-oem commands.
     - Support new get/set-turbo-synchronization-ratio
+    - Support new 'policypowerdomain' option in get-node-manager-capabilities.
     - get/set-node-manager-alert-thresholds converted to
       get/set-node-manager-policy-alert-thresholds.  Legacy commands
       still supported.

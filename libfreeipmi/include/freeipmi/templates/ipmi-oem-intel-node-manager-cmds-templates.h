@@ -439,7 +439,8 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_capabilities_rq
     { 4,  "domain_id", REQUIRED, LENGTH-FIXED }
     { 4,  "reserved", REQUIRED, LENGTH-FIXED }
     { 4,  "policy_trigger_type", REQUIRED, LENGTH-FIXED }
-    { 4,  "policy_type", REQUIRED, LENGTH-FIXED }
+    { 3,  "policy_type", REQUIRED, LENGTH-FIXED }
+    { 1,  "policy_power_domain", REQUIRED, LENGTH-FIXED }
 
 Get Node Manager Capabilities Response
 --------------------------------------

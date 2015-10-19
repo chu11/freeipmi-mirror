@@ -1009,6 +1009,7 @@ ipmi_cmd_oem_intel_node_manager_get_node_manager_capabilities (ipmi_ctx_t ctx,
                                                                uint8_t domain_id,
                                                                uint8_t policy_trigger_type,
                                                                uint8_t policy_type,
+							       uint8_t policy_power_domain,
                                                                fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -1043,6 +1044,7 @@ ipmi_cmd_oem_intel_node_manager_get_node_manager_capabilities (ipmi_ctx_t ctx,
   if (fill_cmd_oem_intel_node_manager_get_node_manager_capabilities (domain_id,
                                                                      policy_trigger_type,
                                                                      policy_type,
+								     policy_power_domain,
                                                                      obj_cmd_rq) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);

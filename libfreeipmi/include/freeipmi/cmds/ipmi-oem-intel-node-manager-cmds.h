@@ -148,6 +148,13 @@ extern "C" {
 #define IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TYPE_VALID(__val)            \
   (((__val) == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TYPE_POWER_CONTROL_POLICY) ? 1 : 0)
 
+#define IPMI_OEM_INTEL_NODE_MANAGER_POLICY_POWER_DOMAIN_POWER_PRIMARY_SIDE_POWER_DOMAIN 0x0
+#define IPMI_OEM_INTEL_NODE_MANAGER_POLICY_POWER_DOMAIN_POWER_SECONDARY_SIDE_POWER_DOMAIN 0x1
+
+#define IPMI_OEM_INTEL_NODE_MANAGER_POLICY_POWER_DOMAIN_VALID(__val)            \
+  (((__val) == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_POWER_DOMAIN_POWER_PRIMARY_SIDE_POWER_DOMAIN \
+    || (__val) == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_POWER_DOMAIN_POWER_SECONDARY_SIDE_POWER_DOMAIN) ? 1 : 0)
+
 #define IPMI_OEM_INTEL_NODE_MANAGER_POLICY_ALERT_THRESHOLDS_MAX 3
 
 #define IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_START_TIME_MIN 0
@@ -475,6 +482,7 @@ int fill_cmd_oem_intel_node_manager_get_node_manager_statistics (uint8_t mode,
 int fill_cmd_oem_intel_node_manager_get_node_manager_capabilities (uint8_t domain_id,
                                                                    uint8_t policy_trigger_type,
                                                                    uint8_t policy_type,
+								   uint8_t policy_power_domain,
                                                                    fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_oem_intel_node_manager_get_node_manager_version (fiid_obj_t obj_cmd_rq);

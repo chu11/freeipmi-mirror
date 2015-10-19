@@ -483,15 +483,17 @@ S5500WB (Penguin Computing Relion 700), Inventec 5441/5442 (Dell
 Xanadu II/III), Quanta S99Q (Dell FS12-TY), Quanta QSSC-S4R (Appro
 GB812X-CN), Supermicro X9DRi-F, Intel S2600JF (Appro 512X).
 .TP
-.B get-node-manager-capabilities \fI[domainid=platform|cpu|memory|highpowerio]\fR \fI[policytrigger=none|inlettemperaturelimitpolicytrigger|missingpowerreadingtimeout|timeafterplatformresettrigger|boottimepolicy]\fR \fI[policytype=powercontrol]\fR
+.B get-node-manager-capabilities \fI[domainid=platform|cpu|memory|highpowerio]\fR \fI[policytrigger=none|inlettemperaturelimitpolicytrigger|missingpowerreadingtimeout|timeafterplatformresettrigger|boottimepolicy]\fR \fI[policytype=powercontrol]\fR \fI[policypowerdomain=primary|secondary]\fR
 This OEM command will output the current capabilities of the Intel
 Node manager.  The user may optionally specify a \fIdomainid\fR,
-\fIpolicytrigger\fR, or \fIpolicytype\fR.  If any particular option is
-not specified, all permutations of the remaining options will be used
-in an attempt to output all capabilities of the system.  If the
-verbose option is set, additional error messages will be output as
-valid policies are being searched for.  Command confirmed to work on
-Intel S2600JF (Appro 512X).
+\fIpolicytrigger\fR, \fIpolicytype\fR, or \fIpolicypowerdomain\fR.
+Note that \fIpolicypowerdomain\fR is only applicabale to domain id
+\fIplatform\fR.  If any particular option is not specified, all
+permutations of the remaining options will be used in an attempt to
+output all capabilities of the system.  If the verbose option is set,
+additional error messages will be output as valid policies are being
+searched for.  Command confirmed to work on Intel S2600JF (Appro
+512X).
 .TP
 .B node-manager-policy-control \fI<enable|disable>\fR \fI[domainid=platform|cpu|memory|highpowerio]\fR \fI[policyid=num]\fR 
 This OEM command will enable or disable the current global, domain, or
