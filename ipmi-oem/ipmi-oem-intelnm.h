@@ -49,6 +49,9 @@ int ipmi_oem_intelnm_get_limiting_policy_id (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_intelnm_get_node_manager_alert_destination (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_intelnm_set_node_manager_alert_destination (ipmi_oem_state_data_t *state_data);
 
+int ipmi_oem_intelnm_get_turbo_synchronization_ratio (ipmi_oem_state_data_t *state_data);
+int ipmi_oem_intelnm_set_turbo_synchronization_ratio (ipmi_oem_state_data_t *state_data);
+
 int ipmi_oem_intelnm_get_node_manager_version (ipmi_oem_state_data_t *state_data);
 
 #endif /* IPMI_OEM_INTELNM_H */
