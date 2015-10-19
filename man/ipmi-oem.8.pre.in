@@ -656,7 +656,7 @@ This OEM command will get the current Turbo Synchronization Ratio.  If
 \fIcpusocket\fR is not set to a specific cpu socket, all sockets will
 return maximum settings.
 .TP
-.B set-turbo-synchronization-ratio \fIturboratiolimit=num\fR \fI[cpusocket=num|all]\fR \fI[activecoresconfig=num|all]\fR,
+.B set-turbo-synchronization-ratio \fIturboratiolimit=num|default\fR \fI[cpusocket=num|all]\fR \fI[activecoresconfig=num|all]\fR,
 This OEM command will set the Turbo Synchronization Ratio.  If
 \fIcpusocket\fR is not set to a specific cpu socket, it assumed to be
 applied to all cores.  If \fIactivecore\fR is not set, it is assumed

@@ -717,7 +717,7 @@ struct ipmi_oem_command oem_intelnm[] =
     },
     {
       "set-turbo-synchronization-ratio",
-      "turboratiolimit=num [cpusocket=num|all] [activecoresconfig=num|all]",
+      "turboratiolimit=num|default [cpusocket=num|all] [activecoresconfig=num|all]",
       1,
       IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
       ipmi_oem_intelnm_set_turbo_synchronization_ratio

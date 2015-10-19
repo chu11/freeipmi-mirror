@@ -5563,11 +5563,417 @@ ipmi_oem_intelnm_set_node_manager_alert_destination (ipmi_oem_state_data_t *stat
 int
 ipmi_oem_intelnm_get_turbo_synchronization_ratio (ipmi_oem_state_data_t *state_data)
 {
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t target_channel_number = 0;
+  uint8_t target_slave_address = 0;
+  uint8_t target_lun = 0;
+  uint8_t cpu_socket_number = IPMI_OEM_INTEL_NODE_MANAGER_CPU_SOCKET_ALL_SOCKETS;
+  int cpu_socket_number_specified = 0;
+  uint8_t active_cores_configuration;
+  int active_cores_configuration_specified = 0;
+  uint8_t current_turbo_ratio_limit;
+  uint8_t default_turbo_ratio_limit;
+  uint8_t maximum_turbo_ratio_limit;
+  uint8_t minimum_turbo_ratio_limit;
+  uint64_t val;
+  int rv = -1;
+  unsigned int i;
+      
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count >= 1);
+
+  for (i = 0; i < state_data->prog_data->args->oem_options_count; i++)
+    {
+      char *key = NULL;
+      char *value = NULL;
+      
+      if (ipmi_oem_parse_key_value (state_data,
+				    i,
+				    &key,
+				    &value) < 0)
+	goto cleanup;
+
+      if (!strcasecmp (key, "cpusocket"))
+	{
+	  if (!strcasecmp (value, "all"))
+	    {
+	      cpu_socket_number = IPMI_OEM_INTEL_NODE_MANAGER_CPU_SOCKET_ALL_SOCKETS;
+	      cpu_socket_number_specified++;
+	    }
+	  else
+	    {
+	      if (ipmi_oem_parse_1_byte_field (state_data,
+					       i,
+					       value,
+					       &cpu_socket_number) < 0)
+		goto cleanup;
+
+	      if (!IPMI_OEM_INTEL_NODE_MANAGER_CPU_SOCKET_VALID(cpu_socket_number))
+		{
+		  pstdout_fprintf (state_data->pstate,
+				   stderr,
+				   "%s:%s invalid OEM option argument '%s' : invalid cpu socket number\n",
+				   state_data->prog_data->args->oem_id,
+				   state_data->prog_data->args->oem_command,
+				   state_data->prog_data->args->oem_options[i]);
+		  goto cleanup;
+		}
+
+	      cpu_socket_number_specified++;
+	    }
+	}
+      else if (!strcasecmp (key, "activecoresconfig"))
+	{
+	  if (ipmi_oem_parse_1_byte_field (state_data,
+					   i,
+					   value,
+					   &active_cores_configuration) < 0)
+	    goto cleanup;
+
+	  if (!IPMI_OEM_INTEL_NODE_MANAGER_GET_ACTIVE_CORES_CONFIGURATION_VALID(active_cores_configuration))
+	    {
+	      pstdout_fprintf (state_data->pstate,
+			       stderr,
+			       "%s:%s invalid OEM option argument '%s' : invalid active cores configuration\n",
+			       state_data->prog_data->args->oem_id,
+			       state_data->prog_data->args->oem_command,
+			       state_data->prog_data->args->oem_options[i]);
+	      goto cleanup;
+	    }
+
+	  active_cores_configuration_specified++;
+	}
+      else
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "%s:%s invalid OEM option argument '%s' : invalid option\n",
+			   state_data->prog_data->args->oem_id,
+			   state_data->prog_data->args->oem_command,
+			   state_data->prog_data->args->oem_options[i]);
+	  goto cleanup;
+	}
+
+      free (key);
+      free (value);
+    }
+
+  if (!active_cores_configuration)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "active cores configuration must be specified\n");
+      goto cleanup;
+    }
+
+  if (_ipmi_oem_intelnm_node_manager_init (state_data,
+                                           &target_channel_number,
+                                           &target_slave_address,
+                                           &target_lun) < 0)
+    goto cleanup;
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_oem_intel_node_manager_get_turbo_synchronization_ratio_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_oem_intel_node_manager_get_turbo_synchronization_ratio (state_data->ipmi_ctx,
+								       target_channel_number,
+								       target_slave_address,
+								       target_lun,
+								       cpu_socket_number,
+								       active_cores_configuration,
+								       obj_cmd_rs) < 0)
+    {
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
+	{
+	  int eret;
+
+	  if ((eret = _ipmi_oem_intelnm_bad_completion_code (state_data,
+							     NULL,
+							     obj_cmd_rs)) < 0)
+	    goto cleanup;
+
+	  if (!eret)
+	    goto efallthrough;
+	}
+      else
+	{
+	efallthrough:
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_cmd_oem_intel_node_manager_get_turbo_synchronization_ratio: %s\n",
+			   ipmi_ctx_errormsg (state_data->ipmi_ctx));
+	}
+
+      goto cleanup;
+    }
+
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "current_turbo_ratio_limit",
+                    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "FIID_OBJ_GET: 'current_turbo_ratio_limit': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  current_turbo_ratio_limit = val;
+
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "default_turbo_ratio_limit",
+                    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "FIID_OBJ_GET: 'default_turbo_ratio_limit': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  default_turbo_ratio_limit = val;
+
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "maximum_turbo_ratio_limit",
+                    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "FIID_OBJ_GET: 'maximum_turbo_ratio_limit': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  maximum_turbo_ratio_limit = val;
+
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "minimum_turbo_ratio_limit",
+                    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "FIID_OBJ_GET: 'minimum_turbo_ratio_limit': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  minimum_turbo_ratio_limit = val;
+
+  pstdout_printf (state_data->pstate,
+		  "Current Turbo Ratio Limit : %u\n",
+		  current_turbo_ratio_limit);
+
+  pstdout_printf (state_data->pstate,
+		  "Default Turbo Ratio Limit : %u\n",
+		  default_turbo_ratio_limit);
+      
+  pstdout_printf (state_data->pstate,
+		  "Maximum Turbo Ratio Limit : %u\n",
+		  maximum_turbo_ratio_limit);
+
+  pstdout_printf (state_data->pstate,
+		  "Minimum Turbo Ratio Limit : %u\n",
+		  minimum_turbo_ratio_limit);
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv); 
 }
 
 int
 ipmi_oem_intelnm_set_turbo_synchronization_ratio (ipmi_oem_state_data_t *state_data)
 {
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t target_channel_number = 0;
+  uint8_t target_slave_address = 0;
+  uint8_t target_lun = 0;
+  uint8_t cpu_socket_number = IPMI_OEM_INTEL_NODE_MANAGER_CPU_SOCKET_ALL_SOCKETS;
+  int cpu_socket_number_specified = 0;
+  uint8_t active_cores_configuration;
+  int active_cores_configuration_specified = 0;
+  uint8_t turbo_ratio_limit;
+  int turbo_ratio_limit_specified = 0;
+  int rv = -1;
+  unsigned int i;
+      
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count >= 1);
+
+  for (i = 0; i < state_data->prog_data->args->oem_options_count; i++)
+    {
+      char *key = NULL;
+      char *value = NULL;
+      
+      if (ipmi_oem_parse_key_value (state_data,
+				    i,
+				    &key,
+				    &value) < 0)
+	goto cleanup;
+
+      if (!strcasecmp (key, "cpusocket"))
+	{
+	  if (!strcasecmp (value, "all"))
+	    {
+	      cpu_socket_number = IPMI_OEM_INTEL_NODE_MANAGER_CPU_SOCKET_ALL_SOCKETS;
+	      cpu_socket_number_specified++;
+	    }
+	  else
+	    {
+	      if (ipmi_oem_parse_1_byte_field (state_data,
+					       i,
+					       value,
+					       &cpu_socket_number) < 0)
+		goto cleanup;
+
+	      if (!IPMI_OEM_INTEL_NODE_MANAGER_CPU_SOCKET_VALID(cpu_socket_number))
+		{
+		  pstdout_fprintf (state_data->pstate,
+				   stderr,
+				   "%s:%s invalid OEM option argument '%s' : invalid cpu socket number\n",
+				   state_data->prog_data->args->oem_id,
+				   state_data->prog_data->args->oem_command,
+				   state_data->prog_data->args->oem_options[i]);
+		  goto cleanup;
+		}
+
+	      cpu_socket_number_specified++;
+	    }
+	}
+      else if (!strcasecmp (key, "activecoresconfig"))
+	{
+	  if (!strcasecmp (value, "all"))
+	    {
+	      active_cores_configuration = IPMI_OEM_INTEL_NODE_MANAGER_ACTIVE_CORES_CONFIGURATION_APPLY_SETTINGS_TO_ALL_ACTIVE_CORES_CONFIGURATION;
+	      active_cores_configuration_specified++;
+	    }
+	  else
+	    {
+	      if (ipmi_oem_parse_1_byte_field (state_data,
+					       i,
+					       value,
+					       &active_cores_configuration) < 0)
+		goto cleanup;
+	      
+	      if (!IPMI_OEM_INTEL_NODE_MANAGER_SET_ACTIVE_CORES_CONFIGURATION_VALID(active_cores_configuration))
+		{
+		  pstdout_fprintf (state_data->pstate,
+				   stderr,
+				   "%s:%s invalid OEM option argument '%s' : invalid active cores configuration\n",
+				   state_data->prog_data->args->oem_id,
+				   state_data->prog_data->args->oem_command,
+				   state_data->prog_data->args->oem_options[i]);
+		  goto cleanup;
+		}
+	      active_cores_configuration_specified++;
+	    }
+	}
+      else if (!strcasecmp (key, "turboratiolimit"))
+	{
+	  if (!strcasecmp (value, "default"))
+	    {
+	      turbo_ratio_limit = IPMI_OEM_INTEL_NODE_MANAGER_TURBO_RATIO_LIMIT_RESTORE_DEFAULT_SETTINGS;
+	      turbo_ratio_limit_specified++;
+	    }
+	  else
+	    {
+	      if (ipmi_oem_parse_1_byte_field (state_data,
+					       i,
+					       value,
+					       &turbo_ratio_limit) < 0)
+		goto cleanup;
+
+	      if (!IPMI_OEM_INTEL_NODE_MANAGER_CPU_SOCKET_VALID(turbo_ratio_limit))
+		{
+		  pstdout_fprintf (state_data->pstate,
+				   stderr,
+				   "%s:%s invalid OEM option argument '%s' : invalid cpu socket number\n",
+				   state_data->prog_data->args->oem_id,
+				   state_data->prog_data->args->oem_command,
+				   state_data->prog_data->args->oem_options[i]);
+		  goto cleanup;
+		}
+
+	      turbo_ratio_limit_specified++;
+	    }
+	}
+      else
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "%s:%s invalid OEM option argument '%s' : invalid option\n",
+			   state_data->prog_data->args->oem_id,
+			   state_data->prog_data->args->oem_command,
+			   state_data->prog_data->args->oem_options[i]);
+	  goto cleanup;
+	}
+
+      free (key);
+      free (value);
+    }
+
+  if (!turbo_ratio_limit)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "turbo ratio limit must be specified\n");
+      goto cleanup;
+    }
+
+  if (_ipmi_oem_intelnm_node_manager_init (state_data,
+                                           &target_channel_number,
+                                           &target_slave_address,
+                                           &target_lun) < 0)
+    goto cleanup;
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_oem_intel_node_manager_set_turbo_synchronization_ratio_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_oem_intel_node_manager_set_turbo_synchronization_ratio (state_data->ipmi_ctx,
+								       target_channel_number,
+								       target_slave_address,
+								       target_lun,
+								       cpu_socket_number,
+								       active_cores_configuration,
+								       turbo_ratio_limit,
+								       obj_cmd_rs) < 0)
+    {
+      if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
+	{
+	  int eret;
+
+	  if ((eret = _ipmi_oem_intelnm_bad_completion_code (state_data,
+							     NULL,
+							     obj_cmd_rs)) < 0)
+	    goto cleanup;
+
+	  if (!eret)
+	    goto efallthrough;
+	}
+      else
+	{
+	efallthrough:
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_cmd_oem_intel_node_manager_set_turbo_synchronization_ratio: %s\n",
+			   ipmi_ctx_errormsg (state_data->ipmi_ctx));
+	}
+
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv); 
 }
 
 int
