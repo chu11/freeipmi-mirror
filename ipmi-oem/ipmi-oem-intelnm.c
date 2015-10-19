@@ -418,7 +418,7 @@ _ipmi_oem_intelnm_bad_completion_code (ipmi_oem_state_data_t *state_data,
 	}
       break;
     case IPMI_CMD_OEM_INTEL_NODE_MANAGER_SET_TURBO_SYNCHRONIZATION_RATIO:
-    case IPMI_CMD_OEM_INTEL_NODE_MANAGER_GET_TURBO_SYNChRONIZATION_RATIO:
+    case IPMI_CMD_OEM_INTEL_NODE_MANAGER_GET_TURBO_SYNCHRONIZATION_RATIO:
       switch (comp_code)
 	{
 	case IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_WRONG_CPU_SOCKET_NUMBER:
@@ -5651,3 +5651,4 @@ ipmi_oem_intelnm_get_node_manager_version (ipmi_oem_state_data_t *state_data)
  cleanup:
   return (rv);
 }
+

@@ -289,6 +289,27 @@ extern "C" {
 
 #define IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_SELECTOR_OPERATOR_USE_VOLATILE_DESTINATION_INFO 0x0
 
+#define IPMI_OEM_INTEL_NODE_MANAGER_CPU_SOCKET_MIN 0 
+#define IPMI_OEM_INTEL_NODE_MANAGER_CPU_SOCKET_MAX 7
+#define IPMI_OEM_INTEL_NODE_MANAGER_CPU_SOCKET_ALL_SOCKETS 0xFF
+
+#define IPMI_OEM_INTEL_NODE_MANAGER_CPU_SOCKET_VALID(__val) \
+  (((__val) == IPMI_OEM_INTEL_NODE_MANAGER_CPU_SOCKET_MIN \
+    || (__val) == IPMI_OEM_INTEL_NODE_MANAGER_CPU_SOCKET_MAX \
+    || (__val) == IPMI_OEM_INTEL_NODE_MANAGER_CPU_SOCKET_ALL_SOCKETS) ? 1 : 0)
+
+#define IPMI_OEM_INTEL_NODE_MANAGER_ACTIVE_CORES_CONFIGURATION_RESERVED                                         0x00
+#define IPMI_OEM_INTEL_NODE_MANAGER_ACTIVE_CORES_CONFIGURATION_APPLY_SETTINGS_TO_ALL_ACTIVE_CORES_CONFIGURATION 0xFF
+
+#define IPMI_OEM_INTEL_NODE_MANAGER_SET_ACTIVE_CORES_CONFIGURATION_VALID(__val) \
+  (((__val) == IPMI_OEM_INTEL_NODE_MANAGER_ACTIVE_CORES_CONFIGURATION_APPLY_SETTINGS_TO_ALL_ACTIVE_CORES_CONFIGURATION \
+    || (__val) != IPMI_OEM_INTEL_NODE_MANAGER_ACTIVE_CORES_CONFIGURATION_RESERVED) ? 1 : 0)
+
+#define IPMI_OEM_INTEL_NODE_MANAGER_GET_ACTIVE_CORES_CONFIGURATION_VALID(__val) \
+  (((__val) != IPMI_OEM_INTEL_NODE_MANAGER_ACTIVE_CORES_CONFIGURATION_RESERVED) ? 1 : 0)
+
+#define IPMI_OEM_INTEL_NODE_MANAGER_TURBO_RATIO_LIMIT_RESTORE_DEFAULT_SETTINGS 0x00
+
 /* 
  * fill* functions return 0 on success, -1 on error.
  *
@@ -330,6 +351,10 @@ extern fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_de
 extern fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_destination_rs;
 extern fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_destination_rq;
 extern fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_destination_rs;
+extern fiid_template_t tmpl_cmd_oem_intel_node_manager_set_turbo_synchronization_ratio_rq;
+extern fiid_template_t tmpl_cmd_oem_intel_node_manager_set_turbo_synchronization_ratio_rs;
+extern fiid_template_t tmpl_cmd_oem_intel_node_manager_get_turbo_synchronization_ratio_rq;
+extern fiid_template_t tmpl_cmd_oem_intel_node_manager_get_turbo_synchronization_ratio_rs;
 extern fiid_template_t tmpl_cmd_oem_intel_node_manager_get_limiting_policy_id_rq;
 extern fiid_template_t tmpl_cmd_oem_intel_node_manager_get_limiting_policy_id_rs;
 
@@ -481,6 +506,15 @@ int fill_cmd_oem_intel_node_manager_set_node_manager_alert_destination_lan (uint
                                                                             fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_oem_intel_node_manager_get_node_manager_alert_destination (fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_oem_intel_node_manager_set_turbo_synchronization_ratio (uint8_t cpu_socket_number,
+								     uint8_t active_cores_configuration,
+								     uint8_t turbo_ratio_limit,
+								     fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_oem_intel_node_manager_get_turbo_synchronization_ratio (uint8_t cpu_socket_number,
+								     uint8_t active_cores_configuration,
+								     fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_oem_intel_node_manager_get_limiting_policy_id (uint8_t domain_id,
 							    fiid_obj_t obj_cmd_rq);

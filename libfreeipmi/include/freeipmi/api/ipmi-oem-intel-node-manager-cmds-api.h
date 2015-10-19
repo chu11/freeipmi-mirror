@@ -267,6 +267,23 @@ int ipmi_cmd_oem_intel_node_manager_get_node_manager_alert_destination (ipmi_ctx
                                                                         uint8_t target_lun,
                                                                         fiid_obj_t obj_cmd_rs);
 
+int ipmi_cmd_oem_intel_node_manager_set_turbo_synchronization_ratio (ipmi_ctx_t ctx,
+								     uint8_t target_channel_number,
+								     uint8_t target_slave_address,
+								     uint8_t target_lun,
+								     uint8_t cpu_socket_number,
+								     uint8_t active_cores_configuration,
+								     uint8_t turbo_ratio_limit,
+								     fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_oem_intel_node_manager_get_turbo_synchronization_ratio (ipmi_ctx_t ctx,
+								     uint8_t target_channel_number,
+								     uint8_t target_slave_address,
+								     uint8_t target_lun,
+								     uint8_t cpu_socket_number,
+								     uint8_t active_cores_configuration,
+								     fiid_obj_t obj_cmd_rs);
+
 int ipmi_cmd_oem_intel_node_manager_get_limiting_policy_id (ipmi_ctx_t ctx,
 							    uint8_t target_channel_number,
 							    uint8_t target_slave_address,

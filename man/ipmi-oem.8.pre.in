@@ -651,13 +651,16 @@ determined via
 .B ipmi-config(8).
 Command confirmed to work on Intel S2600JF (Appro 512X).
 .TP
-.B get-turbo-synchronization-ratio
-This OEM command will get the current Turbo Synchronization Ratio.
+.B get-turbo-synchronization-ratio \fIactivecoresconfig=num|all\fR \fI[cpusocket=num|all]\fR 
+This OEM command will get the current Turbo Synchronization Ratio.  If
+\fIcpusocket\fR is not set to a specific cpu socket, all sockets will
+return maximum settings.
 .TP
-.B set-turbo-synchronization-ratio \fIturboratiolimit=num\fR \fI[cpusocket=num|all]\fR \fI[activecore=num|all]\fR,
+.B set-turbo-synchronization-ratio \fIturboratiolimit=num\fR \fI[cpusocket=num|all]\fR \fI[activecoresconfig=num|all]\fR,
 This OEM command will set the Turbo Synchronization Ratio.  If
-\fIcpusocket\fR is not set, it assumed to be applied to all cores.  If
-\fIactivecore\fR is not set, it is assumed to be for all cores.
+\fIcpusocket\fR is not set to a specific cpu socket, it assumed to be
+applied to all cores.  If \fIactivecore\fR is not set, it is assumed
+to be for all cores.
 .TP
 .B get-node-manager-version
 This OEM command will output the current Intel Node Manager version
