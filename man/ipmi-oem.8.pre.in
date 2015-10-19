@@ -375,8 +375,10 @@ confirmed to work on Fujitsu RX100 S5.
 This OEM command will retrieve the Fujitsu specific string
 interpretation of a SEL record.  This command may be useful for
 interpreting Fujitsu OEM hex codes found in the SEL.  A specific SEL
-record ID must be specified.  Please see .B ipmi-sel(8), for
-retrieving SEL records.  Command confirmed to work on Fujitsu RX100
+record ID must be specified.  Please see
+.B ipmi-sel(8),
+for retrieving SEL records.  Command confirmed to work on Fujitsu
+RX100
 S5.
 .RE
 .TP
@@ -629,8 +631,9 @@ This OEM command will get the current alert destination information.
 Some of the configuration information output by this command will need
 to be correlated to BMC device channel and PEF configuration.  BMC
 device channel information can be viewed via .B bmc-info(8).  PEF
-configuration can be viewed via .B ipmi-config(8).  Command confirmed
-to work on Intel S2600JF (Appro 512X).
+configuration can be viewed via
+.B ipmi-config(8).
+Command confirmed to work on Intel S2600JF (Appro 512X).
 .TP
 .B set-node-manager-alert-destination \fI[channelnumber=num]\fR \fI[slaveaddress=address]\fR \fI[destinationselector=num]\fR \fI[alertstringselector=num]\fR \fI[sendalertstring=yes|no]\fR \fI[register=yes|no]\fR
 This OEM command will set the current alert receiver.  By default,
@@ -683,7 +686,8 @@ tool).  This command is placed here for convenience.
 This OEM command will set the dedicated or shared BMC MAC address.
 (See \fIget\-nic\-mode\fR above for description on dedicated
 vs. shared mode.)  The BMC MAC address cannot be set through the
-normal IPMI MAC address command (what is used in the .B ipmi-config(8)
+normal IPMI MAC address command (what is used in the
+.B ipmi-config(8)
 tool).  The MACADDR should be specified in XX:XX:XX:XX:XX:XX form.  A
 shared BMC MAC address may conflict with normal communication ethernet
 communication on the primary ethernet port.  Users may wish to
@@ -1071,7 +1075,8 @@ This OEM command will set the dedicated or shared BMC MAC address for
 a specified motherboard.  It will be written directly to the BMC
 eeprom.  (See \fIget\-nic\-mode\fR above for description on dedicated
 vs. shared mode.)  The BMC MAC address cannot be set through the
-normal IPMI MAC address command (what is used in the .B ipmi-config(8)
+normal IPMI MAC address command (what is used in the
+.B ipmi-config(8)
 tool).  The MACADDR should be specified in XX:XX:XX:XX:XX:XX form.  A
 shared BMC MAC address may conflict with normal communication ethernet
 communication on the primary ethernet port.  Users may wish to
