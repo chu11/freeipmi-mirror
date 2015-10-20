@@ -1,9 +1,7 @@
 FreeIPMI 1.5.1 - 03/01/14
 -------------------------
-Tools - New Features
---------------------
 o Update Intel Node Manager support for 3.0 specification.
-  - Update API and fiid templates in libfreeipmi
+  - Update API and fiid templates in libfreeipmi.
   - Support new OEM SEL events
   - Update ipmi-oem commands.
     - Support new get/set-turbo-synchronization-ratio
@@ -14,18 +12,11 @@ o Update Intel Node Manager support for 3.0 specification.
     - get/set-node-manager-alert-thresholds converted to
       get/set-node-manager-policy-alert-thresholds.  Legacy commands
       still supported.
-o Support ipmi-sel OEM interpretation of Linux kernel panics.
-
-Tools - Bug Fixes/Minor Changes
--------------------------------
-
-
-Libraries
----------
-o Update for IPMI 2.0 Errata 7.
+o Update libfreeipmi for IPMI 2.0 Errata 7.
   - Support/handle FRU Multirecord NVM Express type.
 o Support Get Device SDR Info, Get Device SDR, and Reserve Device SDR
   Repository commands in libfreeipmi.
+o Support ipmi-sel OEM interpretation of Linux kernel panics.
 
 FreeIPMI 1.4.1 - 03/01/14
 -------------------------
