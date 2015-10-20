@@ -107,7 +107,8 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_rq
     { 1,  "policy_storage_option", REQUIRED, LENGTH-FIXED }
     { 1,  "policy_exception_actions.send_alert", REQUIRED, LENGTH-FIXED }
     { 1,  "policy_exception_actions.shutdown_system", REQUIRED, LENGTH-FIXED }
-    { 6,  "policy_exception_actions.reserved", REQUIRED, LENGTH-FIXED }
+    { 5,  "policy_exception_actions.reserved", REQUIRED, LENGTH-FIXED }
+    { 1,  "policy_power_domain", REQUIRED, LENGTH-FIXED }
     { 16, "policy_target_limit", REQUIRED, LENGTH-FIXED }
     { 32, "correction_time_limit", REQUIRED, LENGTH-FIXED }
     { 16, "policy_trigger_limit", REQUIRED, LENGTH-FIXED }
@@ -130,7 +131,8 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_boot_time
     { 1,  "policy_storage_option", REQUIRED, LENGTH-FIXED }
     { 1,  "policy_exception_actions.send_alert", REQUIRED, LENGTH-FIXED }
     { 1,  "policy_exception_actions.shutdown_system", REQUIRED, LENGTH-FIXED }
-    { 6,  "policy_exception_actions.reserved", REQUIRED, LENGTH-FIXED }
+    { 5,  "policy_exception_actions.reserved", REQUIRED, LENGTH-FIXED }
+    { 1,  "policy_power_domain", REQUIRED, LENGTH-FIXED }
     { 1,  "policy_target_limit.platform_booting_mode", REQUIRED, LENGTH-FIXED }
     { 7,  "policy_target_limit.cores_disabled", REQUIRED, LENGTH-FIXED }
     { 8,  "policy_target_limit.reserved", REQUIRED, LENGTH-FIXED } 
@@ -178,7 +180,8 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_rs
     { 1,  "policy_storage_option", REQUIRED, LENGTH-FIXED }
     { 1,  "policy_exception_actions.send_alert", REQUIRED, LENGTH-FIXED }
     { 1,  "policy_exception_actions.shutdown_system", REQUIRED, LENGTH-FIXED }
-    { 6,  "policy_exception_actions.reserved", REQUIRED, LENGTH-FIXED }
+    { 5,  "policy_exception_actions.reserved", REQUIRED, LENGTH-FIXED }
+    { 1,  "policy_power_domain",  REQUIRED, LENGTH-FIXED }
     { 16, "policy_target_limit", REQUIRED, LENGTH-FIXED }
     { 32, "correction_time_limit", REQUIRED, LENGTH-FIXED }
     { 16, "policy_trigger_limit", REQUIRED, LENGTH-FIXED }
@@ -187,7 +190,7 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_rs
 Set Node Manager Alert Thresholds Request
 -----------------------------------------
 
-FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds_rq
+FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_alert_thresholds_rq
 
     { 8,  "cmd", REQUIRED, LENGTH-FIXED }
     { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
@@ -202,7 +205,7 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds
 Set Node Manager Alert Thresholds Response
 ------------------------------------------
 
-FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds_rs
+FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_alert_thresholds_rs
 
     { 8,  "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
     { 8,  "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
@@ -211,7 +214,7 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds
 Get Node Manager Alert Thresholds Request
 -----------------------------------------
 
-FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds_rq
+FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_alert_thresholds_rq
 
     { 8,  "cmd", REQUIRED, LENGTH-FIXED }
     { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
@@ -222,7 +225,7 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds
 Get Node Manager Alert Thresholds Response
 ------------------------------------------
 
-FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds_rs
+FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_alert_thresholds_rs
 
     { 8,  "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
     { 8,  "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
@@ -439,7 +442,8 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_capabilities_rq
     { 4,  "domain_id", REQUIRED, LENGTH-FIXED }
     { 4,  "reserved", REQUIRED, LENGTH-FIXED }
     { 4,  "policy_trigger_type", REQUIRED, LENGTH-FIXED }
-    { 4,  "policy_type", REQUIRED, LENGTH-FIXED }
+    { 3,  "policy_type", REQUIRED, LENGTH-FIXED }
+    { 1,  "policy_power_domain", REQUIRED, LENGTH-FIXED }
 
 Get Node Manager Capabilities Response
 --------------------------------------
@@ -512,7 +516,7 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_destinatio
     { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
     { 4,  "channel_number", REQUIRED, LENGTH-FIXED }
     { 3,  "reserved1", REQUIRED, LENGTH-FIXED }
-    { 1,  "destination_information_operation", REQUIRED, LENGTH-FIXED }
+    { 1,  "alert_receiver_deactivation", REQUIRED, LENGTH-FIXED }
     { 8,  "destination_information", REQUIRED, LENGTH-FIXED }
     { 7,  "alert_string_selector", REQUIRED, LENGTH-FIXED }
     { 1,  "send_alert_string", REQUIRED, LENGTH-FIXED }
@@ -526,7 +530,7 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_destinatio
     { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
     { 4,  "channel_number", REQUIRED, LENGTH-FIXED }
     { 3,  "reserved1", REQUIRED, LENGTH-FIXED }
-    { 1,  "destination_information_operation", REQUIRED, LENGTH-FIXED }
+    { 1,  "alert_receiver_deactivation", REQUIRED, LENGTH-FIXED }
     { 1,  "reserved2", REQUIRED, LENGTH-FIXED }
     { 7,  "slave_address", REQUIRED, LENGTH-FIXED }
     { 7,  "alert_string_selector", REQUIRED, LENGTH-FIXED }
@@ -541,7 +545,7 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_destinatio
     { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
     { 4,  "channel_number", REQUIRED, LENGTH-FIXED }
     { 3,  "reserved1", REQUIRED, LENGTH-FIXED }
-    { 1,  "destination_information_operation", REQUIRED, LENGTH-FIXED }
+    { 1,  "alert_receiver_deactivation", REQUIRED, LENGTH-FIXED }
     { 4,  "destination_selector", REQUIRED, LENGTH-FIXED }
     { 4,  "reserved2", REQUIRED, LENGTH-FIXED }
     { 7,  "alert_string_selector", REQUIRED, LENGTH-FIXED }
@@ -574,11 +578,54 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_destinatio
     { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
     { 4,  "channel_number", REQUIRED, LENGTH-FIXED }
     { 3,  "reserved1", REQUIRED, LENGTH-FIXED }
-    { 1,  "destination_information_operation", REQUIRED, LENGTH-FIXED }
+    { 1,  "alert_receiver_deactivation", REQUIRED, LENGTH-FIXED }
     { 4,  "destination_selector", REQUIRED, LENGTH-FIXED }
     { 4,  "reserved2", REQUIRED, LENGTH-FIXED }
     { 7,  "alert_string_selector", REQUIRED, LENGTH-FIXED }
     { 1,  "send_alert_string", REQUIRED, LENGTH-FIXED }
+
+Get Turbo Synchronization Ratio Request
+---------------------------------------
+
+FIID Template: tmpl_cmd_oem_intel_node_manager_set_turbo_synchronization_ratio_rq
+
+    { 8,  "cmd",REQUIRED, LENGTH-FIXED }
+    { 24, "manufacturer_id",REQUIRED, LENGTH-FIXED }
+    { 8,  "cpu_socket_number",REQUIRED, LENGTH-FIXED }
+    { 8,  "active_cores_configuration",REQUIRED, LENGTH-FIXED }
+    { 8,  "turbo_ratio_limit",REQUIRED, LENGTH-FIXED }
+
+Get Turbo Synchronization Ratio Response
+----------------------------------------
+
+FIID Template: tmpl_cmd_oem_intel_node_manager_set_turbo_synchronization_ratio_rs
+
+    { 8,  "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8,  "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 24, "manufacturer_id",REQUIRED, LENGTH-FIXED }
+
+Get Turbo Synchronization Ratio Request
+---------------------------------------
+
+FIID Template: tmpl_cmd_oem_intel_node_manager_get_turbo_synchronization_ratio_rq
+
+    { 8,  "cmd",REQUIRED, LENGTH-FIXED }
+    { 24, "manufacturer_id",REQUIRED, LENGTH-FIXED }
+    { 8,  "cpu_socket_number",REQUIRED, LENGTH-FIXED }
+    { 8,  "active_cores_configuration",REQUIRED, LENGTH-FIXED }
+
+Get Turbo Synchronization Ratio Response
+----------------------------------------
+
+FIID Template: tmpl_cmd_oem_intel_node_manager_get_turbo_synchronization_ratio_rs
+
+    { 8,  "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8,  "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 24, "manufacturer_id",REQUIRED, LENGTH-FIXED }
+    { 8,  "current_turbo_ratio_limit",REQUIRED, LENGTH-FIXED }
+    { 8,  "default_turbo_ratio_limit",REQUIRED, LENGTH-FIXED }
+    { 8,  "maximum_turbo_ratio_limit",REQUIRED, LENGTH-FIXED }
+    { 8,  "minimum_turbo_ratio_limit",REQUIRED, LENGTH-FIXED }
 
 Get Limiting Policy ID Request
 ------------------------------

@@ -2,6 +2,18 @@ FreeIPMI 1.5.1 - 03/01/14
 -------------------------
 Tools - New Features
 --------------------
+o Update Intel Node Manager support for 3.0 specification.
+  - Update API and fiid templates in libfreeipmi
+  - Support new OEM SEL events
+  - Update ipmi-oem commands.
+    - Support new get/set-turbo-synchronization-ratio
+    - Support new 'policypowerdomain' option in
+      get-node-manager-capabilities and set-node-manager-policy.
+    - Update output of get-node-manager-policy and
+      get-node-manager-capabilities for changes.
+    - get/set-node-manager-alert-thresholds converted to
+      get/set-node-manager-policy-alert-thresholds.  Legacy commands
+      still supported.
 o Support ipmi-sel OEM interpretation of Linux kernel panics.
 
 Tools - Bug Fixes/Minor Changes

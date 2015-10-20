@@ -37,6 +37,9 @@ extern "C" {
  * Inventec 5442/Dell Xanadu III
  * Quanta S99Q/Dell FS12-TY
  * Quanta QSSC-S4R/Appro GB812X-CN
+ * Intel S2600KP
+ * Intel S2600WT2
+ * Intel S2600WTT
  */
 
 #define IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_MIN 0x0
@@ -145,7 +148,14 @@ extern "C" {
 #define IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TYPE_VALID(__val)            \
   (((__val) == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TYPE_POWER_CONTROL_POLICY) ? 1 : 0)
 
-#define IPMI_OEM_INTEL_NODE_MANAGER_ALERT_THRESHOLDS_MAX 3
+#define IPMI_OEM_INTEL_NODE_MANAGER_POLICY_POWER_DOMAIN_POWER_PRIMARY_SIDE_POWER_DOMAIN 0x0
+#define IPMI_OEM_INTEL_NODE_MANAGER_POLICY_POWER_DOMAIN_POWER_SECONDARY_SIDE_POWER_DOMAIN 0x1
+
+#define IPMI_OEM_INTEL_NODE_MANAGER_POLICY_POWER_DOMAIN_VALID(__val)            \
+  (((__val) == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_POWER_DOMAIN_POWER_PRIMARY_SIDE_POWER_DOMAIN \
+    || (__val) == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_POWER_DOMAIN_POWER_SECONDARY_SIDE_POWER_DOMAIN) ? 1 : 0)
+
+#define IPMI_OEM_INTEL_NODE_MANAGER_POLICY_ALERT_THRESHOLDS_MAX 3
 
 #define IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_START_TIME_MIN 0
 #define IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_START_TIME_MAX 239
@@ -190,6 +200,10 @@ extern "C" {
 
 #define IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_POWER_STATISTICS                      0x01
 #define IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_INLET_TEMPERATURE_STATISTICS          0x02
+#define IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_THROTTLING_STATISTICS                 0x03
+#define IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_VOLUMETRIC_AIRFLOW_STATISTICS         0x04
+#define IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_OUTLET_AIRFLOW_TEMPERATURE_STATISTICS 0x05
+#define IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_CHASSIS_POWER_STATISTICS              0x06
 #define IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_PER_POLICY_POWER_STATISTICS                  0x11
 #define IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_PER_POLICY_TRIGGER_STATISTICS                0x12
 #define IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_PER_POLICY_THROTTLING_STATISTICS             0x13
@@ -202,6 +216,10 @@ extern "C" {
 #define IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_VALID(__val)        \
   (((__val) == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_POWER_STATISTICS \
     || (__val) == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_INLET_TEMPERATURE_STATISTICS \
+    || (__val) == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_THROTTLING_STATISTICS \
+    || (__val) == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_VOLUMETRIC_AIRFLOW_STATISTICS \
+    || (__val) == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_OUTLET_AIRFLOW_TEMPERATURE_STATISTICS \
+    || (__val) == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_CHASSIS_POWER_STATISTICS \
     || (__val) == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_PER_POLICY_POWER_STATISTICS \
     || (__val) == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_PER_POLICY_TRIGGER_STATISTICS \
     || (__val) == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_PER_POLICY_THROTTLING_STATISTICS \
@@ -233,16 +251,25 @@ extern "C" {
 #define IPMI_OEM_INTEL_NODE_MANAGER_VERSION_1_5 0x02
 #define IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_0 0x03
 #define IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_5 0x04
+#define IPMI_OEM_INTEL_NODE_MANAGER_VERSION_3_0 0x05
 
 #define IPMI_OEM_INTEL_NODE_MANAGER_IPMI_INTERFACE_VERSION_1_0 0x01
 #define IPMI_OEM_INTEL_NODE_MANAGER_IPMI_INTERFACE_VERSION_2_0 0x02
+#define IPMI_OEM_INTEL_NODE_MANAGER_IPMI_INTERFACE_VERSION_3_0 0x03
 
-#define IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_INFORMATION_OPERATION_REGISTER_ALERT_RECEIVER   0x0
-#define IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_INFORMATION_OPERATION_UNREGISTER_ALERT_RECEIVER 0x1
+#define IPMI_OEM_INTEL_NODE_MANAGER_ALERT_RECEIVER_DEACTIVATION_REGISTER_ALERT_RECEIVER   0x0
+#define IPMI_OEM_INTEL_NODE_MANAGER_ALERT_RECEIVER_DEACTIVATION_UNREGISTER_ALERT_RECEIVER 0x1
+
+#define IPMI_OEM_INTEL_NODE_MANAGER_ALERT_RECEIVER_DEACTIVATION_VALID(__val) \
+  (((__val) == IPMI_OEM_INTEL_NODE_MANAGER_ALERT_RECEIVER_DEACTIVATION_REGISTER_ALERT_RECEIVER \
+    || (__val) == IPMI_OEM_INTEL_NODE_MANAGER_ALERT_RECEIVER_DEACTIVATION_UNREGISTER_ALERT_RECEIVER) ? 1 : 0)
+
+/* legacy names */
+#define IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_INFORMATION_OPERATION_REGISTER_ALERT_RECEIVER   IPMI_OEM_INTEL_NODE_MANAGER_ALERT_RECEIVER_DEACTIVATION_REGISTER_ALERT_RECEIVER
+#define IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_INFORMATION_OPERATION_UNREGISTER_ALERT_RECEIVER IPMI_OEM_INTEL_NODE_MANAGER_ALERT_RECEIVER_DEACTIVATION_UNREGISTER_ALERT_RECEIVER
 
 #define IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_INFORMATION_OPERATION_VALID(__val) \
-  (((__val) == IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_INFORMATION_OPERATION_REGISTER_ALERT_RECEIVER \
-    || (__val) == IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_INFORMATION_OPERATION_UNREGISTER_ALERT_RECEIVER) ? 1 : 0)
+  IPMI_OEM_INTEL_NODE_MANAGER_ALERT_RECEIVER_DEACTIVATION_VALID((__val))
 
 #define IPMI_OEM_INTEL_NODE_MANAGER_ALERT_STRING_SELECTOR_USE_VOLATILE_ALERT_STRING 0x00
 
@@ -260,10 +287,35 @@ extern "C" {
   (((__val) == IPMI_OEM_INTEL_NODE_MANAGER_DONT_SEND_AN_ALERT_STRING    \
     || (__val) == IPMI_OEM_INTEL_NODE_MANAGER_SEND_ALERT_STRING_IDENTIFIED_BY_STRING_SELECTOR) ? 1 : 0)
 
-#define IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_INFORMATION_OPERATION_CONFIGURATION_VALID   0x0
-#define IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_INFORMATION_OPERATION_CONFIGURATION_INVALID 0x1
+#define IPMI_OEM_INTEL_NODE_MANAGER_ALERT_RECEIVER_DEACTIVATION_CONFIGURATION_VALID   0x0
+#define IPMI_OEM_INTEL_NODE_MANAGER_ALERT_RECEIVER_DEACTIVATION_CONFIGURATION_INVALID 0x1
+
+/* legacy names */
+#define IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_INFORMATION_OPERATION_CONFIGURATION_VALID   IPMI_OEM_INTEL_NODE_MANAGER_ALERT_RECEIVER_DEACTIVATION_CONFIGURATION_VALID
+#define IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_INFORMATION_OPERATION_CONFIGURATION_INVALID IPMI_OEM_INTEL_NODE_MANAGER_ALERT_RECEIVER_DEACTIVATION_CONFIGURATION_INVALID
 
 #define IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_SELECTOR_OPERATOR_USE_VOLATILE_DESTINATION_INFO 0x0
+
+#define IPMI_OEM_INTEL_NODE_MANAGER_CPU_SOCKET_MIN 0 
+#define IPMI_OEM_INTEL_NODE_MANAGER_CPU_SOCKET_MAX 7
+#define IPMI_OEM_INTEL_NODE_MANAGER_CPU_SOCKET_ALL_SOCKETS 0xFF
+
+#define IPMI_OEM_INTEL_NODE_MANAGER_CPU_SOCKET_VALID(__val) \
+  (((__val) == IPMI_OEM_INTEL_NODE_MANAGER_CPU_SOCKET_MIN \
+    || (__val) == IPMI_OEM_INTEL_NODE_MANAGER_CPU_SOCKET_MAX \
+    || (__val) == IPMI_OEM_INTEL_NODE_MANAGER_CPU_SOCKET_ALL_SOCKETS) ? 1 : 0)
+
+#define IPMI_OEM_INTEL_NODE_MANAGER_ACTIVE_CORES_CONFIGURATION_RESERVED                                         0x00
+#define IPMI_OEM_INTEL_NODE_MANAGER_ACTIVE_CORES_CONFIGURATION_APPLY_SETTINGS_TO_ALL_ACTIVE_CORES_CONFIGURATION 0xFF
+
+#define IPMI_OEM_INTEL_NODE_MANAGER_SET_ACTIVE_CORES_CONFIGURATION_VALID(__val) \
+  (((__val) == IPMI_OEM_INTEL_NODE_MANAGER_ACTIVE_CORES_CONFIGURATION_APPLY_SETTINGS_TO_ALL_ACTIVE_CORES_CONFIGURATION \
+    || (__val) != IPMI_OEM_INTEL_NODE_MANAGER_ACTIVE_CORES_CONFIGURATION_RESERVED) ? 1 : 0)
+
+#define IPMI_OEM_INTEL_NODE_MANAGER_GET_ACTIVE_CORES_CONFIGURATION_VALID(__val) \
+  (((__val) != IPMI_OEM_INTEL_NODE_MANAGER_ACTIVE_CORES_CONFIGURATION_RESERVED) ? 1 : 0)
+
+#define IPMI_OEM_INTEL_NODE_MANAGER_TURBO_RATIO_LIMIT_RESTORE_DEFAULT_SETTINGS 0x00
 
 /* 
  * fill* functions return 0 on success, -1 on error.
@@ -282,10 +334,10 @@ extern fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_r
 extern fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_rs;
 extern fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_rq;
 extern fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_rs;
-extern fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds_rq;
-extern fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds_rs;
-extern fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds_rq;
-extern fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds_rs;
+extern fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_alert_thresholds_rq;
+extern fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_alert_thresholds_rs;
+extern fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_alert_thresholds_rq;
+extern fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_alert_thresholds_rs;
 extern fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_suspend_periods_rq;
 extern fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_suspend_periods_rs;
 extern fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_suspend_periods_rq;
@@ -306,6 +358,10 @@ extern fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_de
 extern fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_alert_destination_rs;
 extern fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_destination_rq;
 extern fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_alert_destination_rs;
+extern fiid_template_t tmpl_cmd_oem_intel_node_manager_set_turbo_synchronization_ratio_rq;
+extern fiid_template_t tmpl_cmd_oem_intel_node_manager_set_turbo_synchronization_ratio_rs;
+extern fiid_template_t tmpl_cmd_oem_intel_node_manager_get_turbo_synchronization_ratio_rq;
+extern fiid_template_t tmpl_cmd_oem_intel_node_manager_get_turbo_synchronization_ratio_rs;
 extern fiid_template_t tmpl_cmd_oem_intel_node_manager_get_limiting_policy_id_rq;
 extern fiid_template_t tmpl_cmd_oem_intel_node_manager_get_limiting_policy_id_rs;
 
@@ -323,6 +379,7 @@ int fill_cmd_oem_intel_node_manager_set_node_manager_policy (uint8_t domain_id,
 							     uint8_t policy_storage_option,
                                                              uint8_t policy_exception_actions_send_alert,
                                                              uint8_t policy_exception_actions_shutdown_system,
+							     uint8_t policy_power_domain,
                                                              uint16_t policy_target_limit,
                                                              uint32_t correction_time_limit,
                                                              uint16_t policy_trigger_limit,
@@ -338,6 +395,7 @@ int fill_cmd_oem_intel_node_manager_set_node_manager_policy_boot_time_policy (ui
 									      uint8_t policy_storage_option,
 									      uint8_t policy_exception_actions_send_alert,
 									      uint8_t policy_exception_actions_shutdown_system,
+									      uint8_t policy_power_domain,
 									      uint8_t platform_booting_mode,
 									      uint8_t cores_disabled,
 									      uint32_t correction_time_limit,
@@ -349,16 +407,16 @@ int fill_cmd_oem_intel_node_manager_get_node_manager_policy (uint8_t domain_id,
                                                              uint8_t policy_id,
                                                              fiid_obj_t obj_cmd_rq);
 
-int fill_cmd_oem_intel_node_manager_set_node_manager_alert_thresholds (uint8_t domain_id,
-                                                                       uint8_t policy_id,
-                                                                       uint16_t *alert_threshold1,
-                                                                       uint16_t *alert_threshold2,
-                                                                       uint16_t *alert_threshold3,
-                                                                       fiid_obj_t obj_cmd_rq);
-
-int fill_cmd_oem_intel_node_manager_get_node_manager_alert_thresholds (uint8_t domain_id,
-                                                                       uint8_t policy_id,
-                                                                       fiid_obj_t obj_cmd_rq);
+int fill_cmd_oem_intel_node_manager_set_node_manager_policy_alert_thresholds (uint8_t domain_id,
+									      uint8_t policy_id,
+									      uint16_t *alert_threshold1,
+									      uint16_t *alert_threshold2,
+									      uint16_t *alert_threshold3,
+									      fiid_obj_t obj_cmd_rq);
+ 
+int fill_cmd_oem_intel_node_manager_get_node_manager_policy_alert_thresholds (uint8_t domain_id,
+									      uint8_t policy_id,
+									      fiid_obj_t obj_cmd_rq);
   
 int fill_cmd_oem_intel_node_manager_set_node_manager_policy_suspend_periods (uint8_t domain_id,
                                                                              uint8_t policy_id,
@@ -426,6 +484,7 @@ int fill_cmd_oem_intel_node_manager_get_node_manager_statistics (uint8_t mode,
 int fill_cmd_oem_intel_node_manager_get_node_manager_capabilities (uint8_t domain_id,
                                                                    uint8_t policy_trigger_type,
                                                                    uint8_t policy_type,
+								   uint8_t policy_power_domain,
                                                                    fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_oem_intel_node_manager_get_node_manager_version (fiid_obj_t obj_cmd_rq);
@@ -436,27 +495,36 @@ int fill_cmd_oem_intel_node_manager_set_node_manager_power_draw_range (uint8_t d
                                                                        fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_oem_intel_node_manager_set_node_manager_alert_destination (uint8_t channel_number,
-                                                                        uint8_t destination_information_operation,
+                                                                        uint8_t alert_receiver_deactivation,
                                                                         uint8_t destination_information,
                                                                         uint8_t alert_string_selector,
                                                                         uint8_t send_alert_string,
                                                                         fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_oem_intel_node_manager_set_node_manager_alert_destination_ipmb (uint8_t channel_number,
-                                                                             uint8_t destination_information_operation,
+                                                                             uint8_t alert_receiver_deactivation,
                                                                              uint8_t slave_address,
                                                                              uint8_t alert_string_selector,
                                                                              uint8_t send_alert_string,
                                                                              fiid_obj_t obj_cmd_rq);
   
 int fill_cmd_oem_intel_node_manager_set_node_manager_alert_destination_lan (uint8_t channel_number,
-                                                                            uint8_t destination_information_operation,
+                                                                            uint8_t alert_receiver_deactivation,
                                                                             uint8_t destination_selector,
                                                                             uint8_t alert_string_selector,
                                                                             uint8_t send_alert_string,
                                                                             fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_oem_intel_node_manager_get_node_manager_alert_destination (fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_oem_intel_node_manager_set_turbo_synchronization_ratio (uint8_t cpu_socket_number,
+								     uint8_t active_cores_configuration,
+								     uint8_t turbo_ratio_limit,
+								     fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_oem_intel_node_manager_get_turbo_synchronization_ratio (uint8_t cpu_socket_number,
+								     uint8_t active_cores_configuration,
+								     fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_oem_intel_node_manager_get_limiting_policy_id (uint8_t domain_id,
 							    fiid_obj_t obj_cmd_rq);

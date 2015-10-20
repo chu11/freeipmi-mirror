@@ -1,3 +1,20 @@
+2015-10-19 Albert Chu <chu11@llnl.gov>
+
+	Merge branch intelnm30
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-sensor-and-event-code-tables-oem-spec.h,
+	libfreeipmi/sel/ipmi-sel-string-intel-node-manager.c: Support
+	Intel NM 3.0 SEL events.
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-sensor-numbers-oem-spec.h:
+	Add new sensor numbers.
+
+	* libfreeipmi/include/freeipmi/cmds/ipmi-oem-intel-node-manager-cmds.h,
+	libfreeipmi/include/freeipmi/api/ipmi-oem-intel-node-manager-api.h
+	* libfreeipmi/cmds/ipmi-oem-intel-node-manager-cmds.c,
+	libfreeipmi/api/ipmi-oem-intel-node-manager-api.c,
+	ipmi-oem/ipmi-oem-intelnm.c: Update for Intel NM 3.0 changes.
+	
 2015-10-16 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/ipmi-oem-intelnm.c (ipmi_oem_intelnm_get_node_manager_statistics):

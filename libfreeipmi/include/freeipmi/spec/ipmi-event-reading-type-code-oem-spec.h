@@ -160,6 +160,9 @@ extern "C" {
 #define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_SERVER_PLATFORM_SERVICES_FIRMWARE_HEALTH           IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_ME_FIRMWARE_HEALTH_EVENT
 #define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_THERMAL_SENSOR_ON_DIMM                             0x76
 
+#define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_NODE_MANAGER_CUPS_EVENT                            0x72
+
+
 /*******************************************
  * Inventec                                *
  *******************************************/
