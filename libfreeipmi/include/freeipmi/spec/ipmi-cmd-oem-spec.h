@@ -152,13 +152,13 @@ extern "C" {
  *
  * Intel S5500WB/Penguin Computing Relion 700
  * Intel S2600JF/Appro 512X
+ * Intel S2600KP
+ * Intel S2600WT2
+ * Intel S2600WTT
  * Inventec 5441/Dell Xanadu II
  * Inventec 5442/Dell Xanadu III
  * Quanta S99Q/Dell FS12-TY
  * Quanta QSSC-S4R/Appro GB812X-CN
- * Intel S2600KP
- * Intel S2600WT2
- * Intel S2600WTT
  */
 
 /* IPMI_NET_FN_OEM_GROUP_RQ / IPMI_NET_FN_OEM_GROUP_RS */
