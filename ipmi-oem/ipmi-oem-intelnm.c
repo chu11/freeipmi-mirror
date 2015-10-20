@@ -2964,25 +2964,30 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
 
   if (policytrigger == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_BOOT_TIME_POLICY)
     {
-      if (ipmi_cmd_oem_intel_node_manager_set_node_manager_policy_boot_time_policy (state_data->ipmi_ctx,
-										    target_channel_number,
-										    target_slave_address,
-										    target_lun,
-										    domainid,
-										    policystate,
-										    policyid,
-										    policytrigger,
-										    IPMI_OEM_INTEL_NODE_MANAGER_POLICY_CONFIGURATION_ACTION_ADD_POWER_POLICY,
-										    aggressivepowercorrection,
-										    policystorage,
-										    policyexceptionaction_alert,
-										    policyexceptionaction_shutdown,
-										    platformbootingmode,
-										    policytargetlimit,
-										    correctiontimelimit,
-										    policytriggerlimit,
-										    statisticsreportingperiod,
-										    obj_cmd_rs) < 0)
+      uint16_t boot_time_policy = 0;
+
+      boot_time_policy |= policytargetlimit;
+      boot_time_policy <<= 1;
+      boot_time_policy |= platformbootingmode;
+
+      if (ipmi_cmd_oem_intel_node_manager_set_node_manager_policy (state_data->ipmi_ctx,
+								   target_channel_number,
+								   target_slave_address,
+								   target_lun,
+								   domainid,
+								   policystate,
+								   policyid,
+								   policytrigger,
+								   IPMI_OEM_INTEL_NODE_MANAGER_POLICY_CONFIGURATION_ACTION_ADD_POWER_POLICY,
+								   aggressivepowercorrection,
+								   policystorage,
+								   policyexceptionaction_alert,
+								   policyexceptionaction_shutdown,
+								   boot_time_policy,
+								   correctiontimelimit,
+								   policytriggerlimit,
+								   statisticsreportingperiod,
+								   obj_cmd_rs) < 0)
 	{
 	  if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
 	    {

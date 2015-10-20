@@ -277,7 +277,6 @@ extern "C" {
 extern fiid_template_t tmpl_cmd_oem_intel_node_manager_enable_disable_node_manager_policy_control_rq;
 extern fiid_template_t tmpl_cmd_oem_intel_node_manager_enable_disable_node_manager_policy_control_rs;
 extern fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_rq;
-extern fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_boot_time_policy_rq;
 extern fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_rs;
 extern fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_rs;
 extern fiid_template_t tmpl_cmd_oem_intel_node_manager_get_node_manager_policy_rq;
@@ -328,22 +327,6 @@ int fill_cmd_oem_intel_node_manager_set_node_manager_policy (uint8_t domain_id,
                                                              uint16_t policy_trigger_limit,
                                                              uint16_t statistics_reporting_period,
                                                              fiid_obj_t obj_cmd_rq);
-
-int fill_cmd_oem_intel_node_manager_set_node_manager_policy_boot_time_policy (uint8_t domain_id,
-									      uint8_t policy_enabled,
-									      uint8_t policy_id,
-									      uint8_t policy_trigger_type,
-									      uint8_t policy_configuration_action,
-									      uint8_t aggressive_cpu_power_correction,
-									      uint8_t policy_storage_option,
-									      uint8_t policy_exception_actions_send_alert,
-									      uint8_t policy_exception_actions_shutdown_system,
-									      uint8_t platform_booting_mode,
-									      uint8_t cores_disabled,
-									      uint32_t correction_time_limit,
-									      uint16_t policy_trigger_limit,
-									      uint16_t statistics_reporting_period,
-									      fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_oem_intel_node_manager_get_node_manager_policy (uint8_t domain_id,
                                                              uint8_t policy_id,
