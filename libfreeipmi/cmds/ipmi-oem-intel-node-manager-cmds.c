@@ -74,7 +74,8 @@ fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_rq =
     { 1,  "policy_storage_option", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1,  "policy_exception_actions.send_alert", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1,  "policy_exception_actions.shutdown_system", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 6,  "policy_exception_actions.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 5,  "policy_exception_actions.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1,  "policy_power_domain", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 16, "policy_target_limit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 32, "correction_time_limit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 16, "policy_trigger_limit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -96,7 +97,8 @@ fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_boot_tim
     { 1,  "policy_storage_option", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1,  "policy_exception_actions.send_alert", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1,  "policy_exception_actions.shutdown_system", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 6,  "policy_exception_actions.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 5,  "policy_exception_actions.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1,  "policy_power_domain", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1,  "policy_target_limit.platform_booting_mode", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 7,  "policy_target_limit.cores_disabled", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8,  "policy_target_limit.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -635,6 +637,7 @@ fill_cmd_oem_intel_node_manager_set_node_manager_policy (uint8_t domain_id,
 							 uint8_t policy_storage_option,
                                                          uint8_t policy_exception_actions_send_alert,
                                                          uint8_t policy_exception_actions_shutdown_system,
+							 uint8_t policy_power_domain,
                                                          uint16_t policy_target_limit,
                                                          uint32_t correction_time_limit,
                                                          uint16_t policy_trigger_limit,
@@ -649,6 +652,7 @@ fill_cmd_oem_intel_node_manager_set_node_manager_policy (uint8_t domain_id,
       || !IPMI_OEM_INTEL_NODE_MANAGER_POLICY_STORAGE_VALID (policy_storage_option)
       || !IPMI_OEM_INTEL_NODE_MANAGER_POLICY_EXCEPTION_ACTION_VALID (policy_exception_actions_send_alert)
       || !IPMI_OEM_INTEL_NODE_MANAGER_POLICY_EXCEPTION_ACTION_VALID (policy_exception_actions_shutdown_system)
+      || !IPMI_OEM_INTEL_NODE_MANAGER_POLICY_POWER_DOMAIN_VALID (policy_power_domain)
       || !fiid_obj_valid (obj_cmd_rq))
     {
       SET_ERRNO (EINVAL);
@@ -676,6 +680,7 @@ fill_cmd_oem_intel_node_manager_set_node_manager_policy (uint8_t domain_id,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "policy_exception_actions.send_alert", policy_exception_actions_send_alert);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "policy_exception_actions.shutdown_system", policy_exception_actions_shutdown_system);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "policy_exception_actions.reserved", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "policy_power_domain", policy_power_domain);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "policy_target_limit", policy_target_limit);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "correction_time_limit", correction_time_limit);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "policy_trigger_limit", policy_trigger_limit);
@@ -694,6 +699,7 @@ fill_cmd_oem_intel_node_manager_set_node_manager_policy_boot_time_policy (uint8_
 									  uint8_t policy_storage_option,
 									  uint8_t policy_exception_actions_send_alert,
 									  uint8_t policy_exception_actions_shutdown_system,
+									  uint8_t policy_power_domain,
 									  uint8_t platform_booting_mode,
 									  uint8_t cores_disabled,
 									  uint32_t correction_time_limit,
@@ -709,6 +715,7 @@ fill_cmd_oem_intel_node_manager_set_node_manager_policy_boot_time_policy (uint8_
       || !IPMI_OEM_INTEL_NODE_MANAGER_POLICY_STORAGE_VALID (policy_storage_option)
       || !IPMI_OEM_INTEL_NODE_MANAGER_POLICY_EXCEPTION_ACTION_VALID (policy_exception_actions_send_alert)
       || !IPMI_OEM_INTEL_NODE_MANAGER_POLICY_EXCEPTION_ACTION_VALID (policy_exception_actions_shutdown_system)
+      || !IPMI_OEM_INTEL_NODE_MANAGER_POLICY_POWER_DOMAIN_VALID (policy_power_domain)
       || !IPMI_OEM_INTEL_NODE_MANAGER_PLATFORM_BOOTING_MODE_VALID (platform_booting_mode)
       || !fiid_obj_valid (obj_cmd_rq))
     {
@@ -737,6 +744,7 @@ fill_cmd_oem_intel_node_manager_set_node_manager_policy_boot_time_policy (uint8_
   FILL_FIID_OBJ_SET (obj_cmd_rq, "policy_exception_actions.send_alert", policy_exception_actions_send_alert);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "policy_exception_actions.shutdown_system", policy_exception_actions_shutdown_system);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "policy_exception_actions.reserved", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "policy_power_domain", policy_power_domain);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "policy_target_limit.platform_booting_mode", platform_booting_mode);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "policy_target_limit.cores_disabled", cores_disabled);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "policy_target_limit.reserved", 0);

@@ -1848,7 +1848,6 @@ ipmi_oem_intelnm_get_node_manager_capabilities (ipmi_oem_state_data_t *state_dat
 	      policytype_array_len = 1;
 	      policytype_specified++;
             }
-
           else if (!strcasecmp (key, "policypowerdomain"))
             {
 	      if (strcasecmp (value, "primary")
@@ -2512,7 +2511,7 @@ _ipmi_oem_intelnm_get_node_manager_policy_common (ipmi_oem_state_data_t *state_d
     case IPMI_OEM_INTEL_NODE_MANAGER_POLICY_POWER_DOMAIN_POWER_PRIMARY_SIDE_POWER_DOMAIN:
       policy_power_domain_str = "Primary";
       break;
-    case IPMI_OEM_INTEL_NODE_MANAGER_POLICY_POWER_DOMAIN_POWER_PRIMARY_SIDE_POWER_DOMAIN:
+    case IPMI_OEM_INTEL_NODE_MANAGER_POLICY_POWER_DOMAIN_POWER_SECONDARY_SIDE_POWER_DOMAIN:
       policy_power_domain_str = "Secondary";
       break;
     default:
@@ -2811,6 +2810,7 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
   int policystorage_specified = 0;
   uint8_t policyexceptionaction_alert = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_EXCEPTION_ACTION_DISABLE;
   uint8_t policyexceptionaction_shutdown = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_EXCEPTION_ACTION_DISABLE;
+  uint8_t policypowerdomain = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_POWER_DOMAIN_POWER_PRIMARY_SIDE_POWER_DOMAIN;
   int rv = -1;
   unsigned int i;
 
@@ -2967,7 +2967,6 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
 	    policystate = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_ENABLED;
 	  else
 	    policystate = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_DISABLED;
-	  
 	}
       else if (!strcasecmp (key, "policyexceptionaction"))
 	{
@@ -2988,6 +2987,25 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
 	  
 	  if (!strcasecmp (value, "shutdown"))
 	    policyexceptionaction_shutdown = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_EXCEPTION_ACTION_ENABLE; 
+	}
+      else if (!strcasecmp (key, "policypowerdomain"))
+	{
+	  if (strcasecmp (value, "primary")
+	      && strcasecmp (value, "secondary"))
+	    {
+	      pstdout_fprintf (state_data->pstate,
+			       stderr,
+			       "%s:%s invalid OEM option argument '%s' : invalid policy power domain\n",
+			       state_data->prog_data->args->oem_id,
+			       state_data->prog_data->args->oem_command,
+			       state_data->prog_data->args->oem_options[i]);
+	      goto cleanup;
+	    }
+	  
+	  if (!strcasecmp (value, "primary"))
+	    policypowerdomain = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_POWER_DOMAIN_POWER_PRIMARY_SIDE_POWER_DOMAIN;
+	  else /* !strcasecmp (value, "secondary") */
+	    policypowerdomain = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_POWER_DOMAIN_POWER_SECONDARY_SIDE_POWER_DOMAIN;
 	}
       else if (!strcasecmp (key, "aggressivepowercorrection"))
 	{
@@ -3174,6 +3192,7 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
 										    policystorage,
 										    policyexceptionaction_alert,
 										    policyexceptionaction_shutdown,
+										    policypowerdomain,
 										    platformbootingmode,
 										    policytargetlimit,
 										    correctiontimelimit,
@@ -3219,6 +3238,7 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
 								   policystorage,
 								   policyexceptionaction_alert,
 								   policyexceptionaction_shutdown,
+								   policypowerdomain,
 								   policytargetlimit,
 								   correctiontimelimit,
 								   policytriggerlimit,
@@ -3363,6 +3383,7 @@ ipmi_oem_intelnm_remove_node_manager_policy (ipmi_oem_state_data_t *state_data)
 							       IPMI_OEM_INTEL_NODE_MANAGER_POLICY_STORAGE_PERSISTENT_STORAGE,
 							       IPMI_OEM_INTEL_NODE_MANAGER_POLICY_EXCEPTION_ACTION_DISABLE,
 							       IPMI_OEM_INTEL_NODE_MANAGER_POLICY_EXCEPTION_ACTION_DISABLE,
+							       0,
 							       0,
 							       0,
 							       0,

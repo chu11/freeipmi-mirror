@@ -516,7 +516,7 @@ additional error messages will be output as valid policies are being
 searched for.  Command confirmed to work on Intel S2600JF (Appro
 512X).
 .TP
-.B set-node-manager-policy \fIdomainid=platform|cpu|memory|highpowerio\fR \fIpolicyid=num\fR \fIpolicytrigger=none|inlettemperaturelimitpolicytrigger|missingpowerreadingtimeout|timeafterplatformresettrigger|boottimepolicy\fR \fIpolicytargetlimit=num\fR [platformbootingmode=performance|power] \fIcorrectiontimelimit=ms\fR \fIstatisticsreportingperiod=seconds\fR policystorage=persistent|volatile [\fIpolicytriggerlimit=num\fR] \fI[policystate=enable|disable]\fR \fI[policyexceptionaction=alert|shutdown] [aggressivepowercorrection=automatic|notaggressive|aggressive]\fR
+.B set-node-manager-policy \fIdomainid=platform|cpu|memory|highpowerio\fR \fIpolicyid=num\fR \fIpolicytrigger=none|inlettemperaturelimitpolicytrigger|missingpowerreadingtimeout|timeafterplatformresettrigger|boottimepolicy\fR \fIpolicytargetlimit=num\fR [platformbootingmode=performance|power] \fIcorrectiontimelimit=ms\fR \fIstatisticsreportingperiod=seconds\fR policystorage=persistent|volatile [\fIpolicytriggerlimit=num\fR] \fI[policystate=enable|disable]\fR \fI[policyexceptionaction=alert|shutdown]\fR \fI[aggressivepowercorrection=automatic|notaggressive|aggressive]\fR \fI[policypowerdomain=primary|secondary]\fR
 This OEM command will add or modify an indicated policy ID from the
 domain ID.  Most of the fields above are required, although they can
 be listed in any order.  By default any created/modified policy will
@@ -564,6 +564,9 @@ number of seconds that measured power will be averaged for reporting.
 Please see \fBget\-node\-manager\-policy\fR to determine proper ranges
 for \fIpolicytargetlimit\fR, \fIcorrectiontimelimit\fR,
 \fIpolicytriggerlimit\fR, and \fIstatisticsreportingperiod\fR.
+If \fIdomainid\fR is configured as \fIplatform\fR, user may optionally
+set \fIpolicypowerdomain\fR to \fIprimary\fR or \fIsecondary\fR.
+Otherwise \fIpolicypowerdomain\fR will be ignored.
 Command confirmed to work on Intel S2600JF (Appro 512X).
 .TP
 .B remove-node-manager-policy \fIdomainid=platform|cpu|memory|highpowerio\fR \fIpolicyid=num\fR

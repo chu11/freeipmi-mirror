@@ -107,7 +107,8 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_rq
     { 1,  "policy_storage_option", REQUIRED, LENGTH-FIXED }
     { 1,  "policy_exception_actions.send_alert", REQUIRED, LENGTH-FIXED }
     { 1,  "policy_exception_actions.shutdown_system", REQUIRED, LENGTH-FIXED }
-    { 6,  "policy_exception_actions.reserved", REQUIRED, LENGTH-FIXED }
+    { 5,  "policy_exception_actions.reserved", REQUIRED, LENGTH-FIXED }
+    { 1,  "policy_power_domain", REQUIRED, LENGTH-FIXED }
     { 16, "policy_target_limit", REQUIRED, LENGTH-FIXED }
     { 32, "correction_time_limit", REQUIRED, LENGTH-FIXED }
     { 16, "policy_trigger_limit", REQUIRED, LENGTH-FIXED }
@@ -130,7 +131,8 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_boot_time
     { 1,  "policy_storage_option", REQUIRED, LENGTH-FIXED }
     { 1,  "policy_exception_actions.send_alert", REQUIRED, LENGTH-FIXED }
     { 1,  "policy_exception_actions.shutdown_system", REQUIRED, LENGTH-FIXED }
-    { 6,  "policy_exception_actions.reserved", REQUIRED, LENGTH-FIXED }
+    { 5,  "policy_exception_actions.reserved", REQUIRED, LENGTH-FIXED }
+    { 1,  "policy_power_domain", REQUIRED, LENGTH-FIXED }
     { 1,  "policy_target_limit.platform_booting_mode", REQUIRED, LENGTH-FIXED }
     { 7,  "policy_target_limit.cores_disabled", REQUIRED, LENGTH-FIXED }
     { 8,  "policy_target_limit.reserved", REQUIRED, LENGTH-FIXED } 
