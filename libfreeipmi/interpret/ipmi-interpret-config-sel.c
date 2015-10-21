@@ -1214,7 +1214,7 @@ _interpret_sel_oem_intel_node_manager (ipmi_interpret_ctx_t ctx)
 						     IPMI_QUANTA_PRODUCT_ID_S99Q) < 0)
     return (-1);
 
-  /* Quanta QSSC-S4R/Appro GB812X-CN (Quanta motherboard maintains Intel manufacturer ID)
+  /* Quanta QSSC-S4R/Appro GB812X-CN (Quanta motherboard contains Intel manufacturer ID)
    *
    * Manufacturer ID = 343 (Intel)
    * Product ID = 64 (Quanta QSSC-S4R)
@@ -1292,13 +1292,13 @@ _interpret_sel_oem_intel_smi_timeout_power_throttled (ipmi_interpret_ctx_t ctx)
   /* Intel SMI Timeout
    * Intel SR1625
    * Intel S5500WB/Penguin Computing Relion 700
-   * Quanta QSSC-S4R/Appro GB812X-CN (Quanta motherboard maintains Intel manufacturer ID)
+   * Quanta QSSC-S4R/Appro GB812X-CN (Quanta motherboard contains Intel manufacturer ID)
    * Intel S5000PAL
    *
    * and
    *
    * Intel Power Throttled
-   * Quanta QSSC-S4R/Appro GB812X-CN (Quanta motherboard maintains Intel manufacturer ID)
+   * Quanta QSSC-S4R/Appro GB812X-CN (Quanta motherboard contains Intel manufacturer ID)
    *
    * Manufacturer ID = 343 (Intel)                                                                              
    * Product ID = 62 (Intel SR1625, S5500WB), 64 (Quanta QSSC-S4R), 40 (Intel S5000PAL)

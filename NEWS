@@ -17,6 +17,7 @@ o Update libfreeipmi for IPMI 2.0 Errata 7.
 o Support Get Device SDR Info, Get Device SDR, and Reserve Device SDR
   Repository commands in libfreeipmi.
 o Support ipmi-sel OEM interpretation of Linux kernel panics.
+o Re-organize OEM code files into per-vendor files.
 
 FreeIPMI 1.4.1 - 03/01/14
 -------------------------

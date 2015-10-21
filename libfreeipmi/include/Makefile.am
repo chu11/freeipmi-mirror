@@ -76,7 +76,6 @@ nobase_include_HEADERS = \
 	freeipmi/spec/ipmi-channel-spec.h \
 	freeipmi/spec/ipmi-cmd-spec.h \
 	freeipmi/spec/ipmi-cmd-dcmi-spec.h \
-	freeipmi/spec/ipmi-cmd-oem-spec.h \
 	freeipmi/spec/ipmi-comp-code-spec.h \
 	freeipmi/spec/ipmi-comp-code-dcmi-spec.h \
 	freeipmi/spec/ipmi-comp-code-oem-spec.h \
@@ -118,6 +117,75 @@ nobase_include_HEADERS = \
 	freeipmi/spec/ipmi-system-info-parameters-oem-spec.h \
 	freeipmi/spec/ipmi-system-software-id-spec.h \
 	freeipmi/spec/ipmi-timestamp-spec.h \
+	freeipmi/spec/oem/ipmi-cmd-oem-dell-spec.h \
+	freeipmi/spec/oem/ipmi-cmd-oem-fujitsu-spec.h \
+	freeipmi/spec/oem/ipmi-cmd-oem-ibm-spec.h \
+	freeipmi/spec/oem/ipmi-cmd-oem-intel-node-manager-spec.h \
+	freeipmi/spec/oem/ipmi-cmd-oem-intel-spec.h \
+	freeipmi/spec/oem/ipmi-cmd-oem-inventec-spec.h \
+	freeipmi/spec/oem/ipmi-cmd-oem-quanta-spec.h \
+	freeipmi/spec/oem/ipmi-cmd-oem-sun-microsystems-spec.h \
+	freeipmi/spec/oem/ipmi-cmd-oem-supermicro-spec.h \
+	freeipmi/spec/oem/ipmi-cmd-oem-wistron-spec.h \
+	freeipmi/spec/oem/ipmi-comp-code-oem-dell-spec.h \
+	freeipmi/spec/oem/ipmi-comp-code-oem-fujitsu-spec.h \
+	freeipmi/spec/oem/ipmi-comp-code-oem-intel-node-manager-spec.h \
+	freeipmi/spec/oem/ipmi-comp-code-oem-intel-spec.h \
+	freeipmi/spec/oem/ipmi-comp-code-oem-wistron-spec.h \
+	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-dell-spec.h \
+	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-hp-spec.h \
+	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-node-manager-spec.h \
+	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-spec.h \
+	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-inventec-spec.h \
+	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-supermicro-spec.h \
+	freeipmi/spec/oem/ipmi-netfn-oem-dell-spec.h \
+	freeipmi/spec/oem/ipmi-netfn-oem-fujitsu-spec.h \
+	freeipmi/spec/oem/ipmi-netfn-oem-ibm-spec.h \
+	freeipmi/spec/oem/ipmi-netfn-oem-intel-spec.h \
+	freeipmi/spec/oem/ipmi-netfn-oem-inventec-spec.h \
+	freeipmi/spec/oem/ipmi-netfn-oem-quanta-spec.h \
+	freeipmi/spec/oem/ipmi-netfn-oem-supermicro-spec.h \
+	freeipmi/spec/oem/ipmi-netfn-oem-wistron-spec.h \
+	freeipmi/spec/oem/ipmi-oem-dell-spec.h \
+	freeipmi/spec/oem/ipmi-oem-fujitsu-spec.h \
+	freeipmi/spec/oem/ipmi-oem-ibm-spec.h \
+	freeipmi/spec/oem/ipmi-oem-intel-spec.h \
+	freeipmi/spec/oem/ipmi-oem-inventec-spec.h \
+	freeipmi/spec/oem/ipmi-oem-quanta-spec.h \
+	freeipmi/spec/oem/ipmi-oem-sun-microsystems-spec.h \
+	freeipmi/spec/oem/ipmi-oem-supermicro-spec.h \
+	freeipmi/spec/oem/ipmi-oem-wistron-spec.h \
+	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-dell-spec.h \
+	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-fujitsu-spec.h \
+	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-hp-spec.h \
+	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-intel-node-manager-spec.h \
+	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-intel-spec.h \
+	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-inventec-spec.h \
+	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-quanta-spec.h \
+	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-supermicro-spec.h \
+	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-wistron-spec.h \
+	freeipmi/spec/oem/ipmi-sensor-numbers-oem-dell-spec.h
+	freeipmi/spec/oem/ipmi-sensor-numbers-oem-intel-node-manager-spec.h
+	freeipmi/spec/oem/ipmi-sensor-numbers-oem-intel-spec.h
+	freeipmi/spec/oem/ipmi-sensor-numbers-oem-inventec-spec.h
+	freeipmi/spec/oem/ipmi-sensor-numbers-oem-quanta-spec.h
+	freeipmi/spec/oem/ipmi-sensor-numbers-oem-wistron-spec.h
+	freeipmi/spec/oem/ipmi-sensor-types-oem-dell-spec.h \
+	freeipmi/spec/oem/ipmi-sensor-types-oem-fujitsu-spec.h \
+	freeipmi/spec/oem/ipmi-sensor-types-oem-hp-spec.h \
+	freeipmi/spec/oem/ipmi-sensor-types-oem-intel-node-manager-spec.h \
+	freeipmi/spec/oem/ipmi-sensor-types-oem-inventec-spec.h \
+	freeipmi/spec/oem/ipmi-sensor-types-oem-intel-spec.h \
+	freeipmi/spec/oem/ipmi-sensor-types-oem-supermicro-spec.h \
+	freeipmi/spec/oem/ipmi-sensor-types-oem-wistron-spec.h \
+	freeipmi/spec/oem/ipmi-slave-address-oem-intel-spec.h \
+	freeipmi/spec/oem/ipmi-slave-address-oem-inventec-spec.h \
+	freeipmi/spec/oem/ipmi-slave-address-oem-quanta-spec.h \
+	freeipmi/spec/oem/ipmi-slave-address-oem-wistron-spec.h \
+	freeipmi/spec/oem/ipmi-sol-configuration-parameters-oem-inventec-spec.h \
+	freeipmi/spec/oem/ipmi-sol-configuration-parameters-oem-wistron-spec.h \
+	freeipmi/spec/oem/ipmi-system-info-parameters-oem-dell-spec.h \
+	freeipmi/spec/oem/ipmi-system-info-parameters-oem-wistron-spec.h \
 	freeipmi/templates/ipmi-bmc-watchdog-timer-cmds-templates.h \
 	freeipmi/templates/ipmi-chassis-cmds-templates.h \
 	freeipmi/templates/ipmi-dcmi-cmds-templates.h \

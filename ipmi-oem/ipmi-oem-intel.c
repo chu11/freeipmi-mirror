@@ -102,7 +102,7 @@
  */
 
 /* Quanta QSSC-S4R/Appro GB812X-CN
- * (Quanta motherboard maintains Intel manufacturer ID)
+ * (Quanta motherboard contains Intel manufacturer ID)
  *
  * Set Fan Control Configuration Command
  *

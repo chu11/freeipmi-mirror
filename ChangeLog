@@ -1,5 +1,14 @@
 2015-10-19 Albert Chu <chu11@llnl.gov>
 
+	Re-org of OEM code for future.
+
+	* libfreeipmi/include/freeipmi/spec/: Split OEM .h files into vendor specific files. 
+
+	* libfreeipmi/spec/ipmi-sensor-and-event-code-tables-oem-spec.c:
+	Split into specific vendor files.
+	
+2015-10-19 Albert Chu <chu11@llnl.gov>
+
 	Merge branch intelnm30
 
 	* libfreeipmi/include/freeipmi/spec/ipmi-sensor-and-event-code-tables-oem-spec.h,
