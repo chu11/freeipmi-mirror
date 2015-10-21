@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef IPMI_SEL_STRING_QUANTA_H
-#define IPMI_SEL_STRING_QUANTA_H
+#ifndef IPMI_SEL_STRING_QUANTA_S99Q_H
+#define IPMI_SEL_STRING_QUANTA_S99Q_H
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -85,4 +85,4 @@ int sel_string_output_quanta_s99q_event_data3_class_oem (ipmi_sel_ctx_t ctx,
 							 unsigned int *wlen,
 							 struct ipmi_sel_system_event_record_data *system_event_record_data);
 
-#endif /* IPMI_SEL_STRING_QUANTA_H */
+#endif /* IPMI_SEL_STRING_QUANTA_S99Q_H */

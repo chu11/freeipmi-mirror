@@ -69,53 +69,39 @@
 
 #include "freeipmi-portability.h"
 
-/* return (0) - no OEM match
- * return (1) - OEM match
- * return (-1) - error, cleanup and return error
- */
 int
-sel_string_output_sun_event_data3_threshold_oem (ipmi_sel_ctx_t ctx,
-						 struct ipmi_sel_entry *sel_entry,
-						 uint8_t sel_record_type,
-						 char *tmpbuf,
-						 unsigned int tmpbuflen,
-						 unsigned int flags,
-						 unsigned int *wlen,
-						 struct ipmi_sel_system_event_record_data *system_event_record_data)
+_sel_string_output_sun_x4140_event_data3_fru_position_number (ipmi_sel_ctx_t ctx,
+							      char *tmpbuf,
+							      unsigned int tmpbuflen,
+							      struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
-  int ret;
-
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUN_MICROSYSTEMS);
-  assert (sel_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
-  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
-  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
-  assert (wlen);
   assert (system_event_record_data);
   assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
-
-  /* 
-   * Sun X4140
+  
+  /* From Sun:
+   *
+   * "In general, the data stored in SEL EvtData3 (OEM) field for our
+   * platforms is the "FRU Position Number".  The position number is used
+   * internally and consumed by our diagnostic routines.
+   *
+   * The position number is context sensitive to the  name.
+   *
+   * e.g. For example, Sensor "/SYS/PS0/FAN_FAULT" and
+   * "/SYS/PS0/PRSNT" for /SYS/PS0/PRSNT, EvtData3 field would contain
+   * the sensor logical number while /SYS/PS0/FAN_FAULT, the upper 5
+   * bits of EvtData3 is the Fan Module and the lower 3 bits the Fan
+   * Number."
    */
 
-  if (ctx->product_id == IPMI_SUN_MICROSYSTEMS_PRODUCT_ID_X4140)
-    {
-      if ((ret = sel_string_output_sun_x4140_event_data3_threshold_oem (ctx,
-									sel_entry,
-									sel_record_type,
-									tmpbuf,
-									tmpbuflen,
-									flags,
-									wlen,
-									system_event_record_data)) < 0)
-	return (-1);
-
-      if (ret)
-	return (1);
-    }
+  snprintf (tmpbuf,
+            tmpbuflen,
+            "FRU Position Number = %02Xh",
+            system_event_record_data->event_data3);
 
   return (0);
 }
@@ -125,14 +111,14 @@ sel_string_output_sun_event_data3_threshold_oem (ipmi_sel_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-sel_string_output_sun_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
-						struct ipmi_sel_entry *sel_entry,
-						uint8_t sel_record_type,
-						char *tmpbuf,
-						unsigned int tmpbuflen,
-						unsigned int flags,
-						unsigned int *wlen,
-						struct ipmi_sel_system_event_record_data *system_event_record_data)
+sel_string_output_sun_x4140_event_data3_threshold_oem (ipmi_sel_ctx_t ctx,
+						       struct ipmi_sel_entry *sel_entry,
+						       uint8_t sel_record_type,
+						       char *tmpbuf,
+						       unsigned int tmpbuflen,
+						       unsigned int flags,
+						       unsigned int *wlen,
+						       struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   int ret;
 
@@ -147,26 +133,65 @@ sel_string_output_sun_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
   assert (wlen);
   assert (system_event_record_data);
   assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
+  assert (ctx->product_id == IPMI_SUN_MICROSYSTEMS_PRODUCT_ID_X4140);
 
   /* 
    * Sun X4140
    */
 
-  if (ctx->product_id == IPMI_SUN_MICROSYSTEMS_PRODUCT_ID_X4140)
-    {
-      if ((ret = sel_string_output_sun_x4140_event_data3_discrete_oem (ctx,
-								       sel_entry,
-								       sel_record_type,
-								       tmpbuf,
-								       tmpbuflen,
-								       flags,
-								       wlen,
-								       system_event_record_data)) < 0)
-	return (-1);
+  if ((ret = _sel_string_output_sun_x4140_event_data3_fru_position_number (ctx,
+									   tmpbuf,
+									   tmpbuflen,
+									   system_event_record_data)) < 0)
+    return (-1);
 
-      if (ret)
-	return (1);
-    }
-  
+  if (ret)
+    return (1);
+
+  return (0);
+}
+
+/* return (0) - no OEM match
+ * return (1) - OEM match
+ * return (-1) - error, cleanup and return error
+ */
+int
+sel_string_output_sun_x4140_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
+						      struct ipmi_sel_entry *sel_entry,
+						      uint8_t sel_record_type,
+						      char *tmpbuf,
+						      unsigned int tmpbuflen,
+						      unsigned int flags,
+						      unsigned int *wlen,
+						      struct ipmi_sel_system_event_record_data *system_event_record_data)
+{
+  int ret;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUN_MICROSYSTEMS);
+  assert (sel_entry);
+  assert (tmpbuf);
+  assert (tmpbuflen);
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (wlen);
+  assert (system_event_record_data);
+  assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
+  assert (ctx->product_id == IPMI_SUN_MICROSYSTEMS_PRODUCT_ID_X4140);
+
+  /* 
+   * Sun X4140
+   */
+
+  if ((ret = _sel_string_output_sun_x4140_event_data3_fru_position_number (ctx,
+									   tmpbuf,
+									   tmpbuflen,
+									   system_event_record_data)) < 0)
+    return (-1);
+
+  if (ret)
+    return (1);
+
   return (0);
 }
