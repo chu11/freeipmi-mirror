@@ -3867,7 +3867,18 @@ sel_string_output_intel_event_data3_class_oem (ipmi_sel_ctx_t ctx,
 
 	  return (1);
 	}
+    }
 
+  /* OEM Interpretation
+   *
+   * Intel S2600KP
+   * Intel S2600WT2
+   * Intel S2600WTT
+   */
+  if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600KP
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
+      || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT)
+    {
       if ((system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_E52600V3_BIOS_SMI_HANDLER
 	   && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
 	   && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_PCI_EXPRESS_FATAL_ERROR

@@ -1,3 +1,8 @@
+2015-10-21  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/sel/ipmi-sel-string-intel.c (sel_string_output_intel_event_data3_class_oem):
+	Fix output corner case.
+	
 2015-10-20  Albert Chu <chu11@llnl.gov>
 
 	* NEWS, configure.ac: Update for release.
