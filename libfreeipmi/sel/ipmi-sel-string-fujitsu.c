@@ -67,16 +67,17 @@
  * return (-1) - error, cleanup and return error
  */
 int
-sel_string_output_fujitsu_irmc_event_data1_class_sensor_specific_discrete (ipmi_sel_ctx_t ctx,
-									   struct ipmi_sel_entry *sel_entry,
-									   uint8_t sel_record_type,
-									   char *tmpbuf,
-									   unsigned int tmpbuflen,
-									   unsigned int flags,
-									   unsigned int *wlen,
-									   struct ipmi_sel_system_event_record_data *system_event_record_data)
-
+sel_string_output_fujitsu_event_data1_class_sensor_specific_discrete (ipmi_sel_ctx_t ctx,
+								      struct ipmi_sel_entry *sel_entry,
+								      uint8_t sel_record_type,
+								      char *tmpbuf,
+								      unsigned int tmpbuflen,
+								      unsigned int flags,
+								      unsigned int *wlen,
+								      struct ipmi_sel_system_event_record_data *system_event_record_data) 
 {
+  int ret;
+
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU);
@@ -95,6 +96,18 @@ sel_string_output_fujitsu_irmc_event_data1_class_sensor_specific_discrete (ipmi_
   if (ctx->product_id >= IPMI_FUJITSU_PRODUCT_ID_MIN
        && ctx->product_id <= IPMI_FUJITSU_PRODUCT_ID_MAX)
     {
+      if ((ret = sel_string_output_fujitsu_event_data1_class_sensor_specific_discrete (ctx,
+										       sel_entry,
+										       sel_record_type,
+										       tmpbuf,
+										       tmpbuflen,
+										       flags,
+										       wlen,
+										       system_event_record_data)) < 0)
+	return (-1);
+
+      if (ret)
+	return (1);
     }
   
   return (0);
@@ -109,15 +122,15 @@ sel_string_output_fujitsu_irmc_event_data1_class_sensor_specific_discrete (ipmi_
  * 1 - buffer full, return full buffer to user
  */
 int
-sel_string_output_fujitsu_irmc_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
-							struct ipmi_sel_entry *sel_entry,
-							uint8_t sel_record_type,
-							char *buf,
-							unsigned int buflen,
-							unsigned int flags,
-							unsigned int *wlen,
-							struct ipmi_sel_system_event_record_data *system_event_record_data,
-							int *oem_rv)
+sel_string_output_fujitsu_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
+						   struct ipmi_sel_entry *sel_entry,
+						   uint8_t sel_record_type,
+						   char *buf,
+						   unsigned int buflen,
+						   unsigned int flags,
+						   unsigned int *wlen,
+						   struct ipmi_sel_system_event_record_data *system_event_record_data,
+						   int *oem_rv)
 {
   int ret;
 
@@ -166,14 +179,14 @@ sel_string_output_fujitsu_irmc_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
  * 1 - buffer full, return full buffer to user
  */
 int
-sel_string_output_fujitsu_irmc_oem_record_data (ipmi_sel_ctx_t ctx,
-						struct ipmi_sel_entry *sel_entry,
-						uint8_t sel_record_type,
-						char *buf,
-						unsigned int buflen,
-						unsigned int flags,
-						unsigned int *wlen,
-						int *oem_rv)
+sel_string_output_fujitsu_oem_record_data (ipmi_sel_ctx_t ctx,
+					   struct ipmi_sel_entry *sel_entry,
+					   uint8_t sel_record_type,
+					   char *buf,
+					   unsigned int buflen,
+					   unsigned int flags,
+					   unsigned int *wlen,
+					   int *oem_rv)
 {
   int ret;
 
@@ -222,14 +235,14 @@ sel_string_output_fujitsu_irmc_oem_record_data (ipmi_sel_ctx_t ctx,
  * 1 - buffer full, return full buffer to user
  */
 int
-sel_string_output_fujitsu_irmc_oem_string (ipmi_sel_ctx_t ctx,
-					   struct ipmi_sel_entry *sel_entry,
-					   uint8_t sel_record_type,
-					   char *buf,
-					   unsigned int buflen,
-					   unsigned int flags,
-					   unsigned int *wlen,
-					   int *oem_rv)
+sel_string_output_fujitsu_oem_string (ipmi_sel_ctx_t ctx,
+				      struct ipmi_sel_entry *sel_entry,
+				      uint8_t sel_record_type,
+				      char *buf,
+				      unsigned int buflen,
+				      unsigned int flags,
+				      unsigned int *wlen,
+				      int *oem_rv)
 {
   int ret;
 
