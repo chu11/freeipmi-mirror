@@ -222,7 +222,11 @@ libfreeipmi_la_SOURCES = \
 	spec/ipmi-iana-enterprise-numbers-spec.c \
 	spec/ipmi-jedec-manufacturer-identification-code-spec.c \
 	spec/ipmi-sensor-and-event-code-tables-spec.c \
-	spec/ipmi-sensor-and-event-code-tables-oem-spec.c \
+	spec/ipmi-sensor-and-event-code-tables-oem-dell-spec.c \
+	spec/ipmi-sensor-and-event-code-tables-oem-fujitsu-spec.c \
+	spec/ipmi-sensor-and-event-code-tables-oem-hp-spec.c \
+	spec/ipmi-sensor-and-event-code-tables-oem-intel-spec.c \
+	spec/ipmi-sensor-and-event-code-tables-oem-wistron-spec.c \
 	spec/ipmi-sensor-types-spec.c \
 	spec/ipmi-sensor-units-spec.c \
 	util/ipmi-channel-util.c \
