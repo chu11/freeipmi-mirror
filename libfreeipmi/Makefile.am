@@ -191,6 +191,8 @@ libfreeipmi_la_SOURCES = \
 	sel/ipmi-sel-string-dell.h \
 	sel/ipmi-sel-string-fujitsu.c \
 	sel/ipmi-sel-string-fujitsu.h \
+	sel/ipmi-sel-string-fujitsu-irmc-common.c \
+	sel/ipmi-sel-string-fujitsu-irmc-common.h \
 	sel/ipmi-sel-string-intel.c \
 	sel/ipmi-sel-string-intel.h \
 	sel/ipmi-sel-string-intel-node-manager.c \

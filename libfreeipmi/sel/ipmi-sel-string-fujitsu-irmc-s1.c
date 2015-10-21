@@ -57,26 +57,32 @@
 #include "ipmi-sel-string.h"
 #include "ipmi-sel-string-fujitsu.h"
 #include "ipmi-sel-string-fujitsu-irmc-common.h"
+#include "ipmi-sel-string-fujitsu-irmc-s1.h"
 #include "ipmi-sel-trace.h"
 #include "ipmi-sel-util.h"
 
 #include "freeipmi-portability.h"
+
+/* Fully decoded english version of decoded SEL */
+#define IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH 255
 
 /* return (0) - no OEM match
  * return (1) - OEM match
  * return (-1) - error, cleanup and return error
  */
 int
-sel_string_output_fujitsu_irmc_event_data1_class_sensor_specific_discrete (ipmi_sel_ctx_t ctx,
-									   struct ipmi_sel_entry *sel_entry,
-									   uint8_t sel_record_type,
-									   char *tmpbuf,
-									   unsigned int tmpbuflen,
-									   unsigned int flags,
-									   unsigned int *wlen,
-									   struct ipmi_sel_system_event_record_data *system_event_record_data)
+sel_string_output_fujitsu_irmc_s1_event_data1_class_sensor_specific_discrete (ipmi_sel_ctx_t ctx,
+									      struct ipmi_sel_entry *sel_entry,
+									      uint8_t sel_record_type,
+									      char *tmpbuf,
+									      unsigned int tmpbuflen,
+									      unsigned int flags,
+									      unsigned int *wlen,
+									      struct ipmi_sel_system_event_record_data *system_event_record_data)
 
 {
+  int ret;
+
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU);
@@ -88,14 +94,21 @@ sel_string_output_fujitsu_irmc_event_data1_class_sensor_specific_discrete (ipmi_
   assert (wlen);
   assert (system_event_record_data);
   assert (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC);
+  assert (ctx->product_id >= IPMI_FUJITSU_PRODUCT_ID_MIN
+	  && ctx->product_id <= IPMI_FUJITSU_PRODUCT_ID_MAX);
 
-  /* 
-   * Fujitsu iRMC / iRMC S2
-   */
-  if (ctx->product_id >= IPMI_FUJITSU_PRODUCT_ID_MIN
-       && ctx->product_id <= IPMI_FUJITSU_PRODUCT_ID_MAX)
-    {
-    }
+  if ((ret = sel_string_output_fujitsu_irmc_common_event_data1_class_sensor_specific_discrete (ctx,
+											       sel_entry,
+											       sel_record_type,
+											       tmpbuf,
+											       tmpbuflen,
+											       flags,
+											       wlen,
+											       system_event_record_data)) < 0)
+    return (-1);
+
+  if (ret)
+    return (1);
   
   return (0);
 }
@@ -109,15 +122,15 @@ sel_string_output_fujitsu_irmc_event_data1_class_sensor_specific_discrete (ipmi_
  * 1 - buffer full, return full buffer to user
  */
 int
-sel_string_output_fujitsu_irmc_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
-							struct ipmi_sel_entry *sel_entry,
-							uint8_t sel_record_type,
-							char *buf,
-							unsigned int buflen,
-							unsigned int flags,
-							unsigned int *wlen,
-							struct ipmi_sel_system_event_record_data *system_event_record_data,
-							int *oem_rv)
+sel_string_output_fujitsu_irmc_s1_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
+							   struct ipmi_sel_entry *sel_entry,
+							   uint8_t sel_record_type,
+							   char *buf,
+							   unsigned int buflen,
+							   unsigned int flags,
+							   unsigned int *wlen,
+							   struct ipmi_sel_system_event_record_data *system_event_record_data,
+							   int *oem_rv)
 {
   int ret;
 
@@ -132,27 +145,22 @@ sel_string_output_fujitsu_irmc_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
   assert (wlen);
   assert (system_event_record_data);
   assert (oem_rv);
+  assert (ctx->product_id >= IPMI_FUJITSU_PRODUCT_ID_MIN
+	  && ctx->product_id <= IPMI_FUJITSU_PRODUCT_ID_MAX);
 
-  /* 
-   * Fujitsu iRMC / iRMC S2
-   */
-  if (ctx->product_id >= IPMI_FUJITSU_PRODUCT_ID_MIN
-       && ctx->product_id <= IPMI_FUJITSU_PRODUCT_ID_MAX)
-    {
-      if ((ret = sel_string_output_fujitsu_irmc_common_event_data2_event_data3 (ctx,
-										sel_entry,
-										sel_record_type,
-										buf,
-										buflen,
-										flags,
-										wlen,
-										system_event_record_data,
-										oem_rv)) < 0)
-	return (-1);
-      
-      if (ret)
-	return (1);
-    }
+  if ((ret = sel_string_output_fujitsu_irmc_common_event_data2_event_data3 (ctx,
+									    sel_entry,
+									    sel_record_type,
+									    buf,
+									    buflen,
+									    flags,
+									    wlen,
+									    system_event_record_data,
+									    oem_rv)) < 0)
+    return (-1);
+
+  if (ret)
+    return (1);
 
   return (0);
 }
@@ -166,14 +174,14 @@ sel_string_output_fujitsu_irmc_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
  * 1 - buffer full, return full buffer to user
  */
 int
-sel_string_output_fujitsu_irmc_oem_record_data (ipmi_sel_ctx_t ctx,
-						struct ipmi_sel_entry *sel_entry,
-						uint8_t sel_record_type,
-						char *buf,
-						unsigned int buflen,
-						unsigned int flags,
-						unsigned int *wlen,
-						int *oem_rv)
+sel_string_output_fujitsu_irmc_s1_oem_record_data (ipmi_sel_ctx_t ctx,
+						   struct ipmi_sel_entry *sel_entry,
+						   uint8_t sel_record_type,
+						   char *buf,
+						   unsigned int buflen,
+						   unsigned int flags,
+						   unsigned int *wlen,
+						   int *oem_rv)
 {
   int ret;
 
@@ -189,26 +197,22 @@ sel_string_output_fujitsu_irmc_oem_record_data (ipmi_sel_ctx_t ctx,
   assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (oem_rv);
+  assert (ctx->product_id >= IPMI_FUJITSU_PRODUCT_ID_MIN
+	  && ctx->product_id <= IPMI_FUJITSU_PRODUCT_ID_MAX);
 
-  /* 
-   * Fujitsu iRMC / iRMC S2
-   */
-  if (ctx->product_id >= IPMI_FUJITSU_PRODUCT_ID_MIN
-       && ctx->product_id <= IPMI_FUJITSU_PRODUCT_ID_MAX)
-    {
-      if ((ret = sel_string_output_fujitsu_irmc_common_oem_record_data (ctx,
-									sel_entry,
-									sel_record_type,
-									buf,
-									buflen,
-									flags,
-									wlen,
-									oem_rv)) < 0)
-	return (-1);
+  if ((ret = sel_string_output_fujitsu_irmc_common_oem_record_data (ctx,
+								    sel_entry,
+								    sel_record_type,
+								    buf,
+								    buflen,
+								    flags,
+								    wlen,
+								    system_event_record_data,
+								    oem_rv)) < 0)
+    return (-1);
 
-      if (ret)
-	return (1);
-}
+  if (ret)
+    return (1);
 
   return (0);
 }
@@ -222,14 +226,14 @@ sel_string_output_fujitsu_irmc_oem_record_data (ipmi_sel_ctx_t ctx,
  * 1 - buffer full, return full buffer to user
  */
 int
-sel_string_output_fujitsu_irmc_oem_string (ipmi_sel_ctx_t ctx,
-					   struct ipmi_sel_entry *sel_entry,
-					   uint8_t sel_record_type,
-					   char *buf,
-					   unsigned int buflen,
-					   unsigned int flags,
-					   unsigned int *wlen,
-					   int *oem_rv)
+sel_string_output_fujitsu_irmc_s1_oem_string (ipmi_sel_ctx_t ctx,
+					      struct ipmi_sel_entry *sel_entry,
+					      uint8_t sel_record_type,
+					      char *buf,
+					      unsigned int buflen,
+					      unsigned int flags,
+					      unsigned int *wlen,
+					      int *oem_rv)
 {
   int ret;
 
@@ -242,26 +246,23 @@ sel_string_output_fujitsu_irmc_oem_string (ipmi_sel_ctx_t ctx,
   assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
   assert (wlen);
   assert (oem_rv);
-  
-  /* 
-   * Fujitsu iRMC / iRMC S2
-   */
-  if (ctx->product_id >= IPMI_FUJITSU_PRODUCT_ID_MIN
-      && ctx->product_id <= IPMI_FUJITSU_PRODUCT_ID_MAX)
-    {
-      if ((ret = sel_string_output_fujitsu_irmc_common_oem_string (ctx,
-								   sel_entry,
-								   sel_record_type,
-								   buf,
-								   buflen,
-								   flags,
-								   wlen,
-								   oem_rv)) < 0)
-	return (-1);
+  assert (ctx->product_id >= IPMI_FUJITSU_PRODUCT_ID_MIN
+	  && ctx->product_id <= IPMI_FUJITSU_PRODUCT_ID_MAX);
 
-      if (ret)
-	return (1);
-    }
+
+  if ((ret = sel_string_output_fujitsu_irmc_common_oem_string (ctx,
+							       sel_entry,
+							       sel_record_type,
+							       buf,
+							       buflen,
+							       flags,
+							       wlen,
+							       system_event_record_data,
+							       oem_rv)) < 0)
+    return (-1);
+
+  if (ret)
+    return (1);
 
   return (0);
 }
