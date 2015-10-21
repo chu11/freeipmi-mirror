@@ -228,11 +228,11 @@ sel_string_output_intel_s5500wb_event_data1_class_oem (ipmi_sel_ctx_t ctx,
 }
 
 static void
-_sel_string_output_intel_bus (ipmi_sel_ctx_t ctx,
-			      char *tmpbuf,
-			      unsigned int tmpbuflen,
-			      unsigned int flags,
-			      struct ipmi_sel_system_event_record_data *system_event_record_data)
+_sel_string_output_intel_s5500wb_bus (ipmi_sel_ctx_t ctx,
+				      char *tmpbuf,
+				      unsigned int tmpbuflen,
+				      unsigned int flags,
+				      struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -283,7 +283,7 @@ sel_string_output_intel_s5500wb_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
       && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_PERR
 	  || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_SERR))
     {
-      _sel_string_output_intel_bus (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
+      _sel_string_output_intel_s5500wb_bus (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
 	  
       return (1);
     }
@@ -357,7 +357,7 @@ sel_string_output_intel_s5500wb_event_data2_class_oem (ipmi_sel_ctx_t ctx,
 	  || (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PCIE_CORRECTABLE_SENSOR
 	      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_CORRECTABLE_SENSOR)))
     {
-      _sel_string_output_intel_bus (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
+      _sel_string_output_intel_s5500wb_bus (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
 	  
       return (1);
     }
@@ -383,11 +383,11 @@ sel_string_output_intel_s5500wb_event_data2_class_oem (ipmi_sel_ctx_t ctx,
 }
 
 static void
-_sel_string_output_intel_device_function (ipmi_sel_ctx_t ctx,
-					  char *tmpbuf,
-					  unsigned int tmpbuflen,
-					  unsigned int flags,
-					  struct ipmi_sel_system_event_record_data *system_event_record_data)
+_sel_string_output_intel_s5500wb_device_function (ipmi_sel_ctx_t ctx,
+						  char *tmpbuf,
+						  unsigned int tmpbuflen,
+						  unsigned int flags,
+						  struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   uint8_t device, function;
 
@@ -453,7 +453,7 @@ sel_string_output_intel_s5500wb_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
       && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_PERR
 	  || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_SERR))
     {
-      _sel_string_output_intel_device_function (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
+      _sel_string_output_intel_s5500wb_device_function (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
 	  
       return (1);
     }
@@ -613,7 +613,7 @@ sel_string_output_intel_s5500wb_event_data3_class_oem (ipmi_sel_ctx_t ctx,
 	  || (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_PCIE_CORRECTABLE_SENSOR
 	      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_CORRECTABLE_SENSOR)))
     {
-      _sel_string_output_intel_device_function (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
+      _sel_string_output_intel_s5500wb_device_function (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
 	  
       return (1);
     }

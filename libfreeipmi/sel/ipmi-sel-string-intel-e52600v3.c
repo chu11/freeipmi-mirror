@@ -75,14 +75,14 @@
 
 int
 sel_string_output_intel_e52600v3_sensor_name (ipmi_sel_ctx_t ctx,
-					     struct ipmi_sel_entry *sel_entry,
-					     uint8_t sel_record_type,
-					     char *buf,
-					     unsigned int buflen,
-					     unsigned int flags,
-					     unsigned int *wlen,
-					     struct ipmi_sel_system_event_record_data *system_event_record_data,
-					     int *oem_rv)
+					      struct ipmi_sel_entry *sel_entry,
+					      uint8_t sel_record_type,
+					      char *buf,
+					      unsigned int buflen,
+					      unsigned int flags,
+					      unsigned int *wlen,
+					      struct ipmi_sel_system_event_record_data *system_event_record_data,
+					      int *oem_rv)
 {
   int nmret;
 
@@ -124,13 +124,13 @@ sel_string_output_intel_e52600v3_sensor_name (ipmi_sel_ctx_t ctx,
  */
 int
 sel_string_output_intel_e52600v3_event_data1_class_oem (ipmi_sel_ctx_t ctx,
-						       struct ipmi_sel_entry *sel_entry,
-						       uint8_t sel_record_type,
-						       char *tmpbuf,
-						       unsigned int tmpbuflen,
-						       unsigned int flags,
-						       unsigned int *wlen,
-						       struct ipmi_sel_system_event_record_data *system_event_record_data)
+							struct ipmi_sel_entry *sel_entry,
+							uint8_t sel_record_type,
+							char *tmpbuf,
+							unsigned int tmpbuflen,
+							unsigned int flags,
+							unsigned int *wlen,
+							struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   int nmret;
 
@@ -230,11 +230,11 @@ sel_string_output_intel_e52600v3_event_data1_class_oem (ipmi_sel_ctx_t ctx,
 }
 
 static void
-_sel_string_output_intel_pci_bus (ipmi_sel_ctx_t ctx,
-				  char *tmpbuf,
-				  unsigned int tmpbuflen,
-				  unsigned int flags,
-				  struct ipmi_sel_system_event_record_data *system_event_record_data)
+_sel_string_output_intel_e52600v3_pci_bus (ipmi_sel_ctx_t ctx,
+					   char *tmpbuf,
+					   unsigned int tmpbuflen,
+					   unsigned int flags,
+					   struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -289,13 +289,13 @@ _sel_string_output_intel_e52600v3_ras_mode (uint8_t event_data)
  */
 int
 sel_string_output_intel_e52600v3_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
-							  struct ipmi_sel_entry *sel_entry,
-							  uint8_t sel_record_type,
-							  char *tmpbuf,
-							  unsigned int tmpbuflen,
-							  unsigned int flags,
-							  unsigned int *wlen,
-							  struct ipmi_sel_system_event_record_data *system_event_record_data)
+							   struct ipmi_sel_entry *sel_entry,
+							   uint8_t sel_record_type,
+							   char *tmpbuf,
+							   unsigned int tmpbuflen,
+							   unsigned int flags,
+							   unsigned int *wlen,
+							   struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -647,7 +647,7 @@ sel_string_output_intel_e52600v3_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
       && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_PERR
 	  || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_SERR))
     {
-      _sel_string_output_intel_pci_bus (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
+      _sel_string_output_intel_e52600v3_pci_bus (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
 	  
       return (1);
     }
@@ -763,13 +763,13 @@ sel_string_output_intel_e52600v3_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
  */
 int
 sel_string_output_intel_e52600v3_event_data2_class_oem (ipmi_sel_ctx_t ctx,
-						       struct ipmi_sel_entry *sel_entry,
-						       uint8_t sel_record_type,
-						       char *tmpbuf,
-						       unsigned int tmpbuflen,
-						       unsigned int flags,
-						       unsigned int *wlen,
-						       struct ipmi_sel_system_event_record_data *system_event_record_data)
+							struct ipmi_sel_entry *sel_entry,
+							uint8_t sel_record_type,
+							char *tmpbuf,
+							unsigned int tmpbuflen,
+							unsigned int flags,
+							unsigned int *wlen,
+							struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   int nmret;
 
@@ -900,7 +900,7 @@ sel_string_output_intel_e52600v3_event_data2_class_oem (ipmi_sel_ctx_t ctx,
 	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_PCI_EXPRESS_CORRECTABLE_ERROR
 	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_PCI_EXPRESS_CORRECTABLE_ERRORS))
     {
-      _sel_string_output_intel_pci_bus (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
+      _sel_string_output_intel_e52600v3_pci_bus (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
 	  
       return (1);
     }
@@ -962,11 +962,11 @@ sel_string_output_intel_e52600v3_event_data2_class_oem (ipmi_sel_ctx_t ctx,
 }
 
 static void
-_sel_string_output_intel_pci_device_function (ipmi_sel_ctx_t ctx,
-					      char *tmpbuf,
-					      unsigned int tmpbuflen,
-					      unsigned int flags,
-					      struct ipmi_sel_system_event_record_data *system_event_record_data)
+_sel_string_output_intel_e52600v3_pci_device_function (ipmi_sel_ctx_t ctx,
+						       char *tmpbuf,
+						       unsigned int tmpbuflen,
+						       unsigned int flags,
+						       struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   uint8_t pci_device, pci_function;
 
@@ -1165,13 +1165,13 @@ _sel_string_output_intel_e52600v3_memory_dimm (ipmi_sel_ctx_t ctx,
  */
 int
 sel_string_output_intel_e52600v3_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
-							  struct ipmi_sel_entry *sel_entry,
-							  uint8_t sel_record_type,
-							  char *tmpbuf,
-							  unsigned int tmpbuflen,
-							  unsigned int flags,
-							  unsigned int *wlen,
-							  struct ipmi_sel_system_event_record_data *system_event_record_data)
+							   struct ipmi_sel_entry *sel_entry,
+							   uint8_t sel_record_type,
+							   char *tmpbuf,
+							   unsigned int tmpbuflen,
+							   unsigned int flags,
+							   unsigned int *wlen,
+							   struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -1494,7 +1494,7 @@ sel_string_output_intel_e52600v3_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
       && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_PERR
 	  || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_SERR))
     {
-      _sel_string_output_intel_pci_device_function (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
+      _sel_string_output_intel_e52600v3_pci_device_function (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
 
       return (1);
     }
@@ -1544,13 +1544,13 @@ sel_string_output_intel_e52600v3_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
  */
 int
 sel_string_output_intel_e52600v3_event_data3_class_oem (ipmi_sel_ctx_t ctx,
-						       struct ipmi_sel_entry *sel_entry,
-						       uint8_t sel_record_type,
-						       char *tmpbuf,
-						       unsigned int tmpbuflen,
-						       unsigned int flags,
-						       unsigned int *wlen,
-						       struct ipmi_sel_system_event_record_data *system_event_record_data)
+							struct ipmi_sel_entry *sel_entry,
+							uint8_t sel_record_type,
+							char *tmpbuf,
+							unsigned int tmpbuflen,
+							unsigned int flags,
+							unsigned int *wlen,
+							struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   int nmret;
 
@@ -1594,7 +1594,7 @@ sel_string_output_intel_e52600v3_event_data3_class_oem (ipmi_sel_ctx_t ctx,
 	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_PCI_EXPRESS_CORRECTABLE_ERROR
 	  && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_PCI_EXPRESS_CORRECTABLE_ERRORS))
     {
-      _sel_string_output_intel_pci_device_function (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
+      _sel_string_output_intel_e52600v3_pci_device_function (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
       
       return (1);
     }
@@ -1612,14 +1612,14 @@ sel_string_output_intel_e52600v3_event_data3_class_oem (ipmi_sel_ctx_t ctx,
  */
 int
 sel_string_output_intel_e52600v3_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
-							 struct ipmi_sel_entry *sel_entry,
-							 uint8_t sel_record_type,
-							 char *buf,
-							 unsigned int buflen,
-							 unsigned int flags,
-							 unsigned int *wlen,
-							 struct ipmi_sel_system_event_record_data *system_event_record_data,
-							 int *oem_rv)
+							  struct ipmi_sel_entry *sel_entry,
+							  uint8_t sel_record_type,
+							  char *buf,
+							  unsigned int buflen,
+							  unsigned int flags,
+							  unsigned int *wlen,
+							  struct ipmi_sel_system_event_record_data *system_event_record_data,
+							  int *oem_rv)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
