@@ -147,7 +147,7 @@ extern unsigned int ipmi_oem_intel_specific_pci_correctable_sensor_max_index;
 /*
  * Intel S5500WB/Penguin Computing Relion 700
  * Quanta QSSC-S4R/Appro GB812X-CN
- * (Quanta motherboard maintains Intel manufacturer ID)
+ * (Quanta motherboard contains Intel manufacturer ID)
  * Intel S2600JF/Appro 512X
  */
 
@@ -292,7 +292,7 @@ extern unsigned int ipmi_oem_intel_specific_pci_correctable_sensor_max_index;
 
 /*
  * Quanta QSSC-S4R/Appro GB812X-CN
- * (Quanta motherboard maintains Intel manufacturer ID)
+ * (Quanta motherboard contains Intel manufacturer ID)
  */
 
 /*

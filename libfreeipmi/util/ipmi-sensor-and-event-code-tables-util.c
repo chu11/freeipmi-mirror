@@ -2154,7 +2154,7 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
    *
    * Intel S5500WB/Penguin Computing Relion 700
    * Quanta QSSC-S4R/Appro GB812X-CN
-   * (Quanta motherboard maintains Intel manufacturer ID)
+   * (Quanta motherboard contains Intel manufacturer ID)
    * Intel S2600JF/Appro 512X
    */
   else if (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL)

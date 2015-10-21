@@ -76,7 +76,7 @@ unsigned int ipmi_oem_intel_specific_pci_correctable_sensor_max_index = 0x06;
 
 /*
  * Quanta QSSC-S4R/Appro GB812X-CN
- * (Quanta motherboard maintains Intel manufacturer ID)          
+ * (Quanta motherboard contains Intel manufacturer ID)          
  */
 
 /* achu: Similar to above, but some events text changed, so new arrays to differentiate */

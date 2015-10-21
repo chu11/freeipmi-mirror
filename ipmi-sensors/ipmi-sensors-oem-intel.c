@@ -78,7 +78,7 @@ ipmi_sensors_oem_intel_output_oem_record (ipmi_sensors_state_data_t *state_data,
    * Intel S5500WB/Penguin Computing Relion 700
    * Intel S2600JF/Appro 512X
    * Quanta QSSC-S4R/Appro GB812X-CN
-   * (Quanta motherboard maintains Intel manufacturer ID)
+   * (Quanta motherboard contains Intel manufacturer ID)
    */
   if (state_data->oem_data.product_id == IPMI_INTEL_PRODUCT_ID_S5500WB
       || state_data->oem_data.product_id == IPMI_INTEL_PRODUCT_ID_S2600JF
@@ -93,7 +93,7 @@ ipmi_sensors_oem_intel_output_oem_record (ipmi_sensors_state_data_t *state_data,
   
   /*
    * Quanta QSSC-S4R/Appro GB812X-CN
-   * (Quanta motherboard maintains Intel manufacturer ID)
+   * (Quanta motherboard contains Intel manufacturer ID)
    */
   if (state_data->oem_data.product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R)
     {

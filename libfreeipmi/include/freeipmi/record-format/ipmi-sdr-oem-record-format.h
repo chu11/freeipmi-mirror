@@ -35,7 +35,7 @@ extern "C" {
 
 /*
  * Quanta QSSC-S4R/Appro GB812X-CN
- * (Quanta motherboard maintains Intel manufacturer ID)
+ * (Quanta motherboard contains Intel manufacturer ID)
  */
 
 #define IPMI_SDR_OEM_INTEL_QUANTA_QSSC_S4R_THERMAL_PROFILE_DATA_RECORD_OEM_DATA_LENGTH 11

@@ -100,7 +100,7 @@ sel_string_output_intel_sensor_name (ipmi_sel_ctx_t ctx,
    * Intel S5500WB/Penguin Computing Relion 700
    * Intel S2600JF/Appro 512X
    * Quanta QSSC-S4R/Appro GB812X-CN
-   * (Quanta motherboard maintains Intel manufacturer ID)
+   * (Quanta motherboard contains Intel manufacturer ID)
    * Intel S2600KP
    * Intel S2600WT2
    * Intel S2600WTT
@@ -491,7 +491,7 @@ sel_string_output_intel_event_data1_class_oem (ipmi_sel_ctx_t ctx,
    * Intel S5500WB/Penguin Computing Relion 700
    * Intel S2600JF/Appro 512X
    * Quanta QSSC-S4R/Appro GB812X-CN
-   * (Quanta motherboard maintains Intel manufacturer ID)
+   * (Quanta motherboard contains Intel manufacturer ID)
    * Intel S2600KP
    * Intel S2600WT2
    * Intel S2600WTT
@@ -523,7 +523,7 @@ sel_string_output_intel_event_data1_class_oem (ipmi_sel_ctx_t ctx,
   /* OEM Interpretation
    *
    * Quanta QSSC-S4R/Appro GB812X-CN
-   * (Quanta motherboard maintains Intel manufacturer ID) 
+   * (Quanta motherboard contains Intel manufacturer ID) 
    */
   if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R)
     {
@@ -1025,7 +1025,7 @@ sel_string_output_intel_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
   /* OEM Interpretation
    *
    * Quanta QSSC-S4R/Appro GB812X-CN
-   * (Quanta motherboard maintains Intel manufacturer ID) 
+   * (Quanta motherboard contains Intel manufacturer ID) 
    */
   if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R)
     {
@@ -1906,7 +1906,7 @@ sel_string_output_intel_event_data2_class_oem (ipmi_sel_ctx_t ctx,
   /* OEM Interpretation
    *
    * Quanta QSSC-S4R/Appro GB812X-CN
-   * (Quanta motherboard maintains Intel manufacturer ID)
+   * (Quanta motherboard contains Intel manufacturer ID)
    */
   if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R)
     {
@@ -2006,7 +2006,7 @@ sel_string_output_intel_event_data2_class_oem (ipmi_sel_ctx_t ctx,
    * Intel S5500WB/Penguin Computing Relion 700
    * Intel S2600JF/Appro 512X
    * Quanta QSSC-S4R/Appro GB812X-CN
-   * (Quanta motherboard maintains Intel manufacturer ID)
+   * (Quanta motherboard contains Intel manufacturer ID)
    * Intel S2600KP
    * Intel S2600WT2
    * Intel S2600WTT
@@ -2704,7 +2704,7 @@ sel_string_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
    *
    * Intel S5500WB/Penguin Computing Relion 700
    * Quanta QSSC-S4R/Appro GB812X-CN
-   * (Quanta motherboard maintains Intel manufacturer ID)
+   * (Quanta motherboard contains Intel manufacturer ID)
    */
   if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB)
     {
@@ -2828,7 +2828,7 @@ sel_string_output_intel_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
   /* OEM Interpretation
    *
    * Quanta QSSC-S4R/Appro GB812X-CN
-   * (Quanta motherboard maintains Intel manufacturer ID) 
+   * (Quanta motherboard contains Intel manufacturer ID) 
    */
   if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R)
     {
@@ -3737,7 +3737,7 @@ sel_string_output_intel_event_data3_class_oem (ipmi_sel_ctx_t ctx,
   /* OEM Interpretation
    *
    * Quanta QSSC-S4R/Appro GB812X-CN
-   * (Quanta motherboard maintains Intel manufacturer ID)
+   * (Quanta motherboard contains Intel manufacturer ID)
    */
   if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R)
     {
@@ -3779,7 +3779,7 @@ sel_string_output_intel_event_data3_class_oem (ipmi_sel_ctx_t ctx,
    * Intel S5500WB/Penguin Computing Relion 700
    * Intel S2600JF/Appro 512X
    * Quanta QSSC-S4R/Appro GB812X-CN
-   * (Quanta motherboard maintains Intel manufacturer ID)
+   * (Quanta motherboard contains Intel manufacturer ID)
    * Intel S2600KP
    * Intel S2600WT2
    * Intel S2600WTT
@@ -4610,7 +4610,7 @@ sel_string_output_intel_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
   /* OEM Interpretation
    *
    * Quanta QSSC-S4R/Appro GB812X-CN
-   * (Quanta motherboard maintains Intel manufacturer ID) 
+   * (Quanta motherboard contains Intel manufacturer ID) 
    */
   if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R)
     {

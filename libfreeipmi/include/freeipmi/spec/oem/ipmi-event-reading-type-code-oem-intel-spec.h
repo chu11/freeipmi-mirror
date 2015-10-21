@@ -35,7 +35,7 @@ extern "C" {
 
 /* 
  * Quanta QSSC-S4R/Appro GB812X-CN
- * (Quanta motherboard maintains Intel manufacturer ID)
+ * (Quanta motherboard contains Intel manufacturer ID)
  */
 /* achu: Similar to above, but some events changed and some new ones,
  * so new macros to differentiate

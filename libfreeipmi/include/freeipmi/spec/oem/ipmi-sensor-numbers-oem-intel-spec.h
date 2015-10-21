@@ -50,7 +50,7 @@ extern "C" {
 
 /*
  * Quanta QSSC-S4R/Appro GB812X-CN
- * (Quanta motherboard maintains Intel manufacturer ID)
+ * (Quanta motherboard contains Intel manufacturer ID)
  */
 /* achu: Few same as above, but to clearly differentiate motherboards, duplicate them */
 
