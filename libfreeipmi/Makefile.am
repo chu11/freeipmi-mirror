@@ -211,6 +211,8 @@ libfreeipmi_la_SOURCES = \
 	sel/ipmi-sel-string-intel-node-manager.h \
 	sel/ipmi-sel-string-intel-s5500wb.c \
 	sel/ipmi-sel-string-intel-s5500wb.h \
+	sel/ipmi-sel-string-intel-s2600jf.c \
+	sel/ipmi-sel-string-intel-s2600jf.h \
 	sel/ipmi-sel-string-intel-e52600v3.c \
 	sel/ipmi-sel-string-intel-e52600v3.h \
 	sel/ipmi-sel-string-intel-s2600kp.c \

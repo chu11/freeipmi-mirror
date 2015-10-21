@@ -97,6 +97,7 @@ sel_string_output_intel_s5500wb_sensor_name (ipmi_sel_ctx_t ctx,
   assert (wlen);
   assert (system_event_record_data);
   assert (oem_rv);
+  assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB);
   
   if ((ret = sel_string_output_intel_node_manager_sensor_name (ctx,
 							       sel_entry,
