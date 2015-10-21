@@ -49,8 +49,8 @@ ipmi_sensors_SOURCES = \
 	ipmi-sensors-oem-quanta-s99q.h \
 	ipmi-sensors-oem-wistron.c \
 	ipmi-sensors-oem-wistron.h \
-	ipmi-sensors-oem-wistron-s99q.c \
-	ipmi-sensors-oem-wistron-s99q.h \
+	ipmi-sensors-oem-wistron-c6220.c \
+	ipmi-sensors-oem-wistron-c6220.h \
 	ipmi-sensors-output-common.c \
 	ipmi-sensors-output-common.h \
 	ipmi-sensors-simple-output.c \

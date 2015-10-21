@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef IPMI_SENSORS_OEM_WISTRON_S99Q_H
-#define IPMI_SENSORS_OEM_WISTRON_S99Q_H
+#ifndef IPMI_SENSORS_OEM_WISTRON_C6220_H
+#define IPMI_SENSORS_OEM_WISTRON_C6220_H
 
 #include "ipmi-sensors.h"
 
@@ -25,9 +25,9 @@
  * return (1) - OEM match
  * return (-1) - error, cleanup and return error
  */
-int ipmi_sensors_oem_wistron_s99q_output_oem_record (ipmi_sensors_state_data_t *state_data,
-						     uint32_t oem_record_manufacturer_id,
-						     const uint8_t *oem_data,
-						     unsigned int oem_data_len);
+int ipmi_sensors_oem_wistron_c6220_output_oem_record (ipmi_sensors_state_data_t *state_data,
+						      uint32_t oem_record_manufacturer_id,
+						      const uint8_t *oem_data,
+						      unsigned int oem_data_len);
 
-#endif /* IPMI_SENSORS_OEM_WISTRON_S99Q_H */
+#endif /* IPMI_SENSORS_OEM_WISTRON_C6220_H */

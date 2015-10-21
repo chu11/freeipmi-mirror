@@ -31,7 +31,7 @@
 #include <freeipmi/freeipmi.h>
 
 #include "ipmi-sensors.h"
-#include "ipmi-sensors-oem-wistron-s99q.h"
+#include "ipmi-sensors-oem-wistron-c6220.h"
 #include "ipmi-sensors-oem-intel-node-manager.h"
 
 #include "freeipmi-portability.h"
@@ -43,10 +43,10 @@
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sensors_oem_wistron_s99q_output_oem_record (ipmi_sensors_state_data_t *state_data,
-						 uint32_t oem_record_manufacturer_id,
-						 const uint8_t *oem_data,
-						 unsigned int oem_data_len)
+ipmi_sensors_oem_wistron_c6220_output_oem_record (ipmi_sensors_state_data_t *state_data,
+						  uint32_t oem_record_manufacturer_id,
+						  const uint8_t *oem_data,
+						  unsigned int oem_data_len)
 {
   int ret;
 
@@ -59,7 +59,7 @@ ipmi_sensors_oem_wistron_s99q_output_oem_record (ipmi_sensors_state_data_t *stat
   assert (state_data->oem_data.product_id == IPMI_WISTRON_PRODUCT_ID_C6220);
   
   /*
-   * Wistron S99Q/Dell Poweredge C6200
+   * Wistron / Dell Poweredge C6200
    */
   if ((ret = ipmi_sensors_oem_intel_node_manager_output_oem_record (state_data)) < 0)
     return (-1);
