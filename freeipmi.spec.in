@@ -365,10 +365,13 @@ fi
 %dir %{_includedir}/freeipmi/locate
 %dir %{_includedir}/freeipmi/payload
 %dir %{_includedir}/freeipmi/record-format
+%dir %{_includedir}/freeipmi/record-format/oem
 %dir %{_includedir}/freeipmi/sdr
+%dir %{_includedir}/freeipmi/sdr/oem
 %dir %{_includedir}/freeipmi/sel
 %dir %{_includedir}/freeipmi/sensor-read
 %dir %{_includedir}/freeipmi/spec
+%dir %{_includedir}/freeipmi/spec/oem
 %dir %{_includedir}/freeipmi/templates
 %dir %{_includedir}/freeipmi/util
 %{_includedir}/ipmiconsole.h
