@@ -10,7 +10,9 @@
 	specific vendor files.
 
 	* ipmi-sensors/: Split OEM files into motherboard files.
-	
+
+	* libfreeipmi/sel: Split OEM files into motherboard files.
+
 2015-10-19 Albert Chu <chu11@llnl.gov>
 
 	Re-org of OEM code for future.
