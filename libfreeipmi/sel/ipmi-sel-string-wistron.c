@@ -257,15 +257,15 @@ sel_string_output_wistron_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
    */
   if (ctx->product_id == IPMI_WISTRON_PRODUCT_ID_C6220)
     {
-      if ((ret = sel_string_output_wistron_event_data2_event_data3 (ctx,
-								    sel_entry,
-								    sel_record_type,
-								    buf,
-								    buflen,
-								    flags,
-								    wlen,
-								    system_event_record_data,
-								    oem_rv)) < 0)
+      if ((ret = sel_string_output_wistron_c6220_event_data2_event_data3 (ctx,
+									  sel_entry,
+									  sel_record_type,
+									  buf,
+									  buflen,
+									  flags,
+									  wlen,
+									  system_event_record_data,
+									  oem_rv)) < 0)
 	return (-1);
       
       if (ret)

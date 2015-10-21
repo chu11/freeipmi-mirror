@@ -201,6 +201,8 @@ libfreeipmi_la_SOURCES = \
 	sel/ipmi-sel-string-linux-kernel.h \
 	sel/ipmi-sel-string-quanta.c \
 	sel/ipmi-sel-string-quanta.h \
+	sel/ipmi-sel-string-quanta-s99q.c \
+	sel/ipmi-sel-string-quanta-s99q.h \
 	sel/ipmi-sel-string-sun.c \
 	sel/ipmi-sel-string-sun.h \
 	sel/ipmi-sel-string-supermicro.c \
