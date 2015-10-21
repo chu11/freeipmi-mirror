@@ -1138,16 +1138,16 @@ sel_string_output_dell_r720_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 	  if (memory_card == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA1_OEM_DELL_DIMMS_PER_PACKAGE_3)
 	    dimms_per_node = 3;
               
-	  if (_dell_calculate_dimm_location (ctx,
-					     sel_entry,
-					     sel_record_type,
-					     buf,
-					     buflen,
-					     flags,
-					     wlen,
-					     system_event_record_data,
-					     oem_rv,
-					     dimms_per_node) > 0)
+	  if (sel_string_dell_poweredge_calculate_dimm_location (ctx,
+								 sel_entry,
+								 sel_record_type,
+								 buf,
+								 buflen,
+								 flags,
+								 wlen,
+								 system_event_record_data,
+								 oem_rv,
+								 dimms_per_node) > 0)
 	    return (1);
 	}
     }

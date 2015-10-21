@@ -94,6 +94,17 @@ int sel_string_output_dell_oem_diagnostic_event_data_event_data3_class_oem (ipmi
 									    unsigned int *wlen,
 									    struct ipmi_sel_system_event_record_data *system_event_record_data);
 
+int sel_string_dell_poweredge_calculate_dimm_location (ipmi_sel_ctx_t ctx,
+						       struct ipmi_sel_entry *sel_entry,
+						       uint8_t sel_record_type,
+						       char *buf,
+						       unsigned int buflen,
+						       unsigned int flags,
+						       unsigned int *wlen,
+						       struct ipmi_sel_system_event_record_data *system_event_record_data,
+						       int *oem_rv,
+						       uint8_t dimms_per_node);
+
 int sel_string_output_dell_poweredge_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 							      struct ipmi_sel_entry *sel_entry,
 							      uint8_t sel_record_type,

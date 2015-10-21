@@ -737,17 +737,17 @@ sel_string_output_dell_oem_diagnostic_event_data_event_data3_class_oem (ipmi_sel
   return (0);
 }
 
-static int
-_dell_calculate_dimm_location (ipmi_sel_ctx_t ctx,
-			       struct ipmi_sel_entry *sel_entry,
-			       uint8_t sel_record_type,
-			       char *buf,
-			       unsigned int buflen,
-			       unsigned int flags,
-			       unsigned int *wlen,
-			       struct ipmi_sel_system_event_record_data *system_event_record_data,
-			       int *oem_rv,
-			       uint8_t dimms_per_node)
+int
+sel_string_dell_poweredge_calculate_dimm_location (ipmi_sel_ctx_t ctx,
+						   struct ipmi_sel_entry *sel_entry,
+						   uint8_t sel_record_type,
+						   char *buf,
+						   unsigned int buflen,
+						   unsigned int flags,
+						   unsigned int *wlen,
+						   struct ipmi_sel_system_event_record_data *system_event_record_data,
+						   int *oem_rv,
+						   uint8_t dimms_per_node)
 {
   char dimmstr[DELL_EVENT_BUFFER_LENGTH + 1];
   uint8_t dimm_counter = 0;
@@ -1008,16 +1008,16 @@ sel_string_output_dell_poweredge_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 	  else /* memory_card == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_24_DIMMS_PER_NODE */
 	    dimms_per_node = 24;
               
-	  if (_dell_calculate_dimm_location (ctx,
-					     sel_entry,
-					     sel_record_type,
-					     buf,
-					     buflen,
-					     flags,
-					     wlen,
-					     system_event_record_data,
-					     oem_rv,
-					     dimms_per_node) > 0)
+	  if (sel_string_dell_poweredge_calculate_dimm_location (ctx,
+								 sel_entry,
+								 sel_record_type,
+								 buf,
+								 buflen,
+								 flags,
+								 wlen,
+								 system_event_record_data,
+								 oem_rv,
+								 dimms_per_node) > 0)
 	    return (1);
 	}
       else
