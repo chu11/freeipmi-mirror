@@ -6,7 +6,10 @@
 	libfreeipmi/include/freeipmi/record-format: Split OEM .h files
 	into vendor specific files.
 
-	* libfreeipmi/sdr, libfreeipmi/record-format: Split into specific vendor files.
+	* libfreeipmi/sdr, libfreeipmi/record-format: Split OEM files into
+	specific vendor files.
+
+	* ipmi-sensors/: Split OEM files into motherboard files.
 	
 2015-10-19 Albert Chu <chu11@llnl.gov>
 
@@ -15,7 +18,7 @@
 	* libfreeipmi/include/freeipmi/spec/: Split OEM .h files into vendor specific files. 
 
 	* libfreeipmi/spec/ipmi-sensor-and-event-code-tables-oem-spec.c:
-	Split into specific vendor files.
+	Split OEM files into specific vendor files.
 	
 2015-10-19 Albert Chu <chu11@llnl.gov>
 

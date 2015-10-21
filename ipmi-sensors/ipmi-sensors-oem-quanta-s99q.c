@@ -31,9 +31,8 @@
 #include <freeipmi/freeipmi.h>
 
 #include "ipmi-sensors.h"
-#include "ipmi-sensors-oem-inventec.h"
-#include "ipmi-sensors-oem-inventec-5441.h"
-#include "ipmi-sensors-oem-inventec-5442.h"
+#include "ipmi-sensors-oem-quanta.h"
+#include "ipmi-sensors-oem-quanta-s99q.h"
 #include "ipmi-sensors-oem-intel-node-manager.h"
 
 #include "freeipmi-portability.h"
@@ -45,10 +44,10 @@
  * return (-1) - error, cleanup and return error
  */
 int
-ipmi_sensors_oem_inventec_output_oem_record (ipmi_sensors_state_data_t *state_data,
-					     uint32_t oem_record_manufacturer_id,
-					     const uint8_t *oem_data,
-					     unsigned int oem_data_len)
+ipmi_sensors_oem_quanta_s99q_output_oem_record (ipmi_sensors_state_data_t *state_data,
+						uint32_t oem_record_manufacturer_id,
+						const uint8_t *oem_data,
+						unsigned int oem_data_len)
 {
   int ret;
 
@@ -57,37 +56,17 @@ ipmi_sensors_oem_inventec_output_oem_record (ipmi_sensors_state_data_t *state_da
   assert (oem_data_len);
   assert (state_data->prog_data->args->verbose_count >= 2);
   assert (state_data->prog_data->args->interpret_oem_data);
-  assert (state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC);
+  assert (state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_QUANTA);
+  assert (state_data->oem_data.product_id == IPMI_QUANTA_PRODUCT_ID_S99Q);
   
   /*
-   * Inventec 5441/Dell Xanadu II
+   * Quanta S99Q/Dell FS12-TY
    */
-  if (state_data->oem_data.product_id == IPMI_INVENTEC_PRODUCT_ID_5441)
-    {
-      if ((ret = ipmi_sensors_oem_inventec_5441_output_oem_record (state_data,
-								   oem_record_manufacturer_id,
-								   oem_data,
-								   oem_data_len)) < 0)
-	return (-1);
-
-      if (ret)
-	return (1);
-    }
-
-  /*
-   * Inventec 5442/Dell Xanadu III
-   */
-  if (state_data->oem_data.product_id == IPMI_INVENTEC_PRODUCT_ID_5442)
-    {
-      if ((ret = ipmi_sensors_oem_inventec_5442_output_oem_record (state_data,
-								   oem_record_manufacturer_id,
-								   oem_data,
-								   oem_data_len)) < 0)
-	return (-1);
-
-      if (ret)
-	return (1);
-    }
+  if ((ret = ipmi_sensors_oem_intel_node_manager_output_oem_record (state_data)) < 0)
+    return (-1);
+  
+  if (ret)
+    return (1);
   
   return (0);
 }

@@ -32,6 +32,7 @@
 
 #include "ipmi-sensors.h"
 #include "ipmi-sensors-oem-quanta.h"
+#include "ipmi-sensors-oem-quanta-s99q.h"
 #include "ipmi-sensors-oem-intel-node-manager.h"
 
 #include "freeipmi-portability.h"
@@ -62,7 +63,10 @@ ipmi_sensors_oem_quanta_output_oem_record (ipmi_sensors_state_data_t *state_data
    */
   if (state_data->oem_data.product_id == IPMI_QUANTA_PRODUCT_ID_S99Q)
     {
-      if ((ret = ipmi_sensors_oem_intel_node_manager_output_oem_record (state_data)) < 0)
+      if ((ret = ipmi_sensors_oem_quanta_s99q_output_oem_record (state_data,
+								 oem_record_manufacturer_id,
+								 oem_data,
+								 oem_data_len)) < 0)
 	return (-1);
 
       if (ret)

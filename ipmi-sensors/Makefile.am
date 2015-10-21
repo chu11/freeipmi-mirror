@@ -31,12 +31,26 @@ ipmi_sensors_SOURCES = \
 	ipmi-sensors-oem-intel.h \
 	ipmi-sensors-oem-intel-node-manager.c \
 	ipmi-sensors-oem-intel-node-manager.h \
+	ipmi-sensors-oem-intel-s5500wb.c \
+	ipmi-sensors-oem-intel-s5500wb.h \
+	ipmi-sensors-oem-intel-s2600jf.c \
+	ipmi-sensors-oem-intel-s2600jf.h \
+	ipmi-sensors-oem-intel-quanta-qssc-s4r.c \
+	ipmi-sensors-oem-intel-quanta-qssc-s4r.h \
 	ipmi-sensors-oem-inventec.c \
 	ipmi-sensors-oem-inventec.h \
+	ipmi-sensors-oem-inventec-5441.c \
+	ipmi-sensors-oem-inventec-5441.h \
+	ipmi-sensors-oem-inventec-5442.c \
+	ipmi-sensors-oem-inventec-5442.h \
 	ipmi-sensors-oem-quanta.c \
 	ipmi-sensors-oem-quanta.h \
+	ipmi-sensors-oem-quanta-s99q.c \
+	ipmi-sensors-oem-quanta-s99q.h \
 	ipmi-sensors-oem-wistron.c \
 	ipmi-sensors-oem-wistron.h \
+	ipmi-sensors-oem-wistron-s99q.c \
+	ipmi-sensors-oem-wistron-s99q.h \
 	ipmi-sensors-output-common.c \
 	ipmi-sensors-output-common.h \
 	ipmi-sensors-simple-output.c \
