@@ -170,12 +170,12 @@ nobase_include_HEADERS = \
 	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-quanta-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-supermicro-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-wistron-spec.h \
-	freeipmi/spec/oem/ipmi-sensor-numbers-oem-dell-spec.h
-	freeipmi/spec/oem/ipmi-sensor-numbers-oem-intel-node-manager-spec.h
-	freeipmi/spec/oem/ipmi-sensor-numbers-oem-intel-spec.h
-	freeipmi/spec/oem/ipmi-sensor-numbers-oem-inventec-spec.h
-	freeipmi/spec/oem/ipmi-sensor-numbers-oem-quanta-spec.h
-	freeipmi/spec/oem/ipmi-sensor-numbers-oem-wistron-spec.h
+	freeipmi/spec/oem/ipmi-sensor-numbers-oem-dell-spec.h \
+	freeipmi/spec/oem/ipmi-sensor-numbers-oem-intel-node-manager-spec.h \
+	freeipmi/spec/oem/ipmi-sensor-numbers-oem-intel-spec.h \
+	freeipmi/spec/oem/ipmi-sensor-numbers-oem-inventec-spec.h \
+	freeipmi/spec/oem/ipmi-sensor-numbers-oem-quanta-spec.h \
+	freeipmi/spec/oem/ipmi-sensor-numbers-oem-wistron-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-types-oem-dell-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-types-oem-fujitsu-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-types-oem-hp-spec.h \
