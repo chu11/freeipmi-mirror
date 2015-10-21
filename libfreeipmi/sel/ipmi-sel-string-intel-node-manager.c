@@ -835,39 +835,54 @@ sel_string_output_intel_node_manager_event_data2_class_oem (ipmi_sel_ctx_t ctx,
 
           return (1);
         }
-
-      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
-	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_NODE_MANAGER_NM_SMART_CLST_SENSOR
-	  && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_PREVIOUS_STATE_OR_SEVERITY)
-        {
-	  uint8_t offset;
-	  char severity_str[INTEL_NODE_MANAGER_EVENT_BUFFER_LENGTH + 1];
-          int ret;
-	  
-	  memset (severity_str, '\0', INTEL_NODE_MANAGER_EVENT_BUFFER_LENGTH + 1);
-
-	  offset = (system_event_record_data->event_data2 & IPMI_OEM_INTEL_NODE_MANAGER_NM_SMART_CLST_SENSOR_EVENT_DATA2_OFFSET_FROM_SEVERITY_BITMASK);
-	  offset >>= IPMI_OEM_INTEL_NODE_MANAGER_NM_SMART_CLST_SENSOR_EVENT_DATA2_OFFSET_FROM_SEVERITY_SHIFT;
-
-	  ret = ipmi_get_generic_event_message (IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY,
-						offset,
-						severity_str,
-						INTEL_NODE_MANAGER_EVENT_BUFFER_LENGTH);
-
-	  if (ret > 0)
-	    {
-	      snprintf (tmpbuf,
-			tmpbuflen,
-			"%s",
-			severity_str);
-	      
-	      return (1);
-	    }
-	    
-	}
     }
 
  out:
+  return (0);
+}
+
+/* return (0) - no OEM match
+ * return (1) - OEM match
+ * return (-1) - error, cleanup and return error
+ */
+int
+sel_string_output_intel_node_manager_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
+							       struct ipmi_sel_entry *sel_entry,
+							       uint8_t sel_record_type,
+							       char *tmpbuf,
+							       unsigned int tmpbuflen,
+							       unsigned int flags,
+							       unsigned int *wlen,
+							       struct ipmi_sel_system_event_record_data *system_event_record_data)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
+  assert (sel_entry);
+  assert (tmpbuf);
+  assert (tmpbuflen);
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (wlen);
+  assert (system_event_record_data);
+
+  if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_NODE_MANAGER
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
+      && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_NODE_MANAGER_NM_SMART_CLST_SENSOR
+      && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+    {
+      if (system_event_record_data->event_data3 == IPMI_OEM_INTEL_NODE_MANAGER_NM_SMART_CLST_SENSOR_EVENT_DATA3_EXTERNAL)
+	snprintf (tmpbuf,
+		  tmpbuflen,
+		  "Source of assertion is external");
+      else
+	snprintf (tmpbuf,
+		  tmpbuflen,
+		  "Power Supply Status Number = %u",
+		  system_event_record_data->event_data3);
+      
+      return (1);
+    }
+
   return (0);
 }
 
@@ -1284,23 +1299,6 @@ sel_string_output_intel_node_manager_event_data3_class_oem (ipmi_sel_ctx_t ctx,
                     tmpbuflen,
                     "Policy ID = %u",
                     system_event_record_data->event_data3);
-          
-          return (1);
-	}
-
-      if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
-	  && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_NODE_MANAGER_NM_SMART_CLST_SENSOR
-	  && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
-        {
-	  if (system_event_record_data->event_data3 == IPMI_OEM_INTEL_NODE_MANAGER_NM_SMART_CLST_SENSOR_EVENT_DATA3_EXTERNAL)
-	    snprintf (tmpbuf,
-		      tmpbuflen,
-		      "Source of assertion is external");
-	  else
-	    snprintf (tmpbuf,
-		      tmpbuflen,
-		      "Power Supply Status Number = %u",
-		      system_event_record_data->event_data3);
           
           return (1);
 	}

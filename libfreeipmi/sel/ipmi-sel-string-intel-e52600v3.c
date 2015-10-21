@@ -1173,6 +1173,8 @@ sel_string_output_intel_e52600v3_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 							   unsigned int *wlen,
 							   struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
+  int nmret;
+
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL);
@@ -1187,6 +1189,19 @@ sel_string_output_intel_e52600v3_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
   assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600KP
 	  || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
 	  || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT);
+
+  if ((nmret = sel_string_output_intel_node_manager_event_data3_discrete_oem (ctx,
+									      sel_entry,
+									      sel_record_type,
+									      tmpbuf,
+									      tmpbuflen,
+									      flags,
+									      wlen,
+									      system_event_record_data)) < 0)
+    return (-1);
+  
+  if (nmret)
+    return (1);
 
   /* Document "System Event Log Troubleshooting Guide for PCSD Platforms Based on Intel Xeon Processor E5 2600 V3 Product Families"
    *
