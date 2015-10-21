@@ -85,8 +85,7 @@ sel_string_output_dell_event_data1_class_sensor_specific_discrete (ipmi_sel_ctx_
   assert (system_event_record_data);
   assert (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC);
 
-  /* OEM Interpretation
-   *
+  /* 
    * From Dell Code
    *
    * Dell Poweredge R610
@@ -144,8 +143,7 @@ sel_string_output_dell_event_data1_class_oem (ipmi_sel_ctx_t ctx,
   assert (wlen);
   assert (system_event_record_data);
 
-  /* OEM Interpretation
-   *
+  /* 
    * From Dell Code
    *
    * Dell Poweredge R610
@@ -168,8 +166,7 @@ sel_string_output_dell_event_data1_class_oem (ipmi_sel_ctx_t ctx,
         return (1);
     }
 
-  /* OEM Interpretation
-   *
+  /* 
    * From Dell Code
    *
    * Dell Poweredge R720
@@ -190,8 +187,7 @@ sel_string_output_dell_event_data1_class_oem (ipmi_sel_ctx_t ctx,
         return (1);
     }
 
-  /* OEM Interpretation
-   *
+  /* 
    * From Dell Spec and Dell Code
    *
    * Dell Poweredge 2900
@@ -244,8 +240,7 @@ sel_string_output_dell_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data);
   assert (system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
 
-  /* OEM Interpretation
-   *
+  /* 
    * Dell Poweredge R610
    * Dell Poweredge R710
    * Dell Poweredge R720
@@ -521,8 +516,7 @@ sel_string_output_dell_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 
     }
 
-  /* OEM Interpretation
-   *
+  /* 
    * Dell Poweredge R720
    */
   if (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R720)
@@ -1115,8 +1109,7 @@ sel_string_output_dell_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 
   /* achu: I don't know what motherboards this applies to, probably very old ones */
 #if 0
-  /* OEM Interpretation   
-   *
+  /* 
    * From Dell Spec and Dell Code
    */
   if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
@@ -1192,8 +1185,7 @@ sel_string_output_dell_event_data2_class_oem (ipmi_sel_ctx_t ctx,
   assert (wlen);
   assert (system_event_record_data);
 
-  /* OEM Interpretation
-   *
+  /* 
    * From Dell Spec
    *
    * Dell Poweredge 2900
@@ -1255,8 +1247,7 @@ sel_string_output_dell_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data);
   assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
 
-  /* OEM Interpretation
-   *
+  /* 
    * Dell Poweredge R610
    * Dell Poweredge R710
    * Dell Poweredge R720
@@ -1336,8 +1327,7 @@ sel_string_output_dell_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
         }
     }
 
-  /* OEM Interpretation
-   *
+  /* 
    * Dell Poweredge R720
    */
   if (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R720)
@@ -1454,8 +1444,7 @@ sel_string_output_dell_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 
   /* achu: I don't know what motherboards this applies to */
 #if 0
-  /* OEM Interpretation
-   *
+  /* 
    * From Dell Spec and Dell Code
    */
   if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
@@ -1505,8 +1494,7 @@ sel_string_output_dell_event_data3_class_oem (ipmi_sel_ctx_t ctx,
   assert (wlen);
   assert (system_event_record_data);
 
-  /* OEM Interpretation
-   *
+  /* 
    * From Dell Spec
    *
    * Dell Poweredge 2900
@@ -1698,8 +1686,7 @@ sel_string_output_dell_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data);
   assert (oem_rv);
 
-  /* OEM Interpretation
-   *
+  /* 
    * Dell Poweredge R610
    * Dell Poweredge R710
    * Dell Poweredge R720
@@ -2132,8 +2119,7 @@ sel_string_output_dell_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 
     }
 
-  /* OEM Interpretation
-   *
+  /* 
    * Dell Poweredge R720
    */
   if (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R720)
@@ -2206,8 +2192,7 @@ sel_string_output_dell_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
   /* achu: I don't know what motherboards this applies to */
 #if 0
 
-  /* OEM Interpretation
-   *
+  /* 
    * From Dell Provided Source Code
    *
    * Specifically for Version Change Sensors with an event offset

@@ -100,8 +100,7 @@ sel_string_output_inventec_sensor_name (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data);
   assert (oem_rv);
 
-  /* OEM Interpretation
-   *
+  /* 
    * Inventec 5441/Dell Xanadu II
    * Inventec 5442/Dell Xanadu III
    */
@@ -181,8 +180,7 @@ sel_string_output_inventec_event_data1_class_oem (ipmi_sel_ctx_t ctx,
   assert (wlen);
   assert (system_event_record_data);
 
-  /* OEM Interpretation
-   *
+  /* 
    * Inventec 5441/Dell Xanadu II
    * Inventec 5442/Dell Xanadu III
    *
@@ -253,8 +251,7 @@ sel_string_output_inventec_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data);
   assert (system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
 
-  /* OEM Interpretation
-   *
+  /* 
    * Inventec 5441/Dell Xanadu II
    * Inventec 5442/Dell Xanadu III
    *
@@ -323,8 +320,7 @@ sel_string_output_inventec_event_data2_class_oem (ipmi_sel_ctx_t ctx,
   assert (wlen);
   assert (system_event_record_data);
 
-  /* OEM Interpretation
-   *
+  /* 
    * Inventec 5441/Dell Xanadu II
    * Inventec 5442/Dell Xanadu III
    */
@@ -392,8 +388,7 @@ sel_string_output_inventec_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data);
   assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
 
-  /* OEM Interpretation
-   *
+  /* 
    * Inventec 5441/Dell Xanadu II
    */
 
@@ -464,8 +459,7 @@ sel_string_output_inventec_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
         }
     }
 
-  /* OEM Interpretation
-   *
+  /* 
    * Inventec 5442/Dell Xanadu III
    */
 
@@ -549,8 +543,7 @@ sel_string_output_inventec_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
         }
     }
 
-  /* OEM Interpretation
-   *
+  /* 
    * Inventec 5441/Dell Xanadu II
    * Inventec 5442/Dell Xanadu III
    */
@@ -618,8 +611,7 @@ sel_string_output_inventec_event_data3_class_oem (ipmi_sel_ctx_t ctx,
   assert (wlen);
   assert (system_event_record_data);
 
-  /* OEM Interpretation
-   *
+  /* 
    * Inventec 5441/Dell Xanadu II
    * Inventec 5442/Dell Xanadu III
    */
@@ -692,8 +684,7 @@ sel_string_output_inventec_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data);
   assert (oem_rv);
 
-  /* OEM Interpretation
-   *
+  /* 
    * Inventec 5441/Dell Xanadu II
    * Inventec 5442/Dell Xanadu III
    */

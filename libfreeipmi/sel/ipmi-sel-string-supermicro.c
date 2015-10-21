@@ -96,9 +96,7 @@ sel_string_output_supermicro_event_data1_class_oem (ipmi_sel_ctx_t ctx,
   assert (wlen);
   assert (system_event_record_data);
 
-  /* OEM Interpretation
-   *
-   * 
+  /* 
    * Supermicro X7DBR-3 (X7DBR_3)     
    * Supermicro X7DB8       
    * Supermicro X8DTN       

@@ -96,8 +96,7 @@ sel_string_output_wistron_c6220_event_data1_class_sensor_specific_discrete (ipmi
   assert (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC);
   assert (ctx->product_id == IPMI_WISTRON_PRODUCT_ID_C6220);
 
-  /* OEM Interpretation
-   *
+  /* 
    * Wistron / Dell Poweredge C6220
    */
   if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_WISTRON_IOH_CORE_ERROR)

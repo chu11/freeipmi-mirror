@@ -131,8 +131,7 @@ sel_string_output_sun_event_data3_threshold_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data);
   assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
 
-  /* OEM Interpretation
-   *
+  /* 
    * Sun X4140
    */
 
@@ -176,8 +175,7 @@ sel_string_output_sun_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data);
   assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
 
-  /* OEM Interpretation
-   *
+  /* 
    * Sun X4140
    */
 

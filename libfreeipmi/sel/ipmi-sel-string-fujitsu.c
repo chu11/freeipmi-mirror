@@ -349,8 +349,7 @@ sel_string_output_fujitsu_event_data1_class_sensor_specific_discrete (ipmi_sel_c
   assert (system_event_record_data);
   assert (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC);
 
-  /* OEM Interpretation
-   *
+  /* 
    * Fujitsu iRMC / iRMC S2
    */
   if ((ctx->product_id >= IPMI_FUJITSU_PRODUCT_ID_MIN
@@ -416,8 +415,7 @@ sel_string_output_fujitsu_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data);
   assert (oem_rv);
 
-  /* OEM Interpretation
-   *
+  /* 
    * Fujitsu iRMC / iRMC S2
    */
   if ((ctx->product_id >= IPMI_FUJITSU_PRODUCT_ID_MIN
@@ -486,8 +484,7 @@ sel_string_output_fujitsu_oem_record_data (ipmi_sel_ctx_t ctx,
   assert (wlen);
   assert (oem_rv);
 
-  /* OEM Interpretation
-   *
+  /* 
    * Fujitsu iRMC / iRMC S2
    */
   if ((ctx->product_id >= IPMI_FUJITSU_PRODUCT_ID_MIN
@@ -550,8 +547,7 @@ sel_string_output_fujitsu_oem_string (ipmi_sel_ctx_t ctx,
   assert (wlen);
   assert (oem_rv);
   
-  /* OEM Interpretation
-   *
+  /* 
    * Fujitsu iRMC / iRMC S2
    */
   if ((ctx->product_id >= IPMI_FUJITSU_PRODUCT_ID_MIN

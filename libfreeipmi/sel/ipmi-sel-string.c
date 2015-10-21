@@ -1242,8 +1242,7 @@ _output_event_data1 (ipmi_sel_ctx_t ctx,
             }
         }
       
-      /* OEM Interpretation
-       *
+      /* 
        * From Dell Spec and Dell Code
        *
        * Dell Poweredge R610
