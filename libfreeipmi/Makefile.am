@@ -189,6 +189,18 @@ libfreeipmi_la_SOURCES = \
 	sel/ipmi-sel-string.h \
 	sel/ipmi-sel-string-dell.c \
 	sel/ipmi-sel-string-dell.h \
+	sel/ipmi-sel-string-dell-common.c \
+	sel/ipmi-sel-string-dell-common.h \
+	sel/ipmi-sel-string-dell-2900.c \
+	sel/ipmi-sel-string-dell-2900.h \
+	sel/ipmi-sel-string-dell-2950.c \
+	sel/ipmi-sel-string-dell-2950.h \
+	sel/ipmi-sel-string-dell-r610.c \
+	sel/ipmi-sel-string-dell-r610.h \
+	sel/ipmi-sel-string-dell-r710.c \
+	sel/ipmi-sel-string-dell-r710.h \
+	sel/ipmi-sel-string-dell-r720.c \
+	sel/ipmi-sel-string-dell-r720.h \
 	sel/ipmi-sel-string-fujitsu.c \
 	sel/ipmi-sel-string-fujitsu.h \
 	sel/ipmi-sel-string-fujitsu-irmc-common.c \
@@ -197,6 +209,14 @@ libfreeipmi_la_SOURCES = \
 	sel/ipmi-sel-string-intel.h \
 	sel/ipmi-sel-string-intel-node-manager.c \
 	sel/ipmi-sel-string-intel-node-manager.h \
+	sel/ipmi-sel-string-intel-e52600v3.c \
+	sel/ipmi-sel-string-intel-e52600v3.h \
+	sel/ipmi-sel-string-intel-s2600kp.c \
+	sel/ipmi-sel-string-intel-s2600kp.h \
+	sel/ipmi-sel-string-intel-s2600wt2.c \
+	sel/ipmi-sel-string-intel-s2600wt2.h \
+	sel/ipmi-sel-string-intel-s2600wtt.c \
+	sel/ipmi-sel-string-intel-s2600wtt.h \
 	sel/ipmi-sel-string-inventec.c \
 	sel/ipmi-sel-string-inventec.h \
 	sel/ipmi-sel-string-inventec-common.c \
