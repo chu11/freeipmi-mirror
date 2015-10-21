@@ -1296,11 +1296,11 @@ sel_string_output_intel_node_manager_event_data3_class_oem (ipmi_sel_ctx_t ctx,
 	    snprintf (tmpbuf,
 		      tmpbuflen,
 		      "Source of assertion is external");
-	    else
-	      snprintf (tmpbuf,
-			tmpbuflen,
-			"Power Supply Status Number = %u",
-			system_event_record_data->event_data3);
+	  else
+	    snprintf (tmpbuf,
+		      tmpbuflen,
+		      "Power Supply Status Number = %u",
+		      system_event_record_data->event_data3);
           
           return (1);
 	}

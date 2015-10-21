@@ -137,13 +137,13 @@ sel_string_output_intel_sensor_name (ipmi_sel_ctx_t ctx,
  */
 int
 sel_string_output_intel_event_data1_class_sensor_specific_discrete (ipmi_sel_ctx_t ctx,
-								   struct ipmi_sel_entry *sel_entry,
-								   uint8_t sel_record_type,
-								   char *tmpbuf,
-								   unsigned int tmpbuflen,
-								   unsigned int flags,
-								   unsigned int *wlen,
-								   struct ipmi_sel_system_event_record_data *system_event_record_data)
+								    struct ipmi_sel_entry *sel_entry,
+								    uint8_t sel_record_type,
+								    char *tmpbuf,
+								    unsigned int tmpbuflen,
+								    unsigned int flags,
+								    unsigned int *wlen,
+								    struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -2597,7 +2597,7 @@ _sel_string_output_intel_e52600v3_memory_dimm (ipmi_sel_ctx_t ctx,
 	}
       else
 	channel_str = "Indeterminate"; 
-     break;
+      break;
     case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_SOCKET_ID_CPU4:
       socket_id_str = "4";
       if (channel_valid)
@@ -6356,7 +6356,7 @@ sel_string_output_intel_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 	    (*oem_rv) = 0;
       
 	  return (1);
-      }
+	}
     }
 
   return (0);

@@ -209,6 +209,58 @@ libfreeipmi_la_SOURCES = \
 	sel/ipmi-sel-string-sun-x4140.h \
 	sel/ipmi-sel-string-supermicro.c \
 	sel/ipmi-sel-string-supermicro.h \
+	sel/ipmi-sel-string-supermicro-common.c \
+	sel/ipmi-sel-string-supermicro-common.h \
+	sel/ipmi-sel-string-supermicro-magnum-technologies-x8dtl.c \
+	sel/ipmi-sel-string-supermicro-magnum-technologies-x8dtl.h \
+	sel/ipmi-sel-string-supermicro-peppercon-x7db8.c \
+	sel/ipmi-sel-string-supermicro-peppercon-x7db8.h \
+	sel/ipmi-sel-string-supermicro-peppercon-x7dbr-3.c \
+	sel/ipmi-sel-string-supermicro-peppercon-x7dbr-3.h \
+	sel/ipmi-sel-string-supermicro-peppercon-x7sbi-ln4.c \
+	sel/ipmi-sel-string-supermicro-peppercon-x7sbi-ln4.h \
+	sel/ipmi-sel-string-supermicro-peppercon-x8dtn.c \
+	sel/ipmi-sel-string-supermicro-peppercon-x8dtn.h \
+	sel/ipmi-sel-string-supermicro-h8dg6.c \
+	sel/ipmi-sel-string-supermicro-h8dg6.h \
+	sel/ipmi-sel-string-supermicro-h8dgu-f.c \
+	sel/ipmi-sel-string-supermicro-h8dgu-f.h \
+	sel/ipmi-sel-string-supermicro-h8dgu.c \
+	sel/ipmi-sel-string-supermicro-h8dgu.h \
+	sel/ipmi-sel-string-supermicro-x8dt3-ln4f.c \
+	sel/ipmi-sel-string-supermicro-x8dt3-ln4f.h \
+	sel/ipmi-sel-string-supermicro-x8dtg.c \
+	sel/ipmi-sel-string-supermicro-x8dtg.h \
+	sel/ipmi-sel-string-supermicro-x8dth.c \
+	sel/ipmi-sel-string-supermicro-x8dth.h \
+	sel/ipmi-sel-string-supermicro-x8dtl-3f.c \
+	sel/ipmi-sel-string-supermicro-x8dtl-3f.h \
+	sel/ipmi-sel-string-supermicro-x8dtl.c \
+	sel/ipmi-sel-string-supermicro-x8dtl.h \
+	sel/ipmi-sel-string-supermicro-x8dtnplus-f.c \
+	sel/ipmi-sel-string-supermicro-x8dtnplus-f.h \
+	sel/ipmi-sel-string-supermicro-x8dtu-6plus.c \
+	sel/ipmi-sel-string-supermicro-x8dtu-6plus.h \
+	sel/ipmi-sel-string-supermicro-x8dtu.c \
+	sel/ipmi-sel-string-supermicro-x8dtu.h \
+	sel/ipmi-sel-string-supermicro-x8sie.c \
+	sel/ipmi-sel-string-supermicro-x8sie.h \
+	sel/ipmi-sel-string-supermicro-x8sil-f.c \
+	sel/ipmi-sel-string-supermicro-x8sil-f.h \
+	sel/ipmi-sel-string-supermicro-x9dri-f.c \
+	sel/ipmi-sel-string-supermicro-x9dri-f.h \
+	sel/ipmi-sel-string-supermicro-x9dri-ln4f-plus.c \
+	sel/ipmi-sel-string-supermicro-x9dri-ln4f-plus.h \
+	sel/ipmi-sel-string-supermicro-x9sca-f-o.c \
+	sel/ipmi-sel-string-supermicro-x9sca-f-o.h \
+	sel/ipmi-sel-string-supermicro-x9scl.c \
+	sel/ipmi-sel-string-supermicro-x9scl.h \
+	sel/ipmi-sel-string-supermicro-x9scm-iif.c \
+	sel/ipmi-sel-string-supermicro-x9scm-iif.h \
+	sel/ipmi-sel-string-supermicro-x9scm.c \
+	sel/ipmi-sel-string-supermicro-x9scm.h \
+	sel/ipmi-sel-string-supermicro-x9spu-f-o.c \
+	sel/ipmi-sel-string-supermicro-x9spu-f-o.h \
 	sel/ipmi-sel-string-wistron.c \
 	sel/ipmi-sel-string-wistron.h \
 	sel/ipmi-sel-string-wistron-c6220.c \

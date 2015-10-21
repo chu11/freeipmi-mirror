@@ -63,6 +63,31 @@
 #include "ipmi-sel-defs.h"
 #include "ipmi-sel-string.h"
 #include "ipmi-sel-string-supermicro.h"
+#include "ipmi-sel-string-supermicro-peppercon-x7dbr-3.h"
+#include "ipmi-sel-string-supermicro-peppercon-x7db8.h"
+#include "ipmi-sel-string-supermicro-peppercon-x8dtn.h"
+#include "ipmi-sel-string-supermicro-peppercon-x7sbi-ln4.h"
+#include "ipmi-sel-string-supermicro-x8dth.h"
+#include "ipmi-sel-string-supermicro-x8dtg.h"
+#include "ipmi-sel-string-supermicro-x8dtu.h"
+#include "ipmi-sel-string-supermicro-x8dt3-ln4f.h"
+#include "ipmi-sel-string-supermicro-x8dtu-6plus.h"
+#include "ipmi-sel-string-supermicro-x8dtl.h"
+#include "ipmi-sel-string-supermicro-x8dtl-3f.h"
+#include "ipmi-sel-string-supermicro-x8sil-f.h"
+#include "ipmi-sel-string-supermicro-x9scl.h"
+#include "ipmi-sel-string-supermicro-x9scm.h"
+#include "ipmi-sel-string-supermicro-x8dtnplus-f.h"
+#include "ipmi-sel-string-supermicro-x8sie.h"
+#include "ipmi-sel-string-supermicro-x9sca-f-o.h"
+#include "ipmi-sel-string-supermicro-h8dgu-f.h"
+#include "ipmi-sel-string-supermicro-h8dgu.h"                              
+#include "ipmi-sel-string-supermicro-h8dg6.h"
+#include "ipmi-sel-string-supermicro-x9dri-f.h"
+#include "ipmi-sel-string-supermicro-x9dri-ln4f-plus.h"
+#include "ipmi-sel-string-supermicro-x9spu-f-o.h"
+#include "ipmi-sel-string-supermicro-x9scm-iif.h"
+#include "ipmi-sel-string-supermicro-magnum-technologies-x8dtl.h"
 #include "ipmi-sel-trace.h"
 #include "ipmi-sel-util.h"
 
@@ -82,6 +107,8 @@ sel_string_output_supermicro_event_data1_class_oem (ipmi_sel_ctx_t ctx,
 						    unsigned int *wlen,
 						    struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
+  int ret;
+
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUPERMICRO
@@ -130,44 +157,414 @@ sel_string_output_supermicro_event_data1_class_oem (ipmi_sel_ctx_t ctx,
    * January/early February 2012.
    */
 
-  if (((ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_PEPPERCON
-	&& (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X7DBR_3
-	    || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X7DB8
-	    || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTN
-	    || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X7SBI_LN4))
-       || ((ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUPERMICRO
-	    || ctx->manufacturer_id ==  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND)
-	   && (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTH
-	       || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTG
-	       || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU
-	       || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DT3_LN4F
-	       || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU_6PLUS
-	       || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL
-	       || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL_3F
-	       || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8SIL_F
-	       || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCL
-	       || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCM
-	       || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTNPLUS_F
-	       || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8SIE
-	       || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCA_F_O
-	       || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8DGU_F
-	       || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8DGU
-	       || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8DG6
-	       || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9DRI_F
-	       || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9DRI_LN4F_PLUS
-	       || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SPU_F_O
-	       || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCM_IIF))
-       || (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_MAGNUM_TECHNOLOGIES
-	   && ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL))
-      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_SUPERMICRO_GENERIC
-      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP
-      && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP_SEL_OVERHEAT)
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_PEPPERCON)
     {
-      snprintf (tmpbuf,
-		tmpbuflen,
-		"Overheat");
+      if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_PEPPERCON_X7DBR_3)
+	{
+	  if ((ret = sel_string_output_supermicro_peppercon_x7dbr_3_event_data1_class_oem (ctx,
+											   sel_entry,
+											   sel_record_type,
+											   tmpbuf,
+											   tmpbuflen,
+											   flags,
+											   wlen,
+											   system_event_record_data)) < 0)
+	    return (-1);
+	  
+	  if (ret)
+	    return (1);
+	}
 
-      return (1);
+      if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_PEPPERCON_X7DB8)
+	{
+	  if ((ret = sel_string_output_supermicro_peppercon_x7db8_event_data1_class_oem (ctx,
+											 sel_entry,
+											 sel_record_type,
+											 tmpbuf,
+											 tmpbuflen,
+											 flags,
+											 wlen,
+											 system_event_record_data)) < 0)
+	    return (-1);
+	  
+	  if (ret)
+	    return (1);
+	}
+
+      if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_PEPPERCON_X8DTN)
+	{
+	  if ((ret = sel_string_output_supermicro_peppercon_x8dtn_event_data1_class_oem (ctx,
+											 sel_entry,
+											 sel_record_type,
+											 tmpbuf,
+											 tmpbuflen,
+											 flags,
+											 wlen,
+											 system_event_record_data)) < 0)
+	    return (-1);
+	  
+	  if (ret)
+	    return (1);
+	}
+
+      if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_PEPPERCON_X7SBI_LN4)
+	{
+	  if ((ret = sel_string_output_supermicro_peppercon_x7sbi_ln4_event_data1_class_oem (ctx,
+											     sel_entry,
+											     sel_record_type,
+											     tmpbuf,
+											     tmpbuflen,
+											     flags,
+											     wlen,
+											     system_event_record_data)) < 0)
+	    return (-1);
+	  
+	  if (ret)
+	    return (1);
+	}
+    }
+
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUPERMICRO
+      || ctx->manufacturer_id ==  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND)
+    {
+      if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTH)
+	{
+	  if ((ret = sel_string_output_supermicro_x8dth_event_data1_class_oem (ctx,
+									       sel_entry,
+									       sel_record_type,
+									       tmpbuf,
+									       tmpbuflen,
+									       flags,
+									       wlen,
+									       system_event_record_data)) < 0)
+	    return (-1);
+	  
+	  if (ret)
+	    return (1);
+	}
+
+      if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTG)
+	{
+	  if ((ret = sel_string_output_supermicro_x8dtg_event_data1_class_oem (ctx,
+									       sel_entry,
+									       sel_record_type,
+									       tmpbuf,
+									       tmpbuflen,
+									       flags,
+									       wlen,
+									       system_event_record_data)) < 0)
+	    return (-1);
+	  
+	  if (ret)
+	    return (1);
+	}
+
+      if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU)
+	{
+	  if ((ret = sel_string_output_supermicro_x8dtu_event_data1_class_oem (ctx,
+									       sel_entry,
+									       sel_record_type,
+									       tmpbuf,
+									       tmpbuflen,
+									       flags,
+									       wlen,
+									       system_event_record_data)) < 0)
+	    return (-1);
+	  
+	  if (ret)
+	    return (1);
+	}
+
+      if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DT3_LN4F)
+	{
+	  if ((ret = sel_string_output_supermicro_x8dt3_ln4f_event_data1_class_oem (ctx,
+										    sel_entry,
+										    sel_record_type,
+										    tmpbuf,
+										    tmpbuflen,
+										    flags,
+										    wlen,
+										    system_event_record_data)) < 0)
+	    return (-1);
+	  
+	  if (ret)
+	    return (1);
+	}
+
+      if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU_6PLUS)
+	{
+	  if ((ret = sel_string_output_supermicro_x8dtu_6plus_event_data1_class_oem (ctx,
+										     sel_entry,
+										     sel_record_type,
+										     tmpbuf,
+										     tmpbuflen,
+										     flags,
+										     wlen,
+										     system_event_record_data)) < 0)
+	    return (-1);
+	  
+	  if (ret)
+	    return (1);
+	}
+
+      if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL)
+	{
+	  if ((ret = sel_string_output_supermicro_x8dtl_event_data1_class_oem (ctx,
+									       sel_entry,
+									       sel_record_type,
+									       tmpbuf,
+									       tmpbuflen,
+									       flags,
+									       wlen,
+									       system_event_record_data)) < 0)
+	    return (-1);
+	  
+	  if (ret)
+	    return (1);
+	}
+
+      if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL_3F)
+	{
+	  if ((ret = sel_string_output_supermicro_x8dtl_3f_event_data1_class_oem (ctx,
+										  sel_entry,
+										  sel_record_type,
+										  tmpbuf,
+										  tmpbuflen,
+										  flags,
+										  wlen,
+										  system_event_record_data)) < 0)
+	    return (-1);
+	  
+	  if (ret)
+	    return (1);
+	}
+
+      if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8SIL_F)
+	{
+	  if ((ret = sel_string_output_supermicro_x8sil_f_event_data1_class_oem (ctx,
+										 sel_entry,
+										 sel_record_type,
+										 tmpbuf,
+										 tmpbuflen,
+										 flags,
+										 wlen,
+										 system_event_record_data)) < 0)
+	    return (-1);
+	  
+	  if (ret)
+	    return (1);
+	}
+
+      if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCL)
+	{
+	  if ((ret = sel_string_output_supermicro_x9scl_event_data1_class_oem (ctx,
+									       sel_entry,
+									       sel_record_type,
+									       tmpbuf,
+									       tmpbuflen,
+									       flags,
+									       wlen,
+									       system_event_record_data)) < 0)
+	    return (-1);
+	  
+	  if (ret)
+	    return (1);
+	}
+
+      if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCM)
+	{
+	  if ((ret = sel_string_output_supermicro_x9scm_event_data1_class_oem (ctx,
+									       sel_entry,
+									       sel_record_type,
+									       tmpbuf,
+									       tmpbuflen,
+									       flags,
+									       wlen,
+									       system_event_record_data)) < 0)
+	    return (-1);
+	  
+	  if (ret)
+	    return (1);
+	}
+
+      if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTNPLUS_F)
+	{
+	  if ((ret = sel_string_output_supermicro_x8dtnplus_f_event_data1_class_oem (ctx,
+										     sel_entry,
+										     sel_record_type,
+										     tmpbuf,
+										     tmpbuflen,
+										     flags,
+										     wlen,
+										     system_event_record_data)) < 0)
+	    return (-1);
+	  
+	  if (ret)
+	    return (1);
+	}
+
+      if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8SIE)
+	{
+	  if ((ret = sel_string_output_supermicro_x8sie_event_data1_class_oem (ctx,
+									       sel_entry,
+									       sel_record_type,
+									       tmpbuf,
+									       tmpbuflen,
+									       flags,
+									       wlen,
+									       system_event_record_data)) < 0)
+	    return (-1);
+	  
+	  if (ret)
+	    return (1);
+	}
+
+      if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCA_F_O)
+	{
+	  if ((ret = sel_string_output_supermicro_x9sca_f_o_event_data1_class_oem (ctx,
+										   sel_entry,
+										   sel_record_type,
+										   tmpbuf,
+										   tmpbuflen,
+										   flags,
+										   wlen,
+										   system_event_record_data)) < 0)
+	    return (-1);
+	  
+	  if (ret)
+	    return (1);
+	}
+
+      if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8DGU_F)
+	{
+	  if ((ret = sel_string_output_supermicro_h8dgu_f_event_data1_class_oem (ctx,
+										 sel_entry,
+										 sel_record_type,
+										 tmpbuf,
+										 tmpbuflen,
+										 flags,
+										 wlen,
+										 system_event_record_data)) < 0)
+	    return (-1);
+	  
+	  if (ret)
+	    return (1);
+	}
+
+      if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8DGU)
+	{
+	  if ((ret = sel_string_output_supermicro_h8dgu_event_data1_class_oem (ctx,
+									       sel_entry,
+									       sel_record_type,
+									       tmpbuf,
+									       tmpbuflen,
+									       flags,
+									       wlen,
+									       system_event_record_data)) < 0)
+	    return (-1);
+	  
+	  if (ret)
+	    return (1);
+	}
+
+      if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8DG6)
+	{
+	  if ((ret = sel_string_output_supermicro_h8dg6_event_data1_class_oem (ctx,
+									       sel_entry,
+									       sel_record_type,
+									       tmpbuf,
+									       tmpbuflen,
+									       flags,
+									       wlen,
+									       system_event_record_data)) < 0)
+	    return (-1);
+	  
+	  if (ret)
+	    return (1);
+	}
+
+      if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9DRI_F)
+	{
+	  if ((ret = sel_string_output_supermicro_x9dri_f_event_data1_class_oem (ctx,
+										 sel_entry,
+										 sel_record_type,
+										 tmpbuf,
+										 tmpbuflen,
+										 flags,
+										 wlen,
+										 system_event_record_data)) < 0)
+	    return (-1);
+	  
+	  if (ret)
+	    return (1);
+	}
+
+      if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9DRI_LN4F_PLUS)
+	{
+	  if ((ret = sel_string_output_supermicro_x9dri_ln4f_plus_event_data1_class_oem (ctx,
+											 sel_entry,
+											 sel_record_type,
+											 tmpbuf,
+											 tmpbuflen,
+											 flags,
+											 wlen,
+											 system_event_record_data)) < 0)
+	    return (-1);
+	  
+	  if (ret)
+	    return (1);
+	}
+
+      if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SPU_F_O)
+	{
+	  if ((ret = sel_string_output_supermicro_x9spu_f_o_event_data1_class_oem (ctx,
+										   sel_entry,
+										   sel_record_type,
+										   tmpbuf,
+										   tmpbuflen,
+										   flags,
+										   wlen,
+										   system_event_record_data)) < 0)
+	    return (-1);
+	  
+	  if (ret)
+	    return (1);
+	}
+
+      if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCM_IIF)
+	{
+	  if ((ret = sel_string_output_supermicro_x9scm_iif_event_data1_class_oem (ctx,
+										   sel_entry,
+										   sel_record_type,
+										   tmpbuf,
+										   tmpbuflen,
+										   flags,
+										   wlen,
+										   system_event_record_data)) < 0)
+	    return (-1);
+	  
+	  if (ret)
+	    return (1);
+	}
+    }
+
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_MAGNUM_TECHNOLOGIES)
+    {
+      if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_MAGNUM_TECHNOLOGIES_X8DTL)
+	{
+	  if ((ret = sel_string_output_supermicro_magnum_technologies_x8dtl_event_data1_class_oem (ctx,
+												   sel_entry,
+												   sel_record_type,
+												   tmpbuf,
+												   tmpbuflen,
+												   flags,
+												   wlen,
+												   system_event_record_data)) < 0)
+	    return (-1);
+	  
+	  if (ret)
+	    return (1);
+	}
     }
 
   return (0);

@@ -127,13 +127,13 @@ sel_string_output_linux_kernel_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
  */
 int
 sel_string_output_linux_kernel_oem_record_data (ipmi_sel_ctx_t ctx,
-					 struct ipmi_sel_entry *sel_entry,
-					 uint8_t sel_record_type,
-					 char *buf,
-					 unsigned int buflen,
-					 unsigned int flags,
-					 unsigned int *wlen,
-					 int *oem_rv)
+						struct ipmi_sel_entry *sel_entry,
+						uint8_t sel_record_type,
+						char *buf,
+						unsigned int buflen,
+						unsigned int flags,
+						unsigned int *wlen,
+						int *oem_rv)
 {
   char panic_str[LINUX_KERNEL_EVENT_BUFFER_LENGTH];
 
