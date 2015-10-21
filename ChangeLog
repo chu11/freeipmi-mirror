@@ -1,3 +1,13 @@
+2015-10-20 Albert Chu <chu11@llnl.gov>
+
+	Re-org of OEM code for future.
+
+	* libfreeipmi/include/freeipmi/sdr/,
+	libfreeipmi/include/freeipmi/record-format: Split OEM .h files
+	into vendor specific files.
+
+	* libfreeipmi/sdr, libfreeipmi/record-format: Split into specific vendor files.
+	
 2015-10-19 Albert Chu <chu11@llnl.gov>
 
 	Re-org of OEM code for future.

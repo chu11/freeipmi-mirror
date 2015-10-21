@@ -165,7 +165,7 @@ libfreeipmi_la_SOURCES = \
 	record-format/ipmi-fru-dimmspd-record-format.c \
 	record-format/ipmi-fru-information-record-format.c \
 	record-format/ipmi-sdr-record-format.c \
-	record-format/ipmi-sdr-oem-record-format.c \
+	record-format/ipmi-sdr-oem-intel-node-manager-record-format.c \
 	record-format/ipmi-sel-record-format.c \
 	sdr/ipmi-sdr.c \
 	sdr/ipmi-sdr-common.c \
@@ -174,7 +174,7 @@ libfreeipmi_la_SOURCES = \
 	sdr/ipmi-sdr-defs.h \
 	sdr/ipmi-sdr-cache-delete.c \
 	sdr/ipmi-sdr-cache-read.c \
-	sdr/ipmi-sdr-oem.c \
+	sdr/ipmi-sdr-oem-intel-node-manager.c \
 	sdr/ipmi-sdr-parse.c \
 	sdr/ipmi-sdr-parse-util.c \
 	sdr/ipmi-sdr-stats.c \

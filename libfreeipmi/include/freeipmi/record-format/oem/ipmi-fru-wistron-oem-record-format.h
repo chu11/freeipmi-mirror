@@ -16,17 +16,28 @@
  * 
  */
 
-#ifndef IPMI_FRU_OEM_RECORD_FORMAT_H
-#define IPMI_FRU_OEM_RECORD_FORMAT_H
+#ifndef IPMI_FRU_OEM_WISTRON_RECORD_FORMAT_H
+#define IPMI_FRU_OEM_WISTRON_RECORD_FORMAT_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <freeipmi/record-format/oem/ipmi-fru-wistron-oem-record-format.h>
+#include <freeipmi/fiid/fiid.h>
+
+/* 
+ * see freeipmi/templates/ for template definitions 
+ */
+
+/*
+ * Wistron / Dell Poweredge C6220
+ */
+
+/* achu: not official names, named based on use context */
+#define IPMI_FRU_OEM_WISTRON_PROPRIETARY_STRING 0xC0
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* IPMI_FRU_OEM_RECORD_FORMAT_H */
+#endif /* IPMI_FRU_OEM_WISTRON_RECORD_FORMAT_H */

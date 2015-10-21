@@ -68,8 +68,14 @@ nobase_include_HEADERS = \
 	freeipmi/record-format/ipmi-sdr-oem-record-format.h \
 	freeipmi/record-format/ipmi-sel-record-format.h \
 	freeipmi/record-format/ipmi-sel-oem-record-format.h \
+	freeipmi/record-format/oem/ipmi-fru-wistron-oem-record-format.h \
+	freeipmi/record-format/oem/ipmi-sdr-oem-intel-node-manager-record-format.h \
+	freeipmi/record-format/oem/ipmi-sdr-oem-intel-record-format.h \
+	freeipmi/record-format/oem/ipmi-sel-oem-intel-record-format.h \
+	freeipmi/record-format/oem/ipmi-sel-oem-linux-kernel-record-format.h \
 	freeipmi/sdr/ipmi-sdr.h \
 	freeipmi/sdr/ipmi-sdr-oem.h \
+	freeipmi/sdr/oem/ipmi-sdr-oem-intel-node-manager.h \
 	freeipmi/sel/ipmi-sel.h \
 	freeipmi/sensor-read/ipmi-sensor-read.h \
 	freeipmi/spec/ipmi-authentication-type-spec.h \

@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef IPMI_SDR_OEM_RECORD_FORMAT_H
-#define IPMI_SDR_OEM_RECORD_FORMAT_H
+#ifndef IPMI_SDR_OEM_INTEL_NODE_MANAGER_RECORD_FORMAT_H
+#define IPMI_SDR_OEM_INTEL_NODE_MANAGER_RECORD_FORMAT_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -25,11 +25,34 @@ extern "C" {
 
 #include <freeipmi/fiid/fiid.h>
 
-#include <freeipmi/record-format/oem/ipmi-sdr-oem-intel-node-manager-record-format.h>
-#include <freeipmi/record-format/oem/ipmi-sdr-oem-intel-record-format.h>
+/* 
+ * see freeipmi/templates/ for template definitions 
+ */
+
+/*
+ * Intel Node Manager
+ *
+ * For Intel Chips, not just Intel Motherboards.  Confirmed for:
+ *
+ * Intel S5500WB/Penguin Computing Relion 700
+ * Intel S2600JF/Appro 512X
+ * Intel S2600KP
+ * Intel S2600WT2
+ * Intel S2600WTT
+ * Inventec 5441/Dell Xanadu II
+ * Inventec 5442/Dell Xanadu III
+ * Quanta S99Q/Dell FS12-TY
+ * Quanta QSSC-S4R/Appro GB812X-CN
+ */
+
+#define IPMI_SDR_OEM_INTEL_NODE_MANAGER_RECORD_SUBTYPE_NM_DISCOVERY 0x0D
+
+#define IPMI_SDR_OEM_INTEL_NODE_MANAGER_DISCOVERY_VERSION           0x01
+
+extern fiid_template_t tmpl_sdr_oem_intel_node_manager_record;
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* IPMI_SDR_OEM_RECORD_FORMAT_H */
+#endif /* IPMI_SDR_OEM_INTEL_NODE_MANAGER_RECORD_FORMAT_H */
