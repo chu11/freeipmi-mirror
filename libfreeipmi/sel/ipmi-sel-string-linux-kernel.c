@@ -32,7 +32,7 @@
 
 #include "freeipmi/cmds/ipmi-sel-cmds.h"
 #include "freeipmi/record-format/ipmi-sel-record-format.h"
-#include "freeipmi/record-format/ipmi-sel-oem-record-format.h"
+#include "freeipmi/record-format/oem/ipmi-sel-oem-linux-kernel-record-format.h"
 #include "freeipmi/spec/ipmi-event-reading-type-code-spec.h"
 #include "freeipmi/spec/ipmi-sensor-and-event-code-tables-spec.h"
 #include "freeipmi/spec/ipmi-sensor-types-spec.h"

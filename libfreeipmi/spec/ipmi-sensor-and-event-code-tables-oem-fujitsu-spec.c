@@ -29,7 +29,7 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "freeipmi/spec/ipmi-sensor-and-event-code-tables-oem-spec.h"
+#include "freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-fujitsu-spec.h"
 #include "freeipmi/fiid/fiid.h"
 
 #include "libcommon/ipmi-fiid-util.h"

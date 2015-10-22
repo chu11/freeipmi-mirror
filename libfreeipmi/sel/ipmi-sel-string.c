@@ -45,7 +45,7 @@
 #include "freeipmi/interpret/ipmi-interpret.h"
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
 #include "freeipmi/record-format/ipmi-sel-record-format.h"
-#include "freeipmi/record-format/ipmi-sel-oem-record-format.h"
+#include "freeipmi/record-format/oem/ipmi-sel-oem-linux-kernel-record-format.h"
 #include "freeipmi/sdr/ipmi-sdr.h"
 #include "freeipmi/spec/ipmi-event-reading-type-code-spec.h"
 #include "freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h"

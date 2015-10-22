@@ -24,7 +24,7 @@
 #include <stdlib.h>
 
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
-#include "freeipmi/record-format/ipmi-sdr-oem-record-format.h"
+#include "freeipmi/record-format/oem/ipmi-sdr-oem-intel-node-manager-record-format.h"
 #include "freeipmi/fiid/fiid.h"
 
 #include "freeipmi-portability.h"

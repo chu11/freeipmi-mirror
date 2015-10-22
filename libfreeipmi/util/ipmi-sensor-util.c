@@ -29,10 +29,10 @@
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
 #include "freeipmi/spec/ipmi-event-reading-type-code-spec.h"
 #include "freeipmi/spec/ipmi-sensor-types-spec.h"
-#include "freeipmi/spec/ipmi-sensor-types-oem-spec.h"
 #include "freeipmi/spec/ipmi-sensor-units-spec.h"
 #include "freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h"
 #include "freeipmi/spec/ipmi-product-id-spec.h"
+#include "freeipmi/spec/oem/ipmi-sensor-types-oem-fujitsu-spec.h"
 
 #include "libcommon/ipmi-trace.h"
 

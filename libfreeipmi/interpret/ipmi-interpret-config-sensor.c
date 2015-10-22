@@ -54,13 +54,15 @@
 
 #include "freeipmi/interpret/ipmi-interpret.h"
 #include "freeipmi/spec/ipmi-event-reading-type-code-spec.h"
-#include "freeipmi/spec/ipmi-event-reading-type-code-oem-spec.h"
 #include "freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h"
 #include "freeipmi/spec/ipmi-product-id-spec.h"
 #include "freeipmi/spec/ipmi-sensor-types-spec.h"
 #include "freeipmi/spec/ipmi-sensor-types-oem-spec.h"
 #include "freeipmi/spec/ipmi-sensor-and-event-code-tables-spec.h"
-#include "freeipmi/spec/ipmi-sensor-and-event-code-tables-oem-spec.h"
+#include "freeipmi/spec/oem/ipmi-event-reading-type-code-oem-dell-spec.h"
+#include "freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-dell-spec.h"
+#include "freeipmi/spec/oem/ipmi-event-reading-type-code-oem-supermicro-spec.h"
+#include "freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-supermicro-spec.h"
 
 #include "ipmi-interpret-defs.h"
 #include "ipmi-interpret-trace.h"

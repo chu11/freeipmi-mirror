@@ -32,7 +32,6 @@
 
 #include "freeipmi/util/ipmi-device-types-util.h"
 #include "freeipmi/spec/ipmi-device-types-spec.h"
-#include "freeipmi/spec/ipmi-device-types-oem-spec.h"
 #include "freeipmi/fiid/fiid.h"
 
 #include "libcommon/ipmi-fiid-util.h"

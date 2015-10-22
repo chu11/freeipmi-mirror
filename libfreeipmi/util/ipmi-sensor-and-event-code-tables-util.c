@@ -32,14 +32,34 @@
 
 #include "freeipmi/util/ipmi-sensor-and-event-code-tables-util.h"
 #include "freeipmi/spec/ipmi-event-reading-type-code-spec.h"
-#include "freeipmi/spec/ipmi-event-reading-type-code-oem-spec.h"
 #include "freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h"
 #include "freeipmi/spec/ipmi-product-id-spec.h"
 #include "freeipmi/spec/ipmi-sensor-and-event-code-tables-spec.h"
-#include "freeipmi/spec/ipmi-sensor-and-event-code-tables-oem-spec.h"
-#include "freeipmi/spec/ipmi-sensor-numbers-oem-spec.h"
 #include "freeipmi/spec/ipmi-sensor-types-spec.h"
-#include "freeipmi/spec/ipmi-sensor-types-oem-spec.h"
+
+#include "freeipmi/spec/oem/ipmi-event-reading-type-code-oem-dell-spec.h"
+#include "freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-dell-spec.h"
+#include "freeipmi/spec/oem/ipmi-sensor-types-oem-dell-spec.h"
+
+#include "freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-fujitsu-spec.h"
+#include "freeipmi/spec/oem/ipmi-sensor-types-oem-fujitsu-spec.h"
+
+#include "freeipmi/spec/oem/ipmi-event-reading-type-code-oem-hp-spec.h"
+#include "freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-hp-spec.h"
+#include "freeipmi/spec/oem/ipmi-sensor-types-oem-hp-spec.h"
+
+#include "freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-spec.h"
+#include "freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-intel-spec.h"
+#include "freeipmi/spec/oem/ipmi-sensor-numbers-oem-intel-spec.h"
+#include "freeipmi/spec/oem/ipmi-sensor-types-oem-intel-spec.h"
+
+#include "freeipmi/spec/oem/ipmi-event-reading-type-code-oem-supermicro-spec.h"
+#include "freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-supermicro-spec.h"
+#include "freeipmi/spec/oem/ipmi-sensor-types-oem-supermicro-spec.h"
+
+#include "freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-wistron-spec.h"
+#include "freeipmi/spec/oem/ipmi-sensor-types-oem-wistron-spec.h"
+
 #include "freeipmi/util/ipmi-sensor-util.h"
 #include "freeipmi/fiid/fiid.h"
 

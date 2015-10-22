@@ -1,6 +1,6 @@
 2015-10-21 Albert Chu <chu11@llnl.gov>
 
-	* Minor bug fixes and distcheck fixes.
+	* Various minor bug fixes, cleanup, and distcheck fixes.
 	
 2015-10-20 Albert Chu <chu11@llnl.gov>
 

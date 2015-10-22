@@ -32,11 +32,11 @@
 #include <errno.h>
 
 #include "freeipmi/sdr/ipmi-sdr.h"
-#include "freeipmi/sdr/ipmi-sdr-oem.h"
+#include "freeipmi/sdr/oem/ipmi-sdr-oem-intel-node-manager.h"
 
 #include "freeipmi/fiid/fiid.h"
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
-#include "freeipmi/record-format/ipmi-sdr-oem-record-format.h"
+#include "freeipmi/record-format/oem/ipmi-sdr-oem-intel-node-manager-record-format.h"
 #include "freeipmi/spec/ipmi-event-reading-type-code-oem-spec.h"
 
 #include "ipmi-sdr-common.h"
