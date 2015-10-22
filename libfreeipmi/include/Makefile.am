@@ -144,6 +144,8 @@ nobase_include_HEADERS = \
 	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-spec.h \
 	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-inventec-spec.h \
 	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-supermicro-spec.h \
+	freeipmi/spec/oem/ipmi-lan-configuration-parameters-oem-inventec-spec.h \
+	freeipmi/spec/oem/ipmi-lan-configuration-parameters-oem-wistron-spec.h \
 	freeipmi/spec/oem/ipmi-netfn-oem-dell-spec.h \
 	freeipmi/spec/oem/ipmi-netfn-oem-fujitsu-spec.h \
 	freeipmi/spec/oem/ipmi-netfn-oem-ibm-spec.h \

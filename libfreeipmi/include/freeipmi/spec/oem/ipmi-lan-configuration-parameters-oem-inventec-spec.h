@@ -16,18 +16,26 @@
  * 
  */
 
-#ifndef IPMI_LAN_CONFIGURATION_PARAMETERS_OEM_SPEC_H
-#define IPMI_LAN_CONFIGURATION_PARAMETERS_OEM_SPEC_H
+#ifndef IPMI_LAN_CONFIGURATION_PARAMETERS_OEM_INVENTEC_SPEC_H
+#define IPMI_LAN_CONFIGURATION_PARAMETERS_OEM_INVENTEC_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <freeipmi/spec/oem/ipmi-lan-configuration-parameters-oem-inventec-spec.h>
-#include <freeipmi/spec/oem/ipmi-lan-configuration-parameters-oem-wistron-spec.h>
+/*
+ * Inventec 5441/Dell Xanadu II
+ * Inventec 5442/Dell Xanadu III
+ */
+
+#define IPMI_LAN_CONFIGURATION_PARAMETER_OEM_INVENTEC_DHCP_RETRY 192
+
+/* w/ IPMI_LAN_CONFIGURATION_PARAMETER_OEM_INVENTEC_DHCP_RETRY */
+#define IPMI_LAN_CONFIGURATION_PARAMETER_OEM_INVENTEC_DHCP_RETRY_NO_RETRIES       0x00
+#define IPMI_LAN_CONFIGURATION_PARAMETER_OEM_INVENTEC_DHCP_RETRY_INDEFINITE_RETRY 0xFF
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* IPMI_LAN_CONFIGURATION_PARAMETERS_SPEC_H */
+#endif /* IPMI_LAN_CONFIGURATION_PARAMETERS_INVENTEC_SPEC_H */

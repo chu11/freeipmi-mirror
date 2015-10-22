@@ -27,8 +27,10 @@
 #include "freeipmi/cmds/ipmi-oem-intel-node-manager-cmds.h"
 #include "freeipmi/fiid/fiid.h"
 #include "freeipmi/spec/ipmi-channel-spec.h"
-#include "freeipmi/spec/ipmi-cmd-oem-spec.h"
+#include "freeipmi/spec/oem/ipmi-cmd-oem-intel-node-manager-spec.h"
 #include "freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h"
+
+#include "freeipmi/spec/oem/ipmi-cmd-oem-intel-node-manager-spec.h"
 
 #include "libcommon/ipmi-fiid-util.h"
 #include "libcommon/ipmi-fill-util.h"
