@@ -16,21 +16,17 @@
  * 
  */
 
-#ifndef IPMI_SLAVE_ADDRESS_OEM_SPEC_H
-#define IPMI_SLAVE_ADDRESS_OEM_SPEC_H
+#ifndef IPMI_SLAVE_ADDRESS_OEM_LINUX_KERNEL_SPEC_H
+#define IPMI_SLAVE_ADDRESS_OEM_LINUX_KERNEL_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <freeipmi/spec/oem/ipmi-slave-address-oem-intel-spec.h>
-#include <freeipmi/spec/oem/ipmi-slave-address-oem-inventec-spec.h>
-#include <freeipmi/spec/oem/ipmi-slave-address-oem-linux-kernel-spec.h>
-#include <freeipmi/spec/oem/ipmi-slave-address-oem-quanta-spec.h>
-#include <freeipmi/spec/oem/ipmi-slave-address-oem-wistron-spec.h>
+#define IPMI_SLAVE_ADDRESS_OEM_LINUX_KERNEL 0x21
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* IPMI_SLAVE_ADDRESS_OEM_SPEC_H */
+#endif /* IPMI_SLAVE_ADDRESS_OEM_LINUX_KERNEL_SPEC_H */

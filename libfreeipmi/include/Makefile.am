@@ -188,6 +188,7 @@ nobase_include_HEADERS = \
 	freeipmi/spec/oem/ipmi-sensor-types-oem-wistron-spec.h \
 	freeipmi/spec/oem/ipmi-slave-address-oem-intel-spec.h \
 	freeipmi/spec/oem/ipmi-slave-address-oem-inventec-spec.h \
+	freeipmi/spec/oem/ipmi-slave-address-oem-linux-kernel-spec.h \
 	freeipmi/spec/oem/ipmi-slave-address-oem-quanta-spec.h \
 	freeipmi/spec/oem/ipmi-slave-address-oem-wistron-spec.h \
 	freeipmi/spec/oem/ipmi-sol-configuration-parameters-oem-inventec-spec.h \

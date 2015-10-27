@@ -4,6 +4,14 @@
 
 	* freeipmi.spec.in: Update for new header directories.
 
+	* libfreeipmi/freeipmi/spec/oem/ipmi-slave-address-oem-linux-kernel-spec.h: New file.
+
+	* libfreeipmi/include/Makefile.am,
+	libfreeipmi/include/freeipmi/freeipmi.h.in,
+	libfreeipmi/include/freeipmi/spec/ipmi-slave-address-spec.h,
+	libfreeipmi/include/freeipmi/spec/ipmi-slave-address-oem-spec.h:
+	Update for new file.
+
 2015-10-21 Albert Chu <chu11@llnl.gov>
 
 	* Various minor bug fixes, cleanup, and distcheck fixes.
