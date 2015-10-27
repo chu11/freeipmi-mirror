@@ -16,8 +16,8 @@
  * 
  */
 
-#ifndef IPMI_SDR_OEM_RECORD_FORMAT_TEMPLATES_H
-#define IPMI_SDR_OEM_RECORD_FORMAT_TEMPLATES_H
+#ifndef IPMI_SDR_OEM_INTEL_NODE_MANAGER_RECORD_FORMAT_TEMPLATES_H
+#define IPMI_SDR_OEM_INTEL_NODE_MANAGER_RECORD_FORMAT_TEMPLATES_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -55,10 +55,6 @@ field flags - flags indicating qualities of the field.  The following
                               "sufficient" to make a packet/record valid
                               and not malformed, but not necessarily a
                               complete packet/record.
-
-/*******************************************
- * Intel                                   *
- *******************************************/
 
 /*
  * Intel Node Manager
@@ -111,4 +107,4 @@ FIID Template: tmpl_sdr_oem_intel_node_manager_record
 }
 #endif
 
-#endif /* IPMI_SDR_OEM_RECORD_FORMAT_TEMPLATES_H */
+#endif /* IPMI_SDR_OEM_INTEL_NODE_MANAGER_RECORD_FORMAT_TEMPLATES_H */

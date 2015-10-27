@@ -222,8 +222,8 @@ nobase_include_HEADERS = \
 	freeipmi/templates/ipmi-cipher-suite-record-format-templates.h \
 	freeipmi/templates/ipmi-fru-information-record-format-templates.h \
 	freeipmi/templates/ipmi-sdr-record-format-templates.h \
-	freeipmi/templates/ipmi-sdr-oem-record-format-templates.h \
 	freeipmi/templates/ipmi-sel-record-format-templates.h \
+	freeipmi/templates/oem/ipmi-sdr-oem-intel-node-manager-record-format-templates.h \
 	freeipmi/util/ipmi-channel-util.h \
 	freeipmi/util/ipmi-cipher-suite-util.h \
 	freeipmi/util/ipmi-device-types-util.h \
