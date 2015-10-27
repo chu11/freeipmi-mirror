@@ -373,6 +373,7 @@ fi
 %dir %{_includedir}/freeipmi/spec
 %dir %{_includedir}/freeipmi/spec/oem
 %dir %{_includedir}/freeipmi/templates
+%dir %{_includedir}/freeipmi/templates/oem
 %dir %{_includedir}/freeipmi/util
 %{_includedir}/ipmiconsole.h
 %{_includedir}/ipmidetect.h
@@ -389,11 +390,15 @@ fi
 %{_includedir}/freeipmi/locate/*.h
 %{_includedir}/freeipmi/payload/*.h
 %{_includedir}/freeipmi/record-format/*.h
+%{_includedir}/freeipmi/record-format/oem/*.h
 %{_includedir}/freeipmi/sdr/*.h
+%{_includedir}/freeipmi/sdr/oem/*.h
 %{_includedir}/freeipmi/sel/*.h
 %{_includedir}/freeipmi/sensor-read/*.h
 %{_includedir}/freeipmi/spec/*.h
+%{_includedir}/freeipmi/spec/oem/*.h
 %{_includedir}/freeipmi/templates/*.h
+%{_includedir}/freeipmi/templates/oem/*.h
 %{_includedir}/freeipmi/util/*.h
 %{_mandir}/man3/*
 
@@ -427,6 +432,9 @@ fi
 %dir %{_localstatedir}/cache/ipmiseld
 
 %changelog
+* Tue Oct 27 2015 Albert Chu <chu11@llnl.gov> 1.5.0
+- Add new oem headers.
+
 * Mon Aug 26 2013 Albert Chu <chu11@llnl.gov> 1.4.1
 - Add ipmi-config tool and manpage
 

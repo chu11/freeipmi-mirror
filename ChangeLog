@@ -1,3 +1,9 @@
+2015-10-27 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/templates/: Move some files to oem subdirectory.
+
+	* freeipmi.spec.in: Update for new header directories.
+
 2015-10-21 Albert Chu <chu11@llnl.gov>
 
 	* Various minor bug fixes, cleanup, and distcheck fixes.
