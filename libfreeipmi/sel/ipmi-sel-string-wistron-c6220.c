@@ -51,6 +51,7 @@
 #include "freeipmi/spec/oem/ipmi-sensor-numbers-oem-wistron-spec.h"
 #include "freeipmi/spec/oem/ipmi-sensor-types-oem-wistron-spec.h"
 #include "freeipmi/spec/oem/ipmi-slave-address-oem-wistron-spec.h"
+#include "freeipmi/util/ipmi-sensor-and-event-code-tables-util.h"
 
 #include "ipmi-sel-common.h"
 #include "ipmi-sel-defs.h"

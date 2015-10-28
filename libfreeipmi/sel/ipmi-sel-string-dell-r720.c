@@ -41,6 +41,7 @@
 #include "freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-dell-spec.h"
 #include "freeipmi/spec/oem/ipmi-sensor-numbers-oem-dell-spec.h"
 #include "freeipmi/spec/oem/ipmi-sensor-types-oem-dell-spec.h"
+#include "freeipmi/util/ipmi-sensor-and-event-code-tables-util.h"
 
 #include "ipmi-sel-common.h"
 #include "ipmi-sel-defs.h"

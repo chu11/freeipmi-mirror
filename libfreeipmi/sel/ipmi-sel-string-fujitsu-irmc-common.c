@@ -40,6 +40,7 @@
 #include "freeipmi/spec/oem/ipmi-cmd-oem-fujitsu-spec.h"
 #include "freeipmi/spec/oem/ipmi-oem-fujitsu-spec.h"
 #include "freeipmi/spec/oem/ipmi-sensor-types-oem-fujitsu-spec.h"
+#include "freeipmi/util/ipmi-sensor-and-event-code-tables-util.h"
 
 #include "ipmi-sel-common.h"
 #include "ipmi-sel-defs.h"

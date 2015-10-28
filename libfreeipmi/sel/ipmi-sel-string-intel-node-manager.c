@@ -42,6 +42,7 @@
 #include "freeipmi/sel/ipmi-sel.h"
 
 #include "freeipmi/cmds/ipmi-oem-intel-node-manager-cmds.h"
+#include "freeipmi/sdr/oem/ipmi-sdr-oem-intel-node-manager.h"
 #include "freeipmi/record-format/ipmi-sdr-record-format.h"
 #include "freeipmi/record-format/ipmi-sel-record-format.h"
 #include "freeipmi/spec/ipmi-event-reading-type-code-spec.h"
