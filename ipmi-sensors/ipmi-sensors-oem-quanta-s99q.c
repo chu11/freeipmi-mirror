@@ -31,7 +31,6 @@
 #include <freeipmi/freeipmi.h>
 
 #include "ipmi-sensors.h"
-#include "ipmi-sensors-oem-quanta.h"
 #include "ipmi-sensors-oem-quanta-s99q.h"
 #include "ipmi-sensors-oem-intel-node-manager.h"
 

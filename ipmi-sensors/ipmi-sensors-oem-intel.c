@@ -36,7 +36,6 @@
 #include "ipmi-sensors-oem-intel-s2600jf.h"
 #include "ipmi-sensors-oem-intel-quanta-qssc-s4r.h"
 #include "ipmi-sensors-oem-intel-node-manager.h"
-#include "ipmi-sensors-output-common.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"

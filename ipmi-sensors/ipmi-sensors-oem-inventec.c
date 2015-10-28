@@ -34,7 +34,6 @@
 #include "ipmi-sensors-oem-inventec.h"
 #include "ipmi-sensors-oem-inventec-5441.h"
 #include "ipmi-sensors-oem-inventec-5442.h"
-#include "ipmi-sensors-oem-intel-node-manager.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"

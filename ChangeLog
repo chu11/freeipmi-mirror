@@ -1,3 +1,7 @@
+2015-10-28 Albert Chu <chu11@llnl.gov>
+
+	* Various code cleanup.
+	
 2015-10-27 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/templates/: Move some files to oem subdirectory.

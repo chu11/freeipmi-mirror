@@ -33,7 +33,6 @@
 #include "ipmi-sensors.h"
 #include "ipmi-sensors-oem-wistron.h"
 #include "ipmi-sensors-oem-wistron-c6220.h"
-#include "ipmi-sensors-oem-intel-node-manager.h"
 
 #include "freeipmi-portability.h"
 #include "pstdout.h"

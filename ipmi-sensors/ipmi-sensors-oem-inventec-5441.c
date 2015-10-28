@@ -31,7 +31,6 @@
 #include <freeipmi/freeipmi.h>
 
 #include "ipmi-sensors.h"
-#include "ipmi-sensors-oem-inventec.h"
 #include "ipmi-sensors-oem-inventec-5441.h"
 #include "ipmi-sensors-oem-intel-node-manager.h"
 
