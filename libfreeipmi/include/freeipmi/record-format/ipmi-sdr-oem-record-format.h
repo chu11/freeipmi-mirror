@@ -23,7 +23,7 @@
 extern "C" {
 #endif
 
-#include <freeipmi/fiid/fiid.h>
+#warning ipmi-sdr-oem-record-format.h header file is deprecated
 
 #include <freeipmi/record-format/oem/ipmi-sdr-oem-intel-node-manager-record-format.h>
 #include <freeipmi/record-format/oem/ipmi-sdr-oem-intel-record-format.h>

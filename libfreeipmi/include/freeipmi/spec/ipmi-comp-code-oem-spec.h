@@ -23,6 +23,8 @@
 extern "C" {
 #endif
 
+#warning ipmi-comp-code-oem-spec.h header file is deprecated
+
 #include <freeipmi/spec/oem/ipmi-comp-code-oem-dell-spec.h>
 #include <freeipmi/spec/oem/ipmi-comp-code-oem-fujitsu-spec.h>
 #include <freeipmi/spec/oem/ipmi-comp-code-oem-intel-node-manager-spec.h>

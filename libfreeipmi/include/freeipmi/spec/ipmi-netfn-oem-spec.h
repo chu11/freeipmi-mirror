@@ -23,6 +23,8 @@
 extern "C" {
 #endif
 
+#warning ipmi-netfn-oem-spec.h header file is deprecated
+
 #include <freeipmi/spec/oem/ipmi-netfn-oem-dell-spec.h>
 #include <freeipmi/spec/oem/ipmi-netfn-oem-fujitsu-spec.h>
 #include <freeipmi/spec/oem/ipmi-netfn-oem-ibm-spec.h>

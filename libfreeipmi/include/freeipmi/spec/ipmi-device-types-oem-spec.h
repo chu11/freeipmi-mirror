@@ -23,6 +23,8 @@
 extern "C" {
 #endif
 
+#warning ipmi-device-types-oem-spec.h header file is deprecated
+
 #ifdef __cplusplus
 }
 #endif

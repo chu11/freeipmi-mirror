@@ -23,6 +23,8 @@
 extern "C" {
 #endif
 
+#warning ipmi-sdr-oem.h header file is deprecated
+
 #include <freeipmi/sdr/oem/ipmi-sdr-oem-intel-node-manager.h>
 
 #ifdef __cplusplus

@@ -23,8 +23,6 @@
 extern "C" {
 #endif
 
-#include <freeipmi/fiid/fiid.h>
-
 /* 
  * see freeipmi/templates/ for template definitions 
  */

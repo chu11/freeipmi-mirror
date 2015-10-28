@@ -1,5 +1,7 @@
 2015-10-28 Albert Chu <chu11@llnl.gov>
 
+	* Add warnings to deprecated header files.
+
 	* Various code cleanup.
 	
 2015-10-27 Albert Chu <chu11@llnl.gov>

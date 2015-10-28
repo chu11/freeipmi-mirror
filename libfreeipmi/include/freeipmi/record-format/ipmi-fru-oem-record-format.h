@@ -23,6 +23,8 @@
 extern "C" {
 #endif
 
+#warning ipmi-fru-oem-record-format.h header file is deprecated
+
 #include <freeipmi/record-format/oem/ipmi-fru-wistron-oem-record-format.h>
 
 #ifdef __cplusplus

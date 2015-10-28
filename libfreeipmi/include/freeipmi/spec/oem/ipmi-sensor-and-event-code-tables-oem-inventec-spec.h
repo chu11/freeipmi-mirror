@@ -23,8 +23,6 @@
 extern "C" {
 #endif
 
-#include <stdint.h>
-
 /*
  * Inventec 5441/Dell Xanadu II
  * Inventec 5442/Dell Xanadu III

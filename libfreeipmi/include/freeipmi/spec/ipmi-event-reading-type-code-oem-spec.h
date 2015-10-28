@@ -23,6 +23,8 @@
 extern "C" {
 #endif
 
+#warning ipmi-event-reading-type-code-oem-spec.h header file is deprecated
+
 #include <freeipmi/spec/oem/ipmi-event-reading-type-code-oem-dell-spec.h>
 #include <freeipmi/spec/oem/ipmi-event-reading-type-code-oem-hp-spec.h>
 #include <freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-node-manager-spec.h>

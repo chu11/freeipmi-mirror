@@ -23,6 +23,8 @@
 extern "C" {
 #endif
 
+#warning ipmi-sel-oem-record-format.h header file is deprecated
+
 #include <freeipmi/record-format/oem/ipmi-sel-oem-intel-record-format.h>
 #include <freeipmi/record-format/oem/ipmi-sel-oem-linux-kernel-record-format.h>
 
