@@ -30,13 +30,11 @@
 
 #include "freeipmi/sel/ipmi-sel.h"
 
-#include "freeipmi/cmds/ipmi-sel-cmds.h"
 #include "freeipmi/record-format/ipmi-sel-record-format.h"
 #include "freeipmi/record-format/oem/ipmi-sel-oem-linux-kernel-record-format.h"
 #include "freeipmi/spec/ipmi-event-reading-type-code-spec.h"
-#include "freeipmi/spec/ipmi-sensor-and-event-code-tables-spec.h"
 #include "freeipmi/spec/ipmi-sensor-types-spec.h"
-#include "freeipmi/spec/ipmi-slave-address-spec.h"
+#include "freeipmi/spec/oem/ipmi-slave-address-oem-linux-kernel-spec.h"
 
 #include "ipmi-sel-common.h"
 #include "ipmi-sel-defs.h"
@@ -86,7 +84,7 @@ sel_string_output_linux_kernel_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data);
   assert (oem_rv);
   
-  assert (system_event_record_data->generator_id == IPMI_SLAVE_ADDRESS_LINUX_KERNEL);
+  assert (system_event_record_data->generator_id == IPMI_SLAVE_ADDRESS_OEM_LINUX_KERNEL);
   assert (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC);
   assert (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OS_CRITICAL_STOP);
   assert (system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);

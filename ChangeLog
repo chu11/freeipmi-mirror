@@ -12,6 +12,8 @@
 	libfreeipmi/include/freeipmi/spec/ipmi-slave-address-oem-spec.h:
 	Update for new file.
 
+	* libfreeipmi/: Various code cleanup.
+
 2015-10-21 Albert Chu <chu11@llnl.gov>
 
 	* Various minor bug fixes, cleanup, and distcheck fixes.

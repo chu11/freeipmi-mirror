@@ -30,22 +30,8 @@
 
 #include "freeipmi/sel/ipmi-sel.h"
 
-#include "freeipmi/cmds/ipmi-device-global-cmds.h"
-#include "freeipmi/cmds/ipmi-sel-cmds.h"
-#include "freeipmi/record-format/ipmi-sdr-record-format.h"
-#include "freeipmi/record-format/ipmi-sel-record-format.h"
-#include "freeipmi/spec/ipmi-event-reading-type-code-spec.h"
 #include "freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h"
 #include "freeipmi/spec/ipmi-product-id-spec.h"
-#include "freeipmi/spec/ipmi-sensor-and-event-code-tables-spec.h"
-#include "freeipmi/spec/ipmi-sensor-types-spec.h"
-#include "freeipmi/spec/ipmi-slave-address-spec.h"
-#include "freeipmi/util/ipmi-iana-enterprise-numbers-util.h"
-#include "freeipmi/util/ipmi-sensor-and-event-code-tables-util.h"
-#include "freeipmi/spec/oem/ipmi-event-reading-type-code-oem-dell-spec.h"
-#include "freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-dell-spec.h"
-#include "freeipmi/spec/oem/ipmi-sensor-numbers-oem-dell-spec.h"
-#include "freeipmi/spec/oem/ipmi-sensor-types-oem-dell-spec.h"
 
 #include "ipmi-sel-common.h"
 #include "ipmi-sel-defs.h"

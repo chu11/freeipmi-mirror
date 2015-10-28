@@ -57,6 +57,7 @@
 #include "freeipmi/spec/ipmi-slave-address-spec.h"
 #include "freeipmi/spec/ipmi-netfn-spec.h"
 #include "freeipmi/spec/ipmi-comp-code-spec.h"
+#include "freeipmi/spec/oem/ipmi-slave-address-oem-linux-kernel-spec.h"
 #include "freeipmi/util/ipmi-iana-enterprise-numbers-util.h"
 #include "freeipmi/util/ipmi-sensor-and-event-code-tables-util.h"
 #include "freeipmi/util/ipmi-sensor-util.h"
@@ -2572,7 +2573,7 @@ _output_oem_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
   assert (oem_rv);
 
   /* Linux kernel case is special, not vendor specific */
-  if (system_event_record_data->generator_id == IPMI_SLAVE_ADDRESS_LINUX_KERNEL
+  if (system_event_record_data->generator_id == IPMI_SLAVE_ADDRESS_OEM_LINUX_KERNEL
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OS_CRITICAL_STOP
       && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
