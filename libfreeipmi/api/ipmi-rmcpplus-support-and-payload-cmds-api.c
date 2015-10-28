@@ -26,16 +26,6 @@
 #include <string.h>
 #endif /* STDC_HEADERS */
 #include <errno.h>
-#if TIME_WITH_SYS_TIME
-#include <sys/time.h>
-#include <time.h>
-#else /* !TIME_WITH_SYS_TIME */
-#if HAVE_SYS_TIME_H
-#include <sys/time.h>
-#else /* !HAVE_SYS_TIME_H */
-#include <time.h>
-#endif /* !HAVE_SYS_TIME_H */
-#endif  /* !TIME_WITH_SYS_TIME */
 
 #include "freeipmi/api/ipmi-rmcpplus-support-and-payload-cmds-api.h"
 #include "freeipmi/cmds/ipmi-rmcpplus-support-and-payload-cmds.h"
