@@ -5838,7 +5838,7 @@ ipmi_oem_intelnm_get_turbo_synchronization_ratio (ipmi_oem_state_data_t *state_d
       free (value);
     }
 
-  if (!active_cores_configuration)
+  if (!active_cores_configuration_specified)
     {
       pstdout_fprintf (state_data->pstate,
 		       stderr,
