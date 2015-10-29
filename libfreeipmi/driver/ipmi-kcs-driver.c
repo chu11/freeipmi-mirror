@@ -805,6 +805,11 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
   const uint8_t *p = buf;
   unsigned int count = 0;
   int lock_flag = 0;
+  struct timeval tvb, tve, tvd;
+ 
+  memset (&tvb, '\0', sizeof (tvb));
+  memset (&tve, '\0', sizeof (tve));
+  memset (&tvd, '\0', sizeof (tvd));
 
   if (!ctx || ctx->magic != IPMI_KCS_CTX_MAGIC)
     {
@@ -841,6 +846,8 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
         }
     }
   lock_flag++;
+
+  gettimeofday(&tvb, NULL);
 
   if (_ipmi_kcs_wait_for_ibf_clear (ctx) < 0)
     goto cleanup;
@@ -905,6 +912,12 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
     }
 #endif
   
+  gettimeofday(&tve, NULL);
+  
+  timeval_sub (&tve, &tvb, &tvd);
+  
+  printf("kcs write - %lu-%lu\n", tvd.tv_sec, tvd.tv_usec);
+
   if (count > INT_MAX)
     {
       KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_OVERFLOW);
@@ -932,6 +945,12 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
   unsigned int count = 0;
   int rv = -1;
 
+  struct timeval tvb, tve, tvd;
+ 
+  memset (&tvb, '\0', sizeof (tvb));
+  memset (&tve, '\0', sizeof (tve));
+  memset (&tvd, '\0', sizeof (tvd));
+
   if (!ctx || ctx->magic != IPMI_KCS_CTX_MAGIC)
     {
       ERR_TRACE (ipmi_kcs_ctx_errormsg (ctx), ipmi_kcs_ctx_errnum (ctx));
@@ -949,6 +968,8 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
       KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_IO_NOT_INITIALIZED);
       goto cleanup;
     }
+
+  gettimeofday(&tvb, NULL);
 
   if (_ipmi_kcs_wait_for_ibf_clear (ctx) < 0)
     goto cleanup;
@@ -987,6 +1008,12 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
       KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_DRIVER_TIMEOUT);
       goto cleanup;
     }
+
+  gettimeofday(&tve, NULL);
+  
+  timeval_sub (&tve, &tvb, &tvd);
+  
+  printf("kcs read - %lu-%lu\n", tvd.tv_sec, tvd.tv_usec);
 
   if (count > buf_len)
     {

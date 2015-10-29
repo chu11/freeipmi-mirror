@@ -1537,6 +1537,13 @@ main (int argc, char **argv)
   int hosts_count;
   int rv;
 
+    struct timeval tvb, tve, tvd;
+ 
+    memset (&tvb, '\0', sizeof (tvb));
+    memset (&tve, '\0', sizeof (tve));
+    memset (&tvd, '\0', sizeof (tvd));
+    gettimeofday(&tvb, NULL);
+
   ipmi_disable_coredump ();
 
   memset (&prog_data, '\0', sizeof (ipmi_sensors_prog_data_t));
@@ -1573,6 +1580,12 @@ main (int argc, char **argv)
                pstdout_strerror (pstdout_errnum));
       return (EXIT_FAILURE);
     }
+
+  gettimeofday(&tve, NULL);
+
+  timeval_sub (&tve, &tvb, &tvd);
+    
+  printf("ipmi-sensors - s %lu us %lu\n", tvd.tv_sec, tvd.tv_usec);
 
   return (rv);
 }
