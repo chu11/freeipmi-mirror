@@ -1,4 +1,4 @@
-FreeIPMI 1.4.11 - 10/20/15
+FreeIPMI 1.4.11 - 10/29/15
 --------------------------
 o Fix logic error with a few OEM SEL events for Intel E5 2600 V3 motherboard.
 o Fix various logic errors in ipmi-oem Intel Node Manager extensions.

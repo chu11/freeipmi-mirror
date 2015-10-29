@@ -1290,6 +1290,7 @@ _ipmi_oem_intelnm_get_node_manager_get_node_manager_capabilities_header (ipmi_oe
 		  policy_type_str);
 }
 
+/* return 1 if output something, 0 if not, -1 on error */
 static int
 _ipmi_oem_intelnm_get_node_manager_capabilities_common (ipmi_oem_state_data_t *state_data,
 							uint8_t target_channel_number,
@@ -1387,7 +1388,7 @@ _ipmi_oem_intelnm_get_node_manager_capabilities_common (ipmi_oem_state_data_t *s
 	   || searching_policy_trigger_type
 	   || searching_policy_type)
           && state_data->prog_data->args->verbose_count)
-        rv = 0;
+        rv = 1;
 
       goto cleanup;
     }
@@ -1613,7 +1614,7 @@ _ipmi_oem_intelnm_get_node_manager_capabilities_common (ipmi_oem_state_data_t *s
 		  "Limiting Source                 : %s\n",
 		  limiting_based_on_str);
 
-  rv = 0;
+  rv = 1;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv); 
@@ -1656,9 +1657,10 @@ ipmi_oem_intelnm_get_node_manager_capabilities (ipmi_oem_state_data_t *state_dat
   int policytrigger_specified = 0;
   int policytype_specified = 0;
   unsigned int i, j, k;
-  int first_output_flag = 0;
+  int output_newline_flag = 0;
   uint8_t node_manager_version;
   int rv = -1;
+  int ret;
 
   assert (state_data);
   
@@ -1815,22 +1817,25 @@ ipmi_oem_intelnm_get_node_manager_capabilities (ipmi_oem_state_data_t *state_dat
 	{
 	  for (k = 0; k < policytype_array_len; k++)
 	    {
-	      if (first_output_flag)
+	      if (output_newline_flag)
 		pstdout_printf (state_data->pstate, "\n");
 
-	      if (_ipmi_oem_intelnm_get_node_manager_capabilities_common (state_data,
-									  target_channel_number,
-									  target_slave_address,
-									  target_lun,
-									  domainid_array[i],
-									  policytrigger_array[j],
-									  policytype_array[k],
-									  domainid_specified ? 0 : 1,
-									  policytrigger_specified ? 0 : 1,
-									  policytype_specified ? 0 : 1) < 0)
+	      if ((ret = _ipmi_oem_intelnm_get_node_manager_capabilities_common (state_data,
+									         target_channel_number,
+									         target_slave_address,
+									         target_lun,
+									         domainid_array[i],
+									         policytrigger_array[j],
+									         policytype_array[k],
+									         domainid_specified ? 0 : 1,
+									         policytrigger_specified ? 0 : 1,
+									         policytype_specified ? 0 : 1)) < 0)
 		goto cleanup;
 
-	      first_output_flag++;
+	      if (ret > 0)
+	        output_newline_flag = 1;
+	      else
+	        output_newline_flag = 0;
 	    }
 	}
     }
@@ -2020,6 +2025,7 @@ _ipmi_oem_intelnm_get_node_manager_policy_output_header (ipmi_oem_state_data_t *
 		  policy_id);
 }
 
+/* return 1 if output something, 0 if not, -1 on error */
 static int
 _ipmi_oem_intelnm_get_node_manager_policy_common (ipmi_oem_state_data_t *state_data,
 						  uint8_t target_channel_number,
@@ -2113,7 +2119,7 @@ _ipmi_oem_intelnm_get_node_manager_policy_common (ipmi_oem_state_data_t *state_d
       if ((searching_domain_id
 	   || searching_policy_id)
 	  && state_data->prog_data->args->verbose_count)
-	rv = 0; 
+	rv = 1; 
 
       goto cleanup;
     }
@@ -2433,7 +2439,7 @@ _ipmi_oem_intelnm_get_node_manager_policy_common (ipmi_oem_state_data_t *state_d
 		  "Statistics Reporting Period             : %u s\n",
 		  statistics_reporting_period);
 
-  rv = 0;
+  rv = 1;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv); 
@@ -2460,9 +2466,10 @@ ipmi_oem_intelnm_get_node_manager_policy (ipmi_oem_state_data_t *state_data)
   int domainid_specified = 0;
   int policyid_specified = 0;
   unsigned int i, j;
-  int first_output_flag = 0;
+  int output_newline_flag = 0;
   uint8_t node_manager_version;
   int rv = -1;
+  int ret;
 
   assert (state_data);
   
@@ -2562,20 +2569,23 @@ ipmi_oem_intelnm_get_node_manager_policy (ipmi_oem_state_data_t *state_data)
     {
       for (j = policyid_min; j <= policyid_max; j++)
 	{
-	  if (first_output_flag)
+	  if (output_newline_flag)
 	    pstdout_printf (state_data->pstate, "\n");
 
-	  if (_ipmi_oem_intelnm_get_node_manager_policy_common (state_data,
-								target_channel_number,
-								target_slave_address,
-								target_lun,
-								domainid_array[i],
-								j,
-								domainid_specified ? 0 : 1,
-								policyid_specified ? 0 : 1) < 0)
+	  if ((ret = _ipmi_oem_intelnm_get_node_manager_policy_common (state_data,
+								       target_channel_number,
+								       target_slave_address,
+								       target_lun,
+								       domainid_array[i],
+								       j,
+								       domainid_specified ? 0 : 1,
+								       policyid_specified ? 0 : 1)) < 0)
 	    goto cleanup;
 	  
-	  first_output_flag++;
+	  if (ret > 0)
+	    output_newline_flag = 1;
+	  else
+	    output_newline_flag = 0;
 	}
     }
 
@@ -3228,6 +3238,7 @@ _ipmi_oem_intelnm_get_node_manager_alert_thresholds_output_header (ipmi_oem_stat
 		  policy_id);
 }
 
+/* return 1 if output something, 0 if not, -1 on error */
 static int
 _ipmi_oem_intelnm_get_node_manager_alert_thresholds_common (ipmi_oem_state_data_t *state_data,
 							    uint8_t target_channel_number,
@@ -3309,7 +3320,7 @@ _ipmi_oem_intelnm_get_node_manager_alert_thresholds_common (ipmi_oem_state_data_
       if ((searching_domain_id
 	   || searching_policy_id)
 	  && state_data->prog_data->args->verbose_count)
-	rv = 0; 
+	rv = 1; 
       
       goto cleanup;
     }
@@ -3434,7 +3445,7 @@ _ipmi_oem_intelnm_get_node_manager_alert_thresholds_common (ipmi_oem_state_data_
 	  if ((searching_domain_id
 	       || searching_policy_id)
 	      && state_data->prog_data->args->verbose_count)
-	    rv = 0; 
+	    rv = 1; 
 	  
 	  goto cleanup;
         }
@@ -3500,7 +3511,7 @@ _ipmi_oem_intelnm_get_node_manager_alert_thresholds_common (ipmi_oem_state_data_
     pstdout_printf (state_data->pstate,
 		    "Alert Threshold 3          : N/A\n");
 
-  rv = 0;
+  rv = 1;
  cleanup:
   fiid_obj_destroy (alert_threshold_obj_cmd_rs);
   fiid_obj_destroy (policy_obj_cmd_rs);
@@ -3528,9 +3539,10 @@ ipmi_oem_intelnm_get_node_manager_alert_thresholds (ipmi_oem_state_data_t *state
   int domainid_specified = 0;
   int policyid_specified = 0;
   unsigned int i, j;
-  int first_output_flag = 0;
+  int output_newline_flag = 0;
   uint8_t node_manager_version;
   int rv = -1;
+  int ret;
 
   assert (state_data);
   
@@ -3629,7 +3641,7 @@ ipmi_oem_intelnm_get_node_manager_alert_thresholds (ipmi_oem_state_data_t *state
     {
       for (j = policyid_min; j <= policyid_max; j++)
 	{
-	  if (first_output_flag)
+	  if (output_newline_flag)
 	    pstdout_printf (state_data->pstate, "\n");
 	  
 	  if (_ipmi_oem_intelnm_get_node_manager_alert_thresholds_common (state_data,
@@ -3642,7 +3654,10 @@ ipmi_oem_intelnm_get_node_manager_alert_thresholds (ipmi_oem_state_data_t *state
 									  policyid_specified ? 0 : 1) < 0)
 	    goto cleanup;
 	  
-	  first_output_flag++;
+	  if (ret > 0)
+	    output_newline_flag = 1;
+	  else
+	    output_newline_flag = 0;
 	}
     }
   
@@ -3834,6 +3849,7 @@ _ipmi_oem_intelnm_get_node_manager_policy_suspend_periods_output_header (ipmi_oe
 		  policy_id);
 }
 
+/* return 1 if output something, 0 if not, -1 on error */
 static int
 _ipmi_oem_intelnm_get_node_manager_policy_suspend_periods_common (ipmi_oem_state_data_t *state_data,
 								  uint8_t target_channel_number,
@@ -3919,7 +3935,7 @@ _ipmi_oem_intelnm_get_node_manager_policy_suspend_periods_common (ipmi_oem_state
       if ((searching_domain_id
 	   || searching_policy_id)
 	  && state_data->prog_data->args->verbose_count)
-	rv = 0; 
+	rv = 1; 
       
       goto cleanup;
     }
@@ -4215,7 +4231,7 @@ _ipmi_oem_intelnm_get_node_manager_policy_suspend_periods_common (ipmi_oem_state
 	}
     }
 
-  rv = 0;
+  rv = 1;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv); 
@@ -4242,9 +4258,10 @@ ipmi_oem_intelnm_get_node_manager_policy_suspend_periods (ipmi_oem_state_data_t 
   int domainid_specified = 0;
   int policyid_specified = 0;
   unsigned int i, j;
-  int first_output_flag = 0;
+  int output_newline_flag = 0;
   uint8_t node_manager_version;
   int rv = -1;
+  int ret;
 
   assert (state_data);
   
@@ -4345,20 +4362,23 @@ ipmi_oem_intelnm_get_node_manager_policy_suspend_periods (ipmi_oem_state_data_t 
     {
       for (j = policyid_min; j <= policyid_max; j++)
 	{
-	  if (first_output_flag)
+	  if (output_newline_flag)
 	    pstdout_printf (state_data->pstate, "\n");
 	  
-	  if (_ipmi_oem_intelnm_get_node_manager_policy_suspend_periods_common (state_data,
-										target_channel_number,
-										target_slave_address,
-										target_lun,
-										domainid_array[i],
-										j,
-										domainid_specified ? 0 : 1,
-										policyid_specified ? 0 : 1) < 0)
+	  if ((ret = _ipmi_oem_intelnm_get_node_manager_policy_suspend_periods_common (state_data,
+										       target_channel_number,
+										       target_slave_address,
+										       target_lun,
+										       domainid_array[i],
+										       j,
+										       domainid_specified ? 0 : 1,
+										       policyid_specified ? 0 : 1)) < 0)
 	    goto cleanup;
 	  
-	  first_output_flag++;
+	  if (ret > 0)
+	    output_newline_flag = 1;
+	  else
+	    output_newline_flag = 0;
 	}
     }
   
