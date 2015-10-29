@@ -5796,21 +5796,29 @@ ipmi_oem_intelnm_get_turbo_synchronization_ratio (ipmi_oem_state_data_t *state_d
 	}
       else if (!strcasecmp (key, "activecoresconfig"))
 	{
-	  if (ipmi_oem_parse_1_byte_field (state_data,
-					   i,
-					   value,
-					   &active_cores_configuration) < 0)
-	    goto cleanup;
-
-	  if (!IPMI_OEM_INTEL_NODE_MANAGER_GET_ACTIVE_CORES_CONFIGURATION_VALID(active_cores_configuration))
+	  if (!strcasecmp (value, "all"))
 	    {
-	      pstdout_fprintf (state_data->pstate,
-			       stderr,
-			       "%s:%s invalid OEM option argument '%s' : invalid active cores configuration\n",
-			       state_data->prog_data->args->oem_id,
-			       state_data->prog_data->args->oem_command,
-			       state_data->prog_data->args->oem_options[i]);
-	      goto cleanup;
+	      active_cores_configuration = IPMI_OEM_INTEL_NODE_MANAGER_ACTIVE_CORES_CONFIGURATION_APPLY_SETTINGS_TO_ALL_ACTIVE_CORES_CONFIGURATION;
+	      active_cores_configuration_specified++;
+	    }
+	  else
+	    {
+	      if (ipmi_oem_parse_1_byte_field (state_data,
+					       i,
+					       value,
+					       &active_cores_configuration) < 0)
+		goto cleanup;
+	      
+	      if (!IPMI_OEM_INTEL_NODE_MANAGER_GET_ACTIVE_CORES_CONFIGURATION_VALID(active_cores_configuration))
+		{
+		  pstdout_fprintf (state_data->pstate,
+				   stderr,
+				   "%s:%s invalid OEM option argument '%s' : invalid active cores configuration\n",
+				   state_data->prog_data->args->oem_id,
+				   state_data->prog_data->args->oem_command,
+				   state_data->prog_data->args->oem_options[i]);
+		  goto cleanup;
+		}
 	    }
 
 	  active_cores_configuration_specified++;
