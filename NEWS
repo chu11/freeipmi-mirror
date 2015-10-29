@@ -19,6 +19,66 @@ o Support Get Device SDR Info, Get Device SDR, and Reserve Device SDR
 o Support ipmi-sel OEM interpretation of Linux kernel panics.
 o Re-organize OEM code files into per-vendor files.
 
+FreeIPMI 1.4.10 - 10/20/15
+--------------------------
+o In ipmi-oem, support Supermicro get-power-supply-status2.
+o In ipmi-locate, fix probing issue on arm32 & 64.
+o Handle several additional completion code error message in libfreeipmi.
+o Handle several error handling corner cases in ipmi-sensors.
+o Support Intel E5 2600 V3 motherboard OEM SEL events.
+o Fix several errors in ipmi-oem intelnm get-node-manager-statistics output.
+o Fix logic errors in ipmi-oem intelnm set-node-manager-policy.
+
+FreeIPMI 1.4.9 - 06/01/15
+-------------------------
+o Fix strtol parse corner cases in several commands.
+o Minor documentation fixes.
+
+FreeIPMI 1.4.8 - 01/07/15
+-------------------------
+o Fix segfault in crypt code with libgcrypt versions >= 1.6.0.
+o Fix --fanout command line parse bug.
+
+FreeIPMI 1.4.7 - 12/10/14
+-------------------------
+o Fix typo from FRU spec, language "Tegulu" is actually "Telugu".
+o Fix typo in SEL session output, "Invalid Username of Password" to
+  "Invalid Username or Password".
+o Loop on select() call if interrupted by EINTR in openipmi, ssif, and
+  sunbmc inband drivers.
+o Fix integer overflow bug in ipmi-config when configure vlan ID > 255.
+o Add workaround for ipmi-config issue on Supermicro X10DDW-i.
+o Fix error handling bug in bmc-info.
+
+FreeIPMI 1.4.6 - 10/29/14
+-------------------------
+o In ipmi-fru, support output of DDR4 SDRAM modules.
+o Fix EFI probing on non IA64 systems.
+o Fix corner case in ipmi-raw w/ standard input or --file and empty lines.
+o Fix parsing corner case in ipmi-chassis.
+o Support SSIF bridging.
+
+FreeIPMI 1.4.5 - 07/28/14
+-------------------------
+o Fix libipmiconsole calculation bug w/ SOL character send size.
+o Support Supermicro H8DGU and H8DG6 OEM sensors and events.
+o Minor documentation updates.
+
+FreeIPMI 1.4.4 - 06/27/14
+-------------------------
+o Support retrys of SSIF reads to handle SSIF NACKs.
+
+FreeIPMI 1.4.3 - 05/07/14
+-------------------------
+o Fix compile bug in 1.4.2 release.
+
+FreeIPMI 1.4.2 - 05/06/14
+-------------------------
+o In ipmi-oem, support Supermicro get-power-supply-status and
+  get-pmbus-power-supply-status commands.
+o Support 'ipmiping' workaround in ipmipower.
+o Minor documentation updates.
+
 FreeIPMI 1.4.1 - 03/01/14
 -------------------------
 
