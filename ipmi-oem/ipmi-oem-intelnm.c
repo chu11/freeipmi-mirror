@@ -1278,7 +1278,7 @@ _ipmi_oem_intelnm_get_domain_id_str (ipmi_oem_state_data_t *state_data,
     case IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_CPU_SUBSYSTEM:
       snprintf (domain_id_str,
 		domain_id_str_len,
-		"CPU Subsyste");
+		"CPU Subsystem");
       break;
     case IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_MEMORY_SUBSYSTEM:
       snprintf (domain_id_str,
