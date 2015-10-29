@@ -1,6 +1,8 @@
 2015-10-29 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/ipmi-oem-intelnm.c: Fix typo.
+
+	* ipmi-oem/ipmi-oem-intelnm.c: Fix logic error in searching code in various "get" functions.
 	
 2015-10-29 Albert Chu <chu11@llnl.gov>
 
