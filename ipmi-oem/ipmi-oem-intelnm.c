@@ -1211,7 +1211,7 @@ _ipmi_oem_intelnm_get_domain_id_str (ipmi_oem_state_data_t *state_data,
     case IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_CPU_SUBSYSTEM:
       snprintf (domain_id_str,
 		domain_id_str_len,
-		"CPU Subsyste");
+		"CPU Subsystem");
       break;
     case IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_MEMORY_SUBSYSTEM:
       snprintf (domain_id_str,
@@ -1346,17 +1346,16 @@ _ipmi_oem_intelnm_get_node_manager_capabilities_common (ipmi_oem_state_data_t *s
 	  
 	  if (!state_data->prog_data->args->verbose_count)
             {
-              if (searching_domain_id
-                  && ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_INVALID_DOMAIN_ID) == 1)
-                goto cleanup;
-
-              if (searching_policy_trigger_type
-                  && ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_UNKNOWN_POLICY_TRIGGER_TYPE) == 1)
-                goto cleanup;
-
-              if (searching_policy_type
-                  && ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_UNKNOWN_POLICY_TYPE) == 1)
-                goto cleanup;
+              if ((searching_domain_id
+		   && ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_INVALID_DOMAIN_ID) == 1)
+		  || (searching_policy_trigger_type
+		      && ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_UNKNOWN_POLICY_TRIGGER_TYPE) == 1)
+		  || (searching_policy_type
+		      && ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_UNKNOWN_POLICY_TYPE) == 1))
+		{
+		  rv = 0;
+		  goto cleanup;
+		}
             }
 
           if (searching_domain_id
@@ -2080,13 +2079,14 @@ _ipmi_oem_intelnm_get_node_manager_policy_common (ipmi_oem_state_data_t *state_d
 
 	  if (!state_data->prog_data->args->verbose_count)
 	    {
-	      if (searching_domain_id
+	      if ((searching_domain_id
 		  && ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_INVALID_DOMAIN_ID) == 1)
-		goto cleanup;
-	      
-	      if (searching_policy_id
-		  && ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_INVALID_POLICY_ID) == 1)
-		goto cleanup;
+		  || (searching_policy_id
+		      && ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_INVALID_POLICY_ID) == 1))
+		{
+		  rv = 0;
+		  goto cleanup;
+		}
 	    }
 
 	  if (searching_domain_id
@@ -3275,13 +3275,14 @@ _ipmi_oem_intelnm_get_node_manager_alert_thresholds_common (ipmi_oem_state_data_
 
 	  if (!state_data->prog_data->args->verbose_count)
 	    {
-	      if (searching_domain_id
+	      if ((searching_domain_id
 		  && ipmi_check_completion_code (alert_threshold_obj_cmd_rs, IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_INVALID_DOMAIN_ID) == 1)
-		goto cleanup;
-	      
-	      if (searching_policy_id
-		  && ipmi_check_completion_code (alert_threshold_obj_cmd_rs, IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_INVALID_POLICY_ID) == 1)
-		goto cleanup;
+		  || (searching_policy_id
+		      && ipmi_check_completion_code (alert_threshold_obj_cmd_rs, IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_INVALID_POLICY_ID) == 1))
+		{
+		  rv = 0;
+		  goto cleanup;
+		}
 	    }
 
 	  if (searching_domain_id
@@ -3399,13 +3400,14 @@ _ipmi_oem_intelnm_get_node_manager_alert_thresholds_common (ipmi_oem_state_data_
 	      
 	      if (!state_data->prog_data->args->verbose_count)
 		{
-		  if (searching_domain_id
+		  if ((searching_domain_id
 		      && ipmi_check_completion_code (policy_obj_cmd_rs, IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_INVALID_DOMAIN_ID) == 1)
-		    goto cleanup;
-		  
-		  if (searching_policy_id
-		      && ipmi_check_completion_code (policy_obj_cmd_rs, IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_INVALID_POLICY_ID) == 1)
-		    goto cleanup;
+		      || (searching_policy_id
+			  && ipmi_check_completion_code (policy_obj_cmd_rs, IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_INVALID_POLICY_ID) == 1))
+		    {
+		      rv = 0;
+		      goto cleanup;
+		    }
 		}
 	      
 	      if (searching_domain_id
@@ -3883,13 +3885,14 @@ _ipmi_oem_intelnm_get_node_manager_policy_suspend_periods_common (ipmi_oem_state
 
 	  if (!state_data->prog_data->args->verbose_count)
 	    {
-	      if (searching_domain_id
+	      if ((searching_domain_id
 		  && ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_INVALID_DOMAIN_ID) == 1)
-		goto cleanup;
-	      
-	      if (searching_policy_id
-		  && ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_INVALID_POLICY_ID) == 1)
-		goto cleanup;
+		  || (searching_policy_id
+		      && ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_OEM_INTEL_NODE_MANAGER_INVALID_POLICY_ID) == 1))
+		{
+		  rv = 0;
+		  goto cleanup;
+		}
 	    }
 
 	  if (searching_domain_id
