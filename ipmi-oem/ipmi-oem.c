@@ -712,7 +712,7 @@ struct ipmi_oem_command oem_intelnm[] =
       "get-turbo-synchronization-ratio",
       "activecoresconfig=num|all [cpusocket=num|all]",
       1,
-      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
       ipmi_oem_intelnm_get_turbo_synchronization_ratio
     },
     {

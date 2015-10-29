@@ -5,6 +5,8 @@
 	* ipmi-oem/ipmi-oem-intelnm.c: Fix logic error in searching code in various "get" functions.
 
 	* ipmi-oem/ipmi-oem-intelnm.c: Fix logic errors in new command additions.
+
+	* libfreeipmi/cmds/ipmi-oem-intel-node-manager-cmds.c: Fix error in new templates. 
 	
 2015-10-29 Albert Chu <chu11@llnl.gov>
 

@@ -550,6 +550,7 @@ fiid_template_t tmpl_cmd_oem_intel_node_manager_set_turbo_synchronization_ratio_
     { 8,  "cpu_socket_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8,  "active_cores_configuration", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8,  "turbo_ratio_limit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
   };
 
 fiid_template_t tmpl_cmd_oem_intel_node_manager_set_turbo_synchronization_ratio_rs =
@@ -557,6 +558,7 @@ fiid_template_t tmpl_cmd_oem_intel_node_manager_set_turbo_synchronization_ratio_
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
   };
 
 fiid_template_t tmpl_cmd_oem_intel_node_manager_get_turbo_synchronization_ratio_rq =
@@ -565,6 +567,7 @@ fiid_template_t tmpl_cmd_oem_intel_node_manager_get_turbo_synchronization_ratio_
     { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8,  "cpu_socket_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8,  "active_cores_configuration", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
   };
 
 fiid_template_t tmpl_cmd_oem_intel_node_manager_get_turbo_synchronization_ratio_rs =
@@ -576,6 +579,7 @@ fiid_template_t tmpl_cmd_oem_intel_node_manager_get_turbo_synchronization_ratio_
     { 8,  "default_turbo_ratio_limit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8,  "maximum_turbo_ratio_limit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8,  "minimum_turbo_ratio_limit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
   };
  
 fiid_template_t tmpl_cmd_oem_intel_node_manager_get_limiting_policy_id_rq =

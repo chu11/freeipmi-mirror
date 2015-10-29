@@ -6094,7 +6094,7 @@ ipmi_oem_intelnm_set_turbo_synchronization_ratio (ipmi_oem_state_data_t *state_d
       free (value);
     }
 
-  if (!turbo_ratio_limit)
+  if (!turbo_ratio_limit_specified)
     {
       pstdout_fprintf (state_data->pstate,
 		       stderr,
