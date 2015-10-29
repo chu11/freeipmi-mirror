@@ -245,14 +245,14 @@ can be found in the document @file{freeipmi-hostrange.txt}
 
 @command{Ipmipower} is capable of scaling to large nodes for cluster support and
 is supported by Powerman
-(@uref{http://code.google.com/p/powerman/}) for scalable power
+(@uref{https://github.com/chaos/powerman}) for scalable power
 management.  At @acronym{LLNL}, in conjunction with Powerman, ipmipower is used
 for power control on clusters ranging from sizes of 4 to 2000.  It has
 been used to determine power status or power control @acronym{LLNL}'s largest
 clusters in under a second.
 
 @command{libipmiconsole} is currently supported by Conman
-(@uref{http://conman.googlecode.com/}) and Conserver (@uref{http://www.conserver.com/}) for scalable console management.
+(@uref{https://github.com/dun/conman}) and Conserver (@uref{http://www.conserver.com/}) for scalable console management.
 
 @command{Ipmi-sensors} and libipmimonitoring are capable of
 interpreting sensor readings as well as just reporting them.  It can
@@ -641,7 +641,7 @@ BMC address Locator:
 @section How do you setup Powerman with ipmipower?
 
 There are additional details in the Powerman
-(@uref{http://code.google.com/p/powerman/}) documentation, however
+(@uref{https://github.com/chaos/powerman}) documentation, however
 here are the basics.  In the powerman.conf file, you want to include
 the @file{ipmipower.dev} device file, setup an ipmipower device in
 co-process mode, then configure hosts to use that device.
@@ -719,7 +719,7 @@ using the @file{ipmipower-serial.dev} device file instead of
 @section How do you setup Conman with ipmiconsole or libipmiconsole?
 
 There are additional details in the Conman
-(@uref{http://conman.googlecode.com/}) documentation and manpages,
+(@uref{https://github.com/dun/conman}) documentation and manpages,
 however here are some basics.
 
 To configure Conman to connect via the ipmiconsole tool, Conman comes
@@ -754,7 +754,9 @@ CONSOLE name="myserver" IPMIOPTS="myusername,mypassword" dev="ipmi:myserver"
 @end example
 
 Please see the Conman documentation for current version options and
-additional configuration options available.
+additional configuration options available.  Alternate defaults for
+libipmiconsole can also be set via the @file{libipmiconsole.conf}
+file.
 
 One of the additional advantages of configuring Conman to use the
 libipmiconsole library natively is that Conman is able to detect and
