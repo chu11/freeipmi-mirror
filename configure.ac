@@ -123,7 +123,7 @@ AC_SUBST([ISODATE])
 # If any interfaces have been removed or changed since the last public
 # release, then set age to 0.
 #
-LIBFREEIPMI_CURRENT=16
+LIBFREEIPMI_CURRENT=17
 LIBFREEIPMI_REVISION=0
 LIBFREEIPMI_AGE=0
 
@@ -144,7 +144,7 @@ AC_SUBST([LIBFREEIPMI_VERSION_INFO])
 #         incremented due to bug fixes or minor features.  Interfaces are
 #         forward and backward compatible to other PATCH versions.
 
-LIBFREEIPMI_VERSION_MAJOR=5
+LIBFREEIPMI_VERSION_MAJOR=6
 LIBFREEIPMI_VERSION_MINOR=0
 LIBFREEIPMI_VERSION_PATCH=0
 
