@@ -19,6 +19,12 @@ o Support Get Device SDR Info, Get Device SDR, and Reserve Device SDR
 o Support ipmi-sel OEM interpretation of Linux kernel panics.
 o Re-organize OEM code files into per-vendor files.
 
+FreeIPMI 1.4.11 - 10/29/15
+--------------------------
+o Fix logic error with a few OEM SEL events for Intel E5 2600 V3 motherboard.
+o Fix various logic errors in ipmi-oem Intel Node Manager extensions.
+o Documentation updates.
+
 FreeIPMI 1.4.10 - 10/20/15
 --------------------------
 o In ipmi-oem, support Supermicro get-power-supply-status2.
