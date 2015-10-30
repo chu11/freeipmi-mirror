@@ -37,9 +37,7 @@
 #include "ipmi-sel-common.h"
 #include "ipmi-sel-defs.h"
 #include "ipmi-sel-string.h"
-#include "ipmi-sel-string-supermicro.h"
 #include "ipmi-sel-string-supermicro-common.h"
-#include "ipmi-sel-string-supermicro-peppercon-x7db8.h"
 #include "ipmi-sel-trace.h"
 #include "ipmi-sel-util.h"
 
@@ -94,3 +92,18 @@ sel_string_output_supermicro_peppercon_x7db8_event_data1_class_oem (ipmi_sel_ctx
   return (0);
 }
 
+struct sel_string_oem sel_string_oem_supermicro_peppercon_x7db8 =
+  {
+    NULL,
+    NULL,
+    &sel_string_output_supermicro_peppercon_x7db8_event_data1_class_oem,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+  };

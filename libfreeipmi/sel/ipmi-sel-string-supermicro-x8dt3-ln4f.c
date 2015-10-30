@@ -37,9 +37,7 @@
 #include "ipmi-sel-common.h"
 #include "ipmi-sel-defs.h"
 #include "ipmi-sel-string.h"
-#include "ipmi-sel-string-supermicro.h"
 #include "ipmi-sel-string-supermicro-common.h"
-#include "ipmi-sel-string-supermicro-x8dt3-ln4f.h"
 #include "ipmi-sel-trace.h"
 #include "ipmi-sel-util.h"
 
@@ -95,3 +93,18 @@ sel_string_output_supermicro_x8dt3_ln4f_event_data1_class_oem (ipmi_sel_ctx_t ct
   return (0);
 }
 
+struct sel_string_oem sel_string_oem_supermicro_x8dt3_ln4f =
+  {
+    NULL,
+    NULL,
+    &sel_string_output_supermicro_x8dt3_ln4f_event_data1_class_oem,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+  };

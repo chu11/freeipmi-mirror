@@ -45,9 +45,7 @@
 #include "ipmi-sel-defs.h"
 #include "ipmi-sel-string.h"
 #include "ipmi-sel-string-intel-node-manager.h"
-#include "ipmi-sel-string-inventec.h"
 #include "ipmi-sel-string-inventec-common.h"
-#include "ipmi-sel-string-inventec-5442.h"
 #include "ipmi-sel-trace.h"
 #include "ipmi-sel-util.h"
 
@@ -482,3 +480,19 @@ sel_string_output_inventec_5442_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 
   return (0);
 }
+
+struct sel_string_oem sel_string_oem_inventec_5442 =
+  {
+    sel_string_output_inventec_5442_sensor_name,
+    NULL,
+    sel_string_output_inventec_5442_event_data1_class_oem,
+    NULL,
+    sel_string_output_inventec_5442_event_data2_discrete_oem,
+    sel_string_output_inventec_5442_event_data2_class_oem,
+    NULL,
+    sel_string_output_inventec_5442_event_data3_discrete_oem,
+    sel_string_output_inventec_5442_event_data3_class_oem,
+    NULL,
+    NULL,
+    NULL,
+  };

@@ -46,9 +46,7 @@
 #include "ipmi-sel-common.h"
 #include "ipmi-sel-defs.h"
 #include "ipmi-sel-string.h"
-#include "ipmi-sel-string-intel.h"
 #include "ipmi-sel-string-intel-node-manager.h"
-#include "ipmi-sel-string-intel-quanta-qssc-s4r.h"
 #include "ipmi-sel-trace.h"
 #include "ipmi-sel-util.h"
 
@@ -1459,3 +1457,19 @@ sel_string_output_intel_quanta_qssc_s4r_event_data2_event_data3 (ipmi_sel_ctx_t 
 
   return (0);
 }
+
+struct sel_string_oem sel_string_oem_intel_quanta_qssc_s4r =
+  {
+    sel_string_output_intel_quanta_qssc_s4r_sensor_name,
+    NULL,
+    sel_string_output_intel_quanta_qssc_s4r_event_data1_class_oem,
+    NULL,
+    sel_string_output_intel_quanta_qssc_s4r_event_data2_discrete_oem,
+    sel_string_output_intel_quanta_qssc_s4r_event_data2_class_oem,
+    NULL,
+    sel_string_output_intel_quanta_qssc_s4r_event_data3_discrete_oem,
+    sel_string_output_intel_quanta_qssc_s4r_event_data3_class_oem,
+    sel_string_output_intel_quanta_qssc_s4r_event_data2_event_data3,
+    NULL,
+    NULL,
+  };

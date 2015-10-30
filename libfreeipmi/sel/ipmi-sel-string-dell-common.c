@@ -46,7 +46,6 @@
 #include "ipmi-sel-common.h"
 #include "ipmi-sel-defs.h"
 #include "ipmi-sel-string.h"
-#include "ipmi-sel-string-dell.h"
 #include "ipmi-sel-trace.h"
 #include "ipmi-sel-util.h"
 

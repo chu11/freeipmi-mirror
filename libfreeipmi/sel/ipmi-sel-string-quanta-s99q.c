@@ -45,8 +45,6 @@
 #include "ipmi-sel-defs.h"
 #include "ipmi-sel-string.h"
 #include "ipmi-sel-string-intel-node-manager.h"
-#include "ipmi-sel-string-quanta.h"
-#include "ipmi-sel-string-quanta-s99q.h"
 #include "ipmi-sel-trace.h"
 #include "ipmi-sel-util.h"
 
@@ -498,3 +496,19 @@ sel_string_output_quanta_s99q_event_data3_class_oem (ipmi_sel_ctx_t ctx,
 
   return (0);
 }
+
+struct sel_string_oem sel_string_oem_quanta_s99q =
+  {
+    sel_string_output_quanta_s99q_sensor_name,
+    NULL,
+    sel_string_output_quanta_s99q_event_data1_class_oem,
+    NULL,
+    sel_string_output_quanta_s99q_event_data2_discrete_oem,
+    sel_string_output_quanta_s99q_event_data2_class_oem,
+    NULL,
+    sel_string_output_quanta_s99q_event_data3_discrete_oem,
+    sel_string_output_quanta_s99q_event_data3_class_oem,
+    NULL,
+    NULL,
+    NULL,
+  };

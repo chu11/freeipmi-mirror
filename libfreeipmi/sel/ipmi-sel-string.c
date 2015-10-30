@@ -57,15 +57,7 @@
 #include "ipmi-sel-common.h"
 #include "ipmi-sel-defs.h"
 #include "ipmi-sel-string.h"
-#include "ipmi-sel-string-dell.h"
-#include "ipmi-sel-string-fujitsu.h"
-#include "ipmi-sel-string-intel.h"
-#include "ipmi-sel-string-inventec.h"
 #include "ipmi-sel-string-linux-kernel.h"
-#include "ipmi-sel-string-quanta.h"
-#include "ipmi-sel-string-sun.h"
-#include "ipmi-sel-string-supermicro.h"
-#include "ipmi-sel-string-wistron.h"
 #include "ipmi-sel-trace.h"
 #include "ipmi-sel-util.h"
 
@@ -80,6 +72,51 @@
 #define SENSOR_NAME_LENGTH      256
 #define IANA_LENGTH             1024
 #define UNITS_BUFFER_LENGTH     1024
+
+extern struct sel_string_oem sel_string_oem_dell_2900;
+extern struct sel_string_oem sel_string_oem_dell_2950;
+extern struct sel_string_oem sel_string_oem_dell_r610;
+extern struct sel_string_oem sel_string_oem_dell_r710;
+extern struct sel_string_oem sel_string_oem_dell_r720;
+extern struct sel_string_oem sel_string_oem_fujitsu_irmc_common;
+extern struct sel_string_oem sel_string_oem_intel_quanta_qssc_s4r;
+extern struct sel_string_oem sel_string_oem_intel_s2600jf;
+extern struct sel_string_oem sel_string_oem_intel_s2600kp;
+extern struct sel_string_oem sel_string_oem_intel_s2600wt2;
+extern struct sel_string_oem sel_string_oem_intel_s2600wtt;
+extern struct sel_string_oem sel_string_oem_intel_s5500wb;
+extern struct sel_string_oem sel_string_oem_intel_windmill;
+extern struct sel_string_oem sel_string_oem_inventec_5441;
+extern struct sel_string_oem sel_string_oem_inventec_5442;
+extern struct sel_string_oem sel_string_oem_linux_kernel;
+extern struct sel_string_oem sel_string_oem_quanta_s99q;
+extern struct sel_string_oem sel_string_oem_sun_x4140;
+extern struct sel_string_oem sel_string_oem_supermicro_h8dg6;
+extern struct sel_string_oem sel_string_oem_supermicro_h8dgu_f;
+extern struct sel_string_oem sel_string_oem_supermicro_h8dgu;
+extern struct sel_string_oem sel_string_oem_supermicro_magnum_technologies_x8dtl;
+extern struct sel_string_oem sel_string_oem_supermicro_peppercon_x7db8;
+extern struct sel_string_oem sel_string_oem_supermicro_peppercon_x7dbr_3;
+extern struct sel_string_oem sel_string_oem_supermicro_peppercon_x7sbi_ln4;
+extern struct sel_string_oem sel_string_oem_supermicro_peppercon_x8dtn;
+extern struct sel_string_oem sel_string_oem_supermicro_x8dt3_ln4f;
+extern struct sel_string_oem sel_string_oem_supermicro_x8dtg;
+extern struct sel_string_oem sel_string_oem_supermicro_x8dth;
+extern struct sel_string_oem sel_string_oem_supermicro_x8dtl_3f;
+extern struct sel_string_oem sel_string_oem_supermicro_x8dtl;
+extern struct sel_string_oem sel_string_oem_supermicro_x8dtnplus_f;
+extern struct sel_string_oem sel_string_oem_supermicro_x8dtu_6plus;
+extern struct sel_string_oem sel_string_oem_supermicro_x8dtu;
+extern struct sel_string_oem sel_string_oem_supermicro_x8sie;
+extern struct sel_string_oem sel_string_oem_supermicro_x8sil_f;
+extern struct sel_string_oem sel_string_oem_supermicro_x9dri_f;
+extern struct sel_string_oem sel_string_oem_supermicro_x9dri_ln4f_plus;
+extern struct sel_string_oem sel_string_oem_supermicro_x9sca_f_o;
+extern struct sel_string_oem sel_string_oem_supermicro_x9scl;
+extern struct sel_string_oem sel_string_oem_supermicro_x9scm_iif;
+extern struct sel_string_oem sel_string_oem_supermicro_x9scm;
+extern struct sel_string_oem sel_string_oem_supermicro_x9spu_f_o;
+extern struct sel_string_oem sel_string_oem_wistron_c6220;
 
 /* returns 0 on success, 1 on success but w/ truncation */
 int
@@ -127,6 +164,139 @@ sel_string_strcat_comma_separate (char *buf,
     }
 
   return (sel_string_snprintf (buf, buflen, wlen, "%s", str));
+}
+
+static int
+_find_motherboard_oem_support (ipmi_sel_ctx_t ctx,
+			       unsigned int flags,
+			       struct sel_string_oem **sel_string_oem)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (sel_string_oem);
+
+  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL)
+    {
+      if (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2900)
+	(*sel_string_oem) = &sel_string_oem_dell_2900;
+      else if (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2950)
+	(*sel_string_oem) = &sel_string_oem_dell_2950;
+      else if (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610)
+	(*sel_string_oem) = &sel_string_oem_dell_r610;
+      else if (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
+	(*sel_string_oem) = &sel_string_oem_dell_r710;
+      else if (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R720)
+	(*sel_string_oem) = &sel_string_oem_dell_r720;
+    }
+  else if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU)
+    {
+      if (ctx->product_id >= IPMI_FUJITSU_PRODUCT_ID_MIN
+	  && ctx->product_id <= IPMI_FUJITSU_PRODUCT_ID_MAX)
+	(*sel_string_oem) = &sel_string_oem_fujitsu_irmc_common;
+    }
+  else if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL)
+    {
+      if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R)
+	(*sel_string_oem) = &sel_string_oem_intel_quanta_qssc_s4r;
+      else if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600JF)
+	(*sel_string_oem) = &sel_string_oem_intel_s2600jf;
+      else if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600KP)
+	(*sel_string_oem) = &sel_string_oem_intel_s2600kp;
+      else if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2)
+	(*sel_string_oem) = &sel_string_oem_intel_s2600wt2;
+      else if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT)
+	(*sel_string_oem) = &sel_string_oem_intel_s2600wtt;
+      else if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB)
+	(*sel_string_oem) = &sel_string_oem_intel_s5500wb;
+      else if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_WINDMILL)
+	(*sel_string_oem) = &sel_string_oem_intel_windmill;
+    }
+  else if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC)
+    {
+      if (ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441)
+	(*sel_string_oem) = &sel_string_oem_inventec_5441;
+      else if (ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5442)
+	(*sel_string_oem) = &sel_string_oem_inventec_5442;
+    }
+  else if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_QUANTA)
+    {
+      if (ctx->product_id == IPMI_QUANTA_PRODUCT_ID_S99Q)
+	(*sel_string_oem) = &sel_string_oem_quanta_s99q;
+    }
+  else if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUN_MICROSYSTEMS)
+    {
+      if (ctx->product_id == IPMI_SUN_MICROSYSTEMS_PRODUCT_ID_X4140)
+	(*sel_string_oem) = &sel_string_oem_sun_x4140;
+    }
+  else if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_PEPPERCON) /* Supermicro variant */
+    {
+      if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_PEPPERCON_X7DBR_3)
+	(*sel_string_oem) = &sel_string_oem_supermicro_peppercon_x7dbr_3;
+      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_PEPPERCON_X7DB8)
+	(*sel_string_oem) = &sel_string_oem_supermicro_peppercon_x7db8;
+      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_PEPPERCON_X8DTN)
+	(*sel_string_oem) = &sel_string_oem_supermicro_peppercon_x8dtn;
+      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_PEPPERCON_X7SBI_LN4)
+	(*sel_string_oem) = &sel_string_oem_supermicro_peppercon_x7sbi_ln4;
+    }
+  else if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUPERMICRO
+	   || ctx->manufacturer_id ==  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND)
+    {
+      if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTH)
+	(*sel_string_oem) = &sel_string_oem_supermicro_x8dth;
+      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTG)
+	(*sel_string_oem) = &sel_string_oem_supermicro_x8dtg;
+      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU)
+	(*sel_string_oem) = &sel_string_oem_supermicro_x8dtu;
+      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DT3_LN4F)
+	(*sel_string_oem) = &sel_string_oem_supermicro_x8dt3_ln4f;
+      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU_6PLUS)
+	(*sel_string_oem) = &sel_string_oem_supermicro_x8dtu_6plus;
+      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL)
+	(*sel_string_oem) = &sel_string_oem_supermicro_x8dtl;
+      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL_3F)
+	(*sel_string_oem) = &sel_string_oem_supermicro_x8dtl_3f;
+      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8SIL_F)
+	(*sel_string_oem) = &sel_string_oem_supermicro_x8sil_f;
+      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCL)
+	(*sel_string_oem) = &sel_string_oem_supermicro_x9scl;
+      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCM)
+	(*sel_string_oem) = &sel_string_oem_supermicro_x9scm;
+      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTNPLUS_F)
+	(*sel_string_oem) = &sel_string_oem_supermicro_x8dtnplus_f;
+      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8SIE)
+	(*sel_string_oem) = &sel_string_oem_supermicro_x8sie;
+      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCA_F_O)
+	(*sel_string_oem) = &sel_string_oem_supermicro_x9sca_f_o;
+      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8DGU_F)
+	(*sel_string_oem) = &sel_string_oem_supermicro_h8dgu_f;
+      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8DGU)
+	(*sel_string_oem) = &sel_string_oem_supermicro_h8dgu;
+      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8DG6)
+	(*sel_string_oem) = &sel_string_oem_supermicro_h8dg6;
+      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9DRI_F)
+	(*sel_string_oem) = &sel_string_oem_supermicro_x9dri_f;
+      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9DRI_LN4F_PLUS)
+	(*sel_string_oem) = &sel_string_oem_supermicro_x9dri_ln4f_plus;
+      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SPU_F_O)
+	(*sel_string_oem) = &sel_string_oem_supermicro_x9spu_f_o;
+      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCM_IIF)
+	(*sel_string_oem) = &sel_string_oem_supermicro_x9scm_iif;
+    }
+  else if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_MAGNUM_TECHNOLOGIES) /* Supermicro variant */
+    {
+      if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_MAGNUM_TECHNOLOGIES_X8DTL)
+	(*sel_string_oem) = &sel_string_oem_supermicro_magnum_technologies_x8dtl;
+    }
+  else if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_WISTRON)
+    {
+      if (ctx->product_id == IPMI_WISTRON_PRODUCT_ID_C6220)
+	(*sel_string_oem) = &sel_string_oem_wistron_c6220;
+    }
+
+  return (0);
 }
 
 static int
@@ -782,7 +952,8 @@ _output_oem_sensor_name (ipmi_sel_ctx_t ctx,
                          unsigned int flags,
                          unsigned int *wlen,
                          struct ipmi_sel_system_event_record_data *system_event_record_data,
-                         int *oem_rv)
+                         int *oem_rv,
+			 struct sel_string_oem *sel_string_oem)
 {
   int ret;
 
@@ -797,57 +968,23 @@ _output_oem_sensor_name (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data);
   assert (oem_rv);
 
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL)
+  if (sel_string_oem && sel_string_oem->output_sensor_name)
     {
-      if ((ret = sel_string_output_intel_sensor_name (ctx,
-						      sel_entry,
-						      sel_record_type,
-						      buf,
-						      buflen,
-						      flags,
-						      wlen,
-						      system_event_record_data,
-						      oem_rv)) < 0)
+      if ((ret = sel_string_oem->output_sensor_name (ctx,
+						     sel_entry,
+						     sel_record_type,
+						     buf,
+						     buflen,
+						     flags,
+						     wlen,
+						     system_event_record_data,
+						     oem_rv)) < 0)
 	return (-1);
       
       if (ret)
 	return (1);
     }
       
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC)
-    {
-      if ((ret = sel_string_output_inventec_sensor_name (ctx,
-							 sel_entry,
-							 sel_record_type,
-							 buf,
-							 buflen,
-							 flags,
-							 wlen,
-							 system_event_record_data,
-							 oem_rv)) < 0)
-	return (-1);
-      
-      if (ret)
-	return (1);
-    }
-
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_QUANTA)
-    {
-      if ((ret = sel_string_output_quanta_sensor_name (ctx,
-						       sel_entry,
-						       sel_record_type,
-						       buf,
-						       buflen,
-						       flags,
-						       wlen,
-						       system_event_record_data,
-						       oem_rv)) < 0)
-	return (-1);
-      
-      if (ret)
-	return (1);
-    }
-
   return (0);
 }
 
@@ -862,7 +999,8 @@ _output_sensor_name (ipmi_sel_ctx_t ctx,
                      char *buf,
                      unsigned int buflen,
                      unsigned int flags,
-                     unsigned int *wlen)
+                     unsigned int *wlen,
+		     struct sel_string_oem *sel_string_oem)
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
   char sensor_name_buf[SENSOR_NAME_LENGTH + 1];
@@ -914,7 +1052,8 @@ _output_sensor_name (ipmi_sel_ctx_t ctx,
                                           flags,
                                           wlen,
                                           &system_event_record_data,
-                                          &oem_rv)) < 0)
+                                          &oem_rv,
+					  sel_string_oem)) < 0)
         return (-1);
 
       if (ret)
@@ -968,8 +1107,8 @@ _output_oem_event_data1_class_sensor_specific_discrete (ipmi_sel_ctx_t ctx,
                                                         unsigned int tmpbuflen,
                                                         unsigned int flags,
                                                         unsigned int *wlen,
-                                                        struct ipmi_sel_system_event_record_data *system_event_record_data)
-
+                                                        struct ipmi_sel_system_event_record_data *system_event_record_data,
+							struct sel_string_oem *sel_string_oem)
 {
   int ret;
 
@@ -984,9 +1123,9 @@ _output_oem_event_data1_class_sensor_specific_discrete (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data);
   assert (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC);
 
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL)
+  if (sel_string_oem && sel_string_oem->output_event_data1_class_sensor_specific_discrete)
     {
-      if ((ret = sel_string_output_dell_event_data1_class_sensor_specific_discrete (ctx,
+      if ((ret = sel_string_oem->output_event_data1_class_sensor_specific_discrete (ctx,
 										    sel_entry,
 										    sel_record_type,
 										    tmpbuf,
@@ -998,54 +1137,6 @@ _output_oem_event_data1_class_sensor_specific_discrete (ipmi_sel_ctx_t ctx,
       
       if (ret)
 	return (1);
-    }
-
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU)
-    {
-      if ((ret = sel_string_output_fujitsu_event_data1_class_sensor_specific_discrete (ctx,
-										       sel_entry,
-										       sel_record_type,
-										       tmpbuf,
-										       tmpbuflen,
-										       flags,
-										       wlen,
-										       system_event_record_data)) < 0)
-        return (-1);
-      
-      if (ret)
-        return (1);
-    }
-
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL)
-    {
-      if ((ret = sel_string_output_intel_event_data1_class_sensor_specific_discrete (ctx,
-										     sel_entry,
-										     sel_record_type,
-										     tmpbuf,
-										     tmpbuflen,
-										     flags,
-										     wlen,
-										     system_event_record_data)) < 0)
-        return (-1);
-      
-      if (ret)
-        return (1);
-    }
-
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_WISTRON)
-    {
-      if ((ret = sel_string_output_wistron_event_data1_class_sensor_specific_discrete (ctx,
-										       sel_entry,
-										       sel_record_type,
-										       tmpbuf,
-										       tmpbuflen,
-										       flags,
-										       wlen,
-										       system_event_record_data)) < 0)
-        return (-1);
-      
-      if (ret)
-        return (1);
     }
 
   return (0);
@@ -1063,7 +1154,8 @@ _output_oem_event_data1_class_oem (ipmi_sel_ctx_t ctx,
                                    unsigned int tmpbuflen,
                                    unsigned int flags,
                                    unsigned int *wlen,
-                                   struct ipmi_sel_system_event_record_data *system_event_record_data)
+                                   struct ipmi_sel_system_event_record_data *system_event_record_data,
+				   struct sel_string_oem *sel_string_oem)
 {
   int ret;
 
@@ -1077,9 +1169,9 @@ _output_oem_event_data1_class_oem (ipmi_sel_ctx_t ctx,
   assert (wlen);
   assert (system_event_record_data);
 
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL)
+  if (sel_string_oem && sel_string_oem->output_event_data1_class_oem)
     {
-      if ((ret = sel_string_output_dell_event_data1_class_oem (ctx,
+      if ((ret = sel_string_oem->output_event_data1_class_oem (ctx,
 							       sel_entry,
 							       sel_record_type,
 							       tmpbuf,
@@ -1087,74 +1179,6 @@ _output_oem_event_data1_class_oem (ipmi_sel_ctx_t ctx,
 							       flags,
 							       wlen,
 							       system_event_record_data)) < 0)
-	return (-1);
-      
-      if (ret)
-	return (1);
-    }
-
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL)
-    {
-      if ((ret = sel_string_output_intel_event_data1_class_oem (ctx,
-								sel_entry,
-								sel_record_type,
-								tmpbuf,
-								tmpbuflen,
-								flags,
-								wlen,
-								system_event_record_data)) < 0)
-	return (-1);
-      
-      if (ret)
-	return (1);
-    }
-
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC)
-    {
-      if ((ret = sel_string_output_inventec_event_data1_class_oem (ctx,
-								   sel_entry,
-								   sel_record_type,
-								   tmpbuf,
-								   tmpbuflen,
-								   flags,
-								   wlen,
-								   system_event_record_data)) < 0)
-	return (-1);
-      
-      if (ret)
-	return (1);
-    }
-
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_QUANTA)
-    {
-      if ((ret = sel_string_output_quanta_event_data1_class_oem (ctx,
-								 sel_entry,
-								 sel_record_type,
-								 tmpbuf,
-								 tmpbuflen,
-								 flags,
-								 wlen,
-								 system_event_record_data)) < 0)
-	return (-1);
-      
-      if (ret)
-	return (1);
-    }
-
-  /* achu: Some vendors re-flash the manufacturer id */
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUPERMICRO
-      || ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND
-      || ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_PEPPERCON
-      || ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_MAGNUM_TECHNOLOGIES)
-    {
-      if ((ret = sel_string_output_supermicro_event_data1_class_oem (ctx,
-								     sel_entry,
-								     sel_record_type,
-								     tmpbuf,
-								     tmpbuflen,
-								     flags,
-								     wlen,
-								     system_event_record_data)) < 0)
 	return (-1);
       
       if (ret)
@@ -1175,7 +1199,8 @@ _output_event_data1 (ipmi_sel_ctx_t ctx,
                      char *buf,
                      unsigned int buflen,
                      unsigned int flags,
-                     unsigned int *wlen)
+                     unsigned int *wlen,
+		     struct sel_string_oem *sel_string_oem)
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
   char tmpbuf[EVENT_BUFFER_LENGTH];
@@ -1223,7 +1248,8 @@ _output_event_data1 (ipmi_sel_ctx_t ctx,
                                                                              EVENT_BUFFER_LENGTH,
                                                                              flags,
                                                                              wlen,
-                                                                             &system_event_record_data)) < 0)
+                                                                             &system_event_record_data,
+									     sel_string_oem)) < 0)
             return (-1);
           
           if (ret)
@@ -1275,7 +1301,8 @@ _output_event_data1 (ipmi_sel_ctx_t ctx,
                                                         EVENT_BUFFER_LENGTH,
                                                         flags,
                                                         wlen,
-                                                        &system_event_record_data)) < 0)
+                                                        &system_event_record_data,
+							sel_string_oem)) < 0)
             return (-1);
           
           if (ret)
@@ -1367,8 +1394,11 @@ _output_oem_event_data2_threshold_oem (ipmi_sel_ctx_t ctx,
                                        unsigned int tmpbuflen,
                                        unsigned int flags,
                                        unsigned int *wlen,
-                                       struct ipmi_sel_system_event_record_data *system_event_record_data)
+                                       struct ipmi_sel_system_event_record_data *system_event_record_data,
+				       struct sel_string_oem *sel_string_oem)
 {
+  int ret;
+
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (sel_entry);
@@ -1380,7 +1410,21 @@ _output_oem_event_data2_threshold_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data);
   assert (system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
 
-  /* Nothing Yet */
+  if (sel_string_oem && sel_string_oem->output_event_data2_threshold_oem)
+    {
+      if ((ret = sel_string_oem->output_event_data2_threshold_oem (ctx,
+								   sel_entry,
+								   sel_record_type,
+								   tmpbuf,
+								   tmpbuflen,
+								   flags,
+								   wlen,
+								   system_event_record_data)) < 0)
+	return (-1);
+      
+      if (ret)
+	return (1);
+    }
 
   return (0);
 }
@@ -1397,7 +1441,8 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
                                       unsigned int tmpbuflen,
                                       unsigned int flags,
                                       unsigned int *wlen,
-                                      struct ipmi_sel_system_event_record_data *system_event_record_data)
+                                      struct ipmi_sel_system_event_record_data *system_event_record_data,
+				      struct sel_string_oem *sel_string_oem)
 {
   int ret;
 
@@ -1412,25 +1457,9 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data);
   assert (system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
 
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL)
+  if (sel_string_oem && sel_string_oem->output_event_data2_discrete_oem)
     {
-      if ((ret = sel_string_output_dell_event_data2_discrete_oem (ctx,
-								  sel_entry,
-								  sel_record_type,
-								  tmpbuf,
-								  tmpbuflen,
-								  flags,
-								  wlen,
-								  system_event_record_data)) < 0)
-	return (-1);
-      
-      if (ret)
-	return (1);
-    }
-
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL)
-    {
-      if ((ret = sel_string_output_intel_event_data2_discrete_oem (ctx,
+      if ((ret = sel_string_oem->output_event_data2_discrete_oem (ctx,
 								   sel_entry,
 								   sel_record_type,
 								   tmpbuf,
@@ -1440,54 +1469,6 @@ _output_oem_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 								   system_event_record_data)) < 0)
 	return (-1);
       
-      if (ret)
-	return (1);
-    }
-
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC)
-    {
-      if ((ret = sel_string_output_inventec_event_data2_discrete_oem (ctx,
-								      sel_entry,
-								      sel_record_type,
-								      tmpbuf,
-								      tmpbuflen,
-								      flags,
-								      wlen,
-								      system_event_record_data)) < 0)
-	return (-1);
-      
-      if (ret)
-	return (1);
-    }
-
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_QUANTA)
-    {
-      if ((ret = sel_string_output_quanta_event_data2_discrete_oem (ctx,
-								    sel_entry,
-								    sel_record_type,
-								    tmpbuf,
-								    tmpbuflen,
-								    flags,
-								    wlen,
-								    system_event_record_data)) < 0)
-	return (-1);
-  
-      if (ret)
-	return (1);
-    }
-
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_WISTRON)
-    {
-      if ((ret = sel_string_output_wistron_event_data2_discrete_oem (ctx,
-								     sel_entry,
-								     sel_record_type,
-								     tmpbuf,
-								     tmpbuflen,
-								     flags,
-								     wlen,
-								     system_event_record_data)) < 0)
-	return (-1);
-  
       if (ret)
 	return (1);
     }
@@ -1507,7 +1488,8 @@ _output_oem_event_data2_class_oem (ipmi_sel_ctx_t ctx,
                                    unsigned int tmpbuflen,
                                    unsigned int flags,
                                    unsigned int *wlen,
-                                   struct ipmi_sel_system_event_record_data *system_event_record_data)
+                                   struct ipmi_sel_system_event_record_data *system_event_record_data,
+				   struct sel_string_oem *sel_string_oem)
 {
   int ret;
 
@@ -1521,9 +1503,9 @@ _output_oem_event_data2_class_oem (ipmi_sel_ctx_t ctx,
   assert (wlen);
   assert (system_event_record_data);
 
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL)
+  if (sel_string_oem && sel_string_oem->output_event_data2_class_oem)
     {
-      if ((ret = sel_string_output_dell_event_data2_class_oem (ctx,
+      if ((ret = sel_string_oem->output_event_data2_class_oem (ctx,
 							       sel_entry,
 							       sel_record_type,
 							       tmpbuf,
@@ -1531,54 +1513,6 @@ _output_oem_event_data2_class_oem (ipmi_sel_ctx_t ctx,
 							       flags,
 							       wlen,
 							       system_event_record_data)) < 0)
-	return (-1);
-      
-      if (ret)
-	return (1);
-    }
-  
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL)
-    {
-      if ((ret = sel_string_output_intel_event_data2_class_oem (ctx,
-								sel_entry,
-								sel_record_type,
-								tmpbuf,
-								tmpbuflen,
-								flags,
-								wlen,
-								system_event_record_data)) < 0)
-	return (-1);
-      
-      if (ret)
-	return (1);
-    }
-
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC)
-    {
-      if ((ret = sel_string_output_inventec_event_data2_class_oem (ctx,
-								   sel_entry,
-								   sel_record_type,
-								   tmpbuf,
-								   tmpbuflen,
-								   flags,
-								   wlen,
-								   system_event_record_data)) < 0)
-	return (-1);
-      
-      if (ret)
-	return (1);
-    }
-
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_QUANTA)
-    {
-      if ((ret = sel_string_output_quanta_event_data2_class_oem (ctx,
-								 sel_entry,
-								 sel_record_type,
-								 tmpbuf,
-								 tmpbuflen,
-								 flags,
-								 wlen,
-								 system_event_record_data)) < 0)
 	return (-1);
       
       if (ret)
@@ -1599,7 +1533,8 @@ _output_event_data2 (ipmi_sel_ctx_t ctx,
                      char *buf,
                      unsigned int buflen,
                      unsigned int flags,
-                     unsigned int *wlen)
+                     unsigned int *wlen,
+		     struct sel_string_oem *sel_string_oem)
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
   char tmpbuf[EVENT_BUFFER_LENGTH];
@@ -1693,7 +1628,8 @@ _output_event_data2 (ipmi_sel_ctx_t ctx,
                                                                 EVENT_BUFFER_LENGTH,
                                                                 flags,
                                                                 wlen,
-                                                                &system_event_record_data)) < 0)
+                                                                &system_event_record_data,
+								sel_string_oem)) < 0)
                 return (-1);
               
               if (ret)
@@ -1831,7 +1767,8 @@ _output_event_data2 (ipmi_sel_ctx_t ctx,
                                                                EVENT_BUFFER_LENGTH,
                                                                flags,
                                                                wlen,
-                                                               &system_event_record_data)) < 0)
+                                                               &system_event_record_data,
+							       sel_string_oem)) < 0)
                 return (-1);
               
               if (ret)
@@ -1885,7 +1822,8 @@ _output_event_data2 (ipmi_sel_ctx_t ctx,
                                                         EVENT_BUFFER_LENGTH,
                                                         flags,
                                                         wlen,
-                                                        &system_event_record_data)) < 0)
+                                                        &system_event_record_data,
+							sel_string_oem)) < 0)
             return (-1);
           
           if (ret)
@@ -1975,7 +1913,8 @@ _output_oem_event_data3_threshold_oem (ipmi_sel_ctx_t ctx,
                                        unsigned int tmpbuflen,
                                        unsigned int flags,
                                        unsigned int *wlen,
-                                       struct ipmi_sel_system_event_record_data *system_event_record_data)
+                                       struct ipmi_sel_system_event_record_data *system_event_record_data,
+				       struct sel_string_oem *sel_string_oem)
 {
   int ret;
 
@@ -1990,16 +1929,16 @@ _output_oem_event_data3_threshold_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data);
   assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
 
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUN_MICROSYSTEMS)
+  if (sel_string_oem && sel_string_oem->output_event_data3_threshold_oem)
     {
-      if ((ret = sel_string_output_sun_event_data3_threshold_oem (ctx,
-								  sel_entry,
-								  sel_record_type,
-								  tmpbuf,
-								  tmpbuflen,
-								  flags,
-								  wlen,
-								  system_event_record_data)) < 0)
+      if ((ret = sel_string_oem->output_event_data3_threshold_oem (ctx,
+								   sel_entry,
+								   sel_record_type,
+								   tmpbuf,
+								   tmpbuflen,
+								   flags,
+								   wlen,
+								   system_event_record_data)) < 0)
 	return (-1);
       
       if (ret)
@@ -2021,7 +1960,8 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
                                       unsigned int tmpbuflen,
                                       unsigned int flags,
                                       unsigned int *wlen,
-                                      struct ipmi_sel_system_event_record_data *system_event_record_data)
+                                      struct ipmi_sel_system_event_record_data *system_event_record_data,
+				      struct sel_string_oem *sel_string_oem)
 {
   int ret;
 
@@ -2036,9 +1976,9 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data);
   assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
 
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL)
+  if (sel_string_oem && sel_string_oem->output_event_data3_discrete_oem)
     {
-      if ((ret = sel_string_output_dell_event_data3_discrete_oem (ctx,
+      if ((ret = sel_string_oem->output_event_data3_discrete_oem (ctx,
 								  sel_entry,
 								  sel_record_type,
 								  tmpbuf,
@@ -2048,86 +1988,6 @@ _output_oem_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 								  system_event_record_data)) < 0)
 	return (-1);
       
-      if (ret)
-	return (1);
-    }
-
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL)
-    {
-      if ((ret = sel_string_output_intel_event_data3_discrete_oem (ctx,
-								   sel_entry,
-								   sel_record_type,
-								   tmpbuf,
-								   tmpbuflen,
-								   flags,
-								   wlen,
-								   system_event_record_data)) < 0)
-	return (-1);
-      
-      if (ret)
-	return (1);
-    }
-
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC)
-    {
-      if ((ret = sel_string_output_inventec_event_data3_discrete_oem (ctx,
-								      sel_entry,
-								      sel_record_type,
-								      tmpbuf,
-								      tmpbuflen,
-								      flags,
-								      wlen,
-								      system_event_record_data)) < 0)
-	return (-1);
-      
-      if (ret)
-	return (1);
-    }
-
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_QUANTA)
-    {
-      if ((ret = sel_string_output_quanta_event_data3_discrete_oem (ctx,
-								    sel_entry,
-								    sel_record_type,
-								    tmpbuf,
-								    tmpbuflen,
-								    flags,
-								    wlen,
-								    system_event_record_data)) < 0)
-	return (-1);
-  
-      if (ret)
-	return (1);
-    }
-
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUN_MICROSYSTEMS)
-    {
-      if ((ret = sel_string_output_sun_event_data3_discrete_oem (ctx,
-								 sel_entry,
-								 sel_record_type,
-								 tmpbuf,
-								 tmpbuflen,
-								 flags,
-								 wlen,
-								 system_event_record_data)) < 0)
-	return (-1);
-      
-      if (ret)
-	return (1);
-    }
-
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_WISTRON)
-    {
-      if ((ret = sel_string_output_wistron_event_data3_discrete_oem (ctx,
-								     sel_entry,
-								     sel_record_type,
-								     tmpbuf,
-								     tmpbuflen,
-								     flags,
-								     wlen,
-								     system_event_record_data)) < 0)
-	return (-1);
-  
       if (ret)
 	return (1);
     }
@@ -2147,7 +2007,8 @@ _output_oem_event_data3_class_oem (ipmi_sel_ctx_t ctx,
                                    unsigned int tmpbuflen,
                                    unsigned int flags,
                                    unsigned int *wlen,
-                                   struct ipmi_sel_system_event_record_data *system_event_record_data)
+                                   struct ipmi_sel_system_event_record_data *system_event_record_data,
+				   struct sel_string_oem *sel_string_oem)
 {
   int ret;
 
@@ -2161,9 +2022,9 @@ _output_oem_event_data3_class_oem (ipmi_sel_ctx_t ctx,
   assert (wlen);
   assert (system_event_record_data);
 
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL)
+  if (sel_string_oem && sel_string_oem->output_event_data3_class_oem)
     {
-      if ((ret = sel_string_output_dell_event_data3_class_oem (ctx,
+      if ((ret = sel_string_oem->output_event_data3_class_oem (ctx,
 							       sel_entry,
 							       sel_record_type,
 							       tmpbuf,
@@ -2171,54 +2032,6 @@ _output_oem_event_data3_class_oem (ipmi_sel_ctx_t ctx,
 							       flags,
 							       wlen,
 							       system_event_record_data)) < 0)
-	return (-1);
-  
-      if (ret)
-	return (1);
-    }
-
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL)
-    {
-      if ((ret = sel_string_output_intel_event_data3_class_oem (ctx,
-								sel_entry,
-								sel_record_type,
-								tmpbuf,
-								tmpbuflen,
-								flags,
-								wlen,
-								system_event_record_data)) < 0)
-	return (-1);
-  
-      if (ret)
-	return (1);
-    }
-
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC)
-    {
-      if ((ret = sel_string_output_inventec_event_data3_class_oem (ctx,
-								   sel_entry,
-								   sel_record_type,
-								   tmpbuf,
-								   tmpbuflen,
-								   flags,
-								   wlen,
-								   system_event_record_data)) < 0)
-	return (-1);
-      
-      if (ret)
-	return (1);
-    }
-
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_QUANTA)
-    {
-      if ((ret = sel_string_output_quanta_event_data3_class_oem (ctx,
-								 sel_entry,
-								 sel_record_type,
-								 tmpbuf,
-								 tmpbuflen,
-								 flags,
-								 wlen,
-								 system_event_record_data)) < 0)
 	return (-1);
       
       if (ret)
@@ -2239,7 +2052,8 @@ _output_event_data3 (ipmi_sel_ctx_t ctx,
                      char *buf,
                      unsigned int buflen,
                      unsigned int flags,
-                     unsigned int *wlen)
+                     unsigned int *wlen,
+		     struct sel_string_oem *sel_string_oem)
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
   char tmpbuf[EVENT_BUFFER_LENGTH];
@@ -2325,7 +2139,8 @@ _output_event_data3 (ipmi_sel_ctx_t ctx,
                                                                 EVENT_BUFFER_LENGTH,
                                                                 flags,
                                                                 wlen,
-                                                                &system_event_record_data)) < 0)
+                                                                &system_event_record_data,
+								sel_string_oem)) < 0)
                 return (-1);
               
               if (ret)
@@ -2398,7 +2213,8 @@ _output_event_data3 (ipmi_sel_ctx_t ctx,
                                                                EVENT_BUFFER_LENGTH,
                                                                flags,
                                                                wlen,
-                                                               &system_event_record_data)) < 0)
+                                                               &system_event_record_data,
+							       sel_string_oem)) < 0)
                 return (-1);
               
               if (ret)
@@ -2452,7 +2268,8 @@ _output_event_data3 (ipmi_sel_ctx_t ctx,
                                                         EVENT_BUFFER_LENGTH,
                                                         flags,
                                                         wlen,
-                                                        &system_event_record_data)) < 0)
+                                                        &system_event_record_data,
+							sel_string_oem)) < 0)
             return (-1);
           
           if (ret)
@@ -2547,7 +2364,8 @@ _output_oem_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
                                      unsigned int flags,
                                      unsigned int *wlen,
                                      struct ipmi_sel_system_event_record_data *system_event_record_data,
-                                     int *oem_rv)
+                                     int *oem_rv,
+				     struct sel_string_oem *sel_string_oem)
 {
   int ret;
 
@@ -2584,9 +2402,9 @@ _output_oem_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 	return (1);
     }
       
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL)
+  if (sel_string_oem && sel_string_oem->output_event_data2_event_data3)
     {
-      if ((ret = sel_string_output_dell_event_data2_event_data3 (ctx,
+      if ((ret = sel_string_oem->output_event_data2_event_data3 (ctx,
 								 sel_entry,
 								 sel_record_type,
 								 buf,
@@ -2595,74 +2413,6 @@ _output_oem_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 								 wlen,
 								 system_event_record_data,
 								 oem_rv)) < 0)
-	return (-1);
-      
-      if (ret)
-	return (1);
-    }
-
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU)
-    {
-      if ((ret = sel_string_output_fujitsu_event_data2_event_data3 (ctx,
-								    sel_entry,
-								    sel_record_type,
-								    buf,
-								    buflen,
-								    flags,
-								    wlen,
-								    system_event_record_data,
-								    oem_rv)) < 0)
-	return (-1);
-
-      if (ret)
-	return (1);
-    }
-
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL)
-    {
-      if ((ret = sel_string_output_intel_event_data2_event_data3 (ctx,
-								  sel_entry,
-								  sel_record_type,
-								  buf,
-								  buflen,
-								  flags,
-								  wlen,
-								  system_event_record_data,
-								  oem_rv)) < 0)
-	return (-1);
-
-      if (ret)
-	return (1);
-    }
-
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC)
-    {
-      if ((ret = sel_string_output_inventec_event_data2_event_data3 (ctx,
-								     sel_entry,
-								     sel_record_type,
-								     buf,
-								     buflen,
-								     flags,
-								     wlen,
-								     system_event_record_data,
-								     oem_rv)) < 0)
-	return (-1);
-      
-      if (ret)
-	return (1);
-    }
-
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_WISTRON)
-    {
-      if ((ret = sel_string_output_wistron_event_data2_event_data3 (ctx,
-								    sel_entry,
-								    sel_record_type,
-								    buf,
-								    buflen,
-								    flags,
-								    wlen,
-								    system_event_record_data,
-								    oem_rv)) < 0)
 	return (-1);
       
       if (ret)
@@ -2683,7 +2433,8 @@ _output_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
                                  char *buf,
                                  unsigned int buflen,
                                  unsigned int flags,
-                                 unsigned int *wlen)
+                                 unsigned int *wlen,
+				 struct sel_string_oem *sel_string_oem)
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
   char tmpbufdata2[EVENT_BUFFER_LENGTH + 1];
@@ -2728,7 +2479,8 @@ _output_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 					    tmpbufdata3,
 					    EVENT_BUFFER_LENGTH,
 					    flags,
-					    &tmpbufdata3_wlen)) < 0)
+					    &tmpbufdata3_wlen,
+					    sel_string_oem)) < 0)
 	return (-1);
       
       if (data3_ret)
@@ -2759,7 +2511,8 @@ _output_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
                                                       flags,
                                                       wlen,
                                                       &system_event_record_data,
-                                                      &oem_rv)) < 0)
+                                                      &oem_rv,
+						      sel_string_oem)) < 0)
         return (-1);
       
       if (ret)
@@ -2772,7 +2525,8 @@ _output_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
                                         tmpbufdata2,
                                         EVENT_BUFFER_LENGTH,
                                         flags,
-                                        &tmpbufdata2_wlen)) < 0)
+                                        &tmpbufdata2_wlen,
+					sel_string_oem)) < 0)
     return (-1);
 
   if ((data3_ret = _output_event_data3 (ctx,
@@ -2781,7 +2535,8 @@ _output_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
                                         tmpbufdata3,
                                         EVENT_BUFFER_LENGTH,
                                         flags,
-                                        &tmpbufdata3_wlen)) < 0)
+                                        &tmpbufdata3_wlen,
+					sel_string_oem)) < 0)
     return (-1);
 
   if (data2_ret || data3_ret)
@@ -3044,7 +2799,8 @@ _output_event_data1_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 					     char *buf,
 					     unsigned int buflen,
 					     unsigned int flags,
-					     unsigned int *wlen)
+					     unsigned int *wlen,
+					     struct sel_string_oem *sel_string_oem)
 {
   struct ipmi_sel_system_event_record_data system_event_record_data;
   char tmpbufeventdata1[EVENT_BUFFER_LENGTH + 1];
@@ -3077,7 +2833,8 @@ _output_event_data1_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 					tmpbufeventdata1,
 					EVENT_BUFFER_LENGTH,
 					flags,
-					&tmpbufeventdata1_wlen)) < 0)
+					&tmpbufeventdata1_wlen,
+					sel_string_oem)) < 0)
     return (-1);
 
   if ((data23_ret = _output_event_data2_event_data3 (ctx,
@@ -3086,7 +2843,8 @@ _output_event_data1_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 						     tmpbufeventdata23,
 						     EVENT_BUFFER_LENGTH,
 						     flags,
-						     &tmpbufeventdata23_wlen)) < 0)
+						     &tmpbufeventdata23_wlen,
+						     sel_string_oem)) < 0)
     return (-1);
   
   if (data1_ret || data23_ret)
@@ -3270,7 +3028,8 @@ _output_oem_interpreted_record_data (ipmi_sel_ctx_t ctx,
                                      unsigned int tmpbuflen,
                                      unsigned int flags,
                                      unsigned int *wlen,
-                                     int *oem_rv)
+                                     int *oem_rv,
+				     struct sel_string_oem *sel_string_oem)
 {
   int ret;
 
@@ -3304,32 +3063,16 @@ _output_oem_interpreted_record_data (ipmi_sel_ctx_t ctx,
 	return (1);
     }
 
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU)
+  if (sel_string_oem && sel_string_oem->output_oem_record_data)
     {
-      if ((ret = sel_string_output_fujitsu_oem_record_data (ctx,
-							    sel_entry,
-							    sel_record_type,
-							    tmpbuf,
-							    tmpbuflen,
-							    flags,
-							    wlen,
-							    oem_rv)) < 0)
-	return (-1);
-      
-      if (ret)
-	return (1);
-    }
-
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL)
-    {
-      if ((ret = sel_string_output_intel_oem_record_data (ctx,
-							  sel_entry,
-							  sel_record_type,
-							  tmpbuf,
-							  tmpbuflen,
-							  flags,
-							  wlen,
-							  oem_rv)) < 0)
+      if ((ret = sel_string_oem->output_oem_record_data (ctx,
+							 sel_entry,
+							 sel_record_type,
+							 tmpbuf,
+							 tmpbuflen,
+							 flags,
+							 wlen,
+							 oem_rv)) < 0)
 	return (-1);
       
       if (ret)
@@ -3350,7 +3093,8 @@ _output_oem_record_data (ipmi_sel_ctx_t ctx,
                          char *buf,
                          unsigned int buflen,
                          unsigned int flags,
-                         unsigned int *wlen)
+                         unsigned int *wlen,
+			 struct sel_string_oem *sel_string_oem)
 {
   uint8_t oem_data[SEL_BUFFER_LENGTH];
   int oem_len;
@@ -3380,7 +3124,8 @@ _output_oem_record_data (ipmi_sel_ctx_t ctx,
                                                       buflen,
                                                       flags,
                                                       wlen,
-                                                      &oem_rv)) < 0)
+                                                      &oem_rv,
+						      sel_string_oem)) < 0)
         return (-1);
       
       if (ret)
@@ -3426,7 +3171,8 @@ _output_oem_string (ipmi_sel_ctx_t ctx,
                     char *buf,
                     unsigned int buflen,
                     unsigned int flags,
-                    unsigned int *wlen)
+                    unsigned int *wlen,
+		    struct sel_string_oem *sel_string_oem)
 {
   int ret;
 
@@ -3438,18 +3184,18 @@ _output_oem_string (ipmi_sel_ctx_t ctx,
   assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
   assert (wlen);
   
-  if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU)
+  if (sel_string_oem && sel_string_oem->output_oem_string)
     {
       int oem_rv = 0;
       
-      if ((ret = sel_string_output_fujitsu_oem_string (ctx,
-						       sel_entry,
-						       sel_record_type,
-						       buf,
-						       buflen,
-						       flags,
-						       wlen,
-						       &oem_rv)) < 0)
+      if ((ret = sel_string_oem->output_oem_string (ctx,
+						    sel_entry,
+						    sel_record_type,
+						    buf,
+						    buflen,
+						    flags,
+						    wlen,
+						    &oem_rv)) < 0)
         return (-1);
       
       if (ret)
@@ -3479,6 +3225,7 @@ sel_format_record_string (ipmi_sel_ctx_t ctx,
   uint8_t sel_record_type;
   int percent_flag = 0;
   unsigned int wlen = 0;
+  struct sel_string_oem *sel_string_oem = NULL;
   int rv = -1;
   int ret;
 
@@ -3499,6 +3246,14 @@ sel_format_record_string (ipmi_sel_ctx_t ctx,
 				  &record_id,
 				  &sel_record_type) < 0)
     goto cleanup;
+
+  if (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA)
+    {
+      if (_find_motherboard_oem_support (ctx,
+					 flags,
+					 &sel_string_oem) < 0)
+	goto cleanup;
+    }
 
   while (*fmt)
     {
@@ -3584,7 +3339,8 @@ sel_format_record_string (ipmi_sel_ctx_t ctx,
                                           buf,
                                           buflen,
                                           flags,
-                                          &wlen)) < 0)
+                                          &wlen,
+					  sel_string_oem)) < 0)
             goto cleanup;
           if (ret)
             goto out;
@@ -3598,7 +3354,8 @@ sel_format_record_string (ipmi_sel_ctx_t ctx,
                                           buf,
                                           buflen,
                                           flags,
-                                          &wlen)) < 0)
+                                          &wlen,
+					  sel_string_oem)) < 0)
             goto cleanup;
           if (ret)
             goto out;
@@ -3612,7 +3369,8 @@ sel_format_record_string (ipmi_sel_ctx_t ctx,
                                           buf,
                                           buflen,
                                           flags,
-                                          &wlen)) < 0)
+                                          &wlen,
+					  sel_string_oem)) < 0)
             goto cleanup;
           if (ret)
             goto out;
@@ -3626,7 +3384,8 @@ sel_format_record_string (ipmi_sel_ctx_t ctx,
                                           buf,
                                           buflen,
                                           flags,
-                                          &wlen)) < 0)
+                                          &wlen,
+					  sel_string_oem)) < 0)
             goto cleanup;
           if (ret)
             goto out;
@@ -3640,7 +3399,8 @@ sel_format_record_string (ipmi_sel_ctx_t ctx,
                                                       buf,
                                                       buflen,
                                                       flags,
-                                                      &wlen)) < 0)
+                                                      &wlen,
+						      sel_string_oem)) < 0)
             goto cleanup;
           if (ret)
             goto out;
@@ -3681,7 +3441,8 @@ sel_format_record_string (ipmi_sel_ctx_t ctx,
 								  buf,
 								  buflen,
 								  flags,
-								  &wlen)) < 0)
+								  &wlen,
+								  sel_string_oem)) < 0)
             goto cleanup;
           if (ret)
             goto out;
@@ -3723,7 +3484,8 @@ sel_format_record_string (ipmi_sel_ctx_t ctx,
                                               buf,
                                               buflen,
                                               flags,
-                                              &wlen)) < 0)
+                                              &wlen,
+					      sel_string_oem)) < 0)
             goto cleanup;
           if (ret)
             goto out;
@@ -3737,7 +3499,8 @@ sel_format_record_string (ipmi_sel_ctx_t ctx,
                                          buf,
                                          buflen,
                                          flags,
-                                         &wlen)) < 0)
+                                         &wlen,
+					 sel_string_oem)) < 0)
             goto cleanup;
           if (ret)
             goto out;

@@ -46,8 +46,6 @@
 #include "ipmi-sel-common.h"
 #include "ipmi-sel-defs.h"
 #include "ipmi-sel-string.h"
-#include "ipmi-sel-string-wistron.h"
-#include "ipmi-sel-string-wistron-c6220.h"
 #include "ipmi-sel-trace.h"
 #include "ipmi-sel-util.h"
 
@@ -803,3 +801,19 @@ sel_string_output_wistron_c6220_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 
   return (0);
 }
+
+struct sel_string_oem sel_string_oem_wistron_c6220 =
+  {
+    NULL,
+    sel_string_output_wistron_c6220_event_data1_class_sensor_specific_discrete,
+    NULL,
+    NULL,
+    sel_string_output_wistron_c6220_event_data2_discrete_oem,
+    NULL,
+    NULL,
+    sel_string_output_wistron_c6220_event_data3_discrete_oem,
+    NULL,
+    sel_string_output_wistron_c6220_event_data2_event_data3,
+    NULL,
+    NULL,
+  };

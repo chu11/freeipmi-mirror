@@ -48,7 +48,6 @@
 #include "ipmi-sel-defs.h"
 #include "ipmi-sel-string.h"
 #include "ipmi-sel-string-intel-node-manager.h"
-#include "ipmi-sel-string-inventec.h"
 #include "ipmi-sel-string-inventec-common.h"
 #include "ipmi-sel-trace.h"
 #include "ipmi-sel-util.h"

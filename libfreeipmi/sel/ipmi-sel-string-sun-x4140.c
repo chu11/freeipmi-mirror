@@ -38,8 +38,6 @@
 #include "ipmi-sel-common.h"
 #include "ipmi-sel-defs.h"
 #include "ipmi-sel-string.h"
-#include "ipmi-sel-string-sun.h"
-#include "ipmi-sel-string-sun-x4140.h"
 #include "ipmi-sel-trace.h"
 #include "ipmi-sel-util.h"
 
@@ -171,3 +169,19 @@ sel_string_output_sun_x4140_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 
   return (0);
 }
+
+struct sel_string_oem sel_string_oem_sun_x4140 =
+  {
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    sel_string_output_sun_x4140_event_data3_threshold_oem,
+    sel_string_output_sun_x4140_event_data3_discrete_oem,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+  };

@@ -45,8 +45,6 @@
 #include "ipmi-sel-common.h"
 #include "ipmi-sel-defs.h"
 #include "ipmi-sel-string.h"
-#include "ipmi-sel-string-fujitsu.h"
-#include "ipmi-sel-string-fujitsu-irmc-common.h"
 #include "ipmi-sel-trace.h"
 #include "ipmi-sel-util.h"
 
@@ -570,3 +568,19 @@ sel_string_output_fujitsu_irmc_common_oem_string (ipmi_sel_ctx_t ctx,
 
   return (0);
 }
+
+struct sel_string_oem sel_string_oem_fujitsu_irmc_common =
+  {
+    NULL,
+    sel_string_output_fujitsu_irmc_common_event_data1_class_sensor_specific_discrete,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    sel_string_output_fujitsu_irmc_common_event_data2_event_data3,
+    sel_string_output_fujitsu_irmc_common_oem_record_data,
+    sel_string_output_fujitsu_irmc_common_oem_string,
+  };
