@@ -30,9 +30,6 @@ FreeIPMI general
   - generalize "+" syntax in ipmipower to all FreeIPMI tools?
   - or use extra option?
 - audit/cleanup memsets, use sizeof() when appropriate
-- re-arch oem extensions (especially sel) w/ struct + function call back architecture, if/else is getting crazy ***
-  - not best idea? different motherboards could have multiple OEM extensions
-    - e.g. linux kernel is independent of motherboard, but has OEM extensions
 
 FreeIPMI new stuff
 ------------------
