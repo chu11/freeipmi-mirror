@@ -201,8 +201,8 @@ libfreeipmi_la_SOURCES = \
 	sel/ipmi-sel-string-intel-quanta-qssc-s4r.c \
 	sel/ipmi-sel-string-intel-s2600jf.c \
 	sel/ipmi-sel-string-intel-windmill.c \
-	sel/ipmi-sel-string-intel-e52600v3.c \
-	sel/ipmi-sel-string-intel-e52600v3.h \
+	sel/ipmi-sel-string-intel-e52600v3-common.c \
+	sel/ipmi-sel-string-intel-e52600v3-common.h \
 	sel/ipmi-sel-string-intel-s2600kp.c \
 	sel/ipmi-sel-string-intel-s2600wt2.c \
 	sel/ipmi-sel-string-intel-s2600wtt.c \
