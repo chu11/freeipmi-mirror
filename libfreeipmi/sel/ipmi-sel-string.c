@@ -935,59 +935,6 @@ _output_sensor_type (ipmi_sel_ctx_t ctx,
   return (0);
 }
 
-/* return (0) - no OEM match
- * return (1) - OEM match
- * return (-1) - error, cleanup and return error
- *
- * in oem_rv, return
- * 0 - continue on
- * 1 - buffer full, return full buffer to user
- */
-static int
-_output_oem_sensor_name (ipmi_sel_ctx_t ctx,
-                         struct ipmi_sel_entry *sel_entry,
-                         uint8_t sel_record_type,
-                         char *buf,
-                         unsigned int buflen,
-                         unsigned int flags,
-                         unsigned int *wlen,
-                         struct ipmi_sel_system_event_record_data *system_event_record_data,
-                         int *oem_rv,
-			 struct sel_string_oem *sel_string_oem)
-{
-  int ret;
-
-  assert (ctx);
-  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
-  assert (sel_entry);
-  assert (buf);
-  assert (buflen);
-  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
-  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
-  assert (wlen);
-  assert (system_event_record_data);
-  assert (oem_rv);
-
-  if (sel_string_oem && sel_string_oem->output_sensor_name)
-    {
-      if ((ret = sel_string_oem->output_sensor_name (ctx,
-						     sel_entry,
-						     sel_record_type,
-						     buf,
-						     buflen,
-						     flags,
-						     wlen,
-						     system_event_record_data,
-						     oem_rv)) < 0)
-	return (-1);
-      
-      if (ret)
-	return (1);
-    }
-      
-  return (0);
-}
-
 /* return (0) - continue on
  * return (1) - buffer full, return full buffer to user
  * return (-1) - error, cleanup and return error
@@ -1044,20 +991,22 @@ _output_sensor_name (ipmi_sel_ctx_t ctx,
     {
       int oem_rv = 0;
 
-      if ((ret = _output_oem_sensor_name (ctx,
-                                          sel_entry,
-                                          sel_record_type,
-                                          buf,
-                                          buflen,
-                                          flags,
-                                          wlen,
-                                          &system_event_record_data,
-                                          &oem_rv,
-					  sel_string_oem)) < 0)
-        return (-1);
-
-      if (ret)
-        return (oem_rv);
+      if (sel_string_oem && sel_string_oem->output_sensor_name)
+	{
+	  if ((ret = sel_string_oem->output_sensor_name (ctx,
+							 sel_entry,
+							 sel_record_type,
+							 buf,
+							 buflen,
+							 flags,
+							 wlen,
+							 &system_event_record_data,
+							 &oem_rv)) < 0)
+	    return (-1);
+	  
+	  if (ret)
+	    return (oem_rv);
+	}
     }
 
   if (flags & IPMI_SEL_STRING_FLAGS_VERBOSE)
@@ -1090,99 +1039,6 @@ _output_sensor_name (ipmi_sel_ctx_t ctx,
 				   system_event_record_data.sensor_number))
             return (1);
         }
-    }
-
-  return (0);
-}
-
-/* return (0) - no OEM match
- * return (1) - OEM match
- * return (-1) - error, cleanup and return error
- */
-static int
-_output_oem_event_data1_class_sensor_specific_discrete (ipmi_sel_ctx_t ctx,
-                                                        struct ipmi_sel_entry *sel_entry,
-                                                        uint8_t sel_record_type,
-                                                        char *tmpbuf,
-                                                        unsigned int tmpbuflen,
-                                                        unsigned int flags,
-                                                        unsigned int *wlen,
-                                                        struct ipmi_sel_system_event_record_data *system_event_record_data,
-							struct sel_string_oem *sel_string_oem)
-{
-  int ret;
-
-  assert (ctx);
-  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
-  assert (sel_entry);
-  assert (tmpbuf);
-  assert (tmpbuflen);
-  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
-  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
-  assert (wlen);
-  assert (system_event_record_data);
-  assert (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC);
-
-  if (sel_string_oem && sel_string_oem->output_event_data1_class_sensor_specific_discrete)
-    {
-      if ((ret = sel_string_oem->output_event_data1_class_sensor_specific_discrete (ctx,
-										    sel_entry,
-										    sel_record_type,
-										    tmpbuf,
-										    tmpbuflen,
-										    flags,
-										    wlen,
-										    system_event_record_data)) < 0)
-	return (-1);
-      
-      if (ret)
-	return (1);
-    }
-
-  return (0);
-}
-
-/* return (0) - no OEM match
- * return (1) - OEM match
- * return (-1) - error, cleanup and return error
- */
-static int
-_output_oem_event_data1_class_oem (ipmi_sel_ctx_t ctx,
-                                   struct ipmi_sel_entry *sel_entry,
-                                   uint8_t sel_record_type,
-                                   char *tmpbuf,
-                                   unsigned int tmpbuflen,
-                                   unsigned int flags,
-                                   unsigned int *wlen,
-                                   struct ipmi_sel_system_event_record_data *system_event_record_data,
-				   struct sel_string_oem *sel_string_oem)
-{
-  int ret;
-
-  assert (ctx);
-  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
-  assert (sel_entry);
-  assert (tmpbuf);
-  assert (tmpbuflen);
-  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
-  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
-  assert (wlen);
-  assert (system_event_record_data);
-
-  if (sel_string_oem && sel_string_oem->output_event_data1_class_oem)
-    {
-      if ((ret = sel_string_oem->output_event_data1_class_oem (ctx,
-							       sel_entry,
-							       sel_record_type,
-							       tmpbuf,
-							       tmpbuflen,
-							       flags,
-							       wlen,
-							       system_event_record_data)) < 0)
-	return (-1);
-      
-      if (ret)
-	return (1);
     }
 
   return (0);
@@ -1241,22 +1097,24 @@ _output_event_data1 (ipmi_sel_ctx_t ctx,
 
       if (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA)
         {
-          if ((ret = _output_oem_event_data1_class_sensor_specific_discrete (ctx,
-                                                                             sel_entry,
-                                                                             sel_record_type,
-                                                                             tmpbuf,
-                                                                             EVENT_BUFFER_LENGTH,
-                                                                             flags,
-                                                                             wlen,
-                                                                             &system_event_record_data,
-									     sel_string_oem)) < 0)
-            return (-1);
-          
-          if (ret)
-            {
-              output_flag++;
-              break;
-            }
+	  if (sel_string_oem && sel_string_oem->output_event_data1_class_sensor_specific_discrete)
+	    {
+	      if ((ret = sel_string_oem->output_event_data1_class_sensor_specific_discrete (ctx,
+											    sel_entry,
+											    sel_record_type,
+											    tmpbuf,
+											    EVENT_BUFFER_LENGTH,
+											    flags,
+											    wlen,
+											    &system_event_record_data)) < 0)
+		return (-1);
+	      
+	      if (ret)
+		{
+		  output_flag++;
+		  break;
+		}
+	    }
         }
       
       /* 
@@ -1294,22 +1152,24 @@ _output_event_data1 (ipmi_sel_ctx_t ctx,
 
       if (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA)
         {
-          if ((ret = _output_oem_event_data1_class_oem (ctx,
-                                                        sel_entry,
-                                                        sel_record_type,
-                                                        tmpbuf,
-                                                        EVENT_BUFFER_LENGTH,
-                                                        flags,
-                                                        wlen,
-                                                        &system_event_record_data,
-							sel_string_oem)) < 0)
-            return (-1);
-          
-          if (ret)
-            {
-              output_flag++;
-              break;
-            }
+	  if (sel_string_oem && sel_string_oem->output_event_data1_class_oem)
+	    {
+	      if ((ret = sel_string_oem->output_event_data1_class_oem (ctx,
+								       sel_entry,
+								       sel_record_type,
+								       tmpbuf,
+								       EVENT_BUFFER_LENGTH,
+								       flags,
+								       wlen,
+								       &system_event_record_data)) < 0)
+		return (-1);
+	      
+	      if (ret)
+		{
+		  output_flag++;
+		  break;
+		}
+	    }
         }
 
       if (flags & IPMI_SEL_STRING_FLAGS_LEGACY)
@@ -1380,146 +1240,6 @@ _round_double2 (double d)
     return ((long) d + (((long) r + 1) / 100.0));
 
   return ((long) d + ((long) r / 100.0));
-}
-
-/* return (0) - no OEM match
- * return (1) - OEM match
- * return (-1) - error, cleanup and return error
- */
-static int
-_output_oem_event_data2_threshold_oem (ipmi_sel_ctx_t ctx,
-                                       struct ipmi_sel_entry *sel_entry,
-                                       uint8_t sel_record_type,
-                                       char *tmpbuf,
-                                       unsigned int tmpbuflen,
-                                       unsigned int flags,
-                                       unsigned int *wlen,
-                                       struct ipmi_sel_system_event_record_data *system_event_record_data,
-				       struct sel_string_oem *sel_string_oem)
-{
-  int ret;
-
-  assert (ctx);
-  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
-  assert (sel_entry);
-  assert (tmpbuf);
-  assert (tmpbuflen);
-  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
-  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
-  assert (wlen);
-  assert (system_event_record_data);
-  assert (system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
-
-  if (sel_string_oem && sel_string_oem->output_event_data2_threshold_oem)
-    {
-      if ((ret = sel_string_oem->output_event_data2_threshold_oem (ctx,
-								   sel_entry,
-								   sel_record_type,
-								   tmpbuf,
-								   tmpbuflen,
-								   flags,
-								   wlen,
-								   system_event_record_data)) < 0)
-	return (-1);
-      
-      if (ret)
-	return (1);
-    }
-
-  return (0);
-}
-
-/* return (0) - no OEM match
- * return (1) - OEM match
- * return (-1) - error, cleanup and return error
- */
-static int
-_output_oem_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
-                                      struct ipmi_sel_entry *sel_entry,
-                                      uint8_t sel_record_type,
-                                      char *tmpbuf,
-                                      unsigned int tmpbuflen,
-                                      unsigned int flags,
-                                      unsigned int *wlen,
-                                      struct ipmi_sel_system_event_record_data *system_event_record_data,
-				      struct sel_string_oem *sel_string_oem)
-{
-  int ret;
-
-  assert (ctx);
-  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
-  assert (sel_entry);
-  assert (tmpbuf);
-  assert (tmpbuflen);
-  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
-  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
-  assert (wlen);
-  assert (system_event_record_data);
-  assert (system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
-
-  if (sel_string_oem && sel_string_oem->output_event_data2_discrete_oem)
-    {
-      if ((ret = sel_string_oem->output_event_data2_discrete_oem (ctx,
-								   sel_entry,
-								   sel_record_type,
-								   tmpbuf,
-								   tmpbuflen,
-								   flags,
-								   wlen,
-								   system_event_record_data)) < 0)
-	return (-1);
-      
-      if (ret)
-	return (1);
-    }
-
-  return (0);
-}
-
-/* return (0) - no OEM match
- * return (1) - OEM match
- * return (-1) - error, cleanup and return error
- */
-static int
-_output_oem_event_data2_class_oem (ipmi_sel_ctx_t ctx,
-                                   struct ipmi_sel_entry *sel_entry,
-                                   uint8_t sel_record_type,
-                                   char *tmpbuf,
-                                   unsigned int tmpbuflen,
-                                   unsigned int flags,
-                                   unsigned int *wlen,
-                                   struct ipmi_sel_system_event_record_data *system_event_record_data,
-				   struct sel_string_oem *sel_string_oem)
-{
-  int ret;
-
-  assert (ctx);
-  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
-  assert (sel_entry);
-  assert (tmpbuf);
-  assert (tmpbuflen);
-  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
-  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
-  assert (wlen);
-  assert (system_event_record_data);
-
-  if (sel_string_oem && sel_string_oem->output_event_data2_class_oem)
-    {
-      if ((ret = sel_string_oem->output_event_data2_class_oem (ctx,
-							       sel_entry,
-							       sel_record_type,
-							       tmpbuf,
-							       tmpbuflen,
-							       flags,
-							       wlen,
-							       system_event_record_data)) < 0)
-	return (-1);
-      
-      if (ret)
-	return (1);
-    }
-
-  return (0);
 }
 
 /* return (0) - continue on
@@ -1621,22 +1341,24 @@ _output_event_data2 (ipmi_sel_ctx_t ctx,
 
           if (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA)
             {
-              if ((ret = _output_oem_event_data2_threshold_oem (ctx,
-                                                                sel_entry,
-                                                                sel_record_type,
-                                                                tmpbuf,
-                                                                EVENT_BUFFER_LENGTH,
-                                                                flags,
-                                                                wlen,
-                                                                &system_event_record_data,
-								sel_string_oem)) < 0)
-                return (-1);
-              
-              if (ret)
-                {
-                  output_flag++;
-                  break;
-                }
+	      if (sel_string_oem && sel_string_oem->output_event_data2_threshold_oem)
+		{
+		  if ((ret = sel_string_oem->output_event_data2_threshold_oem (ctx,
+									       sel_entry,
+									       sel_record_type,
+									       tmpbuf,
+									       EVENT_BUFFER_LENGTH,
+									       flags,
+									       wlen,
+									       &system_event_record_data)) < 0)
+		    return (-1);
+		  
+		  if (ret)
+		    {
+		      output_flag++;
+		      break;
+		    }
+		}
             }
 
           if (system_event_record_data.event_data2 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT)
@@ -1760,22 +1482,24 @@ _output_event_data2 (ipmi_sel_ctx_t ctx,
           
           if (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA)
             {
-              if ((ret = _output_oem_event_data2_discrete_oem (ctx,
-                                                               sel_entry,
-                                                               sel_record_type,
-                                                               tmpbuf,
-                                                               EVENT_BUFFER_LENGTH,
-                                                               flags,
-                                                               wlen,
-                                                               &system_event_record_data,
-							       sel_string_oem)) < 0)
-                return (-1);
-              
-              if (ret)
-                {
-                  output_flag++;
-                  break;
-                }
+	      if (sel_string_oem && sel_string_oem->output_event_data2_discrete_oem)
+		{
+		  if ((ret = sel_string_oem->output_event_data2_discrete_oem (ctx,
+									      sel_entry,
+									      sel_record_type,
+									      tmpbuf,
+									      EVENT_BUFFER_LENGTH,
+									      flags,
+									      wlen,
+									      &system_event_record_data)) < 0)
+		    return (-1);
+		  
+		  if (ret)
+		    {
+		      output_flag++;
+		      break;
+		    }
+		}
             }
 	  
           if (system_event_record_data.event_data2 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT)
@@ -1815,22 +1539,24 @@ _output_event_data2 (ipmi_sel_ctx_t ctx,
 
       if (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA)
         {
-          if ((ret = _output_oem_event_data2_class_oem (ctx,
-                                                        sel_entry,
-                                                        sel_record_type,
-                                                        tmpbuf,
-                                                        EVENT_BUFFER_LENGTH,
-                                                        flags,
-                                                        wlen,
-                                                        &system_event_record_data,
-							sel_string_oem)) < 0)
-            return (-1);
-          
-          if (ret)
-            {
-              output_flag++;
-              break;
-            }
+	  if (sel_string_oem && sel_string_oem->output_event_data2_class_oem)
+	    {
+	      if ((ret = sel_string_oem->output_event_data2_class_oem (ctx,
+								       sel_entry,
+								       sel_record_type,
+								       tmpbuf,
+								       EVENT_BUFFER_LENGTH,
+								       flags,
+								       wlen,
+								       &system_event_record_data)) < 0)
+		return (-1);
+	      
+	      if (ret)
+		{
+		  output_flag++;
+		  break;
+		}
+	    }
         }
       
       if (system_event_record_data.event_data2 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT
@@ -1896,146 +1622,6 @@ _output_event_data2 (ipmi_sel_ctx_t ctx,
 				   system_event_record_data.event_data2))
             return (1);
         }
-    }
-
-  return (0);
-}
-
-/* return (0) - no OEM match
- * return (1) - OEM match
- * return (-1) - error, cleanup and return error
- */
-static int
-_output_oem_event_data3_threshold_oem (ipmi_sel_ctx_t ctx,
-                                       struct ipmi_sel_entry *sel_entry,
-                                       uint8_t sel_record_type,
-                                       char *tmpbuf,
-                                       unsigned int tmpbuflen,
-                                       unsigned int flags,
-                                       unsigned int *wlen,
-                                       struct ipmi_sel_system_event_record_data *system_event_record_data,
-				       struct sel_string_oem *sel_string_oem)
-{
-  int ret;
-
-  assert (ctx);
-  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
-  assert (sel_entry);
-  assert (tmpbuf);
-  assert (tmpbuflen);
-  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
-  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
-  assert (wlen);
-  assert (system_event_record_data);
-  assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
-
-  if (sel_string_oem && sel_string_oem->output_event_data3_threshold_oem)
-    {
-      if ((ret = sel_string_oem->output_event_data3_threshold_oem (ctx,
-								   sel_entry,
-								   sel_record_type,
-								   tmpbuf,
-								   tmpbuflen,
-								   flags,
-								   wlen,
-								   system_event_record_data)) < 0)
-	return (-1);
-      
-      if (ret)
-	return (1);
-    }
-
-  return (0);
-}
-
-/* return (0) - no OEM match
- * return (1) - OEM match
- * return (-1) - error, cleanup and return error
- */
-static int
-_output_oem_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
-                                      struct ipmi_sel_entry *sel_entry,
-                                      uint8_t sel_record_type,
-                                      char *tmpbuf,
-                                      unsigned int tmpbuflen,
-                                      unsigned int flags,
-                                      unsigned int *wlen,
-                                      struct ipmi_sel_system_event_record_data *system_event_record_data,
-				      struct sel_string_oem *sel_string_oem)
-{
-  int ret;
-
-  assert (ctx);
-  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
-  assert (sel_entry);
-  assert (tmpbuf);
-  assert (tmpbuflen);
-  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
-  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
-  assert (wlen);
-  assert (system_event_record_data);
-  assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
-
-  if (sel_string_oem && sel_string_oem->output_event_data3_discrete_oem)
-    {
-      if ((ret = sel_string_oem->output_event_data3_discrete_oem (ctx,
-								  sel_entry,
-								  sel_record_type,
-								  tmpbuf,
-								  tmpbuflen,
-								  flags,
-								  wlen,
-								  system_event_record_data)) < 0)
-	return (-1);
-      
-      if (ret)
-	return (1);
-    }
-
-  return (0);
-}
-
-/* return (0) - no OEM match
- * return (1) - OEM match
- * return (-1) - error, cleanup and return error
- */
-static int
-_output_oem_event_data3_class_oem (ipmi_sel_ctx_t ctx,
-                                   struct ipmi_sel_entry *sel_entry,
-                                   uint8_t sel_record_type,
-                                   char *tmpbuf,
-                                   unsigned int tmpbuflen,
-                                   unsigned int flags,
-                                   unsigned int *wlen,
-                                   struct ipmi_sel_system_event_record_data *system_event_record_data,
-				   struct sel_string_oem *sel_string_oem)
-{
-  int ret;
-
-  assert (ctx);
-  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
-  assert (sel_entry);
-  assert (tmpbuf);
-  assert (tmpbuflen);
-  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
-  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
-  assert (wlen);
-  assert (system_event_record_data);
-
-  if (sel_string_oem && sel_string_oem->output_event_data3_class_oem)
-    {
-      if ((ret = sel_string_oem->output_event_data3_class_oem (ctx,
-							       sel_entry,
-							       sel_record_type,
-							       tmpbuf,
-							       tmpbuflen,
-							       flags,
-							       wlen,
-							       system_event_record_data)) < 0)
-	return (-1);
-      
-      if (ret)
-	return (1);
     }
 
   return (0);
@@ -2132,22 +1718,24 @@ _output_event_data3 (ipmi_sel_ctx_t ctx,
 
           if (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA)
             {
-              if ((ret = _output_oem_event_data3_threshold_oem (ctx,
-                                                                sel_entry,
-                                                                sel_record_type,
-                                                                tmpbuf,
-                                                                EVENT_BUFFER_LENGTH,
-                                                                flags,
-                                                                wlen,
-                                                                &system_event_record_data,
-								sel_string_oem)) < 0)
-                return (-1);
-              
-              if (ret)
-                {
-                  output_flag++;
-                  break;
-                }
+	      if (sel_string_oem && sel_string_oem->output_event_data3_threshold_oem)
+		{
+		  if ((ret = sel_string_oem->output_event_data3_threshold_oem (ctx,
+									       sel_entry,
+									       sel_record_type,
+									       tmpbuf,
+									       EVENT_BUFFER_LENGTH,
+									       flags,
+									       wlen,
+									       &system_event_record_data)) < 0)
+		    return (-1);
+      
+		  if (ret)
+		    {
+		      output_flag++;
+		      break;
+		    }
+		}
             }
 
           if (system_event_record_data.event_data3 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT)
@@ -2206,22 +1794,24 @@ _output_event_data3 (ipmi_sel_ctx_t ctx,
 
           if (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA)
             {
-              if ((ret = _output_oem_event_data3_discrete_oem (ctx,
-                                                               sel_entry,
-                                                               sel_record_type,
-                                                               tmpbuf,
-                                                               EVENT_BUFFER_LENGTH,
-                                                               flags,
-                                                               wlen,
-                                                               &system_event_record_data,
-							       sel_string_oem)) < 0)
-                return (-1);
-              
-              if (ret)
-                {
-                  output_flag++;
-                  break;
-                }
+	      if (sel_string_oem && sel_string_oem->output_event_data3_discrete_oem)
+		{
+		  if ((ret = sel_string_oem->output_event_data3_discrete_oem (ctx,
+									      sel_entry,
+									      sel_record_type,
+									      tmpbuf,
+									      EVENT_BUFFER_LENGTH,
+									      flags,
+									      wlen,
+									      &system_event_record_data)) < 0)
+		    return (-1);
+		  
+		  if (ret)
+		    {
+		      output_flag++;
+		      break;
+		    }
+		}
             }
           
           if (system_event_record_data.event_data3 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT)
@@ -2261,22 +1851,24 @@ _output_event_data3 (ipmi_sel_ctx_t ctx,
 
       if (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA)
         {
-          if ((ret = _output_oem_event_data3_class_oem (ctx,
-                                                        sel_entry,
-                                                        sel_record_type,
-                                                        tmpbuf,
-                                                        EVENT_BUFFER_LENGTH,
-                                                        flags,
-                                                        wlen,
-                                                        &system_event_record_data,
-							sel_string_oem)) < 0)
-            return (-1);
-          
-          if (ret)
-            {
-              output_flag++;
-              break;
-            }
+	  if (sel_string_oem && sel_string_oem->output_event_data3_class_oem)
+	    {
+	      if ((ret = sel_string_oem->output_event_data3_class_oem (ctx,
+								       sel_entry,
+								       sel_record_type,
+								       tmpbuf,
+								       EVENT_BUFFER_LENGTH,
+								       flags,
+								       wlen,
+								       &system_event_record_data)) < 0)
+		return (-1);
+	      
+	      if (ret)
+		{
+		  output_flag++;
+		  break;
+		}
+	    }
         }
      
       if (system_event_record_data.event_data3 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT
@@ -2342,81 +1934,6 @@ _output_event_data3 (ipmi_sel_ctx_t ctx,
 				   system_event_record_data.event_data3))
             return (1);
         }
-    }
-
-  return (0);
-}
-
-/* return (0) - no OEM match
- * return (1) - OEM match
- * return (-1) - error, cleanup and return error
- *
- * in oem_rv, return
- * 0 - continue on
- * 1 - buffer full, return full buffer to user
- */
-static int
-_output_oem_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
-                                     struct ipmi_sel_entry *sel_entry,
-                                     uint8_t sel_record_type,
-                                     char *buf,
-                                     unsigned int buflen,
-                                     unsigned int flags,
-                                     unsigned int *wlen,
-                                     struct ipmi_sel_system_event_record_data *system_event_record_data,
-                                     int *oem_rv,
-				     struct sel_string_oem *sel_string_oem)
-{
-  int ret;
-
-  assert (ctx);
-  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
-  assert (sel_entry);
-  assert (buf);
-  assert (buflen);
-  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
-  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
-  assert (wlen);
-  assert (system_event_record_data);
-  assert (oem_rv);
-
-  /* Linux kernel case is special, not vendor specific */
-  if (system_event_record_data->generator_id == IPMI_SLAVE_ADDRESS_OEM_LINUX_KERNEL
-      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
-      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OS_CRITICAL_STOP
-      && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
-      && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
-    {
-      if ((ret = sel_string_output_linux_kernel_event_data2_event_data3 (ctx,
-									 sel_entry,
-									 sel_record_type,
-									 buf,
-									 buflen,
-									 flags,
-									 wlen,
-									 system_event_record_data,
-									 oem_rv)) < 0)
-	return (-1);
-      
-      if (ret)
-	return (1);
-    }
-      
-  if (sel_string_oem && sel_string_oem->output_event_data2_event_data3)
-    {
-      if ((ret = sel_string_oem->output_event_data2_event_data3 (ctx,
-								 sel_entry,
-								 sel_record_type,
-								 buf,
-								 buflen,
-								 flags,
-								 wlen,
-								 system_event_record_data,
-								 oem_rv)) < 0)
-	return (-1);
-      
-      if (ret)
-	return (1);
     }
 
   return (0);
@@ -2503,20 +2020,44 @@ _output_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
       int ret;
       int oem_rv = 0;
 
-      if ((ret = _output_oem_event_data2_event_data3 (ctx,
-                                                      sel_entry,
-                                                      sel_record_type,
-                                                      buf,
-                                                      buflen,
-                                                      flags,
-                                                      wlen,
-                                                      &system_event_record_data,
-                                                      &oem_rv,
-						      sel_string_oem)) < 0)
-        return (-1);
+      /* Linux kernel case is special, not vendor specific */
+      if (system_event_record_data.generator_id == IPMI_SLAVE_ADDRESS_OEM_LINUX_KERNEL
+	  && system_event_record_data.event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+	  && system_event_record_data.sensor_type == IPMI_SENSOR_TYPE_OS_CRITICAL_STOP
+	  && system_event_record_data.event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+	  && system_event_record_data.event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+	{
+	  if ((ret = sel_string_output_linux_kernel_event_data2_event_data3 (ctx,
+									     sel_entry,
+									     sel_record_type,
+									     buf,
+									     buflen,
+									     flags,
+									     wlen,
+									     &system_event_record_data,
+									     &oem_rv)) < 0)
+	    return (-1);
+	  
+	  if (ret)
+	    return (oem_rv);
+	}
       
-      if (ret)
-        return (oem_rv);
+      if (sel_string_oem && sel_string_oem->output_event_data2_event_data3)
+	{
+	  if ((ret = sel_string_oem->output_event_data2_event_data3 (ctx,
+								     sel_entry,
+								     sel_record_type,
+								     buf,
+								     buflen,
+								     flags,
+								     wlen,
+								     &system_event_record_data,
+								     &oem_rv)) < 0)
+	    return (-1);
+	  
+	  if (ret)
+	    return (oem_rv);
+	}
     }
 
   if ((data2_ret = _output_event_data2 (ctx,
@@ -3016,72 +2557,6 @@ _output_manufacturer_id (ipmi_sel_ctx_t ctx,
   return (0);
 }
 
-/* return (0) - no OEM match
- * return (1) - OEM match
- * return (-1) - error, cleanup and return error
- */
-static int
-_output_oem_interpreted_record_data (ipmi_sel_ctx_t ctx,
-                                     struct ipmi_sel_entry *sel_entry,
-                                     uint8_t sel_record_type,
-                                     char *tmpbuf,
-                                     unsigned int tmpbuflen,
-                                     unsigned int flags,
-                                     unsigned int *wlen,
-                                     int *oem_rv,
-				     struct sel_string_oem *sel_string_oem)
-{
-  int ret;
-
-  assert (ctx);
-  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
-  assert (sel_entry);
-  assert (tmpbuf);
-  assert (tmpbuflen);
-  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
-  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
-  assert (wlen);
-  assert (oem_rv);
-
-  /* Linux kernel case is special, not vendor specific
-   *
-   * achu: hoping no vendor violates this
-   */
-  if (sel_record_type == IPMI_SEL_RECORD_TYPE_NON_TIMESTAMPED_OEM_LINUX_KERNEL_PANIC)
-    {
-      if ((ret = sel_string_output_linux_kernel_oem_record_data (ctx,
-								 sel_entry,
-								 sel_record_type,
-								 tmpbuf,
-								 tmpbuflen,
-								 flags,
-								 wlen,
-								 oem_rv)) < 0)
-	return (-1);
-      
-      if (ret)
-	return (1);
-    }
-
-  if (sel_string_oem && sel_string_oem->output_oem_record_data)
-    {
-      if ((ret = sel_string_oem->output_oem_record_data (ctx,
-							 sel_entry,
-							 sel_record_type,
-							 tmpbuf,
-							 tmpbuflen,
-							 flags,
-							 wlen,
-							 oem_rv)) < 0)
-	return (-1);
-      
-      if (ret)
-	return (1);
-    }
-
-  return (0);
-}
-
 /* return (0) - continue on
  * return (1) - buffer full, return full buffer to user
  * return (-1) - error, cleanup and return error
@@ -3117,19 +2592,41 @@ _output_oem_record_data (ipmi_sel_ctx_t ctx,
       int ret;
       int oem_rv = 0;
       
-      if ((ret = _output_oem_interpreted_record_data (ctx,
-                                                      sel_entry,
-                                                      sel_record_type,
-                                                      buf,
-                                                      buflen,
-                                                      flags,
-                                                      wlen,
-                                                      &oem_rv,
-						      sel_string_oem)) < 0)
-        return (-1);
+      /* Linux kernel case is special, not vendor specific
+       *
+       * achu: hoping no vendor violates this
+       */
+      if (sel_record_type == IPMI_SEL_RECORD_TYPE_NON_TIMESTAMPED_OEM_LINUX_KERNEL_PANIC)
+	{
+	  if ((ret = sel_string_output_linux_kernel_oem_record_data (ctx,
+								     sel_entry,
+								     sel_record_type,
+								     buf,
+								     buflen,
+								     flags,
+								     wlen,
+								     &oem_rv)) < 0)
+	    return (-1);
+	  
+	  if (ret)
+	    return (oem_rv);
+	}
       
-      if (ret)
-        return (oem_rv);
+      if (sel_string_oem && sel_string_oem->output_oem_record_data)
+	{
+	  if ((ret = sel_string_oem->output_oem_record_data (ctx,
+							     sel_entry,
+							     sel_record_type,
+							     buf,
+							     buflen,
+							     flags,
+							     wlen,
+							     &oem_rv)) < 0)
+	    return (-1);
+	  
+	  if (ret)
+	    return (oem_rv);
+	}
     }
 
   if ((oem_len = sel_get_oem (ctx, sel_entry, oem_data, SEL_BUFFER_LENGTH)) < 0)

@@ -1,3 +1,7 @@
+2015-11-02 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/sel/ipmi-sel-string.c: Code cleanup.
+	
 2015-10-29 Albert Chu <chu11@llnl.gov>
 
 	* configure.ac: Update library versions for eventually 1.5 release.
