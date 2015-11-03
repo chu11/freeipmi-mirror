@@ -154,7 +154,6 @@ libfreeipmi-fru
 
 libfreeipmi-sel
 ---------------
-- split vendor files into motherboard files?  Is getting big.
 - cleanup parsing functions
 
 libipmiconsole
