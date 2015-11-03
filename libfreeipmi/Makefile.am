@@ -187,13 +187,7 @@ libfreeipmi_la_SOURCES = \
 	sel/ipmi-sel-defs.h \
 	sel/ipmi-sel-string.c \
 	sel/ipmi-sel-string.h \
-	sel/ipmi-sel-string-dell-common.c \
-	sel/ipmi-sel-string-dell-common.h \
-	sel/ipmi-sel-string-dell-2900.c \
-	sel/ipmi-sel-string-dell-2950.c \
-	sel/ipmi-sel-string-dell-r610.c \
-	sel/ipmi-sel-string-dell-r710.c \
-	sel/ipmi-sel-string-dell-r720.c \
+	sel/ipmi-sel-string-dell-poweredge.c \
 	sel/ipmi-sel-string-fujitsu-irmc-common.c \
 	sel/ipmi-sel-string-intel-node-manager.c \
 	sel/ipmi-sel-string-intel-node-manager.h \
@@ -204,8 +198,7 @@ libfreeipmi_la_SOURCES = \
 	sel/ipmi-sel-string-intel-e52600v3-common.c \
 	sel/ipmi-sel-string-intel-e52600v3-common.h \
 	sel/ipmi-sel-string-intel-s2600kp.c \
-	sel/ipmi-sel-string-intel-s2600wt2.c \
-	sel/ipmi-sel-string-intel-s2600wtt.c \
+	sel/ipmi-sel-string-intel-s2600wt-common.c \
 	sel/ipmi-sel-string-inventec-common.c \
 	sel/ipmi-sel-string-inventec-common.h \
 	sel/ipmi-sel-string-inventec-5441.c \
@@ -217,29 +210,21 @@ libfreeipmi_la_SOURCES = \
 	sel/ipmi-sel-string-supermicro-common.c \
 	sel/ipmi-sel-string-supermicro-common.h \
 	sel/ipmi-sel-string-supermicro-magnum-technologies-x8dtl.c \
-	sel/ipmi-sel-string-supermicro-peppercon-x7db8.c \
-	sel/ipmi-sel-string-supermicro-peppercon-x7dbr-3.c \
-	sel/ipmi-sel-string-supermicro-peppercon-x7sbi-ln4.c \
-	sel/ipmi-sel-string-supermicro-peppercon-x8dtn.c \
+	sel/ipmi-sel-string-supermicro-peppercon-common.c \
 	sel/ipmi-sel-string-supermicro-h8dg6.c \
 	sel/ipmi-sel-string-supermicro-h8dgu-f.c \
 	sel/ipmi-sel-string-supermicro-h8dgu.c \
-	sel/ipmi-sel-string-supermicro-x8dt3-ln4f.c \
-	sel/ipmi-sel-string-supermicro-x8dtg.c \
-	sel/ipmi-sel-string-supermicro-x8dth.c \
-	sel/ipmi-sel-string-supermicro-x8dtl-3f.c \
-	sel/ipmi-sel-string-supermicro-x8dtl.c \
+	sel/ipmi-sel-string-supermicro-x8dt-common.c \
+	sel/ipmi-sel-string-supermicro-x8dtl-common.c \
 	sel/ipmi-sel-string-supermicro-x8dtnplus-f.c \
 	sel/ipmi-sel-string-supermicro-x8dtu-6plus.c \
-	sel/ipmi-sel-string-supermicro-x8dtu.c \
 	sel/ipmi-sel-string-supermicro-x8sie.c \
 	sel/ipmi-sel-string-supermicro-x8sil-f.c \
 	sel/ipmi-sel-string-supermicro-x9dri-f.c \
 	sel/ipmi-sel-string-supermicro-x9dri-ln4f-plus.c \
 	sel/ipmi-sel-string-supermicro-x9sca-f-o.c \
-	sel/ipmi-sel-string-supermicro-x9scl.c \
+	sel/ipmi-sel-string-supermicro-x9sc_common.c \
 	sel/ipmi-sel-string-supermicro-x9scm-iif.c \
-	sel/ipmi-sel-string-supermicro-x9scm.c \
 	sel/ipmi-sel-string-supermicro-x9spu-f-o.c \
 	sel/ipmi-sel-string-wistron-c6220.c \
 	sel/ipmi-sel-trace.h \

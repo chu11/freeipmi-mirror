@@ -73,17 +73,12 @@
 #define IANA_LENGTH             1024
 #define UNITS_BUFFER_LENGTH     1024
 
-extern struct sel_string_oem sel_string_oem_dell_2900;
-extern struct sel_string_oem sel_string_oem_dell_2950;
-extern struct sel_string_oem sel_string_oem_dell_r610;
-extern struct sel_string_oem sel_string_oem_dell_r710;
-extern struct sel_string_oem sel_string_oem_dell_r720;
+extern struct sel_string_oem sel_string_oem_dell_poweredge;
 extern struct sel_string_oem sel_string_oem_fujitsu_irmc_common;
 extern struct sel_string_oem sel_string_oem_intel_quanta_qssc_s4r;
 extern struct sel_string_oem sel_string_oem_intel_s2600jf;
 extern struct sel_string_oem sel_string_oem_intel_s2600kp;
-extern struct sel_string_oem sel_string_oem_intel_s2600wt2;
-extern struct sel_string_oem sel_string_oem_intel_s2600wtt;
+extern struct sel_string_oem sel_string_oem_intel_s2600wt_common;
 extern struct sel_string_oem sel_string_oem_intel_s5500wb;
 extern struct sel_string_oem sel_string_oem_intel_windmill;
 extern struct sel_string_oem sel_string_oem_inventec_5441;
@@ -95,26 +90,18 @@ extern struct sel_string_oem sel_string_oem_supermicro_h8dg6;
 extern struct sel_string_oem sel_string_oem_supermicro_h8dgu_f;
 extern struct sel_string_oem sel_string_oem_supermicro_h8dgu;
 extern struct sel_string_oem sel_string_oem_supermicro_magnum_technologies_x8dtl;
-extern struct sel_string_oem sel_string_oem_supermicro_peppercon_x7db8;
-extern struct sel_string_oem sel_string_oem_supermicro_peppercon_x7dbr_3;
-extern struct sel_string_oem sel_string_oem_supermicro_peppercon_x7sbi_ln4;
-extern struct sel_string_oem sel_string_oem_supermicro_peppercon_x8dtn;
-extern struct sel_string_oem sel_string_oem_supermicro_x8dt3_ln4f;
-extern struct sel_string_oem sel_string_oem_supermicro_x8dtg;
-extern struct sel_string_oem sel_string_oem_supermicro_x8dth;
-extern struct sel_string_oem sel_string_oem_supermicro_x8dtl_3f;
-extern struct sel_string_oem sel_string_oem_supermicro_x8dtl;
+extern struct sel_string_oem sel_string_oem_supermicro_peppercon_common;
+extern struct sel_string_oem sel_string_oem_supermicro_x8dt_common;
+extern struct sel_string_oem sel_string_oem_supermicro_x8dtl_common;
 extern struct sel_string_oem sel_string_oem_supermicro_x8dtnplus_f;
 extern struct sel_string_oem sel_string_oem_supermicro_x8dtu_6plus;
-extern struct sel_string_oem sel_string_oem_supermicro_x8dtu;
 extern struct sel_string_oem sel_string_oem_supermicro_x8sie;
 extern struct sel_string_oem sel_string_oem_supermicro_x8sil_f;
 extern struct sel_string_oem sel_string_oem_supermicro_x9dri_f;
 extern struct sel_string_oem sel_string_oem_supermicro_x9dri_ln4f_plus;
 extern struct sel_string_oem sel_string_oem_supermicro_x9sca_f_o;
-extern struct sel_string_oem sel_string_oem_supermicro_x9scl;
+extern struct sel_string_oem sel_string_oem_supermicro_x9sc_common;
 extern struct sel_string_oem sel_string_oem_supermicro_x9scm_iif;
-extern struct sel_string_oem sel_string_oem_supermicro_x9scm;
 extern struct sel_string_oem sel_string_oem_supermicro_x9spu_f_o;
 extern struct sel_string_oem sel_string_oem_wistron_c6220;
 
@@ -179,16 +166,17 @@ _find_motherboard_oem_support (ipmi_sel_ctx_t ctx,
 
   if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL)
     {
-      if (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2900)
-	(*sel_string_oem) = &sel_string_oem_dell_2900;
-      else if (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2950)
-	(*sel_string_oem) = &sel_string_oem_dell_2950;
-      else if (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610)
-	(*sel_string_oem) = &sel_string_oem_dell_r610;
-      else if (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710)
-	(*sel_string_oem) = &sel_string_oem_dell_r710;
-      else if (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R720)
-	(*sel_string_oem) = &sel_string_oem_dell_r720;
+      assert (IPMI_DELL_PRODUCT_ID_POWEREDGE_2900 == IPMI_DELL_PRODUCT_ID_POWEREDGE_2950);
+      assert (IPMI_DELL_PRODUCT_ID_POWEREDGE_2900 == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610);
+      assert (IPMI_DELL_PRODUCT_ID_POWEREDGE_2900 == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710);
+      assert (IPMI_DELL_PRODUCT_ID_POWEREDGE_2900 == IPMI_DELL_PRODUCT_ID_POWEREDGE_R720);
+
+      if (ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2900
+	  || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_2950
+	  || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
+	  || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710
+	  || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R720)
+	(*sel_string_oem) = &sel_string_oem_dell_poweredge;
     }
   else if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU)
     {
@@ -198,16 +186,17 @@ _find_motherboard_oem_support (ipmi_sel_ctx_t ctx,
     }
   else if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL)
     {
+      assert (IPMI_INTEL_PRODUCT_ID_S2600WT2 == IPMI_INTEL_PRODUCT_ID_S2600WTT);
+
       if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R)
 	(*sel_string_oem) = &sel_string_oem_intel_quanta_qssc_s4r;
       else if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600JF)
 	(*sel_string_oem) = &sel_string_oem_intel_s2600jf;
       else if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600KP)
 	(*sel_string_oem) = &sel_string_oem_intel_s2600kp;
-      else if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2)
-	(*sel_string_oem) = &sel_string_oem_intel_s2600wt2;
-      else if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT)
-	(*sel_string_oem) = &sel_string_oem_intel_s2600wtt;
+      else if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
+	       || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT)
+	(*sel_string_oem) = &sel_string_oem_intel_s2600wt_common;
       else if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB)
 	(*sel_string_oem) = &sel_string_oem_intel_s5500wb;
       else if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_WINDMILL)
@@ -232,38 +221,42 @@ _find_motherboard_oem_support (ipmi_sel_ctx_t ctx,
     }
   else if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_PEPPERCON) /* Supermicro variant */
     {
-      if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_PEPPERCON_X7DBR_3)
-	(*sel_string_oem) = &sel_string_oem_supermicro_peppercon_x7dbr_3;
-      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_PEPPERCON_X7DB8)
-	(*sel_string_oem) = &sel_string_oem_supermicro_peppercon_x7db8;
-      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_PEPPERCON_X8DTN)
-	(*sel_string_oem) = &sel_string_oem_supermicro_peppercon_x8dtn;
-      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_PEPPERCON_X7SBI_LN4)
-	(*sel_string_oem) = &sel_string_oem_supermicro_peppercon_x7sbi_ln4;
+      assert (IPMI_SUPERMICRO_PRODUCT_ID_PEPPERCON_X7DBR_3 == IPMI_SUPERMICRO_PRODUCT_ID_PEPPERCON_X7DB8);
+      assert (IPMI_SUPERMICRO_PRODUCT_ID_PEPPERCON_X7DBR_3 == IPMI_SUPERMICRO_PRODUCT_ID_PEPPERCON_X8DTN);
+      assert (IPMI_SUPERMICRO_PRODUCT_ID_PEPPERCON_X7DBR_3 == IPMI_SUPERMICRO_PRODUCT_ID_PEPPERCON_X7SBI_LN4);
+
+      if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_PEPPERCON_X7DBR_3
+	  || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_PEPPERCON_X7DB8
+	  || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_PEPPERCON_X8DTN
+	  || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_PEPPERCON_X7SBI_LN4)
+	(*sel_string_oem) = &sel_string_oem_supermicro_peppercon_common;
     }
   else if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUPERMICRO
 	   || ctx->manufacturer_id ==  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND)
     {
-      if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTH)
-	(*sel_string_oem) = &sel_string_oem_supermicro_x8dth;
-      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTG)
-	(*sel_string_oem) = &sel_string_oem_supermicro_x8dtg;
-      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU)
-	(*sel_string_oem) = &sel_string_oem_supermicro_x8dtu;
-      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DT3_LN4F)
-	(*sel_string_oem) = &sel_string_oem_supermicro_x8dt3_ln4f;
+      assert (IPMI_SUPERMICRO_PRODUCT_ID_X8DTH == IPMI_SUPERMICRO_PRODUCT_ID_X8DTG);
+      assert (IPMI_SUPERMICRO_PRODUCT_ID_X8DTH == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU);
+      assert (IPMI_SUPERMICRO_PRODUCT_ID_X8DTH == IPMI_SUPERMICRO_PRODUCT_ID_X8DT3_LN4F);
+
+      assert (IPMI_SUPERMICRO_PRODUCT_ID_X8DTL == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL_3F);
+
+      assert (IPMI_SUPERMICRO_PRODUCT_ID_X9SCL == IPMI_SUPERMICRO_PRODUCT_ID_X9SCM);
+
+      if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTH
+	  || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTG
+	  || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU
+	  || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DT3_LN4F)
+	(*sel_string_oem) = &sel_string_oem_supermicro_x8dt_common;
       else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU_6PLUS)
 	(*sel_string_oem) = &sel_string_oem_supermicro_x8dtu_6plus;
-      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL)
-	(*sel_string_oem) = &sel_string_oem_supermicro_x8dtl;
-      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL_3F)
-	(*sel_string_oem) = &sel_string_oem_supermicro_x8dtl_3f;
+      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL
+	       || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL_3F)
+	(*sel_string_oem) = &sel_string_oem_supermicro_x8dtl_common;
       else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8SIL_F)
 	(*sel_string_oem) = &sel_string_oem_supermicro_x8sil_f;
-      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCL)
-	(*sel_string_oem) = &sel_string_oem_supermicro_x9scl;
-      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCM)
-	(*sel_string_oem) = &sel_string_oem_supermicro_x9scm;
+      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCL
+	       || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCM)
+	(*sel_string_oem) = &sel_string_oem_supermicro_x9sc_common;
       else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTNPLUS_F)
 	(*sel_string_oem) = &sel_string_oem_supermicro_x8dtnplus_f;
       else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8SIE)

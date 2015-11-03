@@ -46,15 +46,15 @@
 #include "freeipmi-portability.h"
 
 int
-sel_string_output_intel_s2600wtt_sensor_name (ipmi_sel_ctx_t ctx,
-					      struct ipmi_sel_entry *sel_entry,
-					      uint8_t sel_record_type,
-					      char *buf,
-					      unsigned int buflen,
-					      unsigned int flags,
-					      unsigned int *wlen,
-					      struct ipmi_sel_system_event_record_data *system_event_record_data,
-					      int *oem_rv)
+sel_string_output_intel_s2600wt_common_sensor_name (ipmi_sel_ctx_t ctx,
+						    struct ipmi_sel_entry *sel_entry,
+						    uint8_t sel_record_type,
+						    char *buf,
+						    unsigned int buflen,
+						    unsigned int flags,
+						    unsigned int *wlen,
+						    struct ipmi_sel_system_event_record_data *system_event_record_data,
+						    int *oem_rv)
 {
   int ret;
 
@@ -69,7 +69,8 @@ sel_string_output_intel_s2600wtt_sensor_name (ipmi_sel_ctx_t ctx,
   assert (wlen);
   assert (system_event_record_data);
   assert (oem_rv);
-  assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT);
+  assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
+	  || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT);
 
   if ((ret = sel_string_output_intel_e52600v3_sensor_name (ctx,
 							   sel_entry,
@@ -93,14 +94,14 @@ sel_string_output_intel_s2600wtt_sensor_name (ipmi_sel_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-sel_string_output_intel_s2600wtt_event_data1_class_oem (ipmi_sel_ctx_t ctx,
-							struct ipmi_sel_entry *sel_entry,
-							uint8_t sel_record_type,
-							char *tmpbuf,
-							unsigned int tmpbuflen,
-							unsigned int flags,
-							unsigned int *wlen,
-							struct ipmi_sel_system_event_record_data *system_event_record_data)
+sel_string_output_intel_s2600wt_common_event_data1_class_oem (ipmi_sel_ctx_t ctx,
+							      struct ipmi_sel_entry *sel_entry,
+							      uint8_t sel_record_type,
+							      char *tmpbuf,
+							      unsigned int tmpbuflen,
+							      unsigned int flags,
+							      unsigned int *wlen,
+							      struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   int ret;
 
@@ -114,7 +115,8 @@ sel_string_output_intel_s2600wtt_event_data1_class_oem (ipmi_sel_ctx_t ctx,
   assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
-  assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT);
+  assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
+	  || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT);
 
   if ((ret = sel_string_output_intel_e52600v3_event_data1_class_oem (ctx,
 								     sel_entry,
@@ -137,14 +139,14 @@ sel_string_output_intel_s2600wtt_event_data1_class_oem (ipmi_sel_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-sel_string_output_intel_s2600wtt_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
-							   struct ipmi_sel_entry *sel_entry,
-							   uint8_t sel_record_type,
-							   char *tmpbuf,
-							   unsigned int tmpbuflen,
-							   unsigned int flags,
-							   unsigned int *wlen,
-							   struct ipmi_sel_system_event_record_data *system_event_record_data)
+sel_string_output_intel_s2600wt_common_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
+								 struct ipmi_sel_entry *sel_entry,
+								 uint8_t sel_record_type,
+								 char *tmpbuf,
+								 unsigned int tmpbuflen,
+								 unsigned int flags,
+								 unsigned int *wlen,
+								 struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   int ret;
 
@@ -159,7 +161,8 @@ sel_string_output_intel_s2600wtt_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
   assert (wlen);
   assert (system_event_record_data);
   assert (system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
-  assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT);
+  assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
+	  || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT);
 
   if ((ret = sel_string_output_intel_e52600v3_event_data2_discrete_oem (ctx,
 									sel_entry,
@@ -182,14 +185,14 @@ sel_string_output_intel_s2600wtt_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-sel_string_output_intel_s2600wtt_event_data2_class_oem (ipmi_sel_ctx_t ctx,
-							struct ipmi_sel_entry *sel_entry,
-							uint8_t sel_record_type,
-							char *tmpbuf,
-							unsigned int tmpbuflen,
-							unsigned int flags,
-							unsigned int *wlen,
-							struct ipmi_sel_system_event_record_data *system_event_record_data)
+sel_string_output_intel_s2600wt_common_event_data2_class_oem (ipmi_sel_ctx_t ctx,
+							      struct ipmi_sel_entry *sel_entry,
+							      uint8_t sel_record_type,
+							      char *tmpbuf,
+							      unsigned int tmpbuflen,
+							      unsigned int flags,
+							      unsigned int *wlen,
+							      struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   int ret;
 
@@ -203,7 +206,8 @@ sel_string_output_intel_s2600wtt_event_data2_class_oem (ipmi_sel_ctx_t ctx,
   assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
-  assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT);
+  assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
+	  || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT);
 
   if ((ret = sel_string_output_intel_e52600v3_event_data2_class_oem (ctx,
 								     sel_entry,
@@ -226,14 +230,14 @@ sel_string_output_intel_s2600wtt_event_data2_class_oem (ipmi_sel_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-sel_string_output_intel_s2600wtt_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
-							   struct ipmi_sel_entry *sel_entry,
-							   uint8_t sel_record_type,
-							   char *tmpbuf,
-							   unsigned int tmpbuflen,
-							   unsigned int flags,
-							   unsigned int *wlen,
-							   struct ipmi_sel_system_event_record_data *system_event_record_data)
+sel_string_output_intel_s2600wt_common_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
+								 struct ipmi_sel_entry *sel_entry,
+								 uint8_t sel_record_type,
+								 char *tmpbuf,
+								 unsigned int tmpbuflen,
+								 unsigned int flags,
+								 unsigned int *wlen,
+								 struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   int ret;
 
@@ -248,7 +252,8 @@ sel_string_output_intel_s2600wtt_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
   assert (wlen);
   assert (system_event_record_data);
   assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
-  assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT);
+  assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
+	  || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT);
 
   if ((ret = sel_string_output_intel_e52600v3_event_data3_discrete_oem (ctx,
 									sel_entry,
@@ -271,14 +276,14 @@ sel_string_output_intel_s2600wtt_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
  * return (-1) - error, cleanup and return error
  */
 int
-sel_string_output_intel_s2600wtt_event_data3_class_oem (ipmi_sel_ctx_t ctx,
-							struct ipmi_sel_entry *sel_entry,
-							uint8_t sel_record_type,
-							char *tmpbuf,
-							unsigned int tmpbuflen,
-							unsigned int flags,
-							unsigned int *wlen,
-							struct ipmi_sel_system_event_record_data *system_event_record_data)
+sel_string_output_intel_s2600wt_common_event_data3_class_oem (ipmi_sel_ctx_t ctx,
+							      struct ipmi_sel_entry *sel_entry,
+							      uint8_t sel_record_type,
+							      char *tmpbuf,
+							      unsigned int tmpbuflen,
+							      unsigned int flags,
+							      unsigned int *wlen,
+							      struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   int ret;
 
@@ -292,7 +297,8 @@ sel_string_output_intel_s2600wtt_event_data3_class_oem (ipmi_sel_ctx_t ctx,
   assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
-  assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT);
+  assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
+	  || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT);
 
   if ((ret = sel_string_output_intel_e52600v3_event_data3_class_oem (ctx,
 								     sel_entry,
@@ -319,15 +325,15 @@ sel_string_output_intel_s2600wtt_event_data3_class_oem (ipmi_sel_ctx_t ctx,
  * 1 - buffer full, return full buffer to user
  */
 int
-sel_string_output_intel_s2600wtt_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
-							  struct ipmi_sel_entry *sel_entry,
-							  uint8_t sel_record_type,
-							  char *buf,
-							  unsigned int buflen,
-							  unsigned int flags,
-							  unsigned int *wlen,
-							  struct ipmi_sel_system_event_record_data *system_event_record_data,
-							  int *oem_rv)
+sel_string_output_intel_s2600wt_common_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
+								struct ipmi_sel_entry *sel_entry,
+								uint8_t sel_record_type,
+								char *buf,
+								unsigned int buflen,
+								unsigned int flags,
+								unsigned int *wlen,
+								struct ipmi_sel_system_event_record_data *system_event_record_data,
+								int *oem_rv)
 {
   int ret;
 
@@ -342,7 +348,8 @@ sel_string_output_intel_s2600wtt_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
   assert (wlen);
   assert (system_event_record_data);
   assert (oem_rv);
-  assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT);
+  assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
+	  || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT);
 
   if ((ret = sel_string_output_intel_e52600v3_event_data2_event_data3 (ctx,
 								       sel_entry,
@@ -361,18 +368,18 @@ sel_string_output_intel_s2600wtt_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
   return (0);
 }
 
-struct sel_string_oem sel_string_oem_intel_s2600wtt =
+struct sel_string_oem sel_string_oem_intel_s2600wt_common =
   {
-    sel_string_output_intel_s2600wtt_sensor_name,
+    sel_string_output_intel_s2600wt_common_sensor_name,
     NULL,
-    sel_string_output_intel_s2600wtt_event_data1_class_oem,
+    sel_string_output_intel_s2600wt_common_event_data1_class_oem,
     NULL,
-    sel_string_output_intel_s2600wtt_event_data2_discrete_oem,
-    sel_string_output_intel_s2600wtt_event_data2_class_oem,
+    sel_string_output_intel_s2600wt_common_event_data2_discrete_oem,
+    sel_string_output_intel_s2600wt_common_event_data2_class_oem,
     NULL,
-    sel_string_output_intel_s2600wtt_event_data3_discrete_oem,
-    sel_string_output_intel_s2600wtt_event_data3_class_oem,
-    sel_string_output_intel_s2600wtt_event_data2_event_data3,
+    sel_string_output_intel_s2600wt_common_event_data3_discrete_oem,
+    sel_string_output_intel_s2600wt_common_event_data3_class_oem,
+    sel_string_output_intel_s2600wt_common_event_data2_event_data3,
     NULL,
     NULL,
   };
