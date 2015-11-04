@@ -30,6 +30,12 @@ install-init-scripts: install-sysconfig
 	$(INSTALL) -m 755 $(srcdir)/ipmidetectd.init $(DESTDIR)$(sysconfdir)/init.d/ipmidetectd
 	$(INSTALL) -m 755 $(srcdir)/ipmiseld.init $(DESTDIR)$(sysconfdir)/init.d/ipmiseld
 
+install-systemd-scripts: install-sysconfig
+	$(INSTALL) -m 755 -d $(DESTDIR)$(systemdsystemunitdir)
+	$(INSTALL) -m 755 $(srcdir)/bmc-watchdog.service $(DESTDIR)$(systemdsystemunitdir)/bmc-watchdog.service
+	$(INSTALL) -m 755 $(srcdir)/ipmidetectd.service $(DESTDIR)$(systemdsystemunitdir)/ipmidetectd.service
+	$(INSTALL) -m 755 $(srcdir)/ipmiseld.service $(DESTDIR)$(systemdsystemunitdir)/ipmiseld.service
+
 install-sysconfig:
 	$(INSTALL) -m 755 -d $(DESTDIR)$(sysconfdir)/sysconfig
 	$(INSTALL) -m 444 $(srcdir)/bmc-watchdog.sysconfig $(DESTDIR)$(sysconfdir)/sysconfig/bmc-watchdog
@@ -48,3 +54,8 @@ uninstall-init-local:
 	$(RM) -f $(DESTDIR)$(sysconfdir)/init.d/bmc-watchdog
 	$(RM) -f $(DESTDIR)$(sysconfdir)/init.d/ipmidetectd
 	$(RM) -f $(DESTDIR)$(sysconfdir)/init.d/ipmiseld
+
+uninstall-systemd-local:
+	$(RM) -f $(DESTDIR)$(systemdsystemunitdir)/bmc-watchdog.service
+	$(RM) -f $(DESTDIR)$(systemdsystemunitdir)/ipmidetectd.service
+	$(RM) -f $(DESTDIR)$(systemdsystemunitdir)/ipmiseld.service
