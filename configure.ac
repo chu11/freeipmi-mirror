@@ -335,15 +335,18 @@ if test "x${enable_rawdumps}" = "xyes"; then
    AC_DEFINE([WITH_RAWDUMPS], [1], [Define if you want raw dumps])
 fi
 
+INSTALL_DAEMON_SCRIPTS=install-init-scripts
+UNINSTALL_DAEMON_SCRIPTS=uninstall-init-scripts
+
 dnl Option to disable installing init.d scripts
 AC_ARG_ENABLE(init-scripts,
    AC_HELP_STRING([--disable-init-scripts],
       [don\'t install init.d startup scripts]))
-INSTALL_INIT_SCRIPTS=install-init-scripts
 if test x"$enable_init_scripts" = xno; then
-   INSTALL_INIT_SCRIPTS=
+   INSTALL_DAEMON_SCRIPTS=
 fi
-AC_SUBST(INSTALL_INIT_SCRIPTS)
+AC_SUBST(INSTALL_DAEMON_SCRIPTS)
+AC_SUBST(UNINSTALL_DAEMON_SCRIPTS)
 
 dnl Option to disable creating ipmi sdr cache directory
 AC_ARG_ENABLE([ipmisdrcachedir],
