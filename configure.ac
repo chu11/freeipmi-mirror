@@ -348,6 +348,15 @@ fi
 AC_SUBST(INSTALL_DAEMON_SCRIPTS)
 AC_SUBST(UNINSTALL_DAEMON_SCRIPTS)
 
+# Check for systemd
+RRA_WITH_SYSTEMD_UNITDIR
+if test -n "$with_systemdsystemunitdir" -a x"$with_systemdsystemunitdir" != xno; then
+   INSTALL_DAEMON_SCRIPTS=install-systemd-scripts
+   UNINSTALL_DAEMON_SCRIPTS=uninstall-systemd-scripts
+fi
+AC_SUBST(INSTALL_DAEMON_SCRIPTS)
+AC_SUBST(UNINSTALL_DAEMON_SCRIPTS)
+
 dnl Option to disable creating ipmi sdr cache directory
 AC_ARG_ENABLE([ipmisdrcachedir],
    AC_HELP_STRING([--disable-ipmisdrcachedir], [don\'t create ipmi sdr cache directory]))
