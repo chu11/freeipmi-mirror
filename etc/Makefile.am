@@ -1,10 +1,13 @@
 EXTRA_DIST = \
 	bmc-watchdog.init \
+	ipmidetectd.init \
+	ipmiseld.init \
+	bmc-watchdog.service \
+	ipmidetectd.service \
+	ipmiseld.service \
 	bmc-watchdog.sysconfig \
 	ipmidetect.conf \
-	ipmidetectd.init \
 	ipmidetectd.conf \
-	ipmiseld.init \
 	ipmiseld.conf \
 	freeipmi.conf \
 	freeipmi_interpret_sel.conf \
