@@ -762,6 +762,7 @@ ipmi_sdr_cache_iterate (ipmi_sdr_ctx_t ctx,
 {
   uint16_t record_count;
   unsigned int i;
+  int tmpret;
   int rv = -1;
 
   if (!ctx || ctx->magic != IPMI_SDR_CTX_MAGIC)
@@ -842,7 +843,10 @@ ipmi_sdr_cache_iterate (ipmi_sdr_ctx_t ctx,
  out:
   ctx->errnum = IPMI_SDR_ERR_SUCCESS;
  cleanup:
-  return (_sdr_reset_current_offset (ctx));
+  tmpret = _sdr_reset_current_offset (ctx);
+  if (rv)
+    return (rv);
+  return (tmpret);
 }
 
 int
