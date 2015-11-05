@@ -808,8 +808,8 @@ sel_string_output_intel_windmill_event_data3_class_oem (ipmi_sel_ctx_t ctx,
 
       snprintf (tmpbuf,
 		tmpbuflen,
-		"Error ID = 0x%02X",
-		system_event_record_data->event_data2);
+		"CPU Number = %u, Source = %s",
+		cpu_number, source_str);
 
       return (1);
     }
