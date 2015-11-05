@@ -693,7 +693,10 @@ ipmi_oem_fujitsu_get_eeprom_version_info (ipmi_oem_state_data_t *state_data)
   uint8_t minor_firmware_revision;
   uint8_t aux_firmware_revision_major;
   uint8_t aux_firmware_revision_minor;
+#if 0
+  /* unused, remove compiler warning but leave for documentation */
   uint8_t aux_firmware_revision_res;
+#endif
   char major_firmware_revision_char;
   uint8_t major_sdrr_revision;
   uint8_t minor_sdrr_revision;
@@ -827,7 +830,10 @@ ipmi_oem_fujitsu_get_eeprom_version_info (ipmi_oem_state_data_t *state_data)
   minor_firmware_revision = bytes_rs[7];
   aux_firmware_revision_major = bytes_rs[8];
   aux_firmware_revision_minor = bytes_rs[9];
+#if 0
+  /* unused, remove compiler warning but leave for documentation */
   aux_firmware_revision_res = bytes_rs[10];
+#endif
   major_firmware_revision_char = (char)bytes_rs[11];
 
   major_sdrr_revision = bytes_rs[12];

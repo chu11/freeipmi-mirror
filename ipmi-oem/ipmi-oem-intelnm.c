@@ -1608,6 +1608,8 @@ _ipmi_oem_intelnm_get_node_manager_capabilities_common (ipmi_oem_state_data_t *s
     case IPMI_OEM_INTEL_NODE_MANAGER_LIMITING_BASED_ON_DC_POWER_PSU_OUTPUT_POWER_OR_BLADED_SYSTEM:
       limiting_based_on_str = "DC power - PSU output power or bladed system";
       break;
+    default:
+      limiting_based_on_str = "Unknown";
     }
 
   if (searching_domain_id

@@ -245,7 +245,6 @@ string2bytes (ipmi_raw_state_data_t *state_data,
 static int
 ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
 {
-  struct ipmi_raw_arguments *args;
   char *line = NULL;
   unsigned int line_count = 0;
   size_t n = 0;
@@ -258,8 +257,6 @@ ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
 
   assert (state_data);
   assert (stream);
-
-  args = state_data->prog_data->args;
 
   while (1)
     {

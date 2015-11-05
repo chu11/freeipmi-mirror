@@ -6299,7 +6299,10 @@ ipmi_oem_dell_get_power_capacity (ipmi_oem_state_data_t *state_data)
 {
   uint8_t configuration_parameter_data[IPMI_OEM_MAX_BYTES];
   uint16_t power_capacity;
+#if 0
+  /* to remove compiler warning, unused, unclear why unused, copied logic from dell provided source */
   uint8_t units;
+#endif
   uint16_t maximum_power_consumption;
   uint16_t minimum_power_consumption;
   uint8_t total_number_power_supplies;
@@ -6319,7 +6322,10 @@ ipmi_oem_dell_get_power_capacity (ipmi_oem_state_data_t *state_data)
   power_capacity = configuration_parameter_data[0];
   power_capacity |= (configuration_parameter_data[1] << 8);
 
+#if 0
+  /* to remove compiler warning, unused, unclear why unused, copied logic from dell provided source */
   units = configuration_parameter_data[2];
+#endif
 
   maximum_power_consumption = configuration_parameter_data[3];
   maximum_power_consumption |= (configuration_parameter_data[4] << 8);

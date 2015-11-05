@@ -695,7 +695,11 @@ display_system_info_common (bmc_info_state_data_t *state_data,
 {
   fiid_obj_t obj_cmd_first_set_rs = NULL;
   fiid_obj_t obj_cmd_rs = NULL;
-  uint8_t encoding, string_length;
+#if 0
+  /* Code currently assumes ASCII, remove to remove warning */
+  uint8_t encoding;
+#endif
+  uint8_t string_length;
   char string[BMC_INFO_SYSTEM_INFO_STRING_MAX];
   uint64_t val;
   uint8_t set_selector = 0;
@@ -802,7 +806,10 @@ display_system_info_common (bmc_info_state_data_t *state_data,
   if (!ret)
     goto output;
 
+#if 0
+  /* Code currently assumes ASCII, remove to remove warning */
   encoding = val;
+#endif
   
   if ((ret = fiid_obj_get (obj_cmd_first_set_rs,
 			   "string_length",

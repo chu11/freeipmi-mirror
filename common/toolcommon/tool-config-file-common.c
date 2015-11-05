@@ -117,6 +117,8 @@ _config_file_uint8 (conffile_t cf,
   return (0);
 }
 
+#if 0
+/* Presently unused, remove to remove compiler warning, leave for potential future use */
 static int
 _config_file_non_negative_int (conffile_t cf,
                                struct conffile_data *data,
@@ -144,6 +146,7 @@ _config_file_non_negative_int (conffile_t cf,
   *value = data->intval;
   return (0);
 }
+#endif
 
 static int
 _config_file_positive_int (conffile_t cf,

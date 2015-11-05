@@ -974,7 +974,7 @@ _ipmi_acpi_get_rsdp (ipmi_locate_ctx_t ctx,
 
  cleanup:
   free (memdata);
-  return (-1);
+  return (rv);
 }
 
 /*******************************************************************************

@@ -2537,7 +2537,10 @@ _sol_bmc_to_remote_console_packet (ipmiconsole_ctx_t c, int *sol_deactivating_fl
   uint8_t packet_sequence_number;
   uint8_t packet_ack_nack_sequence_number;
   uint8_t accepted_character_count;
+#if 0
+  /* See below on implementation note */
   uint8_t break_condition;
+#endif
   uint8_t transmit_overrun;
   uint8_t sol_deactivating;
   uint8_t nack;
@@ -2603,6 +2606,8 @@ _sol_bmc_to_remote_console_packet (ipmiconsole_ctx_t c, int *sol_deactivating_fl
     }
   accepted_character_count = val;
 
+#if 0
+  /* See below on implementation note */
   if (FIID_OBJ_GET (c->connection.obj_sol_payload_data_rs,
                     "break_condition",
                     &val) < 0)
@@ -2613,6 +2618,7 @@ _sol_bmc_to_remote_console_packet (ipmiconsole_ctx_t c, int *sol_deactivating_fl
       goto cleanup;
     }
   break_condition = val;
+#endif
 
   if (FIID_OBJ_GET (c->connection.obj_sol_payload_data_rs,
                     "transmit_overrun",

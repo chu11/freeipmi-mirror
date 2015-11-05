@@ -118,11 +118,11 @@ static void
 _debug (const char *fmt, va_list ap)
 {
   char errbuf[IPMICONSOLE_DEBUG_ERROR_BUFLEN];
-  int len, perr;
+  int perr;
 
   assert (fmt);
 
-  len = vsnprintf (errbuf, IPMICONSOLE_DEBUG_ERROR_BUFLEN, fmt, ap);
+  vsnprintf (errbuf, IPMICONSOLE_DEBUG_ERROR_BUFLEN, fmt, ap);
   if (console_debug_flags & IPMICONSOLE_DEBUG_STDOUT)
     {
       if ((perr = pthread_mutex_lock (&console_stdout_debug_mutex)))
@@ -214,11 +214,11 @@ static void
 _ctx_debug (ipmiconsole_ctx_t c, const char *fmt, va_list ap)
 {
   char errbuf[IPMICONSOLE_DEBUG_ERROR_BUFLEN];
-  int len, perr;
+  int perr;
 
   assert (fmt);
 
-  len = vsnprintf (errbuf, IPMICONSOLE_DEBUG_ERROR_BUFLEN, fmt, ap);
+  vsnprintf (errbuf, IPMICONSOLE_DEBUG_ERROR_BUFLEN, fmt, ap);
   if (c->config.debug_flags & IPMICONSOLE_DEBUG_STDOUT)
     {
       if ((perr = pthread_mutex_lock (&console_stdout_debug_mutex)))

@@ -252,7 +252,6 @@ _ipmi_pet_parse_trap_data (ipmi_pet_state_data_t *state_data,
 			   struct ipmi_pet_input *input,
 			   struct ipmi_pet_trap_data *data)
 {
-  struct ipmi_pet_arguments *args;
   int rv = -1;
   int i;
 
@@ -260,8 +259,6 @@ _ipmi_pet_parse_trap_data (ipmi_pet_state_data_t *state_data,
   assert (input);
   assert (data);
 
-  args = state_data->prog_data->args;
-  
   if (!input->specific_trap_na_specified)
     {
       uint32_t value;
@@ -1962,7 +1959,6 @@ _ipmi_pet_cmdline (ipmi_pet_state_data_t *state_data)
 static int
 _ipmi_pet_stream (ipmi_pet_state_data_t *state_data, FILE *stream)
 {
-  struct ipmi_pet_arguments *args;
   char *line = NULL;
   size_t n = 0;
   unsigned int line_count = 0;
@@ -1971,8 +1967,6 @@ _ipmi_pet_stream (ipmi_pet_state_data_t *state_data, FILE *stream)
 
   assert (state_data);
   assert (stream);
-
-  args = state_data->prog_data->args;
 
   if (_ipmi_pet_init (state_data) < 0)
     goto cleanup;
