@@ -184,7 +184,7 @@ _get_home_directory (pstdout_state_t pstate,
   rv = 0;
  cleanup:
   free (tbuf);
-  return (0);
+  return (rv);
 }
 
 static int

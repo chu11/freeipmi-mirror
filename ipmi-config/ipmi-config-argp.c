@@ -162,7 +162,7 @@ _ipmi_config_category (char *arg, unsigned int *category_mask)
   rv = 0;
  cleanup:
   free (argtmp);
-  return (0);
+  return (rv);
 }
 
 static int

@@ -2339,7 +2339,7 @@ _api_lan_2_0_cmd_send (ipmi_ctx_t ctx,
   rv = 0;
  cleanup:
   free (pkt);
-  return (0);
+  return (rv);
 }
 
 /* return receive length on success, 0 on no packet, -1 on error */
