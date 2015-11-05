@@ -19,6 +19,9 @@ URL: http://www.gnu.org/software/freeipmi/
 Source: ftp://ftp.gnu.org/gnu/freeipmi/%{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: libgcrypt-devel texinfo
+%if %{?_with_systemd:1}%{!?_with_systemd:0}
+BuildRequires: systemd
+%endif
 Requires(post): info
 Requires(preun): info
 Obsoletes: freeipmi-ipmimonitoring
@@ -70,11 +73,16 @@ IPMI SEL syslog logging daemon.
   %define _enable_debug --enable-debug --enable-trace
 %endif
 
+%if %{?_with_systemd:1}%{!?_with_systemd:0}
+  %define _with_systemdsystemunitdir --with-systemdsystemunitdir=%{_unitdir}
+%endif
+
 %prep
 %setup -q
 
 %build
 %configure --program-prefix=%{?_program_prefix:%{_program_prefix}} \
+	   %{?_with_systemdsystemunitdir} \
            %{?_enable_debug} --disable-static
 CFLAGS="$RPM_OPT_FLAGS" make %{?_smp_mflags}
 
@@ -82,6 +90,7 @@ CFLAGS="$RPM_OPT_FLAGS" make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT
 DESTDIR="$RPM_BUILD_ROOT" make install
+%if %{?_with_systemd:0}%{!?_with_systemd:1}
 # fix coherance problems with associated script filenames
 mkdir -p $RPM_BUILD_ROOT/%{_initrddir}/
 # if check needed for SLES systems
@@ -91,6 +100,7 @@ mv $RPM_BUILD_ROOT/%{_sysconfdir}/init.d/bmc-watchdog $RPM_BUILD_ROOT/%{_initrdd
 mv $RPM_BUILD_ROOT/%{_sysconfdir}/init.d/ipmidetectd $RPM_BUILD_ROOT/%{_initrddir}/ipmidetectd
 mv $RPM_BUILD_ROOT/%{_sysconfdir}/init.d/ipmiseld $RPM_BUILD_ROOT/%{_initrddir}/ipmiseld
 fi
+%endif
 rm -f %{buildroot}%{_infodir}/dir
 # kludge to get around rpmlint complaining about 0 length semephore file
 echo freeipmi > %{buildroot}%{_localstatedir}/lib/freeipmi/ipckey
@@ -118,6 +128,9 @@ fi
 %postun -p /sbin/ldconfig
 
 %post bmc-watchdog
+%if %{?_with_systemd:1}%{!?_with_systemd:0}
+%systemd_post bmc-watchdog.service
+%else
 if [ "$1" = 1 ]; then
    if [ -x %{_initrddir}/bmc-watchdog ]; then
       /sbin/chkconfig --add bmc-watchdog
@@ -133,8 +146,12 @@ if [ $1 -ge 1 ]; then
       fi
    fi
 fi
+%endif
 
 %preun bmc-watchdog
+%if %{?_with_systemd:1}%{!?_with_systemd:0}
+%systemd_preun bmc-watchdog.service
+%else
 #
 # Stop bmc-watchdog if it is running 
 #
@@ -146,8 +163,17 @@ if [ "$1" = 0 ]; then
        /sbin/chkconfig --del bmc-watchdog
     fi
 fi
+%endif
+
+%postun bmc-watchdog
+%if %{?_with_systemd:1}%{!?_with_systemd:0}
+%systemd_postun_with_restart bmc-watchdog.service
+%endif
 
 %post ipmidetectd
+%if %{?_with_systemd:1}%{!?_with_systemd:0}
+%systemd_post ipmidetectd.service
+%else
 if [ "$1" = 1 ]; then
    if [ -x %{_initrddir}/ipmidetectd ]; then
       /sbin/chkconfig --add ipmidetectd
@@ -163,8 +189,12 @@ if [ $1 -ge 1 ]; then
       fi
    fi
 fi
+%endif
 
 %preun ipmidetectd
+%if %{?_with_systemd:1}%{!?_with_systemd:0}
+%systemd_preun ipmidetectd.service
+%else
 #
 # Stop ipmidetectd if it is running 
 #
@@ -176,8 +206,17 @@ if [ "$1" = 0 ]; then
        /sbin/chkconfig --del ipmidetectd
     fi
 fi
+%endif
+
+%postun ipmidetectd
+%if %{?_with_systemd:1}%{!?_with_systemd:0}
+%systemd_postun_with_restart ipmidetectd.service
+%endif
 
 %post ipmiseld
+%if %{?_with_systemd:1}%{!?_with_systemd:0}
+%systemd_post ipmiseld.service
+%else
 if [ "$1" = 1 ]; then
    if [ -x %{_initrddir}/ipmiseld ]; then
       /sbin/chkconfig --add ipmiseld
@@ -193,8 +232,12 @@ if [ $1 -ge 1 ]; then
       fi
    fi
 fi
+%endif
 
 %preun ipmiseld
+%if %{?_with_systemd:1}%{!?_with_systemd:0}
+%systemd_preun ipmiseld.service
+%else
 #
 # Stop ipmiseld if it is running 
 #
@@ -206,6 +249,12 @@ if [ "$1" = 0 ]; then
        /sbin/chkconfig --del ipmiseld
     fi
 fi
+%endif
+
+%postun ipmiseld
+%if %{?_with_systemd:1}%{!?_with_systemd:0}
+%systemd_postun_with_restart ipmiseld.service
+%endif
 
 %files
 %defattr(-,root,root)
@@ -407,14 +456,22 @@ fi
 %doc %{_datadir}/doc/%{name}/COPYING.bmc-watchdog
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.bmc-watchdog
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.bmc-watchdog.UC
+%if %{?_with_systemd:1}%{!?_with_systemd:0}
+%{_unitdir}/bmc-watchdog.service
+%else
 %config(noreplace) %{_initrddir}/bmc-watchdog
+%endif
 %config(noreplace) %{_sysconfdir}/sysconfig/bmc-watchdog
 %{_sbindir}/bmc-watchdog
 %{_mandir}/man8/bmc-watchdog.8*
 
 %files ipmidetectd
 %defattr(-,root,root)
+%if %{?_with_systemd:1}%{!?_with_systemd:0}
+%{_unitdir}/ipmidetectd.service
+%else
 %config(noreplace) %{_initrddir}/ipmidetectd
+%endif
 %attr(0600,root,root) %config(noreplace) %{_sysconfdir}/freeipmi/ipmidetectd.conf
 %{_sbindir}/ipmidetectd
 %{_mandir}/man5/ipmidetectd.conf.5*
@@ -424,7 +481,11 @@ fi
 %defattr(-,root,root)
 %doc %{_datadir}/doc/%{name}/COPYING.ipmiseld
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmiseld
+%if %{?_with_systemd:1}%{!?_with_systemd:0}
+%{_unitdir}/ipmiseld.service
+%else
 %config(noreplace) %{_initrddir}/ipmiseld
+%endif
 %attr(0600,root,root) %config(noreplace) %{_sysconfdir}/freeipmi/ipmiseld.conf
 %{_sbindir}/ipmiseld
 %{_mandir}/man5/ipmiseld.conf.5*
@@ -432,6 +493,9 @@ fi
 %dir %{_localstatedir}/cache/ipmiseld
 
 %changelog
+* Wed Nov 4 2015 Albert Chu <chu11@llnl.gov> 1.5.0
+- Add systemd support.
+
 * Tue Oct 27 2015 Albert Chu <chu11@llnl.gov> 1.5.0
 - Add new oem headers.
 
