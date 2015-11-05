@@ -1382,7 +1382,7 @@ ipmi_oem_thirdparty_get_dns_config_v1 (ipmi_oem_state_data_t *state_data)
   
   pstdout_printf (state_data->pstate,
 		  "DNS Register BMC     : %s\n",
-		  (dnsdomainnamedhcpenable) ? "Enabled" : "Disabled");
+		  (dnsregisterbmc) ? "Enabled" : "Disabled");
   
   pstdout_printf (state_data->pstate,
                   "DNS BMC Host Name    : %s\n",

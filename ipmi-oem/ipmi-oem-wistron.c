@@ -570,7 +570,7 @@ ipmi_oem_wistron_get_dns_config (ipmi_oem_state_data_t *state_data)
   
   pstdout_printf (state_data->pstate,
 		  "DNS Register BMC       : %s\n",
-		  (dnsdomainnamedhcpenable) ? "Enabled" : "Disabled");
+		  (dnsregisterbmc) ? "Enabled" : "Disabled");
   
   pstdout_printf (state_data->pstate,
                   "DNS BMC Host Name      : %s\n",
