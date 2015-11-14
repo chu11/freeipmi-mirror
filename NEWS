@@ -21,6 +21,7 @@ o Re-organize OEM header files into per-vendor files.
 o In ipmi-oem, fix error in "DNS Register BMC" output in
   "get-dns-config" output in Inventec, Quanta, and Wistron vendor
   sections.
+o Support systemd through --with-systemdsystemunitdir configure option. 
 o Minor corner case bug fixes.
 
 FreeIPMI 1.4.11 - 10/29/15
