@@ -2440,7 +2440,7 @@ ipmi_sensors_detailed_output (ipmi_sensors_state_data_t *state_data,
                                                    event_message_list,
                                                    event_message_list_len));
         case IPMI_SDR_FORMAT_EVENT_ONLY_RECORD:
-          /* only in legacy output, I dond't know why this was output
+          /* only in legacy output, I don't know why this was output
            * under verbose before
            */
           if (state_data->prog_data->args->legacy_output)
