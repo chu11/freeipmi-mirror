@@ -1,4 +1,4 @@
-FreeIPMI 1.5.1 - 03/01/14
+FreeIPMI 1.5.1 - 12/01/15
 -------------------------
 o Update Intel Node Manager support for 3.0 specification.
   - Update API and fiid templates in libfreeipmi.
