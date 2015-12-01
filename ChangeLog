@@ -1,3 +1,7 @@
+2015-11-04 Albert Chu <chu11@llnl.gov>
+
+	* configure.ac, freeipmi.spec.in: Add systemd support.
+
 2015-11-02 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/sel/ipmi-sel-string.c: Code cleanup.
