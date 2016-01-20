@@ -1,0 +1,16 @@
+[Unit]
+Description=Send OS startup event to BMC
+Documentation=man:bmc-device
+RefuseManualStart=true
+ConditionFileIsExecutable=/usr/sbin/bmc-device
+
+[Service]
+Type=oneshot
+# IPMI v2.0 rev 1.1 Table 42-3.
+#    Base OS Boot/Installation Status: 0x1f; "C: boot completed": 0x01
+Environment="START_EVENT=0x41 0x04 0x1f 0x01 0x6f assertion 0x01 0x00 0x00"
+ExecStart=/usr/sbin/bmc-device --platform-event=${START_EVENT}
+
+[Install]
+WantedBy=basic.target
+Also=os-shutdown-event.service
