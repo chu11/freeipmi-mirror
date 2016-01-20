@@ -1,0 +1,17 @@
+[Unit]
+Description=Set System information in BMC
+Documentation=man:bmc-device
+
+ConditionFileIsExecutable=/usr/sbin/bmc-device
+ConditionFileNotEmpty=/etc/os-release
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/os-release
+ExecStart=/usr/sbin/bmc-device --set-operating-system-name=${NAME}
+ExecStart=/usr/sbin/bmc-device --set-primary-operating-system-name=${NAME}
+ExecStart=/usr/sbin/bmc-device --set-present-os-version-number=${VERSION}
+ExecStart=/usr/sbin/bmc-device --set-system-name=%H
+
+[Install]
+WantedBy=basic.target
