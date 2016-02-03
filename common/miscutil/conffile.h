@@ -141,7 +141,7 @@
 #define CONFFILE_MAX_LINELEN                  32778
 #define CONFFILE_MAX_OPTIONNAMELEN              256
 #define CONFFILE_MAX_ARGS                        64
-#define CONFFILE_MAX_ARGLEN                     512
+#define CONFFILE_MAX_ARGLEN                    1024
 #define CONFFILE_MAX_ERRMSGLEN                 1024
 
 /* ERROR CODES
