@@ -679,6 +679,8 @@ ipmi_ssif_ctx_set_flags (ipmi_ssif_ctx_t ctx, unsigned int flags)
 int
 ipmi_ssif_ctx_io_init (ipmi_ssif_ctx_t ctx)
 {
+  int flags;
+
   if (!ctx || ctx->magic != IPMI_SSIF_CTX_MAGIC)
     {
       ERR_TRACE (ipmi_ssif_ctx_errormsg (ctx), ipmi_ssif_ctx_errnum (ctx));
@@ -698,6 +700,19 @@ ipmi_ssif_ctx_io_init (ipmi_ssif_ctx_t ctx)
                               O_RDWR)) < 0)
     {
       SSIF_ERRNO_TO_SSIF_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  flags = fcntl(ctx->device_fd, F_GETFD);
+  if (flags == -1)
+    {
+      OPENIPMI_ERRNO_TO_OPENIPMI_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+  flags |= FD_CLOEXEC;
+  if (fcntl(ctx->device_fd, F_SETFD, flags) == -1)
+    {
+      OPENIPMI_ERRNO_TO_OPENIPMI_ERRNUM (ctx, errno);
       goto cleanup;
     }
 
