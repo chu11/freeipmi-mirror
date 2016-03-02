@@ -352,6 +352,7 @@ ipmi_openipmi_ctx_io_init (ipmi_openipmi_ctx_t ctx)
 {
   unsigned int addr = IPMI_SLAVE_ADDRESS_BMC;
   char *driver_device;
+  int flags;
 
   if (!ctx || ctx->magic != IPMI_OPENIPMI_CTX_MAGIC)
     {
@@ -369,6 +370,19 @@ ipmi_openipmi_ctx_io_init (ipmi_openipmi_ctx_t ctx)
 
   if ((ctx->device_fd = open (driver_device,
                               O_RDWR)) < 0)
+    {
+      OPENIPMI_ERRNO_TO_OPENIPMI_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  flags = fcntl(ctx->device_fd, F_GETFD);
+  if (flags < 0)
+    {
+      OPENIPMI_ERRNO_TO_OPENIPMI_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+  flags |= FD_CLOEXEC;
+  if (fcntl(ctx->device_fd, F_SETFD, flags) < 0)
     {
       OPENIPMI_ERRNO_TO_OPENIPMI_ERRNUM (ctx, errno);
       goto cleanup;
