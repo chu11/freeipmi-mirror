@@ -303,6 +303,7 @@ ipmi_sunbmc_ctx_io_init (ipmi_sunbmc_ctx_t ctx)
   uint8_t method;
 #endif /* !(defined(HAVE_SYS_STROPTS_H) && defined(IOCTL_IPMI_INTERFACE_METHOD)) */
   char *driver_device;
+  int flags;
 
   if (!ctx || ctx->magic != IPMI_SUNBMC_CTX_MAGIC)
     {
@@ -322,6 +323,19 @@ ipmi_sunbmc_ctx_io_init (ipmi_sunbmc_ctx_t ctx)
                               O_RDWR)) < 0)
     {
       SUNBMC_ERRNO_TO_SUNBMC_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  flags = fcntl(ctx->device_fd, F_GETFD);
+  if (flags == -1)
+    {
+      OPENIPMI_ERRNO_TO_OPENIPMI_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+  flags |= FD_CLOEXEC;
+  if (fcntl(ctx->device_fd, F_SETFD, flags) == -1)
+    {
+      OPENIPMI_ERRNO_TO_OPENIPMI_ERRNUM (ctx, errno);
       goto cleanup;
     }
 

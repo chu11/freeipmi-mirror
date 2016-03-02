@@ -423,6 +423,7 @@ int
 ipmi_inteldcmi_ctx_io_init (ipmi_inteldcmi_ctx_t ctx)
 {
   char *driver_device;
+  int flags;
 
   if (!ctx || ctx->magic != IPMI_INTELDCMI_CTX_MAGIC)
     {
@@ -441,6 +442,19 @@ ipmi_inteldcmi_ctx_io_init (ipmi_inteldcmi_ctx_t ctx)
   if ((ctx->device_fd = open (driver_device, O_RDWR)) < 0)
     {
       INTELDCMI_ERRNO_TO_INTELDCMI_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  flags = fcntl(ctx->device_fd, F_GETFD);
+  if (flags == -1)
+    {
+      OPENIPMI_ERRNO_TO_OPENIPMI_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+  flags |= FD_CLOEXEC;
+  if (fcntl(ctx->device_fd, F_SETFD, flags) == -1)
+    {
+      OPENIPMI_ERRNO_TO_OPENIPMI_ERRNUM (ctx, errno);
       goto cleanup;
     }
 
