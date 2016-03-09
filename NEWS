@@ -2,6 +2,8 @@ FreeIPMI 1.5.2 - 12/01/15
 -------------------------
 o Update configuration file parsing code to handle values up to 1024
   characters in length.
+o Set FD_CLOEXEC for ipmi driver device files opened within
+  libfreeipmi.
 
 FreeIPMI 1.5.1 - 12/01/15
 -------------------------
