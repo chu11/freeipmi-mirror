@@ -1,3 +1,11 @@
+2016-03-09 Maksym Planeta <mcsim.planeta@gmail.com>
+
+	* libfreeipmi/driver/ipmi-inteldcmi-driver.c,
+	libfreeipmi/driver/ipmi-openipmi-driver.c,
+	libfreeipmi/driver/ipmi-ssif-driver.c,
+	libfreeipmi/driver/ipmi-sunbmc-driver.c: Set FD_CLOEXEC on device
+	driver opened files.
+
 2016-02-03 Albert Chu <chu11@llnl.gov>
 	
 	* common/miscutil/conffile.h: Increase CONFFILE_MAX_ARGLEN from
