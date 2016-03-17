@@ -182,12 +182,12 @@ In our eyes, there are several reasons why FreeIPMI is particularly special.
 
 @enumerate
 
-@item Support for HPC and large data centers
+@item Support for HPC, clusters, and large data centers
 
-A number of features have been added into the tools to support HPC
-and/or large data centers.  Much of this original support was added to
-support the large cluster environments at Lawrence Livermore National
-Laboratory (@acronym{LLNL}).
+A number of features have been added into the tools to support HPC,
+clusters, and/or large data centers.  Much of this original support
+was added to support the large cluster environments at Lawrence
+Livermore National Laboratory (@acronym{LLNL}).
 
 Scalable parallel execution of many FreeIPMI tools
 (@command{ipmi-sensors}, @command{ipmi-sel}, @command{bmc-info}, etc.)
