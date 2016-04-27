@@ -17,6 +17,8 @@ FreeIPMI general
 - oem extensions
   - test/check handle firmware versions
   - document firmware versions in docs/ or mans/?
+  - configuration option (e.g. via config file) to point manufacturer ids/product ids to "motherboard"
+    - so no need to recompile when getting new product ids from people
 - build system
   - single Makefile, so parallel build faster?
 - consider moving #defines to #enums globally for easier debugging w/
