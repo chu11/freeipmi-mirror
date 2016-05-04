@@ -1,3 +1,7 @@
+2016-05-04 Albert Chu <chu11@llnl.gov>
+
+	* man/ipmi-fru.8.pre.in, man/bmc-device.8.pre.in: Minor fixes
+
 2016-03-09 Maksym Planeta <mcsim.planeta@gmail.com>
 
 	* libfreeipmi/driver/ipmi-inteldcmi-driver.c,

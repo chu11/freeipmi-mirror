@@ -58,7 +58,7 @@ information, serial numbers, and part numbers.
 The following options are specific to
 .B Ipmi-fru.
 .TP
-\fB\-e\fR, \fB\-\-device-id\fR
+\fB\-e\fR, \fB\-\-device-id\fR=\fIIDNUM\fR
 Specify a specific FRU device ID.
 .TP
 \fB\-v\fR, \fB\-\-verbose\fR
