@@ -54,13 +54,15 @@ enum bmc_device_argp_option_keys
     SET_PRESENT_OS_VERSION_NUMBER_KEY = 185,
     SET_BMC_URL_KEY = 186,
     SET_BASE_OS_HYPERVISOR_URL_KEY = 187,
-    VERBOSE_KEY = 188,
+    READ_FRU_KEY = 188,
+    DEVICE_ID_KEY = 189,
+    VERBOSE_KEY = 190,
   };
 
 enum bmc_device_set_acpi_power_state_options
   {
-    SET_ACPI_SYSTEM_POWER_STATE_KEY = 190,
-    SET_ACPI_DEVICE_POWER_STATE_KEY = 191,
+    SET_ACPI_SYSTEM_POWER_STATE_KEY = 200,
+    SET_ACPI_DEVICE_POWER_STATE_KEY = 201,
   };
 
 #define SYSTEM_INFO_STRING_MAX 255
@@ -116,6 +118,10 @@ struct bmc_device_arguments
   char *set_bmc_url_arg;
   int set_base_os_hypervisor_url;
   char *set_base_os_hypervisor_url_arg;
+  int read_fru;
+  char *read_fru_filename;
+  uint8_t device_id;
+  int device_id_set;
   int verbose;
 };
 
@@ -132,6 +138,7 @@ typedef struct bmc_device_state_data
   pstdout_state_t pstate;
   char *hostname;
   ipmi_sdr_ctx_t sdr_ctx;
+  ipmi_fru_ctx_t fru_ctx;
 } bmc_device_state_data_t;
 
 #endif /* BMC_DEVICE_H */
