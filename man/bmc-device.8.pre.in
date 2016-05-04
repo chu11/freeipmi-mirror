@@ -8,7 +8,7 @@ bmc-device \- perform advanced BMC commands
 .B bmc-device 
 supports a variety of IPMI commands to perform advanced BMC functions.
 This tool is primarily used for development debugging, BMC error
-recory, retrieving detailed technical information, and other advanced
+recovery, retrieving detailed technical information, and other advanced
 purposes.  Most IPMI users will not need to use this tool.  Some of
 the
 .B bmc-device
