@@ -26,6 +26,14 @@
 #include <string.h>
 #include <ctype.h>
 #endif /* STDC_HEADERS */
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif /* HAVE_UNISTD_H */
+#if HAVE_FCNTL_H
+#include <fcntl.h>
+#endif /* HAVE_FCNTL_H */
+#include <sys/types.h>
+#include <sys/stat.h>
 #if TIME_WITH_SYS_TIME
 #include <sys/time.h>
 #include <time.h>
@@ -51,6 +59,7 @@
 #include "tool-hostrange-common.h"
 #include "tool-sdr-cache-common.h"
 #include "tool-util-common.h"
+#include "fd.h"
 
 typedef int (*Bmc_device_system_info_first_set)(ipmi_ctx_t ctx,
 						uint8_t set_selector,
@@ -2722,6 +2731,108 @@ set_base_os_hypervisor_url (bmc_device_state_data_t *state_data)
 
 
 static int
+read_fru (bmc_device_state_data_t *state_data)
+{
+  uint8_t areabuf[IPMI_FRU_AREA_SIZE_MAX+1];
+  unsigned int area_type = 0;
+  unsigned int area_length = 0;
+  unsigned int flags = 0;
+  int fd = -1;
+  int rv = -1;
+
+  assert (state_data);
+
+  if (!(state_data->fru_ctx = ipmi_fru_ctx_create (state_data->ipmi_ctx)))
+    {
+      pstdout_perror (state_data->pstate, "ipmi_fru_ctx_create()");
+      goto cleanup;
+    }
+  
+  if (state_data->prog_data->args->common_args.debug)
+    flags |= IPMI_FRU_FLAGS_DEBUG_DUMP;
+
+  /* Don't care about checksum checks now */
+  flags |= IPMI_FRU_FLAGS_SKIP_CHECKSUM_CHECKS;
+  flags |= IPMI_FRU_FLAGS_READ_RAW;
+
+  if (ipmi_fru_ctx_set_flags (state_data->fru_ctx, flags) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "ipmi_fru_ctx_set_flags: %s\n",
+		       ipmi_fru_ctx_strerror (ipmi_fru_ctx_errnum (state_data->fru_ctx)));
+      goto cleanup;
+    }
+  
+  if (ipmi_fru_open_device_id (state_data->fru_ctx, state_data->prog_data->args->device_id) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_fru_open_device_id: %s\n",
+                       ipmi_fru_ctx_errormsg (state_data->fru_ctx));
+      goto cleanup;
+    }
+
+  memset (areabuf, '\0', IPMI_FRU_AREA_SIZE_MAX + 1);
+  if (ipmi_fru_read_data_area (state_data->fru_ctx,
+			       &area_type,
+			       &area_length,
+			       areabuf,
+			       IPMI_FRU_AREA_SIZE_MAX) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "ipmi_fru_read_data_area: %s\n",
+		       ipmi_fru_ctx_errormsg (state_data->fru_ctx));
+      goto cleanup;
+    }
+
+  if (area_type != IPMI_FRU_AREA_TYPE_RAW_DATA)
+    {
+      pstdout_printf (state_data->pstate,
+                      "FRU Error: Invalid area type returned\n");
+      goto out;
+    }
+
+  if (area_length)
+    {
+      if ((fd = open (state_data->prog_data->args->read_fru_filename, O_CREAT | O_WRONLY, 0600)) < 0)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "Cannot open '%s': %s\n",
+			   state_data->prog_data->args->read_fru_filename,
+			   strerror (errno));
+	  goto out;
+	}
+
+      if (fd_write_n (fd, areabuf, area_length) < 0)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "fd_write_n: %s\n",
+			   strerror (errno));
+	  goto out;
+	}
+    }
+  else
+    {
+      pstdout_printf (state_data->pstate,
+                      "FRU Error: FRU area is zero length\n");
+      goto out;
+    }
+
+  
+ /* Close of fru_ctx in run_cmd_args */
+ out:
+  rv = 0;
+ cleanup:
+  ipmi_fru_close_device_id (state_data->fru_ctx);
+  close (fd);
+  return (rv);
+}
+
+static int
 run_cmd_args (bmc_device_state_data_t *state_data)
 {
   struct bmc_device_arguments *args;
@@ -2817,6 +2928,9 @@ run_cmd_args (bmc_device_state_data_t *state_data)
   if (args->set_base_os_hypervisor_url)
     return (set_base_os_hypervisor_url (state_data));
 
+  if (args->read_fru)
+    return (read_fru (state_data));
+  
   rv = 0;
   return (rv);
 }
@@ -2843,7 +2957,7 @@ _bmc_device (pstdout_state_t pstate,
 	return (EXIT_FAILURE);
       return (EXIT_SUCCESS);
     }
-  
+
   memset (&state_data, '\0', sizeof (bmc_device_state_data_t));
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;
@@ -2867,6 +2981,7 @@ _bmc_device (pstdout_state_t pstate,
   exit_code = EXIT_SUCCESS;
  cleanup:
   ipmi_sdr_ctx_destroy (state_data.sdr_ctx);
+  ipmi_fru_ctx_destroy (state_data.fru_ctx);
   ipmi_ctx_close (state_data.ipmi_ctx);
   ipmi_ctx_destroy (state_data.ipmi_ctx);
   return (exit_code);
@@ -2893,6 +3008,14 @@ main (int argc, char **argv)
 
   if (!hosts_count)
     return (EXIT_SUCCESS);
+
+  /* Handle special case exception */
+  if (prog_data.args->read_fru && hosts_count > 1)
+    {
+      fprintf (stderr,
+	       "Cannot execute --read-fru on multiple hosts\n");
+      return (EXIT_FAILURE);
+    }
 
   /* We don't want caching info to output when are doing ranged output */
   if (hosts_count > 1)
