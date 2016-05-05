@@ -1,3 +1,7 @@
+2016-05-05 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-config/: Set SDR quiet-cache when doing hostranged actions.
+
 2016-05-04 Albert Chu <chu11@llnl.gov>
 
 	* man/ipmi-fru.8.pre.in, man/bmc-device.8.pre.in: Minor fixes

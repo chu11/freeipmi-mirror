@@ -530,6 +530,10 @@ main (int argc, char *argv[])
   if (!hosts_count)
     return (EXIT_SUCCESS);
 
+  /* We don't want caching info to output when are doing ranged output */
+  if (hosts_count > 1)
+    prog_data.args->common_args.quiet_cache = 1;
+
   prog_data.hosts_count = hosts_count;
 
   if ((rv = pstdout_launch (prog_data.args->common_args.hostname,
