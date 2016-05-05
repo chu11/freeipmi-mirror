@@ -1,0 +1,74 @@
+# automake/autoconf files
+Makefile
+Makefile.in
+aclocal.m4
+configure
+libtool
+autom4te.cache/
+config/
+config.log
+config.status
+
+# Object files
+*.o
+
+# Libraries
+*.la
+*.lo
+.dirstamp
+.deps/
+.libs/
+
+# Generated files
+*.pre
+*.3
+*.5
+*.7
+*.8
+*.spec
+*.pc
+
+# Generated files/tools
+bmc-device/bmc-device
+bmc-info/bmc-info
+bmc-watchdog/bmc-watchdog
+ipmi-chassis/ipmi-chassis
+ipmi-config/bmc-config
+ipmi-config/ipmi-chassis-config
+ipmi-config/ipmi-config
+ipmi-config/ipmi-pef-config
+ipmi-config/ipmi-sensors-config
+ipmi-dcmi/ipmi-dcmi
+ipmi-fru/ipmi-fru
+ipmi-locate/ipmi-locate
+ipmi-oem/ipmi-oem
+ipmi-pet/ipmi-pet
+ipmi-raw/ipmi-raw
+ipmi-sel/ipmi-sel
+ipmi-sensors/ipmi-sensors
+ipmi-sensors/ipmimonitoring
+ipmiconsole/ipmiconsole
+ipmidetect/ipmidetect
+ipmidetectd/ipmidetectd
+ipmiping/ipmiping
+ipmipower/ipmipower
+ipmiseld/ipmiseld
+rmcpping/rmcpping
+
+# Generated library files
+libfreeipmi/include/freeipmi/freeipmi.h
+libipmiconsole/ipmiconsole.h
+libipmidetect/ipmidetect.h
+libipmimonitoring/ipmi_monitoring.h
+
+# Generated documentation
+doc/freeipmi-faq.info
+doc/stamp-vti
+doc/version-faq.texi
+
+# Misc distribution files
+*.tar.gz
+
+# Misc development files
+cscope.files
+cscope.out
