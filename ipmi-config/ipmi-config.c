@@ -72,6 +72,15 @@ _ipmi_config (pstdout_state_t pstate,
 
   assert (!(prog_data->args->category_mask & ~IPMI_CONFIG_CATEGORY_MASK_ALL));
 
+  if (prog_data->args->common_args.flush_cache)
+    {
+      if (sdr_cache_flush_cache (pstate,
+                                 hostname,
+                                 &prog_data->args->common_args) < 0)
+        return (EXIT_FAILURE);
+      return (EXIT_SUCCESS);
+    }
+
   memset (&state_data, '\0', sizeof (ipmi_config_state_data_t));
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;

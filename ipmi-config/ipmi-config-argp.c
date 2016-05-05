@@ -72,6 +72,8 @@ static struct argp_option cmdline_options[] = {
   ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL,
   ARGP_COMMON_OPTIONS_CONFIG_FILE,
   ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
+  ARGP_COMMON_SDR_CACHE_OPTIONS,
+  ARGP_COMMON_SDR_CACHE_OPTIONS_FILE_DIRECTORY,
   ARGP_COMMON_HOSTRANGED_OPTIONS,
   ARGP_COMMON_OPTIONS_DEBUG,
   { "category", IPMI_CONFIG_ARGP_CATEGORY_KEY, "CATEGORY", 0,
@@ -600,7 +602,8 @@ _ipmi_config_args_validate (struct ipmi_config_arguments *cmd_args)
   assert (cmd_args);
 
   if ((!cmd_args->action || cmd_args->action == -1)
-      && !cmd_args->info)
+      && !cmd_args->info
+      && !cmd_args->common_args.flush_cache)
     {
       fprintf (stderr,
                "Exactly one of --checkout, --commit, --diff, or --listsections MUST be given\n");
