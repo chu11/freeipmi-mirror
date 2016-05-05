@@ -2,6 +2,11 @@
 
 	* ipmi-config/: Set SDR quiet-cache when doing hostranged actions.
 
+	* ipmi-config/: Support SDR options in ipmi-config.
+
+	* Globally legacy old 'f' option for --flush-cache and 'Q' option
+	for --quiet-cache.
+
 2016-05-04 Albert Chu <chu11@llnl.gov>
 
 	* man/ipmi-fru.8.pre.in, man/bmc-device.8.pre.in: Minor fixes
