@@ -685,7 +685,7 @@ sdr_cache_create_and_load (ipmi_sdr_ctx_t sdr_ctx,
                          "ipmi_sdr_ctx_set_flags: %s\n",
                          ipmi_sdr_ctx_errormsg (sdr_ctx));
   
-  if (hostname)
+      if (hostname)
         {
           if (ipmi_sdr_ctx_set_debug_prefix (sdr_ctx, hostname) < 0)
             PSTDOUT_FPRINTF (pstate,
