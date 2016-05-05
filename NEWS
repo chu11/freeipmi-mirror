@@ -1,3 +1,9 @@
+FreeIPMI 1.6.1 - 03/01/14
+-------------------------
+o Legacy -f short option for --flush-cache and -Q short option for
+  quiet-cache.  Backwards compatible for tools that supported it
+  before.
+
 FreeIPMI 1.5.1 - 03/01/14
 -------------------------
 o Update Intel Node Manager support for 3.0 specification.

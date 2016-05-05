@@ -65,22 +65,24 @@ enum argp_common_option_keys
     ARGP_WORKAROUND_FLAGS_KEY = 'W',
     ARGP_DEBUG_KEY = 147,
     /* sdr options */
-    ARGP_FLUSH_CACHE_KEY = 'f',
-    ARGP_QUIET_CACHE_KEY = 'Q',
-    ARGP_SDR_CACHE_RECREATE_KEY = 149,
-    ARGP_SDR_CACHE_FILE_KEY = 148,
-    ARGP_SDR_CACHE_DIRECTORY_KEY = 150,
-    ARGP_IGNORE_SDR_CACHE_KEY = 151,
+    ARGP_FLUSH_CACHE_KEY = 148,
+    ARGP_FLUSH_CACHE_LEGACY_KEY = 'f',
+    ARGP_QUIET_CACHE_KEY = 149,
+    ARGP_QUIET_CACHE_LEGACY_KEY = 'Q',
+    ARGP_SDR_CACHE_RECREATE_KEY = 150,
+    ARGP_SDR_CACHE_FILE_KEY = 151,
+    ARGP_SDR_CACHE_DIRECTORY_KEY = 152,
+    ARGP_IGNORE_SDR_CACHE_KEY = 153,
     /* time options */
-    ARGP_UTC_TO_LOCALTIME_KEY = 152,
-    ARGP_LOCALTIME_TO_UTC_KEY = 153,
-    ARGP_UTC_OFFSET_KEY = 154,
+    ARGP_UTC_TO_LOCALTIME_KEY = 154,
+    ARGP_LOCALTIME_TO_UTC_KEY = 155,
+    ARGP_UTC_OFFSET_KEY = 156,
     /* hostrange options */
     ARGP_BUFFER_OUTPUT_KEY = 'B',
     ARGP_CONSOLIDATE_OUTPUT_KEY = 'C',
     ARGP_FANOUT_KEY = 'F',
     ARGP_ELIMINATE_KEY = 'E',
-    ARGP_ALWAYS_PREFIX_KEY = 155,
+    ARGP_ALWAYS_PREFIX_KEY = 157,
   };
 
 /*
@@ -183,6 +185,13 @@ enum argp_common_option_keys
       "Do not output information about cache creation/deletion.", 21},                                          \
   { "sdr-cache-recreate", ARGP_SDR_CACHE_RECREATE_KEY,  0, 0,                                                   \
       "Recreate sensor data repository (SDR) cache if cache is out of date or invalid.", 22}
+
+/* older -f option maintained for backwards compatability */
+#define ARGP_COMMON_SDR_CACHE_OPTIONS_LEGACY                                                                    \
+  { "flush-cache", ARGP_FLUSH_CACHE_LEGACY_KEY,  0, OPTION_HIDDEN,                                              \
+      "Flush a cached version of the sensor data repository (SDR) cache.", 20},                                 \
+  { "quiet-cache", ARGP_QUIET_CACHE_LEGACY_KEY,  0, OPTION_HIDDEN,                                              \
+      "Do not output information about cache creation/deletion.", 21}                                           \
 
 #define ARGP_COMMON_SDR_CACHE_OPTIONS_FILE_DIRECTORY                                                            \
   { "sdr-cache-file", ARGP_SDR_CACHE_FILE_KEY, "FILE", 0,                                                       \

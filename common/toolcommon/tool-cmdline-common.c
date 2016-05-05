@@ -410,9 +410,11 @@ common_parse_opt (int key,
        * sdr options
        */
     case ARGP_FLUSH_CACHE_KEY:
+    case ARGP_FLUSH_CACHE_LEGACY_KEY:
       common_args->flush_cache = 1;
       break;
     case ARGP_QUIET_CACHE_KEY:
+    case ARGP_QUIET_CACHE_LEGACY_KEY:
       common_args->quiet_cache = 1;
       break;
     case ARGP_SDR_CACHE_RECREATE_KEY:
