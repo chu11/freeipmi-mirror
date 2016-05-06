@@ -1,3 +1,8 @@
+2016-05-06 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-fru/: Rename INTERPRET_OEM_DATA to INTERPRET_OEM_DATA_KEY
+	for consistency.
+	
 2016-05-05 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-config/: Set SDR quiet-cache when doing hostranged actions.
