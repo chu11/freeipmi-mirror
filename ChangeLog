@@ -2,6 +2,8 @@
 
 	* bmc-device/: Support --read-fru and --device-id option.
 
+	* libfreeipmi/: Add ipmi_fru_open_device_id_with_buffer function.
+
 2016-05-20 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/spec/enterprise-numbers.pl: Handle header and all
@@ -18,7 +20,6 @@
 	* libfreeipmi/spec/ipmi-iana-enterprise-numbers-spec.c: Update to
 	newest.
 	
-
 2016-05-06 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-fru/: Rename INTERPRET_OEM_DATA to INTERPRET_OEM_DATA_KEY

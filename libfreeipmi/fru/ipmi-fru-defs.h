@@ -54,6 +54,9 @@ struct ipmi_fru_ctx {
   unsigned int multirecord_area_starting_offset;
   unsigned int device_opened;
 
+  int device_opened_with_buffer;
+  uint8_t frudata[IPMI_FRU_AREA_SIZE_MAX];
+
   int chassis_info_area_parsed;
   int board_info_area_parsed;
   int product_info_area_parsed;
