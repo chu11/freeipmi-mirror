@@ -2,6 +2,8 @@
 
 	* bmc-device/: Support --read-fru and --device-id option.
 
+	* libfreeipmi/: Add ipmi_fru_open_device_id_with_buffer function.
+
 2016-05-04 Albert Chu <chu11@llnl.gov>
 
 	* man/ipmi-fru.8.pre.in, man/bmc-device.8.pre.in: Minor fixes

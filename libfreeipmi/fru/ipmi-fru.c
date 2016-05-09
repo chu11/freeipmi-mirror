@@ -141,6 +141,8 @@ _init_fru_parsing_data (ipmi_fru_ctx_t ctx)
   ctx->multirecord_area_starting_offset = 0;
   ctx->device_opened = 0;
 
+  ctx->device_opened_with_buffer = 0;
+
   _init_fru_parsing_iterator_data (ctx);
 }
 
@@ -382,15 +384,23 @@ _read_fru_data (ipmi_fru_ctx_t ctx,
   assert (frubuflen);
   assert (fru_read_bytes <= frubuflen);
 
-  if (!(fru_read_data_rs = fiid_obj_create (tmpl_cmd_read_fru_data_rs)))
-    {
-      FRU_ERRNO_TO_FRU_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
   if ((offset_in_bytes + fru_read_bytes) > ctx->fru_inventory_area_size)
     {
       FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_FRU_INFORMATION_INCONSISTENT);
+      goto cleanup;
+    }
+
+  if (ctx->device_opened_with_buffer)
+    {
+      memcpy (frubuf,
+	      ctx->frudata + offset_in_bytes,
+	      fru_read_bytes);
+      goto out;
+    }
+
+  if (!(fru_read_data_rs = fiid_obj_create (tmpl_cmd_read_fru_data_rs)))
+    {
+      FRU_ERRNO_TO_FRU_ERRNUM (ctx, errno);
       goto cleanup;
     }
 
@@ -484,6 +494,7 @@ _read_fru_data (ipmi_fru_ctx_t ctx,
       num_bytes_read += count_returned;
     }
 
+ out:
   rv = 0;
  cleanup:
   fiid_obj_destroy (fru_read_data_rs);
@@ -516,8 +527,11 @@ _check_checksum (ipmi_fru_ctx_t ctx,
   return (1);
 }
 
-int
-ipmi_fru_open_device_id (ipmi_fru_ctx_t ctx, uint8_t fru_device_id)
+static int
+_ipmi_fru_open_device_id_common (ipmi_fru_ctx_t ctx,
+				 uint8_t fru_device_id,
+				 const void *areabuf,
+				 unsigned int areabuflen)
 {
   uint8_t frubuf[IPMI_FRU_INVENTORY_AREA_SIZE_MAX+1];
   fiid_obj_t fru_get_inventory_rs = NULL;
@@ -528,21 +542,14 @@ ipmi_fru_open_device_id (ipmi_fru_ctx_t ctx, uint8_t fru_device_id)
   int rv = -1;
   int ret;
 
-  if (!ctx || ctx->magic != IPMI_FRU_CTX_MAGIC)
-    {
-      ERR_TRACE (ipmi_fru_ctx_errormsg (ctx), ipmi_fru_ctx_errnum (ctx));
-      return (-1);
-    }
-
+  assert (ctx);
+  assert (ctx->magic == IPMI_FRU_CTX_MAGIC);
+  assert (fru_device_id != IPMI_FRU_DEVICE_ID_RESERVED
+	  || (areabuf && areabuflen));
+  
   if (!ctx->ipmi_ctx)
     {
       FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_IPMI_ERROR);
-      return (-1);
-    }
-
-  if (fru_device_id == IPMI_FRU_DEVICE_ID_RESERVED)
-    {
-      FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_PARAMETERS);
       return (-1);
     }
 
@@ -554,53 +561,64 @@ ipmi_fru_open_device_id (ipmi_fru_ctx_t ctx, uint8_t fru_device_id)
 
   ctx->fru_device_id = fru_device_id;
 
-  if (!(fru_get_inventory_rs = fiid_obj_create (tmpl_cmd_get_fru_inventory_area_info_rs)))
+  if (areabuf && areabuflen)
     {
-      FRU_ERRNO_TO_FRU_ERRNUM (ctx, errno);
-      goto cleanup;
+      memcpy (ctx->frudata,
+	      areabuf,
+	      areabuflen > IPMI_FRU_AREA_SIZE_MAX ? IPMI_FRU_AREA_SIZE_MAX : areabuflen);
+      ctx->fru_inventory_area_size = areabuflen;
+      ctx->device_opened_with_buffer = 1;
     }
-  
-  if (ipmi_cmd_get_fru_inventory_area_info (ctx->ipmi_ctx,
-                                            ctx->fru_device_id,
-                                            fru_get_inventory_rs) < 0)
+  else
     {
-      if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
+      if (!(fru_get_inventory_rs = fiid_obj_create (tmpl_cmd_get_fru_inventory_area_info_rs)))
 	{
-	  /* achu: Assume this completion code means we got a FRU SDR
-	   * entry pointed to a device that doesn't exist on this
-	   * particular mother board (b/c manufacturers may use the same
-	   * SDR for multiple motherboards).
-	   */
-	  if (ipmi_check_completion_code (fru_get_inventory_rs, IPMI_COMP_CODE_REQUESTED_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
-	    {
-	      FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_NO_FRU_INFORMATION);
-	      goto cleanup;
-	    }
-	}
-
-      if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_MESSAGE_TIMEOUT)
-	{
-	  FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_DEVICE_BUSY);
+	  FRU_ERRNO_TO_FRU_ERRNUM (ctx, errno);
 	  goto cleanup;
 	}
-
-      FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_IPMI_ERROR);
-      goto cleanup;
-    }
+      
+      if (ipmi_cmd_get_fru_inventory_area_info (ctx->ipmi_ctx,
+						ctx->fru_device_id,
+						fru_get_inventory_rs) < 0)
+	{
+	  if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
+	    {
+	      /* achu: Assume this completion code means we got a FRU SDR
+	       * entry pointed to a device that doesn't exist on this
+	       * particular mother board (b/c manufacturers may use the same
+	       * SDR for multiple motherboards).
+	       */
+	      if (ipmi_check_completion_code (fru_get_inventory_rs, IPMI_COMP_CODE_REQUESTED_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
+		{
+		  FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_NO_FRU_INFORMATION);
+		  goto cleanup;
+		}
+	    }
+	  
+	  if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_MESSAGE_TIMEOUT)
+	    {
+	      FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_DEVICE_BUSY);
+	      goto cleanup;
+	    }
+	  
+	  FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_IPMI_ERROR);
+	  goto cleanup;
+	}
   
-  if (FIID_OBJ_GET (fru_get_inventory_rs,
-                    "fru_inventory_area_size",
-                    &val) < 0)
-    {
-      FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, fru_get_inventory_rs);
-      goto cleanup;
-    }
-  ctx->fru_inventory_area_size = val;
+      if (FIID_OBJ_GET (fru_get_inventory_rs,
+			"fru_inventory_area_size",
+			&val) < 0)
+	{
+	  FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, fru_get_inventory_rs);
+	  goto cleanup;
+	}
+      ctx->fru_inventory_area_size = val;
 
-  if (!ctx->fru_inventory_area_size)
-    {
-      FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_NO_FRU_INFORMATION);
-      goto cleanup;
+      if (!ctx->fru_inventory_area_size)
+	{
+	  FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_NO_FRU_INFORMATION);
+	  goto cleanup;
+	}
     }
 
   if (!(ctx->flags & IPMI_FRU_FLAGS_READ_RAW))
@@ -726,6 +744,51 @@ ipmi_fru_open_device_id (ipmi_fru_ctx_t ctx, uint8_t fru_device_id)
   fiid_obj_destroy (fru_get_inventory_rs);
   fiid_obj_destroy (fru_common_header);
   return (rv); 
+}
+
+int
+ipmi_fru_open_device_id (ipmi_fru_ctx_t ctx, uint8_t fru_device_id)
+{
+  if (!ctx || ctx->magic != IPMI_FRU_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_fru_ctx_errormsg (ctx), ipmi_fru_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (fru_device_id == IPMI_FRU_DEVICE_ID_RESERVED)
+    {
+      FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  return (_ipmi_fru_open_device_id_common (ctx,
+					   fru_device_id,
+					   NULL,
+					   0));
+}
+
+int
+ipmi_fru_open_device_id_with_buffer (ipmi_fru_ctx_t ctx,
+				     const void *areabuf,
+				     unsigned int areabuflen)
+{
+  if (!ctx || ctx->magic != IPMI_FRU_CTX_MAGIC)
+    {
+      ERR_TRACE (ipmi_fru_ctx_errormsg (ctx), ipmi_fru_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  if (!areabuf
+      || !areabuflen)
+    {
+      FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  return (_ipmi_fru_open_device_id_common (ctx,
+					   0,
+					   areabuf,
+					   areabuflen));
 }
 
 int

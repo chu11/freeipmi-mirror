@@ -140,6 +140,11 @@ int ipmi_fru_ctx_set_debug_prefix (ipmi_fru_ctx_t ctx, const char *debug_prefix)
 int ipmi_fru_open_device_id (ipmi_fru_ctx_t ctx, uint8_t fru_device_id);
 int ipmi_fru_close_device_id (ipmi_fru_ctx_t ctx);
 
+/* Identical to ipmi_fru_open_device_id, but do not read from IPMI, use data in buffer */
+int ipmi_fru_open_device_id_with_buffer (ipmi_fru_ctx_t ctx, 
+					 const void *areabuf,
+					 unsigned int areabuflen);
+
 /* FRU data iterator functions */
 int ipmi_fru_first (ipmi_fru_ctx_t ctx);
 /* returns 1 if iterator can continue, 0 if at end, -1 on error */
