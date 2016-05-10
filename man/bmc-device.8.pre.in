@@ -174,8 +174,14 @@ Set Base OS/Hypervisor URL.
 Read the contents of a FRU device ID and store it in the specified
 file.  Requires setting of a device ID via \fI\-\-device\-id\.
 .TP
+\fB\-\-write\-fru\fR=\fIFILENAME\fR
+Write the contents of the specified file into a FRU device id.
+Requires setting of a device ID via \fI\-\-device\-id\.  If
+\fI\-\-verbose\fR is specified, progress percent will also be output.
+.TP
 \fB\-\-device\-id\fR=\fIIDNUM\fR
-Specify a specific FRU device ID.  For use with \fI\-\-read\-fru\fR.
+Specify a specific FRU device ID.  For use with \fI\-\-read\-fru\fR
+and \fI\-\-write\-fru\fR.
 .TP
 \fB\-\-verbose\fR
 Increase verbosity in output.

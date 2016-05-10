@@ -55,8 +55,9 @@ enum bmc_device_argp_option_keys
     SET_BMC_URL_KEY = 186,
     SET_BASE_OS_HYPERVISOR_URL_KEY = 187,
     READ_FRU_KEY = 188,
-    DEVICE_ID_KEY = 189,
-    VERBOSE_KEY = 190,
+    WRITE_FRU_KEY = 189,
+    DEVICE_ID_KEY = 190,
+    VERBOSE_KEY = 191,
   };
 
 enum bmc_device_set_acpi_power_state_options
@@ -120,6 +121,8 @@ struct bmc_device_arguments
   char *set_base_os_hypervisor_url_arg;
   int read_fru;
   char *read_fru_filename;
+  int write_fru;
+  char *write_fru_filename;
   uint8_t device_id;
   int device_id_set;
   int verbose;

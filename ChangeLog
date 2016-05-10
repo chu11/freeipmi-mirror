@@ -8,6 +8,8 @@
 
 	* libfreeipmi/: Add ipmi_cmd_write_fru_data function.
 
+	* bmc-device/: Support --write-fru option.
+
 2016-05-20 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/spec/enterprise-numbers.pl: Handle header and all
