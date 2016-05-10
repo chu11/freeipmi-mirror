@@ -68,6 +68,13 @@ int ipmi_cmd_read_fru_data (ipmi_ctx_t ctx,
                             uint8_t count_to_read,
                             fiid_obj_t obj_cmd_rs);
 
+int ipmi_cmd_write_fru_data (ipmi_ctx_t ctx,
+			     uint8_t fru_device_id,
+			     uint16_t fru_inventory_offset_to_write,
+			     const void *data_to_write,
+			     unsigned int data_to_write_len,
+			     fiid_obj_t obj_cmd_rs);
+
 #ifdef __cplusplus
 }
 #endif
