@@ -136,10 +136,12 @@ static struct argp_option cmdline_options[] =
       "Set Base OS/Hypervisor URL.", 67},
     { "read-fru", READ_FRU_KEY, "FILENAME", 0,
       "Read FRU device ID into specified filename.", 68},
+    { "write-fru", WRITE_FRU_KEY, "FILENAME", 0,
+      "Write specified filename into FRU device ID", 69},
     { "device-id", DEVICE_ID_KEY, "IDNUM", 0,
-      "Specify device-id for --read-fru or --write-fru.", 69},
+      "Specify device-id for --read-fru or --write-fru.", 70},
     { "verbose", VERBOSE_KEY, 0, 0,
-      "Increase verbosity in output.", 70},
+      "Increase verbosity in output.", 71},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -327,6 +329,10 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       cmd_args->read_fru = 1;
       cmd_args->read_fru_filename = arg;
       break;
+    case WRITE_FRU_KEY:
+      cmd_args->write_fru = 1;
+      cmd_args->write_fru_filename = arg;
+      break;
     case DEVICE_ID_KEY:
       errno = 0;
       tmp = strtol (arg, &endptr, 0);
@@ -414,7 +420,8 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
       && !cmd_args->set_present_os_version_number
       && !cmd_args->set_bmc_url
       && !cmd_args->set_base_os_hypervisor_url
-      && !cmd_args->read_fru)
+      && !cmd_args->read_fru
+      && !cmd_args->write_fru)
     {
       fprintf (stderr,
                "No command specified.\n");
@@ -450,7 +457,8 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
        + cmd_args->set_present_os_version_number
        + cmd_args->set_bmc_url
        + cmd_args->set_base_os_hypervisor_url
-       + cmd_args->read_fru) > 1)
+       + cmd_args->read_fru
+       + cmd_args->write_fru) > 1)
     {
       fprintf (stderr,
                "Multiple commands specified.\n");
@@ -569,6 +577,24 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
 	    }
 	}
     }
+
+  if (cmd_args->write_fru)
+    {
+      if (!cmd_args->device_id_set)
+	{
+	  fprintf (stderr, "Device ID not set\n");
+	  exit (EXIT_FAILURE);
+	}
+
+      if (access (cmd_args->write_fru_filename, R_OK) < 0)
+	{
+	  fprintf (stderr,
+		   "Cannot read '%s': %s\n",
+		   cmd_args->write_fru_filename,
+		   strerror (errno));
+	  exit (EXIT_FAILURE);
+	}
+    }
 }
 
 void
@@ -625,6 +651,8 @@ bmc_device_argp_parse (int argc, char **argv, struct bmc_device_arguments *cmd_a
   cmd_args->set_base_os_hypervisor_url_arg = NULL;
   cmd_args->read_fru = 0;
   cmd_args->read_fru_filename = NULL;
+  cmd_args->write_fru = 0;
+  cmd_args->write_fru_filename = NULL;
   cmd_args->device_id_set = 0;
 
   cmd_args->verbose = 0;

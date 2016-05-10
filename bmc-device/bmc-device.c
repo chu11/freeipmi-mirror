@@ -2833,6 +2833,199 @@ read_fru (bmc_device_state_data_t *state_data)
 }
 
 static int
+write_fru (bmc_device_state_data_t *state_data)
+{
+  uint8_t areabuf[IPMI_FRU_AREA_SIZE_MAX+1];
+  fiid_obj_t fru_get_inventory_rs = NULL;
+  fiid_obj_t obj_cmd_rs = NULL;
+  struct stat sbuf;
+  unsigned int area_size;
+  unsigned int area_offset = 0;
+  unsigned int blocksize = 16;
+  ssize_t len;
+  int fd = -1;
+  int rv = -1;
+  int loop_errors = 0;
+  int loop_errors_max = 5;	/* arbitrarily selected */
+  unsigned int percent = 0;
+  uint64_t val;
+
+  assert (state_data);
+
+  if (stat (state_data->prog_data->args->write_fru_filename, &sbuf) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "Cannot stat '%s': %s\n",
+		       state_data->prog_data->args->write_fru_filename,
+		       strerror (errno));
+      goto cleanup;
+    }
+
+  if (!sbuf.st_size)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "FRU file '%s' is empty\n",
+		       state_data->prog_data->args->write_fru_filename);
+      goto cleanup;
+    }
+
+  if (!(fru_get_inventory_rs = fiid_obj_create (tmpl_cmd_get_fru_inventory_area_info_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_fru_inventory_area_info (state_data->ipmi_ctx,
+					    state_data->prog_data->args->device_id,
+					    fru_get_inventory_rs) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_fru_inventory_area_info: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+      goto cleanup;
+    }
+
+  if (FIID_OBJ_GET (fru_get_inventory_rs,
+		    "fru_inventory_area_size",
+		    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'fru_inventory_area_size': %s\n",
+                       fiid_obj_errormsg (fru_get_inventory_rs));
+      goto cleanup;
+    }
+  area_size = val;
+
+  if (area_size != sbuf.st_size)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "FRU file '%s':  size (%u) does not match area size (%u)\n",
+		       sbuf.st_size,
+		       area_size);
+      goto cleanup;
+    }
+
+  memset (areabuf, '\0', IPMI_FRU_AREA_SIZE_MAX + 1);
+  if ((fd = open (state_data->prog_data->args->write_fru_filename, O_RDONLY)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "Cannot open '%s': %s\n",
+		       state_data->prog_data->args->write_fru_filename,
+		       strerror (errno));
+      goto cleanup;
+    }
+  
+  if ((len = fd_read_n (fd, areabuf, area_size)) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+		       stderr,
+		       "fd_read_n: %s\n",
+		       strerror (errno));
+      goto cleanup;
+    }
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_write_fru_data_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if (state_data->prog_data->args->verbose)
+    fprintf (stderr, "%u%%\r", percent);
+
+  while (area_offset < area_size)
+    {
+      unsigned int count_written;
+
+      if ((area_size - area_offset) < blocksize)
+	blocksize = area_size - area_offset;
+
+      if (ipmi_cmd_write_fru_data (state_data->ipmi_ctx,
+                                   state_data->prog_data->args->device_id,
+                                   area_offset,
+                                   areabuf + area_offset,
+                                   blocksize,
+                                   obj_cmd_rs) < 0)
+	{
+	  if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
+	    {
+	      /* Assume blocksize is too large */
+	      if (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_CANNOT_RETURN_REQUESTED_NUMBER_OF_BYTES) == 1)
+		{
+		  if (!(blocksize <= 8))
+		    blocksize /= 2;
+		  else
+		    goto error_out;
+		}
+	      
+	      if (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_WRITE_FRU_DATA_FRU_DEVICE_BUSY) == 1)
+		{
+		  loop_errors++;
+
+		  if (loop_errors > loop_errors_max)
+		    goto error_out;
+		}
+
+	      continue;
+	    }
+
+	error_out:
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "ipmi_cmd_write_fru_data: %s\n",
+			   ipmi_ctx_errormsg (state_data->ipmi_ctx));
+	  goto cleanup;
+	}
+
+      if (FIID_OBJ_GET (obj_cmd_rs,
+			"count_written",
+			&val) < 0)
+	{
+	  pstdout_fprintf (state_data->pstate,
+			   stderr,
+			   "fiid_obj_get: 'count_written': %s\n",
+			   fiid_obj_errormsg (fru_get_inventory_rs));
+	  goto cleanup;
+	}
+      count_written = val;
+
+      area_offset += count_written;
+
+      if (state_data->prog_data->args->verbose)
+	{
+	  unsigned int newpercent = (unsigned int)(((double)area_offset/area_size) * 100);
+	  if (newpercent > percent)
+	    {
+	      percent = newpercent;
+	      fprintf (stderr, "%u%%\r", percent);
+	    }
+	}
+    }
+
+  if (state_data->prog_data->args->verbose)
+    fprintf (stderr, "100%%\r\n");
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (fru_get_inventory_rs);
+  fiid_obj_destroy (obj_cmd_rs);
+  close (fd);
+  return (rv);
+}
+
+static int
 run_cmd_args (bmc_device_state_data_t *state_data)
 {
   struct bmc_device_arguments *args;
@@ -2931,6 +3124,9 @@ run_cmd_args (bmc_device_state_data_t *state_data)
   if (args->read_fru)
     return (read_fru (state_data));
   
+  if (args->write_fru)
+    return (write_fru (state_data));
+
   rv = 0;
   return (rv);
 }
@@ -3009,12 +3205,19 @@ main (int argc, char **argv)
   if (!hosts_count)
     return (EXIT_SUCCESS);
 
-  /* Handle special case exception */
+  /* Handle special case exceptions */
   if (prog_data.args->read_fru && hosts_count > 1)
     {
       fprintf (stderr,
 	       "Cannot execute --read-fru on multiple hosts\n");
       return (EXIT_FAILURE);
+    }
+
+  if (prog_data.args->write_fru && hosts_count > 1 && prog_data.args->verbose > 0)
+    {
+      fprintf (stderr,
+	       "Cannot execute --write-fru w/ verbosity on multiple hosts, setting verbosity to 0\n");
+      prog_data.args->verbose = 0;
     }
 
   /* We don't want caching info to output when are doing ranged output */
