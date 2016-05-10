@@ -42,6 +42,9 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
+#if HAVE_FCNTL_H
+#include <fcntl.h>
+#endif /* HAVE_FCNTL_H */
 #include <assert.h>
 #include <errno.h>
 
@@ -95,6 +98,8 @@ static struct argp_option cmdline_options[] =
       "Bridge to read FRU entries on other controllers", 43},
     { "interpret-oem-data", INTERPRET_OEM_DATA_KEY, NULL, 0,
       "Attempt to interpret OEM data.", 44},
+    { "fru-file", FRU_FILE_KEY, "FILENAME", 0,
+      "Output from specified FRU binary file.", 45},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -156,6 +161,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case INTERPRET_OEM_DATA_KEY:
       cmd_args->interpret_oem_data = 1;
       break;
+    case FRU_FILE_KEY:
+      cmd_args->fru_file = arg;
+      break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */
       argp_usage (state);
@@ -202,6 +210,22 @@ _ipmi_fru_config_file_parse (struct ipmi_fru_arguments *cmd_args)
     cmd_args->interpret_oem_data = config_file_data.interpret_oem_data;
 }
 
+static void
+_ipmi_fru_args_validate (struct ipmi_fru_arguments *cmd_args)
+{
+  if (cmd_args->fru_file)
+    {
+      if (access (cmd_args->fru_file, R_OK) < 0)
+	{
+	  fprintf (stderr,
+		   "Cannot read '%s': %s\n",
+		   cmd_args->fru_file,
+		   strerror (errno));
+	  exit (EXIT_FAILURE);
+	}
+    }
+}
+
 void
 ipmi_fru_argp_parse (int argc, char **argv, struct ipmi_fru_arguments *cmd_args)
 {
@@ -218,6 +242,7 @@ ipmi_fru_argp_parse (int argc, char **argv, struct ipmi_fru_arguments *cmd_args)
   cmd_args->skip_checks = 0;
   cmd_args->bridge_fru = 0;
   cmd_args->interpret_oem_data = 0;
+  cmd_args->fru_file = NULL;
 
   argp_parse (&cmdline_config_file_argp,
               argc,
@@ -235,4 +260,5 @@ ipmi_fru_argp_parse (int argc, char **argv, struct ipmi_fru_arguments *cmd_args)
               cmd_args);
 
   verify_common_cmd_args (&(cmd_args->common_args));
+  _ipmi_fru_args_validate (cmd_args);
 }

@@ -4,6 +4,8 @@
 
 	* libfreeipmi/: Add ipmi_fru_open_device_id_with_buffer function.
 
+	* ipmi-fru/: Add --fru-file option.
+
 2016-05-20 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/spec/enterprise-numbers.pl: Handle header and all

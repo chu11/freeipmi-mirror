@@ -78,6 +78,9 @@ By default, FRU entries on other satellite controllers will not be
 read by default.  Bridging may not work on some interfaces/driver
 types.
 #include <@top_srcdir@/man/manpage-common-interpret-oem-data.man>
+.TP
+\fB\-\-fru-file\fR=\fIFILENAME\fR
+Output data from the specified FRU binary file instead of reading FRU data off of a board.
 #include <@top_srcdir@/man/manpage-common-sdr-cache-options-heading.man>
 #include <@top_srcdir@/man/manpage-common-sdr-cache-options.man>
 #include <@top_srcdir@/man/manpage-common-sdr-cache-file-directory.man>

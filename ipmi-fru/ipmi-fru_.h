@@ -52,6 +52,7 @@ enum ipmi_fru_argp_option_keys
     SKIP_CHECKS_KEY = 's',
     BRIDGE_FRU_KEY = 160,
     INTERPRET_OEM_DATA_KEY = 161,
+    FRU_FILE_KEY = 162,
   };
 
 struct ipmi_fru_arguments
@@ -64,6 +65,7 @@ struct ipmi_fru_arguments
   int skip_checks;
   int bridge_fru;
   int interpret_oem_data;
+  char *fru_file;
 };
 
 typedef struct ipmi_fru_prog_data
