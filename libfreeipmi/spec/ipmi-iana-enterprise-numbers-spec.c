@@ -109,7 +109,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Ungermann-Bass", /* 75 */
     "Digital Analysis Corporation", /* 76 */
     "LAN Manager", /* 77 */
-    "LogMatrix Inc (previous was 'OpenService Inc.')", /* 78 */
+    "LogMatrix Inc (formerly 'OpenService Inc.')", /* 78 */
     "Fujitsu Services", /* 79 */
     "Auspex Systems, Inc", /* 80 */
     "Lannet Company", /* 81 */
@@ -141,7 +141,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Bull Company", /* 107 */
     "Emulex Corporation", /* 108 */
     "Warwick University Computing Services", /* 109 */
-    "NetScout Systems, Inc. (previous was 'Network General Corporation')", /* 110 */
+    "NetScout Systems, Inc. (formerly 'Network General Corporation')", /* 110 */
     "Oracle", /* 111 */
     "Control Data Corporation", /* 112 */
     "Hughes Aircraft Company", /* 113 */
@@ -172,7 +172,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Luxcom", /* 138 */
     "Artel", /* 139 */
     "Independence Technologies, Inc.(ITI)", /* 140 */
-    "NetScout Systems, Inc. (previous was 'Frontier Software Development')", /* 141 */
+    "NetScout Systems, Inc. (formerly 'Frontier Software Development')", /* 141 */
     "Digital Computer Limited", /* 142 */
     "Eyring, Inc.", /* 143 */
     "Case Communications", /* 144 */
@@ -189,7 +189,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Network Systems Corp.", /* 155 */
     "ENE (European Network Engineering)", /* 156 */
     "Dansk Data Elektronik A/S", /* 157 */
-    "Morning Star Technologies", /* 158 */
+    "Morningstar, Inc.", /* 158 */
     "Dupont EOP", /* 159 */
     "Legato Systems, Inc.", /* 160 */
     "Motorola", /* 161 */
@@ -262,7 +262,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "ASTEC, Inc.", /* 228 */
     "Delmarva Power", /* 229 */
     "Telematics International, Inc.", /* 230 */
-    "Fujitsu Technology Solutions GmbH (previous was 'Fujitsu Siemens Computers')", /* 231 */
+    "Fujitsu Technology Solutions GmbH (formerly 'Fujitsu Siemens Computers')", /* 231 */
     "Compaq", /* 232 */
     "NetManage, Inc.", /* 233 */
     "NC State University", /* 234 */
@@ -320,7 +320,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Digital-Kienzle Computersystems", /* 286 */
     "CSELT(Centro Studi E Laboratori Telecomunicazioni)", /* 287 */
     "Electronic Data Systems", /* 288 */
-    "Brocade Communications Systems, Inc. (previous was 'McData Corporation')", /* 289 */
+    "Brocade Communications Systems, Inc. (formerly 'McData Corporation')", /* 289 */
     "Harris Corporation", /* 290 */
     "Technology Dynamics, Inc.", /* 291 */
     "DATAHOUSE Information Systems Ltd.", /* 292 */
@@ -370,7 +370,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "ASCII Corporation", /* 336 */
     "PUREDATA Research", /* 337 */
     "NTT DATA", /* 338 */
-    "Siemens EMIS", /* 339 */
+    "Siemens Industry Inc.", /* 339 */
     "Kendall Square Research (KSR)", /* 340 */
     "ORNL", /* 341 */
     "Network Innovations, Inc.", /* 342 */
@@ -549,7 +549,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "MCI", /* 515 */
     "Human Engineering AG (HEAG)", /* 516 */
     "FileNet Corporation", /* 517 */
-    "NFT-Ericsson", /* 518 */
+    "Kongsberg Gruppen ASA (formerly 'NFT-Ericsson')", /* 518 */
     "Dun & Bradstreet", /* 519 */
     "Intercomputer Communications", /* 520 */
     "Defense Intelligence Agency", /* 521 */
@@ -584,7 +584,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Dornier GMBH", /* 550 */
     "Telxon Corporation", /* 551 */
     "Entergy Corporation", /* 552 */
-    "GarrettCom, Inc (formerly Garrett Communications)", /* 553 */
+    "GarrettCom, Inc (formerly 'Garrett Communications')", /* 553 */
     "Agile Networks, Inc.", /* 554 */
     "Larscom", /* 555 */
     "Stock Equipment", /* 556 */
@@ -612,7 +612,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Interlink Computer Sciences, Inc.", /* 578 */
     "Bridge Information Systems, Inc.", /* 579 */
     "Leeds and Northrup Australia (LNA) Nigel Cook", /* 580 */
-    "CSG Systems International (previous was 'Intec Telecom Systems')", /* 581 */
+    "CSG Systems International (formerly 'Intec Telecom Systems')", /* 581 */
     "Newport Systems Solutions, Inc.", /* 582 */
     "azel Corporation", /* 583 */
     "ROBOTIKER", /* 584 */
@@ -668,7 +668,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Santix Software GmbH", /* 634 */
     "Encore Networks, Inc.", /* 635 */
     "Georgia Institute of Technology", /* 636 */
-    "Alcatel-Lucent (previously was 'Alcatel Data Network')", /* 637 */
+    "Alcatel-Lucent (formerly 'Alcatel Data Network')", /* 637 */
     "GTECH", /* 638 */
     "UNOCAL Corporation", /* 639 */
     "First Pacific Network", /* 640 */
@@ -939,7 +939,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Scorpion Logic", /* 905 */
     "Inotech Inc.Eric Jacobs", /* 906 */
     "Controlled Power Co.", /* 907 */
-    "ABB Inc. (previous was 'Elsag Bailey Incorporated')", /* 908 */
+    "ABB Inc. (formerly 'Elsag Bailey Incorporated')", /* 908 */
     "J.P. Morgan", /* 909 */
     "Clear Communications Corp.", /* 910 */
     "General Technology Inc.", /* 911 */
@@ -976,7 +976,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Pacific Communication Sciences, Inc.", /* 942 */
     "Level One Communications, Inc.", /* 943 */
     "Intellimon Software, LLC.", /* 944 */
-    "Accenture (formerly Andersen Consulting)", /* 945 */
+    "Accenture (formerly 'Andersen Consulting')", /* 945 */
     "Bay Technologies Pty Ltd.", /* 946 */
     "Integrated Network Corp.", /* 947 */
     "CyberPro International", /* 948 */
@@ -1013,7 +1013,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Digicom, SPA", /* 979 */
     "Ark Telecom", /* 980 */
     "National Security Agency (NSA)", /* 981 */
-    "Southwestern Bell Corporation", /* 982 */
+    "Southwestern Bell Corporation (AT&T) (formerly 'Southwestern Bell Corporation')", /* 982 */
     "Virtual Design Group, Inc.", /* 983 */
     "Rhone Poulenc", /* 984 */
     "Swiss Bank Corporation", /* 985 */
@@ -1135,7 +1135,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "MoNet Systems, Inc.", /* 1101 */
     "Metricom, Inc.", /* 1102 */
     "Xact, Inc", /* 1103 */
-    "First Virtual Holdings Incorporated", /* 1104 */
+    "Brave Software, Inc.", /* 1104 */
     "NetCell Systems, Inc.", /* 1105 */
     "Uni-QLennart Norlanderlennart.norlander&uniq.se", /* 1106 */
     "DISA Space Systems Development Division", /* 1107 */
@@ -1202,7 +1202,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "ICOM Informatique", /* 1168 */
     "MPX Data Systems Inc.", /* 1169 */
     "Syntellect", /* 1170 */
-    "Polyhedra Ltd (previously was 'Perihelion Technology Ltd')", /* 1171 */
+    "Polyhedra Ltd (formerly 'Perihelion Technology Ltd')", /* 1171 */
     "Shoppers Drug Mart", /* 1172 */
     "Apollo Travel Services Judith Williams-Murphy", /* 1173 */
     "Time Warner Cable, Inc.", /* 1174 */
@@ -1271,7 +1271,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Revco D.S., Inc.", /* 1237 */
     "HRB Systems, Inc.", /* 1238 */
     "Litton Fibercom", /* 1239 */
-    "Silex Technology America, Inc.  (previously was 'XCD, Incorporated')", /* 1240 */
+    "Silex Technology America, Inc.  (formerly 'XCD, Incorporated')", /* 1240 */
     "ProsjektLeveranser AS", /* 1241 */
     "Halcyon Inc.", /* 1242 */
     "SBB", /* 1243 */
@@ -1406,7 +1406,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "LSI Logic", /* 1372 */
     "interWAVE Communications, Inc.", /* 1373 */
     "mdl-Consult", /* 1374 */
-    "Firma PAF", /* 1375 */
+    "Frobbit AB (formerly 'Firma PAF')", /* 1375 */
     "Nashoba Networks Inc", /* 1376 */
     "Comedia Information AB", /* 1377 */
     "Harvey Mudd College", /* 1378 */
@@ -1446,7 +1446,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "DunsGate, a Dun and Bradstreet Company", /* 1412 */
     "AFP", /* 1413 */
     "VertexRSI, Controls and Structures", /* 1414 */
-    "Williams Energy Services Company", /* 1415 */
+    "The Williams Companies, Inc.", /* 1415 */
     "ASP Technologies, Inc.", /* 1416 */
     "Philips Communication Systems", /* 1417 */
     "Dataprobe Inc.", /* 1418 */
@@ -1535,7 +1535,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "The Aerospace Corporation Michael", /* 1501 */
     "Orckit Communications Ltd.", /* 1502 */
     "Tertio Limited", /* 1503 */
-    "COMSOFT GmbH", /* 1504 */
+    "Comsoft Solutions GmbH (formerly 'COMSOFT GmbH')", /* 1504 */
     "Power Center Software LLC", /* 1505 */
     "Technologic, Inc.", /* 1506 */
     "Vertex Data Science Limited", /* 1507 */
@@ -1604,7 +1604,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Telesend Inc.", /* 1570 */
     "NCC", /* 1571 */
     "Forte Software, Inc.", /* 1572 */
-    "McAfee (previous was 'Secure Computing Corporation')", /* 1573 */
+    "McAfee (formerly 'Secure Computing Corporation')", /* 1573 */
     "BEZEQ", /* 1574 */
     "TU Braunschweig", /* 1575 */
     "Stac Inc.", /* 1576 */
@@ -1621,10 +1621,10 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Switched Network Technologies (SNT)", /* 1587 */
     "Brocade Communications Systems, Inc.", /* 1588 */
     "Computer Resources International A/S (CRI)", /* 1589 */
-    "LuchtVerkeersBeveiliging", /* 1590 */
+    "Luchtverkeersleiding Nederland", /* 1590 */
     "GTIL", /* 1591 */
     "XactLabs Corporation", /* 1592 */
-    "Quest Software, Inc. (previous was 'NetPro Computing, Inc.')", /* 1593 */
+    "Quest Software, Inc. (formerly 'NetPro Computing, Inc.')", /* 1593 */
     "TELESYNC", /* 1594 */
     "ewt breitbandnetze gmbh", /* 1595 */
     "INS GmbH", /* 1596 */
@@ -1740,13 +1740,13 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Midland Business Systems, Inc.", /* 1706 */
     "Optimal Networks", /* 1707 */
     "Gresham Computing plc", /* 1708 */
-    "Leidos, Inc. (Formerly SAIC)", /* 1709 */
+    "Leidos, Inc. (formerly 'SAIC')", /* 1709 */
     "Acclaim Communications", /* 1710 */
     "BISS Limited", /* 1711 */
     "Caravelle Inc.", /* 1712 */
     "Diamond Lane Communications Corporation", /* 1713 */
     "Infortrend Technology, Inc.", /* 1714 */
-    "Ardatis N.V (previous was 'Orda-B N.V.')", /* 1715 */
+    "Ardatis N.V (formerly 'Orda-B N.V.')", /* 1715 */
     "Ariel Corporation", /* 1716 */
     "Datalex Communications Ltd.", /* 1717 */
     "Server Technology Inc.", /* 1718 */
@@ -1918,7 +1918,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Quantum Telecom Solutions, Inc.", /* 1884 */
     "Archinet", /* 1885 */
     "i-cubed Ltd.", /* 1886 */
-    "Albis Technologies Ltd. (previously was 'Siemens Switzerland Ltd.')", /* 1887 */
+    "Albis Technologies Ltd. (formerly 'Siemens Switzerland Ltd.')", /* 1887 */
     "GigaLabs, Inc.", /* 1888 */
     "MET Matra-Ericsson", /* 1889 */
     "Red Lion Controls (JBM Electronics)", /* 1890 */
@@ -2022,7 +2022,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Lycoming County PA", /* 1988 */
     "Statens Institutions styrelse SiS", /* 1989 */
     "INware Solutions Inc.", /* 1990 */
-    "Brocade Communication Systems, Inc. (previous was 'Foundry Networks, Inc.')", /* 1991 */
+    "Brocade Communication Systems, Inc. (formerly 'Foundry Networks, Inc.')", /* 1991 */
     "Deutsche Bank", /* 1992 */
     "Xyratex", /* 1993 */
     "Bausch Datacom B.V.", /* 1994 */
@@ -2063,7 +2063,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Vivid Image", /* 2029 */
     "AfriQ*Access, Inc.", /* 2030 */
     "Reliant Networks Corporation Steven", /* 2031 */
-    "Mavenir Systems (previous was 'airwide solutions')", /* 2032 */
+    "Mavenir Systems (formerly 'airwide solutions')", /* 2032 */
     "McKinney Lighting & Sound", /* 2033 */
     "Whole Systems Design, Inc.", /* 2034 */
     "O'Reilly & Associates, Inc.", /* 2035 */
@@ -2193,7 +2193,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Essential Communications", /* 2159 */
     "University of Hawaii", /* 2160 */
     "Foxtel Management Pty", /* 2161 */
-    "ZOHO Corporation (previous was 'Advent Network Management')", /* 2162 */
+    "ZOHO Corporation (formerly 'Advent Network Management')", /* 2162 */
     "Vayris, S.A.", /* 2163 */
     "Telecom Multimedia Systems, Inc.", /* 2164 */
     "Guardall Ltd.", /* 2165 */
@@ -2276,7 +2276,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "NET-TEL Computer Systems Limited", /* 2242 */
     "Sattel Communications", /* 2243 */
     "Promatory Communications Inc.", /* 2244 */
-    "Syncsort Inc.", /* 2245 */
+    "Catalogic Software Inc. (formerly 'Syncsort, Inc.')", /* 2245 */
     "LloydsTSB Group Plc", /* 2246 */
     "IT Consultancy Engineering Management Group Ltd.", /* 2247 */
     "LITE-ON COMMUNICATIONS Corp.", /* 2248 */
@@ -2288,7 +2288,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Delta Electronics, Inc.", /* 2254 */
     "Waffle Productions", /* 2255 */
     "Korea Internet", /* 2256 */
-    "Selex Communications Limited (previously was 'BAE SYSTEMS')", /* 2257 */
+    "Selex Communications Limited (formerly 'BAE SYSTEMS')", /* 2257 */
     "THOMSON BROADCAST SYSTEMS", /* 2258 */
     "Workflow Automation Company Ltd.", /* 2259 */
     "Associated RT, Inc.", /* 2260 */
@@ -2383,7 +2383,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Mission Critical Software, Inc.", /* 2349 */
     "Data Research and Applications, Inc.", /* 2350 */
     "Resonate Inc.", /* 2351 */
-    "Ericsson, Inc. (previous was 'RedBack Networks')", /* 2352 */
+    "Ericsson, Inc. (formerly 'RedBack Networks')", /* 2352 */
     "Nexware Corporation", /* 2353 */
     "ADC Wireless Systems", /* 2354 */
     "ITIS", /* 2355 */
@@ -2458,7 +2458,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Dominio Publico Internet, S.L.", /* 2424 */
     "bkr - Network Systems", /* 2425 */
     "Mariposa Technology, Inc.", /* 2426 */
-    "Brocade Communications Systems, Inc. (previous was 'NuView Inc.')", /* 2427 */
+    "Brocade Communications Systems, Inc. (formerly 'NuView Inc.')", /* 2427 */
     "Uninett", /* 2428 */
     "A.C.E.", /* 2429 */
     "Oy Comptel Ab", /* 2430 */
@@ -2482,7 +2482,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "NXT", /* 2448 */
     "Pan Dacom Forcom Telekommunikationssysteme GmbH", /* 2449 */
     "Auco, Inc.", /* 2450 */
-    "Tecnotree (previous was 'Tecnomen')", /* 2451 */
+    "Tecnotree (formerly 'Tecnomen')", /* 2451 */
     "Helax AB", /* 2452 */
     "Omtool Ltd.", /* 2453 */
     "G-connect", /* 2454 */
@@ -2581,7 +2581,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Catholic University of Pelotas", /* 2547 */
     "Cryptonym Corporation", /* 2548 */
     "Aker Consultoria e Informatica Rodrigo Ormonde", /* 2549 */
-    "Elvis Plus Co.", /* 2550 */
+    "ELVIS-PLUS", /* 2550 */
     "Telegyr Systems", /* 2551 */
     "Netegrity, Inc.", /* 2552 */
     "Cardinal Network, New Zealand Ltd", /* 2553 */
@@ -2643,7 +2643,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "New Prime Inc.", /* 2609 */
     "DataHaven Project, Inc.", /* 2610 */
     "Interspeed", /* 2611 */
-    "MPI Tech a/s (previous was 'i-data international a-s')", /* 2612 */
+    "MPI Tech a/s (formerly 'i-data international a-s')", /* 2612 */
     "Accelerated Networks, Inc.", /* 2613 */
     "Forschungszentrum Karlsruhe GmbH", /* 2614 */
     "ixMicro", /* 2615 */
@@ -2657,7 +2657,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "ASUSTek Computer Inc.", /* 2623 */
     "Wave Wireless Networking", /* 2624 */
     "FCI Telecommunications Corporation", /* 2625 */
-    "Entuity Limited (previously was 'Prosum Ltd')", /* 2626 */
+    "Entuity Limited (formerly 'Prosum Ltd')", /* 2626 */
     "TCAM Systems (UK) Ltd", /* 2627 */
     "Natural MicroSystems", /* 2628 */
     "City of Wauwatosa", /* 2629 */
@@ -2966,7 +2966,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "TERMA Elektronik AS", /* 2932 */
     "Floware System Solutions Ltd.", /* 2933 */
     "Citicorp", /* 2934 */
-    "Quantum Corp. (previous was 'Pathlight Technology Inc.')", /* 2935 */
+    "Quantum Corp. (formerly 'Pathlight Technology Inc.')", /* 2935 */
     "Prominence Dot Com, Inc.", /* 2936 */
     "Deutsche Telekom AG", /* 2937 */
     "Proginet Corporation", /* 2938 */
@@ -3007,7 +3007,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Integral Access, Inc.", /* 2973 */
     "IP Metrics Software, Inc.", /* 2974 */
     "Notarius T.S.I.N. Inc.", /* 2975 */
-    "Sphairon Technologies GmbH (previous was 'Philips Multimedia Network Systems GmbH')", /* 2976 */
+    "Sphairon Technologies GmbH (formerly 'Philips Multimedia Network Systems GmbH')", /* 2976 */
     "Teubner and Associates, Inc.", /* 2977 */
     "ImageCom Ltd.", /* 2978 */
     "Waverider Communications Inc.", /* 2979 */
@@ -3039,7 +3039,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "TDS (Telecoms Data Systems)", /* 3005 */
     "HCI Technologies", /* 3006 */
     "TOPCALL International", /* 3007 */
-    "LogMatrix Inc (previous was 'Open Service')", /* 3008 */
+    "LogMatrix Inc (formerly 'Open Service')", /* 3008 */
     "SYNCLAYER Inc.", /* 3009 */
     "university of aizu", /* 3010 */
     "VideoServer, Inc.", /* 3011 */
@@ -3430,9 +3430,9 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "DICOS GmbH Kommunikationssysteme Stephan", /* 3396 */
     "Border Blues Productions", /* 3397 */
     "Fieldbus Foundation", /* 3398 */
-    "Olencom Electronics Ltd Olentuch", /* 3399 */
+    "Olencom Electronics Ltd.", /* 3399 */
     "Alacrity Communications Inc.", /* 3400 */
-    "McAfee Inc. (previous was 'Network Associates, Inc.')", /* 3401 */
+    "McAfee Inc. (formerly 'Network Associates, Inc.')", /* 3401 */
     "Magicom Integrated Solutions", /* 3402 */
     "Marimba, Inc.", /* 3403 */
     "Adicom", /* 3404 */
@@ -3455,7 +3455,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Performance Reporting Services Ltd", /* 3421 */
     "Network Aware, Inc.", /* 3422 */
     "Project 25", /* 3423 */
-    "Evident Software, Inc. (previously was 'Apogee Networks, Inc.')", /* 3424 */
+    "Evident Software, Inc. (formerly 'Apogee Networks, Inc.')", /* 3424 */
     "Amsdell Inc.", /* 3425 */
     "Tokyo Denshi Sekei K.K.", /* 3426 */
     "MicroJuris, Inc.", /* 3427 */
@@ -3485,7 +3485,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Vita Nuova Limited", /* 3451 */
     "MDSI Mobile Data Solutions Inc.", /* 3452 */
     "AAE Systems, Inc.", /* 3453 */
-    "TrustWorks Systems B.V.", /* 3454 */
+    "ELVIS-PLUS", /* 3454 */
     "Internet Freaks Luxembourg a.s.b.l.Department Technique", /* 3455 */
     "Adtech, Inc.", /* 3456 */
     "Advanced Intelligent Networks Corp.", /* 3457 */
@@ -3592,7 +3592,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "BGS Systemplanung AG", /* 3558 */
     "The Digital Schoolhouse", /* 3559 */
     "Sphere Logic Corporation", /* 3560 */
-    "The Broadband Forum (previous was 'ADSL Forum')", /* 3561 */
+    "The Broadband Forum (formerly 'ADSL Forum')", /* 3561 */
     "Selway Moore Limited", /* 3562 */
     "National Network Data Services", /* 3563 */
     "Ciphernet", /* 3564 */
@@ -3637,7 +3637,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Westpac Banking Corporation", /* 3603 */
     "XYPI MEDIANET PVT. Ltd.", /* 3604 */
     "Nesser & Nesser Consulting", /* 3605 */
-    "Incognito Software Inc.", /* 3606 */
+    "Incognito Software Systems Inc.", /* 3606 */
     "Cerent Corporation", /* 3607 */
     "The Tillerman Group", /* 3608 */
     "Cequs Inc.", /* 3609 */
@@ -3671,7 +3671,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Power & Data Technology, Inc.", /* 3637 */
     "IntelliReach Corporation", /* 3638 */
     "WM-data", /* 3639 */
-    "Industrial Logic Corporation", /* 3640 */
+    "DataPath, Inc.", /* 3640 */
     "Netaphor Software, Inc.", /* 3641 */
     "CryptoConsult", /* 3642 */
     "DIRTSA", /* 3643 */
@@ -3683,9 +3683,9 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Rollins Technology Inc.", /* 3649 */
     "NetOps Corp", /* 3650 */
     "Know IT AB", /* 3651 */
-    "Pan Dacom Direkt GmbH (previous was 'Pan Dacom Networking AG')", /* 3652 */
+    "Pan Dacom Direkt GmbH (formerly 'Pan Dacom Networking AG')", /* 3652 */
     "Cirque Networks, Inc.", /* 3653 */
-    "NaviNet Internet Services", /* 3654 */
+    "NaviNet", /* 3654 */
     "Germanischer Lloyd AG", /* 3655 */
     "FORCE Computers GmbH", /* 3656 */
     "Ericsson Wireless LAN Systems", /* 3657 */
@@ -3719,7 +3719,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Sento Pty Ltd", /* 3685 */
     "Wicks By Julie", /* 3686 */
     "HSD - Hardware Software Development GmbH", /* 3687 */
-    "Sagem Orga GmbH", /* 3688 */
+    "Morpho e-documents (formerly 'Sagem Orga GmbH')", /* 3688 */
     "New Technology Development, Inc.", /* 3689 */
     "TIAA-CREF", /* 3690 */
     "Team2it-CopyLeft S.r.l.", /* 3691 */
@@ -3760,10 +3760,10 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "enCommerce, Incorporated", /* 3726 */
     "Western Multiplex", /* 3727 */
     "REALM Information Technoligies, Inc.", /* 3728 */
-    "Lucent Technologies", /* 3729 */
+    "Nokia (formerly 'Alcatel-Lucent')", /* 3729 */
     "Westport Technologies", /* 3730 */
     "The SABRE Group", /* 3731 */
-    "Calamp Wireless Networks Inc (previous was 'Dataradio Inc.')", /* 3732 */
+    "Calamp Wireless Networks Inc (formerly 'Dataradio Inc.')", /* 3732 */
     "Datakom Austria DI Erich", /* 3733 */
     "Security-7 Ltd.", /* 3734 */
     "Telesafe AS", /* 3735 */
@@ -3795,7 +3795,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "HAGER-ELECTRONICS GmbH", /* 3761 */
     "Kwangwoon University", /* 3762 */
     "Veramark", /* 3763 */
-    "Quantum Corporation  (previous was 'Advanced Digital Information Corporation')", /* 3764 */
+    "Quantum Corporation  (formerly 'Advanced Digital Information Corporation')", /* 3764 */
     "StrategicLink Consulting", /* 3765 */
     "Hannibal Teknologies", /* 3766 */
     "Pan-International Industrial Corp.", /* 3767 */
@@ -3998,7 +3998,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Danet GmbH", /* 3964 */
     "Spacebridge Networks Corporation", /* 3965 */
     "Allianz Elementar Versicherungs-Aktiengesellschaften", /* 3966 */
-    "VCS Video Communication Systems GmbH", /* 3967 */
+    "Bosch Sicherheitssysteme Engineering GmbH", /* 3967 */
     "Webline Communications Corp.", /* 3968 */
     "RealNetworks, Inc.", /* 3969 */
     "FragRage Network", /* 3970 */
@@ -4094,7 +4094,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "JFAX.COM", /* 4060 */
     "Technology Control Services", /* 4061 */
     "Astral Point Communications, Inc.", /* 4062 */
-    "ASC Telecom AG", /* 4063 */
+    "ASC Technologies AG (formerly 'ASC Telecom AG')", /* 4063 */
     "Elma Oy Electronic Trading", /* 4064 */
     "InfraServ GmbH & Co Gendorf KG", /* 4065 */
     "Carioli Consulting Inc.", /* 4066 */
@@ -4114,7 +4114,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Archangels Realty, Inc.", /* 4080 */
     "Zelea", /* 4081 */
     "Timko Enterprises", /* 4082 */
-    "Telecom New Zealand", /* 4083 */
+    "Spark New Zealand (formerly 'Telecom New Zealand')", /* 4083 */
     "Trilogy Development Group", /* 4084 */
     "D.I.B. Ges. fuer Standortbetreiberdienste mbH", /* 4085 */
     "Ericsson Research Montreal (LMC)", /* 4086 */
@@ -4157,7 +4157,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Hitachi America Ltd", /* 4123 */
     "Unify Consulting Group, Inc.", /* 4124 */
     "Siemens AG ICP Kornelius", /* 4125 */
-    "LogMatrix Inc (previous was 'Open Service')", /* 4126 */
+    "LogMatrix Inc (formerly 'Open Service')", /* 4126 */
     "Mercury Computer Systems, Inc.", /* 4127 */
     "ARM Ltd.", /* 4128 */
     "Mnaccari@consulting", /* 4129 */
@@ -4198,7 +4198,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     NULL, /* 4164 */
     "SE Electronics", /* 4165 */
     "The Mercy Foundation", /* 4166 */
-    "Markus Lauer EDV-Entwicklung", /* 4167 */
+    "Markus Lauer IT Consulting", /* 4167 */
     "Systems Management Specialists", /* 4168 */
     "Syzygy Solutions", /* 4169 */
     "University of Wisconsin-Milwaukee", /* 4170 */
@@ -4400,7 +4400,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Locus Corp.", /* 4366 */
     "Electronic Laboratory Services CC", /* 4367 */
     "H.A.N.D. GmbH", /* 4368 */
-    "Brocade Communications Systems, Inc. (previous was 'McDATA,Inc')", /* 4369 */
+    "Brocade Communications Systems, Inc. (formerly 'McDATA,Inc')", /* 4369 */
     "Tokyo DisneySea", /* 4370 */
     "Digital United Inc.", /* 4371 */
     "Softlink s.r.o.", /* 4372 */
@@ -4469,7 +4469,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Suedtiroler Informatik AG", /* 4435 */
     "Mission Critical", /* 4436 */
     "Canadian Imperial Bank of Commerce", /* 4437 */
-    "Goteborg Energi AB", /* 4438 */
+    "Göteborg Energi AB", /* 4438 */
     "EnZane Enterprise", /* 4439 */
     "Purdue University", /* 4440 */
     "GE Capital Fleet Services", /* 4441 */
@@ -4497,7 +4497,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "TaoNet", /* 4463 */
     "MPB Communications Inc.", /* 4464 */
     "ViewCast.com", /* 4465 */
-    "Harmonic Video Network  (previous was 'Tadiran Scopus')", /* 4466 */
+    "Harmonic Video Network  (formerly 'Tadiran Scopus')", /* 4466 */
     "FibroLan", /* 4467 */
     "Telkoor-QPS", /* 4468 */
     "Diversinet Corp.", /* 4469 */
@@ -4592,7 +4592,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Euromove s.r.o.", /* 4558 */
     "NVision", /* 4559 */
     "Shebang Networking", /* 4560 */
-    "Panasonic Electric Works Laboratory of Americ, Inc./SLC Lab", /* 4561 */
+    "OpenDOF Project, Inc. (formerly 'Panasonic Electric Works Laboratory of America, Inc./SLC Lab')", /* 4561 */
     "Centermark Engineering LC", /* 4562 */
     "Syllogi, Inc.", /* 4563 */
     "Diverse Networks, Inc.", /* 4564 */
@@ -4660,7 +4660,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "WestLB", /* 4626 */
     "SAET IS s.r.l.", /* 4627 */
     "Xtra On-Line", /* 4628 */
-    "Veraz Networks Inc. (previously 'ipVerse')", /* 4629 */
+    "Veraz Networks Inc. (formerly 'ipVerse')", /* 4629 */
     "FileTek, Inc.", /* 4630 */
     "homeloandotcom", /* 4631 */
     "FreeMarkets", /* 4632 */
@@ -4799,7 +4799,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Tomorrow Factory", /* 4765 */
     "Hochschule Heilbronn", /* 4766 */
     "TrafficMaster PLC", /* 4767 */
-    "E.ON AG", /* 4768 */
+    "E.ON SE (formerly 'E.ON AG')", /* 4768 */
     "IBM Corporation", /* 4769 */
     "Ol'e Communications, Inc.", /* 4770 */
     "Narus Inc", /* 4771 */
@@ -4912,7 +4912,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Village Networks, Inc.", /* 4878 */
     "SecureMethods, Inc.", /* 4879 */
     "Standard & Poors Compustat", /* 4880 */
-    "Start Network Technology Co., Ltd.", /* 4881 */
+    "Ruijie Networks Co., Ltd. (formerly 'Start Network Technology Co., Ltd.')", /* 4881 */
     "Root, Inc.", /* 4882 */
     "Saatch & Saatchi", /* 4883 */
     "Protek Ltd", /* 4884 */
@@ -4948,7 +4948,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "hole-in-the.net", /* 4914 */
     "Sipher Internet Technology Ltd.+44 1494 765335", /* 4915 */
     "Blacksound SA", /* 4916 */
-    "Sistemas Tecnicos de Loterias", /* 4917 */
+    "Sociedad Estatal de Loterias y Apuestas de Estado", /* 4917 */
     "Taurusent Technologies", /* 4918 */
     "Luminate Software Corporation", /* 4919 */
     "Boston Globe", /* 4920 */
@@ -5000,7 +5000,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "AACom", /* 4966 */
     "Starwood Hotels & Resorts", /* 4967 */
     "Universtiy of North Texas (unofficial)", /* 4968 */
-    "Park Air Systems", /* 4969 */
+    "Park Air Systems Ltd.", /* 4969 */
     "National Grid for Learning", /* 4970 */
     "Anglers Club", /* 4971 */
     "Los Alamos National LaboratoryGiri", /* 4972 */
@@ -5167,7 +5167,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Halfdome Systems, Inc.", /* 5133 */
     "IP Unity", /* 5134 */
     "CyberSafe Corporation", /* 5135 */
-    "Gruner + Jahr AG & Co KG (previously was 'Electronic Media Service')", /* 5136 */
+    "Gruner + Jahr AG & Co KG (formerly 'Electronic Media Service')", /* 5136 */
     "DFC, Inc.", /* 5137 */
     "Easynet Group Plc", /* 5138 */
     "ARESCOM, Inc.", /* 5139 */
@@ -5233,7 +5233,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Odetics ITS", /* 5199 */
     "EnFlex Corp.", /* 5200 */
     NULL, /* 5201 */
-    "Aalto University (previous was 'Helsinki University of Technology')", /* 5202 */
+    "Aalto University (formerly 'Helsinki University of Technology')", /* 5202 */
     "The Naqvi Group", /* 5203 */
     "ClickNet Software Corporation", /* 5204 */
     "Ruby Tech Corp.", /* 5205 */
@@ -5644,7 +5644,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Exbit TechnologyA/S", /* 5610 */
     "vmunix.org", /* 5611 */
     "Korea Data Communications", /* 5612 */
-    "tdressler.net (previous was 'SQLcompetence')", /* 5613 */
+    "tdressler.net (formerly 'SQLcompetence')", /* 5613 */
     "SonyBPE", /* 5614 */
     "Inherit S AB", /* 5615 */
     "TEKOPS", /* 5616 */
@@ -5703,7 +5703,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Digital Island", /* 5669 */
     "Redwood Technologies Ltd.", /* 5670 */
     "Horus IT GmbH", /* 5671 */
-    "CIENA Corporation (formally known as ONI Systems Corp.)", /* 5672 */
+    "CIENA Corporation (formerly 'ONI Systems Corp.')", /* 5672 */
     "eConvergent, Inc.", /* 5673 */
     "Texcel Technology Plc.", /* 5674 */
     "Genosys Technology Management Inc.", /* 5675 */
@@ -5753,7 +5753,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "PNC Financial Services Group", /* 5719 */
     "iMimic Networking, Inc.", /* 5720 */
     "IntellOps", /* 5721 */
-    "OPNET Technologies, Inc  (previous was 'Altaworks  Corporation')", /* 5722 */
+    "OPNET Technologies, Inc  (formerly 'Altaworks  Corporation')", /* 5722 */
     "SAMAC Software GmbH", /* 5723 */
     "Cicero Communications, Inc.", /* 5724 */
     "Xel Communications", /* 5725 */
@@ -5787,7 +5787,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "University of Maribor", /* 5753 */
     "Clearstream International", /* 5754 */
     "ITS (UK) Ltd.", /* 5755 */
-    "Supertel", /* 5756 */
+    "Supertel , JSC", /* 5756 */
     "Trilithic", /* 5757 */
     "Stins Coman", /* 5758 */
     "bridges.com", /* 5759 */
@@ -5816,7 +5816,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "University of Wisconsin System", /* 5782 */
     "BROADPAC Communications", /* 5783 */
     "Cogita Ltd", /* 5784 */
-    "Intershop Communications", /* 5785 */
+    "Intershop Communications AG", /* 5785 */
     "Mc Coy Marine Consultants", /* 5786 */
     "Adventist Health", /* 5787 */
     "Softdev Corp.", /* 5788 */
@@ -5862,7 +5862,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "SpaceNet Communication AB", /* 5828 */
     "AMCC Switching Corp.", /* 5829 */
     "XcelleNet", /* 5830 */
-    "Cleondra GmbH", /* 5831 */
+    "Cleondris GmbH", /* 5831 */
     "Horgan.net", /* 5832 */
     "Tailyn Communication Company", /* 5833 */
     "Identikey ltd", /* 5834 */
@@ -5987,7 +5987,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "EleTel Inc.", /* 5953 */
     "Aaron Telecommunication Technology", /* 5954 */
     "ASCONA", /* 5955 */
-    "Travelport (previous was 'Worldspan')", /* 5956 */
+    "Travelport (formerly 'Worldspan')", /* 5956 */
     "Essematica S.r.l.", /* 5957 */
     "KCell", /* 5958 */
     "Eastern Communications Co. Ltd.", /* 5959 */
@@ -6220,7 +6220,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Space CyberLink Inc.", /* 6186 */
     "Dartmouth-Hitchcock Medical Center", /* 6187 */
     "University of Massachusetts Lowell", /* 6188 */
-    "Atos Origin GmbH - Trustcenter", /* 6189 */
+    "Atos Information Technology GmbH - Trustcenter", /* 6189 */
     "Network365 Ltd", /* 6190 */
     "Plasmon, Inc.", /* 6191 */
     "Environmental Monitoring Solutions", /* 6192 */
@@ -6383,7 +6383,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Treeblossom Technologies", /* 6349 */
     "Blue Cross Blue Shield of Michigan", /* 6350 */
     "Shawn Systems, Inc.", /* 6351 */
-    "Ciena Corporation (formerly known as Catena Networks)", /* 6352 */
+    "Ciena Corporation (formerly 'Catena Networks')", /* 6352 */
     "Avisto SA", /* 6353 */
     "Telways Communication Co.,Ltd.", /* 6354 */
     "Sipher Internet Tachnology", /* 6355 */
@@ -6430,19 +6430,19 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Absolute Website Solutions", /* 6396 */
     "Nayna Networks, Inc.", /* 6397 */
     "Lindner & Pelc Consult GmbH", /* 6398 */
-    "Edrich Integration", /* 6399 */
+    "Intelligent Maintenance Systems Ltd (formerly 'Edrich Integration')", /* 6399 */
     "Millenux GmbH", /* 6400 */
     "JTI OF GEORGIA", /* 6401 */
     "OPTEL Ges. für Lasertechnik und Elektronik mbH", /* 6402 */
     "Universidad Blas Pascal", /* 6403 */
-    "ECRESO (previously was 'Ecreso RFTS Broadcast')", /* 6404 */
+    "ECRESO (formerly 'Ecreso RFTS Broadcast')", /* 6404 */
     "Activ Australia", /* 6405 */
     "Neomar", /* 6406 */
     "bit-Services GmbH", /* 6407 */
     "Mikom GmbH", /* 6408 */
     "Mondial Assistance Limited", /* 6409 */
     "Zoneworx, Inc.", /* 6410 */
-    "Overland Storage, Inc.  (previous was 'Quantum Corp - Snap Division')", /* 6411 */
+    "Overland Storage, Inc.  (formerly 'Quantum Corp - Snap Division')", /* 6411 */
     "HiddenMind Technology", /* 6412 */
     "I.S. Associates, Inc.", /* 6413 */
     "Embry-Riddle University", /* 6414 */
@@ -6517,7 +6517,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Captus Networks", /* 6483 */
     "Campus Crusade for Christ, Inc.", /* 6484 */
     "Spatial Technologies", /* 6485 */
-    "Alcatel-Lucent (previous was 'Alcatel')", /* 6486 */
+    "Alcatel-Lucent Enterprise (previous was 'Alcatel')", /* 6486 */
     "YouSync", /* 6487 */
     "TalentStorm Enterprises", /* 6488 */
     "Siemens Cerberus", /* 6489 */
@@ -6558,7 +6558,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Greenbytes GmbH", /* 6524 */
     "Jasmine Networks, Inc.", /* 6525 */
     "Windward Consulting Group", /* 6526 */
-    "Panthera Networks, Inc.", /* 6527 */
+    "Alcatel-Lucent (formerly 'Panthera Networks, Inc.')", /* 6527 */
     "Source One", /* 6528 */
     "Bundesamt für Sicherheit in der Informationstechnik", /* 6529 */
     "2N spol. s r.o.", /* 6530 */
@@ -6597,9 +6597,9 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "TimeBridge Technologies", /* 6563 */
     "Gradient Solutions", /* 6564 */
     "Johns Hopkins Institutions", /* 6565 */
-    "Metropolitan Life Insurance Peter", /* 6566 */
+    "Metropolitan Life Insurance", /* 6566 */
     "Klimke Industry Consulting", /* 6567 */
-    "Promptu Systems Corporation (previous was 'AgileTV')", /* 6568 */
+    "Promptu Systems Corporation (formerly 'AgileTV')", /* 6568 */
     "INVENTEC CORPORATION", /* 6569 */
     "ACOMZ NETWORKS Corp.", /* 6570 */
     "Fusion In Tech co.,Ltd.", /* 6571 */
@@ -6744,7 +6744,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "South Birmingham College", /* 6710 */
     "Connect One", /* 6711 */
     "VOXTRONIC Technology", /* 6712 */
-    "EIZO NANAO CORPORATION", /* 6713 */
+    "EIZO", /* 6713 */
     "Banco Santander Central Hispano", /* 6714 */
     "HTT Consulting", /* 6715 */
     "AMS Systems", /* 6716 */
@@ -6813,7 +6813,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "CHL NETHERLANDS B.V.", /* 6779 */
     "Linux Communications AS", /* 6780 */
     "Vast", /* 6781 */
-    "Ciena (Formerly Akara Inc.)", /* 6782 */
+    "Ciena (formerly 'Akara Inc.')", /* 6782 */
     "Tidepoint", /* 6783 */
     "JP Systems", /* 6784 */
     "Delta Electronics Inc.", /* 6785 */
@@ -6829,7 +6829,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Pocono Pet Sitters", /* 6795 */
     "TekVision Communications", /* 6796 */
     "ConfigureSoft, Inc.", /* 6797 */
-    "Marvell Hispania S.L. (previous was 'Design of Systems on Silicon')", /* 6798 */
+    "Marvell Hispania S.L. (formerly 'Design of Systems on Silicon')", /* 6798 */
     "GlueCode, Inc.", /* 6799 */
     "Express Rail Link sdn Bhd", /* 6800 */
     "Gamma Technologies", /* 6801 */
@@ -6852,7 +6852,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Tripwire, Inc.", /* 6818 */
     "Musicfans, Inc.", /* 6819 */
     "Menta Software", /* 6820 */
-    "TELECOM Lille1 (previously was 'ENIC')", /* 6821 */
+    "TELECOM Lille1 (formerly 'ENIC')", /* 6821 */
     "University of Cambridge, Card Office", /* 6822 */
     "Distributed Object Technologies, Inc.", /* 6823 */
     "List & Niemann", /* 6824 */
@@ -6936,7 +6936,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Plisch Gmbh & Co KG", /* 6902 */
     "Visoft (Pty) Ltd", /* 6903 */
     "IBM, Infrastructure Support Group", /* 6904 */
-    "Brocade Communication Systems, Inc. (previous was 'Rhapsody Networks Inc.')", /* 6905 */
+    "Brocade Communication Systems, Inc. (formerly 'Rhapsody Networks Inc.')", /* 6905 */
     "Asiana Communications", /* 6906 */
     "Broad Telecom, S.A. (Btesa)", /* 6907 */
     "Movaz Networks", /* 6908 */
@@ -6956,7 +6956,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Amino Communications Ltd", /* 6922 */
     "Shutterfly", /* 6923 */
     "Capital Internet, LLC", /* 6924 */
-    "United Space AllianceStephen A. Kerney or Donald Wilsonstephen.kerney&ksc.nasa.gov", /* 6925 */
+    "IT Communications, Kennedy Space Center (KSC)", /* 6925 */
     "Optical Access Inc.", /* 6926 */
     "MAIL.COM", /* 6927 */
     "Mobility Next Generation", /* 6928 */
@@ -6975,7 +6975,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "proflash cross-media AG", /* 6941 */
     "James Cook University", /* 6942 */
     "R-Alpha Ltd.", /* 6943 */
-    "REDSYS (previous was 'SERMEPA')", /* 6944 */
+    "REDSYS (formerly 'SERMEPA')", /* 6944 */
     "LAKE Communications", /* 6945 */
     "Fouche Enterprises, LLC.", /* 6946 */
     "Central Bank of Russia, Arkhangelsk", /* 6947 */
@@ -7016,7 +7016,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Erba Holding", /* 6982 */
     "Sofaware Technologies", /* 6983 */
     "Fovea, Inc.", /* 6984 */
-    "Jumpy Cat Systems, Inc. (previous was 'Prism Software, Inc.')", /* 6985 */
+    "Jumpy Cat Systems, Inc. (formerly 'Prism Software, Inc.')", /* 6985 */
     "Kiodex, Inc.", /* 6986 */
     "WRonline GbR", /* 6987 */
     "University of Northern British Columbia", /* 6988 */
@@ -7062,7 +7062,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Alloptic, Inc.", /* 7028 */
     "CUBIweb, LLC", /* 7029 */
     "Ethernet, Solucoes Informaticas, lda", /* 7030 */
-    "McAfee, Inc.  (previous was 'Securify, Inc.')", /* 7031 */
+    "McAfee, Inc.  (formerly 'Securify, Inc.')", /* 7031 */
     "Chartered Semiconductor Manufacturing", /* 7032 */
     "Matías Software Group", /* 7033 */
     "inyourwake", /* 7034 */
@@ -7086,7 +7086,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "IKOM - Ingenieurbüro", /* 7052 */
     "Videon CableSystems Alberta Inc.", /* 7053 */
     "Mazu Networks, Inc.", /* 7054 */
-    "Cox Internet Services", /* 7055 */
+    "Cox Communications, Inc.", /* 7055 */
     "Senterprise Inc.", /* 7056 */
     "SuSE Linux AG", /* 7057 */
     "BB4 Technologies Inc", /* 7058 */
@@ -7150,7 +7150,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "TechTrade International Management AB", /* 7116 */
     "Invertix, Inc", /* 7117 */
     "NetContinuum, Inc", /* 7118 */
-    "OPNET Technologies, Inc. (previous was 'Network Physics, Inc.')", /* 7119 */
+    "OPNET Technologies, Inc. (formerly 'Network Physics, Inc.')", /* 7119 */
     "Sentry Telecom Systems Inc.", /* 7120 */
     "Comunicaciones Netglobalis", /* 7121 */
     "Lusars.net", /* 7122 */
@@ -7514,7 +7514,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "@MySpend.Com", /* 7480 */
     "Talon", /* 7481 */
     "Widax Corporation", /* 7482 */
-    "Alcatel-Lucent (previously was Tropic Networks)", /* 7483 */
+    "Alcatel-Lucent (formerly 'Tropic Networks')", /* 7483 */
     "Teleias Inc.", /* 7484 */
     "SPS, Inc.", /* 7485 */
     "Embassy Systems, Ltda.", /* 7486 */
@@ -7532,7 +7532,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Gorski.net", /* 7498 */
     "Pacific Century CyberWorks - Hongkong Telecom", /* 7499 */
     "IICS", /* 7500 */
-    "BKtel Systems GmbH", /* 7501 */
+    "BKtel communications GmbH (Systems)", /* 7501 */
     "African Medical Imaging", /* 7502 */
     "Henkels and McCoy", /* 7503 */
     "AerSoft Ltd", /* 7504 */
@@ -7551,8 +7551,8 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Acxsys Corporation", /* 7517 */
     "Chicago Mercantile Exchange", /* 7518 */
     "RateIntegration, Inc.", /* 7519 */
-    "Harris Corporation (previous was 'M/A-COM Private Radio Systems, Inc.')", /* 7520 */
-    "Logicalis Australia Pty Ltd (previous was 'NetStar Networks')", /* 7521 */
+    "Harris Corporation (formerly 'M/A-COM Private Radio Systems, Inc.')", /* 7520 */
+    "Logicalis Australia Pty Ltd (formerly 'NetStar Networks')", /* 7521 */
     "Brains Corp", /* 7522 */
     "AccessNet", /* 7523 */
     "RapidSolution Software GmbH", /* 7524 */
@@ -7591,7 +7591,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Echomine", /* 7557 */
     "National Air Traffic Services Ltd", /* 7558 */
     "Egenera, Inc", /* 7559 */
-    "Trend Network Services", /* 7560 */
+    "Daisy Group", /* 7560 */
     "Askoo SA", /* 7561 */
     "ICPSR (Inter-university Consortium for Political & Social Research)", /* 7562 */
     "OneSpot, Inc.", /* 7563 */
@@ -7652,7 +7652,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Adomo, Inc.", /* 7618 */
     "Amon Technologies", /* 7619 */
     "France Teaser", /* 7620 */
-    "DISH Network L.L.C. (previous was 'EchoStar Corporation')", /* 7621 */
+    "DISH Network L.L.C. (formerly 'EchoStar Corporation')", /* 7621 */
     "Mesa Systems International", /* 7622 */
     "DXO Telecom Co., Ltd.", /* 7623 */
     "akal systems", /* 7624 */
@@ -7773,7 +7773,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "DigEncP", /* 7739 */
     "NetMonger Communications Christopher", /* 7740 */
     "SNMP Technologies", /* 7741 */
-    "Aptira Pty Ltd (previous was 'Antithesys Pty Ltd')", /* 7742 */
+    "Aptira Pty Ltd (formerly 'Antithesys Pty Ltd')", /* 7742 */
     "Salomon Smith Barney, Autralia", /* 7743 */
     "SPE Systemhaus GmbH", /* 7744 */
     "AETHRA", /* 7745 */
@@ -7840,7 +7840,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Techsar", /* 7806 */
     "Stoneware, Inc.", /* 7807 */
     "Rearden Steel Technologies, Inc.", /* 7808 */
-    "Finch Computer Services", /* 7809 */
+    "Phil Pearl (formerly 'Finch Computer Services')", /* 7809 */
     "Seek Systems", /* 7810 */
     "40 Street Records", /* 7811 */
     "Pfadi Limmattal", /* 7812 */
@@ -8212,16 +8212,16 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Just Innovative Software GmbH", /* 8178 */
     "Communications Laboratories Telekommunikations Dienstleistungs-Ges.m.b.H.", /* 8179 */
     "Spirea", /* 8180 */
-    "Commarco GmbH (previous was 'Scholz & Friends Dresden GmbH')", /* 8181 */
+    "Commarco GmbH (formerly 'Scholz & Friends Dresden GmbH')", /* 8181 */
     "The Boston Bit Co", /* 8182 */
     "NetSource America Inc.", /* 8183 */
     "Inspira S.L.", /* 8184 */
     "Online Creation, Inc.", /* 8185 */
     "California Institute of Technology", /* 8186 */
     "Sharinga Networks Inc.", /* 8187 */
-    "AXA Technology Services Switzerland AG (previous was 'Winterthur Versicherungen')", /* 8188 */
+    "AXA Technology Services Switzerland AG (formerly 'Winterthur Versicherungen')", /* 8188 */
     "Gerichhausen, Adomeit & Terstappen GmbH", /* 8189 */
-    "3M Deutschland GmbH (previously was 'Quante')", /* 8190 */
+    "3M Deutschland GmbH (formerly 'Quante')", /* 8190 */
     "glutam.at", /* 8191 */
     "Symbiont Networks, Inc.", /* 8192 */
     "Telemetry Technologies", /* 8193 */
@@ -8275,7 +8275,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Securant Technologies", /* 8241 */
     "Security Portal, Inc", /* 8242 */
     "iPass, Inc.", /* 8243 */
-    "Brocade Communications Systems, Inc. (previous was 'McDATA Corp.')", /* 8244 */
+    "Brocade Communications Systems, Inc. (formerly 'McDATA Corp.')", /* 8244 */
     "Vsovt Ltd.", /* 8245 */
     "Cistron Internet Services", /* 8246 */
     "University of Rostock", /* 8247 */
@@ -8313,7 +8313,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "f3pu5.net", /* 8279 */
     "Fiver LightCom Co., Ltd.", /* 8280 */
     "Movelife", /* 8281 */
-    "BAE Systems Defence Pty Ltd (previous was 'Tenix Defence Systems - Systems Adelaide')", /* 8282 */
+    "BAE Systems Defence Pty Ltd (formerly 'Tenix Defence Systems - Systems Adelaide')", /* 8282 */
     "TSMT - Magic Touch Ltd", /* 8283 */
     "ACTL", /* 8284 */
     "FlexLight", /* 8285 */
@@ -8345,7 +8345,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Police Information Technology Organization", /* 8311 */
     "OskolNET JSC", /* 8312 */
     "JARDiX AG", /* 8313 */
-    "AVL Emission Test Systems GmbH (previous was 'PEUS Systems GmbH')", /* 8314 */
+    "AVL Emission Test Systems GmbH (formerly 'PEUS Systems GmbH')", /* 8314 */
     "Minacom Labs Inc.", /* 8315 */
     "Staffwell", /* 8316 */
     "FiberCycle Networks", /* 8317 */
@@ -8721,14 +8721,14 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Milestone R/D Labs", /* 8687 */
     "Shepherd-Express", /* 8688 */
     "Miller Simon McGinn and Clark", /* 8689 */
-    "Xener.com, Inc.", /* 8690 */
+    "IPAGEON Co.Ltd", /* 8690 */
     "Moxa Technologies Co., Ltd.", /* 8691 */
     "Network Programs", /* 8692 */
-    "A-xell Wireless AB (previous was 'Avitec AB')", /* 8693 */
+    "A-xell Wireless AB (formerly 'Avitec AB')", /* 8693 */
     "University of Wolverhampton", /* 8694 */
     "Mission Data", /* 8695 */
     "myCustoms", /* 8696 */
-    "RIZIT GesmbH", /* 8697 */
+    "Raiffeisen Informatik GmbH", /* 8697 */
     "Viasat, Inc.", /* 8698 */
     "iWay Software", /* 8699 */
     "World Savings", /* 8700 */
@@ -8799,7 +8799,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Telesoft Technologies Ltd", /* 8765 */
     "Elsag S.p.A.", /* 8766 */
     "Bayour.COM", /* 8767 */
-    "Nevion (previous was 'Network Electronics')", /* 8768 */
+    "Nevion (formerly 'Network Electronics')", /* 8768 */
     "TeraOptic Networks, Inc.", /* 8769 */
     "The Emerginggroup Group", /* 8770 */
     "ARCANVS, Inc.", /* 8771 */
@@ -8860,7 +8860,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "ComNet Software Specialists,Inc", /* 8826 */
     "Nu-kote International", /* 8827 */
     "General Dynamics Advanced Information Systems", /* 8828 */
-    "Axell Wireless Limited (previous was 'Aerial Facilities Limited')", /* 8829 */
+    "Axell Wireless Limited (formerly 'Aerial Facilities Limited')", /* 8829 */
     "Xyphius Solutions Inc.", /* 8830 */
     "Agora Systems Ltd", /* 8831 */
     "Ecominds Ltd", /* 8832 */
@@ -8876,7 +8876,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Clockwork Web", /* 8842 */
     "INACCESS NETWORKS SA", /* 8843 */
     "Diveo Broadband Networks", /* 8844 */
-    "Enablence USA FTTX Networks Inc (previously was 'wave7optics')", /* 8845 */
+    "Enablence USA FTTX Networks Inc (formerly 'wave7optics')", /* 8845 */
     "Caramail", /* 8846 */
     "Pivotech Systems, Inc", /* 8847 */
     "Rootroute Research", /* 8848 */
@@ -9009,7 +9009,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Soluzione Script GmbH", /* 8975 */
     "Airia, Inc.", /* 8976 */
     "Synamics Inc.", /* 8977 */
-    "Sears & Roebuck, Inc", /* 8978 */
+    "Sears Holdings Corp", /* 8978 */
     "The Real Asset Company Limited", /* 8979 */
     "Collective Technologies", /* 8980 */
     "Joeunsecurity", /* 8981 */
@@ -9021,7 +9021,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "State Infocommunication Foundation of Estonia", /* 8987 */
     "Pingworks", /* 8988 */
     "Naino Corporation", /* 8989 */
-    "Redpill Linpro AS (previous was 'Linpro AS')", /* 8990 */
+    "Redpill Linpro AS (formerly 'Linpro AS')", /* 8990 */
     "MARPOSS S.p.A.", /* 8991 */
     "Unisoft Consultants", /* 8992 */
     "Asera Inc.", /* 8993 */
@@ -9334,7 +9334,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Hypostasis", /* 9300 */
     "Spider Software", /* 9301 */
     "ESI s.r.l.", /* 9302 */
-    "PacketFront Sweden AB", /* 9303 */
+    "Waystream AB (formerly 'PacketFront Network Products AB')", /* 9303 */
     "Connection Technology Systems", /* 9304 */
     "Western Michigan University", /* 9305 */
     "Octave Communications", /* 9306 */
@@ -9520,7 +9520,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Powwow Germany GmbH", /* 9486 */
     "saardata GmbH", /* 9487 */
     "Circuit City Stores", /* 9488 */
-    "SAXA, Inc. (previously was 'Taiko Electric Works, LTD')", /* 9489 */
+    "SAXA, Inc. (formerly 'Taiko Electric Works, LTD')", /* 9489 */
     "Scorecon International", /* 9490 */
     "VECTAN", /* 9491 */
     "The Cobalt Group", /* 9492 */
@@ -9722,7 +9722,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Tahoe Networks, Inc.", /* 9688 */
     "TBD Networks", /* 9689 */
     "Terralab", /* 9690 */
-    "Children's Hospital Colorado (previous was 'The Children's Hospital of Denver')", /* 9691 */
+    "Children's Hospital Colorado (formerly 'The Children's Hospital of Denver')", /* 9691 */
     "Tool Object", /* 9692 */
     "UND School of Medicine and Health Sciences", /* 9693 */
     "Arbor Networks", /* 9694 */
@@ -9827,7 +9827,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "CloudShield Technologies, Inc.", /* 9793 */
     "CYTBeN", /* 9794 */
     "EBS Dealing Resources, Inc", /* 9795 */
-    "European Network Exchange", /* 9796 */
+    "ENX Association (formerly 'European Network Exchange')", /* 9796 */
     "EVER Sp. z o.o.", /* 9797 */
     "Griff-IT Ltd.", /* 9798 */
     "Holos Software, Inc.", /* 9799 */
@@ -9987,7 +9987,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Bertelsmann Gamechannel", /* 9953 */
     "craigbuchek.com", /* 9954 */
     "Crisp Hughes Evans L.L.P.", /* 9955 */
-    "NDS Surgical Imaging (previoulsy was 'Planar Systems, Inc.')", /* 9956 */
+    "NDS Surgical Imaging (formerly 'Planar Systems, Inc.')", /* 9956 */
     "Dynamic Equilibrium Pty Ltd", /* 9957 */
     "Formula/400", /* 9958 */
     "NODS", /* 9959 */
@@ -10399,7 +10399,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Davox Corp.", /* 10365 */
     "Dialpad Communications", /* 10366 */
     "donnie21", /* 10367 */
-    "Fujitsu Technology Solutions GmbH (previous was 'Fujitsu Siemens Computers')", /* 10368 */
+    "Fujitsu Technology Solutions GmbH (formerly 'Fujitsu Siemens Computers')", /* 10368 */
     "Fujitsu Prime Software Technologies Ltd.", /* 10369 */
     "Impulsesoft", /* 10370 */
     "Inabyte Inc.", /* 10371 */
@@ -10428,7 +10428,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Banamex, S.A.", /* 10394 */
     "Belo Corporation", /* 10395 */
     "California State University, Office of the Chancellor", /* 10396 */
-    "CK Software GmbH (previous was 'CKSOFT, Christian Kratzer Software Entwicklung und Vertrieb')", /* 10397 */
+    "CK Software GmbH (formerly 'CKSOFT, Christian Kratzer Software Entwicklung und Vertrieb')", /* 10397 */
     "Covasoft, Inc.", /* 10398 */
     "Datakey", /* 10399 */
     "Electric Lightwave, Inc.", /* 10400 */
@@ -10735,7 +10735,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Telefonica DataCorp, S.A.", /* 10701 */
     "Solvare", /* 10702 */
     "ATnet", /* 10703 */
-    "Barracuda Networks AG (previous was 'phion Information Technologies')", /* 10704 */
+    "Barracuda Networks AG (formerly 'phion Information Technologies')", /* 10704 */
     "VOGT electronic AG", /* 10705 */
     "Accelerated Encryption Processing Ltd", /* 10706 */
     "Adhersis", /* 10707 */
@@ -11111,7 +11111,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "C.net d.o.o.", /* 11077 */
     "Centralworks LLC", /* 11078 */
     "EIT Ltd", /* 11079 */
-    "Airwide Solutions (previous was 'First Hop')", /* 11080 */
+    "Airwide Solutions (formerly 'First Hop')", /* 11080 */
     "Hydrogen Line, Inc.", /* 11081 */
     "Illinois Central College", /* 11082 */
     "Intersix Technologies S.A.", /* 11083 */
@@ -11181,7 +11181,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "SVTO Hewlett-Packard", /* 11147 */
     "Swan Systems", /* 11148 */
     "TI, d.o.o.", /* 11149 */
-    "Roamware Inc. (previous was 'Unwiredsoft')", /* 11150 */
+    "Roamware Inc. (formerly 'Unwiredsoft')", /* 11150 */
     "Urschel Laboratories Incorporated", /* 11151 */
     "Vocalcom", /* 11152 */
     "WebWear", /* 11153 */
@@ -11207,7 +11207,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Directory Solutions", /* 11173 */
     "DX Antenna Co., Ltd.", /* 11174 */
     "Epic Group plc", /* 11175 */
-    "Objective Pathology Services Limited (previous was 'Extelligence')", /* 11176 */
+    "Objective Pathology Services Limited (formerly 'Extelligence')", /* 11176 */
     "Grapevine Interactive (Pty) Ltd", /* 11177 */
     "Guardian Controls International", /* 11178 */
     "hereUare Communications, Inc.", /* 11179 */
@@ -11242,7 +11242,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Global Media Systems", /* 11208 */
     "Gold Wire Technology", /* 11209 */
     "Iain Stevenson", /* 11210 */
-    "MobiTV Inc. (previous was 'Idetic Incorporated')", /* 11211 */
+    "MobiTV Inc. (formerly 'Idetic Incorporated')", /* 11211 */
     "IDM", /* 11212 */
     "Information Services Extended Inc.", /* 11213 */
     "Meridis Corporation", /* 11214 */
@@ -11287,7 +11287,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "J.P. Stephenson Co.", /* 11253 */
     "Jydsk Consulting", /* 11254 */
     "LocatioNet Systems LTD", /* 11255 */
-    "NETASQ", /* 11256 */
+    "Stormshield (formerly 'NETASQ')", /* 11256 */
     "Net-ES", /* 11257 */
     "Nogui AB", /* 11258 */
     "Sepulveda Systems", /* 11259 */
@@ -11400,7 +11400,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Goanna Graphics", /* 11366 */
     "Helix GmbH", /* 11367 */
     "IAVista, Inc.", /* 11368 */
-    "LenovoEMC Ltd (previous was 'Iomega')", /* 11369 */
+    "LenovoEMC Ltd (formerly 'Iomega')", /* 11369 */
     "ITT CO., Ltd.", /* 11370 */
     "jung myung telecom. co., Ltd.", /* 11371 */
     "Meret Optical Communications", /* 11372 */
@@ -11443,11 +11443,11 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "adequate systems GmbH", /* 11409 */
     "Advanced Communication Devices Corp.", /* 11410 */
     "AOL Australia", /* 11411 */
-    "BKtel communication GmbH", /* 11412 */
+    "BKtel communications GmbH", /* 11412 */
     "Cape Clear Software Ltd.", /* 11413 */
     "Carnation Technology Ltd.", /* 11414 */
     "CLCsoft", /* 11415 */
-    "Coalsere Inc.", /* 11416 */
+    "Allgera Corp. (formerly 'Coalsere Inc.')", /* 11416 */
     "Cynops GmbH", /* 11417 */
     "DFN-CERT Services GmbH", /* 11418 */
     "FOTEL Corp.", /* 11419 */
@@ -11485,7 +11485,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "SINBON ELECTRONIC CO., LTD", /* 11451 */
     "Allegient Systems", /* 11452 */
     "Altadis", /* 11453 */
-    "Avenci SA", /* 11454 */
+    "Avencis SA", /* 11454 */
     "Aviation Management Technologies GmbH", /* 11455 */
     "CalvaEDI S.A.", /* 11456 */
     "Cimcor, Inc.", /* 11457 */
@@ -11885,7 +11885,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "NetEconomist", /* 11851 */
     "New Productivity Initiative Inc", /* 11852 */
     "Public Service Company of New Mexico", /* 11853 */
-    "Healthvision (previously was 'Quovadx, Inc.')", /* 11854 */
+    "Healthvision (formerly 'Quovadx, Inc.')", /* 11854 */
     "Retirement By Design", /* 11855 */
     "TNT Logistics North America", /* 11856 */
     "Transmode Systems AB", /* 11857 */
@@ -12207,7 +12207,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "UNICC", /* 12173 */
     "Consolidated Freightways", /* 12174 */
     "Frontier Internet, Inc.", /* 12175 */
-    "Canon IT Solutions Inc. (previous was 'Sumitomo Metal System Solutions Co.,Ltd')", /* 12176 */
+    "Canon IT Solutions Inc. (formerly 'Sumitomo Metal System Solutions Co.,Ltd')", /* 12176 */
     "Henkel KGaA", /* 12177 */
     "3va.net", /* 12178 */
     "Alacris Inc.", /* 12179 */
@@ -12237,7 +12237,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "VTT Information Technology", /* 12203 */
     "DevonIT", /* 12204 */
     "Allianz Ireland PLC", /* 12205 */
-    "msinbg", /* 12206 */
+    "QinetiQ Ltd", /* 12206 */
     "Acme Solutions", /* 12207 */
     "actina AG", /* 12208 */
     "ASTOR-PROMOCJA Poland", /* 12209 */
@@ -12617,7 +12617,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "University of California, Irvine Information and Computer Science Department", /* 12583 */
     "Butler", /* 12584 */
     "Alstom Holdings", /* 12585 */
-    "Manono Software, Inc. (previous was 'ApiaTech Information Technologies, Inc.')", /* 12586 */
+    "Manono Software, Inc. (formerly 'ApiaTech Information Technologies, Inc.')", /* 12586 */
     "430am", /* 12587 */
     "Blueice Research AB", /* 12588 */
     "Celestial Software LLC", /* 12589 */
@@ -12686,7 +12686,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Aminor", /* 12652 */
     "Armitel", /* 12653 */
     "ATH system", /* 12654 */
-    "AuthentiDate International AG", /* 12655 */
+    "exceet Secure Solutions AG (formerly 'AuthentiDate International AG')", /* 12655 */
     "Avest Plc.", /* 12656 */
     "Birmé Consulting", /* 12657 */
     "Blue Star Sustainable Technologies Inc.", /* 12658 */
@@ -12999,7 +12999,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "New Media Data Marketing, Inc.", /* 12965 */
     "Next Generation Systems, Inc.", /* 12966 */
     "Petrobras - Petroleo Brasileiro S.A.", /* 12967 */
-    "Menno Pieters (previously Stelvio)", /* 12968 */
+    "Menno Pieters (formerly 'Stelvio')", /* 12968 */
     "The Rockefeller University", /* 12969 */
     "Urban Development Co.", /* 12970 */
     "bigdom.com", /* 12971 */
@@ -13062,7 +13062,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Kuokoa Networks, Inc.", /* 13028 */
     "Managed Service Partners International", /* 13029 */
     "Monitor724 Services Limited", /* 13030 */
-    "Neix, Inc. (previous was 'Digital Technologies Corporation')", /* 13031 */
+    "neix,Inc.  (formerly 'Digital Technologies Corporation')", /* 13031 */
     "Reach Technologies", /* 13032 */
     "shockunit productions", /* 13033 */
     "SoftNet Systems, Inc.", /* 13034 */
@@ -13200,7 +13200,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Acamar Systems", /* 13166 */
     "Oeko.neT Mueller & Brandt", /* 13167 */
     "Aries e-Publishing", /* 13168 */
-    "C&D Technologies, Inc.", /* 13169 */
+    "UNIPOWER, LLC. - IPS (formerly 'C&D Technologies, Inc.')", /* 13169 */
     "caresys GmbH", /* 13170 */
     "Cilys", /* 13171 */
     "Dark Side of the Moon Software", /* 13172 */
@@ -13323,7 +13323,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Neoscale Systems", /* 13289 */
     "nextSource, Inc.", /* 13290 */
     "Ogangi Corporation", /* 13291 */
-    "oneShell Internet Services GmbH", /* 13292 */
+    "feel3 UG (haftungsbeschraenkt) (formerly 'oneShell Internet Services GmbH')", /* 13292 */
     "OTTO International (Hong Kong) Ltd.", /* 13293 */
     "ph03n1x.net - Development", /* 13294 */
     "Portugalmail", /* 13295 */
@@ -13336,7 +13336,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "The Advantage Media Group", /* 13302 */
     "The Gillette Company", /* 13303 */
     "T-Systems Solutions for Research GmbH", /* 13304 */
-    "BFH Berne University of Applied Sciences (previous was 'Berne University of Applied Sciences')", /* 13305 */
+    "BFH Berne University of Applied Sciences (formerly 'Berne University of Applied Sciences')", /* 13305 */
     "University of Montana", /* 13306 */
     "V.R.A.M. Rt.", /* 13307 */
     "Városmajori Gimnázium", /* 13308 */
@@ -13364,7 +13364,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Ceyoniq Incorporated", /* 13330 */
     "CICAIA - Universita` di Modena e Reggio Emilia", /* 13331 */
     "Credit Union Central Alberta Limited", /* 13332 */
-    "Data On Air", /* 13333 */
+    "ClearSky Technologies, Inc. (formerly 'Data On Air')", /* 13333 */
     "Hewett Inc.", /* 13334 */
     "Internet Information Services", /* 13335 */
     "IronHide Corp", /* 13336 */
@@ -13377,7 +13377,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Networking Laboratory of DMIS, BUTE", /* 13343 */
     "Ningbo Success Information Industry CO.,LTD.", /* 13344 */
     "Pacificorp", /* 13345 */
-    "Pace France (previously was 'Philips CE STB')", /* 13346 */
+    "Pace France (formerly 'Philips CE STB')", /* 13346 */
     "Qbranch", /* 13347 */
     "Randall Kunkee", /* 13348 */
     "RMP & Associates", /* 13349 */
@@ -13429,7 +13429,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "CommerceQuest, Inc.", /* 13395 */
     "DANVILLE ASSOCIATES", /* 13396 */
     "DemandTec Inc.", /* 13397 */
-    "Dr. Ralf Schwedler Internet / Sicherheit", /* 13398 */
+    "SicherByte GmbH Dr. Ralf Schwedler", /* 13398 */
     "Dune Semiconductor", /* 13399 */
     "Emerson Network Power Co.,Ltd.", /* 13400 */
     "ETE Software", /* 13401 */
@@ -13458,7 +13458,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "UPC Netherlands", /* 13424 */
     "Virtual Space Research", /* 13425 */
     "WZab Software", /* 13426 */
-    "Emerson Network Power (previously was 'Artesyn Technologies')", /* 13427 */
+    "Artesyn Embedded Technologies (formerly 'Emerson Network Power ')", /* 13427 */
     "JAPAN STORAGE BATTERY CO., Ltd.", /* 13428 */
     "Queen Elizabeth School Old Students' Association", /* 13429 */
     "Shanghai Online Bussiness Co.,Ltd.", /* 13430 */
@@ -13501,7 +13501,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Medasys", /* 13467 */
     "Montclair State University", /* 13468 */
     "netLibrary, Inc.", /* 13469 */
-    "Otto Security & Software Technologie GmbH", /* 13470 */
+    "SecureGUARD GmbH (formerly 'Otto Security & Software Technologie GmbH')", /* 13470 */
     "PowerWAN, Inc", /* 13471 */
     "RTS Realtimes Systems (Deutschland) AG", /* 13472 */
     "SafeWeb, Inc.", /* 13473 */
@@ -13776,7 +13776,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Raritan Computer, Inc.", /* 13742 */
     "SGTE-IES", /* 13743 */
     "SkyTel, Inc.", /* 13744 */
-    "Plixer International, Inc. (previous was 'Somix Technologies, INC')", /* 13745 */
+    "Plixer International, Inc. (formerly 'Somix Technologies, INC')", /* 13745 */
     "UNIversity of Detroit Mercy", /* 13746 */
     "Virtual Health Networks, Inc.", /* 13747 */
     "Wizzbit", /* 13748 */
@@ -13808,7 +13808,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Onetta, Inc.", /* 13774 */
     "Pomona College", /* 13775 */
     "Potlatch Corporation", /* 13776 */
-    "Rakuten", /* 13777 */
+    "Rakuten Inc.", /* 13777 */
     "Sociedade Diginet, LdaJacques", /* 13778 */
     "SUMIX Corporation", /* 13779 */
     "ubernul projekt", /* 13780 */
@@ -13870,7 +13870,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Information and Logistics Consultancy", /* 13836 */
     "IntroTec", /* 13837 */
     "KadeL Data Servis s.r.o.", /* 13838 */
-    "MarkitServFX (previous was 'Logicscope Realisations Ltd')", /* 13839 */
+    "MarkitServFX (formerly 'Logicscope Realisations Ltd')", /* 13839 */
     "Media Driver, LLC", /* 13840 */
     "MetiLinx", /* 13841 */
     "Moser-Baer AG", /* 13842 */
@@ -13888,8 +13888,8 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Universitaet Mannheim, Rechenzentrum", /* 13854 */
     "Universitaet Oldenburg", /* 13855 */
     "University of Michigan Health System", /* 13856 */
-    "Ursys Pty LTD", /* 13857 */
-    "Eltek Valere Inc. (previous was 'Valere Power Inc')", /* 13858 */
+    "Ursys Pty Ltd", /* 13857 */
+    "Eltek Valere Inc. (formerly 'Valere Power Inc')", /* 13858 */
     "Voxpilot", /* 13859 */
     "WASKO", /* 13860 */
     "Wolf IT Concepts", /* 13861 */
@@ -14010,7 +14010,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Interaktivna Consulting", /* 13976 */
     "SHAYNE ENTERPRISES", /* 13977 */
     "GuardedNet, Inc.", /* 13978 */
-    "Mintact Software Inc (previous was 'CompuCS Inc.')", /* 13979 */
+    "Mintact Software Inc (formerly 'CompuCS Inc.')", /* 13979 */
     "Platinum Web Pages", /* 13980 */
     "INGCHEM", /* 13981 */
     "FibreSpeed Ltd.", /* 13982 */
@@ -14031,8 +14031,8 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Invisible Industries", /* 13997 */
     "Conceptual MindWorks, Inc.", /* 13998 */
     "ItsNotA.com", /* 13999 */
-    "InterZone", /* 14000 */
-    "DRS Technologies Canada Ltd. (previous was 'DRS Flight Safety and Communications')", /* 14001 */
+    "Michail Kamprianis", /* 14000 */
+    "DRS Technologies Canada Ltd. (formerly 'DRS Flight Safety and Communications')", /* 14001 */
     "University of Wisconsin - Whitewater", /* 14002 */
     "Saint Mary's College", /* 14003 */
     "Gap Inc.", /* 14004 */
@@ -14054,7 +14054,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Zencod", /* 14020 */
     "Shapers", /* 14021 */
     "Arachne (Poland)", /* 14022 */
-    "KCOM Service Provider Network (previous was 'Mistral Internet Group')", /* 14023 */
+    "KCOM Service Provider Network (formerly 'Mistral Internet Group')", /* 14023 */
     "fiscus GmbH", /* 14024 */
     "Landesversicherungsanstalt", /* 14025 */
     "Slapd.Net", /* 14026 */
@@ -14099,7 +14099,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Shanghai FOCI Fiber Optic Communication Equipments Inc.", /* 14065 */
     "pit.at", /* 14066 */
     "allied networks GmbH", /* 14067 */
-    "TEAG Netkom GmbH", /* 14068 */
+    "Thueringer Netkom GmbH (formerly 'TEAG Netkom GmbH')", /* 14068 */
     "Syngenio AG", /* 14069 */
     "C3T", /* 14070 */
     "Bohr- und Rohrtechnik GmbH", /* 14071 */
@@ -14153,7 +14153,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Netlife AG", /* 14119 */
     "Letifer.org", /* 14120 */
     "Stone-IT", /* 14121 */
-    "Wireless Broadband Alliance Ltd (previous was 'Wi-Fi Alliance')", /* 14122 */
+    "Wireless Broadband Alliance Ltd (formerly 'Wi-Fi Alliance')", /* 14122 */
     "Expertcity Inc.", /* 14123 */
     "UK/CA/JN Joint Astronomy Centre", /* 14124 */
     "SENAO INTERNATIONAL CO., Ltd.", /* 14125 */
@@ -14210,7 +14210,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Katholieke Hogeschool Leuven", /* 14176 */
     "implementa GmbH", /* 14177 */
     "JNI Corporation", /* 14178 */
-    "Airespace, Inc (formerly Black Storm Networks)", /* 14179 */
+    "Airespace, Inc (formerly 'Black Storm Networks')", /* 14179 */
     "DS Consulting", /* 14180 */
     "Cygnus Technologies", /* 14181 */
     "GlobalLocate", /* 14182 */
@@ -14444,12 +14444,12 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "TSSX", /* 14410 */
     "Beijing QXCOMM Technology CO., Ltd.", /* 14411 */
     "European Transaction Bank AG", /* 14412 */
-    "TOGEWAnet", /* 14413 */
+    "Comfone AG", /* 14413 */
     "Regio Ltd.", /* 14414 */
     "e-mobilizer", /* 14415 */
     "ntl", /* 14416 */
     "Continentale Krankenversicherung A.G.", /* 14417 */
-    "Ciagri-Centro de Informatica na Agricultura", /* 14418 */
+    "Centro de Tecnologia da Informação \"Luiz de Queiroz\"", /* 14418 */
     "EMIGRATUS Communications Inc.", /* 14419 */
     "ltinetworks.com", /* 14420 */
     "Mocana Corporation", /* 14421 */
@@ -14509,7 +14509,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Ralph DeHart", /* 14475 */
     "Network Executive Software, Inc.", /* 14476 */
     "RELIX", /* 14477 */
-    "Melbourne-IT", /* 14478 */
+    "University of Melbourne", /* 14478 */
     "Korea National Defence University", /* 14479 */
     "norisbank AG", /* 14480 */
     "KOBIL Systems GmbH", /* 14481 */
@@ -14699,7 +14699,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Comlab Telecommunications inc", /* 14665 */
     "McLeod Lake Indian Band", /* 14666 */
     "NextiraOne LLC", /* 14667 */
-    "ViaSat, Inc., Acceleration Research and Technology (previous was 'Intelligent Compression Technologies')", /* 14668 */
+    "ViaSat, Inc., Acceleration Research and Technology (formerly 'Intelligent Compression Technologies')", /* 14668 */
     "Systemhaus x-Team", /* 14669 */
     "MTX Networks Inc.", /* 14670 */
     "GenFour Communications, LLC", /* 14671 */
@@ -14865,7 +14865,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "voetter.at", /* 14831 */
     "ESO Consortium", /* 14832 */
     "Portal Solutions Technology, Inc.", /* 14833 */
-    "mediales GmbH", /* 14834 */
+    "Konsec GmbH (formerly 'mediales GmbH')", /* 14834 */
     "INFOTEC", /* 14835 */
     "VARTA Microbattery GmbH", /* 14836 */
     "Trenchant Consulting, LLC", /* 14837 */
@@ -15285,7 +15285,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Deutsche Telekom T-Com", /* 15251 */
     "SB&C, Ltd.", /* 15252 */
     "Ceyba", /* 15253 */
-    "Kaseya Sweden AB (previous was 'Intellipool AB')", /* 15254 */
+    "Kaseya Sweden AB (formerly 'Intellipool AB')", /* 15254 */
     "Reliable Controls Corporation", /* 15255 */
     "United Nations", /* 15256 */
     "City Computing Limited", /* 15257 */
@@ -15597,7 +15597,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Adtron", /* 15563 */
     "Aselia Technologies, Inc.", /* 15564 */
     "Great Plains Mall.net", /* 15565 */
-    "Experian Japan Co., Ltd (previous was 'A-Care Systems, Inc.')", /* 15566 */
+    "Experian Japan Co., Ltd (formerly 'A-Care Systems, Inc.')", /* 15566 */
     "Neople Ltd.", /* 15567 */
     "Center for Development of Information Technology - CDIT", /* 15568 */
     "Krasnoyarsk ICC subdivision of MCC, JSC \"Russian Railways\"", /* 15569 */
@@ -15703,7 +15703,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Lifecycle Software", /* 15669 */
     "The Internet Marketing Center", /* 15670 */
     "Wardega Consulting", /* 15671 */
-    "Javno preduzece \"Posta Srbije\" (previous was 'Javno preduzece PTT saobracaja \"Srbija\"')", /* 15672 */
+    "Javno preduzece \"Posta Srbije\" (formerly 'Javno preduzece PTT saobracaja \"Srbija\"')", /* 15672 */
     "Codeangels Solutions", /* 15673 */
     "Valente CC", /* 15674 */
     "StoneDonut, LLC", /* 15675 */
@@ -15747,7 +15747,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Drinsama GmbH", /* 15713 */
     "Lenel Systems International, Inc.", /* 15714 */
     "Blue Tree Systems", /* 15715 */
-    "gogo6 (previous was 'Hexago')", /* 15716 */
+    "gogo6 (formerly 'Hexago')", /* 15716 */
     "Cegetel Net", /* 15717 */
     "Loyalty Management Group Canada, Inc.", /* 15718 */
     "Mass College of Liberal Arts", /* 15719 */
@@ -15763,7 +15763,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "SyTrust GmbH", /* 15729 */
     "Lulu Enterprises, Inc.", /* 15730 */
     "EasyPax Inc.", /* 15731 */
-    "ZIV Aplicaciones y Tecnología S.A. (previous was 'uSysCom')", /* 15732 */
+    "ZIV Aplicaciones y Tecnología S.A. (formerly 'uSysCom')", /* 15732 */
     "Washington State University", /* 15733 */
     "AION Systems", /* 15734 */
     "Secure Technology Hawaii", /* 15735 */
@@ -15799,7 +15799,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "JX Solutions Ltd.", /* 15765 */
     "Matrix Mailing, LLC", /* 15766 */
     "Triblen", /* 15767 */
-    "BelAir Networks", /* 15768 */
+    "Ericsson Inc. (formerly 'BelAir Networks')", /* 15768 */
     "Argecy Computer Corporation", /* 15769 */
     "Zeera Networks, Inc.", /* 15770 */
     "JF Possibilities", /* 15771 */
@@ -15924,10 +15924,10 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Prairie Grove Telephone Co.", /* 15890 */
     "Panda Restaurant Group, Inc.", /* 15891 */
     "Openmodes Technology Group Inc.", /* 15892 */
-    "Emerson Climate Technologies Retail Solutions, Inc. (previously was 'Computer Process Controls')", /* 15893 */
+    "Emerson Climate Technologies Retail Solutions, Inc. (formerly 'Computer Process Controls')", /* 15893 */
     "AstroStage Inc.", /* 15894 */
     "4Linux", /* 15895 */
-    "Southern Federal University (previous was 'Rostov State University, Computer Center')", /* 15896 */
+    "Southern Federal University (formerly 'Rostov State University, Computer Center')", /* 15896 */
     "Guangzhou GaoU S & T Development Co. Ltd.", /* 15897 */
     "Polizei Brandenburg", /* 15898 */
     "inubit", /* 15899 */
@@ -16021,7 +16021,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Topoz Pty Ltd", /* 15987 */
     "Cymes GmbH", /* 15988 */
     "Torsten Schneider", /* 15989 */
-    "MikroBitti", /* 15990 */
+    "x9 (formerly 'MikroBitti')", /* 15990 */
     "Raso", /* 15991 */
     "Tracerdigital, LLC", /* 15992 */
     "Net-Scale Technologies, Inc.", /* 15993 */
@@ -16331,7 +16331,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Semnode", /* 16297 */
     "hanbang-soft technology co.,Ltd", /* 16298 */
     "corega K.K.", /* 16299 */
-    "Penguin Infotech Pvt. Ltd. (previous was 'Penguin India Linux Solutions Pvt. Ltd.')", /* 16300 */
+    "Penguin Infotech Pvt. Ltd. (formerly 'Penguin India Linux Solutions Pvt. Ltd.')", /* 16300 */
     "Silesian University in Opava", /* 16301 */
     "intrae", /* 16302 */
     "Sans Serif", /* 16303 */
@@ -16396,7 +16396,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Waters Network Systems", /* 16362 */
     "SCHOLZ & VOLKMER Intermediales Design, GmbH", /* 16363 */
     "SMARTDATA", /* 16364 */
-    "Dion Global Solutions GmbH (previous was 'Swissrisk Financial Systems GmbH')", /* 16365 */
+    "Dion Global Solutions GmbH (formerly 'Swissrisk Financial Systems GmbH')", /* 16365 */
     "INFORMA DEL PERU, INFORMACION ECONOMICA SA", /* 16366 */
     "saarstahl", /* 16367 */
     "Sysapex Communications Inc.", /* 16368 */
@@ -16425,7 +16425,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "RouteOne", /* 16391 */
     "Cortland Communications", /* 16392 */
     "Sean Champ Enterprises", /* 16393 */
-    "Pigeon Point Systems", /* 16394 */
+    "Pentair Technical Products (formerly 'Pigeon Point Systems')", /* 16394 */
     "William R Sowerbutts", /* 16395 */
     "justinknash.com", /* 16396 */
     "U.S. Army ALTESS", /* 16397 */
@@ -16462,7 +16462,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Dial Assurance, Inc.", /* 16428 */
     "Lindorff Holding AS", /* 16429 */
     "Mutiny Limited", /* 16430 */
-    "T-Systems Italia S.p.A.", /* 16431 */
+    "Engineering.MO S.p.A. (formerly 'T-Systems Italia S.p.A.')", /* 16431 */
     "PKI Innovations Inc.", /* 16432 */
     "Moorehead Communications", /* 16433 */
     "Jenzabar, Inc", /* 16434 */
@@ -16602,7 +16602,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "FUKKEN CO.,LTD.", /* 16568 */
     "RealVision Inc.", /* 16569 */
     "linux-at-work.de", /* 16570 */
-    "Hungarian Telekom Plc. (previously was 'Westel Mobile Telecommunications Company Ltd.')", /* 16571 */
+    "Hungarian Telekom Plc. (formerly 'Westel Mobile Telecommunications Company Ltd.')", /* 16571 */
     "Centro Tecnico per la Rete Unitaria della Pubblica Amministrazione", /* 16572 */
     "ICP Europe PLC", /* 16573 */
     "Ontario Systems", /* 16574 */
@@ -16777,7 +16777,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Hessische Zentrale fuer Datenverarbeitung", /* 16743 */
     "BLANKOM", /* 16744 */
     "Alfa-Bank OJSC", /* 16745 */
-    "springtimesoft LTD (previous was 'norbu09.org')", /* 16746 */
+    "springtimesoft LTD (formerly 'norbu09.org')", /* 16746 */
     "InterCommIT b.v.", /* 16747 */
     "Studentska Unie CVUT", /* 16748 */
     "Extensible Systems Ltd.", /* 16749 */
@@ -16898,7 +16898,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "{M:U} Consulting", /* 16864 */
     "ZIM Technologies International Inc.", /* 16865 */
     "Software North, Inc.", /* 16866 */
-    "TIBCO Software, Inc. DSPG (previous was 'DataSynapse, Inc.')", /* 16867 */
+    "TIBCO Software, Inc. DSPG (formerly 'DataSynapse, Inc.')", /* 16867 */
     "Conseil Internet & Logiciels Libres, Jérôme Alet", /* 16868 */
     "ROMmon Ltd", /* 16869 */
     "Banco do Estado do Rio Grande do Sul,S.A.", /* 16870 */
@@ -16932,7 +16932,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Venture Industry International Corp.", /* 16898 */
     "Corvigo, Inc.", /* 16899 */
     "a metareal material", /* 16900 */
-    "Wibhu Technologies Pvt. Ltd.", /* 16901 */
+    "Mojo Networks, Inc. (formerly 'Wibhu Technologies Pvt. Ltd.')", /* 16901 */
     "APPLETZ CO., LTD.", /* 16902 */
     "TeleCats BV", /* 16903 */
     "Aylesford Newsprint Limited", /* 16904 */
@@ -16974,7 +16974,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "CryptoGram SA", /* 16940 */
     "Oakley, Inc.", /* 16941 */
     "TRX", /* 16942 */
-    "Overture Networks, Inc. (previous was 'Ceterus Networks')", /* 16943 */
+    "Overture Networks, Inc. (formerly 'Ceterus Networks')", /* 16943 */
     "Seven Blades", /* 16944 */
     "Grupo de Usuarios de Linux de Canarias", /* 16945 */
     "Litchfield Communications, Inc.", /* 16946 */
@@ -17060,7 +17060,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "dotNSF, Inc.", /* 17026 */
     "YAAO", /* 17027 */
     "MarketXS.com BV", /* 17028 */
-    "baumer it-services (previous was '0mode')", /* 17029 */
+    "baumer it-services (formerly '0mode')", /* 17029 */
     "Velveo", /* 17030 */
     "Cluster Labs GmbH", /* 17031 */
     "City of Helsinki", /* 17032 */
@@ -17349,7 +17349,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "EtherAddress.com", /* 17315 */
     "Peoria Christian School", /* 17316 */
     "MassiveEgo", /* 17317 */
-    "Media5 Corporation  (previous was 'M5T Centre d'Excellence en Telecom Inc.')", /* 17318 */
+    "Media5 Corporation  (formerly 'M5T Centre d'Excellence en Telecom Inc.')", /* 17318 */
     "JC Computing", /* 17319 */
     "J&M Crowther Ltd.", /* 17320 */
     "Calpine", /* 17321 */
@@ -17470,7 +17470,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Worlight International", /* 17436 */
     "Insurance Corporation of British Columbia", /* 17437 */
     "Novannet, LLC", /* 17438 */
-    "Panasonic Avionics Corporation (previous was 'Matsushita Avionics Systems Corporation')", /* 17439 */
+    "Panasonic Avionics Corporation (formerly 'Matsushita Avionics Systems Corporation')", /* 17439 */
     "Omnipod, Inc.", /* 17440 */
     "Unholy.org", /* 17441 */
     "Iter8 Inc.", /* 17442 */
@@ -17689,7 +17689,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Epsys", /* 17655 */
     "Tohoku Ricoh Co., Ltd.", /* 17656 */
     "@tp-net e. K.", /* 17657 */
-    "Thinklogical, Inc  (previous was 'Logical Solutions Inc.')", /* 17658 */
+    "Thinklogical, Inc  (formerly 'Logical Solutions Inc.')", /* 17658 */
     "The Lutheran University Association, Inc (d/b/a Valparaiso University)", /* 17659 */
     "AStA Universitaet Potsdam", /* 17660 */
     "Lincoln National Corporation", /* 17661 */
@@ -17744,7 +17744,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "michael j van ham", /* 17710 */
     "Aisai communication technology CO.,LTD", /* 17711 */
     "TB-Solutions Technologies Software S.L.", /* 17712 */
-    "Cambium Networks Limited (previous was 'PipingHot Networks Limited')", /* 17713 */
+    "Cambium Networks Limited (formerly 'PipingHot Networks Limited')", /* 17713 */
     "ASM Enterprises", /* 17714 */
     "Mitsukoshi Infomation Service Co.,Ltd.", /* 17715 */
     "Georgia Tech Foundation", /* 17716 */
@@ -17853,7 +17853,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "GIP RENATER", /* 17819 */
     "Foresttek Networks Limited", /* 17820 */
     "Tempest spol. s r.o.", /* 17821 */
-    "EASYTOUCH Robert Divoky KEG", /* 17822 */
+    "Easytouch Robert Redl KG (formerly 'EASYTOUCH Robert Divoky KEG')", /* 17822 */
     "Arnes - Academic and Research Network of Slovenia", /* 17823 */
     "Hisense Information Technology Ltd.", /* 17824 */
     "BEconnectIT GmbH", /* 17825 */
@@ -18018,7 +18018,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "SHENZHEN COSHIP SOFTWARE CO.,LTD.", /* 17984 */
     "kingsoft", /* 17985 */
     "Systems Union (Shanghai) Ltd.", /* 17986 */
-    "Cable & Wireless UK", /* 17987 */
+    "Vodafone Group Services Limited (formerly 'Cable & Wireless UK')", /* 17987 */
     "PYLON R.I.S.C. GmbH", /* 17988 */
     "petujek.net", /* 17989 */
     "NEC Electronics Corporation", /* 17990 */
@@ -18094,7 +18094,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "The Apache Software Foundation", /* 18060 */
     "OCEAN DEVELOPMENT", /* 18061 */
     "Jo Tankers AS", /* 18062 */
-    "Technetix BV (previous was 'Tratec Telecom b.v.')", /* 18063 */
+    "Technetix BV (formerly 'Tratec Telecom b.v.')", /* 18063 */
     "Marek Walther", /* 18064 */
     "XOU Solutions Limited", /* 18065 */
     "Planet Lauritsen", /* 18066 */
@@ -18203,14 +18203,14 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "DOTFLUX", /* 18169 */
     "Inno.com", /* 18170 */
     "Torchbox Ltd", /* 18171 */
-    "Ludwig Schneider it-consulting", /* 18172 */
+    "AP-WDSL GbR", /* 18172 */
     "Ramanam Software Distributors Private Limited", /* 18173 */
     "Wisconsin Department of Justice", /* 18174 */
     "Araknos Srl", /* 18175 */
     "Pikeville Methodist Hospital", /* 18176 */
     "INPE", /* 18177 */
     "Front Range Internet, Inc.", /* 18178 */
-    "Quest Software, Inc. (previous was 'Vintela Inc.')", /* 18179 */
+    "Quest Software, Inc. (formerly 'Vintela Inc.')", /* 18179 */
     "UNIT Ltd.", /* 18180 */
     "Western Union Financial Services, Inc", /* 18181 */
     "Ahold Information Services", /* 18182 */
@@ -18235,7 +18235,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Bestseller A/S", /* 18201 */
     "Belatronix Kommunikation & EDV", /* 18202 */
     "TC Electronic A/S", /* 18203 */
-    "Computer And Software Enterprises, Inc.", /* 18204 */
+    "HPD Software, LLC (formerly 'Computer And Software Enterprises, Inc.')", /* 18204 */
     "Pioneer Industries, Inc.", /* 18205 */
     "iVolve Pty Ltd", /* 18206 */
     "ANTs software inc.", /* 18207 */
@@ -18270,7 +18270,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "McGill University", /* 18236 */
     "IntelliVid Corporation", /* 18237 */
     "SkyLink Design", /* 18238 */
-    "DTS, Inc. (previous was 'Digital Theater Systems, Inc')", /* 18239 */
+    "DTS, Inc. (formerly 'Digital Theater Systems, Inc')", /* 18239 */
     "berger.de", /* 18240 */
     "w3design", /* 18241 */
     "Wyyzzk, Inc.", /* 18242 */
@@ -18388,7 +18388,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Calyptech Pty Ltd", /* 18354 */
     "Avitech International Corp.", /* 18355 */
     "kevinstevens.info", /* 18356 */
-    "Full Frontal Ingenuity LLC (previous was 'Leathern Apron Incorporated')", /* 18357 */
+    "Full Frontal Ingenuity LLC (formerly 'Leathern Apron Incorporated')", /* 18357 */
     "EPITECH", /* 18358 */
     "Intransa, Inc.", /* 18359 */
     "INTEC Web and Genome Informatics Corporation", /* 18360 */
@@ -18488,7 +18488,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "OATSystems, Inc", /* 18454 */
     "MEDICAL INFOMATION CO., LTD.", /* 18455 */
     "NetKlass Technology Inc.", /* 18456 */
-    "European Directorate for the Quality of Medicines", /* 18457 */
+    "European Directorate for the Quality of Medicines & HealthCare, Council of Europe (EDQM) (formerly 'European Directorate for the Quality of Medicines')", /* 18457 */
     "Image Processing Techniques Ltd", /* 18458 */
     "Semafor Informatik & Energie AG", /* 18459 */
     "Powell Companies", /* 18460 */
@@ -18526,7 +18526,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Tacoma, spol.s r.o.", /* 18492 */
     "ProcoliX", /* 18493 */
     "S.W.I.F.T. SCRL", /* 18494 */
-    "GRAU Data Storage AG", /* 18495 */
+    "GRAU DATA  AG", /* 18495 */
     "Rolotec AG", /* 18496 */
     "gec UOC Group", /* 18497 */
     "A&M Consulting Co", /* 18498 */
@@ -18685,7 +18685,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "GLANCE AG", /* 18651 */
     "Zentrum für Bioinformatik, Hamburg", /* 18652 */
     "Eraia srl", /* 18653 */
-    "Scottish Police Authority (previous was 'Central Scotland Police')", /* 18654 */
+    "Scottish Police Authority (formerly 'Central Scotland Police')", /* 18654 */
     "IUNDS AG", /* 18655 */
     "AirRunner Technologies", /* 18656 */
     "GoldenGate Software, Inc.", /* 18657 */
@@ -19077,7 +19077,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "XiTrust Secure Technologies GmbH", /* 19043 */
     "JSC \"Kredyt Bank (Ukrajina)\"", /* 19044 */
     "MyNetwork System Co.,Ltd", /* 19045 */
-    "Lenovo Group", /* 19046 */
+    "Lenovo Enterprise Business Group", /* 19046 */
     "Magerealm Enterprises", /* 19047 */
     "Fambus", /* 19048 */
     "Scalix Corporation", /* 19049 */
@@ -19173,7 +19173,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Edgewater Networks, Inc.", /* 19139 */
     "Matthew R. Wilson", /* 19140 */
     "Quest Serviced Apartments", /* 19141 */
-    "Carlo Strozzi (previous was 'ScriptaWorks s.r.l.')", /* 19142 */
+    "Carlo Strozzi (formerly 'ScriptaWorks s.r.l.')", /* 19142 */
     "SecureAge Technology", /* 19143 */
     "Arjuna", /* 19144 */
     "Xonix", /* 19145 */
@@ -19245,7 +19245,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "TEZ Georgsberg GmbH", /* 19211 */
     "University System of Maryland", /* 19212 */
     "Raining Data Corporation", /* 19213 */
-    "Ogilvy & Mather Deutschland GmbH  (previous was 'WPP Service GmbH & Co. KG')", /* 19214 */
+    "Ogilvy & Mather Deutschland GmbH  (formerly 'WPP Service GmbH & Co. KG')", /* 19214 */
     "European Organisation for Research and Treatment of Cancer AISBL / IVZW", /* 19215 */
     "Heringa", /* 19216 */
     "iiNet Pty Ltd", /* 19217 */
@@ -19324,7 +19324,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Just Aaron", /* 19290 */
     "Macrad", /* 19291 */
     "Pirel inc.", /* 19292 */
-    "Danriver Technologies Corporation (previous was 'Shanghai jisung information technology co.,Ltd')", /* 19293 */
+    "Danriver Technologies Corporation (formerly 'Shanghai jisung information technology co.,Ltd')", /* 19293 */
     "LeapComm Communication Technologies Inc.", /* 19294 */
     "Kolle, IT-Ingeniørfirma ApS", /* 19295 */
     "Filterlogix, LLC", /* 19296 */
@@ -19379,7 +19379,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Odd Element Inc.", /* 19345 */
     "SMComputer EDV Service & Consulting Schmid Manfred", /* 19346 */
     "Pyzzo Software Corporation", /* 19347 */
-    "Liquid Appliance", /* 19348 */
+    "Synacor, Inc.", /* 19348 */
     "Lightshore", /* 19349 */
     "eyevis", /* 19350 */
     "Ivega Corporation Pvt. Ltd.", /* 19351 */
@@ -19475,7 +19475,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Toroki, Inc.", /* 19441 */
     "PHANTOM", /* 19442 */
     "EGATEL S.L.", /* 19443 */
-    "Metaswitch Networks Ltd (previous was 'Data Connection Ltd')", /* 19444 */
+    "Metaswitch Networks Ltd (formerly 'Data Connection Ltd')", /* 19444 */
     "Calltech Sp. z o.o.", /* 19445 */
     "Cable One", /* 19446 */
     "Swift and Company", /* 19447 */
@@ -19504,7 +19504,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Highnet Systems Ltd.", /* 19470 */
     "Secgo Group Oy", /* 19471 */
     "Staer Sistemi s.r.l.", /* 19472 */
-    "North American Electric Reliabiity Council", /* 19473 */
+    "North American Electric Reliabiity Corporation", /* 19473 */
     "CRL", /* 19474 */
     "Confederação Interestadual das Cooperativas Ligadas ao Sicredi - Sicredi Servicos", /* 19475 */
     "Highwall Technologies, LLC", /* 19476 */
@@ -19580,7 +19580,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "MELENTANE", /* 19546 */
     "Oplink Communications, Inc.", /* 19547 */
     "FROX communication", /* 19548 */
-    "Uni-Q Systems (previous was 'ENGREN.NET')", /* 19549 */
+    "Uni-Q Systems (formerly 'ENGREN.NET')", /* 19549 */
     "an Academic Network at Sao Paulo (ANSP)", /* 19550 */
     "Thales Naval France", /* 19551 */
     "Alexander Kowalski", /* 19552 */
@@ -19700,7 +19700,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Alcatel Suomi Oy", /* 19666 */
     "Dr. Ing. h.c. F. Porsche AG", /* 19667 */
     "A.S. Reiiseveranstaltungs GmbH", /* 19668 */
-    "aserva GmbH (previous was 'newthinking IT, Inhaber Alexander Scheibner')", /* 19669 */
+    "aserva GmbH (formerly 'newthinking IT, Inhaber Alexander Scheibner')", /* 19669 */
     "IT University of Copenhagen", /* 19670 */
     "DMDsecure.com BV", /* 19671 */
     "Gratisavisa Stimuli", /* 19672 */
@@ -20126,7 +20126,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Servicios de i-pro para competitividad, S.A. de C.V.", /* 20092 */
     "TrekLogic Inc.", /* 20093 */
     "Vaonet", /* 20094 */
-    "Aktino, Inc.", /* 20095 */
+    "Positron Access Solutions Corp (formerly 'Aktino, Inc.')", /* 20095 */
     "Image Entry, Inc.", /* 20096 */
     "Plope Consulting", /* 20097 */
     "Dave Hoebe", /* 20098 */
@@ -20158,7 +20158,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Cologne Systems GmbH", /* 20124 */
     "Vitel Software, Inc", /* 20125 */
     "LP Agent", /* 20126 */
-    "Gutenpress", /* 20127 */
+    "TTYS0 (formerly 'Gutenpress')", /* 20127 */
     "SKH TKO Kei Tak Primary School", /* 20128 */
     "SOURCECORP,Inc.", /* 20129 */
     "Advanced Digital Systems, Inc.", /* 20130 */
@@ -20176,7 +20176,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "QianWang Networks Co.", /* 20142 */
     "Uffaq Technologies Private Ltd.", /* 20143 */
     "Optimo Service AG", /* 20144 */
-    "Synartra Ltd.", /* 20145 */
+    "ELVIS-PLUS", /* 20145 */
     "Ecutel", /* 20146 */
     "Internet NetOnRamp", /* 20147 */
     "runIT AG", /* 20148 */
@@ -20250,7 +20250,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "more4u gbr", /* 20216 */
     "Polystar Instruments AB", /* 20217 */
     "Ajeco Oy", /* 20218 */
-    "BSH Bosch und Siemens Hausgeraete GmbH", /* 20219 */
+    "BSH Hausgeraete GmbH", /* 20219 */
     "EB Software Enk, John Weholdt", /* 20220 */
     "IMAGINEON oHG", /* 20221 */
     "PROFSOFT Sp. z o.o.", /* 20222 */
@@ -20421,7 +20421,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Externet Kft", /* 20387 */
     "Streamwide SAS", /* 20388 */
     "Cape Clear Software", /* 20389 */
-    "I & C Energo a.s.", /* 20390 */
+    "OT Energy Services a.s. (formerly 'I & C Energo a.s.')", /* 20390 */
     "FAKUS Elektronik GmbH", /* 20391 */
     "Oberfinanzdirektion Berlin", /* 20392 */
     "Money Services, Inc.", /* 20393 */
@@ -20490,7 +20490,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Omnis Network, LLC", /* 20456 */
     "Incipient, Inc.", /* 20457 */
     "Schneider National, Inc.", /* 20458 */
-    "OF Networks Co., Ltd.", /* 20459 */
+    "Oki Electric Industry Co., Ltd. (formerly 'OF Networks Co., Ltd.')", /* 20459 */
     "goldenfile ltd", /* 20460 */
     "Organika-Kuznetsk", /* 20461 */
     "Multimedia Project Srl", /* 20462 */
@@ -20499,7 +20499,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Caja de Ahorros de CASTILLA-LA MANCHA", /* 20465 */
     "DS Wilson Consulting", /* 20466 */
     "SAPIENS TECHNOLOGIES Ltd", /* 20467 */
-    "TatraMed s.r.o.", /* 20468 */
+    "TatraMed Software s.r.o.", /* 20468 */
     "Lycos Europe GmbH", /* 20469 */
     "WINGcon GmbH", /* 20470 */
     "Banca di Roma S.p.A.", /* 20471 */
@@ -20517,7 +20517,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Ministerio de Hacienda", /* 20483 */
     "Sukra Helitek, Inc.", /* 20484 */
     "Fuchsia Open Source Solutions", /* 20485 */
-    "ChyronHego Corporation (previous was 'Chyron Corporation')", /* 20486 */
+    "ChyronHego Corporation (formerly 'Chyron Corporation')", /* 20486 */
     "AXT Systems Pty Limited", /* 20487 */
     "DTMC Systems", /* 20488 */
     "Geotek Design Services", /* 20489 */
@@ -20604,7 +20604,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "ShenZhen Yinghetong Information & Technology  Co.,Ltd.", /* 20570 */
     "International Turnkey Systems", /* 20571 */
     "virtual-image", /* 20572 */
-    "Universitätsklinikum Aachen", /* 20573 */
+    "Universitaetsklinikum Aachen", /* 20573 */
     "OXYAN SOFTWARE", /* 20574 */
     "Nucleonet Inc", /* 20575 */
     "University of Wales, Bangor", /* 20576 */
@@ -20916,7 +20916,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "PCDEMANO Inc", /* 20882 */
     "Evangelische Landeskirche Württemberg", /* 20883 */
     "BDT GmbH & Co. KG", /* 20884 */
-    "Kontron Modular Computers SA (previous was 'Thales Computers')", /* 20885 */
+    "Kontron Modular Computers SA (formerly 'Thales Computers')", /* 20885 */
     "Dr. Glinz COVIS GmbH", /* 20886 */
     "SOLSOFT", /* 20887 */
     "SIS Spektrum s.r.o.", /* 20888 */
@@ -21646,7 +21646,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "ise - Individuelle Software-Entwicklung GmbH", /* 21612 */
     "TOYOTA Motor Marketing Europe", /* 21613 */
     "Multix Finland Oy", /* 21614 */
-    "Bolton 6th Form College", /* 21615 */
+    "Bolton Sixth Form College", /* 21615 */
     "Fraunhofer IIS", /* 21616 */
     "TiFiC AB", /* 21617 */
     "Navecor, SA", /* 21618 */
@@ -21900,7 +21900,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "FMAudit, LLC.", /* 21866 */
     "ESI-HEB", /* 21867 */
     "Highmark Inc.", /* 21868 */
-    "TECTROL  INC.", /* 21869 */
+    "CUI Inc (formerly 'Tectrol Inc')", /* 21869 */
     "United Cerebral Palsy of Greater Chicago", /* 21870 */
     "Datastream Systems, Inc.", /* 21871 */
     "WICEN (NSW) Inc", /* 21872 */
@@ -21918,7 +21918,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "W. Schneider+Co AG", /* 21884 */
     "Ericsson Mobile Platforms AB", /* 21885 */
     "Newel Informatique", /* 21886 */
-    "Funkwerk AG, Traffic & Control Communication, Kiel (previous was 'Funkwerk Information Technologies Kiel GmbH')", /* 21887 */
+    "Funkwerk AG, Traffic & Control Communication, Kiel (formerly 'Funkwerk Information Technologies Kiel GmbH')", /* 21887 */
     "Content Management License Administrator", /* 21888 */
     "Acsis, Inc.", /* 21889 */
     "GRIB", /* 21890 */
@@ -21987,7 +21987,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Business Computer Maintenance Limited", /* 21953 */
     "Transatlantic Diagnostics LLC", /* 21954 */
     "CONTROL SYSTEMS Srl", /* 21955 */
-    "MegaPath Networks", /* 21956 */
+    "Megapath Cloud Company LLC", /* 21956 */
     "Sealed Air (NZ) ltd", /* 21957 */
     "Thermakraft IndustriesNZ Ltd.", /* 21958 */
     "P J Papers ltd.", /* 21959 */
@@ -22242,7 +22242,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "AGES International GmbH & Co KG", /* 22208 */
     "LJXN inc.", /* 22209 */
     "FLsystem", /* 22210 */
-    "Legacy Property Investments LLC (previous was 'JMAnderson Enterprises')", /* 22211 */
+    "Legacy Property Investments LLC (formerly 'JMAnderson Enterprises')", /* 22211 */
     "Cognio, Inc.", /* 22212 */
     "Posda", /* 22213 */
     "Explorer Post 227", /* 22214 */
@@ -22283,7 +22283,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "INSIGHT TECHNOLOGIES Co., Ltd", /* 22249 */
     "Max-Planck-Institut fuer Radioastronomie", /* 22250 */
     "Syderal SA", /* 22251 */
-    "McAfee Inc. (previously was 'Reconnex Corporation')", /* 22252 */
+    "McAfee Inc. (formerly 'Reconnex Corporation')", /* 22252 */
     "Lite Speed Technologies, Inc.", /* 22253 */
     "Jerome's Furniture Warehouse", /* 22254 */
     "StopTheGlaciers.org", /* 22255 */
@@ -22343,7 +22343,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "California State Automobile Association", /* 22309 */
     "ComNetMedia AG", /* 22310 */
     "A.F. Blakemore and Son Ltd", /* 22311 */
-    "Université Saint-Louis - Bruxelles (USL-B) (previous was 'Université Saint-Louis (USL-B)')", /* 22312 */
+    "Université Saint-Louis - Bruxelles (USL-B) (formerly 'Université Saint-Louis (USL-B)')", /* 22312 */
     "SP Controls, Inc.", /* 22313 */
     "TGN-Systeme Krueger + Partner", /* 22314 */
     "spot media AG", /* 22315 */
@@ -22449,7 +22449,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Mole Valley Farmers Ltd.", /* 22415 */
     "Shelton Internet Ltd", /* 22416 */
     "Information Design Department of Tama Art University", /* 22417 */
-    "USINA DE IMAGENS PHOTO+DESIGN LTDA.", /* 22418 */
+    "Usina de Imagens Photo+Design Ltda.", /* 22418 */
     "Relex, Inc.", /* 22419 */
     "accedian, Inc.", /* 22420 */
     "TSYS Prepaid, Inc.", /* 22421 */
@@ -22477,7 +22477,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "EMETEC", /* 22443 */
     "GASCARD Partners, L.P.", /* 22444 */
     "Simon Holmgaard-IT", /* 22445 */
-    "SOFTWIN SRL", /* 22446 */
+    "Bitdefender SRL (formerly 'SOFTWIN SRL')", /* 22446 */
     "B.Braun Melsungen AG", /* 22447 */
     "Cluster-Worxx.net", /* 22448 */
     "SOPA", /* 22449 */
@@ -22631,7 +22631,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "eOrg", /* 22597 */
     "MissionMode Solutions, Inc.", /* 22598 */
     "Informatec Comercial e Serviços Ltda.", /* 22599 */
-    "Harris CapRock Communications (previous was 'CapRock Communications')", /* 22600 */
+    "Harris CapRock Communications (formerly 'CapRock Communications')", /* 22600 */
     "Tachometry Corporation", /* 22601 */
     "TESI Tècnica del So i la Imatge S.L.", /* 22602 */
     "skyblue.eu.com", /* 22603 */
@@ -23377,7 +23377,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Invensys/Wonderware", /* 23343 */
     "AXS-One Inc.", /* 23344 */
     "System Control Networks", /* 23345 */
-    "CitiStreet,LLC", /* 23346 */
+    "Voya Financial (formerly 'CitiStreet, LLC')", /* 23346 */
     "Infra Resource, LLC.", /* 23347 */
     "PC KNOW HOW CENTER Brachhold GmbH", /* 23348 */
     "NTT GIN", /* 23349 */
@@ -23388,7 +23388,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Niska AB", /* 23354 */
     "Gosh Enterprises, Inc.", /* 23355 */
     "TRYSKEL", /* 23356 */
-    "TwentyFourNine (previously was 'oogyNetworks')", /* 23357 */
+    "TwentyFourNine (formerly 'oogyNetworks')", /* 23357 */
     "Typhon SARL", /* 23358 */
     "Hexod", /* 23359 */
     "Pacific Union College", /* 23360 */
@@ -23398,7 +23398,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Bryn Mawr College", /* 23364 */
     "Websense, Inc.", /* 23365 */
     "ValueClick, Inc.", /* 23366 */
-    "m networking", /* 23367 */
+    "Host Europe GmbH (formerly 'm networking')", /* 23367 */
     "GHK Wireless", /* 23368 */
     "Shawn Church, Information Systems Consultant", /* 23369 */
     "Joel Davis", /* 23370 */
@@ -23416,7 +23416,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Swissphone Telecom AG", /* 23382 */
     "Azienda Sanitaria Locale N.4 Chiavarese", /* 23383 */
     "Aptus Elektronik AB", /* 23384 */
-    "GESIS mbH", /* 23385 */
+    "GESIS Gesellschaft für Informationssysteme mit beschraenkter Haftung (formerly 'GESIS mbH')", /* 23385 */
     "Pole Universitaire Leonard de Vinci", /* 23386 */
     "iXTS Software GmbH", /* 23387 */
     "Hypercube Systems Ltd.", /* 23388 */
@@ -23609,7 +23609,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Wayfinder Systems AB", /* 23575 */
     "ADVIS Maciej Matysiak", /* 23576 */
     "Enfo Partner Oy", /* 23577 */
-    "MSC Vertriebs GmbH (previously was 'Smart Network Devices GmbH')", /* 23578 */
+    "MSC Vertriebs GmbH (formerly 'Smart Network Devices GmbH')", /* 23578 */
     "Centrica plc", /* 23579 */
     "Andritz Oy", /* 23580 */
     "Hacousto Holland", /* 23581 */
@@ -23660,7 +23660,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Poggs Computer Services", /* 23626 */
     "Interlix", /* 23627 */
     "California State University Dominguez Hills", /* 23628 */
-    "SafeNet, Inc. (previous was ' Mykotronx, Inc.')", /* 23629 */
+    "SafeNet, Inc. (formerly 'Mykotronx, Inc.')", /* 23629 */
     "Computer Aid, Inc.", /* 23630 */
     "Azalea Networks, Inc.", /* 23631 */
     "Sneha Technologies S.L.", /* 23632 */
@@ -23728,7 +23728,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "PMX NETWORKS, INC", /* 23694 */
     "PePLink Ltd.", /* 23695 */
     "Nilai International College", /* 23696 */
-    "hoi-polloi.org (previous was 'aspector GmbH')", /* 23697 */
+    "hoi-polloi.org (formerly 'aspector GmbH')", /* 23697 */
     "RELDATA Inc.", /* 23698 */
     "Zyden Software", /* 23699 */
     "Internews 98 Ltd.", /* 23700 */
@@ -23746,7 +23746,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Minnesota Office of Enterprise Technology", /* 23712 */
     "Keating Inc", /* 23713 */
     "Data Systems S.A.E.C.A.", /* 23714 */
-    "Produ-Tech Monitoring Pty Ld", /* 23715 */
+    "Live Monitoring Pty Ld (formerly 'Produ-Tech Monitoring Pty Ld')", /* 23715 */
     "United States Council for Automotive Research", /* 23716 */
     "Siricomm, Inc.", /* 23717 */
     "Esensors, Inc.", /* 23718 */
@@ -23775,7 +23775,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Wogri Unlimited", /* 23741 */
     "CONNOTECH Experts-conseils inc.", /* 23742 */
     "Kerridge Computer Company Ltd", /* 23743 */
-    "BITMARCK SOFTWARE GMBH (previous was 'Arbeitsgemeinschaft Informationssysteme in der gesetzlichen Krankenversicherung (ISKV)')", /* 23744 */
+    "BITMARCK SOFTWARE GMBH (formerly 'Arbeitsgemeinschaft Informationssysteme in der gesetzlichen Krankenversicherung (ISKV)')", /* 23744 */
     "Black Hen Limited", /* 23745 */
     "Administration communale de Braine-l'Alleud", /* 23746 */
     "Areste Centre Informatique", /* 23747 */
@@ -23811,10 +23811,10 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Elektrarny Opatovice a.s.", /* 23777 */
     "BEZ Systems, Inc.", /* 23778 */
     "Asklepios Group", /* 23779 */
-    "Freedomware UK", /* 23780 */
+    "Prose Consulting Ltd. (formerly 'Freedomware UK')", /* 23780 */
     "Albertslund Ungdomsboliger", /* 23781 */
     "ASN", /* 23782 */
-    "iTellus Holdings, Inc. (previous was 'Tellurian Networks, Inc.')", /* 23783 */
+    "iTellus Holdings, Inc. (formerly 'Tellurian Networks, Inc.')", /* 23783 */
     "StrataLight Communications", /* 23784 */
     "CIC/CAFMICRO", /* 23785 */
     "DS DATA SYSTEMS GmbH", /* 23786 */
@@ -23823,10 +23823,10 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "GrammaTech, Inc.", /* 23789 */
     "Pearce Bevill Leesburg & Moore, P.C.", /* 23790 */
     "Adaptix", /* 23791 */
-    "Axell Wireless Israel Ltd (previous was 'Dekolink Wireless Ltd')", /* 23792 */
+    "Axell Wireless Israel Ltd (formerly 'Dekolink Wireless Ltd')", /* 23792 */
     "Cluster Resources", /* 23793 */
     "Significant Bits", /* 23794 */
-    "Movile (previous was 'Yavox Latin America')", /* 23795 */
+    "Movile (formerly 'Yavox Latin America')", /* 23795 */
     "SunWare GmbH & Co KG", /* 23796 */
     "KSIGN Co., Ltd.", /* 23797 */
     "Australia Post", /* 23798 */
@@ -24407,7 +24407,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "information unlimited", /* 24373 */
     "Life Sciences Collaborative Access Team", /* 24374 */
     "Aleksandar Milivojevic", /* 24375 */
-    "Landeshauptstadt München", /* 24376 */
+    "Landeshauptstadt Muenchen", /* 24376 */
     "Nassauische Sparkasse", /* 24377 */
     "Kizoom Ltd", /* 24378 */
     "Tracewell Power", /* 24379 */
@@ -24510,7 +24510,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Server-side Systems Ltd", /* 24476 */
     "eenterphace", /* 24477 */
     "megatrade corp.", /* 24478 */
-    "E.ON IT Czech Republic s.r.o.", /* 24479 */
+    "E.ON Business Services Czech Republic s.r.o.", /* 24479 */
     "oncampusuk", /* 24480 */
     "Warsaw Data Center Sp. z o.o.", /* 24481 */
     "Light Backup Services", /* 24482 */
@@ -24550,7 +24550,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Conair Corporation", /* 24516 */
     "LTIA", /* 24517 */
     "Great-West Life & Annuity Insurance Company", /* 24518 */
-    "Trustwave Holdings, Inc. (previous was 'XRamp Security Services Inc.')", /* 24519 */
+    "Trustwave Holdings, Inc. (formerly 'XRamp Security Services Inc.')", /* 24519 */
     "Tokash Consulting Inc.", /* 24520 */
     "SupplyFX, Inc", /* 24521 */
     "PT. Excelcomindo Pratama, Tbk.", /* 24522 */
@@ -24625,7 +24625,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Marchex, Inc.", /* 24591 */
     "Brazos County, Texas", /* 24592 */
     "Think Zone S.C.", /* 24593 */
-    "MYOB Australia E1 Pty Ltd (previous was 'Ilisys Web Hosting Pty Ltd')", /* 24594 */
+    "MYOB Australia E1 Pty Ltd (formerly 'Ilisys Web Hosting Pty Ltd')", /* 24594 */
     "safari video networks llc.", /* 24595 */
     "Ascent Technology, Inc.", /* 24596 */
     "NRW.BANK", /* 24597 */
@@ -24943,12 +24943,12 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Secure-24, LLC", /* 24909 */
     "OOO \"ElitStudio\"", /* 24910 */
     "Foxbyte Ltd", /* 24911 */
-    "Aselsan", /* 24912 */
+    "ASELSAN INC.", /* 24912 */
     "Cook Group Incorporated", /* 24913 */
     "WSOFT, Lda.", /* 24914 */
     "iG Internet Group do Brasil Ltda", /* 24915 */
     "Essent Corporation", /* 24916 */
-    "Intermedix (previous was 'Collaborative Fusion, Inc.')", /* 24917 */
+    "Intermedix Corporation (formerly 'Collaborative Fusion, Inc.')", /* 24917 */
     "Radmer", /* 24918 */
     "Web Wizard Design", /* 24919 */
     "Our Help Desk", /* 24920 */
@@ -24991,7 +24991,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Onoclea", /* 24957 */
     "Ascent Media Group", /* 24958 */
     "Pankerl - Media", /* 24959 */
-    "The Sip-router Project (previous was 'iptel.org')", /* 24960 */
+    "The Sip-router Project (formerly 'iptel.org')", /* 24960 */
     "Tail-f  Systems AB", /* 24961 */
     "Atlantic Harbour Limited", /* 24962 */
     "SiliconVortex", /* 24963 */
@@ -25037,7 +25037,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "SQUILD", /* 25003 */
     "AEGON Magyarorszag Rt.", /* 25004 */
     "sevecek", /* 25005 */
-    "NVision Czech Republic a.s. (previous was 'SITRONICS Telecom Solutions, Czech Republic a.s.')", /* 25006 */
+    "NVision Czech Republic a.s. (formerly 'SITRONICS Telecom Solutions, Czech Republic a.s.')", /* 25006 */
     "Precesamiento Digital y Sistemas S.L.", /* 25007 */
     "I.T.E.N.O.S. GmbH - Mobile Solutions", /* 25008 */
     "Sysworksoft", /* 25009 */
@@ -25070,7 +25070,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Kantonsschule Romanshorn", /* 25036 */
     "Novovia", /* 25037 */
     "denver health", /* 25038 */
-    "vitroconnect systems GmbH (previous was 'infinity-3 GmbH')", /* 25039 */
+    "vitroconnect systems GmbH (formerly 'infinity-3 GmbH')", /* 25039 */
     "Keytronix GmbH.", /* 25040 */
     "Microsol Ltd.", /* 25041 */
     "JDM Software BV", /* 25042 */
@@ -25166,7 +25166,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Redeal Ltd", /* 25132 */
     "HKU School of Professional and Continuing Education", /* 25133 */
     "ComDesign Inc.", /* 25134 */
-    "Ministerul pentru Societatea Informațională (previous was 'Ministerul Comunicatiilor si Tehnologiei Informatiei')", /* 25135 */
+    "Ministerul pentru Societatea Informațională (formerly 'Ministerul Comunicatiilor si Tehnologiei Informatiei')", /* 25135 */
     "Haute Ecole Arc", /* 25136 */
     "Voronezh State Pedagogical University", /* 25137 */
     "Alyseo", /* 25138 */
@@ -25310,7 +25310,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Gear6", /* 25276 */
     "Pekao Inc.", /* 25277 */
     "Canon Electronics Inc.", /* 25278 */
-    "OMX Group", /* 25279 */
+    "Nasdaq MTS (formerly 'OMX Group')", /* 25279 */
     "Market Pulse International", /* 25280 */
     "Westerstrand Urfabrik AB", /* 25281 */
     "MDK Baden-Württemberg", /* 25282 */
@@ -25589,7 +25589,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Social Science Research Council", /* 25555 */
     "Beyond 2000 Ltd", /* 25556 */
     "Xerox -ORG", /* 25557 */
-    "Infoblox, WinConnect (previously was 'Ipanto')", /* 25558 */
+    "Infoblox, WinConnect (formerly 'Ipanto')", /* 25558 */
     "Tivella Inc.", /* 25559 */
     "Ministerio Publico do DF e Territorios", /* 25560 */
     "Telecom Protection Technologies Limited", /* 25561 */
@@ -25653,7 +25653,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Ultragreen", /* 25619 */
     "Ost-West Handelsbank AG", /* 25620 */
     "Z Microsystems", /* 25621 */
-    "JANET(UK) (previous was 'UKERNA (United Kingdom Education and Research Networking Association)')", /* 25622 */
+    "JANET(UK) (formerly 'UKERNA (United Kingdom Education and Research Networking Association)')", /* 25622 */
     "OpenVAS", /* 25623 */
     "Kent School District", /* 25624 */
     "ChattenAssociates, Inc.", /* 25625 */
@@ -25809,7 +25809,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "midPhase Services, Inc", /* 25775 */
     "Hangzhou zhongwei electronics Ltd.", /* 25776 */
     "technoms", /* 25777 */
-    "Irkutsk state university of a railway transport (IrGUPS)", /* 25778 */
+    "Irkutsk State Transport University (IrGUPS)", /* 25778 */
     "MITO-Performance", /* 25779 */
     "Sanchin Consulting AB", /* 25780 */
     "NetFort Technologies Limited", /* 25781 */
@@ -26016,7 +26016,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Hillcrest Laboratories, Inc.", /* 25982 */
     "Telecom Design", /* 25983 */
     "FAST CORPORATION", /* 25984 */
-    "JoyTV10 / S-Vox Ltd  (previously was 'Rogers Broadcasting Ltd.')", /* 25985 */
+    "JoyTV10 / S-Vox Ltd  (formerly 'Rogers Broadcasting Ltd.')", /* 25985 */
     "InterGen Services, Inc.", /* 25986 */
     "Grupo de Investigación en Bioingeniería (GIB) CES - EAFIT", /* 25987 */
     "AKH Wien", /* 25988 */
@@ -26092,7 +26092,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Codebay Oy", /* 26058 */
     "BTECH, Inc.", /* 26059 */
     "IZT Innovationszentrum Telekommunikationstechnik GmbH", /* 26060 */
-    "Emerson Network Power, Embedded Computing", /* 26061 */
+    "Artesyn Embedded Technologies (formerly 'Emerson Network Power, Embedded Computing')", /* 26061 */
     "MZL Software Development", /* 26062 */
     "Ankhnet Informations Pvt. Ltd.", /* 26063 */
     "Braga Moro S.p.A.", /* 26064 */
@@ -26114,7 +26114,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "AR Department of Information Systems", /* 26080 */
     "Lars Kornwinkel", /* 26081 */
     "CERTIRA", /* 26082 */
-    "CacheGuard Technologies Ltd. (previous was 'OneTec')", /* 26083 */
+    "CacheGuard Technologies Ltd. (formerly 'OneTec')", /* 26083 */
     "Enter srl", /* 26084 */
     "Kunstuniversitaet Linz", /* 26085 */
     "PC - ANWENDUNGEN", /* 26086 */
@@ -26202,7 +26202,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Idologic Inc.", /* 26168 */
     "eLynx Ltd.", /* 26169 */
     "Clario Medical Imaging, Inc.", /* 26170 */
-    "Parallels Holdings Ltd (previous was 'SWsoft, Inc.')", /* 26171 */
+    "Parallels Holdings Ltd (formerly 'SWsoft, Inc.')", /* 26171 */
     "Keble College", /* 26172 */
     "monaghen.com", /* 26173 */
     "SignaCert, Inc.", /* 26174 */
@@ -26230,7 +26230,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "AVT Audio Video Technolgies GmbH", /* 26196 */
     "HITT GmbH", /* 26197 */
     "Hedmark University College", /* 26198 */
-    "ALLEGRO DVT", /* 26199 */
+    "KEEPIXO", /* 26199 */
     "Solid Rock IT", /* 26200 */
     "UHU-Linux Kft.", /* 26201 */
     "Snipe Networks", /* 26202 */
@@ -26366,7 +26366,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "TechnoKad", /* 26332 */
     "Brose Fahrzeugteile", /* 26333 */
     "MEGATRON DATA SERVICES GMBH", /* 26334 */
-    "Divinetworks Ltd. (previous was 'IPortent Ltd.')", /* 26335 */
+    "DiViNetworks Ltd. (formerly 'IPortent Ltd.')", /* 26335 */
     "Pawel Kraszewski", /* 26336 */
     "Paper Management Services Ltd.", /* 26337 */
     "IWICS Inc.", /* 26338 */
@@ -26515,7 +26515,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Zane C. Bowers", /* 26481 */
     "Rossonet S.r.l.", /* 26482 */
     "JW NetSource, LLC", /* 26483 */
-    "Cisco Systems, Inc. (previous was 'Arch Rock Corporation')", /* 26484 */
+    "Cisco Systems, Inc. (formerly 'Arch Rock Corporation')", /* 26484 */
     "Cryoserver Ltd", /* 26485 */
     "The Stanley Works", /* 26486 */
     "WebSpace-Forum", /* 26487 */
@@ -26544,7 +26544,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Like Minded People Ltd", /* 26510 */
     "TAC Bilgisayar Hizmetleri Ic ve Dis Ticaret A.S.", /* 26511 */
     "GEEK Bilgisayar Muhendislik ve Sanayi LTD STI", /* 26512 */
-    "Hellenic Academic and Research Institutions Certification Authority", /* 26513 */
+    "Hellenic Academic and Research Institutions CertificationAuthority", /* 26513 */
     "Suntel Communications", /* 26514 */
     "Tepe Teknoloji", /* 26515 */
     "Innovation Designs Ltd.", /* 26516 */
@@ -26565,7 +26565,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Kodak Imaging Network, Inc", /* 26531 */
     "eB Technologies (M) Sdn. Bhd.", /* 26532 */
     "Nurun inc.", /* 26533 */
-    "think project! International (previous was 'AEC/communications GmbH')", /* 26534 */
+    "think project! International (formerly 'AEC/communications GmbH')", /* 26534 */
     "OMNEX Control Systems ULC", /* 26535 */
     "Ringland Consulting LLC", /* 26536 */
     "Riorey Inc.", /* 26537 */
@@ -26680,7 +26680,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Institute for Parallel Processing, BAS", /* 26646 */
     "Banco Safra S/A", /* 26647 */
     "Avago Technologies Limited", /* 26648 */
-    "Covidien (previous 'Tyco Healthcare')", /* 26649 */
+    "Covidien (formerly 'Tyco Healthcare')", /* 26649 */
     "Pandora Media Inc.", /* 26650 */
     "Propus Informatica Ltda", /* 26651 */
     "MELCO HOLDINGS INC.", /* 26652 */
@@ -26766,7 +26766,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "COMNET Computer Netzwerke Gmbh", /* 26732 */
     "RRD S.p.a.", /* 26733 */
     "CMYK Energy Software Limited", /* 26734 */
-    "ITadmin GmbH", /* 26735 */
+    "Dipl. Ing. T. Biel", /* 26735 */
     "Weyhmueller.net", /* 26736 */
     "Infostream Pty ltd", /* 26737 */
     "BEA International FZE", /* 26738 */
@@ -26798,7 +26798,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Novnet HB", /* 26764 */
     "Universitaet Bielefeld, Fakultaet fuer Mathematik", /* 26765 */
     ".vantronix secure systems", /* 26766 */
-    "Alcatel-Lucent TMC (previous was 'Alcatel SOC')", /* 26767 */
+    "Alcatel-Lucent TMC (formerly 'Alcatel SOC')", /* 26767 */
     "Comune di Rimini", /* 26768 */
     "United Technologies Corporation", /* 26769 */
     "Virtutility Ltd", /* 26770 */
@@ -26942,7 +26942,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Pictor Solutions, Inc.", /* 26908 */
     "SUBNET Solutions Inc.", /* 26909 */
     "Studentersamfundet ved Aalborg Universitet", /* 26910 */
-    "Trend Micro Inc. (previous was 'Third Brigade Inc.')", /* 26911 */
+    "Trend Micro Inc. (formerly 'Third Brigade Inc.')", /* 26911 */
     "Cheiron", /* 26912 */
     "Group Logic, Inc.", /* 26913 */
     "TIME Networks Inc,.", /* 26914 */
@@ -26987,7 +26987,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Astronix Technology Inc.", /* 26953 */
     "INdustrias Sola Basic, SA de CV", /* 26954 */
     "Avalon Networks LLC", /* 26955 */
-    "AG04", /* 26956 */
+    "AG04 Innovative Solutions", /* 26956 */
     "Kognita", /* 26957 */
     "Indu-Sol GmbH", /* 26958 */
     "www.brianmichael.org", /* 26959 */
@@ -27033,7 +27033,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Grace Community Church of Howard County, Inc.", /* 26999 */
     "Magistrat Linz, AT", /* 27000 */
     "optionsXpress, Inc.", /* 27001 */
-    "Zayo Group  (previous was 'Onvoy, Inc.')", /* 27002 */
+    "Zayo Group  (formerly 'Onvoy, Inc.')", /* 27002 */
     "Trigence Corp", /* 27003 */
     "HOT Telecom Ltd.", /* 27004 */
     "Hackwerk.net", /* 27005 */
@@ -27088,7 +27088,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Oneida Baptist Institute", /* 27054 */
     "ZANDER LLC.", /* 27055 */
     "Zednax Limited", /* 27056 */
-    "Elektrobit Automotive GmbH (former 3SOFT GmbH)", /* 27057 */
+    "Elektrobit Automotive GmbH (formerly '3SOFT GmbH')", /* 27057 */
     "Ventelo Norge AS", /* 27058 */
     "SmartSol d.o.o.", /* 27059 */
     "interactive instruments", /* 27060 */
@@ -27290,7 +27290,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "NPF \"KRUG\"", /* 27256 */
     "Valimo Wireless Oy", /* 27257 */
     "NovaSecure AS", /* 27258 */
-    "Power-One", /* 27259 */
+    "BEL POWER SOLUTIONS (formerly 'Power-One')", /* 27259 */
     "DynaPel Systems Inc.", /* 27260 */
     "Servicios Avanzados para las Instituciones S.L.", /* 27261 */
     "DANTE Ltd.", /* 27262 */
@@ -27300,7 +27300,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "freecode", /* 27266 */
     "Encryptanet, Inc.", /* 27267 */
     "Hangar Eighteen Enterprises LLC", /* 27268 */
-    "Mainichi Communications Inc.", /* 27269 */
+    "Mynavi Corporation", /* 27269 */
     "KoSyS - Kockisch ITK Systems and Services", /* 27270 */
     "Structured Software Systems Ltd", /* 27271 */
     "Envisioneering Medical Technologies", /* 27272 */
@@ -27315,7 +27315,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Netcon Systems", /* 27281 */
     "Realtek Semiconductor corp.", /* 27282 */
     "Xcenium Technology", /* 27283 */
-    "Daon Trusted Identity Services (previous was 'Security Biometric Clearing Network')", /* 27284 */
+    "Daon Trusted Identity Services (formerly 'Security Biometric Clearing Network')", /* 27284 */
     "The Nisu research team", /* 27285 */
     "Netopia, Inc.", /* 27286 */
     "University Of Perugia", /* 27287 */
@@ -27425,7 +27425,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Braintribe IT Technologies", /* 27391 */
     "SCHILLER", /* 27392 */
     "Metrovacesa, S.A.", /* 27393 */
-    "Cabo TV Madeirense", /* 27394 */
+    "NOSMadeira", /* 27394 */
     "AVANSI C. por A.", /* 27395 */
     "Open Journal Project", /* 27396 */
     "Praxis Balster-De Beer", /* 27397 */
@@ -27514,7 +27514,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "FORSIS GmbH", /* 27480 */
     "Arzl Datentechnik", /* 27481 */
     "G2 Microsystems Pty Ltd", /* 27482 */
-    "OpenSIPS.ORG (previous was 'OpenSER.ORG')", /* 27483 */
+    "OpenSIPS.ORG (formerly 'OpenSER.ORG')", /* 27483 */
     "Eightwire.com Limited", /* 27484 */
     "JSC  Public Key Infrastructure", /* 27485 */
     "swissgeek.org", /* 27486 */
@@ -27548,7 +27548,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "QTECH LLC", /* 27514 */
     "Stockholms stad", /* 27515 */
     "NIVC AS", /* 27516 */
-    "Secure Edge Srl", /* 27517 */
+    "GT50 Srl (formerly 'Secure Edge Srl')", /* 27517 */
     "ProMedica Health System", /* 27518 */
     "Pozicom Technologies, Inc.", /* 27519 */
     "International Electronic Communication Analysts (IECA), Inc.", /* 27520 */
@@ -27595,7 +27595,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Indeca", /* 27561 */
     "daemon software", /* 27562 */
     "QStar Technologies, Inc.", /* 27563 */
-    "UNIFAL - Universidade Federal de Alfenas", /* 27564 */
+    "UNIFAL-MG - Universidade Federal de Alfenas", /* 27564 */
     "Ministerio de Industria Turismo y Comercio", /* 27565 */
     "Vizrt", /* 27566 */
     "Baur GmbH", /* 27567 */
@@ -27604,7 +27604,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "GiaRoCo", /* 27570 */
     "Guenther Brunthaler EDV Dienstleistungen", /* 27571 */
     "CEOS Integradores de Sistemas C.A.", /* 27572 */
-    "TechGuard Security, LLC (previous was 'the-ferret.net')", /* 27573 */
+    "TechGuard Security, LLC (formerly 'the-ferret.net')", /* 27573 */
     "10MT Co.", /* 27574 */
     "DSL Internet Corporation", /* 27575 */
     "Envysion, Inc", /* 27576 */
@@ -27685,7 +27685,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "ProConsultant Informatique", /* 27651 */
     "SUNY", /* 27652 */
     "MyRunning.com", /* 27653 */
-    "Tain Malta Ltd. (previously was 'Involve Ltd.')", /* 27654 */
+    "Tain Malta Ltd. (formerly 'Involve Ltd.')", /* 27654 */
     "IFP", /* 27655 */
     "HafenCity Universität Hamburg", /* 27656 */
     "Hugh McLenaghan", /* 27657 */
@@ -27701,7 +27701,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Apprion, Inc", /* 27667 */
     "Olivier Molteni", /* 27668 */
     "easyRAID", /* 27669 */
-    "Tiroler Landeskrankenanstalten GmbH.", /* 27670 */
+    "Tirol Kliniken GmbH.", /* 27670 */
     "ATL Systems, Inc.", /* 27671 */
     "Electool Systems Kft.", /* 27672 */
     "QUOD Financial SA", /* 27673 */
@@ -27754,7 +27754,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "SBone.DE", /* 27720 */
     "Dotster, Inc.", /* 27721 */
     "Pennic Consulting Inc", /* 27722 */
-    "Permessa Corporation (formerly DYS Analytics, Inc.)", /* 27723 */
+    "Permessa Corporation (formerly 'DYS Analytics, Inc.')", /* 27723 */
     "Opticomm Corporation", /* 27724 */
     "Asurion", /* 27725 */
     "Executive Coach Inc.", /* 27726 */
@@ -27812,7 +27812,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "UnState educational establishment of additional education \"Educational center \"Meson\"", /* 27778 */
     "OFFRATEL", /* 27779 */
     "Public Surplus, LLC", /* 27780 */
-    "Ministerio de Empleo y Seguridad Social (Previously it was 'Ministerio de Trabajo e Inmigracion')", /* 27781 */
+    "Ministerio de Empleo y Seguridad Social (formerly 'Ministerio de Trabajo e Inmigracion')", /* 27781 */
     "OnFin", /* 27782 */
     "Mulder Innova BV", /* 27783 */
     "Sensata Technologies", /* 27784 */
@@ -27879,7 +27879,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Netcube Technologies,Inc", /* 27845 */
     "Prill Tecnologia Ltda", /* 27846 */
     "VirtenSys Ltd.", /* 27847 */
-    "Itron GmbH (previously was 'Actaris Gaszaehlerbau GmbH')", /* 27848 */
+    "Itron GmbH (formerly 'Actaris Gaszaehlerbau GmbH')", /* 27848 */
     "American Research Institute", /* 27849 */
     "LiquidXStream Systems Inc", /* 27850 */
     "Video Furnace, Inc.", /* 27851 */
@@ -27887,7 +27887,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "mconsultancy", /* 27853 */
     "Petr Kutalek", /* 27854 */
     "Interactions Corporation", /* 27855 */
-    "The Council of Australian University Directors of Information Technology (previous was 'Australian Access Federation')", /* 27856 */
+    "The Council of Australian University Directors of Information Technology (formerly 'Australian Access Federation')", /* 27856 */
     "J. Gordon Electronic Design", /* 27857 */
     "University of Delhi", /* 27858 */
     "Rapid Information & Communication co. Ltd", /* 27859 */
@@ -27956,7 +27956,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Tripoint Corporation Pty Ltd", /* 27922 */
     "Trillian GmbH", /* 27923 */
     "Titof3000.org", /* 27924 */
-    "OPTOPOL Technology S.A. (previous was 'medi.com J. Jaronski T. Licznerski sp. j.')", /* 27925 */
+    "Canon Ophthalmic Technologies Sp. z o.o. (formerly 'OPTOPOL Technology S.A.')", /* 27925 */
     "Future Voice Technology", /* 27926 */
     "Evangelische Kliniken Bonn gGmbH", /* 27927 */
     "Ayecka Communication Systems Ltd.", /* 27928 */
@@ -28034,7 +28034,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Aptivate Ltd", /* 28000 */
     "Tufts Associated Health Plans, Inc.", /* 28001 */
     "The Source", /* 28002 */
-    "Bender Family", /* 28003 */
+    "Bender Est.", /* 28003 */
     "Mobiletech AS", /* 28004 */
     "LissProductions", /* 28005 */
     "United Space Alliance", /* 28006 */
@@ -28063,7 +28063,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Mera Systems, Inc.", /* 28029 */
     "The Sidwell Company", /* 28030 */
     "Brightprofiles Resources ltd", /* 28031 */
-    "creat.io, s. r. o. (previous was 'Genesys, s. r. o.')", /* 28032 */
+    "creat.io, s. r. o. (formerly 'Genesys, s. r. o.')", /* 28032 */
     "VERISOFT CONSULTING TECNOLOGIA DA INFORMAÇÂO LTDA", /* 28033 */
     "Belkin Logistics, Inc", /* 28034 */
     "Venture Data L.L.C.", /* 28035 */
@@ -28290,7 +28290,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "InfoGuard AG", /* 28256 */
     "NUTRICHEM Diät+Pharma GmbH", /* 28257 */
     "EidosMedia S.p.A.", /* 28258 */
-    "bw-trust CA", /* 28259 */
+    "Landeshauptstadt Stuttgart (formerly 'bw-trust CA')", /* 28259 */
     "PROGIWEB", /* 28260 */
     "ProfiForms Projekt GmbH", /* 28261 */
     "Chick-fil-A, Inc", /* 28262 */
@@ -28340,7 +28340,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Foerderverein Buergernetz Ulm/Neu-Ulm e.V.", /* 28306 */
     "PostPath, Inc.", /* 28307 */
     "Zaragoza Network Management Research Group", /* 28308 */
-    "StatRad LLC (previous was 'Stat Radiology Medical Corp')", /* 28309 */
+    "StatRad LLC (formerly 'Stat Radiology Medical Corp')", /* 28309 */
     "Center for Computational Biology and Bioinformatics", /* 28310 */
     "TECHNOGAMA Ltd.", /* 28311 */
     "Penson GHCO", /* 28312 */
@@ -28365,7 +28365,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Smiley Media, Inc.", /* 28331 */
     "Brink's Home Security", /* 28332 */
     "Simon Niechzial EDV Dienstleistungen", /* 28333 */
-    "Siemens A/S (previous was 'pulz8 Communications ApS')", /* 28334 */
+    "Siemens A/S (formerly 'pulz8 Communications ApS')", /* 28334 */
     "Xworks NZ Limited", /* 28335 */
     "Voxeo", /* 28336 */
     "albatron S.r.l.", /* 28337 */
@@ -28489,7 +28489,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Trion World Network", /* 28455 */
     "QNIX Pty Ltd", /* 28456 */
     "NTT America Enterprise Hosting", /* 28457 */
-    "Nokia Solutions and Networks (previous was 'Nokia Siemens Networks')", /* 28458 */
+    "Nokia Solutions and Networks (formerly 'Nokia Siemens Networks')", /* 28458 */
     "Rogue Engineering Inc.", /* 28459 */
     "Benone Bitencourt", /* 28460 */
     "Mutoh Industries Ltd.", /* 28461 */
@@ -28563,7 +28563,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "NetSolutions Perú S.A.C.", /* 28529 */
     "Khypoea", /* 28530 */
     "Steven Roth", /* 28531 */
-    "OAO DAAZ", /* 28532 */
+    "AO DAAZ", /* 28532 */
     "CYAN", /* 28533 */
     "City of Jacksonville", /* 28534 */
     "AlarmEngine", /* 28535 */
@@ -28617,7 +28617,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Tangent Systems, Inc.", /* 28583 */
     "Allegro Networks pty ltd", /* 28584 */
     "Sniddle LLC", /* 28585 */
-    "ELPRO Technologies Pty Ltd", /* 28586 */
+    "EATON Wireless", /* 28586 */
     "Mobilesoft (Aust) Pty Limited", /* 28587 */
     "Kaplan Software, LLC", /* 28588 */
     "IDERs Inc", /* 28589 */
@@ -28634,9 +28634,9 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Hetra Secure Solutions Corp.", /* 28600 */
     "Know It All", /* 28601 */
     "LogicBox, Inc.", /* 28602 */
-    "MEDNETWorld.com, Inc (previously was 'MEDNET USA, Inc')", /* 28603 */
+    "MEDNETWorld.com, Inc (formerly 'MEDNET USA, Inc')", /* 28603 */
     "Factory Creative Studio Ltd.", /* 28604 */
-    "Logicalis GmbH (previous was 'Minters GmbH')", /* 28605 */
+    "Logicalis GmbH (formerly 'Minters GmbH')", /* 28605 */
     "TheFind, Inc.", /* 28606 */
     "coforum", /* 28607 */
     "Technomonk Industries", /* 28608 */
@@ -28788,7 +28788,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Vinotech", /* 28754 */
     "comWare GmbH", /* 28755 */
     "Fachhochschule Worms", /* 28756 */
-    "Mu Dynamics (previously was 'Mu Security')", /* 28757 */
+    "Mu Dynamics (formerly 'Mu Security')", /* 28757 */
     "Centurum Inc.", /* 28758 */
     "Savant Tecnologia", /* 28759 */
     "Albus-Insec", /* 28760 */
@@ -28810,7 +28810,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Neuf Cegetel", /* 28776 */
     "Ignos Estudio de Ingenieria S.L.", /* 28777 */
     "Intellistream", /* 28778 */
-    "Fox-IT Forensic IT Expert B.V", /* 28779 */
+    "Fox-IT B.V.", /* 28779 */
     "patteran, inc.", /* 28780 */
     "Bowdoin College", /* 28781 */
     "Earmark Media Services", /* 28782 */
@@ -28837,7 +28837,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "ISCaD GmbH", /* 28803 */
     "L'Occitane SA", /* 28804 */
     "Visionary Networks, Inc.", /* 28805 */
-    "Nationwide Children's Hospital (previous was 'Children's Hospital, Inc.')", /* 28806 */
+    "Nationwide Children's Hospital (formerly 'Children's Hospital, Inc.')", /* 28806 */
     "Mullins Household", /* 28807 */
     "accom GmbH & Co. KG", /* 28808 */
     "Netwurk Labs", /* 28809 */
@@ -28912,7 +28912,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Seikosha Inc.", /* 28878 */
     "Americanas.com", /* 28879 */
     "Westone Information Industry INC.", /* 28880 */
-    "dSigma, LLC (previously was 'dCube Technologies, LLC')", /* 28881 */
+    "dSigma, LLC (formerly 'dCube Technologies, LLC')", /* 28881 */
     "Michael Eisler", /* 28882 */
     "Tomas Bata University in Zlín", /* 28883 */
     "Kucko", /* 28884 */
@@ -28938,14 +28938,14 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Arius Software", /* 28904 */
     "MeshLinx Wireless, Inc", /* 28905 */
     "Cluenet", /* 28906 */
-    "ViASSoL (Virtual Applied Scientific Software Laboratory)(previous was 'ViSSoL (Virtual Scientific Software Laboratory)')", /* 28907 */
+    "ViASSoL (Virtual Applied Scientific Software Laboratory)(formerly 'ViSSoL (Virtual Scientific Software Laboratory)')", /* 28907 */
     "MUJIN Systems, Inc.", /* 28908 */
     "4A-Securer", /* 28909 */
     "Ansitaly", /* 28910 */
     "CompFort Meridian Polska Sp. z o.o.", /* 28911 */
     "ZURIEL Ltd.", /* 28912 */
     "BitTorrent, Inc.", /* 28913 */
-    "GE Transportation Systems Global Signaling, LLC", /* 28914 */
+    "Alstom Signaling Operation LLC (formerly 'GE Transportation Systems Global Signaling, LLC')", /* 28914 */
     "Turtlesystems", /* 28915 */
     "Interop Informatica", /* 28916 */
     "Comtica", /* 28917 */
@@ -29004,7 +29004,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Digitec Systems", /* 28970 */
     "Incontech Ltd", /* 28971 */
     "Keio University", /* 28972 */
-    "LVR InfoKom", /* 28973 */
+    "Landschaftsverband Rheinland (formerly 'LVR InfoKom')", /* 28973 */
     "Belarusbank", /* 28974 */
     "GSI Europe SL", /* 28975 */
     "Intersys Sistemas Interactivos", /* 28976 */
@@ -29040,13 +29040,13 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "VocaLink Limited", /* 29006 */
     "R&D ScanEx", /* 29007 */
     "Kaya Software, LLC", /* 29008 */
-    "Mirth Corporation (previous was ' WebReach, Inc.')", /* 29009 */
+    "Mirth Corporation (formerly 'WebReach, Inc.')", /* 29009 */
     "National Bank Of Kuwait", /* 29010 */
     "HeBIS", /* 29011 */
     "Quality Technology Services", /* 29012 */
     "Teldat Sp.J. H. Kruszyński, M. Cichocki", /* 29013 */
     "Intellengine", /* 29014 */
-    "Keitai Gaming (previously was 'TallTele')", /* 29015 */
+    "Keitai Gaming (formerly 'TallTele')", /* 29015 */
     "Professional Partnership Ltd", /* 29016 */
     "Buda", /* 29017 */
     "Network Security Solutions d.o.o.", /* 29018 */
@@ -29164,7 +29164,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Lithuanian Academy of Physical Education", /* 29130 */
     "PERSONAL_JG", /* 29131 */
     "CalNet", /* 29132 */
-    "ATIS Systems GmbH", /* 29133 */
+    "ATIS UHER S.A.", /* 29133 */
     "SpeedXS", /* 29134 */
     "Salvadè S.r.l.", /* 29135 */
     "Toys R Us Corporation", /* 29136 */
@@ -29244,7 +29244,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "KARCHER & LADWEIN Ingenieurpartnerschaft fuer Bautechnik", /* 29210 */
     "DiOmega GmbH", /* 29211 */
     "HOV Services, LLC", /* 29212 */
-    "GARURU", /* 29213 */
+    "ARBU", /* 29213 */
     "Dairiki Solutions", /* 29214 */
     "Eyeball Networks Inc.", /* 29215 */
     "Onode Server Project", /* 29216 */
@@ -29301,7 +29301,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Teleologic Learning Company", /* 29267 */
     "Unitarian Universalist Association", /* 29268 */
     "SiteXs Netzwerkloesungen & IT-Consulting GmbH", /* 29269 */
-    "Rogers West Group", /* 29270 */
+    "Rogers West", /* 29270 */
     "OBS Technology", /* 29271 */
     "Biological and Popular Culture, LLC", /* 29272 */
     "GCS Software & Consulting KEG", /* 29273 */
@@ -29494,7 +29494,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Red Bee Media", /* 29460 */
     "Authentity - Certificaton Entity", /* 29461 */
     "Stulz GmbH Klimatechnik", /* 29462 */
-    "GECAD Technologies", /* 29463 */
+    "Axigen Messaging (formerly 'GECAD Technologies')", /* 29463 */
     "Inverse groupe conseil", /* 29464 */
     "Aaron Von Gauss", /* 29465 */
     "The Nation Traffic", /* 29466 */
@@ -29567,7 +29567,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "NSSE SSC Charleston", /* 29533 */
     "the hive", /* 29534 */
     "BKMKS.COM", /* 29535 */
-    "SKY Perfect JSAT Corporation (previous was 'Space Communications Corporation')", /* 29536 */
+    "SKY Perfect JSAT Corporation (formerly 'Space Communications Corporation')", /* 29536 */
     "Velox", /* 29537 */
     "Celeonet", /* 29538 */
     "Lockview", /* 29539 */
@@ -29734,7 +29734,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Got Linux, Inc.", /* 29700 */
     "PMD GmbH", /* 29701 */
     "Eckard Vossas Unternehmensberatung", /* 29702 */
-    "Zanzar", /* 29703 */
+    "Stuart Morgan", /* 29703 */
     "Carlos Perello Marin", /* 29704 */
     "SNOLAB", /* 29705 */
     "Mapsolute GmbH", /* 29706 */
@@ -29748,7 +29748,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Kyocera Communication Systems Co.Ltd", /* 29714 */
     "Zavod za zdravstveno zavarovanje Slovenije", /* 29715 */
     "Concilio Networks", /* 29716 */
-    "RealDolmen (previous was 'Dolmen Computer Applications')", /* 29717 */
+    "RealDolmen (formerly 'Dolmen Computer Applications')", /* 29717 */
     "Technological Educational Institution of Athens (T.E.I. of Athens)", /* 29718 */
     "MICROPLEX Printware AG", /* 29719 */
     "xyco technologies AG", /* 29720 */
@@ -29873,8 +29873,8 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Dalman Technical Services Ltd", /* 29839 */
     "llrp.org", /* 29840 */
     "Fat Spaniel Technologies", /* 29841 */
-    "macmon secure gmbh (previous was 'mikado soft gmbH')", /* 29842 */
-    "ncode  gmbh", /* 29843 */
+    "macmon secure gmbh (formerly 'mikado soft gmbH')", /* 29842 */
+    "CargoServer AG (formerly 'ncode  gmbh')", /* 29843 */
     "Centile SA", /* 29844 */
     "VCC Perfect Pictures AG", /* 29845 */
     "Sparkroom, Inc.", /* 29846 */
@@ -29889,7 +29889,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "T-Mobile Crna Gora d.o.o.", /* 29855 */
     "anapol", /* 29856 */
     "Ready Set Companies", /* 29857 */
-    "Chrysler LLC", /* 29858 */
+    "FCA US LLC (formerly 'Chrysler LLC')", /* 29858 */
     "KJC Systems Ltd Co", /* 29859 */
     "Octopus Technologies Ltd", /* 29860 */
     "N-iX LLC", /* 29861 */
@@ -30065,7 +30065,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Penguinlabs LTD", /* 30031 */
     "Beijing Xintong Huaan Technologies Co. Ltd", /* 30032 */
     "Atabyte", /* 30033 */
-    "Net Care,Inc.", /* 30034 */
+    "IIJ Engineering,Inc. (formerly 'Net Care,Inc.')", /* 30034 */
     "Formosa Wireless Systems Corp.", /* 30035 */
     "Nomad Digital Ltd", /* 30036 */
     "Company Extrim pro, Ltd.", /* 30037 */
@@ -30096,7 +30096,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "CRIX International", /* 30062 */
     "Kantonsspital Luzern", /* 30063 */
     "Jens Kaiser", /* 30064 */
-    "Arista Networks, Inc. (previous was 'Arastra, Inc.')", /* 30065 */
+    "Arista Networks, Inc. (formerly 'Arastra, Inc.')", /* 30065 */
     "Swissdotnet", /* 30066 */
     "Imprint Global Pty Ltd", /* 30067 */
     "Walker Chandiok Grant Thornton", /* 30068 */
@@ -30130,7 +30130,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "dataway GmbH", /* 30096 */
     "Familie Dieter Baerwolf", /* 30097 */
     "BBP AG", /* 30098 */
-    "L-1 Identity Solutioins, Inc.", /* 30099 */
+    "MorphoTrust USA (formerly 'L-1 Identity Solutioins, Inc.')", /* 30099 */
     "greenBytes Inc.", /* 30100 */
     "SUNIX Co., Ltd.", /* 30101 */
     "team Communication Technology Management GmbH", /* 30102 */
@@ -30171,7 +30171,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "SHANDONG TRANSPARENT COMMUNICATIONS CO,LTD", /* 30137 */
     "Sparkassen Informatik GmbH & Co. KG", /* 30138 */
     "AMS Engineering Sticht Gmbh", /* 30139 */
-    "Conel s.r.o.", /* 30140 */
+    "Advantech B+B SmartWorx s.r.o. (formerly 'Conel s.r.o.')", /* 30140 */
     "Landesbetrieb Daten und Information Rheinland-Pfalz", /* 30141 */
     "National Magazine Company", /* 30142 */
     "DecisionSoft LTD", /* 30143 */
@@ -30241,7 +30241,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Level 3 Solutions, LLC", /* 30207 */
     "Firecode Soluções em Tecnologia LTDA", /* 30208 */
     "Universita' Ca' Foscari Venezia", /* 30209 */
-    "Logalty Servicios de Tercero de Confianza, S.L. (previously was 'Postaltrust, S.L.')", /* 30210 */
+    "Logalty Servicios de Tercero de Confianza, S.L. (formerly 'Postaltrust, S.L.')", /* 30210 */
     "THE CHUNICHI SHIMBUN CO., LTD.", /* 30211 */
     "ON telecomm", /* 30212 */
     "Vertex Pharmaceuticals", /* 30213 */
@@ -30303,7 +30303,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "via donau Österreichische Wasserstraßengesellschaft mbH.", /* 30269 */
     "Microdata Tecnologia Ltda", /* 30270 */
     "Netsense", /* 30271 */
-    "Cache IQ, Inc (previous was 'Storspeed Inc')", /* 30272 */
+    "Cache IQ, Inc (formerly 'Storspeed Inc')", /* 30272 */
     "Sairyx", /* 30273 */
     "Greenfossil Pte Ltd", /* 30274 */
     "TeraCortex", /* 30275 */
@@ -30536,7 +30536,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "The Norwegian Polar Institute", /* 30502 */
     "Bastart", /* 30503 */
     "Punctual Software Inc.", /* 30504 */
-    "Schweizerische Lebensversicherungs- und Rentenanstalt, Niederlassung für Deutschland", /* 30505 */
+    "Swiss Life Deutschland Operations GmbH", /* 30505 */
     "ooma Inc.", /* 30506 */
     "Extreme Copper, Incorporated", /* 30507 */
     "Medavie Blue Cross", /* 30508 */
@@ -30653,7 +30653,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "TOSHIBA MITSUBISHI-ELECTRIC INDUSTRIAL SYSTEMS CORPORATION", /* 30619 */
     "Sloka Telecom Private Limited", /* 30620 */
     "Global Holdings Group", /* 30621 */
-    "Centre des technologies de l'information  de l'Etat , Luxembourg (previous was 'Centre Informatique de l'Etat , Luxembourg')", /* 30622 */
+    "Centre des technologies de l'information  de l'Etat , Luxembourg (formerly 'Centre Informatique de l'Etat , Luxembourg')", /* 30622 */
     "Federal Signal Corporation, Integrated Systems", /* 30623 */
     "ALALOOP SAS", /* 30624 */
     "tollwerk sinnesnavigatoren", /* 30625 */
@@ -30765,7 +30765,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "BODET S.A", /* 30731 */
     "NetSocket, Inc.", /* 30732 */
     "Umpqua Bank", /* 30733 */
-    "Florian Sailer (previously was 'Seven-F')", /* 30734 */
+    "Florian Sailer (formerly 'Seven-F')", /* 30734 */
     "BLUECOARA Networks", /* 30735 */
     "Kyoeisangyo corp.", /* 30736 */
     "Servicios Tecnicos Agrupados S.A.", /* 30737 */
@@ -31344,7 +31344,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "CRYPTECHNIQ Pty Ltd", /* 31310 */
     "CEMA ASP", /* 31311 */
     "Jens Axboe Linux Kernel", /* 31312 */
-    "DanID", /* 31313 */
+    "Nets DanID A/S", /* 31313 */
     "Priva B.V.", /* 31314 */
     "Thales Alenia Space Italia", /* 31315 */
     "Seed Linux", /* 31316 */
@@ -31450,14 +31450,14 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Edevag Consulting HB", /* 31416 */
     "Tokyo University of Science", /* 31417 */
     "Adexso Advanced Expert Solutions", /* 31418 */
-    "Skalarit AB (previous was 'Skvader Systems AB')", /* 31419 */
+    "Skalarit AB (formerly 'Skvader Systems AB')", /* 31419 */
     "team2work GbR", /* 31420 */
     "Coblan srl", /* 31421 */
     "Retailp S.A.S.", /* 31422 */
     "Identity Technology Ltd", /* 31423 */
     "Egothor", /* 31424 */
     "Mountain Power Inc.", /* 31425 */
-    "Weddell IT Solutions", /* 31426 */
+    "Fitbit, Inc.", /* 31426 */
     "ticketpro GmbH", /* 31427 */
     "PT. Telemetri Indonesia", /* 31428 */
     "RealConnect (Pty) Ltd", /* 31429 */
@@ -31515,7 +31515,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "ABBRIS Ltd.", /* 31481 */
     "Top Level Internet Pty Ltd", /* 31482 */
     "Universidad Rey Juan Carlos", /* 31483 */
-    "Basset AB (previous was 'BassetLabs AB')", /* 31484 */
+    "Basset AB (formerly 'BassetLabs AB')", /* 31484 */
     "FlexSecure GmbH", /* 31485 */
     "Logica Norr AB", /* 31486 */
     "The Transaction Company", /* 31487 */
@@ -31565,7 +31565,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Immutify Limited", /* 31531 */
     "Ensynch, Inc", /* 31532 */
     "ScanSafe Ltd", /* 31533 */
-    "SyGroup GmbH", /* 31534 */
+    "Adfinis SyGroup AG (formerly 'SyGroup GmbH')", /* 31534 */
     "Parkeon", /* 31535 */
     "OpenNHRP project", /* 31536 */
     "Gossamer Threads Inc.", /* 31537 */
@@ -31664,7 +31664,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "media concept GmbH", /* 31630 */
     "Conseil Régional Nord - Pas de Calais", /* 31631 */
     "Shanghai Titan Technology Co., Ltd.", /* 31632 */
-    "Quickline Business AG (previous was 'EBM Telecom AG')", /* 31633 */
+    "Quickline Business AG (formerly 'EBM Telecom AG')", /* 31633 */
     "ICT Embedded b.v.", /* 31634 */
     "TextFunnel", /* 31635 */
     "Shanghai Colorful Magnetic Resonance Technology Co. Ltd.", /* 31636 */
@@ -31739,7 +31739,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "lug.org.uk", /* 31705 */
     "Torrenga Engineering, Inc.", /* 31706 */
     "Tamil IPTV Inc", /* 31707 */
-    "Meddiff Technologies Pvt. Ltd. (previous was ' MedSphere Technologies Pvt Ltd')", /* 31708 */
+    "Meddiff Technologies Pvt. Ltd. (formerly 'MedSphere Technologies Pvt Ltd')", /* 31708 */
     "Sistema FIESC", /* 31709 */
     "Torrenga Surveying LLC", /* 31710 */
     "Mystiq Mobile Pte Ltd", /* 31711 */
@@ -31804,7 +31804,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Bachmann GmbH & Co KG", /* 31770 */
     "eGenix.com Software, Skills and Services GmbH", /* 31771 */
     "International Paper", /* 31772 */
-    "GEWI Hard- und Software Entwicklungsgesellschaft mbH", /* 31773 */
+    "GEWI Europe GmbH & Co. KG", /* 31773 */
     "RealTimeSites", /* 31774 */
     "Gellings CO", /* 31775 */
     "TheLogInn", /* 31776 */
@@ -31914,7 +31914,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Programma Verwijsindex", /* 31880 */
     "GGH Engineering s.r.l.", /* 31881 */
     "Metrotek", /* 31882 */
-    "Vega", /* 31883 */
+    "Openstat (formerly 'Vega')", /* 31883 */
     "Kuipers Electronic Engineering", /* 31884 */
     "ProDaM", /* 31885 */
     "Syntactic Sugar s. r. o.", /* 31886 */
@@ -32054,7 +32054,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "doudemoii", /* 32020 */
     "Positron Inc.", /* 32021 */
     "Pegatron Computer Inc.", /* 32022 */
-    "American Clean Air, Inc. (previous was 'XeNSiiS')", /* 32023 */
+    "American Clean Air, Inc. (formerly 'XeNSiiS')", /* 32023 */
     "Applied Polymorphism", /* 32024 */
     "Primal Research", /* 32025 */
     "Sigma ITS Co., Ltd.", /* 32026 */
@@ -32085,7 +32085,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "SAMsystems GmbH", /* 32051 */
     "Toronto Hydro Corporation", /* 32052 */
     "3Y Power Technology, Inc.", /* 32053 */
-    "IPSL (previous was 'IPSL/CETP')", /* 32054 */
+    "IPSL (formerly 'IPSL/CETP')", /* 32054 */
     "Service to Youth Council Inc", /* 32055 */
     "Vietnam Datacommunication Company (VDC)", /* 32056 */
     "Mercury Brain Systems", /* 32057 */
@@ -32116,7 +32116,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Unassigned", /* 32082 */
     "HealthBlocks, Inc.", /* 32083 */
     "DeltaNode Ltd.", /* 32084 */
-    "E.ON IT GmbH", /* 32085 */
+    "E.ON Business Services GmbH", /* 32085 */
     "Fiberblaze", /* 32086 */
     "x:fer GmbH", /* 32087 */
     "College of Micronesia-FSM", /* 32088 */
@@ -32143,7 +32143,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "ADC Co.,LLC", /* 32109 */
     "IPVox Sdn Bhd", /* 32110 */
     "Digital Solutions Ltd.", /* 32111 */
-    "VCS Computer-Systeme GmbH", /* 32112 */
+    "CENARIO systems GmbH (formerly 'VCS Computer-Systeme GmbH')", /* 32112 */
     "Vocord", /* 32113 */
     "ORELIA SAS", /* 32114 */
     "Zweites Deutsches Fernsehen Anstalt des oeffentlichen Rechts", /* 32115 */
@@ -32224,7 +32224,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "REDOUBT, Inc.", /* 32190 */
     "Emergensys solutions inc.", /* 32191 */
     "Vanguard Rugged Storage LLC", /* 32192 */
-    "I-New Communicative Solutions GmbH", /* 32193 */
+    "I-New Unified Mobile Solutions AG", /* 32193 */
     "InDorse Technologies", /* 32194 */
     "CommTel Network Solutions Pty Ltd.", /* 32195 */
     "EBFS AG", /* 32196 */
@@ -32260,7 +32260,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Ingenieurbuero für innovative Informationstechnik", /* 32226 */
     "ArtSoft Consult", /* 32227 */
     "MERAWEX Sp. z o. o.", /* 32228 */
-    "Nokia (previous was 'Novarra, Inc.')", /* 32229 */
+    "Nokia (formerly 'Novarra, Inc.')", /* 32229 */
     "Aeris Communications, Inc.", /* 32230 */
     "hbcms", /* 32231 */
     "Landratsamt Muenchen", /* 32232 */
@@ -32513,7 +32513,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "AppEx Networks", /* 32479 */
     "Ollix", /* 32480 */
     "Unitronics", /* 32481 */
-    "Qporter Schweitz AG", /* 32482 */
+    "Qnective AG (formerly 'Qporter Schweitz AG')", /* 32482 */
     "Octrooicentrum Nederland", /* 32483 */
     "Escatronic GmbH", /* 32484 */
     "Live Interactive S.A.", /* 32485 */
@@ -32835,7 +32835,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "ObjectFX", /* 32801 */
     "Inuk Networks", /* 32802 */
     "Research Institute for Linguistics, Hungarian Academy of Sciences", /* 32803 */
-    "Unify GmbH & Co. KG (formerly 'Siemens Enterprise Communications GmbH & Co. KG')", /* 32804 */
+    "Unify Software and Solutions GmbH & Co.", /* 32804 */
     "CR Host", /* 32805 */
     "scientia.net", /* 32806 */
     "TVACE", /* 32807 */
@@ -32917,7 +32917,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "One23 Designs", /* 32883 */
     "Chemnitzer Verlag und Druck GmbH & Co. KG", /* 32884 */
     "H-Net AG", /* 32885 */
-    "Restorepoint (previous was 'TADASoft Ltd')", /* 32886 */
+    "Restorepoint (formerly 'TADASoft Ltd')", /* 32886 */
     "Joseph King ICT Consultants", /* 32887 */
     "Bizsensors", /* 32888 */
     "The College at Brockport State University of New York", /* 32889 */
@@ -32962,7 +32962,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "BrightHouse", /* 32928 */
     "Squarewave Computing", /* 32929 */
     "Wolfgang Karall EDV Consulting and Training", /* 32930 */
-    "TOTEC AMENITY LIMITED (previous was 'easynet, inc.')", /* 32931 */
+    "TOTEC AMENITY LIMITED (formerly 'easynet, inc.')", /* 32931 */
     "Direct Telecom Ltd", /* 32932 */
     "Conduct AS", /* 32933 */
     "Institute of Biophysics, AS CR, v.v.i.", /* 32934 */
@@ -32985,7 +32985,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Wellseeing Communication Technology Co.,Ltd", /* 32951 */
     "PheeNet Technology Corp.", /* 32952 */
     "YACOUB Automatiom GmbH", /* 32953 */
-    "Matrix SpA", /* 32954 */
+    "Italiaonline S.p.A.", /* 32954 */
     "Hrvatske sume d.o.o", /* 32955 */
     "ipct.net", /* 32956 */
     "IN Switch Solutions", /* 32957 */
@@ -33011,7 +33011,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "TELoIP", /* 32977 */
     "IntelliDOT Corporation", /* 32978 */
     "XIX", /* 32979 */
-    "Hitachi Systems Engineering Services, Ltd. (previous was 'Hitachi Systems Engineering and Solutions, Ltd.')", /* 32980 */
+    "Hitachi Systems Engineering Services, Ltd. (formerly 'Hitachi Systems Engineering and Solutions, Ltd.')", /* 32980 */
     "Arcadyan Technology Corporation", /* 32981 */
     "Trends Telematics BV", /* 32982 */
     "Open Computing Solutions", /* 32983 */
@@ -33107,7 +33107,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "System Analysis and Information Technologies Conference", /* 33073 */
     "Oryx Mail Systems GmbH", /* 33074 */
     "linux systeme thomas", /* 33075 */
-    "SCORE42 SAS  (previous was 'Virtual Internet Service Provider')", /* 33076 */
+    "SCORE42 SAS  (formerly 'Virtual Internet Service Provider')", /* 33076 */
     "InformSvyazStroi, Ltd.", /* 33077 */
     "Ganymeade Systems", /* 33078 */
     "EmblaCom Oy", /* 33079 */
@@ -33289,7 +33289,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Kentucky Christian University", /* 33255 */
     "Small Office Networks", /* 33256 */
     "Dienste fuer Menschen gGmbH", /* 33257 */
-    "dzhon pty. ltd. (previous was 'mosais pty. ltd.')", /* 33258 */
+    "dzhon pty. ltd. (formerly 'mosais pty. ltd.')", /* 33258 */
     "Martin DiViaio", /* 33259 */
     "Triescom Co., Ltd.", /* 33260 */
     "Resilans AB", /* 33261 */
@@ -33426,7 +33426,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Source Allies, Inc", /* 33392 */
     "C-NET Information Technology LTD.", /* 33393 */
     "Mio Software Laboratory Inc.", /* 33394 */
-    "Washington State Department Of Information Services", /* 33395 */
+    "Washington State Consolidated Technology Services", /* 33395 */
     "Ferpa Consultoria e Sistemas Ltda.", /* 33396 */
     "CreAPPtive Limited", /* 33397 */
     "Traffic Management Technologies", /* 33398 */
@@ -33537,7 +33537,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Heavens-Above GmbH", /* 33503 */
     "Narodni technicka knihovna", /* 33504 */
     "tw telecom, inc.", /* 33505 */
-    "Dassault Systemes (previous was 'Enginuity PLM LLC')", /* 33506 */
+    "Dassault Systemes (formerly 'Enginuity PLM LLC')", /* 33506 */
     "Elster Electricity, LLC", /* 33507 */
     "Avere Systems, Inc.", /* 33508 */
     "Sociedad Hebraica Argentina", /* 33509 */
@@ -33849,7 +33849,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Archean Technologies", /* 33815 */
     "PROFILAX, s.r.o.", /* 33816 */
     "CopyKnight Technologies Ltd", /* 33817 */
-    "asco GmbH", /* 33818 */
+    "asco", /* 33818 */
     "StreetGeek", /* 33819 */
     "DECOIT GmbH", /* 33820 */
     "Proliphix, Inc.", /* 33821 */
@@ -33896,14 +33896,14 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Large Binocular Telescope Observatory", /* 33862 */
     "Mantaro Networks, Inc.", /* 33863 */
     "Praktiker Services GmbH", /* 33864 */
-    "Atukorala Holdings Ltd. (previous was 'Squad 17 Limited')", /* 33865 */
+    "Atukorala Holdings Ltd. (formerly 'Squad 17 Limited')", /* 33865 */
     "Lionic Corp.", /* 33866 */
     "Infrascape Technologies Limited", /* 33867 */
     "DOSIsoft", /* 33868 */
     "Kompas Xnet d.o.o.", /* 33869 */
     "EXXOSS S.P.R.L.", /* 33870 */
     "ZIBImed GmbH", /* 33871 */
-    "Cheetah Technologies L.P.", /* 33872 */
+    "Alpha Technologies, Inc. (formerly 'Cheetah Technologies L.P.')", /* 33872 */
     "ARC Créations", /* 33873 */
     "Novita", /* 33874 */
     "National Bank of Ukraine", /* 33875 */
@@ -33950,8 +33950,8 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Freeman Decorating Services, Inc.", /* 33916 */
     "Intact Financial Corporation", /* 33917 */
     "Top Producer Systems", /* 33918 */
-    "ImmediaTV Corporation (previous was 'Magenta Video Networks')", /* 33919 */
-    "Remote Management Systems Limited", /* 33920 */
+    "ImmediaTV Corporation (formerly 'Magenta Video Networks')", /* 33919 */
+    "DLT Limited (formerly 'Remote Management Systems Limited')", /* 33920 */
     "Molowa", /* 33921 */
     "Byzoro Networks Ltd.", /* 33922 */
     "Axione", /* 33923 */
@@ -34031,7 +34031,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "OneMedNet Corporation", /* 33997 */
     "Agily Networks Inc.", /* 33998 */
     "Xiangmin Technology Co.,Ltd", /* 33999 */
-    "SIMB Tecnologia", /* 34000 */
+    "BYNE (formerly 'SIMB Tecnologia')", /* 34000 */
     "ingrifo", /* 34001 */
     "WriteX ltd", /* 34002 */
     "AdRiver", /* 34003 */
@@ -34060,7 +34060,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Alphalink", /* 34026 */
     "Qumu, Inc.", /* 34027 */
     "Idaho Power Company", /* 34028 */
-    "TLSPU (previous was 'HaqaSoft')", /* 34029 */
+    "TLSPU (formerly 'HaqaSoft')", /* 34029 */
     "metatux.net", /* 34030 */
     "ViewStor Pty Ltd", /* 34031 */
     "Amateur Radio Club (ARC) ITB", /* 34032 */
@@ -34134,11 +34134,11 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Tompkins Cortland Community College", /* 34100 */
     "Aimetis Corp", /* 34101 */
     "Perversia Networking", /* 34102 */
-    "Bluestone S.r.l.", /* 34103 */
+    "BV-Tech S.p.A. (formerly 'Bluestone S.r.l.')", /* 34103 */
     "Ceton Corp", /* 34104 */
     "Local Website Consulting", /* 34105 */
     "TESCOMA s.r.o.", /* 34106 */
-    "SELEX ES LTD (previous was 'SELEX GALILEO')", /* 34107 */
+    "SELEX ES LTD (formerly 'SELEX GALILEO')", /* 34107 */
     "IAM Solutions GmbH & Co. KG", /* 34108 */
     "G&G Fitness Equipment Inc.", /* 34109 */
     "Code Blue Corporation", /* 34110 */
@@ -34174,7 +34174,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "MAISONNEUVE Informatique", /* 34140 */
     "EXPRESS", /* 34141 */
     "Bank of Thailand", /* 34142 */
-    "Netrounds Solutions AB (previous was 'Absilion AB')", /* 34143 */
+    "Netrounds Solutions AB (formerly 'Absilion AB')", /* 34143 */
     "Böhler Edelstahl GmbH & CoKG", /* 34144 */
     "Károly Róbert College, Gyöngyös, Hungary", /* 34145 */
     "Telogic Ltd.", /* 34146 */
@@ -34330,14 +34330,14 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Dalian Maritime University", /* 34296 */
     "Mobistar sa/nv", /* 34297 */
     "ConteXtream", /* 34298 */
-    "Travelnet Technologies Inc.", /* 34299 */
+    "Datavalet Technologies Inc.", /* 34299 */
     "Croix Rouge Francaise", /* 34300 */
     "NEON, Inc.", /* 34301 */
     "NetIntegrate Solutions Inc", /* 34302 */
     "Skyline Network Engineering", /* 34303 */
     "Feynman Group, Inc.", /* 34304 */
     "Developing Solutions, Inc.", /* 34305 */
-    "Canodus (previous was 'Decre')", /* 34306 */
+    "Canodus (formerly 'Decre')", /* 34306 */
     "Deckland", /* 34307 */
     "Ford & Mason Ltd", /* 34308 */
     "Archimedes Solutions GmbH", /* 34309 */
@@ -34357,7 +34357,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Zolfo Cooper", /* 34323 */
     "Ministry for Information Society of Montenegro", /* 34324 */
     "Investec", /* 34325 */
-    "Nokia Services", /* 34326 */
+    "Nokia Technologies", /* 34326 */
     "Farmacia Valentini", /* 34327 */
     "Tmcpcorp", /* 34328 */
     "DOCOMO interTouch", /* 34329 */
@@ -34411,7 +34411,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Locaweb Ltda", /* 34377 */
     "q1cc.net", /* 34378 */
     "Cheers Co.,Ltd", /* 34379 */
-    "Puppet Labs, Inc. (previous was 'Reductive Labs, Inc.')", /* 34380 */
+    "Puppet Labs, Inc. (formerly 'Reductive Labs, Inc.')", /* 34380 */
     "Inixa - Security & Communication", /* 34381 */
     "Bigdogs Bros & Co.", /* 34382 */
     "INEX/ZAMIR", /* 34383 */
@@ -34635,7 +34635,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "MongoDB", /* 34601 */
     "Bomgar Corporation", /* 34602 */
     "Seria AS", /* 34603 */
-    "3757277 Canada Inc. (o/a 295.ca)", /* 34604 */
+    "Fibernetics Corp", /* 34604 */
     "SL Corporation", /* 34605 */
     "Wayne RESA", /* 34606 */
     "Newdaysoft Co., Ltd", /* 34607 */
@@ -34886,7 +34886,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Roeften", /* 34852 */
     "RainStor", /* 34853 */
     "indeni", /* 34854 */
-    "Votiro Ltd. (previous was 'MobileTick Ltd')", /* 34855 */
+    "Votiro Ltd. (formerly 'MobileTick Ltd')", /* 34855 */
     "ALTAVIA SA", /* 34856 */
     "BaiY Studio", /* 34857 */
     "Wireless Networks Association (WNA.gr)", /* 34858 */
@@ -34897,7 +34897,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Leopold Kostal GmbH & Co. KG", /* 34863 */
     "Mito Europe Ltd", /* 34864 */
     "World Evolved Services, LLC", /* 34865 */
-    "Customer Service Direct", /* 34866 */
+    "Suffolk County Council (formerly 'Customer Service Direct')", /* 34866 */
     "Universitaet Greifswald", /* 34867 */
     "Winnerstek Inc.", /* 34868 */
     "Ian Hine Consulting", /* 34869 */
@@ -35119,7 +35119,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "EURO-INFORMATION", /* 35085 */
     "ReliabilityFirst Corporation", /* 35086 */
     "BD Consult A/S", /* 35087 */
-    "Platinum Solutions, Inc.", /* 35088 */
+    "SRA International, Inc", /* 35088 */
     "Bluebird Electronics Ltd", /* 35089 */
     "CTI", /* 35090 */
     "Mitec Telecom Inc", /* 35091 */
@@ -35172,7 +35172,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "PK Verkkotaito Oy", /* 35138 */
     "AZWUL", /* 35139 */
     "CableHD Radio Network", /* 35140 */
-    "Glenmere Industries", /* 35141 */
+    "PSIGlenmere", /* 35141 */
     "VX4.NET", /* 35142 */
     "Helpo Systems", /* 35143 */
     "Power Quadrant", /* 35144 */
@@ -35220,8 +35220,8 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Hiromasa Nara", /* 35186 */
     "kunming ucrown network system (china) ltd. co", /* 35187 */
     "Eventide", /* 35188 */
-    "Thermo Fisher Scientific Inc (previous was 'Thermo Electron LED GmbH')", /* 35189 */
-    "Great Connection", /* 35190 */
+    "Thermo Fisher Scientific Inc (formerly 'Thermo Electron LED GmbH')", /* 35189 */
+    "Trice Imaging, Inc. (formerly 'Great Connection')", /* 35190 */
     "Applied Software Control Ltd.", /* 35191 */
     "Miracle Tan", /* 35192 */
     "MicroNet Video Technology Ltd.,", /* 35193 */
@@ -35300,7 +35300,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "EJJE, Lda", /* 35266 */
     "Eten Technologies Inc.", /* 35267 */
     "ORESCO", /* 35268 */
-    "Siemens AG Österreich, CMT (previous was 'Siemens AG Österreich, SIS SDE SVI OSS SAC')", /* 35269 */
+    "Siemens AG Österreich, CMT (formerly 'Siemens AG Österreich, SIS SDE SVI OSS SAC')", /* 35269 */
     "Samji Eletronics Co., Ltd.", /* 35270 */
     "micallef.fr", /* 35271 */
     "DEBID", /* 35272 */
@@ -35557,7 +35557,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Phillips and Jordan, Inc.", /* 35523 */
     "phgamers", /* 35524 */
     "DirectStreams", /* 35525 */
-    "ikt.werk GbR", /* 35526 */
+    "Foundata GmbH (formerly 'ikt.werk GbR')", /* 35526 */
     "FlexRadio Systems", /* 35527 */
     "ADLANTIA", /* 35528 */
     "Evony LLC", /* 35529 */
@@ -35620,7 +35620,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Competentum", /* 35586 */
     "White Birch Paper division Papier Masson", /* 35587 */
     "ndl.kiev.ua", /* 35588 */
-    "Confederación Pirata (previous was 'Partido PIRATA')", /* 35589 */
+    "Confederación Pirata (formerly 'Partido PIRATA')", /* 35589 */
     "Convergent Communications, Inc", /* 35590 */
     "Limited Liability Company \"Mejregiongaz \"", /* 35591 */
     "FiberSensing S.A.", /* 35592 */
@@ -35654,7 +35654,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "William Beaumont Hospitals", /* 35620 */
     "Patrick Kobly", /* 35621 */
     "Akaflieg Stuttgart", /* 35622 */
-    "Albino Slug Studios", /* 35623 */
+    "stwalkerster.co.uk (formerly 'Albino Slug Studios')", /* 35623 */
     "tuxad.com", /* 35624 */
     "Vembu Technologies Private Limited", /* 35625 */
     "CHONGQING JINGHONG HI-TECH CO.,LTD", /* 35626 */
@@ -35711,7 +35711,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Envisionier Medical Technologies, Inc.", /* 35677 */
     "Clayster AB", /* 35678 */
     "GRITA", /* 35679 */
-    "AdGear Technologies Inc. (previous was 'Bloom Digital Platforms')", /* 35680 */
+    "AdGear Technologies Inc. (formerly 'Bloom Digital Platforms')", /* 35680 */
     "Zenith System Solutions", /* 35681 */
     "Technical University of Liberec", /* 35682 */
     "Hofmann-IT-Systeme Ingenieurbuero", /* 35683 */
@@ -35733,7 +35733,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Cummins Power Generation", /* 35699 */
     "Tyrian Technical Consulting", /* 35700 */
     "phpcoms", /* 35701 */
-    "NTO IRE-Polus, Ltd. (previous was 'Optical Components & Systems')", /* 35702 */
+    "NTO IRE-Polus, Ltd. (formerly 'Optical Components & Systems')", /* 35702 */
     "JSC DevLab", /* 35703 */
     "SALUC", /* 35704 */
     "HWS Informationssysteme GmbH", /* 35705 */
@@ -35908,7 +35908,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Action Packed Networks", /* 35874 */
     "JX2 Technology Pty Ltd", /* 35875 */
     "WHITECODE,.LTD", /* 35876 */
-    "LEITNER AG - S.p.A", /* 35877 */
+    "High Technology Industries B.V. (formerly 'LEITNER AG - S.p.A')", /* 35877 */
     "Conseil général de l'Aube", /* 35878 */
     "WellDoc, Inc.", /* 35879 */
     "JSC \"Mediafon\"", /* 35880 */
@@ -35968,7 +35968,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "OOO CPCR-Express", /* 35934 */
     "RAU-Stromversorgungen GmbH", /* 35935 */
     "Iconmobile GmbH", /* 35936 */
-    "Víctor Román Archidona", /* 35937 */
+    "Unassigned", /* 35937 */
     "Omnibond Systems LLC.", /* 35938 */
     "Original1 GmbH", /* 35939 */
     "Neuhalfen", /* 35940 */
@@ -36034,7 +36034,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Host-Consultants", /* 36000 */
     "PJB Consulting", /* 36001 */
     "Taiji Computer Corporation Ltd.", /* 36002 */
-    "Techlan Reti s.r.l.", /* 36003 */
+    "Techlan s.r.l.", /* 36003 */
     "Vitracom AG", /* 36004 */
     "CSE s.c.a.r.l. Consorzio Servizi Bancari", /* 36005 */
     "VFT Telecom", /* 36006 */
@@ -36058,7 +36058,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "AltaSoft s.c.", /* 36024 */
     "Videopolis France", /* 36025 */
     "GoldZone Web", /* 36026 */
-    "Methode", /* 36027 */
+    "Methode Electronics", /* 36027 */
     "NoconaGeek", /* 36028 */
     "Medical Micrographics LLC", /* 36029 */
     "Happyserver Ltd", /* 36030 */
@@ -36075,7 +36075,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "KAMAZ Inc.", /* 36041 */
     "LIAB ApS", /* 36042 */
     "Athena Wireless Communications Inc.", /* 36043 */
-    "NSSR.neT", /* 36044 */
+    "UCC Pro GmbH (formerly 'NSSR.neT')", /* 36044 */
     "Uma Electrotechnical Services", /* 36045 */
     "tdvine Co., Ltd", /* 36046 */
     "Kadme AS", /* 36047 */
@@ -36132,7 +36132,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "GoodForBusiness", /* 36098 */
     "Hangmat", /* 36099 */
     "WWF-UK", /* 36100 */
-    "South Patron (previous was 'SMK Software')", /* 36101 */
+    "South Patron (formerly 'SMK Software')", /* 36101 */
     "Paramatrix Technologies Pvt. Ltd.", /* 36102 */
     "Lan ETS", /* 36103 */
     "TraceSpan Communications", /* 36104 */
@@ -36336,7 +36336,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "ARTiiS GROUP a.s.", /* 36302 */
     "AuthenTec Inc.", /* 36303 */
     "Kandcnet Inc.", /* 36304 */
-    "WoSign CA Limited (previous was 'WoSign eCommerce Services Ltd.')", /* 36305 */
+    "WoSign CA Limited (formerly 'WoSign eCommerce Services Ltd.')", /* 36305 */
     "University of Teesside", /* 36306 */
     "SONUMA", /* 36307 */
     "txtNation Ltd.", /* 36308 */
@@ -36497,7 +36497,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "DNW Technologies", /* 36463 */
     "henrich", /* 36464 */
     "Data Center Manageability Interface Forum", /* 36465 */
-    "Ballard Fuel Cell Systems (previous was 'IdaTech, LLC')", /* 36466 */
+    "Ballard Fuel Cell Systems (formerly 'IdaTech, LLC')", /* 36466 */
     "adesso AG", /* 36467 */
     "Cornastone Infrastructure Services (Pty) Ltd", /* 36468 */
     "Through IP Pty. Ltd.", /* 36469 */
@@ -36618,14 +36618,14 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "vmkid.com", /* 36584 */
     "Logan Technologies", /* 36585 */
     "NET IDEA d.o.o.", /* 36586 */
-    "NFB Consulting Pty Limited", /* 36587 */
+    "NFB Consulting", /* 36587 */
     "Satellink, Inc", /* 36588 */
     "Pier 1 Imports", /* 36589 */
     "Rb Datensysteme GmbH", /* 36590 */
     "Prefeitura Municipal de Fortaleza", /* 36591 */
     "The CBORD Group, Inc.", /* 36592 */
     "Paul De Audney", /* 36593 */
-    "Certi Networks Sdn Bhd (previous was 'Telistar Solutions Pte Ltd')", /* 36594 */
+    "Certi Networks Sdn Bhd (formerly 'Telistar Solutions Pte Ltd')", /* 36594 */
     "Ena Tecnologia, S.L.", /* 36595 */
     "Dachser GmbH & Co. KG", /* 36596 */
     "PRDS", /* 36597 */
@@ -36674,7 +36674,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Benjamin Tietz", /* 36640 */
     "Famos, LLC", /* 36641 */
     "FireID", /* 36642 */
-    "ANNAX passenger electronics AG", /* 36643 */
+    "ANNAX Schweiz AG (formerly 'ANNAX passenger electronics AG')", /* 36643 */
     "WiseMo A/S", /* 36644 */
     "cybertronixx consulting services GmbH", /* 36645 */
     "San Diego State University", /* 36646 */
@@ -36847,7 +36847,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "SafeTek USA, LLC", /* 36813 */
     "DEFFAYET", /* 36814 */
     "Savings Society Inc", /* 36815 */
-    "Beijing Abloomy Technologies Co., Ltd (previous was 'Beijing Yunshengfa Technologies Co., Ltd')", /* 36816 */
+    "Beijing Abloomy Technologies Co., Ltd (formerly 'Beijing Yunshengfa Technologies Co., Ltd')", /* 36816 */
     "Bohemia Interactive Simulations", /* 36817 */
     "Accelya France SAS", /* 36818 */
     "Yare Objects AB", /* 36819 */
@@ -36890,7 +36890,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "GEDIA Gebrüder Dingerkus GmbH", /* 36856 */
     "Holztechnikum Kuchl", /* 36857 */
     "THQ Inc.", /* 36858 */
-    "Ixia (previous was 'BreakingPoint Systems')", /* 36859 */
+    "Ixia (formerly 'BreakingPoint Systems')", /* 36859 */
     "True Value Company", /* 36860 */
     "Pacmed International Inc", /* 36861 */
     "Mitrol SRL", /* 36862 */
@@ -36923,7 +36923,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "China Bluedon information security technology co., ltd", /* 36889 */
     "future Training & Consulting GmbH", /* 36890 */
     "Nomadic Technologies Inc.", /* 36891 */
-    "Axel Springer AG", /* 36892 */
+    "Axel Springer SE", /* 36892 */
     "Takacom Corporation", /* 36893 */
     "Compagnie Européenne des Emballages Robert Schisler", /* 36894 */
     "Guangdong Newstart Technology Service Co.,Ltd", /* 36895 */
@@ -36950,7 +36950,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Gemeente Groningen", /* 36916 */
     "Tunz.com", /* 36917 */
     "Altran", /* 36918 */
-    "Mentana - Claimsoft AG", /* 36919 */
+    "Mentana - Claimsoft GmbH", /* 36919 */
     "Yearsun Industrial Co., Ltd.", /* 36920 */
     "LLC SIBUR", /* 36921 */
     "Eurohueco S.A.", /* 36922 */
@@ -37009,7 +37009,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "UrgentCare Works, LLC", /* 36975 */
     "Critter bvba", /* 36976 */
     "Eloqua Corporation", /* 36977 */
-    "Picodigital", /* 36978 */
+    "Pico Digital Inc", /* 36978 */
     "accumio GmbH", /* 36979 */
     "Steinle Solution-Factory GmbH", /* 36980 */
     "Kindersprachscreening", /* 36981 */
@@ -37088,7 +37088,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "AirP Systems LLC", /* 37054 */
     "JM Properties", /* 37055 */
     "ATM Japan, Ltd.", /* 37056 */
-    "Quickpay Ltd. (previous was 'MPS Quickpay')", /* 37057 */
+    "Quickpay Ltd. (formerly 'MPS Quickpay')", /* 37057 */
     "thockar IT consulting", /* 37058 */
     "Command and Control Systems", /* 37059 */
     "Silicon & Software Systems Ltd.", /* 37060 */
@@ -37304,7 +37304,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Farell Instruments SL", /* 37270 */
     "COESYS s.r.l.", /* 37271 */
     "Westvik", /* 37272 */
-    "Crocodile RCS Ltd", /* 37273 */
+    "Acision Ltd", /* 37273 */
     "Infratel, Inc.", /* 37274 */
     "Skyfire Labs, Inc.", /* 37275 */
     "System of Modular Technologies - ICC", /* 37276 */
@@ -37319,7 +37319,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "NationalField", /* 37285 */
     "Congressional Budget Office", /* 37286 */
     "christopher d del riesgo", /* 37287 */
-    "AXGATE CO., LTD (previous was 'AXAN Networks Co.,LTD.')", /* 37288 */
+    "AXGATE CO., LTD (formerly 'AXAN Networks Co.,LTD.')", /* 37288 */
     "Inco-Service Ltd.", /* 37289 */
     "Gridmerge Limited", /* 37290 */
     "BRITZE Elektronik und Geraetebau GmbH", /* 37291 */
@@ -37456,7 +37456,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Start Norge", /* 37422 */
     "DynaMITe Services", /* 37423 */
     "MDL29", /* 37424 */
-    "LG-Ericsson Co., Ltd.", /* 37425 */
+    "Ericsson-LG Enterprise Co., Ltd. (formerly 'LG-Ericsson Co., Ltd.')", /* 37425 */
     "Travelzen Group Ltd.", /* 37426 */
     "ENTE", /* 37427 */
     "Bürkert Werke GmbH", /* 37428 */
@@ -37591,7 +37591,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Pathology Associates Medical Laboratories, LLC", /* 37557 */
     "VM-DG Hemmert & Schuster GbR", /* 37558 */
     "Socialcast", /* 37559 */
-    "Netscout Systems, Inc. (previous was 'Simena, LLC')", /* 37560 */
+    "Netscout Systems, Inc. (formerly 'Simena, LLC')", /* 37560 */
     "Beijing KEMACOM technologies Co., Ltd.", /* 37561 */
     "Hangzhou Yuwan Technology Co., Ltd.", /* 37562 */
     "NNS - Nigl Network Solutions", /* 37563 */
@@ -38033,7 +38033,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "TransPacket AS", /* 37999 */
     "DELEC Audio- und Videotechnik GmbH", /* 38000 */
     "DIgitata LTD", /* 38001 */
-    "Innovise IES (previous was 'Innovise ESM Software Ltd.')", /* 38002 */
+    "Innovise IES (formerly 'Innovise ESM Software Ltd.')", /* 38002 */
     "StorMagic Ltd", /* 38003 */
     "Edenred SA", /* 38004 */
     "REFLEXE Technologies", /* 38005 */
@@ -38102,7 +38102,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Centrastate Medical Center, Inc.", /* 38068 */
     "Cetis, Inc.", /* 38069 */
     "Anode", /* 38070 */
-    "MaximaTelecom CJSC", /* 38071 */
+    "MaximaTelecom JSC", /* 38071 */
     "Linear Photonics, LLC", /* 38072 */
     "Defense Photonics Group", /* 38073 */
     "Statropy Software LLC", /* 38074 */
@@ -38175,7 +38175,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Emich KsE - Kundenspezifische Elektronik", /* 38141 */
     "BHE Bonn Hungary Electronics Ltd.", /* 38142 */
     "CloudBees, Inc.", /* 38143 */
-    "ZBD Displays Limited", /* 38144 */
+    "Displaydata Ltd (formerly 'ZBD Displays Limited')", /* 38144 */
     "ECG, Inc.", /* 38145 */
     "Access Now", /* 38146 */
     "Mind Matters LLC", /* 38147 */
@@ -38251,7 +38251,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "gigatec GmbH", /* 38217 */
     "Designer Systems Ltd", /* 38218 */
     "Therap Services, LLC", /* 38219 */
-    "Private Unitary Enterprise on Rendering Services \"Greenwall Systems\" (previous was 'IZAO Greenwall Systems')", /* 38220 */
+    "Private Unitary Enterprise on Rendering Services \"Greenwall Systems\" (formerly 'IZAO Greenwall Systems')", /* 38220 */
     "IP Gorshkov Yuri Valerevich", /* 38221 */
     "Philips Electronics North America Corporation", /* 38222 */
     "definition six, inc.", /* 38223 */
@@ -38389,7 +38389,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "TTTech Computertechnik AG", /* 38355 */
     "Mike Becker", /* 38356 */
     "ActualMed", /* 38357 */
-    "Peak Reliability (previous was 'Western Electricity Coordinating Council')", /* 38358 */
+    "Peak Reliability (formerly 'Western Electricity Coordinating Council')", /* 38358 */
     "Meissner", /* 38359 */
     "Delled Company Ltd", /* 38360 */
     "Exabre Ltd", /* 38361 */
@@ -38425,7 +38425,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "iroïd", /* 38391 */
     "University of Dayton", /* 38392 */
     "SJX Soft", /* 38393 */
-    "Teleyecla, S.L.", /* 38394 */
+    "Interfibra Telecomunicaciones, S.L. (formerly 'Teleyecla, S.L.')", /* 38394 */
     "Phillips Foods, Inc.", /* 38395 */
     "Flinders Christian Community College Inc", /* 38396 */
     "TSB - Tiefdruck Schwann-Bagel GmbH & Co.KG", /* 38397 */
@@ -38508,7 +38508,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Blackridge Technology", /* 38474 */
     "Global SATCOM Technology, Inc.", /* 38475 */
     "prosozial GmbH", /* 38476 */
-    "Antaira Technologies, LLC. (previous was 'Aaxeon Technologies, LLC.')", /* 38477 */
+    "Antaira Technologies, LLC. (formerly 'Aaxeon Technologies, LLC.')", /* 38477 */
     "VerticalCue Design LLC", /* 38478 */
     "Seluxit", /* 38479 */
     "ABPM", /* 38480 */
@@ -38572,7 +38572,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Sify Technologies Ltd", /* 38538 */
     "ANKABUT (UAE Advanced Network for Research and Education)", /* 38539 */
     "Phoebus Vision", /* 38540 */
-    "Concentric Cloud Solutions, LLC (previous was 'XO Interactive, LLC')", /* 38541 */
+    "Concentric Cloud Solutions, LLC (formerly 'XO Interactive, LLC')", /* 38541 */
     "OpenIP", /* 38542 */
     "Continental Lensa Ltd.", /* 38543 */
     "Asset Control International BV", /* 38544 */
@@ -38791,7 +38791,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Sigtec Pty Ltd", /* 38757 */
     "GrandCapital Ltd.", /* 38758 */
     "Katholieke Hogeschool Limburg", /* 38759 */
-    "Veselības ekonomikas centrs (previous was 'ABC Software, Ltd')", /* 38760 */
+    "Veselības ekonomikas centrs (formerly 'ABC Software, Ltd')", /* 38760 */
     "OSnode", /* 38761 */
     "Deutsche Rentenversicherung Bund", /* 38762 */
     "cenhare AG", /* 38763 */
@@ -38884,7 +38884,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Global MunnexTech SA de CV", /* 38850 */
     "Izmir Institute of High Technology", /* 38851 */
     "XCOM AG", /* 38852 */
-    "RIA Novosti (previous was 'Federal State Unitary Enterprise Russian Information Agency News')", /* 38853 */
+    "RIA Novosti (formerly 'Federal State Unitary Enterprise Russian Information Agency News')", /* 38853 */
     "Ncurity", /* 38854 */
     "Nagoya Institute of Technology", /* 38855 */
     "Login People", /* 38856 */
@@ -38897,7 +38897,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "SiChuan Andi industry co.LTD", /* 38863 */
     "Virgin Holidays Ltd", /* 38864 */
     "Squadra Technologies", /* 38865 */
-    "TRIMET ALUMINIUM AG", /* 38866 */
+    "TRIMET Aluminium SE (formerly 'TRIMET ALUMINIUM AG')", /* 38866 */
     "mecodia GmbH", /* 38867 */
     "Comision Nacional de Bancos y Seguros", /* 38868 */
     "Alexey S Khromov", /* 38869 */
@@ -38979,7 +38979,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "NASA Center for Climate Simulation (NCCS)", /* 38945 */
     "Raja Consulting Ltd", /* 38946 */
     "IREQ (Institut de recherche d'Hydro-Quebec)", /* 38947 */
-    "Eid Passport Inc.", /* 38948 */
+    "SureID, Inc. (formerly 'Eid Passport Inc.')", /* 38948 */
     "Ballard Technology, Inc.", /* 38949 */
     "Mars Space Flight Facility", /* 38950 */
     "Beijing Zigvine Tech. Co. Ltd.", /* 38951 */
@@ -39061,7 +39061,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "www.duowan.com", /* 39027 */
     "Enkata", /* 39028 */
     "Lukse", /* 39029 */
-    "wlan-partner.com AG", /* 39030 */
+    "CloudGuard Software AG (formerly 'wlan-partner.com AG')", /* 39030 */
     "Eastern Mennonite University", /* 39031 */
     "Caldwell Memorial Hospital, Inc.", /* 39032 */
     "Quinstar Technology, Inc.", /* 39033 */
@@ -39083,7 +39083,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Byte, SIA", /* 39049 */
     "Forschungsgemeinschaft elektronische Medien (FeM) e.V.", /* 39050 */
     "g360apps.com", /* 39051 */
-    "Sky Control sro", /* 39052 */
+    "Vutlan sro (formerly 'Sky Control sro')", /* 39052 */
     "Rail & Sea", /* 39053 */
     "NetUP Inc.", /* 39054 */
     "S2 Communications AB", /* 39055 */
@@ -39267,7 +39267,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Saint John's Health System", /* 39233 */
     "Mitroko Inc.", /* 39234 */
     "Exelis Inc.", /* 39235 */
-    "TriFractal Studios (previous was 'Sacred Point Studios')", /* 39236 */
+    "TriFractal Studios (formerly 'Sacred Point Studios')", /* 39236 */
     "FW-Systeme GmbH", /* 39237 */
     "VelociData, Inc", /* 39238 */
     "LittleJackal", /* 39239 */
@@ -39278,7 +39278,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "CHINA NATIONAL SOFTWARE & SERVICE CO., LTD.", /* 39244 */
     "Linkra Networks", /* 39245 */
     "MBDA Deutschland GmbH", /* 39246 */
-    "medInt Holdings LLC (previous was 'Imalogix')", /* 39247 */
+    "medInt Holdings LLC (formerly 'Imalogix')", /* 39247 */
     "STEC", /* 39248 */
     "Shango", /* 39249 */
     "Dalian Xinyu Technology, Ltd", /* 39250 */
@@ -39428,7 +39428,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Direccion General de Escuela Nacional Preparatoria", /* 39394 */
     "ELDIS Pardubice, s.r.o.", /* 39395 */
     "Zygma LLC", /* 39396 */
-    "ToolBox Solution GmbH", /* 39397 */
+    "amitego engineering GmbH (formerly 'ToolBox Solution GmbH')", /* 39397 */
     "HvS-Consulting AG", /* 39398 */
     "Gumilyov Eurasian National University", /* 39399 */
     "Institut für angewandte Funksystemtechnik GmbH", /* 39400 */
@@ -39463,7 +39463,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "G10 Transportes - LTDA", /* 39429 */
     "ownCloud Inc.", /* 39430 */
     "BLT Italia srl", /* 39431 */
-    "devcoach - Fisher + Willers GbR.", /* 39432 */
+    "devcoach GbR - Michael Willers & Partner", /* 39432 */
     "T8, LLC", /* 39433 */
     "Isthmus SARL", /* 39434 */
     "Sistemas Dypsa S.R.L", /* 39435 */
@@ -39530,7 +39530,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Arch Systems, Inc.", /* 39496 */
     "EMSYS Design Inc", /* 39497 */
     "Peerpath", /* 39498 */
-    "INVEA-TECH a.s.", /* 39499 */
+    "Flowmon Networks a.s. (formerly 'INVEA-TECH a.s.')", /* 39499 */
     "Sumatronic AG", /* 39500 */
     "Bayerische Medien Technik (bmt) GmbH", /* 39501 */
     "Aaron Wolfe", /* 39502 */
@@ -39644,7 +39644,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "BITLANCER LLC", /* 39610 */
     "Video Design Software Inc.", /* 39611 */
     "Stantec Consulting", /* 39612 */
-    "Torres Networks", /* 39613 */
+    "Sawridge Systems India Pvt Ltd", /* 39613 */
     "Valid", /* 39614 */
     "2008mcitp.com", /* 39615 */
     "GlasgowNet", /* 39616 */
@@ -39687,7 +39687,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Imbio", /* 39653 */
     "TISSOT", /* 39654 */
     "Humbug Telecom Labs Limited", /* 39655 */
-    "ING Insurance /IM", /* 39656 */
+    "Nationale Nederlanden (formerly 'ING Insurance /IM')", /* 39656 */
     "Administration of the Vladimir Region", /* 39657 */
     "TollNet a.s.", /* 39658 */
     "NSD CO., LTD.", /* 39659 */
@@ -39904,7 +39904,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Telesis A.S.", /* 39870 */
     "Trans Industrias Electronicas", /* 39871 */
     "CIPFP Ausias March", /* 39872 */
-    "Silicon Labs (previous was 'Ember Corporation')", /* 39873 */
+    "Silicon Labs (formerly 'Ember Corporation')", /* 39873 */
     "Asmlab Limited", /* 39874 */
     "Beijing GuangXinYingKe Technology Co.,Ltd", /* 39875 */
     "7-Technologies A/S", /* 39876 */
@@ -40030,7 +40030,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "sys4 AG", /* 39996 */
     "Netsumo Ltd", /* 39997 */
     "Beijing Lanxum New Technology", /* 39998 */
-    "Hispania Eurovip SL", /* 39999 */
+    "Prodo Telecom (An OT Company)", /* 39999 */
     "Kapsi Internet-käyttäjät ry", /* 40000 */
     "WineSOFT", /* 40001 */
     "Open System Co., Ltd.", /* 40002 */
@@ -40057,8 +40057,8 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "LLC \" NPF DUKON\"", /* 40023 */
     "iNovo Broadband, Inc.", /* 40024 */
     "Tym3", /* 40025 */
-    "SIS-FRANCE", /* 40026 */
-    "Aki Network Technology", /* 40027 */
+    "Société d’Informatique et de Systèmes", /* 40026 */
+    "Aki Network", /* 40027 */
     "TAKOTA, LTD", /* 40028 */
     "leadtone", /* 40029 */
     "RADOM, s.r.o.", /* 40030 */
@@ -40101,9 +40101,9 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "LinTech JSC", /* 40067 */
     "The Venus Project", /* 40068 */
     "enprovia Software Engineering s. r. o.", /* 40069 */
-    "Nearbuy Systems", /* 40070 */
+    "RetailNext", /* 40070 */
     "P. St. Onge", /* 40071 */
-    "scminfo.net", /* 40072 */
+    "techlab.jp (formerly 'scminfo.net')", /* 40072 */
     "Lutron Electronics Company, Inc", /* 40073 */
     "Energy Solutions Ltd.", /* 40074 */
     "SPL-Xdemat", /* 40075 */
@@ -40113,7 +40113,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Electronic Systems Protection, Inc.", /* 40079 */
     "IIHE - Inter-university Institute for High Energies", /* 40080 */
     "Shanghai Myway Technology, Inc.", /* 40081 */
-    "NuGardt Software", /* 40082 */
+    "NuGardt Software UG (haftungsbeschränkt)", /* 40082 */
     "Accelerated Concepts, Inc.", /* 40083 */
     "Ingalls Memorial Hospital", /* 40084 */
     "Stage Tec GmbH", /* 40085 */
@@ -40257,7 +40257,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "molotov.ro", /* 40223 */
     "Willem4Ever BV", /* 40224 */
     "Image Data Systems", /* 40225 */
-    "xNet Solutions Inc. (previous was 'xNetBox Solutions')", /* 40226 */
+    "xNet Solutions Inc. (formerly 'xNetBox Solutions')", /* 40226 */
     "Digital One", /* 40227 */
     "Valley ComputerWorks, Inc. DBA Paragus Strategic I.T.", /* 40228 */
     "VizionR", /* 40229 */
@@ -40496,7 +40496,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "CIDEON", /* 40462 */
     "TROY Group, Inc.", /* 40463 */
     "a4ESSOR SAS", /* 40464 */
-    "NEiSEO Bilisim Teknolojileri San. ve Tic. Ltd. Sti.", /* 40465 */
+    "ZETA6 Computer Systems LLC", /* 40465 */
     "West Monroe Partners, LLC", /* 40466 */
     "Netronome Systems, Inc.", /* 40467 */
     "LSE Leading Security Experts GmbH", /* 40468 */
@@ -40705,7 +40705,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Radinet Communications Inc.", /* 40671 */
     "Fiber SenSys, Inc.", /* 40672 */
     "Unigine Inc.", /* 40673 */
-    "SAIT (previous was SAIT Zenitel)", /* 40674 */
+    "SAIT (formerly 'SAIT Zenitel')", /* 40674 */
     "geiger BDT GmbH", /* 40675 */
     "Microsemi Corporation", /* 40676 */
     "RKF Engineering Solutions, LLC", /* 40677 */
@@ -40811,7 +40811,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Qin Technology SpA", /* 40777 */
     "Unassigned", /* 40778 */
     "2reallife", /* 40779 */
-    "5th Tier Limited", /* 40780 */
+    "Smartpipe Solutions", /* 40780 */
     "Cynaptica", /* 40781 */
     "Dyne System Co., Ltd", /* 40782 */
     "icoMetrix", /* 40783 */
@@ -41255,7 +41255,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "IMDIT GmbH", /* 41221 */
     "Jnsys", /* 41222 */
     "ASC-TEC AG", /* 41223 */
-    "MobileVaults, Inc. (previous was 'CloudVaults, LLC')", /* 41224 */
+    "MobileVaults, Inc. (formerly 'CloudVaults, LLC')", /* 41224 */
     "JSC Volga", /* 41225 */
     "Ennetix", /* 41226 */
     "Voice Conferencing Systems for Misson Control Centers (vocsmcc)", /* 41227 */
@@ -41352,7 +41352,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Adaptavist", /* 41318 */
     "Netbuilder S.r.l.", /* 41319 */
     "Diagnosoft", /* 41320 */
-    "Commsky Technologies Corporation", /* 41321 */
+    "Commsky Technologies(HangZhou)Co.,Ltd.", /* 41321 */
     "Time-O-Matic, Inc.", /* 41322 */
     "Reid Hospital & Health Care Services", /* 41323 */
     "Centre de services partagés du Québec", /* 41324 */
@@ -41486,7 +41486,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "LUISLAIN.COM", /* 41452 */
     "Decura IM LLP", /* 41453 */
     "Globig Consulting", /* 41454 */
-    "International Radio and Electronics Corporation (previous was 'Chrisso Technologies, LLC')", /* 41455 */
+    "International Radio and Electronics Corporation (formerly 'Chrisso Technologies, LLC')", /* 41455 */
     "Tintri Inc.", /* 41456 */
     "Bauman Moscow State Technical University (BMSTU)", /* 41457 */
     "Ensoft Ltd", /* 41458 */
@@ -41617,7 +41617,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "ZAO NHK", /* 41583 */
     "GCC Ltd.", /* 41584 */
     "EILEO", /* 41585 */
-    "E-FISH Sp. z o.o.", /* 41586 */
+    "ENSTEAM Sp. z o.o. (c/o E-FISH Sp. z o.o.)", /* 41586 */
     "HOLLY&Co.,Ltd.", /* 41587 */
     "Shumilov Nikita Sergeevich", /* 41588 */
     "Jolokia", /* 41589 */
@@ -41684,7 +41684,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Engisoft", /* 41650 */
     "Dapesco S.A.", /* 41651 */
     "IdentSign", /* 41652 */
-    "GETCO Europe Ltd", /* 41653 */
+    "KCG Europe Ltd (formerly 'GETCO Europe Ltd')", /* 41653 */
     "EAL (Apeldoorn) BV", /* 41654 */
     "CardSmart Technologies", /* 41655 */
     "2024Sight INC.", /* 41656 */
@@ -41987,7 +41987,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "JSC \"ESC of EVRAAS\"", /* 41953 */
     "Polewall Norge AS", /* 41954 */
     "Jansen AG", /* 41955 */
-    "Fellig", /* 41956 */
+    "Fellig e.V.", /* 41956 */
     "Olfeo", /* 41957 */
     "Prime Rate Ltd.", /* 41958 */
     "Earlham College", /* 41959 */
@@ -42053,7 +42053,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Fort-Telecom", /* 42019 */
     "Piter Gaz JSC.", /* 42020 */
     "VoiceCom SA", /* 42021 */
-    "ITUS JAPAN", /* 42022 */
+    "ITUS JAPAN Co.,Ltd.", /* 42022 */
     "Thetus Corporation", /* 42023 */
     "Cibertec Internacional", /* 42024 */
     "Koji Komatsuzaki", /* 42025 */
@@ -42407,7 +42407,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Kliniken des MTK GmbH", /* 42373 */
     "Inmar Enterprises", /* 42374 */
     "Unassigned", /* 42375 */
-    "Ocedo GmbH (previous was 'Xyne GmbH')", /* 42376 */
+    "Riverbed Technology Labs GmbH (formerly 'Ocedo GmbH')", /* 42376 */
     "MBD Consulting, LLC", /* 42377 */
     "FOSS-Group GmbH", /* 42378 */
     "Danske Fragtmænd A/S", /* 42379 */
@@ -42701,7 +42701,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Northwest Multiple Listing Service", /* 42667 */
     "ZIMT University of Siegen", /* 42668 */
     "HangZhou Chenxiao Technologies Co.,ltd", /* 42669 */
-    "Sociedad Ibérica de Construcciones Eléctricas, S.A.", /* 42670 */
+    "SICE Tecnología y Sistemas, S.A. (formerly 'Sociedad Ibérica de Construcciones Eléctricas, S.A.')", /* 42670 */
     "Pinetron Co.,Ltd", /* 42671 */
     "G. X. Clarke & Co.", /* 42672 */
     "SAIC, Inc.", /* 42673 */
@@ -42862,7 +42862,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "US Army Electronic Provings Ground (USAEPG) Instrumentation Management System (IMS)", /* 42828 */
     "QuartzDesk.com", /* 42829 */
     "PowerSense", /* 42830 */
-    "syssrv.net", /* 42831 */
+    "Kickass Systems", /* 42831 */
     "Tata Institute Fundamental Research", /* 42832 */
     "Nimbus Technologieberatung GmbH", /* 42833 */
     "TechniData IT-Service GmbH", /* 42834 */
@@ -43081,7 +43081,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "H&W Computer Systems", /* 43047 */
     "CB7 Systems LLC", /* 43048 */
     "Stewart Bryant", /* 43049 */
-    "Vobileinc", /* 43050 */
+    "Vobile Co., Ltd.", /* 43050 */
     "SHENZHEN SENSEGRID CO.,LTD.", /* 43051 */
     "Shenzhen Tendzone Intelligent Technology Co; Ltd", /* 43052 */
     "I.T. SYNERGY LIMITED", /* 43053 */
@@ -43230,10 +43230,10 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Evintia SL", /* 43196 */
     "BCS Technologies", /* 43197 */
     "stepins.com", /* 43198 */
-    "Aitch-Pea Limited", /* 43199 */
+    "Rubisco Ltd (formerly 'Aitch-Pea Limited')", /* 43199 */
     "CLAAS KGaA mbH", /* 43200 */
     "bytemine GmbH", /* 43201 */
-    "Digital Networks UK Ltd", /* 43202 */
+    "Zeta Storage Systems Ltd (formerly 'Digital Networks UK Ltd')", /* 43202 */
     "TSS COMPANY", /* 43203 */
     "Hard 'n Software Consulting GmbH", /* 43204 */
     "Aloxa.eu", /* 43205 */
@@ -43529,7 +43529,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Taide Enterprise Co.,Ltd.", /* 43495 */
     "QSC AG", /* 43496 */
     "Weavesys UK", /* 43497 */
-    "SENSORBOX DO BRASIL LTDA", /* 43498 */
+    "SENSORBOX LTDA (formerly 'SENSORBOX DO BRASIL LTDA')", /* 43498 */
     "Youncta", /* 43499 */
     "4D Security Solutions", /* 43500 */
     "Boston Financial Data Services Inc", /* 43501 */
@@ -43671,7 +43671,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Zymer Inc.", /* 43637 */
     "ITS Korea", /* 43638 */
     "Evoluta Interactive", /* 43639 */
-    "through.other.eyes (Jonathan Platzer)", /* 43640 */
+    "THROUGHOTHEREYES (Jonathan Platzer)", /* 43640 */
     "netplus.ch SA", /* 43641 */
     "Linde Engineering", /* 43642 */
     "TEQ SA", /* 43643 */
@@ -43728,7 +43728,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Omega Intelligence Systems Ltd", /* 43694 */
     "5nine Software", /* 43695 */
     "LLC Info-Kontent", /* 43696 */
-    "JSC Bryansk Supply Company", /* 43697 */
+    "JSC Tyumen Electricity sale company", /* 43697 */
     "Joint Electronic Teller Services Ltd.", /* 43698 */
     "EasyData, LLC", /* 43699 */
     "PathCore", /* 43700 */
@@ -44350,7 +44350,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Softneta UAB", /* 44316 */
     "Kanton Zug (www.zg.ch)", /* 44317 */
     "PT. Telekomunikasi Indonesia", /* 44318 */
-    "Tulsa Cancer Institute PLLC", /* 44319 */
+    "Oklahoma Cancer Specialists and Research Institute", /* 44319 */
     "Lake Norman Hematology Oncology", /* 44320 */
     "TrilioData, Inc", /* 44321 */
     "Shenzhen Mailian Electronics Co.,Ltd", /* 44322 */
@@ -44476,7 +44476,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "iSysBus", /* 44442 */
     "Stelo - Companhia Brasileira de Pag Eletr", /* 44443 */
     "iWelcome B.V.", /* 44444 */
-    "Corrado Mulas Enterprise CA", /* 44445 */
+    "Corrado Mulas Enterprise Root CA", /* 44445 */
     "GovComm, Inc.", /* 44446 */
     "Fairchild Medical Center", /* 44447 */
     "Apica", /* 44448 */
@@ -44599,7 +44599,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "LECKERBEEF.de", /* 44565 */
     "OOO Komandor-holding", /* 44566 */
     "Agencja Rozwoju Przemyslu S.A.", /* 44567 */
-    "Topik Business Services GmbH", /* 44568 */
+    "newnet Marketing (formerly 'Topik Business Services GmbH')", /* 44568 */
     "Regional Networks, Ltd.", /* 44569 */
     "Lancaster Cancer Center", /* 44570 */
     "Solinea, Inc", /* 44571 */
@@ -44635,4 +44635,3262 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Sunware s.r.o.", /* 44601 */
     "Systems Mechanics Ltd.", /* 44602 */
     "u-form Testsysteme GmbH & Co KG", /* 44603 */
+    "Beijing Jinhong Xi-Dian Information Technology Corp.", /* 44604 */
+    "Lighthouse IVM GmbH", /* 44605 */
+    "Siraya Networks Co., Ltd.", /* 44606 */
+    "GreenField Software Private Limited", /* 44607 */
+    "Net at Work Netzwerksysteme GmbH", /* 44608 */
+    "PRONIX s.r.o.", /* 44609 */
+    "Elvis-Telecom JSC", /* 44610 */
+    "Dumee.fr", /* 44611 */
+    "Beijing Tonlier Energy Technology Co., Ltd.", /* 44612 */
+    "Sunkaisens(Beijing) Technology Co.,Ltd.", /* 44613 */
+    "Lingualeo LLC.", /* 44614 */
+    "Bluehouse Technology Ltd", /* 44615 */
+    "University Transilvania of Brasov", /* 44616 */
+    "GLOBTECH spol. s r.o.", /* 44617 */
+    "Philter, LLC", /* 44618 */
+    "Ziften Technologies", /* 44619 */
+    "Integrated Service Company LLC", /* 44620 */
+    "OLeary Computers Inc", /* 44621 */
+    "Instituto Colegio de Todos los Santos", /* 44622 */
+    "Iomnis Surveillance Solutions", /* 44623 */
+    "Blood & Cancer Center (Ohio)", /* 44624 */
+    "Electre", /* 44625 */
+    "Captive.net", /* 44626 */
+    "National Instruments Corporation", /* 44627 */
+    "Canva, Inc.", /* 44628 */
+    "Australian Department of Infrastructure and Regional Development", /* 44629 */
+    "JSC Platron", /* 44630 */
+    "TechFu (Pty) Ltd.", /* 44631 */
+    "EBlink SA", /* 44632 */
+    "Squire Technologies", /* 44633 */
+    "markentier (Christoph Grabo)", /* 44634 */
+    "Degeetia OÜ", /* 44635 */
+    "NewCashel Inc.", /* 44636 */
+    "CB&I Federal Services", /* 44637 */
+    "ONEDC", /* 44638 */
+    "Hermes Europe GmbH", /* 44639 */
+    "UpdateLogic, Inc.", /* 44640 */
+    "VyOS", /* 44641 */
+    "National Knowledge Network", /* 44642 */
+    "Fujikura Automotive Europe S.A.", /* 44643 */
+    "Vopium A/S", /* 44644 */
+    "Infrabel NV", /* 44645 */
+    "Emko Elektronik Sanayi ve Ticaret A.Ş.", /* 44646 */
+    "Argus der Presse AG", /* 44647 */
+    "Manet Ltd", /* 44648 */
+    "Alma Technologies", /* 44649 */
+    "Hemotology Oncology Care of Northern VA", /* 44650 */
+    "University of Detroit Jesuit High School and Academy", /* 44651 */
+    "LaMarche Mfg. Company", /* 44652 */
+    "Unassigned", /* 44653 */
+    "Hochschule für Musik Freiburg", /* 44654 */
+    "Heartland Hematology & Oncology", /* 44655 */
+    "Sound Choice Communications LLC", /* 44656 */
+    "Bow Valley College", /* 44657 */
+    "Northwest Medical Specialties PLLC", /* 44658 */
+    "Burlington County Hematology-Oncology Associates, P.A.", /* 44659 */
+    "Landspitali", /* 44660 */
+    "Boyce Technologies, Inc.", /* 44661 */
+    "CodeChase", /* 44662 */
+    "Wuhan GreeNet Information Service Co., Ltd.", /* 44663 */
+    "IRCOS JSC", /* 44664 */
+    "1&1 Internet AG", /* 44665 */
+    "Ville de Saint André", /* 44666 */
+    "Pardic Systems , Ltd.", /* 44667 */
+    "Securosys SA", /* 44668 */
+    "First Capital Payments", /* 44669 */
+    "Prism Software Corporation", /* 44670 */
+    "Sysctl AB", /* 44671 */
+    "Naucra Co., Ltd", /* 44672 */
+    "SitePen, Inc.", /* 44673 */
+    "FUSED NETWORK CORP", /* 44674 */
+    "Spillman Technologies Inc.", /* 44675 */
+    "Glenn McGurrin", /* 44676 */
+    "Dreamhack Network", /* 44677 */
+    "Loopia AB", /* 44678 */
+    "Plansee Group Service GmbH", /* 44679 */
+    "Iudex", /* 44680 */
+    "Ajuntament de Valencia", /* 44681 */
+    "CompliSpace Technology Pty Ltd", /* 44682 */
+    "Intern-net", /* 44683 */
+    "Corsa Technology Inc.", /* 44684 */
+    "NTENT", /* 44685 */
+    "ROI Development Corp., DBA Newmar", /* 44686 */
+    "Hebeo", /* 44687 */
+    "WorldWide Supply LLC (aka \"WWS\")", /* 44688 */
+    "Groupe Simplinet inc.", /* 44689 */
+    "Sonavox Canada Inc.", /* 44690 */
+    "GRUPO ONCOLOGICO COMUNITARIO DE SAN JUAN", /* 44691 */
+    "Sedus Stoll AG", /* 44692 */
+    "Microwave Photonic Systems, Inc.", /* 44693 */
+    "Adams County Cancer Center", /* 44694 */
+    "Wolfgang Erlenkoetter IT", /* 44695 */
+    "apl.io", /* 44696 */
+    "Charles University in Prague, Faculty of Mathematics and Physics", /* 44697 */
+    "Baxter Planning System", /* 44698 */
+    "BiLL GmbH", /* 44699 */
+    "Kuss IT-Solutions", /* 44700 */
+    "Hearsay Social", /* 44701 */
+    "Voiceworks B.V.", /* 44702 */
+    "Danville Hematology and Oncology", /* 44703 */
+    "BlackSip Development", /* 44704 */
+    "Hack12", /* 44705 */
+    "Hostopia.com Inc.", /* 44706 */
+    "SAI Technology Inc.", /* 44707 */
+    "Crews Banking corporation", /* 44708 */
+    "Xolphin B.V.", /* 44709 */
+    "Ensured B.V.", /* 44710 */
+    "T-Mobile Nederland BV", /* 44711 */
+    "AGAT-System", /* 44712 */
+    "COSMOS-SOFT.net", /* 44713 */
+    "Transdata", /* 44714 */
+    "Ezitherm", /* 44715 */
+    "University of the Sunshine Coast", /* 44716 */
+    "CO-Sol Inc.", /* 44717 */
+    "Loews Hotels Inc", /* 44718 */
+    "UniversalCard Sibiria LLC", /* 44719 */
+    "Shanghai BEIDIAN Industry Group", /* 44720 */
+    "Okaki Health Intelligence Inc", /* 44721 */
+    "WALLMEDIEN AG", /* 44722 */
+    "Unassigned", /* 44723 */
+    "LLC \"ITTech\"", /* 44724 */
+    "BADTRONIC sarl", /* 44725 */
+    "Radionika Sp. z o.o.", /* 44726 */
+    "Y2S Corporation", /* 44727 */
+    "I3 CZ s.r.o.", /* 44728 */
+    "Fixmon", /* 44729 */
+    "Elkomtech S.A.", /* 44730 */
+    "Palestine Monetary Authority", /* 44731 */
+    "OOO bella-Don", /* 44732 */
+    "Forbes Technosys Ltd", /* 44733 */
+    "Menlo Security", /* 44734 */
+    "Electronic Commerce Inc.", /* 44735 */
+    "JERRA Soft GmbH", /* 44736 */
+    "Raindrop Laboratories (Alan Batie)", /* 44737 */
+    "ASUSTOR Inc.", /* 44738 */
+    "Miele & Cie. KG", /* 44739 */
+    "Innovapuglia S.p.A.", /* 44740 */
+    "IAV GmbH", /* 44741 */
+    "Aunigma Network Security Corp.", /* 44742 */
+    "POMA", /* 44743 */
+    "Scanline VFX LA Inc.", /* 44744 */
+    "Tremor Video", /* 44745 */
+    "Sea Surveillance AS", /* 44746 */
+    "VoiceTrust", /* 44747 */
+    "Wild Kilt Pty Ltd", /* 44748 */
+    "Malwarebytes Corporation", /* 44749 */
+    "Edifecs Inc", /* 44750 */
+    "Tell International Inc.", /* 44751 */
+    "Quamatik doo", /* 44752 */
+    "UniQ-CA B.V.", /* 44753 */
+    "Patent Agency Tegas Llc", /* 44754 */
+    "Online Development Inc.", /* 44755 */
+    "AgNO3 GmbH & Co. KG", /* 44756 */
+    "ANIMO LIMITED.", /* 44757 */
+    "ACTRONICS K.K.", /* 44758 */
+    "Turbo Systems Co., Ltd.", /* 44759 */
+    "Vsoft Colombia Ltda.", /* 44760 */
+    "VoxIdea", /* 44761 */
+    "IBS PROJECT LLC", /* 44762 */
+    "Steven Sloane", /* 44763 */
+    "bacq.ru", /* 44764 */
+    "PTL Limited", /* 44765 */
+    "Katao Ops", /* 44766 */
+    "Tieto Sweden AB", /* 44767 */
+    "Grayson bvba", /* 44768 */
+    "Tsinghua University", /* 44769 */
+    "NYNEX satellite OHG", /* 44770 */
+    "Apsidis", /* 44771 */
+    "West Genesee Central School District", /* 44772 */
+    "Sistemas de Seguridade A1", /* 44773 */
+    "Alameda Health Services", /* 44774 */
+    "City Network Hosting AB", /* 44775 */
+    "Hedberg Produtions", /* 44776 */
+    "MEAZON SA", /* 44777 */
+    "thinkindifferent.net", /* 44778 */
+    "Unity Health Insurance", /* 44779 */
+    "BikePics", /* 44780 */
+    "Connetos Company", /* 44781 */
+    "Xiamen Kehua Hengsheng Co.,Ltd", /* 44782 */
+    "Push To Talk International Ltd", /* 44783 */
+    "Hitzigrath", /* 44784 */
+    "IS2 Intelligent Solution Services AG", /* 44785 */
+    "Stadtwerke Jena GmbH", /* 44786 */
+    "Corporate Business Systems LLP.", /* 44787 */
+    "Goethe-Institut e. V.", /* 44788 */
+    "Sarah Cannon Research Institute", /* 44789 */
+    "Ingenium Automation + Engineering Pte Ltd", /* 44790 */
+    "Chengdu Global Capsheaf Solution Technology Co., Ltd.", /* 44791 */
+    "AzuriteUK (Valerij Prusakov)", /* 44792 */
+    "GAMING1 SPRL", /* 44793 */
+    "Chickasaw Holding Company", /* 44794 */
+    "Tridigy, LLC", /* 44795 */
+    "SFO Technologies Pvt. Ltd.", /* 44796 */
+    "Stoat Works", /* 44797 */
+    "TechsMix Networks", /* 44798 */
+    "audioalgorithms", /* 44799 */
+    "it7 s.r.o.", /* 44800 */
+    "Sole proprietorship Ilya Gruzinov", /* 44801 */
+    "IT-Labor", /* 44802 */
+    "Whatson-Web", /* 44803 */
+    "FCM TECHNOLOGY S.r.l.", /* 44804 */
+    "Sea Island Cancer Center", /* 44805 */
+    "Universidade Federal da Integração Latino-Americana", /* 44806 */
+    "Infor*Med", /* 44807 */
+    "tsblog.org", /* 44808 */
+    "HealthStream, Inc.", /* 44809 */
+    "arales.org", /* 44810 */
+    "Funambolo Technologies Private Limited", /* 44811 */
+    "JSC \"Institute of Automation of Energy Systems\"", /* 44812 */
+    "Beijing Easynetworks Technology Co.,Ltd.", /* 44813 */
+    "Genexyx Srl", /* 44814 */
+    "Mauro Altamura", /* 44815 */
+    "South Carolina Oncology Associates", /* 44816 */
+    "Idaho Division of Veterans Services", /* 44817 */
+    "CADMO CONOCIMIENTO S.L.", /* 44818 */
+    "Store Electronic Systems S.A.", /* 44819 */
+    "Chlorine Hilarva", /* 44820 */
+    "Beijer Electronics AB", /* 44821 */
+    "DC Matrix Internet S/A", /* 44822 */
+    "Airborne Interactive", /* 44823 */
+    "Opravil", /* 44824 */
+    "Lautersoft", /* 44825 */
+    "Fire Protection Service Corporation", /* 44826 */
+    "epcan GmbH", /* 44827 */
+    "SilverNet Ltd.", /* 44828 */
+    "Ganymed Pharmaceuticals AG", /* 44829 */
+    "Trio Motion Technology Ltd", /* 44830 */
+    "Nuvotex Solutions GmbH & Co KG", /* 44831 */
+    "Product Ventures Ltd", /* 44832 */
+    "peteheilig.com", /* 44833 */
+    "SYSTEMS AND TECHNOLOGIES, ZAO", /* 44834 */
+    "Oncology & Hematology Consultants of Houston", /* 44835 */
+    "Breqwatr, Inc.", /* 44836 */
+    "Absec Malaysia Sdn Bhd", /* 44837 */
+    "chinasoft-tokyo corporation", /* 44838 */
+    "Mega Designs Pvt. Ltd.", /* 44839 */
+    "Intrasonics Ltd", /* 44840 */
+    "Lyngmo.Net", /* 44841 */
+    "Fairbanks North Star Borough School District", /* 44842 */
+    "Hasin Technology", /* 44843 */
+    "Nobel Biocare Services AG", /* 44844 */
+    "Dillert", /* 44845 */
+    "SuperNetwork s.r.o.", /* 44846 */
+    "Yuri Bugelli", /* 44847 */
+    "COSYLVAL", /* 44848 */
+    "Five Below, Inc.", /* 44849 */
+    "United States Antarctic Program", /* 44850 */
+    "WINK Streaming", /* 44851 */
+    "Energy Communications Management Exchange, sub-division of Future DOS Research & Development Inc.", /* 44852 */
+    "KVL COMP Kft.", /* 44853 */
+    "linmaonline.de", /* 44854 */
+    "h-dy's Home", /* 44855 */
+    "Art Developers Corporation", /* 44856 */
+    "Broadsound Corporation", /* 44857 */
+    "Elkjøp Nordic AS", /* 44858 */
+    "Mobik d.o.o.", /* 44859 */
+    "Emanomedia GmbH", /* 44860 */
+    "Catoctin Systems", /* 44861 */
+    "IT SYSTEMS srl", /* 44862 */
+    "Unitow Services (1978) Ltd.", /* 44863 */
+    "Bethel Blood and Cancer Center", /* 44864 */
+    "Bay Area Regional Medical Center", /* 44865 */
+    "Benedikt Frenzel Systems", /* 44866 */
+    "Etic Telecom", /* 44867 */
+    "Earthling Interactive", /* 44868 */
+    "Zen Solutions Limited", /* 44869 */
+    "JSC \"SKB Electronmash\"", /* 44870 */
+    "Universidad de Cuenca", /* 44871 */
+    "FiberLabs Inc.", /* 44872 */
+    "CJSC «INTERSET»", /* 44873 */
+    "Instytut Matematyczny Polskiej Akademii Nauk", /* 44874 */
+    "Reykjavikurborg", /* 44875 */
+    "Hrvatska poštanska banka, dioničko društvo", /* 44876 */
+    "IMMA Inc.", /* 44877 */
+    "Datcent Technology Co.,Ltd.", /* 44878 */
+    "Cunz RaD Ltd.", /* 44879 */
+    "Harte & Lyne Limited", /* 44880 */
+    "ikara", /* 44881 */
+    "Techno-com", /* 44882 */
+    "Iw1BI", /* 44883 */
+    "OneVision Software AG", /* 44884 */
+    "Baltech AG", /* 44885 */
+    "Gainspeed, Inc.", /* 44886 */
+    "The Kansas City Southern Railway Company", /* 44887 */
+    "klolik.org", /* 44888 */
+    "Denver Public Library", /* 44889 */
+    "BKtel Photonics SAS", /* 44890 */
+    "Xero", /* 44891 */
+    "Primum Health IT S.L.", /* 44892 */
+    "Software Diversions, Inc.", /* 44893 */
+    "Napatech", /* 44894 */
+    "Bitcraze AB", /* 44895 */
+    "Secureloin", /* 44896 */
+    "Vista Oncology", /* 44897 */
+    "Insignis", /* 44898 */
+    "Code L7", /* 44899 */
+    "ReminderMedia", /* 44900 */
+    "Xiamen Sunwe Technology CO.,Ltd", /* 44901 */
+    "ShareTech Information Co., LTD.", /* 44902 */
+    "Stratech Systems Limited", /* 44903 */
+    "Media Stream Co., LTD.", /* 44904 */
+    "NightTrade Group, Inc.", /* 44905 */
+    "TBDD, LTD", /* 44906 */
+    "nVisionIT Pty Ltd", /* 44907 */
+    "CARTIERE DEL GARDA", /* 44908 */
+    "sys-pro GmbH", /* 44909 */
+    "ST-Vitrinen Trautmann GmbH & Co. KG", /* 44910 */
+    "Alpha ENGINEERING Tunisia", /* 44911 */
+    "2Be-FFICIENT", /* 44912 */
+    "RedSocks B.V.", /* 44913 */
+    "Genting Casinos UK", /* 44914 */
+    "Silex Industrial Automation Ltd.", /* 44915 */
+    "MJog Limited", /* 44916 */
+    "LMpro GmbH", /* 44917 */
+    "Nethix S.r.l", /* 44918 */
+    "Avisi B.V", /* 44919 */
+    "Argyle Security Inc", /* 44920 */
+    "Exele", /* 44921 */
+    "Echo Technology Solutions", /* 44922 */
+    "Remco ICT", /* 44923 */
+    "AllSeen Alliance, Inc.", /* 44924 */
+    "East Kent Hospitals University Foundation Trust", /* 44925 */
+    "Amdocs Network Solutions", /* 44926 */
+    "SyS LLC.", /* 44927 */
+    "Caligare, s.r.o.", /* 44928 */
+    "NetKnights GmbH", /* 44929 */
+    "Fisher Investments", /* 44930 */
+    "SyncWise Systems & Technology", /* 44931 */
+    "Panasonic System Communications Company of North America", /* 44932 */
+    "In Ardua Petit", /* 44933 */
+    "G-RAY", /* 44934 */
+    "Digital Telecommunication Systems WA PTY LTD", /* 44935 */
+    "Stratech iVision Pte. Ltd", /* 44936 */
+    "Inoventica technologies", /* 44937 */
+    "Charité - Universitätsmedizin Berlin", /* 44938 */
+    "AVA-PETER Ltd.", /* 44939 */
+    "Nemiroff", /* 44940 */
+    "GCP German Cathodic Protection GmbH & Co. KG", /* 44941 */
+    "Stadt Duelmen", /* 44942 */
+    "Inlink OÜ", /* 44943 */
+    "Rock Flow Dynamics", /* 44944 */
+    "TEKTELIC Communications Inc.", /* 44945 */
+    "Danish Railway (DSB)", /* 44946 */
+    "Internet Security Research Group", /* 44947 */
+    "Pacific Institute for the Mathematical Sciences", /* 44948 */
+    "NJK Aviation AG", /* 44949 */
+    "automation-engineering", /* 44950 */
+    "SSR Engineering, Inc.", /* 44951 */
+    "AC/ BC Electrical Company", /* 44952 */
+    "Flat World Resource Technologies Limited.", /* 44953 */
+    "Keweon", /* 44954 */
+    "Connexo Tecnologia e Comunicação EIRELI", /* 44955 */
+    "Savvi Inc.", /* 44956 */
+    "Robotron Datenbank-Software GmbH", /* 44957 */
+    "mse GmbH", /* 44958 */
+    "Carl Berberich GmbH", /* 44959 */
+    "Craltech Electrónica, S.L.", /* 44960 */
+    "Valley Medical Center, PLLC", /* 44961 */
+    "Foreman Instrumentation And Controls", /* 44962 */
+    "gueux.org", /* 44963 */
+    "Vivid Orange Limited", /* 44964 */
+    "pascher.IT", /* 44965 */
+    "Jingtu Printing Systems Co., Ltd", /* 44966 */
+    "Beijing Heweinet Technology Co.,Ltd (北京和维网通科技有限公司)", /* 44967 */
+    "May China", /* 44968 */
+    "CLINICA DE CANCER Y ENFERMEDADES DE LA SANGRE, CSP", /* 44969 */
+    "Thread Group, Inc.", /* 44970 */
+    "Compen Embedded Software", /* 44971 */
+    "Alameda Hospital", /* 44972 */
+    "Kantar Media France SAS", /* 44973 */
+    "Sonos, Inc.", /* 44974 */
+    "FlexCoders Ltd", /* 44975 */
+    "Onegini B.V.", /* 44976 */
+    "Reduxio Systems", /* 44977 */
+    "Istria, soluciones de criptografía, S. A.", /* 44978 */
+    "Tsmart Inc.", /* 44979 */
+    "MEDiA LiNK Co.,Ltd.", /* 44980 */
+    "LLC \"PromIT\"", /* 44981 */
+    "INNEXIV, INC.", /* 44982 */
+    "ARTIS GmbH", /* 44983 */
+    "EPAM Systems", /* 44984 */
+    "Tecnologias Corporativas SC", /* 44985 */
+    "Taglio LLC", /* 44986 */
+    "Temple University", /* 44987 */
+    "Nxtera Ltd", /* 44988 */
+    "Multi Parts Supply USA, Inc.", /* 44989 */
+    "TONGFANG INDUSTRIAL CO.,LTD", /* 44990 */
+    "Ameriprise Financial", /* 44991 */
+    "Amscreen Group Limited", /* 44992 */
+    "BCP Co.", /* 44993 */
+    "Umbrellium Ltd.", /* 44994 */
+    "Regional Cancer Care Associates, Little Silver Division", /* 44995 */
+    "JMP Group Inc.", /* 44996 */
+    "Emery Telcom", /* 44997 */
+    "Sichuan Zero Gravity Technology CO.LTD", /* 44998 */
+    "Ltd GoldLans", /* 44999 */
+    "Symbicon Ltd", /* 45000 */
+    "Northern Virginia Hematology Oncology Associates", /* 45001 */
+    "CompuGroup Medical Polska sp. z o.o.", /* 45002 */
+    "Egag, LLC", /* 45003 */
+    "SMARTRAC N.V.", /* 45004 */
+    "Advanced Alloy Processing", /* 45005 */
+    "Wuestenrot poistovna, a.s.", /* 45006 */
+    "Trial Software Laboratories, Inc.", /* 45007 */
+    "Things.Expert LLC", /* 45008 */
+    "Thomas Hassall Anglican College", /* 45009 */
+    "Youhua", /* 45010 */
+    "Ming Dynasty AvantLexa Firm", /* 45011 */
+    "Miraeson", /* 45012 */
+    "Beijing Gehua CATV Network Co.,Ltd.", /* 45013 */
+    "Andra sp. z o. o.", /* 45014 */
+    "foo.sh", /* 45015 */
+    "Kouba & Partner", /* 45016 */
+    "I3 Comércio de Computadores Ltda Epp", /* 45017 */
+    "QualiStream", /* 45018 */
+    "Infinite AI, Inc.", /* 45019 */
+    "Bitnasium Co., Ltd.", /* 45020 */
+    "Health Plan Partners LLC", /* 45021 */
+    "digivod gmbh", /* 45022 */
+    "Chair Four Development Group LLC", /* 45023 */
+    "BTS Software Solutions, LLC", /* 45024 */
+    "Fujitsu Hokuriku Systems Limited", /* 45025 */
+    "Mynavi Corporation", /* 45026 */
+    "The Center For Mental Health", /* 45027 */
+    "Debugo", /* 45028 */
+    "Fengyz Technology CO.,Ltd.", /* 45029 */
+    "Lagopus switch project", /* 45030 */
+    "Engineering Centre Energoservice LLC", /* 45031 */
+    "JustNow", /* 45032 */
+    "synyx GmbH & Co. KG", /* 45033 */
+    "Millimetrica s.r.l.", /* 45034 */
+    "TelSIP Communication", /* 45035 */
+    "NIC Hosting", /* 45036 */
+    "Hauke Bartsch", /* 45037 */
+    "Enman", /* 45038 */
+    "Central Bank of the Republic of Azerbaijan", /* 45039 */
+    "BBH Media", /* 45040 */
+    "Vieira Filho Tecnologia Eletronica", /* 45041 */
+    "Officeworks Ltd", /* 45042 */
+    "Argus Hosting, LLC", /* 45043 */
+    "TangoRythm", /* 45044 */
+    "DELNET", /* 45045 */
+    "lpk", /* 45046 */
+    "Crypto Software Chryselius", /* 45047 */
+    "MARIA - DEBORA", /* 45048 */
+    "Gudok LLC", /* 45049 */
+    "Bjørn Ludvig Langaas Johansen", /* 45050 */
+    "Finalsite", /* 45051 */
+    "SequoiaDB Ltd.", /* 45052 */
+    "Information and Telecom Systems India Pvt. Ltd.", /* 45053 */
+    "Tony Ditchfield", /* 45054 */
+    "ISAE", /* 45055 */
+    "Kassenärztliche Vereinigung Schleswig-Holstein", /* 45056 */
+    "COPALP", /* 45057 */
+    "CCP Games", /* 45058 */
+    "Bauduin Raphaël", /* 45059 */
+    "Otis R Bowen Center for Human Services, Inc", /* 45060 */
+    "Gymnasium Geretsried", /* 45061 */
+    "Southern Cancer Center", /* 45062 */
+    "SEAtech Technology Inc", /* 45063 */
+    "China Mobile Hong Kong Company Limited", /* 45064 */
+    "Insyde", /* 45065 */
+    "SIP Cantabria S.L.", /* 45066 */
+    "Dude Solutions Inc.", /* 45067 */
+    "PROTECH SYSTEMS PRIVATE LIMITED", /* 45068 */
+    "TOMinf Tomasz Tomaszewski", /* 45069 */
+    "Reservoir Labs, Inc.", /* 45070 */
+    "tetraguard systems GmbH", /* 45071 */
+    "Catalyst Paper", /* 45072 */
+    "Pacific Seafood Group", /* 45073 */
+    "TTSSB corp", /* 45074 */
+    "Electron Jungle, LLC", /* 45075 */
+    "HamLogin.com", /* 45076 */
+    "Sestek Ses ve Iletisim Bilgisayar Teknolojileri San. ve Tic. A.S.", /* 45077 */
+    "QoS Solutions", /* 45078 */
+    "i2p informatikai kft.", /* 45079 */
+    "Kerio Technologies, Inc.", /* 45080 */
+    "Increase Qingdao Information Technology Co., Ltd.", /* 45081 */
+    "PT. Tekno Inovasi Asia", /* 45082 */
+    "Intility AS", /* 45083 */
+    "Arbeitsgemeinschaft Dresdner Studentennetz", /* 45084 */
+    "Bibliotheca Alexandrina", /* 45085 */
+    "Advanced Imaging Technologies (Pty) Ltd", /* 45086 */
+    "Institut Catala de Finances", /* 45087 */
+    "Volkswagen Møller Bilfinans AS", /* 45088 */
+    "ICANN", /* 45089 */
+    "Mushroom Networks, Inc.", /* 45090 */
+    "Cisco Sera", /* 45091 */
+    "Silectica", /* 45092 */
+    "SUMOMO Computer Association", /* 45093 */
+    "UAB \"VAATC\"", /* 45094 */
+    "INAF - Osservatorio Astrofisico di Arcetri", /* 45095 */
+    "INTERNATIONAL MEDICAL SOLUTIONS INC.", /* 45096 */
+    "Graphite Systems, Inc.", /* 45097 */
+    "Ex Cathedra Solutions Ltd.", /* 45098 */
+    "Pentaho Corporation", /* 45099 */
+    "Cloud Vision Networks Technology Co.,Ltd. (cvn)", /* 45100 */
+    "Yew Tree Services, Inc.", /* 45101 */
+    "Yawns.com Limited", /* 45102 */
+    "Satel Spain, S.L.", /* 45103 */
+    "infoworxx GmbH", /* 45104 */
+    "Samsung Poland R&D Center", /* 45105 */
+    "Subsentio", /* 45106 */
+    "IntegraOptics Inc", /* 45107 */
+    "Jetmobile", /* 45108 */
+    "Chaos Labs OOD", /* 45109 */
+    "IzumoBASE, Inc.", /* 45110 */
+    "Elbrus-RW", /* 45111 */
+    "Christian Wilhelmi", /* 45112 */
+    "OPTIMANS", /* 45113 */
+    "PALS Elektronik", /* 45114 */
+    "Ajenti Solutions", /* 45115 */
+    "LoJack Corp.", /* 45116 */
+    "University of North Carolina at Charlotte", /* 45117 */
+    "ehaaihee", /* 45118 */
+    "SBONGILE PROJECT", /* 45119 */
+    "iba AG", /* 45120 */
+    "Hangzhou Guangwei Technology Co., Ltd", /* 45121 */
+    "M & T Bank Corporation", /* 45122 */
+    "Suzhou Industrial Park Kejia Automation Co., Ltd", /* 45123 */
+    "De Haan", /* 45124 */
+    "Netcom Europa S.L.", /* 45125 */
+    "Sarada Gummadi MD PA", /* 45126 */
+    "ProfitBricks GmbH", /* 45127 */
+    "Infotrage Limited", /* 45128 */
+    "BID Initiative Tanzania - PATH", /* 45129 */
+    "r3k", /* 45130 */
+    "Onelogin, Inc.", /* 45131 */
+    "ADD-Engineering BV", /* 45132 */
+    "Kristian Söderholm", /* 45133 */
+    "XCore Company Limited", /* 45134 */
+    "AQUASOFT spol. s r.o.", /* 45135 */
+    "e-Cop Pte Ltd.", /* 45136 */
+    "Nanoha Project", /* 45137 */
+    "Huwomobility Inc.", /* 45138 */
+    "Maruganzer", /* 45139 */
+    "Green Vict Technology Co., Ltd", /* 45140 */
+    "Onomichi ikakikai Co., Ltd.", /* 45141 */
+    "Corporate West Computer Systems, Inc.", /* 45142 */
+    "Datawise Systems, Inc.", /* 45143 */
+    "American Airlines Federal Credit Union", /* 45144 */
+    "Hivemind Engineering", /* 45145 */
+    "Primestone Network", /* 45146 */
+    "Datu Health", /* 45147 */
+    "Universität Koblenz-Landau", /* 45148 */
+    "NoisyPeak", /* 45149 */
+    "WAGNER AG", /* 45150 */
+    "MEISLAB", /* 45151 */
+    "Parchment Inc.", /* 45152 */
+    "Drillinginfo", /* 45153 */
+    "ELES, d.o.o., sistemski operater prenosnega elektroenergetskega omrezja", /* 45154 */
+    "Democratic Alliance", /* 45155 */
+    "The IcedTea project (HeapStats)", /* 45156 */
+    "Medgate AG", /* 45157 */
+    "Infracom S.p.A.", /* 45158 */
+    "Heinz Nixdorf MuseumsForum GmbH", /* 45159 */
+    "Jabatan Ketua Menteri Melaka", /* 45160 */
+    "YouCo Srl", /* 45161 */
+    "GUANG DONG SMART ELECTRIC INFORMATION INDUSTRY CO.,LTD.", /* 45162 */
+    "Hafen-Entwicklungsgesellschaft Rostock mbH", /* 45163 */
+    "Brulli Energia", /* 45164 */
+    "IT Services, Loughborough University", /* 45165 */
+    "Itaipu Binacional", /* 45166 */
+    "Redgates.com", /* 45167 */
+    "krumedia GmbH", /* 45168 */
+    "Tahoe Forest Health System", /* 45169 */
+    "The Baupost Group, L.L.C.", /* 45170 */
+    "Gareth Morgan Investments", /* 45171 */
+    "Stronghold, Ltd.", /* 45172 */
+    "The Furukawa Battery Co.,Ltd", /* 45173 */
+    "Eyecom Telecommunication Equipments Ltd", /* 45174 */
+    "NGI SpA", /* 45175 */
+    "Mirantis Inc", /* 45176 */
+    "Sapientier Development", /* 45177 */
+    "Direktion der Justiz und des Innern des Kantons Zuerich", /* 45178 */
+    "Jablotron Alarms a.s.", /* 45179 */
+    "Rolls-Royce Marine", /* 45180 */
+    "AVSystem", /* 45181 */
+    "bkaiser GmbH", /* 45182 */
+    "Access Control Services Ltd", /* 45183 */
+    "Patrick Kalkman", /* 45184 */
+    "SCA Skog AB", /* 45185 */
+    "frazz.se", /* 45186 */
+    "Amber Technical Solutions Ltd", /* 45187 */
+    "Vzajemna, d.v.z.", /* 45188 */
+    "Genplus Pte Ltd", /* 45189 */
+    "Peaxy, Inc.", /* 45190 */
+    "Simple Finance Technology Corp", /* 45191 */
+    "Lonmin", /* 45192 */
+    "TeraStream", /* 45193 */
+    "Oryx Embedded", /* 45194 */
+    "Beijing 35one Technology Development Co., Ltd", /* 45195 */
+    "Of Modems and Men", /* 45196 */
+    "C.S.C.D.G.R", /* 45197 */
+    "Weichert Lead Network, Inc", /* 45198 */
+    "Lite-On Power System Solutions", /* 45199 */
+    "Reserve Bank Of Australia", /* 45200 */
+    "BBright", /* 45201 */
+    "Fachhochschule Potsdam", /* 45202 */
+    "Synergy Consulting Ltd.", /* 45203 */
+    "Four Horsemen", /* 45204 */
+    "Richard Frostell", /* 45205 */
+    "Quintron Systems, Inc", /* 45206 */
+    "healcerion", /* 45207 */
+    "GSS International Group", /* 45208 */
+    "Altostratus Oy", /* 45209 */
+    "DigiSeq Limited", /* 45210 */
+    "Data Control Ltd", /* 45211 */
+    "Vecture Inc.", /* 45212 */
+    "Municipal Parking Services, Inc.", /* 45213 */
+    "Community Campaign (Hart)", /* 45214 */
+    "Matchpoint Systems, Inc.", /* 45215 */
+    "Cyprus Telecommunications Authority (CYTA)", /* 45216 */
+    "Large Display Solutions International ltd.", /* 45217 */
+    "Mesosphere", /* 45218 */
+    "Telecomax", /* 45219 */
+    "eGO Travel & Leisure AG", /* 45220 */
+    "AMP", /* 45221 */
+    "XpoLog Ltd.", /* 45222 */
+    "FASII Information Technology", /* 45223 */
+    "Wireless Sensors LLC", /* 45224 */
+    "Guangzhou Netzone Inc.", /* 45225 */
+    "Allicient", /* 45226 */
+    "Okinawa Institute of Science and Technology Graduate University", /* 45227 */
+    "Lumagate AB", /* 45228 */
+    "nyantec UG (haftungsbeschränkt)", /* 45229 */
+    "RCD Radiokomunikace spol. s r. o.", /* 45230 */
+    "Liverock Technologies", /* 45231 */
+    "Hellenic Ministry of Foreign Affairs", /* 45232 */
+    "Guangzhou Tongrui Electronic Electronic Technology Co.,Ltd", /* 45233 */
+    "Pennsylvania State Education Association", /* 45234 */
+    "ConfirmSign S.L.", /* 45235 */
+    "Ferz corp.", /* 45236 */
+    "Context Relevant", /* 45237 */
+    "City of Oregon City", /* 45238 */
+    "RosReserv", /* 45239 */
+    "International Capital & Management Company", /* 45240 */
+    "fuzzcat.net", /* 45241 */
+    "INGEBI", /* 45242 */
+    "La Boulgour Compagnie", /* 45243 */
+    "IJM Systems", /* 45244 */
+    "SAS CALVI Célestin", /* 45245 */
+    "EcoCooling Ltd", /* 45246 */
+    "Triple Domain Vision Co., Ltd.", /* 45247 */
+    "NetOcean", /* 45248 */
+    "Banco Macro S.A.", /* 45249 */
+    "Habr LLC", /* 45250 */
+    "axelIT Üzletfejlesztési Kft.", /* 45251 */
+    "mDAKS GmbH", /* 45252 */
+    "RMB Capital Management, LLC", /* 45253 */
+    "Shouei Denshi Kenkyuusho Co.,Ltd.", /* 45254 */
+    "Dallas Delta Corp", /* 45255 */
+    "Foreks Bilgi Iletisim Hiz. A.S.", /* 45256 */
+    "InterConnectData", /* 45257 */
+    "Lazaros Economou", /* 45258 */
+    "Billo Systems Ltd. Co.", /* 45259 */
+    "FYLDE MICRO LTD", /* 45260 */
+    "inAere Holdings", /* 45261 */
+    "Raven", /* 45262 */
+    "VTAS GmbH & Co. KG", /* 45263 */
+    "Schaeffler Technologies AG & Co. KG", /* 45264 */
+    "GMAURER", /* 45265 */
+    "bootix Technology GmbH", /* 45266 */
+    "ISSENDIS", /* 45267 */
+    "RusHydro", /* 45268 */
+    "Rivasense Technologies Ltd", /* 45269 */
+    "Electronic Certification Services SL", /* 45270 */
+    "Beco", /* 45271 */
+    "Szallas.hu Ltd.", /* 45272 */
+    "independIT Integrative Technologies GmbH", /* 45273 */
+    "EyaSys", /* 45274 */
+    "Energy Essentials Group B.V.", /* 45275 */
+    "iTEAM (Instituto de Telecomunicaciones y Aplicaciones Multimedia, Grupo COMM)", /* 45276 */
+    "Five Monkeys Code Factory", /* 45277 */
+    "OpenCloud SL", /* 45278 */
+    "Strategy Object", /* 45279 */
+    "Premise Health", /* 45280 */
+    "Generac Power Systems Inc.", /* 45281 */
+    "LinkUp Networks", /* 45282 */
+    "T-Systems International GmbH", /* 45283 */
+    "ax86.net", /* 45284 */
+    "Salience Systems Pty Ltd", /* 45285 */
+    "Morning Project Samurai", /* 45286 */
+    "GEOPRAEVENT AG", /* 45287 */
+    "Compania Logistica de Hidrocarburos CLH, S.A.", /* 45288 */
+    "unixadm.org", /* 45289 */
+    "Agentia pentru Agenda Digitala a Romaniei", /* 45290 */
+    "DOCTORS CENTER HEMATOLOGY & ONCOLOGY GROUP, PSC", /* 45291 */
+    "DOCTORS' CENTER HEMATOLOGY & ONCOLOGY GROUP BAYAMON, PSC", /* 45292 */
+    "Transport Network llc", /* 45293 */
+    "ANEAC Co., Ltd.", /* 45294 */
+    "BTT Bilgi Teknoloji Tasarim Ltd", /* 45295 */
+    "Mazars", /* 45296 */
+    "T-21 Technologies, LLC", /* 45297 */
+    "Alea s.r.l.", /* 45298 */
+    "AMRTEC TECNOLOGIA IMPORTAÇÂO E EXPORTAÇÂO LTDA", /* 45299 */
+    "WatchDox LTD", /* 45300 */
+    "Double B - Business, s.r.o.", /* 45301 */
+    "SOIN Soluciones Integrales S.A,", /* 45302 */
+    "Industrial Software Co", /* 45303 */
+    "ByteLogix", /* 45304 */
+    "Asyne inc.", /* 45305 */
+    "DE-CIX Management GmbH", /* 45306 */
+    "Tracsis plc", /* 45307 */
+    "Born Inventors BV", /* 45308 */
+    "Needham Public Schools", /* 45309 */
+    "Universidade Estadual de Santa Cruz", /* 45310 */
+    "GHT Co., Ltd", /* 45311 */
+    "Instituto para os Assuntos Cívicos e Municipais Macau", /* 45312 */
+    "iiPAY Ltd", /* 45313 */
+    "CCV Deutschland GmbH", /* 45314 */
+    "KRKA, tovarna zdravil, d. d., Novo mesto", /* 45315 */
+    "devlab", /* 45316 */
+    "SAU", /* 45317 */
+    "Rosa Khutor LLC", /* 45318 */
+    "NGENIX", /* 45319 */
+    "ActiStuff", /* 45320 */
+    "Triumph Bancorp, Inc.", /* 45321 */
+    "GigaEnergy Inc.", /* 45322 */
+    "BIORETICS SRL", /* 45323 */
+    "Business Solutions Adviser", /* 45324 */
+    "roo.ch", /* 45325 */
+    "Yves Durce ent.", /* 45326 */
+    "NATAJA Maciej Kozuch", /* 45327 */
+    "KOSHIN DENKI KOGYO CO., LTD.", /* 45328 */
+    "Kristin School", /* 45329 */
+    "Fineline Solutions Ltd.", /* 45330 */
+    "San Fernando Valley Community Mental Health Center, Inc.", /* 45331 */
+    "East Side Oncology Clinic PLLC", /* 45332 */
+    "NeatApps, Inc.", /* 45333 */
+    "Nextys", /* 45334 */
+    "Matthias Blümel IT-Dienstleistungen", /* 45335 */
+    "Microbase", /* 45336 */
+    "voria.net", /* 45337 */
+    "Tableau Software, Inc.", /* 45338 */
+    "JSC \"Housing Construction Savings Bank of Kazakhstan\"", /* 45339 */
+    "Half-Baked Software", /* 45340 */
+    "NEXT Srl", /* 45341 */
+    "IWD Ltd.", /* 45342 */
+    "Thum+Mahr GmbH", /* 45343 */
+    "ZhenJiang College", /* 45344 */
+    "Smithee, Spelvin, Agnew & Plinge, Inc.", /* 45345 */
+    "Velocloud Networks, Inc.", /* 45346 */
+    "The Centers for Families and Children", /* 45347 */
+    "Megvii Inc.", /* 45348 */
+    "VGNet Networking", /* 45349 */
+    "jorde.it", /* 45350 */
+    "XPSoft sas", /* 45351 */
+    "AMERGINT Technologies Inc.", /* 45352 */
+    "BRS Sistemas Eletrônicos", /* 45353 */
+    "E2G srl", /* 45354 */
+    "Staffordshire Police", /* 45355 */
+    "Liveblock Auctions International", /* 45356 */
+    "CUBENet GmbH", /* 45357 */
+    "Integral Business Solutions", /* 45358 */
+    "ARC Informatique", /* 45359 */
+    "Valley Christian School", /* 45360 */
+    "OC Software Engineering", /* 45361 */
+    "Coca-Cola Erfrischungsgetraenke AG", /* 45362 */
+    "Advanced Training LLC", /* 45363 */
+    "TRIADE InformationSystems GmbH", /* 45364 */
+    "Om Vindhyavasini College of IT & Management", /* 45365 */
+    "Cohere Technologies", /* 45366 */
+    "SilverTip Marine Inc.", /* 45367 */
+    "Amida Technology Solutions", /* 45368 */
+    "MVZ Labor Dr. Quade und Kollegen", /* 45369 */
+    "ID TECH", /* 45370 */
+    "AV", /* 45371 */
+    "Professional Software Design Pty Ltd", /* 45372 */
+    "Speech Technology Center Limited", /* 45373 */
+    "i-SOLUTIONS HEALTH GmbH", /* 45374 */
+    "Znuny GmbH", /* 45375 */
+    "PT. Mahardika Putra Mahkota", /* 45376 */
+    "Air Liquide IT", /* 45377 */
+    "Beijing Uxsino software CO.,Ltd", /* 45378 */
+    "iCRCo, Inc", /* 45379 */
+    "Happy Crow Enterprises, LLC", /* 45380 */
+    "iCode Global, LLC", /* 45381 */
+    "Huf Secure Mobile", /* 45382 */
+    "SHARP Corporation Communication Systems Division", /* 45383 */
+    "SERgroup Holding Europe GmbH", /* 45384 */
+    "4GTSS Corporation W.L.L.", /* 45385 */
+    "PeopleLogic Corporation", /* 45386 */
+    "NCC Group PLC.", /* 45387 */
+    "SSV Software Systems GmbH", /* 45388 */
+    "LV=", /* 45389 */
+    "Alef Mobitech Inc.", /* 45390 */
+    "PLC Group", /* 45391 */
+    "Quadro Group LLC", /* 45392 */
+    "OSM GmbH", /* 45393 */
+    "Mangstor Inc", /* 45394 */
+    "Secrétariat général de l'enseignement catholique", /* 45395 */
+    "Dejero Labs. Inc", /* 45396 */
+    "ASFINAG Maut Service GmbH", /* 45397 */
+    "Segmint, Inc.", /* 45398 */
+    "Omemee Engineering Group", /* 45399 */
+    "Candid Security Solutions LLC", /* 45400 */
+    "Unitron NV", /* 45401 */
+    "Arvet Bank Operations, INC.", /* 45402 */
+    "ExchangeCore LLC", /* 45403 */
+    "TightVideo Ltd.", /* 45404 */
+    "Lee County School System", /* 45405 */
+    "BetEasy Pty Ltd", /* 45406 */
+    "Northwest Kits", /* 45407 */
+    "Octavian Technology Ltd", /* 45408 */
+    "OneSoft Tecnologia S/A", /* 45409 */
+    "ISAMBERT", /* 45410 */
+    "Ultra Electronics - Varisys", /* 45411 */
+    "HGH SYSTEMES INFRAROUGES", /* 45412 */
+    "Global IQX", /* 45413 */
+    "SHUYSKIY ZAVOD AKVARIUS LLC", /* 45414 */
+    "Repheka Haiti, Inc.", /* 45415 */
+    "Chengdu Chengxun Network Technologies Co., Ltd.", /* 45416 */
+    "HCO Computer Products /dba ZGO Tech Hosting", /* 45417 */
+    "ABAST systems", /* 45418 */
+    "PhirePhly Design", /* 45419 */
+    "Strike XII Development", /* 45420 */
+    "Nico Boehr", /* 45421 */
+    "powerbrand marketing GmbH", /* 45422 */
+    "Match.com L.L.C.", /* 45423 */
+    "The Ghosh Center for Oncology & Hematology", /* 45424 */
+    "Kadlec Health System", /* 45425 */
+    "Soltec Technology Co., Ltd.", /* 45426 */
+    "Xiamen Winer Technology Co.,Ltd", /* 45427 */
+    "UrtheCast", /* 45428 */
+    "Instituto Federal Catarinense Campus Sombrio", /* 45429 */
+    "Atlas Copco Rock Drills AB (Business Area MR)", /* 45430 */
+    "Nanjing Lopu Co., Ltd.", /* 45431 */
+    "Cirrato Technologies AB", /* 45432 */
+    "Finivation Software", /* 45433 */
+    "Accel Frontline Ltd", /* 45434 */
+    "Cyprus University of Technology", /* 45435 */
+    "THALES Services Lab DT", /* 45436 */
+    "TEOCO Corporation", /* 45437 */
+    "AI2M srl", /* 45438 */
+    "Esterline Belgium bvba", /* 45439 */
+    "BISS d.o.o.", /* 45440 */
+    "Safe Internet, LLC", /* 45441 */
+    "Wrocław University of Technology", /* 45442 */
+    "Arca Sistemi Scarl", /* 45443 */
+    "ecg.local", /* 45444 */
+    "Kuantic SAS", /* 45445 */
+    "Ministerio Publico de la Acusación", /* 45446 */
+    "SOCIETE DU FIGARO", /* 45447 */
+    "UF Health Oncology - Baymeadows", /* 45448 */
+    "Blue Krait Consulting Inc.", /* 45449 */
+    "Parsec (Pty) Ltd", /* 45450 */
+    "reBTSOFT", /* 45451 */
+    "Instituto Medico Alexander Fleming", /* 45452 */
+    "Banff Cyber Technologies Pte Ltd", /* 45453 */
+    "Shanghai Digigrid Technology Co.,Ltd", /* 45454 */
+    "John Wason", /* 45455 */
+    "Galaxia Electronics Co., Ltd.", /* 45456 */
+    "Kanton Thurgau", /* 45457 */
+    "VKBit Betrieb GmbH", /* 45458 */
+    "Lonix Oy", /* 45459 */
+    "Comfact AB", /* 45460 */
+    "Pocos bv", /* 45461 */
+    "Delvag Luftfahrtversicherungs-AG", /* 45462 */
+    "Federal Public Service Justice, Belgium", /* 45463 */
+    "Verband Christlicher Pfadfinderinnen und Pfadfinder in Württemberg", /* 45464 */
+    "Clear2Pay NV/SA", /* 45465 */
+    "PIXEL Sp. z o.o.", /* 45466 */
+    "Vidat", /* 45467 */
+    "Avi Networks", /* 45468 */
+    "IQ Messenger", /* 45469 */
+    "Azienda Ospedaliero-Universitaria di Bologna", /* 45470 */
+    "Triangle Wholefoods Collective Ltd.", /* 45471 */
+    "Ebee Smart Technologies GmbH", /* 45472 */
+    "Excelfore Corporation", /* 45473 */
+    "HfMT Hamburg", /* 45474 */
+    "MEYTEC GmbH", /* 45475 */
+    "StreamVue Ltd", /* 45476 */
+    "ZOO Digital Group plc.", /* 45477 */
+    "DIVA IT SIA", /* 45478 */
+    "PXP Solutions Ltd", /* 45479 */
+    "Packetwerk GmbH", /* 45480 */
+    "Galore Networks Private Limited", /* 45481 */
+    "St Jude Medical", /* 45482 */
+    "FusionLayer, Inc.", /* 45483 */
+    "Siama Systems Inc.", /* 45484 */
+    "SCUBI", /* 45485 */
+    "ACSS Communications Pty Ltd", /* 45486 */
+    "Polydata Corporate", /* 45487 */
+    "KONAR", /* 45488 */
+    "groupe-alpha", /* 45489 */
+    "Nexperteam", /* 45490 */
+    "Gainde 2000", /* 45491 */
+    "Connexin Software, Inc.", /* 45492 */
+    "Media System Technologies Srl", /* 45493 */
+    "GISTEC", /* 45494 */
+    "Konneka Information Technologies (formerly 'Konneka Bilgi ve Iletisim Teknolojileri Imalat Tic. Ltd. Sti.')", /* 45495 */
+    "Groupe ESB", /* 45496 */
+    "Qucell", /* 45497 */
+    "Novella-R SIA", /* 45498 */
+    "Janos", /* 45499 */
+    "Virgin Technologies Inc", /* 45500 */
+    "Micro Instruments", /* 45501 */
+    "nterra integration GmbH", /* 45502 */
+    "42 Solutions B.V.", /* 45503 */
+    "Synaptive Medical Inc.", /* 45504 */
+    "Tox Foundation", /* 45505 */
+    "Mida Solutions s.r.l.", /* 45506 */
+    "iMapData.com", /* 45507 */
+    "Strich Labs", /* 45508 */
+    "YourMembership", /* 45509 */
+    "BBMRI-ERIC", /* 45510 */
+    "Cogent Technologies Limited", /* 45511 */
+    "Entergate AB", /* 45512 */
+    "Hekatron Technik GmbH", /* 45513 */
+    "ShenZhen SNMP Link Electronics Co., Ltd.", /* 45514 */
+    "Econocom-osiatis", /* 45515 */
+    "Valid Soluciones Tecnógicas S.A.U.", /* 45516 */
+    "GarantPlus Ltd", /* 45517 */
+    "Macnica Inc.", /* 45518 */
+    "Diamedica Sp. z o.o.", /* 45519 */
+    "Actility", /* 45520 */
+    "OPENBASE", /* 45521 */
+    "xipki.org", /* 45522 */
+    "RFE Broadcast srl", /* 45523 */
+    "Advancapp", /* 45524 */
+    "Ubiqam LTD", /* 45525 */
+    "Snapper Services", /* 45526 */
+    "Diehl AKO Stiftung & Co. KG", /* 45527 */
+    "Joerg-Peter Hempel", /* 45528 */
+    "vishmail.net", /* 45529 */
+    "Medien Service Untermain GmbH", /* 45530 */
+    "M.A.D.A.", /* 45531 */
+    "Infinicore inc", /* 45532 */
+    "Red Arrow (Southampton) Group Limited", /* 45533 */
+    "WestNet", /* 45534 */
+    "Information Systems Dynamics", /* 45535 */
+    "Rheinmetall Defence Electronics GmbH", /* 45536 */
+    "NUAZ", /* 45537 */
+    "PHARMAGEST INTERACTIVE", /* 45538 */
+    "Domain fritze.org", /* 45539 */
+    "Rueval S.A.", /* 45540 */
+    "Schneider Elektronik GmbH", /* 45541 */
+    "Orlando Utilities Commission", /* 45542 */
+    "Mekansal Yazilim", /* 45543 */
+    "IT Kimmig", /* 45544 */
+    "Ormazabal", /* 45545 */
+    "SECUWAVE CO,. LT", /* 45546 */
+    "Wirtgen (China) Machinery Co., Ltd.", /* 45547 */
+    "Asian Hope Inc", /* 45548 */
+    "Shenzhen Zontele Technologies Co., Ltd", /* 45549 */
+    "Webstudio Information Technology Inc.", /* 45550 */
+    "VIPP", /* 45551 */
+    "Unisys", /* 45552 */
+    "GE Healthcare - Engineering", /* 45553 */
+    "Grupo JAMPIG S.A.S.", /* 45554 */
+    "RDP", /* 45555 */
+    "Triadic Industries, LLC", /* 45556 */
+    "SHENZHEN CAN TECHNOLOGY CO.,LTD", /* 45557 */
+    "CJSC GROUP OF COMPANIES RENOVA", /* 45558 */
+    "Prevoty, Inc.", /* 45559 */
+    "Inovapar Soluções LTDA.", /* 45560 */
+    "Masterclock, Inc.", /* 45561 */
+    "Capella Aerospace Systems Engineering Inc.", /* 45562 */
+    "SOMNOmedics GmbH", /* 45563 */
+    "Beijing SplendidTel Co.,Ltd.", /* 45564 */
+    "INTERBYSS S.R.L", /* 45565 */
+    "INTELMA CONSULTING Inc.", /* 45566 */
+    "Ticom Geomatics, Inc.", /* 45567 */
+    "GoCardless Ltd", /* 45568 */
+    "Core Network Dynamics", /* 45569 */
+    "IQ Tel d.o.o.", /* 45570 */
+    "Midfin Systems", /* 45571 */
+    "awelten", /* 45572 */
+    "Western Michigan University Homer Stryker M.D. School of Medicine", /* 45573 */
+    "Hellea SPRL", /* 45574 */
+    "China Beijing Stegosaurus Technology Laboratory", /* 45575 */
+    "Hulu LLC", /* 45576 */
+    "Shenzhen Sundray Technologies Company Limited", /* 45577 */
+    "BroadQuest", /* 45578 */
+    "Guangdong Nenkingtech Development Co,Ltd.", /* 45579 */
+    "DENTCAT", /* 45580 */
+    "YICHUN YILIAN PRINT TECH CO.,LTD", /* 45581 */
+    "paysafecard.com Wertkarten GmbH", /* 45582 */
+    "Puminsoft Co.,Ltd.", /* 45583 */
+    "OJSC \"RIRT\"", /* 45584 */
+    "Space Imaging Middle East (SIME)", /* 45585 */
+    "Mythic Network", /* 45586 */
+    "Software & Service Center,Sichuan Changhong Electric Co.,Ltd", /* 45587 */
+    "OLSPS", /* 45588 */
+    "Doc-Soft Ltd.", /* 45589 */
+    "Mutesah General Investments ltd", /* 45590 */
+    "Shenzhen Sungreat Communication Co.,LTD", /* 45591 */
+    "Julius Clinical", /* 45592 */
+    "OpenREM", /* 45593 */
+    "Università Iuav di Venezia", /* 45594 */
+    "Reaktor 23", /* 45595 */
+    "ICloud Innovation (Beijing) ltd.", /* 45596 */
+    "TESA Assa Abloy", /* 45597 */
+    "Mckinney Independent School District", /* 45598 */
+    "Network RADIUS SARL", /* 45599 */
+    "OX Service AG", /* 45600 */
+    "Wikimedia Deutschland e.V.", /* 45601 */
+    "Corvus Energy", /* 45602 */
+    "Rieker, Inc.", /* 45603 */
+    "BeiJing SmartWell Info&Tech Co.,Ltd.", /* 45604 */
+    "Wi-SUN Alliance, Inc", /* 45605 */
+    "Carillon Federal Services Inc.", /* 45606 */
+    "Sysco Foods", /* 45607 */
+    "Atlan dynamic group", /* 45608 */
+    "Centralschweizerische Kraftwerke AG", /* 45609 */
+    "EAM GmbH & Co. KG", /* 45610 */
+    "EOSPACE Inc.", /* 45611 */
+    "Under Armour Connected Fitness", /* 45612 */
+    "Universiti Malaysia Terengganu", /* 45613 */
+    "RegEd Inc.", /* 45614 */
+    "CityNet", /* 45615 */
+    "Healthcare Information and Management System Society (HIMSS)", /* 45616 */
+    "The Institute of Computational Technologies of the Siberian Branch of the Russian Academy of Sciences", /* 45617 */
+    "Ferdinand Malcher", /* 45618 */
+    "Oei Family Office", /* 45619 */
+    "Steampunk Island Inc", /* 45620 */
+    "Tycon Systems Inc.", /* 45621 */
+    "Netrix LLC.", /* 45622 */
+    "Hughey & Phillips, LLC", /* 45623 */
+    "Brain Sense", /* 45624 */
+    "hahnefeld.net", /* 45625 */
+    "Sapientia Systems", /* 45626 */
+    "X NET", /* 45627 */
+    "HANFORD (DOE)", /* 45628 */
+    "Ritron", /* 45629 */
+    "Regional Medical Oncology Center", /* 45630 */
+    "Perimind Corporation", /* 45631 */
+    "br0.fr", /* 45632 */
+    "The Hershey Company", /* 45633 */
+    "XeeMetric Inc.", /* 45634 */
+    "Cornerstone Health Enablement Strategic Solutions, LLC", /* 45635 */
+    "Robit SAS", /* 45636 */
+    "Dicks Garage", /* 45637 */
+    "AVOLITES LTD", /* 45638 */
+    "Chen-Hung Chen", /* 45639 */
+    "Fujitsu Taiwan Ltd.", /* 45640 */
+    "SOARNEX Technology Corporation", /* 45641 */
+    "SITRINICS CAMS, JSC", /* 45642 */
+    "MARETON d.o.o.", /* 45643 */
+    "Tom Maher", /* 45644 */
+    "thinkCSC, Inc", /* 45645 */
+    "UK Shared Business Services Ltd", /* 45646 */
+    "Grant Thornton UK LLP", /* 45647 */
+    "Bridgeway Software, Inc.", /* 45648 */
+    "Sousou Industries", /* 45649 */
+    "Fibersystem AB", /* 45650 */
+    "Layer3 TV, Inc.", /* 45651 */
+    "New Jersey State Government (Office of Information Technology)", /* 45652 */
+    "Compression Services", /* 45653 */
+    "LogicVein, Inc.", /* 45654 */
+    "CHUNG-HSIN ELECTRIC & MACHINERY MFG. CORP.", /* 45655 */
+    "Vector-V, Law Firm", /* 45656 */
+    "Syncbak", /* 45657 */
+    "P3 GmbH & Co KG", /* 45658 */
+    "LPO OUI Dev Teams", /* 45659 */
+    "Pentandra Research Solutions, Inc.", /* 45660 */
+    "Instec Inc.", /* 45661 */
+    "Intelligence Ambiante", /* 45662 */
+    "Hochschule Merseburg", /* 45663 */
+    "Guangzhou Hugen Electronic Technology Co .Ltd", /* 45664 */
+    "Biroteh Ltd", /* 45665 */
+    "Ebiid Product and Solutions, S.L.", /* 45666 */
+    "Single Digits", /* 45667 */
+    "Midwest Microwave Solutions Inc.", /* 45668 */
+    "CBR Systems Limited", /* 45669 */
+    "tcc construction", /* 45670 */
+    "Nick Sverdel", /* 45671 */
+    "HARVL", /* 45672 */
+    "Smith & Nephew", /* 45673 */
+    "Redbird Advanced Learning, LLC", /* 45674 */
+    "Evolve IP, LLC", /* 45675 */
+    "OCHIN", /* 45676 */
+    "Parashift", /* 45677 */
+    "Department of Primary Industries and Mines", /* 45678 */
+    "AGR Abfallentsorgungs-Gesellschaft Ruhrgebiet mbH", /* 45679 */
+    "ORISOFT", /* 45680 */
+    "Polska Spolka Gazownictwa sp. z o.o.", /* 45681 */
+    "Michigan Education Special Services Association", /* 45682 */
+    "Flexpay AB (Benify)", /* 45683 */
+    "Ingenieurbüro Dübon", /* 45684 */
+    "AllCreator Co., Ltd.", /* 45685 */
+    "Ratel Technologies", /* 45686 */
+    "oneM2M", /* 45687 */
+    "Limone Fresco Limited", /* 45688 */
+    "Evolveum", /* 45689 */
+    "bitbone AG", /* 45690 */
+    "Javacraft LLC", /* 45691 */
+    "Dantherm Power A/S", /* 45692 */
+    "arvato Systems S4M GmbH", /* 45693 */
+    "Comvergence Pty Ltd", /* 45694 */
+    "CHAPS spol. s r.o.", /* 45695 */
+    "Mitchel Berberich Software GmbH", /* 45696 */
+    "Computer Sciences Corporation", /* 45697 */
+    "E-KENT Teknoloji ve Odeme Sistemleri San. ve Tic A.S", /* 45698 */
+    "Hireku, Inc.", /* 45699 */
+    "Transylvania University", /* 45700 */
+    "IntegraCore, LLC", /* 45701 */
+    "China Transinfo Technology", /* 45702 */
+    "Gemeindewerke Ga.-Pa.", /* 45703 */
+    "Landstinget i Kalmar Län", /* 45704 */
+    "FINT AB", /* 45705 */
+    "Bluer Medical Technology", /* 45706 */
+    "ITCEG S.A.S", /* 45707 */
+    "Lively Arts Productions LLC", /* 45708 */
+    "Seibels", /* 45709 */
+    "Mobie Oy", /* 45710 */
+    "Matrix Electronica S.L.", /* 45711 */
+    "SERFIM T.I.C. (formerly 'SERELEC SAS')", /* 45712 */
+    "CONSULDATA Advisors di Massimo Del Barba", /* 45713 */
+    "Logitravel SL", /* 45714 */
+    "Empresa Municipal de Informática S.A. - IPLANRIO", /* 45715 */
+    "ARGE Rundfunk-Betriebstechnik", /* 45716 */
+    "Sensu Enterprise", /* 45717 */
+    "TJH Systems Pty Limited", /* 45718 */
+    "inQool a.s.", /* 45719 */
+    "Chaos Computer Club Mainz e.V.", /* 45720 */
+    "Shenzhen SONTU Medical Imaging Equipment Co.,LTD", /* 45721 */
+    "Hamburg Port Authority AoeR", /* 45722 */
+    "Cirrent", /* 45723 */
+    "FIDO Alliance, Inc.", /* 45724 */
+    "ABB Xiamen Low Voltage Equipment Co.,Ltd", /* 45725 */
+    "ecava sdn bhd", /* 45726 */
+    "HDWIFI TECHNOLOGIES", /* 45727 */
+    "JunoTele Solutions Pvt. Ltd", /* 45728 */
+    "Roedl IT Operation GmbH", /* 45729 */
+    "Geneberg", /* 45730 */
+    "WOOBE s.a.s.", /* 45731 */
+    "TIM AG", /* 45732 */
+    "Frank Wagner Holding Hanseatische Management GmbH", /* 45733 */
+    "STARNET s.r.o.", /* 45734 */
+    "easyset", /* 45735 */
+    "Utilisoft Ltd", /* 45736 */
+    "shah-network.com", /* 45737 */
+    "Aspirational Cognition LLC", /* 45738 */
+    "winfonet.eu", /* 45739 */
+    "Cirrus Identity, Inc", /* 45740 */
+    "Entensys", /* 45741 */
+    "ImageWare Components GmbH", /* 45742 */
+    "FIBERLAB", /* 45743 */
+    "GGExo", /* 45744 */
+    "Care Zone Inc.", /* 45745 */
+    "University of Rochester Medical Center", /* 45746 */
+    "Wuhan Rui Ying Tong Network Technology Co., Ltd(China)", /* 45747 */
+    "Thüga MeteringService GmbH", /* 45748 */
+    "Evolving Models", /* 45749 */
+    "gerthoux", /* 45750 */
+    "Hibernating Rhinos", /* 45751 */
+    "connecT EDV-Vertriebs GmbH", /* 45752 */
+    "winterdrache.de", /* 45753 */
+    "VoipOtago Ltd", /* 45754 */
+    "2memory LTD", /* 45755 */
+    "MicroLAB Systems", /* 45756 */
+    "FUCOM", /* 45757 */
+    "IPCOMM GmbH", /* 45758 */
+    "Signicat AS", /* 45759 */
+    "Kove IO Inc.", /* 45760 */
+    "Celab Communications AB", /* 45761 */
+    "Platan spółka z ograniczoną odpowiedzialnością sp.k.", /* 45762 */
+    "EMG Systems Sp. z o.o.", /* 45763 */
+    "CH Des pays de Morlaix", /* 45764 */
+    "nohl.eu", /* 45765 */
+    "Serval CA", /* 45766 */
+    "Succeed Management Solutions, LLC", /* 45767 */
+    "telecoms forensics equipment ltd", /* 45768 */
+    "Farm House Technologies, LLC.", /* 45769 */
+    "Digital Loggers, Inc.", /* 45770 */
+    "weatherlights.com", /* 45771 */
+    "TauRes Gesellschaft für Investmentberatung mbH", /* 45772 */
+    "Liebherr-IT Services GmbH", /* 45773 */
+    "SHS SERVICES GmbH", /* 45774 */
+    "Tornado Network Operating System", /* 45775 */
+    "Belden Deutschland GmbH", /* 45776 */
+    "Fingerprint Technologies SAS", /* 45777 */
+    "exp Services Inc.", /* 45778 */
+    "Mosaic Life Care at St. Joseph Medical Oncology", /* 45779 */
+    "Norsk Sykepleierforbund", /* 45780 */
+    "Masaryk Memorial Cancer Institute", /* 45781 */
+    "Metacores Sp. z o.o.", /* 45782 */
+    "TEKIN", /* 45783 */
+    "Novarad, Corp", /* 45784 */
+    "bangj, LLC", /* 45785 */
+    "SAT-AN CableNet SE", /* 45786 */
+    "WISTE", /* 45787 */
+    "Agustus & Ahab, Inc.", /* 45788 */
+    "Vicon", /* 45789 */
+    "Crystal GmbH", /* 45790 */
+    "Neos Ventures GmbH", /* 45791 */
+    "Flohr IT", /* 45792 */
+    "Joint Stock Company \"PK Kupchino\"", /* 45793 */
+    "Safe Creative", /* 45794 */
+    "Primo1D SA", /* 45795 */
+    "Umea Municipality", /* 45796 */
+    "Viettel Group", /* 45797 */
+    "Enovae BV", /* 45798 */
+    "Csaw BV", /* 45799 */
+    "Zorgdoc Nederland BV", /* 45800 */
+    "TARASOFT SRL", /* 45801 */
+    "Ubee Interactive Corp.", /* 45802 */
+    "netcruz inc.", /* 45803 */
+    "ERICA", /* 45804 */
+    "OCMW Temse", /* 45805 */
+    "genealogie.com", /* 45806 */
+    "Starbucks Coffee Company", /* 45807 */
+    "Global Tecnologia LTDA.", /* 45808 */
+    "Beijing Mipay Technology Co., Ltd.", /* 45809 */
+    "Binary Rock", /* 45810 */
+    "Istvan Puzsar e.v.", /* 45811 */
+    "ILoca Services, Inc.", /* 45812 */
+    "PI '97 Bt.", /* 45813 */
+    "Waukesha-Pearce Industries, Inc.", /* 45814 */
+    "Sourcewise", /* 45815 */
+    "Bruce R. Smith Limited", /* 45816 */
+    "Inacomp Consultores SA", /* 45817 */
+    "Passaic County Technical Institute", /* 45818 */
+    "Sven Anders", /* 45819 */
+    "PROFIPRINT spol. s r.o.", /* 45820 */
+    "21st century Oncology, LLC-Gabriel Domenech MD", /* 45821 */
+    "Les Ambassadeurs Club", /* 45822 */
+    "Orient Technologies LTD", /* 45823 */
+    "System One Noc & Development Solutions", /* 45824 */
+    "One-Click Softworks", /* 45825 */
+    "Singlewire Software, LLC", /* 45826 */
+    "Beijing JN TASS Technology Co.,Ltd.", /* 45827 */
+    "Kanhan Technologies Limited", /* 45828 */
+    "preis24.de GmbH", /* 45829 */
+    "Imtech Traffic & Infra UK Ltd", /* 45830 */
+    "Argo Technologie SA", /* 45831 */
+    "I-ROSE d.o.o.", /* 45832 */
+    "Hoffmann Foerdertechnik GmbH", /* 45833 */
+    "Tieto Finland Oy", /* 45834 */
+    "Tangara Tagentis Inc.", /* 45835 */
+    "Varonis System inc.", /* 45836 */
+    "Orage.io", /* 45837 */
+    "BELIMO Automation AG", /* 45838 */
+    "NETEVEN", /* 45839 */
+    "Lester Electrical of Nebraska, Inc.", /* 45840 */
+    "System One Noc & Development Solutions S.A", /* 45841 */
+    "Andrew Stemen", /* 45842 */
+    "WebNet Broadband", /* 45843 */
+    "Uwe Stoppel", /* 45844 */
+    "EchoPixel, Inc.", /* 45845 */
+    "StorPool Storage AD", /* 45846 */
+    "ComputerTel LTD", /* 45847 */
+    "VISHMAIL", /* 45848 */
+    "MMCVEN Mail", /* 45849 */
+    "Eternity's Touch, Inc.", /* 45850 */
+    "Unfallkasse Baden-Wuerttemberg", /* 45851 */
+    "Miami Hematology and Oncology Associates", /* 45852 */
+    "Jaguar Land Rover Limited", /* 45853 */
+    "Cell Technology Ltd.", /* 45854 */
+    "Intracom Asia Co., Ltd.", /* 45855 */
+    "Mie Prefectural Government", /* 45856 */
+    "Kailow Graphic A/S", /* 45857 */
+    "Cifernet Inc.", /* 45858 */
+    "Pylo.Net", /* 45859 */
+    "Exel Technology Group", /* 45860 */
+    "Research Associates of Syracuse, Inc.", /* 45861 */
+    "Apost Ltd.", /* 45862 */
+    "La Folie Boutique", /* 45863 */
+    "Direction Generale de l'Education et des Enseignements", /* 45864 */
+    "Shouei electric,co", /* 45865 */
+    "GlobalPME", /* 45866 */
+    "LUKOIL Bulgaria Ltd.", /* 45867 */
+    "Skywire Technologies", /* 45868 */
+    "POET GmbH", /* 45869 */
+    "Fraunhofer Institute for Secure Information Technology SIT", /* 45870 */
+    "FATECH Electronic", /* 45871 */
+    "Institut National de l'Audiovisuel", /* 45872 */
+    "Instituto Federal Catarinense", /* 45873 */
+    "Coencorp", /* 45874 */
+    "Edward H. Kaplan,M.D. and Assoc.", /* 45875 */
+    "Jetson Systems, LLC", /* 45876 */
+    "Intelligent Homes", /* 45877 */
+    "vesperal.eu", /* 45878 */
+    "Université de Lille", /* 45879 */
+    "West-Ward Pharmaceuticals Corp", /* 45880 */
+    "2Lconsult", /* 45881 */
+    "Global Voice Group, S.A.", /* 45882 */
+    "EagleBurgmann Germany GmbH & Co. KG", /* 45883 */
+    "AuthClub Inc", /* 45884 */
+    "Cesbo Ltd.", /* 45885 */
+    "Connect-Omsk, Ltd.", /* 45886 */
+    "Arke Telekom Ltd. Sti.", /* 45887 */
+    "Jawset Visual Computing", /* 45888 */
+    "TechMIC electronics", /* 45889 */
+    "Sys-City Co., Ltd.", /* 45890 */
+    "Pandora A/S", /* 45891 */
+    "Combination AB", /* 45892 */
+    "PSTech", /* 45893 */
+    "SysAdmin-CR Sociedad Anonima", /* 45894 */
+    "SysAdmin-CR Sociedad Anonima", /* 45895 */
+    "Paperless Pipeline, LLC.", /* 45896 */
+    "M H Corbin Inc", /* 45897 */
+    "KEYLOGIC AB", /* 45898 */
+    "CASwell Inc", /* 45899 */
+    "Weber Schraubautomaten GmbH", /* 45900 */
+    "Kellerman Networks", /* 45901 */
+    "Kellerman Networks", /* 45902 */
+    "dachsbau", /* 45903 */
+    "National Foods Ltd.", /* 45904 */
+    "Obihai Technology, Inc.", /* 45905 */
+    "Selinko S.A.", /* 45906 */
+    "PolyVirtual Corporation", /* 45907 */
+    "ITDO Inc.", /* 45908 */
+    "SHENZHEN ANKKI TECHNOLOGIES CO., LTD", /* 45909 */
+    "haiyi", /* 45910 */
+    "SynerMed Labs", /* 45911 */
+    "Universitas Brawijaya", /* 45912 */
+    "M2 Group Pty Ltd", /* 45913 */
+    "Cetera Financial Group", /* 45914 */
+    "PromonLogicalis", /* 45915 */
+    "Quest Payment Systems", /* 45916 */
+    "NFRI", /* 45917 */
+    "Network Canary", /* 45918 */
+    "Planevision Systems GmbH", /* 45919 */
+    "Humble Carrier", /* 45920 */
+    "Ministry of Agriculture Latvia", /* 45921 */
+    "DunaNet-DeviceManagement LLC", /* 45922 */
+    "TVN S.A.", /* 45923 */
+    "NOU IPAP", /* 45924 */
+    "MPS GmbH", /* 45925 */
+    "OpenZAB.com", /* 45926 */
+    "Ahsay Systems Corporation Limited", /* 45927 */
+    "MORU Industrial Systems Co.,LTD.", /* 45928 */
+    "Plum Sp. z o.o.", /* 45929 */
+    "Landwirtschaftskammer Niedersachsen", /* 45930 */
+    "Patterson Companies", /* 45931 */
+    "Walcoe", /* 45932 */
+    "Kuratorium für Dialyse und Nierentransplantation e.V.", /* 45933 */
+    "Fiber Mountain Inc", /* 45934 */
+    "Main Line Oncology Hematology Associates", /* 45935 */
+    "Das Kommunalunternehmen des Landkreises Wuerzburg", /* 45936 */
+    "M & C Enterprises, Ltd.", /* 45937 */
+    "Intelligent Visibility, Inc.", /* 45938 */
+    "TRIMET S.A.", /* 45939 */
+    "Beckman Library", /* 45940 */
+    "Papa Malick MBOW", /* 45941 */
+    "ezVoice Telecom", /* 45942 */
+    "Londelec UK Ltd", /* 45943 */
+    "IT Telecom co.,Ltd", /* 45944 */
+    "Friedrich-von-Bodelschwingh-Schule", /* 45945 */
+    "dynexo GmbH", /* 45946 */
+    "Kartal Belediye Baskanligi", /* 45947 */
+    "FitnessFirst Germany", /* 45948 */
+    "RF elements s.r.o.", /* 45949 */
+    "Cogo Labs", /* 45950 */
+    "RDK Management LLC", /* 45951 */
+    "CTRLTECH S.A.", /* 45952 */
+    "CyberData Corporation", /* 45953 */
+    "Truven Health Analytics Inc.", /* 45954 */
+    "Big Daddy Games, LLC", /* 45955 */
+    "128 Technology", /* 45956 */
+    "Cryptographic Information Services", /* 45957 */
+    "aisubp", /* 45958 */
+    "Zhongyunwangan Technology (Beijing) Co.,Ltd", /* 45959 */
+    "IMS, TU Wien", /* 45960 */
+    "ATGEN SOFTWARE SOLUTIONS LLP", /* 45961 */
+    "SHOWA TSUSHIN KOGYO INC.", /* 45962 */
+    "HHnet", /* 45963 */
+    "Dispersive Technologies", /* 45964 */
+    "Aleris International Inc", /* 45965 */
+    "GURI SOFTHOUSE LTDA", /* 45966 */
+    "SWAN Analytische Instrumente AG", /* 45967 */
+    "perinova IT-Management GmbH", /* 45968 */
+    "perinova IT-Management GmbH", /* 45969 */
+    "Böttcher & Collin GbR", /* 45970 */
+    "CJSC \"Transinfoset\"", /* 45971 */
+    "Baptist School of Health Professions", /* 45972 */
+    "Playground Global", /* 45973 */
+    "SPINNER GmbH", /* 45974 */
+    "Securities Finance Trust Company", /* 45975 */
+    "Intema Comunicaciones", /* 45976 */
+    "Platform.sh", /* 45977 */
+    "Vision 95 Ltd.", /* 45978 */
+    "Intevac, Inc.", /* 45979 */
+    "S.Network Communications Ltd.", /* 45980 */
+    "DroidInActu", /* 45981 */
+    "Goletas", /* 45982 */
+    "Airbus DS Limited - MIPN", /* 45983 */
+    "OOO Stels", /* 45984 */
+    "CyberStream Ltd", /* 45985 */
+    "Kramer Electronics Ltd.", /* 45986 */
+    "Rete telematica del CNR di Pisa", /* 45987 */
+    "SKYCOM", /* 45988 */
+    "SKYCOM", /* 45989 */
+    "Brueckner-Werke KG", /* 45990 */
+    "KLENK HOLZ AG", /* 45991 */
+    "Grabeuh Corp.", /* 45992 */
+    "ITSMOS", /* 45993 */
+    "Prink s.r.l", /* 45994 */
+    "Posteo e.K.", /* 45995 */
+    "Chora A/S", /* 45996 */
+    "Colorado Center for Gynecologic Oncology", /* 45997 */
+    "JENSEN-GROUP", /* 45998 */
+    "The Dysongang", /* 45999 */
+    "Third Light Ltd.", /* 46000 */
+    "Vektra Advanced Engineering", /* 46001 */
+    "6Harmonics Inc.", /* 46002 */
+    "NAUTILUS INFOTECH Co., Ltd.", /* 46003 */
+    "50Hertz Transmission GmbH", /* 46004 */
+    "SAG Services AG (formerly 'SAG Informatik AG')", /* 46005 */
+    "Greetz BV", /* 46006 */
+    "Augustinum gGmbH", /* 46007 */
+    "Codan A/S", /* 46008 */
+    "Advanced Hematology & Oncology Group of PR", /* 46009 */
+    "Westfalen Weser Netz GmbH", /* 46010 */
+    "cloudVM Inc.", /* 46011 */
+    "Redhot OOO", /* 46012 */
+    "Yhat, Inc.", /* 46013 */
+    "KCA Deutag", /* 46014 */
+    "PrimoTechSolution S.R.L.", /* 46015 */
+    "Leonton Technologies, Co. Ltd.", /* 46016 */
+    "Research Institute of Systems Planning, Inc. / ISP", /* 46017 */
+    "Thoralf Tietboehl (ttcn)", /* 46018 */
+    "DSPG Ltd.", /* 46019 */
+    "Cardio Sistemas Coml. Indl. Ltda.", /* 46020 */
+    "Thales Belgium SA", /* 46021 */
+    "Deep S.R.L", /* 46022 */
+    "High Desert Oncology", /* 46023 */
+    "W&W-AFCO STEEL LLC", /* 46024 */
+    "Kahana Technology, LLC", /* 46025 */
+    "Southern Oncology Hematology Associates", /* 46026 */
+    "OFICINA NACIONAL DE PROCESOS ELECTORALES", /* 46027 */
+    "Play Consulting", /* 46028 */
+    "Serenergy A/S", /* 46029 */
+    "iRespond", /* 46030 */
+    "Taconza LLC", /* 46031 */
+    "AccelStor, Inc.", /* 46032 */
+    "Cavium Inc.", /* 46033 */
+    "Ramakrishna Mission Vivekananda University", /* 46034 */
+    "Company Crypton Ltd.", /* 46035 */
+    "IT CARD Centrum Technologii Platniczych SA", /* 46036 */
+    "City of Pearland", /* 46037 */
+    "Layer8", /* 46038 */
+    "Dynamist AB", /* 46039 */
+    "Freestyle Technology Pty. Ltd.", /* 46040 */
+    "W.B. Hunt Co., Inc.", /* 46041 */
+    "SpacePath Communications", /* 46042 */
+    "element j", /* 46043 */
+    "Cloudbyte", /* 46044 */
+    "BYTEDANCE LTD.", /* 46045 */
+    "Branislav Manic Law Office", /* 46046 */
+    "paulista informatica ltd", /* 46047 */
+    "Attivo Networks", /* 46048 */
+    "SMSEagle", /* 46049 */
+    "Remod Oy", /* 46050 */
+    "STAGE2015", /* 46051 */
+    "Neotys", /* 46052 */
+    "AVEBE U.A.", /* 46053 */
+    "NBS Ltd.", /* 46054 */
+    "Hytera Broadband Products", /* 46055 */
+    "OOO\"NPF MULTIOBRABOTKA\"", /* 46056 */
+    "Hong Kong Community Athletic Development", /* 46057 */
+    "Panda Sports", /* 46058 */
+    "Vidamin Ltd", /* 46059 */
+    "central florida cancer and blood center", /* 46060 */
+    "Ognios GmbH", /* 46061 */
+    "YAVEON AG", /* 46062 */
+    "Broala", /* 46063 */
+    "AddApptr GmbH", /* 46064 */
+    "Cannabis Credit", /* 46065 */
+    "The DiameterTech Project", /* 46066 */
+    "Union College - Computer Science Department", /* 46067 */
+    "Take-Two Interactive Software, Inc.", /* 46068 */
+    "Deutsches Rotes Kreuz Ortsverein Suedlicher Wonnegau e. V.", /* 46069 */
+    "NDP, LLC (NVEA)", /* 46070 */
+    "Chista Ltd.", /* 46071 */
+    "B2B-SOFT", /* 46072 */
+    "Imbasoft", /* 46073 */
+    "ROAMData, Inc.", /* 46074 */
+    "Freshmind Sp. z o. o.", /* 46075 */
+    "Edward A Eichler, Jr.,  M.D., P.A.", /* 46076 */
+    "Inventive IT Services Ltd", /* 46077 */
+    "Beijing ForceControl-Huacon Technology Co., Ltd.", /* 46078 */
+    "HM Electronics, Inc.", /* 46079 */
+    "Yara SA/NV", /* 46080 */
+    "INFODAS Gesellschaft für Systementwicklung und Informationsverarbeitung mbH", /* 46081 */
+    "AVI", /* 46082 */
+    "F&F Computer Anwendungen und Unternehmensberatung GmbH", /* 46083 */
+    "FACTORYNET AUGUSTA, S.L.", /* 46084 */
+    "INFORMATICA Y PROCESOS DE GESTION, S.L.", /* 46085 */
+    "Infoteam Technique SA", /* 46086 */
+    "IT Scharschinger", /* 46087 */
+    "Sylvain Girod", /* 46088 */
+    "DB.Studio", /* 46089 */
+    "namotronic GmbH", /* 46090 */
+    "ICM University of Warsaw", /* 46091 */
+    "Ingenieurgesellschaft für Gebäudeautomation mbH", /* 46092 */
+    "Sistelbanda S.A.", /* 46093 */
+    "Brampton College", /* 46094 */
+    "otrisPROJECTS GmbH", /* 46095 */
+    "bitbert.com", /* 46096 */
+    "IPiFony Systems, Inc.", /* 46097 */
+    "Ericsson Canada Inc.", /* 46098 */
+    "Community Health Systems-CHS14", /* 46099 */
+    "Maxwell Paper Canada Inc", /* 46100 */
+    "Belar Electronics Laboratory Inc", /* 46101 */
+    "Art Van Furniture, Inc.", /* 46102 */
+    "VoIP Integration Inc", /* 46103 */
+    "TVM Capital", /* 46104 */
+    "Alexion Pharmaceuticals, Inc.", /* 46105 */
+    "1-800 Contacts Inc.", /* 46106 */
+    "Medivation, Inc.", /* 46107 */
+    "Medivation, Inc.", /* 46108 */
+    "Credomatic", /* 46109 */
+    "smartTrade Technologies", /* 46110 */
+    "Document Knowledge Business Solutions (DKB Solutions SA)", /* 46111 */
+    "All Russian Institute for Scientific and Technical Information (VINITI) of the Russian Academy of Sciences", /* 46112 */
+    "The Moscow Chamber of Advocates", /* 46113 */
+    "«SUMYOBLENERGO» PJSC", /* 46114 */
+    "Progi-média inc.", /* 46115 */
+    "CRYPTONEO", /* 46116 */
+    "SMP Solutions GmbH", /* 46117 */
+    "SwissMediaPartners AG", /* 46118 */
+    "Eden Rock Communications, LLC", /* 46119 */
+    "Alliance-Electronics, Ltd.", /* 46120 */
+    "The Stahura-Brenner Group Inc.", /* 46121 */
+    "WrightCCS", /* 46122 */
+    "Wiener Boerse AG", /* 46123 */
+    "MICI Network Co,.Ltd", /* 46124 */
+    "Canadian Pacific", /* 46125 */
+    "Blockstream", /* 46126 */
+    "Rock Solid Solutions LLC", /* 46127 */
+    "City of Biel", /* 46128 */
+    "MechanicaPark LLC", /* 46129 */
+    "Informa Sistemi S.P.A.", /* 46130 */
+    "Hackerspace Kraków", /* 46131 */
+    "Amdatu", /* 46132 */
+    "ostermeyer.de", /* 46133 */
+    "Uprava za indirektno oporezivanje", /* 46134 */
+    "MSS Managed Security Services GmbH", /* 46135 */
+    "Steinbeis Embedded Systems Technologies GmbH", /* 46136 */
+    "Association Clandestine", /* 46137 */
+    "HTU Härtetechnik Uhldingen-Mühlhofen GmbH", /* 46138 */
+    "Baseventure Investing", /* 46139 */
+    "Laboratoire d'Analyse et de Mathématiques Appliquées", /* 46140 */
+    "Ysance", /* 46141 */
+    "ShenZhen Sinexcel Electric Co.Ltd.", /* 46142 */
+    "Lazada Tech Hub", /* 46143 */
+    "Schmidt & Co., (H.K.) Ltd. Taiwan Branch", /* 46144 */
+    "A. Baggenstos & Co. AG", /* 46145 */
+    "INFORM GmbH", /* 46146 */
+    "American Prepaid VAS LLC", /* 46147 */
+    "Beijing Yoxon Smart Technology Co.,Ltd.", /* 46148 */
+    "ZAO Citibank", /* 46149 */
+    "spornkuller.de", /* 46150 */
+    "Brett A. Lewis", /* 46151 */
+    "MCHV Software", /* 46152 */
+    "Budafony", /* 46153 */
+    "xMob", /* 46154 */
+    "TAKAOKA TOKO CO.,LTD.", /* 46155 */
+    "SB Systems Co.,Ltd", /* 46156 */
+    "NARI Technology Co., Ltd.", /* 46157 */
+    "Ohanae", /* 46158 */
+    "TselinTransStroy Ltd.", /* 46159 */
+    "GDV Dienstleistungs-GmbH & Co. KG", /* 46160 */
+    "Mobile Viewpoint", /* 46161 */
+    "Tuna Technologies Limited", /* 46162 */
+    "Neuberger Gebaeudeautomation GmbH", /* 46163 */
+    "AS-PC Sarl", /* 46164 */
+    "Politeknik Negeri Ujung Pandang", /* 46165 */
+    "JETR Consulting", /* 46166 */
+    "Toptranslation GmbH", /* 46167 */
+    "NewGen Interactive Software Corporation", /* 46168 */
+    "International Capital Investment Company", /* 46169 */
+    "Runetwister Publishing", /* 46170 */
+    "HashPlex, Inc", /* 46171 */
+    "Redcello Ltd.", /* 46172 */
+    "PayPal Inc", /* 46173 */
+    "SecuLynx Corporation", /* 46174 */
+    "NEWIND Sp. z o.o.", /* 46175 */
+    "SensorLink", /* 46176 */
+    "KYOSAN ELECTRIC MFG. CO., LTD.", /* 46177 */
+    "Faculty of Informatics, TU Wien", /* 46178 */
+    "Pikkatech Software Development & Consulting", /* 46179 */
+    "Gables Engineering, Inc.", /* 46180 */
+    "sanscomp", /* 46181 */
+    "Golden Grid Systems", /* 46182 */
+    "Dansk Medicinsk DataCenter ApS", /* 46183 */
+    "Lumentum.com", /* 46184 */
+    "Intelity", /* 46185 */
+    "cyontec solutions GmbH", /* 46186 */
+    "AGRAVIS Raiffeisen AG", /* 46187 */
+    "MarketFactory Inc", /* 46188 */
+    "John Cianfarani", /* 46189 */
+    "Phoenyxcode", /* 46190 */
+    "21st Century Oncology - Crestview", /* 46191 */
+    "ToastCoders", /* 46192 */
+    "Distributed Hacker Maker Network Inc.", /* 46193 */
+    "arara inc. (formerly 'repica Inc.')", /* 46194 */
+    "sdc world group co.", /* 46195 */
+    "Narodowy Fundusz Ochrony Srodowiska i Gospodarki Wodnej", /* 46196 */
+    "Telensa Limited", /* 46197 */
+    "Equinox Holdings LLC", /* 46198 */
+    "DENTSPLY International", /* 46199 */
+    "Matthew Martin", /* 46200 */
+    "Business Telecommunications Services Europe", /* 46201 */
+    "Avigilon Corporation", /* 46202 */
+    "Strictly Monitoring Limited", /* 46203 */
+    "Hutchison Drei Austria GmbH", /* 46204 */
+    "MIT Dynamic Technologies Limited", /* 46205 */
+    "Stamm", /* 46206 */
+    "Kasisto, Inc.", /* 46207 */
+    "Knjaz Milos a.d.", /* 46208 */
+    "deepin", /* 46209 */
+    "Shanghai Koal Software", /* 46210 */
+    "Fernfachhochschule Schweiz (FFHS)", /* 46211 */
+    "e2E Satcom Limited", /* 46212 */
+    "Atmos Sistemas Ltda.", /* 46213 */
+    "COGIT MATIDA UK LTD", /* 46214 */
+    "Shandong Senter Electronic Co., Ltd.", /* 46215 */
+    "Rocken am Brocken UG", /* 46216 */
+    "VINCI Energies Schweiz AG", /* 46217 */
+    "SilverTours GmbH", /* 46218 */
+    "Migros Bank AG", /* 46219 */
+    "Ministério Público do Estado de Santa Catarina", /* 46220 */
+    "iconectiv", /* 46221 */
+    "On IP 46 Limited", /* 46222 */
+    "Cyber Medical Imaging, Inc.", /* 46223 */
+    "Inner Range Pty. Ltd.", /* 46224 */
+    "tehasdf.com", /* 46225 */
+    "Apigee Corporation", /* 46226 */
+    "Guangxi radio and television information network corporation limited", /* 46227 */
+    "Nikko Graphic Arts Co.,Ltd.", /* 46228 */
+    "igus GmbH", /* 46229 */
+    "Cleverlance Enterprise Solutions a.s.", /* 46230 */
+    "Eikeo", /* 46231 */
+    "Ergatel", /* 46232 */
+    "Mundo Digital Informática Redes y Comunicación S.L.", /* 46233 */
+    "SpaceTeamLab, Ltd.", /* 46234 */
+    "RCNTEC", /* 46235 */
+    "Multisoft S.A.", /* 46236 */
+    "Ayuntamiento de Alcobendas", /* 46237 */
+    "Immobilien Hilgers e.K", /* 46238 */
+    "InviNets", /* 46239 */
+    "Polish Border Guard (Border Guard Headquarters)", /* 46240 */
+    "Bionic Fuel Knowledge Partners Inc.", /* 46241 */
+    "Netonix", /* 46242 */
+    "Programize", /* 46243 */
+    "South African Air Force", /* 46244 */
+    "Reo3", /* 46245 */
+    "88.io", /* 46246 */
+    "Supertel-DALS", /* 46247 */
+    "Pole/Zero Corporation", /* 46248 */
+    "SITES", /* 46249 */
+    "Amsted Rail", /* 46250 */
+    "POSBANK", /* 46251 */
+    "Z-ROUTER TECHNOLOGY", /* 46252 */
+    "Plusserver GmbH", /* 46253 */
+    "Vector Informatik GmbH", /* 46254 */
+    "Ovenden Papers Limited", /* 46255 */
+    "Hokkaido University", /* 46256 */
+    "Wlbe Deutschland", /* 46257 */
+    "VENISO SOLUTIONS PRIVATE LIMITED", /* 46258 */
+    "Hauseigentümerverband Zürich", /* 46259 */
+    "IQ-Media B.V.", /* 46260 */
+    "Universidad Nacional del Litoral", /* 46261 */
+    "Zscaler Inc", /* 46262 */
+    "LPL Financial", /* 46263 */
+    "FinnHEMS Oy", /* 46264 */
+    "AlBikar.net", /* 46265 */
+    "Wood County Telephone Company dba Solarus", /* 46266 */
+    "Development Gateway", /* 46267 */
+    "bleim.net GmbH", /* 46268 */
+    "Dynasys Technology Co.,LTD", /* 46269 */
+    "NBOO-RU", /* 46270 */
+    "PaloVerde Cancer Specialists", /* 46271 */
+    "DataStax, Inc.", /* 46272 */
+    "informalogique", /* 46273 */
+    "Heartware", /* 46274 */
+    "EBPI", /* 46275 */
+    "Linux Lab", /* 46276 */
+    "Ministerio dos Petroleos", /* 46277 */
+    "TÜV NORD AG", /* 46278 */
+    "Thomas Hellström", /* 46279 */
+    "Enterprise Computing", /* 46280 */
+    "WRITESYS Traffic Systems", /* 46281 */
+    "uGo3D LLC", /* 46282 */
+    "Inmotion Data, LLC.", /* 46283 */
+    "ENERGEX", /* 46284 */
+    "Trimble Navigation Ltd.", /* 46285 */
+    "RUDIMENTS", /* 46286 */
+    "yaxunhongda", /* 46287 */
+    "Tedas B.V.", /* 46288 */
+    "gluIT Software GmbH", /* 46289 */
+    "VS XXI JSC", /* 46290 */
+    "IES srl", /* 46291 */
+    "Koiossian Inc.", /* 46292 */
+    "Monroe County Hospital Oncology Clinic", /* 46293 */
+    "inView GmbH", /* 46294 */
+    "City of Huntsville", /* 46295 */
+    "SHI", /* 46296 */
+    "Agrarmarkt Austria", /* 46297 */
+    "ISPM Serviços em Informática LTDA", /* 46298 */
+    "Birmingham Hematology and Oncology Associates, LLC d/b/a Alabama Oncology", /* 46299 */
+    "MicroKnight Business Systems Ltd.", /* 46300 */
+    "CARRA, Inc.", /* 46301 */
+    "Urmet Sistemi S.p.A.", /* 46302 */
+    "ITSUDE", /* 46303 */
+    "GSMA", /* 46304 */
+    "OSDE", /* 46305 */
+    "Institute for Traffic Safety Management and Research", /* 46306 */
+    "Briskhome", /* 46307 */
+    "GDC Communications", /* 46308 */
+    "Delft Solutions", /* 46309 */
+    "BCons Argentina S.A.", /* 46310 */
+    "Baufest", /* 46311 */
+    "Jack Kingsman", /* 46312 */
+    "Level 8 Aps", /* 46313 */
+    "SongMovers", /* 46314 */
+    "Silicon Valley Bank", /* 46315 */
+    "AERTiCKET AG", /* 46316 */
+    "VRSG Verwaltungsrechenzentrum AG St.Gallen", /* 46317 */
+    "Mils Electronic Gesmbh & CoKG", /* 46318 */
+    "Traffic Tech Inc.", /* 46319 */
+    "BNC National Bank", /* 46320 */
+    "Sensignal Co.,Ltd.", /* 46321 */
+    "Gareth Williams", /* 46322 */
+    "F. KLUCZNIK & SON LIMITED", /* 46323 */
+    "HAYSYS Ltd", /* 46324 */
+    "Firstwan Delivery Network Services", /* 46325 */
+    "IUT de VALENCE", /* 46326 */
+    "Niagara Regional Police Service", /* 46327 */
+    "DDS Wireless International Inc", /* 46328 */
+    "Security Indemnity Insurance Company In Liquidation", /* 46329 */
+    "Vubiq Networks", /* 46330 */
+    "NightSteam Solutions", /* 46331 */
+    "Lacuna Software LTDA - EPP", /* 46332 */
+    "American Express Global Business Travel", /* 46333 */
+    "HRM Systems AG", /* 46334 */
+    "Bruce A. Hayton, M.D.", /* 46335 */
+    "Live Niaga", /* 46336 */
+    "Meisei Electric Co., Ltd.", /* 46337 */
+    "CTO Balzuweit GmbH", /* 46338 */
+    "National Archives, Czech Republic", /* 46339 */
+    "The Opole University of Technology", /* 46340 */
+    "Dansk Metalarbejderforbund", /* 46341 */
+    "Anoop Sukumaran", /* 46342 */
+    "mazou kitchen", /* 46343 */
+    "PricewaterhouseCoopers AG", /* 46344 */
+    "Clear Government Solutions, Inc.", /* 46345 */
+    "Vail Software Solutions", /* 46346 */
+    "Ovapro", /* 46347 */
+    "Providence Health & Services", /* 46348 */
+    "Deepfield", /* 46349 */
+    "NorCERT - Norwegian Computer Emergency Response Team", /* 46350 */
+    "Laubheimer Networks", /* 46351 */
+    "Premier Business Centers", /* 46352 */
+    "Schwackenberg Consulting", /* 46353 */
+    "Kooperativa pojistovna, a.s.", /* 46354 */
+    "Expert-Team Pte Ltd", /* 46355 */
+    "Grupo de Tecnologia Cibernetica, S.A. de C.V.", /* 46356 */
+    "NBS System", /* 46357 */
+    "Zwick GmbH & Co KG", /* 46358 */
+    "Robert P. Fein and David A. Richards", /* 46359 */
+    "West and Central African Research and Education Network (WACREN)", /* 46360 */
+    "Richard Scranton", /* 46361 */
+    "Digital Data Technologies Inc.", /* 46362 */
+    "BGProtect", /* 46363 */
+    "Halmstad University", /* 46364 */
+    "arvato IT Support GmbH", /* 46365 */
+    "Technicolor", /* 46366 */
+    "UPSINVERTER.COM", /* 46367 */
+    "The Job Planet", /* 46368 */
+    "Miskolci Egyetem Informatikai Intezet", /* 46369 */
+    "eshore", /* 46370 */
+    "Japan Canada Oil Sands Limited", /* 46371 */
+    "Uber Operations, LLC", /* 46372 */
+    "Bypass Network Services", /* 46373 */
+    "Zizaike Inc.", /* 46374 */
+    "eCommistry Ltd", /* 46375 */
+    "Nullroute", /* 46376 */
+    "Star Media (Beijing) CO.,LTD", /* 46377 */
+    "Centre Hospitalier Mémorial Saint-Lô", /* 46378 */
+    "LunaticIsland.net", /* 46379 */
+    "Enghouse Interactive AB", /* 46380 */
+    "Imterra", /* 46381 */
+    "Berolina-autolacke", /* 46382 */
+    "Ministry Division, Church of England", /* 46383 */
+    "DUCA Financial Services Credit Union Ltd.", /* 46384 */
+    "Walnut Hill Physicians’ Hospital, LLC", /* 46385 */
+    "Shenzhen GL-COM Technology Co.,Ltd.", /* 46386 */
+    "Drift", /* 46387 */
+    "Taygeta Scientific Inc.", /* 46388 */
+    "VESTA", /* 46389 */
+    "Clarke Technical Services, Inc.", /* 46390 */
+    "jddev", /* 46391 */
+    "Donostian Belgie", /* 46392 */
+    "Programlabbet AB", /* 46393 */
+    "BLITSC", /* 46394 */
+    "FirstRand Group", /* 46395 */
+    "Marotta Controls, Inc.", /* 46396 */
+    "iSecway Inc.", /* 46397 */
+    "Regional Cancer Care Associates Hope Community Cancer Center Division", /* 46398 */
+    "iSIGHT Partners", /* 46399 */
+    "NorQuest College", /* 46400 */
+    "Marshall B. Ketchum University", /* 46401 */
+    "NSF Telecom Ab", /* 46402 */
+    "QA2", /* 46403 */
+    "DOT Systems Sp. z o.o.", /* 46404 */
+    "superChic", /* 46405 */
+    "Foundation Pärnu Hospital", /* 46406 */
+    "TECNOLOGIAS EOS SA DE CV", /* 46407 */
+    "PKP Polskie Linie Kolejowe S.A.", /* 46408 */
+    "BSP Consulting spol. s r.o.", /* 46409 */
+    "SEGGER Microcontroller GmbH & Co. KG", /* 46410 */
+    "Art2Wave Canada Inc.", /* 46411 */
+    "Andrew Sheret Ltd.", /* 46412 */
+    "Table25, Inc.", /* 46413 */
+    "William Oliver", /* 46414 */
+    "Open Banking Foundation", /* 46415 */
+    "The National Archives of Latvia", /* 46416 */
+    "Emerald Coast Cancer Center", /* 46417 */
+    "Agile Ingeniería y Consultoría Ltda.", /* 46418 */
+    "Araknis Networks", /* 46419 */
+    "Knauf Information Services GmbH", /* 46420 */
+    "B/E Aerospace", /* 46421 */
+    "UTEK TECHNOLOGY(SHENZHEN)CO,LTD", /* 46422 */
+    "Osirium Ltd", /* 46423 */
+    "Otterbein Homes", /* 46424 */
+    "DTSV, Inc.", /* 46425 */
+    "Salinas Valley Medical Clinic Cancer Care", /* 46426 */
+    "LISI AEROSPACE", /* 46427 */
+    "Mobicare", /* 46428 */
+    "Universidad Nacional de San Martin", /* 46429 */
+    "RTEC", /* 46430 */
+    "Alaf Organization", /* 46431 */
+    "Modula Shop Systems", /* 46432 */
+    "Fern Ridge School District 28J", /* 46433 */
+    "consulter net GmbH", /* 46434 */
+    "LEW AG", /* 46435 */
+    "Infoprocess", /* 46436 */
+    "TTI NORTE SL", /* 46437 */
+    "Bartec-Vodec", /* 46438 */
+    "Bolsas y Mercados Españoles Innova, S.A.U. (BME Innova).", /* 46439 */
+    "Cloud Electronics Ltd.", /* 46440 */
+    "AKROS AG", /* 46441 */
+    "PIHI Media", /* 46442 */
+    "intec GmbH", /* 46443 */
+    "Zhejiang Huanshun Network Science & Technology Co., Ltd.", /* 46444 */
+    "Unitel Engineering", /* 46445 */
+    "OV Corporation SAS", /* 46446 */
+    "Embedict", /* 46447 */
+    "Telewizja Polsat Spolka z o. o.", /* 46448 */
+    "Collibra", /* 46449 */
+    "Opsmate, Inc.", /* 46450 */
+    "InfoRelay Online Systems, Inc", /* 46451 */
+    "Lanworld Finland Oy", /* 46452 */
+    "McKesson IWS", /* 46453 */
+    "Goldberg and Mathew Medical Assc P.L.L.C.", /* 46454 */
+    "Coral Active", /* 46455 */
+    "AttoCore Ltd", /* 46456 */
+    "Gerrie Electric Wholesale Limited", /* 46457 */
+    "ENow, inc.", /* 46458 */
+    "Mairie de Canteleu", /* 46459 */
+    "Veterinary Specialists of North Texas", /* 46460 */
+    "Outhwaite Technologies", /* 46461 */
+    "Sicoob Confederação", /* 46462 */
+    "Radio Gigabit Inc.", /* 46463 */
+    "Knowledgeloop, Inc.", /* 46464 */
+    "EKE-Electronics Ltd.", /* 46465 */
+    "Rossbach Systems", /* 46466 */
+    "CellSens", /* 46467 */
+    "Coho Data, Inc.", /* 46468 */
+    "149W Managed Services LLC", /* 46469 */
+    "Man Technology Co, Ltd.", /* 46470 */
+    "Illusive Networks Ltd.", /* 46471 */
+    "infraView GmbH", /* 46472 */
+    "Otterbein Homes", /* 46473 */
+    "Kiwox Soluciones Tecnológicas", /* 46474 */
+    "OSTEC Business Security", /* 46475 */
+    "Martijn van Hoof", /* 46476 */
+    "HealthNow New York Inc", /* 46477 */
+    "DIAL GmbH", /* 46478 */
+    "Unidesk Corporation", /* 46479 */
+    "Modular Mining Systems, Inc.", /* 46480 */
+    "Desjardins Groupe Technologies", /* 46481 */
+    "Netki, Inc.", /* 46482 */
+    "ERLPhase Power Technologies Ltd", /* 46483 */
+    "HERE North America, LLC", /* 46484 */
+    "Guy's and St Thomas' NHS Foundation Trust", /* 46485 */
+    "Dedrone GmbH", /* 46486 */
+    "Stripe, Inc.", /* 46487 */
+    "WALSER-NET", /* 46488 */
+    "TGR - Tecnologia para Gestão de Redes, S.A.", /* 46489 */
+    "Captel", /* 46490 */
+    "Valerio Morozzo", /* 46491 */
+    "Conevity Solutions Inc", /* 46492 */
+    "UAB \"GKF\"", /* 46493 */
+    "Assimil8 Limited", /* 46494 */
+    "European Dynamics SA", /* 46495 */
+    "DEPARTAMENTO ADMINISTRATIVO DE CIENCIA, TECNOLOGIA E INNOVACION - COLCIENCIAS", /* 46496 */
+    "ISS BRASIL LTDA", /* 46497 */
+    "Jiangsu Sinolte Wireless Technology Co., Ltd.", /* 46498 */
+    "ICD CO.,LTD", /* 46499 */
+    "Trukai Industries Limited", /* 46500 */
+    "Didactum® Ltd. Deutschland (formerly 'Vutlan sro')", /* 46501 */
+    "TASS", /* 46502 */
+    "Quench Worldwide Limited", /* 46503 */
+    "Stolt-Nielsen Limited", /* 46504 */
+    "PLAS-TEK Ltd.", /* 46505 */
+    "Systems Integrated", /* 46506 */
+    "Simpress Comercio Locacao e Servicos", /* 46507 */
+    "Glen Raven, Inc.", /* 46508 */
+    "Oncology and Hematology Specialists", /* 46509 */
+    "Wake County Public School System", /* 46510 */
+    "New Telecom Solutions LLC", /* 46511 */
+    "Times Internet Limited", /* 46512 */
+    "ZorgNed Automatisering BV", /* 46513 */
+    "Mhashim Ltd", /* 46514 */
+    "Wolf-Medizintechnik GmbH", /* 46515 */
+    "Ante Grup Elektrik Elektronik Bilişim İnşaat Danışmanlık San. ve Tic. Ltd. Şti.", /* 46516 */
+    "FitX Deutschland GmbH", /* 46517 */
+    "SPD Electrical Engineers (Pty) Ltd", /* 46518 */
+    "Albertslund Kommune", /* 46519 */
+    "Hitachi Industry & Control Solutions, Ltd.", /* 46520 */
+    "PMC - PERIPHERIQUES ET MATERIELS DE CONTROLE", /* 46521 */
+    "Dino Occhialini", /* 46522 */
+    "Bridgetec Corp.", /* 46523 */
+    "Linkbroad Technology Beijing Corporation Limited", /* 46524 */
+    "Hedvig Inc.", /* 46525 */
+    "Moldeo AB", /* 46526 */
+    "Trans Link Systems B.V.", /* 46527 */
+    "Shanghai Chuxun Information Technology Co.,Ltd.", /* 46528 */
+    "ldap4mail", /* 46529 */
+    "R-SYS s.r.o.", /* 46530 */
+    "PGE Polska Grupa Energetyczna S.A.", /* 46531 */
+    "Hinchingbrooke Hospital NHS Health Care Trust", /* 46532 */
+    "Open Source System", /* 46533 */
+    "Arx One", /* 46534 */
+    "CosmoKey GmbH & Co. KG", /* 46535 */
+    "Textel Marimon s.a.", /* 46536 */
+    "Yodel Delivery Network Limited", /* 46537 */
+    "Pioneers Memorial Healthcare", /* 46538 */
+    "Virtual Network Element, Inc.", /* 46539 */
+    "VSSUT", /* 46540 */
+    "Seneca Data Distributors, Inc.", /* 46541 */
+    "Mountain Blue Cancer Care Center", /* 46542 */
+    "CNIAP - Guinea Ecuatorial", /* 46543 */
+    "Axion Technologies Ltd.", /* 46544 */
+    "Rechtsanwaltskanzlei Schaalo", /* 46545 */
+    "Impavid LLC", /* 46546 */
+    "BILD GmbH & Co. KG", /* 46547 */
+    "Secvice Information Technologies Private Limited", /* 46548 */
+    "Messer Information Services GmbH", /* 46549 */
+    "Dufoort", /* 46550 */
+    "Amprion GmbH", /* 46551 */
+    "Eltham College", /* 46552 */
+    "Amsterdamtelecom Ltd.", /* 46553 */
+    "Anthon Romanov", /* 46554 */
+    "Kostya.Pro", /* 46555 */
+    "L.D. Lutum", /* 46556 */
+    "Scale Genius Inc.", /* 46557 */
+    "FutoIn", /* 46558 */
+    "ESC - Electronic Service Center GbR", /* 46559 */
+    "Cox Communications Inc - Engineering", /* 46560 */
+    "BHS Sonthofen GmbH", /* 46561 */
+    "Revenue Management Solutions, LLC", /* 46562 */
+    "Virgin Islands Oncology & Hematology,PC", /* 46563 */
+    "Entera AS", /* 46564 */
+    "Wiollo Sp. z o.o.", /* 46565 */
+    "Holbæk Kommune", /* 46566 */
+    "DIROX", /* 46567 */
+    "Moqom Limited", /* 46568 */
+    "HybridDigital", /* 46569 */
+    "Mithril Informatique", /* 46570 */
+    "Fruit of the Loom", /* 46571 */
+    "Comact Equipment Inc.", /* 46572 */
+    "Stefan van Someren", /* 46573 */
+    "Encore Systems, LLC", /* 46574 */
+    "WorkCover Queensland", /* 46575 */
+    "NFWare Inc.", /* 46576 */
+    "Cloudstead, Inc.", /* 46577 */
+    "Gereltei Systems", /* 46578 */
+    "Pivotal Cloud Foundry", /* 46579 */
+    "Braincoolant Oy", /* 46580 */
+    "MalariaGEN", /* 46581 */
+    "Robert-Bosch-Krankenhaus GmbH", /* 46582 */
+    "Linoma Software", /* 46583 */
+    "French Lick Resort", /* 46584 */
+    "StrathTech", /* 46585 */
+    "ProSiebenSat.1 Media SE", /* 46586 */
+    "Institute of Low Temperature and Structure Research, Polish Academy of Sciences", /* 46587 */
+    "Aptitude Technologies", /* 46588 */
+    "Stifel Financial Corp", /* 46589 */
+    "suretap wallet lp", /* 46590 */
+    "Auditoria y Consultoria de Privacidad y Seguridad, S.L.", /* 46591 */
+    "Gebr. Hoffmann Werkzeugmaschinen GmbH", /* 46592 */
+    "JuntoTelecom", /* 46593 */
+    "Matthew Wynn", /* 46594 */
+    "smartbits", /* 46595 */
+    "Hazelnut Software Ltd", /* 46596 */
+    "OW2 Consortium", /* 46597 */
+    "Industrielle Alliance Valeurs mobilières inc.", /* 46598 */
+    "UAB Erisata", /* 46599 */
+    "Mersoft Corporation", /* 46600 */
+    "Inform-Mobil", /* 46601 */
+    "kt Corporation", /* 46602 */
+    "Xeron Universal Technologies", /* 46603 */
+    "NetIndia Private Limited", /* 46604 */
+    "WALLYS COMMUNICATIONS SDN BHD", /* 46605 */
+    "Cisco Systems India Private Limited", /* 46606 */
+    "VetRay N", /* 46607 */
+    "SoftLab–NSK Co., Ltd.", /* 46608 */
+    "The Wireless Innovation Forum", /* 46609 */
+    "Sensorpoint, LLC", /* 46610 */
+    "St Vincents Health Australia (NSW)", /* 46611 */
+    "DV Impex, Ltd", /* 46612 */
+    "JSC \"SPO Angstrem\"", /* 46613 */
+    "BBM spol. s r. o.", /* 46614 */
+    "WirelessCar", /* 46615 */
+    "Anghel F. Dan-Alexandru PFA", /* 46616 */
+    "Helse Nord IKT", /* 46617 */
+    "AXEL", /* 46618 */
+    "Centre Hospitalier Emile Mayrisch", /* 46619 */
+    "Wolseley plc", /* 46620 */
+    "Thales Services France Toulouse", /* 46621 */
+    "FLAG Solutions S.L.", /* 46622 */
+    "Trunomi, Inc.", /* 46623 */
+    "Flexoptix GmbH", /* 46624 */
+    "wingtop co., ltd", /* 46625 */
+    "zibernetics", /* 46626 */
+    "Init Corporation", /* 46627 */
+    "SC 4 WAVE BRO SRL", /* 46628 */
+    "Joe Pitt", /* 46629 */
+    "Dominique Dor", /* 46630 */
+    "DeviousOps", /* 46631 */
+    "Encinitas Country Day School", /* 46632 */
+    "Oncology San Antonio", /* 46633 */
+    "NIvetti Systems Private Limited", /* 46634 */
+    "INTERSCHALT maritime systems AG", /* 46635 */
+    "Honorardozent Peter Kruse", /* 46636 */
+    "RaulWalter LLC", /* 46637 */
+    "City of Sunrise", /* 46638 */
+    "Jan Skogqvist", /* 46639 */
+    "Caixa Economica Federal", /* 46640 */
+    "MeterBee", /* 46641 */
+    "National Documentation Centre", /* 46642 */
+    "kittenberger.org", /* 46643 */
+    "ZettaLogs", /* 46644 */
+    "Aeronix", /* 46645 */
+    "Wavelab Inc.", /* 46646 */
+    "Michael G. Sullivan (MGS)", /* 46647 */
+    "Brain4Net, Inc.", /* 46648 */
+    "PTPd project", /* 46649 */
+    "Humboldt Solutions Ltd", /* 46650 */
+    "Dantherm Cooling A/S", /* 46651 */
+    "Sertel Electronics UK Ltd", /* 46652 */
+    "Raymond Chung Industries Corporation", /* 46653 */
+    "Future Infrastructures Online Ltd.", /* 46654 */
+    "Innofidei Technologies Inc.", /* 46655 */
+    "Polskie Koleje Państwowe S.A.", /* 46656 */
+    "EKCR", /* 46657 */
+    "AssetOwl", /* 46658 */
+    "BBR Verkehrstechnik GmbH", /* 46659 */
+    "Volvo Group Telematics", /* 46660 */
+    "Bucherer AG", /* 46661 */
+    "Pointek", /* 46662 */
+    "TORRING SYSTEMS CORP", /* 46663 */
+    "Novatronic", /* 46664 */
+    "Reshin", /* 46665 */
+    "NPF Modem, Ltd.", /* 46666 */
+    "Limited Liability Company «ICBCOM»", /* 46667 */
+    "ENX Association", /* 46668 */
+    "Job Corps", /* 46669 */
+    "OCTAGON computer&communication", /* 46670 */
+    "Medical Specialists of Fairfield, LLC.", /* 46671 */
+    "PrimeDesign", /* 46672 */
+    "Minoris", /* 46673 */
+    "cantaa GmbH", /* 46674 */
+    "Essential Energy", /* 46675 */
+    "Weir Shared Services Ltd", /* 46676 */
+    "XATU", /* 46677 */
+    "naksitrallid.com", /* 46678 */
+    "Bistum Würzburg", /* 46679 */
+    "Control Techniques", /* 46680 */
+    "SV Informatik GmbH", /* 46681 */
+    "Applied Optoelectronics, Inc.", /* 46682 */
+    "Zdravec Bulgaria Ltd", /* 46683 */
+    "Nazessen", /* 46684 */
+    "Maag Informatik", /* 46685 */
+    "Document Storage Systems, Inc.", /* 46686 */
+    "Qualicorp SA", /* 46687 */
+    "Karl Camilleri", /* 46688 */
+    "Entria LLC", /* 46689 */
+    "12Sided Technology, LLC", /* 46690 */
+    "IDOBJECT", /* 46691 */
+    "Ripple", /* 46692 */
+    "BestCAS Ltd", /* 46693 */
+    "KoreLogic, Inc.", /* 46694 */
+    "Cancer Care of West Central Ohio", /* 46695 */
+    "MastMinder Ltd", /* 46696 */
+    "Unimar, Inc.", /* 46697 */
+    "Cybersales a.s.", /* 46698 */
+    "HCit Consultant", /* 46699 */
+    "ICTrex", /* 46700 */
+    "State Historical Museum", /* 46701 */
+    "Control Service do Brasil Ltda.", /* 46702 */
+    "aBjorne", /* 46703 */
+    "Salib Oncology Hematology", /* 46704 */
+    "Maestria en Seguridad Informatica Aplicada - ESPOL", /* 46705 */
+    "Wowza Media Systems, LLC", /* 46706 */
+    "Neocoretech SAS", /* 46707 */
+    "Action for Children", /* 46708 */
+    "BDO Canada LLP", /* 46709 */
+    "Network Time Foundation", /* 46710 */
+    "DoubleNegative.eu", /* 46711 */
+    "Open Infrastructure", /* 46712 */
+    "Datahealth", /* 46713 */
+    "Cesa Inc", /* 46714 */
+    "Bioptická laboratoř s.r.o.", /* 46715 */
+    "TARGOBANK AG & Co. KGaA", /* 46716 */
+    "Ibys Technologies S.A.", /* 46717 */
+    "Sea Island Systems, Inc.", /* 46718 */
+    "dtsi", /* 46719 */
+    "LightFactor", /* 46720 */
+    "Cancer Care Center, PC", /* 46721 */
+    "Merge Security", /* 46722 */
+    "United Educators Credit Union", /* 46723 */
+    "Ferrograph Limited", /* 46724 */
+    "Swift MT", /* 46725 */
+    "U.S. Anesthesia Partners, Inc.", /* 46726 */
+    "SOFTEK GLOBAL EDESIGN S DE RL DE CV", /* 46727 */
+    "Heksagon Group Cy Ltd", /* 46728 */
+    "Growing Energy Labs, Inc.", /* 46729 */
+    "Route Weaver LLC", /* 46730 */
+    "Institut fuer medizinische und pharmazeutische Pruefungsfragen", /* 46731 */
+    "Vedang Radio Technology Pvt. Limited", /* 46732 */
+    "DOM-P Zrt", /* 46733 */
+    "TCCC", /* 46734 */
+    "Silhouette International Schmied AG", /* 46735 */
+    "Powertech IT Services S.R.L.", /* 46736 */
+    "Amphinicy Technologies", /* 46737 */
+    "Beeler IT Services", /* 46738 */
+    "RONIT. N.THAKOR", /* 46739 */
+    "Zendesk, Inc", /* 46740 */
+    "Aspect Enterprise Solutions Inc.", /* 46741 */
+    "Global Biodiversity Information Facility (GBIF)", /* 46742 */
+    "Technology Architects LLC", /* 46743 */
+    "Transaction Technologies Pte Ltd", /* 46744 */
+    "Joe Thielen", /* 46745 */
+    "Weill Cornell Medicine", /* 46746 */
+    "The Christ Hospital Hem Onc", /* 46747 */
+    "Alliance Technology Group, LLC", /* 46748 */
+    "121 Marketing Services Group, Inc.", /* 46749 */
+    "MobilSign Ltd.", /* 46750 */
+    "Carrizo Oil & Gas, Inc.", /* 46751 */
+    "THE MINNITI CENTER FOR MEDICAL ONCOLOGY & HEMATOLOGY", /* 46752 */
+    "Hematology Oncology Clinic, LLP", /* 46753 */
+    "NETFOX AG", /* 46754 */
+    "Nexgen Oncology", /* 46755 */
+    "Michael Oberdorf IT-Consulting", /* 46756 */
+    "DeMoulas Market Basket, Inc.", /* 46757 */
+    "CarMax", /* 46758 */
+    "CoverMyMeds", /* 46759 */
+    "Teksush.com", /* 46760 */
+    "Groupe JVS", /* 46761 */
+    "Atos IT Solutions and Services GmbH", /* 46762 */
+    "alfer aluminium Gesellschaft mbH", /* 46763 */
+    "HealthInsight", /* 46764 */
+    "Sviaz-Bank", /* 46765 */
+    "Creatcomm Technology", /* 46766 */
+    "CarMax, Inc", /* 46767 */
+    "Symphony Communication Services LLC", /* 46768 */
+    "St. Leonard's Community Services", /* 46769 */
+    "Benz Dataconsulting", /* 46770 */
+    "Atos IT Services Sp. z o.o.", /* 46771 */
+    "Brig Center for Cancer Care and Survivorship", /* 46772 */
+    "Voss Kommunikasjon AS", /* 46773 */
+    "K4Connect", /* 46774 */
+    "Bourgeois Bits LLC", /* 46775 */
+    "Westchester Cancer Care", /* 46776 */
+    "Air New Zealand", /* 46777 */
+    "NTx Back Office Consulting Group", /* 46778 */
+    "Belgian Supreme Administrative Court", /* 46779 */
+    "Leo Angelo", /* 46780 */
+    "Sasola Limited", /* 46781 */
+    "John Holland PTY LTD", /* 46782 */
+    "Nephos6", /* 46783 */
+    "COSMOVISION Co., Ltd.", /* 46784 */
+    "Comark Communications LLC", /* 46785 */
+    "blue-beam.de", /* 46786 */
+    "Sony Computer Entertainment Shanghai Ltd.", /* 46787 */
+    "Xabyss Inc.", /* 46788 */
+    "Rains Corp.", /* 46789 */
+    "TOYOTA MOTOR CORPORATION", /* 46790 */
+    "Stephan Fiebrandt", /* 46791 */
+    "ISON Technology Co., Ltd", /* 46792 */
+    "ASAT Co., Ltd.", /* 46793 */
+    "Decision Detective Corporation", /* 46794 */
+    "Organization for Security and Co-operation in Europe", /* 46795 */
+    "Bedrock Automation Platforms, Inc.", /* 46796 */
+    "The self-financing Science Information Center for New Technologies under State Tax Committee of the Republic of Uzbekistan", /* 46797 */
+    "RBS Services (Switzerland) Ltd", /* 46798 */
+    "Interblock d.d.", /* 46799 */
+    "Digitoll Information Technology and Servicing Ltd.", /* 46800 */
+    "The Hut Group", /* 46801 */
+    "The Business Clinic Ltd", /* 46802 */
+    "BROCELIA", /* 46803 */
+    "Himnark CJSC", /* 46804 */
+    "Oncology Consultants", /* 46805 */
+    "Mid Florida Hematology Oncology", /* 46806 */
+    "Motiv Telecom Group", /* 46807 */
+    "Fall River School District", /* 46808 */
+    "KB PROMSVYAZ", /* 46809 */
+    "Stockton University", /* 46810 */
+    "L'Imprimerie", /* 46811 */
+    "Konsortium ICT Pantai Timur", /* 46812 */
+    "Sunbird Software, Inc.", /* 46813 */
+    "SC3 Technologies Oü", /* 46814 */
+    "Third Point LLC", /* 46815 */
+    "HELM AG", /* 46816 */
+    "Atam Holdings", /* 46817 */
+    "Systemhaus Scheuschner GmbH", /* 46818 */
+    "Attenda Ltd.", /* 46819 */
+    "Telekom Malaysia Berhad", /* 46820 */
+    "Commandus", /* 46821 */
+    "Zhuhai Kingsoft Office Software Co Ltd", /* 46822 */
+    "Siselectron Technology Ltd", /* 46823 */
+    "Certly, Inc.", /* 46824 */
+    "Loop Technologies Limited", /* 46825 */
+    "OptimalMethods Ltd.", /* 46826 */
+    "Affix Technology Co., Ltd.", /* 46827 */
+    "Sea and Air Technology, S.L.", /* 46828 */
+    "GLOCK Ges.m.b.H.", /* 46829 */
+    "LearnConsult - DI Meitz & Ing. Pock OG", /* 46830 */
+    "GRAUPNER medical solutions GmbH", /* 46831 */
+    "Heylige FRau Latte", /* 46832 */
+    "Synapses Technologies, LLC", /* 46833 */
+    "Martin GmbH für Umwelt- und Energietechnik", /* 46834 */
+    "rf152", /* 46835 */
+    "Bilfinger GreyLogix GmbH", /* 46836 */
+    "AZD Praha s.r.o.", /* 46837 */
+    "Swaffer Consulting Ltd.", /* 46838 */
+    "RED ELECTRICA DE ESPAÑA SAU", /* 46839 */
+    "Christophorus Club e.V.", /* 46840 */
+    "Hwacheon Machinery Europe GmbH", /* 46841 */
+    "Hamburger Software GmbH & Co. KG", /* 46842 */
+    "Newfield Automation Ltd.", /* 46843 */
+    "Dreamtime.net (Thailand) Co., Ltd.", /* 46844 */
+    "Interlink INC", /* 46845 */
+    "FLOPNET", /* 46846 */
+    "VALLEY MEDICAL & SURGICAL CLINIC", /* 46847 */
+    "Lavelle Networks India Private Limited", /* 46848 */
+    "Irving Independent School District", /* 46849 */
+    "Tula State Center of Information Technology", /* 46850 */
+    "Terremark", /* 46851 */
+    "viagogo AG", /* 46852 */
+    "PAC Enterprises", /* 46853 */
+    "Hagenberger Kreis zur Förderung der digitalen Sicherheit", /* 46854 */
+    "ShowCase PRO Tecnologia LTDA", /* 46855 */
+    "ZPEG, Inc.", /* 46856 */
+    "Park Controls & Communications (P) Ltd.", /* 46857 */
+    "Dgoujard", /* 46858 */
+    "Guangdong  Quantum Technology Co., Ltd", /* 46859 */
+    "Bittacle Consulting Limited", /* 46860 */
+    "JVCKENWOOD Corporation", /* 46861 */
+    "Digital Life Promotion Association", /* 46862 */
+    "Bosch Thermotechnik GmbH", /* 46863 */
+    "Embedtronics Oy", /* 46864 */
+    "IS4U, s.r.o.", /* 46865 */
+    "Virdata NV", /* 46866 */
+    "Synthetel Corporation", /* 46867 */
+    "Secure Energy Services", /* 46868 */
+    "Torchmind", /* 46869 */
+    "relaxt confusion labs e.U.", /* 46870 */
+    "Magic Mike, Ltd", /* 46871 */
+    "Bimex Energy AG", /* 46872 */
+    "y1s2", /* 46873 */
+    "Wavenet sprl", /* 46874 */
+    "prodot GmbH", /* 46875 */
+    "GE Lighting", /* 46876 */
+    "ATB Financial", /* 46877 */
+    "PermaGreen Supreme, Inc.", /* 46878 */
+    "Lengvarsky.com", /* 46879 */
+    "Technology Kitchen Corporation", /* 46880 */
+    "henz.co", /* 46881 */
+    "LSTI", /* 46882 */
+    "Capsicum Business Architects", /* 46883 */
+    "Freie ev. Gemeinde Giessen", /* 46884 */
+    "TwoFive, Inc.", /* 46885 */
+    "Beken Learning Systems, Inc.", /* 46886 */
+    "Bulletin.net Ltd", /* 46887 */
+    "KRDS", /* 46888 */
+    "Gravity Academy Engineering", /* 46889 */
+    "SOLUM Co., Ltd.", /* 46890 */
+    "fmad engineering llc", /* 46891 */
+    "TwelveBaud Studios, LLC", /* 46892 */
+    "Antelope Enterprises", /* 46893 */
+    "Hanwha S&C", /* 46894 */
+    "NexDefense, Inc.", /* 46895 */
+    "UNIACC Electronic Technology Ltd. of Suzhou", /* 46896 */
+    "Virtual Hold Technology, LLC", /* 46897 */
+    "Hewlett-Packard (Schweiz) GmbH", /* 46898 */
+    "TDK LAMBDA LTD", /* 46899 */
+    "TiePie engineering", /* 46900 */
+    "Wilhelmsen Loom Consulting", /* 46901 */
+    "Keegan Moodley Ltd", /* 46902 */
+    "DE-CIX Management GmbH", /* 46903 */
+    "Sepura plc", /* 46904 */
+    "KTI RÁDIO, spol. s r.o.", /* 46905 */
+    "Enghouse Networks Nordics AB", /* 46906 */
+    "Qognify LTD", /* 46907 */
+    "Ascot Industrial", /* 46908 */
+    "Centric Housing & Healthcare", /* 46909 */
+    "AIC S.A.", /* 46910 */
+    "KERLINK", /* 46911 */
+    "Nassauische Heimstaette Wohnungs- und Entwicklungsgesellschaft mbH", /* 46912 */
+    "Hotspot Tiefenort", /* 46913 */
+    "Administration des Ponts et Chaussées", /* 46914 */
+    "raffel.biz", /* 46915 */
+    "Aviva Voice Systems and Services SL", /* 46916 */
+    "PC-TipTop", /* 46917 */
+    "GRUPO REVENGA", /* 46918 */
+    "Aadi Network Tools", /* 46919 */
+    "DEVISE FUTURES - IT SOLUTIONS, LDA", /* 46920 */
+    "Universidade Federal de Sao Joao del-Rei", /* 46921 */
+    "Wolf GmbH", /* 46922 */
+    "LG&E-KU LLC", /* 46923 */
+    "Oncology Specialists of Charlotte, PA", /* 46924 */
+    "EEBus Initiative e.V.", /* 46925 */
+    "Midas Green Technologies", /* 46926 */
+    "INVITE Networks Incorporated", /* 46927 */
+    "r0ck.net", /* 46928 */
+    "Uzma Iqbal MD PA", /* 46929 */
+    "Sandelman Software Works", /* 46930 */
+    "Welch Allyn Singapore Pte Ltd", /* 46931 */
+    "OAO NEFAZ", /* 46932 */
+    "Business&Decision", /* 46933 */
+    "AFSOC", /* 46934 */
+    "Provinzial NordWest", /* 46935 */
+    "Ingenieurbüro Eggimann", /* 46936 */
+    "jduprat.net", /* 46937 */
+    "Frederick Oncology Hematology Associates", /* 46938 */
+    "Sentinel Technologies", /* 46939 */
+    "Quantic Telecom", /* 46940 */
+    "Noom, Inc.", /* 46941 */
+    "Löwenfelsen UG (haftungsbeschränkt)", /* 46942 */
+    "STC Systems", /* 46943 */
+    "Beijing Yanglian technology co., LTD", /* 46944 */
+    "Rafako S.A.", /* 46945 */
+    "Transports Publics Genevois", /* 46946 */
+    "Meplan GmbH", /* 46947 */
+    "United Airlines, Inc.", /* 46948 */
+    "Moore Family", /* 46949 */
+    "FRZ Uni Leipzig", /* 46950 */
+    "中山大学附属第一医院 (First Affiliated Hospital of Sun Yat-sen)", /* 46951 */
+    "SecureAuth Corporation", /* 46952 */
+    "Active8", /* 46953 */
+    "Institut Puig Castellar", /* 46954 */
+    "Wolfnet", /* 46955 */
+    "Institute of Cosmophysical Research and Aeronomy of the Siberian Branch of the Russian Academy of Sciences", /* 46956 */
+    "setelsa", /* 46957 */
+    "New Cloud Technologies Ltd.", /* 46958 */
+    "Jaxageto", /* 46959 */
+    "mrn sa (formerly 'mrn lda')", /* 46960 */
+    "emineo AG", /* 46961 */
+    "Novaris Ltd.", /* 46962 */
+    "Shenzhen United Innovation Automatic Control System Co., Ltd.", /* 46963 */
+    "Yandik", /* 46964 */
+    "Wordery", /* 46965 */
+    "KIRACON Ltd.", /* 46966 */
+    "Thompson Rivers University", /* 46967 */
+    "Triad RF Systems", /* 46968 */
+    "R&D Software Solutions srl", /* 46969 */
+    "Borealis", /* 46970 */
+    "GKeS", /* 46971 */
+    "ICS Industries Pty Ltd", /* 46972 */
+    "Datalab Software GmbH", /* 46973 */
+    "EdgeTheory LLC", /* 46974 */
+    "MediGroup", /* 46975 */
+    "Rhebo AG", /* 46976 */
+    "ELTEC Elektronik AG", /* 46977 */
+    "The Akron Holding", /* 46978 */
+    "Q&D Solutions", /* 46979 */
+    "Ondics GmbH", /* 46980 */
+    "Netclient as", /* 46981 */
+    "Smart Concepts B.V.", /* 46982 */
+    "inIT - Institute Industrial IT, Ostwestfalen-Lippe University of Applied Sciences", /* 46983 */
+    "SABO Elektronik GmbH", /* 46984 */
+    "Marcus Portmann", /* 46985 */
+    "Meister Rechtsanwaelte", /* 46986 */
+    "Cancer & Blood Disorders Treatment Center", /* 46987 */
+    "CGI Deutschland", /* 46988 */
+    "Systemservice Nordfriesland", /* 46989 */
+    "ACCOLADE ELECTRONICS PVT. LTD.", /* 46990 */
+    "Universitaetsmedizin Goettingen", /* 46991 */
+    "IP CINT", /* 46992 */
+    "TDP s.r.o.", /* 46993 */
+    "ETS Schick", /* 46994 */
+    "Tantalus Systems", /* 46995 */
+    "Claus Queck GmbH", /* 46996 */
+    "MyQuickCloud", /* 46997 */
+    "CEHL", /* 46998 */
+    "RAK", /* 46999 */
+    "Converling Group B.V.", /* 47000 */
+    "LCS Co.Ltd", /* 47001 */
+    "System Controls Technology Solutions Private Limited", /* 47002 */
+    "JSC VELAN", /* 47003 */
+    "Secucloud Network GmbH", /* 47004 */
+    "Fort Lewis College", /* 47005 */
+    "TransneftEnergy, LLC", /* 47006 */
+    "Ascent Resources", /* 47007 */
+    "MBDA France", /* 47008 */
+    "ISIS Bilisim Teknolojileri San. Tic. Ltd. Sti.", /* 47009 */
+    "UK Ministry of Defence", /* 47010 */
+    "Ozarks Community Hospital", /* 47011 */
+    "SIMP", /* 47012 */
+    "APTVISION LIMITED", /* 47013 */
+    "BBS1 Mainz", /* 47014 */
+    "Zeye Solutions", /* 47015 */
+    "BlackSands Inc", /* 47016 */
+    "Qumulo Inc.", /* 47017 */
+    "ZeuSWarE GmbH", /* 47018 */
+    "ApexSQL LLC", /* 47019 */
+    "Flor Szoftver Ltd.", /* 47020 */
+    "Real Time Automation, Inc.", /* 47021 */
+    "TSI Automacao", /* 47022 */
+    "Xolarsoft", /* 47023 */
+    "Catalyze", /* 47024 */
+    "Charles River Analytics, Inc.", /* 47025 */
+    "Paraqum Technologies (Private) Limited", /* 47026 */
+    "Quavant Networks, Inc.", /* 47027 */
+    "Bund der Pfadfinderinnen und Pfadfinder e.V.", /* 47028 */
+    "Thomas Tague", /* 47029 */
+    "HAN Networks Co., Ltd", /* 47030 */
+    "Shenzhen Eunicum Electric Co., Ltd.", /* 47031 */
+    "Shanghai Yamu Technology Limited", /* 47032 */
+    "LLC \"66 Parallel\"", /* 47033 */
+    "CARS", /* 47034 */
+    "trash.net", /* 47035 */
+    "Ecosoft B.V. (trademark is Vidicode)", /* 47036 */
+    "Jubic Oy", /* 47037 */
+    "Université de Namur (UNamur)", /* 47038 */
+    "312Telephony", /* 47039 */
+    "ChuckStarter", /* 47040 */
+    "gurtzick.net", /* 47041 */
+    "Neragon Networks LTD", /* 47042 */
+    "Illusion Ltd.", /* 47043 */
+    "Charter Court Financial Services", /* 47044 */
+    "MartinLefebvre.com", /* 47045 */
+    "Bucks New University", /* 47046 */
+    "Phoenix Home", /* 47047 */
+    "Webnii", /* 47048 */
+    "EndFirst LLC", /* 47049 */
+    "The AREDN Project", /* 47050 */
+    "Virtu Financial LLC", /* 47051 */
+    "SK Planet", /* 47052 */
+    "SOUTHEAST ASIA JOINT STOCK COMMERCIAL BANK (SeABank)", /* 47053 */
+    "CJSC Transmashholding", /* 47054 */
+    "GouldFLP", /* 47055 */
+    "SunEdison Inc", /* 47056 */
+    "CityLink Data Co,.Ltd", /* 47057 */
+    "AlfaSix Tecnologia", /* 47058 */
+    "Earth2 Software Pty Ltd.", /* 47059 */
+    "elementmedia GmbH", /* 47060 */
+    "Shenzhen headsun technology co.,ltd.", /* 47061 */
+    "Isha Foundation", /* 47062 */
+    "ZWAY CO.,LTD.", /* 47063 */
+    "St. Joseph's Anglo-Chinese Primary School", /* 47064 */
+    "TACACS.net, Inc.", /* 47065 */
+    "VISQUAL Technologies", /* 47066 */
+    "xlea.se GmbH", /* 47067 */
+    "Optelix (Pty) Ltd", /* 47068 */
+    "Economia per i Cittadini", /* 47069 */
+    "Orell Fuessli Holding AG", /* 47070 */
+    "Flash Systems", /* 47071 */
+    "567.dk", /* 47072 */
+    "Layka Soluciones", /* 47073 */
+    "TRONTEQ Electronic", /* 47074 */
+    "PROJECT-M", /* 47075 */
+    "Bridgeway Security Solutions", /* 47076 */
+    "Device Insight GmbH", /* 47077 */
+    "JAPAN TELECOMMUNICATION ENGINEERING SERVICE CO., LTD.", /* 47078 */
+    "Mott MacDonald", /* 47079 */
+    "EDV-Beratung Baumgarten GmbH", /* 47080 */
+    "Aragon Institute of Engineering Research", /* 47081 */
+    "Mobiquithings", /* 47082 */
+    "Advanced Vision Technology LTD", /* 47083 */
+    "Stade Toulousain Rugby", /* 47084 */
+    "Controles Inteligentes S.A.S", /* 47085 */
+    "Olmsted County Minnesota", /* 47086 */
+    "Masonic Villages of the Grand Lodge of PA", /* 47087 */
+    "Pro-hosting s.r.o.", /* 47088 */
+    "Ramp Holdings, Inc.", /* 47089 */
+    "Exdev", /* 47090 */
+    "Cancer and Blood Specialist of Northern Virginia, PC", /* 47091 */
+    "Tangible Trade", /* 47092 */
+    "DeMaTech HB", /* 47093 */
+    "Sielte S.p.A.", /* 47094 */
+    "Subtopia Ltd", /* 47095 */
+    "Unisphone", /* 47096 */
+    "ARDIAN", /* 47097 */
+    "Lloyd Industries Inc.", /* 47098 */
+    "G4S Security Systems (Hungary) Ltd.", /* 47099 */
+    "Linkscreens SRL", /* 47100 */
+    "DAS-Online", /* 47101 */
+    "Global Technology Solutions", /* 47102 */
+    "PLC Technology, LLC", /* 47103 */
+    "Agentia pentru Agenda Digitala a Romaniei", /* 47104 */
+    "Together Bulgaria", /* 47105 */
+    "Spearline Labs", /* 47106 */
+    "Shaw Academy", /* 47107 */
+    "Beeper Communications Ltd.", /* 47108 */
+    "Abaco Systems", /* 47109 */
+    "Agenzia per l'Italia Digitale", /* 47110 */
+    "Baker Hill Solutions, LLC", /* 47111 */
+    "Louisiana Division of Administration", /* 47112 */
+    "Aviacomm Inc.", /* 47113 */
+    "WOM Engineering", /* 47114 */
+    "The Star Entertainment Group Limited", /* 47115 */
+    "NPL Management Ltd", /* 47116 */
+    "Spaulding Clinical", /* 47117 */
+    "Asian Arts Talents Foundation", /* 47118 */
+    "SCIFI", /* 47119 */
+    "Solustic - Solucoes em Tecnologia", /* 47120 */
+    "TDCH A/S", /* 47121 */
+    "BVL Group Ltd", /* 47122 */
+    "CODEC CO.,LTD.", /* 47123 */
+    "Schmied Elektronik & Software", /* 47124 */
+    "IDEAS S.R.L.", /* 47125 */
+    "earthTV network GmbH", /* 47126 */
+    "Yoti Ltd", /* 47127 */
+    "Insobis GmbH", /* 47128 */
+    "SECURA Insurance Companies", /* 47129 */
+    "Al Yah Satellite Communication Company PJSC (Yahsat)", /* 47130 */
+    "ViktorBalogh", /* 47131 */
+    "Thinking Automation, Inc.", /* 47132 */
+    "Research Capital Group, Inc.", /* 47133 */
+    "FROG CELLSAT LIMITED", /* 47134 */
+    "MotionLED Technology Ltd.", /* 47135 */
+    "4S Information Technologies", /* 47136 */
+    "Andre Grosse Bley", /* 47137 */
+    "Noble 3D Printers, LLC", /* 47138 */
+    "MaTelSo GmbH", /* 47139 */
+    "DSG Systems AS", /* 47140 */
+    "PT. WIRAKY NUSA TELEKOMUNIKASI", /* 47141 */
+    "CoralTree Systems", /* 47142 */
+    "iSnapp", /* 47143 */
+    "CommerceHub", /* 47144 */
+    "Telonic Berkeley Inc", /* 47145 */
+    "ENDERCODING", /* 47146 */
+    "Avionics Interface Technologies", /* 47147 */
+    "Winston Brands Inc.", /* 47148 */
+    "Adaptrum Inc.", /* 47149 */
+    "Virginia Cancer Institute", /* 47150 */
+    "CoinBau GmbH", /* 47151 */
+    "Dovecot Oy", /* 47152 */
+    "Brunke electronic", /* 47153 */
+    "Stabilitas", /* 47154 */
+    "VINTEGRIS SL", /* 47155 */
+    "Haus Michael auf Draht e.V.", /* 47156 */
+    "Boston Scientific Corporation", /* 47157 */
+    "Clipcomm Inc.", /* 47158 */
+    "Jevons Global Pty Ltd", /* 47159 */
+    "Centorrino Technologies", /* 47160 */
+    "Stuttgarter Haus- und Grundbesitzerverein e. V.", /* 47161 */
+    "Ote SA (Hellenic Telecommunications Organisation)", /* 47162 */
+    "Banka Koper d.d.", /* 47163 */
+    "Ciudad del Motor de Aragon, SA", /* 47164 */
+    "Self Esteem Brands", /* 47165 */
+    "Digital Insyte, LLC", /* 47166 */
+    "AB LITGRID", /* 47167 */
+    "Guangzhou Yinxun Comm. Tech. Co., LTD", /* 47168 */
+    "JSS Technologies, LLC", /* 47169 */
+    "Skylark Technology Inc.", /* 47170 */
+    "Maximus, Inc.", /* 47171 */
+    "OMNITEC SOLUTIONS, Inc.", /* 47172 */
+    "Openwave Messaging", /* 47173 */
+    "Compute Canada", /* 47174 */
+    "Cosylab d.d.", /* 47175 */
+    "gbltech.net", /* 47176 */
+    "Diplomat Pharmacy, Inc.", /* 47177 */
+    "Seneca Mortgage Servicing LLC", /* 47178 */
+    "Infosec Global Inc", /* 47179 */
+    "Unite Control Sp. z o.o.", /* 47180 */
+    "Capella Systems, LLC", /* 47181 */
+    "Applied Micro Design Inc.", /* 47182 */
+    "Studer Innotec SA", /* 47183 */
+    "LifeTech", /* 47184 */
+    "TOPCON CORPORATION", /* 47185 */
+    "CryoWerx", /* 47186 */
+    "Global Blue Service Company Austria GmbH", /* 47187 */
+    "Slovenske elektrarne, a.s.", /* 47188 */
+    "EPICT Italy", /* 47189 */
+    "HCMI datasharing consortium", /* 47190 */
+    "Bulat LLC", /* 47191 */
+    "Central Bank of Ireland", /* 47192 */
+    "ATICEL - Advanced Tech Cell", /* 47193 */
+    "Asesoria Telematica Canarias SL", /* 47194 */
+    "Gradkell Systems, Inc.", /* 47195 */
+    "Hewlett Packard Enterprise", /* 47196 */
+    "Rainbow Crow", /* 47197 */
+    "IVALUA SAS", /* 47198 */
+    "ISEC7", /* 47199 */
+    "realraum - Verein für Technik in Kultur und Gesellschaft", /* 47200 */
+    "Vivid-Hosting, LLC", /* 47201 */
+    "Top Down Systems Corporation", /* 47202 */
+    "Reactiv Media Ltd", /* 47203 */
+    "«КВАНТЭКС» Limited liability partnership («QUANTEX»)", /* 47204 */
+    "Lake Superior State University", /* 47205 */
+    "Brnit", /* 47206 */
+    "DAVID Systems GmbH", /* 47207 */
+    "Ensinger GmbH", /* 47208 */
+    "MonkZ", /* 47209 */
+    "ug consult", /* 47210 */
+    "Ecole Polytechnique Fédérale de Lausanne", /* 47211 */
+    "MailInBlack", /* 47212 */
+    "Nechi Group", /* 47213 */
+    "4all Tecnologia", /* 47214 */
+    "Markus Losco", /* 47215 */
+    "Mundio Mobile Holding Limited", /* 47216 */
+    "Einstein Medical Center", /* 47217 */
+    "websix GmbH", /* 47218 */
+    "Primary Data", /* 47219 */
+    "IUT de BEZIERS", /* 47220 */
+    "µE Kunst", /* 47221 */
+    "Megapath", /* 47222 */
+    "IQlunch", /* 47223 */
+    "Maersk Oil", /* 47224 */
+    "David Garner NZ", /* 47225 */
+    "Walker Digital Table Systems", /* 47226 */
+    "EPI-USE Systems", /* 47227 */
+    "Evolution Gaming, Ltd.", /* 47228 */
+    "SIPO Global", /* 47229 */
+    "Gafachi, Inc.", /* 47230 */
+    "Foxconn Corporation", /* 47231 */
+    "RodNoc", /* 47232 */
+    "TELENT TECHNOLOGY SERVICES LIMITED", /* 47233 */
+    "Suffolk County Scouts", /* 47234 */
+    "QXIP", /* 47235 */
+    "MarSoftware", /* 47236 */
+    "SYSTEMES INFORMATION HARMONIE MUTUELLE  SIHM  GIE", /* 47237 */
+    "AIS Advanced Info Service", /* 47238 */
+    "Braincarta", /* 47239 */
+    "Vision Solutions, Inc.", /* 47240 */
+    "DZIECIECY SWIAT Krzysztof Pytko", /* 47241 */
+    "CoreOS, Inc", /* 47242 */
+    "Steelcase, Inc.", /* 47243 */
+    "Roku Inc.", /* 47244 */
+    "Shar3d Interactive", /* 47245 */
+    "JF Zwobada", /* 47246 */
+    "SILKAN SA", /* 47247 */
+    "Ramarc Innovations", /* 47248 */
+    "Pjano Consulting AB", /* 47249 */
+    "ProMDM d.o.o.", /* 47250 */
+    "Web Solutions PH", /* 47251 */
+    "City of West Lafayette", /* 47252 */
+    "secureNET Switzerland Inc.", /* 47253 */
+    "Western Australian Internet Association Inc.", /* 47254 */
+    "T&T sistemi srl", /* 47255 */
+    "INSTER Tecnologia y Comunicaciones", /* 47256 */
+    "DBC A/S", /* 47257 */
+    "The Automobile Association (AA PLC)", /* 47258 */
+    "LUNATICANET", /* 47259 */
+    "Electrontechnika", /* 47260 */
+    "OBI Smart Technologies mbH", /* 47261 */
+    "LSware Inc.", /* 47262 */
+    "HEITZ Jean-Marie", /* 47263 */
+    "New Zealand Customs Service", /* 47264 */
+    "HWADAR Technologies Co., Ltd.", /* 47265 */
+    "Prochista Irsa Tech Ltd.", /* 47266 */
+    "OpenSwitch", /* 47267 */
+    "FARMING BITS, UNIPESSOAL LDA", /* 47268 */
+    "Pluribus Networks, Inc", /* 47269 */
+    "Felixfound", /* 47270 */
+    "Dreamlab Onet.pl SA", /* 47271 */
+    "Evrotrust JSC", /* 47272 */
+    "LLAMMA SK", /* 47273 */
+    "CPK Interior Products", /* 47274 */
+    "Hirschmann Multimedia B.V.", /* 47275 */
+    "Helsana Versicherungen AG", /* 47276 */
+    "Hochschule Weihenstephan-Triesdorf", /* 47277 */
+    "TeskaLabs Ltd", /* 47278 */
+    "ITCENTER", /* 47279 */
+    "Imagen Technologies", /* 47280 */
+    "Auloce S.A.", /* 47281 */
+    "The LinchPinGroup, LLC", /* 47282 */
+    "PJSC SOLLERS", /* 47283 */
+    "Cyber IT Solutions", /* 47284 */
+    "LLC \"Smartbrood\"", /* 47285 */
+    "UANATACA S.A.", /* 47286 */
+    "Brabbler Secure Message and Data Exchange Aktiengesellschaft", /* 47287 */
+    "COMMUNITHINGS S.A.", /* 47288 */
+    "Tango Wave", /* 47289 */
+    "Johnson Computers", /* 47290 */
+    "Deep Groups", /* 47291 */
+    "Luxar Tech Inc", /* 47292 */
+    "STILLITS", /* 47293 */
+    "NPort Networks, Inc.", /* 47294 */
+    "Marvin Gülker", /* 47295 */
+    "Arctic Paper Kostrzyn S.A.", /* 47296 */
+    "hotelleriesuisse", /* 47297 */
+    "Pastem Solutions, Ltd.", /* 47298 */
+    "P2 Wireless Technologies Limited", /* 47299 */
+    "itelligence AG", /* 47300 */
+    "\"NR\"WEB US", /* 47301 */
+    "Alnatura Produktions- und Handels GmbH", /* 47302 */
+    "Moratua Solutions", /* 47303 */
+    "Ivnosys Soluciones S.L.", /* 47304 */
+    "FoxGuard Solutions", /* 47305 */
+    "Jasper", /* 47306 */
+    "IgniteNet", /* 47307 */
+    "Lanbowan Technology Ltd.", /* 47308 */
+    "Sofia Digital, Ltd.", /* 47309 */
+    "botanic", /* 47310 */
+    "Seacomp s.r.o.", /* 47311 */
+    "Searidge Technologies", /* 47312 */
+    "Adenon Bilisim ve Iletisim Tek. San. ve Tic. Ltd. Sti.", /* 47313 */
+    "Torrential Data Solutions, Inc.", /* 47314 */
+    "Wahsega Labs", /* 47315 */
+    "True Manufacturing", /* 47316 */
+    "University of Warsaw", /* 47317 */
+    "Optigo Networks", /* 47318 */
+    "Riella Systems", /* 47319 */
+    "Advanced Enterprise Solutions Limited", /* 47320 */
+    "memit.de", /* 47321 */
+    "Office IT-Partner Borås", /* 47322 */
+    "TrustKo", /* 47323 */
+    "Mokop, Bartosz Rebeś", /* 47324 */
+    "Suzhou Robot Information Technology Co.,Ltd.", /* 47325 */
+    "yanyuxieyang", /* 47326 */
+    "Kassenärztliche Vereinigung Nordrhein", /* 47327 */
+    "Simulity Labs", /* 47328 */
+    "Stancke Transporte GmbH & Co. KG", /* 47329 */
+    "Murrelektronik GmbH", /* 47330 */
+    "Pro:Atria Ltd.", /* 47331 */
+    "Current, powered by GE", /* 47332 */
+    "Asintel, S.L.", /* 47333 */
+    "trendytech", /* 47334 */
+    "Superwave Group LLC", /* 47335 */
+    "Iguana Comunicacions SL", /* 47336 */
+    "Security On-Demand, Inc.", /* 47337 */
+    "Bob Ziuchkovski Free/Libre and Open Source Software", /* 47338 */
+    "Hessware GmbH", /* 47339 */
+    "Handysoft,co.ltd.", /* 47340 */
+    "Syllaba Press International Inc.", /* 47341 */
+    "VITAL WILLIAM CONSEIL", /* 47342 */
+    "ElektronIT GmbH", /* 47343 */
+    "COMSYS Communications Systems Service GmbH", /* 47344 */
+    "Variant", /* 47345 */
+    "Laurenz Wagner", /* 47346 */
+    "MIRACL", /* 47347 */
+    "Centro de Tradições Nordestinas", /* 47348 */
+    "Rockwell Automation", /* 47349 */
+    "Securian Financial Group", /* 47350 */
+    "Premium Security Broadband", /* 47351 */
+    "AMPAREX GmbH", /* 47352 */
+    "HornasjövägenIT", /* 47353 */
+    "Avista Corporation", /* 47354 */
+    "Metamarkets", /* 47355 */
+    "Cress Enterprises", /* 47356 */
+    "Technology Concepts & Design, Inc.", /* 47357 */
+    "HenzHome Services", /* 47358 */
+    "stary tec", /* 47359 */
+    "MAX-TECH", /* 47360 */
+    "KT&C CO., LTD.", /* 47361 */
+    "Woningstichting Haag Wonen", /* 47362 */
+    "SYSTEM Development Inc.", /* 47363 */
+    "SIRIETA", /* 47364 */
+    "Wabtec Railway Electronics", /* 47365 */
+    "Arturs Plisko", /* 47366 */
+    "Transport for New South Wales", /* 47367 */
+    "dainox GmbH", /* 47368 */
+    "Canal Digital AS", /* 47369 */
+    "Lorindus", /* 47370 */
+    "Shine Security Ltd", /* 47371 */
+    "MariaDB Corporation Ab", /* 47372 */
+    "Octopod Technology Company Limited", /* 47373 */
+    "Sitex Inc.", /* 47374 */
+    "Turpeinen", /* 47375 */
+    "Taqniat Ltd", /* 47376 */
+    "International Software Systems Inc. (ISSI)", /* 47377 */
+    "Threema GmbH", /* 47378 */
+    "iot.nxt", /* 47379 */
+    "Zagrebacka banka d.d.", /* 47380 */
+    "Omnitelecom", /* 47381 */
+    "UMAITEK", /* 47382 */
+    "Kaessbohrer Geländefahrzeug AG", /* 47383 */
+    "Sartorius Mechatronics T+H GmbH", /* 47384 */
+    "Sveaskog Förvaltnings AB", /* 47385 */
+    "US Signal", /* 47386 */
+    "0xBEDA, LLC", /* 47387 */
+    "SeGuru Corp.", /* 47388 */
+    "State Universities Retirement System", /* 47389 */
+    "Affinity Credit Union 2013", /* 47390 */
+    "Green Cubes Technology Corporation", /* 47391 */
+    "FAWONG", /* 47392 */
+    "Koalephant Co., Ltd.", /* 47393 */
+    "BKT Elektronik Sp. z o.o.", /* 47394 */
+    "East Central Oncology", /* 47395 */
+    "CJSC TransProektInzhiniring", /* 47396 */
+    "IT-Wissen.org", /* 47397 */
+    "AVP Technology", /* 47398 */
+    "AMAG Technology", /* 47399 */
+    "Cottonwood Creek Technologies, Inc.", /* 47400 */
+    "Hotel Internet Services", /* 47401 */
+    "VALID CERTIFICADORA DIGITAL LTDA", /* 47402 */
+    "Connect Managed Services", /* 47403 */
+    "Coligo AB", /* 47404 */
+    "Brukarkooperativet JAG", /* 47405 */
+    "Tactic Code AB", /* 47406 */
+    "Forester IT", /* 47407 */
+    "Pankraz Elektronik", /* 47408 */
+    "Javier Pastor", /* 47409 */
+    "InfraSource Inc.", /* 47410 */
+    "Esferize Comunicaciones SL", /* 47411 */
+    "SAIFER ASSOCIATES LTD", /* 47412 */
+    "Caprica Limited", /* 47413 */
+    "Burgstaller", /* 47414 */
+    "Voxaware Ltd.", /* 47415 */
+    "3Shape Medical A/S", /* 47416 */
+    "Associazione La Nostra Famiglia", /* 47417 */
+    "Key Bridge LLC", /* 47418 */
+    "Halter AG", /* 47419 */
+    "2scale GmbH", /* 47420 */
+    "Cohesity Inc.", /* 47421 */
+    "imito AG", /* 47422 */
+    "Viamericas Corporation", /* 47423 */
+    "RPCI Oncology, PC", /* 47424 */
+    "BASYS Bartsch EDV-Systeme GmbH", /* 47425 */
+    "Triolan Limited Inc.", /* 47426 */
+    "PULLNET TECHNOLOGY, S.L.", /* 47427 */
+    "Taras Shevchenko National University of Kyiv", /* 47428 */
+    "NOWMEDIA TECHNOLOGIES", /* 47429 */
+    "Ifixmail.com", /* 47430 */
+    "CrowdStrike Inc.", /* 47431 */
+    "Diamond Technologies Inc.", /* 47432 */
+    "DAC System SA", /* 47433 */
+    "COUNT+CARE GmbH & Co. KG", /* 47434 */
+    "Roksnet Solutions LTD", /* 47435 */
+    "Lufthansa Systems GmbH & Co. KG", /* 47436 */
+    "Vagaro Inc.", /* 47437 */
+    "tofutown gmbh", /* 47438 */
+    "Alexander Zaigraev", /* 47439 */
+    "Stellus Technologies", /* 47440 */
+    "Lagardère Ressources", /* 47441 */
+    "Highlands Oncology Group", /* 47442 */
+    "Jockulator Studios North", /* 47443 */
+    "Milwaukee School of Engineering", /* 47444 */
+    "Telestream LLC", /* 47445 */
+    "443 IT", /* 47446 */
+    "UniqCast", /* 47447 */
+    "Intis d.o.o.", /* 47448 */
+    "Ryanair Ltd", /* 47449 */
+    "Cloud Foundry Foundation", /* 47450 */
+    "OmegaStar", /* 47451 */
+    "QMS Capital Management LP", /* 47452 */
+    "Gobierno de Santa Fe", /* 47453 */
+    "Area d'Inxenieria Telematica - University of Oviedo", /* 47454 */
+    "Sydved AB", /* 47455 */
+    "Vodafone NZ Limited", /* 47456 */
+    "SAS Orbitracs", /* 47457 */
+    "GIGANET NETWORKING SOLUTIONS LTD", /* 47458 */
+    "BKM-Micronic Richtfunkanlagen GmbH", /* 47459 */
+    "LiquidCool Solutions", /* 47460 */
+    "Lit Consulting", /* 47461 */
+    "ChangZhou Taiping Communication Technology Co.Ltd", /* 47462 */
+    "bestrun nanjing, co.ltd", /* 47463 */
+    "IN WIN Development Inc.", /* 47464 */
+    "CDB Monolit", /* 47465 */
+    "Lab3 e.V.", /* 47466 */
+    "Allianz Insurance Company Russia OJSC", /* 47467 */
+    "Trueverit", /* 47468 */
+    "Presence Technology", /* 47469 */
+    "CGI Sverige", /* 47470 */
+    "Apogey Ltd", /* 47471 */
+    "Purkinje Inc.", /* 47472 */
+    "Resurs-Komplekt LLC", /* 47473 */
+    "Sonn & Partner Patentanwälte", /* 47474 */
+    "ShenZhen Smart Imaging Healthcare Co.,Ltd.", /* 47475 */
+    "medi.com sp. z o.o.", /* 47476 */
+    "CGS Tower Networks Ltd.", /* 47477 */
+    "NetSection Security", /* 47478 */
+    "Artec Design LLC", /* 47479 */
+    "TECO Ltd", /* 47480 */
+    "RADD Web Studio", /* 47481 */
+    "ATVIRTUAL.NET KG", /* 47482 */
+    "Mcallen Oncology", /* 47483 */
+    "Quest Medical Imaging B.V.", /* 47484 */
+    "ArmySr", /* 47485 */
+    "Factorial Advance Systems Ltd", /* 47486 */
+    "Leroy Merlin Polska Sp. z o.o.", /* 47487 */
+    "Nedam ENG. Co., ltd.", /* 47488 */
+    "Techonline Consulting Ltd", /* 47489 */
+    "Nordea AEP Luxembourg", /* 47490 */
+    "Feenix Communications", /* 47491 */
+    "Carnelutti Studio Legale Associato", /* 47492 */
+    "SHENZHEN GYE TECH CO.,LTD", /* 47493 */
+    "AO-27 Control Operators Association", /* 47494 */
+    "alfaleasing", /* 47495 */
+    "Binary Kitchen e.V.", /* 47496 */
+    "KIZIL Elektronik", /* 47497 */
+    "Dirk Rossmann GmbH", /* 47498 */
+    "Beijing NewDigit Technology Co., Ltd.", /* 47499 */
+    "PB Design & Developments Limited", /* 47500 */
+    "Hargreaves Lansdown Plc", /* 47501 */
+    "Hiawatha Valley Education District", /* 47502 */
+    "Ralph Lauren Center for Cancer Care", /* 47503 */
+    "Zellkraftwerk GmbH", /* 47504 */
+    "Numonix", /* 47505 */
+    "AOSense, Inc.", /* 47506 */
+    "CT LAB", /* 47507 */
+    "Incosys SAS", /* 47508 */
+    "Herz Group", /* 47509 */
+    "Signifai, Inc", /* 47510 */
+    "GPC Asia Pacific", /* 47511 */
+    "linuxmuster.net e.V.", /* 47512 */
+    "venetex corporation", /* 47513 */
+    "RAK SYSTEM CO,;LTD", /* 47514 */
+    "Spectrum Controls, Inc.", /* 47515 */
+    "Certego s.r.l.", /* 47516 */
+    "Nekomit", /* 47517 */
+    "Openflexo", /* 47518 */
+    "Fincons SpA", /* 47519 */
+    "NES Technology Inc", /* 47520 */
+    "S+T Service & Technique S.A.", /* 47521 */
+    "BTECO LIMITED", /* 47522 */
+    "VDE Prüf- und Zertifizierungsinstitut GmbH", /* 47523 */
+    "Rubicon Labs, Inc.", /* 47524 */
+    "Wuliang", /* 47525 */
+    "A. Farber & Partners Inc.", /* 47526 */
+    "Charbonnier", /* 47527 */
+    "Softhum", /* 47528 */
+    "NATIONAL BANK OF GREECE", /* 47529 */
+    "Softwaretechnik Ges.m.b.H.", /* 47530 */
+    "Analytik Jena AG", /* 47531 */
+    "Arhides d.o.o.", /* 47532 */
+    "Balyasny Asset management L.P.", /* 47533 */
+    "AutoAlert", /* 47534 */
+    "Autoridad Certificante de la Oficina Nacional de Tecnologías de Información", /* 47535 */
+    "PJSC \"Sumykhimprom\"", /* 47536 */
+    "SATT PACA Corse", /* 47537 */
+    "knoefel.xyz", /* 47538 */
+    "Greendoc Systems Kft.", /* 47539 */
+    "QuadraNet, Inc", /* 47540 */
+    "Admino LLC", /* 47541 */
+    "Tianyi iMusic culture & technology Co. Ltd.", /* 47542 */
+    "MWR InfoSecurity", /* 47543 */
+    "JTKJ.com", /* 47544 */
+    "Jingtong Technology Co. Ltd.", /* 47545 */
+    "HANGZHOU CHANGER TECHNOLOGY.,LTD", /* 47546 */
+    "Takta Co.", /* 47547 */
+    "Tvip Ltd", /* 47548 */
+    "iniLINE Co., Ltd.", /* 47549 */
+    "AVENTICS GmbH", /* 47550 */
+    "USGS National Wildlife Health Center", /* 47551 */
+    "Marcone Supply", /* 47552 */
+    "Hochschule Koblenz", /* 47553 */
+    "Total Highspeed", /* 47554 */
+    "EA Games FireMonkeys", /* 47555 */
+    "Barrcode Ltd", /* 47556 */
+    "Hangzhou Telin Technologies Company limited", /* 47557 */
+    "General Dynamics SATCOM Technologies, Inc.", /* 47558 */
+    "Crypto-Pro", /* 47559 */
+    "Westinghouse Electric Sweden AB", /* 47560 */
+    "System-on-Chip engineering (SoC-e)", /* 47561 */
+    "Chengdu Emfuture Automation Engineering Co., Ltd", /* 47562 */
+    "Falcon Critical Care Transport", /* 47563 */
+    "Permian Resources, LLC", /* 47564 */
+    "Forcepoint LLC", /* 47565 */
+    "Uniper AG", /* 47566 */
+    "Seifert Logistics GmbH", /* 47567 */
+    "Pantel International", /* 47568 */
+    "FIAMM SoNick S.A.", /* 47569 */
+    "Ennnot", /* 47570 */
+    "Glowpoint", /* 47571 */
+    "University of Keele", /* 47572 */
+    "McFarland Clinic", /* 47573 */
+    "City of Harker Heights", /* 47574 */
+    "AUTEC Gesellschaft fuer Automationstechnik mbH", /* 47575 */
+    "CapSenze Biosystems AB", /* 47576 */
+    "Newell Rubbermaid", /* 47577 */
+    "Vantiv Inc", /* 47578 */
+    "Open Software S.r.l.", /* 47579 */
+    "Liechtensteinische Landesverwaltung", /* 47580 */
+    "Styevko Attila", /* 47581 */
+    "Timothy Boronczyk", /* 47582 */
+    "Gentrack", /* 47583 */
+    "Hirealton network technology co., LTD", /* 47584 */
+    "上海兆越通讯技术有限公司 (Shanghai Communication Technology Co., Ltd. trillion more)", /* 47585 */
+    "Alfing Kessler Sondermaschinen GmbH", /* 47586 */
+    "Rack2Cloud Limited", /* 47587 */
+    "StatPro Group Plc.", /* 47588 */
+    "Route443 LLP", /* 47589 */
+    "iik", /* 47590 */
+    "aidounix", /* 47591 */
+    "NJATECH", /* 47592 */
+    "Shenzhen Electrical Co.", /* 47593 */
+    "Allwaywin Co., Ltd", /* 47594 */
+    "cluster", /* 47595 */
+    "INSS", /* 47596 */
+    "christmann informationstechnik + medien GmbH & Co. KG", /* 47597 */
+    "Weiss Klimatechnik GmbH", /* 47598 */
+    "Changzhou Wisdom Intelligent Technology CO.,LTD.", /* 47599 */
+    "LLC \"Commercial Bank\" Bank Talmenka \"", /* 47600 */
+    "Novo Nordisk A/S", /* 47601 */
+    "pandoranorge", /* 47602 */
+    "eClinicalWorks", /* 47603 */
+    "OOO NPP ETRA-Plus (Ltd, Research and Production Enterprise)", /* 47604 */
+    "OOO BALTSTAR", /* 47605 */
+    "ocuro", /* 47606 */
+    "Lopez Foods, Inc.", /* 47607 */
+    "WIRTGEN GROUP Holding GmbH", /* 47608 */
+    "Escola Nacional de Administração Pública (Enap)", /* 47609 */
+    "Bitwiseshift Ltd.", /* 47610 */
+    "CENAPAD", /* 47611 */
+    "Gurtsoft", /* 47612 */
+    "Esbjerg Kommune", /* 47613 */
+    "Pranas.NET", /* 47614 */
+    "WRELMS Networking", /* 47615 */
+    "HangZhou AOBO TELECOM Corp", /* 47616 */
+    "NTSystems", /* 47617 */
+    "SEFIRA spol. s r.o.", /* 47618 */
+    "D&K Technologies GmbH", /* 47619 */
+    "DOMIS/SOMFY", /* 47620 */
+    "RiverWeb IT Solutions", /* 47621 */
+    "nicos Research & Development GmbH", /* 47622 */
+    "schaetz cro", /* 47623 */
+    "Sysdat Turismo s.r.l.", /* 47624 */
+    "Gekås Ullared AB", /* 47625 */
+    "Datelstream Limited", /* 47626 */
+    "kapptivate", /* 47627 */
+    "krauth technology GmbH", /* 47628 */
+    "AAEON Technology Inc.", /* 47629 */
+    "Ontario English Catholic Teachers Association", /* 47630 */
+    "University of South Alabama", /* 47631 */
+    "HC APMC ONCOLOGY", /* 47632 */
+    "International Airlines Group", /* 47633 */
+    "Blue Labs", /* 47634 */
+    "Skogsutveckling Syd AB", /* 47635 */
+    "Stora Enso Bioenergi AB", /* 47636 */
+    "gehrigmobi", /* 47637 */
+    "Crescend Technologies", /* 47638 */
+    "KpXX", /* 47639 */
+    "Tangible Security Inc", /* 47640 */
+    "gruenewald-clan.de", /* 47641 */
+    "Istituto Clinico Città Studi", /* 47642 */
+    "Asahi Net, Inc.", /* 47643 */
+    "Robin Systems", /* 47644 */
+    "Harman Intl.", /* 47645 */
+    "Beijing Qianxin Technology Co., LTD.", /* 47646 */
+    "barox Kommunikation", /* 47647 */
+    "Aireon LLC", /* 47648 */
+    "World Economic Forum", /* 47649 */
+    "Arkin Net Inc.", /* 47650 */
+    "Accessnord AB", /* 47651 */
+    "D.C.Orbital LLC", /* 47652 */
+    "Lanbowan Technology Ltd.", /* 47653 */
+    "News India Today Trust", /* 47654 */
+    "Nufront co.ltd", /* 47655 */
+    "Conval, Inc.", /* 47656 */
+    "Shanghai Golden Bridge InfoTech Co.,Ltd", /* 47657 */
+    "ZITH", /* 47658 */
+    "Actions-Micro", /* 47659 */
+    "Cookpad Inc.", /* 47660 */
+    "H&K International", /* 47661 */
+    "weroSoft AG", /* 47662 */
+    "Baruwa Enterprise Edition", /* 47663 */
+    "IP Rozduhov M.E.", /* 47664 */
+    "InformInvestGroup", /* 47665 */
+    "Qualica Technologies (Pty) Ltd", /* 47666 */
+    "Init AB", /* 47667 */
+    "Agência para a Modernização Administrativa, I.P. (AMA)", /* 47668 */
+    "IHI Charging Systems International GmbH", /* 47669 */
+    "Hitachi, Ltd., Defense Systems Business Unit", /* 47670 */
+    "Intra", /* 47671 */
+    "findsolutions", /* 47672 */
+    "IHI Charging Systems International Germany GmbH", /* 47673 */
+    "University POLITEHNICA of Bucharest", /* 47674 */
+    "IHI Charging Systems International Sp A", /* 47675 */
+    "Social Native", /* 47676 */
+    "Point of Presence Technologies", /* 47677 */
+    "Intuity Consultants, Inc.", /* 47678 */
+    "DigitalX", /* 47679 */
+    "Weimann - IT Consulting", /* 47680 */
+    "Endeavor Air, Inc.", /* 47681 */
+    "Rocket Lab Ltd.", /* 47682 */
+    "MSCH", /* 47683 */
+    "Babcock Power", /* 47684 */
+    "SimuOne ApS", /* 47685 */
+    "Switzerland Global Enterprise", /* 47686 */
+    "Filetress", /* 47687 */
+    "Itential", /* 47688 */
+    "Chop-Chop Sp. z o.o.", /* 47689 */
+    "Linton Enterprise I (LEI)", /* 47690 */
+    "Krogh-Consult", /* 47691 */
+    "Tribunal Supremo de Elecciones de Costa Rica", /* 47692 */
+    "Monroe Tool and Manufacturing", /* 47693 */
+    "CANATAL", /* 47694 */
+    "McKesson Corporation", /* 47695 */
+    "MedicusTek Inc", /* 47696 */
+    "Nanjing Tian Hua Zhong An  Communication Technology CO.LTD", /* 47697 */
+    "aroba Inc.", /* 47698 */
+    "Avon Products Inc", /* 47699 */
+    "Systrome Networks", /* 47700 */
+    "BDO Audit SRL", /* 47701 */
+    "SECLAB", /* 47702 */
+    "cadilinea, slu", /* 47703 */
+    "BEIT Systemhaus GmbH", /* 47704 */
+    "Norra Skogsägarna Ek För", /* 47705 */
+    "Silion Technology Co., Ltd", /* 47706 */
+    "Zynx", /* 47707 */
+    "Di-Nikko Engineering Co.,Ltd.", /* 47708 */
+    "GE Healthcare on behalf of ACRIM hospital", /* 47709 */
+    "RIBS - Registration and Imaging of Brain Systems", /* 47710 */
+    "KECK MEDICINE OF USC", /* 47711 */
+    "Treegital", /* 47712 */
+    "Charlieuniformtango", /* 47713 */
+    "qsx", /* 47714 */
+    "EZTrader", /* 47715 */
+    "Devdot B.V.", /* 47716 */
+    "OrbiWise SA", /* 47717 */
+    "Zetes", /* 47718 */
+    "Videology", /* 47719 */
+    "LAWO Informationssysteme GmbH", /* 47720 */
+    "Avaleris", /* 47721 */
+    "Hansoft AB", /* 47722 */
+    "Michigan Open Carry, Inc.", /* 47723 */
+    "Cuyahoga County", /* 47724 */
+    "Konke Online", /* 47725 */
+    "Slots Machines S.A.", /* 47726 */
+    "Assistance Publique des Hôpitaux de Paris", /* 47727 */
+    "Tobias Buchloh", /* 47728 */
+    "Niagara Networks Inc", /* 47729 */
+    "République et Canton du Jura", /* 47730 */
+    "Leidos, Inc.", /* 47731 */
+    "Kopano B.V.", /* 47732 */
+    "Beijing Lehe Innovation Information Technology Co.,Ltd.", /* 47733 */
+    "Nomura Holdings, Inc.", /* 47734 */
+    "Toyam Cox", /* 47735 */
+    "L2M Solutions doo", /* 47736 */
+    "BLUETOWN", /* 47737 */
+    "MilDef AB", /* 47738 */
+    "Fam.Andersson Skog AB", /* 47739 */
+    "Holmen Skog AB", /* 47740 */
+    "Vista Entertainment Solutions", /* 47741 */
+    "V-Key Pte Ltd", /* 47742 */
+    "Atelios Communication Systems GmbH", /* 47743 */
+    "Tomra ASA", /* 47744 */
+    "Monmouth Hematology Oncology", /* 47745 */
+    "Celgene", /* 47746 */
+    "Oakwood Controls", /* 47747 */
+    "Rubricall, SL", /* 47748 */
+    "GemTalk Systems", /* 47749 */
+    "Bring Dialog Norge AS", /* 47750 */
+    "Mattersight Corporation", /* 47751 */
+    "Lycee Louis Armand", /* 47752 */
+    "Aperi Corporation", /* 47753 */
+    "Core Services Corporation", /* 47754 */
+    "OpenRat CMS", /* 47755 */
+    "Global Oncology, Inc", /* 47756 */
+    "Bariq Electronics", /* 47757 */
+    "Służba Więzienna", /* 47758 */
+    "Sociedade Educacional Braz Cubas Ltda", /* 47759 */
+    "County of El Dorado", /* 47760 */
+    "Wishnmix Ltd", /* 47761 */
+    "Section9", /* 47762 */
+    "OfficeFlex LLC", /* 47763 */
+    "Elektrownia Rybnik", /* 47764 */
+    "DOC.INFOSAFE (ISRAEL) LTD", /* 47765 */
+    "MACNICA FUJI ELECTRONICS HOLDINGS, INC.", /* 47766 */
+    "ASH Szoftverhaz Kft", /* 47767 */
+    "Aristech GmbH", /* 47768 */
+    "Armour Communications Limited", /* 47769 */
+    "ESG BIRO DE SERVICOS S/S LIMITADA - ME", /* 47770 */
+    "Colorado School of Mines", /* 47771 */
+    "Clear Axess SAGL", /* 47772 */
+    "Radeus Labs", /* 47773 */
+    "Microsoft Small Basic", /* 47774 */
+    "Ernst Basler + Partner AG", /* 47775 */
+    "TS Gateway Ltd", /* 47776 */
+    "Fachschaftsvertretung der Fakultät für Informatik und Mathematik, Universität Passau", /* 47777 */
+    "Cox Communications Inc. - Atlanta Technology", /* 47778 */
+    "TaiHao Medical", /* 47779 */
+    "Prosoft Kroměříž s.r.o.", /* 47780 */
+    "National Western Life Insurance", /* 47781 */
+    "Nautile Software", /* 47782 */
+    "codia Software GmbH", /* 47783 */
+    "Suncoast Cancer Institute", /* 47784 */
+    "mBank S.A.", /* 47785 */
+    "5BARz India Private Limited", /* 47786 */
+    "MuseumsIT", /* 47787 */
+    "Prismaflex International", /* 47788 */
+    "OAO MNIIPI OKOSZ \"MOSPROEKT-4\"", /* 47789 */
+    "ASYS Automatic Systems GmbH & Co. KG", /* 47790 */
+    "Rayed Alrashed", /* 47791 */
+    "Pew Research Center", /* 47792 */
+    "Scripps Networks Interactive", /* 47793 */
+    "Arizona Center for Hematology and Oncology, LLC", /* 47794 */
+    "Tegsoft", /* 47795 */
+    "Architecting.nl", /* 47796 */
+    "Yellowbrick Data, Inc", /* 47797 */
+    "CNI", /* 47798 */
+    "Verody, LLC", /* 47799 */
+    "Waiariki Bay of Plenty Polytechnic", /* 47800 */
+    "CloudSeeds GmbH", /* 47801 */
+    "CTSI Limited", /* 47802 */
+    "Urban Renaissance Agency", /* 47803 */
+    "Bravowhale Information Technology Ltd", /* 47804 */
+    "Shenzhen Grentech RF Communication Limited", /* 47805 */
+    "Trussan Co., Ltd", /* 47806 */
+    "DSRI \"Volna\", OJSC", /* 47807 */
+    "Delaware County Community College", /* 47808 */
+    "Centerline Biomedical, Inc.", /* 47809 */
+    "LINAGORA TUNISIE", /* 47810 */
+    "Pavilion Data Systems Inc", /* 47811 */
+    "AZ Elektro AG", /* 47812 */
+    "Luetze Transportation GmbH", /* 47813 */
+    "ChinaUnicom", /* 47814 */
+    "Stora Enso Skog AB", /* 47815 */
+    "Joseph Workstation", /* 47816 */
+    "HAWE Hydraulik SE", /* 47817 */
+    "Salzburg AG", /* 47818 */
+    "NTT DATA Italia", /* 47819 */
+    "Böco Böddecker & Co. GmbH & Co. KG", /* 47820 */
+    "Sjova-Almennar tryggingar hf", /* 47821 */
+    "NdT Web Services", /* 47822 */
+    "Couch Red", /* 47823 */
+    "Exprivia Telco & Media srl", /* 47824 */
+    "Ravel Electronics Pvt Ltd", /* 47825 */
+    "Bristows LLP", /* 47826 */
+    "Moogsoft", /* 47827 */
+    "Lincoln Oncology, LLC", /* 47828 */
+    "Fornetix", /* 47829 */
+    "MovingStar Corporation", /* 47830 */
+    "Robert Half Inc.", /* 47831 */
+    "NBCUniversal", /* 47832 */
+    "Teleworks Co., Ltd.", /* 47833 */
+    "OOO NPP \"POLUS\"", /* 47834 */
+    "ARCHIVECO", /* 47835 */
+    "Bernd Matusche", /* 47836 */
+    "Produban Global Services", /* 47837 */
+    "onether.net", /* 47838 */
+    "Landesarchiv Nordrhein-Westfalen", /* 47839 */
+    "alzahra university", /* 47840 */
+    "Comita Group of companies", /* 47841 */
+    "Identity Tech Solutions, LLC", /* 47842 */
+    "广州易速计算机设备有限公司 (Guangzhou-speed computer equipment Ltd.)", /* 47843 */
+    "ELEET Networks", /* 47844 */
+    "Netz39 e.V.", /* 47845 */
+    "BCausE Enterprise Private Limited", /* 47846 */
+    "Informatikdienste, Stadt Bern", /* 47847 */
+    "SYNERGY SYSTEMS AND SOLUTIONS", /* 47848 */
+    "RealSprint AB", /* 47849 */
+    "Cathexis Technologies (PTY) LTD", /* 47850 */
+    "Arest Inc.", /* 47851 */
+    "throwstone", /* 47852 */
+    "Key Performance Consulting", /* 47853 */
+    "Abakusz Computer Services", /* 47854 */
+    "Rumo Logística", /* 47855 */
+    "Geo++ GmbH", /* 47856 */
+    "Juice Goose", /* 47857 */
+    "ENDICOTT PRECISION", /* 47858 */
+    "KEO GmbH", /* 47859 */
+    "Thalia Bücher GmbH", /* 47860 */
+    "The Berkeley Carroll School", /* 47861 */
 };

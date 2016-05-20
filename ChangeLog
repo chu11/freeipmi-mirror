@@ -1,3 +1,12 @@
+2016-05-20 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/spec/enterprise-numbers.pl: Handle header and all
+	corner cases in enterprise-numbers records list to avoid having to
+	hand modify.
+
+	* libfreeipmi/spec/generate-enterprise-numbers-file.sh: New file
+	to automatically download and generate C file.
+	
 2016-05-06 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-fru/: Rename INTERPRET_OEM_DATA to INTERPRET_OEM_DATA_KEY
