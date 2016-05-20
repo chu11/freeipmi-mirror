@@ -1,9 +1,10 @@
 #!/usr/bin/perl
 
 # This script should be used to process the IANA Private Enterprise
-# list from http://www.iana.org/assignments/enterprise-numbers.  This
-# script is *very* simple.  I think there was one or two "empty lines"
-# that are accidently in the file too.
+# list from http://www.iana.org/assignments/enterprise-numbers.
+#
+# It handles a number of corner case formatting errors in the list.
+# Hopefully new ones don't crop up when you update.
 
 use strict;
 
@@ -16,6 +17,7 @@ my $line_contact;
 my $line_email;
 my $count = 0;
 my $found_beginning = 0;
+my $tmp;
 
 sub usage
 {
@@ -95,6 +97,15 @@ while (<FH>)
     $line_number = $_;
     $line_number = trim($line_number);
 
+    # There are some empty lines between some records.  Why?  No idea.
+    if ($line_number eq "") {
+	next;
+    }
+
+    if ($line_number eq "End of Document") {
+	last;
+    }
+
     # Iterate until you hit '0', there is comment text at the top
     if ($found_beginning == 0) {
 	if ($line_number ne "0") {
@@ -106,10 +117,45 @@ while (<FH>)
     }
 
     $line_organization = <FH>;
-    $line_organization = trim($line_organization);
+
+    # Some random empty lines in the records, why?
+    # Note, do not check for whitespace, b/c whitespace can mean empty string for field.
+    # We are specifically checking for empty line w/o anything.
+    while (chomp($line_organization) eq "") {
+     	$line_organization = <FH>;
+     }
 
     $line_contact = <FH>;
+
+    # more empty strings between lines in record
+    while (chomp($line_contact) eq "") {
+     	$line_contact = <FH>;
+     }
+
+    # Some organization names linger onto the next lines, even
+    # multiple lines.  I have no idea why some lines are formatted
+    # this way.  It doesn't appear to be based one length of the
+    # organization name or anything.
+    $tmp = substr($line_contact, 0, 1);
+    while (!($tmp =~ /\s/)) {
+	$line_organization = trim($line_organization);
+	$line_organization = "$line_organization $line_contact";
+	$line_contact = <FH>;
+	$tmp = substr($line_contact, 0, 1);
+    }
+
+    $line_organization = trim($line_organization);
+
     $line_email = <FH>;
+
+    # Likewise contact names can linger onto the next line.  No idea
+    # why.  It seems random
+    $tmp = substr($line_email, 0, 1);
+    while (!($tmp =~ /\s/)) {
+	$line_contact = $line_contact + " " + $line_email;
+	$line_email = <FH>;
+	$tmp = substr($line_email, 0, 1);
+    }
 
     # Fill in any missing numbers
     while ($count < $line_number)
