@@ -23165,7 +23165,7 @@ const char *const ipmi_iana_enterprise_numbers[] =
     "Mithi Software Technologies private Limited", /* 23131 */
     "Canadian Net", /* 23132 */
     "IzhInformProject", /* 23133 */
-    "Skillsunited.co.uk <http://Skillsunited.co.uk>", /* 23134 */
+    "Skillsunited.co.uk", /* 23134 */
     "Articon Integralis AG", /* 23135 */
     "Warweus S.r.l", /* 23136 */
     "Altinity Limited", /* 23137 */

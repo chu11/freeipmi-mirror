@@ -157,6 +157,11 @@ while (<FH>)
 	$line_organization =~ s/\(previous was .*\)//; 
 	$line_organization = trim($line_organization);
     }
+
+    if ($line_organization =~ /http/) {
+	$line_organization =~ s/\<http:\/\/.*\>//;
+	$line_organization = trim($line_organization);
+    }
     
     $line_email = <FH>;
 
