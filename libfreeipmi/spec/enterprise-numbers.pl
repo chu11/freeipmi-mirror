@@ -146,6 +146,18 @@ while (<FH>)
 
     $line_organization = trim($line_organization);
 
+    # Some companies have some indication of former names, we'll
+    # remove em b/c we don't care about it.
+    if ($line_organization =~ /formerly/) {
+	$line_organization =~ s/\(formerly .*\)//; 
+	$line_organization = trim($line_organization);
+    }
+
+    if ($line_organization =~ /previous/) {
+	$line_organization =~ s/\(previous was .*\)//; 
+	$line_organization = trim($line_organization);
+    }
+    
     $line_email = <FH>;
 
     # Likewise contact names can linger onto the next line.  No idea
