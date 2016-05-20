@@ -101,6 +101,7 @@ while (<FH>)
     $line_number = trim($line_number);
     $line_organization = trim($line_organization);
 
+    # Fill in any missing numbers
     while ($count < $line_number)
     {
         print("    NULL, /* $count */\n");
