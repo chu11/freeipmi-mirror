@@ -2,11 +2,8 @@
 
 # This script should be used to process the IANA Private Enterprise
 # list from http://www.iana.org/assignments/enterprise-numbers.  This
-# script is *very* simple.  Strip out the beginning and ending
-# text/cruft in the textfile before inputting it into this script.
-# You will need to fix some line wrapping issues in the main text file
-# too.  I think there was one or two "empty lines" that are accidently
-# in the file too.
+# script is *very* simple.  I think there was one or two "empty lines"
+# that are accidently in the file too.
 
 use strict;
 
@@ -18,6 +15,7 @@ my $line_organization;
 my $line_contact;
 my $line_email;
 my $count = 0;
+my $found_beginning = 0;
 
 sub usage
 {
@@ -95,11 +93,23 @@ const char *const ipmi_iana_enterprise_numbers[] =
 while (<FH>)
 {
     $line_number = $_;
+    $line_number = trim($line_number);
+
+    # Iterate until you hit '0', there is comment text at the top
+    if ($found_beginning == 0) {
+	if ($line_number ne "0") {
+	    next;
+	}
+	else {
+	    $found_beginning++;
+	}
+    }
+
     $line_organization = <FH>;
+    $line_organization = trim($line_organization);
+
     $line_contact = <FH>;
     $line_email = <FH>;
-    $line_number = trim($line_number);
-    $line_organization = trim($line_organization);
 
     # Fill in any missing numbers
     while ($count < $line_number)
