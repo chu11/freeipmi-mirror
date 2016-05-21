@@ -40,7 +40,7 @@ extern "C" {
 /* Workarounds for motherboards with invalid enterprise IDs */
 #define IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND 47488
 
-#define IPMI_IANA_ENTERPRISE_ID_MAX 47861
+#define IPMI_IANA_ENTERPRISE_ID_MAX 47872
 
 /* To avoid gcc warnings, add +1 in comparison */
 #define IPMI_IANA_ENTERPRISE_ID_VALID(__iana_enterprise_id) \
