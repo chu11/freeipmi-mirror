@@ -1,3 +1,8 @@
+2016-05-21 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h:
+	Add macro for maximum IANA numbers.
+	
 2016-05-10 Albert Chu <chu11@llnl.gov>
 
 	* bmc-device/: Support --read-fru and --device-id option.
