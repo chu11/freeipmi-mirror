@@ -134,7 +134,7 @@ while (<FH>)
 
     # Some organization names linger onto the next lines, even
     # multiple lines.  I have no idea why some lines are formatted
-    # this way.  It doesn't appear to be based one length of the
+    # this way.  It doesn't appear to be based on length of the
     # organization name or anything.
     $tmp = substr($line_contact, 0, 1);
     while (!($tmp =~ /\s/)) {
