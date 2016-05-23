@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#rm enterprise-numbers
-#wget http://www.iana.org/assignments/enterprise-numbers
-#./enterprise-numbers.pl enterprise-numbers > ipmi-iana-enterprise-numbers-spec.c
+rm enterprise-numbers
+wget http://www.iana.org/assignments/enterprise-numbers
+./enterprise-numbers.pl enterprise-numbers > ipmi-iana-enterprise-numbers-spec.c
 
 # Determine max index, last 30 lines of the file is sufficient
 output=`tail -n 30 enterprise-numbers`
