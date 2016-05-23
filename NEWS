@@ -4,6 +4,10 @@ o Update configuration file parsing code to handle values up to 1024
   characters in length.
 o Set FD_CLOEXEC for ipmi driver device files opened within
   libfreeipmi.
+o Support --read-fru, --write-fru, and --device-id option in
+  bmc-device.
+o Support --fru-file option in ipmi-fru.
+o Various library updates in libfreeipmi to handle new features.
 
 FreeIPMI 1.5.1 - 12/01/15
 -------------------------
