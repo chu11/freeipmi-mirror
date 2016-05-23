@@ -1,4 +1,4 @@
-FreeIPMI 1.5.2 - 12/01/15
+FreeIPMI 1.5.2 - 05/24/16
 -------------------------
 o Update configuration file parsing code to handle values up to 1024
   characters in length.
