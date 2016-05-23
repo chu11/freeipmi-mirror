@@ -4,10 +4,6 @@ o Add SDR cache options to ipmi-config.
 o Legacy -f short option for --flush-cache and -Q short option for
   quiet-cache.  Backwards compatible for tools that supported it
   before.
-o Support --read-fru, --write-fru, and --device-id option in
-  bmc-device.
-o Support --fru-file option in ipmi-fru.
-o Various library updates in libfreeipmi to handle new features.
 
 FreeIPMI 1.5.1 - 03/01/14
 -------------------------
