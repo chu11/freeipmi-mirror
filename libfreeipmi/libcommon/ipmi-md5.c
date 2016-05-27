@@ -24,6 +24,11 @@
  *  with Ipmipower.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
+/* achu: Concern/question over license of openssl.  Other
+ * implementations found online questionable.  End result was
+ * re-implementation from scratch.
+ */
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif /* HAVE_CONFIG_H */
