@@ -1,6 +1,13 @@
+2016-06-06 Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/ipmiconsole-argp.c, man/ipmiconsole.8.pre.in:
+	Clarify use of --debugfile option.
+
 2016-05-24  Albert Chu <chu11@llnl.gov>
 
         * NEWS, configure.ac: Update for release.
+
+2016-05-21 Albert Chu <chu11@llnl.gov>
 
         * Tagged freeipmi-1-5-2
 

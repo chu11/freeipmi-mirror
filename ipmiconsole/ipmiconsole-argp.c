@@ -97,7 +97,7 @@ static struct argp_option cmdline_options[] =
       "Lock sensitive information (such as usernames and passwords) in memory.", 47},
 #ifndef NDEBUG
     { "debugfile", DEBUGFILE_KEY, 0, 0,
-      "Output debugging to the debugfile rather than to standard output.", 48},
+      "Output debugging to files in current directory rather than to standard output.", 48},
     { "noraw", NORAW_KEY, 0, 0,
       "Don't enter terminal raw mode.", 49},
 #endif

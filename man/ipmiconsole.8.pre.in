@@ -145,7 +145,8 @@ memory.
 .if @WITH_DEBUG@ \{
 .TP
 \fB\-\-debugfile\fR
-Output debugging to the debugfile rather than to standard output.
+Output debugging to files in current directory rather than to standard
+output.
 .TP
 \fB\-\-noraw\fR
 Don't enter terminal raw mode.
