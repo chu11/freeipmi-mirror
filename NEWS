@@ -1,3 +1,8 @@
+FreeIPMI 1.5.3 - 05/24/16
+-------------------------
+o In ipmiconsole, support --debugfile option for more difficult
+  debugging scenarios.
+
 FreeIPMI 1.5.2 - 05/24/16
 -------------------------
 o Update configuration file parsing code to handle values up to 1024
