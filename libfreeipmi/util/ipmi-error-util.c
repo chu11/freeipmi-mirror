@@ -297,18 +297,6 @@ ipmi_completion_code_strerror_r (uint8_t cmd,
                   SNPRINTF_RETURN (IPMI_COMP_CODE_SEND_MESSAGE_NAK_ON_WRITE_STR);
                 }
               break;
-              switch (comp_code)
-                {
-                case IPMI_COMP_CODE_MASTER_WRITE_READ_LOST_ARBITRATION:
-                  SNPRINTF_RETURN (IPMI_COMP_CODE_MASTER_WRITE_READ_LOST_ARBITRATION_STR);
-                case IPMI_COMP_CODE_MASTER_WRITE_READ_BUS_ERROR:
-                  SNPRINTF_RETURN (IPMI_COMP_CODE_MASTER_WRITE_READ_BUS_ERROR_STR);
-                case IPMI_COMP_CODE_MASTER_WRITE_READ_NAK_ON_WRITE:
-                  SNPRINTF_RETURN (IPMI_COMP_CODE_MASTER_WRITE_READ_NAK_ON_WRITE_STR);
-                case IPMI_COMP_CODE_MASTER_WRITE_READ_TRUNCATED_READ:
-                  SNPRINTF_RETURN (IPMI_COMP_CODE_MASTER_WRITE_READ_TRUNCATED_READ_STR);
-                }
-              break;
             case IPMI_CMD_SET_SYSTEM_INFO_PARAMETERS:
               switch (comp_code)
                 {
