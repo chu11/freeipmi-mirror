@@ -142,11 +142,11 @@ payload instance.
 \fB\-\-lock-memory\fR
 Lock sensitive information (such as usernames and passwords) in
 memory.
-.if @WITH_DEBUG@ \{
 .TP
 \fB\-\-debugfile\fR
 Output debugging to files in current directory rather than to standard
 output.
+.if @WITH_DEBUG@ \{
 .TP
 \fB\-\-noraw\fR
 Don't enter terminal raw mode.

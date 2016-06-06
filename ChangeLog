@@ -3,6 +3,9 @@
 	* ipmiconsole/ipmiconsole-argp.c, man/ipmiconsole.8.pre.in:
 	Clarify use of --debugfile option.
 
+	* ipmiconsole/: Make --debugfile option available in production
+	builds.
+
 2016-05-24  Albert Chu <chu11@llnl.gov>
 
         * NEWS, configure.ac: Update for release.
