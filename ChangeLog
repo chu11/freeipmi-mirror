@@ -1,9 +1,14 @@
 2016-06-06 Albert Chu <chu11@llnl.gov>
 
+	* ipmiconsole/ipmiconsole-argp.c, man/ipmiconsole.8.pre.in:
+	Clarify use of --debugfile option.
+
+2016-06-06 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/util/ipmi-error-util.c (ipmi_completion_code_strerror_r):
 	Remove buggy code which explains Master/Read write error from
 	ChangeLog on 2015-09-09.
-	
+
 2016-05-21 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h:
