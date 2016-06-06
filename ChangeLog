@@ -3,6 +3,9 @@
 	* ipmiconsole/ipmiconsole-argp.c, man/ipmiconsole.8.pre.in:
 	Clarify use of --debugfile option.
 
+	* ipmiconsole/: Make --debugfile option available in production
+	builds.
+
 2016-06-06 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/util/ipmi-error-util.c (ipmi_completion_code_strerror_r):
