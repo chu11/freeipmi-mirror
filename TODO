@@ -33,6 +33,8 @@ FreeIPMI general
   - or use extra option?
 - audit/cleanup memsets, use sizeof() when appropriate
 - audit, loop on select/poll if EINTR everywhere
+- dynamically loadable modules for SEL OEM extensions?
+  - sensor & FRU & etc. too?
 
 FreeIPMI new stuff
 ------------------
