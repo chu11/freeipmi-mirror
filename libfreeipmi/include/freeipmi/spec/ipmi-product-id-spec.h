@@ -53,7 +53,7 @@ extern "C" {
  * iRMC S1 / iRMC S2
  */
 #define IPMI_FUJITSU_PRODUCT_ID_MIN                 0x0200
-#define IPMI_FUJITSU_PRODUCT_ID_MAX                 0x03FF
+#define IPMI_FUJITSU_PRODUCT_ID_MAX                 0x05FF
 
 // iRMC-S1 based systems        
 #define IPMI_FUJITSU_PRODUCT_ID_TX200S3             0x0200
