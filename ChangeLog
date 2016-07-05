@@ -1,3 +1,8 @@
+2016-07-05 Holger Liebig <holger.liebig@ts.fujitsu.com>
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-product-id-spec.h: Update
+	Fujitsu Product ID range.
+
 2016-06-21 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/spec/oem/ipmi-oem-intel-spec.h: Add
