@@ -1,5 +1,6 @@
 FreeIPMI 1.5.3 - 05/24/16
 -------------------------
+o Update Fujitsu OEM extension product id support range.
 o In ipmiconsole, support --debugfile option for more difficult
   debugging scenarios.
 o Fix several invalid completion code errors/values.
