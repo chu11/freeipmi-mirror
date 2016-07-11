@@ -186,7 +186,18 @@ _find_motherboard_oem_support (ipmi_sel_ctx_t ctx,
     }
   else if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL)
     {
+      /* achu:
+       *
+       * ARGH! Intel gave the S2600KPR an identical product ID number as the
+       * S2600WT2 and S2600WTT.
+       *
+       * That's why IPMI_INTEL_PRODUCT_ID_S2600KPR returns
+       * sel_string_oem_intel_s2600wt_common, even though it seemingly
+       * should return sel_string_oem_intel_s2600kp.
+       */
+
       assert (IPMI_INTEL_PRODUCT_ID_S2600WT2 == IPMI_INTEL_PRODUCT_ID_S2600WTT);
+      assert (IPMI_INTEL_PRODUCT_ID_S2600WT2 == IPMI_INTEL_PRODUCT_ID_S2600KPR);
 
       if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R)
         (*sel_string_oem) = &sel_string_oem_intel_quanta_qssc_s4r;
@@ -195,7 +206,8 @@ _find_motherboard_oem_support (ipmi_sel_ctx_t ctx,
       else if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600KP)
         (*sel_string_oem) = &sel_string_oem_intel_s2600kp;
       else if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
-               || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT)
+               || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT
+               || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600KPR)
         (*sel_string_oem) = &sel_string_oem_intel_s2600wt_common;
       else if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB)
         (*sel_string_oem) = &sel_string_oem_intel_s5500wb;

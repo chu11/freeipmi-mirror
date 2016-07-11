@@ -2,6 +2,10 @@
 
 	* Document support of Intel S2600KPR.
 
+	* libfreeipmi/include/freeipmi/spec/ipmi-product-id-spec.h,
+	libfreeipmi/sel/ipmi-sel-string.c: Add code indicating support for
+	Intel S2600KPR.
+
 2016-07-11 Albert Chu <chu11@llnl.gov>
 
 	* Untabify all .c, .h, and .pl files for consistency across
