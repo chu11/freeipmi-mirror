@@ -58,8 +58,8 @@
 
 static int
 _entity_id_add_instance (ipmi_sdr_ctx_t ctx,
-			 uint8_t entity_id,
-			 uint8_t entity_instance)
+                         uint8_t entity_id,
+                         uint8_t entity_instance)
 {
   struct ipmi_sdr_entity_count *entity;
   unsigned int i;
@@ -73,10 +73,10 @@ _entity_id_add_instance (ipmi_sdr_ctx_t ctx,
   for (i = 0; i < entity->entity_instances_count; i++)
     {
       if (entity->entity_instances[i] == entity_instance)
-	{
-	  found++;
-	  break;
-	}
+        {
+          found++;
+          break;
+        }
     }
 
   if (!found)
@@ -90,9 +90,9 @@ _entity_id_add_instance (ipmi_sdr_ctx_t ctx,
 
 static int
 _entity_id_instances_count (ipmi_sdr_ctx_t ctx,
-			    uint8_t record_type,
-			    const void *sdr_record,
-			    unsigned int sdr_record_len)
+                            uint8_t record_type,
+                            const void *sdr_record,
+                            unsigned int sdr_record_len)
 {
   uint8_t entity_id, entity_instance, entity_instance_type;
 
@@ -134,27 +134,27 @@ _entity_id_instances_count (ipmi_sdr_ctx_t ctx,
       uint8_t entity_instance_sharing;
       
       if (ipmi_sdr_parse_sensor_record_sharing (ctx,
-						sdr_record,
-						sdr_record_len,
+                                                sdr_record,
+                                                sdr_record_len,
                                                 &share_count,
                                                 NULL,
                                                 NULL,
                                                 &entity_instance_sharing) < 0)
         {
-	  SDR_SET_INTERNAL_ERRNUM (ctx);
+          SDR_SET_INTERNAL_ERRNUM (ctx);
           return (-1);
         }
       
       if (share_count > 1
           && entity_instance_sharing == IPMI_SDR_ENTITY_INSTANCE_INCREMENTS_FOR_EACH_SHARED_RECORD)
         {
-	  unsigned int i;
-	  
+          unsigned int i;
+          
           for (i = 1; i < share_count; i++)
-	    {
-	      if (_entity_id_add_instance (ctx, entity_id, entity_instance + i) < 0)
-		return (-1);
-	    }
+            {
+              if (_entity_id_add_instance (ctx, entity_id, entity_instance + i) < 0)
+                return (-1);
+            }
         }
     }
 
@@ -163,10 +163,10 @@ _entity_id_instances_count (ipmi_sdr_ctx_t ctx,
 
 static int
 _sdr_stat_callback (ipmi_sdr_ctx_t ctx,
-		    uint8_t record_type,
-		    const void *sdr_record,
-		    unsigned int sdr_record_len,
-		    void *data)
+                    uint8_t record_type,
+                    const void *sdr_record,
+                    unsigned int sdr_record_len,
+                    void *data)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SDR_CTX_MAGIC);
@@ -174,9 +174,9 @@ _sdr_stat_callback (ipmi_sdr_ctx_t ctx,
   assert (sdr_record_len);
 
   if (_entity_id_instances_count (ctx,
-				  record_type,
-				  sdr_record,
-				  sdr_record_len) < 0)
+                                  record_type,
+                                  sdr_record,
+                                  sdr_record_len) < 0)
     return (-1);
 
   return (0);
@@ -203,8 +203,8 @@ ipmi_sdr_stats_compile (ipmi_sdr_ctx_t ctx)
     goto out;
 
   if (ipmi_sdr_cache_iterate (ctx,
-			      _sdr_stat_callback,
-			      NULL) < 0)
+                              _sdr_stat_callback,
+                              NULL) < 0)
     goto cleanup;
 
   ctx->stats_compiled = 1;

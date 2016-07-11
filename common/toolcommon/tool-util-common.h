@@ -35,6 +35,6 @@ int check_kg_len (const char *in);
 char *format_kg (char *out, unsigned int outlen, const void *k_g);
 
 unsigned int get_timestamp_flags (struct common_cmd_args *common_args,
-				  unsigned int defaultflags); 
+                                  unsigned int defaultflags); 
 
 #endif /* TOOL_UTIL_COMMON_H */

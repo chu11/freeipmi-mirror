@@ -309,7 +309,7 @@ _config_file_workaround_flags (conffile_t cf,
                                   NULL,
                                   &outofband_2_0_flags,
                                   NULL,
-				  NULL,
+                                  NULL,
                                   &section_flags) < 0)
         {
           IPMICONSOLE_DEBUG (("libipmiconsole config file workaround flag invalid"));
@@ -462,13 +462,13 @@ _config_file_debug_flags (conffile_t cf,
 
 static int
 _config_file_sol_payload_instance (conffile_t cf,
-				   struct conffile_data *data,
-				   char *optionname,
-				   int option_type,
-				   void *option_ptr,
-				   int option_data,
-				   void *app_ptr,
-				   int app_data)
+                                   struct conffile_data *data,
+                                   char *optionname,
+                                   int option_type,
+                                   void *option_ptr,
+                                   int option_data,
+                                   void *app_ptr,
+                                   int app_data)
 {
   unsigned int *value;
 
@@ -689,7 +689,7 @@ _ipmiconsole_defaults_setup (void)
         "libipmiconsole-context-sol-payload-instance",
         CONFFILE_OPTION_INT,
         -1,
-	_config_file_sol_payload_instance,
+        _config_file_sol_payload_instance,
         1,
         0,
         &libipmiconsole_context_sol_payload_instance_count,
@@ -760,7 +760,7 @@ ipmiconsole_engine_init (unsigned int thread_count, unsigned int debug_flags)
 
   if (thread_count > IPMICONSOLE_THREAD_COUNT_MAX
       || (debug_flags != IPMICONSOLE_DEBUG_DEFAULT
-	  && debug_flags & ~IPMICONSOLE_DEBUG_MASK))
+          && debug_flags & ~IPMICONSOLE_DEBUG_MASK))
     {
       errno = EINVAL;
       return (-1);
@@ -1153,13 +1153,13 @@ ipmiconsole_ctx_create (const char *hostname,
       || (ipmi_config->cipher_suite_id >= IPMI_CIPHER_SUITE_ID_MIN
           && !IPMI_CIPHER_SUITE_ID_SUPPORTED (ipmi_config->cipher_suite_id))
       || (ipmi_config->workaround_flags != IPMICONSOLE_WORKAROUND_DEFAULT
-	  && ipmi_config->workaround_flags & ~IPMICONSOLE_WORKAROUND_MASK)
+          && ipmi_config->workaround_flags & ~IPMICONSOLE_WORKAROUND_MASK)
       || (engine_config->engine_flags != IPMICONSOLE_ENGINE_DEFAULT
-	  && engine_config->engine_flags & ~IPMICONSOLE_ENGINE_MASK)
+          && engine_config->engine_flags & ~IPMICONSOLE_ENGINE_MASK)
       || (engine_config->behavior_flags != IPMICONSOLE_BEHAVIOR_DEFAULT
-	  && engine_config->behavior_flags & ~IPMICONSOLE_BEHAVIOR_MASK)
+          && engine_config->behavior_flags & ~IPMICONSOLE_BEHAVIOR_MASK)
       || (engine_config->debug_flags != IPMICONSOLE_DEBUG_DEFAULT
-	  && engine_config->debug_flags & ~IPMICONSOLE_DEBUG_MASK))
+          && engine_config->debug_flags & ~IPMICONSOLE_DEBUG_MASK))
     {
       IPMICONSOLE_DEBUG (("invalid input parameters"));
       errno = EINVAL;
@@ -1171,55 +1171,55 @@ ipmiconsole_ctx_create (const char *hostname,
       char *ptr;
 
       if (strlen (hostname) > MAXHOSTNAMELEN_WITH_PORT)
-	{
-	  IPMICONSOLE_DEBUG (("invalid input parameters"));
-	  errno = EINVAL;
-	  return (NULL);
-	} 
+        {
+          IPMICONSOLE_DEBUG (("invalid input parameters"));
+          errno = EINVAL;
+          return (NULL);
+        } 
       
       memset (hostnamebuf, '\0', MAXHOSTNAMELEN_WITH_PORT + 1);
       strcpy (hostnamebuf, hostname);
       
       if ((ptr = strchr (hostnamebuf, ':')))
-	{
-	  char *endptr;
+        {
+          char *endptr;
           int tmp;
-	  
-	  *ptr = '\0';
-	  ptr++;
-	  
-	  if (strlen (hostnamebuf) > MAXHOSTNAMELEN)
-	    {
-	      IPMICONSOLE_DEBUG (("invalid input parameters"));
-	      errno = EINVAL;
-	      return (NULL);
-	    } 
-	  
-	  errno = 0;
-	  tmp = strtol (ptr, &endptr, 0);
-	  if (errno
+          
+          *ptr = '\0';
+          ptr++;
+          
+          if (strlen (hostnamebuf) > MAXHOSTNAMELEN)
+            {
+              IPMICONSOLE_DEBUG (("invalid input parameters"));
+              errno = EINVAL;
+              return (NULL);
+            } 
+          
+          errno = 0;
+          tmp = strtol (ptr, &endptr, 0);
+          if (errno
               || endptr[0] != '\0'
               || tmp <= 0
-	      || tmp > USHRT_MAX)
-	    {
-	      IPMICONSOLE_DEBUG (("invalid input parameters"));
-	      errno = EINVAL;
-	      return (NULL);
-	    }
-	  
-	  port = tmp;
-	}
+              || tmp > USHRT_MAX)
+            {
+              IPMICONSOLE_DEBUG (("invalid input parameters"));
+              errno = EINVAL;
+              return (NULL);
+            }
+          
+          port = tmp;
+        }
 
       hostname_ptr = hostnamebuf;
     }
   else
     {
       if (strlen (hostname) > MAXHOSTNAMELEN)
-	{
-	  IPMICONSOLE_DEBUG (("invalid input parameters"));
-	  errno = EINVAL;
-	  return (NULL);
-	}
+        {
+          IPMICONSOLE_DEBUG (("invalid input parameters"));
+          errno = EINVAL;
+          return (NULL);
+        }
 
       hostname_ptr = (char *)hostname;
     }
@@ -1260,7 +1260,7 @@ ipmiconsole_ctx_create (const char *hostname,
 
   if (ipmiconsole_ctx_config_setup (c,
                                     hostname_ptr,
-				    port,
+                                    port,
                                     ipmi_config,
                                     protocol_config,
                                     engine_config) < 0)
@@ -1308,8 +1308,8 @@ ipmiconsole_ctx_create (const char *hostname,
 
 int
 ipmiconsole_ctx_set_config (ipmiconsole_ctx_t c,
-			    ipmiconsole_ctx_config_option_t config_option,
-			    void *config_option_value)
+                            ipmiconsole_ctx_config_option_t config_option,
+                            void *config_option_value)
 {
   unsigned int *tmpptr;
 
@@ -1336,10 +1336,10 @@ ipmiconsole_ctx_set_config (ipmiconsole_ctx_t c,
     case IPMICONSOLE_CTX_CONFIG_OPTION_SOL_PAYLOAD_INSTANCE:
       tmpptr = (unsigned int *)config_option_value;
       if (!IPMI_PAYLOAD_INSTANCE_VALID((*tmpptr)))
-	{
-	  ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_PARAMETERS);
-	  return (-1);
-	}
+        {
+          ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_PARAMETERS);
+          return (-1);
+        }
       c->config.sol_payload_instance = *(tmpptr);
       break;
     default:
@@ -1353,8 +1353,8 @@ ipmiconsole_ctx_set_config (ipmiconsole_ctx_t c,
 
 int
 ipmiconsole_ctx_get_config (ipmiconsole_ctx_t c,
-			    ipmiconsole_ctx_config_option_t config_option,
-			    void *config_option_value)
+                            ipmiconsole_ctx_config_option_t config_option,
+                            void *config_option_value)
 {
   unsigned int *tmpptr;
 

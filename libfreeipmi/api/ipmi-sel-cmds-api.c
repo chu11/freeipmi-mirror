@@ -493,7 +493,7 @@ ipmi_cmd_set_sel_time (ipmi_ctx_t ctx,
 
 int
 ipmi_cmd_get_sel_time_utc_offset (ipmi_ctx_t ctx,
-				  fiid_obj_t obj_cmd_rs)
+                                  fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int rv = -1;
@@ -547,8 +547,8 @@ ipmi_cmd_get_sel_time_utc_offset (ipmi_ctx_t ctx,
 
 int
 ipmi_cmd_set_sel_time_utc_offset (ipmi_ctx_t ctx,
-				  int16_t offset,
-				  fiid_obj_t obj_cmd_rs)
+                                  int16_t offset,
+                                  fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int rv = -1;

@@ -639,11 +639,11 @@ fill_cmd_oem_intel_node_manager_set_node_manager_policy (uint8_t domain_id,
                                                          uint8_t policy_id,
                                                          uint8_t policy_trigger_type,
                                                          uint8_t policy_configuration_action,
-							 uint8_t aggressive_cpu_power_correction,
-							 uint8_t policy_storage_option,
+                                                         uint8_t aggressive_cpu_power_correction,
+                                                         uint8_t policy_storage_option,
                                                          uint8_t policy_exception_actions_send_alert,
                                                          uint8_t policy_exception_actions_shutdown_system,
-							 uint8_t policy_power_domain,
+                                                         uint8_t policy_power_domain,
                                                          uint16_t policy_target_limit,
                                                          uint32_t correction_time_limit,
                                                          uint16_t policy_trigger_limit,
@@ -697,21 +697,21 @@ fill_cmd_oem_intel_node_manager_set_node_manager_policy (uint8_t domain_id,
 
 int
 fill_cmd_oem_intel_node_manager_set_node_manager_policy_boot_time_policy (uint8_t domain_id,
-									  uint8_t policy_enabled,
-									  uint8_t policy_id,
-									  uint8_t policy_trigger_type,
-									  uint8_t policy_configuration_action,
-									  uint8_t aggressive_cpu_power_correction,
-									  uint8_t policy_storage_option,
-									  uint8_t policy_exception_actions_send_alert,
-									  uint8_t policy_exception_actions_shutdown_system,
-									  uint8_t policy_power_domain,
-									  uint8_t platform_booting_mode,
-									  uint8_t cores_disabled,
-									  uint32_t correction_time_limit,
-									  uint16_t policy_trigger_limit,
-									  uint16_t statistics_reporting_period,
-									  fiid_obj_t obj_cmd_rq)
+                                                                          uint8_t policy_enabled,
+                                                                          uint8_t policy_id,
+                                                                          uint8_t policy_trigger_type,
+                                                                          uint8_t policy_configuration_action,
+                                                                          uint8_t aggressive_cpu_power_correction,
+                                                                          uint8_t policy_storage_option,
+                                                                          uint8_t policy_exception_actions_send_alert,
+                                                                          uint8_t policy_exception_actions_shutdown_system,
+                                                                          uint8_t policy_power_domain,
+                                                                          uint8_t platform_booting_mode,
+                                                                          uint8_t cores_disabled,
+                                                                          uint32_t correction_time_limit,
+                                                                          uint16_t policy_trigger_limit,
+                                                                          uint16_t statistics_reporting_period,
+                                                                          fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domain_id)
       || !IPMI_OEM_INTEL_NODE_MANAGER_POLICY_ENABLED_VALID (policy_enabled)
@@ -792,11 +792,11 @@ fill_cmd_oem_intel_node_manager_get_node_manager_policy (uint8_t domain_id,
 
 int
 fill_cmd_oem_intel_node_manager_set_node_manager_policy_alert_thresholds (uint8_t domain_id,
-									  uint8_t policy_id,
-									  uint16_t *alert_threshold1,
-									  uint16_t *alert_threshold2,
-									  uint16_t *alert_threshold3,
-									  fiid_obj_t obj_cmd_rq)
+                                                                          uint8_t policy_id,
+                                                                          uint16_t *alert_threshold1,
+                                                                          uint16_t *alert_threshold2,
+                                                                          uint16_t *alert_threshold3,
+                                                                          fiid_obj_t obj_cmd_rq)
 {
   uint8_t number_of_alert_thresholds = 0;
 
@@ -845,8 +845,8 @@ fill_cmd_oem_intel_node_manager_set_node_manager_policy_alert_thresholds (uint8_
 
 int
 fill_cmd_oem_intel_node_manager_get_node_manager_policy_alert_thresholds (uint8_t domain_id,
-									  uint8_t policy_id,
-									  fiid_obj_t obj_cmd_rq)
+                                                                          uint8_t policy_id,
+                                                                          fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domain_id)
       || !fiid_obj_valid (obj_cmd_rq))
@@ -1268,7 +1268,7 @@ int
 fill_cmd_oem_intel_node_manager_get_node_manager_capabilities (uint8_t domain_id,
                                                                uint8_t policy_trigger_type,
                                                                uint8_t policy_type,
-							       uint8_t policy_power_domain,
+                                                               uint8_t policy_power_domain,
                                                                fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domain_id)
@@ -1495,9 +1495,9 @@ fill_cmd_oem_intel_node_manager_get_node_manager_alert_destination (fiid_obj_t o
 
 int
 fill_cmd_oem_intel_node_manager_set_turbo_synchronization_ratio (uint8_t cpu_socket_number,
-								 uint8_t active_cores_configuration,
-								 uint8_t turbo_ratio_limit,
-								 fiid_obj_t obj_cmd_rq)
+                                                                 uint8_t active_cores_configuration,
+                                                                 uint8_t turbo_ratio_limit,
+                                                                 fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_OEM_INTEL_NODE_MANAGER_CPU_SOCKET_VALID (cpu_socket_number)
       || !IPMI_OEM_INTEL_NODE_MANAGER_SET_ACTIVE_CORES_CONFIGURATION_VALID (active_cores_configuration)
@@ -1526,8 +1526,8 @@ fill_cmd_oem_intel_node_manager_set_turbo_synchronization_ratio (uint8_t cpu_soc
 
 int
 fill_cmd_oem_intel_node_manager_get_turbo_synchronization_ratio (uint8_t cpu_socket_number,
-								 uint8_t active_cores_configuration,
-								 fiid_obj_t obj_cmd_rq)
+                                                                 uint8_t active_cores_configuration,
+                                                                 fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_OEM_INTEL_NODE_MANAGER_CPU_SOCKET_VALID (cpu_socket_number)
       || !IPMI_OEM_INTEL_NODE_MANAGER_GET_ACTIVE_CORES_CONFIGURATION_VALID (active_cores_configuration)
@@ -1555,7 +1555,7 @@ fill_cmd_oem_intel_node_manager_get_turbo_synchronization_ratio (uint8_t cpu_soc
 
 int
 fill_cmd_oem_intel_node_manager_get_limiting_policy_id (uint8_t domain_id,
-							fiid_obj_t obj_cmd_rq)
+                                                        fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))
     {

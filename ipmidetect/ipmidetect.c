@@ -57,8 +57,8 @@
 #include <assert.h>
 #include <errno.h>
 
-#include <ipmidetect.h>		/* library ipmidetect.h */
-#include "ipmidetect_.h"	/* tool ipmidetect.h */
+#include <ipmidetect.h>         /* library ipmidetect.h */
+#include "ipmidetect_.h"        /* tool ipmidetect.h */
 #include "ipmidetect-argp.h"
 
 #include "freeipmi-portability.h"
@@ -243,7 +243,7 @@ _output_nodes (char *nodebuf)
 
       /* start on the next line if its a newline separator */
       if (cmd_args.output_type == IPMIDETECT_DETECTED_AND_UNDETECTED_NODES
-	  && cmd_args.output_format == '\n')
+          && cmd_args.output_format == '\n')
         fprintf (stdout, "\n");
 
       fprintf (stdout,"%s\n", tbuf);
@@ -307,9 +307,9 @@ _output_data (void)
   int exit_val;
 
   if (ipmidetect_load_data (handle,
-			    cmd_args.hostname,
-			    cmd_args.port,
-			    0) < 0)
+                            cmd_args.hostname,
+                            cmd_args.port,
+                            0) < 0)
     {
       int errnum = ipmidetect_errnum (handle);
       char *msg = ipmidetect_errormsg (handle);

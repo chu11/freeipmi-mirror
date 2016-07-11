@@ -382,12 +382,12 @@ main (int argc, char **argv)
   if (cmd_args.sol_payload_instance)
     {
       if (ipmiconsole_ctx_set_config (c,
-				      IPMICONSOLE_CTX_CONFIG_OPTION_SOL_PAYLOAD_INSTANCE,
-				      &(cmd_args.sol_payload_instance)) < 0)
-	{
-	  fprintf (stderr, "ipmiconsole_submit_block: %s\r\n", ipmiconsole_ctx_errormsg (c));
-	  goto cleanup;
-	}
+                                      IPMICONSOLE_CTX_CONFIG_OPTION_SOL_PAYLOAD_INSTANCE,
+                                      &(cmd_args.sol_payload_instance)) < 0)
+        {
+          fprintf (stderr, "ipmiconsole_submit_block: %s\r\n", ipmiconsole_ctx_errormsg (c));
+          goto cleanup;
+        }
     }
 
   if (ipmiconsole_engine_submit_block (c) < 0)

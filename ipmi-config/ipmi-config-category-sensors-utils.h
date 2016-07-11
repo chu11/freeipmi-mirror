@@ -22,10 +22,10 @@
 #include "ipmi-config.h"
 
 ipmi_config_err_t ipmi_config_sensors_create_section_name (ipmi_config_state_data_t *state_data,
-							   char *section_name,
-							   unsigned int section_name_len);
+                                                           char *section_name,
+                                                           unsigned int section_name_len);
 
 ipmi_config_err_t ipmi_config_sensors_seek_to_sdr_record (ipmi_config_state_data_t *state_data,
-							  const char *section_name);
+                                                          const char *section_name);
 
 #endif /* IPMI_CONFIG_CATEGORY_SENSORS_UTILS_H */

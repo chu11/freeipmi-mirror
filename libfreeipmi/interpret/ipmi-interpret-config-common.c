@@ -61,7 +61,7 @@
 
 int
 interpret_config_parse_state (conffile_t cf,
-			      char *option_string)
+                              char *option_string)
 {
   assert (cf);
   assert (option_string);
@@ -79,9 +79,9 @@ interpret_config_parse_state (conffile_t cf,
 
 int
 interpret_config_parse_strtoul (conffile_t cf,
-				const char *str,
-				uint32_t max,
-				uint32_t *value)
+                                const char *str,
+                                uint32_t max,
+                                uint32_t *value)
 {
   char *endptr = NULL;
   
@@ -106,9 +106,9 @@ interpret_config_parse_strtoul (conffile_t cf,
 
 int
 interpret_config_parse_manufactuer_id_product_id (conffile_t cf,
-						  const char *str,
-						  struct ipmi_interpret_config_file_ids ids[IPMI_INTERPRET_CONFIG_FILE_MANUFACTURER_ID_MAX],
-						  unsigned int *ids_count)
+                                                  const char *str,
+                                                  struct ipmi_interpret_config_file_ids ids[IPMI_INTERPRET_CONFIG_FILE_MANUFACTURER_ID_MAX],
+                                                  unsigned int *ids_count)
 {
   char *tmpstr = NULL;
   char *manufacturer_id_ptr;
@@ -145,9 +145,9 @@ interpret_config_parse_manufactuer_id_product_id (conffile_t cf,
       product_ids_ptr = ptr + 1;
       
       if (interpret_config_parse_strtoul (cf,
-					  manufacturer_id_ptr,
-					  0x00FFFFFF,  /* 24 bit manufacturer ID */
-					  &tmp) < 0)
+                                          manufacturer_id_ptr,
+                                          0x00FFFFFF,  /* 24 bit manufacturer ID */
+                                          &tmp) < 0)
         goto cleanup;
       ids[(*ids_count)].manufacturer_id = tmp;
       
@@ -163,16 +163,16 @@ interpret_config_parse_manufactuer_id_product_id (conffile_t cf,
           product_id2_ptr = ptr + 1;
 
           if (interpret_config_parse_strtoul (cf,
-					      product_id1_ptr,
-					      USHRT_MAX,
-					      &tmp) < 0)
+                                              product_id1_ptr,
+                                              USHRT_MAX,
+                                              &tmp) < 0)
             goto cleanup;
           product_id1 = tmp;
 
           if (interpret_config_parse_strtoul (cf,
-					      product_id2_ptr,
-					      USHRT_MAX,
-					      &tmp) < 0)
+                                              product_id2_ptr,
+                                              USHRT_MAX,
+                                              &tmp) < 0)
             goto cleanup;
           product_id2 = tmp;
 
@@ -207,9 +207,9 @@ interpret_config_parse_manufactuer_id_product_id (conffile_t cf,
               product_ids_ptr = ptr + 1;
 
               if (interpret_config_parse_strtoul (cf,
-						  product_id_ptr,
-						  USHRT_MAX,
-						  &tmp) < 0)
+                                                  product_id_ptr,
+                                                  USHRT_MAX,
+                                                  &tmp) < 0)
                 goto cleanup;
               product_id = tmp;
               
@@ -219,9 +219,9 @@ interpret_config_parse_manufactuer_id_product_id (conffile_t cf,
             }
 
           if (interpret_config_parse_strtoul (cf,
-					      product_ids_ptr,
-					      USHRT_MAX,
-					      &tmp) < 0)
+                                              product_ids_ptr,
+                                              USHRT_MAX,
+                                              &tmp) < 0)
             goto cleanup;
           product_id = tmp;
           
@@ -234,9 +234,9 @@ interpret_config_parse_manufactuer_id_product_id (conffile_t cf,
       else
         {
           if (interpret_config_parse_strtoul (cf,
-					      product_ids_ptr,
-					      USHRT_MAX,
-					      &tmp) < 0)
+                                              product_ids_ptr,
+                                              USHRT_MAX,
+                                              &tmp) < 0)
             goto cleanup;
           ids[(*ids_count)].product_ids[0] = tmp;
           ids[(*ids_count)].product_ids_count = 1;

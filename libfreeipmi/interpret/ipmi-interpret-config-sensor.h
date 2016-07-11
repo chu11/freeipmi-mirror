@@ -28,6 +28,6 @@ int interpret_sensor_init (ipmi_interpret_ctx_t ctx);
 void interpret_sensor_destroy (ipmi_interpret_ctx_t ctx);
 
 int interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
-				   const char *sensor_config_file);
+                                   const char *sensor_config_file);
 
 #endif /* IPMI_INTERPRET_CONFIG_SENSOR_H */

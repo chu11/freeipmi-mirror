@@ -329,7 +329,7 @@ fiid_template_t tmpl_cmd_get_oem_netfn_iana_support_rs =
 
 int
 fill_cmd_get_netfn_support (uint8_t channel_number,
-			    fiid_obj_t obj_cmd_rq)
+                            fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
       || !fiid_obj_valid (obj_cmd_rq))
@@ -354,11 +354,11 @@ fill_cmd_get_netfn_support (uint8_t channel_number,
 
 int
 fill_cmd_get_command_support (uint8_t channel_number,
-			      uint8_t net_fn,
-			      uint8_t operation,
-			      uint8_t lun,
-			      uint32_t net_fn_data,
-			      fiid_obj_t obj_cmd_rq)
+                              uint8_t net_fn,
+                              uint8_t operation,
+                              uint8_t lun,
+                              uint32_t net_fn_data,
+                              fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
       || !IPMI_NET_FN_VALID (net_fn)
@@ -391,7 +391,7 @@ fill_cmd_get_command_support (uint8_t channel_number,
       FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "net_fn_data", &tmp, 1);
     }
   else if (net_fn == IPMI_NET_FN_OEM_GROUP_RQ
-	   || net_fn == IPMI_NET_FN_OEM_GROUP_RS)
+           || net_fn == IPMI_NET_FN_OEM_GROUP_RS)
     FILL_FIID_OBJ_SET (obj_cmd_rq, "net_fn_data", net_fn_data);
   
   return (0);
@@ -399,11 +399,11 @@ fill_cmd_get_command_support (uint8_t channel_number,
 
 int
 fill_cmd_get_command_sub_function_support (uint8_t channel_number,
-					   uint8_t net_fn,
-					   uint8_t lun,
-					   uint8_t command,
-					   uint32_t net_fn_data,
-					   fiid_obj_t obj_cmd_rq)
+                                           uint8_t net_fn,
+                                           uint8_t lun,
+                                           uint8_t command,
+                                           uint32_t net_fn_data,
+                                           fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
       || !IPMI_NET_FN_VALID (net_fn)
@@ -436,7 +436,7 @@ fill_cmd_get_command_sub_function_support (uint8_t channel_number,
       FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "net_fn_data", &tmp, 1);
     }
   else if (net_fn == IPMI_NET_FN_OEM_GROUP_RQ
-	   || net_fn == IPMI_NET_FN_OEM_GROUP_RS)
+           || net_fn == IPMI_NET_FN_OEM_GROUP_RS)
     FILL_FIID_OBJ_SET (obj_cmd_rq, "net_fn_data", net_fn_data);
   
   return (0);
@@ -444,11 +444,11 @@ fill_cmd_get_command_sub_function_support (uint8_t channel_number,
 
 int
 fill_cmd_get_configurable_commands (uint8_t channel_number,
-				    uint8_t net_fn,
-				    uint8_t operation,
-				    uint8_t lun,
-				    uint32_t net_fn_data,
-				    fiid_obj_t obj_cmd_rq)
+                                    uint8_t net_fn,
+                                    uint8_t operation,
+                                    uint8_t lun,
+                                    uint32_t net_fn_data,
+                                    fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
       || !IPMI_NET_FN_VALID (net_fn)
@@ -481,7 +481,7 @@ fill_cmd_get_configurable_commands (uint8_t channel_number,
       FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "net_fn_data", &tmp, 1);
     }
   else if (net_fn == IPMI_NET_FN_OEM_GROUP_RQ
-	   || net_fn == IPMI_NET_FN_OEM_GROUP_RS)
+           || net_fn == IPMI_NET_FN_OEM_GROUP_RS)
     FILL_FIID_OBJ_SET (obj_cmd_rq, "net_fn_data", net_fn_data);
   
   return (0);
@@ -489,11 +489,11 @@ fill_cmd_get_configurable_commands (uint8_t channel_number,
 
 int
 fill_cmd_get_configurable_command_sub_functions (uint8_t channel_number,
-						 uint8_t net_fn,
-						 uint8_t lun,
-						 uint8_t command,
-						 uint32_t net_fn_data,
-						 fiid_obj_t obj_cmd_rq)
+                                                 uint8_t net_fn,
+                                                 uint8_t lun,
+                                                 uint8_t command,
+                                                 uint32_t net_fn_data,
+                                                 fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
       || !IPMI_NET_FN_VALID (net_fn)
@@ -526,7 +526,7 @@ fill_cmd_get_configurable_command_sub_functions (uint8_t channel_number,
       FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "net_fn_data", &tmp, 1);
     }
   else if (net_fn == IPMI_NET_FN_OEM_GROUP_RQ
-	   || net_fn == IPMI_NET_FN_OEM_GROUP_RS)
+           || net_fn == IPMI_NET_FN_OEM_GROUP_RS)
     FILL_FIID_OBJ_SET (obj_cmd_rq, "net_fn_data", net_fn_data);
   
   return (0);
@@ -534,13 +534,13 @@ fill_cmd_get_configurable_command_sub_functions (uint8_t channel_number,
 
 int
 fill_cmd_set_command_enables (uint8_t channel_number,
-			      uint8_t net_fn,
-			      uint8_t operation,
-			      uint8_t lun,
-			      uint8_t *enable_disable_bitmask,
-			      unsigned int enable_disable_bitmask_len,
-			      uint32_t net_fn_data,
-			      fiid_obj_t obj_cmd_rq)
+                              uint8_t net_fn,
+                              uint8_t operation,
+                              uint8_t lun,
+                              uint8_t *enable_disable_bitmask,
+                              unsigned int enable_disable_bitmask_len,
+                              uint32_t net_fn_data,
+                              fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
       || !IPMI_NET_FN_VALID (net_fn)
@@ -569,9 +569,9 @@ fill_cmd_set_command_enables (uint8_t channel_number,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "lun", lun);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
   FILL_FIID_OBJ_SET_DATA (obj_cmd_rq,
-			  "enable_disable_mask",
-			  enable_disable_bitmask,
-			  IPMI_FIRMWARE_FIREWALL_COMMAND_DISCOVERY_ENABLE_DISABLE_BITMASK_LEN);
+                          "enable_disable_mask",
+                          enable_disable_bitmask,
+                          IPMI_FIRMWARE_FIREWALL_COMMAND_DISCOVERY_ENABLE_DISABLE_BITMASK_LEN);
   if (net_fn == IPMI_NET_FN_GROUP_EXTENSION_RQ
       || net_fn == IPMI_NET_FN_GROUP_EXTENSION_RS)
     {
@@ -579,7 +579,7 @@ fill_cmd_set_command_enables (uint8_t channel_number,
       FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "net_fn_data", &tmp, 1);
     }
   else if (net_fn == IPMI_NET_FN_OEM_GROUP_RQ
-	   || net_fn == IPMI_NET_FN_OEM_GROUP_RS)
+           || net_fn == IPMI_NET_FN_OEM_GROUP_RS)
     FILL_FIID_OBJ_SET (obj_cmd_rq, "net_fn_data", net_fn_data);
   
   return (0);
@@ -587,11 +587,11 @@ fill_cmd_set_command_enables (uint8_t channel_number,
 
 int
 fill_cmd_get_command_enables (uint8_t channel_number,
-			      uint8_t net_fn,
-			      uint8_t operation,
-			      uint8_t lun,
-			      uint32_t net_fn_data,
-			      fiid_obj_t obj_cmd_rq)
+                              uint8_t net_fn,
+                              uint8_t operation,
+                              uint8_t lun,
+                              uint32_t net_fn_data,
+                              fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
       || !IPMI_NET_FN_VALID (net_fn)
@@ -624,7 +624,7 @@ fill_cmd_get_command_enables (uint8_t channel_number,
       FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "net_fn_data", &tmp, 1);
     }
   else if (net_fn == IPMI_NET_FN_OEM_GROUP_RQ
-	   || net_fn == IPMI_NET_FN_OEM_GROUP_RS)
+           || net_fn == IPMI_NET_FN_OEM_GROUP_RS)
     FILL_FIID_OBJ_SET (obj_cmd_rq, "net_fn_data", net_fn_data);
   
   return (0);
@@ -632,19 +632,19 @@ fill_cmd_get_command_enables (uint8_t channel_number,
 
 int
 fill_cmd_set_command_sub_function_enables (uint8_t channel_number,
-					   uint8_t net_fn,
-					   uint8_t lun,
-					   uint8_t command,
-					   uint32_t sub_function_enables1,
-					   uint32_t *sub_function_enables2,
-					   fiid_obj_t obj_cmd_rq)
+                                           uint8_t net_fn,
+                                           uint8_t lun,
+                                           uint8_t command,
+                                           uint32_t sub_function_enables1,
+                                           uint32_t *sub_function_enables2,
+                                           fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
       || !IPMI_NET_FN_VALID (net_fn)
       || (net_fn == IPMI_NET_FN_GROUP_EXTENSION_RQ
-	  || net_fn == IPMI_NET_FN_GROUP_EXTENSION_RS
-	  || net_fn == IPMI_NET_FN_OEM_GROUP_RQ
-	  || net_fn == IPMI_NET_FN_OEM_GROUP_RS)
+          || net_fn == IPMI_NET_FN_GROUP_EXTENSION_RS
+          || net_fn == IPMI_NET_FN_OEM_GROUP_RQ
+          || net_fn == IPMI_NET_FN_OEM_GROUP_RS)
       || !IPMI_BMC_LUN_VALID (lun)
       || !fiid_obj_valid (obj_cmd_rq))
     {
@@ -676,17 +676,17 @@ fill_cmd_set_command_sub_function_enables (uint8_t channel_number,
 
 int
 fill_cmd_set_command_sub_function_enables_defining_body_code (uint8_t channel_number,
-							      uint8_t net_fn,
-							      uint8_t lun,
-							      uint8_t command,
-							      uint8_t defining_body_code,
-							      uint32_t sub_function_enables1,
-							      uint32_t *sub_function_enables2,
-							      fiid_obj_t obj_cmd_rq)
+                                                              uint8_t net_fn,
+                                                              uint8_t lun,
+                                                              uint8_t command,
+                                                              uint8_t defining_body_code,
+                                                              uint32_t sub_function_enables1,
+                                                              uint32_t *sub_function_enables2,
+                                                              fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
       || (net_fn != IPMI_NET_FN_GROUP_EXTENSION_RQ
-	  && net_fn != IPMI_NET_FN_GROUP_EXTENSION_RS)
+          && net_fn != IPMI_NET_FN_GROUP_EXTENSION_RS)
       || !IPMI_BMC_LUN_VALID (lun)
       || !fiid_obj_valid (obj_cmd_rq))
     {
@@ -719,17 +719,17 @@ fill_cmd_set_command_sub_function_enables_defining_body_code (uint8_t channel_nu
 
 int
 fill_cmd_set_command_sub_function_enables_oem_iana (uint8_t channel_number,
-						    uint8_t net_fn,
-						    uint8_t lun,
-						    uint8_t command,
-						    uint32_t oem_iana,
-						    uint32_t sub_function_enables1,
-						    uint32_t *sub_function_enables2,
-						    fiid_obj_t obj_cmd_rq)
+                                                    uint8_t net_fn,
+                                                    uint8_t lun,
+                                                    uint8_t command,
+                                                    uint32_t oem_iana,
+                                                    uint32_t sub_function_enables1,
+                                                    uint32_t *sub_function_enables2,
+                                                    fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
       || (net_fn != IPMI_NET_FN_OEM_GROUP_RQ
-	  && net_fn != IPMI_NET_FN_OEM_GROUP_RS)
+          && net_fn != IPMI_NET_FN_OEM_GROUP_RS)
       || !IPMI_BMC_LUN_VALID (lun)
       || !fiid_obj_valid (obj_cmd_rq))
     {
@@ -762,11 +762,11 @@ fill_cmd_set_command_sub_function_enables_oem_iana (uint8_t channel_number,
 
 int
 fill_cmd_get_command_sub_function_enables (uint8_t channel_number,
-					   uint8_t net_fn,
-					   uint8_t lun,
-					   uint8_t command,
-					   uint32_t net_fn_data,
-					   fiid_obj_t obj_cmd_rq)
+                                           uint8_t net_fn,
+                                           uint8_t lun,
+                                           uint8_t command,
+                                           uint32_t net_fn_data,
+                                           fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
       || !IPMI_NET_FN_VALID (net_fn)
@@ -799,7 +799,7 @@ fill_cmd_get_command_sub_function_enables (uint8_t channel_number,
       FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "net_fn_data", &tmp, 1);
     }
   else if (net_fn == IPMI_NET_FN_OEM_GROUP_RQ
-	   || net_fn == IPMI_NET_FN_OEM_GROUP_RS)
+           || net_fn == IPMI_NET_FN_OEM_GROUP_RS)
     FILL_FIID_OBJ_SET (obj_cmd_rq, "net_fn_data", net_fn_data);
   
   return (0);
@@ -807,13 +807,13 @@ fill_cmd_get_command_sub_function_enables (uint8_t channel_number,
 
 int
 fill_cmd_get_oem_netfn_iana_support (uint8_t channel_number,
-				     uint8_t net_fn,
-				     uint8_t list_index,
-				     fiid_obj_t obj_cmd_rq)
+                                     uint8_t net_fn,
+                                     uint8_t list_index,
+                                     fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
       || (net_fn != IPMI_NET_FN_GROUP_EXTENSION_RQ
-	  && net_fn != IPMI_NET_FN_OEM_GROUP_RQ)
+          && net_fn != IPMI_NET_FN_OEM_GROUP_RQ)
       || !fiid_obj_valid (obj_cmd_rq))
     {
       SET_ERRNO (EINVAL);

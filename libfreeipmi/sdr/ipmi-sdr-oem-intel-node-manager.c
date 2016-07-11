@@ -53,15 +53,15 @@
  */
 int
 ipmi_sdr_oem_parse_intel_node_manager (ipmi_sdr_ctx_t ctx,
-				       const void *sdr_record,
-				       unsigned int sdr_record_len,
-				       uint8_t *nm_device_slave_address,
-				       uint8_t *sensor_owner_lun,
-				       uint8_t *channel_number,
-				       uint8_t *nm_health_event_sensor_number,
-				       uint8_t *nm_exception_event_sensor_number,
-				       uint8_t *nm_operational_capabilities_sensor_number,
-				       uint8_t *nm_alert_threshold_exceeded_sensor_number)
+                                       const void *sdr_record,
+                                       unsigned int sdr_record_len,
+                                       uint8_t *nm_device_slave_address,
+                                       uint8_t *sensor_owner_lun,
+                                       uint8_t *channel_number,
+                                       uint8_t *nm_health_event_sensor_number,
+                                       uint8_t *nm_exception_event_sensor_number,
+                                       uint8_t *nm_operational_capabilities_sensor_number,
+                                       uint8_t *nm_alert_threshold_exceeded_sensor_number)
 {
   uint8_t sdr_record_buf[IPMI_SDR_MAX_RECORD_LENGTH];
   int sdr_record_buf_len;
@@ -81,24 +81,24 @@ ipmi_sdr_oem_parse_intel_node_manager (ipmi_sdr_ctx_t ctx,
   if (!sdr_record || !sdr_record_len)
     {
       if (ctx->operation == IPMI_SDR_OPERATION_READ_CACHE
-	  && !sdr_record
-	  && !sdr_record_len)
-	{
-	  if ((sdr_record_buf_len = ipmi_sdr_cache_record_read (ctx,
-								sdr_record_buf,
-								IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
-	    {
-	      SDR_SET_INTERNAL_ERRNUM (ctx);
-	      return (-1);
-	    }
-	  sdr_record_to_use = sdr_record_buf;
-	  sdr_record_len_to_use = sdr_record_buf_len;
-	}
+          && !sdr_record
+          && !sdr_record_len)
+        {
+          if ((sdr_record_buf_len = ipmi_sdr_cache_record_read (ctx,
+                                                                sdr_record_buf,
+                                                                IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
+            {
+              SDR_SET_INTERNAL_ERRNUM (ctx);
+              return (-1);
+            }
+          sdr_record_to_use = sdr_record_buf;
+          sdr_record_len_to_use = sdr_record_buf_len;
+        }
       else
-	{
-	  SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-	  return (-1);
-	}
+        {
+          SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
+          return (-1);
+        }
     }
   else
     {
@@ -126,7 +126,7 @@ ipmi_sdr_oem_parse_intel_node_manager (ipmi_sdr_ctx_t ctx,
 
   if (fiid_obj_set_all (obj_oem_record,
                         sdr_record_to_use,
-			expected_record_len) < 0)
+                        expected_record_len) < 0)
     {
       SDR_FIID_OBJECT_ERROR_TO_SDR_ERRNUM (ctx, obj_oem_record);
       goto cleanup;
@@ -171,7 +171,7 @@ ipmi_sdr_oem_parse_intel_node_manager (ipmi_sdr_ctx_t ctx,
                         "nm_device_slave_address",
                         &val) < 0)
         {
-	  SDR_FIID_OBJECT_ERROR_TO_SDR_ERRNUM (ctx, obj_oem_record);
+          SDR_FIID_OBJECT_ERROR_TO_SDR_ERRNUM (ctx, obj_oem_record);
           goto cleanup;
         }
       (*nm_device_slave_address) = val;
@@ -183,7 +183,7 @@ ipmi_sdr_oem_parse_intel_node_manager (ipmi_sdr_ctx_t ctx,
                         "sensor_owner_lun",
                         &val) < 0)
         {
-	  SDR_FIID_OBJECT_ERROR_TO_SDR_ERRNUM (ctx, obj_oem_record);
+          SDR_FIID_OBJECT_ERROR_TO_SDR_ERRNUM (ctx, obj_oem_record);
           goto cleanup;
         }
       (*sensor_owner_lun) = val;
@@ -195,7 +195,7 @@ ipmi_sdr_oem_parse_intel_node_manager (ipmi_sdr_ctx_t ctx,
                         "channel_number",
                         &val) < 0)
         {
-	  SDR_FIID_OBJECT_ERROR_TO_SDR_ERRNUM (ctx, obj_oem_record);
+          SDR_FIID_OBJECT_ERROR_TO_SDR_ERRNUM (ctx, obj_oem_record);
           goto cleanup;
         }
       (*channel_number) = val;
@@ -207,7 +207,7 @@ ipmi_sdr_oem_parse_intel_node_manager (ipmi_sdr_ctx_t ctx,
                         "nm_health_event_sensor_number",
                         &val) < 0)
         {
-	  SDR_FIID_OBJECT_ERROR_TO_SDR_ERRNUM (ctx, obj_oem_record);
+          SDR_FIID_OBJECT_ERROR_TO_SDR_ERRNUM (ctx, obj_oem_record);
           goto cleanup;
         }
       (*nm_health_event_sensor_number) = val;
@@ -219,7 +219,7 @@ ipmi_sdr_oem_parse_intel_node_manager (ipmi_sdr_ctx_t ctx,
                         "nm_exception_event_sensor_number",
                         &val) < 0)
         {
-	  SDR_FIID_OBJECT_ERROR_TO_SDR_ERRNUM (ctx, obj_oem_record);
+          SDR_FIID_OBJECT_ERROR_TO_SDR_ERRNUM (ctx, obj_oem_record);
           goto cleanup;
         }
       (*nm_exception_event_sensor_number) = val;
@@ -231,7 +231,7 @@ ipmi_sdr_oem_parse_intel_node_manager (ipmi_sdr_ctx_t ctx,
                         "nm_operational_capabilities_sensor_number",
                         &val) < 0)
         {
-	  SDR_FIID_OBJECT_ERROR_TO_SDR_ERRNUM (ctx, obj_oem_record);
+          SDR_FIID_OBJECT_ERROR_TO_SDR_ERRNUM (ctx, obj_oem_record);
           goto cleanup;
         }
       (*nm_operational_capabilities_sensor_number) = val;
@@ -243,7 +243,7 @@ ipmi_sdr_oem_parse_intel_node_manager (ipmi_sdr_ctx_t ctx,
                         "nm_alert_threshold_exceeded_sensor_number",
                         &val) < 0)
         {
-	  SDR_FIID_OBJECT_ERROR_TO_SDR_ERRNUM (ctx, obj_oem_record);
+          SDR_FIID_OBJECT_ERROR_TO_SDR_ERRNUM (ctx, obj_oem_record);
           goto cleanup;
         }
       (*nm_alert_threshold_exceeded_sensor_number) = val;

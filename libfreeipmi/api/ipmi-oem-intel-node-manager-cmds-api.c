@@ -136,11 +136,11 @@ ipmi_cmd_oem_intel_node_manager_set_node_manager_policy (ipmi_ctx_t ctx,
                                                          uint8_t policy_id,
                                                          uint8_t policy_trigger_type,
                                                          uint8_t policy_configuration_action,
-							 uint8_t aggressive_cpu_power_correction,
-							 uint8_t policy_storage_option,
+                                                         uint8_t aggressive_cpu_power_correction,
+                                                         uint8_t policy_storage_option,
                                                          uint8_t policy_exception_actions_send_alert,
                                                          uint8_t policy_exception_actions_shutdown_system,
-							 uint8_t policy_power_domain,
+                                                         uint8_t policy_power_domain,
                                                          uint16_t policy_target_limit,
                                                          uint32_t correction_time_limit,
                                                          uint16_t policy_trigger_limit,
@@ -181,11 +181,11 @@ ipmi_cmd_oem_intel_node_manager_set_node_manager_policy (ipmi_ctx_t ctx,
                                                                policy_id,
                                                                policy_trigger_type,
                                                                policy_configuration_action,
-							       aggressive_cpu_power_correction,
-							       policy_storage_option,
+                                                               aggressive_cpu_power_correction,
+                                                               policy_storage_option,
                                                                policy_exception_actions_send_alert,
                                                                policy_exception_actions_shutdown_system,
-							       policy_power_domain,
+                                                               policy_power_domain,
                                                                policy_target_limit,
                                                                correction_time_limit,
                                                                policy_trigger_limit,
@@ -233,25 +233,25 @@ ipmi_cmd_oem_intel_node_manager_set_node_manager_policy (ipmi_ctx_t ctx,
   
 int
 ipmi_cmd_oem_intel_node_manager_set_node_manager_policy_boot_time_policy (ipmi_ctx_t ctx,
-									  uint8_t target_channel_number,
-									  uint8_t target_slave_address,
-									  uint8_t target_lun,
-									  uint8_t domain_id,
-									  uint8_t policy_enabled,
-									  uint8_t policy_id,
-									  uint8_t policy_trigger_type,
-									  uint8_t policy_configuration_action,
-									  uint8_t aggressive_cpu_power_correction,
-									  uint8_t policy_storage_option,
-									  uint8_t policy_exception_actions_send_alert,
-									  uint8_t policy_exception_actions_shutdown_system,
-									  uint8_t policy_power_domain,
-									  uint8_t platform_booting_mode,
-									  uint8_t cores_disabled,
-									  uint32_t correction_time_limit,
-									  uint16_t policy_trigger_limit,
-									  uint16_t statistics_reporting_period,
-									  fiid_obj_t obj_cmd_rs)
+                                                                          uint8_t target_channel_number,
+                                                                          uint8_t target_slave_address,
+                                                                          uint8_t target_lun,
+                                                                          uint8_t domain_id,
+                                                                          uint8_t policy_enabled,
+                                                                          uint8_t policy_id,
+                                                                          uint8_t policy_trigger_type,
+                                                                          uint8_t policy_configuration_action,
+                                                                          uint8_t aggressive_cpu_power_correction,
+                                                                          uint8_t policy_storage_option,
+                                                                          uint8_t policy_exception_actions_send_alert,
+                                                                          uint8_t policy_exception_actions_shutdown_system,
+                                                                          uint8_t policy_power_domain,
+                                                                          uint8_t platform_booting_mode,
+                                                                          uint8_t cores_disabled,
+                                                                          uint32_t correction_time_limit,
+                                                                          uint16_t policy_trigger_limit,
+                                                                          uint16_t statistics_reporting_period,
+                                                                          fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int rv = -1;
@@ -283,21 +283,21 @@ ipmi_cmd_oem_intel_node_manager_set_node_manager_policy_boot_time_policy (ipmi_c
     }
 
   if (fill_cmd_oem_intel_node_manager_set_node_manager_policy_boot_time_policy (domain_id,
-										policy_enabled,
-										policy_id,
-										policy_trigger_type,
-										policy_configuration_action,
-										aggressive_cpu_power_correction,
-										policy_storage_option,
-										policy_exception_actions_send_alert,
-										policy_exception_actions_shutdown_system,
-										policy_power_domain,
-										platform_booting_mode,
-										cores_disabled,
-										correction_time_limit,
-										policy_trigger_limit,
-										statistics_reporting_period,
-										obj_cmd_rq) < 0)
+                                                                                policy_enabled,
+                                                                                policy_id,
+                                                                                policy_trigger_type,
+                                                                                policy_configuration_action,
+                                                                                aggressive_cpu_power_correction,
+                                                                                policy_storage_option,
+                                                                                policy_exception_actions_send_alert,
+                                                                                policy_exception_actions_shutdown_system,
+                                                                                policy_power_domain,
+                                                                                platform_booting_mode,
+                                                                                cores_disabled,
+                                                                                correction_time_limit,
+                                                                                policy_trigger_limit,
+                                                                                statistics_reporting_period,
+                                                                                obj_cmd_rq) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
@@ -421,15 +421,15 @@ ipmi_cmd_oem_intel_node_manager_get_node_manager_policy (ipmi_ctx_t ctx,
 
 int
 ipmi_cmd_oem_intel_node_manager_set_node_manager_policy_alert_thresholds (ipmi_ctx_t ctx,
-									  uint8_t target_channel_number,
-									  uint8_t target_slave_address,
-									  uint8_t target_lun,
-									  uint8_t domain_id,
-									  uint8_t policy_id,
-									  uint16_t *alert_threshold1,
-									  uint16_t *alert_threshold2,
-									  uint16_t *alert_threshold3,
-									  fiid_obj_t obj_cmd_rs)
+                                                                          uint8_t target_channel_number,
+                                                                          uint8_t target_slave_address,
+                                                                          uint8_t target_lun,
+                                                                          uint8_t domain_id,
+                                                                          uint8_t policy_id,
+                                                                          uint16_t *alert_threshold1,
+                                                                          uint16_t *alert_threshold2,
+                                                                          uint16_t *alert_threshold3,
+                                                                          fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int rv = -1;
@@ -461,11 +461,11 @@ ipmi_cmd_oem_intel_node_manager_set_node_manager_policy_alert_thresholds (ipmi_c
     }
 
   if (fill_cmd_oem_intel_node_manager_set_node_manager_policy_alert_thresholds (domain_id,
-										policy_id,
-										alert_threshold1,
-										alert_threshold2,
-										alert_threshold3,
-										obj_cmd_rq) < 0)
+                                                                                policy_id,
+                                                                                alert_threshold1,
+                                                                                alert_threshold2,
+                                                                                alert_threshold3,
+                                                                                obj_cmd_rq) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
@@ -508,12 +508,12 @@ ipmi_cmd_oem_intel_node_manager_set_node_manager_policy_alert_thresholds (ipmi_c
 
 int
 ipmi_cmd_oem_intel_node_manager_get_node_manager_policy_alert_thresholds (ipmi_ctx_t ctx,
-									  uint8_t target_channel_number,
-									  uint8_t target_slave_address,
-									  uint8_t target_lun,
-									  uint8_t domain_id,
-									  uint8_t policy_id,
-									  fiid_obj_t obj_cmd_rs)
+                                                                          uint8_t target_channel_number,
+                                                                          uint8_t target_slave_address,
+                                                                          uint8_t target_lun,
+                                                                          uint8_t domain_id,
+                                                                          uint8_t policy_id,
+                                                                          fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int rv = -1;
@@ -545,8 +545,8 @@ ipmi_cmd_oem_intel_node_manager_get_node_manager_policy_alert_thresholds (ipmi_c
     }
 
   if (fill_cmd_oem_intel_node_manager_get_node_manager_policy_alert_thresholds (domain_id,
-										policy_id,
-										obj_cmd_rq) < 0)
+                                                                                policy_id,
+                                                                                obj_cmd_rq) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
@@ -1013,7 +1013,7 @@ ipmi_cmd_oem_intel_node_manager_get_node_manager_capabilities (ipmi_ctx_t ctx,
                                                                uint8_t domain_id,
                                                                uint8_t policy_trigger_type,
                                                                uint8_t policy_type,
-							       uint8_t policy_power_domain,
+                                                               uint8_t policy_power_domain,
                                                                fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -1048,7 +1048,7 @@ ipmi_cmd_oem_intel_node_manager_get_node_manager_capabilities (ipmi_ctx_t ctx,
   if (fill_cmd_oem_intel_node_manager_get_node_manager_capabilities (domain_id,
                                                                      policy_trigger_type,
                                                                      policy_type,
-								     policy_power_domain,
+                                                                     policy_power_domain,
                                                                      obj_cmd_rq) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
@@ -1590,13 +1590,13 @@ ipmi_cmd_oem_intel_node_manager_get_node_manager_alert_destination (ipmi_ctx_t c
 
 int
 ipmi_cmd_oem_intel_node_manager_set_turbo_synchronization_ratio (ipmi_ctx_t ctx,
-								 uint8_t target_channel_number,
-								 uint8_t target_slave_address,
-								 uint8_t target_lun,
-								 uint8_t cpu_socket_number,
-								 uint8_t active_cores_configuration,
-								 uint8_t turbo_ratio_limit,
-								 fiid_obj_t obj_cmd_rs)
+                                                                 uint8_t target_channel_number,
+                                                                 uint8_t target_slave_address,
+                                                                 uint8_t target_lun,
+                                                                 uint8_t cpu_socket_number,
+                                                                 uint8_t active_cores_configuration,
+                                                                 uint8_t turbo_ratio_limit,
+                                                                 fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int rv = -1;
@@ -1628,9 +1628,9 @@ ipmi_cmd_oem_intel_node_manager_set_turbo_synchronization_ratio (ipmi_ctx_t ctx,
     }
 
   if (fill_cmd_oem_intel_node_manager_set_turbo_synchronization_ratio (cpu_socket_number,
-								       active_cores_configuration,
-								       turbo_ratio_limit,
-								       obj_cmd_rq) < 0)
+                                                                       active_cores_configuration,
+                                                                       turbo_ratio_limit,
+                                                                       obj_cmd_rq) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
@@ -1673,12 +1673,12 @@ ipmi_cmd_oem_intel_node_manager_set_turbo_synchronization_ratio (ipmi_ctx_t ctx,
 
 int
 ipmi_cmd_oem_intel_node_manager_get_turbo_synchronization_ratio (ipmi_ctx_t ctx,
-								 uint8_t target_channel_number,
-								 uint8_t target_slave_address,
-								 uint8_t target_lun,
-								 uint8_t cpu_socket_number,
-								 uint8_t active_cores_configuration,
-								 fiid_obj_t obj_cmd_rs)
+                                                                 uint8_t target_channel_number,
+                                                                 uint8_t target_slave_address,
+                                                                 uint8_t target_lun,
+                                                                 uint8_t cpu_socket_number,
+                                                                 uint8_t active_cores_configuration,
+                                                                 fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int rv = -1;
@@ -1710,8 +1710,8 @@ ipmi_cmd_oem_intel_node_manager_get_turbo_synchronization_ratio (ipmi_ctx_t ctx,
     }
 
   if (fill_cmd_oem_intel_node_manager_get_turbo_synchronization_ratio (cpu_socket_number,
-								       active_cores_configuration,
-								       obj_cmd_rq) < 0)
+                                                                       active_cores_configuration,
+                                                                       obj_cmd_rq) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
@@ -1754,11 +1754,11 @@ ipmi_cmd_oem_intel_node_manager_get_turbo_synchronization_ratio (ipmi_ctx_t ctx,
 
 int
 ipmi_cmd_oem_intel_node_manager_get_limiting_policy_id (ipmi_ctx_t ctx,
-							uint8_t target_channel_number,
-							uint8_t target_slave_address,
-							uint8_t target_lun,
-							uint8_t domain_id,
-							fiid_obj_t obj_cmd_rs)
+                                                        uint8_t target_channel_number,
+                                                        uint8_t target_slave_address,
+                                                        uint8_t target_lun,
+                                                        uint8_t domain_id,
+                                                        fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int rv = -1;
@@ -1790,7 +1790,7 @@ ipmi_cmd_oem_intel_node_manager_get_limiting_policy_id (ipmi_ctx_t ctx,
     }
 
   if (fill_cmd_oem_intel_node_manager_get_limiting_policy_id (domain_id,
-							      obj_cmd_rq) < 0)
+                                                              obj_cmd_rq) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;

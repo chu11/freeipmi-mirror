@@ -118,7 +118,7 @@ ipmiconsole_packet_template (ipmiconsole_ctx_t c,
       return (NULL);
     }
 
-  return (NULL);			/* NOT REACHED */
+  return (NULL);                        /* NOT REACHED */
 }
 
 fiid_obj_t
@@ -185,7 +185,7 @@ ipmiconsole_packet_object (ipmiconsole_ctx_t c,
       return (NULL);
     }
 
-  return (NULL);			/* NOT REACHED */
+  return (NULL);                        /* NOT REACHED */
 }
 
 static int
@@ -283,7 +283,7 @@ _packet_dump_hdr (ipmiconsole_ctx_t c,
 
   if (debug_hdr_str (packet_type,
                      packet_direction,
-		     DEBUG_UTIL_FLAGS_DEFAULT,
+                     DEBUG_UTIL_FLAGS_DEFAULT,
                      str_cmd,
                      hdr,
                      hdrlen) < 0)
@@ -455,34 +455,34 @@ _packet_dump_unknown_hdr (ipmiconsole_ctx_t c,
         }
 
       switch (payload_type)
-	{
-	case IPMI_PAYLOAD_TYPE_SOL:
-	  str = "= Unexpected SOL Packet                        =";
-	  break;
-	case IPMI_PAYLOAD_TYPE_IPMI:
-	  str = "= Unexpected IPMI 2.0 Packet                   =";
-	  break;
-	case IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST:
-	  str = "= Unexpected Open Session Request              =";
-	  break;
-	case IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE:
-	  str = "= Unexpected Open Session Response             =";
-	  break;
-	case IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1:
-	  str = "= Unexpected RAKP Message 1                    =";
-	  break;
-	case IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2:
-	  str = "= Unexpected RAKP Message 2                    =";
-	  break;
-	case IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3:
-	  str = "= Unexpected RAKP Message 3                    =";
-	  break;
-	case IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4:
-	  str = "= Unexpected RAKP Message 4                    =";
-	  break;
-	default:
-	  str = "= Unexpected Packet                            =";
-	}
+        {
+        case IPMI_PAYLOAD_TYPE_SOL:
+          str = "= Unexpected SOL Packet                        =";
+          break;
+        case IPMI_PAYLOAD_TYPE_IPMI:
+          str = "= Unexpected IPMI 2.0 Packet                   =";
+          break;
+        case IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST:
+          str = "= Unexpected Open Session Request              =";
+          break;
+        case IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE:
+          str = "= Unexpected Open Session Response             =";
+          break;
+        case IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1:
+          str = "= Unexpected RAKP Message 1                    =";
+          break;
+        case IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2:
+          str = "= Unexpected RAKP Message 2                    =";
+          break;
+        case IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3:
+          str = "= Unexpected RAKP Message 3                    =";
+          break;
+        case IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4:
+          str = "= Unexpected RAKP Message 4                    =";
+          break;
+        default:
+          str = "= Unexpected Packet                            =";
+        }
     }
 
   if ((len = snprintf (hdr, hdrlen, fmt, str)) < 0)
@@ -655,7 +655,7 @@ _ipmi_1_5_packet_assemble (ipmiconsole_ctx_t c,
                                         authentication_code_data_len,
                                         buf,
                                         buflen,
-					IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
+                                        IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("assemble_ipmi_lan_pkt: p = %d; %s", p, strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
@@ -775,7 +775,7 @@ _ipmi_2_0_packet_assemble (ipmiconsole_ctx_t c,
                                              c->connection.obj_rmcpplus_session_trlr_rq,
                                              buf,
                                              buflen,
-					     IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
+                                             IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("assemble_ipmi_rmcpplus_pkt: p = %d; %s", p, strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
@@ -1222,9 +1222,9 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
        * don't even have serial ports.
        */
       if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_SERIAL_ALERTS_DEFERRED)
-	shared_serial_alert_behavior = IPMI_SERIAL_MODEM_ALERTS_DEFERRED_WHILE_SOL_ACTIVE;
+        shared_serial_alert_behavior = IPMI_SERIAL_MODEM_ALERTS_DEFERRED_WHILE_SOL_ACTIVE;
       else
-	shared_serial_alert_behavior = IPMI_SERIAL_MODEM_ALERTS_FAIL_WHILE_SOL_ACTIVE;
+        shared_serial_alert_behavior = IPMI_SERIAL_MODEM_ALERTS_FAIL_WHILE_SOL_ACTIVE;
 
       if (fill_cmd_activate_payload_sol (IPMI_PAYLOAD_TYPE_SOL,
                                          (uint8_t)c->config.sol_payload_instance,
@@ -1555,7 +1555,7 @@ ipmiconsole_packet_unassemble (ipmiconsole_ctx_t c,
                                               c->connection.obj_lan_msg_hdr_rs,
                                               obj_cmd,
                                               c->connection.obj_lan_msg_trlr_rs,
-					      IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
+                                              IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
         {
           IPMICONSOLE_CTX_DEBUG (c, ("unassemble_ipmi_lan_pkt: %s", strerror (errno)));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
@@ -1570,9 +1570,9 @@ ipmiconsole_packet_unassemble (ipmiconsole_ctx_t c,
       if (ipmi_rmcpplus_calculate_payload_type (buf, buflen, &payload_type) < 0)
         {
           IPMICONSOLE_CTX_DEBUG (c, ("ipmi_rmcpplus_calculate_payload_type: %s", strerror (errno)));
-	  /* Assume malformed packet */
-	  pkt_ret = 0;
-	  goto out;
+          /* Assume malformed packet */
+          pkt_ret = 0;
+          goto out;
         }
 
       if (payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE
@@ -1617,7 +1617,7 @@ ipmiconsole_packet_unassemble (ipmiconsole_ctx_t c,
                                                        obj_cmd,
                                                        c->connection.obj_lan_msg_trlr_rs,
                                                        c->connection.obj_rmcpplus_session_trlr_rs,
-						       IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
+                                                       IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
             {
               IPMICONSOLE_CTX_DEBUG (c, ("unassemble_ipmi_rmcpplus_pkt: %s", strerror (errno)));
               ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
@@ -1687,7 +1687,7 @@ ipmiconsole_packet_unassemble (ipmiconsole_ctx_t c,
                                                        obj_cmd,
                                                        c->connection.obj_lan_msg_trlr_rs,
                                                        c->connection.obj_rmcpplus_session_trlr_rs,
-						       IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
+                                                       IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
             {
               IPMICONSOLE_CTX_DEBUG (c, ("unassemble_ipmi_rmcpplus_pkt: %s", strerror (errno)));
               ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
@@ -1749,7 +1749,7 @@ ipmiconsole_calculate_errnum (ipmiconsole_ctx_t c,
           return (0);
         }
       else if (rmcpplus_status_code == RMCPPLUS_STATUS_UNAUTHORIZED_ROLE_OR_PRIVILEGE_LEVEL_REQUESTED
-	       || rmcpplus_status_code == RMCPPLUS_STATUS_INVALID_ROLE)
+               || rmcpplus_status_code == RMCPPLUS_STATUS_INVALID_ROLE)
         {
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
           return (0);

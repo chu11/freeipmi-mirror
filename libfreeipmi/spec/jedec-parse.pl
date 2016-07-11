@@ -49,9 +49,9 @@ while (($line = <FH>))
     # print "$line\n";
 
     if ($line =~ /\d+ (.+) [01] [01] [01] [01] [01] [01] [01] [01] (.+)/) {
-	print "{ 0x$2, \"$1\" },\n";
+        print "{ 0x$2, \"$1\" },\n";
     }
     else {
-	print "\n";
+        print "\n";
     }
 }

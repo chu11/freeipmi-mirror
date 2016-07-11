@@ -98,7 +98,7 @@ static struct argp cmdline_argp = { cmdline_options,
 
 static void
 _push_inputted_nodes (struct ipmidetect_arguments *cmd_args,
-		      const char *nodes)
+                      const char *nodes)
 {
   assert (cmd_args);
   assert (nodes);
@@ -153,14 +153,14 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case IPMIDETECT_HOSTNAME_KEY:
     case IPMIDETECT_LEGACY_HOSTNAME_KEY:
       if (!(cmd_args->hostname = strdup (arg)))
-	err_exit ("strdup: %s", strerror (errno));
+        err_exit ("strdup: %s", strerror (errno));
       break;
     case IPMIDETECT_PORT_KEY:
       errno = 0;
       cmd_args->port = strtol (arg, &endptr, 10);
       if (errno
-	  || endptr[0] != '\0')
-	err_exit ("invalid port specified");
+          || endptr[0] != '\0')
+        err_exit ("invalid port specified");
       break;
     case IPMIDETECT_DETECTED_KEY:
       cmd_args->output_type = IPMIDETECT_DETECTED_NODES;
@@ -184,7 +184,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       if (!strcmp (arg, "-"))
         _read_nodes_from_stdin (cmd_args);
       else
-	_push_inputted_nodes (cmd_args, arg);
+        _push_inputted_nodes (cmd_args, arg);
       hostlist_uniq (cmd_args->inputted_nodes);
       break;
     case ARGP_KEY_END:

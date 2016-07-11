@@ -1863,7 +1863,7 @@ int
 ipmi_get_oem_sensor_type_message (uint32_t manufacturer_id,
                                   uint16_t product_id,
                                   uint8_t sensor_type,
-				  uint8_t sensor_number,
+                                  uint8_t sensor_number,
                                   unsigned int offset,
                                   char *buf,
                                   unsigned int buflen)
@@ -1883,7 +1883,7 @@ ipmi_get_oem_sensor_type_message (uint32_t manufacturer_id,
   if (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_DELL
       && (product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R610
           || product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R710
-	  || product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R720))
+          || product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R720))
     {
       switch (sensor_type)
         {
@@ -2021,7 +2021,7 @@ ipmi_get_oem_sensor_type_message (uint32_t manufacturer_id,
     {
       switch (sensor_type)
         {
-	case IPMI_SENSOR_TYPE_OEM_WISTRON_IOH_CORE_ERROR:
+        case IPMI_SENSOR_TYPE_OEM_WISTRON_IOH_CORE_ERROR:
           return (_get_event_message (offset,
                                       buf,
                                       buflen,
@@ -2047,86 +2047,86 @@ ipmi_get_oem_sensor_type_message (uint32_t manufacturer_id,
     {
       unsigned int sensor_reading = (1 << offset);
       if (sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_WINDMILL_CPU_SEL_STATUS)
-	{
-	  if (sensor_reading & IPMI_SENSOR_TYPE_OEM_INTEL_SEL_CLEAR_BITMASK)
-	    return (snprintf (buf, buflen, "SEL Clear"));
-	  else if (sensor_reading & IPMI_SENSOR_TYPE_OEM_INTEL_SEL_ROLLOVER_BITMASK)
-	    return (snprintf (buf, buflen, "SEL Rollover"));
-	}
+        {
+          if (sensor_reading & IPMI_SENSOR_TYPE_OEM_INTEL_SEL_CLEAR_BITMASK)
+            return (snprintf (buf, buflen, "SEL Clear"));
+          else if (sensor_reading & IPMI_SENSOR_TYPE_OEM_INTEL_SEL_ROLLOVER_BITMASK)
+            return (snprintf (buf, buflen, "SEL Rollover"));
+        }
       else if (sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_WINDMILL_CHASSIS_POWER_STATUS)
-	{
-	  /* achu: A/C Lost is 4h, not 3h, so the below may not be correct.  Had to guess */  
-	  if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_CHASSIS_POWER_STATUS_POWER_DOWN))
-	    return (snprintf (buf, buflen, "Power Down"));
-	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_CHASSIS_POWER_STATUS_POWER_CYCLE_RESET))
-	    return (snprintf (buf, buflen, "Power Cycle/Reset"));
-	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_CHASSIS_POWER_STATUS_POWER_ON))
-	    return (snprintf (buf, buflen, "Power On"));
-	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_CHASSIS_POWER_STATUS_AC_LOST))
-	    return (snprintf (buf, buflen, "A/C Lost"));
-	}
+        {
+          /* achu: A/C Lost is 4h, not 3h, so the below may not be correct.  Had to guess */  
+          if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_CHASSIS_POWER_STATUS_POWER_DOWN))
+            return (snprintf (buf, buflen, "Power Down"));
+          else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_CHASSIS_POWER_STATUS_POWER_CYCLE_RESET))
+            return (snprintf (buf, buflen, "Power Cycle/Reset"));
+          else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_CHASSIS_POWER_STATUS_POWER_ON))
+            return (snprintf (buf, buflen, "Power On"));
+          else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_CHASSIS_POWER_STATUS_AC_LOST))
+            return (snprintf (buf, buflen, "A/C Lost"));
+        }
       else if (sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_LOW)
-	{
-	  if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_LOW_NONE_OF_THE_ABOVE))
-	    return (snprintf (buf, buflen, "Active status bits are waiting to be read"));
-	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_LOW_CML_ERROR))
-	    return (snprintf (buf, buflen, "An error was detected on the I2C/PMBus interface"));
-	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_LOW_VIN_UV_FAULT))
-	    return (snprintf (buf, buflen, "An undervoltage input fault was detected on the UV pin"));
-	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_LOW_IOUT_OC_FAULT))
-	    return (snprintf (buf, buflen, "The hot swap controller detected an overcurrent condition"));
-	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_LOW_HOTSWAP_OFF))
-	    return (snprintf (buf, buflen, "The hot swap gate driver output is disabled"));
-	}
+        {
+          if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_LOW_NONE_OF_THE_ABOVE))
+            return (snprintf (buf, buflen, "Active status bits are waiting to be read"));
+          else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_LOW_CML_ERROR))
+            return (snprintf (buf, buflen, "An error was detected on the I2C/PMBus interface"));
+          else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_LOW_VIN_UV_FAULT))
+            return (snprintf (buf, buflen, "An undervoltage input fault was detected on the UV pin"));
+          else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_LOW_IOUT_OC_FAULT))
+            return (snprintf (buf, buflen, "The hot swap controller detected an overcurrent condition"));
+          else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_LOW_HOTSWAP_OFF))
+            return (snprintf (buf, buflen, "The hot swap gate driver output is disabled"));
+        }
       else if (sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_HIGH)
-	{
-	  if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_HIGH_POWER_GOOD))
-	    return (snprintf (buf, buflen, "The voltage on the FLB pin is below the required threshold"));
-	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_HIGH_MFR_STATUS))
-	    return (snprintf (buf, buflen, "There are one or more active status bits to be read by STATUS_MFR_SPECIFIC"));
-	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_HIGH_INPUT_STATUS))
-	    return (snprintf (buf, buflen, "There are one or more active status bits to be read by STATUS_INPUT"));
-	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_HIGH_IOUT_STATUS))
-	    return (snprintf (buf, buflen, "There are one or more active status bits to be read by STATUS_IOUT"));
-	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_HIGH_VOUT_STATUS))
-	    return (snprintf (buf, buflen, "There are one or more active status bits to be read by STATUS_VOUT"));
-	}
+        {
+          if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_HIGH_POWER_GOOD))
+            return (snprintf (buf, buflen, "The voltage on the FLB pin is below the required threshold"));
+          else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_HIGH_MFR_STATUS))
+            return (snprintf (buf, buflen, "There are one or more active status bits to be read by STATUS_MFR_SPECIFIC"));
+          else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_HIGH_INPUT_STATUS))
+            return (snprintf (buf, buflen, "There are one or more active status bits to be read by STATUS_INPUT"));
+          else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_HIGH_IOUT_STATUS))
+            return (snprintf (buf, buflen, "There are one or more active status bits to be read by STATUS_IOUT"));
+          else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_HIGH_VOUT_STATUS))
+            return (snprintf (buf, buflen, "There are one or more active status bits to be read by STATUS_VOUT"));
+        }
       else if (sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC)
-	{
-	  if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_IOUT_WARN2))
-	    return (snprintf (buf, buflen, "An undercurrent or overcurrent condition on the output supply detected"));
-	  /* achu: HS_SHUTDOWN_CAUSE1 & HS_SHUTDOWN_CAUSE2 list 4 error messages
-	   * with <00>, <01>, <10>, & <11> listed next to them.  I have no idea
-	   * where these other bits come from.
-	   *
-	   * So all user gets is a generic "hotswap shutdown"
-	   */
-	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_HS_SHUTDOWN_CAUSE1))
-	    return (snprintf (buf, buflen, "Hotswap shutdown"));
-	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_HS_SHUTDOWN_CAUSE2))
-	    return (snprintf (buf, buflen, "Hotswap shutdown"));
-	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_HS_INLIM))
-	    return (snprintf (buf, buflen, "The ADM1276 has actively limited current into the load"));
-	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_OV_CMP_OUT))
-	    return (snprintf (buf, buflen, "Input Voltage to OV pin is above threshold"));
-	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_UV_CMP_OUT))
-	    return (snprintf (buf, buflen, "Input voltage to UV pin is below threshold"));
-	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_FET_HEALTH_BAD))
-	    return (snprintf (buf, buflen, "FET behavior suggests that the FET may be shorted"));
-	}
+        {
+          if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_IOUT_WARN2))
+            return (snprintf (buf, buflen, "An undercurrent or overcurrent condition on the output supply detected"));
+          /* achu: HS_SHUTDOWN_CAUSE1 & HS_SHUTDOWN_CAUSE2 list 4 error messages
+           * with <00>, <01>, <10>, & <11> listed next to them.  I have no idea
+           * where these other bits come from.
+           *
+           * So all user gets is a generic "hotswap shutdown"
+           */
+          else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_HS_SHUTDOWN_CAUSE1))
+            return (snprintf (buf, buflen, "Hotswap shutdown"));
+          else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_HS_SHUTDOWN_CAUSE2))
+            return (snprintf (buf, buflen, "Hotswap shutdown"));
+          else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_HS_INLIM))
+            return (snprintf (buf, buflen, "The ADM1276 has actively limited current into the load"));
+          else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_OV_CMP_OUT))
+            return (snprintf (buf, buflen, "Input Voltage to OV pin is above threshold"));
+          else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_UV_CMP_OUT))
+            return (snprintf (buf, buflen, "Input voltage to UV pin is below threshold"));
+          else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_FET_HEALTH_BAD))
+            return (snprintf (buf, buflen, "FET behavior suggests that the FET may be shorted"));
+        }
       else if (sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT)
-	{
-	  if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT_PIN_OP_WARN))
-	    return (snprintf (buf, buflen, "An overpower condition on the input supply was detected by power monitor"));
-	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT_VIN_UV_FAULT))
-	    return (snprintf (buf, buflen, "An undervoltage was detected on the UV pin"));
-	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT_VIN_UV_WARN))
-	    return (snprintf (buf, buflen, "An undervoltage condition on the input supply was detected by the power monitor"));
-	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT_VIN_OV_WARN))
-	    return (snprintf (buf, buflen, "An overvoltage condition on the input supply was detected by hte power monitor"));
-	  else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT_VIN_OV_FAULT))
-	    return (snprintf (buf, buflen, "An overvoltage was detected on the OV pin"));
-	}
+        {
+          if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT_PIN_OP_WARN))
+            return (snprintf (buf, buflen, "An overpower condition on the input supply was detected by power monitor"));
+          else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT_VIN_UV_FAULT))
+            return (snprintf (buf, buflen, "An undervoltage was detected on the UV pin"));
+          else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT_VIN_UV_WARN))
+            return (snprintf (buf, buflen, "An undervoltage condition on the input supply was detected by the power monitor"));
+          else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT_VIN_OV_WARN))
+            return (snprintf (buf, buflen, "An overvoltage condition on the input supply was detected by hte power monitor"));
+          else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT_VIN_OV_FAULT))
+            return (snprintf (buf, buflen, "An overvoltage was detected on the OV pin"));
+        }
     }
 
   SET_ERRNO (EINVAL);
@@ -2155,20 +2155,20 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
   if (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_HP)
     {
       if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_HP_UID_LIGHT
-	  && sensor_type == IPMI_SENSOR_TYPE_OEM_HP_LED)
-	return (_get_event_message (offset,
-				    buf,
-				    buflen,
-				    ipmi_oem_hp_uid_light_max_index,
-				    ipmi_oem_hp_uid_light));
+          && sensor_type == IPMI_SENSOR_TYPE_OEM_HP_LED)
+        return (_get_event_message (offset,
+                                    buf,
+                                    buflen,
+                                    ipmi_oem_hp_uid_light_max_index,
+                                    ipmi_oem_hp_uid_light));
       
       if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_HP_HEALTH_LED
-	  && sensor_type == IPMI_SENSOR_TYPE_OEM_HP_LED)
-	return (_get_event_message (offset,
-				    buf,
-				    buflen,
-				    ipmi_oem_hp_health_led_max_index,
-				    ipmi_oem_hp_health_led));
+          && sensor_type == IPMI_SENSOR_TYPE_OEM_HP_LED)
+        return (_get_event_message (offset,
+                                    buf,
+                                    buflen,
+                                    ipmi_oem_hp_health_led_max_index,
+                                    ipmi_oem_hp_health_led));
     }
   /* OEM Interpretation
    *
@@ -2180,175 +2180,175 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
   else if (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL)
     {
       if (product_id == IPMI_INTEL_PRODUCT_ID_S5500WB)
-	{
-	  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_SENSOR
-	      && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
-	    return (_get_event_message (offset,
-					buf,
-					buflen,
-					ipmi_oem_intel_specific_pci_fatal_sensor_max_index,
-					ipmi_oem_intel_specific_pci_fatal_sensor));
-	  
-	  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_CORRECTABLE_SENSOR
-	      && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
-	    return (_get_event_message (offset,
-					buf,
-					buflen,
-					ipmi_oem_intel_specific_pci_correctable_sensor_max_index,
-					ipmi_oem_intel_specific_pci_correctable_sensor));
-	}
+        {
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_SENSOR
+              && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+            return (_get_event_message (offset,
+                                        buf,
+                                        buflen,
+                                        ipmi_oem_intel_specific_pci_fatal_sensor_max_index,
+                                        ipmi_oem_intel_specific_pci_fatal_sensor));
+          
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_CORRECTABLE_SENSOR
+              && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+            return (_get_event_message (offset,
+                                        buf,
+                                        buflen,
+                                        ipmi_oem_intel_specific_pci_correctable_sensor_max_index,
+                                        ipmi_oem_intel_specific_pci_correctable_sensor));
+        }
       else if (product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R)
-	{
-	  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QUANTA_QSSC_S4R_PCIE_FATAL_SENSOR
-	      && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
-	    return (_get_event_message (offset,
-					buf,
-					buflen,
-					ipmi_oem_intel_quanta_qssc_s4r_specific_pci_fatal_sensor_max_index,
-					ipmi_oem_intel_quanta_qssc_s4r_specific_pci_fatal_sensor));
-	  
-	  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QUANTA_QSSC_S4R_PCIE_CORRECTABLE_SENSOR
-	      && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
-	    return (_get_event_message (offset,
-					buf,
-					buflen,
-					ipmi_oem_intel_quanta_qssc_s4r_specific_pci_correctable_sensor_max_index,
-					ipmi_oem_intel_quanta_qssc_s4r_specific_pci_correctable_sensor));
-	}
+        {
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QUANTA_QSSC_S4R_PCIE_FATAL_SENSOR
+              && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+            return (_get_event_message (offset,
+                                        buf,
+                                        buflen,
+                                        ipmi_oem_intel_quanta_qssc_s4r_specific_pci_fatal_sensor_max_index,
+                                        ipmi_oem_intel_quanta_qssc_s4r_specific_pci_fatal_sensor));
+          
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QUANTA_QSSC_S4R_PCIE_CORRECTABLE_SENSOR
+              && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+            return (_get_event_message (offset,
+                                        buf,
+                                        buflen,
+                                        ipmi_oem_intel_quanta_qssc_s4r_specific_pci_correctable_sensor_max_index,
+                                        ipmi_oem_intel_quanta_qssc_s4r_specific_pci_correctable_sensor));
+        }
       else if (product_id == IPMI_INTEL_PRODUCT_ID_S2600JF)
-	{
-	  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_PCIE_FATAL_ERROR
-	      && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
-	    return (_get_event_message (offset,
-					buf,
-					buflen,
-					ipmi_oem_intel_s2600jf_specific_pci_fatal_error_max_index,
-					ipmi_oem_intel_s2600jf_specific_pci_fatal_error));
+        {
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_PCIE_FATAL_ERROR
+              && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+            return (_get_event_message (offset,
+                                        buf,
+                                        buflen,
+                                        ipmi_oem_intel_s2600jf_specific_pci_fatal_error_max_index,
+                                        ipmi_oem_intel_s2600jf_specific_pci_fatal_error));
 
-	  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_PCIE_FATAL_ERROR_2
-	      && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
-	    return (_get_event_message (offset,
-					buf,
-					buflen,
-					ipmi_oem_intel_s2600jf_specific_pci_fatal_error_2_max_index,
-					ipmi_oem_intel_s2600jf_specific_pci_fatal_error_2));
-	  
-	  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_PCIE_CORRECTABLE_ERROR
-	      && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
-	    return (_get_event_message (offset,
-					buf,
-					buflen,
-					ipmi_oem_intel_s2600jf_specific_pci_correctable_error_max_index,
-					ipmi_oem_intel_s2600jf_specific_pci_correctable_error));
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_PCIE_FATAL_ERROR_2
+              && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+            return (_get_event_message (offset,
+                                        buf,
+                                        buflen,
+                                        ipmi_oem_intel_s2600jf_specific_pci_fatal_error_2_max_index,
+                                        ipmi_oem_intel_s2600jf_specific_pci_fatal_error_2));
+          
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_PCIE_CORRECTABLE_ERROR
+              && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+            return (_get_event_message (offset,
+                                        buf,
+                                        buflen,
+                                        ipmi_oem_intel_s2600jf_specific_pci_correctable_error_max_index,
+                                        ipmi_oem_intel_s2600jf_specific_pci_correctable_error));
 
-	  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_OPI_FATAL_ERROR
-	      && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
-	    return (_get_event_message (offset,
-					buf,
-					buflen,
-					ipmi_oem_intel_s2600jf_specific_opi_fatal_error_max_index,
-					ipmi_oem_intel_s2600jf_specific_opi_fatal_error));
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_OPI_FATAL_ERROR
+              && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+            return (_get_event_message (offset,
+                                        buf,
+                                        buflen,
+                                        ipmi_oem_intel_s2600jf_specific_opi_fatal_error_max_index,
+                                        ipmi_oem_intel_s2600jf_specific_opi_fatal_error));
 
-	  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_OPI_FATAL_ERROR_2
-	      && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
-	    return (_get_event_message (offset,
-					buf,
-					buflen,
-					ipmi_oem_intel_s2600jf_specific_opi_fatal_error_2_max_index,
-					ipmi_oem_intel_s2600jf_specific_opi_fatal_error_2));
-	  
-	  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_QPI_LINK_WIDTH_REDUCED
-	      && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
-	    return (_get_event_message (offset,
-					buf,
-					buflen,
-					ipmi_oem_intel_s2600jf_specific_qpi_link_width_reduced_max_index,
-					ipmi_oem_intel_s2600jf_specific_qpi_link_width_reduced));
-	}
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_OPI_FATAL_ERROR_2
+              && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+            return (_get_event_message (offset,
+                                        buf,
+                                        buflen,
+                                        ipmi_oem_intel_s2600jf_specific_opi_fatal_error_2_max_index,
+                                        ipmi_oem_intel_s2600jf_specific_opi_fatal_error_2));
+          
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_QPI_LINK_WIDTH_REDUCED
+              && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+            return (_get_event_message (offset,
+                                        buf,
+                                        buflen,
+                                        ipmi_oem_intel_s2600jf_specific_qpi_link_width_reduced_max_index,
+                                        ipmi_oem_intel_s2600jf_specific_qpi_link_width_reduced));
+        }
       else if (product_id == IPMI_INTEL_PRODUCT_ID_S2600KP
-	       || product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
-	       || product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT)
-	{
-	  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_QPI_FATAL_ERROR
-	      && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
-	    return (_get_event_message (offset,
-					buf,
-					buflen,
-					ipmi_oem_intel_e52600v3_specific_qpi_fatal_error_max_index,
-					ipmi_oem_intel_e52600v3_specific_qpi_fatal_error));
+               || product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
+               || product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT)
+        {
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_QPI_FATAL_ERROR
+              && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+            return (_get_event_message (offset,
+                                        buf,
+                                        buflen,
+                                        ipmi_oem_intel_e52600v3_specific_qpi_fatal_error_max_index,
+                                        ipmi_oem_intel_e52600v3_specific_qpi_fatal_error));
 
-	  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_QPI_FATAL_ERROR_2
-	      && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
-	    return (_get_event_message (offset,
-					buf,
-					buflen,
-					ipmi_oem_intel_e52600v3_specific_qpi_fatal_error_2_max_index,
-					ipmi_oem_intel_e52600v3_specific_qpi_fatal_error_2));
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_QPI_FATAL_ERROR_2
+              && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+            return (_get_event_message (offset,
+                                        buf,
+                                        buflen,
+                                        ipmi_oem_intel_e52600v3_specific_qpi_fatal_error_2_max_index,
+                                        ipmi_oem_intel_e52600v3_specific_qpi_fatal_error_2));
 
-	  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_QPI_LINK_WIDTH_REDUCED
-	      && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
-	    return (_get_event_message (offset,
-					buf,
-					buflen,
-					ipmi_oem_intel_e52600v3_specific_qpi_link_width_reduced_max_index,
-					ipmi_oem_intel_e52600v3_specific_qpi_link_width_reduced));
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_QPI_LINK_WIDTH_REDUCED
+              && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+            return (_get_event_message (offset,
+                                        buf,
+                                        buflen,
+                                        ipmi_oem_intel_e52600v3_specific_qpi_link_width_reduced_max_index,
+                                        ipmi_oem_intel_e52600v3_specific_qpi_link_width_reduced));
 
-	  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_PCI_EXPRESS_FATAL_ERRORS
-	      && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
-	    return (_get_event_message (offset,
-					buf,
-					buflen,
-					ipmi_oem_intel_e52600v3_specific_pci_express_fatal_errors_max_index,
-					ipmi_oem_intel_e52600v3_specific_pci_express_fatal_errors));
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_PCI_EXPRESS_FATAL_ERRORS
+              && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+            return (_get_event_message (offset,
+                                        buf,
+                                        buflen,
+                                        ipmi_oem_intel_e52600v3_specific_pci_express_fatal_errors_max_index,
+                                        ipmi_oem_intel_e52600v3_specific_pci_express_fatal_errors));
 
-	  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_PCI_EXPRESS_FATAL_ERRORS_2
-	      && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
-	    return (_get_event_message (offset,
-					buf,
-					buflen,
-					ipmi_oem_intel_e52600v3_specific_pci_express_fatal_errors_2_max_index,
-					ipmi_oem_intel_e52600v3_specific_pci_express_fatal_errors_2));
-	    
-	  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_PCI_EXPRESS_CORRECTABLE_ERRORS
-	      && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
-	    return (_get_event_message (offset,
-					buf,
-					buflen,
-					ipmi_oem_intel_e52600v3_specific_pci_express_correctable_errors_max_index,
-					ipmi_oem_intel_e52600v3_specific_pci_express_correctable_errors));
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_PCI_EXPRESS_FATAL_ERRORS_2
+              && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+            return (_get_event_message (offset,
+                                        buf,
+                                        buflen,
+                                        ipmi_oem_intel_e52600v3_specific_pci_express_fatal_errors_2_max_index,
+                                        ipmi_oem_intel_e52600v3_specific_pci_express_fatal_errors_2));
+            
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_PCI_EXPRESS_CORRECTABLE_ERRORS
+              && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+            return (_get_event_message (offset,
+                                        buf,
+                                        buflen,
+                                        ipmi_oem_intel_e52600v3_specific_pci_express_correctable_errors_max_index,
+                                        ipmi_oem_intel_e52600v3_specific_pci_express_correctable_errors));
  
-	  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_FIRMWARE_UPDATE_STATUS_SENSOR
-	      && sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE)
-	    return (_get_event_message (offset,
-					buf,
-					buflen,
-					ipmi_oem_intel_e52600v3_specific_firmware_update_status_sensor_max_index,
-					ipmi_oem_intel_e52600v3_specific_firmware_update_status_sensor));
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_FIRMWARE_UPDATE_STATUS_SENSOR
+              && sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE)
+            return (_get_event_message (offset,
+                                        buf,
+                                        buflen,
+                                        ipmi_oem_intel_e52600v3_specific_firmware_update_status_sensor_max_index,
+                                        ipmi_oem_intel_e52600v3_specific_firmware_update_status_sensor));
 
-	  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_BIOS_RECOVERY_START
-	      && sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS)
-	    return (_get_event_message (offset,
-					buf,
-					buflen,
-					ipmi_oem_intel_e52600v3_specific_bios_recovery_start_max_index,
-					ipmi_oem_intel_e52600v3_specific_bios_recovery_start));
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_BIOS_RECOVERY_START
+              && sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS)
+            return (_get_event_message (offset,
+                                        buf,
+                                        buflen,
+                                        ipmi_oem_intel_e52600v3_specific_bios_recovery_start_max_index,
+                                        ipmi_oem_intel_e52600v3_specific_bios_recovery_start));
 
-	  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_BIOS_RECOVERY_FINISH
-	      && sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS)
-	    return (_get_event_message (offset,
-					buf,
-					buflen,
-					ipmi_oem_intel_e52600v3_specific_bios_recovery_finish_max_index,
-					ipmi_oem_intel_e52600v3_specific_bios_recovery_finish));
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_BIOS_RECOVERY_FINISH
+              && sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS)
+            return (_get_event_message (offset,
+                                        buf,
+                                        buflen,
+                                        ipmi_oem_intel_e52600v3_specific_bios_recovery_finish_max_index,
+                                        ipmi_oem_intel_e52600v3_specific_bios_recovery_finish));
 
-	  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_IERR_RECOVERY_DUMP_INFO
-	      && sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_E52600V3_IERR_RECOVERY_DUMP_INFO)
-	    return (_get_event_message (offset,
-					buf,
-					buflen,
-					ipmi_oem_intel_e52600v3_specific_ierr_recovery_dump_info_max_index,
-					ipmi_oem_intel_e52600v3_specific_ierr_recovery_dump_info));
-	}
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_IERR_RECOVERY_DUMP_INFO
+              && sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_E52600V3_IERR_RECOVERY_DUMP_INFO)
+            return (_get_event_message (offset,
+                                        buf,
+                                        buflen,
+                                        ipmi_oem_intel_e52600v3_specific_ierr_recovery_dump_info_max_index,
+                                        ipmi_oem_intel_e52600v3_specific_ierr_recovery_dump_info));
+        }
     }
   
   SET_ERRNO (EINVAL);
@@ -2396,33 +2396,33 @@ _supermicro_oem_temp_level_sensor_supported (uint32_t manufacturer_id, uint16_t 
    */
   if ((manufacturer_id == IPMI_IANA_ENTERPRISE_ID_PEPPERCON
        && (product_id == IPMI_SUPERMICRO_PRODUCT_ID_X7DBR_3
-	   || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X7DB8
-	   || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTN
-	   || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X7SBI_LN4))
+           || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X7DB8
+           || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTN
+           || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X7SBI_LN4))
       || ((manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUPERMICRO
-	   || manufacturer_id ==  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND)
-	  && (product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTH
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTG
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DT3_LN4F
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU_6PLUS
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL_3F
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8SIL_F
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCL
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCM
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTNPLUS_F
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8SIE
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCA_F_O
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8DGU_F
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8DGU
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8DG6
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9DRI_F
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9DRI_LN4F_PLUS
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SPU_F_O
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCM_IIF))
+           || manufacturer_id ==  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND)
+          && (product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTH
+              || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTG
+              || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU
+              || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DT3_LN4F
+              || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU_6PLUS
+              || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL
+              || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL_3F
+              || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8SIL_F
+              || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCL
+              || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCM
+              || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTNPLUS_F
+              || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8SIE
+              || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCA_F_O
+              || product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8DGU_F
+              || product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8DGU
+              || product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8DG6
+              || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9DRI_F
+              || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9DRI_LN4F_PLUS
+              || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SPU_F_O
+              || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCM_IIF))
       || (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_MAGNUM_TECHNOLOGIES
-	  && product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL))
+          && product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL))
     return (1);
 
   return (0);
@@ -2450,33 +2450,33 @@ ipmi_get_oem_event_bitmask_message (uint32_t manufacturer_id,
   if (_supermicro_oem_temp_level_sensor_supported (manufacturer_id, product_id))
     {
       switch (event_reading_type_code)
-	{
-	case IPMI_EVENT_READING_TYPE_CODE_OEM_SUPERMICRO_GENERIC:
-	  {
-	    switch (sensor_type)
-	      {
-	      case IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP:
-		{
-		  switch (event_bitmask)
-		    {
-		    case IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP_LOW:
-		      return (snprintf (buf, buflen, "Low"));
-		    case IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP_MEDIUM:
-		      return (snprintf (buf, buflen, "Medium"));
-		    case IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP_HIGH:
-		      return (snprintf (buf, buflen, "High"));
-		    case IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP_OVERHEAT:
-		      return (snprintf (buf, buflen, "Overheat"));
-		    case IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP_NOT_INSTALLED:
-		      return (snprintf (buf, buflen, "Not Installed"));
-		    }
-		}
-		break;
-	      }
-	  }
-	  break;
-	  /* end case IPMI_EVENT_READING_TYPE_CODE_OEM_SUPERMICRO_GENERIC: */
-	}
+        {
+        case IPMI_EVENT_READING_TYPE_CODE_OEM_SUPERMICRO_GENERIC:
+          {
+            switch (sensor_type)
+              {
+              case IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP:
+                {
+                  switch (event_bitmask)
+                    {
+                    case IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP_LOW:
+                      return (snprintf (buf, buflen, "Low"));
+                    case IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP_MEDIUM:
+                      return (snprintf (buf, buflen, "Medium"));
+                    case IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP_HIGH:
+                      return (snprintf (buf, buflen, "High"));
+                    case IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP_OVERHEAT:
+                      return (snprintf (buf, buflen, "Overheat"));
+                    case IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP_NOT_INSTALLED:
+                      return (snprintf (buf, buflen, "Not Installed"));
+                    }
+                }
+                break;
+              }
+          }
+          break;
+          /* end case IPMI_EVENT_READING_TYPE_CODE_OEM_SUPERMICRO_GENERIC: */
+        }
     }
 
   SET_ERRNO (EINVAL);
@@ -2486,7 +2486,7 @@ ipmi_get_oem_event_bitmask_message (uint32_t manufacturer_id,
 int
 ipmi_get_event_messages (uint8_t event_reading_type_code,
                          uint8_t sensor_type, /* ignored if not relevant for event_reading_type_code */
-			 uint8_t sensor_number, /* ignored if not relevant for event_reading_type_code or sensor_type */
+                         uint8_t sensor_number, /* ignored if not relevant for event_reading_type_code or sensor_type */
                          uint16_t event_bitmask, /* ignored if not relevant for event_reading_type_code */
                          uint32_t manufacturer_id, /* ignored if INTERPRET_OEM_DATA not set */
                          uint16_t product_id, /* ignored if INTERPRET_OEM_DATA not set */
@@ -2509,7 +2509,7 @@ ipmi_get_event_messages (uint8_t event_reading_type_code,
       || (flags & ~(IPMI_GET_EVENT_MESSAGES_FLAGS_SHORT
                     | IPMI_GET_EVENT_MESSAGES_FLAGS_INTERPRET_OEM_DATA
                     | IPMI_GET_EVENT_MESSAGES_FLAGS_SENSOR_READING
-		    | IPMI_GET_EVENT_MESSAGES_FLAGS_IGNORE_UNRECOGNIZED_EVENTS)))
+                    | IPMI_GET_EVENT_MESSAGES_FLAGS_IGNORE_UNRECOGNIZED_EVENTS)))
     {
       SET_ERRNO (EINVAL);
       return (-1);
@@ -2619,7 +2619,7 @@ ipmi_get_event_messages (uint8_t event_reading_type_code,
                                    || sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_NON_FATAL_ERROR
                                    || sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_FATAL_IO_ERROR
                                    || sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_UPGRADE)
-			       )
+                               )
                               || (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU
                                   && (product_id >= IPMI_FUJITSU_PRODUCT_ID_MIN
                                       && product_id <= IPMI_FUJITSU_PRODUCT_ID_MAX)
@@ -2638,18 +2638,18 @@ ipmi_get_event_messages (uint8_t event_reading_type_code,
                                       || sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_COMMUNICATION
                                       /* These are for events only --end */
                                       )
-				  )
-			      || (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL
-				  && (product_id == IPMI_INTEL_PRODUCT_ID_WINDMILL)
-				  && (sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_GENERIC)
-				  )
-			      )
-			  )
+                                  )
+                              || (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL
+                                  && (product_id == IPMI_INTEL_PRODUCT_ID_WINDMILL)
+                                  && (sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_GENERIC)
+                                  )
+                              )
+                          )
                         {
                           len = ipmi_get_oem_sensor_type_message (manufacturer_id,
                                                                   product_id,
                                                                   sensor_type,
-								  sensor_number,
+                                                                  sensor_number,
                                                                   i,
                                                                   buf,
                                                                   EVENT_BUFLEN);
@@ -2679,27 +2679,27 @@ ipmi_get_event_messages (uint8_t event_reading_type_code,
                                                           buf,
                                                           EVENT_BUFLEN);
 
-	      if (len < 0)
-		{
-		  if (!(flags & IPMI_GET_EVENT_MESSAGES_FLAGS_IGNORE_UNRECOGNIZED_EVENTS))
-		    {
-		      snprintf (buf,
-				EVENT_BUFLEN,
-				"Unrecognized Event = %04Xh",
-				bitmask);
-		      
-		      if (!(tmp_event_messages[tmp_event_messages_count] = strdup (buf)))
-			{
-			  SET_ERRNO (ENOMEM);
-			  goto cleanup;
-			}
-		      
-		      tmp_event_messages_count++;
-		      continue;
-		    }
-		  else
-		    continue;
-		}
+              if (len < 0)
+                {
+                  if (!(flags & IPMI_GET_EVENT_MESSAGES_FLAGS_IGNORE_UNRECOGNIZED_EVENTS))
+                    {
+                      snprintf (buf,
+                                EVENT_BUFLEN,
+                                "Unrecognized Event = %04Xh",
+                                bitmask);
+                      
+                      if (!(tmp_event_messages[tmp_event_messages_count] = strdup (buf)))
+                        {
+                          SET_ERRNO (ENOMEM);
+                          goto cleanup;
+                        }
+                      
+                      tmp_event_messages_count++;
+                      continue;
+                    }
+                  else
+                    continue;
+                }
               
               if (len)
                 {
@@ -2721,7 +2721,7 @@ ipmi_get_event_messages (uint8_t event_reading_type_code,
    */
   else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM
            && flags & IPMI_GET_EVENT_MESSAGES_FLAGS_INTERPRET_OEM_DATA
-	   && _supermicro_oem_temp_level_sensor_supported (manufacturer_id, product_id)
+           && _supermicro_oem_temp_level_sensor_supported (manufacturer_id, product_id)
            && event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_SUPERMICRO_GENERIC)
     {
       len = ipmi_get_oem_event_bitmask_message (manufacturer_id,
@@ -2751,11 +2751,11 @@ ipmi_get_event_messages (uint8_t event_reading_type_code,
    */
   else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM
            && flags & IPMI_GET_EVENT_MESSAGES_FLAGS_INTERPRET_OEM_DATA
-	   && manufacturer_id == IPMI_IANA_ENTERPRISE_ID_HP
-	   && product_id == IPMI_HP_PRODUCT_ID_PROLIANT_DL160_G8
-	   && (sensor_type == IPMI_SENSOR_TYPE_OEM_HP_LED
-	       && (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_HP_UID_LIGHT
-		   || event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_HP_HEALTH_LED)))
+           && manufacturer_id == IPMI_IANA_ENTERPRISE_ID_HP
+           && product_id == IPMI_HP_PRODUCT_ID_PROLIANT_DL160_G8
+           && (sensor_type == IPMI_SENSOR_TYPE_OEM_HP_LED
+               && (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_HP_UID_LIGHT
+                   || event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_HP_HEALTH_LED)))
     {
       for (i = 0; i < IPMI_MAX_SENSOR_AND_EVENT_OFFSET; i++)
         {
@@ -2763,29 +2763,29 @@ ipmi_get_event_messages (uint8_t event_reading_type_code,
 
           if (event_bitmask & bitmask)
             {
-	      len = ipmi_get_oem_specific_message (manufacturer_id,
-						   product_id,
-						   event_reading_type_code,
-						   sensor_type,
-						   i,
-						   buf,
-						   EVENT_BUFLEN);
+              len = ipmi_get_oem_specific_message (manufacturer_id,
+                                                   product_id,
+                                                   event_reading_type_code,
+                                                   sensor_type,
+                                                   i,
+                                                   buf,
+                                                   EVENT_BUFLEN);
 
-	      if (len > 0)
-		{
-		  if (!(tmp_event_messages[tmp_event_messages_count] = strdup (buf)))
-		    {
-		      SET_ERRNO (ENOMEM);
-		      goto cleanup;
-		    }
-		  
-		  tmp_event_messages_count++;
-		  break;
-		}
-	      else
-		goto oem_default_output;
-	    }
-	}
+              if (len > 0)
+                {
+                  if (!(tmp_event_messages[tmp_event_messages_count] = strdup (buf)))
+                    {
+                      SET_ERRNO (ENOMEM);
+                      goto cleanup;
+                    }
+                  
+                  tmp_event_messages_count++;
+                  break;
+                }
+              else
+                goto oem_default_output;
+            }
+        }
     }
   else /* OEM Event */
     {

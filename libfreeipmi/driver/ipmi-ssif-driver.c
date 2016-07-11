@@ -246,35 +246,35 @@ _ipmi_i2c_smbus_access (ipmi_ssif_ctx_t ctx,
       tv_orig.tv_usec = tv.tv_usec;
 
       if (gettimeofday (&start, NULL) < 0)
-	{
-	  SSIF_ERRNO_TO_SSIF_ERRNUM (ctx, errno);
-	  return (-1);
-	}
+        {
+          SSIF_ERRNO_TO_SSIF_ERRNUM (ctx, errno);
+          return (-1);
+        }
 
       do {
-	if ((n = select (dev_fd + 1,
-			 &read_fds,
-			 NULL,
-			 NULL,
-			 &tv)) < 0)
-	  {
-	    if (errno != EINTR)
-	      {
-		SSIF_ERRNO_TO_SSIF_ERRNUM (ctx, errno);
-		return (-1);
-	      }
+        if ((n = select (dev_fd + 1,
+                         &read_fds,
+                         NULL,
+                         NULL,
+                         &tv)) < 0)
+          {
+            if (errno != EINTR)
+              {
+                SSIF_ERRNO_TO_SSIF_ERRNUM (ctx, errno);
+                return (-1);
+              }
 
-	    if (gettimeofday (&end, NULL) < 0)
-	      {
-		SSIF_ERRNO_TO_SSIF_ERRNUM (ctx, errno);
-		return (-1);
-	      }
+            if (gettimeofday (&end, NULL) < 0)
+              {
+                SSIF_ERRNO_TO_SSIF_ERRNUM (ctx, errno);
+                return (-1);
+              }
 
-	    /* delta = end - start */
-	    timersub (&end, &start, &delta);
-	    /* tv = tv_orig - delta */
-	    timersub (&tv_orig, &delta, &tv);
-	  }
+            /* delta = end - start */
+            timersub (&end, &start, &delta);
+            /* tv = tv_orig - delta */
+            timersub (&tv_orig, &delta, &tv);
+          }
       } while (n < 0);
 
       if (!n)
@@ -905,7 +905,7 @@ _ipmi_ssif_cmd_write (ipmi_ssif_ctx_t ctx,
                              obj_cmd_rq,
                              pkt,
                              pkt_len,
-			     IPMI_INTERFACE_FLAGS_DEFAULT) < 0)
+                             IPMI_INTERFACE_FLAGS_DEFAULT) < 0)
     {
       SSIF_SET_ERRNUM (ctx, IPMI_SSIF_ERR_INTERNAL_ERROR);
       goto cleanup;
@@ -984,7 +984,7 @@ _ipmi_ssif_cmd_read (ipmi_ssif_ctx_t ctx,
                                       read_len,
                                       obj_hdr,
                                       obj_cmd_rs,
-				      IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
+                                      IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
     {
       SSIF_SET_ERRNUM (ctx, IPMI_SSIF_ERR_INTERNAL_ERROR);
       goto cleanup;

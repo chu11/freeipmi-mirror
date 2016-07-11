@@ -407,8 +407,8 @@ struct sensor_event_enable_data {
 #define KEY_NAME_MAX_LEN 1024
 
 typedef int (*Sdr_event_flags_func)(ipmi_sdr_ctx_t ctx,
-				    const void *sdr_record,
-				    unsigned int sdr_record_len,
+                                    const void *sdr_record,
+                                    unsigned int sdr_record_len,
                                     uint8_t *event_state_0,
                                     uint8_t *event_state_1,
                                     uint8_t *event_state_2,
@@ -426,8 +426,8 @@ typedef int (*Sdr_event_flags_func)(ipmi_sdr_ctx_t ctx,
                                     uint8_t *event_state_14);
 
 typedef int (*Sdr_threshold_event_flags_func)(ipmi_sdr_ctx_t ctx,
-					      const void *sdr_record,
-					      unsigned int sdr_record_len,
+                                              const void *sdr_record,
+                                              unsigned int sdr_record_len,
                                               uint8_t *lower_non_critical_going_low,
                                               uint8_t *lower_non_critical_going_high,
                                               uint8_t *lower_critical_going_low,
@@ -460,15 +460,15 @@ _get_sensor_event_enable (ipmi_config_state_data_t *state_data,
   memset (data, '\0', sizeof (struct sensor_event_enable_data));
 
   if ((ret = ipmi_config_sensors_seek_to_sdr_record (state_data,
-						     section_name)) != IPMI_CONFIG_ERR_SUCCESS)
+                                                     section_name)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
 
   if (ipmi_sdr_parse_sensor_number (state_data->sdr_ctx,
-				    NULL,
-				    0,
+                                    NULL,
+                                    0,
                                     &sensor_number) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -492,12 +492,12 @@ _get_sensor_event_enable (ipmi_config_state_data_t *state_data,
                                         obj_cmd_rs) < 0)
     {
       if (ipmi_errnum_is_non_fatal (state_data,
-				    obj_cmd_rs,
-				    &ret))
+                                    obj_cmd_rs,
+                                    &ret))
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_sensor_event_enable: %s\n",
@@ -590,15 +590,15 @@ _set_sensor_event_enable (ipmi_config_state_data_t *state_data,
   assert (data);
 
   if ((ret = ipmi_config_sensors_seek_to_sdr_record (state_data,
-						     section_name)) != IPMI_CONFIG_ERR_SUCCESS)
+                                                     section_name)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
 
   if (ipmi_sdr_parse_sensor_number (state_data->sdr_ctx,
-				    NULL,
-				    0,
+                                    NULL,
+                                    0,
                                     &sensor_number) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -627,12 +627,12 @@ _set_sensor_event_enable (ipmi_config_state_data_t *state_data,
                                         obj_cmd_rs) < 0)
     {
       if (ipmi_errnum_is_non_fatal (state_data,
-				    obj_cmd_rs,
-				    &ret))
+                                    obj_cmd_rs,
+                                    &ret))
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_sensor_event_enable: %s\n",
@@ -649,7 +649,7 @@ _set_sensor_event_enable (ipmi_config_state_data_t *state_data,
 
 ipmi_config_err_t
 sensor_event_enable_enable_all_event_messages_checkout (ipmi_config_state_data_t *state_data,
-							const char *section_name,
+                                                        const char *section_name,
                                                         struct ipmi_config_keyvalue *kv)
 {
   struct sensor_event_enable_data data;
@@ -669,8 +669,8 @@ sensor_event_enable_enable_all_event_messages_checkout (ipmi_config_state_data_t
     }
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  data.all_event_messages ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  data.all_event_messages ? "Yes" : "No") < 0)
     goto cleanup;
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
@@ -680,7 +680,7 @@ sensor_event_enable_enable_all_event_messages_checkout (ipmi_config_state_data_t
 
 ipmi_config_err_t
 sensor_event_enable_enable_all_event_messages_commit (ipmi_config_state_data_t *state_data,
-						      const char *section_name,
+                                                      const char *section_name,
                                                       const struct ipmi_config_keyvalue *kv)
 {
   struct sensor_event_enable_data data;
@@ -721,7 +721,7 @@ sensor_event_enable_enable_all_event_messages_commit (ipmi_config_state_data_t *
 
 ipmi_config_err_t
 sensor_event_enable_enable_scanning_on_this_sensor_checkout (ipmi_config_state_data_t *state_data,
-							     const char *section_name,
+                                                             const char *section_name,
                                                              struct ipmi_config_keyvalue *kv)
 {
   struct sensor_event_enable_data data;
@@ -741,8 +741,8 @@ sensor_event_enable_enable_scanning_on_this_sensor_checkout (ipmi_config_state_d
     }
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  data.scanning_on_this_sensor ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  data.scanning_on_this_sensor ? "Yes" : "No") < 0)
     goto cleanup;
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
@@ -752,7 +752,7 @@ sensor_event_enable_enable_scanning_on_this_sensor_checkout (ipmi_config_state_d
 
 ipmi_config_err_t
 sensor_event_enable_enable_scanning_on_this_sensor_commit (ipmi_config_state_data_t *state_data,
-							   const char *section_name,
+                                                           const char *section_name,
                                                            const struct ipmi_config_keyvalue *kv)
 {
   struct sensor_event_enable_data data;
@@ -814,13 +814,13 @@ _setup_event_enable_key (ipmi_config_state_data_t *state_data,
         flags |= IPMI_CONFIG_UNDEFINED;
 
       if (ipmi_config_section_add_key (state_data,
-				       section,
-				       key_name,
-				       "Possible values: Yes/No",
-				       flags,
-				       checkout_func,
-				       commit_func,
-				       yes_no_validate) < 0)
+                                       section,
+                                       key_name,
+                                       "Possible values: Yes/No",
+                                       flags,
+                                       checkout_func,
+                                       commit_func,
+                                       yes_no_validate) < 0)
         goto cleanup;
     }
 
@@ -843,15 +843,15 @@ _threshold_event_enable_verify (ipmi_config_state_data_t *state_data,
   assert (section_name);
 
   if ((ret = ipmi_config_sensors_seek_to_sdr_record (state_data,
-						     section_name)) != IPMI_CONFIG_ERR_SUCCESS)
+                                                     section_name)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
 
   if (ipmi_sdr_parse_event_reading_type_code (state_data->sdr_ctx,
-					      NULL,
-					      0,
+                                              NULL,
+                                              0,
                                               &event_reading_type_code) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -942,7 +942,7 @@ _threshold_event_enable_get_data (ipmi_config_state_data_t *state_data,
 
 ipmi_config_err_t
 threshold_event_enable_checkout (ipmi_config_state_data_t *state_data,
-				 const char *section_name,
+                                 const char *section_name,
                                  struct ipmi_config_keyvalue *kv)
 {
   struct sensor_event_enable_data data;
@@ -974,8 +974,8 @@ threshold_event_enable_checkout (ipmi_config_state_data_t *state_data,
     }
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  ((bits >> bitposition) & 0x1) ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  ((bits >> bitposition) & 0x1) ? "Yes" : "No") < 0)
     goto cleanup;
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
@@ -985,7 +985,7 @@ threshold_event_enable_checkout (ipmi_config_state_data_t *state_data,
 
 ipmi_config_err_t
 threshold_event_enable_commit (ipmi_config_state_data_t *state_data,
-			       const char *section_name,
+                               const char *section_name,
                                const struct ipmi_config_keyvalue *kv)
 {
   struct sensor_event_enable_data data;
@@ -1074,8 +1074,8 @@ _setup_threshold_event_enable_wrapper (ipmi_config_state_data_t *state_data,
   assert (sdr_call);
 
   if (((*sdr_call)(state_data->sdr_ctx,
-		   NULL,
-		   0,
+                   NULL,
+                   0,
                    &lower_non_critical_going_low,
                    &lower_non_critical_going_high,
                    &lower_critical_going_low,
@@ -1182,8 +1182,8 @@ _get_event_state_bitmask (ipmi_config_state_data_t *state_data,
   assert (bitmask);
 
   if (((*sdr_call)(state_data->sdr_ctx,
-		   NULL,
-		   0,
+                   NULL,
+                   0,
                    &event_state_0,
                    &event_state_1,
                    &event_state_2,
@@ -1238,15 +1238,15 @@ _generic_event_enable_verify (ipmi_config_state_data_t *state_data,
   assert (event_reading_type_code_ptr);
 
   if ((ret = ipmi_config_sensors_seek_to_sdr_record (state_data,
-						     section_name)) != IPMI_CONFIG_ERR_SUCCESS)
+                                                     section_name)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
 
   if (ipmi_sdr_parse_event_reading_type_code (state_data->sdr_ctx,
-					      NULL,
-					      0,
+                                              NULL,
+                                              0,
                                               &event_reading_type_code) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -1393,7 +1393,7 @@ _generic_event_enable_get_data (ipmi_config_state_data_t *state_data,
 
 ipmi_config_err_t
 generic_event_enable_checkout (ipmi_config_state_data_t *state_data,
-			       const char *section_name,
+                               const char *section_name,
                                struct ipmi_config_keyvalue *kv)
 {
   struct sensor_event_enable_data data;
@@ -1428,8 +1428,8 @@ generic_event_enable_checkout (ipmi_config_state_data_t *state_data,
     }
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  ((bits >> bitposition) & 0x1) ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  ((bits >> bitposition) & 0x1) ? "Yes" : "No") < 0)
     goto cleanup;
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
@@ -1439,7 +1439,7 @@ generic_event_enable_checkout (ipmi_config_state_data_t *state_data,
 
 ipmi_config_err_t
 generic_event_enable_commit (ipmi_config_state_data_t *state_data,
-			     const char *section_name,
+                             const char *section_name,
                              const struct ipmi_config_keyvalue *kv)
 {
   struct sensor_event_enable_data data;
@@ -1607,15 +1607,15 @@ _sensor_specific_event_enable_verify (ipmi_config_state_data_t *state_data,
   assert (sensor_type_ptr);
 
   if ((ret = ipmi_config_sensors_seek_to_sdr_record (state_data,
-						     section_name)) != IPMI_CONFIG_ERR_SUCCESS)
+                                                     section_name)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
 
   if (ipmi_sdr_parse_event_reading_type_code (state_data->sdr_ctx,
-					      NULL,
-					      0,
+                                              NULL,
+                                              0,
                                               &event_reading_type_code) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -1639,8 +1639,8 @@ _sensor_specific_event_enable_verify (ipmi_config_state_data_t *state_data,
     }
 
   if (ipmi_sdr_parse_sensor_type (state_data->sdr_ctx,
-				  NULL,
-				  0,
+                                  NULL,
+                                  0,
                                   &sensor_type) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -1804,7 +1804,7 @@ _sensor_specific_event_enable_get_data (ipmi_config_state_data_t *state_data,
 
 ipmi_config_err_t
 sensor_specific_event_enable_checkout (ipmi_config_state_data_t *state_data,
-				       const char *section_name,
+                                       const char *section_name,
                                        struct ipmi_config_keyvalue *kv)
 {
   struct sensor_event_enable_data data;
@@ -1839,8 +1839,8 @@ sensor_specific_event_enable_checkout (ipmi_config_state_data_t *state_data,
     }
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  ((bits >> bitposition) & 0x1) ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  ((bits >> bitposition) & 0x1) ? "Yes" : "No") < 0)
     goto cleanup;
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
@@ -1850,7 +1850,7 @@ sensor_specific_event_enable_checkout (ipmi_config_state_data_t *state_data,
 
 ipmi_config_err_t
 sensor_specific_event_enable_commit (ipmi_config_state_data_t *state_data,
-				     const char *section_name,
+                                     const char *section_name,
                                      const struct ipmi_config_keyvalue *kv)
 {
   struct sensor_event_enable_data data;
@@ -1937,8 +1937,8 @@ _setup_sensor_specific_event_enable_wrapper (ipmi_config_state_data_t *state_dat
     goto cleanup;
 
   if (ipmi_sdr_parse_sensor_type (state_data->sdr_ctx,
-				  NULL,
-				  0,
+                                  NULL,
+                                  0,
                                   &sensor_type) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -2050,8 +2050,8 @@ setup_sensor_event_enable_fields (ipmi_config_state_data_t *state_data,
   assert (section);
 
   if (ipmi_sdr_parse_sensor_capabilities (state_data->sdr_ctx,
-					  NULL,
-					  0,
+                                          NULL,
+                                          0,
                                           &event_message_control_support,
                                           NULL,
                                           NULL,
@@ -2074,23 +2074,23 @@ setup_sensor_event_enable_fields (ipmi_config_state_data_t *state_data,
       || event_message_control_support == IPMI_SDR_ENTIRE_SENSOR_ONLY)
     {
       if (ipmi_config_section_add_key (state_data,
-				       section,
-				       "Enable_All_Event_Messages",
-				       "Possible values: Yes/No",
-				       0,
-				       sensor_event_enable_enable_all_event_messages_checkout,
-				       sensor_event_enable_enable_all_event_messages_commit,
-				       yes_no_validate) < 0)
+                                       section,
+                                       "Enable_All_Event_Messages",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       sensor_event_enable_enable_all_event_messages_checkout,
+                                       sensor_event_enable_enable_all_event_messages_commit,
+                                       yes_no_validate) < 0)
         goto cleanup;
 
       if (ipmi_config_section_add_key (state_data,
-				       section,
-				       "Enable_Scanning_On_This_Sensor",
-				       "Possible values: Yes/No",
-				       0,
-				       sensor_event_enable_enable_scanning_on_this_sensor_checkout,
-				       sensor_event_enable_enable_scanning_on_this_sensor_commit,
-				       yes_no_validate) < 0)
+                                       section,
+                                       "Enable_Scanning_On_This_Sensor",
+                                       "Possible values: Yes/No",
+                                       0,
+                                       sensor_event_enable_enable_scanning_on_this_sensor_checkout,
+                                       sensor_event_enable_enable_scanning_on_this_sensor_commit,
+                                       yes_no_validate) < 0)
         goto cleanup;
     }
 
@@ -2100,8 +2100,8 @@ setup_sensor_event_enable_fields (ipmi_config_state_data_t *state_data,
       int event_reading_type_code_class;
 
       if (ipmi_sdr_parse_event_reading_type_code (state_data->sdr_ctx,
-						  NULL,
-						  0,
+                                                  NULL,
+                                                  0,
                                                   &event_reading_type_code) < 0)
         {
           pstdout_fprintf (state_data->pstate,

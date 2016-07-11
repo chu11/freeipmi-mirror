@@ -141,22 +141,22 @@ _ipmi_config_category (char *arg, unsigned int *category_mask)
   while (tok)
     {
       if (!strcasecmp (tok, "core")
-	  || !strcasecmp (tok, "bmc"))
-	(*category_mask) |= IPMI_CONFIG_CATEGORY_MASK_CORE;
+          || !strcasecmp (tok, "bmc"))
+        (*category_mask) |= IPMI_CONFIG_CATEGORY_MASK_CORE;
       else if (!strcasecmp (tok, "chassis"))
-	(*category_mask) |= IPMI_CONFIG_CATEGORY_MASK_CHASSIS;
+        (*category_mask) |= IPMI_CONFIG_CATEGORY_MASK_CHASSIS;
       else if (!strcasecmp (tok, "sensors")
-	       || !strcasecmp (tok, "sensor")) /* handle common typo */
-	(*category_mask) |= IPMI_CONFIG_CATEGORY_MASK_SENSORS;
+               || !strcasecmp (tok, "sensor")) /* handle common typo */
+        (*category_mask) |= IPMI_CONFIG_CATEGORY_MASK_SENSORS;
       else if (!strcasecmp (tok, "pef"))
-	(*category_mask) |= IPMI_CONFIG_CATEGORY_MASK_PEF;
+        (*category_mask) |= IPMI_CONFIG_CATEGORY_MASK_PEF;
       else if (!strcasecmp (tok, "dcmi"))
-	(*category_mask) |= IPMI_CONFIG_CATEGORY_MASK_DCMI;
+        (*category_mask) |= IPMI_CONFIG_CATEGORY_MASK_DCMI;
       else
-	{
-	  fprintf (stderr, "invalid category '%s' specified\n", tok);
-	  goto cleanup;
-	}
+        {
+          fprintf (stderr, "invalid category '%s' specified\n", tok);
+          goto cleanup;
+        }
 
       tok = strtok (NULL, " ,");
     }

@@ -171,9 +171,9 @@ ipmi_dump_rmcp_packet (int fd,
   if (ipmi_dump_hex (fd,
                      prefix,
                      hdr,
-		     trlr,
-		     pkt,
-		     pkt_len) < 0)
+                     trlr,
+                     pkt,
+                     pkt_len) < 0)
     {
       ERRNO_TRACE (errno);
       goto cleanup;

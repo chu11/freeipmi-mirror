@@ -38,15 +38,15 @@
 void sdr_init_ctx (ipmi_sdr_ctx_t ctx);
 
 int sdr_info (ipmi_sdr_ctx_t ctx,
-	      ipmi_ctx_t ipmi_ctx,
-	      uint8_t *sdr_version,
-	      uint16_t *record_count,
-	      uint32_t *most_recent_addition_timestamp,
-	      uint32_t *most_recent_erase_timestamp);
+              ipmi_ctx_t ipmi_ctx,
+              uint8_t *sdr_version,
+              uint16_t *record_count,
+              uint32_t *most_recent_addition_timestamp,
+              uint32_t *most_recent_erase_timestamp);
 
 const char *sdr_record_type_str (ipmi_sdr_ctx_t ctx,
-				 uint8_t *sdr_record,
-				 unsigned int sdr_record_len);
+                                 uint8_t *sdr_record,
+                                 unsigned int sdr_record_len);
 
 void sdr_check_read_status (ipmi_sdr_ctx_t ctx);
 

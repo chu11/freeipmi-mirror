@@ -1678,10 +1678,10 @@ _run_oem_cmd (ipmi_oem_state_data_t *state_data)
 
           id_found++;
 
-	  /* offer "help" as well as list, for those used to ipmitool */
+          /* offer "help" as well as list, for those used to ipmitool */
           if (!args->oem_command
               || !strcasecmp (args->oem_command, "list")
-	      || !strcasecmp (args->oem_command, "help"))
+              || !strcasecmp (args->oem_command, "help"))
             {
               while (oem_cmd && oem_cmd->oem_command)
                 {
@@ -1711,9 +1711,9 @@ _run_oem_cmd (ipmi_oem_state_data_t *state_data)
                   cmd_found++;
 
                   if ((oem_cmd->flags & IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE
-		       && state_data->prog_data->args->oem_options_count < oem_cmd->required_oem_options)
-		      || (!(oem_cmd->flags & IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE)
-			  && state_data->prog_data->args->oem_options_count != oem_cmd->required_oem_options))
+                       && state_data->prog_data->args->oem_options_count < oem_cmd->required_oem_options)
+                      || (!(oem_cmd->flags & IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE)
+                          && state_data->prog_data->args->oem_options_count != oem_cmd->required_oem_options))
                     {
                       pstdout_fprintf (state_data->pstate,
                                        stderr,
@@ -1808,7 +1808,7 @@ _ipmi_oem (pstdout_state_t pstate,
       if (sdr_cache_flush_cache (pstate,
                                  hostname,
                                  &prog_data->args->common_args) < 0)
-	return (EXIT_FAILURE);
+        return (EXIT_FAILURE);
       return (EXIT_SUCCESS);
     }
 
@@ -1821,10 +1821,10 @@ _ipmi_oem (pstdout_state_t pstate,
   if (prog_data->args->oem_command)
     {
       if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
-					     hostname,
-					     &(prog_data->args->common_args),
-					     state_data.pstate)))
-	goto cleanup;
+                                             hostname,
+                                             &(prog_data->args->common_args),
+                                             state_data.pstate)))
+        goto cleanup;
     }
 
   if (!(state_data.sdr_ctx = ipmi_sdr_ctx_create ()))
@@ -1867,12 +1867,12 @@ main (int argc, char **argv)
       || cmd_args.list)
     {
       if (_list () < 0)
-	return (EXIT_FAILURE);
+        return (EXIT_FAILURE);
       return (EXIT_SUCCESS);
     }
 
   if ((hosts_count = pstdout_setup (&(prog_data.args->common_args.hostname),
-				    &(prog_data.args->common_args))) < 0)
+                                    &(prog_data.args->common_args))) < 0)
     return (EXIT_FAILURE);
 
   if (!hosts_count)

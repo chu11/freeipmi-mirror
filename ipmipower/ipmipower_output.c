@@ -96,11 +96,11 @@ ipmipower_output (ipmipower_msg_type_t num, const char *hostname, const char *ex
     }
   else
     ipmipower_cbuf_printf (ttyout,
-			   "%s%s%s: %s\n",
-			   hostname,
-			   extra_arg ? "+" : "",
-			   extra_arg ? extra_arg : "",
-			   ipmipower_outputs[num]);
+                           "%s%s%s: %s\n",
+                           hostname,
+                           extra_arg ? "+" : "",
+                           extra_arg ? extra_arg : "",
+                           ipmipower_outputs[num]);
 
   output_counts[num]++;
   return;

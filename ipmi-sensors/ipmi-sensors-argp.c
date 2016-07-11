@@ -250,18 +250,18 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case GROUPS_KEY:            /* legacy */
     case SENSOR_TYPES_KEY:
       if (parse_sensor_types (SENSOR_PARSE_ALL_STRING,
-			      cmd_args->sensor_types,
-			      &(cmd_args->sensor_types_length),
-			      arg) < 0)
-	exit (EXIT_FAILURE);
+                              cmd_args->sensor_types,
+                              &(cmd_args->sensor_types_length),
+                              arg) < 0)
+        exit (EXIT_FAILURE);
       break;
     case EXCLUDE_GROUPS_KEY:    /* legacy */
     case EXCLUDE_SENSOR_TYPES_KEY:
       if (parse_sensor_types (SENSOR_PARSE_NONE_STRING,
-			      cmd_args->exclude_sensor_types,
-			      &(cmd_args->exclude_sensor_types_length),
-			      arg) < 0)
-	exit (EXIT_FAILURE);
+                              cmd_args->exclude_sensor_types,
+                              &(cmd_args->exclude_sensor_types_length),
+                              arg) < 0)
+        exit (EXIT_FAILURE);
       break;
     case LIST_GROUPS_KEY:       /* legacy */
     case LIST_SENSOR_TYPES_KEY:

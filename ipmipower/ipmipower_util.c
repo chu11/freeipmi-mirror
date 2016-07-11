@@ -92,13 +92,13 @@ ipmipower_power_cmd_to_string (ipmipower_power_cmd_t cmd)
       exit (EXIT_FAILURE);
     }
   
-  return (NULL);		/* NOT REACHED */
+  return (NULL);                /* NOT REACHED */
 }
 
 int
 ipmipower_power_cmd_check_privilege (ipmipower_power_cmd_t cmd,
-				     char *errbuf,
-				     unsigned int errbuflen)
+                                     char *errbuf,
+                                     unsigned int errbuflen)
 {
   int rv = -1;
   
@@ -115,9 +115,9 @@ ipmipower_power_cmd_check_privilege (ipmipower_power_cmd_t cmd,
       power_cmd_str = ipmipower_power_cmd_to_string (cmd);
       
       snprintf (errbuf,
-		errbuflen, 
-		"'%s' requires atleast operator privilege",
-		power_cmd_str);
+                errbuflen, 
+                "'%s' requires atleast operator privilege",
+                power_cmd_str);
       
       rv = 0;
       goto cleanup;

@@ -70,8 +70,8 @@ struct event_filter_table {
 
 static int
 _ipmi_config_section_update_keyvalue_output_hex (struct ipmi_config_state_data *state_data,
-						 struct ipmi_config_keyvalue *kv,
-						 unsigned int value_output)
+                                                 struct ipmi_config_keyvalue *kv,
+                                                 unsigned int value_output)
 {
   char buf[IPMI_CONFIG_PARSE_BUFLEN];
 
@@ -117,12 +117,12 @@ _get_event_filter_table (struct ipmi_config_state_data *state_data,
       ipmi_config_err_t ret;
 
       if (ipmi_config_param_errnum_is_non_fatal (state_data,
-						 obj_cmd_rs,
-						 &ret))
+                                                 obj_cmd_rs,
+                                                 &ret))
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_pef_configuration_parameters_event_filter_table: %s\n",
@@ -476,12 +476,12 @@ _set_event_filter_table (struct ipmi_config_state_data *state_data,
       ipmi_config_err_t ret;
 
       if (ipmi_config_param_errnum_is_non_fatal (state_data,
-						 obj_cmd_rs,
-						 &ret))
+                                                 obj_cmd_rs,
+                                                 &ret))
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_pef_configuration_parameters_event_filter_table: %s\n",
@@ -498,7 +498,7 @@ _set_event_filter_table (struct ipmi_config_state_data *state_data,
 
 static ipmi_config_err_t
 filter_type_checkout (ipmi_config_state_data_t *state_data,
-		      const char *section_name,
+                      const char *section_name,
                       struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -514,8 +514,8 @@ filter_type_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  filter_type_string (eft.filter_type)) < 0)
+                                                  kv,
+                                                  filter_type_string (eft.filter_type)) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -523,7 +523,7 @@ filter_type_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 filter_type_commit (ipmi_config_state_data_t *state_data,
-		    const char *section_name,
+                    const char *section_name,
                     const struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -547,7 +547,7 @@ filter_type_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 enable_filter_checkout (ipmi_config_state_data_t *state_data,
-			const char *section_name,
+                        const char *section_name,
                         struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -563,8 +563,8 @@ enable_filter_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  eft.enable_filter ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  eft.enable_filter ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -572,7 +572,7 @@ enable_filter_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 enable_filter_commit (ipmi_config_state_data_t *state_data,
-		      const char *section_name,
+                      const char *section_name,
                       const struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -596,7 +596,7 @@ enable_filter_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 event_filter_action_alert_checkout (ipmi_config_state_data_t *state_data,
-				    const char *section_name,
+                                    const char *section_name,
                                     struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -612,8 +612,8 @@ event_filter_action_alert_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  eft.event_filter_action_alert ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  eft.event_filter_action_alert ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -621,7 +621,7 @@ event_filter_action_alert_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 event_filter_action_alert_commit (ipmi_config_state_data_t *state_data,
-				  const char *section_name,
+                                  const char *section_name,
                                   const struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -645,7 +645,7 @@ event_filter_action_alert_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 event_filter_action_power_off_checkout (ipmi_config_state_data_t *state_data,
-					const char *section_name,
+                                        const char *section_name,
                                         struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -661,8 +661,8 @@ event_filter_action_power_off_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  eft.event_filter_action_power_off ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  eft.event_filter_action_power_off ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -670,7 +670,7 @@ event_filter_action_power_off_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 event_filter_action_power_off_commit (ipmi_config_state_data_t *state_data,
-				      const char *section_name,
+                                      const char *section_name,
                                       const struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -694,7 +694,7 @@ event_filter_action_power_off_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 event_filter_action_reset_checkout (ipmi_config_state_data_t *state_data,
-				    const char *section_name,
+                                    const char *section_name,
                                     struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -710,8 +710,8 @@ event_filter_action_reset_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  eft.event_filter_action_reset ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  eft.event_filter_action_reset ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -719,7 +719,7 @@ event_filter_action_reset_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 event_filter_action_reset_commit (ipmi_config_state_data_t *state_data,
-				  const char *section_name,
+                                  const char *section_name,
                                   const struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -743,7 +743,7 @@ event_filter_action_reset_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 event_filter_action_power_cycle_checkout (ipmi_config_state_data_t *state_data,
-					  const char *section_name,
+                                          const char *section_name,
                                           struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -759,8 +759,8 @@ event_filter_action_power_cycle_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  eft.event_filter_action_power_cycle ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  eft.event_filter_action_power_cycle ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -768,7 +768,7 @@ event_filter_action_power_cycle_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 event_filter_action_power_cycle_commit (ipmi_config_state_data_t *state_data,
-					const char *section_name,
+                                        const char *section_name,
                                         const struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -792,7 +792,7 @@ event_filter_action_power_cycle_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 event_filter_action_oem_checkout (ipmi_config_state_data_t *state_data,
-				  const char *section_name,
+                                  const char *section_name,
                                   struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -808,8 +808,8 @@ event_filter_action_oem_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  eft.event_filter_action_oem ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  eft.event_filter_action_oem ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -817,7 +817,7 @@ event_filter_action_oem_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 event_filter_action_oem_commit (ipmi_config_state_data_t *state_data,
-				const char *section_name,
+                                const char *section_name,
                                 const struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -841,7 +841,7 @@ event_filter_action_oem_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 event_filter_action_diagnostic_interrupt_checkout (ipmi_config_state_data_t *state_data,
-						   const char *section_name,
+                                                   const char *section_name,
                                                    struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -857,8 +857,8 @@ event_filter_action_diagnostic_interrupt_checkout (ipmi_config_state_data_t *sta
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  eft.event_filter_action_diagnostic_interrupt ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  eft.event_filter_action_diagnostic_interrupt ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -866,7 +866,7 @@ event_filter_action_diagnostic_interrupt_checkout (ipmi_config_state_data_t *sta
 
 static ipmi_config_err_t
 event_filter_action_diagnostic_interrupt_commit (ipmi_config_state_data_t *state_data,
-						 const char *section_name,
+                                                 const char *section_name,
                                                  const struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -890,7 +890,7 @@ event_filter_action_diagnostic_interrupt_commit (ipmi_config_state_data_t *state
 
 static ipmi_config_err_t
 event_filter_action_group_control_operation_checkout (ipmi_config_state_data_t *state_data,
-						      const char *section_name,
+                                                      const char *section_name,
                                                       struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -906,8 +906,8 @@ event_filter_action_group_control_operation_checkout (ipmi_config_state_data_t *
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  eft.event_filter_action_group_control_operation ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  eft.event_filter_action_group_control_operation ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -915,7 +915,7 @@ event_filter_action_group_control_operation_checkout (ipmi_config_state_data_t *
 
 static ipmi_config_err_t
 event_filter_action_group_control_operation_commit (ipmi_config_state_data_t *state_data,
-						    const char *section_name,
+                                                    const char *section_name,
                                                     const struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -939,7 +939,7 @@ event_filter_action_group_control_operation_commit (ipmi_config_state_data_t *st
 
 static ipmi_config_err_t
 alert_policy_number_checkout (ipmi_config_state_data_t *state_data,
-			      const char *section_name,
+                              const char *section_name,
                               struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -955,8 +955,8 @@ alert_policy_number_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
-							       kv,
-							       eft.alert_policy_number) < 0)
+                                                               kv,
+                                                               eft.alert_policy_number) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -964,7 +964,7 @@ alert_policy_number_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 alert_policy_number_commit (ipmi_config_state_data_t *state_data,
-			    const char *section_name,
+                            const char *section_name,
                             const struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -988,7 +988,7 @@ alert_policy_number_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 group_control_selector_checkout (ipmi_config_state_data_t *state_data,
-				 const char *section_name,
+                                 const char *section_name,
                                  struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -1004,8 +1004,8 @@ group_control_selector_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
-							       kv,
-							       eft.group_control_selector) < 0)
+                                                               kv,
+                                                               eft.group_control_selector) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -1013,7 +1013,7 @@ group_control_selector_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 group_control_selector_commit (ipmi_config_state_data_t *state_data,
-			       const char *section_name,
+                               const char *section_name,
                                const struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -1037,7 +1037,7 @@ group_control_selector_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 event_severity_checkout (ipmi_config_state_data_t *state_data,
-			 const char *section_name,
+                         const char *section_name,
                          struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -1053,8 +1053,8 @@ event_severity_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  event_severity_string (eft.event_severity)) < 0)
+                                                  kv,
+                                                  event_severity_string (eft.event_severity)) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -1062,7 +1062,7 @@ event_severity_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 event_severity_commit (ipmi_config_state_data_t *state_data,
-		       const char *section_name,
+                       const char *section_name,
                        const struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -1086,7 +1086,7 @@ event_severity_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 generator_id_byte_1_checkout (ipmi_config_state_data_t *state_data,
-			      const char *section_name,
+                              const char *section_name,
                               struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -1102,8 +1102,8 @@ generator_id_byte_1_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (_ipmi_config_section_update_keyvalue_output_hex (state_data,
-						       kv,
-						       eft.generator_id_byte_1) < 0)
+                                                       kv,
+                                                       eft.generator_id_byte_1) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -1111,7 +1111,7 @@ generator_id_byte_1_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 generator_id_byte_1_commit (ipmi_config_state_data_t *state_data,
-			    const char *section_name,
+                            const char *section_name,
                             const struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -1137,7 +1137,7 @@ generator_id_byte_1_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 generator_id_byte_2_checkout (ipmi_config_state_data_t *state_data,
-			      const char *section_name,
+                              const char *section_name,
                               struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -1153,8 +1153,8 @@ generator_id_byte_2_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (_ipmi_config_section_update_keyvalue_output_hex (state_data,
-						       kv,
-						       eft.generator_id_byte_2) < 0)
+                                                       kv,
+                                                       eft.generator_id_byte_2) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -1162,7 +1162,7 @@ generator_id_byte_2_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 generator_id_byte_2_commit (ipmi_config_state_data_t *state_data,
-			    const char *section_name,
+                            const char *section_name,
                             const struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -1187,7 +1187,7 @@ generator_id_byte_2_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 sensor_type_checkout (ipmi_config_state_data_t *state_data,
-		      const char *section_name,
+                      const char *section_name,
                       struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -1209,15 +1209,15 @@ sensor_type_checkout (ipmi_config_state_data_t *state_data,
   if (str && strlen (str))
     {
       if (ipmi_config_section_update_keyvalue_output (state_data,
-						      kv,
-						      str) < 0)
+                                                      kv,
+                                                      str) < 0)
         return (IPMI_CONFIG_ERR_FATAL_ERROR);
     }
   else
     {
       if (_ipmi_config_section_update_keyvalue_output_hex (state_data,
-							   kv,
-							   eft.sensor_type) < 0)
+                                                           kv,
+                                                           eft.sensor_type) < 0)
         return (IPMI_CONFIG_ERR_FATAL_ERROR);
     }
 
@@ -1226,7 +1226,7 @@ sensor_type_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 sensor_type_commit (ipmi_config_state_data_t *state_data,
-		    const char *section_name,
+                    const char *section_name,
                     const struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -1257,7 +1257,7 @@ sensor_type_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 sensor_number_checkout (ipmi_config_state_data_t *state_data,
-			const char *section_name,
+                        const char *section_name,
                         struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -1273,8 +1273,8 @@ sensor_number_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (_ipmi_config_section_update_keyvalue_output_hex (state_data,
-						       kv,
-						       eft.sensor_number) < 0)
+                                                       kv,
+                                                       eft.sensor_number) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -1282,7 +1282,7 @@ sensor_number_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 sensor_number_commit (ipmi_config_state_data_t *state_data,
-		      const char *section_name,
+                      const char *section_name,
                       const struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -1307,7 +1307,7 @@ sensor_number_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 event_trigger_checkout (ipmi_config_state_data_t *state_data,
-			const char *section_name,
+                        const char *section_name,
                         struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -1323,8 +1323,8 @@ event_trigger_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (_ipmi_config_section_update_keyvalue_output_hex (state_data,
-						       kv,
-						       eft.event_trigger) < 0)
+                                                       kv,
+                                                       eft.event_trigger) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -1332,7 +1332,7 @@ event_trigger_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 event_trigger_commit (ipmi_config_state_data_t *state_data,
-		      const char *section_name,
+                      const char *section_name,
                       const struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -1357,7 +1357,7 @@ event_trigger_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 event_data1_offset_mask_checkout (ipmi_config_state_data_t *state_data,
-				  const char *section_name,
+                                  const char *section_name,
                                   struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -1373,8 +1373,8 @@ event_data1_offset_mask_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (_ipmi_config_section_update_keyvalue_output_hex (state_data,
-						       kv,
-						       eft.event_data1_offset_mask) < 0)
+                                                       kv,
+                                                       eft.event_data1_offset_mask) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -1382,7 +1382,7 @@ event_data1_offset_mask_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 event_data1_offset_mask_commit (ipmi_config_state_data_t *state_data,
-				const char *section_name,
+                                const char *section_name,
                                 const struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -1407,7 +1407,7 @@ event_data1_offset_mask_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 event_data1_and_mask_checkout (ipmi_config_state_data_t *state_data,
-			       const char *section_name,
+                               const char *section_name,
                                struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -1423,8 +1423,8 @@ event_data1_and_mask_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (_ipmi_config_section_update_keyvalue_output_hex (state_data,
-						       kv,
-						       eft.event_data1_and_mask) < 0)
+                                                       kv,
+                                                       eft.event_data1_and_mask) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -1432,7 +1432,7 @@ event_data1_and_mask_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 event_data1_and_mask_commit (ipmi_config_state_data_t *state_data,
-			     const char *section_name,
+                             const char *section_name,
                              const struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -1457,7 +1457,7 @@ event_data1_and_mask_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 event_data1_compare1_checkout (ipmi_config_state_data_t *state_data,
-			       const char *section_name,
+                               const char *section_name,
                                struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -1473,8 +1473,8 @@ event_data1_compare1_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (_ipmi_config_section_update_keyvalue_output_hex (state_data,
-						       kv,
-						       eft.event_data1_compare1) < 0)
+                                                       kv,
+                                                       eft.event_data1_compare1) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -1482,7 +1482,7 @@ event_data1_compare1_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 event_data1_compare1_commit (ipmi_config_state_data_t *state_data,
-			     const char *section_name,
+                             const char *section_name,
                              const struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -1507,7 +1507,7 @@ event_data1_compare1_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 event_data1_compare2_checkout (ipmi_config_state_data_t *state_data,
-			       const char *section_name,
+                               const char *section_name,
                                struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -1523,8 +1523,8 @@ event_data1_compare2_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (_ipmi_config_section_update_keyvalue_output_hex (state_data,
-						       kv,
-						       eft.event_data1_compare2) < 0)
+                                                       kv,
+                                                       eft.event_data1_compare2) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -1532,7 +1532,7 @@ event_data1_compare2_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 event_data1_compare2_commit (ipmi_config_state_data_t *state_data,
-			     const char *section_name,
+                             const char *section_name,
                              const struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -1557,7 +1557,7 @@ event_data1_compare2_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 event_data2_and_mask_checkout (ipmi_config_state_data_t *state_data,
-			       const char *section_name,
+                               const char *section_name,
                                struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -1573,8 +1573,8 @@ event_data2_and_mask_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (_ipmi_config_section_update_keyvalue_output_hex (state_data,
-						       kv,
-						       eft.event_data2_and_mask) < 0)
+                                                       kv,
+                                                       eft.event_data2_and_mask) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -1582,7 +1582,7 @@ event_data2_and_mask_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 event_data2_and_mask_commit (ipmi_config_state_data_t *state_data,
-			     const char *section_name,
+                             const char *section_name,
                              const struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -1607,7 +1607,7 @@ event_data2_and_mask_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 event_data2_compare1_checkout (ipmi_config_state_data_t *state_data,
-			       const char *section_name,
+                               const char *section_name,
                                struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -1623,8 +1623,8 @@ event_data2_compare1_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (_ipmi_config_section_update_keyvalue_output_hex (state_data,
-						       kv,
-						       eft.event_data2_compare1) < 0)
+                                                       kv,
+                                                       eft.event_data2_compare1) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -1632,7 +1632,7 @@ event_data2_compare1_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 event_data2_compare1_commit (ipmi_config_state_data_t *state_data,
-			     const char *section_name,
+                             const char *section_name,
                              const struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -1657,7 +1657,7 @@ event_data2_compare1_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 event_data2_compare2_checkout (ipmi_config_state_data_t *state_data,
-			       const char *section_name,
+                               const char *section_name,
                                struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -1673,8 +1673,8 @@ event_data2_compare2_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (_ipmi_config_section_update_keyvalue_output_hex (state_data,
-						       kv,
-						       eft.event_data2_compare2) < 0)
+                                                       kv,
+                                                       eft.event_data2_compare2) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -1682,7 +1682,7 @@ event_data2_compare2_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 event_data2_compare2_commit (ipmi_config_state_data_t *state_data,
-			     const char *section_name,
+                             const char *section_name,
                              const struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -1707,7 +1707,7 @@ event_data2_compare2_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 event_data3_and_mask_checkout (ipmi_config_state_data_t *state_data,
-			       const char *section_name,
+                               const char *section_name,
                                struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -1723,8 +1723,8 @@ event_data3_and_mask_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (_ipmi_config_section_update_keyvalue_output_hex (state_data,
-						       kv,
-						       eft.event_data3_and_mask) < 0)
+                                                       kv,
+                                                       eft.event_data3_and_mask) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -1732,7 +1732,7 @@ event_data3_and_mask_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 event_data3_and_mask_commit (ipmi_config_state_data_t *state_data,
-			     const char *section_name,
+                             const char *section_name,
                              const struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -1757,7 +1757,7 @@ event_data3_and_mask_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 event_data3_compare1_checkout (ipmi_config_state_data_t *state_data,
-			       const char *section_name,
+                               const char *section_name,
                                struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -1773,8 +1773,8 @@ event_data3_compare1_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (_ipmi_config_section_update_keyvalue_output_hex (state_data,
-						       kv,
-						       eft.event_data3_compare1) < 0)
+                                                       kv,
+                                                       eft.event_data3_compare1) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -1782,7 +1782,7 @@ event_data3_compare1_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 event_data3_compare1_commit (ipmi_config_state_data_t *state_data,
-			     const char *section_name,
+                             const char *section_name,
                              const struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -1807,7 +1807,7 @@ event_data3_compare1_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 event_data3_compare2_checkout (ipmi_config_state_data_t *state_data,
-			       const char *section_name,
+                               const char *section_name,
                                struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -1823,8 +1823,8 @@ event_data3_compare2_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (_ipmi_config_section_update_keyvalue_output_hex (state_data,
-						       kv,
-						       eft.event_data3_compare2) < 0)
+                                                       kv,
+                                                       eft.event_data3_compare2) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -1832,7 +1832,7 @@ event_data3_compare2_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 event_data3_compare2_commit (ipmi_config_state_data_t *state_data,
-			     const char *section_name,
+                             const char *section_name,
                              const struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
@@ -1867,282 +1867,282 @@ ipmi_config_pef_event_filter_table_section_get (ipmi_config_state_data_t *state_
   snprintf (buf, IPMI_CONFIG_MAX_SECTION_NAME_LEN, "Event_Filter_%u", num);
 
   if (!(section = ipmi_config_section_create (state_data,
-					      buf,
-					      NULL,
-					      NULL,
-					      0,
-					      NULL,
-					      NULL)))
+                                              buf,
+                                              NULL,
+                                              NULL,
+                                              0,
+                                              NULL,
+                                              NULL)))
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Filter_Type",
-				   "Possible values: Manufacturer_Pre_Configured/Software_Configurable/Reserved1/Reserved3",
-				   0,
-				   filter_type_checkout,
-				   filter_type_commit,
-				   filter_type_validate) < 0)
+                                   section,
+                                   "Filter_Type",
+                                   "Possible values: Manufacturer_Pre_Configured/Software_Configurable/Reserved1/Reserved3",
+                                   0,
+                                   filter_type_checkout,
+                                   filter_type_commit,
+                                   filter_type_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Enable_Filter",
-				   "Possible values: Yes/No",
-				   0,
-				   enable_filter_checkout,
-				   enable_filter_commit,
-				   yes_no_validate) < 0)
+                                   section,
+                                   "Enable_Filter",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   enable_filter_checkout,
+                                   enable_filter_commit,
+                                   yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Event_Filter_Action_Alert",
-				   "Possible values: Yes/No",
-				   0,
-				   event_filter_action_alert_checkout,
-				   event_filter_action_alert_commit,
-				   yes_no_validate) < 0)
+                                   section,
+                                   "Event_Filter_Action_Alert",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   event_filter_action_alert_checkout,
+                                   event_filter_action_alert_commit,
+                                   yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Event_Filter_Action_Power_Off",
-				   "Possible values: Yes/No",
-				   0,
-				   event_filter_action_power_off_checkout,
-				   event_filter_action_power_off_commit,
-				   yes_no_validate) < 0)
+                                   section,
+                                   "Event_Filter_Action_Power_Off",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   event_filter_action_power_off_checkout,
+                                   event_filter_action_power_off_commit,
+                                   yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Event_Filter_Action_Reset",
-				   "Possible values: Yes/No",
-				   0,
-				   event_filter_action_reset_checkout,
-				   event_filter_action_reset_commit,
-				   yes_no_validate) < 0)
+                                   section,
+                                   "Event_Filter_Action_Reset",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   event_filter_action_reset_checkout,
+                                   event_filter_action_reset_commit,
+                                   yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Event_Filter_Action_Power_Cycle",
-				   "Possible values: Yes/No",
-				   0,
-				   event_filter_action_power_cycle_checkout,
-				   event_filter_action_power_cycle_commit,
-				   yes_no_validate) < 0)
+                                   section,
+                                   "Event_Filter_Action_Power_Cycle",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   event_filter_action_power_cycle_checkout,
+                                   event_filter_action_power_cycle_commit,
+                                   yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Event_Filter_Action_Oem",
-				   "Possible values: Yes/No",
-				   0,
-				   event_filter_action_oem_checkout,
-				   event_filter_action_oem_commit,
-				   yes_no_validate) < 0)
+                                   section,
+                                   "Event_Filter_Action_Oem",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   event_filter_action_oem_checkout,
+                                   event_filter_action_oem_commit,
+                                   yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Event_Filter_Action_Diagnostic_Interrupt",
-				   "Possible values: Yes/No",
-				   0,
-				   event_filter_action_diagnostic_interrupt_checkout,
-				   event_filter_action_diagnostic_interrupt_commit,
-				   yes_no_validate) < 0)
+                                   section,
+                                   "Event_Filter_Action_Diagnostic_Interrupt",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   event_filter_action_diagnostic_interrupt_checkout,
+                                   event_filter_action_diagnostic_interrupt_commit,
+                                   yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Event_Filter_Action_Group_Control_Operation",
-				   "Possible values: Yes/No",
-				   0,
-				   event_filter_action_group_control_operation_checkout,
-				   event_filter_action_group_control_operation_commit,
-				   yes_no_validate) < 0)
+                                   section,
+                                   "Event_Filter_Action_Group_Control_Operation",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   event_filter_action_group_control_operation_checkout,
+                                   event_filter_action_group_control_operation_commit,
+                                   yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Alert_Policy_Number",
-				   "Give a valid number",
-				   0,
-				   alert_policy_number_checkout,
-				   alert_policy_number_commit,
-				   number_range_four_bits_validate) < 0)
+                                   section,
+                                   "Alert_Policy_Number",
+                                   "Give a valid number",
+                                   0,
+                                   alert_policy_number_checkout,
+                                   alert_policy_number_commit,
+                                   number_range_four_bits_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Group_Control_Selector",
-				   "Give a valid number",
-				   0,
-				   group_control_selector_checkout,
-				   group_control_selector_commit,
-				   number_range_three_bits_validate) < 0)
+                                   section,
+                                   "Group_Control_Selector",
+                                   "Give a valid number",
+                                   0,
+                                   group_control_selector_checkout,
+                                   group_control_selector_commit,
+                                   number_range_three_bits_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Event_Severity",
-				   "Possible values: Unspecified/Monitor/Information/OK/Non_Critical/Critical/Non_Recoverable",
-				   0,
-				   event_severity_checkout,
-				   event_severity_commit,
-				   event_severity_validate) < 0)
+                                   section,
+                                   "Event_Severity",
+                                   "Possible values: Unspecified/Monitor/Information/OK/Non_Critical/Critical/Non_Recoverable",
+                                   0,
+                                   event_severity_checkout,
+                                   event_severity_commit,
+                                   event_severity_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Generator_Id_Byte_1",
-				   "Specify a hex Slave Address or Software ID from Event Message or 0xFF to Match Any",
-				   0,
-				   generator_id_byte_1_checkout,
-				   generator_id_byte_1_commit,
-				   number_range_one_byte_validate) < 0)
+                                   section,
+                                   "Generator_Id_Byte_1",
+                                   "Specify a hex Slave Address or Software ID from Event Message or 0xFF to Match Any",
+                                   0,
+                                   generator_id_byte_1_checkout,
+                                   generator_id_byte_1_commit,
+                                   number_range_one_byte_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Generator_Id_Byte_2",
-				   "Specify a hex Channel Number or LUN to match or 0xFF to Match Any",
-				   0,
-				   generator_id_byte_2_checkout,
-				   generator_id_byte_2_commit,
-				   number_range_one_byte_validate) < 0)
+                                   section,
+                                   "Generator_Id_Byte_2",
+                                   "Specify a hex Channel Number or LUN to match or 0xFF to Match Any",
+                                   0,
+                                   generator_id_byte_2_checkout,
+                                   generator_id_byte_2_commit,
+                                   number_range_one_byte_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Sensor_Type",
-				   "Specify a Sensor Type, via hex or see MAN page for string options",
-				   0,
-				   sensor_type_checkout,
-				   sensor_type_commit,
-				   sensor_type_validate) < 0)
+                                   section,
+                                   "Sensor_Type",
+                                   "Specify a Sensor Type, via hex or see MAN page for string options",
+                                   0,
+                                   sensor_type_checkout,
+                                   sensor_type_commit,
+                                   sensor_type_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Sensor_Number",
-				   "Specify a Sensor Number or 0xFF to Match Any",
-				   0,
-				   sensor_number_checkout,
-				   sensor_number_commit,
-				   number_range_one_byte_validate) < 0)
+                                   section,
+                                   "Sensor_Number",
+                                   "Specify a Sensor Number or 0xFF to Match Any",
+                                   0,
+                                   sensor_number_checkout,
+                                   sensor_number_commit,
+                                   number_range_one_byte_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Event_Trigger",
-				   "Specify a Event/Reading Type Number or 0xFF to Match Any",
-				   0,
-				   event_trigger_checkout,
-				   event_trigger_commit,
-				   number_range_one_byte_validate) < 0)
+                                   section,
+                                   "Event_Trigger",
+                                   "Specify a Event/Reading Type Number or 0xFF to Match Any",
+                                   0,
+                                   event_trigger_checkout,
+                                   event_trigger_commit,
+                                   number_range_one_byte_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Event_Data1_Offset_Mask",
-				   "Give a valid number",
-				   0,
-				   event_data1_offset_mask_checkout,
-				   event_data1_offset_mask_commit,
-				   number_range_two_bytes_validate) < 0)
+                                   section,
+                                   "Event_Data1_Offset_Mask",
+                                   "Give a valid number",
+                                   0,
+                                   event_data1_offset_mask_checkout,
+                                   event_data1_offset_mask_commit,
+                                   number_range_two_bytes_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Event_Data1_AND_Mask",
-				   "Give a valid number",
-				   0,
-				   event_data1_and_mask_checkout,
-				   event_data1_and_mask_commit,
-				   number_range_one_byte_validate) < 0)
+                                   section,
+                                   "Event_Data1_AND_Mask",
+                                   "Give a valid number",
+                                   0,
+                                   event_data1_and_mask_checkout,
+                                   event_data1_and_mask_commit,
+                                   number_range_one_byte_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Event_Data1_Compare1",
-				   "Give a valid number",
-				   0,
-				   event_data1_compare1_checkout,
-				   event_data1_compare1_commit,
-				   number_range_one_byte_validate) < 0)
+                                   section,
+                                   "Event_Data1_Compare1",
+                                   "Give a valid number",
+                                   0,
+                                   event_data1_compare1_checkout,
+                                   event_data1_compare1_commit,
+                                   number_range_one_byte_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Event_Data1_Compare2",
-				   "Give a valid number",
-				   0,
-				   event_data1_compare2_checkout,
-				   event_data1_compare2_commit,
-				   number_range_one_byte_validate) < 0)
+                                   section,
+                                   "Event_Data1_Compare2",
+                                   "Give a valid number",
+                                   0,
+                                   event_data1_compare2_checkout,
+                                   event_data1_compare2_commit,
+                                   number_range_one_byte_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Event_Data2_AND_Mask",
-				   "Give a valid number",
-				   0,
-				   event_data2_and_mask_checkout,
-				   event_data2_and_mask_commit,
-				   number_range_one_byte_validate) < 0)
+                                   section,
+                                   "Event_Data2_AND_Mask",
+                                   "Give a valid number",
+                                   0,
+                                   event_data2_and_mask_checkout,
+                                   event_data2_and_mask_commit,
+                                   number_range_one_byte_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Event_Data2_Compare1",
-				   "Give a valid number",
-				   0,
-				   event_data2_compare1_checkout,
-				   event_data2_compare1_commit,
-				   number_range_one_byte_validate) < 0)
+                                   section,
+                                   "Event_Data2_Compare1",
+                                   "Give a valid number",
+                                   0,
+                                   event_data2_compare1_checkout,
+                                   event_data2_compare1_commit,
+                                   number_range_one_byte_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Event_Data2_Compare2",
-				   "Give a valid number",
-				   0,
-				   event_data2_compare2_checkout,
-				   event_data2_compare2_commit,
-				   number_range_one_byte_validate) < 0)
+                                   section,
+                                   "Event_Data2_Compare2",
+                                   "Give a valid number",
+                                   0,
+                                   event_data2_compare2_checkout,
+                                   event_data2_compare2_commit,
+                                   number_range_one_byte_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Event_Data3_AND_Mask",
-				   "Give a valid number",
-				   0,
-				   event_data3_and_mask_checkout,
-				   event_data3_and_mask_commit,
-				   number_range_one_byte_validate) < 0)
+                                   section,
+                                   "Event_Data3_AND_Mask",
+                                   "Give a valid number",
+                                   0,
+                                   event_data3_and_mask_checkout,
+                                   event_data3_and_mask_commit,
+                                   number_range_one_byte_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Event_Data3_Compare1",
-				   "Give a valid number",
-				   0,
-				   event_data3_compare1_checkout,
-				   event_data3_compare1_commit,
-				   number_range_one_byte_validate) < 0)
+                                   section,
+                                   "Event_Data3_Compare1",
+                                   "Give a valid number",
+                                   0,
+                                   event_data3_compare1_checkout,
+                                   event_data3_compare1_commit,
+                                   number_range_one_byte_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Event_Data3_Compare2",
-				   "Give a valid number",
-				   0,
-				   event_data3_compare2_checkout,
-				   event_data3_compare2_commit,
-				   number_range_one_byte_validate) < 0)
+                                   section,
+                                   "Event_Data3_Compare2",
+                                   "Give a valid number",
+                                   0,
+                                   event_data3_compare2_checkout,
+                                   event_data3_compare2_commit,
+                                   number_range_one_byte_validate) < 0)
     goto cleanup;
 
   return (section);

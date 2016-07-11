@@ -80,15 +80,15 @@ fiid_template_t tmpl_kcs_raw =
 
 static void
 _api_kcs_dump (ipmi_ctx_t ctx,
-	       const void *pkt,
-	       unsigned int pkt_len,
-	       uint8_t cmd,
-	       uint8_t net_fn,
-	       uint8_t group_extension,
-	       unsigned int debug_direction,
-	       fiid_template_t tmpl_cmd,
-	       fiid_template_t tmpl_ipmb_msg_hdr,
-	       fiid_template_t tmpl_ipmb_cmd)
+               const void *pkt,
+               unsigned int pkt_len,
+               uint8_t cmd,
+               uint8_t net_fn,
+               uint8_t group_extension,
+               unsigned int debug_direction,
+               fiid_template_t tmpl_cmd,
+               fiid_template_t tmpl_ipmb_msg_hdr,
+               fiid_template_t tmpl_ipmb_cmd)
 {
   char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
 
@@ -107,7 +107,7 @@ _api_kcs_dump (ipmi_ctx_t ctx,
                  debug_direction,
                  net_fn,
                  cmd,
-		 group_extension,
+                 group_extension,
                  hdrbuf,
                  DEBUG_UTIL_HDR_BUFLEN);
 
@@ -138,63 +138,63 @@ _api_kcs_dump (ipmi_ctx_t ctx,
 
 static void
 _api_kcs_dump_rq (ipmi_ctx_t ctx,
-		  const void *pkt,
-		  unsigned int pkt_len,
-		  uint8_t cmd,
-		  uint8_t net_fn,
-		  uint8_t group_extension,
-		  fiid_obj_t obj_cmd_rq)
+                  const void *pkt,
+                  unsigned int pkt_len,
+                  uint8_t cmd,
+                  uint8_t net_fn,
+                  uint8_t group_extension,
+                  fiid_obj_t obj_cmd_rq)
 {
   fiid_field_t *tmpl_cmd = NULL;
 
   if ((tmpl_cmd = fiid_obj_template (obj_cmd_rq)))
     {
       _api_kcs_dump (ctx,
-		     pkt,
-		     pkt_len,
-		     cmd,
-		     net_fn,
-		     group_extension,
-		     DEBUG_UTIL_DIRECTION_REQUEST,
-		     tmpl_cmd,
-		     tmpl_ipmb_msg_hdr_rq,
-		     ctx->tmpl_ipmb_cmd_rq);
+                     pkt,
+                     pkt_len,
+                     cmd,
+                     net_fn,
+                     group_extension,
+                     DEBUG_UTIL_DIRECTION_REQUEST,
+                     tmpl_cmd,
+                     tmpl_ipmb_msg_hdr_rq,
+                     ctx->tmpl_ipmb_cmd_rq);
       fiid_template_free (tmpl_cmd);
     }
 }
 
 static void
 _api_kcs_dump_rs (ipmi_ctx_t ctx,
-		  const void *pkt,
-		  unsigned int pkt_len,
-		  uint8_t cmd,
-		  uint8_t net_fn,
-		  uint8_t group_extension,
-		  fiid_obj_t obj_cmd_rs)
+                  const void *pkt,
+                  unsigned int pkt_len,
+                  uint8_t cmd,
+                  uint8_t net_fn,
+                  uint8_t group_extension,
+                  fiid_obj_t obj_cmd_rs)
 {
   fiid_field_t *tmpl_cmd = NULL;
 
   if ((tmpl_cmd = fiid_obj_template (obj_cmd_rs)))
     {
       _api_kcs_dump (ctx,
-		     pkt,
-		     pkt_len,
-		     cmd,
-		     net_fn,
-		     group_extension,
-		     DEBUG_UTIL_DIRECTION_RESPONSE,
-		     tmpl_cmd,
-		     tmpl_ipmb_msg_hdr_rs,
-		     ctx->tmpl_ipmb_cmd_rs);
+                     pkt,
+                     pkt_len,
+                     cmd,
+                     net_fn,
+                     group_extension,
+                     DEBUG_UTIL_DIRECTION_RESPONSE,
+                     tmpl_cmd,
+                     tmpl_ipmb_msg_hdr_rs,
+                     ctx->tmpl_ipmb_cmd_rs);
       fiid_template_free (tmpl_cmd);
     }
 }
 
 static int
 _kcs_cmd_write (ipmi_ctx_t ctx,
-		uint8_t cmd,
-		uint8_t group_extension,
-		fiid_obj_t obj_cmd_rq)
+                uint8_t cmd,
+                uint8_t group_extension,
+                fiid_obj_t obj_cmd_rq)
 {
   uint8_t *pkt = NULL;
   unsigned int pkt_len;
@@ -237,7 +237,7 @@ _kcs_cmd_write (ipmi_ctx_t ctx,
                                          obj_cmd_rq,
                                          pkt,
                                          pkt_len,
-					 IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
+                                         IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
@@ -245,12 +245,12 @@ _kcs_cmd_write (ipmi_ctx_t ctx,
   
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP && send_len)
     _api_kcs_dump_rq (ctx,
-		      pkt,
-		      send_len,
-		      cmd,
-		      ctx->target.net_fn,
-		      group_extension,
-		      obj_cmd_rq);
+                      pkt,
+                      send_len,
+                      cmd,
+                      ctx->target.net_fn,
+                      group_extension,
+                      obj_cmd_rq);
   
   if (ipmi_kcs_write (ctx->io.inband.kcs_ctx, pkt, send_len) < 0)
     {
@@ -266,9 +266,9 @@ _kcs_cmd_write (ipmi_ctx_t ctx,
 
 static int
 _kcs_cmd_read (ipmi_ctx_t ctx,
-	       uint8_t cmd,
-	       uint8_t group_extension,
-	       fiid_obj_t obj_cmd_rs)
+               uint8_t cmd,
+               uint8_t group_extension,
+               fiid_obj_t obj_cmd_rs)
 {
   uint8_t *pkt = NULL;
   unsigned int pkt_len;
@@ -328,18 +328,18 @@ _kcs_cmd_read (ipmi_ctx_t ctx,
   
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP && read_len)
     _api_kcs_dump_rs (ctx,
-		      pkt,
-		      read_len,
-		      cmd,
-		      ctx->target.net_fn,
-		      group_extension,
-		      obj_cmd_rs);
+                      pkt,
+                      read_len,
+                      cmd,
+                      ctx->target.net_fn,
+                      group_extension,
+                      obj_cmd_rs);
   
   if ((ret = unassemble_ipmi_kcs_pkt (pkt,
                                       read_len,
                                       ctx->io.inband.rs.obj_hdr,
                                       obj_cmd_rs,
-				      intf_flags)) < 0)
+                                      intf_flags)) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
@@ -361,19 +361,19 @@ _kcs_cmd_read (ipmi_ctx_t ctx,
 
 int
 api_kcs_cmd (ipmi_ctx_t ctx,
-	     fiid_obj_t obj_cmd_rq,
-	     fiid_obj_t obj_cmd_rs)
+             fiid_obj_t obj_cmd_rq,
+             fiid_obj_t obj_cmd_rs)
 {
   uint8_t cmd = 0;             /* used for debugging */
   uint8_t group_extension = 0; /* used for debugging */
   uint64_t val;
 
   assert (ctx
-	  && ctx->magic == IPMI_CTX_MAGIC
-	  && ctx->type == IPMI_DEVICE_KCS
-	  && fiid_obj_valid (obj_cmd_rq)
-	  && fiid_obj_packet_valid (obj_cmd_rq) == 1
-	  && fiid_obj_valid (obj_cmd_rs));
+          && ctx->magic == IPMI_CTX_MAGIC
+          && ctx->type == IPMI_DEVICE_KCS
+          && fiid_obj_valid (obj_cmd_rq)
+          && fiid_obj_packet_valid (obj_cmd_rq) == 1
+          && fiid_obj_valid (obj_cmd_rs));
   
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
     {
@@ -384,15 +384,15 @@ api_kcs_cmd (ipmi_ctx_t ctx,
         cmd = val;
 
       if (IPMI_NET_FN_GROUP_EXTENSION (ctx->target.net_fn))
-	{
-	  /* ignore error, continue on */
-	  if (FIID_OBJ_GET (obj_cmd_rq,
-			    "group_extension_identification",
-			    &val) < 0)
-	    API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
-	  else
-	    group_extension = val;
-	}
+        {
+          /* ignore error, continue on */
+          if (FIID_OBJ_GET (obj_cmd_rq,
+                            "group_extension_identification",
+                            &val) < 0)
+            API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
+          else
+            group_extension = val;
+        }
     }
 
   if (_kcs_cmd_write (ctx, cmd, group_extension, obj_cmd_rq) < 0)
@@ -406,7 +406,7 @@ api_kcs_cmd (ipmi_ctx_t ctx,
 
 static int
 _api_kcs_ipmb_send (ipmi_ctx_t ctx,
-		    fiid_obj_t obj_cmd_rq)
+                    fiid_obj_t obj_cmd_rq)
 {
   struct ipmi_ctx_target target_save;
   uint8_t buf[IPMI_MAX_PKT_LEN];
@@ -452,7 +452,7 @@ _api_kcs_ipmb_send (ipmi_ctx_t ctx,
   if (assemble_ipmi_ipmb_msg (obj_ipmb_msg_hdr_rq,
                               obj_cmd_rq,
                               obj_ipmb_msg_rq,
-			      IPMI_INTERFACE_FLAGS_DEFAULT) < 0)
+                              IPMI_INTERFACE_FLAGS_DEFAULT) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
@@ -473,13 +473,13 @@ _api_kcs_ipmb_send (ipmi_ctx_t ctx,
   ctx->target.rs_addr_is_set = 0;
   
   ret = ipmi_cmd_send_message (ctx,
-			       target_save.channel_number,
-			       IPMI_SEND_MESSAGE_AUTHENTICATION_NOT_REQUIRED,
-			       IPMI_SEND_MESSAGE_ENCRYPTION_NOT_REQUIRED,
-			       IPMI_SEND_MESSAGE_TRACKING_OPERATION_NO_TRACKING,
-			       buf,
-			       len,
-			       obj_send_cmd_rs);
+                               target_save.channel_number,
+                               IPMI_SEND_MESSAGE_AUTHENTICATION_NOT_REQUIRED,
+                               IPMI_SEND_MESSAGE_ENCRYPTION_NOT_REQUIRED,
+                               IPMI_SEND_MESSAGE_TRACKING_OPERATION_NO_TRACKING,
+                               buf,
+                               len,
+                               obj_send_cmd_rs);
 
   /* restore target info */
   memcpy (&ctx->target, &target_save, sizeof (target_save));
@@ -506,9 +506,9 @@ _api_kcs_ipmb_send (ipmi_ctx_t ctx,
 
 static int
 _api_kcs_ipmb_recv (ipmi_ctx_t ctx,
-		    fiid_obj_t obj_ipmb_msg_hdr_rs,
-		    fiid_obj_t obj_ipmb_msg_trlr,
-		    fiid_obj_t obj_cmd_rs)
+                    fiid_obj_t obj_ipmb_msg_hdr_rs,
+                    fiid_obj_t obj_ipmb_msg_trlr,
+                    fiid_obj_t obj_cmd_rs)
 {
   struct ipmi_ctx_target target_save;
   uint8_t buf[IPMI_MAX_PKT_LEN];
@@ -578,7 +578,7 @@ _api_kcs_ipmb_recv (ipmi_ctx_t ctx,
                                 obj_ipmb_msg_hdr_rs,
                                 obj_cmd_rs,
                                 obj_ipmb_msg_trlr,
-				intf_flags) < 0)
+                                intf_flags) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
@@ -593,8 +593,8 @@ _api_kcs_ipmb_recv (ipmi_ctx_t ctx,
 
 int
 api_kcs_cmd_ipmb (ipmi_ctx_t ctx,
-		  fiid_obj_t obj_cmd_rq,
-		  fiid_obj_t obj_cmd_rs)
+                  fiid_obj_t obj_cmd_rq,
+                  fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_ipmb_msg_hdr_rs = NULL;
   fiid_obj_t obj_ipmb_msg_trlr = NULL;
@@ -603,11 +603,11 @@ api_kcs_cmd_ipmb (ipmi_ctx_t ctx,
   int ret, rv = -1;
 
   assert (ctx
-	  && ctx->magic == IPMI_CTX_MAGIC
-	  && ctx->type == IPMI_DEVICE_KCS
-	  && fiid_obj_valid (obj_cmd_rq)
-	  && fiid_obj_packet_valid (obj_cmd_rq) == 1
-	  && fiid_obj_valid (obj_cmd_rs));
+          && ctx->magic == IPMI_CTX_MAGIC
+          && ctx->type == IPMI_DEVICE_KCS
+          && fiid_obj_valid (obj_cmd_rq)
+          && fiid_obj_packet_valid (obj_cmd_rq) == 1
+          && fiid_obj_valid (obj_cmd_rs));
 
   if (!(obj_ipmb_msg_hdr_rs = fiid_obj_create (tmpl_ipmb_msg_hdr_rs)))
     {
@@ -630,9 +630,9 @@ api_kcs_cmd_ipmb (ipmi_ctx_t ctx,
   while (1)
     {
       if (_api_kcs_ipmb_recv (ctx,
-			      obj_ipmb_msg_hdr_rs,
-			      obj_ipmb_msg_trlr,
-			      obj_cmd_rs) < 0)
+                              obj_ipmb_msg_hdr_rs,
+                              obj_ipmb_msg_trlr,
+                              obj_cmd_rs) < 0)
         {
           if (ctx->errnum == IPMI_ERR_MESSAGE_TIMEOUT)
             {
@@ -644,12 +644,12 @@ api_kcs_cmd_ipmb (ipmi_ctx_t ctx,
                   goto cleanup;
                 }
 
-	      /* Wait a little bit to avoid spinning and killing the
-	       * controller.  Observed on the Quanta QSSC-S4R/Appro
-	       * GB812X-CN that when bridging FRU reads, this allowed
-	       * records to be read more successfully.
-	       */
-	      usleep (IPMI_KCS_IPMB_REREAD_WAIT);
+              /* Wait a little bit to avoid spinning and killing the
+               * controller.  Observed on the Quanta QSSC-S4R/Appro
+               * GB812X-CN that when bridging FRU reads, this allowed
+               * records to be read more successfully.
+               */
+              usleep (IPMI_KCS_IPMB_REREAD_WAIT);
               continue;
             }
           goto cleanup;
@@ -711,22 +711,22 @@ api_kcs_cmd_ipmb (ipmi_ctx_t ctx,
 
 int
 api_kcs_cmd_raw (ipmi_ctx_t ctx,
-		 const void *buf_rq,
-		 unsigned int buf_rq_len,
-		 void *buf_rs,
-		 unsigned int buf_rs_len)
+                 const void *buf_rq,
+                 unsigned int buf_rq_len,
+                 void *buf_rs,
+                 unsigned int buf_rs_len)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   fiid_obj_t obj_cmd_rs = NULL;
   int len, rv = -1;
 
   assert (ctx
-	  && ctx->magic == IPMI_CTX_MAGIC
-	  && ctx->type == IPMI_DEVICE_KCS
-	  && buf_rq
-	  && buf_rq_len
-	  && buf_rs
-	  && buf_rs_len);
+          && ctx->magic == IPMI_CTX_MAGIC
+          && ctx->type == IPMI_DEVICE_KCS
+          && buf_rq
+          && buf_rq_len
+          && buf_rs
+          && buf_rs_len);
 
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_kcs_raw)))
     {
@@ -748,8 +748,8 @@ api_kcs_cmd_raw (ipmi_ctx_t ctx,
     }
 
   if (api_kcs_cmd (ctx,
-		   obj_cmd_rq,
-		   obj_cmd_rs) < 0)
+                   obj_cmd_rq,
+                   obj_cmd_rs) < 0)
     goto cleanup;
   
   if ((len = fiid_obj_get_all (obj_cmd_rs,
@@ -769,22 +769,22 @@ api_kcs_cmd_raw (ipmi_ctx_t ctx,
 
 int
 api_kcs_cmd_raw_ipmb (ipmi_ctx_t ctx,
-		      const void *buf_rq,
-		      unsigned int buf_rq_len,
-		      void *buf_rs,
-		      unsigned int buf_rs_len)
+                      const void *buf_rq,
+                      unsigned int buf_rq_len,
+                      void *buf_rs,
+                      unsigned int buf_rs_len)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   fiid_obj_t obj_cmd_rs = NULL;
   int len, rv = -1;
 
   assert (ctx
-	  && ctx->magic == IPMI_CTX_MAGIC
-	  && ctx->type == IPMI_DEVICE_KCS
-	  && buf_rq
-	  && buf_rq_len
-	  && buf_rs
-	  && buf_rs_len);
+          && ctx->magic == IPMI_CTX_MAGIC
+          && ctx->type == IPMI_DEVICE_KCS
+          && buf_rq
+          && buf_rq_len
+          && buf_rs
+          && buf_rs_len);
 
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_kcs_raw)))
     {
@@ -806,8 +806,8 @@ api_kcs_cmd_raw_ipmb (ipmi_ctx_t ctx,
     }
 
   if (api_kcs_cmd_ipmb (ctx,
-			obj_cmd_rq,
-			obj_cmd_rs) < 0)
+                        obj_cmd_rq,
+                        obj_cmd_rs) < 0)
     goto cleanup;
   
   if ((len = fiid_obj_get_all (obj_cmd_rs,

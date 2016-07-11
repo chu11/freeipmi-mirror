@@ -68,7 +68,7 @@
 #  ifndef lsd_fatal_error
 #    define lsd_fatal_error(file, line, mesg)
 #  endif /* !lsd_fatal_error */
-#endif	/* !0 */
+#endif  /* !0 */
 
 #endif /* !WITH_LSD_FATAL_ERROR_FUNC */
 

@@ -335,8 +335,8 @@ _get_sensor_reading (ipmi_monitoring_ctx_t c,
 
   memset (sdr_record, '\0', IPMI_SDR_MAX_RECORD_LENGTH);
   if ((sdr_record_len = ipmi_sdr_cache_record_read (c->sdr_ctx,
-						    sdr_record,
-						    IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
+                                                    sdr_record,
+                                                    IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sdr_cache_record_read: %s", ipmi_sdr_ctx_errormsg (c->sdr_ctx)));
       c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
@@ -450,7 +450,7 @@ _get_sensor_bitmask_strings (ipmi_monitoring_ctx_t c,
                              unsigned int sensor_reading_flags,
                              uint8_t event_reading_type_code,
                              uint8_t sensor_type,
-			     uint8_t sensor_number,
+                             uint8_t sensor_number,
                              uint16_t sensor_event_bitmask,
                              char ***sensor_bitmask_strings)
 {
@@ -477,7 +477,7 @@ _get_sensor_bitmask_strings (ipmi_monitoring_ctx_t c,
 
   if (ipmi_get_event_messages (event_reading_type_code,
                                sensor_type,
-			       sensor_number,
+                               sensor_number,
                                sensor_event_bitmask,
                                manufacturer_id,
                                product_id,
@@ -537,8 +537,8 @@ _threshold_sensor_reading (ipmi_monitoring_ctx_t c,
   assert (sensor_name);
 
   if (ipmi_sdr_parse_sensor_units (c->sdr_ctx,
-				   NULL,
-				   0,
+                                   NULL,
+                                   0,
                                    &sensor_units_percentage,
                                    &sensor_units_modifier,
                                    &sensor_units_rate,
@@ -591,7 +591,7 @@ _threshold_sensor_reading (ipmi_monitoring_ctx_t c,
                                    sensor_reading_flags,
                                    event_reading_type_code,
                                    sdr_sensor_type,
-				   sensor_number_base + shared_sensor_number_offset,
+                                   sensor_number_base + shared_sensor_number_offset,
                                    sensor_event_bitmask,
                                    &sensor_bitmask_strings) < 0)
     return (-1);
@@ -617,8 +617,8 @@ _threshold_sensor_reading (ipmi_monitoring_ctx_t c,
 
 static int
 _get_sensor_bitmask_type (ipmi_monitoring_ctx_t c,
-			  uint8_t event_reading_type_code,
-			  uint8_t sdr_sensor_type)
+                          uint8_t event_reading_type_code,
+                          uint8_t sdr_sensor_type)
 {
   int sensor_bitmask_type;
 
@@ -653,100 +653,100 @@ _get_sensor_bitmask_type (ipmi_monitoring_ctx_t c,
   else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC)
     {
       if (sdr_sensor_type == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY)
-	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_PHYSICAL_SECURITY;
+        sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_PHYSICAL_SECURITY;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT)
-	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT;
+        sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_PROCESSOR)
-	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_PROCESSOR;
+        sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_PROCESSOR;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY)
-	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_POWER_SUPPLY;
+        sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_POWER_SUPPLY;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_POWER_UNIT)
-	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_POWER_UNIT;
+        sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_POWER_UNIT;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_COOLING_DEVICE)
-	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_COOLING_DEVICE;
+        sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_COOLING_DEVICE;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_OTHER_UNITS_BASED_SENSOR)
-	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_OTHER_UNITS_BASED_SENSOR;
+        sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_OTHER_UNITS_BASED_SENSOR;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_MEMORY)
-	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_MEMORY;
+        sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_MEMORY;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
-	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_DRIVE_SLOT;
+        sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_DRIVE_SLOT;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_POST_MEMORY_RESIZE)
-	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_POST_MEMORY_RESIZE;
+        sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_POST_MEMORY_RESIZE;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS)
-	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_SYSTEM_FIRMWARE_PROGRESS;
+        sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_SYSTEM_FIRMWARE_PROGRESS;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED)
-	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_EVENT_LOGGING_DISABLED;
+        sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_EVENT_LOGGING_DISABLED;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_WATCHDOG1)
-	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_WATCHDOG1;
+        sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_WATCHDOG1;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_SYSTEM_EVENT)
-	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_SYSTEM_EVENT;
+        sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_SYSTEM_EVENT;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
-	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_CRITICAL_INTERRUPT;
+        sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_CRITICAL_INTERRUPT;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_BUTTON_SWITCH)
-	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_BUTTON_SWITCH;
+        sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_BUTTON_SWITCH;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_MODULE_BOARD)
-	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_MODULE_BOARD;
+        sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_MODULE_BOARD;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_MICROCONTROLLER_COPROCESSOR)
-	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_MICROCONTROLLER_COPROCESSOR;
+        sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_MICROCONTROLLER_COPROCESSOR;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_ADD_IN_CARD)
-	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_ADD_IN_CARD;
+        sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_ADD_IN_CARD;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_CHASSIS)
-	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_CHASSIS;
+        sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_CHASSIS;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_CHIP_SET)
-	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_CHIP_SET;
+        sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_CHIP_SET;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_OTHER_FRU)
-	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_OTHER_FRU;
+        sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_OTHER_FRU;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_CABLE_INTERCONNECT)
-	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_CABLE_INTERCONNECT;
+        sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_CABLE_INTERCONNECT;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_TERMINATOR)
-	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_TERMINATOR;
+        sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_TERMINATOR;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_SYSTEM_BOOT_INITIATED)
-	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_SYSTEM_BOOT_INITIATED;
+        sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_SYSTEM_BOOT_INITIATED;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_BOOT_ERROR)
-	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_BOOT_ERROR;
+        sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_BOOT_ERROR;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_OS_BOOT)
-	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_OS_BOOT;
+        sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_OS_BOOT;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_OS_CRITICAL_STOP)
-	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_OS_CRITICAL_STOP;
+        sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_OS_CRITICAL_STOP;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_SLOT_CONNECTOR)
-	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_SLOT_CONNECTOR;
+        sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_SLOT_CONNECTOR;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE)
-	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_SYSTEM_ACPI_POWER_STATE;
+        sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_SYSTEM_ACPI_POWER_STATE;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_WATCHDOG2)
-	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_WATCHDOG2;
+        sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_WATCHDOG2;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_PLATFORM_ALERT)
-	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_PLATFORM_ALERT;
+        sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_PLATFORM_ALERT;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_ENTITY_PRESENCE)
-	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_ENTITY_PRESENCE;
+        sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_ENTITY_PRESENCE;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_MONITOR_ASIC_IC)
-	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_MONITOR_ASIC_IC;
+        sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_MONITOR_ASIC_IC;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_LAN)
-	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_LAN;
+        sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_LAN;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH)
-	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH;
+        sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_BATTERY)
-	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_BATTERY;
+        sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_BATTERY;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_SESSION_AUDIT)
-	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_SESSION_AUDIT;
+        sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_SESSION_AUDIT;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE)
-	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_VERSION_CHANGE;
+        sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_VERSION_CHANGE;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_FRU_STATE)
-	sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_FRU_STATE;
+        sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_FRU_STATE;
       /* To avoid gcc warnings, subtract -1 in comparison */
       else if (sdr_sensor_type >= IPMI_SENSOR_TYPE_OEM_MIN
-	       && (sdr_sensor_type - 1) <= (IPMI_SENSOR_TYPE_OEM_MAX - 1))
-	{
-	  IPMI_MONITORING_DEBUG (("sensor_type '0x%X' bitmask is OEM", sdr_sensor_type));
-	  sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_OEM;
-	}
+               && (sdr_sensor_type - 1) <= (IPMI_SENSOR_TYPE_OEM_MAX - 1))
+        {
+          IPMI_MONITORING_DEBUG (("sensor_type '0x%X' bitmask is OEM", sdr_sensor_type));
+          sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_OEM;
+        }
       else
-	{
-	  IPMI_MONITORING_DEBUG (("sensor_type '0x%X' bitmask not supported", sdr_sensor_type));
-	  sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN;
-	}
+        {
+          IPMI_MONITORING_DEBUG (("sensor_type '0x%X' bitmask not supported", sdr_sensor_type));
+          sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN;
+        }
     }
   else if (event_reading_type_code >= IPMI_EVENT_READING_TYPE_CODE_OEM_MIN
-	   && event_reading_type_code <= IPMI_EVENT_READING_TYPE_CODE_OEM_MAX)
+           && event_reading_type_code <= IPMI_EVENT_READING_TYPE_CODE_OEM_MAX)
     {
       IPMI_MONITORING_DEBUG (("event_reading_type_code '0x%X' bitmask is OEM",
                               event_reading_type_code));
@@ -816,15 +816,15 @@ _digital_sensor_reading (ipmi_monitoring_ctx_t c,
     return (-1);
 
   if ((sensor_bitmask_type = _get_sensor_bitmask_type (c,
-						       event_reading_type_code,
-						       sdr_sensor_type)) < 0)
+                                                       event_reading_type_code,
+                                                       sdr_sensor_type)) < 0)
     return (-1);
 
   if (_get_sensor_bitmask_strings (c,
                                    sensor_reading_flags,
                                    event_reading_type_code,
                                    sdr_sensor_type,
-				   sensor_number_base + shared_sensor_number_offset,
+                                   sensor_number_base + shared_sensor_number_offset,
                                    sensor_event_bitmask,
                                    &sensor_bitmask_strings) < 0)
     return (-1);
@@ -901,15 +901,15 @@ _specific_sensor_reading (ipmi_monitoring_ctx_t c,
     return (-1);
 
   if ((sensor_bitmask_type = _get_sensor_bitmask_type (c,
-						       event_reading_type_code,
-						       sdr_sensor_type)) < 0)
+                                                       event_reading_type_code,
+                                                       sdr_sensor_type)) < 0)
     return (-1);
 
   if (_get_sensor_bitmask_strings (c,
                                    sensor_reading_flags,
                                    event_reading_type_code,
                                    sdr_sensor_type,
-				   sensor_number_base + shared_sensor_number_offset,
+                                   sensor_number_base + shared_sensor_number_offset,
                                    sensor_event_bitmask,
                                    &sensor_bitmask_strings) < 0)
     return (-1);
@@ -936,14 +936,14 @@ _specific_sensor_reading (ipmi_monitoring_ctx_t c,
 
 static int
 _oem_sensor_reading (ipmi_monitoring_ctx_t c,
-		     unsigned int sensor_reading_flags,
-		     uint16_t record_id,
-		     uint8_t sensor_number_base,
-		     unsigned int shared_sensor_number_offset,
-		     uint8_t event_reading_type_code,
-		     uint8_t sdr_sensor_type,
-		     int sensor_type,
-		     char *sensor_name)
+                     unsigned int sensor_reading_flags,
+                     uint16_t record_id,
+                     uint8_t sensor_number_base,
+                     unsigned int shared_sensor_number_offset,
+                     uint8_t event_reading_type_code,
+                     uint8_t sdr_sensor_type,
+                     int sensor_type,
+                     char *sensor_name)
 {
   double sensor_reading;
   uint16_t sensor_event_bitmask;
@@ -986,15 +986,15 @@ _oem_sensor_reading (ipmi_monitoring_ctx_t c,
     return (-1);
 
   if ((sensor_bitmask_type = _get_sensor_bitmask_type (c,
-						       event_reading_type_code,
-						       sdr_sensor_type)) < 0)
+                                                       event_reading_type_code,
+                                                       sdr_sensor_type)) < 0)
     return (-1);
 
   if (_get_sensor_bitmask_strings (c,
                                    sensor_reading_flags,
                                    event_reading_type_code,
                                    sdr_sensor_type,
-				   sensor_number_base + shared_sensor_number_offset,
+                                   sensor_number_base + shared_sensor_number_offset,
                                    sensor_event_bitmask,
                                    &sensor_bitmask_strings) < 0)
     return (-1);
@@ -1044,8 +1044,8 @@ ipmi_monitoring_get_sensor_reading (ipmi_monitoring_ctx_t c,
   assert (!sensor_types || sensor_types_len);
 
   if (ipmi_sdr_parse_record_id_and_type (c->sdr_ctx,
-					 NULL,
-					 0,
+                                         NULL,
+                                         0,
                                          &record_id,
                                          &record_type) < 0)
     {
@@ -1072,8 +1072,8 @@ ipmi_monitoring_get_sensor_reading (ipmi_monitoring_ctx_t c,
     }
 
   if (ipmi_sdr_parse_sensor_number (c->sdr_ctx,
-				    NULL,
-				    0,
+                                    NULL,
+                                    0,
                                     &sensor_number_base) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sdr_parse_sensor_number: %s",
@@ -1083,8 +1083,8 @@ ipmi_monitoring_get_sensor_reading (ipmi_monitoring_ctx_t c,
     }
 
   if (ipmi_sdr_parse_sensor_type (c->sdr_ctx,
-				  NULL,
-				  0,
+                                  NULL,
+                                  0,
                                   &sdr_sensor_type) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sdr_parse_sensor_type: %s",
@@ -1121,34 +1121,34 @@ ipmi_monitoring_get_sensor_reading (ipmi_monitoring_ctx_t c,
   if (sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_ENTITY_SENSOR_NAMES)
     {
       if ((len = ipmi_sdr_parse_entity_sensor_name (c->sdr_ctx,
-						    NULL,
-						    0,
-						    sensor_number_base + shared_sensor_number_offset,
-						    sensor_name_flags,
-						    sensor_name,
-						    IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH)) < 0)
-	{
-	  IPMI_MONITORING_DEBUG (("ipmi_sdr_parse_entity_sensor_name: %s",
-				  ipmi_sdr_ctx_errormsg (c->sdr_ctx)));
-	  c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
-	  return (-1);
-	}
+                                                    NULL,
+                                                    0,
+                                                    sensor_number_base + shared_sensor_number_offset,
+                                                    sensor_name_flags,
+                                                    sensor_name,
+                                                    IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH)) < 0)
+        {
+          IPMI_MONITORING_DEBUG (("ipmi_sdr_parse_entity_sensor_name: %s",
+                                  ipmi_sdr_ctx_errormsg (c->sdr_ctx)));
+          c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
+          return (-1);
+        }
     }
   else
     {
       if ((len = ipmi_sdr_parse_sensor_name (c->sdr_ctx,
-					     NULL,
-					     0,
-					     sensor_number_base + shared_sensor_number_offset,
-					     sensor_name_flags,
-					     sensor_name,
-					     IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH)) < 0)
-	{
-	  IPMI_MONITORING_DEBUG (("ipmi_sdr_parse_sensor_name: %s",
-				  ipmi_sdr_ctx_errormsg (c->sdr_ctx)));
-	  c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
-	  return (-1);
-	}
+                                             NULL,
+                                             0,
+                                             sensor_number_base + shared_sensor_number_offset,
+                                             sensor_name_flags,
+                                             sensor_name,
+                                             IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH)) < 0)
+        {
+          IPMI_MONITORING_DEBUG (("ipmi_sdr_parse_sensor_name: %s",
+                                  ipmi_sdr_ctx_errormsg (c->sdr_ctx)));
+          c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
+          return (-1);
+        }
     }
 
   if (len >= IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH)
@@ -1159,8 +1159,8 @@ ipmi_monitoring_get_sensor_reading (ipmi_monitoring_ctx_t c,
     }
 
   if (ipmi_sdr_parse_event_reading_type_code (c->sdr_ctx,
-					      NULL,
-					      0,
+                                              NULL,
+                                              0,
                                               &event_reading_type_code) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sdr_parse_event_reading_type_code: %s",
@@ -1211,14 +1211,14 @@ ipmi_monitoring_get_sensor_reading (ipmi_monitoring_ctx_t c,
   else if (IPMI_EVENT_READING_TYPE_CODE_IS_OEM (event_reading_type_code))
     {
       if (_oem_sensor_reading (c,
-			       sensor_reading_flags,
-			       record_id,
-			       sensor_number_base,
-			       shared_sensor_number_offset,
-			       event_reading_type_code,
-			       sdr_sensor_type,
-			       sensor_type,
-			       sensor_name) < 0)
+                               sensor_reading_flags,
+                               record_id,
+                               sensor_number_base,
+                               shared_sensor_number_offset,
+                               event_reading_type_code,
+                               sdr_sensor_type,
+                               sensor_type,
+                               sensor_name) < 0)
         return (-1);
     }
   else

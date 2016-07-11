@@ -31,12 +31,12 @@
 #include "ipmi-sel-common.h"
 
 int sel_string_output_supermicro_overheat_event_data1_class_oem (ipmi_sel_ctx_t ctx,
-								 struct ipmi_sel_entry *sel_entry,
-								 uint8_t sel_record_type,
-								 char *tmpbuf,
-								 unsigned int tmpbuflen,
-								 unsigned int flags,
-								 unsigned int *wlen,
-								 struct ipmi_sel_system_event_record_data *system_event_record_data);
+                                                                 struct ipmi_sel_entry *sel_entry,
+                                                                 uint8_t sel_record_type,
+                                                                 char *tmpbuf,
+                                                                 unsigned int tmpbuflen,
+                                                                 unsigned int flags,
+                                                                 unsigned int *wlen,
+                                                                 struct ipmi_sel_system_event_record_data *system_event_record_data);
 
 #endif /* IPMI_SEL_STRING_SUPERMICRO_COMMON_H */

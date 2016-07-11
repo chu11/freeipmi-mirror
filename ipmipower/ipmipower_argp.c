@@ -230,7 +230,7 @@ cmdline_parse (int key,
       errno = 0;
       tmp = strtol (arg, &endptr, 10);
       if (errno
-	  || endptr[0] != '\0'
+          || endptr[0] != '\0'
           || tmp <= 0)
         {
           fprintf (stderr, "retransmission wait timeout length invalid");
@@ -244,7 +244,7 @@ cmdline_parse (int key,
       errno = 0;
       tmp = strtol (arg, &endptr, 10);
       if (errno
-	  || endptr[0] != '\0'
+          || endptr[0] != '\0'
           || tmp <= 0)
         {
           fprintf (stderr, "retransmission backoff count invalid");
@@ -256,7 +256,7 @@ cmdline_parse (int key,
       errno = 0;
       tmp = strtol (arg, &endptr, 10);
       if (errno
-	  || endptr[0] != '\0'
+          || endptr[0] != '\0'
           || tmp < 0)
         {
           fprintf (stderr, "ping interval length invalid");
@@ -268,7 +268,7 @@ cmdline_parse (int key,
       errno = 0;
       tmp = strtol (arg, &endptr, 10);
       if (errno
-	  || endptr[0] != '\0'
+          || endptr[0] != '\0'
           || tmp < 0)
         {
           fprintf (stderr, "ping timeout length invalid");
@@ -280,7 +280,7 @@ cmdline_parse (int key,
       errno = 0;
       tmp = strtol (arg, &endptr, 10);
       if (errno
-	  || endptr[0] != '\0'
+          || endptr[0] != '\0'
           || tmp < 0)
         {
           fprintf (stderr, "ping packet count invalid");
@@ -292,7 +292,7 @@ cmdline_parse (int key,
       errno = 0;
       tmp = strtol (arg, &endptr, 10);
       if (errno
-	  || endptr[0] != '\0'
+          || endptr[0] != '\0'
           || tmp < 0)
         {
           fprintf (stderr, "ping percent invalid");
@@ -304,7 +304,7 @@ cmdline_parse (int key,
       errno = 0;
       tmp = strtol (arg, &endptr, 10);
       if (errno
-	  || endptr[0] != '\0'
+          || endptr[0] != '\0'
           || tmp < 0)
         {
           fprintf (stderr, "ping consec count invalid");

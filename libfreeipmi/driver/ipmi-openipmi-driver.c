@@ -532,27 +532,27 @@ _openipmi_read (ipmi_openipmi_ctx_t ctx,
 
   do {
     if ((n = select (ctx->device_fd + 1,
-		     &read_fds,
-		     NULL,
-		     NULL,
-		     &tv)) < 0)
+                     &read_fds,
+                     NULL,
+                     NULL,
+                     &tv)) < 0)
       {
-	if (errno != EINTR)
-	  {
-	    OPENIPMI_ERRNO_TO_OPENIPMI_ERRNUM (ctx, errno);
-	    return (-1);
-	  }
+        if (errno != EINTR)
+          {
+            OPENIPMI_ERRNO_TO_OPENIPMI_ERRNUM (ctx, errno);
+            return (-1);
+          }
 
-	if (gettimeofday (&end, NULL) < 0)
-	  {
-	    OPENIPMI_ERRNO_TO_OPENIPMI_ERRNUM (ctx, errno);
-	    return (-1);
-	  }
-	
-	/* delta = end - start */
-	timersub (&end, &start, &delta);
-	/* tv = tv_orig - delta */
-	timersub (&tv_orig, &delta, &tv);
+        if (gettimeofday (&end, NULL) < 0)
+          {
+            OPENIPMI_ERRNO_TO_OPENIPMI_ERRNUM (ctx, errno);
+            return (-1);
+          }
+        
+        /* delta = end - start */
+        timersub (&end, &start, &delta);
+        /* tv = tv_orig - delta */
+        timersub (&tv_orig, &delta, &tv);
       }
   } while (n < 0);
 

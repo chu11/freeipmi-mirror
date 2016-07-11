@@ -112,7 +112,7 @@ _get_authentication_type_support (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_authentication_type_support: %s\n",
@@ -222,7 +222,7 @@ _get_authentication_type_enables (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_authentication_type_enables: %s\n",
@@ -642,13 +642,13 @@ _set_authentication_type_enables (ipmi_config_state_data_t *state_data,
                                                                                      al->oem_level_oem_proprietary,
                                                                                      obj_cmd_rs) < 0)
             {
-	      if (ipmi_config_param_errnum_is_non_fatal (state_data,
+              if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                          obj_cmd_rs,
                                                          &ret))
                 rv = ret;
               
-	      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-		  || state_data->prog_data->args->common_args.debug)
+              if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+                  || state_data->prog_data->args->common_args.debug)
                 pstdout_fprintf (state_data->pstate,
                                  stderr,
                                  "ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables: %s\n",
@@ -663,14 +663,14 @@ _set_authentication_type_enables (ipmi_config_state_data_t *state_data,
       else if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                       obj_cmd_rs,
                                                       &ret))
-	rv = ret;
+        rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
-	pstdout_fprintf (state_data->pstate,
-			 stderr,
-			 "ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables: %s\n",
-			 ipmi_ctx_errormsg (state_data->ipmi_ctx));
+          || state_data->prog_data->args->common_args.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       goto cleanup;
     }
@@ -802,7 +802,7 @@ _authentication_type_enable_available (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 _authentication_level_checkout (ipmi_config_state_data_t *state_data,
-				const char *section_name,
+                                const char *section_name,
                                 struct ipmi_config_keyvalue *kv)
 {
   struct bmc_authentication_level al;
@@ -848,7 +848,7 @@ _authentication_level_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 _authentication_level_commit (ipmi_config_state_data_t *state_data,
-			      const char *section_name,
+                              const char *section_name,
                               const struct ipmi_config_keyvalue *kv)
 {
   struct bmc_authentication_level al;
@@ -882,8 +882,8 @@ _authentication_level_commit (ipmi_config_state_data_t *state_data,
 
 struct ipmi_config_section *
 ipmi_config_core_lan_conf_auth_section_get (ipmi_config_state_data_t *state_data,
-					    unsigned int config_flags,
-					    int channel_index)
+                                            unsigned int config_flags,
+                                            int channel_index)
 {
   struct ipmi_config_section *section = NULL;
   char *section_comment =

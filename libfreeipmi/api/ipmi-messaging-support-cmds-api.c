@@ -1082,14 +1082,14 @@ ipmi_cmd_set_system_info_parameters_set_in_progress (ipmi_ctx_t ctx,
 
 static int
 _ipmi_cmd_set_system_info_parameters_string_first_set_common (ipmi_ctx_t ctx,
-							      uint8_t set_selector,
-							      uint8_t encoding,
-							      uint8_t string_length,
-							      const void *string_block,
-							      unsigned int string_block_length,
-							      fiid_obj_t obj_cmd_rs,
-							      fiid_field_t *tmpl_cmd_rq,
-							      int (*fill_func)(uint8_t, uint8_t, uint8_t, const void *, unsigned int, fiid_obj_t))
+                                                              uint8_t set_selector,
+                                                              uint8_t encoding,
+                                                              uint8_t string_length,
+                                                              const void *string_block,
+                                                              unsigned int string_block_length,
+                                                              fiid_obj_t obj_cmd_rs,
+                                                              fiid_field_t *tmpl_cmd_rq,
+                                                              int (*fill_func)(uint8_t, uint8_t, uint8_t, const void *, unsigned int, fiid_obj_t))
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int rv = -1;
@@ -1109,7 +1109,7 @@ _ipmi_cmd_set_system_info_parameters_string_first_set_common (ipmi_ctx_t ctx,
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
-								      
+                                                                      
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs, tmpl_cmd_set_system_info_parameters_rs) < 0)
     {
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
@@ -1123,11 +1123,11 @@ _ipmi_cmd_set_system_info_parameters_string_first_set_common (ipmi_ctx_t ctx,
     }
 
   if (fill_func (set_selector,
-		 encoding,
-		 string_length,
-		 string_block,
-		 string_block_length,
-		 obj_cmd_rq) < 0)
+                 encoding,
+                 string_length,
+                 string_block,
+                 string_block_length,
+                 obj_cmd_rq) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
@@ -1151,12 +1151,12 @@ _ipmi_cmd_set_system_info_parameters_string_first_set_common (ipmi_ctx_t ctx,
 
 static int
 _ipmi_cmd_set_system_info_parameters_string_set_common (ipmi_ctx_t ctx,
-							uint8_t set_selector,
-							const void *string_block,
-							unsigned int string_block_length,
-							fiid_obj_t obj_cmd_rs,
-							fiid_field_t *tmpl_cmd_rq,
-							int (*fill_func)(uint8_t, const void *, unsigned int, fiid_obj_t))
+                                                        uint8_t set_selector,
+                                                        const void *string_block,
+                                                        unsigned int string_block_length,
+                                                        fiid_obj_t obj_cmd_rs,
+                                                        fiid_field_t *tmpl_cmd_rq,
+                                                        int (*fill_func)(uint8_t, const void *, unsigned int, fiid_obj_t))
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int rv = -1;
@@ -1187,9 +1187,9 @@ _ipmi_cmd_set_system_info_parameters_string_set_common (ipmi_ctx_t ctx,
     }
 
   if (fill_func (set_selector,
-		 string_block,
-		 string_block_length,
-		 obj_cmd_rq) < 0)
+                 string_block,
+                 string_block_length,
+                 obj_cmd_rq) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
@@ -1221,14 +1221,14 @@ ipmi_cmd_set_system_info_parameters_system_firmware_version_first_set (ipmi_ctx_
                                                                        fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_set_system_info_parameters_string_first_set_common (ctx,
-								    set_selector,
-								    encoding,
-								    string_length,
-								    string_block,
-								    string_block_length,
-								    obj_cmd_rs,
-								    tmpl_cmd_set_system_info_parameters_system_firmware_version_first_set_rq,
-								    fill_cmd_set_system_info_parameters_system_firmware_version_first_set) < 0)
+                                                                    set_selector,
+                                                                    encoding,
+                                                                    string_length,
+                                                                    string_block,
+                                                                    string_block_length,
+                                                                    obj_cmd_rs,
+                                                                    tmpl_cmd_set_system_info_parameters_system_firmware_version_first_set_rq,
+                                                                    fill_cmd_set_system_info_parameters_system_firmware_version_first_set) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1245,12 +1245,12 @@ ipmi_cmd_set_system_info_parameters_system_firmware_version (ipmi_ctx_t ctx,
                                                              fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_set_system_info_parameters_string_set_common (ctx,
-							      set_selector,
-							      string_block,
-							      string_block_length,
-							      obj_cmd_rs,
-							      tmpl_cmd_set_system_info_parameters_system_firmware_version_rq,
-							      fill_cmd_set_system_info_parameters_system_firmware_version) < 0)
+                                                              set_selector,
+                                                              string_block,
+                                                              string_block_length,
+                                                              obj_cmd_rs,
+                                                              tmpl_cmd_set_system_info_parameters_system_firmware_version_rq,
+                                                              fill_cmd_set_system_info_parameters_system_firmware_version) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1269,14 +1269,14 @@ ipmi_cmd_set_system_info_parameters_system_name_first_set (ipmi_ctx_t ctx,
                                                            fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_set_system_info_parameters_string_first_set_common (ctx,
-								    set_selector,
-								    encoding,
-								    string_length,
-								    string_block,
-								    string_block_length,
-								    obj_cmd_rs,
-								    tmpl_cmd_set_system_info_parameters_system_name_first_set_rq,
-								    fill_cmd_set_system_info_parameters_system_name_first_set) < 0)
+                                                                    set_selector,
+                                                                    encoding,
+                                                                    string_length,
+                                                                    string_block,
+                                                                    string_block_length,
+                                                                    obj_cmd_rs,
+                                                                    tmpl_cmd_set_system_info_parameters_system_name_first_set_rq,
+                                                                    fill_cmd_set_system_info_parameters_system_name_first_set) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1293,12 +1293,12 @@ ipmi_cmd_set_system_info_parameters_system_name (ipmi_ctx_t ctx,
                                                  fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_set_system_info_parameters_string_set_common (ctx,
-							      set_selector,
-							      string_block,
-							      string_block_length,
-							      obj_cmd_rs,
-							      tmpl_cmd_set_system_info_parameters_system_name_rq,
-							      fill_cmd_set_system_info_parameters_system_name) < 0)
+                                                              set_selector,
+                                                              string_block,
+                                                              string_block_length,
+                                                              obj_cmd_rs,
+                                                              tmpl_cmd_set_system_info_parameters_system_name_rq,
+                                                              fill_cmd_set_system_info_parameters_system_name) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1317,14 +1317,14 @@ ipmi_cmd_set_system_info_parameters_primary_operating_system_name_first_set (ipm
                                                                              fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_set_system_info_parameters_string_first_set_common (ctx,
-								    set_selector,
-								    encoding,
-								    string_length,
-								    string_block,
-								    string_block_length,
-								    obj_cmd_rs,
-								    tmpl_cmd_set_system_info_parameters_primary_operating_system_name_first_set_rq,
-								    fill_cmd_set_system_info_parameters_primary_operating_system_name_first_set) < 0)
+                                                                    set_selector,
+                                                                    encoding,
+                                                                    string_length,
+                                                                    string_block,
+                                                                    string_block_length,
+                                                                    obj_cmd_rs,
+                                                                    tmpl_cmd_set_system_info_parameters_primary_operating_system_name_first_set_rq,
+                                                                    fill_cmd_set_system_info_parameters_primary_operating_system_name_first_set) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1341,12 +1341,12 @@ ipmi_cmd_set_system_info_parameters_primary_operating_system_name (ipmi_ctx_t ct
                                                                    fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_set_system_info_parameters_string_set_common (ctx,
-							      set_selector,
-							      string_block,
-							      string_block_length,
-							      obj_cmd_rs,
-							      tmpl_cmd_set_system_info_parameters_primary_operating_system_name_rq,
-							      fill_cmd_set_system_info_parameters_primary_operating_system_name) < 0)
+                                                              set_selector,
+                                                              string_block,
+                                                              string_block_length,
+                                                              obj_cmd_rs,
+                                                              tmpl_cmd_set_system_info_parameters_primary_operating_system_name_rq,
+                                                              fill_cmd_set_system_info_parameters_primary_operating_system_name) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1365,14 +1365,14 @@ ipmi_cmd_set_system_info_parameters_operating_system_name_first_set (ipmi_ctx_t 
                                                                      fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_set_system_info_parameters_string_first_set_common (ctx,
-								    set_selector,
-								    encoding,
-								    string_length,
-								    string_block,
-								    string_block_length,
-								    obj_cmd_rs,
-								    tmpl_cmd_set_system_info_parameters_operating_system_name_first_set_rq,
-								    fill_cmd_set_system_info_parameters_operating_system_name_first_set) < 0)
+                                                                    set_selector,
+                                                                    encoding,
+                                                                    string_length,
+                                                                    string_block,
+                                                                    string_block_length,
+                                                                    obj_cmd_rs,
+                                                                    tmpl_cmd_set_system_info_parameters_operating_system_name_first_set_rq,
+                                                                    fill_cmd_set_system_info_parameters_operating_system_name_first_set) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1389,12 +1389,12 @@ ipmi_cmd_set_system_info_parameters_operating_system_name (ipmi_ctx_t ctx,
                                                            fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_set_system_info_parameters_string_set_common (ctx,
-							      set_selector,
-							      string_block,
-							      string_block_length,
-							      obj_cmd_rs,
-							      tmpl_cmd_set_system_info_parameters_operating_system_name_rq,
-							      fill_cmd_set_system_info_parameters_operating_system_name) < 0)
+                                                              set_selector,
+                                                              string_block,
+                                                              string_block_length,
+                                                              obj_cmd_rs,
+                                                              tmpl_cmd_set_system_info_parameters_operating_system_name_rq,
+                                                              fill_cmd_set_system_info_parameters_operating_system_name) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1405,22 +1405,22 @@ ipmi_cmd_set_system_info_parameters_operating_system_name (ipmi_ctx_t ctx,
 
 int
 ipmi_cmd_set_system_info_parameters_present_os_version_number_first_set (ipmi_ctx_t ctx,
-									 uint8_t set_selector,
-									 uint8_t encoding,
-									 uint8_t string_length,
-									 const void *string_block,
-									 unsigned int string_block_length,
-									 fiid_obj_t obj_cmd_rs)
+                                                                         uint8_t set_selector,
+                                                                         uint8_t encoding,
+                                                                         uint8_t string_length,
+                                                                         const void *string_block,
+                                                                         unsigned int string_block_length,
+                                                                         fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_set_system_info_parameters_string_first_set_common (ctx,
-								    set_selector,
-								    encoding,
-								    string_length,
-								    string_block,
-								    string_block_length,
-								    obj_cmd_rs,
-								    tmpl_cmd_set_system_info_parameters_present_os_version_number_first_set_rq,
-								    fill_cmd_set_system_info_parameters_present_os_version_number_first_set) < 0)
+                                                                    set_selector,
+                                                                    encoding,
+                                                                    string_length,
+                                                                    string_block,
+                                                                    string_block_length,
+                                                                    obj_cmd_rs,
+                                                                    tmpl_cmd_set_system_info_parameters_present_os_version_number_first_set_rq,
+                                                                    fill_cmd_set_system_info_parameters_present_os_version_number_first_set) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1431,18 +1431,18 @@ ipmi_cmd_set_system_info_parameters_present_os_version_number_first_set (ipmi_ct
 
 int
 ipmi_cmd_set_system_info_parameters_present_os_version_number (ipmi_ctx_t ctx,
-							       uint8_t set_selector,
-							       const void *string_block,
-							       unsigned int string_block_length,
-							       fiid_obj_t obj_cmd_rs)
+                                                               uint8_t set_selector,
+                                                               const void *string_block,
+                                                               unsigned int string_block_length,
+                                                               fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_set_system_info_parameters_string_set_common (ctx,
-							      set_selector,
-							      string_block,
-							      string_block_length,
-							      obj_cmd_rs,
-							      tmpl_cmd_set_system_info_parameters_present_os_version_number_rq,
-							      fill_cmd_set_system_info_parameters_present_os_version_number) < 0)
+                                                              set_selector,
+                                                              string_block,
+                                                              string_block_length,
+                                                              obj_cmd_rs,
+                                                              tmpl_cmd_set_system_info_parameters_present_os_version_number_rq,
+                                                              fill_cmd_set_system_info_parameters_present_os_version_number) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1453,22 +1453,22 @@ ipmi_cmd_set_system_info_parameters_present_os_version_number (ipmi_ctx_t ctx,
 
 int
 ipmi_cmd_set_system_info_parameters_bmc_url_first_set (ipmi_ctx_t ctx,
-						       uint8_t set_selector,
-						       uint8_t encoding,
-						       uint8_t string_length,
-						       const void *string_block,
-						       unsigned int string_block_length,
-						       fiid_obj_t obj_cmd_rs)
+                                                       uint8_t set_selector,
+                                                       uint8_t encoding,
+                                                       uint8_t string_length,
+                                                       const void *string_block,
+                                                       unsigned int string_block_length,
+                                                       fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_set_system_info_parameters_string_first_set_common (ctx,
-								    set_selector,
-								    encoding,
-								    string_length,
-								    string_block,
-								    string_block_length,
-								    obj_cmd_rs,
-								    tmpl_cmd_set_system_info_parameters_bmc_url_first_set_rq,
-								    fill_cmd_set_system_info_parameters_bmc_url_first_set) < 0)
+                                                                    set_selector,
+                                                                    encoding,
+                                                                    string_length,
+                                                                    string_block,
+                                                                    string_block_length,
+                                                                    obj_cmd_rs,
+                                                                    tmpl_cmd_set_system_info_parameters_bmc_url_first_set_rq,
+                                                                    fill_cmd_set_system_info_parameters_bmc_url_first_set) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1479,18 +1479,18 @@ ipmi_cmd_set_system_info_parameters_bmc_url_first_set (ipmi_ctx_t ctx,
 
 int
 ipmi_cmd_set_system_info_parameters_bmc_url (ipmi_ctx_t ctx,
-					     uint8_t set_selector,
-					     const void *string_block,
-					     unsigned int string_block_length,
-					     fiid_obj_t obj_cmd_rs)
+                                             uint8_t set_selector,
+                                             const void *string_block,
+                                             unsigned int string_block_length,
+                                             fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_set_system_info_parameters_string_set_common (ctx,
-							      set_selector,
-							      string_block,
-							      string_block_length,
-							      obj_cmd_rs,
-							      tmpl_cmd_set_system_info_parameters_bmc_url_rq,
-							      fill_cmd_set_system_info_parameters_bmc_url) < 0)
+                                                              set_selector,
+                                                              string_block,
+                                                              string_block_length,
+                                                              obj_cmd_rs,
+                                                              tmpl_cmd_set_system_info_parameters_bmc_url_rq,
+                                                              fill_cmd_set_system_info_parameters_bmc_url) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1501,22 +1501,22 @@ ipmi_cmd_set_system_info_parameters_bmc_url (ipmi_ctx_t ctx,
 
 int
 ipmi_cmd_set_system_info_parameters_base_os_hypervisor_url_first_set (ipmi_ctx_t ctx,
-								      uint8_t set_selector,
-								      uint8_t encoding,
-								      uint8_t string_length,
-								      const void *string_block,
-								      unsigned int string_block_length,
-								      fiid_obj_t obj_cmd_rs)
+                                                                      uint8_t set_selector,
+                                                                      uint8_t encoding,
+                                                                      uint8_t string_length,
+                                                                      const void *string_block,
+                                                                      unsigned int string_block_length,
+                                                                      fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_set_system_info_parameters_string_first_set_common (ctx,
-								    set_selector,
-								    encoding,
-								    string_length,
-								    string_block,
-								    string_block_length,
-								    obj_cmd_rs,
-								    tmpl_cmd_set_system_info_parameters_base_os_hypervisor_url_first_set_rq,
-								    fill_cmd_set_system_info_parameters_base_os_hypervisor_url_first_set) < 0)
+                                                                    set_selector,
+                                                                    encoding,
+                                                                    string_length,
+                                                                    string_block,
+                                                                    string_block_length,
+                                                                    obj_cmd_rs,
+                                                                    tmpl_cmd_set_system_info_parameters_base_os_hypervisor_url_first_set_rq,
+                                                                    fill_cmd_set_system_info_parameters_base_os_hypervisor_url_first_set) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1527,18 +1527,18 @@ ipmi_cmd_set_system_info_parameters_base_os_hypervisor_url_first_set (ipmi_ctx_t
 
 int
 ipmi_cmd_set_system_info_parameters_base_os_hypervisor_url (ipmi_ctx_t ctx,
-							    uint8_t set_selector,
-							    const void *string_block,
-							    unsigned int string_block_length,
-							    fiid_obj_t obj_cmd_rs)
+                                                            uint8_t set_selector,
+                                                            const void *string_block,
+                                                            unsigned int string_block_length,
+                                                            fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_set_system_info_parameters_string_set_common (ctx,
-							      set_selector,
-							      string_block,
-							      string_block_length,
-							      obj_cmd_rs,
-							      tmpl_cmd_set_system_info_parameters_base_os_hypervisor_url_rq,
-							      fill_cmd_set_system_info_parameters_base_os_hypervisor_url) < 0)
+                                                              set_selector,
+                                                              string_block,
+                                                              string_block_length,
+                                                              obj_cmd_rs,
+                                                              tmpl_cmd_set_system_info_parameters_base_os_hypervisor_url_rq,
+                                                              fill_cmd_set_system_info_parameters_base_os_hypervisor_url) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1549,12 +1549,12 @@ ipmi_cmd_set_system_info_parameters_base_os_hypervisor_url (ipmi_ctx_t ctx,
 
 static int
 _ipmi_cmd_get_system_info_parameters_common (ipmi_ctx_t ctx,
-					     uint8_t get_parameter,
-					     uint8_t set_selector,
-					     uint8_t block_selector,
-					     fiid_obj_t obj_cmd_rs,
-					     fiid_field_t *tmpl_cmd_rs_expected,
-					     uint8_t parameter_selector)
+                                             uint8_t get_parameter,
+                                             uint8_t set_selector,
+                                             uint8_t block_selector,
+                                             fiid_obj_t obj_cmd_rs,
+                                             fiid_field_t *tmpl_cmd_rs_expected,
+                                             uint8_t parameter_selector)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int rv = -1;
@@ -1585,7 +1585,7 @@ _ipmi_cmd_get_system_info_parameters_common (ipmi_ctx_t ctx,
     }
 
   if (fill_cmd_get_system_info_parameters (get_parameter,
-					   parameter_selector,
+                                           parameter_selector,
                                            set_selector,
                                            block_selector,
                                            obj_cmd_rq) < 0)
@@ -1619,12 +1619,12 @@ ipmi_cmd_get_system_info_parameters (ipmi_ctx_t ctx,
                                      fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_system_info_parameters_common (ctx,
-						   get_parameter,
-						   set_selector,
-						   block_selector,
-						   obj_cmd_rs,
-						   tmpl_cmd_get_system_info_parameters_rs,
-						   parameter_selector) < 0)
+                                                   get_parameter,
+                                                   set_selector,
+                                                   block_selector,
+                                                   obj_cmd_rs,
+                                                   tmpl_cmd_get_system_info_parameters_rs,
+                                                   parameter_selector) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1635,18 +1635,18 @@ ipmi_cmd_get_system_info_parameters (ipmi_ctx_t ctx,
 
 int
 ipmi_cmd_get_system_info_parameters_set_in_progress (ipmi_ctx_t ctx,
-						     uint8_t get_parameter,
-						     uint8_t set_selector,
-						     uint8_t block_selector,
-						     fiid_obj_t obj_cmd_rs)
+                                                     uint8_t get_parameter,
+                                                     uint8_t set_selector,
+                                                     uint8_t block_selector,
+                                                     fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_system_info_parameters_common (ctx,
-						   get_parameter,
-						   set_selector,
-						   block_selector,
-						   obj_cmd_rs,
-						   tmpl_cmd_get_system_info_parameters_set_in_progress_rs,
-						   IPMI_SYSTEM_INFO_PARAMETER_SET_IN_PROGRESS) < 0)
+                                                   get_parameter,
+                                                   set_selector,
+                                                   block_selector,
+                                                   obj_cmd_rs,
+                                                   tmpl_cmd_get_system_info_parameters_set_in_progress_rs,
+                                                   IPMI_SYSTEM_INFO_PARAMETER_SET_IN_PROGRESS) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1663,12 +1663,12 @@ ipmi_cmd_get_system_info_parameters_system_firmware_version_first_set (ipmi_ctx_
                                                                        fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_system_info_parameters_common (ctx,
-						   get_parameter,
-						   set_selector,
-						   block_selector,
-						   obj_cmd_rs,
-						   tmpl_cmd_get_system_info_parameters_system_firmware_version_first_set_rs,
-						   IPMI_SYSTEM_INFO_PARAMETER_SYSTEM_FIRMWARE_VERSION) < 0)
+                                                   get_parameter,
+                                                   set_selector,
+                                                   block_selector,
+                                                   obj_cmd_rs,
+                                                   tmpl_cmd_get_system_info_parameters_system_firmware_version_first_set_rs,
+                                                   IPMI_SYSTEM_INFO_PARAMETER_SYSTEM_FIRMWARE_VERSION) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1685,12 +1685,12 @@ ipmi_cmd_get_system_info_parameters_system_firmware_version (ipmi_ctx_t ctx,
                                                              fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_system_info_parameters_common (ctx,
-						   get_parameter,
-						   set_selector,
-						   block_selector,
-						   obj_cmd_rs,
-						   tmpl_cmd_get_system_info_parameters_system_firmware_version_rs,
-						   IPMI_SYSTEM_INFO_PARAMETER_SYSTEM_FIRMWARE_VERSION) < 0)
+                                                   get_parameter,
+                                                   set_selector,
+                                                   block_selector,
+                                                   obj_cmd_rs,
+                                                   tmpl_cmd_get_system_info_parameters_system_firmware_version_rs,
+                                                   IPMI_SYSTEM_INFO_PARAMETER_SYSTEM_FIRMWARE_VERSION) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1707,12 +1707,12 @@ ipmi_cmd_get_system_info_parameters_system_name_first_set (ipmi_ctx_t ctx,
                                                            fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_system_info_parameters_common (ctx,
-						   get_parameter,
-						   set_selector,
-						   block_selector,
-						   obj_cmd_rs,
-						   tmpl_cmd_get_system_info_parameters_system_name_first_set_rs,
-						   IPMI_SYSTEM_INFO_PARAMETER_SYSTEM_NAME) < 0)
+                                                   get_parameter,
+                                                   set_selector,
+                                                   block_selector,
+                                                   obj_cmd_rs,
+                                                   tmpl_cmd_get_system_info_parameters_system_name_first_set_rs,
+                                                   IPMI_SYSTEM_INFO_PARAMETER_SYSTEM_NAME) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1729,12 +1729,12 @@ ipmi_cmd_get_system_info_parameters_system_name (ipmi_ctx_t ctx,
                                                  fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_system_info_parameters_common (ctx,
-						   get_parameter,
-						   set_selector,
-						   block_selector,
-						   obj_cmd_rs,
-						   tmpl_cmd_get_system_info_parameters_system_name_rs,
-						   IPMI_SYSTEM_INFO_PARAMETER_SYSTEM_NAME) < 0)
+                                                   get_parameter,
+                                                   set_selector,
+                                                   block_selector,
+                                                   obj_cmd_rs,
+                                                   tmpl_cmd_get_system_info_parameters_system_name_rs,
+                                                   IPMI_SYSTEM_INFO_PARAMETER_SYSTEM_NAME) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1751,12 +1751,12 @@ ipmi_cmd_get_system_info_parameters_primary_operating_system_name_first_set (ipm
                                                                              fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_system_info_parameters_common (ctx,
-						   get_parameter,
-						   set_selector,
-						   block_selector,
-						   obj_cmd_rs,
-						   tmpl_cmd_get_system_info_parameters_primary_operating_system_name_first_set_rs,
-						   IPMI_SYSTEM_INFO_PARAMETER_PRIMARY_OPERATING_SYSTEM_NAME) < 0)
+                                                   get_parameter,
+                                                   set_selector,
+                                                   block_selector,
+                                                   obj_cmd_rs,
+                                                   tmpl_cmd_get_system_info_parameters_primary_operating_system_name_first_set_rs,
+                                                   IPMI_SYSTEM_INFO_PARAMETER_PRIMARY_OPERATING_SYSTEM_NAME) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1773,12 +1773,12 @@ ipmi_cmd_get_system_info_parameters_primary_operating_system_name (ipmi_ctx_t ct
                                                                    fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_system_info_parameters_common (ctx,
-						   get_parameter,
-						   set_selector,
-						   block_selector,
-						   obj_cmd_rs,
-						   tmpl_cmd_get_system_info_parameters_primary_operating_system_name_rs,
-						   IPMI_SYSTEM_INFO_PARAMETER_PRIMARY_OPERATING_SYSTEM_NAME) < 0)
+                                                   get_parameter,
+                                                   set_selector,
+                                                   block_selector,
+                                                   obj_cmd_rs,
+                                                   tmpl_cmd_get_system_info_parameters_primary_operating_system_name_rs,
+                                                   IPMI_SYSTEM_INFO_PARAMETER_PRIMARY_OPERATING_SYSTEM_NAME) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1795,12 +1795,12 @@ ipmi_cmd_get_system_info_parameters_operating_system_name_first_set (ipmi_ctx_t 
                                                                      fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_system_info_parameters_common (ctx,
-						   get_parameter,
-						   set_selector,
-						   block_selector,
-						   obj_cmd_rs,
-						   tmpl_cmd_get_system_info_parameters_operating_system_name_first_set_rs,
-						   IPMI_SYSTEM_INFO_PARAMETER_OPERATING_SYSTEM_NAME) < 0)
+                                                   get_parameter,
+                                                   set_selector,
+                                                   block_selector,
+                                                   obj_cmd_rs,
+                                                   tmpl_cmd_get_system_info_parameters_operating_system_name_first_set_rs,
+                                                   IPMI_SYSTEM_INFO_PARAMETER_OPERATING_SYSTEM_NAME) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1817,12 +1817,12 @@ ipmi_cmd_get_system_info_parameters_operating_system_name (ipmi_ctx_t ctx,
                                                            fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_system_info_parameters_common (ctx,
-						   get_parameter,
-						   set_selector,
-						   block_selector,
-						   obj_cmd_rs,
-						   tmpl_cmd_get_system_info_parameters_operating_system_name_rs,
-						   IPMI_SYSTEM_INFO_PARAMETER_OPERATING_SYSTEM_NAME) < 0)
+                                                   get_parameter,
+                                                   set_selector,
+                                                   block_selector,
+                                                   obj_cmd_rs,
+                                                   tmpl_cmd_get_system_info_parameters_operating_system_name_rs,
+                                                   IPMI_SYSTEM_INFO_PARAMETER_OPERATING_SYSTEM_NAME) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1833,18 +1833,18 @@ ipmi_cmd_get_system_info_parameters_operating_system_name (ipmi_ctx_t ctx,
 
 int
 ipmi_cmd_get_system_info_parameters_present_os_version_number_first_set (ipmi_ctx_t ctx,
-									 uint8_t get_parameter,
-									 uint8_t set_selector,
-									 uint8_t block_selector,
-									 fiid_obj_t obj_cmd_rs)
+                                                                         uint8_t get_parameter,
+                                                                         uint8_t set_selector,
+                                                                         uint8_t block_selector,
+                                                                         fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_system_info_parameters_common (ctx,
-						   get_parameter,
-						   set_selector,
-						   block_selector,
-						   obj_cmd_rs,
-						   tmpl_cmd_get_system_info_parameters_present_os_version_number_first_set_rs,
-						   IPMI_SYSTEM_INFO_PARAMETER_PRESENT_OS_VERSION_NUMBER) < 0)
+                                                   get_parameter,
+                                                   set_selector,
+                                                   block_selector,
+                                                   obj_cmd_rs,
+                                                   tmpl_cmd_get_system_info_parameters_present_os_version_number_first_set_rs,
+                                                   IPMI_SYSTEM_INFO_PARAMETER_PRESENT_OS_VERSION_NUMBER) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1855,18 +1855,18 @@ ipmi_cmd_get_system_info_parameters_present_os_version_number_first_set (ipmi_ct
 
 int
 ipmi_cmd_get_system_info_parameters_present_os_version_number (ipmi_ctx_t ctx,
-							       uint8_t get_parameter,
-							       uint8_t set_selector,
-							       uint8_t block_selector,
-							       fiid_obj_t obj_cmd_rs)
+                                                               uint8_t get_parameter,
+                                                               uint8_t set_selector,
+                                                               uint8_t block_selector,
+                                                               fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_system_info_parameters_common (ctx,
-						   get_parameter,
-						   set_selector,
-						   block_selector,
-						   obj_cmd_rs,
-						   tmpl_cmd_get_system_info_parameters_present_os_version_number_rs,
-						   IPMI_SYSTEM_INFO_PARAMETER_PRESENT_OS_VERSION_NUMBER) < 0)
+                                                   get_parameter,
+                                                   set_selector,
+                                                   block_selector,
+                                                   obj_cmd_rs,
+                                                   tmpl_cmd_get_system_info_parameters_present_os_version_number_rs,
+                                                   IPMI_SYSTEM_INFO_PARAMETER_PRESENT_OS_VERSION_NUMBER) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1877,18 +1877,18 @@ ipmi_cmd_get_system_info_parameters_present_os_version_number (ipmi_ctx_t ctx,
 
 int
 ipmi_cmd_get_system_info_parameters_bmc_url_first_set (ipmi_ctx_t ctx,
-						       uint8_t get_parameter,
-						       uint8_t set_selector,
-						       uint8_t block_selector,
-						       fiid_obj_t obj_cmd_rs)
+                                                       uint8_t get_parameter,
+                                                       uint8_t set_selector,
+                                                       uint8_t block_selector,
+                                                       fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_system_info_parameters_common (ctx,
-						   get_parameter,
-						   set_selector,
-						   block_selector,
-						   obj_cmd_rs,
-						   tmpl_cmd_get_system_info_parameters_bmc_url_first_set_rs,
-						   IPMI_SYSTEM_INFO_PARAMETER_BMC_URL) < 0)
+                                                   get_parameter,
+                                                   set_selector,
+                                                   block_selector,
+                                                   obj_cmd_rs,
+                                                   tmpl_cmd_get_system_info_parameters_bmc_url_first_set_rs,
+                                                   IPMI_SYSTEM_INFO_PARAMETER_BMC_URL) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1899,18 +1899,18 @@ ipmi_cmd_get_system_info_parameters_bmc_url_first_set (ipmi_ctx_t ctx,
 
 int
 ipmi_cmd_get_system_info_parameters_bmc_url (ipmi_ctx_t ctx,
-					     uint8_t get_parameter,
-					     uint8_t set_selector,
-					     uint8_t block_selector,
-					     fiid_obj_t obj_cmd_rs)
+                                             uint8_t get_parameter,
+                                             uint8_t set_selector,
+                                             uint8_t block_selector,
+                                             fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_system_info_parameters_common (ctx,
-						   get_parameter,
-						   set_selector,
-						   block_selector,
-						   obj_cmd_rs,
-						   tmpl_cmd_get_system_info_parameters_bmc_url_rs,
-						   IPMI_SYSTEM_INFO_PARAMETER_BMC_URL) < 0)
+                                                   get_parameter,
+                                                   set_selector,
+                                                   block_selector,
+                                                   obj_cmd_rs,
+                                                   tmpl_cmd_get_system_info_parameters_bmc_url_rs,
+                                                   IPMI_SYSTEM_INFO_PARAMETER_BMC_URL) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1921,18 +1921,18 @@ ipmi_cmd_get_system_info_parameters_bmc_url (ipmi_ctx_t ctx,
 
 int
 ipmi_cmd_get_system_info_parameters_base_os_hypervisor_url_first_set (ipmi_ctx_t ctx,
-								      uint8_t get_parameter,
-								      uint8_t set_selector,
-								      uint8_t block_selector,
-								      fiid_obj_t obj_cmd_rs)
+                                                                      uint8_t get_parameter,
+                                                                      uint8_t set_selector,
+                                                                      uint8_t block_selector,
+                                                                      fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_system_info_parameters_common (ctx,
-						   get_parameter,
-						   set_selector,
-						   block_selector,
-						   obj_cmd_rs,
-						   tmpl_cmd_get_system_info_parameters_base_os_hypervisor_url_first_set_rs,
-						   IPMI_SYSTEM_INFO_PARAMETER_BASE_OS_HYPERVISOR_URL) < 0)
+                                                   get_parameter,
+                                                   set_selector,
+                                                   block_selector,
+                                                   obj_cmd_rs,
+                                                   tmpl_cmd_get_system_info_parameters_base_os_hypervisor_url_first_set_rs,
+                                                   IPMI_SYSTEM_INFO_PARAMETER_BASE_OS_HYPERVISOR_URL) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1943,18 +1943,18 @@ ipmi_cmd_get_system_info_parameters_base_os_hypervisor_url_first_set (ipmi_ctx_t
 
 int
 ipmi_cmd_get_system_info_parameters_base_os_hypervisor_url (ipmi_ctx_t ctx,
-							    uint8_t get_parameter,
-							    uint8_t set_selector,
-							    uint8_t block_selector,
-							    fiid_obj_t obj_cmd_rs)
+                                                            uint8_t get_parameter,
+                                                            uint8_t set_selector,
+                                                            uint8_t block_selector,
+                                                            fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_system_info_parameters_common (ctx,
-						   get_parameter,
-						   set_selector,
-						   block_selector,
-						   obj_cmd_rs,
-						   tmpl_cmd_get_system_info_parameters_base_os_hypervisor_url_rs,
-						   IPMI_SYSTEM_INFO_PARAMETER_BASE_OS_HYPERVISOR_URL) < 0)
+                                                   get_parameter,
+                                                   set_selector,
+                                                   block_selector,
+                                                   obj_cmd_rs,
+                                                   tmpl_cmd_get_system_info_parameters_base_os_hypervisor_url_rs,
+                                                   IPMI_SYSTEM_INFO_PARAMETER_BASE_OS_HYPERVISOR_URL) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);

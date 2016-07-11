@@ -168,11 +168,11 @@ ipmi_cmd_read_fru_data (ipmi_ctx_t ctx,
 
 int
 ipmi_cmd_write_fru_data (ipmi_ctx_t ctx,
-			 uint8_t fru_device_id,
-			 uint16_t fru_inventory_offset_to_write,
-			 const void *data_to_write,
-			 unsigned int data_to_write_len,
-			 fiid_obj_t obj_cmd_rs)
+                         uint8_t fru_device_id,
+                         uint16_t fru_inventory_offset_to_write,
+                         const void *data_to_write,
+                         unsigned int data_to_write_len,
+                         fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int rv = -1;
@@ -203,10 +203,10 @@ ipmi_cmd_write_fru_data (ipmi_ctx_t ctx,
     }
 
   if (fill_cmd_write_fru_data (fru_device_id,
-			       fru_inventory_offset_to_write,
-			       data_to_write,
-			       data_to_write_len,
-			       obj_cmd_rq) < 0)
+                               fru_inventory_offset_to_write,
+                               data_to_write,
+                               data_to_write_len,
+                               obj_cmd_rq) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;

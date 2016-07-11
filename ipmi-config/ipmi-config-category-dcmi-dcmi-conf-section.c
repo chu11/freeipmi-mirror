@@ -47,8 +47,8 @@ struct get_power_limit_data
 
 static ipmi_config_err_t
 asset_tag_checkout (ipmi_config_state_data_t *state_data,
-		    const char *section_name,
-		    struct ipmi_config_keyvalue *kv)
+                    const char *section_name,
+                    struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   char asset_tag_data[IPMI_DCMI_MAX_ASSET_TAG_LENGTH + 1];
@@ -89,19 +89,19 @@ asset_tag_checkout (ipmi_config_state_data_t *state_data,
                                        bytes_to_read,
                                        obj_cmd_rs) < 0)
         {
-	  if (ipmi_config_param_errnum_is_non_fatal (state_data,
-						     obj_cmd_rs,
-						     &ret))
-	    rv = ret;
+          if (ipmi_config_param_errnum_is_non_fatal (state_data,
+                                                     obj_cmd_rs,
+                                                     &ret))
+            rv = ret;
 
-	  if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	      || state_data->prog_data->args->common_args.debug)
-	    pstdout_fprintf (state_data->pstate,
-			     stderr,
-			     "ipmi_cmd_dcmi_get_asset_tag: %s\n",
-			     ipmi_ctx_errormsg (state_data->ipmi_ctx));
-	  
-	  goto cleanup;
+          if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+              || state_data->prog_data->args->common_args.debug)
+            pstdout_fprintf (state_data->pstate,
+                             stderr,
+                             "ipmi_cmd_dcmi_get_asset_tag: %s\n",
+                             ipmi_ctx_errormsg (state_data->ipmi_ctx));
+          
+          goto cleanup;
         }
 
       if (FIID_OBJ_GET (obj_cmd_rs,
@@ -145,16 +145,16 @@ asset_tag_checkout (ipmi_config_state_data_t *state_data,
        * portable, but I would bet some systems won't like this.
        */
       if (ipmi_config_section_update_keyvalue_output (state_data,
-						      kv,
-						      &asset_tag_data[3]) < 0)
-	return (IPMI_CONFIG_ERR_FATAL_ERROR);
+                                                      kv,
+                                                      &asset_tag_data[3]) < 0)
+        return (IPMI_CONFIG_ERR_FATAL_ERROR);
     }
   else
     {
       if (ipmi_config_section_update_keyvalue_output (state_data,
-						      kv,
-						      asset_tag_data) < 0)
-	return (IPMI_CONFIG_ERR_FATAL_ERROR);
+                                                      kv,
+                                                      asset_tag_data) < 0)
+        return (IPMI_CONFIG_ERR_FATAL_ERROR);
     }
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
@@ -231,19 +231,19 @@ asset_tag_commit (ipmi_config_state_data_t *state_data,
                                        data_len,
                                        obj_cmd_rs) < 0)
         {
-	  if (ipmi_config_param_errnum_is_non_fatal (state_data,
-						     obj_cmd_rs,
-						     &ret))
-	    rv = ret;
-	  
-	  if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	      || state_data->prog_data->args->common_args.debug)
-	    pstdout_fprintf (state_data->pstate,
-			     stderr,
-			     "ipmi_cmd_dcmi_set_asset_tag: %s\n",
-			     ipmi_ctx_errormsg (state_data->ipmi_ctx));
-	  
-	  goto cleanup;
+          if (ipmi_config_param_errnum_is_non_fatal (state_data,
+                                                     obj_cmd_rs,
+                                                     &ret))
+            rv = ret;
+          
+          if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+              || state_data->prog_data->args->common_args.debug)
+            pstdout_fprintf (state_data->pstate,
+                             stderr,
+                             "ipmi_cmd_dcmi_set_asset_tag: %s\n",
+                             ipmi_ctx_errormsg (state_data->ipmi_ctx));
+          
+          goto cleanup;
         }
 
       if (FIID_OBJ_GET (obj_cmd_rs,
@@ -297,8 +297,8 @@ asset_tag_validate (ipmi_config_state_data_t *state_data,
     
 static ipmi_config_err_t
 management_controller_identifier_string_checkout (ipmi_config_state_data_t *state_data,
-						  const char *section_name,
-						  struct ipmi_config_keyvalue *kv)
+                                                  const char *section_name,
+                                                  struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   char management_controller_identifier_string_data[IPMI_DCMI_MAX_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_LENGTH];
@@ -335,21 +335,21 @@ management_controller_identifier_string_checkout (ipmi_config_state_data_t *stat
         bytes_to_read = total_length - offset;
       
       if (ipmi_cmd_dcmi_get_management_controller_identifier_string (state_data->ipmi_ctx,
-								     offset,
-								     bytes_to_read,
-								     obj_cmd_rs) < 0)
+                                                                     offset,
+                                                                     bytes_to_read,
+                                                                     obj_cmd_rs) < 0)
         {
-	  if (ipmi_config_param_errnum_is_non_fatal (state_data,
-						     obj_cmd_rs,
-						     &ret))
-	    rv = ret;
-	  
-	  if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	      || state_data->prog_data->args->common_args.debug)
-	    pstdout_fprintf (state_data->pstate,
-			     stderr,
-			     "ipmi_cmd_dcmi_get_management_controller_identifier_string: %s\n",
-			     ipmi_ctx_errormsg (state_data->ipmi_ctx));
+          if (ipmi_config_param_errnum_is_non_fatal (state_data,
+                                                     obj_cmd_rs,
+                                                     &ret))
+            rv = ret;
+          
+          if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+              || state_data->prog_data->args->common_args.debug)
+            pstdout_fprintf (state_data->pstate,
+                             stderr,
+                             "ipmi_cmd_dcmi_get_management_controller_identifier_string: %s\n",
+                             ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
           goto cleanup;
         }
@@ -387,9 +387,9 @@ management_controller_identifier_string_checkout (ipmi_config_state_data_t *stat
     }
   
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  management_controller_identifier_string_data) < 0)
-	return (IPMI_CONFIG_ERR_FATAL_ERROR);
+                                                  kv,
+                                                  management_controller_identifier_string_data) < 0)
+        return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
@@ -399,8 +399,8 @@ management_controller_identifier_string_checkout (ipmi_config_state_data_t *stat
 
 static ipmi_config_err_t
 management_controller_identifier_string_commit (ipmi_config_state_data_t *state_data,
-						const char *section_name,
-						const struct ipmi_config_keyvalue *kv)
+                                                const char *section_name,
+                                                const struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   unsigned int offset = 0;
@@ -462,17 +462,17 @@ management_controller_identifier_string_commit (ipmi_config_state_data_t *state_
                                                                      data_len,
                                                                      obj_cmd_rs) < 0)
         {
-	  if (ipmi_config_param_errnum_is_non_fatal (state_data,
-						     obj_cmd_rs,
-						     &ret))
-	    rv = ret;
-	  
-	  if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	      || state_data->prog_data->args->common_args.debug)
-	    pstdout_fprintf (state_data->pstate,
-			     stderr,
-			     "ipmi_cmd_dcmi_set_management_controller_identifier_string: %s\n",
-			     ipmi_ctx_errormsg (state_data->ipmi_ctx));
+          if (ipmi_config_param_errnum_is_non_fatal (state_data,
+                                                     obj_cmd_rs,
+                                                     &ret))
+            rv = ret;
+          
+          if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+              || state_data->prog_data->args->common_args.debug)
+            pstdout_fprintf (state_data->pstate,
+                             stderr,
+                             "ipmi_cmd_dcmi_set_management_controller_identifier_string: %s\n",
+                             ipmi_ctx_errormsg (state_data->ipmi_ctx));
           goto cleanup;
         }
 
@@ -511,9 +511,9 @@ management_controller_identifier_string_commit (ipmi_config_state_data_t *state_
 
 static ipmi_config_validate_t
 management_controller_identifier_string_validate (ipmi_config_state_data_t *state_data,
-						  const char *section_name,
-						  const char *key_name,
-						  const char *value)
+                                                  const char *section_name,
+                                                  const char *key_name,
+                                                  const char *value)
 {
   assert (state_data);
   assert (section_name);
@@ -528,8 +528,8 @@ management_controller_identifier_string_validate (ipmi_config_state_data_t *stat
 
 static ipmi_config_err_t
 _get_power_limit (ipmi_config_state_data_t *state_data,
-		  struct get_power_limit_data *gpld,
-		  int *no_set_power_limit_flag)
+                  struct get_power_limit_data *gpld,
+                  int *no_set_power_limit_flag)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -545,9 +545,9 @@ _get_power_limit (ipmi_config_state_data_t *state_data,
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_dcmi_get_power_limit_rs)))
     {
       pstdout_fprintf (state_data->pstate,
-		       stderr,
-		       "fiid_obj_create: %s",
-		       strerror (errno));
+                       stderr,
+                       "fiid_obj_create: %s",
+                       strerror (errno));
       goto cleanup;
     }
 
@@ -575,38 +575,38 @@ _get_power_limit (ipmi_config_state_data_t *state_data,
    */
 
   if (ipmi_cmd_dcmi_get_power_limit (state_data->ipmi_ctx,
-				     obj_cmd_rs) < 0)
+                                     obj_cmd_rs) < 0)
     {
       ipmi_config_err_t ret;
 
       if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-	  && ipmi_check_completion_code (obj_cmd_rs,
-					 IPMI_COMP_CODE_DCMI_NO_SET_POWER_LIMIT) == 1)
-	{
-	  if (state_data->prog_data->args->common_args.debug)
-	    pstdout_fprintf (state_data->pstate,
-			     stderr,
-			     "ipmi_cmd_dcmi_get_power_limit: %s",
-			     IPMI_COMP_CODE_DCMI_NO_SET_POWER_LIMIT_STR);
+          && ipmi_check_completion_code (obj_cmd_rs,
+                                         IPMI_COMP_CODE_DCMI_NO_SET_POWER_LIMIT) == 1)
+        {
+          if (state_data->prog_data->args->common_args.debug)
+            pstdout_fprintf (state_data->pstate,
+                             stderr,
+                             "ipmi_cmd_dcmi_get_power_limit: %s",
+                             IPMI_COMP_CODE_DCMI_NO_SET_POWER_LIMIT_STR);
 
-	  if (no_set_power_limit_flag)
-	    (*no_set_power_limit_flag) = 1;
+          if (no_set_power_limit_flag)
+            (*no_set_power_limit_flag) = 1;
  
-	  no_set_power_limit_error_flag++;
-	  goto read_data;
-	}
+          no_set_power_limit_error_flag++;
+          goto read_data;
+        }
 
       if (ipmi_config_param_errnum_is_non_fatal (state_data,
-						 obj_cmd_rs,
-						 &ret))
-	rv = ret;
+                                                 obj_cmd_rs,
+                                                 &ret))
+        rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
-	pstdout_fprintf (state_data->pstate,
-			 stderr,
-			 "ipmi_cmd_get_pef_configuration_parameters_event_filter_table: %s\n",
-			 ipmi_ctx_errormsg (state_data->ipmi_ctx));
+          || state_data->prog_data->args->common_args.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_get_pef_configuration_parameters_event_filter_table: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       goto cleanup;
     }
@@ -614,72 +614,72 @@ _get_power_limit (ipmi_config_state_data_t *state_data,
  read_data:
 
   if (FIID_OBJ_GET (obj_cmd_rs,
-		    "exception_actions",
-		    &val) < 0)
+                    "exception_actions",
+                    &val) < 0)
     {
       if (!no_set_power_limit_error_flag
-	  || fiid_obj_errnum (obj_cmd_rs) != FIID_ERR_DATA_NOT_AVAILABLE)
-	pstdout_fprintf (state_data->pstate,
-			 stderr,
-			 "fiid_obj_get: 'exception_actions': %s",
-			 fiid_obj_errormsg (obj_cmd_rs));
+          || fiid_obj_errnum (obj_cmd_rs) != FIID_ERR_DATA_NOT_AVAILABLE)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "fiid_obj_get: 'exception_actions': %s",
+                         fiid_obj_errormsg (obj_cmd_rs));
 
       if (no_set_power_limit_error_flag)
-	rv = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
+        rv = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
 
       goto cleanup;
     }
   gpld->exception_actions = val;
   
   if (FIID_OBJ_GET (obj_cmd_rs,
-		    "power_limit_requested",
-		    &val) < 0)
+                    "power_limit_requested",
+                    &val) < 0)
     {
       if (!no_set_power_limit_error_flag
-	  || fiid_obj_errnum (obj_cmd_rs) != FIID_ERR_DATA_NOT_AVAILABLE)
-	pstdout_fprintf (state_data->pstate,
-			 stderr,
-			 "fiid_obj_get: 'power_limit_requested': %s",
-			 fiid_obj_errormsg (obj_cmd_rs));
+          || fiid_obj_errnum (obj_cmd_rs) != FIID_ERR_DATA_NOT_AVAILABLE)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "fiid_obj_get: 'power_limit_requested': %s",
+                         fiid_obj_errormsg (obj_cmd_rs));
 
       if (no_set_power_limit_error_flag)
-	rv = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
+        rv = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
 
       goto cleanup;
     }
   gpld->power_limit_requested = val;
 
   if (FIID_OBJ_GET (obj_cmd_rs,
-		    "correction_time_limit",
-		    &val) < 0)
+                    "correction_time_limit",
+                    &val) < 0)
     {
       if (!no_set_power_limit_error_flag
-	  || fiid_obj_errnum (obj_cmd_rs) != FIID_ERR_DATA_NOT_AVAILABLE)
-	pstdout_fprintf (state_data->pstate,
-			 stderr,
-			 "fiid_obj_get: 'correction_time_limit': %s",
-			 fiid_obj_errormsg (obj_cmd_rs));
+          || fiid_obj_errnum (obj_cmd_rs) != FIID_ERR_DATA_NOT_AVAILABLE)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "fiid_obj_get: 'correction_time_limit': %s",
+                         fiid_obj_errormsg (obj_cmd_rs));
 
       if (no_set_power_limit_error_flag)
-	rv = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
+        rv = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
 
       goto cleanup;
     }
   gpld->correction_time_limit = val;
 
   if (FIID_OBJ_GET (obj_cmd_rs,
-		    "management_application_statistics_sampling_period",
-		    &val) < 0)
+                    "management_application_statistics_sampling_period",
+                    &val) < 0)
     {
       if (!no_set_power_limit_error_flag
-	  || fiid_obj_errnum (obj_cmd_rs) != FIID_ERR_DATA_NOT_AVAILABLE)
-	pstdout_fprintf (state_data->pstate,
-			 stderr,
-			 "fiid_obj_get: 'management_application_statistics_sampling_period': %s",
-			 fiid_obj_errormsg (obj_cmd_rs));
+          || fiid_obj_errnum (obj_cmd_rs) != FIID_ERR_DATA_NOT_AVAILABLE)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "fiid_obj_get: 'management_application_statistics_sampling_period': %s",
+                         fiid_obj_errormsg (obj_cmd_rs));
 
       if (no_set_power_limit_error_flag)
-	rv = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
+        rv = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
 
       goto cleanup;
     }
@@ -693,9 +693,9 @@ _get_power_limit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 _set_power_limit (ipmi_config_state_data_t *state_data,
-		  const char *section_name,
-		  struct get_power_limit_data *gpld,
-		  int no_set_power_limit_flag)
+                  const char *section_name,
+                  struct get_power_limit_data *gpld,
+                  int no_set_power_limit_flag)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
@@ -741,35 +741,35 @@ _set_power_limit (ipmi_config_state_data_t *state_data,
 
       section = state_data->sections;
       while (section)
-	{
-	  if (!strcasecmp (section_name, section->section_name))
-	    break;
-	  section = section->next;
-	}
+        {
+          if (!strcasecmp (section_name, section->section_name))
+            break;
+          section = section->next;
+        }
 
       /* shouldn't be possible */
       if (!section)
-	goto cleanup;
+        goto cleanup;
 
       if ((kv = ipmi_config_find_keyvalue (section, "Policy_Type")))
-	gpld->power_limit_requested = atoi (kv->value_input);
+        gpld->power_limit_requested = atoi (kv->value_input);
 
       if ((kv = ipmi_config_find_keyvalue (section, "Policy_Enabled")))
-	gpld->correction_time_limit = strtoul (kv->value_input, NULL, 0);
+        gpld->correction_time_limit = strtoul (kv->value_input, NULL, 0);
 
       if ((kv = ipmi_config_find_keyvalue (section, "Management_Application_Statistics_Sampling_Period")))
-	gpld->management_application_statistics_sampling_period = atoi (kv->value_input);
+        gpld->management_application_statistics_sampling_period = atoi (kv->value_input);
 
       if ((kv = ipmi_config_find_keyvalue (section, "Exception_Actions")))
-	{
-	  int num = exception_actions_number (kv->value_input);
+        {
+          int num = exception_actions_number (kv->value_input);
 
-	  if (num < 0)
-	    /* previously checked for correctness, so no error check */
-	    gpld->exception_actions = strtol (kv->value_input, NULL, 0);
-	  else
-	    gpld->exception_actions = num;
-	}
+          if (num < 0)
+            /* previously checked for correctness, so no error check */
+            gpld->exception_actions = strtol (kv->value_input, NULL, 0);
+          else
+            gpld->exception_actions = num;
+        }
     }
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_dcmi_set_power_limit_rs)))
@@ -782,59 +782,59 @@ _set_power_limit (ipmi_config_state_data_t *state_data,
     }
   
   if (ipmi_cmd_dcmi_set_power_limit (state_data->ipmi_ctx,
-				     gpld->exception_actions,
-				     gpld->power_limit_requested,
-				     gpld->correction_time_limit,
-				     gpld->management_application_statistics_sampling_period,
-				     obj_cmd_rs) < 0)
+                                     gpld->exception_actions,
+                                     gpld->power_limit_requested,
+                                     gpld->correction_time_limit,
+                                     gpld->management_application_statistics_sampling_period,
+                                     obj_cmd_rs) < 0)
     {
       ipmi_config_err_t ret;
 
       if ((ipmi_check_completion_code (obj_cmd_rs,
-				       IPMI_COMP_CODE_DCMI_POWER_LIMIT_OUT_OF_RANGE) == 1)
-	  || (ipmi_check_completion_code (obj_cmd_rs,
+                                       IPMI_COMP_CODE_DCMI_POWER_LIMIT_OUT_OF_RANGE) == 1)
+          || (ipmi_check_completion_code (obj_cmd_rs,
                                               IPMI_COMP_CODE_DCMI_CORRECTION_TIME_OUT_OF_RANGE) == 1)
-	  || (ipmi_check_completion_code (obj_cmd_rs,
-					  IPMI_COMP_CODE_DCMI_STATISTICS_REPORTING_PERIOD_OUT_OF_RANGE) == 1))
-	rv = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
+          || (ipmi_check_completion_code (obj_cmd_rs,
+                                          IPMI_COMP_CODE_DCMI_STATISTICS_REPORTING_PERIOD_OUT_OF_RANGE) == 1))
+        rv = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
       else
-	{
-	  if (ipmi_config_param_errnum_is_non_fatal (state_data,
-						     obj_cmd_rs,
-						     &ret))
-	    rv = ret;
-	}
+        {
+          if (ipmi_config_param_errnum_is_non_fatal (state_data,
+                                                     obj_cmd_rs,
+                                                     &ret))
+            rv = ret;
+        }
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
-	{
-	  if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-	      && ipmi_check_completion_code (obj_cmd_rs,
-					     IPMI_COMP_CODE_DCMI_POWER_LIMIT_OUT_OF_RANGE) == 1)
-	    pstdout_fprintf (state_data->pstate,
-			     stderr,
-			     "ipmi_cmd_dcmi_set_power_limit: %s\n",
-			     IPMI_COMP_CODE_DCMI_POWER_LIMIT_OUT_OF_RANGE_STR);
-	  else if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-		   && ipmi_check_completion_code (obj_cmd_rs,
-						  IPMI_COMP_CODE_DCMI_CORRECTION_TIME_OUT_OF_RANGE) == 1)
-	    pstdout_fprintf (state_data->pstate,
-			     stderr,
-			     "ipmi_cmd_dcmi_set_power_limit: %s\n",
-			     IPMI_COMP_CODE_DCMI_CORRECTION_TIME_OUT_OF_RANGE_STR);
-	  else if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-		   && ipmi_check_completion_code (obj_cmd_rs,
-						  IPMI_COMP_CODE_DCMI_STATISTICS_REPORTING_PERIOD_OUT_OF_RANGE) == 1)
-	    pstdout_fprintf (state_data->pstate,
-			     stderr,
-			     "ipmi_cmd_dcmi_set_power_limit: %s\n",
-			     IPMI_COMP_CODE_DCMI_STATISTICS_REPORTING_PERIOD_OUT_OF_RANGE_STR);
-	  else
-	    pstdout_fprintf (state_data->pstate,
-			     stderr,
-			     "ipmi_cmd_dcmi_set_power_limit: %s\n",
-			     ipmi_ctx_errormsg (state_data->ipmi_ctx));
-	}
+          || state_data->prog_data->args->common_args.debug)
+        {
+          if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+              && ipmi_check_completion_code (obj_cmd_rs,
+                                             IPMI_COMP_CODE_DCMI_POWER_LIMIT_OUT_OF_RANGE) == 1)
+            pstdout_fprintf (state_data->pstate,
+                             stderr,
+                             "ipmi_cmd_dcmi_set_power_limit: %s\n",
+                             IPMI_COMP_CODE_DCMI_POWER_LIMIT_OUT_OF_RANGE_STR);
+          else if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+                   && ipmi_check_completion_code (obj_cmd_rs,
+                                                  IPMI_COMP_CODE_DCMI_CORRECTION_TIME_OUT_OF_RANGE) == 1)
+            pstdout_fprintf (state_data->pstate,
+                             stderr,
+                             "ipmi_cmd_dcmi_set_power_limit: %s\n",
+                             IPMI_COMP_CODE_DCMI_CORRECTION_TIME_OUT_OF_RANGE_STR);
+          else if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+                   && ipmi_check_completion_code (obj_cmd_rs,
+                                                  IPMI_COMP_CODE_DCMI_STATISTICS_REPORTING_PERIOD_OUT_OF_RANGE) == 1)
+            pstdout_fprintf (state_data->pstate,
+                             stderr,
+                             "ipmi_cmd_dcmi_set_power_limit: %s\n",
+                             IPMI_COMP_CODE_DCMI_STATISTICS_REPORTING_PERIOD_OUT_OF_RANGE_STR);
+          else
+            pstdout_fprintf (state_data->pstate,
+                             stderr,
+                             "ipmi_cmd_dcmi_set_power_limit: %s\n",
+                             ipmi_ctx_errormsg (state_data->ipmi_ctx));
+        }
 
       goto cleanup;
     }
@@ -847,8 +847,8 @@ _set_power_limit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 power_limit_requested_checkout (ipmi_config_state_data_t *state_data,
-				const char *section_name,
-				struct ipmi_config_keyvalue *kv)
+                                const char *section_name,
+                                struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
   struct get_power_limit_data gpld;
@@ -858,13 +858,13 @@ power_limit_requested_checkout (ipmi_config_state_data_t *state_data,
   assert (kv);
 
   if ((ret = _get_power_limit (state_data,
-			       &gpld,
-			       NULL)) != IPMI_CONFIG_ERR_SUCCESS)
+                               &gpld,
+                               NULL)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
   
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
-							       kv,
-							       gpld.power_limit_requested) < 0)
+                                                               kv,
+                                                               gpld.power_limit_requested) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
   
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -872,8 +872,8 @@ power_limit_requested_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 power_limit_requested_commit (ipmi_config_state_data_t *state_data,
-			      const char *section_name,
-			      const struct ipmi_config_keyvalue *kv)
+                              const char *section_name,
+                              const struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
   struct get_power_limit_data gpld;
@@ -884,13 +884,13 @@ power_limit_requested_commit (ipmi_config_state_data_t *state_data,
   assert (kv);
 
   if ((ret = _get_power_limit (state_data,
-			       &gpld,
-			       &no_set_power_limit_flag)) != IPMI_CONFIG_ERR_SUCCESS)
+                               &gpld,
+                               &no_set_power_limit_flag)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       if (no_set_power_limit_flag)
-	return (_set_power_limit (state_data, section_name, &gpld, 1));
+        return (_set_power_limit (state_data, section_name, &gpld, 1));
       else
-	return (ret);
+        return (ret);
     }
 
   gpld.power_limit_requested = atoi (kv->value_input);
@@ -900,8 +900,8 @@ power_limit_requested_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 correction_time_limit_checkout (ipmi_config_state_data_t *state_data,
-				const char *section_name,
-				struct ipmi_config_keyvalue *kv)
+                                const char *section_name,
+                                struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
   struct get_power_limit_data gpld;
@@ -911,13 +911,13 @@ correction_time_limit_checkout (ipmi_config_state_data_t *state_data,
   assert (kv);
 
   if ((ret = _get_power_limit (state_data,
-			       &gpld,
-			       NULL)) != IPMI_CONFIG_ERR_SUCCESS)
+                               &gpld,
+                               NULL)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
   
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
-							       kv,
-							       gpld.correction_time_limit) < 0)
+                                                               kv,
+                                                               gpld.correction_time_limit) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -925,8 +925,8 @@ correction_time_limit_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 correction_time_limit_commit (ipmi_config_state_data_t *state_data,
-			      const char *section_name,
-			      const struct ipmi_config_keyvalue *kv)
+                              const char *section_name,
+                              const struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
   struct get_power_limit_data gpld;
@@ -937,13 +937,13 @@ correction_time_limit_commit (ipmi_config_state_data_t *state_data,
   assert (kv);
 
   if ((ret = _get_power_limit (state_data,
-			       &gpld,
-			       &no_set_power_limit_flag)) != IPMI_CONFIG_ERR_SUCCESS)
+                               &gpld,
+                               &no_set_power_limit_flag)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       if (no_set_power_limit_flag)
-	return (_set_power_limit (state_data, section_name, &gpld, 1));
+        return (_set_power_limit (state_data, section_name, &gpld, 1));
       else
-	return (ret);
+        return (ret);
     }
 
   /* already validated, no need to check for errors */
@@ -954,8 +954,8 @@ correction_time_limit_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 management_application_statistics_sampling_period_checkout (ipmi_config_state_data_t *state_data,
-							    const char *section_name,
-							    struct ipmi_config_keyvalue *kv)
+                                                            const char *section_name,
+                                                            struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
   struct get_power_limit_data gpld;
@@ -965,13 +965,13 @@ management_application_statistics_sampling_period_checkout (ipmi_config_state_da
   assert (kv);
 
   if ((ret = _get_power_limit (state_data,
-			       &gpld,
-			       NULL)) != IPMI_CONFIG_ERR_SUCCESS)
+                               &gpld,
+                               NULL)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
   
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
-							       kv,
-							       gpld.management_application_statistics_sampling_period) < 0)
+                                                               kv,
+                                                               gpld.management_application_statistics_sampling_period) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -979,8 +979,8 @@ management_application_statistics_sampling_period_checkout (ipmi_config_state_da
 
 static ipmi_config_err_t
 management_application_statistics_sampling_period_commit (ipmi_config_state_data_t *state_data,
-							  const char *section_name,
-							  const struct ipmi_config_keyvalue *kv)
+                                                          const char *section_name,
+                                                          const struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
   struct get_power_limit_data gpld;
@@ -991,13 +991,13 @@ management_application_statistics_sampling_period_commit (ipmi_config_state_data
   assert (kv);
 
   if ((ret = _get_power_limit (state_data,
-			       &gpld,
-			       &no_set_power_limit_flag)) != IPMI_CONFIG_ERR_SUCCESS)
+                               &gpld,
+                               &no_set_power_limit_flag)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       if (no_set_power_limit_flag)
-	return (_set_power_limit (state_data, section_name, &gpld, 1));
+        return (_set_power_limit (state_data, section_name, &gpld, 1));
       else
-	return (ret);
+        return (ret);
     }
 
   gpld.management_application_statistics_sampling_period = atoi (kv->value_input);
@@ -1007,8 +1007,8 @@ management_application_statistics_sampling_period_commit (ipmi_config_state_data
 
 static ipmi_config_err_t
 exception_actions_checkout (ipmi_config_state_data_t *state_data,
-							    const char *section_name,
-							    struct ipmi_config_keyvalue *kv)
+                                                            const char *section_name,
+                                                            struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
   struct get_power_limit_data gpld;
@@ -1019,8 +1019,8 @@ exception_actions_checkout (ipmi_config_state_data_t *state_data,
   assert (kv);
 
   if ((ret = _get_power_limit (state_data,
-			       &gpld,
-			       NULL)) != IPMI_CONFIG_ERR_SUCCESS)
+                               &gpld,
+                               NULL)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
   
   str = exception_actions_string (gpld.exception_actions);
@@ -1035,8 +1035,8 @@ exception_actions_checkout (ipmi_config_state_data_t *state_data,
   else
     {
       if (ipmi_config_section_update_keyvalue_output_hex (state_data,
-							  kv,
-							  gpld.exception_actions) < 0)
+                                                          kv,
+                                                          gpld.exception_actions) < 0)
         return (IPMI_CONFIG_ERR_FATAL_ERROR);
     }
 
@@ -1045,8 +1045,8 @@ exception_actions_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 exception_actions_commit (ipmi_config_state_data_t *state_data,
-							  const char *section_name,
-							  const struct ipmi_config_keyvalue *kv)
+                                                          const char *section_name,
+                                                          const struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t ret;
   struct get_power_limit_data gpld;
@@ -1058,13 +1058,13 @@ exception_actions_commit (ipmi_config_state_data_t *state_data,
   assert (kv);
 
   if ((ret = _get_power_limit (state_data,
-			       &gpld,
-			       &no_set_power_limit_flag)) != IPMI_CONFIG_ERR_SUCCESS)
+                               &gpld,
+                               &no_set_power_limit_flag)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       if (no_set_power_limit_flag)
-	return (_set_power_limit (state_data, section_name, &gpld, 1));
+        return (_set_power_limit (state_data, section_name, &gpld, 1));
       else
-	return (ret);
+        return (ret);
     }
 
   num = exception_actions_number (kv->value_input);
@@ -1086,12 +1086,12 @@ ipmi_config_dcmi_dcmi_conf_section_get (ipmi_config_state_data_t *state_data)
   assert (state_data);
 
   if (!(section = ipmi_config_section_create (state_data,
-					      "DCMI_Conf",
-					      NULL,
-					      NULL,
-					      0,
-					      NULL,
-					      NULL)))
+                                              "DCMI_Conf",
+                                              NULL,
+                                              NULL,
+                                              0,
+                                              NULL,
+                                              NULL)))
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
@@ -1121,7 +1121,7 @@ ipmi_config_dcmi_dcmi_conf_section_get (ipmi_config_state_data_t *state_data)
                                    0,
                                    power_limit_requested_checkout,
                                    power_limit_requested_commit,
-				   number_range_two_bytes_validate) < 0)
+                                   number_range_two_bytes_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
@@ -1131,7 +1131,7 @@ ipmi_config_dcmi_dcmi_conf_section_get (ipmi_config_state_data_t *state_data)
                                    0,
                                    correction_time_limit_checkout,
                                    correction_time_limit_commit,
-				   number_range_four_bytes_validate) < 0)
+                                   number_range_four_bytes_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
@@ -1141,7 +1141,7 @@ ipmi_config_dcmi_dcmi_conf_section_get (ipmi_config_state_data_t *state_data)
                                    0,
                                    management_application_statistics_sampling_period_checkout,
                                    management_application_statistics_sampling_period_commit,
-				   number_range_two_bytes_validate) < 0)
+                                   number_range_two_bytes_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
@@ -1151,7 +1151,7 @@ ipmi_config_dcmi_dcmi_conf_section_get (ipmi_config_state_data_t *state_data)
                                    0,
                                    exception_actions_checkout,
                                    exception_actions_commit,
-				   exception_actions_validate) < 0)
+                                   exception_actions_validate) < 0)
     goto cleanup;
 
   return (section);

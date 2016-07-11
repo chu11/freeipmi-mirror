@@ -188,7 +188,7 @@ ipmipower_packet_cmd_obj (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
 
 void
 ipmipower_packet_dump (ipmipower_powercmd_t ip,
-		       ipmipower_packet_type_t pkt,
+                       ipmipower_packet_type_t pkt,
                        const void *buf,
                        unsigned int buflen)
 {
@@ -210,67 +210,67 @@ ipmipower_packet_dump (ipmipower_powercmd_t ip,
         packet_type = DEBUG_UTIL_TYPE_IPMI_2_0;
 
       switch (pkt)
-	{
-	case IPMIPOWER_PACKET_TYPE_AUTHENTICATION_CAPABILITIES_RQ:
-	case IPMIPOWER_PACKET_TYPE_AUTHENTICATION_CAPABILITIES_RS:
-	  str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES);
-	  break;
-	case IPMIPOWER_PACKET_TYPE_GET_SESSION_CHALLENGE_RQ:
-	case IPMIPOWER_PACKET_TYPE_GET_SESSION_CHALLENGE_RS:
-	  str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_GET_SESSION_CHALLENGE);
-	  break;
-	case IPMIPOWER_PACKET_TYPE_ACTIVATE_SESSION_RQ:
-	case IPMIPOWER_PACKET_TYPE_ACTIVATE_SESSION_RS:
-	  str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_ACTIVATE_SESSION);
-	  break;
-	case IPMIPOWER_PACKET_TYPE_OPEN_SESSION_REQUEST:
-	case IPMIPOWER_PACKET_TYPE_OPEN_SESSION_RESPONSE:
-	  str_cmd = DEBUG_UTIL_OPEN_SESSION_STR;
-	  break;
-	case IPMIPOWER_PACKET_TYPE_RAKP_MESSAGE_1:
-	  str_cmd = DEBUG_UTIL_RAKP_1_STR;
-	  break;
-	case IPMIPOWER_PACKET_TYPE_RAKP_MESSAGE_2:
-	  str_cmd = DEBUG_UTIL_RAKP_2_STR;
-	  break;
-	case IPMIPOWER_PACKET_TYPE_RAKP_MESSAGE_3:
-	  str_cmd = DEBUG_UTIL_RAKP_3_STR;
-	  break;
-	case IPMIPOWER_PACKET_TYPE_RAKP_MESSAGE_4:
-	  str_cmd = DEBUG_UTIL_RAKP_4_STR;
-	  break;
-	case IPMIPOWER_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RQ:
-	case IPMIPOWER_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS:
-	  str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_SET_SESSION_PRIVILEGE_LEVEL);
-	  break;
-	case IPMIPOWER_PACKET_TYPE_GET_CHASSIS_STATUS_RQ:
-	case IPMIPOWER_PACKET_TYPE_GET_CHASSIS_STATUS_RS:
-	  str_cmd = ipmi_cmd_str (IPMI_NET_FN_CHASSIS_RQ, IPMI_CMD_GET_CHASSIS_STATUS);
-	  break;
-	case IPMIPOWER_PACKET_TYPE_CHASSIS_CONTROL_RQ:
-	case IPMIPOWER_PACKET_TYPE_CHASSIS_CONTROL_RS:
-	  str_cmd = ipmi_cmd_str (IPMI_NET_FN_CHASSIS_RQ, IPMI_CMD_CHASSIS_CONTROL);
-	  break;
-	case IPMIPOWER_PACKET_TYPE_CHASSIS_IDENTIFY_RQ:
-	case IPMIPOWER_PACKET_TYPE_CHASSIS_IDENTIFY_RS:
-	  str_cmd = ipmi_cmd_str (IPMI_NET_FN_CHASSIS_RQ, IPMI_CMD_CHASSIS_IDENTIFY);
-	  break;
-	case IPMIPOWER_PACKET_TYPE_C410X_GET_SENSOR_READING_RQ:
-	case IPMIPOWER_PACKET_TYPE_C410X_GET_SENSOR_READING_RS:
-	  str_cmd = ipmi_cmd_str (IPMI_NET_FN_SENSOR_EVENT_RQ, IPMI_CMD_GET_SENSOR_READING);
-	  break;
-	case IPMIPOWER_PACKET_TYPE_C410X_SLOT_POWER_CONTROL_RQ:
-	case IPMIPOWER_PACKET_TYPE_C410X_SLOT_POWER_CONTROL_RS:
-	  str_cmd = "C410x Slot Power Control";
-	  break;
-	case IPMIPOWER_PACKET_TYPE_CLOSE_SESSION_RQ:
-	case IPMIPOWER_PACKET_TYPE_CLOSE_SESSION_RS:
-	  str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_CLOSE_SESSION);
-	  break;
-	default:
-	  IPMIPOWER_ERROR (("ipmipower_packet_dump: invalid packet type: %d", pkt));
-	  exit (EXIT_FAILURE);
-	}
+        {
+        case IPMIPOWER_PACKET_TYPE_AUTHENTICATION_CAPABILITIES_RQ:
+        case IPMIPOWER_PACKET_TYPE_AUTHENTICATION_CAPABILITIES_RS:
+          str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES);
+          break;
+        case IPMIPOWER_PACKET_TYPE_GET_SESSION_CHALLENGE_RQ:
+        case IPMIPOWER_PACKET_TYPE_GET_SESSION_CHALLENGE_RS:
+          str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_GET_SESSION_CHALLENGE);
+          break;
+        case IPMIPOWER_PACKET_TYPE_ACTIVATE_SESSION_RQ:
+        case IPMIPOWER_PACKET_TYPE_ACTIVATE_SESSION_RS:
+          str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_ACTIVATE_SESSION);
+          break;
+        case IPMIPOWER_PACKET_TYPE_OPEN_SESSION_REQUEST:
+        case IPMIPOWER_PACKET_TYPE_OPEN_SESSION_RESPONSE:
+          str_cmd = DEBUG_UTIL_OPEN_SESSION_STR;
+          break;
+        case IPMIPOWER_PACKET_TYPE_RAKP_MESSAGE_1:
+          str_cmd = DEBUG_UTIL_RAKP_1_STR;
+          break;
+        case IPMIPOWER_PACKET_TYPE_RAKP_MESSAGE_2:
+          str_cmd = DEBUG_UTIL_RAKP_2_STR;
+          break;
+        case IPMIPOWER_PACKET_TYPE_RAKP_MESSAGE_3:
+          str_cmd = DEBUG_UTIL_RAKP_3_STR;
+          break;
+        case IPMIPOWER_PACKET_TYPE_RAKP_MESSAGE_4:
+          str_cmd = DEBUG_UTIL_RAKP_4_STR;
+          break;
+        case IPMIPOWER_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RQ:
+        case IPMIPOWER_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS:
+          str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_SET_SESSION_PRIVILEGE_LEVEL);
+          break;
+        case IPMIPOWER_PACKET_TYPE_GET_CHASSIS_STATUS_RQ:
+        case IPMIPOWER_PACKET_TYPE_GET_CHASSIS_STATUS_RS:
+          str_cmd = ipmi_cmd_str (IPMI_NET_FN_CHASSIS_RQ, IPMI_CMD_GET_CHASSIS_STATUS);
+          break;
+        case IPMIPOWER_PACKET_TYPE_CHASSIS_CONTROL_RQ:
+        case IPMIPOWER_PACKET_TYPE_CHASSIS_CONTROL_RS:
+          str_cmd = ipmi_cmd_str (IPMI_NET_FN_CHASSIS_RQ, IPMI_CMD_CHASSIS_CONTROL);
+          break;
+        case IPMIPOWER_PACKET_TYPE_CHASSIS_IDENTIFY_RQ:
+        case IPMIPOWER_PACKET_TYPE_CHASSIS_IDENTIFY_RS:
+          str_cmd = ipmi_cmd_str (IPMI_NET_FN_CHASSIS_RQ, IPMI_CMD_CHASSIS_IDENTIFY);
+          break;
+        case IPMIPOWER_PACKET_TYPE_C410X_GET_SENSOR_READING_RQ:
+        case IPMIPOWER_PACKET_TYPE_C410X_GET_SENSOR_READING_RS:
+          str_cmd = ipmi_cmd_str (IPMI_NET_FN_SENSOR_EVENT_RQ, IPMI_CMD_GET_SENSOR_READING);
+          break;
+        case IPMIPOWER_PACKET_TYPE_C410X_SLOT_POWER_CONTROL_RQ:
+        case IPMIPOWER_PACKET_TYPE_C410X_SLOT_POWER_CONTROL_RS:
+          str_cmd = "C410x Slot Power Control";
+          break;
+        case IPMIPOWER_PACKET_TYPE_CLOSE_SESSION_RQ:
+        case IPMIPOWER_PACKET_TYPE_CLOSE_SESSION_RS:
+          str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_CLOSE_SESSION);
+          break;
+        default:
+          IPMIPOWER_ERROR (("ipmipower_packet_dump: invalid packet type: %d", pkt));
+          exit (EXIT_FAILURE);
+        }
 
       if (IPMIPOWER_PACKET_TYPE_RQ (pkt))
         packet_direction = DEBUG_UTIL_DIRECTION_REQUEST;
@@ -279,7 +279,7 @@ ipmipower_packet_dump (ipmipower_powercmd_t ip,
 
       debug_hdr_str (packet_type,
                      packet_direction,
-		     DEBUG_UTIL_FLAGS_DEFAULT,
+                     DEBUG_UTIL_FLAGS_DEFAULT,
                      str_cmd,
                      hdrbuf,
                      DEBUG_UTIL_HDR_BUFLEN);
@@ -335,8 +335,8 @@ ipmipower_packet_dump (ipmipower_powercmd_t ip,
             }
         }
       else /* cmd_args.common_args.driver_type == IPMI_DEVICE_LAN
-	      && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET (pkt))
-	   */
+              && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET (pkt))
+           */
         {
           if (ipmi_dump_lan_packet (STDERR_FILENO,
                                     ip->ic->hostname,
@@ -426,7 +426,7 @@ ipmipower_packet_store (ipmipower_powercmd_t ip,
                                          ip->obj_lan_msg_hdr_rs,
                                          obj,
                                          ip->obj_lan_msg_trlr_rs,
-					 IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
+                                         IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
         {
           IPMIPOWER_ERROR (("unassemble_ipmi_lan_pkt: %s", strerror (errno)));
           exit (EXIT_FAILURE);
@@ -452,7 +452,7 @@ ipmipower_packet_store (ipmipower_powercmd_t ip,
                                                   obj,
                                                   ip->obj_lan_msg_trlr_rs,
                                                   ip->obj_rmcpplus_session_trlr_rs,
-						  IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
+                                                  IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
             {
               IPMIPOWER_ERROR (("unassemble_ipmi_rmcpplus_pkt: %s", strerror (errno)));
               exit (EXIT_FAILURE);
@@ -476,7 +476,7 @@ ipmipower_packet_store (ipmipower_powercmd_t ip,
                                                   obj,
                                                   ip->obj_lan_msg_trlr_rs,
                                                   ip->obj_rmcpplus_session_trlr_rs,
-						  IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
+                                                  IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
             {
               IPMIPOWER_ERROR (("unassemble_ipmi_rmcpplus_pkt: %s", strerror (errno)));
               exit (EXIT_FAILURE);
@@ -557,7 +557,7 @@ _ipmi_1_5_packet_create (ipmipower_powercmd_t ip,
                                     authentication_code_data_len,
                                     buf,
                                     buflen,
-				    IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
+                                    IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
     {
       IPMIPOWER_ERROR (("assemble_ipmi_lan_pkt: %s", strerror (errno)));
       exit (EXIT_FAILURE);
@@ -668,7 +668,7 @@ _ipmi_2_0_packet_create (ipmipower_powercmd_t ip,
                                          ip->obj_rmcpplus_session_trlr_rq,
                                          buf,
                                          buflen,
-					 IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
+                                         IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
     {
       IPMIPOWER_ERROR (("assemble_ipmi_rmcpplus_pkt: %s", strerror (errno)));
       exit (EXIT_FAILURE);
@@ -766,7 +766,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
       session_id = val;
     }
   else if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN
-	   && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt))
+           && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt))
     {
       if (FIID_OBJ_GET (ip->obj_activate_session_rs,
                         "session_id",
@@ -779,7 +779,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
       session_id = val;
     }
   else if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN_2_0
-	   && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt))
+           && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt))
     {
       if (FIID_OBJ_GET (ip->obj_open_session_rs,
                         "managed_system_session_id",
@@ -813,7 +813,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
       sequence_number = initial_inbound_sequence_number + ip->session_inbound_count;
     }
   else if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN_2_0
-	   && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt))
+           && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt))
     sequence_number = ip->session_sequence_number;
   else
     sequence_number = 0;
@@ -838,7 +838,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
   if (pkt == IPMIPOWER_PACKET_TYPE_ACTIVATE_SESSION_RQ)
     authentication_type = cmd_args.common_args.authentication_type;
   else if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN
-	   && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt))
+           && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt))
     {
       if (!ip->permsgauth_enabled)
         authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
@@ -1199,14 +1199,14 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
       assert (!errno);
       assert (endptr[0] == '\0');
       assert (slot_number >= IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MIN
-	      && slot_number <= IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MAX);
+              && slot_number <= IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MAX);
       
       if (fill_cmd_get_sensor_reading (IPMI_SENSOR_NUMBER_OEM_DELL_C410X_PCIE_1_WATT + (slot_number - 1),
-				       ip->obj_c410x_get_sensor_reading_rq) < 0)
-	{
-	  IPMIPOWER_ERROR (("fill_cmd_get_sensor_reading: %s", strerror (errno)));
-	  exit (EXIT_FAILURE);
-	}
+                                       ip->obj_c410x_get_sensor_reading_rq) < 0)
+        {
+          IPMIPOWER_ERROR (("fill_cmd_get_sensor_reading: %s", strerror (errno)));
+          exit (EXIT_FAILURE);
+        }
 
       obj_cmd_rq = ip->obj_c410x_get_sensor_reading_rq;
     }
@@ -1225,26 +1225,26 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
       assert (!errno);
       assert (endptr[0] == '\0');
       assert (slot_number >= IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MIN
-	      && slot_number <= IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MAX);
+              && slot_number <= IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MAX);
 
       if (fiid_obj_set (ip->obj_c410x_slot_power_control_rq,
-			"cmd",
-			IPMI_CMD_OEM_DELL_SLOT_POWER_CONTROL) < 0)
-	{
-	  IPMIPOWER_ERROR (("fiid_obj_set: 'cmd': %s",
-			    fiid_obj_errormsg (ip->obj_c410x_slot_power_control_rq)));
-	  exit (EXIT_FAILURE);
-	}
+                        "cmd",
+                        IPMI_CMD_OEM_DELL_SLOT_POWER_CONTROL) < 0)
+        {
+          IPMIPOWER_ERROR (("fiid_obj_set: 'cmd': %s",
+                            fiid_obj_errormsg (ip->obj_c410x_slot_power_control_rq)));
+          exit (EXIT_FAILURE);
+        }
 
       slot_number_bitmask = (0x1 << (slot_number - 1));
       if (fiid_obj_set (ip->obj_c410x_slot_power_control_rq,
-			"slot_number_bitmask",
-			slot_number_bitmask) < 0)
-	{
-	  IPMIPOWER_ERROR (("fiid_obj_set: 'slot_number_bitmask': %s",
-			    fiid_obj_errormsg (ip->obj_c410x_slot_power_control_rq)));
-	  exit (EXIT_FAILURE);
-	}
+                        "slot_number_bitmask",
+                        slot_number_bitmask) < 0)
+        {
+          IPMIPOWER_ERROR (("fiid_obj_set: 'slot_number_bitmask': %s",
+                            fiid_obj_errormsg (ip->obj_c410x_slot_power_control_rq)));
+          exit (EXIT_FAILURE);
+        }
 
       obj_cmd_rq = ip->obj_c410x_slot_power_control_rq;
     }
@@ -1263,7 +1263,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
   /* Construct packets */
   if (IPMIPOWER_PACKET_TYPE_IPMI_1_5_SETUP_RQ (pkt)
       || (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN
-	  && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt)))
+          && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt)))
     rv = _ipmi_1_5_packet_create (ip,
                                   pkt,
                                   authentication_type,
@@ -1277,7 +1277,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
                                   buflen);
   else if (IPMIPOWER_PACKET_TYPE_IPMI_2_0_SETUP_RQ (pkt)
            || (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN_2_0
-	       && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt)))
+               && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt)))
     rv = _ipmi_2_0_packet_create (ip,
                                   pkt,
                                   payload_type,
@@ -1363,7 +1363,7 @@ ipmipower_packet_errmsg (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
                || rmcpplus_status_code == RMCPPLUS_STATUS_INSUFFICIENT_RESOURCES_TO_CREATE_A_SESSION_AT_THE_REQUESTED_TIME)
         return (IPMIPOWER_MSG_TYPE_BMC_BUSY);
       else if (rmcpplus_status_code == RMCPPLUS_STATUS_UNAUTHORIZED_ROLE_OR_PRIVILEGE_LEVEL_REQUESTED
-	       || rmcpplus_status_code == RMCPPLUS_STATUS_INVALID_ROLE)
+               || rmcpplus_status_code == RMCPPLUS_STATUS_INVALID_ROLE)
         return (IPMIPOWER_MSG_TYPE_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
       else if (rmcpplus_status_code == RMCPPLUS_STATUS_UNAUTHORIZED_NAME)
         return (IPMIPOWER_MSG_TYPE_USERNAME_INVALID);
@@ -1419,8 +1419,8 @@ ipmipower_packet_errmsg (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
        * work around the problem.
        */
       else if (pkt == IPMIPOWER_PACKET_TYPE_ACTIVATE_SESSION_RS
-	       && comp_code == IPMI_COMP_CODE_INSUFFICIENT_PRIVILEGE_LEVEL)
-	return (IPMIPOWER_MSG_TYPE_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
+               && comp_code == IPMI_COMP_CODE_INSUFFICIENT_PRIVILEGE_LEVEL)
+        return (IPMIPOWER_MSG_TYPE_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED);
       else if (pkt == IPMIPOWER_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RS
                && (comp_code == IPMI_COMP_CODE_SET_SESSION_PRIVILEGE_LEVEL_REQUESTED_LEVEL_NOT_AVAILABLE_FOR_USER
                    || comp_code == IPMI_COMP_CODE_SET_SESSION_PRIVILEGE_LEVEL_REQUESTED_LEVEL_EXCEEDS_USER_PRIVILEGE_LIMIT

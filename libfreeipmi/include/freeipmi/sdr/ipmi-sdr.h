@@ -109,11 +109,11 @@ extern "C" {
 typedef struct ipmi_sdr_ctx *ipmi_sdr_ctx_t;
 
 typedef void (*Ipmi_Sdr_Cache_Create_Callback)(uint8_t sdr_version,
-					       uint16_t record_count,
-					       uint32_t most_recent_addition_timestamp,
-					       uint32_t most_recent_erase_timestamp,
-					       uint16_t record_id,
-					       void *data);
+                                               uint16_t record_count,
+                                               uint32_t most_recent_addition_timestamp,
+                                               uint32_t most_recent_erase_timestamp,
+                                               uint16_t record_id,
+                                               void *data);
 
 /* return != 0 to quit iteration, return val will be returned up
  * through original caller.  return < 0 will result in
@@ -124,10 +124,10 @@ typedef void (*Ipmi_Sdr_Cache_Create_Callback)(uint8_t sdr_version,
  * may change iteration behavior.
  */
 typedef int (*Ipmi_Sdr_Cache_Iterate_Callback)(ipmi_sdr_ctx_t ctx,
-					       uint8_t record_type,
-					       const void *sdr_record,
-					       unsigned int sdr_record_len,
-					       void *data);
+                                               uint8_t record_type,
+                                               const void *sdr_record,
+                                               unsigned int sdr_record_len,
+                                               void *data);
 
 /*
  * SDR Cache Context and General functions
@@ -194,8 +194,8 @@ int ipmi_sdr_cache_record_read (ipmi_sdr_ctx_t ctx,
  *   value is returned here.
  */
 int ipmi_sdr_cache_iterate (ipmi_sdr_ctx_t ctx,
-			    Ipmi_Sdr_Cache_Iterate_Callback iterate_callback,
-			    void *iterate_callback_data);
+                            Ipmi_Sdr_Cache_Iterate_Callback iterate_callback,
+                            void *iterate_callback_data);
 
 int ipmi_sdr_cache_close (ipmi_sdr_ctx_t ctx);
 
@@ -555,20 +555,20 @@ int ipmi_sdr_parse_management_controller_device_locator_parameters (ipmi_sdr_ctx
                                                                     unsigned int sdr_record_len,
                                                                     uint8_t *device_slave_address,
                                                                     uint8_t *channel_number,
-								    uint8_t *global_initialization_event_message_generation,
-								    uint8_t *global_initialization_log_initialization_agent_errors,
-								    uint8_t *global_initialization_controller_logs_initialization_agent_errors,
-								    uint8_t *power_state_notification_controller,
-								    uint8_t *power_state_notification_acpi_device_power_state_notification,
-								    uint8_t *power_state_notification_acpi_system_power_state_notification,
-								    uint8_t *device_capabilities_sensor_device,
-								    uint8_t *device_capabilities_sdr_repository_device,
-								    uint8_t *device_capabilities_sel_device,
-								    uint8_t *device_capabilities_fru_inventory_device,
-								    uint8_t *device_capabilities_ipmb_event_receiver,
-								    uint8_t *device_capabilities_ipmb_event_generator,
-								    uint8_t *device_capabilities_bridge,
-								    uint8_t *device_capabilities_chassis_device);
+                                                                    uint8_t *global_initialization_event_message_generation,
+                                                                    uint8_t *global_initialization_log_initialization_agent_errors,
+                                                                    uint8_t *global_initialization_controller_logs_initialization_agent_errors,
+                                                                    uint8_t *power_state_notification_controller,
+                                                                    uint8_t *power_state_notification_acpi_device_power_state_notification,
+                                                                    uint8_t *power_state_notification_acpi_system_power_state_notification,
+                                                                    uint8_t *device_capabilities_sensor_device,
+                                                                    uint8_t *device_capabilities_sdr_repository_device,
+                                                                    uint8_t *device_capabilities_sel_device,
+                                                                    uint8_t *device_capabilities_fru_inventory_device,
+                                                                    uint8_t *device_capabilities_ipmb_event_receiver,
+                                                                    uint8_t *device_capabilities_ipmb_event_generator,
+                                                                    uint8_t *device_capabilities_bridge,
+                                                                    uint8_t *device_capabilities_chassis_device);
 
 /* For Management Controller Confirmation, OEM SDR records */
 int ipmi_sdr_parse_manufacturer_id (ipmi_sdr_ctx_t ctx,
@@ -609,12 +609,12 @@ int ipmi_sdr_cache_delete (ipmi_sdr_ctx_t ctx, const char *filename);
  */
 /* returns length written into buffer on success, -1 on error */
 int ipmi_sdr_parse_sensor_name (ipmi_sdr_ctx_t ctx,
-				const void *sdr_record,
-				unsigned int sdr_record_len,
-				uint8_t sensor_number,
-				unsigned int flags,
-				char *buf,
-				unsigned int buflen);
+                                const void *sdr_record,
+                                unsigned int sdr_record_len,
+                                uint8_t sensor_number,
+                                unsigned int flags,
+                                char *buf,
+                                unsigned int buflen);
 
 /* ipmi_sensor_parse_entity_sensor_name
  * - Creates sensor names with the entity id and instance for better
@@ -632,12 +632,12 @@ int ipmi_sdr_parse_sensor_name (ipmi_sdr_ctx_t ctx,
  */
 /* returns length written into buffer on success, -1 on error */
 int ipmi_sdr_parse_entity_sensor_name (ipmi_sdr_ctx_t ctx,
-				       const void *sdr_record,
-				       unsigned int sdr_record_len,
-				       uint8_t sensor_number,
-				       unsigned int flags,
-				       char *buf,
-				       unsigned int buflen);
+                                       const void *sdr_record,
+                                       unsigned int sdr_record_len,
+                                       uint8_t sensor_number,
+                                       unsigned int flags,
+                                       char *buf,
+                                       unsigned int buflen);
 
 #ifdef __cplusplus
 }

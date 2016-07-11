@@ -56,7 +56,7 @@ struct ipv4_header_parameters
 
 static ipmi_config_err_t
 ip_address_source_checkout (ipmi_config_state_data_t *state_data,
-			    const char *section_name,
+                            const char *section_name,
                             struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -100,7 +100,7 @@ ip_address_source_checkout (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_ip_address_source: %s\n",
@@ -132,7 +132,7 @@ ip_address_source_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 ip_address_source_commit (ipmi_config_state_data_t *state_data,
-			  const char *section_name,
+                          const char *section_name,
                           const struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -172,7 +172,7 @@ ip_address_source_commit (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_ip_address_source: %s\n",
@@ -189,7 +189,7 @@ ip_address_source_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 ip_address_checkout (ipmi_config_state_data_t *state_data,
-		     const char *section_name,
+                     const char *section_name,
                      struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -233,7 +233,7 @@ ip_address_checkout (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_ip_address: %s\n",
@@ -276,7 +276,7 @@ ip_address_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 ip_address_commit (ipmi_config_state_data_t *state_data,
-		   const char *section_name,
+                   const char *section_name,
                    const struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -322,7 +322,7 @@ ip_address_commit (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_ip_address: %s\n",
@@ -339,7 +339,7 @@ ip_address_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 mac_address_checkout (ipmi_config_state_data_t *state_data,
-		      const char *section_name,
+                      const char *section_name,
                       struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -383,7 +383,7 @@ mac_address_checkout (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_mac_address: %s\n",
@@ -429,7 +429,7 @@ mac_address_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 mac_address_commit (ipmi_config_state_data_t *state_data,
-		    const char *section_name,
+                    const char *section_name,
                     const struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -475,7 +475,7 @@ mac_address_commit (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_mac_address: %s\n",
@@ -492,7 +492,7 @@ mac_address_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 subnet_mask_checkout (ipmi_config_state_data_t *state_data,
-		      const char *section_name,
+                      const char *section_name,
                       struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -536,7 +536,7 @@ subnet_mask_checkout (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_subnet_mask: %s\n",
@@ -579,7 +579,7 @@ subnet_mask_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 subnet_mask_commit (ipmi_config_state_data_t *state_data,
-		    const char *section_name,
+                    const char *section_name,
                     const struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -625,7 +625,7 @@ subnet_mask_commit (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_subnet_mask: %s\n",
@@ -642,7 +642,7 @@ subnet_mask_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 default_gateway_address_checkout (ipmi_config_state_data_t *state_data,
-				  const char *section_name,
+                                  const char *section_name,
                                   struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -686,7 +686,7 @@ default_gateway_address_checkout (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_default_gateway_address: %s\n",
@@ -730,7 +730,7 @@ default_gateway_address_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 default_gateway_address_commit (ipmi_config_state_data_t *state_data,
-				const char *section_name,
+                                const char *section_name,
                                 const struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -776,7 +776,7 @@ default_gateway_address_commit (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_default_gateway_address: %s\n",
@@ -793,7 +793,7 @@ default_gateway_address_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 default_gateway_mac_address_checkout (ipmi_config_state_data_t *state_data,
-				      const char *section_name,
+                                      const char *section_name,
                                       struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -837,7 +837,7 @@ default_gateway_mac_address_checkout (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_default_gateway_mac_address: %s\n",
@@ -883,7 +883,7 @@ default_gateway_mac_address_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 default_gateway_mac_address_commit (ipmi_config_state_data_t *state_data,
-				    const char *section_name,
+                                    const char *section_name,
                                     const struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -929,7 +929,7 @@ default_gateway_mac_address_commit (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_default_gateway_mac_address: %s\n",
@@ -946,7 +946,7 @@ default_gateway_mac_address_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 backup_gateway_address_checkout (ipmi_config_state_data_t *state_data,
-				 const char *section_name,
+                                 const char *section_name,
                                  struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -990,7 +990,7 @@ backup_gateway_address_checkout (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_backup_gateway_address: %s\n",
@@ -1033,7 +1033,7 @@ backup_gateway_address_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 backup_gateway_address_commit (ipmi_config_state_data_t *state_data,
-			       const char *section_name,
+                               const char *section_name,
                                const struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -1079,7 +1079,7 @@ backup_gateway_address_commit (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_backup_gateway_address: %s\n",
@@ -1096,7 +1096,7 @@ backup_gateway_address_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 backup_gateway_mac_address_checkout (ipmi_config_state_data_t *state_data,
-				     const char *section_name,
+                                     const char *section_name,
                                      struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -1140,7 +1140,7 @@ backup_gateway_mac_address_checkout (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_backup_gateway_mac_address: %s\n",
@@ -1185,7 +1185,7 @@ backup_gateway_mac_address_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 backup_gateway_mac_address_commit (ipmi_config_state_data_t *state_data,
-				   const char *section_name,
+                                   const char *section_name,
                                    const struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -1231,7 +1231,7 @@ backup_gateway_mac_address_commit (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_backup_gateway_mac_address: %s\n",
@@ -1291,7 +1291,7 @@ _get_vlan_id (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_vlan_id: %s\n",
@@ -1369,7 +1369,7 @@ _set_vlan_id (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_vlan_id: %s\n",
@@ -1386,7 +1386,7 @@ _set_vlan_id (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 vlan_id_checkout (ipmi_config_state_data_t *state_data,
-		  const char *section_name,
+                  const char *section_name,
                   struct ipmi_config_keyvalue *kv)
 {
   struct vlan_id vi;
@@ -1409,7 +1409,7 @@ vlan_id_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 vlan_id_commit (ipmi_config_state_data_t *state_data,
-		const char *section_name,
+                const char *section_name,
                 const struct ipmi_config_keyvalue *kv)
 {
   struct vlan_id vi;
@@ -1429,7 +1429,7 @@ vlan_id_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_validate_t
 vlan_id_validate (ipmi_config_state_data_t *state_data,
-		  const char *section_name,
+                  const char *section_name,
                   const char *key_name,
                   const char *value)
 {
@@ -1443,7 +1443,7 @@ vlan_id_validate (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 vlan_id_enable_checkout (ipmi_config_state_data_t *state_data,
-			 const char *section_name,
+                         const char *section_name,
                          struct ipmi_config_keyvalue *kv)
 {
   struct vlan_id vi;
@@ -1466,7 +1466,7 @@ vlan_id_enable_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 vlan_id_enable_commit (ipmi_config_state_data_t *state_data,
-		       const char *section_name,
+                       const char *section_name,
                        const struct ipmi_config_keyvalue *kv)
 {
   struct vlan_id vi;
@@ -1486,7 +1486,7 @@ vlan_id_enable_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 vlan_priority_checkout (ipmi_config_state_data_t *state_data,
-			const char *section_name,
+                        const char *section_name,
                         struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -1530,7 +1530,7 @@ vlan_priority_checkout (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_vlan_priority: %s\n",
@@ -1562,7 +1562,7 @@ vlan_priority_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 vlan_priority_commit (ipmi_config_state_data_t *state_data,
-		      const char *section_name,
+                      const char *section_name,
                       const struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -1602,7 +1602,7 @@ vlan_priority_commit (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_vlan_priority: %s\n",
@@ -1662,7 +1662,7 @@ _get_ipv4_header_parameters (ipmi_config_state_data_t *state_data,
         rv = ret;
       
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_ipv4_header_parameters: %s\n",
@@ -1762,7 +1762,7 @@ _set_ipv4_header_parameters (ipmi_config_state_data_t *state_data,
         rv = ret;
       
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_ipv4_header_parameters: %s\n",
@@ -1779,7 +1779,7 @@ _set_ipv4_header_parameters (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 ipv4_header_time_to_live_checkout (ipmi_config_state_data_t *state_data,
-				   const char *section_name,
+                                   const char *section_name,
                                    struct ipmi_config_keyvalue *kv)
 {
   struct ipv4_header_parameters ihp;
@@ -1802,7 +1802,7 @@ ipv4_header_time_to_live_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 ipv4_header_time_to_live_commit (ipmi_config_state_data_t *state_data,
-				 const char *section_name,
+                                 const char *section_name,
                                  const struct ipmi_config_keyvalue *kv)
 {
   struct ipv4_header_parameters ihp;
@@ -1823,7 +1823,7 @@ ipv4_header_time_to_live_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 ipv4_header_flags_checkout (ipmi_config_state_data_t *state_data,
-			    const char *section_name,
+                            const char *section_name,
                             struct ipmi_config_keyvalue *kv)
 {
   struct ipv4_header_parameters ihp;
@@ -1846,7 +1846,7 @@ ipv4_header_flags_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 ipv4_header_flags_commit (ipmi_config_state_data_t *state_data,
-			  const char *section_name,
+                          const char *section_name,
                           const struct ipmi_config_keyvalue *kv)
 {
   struct ipv4_header_parameters ihp;
@@ -1867,7 +1867,7 @@ ipv4_header_flags_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 ipv4_header_type_of_service_checkout (ipmi_config_state_data_t *state_data,
-				      const char *section_name,
+                                      const char *section_name,
                                       struct ipmi_config_keyvalue *kv)
 {
   struct ipv4_header_parameters ihp;
@@ -1890,7 +1890,7 @@ ipv4_header_type_of_service_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 ipv4_header_type_of_service_commit (ipmi_config_state_data_t *state_data,
-				    const char *section_name,
+                                    const char *section_name,
                                     const struct ipmi_config_keyvalue *kv)
 {
   struct ipv4_header_parameters ihp;
@@ -1911,7 +1911,7 @@ ipv4_header_type_of_service_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 ipv4_header_precedence_checkout (ipmi_config_state_data_t *state_data,
-				 const char *section_name,
+                                 const char *section_name,
                                  struct ipmi_config_keyvalue *kv)
 {
   struct ipv4_header_parameters ihp;
@@ -1934,7 +1934,7 @@ ipv4_header_precedence_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 ipv4_header_precedence_commit (ipmi_config_state_data_t *state_data,
-			       const char *section_name,
+                               const char *section_name,
                                const struct ipmi_config_keyvalue *kv)
 {
   struct ipv4_header_parameters ihp;
@@ -1955,7 +1955,7 @@ ipv4_header_precedence_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 primary_rmcp_port_checkout (ipmi_config_state_data_t *state_data,
-			    const char *section_name,
+                            const char *section_name,
                             struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -1997,7 +1997,7 @@ primary_rmcp_port_checkout (ipmi_config_state_data_t *state_data,
         rv = ret;
       
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_primary_rmcp_port_number: %s\n",
@@ -2029,7 +2029,7 @@ primary_rmcp_port_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 primary_rmcp_port_commit (ipmi_config_state_data_t *state_data,
-			  const char *section_name,
+                          const char *section_name,
                           const struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -2067,7 +2067,7 @@ primary_rmcp_port_commit (ipmi_config_state_data_t *state_data,
         rv = ret;
       
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_primary_rmcp_port_number: %s\n",
@@ -2084,7 +2084,7 @@ primary_rmcp_port_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 secondary_rmcp_port_checkout (ipmi_config_state_data_t *state_data,
-			      const char *section_name,
+                              const char *section_name,
                               struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -2126,7 +2126,7 @@ secondary_rmcp_port_checkout (ipmi_config_state_data_t *state_data,
         rv = ret;
       
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_secondary_rmcp_port_number: %s\n",
@@ -2158,7 +2158,7 @@ secondary_rmcp_port_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 secondary_rmcp_port_commit (ipmi_config_state_data_t *state_data,
-			    const char *section_name,
+                            const char *section_name,
                             const struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -2196,7 +2196,7 @@ secondary_rmcp_port_commit (ipmi_config_state_data_t *state_data,
         rv = ret;
       
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_secondary_rmcp_port_number: %s\n",
@@ -2213,8 +2213,8 @@ secondary_rmcp_port_commit (ipmi_config_state_data_t *state_data,
 
 struct ipmi_config_section *
 ipmi_config_core_lan_conf_section_get (ipmi_config_state_data_t *state_data,
-				       unsigned int config_flags,
-				       int channel_index)
+                                       unsigned int config_flags,
+                                       int channel_index)
 {
   struct ipmi_config_section *section = NULL;
   char *section_comment =

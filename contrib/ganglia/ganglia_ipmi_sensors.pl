@@ -350,8 +350,8 @@ foreach $line (@IPMI_SENSORS_OUTPUT_LINES)
     $id_string =~ s/\//_/g;
     
     if ($IPMI_HOSTS_SUBST) {
-	@subst = split(/:/, $IPMI_HOSTS_SUBST);
-	$hostname =~ s/$subst[0]/$subst[1]/;
+        @subst = split(/:/, $IPMI_HOSTS_SUBST);
+        $hostname =~ s/$subst[0]/$subst[1]/;
     }
 
     if ($hostname ne "localhost" && $hostname ne "127.0.0.1")
@@ -388,12 +388,12 @@ foreach $line (@IPMI_SENSORS_OUTPUT_LINES)
     if (!$no_sensor_readings)
     {
         if ((($type eq "Temperature"
-	      && ($units eq "C"
-		  || $units eq "F"))
+              && ($units eq "C"
+                  || $units eq "F"))
              || ($type eq "Voltage"
-		 && $units eq "V")
+                 && $units eq "V")
              || ($type eq "Fan"
-		 && $units eq "RPM"))
+                 && $units eq "RPM"))
             && $reading ne "N/A")
         {
             if ($hostname ne "localhost" && $hostname ne "127.0.0.1")

@@ -258,7 +258,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
                        unsigned int authentication_code_data_len,
                        void *pkt,
                        unsigned int pkt_len,
-		       unsigned int flags)
+                       unsigned int flags)
 {
   uint8_t authentication_type;
   uint64_t val;
@@ -611,7 +611,7 @@ unassemble_ipmi_lan_pkt (const void *pkt,
                          fiid_obj_t obj_lan_msg_hdr,
                          fiid_obj_t obj_cmd,
                          fiid_obj_t obj_lan_msg_trlr,
-			 unsigned int flags)
+                         unsigned int flags)
 {
   uint8_t authentication_type;
   unsigned int indx = 0;

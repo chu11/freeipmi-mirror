@@ -42,8 +42,8 @@ extern fiid_template_t tmpl_cmd_c410x_slot_power_control_rs;
  * - if returns 0 or -1, error message in buf 
  */
 int ipmipower_oem_power_cmd_check_support_and_privilege (ipmipower_power_cmd_t cmd,
-							 char *errbuf,
-							 unsigned int errbuflen);
+                                                         char *errbuf,
+                                                         unsigned int errbuflen);
 
 /* ipmipower_oem_power_cmd_check_extra_arg
  * - check if extra arg is valid
@@ -51,7 +51,7 @@ int ipmipower_oem_power_cmd_check_support_and_privilege (ipmipower_power_cmd_t c
  * - if returns 0 or -1, error message in buf
  */
 int ipmipower_oem_power_cmd_check_extra_arg (const char *extra_arg,
-					     char *errbuf,
-					     unsigned int errbuflen);
+                                             char *errbuf,
+                                             unsigned int errbuflen);
 
 #endif /* IPMIPOWER_OEM_H */

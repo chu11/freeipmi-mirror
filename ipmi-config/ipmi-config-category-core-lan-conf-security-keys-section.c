@@ -85,7 +85,7 @@ _get_key (ipmi_config_state_data_t *state_data,
         rv = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_channel_security_keys: %s\n",
@@ -166,7 +166,7 @@ _set_key (ipmi_config_state_data_t *state_data,
         rv = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_channel_security_keys: %s\n",
@@ -183,7 +183,7 @@ _set_key (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 k_r_checkout (ipmi_config_state_data_t *state_data,
-	      const char *section_name,
+              const char *section_name,
               struct ipmi_config_keyvalue *kv)
 {
   uint8_t k_r[IPMI_MAX_K_R_LENGTH + 1];
@@ -214,7 +214,7 @@ k_r_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 k_r_commit (ipmi_config_state_data_t *state_data,
-	    const char *section_name,
+            const char *section_name,
             const struct ipmi_config_keyvalue *kv)
 {
   assert (state_data);
@@ -230,7 +230,7 @@ k_r_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_validate_t
 k_r_validate (ipmi_config_state_data_t *state_data,
-	      const char *section_name,
+              const char *section_name,
               const char *key_name,
               const char *value)
 {
@@ -246,7 +246,7 @@ k_r_validate (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 k_g_checkout (ipmi_config_state_data_t *state_data,
-	      const char *section_name,
+              const char *section_name,
               struct ipmi_config_keyvalue *kv)
 {
   uint8_t k_g[IPMI_MAX_K_G_LENGTH];
@@ -305,7 +305,7 @@ k_g_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 k_g_commit (ipmi_config_state_data_t *state_data,
-	    const char *section_name,
+            const char *section_name,
             const struct ipmi_config_keyvalue *kv)
 {
   uint8_t k_g[IPMI_MAX_K_G_LENGTH+1];
@@ -329,7 +329,7 @@ k_g_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_validate_t
 k_g_validate (ipmi_config_state_data_t *state_data,
-	      const char *section_name,
+              const char *section_name,
               const char *key_name,
               const char *value)
 {
@@ -347,8 +347,8 @@ k_g_validate (ipmi_config_state_data_t *state_data,
 
 struct ipmi_config_section *
 ipmi_config_core_lan_conf_security_keys_section_get (ipmi_config_state_data_t *state_data,
-						     unsigned int config_flags,
-						     int channel_index)
+                                                     unsigned int config_flags,
+                                                     int channel_index)
 {
   struct ipmi_config_section *section = NULL;
   char *section_comment =

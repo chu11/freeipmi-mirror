@@ -99,21 +99,21 @@ while (<FH>)
 
     # There are some empty lines between some records.  Why?  No idea.
     if ($line_number eq "") {
-	next;
+        next;
     }
 
     if ($line_number eq "End of Document") {
-	last;
+        last;
     }
 
     # Iterate until you hit '0', there is comment text at the top
     if ($found_beginning == 0) {
-	if ($line_number ne "0") {
-	    next;
-	}
-	else {
-	    $found_beginning++;
-	}
+        if ($line_number ne "0") {
+            next;
+        }
+        else {
+            $found_beginning++;
+        }
     }
 
     $line_organization = <FH>;
@@ -122,14 +122,14 @@ while (<FH>)
     # Note, do not check for whitespace, b/c whitespace can mean empty string for field.
     # We are specifically checking for empty line w/o anything.
     while (chomp($line_organization) eq "") {
-     	$line_organization = <FH>;
+        $line_organization = <FH>;
      }
 
     $line_contact = <FH>;
 
     # more empty strings between lines in record
     while (chomp($line_contact) eq "") {
-     	$line_contact = <FH>;
+        $line_contact = <FH>;
      }
 
     # Some organization names linger onto the next lines, even
@@ -138,10 +138,10 @@ while (<FH>)
     # organization name or anything.
     $tmp = substr($line_contact, 0, 1);
     while (!($tmp =~ /\s/)) {
-	$line_organization = trim($line_organization);
-	$line_organization = "$line_organization $line_contact";
-	$line_contact = <FH>;
-	$tmp = substr($line_contact, 0, 1);
+        $line_organization = trim($line_organization);
+        $line_organization = "$line_organization $line_contact";
+        $line_contact = <FH>;
+        $tmp = substr($line_contact, 0, 1);
     }
 
     $line_organization = trim($line_organization);
@@ -149,18 +149,18 @@ while (<FH>)
     # Some companies have some indication of former names, we'll
     # remove em b/c we don't care about it.
     if ($line_organization =~ /formerly/) {
-	$line_organization =~ s/\(formerly .*\)//; 
-	$line_organization = trim($line_organization);
+        $line_organization =~ s/\(formerly .*\)//; 
+        $line_organization = trim($line_organization);
     }
 
     if ($line_organization =~ /previous/) {
-	$line_organization =~ s/\(previous was .*\)//; 
-	$line_organization = trim($line_organization);
+        $line_organization =~ s/\(previous was .*\)//; 
+        $line_organization = trim($line_organization);
     }
 
     if ($line_organization =~ /http/) {
-	$line_organization =~ s/\<http:\/\/.*\>//;
-	$line_organization = trim($line_organization);
+        $line_organization =~ s/\<http:\/\/.*\>//;
+        $line_organization = trim($line_organization);
     }
     
     $line_email = <FH>;
@@ -169,9 +169,9 @@ while (<FH>)
     # why.  It seems random
     $tmp = substr($line_email, 0, 1);
     while (!($tmp =~ /\s/)) {
-	$line_contact = $line_contact + " " + $line_email;
-	$line_email = <FH>;
-	$tmp = substr($line_email, 0, 1);
+        $line_contact = $line_contact + " " + $line_email;
+        $line_email = <FH>;
+        $tmp = substr($line_email, 0, 1);
     }
 
     # Fill in any missing numbers

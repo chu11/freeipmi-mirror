@@ -22,8 +22,8 @@
 #include "ipmi-sensors.h"
 
 int ipmi_sensors_oem_intel_s5500wb_output_oem_record (ipmi_sensors_state_data_t *state_data,
-						      uint32_t oem_record_manufacturer_id,
-						      const uint8_t *oem_data,
-						      unsigned int oem_data_len);
+                                                      uint32_t oem_record_manufacturer_id,
+                                                      const uint8_t *oem_data,
+                                                      unsigned int oem_data_len);
 
 #endif /* IPMI_SENSORS_OEM_INTEL_S5500WB_H */

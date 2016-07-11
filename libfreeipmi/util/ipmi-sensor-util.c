@@ -185,18 +185,18 @@ ipmi_sensor_units_string (uint8_t sensor_units_percentage,
        * and the base unit is unspecified, just output '%' only.
        */
       if (sensor_units_modifier == IPMI_SDR_MODIFIER_UNIT_NONE
-	  && sensor_units_rate == IPMI_SENSOR_RATE_UNIT_NONE
-	  && sensor_base_unit_type == IPMI_SENSOR_UNIT_UNSPECIFIED)
-	{
-	  rv = snprintf (buf,
-			 buflen,
-			 "%%");
-	  return (rv);
-	}
+          && sensor_units_rate == IPMI_SENSOR_RATE_UNIT_NONE
+          && sensor_base_unit_type == IPMI_SENSOR_UNIT_UNSPECIFIED)
+        {
+          rv = snprintf (buf,
+                         buflen,
+                         "%%");
+          return (rv);
+        }
       else
-	offset = snprintf (buf,
-			   buflen,
-			   "%% ");
+        offset = snprintf (buf,
+                           buflen,
+                           "%% ");
     }
 
   if (abbreviated_units_flag)
@@ -242,24 +242,24 @@ ipmi_sensor_units_string (uint8_t sensor_units_percentage,
   if (sensor_modifier_unit_type == IPMI_SENSOR_UNIT_UNSPECIFIED)
     {
       rv = snprintf (buf + offset,
-		     buflen,
-		     "%s",
-		     sensor_units[sensor_base_unit_type]);
+                     buflen,
+                     "%s",
+                     sensor_units[sensor_base_unit_type]);
     }
   else
     {
       if (sensor_units_modifier == IPMI_SDR_MODIFIER_UNIT_DIVIDE)
-	rv = snprintf (buf + offset,
-		       buflen,
-		       "%s / %s",
-		       sensor_units[sensor_base_unit_type],
-		       sensor_units[sensor_modifier_unit_type]);
+        rv = snprintf (buf + offset,
+                       buflen,
+                       "%s / %s",
+                       sensor_units[sensor_base_unit_type],
+                       sensor_units[sensor_modifier_unit_type]);
       else
-	rv = snprintf (buf + offset,
-		       buflen,
-		       "%s * %s",
-		       sensor_units[sensor_base_unit_type],
-		       sensor_units[sensor_modifier_unit_type]);
+        rv = snprintf (buf + offset,
+                       buflen,
+                       "%s * %s",
+                       sensor_units[sensor_base_unit_type],
+                       sensor_units[sensor_modifier_unit_type]);
     }
 
   return (rv);
@@ -322,7 +322,7 @@ ipmi_sensor_decode_value (int8_t r_exponent,
       break;
     case IPMI_SDR_LINEARIZATION_INVERSE:
       if (dval != 0.0)
-	dval = 1.0 / dval;
+        dval = 1.0 / dval;
       break;
     case IPMI_SDR_LINEARIZATION_SQR:
       dval = pow (dval, 2.0);
@@ -490,7 +490,7 @@ ipmi_sensor_decode_tolerance (int8_t r_exponent,
       break;
     case IPMI_SDR_LINEARIZATION_INVERSE:
       if (dval != 0.0)
-	dval = 1.0 / dval;
+        dval = 1.0 / dval;
       break;
     case IPMI_SDR_LINEARIZATION_SQR:
       dval = pow (dval, 2.0);

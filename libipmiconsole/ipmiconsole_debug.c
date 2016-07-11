@@ -68,7 +68,7 @@ int
 ipmiconsole_debug_setup (uint32_t debug_flags)
 {
   assert (debug_flags == IPMICONSOLE_DEBUG_DEFAULT
-	  || !(debug_flags & ~IPMICONSOLE_DEBUG_MASK));
+          || !(debug_flags & ~IPMICONSOLE_DEBUG_MASK));
 
   if (debug_flags == IPMICONSOLE_DEBUG_DEFAULT)
     console_debug_flags = 0;
@@ -86,11 +86,11 @@ ipmiconsole_debug_setup (uint32_t debug_flags)
                 MAXPATHLEN,
                 "%s.%d",
                 IPMICONSOLE_DEBUG_FILENAME,
-		pid);
+                pid);
 
       if ((console_debug_fd = open (filename,
-				    O_CREAT | O_APPEND | O_WRONLY | O_EXCL,
-				    0600)) < 0)
+                                    O_CREAT | O_APPEND | O_WRONLY | O_EXCL,
+                                    0600)) < 0)
         {
           console_debug_flags &= ~IPMICONSOLE_DEBUG_FILE;
           IPMICONSOLE_DEBUG (("open: %s", strerror (errno)));

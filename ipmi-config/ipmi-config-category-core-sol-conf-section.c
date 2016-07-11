@@ -57,7 +57,7 @@ struct sol_retry {
 
 static ipmi_config_err_t
 enable_sol_checkout (ipmi_config_state_data_t *state_data,
-		     const char *section_name,
+                     const char *section_name,
                      struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -98,7 +98,7 @@ enable_sol_checkout (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_sol_configuration_parameters_sol_enable: %s\n",
@@ -129,7 +129,7 @@ enable_sol_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 enable_sol_commit (ipmi_config_state_data_t *state_data,
-		   const char *section_name,
+                   const char *section_name,
                    const struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -167,7 +167,7 @@ enable_sol_commit (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_sol_configuration_parameters_sol_enable: %s\n",
@@ -225,7 +225,7 @@ _get_sol_sol_authentication (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_sol_configuration_parameters_sol_authentication: %s\n",
@@ -312,7 +312,7 @@ _set_sol_sol_authentication (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_sol_configuration_parameters_sol_authentication: %s\n",
@@ -329,7 +329,7 @@ _set_sol_sol_authentication (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 sol_privilege_level_checkout (ipmi_config_state_data_t *state_data,
-			      const char *section_name,
+                              const char *section_name,
                               struct ipmi_config_keyvalue *kv)
 {
   struct sol_authentication sa;
@@ -352,7 +352,7 @@ sol_privilege_level_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 sol_privilege_level_commit (ipmi_config_state_data_t *state_data,
-			    const char *section_name,
+                            const char *section_name,
                             const struct ipmi_config_keyvalue *kv)
 {
   struct sol_authentication sa;
@@ -372,7 +372,7 @@ sol_privilege_level_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 force_sol_payload_authentication_checkout (ipmi_config_state_data_t *state_data,
-					   const char *section_name,
+                                           const char *section_name,
                                            struct ipmi_config_keyvalue *kv)
 {
   struct sol_authentication sa;
@@ -395,7 +395,7 @@ force_sol_payload_authentication_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 force_sol_payload_authentication_commit (ipmi_config_state_data_t *state_data,
-					 const char *section_name,
+                                         const char *section_name,
                                          const struct ipmi_config_keyvalue *kv)
 {
   struct sol_authentication sa;
@@ -415,7 +415,7 @@ force_sol_payload_authentication_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 force_sol_payload_encryption_checkout (ipmi_config_state_data_t *state_data,
-				       const char *section_name,
+                                       const char *section_name,
                                        struct ipmi_config_keyvalue *kv)
 {
   struct sol_authentication sa;
@@ -438,7 +438,7 @@ force_sol_payload_encryption_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 force_sol_payload_encryption_commit (ipmi_config_state_data_t *state_data,
-				     const char *section_name,
+                                     const char *section_name,
                                      const struct ipmi_config_keyvalue *kv)
 {
   struct sol_authentication sa;
@@ -499,7 +499,7 @@ _get_sol_character_accumulate_interval_and_send_threshold (ipmi_config_state_dat
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send_threshold: %s\n",
@@ -575,7 +575,7 @@ _set_sol_character_accumulate_interval_and_send_threshold (ipmi_config_state_dat
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send_threshold: %s\n",
@@ -592,7 +592,7 @@ _set_sol_character_accumulate_interval_and_send_threshold (ipmi_config_state_dat
 
 static ipmi_config_err_t
 character_accumulate_interval_checkout (ipmi_config_state_data_t *state_data,
-					const char *section_name,
+                                        const char *section_name,
                                         struct ipmi_config_keyvalue *kv)
 {
   struct interval_and_threshold it;
@@ -615,7 +615,7 @@ character_accumulate_interval_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 character_accumulate_interval_commit (ipmi_config_state_data_t *state_data,
-				      const char *section_name,
+                                      const char *section_name,
                                       const struct ipmi_config_keyvalue *kv)
 {
   struct interval_and_threshold it;
@@ -635,7 +635,7 @@ character_accumulate_interval_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 character_send_threshold_checkout (ipmi_config_state_data_t *state_data,
-				   const char *section_name,
+                                   const char *section_name,
                                    struct ipmi_config_keyvalue *kv)
 {
   struct interval_and_threshold it;
@@ -658,7 +658,7 @@ character_send_threshold_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 character_send_threshold_commit (ipmi_config_state_data_t *state_data,
-				 const char *section_name,
+                                 const char *section_name,
                                  const struct ipmi_config_keyvalue *kv)
 {
   struct interval_and_threshold it;
@@ -719,7 +719,7 @@ _get_sol_sol_retry (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_sol_configuration_parameters_sol_retry: %s\n",
@@ -795,7 +795,7 @@ _set_sol_sol_retry (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_sol_configuration_parameters_sol_retry: %s\n",
@@ -812,7 +812,7 @@ _set_sol_sol_retry (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 sol_retry_count_checkout (ipmi_config_state_data_t *state_data,
-			  const char *section_name,
+                          const char *section_name,
                           struct ipmi_config_keyvalue *kv)
 {
   struct sol_retry sr;
@@ -836,7 +836,7 @@ sol_retry_count_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 sol_retry_count_commit (ipmi_config_state_data_t *state_data,
-			const char *section_name,
+                        const char *section_name,
                         const struct ipmi_config_keyvalue *kv)
 {
   struct sol_retry sr;
@@ -856,7 +856,7 @@ sol_retry_count_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 sol_retry_interval_checkout (ipmi_config_state_data_t *state_data,
-			     const char *section_name,
+                             const char *section_name,
                              struct ipmi_config_keyvalue *kv)
 {
   struct sol_retry sr;
@@ -879,7 +879,7 @@ sol_retry_interval_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 sol_retry_interval_commit (ipmi_config_state_data_t *state_data,
-			   const char *section_name,
+                           const char *section_name,
                            const struct ipmi_config_keyvalue *kv)
 {
   struct sol_retry sr;
@@ -899,7 +899,7 @@ sol_retry_interval_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 non_volatile_bit_rate_checkout (ipmi_config_state_data_t *state_data,
-				const char *section_name,
+                                const char *section_name,
                                 struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -941,7 +941,7 @@ non_volatile_bit_rate_checkout (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate: %s\n",
@@ -973,7 +973,7 @@ non_volatile_bit_rate_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 non_volatile_bit_rate_commit (ipmi_config_state_data_t *state_data,
-			      const char *section_name,
+                              const char *section_name,
                               const struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -1011,7 +1011,7 @@ non_volatile_bit_rate_commit (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate: %s\n",
@@ -1028,7 +1028,7 @@ non_volatile_bit_rate_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 volatile_bit_rate_checkout (ipmi_config_state_data_t *state_data,
-			    const char *section_name,
+                            const char *section_name,
                             struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -1070,7 +1070,7 @@ volatile_bit_rate_checkout (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate: %s\n",
@@ -1102,7 +1102,7 @@ volatile_bit_rate_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 volatile_bit_rate_commit (ipmi_config_state_data_t *state_data,
-			  const char *section_name,
+                          const char *section_name,
                           const struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -1140,7 +1140,7 @@ volatile_bit_rate_commit (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate: %s\n",
@@ -1157,7 +1157,7 @@ volatile_bit_rate_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 sol_payload_port_checkout (ipmi_config_state_data_t *state_data,
-			   const char *section_name,
+                           const char *section_name,
                            struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -1199,7 +1199,7 @@ sol_payload_port_checkout (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_sol_configuration_parameters_sol_payload_port_number: %s\n",
@@ -1231,7 +1231,7 @@ sol_payload_port_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 sol_payload_port_commit (ipmi_config_state_data_t *state_data,
-			 const char *section_name,
+                         const char *section_name,
                          const struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -1269,7 +1269,7 @@ sol_payload_port_commit (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_sol_configuration_parameters_sol_payload_port_number: %s\n",
@@ -1286,8 +1286,8 @@ sol_payload_port_commit (ipmi_config_state_data_t *state_data,
 
 struct ipmi_config_section *
 ipmi_config_core_sol_conf_section_get (ipmi_config_state_data_t *state_data,
-				       unsigned int config_flags,
-				       int channel_index)
+                                       unsigned int config_flags,
+                                       int channel_index)
 {
   struct ipmi_config_section * section = NULL;
   char *section_comment =

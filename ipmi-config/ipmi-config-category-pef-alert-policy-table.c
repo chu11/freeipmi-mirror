@@ -81,12 +81,12 @@ _get_alert_policy_table (struct ipmi_config_state_data *state_data,
       ipmi_config_err_t ret;
 
       if (ipmi_config_param_errnum_is_non_fatal (state_data,
-						 obj_cmd_rs,
-						 &ret))
+                                                 obj_cmd_rs,
+                                                 &ret))
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_pef_configuration_parameters_alert_policy_table: %s\n",
@@ -237,45 +237,45 @@ _set_alert_policy_table (struct ipmi_config_state_data *state_data,
           struct ipmi_config_section *section;
           struct ipmi_config_keyvalue *kv;
           
-	  if (!(section = ipmi_config_find_section (state_data, section_name)))
-	    {
-	      /* This should be impossible */
-	      pstdout_fprintf (state_data->pstate,
-			       stderr,
-			       "Cannot find section '%s'\n",
-			       section_name);
-	      goto cleanup;
-	    }
+          if (!(section = ipmi_config_find_section (state_data, section_name)))
+            {
+              /* This should be impossible */
+              pstdout_fprintf (state_data->pstate,
+                               stderr,
+                               "Cannot find section '%s'\n",
+                               section_name);
+              goto cleanup;
+            }
           
           if ((kv = ipmi_config_find_keyvalue (section,
-					       "Policy_Type")))
+                                               "Policy_Type")))
             apt->policy_type = policy_type_number (kv->value_input);
 
           if ((kv = ipmi_config_find_keyvalue (section,
-					       "Policy_Enabled")))
+                                               "Policy_Enabled")))
             apt->policy_enabled = same (kv->value_input, "yes");
 
           if ((kv = ipmi_config_find_keyvalue (section,
-					       "Policy_Number")))
+                                               "Policy_Number")))
             apt->policy_number = atoi (kv->value_input);
 
           if ((kv = ipmi_config_find_keyvalue (section,
-					       "Destination_Selector")))
+                                               "Destination_Selector")))
             apt->destination_selector = atoi (kv->value_input);
           
           if ((kv = ipmi_config_find_keyvalue (section,
-					       "Channel_Number")))
+                                               "Channel_Number")))
             apt->channel_number = atoi (kv->value_input);
 
           if ((kv = ipmi_config_find_keyvalue (section,
-					       "Alert_String_Set_Selector")))
+                                               "Alert_String_Set_Selector")))
             apt->alert_string_set_selector = atoi (kv->value_input);
           
           if ((kv = ipmi_config_find_keyvalue (section,
-					       "Event_Specific_Alert_String")))
+                                               "Event_Specific_Alert_String")))
             apt->event_specific_alert_string = same (kv->value_input, "yes");
 
-	  if (state_data->prog_data->args->common_args.debug)
+          if (state_data->prog_data->args->common_args.debug)
             pstdout_fprintf (state_data->pstate,
                              stderr,
                              "ipmi_cmd_set_pef_configuration_parameters_alert_policy_table: attempting workaround\n");
@@ -292,12 +292,12 @@ _set_alert_policy_table (struct ipmi_config_state_data *state_data,
                                                                             obj_cmd_rs) < 0)
             {
               if (ipmi_config_param_errnum_is_non_fatal (state_data,
-							 obj_cmd_rs,
-							 &ret))
+                                                         obj_cmd_rs,
+                                                         &ret))
                 rv = ret;
 
-	      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-		  || state_data->prog_data->args->common_args.debug)
+              if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+                  || state_data->prog_data->args->common_args.debug)
                 pstdout_fprintf (state_data->pstate,
                                  stderr,
                                  "ipmi_cmd_set_pef_configuration_parameters_alert_policy_table: %s\n",
@@ -310,12 +310,12 @@ _set_alert_policy_table (struct ipmi_config_state_data *state_data,
           goto out;
         }
       else if (ipmi_config_param_errnum_is_non_fatal (state_data,
-						      obj_cmd_rs,
-						      &ret))
+                                                      obj_cmd_rs,
+                                                      &ret))
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_pef_configuration_parameters_alert_policy_table: %s\n",
@@ -333,7 +333,7 @@ _set_alert_policy_table (struct ipmi_config_state_data *state_data,
 
 static ipmi_config_err_t
 policy_type_checkout (ipmi_config_state_data_t *state_data,
-		      const char *section_name,
+                      const char *section_name,
                       struct ipmi_config_keyvalue *kv)
 {
   struct alert_policy_table apt;
@@ -349,8 +349,8 @@ policy_type_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  policy_type_string (apt.policy_type)) < 0)
+                                                  kv,
+                                                  policy_type_string (apt.policy_type)) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -358,7 +358,7 @@ policy_type_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 policy_type_commit (ipmi_config_state_data_t *state_data,
-		    const char *section_name,
+                    const char *section_name,
                     const struct ipmi_config_keyvalue *kv)
 {
   struct alert_policy_table apt;
@@ -382,7 +382,7 @@ policy_type_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 policy_enabled_checkout (ipmi_config_state_data_t *state_data,
-			 const char *section_name,
+                         const char *section_name,
                          struct ipmi_config_keyvalue *kv)
 {
   struct alert_policy_table apt;
@@ -398,8 +398,8 @@ policy_enabled_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  apt.policy_enabled ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  apt.policy_enabled ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -407,7 +407,7 @@ policy_enabled_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 policy_enabled_commit (ipmi_config_state_data_t *state_data,
-		       const char *section_name,
+                       const char *section_name,
                        const struct ipmi_config_keyvalue *kv)
 {
   struct alert_policy_table apt;
@@ -431,7 +431,7 @@ policy_enabled_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 policy_number_checkout (ipmi_config_state_data_t *state_data,
-			const char *section_name,
+                        const char *section_name,
                         struct ipmi_config_keyvalue *kv)
 {
   struct alert_policy_table apt;
@@ -447,8 +447,8 @@ policy_number_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
-							       kv,
-							       apt.policy_number) < 0)
+                                                               kv,
+                                                               apt.policy_number) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -456,7 +456,7 @@ policy_number_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 policy_number_commit (ipmi_config_state_data_t *state_data,
-		      const char *section_name,
+                      const char *section_name,
                       const struct ipmi_config_keyvalue *kv)
 {
   struct alert_policy_table apt;
@@ -480,7 +480,7 @@ policy_number_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 destination_selector_checkout (ipmi_config_state_data_t *state_data,
-			       const char *section_name,
+                               const char *section_name,
                                struct ipmi_config_keyvalue *kv)
 {
   struct alert_policy_table apt;
@@ -496,8 +496,8 @@ destination_selector_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
-							       kv,
-							       apt.destination_selector) < 0)
+                                                               kv,
+                                                               apt.destination_selector) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -505,7 +505,7 @@ destination_selector_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 destination_selector_commit (ipmi_config_state_data_t *state_data,
-			     const char *section_name,
+                             const char *section_name,
                              const struct ipmi_config_keyvalue *kv)
 {
   struct alert_policy_table apt;
@@ -529,7 +529,7 @@ destination_selector_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 channel_number_checkout (ipmi_config_state_data_t *state_data,
-			 const char *section_name,
+                         const char *section_name,
                          struct ipmi_config_keyvalue *kv)
 {
   struct alert_policy_table apt;
@@ -545,8 +545,8 @@ channel_number_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
-							       kv,
-							       apt.channel_number) < 0)
+                                                               kv,
+                                                               apt.channel_number) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -554,7 +554,7 @@ channel_number_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 channel_number_commit (ipmi_config_state_data_t *state_data,
-		       const char *section_name,
+                       const char *section_name,
                        const struct ipmi_config_keyvalue *kv)
 {
   struct alert_policy_table apt;
@@ -578,7 +578,7 @@ channel_number_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 alert_string_set_selector_checkout (ipmi_config_state_data_t *state_data,
-				    const char *section_name,
+                                    const char *section_name,
                                     struct ipmi_config_keyvalue *kv)
 {
   struct alert_policy_table apt;
@@ -594,8 +594,8 @@ alert_string_set_selector_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
-							       kv,
-							       apt.alert_string_set_selector) < 0)
+                                                               kv,
+                                                               apt.alert_string_set_selector) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -603,7 +603,7 @@ alert_string_set_selector_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 alert_string_set_selector_commit (ipmi_config_state_data_t *state_data,
-				  const char *section_name,
+                                  const char *section_name,
                                   const struct ipmi_config_keyvalue *kv)
 {
   struct alert_policy_table apt;
@@ -627,7 +627,7 @@ alert_string_set_selector_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 event_specific_alert_string_checkout (ipmi_config_state_data_t *state_data,
-				      const char *section_name,
+                                      const char *section_name,
                                       struct ipmi_config_keyvalue *kv)
 {
   struct alert_policy_table apt;
@@ -643,8 +643,8 @@ event_specific_alert_string_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  apt.event_specific_alert_string ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  apt.event_specific_alert_string ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -652,7 +652,7 @@ event_specific_alert_string_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 event_specific_alert_string_commit (ipmi_config_state_data_t *state_data,
-				    const char *section_name,
+                                    const char *section_name,
                                     const struct ipmi_config_keyvalue *kv)
 {
   struct alert_policy_table apt;
@@ -687,58 +687,58 @@ ipmi_config_pef_alert_policy_table_section_get (ipmi_config_state_data_t *state_
   snprintf (section_name, IPMI_CONFIG_MAX_SECTION_NAME_LEN, "Alert_Policy_%u", num);
 
   if (!(section = ipmi_config_section_create (state_data,
-					      section_name,
-					      NULL,
-					      NULL,
-					      0,
-					      NULL,
-					      NULL)))
+                                              section_name,
+                                              NULL,
+                                              NULL,
+                                              0,
+                                              NULL,
+                                              NULL)))
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Policy_Type",
-				   "Possible values: Always_Send_To_This_Destination/Proceed_To_Next_Entry/Do_Not_Proceed_Any_More_Entries/Proceed_To_Next_Entry_Different_Channel/Proceed_To_Next_Entry_Different_Destination_Type",
-				   0,
-				   policy_type_checkout,
-				   policy_type_commit,
-				   policy_type_validate) < 0)
+                                   section,
+                                   "Policy_Type",
+                                   "Possible values: Always_Send_To_This_Destination/Proceed_To_Next_Entry/Do_Not_Proceed_Any_More_Entries/Proceed_To_Next_Entry_Different_Channel/Proceed_To_Next_Entry_Different_Destination_Type",
+                                   0,
+                                   policy_type_checkout,
+                                   policy_type_commit,
+                                   policy_type_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Policy_Enabled",
-				   "Possible values: Yes/No",
-				   0,
-				   policy_enabled_checkout,
-				   policy_enabled_commit,
-				   yes_no_validate) < 0)
+                                   section,
+                                   "Policy_Enabled",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   policy_enabled_checkout,
+                                   policy_enabled_commit,
+                                   yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Policy_Number",
-				   "Give a valid number",
-				   0,
-				   policy_number_checkout,
-				   policy_number_commit,
-				   number_range_four_bits_validate) < 0)
+                                   section,
+                                   "Policy_Number",
+                                   "Give a valid number",
+                                   0,
+                                   policy_number_checkout,
+                                   policy_number_commit,
+                                   number_range_four_bits_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Destination_Selector",
-				   "Give a valid number",
-				   0,
-				   destination_selector_checkout,
-				   destination_selector_commit,
-				   number_range_four_bits_validate) < 0)
+                                   section,
+                                   "Destination_Selector",
+                                   "Give a valid number",
+                                   0,
+                                   destination_selector_checkout,
+                                   destination_selector_commit,
+                                   number_range_four_bits_validate) < 0)
     goto cleanup;
 
   if (!state_data->lan_channel_numbers_loaded)
     {
       if (load_lan_channel_numbers (state_data) != IPMI_CONFIG_ERR_SUCCESS)
-	goto cleanup;
+        goto cleanup;
     }
 
   if (state_data->lan_channel_numbers_count > 0)
@@ -747,55 +747,55 @@ ipmi_config_pef_alert_policy_table_section_get (ipmi_config_state_data_t *state_
       int i;
 
       snprintf (description,
-		IPMI_CONFIG_MAX_DESCRIPTION_LEN,
-		"Give a valid number (LAN = %u",
-		state_data->lan_channel_numbers[0]);
+                IPMI_CONFIG_MAX_DESCRIPTION_LEN,
+                "Give a valid number (LAN = %u",
+                state_data->lan_channel_numbers[0]);
 
       for (i = 1; i < state_data->lan_channel_numbers_count; i++)
-	{
-	  snprintf (tempbuf,
-		    IPMI_CONFIG_MAX_DESCRIPTION_LEN,
-		    ", %u",
-		    state_data->lan_channel_numbers[i]);
-	  
-	  strcat (description, tempbuf);
-	}
+        {
+          snprintf (tempbuf,
+                    IPMI_CONFIG_MAX_DESCRIPTION_LEN,
+                    ", %u",
+                    state_data->lan_channel_numbers[i]);
+          
+          strcat (description, tempbuf);
+        }
 
       strcat (description, ")");
     }
   else
     snprintf (description,
-	      IPMI_CONFIG_MAX_DESCRIPTION_LEN,
-	      "Give a valid number");
+              IPMI_CONFIG_MAX_DESCRIPTION_LEN,
+              "Give a valid number");
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Channel_Number",
-				   description,
-				   0,
-				   channel_number_checkout,
-				   channel_number_commit,
-				   number_range_four_bits_validate) < 0)
+                                   section,
+                                   "Channel_Number",
+                                   description,
+                                   0,
+                                   channel_number_checkout,
+                                   channel_number_commit,
+                                   number_range_four_bits_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Alert_String_Set_Selector",
-				   "Give a valid number",
-				   0,
-				   alert_string_set_selector_checkout,
-				   alert_string_set_selector_commit,
-				   number_range_seven_bits_validate) < 0)
+                                   section,
+                                   "Alert_String_Set_Selector",
+                                   "Give a valid number",
+                                   0,
+                                   alert_string_set_selector_checkout,
+                                   alert_string_set_selector_commit,
+                                   number_range_seven_bits_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Event_Specific_Alert_String",
-				   "Possible values: Yes/No",
-				   0,
-				   event_specific_alert_string_checkout,
-				   event_specific_alert_string_commit,
-				   yes_no_validate) < 0)
+                                   section,
+                                   "Event_Specific_Alert_String",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   event_specific_alert_string_checkout,
+                                   event_specific_alert_string_commit,
+                                   yes_no_validate) < 0)
     goto cleanup;
 
   return (section);

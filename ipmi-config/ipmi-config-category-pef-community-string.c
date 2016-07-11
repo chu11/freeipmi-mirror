@@ -37,7 +37,7 @@
 
 static ipmi_config_err_t
 community_string_checkout (ipmi_config_state_data_t *state_data,
-			   const char *section_name,
+                           const char *section_name,
                            struct ipmi_config_keyvalue *kv)
 {
   char community_string[IPMI_MAX_COMMUNITY_STRING_LENGTH+1] = { 0, };
@@ -73,12 +73,12 @@ community_string_checkout (ipmi_config_state_data_t *state_data,
                                                                   obj_cmd_rs) < 0)
     {
       if (ipmi_config_param_errnum_is_non_fatal (state_data,
-						 obj_cmd_rs,
-						 &ret))
+                                                 obj_cmd_rs,
+                                                 &ret))
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_community_string: %s\n",
@@ -101,8 +101,8 @@ community_string_checkout (ipmi_config_state_data_t *state_data,
     }
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  community_string) < 0)
+                                                  kv,
+                                                  community_string) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
@@ -113,7 +113,7 @@ community_string_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 community_string_commit (ipmi_config_state_data_t *state_data,
-			 const char *section_name,
+                         const char *section_name,
                          const struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -147,12 +147,12 @@ community_string_commit (ipmi_config_state_data_t *state_data,
                                                                   obj_cmd_rs) < 0)
     {
       if (ipmi_config_param_errnum_is_non_fatal (state_data,
-						 obj_cmd_rs,
-						 &ret))
+                                                 obj_cmd_rs,
+                                                 &ret))
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_community_string: %s\n",
@@ -169,7 +169,7 @@ community_string_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_validate_t
 community_string_validate (ipmi_config_state_data_t *state_data,
-			   const char *section_name,
+                           const char *section_name,
                            const char *key_name,
                            const char *value)
 {
@@ -185,8 +185,8 @@ community_string_validate (ipmi_config_state_data_t *state_data,
 
 struct ipmi_config_section *
 ipmi_config_pef_community_string_section_get (ipmi_config_state_data_t *state_data,
-					      unsigned int config_flags,
-					      int channel_index)
+                                              unsigned int config_flags,
+                                              int channel_index)
 {
   struct ipmi_config_section *section = NULL;
   char *section_name_base_str = "Community_String";
@@ -194,24 +194,24 @@ ipmi_config_pef_community_string_section_get (ipmi_config_state_data_t *state_da
   assert (state_data);
 
   if (!(section = ipmi_config_section_multi_channel_create (state_data,
-							    section_name_base_str,
-							    NULL,
-							    NULL,
-							    NULL,
-							    config_flags,
-							    channel_index,
-							    state_data->lan_channel_numbers,
-							    state_data->lan_channel_numbers_count)))
+                                                            section_name_base_str,
+                                                            NULL,
+                                                            NULL,
+                                                            NULL,
+                                                            config_flags,
+                                                            channel_index,
+                                                            state_data->lan_channel_numbers,
+                                                            state_data->lan_channel_numbers_count)))
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Community_String",
-				   "Give valid string",
-				   0,
-				   community_string_checkout,
-				   community_string_commit,
-				   community_string_validate) < 0)
+                                   section,
+                                   "Community_String",
+                                   "Give valid string",
+                                   0,
+                                   community_string_checkout,
+                                   community_string_commit,
+                                   community_string_validate) < 0)
     goto cleanup;
 
   return (section);

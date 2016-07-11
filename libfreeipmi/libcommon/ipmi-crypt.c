@@ -82,11 +82,11 @@ crypt_init (void)
   if (!gcrypt_thread_initialized)
     {
       if ((e = gcry_control (GCRYCTL_SET_THREAD_CBS, &gcry_threads_pthread)) != GPG_ERR_NO_ERROR)
-	{
-	  ERR_TRACE (gcry_strerror (e), e);
-	  SET_ERRNO (_gpg_error_to_errno (e));
-	  return (-1);
-	}
+        {
+          ERR_TRACE (gcry_strerror (e), e);
+          SET_ERRNO (_gpg_error_to_errno (e));
+          return (-1);
+        }
       gcrypt_thread_initialized++;
     }
 
@@ -127,13 +127,13 @@ crypt_init (void)
 
 int
 crypt_hash (unsigned int hash_algorithm,
-	    unsigned int hash_flags,
-	    const void *key,
-	    unsigned int key_len,
-	    const void *hash_data,
-	    unsigned int hash_data_len,
-	    void *digest,
-	    unsigned int digest_len)
+            unsigned int hash_flags,
+            const void *key,
+            unsigned int key_len,
+            const void *hash_data,
+            unsigned int hash_data_len,
+            void *digest,
+            unsigned int digest_len)
 {
 #ifdef WITH_ENCRYPTION
   gcry_md_hd_t h = NULL;
@@ -421,13 +421,13 @@ _cipher_crypt (unsigned int cipher_algorithm,
 
 int
 crypt_cipher_encrypt (unsigned int cipher_algorithm,
-		      unsigned int cipher_mode,
-		      const void *key,
-		      unsigned int key_len,
-		      const void *iv,
-		      unsigned int iv_len,
-		      void *data,
-		      unsigned int data_len)
+                      unsigned int cipher_mode,
+                      const void *key,
+                      unsigned int key_len,
+                      const void *iv,
+                      unsigned int iv_len,
+                      void *data,
+                      unsigned int data_len)
 {
 #ifdef WITH_ENCRYPTION
   return (_cipher_crypt (cipher_algorithm,
@@ -447,13 +447,13 @@ crypt_cipher_encrypt (unsigned int cipher_algorithm,
 
 int
 crypt_cipher_decrypt (unsigned int cipher_algorithm,
-		      unsigned int cipher_mode,
-		      const void *key,
-		      unsigned int key_len,
-		      const void *iv,
-		      unsigned int iv_len,
-		      void *data,
-		      unsigned int data_len)
+                      unsigned int cipher_mode,
+                      const void *key,
+                      unsigned int key_len,
+                      const void *iv,
+                      unsigned int iv_len,
+                      void *data,
+                      unsigned int data_len)
 {
 #ifdef WITH_ENCRYPTION
   return (_cipher_crypt (cipher_algorithm,

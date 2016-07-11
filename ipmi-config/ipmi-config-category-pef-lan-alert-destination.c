@@ -94,12 +94,12 @@ _get_destination_type (ipmi_config_state_data_t *state_data,
                                                                   obj_cmd_rs) < 0)
     {
       if (ipmi_config_param_errnum_is_non_fatal (state_data,
-						 obj_cmd_rs,
-						 &ret))
+                                                 obj_cmd_rs,
+                                                 &ret))
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_destination_type: %s\n",
@@ -196,12 +196,12 @@ _set_destination_type (ipmi_config_state_data_t *state_data,
                                                                  obj_cmd_rs) < 0)
     {
       if (ipmi_config_param_errnum_is_non_fatal (state_data,
-						 obj_cmd_rs,
-						 &ret))
+                                                 obj_cmd_rs,
+                                                 &ret))
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_destination_type: %s\n",
@@ -218,7 +218,7 @@ _set_destination_type (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 alert_destination_type_checkout (ipmi_config_state_data_t *state_data,
-				 const char *section_name,
+                                 const char *section_name,
                                  struct ipmi_config_keyvalue *kv)
 {
   struct destination_type dt;
@@ -234,8 +234,8 @@ alert_destination_type_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  alert_destination_type_string (dt.alert_destination_type)) < 0)
+                                                  kv,
+                                                  alert_destination_type_string (dt.alert_destination_type)) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -243,7 +243,7 @@ alert_destination_type_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 alert_destination_type_commit (ipmi_config_state_data_t *state_data,
-			       const char *section_name,
+                               const char *section_name,
                                const struct ipmi_config_keyvalue *kv)
 {
   struct destination_type dt;
@@ -267,7 +267,7 @@ alert_destination_type_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 alert_acknowledge_checkout (ipmi_config_state_data_t *state_data,
-			    const char *section_name,
+                            const char *section_name,
                             struct ipmi_config_keyvalue *kv)
 {
   struct destination_type dt;
@@ -283,8 +283,8 @@ alert_acknowledge_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  dt.alert_acknowledge ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  dt.alert_acknowledge ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -292,7 +292,7 @@ alert_acknowledge_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 alert_acknowledge_commit (ipmi_config_state_data_t *state_data,
-			  const char *section_name,
+                          const char *section_name,
                           const struct ipmi_config_keyvalue *kv)
 {
   struct destination_type dt;
@@ -316,7 +316,7 @@ alert_acknowledge_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 alert_acknowledge_timeout_checkout (ipmi_config_state_data_t *state_data,
-				    const char *section_name,
+                                    const char *section_name,
                                     struct ipmi_config_keyvalue *kv)
 {
   struct destination_type dt;
@@ -332,8 +332,8 @@ alert_acknowledge_timeout_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
-							       kv,
-							       dt.alert_acknowledge_timeout) < 0)
+                                                               kv,
+                                                               dt.alert_acknowledge_timeout) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -341,7 +341,7 @@ alert_acknowledge_timeout_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 alert_acknowledge_timeout_commit (ipmi_config_state_data_t *state_data,
-				  const char *section_name,
+                                  const char *section_name,
                                   const struct ipmi_config_keyvalue *kv)
 {
   struct destination_type dt;
@@ -365,7 +365,7 @@ alert_acknowledge_timeout_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 alert_retries_checkout (ipmi_config_state_data_t *state_data,
-			const char *section_name,
+                        const char *section_name,
                         struct ipmi_config_keyvalue *kv)
 {
   struct destination_type dt;
@@ -381,8 +381,8 @@ alert_retries_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
-							       kv,
-							       dt.alert_retries) < 0)
+                                                               kv,
+                                                               dt.alert_retries) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -390,7 +390,7 @@ alert_retries_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 alert_retries_commit (ipmi_config_state_data_t *state_data,
-		      const char *section_name,
+                      const char *section_name,
                       const struct ipmi_config_keyvalue *kv)
 {
   struct destination_type dt;
@@ -414,7 +414,7 @@ alert_retries_commit (ipmi_config_state_data_t *state_data,
 
 ipmi_config_validate_t
 alert_retries_validate (ipmi_config_state_data_t *state_data,
-			const char *section_name,
+                        const char *section_name,
                         const char *key_name,
                         const char *value)
 {
@@ -469,12 +469,12 @@ _get_destination_addresses (ipmi_config_state_data_t *state_data,
                                                                       obj_cmd_rs) < 0)
     {
       if (ipmi_config_param_errnum_is_non_fatal (state_data,
-						 obj_cmd_rs,
-						 &ret))
+                                                 obj_cmd_rs,
+                                                 &ret))
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_destination_addresses: %s\n",
@@ -578,13 +578,13 @@ _set_destination_addresses (ipmi_config_state_data_t *state_data,
     }
 
   if (ipv4_address_string2int (state_data,
-			       da->alert_ip,
-			       &alert_ip_address_val) < 0)
+                               da->alert_ip,
+                               &alert_ip_address_val) < 0)
     goto cleanup;
 
   if (mac_address_string2int (state_data,
-			      da->alert_mac,
-			      &alert_mac_address_val) < 0)
+                              da->alert_mac,
+                              &alert_mac_address_val) < 0)
     goto cleanup;
 
   if (ipmi_cmd_set_lan_configuration_parameters_destination_addresses (state_data->ipmi_ctx,
@@ -596,12 +596,12 @@ _set_destination_addresses (ipmi_config_state_data_t *state_data,
                                                                        obj_cmd_rs) < 0)
     {
       if (ipmi_config_param_errnum_is_non_fatal (state_data,
-						 obj_cmd_rs,
-						 &ret))
+                                                 obj_cmd_rs,
+                                                 &ret))
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_destination_addresses: %s\n",
@@ -618,7 +618,7 @@ _set_destination_addresses (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 alert_gateway_checkout (ipmi_config_state_data_t *state_data,
-			const char *section_name,
+                        const char *section_name,
                         struct ipmi_config_keyvalue *kv)
 {
   struct destination_addresses da;
@@ -634,8 +634,8 @@ alert_gateway_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  alert_gateway_string (da.alert_gateway)) < 0)
+                                                  kv,
+                                                  alert_gateway_string (da.alert_gateway)) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -643,7 +643,7 @@ alert_gateway_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 alert_gateway_commit (ipmi_config_state_data_t *state_data,
-		      const char *section_name,
+                      const char *section_name,
                       const struct ipmi_config_keyvalue *kv)
 {
   struct destination_addresses da;
@@ -667,7 +667,7 @@ alert_gateway_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 alert_ip_address_checkout (ipmi_config_state_data_t *state_data,
-			   const char *section_name,
+                           const char *section_name,
                            struct ipmi_config_keyvalue *kv)
 {
   struct destination_addresses da;
@@ -683,8 +683,8 @@ alert_ip_address_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  da.alert_ip) < 0)
+                                                  kv,
+                                                  da.alert_ip) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -692,7 +692,7 @@ alert_ip_address_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 alert_ip_address_commit (ipmi_config_state_data_t *state_data,
-			 const char *section_name,
+                         const char *section_name,
                          const struct ipmi_config_keyvalue *kv)
 {
   struct destination_addresses da;
@@ -717,7 +717,7 @@ alert_ip_address_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 alert_mac_address_checkout (ipmi_config_state_data_t *state_data,
-			    const char *section_name,
+                            const char *section_name,
                             struct ipmi_config_keyvalue *kv)
 {
   struct destination_addresses da;
@@ -733,8 +733,8 @@ alert_mac_address_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  da.alert_mac) < 0)
+                                                  kv,
+                                                  da.alert_mac) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -742,7 +742,7 @@ alert_mac_address_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 alert_mac_address_commit (ipmi_config_state_data_t *state_data,
-			  const char *section_name,
+                          const char *section_name,
                           const struct ipmi_config_keyvalue *kv)
 {
   struct destination_addresses da;
@@ -767,9 +767,9 @@ alert_mac_address_commit (ipmi_config_state_data_t *state_data,
 
 struct ipmi_config_section *
 ipmi_config_pef_lan_alert_destination_section_get (ipmi_config_state_data_t *state_data,
-						   unsigned int num,
-						   unsigned int config_flags,
-						   int channel_index)
+                                                   unsigned int num,
+                                                   unsigned int config_flags,
+                                                   int channel_index)
 {
   struct ipmi_config_section *section = NULL;
   char section_name_base[IPMI_CONFIG_MAX_SECTION_NAME_LEN];
@@ -779,84 +779,84 @@ ipmi_config_pef_lan_alert_destination_section_get (ipmi_config_state_data_t *sta
   snprintf (section_name_base, IPMI_CONFIG_MAX_SECTION_NAME_LEN, "Lan_Alert_Destination_%u", num);
 
   if (!(section = ipmi_config_section_multi_channel_create (state_data,
-							    section_name_base,
-							    NULL,
-							    NULL,
-							    NULL,
-							    config_flags,
-							    channel_index,
-							    state_data->lan_channel_numbers,
-							    state_data->lan_channel_numbers_count)))
+                                                            section_name_base,
+                                                            NULL,
+                                                            NULL,
+                                                            NULL,
+                                                            config_flags,
+                                                            channel_index,
+                                                            state_data->lan_channel_numbers,
+                                                            state_data->lan_channel_numbers_count)))
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Alert_Destination_Type",
-				   "Possible values: PET_Trap/OEM1/OEM2",
-				   0,
-				   alert_destination_type_checkout,
-				   alert_destination_type_commit,
-				   alert_destination_type_validate) < 0)
+                                   section,
+                                   "Alert_Destination_Type",
+                                   "Possible values: PET_Trap/OEM1/OEM2",
+                                   0,
+                                   alert_destination_type_checkout,
+                                   alert_destination_type_commit,
+                                   alert_destination_type_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Alert_Acknowledge",
-				   "Possible values: Yes/No",
-				   0,
-				   alert_acknowledge_checkout,
-				   alert_acknowledge_commit,
-				   yes_no_validate) < 0)
+                                   section,
+                                   "Alert_Acknowledge",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   alert_acknowledge_checkout,
+                                   alert_acknowledge_commit,
+                                   yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Alert_Acknowledge_Timeout",
-				   "Give valid unsigned number in seconds",
-				   0,
-				   alert_acknowledge_timeout_checkout,
-				   alert_acknowledge_timeout_commit,
-				   number_range_one_byte_validate) < 0)
+                                   section,
+                                   "Alert_Acknowledge_Timeout",
+                                   "Give valid unsigned number in seconds",
+                                   0,
+                                   alert_acknowledge_timeout_checkout,
+                                   alert_acknowledge_timeout_commit,
+                                   number_range_one_byte_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Alert_Retries",
-				   "Give valid unsigned number",
-				   0,
-				   alert_retries_checkout,
-				   alert_retries_commit,
-				   alert_retries_validate) < 0)
+                                   section,
+                                   "Alert_Retries",
+                                   "Give valid unsigned number",
+                                   0,
+                                   alert_retries_checkout,
+                                   alert_retries_commit,
+                                   alert_retries_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Alert_Gateway",
-				   "Possible values: Default/Backup",
-				   0,
-				   alert_gateway_checkout,
-				   alert_gateway_commit,
-				   alert_gateway_validate) < 0)
+                                   section,
+                                   "Alert_Gateway",
+                                   "Possible values: Default/Backup",
+                                   0,
+                                   alert_gateway_checkout,
+                                   alert_gateway_commit,
+                                   alert_gateway_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Alert_IP_Address",
-				   "Give valid IP address",
-				   0,
-				   alert_ip_address_checkout,
-				   alert_ip_address_commit,
-				   ip_address_validate) < 0)
+                                   section,
+                                   "Alert_IP_Address",
+                                   "Give valid IP address",
+                                   0,
+                                   alert_ip_address_checkout,
+                                   alert_ip_address_commit,
+                                   ip_address_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Alert_MAC_Address",
-				   "Give valid MAC address",
-				   0,
-				   alert_mac_address_checkout,
-				   alert_mac_address_commit,
-				   mac_address_validate) < 0)
+                                   section,
+                                   "Alert_MAC_Address",
+                                   "Give valid MAC address",
+                                   0,
+                                   alert_mac_address_checkout,
+                                   alert_mac_address_commit,
+                                   mac_address_validate) < 0)
     goto cleanup;
 
   return (section);

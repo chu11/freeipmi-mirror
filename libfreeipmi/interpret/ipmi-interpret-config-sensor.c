@@ -938,11 +938,11 @@ _interpret_config_sensor_init (ipmi_interpret_ctx_t ctx,
 
 static int
 _interpret_sensor_oem_config_create (ipmi_interpret_ctx_t ctx,
-				     uint32_t manufacturer_id,
-				     uint16_t product_id,
-				     uint8_t event_reading_type_code,
-				     uint8_t sensor_type,
-				     struct ipmi_interpret_sensor_oem_config **oem_conf)
+                                     uint32_t manufacturer_id,
+                                     uint16_t product_id,
+                                     uint8_t event_reading_type_code,
+                                     uint8_t sensor_type,
+                                     struct ipmi_interpret_sensor_oem_config **oem_conf)
 {
   struct ipmi_interpret_sensor_oem_config *tmp_oem_conf = NULL;
   char keybuf[IPMI_OEM_HASH_KEY_BUFLEN + 1];
@@ -956,12 +956,12 @@ _interpret_sensor_oem_config_create (ipmi_interpret_ctx_t ctx,
   memset (keybuf, '\0', IPMI_OEM_HASH_KEY_BUFLEN + 1);
 
   snprintf (keybuf,
-	    IPMI_OEM_HASH_KEY_BUFLEN,
-	    "%u:%u:%u:%u",
-	    manufacturer_id,
-	    product_id,
-	    event_reading_type_code,
-	    sensor_type);
+            IPMI_OEM_HASH_KEY_BUFLEN,
+            "%u:%u:%u:%u",
+            manufacturer_id,
+            product_id,
+            event_reading_type_code,
+            sensor_type);
 
   if (!(tmp_oem_conf = (struct ipmi_interpret_sensor_oem_config *)malloc (sizeof (struct ipmi_interpret_sensor_oem_config))))
     {
@@ -978,8 +978,8 @@ _interpret_sensor_oem_config_create (ipmi_interpret_ctx_t ctx,
   tmp_oem_conf->sensor_type = sensor_type;
   
   if (!hash_insert (ctx->interpret_sensor.sensor_oem_config,
-		    tmp_oem_conf->key,
-		    tmp_oem_conf))
+                    tmp_oem_conf->key,
+                    tmp_oem_conf))
     {
       INTERPRET_SET_ERRNUM (ctx, IPMI_INTERPRET_ERR_INTERNAL_ERROR);
       goto cleanup;
@@ -1019,11 +1019,11 @@ _interpret_sensor_oem_dell_power_optimized (ipmi_interpret_ctx_t ctx)
    */
   
   if (_interpret_sensor_oem_config_create (ctx,
-					   IPMI_IANA_ENTERPRISE_ID_DELL,
-					   IPMI_DELL_PRODUCT_ID_POWEREDGE_R610,
-					   IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC,
-					   IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS,
-					   &oem_conf) < 0)
+                                           IPMI_IANA_ENTERPRISE_ID_DELL,
+                                           IPMI_DELL_PRODUCT_ID_POWEREDGE_R610,
+                                           IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC,
+                                           IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS,
+                                           &oem_conf) < 0)
     return (-1);
 
   oem_conf->oem_state[0].sensor_event_bitmask = 0;
@@ -1094,11 +1094,11 @@ _interpret_sensor_oem_dell_module_board_status (ipmi_interpret_ctx_t ctx)
    */
   
   if (_interpret_sensor_oem_config_create (ctx,
-					   IPMI_IANA_ENTERPRISE_ID_DELL,
-					   IPMI_DELL_PRODUCT_ID_POWEREDGE_R610,
-					   IPMI_EVENT_READING_TYPE_CODE_OEM_DELL_STATUS,
-					   IPMI_SENSOR_TYPE_MODULE_BOARD,
-					   &oem_conf) < 0)
+                                           IPMI_IANA_ENTERPRISE_ID_DELL,
+                                           IPMI_DELL_PRODUCT_ID_POWEREDGE_R610,
+                                           IPMI_EVENT_READING_TYPE_CODE_OEM_DELL_STATUS,
+                                           IPMI_SENSOR_TYPE_MODULE_BOARD,
+                                           &oem_conf) < 0)
     return (-1);
 
   oem_conf->oem_state[0].sensor_event_bitmask = 0;
@@ -1164,8 +1164,8 @@ _interpret_sensor_oem_dell (ipmi_interpret_ctx_t ctx)
 
 static int
 _interpret_sensor_oem_supermicro_discrete_cpu_temp_wrapper (ipmi_interpret_ctx_t ctx,
-							    uint32_t manufacturer_id,
-							    uint16_t product_id)
+                                                            uint32_t manufacturer_id,
+                                                            uint16_t product_id)
 {
   struct ipmi_interpret_sensor_oem_config *oem_conf;
 
@@ -1174,11 +1174,11 @@ _interpret_sensor_oem_supermicro_discrete_cpu_temp_wrapper (ipmi_interpret_ctx_t
   assert (ctx->interpret_sensor.sensor_oem_config);
 
   if (_interpret_sensor_oem_config_create (ctx,
-					   manufacturer_id,
-					   product_id,
-					   IPMI_EVENT_READING_TYPE_CODE_OEM_SUPERMICRO_GENERIC,
-					   IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP,
-					   &oem_conf) < 0)
+                                           manufacturer_id,
+                                           product_id,
+                                           IPMI_EVENT_READING_TYPE_CODE_OEM_SUPERMICRO_GENERIC,
+                                           IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP,
+                                           &oem_conf) < 0)
     return (-1);
 
   oem_conf->oem_state[0].sensor_event_bitmask = IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP_LOW;
@@ -1235,93 +1235,93 @@ _interpret_sensor_oem_supermicro_discrete_cpu_temp (ipmi_interpret_ctx_t ctx)
    */
 
   if (_interpret_sensor_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
-								  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO,
-								  IPMI_SUPERMICRO_PRODUCT_ID_X9SC_BASE) < 0)
+                                                                  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO,
+                                                                  IPMI_SUPERMICRO_PRODUCT_ID_X9SC_BASE) < 0)
     return (-1);
 
   if (_interpret_sensor_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
-								  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO,
-								  IPMI_SUPERMICRO_PRODUCT_ID_X9DRI_F) < 0)
+                                                                  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO,
+                                                                  IPMI_SUPERMICRO_PRODUCT_ID_X9DRI_F) < 0)
     return (-1);
 
   if (_interpret_sensor_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
-								  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO,
-								  IPMI_SUPERMICRO_PRODUCT_ID_X9DRI_LN4F_PLUS) < 0)
+                                                                  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO,
+                                                                  IPMI_SUPERMICRO_PRODUCT_ID_X9DRI_LN4F_PLUS) < 0)
     return (-1);
 
   if (_interpret_sensor_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
-								  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO,
-								  IPMI_SUPERMICRO_PRODUCT_ID_X9SPU_F_O) < 0)
+                                                                  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO,
+                                                                  IPMI_SUPERMICRO_PRODUCT_ID_X9SPU_F_O) < 0)
     return (-1);
 
   if (_interpret_sensor_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
-								  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO,
-								  IPMI_SUPERMICRO_PRODUCT_ID_X9SCM_IIF) < 0)
+                                                                  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO,
+                                                                  IPMI_SUPERMICRO_PRODUCT_ID_X9SCM_IIF) < 0)
     return (-1);
 
   if (_interpret_sensor_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
-								  IPMI_IANA_ENTERPRISE_ID_PEPPERCON,
-								  IPMI_SUPERMICRO_PRODUCT_ID_FOUR_BASE) < 0)
+                                                                  IPMI_IANA_ENTERPRISE_ID_PEPPERCON,
+                                                                  IPMI_SUPERMICRO_PRODUCT_ID_FOUR_BASE) < 0)
     return (-1);
 
   if (_interpret_sensor_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
-								  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
-								  IPMI_SUPERMICRO_PRODUCT_ID_X8DT_BASE) < 0)
+                                                                  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+                                                                  IPMI_SUPERMICRO_PRODUCT_ID_X8DT_BASE) < 0)
     return (-1);
   
   if (_interpret_sensor_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
-								  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
-								  IPMI_SUPERMICRO_PRODUCT_ID_X8DTU_6PLUS) < 0)
+                                                                  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+                                                                  IPMI_SUPERMICRO_PRODUCT_ID_X8DTU_6PLUS) < 0)
     return (-1);
   
   if (_interpret_sensor_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
-								  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
-								  IPMI_SUPERMICRO_PRODUCT_ID_X8DTL_BASE) < 0)
+                                                                  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+                                                                  IPMI_SUPERMICRO_PRODUCT_ID_X8DTL_BASE) < 0)
     return (-1);
   
   if (_interpret_sensor_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
-								  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
-								  IPMI_SUPERMICRO_PRODUCT_ID_X8SIL_F) < 0)
+                                                                  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+                                                                  IPMI_SUPERMICRO_PRODUCT_ID_X8SIL_F) < 0)
     return (-1);
 
   if (_interpret_sensor_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
-								  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
-								  IPMI_SUPERMICRO_PRODUCT_ID_X9SC_BASE) < 0)
+                                                                  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+                                                                  IPMI_SUPERMICRO_PRODUCT_ID_X9SC_BASE) < 0)
     return (-1);
 
   if (_interpret_sensor_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
-								  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
-								  IPMI_SUPERMICRO_PRODUCT_ID_X8DTNPLUS_F) < 0)
+                                                                  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+                                                                  IPMI_SUPERMICRO_PRODUCT_ID_X8DTNPLUS_F) < 0)
     return (-1);
 
   if (_interpret_sensor_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
-								  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
-								  IPMI_SUPERMICRO_PRODUCT_ID_X8SIE) < 0)
+                                                                  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+                                                                  IPMI_SUPERMICRO_PRODUCT_ID_X8SIE) < 0)
     return (-1);
 
   if (_interpret_sensor_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
-								  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
-								  IPMI_SUPERMICRO_PRODUCT_ID_X9SCA_F_O) < 0)
+                                                                  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+                                                                  IPMI_SUPERMICRO_PRODUCT_ID_X9SCA_F_O) < 0)
     return (-1);
 
   if (_interpret_sensor_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
-								  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
-								  IPMI_SUPERMICRO_PRODUCT_ID_H8DGU_F) < 0)
+                                                                  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+                                                                  IPMI_SUPERMICRO_PRODUCT_ID_H8DGU_F) < 0)
     return (-1);
 
   if (_interpret_sensor_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
-								  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
-								  IPMI_SUPERMICRO_PRODUCT_ID_H8DGU) < 0)
+                                                                  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+                                                                  IPMI_SUPERMICRO_PRODUCT_ID_H8DGU) < 0)
     return (-1);
 
   if (_interpret_sensor_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
-								  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
-								  IPMI_SUPERMICRO_PRODUCT_ID_H8DG6) < 0)
+                                                                  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+                                                                  IPMI_SUPERMICRO_PRODUCT_ID_H8DG6) < 0)
     return (-1);
 
   if (_interpret_sensor_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
-								  IPMI_IANA_ENTERPRISE_ID_MAGNUM_TECHNOLOGIES,
-								  IPMI_SUPERMICRO_PRODUCT_ID_X8DTL_BASE) < 0)
+                                                                  IPMI_IANA_ENTERPRISE_ID_MAGNUM_TECHNOLOGIES,
+                                                                  IPMI_SUPERMICRO_PRODUCT_ID_X8DTL_BASE) < 0)
     return (-1);
 
   return (0);
@@ -1342,8 +1342,8 @@ _interpret_sensor_oem_supermicro (ipmi_interpret_ctx_t ctx)
 
 static int
 _interpret_sensor_oem_intel_smi_timeout_power_throttled_wrapper (ipmi_interpret_ctx_t ctx,
-								 uint32_t manufacturer_id,
-								 uint16_t product_id)
+                                                                 uint32_t manufacturer_id,
+                                                                 uint16_t product_id)
 {
   struct ipmi_interpret_sensor_oem_config *oem_conf;
 
@@ -1352,11 +1352,11 @@ _interpret_sensor_oem_intel_smi_timeout_power_throttled_wrapper (ipmi_interpret_
   assert (ctx->interpret_sensor.sensor_oem_config);
 
   if (_interpret_sensor_oem_config_create (ctx,
-					   manufacturer_id,
-					   product_id,
-					   IPMI_EVENT_READING_TYPE_CODE_STATE,
-					   IPMI_SENSOR_TYPE_OEM_INTEL_SMI_TIMEOUT,
-					   &oem_conf) < 0)
+                                           manufacturer_id,
+                                           product_id,
+                                           IPMI_EVENT_READING_TYPE_CODE_STATE,
+                                           IPMI_SENSOR_TYPE_OEM_INTEL_SMI_TIMEOUT,
+                                           &oem_conf) < 0)
     return (-1);
   
   oem_conf->oem_state[0].sensor_event_bitmask = 0;
@@ -1375,7 +1375,7 @@ _interpret_sensor_oem_intel_smi_timeout_power_throttled_wrapper (ipmi_interpret_
   
   return (0);
 }
-						 
+                                                 
 
 static int
 _interpret_sensor_oem_intel_smi_timeout_power_throttled (ipmi_interpret_ctx_t ctx)
@@ -1419,20 +1419,20 @@ _interpret_sensor_oem_intel_smi_timeout_power_throttled (ipmi_interpret_ctx_t ct
    * Intel S5500WB/Penguin Computing Relion 700
    */
   if (_interpret_sensor_oem_intel_smi_timeout_power_throttled_wrapper (ctx,
-								       IPMI_IANA_ENTERPRISE_ID_INTEL,
-								       IPMI_INTEL_PRODUCT_ID_SR1625) < 0)
+                                                                       IPMI_IANA_ENTERPRISE_ID_INTEL,
+                                                                       IPMI_INTEL_PRODUCT_ID_SR1625) < 0)
     return (-1);
 
   /* Quanta QSSC-S4R/Appro GB812X-CN */
   if (_interpret_sensor_oem_intel_smi_timeout_power_throttled_wrapper (ctx,
-								       IPMI_IANA_ENTERPRISE_ID_INTEL,
-								       IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R) < 0)
+                                                                       IPMI_IANA_ENTERPRISE_ID_INTEL,
+                                                                       IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R) < 0)
     return (-1);
 
   /* Intel S5000PAL */
   if (_interpret_sensor_oem_intel_smi_timeout_power_throttled_wrapper (ctx,
-								       IPMI_IANA_ENTERPRISE_ID_INTEL,
-								       IPMI_INTEL_PRODUCT_ID_S5000PAL) < 0)
+                                                                       IPMI_IANA_ENTERPRISE_ID_INTEL,
+                                                                       IPMI_INTEL_PRODUCT_ID_S5000PAL) < 0)
     return (-1);
 
   return (0);
@@ -1440,8 +1440,8 @@ _interpret_sensor_oem_intel_smi_timeout_power_throttled (ipmi_interpret_ctx_t ct
 
 static int
 _interpret_sensor_oem_intel_nmi_state_wrapper (ipmi_interpret_ctx_t ctx,
-					       uint32_t manufacturer_id,
-					       uint16_t product_id)
+                                               uint32_t manufacturer_id,
+                                               uint16_t product_id)
 {
   struct ipmi_interpret_sensor_oem_config *oem_conf;
 
@@ -1450,11 +1450,11 @@ _interpret_sensor_oem_intel_nmi_state_wrapper (ipmi_interpret_ctx_t ctx,
   assert (ctx->interpret_sensor.sensor_oem_config);
 
   if (_interpret_sensor_oem_config_create (ctx,
-					   manufacturer_id,
-					   product_id,
-					   IPMI_EVENT_READING_TYPE_CODE_STATE,
-					   IPMI_SENSOR_TYPE_OEM_INTEL_NMI_STATE,
-					   &oem_conf) < 0)
+                                           manufacturer_id,
+                                           product_id,
+                                           IPMI_EVENT_READING_TYPE_CODE_STATE,
+                                           IPMI_SENSOR_TYPE_OEM_INTEL_NMI_STATE,
+                                           &oem_conf) < 0)
     return (-1);
   
   oem_conf->oem_state[0].sensor_event_bitmask = 0;
@@ -1494,8 +1494,8 @@ _interpret_sensor_oem_intel_nmi_state (ipmi_interpret_ctx_t ctx)
 
   /* Intel S5000PAL */
   if (_interpret_sensor_oem_intel_nmi_state_wrapper (ctx,
-						     IPMI_IANA_ENTERPRISE_ID_INTEL,
-						     IPMI_INTEL_PRODUCT_ID_S5000PAL) < 0)
+                                                     IPMI_IANA_ENTERPRISE_ID_INTEL,
+                                                     IPMI_INTEL_PRODUCT_ID_S5000PAL) < 0)
     return (-1);
   
   return (0);
@@ -2290,22 +2290,22 @@ _cb_sensor_oem_parse (conffile_t cf,
     }
   
   if (interpret_config_parse_manufactuer_id_product_id (cf,
-							data->stringlist[0],
-							ids,
-							&ids_count) < 0)
+                                                        data->stringlist[0],
+                                                        ids,
+                                                        &ids_count) < 0)
     return (-1);
 
   if (interpret_config_parse_strtoul (cf,
-				      data->stringlist[1],
-				      UCHAR_MAX,
-				      &tmp) < 0)
+                                      data->stringlist[1],
+                                      UCHAR_MAX,
+                                      &tmp) < 0)
     return (-1);
   event_reading_type_code = tmp;
 
   if (interpret_config_parse_strtoul (cf,
-				      data->stringlist[2],
-				      UCHAR_MAX,
-				      &tmp) < 0)
+                                      data->stringlist[2],
+                                      UCHAR_MAX,
+                                      &tmp) < 0)
     return (-1);
   sensor_type = tmp;
   
@@ -2315,9 +2315,9 @@ _cb_sensor_oem_parse (conffile_t cf,
    * matched.
    */
   if (interpret_config_parse_strtoul (cf,
-				      data->stringlist[3],
-				      USHRT_MAX,
-				      &tmp) < 0)
+                                      data->stringlist[3],
+                                      USHRT_MAX,
+                                      &tmp) < 0)
     return (-1);
   sensor_event_bitmask = tmp;
 
@@ -2435,7 +2435,7 @@ _fill_sensor_config_options (struct conffile_option *to_options,
 
 int
 interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
-			       const char *sensor_config_file)
+                               const char *sensor_config_file)
 {
   int ipmi_interpret_sensor_threshold_flags[ipmi_interpret_sensor_threshold_config_len];
   int ipmi_interpret_sensor_temperature_state_flags[ipmi_interpret_sensor_temperature_state_config_len];

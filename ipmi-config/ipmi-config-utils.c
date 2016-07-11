@@ -196,11 +196,11 @@ ipmi_errnum_is_non_fatal (ipmi_config_state_data_t *state_data,
   if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
     {
       if ((ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-	   && ipmi_check_completion_code (obj_cmd_rs,
-					  IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED) == 1)
-	  || (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
-	      && ipmi_check_completion_code (obj_cmd_rs,
-					     IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
+           && ipmi_check_completion_code (obj_cmd_rs,
+                                          IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED) == 1)
+          || (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
+              && ipmi_check_completion_code (obj_cmd_rs,
+                                             IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
         (*non_fatal_err) = IPMI_CONFIG_ERR_NON_FATAL_ERROR_INVALID_UNSUPPORTED_CONFIG;
       else
         (*non_fatal_err) = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
@@ -241,11 +241,11 @@ ipmi_config_param_errnum_is_non_fatal (ipmi_config_state_data_t *state_data,
                                               IPMI_COMP_CODE_SET_LAN_CONFIGURATION_PARAMETERS_PARAMETER_NOT_SUPPORTED) == 1)
         (*non_fatal_err) = IPMI_CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED;
       else if ((ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-		&& ipmi_check_completion_code (obj_cmd_rs,
-					       IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED) == 1)
-	       || (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
-		   && ipmi_check_completion_code (obj_cmd_rs,
-						  IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
+                && ipmi_check_completion_code (obj_cmd_rs,
+                                               IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED) == 1)
+               || (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
+                   && ipmi_check_completion_code (obj_cmd_rs,
+                                                  IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
         (*non_fatal_err) = IPMI_CONFIG_ERR_NON_FATAL_ERROR_INVALID_UNSUPPORTED_CONFIG;
       else
         (*non_fatal_err) = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
@@ -413,7 +413,7 @@ _get_sol_channel_number_for_channel (ipmi_config_state_data_t *state_data,
         rv = ret;
       
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_sol_configuration_parameters_sol_payload_channel: %s\n",

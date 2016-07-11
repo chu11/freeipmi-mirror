@@ -479,7 +479,7 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
       && strlen (cmd_args->set_system_firmware_version_arg) > IPMI_SYSTEM_INFO_STRING_LEN_MAX)
     {
       fprintf (stderr,
-	       "system firmware version string too long\n");
+               "system firmware version string too long\n");
       exit (EXIT_FAILURE);
     }
   
@@ -487,7 +487,7 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
       && strlen (cmd_args->set_system_name_arg) > IPMI_SYSTEM_INFO_STRING_LEN_MAX)
     {
       fprintf (stderr,
-	       "system name string too long\n");
+               "system name string too long\n");
       exit (EXIT_FAILURE);
     }
   
@@ -495,7 +495,7 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
       && strlen (cmd_args->set_primary_operating_system_name_arg) > IPMI_SYSTEM_INFO_STRING_LEN_MAX)
     {
       fprintf (stderr,
-	       "primary operating system name string too long\n");
+               "primary operating system name string too long\n");
       exit (EXIT_FAILURE);
     }
   
@@ -503,7 +503,7 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
       && strlen (cmd_args->set_operating_system_name_arg) > IPMI_SYSTEM_INFO_STRING_LEN_MAX)
     {
       fprintf (stderr,
-	       "operating system name string too long\n");
+               "operating system name string too long\n");
       exit (EXIT_FAILURE);
     }
 
@@ -511,7 +511,7 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
       && strlen (cmd_args->set_present_os_version_number_arg) > IPMI_SYSTEM_INFO_STRING_LEN_MAX)
     {
       fprintf (stderr,
-	       "present OS version number string too long\n");
+               "present OS version number string too long\n");
       exit (EXIT_FAILURE);
     }
 
@@ -519,7 +519,7 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
       && strlen (cmd_args->set_bmc_url_arg) > IPMI_SYSTEM_INFO_STRING_LEN_MAX)
     {
       fprintf (stderr,
-	       "BMC URL string too long\n");
+               "BMC URL string too long\n");
       exit (EXIT_FAILURE);
     }
 
@@ -527,74 +527,74 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
       && strlen (cmd_args->set_base_os_hypervisor_url_arg) > IPMI_SYSTEM_INFO_STRING_LEN_MAX)
     {
       fprintf (stderr,
-	       "Base OS/Hypervisor URL string too long\n");
+               "Base OS/Hypervisor URL string too long\n");
       exit (EXIT_FAILURE);
     }
 
   if (cmd_args->read_fru)
     {
       if (!cmd_args->device_id_set)
-	{
-	  fprintf (stderr, "Device ID not set\n");
-	  exit (EXIT_FAILURE);
-	}
+        {
+          fprintf (stderr, "Device ID not set\n");
+          exit (EXIT_FAILURE);
+        }
 
       if (access (cmd_args->read_fru_filename, F_OK) == 0)
-	{
-	  if (access (cmd_args->read_fru_filename, W_OK) < 0)
-	    {
-	      fprintf (stderr,
-		       "Cannot write to '%s': %s\n",
-		       cmd_args->read_fru_filename,
-		       strerror (errno));
-	      exit (EXIT_FAILURE);
-	    }
-	}
+        {
+          if (access (cmd_args->read_fru_filename, W_OK) < 0)
+            {
+              fprintf (stderr,
+                       "Cannot write to '%s': %s\n",
+                       cmd_args->read_fru_filename,
+                       strerror (errno));
+              exit (EXIT_FAILURE);
+            }
+        }
       else
-	{
-	  int fd;
+        {
+          int fd;
 
-	  if ((fd = open (cmd_args->read_fru_filename, O_CREAT, 0644)) < 0)
-	    {
-	      fprintf (stderr,
-		       "Cannot open '%s': %s\n",
-		       cmd_args->read_fru_filename,
-		       strerror (errno));
-	      exit (EXIT_FAILURE);
-	    }
-	  else
-	    {
-	      /* ignore close error, don't care right now */
-	      close (fd);
+          if ((fd = open (cmd_args->read_fru_filename, O_CREAT, 0644)) < 0)
+            {
+              fprintf (stderr,
+                       "Cannot open '%s': %s\n",
+                       cmd_args->read_fru_filename,
+                       strerror (errno));
+              exit (EXIT_FAILURE);
+            }
+          else
+            {
+              /* ignore close error, don't care right now */
+              close (fd);
 
-	      if (unlink (cmd_args->read_fru_filename) < 0)
-		{
-		  fprintf (stderr,
-			   "Cannot remove '%s': %s\n",
-			   cmd_args->read_fru_filename,
-			   strerror (errno));
-		  exit (EXIT_FAILURE);
-		}
-	    }
-	}
+              if (unlink (cmd_args->read_fru_filename) < 0)
+                {
+                  fprintf (stderr,
+                           "Cannot remove '%s': %s\n",
+                           cmd_args->read_fru_filename,
+                           strerror (errno));
+                  exit (EXIT_FAILURE);
+                }
+            }
+        }
     }
 
   if (cmd_args->write_fru)
     {
       if (!cmd_args->device_id_set)
-	{
-	  fprintf (stderr, "Device ID not set\n");
-	  exit (EXIT_FAILURE);
-	}
+        {
+          fprintf (stderr, "Device ID not set\n");
+          exit (EXIT_FAILURE);
+        }
 
       if (access (cmd_args->write_fru_filename, R_OK) < 0)
-	{
-	  fprintf (stderr,
-		   "Cannot read '%s': %s\n",
-		   cmd_args->write_fru_filename,
-		   strerror (errno));
-	  exit (EXIT_FAILURE);
-	}
+        {
+          fprintf (stderr,
+                   "Cannot read '%s': %s\n",
+                   cmd_args->write_fru_filename,
+                   strerror (errno));
+          exit (EXIT_FAILURE);
+        }
     }
 }
 

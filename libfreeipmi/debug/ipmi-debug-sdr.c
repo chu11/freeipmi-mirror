@@ -330,11 +330,11 @@ ipmi_dump_sdr_record (int fd,
    * and want the hex output
    */
   if (ipmi_dump_hex (fd,
-		     prefix,
-		     hdr,
-		     trlr,
-		     sdr_record,
-		     sdr_record_len) < 0)
+                     prefix,
+                     hdr,
+                     trlr,
+                     sdr_record,
+                     sdr_record_len) < 0)
     {
       ERRNO_TRACE (errno);
       goto cleanup;

@@ -578,15 +578,15 @@ _ipmi_kcs_spin_sleep (ipmi_kcs_ctx_t ctx)
       unsigned long t;
       
       if (gettimeofday (&spinend, NULL) < 0)
-	{
-	  KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_SYSTEM_ERROR);
-	  return (-1);
-	}
+        {
+          KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_SYSTEM_ERROR);
+          return (-1);
+        }
 
       t = _ipmi_kcs_timeval_diff (&spinstart, &spinend);
 
       if (t > ctx->poll_interval)
-	break;
+        break;
     }
 
   return (0);
@@ -629,7 +629,7 @@ _ipmi_kcs_sleep (ipmi_kcs_ctx_t ctx, struct timeval *start)
   else
     {
       if (_ipmi_kcs_spin_sleep (ctx) < 0)
-	return (-1);
+        return (-1);
     }
   
   return (0);
@@ -656,7 +656,7 @@ _ipmi_kcs_wait_for_ibf_clear (ipmi_kcs_ctx_t ctx)
   while (_ipmi_kcs_get_status (ctx) & IPMI_KCS_STATUS_REG_IBF)
     {
       if (_ipmi_kcs_sleep (ctx, &start) < 0)
-	return (-1);
+        return (-1);
     }
 
   return (0);
@@ -684,7 +684,7 @@ _ipmi_kcs_wait_for_obf_set (ipmi_kcs_ctx_t ctx)
   while (!(_ipmi_kcs_get_status (ctx) & IPMI_KCS_STATUS_REG_OBF))
     {
       if (_ipmi_kcs_sleep (ctx, &start) < 0)
-	return (-1);
+        return (-1);
     }
 
   return (0);
@@ -867,7 +867,7 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
       _ipmi_kcs_write_byte (ctx, *p);
 
       if (_ipmi_kcs_wait_for_ibf_clear (ctx) < 0)
-	goto cleanup;
+        goto cleanup;
 
       if (!_ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_WRITE))
         {
@@ -963,7 +963,7 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
     {
       char c;
       if (_ipmi_kcs_wait_for_obf_set (ctx) < 0)
-	goto cleanup;
+        goto cleanup;
       c = _ipmi_kcs_read_byte (ctx);
       if (count < buf_len)
         {
@@ -972,14 +972,14 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
         }
       _ipmi_kcs_read_next (ctx);
       if (_ipmi_kcs_wait_for_ibf_clear (ctx) < 0)
-	goto cleanup;
+        goto cleanup;
     }
 
   if (_ipmi_kcs_test_if_state (ctx, IPMI_KCS_STATE_IDLE))
     {
       /* Clean up */
       if (_ipmi_kcs_wait_for_obf_set (ctx) < 0)
-	goto cleanup;
+        goto cleanup;
       _ipmi_kcs_read_byte (ctx); /* toss it, ACK */
     }
   else
@@ -1066,7 +1066,7 @@ _ipmi_kcs_cmd_write (ipmi_kcs_ctx_t ctx,
                              obj_cmd_rq,
                              pkt,
                              pkt_len,
-			     IPMI_INTERFACE_FLAGS_DEFAULT) < 0)
+                             IPMI_INTERFACE_FLAGS_DEFAULT) < 0)
     {
       KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_INTERNAL_ERROR);
       goto cleanup;
@@ -1145,7 +1145,7 @@ _ipmi_kcs_cmd_read (ipmi_kcs_ctx_t ctx,
                                       read_len,
                                       obj_hdr,
                                       obj_cmd_rs,
-				      IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
+                                      IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
     {
       KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_INTERNAL_ERROR);
       goto cleanup;

@@ -117,7 +117,7 @@ static char *ipmi_errmsg[] =
     "device not open",                                                  /* 16 */
     "device not supported",                                             /* 17 */
     "device not found",                                                 /* 18 */
-    "driver busy",			                                /* 19 */
+    "driver busy",                                                      /* 19 */
     "driver timeout",                                                   /* 20 */
     "message timeout",                                                  /* 21 */
     "command invalid for selected interface",                           /* 22 */
@@ -213,11 +213,11 @@ int
 ipmi_ctx_set_flags (ipmi_ctx_t ctx, unsigned int flags)
 {
   unsigned int flags_mask = (IPMI_FLAGS_NONBLOCKING
-			     | IPMI_FLAGS_NOSESSION
+                             | IPMI_FLAGS_NOSESSION
                              | IPMI_FLAGS_DEBUG_DUMP
                              | IPMI_FLAGS_NO_VALID_CHECK
-			     | IPMI_FLAGS_NO_LEGAL_CHECK
-			     | IPMI_FLAGS_IGNORE_AUTHENTICATION_CODE);
+                             | IPMI_FLAGS_NO_LEGAL_CHECK
+                             | IPMI_FLAGS_IGNORE_AUTHENTICATION_CODE);
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -239,10 +239,10 @@ ipmi_ctx_set_flags (ipmi_ctx_t ctx, unsigned int flags)
       flags_mask = IPMI_FLAGS_NOSESSION;
       
       if ((ctx->flags & flags_mask) != (flags & flags_mask))
-	{
-	  API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-	  return (-1);
-	}
+        {
+          API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
+          return (-1);
+        }
     }
 
   ctx->flags = flags;
@@ -349,47 +349,47 @@ _setup_hostname (ipmi_ctx_t ctx, const char *hostname)
       char *ptr;
 
       if (!(hostname_copy = strdup ((char *)hostname)))
-	{
-	  API_SET_ERRNUM (ctx, IPMI_ERR_OUT_OF_MEMORY);
-	  goto cleanup;
-	}
+        {
+          API_SET_ERRNUM (ctx, IPMI_ERR_OUT_OF_MEMORY);
+          goto cleanup;
+        }
 
       if ((ptr = strchr (hostname_copy, ':')))
-	{
-	  char *endptr;
-	  int tmp;
+        {
+          char *endptr;
+          int tmp;
 
-	  *ptr = '\0';
-	  ptr++;
+          *ptr = '\0';
+          ptr++;
 
-	  if (strlen (hostname_copy) > MAXHOSTNAMELEN)
-	    {
-	      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-	      return (-1);
-	    }
-	  
-	  errno = 0;
-	  tmp = strtol (ptr, &endptr, 0);
-	  if (errno
-	      || endptr[0] != '\0'
-	      || tmp <= 0
-	      || tmp > USHRT_MAX)
-	    {
-	      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-	      goto cleanup;
-	    }
-	  
-	  port = tmp;
-	}
+          if (strlen (hostname_copy) > MAXHOSTNAMELEN)
+            {
+              API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
+              return (-1);
+            }
+          
+          errno = 0;
+          tmp = strtol (ptr, &endptr, 0);
+          if (errno
+              || endptr[0] != '\0'
+              || tmp <= 0
+              || tmp > USHRT_MAX)
+            {
+              API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
+              goto cleanup;
+            }
+          
+          port = tmp;
+        }
       hostname_ptr = hostname_copy;
     }
   else
     {
       if (strlen (hostname) > MAXHOSTNAMELEN)
-	{
-	  API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-	  return (-1);
-	}
+        {
+          API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
+          return (-1);
+        }
 
       hostname_ptr = (char *)hostname;
     }
@@ -507,12 +507,12 @@ ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
                                         | IPMI_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION
                                         | IPMI_WORKAROUND_FLAGS_OUTOFBAND_CHECK_UNEXPECTED_AUTHCODE
                                         | IPMI_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER
-					| IPMI_WORKAROUND_FLAGS_OUTOFBAND_NO_AUTH_CODE_CHECK
-					| IPMI_WORKAROUND_FLAGS_OUTOFBAND_NO_CHECKSUM_CHECK);
+                                        | IPMI_WORKAROUND_FLAGS_OUTOFBAND_NO_AUTH_CODE_CHECK
+                                        | IPMI_WORKAROUND_FLAGS_OUTOFBAND_NO_CHECKSUM_CHECK);
   unsigned int flags_mask = (IPMI_FLAGS_NOSESSION
-			     | IPMI_FLAGS_DEBUG_DUMP
+                             | IPMI_FLAGS_DEBUG_DUMP
                              | IPMI_FLAGS_NO_VALID_CHECK
-			     | IPMI_FLAGS_NO_LEGAL_CHECK);
+                             | IPMI_FLAGS_NO_LEGAL_CHECK);
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -652,11 +652,11 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
                                         | IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUPERMICRO_2_0_SESSION
                                         | IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUN_2_0_SESSION
                                         | IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_OPEN_SESSION_PRIVILEGE
-					| IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_NON_EMPTY_INTEGRITY_CHECK_VALUE
-					| IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_NO_CHECKSUM_CHECK);
+                                        | IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_NON_EMPTY_INTEGRITY_CHECK_VALUE
+                                        | IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_NO_CHECKSUM_CHECK);
   unsigned int flags_mask = (IPMI_FLAGS_DEBUG_DUMP
                              | IPMI_FLAGS_NO_VALID_CHECK
-			     | IPMI_FLAGS_NO_LEGAL_CHECK);
+                             | IPMI_FLAGS_NO_LEGAL_CHECK);
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -868,11 +868,11 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
   unsigned int seedp;
   unsigned int temp_flags = 0;
   unsigned int workaround_flags_mask = (IPMI_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS
-					| IPMI_WORKAROUND_FLAGS_INBAND_SPIN_POLL);
+                                        | IPMI_WORKAROUND_FLAGS_INBAND_SPIN_POLL);
   unsigned int flags_mask = (IPMI_FLAGS_NONBLOCKING
                              | IPMI_FLAGS_DEBUG_DUMP
                              | IPMI_FLAGS_NO_VALID_CHECK
-			     | IPMI_FLAGS_NO_LEGAL_CHECK);
+                             | IPMI_FLAGS_NO_LEGAL_CHECK);
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -1028,7 +1028,7 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
         temp_flags |= IPMI_KCS_FLAGS_NONBLOCKING;
 
       if (ctx->workaround_flags_inband & IPMI_WORKAROUND_FLAGS_INBAND_SPIN_POLL)
-	temp_flags |= IPMI_KCS_FLAGS_SPIN_POLL;
+        temp_flags |= IPMI_KCS_FLAGS_SPIN_POLL;
 
       if (ipmi_kcs_ctx_set_flags (ctx->io.inband.kcs_ctx, temp_flags) < 0)
         {
@@ -1196,7 +1196,7 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
       if (driver_device)
         {
           if (ipmi_inteldcmi_ctx_set_driver_device (ctx->io.inband.inteldcmi_ctx,
-						    driver_device) < 0)
+                                                    driver_device) < 0)
             {
               API_INTELDCMI_ERRNUM_TO_API_ERRNUM (ctx, ipmi_inteldcmi_ctx_errnum (ctx->io.inband.inteldcmi_ctx));
               goto cleanup;
@@ -1506,8 +1506,8 @@ ipmi_ctx_find_inband (ipmi_ctx_t ctx,
 
 int
 ipmi_ctx_set_target (ipmi_ctx_t ctx,
-		     uint8_t *channel_number,
-		     uint8_t *rs_addr)
+                     uint8_t *channel_number,
+                     uint8_t *rs_addr)
 {
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -1532,7 +1532,7 @@ ipmi_ctx_set_target (ipmi_ctx_t ctx,
   if ((channel_number
        && (*channel_number) == IPMI_CHANNEL_NUMBER_PRIMARY_IPMB)
       && (rs_addr
-	  && (*rs_addr) == IPMI_SLAVE_ADDRESS_BMC))
+          && (*rs_addr) == IPMI_SLAVE_ADDRESS_BMC))
     {
       ctx->target.channel_number_is_set = 0;
       ctx->target.rs_addr_is_set = 0;
@@ -1542,10 +1542,10 @@ ipmi_ctx_set_target (ipmi_ctx_t ctx,
   if (channel_number)
     {
       if (!IPMI_CHANNEL_NUMBER_VALID (*channel_number))
-	{
-	  API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-	  return (-1);
-	}
+        {
+          API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
+          return (-1);
+        }
     }
 
   if (channel_number)
@@ -1567,8 +1567,8 @@ ipmi_ctx_set_target (ipmi_ctx_t ctx,
 
 int
 ipmi_ctx_get_target (ipmi_ctx_t ctx,
-		     uint8_t *channel_number,
-		     uint8_t *rs_addr)
+                     uint8_t *channel_number,
+                     uint8_t *rs_addr)
 {
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
@@ -1585,17 +1585,17 @@ ipmi_ctx_get_target (ipmi_ctx_t ctx,
   if (channel_number)
     {
       if (ctx->target.channel_number_is_set)
-	(*channel_number) = ctx->target.channel_number;
+        (*channel_number) = ctx->target.channel_number;
       else
-	(*channel_number) = IPMI_CHANNEL_NUMBER_PRIMARY_IPMB;
+        (*channel_number) = IPMI_CHANNEL_NUMBER_PRIMARY_IPMB;
     }
 
   if (rs_addr)
     {
       if (ctx->target.rs_addr_is_set)
-	(*rs_addr) = ctx->target.rs_addr;
+        (*rs_addr) = ctx->target.rs_addr;
       else
-	(*rs_addr) = IPMI_SLAVE_ADDRESS_BMC;
+        (*rs_addr) = IPMI_SLAVE_ADDRESS_BMC;
     }
 
   ctx->errnum = IPMI_ERR_SUCCESS;
@@ -1683,7 +1683,7 @@ ipmi_cmd (ipmi_ctx_t ctx,
         {
           char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
           uint8_t cmd = 0;
-	  uint8_t group_extension = 0;
+          uint8_t group_extension = 0;
           uint64_t val;
 
           /* ignore error, continue on */
@@ -1694,22 +1694,22 @@ ipmi_cmd (ipmi_ctx_t ctx,
           else
             cmd = val;
 
-	  if (IPMI_NET_FN_GROUP_EXTENSION (ctx->target.net_fn))
-	    {
-	      /* ignore error, continue on */
-	      if (FIID_OBJ_GET (obj_cmd_rq,
-				"group_extension_identification",
-				&val) < 0)
-		API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
-	      else
-		group_extension = val;
-	    }
+          if (IPMI_NET_FN_GROUP_EXTENSION (ctx->target.net_fn))
+            {
+              /* ignore error, continue on */
+              if (FIID_OBJ_GET (obj_cmd_rq,
+                                "group_extension_identification",
+                                &val) < 0)
+                API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
+              else
+                group_extension = val;
+            }
 
           debug_hdr_cmd (DEBUG_UTIL_TYPE_INBAND,
                          DEBUG_UTIL_DIRECTION_REQUEST,
                          ctx->target.net_fn,
                          cmd,
-			 group_extension,
+                         group_extension,
                          hdrbuf,
                          DEBUG_UTIL_HDR_BUFLEN);
 
@@ -1736,73 +1736,73 @@ ipmi_cmd (ipmi_ctx_t ctx,
   if (ctx->type == IPMI_DEVICE_LAN)
     {
       if (ctx->target.channel_number_is_set
-	  && ctx->target.rs_addr_is_set)
-	rv = api_lan_cmd_ipmb (ctx,
-			       obj_cmd_rq,
-			       obj_cmd_rs);
+          && ctx->target.rs_addr_is_set)
+        rv = api_lan_cmd_ipmb (ctx,
+                               obj_cmd_rq,
+                               obj_cmd_rs);
       else
-	rv = api_lan_cmd (ctx, obj_cmd_rq, obj_cmd_rs);
+        rv = api_lan_cmd (ctx, obj_cmd_rq, obj_cmd_rs);
     }
   else if (ctx->type == IPMI_DEVICE_LAN_2_0)
     {
       if (ctx->target.channel_number_is_set
-	  && ctx->target.rs_addr_is_set)
-	rv = api_lan_2_0_cmd_ipmb (ctx,
-				   obj_cmd_rq,
-				   obj_cmd_rs);
+          && ctx->target.rs_addr_is_set)
+        rv = api_lan_2_0_cmd_ipmb (ctx,
+                                   obj_cmd_rq,
+                                   obj_cmd_rs);
       else
-	rv = api_lan_2_0_cmd (ctx, obj_cmd_rq, obj_cmd_rs);
+        rv = api_lan_2_0_cmd (ctx, obj_cmd_rq, obj_cmd_rs);
     }
   else if (ctx->type == IPMI_DEVICE_KCS)
     {
       if (ctx->target.channel_number_is_set
-	  && ctx->target.rs_addr_is_set)
-	rv = api_kcs_cmd_ipmb (ctx,
-			       obj_cmd_rq,
-			       obj_cmd_rs);
+          && ctx->target.rs_addr_is_set)
+        rv = api_kcs_cmd_ipmb (ctx,
+                               obj_cmd_rq,
+                               obj_cmd_rs);
       else
-	rv = api_kcs_cmd (ctx, obj_cmd_rq, obj_cmd_rs);
+        rv = api_kcs_cmd (ctx, obj_cmd_rq, obj_cmd_rs);
     }
   else if (ctx->type == IPMI_DEVICE_SSIF)
     {
       if (ctx->target.channel_number_is_set
-	  && ctx->target.rs_addr_is_set)
-	rv = api_ssif_cmd_ipmb (ctx,
-				obj_cmd_rq,
-				obj_cmd_rs);
+          && ctx->target.rs_addr_is_set)
+        rv = api_ssif_cmd_ipmb (ctx,
+                                obj_cmd_rq,
+                                obj_cmd_rs);
       else
-	rv = api_ssif_cmd (ctx, obj_cmd_rq, obj_cmd_rs);
+        rv = api_ssif_cmd (ctx, obj_cmd_rq, obj_cmd_rs);
     }
   else if (ctx->type == IPMI_DEVICE_OPENIPMI)
     {
       if (ctx->target.channel_number_is_set
-	  && ctx->target.rs_addr_is_set)
-	rv = api_openipmi_cmd_ipmb (ctx,
-				    obj_cmd_rq,
-				    obj_cmd_rs);
+          && ctx->target.rs_addr_is_set)
+        rv = api_openipmi_cmd_ipmb (ctx,
+                                    obj_cmd_rq,
+                                    obj_cmd_rs);
       else
-	rv = api_openipmi_cmd (ctx, obj_cmd_rq, obj_cmd_rs);
+        rv = api_openipmi_cmd (ctx, obj_cmd_rq, obj_cmd_rs);
     }
   else if (ctx->type == IPMI_DEVICE_SUNBMC)
     {
       if (ctx->target.channel_number_is_set
-	  && ctx->target.rs_addr_is_set)
-	{
-	  API_SET_ERRNUM (ctx, IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE);
-	  rv = -1;
-	}
+          && ctx->target.rs_addr_is_set)
+        {
+          API_SET_ERRNUM (ctx, IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE);
+          rv = -1;
+        }
       else
-	rv = api_sunbmc_cmd (ctx, obj_cmd_rq, obj_cmd_rs);
+        rv = api_sunbmc_cmd (ctx, obj_cmd_rq, obj_cmd_rs);
     }
   else /* ctx->type == IPMI_DEVICE_INTELDCMI */
     {
       if (ctx->target.channel_number_is_set
-	  && ctx->target.rs_addr_is_set)
-	rv = api_inteldcmi_cmd_ipmb (ctx,
-				    obj_cmd_rq,
-				    obj_cmd_rs);
+          && ctx->target.rs_addr_is_set)
+        rv = api_inteldcmi_cmd_ipmb (ctx,
+                                    obj_cmd_rq,
+                                    obj_cmd_rs);
       else
-	rv = api_inteldcmi_cmd (ctx, obj_cmd_rq, obj_cmd_rs);
+        rv = api_inteldcmi_cmd (ctx, obj_cmd_rq, obj_cmd_rs);
     }
 
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
@@ -1817,7 +1817,7 @@ ipmi_cmd (ipmi_ctx_t ctx,
         {
           char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
           uint8_t cmd = 0;
-	  uint8_t group_extension = 0;
+          uint8_t group_extension = 0;
           uint64_t val;
 
           /* ignore error, continue on */
@@ -1828,23 +1828,23 @@ ipmi_cmd (ipmi_ctx_t ctx,
           else
             cmd = val;
 
-	  if (IPMI_NET_FN_GROUP_EXTENSION (ctx->target.net_fn))
-	    {
-	      /* ignore error, continue on */
-	      if (FIID_OBJ_GET (obj_cmd_rq,
-				"group_extension_identification",
-				&val) < 0)
-		API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
-	      else
-		group_extension = val;
-	    }
+          if (IPMI_NET_FN_GROUP_EXTENSION (ctx->target.net_fn))
+            {
+              /* ignore error, continue on */
+              if (FIID_OBJ_GET (obj_cmd_rq,
+                                "group_extension_identification",
+                                &val) < 0)
+                API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
+              else
+                group_extension = val;
+            }
 
           /* its ok to use the "request" net_fn */
           debug_hdr_cmd (DEBUG_UTIL_TYPE_INBAND,
                          DEBUG_UTIL_DIRECTION_RESPONSE,
                          ctx->target.net_fn,
                          cmd,
-			 group_extension,
+                         group_extension,
                          hdrbuf,
                          DEBUG_UTIL_HDR_BUFLEN);
 
@@ -1982,20 +1982,20 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
         {
           char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
           uint8_t cmd = 0;
-	  uint8_t group_extension = 0;
+          uint8_t group_extension = 0;
 
           cmd = ((uint8_t *)buf_rq)[0];
-	  if (IPMI_NET_FN_GROUP_EXTENSION (ctx->target.net_fn))
-	    {
-	      if (buf_rq_len > 1)
-		group_extension = ((uint8_t *)buf_rq)[1];
-	    }
+          if (IPMI_NET_FN_GROUP_EXTENSION (ctx->target.net_fn))
+            {
+              if (buf_rq_len > 1)
+                group_extension = ((uint8_t *)buf_rq)[1];
+            }
     
           debug_hdr_cmd (DEBUG_UTIL_TYPE_INBAND,
                          DEBUG_UTIL_DIRECTION_REQUEST,
                          ctx->target.net_fn,
                          cmd,
-			 group_extension,
+                         group_extension,
                          hdrbuf,
                          DEBUG_UTIL_HDR_BUFLEN);
 
@@ -2011,85 +2011,85 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
   if (ctx->type == IPMI_DEVICE_LAN)
     {
       if (ctx->target.channel_number_is_set
-	  && ctx->target.rs_addr_is_set)
-	rv = api_lan_cmd_raw_ipmb (ctx,
-				   buf_rq,
-				   buf_rq_len,
-				   buf_rs,
-				   buf_rs_len);
+          && ctx->target.rs_addr_is_set)
+        rv = api_lan_cmd_raw_ipmb (ctx,
+                                   buf_rq,
+                                   buf_rq_len,
+                                   buf_rs,
+                                   buf_rs_len);
       else
-	rv = api_lan_cmd_raw (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
+        rv = api_lan_cmd_raw (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
     }
   else if (ctx->type == IPMI_DEVICE_LAN_2_0)
     {
       if (ctx->target.channel_number_is_set
-	  && ctx->target.rs_addr_is_set)
-	rv = api_lan_2_0_cmd_raw_ipmb (ctx,
-				       buf_rq,
-				       buf_rq_len,
-				       buf_rs,
-				       buf_rs_len);
+          && ctx->target.rs_addr_is_set)
+        rv = api_lan_2_0_cmd_raw_ipmb (ctx,
+                                       buf_rq,
+                                       buf_rq_len,
+                                       buf_rs,
+                                       buf_rs_len);
       else
-	rv = api_lan_2_0_cmd_raw (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
+        rv = api_lan_2_0_cmd_raw (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
     }
   else if (ctx->type == IPMI_DEVICE_KCS)
     {
       if (ctx->target.channel_number_is_set
-	  && ctx->target.rs_addr_is_set)
-	rv = api_kcs_cmd_raw_ipmb (ctx,
-				   buf_rq,
-				   buf_rq_len,
-				   buf_rs,
-				   buf_rs_len);
+          && ctx->target.rs_addr_is_set)
+        rv = api_kcs_cmd_raw_ipmb (ctx,
+                                   buf_rq,
+                                   buf_rq_len,
+                                   buf_rs,
+                                   buf_rs_len);
       else
-	rv = api_kcs_cmd_raw (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
+        rv = api_kcs_cmd_raw (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
     }
   else if (ctx->type == IPMI_DEVICE_SSIF)
     {
       if (ctx->target.channel_number_is_set
-	  && ctx->target.rs_addr_is_set)
-	rv = api_ssif_cmd_raw_ipmb (ctx,
-				    buf_rq,
-				    buf_rq_len,
-				    buf_rs,
-				    buf_rs_len);
+          && ctx->target.rs_addr_is_set)
+        rv = api_ssif_cmd_raw_ipmb (ctx,
+                                    buf_rq,
+                                    buf_rq_len,
+                                    buf_rs,
+                                    buf_rs_len);
       else
-	rv = api_ssif_cmd_raw (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
+        rv = api_ssif_cmd_raw (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
     }
   else if (ctx->type == IPMI_DEVICE_OPENIPMI)
     {
       if (ctx->target.channel_number_is_set
-	  && ctx->target.rs_addr_is_set)
-	rv = api_openipmi_cmd_raw_ipmb (ctx,
-					buf_rq,
-					buf_rq_len,
-					buf_rs,
-					buf_rs_len);
+          && ctx->target.rs_addr_is_set)
+        rv = api_openipmi_cmd_raw_ipmb (ctx,
+                                        buf_rq,
+                                        buf_rq_len,
+                                        buf_rs,
+                                        buf_rs_len);
       else
-	rv = api_openipmi_cmd_raw (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
+        rv = api_openipmi_cmd_raw (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
     }
   else if (ctx->type == IPMI_DEVICE_SUNBMC)
     {
       if (ctx->target.channel_number_is_set
-	  && ctx->target.rs_addr_is_set)
-	{
-	  API_SET_ERRNUM (ctx, IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE);
-	  rv = -1;
-	}
+          && ctx->target.rs_addr_is_set)
+        {
+          API_SET_ERRNUM (ctx, IPMI_ERR_COMMAND_INVALID_FOR_SELECTED_INTERFACE);
+          rv = -1;
+        }
       else
-	rv = api_sunbmc_cmd_raw (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
+        rv = api_sunbmc_cmd_raw (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
     }
   else /* ctx->type == IPMI_DEVICE_INTELDCMI */
     {
       if (ctx->target.channel_number_is_set
-	  && ctx->target.rs_addr_is_set)
-	rv = api_inteldcmi_cmd_raw_ipmb (ctx,
-					buf_rq,
-					buf_rq_len,
-					buf_rs,
-					buf_rs_len);
+          && ctx->target.rs_addr_is_set)
+        rv = api_inteldcmi_cmd_raw_ipmb (ctx,
+                                        buf_rq,
+                                        buf_rq_len,
+                                        buf_rs,
+                                        buf_rs_len);
       else
-	rv = api_inteldcmi_cmd_raw (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
+        rv = api_inteldcmi_cmd_raw (ctx, buf_rq, buf_rq_len, buf_rs, buf_rs_len);
     }
 
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP && rv >= 0)
@@ -2104,21 +2104,21 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
         {
           char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
           uint8_t cmd = 0;
-	  uint8_t group_extension = 0;
+          uint8_t group_extension = 0;
 
           cmd = ((uint8_t *)buf_rq)[0];
-	  if (IPMI_NET_FN_GROUP_EXTENSION (ctx->target.net_fn))
-	    {
-	      if (buf_rq_len > 1)
-		group_extension = ((uint8_t *)buf_rq)[1];
-	    }
+          if (IPMI_NET_FN_GROUP_EXTENSION (ctx->target.net_fn))
+            {
+              if (buf_rq_len > 1)
+                group_extension = ((uint8_t *)buf_rq)[1];
+            }
 
           /* its ok to use the "request" net_fn */
           debug_hdr_cmd (DEBUG_UTIL_TYPE_INBAND,
                          DEBUG_UTIL_DIRECTION_RESPONSE,
                          ctx->target.net_fn,
                          cmd,
-			 group_extension,
+                         group_extension,
                          hdrbuf,
                          DEBUG_UTIL_HDR_BUFLEN);
 
@@ -2137,14 +2137,14 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
 
 int
 ipmi_cmd_raw_ipmb (ipmi_ctx_t ctx,
-		   uint8_t channel_number,
-		   uint8_t rs_addr,
-		   uint8_t lun,
-		   uint8_t net_fn,
-		   const void *buf_rq,
-		   unsigned int buf_rq_len,
-		   void *buf_rs,
-		   unsigned int buf_rs_len)
+                   uint8_t channel_number,
+                   uint8_t rs_addr,
+                   uint8_t lun,
+                   uint8_t net_fn,
+                   const void *buf_rq,
+                   unsigned int buf_rq_len,
+                   void *buf_rs,
+                   unsigned int buf_rs_len)
 {
   struct ipmi_ctx_target target_save;
   int rv = 0;
@@ -2169,12 +2169,12 @@ ipmi_cmd_raw_ipmb (ipmi_ctx_t ctx,
   ctx->target.rs_addr_is_set = 1;
 
   rv = ipmi_cmd_raw (ctx,
-		     lun,
-		     net_fn,
-		     buf_rq,
-		     buf_rq_len,
-		     buf_rs,
-		     buf_rs_len);
+                     lun,
+                     net_fn,
+                     buf_rq,
+                     buf_rq_len,
+                     buf_rs,
+                     buf_rs_len);
 
   memcpy (&ctx->target, &target_save, sizeof (target_save));
 
@@ -2196,7 +2196,7 @@ _ipmi_outofband_close (ipmi_ctx_t ctx)
   if (!(ctx->flags & IPMI_FLAGS_NOSESSION))
     {
       if (api_lan_close_session (ctx) < 0)
-	goto cleanup;
+        goto cleanup;
     }
 
  cleanup:

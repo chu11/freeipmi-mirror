@@ -46,7 +46,7 @@ ipmi_ctx_t
 ipmi_open (const char *progname,
            const char *hostname,
            struct common_cmd_args *common_args,
-	   pstdout_state_t pstate)
+           pstdout_state_t pstate)
 {
   ipmi_ctx_t ipmi_ctx = NULL;
   unsigned int workaround_flags = 0;
@@ -57,9 +57,9 @@ ipmi_open (const char *progname,
   if (!(ipmi_ctx = ipmi_ctx_create ()))
     {
       PSTDOUT_FPRINTF (pstate,
-		       stderr,
-		       "ipmi_ctx_create: %s",
-		       strerror (errno));
+                       stderr,
+                       "ipmi_ctx_create: %s",
+                       strerror (errno));
       goto cleanup;
     }
 
@@ -69,8 +69,8 @@ ipmi_open (const char *progname,
     {
       if (common_args->driver_type == IPMI_DEVICE_LAN_2_0)
         {
-	  parse_get_freeipmi_outofband_2_0_flags (common_args->workaround_flags_outofband_2_0,
-						  &workaround_flags);
+          parse_get_freeipmi_outofband_2_0_flags (common_args->workaround_flags_outofband_2_0,
+                                                  &workaround_flags);
           
           if (ipmi_ctx_open_outofband_2_0 (ipmi_ctx,
                                            hostname,
@@ -97,22 +97,22 @@ ipmi_open (const char *progname,
                   || ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_IPMI_2_0_UNAVAILABLE
                   || ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_CONNECTION_TIMEOUT)
                 PSTDOUT_FPRINTF (pstate,
-				 stderr,
-				 "%s: %s\n",
-				 progname,
-				 ipmi_ctx_errormsg (ipmi_ctx));
+                                 stderr,
+                                 "%s: %s\n",
+                                 progname,
+                                 ipmi_ctx_errormsg (ipmi_ctx));
               else
                 PSTDOUT_FPRINTF (pstate,
-				 stderr,
-				 "ipmi_ctx_open_outofband_2_0: %s\n",
-				 ipmi_ctx_errormsg (ipmi_ctx));
+                                 stderr,
+                                 "ipmi_ctx_open_outofband_2_0: %s\n",
+                                 ipmi_ctx_errormsg (ipmi_ctx));
               goto cleanup;
             }
         }
       else
         {
-	  parse_get_freeipmi_outofband_flags (common_args->workaround_flags_outofband,
-					      &workaround_flags);
+          parse_get_freeipmi_outofband_flags (common_args->workaround_flags_outofband,
+                                              &workaround_flags);
 
           if (ipmi_ctx_open_outofband (ipmi_ctx,
                                        hostname,
@@ -134,15 +134,15 @@ ipmi_open (const char *progname,
                   || ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_HOSTNAME_INVALID
                   || ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_CONNECTION_TIMEOUT)
                 PSTDOUT_FPRINTF (pstate,
-				 stderr,
-				 "%s: %s\n",
-				 progname,
-				 ipmi_ctx_errormsg (ipmi_ctx));
+                                 stderr,
+                                 "%s: %s\n",
+                                 progname,
+                                 ipmi_ctx_errormsg (ipmi_ctx));
               else
                 PSTDOUT_FPRINTF (pstate,
-				 stderr,
-				 "ipmi_ctx_open_outofband: %s\n",
-				 ipmi_ctx_errormsg (ipmi_ctx));
+                                 stderr,
+                                 "ipmi_ctx_open_outofband: %s\n",
+                                 ipmi_ctx_errormsg (ipmi_ctx));
               goto cleanup;
             }
         }
@@ -152,15 +152,15 @@ ipmi_open (const char *progname,
       if (!ipmi_is_root ())
         {
           PSTDOUT_FPRINTF (pstate,
-			   stderr,
-			   "%s: %s\n",
-			   progname,
-			   ipmi_ctx_strerror (IPMI_ERR_PERMISSION));
+                           stderr,
+                           "%s: %s\n",
+                           progname,
+                           ipmi_ctx_strerror (IPMI_ERR_PERMISSION));
           goto cleanup;
         }
 
       parse_get_freeipmi_inband_flags (common_args->workaround_flags_inband,
-				       &workaround_flags);
+                                       &workaround_flags);
 
       if (common_args->driver_type == IPMI_DEVICE_UNKNOWN)
         {
@@ -176,17 +176,17 @@ ipmi_open (const char *progname,
                                            (common_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT)) < 0)
             {
               PSTDOUT_FPRINTF (pstate,
-			       stderr,
-			       "ipmi_ctx_find_inband: %s\n",
-			       ipmi_ctx_errormsg (ipmi_ctx));
+                               stderr,
+                               "ipmi_ctx_find_inband: %s\n",
+                               ipmi_ctx_errormsg (ipmi_ctx));
               goto cleanup;
             }
 
           if (!ret)
             {
               PSTDOUT_FPRINTF (pstate,
-			       stderr,
-			       "could not find inband device");
+                               stderr,
+                               "could not find inband device");
               goto cleanup;
             }
         }
@@ -203,15 +203,15 @@ ipmi_open (const char *progname,
             {
               if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_DEVICE_NOT_FOUND)
                 PSTDOUT_FPRINTF (pstate,
-				 stderr,
-				 "%s: %s\n",
-				 progname,
-				 ipmi_ctx_errormsg (ipmi_ctx));
+                                 stderr,
+                                 "%s: %s\n",
+                                 progname,
+                                 ipmi_ctx_errormsg (ipmi_ctx));
               else
                 PSTDOUT_FPRINTF (pstate,
-				 stderr,
-				 "ipmi_ctx_open_inband: %s\n",
-				 ipmi_ctx_errormsg (ipmi_ctx));
+                                 stderr,
+                                 "ipmi_ctx_open_inband: %s\n",
+                                 ipmi_ctx_errormsg (ipmi_ctx));
               goto cleanup;
             }
         }
@@ -221,15 +221,15 @@ ipmi_open (const char *progname,
       || common_args->target_slave_address_is_set)
     {
       if (ipmi_ctx_set_target (ipmi_ctx,
-			       common_args->target_channel_number_is_set ? &common_args->target_channel_number : NULL,
-			       common_args->target_slave_address_is_set ? &common_args->target_slave_address : NULL) < 0)
-	{
-	  PSTDOUT_FPRINTF (pstate,
-			   stderr,
-			   "ipmi_ctx_set_target: %s\n",
-			   ipmi_ctx_errormsg (ipmi_ctx));
-	  goto cleanup;
-	} 
+                               common_args->target_channel_number_is_set ? &common_args->target_channel_number : NULL,
+                               common_args->target_slave_address_is_set ? &common_args->target_slave_address : NULL) < 0)
+        {
+          PSTDOUT_FPRINTF (pstate,
+                           stderr,
+                           "ipmi_ctx_set_target: %s\n",
+                           ipmi_ctx_errormsg (ipmi_ctx));
+          goto cleanup;
+        } 
     }
   
   return (ipmi_ctx);

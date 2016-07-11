@@ -52,7 +52,7 @@ ipmi_config_diff (ipmi_config_state_data_t *state_data)
           assert (kv->value_input);
 
           if ((this_ret = kv->key->checkout (state_data,
-					     s->section_name,
+                                             s->section_name,
                                              kv)) == IPMI_CONFIG_ERR_FATAL_ERROR)
             goto cleanup;
 

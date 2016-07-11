@@ -30,10 +30,10 @@
 #include "ipmipower.h"
 
 fiid_field_t *ipmipower_packet_cmd_template (ipmipower_powercmd_t ip,
-					     ipmipower_packet_type_t pkt);
+                                             ipmipower_packet_type_t pkt);
 
 fiid_obj_t ipmipower_packet_cmd_obj (ipmipower_powercmd_t ip,
-				     ipmipower_packet_type_t pkt);
+                                     ipmipower_packet_type_t pkt);
 
 /* ipmipower_packet_store
  * - Store pkt into ipmipower_powercmd_t structure
@@ -67,6 +67,6 @@ int ipmipower_packet_create (ipmipower_powercmd_t ip,
  * Returns message error code for appropriate error message
  */
 ipmipower_msg_type_t ipmipower_packet_errmsg (ipmipower_powercmd_t ip,
-					      ipmipower_packet_type_t pkt);
+                                              ipmipower_packet_type_t pkt);
 
 #endif /* IPMIPOWER_PACKETS_H */

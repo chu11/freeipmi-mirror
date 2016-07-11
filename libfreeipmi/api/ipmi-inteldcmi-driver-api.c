@@ -49,8 +49,8 @@ fiid_template_t tmpl_inteldcmi_raw =
 
 int
 api_inteldcmi_cmd (ipmi_ctx_t ctx,
-		   fiid_obj_t obj_cmd_rq,
-		   fiid_obj_t obj_cmd_rs)
+                   fiid_obj_t obj_cmd_rq,
+                   fiid_obj_t obj_cmd_rs)
 {
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
@@ -60,10 +60,10 @@ api_inteldcmi_cmd (ipmi_ctx_t ctx,
           && fiid_obj_valid (obj_cmd_rs));
   
   if (ipmi_inteldcmi_cmd (ctx->io.inband.inteldcmi_ctx,
-			  ctx->target.lun,
-			  ctx->target.net_fn,
-			  obj_cmd_rq,
-			  obj_cmd_rs) < 0)
+                          ctx->target.lun,
+                          ctx->target.net_fn,
+                          obj_cmd_rq,
+                          obj_cmd_rs) < 0)
     {
       API_INTELDCMI_ERRNUM_TO_API_ERRNUM (ctx, ipmi_inteldcmi_ctx_errnum (ctx->io.inband.inteldcmi_ctx));
       return (-1);
@@ -74,8 +74,8 @@ api_inteldcmi_cmd (ipmi_ctx_t ctx,
 
 int
 api_inteldcmi_cmd_ipmb (ipmi_ctx_t ctx,
-			fiid_obj_t obj_cmd_rq,
-			fiid_obj_t obj_cmd_rs)
+                        fiid_obj_t obj_cmd_rq,
+                        fiid_obj_t obj_cmd_rs)
 {
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
@@ -85,12 +85,12 @@ api_inteldcmi_cmd_ipmb (ipmi_ctx_t ctx,
           && fiid_obj_valid (obj_cmd_rs));
 
   if (ipmi_inteldcmi_cmd_ipmb (ctx->io.inband.inteldcmi_ctx,
-			       ctx->target.channel_number,
-			       ctx->target.rs_addr,
-			       ctx->target.lun,
-			       ctx->target.net_fn,
-			       obj_cmd_rq,
-			       obj_cmd_rs) < 0)
+                               ctx->target.channel_number,
+                               ctx->target.rs_addr,
+                               ctx->target.lun,
+                               ctx->target.net_fn,
+                               obj_cmd_rq,
+                               obj_cmd_rs) < 0)
     {
       API_INTELDCMI_ERRNUM_TO_API_ERRNUM (ctx, ipmi_inteldcmi_ctx_errnum (ctx->io.inband.inteldcmi_ctx));
       return (-1);
@@ -101,10 +101,10 @@ api_inteldcmi_cmd_ipmb (ipmi_ctx_t ctx,
 
 int
 api_inteldcmi_cmd_raw (ipmi_ctx_t ctx,
-		       const void *buf_rq,
-		       unsigned int buf_rq_len,
-		       void *buf_rs,
-		       unsigned int buf_rs_len)
+                       const void *buf_rq,
+                       unsigned int buf_rq_len,
+                       void *buf_rs,
+                       unsigned int buf_rs_len)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   fiid_obj_t obj_cmd_rs = NULL;
@@ -138,8 +138,8 @@ api_inteldcmi_cmd_raw (ipmi_ctx_t ctx,
     }
 
   if (api_inteldcmi_cmd (ctx,
-			 obj_cmd_rq,
-			 obj_cmd_rs) < 0)
+                         obj_cmd_rq,
+                         obj_cmd_rs) < 0)
     goto cleanup;
 
   if ((len = fiid_obj_get_all (obj_cmd_rs,
@@ -159,10 +159,10 @@ api_inteldcmi_cmd_raw (ipmi_ctx_t ctx,
 
 int
 api_inteldcmi_cmd_raw_ipmb (ipmi_ctx_t ctx,
-			    const void *buf_rq,
-			    unsigned int buf_rq_len,
-			    void *buf_rs,
-			    unsigned int buf_rs_len)
+                            const void *buf_rq,
+                            unsigned int buf_rq_len,
+                            void *buf_rs,
+                            unsigned int buf_rs_len)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   fiid_obj_t obj_cmd_rs = NULL;
@@ -196,8 +196,8 @@ api_inteldcmi_cmd_raw_ipmb (ipmi_ctx_t ctx,
     }
 
   if (api_inteldcmi_cmd_ipmb (ctx,
-			      obj_cmd_rq,
-			      obj_cmd_rs) < 0)
+                              obj_cmd_rq,
+                              obj_cmd_rs) < 0)
     goto cleanup;
 
   if ((len = fiid_obj_get_all (obj_cmd_rs,

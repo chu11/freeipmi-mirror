@@ -881,12 +881,12 @@ ipmi_cmd_set_pef_configuration_parameters_alert_strings (ipmi_ctx_t ctx,
 
 static int
 _ipmi_cmd_get_pef_configuration_parameters_common (ipmi_ctx_t ctx,
-						   uint8_t get_parameter,
-						   uint8_t set_selector,
-						   uint8_t block_selector,
-						   fiid_obj_t obj_cmd_rs,
-						   fiid_field_t *tmpl_cmd_rs_expected,
-						   uint8_t parameter_selector)
+                                                   uint8_t get_parameter,
+                                                   uint8_t set_selector,
+                                                   uint8_t block_selector,
+                                                   fiid_obj_t obj_cmd_rs,
+                                                   fiid_field_t *tmpl_cmd_rs_expected,
+                                                   uint8_t parameter_selector)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int rv = -1;
@@ -953,12 +953,12 @@ ipmi_cmd_get_pef_configuration_parameters (ipmi_ctx_t ctx,
                                            fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_pef_configuration_parameters_common (ctx,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_pef_configuration_parameters_rs,
-							 parameter_selector) < 0)
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_pef_configuration_parameters_rs,
+                                                         parameter_selector) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -975,12 +975,12 @@ ipmi_cmd_get_pef_configuration_parameters_set_in_progress (ipmi_ctx_t ctx,
                                                            fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_pef_configuration_parameters_common (ctx,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_pef_configuration_parameters_set_in_progress_rs,
-							 IPMI_PEF_CONFIGURATION_PARAMETER_SET_IN_PROGRESS) < 0)
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_pef_configuration_parameters_set_in_progress_rs,
+                                                         IPMI_PEF_CONFIGURATION_PARAMETER_SET_IN_PROGRESS) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -997,12 +997,12 @@ ipmi_cmd_get_pef_configuration_parameters_pef_control (ipmi_ctx_t ctx,
                                                        fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_pef_configuration_parameters_common (ctx,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_pef_configuration_parameters_pef_control_rs,
-							 IPMI_PEF_CONFIGURATION_PARAMETER_PEF_CONTROL) < 0)
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_pef_configuration_parameters_pef_control_rs,
+                                                         IPMI_PEF_CONFIGURATION_PARAMETER_PEF_CONTROL) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1019,12 +1019,12 @@ ipmi_cmd_get_pef_configuration_parameters_pef_action_global_control (ipmi_ctx_t 
                                                                      fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_pef_configuration_parameters_common (ctx,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_pef_configuration_parameters_pef_action_global_control_rs,
-							 IPMI_PEF_CONFIGURATION_PARAMETER_PEF_ACTION_GLOBAL_CONTROL) < 0)
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_pef_configuration_parameters_pef_action_global_control_rs,
+                                                         IPMI_PEF_CONFIGURATION_PARAMETER_PEF_ACTION_GLOBAL_CONTROL) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1041,12 +1041,12 @@ ipmi_cmd_get_pef_configuration_parameters_pef_startup_delay (ipmi_ctx_t ctx,
                                                              fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_pef_configuration_parameters_common (ctx,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_pef_configuration_parameters_pef_startup_delay_rs,
-							 IPMI_PEF_CONFIGURATION_PARAMETER_PEF_STARTUP_DELAY) < 0)
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_pef_configuration_parameters_pef_startup_delay_rs,
+                                                         IPMI_PEF_CONFIGURATION_PARAMETER_PEF_STARTUP_DELAY) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1063,12 +1063,12 @@ ipmi_cmd_get_pef_configuration_parameters_pef_alert_startup_delay (ipmi_ctx_t ct
                                                                    fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_pef_configuration_parameters_common (ctx,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_pef_configuration_parameters_pef_alert_startup_delay_rs,
-							 IPMI_PEF_CONFIGURATION_PARAMETER_PEF_ALERT_STARTUP_DELAY) < 0)
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_pef_configuration_parameters_pef_alert_startup_delay_rs,
+                                                         IPMI_PEF_CONFIGURATION_PARAMETER_PEF_ALERT_STARTUP_DELAY) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1085,12 +1085,12 @@ ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters (ipmi_ctx_t ct
                                                                    fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_pef_configuration_parameters_common (ctx,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_pef_configuration_parameters_number_of_event_filters_rs,
-							 IPMI_PEF_CONFIGURATION_PARAMETER_NUMBER_OF_EVENT_FILTERS) < 0)
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_pef_configuration_parameters_number_of_event_filters_rs,
+                                                         IPMI_PEF_CONFIGURATION_PARAMETER_NUMBER_OF_EVENT_FILTERS) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1107,12 +1107,12 @@ ipmi_cmd_get_pef_configuration_parameters_event_filter_table (ipmi_ctx_t ctx,
                                                               fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_pef_configuration_parameters_common (ctx,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_pef_configuration_parameters_event_filter_table_rs,
-							 IPMI_PEF_CONFIGURATION_PARAMETER_EVENT_FILTER_TABLE) < 0)
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_pef_configuration_parameters_event_filter_table_rs,
+                                                         IPMI_PEF_CONFIGURATION_PARAMETER_EVENT_FILTER_TABLE) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1129,12 +1129,12 @@ ipmi_cmd_get_pef_configuration_parameters_event_filter_table_data1_ (ipmi_ctx_t 
                                                                      fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_pef_configuration_parameters_common (ctx,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_pef_configuration_parameters_event_filter_table_data1_rs,
-							 IPMI_PEF_CONFIGURATION_PARAMETER_EVENT_FILTER_TABLE_DATA_1) < 0)
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_pef_configuration_parameters_event_filter_table_data1_rs,
+                                                         IPMI_PEF_CONFIGURATION_PARAMETER_EVENT_FILTER_TABLE_DATA_1) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1151,12 +1151,12 @@ ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries (ipmi_c
                                                                           fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_pef_configuration_parameters_common (ctx,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries_rs,
-							 IPMI_PEF_CONFIGURATION_PARAMETER_NUMBER_OF_ALERT_POLICY_ENTRIES) < 0)
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries_rs,
+                                                         IPMI_PEF_CONFIGURATION_PARAMETER_NUMBER_OF_ALERT_POLICY_ENTRIES) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1173,12 +1173,12 @@ ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings (ipmi_ctx_t ct
                                                                    fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_pef_configuration_parameters_common (ctx,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_pef_configuration_parameters_number_of_alert_strings_rs,
-							 IPMI_PEF_CONFIGURATION_PARAMETER_NUMBER_OF_ALERT_STRINGS) < 0)
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_pef_configuration_parameters_number_of_alert_strings_rs,
+                                                         IPMI_PEF_CONFIGURATION_PARAMETER_NUMBER_OF_ALERT_STRINGS) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1195,12 +1195,12 @@ ipmi_cmd_get_pef_configuration_parameters_alert_string_keys (ipmi_ctx_t ctx,
                                                              fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_pef_configuration_parameters_common (ctx,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_pef_configuration_parameters_alert_string_keys_rs,
-							 IPMI_PEF_CONFIGURATION_PARAMETER_ALERT_STRING_KEYS) < 0)
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_pef_configuration_parameters_alert_string_keys_rs,
+                                                         IPMI_PEF_CONFIGURATION_PARAMETER_ALERT_STRING_KEYS) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1217,12 +1217,12 @@ ipmi_cmd_get_pef_configuration_parameters_alert_string (ipmi_ctx_t ctx,
                                                         fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_pef_configuration_parameters_common (ctx,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_pef_configuration_parameters_alert_strings_rs,
-							 IPMI_PEF_CONFIGURATION_PARAMETER_ALERT_STRINGS) < 0)
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_pef_configuration_parameters_alert_strings_rs,
+                                                         IPMI_PEF_CONFIGURATION_PARAMETER_ALERT_STRINGS) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1239,12 +1239,12 @@ ipmi_cmd_get_pef_configuration_parameters_alert_policy_table (ipmi_ctx_t ctx,
                                                               fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_pef_configuration_parameters_common (ctx,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_pef_configuration_parameters_alert_policy_table_rs,
-							 IPMI_PEF_CONFIGURATION_PARAMETER_ALERT_POLICY_TABLE) < 0)
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_pef_configuration_parameters_alert_policy_table_rs,
+                                                         IPMI_PEF_CONFIGURATION_PARAMETER_ALERT_POLICY_TABLE) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);

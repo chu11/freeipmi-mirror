@@ -55,12 +55,12 @@ debug_hdr_str (uint8_t packet_type,
   int len;
 
   assert (packet_type == DEBUG_UTIL_TYPE_NONE
-	  || packet_type == DEBUG_UTIL_TYPE_INBAND
-	  || packet_type == DEBUG_UTIL_TYPE_IPMI_1_5
-	  || packet_type == DEBUG_UTIL_TYPE_IPMI_2_0);
+          || packet_type == DEBUG_UTIL_TYPE_INBAND
+          || packet_type == DEBUG_UTIL_TYPE_IPMI_1_5
+          || packet_type == DEBUG_UTIL_TYPE_IPMI_2_0);
   assert (packet_direction == DEBUG_UTIL_DIRECTION_NONE
-	  || packet_direction == DEBUG_UTIL_DIRECTION_REQUEST
-	  || packet_direction == DEBUG_UTIL_DIRECTION_RESPONSE);
+          || packet_direction == DEBUG_UTIL_DIRECTION_REQUEST
+          || packet_direction == DEBUG_UTIL_DIRECTION_RESPONSE);
   assert (str);
   assert (hdrbuf);
   assert (hdrbuf_len);
@@ -120,7 +120,7 @@ debug_hdr_cmd (uint8_t packet_type,
                uint8_t packet_direction,
                uint8_t net_fn,
                uint8_t cmd,
-	       uint8_t group_extension,
+               uint8_t group_extension,
                char *hdrbuf,
                unsigned int hdrbuf_len)
 {
@@ -130,9 +130,9 @@ debug_hdr_cmd (uint8_t packet_type,
   if (IPMI_NET_FN_GROUP_EXTENSION (net_fn))
     {
       if (group_extension == IPMI_NET_FN_GROUP_EXTENSION_IDENTIFICATION_DCMI)
-	str_cmd = ipmi_cmd_dcmi_str (cmd);
+        str_cmd = ipmi_cmd_dcmi_str (cmd);
       else
-	str_cmd = "Unknown";
+        str_cmd = "Unknown";
       packet_flags = DEBUG_UTIL_FLAGS_GROUP_EXTENSION;
     }
   else if (IPMI_NET_FN_OEM_GROUP (net_fn))

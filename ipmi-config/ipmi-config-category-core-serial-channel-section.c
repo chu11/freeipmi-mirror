@@ -36,8 +36,8 @@
 
 struct ipmi_config_section *
 ipmi_config_core_serial_channel_section_get (ipmi_config_state_data_t *state_data,
-					     unsigned int config_flags,
-					     int channel_index)
+                                             unsigned int config_flags,
+                                             int channel_index)
 {
   struct ipmi_config_section * section = NULL;
   char *section_comment =
@@ -75,7 +75,7 @@ ipmi_config_core_serial_channel_section_get (ipmi_config_state_data_t *state_dat
     goto cleanup;
 
   if (ipmi_config_core_channel_common_section_get (state_data,
-						   section) < 0)
+                                                   section) < 0)
     goto cleanup;
 
   return (section);

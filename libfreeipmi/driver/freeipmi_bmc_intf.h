@@ -31,72 +31,72 @@
  */
 
 #ifndef FREEIPMI_BMC_INTF_H
-#define	FREEIPMI_BMC_INTF_H
+#define FREEIPMI_BMC_INTF_H
 
 /* achu: removing pragma for FreeIPMI */
 #if 0
-#pragma ident	"@(#)bmc_intf.h	1.2	05/03/07 SMI"
+#pragma ident   "@(#)bmc_intf.h 1.2     05/03/07 SMI"
 #endif
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define	BMC_SUCCESS		0x0
-#define	BMC_FAILURE		0x1
+#define BMC_SUCCESS             0x0
+#define BMC_FAILURE             0x1
 
-#define	BMC_NETFN_CHASSIS		0x0
-#define	BMC_NETFN_BRIDGE		0x2
-#define	BMC_NETFN_SE			0x4
-#define	BMC_NETFN_APP			0x6
-#define	BMC_NETFN_FIRMWARE		0x8
-#define	BMC_NETFN_STORAGE		0xa
-#define	BMC_NETFN_TRANSPORT		0xc
+#define BMC_NETFN_CHASSIS               0x0
+#define BMC_NETFN_BRIDGE                0x2
+#define BMC_NETFN_SE                    0x4
+#define BMC_NETFN_APP                   0x6
+#define BMC_NETFN_FIRMWARE              0x8
+#define BMC_NETFN_STORAGE               0xa
+#define BMC_NETFN_TRANSPORT             0xc
 
-#define	SEND_MAX_PAYLOAD_SIZE		34	/* MAX payload */
-#define	RECV_MAX_PAYLOAD_SIZE		33	/* MAX payload */
-#define	BMC_MIN_RESPONSE_SIZE		3
-#define	BMC_MIN_REQUEST_SIZE		2
-#define	BMC_MAX_RESPONSE_SIZE   (BMC_MIN_RESPONSE_SIZE + RECV_MAX_PAYLOAD_SIZE)
-#define	BMC_MAX_REQUEST_SIZE	(BMC_MIN_REQUEST_SIZE + BMC_MAX_RESPONSE_SIZE)
+#define SEND_MAX_PAYLOAD_SIZE           34      /* MAX payload */
+#define RECV_MAX_PAYLOAD_SIZE           33      /* MAX payload */
+#define BMC_MIN_RESPONSE_SIZE           3
+#define BMC_MIN_REQUEST_SIZE            2
+#define BMC_MAX_RESPONSE_SIZE   (BMC_MIN_RESPONSE_SIZE + RECV_MAX_PAYLOAD_SIZE)
+#define BMC_MAX_REQUEST_SIZE    (BMC_MIN_REQUEST_SIZE + BMC_MAX_RESPONSE_SIZE)
 
-#define	BUF_SIZE 256
-#define	MAX_BUF_SIZE			256
+#define BUF_SIZE 256
+#define MAX_BUF_SIZE                    256
 
 /*
  * Useful macros
  */
-#define	FORM_NETFNLUN(net, lun)	((((net) << 2) | ((lun) & 0x3)))
-#define	GET_NETFN(netfn)	(((netfn) >> 2) & 0x3f)
-#define	GET_LUN(netfn)		(netfn & 0x3)
-#define	RESP_NETFN(nflun)	((nflun) | 1)
-#define	ISREQUEST(nl)		(((nl) & 1) == 0)	/* test for request */
-#define	ISRESPONSE(nl)		(((nl) & 1) == 1)	/* test for response */
+#define FORM_NETFNLUN(net, lun) ((((net) << 2) | ((lun) & 0x3)))
+#define GET_NETFN(netfn)        (((netfn) >> 2) & 0x3f)
+#define GET_LUN(netfn)          (netfn & 0x3)
+#define RESP_NETFN(nflun)       ((nflun) | 1)
+#define ISREQUEST(nl)           (((nl) & 1) == 0)       /* test for request */
+#define ISRESPONSE(nl)          (((nl) & 1) == 1)       /* test for response */
 
 
 /* for checking BMC specific stuff */
-#define	BMC_GET_DEVICE_ID		0x1	/* GET DEVICE ID COMMAND */
-#define	BMC_IPMI_15_VER		0x51	/* IPMI 1.5 definion */
+#define BMC_GET_DEVICE_ID               0x1     /* GET DEVICE ID COMMAND */
+#define BMC_IPMI_15_VER         0x51    /* IPMI 1.5 definion */
 
 /* BMC Completion Code and OEM Completion Code */
-#define	BMC_IPMI_UNSPECIFIC_ERROR	0xFF	/* Unspecific Error */
-#define	BMC_IPMI_INVALID_COMMAND	0xC1	/* Invalid Command */
-#define	BMC_IPMI_COMMAND_TIMEOUT	0xC3	/* Command Timeout */
-#define	BMC_IPMI_DATA_LENGTH_EXCEED	0xC8	/* DataLength exceeded limit */
-#define	BMC_IPMI_OEM_FAILURE_SENDBMC	0x7E	/* Cannot send BMC req */
+#define BMC_IPMI_UNSPECIFIC_ERROR       0xFF    /* Unspecific Error */
+#define BMC_IPMI_INVALID_COMMAND        0xC1    /* Invalid Command */
+#define BMC_IPMI_COMMAND_TIMEOUT        0xC3    /* Command Timeout */
+#define BMC_IPMI_DATA_LENGTH_EXCEED     0xC8    /* DataLength exceeded limit */
+#define BMC_IPMI_OEM_FAILURE_SENDBMC    0x7E    /* Cannot send BMC req */
 
 
-#define	IOCTL_IPMI_KCS_ACTION		0x01
-#define	IOCTL_IPMI_INTERFACE_METHOD	0x02
+#define IOCTL_IPMI_KCS_ACTION           0x01
+#define IOCTL_IPMI_INTERFACE_METHOD     0x02
 
 /* Interface methods returned from IOCTL_IPMI_INTERFACE_METHOD ioctl: */
 
-#define	BMC_IOCTL_METHOD		0	/* Not returned from ioctl, */
-						/* but can be used by	*/
-						/* applications that want to */
-						/* compare against an	*/
-						/* alternative method.	*/
-#define	BMC_PUTMSG_METHOD		1
+#define BMC_IOCTL_METHOD                0       /* Not returned from ioctl, */
+                                                /* but can be used by   */
+                                                /* applications that want to */
+                                                /* compare against an   */
+                                                /* alternative method.  */
+#define BMC_PUTMSG_METHOD               1
 
 /*
  * bmc_req_t is the data structure to send
@@ -114,11 +114,11 @@ extern "C" {
  * rsSa field is not required.
  */
 typedef struct bmc_req {
-	uint8_t fn;			/* netFn for command */
-	uint8_t lun;			/* logical unit on responder */
-	uint8_t cmd;			/* command */
-	uint8_t datalength;		/* length of following data */
-	uint8_t data[SEND_MAX_PAYLOAD_SIZE]; /* request data */
+        uint8_t fn;                     /* netFn for command */
+        uint8_t lun;                    /* logical unit on responder */
+        uint8_t cmd;                    /* command */
+        uint8_t datalength;             /* length of following data */
+        uint8_t data[SEND_MAX_PAYLOAD_SIZE]; /* request data */
 } bmc_req_t;
 
 /*
@@ -135,20 +135,20 @@ typedef struct bmc_req {
  * BMC supported packet size.
  */
 typedef struct bmc_rsp {
-	uint8_t	fn;			/* netFn for command */
-	uint8_t	lun;			/* logical unit on responder */
-	uint8_t	cmd;			/* command */
-	uint8_t	ccode;			/* completion code */
-	uint8_t	datalength;		/* Length */
-	uint8_t	data[RECV_MAX_PAYLOAD_SIZE]; /* response */
+        uint8_t fn;                     /* netFn for command */
+        uint8_t lun;                    /* logical unit on responder */
+        uint8_t cmd;                    /* command */
+        uint8_t ccode;                  /* completion code */
+        uint8_t datalength;             /* Length */
+        uint8_t data[RECV_MAX_PAYLOAD_SIZE]; /* response */
 } bmc_rsp_t;
 
 /*
  * the data structure for synchronous operation via ioctl (DEPRECATED)
  */
 typedef struct bmc_reqrsp {
-	bmc_req_t	req;			/* request half */
-	bmc_rsp_t	rsp;			/* response half */
+        bmc_req_t       req;                    /* request half */
+        bmc_rsp_t       rsp;                    /* response half */
 } bmc_reqrsp_t;
 
 
@@ -174,10 +174,10 @@ typedef struct bmc_reqrsp {
  * request's data field (as was required when using the ioctl interface).
  */
 typedef struct bmc_msg {
-	uint8_t		m_type;		/* Message type (see below) */
-	uint32_t	m_id;		/* Message ID */
-	uint8_t		reserved[32];
-	uint8_t		msg[1];		/* Variable length message data */
+        uint8_t         m_type;         /* Message type (see below) */
+        uint32_t        m_id;           /* Message ID */
+        uint8_t         reserved[32];
+        uint8_t         msg[1];         /* Variable length message data */
 } bmc_msg_t;
 
 
@@ -186,24 +186,24 @@ typedef struct bmc_msg {
  * field set to BMC_UNKNOWN_MSG_ID if a message is sent to it that is not
  * at least as large as a bmc_msg_t.
  */
-#define	BMC_UNKNOWN_MSG_ID	~((uint32_t)0)
+#define BMC_UNKNOWN_MSG_ID      ~((uint32_t)0)
 
 
 /*
  * Possible values for the m_type field in bmc_msg_t:
  */
-#define	BMC_MSG_REQUEST		1	/* BMC request (as above, sent to the */
-					/* driver by the user), bmc_msg.msg */
-					/* begins with the bmc_req_t	*/
-					/* structure.			*/
-#define	BMC_MSG_RESPONSE	2	/* BMC response (sent by the driver) */
-					/* bmc_msg.msg begins with the	*/
-					/* bmc_rsp_t structure.		*/
-#define	BMC_MSG_ERROR		3	/* Error while processing a user msg */
-					/* msg[0] is the error code	*/
-					/* (interpret as an errno value) */
+#define BMC_MSG_REQUEST         1       /* BMC request (as above, sent to the */
+                                        /* driver by the user), bmc_msg.msg */
+                                        /* begins with the bmc_req_t    */
+                                        /* structure.                   */
+#define BMC_MSG_RESPONSE        2       /* BMC response (sent by the driver) */
+                                        /* bmc_msg.msg begins with the  */
+                                        /* bmc_rsp_t structure.         */
+#define BMC_MSG_ERROR           3       /* Error while processing a user msg */
+                                        /* msg[0] is the error code     */
+                                        /* (interpret as an errno value) */
 
-#ifdef	__cplusplus
+#ifdef  __cplusplus
 }
 #endif
 

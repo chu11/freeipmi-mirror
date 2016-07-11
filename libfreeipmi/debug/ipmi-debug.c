@@ -141,7 +141,7 @@ ipmi_obj_dump (int fd,
           && strcasecmp (key, "raw_data")
           && strcasecmp (key, "user_name")
           && strcasecmp (key, "payload_data")
-	  && strcasecmp (key, "record_data"))
+          && strcasecmp (key, "record_data"))
         {
           uint64_t val = 0;
 
@@ -277,11 +277,11 @@ ipmi_obj_dump_ipmb (int fd,
   if (ipmb_buf_len)
     {
       if (debug_dump_ipmb (fd,
-			   prefix,
-			   ipmb_buf,
-			   ipmb_buf_len,
-			   tmpl_ipmb_msg_hdr,
-			   tmpl_ipmb_cmd) < 0)
+                           prefix,
+                           ipmb_buf,
+                           ipmb_buf_len,
+                           tmpl_ipmb_msg_hdr,
+                           tmpl_ipmb_cmd) < 0)
         goto cleanup;
     }
 

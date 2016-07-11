@@ -103,7 +103,7 @@ static char *ipmi_fru_errmsgs[] =
     "FRU language code not supported",    /* 19 */
     "FRU invalid BCD encoding",           /* 20 */
     "FRU sentinel value not found",       /* 21 */
-    "not available for this record",	  /* 22 */
+    "not available for this record",      /* 22 */
     "buffer too small to hold result",    /* 23 */
     "out of memory",                      /* 24 */
     "device busy",                        /* 25 */
@@ -155,10 +155,10 @@ ipmi_fru_ctx_create (ipmi_ctx_t ipmi_ctx)
   if (ipmi_ctx)
     {
       if (ipmi_ctx_get_target (ipmi_ctx, NULL, NULL) < 0)
-	{
-	  SET_ERRNO (EINVAL);
-	  return (NULL);
-	}
+        {
+          SET_ERRNO (EINVAL);
+          return (NULL);
+        }
     }
 
   if (!(ctx = (ipmi_fru_ctx_t)malloc (sizeof (struct ipmi_fru_ctx))))
@@ -393,8 +393,8 @@ _read_fru_data (ipmi_fru_ctx_t ctx,
   if (ctx->device_opened_with_buffer)
     {
       memcpy (frubuf,
-	      ctx->frudata + offset_in_bytes,
-	      fru_read_bytes);
+              ctx->frudata + offset_in_bytes,
+              fru_read_bytes);
       goto out;
     }
 
@@ -433,26 +433,26 @@ _read_fru_data (ipmi_fru_ctx_t ctx,
                                   count_to_read,
                                   fru_read_data_rs) < 0)
         {
-	  /* if first time we've read from this device id, assume the
-	   * below completion codes mean that there is no data on this
-	   * device.
-	   */
-	  if (!num_bytes_read
-	      && ((ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
-		   && ipmi_check_completion_code (fru_read_data_rs, IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1)
-		  || (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_MESSAGE_TIMEOUT
-		      && ipmi_check_completion_code (fru_read_data_rs, IPMI_COMP_CODE_COMMAND_TIMEOUT) == 1)))
-	    {
-	      FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_NO_FRU_INFORMATION);
-	      goto cleanup;
-	    }
-	  
-	  if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
-	      && ipmi_check_completion_code (fru_read_data_rs, IPMI_COMP_CODE_READ_FRU_DATA_FRU_DEVICE_BUSY) == 1)
-	    {
-	      FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_DEVICE_BUSY);
-	      goto cleanup;
-	    }
+          /* if first time we've read from this device id, assume the
+           * below completion codes mean that there is no data on this
+           * device.
+           */
+          if (!num_bytes_read
+              && ((ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
+                   && ipmi_check_completion_code (fru_read_data_rs, IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1)
+                  || (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_MESSAGE_TIMEOUT
+                      && ipmi_check_completion_code (fru_read_data_rs, IPMI_COMP_CODE_COMMAND_TIMEOUT) == 1)))
+            {
+              FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_NO_FRU_INFORMATION);
+              goto cleanup;
+            }
+          
+          if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
+              && ipmi_check_completion_code (fru_read_data_rs, IPMI_COMP_CODE_READ_FRU_DATA_FRU_DEVICE_BUSY) == 1)
+            {
+              FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_DEVICE_BUSY);
+              goto cleanup;
+            }
 
           FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_IPMI_ERROR);
           goto cleanup;
@@ -529,9 +529,9 @@ _check_checksum (ipmi_fru_ctx_t ctx,
 
 static int
 _ipmi_fru_open_device_id_common (ipmi_fru_ctx_t ctx,
-				 uint8_t fru_device_id,
-				 const void *areabuf,
-				 unsigned int areabuflen)
+                                 uint8_t fru_device_id,
+                                 const void *areabuf,
+                                 unsigned int areabuflen)
 {
   uint8_t frubuf[IPMI_FRU_INVENTORY_AREA_SIZE_MAX+1];
   fiid_obj_t fru_get_inventory_rs = NULL;
@@ -545,7 +545,7 @@ _ipmi_fru_open_device_id_common (ipmi_fru_ctx_t ctx,
   assert (ctx);
   assert (ctx->magic == IPMI_FRU_CTX_MAGIC);
   assert (fru_device_id != IPMI_FRU_DEVICE_ID_RESERVED
-	  || (areabuf && areabuflen));
+          || (areabuf && areabuflen));
   
   if (!ctx->ipmi_ctx)
     {
@@ -564,175 +564,175 @@ _ipmi_fru_open_device_id_common (ipmi_fru_ctx_t ctx,
   if (areabuf && areabuflen)
     {
       memcpy (ctx->frudata,
-	      areabuf,
-	      areabuflen > IPMI_FRU_AREA_SIZE_MAX ? IPMI_FRU_AREA_SIZE_MAX : areabuflen);
+              areabuf,
+              areabuflen > IPMI_FRU_AREA_SIZE_MAX ? IPMI_FRU_AREA_SIZE_MAX : areabuflen);
       ctx->fru_inventory_area_size = areabuflen;
       ctx->device_opened_with_buffer = 1;
     }
   else
     {
       if (!(fru_get_inventory_rs = fiid_obj_create (tmpl_cmd_get_fru_inventory_area_info_rs)))
-	{
-	  FRU_ERRNO_TO_FRU_ERRNUM (ctx, errno);
-	  goto cleanup;
-	}
+        {
+          FRU_ERRNO_TO_FRU_ERRNUM (ctx, errno);
+          goto cleanup;
+        }
       
       if (ipmi_cmd_get_fru_inventory_area_info (ctx->ipmi_ctx,
-						ctx->fru_device_id,
-						fru_get_inventory_rs) < 0)
-	{
-	  if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
-	    {
-	      /* achu: Assume this completion code means we got a FRU SDR
-	       * entry pointed to a device that doesn't exist on this
-	       * particular mother board (b/c manufacturers may use the same
-	       * SDR for multiple motherboards).
-	       */
-	      if (ipmi_check_completion_code (fru_get_inventory_rs, IPMI_COMP_CODE_REQUESTED_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
-		{
-		  FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_NO_FRU_INFORMATION);
-		  goto cleanup;
-		}
-	    }
-	  
-	  if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_MESSAGE_TIMEOUT)
-	    {
-	      FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_DEVICE_BUSY);
-	      goto cleanup;
-	    }
-	  
-	  FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_IPMI_ERROR);
-	  goto cleanup;
-	}
+                                                ctx->fru_device_id,
+                                                fru_get_inventory_rs) < 0)
+        {
+          if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
+            {
+              /* achu: Assume this completion code means we got a FRU SDR
+               * entry pointed to a device that doesn't exist on this
+               * particular mother board (b/c manufacturers may use the same
+               * SDR for multiple motherboards).
+               */
+              if (ipmi_check_completion_code (fru_get_inventory_rs, IPMI_COMP_CODE_REQUESTED_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
+                {
+                  FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_NO_FRU_INFORMATION);
+                  goto cleanup;
+                }
+            }
+          
+          if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_MESSAGE_TIMEOUT)
+            {
+              FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_DEVICE_BUSY);
+              goto cleanup;
+            }
+          
+          FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_IPMI_ERROR);
+          goto cleanup;
+        }
   
       if (FIID_OBJ_GET (fru_get_inventory_rs,
-			"fru_inventory_area_size",
-			&val) < 0)
-	{
-	  FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, fru_get_inventory_rs);
-	  goto cleanup;
-	}
+                        "fru_inventory_area_size",
+                        &val) < 0)
+        {
+          FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, fru_get_inventory_rs);
+          goto cleanup;
+        }
       ctx->fru_inventory_area_size = val;
 
       if (!ctx->fru_inventory_area_size)
-	{
-	  FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_NO_FRU_INFORMATION);
-	  goto cleanup;
-	}
+        {
+          FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_NO_FRU_INFORMATION);
+          goto cleanup;
+        }
     }
 
   if (!(ctx->flags & IPMI_FRU_FLAGS_READ_RAW))
     {
       if ((common_header_len = fiid_template_len_bytes (tmpl_fru_common_header)) < 0)
-	{
-	  FRU_ERRNO_TO_FRU_ERRNUM (ctx, errno);
-	  goto cleanup;
-	}
+        {
+          FRU_ERRNO_TO_FRU_ERRNUM (ctx, errno);
+          goto cleanup;
+        }
   
       if (_read_fru_data (ctx,
-			  frubuf,
-			  IPMI_FRU_INVENTORY_AREA_SIZE_MAX,
-			  0,
-			  common_header_len) < 0)
-	goto cleanup;
+                          frubuf,
+                          IPMI_FRU_INVENTORY_AREA_SIZE_MAX,
+                          0,
+                          common_header_len) < 0)
+        goto cleanup;
       
       if (fru_dump_hex (ctx,
-			frubuf,
-			common_header_len,
-			"Common Header") < 0)
-	goto cleanup;
+                        frubuf,
+                        common_header_len,
+                        "Common Header") < 0)
+        goto cleanup;
 
       if ((ret = _check_checksum (ctx,
-				  frubuf,
-				  common_header_len,
-				  0)) < 0)
-	goto cleanup;
+                                  frubuf,
+                                  common_header_len,
+                                  0)) < 0)
+        goto cleanup;
 
       if (!ret)
-	{
-	  FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_COMMON_HEADER_CHECKSUM_INVALID);
-	  goto cleanup;
-	}
+        {
+          FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_COMMON_HEADER_CHECKSUM_INVALID);
+          goto cleanup;
+        }
 
       if (!(fru_common_header = fiid_obj_create (tmpl_fru_common_header)))
-	{
-	  FRU_ERRNO_TO_FRU_ERRNUM (ctx, errno);
-	  goto cleanup;
-	}
+        {
+          FRU_ERRNO_TO_FRU_ERRNUM (ctx, errno);
+          goto cleanup;
+        }
 
       if (fiid_obj_set_all (fru_common_header,
-			    frubuf,
-			    common_header_len) < 0)
-	{
-	  FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, fru_common_header);
-	  goto cleanup;
-	}
+                            frubuf,
+                            common_header_len) < 0)
+        {
+          FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, fru_common_header);
+          goto cleanup;
+        }
 
       if (fru_dump_obj (ctx,
-			fru_common_header,
-			"Common Header") < 0)
-	goto cleanup;
+                        fru_common_header,
+                        "Common Header") < 0)
+        goto cleanup;
 
       if (FIID_OBJ_GET (fru_common_header,
-			"format_version",
-			&val) < 0)
-	{
-	  FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, fru_common_header);
-	  goto cleanup;
-	}
+                        "format_version",
+                        &val) < 0)
+        {
+          FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, fru_common_header);
+          goto cleanup;
+        }
       format_version = val;
       
       if (FIID_OBJ_GET (fru_common_header,
-			"chassis_info_area_starting_offset",
-			&val) < 0)
-	{
-	  FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, fru_common_header);
-	  goto cleanup;
-	}
+                        "chassis_info_area_starting_offset",
+                        &val) < 0)
+        {
+          FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, fru_common_header);
+          goto cleanup;
+        }
       ctx->chassis_info_area_starting_offset = val;
       
       if (FIID_OBJ_GET (fru_common_header,
-			"board_info_area_starting_offset",
-			&val) < 0)
-	{
-	  FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, fru_common_header);
-	  goto cleanup;
-	}
+                        "board_info_area_starting_offset",
+                        &val) < 0)
+        {
+          FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, fru_common_header);
+          goto cleanup;
+        }
       ctx->board_info_area_starting_offset = val;
       
       if (FIID_OBJ_GET (fru_common_header,
-			"product_info_area_starting_offset",
-			&val) < 0)
-	{
-	  FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, fru_common_header);
-	  goto cleanup;
-	}
+                        "product_info_area_starting_offset",
+                        &val) < 0)
+        {
+          FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, fru_common_header);
+          goto cleanup;
+        }
       ctx->product_info_area_starting_offset = val;
 
       if (FIID_OBJ_GET (fru_common_header,
-			"multirecord_area_starting_offset",
-			&val) < 0)
-	{
-	  FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, fru_common_header);
-	  goto cleanup;
-	}
+                        "multirecord_area_starting_offset",
+                        &val) < 0)
+        {
+          FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, fru_common_header);
+          goto cleanup;
+        }
       ctx->multirecord_area_starting_offset = val;
 
       /* Special corner case, found on Dell Poweredge R710 */
       if (!ctx->chassis_info_area_starting_offset
-	  && !ctx->board_info_area_starting_offset
-	  && !ctx->product_info_area_starting_offset
-	  && !ctx->multirecord_area_starting_offset)
-	{
-	  FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_NO_FRU_INFORMATION);
-	  goto cleanup;
-	}
+          && !ctx->board_info_area_starting_offset
+          && !ctx->product_info_area_starting_offset
+          && !ctx->multirecord_area_starting_offset)
+        {
+          FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_NO_FRU_INFORMATION);
+          goto cleanup;
+        }
 
       if (format_version != IPMI_FRU_COMMON_HEADER_FORMAT_VERSION)
-	{
-	  FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_COMMON_HEADER_FORMAT_INVALID);
-	  goto cleanup;
-	}
+        {
+          FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_COMMON_HEADER_FORMAT_INVALID);
+          goto cleanup;
+        }
     }
 
   rv = 0;
@@ -762,15 +762,15 @@ ipmi_fru_open_device_id (ipmi_fru_ctx_t ctx, uint8_t fru_device_id)
     }
 
   return (_ipmi_fru_open_device_id_common (ctx,
-					   fru_device_id,
-					   NULL,
-					   0));
+                                           fru_device_id,
+                                           NULL,
+                                           0));
 }
 
 int
 ipmi_fru_open_device_id_with_buffer (ipmi_fru_ctx_t ctx,
-				     const void *areabuf,
-				     unsigned int areabuflen)
+                                     const void *areabuf,
+                                     unsigned int areabuflen)
 {
   if (!ctx || ctx->magic != IPMI_FRU_CTX_MAGIC)
     {
@@ -786,9 +786,9 @@ ipmi_fru_open_device_id_with_buffer (ipmi_fru_ctx_t ctx,
     }
 
   return (_ipmi_fru_open_device_id_common (ctx,
-					   0,
-					   areabuf,
-					   areabuflen));
+                                           0,
+                                           areabuf,
+                                           areabuflen));
 }
 
 int
@@ -873,9 +873,9 @@ _parse_multirecord_header (ipmi_fru_ctx_t ctx,
     goto cleanup;
       
   if (fru_dump_hex (ctx,
-		    frubuf,
-		    multirecord_header_length,
-		    "MultiRecord Header") < 0)
+                    frubuf,
+                    multirecord_header_length,
+                    "MultiRecord Header") < 0)
     goto cleanup;
 
   if ((ret = _check_checksum (ctx,
@@ -905,8 +905,8 @@ _parse_multirecord_header (ipmi_fru_ctx_t ctx,
     }
   
   if (fru_dump_obj (ctx,
-		    fru_multirecord_header,
-		    "MultiRecord Header") < 0)
+                    fru_multirecord_header,
+                    "MultiRecord Header") < 0)
     goto cleanup;
 
   if (record_type_id)
@@ -1025,10 +1025,10 @@ ipmi_fru_next (ipmi_fru_ctx_t ctx)
 
       if (end_of_list)
         {
-	  /* achu: end_of_list means this is the last record, possibly
-	   * with FRU data, and there are no more *after* this record.
-	   * So we should return 1.
-	   */
+          /* achu: end_of_list means this is the last record, possibly
+           * with FRU data, and there are no more *after* this record.
+           * So we should return 1.
+           */
           ctx->multirecord_area_parsed++;
         }
       
@@ -1148,8 +1148,8 @@ _read_info_area_data (ipmi_fru_ctx_t ctx,
     }
 
   if (fru_dump_obj (ctx,
-		    fru_info_area_header,
-		    headerhdrstr) < 0)
+                    fru_info_area_header,
+                    headerhdrstr) < 0)
     goto cleanup;
 
   if (FIID_OBJ_GET (fru_info_area_header,
@@ -1197,9 +1197,9 @@ _read_info_area_data (ipmi_fru_ctx_t ctx,
     goto cleanup;
   
   if (fru_dump_hex (ctx,
-		    frubuf,
-		    info_area_length_bytes,
-		    areahdrstr) < 0)
+                    frubuf,
+                    info_area_length_bytes,
+                    areahdrstr) < 0)
     goto cleanup;
   
   if ((ret = _check_checksum (ctx,
@@ -1300,9 +1300,9 @@ _read_multirecord_area_data (ipmi_fru_ctx_t ctx,
     goto cleanup;
 
   if (fru_dump_hex (ctx,
-		    frubuf,
-		    record_length,
-		    "MultiRecord") < 0)
+                    frubuf,
+                    record_length,
+                    "MultiRecord") < 0)
     goto cleanup;
   
   if ((ret = _check_checksum (ctx,
@@ -1360,11 +1360,11 @@ _read_multirecord_area_data (ipmi_fru_ctx_t ctx,
       break;
     default:
       if (IPMI_FRU_MULTIRECORD_AREA_TYPE_IS_NVM_EXPRESS (record_type_id))
-	(*area_type) = IPMI_FRU_AREA_TYPE_MULTIRECORD_NVM_EXPRESS;
+        (*area_type) = IPMI_FRU_AREA_TYPE_MULTIRECORD_NVM_EXPRESS;
       else if (IPMI_FRU_MULTIRECORD_AREA_TYPE_IS_OEM (record_type_id))
-	(*area_type) = IPMI_FRU_AREA_TYPE_MULTIRECORD_OEM;
+        (*area_type) = IPMI_FRU_AREA_TYPE_MULTIRECORD_OEM;
       else
-	(*area_type) = IPMI_FRU_AREA_TYPE_MULTIRECORD_UNKNOWN;
+        (*area_type) = IPMI_FRU_AREA_TYPE_MULTIRECORD_UNKNOWN;
     }
     
   (*area_length) = record_length;
@@ -1377,10 +1377,10 @@ _read_multirecord_area_data (ipmi_fru_ctx_t ctx,
 
 static int
 _read_raw_data (ipmi_fru_ctx_t ctx,
-		unsigned int *area_type,
-		unsigned int *area_length,
-		void *areabuf,
-		unsigned int areabuflen)
+                unsigned int *area_type,
+                unsigned int *area_length,
+                void *areabuf,
+                unsigned int areabuflen)
 {
   uint8_t frubuf[IPMI_FRU_INVENTORY_AREA_SIZE_MAX+1];
   unsigned int len = 0;
@@ -1403,14 +1403,14 @@ _read_raw_data (ipmi_fru_ctx_t ctx,
   if (_read_fru_data (ctx,
                       frubuf,
                       IPMI_FRU_INVENTORY_AREA_SIZE_MAX,
-		      0,
-		      len) < 0)
+                      0,
+                      len) < 0)
     goto cleanup;
 
   if (fru_dump_hex (ctx,
-		    frubuf,
-		    len,
-		    "Raw") < 0)
+                    frubuf,
+                    len,
+                    "Raw") < 0)
     goto cleanup;
   
   (*area_type) = IPMI_FRU_AREA_TYPE_RAW_DATA;
@@ -1424,10 +1424,10 @@ _read_raw_data (ipmi_fru_ctx_t ctx,
 
 int
 ipmi_fru_read_data_area (ipmi_fru_ctx_t ctx,
-			 unsigned int *area_type,
-			 unsigned int *area_length,
-			 void *areabuf,
-			 unsigned int areabuflen)
+                         unsigned int *area_type,
+                         unsigned int *area_length,
+                         void *areabuf,
+                         unsigned int areabuflen)
 {
   int rv = -1;
 
@@ -1455,39 +1455,39 @@ ipmi_fru_read_data_area (ipmi_fru_ctx_t ctx,
   if (!(ctx->flags & IPMI_FRU_FLAGS_READ_RAW))
     {
       if ((ctx->chassis_info_area_starting_offset && !ctx->chassis_info_area_parsed)
-	  || (ctx->board_info_area_starting_offset && !ctx->board_info_area_parsed)
-	  || (ctx->product_info_area_starting_offset && !ctx->product_info_area_parsed))
-	{
-	  if (_read_info_area_data (ctx,
-				    area_type,
-				    area_length,
-				    areabuf,
-				    areabuflen) < 0)
-	    goto cleanup;
-	  
-	  goto out;
-	}
+          || (ctx->board_info_area_starting_offset && !ctx->board_info_area_parsed)
+          || (ctx->product_info_area_starting_offset && !ctx->product_info_area_parsed))
+        {
+          if (_read_info_area_data (ctx,
+                                    area_type,
+                                    area_length,
+                                    areabuf,
+                                    areabuflen) < 0)
+            goto cleanup;
+          
+          goto out;
+        }
       
       if (ctx->multirecord_area_starting_offset && !ctx->multirecord_area_parsed)
-	{
-	  if (_read_multirecord_area_data (ctx,
-					   area_type,
-					   area_length,
-					   areabuf,
-					   areabuflen) < 0)
-	    goto cleanup;
-	  
-	  goto out;
-	}
+        {
+          if (_read_multirecord_area_data (ctx,
+                                           area_type,
+                                           area_length,
+                                           areabuf,
+                                           areabuflen) < 0)
+            goto cleanup;
+          
+          goto out;
+        }
     }
   else
     {
       if (_read_raw_data (ctx,
-			  area_type,
-			  area_length,
-			  areabuf,
-			  areabuflen) < 0)
-	    goto cleanup;
+                          area_type,
+                          area_length,
+                          areabuf,
+                          areabuflen) < 0)
+            goto cleanup;
 
       goto out;
     }
@@ -1500,7 +1500,7 @@ ipmi_fru_read_data_area (ipmi_fru_ctx_t ctx,
 
 int
 ipmi_fru_read_multirecord_record_type_id (ipmi_fru_ctx_t ctx,
-					  uint8_t *record_type_id)
+                                          uint8_t *record_type_id)
 {
   int rv = -1;
 
@@ -1535,16 +1535,16 @@ ipmi_fru_read_multirecord_record_type_id (ipmi_fru_ctx_t ctx,
       unsigned int record_type_id_tmp;
 
       if (!ctx->multirecord_area_offset_in_bytes)
-	ctx->multirecord_area_offset_in_bytes = ctx->multirecord_area_starting_offset * 8;
+        ctx->multirecord_area_offset_in_bytes = ctx->multirecord_area_starting_offset * 8;
       
       if (_parse_multirecord_header (ctx,
-				     NULL,
-				     &record_type_id_tmp,
-				     NULL,
-				     NULL,
-				     NULL,
-				     NULL) < 0)
-	goto cleanup;
+                                     NULL,
+                                     &record_type_id_tmp,
+                                     NULL,
+                                     NULL,
+                                     NULL,
+                                     NULL) < 0)
+        goto cleanup;
 
       (*record_type_id) = record_type_id_tmp;
 
@@ -1744,11 +1744,11 @@ _bcd_to_ascii (ipmi_fru_ctx_t ctx,
 
 int
 ipmi_fru_type_length_field_to_string (ipmi_fru_ctx_t ctx,
-				      const uint8_t *type_length_buf,
-				      unsigned int type_length_buflen,
-				      uint8_t language_code,
-				      char *strbuf,
-				      unsigned int *strbuflen)
+                                      const uint8_t *type_length_buf,
+                                      unsigned int type_length_buflen,
+                                      uint8_t language_code,
+                                      char *strbuf,
+                                      unsigned int *strbuflen)
 {
   uint8_t type_length;
   uint8_t databuf[IPMI_FRU_BUF_LEN+1];
@@ -1781,9 +1781,9 @@ ipmi_fru_type_length_field_to_string (ipmi_fru_ctx_t ctx,
   memset (strtmpbuf, '\0', IPMI_FRU_AREA_STRING_MAX+1);
 
   if (fru_dump_hex (ctx,
-		    type_length_buf,
-		    1,
-		    "Type/Length Field Header") < 0)
+                    type_length_buf,
+                    1,
+                    "Type/Length Field Header") < 0)
     goto cleanup;
 
   type_length = type_length_buf[0];

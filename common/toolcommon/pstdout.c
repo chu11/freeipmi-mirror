@@ -257,10 +257,10 @@ pstdout_init(void)
           goto cleanup;
         }
       if (!(pstdout_states = list_create((ListDelF)NULL)))
-	{
+        {
           pstdout_errnum = PSTDOUT_ERR_OUTMEM;
           goto cleanup;
-	}
+        }
       pstdout_initialized++;
     }
 
@@ -680,11 +680,11 @@ _pstdout_print(pstdout_state_t pstate,
   if (pstate_mutex_locked)
     {
       if ((rc = pthread_mutex_unlock(&(pstate->mutex))))
-	{
-	  if (pstdout_debug_flags & PSTDOUT_DEBUG_STANDARD)
-	    fprintf(stderr, "pthread_mutex_unlock: %s\n", strerror(rc));
-	  /* Don't change error code, just move on */
-	}
+        {
+          if (pstdout_debug_flags & PSTDOUT_DEBUG_STANDARD)
+            fprintf(stderr, "pthread_mutex_unlock: %s\n", strerror(rc));
+          /* Don't change error code, just move on */
+        }
     }
   free(buf);
   free(linebuf);
@@ -810,7 +810,7 @@ pstdout_fprintf(pstdout_state_t pstate, FILE *stream, const char *format, ...)
 
 int 
 pstdout_vfprintf(pstdout_state_t pstate, FILE *stream, const char *format,
-		 va_list ap)
+                 va_list ap)
 {
   int rv;
 
@@ -916,7 +916,7 @@ _pstdout_output_buffer_data(pstdout_state_t pstate,
                             uint32_t whichbuffermask,
                             uint32_t whichconsolidatemask,
                             List whichconsolidatedlist,
-			    pthread_mutex_t *whichconsolidatedmutex)
+                            pthread_mutex_t *whichconsolidatedmutex)
 {
   assert(pstate);
   assert(pstate->magic == PSTDOUT_STATE_MAGIC);
@@ -962,16 +962,16 @@ _pstdout_output_buffer_data(pstdout_state_t pstate,
         }
       else
         {
-	  struct pstdout_consolidated_data *cdata;
-	  int rc;
+          struct pstdout_consolidated_data *cdata;
+          int rc;
 
-	  if ((rc = pthread_mutex_lock(whichconsolidatedmutex)))
-	    {
-	      if (pstdout_debug_flags & PSTDOUT_DEBUG_STANDARD)
-		fprintf(stderr, "pthread_mutex_lock: %s\n", strerror(rc));
-	      pstdout_errnum = PSTDOUT_ERR_INTERNAL;
-	      goto cleanup;
-	    }
+          if ((rc = pthread_mutex_lock(whichconsolidatedmutex)))
+            {
+              if (pstdout_debug_flags & PSTDOUT_DEBUG_STANDARD)
+                fprintf(stderr, "pthread_mutex_lock: %s\n", strerror(rc));
+              pstdout_errnum = PSTDOUT_ERR_INTERNAL;
+              goto cleanup;
+            }
 
           if (!(cdata = list_find_first(whichconsolidatedlist, _pstdout_consolidated_data_find, *whichbuffer)))
             {
@@ -998,13 +998,13 @@ _pstdout_output_buffer_data(pstdout_state_t pstate,
                 }
             }
 
-	  if ((rc = pthread_mutex_unlock(whichconsolidatedmutex)))
-	    {
-	      if (pstdout_debug_flags & PSTDOUT_DEBUG_STANDARD)
-		fprintf(stderr, "pthread_mutex_unlock: %s\n", strerror(rc));
-	      pstdout_errnum = PSTDOUT_ERR_INTERNAL;
-	      goto cleanup;
-	    }
+          if ((rc = pthread_mutex_unlock(whichconsolidatedmutex)))
+            {
+              if (pstdout_debug_flags & PSTDOUT_DEBUG_STANDARD)
+                fprintf(stderr, "pthread_mutex_unlock: %s\n", strerror(rc));
+              pstdout_errnum = PSTDOUT_ERR_INTERNAL;
+              goto cleanup;
+            }
 
         }
     }
@@ -1029,7 +1029,7 @@ _pstdout_output_finish(pstdout_state_t pstate)
   if ((rc = pthread_mutex_lock(&(pstate->mutex))))
     {
       if (pstdout_debug_flags & PSTDOUT_DEBUG_STANDARD)
-	fprintf(stderr, "pthread_mutex_lock: %s\n", strerror(rc));
+        fprintf(stderr, "pthread_mutex_lock: %s\n", strerror(rc));
       pstdout_errnum = PSTDOUT_ERR_INTERNAL;
       goto cleanup;
     }
@@ -1052,7 +1052,7 @@ _pstdout_output_finish(pstdout_state_t pstate)
                                   PSTDOUT_OUTPUT_BUFFER_STDOUT,
                                   PSTDOUT_OUTPUT_STDOUT_CONSOLIDATE,
                                   pstdout_consolidated_stdout,
-				  &pstdout_consolidated_stdout_mutex) < 0)
+                                  &pstdout_consolidated_stdout_mutex) < 0)
     goto cleanup;
 
   if (_pstdout_output_buffer_data(pstate,
@@ -1063,7 +1063,7 @@ _pstdout_output_finish(pstdout_state_t pstate)
                                   PSTDOUT_OUTPUT_BUFFER_STDERR,
                                   PSTDOUT_OUTPUT_STDERR_CONSOLIDATE,
                                   pstdout_consolidated_stderr,
-				  &pstdout_consolidated_stderr_mutex) < 0)
+                                  &pstdout_consolidated_stderr_mutex) < 0)
     goto cleanup;
 
   /* Only output from internal to pstdout is allowed */
@@ -1074,11 +1074,11 @@ _pstdout_output_finish(pstdout_state_t pstate)
   if (pstate_mutex_locked)
     {
       if ((rc = pthread_mutex_unlock(&(pstate->mutex))))
-	{
-	  if (pstdout_debug_flags & PSTDOUT_DEBUG_STANDARD)
-	    fprintf(stderr, "pthread_mutex_unlock: %s\n", strerror(rc));
-	  /* Don't change error code, just move on */
-	}
+        {
+          if (pstdout_debug_flags & PSTDOUT_DEBUG_STANDARD)
+            fprintf(stderr, "pthread_mutex_unlock: %s\n", strerror(rc));
+          /* Don't change error code, just move on */
+        }
     }
   return rv;
 }
@@ -1121,7 +1121,7 @@ _pstdout_func_entry(void *arg)
   if (!list_append(pstdout_states, &pstate))
     {
       if (pstdout_debug_flags & PSTDOUT_DEBUG_STANDARD)
-	fprintf(stderr, "list_append: %s\n", strerror(errno));
+        fprintf(stderr, "list_append: %s\n", strerror(errno));
       pstdout_errnum = PSTDOUT_ERR_INTERNAL;
       pthread_mutex_unlock(&pstdout_states_mutex);
       goto cleanup;
@@ -1155,7 +1155,7 @@ _pstdout_func_entry(void *arg)
 static int
 _pstdout_output_consolidated(FILE *stream,
                              List whichconsolidatedlist,
-			     pthread_mutex_t *whichconsolidatedmutex)
+                             pthread_mutex_t *whichconsolidatedmutex)
 {
   struct pstdout_consolidated_data *cdata;
   ListIterator itr = NULL;
@@ -1209,11 +1209,11 @@ _pstdout_output_consolidated(FILE *stream,
   if (mutex_locked)
     {
       if ((rc = pthread_mutex_unlock(whichconsolidatedmutex)))
-	{
-	  if (pstdout_debug_flags & PSTDOUT_DEBUG_STANDARD)
-	    fprintf(stderr, "pthread_mutex_unlock: %s\n", strerror(rc));
-	  /* Don't change error code, just move on */
-	}
+        {
+          if (pstdout_debug_flags & PSTDOUT_DEBUG_STANDARD)
+            fprintf(stderr, "pthread_mutex_unlock: %s\n", strerror(rc));
+          /* Don't change error code, just move on */
+        }
     }
   if (itr)
     list_iterator_destroy(itr);
@@ -1227,16 +1227,16 @@ _pstdout_output_consolidated_finish(void)
   if (pstdout_output_flags & PSTDOUT_OUTPUT_STDOUT_CONSOLIDATE)
     {
       if (_pstdout_output_consolidated(stdout, 
-				       pstdout_consolidated_stdout,
-				       &pstdout_consolidated_stdout_mutex) < 0)
+                                       pstdout_consolidated_stdout,
+                                       &pstdout_consolidated_stdout_mutex) < 0)
         goto cleanup;
     }
 
   if (pstdout_output_flags & PSTDOUT_OUTPUT_STDERR_CONSOLIDATE)
     {
       if (_pstdout_output_consolidated(stderr,
-				       pstdout_consolidated_stderr,
-				       &pstdout_consolidated_stderr_mutex) < 0)
+                                       pstdout_consolidated_stderr,
+                                       &pstdout_consolidated_stderr_mutex) < 0)
         goto cleanup;
     }
 
@@ -1312,13 +1312,13 @@ _pstdout_sigint(int s)
   if ((rc = pthread_mutex_lock(&pstdout_states_mutex)))
     {
       if (pstdout_debug_flags & PSTDOUT_DEBUG_STANDARD)
-	fprintf(stderr, "hostlist_ranged_string: %s\n", strerror(rc));
+        fprintf(stderr, "hostlist_ranged_string: %s\n", strerror(rc));
     }
 
   if (list_for_each(pstdout_states, _pstdout_sigint_finish_output, NULL) < 0)
     {
       if (pstdout_debug_flags & PSTDOUT_DEBUG_STANDARD)
-	fprintf(stderr, "list_for_each: %s\n", strerror(errno));
+        fprintf(stderr, "list_for_each: %s\n", strerror(errno));
     }
 
   _pstdout_output_consolidated_finish();
@@ -1556,7 +1556,7 @@ pstdout_launch(const char *hostnames, Pstdout_Thread pstdout_func, void *arg)
         {
           if (tdata[i])
             {
-	      free(tdata[i]->hostname);
+              free(tdata[i]->hostname);
               pthread_attr_destroy(&(tdata[i]->attr));
               free(tdata[i]);
             }

@@ -136,12 +136,12 @@ parse_privilege_level (const char *str)
 
 static int
 _parse_workaround_flags (const char *str,
-			 unsigned int *workaround_flags_outofband,
-			 unsigned int *workaround_flags_outofband_2_0,
-			 unsigned int *workaround_flags_inband,
-			 unsigned int *workaround_flags_sdr,
-			 unsigned int *section_specific_workaround_flags,
-			 int command_line_flag)
+                         unsigned int *workaround_flags_outofband,
+                         unsigned int *workaround_flags_outofband_2_0,
+                         unsigned int *workaround_flags_inband,
+                         unsigned int *workaround_flags_sdr,
+                         unsigned int *section_specific_workaround_flags,
+                         int command_line_flag)
 {
   char buf[WORKAROUND_FLAG_BUFLEN+1];
   char *tok;
@@ -166,20 +166,20 @@ _parse_workaround_flags (const char *str,
   while (tok)
     {
       if (command_line_flag
-	  && !strcasecmp (tok, IPMI_PARSE_WORKAROUND_FLAGS_NONE_STR))
-	{
-	  if (workaround_flags_outofband)
-	    (*workaround_flags_outofband) = 0;
-	  if (workaround_flags_outofband_2_0)
-	    (*workaround_flags_outofband_2_0) = 0;
-	  if (workaround_flags_inband)
-	    (*workaround_flags_inband) = 0;
-	  if (workaround_flags_sdr)
-	    (*workaround_flags_sdr) = 0;
-	  if (section_specific_workaround_flags)
-	    (*section_specific_workaround_flags) = 0;
-	  break;
-	}
+          && !strcasecmp (tok, IPMI_PARSE_WORKAROUND_FLAGS_NONE_STR))
+        {
+          if (workaround_flags_outofband)
+            (*workaround_flags_outofband) = 0;
+          if (workaround_flags_outofband_2_0)
+            (*workaround_flags_outofband_2_0) = 0;
+          if (workaround_flags_inband)
+            (*workaround_flags_inband) = 0;
+          if (workaround_flags_sdr)
+            (*workaround_flags_sdr) = 0;
+          if (section_specific_workaround_flags)
+            (*section_specific_workaround_flags) = 0;
+          break;
+        }
       
       /* special case, may apply to outofband and outofband_2_0 */
       if (!strcasecmp (tok, IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES_STR))
@@ -191,12 +191,12 @@ _parse_workaround_flags (const char *str,
         }
       /* special case, may apply to outofband and outofband_2_0 */
       else if (!strcasecmp (tok, IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_NO_CHECKSUM_CHECK_STR))
-	{
+        {
           if (workaround_flags_outofband)
             (*workaround_flags_outofband) |= IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_NO_CHECKSUM_CHECK;
           if (workaround_flags_outofband_2_0)
             (*workaround_flags_outofband_2_0) |= IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_NO_CHECKSUM_CHECK;
-	}
+        }
       else if (workaround_flags_outofband
                && !strcasecmp (tok, IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_ACCEPT_SESSION_ID_ZERO_STR))
         (*workaround_flags_outofband) |= IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_ACCEPT_SESSION_ID_ZERO;
@@ -274,10 +274,10 @@ _parse_workaround_flags (const char *str,
         (*section_specific_workaround_flags) |= IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_SCANNING_DISABLED;
       else if (section_specific_workaround_flags
                && !strcasecmp (tok, IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_ASSUME_BMC_OWNER_STR))
-	(*section_specific_workaround_flags) |= IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_ASSUME_BMC_OWNER;
+        (*section_specific_workaround_flags) |= IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_ASSUME_BMC_OWNER;
       else if (section_specific_workaround_flags
                && !strcasecmp (tok, IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_AUTH_CODE_STR))
-	(*section_specific_workaround_flags) |= IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_AUTH_CODE;
+        (*section_specific_workaround_flags) |= IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_AUTH_CODE;
       else if (section_specific_workaround_flags
                && !strcasecmp (tok, IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_SLOW_COMMIT_STR))
         (*section_specific_workaround_flags) |= IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_SLOW_COMMIT;
@@ -309,36 +309,36 @@ _parse_workaround_flags (const char *str,
 
 int
 parse_workaround_flags (const char *str,
-			unsigned int *workaround_flags_outofband,
-			unsigned int *workaround_flags_outofband_2_0,
-			unsigned int *workaround_flags_inband,
-			unsigned int *workaround_flags_sdr,
-			unsigned int *section_specific_workaround_flags)
+                        unsigned int *workaround_flags_outofband,
+                        unsigned int *workaround_flags_outofband_2_0,
+                        unsigned int *workaround_flags_inband,
+                        unsigned int *workaround_flags_sdr,
+                        unsigned int *section_specific_workaround_flags)
 {
   return (_parse_workaround_flags (str,
-				   workaround_flags_outofband,
-				   workaround_flags_outofband_2_0,
-				   workaround_flags_inband,
-				   workaround_flags_sdr,
-				   section_specific_workaround_flags,
-				   0));
+                                   workaround_flags_outofband,
+                                   workaround_flags_outofband_2_0,
+                                   workaround_flags_inband,
+                                   workaround_flags_sdr,
+                                   section_specific_workaround_flags,
+                                   0));
 }
 
 int
 parse_workaround_flags_tool (const char *str,
-			     unsigned int *workaround_flags_outofband,
-			     unsigned int *workaround_flags_outofband_2_0,
-			     unsigned int *workaround_flags_inband,
-			     unsigned int *workaround_flags_sdr,
-			     unsigned int *section_specific_workaround_flags)
+                             unsigned int *workaround_flags_outofband,
+                             unsigned int *workaround_flags_outofband_2_0,
+                             unsigned int *workaround_flags_inband,
+                             unsigned int *workaround_flags_sdr,
+                             unsigned int *section_specific_workaround_flags)
 {
   return (_parse_workaround_flags (str,
-				   workaround_flags_outofband,
-				   workaround_flags_outofband_2_0,
-				   workaround_flags_inband,
-				   workaround_flags_sdr,
-				   section_specific_workaround_flags,
-				   1));
+                                   workaround_flags_outofband,
+                                   workaround_flags_outofband_2_0,
+                                   workaround_flags_inband,
+                                   workaround_flags_sdr,
+                                   section_specific_workaround_flags,
+                                   1));
 }
 
 /* a k_g key is interpreted as ascii text unless it is prefixed with
@@ -398,7 +398,7 @@ parse_kg (void *out, unsigned int outlen, const char *in)
 
 void
 parse_get_freeipmi_outofband_flags (unsigned int parse_workaround_flags_outofband,
-				    unsigned int *freeipmi_workaround_flags_outofband)
+                                    unsigned int *freeipmi_workaround_flags_outofband)
 {
   assert (freeipmi_workaround_flags_outofband);
 
@@ -422,7 +422,7 @@ parse_get_freeipmi_outofband_flags (unsigned int parse_workaround_flags_outofban
 
 void
 parse_get_freeipmi_outofband_2_0_flags (unsigned int parse_workaround_flags_outofband_2_0,
-					unsigned int *freeipmi_workaround_flags_outofband_2_0)
+                                        unsigned int *freeipmi_workaround_flags_outofband_2_0)
 {
   assert (freeipmi_workaround_flags_outofband_2_0);
 
@@ -446,7 +446,7 @@ parse_get_freeipmi_outofband_2_0_flags (unsigned int parse_workaround_flags_outo
 
 void
 parse_get_freeipmi_inband_flags (unsigned int parse_workaround_flags_inband,
-				 unsigned int *freeipmi_workaround_flags_inband)
+                                 unsigned int *freeipmi_workaround_flags_inband)
 {
   assert (freeipmi_workaround_flags_inband);
 

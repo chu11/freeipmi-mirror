@@ -147,13 +147,13 @@ _ipmipower_power_cmd_to_oem_power_type_support (ipmipower_power_cmd_t cmd)
       exit (EXIT_FAILURE);
     }
 
-  return (-1);			/* NOT REACHED */
+  return (-1);                  /* NOT REACHED */
 }
 
 int
 ipmipower_oem_power_cmd_check_support_and_privilege (ipmipower_power_cmd_t cmd,
-						     char *errbuf,
-						     unsigned int errbuflen)
+                                                     char *errbuf,
+                                                     unsigned int errbuflen)
 {
   unsigned int oem_power_type_support_mask;
   char *power_cmd_str;
@@ -170,11 +170,11 @@ ipmipower_oem_power_cmd_check_support_and_privilege (ipmipower_power_cmd_t cmd,
   if (!(oem_power_type_data[cmd_args.oem_power_type].supported_operations & oem_power_type_support_mask))
     {
       if (errbuf && errbuflen)
-	snprintf (errbuf,
-		  errbuflen,
-		  "'%s' operation not supported by oem power type '%s'",
-		  power_cmd_str,
-		  oem_power_type_data[cmd_args.oem_power_type].name);
+        snprintf (errbuf,
+                  errbuflen,
+                  "'%s' operation not supported by oem power type '%s'",
+                  power_cmd_str,
+                  oem_power_type_data[cmd_args.oem_power_type].name);
       rv = 0;
       goto cleanup;
     }
@@ -183,19 +183,19 @@ ipmipower_oem_power_cmd_check_support_and_privilege (ipmipower_power_cmd_t cmd,
     {
       /* XXX - I'm pretty sure */
       if ((cmd == IPMIPOWER_POWER_CMD_POWER_OFF
-	   || cmd == IPMIPOWER_POWER_CMD_POWER_ON)
-	  && (cmd_args.common_args.privilege_level == IPMI_PRIVILEGE_LEVEL_USER
-	      || cmd_args.common_args.privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR))
-	{
-	  if (errbuf && errbuflen)
-	    snprintf (errbuf,
-		      errbuflen,
-		      "'%s' requires admin privilege for oem power type '%s'",
-		      power_cmd_str,
-		      oem_power_type_data[cmd_args.oem_power_type].name);
-	  rv = 0;
-	  goto cleanup;
-	} 
+           || cmd == IPMIPOWER_POWER_CMD_POWER_ON)
+          && (cmd_args.common_args.privilege_level == IPMI_PRIVILEGE_LEVEL_USER
+              || cmd_args.common_args.privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR))
+        {
+          if (errbuf && errbuflen)
+            snprintf (errbuf,
+                      errbuflen,
+                      "'%s' requires admin privilege for oem power type '%s'",
+                      power_cmd_str,
+                      oem_power_type_data[cmd_args.oem_power_type].name);
+          rv = 0;
+          goto cleanup;
+        } 
     }
 
   rv = 1;
@@ -205,8 +205,8 @@ ipmipower_oem_power_cmd_check_support_and_privilege (ipmipower_power_cmd_t cmd,
 
 int
 ipmipower_oem_power_cmd_check_extra_arg (const char *extra_arg,
-					 char *errbuf,
-					 unsigned int errbuflen)
+                                         char *errbuf,
+                                         unsigned int errbuflen)
 {
   int rv = -1;
 
@@ -220,43 +220,43 @@ ipmipower_oem_power_cmd_check_extra_arg (const char *extra_arg,
       unsigned int tmp;
       
       if (!extra_arg)
-	{
-	  if (errbuf && errbuflen)
-	    snprintf (errbuf,
-		      errbuflen,
-		      "slot number must be specified for oem power type '%s'",
-		      oem_power_type_data[cmd_args.oem_power_type].name);
-	  rv = 0;
-	  goto cleanup;
-	}
+        {
+          if (errbuf && errbuflen)
+            snprintf (errbuf,
+                      errbuflen,
+                      "slot number must be specified for oem power type '%s'",
+                      oem_power_type_data[cmd_args.oem_power_type].name);
+          rv = 0;
+          goto cleanup;
+        }
       
       errno = 0; 
       tmp = strtol (extra_arg, &endptr, 0);
       if (errno
           || endptr[0] != '\0')
-	{
-	  if (errbuf && errbuflen)
-	    snprintf (errbuf,
-		      errbuflen,
-		      "slot number '%s' for oem power type '%s' invalid",
-		      extra_arg,
-		      oem_power_type_data[cmd_args.oem_power_type].name);
-	  rv = 0;
-	  goto cleanup;
-	}
+        {
+          if (errbuf && errbuflen)
+            snprintf (errbuf,
+                      errbuflen,
+                      "slot number '%s' for oem power type '%s' invalid",
+                      extra_arg,
+                      oem_power_type_data[cmd_args.oem_power_type].name);
+          rv = 0;
+          goto cleanup;
+        }
       
       if (tmp < IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MIN
-	  || tmp > IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MAX)
-	{
-	  if (errbuf && errbuflen)
-	    snprintf (errbuf,
-		      errbuflen,
-		      "slot number '%s' for oem power type '%s' out of range",
-		      extra_arg,
-		      oem_power_type_data[cmd_args.oem_power_type].name);
-	  rv = 0;
-	  goto cleanup;
-	}
+          || tmp > IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MAX)
+        {
+          if (errbuf && errbuflen)
+            snprintf (errbuf,
+                      errbuflen,
+                      "slot number '%s' for oem power type '%s' out of range",
+                      extra_arg,
+                      oem_power_type_data[cmd_args.oem_power_type].name);
+          rv = 0;
+          goto cleanup;
+        }
     }
   
   rv = 1;

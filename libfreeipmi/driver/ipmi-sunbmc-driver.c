@@ -540,27 +540,27 @@ _sunbmc_read (ipmi_sunbmc_ctx_t ctx,
 
   do {
     if ((n = select (ctx->device_fd + 1,
-		     &read_fds,
-		     NULL,
-		     NULL,
-		     &tv)) < 0)
+                     &read_fds,
+                     NULL,
+                     NULL,
+                     &tv)) < 0)
       {
-	if (errno != EINTR)
-	  {
-	    SUNBMC_ERRNO_TO_SUNBMC_ERRNUM (ctx, errno);
-	    return (-1);
-	  }
+        if (errno != EINTR)
+          {
+            SUNBMC_ERRNO_TO_SUNBMC_ERRNUM (ctx, errno);
+            return (-1);
+          }
 
-	if (gettimeofday (&end, NULL) < 0)
-	  {
-	    SUNBMC_ERRNO_TO_SUNBMC_ERRNUM (ctx, errno);
-	    return (-1);
-	  }
+        if (gettimeofday (&end, NULL) < 0)
+          {
+            SUNBMC_ERRNO_TO_SUNBMC_ERRNUM (ctx, errno);
+            return (-1);
+          }
 
-	/* delta = end - start */
-	timersub (&end, &start, &delta);
-	/* tv = tv_orig - delta */
-	timersub (&tv_orig, &delta, &tv);
+        /* delta = end - start */
+        timersub (&end, &start, &delta);
+        /* tv = tv_orig - delta */
+        timersub (&tv_orig, &delta, &tv);
       }
   } while (n < 0);
 

@@ -134,9 +134,9 @@ dmidecode_probe_display (ipmi_locate_ctx_t ctx)
   else
     {
       if (ipmi_locate_ctx_errnum (ctx) == IPMI_LOCATE_ERR_SYSTEM_ERROR)
-	printf ("FAILED\n");
+        printf ("FAILED\n");
       else
-	printf ("ERROR: %s\n", ipmi_locate_ctx_errormsg (ctx));
+        printf ("ERROR: %s\n", ipmi_locate_ctx_errormsg (ctx));
     }
   printf ("\n");
 
@@ -151,9 +151,9 @@ dmidecode_probe_display (ipmi_locate_ctx_t ctx)
   else
     {
       if (ipmi_locate_ctx_errnum (ctx) == IPMI_LOCATE_ERR_SYSTEM_ERROR)
-	printf ("FAILED\n");
+        printf ("FAILED\n");
       else
-	printf ("ERROR: %s\n", ipmi_locate_ctx_errormsg (ctx));
+        printf ("ERROR: %s\n", ipmi_locate_ctx_errormsg (ctx));
     }
   printf ("\n");
 
@@ -168,9 +168,9 @@ dmidecode_probe_display (ipmi_locate_ctx_t ctx)
   else
     {
       if (ipmi_locate_ctx_errnum (ctx) == IPMI_LOCATE_ERR_SYSTEM_ERROR)
-	printf ("FAILED\n");
+        printf ("FAILED\n");
       else
-	printf ("ERROR: %s\n", ipmi_locate_ctx_errormsg (ctx));
+        printf ("ERROR: %s\n", ipmi_locate_ctx_errormsg (ctx));
     }
   printf ("\n");
 
@@ -185,9 +185,9 @@ dmidecode_probe_display (ipmi_locate_ctx_t ctx)
   else
     {
       if (ipmi_locate_ctx_errnum (ctx) == IPMI_LOCATE_ERR_SYSTEM_ERROR)
-	printf ("FAILED\n");
+        printf ("FAILED\n");
       else
-	printf ("ERROR: %s\n", ipmi_locate_ctx_errormsg (ctx));
+        printf ("ERROR: %s\n", ipmi_locate_ctx_errormsg (ctx));
     }
   printf ("\n");
 
@@ -212,9 +212,9 @@ smbios_probe_display (ipmi_locate_ctx_t ctx)
   else
     {
       if (ipmi_locate_ctx_errnum (ctx) == IPMI_LOCATE_ERR_SYSTEM_ERROR)
-	printf ("FAILED\n");
+        printf ("FAILED\n");
       else
-	printf ("ERROR: %s\n", ipmi_locate_ctx_errormsg (ctx));
+        printf ("ERROR: %s\n", ipmi_locate_ctx_errormsg (ctx));
     }
   printf ("\n");
 
@@ -229,9 +229,9 @@ smbios_probe_display (ipmi_locate_ctx_t ctx)
   else
     {
       if (ipmi_locate_ctx_errnum (ctx) == IPMI_LOCATE_ERR_SYSTEM_ERROR)
-	printf ("FAILED\n");
+        printf ("FAILED\n");
       else
-	printf ("ERROR: %s\n", ipmi_locate_ctx_errormsg (ctx));
+        printf ("ERROR: %s\n", ipmi_locate_ctx_errormsg (ctx));
     }
   printf ("\n");
 
@@ -246,9 +246,9 @@ smbios_probe_display (ipmi_locate_ctx_t ctx)
   else
     {
       if (ipmi_locate_ctx_errnum (ctx) == IPMI_LOCATE_ERR_SYSTEM_ERROR)
-	printf ("FAILED\n");
+        printf ("FAILED\n");
       else
-	printf ("ERROR: %s\n", ipmi_locate_ctx_errormsg (ctx));
+        printf ("ERROR: %s\n", ipmi_locate_ctx_errormsg (ctx));
     }
   printf ("\n");
 
@@ -263,9 +263,9 @@ smbios_probe_display (ipmi_locate_ctx_t ctx)
   else
     {
       if (ipmi_locate_ctx_errnum (ctx) == IPMI_LOCATE_ERR_SYSTEM_ERROR)
-	printf ("FAILED\n");
+        printf ("FAILED\n");
       else
-	printf ("ERROR: %s\n", ipmi_locate_ctx_errormsg (ctx));
+        printf ("ERROR: %s\n", ipmi_locate_ctx_errormsg (ctx));
     }
   printf ("\n");
 
@@ -290,9 +290,9 @@ acpi_probe_display (ipmi_locate_ctx_t ctx)
   else
     {
       if (ipmi_locate_ctx_errnum (ctx) == IPMI_LOCATE_ERR_SYSTEM_ERROR)
-	printf ("FAILED\n");
+        printf ("FAILED\n");
       else
-	printf ("ERROR: %s\n", ipmi_locate_ctx_errormsg (ctx));
+        printf ("ERROR: %s\n", ipmi_locate_ctx_errormsg (ctx));
     }
   printf ("\n");
 
@@ -307,9 +307,9 @@ acpi_probe_display (ipmi_locate_ctx_t ctx)
   else
     {
       if (ipmi_locate_ctx_errnum (ctx) == IPMI_LOCATE_ERR_SYSTEM_ERROR)
-	printf ("FAILED\n");
+        printf ("FAILED\n");
       else
-	printf ("ERROR: %s\n", ipmi_locate_ctx_errormsg (ctx));
+        printf ("ERROR: %s\n", ipmi_locate_ctx_errormsg (ctx));
     }
   printf ("\n");
 
@@ -324,9 +324,9 @@ acpi_probe_display (ipmi_locate_ctx_t ctx)
   else
     {
       if (ipmi_locate_ctx_errnum (ctx) == IPMI_LOCATE_ERR_SYSTEM_ERROR)
-	printf ("FAILED\n");
+        printf ("FAILED\n");
       else
-	printf ("ERROR: %s\n", ipmi_locate_ctx_errormsg (ctx));
+        printf ("ERROR: %s\n", ipmi_locate_ctx_errormsg (ctx));
     }
   printf ("\n");
 
@@ -341,9 +341,9 @@ acpi_probe_display (ipmi_locate_ctx_t ctx)
   else
     {
       if (ipmi_locate_ctx_errnum (ctx) == IPMI_LOCATE_ERR_SYSTEM_ERROR)
-	printf ("FAILED\n");
+        printf ("FAILED\n");
       else
-	printf ("ERROR: %s\n", ipmi_locate_ctx_errormsg (ctx));
+        printf ("ERROR: %s\n", ipmi_locate_ctx_errormsg (ctx));
     }
   printf ("\n");
 
@@ -368,9 +368,9 @@ pci_probe_display (ipmi_locate_ctx_t ctx)
   else
     {
       if (ipmi_locate_ctx_errnum (ctx) == IPMI_LOCATE_ERR_SYSTEM_ERROR)
-	printf ("FAILED\n");
+        printf ("FAILED\n");
       else
-	printf ("ERROR: %s\n", ipmi_locate_ctx_errormsg (ctx));
+        printf ("ERROR: %s\n", ipmi_locate_ctx_errormsg (ctx));
     }
   printf ("\n");
 
@@ -385,9 +385,9 @@ pci_probe_display (ipmi_locate_ctx_t ctx)
   else
     {
       if (ipmi_locate_ctx_errnum (ctx) == IPMI_LOCATE_ERR_SYSTEM_ERROR)
-	printf ("FAILED\n");
+        printf ("FAILED\n");
       else
-	printf ("ERROR: %s\n", ipmi_locate_ctx_errormsg (ctx));
+        printf ("ERROR: %s\n", ipmi_locate_ctx_errormsg (ctx));
     }
   printf ("\n");
 
@@ -402,9 +402,9 @@ pci_probe_display (ipmi_locate_ctx_t ctx)
   else
     {
       if (ipmi_locate_ctx_errnum (ctx) == IPMI_LOCATE_ERR_SYSTEM_ERROR)
-	printf ("FAILED\n");
+        printf ("FAILED\n");
       else
-	printf ("ERROR: %s\n", ipmi_locate_ctx_errormsg (ctx));
+        printf ("ERROR: %s\n", ipmi_locate_ctx_errormsg (ctx));
     }
   printf ("\n");
 
@@ -419,9 +419,9 @@ pci_probe_display (ipmi_locate_ctx_t ctx)
   else
     {
       if (ipmi_locate_ctx_errnum (ctx) == IPMI_LOCATE_ERR_SYSTEM_ERROR)
-	printf ("FAILED\n");
+        printf ("FAILED\n");
       else
-	printf ("ERROR: %s\n", ipmi_locate_ctx_errormsg (ctx));
+        printf ("ERROR: %s\n", ipmi_locate_ctx_errormsg (ctx));
     }
   printf ("\n");
 
@@ -446,9 +446,9 @@ defaults_display (ipmi_locate_ctx_t ctx)
   else
     {
       if (ipmi_locate_ctx_errnum (ctx) == IPMI_LOCATE_ERR_SYSTEM_ERROR)
-	printf ("FAILED\n");
+        printf ("FAILED\n");
       else
-	printf ("ERROR: %s\n", ipmi_locate_ctx_errormsg (ctx));
+        printf ("ERROR: %s\n", ipmi_locate_ctx_errormsg (ctx));
     }
   printf ("\n");
 
@@ -463,9 +463,9 @@ defaults_display (ipmi_locate_ctx_t ctx)
   else
     {
       if (ipmi_locate_ctx_errnum (ctx) == IPMI_LOCATE_ERR_SYSTEM_ERROR)
-	printf ("FAILED\n");
+        printf ("FAILED\n");
       else
-	printf ("ERROR: %s\n", ipmi_locate_ctx_errormsg (ctx));
+        printf ("ERROR: %s\n", ipmi_locate_ctx_errormsg (ctx));
     }
   printf ("\n");
 
@@ -484,9 +484,9 @@ defaults_display (ipmi_locate_ctx_t ctx)
   else
     {
       if (ipmi_locate_ctx_errnum (ctx) == IPMI_LOCATE_ERR_SYSTEM_ERROR)
-	printf ("FAILED\n");
+        printf ("FAILED\n");
       else
-	printf ("ERROR: %s\n", ipmi_locate_ctx_errormsg (ctx));
+        printf ("ERROR: %s\n", ipmi_locate_ctx_errormsg (ctx));
     }
   printf ("\n");
 #else /* !0 */
@@ -507,9 +507,9 @@ defaults_display (ipmi_locate_ctx_t ctx)
   else
     {
       if (ipmi_locate_ctx_errnum (ctx) == IPMI_LOCATE_ERR_SYSTEM_ERROR)
-	printf ("FAILED\n");
+        printf ("FAILED\n");
       else
-	printf ("ERROR: %s\n", ipmi_locate_ctx_errormsg (ctx));
+        printf ("ERROR: %s\n", ipmi_locate_ctx_errormsg (ctx));
     }
   printf ("\n");
   return;

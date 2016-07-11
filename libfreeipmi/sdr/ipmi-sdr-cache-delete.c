@@ -80,7 +80,7 @@ ipmi_sdr_cache_delete (ipmi_sdr_ctx_t ctx, const char *filename)
       if (errno != ENOENT)
         {
           SDR_ERRNO_TO_SDR_ERRNUM (ctx, errno);
-	  goto cleanup;
+          goto cleanup;
         }
     }
 

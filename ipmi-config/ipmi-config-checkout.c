@@ -126,7 +126,7 @@ ipmi_config_checkout_section (ipmi_config_state_data_t *state_data,
       else
         {
           if ((this_ret = kv->key->checkout (state_data,
-					     section->section_name,
+                                             section->section_name,
                                              kv)) == IPMI_CONFIG_ERR_FATAL_ERROR)
             goto cleanup;
         }

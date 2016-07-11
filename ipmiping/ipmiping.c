@@ -122,7 +122,7 @@ createpacket (const char *destination,
                                     0,
                                     buf,
                                     buflen,
-				    IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
+                                    IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
     ipmi_ping_err_exit ("assemble_ipmi_lan_pkt: %s", strerror (errno));
 
   if (debug)
@@ -133,7 +133,7 @@ createpacket (const char *destination,
                      DEBUG_UTIL_DIRECTION_REQUEST,
                      IPMI_NET_FN_APP_RQ,
                      IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES,
-		     0,
+                     0,
                      hdrbuf,
                      DEBUG_UTIL_HDR_BUFLEN);
 
@@ -205,7 +205,7 @@ parsepacket (const char *destination,
                      DEBUG_UTIL_DIRECTION_RESPONSE,
                      IPMI_NET_FN_APP_RQ,
                      IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES,
-		     0,
+                     0,
                      hdrbuf,
                      DEBUG_UTIL_HDR_BUFLEN);
 
@@ -238,7 +238,7 @@ parsepacket (const char *destination,
                                       obj_lan_msg_hdr,
                                       obj_cmd,
                                       obj_lan_msg_trlr,
-				      IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
+                                      IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
     ipmi_ping_err_exit ("unassemble_ipmi_lan_pkt: %s", strerror (errno));
 
   if (!ret)

@@ -200,18 +200,18 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case IPMISELD_EVENT_STATE_FILTER_KEY:
       if (!(cmd_args->event_state_filter_str = strdup (arg)))
-	{
-	  perror ("strdup");
-	  exit (EXIT_FAILURE);
-	}
+        {
+          perror ("strdup");
+          exit (EXIT_FAILURE);
+        }
       break;
     case IPMISELD_WARNING_THRESHOLD_KEY:
       errno = 0;
       tmp = strtol (arg, &endptr, 0);
       if (errno
           || endptr[0] != '\0'
-	  || tmp < 0
-	  || tmp > 100) 
+          || tmp < 0
+          || tmp > 100) 
         {
           fprintf (stderr, "invalid warning threshold\n");
           exit (EXIT_FAILURE);
@@ -223,8 +223,8 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       tmp = strtol (arg, &endptr, 0);
       if (errno
           || endptr[0] != '\0'
-	  || tmp < 0
-	  || tmp > 100) 
+          || tmp < 0
+          || tmp > 100) 
         {
           fprintf (stderr, "invalid clear threshold\n");
           exit (EXIT_FAILURE);
@@ -233,31 +233,31 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case IPMISELD_SYSTEM_EVENT_FORMAT_KEY:
       if (!(cmd_args->system_event_format_str = strdup (arg)))
-	{
-	  perror ("strdup");
-	  exit (EXIT_FAILURE);
-	}
+        {
+          perror ("strdup");
+          exit (EXIT_FAILURE);
+        }
       break;
     case IPMISELD_OEM_TIMESTAMPED_EVENT_FORMAT_KEY:
       if (!(cmd_args->oem_timestamped_event_format_str = strdup (arg)))
-	{
-	  perror ("strdup");
-	  exit (EXIT_FAILURE);
-	}
+        {
+          perror ("strdup");
+          exit (EXIT_FAILURE);
+        }
       break;
     case IPMISELD_OEM_NON_TIMESTAMPED_EVENT_FORMAT_KEY:
       if (!(cmd_args->oem_non_timestamped_event_format_str = strdup (arg)))
-	{
-	  perror ("strdup");
-	  exit (EXIT_FAILURE);
-	}
+        {
+          perror ("strdup");
+          exit (EXIT_FAILURE);
+        }
       break;
     case IPMISELD_POLL_INTERVAL_KEY:
       errno = 0;
       tmp = strtol (arg, &endptr, 0);
       if (errno
           || endptr[0] != '\0'
-	  || tmp <= 0) 
+          || tmp <= 0) 
         {
           fprintf (stderr, "invalid poll interval\n");
           exit (EXIT_FAILURE);
@@ -266,24 +266,24 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case IPMISELD_LOG_FACILITY_KEY:
       if (!(cmd_args->log_facility_str = strdup (arg)))
-	{
-	  perror ("strdup");
-	  exit (EXIT_FAILURE);
-	}
+        {
+          perror ("strdup");
+          exit (EXIT_FAILURE);
+        }
       break;
     case IPMISELD_LOG_PRIORITY_KEY:
       if (!(cmd_args->log_priority_str = strdup (arg)))
-	{
-	  perror ("strdup");
-	  exit (EXIT_FAILURE);
-	}
+        {
+          perror ("strdup");
+          exit (EXIT_FAILURE);
+        }
       break;
     case IPMISELD_CACHE_DIRECTORY_KEY:
       if (!(cmd_args->cache_directory = strdup (arg)))
-	{
-	  perror ("strdup");
-	  exit (EXIT_FAILURE);
-	}
+        {
+          perror ("strdup");
+          exit (EXIT_FAILURE);
+        }
       break;
     case IPMISELD_IGNORE_SDR_KEY:
       cmd_args->ignore_sdr = 1;
@@ -299,7 +299,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       tmp = strtol (arg, &endptr, 0);
       if (errno
           || endptr[0] != '\0'
-	  || tmp <= 0) 
+          || tmp <= 0) 
         {
           fprintf (stderr, "invalid threadpool count\n");
           exit (EXIT_FAILURE);
@@ -459,19 +459,19 @@ _ipmiseld_args_validate (struct ipmiseld_arguments *cmd_args)
   if (cmd_args->event_state_filter_str)
     {
       if (ipmiseld_event_state_filter_parse (cmd_args->event_state_filter_str) < 0)
-	err_exit ("Invalid event state filter specified\n");
+        err_exit ("Invalid event state filter specified\n");
     }
 
   if (cmd_args->log_facility_str)
     {
       if (ipmiseld_log_facility_parse (cmd_args->log_facility_str) < 0)
-	err_exit ("Invalid log facility specified\n");
+        err_exit ("Invalid log facility specified\n");
     }
 
   if (cmd_args->log_priority_str)
     {
       if (ipmiseld_log_priority_parse (cmd_args->log_priority_str) < 0)
-	err_exit ("Invalid log priority specified\n");
+        err_exit ("Invalid log priority specified\n");
     }
 
   if (cmd_args->cache_directory)
@@ -479,7 +479,7 @@ _ipmiseld_args_validate (struct ipmiseld_arguments *cmd_args)
       if (access (cmd_args->cache_directory, R_OK|W_OK|X_OK) < 0)
         {
           err_exit ("insufficient permission on cache directory '%s'",
-		    cmd_args->cache_directory);
+                    cmd_args->cache_directory);
           exit (EXIT_FAILURE);
         }
     }

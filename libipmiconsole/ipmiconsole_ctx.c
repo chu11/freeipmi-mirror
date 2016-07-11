@@ -138,7 +138,7 @@ ipmiconsole_ctx_list_cleanup (ipmiconsole_ctx_t c)
 int
 ipmiconsole_ctx_config_setup (ipmiconsole_ctx_t c,
                               const char *hostname,
-			      uint16_t port,
+                              uint16_t port,
                               struct ipmiconsole_ipmi_config *ipmi_config,
                               struct ipmiconsole_protocol_config *protocol_config,
                               struct ipmiconsole_engine_config *engine_config)
@@ -167,15 +167,15 @@ ipmiconsole_ctx_config_setup (ipmiconsole_ctx_t c,
   if (ipmi_config->k_g)
     {
       if (ipmi_config->k_g_len)
-	{
-	  memcpy (c->config.k_g, ipmi_config->k_g, ipmi_config->k_g_len);
-	  c->config.k_g_len = ipmi_config->k_g_len;
-	}
+        {
+          memcpy (c->config.k_g, ipmi_config->k_g, ipmi_config->k_g_len);
+          c->config.k_g_len = ipmi_config->k_g_len;
+        }
       else
-	{
-	  memset (c->config.k_g, '\0', IPMI_MAX_K_G_LENGTH + 1);
-	  c->config.k_g_len = 0;
-	}
+        {
+          memset (c->config.k_g, '\0', IPMI_MAX_K_G_LENGTH + 1);
+          c->config.k_g_len = 0;
+        }
     }
   else
     {
@@ -359,7 +359,7 @@ ipmiconsole_ctx_debug_setup (ipmiconsole_ctx_t c)
                 "%s.%s.%d",
                 IPMICONSOLE_DEBUG_FILENAME,
                 c->config.hostname,
-		pid);
+                pid);
 
       if ((c->debug.debug_fd = open (filename,
                                      O_CREAT | O_APPEND | O_WRONLY | O_EXCL,

@@ -149,9 +149,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       tmp = strtol (arg, &endptr, 0);
       if (errno
           || endptr[0] != '\0'
-	  || !IPMI_PAYLOAD_INSTANCE_VALID (tmp))
+          || !IPMI_PAYLOAD_INSTANCE_VALID (tmp))
         {
-	  fprintf (stderr, "invalid sol payload instance\n");
+          fprintf (stderr, "invalid sol payload instance\n");
           exit (EXIT_FAILURE);
         }
       cmd_args->sol_payload_instance = tmp;

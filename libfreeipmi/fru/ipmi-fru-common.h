@@ -46,12 +46,12 @@
 #define IPMI_FRU_COMMON_H
 
 int fru_dump_hex (ipmi_fru_ctx_t ctx,
-		  const void *frubuf,
-		  unsigned int length_in_bytes,
-		  const char *debug_hdr);
+                  const void *frubuf,
+                  unsigned int length_in_bytes,
+                  const char *debug_hdr);
 
 int fru_dump_obj (ipmi_fru_ctx_t ctx,
-		  fiid_obj_t obj,
-		  const char *debug_hdr);
+                  fiid_obj_t obj,
+                  const char *debug_hdr);
 
 #endif /* IPMI_FRU_COMMON_H */

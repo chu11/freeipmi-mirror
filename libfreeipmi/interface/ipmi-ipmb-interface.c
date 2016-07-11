@@ -141,7 +141,7 @@ int
 assemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg_hdr,
                         fiid_obj_t obj_cmd,
                         fiid_obj_t obj_ipmb_msg,
-			unsigned int flags)
+                        unsigned int flags)
 {
   uint8_t buf[IPMB_MAX_LEN+1];
   unsigned int indx = 0;
@@ -284,7 +284,7 @@ unassemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg,
                           fiid_obj_t obj_ipmb_msg_hdr,
                           fiid_obj_t obj_cmd,
                           fiid_obj_t obj_ipmb_msg_trlr,
-			  unsigned int flags)
+                          unsigned int flags)
 {
   uint8_t buf[IPMB_MAX_LEN+1];
   int buf_len, obj_ipmb_msg_trlr_len, len;

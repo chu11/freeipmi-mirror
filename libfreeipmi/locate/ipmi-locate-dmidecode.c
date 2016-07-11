@@ -480,36 +480,36 @@ ipmi_locate_dmidecode_get_device_info (ipmi_locate_ctx_t ctx,
     {
       fp = 0;
       while ((fgets (linebuf, sizeof (linebuf) - 1, efi_systab)))
-	{
-	  char *addr =  memchr (linebuf, '=', strlen (linebuf));
-	  *(addr++) = '\0';
-	  if (!strcmp (linebuf, "SMBIOS"))
-	    {
-	      char *endptr;
-	  
-	      errno = 0;
-	      fp = strtoul (addr, &endptr, 0);
-	      if (errno
-		  || ((endptr[0] != '\0') && (endptr[0] != 0x0a)))
-		{
-		  LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
-		  return (-1);
-		}
-	    }
-	}
+        {
+          char *addr =  memchr (linebuf, '=', strlen (linebuf));
+          *(addr++) = '\0';
+          if (!strcmp (linebuf, "SMBIOS"))
+            {
+              char *endptr;
+          
+              errno = 0;
+              fp = strtoul (addr, &endptr, 0);
+              if (errno
+                  || ((endptr[0] != '\0') && (endptr[0] != 0x0a)))
+                {
+                  LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
+                  return (-1);
+                }
+            }
+        }
       fclose (efi_systab);
 
       if (!fp)
-	{
-	  LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
-	  return (-1);
-	}
+        {
+          LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
+          return (-1);
+        }
 
       if (!(buf = _mem_chunk (ctx, fp, 0x20, DEFAULT_MEM_DEV)))
-	return (-1);
+        return (-1);
 
       if (!(_smbios_decode (ctx, buf, DEFAULT_MEM_DEV, type, &locate_info) < 0))
-	found++;
+        found++;
 
       free (buf);
     }
@@ -517,36 +517,36 @@ ipmi_locate_dmidecode_get_device_info (ipmi_locate_ctx_t ctx,
   else
     {
       if (!(buf = _mem_chunk (ctx, 0xF0000, 0x10000, DEFAULT_MEM_DEV)))
-	return (-1);
+        return (-1);
 
       for (fp = 0; fp <= 0xFFF0; fp += 16)
-	{
-	  if ((memcmp (buf + fp, "_SM_", 4) == 0) && (fp <= 0xFFE0))
-	    {
-	      if (!(_smbios_decode (ctx,
-				    buf + fp,
-				    DEFAULT_MEM_DEV,
-				    type,
-				    &locate_info) < 0))
-		{
-		  found++;
-		  break;
-		}
-	      fp += 16;
-	    }
-	  else if (memcmp (buf + fp, "_DMI_", 5) == 0)
-	    {
-	      if (!(_legacy_decode (ctx,
-				    buf + fp,
-				    DEFAULT_MEM_DEV,
-				    type,
-				    &locate_info) < 0))
-		{
-		  found++;
-		  break;
-		}
-	    }
-	}
+        {
+          if ((memcmp (buf + fp, "_SM_", 4) == 0) && (fp <= 0xFFE0))
+            {
+              if (!(_smbios_decode (ctx,
+                                    buf + fp,
+                                    DEFAULT_MEM_DEV,
+                                    type,
+                                    &locate_info) < 0))
+                {
+                  found++;
+                  break;
+                }
+              fp += 16;
+            }
+          else if (memcmp (buf + fp, "_DMI_", 5) == 0)
+            {
+              if (!(_legacy_decode (ctx,
+                                    buf + fp,
+                                    DEFAULT_MEM_DEV,
+                                    type,
+                                    &locate_info) < 0))
+                {
+                  found++;
+                  break;
+                }
+            }
+        }
 
       free (buf);
     }

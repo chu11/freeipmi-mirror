@@ -111,7 +111,7 @@ ipmi_sdr_ctx_create (void)
   if (ctx)
     {
       if (ctx->saved_offsets)
-	list_destroy (ctx->saved_offsets);
+        list_destroy (ctx->saved_offsets);
       free (ctx);
     }
   return (NULL);

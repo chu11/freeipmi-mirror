@@ -41,8 +41,8 @@ char *ipmipower_power_cmd_to_string (ipmipower_power_cmd_t cmd);
  * - if returns 0 or -1, error message in buf 
  */
 int ipmipower_power_cmd_check_privilege (ipmipower_power_cmd_t cmd,
-					 char *errbuf,
-					 unsigned int errbuflen);
+                                         char *errbuf,
+                                         unsigned int errbuflen);
 
 /* ipmipower_poll
  * - safe poll()

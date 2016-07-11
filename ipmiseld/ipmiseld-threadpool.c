@@ -82,27 +82,27 @@ _threadpool_func (void *arg)
       pthread_mutex_lock (&threadpool_queue_lock);
 
       while (!list_count (threadpool_queue)
-	     && !threadpool_data->exit_flag)
-	pthread_cond_wait (&threadpool_queue_cond, &threadpool_queue_lock);
+             && !threadpool_data->exit_flag)
+        pthread_cond_wait (&threadpool_queue_cond, &threadpool_queue_lock);
       
       if (threadpool_data->exit_flag)
-	{
-	  pthread_mutex_unlock (&threadpool_queue_lock);
-	  break;
-	}
+        {
+          pthread_mutex_unlock (&threadpool_queue_lock);
+          break;
+        }
 
       if (!(queue_arg = list_dequeue (threadpool_queue)))
-	err_output ("list_dequeue: %s", strerror (errno));
+        err_output ("list_dequeue: %s", strerror (errno));
       
       pthread_mutex_unlock (&threadpool_queue_lock);
       
       if (queue_arg)
-	{
-	  threadpool_data->callback (queue_arg);
-	  
-	  if (threadpool_data->postprocess)
-	    threadpool_data->postprocess (queue_arg);
-	}
+        {
+          threadpool_data->callback (queue_arg);
+          
+          if (threadpool_data->postprocess)
+            threadpool_data->postprocess (queue_arg);
+        }
     }
 
   pthread_mutex_lock (&threadpool_count_lock);
@@ -115,8 +115,8 @@ _threadpool_func (void *arg)
 
 int
 ipmiseld_threadpool_init (struct ipmiseld_prog_data *prog_data,
-			  IpmiSeldThreadPoolCallback callback,
-			  IpmiSeldThreadPoolPostProcess postprocess)
+                          IpmiSeldThreadPoolCallback callback,
+                          IpmiSeldThreadPoolPostProcess postprocess)
 {
   int i;
   int ret;
@@ -155,13 +155,13 @@ ipmiseld_threadpool_init (struct ipmiseld_prog_data *prog_data,
       threadpool_data_array[i].exit_flag = 0;
 
       if ((ret = pthread_create (&threadpool_data_array[i].tid,
-				 NULL,
-				 _threadpool_func,
-				 &threadpool_data_array[i])))
-	{
-	  err_output ("pthread_create: %s", strerror (ret));
-	  goto cleanup;
-	}
+                                 NULL,
+                                 _threadpool_func,
+                                 &threadpool_data_array[i])))
+        {
+          err_output ("pthread_create: %s", strerror (ret));
+          goto cleanup;
+        }
       
       pthread_mutex_lock (&threadpool_count_lock);
       threadpool_count++;
@@ -195,7 +195,7 @@ ipmiseld_threadpool_destroy (void)
   for (i = 0; i < threadpool_data_array_len; i++)
     {
       if ((ret = pthread_cond_signal (&threadpool_queue_cond)))
-	err_output ("pthread_cond_signal: %s", strerror (ret)); 
+        err_output ("pthread_cond_signal: %s", strerror (ret)); 
     }
 
   while (threadpool_count > 0)

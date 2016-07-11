@@ -263,8 +263,8 @@ _cmd_k_g (char **argv)
           ipmipower_cbuf_printf (ttyout,
 "k_g: %s\n",
                                  (cmd_args.common_args.k_g_len) ? format_kg (buf,
-									     IPMI_MAX_K_G_LENGTH*2+3,
-									     cmd_args.common_args.k_g) : "NULL");
+                                                                             IPMI_MAX_K_G_LENGTH*2+3,
+                                                                             cmd_args.common_args.k_g) : "NULL");
 #endif /* !NDEBUG */
         }
     }
@@ -313,7 +313,7 @@ _cmd_cipher_suite_id (char **argv)
       errno = 0;
       tmp = strtol (argv[1], &endptr, 10);
       if (errno
-	  || endptr[0] != '\0'
+          || endptr[0] != '\0'
           || tmp < IPMI_CIPHER_SUITE_ID_MIN
           || tmp > IPMI_CIPHER_SUITE_ID_MAX)
         ipmipower_cbuf_printf (ttyout,
@@ -375,11 +375,11 @@ _cmd_workaround_flags (char **argv)
       unsigned int outofband_flags, outofband_2_0_flags;
 
       if (parse_workaround_flags_tool (argv[1],
-				       &outofband_flags,
-				       &outofband_2_0_flags,
-				       NULL,
-				       NULL,
-				       NULL) < 0)
+                                       &outofband_flags,
+                                       &outofband_2_0_flags,
+                                       NULL,
+                                       NULL,
+                                       NULL) < 0)
         ipmipower_cbuf_printf (ttyout,
                                "%s invalid workaround flags specified\n",
                                argv[1]);
@@ -395,9 +395,9 @@ _cmd_workaround_flags (char **argv)
   else
     ipmipower_cbuf_printf (ttyout,
                            "workaround_flags must be specified: %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n",
-			   IPMI_PARSE_WORKAROUND_FLAGS_NONE_STR,
+                           IPMI_PARSE_WORKAROUND_FLAGS_NONE_STR,
                            IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES_STR,
-			   IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_NO_CHECKSUM_CHECK_STR,
+                           IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_NO_CHECKSUM_CHECK_STR,
                            IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_ACCEPT_SESSION_ID_ZERO_STR,
                            IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION_STR,
                            IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_CHECK_UNEXPECTED_AUTHCODE_STR,
@@ -408,7 +408,7 @@ _cmd_workaround_flags (char **argv)
                            IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_SUN_2_0_SESSION_STR,
                            IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_OPEN_SESSION_PRIVILEGE_STR,
                            IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_NON_EMPTY_INTEGRITY_CHECK_VALUE_STR,
-			   IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IPMIPING_STR);
+                           IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IPMIPING_STR);
 }
 
 static void
@@ -425,42 +425,42 @@ _cmd_power_all_nodes (ipmipower_power_cmd_t cmd)
   for (i = 0; i < ics_len; i++)
     {
       if (cmd_args.ping_interval
-	  && ics[i].discover_state == IPMIPOWER_DISCOVER_STATE_UNDISCOVERED)
-	ipmipower_output (IPMIPOWER_MSG_TYPE_NOTDISCOVERED, ics[i].hostname, NULL);
+          && ics[i].discover_state == IPMIPOWER_DISCOVER_STATE_UNDISCOVERED)
+        ipmipower_output (IPMIPOWER_MSG_TYPE_NOTDISCOVERED, ics[i].hostname, NULL);
       else if (cmd_args.ping_interval
-	       && cmd_args.ping_packet_count
-	       && cmd_args.ping_percent
-	       && ics[i].discover_state == IPMIPOWER_DISCOVER_STATE_BADCONNECTION)
-	ipmipower_output (IPMIPOWER_MSG_TYPE_BADCONNECTION, ics[i].hostname, NULL);
+               && cmd_args.ping_packet_count
+               && cmd_args.ping_percent
+               && ics[i].discover_state == IPMIPOWER_DISCOVER_STATE_BADCONNECTION)
+        ipmipower_output (IPMIPOWER_MSG_TYPE_BADCONNECTION, ics[i].hostname, NULL);
       else
-	{
-	  if (cmd_args.oem_power_type != IPMIPOWER_OEM_POWER_TYPE_NONE)
-	    {
-	      eanode = ics[i].extra_args;
-	      while (eanode)
-		{
-		  if (ipmipower_oem_power_cmd_check_extra_arg (eanode->extra_arg,
-							       NULL,
-							       0) <= 0)
-		    ipmipower_output (IPMIPOWER_MSG_TYPE_INVALID_ARGUMENT_FOR_OEM_EXTENSION,
-				      ics[i].hostname,
-				      eanode->extra_arg);
-		  else
-		    {
-		      ipmipower_connection_clear (&ics[i]);
-		      ipmipower_powercmd_queue (cmd, &ics[i], eanode->extra_arg);
-		      nodes_queued++;
-		    }
-		  eanode = eanode->next;
-		}
-	    }
-	  else
-	    {
-	      ipmipower_connection_clear (&ics[i]);
-	      ipmipower_powercmd_queue (cmd, &ics[i], NULL);
-	      nodes_queued++;
-	    }
-	}
+        {
+          if (cmd_args.oem_power_type != IPMIPOWER_OEM_POWER_TYPE_NONE)
+            {
+              eanode = ics[i].extra_args;
+              while (eanode)
+                {
+                  if (ipmipower_oem_power_cmd_check_extra_arg (eanode->extra_arg,
+                                                               NULL,
+                                                               0) <= 0)
+                    ipmipower_output (IPMIPOWER_MSG_TYPE_INVALID_ARGUMENT_FOR_OEM_EXTENSION,
+                                      ics[i].hostname,
+                                      eanode->extra_arg);
+                  else
+                    {
+                      ipmipower_connection_clear (&ics[i]);
+                      ipmipower_powercmd_queue (cmd, &ics[i], eanode->extra_arg);
+                      nodes_queued++;
+                    }
+                  eanode = eanode->next;
+                }
+            }
+          else
+            {
+              ipmipower_connection_clear (&ics[i]);
+              ipmipower_powercmd_queue (cmd, &ics[i], NULL);
+              nodes_queued++;
+            }
+        }
     }
   
   /* Special corner case when no nodes are discovered */
@@ -515,8 +515,8 @@ _cmd_power_specific_nodes (char **argv, ipmipower_power_cmd_t cmd)
 
       if (!(h2 = hostlist_create (hstr)))
         {
-	  ipmipower_cbuf_printf (ttyout, "invalid hostname(s) specified\n");
-	  goto cleanup;
+          ipmipower_cbuf_printf (ttyout, "invalid hostname(s) specified\n");
+          goto cleanup;
         }
 
       hostlist_uniq (h2);
@@ -528,67 +528,67 @@ _cmd_power_specific_nodes (char **argv, ipmipower_power_cmd_t cmd)
         }
 
       while ((h2str = hostlist_next (h2itr)))
-	{
-	  char *h2str_extra_arg = NULL;
-	  int i;
-	  
-	  if (cmd_args.oem_power_type != IPMIPOWER_OEM_POWER_TYPE_NONE)
-	    {
-	      char *ptr;
-	      
-	      if ((ptr = strchr (h2str, '+')))
-		{
-		  *ptr = '\0';
-		  ptr++;
-		  
-		  if (!(h2str_extra_arg = strdup (ptr)))
-		    {
-		      IPMIPOWER_ERROR (("strdup: %s", strerror(errno)));
-		      exit (EXIT_FAILURE);
-		    }
-		}
-	    }
-	  
-	  i = ipmipower_connection_hostname_index (ics, ics_len, h2str);
-	  
-	  if (i < 0)
-	    ipmipower_output (IPMIPOWER_MSG_TYPE_UNCONFIGURED_HOSTNAME, h2str, NULL);
-	  else if (cmd_args.ping_interval
-		   && ics[i].discover_state == IPMIPOWER_DISCOVER_STATE_UNDISCOVERED)
-	    ipmipower_output (IPMIPOWER_MSG_TYPE_NOTDISCOVERED, ics[i].hostname, NULL);
-	  else if (cmd_args.ping_interval
-		   && cmd_args.ping_packet_count
-		   && cmd_args.ping_percent
-		   && ics[i].discover_state == IPMIPOWER_DISCOVER_STATE_BADCONNECTION)
-	    ipmipower_output (IPMIPOWER_MSG_TYPE_BADCONNECTION, ics[i].hostname, NULL);
-	  else
-	    {
-	      if (cmd_args.oem_power_type != IPMIPOWER_OEM_POWER_TYPE_NONE)
-		{
-		  if (ipmipower_oem_power_cmd_check_extra_arg (h2str_extra_arg,
-							       NULL,
-							       0) <= 0)
-		    {
-		      ipmipower_output (IPMIPOWER_MSG_TYPE_INVALID_ARGUMENT_FOR_OEM_EXTENSION,
-					ics[i].hostname,
-					h2str_extra_arg);
-		      goto end_inner_loop;
-		    }
-		  ipmipower_connection_clear (&ics[i]);
-		  ipmipower_powercmd_queue (cmd, &ics[i], h2str_extra_arg);
-		}
-	      else
-		{
-		  ipmipower_connection_clear (&ics[i]);
-		  ipmipower_powercmd_queue (cmd, &ics[i], NULL);
-		}
-	    }
-	  
-	end_inner_loop:
-	  free (h2str_extra_arg);
-	  free (h2str);
-	  h2str = NULL;
-	}
+        {
+          char *h2str_extra_arg = NULL;
+          int i;
+          
+          if (cmd_args.oem_power_type != IPMIPOWER_OEM_POWER_TYPE_NONE)
+            {
+              char *ptr;
+              
+              if ((ptr = strchr (h2str, '+')))
+                {
+                  *ptr = '\0';
+                  ptr++;
+                  
+                  if (!(h2str_extra_arg = strdup (ptr)))
+                    {
+                      IPMIPOWER_ERROR (("strdup: %s", strerror(errno)));
+                      exit (EXIT_FAILURE);
+                    }
+                }
+            }
+          
+          i = ipmipower_connection_hostname_index (ics, ics_len, h2str);
+          
+          if (i < 0)
+            ipmipower_output (IPMIPOWER_MSG_TYPE_UNCONFIGURED_HOSTNAME, h2str, NULL);
+          else if (cmd_args.ping_interval
+                   && ics[i].discover_state == IPMIPOWER_DISCOVER_STATE_UNDISCOVERED)
+            ipmipower_output (IPMIPOWER_MSG_TYPE_NOTDISCOVERED, ics[i].hostname, NULL);
+          else if (cmd_args.ping_interval
+                   && cmd_args.ping_packet_count
+                   && cmd_args.ping_percent
+                   && ics[i].discover_state == IPMIPOWER_DISCOVER_STATE_BADCONNECTION)
+            ipmipower_output (IPMIPOWER_MSG_TYPE_BADCONNECTION, ics[i].hostname, NULL);
+          else
+            {
+              if (cmd_args.oem_power_type != IPMIPOWER_OEM_POWER_TYPE_NONE)
+                {
+                  if (ipmipower_oem_power_cmd_check_extra_arg (h2str_extra_arg,
+                                                               NULL,
+                                                               0) <= 0)
+                    {
+                      ipmipower_output (IPMIPOWER_MSG_TYPE_INVALID_ARGUMENT_FOR_OEM_EXTENSION,
+                                        ics[i].hostname,
+                                        h2str_extra_arg);
+                      goto end_inner_loop;
+                    }
+                  ipmipower_connection_clear (&ics[i]);
+                  ipmipower_powercmd_queue (cmd, &ics[i], h2str_extra_arg);
+                }
+              else
+                {
+                  ipmipower_connection_clear (&ics[i]);
+                  ipmipower_powercmd_queue (cmd, &ics[i], NULL);
+                }
+            }
+          
+        end_inner_loop:
+          free (h2str_extra_arg);
+          free (h2str);
+          h2str = NULL;
+        }
       
       hostlist_iterator_destroy (h2itr);
       hostlist_destroy (h2);
@@ -624,22 +624,22 @@ _cmd_power (char **argv, ipmipower_power_cmd_t cmd)
   if (cmd_args.oem_power_type == IPMIPOWER_OEM_POWER_TYPE_NONE)
     {
       if (ipmipower_power_cmd_check_privilege (cmd,
-					       errbuf,
-					       IPMIPOWER_OUTPUT_BUFLEN) <= 0)
-	{
-	  ipmipower_cbuf_printf (ttyout, "%s\n", errbuf);
-	  return;
-	}
+                                               errbuf,
+                                               IPMIPOWER_OUTPUT_BUFLEN) <= 0)
+        {
+          ipmipower_cbuf_printf (ttyout, "%s\n", errbuf);
+          return;
+        }
     }
   else
     {
       if (ipmipower_oem_power_cmd_check_support_and_privilege (cmd,
-							       errbuf,
-							       IPMIPOWER_OUTPUT_BUFLEN) <= 0)
-  	{
-	  ipmipower_cbuf_printf (ttyout, "%s\n", errbuf);
-	  return;
-	}
+                                                               errbuf,
+                                                               IPMIPOWER_OUTPUT_BUFLEN) <= 0)
+        {
+          ipmipower_cbuf_printf (ttyout, "%s\n", errbuf);
+          return;
+        }
     }
   
   /* all nodes */
@@ -1089,7 +1089,7 @@ _cmd_set_unsigned_int (char **argv,
       errno = 0;
       temp = strtoul (argv[1], &endptr, 10);
       if (errno
-	  || endptr[0] != '\0')
+          || endptr[0] != '\0')
         ipmipower_cbuf_printf (ttyout,
                                "invalid %s input\n",
                                str);
@@ -1130,7 +1130,7 @@ _cmd_set_unsigned_int_ranged (char **argv,
       errno = 0;
       temp = strtol (argv[1], &endptr, 10);
       if (errno
-	  || endptr[0] != '\0')
+          || endptr[0] != '\0')
         ipmipower_cbuf_printf (ttyout,
                                "invalid %s input\n",
                                str);

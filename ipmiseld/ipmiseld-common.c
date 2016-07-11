@@ -64,23 +64,23 @@ ipmiseld_event_state_filter_parse (const char *str)
   while (tok)
     {
       if (!strcasecmp (tok, "NOMINAL"))
-	filter_mask |= IPMISELD_NOMINAL_FILTER;
+        filter_mask |= IPMISELD_NOMINAL_FILTER;
       else if (!strcasecmp (tok, "WARNING"))
-	filter_mask |= IPMISELD_WARNING_FILTER;
+        filter_mask |= IPMISELD_WARNING_FILTER;
       else if (!strcasecmp (tok, "CRITICAL"))
-	filter_mask |= IPMISELD_CRITICAL_FILTER;
+        filter_mask |= IPMISELD_CRITICAL_FILTER;
       else if (!strcasecmp (tok, "NA"))
-	filter_mask |= IPMISELD_NA_FILTER;
+        filter_mask |= IPMISELD_NA_FILTER;
       else if (!strcasecmp (tok, "none"))
-	{
-	  filter_mask = 0;
-	  break;
-	}
+        {
+          filter_mask = 0;
+          break;
+        }
       else
-	{
-	  filter_mask = -1;
-	  break;
-	}
+        {
+          filter_mask = -1;
+          break;
+        }
       tok = strtok (NULL, " ,");
     }
 
@@ -145,8 +145,8 @@ ipmiseld_log_priority_parse (const char *str)
  
 static void
 _ipmiseld_syslog (ipmiseld_host_data_t *host_data,
-		  const char *message,
-		  va_list ap)
+                  const char *message,
+                  va_list ap)
 {
   char buf[IPMISELD_ERR_BUFLEN + 1];
   
@@ -162,8 +162,8 @@ _ipmiseld_syslog (ipmiseld_host_data_t *host_data,
 
 void
 ipmiseld_syslog (ipmiseld_host_data_t *host_data,
-		 const char *message,
-		 ...)
+                 const char *message,
+                 ...)
 {
   va_list ap;
 
@@ -177,8 +177,8 @@ ipmiseld_syslog (ipmiseld_host_data_t *host_data,
 
 void
 ipmiseld_syslog_host (ipmiseld_host_data_t *host_data,
-		      const char *message,
-		      ...)
+                      const char *message,
+                      ...)
 {
   va_list ap;
 
@@ -195,21 +195,21 @@ ipmiseld_syslog_host (ipmiseld_host_data_t *host_data,
       vsnprintf(buf, IPMISELD_ERR_BUFLEN, message, ap);
       
       if (host_data->prog_data->args->test_run
-	  || host_data->prog_data->args->foreground)
-	printf ("%s: %s\n", host_data->hostname, buf);
+          || host_data->prog_data->args->foreground)
+        printf ("%s: %s\n", host_data->hostname, buf);
       else
-	syslog (host_data->prog_data->log_priority,
-		"%s: %s",
-		host_data->hostname,
-		buf);
+        syslog (host_data->prog_data->log_priority,
+                "%s: %s",
+                host_data->hostname,
+                buf);
     }
   va_end (ap);
 }
 
 void
 ipmiseld_err_output (ipmiseld_host_data_t *host_data,
-		     const char *message,
-		     ...)
+                     const char *message,
+                     ...)
 {
   char buf[IPMISELD_ERR_BUFLEN + 1];
   va_list ap;

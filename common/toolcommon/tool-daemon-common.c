@@ -76,7 +76,7 @@ daemonize_common (const char *pidfile)
       /* parent terminates */
       char buf;
       if (read(fds[0], &buf, 1) < 0)
-	err_exit ("read: %s", strerror (errno));
+        err_exit ("read: %s", strerror (errno));
       close(fds[1]);
       close(fds[0]);
       exit (0);
@@ -100,7 +100,7 @@ daemonize_common (const char *pidfile)
       (void) unlink (pidfile);
 
       if (!(pf = fopen (pidfile, "w")))
-	err_exit ("fopen: %s", strerror (errno));
+        err_exit ("fopen: %s", strerror (errno));
 
       /* write the 2nd child PID to the pidfile */
       fprintf (pf, "%u\n", pid);

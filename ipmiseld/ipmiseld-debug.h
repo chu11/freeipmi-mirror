@@ -55,7 +55,7 @@
                       __FILE__, \
                       __FUNCTION__, \
                       __LINE__, \
-                      host_data->hostname ? host_data->hostname : "localhost");	\
+                      host_data->hostname ? host_data->hostname : "localhost"); \
     if (__len < IPMISELD_DEBUG_BUFFER_LEN) \
       { \
         char *__str; \
@@ -78,7 +78,7 @@
     __len = snprintf (__err, \
                       IPMISELD_DEBUG_BUFFER_LEN, \
                       "hostname = %s ; ", \
-                      host_data->hostname ? host_data->hostname : "localhost");	\
+                      host_data->hostname ? host_data->hostname : "localhost"); \
     if (__len < IPMISELD_DEBUG_BUFFER_LEN) \
       { \
         char *__str; \

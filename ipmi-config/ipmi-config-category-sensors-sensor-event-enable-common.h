@@ -23,20 +23,20 @@
 #include "ipmi-config.h"
 
 ipmi_config_err_t sensor_event_enable_enable_all_event_messages_checkout (ipmi_config_state_data_t *state_data,
-									  const char *section_name,
-									  struct ipmi_config_keyvalue *kv);
+                                                                          const char *section_name,
+                                                                          struct ipmi_config_keyvalue *kv);
 
 ipmi_config_err_t sensor_event_enable_enable_all_event_messages_commit (ipmi_config_state_data_t *state_data,
-									const char *section_name,
-									const struct ipmi_config_keyvalue *kv);
+                                                                        const char *section_name,
+                                                                        const struct ipmi_config_keyvalue *kv);
 
 ipmi_config_err_t sensor_event_enable_enable_scanning_on_this_sensor_checkout (ipmi_config_state_data_t *state_data,
-									       const char *section_name,
-									       struct ipmi_config_keyvalue *kv);
+                                                                               const char *section_name,
+                                                                               struct ipmi_config_keyvalue *kv);
 
 ipmi_config_err_t sensor_event_enable_enable_scanning_on_this_sensor_commit (ipmi_config_state_data_t *state_data,
-									     const char *section_name,
-									     const struct ipmi_config_keyvalue *kv);
+                                                                             const char *section_name,
+                                                                             const struct ipmi_config_keyvalue *kv);
 
 int setup_sensor_event_enable_fields (ipmi_config_state_data_t *state_data,
                                       struct ipmi_config_section *section);

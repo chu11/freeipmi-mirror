@@ -45,9 +45,9 @@
 
 int
 _sel_string_output_sun_x4140_event_data3_fru_position_number (ipmi_sel_ctx_t ctx,
-							      char *tmpbuf,
-							      unsigned int tmpbuflen,
-							      struct ipmi_sel_system_event_record_data *system_event_record_data)
+                                                              char *tmpbuf,
+                                                              unsigned int tmpbuflen,
+                                                              struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -86,13 +86,13 @@ _sel_string_output_sun_x4140_event_data3_fru_position_number (ipmi_sel_ctx_t ctx
  */
 int
 sel_string_output_sun_x4140_event_data3_threshold_oem (ipmi_sel_ctx_t ctx,
-						       struct ipmi_sel_entry *sel_entry,
-						       uint8_t sel_record_type,
-						       char *tmpbuf,
-						       unsigned int tmpbuflen,
-						       unsigned int flags,
-						       unsigned int *wlen,
-						       struct ipmi_sel_system_event_record_data *system_event_record_data)
+                                                       struct ipmi_sel_entry *sel_entry,
+                                                       uint8_t sel_record_type,
+                                                       char *tmpbuf,
+                                                       unsigned int tmpbuflen,
+                                                       unsigned int flags,
+                                                       unsigned int *wlen,
+                                                       struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   int ret;
 
@@ -114,9 +114,9 @@ sel_string_output_sun_x4140_event_data3_threshold_oem (ipmi_sel_ctx_t ctx,
    */
 
   if ((ret = _sel_string_output_sun_x4140_event_data3_fru_position_number (ctx,
-									   tmpbuf,
-									   tmpbuflen,
-									   system_event_record_data)) < 0)
+                                                                           tmpbuf,
+                                                                           tmpbuflen,
+                                                                           system_event_record_data)) < 0)
     return (-1);
 
   if (ret)
@@ -131,13 +131,13 @@ sel_string_output_sun_x4140_event_data3_threshold_oem (ipmi_sel_ctx_t ctx,
  */
 int
 sel_string_output_sun_x4140_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
-						      struct ipmi_sel_entry *sel_entry,
-						      uint8_t sel_record_type,
-						      char *tmpbuf,
-						      unsigned int tmpbuflen,
-						      unsigned int flags,
-						      unsigned int *wlen,
-						      struct ipmi_sel_system_event_record_data *system_event_record_data)
+                                                      struct ipmi_sel_entry *sel_entry,
+                                                      uint8_t sel_record_type,
+                                                      char *tmpbuf,
+                                                      unsigned int tmpbuflen,
+                                                      unsigned int flags,
+                                                      unsigned int *wlen,
+                                                      struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   int ret;
 
@@ -159,9 +159,9 @@ sel_string_output_sun_x4140_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
    */
 
   if ((ret = _sel_string_output_sun_x4140_event_data3_fru_position_number (ctx,
-									   tmpbuf,
-									   tmpbuflen,
-									   system_event_record_data)) < 0)
+                                                                           tmpbuf,
+                                                                           tmpbuflen,
+                                                                           system_event_record_data)) < 0)
     return (-1);
 
   if (ret)

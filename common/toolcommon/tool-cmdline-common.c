@@ -136,7 +136,7 @@ common_parse_opt (int key,
       errno = 0;
       tmp = strtol (arg, &endptr, 0);
       if (errno
-	  || endptr[0] != '\0'
+          || endptr[0] != '\0'
           || tmp <= 0)
         {
           fprintf (stderr, "invalid driver address\n");
@@ -156,7 +156,7 @@ common_parse_opt (int key,
       errno = 0;
       tmp = strtol (arg, &endptr, 0);
       if (errno
-	  || endptr[0] != '\0'
+          || endptr[0] != '\0'
           || tmp <= 0)
         {
           fprintf (stderr, "invalid register spacing\n");
@@ -168,9 +168,9 @@ common_parse_opt (int key,
       errno = 0;
       tmp = strtol (arg, &endptr, 0);
       if (errno
-	  || endptr[0] != '\0'
-	  || tmp < 0
-	  || !IPMI_CHANNEL_NUMBER_VALID (tmp))
+          || endptr[0] != '\0'
+          || tmp < 0
+          || !IPMI_CHANNEL_NUMBER_VALID (tmp))
         {
           fprintf (stderr, "invalid target channel numbern");
           exit (EXIT_FAILURE);
@@ -182,8 +182,8 @@ common_parse_opt (int key,
       errno = 0;
       tmp = strtol (arg, &endptr, 0);
       if (errno
-	  || endptr[0] != '\0'
-	  || tmp < 0)
+          || endptr[0] != '\0'
+          || tmp < 0)
         {
           fprintf (stderr, "invalid target slave addressn");
           exit (EXIT_FAILURE);
@@ -211,7 +211,7 @@ common_parse_opt (int key,
         }
       else
         {
-	  free (common_args->username);
+          free (common_args->username);
           if (!(common_args->username = strdup (arg)))
             {
               perror ("strdup");
@@ -229,7 +229,7 @@ common_parse_opt (int key,
         }
       else
         {
-	  free (common_args->password);
+          free (common_args->password);
           if (!(common_args->password = strdup (arg)))
             {
               perror ("strdup");
@@ -313,7 +313,7 @@ common_parse_opt (int key,
       errno = 0;
       tmp = strtol (arg, &endptr, 0);
       if (errno
-	  || endptr[0] != '\0'
+          || endptr[0] != '\0'
           || tmp <= 0)
         {
           fprintf (stderr, "invalid session timeout\n");
@@ -327,7 +327,7 @@ common_parse_opt (int key,
       errno = 0;
       tmp = strtol (arg, &endptr, 0);
       if (errno
-	  || endptr[0] != '\0'
+          || endptr[0] != '\0'
           || tmp <= 0)
         {
           fprintf (stderr, "invalid retransmission timeout\n");
@@ -349,7 +349,7 @@ common_parse_opt (int key,
       errno = 0;
       tmp = strtol (arg, &endptr, 0);
       if (errno
-	  || endptr[0] != '\0'
+          || endptr[0] != '\0'
           || tmp < IPMI_CIPHER_SUITE_ID_MIN
           || tmp > IPMI_CIPHER_SUITE_ID_MAX)
         {
@@ -357,10 +357,10 @@ common_parse_opt (int key,
           exit (EXIT_FAILURE);
         }
       if (!IPMI_CIPHER_SUITE_ID_SUPPORTED (tmp))
-	{
+        {
           fprintf (stderr, "unsupported cipher suite id\n");
           exit (EXIT_FAILURE);
-	}
+        }
       common_args->cipher_suite_id = tmp;
       break;
       /* ARGP_PRIVILEGE_KEY for backwards compatability */
@@ -387,11 +387,11 @@ common_parse_opt (int key,
       break;
     case ARGP_WORKAROUND_FLAGS_KEY:
       if (parse_workaround_flags_tool (arg,
-				       &outofband_flags,
-				       &outofband_2_0_flags,
-				       &inband_flags,
-				       &sdr_flags,
-				       &section_flags) < 0)
+                                       &outofband_flags,
+                                       &outofband_2_0_flags,
+                                       &inband_flags,
+                                       &sdr_flags,
+                                       &section_flags) < 0)
         {
           fprintf (stderr, "invalid workaround flags\n");
           exit (EXIT_FAILURE);
@@ -453,8 +453,8 @@ common_parse_opt (int key,
       errno = 0;
       tmp = strtol (arg, &endptr, 0);
       if (errno
-	  || endptr[0] != '\0'
-	  || !IPMI_UTC_OFFSET_VALID (tmp))
+          || endptr[0] != '\0'
+          || !IPMI_UTC_OFFSET_VALID (tmp))
         {
           fprintf (stderr, "invalid UTC offset\n");
           exit (EXIT_FAILURE);
@@ -475,7 +475,7 @@ common_parse_opt (int key,
       errno = 0;
       tmp = strtol (arg, &endptr, 10);
       if (errno
-	  || endptr[0] != '\0'
+          || endptr[0] != '\0'
           || (tmp < PSTDOUT_FANOUT_MIN)
           || (tmp > PSTDOUT_FANOUT_MAX))
         {

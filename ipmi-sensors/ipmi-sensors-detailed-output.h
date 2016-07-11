@@ -22,7 +22,7 @@
 #include "ipmi-sensors.h"
 
 int ipmi_sensors_detailed_output (ipmi_sensors_state_data_t *state_data,
-				  uint8_t sensor_number,
+                                  uint8_t sensor_number,
                                   double *sensor_reading,
                                   int event_message_output_type,
                                   uint16_t sensor_event_bitmask,

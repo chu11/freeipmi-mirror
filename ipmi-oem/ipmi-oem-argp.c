@@ -139,11 +139,11 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
                 cmd_args->oem_options_count++;
                 break;
               }
-	    else
-	      {
-		fprintf (stderr, "Too many arguments specified\n");
-		exit (EXIT_FAILURE);
-	      }
+            else
+              {
+                fprintf (stderr, "Too many arguments specified\n");
+                exit (EXIT_FAILURE);
+              }
           }
         break;
       }
@@ -196,8 +196,8 @@ ipmi_oem_argp_parse (int argc, char **argv, struct ipmi_oem_arguments *cmd_args)
   cmd_args->oem_id = NULL;
   cmd_args->oem_command = NULL;
   memset (cmd_args->oem_options,
-	  '\0',
-	  sizeof (char *) * IPMI_OEM_MAX_ARGS);
+          '\0',
+          sizeof (char *) * IPMI_OEM_MAX_ARGS);
   cmd_args->oem_options_count = 0;
 
   argp_parse (&cmdline_config_file_argp,

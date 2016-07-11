@@ -82,12 +82,12 @@ _get_front_panel_buttons (ipmi_config_state_data_t *state_data,
       ipmi_config_err_t ret;
 
       if (ipmi_errnum_is_non_fatal (state_data,
-				    obj_cmd_rs,
-				    &ret))
+                                    obj_cmd_rs,
+                                    &ret))
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_chassis_status: %s\n",
@@ -259,12 +259,12 @@ _set_front_panel_buttons (ipmi_config_state_data_t *state_data,
       ipmi_config_err_t ret;
 
       if (ipmi_errnum_is_non_fatal (state_data,
-				    obj_cmd_rs,
-				    &ret))
+                                    obj_cmd_rs,
+                                    &ret))
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_front_panel_enables: %s\n",
@@ -281,7 +281,7 @@ _set_front_panel_buttons (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 front_panel_buttons_checkout (ipmi_config_state_data_t *state_data,
-			      const char *section_name,
+                              const char *section_name,
                               struct ipmi_config_keyvalue *kv)
 {
   struct front_panel_buttons data;
@@ -328,8 +328,8 @@ front_panel_buttons_checkout (ipmi_config_state_data_t *state_data,
     enabled_str = "";
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  enabled_str) < 0)
+                                                  kv,
+                                                  enabled_str) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
@@ -339,7 +339,7 @@ front_panel_buttons_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 front_panel_buttons_commit (ipmi_config_state_data_t *state_data,
-			    const char *section_name,
+                            const char *section_name,
                             const struct ipmi_config_keyvalue *kv)
 {
   struct front_panel_buttons data;
@@ -463,52 +463,52 @@ ipmi_config_chassis_front_panel_buttons_get (ipmi_config_state_data_t *state_dat
   assert (state_data);
 
   if (!(section = ipmi_config_section_create (state_data,
-					      "Chassis_Front_Panel_Buttons",
-					      "Chassis_Front_Panel_Buttons",
-					      section_comment,
-					      0,
-					      NULL,
-					      NULL)))
+                                              "Chassis_Front_Panel_Buttons",
+                                              "Chassis_Front_Panel_Buttons",
+                                              section_comment,
+                                              0,
+                                              NULL,
+                                              NULL)))
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Enable_Standby_Button_For_Entering_Standby",
-				   "Possible values: Yes/No",
-				   IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
-				   front_panel_buttons_checkout,
-				   front_panel_buttons_commit,
-				   yes_no_validate) < 0)
+                                   section,
+                                   "Enable_Standby_Button_For_Entering_Standby",
+                                   "Possible values: Yes/No",
+                                   IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                                   front_panel_buttons_checkout,
+                                   front_panel_buttons_commit,
+                                   yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Enable_Diagnostic_Interrupt_Button",
-				   "Possible values: Yes/No",
-				   IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
-				   front_panel_buttons_checkout,
-				   front_panel_buttons_commit,
-				   yes_no_validate) < 0)
+                                   section,
+                                   "Enable_Diagnostic_Interrupt_Button",
+                                   "Possible values: Yes/No",
+                                   IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                                   front_panel_buttons_checkout,
+                                   front_panel_buttons_commit,
+                                   yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Enable_Reset_Button",
-				   "Possible values: Yes/No",
-				   IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
-				   front_panel_buttons_checkout,
-				   front_panel_buttons_commit,
-				   yes_no_validate) < 0)
+                                   section,
+                                   "Enable_Reset_Button",
+                                   "Possible values: Yes/No",
+                                   IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                                   front_panel_buttons_checkout,
+                                   front_panel_buttons_commit,
+                                   yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Enable_Power_Off_Button_For_Power_Off_Only",
-				   "Possible values: Yes/No",
-				   IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
-				   front_panel_buttons_checkout,
-				   front_panel_buttons_commit,
-				   yes_no_validate) < 0)
+                                   section,
+                                   "Enable_Power_Off_Button_For_Power_Off_Only",
+                                   "Possible values: Yes/No",
+                                   IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT_IF_VALUE_EMPTY,
+                                   front_panel_buttons_checkout,
+                                   front_panel_buttons_commit,
+                                   yes_no_validate) < 0)
     goto cleanup;
 
   return (section);

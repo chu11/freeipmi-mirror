@@ -91,7 +91,7 @@ _get_pef_control (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_pef_configuration_parameters_pef_control: %s\n",
@@ -181,7 +181,7 @@ _set_pef_control (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_pef_configuration_parameters_pef_control: %s\n",
@@ -199,7 +199,7 @@ _set_pef_control (ipmi_config_state_data_t *state_data,
 
 ipmi_config_err_t
 enable_pef_checkout (ipmi_config_state_data_t *state_data,
-		     const char *section_name,
+                     const char *section_name,
                      struct ipmi_config_keyvalue *kv)
 {
   struct pef_control pc;
@@ -222,7 +222,7 @@ enable_pef_checkout (ipmi_config_state_data_t *state_data,
 
 ipmi_config_err_t
 enable_pef_commit (ipmi_config_state_data_t *state_data,
-		   const char *section_name,
+                   const char *section_name,
                    const struct ipmi_config_keyvalue *kv)
 {
   struct pef_control pc;
@@ -242,7 +242,7 @@ enable_pef_commit (ipmi_config_state_data_t *state_data,
 
 ipmi_config_err_t
 enable_pef_event_messages_checkout (ipmi_config_state_data_t *state_data,
-				    const char *section_name,
+                                    const char *section_name,
                                     struct ipmi_config_keyvalue *kv)
 {
   struct pef_control pc;
@@ -265,7 +265,7 @@ enable_pef_event_messages_checkout (ipmi_config_state_data_t *state_data,
 
 ipmi_config_err_t
 enable_pef_event_messages_commit (ipmi_config_state_data_t *state_data,
-				  const char *section_name,
+                                  const char *section_name,
                                   const struct ipmi_config_keyvalue *kv)
 {
   struct pef_control pc;
@@ -285,7 +285,7 @@ enable_pef_event_messages_commit (ipmi_config_state_data_t *state_data,
 
 ipmi_config_err_t
 enable_pef_startup_delay_checkout (ipmi_config_state_data_t *state_data,
-				   const char *section_name,
+                                   const char *section_name,
                                    struct ipmi_config_keyvalue *kv)
 {
   struct pef_control pc;
@@ -308,7 +308,7 @@ enable_pef_startup_delay_checkout (ipmi_config_state_data_t *state_data,
 
 ipmi_config_err_t
 enable_pef_startup_delay_commit (ipmi_config_state_data_t *state_data,
-				 const char *section_name,
+                                 const char *section_name,
                                  const struct ipmi_config_keyvalue *kv)
 {
   struct pef_control pc;
@@ -328,7 +328,7 @@ enable_pef_startup_delay_commit (ipmi_config_state_data_t *state_data,
 
 ipmi_config_err_t
 enable_pef_alert_startup_delay_checkout (ipmi_config_state_data_t *state_data,
-					 const char *section_name,
+                                         const char *section_name,
                                          struct ipmi_config_keyvalue *kv)
 {
   struct pef_control pc;
@@ -351,7 +351,7 @@ enable_pef_alert_startup_delay_checkout (ipmi_config_state_data_t *state_data,
 
 ipmi_config_err_t
 enable_pef_alert_startup_delay_commit (ipmi_config_state_data_t *state_data,
-				       const char *section_name,
+                                       const char *section_name,
                                        const struct ipmi_config_keyvalue *kv)
 {
   struct pef_control pc;
@@ -404,7 +404,7 @@ _get_pef_action_global_control (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_pef_configuration_parameters_pef_action_global_control: %s\n",
@@ -516,7 +516,7 @@ _set_pef_action_global_control (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_pef_configuration_parameters_pef_action_global_control: %s\n",
@@ -534,7 +534,7 @@ _set_pef_action_global_control (ipmi_config_state_data_t *state_data,
 
 ipmi_config_err_t
 enable_alert_action_checkout (ipmi_config_state_data_t *state_data,
-			      const char *section_name,
+                              const char *section_name,
                               struct ipmi_config_keyvalue *kv)
 {
   struct pef_action_global_control gc;
@@ -557,7 +557,7 @@ enable_alert_action_checkout (ipmi_config_state_data_t *state_data,
 
 ipmi_config_err_t
 enable_alert_action_commit (ipmi_config_state_data_t *state_data,
-			    const char *section_name,
+                            const char *section_name,
                             const struct ipmi_config_keyvalue *kv)
 {
   struct pef_action_global_control gc;
@@ -577,7 +577,7 @@ enable_alert_action_commit (ipmi_config_state_data_t *state_data,
 
 ipmi_config_err_t
 enable_power_down_action_checkout (ipmi_config_state_data_t *state_data,
-				   const char *section_name,
+                                   const char *section_name,
                                    struct ipmi_config_keyvalue *kv)
 {
   struct pef_action_global_control gc;
@@ -600,7 +600,7 @@ enable_power_down_action_checkout (ipmi_config_state_data_t *state_data,
 
 ipmi_config_err_t
 enable_power_down_action_commit (ipmi_config_state_data_t *state_data,
-				 const char *section_name,
+                                 const char *section_name,
                                  const struct ipmi_config_keyvalue *kv)
 {
   struct pef_action_global_control gc;
@@ -620,7 +620,7 @@ enable_power_down_action_commit (ipmi_config_state_data_t *state_data,
 
 ipmi_config_err_t
 enable_reset_action_checkout (ipmi_config_state_data_t *state_data,
-			      const char *section_name,
+                              const char *section_name,
                               struct ipmi_config_keyvalue *kv)
 {
   struct pef_action_global_control gc;
@@ -643,7 +643,7 @@ enable_reset_action_checkout (ipmi_config_state_data_t *state_data,
 
 ipmi_config_err_t
 enable_reset_action_commit (ipmi_config_state_data_t *state_data,
-			    const char *section_name,
+                            const char *section_name,
                             const struct ipmi_config_keyvalue *kv)
 {
   struct pef_action_global_control gc;
@@ -663,7 +663,7 @@ enable_reset_action_commit (ipmi_config_state_data_t *state_data,
 
 ipmi_config_err_t
 enable_power_cycle_action_checkout (ipmi_config_state_data_t *state_data,
-				    const char *section_name,
+                                    const char *section_name,
                                     struct ipmi_config_keyvalue *kv)
 {
   struct pef_action_global_control gc;
@@ -686,7 +686,7 @@ enable_power_cycle_action_checkout (ipmi_config_state_data_t *state_data,
 
 ipmi_config_err_t
 enable_power_cycle_action_commit (ipmi_config_state_data_t *state_data,
-				  const char *section_name,
+                                  const char *section_name,
                                   const struct ipmi_config_keyvalue *kv)
 {
   struct pef_action_global_control gc;
@@ -706,7 +706,7 @@ enable_power_cycle_action_commit (ipmi_config_state_data_t *state_data,
 
 ipmi_config_err_t
 enable_oem_action_checkout (ipmi_config_state_data_t *state_data,
-			    const char *section_name,
+                            const char *section_name,
                             struct ipmi_config_keyvalue *kv)
 {
   struct pef_action_global_control gc;
@@ -729,7 +729,7 @@ enable_oem_action_checkout (ipmi_config_state_data_t *state_data,
 
 ipmi_config_err_t
 enable_oem_action_commit (ipmi_config_state_data_t *state_data,
-			  const char *section_name,
+                          const char *section_name,
                           const struct ipmi_config_keyvalue *kv)
 {
   struct pef_action_global_control gc;
@@ -749,7 +749,7 @@ enable_oem_action_commit (ipmi_config_state_data_t *state_data,
 
 ipmi_config_err_t
 enable_diagnostic_interrupt_checkout (ipmi_config_state_data_t *state_data,
-				      const char *section_name,
+                                      const char *section_name,
                                       struct ipmi_config_keyvalue *kv)
 {
   struct pef_action_global_control gc;
@@ -772,7 +772,7 @@ enable_diagnostic_interrupt_checkout (ipmi_config_state_data_t *state_data,
 
 ipmi_config_err_t
 enable_diagnostic_interrupt_commit (ipmi_config_state_data_t *state_data,
-				    const char *section_name,
+                                    const char *section_name,
                                     const struct ipmi_config_keyvalue *kv)
 {
   struct pef_action_global_control gc;
@@ -792,7 +792,7 @@ enable_diagnostic_interrupt_commit (ipmi_config_state_data_t *state_data,
 
 ipmi_config_err_t
 pef_startup_delay_checkout (ipmi_config_state_data_t *state_data,
-			    const char *section_name,
+                            const char *section_name,
                             struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -827,7 +827,7 @@ pef_startup_delay_checkout (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_pef_configuration_parameters_pef_startup_delay: %s\n",
@@ -860,7 +860,7 @@ pef_startup_delay_checkout (ipmi_config_state_data_t *state_data,
 
 ipmi_config_err_t
 pef_startup_delay_commit (ipmi_config_state_data_t *state_data,
-			  const char *section_name,
+                          const char *section_name,
                           const struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -891,7 +891,7 @@ pef_startup_delay_commit (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_pef_configuration_parameters_pef_startup_delay: %s\n",
@@ -909,7 +909,7 @@ pef_startup_delay_commit (ipmi_config_state_data_t *state_data,
 
 ipmi_config_err_t
 pef_alert_startup_delay_checkout (ipmi_config_state_data_t *state_data,
-				  const char *section_name,
+                                  const char *section_name,
                                   struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -944,7 +944,7 @@ pef_alert_startup_delay_checkout (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_pef_configuration_parameters_pef_alert_startup_delay: %s\n",
@@ -977,7 +977,7 @@ pef_alert_startup_delay_checkout (ipmi_config_state_data_t *state_data,
 
 ipmi_config_err_t
 pef_alert_startup_delay_commit (ipmi_config_state_data_t *state_data,
-				const char *section_name,
+                                const char *section_name,
                                 const struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -1008,7 +1008,7 @@ pef_alert_startup_delay_commit (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_pef_configuration_parameters_pef_alert_startup_delay: %s\n",

@@ -261,7 +261,7 @@ int pstdout_fprintf(pstdout_state_t pstate, FILE *stream, const char *format, ..
  * pstdout_fprintf call.
  */
 int pstdout_vfprintf(pstdout_state_t pstate, FILE *stream, const char *format,
-		     va_list ap);
+                     va_list ap);
 
 /* pstdout_perror
  *

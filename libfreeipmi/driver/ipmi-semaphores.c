@@ -107,11 +107,11 @@ driver_mutex_lock (int semid)
   do {
     if (semop (semid, &mutex_lock_buf, 1) < 0)
       {
-	/* While blocked in this system call, the process caught a signal */
-	if (errno == EINTR)
-	  continue;
-	ERRNO_TRACE (errno);
-	return (-1);
+        /* While blocked in this system call, the process caught a signal */
+        if (errno == EINTR)
+          continue;
+        ERRNO_TRACE (errno);
+        return (-1);
       }
     break;
   } while (1);

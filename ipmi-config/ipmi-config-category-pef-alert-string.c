@@ -83,12 +83,12 @@ _get_alert_string_keys (ipmi_config_state_data_t *state_data,
       ipmi_config_err_t ret;
 
       if (ipmi_config_param_errnum_is_non_fatal (state_data,
-						 obj_cmd_rs,
-						 &ret))
+                                                 obj_cmd_rs,
+                                                 &ret))
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_pef_configuration_parameters_alert_string_keys: %s\n",
@@ -156,12 +156,12 @@ _set_alert_string_keys (ipmi_config_state_data_t *state_data,
       ipmi_config_err_t ret;
 
       if (ipmi_config_param_errnum_is_non_fatal (state_data,
-						 obj_cmd_rs,
-						 &ret))
+                                                 obj_cmd_rs,
+                                                 &ret))
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_pef_configuration_parameters_alert_string_keys: %s\n",
@@ -178,7 +178,7 @@ _set_alert_string_keys (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 event_filter_number_checkout (ipmi_config_state_data_t *state_data,
-			      const char *section_name,
+                              const char *section_name,
                               struct ipmi_config_keyvalue *kv)
 {
   struct alert_string_keys ask;
@@ -194,8 +194,8 @@ event_filter_number_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
-							       kv,
-							       ask.event_filter_number) < 0)
+                                                               kv,
+                                                               ask.event_filter_number) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -203,7 +203,7 @@ event_filter_number_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 event_filter_number_commit (ipmi_config_state_data_t *state_data,
-			    const char *section_name,
+                            const char *section_name,
                             const struct ipmi_config_keyvalue *kv)
 {
   struct alert_string_keys ask;
@@ -227,7 +227,7 @@ event_filter_number_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 alert_string_set_checkout (ipmi_config_state_data_t *state_data,
-			   const char *section_name,
+                           const char *section_name,
                            struct ipmi_config_keyvalue *kv)
 {
   struct alert_string_keys ask;
@@ -243,8 +243,8 @@ alert_string_set_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
-							       kv,
-							       ask.alert_string_set) < 0)
+                                                               kv,
+                                                               ask.alert_string_set) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -252,7 +252,7 @@ alert_string_set_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 alert_string_set_commit (ipmi_config_state_data_t *state_data,
-			 const char *section_name,
+                         const char *section_name,
                          const struct ipmi_config_keyvalue *kv)
 {
   struct alert_string_keys ask;
@@ -276,7 +276,7 @@ alert_string_set_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 alert_string_checkout (ipmi_config_state_data_t *state_data,
-		       const char *section_name,
+                       const char *section_name,
                        struct ipmi_config_keyvalue *kv)
 {
   char alert_string[PEF_ALERT_STRING_MAX_LEN+1];
@@ -327,12 +327,12 @@ alert_string_checkout (ipmi_config_state_data_t *state_data,
           ipmi_config_err_t ret;
 
           if (ipmi_config_param_errnum_is_non_fatal (state_data,
-						     obj_cmd_rs,
-						     &ret))
+                                                     obj_cmd_rs,
+                                                     &ret))
             rv = ret;
 
-	  if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	      || state_data->prog_data->args->common_args.debug)
+          if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+              || state_data->prog_data->args->common_args.debug)
             pstdout_fprintf (state_data->pstate,
                              stderr,
                              "ipmi_cmd_get_pef_configuration_parameters_alert_string: %s\n",
@@ -367,8 +367,8 @@ alert_string_checkout (ipmi_config_state_data_t *state_data,
 
  done:
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  alert_string) < 0)
+                                                  kv,
+                                                  alert_string) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
@@ -380,7 +380,7 @@ alert_string_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 alert_string_commit (ipmi_config_state_data_t *state_data,
-		     const char *section_name,
+                     const char *section_name,
                      const struct ipmi_config_keyvalue *kv)
 {
   uint8_t string_selector;
@@ -446,12 +446,12 @@ alert_string_commit (ipmi_config_state_data_t *state_data,
           ipmi_config_err_t ret;
       
           if (ipmi_config_param_errnum_is_non_fatal (state_data,
-						     obj_cmd_rs,
-						     &ret))
+                                                     obj_cmd_rs,
+                                                     &ret))
             rv = ret;
 
-	  if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	      || state_data->prog_data->args->common_args.debug)
+          if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+              || state_data->prog_data->args->common_args.debug)
             pstdout_fprintf (state_data->pstate,
                              stderr,
                              "ipmi_cmd_set_pef_configuration_parameters_alert_strings: %s\n",
@@ -471,7 +471,7 @@ alert_string_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_validate_t
 alert_string_validate (ipmi_config_state_data_t *state_data,
-		       const char *section_name,
+                       const char *section_name,
                        const char *key_name,
                        const char *value)
 {
@@ -487,7 +487,7 @@ alert_string_validate (ipmi_config_state_data_t *state_data,
 
 struct ipmi_config_section *
 ipmi_config_pef_alert_string_section_get (ipmi_config_state_data_t *state_data,
-					  unsigned int num)
+                                          unsigned int num)
 {
   struct ipmi_config_section *section = NULL;
   char buf[IPMI_CONFIG_MAX_SECTION_NAME_LEN];
@@ -497,42 +497,42 @@ ipmi_config_pef_alert_string_section_get (ipmi_config_state_data_t *state_data,
   snprintf (buf, IPMI_CONFIG_MAX_SECTION_NAME_LEN, "Alert_String_%u", num);
 
   if (!(section = ipmi_config_section_create (state_data,
-					      buf,
-					      NULL,
-					      NULL,
-					      0,
-					      NULL,
-					      NULL)))
+                                              buf,
+                                              NULL,
+                                              NULL,
+                                              0,
+                                              NULL,
+                                              NULL)))
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Event_Filter_Number",
-				   "Give valid number",
-				   0,
-				   event_filter_number_checkout,
-				   event_filter_number_commit,
-				   number_range_one_byte_validate) < 0)
+                                   section,
+                                   "Event_Filter_Number",
+                                   "Give valid number",
+                                   0,
+                                   event_filter_number_checkout,
+                                   event_filter_number_commit,
+                                   number_range_one_byte_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Alert_String_Set",
-				   "Give valid number",
-				   0,
-				   alert_string_set_checkout,
-				   alert_string_set_commit,
-				   number_range_seven_bits_validate) < 0)
+                                   section,
+                                   "Alert_String_Set",
+                                   "Give valid number",
+                                   0,
+                                   alert_string_set_checkout,
+                                   alert_string_set_commit,
+                                   number_range_seven_bits_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Alert_String",
-				   "Give string. Max 64 chars.",
-				   0,
-				   alert_string_checkout,
-				   alert_string_commit,
-				   alert_string_validate) < 0)
+                                   section,
+                                   "Alert_String",
+                                   "Give string. Max 64 chars.",
+                                   0,
+                                   alert_string_checkout,
+                                   alert_string_commit,
+                                   alert_string_validate) < 0)
     goto cleanup;
 
   return (section);

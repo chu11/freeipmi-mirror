@@ -23,17 +23,17 @@
 #include <sys/socket.h>
 
 ssize_t ipmi_network_sendto (int s,
-			     const void *buf,
-			     size_t len,
-			     int flags,
-			     const struct sockaddr *to,
-			     socklen_t tolen);
+                             const void *buf,
+                             size_t len,
+                             int flags,
+                             const struct sockaddr *to,
+                             socklen_t tolen);
 
 ssize_t ipmi_network_recvfrom (int s,
-			       void *buf,
-			       size_t len,
-			       int flags,
-			       struct sockaddr *from,
-			       socklen_t *fromlen);
+                               void *buf,
+                               size_t len,
+                               int flags,
+                               struct sockaddr *from,
+                               socklen_t *fromlen);
 
 #endif /* IPMI_NETWORK_H */

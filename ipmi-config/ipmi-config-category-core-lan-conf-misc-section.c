@@ -86,7 +86,7 @@ _get_bmc_generated_arp_control (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_bmc_generated_arp_control: %s\n",
@@ -162,7 +162,7 @@ _set_bmc_generated_arp_control (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_bmc_generated_arp_control: %s\n",
@@ -180,7 +180,7 @@ _set_bmc_generated_arp_control (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 enable_gratuitous_arps_checkout (ipmi_config_state_data_t *state_data,
-				 const char *section_name,
+                                 const char *section_name,
                                  struct ipmi_config_keyvalue *kv)
 {
   struct bmc_generated_arp_control ac;
@@ -203,7 +203,7 @@ enable_gratuitous_arps_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 enable_gratuitous_arps_commit (ipmi_config_state_data_t *state_data,
-			       const char *section_name,
+                               const char *section_name,
                                const struct ipmi_config_keyvalue *kv)
 {
   struct bmc_generated_arp_control ac;
@@ -222,7 +222,7 @@ enable_gratuitous_arps_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 enable_arp_response_checkout (ipmi_config_state_data_t *state_data,
-			      const char *section_name,
+                              const char *section_name,
                               struct ipmi_config_keyvalue *kv)
 {
   struct bmc_generated_arp_control ac;
@@ -245,7 +245,7 @@ enable_arp_response_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 enable_arp_response_commit (ipmi_config_state_data_t *state_data,
-			    const char *section_name,
+                            const char *section_name,
                             const struct ipmi_config_keyvalue *kv)
 {
   struct bmc_generated_arp_control ac;
@@ -264,7 +264,7 @@ enable_arp_response_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 gratuitous_arp_interval_checkout (ipmi_config_state_data_t *state_data,
-				  const char *section_name,
+                                  const char *section_name,
                                   struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -306,7 +306,7 @@ gratuitous_arp_interval_checkout (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_gratuitous_arp_interval: %s\n",
@@ -338,7 +338,7 @@ gratuitous_arp_interval_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 gratuitous_arp_interval_commit (ipmi_config_state_data_t *state_data,
-				const char *section_name,
+                                const char *section_name,
                                 const struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -376,7 +376,7 @@ gratuitous_arp_interval_commit (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_gratuitous_arp_interval: %s\n",
@@ -394,8 +394,8 @@ gratuitous_arp_interval_commit (ipmi_config_state_data_t *state_data,
 
 struct ipmi_config_section *
 ipmi_config_core_lan_conf_misc_section_get (ipmi_config_state_data_t *state_data,
-					    unsigned int config_flags,
-					    int channel_index)
+                                            unsigned int config_flags,
+                                            int channel_index)
 {
   struct ipmi_config_section *section = NULL;
   char *section_comment =

@@ -36,18 +36,18 @@ extern "C" {
  */
 
 int ipmi_cmd_get_device_sdr_info (ipmi_ctx_t ctx,
-				  uint8_t operation,
-				  fiid_obj_t obj_cmd_rs);
+                                  uint8_t operation,
+                                  fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_get_device_sdr (ipmi_ctx_t ctx,
-			     uint16_t reservation_id,
-			     uint16_t record_id,
-			     uint8_t offset_into_record,
-			     uint8_t bytes_to_read,
-			     fiid_obj_t obj_cmd_rs);
+                             uint16_t reservation_id,
+                             uint16_t record_id,
+                             uint8_t offset_into_record,
+                             uint8_t bytes_to_read,
+                             fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_reserve_device_sdr_repository (ipmi_ctx_t ctx,
-					    fiid_obj_t obj_cmd_rs);
+                                            fiid_obj_t obj_cmd_rs);
 
 /* achu: as of IPMI 2.0 hysteresis_mask reserved for future - write as 0xFF */
 int ipmi_cmd_set_sensor_hysteresis (ipmi_ctx_t ctx,
@@ -167,21 +167,21 @@ int ipmi_cmd_get_sensor_event_enable_discrete (ipmi_ctx_t ctx,
                                                fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_re_arm_sensor_events (ipmi_ctx_t ctx,
-				   uint8_t sensor_number,
-				   uint8_t re_arm_all_event_status_from_this_sensor,
-				   uint16_t *re_arm_assertion_event,
-				   uint16_t *re_arm_deassertion_event,
-				   fiid_obj_t obj_cmd_rs);
+                                   uint8_t sensor_number,
+                                   uint8_t re_arm_all_event_status_from_this_sensor,
+                                   uint16_t *re_arm_assertion_event,
+                                   uint16_t *re_arm_deassertion_event,
+                                   fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_re_arm_sensor_events_ipmb (ipmi_ctx_t ctx,
-					uint8_t channel_number,
-					uint8_t slave_address,
-					uint8_t lun,
-					uint8_t sensor_number,
-					uint8_t re_arm_all_event_status_from_this_sensor,
-					uint16_t *re_arm_assertion_event,
-					uint16_t *re_arm_deassertion_event,
-					fiid_obj_t obj_cmd_rs);
+                                        uint8_t channel_number,
+                                        uint8_t slave_address,
+                                        uint8_t lun,
+                                        uint8_t sensor_number,
+                                        uint8_t re_arm_all_event_status_from_this_sensor,
+                                        uint16_t *re_arm_assertion_event,
+                                        uint16_t *re_arm_deassertion_event,
+                                        fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_get_sensor_reading (ipmi_ctx_t ctx,
                                  uint8_t sensor_number,
@@ -203,18 +203,18 @@ int ipmi_cmd_get_sensor_reading_discrete (ipmi_ctx_t ctx,
                                           fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_set_sensor_reading_and_event_status (ipmi_ctx_t ctx,
-						  uint8_t sensor_number,
-						  uint8_t sensor_reading_operation,
-						  uint8_t deassertion_bits_operation,
-						  uint8_t assertion_bits_operation,
-						  uint8_t event_data_bytes_operation,
-						  uint8_t sensor_reading,
-						  uint16_t assertion_event_bitmask,
-						  uint16_t deassertion_event_bitmask,
-						  uint8_t event_data1,
-						  uint8_t event_data2,
-						  uint8_t event_data3,
-						  fiid_obj_t obj_cmd_rs);
+                                                  uint8_t sensor_number,
+                                                  uint8_t sensor_reading_operation,
+                                                  uint8_t deassertion_bits_operation,
+                                                  uint8_t assertion_bits_operation,
+                                                  uint8_t event_data_bytes_operation,
+                                                  uint8_t sensor_reading,
+                                                  uint16_t assertion_event_bitmask,
+                                                  uint16_t deassertion_event_bitmask,
+                                                  uint8_t event_data1,
+                                                  uint8_t event_data2,
+                                                  uint8_t event_data3,
+                                                  fiid_obj_t obj_cmd_rs);
 
 #ifdef __cplusplus
 }

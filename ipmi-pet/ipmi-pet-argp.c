@@ -156,7 +156,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       tmp = strtoul (arg, &endptr, 10);
       if (errno
           || endptr[0] != '\0'
-	  || !tmp)
+          || !tmp)
         {
           fprintf (stderr, "invalid manufacturer id: %lu\n", tmp);
           exit (EXIT_FAILURE);
@@ -169,7 +169,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       tmp = strtoul (arg, &endptr, 10);
       if (errno
           || endptr[0] != '\0'
-	  || tmp > USHRT_MAX)
+          || tmp > USHRT_MAX)
         {
           fprintf (stderr, "invalid product id: %lu\n", tmp);
           exit (EXIT_FAILURE);
@@ -198,33 +198,33 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case ARGP_KEY_ARG:
       {
         unsigned int i;
-	unsigned long uvalue;
+        unsigned long uvalue;
         long value;
-	char *endptr = NULL;
+        char *endptr = NULL;
 
-	if (!cmd_args->specific_trap_set)
-	  {
-	    if (!strcasecmp (arg, "NA"))
-	      {
-		cmd_args->specific_trap_na_specified = 1;
-		cmd_args->specific_trap_set = 1;
-		break;
-	      }
+        if (!cmd_args->specific_trap_set)
+          {
+            if (!strcasecmp (arg, "NA"))
+              {
+                cmd_args->specific_trap_na_specified = 1;
+                cmd_args->specific_trap_set = 1;
+                break;
+              }
 
-	    errno = 0;
-	    uvalue = strtoul (arg, &endptr, 0);
-	    if (errno
-		|| endptr[0] != '\0')
-	      {
-		fprintf (stderr, "invalid specific trap argument\n");
-		exit (EXIT_FAILURE);
-	      }
-	    
-	    cmd_args->specific_trap = uvalue;
-	    cmd_args->specific_trap_set = 1;
-	    break;
-	  }
-	
+            errno = 0;
+            uvalue = strtoul (arg, &endptr, 0);
+            if (errno
+                || endptr[0] != '\0')
+              {
+                fprintf (stderr, "invalid specific trap argument\n");
+                exit (EXIT_FAILURE);
+              }
+            
+            cmd_args->specific_trap = uvalue;
+            cmd_args->specific_trap_set = 1;
+            break;
+          }
+        
         if (strlen (arg) >= 2)
           {
             if (!strncmp (arg, "0x", 2))
@@ -252,17 +252,17 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
               }
           }
         
-	if (cmd_args->variable_bindings_length < IPMI_PET_MAX_ARGS)
+        if (cmd_args->variable_bindings_length < IPMI_PET_MAX_ARGS)
           {
-	    errno = 0;
-	    value = strtol (arg, &endptr, 16);
-	    if (errno
-		|| endptr[0] != '\0')
-	      {
-		fprintf (stderr, "invalid variable binding hex byte argument\n");
-		exit (EXIT_FAILURE);
-	      }
-	    cmd_args->variable_bindings[cmd_args->variable_bindings_length++] = (uint8_t) value;
+            errno = 0;
+            value = strtol (arg, &endptr, 16);
+            if (errno
+                || endptr[0] != '\0')
+              {
+                fprintf (stderr, "invalid variable binding hex byte argument\n");
+                exit (EXIT_FAILURE);
+              }
+            cmd_args->variable_bindings[cmd_args->variable_bindings_length++] = (uint8_t) value;
           }
         else
           {

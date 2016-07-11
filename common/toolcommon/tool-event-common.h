@@ -35,8 +35,8 @@
 #define EVENT_OUTPUT_SEPARATOR " ; "
 
 int event_load_event_state_config_file (pstdout_state_t pstate,
-					ipmi_interpret_ctx_t interpret_ctx,
-					const char *event_state_config_file);
+                                        ipmi_interpret_ctx_t interpret_ctx,
+                                        const char *event_state_config_file);
 
 /* All functions below
  * return 1 on success
@@ -45,70 +45,70 @@ int event_load_event_state_config_file (pstdout_state_t pstate,
  */
 
 int event_output_time (pstdout_state_t pstate,
-		       ipmi_sel_ctx_t sel_ctx,
-		       uint8_t *sel_record,
-		       unsigned int sel_record_len,
-		       int comma_separated_output,
-		       int debug,
-		       unsigned int flags);
-				       
+                       ipmi_sel_ctx_t sel_ctx,
+                       uint8_t *sel_record,
+                       unsigned int sel_record_len,
+                       int comma_separated_output,
+                       int debug,
+                       unsigned int flags);
+                                       
 int event_output_not_available_time (pstdout_state_t pstate,
-				     int comma_separated_output);
+                                     int comma_separated_output);
 
 int event_output_sensor_name (pstdout_state_t pstate,
-			      ipmi_sel_ctx_t sel_ctx,
-			      uint8_t *sel_record,
-			      unsigned int sel_record_len,
-			      struct sensor_column_width *column_width,
-			      struct common_cmd_args *common_args,
-			      int comma_separated_output,
-			      unsigned int flags);
+                              ipmi_sel_ctx_t sel_ctx,
+                              uint8_t *sel_record,
+                              unsigned int sel_record_len,
+                              struct sensor_column_width *column_width,
+                              struct common_cmd_args *common_args,
+                              int comma_separated_output,
+                              unsigned int flags);
 
 int event_output_not_available_sensor_name (pstdout_state_t pstate,
-					    struct sensor_column_width *column_width,
-					    int comma_separated_output);
+                                            struct sensor_column_width *column_width,
+                                            int comma_separated_output);
 
 int event_output_sensor_type (pstdout_state_t pstate,
-			      ipmi_sel_ctx_t sel_ctx,
-			      uint8_t *sel_record,
-			      unsigned int sel_record_len,
-			      struct sensor_column_width *column_width,
-			      int comma_separated_output,
-			      int debug,
-			      unsigned int flags);
+                              ipmi_sel_ctx_t sel_ctx,
+                              uint8_t *sel_record,
+                              unsigned int sel_record_len,
+                              struct sensor_column_width *column_width,
+                              int comma_separated_output,
+                              int debug,
+                              unsigned int flags);
 
 int event_output_not_available_sensor_type (pstdout_state_t pstate,
-					    struct sensor_column_width *column_width,
-					    int comma_separated_output);
+                                            struct sensor_column_width *column_width,
+                                            int comma_separated_output);
 
 int event_output_event_state (pstdout_state_t pstate,
-			      ipmi_sel_ctx_t sel_ctx,
-			      uint8_t *sel_record,
-			      unsigned int sel_record_len,
-			      int comma_separated_output,
-			      int debug,
-			      unsigned int flags);
+                              ipmi_sel_ctx_t sel_ctx,
+                              uint8_t *sel_record,
+                              unsigned int sel_record_len,
+                              int comma_separated_output,
+                              int debug,
+                              unsigned int flags);
 
 int event_output_event_direction (pstdout_state_t pstate,
-				  ipmi_sel_ctx_t sel_ctx,
-				  uint8_t *sel_record,
-				  unsigned int sel_record_len,
-				  int comma_separated_output,
-				  int debug,
-				  unsigned int flags);
+                                  ipmi_sel_ctx_t sel_ctx,
+                                  uint8_t *sel_record,
+                                  unsigned int sel_record_len,
+                                  int comma_separated_output,
+                                  int debug,
+                                  unsigned int flags);
 
 int event_output_not_available_event_direction (pstdout_state_t pstate,
-						int comma_separated_output);
+                                                int comma_separated_output);
 
 int event_output_event (pstdout_state_t pstate,
-			ipmi_sel_ctx_t sel_ctx,
-			uint8_t *sel_record,
-			unsigned int sel_record_len,
-			int comma_separated_output,
-			int debug,
-			unsigned int flags);
+                        ipmi_sel_ctx_t sel_ctx,
+                        uint8_t *sel_record,
+                        unsigned int sel_record_len,
+                        int comma_separated_output,
+                        int debug,
+                        unsigned int flags);
 
 int event_output_not_available_event (pstdout_state_t pstate,
-				      int comma_separated_output);
+                                      int comma_separated_output);
 
 #endif /* TOOL_EVENT_COMMON_H */

@@ -45,9 +45,9 @@
  * ? bytes = string
  */
 int ipmi_oem_thirdparty_get_system_info_block_pstring (ipmi_oem_state_data_t *state_data,
-						       uint8_t parameter_selector,
-						       char *string,
-						       unsigned int string_len);
+                                                       uint8_t parameter_selector,
+                                                       char *string,
+                                                       unsigned int string_len);
 
 /* Shared between:
  * Inventec 5441/Dell Xanadu II OEM
@@ -56,11 +56,11 @@ int ipmi_oem_thirdparty_get_system_info_block_pstring (ipmi_oem_state_data_t *st
  * Wistron/Dell Poweredge C6220
  */
 int ipmi_oem_thirdparty_get_extended_config_value (ipmi_oem_state_data_t *state_data,
-						   uint8_t configuration_id,
-						   uint8_t attribute_id,
-						   uint8_t index,
-						   unsigned int value_return_length,
-						   uint32_t *value);
+                                                   uint8_t configuration_id,
+                                                   uint8_t attribute_id,
+                                                   uint8_t index,
+                                                   unsigned int value_return_length,
+                                                   uint32_t *value);
 
 /* Shared between:
  * Inventec 5441/Dell Xanadu II OEM
@@ -69,11 +69,11 @@ int ipmi_oem_thirdparty_get_extended_config_value (ipmi_oem_state_data_t *state_
  * Wistron/Dell Poweredge C6220
  */
 int ipmi_oem_thirdparty_get_extended_config_string (ipmi_oem_state_data_t *state_data,
-						    uint8_t configuration_id,
-						    uint8_t attribute_id,
-						    uint8_t index,
-						    char *buf,
-						    unsigned int buflen);
+                                                    uint8_t configuration_id,
+                                                    uint8_t attribute_id,
+                                                    uint8_t index,
+                                                    char *buf,
+                                                    unsigned int buflen);
 
 /* Shared between:
  * Inventec 5441/Dell Xanadu II OEM
@@ -82,11 +82,11 @@ int ipmi_oem_thirdparty_get_extended_config_string (ipmi_oem_state_data_t *state
  * Wistron/Dell Poweredge C6220
  */
 int ipmi_oem_thirdparty_set_extended_config_value (ipmi_oem_state_data_t *state_data,
-						   uint8_t configuration_id,
-						   uint8_t attribute_id,
-						   uint8_t index,
-						   unsigned int value_length,
-						   uint32_t value);
+                                                   uint8_t configuration_id,
+                                                   uint8_t attribute_id,
+                                                   uint8_t index,
+                                                   unsigned int value_length,
+                                                   uint32_t value);
 
 /* Shared between:
  * Inventec 5441/Dell Xanadu II OEM
@@ -95,11 +95,11 @@ int ipmi_oem_thirdparty_set_extended_config_value (ipmi_oem_state_data_t *state_
  * Wistron/Dell Poweredge C6220
  */
 int ipmi_oem_thirdparty_set_extended_config_string (ipmi_oem_state_data_t *state_data,
-						    uint8_t configuration_id,
-						    uint8_t attribute_id,
-						    uint8_t index,
-						    char *buf,
-						    unsigned int buflen);
+                                                    uint8_t configuration_id,
+                                                    uint8_t attribute_id,
+                                                    uint8_t index,
+                                                    char *buf,
+                                                    unsigned int buflen);
 
 /* Shared between:
  * Inventec 5441/Dell Xanadu II OEM
@@ -117,7 +117,7 @@ int ipmi_oem_thirdparty_set_nic_mode (ipmi_oem_state_data_t *state_data);
  * Wistron/Dell Poweredge C6220
  */
 int ipmi_oem_thirdparty_get_bmc_services_bitmask (ipmi_oem_state_data_t *state_data,
-						  uint8_t *services);
+                                                  uint8_t *services);
 
 /* Shared between:
  * Inventec 5441/Dell Xanadu II OEM

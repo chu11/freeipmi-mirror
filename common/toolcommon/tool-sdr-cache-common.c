@@ -266,9 +266,9 @@ _get_config_directory (pstdout_state_t pstate,
 
 static int
 _sdr_cache_get_cache_directory (pstdout_state_t pstate,
-				const char *cache_dir,
-				char *buf,
-				unsigned int buflen)
+                                const char *cache_dir,
+                                char *buf,
+                                unsigned int buflen)
 {
   char tbuf[MAXPATHLEN+1];
   int ret;
@@ -306,10 +306,10 @@ _sdr_cache_get_cache_directory (pstdout_state_t pstate,
 
 static int
 _sdr_cache_get_cache_filename (pstdout_state_t pstate,
-			       const char *hostname,
-			       const struct common_cmd_args *common_args,
-			       char *buf,
-			       unsigned int buflen)
+                               const char *hostname,
+                               const struct common_cmd_args *common_args,
+                               char *buf,
+                               unsigned int buflen)
 {
   char sdrcachebuf[MAXPATHLEN+1];
   char *ptr;
@@ -325,38 +325,38 @@ _sdr_cache_get_cache_filename (pstdout_state_t pstate,
 
       memset (hostnamebuf, '\0', MAXHOSTNAMELEN+1);
       if (gethostname (hostnamebuf, MAXHOSTNAMELEN) < 0)
-	snprintf (hostnamebuf, MAXHOSTNAMELEN, "localhost");
+        snprintf (hostnamebuf, MAXHOSTNAMELEN, "localhost");
 
       /* shorten hostname if necessary */
       if ((ptr = strchr (hostnamebuf, '.')))
-	*ptr = '\0';
+        *ptr = '\0';
       
       if (_sdr_cache_get_cache_directory (pstate,
-					  common_args->sdr_cache_directory,
-					  sdrcachebuf,
-					  MAXPATHLEN) < 0)
-	return (-1);
+                                          common_args->sdr_cache_directory,
+                                          sdrcachebuf,
+                                          MAXPATHLEN) < 0)
+        return (-1);
 
       if ((ret = snprintf (buf,
-			   buflen,
-			   "%s/%s-%s.%s",
-			   sdrcachebuf,
-			   SDR_CACHE_FILENAME_PREFIX,
-			   hostnamebuf,
-			   hostname ? hostname : "localhost")) < 0)
-	
-	{
-	  PSTDOUT_PERROR (pstate, "snprintf");
-	  return (-1);
-	}
+                           buflen,
+                           "%s/%s-%s.%s",
+                           sdrcachebuf,
+                           SDR_CACHE_FILENAME_PREFIX,
+                           hostnamebuf,
+                           hostname ? hostname : "localhost")) < 0)
+        
+        {
+          PSTDOUT_PERROR (pstate, "snprintf");
+          return (-1);
+        }
 
       if (ret >= buflen)
-	{
-	  PSTDOUT_FPRINTF (pstate,
-			   stderr,
-			   "snprintf invalid bytes written\n");
-	  return (-1);
-	}
+        {
+          PSTDOUT_FPRINTF (pstate,
+                           stderr,
+                           "snprintf invalid bytes written\n");
+          return (-1);
+        }
     }
   else
     {
@@ -370,36 +370,36 @@ _sdr_cache_get_cache_filename (pstdout_state_t pstate,
       
       if (access (common_args->sdr_cache_file, R_OK) < 0)
         {
-	  if (errno != ENOENT)
-	    {
-	      PSTDOUT_FPRINTF (pstate,
-			       stderr,
-			       "Cannot access cache file: %s\n",
-			       common_args->sdr_cache_file);
-	      return (-1);
-	    }
-	  else
-	    {
-	      /* File doesn't exist, do checks for directory */
-	      char cachedirbuf[MAXPATHLEN+1];
-	      char *cachedirptr;
-	      strcpy (cachedirbuf, common_args->sdr_cache_file);
+          if (errno != ENOENT)
+            {
+              PSTDOUT_FPRINTF (pstate,
+                               stderr,
+                               "Cannot access cache file: %s\n",
+                               common_args->sdr_cache_file);
+              return (-1);
+            }
+          else
+            {
+              /* File doesn't exist, do checks for directory */
+              char cachedirbuf[MAXPATHLEN+1];
+              char *cachedirptr;
+              strcpy (cachedirbuf, common_args->sdr_cache_file);
 
-	      cachedirptr = dirname (cachedirbuf);
-	      
-	      if (_sdr_cache_get_cache_directory (pstate,
-						  cachedirptr,
-						  sdrcachebuf,
-						  MAXPATHLEN) < 0)
-		return (-1);
+              cachedirptr = dirname (cachedirbuf);
+              
+              if (_sdr_cache_get_cache_directory (pstate,
+                                                  cachedirptr,
+                                                  sdrcachebuf,
+                                                  MAXPATHLEN) < 0)
+                return (-1);
 
-	    }
+            }
         }
       
       if ((ret = snprintf (buf,
                            buflen,
-			   "%s",
-			   common_args->sdr_cache_file)) < 0)
+                           "%s",
+                           common_args->sdr_cache_file)) < 0)
 
         {
           PSTDOUT_PERROR (pstate, "snprintf");
@@ -412,7 +412,7 @@ _sdr_cache_get_cache_filename (pstdout_state_t pstate,
                            stderr,
                            "snprintf invalid bytes written\n");
           return (-1);
-	}
+        }
 
     }
 
@@ -449,9 +449,9 @@ _setup_sdr_cache_directory (pstdout_state_t pstate,
     }
 
   if (_sdr_cache_get_cache_directory (pstate,
-				      cache_dir,
-				      cachebuf,
-				      MAXPATHLEN) < 0)
+                                      cache_dir,
+                                      cachebuf,
+                                      MAXPATHLEN) < 0)
     return (-1);
 
   errno = 0;
@@ -498,15 +498,15 @@ _sdr_cache_create_callback (uint8_t sdr_version,
 
 static int
 _sdr_cache_create_directory (pstdout_state_t pstate,
-			     const char *cache_dir)
+                             const char *cache_dir)
 {
   char cachedirectorybuf[MAXPATHLEN+1];
   struct stat buf;
 
   if (_sdr_cache_get_cache_directory (pstate,
-				      cache_dir,
-				      cachedirectorybuf,
-				      MAXPATHLEN) < 0)
+                                      cache_dir,
+                                      cachedirectorybuf,
+                                      MAXPATHLEN) < 0)
     return (-1);
 
   if (stat (cachedirectorybuf, &buf) < 0)
@@ -520,10 +520,10 @@ _sdr_cache_create_directory (pstdout_state_t pstate,
 
 int
 _sdr_cache_create (ipmi_sdr_ctx_t ctx,
-		   pstdout_state_t pstate,
-		   ipmi_ctx_t ipmi_ctx,
-		   const char *hostname,
-		   const struct common_cmd_args *common_args)
+                   pstdout_state_t pstate,
+                   ipmi_ctx_t ipmi_ctx,
+                   const char *hostname,
+                   const struct common_cmd_args *common_args)
 {
   char cachefilenamebuf[MAXPATHLEN+1];
   int count = 0;
@@ -539,10 +539,10 @@ _sdr_cache_create (ipmi_sdr_ctx_t ctx,
 
   memset (cachefilenamebuf, '\0', MAXPATHLEN+1);
   if (_sdr_cache_get_cache_filename (pstate,
-				     hostname,
-				     common_args,
-				     cachefilenamebuf,
-				     MAXPATHLEN) < 0)
+                                     hostname,
+                                     common_args,
+                                     cachefilenamebuf,
+                                     MAXPATHLEN) < 0)
     goto cleanup;
 
   /* pstdout library can't handle \r, its the responsibility of
@@ -595,7 +595,7 @@ sdr_cache_create_and_load (ipmi_sdr_ctx_t sdr_ctx,
                            pstdout_state_t pstate,
                            ipmi_ctx_t ipmi_ctx,
                            const char *hostname,
-			   const struct common_cmd_args *common_args)
+                           const struct common_cmd_args *common_args)
 {
   char cachefilenamebuf[MAXPATHLEN+1];
   int rv = -1;
@@ -605,10 +605,10 @@ sdr_cache_create_and_load (ipmi_sdr_ctx_t sdr_ctx,
 
   memset (cachefilenamebuf, '\0', MAXPATHLEN+1);
   if (_sdr_cache_get_cache_filename (pstate,
-				     hostname,
-				     common_args,
-				     cachefilenamebuf,
-				     MAXPATHLEN) < 0)
+                                     hostname,
+                                     common_args,
+                                     cachefilenamebuf,
+                                     MAXPATHLEN) < 0)
     goto cleanup;
 
   /* If user specifies cache file, don't check timestamps, just load it */
@@ -657,14 +657,14 @@ sdr_cache_create_and_load (ipmi_sdr_ctx_t sdr_ctx,
           && common_args->sdr_cache_recreate))
     {
       if (_sdr_cache_create (sdr_ctx,
-			     pstate,
-			     ipmi_ctx,
-			     hostname,
-			     common_args) < 0)
+                             pstate,
+                             ipmi_ctx,
+                             hostname,
+                             common_args) < 0)
         goto cleanup;
 
       if (ipmi_sdr_cache_open (sdr_ctx,
-			       common_args->sdr_cache_file ? NULL : ipmi_ctx,
+                               common_args->sdr_cache_file ? NULL : ipmi_ctx,
                                cachefilenamebuf) < 0)
         {
           PSTDOUT_FPRINTF (pstate,
@@ -691,8 +691,8 @@ sdr_cache_create_and_load (ipmi_sdr_ctx_t sdr_ctx,
             PSTDOUT_FPRINTF (pstate,
                              stderr,
                              "ipmi_sdr_ctx_set_debug_prefix: %s\n",
-			     ipmi_sdr_ctx_errormsg (sdr_ctx));
-	}
+                             ipmi_sdr_ctx_errormsg (sdr_ctx));
+        }
     }
   
   rv = 0;
@@ -703,7 +703,7 @@ sdr_cache_create_and_load (ipmi_sdr_ctx_t sdr_ctx,
 int
 sdr_cache_flush_cache (pstdout_state_t pstate,
                        const char *hostname,
-		       const struct common_cmd_args *common_args)
+                       const struct common_cmd_args *common_args)
 {
   ipmi_sdr_ctx_t ctx = NULL;
   char cachefilenamebuf[MAXPATHLEN+1];
@@ -713,10 +713,10 @@ sdr_cache_flush_cache (pstdout_state_t pstate,
 
   memset (cachefilenamebuf, '\0', MAXPATHLEN+1);
   if (_sdr_cache_get_cache_filename (pstate,
-				     hostname,
-				     common_args,
-				     cachefilenamebuf,
-				     MAXPATHLEN) < 0)
+                                     hostname,
+                                     common_args,
+                                     cachefilenamebuf,
+                                     MAXPATHLEN) < 0)
     goto cleanup;
 
   if (!common_args->quiet_cache)
@@ -745,16 +745,16 @@ sdr_cache_flush_cache (pstdout_state_t pstate,
 
 int
 ipmi_sdr_cache_search_sensor_wrapper (ipmi_sdr_ctx_t sdr_ctx,
-				      uint8_t sensor_number,
-				      uint8_t generator_id)
+                                      uint8_t sensor_number,
+                                      uint8_t generator_id)
 {
   int rv;
 
   assert (sdr_ctx);
   
   if ((rv = ipmi_sdr_cache_search_sensor (sdr_ctx,
-					  sensor_number,
-					  generator_id)) < 0)
+                                          sensor_number,
+                                          generator_id)) < 0)
     {
       /* IPMI Workaround (achu)                                                                              
        *                                                                                                     
@@ -765,14 +765,14 @@ ipmi_sdr_cache_search_sensor_wrapper (ipmi_sdr_ctx_t sdr_ctx,
        * again" corner case.
        */
       if (ipmi_sdr_ctx_errnum (sdr_ctx) == IPMI_SDR_ERR_NOT_FOUND
-	  && (generator_id == (IPMI_SLAVE_ADDRESS_BMC << 1)))
-	{
-	  if (!ipmi_sdr_cache_search_sensor (sdr_ctx,
-					     sensor_number,
-					     (generator_id >> 1)))
-	    return (0);
-	  /* else fall through to normal error case */
-	}
+          && (generator_id == (IPMI_SLAVE_ADDRESS_BMC << 1)))
+        {
+          if (!ipmi_sdr_cache_search_sensor (sdr_ctx,
+                                             sensor_number,
+                                             (generator_id >> 1)))
+            return (0);
+          /* else fall through to normal error case */
+        }
       
       return (rv);
     }

@@ -96,37 +96,37 @@ _config_file_parse (void)
   struct conffile_option options[] =
     {
       {
-	"ipmiping_period",
-	CONFFILE_OPTION_INT,
-	-1,
-	conffile_int,
-	1,
-	0,
-	&(ipmiping_period_flag),
-	&(conf.ipmiping_period),
-	0
+        "ipmiping_period",
+        CONFFILE_OPTION_INT,
+        -1,
+        conffile_int,
+        1,
+        0,
+        &(ipmiping_period_flag),
+        &(conf.ipmiping_period),
+        0
       },
       {
-	"ipmidetectd_server_port",
-	CONFFILE_OPTION_INT,
-	-1,
-	conffile_int,
-	1,
-	0,
-	&(ipmidetectd_server_port_flag),
-	&(conf.ipmidetectd_server_port),
-	0,
+        "ipmidetectd_server_port",
+        CONFFILE_OPTION_INT,
+        -1,
+        conffile_int,
+        1,
+        0,
+        &(ipmidetectd_server_port_flag),
+        &(conf.ipmidetectd_server_port),
+        0,
       },
       {
-	"host",
-	CONFFILE_OPTION_STRING,
-	-1,
-	_cb_host,
-	INT_MAX,
-	0,
-	&host_flag,
-	NULL,
-	0
+        "host",
+        CONFFILE_OPTION_STRING,
+        -1,
+        _cb_host,
+        INT_MAX,
+        0,
+        &host_flag,
+        NULL,
+        0
       },
     };
   conffile_t cf = NULL;
@@ -168,7 +168,7 @@ _config_file_parse (void)
           
           /* Its not an error if the default configuration file doesn't exist */
           if ((!cmd_args.config_file
-	       || !strcmp (cmd_args.config_file, IPMIDETECTD_CONFIG_FILE_DEFAULT))
+               || !strcmp (cmd_args.config_file, IPMIDETECTD_CONFIG_FILE_DEFAULT))
               && conffile_errnum (cf) == CONFFILE_ERR_EXIST)
             goto cleanup;
           

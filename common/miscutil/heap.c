@@ -255,7 +255,7 @@ heap_destroy (Heap h)
   for (i = 0; i < h->count; i++)
     {
       if ((h->heaparray[i])->data && h->fDel)
-	h->fDel ((h->heaparray[i])->data);
+        h->fDel ((h->heaparray[i])->data);
       free (h->heaparray[i]);
     }
   free (h->heaparray);
@@ -403,20 +403,20 @@ heap_pop (Heap h)
   p = h->heaparray[h->count - 1];
 
   while ((((2 * index) + 1) < h->count
-	  && h->fCmp (h->heaparray[(2 * index) + 1]->data, p->data) > 0)
-	 || (((2 * index) + 2) < h->count
-	     && h->fCmp (h->heaparray[(2 * index) + 2]->data, p->data) > 0))
+          && h->fCmp (h->heaparray[(2 * index) + 1]->data, p->data) > 0)
+         || (((2 * index) + 2) < h->count
+             && h->fCmp (h->heaparray[(2 * index) + 2]->data, p->data) > 0))
     {
       unsigned int tmp;
       if (((2 * index) + 2) < h->count)
-	{
-	  if (h->fCmp (h->heaparray[(2 * index) + 1]->data, h->heaparray[(2 * index) + 2]->data) > 0)
-	    tmp = (2 * index) + 1;
-	  else
-	    tmp = (2 * index) + 2;
-	}
+        {
+          if (h->fCmp (h->heaparray[(2 * index) + 1]->data, h->heaparray[(2 * index) + 2]->data) > 0)
+            tmp = (2 * index) + 1;
+          else
+            tmp = (2 * index) + 2;
+        }
       else
-	tmp = (2 * index) + 1;
+        tmp = (2 * index) + 1;
       h->heaparray[index] = h->heaparray[tmp];
       index = tmp;
     }

@@ -343,11 +343,11 @@ _ipmi_dump_lan_packet (int fd,
   if (tmpl_ipmb_msg_hdr && tmpl_ipmb_cmd && ipmb_buf_len)
     {
       if (debug_dump_ipmb (fd,
-			   prefix,
-			   ipmb_buf,
-			   ipmb_buf_len,
-			   tmpl_ipmb_msg_hdr,
-			   tmpl_ipmb_cmd) < 0)
+                           prefix,
+                           ipmb_buf,
+                           ipmb_buf_len,
+                           tmpl_ipmb_msg_hdr,
+                           tmpl_ipmb_cmd) < 0)
         goto cleanup;
     }
 
@@ -424,9 +424,9 @@ _ipmi_dump_lan_packet (int fd,
   if (ipmi_dump_hex (fd,
                      prefix,
                      hdr,
-		     trlr,
-		     pkt,
-		     pkt_len) < 0)
+                     trlr,
+                     pkt,
+                     pkt_len) < 0)
     {
       ERRNO_TRACE (errno);
       goto cleanup;

@@ -76,17 +76,17 @@ sdr_init_ctx (ipmi_sdr_ctx_t ctx)
   
   ctx->stats_compiled = 0;
   memset (ctx->entity_counts,
-	  '\0',
-	  sizeof (struct ipmi_sdr_entity_count) * IPMI_MAX_ENTITY_IDS); 
+          '\0',
+          sizeof (struct ipmi_sdr_entity_count) * IPMI_MAX_ENTITY_IDS); 
 }
 
 int
 sdr_info (ipmi_sdr_ctx_t ctx,
-	  ipmi_ctx_t ipmi_ctx,
-	  uint8_t *sdr_version,
-	  uint16_t *record_count,
-	  uint32_t *most_recent_addition_timestamp,
-	  uint32_t *most_recent_erase_timestamp)
+          ipmi_ctx_t ipmi_ctx,
+          uint8_t *sdr_version,
+          uint16_t *record_count,
+          uint32_t *most_recent_addition_timestamp,
+          uint32_t *most_recent_erase_timestamp)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -170,8 +170,8 @@ sdr_info (ipmi_sdr_ctx_t ctx,
 
 const char *
 sdr_record_type_str (ipmi_sdr_ctx_t ctx,
-		     uint8_t *sdr_record,
-		     unsigned int sdr_record_len)
+                     uint8_t *sdr_record,
+                     unsigned int sdr_record_len)
 {
   fiid_obj_t obj_sdr_record_header = NULL;
   uint8_t record_type;
@@ -278,14 +278,14 @@ sdr_check_read_status (ipmi_sdr_ctx_t ctx)
       record_length = (uint8_t)((ctx->sdr_cache + ctx->current_offset.offset)[IPMI_SDR_RECORD_LENGTH_INDEX]);
 
       if ((record_str = sdr_record_type_str (ctx,
-					     ctx->sdr_cache + ctx->current_offset.offset,
-					     record_length + IPMI_SDR_RECORD_HEADER_LENGTH)))
+                                             ctx->sdr_cache + ctx->current_offset.offset,
+                                             record_length + IPMI_SDR_RECORD_HEADER_LENGTH)))
         {
           char hdrbuf[IPMI_SDR_CACHE_DEBUG_BUFLEN];
 
           debug_hdr_str (DEBUG_UTIL_TYPE_NONE,
                          DEBUG_UTIL_DIRECTION_NONE,
-			 DEBUG_UTIL_FLAGS_DEFAULT,
+                         DEBUG_UTIL_FLAGS_DEFAULT,
                          record_str,
                          hdrbuf,
                          IPMI_SDR_CACHE_DEBUG_BUFLEN);

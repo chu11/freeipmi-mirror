@@ -49,13 +49,13 @@
  */
 int
 sel_string_output_supermicro_magnum_technologies_x8dtl_event_data1_class_oem (ipmi_sel_ctx_t ctx,
-									      struct ipmi_sel_entry *sel_entry,
-									      uint8_t sel_record_type,
-									      char *tmpbuf,
-									      unsigned int tmpbuflen,
-									      unsigned int flags,
-									      unsigned int *wlen,
-									      struct ipmi_sel_system_event_record_data *system_event_record_data)
+                                                                              struct ipmi_sel_entry *sel_entry,
+                                                                              uint8_t sel_record_type,
+                                                                              char *tmpbuf,
+                                                                              unsigned int tmpbuflen,
+                                                                              unsigned int flags,
+                                                                              unsigned int *wlen,
+                                                                              struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   int ret;
 
@@ -78,13 +78,13 @@ sel_string_output_supermicro_magnum_technologies_x8dtl_event_data1_class_oem (ip
    */
 
   if ((ret = sel_string_output_supermicro_overheat_event_data1_class_oem (ctx,
-									  sel_entry,
-									  sel_record_type,
-									  tmpbuf,
-									  tmpbuflen,
-									  flags,
-									  wlen,
-									  system_event_record_data)) < 0)
+                                                                          sel_entry,
+                                                                          sel_record_type,
+                                                                          tmpbuf,
+                                                                          tmpbuflen,
+                                                                          flags,
+                                                                          wlen,
+                                                                          system_event_record_data)) < 0)
 
     if (ret)
       return (1);

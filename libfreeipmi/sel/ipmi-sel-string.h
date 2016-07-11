@@ -33,114 +33,114 @@
 #include "ipmi-sel-defs.h"
 
 typedef int (*Sel_string_output_sensor_name) (ipmi_sel_ctx_t ctx,
-					      struct ipmi_sel_entry *sel_entry,
-					      uint8_t sel_record_type,
-					      char *buf,
-					      unsigned int buflen,
-					      unsigned int flags,
-					      unsigned int *wlen,
-					      struct ipmi_sel_system_event_record_data *system_event_record_data,
-					      int *oem_rv);
+                                              struct ipmi_sel_entry *sel_entry,
+                                              uint8_t sel_record_type,
+                                              char *buf,
+                                              unsigned int buflen,
+                                              unsigned int flags,
+                                              unsigned int *wlen,
+                                              struct ipmi_sel_system_event_record_data *system_event_record_data,
+                                              int *oem_rv);
 
 typedef int (*Sel_string_output_event_data1_class_sensor_specific_discrete) (ipmi_sel_ctx_t ctx,
-									     struct ipmi_sel_entry *sel_entry,
-									     uint8_t sel_record_type,
-									     char *tmpbuf,
-									     unsigned int tmpbuflen,
-									     unsigned int flags,
-									     unsigned int *wlen,
-									     struct ipmi_sel_system_event_record_data *system_event_record_data);
+                                                                             struct ipmi_sel_entry *sel_entry,
+                                                                             uint8_t sel_record_type,
+                                                                             char *tmpbuf,
+                                                                             unsigned int tmpbuflen,
+                                                                             unsigned int flags,
+                                                                             unsigned int *wlen,
+                                                                             struct ipmi_sel_system_event_record_data *system_event_record_data);
 
 typedef int (*Sel_string_output_event_data1_class_oem) (ipmi_sel_ctx_t ctx,
-							struct ipmi_sel_entry *sel_entry,
-							uint8_t sel_record_type,
-							char *tmpbuf,
-							unsigned int tmpbuflen,
-							unsigned int flags,
-							unsigned int *wlen,
-							struct ipmi_sel_system_event_record_data *system_event_record_data);
+                                                        struct ipmi_sel_entry *sel_entry,
+                                                        uint8_t sel_record_type,
+                                                        char *tmpbuf,
+                                                        unsigned int tmpbuflen,
+                                                        unsigned int flags,
+                                                        unsigned int *wlen,
+                                                        struct ipmi_sel_system_event_record_data *system_event_record_data);
 
 typedef int (*Sel_string_output_event_data2_threshold_oem) (ipmi_sel_ctx_t ctx,
-							    struct ipmi_sel_entry *sel_entry,
-							    uint8_t sel_record_type,
-							    char *tmpbuf,
-							    unsigned int tmpbuflen,
-							    unsigned int flags,
-							    unsigned int *wlen,
-							    struct ipmi_sel_system_event_record_data *system_event_record_data);
+                                                            struct ipmi_sel_entry *sel_entry,
+                                                            uint8_t sel_record_type,
+                                                            char *tmpbuf,
+                                                            unsigned int tmpbuflen,
+                                                            unsigned int flags,
+                                                            unsigned int *wlen,
+                                                            struct ipmi_sel_system_event_record_data *system_event_record_data);
 
 typedef int (*Sel_string_output_event_data2_discrete_oem) (ipmi_sel_ctx_t ctx,
-							   struct ipmi_sel_entry *sel_entry,
-							   uint8_t sel_record_type,
-							   char *tmpbuf,
-							   unsigned int tmpbuflen,
-							   unsigned int flags,
-							   unsigned int *wlen,
-							   struct ipmi_sel_system_event_record_data *system_event_record_data);
+                                                           struct ipmi_sel_entry *sel_entry,
+                                                           uint8_t sel_record_type,
+                                                           char *tmpbuf,
+                                                           unsigned int tmpbuflen,
+                                                           unsigned int flags,
+                                                           unsigned int *wlen,
+                                                           struct ipmi_sel_system_event_record_data *system_event_record_data);
 
 typedef int (*Sel_string_output_event_data2_class_oem) (ipmi_sel_ctx_t ctx,
-							struct ipmi_sel_entry *sel_entry,
-							uint8_t sel_record_type,
-							char *tmpbuf,
-							unsigned int tmpbuflen,
-							unsigned int flags,
-							unsigned int *wlen,
-							struct ipmi_sel_system_event_record_data *system_event_record_data);
+                                                        struct ipmi_sel_entry *sel_entry,
+                                                        uint8_t sel_record_type,
+                                                        char *tmpbuf,
+                                                        unsigned int tmpbuflen,
+                                                        unsigned int flags,
+                                                        unsigned int *wlen,
+                                                        struct ipmi_sel_system_event_record_data *system_event_record_data);
 
 typedef int (*Sel_string_output_event_data3_threshold_oem) (ipmi_sel_ctx_t ctx,
-							    struct ipmi_sel_entry *sel_entry,
-							    uint8_t sel_record_type,
-							    char *tmpbuf,
-							    unsigned int tmpbuflen,
-							    unsigned int flags,
-							    unsigned int *wlen,
-							    struct ipmi_sel_system_event_record_data *system_event_record_data);
+                                                            struct ipmi_sel_entry *sel_entry,
+                                                            uint8_t sel_record_type,
+                                                            char *tmpbuf,
+                                                            unsigned int tmpbuflen,
+                                                            unsigned int flags,
+                                                            unsigned int *wlen,
+                                                            struct ipmi_sel_system_event_record_data *system_event_record_data);
 
 typedef int (*Sel_string_output_event_data3_discrete_oem) (ipmi_sel_ctx_t ctx,
-							   struct ipmi_sel_entry *sel_entry,
-							   uint8_t sel_record_type,
-							   char *tmpbuf,
-							   unsigned int tmpbuflen,
-							   unsigned int flags,
-							   unsigned int *wlen,
-							   struct ipmi_sel_system_event_record_data *system_event_record_data);
+                                                           struct ipmi_sel_entry *sel_entry,
+                                                           uint8_t sel_record_type,
+                                                           char *tmpbuf,
+                                                           unsigned int tmpbuflen,
+                                                           unsigned int flags,
+                                                           unsigned int *wlen,
+                                                           struct ipmi_sel_system_event_record_data *system_event_record_data);
 
 typedef int (*Sel_string_output_event_data3_class_oem) (ipmi_sel_ctx_t ctx,
-							struct ipmi_sel_entry *sel_entry,
-							uint8_t sel_record_type,
-							char *tmpbuf,
-							unsigned int tmpbuflen,
-							unsigned int flags,
-							unsigned int *wlen,
-							struct ipmi_sel_system_event_record_data *system_event_record_data);
+                                                        struct ipmi_sel_entry *sel_entry,
+                                                        uint8_t sel_record_type,
+                                                        char *tmpbuf,
+                                                        unsigned int tmpbuflen,
+                                                        unsigned int flags,
+                                                        unsigned int *wlen,
+                                                        struct ipmi_sel_system_event_record_data *system_event_record_data);
 
 typedef int (*Sel_string_output_event_data2_event_data3) (ipmi_sel_ctx_t ctx,
-							  struct ipmi_sel_entry *sel_entry,
-							  uint8_t sel_record_type,
-							  char *buf,
-							  unsigned int buflen,
-							  unsigned int flags,
-							  unsigned int *wlen,
-							  struct ipmi_sel_system_event_record_data *system_event_record_data,
-							  int *oem_rv);
+                                                          struct ipmi_sel_entry *sel_entry,
+                                                          uint8_t sel_record_type,
+                                                          char *buf,
+                                                          unsigned int buflen,
+                                                          unsigned int flags,
+                                                          unsigned int *wlen,
+                                                          struct ipmi_sel_system_event_record_data *system_event_record_data,
+                                                          int *oem_rv);
  
 typedef int (*Sel_string_output_oem_record_data) (ipmi_sel_ctx_t ctx,
-						  struct ipmi_sel_entry *sel_entry,
-						  uint8_t sel_record_type,
-						  char *buf,
-						  unsigned int buflen,
-						  unsigned int flags,
-						  unsigned int *wlen,
-						  int *oem_rv);
+                                                  struct ipmi_sel_entry *sel_entry,
+                                                  uint8_t sel_record_type,
+                                                  char *buf,
+                                                  unsigned int buflen,
+                                                  unsigned int flags,
+                                                  unsigned int *wlen,
+                                                  int *oem_rv);
 
 typedef int (*Sel_string_output_oem_string) (ipmi_sel_ctx_t ctx,
-					     struct ipmi_sel_entry *sel_entry,
-					     uint8_t sel_record_type,
-					     char *buf,
-					     unsigned int buflen,
-					     unsigned int flags,
-					     unsigned int *wlen,
-					     int *oem_rv);
+                                             struct ipmi_sel_entry *sel_entry,
+                                             uint8_t sel_record_type,
+                                             char *buf,
+                                             unsigned int buflen,
+                                             unsigned int flags,
+                                             unsigned int *wlen,
+                                             int *oem_rv);
 
 
 struct sel_string_oem
@@ -161,26 +161,26 @@ struct sel_string_oem
 
 /* returns 0 on success, 1 on success but w/ truncation */
 int sel_string_snprintf (char *buf,
-			 unsigned int buflen,
-			 unsigned int *wlen,
-			 const char *fmt,
-			 ...);
+                         unsigned int buflen,
+                         unsigned int *wlen,
+                         const char *fmt,
+                         ...);
 
 /* returns 0 on success, 1 on success but w/ truncation
  * 
  * Just like sel_string_snprintf, but just appends and does non-zero check beforehand
  */
 int sel_string_strcat_comma_separate (char *buf,
-				      unsigned int buflen,
-				      unsigned int *wlen,
-				      const char *str);
+                                      unsigned int buflen,
+                                      unsigned int *wlen,
+                                      const char *str);
 
 int sel_format_record_string (ipmi_sel_ctx_t ctx,
-			      const char *fmt,
-			      const void *sel_record,
-			      unsigned int sel_record_len,
-			      char *buf,
-			      unsigned int buflen,
-			      unsigned int flags);
+                              const char *fmt,
+                              const void *sel_record,
+                              unsigned int sel_record_len,
+                              char *buf,
+                              unsigned int buflen,
+                              unsigned int flags);
 
 #endif /* IPMI_SEL_STRING_H */

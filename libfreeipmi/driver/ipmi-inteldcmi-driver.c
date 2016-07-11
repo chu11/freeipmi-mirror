@@ -166,13 +166,13 @@ struct inteldcmi_smi {
   unsigned int smi_VersionNo;
   unsigned int smi_Reserved1;
   unsigned int smi_Reserved2;
-  void *ntstatus;		    /* address of NT status block*/
-  void *lpvInBuffer;		    /* address of buffer for input data*/
-  unsigned int cbInBuffer;	    /* size of input buffer*/
-  void *lpvOutBuffer;		    /* address of output buffer*/
-  unsigned int cbOutBuffer;	    /* size of output buffer*/
+  void *ntstatus;                   /* address of NT status block*/
+  void *lpvInBuffer;                /* address of buffer for input data*/
+  unsigned int cbInBuffer;          /* size of input buffer*/
+  void *lpvOutBuffer;               /* address of output buffer*/
+  unsigned int cbOutBuffer;         /* size of output buffer*/
   unsigned int *lpcbBytesReturned; /* address of actual bytes of output */
-  void *lpoOverlapped;		    /* address of overlapped structure - set to NULL for Linux */
+  void *lpoOverlapped;              /* address of overlapped structure - set to NULL for Linux */
 };
 
 struct io_status_block {
@@ -472,12 +472,12 @@ ipmi_inteldcmi_ctx_io_init (ipmi_inteldcmi_ctx_t ctx)
 
 static int
 _inteldcmi_write_read (ipmi_inteldcmi_ctx_t ctx,
-		       uint8_t channel_number,
-		       uint8_t rs_addr,
-		       uint8_t lun,
-		       uint8_t net_fn,
-		       fiid_obj_t obj_cmd_rq,
-		       fiid_obj_t obj_cmd_rs)
+                       uint8_t channel_number,
+                       uint8_t rs_addr,
+                       uint8_t lun,
+                       uint8_t net_fn,
+                       fiid_obj_t obj_cmd_rq,
+                       fiid_obj_t obj_cmd_rs)
 {
   uint8_t rq_temp[IPMI_INTELDCMI_BUFLEN];
   uint8_t *rq_data = NULL;
@@ -578,15 +578,15 @@ _inteldcmi_write_read (ipmi_inteldcmi_ctx_t ctx,
   if (rq_data && rq_data_len)
     {
       if (fiid_obj_set_data (obj_inteldcmi_rq, "data", rq_data, rq_data_len) < 0)
-	{
-	  INTELDCMI_SET_ERRNUM (ctx, IPMI_INTELDCMI_ERR_INTERNAL_ERROR);
-	  goto cleanup;
-	}
+        {
+          INTELDCMI_SET_ERRNUM (ctx, IPMI_INTELDCMI_ERR_INTERNAL_ERROR);
+          goto cleanup;
+        }
     }
 
   if ((len = fiid_obj_get_all (obj_inteldcmi_rq,
-			       rq_buf,
-			       IPMI_INTELDCMI_BUFLEN)) < 0)
+                               rq_buf,
+                               IPMI_INTELDCMI_BUFLEN)) < 0)
     {
       INTELDCMI_SET_ERRNUM (ctx, IPMI_INTELDCMI_ERR_INTERNAL_ERROR);
       goto cleanup;
@@ -611,8 +611,8 @@ _inteldcmi_write_read (ipmi_inteldcmi_ctx_t ctx,
   smi_msg.lpoOverlapped = NULL;
 
   if ((ret = ioctl (ctx->device_fd,
-		    IPMI_INTELDCMI_IOCTL_IMB_SEND_MESSAGE,
-		    &smi_msg)) < 0)
+                    IPMI_INTELDCMI_IOCTL_IMB_SEND_MESSAGE,
+                    &smi_msg)) < 0)
     {
       INTELDCMI_ERRNO_TO_INTELDCMI_ERRNUM (ctx, errno);
       goto cleanup;
@@ -623,9 +623,9 @@ _inteldcmi_write_read (ipmi_inteldcmi_ctx_t ctx,
       TRACE_MSG_OUT ("Intel DCMI ioctl status", ret);
 
       if (ret == IPMI_INTELDCMI_STATUS_DEVICE_BUSY)
-	INTELDCMI_SET_ERRNUM (ctx, IPMI_INTELDCMI_ERR_DRIVER_TIMEOUT);
+        INTELDCMI_SET_ERRNUM (ctx, IPMI_INTELDCMI_ERR_DRIVER_TIMEOUT);
       else
-	INTELDCMI_SET_ERRNUM (ctx, IPMI_INTELDCMI_ERR_SYSTEM_ERROR);
+        INTELDCMI_SET_ERRNUM (ctx, IPMI_INTELDCMI_ERR_SYSTEM_ERROR);
 
       goto cleanup;
     }
@@ -659,10 +659,10 @@ _inteldcmi_write_read (ipmi_inteldcmi_ctx_t ctx,
 
 int
 ipmi_inteldcmi_cmd (ipmi_inteldcmi_ctx_t ctx,
-		    uint8_t lun,
-		    uint8_t net_fn,
-		    fiid_obj_t obj_cmd_rq,
-		    fiid_obj_t obj_cmd_rs)
+                    uint8_t lun,
+                    uint8_t net_fn,
+                    fiid_obj_t obj_cmd_rq,
+                    fiid_obj_t obj_cmd_rs)
 {
   if (!ctx || ctx->magic != IPMI_INTELDCMI_CTX_MAGIC)
     {
@@ -687,12 +687,12 @@ ipmi_inteldcmi_cmd (ipmi_inteldcmi_ctx_t ctx,
     }
 
   if (_inteldcmi_write_read (ctx,
-			     IPMI_CHANNEL_NUMBER_PRIMARY_IPMB,
-			     IPMI_SLAVE_ADDRESS_BMC,
-			     lun,
-			     net_fn,
-			     obj_cmd_rq,
-			     obj_cmd_rs) < 0)
+                             IPMI_CHANNEL_NUMBER_PRIMARY_IPMB,
+                             IPMI_SLAVE_ADDRESS_BMC,
+                             lun,
+                             net_fn,
+                             obj_cmd_rq,
+                             obj_cmd_rs) < 0)
     return (-1);
 
   return (0);
@@ -700,12 +700,12 @@ ipmi_inteldcmi_cmd (ipmi_inteldcmi_ctx_t ctx,
 
 int
 ipmi_inteldcmi_cmd_ipmb (ipmi_inteldcmi_ctx_t ctx,
-			 uint8_t channel_number,
-			 uint8_t rs_addr,
-			 uint8_t lun,
-			 uint8_t net_fn,
-			 fiid_obj_t obj_cmd_rq,
-			 fiid_obj_t obj_cmd_rs)
+                         uint8_t channel_number,
+                         uint8_t rs_addr,
+                         uint8_t lun,
+                         uint8_t net_fn,
+                         fiid_obj_t obj_cmd_rq,
+                         fiid_obj_t obj_cmd_rs)
 {
   if (!ctx || ctx->magic != IPMI_INTELDCMI_CTX_MAGIC)
     {
@@ -731,12 +731,12 @@ ipmi_inteldcmi_cmd_ipmb (ipmi_inteldcmi_ctx_t ctx,
     }
 
   if (_inteldcmi_write_read (ctx,
-			     channel_number,
-			     rs_addr,
-			     lun,
-			     net_fn,
-			     obj_cmd_rq,
-			     obj_cmd_rs) < 0)
+                             channel_number,
+                             rs_addr,
+                             lun,
+                             net_fn,
+                             obj_cmd_rq,
+                             obj_cmd_rs) < 0)
     return (-1);
 
   return (0);

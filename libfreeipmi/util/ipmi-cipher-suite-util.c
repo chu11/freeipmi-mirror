@@ -40,7 +40,7 @@ ipmi_cipher_suite_id_to_algorithms (uint8_t cipher_suite_id,
 
   /* To avoid gcc warnings, add +1 to comparison */
   if (!((cipher_suite_id + 1) >= 1
-	&& cipher_suite_id <= 19))
+        && cipher_suite_id <= 19))
     {
       SET_ERRNO (EINVAL);
       return (-1);
@@ -174,10 +174,10 @@ ipmi_algorithms_to_cipher_suite_id (uint8_t authentication_algorithm,
   else if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA256)
     {
       if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE
-	  && confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE)
-	*cipher_suite_id = 15;
+          && confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE)
+        *cipher_suite_id = 15;
       else /* integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA256_128 */
-	{
+        {
           if (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE)
             *cipher_suite_id = 16;
           else if (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
@@ -186,7 +186,7 @@ ipmi_algorithms_to_cipher_suite_id (uint8_t authentication_algorithm,
             *cipher_suite_id = 18;
           else /* confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_40 */
             *cipher_suite_id = 19;
-	}
+        }
     }
 
   return (0);

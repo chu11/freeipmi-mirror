@@ -78,7 +78,7 @@ assemble_ipmi_kcs_pkt (fiid_obj_t obj_kcs_hdr,
                        fiid_obj_t obj_cmd,
                        void *pkt,
                        unsigned int pkt_len,
-		       unsigned int flags)
+                       unsigned int flags)
 {
   int obj_cmd_len, obj_kcs_hdr_len;
   unsigned int utmp;
@@ -159,7 +159,7 @@ unassemble_ipmi_kcs_pkt (const void *pkt,
                          unsigned int pkt_len,
                          fiid_obj_t obj_kcs_hdr,
                          fiid_obj_t obj_cmd,
-			 unsigned int flags)
+                         unsigned int flags)
 {
   unsigned int indx = 0;
   int len;

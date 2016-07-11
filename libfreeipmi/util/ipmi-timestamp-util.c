@@ -51,11 +51,11 @@
 
 int
 ipmi_timestamp_string (uint32_t timestamp,
-		       int utc_offset,
-		       unsigned int flags,
-		       const char *format,
-		       char *buf,
-		       unsigned int buflen)
+                       int utc_offset,
+                       unsigned int flags,
+                       const char *format,
+                       char *buf,
+                       unsigned int buflen)
 {
   struct tm tm;
   time_t t;
@@ -71,18 +71,18 @@ ipmi_timestamp_string (uint32_t timestamp,
   if (timestamp == IPMI_TIMESTAMP_UNSPECIFIED)
     {
       if (flags & IPMI_TIMESTAMP_FLAG_ABBREVIATE)
-	snprintf (buf, buflen, "Unspec.");
+        snprintf (buf, buflen, "Unspec.");
       else
-	snprintf (buf, buflen, "Unspecified");
+        snprintf (buf, buflen, "Unspecified");
       return (0);
     }
 
   if (IPMI_TIMESTAMP_POST_INIT (timestamp))
     {
       if (flags & IPMI_TIMESTAMP_FLAG_ABBREVIATE)
-	snprintf (buf, buflen, "PostInit");
+        snprintf (buf, buflen, "PostInit");
       else
-	snprintf (buf, buflen, "Post-Init %u s", timestamp);
+        snprintf (buf, buflen, "Post-Init %u s", timestamp);
       return (0);
     }
 

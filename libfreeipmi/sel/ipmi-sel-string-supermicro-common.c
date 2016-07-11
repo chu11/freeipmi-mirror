@@ -52,20 +52,20 @@
  */
 int
 sel_string_output_supermicro_overheat_event_data1_class_oem (ipmi_sel_ctx_t ctx,
-							     struct ipmi_sel_entry *sel_entry,
-							     uint8_t sel_record_type,
-							     char *tmpbuf,
-							     unsigned int tmpbuflen,
-							     unsigned int flags,
-							     unsigned int *wlen,
-							     struct ipmi_sel_system_event_record_data *system_event_record_data)
+                                                             struct ipmi_sel_entry *sel_entry,
+                                                             uint8_t sel_record_type,
+                                                             char *tmpbuf,
+                                                             unsigned int tmpbuflen,
+                                                             unsigned int flags,
+                                                             unsigned int *wlen,
+                                                             struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUPERMICRO
-	  || ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND
-	  || ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_PEPPERCON
-	  || ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_MAGNUM_TECHNOLOGIES);
+          || ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND
+          || ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_PEPPERCON
+          || ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_MAGNUM_TECHNOLOGIES);
   assert (sel_entry);
   assert (tmpbuf);
   assert (tmpbuflen);
@@ -113,8 +113,8 @@ sel_string_output_supermicro_overheat_event_data1_class_oem (ipmi_sel_ctx_t ctx,
       && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP_SEL_OVERHEAT)
     {
       snprintf (tmpbuf,
-		tmpbuflen,
-		"Overheat");
+                tmpbuflen,
+                "Overheat");
   
       return (1);
     }

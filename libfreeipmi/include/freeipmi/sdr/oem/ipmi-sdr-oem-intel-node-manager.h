@@ -44,9 +44,9 @@ extern "C" {
  * return (-1) - error
  */
 int ipmi_sdr_oem_parse_intel_node_manager (ipmi_sdr_ctx_t ctx,
-					   const void *sdr_record,
-					   unsigned int sdr_record_len,
-					   uint8_t *nm_device_slave_address,
+                                           const void *sdr_record,
+                                           unsigned int sdr_record_len,
+                                           uint8_t *nm_device_slave_address,
                                            uint8_t *sensor_owner_lun,
                                            uint8_t *channel_number,
                                            uint8_t *nm_health_event_sensor_number,

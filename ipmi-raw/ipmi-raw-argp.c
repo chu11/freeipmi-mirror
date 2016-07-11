@@ -106,12 +106,12 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case CHANNEL_NUMBER_KEY:
       ret = common_parse_opt (ARGP_TARGET_CHANNEL_NUMBER_KEY, arg, &(cmd_args->common_args));
       if (ret == ARGP_ERR_UNKNOWN)
-	return (ret);
+        return (ret);
       break;
     case SLAVE_ADDRESS_KEY:
       ret = common_parse_opt (ARGP_TARGET_SLAVE_ADDRESS_KEY, arg, &(cmd_args->common_args));
       if (ret == ARGP_ERR_UNKNOWN)
-	return (ret);
+        return (ret);
       break;
     case CMD_FILE_KEY:
       if (!(cmd_args->cmd_file = strdup (arg)))
@@ -152,23 +152,23 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
               }
           }
         
-	if (cmd_args->cmd_length < IPMI_RAW_MAX_ARGS)
-	  {
-	    errno = 0;
-	    value = strtol (arg, &endptr, 16);
-	    if (errno
-		|| endptr[0] != '\0')
-	      {
-		fprintf (stderr, "invalid hex byte argument\n");
-		exit (EXIT_FAILURE);
-	      }
-	    cmd_args->cmd[cmd_args->cmd_length++] = (uint8_t) value;
-	  }
-	else
-	  {
-	    fprintf (stderr, "Too many arguments specified\n");
-	    exit (EXIT_FAILURE);
-	  }
+        if (cmd_args->cmd_length < IPMI_RAW_MAX_ARGS)
+          {
+            errno = 0;
+            value = strtol (arg, &endptr, 16);
+            if (errno
+                || endptr[0] != '\0')
+              {
+                fprintf (stderr, "invalid hex byte argument\n");
+                exit (EXIT_FAILURE);
+              }
+            cmd_args->cmd[cmd_args->cmd_length++] = (uint8_t) value;
+          }
+        else
+          {
+            fprintf (stderr, "Too many arguments specified\n");
+            exit (EXIT_FAILURE);
+          }
         
         break;
       }

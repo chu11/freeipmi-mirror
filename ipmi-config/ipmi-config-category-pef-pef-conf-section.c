@@ -42,12 +42,12 @@ ipmi_config_pef_pef_conf_section_get (ipmi_config_state_data_t *state_data)
   assert (state_data);
 
   if (!(section = ipmi_config_section_create (state_data,
-					      "PEF_Conf",
-					      NULL,
-					      NULL,
-					      0,
-					      NULL,
-					      NULL)))
+                                              "PEF_Conf",
+                                              NULL,
+                                              NULL,
+                                              0,
+                                              NULL,
+                                              NULL)))
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,

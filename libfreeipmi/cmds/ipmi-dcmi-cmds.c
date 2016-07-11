@@ -648,10 +648,10 @@ fill_cmd_dcmi_get_dcmi_capability_info (uint8_t parameter_selector,
 
 int
 fill_cmd_dcmi_set_dcmi_configuration_parameters (uint8_t parameter_selector,
-						 uint8_t set_selector,
-						 const void *configuration_parameter_data,
-						 unsigned int configuration_parameter_data_len,
-						 fiid_obj_t obj_cmd_rq)
+                                                 uint8_t set_selector,
+                                                 const void *configuration_parameter_data,
+                                                 unsigned int configuration_parameter_data_len,
+                                                 fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_DCMI_CONFIGURATION_PARAMETER_SELECTOR_VALID (parameter_selector)
       || !configuration_parameter_data
@@ -683,8 +683,8 @@ fill_cmd_dcmi_set_dcmi_configuration_parameters (uint8_t parameter_selector,
 
 int
 fill_cmd_dcmi_set_dcmi_configuration_parameters_activate_dhcp (uint8_t set_selector,
-							       uint8_t activate,
-							       fiid_obj_t obj_cmd_rq)
+                                                               uint8_t activate,
+                                                               fiid_obj_t obj_cmd_rq)
 {
   /* technically, user can input anything for activate, but only 0x01 will do anything */
   if (!fiid_obj_valid (obj_cmd_rq))
@@ -711,10 +711,10 @@ fill_cmd_dcmi_set_dcmi_configuration_parameters_activate_dhcp (uint8_t set_selec
 
 int
 fill_cmd_dcmi_set_dcmi_configuration_parameters_discovery_configuration (uint8_t set_selector,
-									 uint8_t option_12,
-									 uint8_t option_60_with_option_43,
-									 uint8_t random_back_off,
-									 fiid_obj_t obj_cmd_rq)
+                                                                         uint8_t option_12,
+                                                                         uint8_t option_60_with_option_43,
+                                                                         uint8_t random_back_off,
+                                                                         fiid_obj_t obj_cmd_rq)
 {
   if (IPMI_DCMI_DHCP_INCLUDE_OPTION_VALID (option_12)
       || IPMI_DCMI_DHCP_INCLUDE_OPTION_VALID (option_60_with_option_43)
@@ -746,8 +746,8 @@ fill_cmd_dcmi_set_dcmi_configuration_parameters_discovery_configuration (uint8_t
 
 int
 fill_cmd_dcmi_set_dcmi_configuration_parameters_dhcp_timing_1 (uint8_t set_selector,
-							       uint8_t initial_timeout_interval,
-							       fiid_obj_t obj_cmd_rq)
+                                                               uint8_t initial_timeout_interval,
+                                                               fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))
     {
@@ -773,8 +773,8 @@ fill_cmd_dcmi_set_dcmi_configuration_parameters_dhcp_timing_1 (uint8_t set_selec
 
 int
 fill_cmd_dcmi_set_dcmi_configuration_parameters_dhcp_timing_2 (uint8_t set_selector,
-							       uint16_t server_contact_timeout_interval,
-							       fiid_obj_t obj_cmd_rq)
+                                                               uint16_t server_contact_timeout_interval,
+                                                               fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))
     {
@@ -800,8 +800,8 @@ fill_cmd_dcmi_set_dcmi_configuration_parameters_dhcp_timing_2 (uint8_t set_selec
 
 int
 fill_cmd_dcmi_set_dcmi_configuration_parameters_dhcp_timing_3 (uint8_t set_selector,
-							       uint16_t server_contact_retry_interval,
-							       fiid_obj_t obj_cmd_rq)
+                                                               uint16_t server_contact_retry_interval,
+                                                               fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))
     {
@@ -827,8 +827,8 @@ fill_cmd_dcmi_set_dcmi_configuration_parameters_dhcp_timing_3 (uint8_t set_selec
 
 int
 fill_cmd_dcmi_get_dcmi_configuration_parameters (uint8_t parameter_selector,
-						 uint8_t set_selector,
-						 fiid_obj_t obj_cmd_rq)
+                                                 uint8_t set_selector,
+                                                 fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_DCMI_CONFIGURATION_PARAMETER_SELECTOR_VALID (parameter_selector)
       || !fiid_obj_valid (obj_cmd_rq))
@@ -987,9 +987,9 @@ fill_cmd_dcmi_get_dcmi_sensor_info (uint8_t sensor_type,
 {
   if (sensor_type != IPMI_SENSOR_TYPE_TEMPERATURE
       || (!IPMI_DCMI_ENTITY_ID_VALID(entity_id)
-	  && entity_id != IPMI_ENTITY_ID_PROCESSOR
-	  && entity_id != IPMI_ENTITY_ID_SYSTEM_BOARD
-	  && entity_id != IPMI_ENTITY_ID_AIR_INLET_B)
+          && entity_id != IPMI_ENTITY_ID_PROCESSOR
+          && entity_id != IPMI_ENTITY_ID_SYSTEM_BOARD
+          && entity_id != IPMI_ENTITY_ID_AIR_INLET_B)
       || !fiid_obj_valid (obj_cmd_rq))
     {
       SET_ERRNO (EINVAL);
@@ -1125,8 +1125,8 @@ fill_cmd_dcmi_activate_deactivate_power_limit (uint8_t power_limit_activation,
 
 int
 fill_cmd_dcmi_get_thermal_limit (uint8_t entity_id,
-				 uint8_t entity_instance,
-				 fiid_obj_t obj_cmd_rq)
+                                 uint8_t entity_instance,
+                                 fiid_obj_t obj_cmd_rq)
 {
   if ((entity_id != IPMI_DCMI_ENTITY_ID_INLET_TEMPERATURE
        && entity_id != IPMI_ENTITY_ID_AIR_INLET_B)
@@ -1153,12 +1153,12 @@ fill_cmd_dcmi_get_thermal_limit (uint8_t entity_id,
 
 int
 fill_cmd_dcmi_set_thermal_limit (uint8_t entity_id,
-				 uint8_t entity_instance,
-				 uint8_t temperature_limit,
-				 uint8_t exception_actions_log_event_to_sel_only,
-				 uint8_t exception_actions_hard_power_off_system_and_log_event,
-				 uint16_t exception_time,
-				 fiid_obj_t obj_cmd_rq)
+                                 uint8_t entity_instance,
+                                 uint8_t temperature_limit,
+                                 uint8_t exception_actions_log_event_to_sel_only,
+                                 uint8_t exception_actions_hard_power_off_system_and_log_event,
+                                 uint16_t exception_time,
+                                 fiid_obj_t obj_cmd_rq)
 {
   if ((entity_id != IPMI_DCMI_ENTITY_ID_INLET_TEMPERATURE
        && entity_id != IPMI_ENTITY_ID_AIR_INLET_B)
@@ -1193,16 +1193,16 @@ fill_cmd_dcmi_set_thermal_limit (uint8_t entity_id,
 
 int
 fill_cmd_dcmi_get_temperature_reading (uint8_t sensor_type,
-				       uint8_t entity_id,
-				       uint8_t entity_instance,
-				       uint8_t entity_instance_start,
-				       fiid_obj_t obj_cmd_rq)
+                                       uint8_t entity_id,
+                                       uint8_t entity_instance,
+                                       uint8_t entity_instance_start,
+                                       fiid_obj_t obj_cmd_rq)
 {
   if (sensor_type != IPMI_SENSOR_TYPE_TEMPERATURE
       || (!IPMI_DCMI_ENTITY_ID_VALID(entity_id)
-	  && entity_id != IPMI_ENTITY_ID_PROCESSOR
-	  && entity_id != IPMI_ENTITY_ID_SYSTEM_BOARD
-	  && entity_id != IPMI_ENTITY_ID_AIR_INLET_B)
+          && entity_id != IPMI_ENTITY_ID_PROCESSOR
+          && entity_id != IPMI_ENTITY_ID_SYSTEM_BOARD
+          && entity_id != IPMI_ENTITY_ID_AIR_INLET_B)
       || !fiid_obj_valid (obj_cmd_rq))
     {
       SET_ERRNO (EINVAL);

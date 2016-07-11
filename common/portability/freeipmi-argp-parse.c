@@ -19,7 +19,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _GNU_SOURCE
-# define _GNU_SOURCE	1
+# define _GNU_SOURCE    1
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -93,17 +93,17 @@ char *alloca ();
    it to 0 yourself.  */
 volatile int _argp_hang;
 
-#define OPT_PROGNAME	-2
-#define OPT_USAGE	-3
-#define OPT_HANG	-4
+#define OPT_PROGNAME    -2
+#define OPT_USAGE       -3
+#define OPT_HANG        -4
 
 static const struct argp_option argp_default_options[] =
 {
-  {"help",	  '?',    	0, 0,  N_("Give this help list"), -1},
-  {"usage",	  OPT_USAGE,	0, 0,  N_("Give a short usage message"), 0 },
+  {"help",        '?',          0, 0,  N_("Give this help list"), -1},
+  {"usage",       OPT_USAGE,    0, 0,  N_("Give a short usage message"), 0 },
   {"program-name",OPT_PROGNAME,"NAME", OPTION_HIDDEN,
      N_("Set the program name"), 0},
-  {"HANG",	  OPT_HANG,    "SECS", OPTION_ARG_OPTIONAL | OPTION_HIDDEN,
+  {"HANG",        OPT_HANG,    "SECS", OPTION_ARG_OPTIONAL | OPTION_HIDDEN,
      N_("Hang for SECS seconds (default 3600)"), 0 },
   {0, 0, 0, 0, 0, 0}
 };
@@ -118,16 +118,16 @@ argp_default_parser (int key, char *arg, struct argp_state *state)
       break;
     case OPT_USAGE:
       __argp_state_help (state, state->out_stream,
-		       ARGP_HELP_USAGE | ARGP_HELP_EXIT_OK);
+                       ARGP_HELP_USAGE | ARGP_HELP_EXIT_OK);
       break;
 
-    case OPT_PROGNAME:		/* Set the program name.  */
+    case OPT_PROGNAME:          /* Set the program name.  */
 #if HAVE_DECL_PROGRAM_INVOCATION_NAME
       program_invocation_name = arg;
 #endif
       /* [Note that some systems only have PROGRAM_INVOCATION_SHORT_NAME (aka
-	 __PROGNAME), in which case, PROGRAM_INVOCATION_NAME is just defined
-	 to be that, so we have to be a bit careful here.]  */
+         __PROGNAME), in which case, PROGRAM_INVOCATION_NAME is just defined
+         to be that, so we have to be a bit careful here.]  */
 
       /* Update what we use for messages.  */
 
@@ -138,18 +138,18 @@ argp_default_parser (int key, char *arg, struct argp_state *state)
 #endif
 
       if ((state->flags & (ARGP_PARSE_ARGV0 | ARGP_NO_ERRS))
-	  == ARGP_PARSE_ARGV0)
-	/* Update what getopt uses too.  */
-	state->argv[0] = arg;
+          == ARGP_PARSE_ARGV0)
+        /* Update what getopt uses too.  */
+        state->argv[0] = arg;
 
       break;
 
     case OPT_HANG:
       _argp_hang = atoi (arg ? arg : "3600");
       fprintf(state->err_stream, "%s: pid = %ld\n",
-	      state->name, (long) getpid());
+              state->name, (long) getpid());
       while (_argp_hang-- > 0)
-	__sleep (1);
+        __sleep (1);
       break;
 
     default:
@@ -164,7 +164,7 @@ static const struct argp argp_default_argp =
 
 static const struct argp_option argp_version_options[] =
 {
-  {"version",	  'V',    	0, 0,  N_("Print program version"), -1},
+  {"version",     'V',          0, 0,  N_("Print program version"), -1},
   {0, 0, 0, 0, 0, 0 }
 };
 
@@ -175,14 +175,14 @@ argp_version_parser (int key, char *arg UNUSED, struct argp_state *state)
     {
     case 'V':
       if (argp_program_version_hook)
-	(*argp_program_version_hook) (state->out_stream, state);
+        (*argp_program_version_hook) (state->out_stream, state);
       else if (argp_program_version)
-	fprintf (state->out_stream, "%s\n", argp_program_version);
+        fprintf (state->out_stream, "%s\n", argp_program_version);
       else
-	__argp_error (state, dgettext (state->root_argp->argp_domain,
-				       "(PROGRAM ERROR) No version known!?"));
+        __argp_error (state, dgettext (state->root_argp->argp_domain,
+                                       "(PROGRAM ERROR) No version known!?"));
       if (! (state->flags & ARGP_NO_EXIT))
-	exit (0);
+        exit (0);
       break;
     default:
       return EBADKEY;
@@ -211,7 +211,7 @@ struct group
 
   /* This group's parser's parent's group.  */
   struct group *parent;
-  unsigned parent_index;	/* And the our position in the parent.   */
+  unsigned parent_index;        /* And the our position in the parent.   */
 
   /* These fields are swapped into and out of the state structure when
      calling this group's parser.  */
@@ -326,11 +326,11 @@ find_short_option(struct parser *parser, int key, struct group **p)
       const struct argp_option *opts;
 
       for (opts = group->argp->options; !__option_is_end(opts); opts++)
-	if (opts->key == key)
-	  {
-	    *p = group;
-	    return opts;
-	  }
+        if (opts->key == key)
+          {
+            *p = group;
+            return opts;
+          }
     }
   return NULL;
 }
@@ -351,28 +351,28 @@ match_option(const char *arg, const char *name)
   for (i = j = 0;; i++, j++)
     {
       switch(arg[i])
-	{
-	case '\0':
-	case '=':
-	  return name[j] ? MATCH_PARTIAL : MATCH_EXACT;
+        {
+        case '\0':
+        case '=':
+          return name[j] ? MATCH_PARTIAL : MATCH_EXACT;
 #if ARGP_COMPLETE
-	case '-':
-	  while (name[j] != '-')
-	    if (!name[j++])
-	      return MATCH_NO;
-	  break;
+        case '-':
+          while (name[j] != '-')
+            if (!name[j++])
+              return MATCH_NO;
+          break;
 #endif
-	default:
-	  if (arg[i] != name[j])
-	    return MATCH_NO;
-	}
+        default:
+          if (arg[i] != name[j])
+            return MATCH_NO;
+        }
     }
 }
 
 static const struct argp_option *
 find_long_option(struct parser *parser,
-		 const char *arg,
-		 struct group **p)
+                 const char *arg,
+                 struct group **p)
 {
   struct group *group;
 
@@ -388,26 +388,26 @@ find_long_option(struct parser *parser,
       const struct argp_option *opts;
 
       for (opts = group->argp->options; !__option_is_end(opts); opts++)
-	{
-	  if (!opts->name)
-	    continue;
-	  switch (match_option(arg, opts->name))
-	    {
-	    case MATCH_NO:
-	      break;
-	    case MATCH_PARTIAL:
-	      num_partial++;
+        {
+          if (!opts->name)
+            continue;
+          switch (match_option(arg, opts->name))
+            {
+            case MATCH_NO:
+              break;
+            case MATCH_PARTIAL:
+              num_partial++;
 
-	      matched_group = group;
-	      matched_option = opts;
+              matched_group = group;
+              matched_option = opts;
 
-	      break;
-	    case MATCH_EXACT:
-	      /* Exact match. */
-	      *p = group;
-	      return opts;
-	    }
-	}
+              break;
+            case MATCH_EXACT:
+              /* Exact match. */
+              *p = group;
+              return opts;
+            }
+        }
     }
   if (num_partial == 1)
     {
@@ -433,8 +433,8 @@ struct parser_convert_state
    unused group entry. CVT holds state used during the conversion. */
 static struct group *
 convert_options (const struct argp *argp,
-		 struct group *parent, unsigned parent_index,
-		 struct group *group, struct parser_convert_state *cvt)
+                 struct group *parent, unsigned parent_index,
+                 struct group *group, struct parser_convert_state *cvt)
 {
   const struct argp_option *opt = argp->options;
   const struct argp_child *children = argp->children;
@@ -443,12 +443,12 @@ convert_options (const struct argp *argp,
     {
       /* This parser needs a group. */
       if (cvt->short_end)
-	{
-	  /* Record any short options. */
-	  for ( ; !__option_is_end (opt); opt++)
-	    if (__option_is_short(opt))
-	      *cvt->short_end++ = opt->key;
-	}
+        {
+          /* Record any short options. */
+          for ( ; !__option_is_end (opt); opt++)
+            if (__option_is_short(opt))
+              *cvt->short_end++ = opt->key;
+        }
       
       group->parser = argp->parser;
       group->argp = argp;
@@ -460,15 +460,15 @@ convert_options (const struct argp *argp,
       group->child_inputs = 0;
       
       if (children)
-	/* Assign GROUP's CHILD_INPUTS field some space from
-	   CVT->child_inputs_end.*/
-	{
-	  unsigned num_children = 0;
-	  while (children[num_children].argp)
-	    num_children++;
-	  group->child_inputs = cvt->child_inputs_end;
-	  cvt->child_inputs_end += num_children;
-	}
+        /* Assign GROUP's CHILD_INPUTS field some space from
+           CVT->child_inputs_end.*/
+        {
+          unsigned num_children = 0;
+          while (children[num_children].argp)
+            num_children++;
+          group->child_inputs = cvt->child_inputs_end;
+          cvt->child_inputs_end += num_children;
+        }
       parent = group++;
     }
   else
@@ -478,8 +478,8 @@ convert_options (const struct argp *argp,
     {
       unsigned index = 0;
       while (children->argp)
-	group =
-	  convert_options (children++->argp, parent, index++, group, cvt);
+        group =
+          convert_options (children++->argp, parent, index++, group, cvt);
     }
 
   return group;
@@ -511,10 +511,10 @@ parser_convert (struct parser *parser, const struct argp *argp)
 struct parser_sizes
 {
   /* Needed only ARGP_LONG_ONLY */
-  size_t short_len;		/* Number of short options.  */
+  size_t short_len;             /* Number of short options.  */
 
-  size_t num_groups;		/* Group structures we allocate.  */
-  size_t num_child_inputs;	/* Child input slots.  */
+  size_t num_groups;            /* Group structures we allocate.  */
+  size_t num_child_inputs;      /* Child input slots.  */
 };
 
 /* For ARGP, increments the NUM_GROUPS field in SZS by the total
@@ -531,24 +531,24 @@ calc_sizes (const struct argp *argp,  struct parser_sizes *szs)
       /* This parser needs a group. */
       szs->num_groups++;
       if (opt)
-	{
-	  while (__option_is_short (opt++))
-	    szs->short_len++;
-	}
+        {
+          while (__option_is_short (opt++))
+            szs->short_len++;
+        }
     }
 
   if (child)
     while (child->argp)
       {
-	calc_sizes ((child++)->argp, szs);
-	szs->num_child_inputs++;
+        calc_sizes ((child++)->argp, szs);
+        szs->num_child_inputs++;
       }
 }
 
 /* Initializes PARSER to parse ARGP in a manner described by FLAGS.  */
 static error_t
 parser_init (struct parser *parser, const struct argp *argp,
-	     int argc, char **argv, int flags, void *input)
+             int argc, char **argv, int flags, void *input)
 {
   error_t err = 0;
   struct group *group;
@@ -621,20 +621,20 @@ parser_init (struct parser *parser, const struct argp *argp,
        group++)
     {
       if (group->parent)
-	/* If a child parser, get the initial input value from the parent. */
-	group->input = group->parent->child_inputs[group->parent_index];
+        /* If a child parser, get the initial input value from the parent. */
+        group->input = group->parent->child_inputs[group->parent_index];
 
       if (!group->parser
-	  && group->argp->children && group->argp->children->argp)
-	/* For the special case where no parsing function is supplied for an
-	   argp, propagate its input to its first child, if any (this just
-	   makes very simple wrapper argps more convenient).  */
-	group->child_inputs[0] = group->input;
+          && group->argp->children && group->argp->children->argp)
+        /* For the special case where no parsing function is supplied for an
+           argp, propagate its input to its first child, if any (this just
+           makes very simple wrapper argps more convenient).  */
+        group->child_inputs[0] = group->input;
 
       err = group_parse (group, &parser->state, ARGP_KEY_INIT, 0);
     }
   if (err == EBADKEY)
-    err = 0;			/* Some parser didn't understand.  */
+    err = 0;                    /* Some parser didn't understand.  */
 
   if (err)
     return err;
@@ -656,7 +656,7 @@ parser_init (struct parser *parser, const struct argp *argp,
 /* Free any storage consumed by PARSER (but not PARSER itself).  */
 static error_t
 parser_finalize (struct parser *parser,
-		 error_t err, int arg_ebadkey, int *end_index)
+                 error_t err, int arg_ebadkey, int *end_index)
 {
   struct group *group;
 
@@ -667,40 +667,40 @@ parser_finalize (struct parser *parser,
   if (! err)
     {
       if (parser->state.next == parser->state.argc)
-	/* We successfully parsed all arguments!  Call all the parsers again,
-	   just a few more times... */
-	{
-	  for (group = parser->groups;
-	       group < parser->egroup && (!err || err==EBADKEY);
-	       group++)
-	    if (group->args_processed == 0)
-	      err = group_parse (group, &parser->state, ARGP_KEY_NO_ARGS, 0);
-	  for (group = parser->egroup - 1;
-	       group >= parser->groups && (!err || err==EBADKEY);
-	       group--)
-	    err = group_parse (group, &parser->state, ARGP_KEY_END, 0);
+        /* We successfully parsed all arguments!  Call all the parsers again,
+           just a few more times... */
+        {
+          for (group = parser->groups;
+               group < parser->egroup && (!err || err==EBADKEY);
+               group++)
+            if (group->args_processed == 0)
+              err = group_parse (group, &parser->state, ARGP_KEY_NO_ARGS, 0);
+          for (group = parser->egroup - 1;
+               group >= parser->groups && (!err || err==EBADKEY);
+               group--)
+            err = group_parse (group, &parser->state, ARGP_KEY_END, 0);
 
-	  if (err == EBADKEY)
-	    err = 0;		/* Some parser didn't understand.  */
+          if (err == EBADKEY)
+            err = 0;            /* Some parser didn't understand.  */
 
-	  /* Tell the user that all arguments are parsed.  */
-	  if (end_index)
-	    *end_index = parser->state.next;
-	}
+          /* Tell the user that all arguments are parsed.  */
+          if (end_index)
+            *end_index = parser->state.next;
+        }
       else if (end_index)
-	/* Return any remaining arguments to the user.  */
-	*end_index = parser->state.next;
+        /* Return any remaining arguments to the user.  */
+        *end_index = parser->state.next;
       else
-	/* No way to return the remaining arguments, they must be bogus. */
-	{
-	  if (!(parser->state.flags & ARGP_NO_ERRS)
-	      && parser->state.err_stream)
-	    fprintf (parser->state.err_stream,
-		     dgettext (parser->argp->argp_domain,
-			       "%s: Too many arguments\n"),
-		     parser->state.name);
-	  err = EBADKEY;
-	}
+        /* No way to return the remaining arguments, they must be bogus. */
+        {
+          if (!(parser->state.flags & ARGP_NO_ERRS)
+              && parser->state.err_stream)
+            fprintf (parser->state.err_stream,
+                     dgettext (parser->argp->argp_domain,
+                               "%s: Too many arguments\n"),
+                     parser->state.name);
+          err = EBADKEY;
+        }
     }
 
   /* Okay, we're all done, with either an error or success; call the parsers
@@ -710,27 +710,27 @@ parser_finalize (struct parser *parser,
     {
       /* Maybe print an error message.  */
       if (err == EBADKEY)
-	/* An appropriate message describing what the error was should have
-	   been printed earlier.  */
-	__argp_state_help (&parser->state, parser->state.err_stream,
-			   ARGP_HELP_STD_ERR);
+        /* An appropriate message describing what the error was should have
+           been printed earlier.  */
+        __argp_state_help (&parser->state, parser->state.err_stream,
+                           ARGP_HELP_STD_ERR);
 
       /* Since we didn't exit, give each parser an error indication.  */
       for (group = parser->groups; group < parser->egroup; group++)
-	group_parse (group, &parser->state, ARGP_KEY_ERROR, 0);
+        group_parse (group, &parser->state, ARGP_KEY_ERROR, 0);
     }
   else
     /* Notify parsers of success, and propagate back values from parsers.  */
     {
       /* We pass over the groups in reverse order so that child groups are
-	 given a chance to do there processing before passing back a value to
-	 the parent.  */
+         given a chance to do there processing before passing back a value to
+         the parent.  */
       for (group = parser->egroup - 1
-	   ; group >= parser->groups && (!err || err == EBADKEY)
-	   ; group--)
-	err = group_parse (group, &parser->state, ARGP_KEY_SUCCESS, 0);
+           ; group >= parser->groups && (!err || err == EBADKEY)
+           ; group--)
+        err = group_parse (group, &parser->state, ARGP_KEY_SUCCESS, 0);
       if (err == EBADKEY)
-	err = 0;		/* Some parser didn't understand.  */
+        err = 0;                /* Some parser didn't understand.  */
     }
 
   /* Call parsers once more, to do any final cleanup.  Errors are ignored.  */
@@ -757,42 +757,42 @@ parser_parse_arg (struct parser *parser, char *val)
   int index = parser->state.next;
   error_t err = EBADKEY;
   struct group *group;
-  int key = 0;			/* Which of ARGP_KEY_ARG[S] we used.  */
+  int key = 0;                  /* Which of ARGP_KEY_ARG[S] we used.  */
 
   /* Try to parse the argument in each parser.  */
   for (group = parser->groups
        ; group < parser->egroup && err == EBADKEY
        ; group++)
     {
-      parser->state.next++;	/* For ARGP_KEY_ARG, consume the arg.  */
+      parser->state.next++;     /* For ARGP_KEY_ARG, consume the arg.  */
       key = ARGP_KEY_ARG;
       err = group_parse (group, &parser->state, key, val);
 
       if (err == EBADKEY)
-	/* This parser doesn't like ARGP_KEY_ARG; try ARGP_KEY_ARGS instead. */
-	{
-	  parser->state.next--;	/* For ARGP_KEY_ARGS, put back the arg.  */
-	  key = ARGP_KEY_ARGS;
-	  err = group_parse (group, &parser->state, key, 0);
-	}
+        /* This parser doesn't like ARGP_KEY_ARG; try ARGP_KEY_ARGS instead. */
+        {
+          parser->state.next--; /* For ARGP_KEY_ARGS, put back the arg.  */
+          key = ARGP_KEY_ARGS;
+          err = group_parse (group, &parser->state, key, 0);
+        }
     }
 
   if (! err)
     {
       if (key == ARGP_KEY_ARGS)
-	/* The default for ARGP_KEY_ARGS is to assume that if NEXT isn't
-	   changed by the user, *all* arguments should be considered
-	   consumed.  */
-	parser->state.next = parser->state.argc;
+        /* The default for ARGP_KEY_ARGS is to assume that if NEXT isn't
+           changed by the user, *all* arguments should be considered
+           consumed.  */
+        parser->state.next = parser->state.argc;
 
       if (parser->state.next > index)
-	/* Remember that we successfully processed a non-option
-	   argument -- but only if the user hasn't gotten tricky and set
-	   the clock back.  */
-	(--group)->args_processed += (parser->state.next - index);
+        /* Remember that we successfully processed a non-option
+           argument -- but only if the user hasn't gotten tricky and set
+           the clock back.  */
+        (--group)->args_processed += (parser->state.next - index);
       else
-	/* The user wants to reparse some args, so try looking for options again.  */
-	parser->args_only = 0;
+        /* The user wants to reparse some args, so try looking for options again.  */
+        parser->args_only = 0;
     }
 
   return err;
@@ -825,37 +825,37 @@ exchange (struct parser *parser)
   while (top > middle && middle > bottom)
     {
       if (top - middle > middle - bottom)
-	{
-	  /* Bottom segment is the short one.  */
-	  int len = middle - bottom;
-	  register int i;
+        {
+          /* Bottom segment is the short one.  */
+          int len = middle - bottom;
+          register int i;
 
-	  /* Swap it with the top part of the top segment.  */
-	  for (i = 0; i < len; i++)
-	    {
-	      tem = argv[bottom + i];
-	      argv[bottom + i] = argv[top - (middle - bottom) + i];
-	      argv[top - (middle - bottom) + i] = tem;
-	    }
-	  /* Exclude the moved bottom segment from further swapping.  */
-	  top -= len;
-	}
+          /* Swap it with the top part of the top segment.  */
+          for (i = 0; i < len; i++)
+            {
+              tem = argv[bottom + i];
+              argv[bottom + i] = argv[top - (middle - bottom) + i];
+              argv[top - (middle - bottom) + i] = tem;
+            }
+          /* Exclude the moved bottom segment from further swapping.  */
+          top -= len;
+        }
       else
-	{
-	  /* Top segment is the short one.  */
-	  int len = top - middle;
-	  register int i;
+        {
+          /* Top segment is the short one.  */
+          int len = top - middle;
+          register int i;
 
-	  /* Swap it with the bottom part of the bottom segment.  */
-	  for (i = 0; i < len; i++)
-	    {
-	      tem = argv[bottom + i];
-	      argv[bottom + i] = argv[middle + i];
-	      argv[middle + i] = tem;
-	    }
-	  /* Exclude the moved top segment from further swapping.  */
-	  bottom += len;
-	}
+          /* Swap it with the bottom part of the bottom segment.  */
+          for (i = 0; i < len; i++)
+            {
+              tem = argv[bottom + i];
+              argv[bottom + i] = argv[middle + i];
+              argv[middle + i] = tem;
+            }
+          /* Exclude the moved top segment from further swapping.  */
+          bottom += len;
+        }
     }
 
   /* Update records for the slots the non-options now occupy.  */
@@ -867,8 +867,8 @@ exchange (struct parser *parser)
 
 
 enum arg_type { ARG_ARG, ARG_SHORT_OPTION,
-		ARG_LONG_OPTION, ARG_LONG_ONLY_OPTION,
-		ARG_QUOTE };
+                ARG_LONG_OPTION, ARG_LONG_ONLY_OPTION,
+                ARG_QUOTE };
 
 static enum arg_type
 classify_arg(struct parser *parser, char *arg, char **opt)
@@ -878,48 +878,48 @@ classify_arg(struct parser *parser, char *arg, char **opt)
     switch (arg[1])
       {
       case '\0':
-	/* "-" is not an option. */
-	return ARG_ARG;
+        /* "-" is not an option. */
+        return ARG_ARG;
       case '-':
-	/* Long option, or quote. */
-	if (!arg[2])
-	  return ARG_QUOTE;
-	  
-	/* A long option. */
-	if (opt)
-	  *opt = arg + 2;
-	return ARG_LONG_OPTION;
+        /* Long option, or quote. */
+        if (!arg[2])
+          return ARG_QUOTE;
+          
+        /* A long option. */
+        if (opt)
+          *opt = arg + 2;
+        return ARG_LONG_OPTION;
 
       default:
-	/* Short option. But if ARGP_LONG_ONLY, it can also be a long option. */
+        /* Short option. But if ARGP_LONG_ONLY, it can also be a long option. */
 
-	if (opt)
-	  *opt = arg + 1;
+        if (opt)
+          *opt = arg + 1;
 
-	if (parser->state.flags & ARGP_LONG_ONLY)
-	  {
-	    /* Rules from getopt.c:
+        if (parser->state.flags & ARGP_LONG_ONLY)
+          {
+            /* Rules from getopt.c:
 
-	       If long_only and the ARGV-element has the form "-f",
-	       where f is a valid short option, don't consider it an
-	       abbreviated form of a long option that starts with f.
-	       Otherwise there would be no way to give the -f short
-	       option.
+               If long_only and the ARGV-element has the form "-f",
+               where f is a valid short option, don't consider it an
+               abbreviated form of a long option that starts with f.
+               Otherwise there would be no way to give the -f short
+               option.
 
-	       On the other hand, if there's a long option "fubar" and
-	       the ARGV-element is "-fu", do consider that an
-	       abbreviation of the long option, just like "--fu", and
-	       not "-f" with arg "u".
+               On the other hand, if there's a long option "fubar" and
+               the ARGV-element is "-fu", do consider that an
+               abbreviation of the long option, just like "--fu", and
+               not "-f" with arg "u".
 
-	       This distinction seems to be the most useful approach. */
+               This distinction seems to be the most useful approach. */
 
-	    assert(parser->short_opts);
-	    
-	    if (arg[2] || !strchr(parser->short_opts, arg[1]))
-	      return ARG_LONG_ONLY_OPTION;
-	  }
+            assert(parser->short_opts);
+            
+            if (arg[2] || !strchr(parser->short_opts, arg[1]))
+              return ARG_LONG_ONLY_OPTION;
+          }
 
-	return ARG_SHORT_OPTION;
+        return ARG_SHORT_OPTION;
       }
   
   else
@@ -961,239 +961,239 @@ parser_parse_next (struct parser *parser, int *arg_ebadkey)
       
       option = find_short_option(parser, c, &group);
       if (!option)
-	{
-	  if (parser->posixly_correct)
-	    /* 1003.2 specifies the format of this message.  */
-	    fprintf (parser->state.err_stream,
-		     dgettext(parser->state.root_argp->argp_domain,
-			      "%s: illegal option -- %c\n"),
-		     parser->state.name, c);
-	  else
-	    fprintf (parser->state.err_stream,
-		     dgettext(parser->state.root_argp->argp_domain,
-			      "%s: invalid option -- %c\n"),
-		     parser->state.name, c);
+        {
+          if (parser->posixly_correct)
+            /* 1003.2 specifies the format of this message.  */
+            fprintf (parser->state.err_stream,
+                     dgettext(parser->state.root_argp->argp_domain,
+                              "%s: illegal option -- %c\n"),
+                     parser->state.name, c);
+          else
+            fprintf (parser->state.err_stream,
+                     dgettext(parser->state.root_argp->argp_domain,
+                              "%s: invalid option -- %c\n"),
+                     parser->state.name, c);
 
-	  *arg_ebadkey = 0;
-	  return EBADKEY;
-	}
+          *arg_ebadkey = 0;
+          return EBADKEY;
+        }
 
       if (!*parser->nextchar)
-	parser->nextchar = NULL;
+        parser->nextchar = NULL;
 
       if (option->arg)
-	{
-	  value = parser->nextchar;
-	  parser->nextchar = NULL;
-	      
-	  if (!value
-	      && !(option->flags & OPTION_ARG_OPTIONAL))
-	    /* We need an mandatory argument. */
-	    {
-	      if (parser->state.next == parser->state.argc)
-		/* Missing argument */
-		{
-		  /* 1003.2 specifies the format of this message.  */
-		  fprintf (parser->state.err_stream,
-			   dgettext(parser->state.root_argp->argp_domain,
-				    "%s: option requires an argument -- %c\n"),
-			   parser->state.name, c);
+        {
+          value = parser->nextchar;
+          parser->nextchar = NULL;
+              
+          if (!value
+              && !(option->flags & OPTION_ARG_OPTIONAL))
+            /* We need an mandatory argument. */
+            {
+              if (parser->state.next == parser->state.argc)
+                /* Missing argument */
+                {
+                  /* 1003.2 specifies the format of this message.  */
+                  fprintf (parser->state.err_stream,
+                           dgettext(parser->state.root_argp->argp_domain,
+                                    "%s: option requires an argument -- %c\n"),
+                           parser->state.name, c);
 
-		  *arg_ebadkey = 0;
-		  return EBADKEY;
-		}
-	      value = parser->state.argv[parser->state.next++];
-	    }
-	}
+                  *arg_ebadkey = 0;
+                  return EBADKEY;
+                }
+              value = parser->state.argv[parser->state.next++];
+            }
+        }
       return group_parse(group, &parser->state,
-			 option->key, value);
+                         option->key, value);
     }
   else
     /* Advance to the next ARGV-element.  */
     {
       if (parser->args_only)
-	{
-	  *arg_ebadkey = 1;
-	  if (parser->state.next >= parser->state.argc)
-	    /* We're done. */
-	    return EBADKEY;
-	  else
-	    return parser_parse_arg(parser,
-				    parser->state.argv[parser->state.next]);
-	}
+        {
+          *arg_ebadkey = 1;
+          if (parser->state.next >= parser->state.argc)
+            /* We're done. */
+            return EBADKEY;
+          else
+            return parser_parse_arg(parser,
+                                    parser->state.argv[parser->state.next]);
+        }
       
       if (parser->state.next >= parser->state.argc)
-	/* Almost done. If there are non-options that we skipped
-	   previously, we should process them now. */
-	{
-	  *arg_ebadkey = 1;
-	  if (parser->first_nonopt != parser->last_nonopt)
-	    {
-	      exchange(parser);
-	      
-	      /* Start processing the arguments we skipped previously. */
-	      parser->state.next = parser->first_nonopt;
-	      
-	      parser->first_nonopt = parser->last_nonopt = 0;
+        /* Almost done. If there are non-options that we skipped
+           previously, we should process them now. */
+        {
+          *arg_ebadkey = 1;
+          if (parser->first_nonopt != parser->last_nonopt)
+            {
+              exchange(parser);
+              
+              /* Start processing the arguments we skipped previously. */
+              parser->state.next = parser->first_nonopt;
+              
+              parser->first_nonopt = parser->last_nonopt = 0;
 
-	      parser->args_only = 1;
-	      return 0;
-	    }
-	  else
-	    /* Indicate that we're really done. */
-	    return EBADKEY;
-	}
+              parser->args_only = 1;
+              return 0;
+            }
+          else
+            /* Indicate that we're really done. */
+            return EBADKEY;
+        }
       else
-	/* Look for options. */
-	{
-	  char *arg = parser->state.argv[parser->state.next];
+        /* Look for options. */
+        {
+          char *arg = parser->state.argv[parser->state.next];
 
-	  char *optstart;
-	  enum arg_type token = classify_arg(parser, arg, &optstart);
-	  
-	  switch (token)
-	    {
-	    case ARG_ARG:
-	      switch (parser->ordering)
-		{
-		case PERMUTE:
-		  if (parser->first_nonopt == parser->last_nonopt)
-		    /* Skipped sequence is empty; start a new one. */
-		    parser->first_nonopt = parser->last_nonopt = parser->state.next;
+          char *optstart;
+          enum arg_type token = classify_arg(parser, arg, &optstart);
+          
+          switch (token)
+            {
+            case ARG_ARG:
+              switch (parser->ordering)
+                {
+                case PERMUTE:
+                  if (parser->first_nonopt == parser->last_nonopt)
+                    /* Skipped sequence is empty; start a new one. */
+                    parser->first_nonopt = parser->last_nonopt = parser->state.next;
 
-		  else if (parser->last_nonopt != parser->state.next)
-		    /* We have a non-empty skipped sequence, and
-		       we're not at the end-point, so move it. */
-		    exchange(parser);
+                  else if (parser->last_nonopt != parser->state.next)
+                    /* We have a non-empty skipped sequence, and
+                       we're not at the end-point, so move it. */
+                    exchange(parser);
 
-		  assert(parser->last_nonopt == parser->state.next);
-		  
-		  /* Skip this argument for now. */
-		  parser->state.next++;
-		  parser->last_nonopt = parser->state.next; 
-		  
-		  return 0;
+                  assert(parser->last_nonopt == parser->state.next);
+                  
+                  /* Skip this argument for now. */
+                  parser->state.next++;
+                  parser->last_nonopt = parser->state.next; 
+                  
+                  return 0;
 
-		case REQUIRE_ORDER:
-		  /* Implicit quote before the first argument. */
-		   parser->args_only = 1;
-		   return 0;
-		   
-		case RETURN_IN_ORDER:
-		  *arg_ebadkey = 1;
-		  return parser_parse_arg(parser, arg);
+                case REQUIRE_ORDER:
+                  /* Implicit quote before the first argument. */
+                   parser->args_only = 1;
+                   return 0;
+                   
+                case RETURN_IN_ORDER:
+                  *arg_ebadkey = 1;
+                  return parser_parse_arg(parser, arg);
 
-		default:
-		  abort();
-		}
-	    case ARG_QUOTE:
-	      /* Skip it, then exchange with any previous non-options. */
-	      parser->state.next++;
-	      assert (parser->last_nonopt != parser->state.next);
+                default:
+                  abort();
+                }
+            case ARG_QUOTE:
+              /* Skip it, then exchange with any previous non-options. */
+              parser->state.next++;
+              assert (parser->last_nonopt != parser->state.next);
 
-	      if (parser->first_nonopt != parser->last_nonopt)
-		{
-		  exchange(parser);
-		  
-		  /* Start processing the skipped and the quoted
-		     arguments. */
+              if (parser->first_nonopt != parser->last_nonopt)
+                {
+                  exchange(parser);
+                  
+                  /* Start processing the skipped and the quoted
+                     arguments. */
 
-		  parser->state.quoted = parser->state.next = parser->first_nonopt;
+                  parser->state.quoted = parser->state.next = parser->first_nonopt;
 
-		  /* Also empty the skipped-list, to avoid confusion
-		     if the user resets the next pointer. */
-		  parser->first_nonopt = parser->last_nonopt = 0;
-		}
-	      else
-		parser->state.quoted = parser->state.next;
+                  /* Also empty the skipped-list, to avoid confusion
+                     if the user resets the next pointer. */
+                  parser->first_nonopt = parser->last_nonopt = 0;
+                }
+              else
+                parser->state.quoted = parser->state.next;
 
-	      parser->args_only = 1;	      
-	      return 0;
+              parser->args_only = 1;          
+              return 0;
 
-	    case ARG_LONG_ONLY_OPTION:
-	    case ARG_LONG_OPTION:
-	      {
-		struct group *group;
-		const struct argp_option *option;
-		char *value;
+            case ARG_LONG_ONLY_OPTION:
+            case ARG_LONG_OPTION:
+              {
+                struct group *group;
+                const struct argp_option *option;
+                char *value;
 
-		parser->state.next++;
-		option = find_long_option(parser, optstart, &group);
-		
-		if (!option)
-		  {
-		    /* NOTE: This includes any "=something" in the output. */
-		    fprintf (parser->state.err_stream,
-			     dgettext(parser->state.root_argp->argp_domain,
-				      "%s: unrecognized option `%s'\n"),
-			     parser->state.name, arg);
-		    *arg_ebadkey = 0;
-		    return EBADKEY;
-		  }
+                parser->state.next++;
+                option = find_long_option(parser, optstart, &group);
+                
+                if (!option)
+                  {
+                    /* NOTE: This includes any "=something" in the output. */
+                    fprintf (parser->state.err_stream,
+                             dgettext(parser->state.root_argp->argp_domain,
+                                      "%s: unrecognized option `%s'\n"),
+                             parser->state.name, arg);
+                    *arg_ebadkey = 0;
+                    return EBADKEY;
+                  }
 
-		value = strchr(optstart, '=');
-		if (value)
-		  value++;
-		
-		if (value && !option->arg)
-		  /* Unexpected argument. */
-		  {
-		    if (token == ARG_LONG_OPTION)
-		      /* --option */
-		      fprintf (parser->state.err_stream,
-			       dgettext(parser->state.root_argp->argp_domain,
-					"%s: option `--%s' doesn't allow an argument\n"),
-			       parser->state.name, option->name);
-		    else
-		      /* +option or -option */
-		      fprintf (parser->state.err_stream,
-			       dgettext(parser->state.root_argp->argp_domain,
-					"%s: option `%c%s' doesn't allow an argument\n"),
-			       parser->state.name, arg[0], option->name);
+                value = strchr(optstart, '=');
+                if (value)
+                  value++;
+                
+                if (value && !option->arg)
+                  /* Unexpected argument. */
+                  {
+                    if (token == ARG_LONG_OPTION)
+                      /* --option */
+                      fprintf (parser->state.err_stream,
+                               dgettext(parser->state.root_argp->argp_domain,
+                                        "%s: option `--%s' doesn't allow an argument\n"),
+                               parser->state.name, option->name);
+                    else
+                      /* +option or -option */
+                      fprintf (parser->state.err_stream,
+                               dgettext(parser->state.root_argp->argp_domain,
+                                        "%s: option `%c%s' doesn't allow an argument\n"),
+                               parser->state.name, arg[0], option->name);
 
-		    *arg_ebadkey = 0;
-		    return EBADKEY;
-		  }
-		
-		if (option->arg && !value
-		    && !(option->flags & OPTION_ARG_OPTIONAL))
-		  /* We need an mandatory argument. */
-		  {
-		    if (parser->state.next == parser->state.argc)
-		      /* Missing argument */
-		      {
-			if (token == ARG_LONG_OPTION)
-			  /* --option */
-			  fprintf (parser->state.err_stream,
-				   dgettext(parser->state.root_argp->argp_domain,
-					    "%s: option `--%s' requires an argument\n"),
-				 parser->state.name, option->name);
-			else
-			  /* +option or -option */
-			  fprintf (parser->state.err_stream,
-				   dgettext(parser->state.root_argp->argp_domain,
-					    "%s: option `%c%s' requires an argument\n"),
-				   parser->state.name, arg[0], option->name);
+                    *arg_ebadkey = 0;
+                    return EBADKEY;
+                  }
+                
+                if (option->arg && !value
+                    && !(option->flags & OPTION_ARG_OPTIONAL))
+                  /* We need an mandatory argument. */
+                  {
+                    if (parser->state.next == parser->state.argc)
+                      /* Missing argument */
+                      {
+                        if (token == ARG_LONG_OPTION)
+                          /* --option */
+                          fprintf (parser->state.err_stream,
+                                   dgettext(parser->state.root_argp->argp_domain,
+                                            "%s: option `--%s' requires an argument\n"),
+                                 parser->state.name, option->name);
+                        else
+                          /* +option or -option */
+                          fprintf (parser->state.err_stream,
+                                   dgettext(parser->state.root_argp->argp_domain,
+                                            "%s: option `%c%s' requires an argument\n"),
+                                   parser->state.name, arg[0], option->name);
 
-			*arg_ebadkey = 0;
-			return EBADKEY;
-		      }
+                        *arg_ebadkey = 0;
+                        return EBADKEY;
+                      }
 
-		    value = parser->state.argv[parser->state.next++];
-		  }
-		*arg_ebadkey = 0;
-		return group_parse(group, &parser->state,
-				   option->key, value);
-	      }
-	    case ARG_SHORT_OPTION:
-	      parser->state.next++;
-	      parser->nextchar = optstart;
-	      return 0;
+                    value = parser->state.argv[parser->state.next++];
+                  }
+                *arg_ebadkey = 0;
+                return group_parse(group, &parser->state,
+                                   option->key, value);
+              }
+            case ARG_SHORT_OPTION:
+              parser->state.next++;
+              parser->nextchar = optstart;
+              return 0;
 
-	    default:
-	      abort();
-	    }
-	}
+            default:
+              abort();
+            }
+        }
     }
 }
 
@@ -1204,7 +1204,7 @@ parser_parse_next (struct parser *parser, int *arg_ebadkey)
    returned a non-zero value, it is returned; otherwise 0 is returned.  */
 error_t
 __argp_parse (const struct argp *argp, int argc, char **argv, unsigned flags,
-	      int *end_index, void *input)
+              int *end_index, void *input)
 {
   error_t err;
   struct parser parser;
@@ -1220,17 +1220,17 @@ __argp_parse (const struct argp *argp, int argc, char **argv, unsigned flags,
       struct argp *top_argp = alloca (sizeof (struct argp));
 
       /* TOP_ARGP has no options, it just serves to group the user & default
-	 argps.  */
+         argps.  */
       memset (top_argp, 0, sizeof (*top_argp));
       top_argp->children = child;
 
       memset (child, 0, 4 * sizeof (struct argp_child));
 
       if (argp)
-	(child++)->argp = argp;
+        (child++)->argp = argp;
       (child++)->argp = &argp_default_argp;
       if (argp_program_version || argp_program_version_hook)
-	(child++)->argp = &argp_version_argp;
+        (child++)->argp = &argp_version_argp;
       child->argp = 0;
 
       argp = top_argp;
@@ -1243,7 +1243,7 @@ __argp_parse (const struct argp *argp, int argc, char **argv, unsigned flags,
     /* Parse! */
     {
       while (! err)
-	err = parser_parse_next (&parser, &arg_ebadkey);
+        err = parser_parse_next (&parser, &arg_ebadkey);
       err = parser_finalize (&parser, err, arg_ebadkey, end_index);
     }
 
@@ -1264,8 +1264,8 @@ __argp_input (const struct argp *argp, const struct argp_state *state)
       struct parser *parser = state->pstate;
 
       for (group = parser->groups; group < parser->egroup; group++)
-	if (group->argp == argp)
-	  return group->input;
+        if (group->argp == argp)
+          return group->input;
     }
 
   return 0;

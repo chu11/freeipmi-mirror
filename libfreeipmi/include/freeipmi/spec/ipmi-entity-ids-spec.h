@@ -132,7 +132,7 @@ extern "C" {
    && ((__entity_instance) >= IPMI_ENTITY_INSTANCE_SYSTEM_RELATIVE_MAX) ? 1 : 0)
 
 #define IPMI_ENTITY_INSTANCE_DEVICE_RELATIVE(__entity_instance) \
-  (((__entity_instance) >= IPMI_ENTITY_INSTANCE_DEVICE_RELATIVE_MIN)	\
+  (((__entity_instance) >= IPMI_ENTITY_INSTANCE_DEVICE_RELATIVE_MIN)    \
    && ((__entity_instance) >= IPMI_ENTITY_INSTANCE_DEVICE_RELATIVE_MAX) ? 1 : 0)
   
 extern const char *const ipmi_entity_ids[];

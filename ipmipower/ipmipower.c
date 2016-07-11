@@ -229,29 +229,29 @@ _sendto (cbuf_t cbuf, int fd, struct sockaddr_in *destaddr)
   do 
     {
       if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN)
-	rv = ipmi_lan_sendto (fd,
-			      buf,
-			      n,
-			      0,
-			      (struct sockaddr *)destaddr,
-			      sizeof (struct sockaddr_in));
+        rv = ipmi_lan_sendto (fd,
+                              buf,
+                              n,
+                              0,
+                              (struct sockaddr *)destaddr,
+                              sizeof (struct sockaddr_in));
       else
-	{
-	  if (ipmi_is_ipmi_1_5_packet (buf, n))
-	    rv = ipmi_lan_sendto (fd,
-				  buf,
-				  n,
-				  0,
-				  (struct sockaddr *)destaddr,
-				  sizeof (struct sockaddr_in));
-	  else
-	    rv = ipmi_rmcpplus_sendto (fd,
-				       buf,
-				       n,
-				       0,
-				       (struct sockaddr *)destaddr,
-				       sizeof (struct sockaddr_in));
-	}
+        {
+          if (ipmi_is_ipmi_1_5_packet (buf, n))
+            rv = ipmi_lan_sendto (fd,
+                                  buf,
+                                  n,
+                                  0,
+                                  (struct sockaddr *)destaddr,
+                                  sizeof (struct sockaddr_in));
+          else
+            rv = ipmi_rmcpplus_sendto (fd,
+                                       buf,
+                                       n,
+                                       0,
+                                       (struct sockaddr *)destaddr,
+                                       sizeof (struct sockaddr_in));
+        }
     } while (rv < 0 && errno == EINTR);
 
   if (rv < 0)
@@ -473,11 +473,11 @@ _poll_loop (int non_interactive)
         }
 
       if (!non_interactive)
-	{
-	  pfds[nfds-2].fd = STDIN_FILENO;
-	  pfds[nfds-2].events = POLLIN;
-	  pfds[nfds-2].revents = 0;
-	}
+        {
+          pfds[nfds-2].fd = STDIN_FILENO;
+          pfds[nfds-2].events = POLLIN;
+          pfds[nfds-2].revents = 0;
+        }
       pfds[nfds-1].fd = STDOUT_FILENO;
       if (!cbuf_is_empty (ttyout))
         pfds[nfds-1].events = POLLOUT;
@@ -613,25 +613,25 @@ main (int argc, char *argv[])
 
       memset (errbuf, '\0', IPMIPOWER_OUTPUT_BUFLEN + 1);
       if (cmd_args.oem_power_type == IPMIPOWER_OEM_POWER_TYPE_NONE)
-	{
-	  if (ipmipower_power_cmd_check_privilege (cmd_args.powercmd,
-						   errbuf,
-						   IPMIPOWER_OUTPUT_BUFLEN) <= 0)
-	    {
-	      IPMIPOWER_ERROR (("%s", errbuf));
-	      exit (EXIT_FAILURE);
-	    }
-	}
+        {
+          if (ipmipower_power_cmd_check_privilege (cmd_args.powercmd,
+                                                   errbuf,
+                                                   IPMIPOWER_OUTPUT_BUFLEN) <= 0)
+            {
+              IPMIPOWER_ERROR (("%s", errbuf));
+              exit (EXIT_FAILURE);
+            }
+        }
       else
-	{
-	  if (ipmipower_oem_power_cmd_check_support_and_privilege (cmd_args.powercmd,
-								   errbuf,
-								   IPMIPOWER_OUTPUT_BUFLEN) <= 0)
-	    {
-	      IPMIPOWER_ERROR (("%s", errbuf));
-	      exit (EXIT_FAILURE);
-	    }
-	}
+        {
+          if (ipmipower_oem_power_cmd_check_support_and_privilege (cmd_args.powercmd,
+                                                                   errbuf,
+                                                                   IPMIPOWER_OUTPUT_BUFLEN) <= 0)
+            {
+              IPMIPOWER_ERROR (("%s", errbuf));
+              exit (EXIT_FAILURE);
+            }
+        }
 
       _eliminate_nodes ();
       
@@ -640,50 +640,50 @@ main (int argc, char *argv[])
        * invalid
        */
       if (cmd_args.oem_power_type != IPMIPOWER_OEM_POWER_TYPE_NONE)
-	{
-	  for (i = 0; i < ics_len; i++)
-	    {
-	      assert (ics[i].extra_args);
+        {
+          for (i = 0; i < ics_len; i++)
+            {
+              assert (ics[i].extra_args);
 
-	      if (ics[i].skip)
-		continue;
-	      
-	      eanode = ics[i].extra_args;
-	      while (eanode)
-		{
-		  memset (errbuf, '\0', IPMIPOWER_OUTPUT_BUFLEN + 1);
-		  
-		  if (ipmipower_oem_power_cmd_check_extra_arg (eanode->extra_arg,
-							       errbuf,
-							       IPMIPOWER_OUTPUT_BUFLEN) <= 0)
-		    {
-		      IPMIPOWER_ERROR (("%s", errbuf));
-		      exit (EXIT_FAILURE);
-		    }
-		  
-		  eanode = eanode->next;
-		}
-	    }
-	}
+              if (ics[i].skip)
+                continue;
+              
+              eanode = ics[i].extra_args;
+              while (eanode)
+                {
+                  memset (errbuf, '\0', IPMIPOWER_OUTPUT_BUFLEN + 1);
+                  
+                  if (ipmipower_oem_power_cmd_check_extra_arg (eanode->extra_arg,
+                                                               errbuf,
+                                                               IPMIPOWER_OUTPUT_BUFLEN) <= 0)
+                    {
+                      IPMIPOWER_ERROR (("%s", errbuf));
+                      exit (EXIT_FAILURE);
+                    }
+                  
+                  eanode = eanode->next;
+                }
+            }
+        }
 
       for (i = 0; i < ics_len; i++)
         {
           if (ics[i].skip)
             continue;
 
-	  if (cmd_args.oem_power_type != IPMIPOWER_OEM_POWER_TYPE_NONE)
-	    {
-	      assert (ics[i].extra_args);
+          if (cmd_args.oem_power_type != IPMIPOWER_OEM_POWER_TYPE_NONE)
+            {
+              assert (ics[i].extra_args);
 
-	      eanode = ics[i].extra_args;
-	      while (eanode)
-		{
-		  ipmipower_powercmd_queue (cmd_args.powercmd, &ics[i], eanode->extra_arg);
-		  eanode = eanode->next;
-		}
-	    }
-	  else
-	    ipmipower_powercmd_queue (cmd_args.powercmd, &ics[i], NULL);
+              eanode = ics[i].extra_args;
+              while (eanode)
+                {
+                  ipmipower_powercmd_queue (cmd_args.powercmd, &ics[i], eanode->extra_arg);
+                  eanode = eanode->next;
+                }
+            }
+          else
+            ipmipower_powercmd_queue (cmd_args.powercmd, &ics[i], NULL);
         }
     }
 
@@ -701,7 +701,7 @@ main (int argc, char *argv[])
   for (i = IPMIPOWER_MSG_TYPE_ERROR_MIN; i < IPMIPOWER_MSG_TYPE_ERROR_MAX; i++)
     {
       if (output_counts[i])
-	return (EXIT_FAILURE);
+        return (EXIT_FAILURE);
     }
 
   return (EXIT_SUCCESS);

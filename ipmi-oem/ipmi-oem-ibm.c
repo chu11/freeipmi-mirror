@@ -108,241 +108,241 @@ _get_led_name (ipmi_oem_state_data_t *state_data,
             && oem_data->product_id == IPMI_IBM_PRODUCT_ID_X3755)
      {
        switch (led_id)
-	 {
-	 case IPMI_OEM_IBM_LED_X3755_CPU:
-	   led_id_str = "CPU";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_CPU1:
-	   led_id_str = "CPU1";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_CPU2:
-	   led_id_str = "CPU2";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_CPU3:
-	   led_id_str = "CPU3";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_CPU4:
-	   led_id_str = "CPU4";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_CPU1_BOARD:
-	   led_id_str = "CPU1_BOARD";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_CPU2_BOARD:
-	   led_id_str = "CPU2_BOARD";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_CPU3_BOARD:
-	   led_id_str = "CPU3_BOARD";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_CPU4_BOARD:
-	   led_id_str = "CPU4_BOARD";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_DIMM_1:
-	   led_id_str = "DIMM 1";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_DIMM_2:
-	   led_id_str = "DIMM 2";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_DIMM_3:
-	   led_id_str = "DIMM 3";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_DIMM_4:
-	   led_id_str = "DIMM 4";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_DIMM_5:
-	   led_id_str = "DIMM 5";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_DIMM_6:
-	   led_id_str = "DIMM 6";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_DIMM_7:
-	   led_id_str = "DIMM 7";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_DIMM_8:
-	   led_id_str = "DIMM 8";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_DIMM_9:
-	   led_id_str = "DIMM 9";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_DIMM_10:
-	   led_id_str = "DIMM 10";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_DIMM_11:
-	   led_id_str = "DIMM 11";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_DIMM_12:
-	   led_id_str = "DIMM 12";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_DIMM_13:
-	   led_id_str = "DIMM 13";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_DIMM_14:
-	   led_id_str = "DIMM 14";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_DIMM_15:
-	   led_id_str = "DIMM 15";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_DIMM_16:
-	   led_id_str = "DIMM 16";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_DIMM_17:
-	   led_id_str = "DIMM 17";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_DIMM_18:
-	   led_id_str = "DIMM 18";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_DIMM_19:
-	   led_id_str = "DIMM 19";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_DIMM_20:
-	   led_id_str = "DIMM 20";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_DIMM_21:
-	   led_id_str = "DIMM 21";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_DIMM_22:
-	   led_id_str = "DIMM 22";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_DIMM_23:
-	   led_id_str = "DIMM 23";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_DIMM_24:
-	   led_id_str = "DIMM 24";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_DIMM_25:
-	   led_id_str = "DIMM 25";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_DIMM_26:
-	   led_id_str = "DIMM 26";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_DIMM_27:
-	   led_id_str = "DIMM 27";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_DIMM_28:
-	   led_id_str = "DIMM 28";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_DIMM_29:
-	   led_id_str = "DIMM 29";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_DIMM_30:
-	   led_id_str = "DIMM 30";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_DIMM_31:
-	   led_id_str = "DIMM 31";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_DIMM_32:
-	   led_id_str = "DIMM 32";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_FAN:
-	   led_id_str = "FAN";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_FAN_1:
-	   led_id_str = "Fan 1";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_FAN_2:
-	   led_id_str = "Fan 2";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_FAN_3:
-	   led_id_str = "Fan 3";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_FAN_4:
-	   led_id_str = "Fan 4";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_FAN_5:
-	   led_id_str = "Fan 5";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_FAN_6:
-	   led_id_str = "Fan 6";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_FAN_7:
-	   led_id_str = "Fan 7";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_FAN_8:
-	   led_id_str = "Fan 8";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_PCI:
-	   led_id_str = "PCI";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_PCI_1:
-	   led_id_str = "PCI 1";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_PCI_2:
-	   led_id_str = "PCI 2";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_PCI_3:
-	   led_id_str = "PCI 3";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_PCI_4:
-	   led_id_str = "PCI 4";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_PCI_5:
-	   led_id_str = "PCI 5";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_PCI_6:
-	   led_id_str = "PCI 6";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_SERVERAID_8K_BATT:
-	   led_id_str = "ServeRAID 8k Batt";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_SERVERAID_8K_ERR:
-	   led_id_str = "ServeRAID 8k Err";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_ALERT:
-	   led_id_str = "Alert";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_BK_BLUE:
-	   led_id_str = "BK_Blue";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_BOARD:
-	   led_id_str = "BOARD";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_CNFG:
-	   led_id_str = "CNFG";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_DASD:
-	   led_id_str = "DASD";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_FAULT:
-	   led_id_str = "FAULT";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_HTX:
-	   led_id_str = "HTX";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_INFO:
-	   led_id_str = "INFO";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_LOCATION:
-	   led_id_str = "Location";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_MEM:
-	   led_id_str = "MEM";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_NMI:
-	   led_id_str = "NMI";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_OVERSPEC:
-	   led_id_str = "OVERSPEC";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_RAID:
-	   led_id_str = "RAID";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_SEER:
-	   led_id_str = "SEER";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_SP:
-	   led_id_str = "SP";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_TEMP:
-	   led_id_str = "TEMP";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_VRM:
-	   led_id_str = "VRM";
-	   break;
-	 case IPMI_OEM_IBM_LED_X3755_UNKNOWN1:
-	 case IPMI_OEM_IBM_LED_X3755_UNKNOWN2:
-	 case IPMI_OEM_IBM_LED_X3755_UNKNOWN3:
-	   led_id_str = "UNKNOWN";
-	   break;
-	 }
+         {
+         case IPMI_OEM_IBM_LED_X3755_CPU:
+           led_id_str = "CPU";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_CPU1:
+           led_id_str = "CPU1";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_CPU2:
+           led_id_str = "CPU2";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_CPU3:
+           led_id_str = "CPU3";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_CPU4:
+           led_id_str = "CPU4";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_CPU1_BOARD:
+           led_id_str = "CPU1_BOARD";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_CPU2_BOARD:
+           led_id_str = "CPU2_BOARD";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_CPU3_BOARD:
+           led_id_str = "CPU3_BOARD";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_CPU4_BOARD:
+           led_id_str = "CPU4_BOARD";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_DIMM_1:
+           led_id_str = "DIMM 1";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_DIMM_2:
+           led_id_str = "DIMM 2";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_DIMM_3:
+           led_id_str = "DIMM 3";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_DIMM_4:
+           led_id_str = "DIMM 4";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_DIMM_5:
+           led_id_str = "DIMM 5";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_DIMM_6:
+           led_id_str = "DIMM 6";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_DIMM_7:
+           led_id_str = "DIMM 7";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_DIMM_8:
+           led_id_str = "DIMM 8";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_DIMM_9:
+           led_id_str = "DIMM 9";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_DIMM_10:
+           led_id_str = "DIMM 10";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_DIMM_11:
+           led_id_str = "DIMM 11";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_DIMM_12:
+           led_id_str = "DIMM 12";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_DIMM_13:
+           led_id_str = "DIMM 13";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_DIMM_14:
+           led_id_str = "DIMM 14";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_DIMM_15:
+           led_id_str = "DIMM 15";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_DIMM_16:
+           led_id_str = "DIMM 16";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_DIMM_17:
+           led_id_str = "DIMM 17";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_DIMM_18:
+           led_id_str = "DIMM 18";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_DIMM_19:
+           led_id_str = "DIMM 19";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_DIMM_20:
+           led_id_str = "DIMM 20";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_DIMM_21:
+           led_id_str = "DIMM 21";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_DIMM_22:
+           led_id_str = "DIMM 22";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_DIMM_23:
+           led_id_str = "DIMM 23";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_DIMM_24:
+           led_id_str = "DIMM 24";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_DIMM_25:
+           led_id_str = "DIMM 25";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_DIMM_26:
+           led_id_str = "DIMM 26";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_DIMM_27:
+           led_id_str = "DIMM 27";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_DIMM_28:
+           led_id_str = "DIMM 28";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_DIMM_29:
+           led_id_str = "DIMM 29";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_DIMM_30:
+           led_id_str = "DIMM 30";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_DIMM_31:
+           led_id_str = "DIMM 31";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_DIMM_32:
+           led_id_str = "DIMM 32";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_FAN:
+           led_id_str = "FAN";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_FAN_1:
+           led_id_str = "Fan 1";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_FAN_2:
+           led_id_str = "Fan 2";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_FAN_3:
+           led_id_str = "Fan 3";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_FAN_4:
+           led_id_str = "Fan 4";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_FAN_5:
+           led_id_str = "Fan 5";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_FAN_6:
+           led_id_str = "Fan 6";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_FAN_7:
+           led_id_str = "Fan 7";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_FAN_8:
+           led_id_str = "Fan 8";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_PCI:
+           led_id_str = "PCI";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_PCI_1:
+           led_id_str = "PCI 1";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_PCI_2:
+           led_id_str = "PCI 2";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_PCI_3:
+           led_id_str = "PCI 3";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_PCI_4:
+           led_id_str = "PCI 4";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_PCI_5:
+           led_id_str = "PCI 5";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_PCI_6:
+           led_id_str = "PCI 6";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_SERVERAID_8K_BATT:
+           led_id_str = "ServeRAID 8k Batt";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_SERVERAID_8K_ERR:
+           led_id_str = "ServeRAID 8k Err";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_ALERT:
+           led_id_str = "Alert";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_BK_BLUE:
+           led_id_str = "BK_Blue";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_BOARD:
+           led_id_str = "BOARD";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_CNFG:
+           led_id_str = "CNFG";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_DASD:
+           led_id_str = "DASD";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_FAULT:
+           led_id_str = "FAULT";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_HTX:
+           led_id_str = "HTX";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_INFO:
+           led_id_str = "INFO";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_LOCATION:
+           led_id_str = "Location";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_MEM:
+           led_id_str = "MEM";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_NMI:
+           led_id_str = "NMI";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_OVERSPEC:
+           led_id_str = "OVERSPEC";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_RAID:
+           led_id_str = "RAID";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_SEER:
+           led_id_str = "SEER";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_SP:
+           led_id_str = "SP";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_TEMP:
+           led_id_str = "TEMP";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_VRM:
+           led_id_str = "VRM";
+           break;
+         case IPMI_OEM_IBM_LED_X3755_UNKNOWN1:
+         case IPMI_OEM_IBM_LED_X3755_UNKNOWN2:
+         case IPMI_OEM_IBM_LED_X3755_UNKNOWN3:
+           led_id_str = "UNKNOWN";
+           break;
+         }
      }
 
    if (led_id_str)
@@ -361,10 +361,10 @@ _get_led_name (ipmi_oem_state_data_t *state_data,
 
 static int
 _find_sensor_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
-			   uint8_t record_type,
-			   const void *sdr_record,
-			   unsigned int sdr_record_len,
-			   void *arg)
+                           uint8_t record_type,
+                           const void *sdr_record,
+                           unsigned int sdr_record_len,
+                           void *arg)
 {
   struct ipmi_oem_ibm_find_sensor_sdr_callback *sdr_callback_arg;
   ipmi_oem_state_data_t *state_data;
@@ -384,25 +384,25 @@ _find_sensor_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
     return (0);
 
   if (ipmi_sdr_parse_sensor_number (state_data->sdr_ctx,
-				    sdr_record,
-				    sdr_record_len,
-				    &sdr_sensor_number) < 0)
+                                    sdr_record,
+                                    sdr_record_len,
+                                    &sdr_sensor_number) < 0)
     {
       pstdout_fprintf (state_data->pstate,
-		       stderr,
-		       "ipmi_sdr_parse_sensor_number: %s\n",
-		       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
+                       stderr,
+                       "ipmi_sdr_parse_sensor_number: %s\n",
+                       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       return (-1);
     }
 
   if (sdr_callback_arg->sensor_number == sdr_sensor_number)
     {
       if (ipmi_sdr_parse_id_string (state_data->sdr_ctx,
-				    sdr_record,
-				    sdr_record_len,
-				    sdr_callback_arg->id_string,
-				    sdr_callback_arg->id_string_len) < 0)
-	return (-1);
+                                    sdr_record,
+                                    sdr_record_len,
+                                    sdr_callback_arg->id_string,
+                                    sdr_callback_arg->id_string_len) < 0)
+        return (-1);
       
       sdr_callback_arg->found = 1;
       return (1);
@@ -452,17 +452,17 @@ _find_sensor (ipmi_oem_state_data_t *state_data,
                                  state_data->pstate,
                                  state_data->ipmi_ctx,
                                  state_data->hostname,
-				 &common_args) < 0)
+                                 &common_args) < 0)
     goto cleanup;
 
   if (ipmi_sdr_cache_iterate (tmp_sdr_ctx,
-			      _find_sensor_sdr_callback,
-			      &sdr_callback_arg) < 0)
+                              _find_sensor_sdr_callback,
+                              &sdr_callback_arg) < 0)
     {
       pstdout_fprintf (state_data->pstate,
-		       stderr,
-		       "ipmi_sdr_cache_iterate: %s\n",
-		       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
+                       stderr,
+                       "ipmi_sdr_cache_iterate: %s\n",
+                       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       goto cleanup;
     }
 
@@ -479,10 +479,10 @@ _find_sensor (ipmi_oem_state_data_t *state_data,
 
 static int
 _get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
-		       uint8_t record_type,
-		       const void *sdr_record,
-		       unsigned int sdr_record_len,
-		       void *arg)
+                       uint8_t record_type,
+                       const void *sdr_record,
+                       unsigned int sdr_record_len,
+                       void *arg)
 {
   struct ipmi_oem_ibm_get_led_sdr_callback *sdr_callback_arg;
   ipmi_oem_state_data_t *state_data;
@@ -550,28 +550,28 @@ _get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
     return (0);
 
   if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_ctx,
-					 sdr_record,
-					 sdr_record_len,
-					 &record_id,
-					 NULL) < 0)
+                                         sdr_record,
+                                         sdr_record_len,
+                                         &record_id,
+                                         NULL) < 0)
     {
       pstdout_fprintf (state_data->pstate,
-		       stderr,
-		       "ipmi_sdr_parse_record_id_and_type: %s\n",
-		       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
+                       stderr,
+                       "ipmi_sdr_parse_record_id_and_type: %s\n",
+                       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       return (-1);
     }
 
   if ((oem_data_buf_len = ipmi_sdr_parse_oem_data (state_data->sdr_ctx,
-						   sdr_record,
-						   sdr_record_len,
-						   oem_data_buf,
-						   IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
+                                                   sdr_record,
+                                                   sdr_record_len,
+                                                   oem_data_buf,
+                                                   IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
     {
       pstdout_fprintf (state_data->pstate,
-		       stderr,
-		       "ipmi_sdr_parse_oem_data: %s\n",
-		       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
+                       stderr,
+                       "ipmi_sdr_parse_oem_data: %s\n",
+                       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       return (-1);
     }
       
@@ -607,17 +607,17 @@ _get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
   bytes_rq[2] = led_id_ls;
       
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
-			      0, /* lun */
-			      IPMI_NET_FN_OEM_IBM_LED_RQ, /* network function */
-			      bytes_rq, /* data */
-			      3, /* num bytes */
-			      bytes_rs,
-			      IPMI_OEM_MAX_BYTES)) < 0)
+                              0, /* lun */
+                              IPMI_NET_FN_OEM_IBM_LED_RQ, /* network function */
+                              bytes_rq, /* data */
+                              3, /* num bytes */
+                              bytes_rs,
+                              IPMI_OEM_MAX_BYTES)) < 0)
     {
       pstdout_fprintf (state_data->pstate,
-		       stderr,
-		       "ipmi_cmd_raw: %s\n",
-		       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
       return (-1);
     }
       
@@ -629,19 +629,19 @@ _get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
       bytes_rq[2] = led_id_ms;
 
       if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
-				  0, /* lun */
-				  IPMI_NET_FN_OEM_IBM_LED_RQ, /* network function */
-				  bytes_rq, /* data */
-				  3, /* num bytes */
-				  bytes_rs,
-				  IPMI_OEM_MAX_BYTES)) < 0)
-	{
-	  pstdout_fprintf (state_data->pstate,
-			   stderr,
-			   "ipmi_cmd_raw: %s\n",
-			   ipmi_ctx_errormsg (state_data->ipmi_ctx));
-	  return (-1);
-	}
+                                  0, /* lun */
+                                  IPMI_NET_FN_OEM_IBM_LED_RQ, /* network function */
+                                  bytes_rq, /* data */
+                                  3, /* num bytes */
+                                  bytes_rs,
+                                  IPMI_OEM_MAX_BYTES)) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_cmd_raw: %s\n",
+                           ipmi_ctx_errormsg (state_data->ipmi_ctx));
+          return (-1);
+        }
     }
 
   /* achu: there are probably 1 or 2 completion codes that are
@@ -655,13 +655,13 @@ _get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
   else
     {
       if (ipmi_oem_check_response_and_completion_code (state_data,
-						       bytes_rs,
-						       rs_len,
-						       8,
-						       IPMI_CMD_OEM_IBM_GET_LED,
-						       IPMI_NET_FN_OEM_IBM_LED_RS,
-						       NULL) < 0)
-	return (-1);
+                                                       bytes_rs,
+                                                       rs_len,
+                                                       8,
+                                                       IPMI_CMD_OEM_IBM_GET_LED,
+                                                       IPMI_NET_FN_OEM_IBM_LED_RS,
+                                                       NULL) < 0)
+        return (-1);
       
       available_led = 1;
     }
@@ -671,13 +671,13 @@ _get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
       memset (fmt, '\0', IPMI_OEM_FMT_BUFLEN + 1);
       
       snprintf (fmt,
-		IPMI_OEM_FMT_BUFLEN,
-		"%%-%ds | LED               | State    | LED Information\n",
-		sdr_callback_arg->column_width->record_id);
+                IPMI_OEM_FMT_BUFLEN,
+                "%%-%ds | LED               | State    | LED Information\n",
+                sdr_callback_arg->column_width->record_id);
       
       pstdout_printf (state_data->pstate,
-		      fmt,
-		      SENSORS_HEADER_RECORD_ID_STR);
+                      fmt,
+                      SENSORS_HEADER_RECORD_ID_STR);
       
       sdr_callback_arg->header_output_flag++;
     }
@@ -688,10 +688,10 @@ _get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
   memset (led_info, '\0', IPMI_OEM_IBM_LED_INFO_BUFLEN + 1);
       
   if (_get_led_name (state_data,
-		     sdr_callback_arg->oem_data,
-		     led_id,
-		     led_name,
-		     IPMI_OEM_IBM_LED_NAME_BUFLEN) < 0)
+                     sdr_callback_arg->oem_data,
+                     led_id,
+                     led_name,
+                     IPMI_OEM_IBM_LED_NAME_BUFLEN) < 0)
     return (-1);
       
   if (available_led)
@@ -702,83 +702,83 @@ _get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
       sensor_number = bytes_rs[6];
 
       if (led_state == IPMI_OEM_IBM_LED_STATE_INACTIVE)
-	led_state_str = "Inactive";
+        led_state_str = "Inactive";
       else
-	led_state_str = "Active";
+        led_state_str = "Active";
       
       if (led_state != IPMI_OEM_IBM_LED_STATE_INACTIVE)
-	{
-	  /* Location LED special case */
-	  if (!led_id)
-	    {
-	      snprintf (led_info,
-			IPMI_OEM_IBM_LED_INFO_BUFLEN,
-			"System Error Condition");
-	    }
-	  else if (led_active_type == IPMI_OEM_IBM_LED_ACTIVE_BY_LED)
-	    {
-	      if (_get_led_name (state_data,
-				 sdr_callback_arg->oem_data,
-				 led_pointer_id,
-				 led_pointer_name,
-				 IPMI_OEM_IBM_LED_NAME_BUFLEN) < 0)
-		return (-1);
-	      
-	      snprintf (led_info,
-			IPMI_OEM_IBM_LED_INFO_BUFLEN,
-			"'%s' Active",
-			led_pointer_name);
-	    }
-	  else if (led_active_type == IPMI_OEM_IBM_LED_ACTIVE_BY_SENSOR)
-	    {
-	      /* achu: sensor numbers may not be unique.  I'm copying
-	       * this algorithm from xCAT so I assume it's safe for
-	       * IBM machines b/c IBM lays out their SDRs in a fashion
-	       * that this search is safe and won't result in an
-	       * incorrect output.
-	       */
-	      if (_find_sensor (state_data,
-				sensor_number,
-				id_string,
-				IPMI_OEM_IBM_LED_ID_STRING_BUFLEN) < 0)
-		return (-1);
-	      
-	      snprintf (led_info,
-			IPMI_OEM_IBM_LED_INFO_BUFLEN,
-			"Sensor '%s' error",
-			id_string);
-	    }
-	  else if (led_active_type == IPMI_OEM_IBM_LED_ACTIVE_BY_USER)
-	    {
-	      snprintf (led_info,
-			IPMI_OEM_IBM_LED_INFO_BUFLEN,
-			"LED Activated by User");
-	    }
-	  else if (led_active_type == IPMI_OEM_IBM_LED_ACTIVE_BY_BIOS_OR_ADMINISTRATOR)
-	    {
-	      snprintf (led_info,
-			IPMI_OEM_IBM_LED_INFO_BUFLEN,
-			"LED Activated by BIOS or Administrator");
-	    }
-	}
+        {
+          /* Location LED special case */
+          if (!led_id)
+            {
+              snprintf (led_info,
+                        IPMI_OEM_IBM_LED_INFO_BUFLEN,
+                        "System Error Condition");
+            }
+          else if (led_active_type == IPMI_OEM_IBM_LED_ACTIVE_BY_LED)
+            {
+              if (_get_led_name (state_data,
+                                 sdr_callback_arg->oem_data,
+                                 led_pointer_id,
+                                 led_pointer_name,
+                                 IPMI_OEM_IBM_LED_NAME_BUFLEN) < 0)
+                return (-1);
+              
+              snprintf (led_info,
+                        IPMI_OEM_IBM_LED_INFO_BUFLEN,
+                        "'%s' Active",
+                        led_pointer_name);
+            }
+          else if (led_active_type == IPMI_OEM_IBM_LED_ACTIVE_BY_SENSOR)
+            {
+              /* achu: sensor numbers may not be unique.  I'm copying
+               * this algorithm from xCAT so I assume it's safe for
+               * IBM machines b/c IBM lays out their SDRs in a fashion
+               * that this search is safe and won't result in an
+               * incorrect output.
+               */
+              if (_find_sensor (state_data,
+                                sensor_number,
+                                id_string,
+                                IPMI_OEM_IBM_LED_ID_STRING_BUFLEN) < 0)
+                return (-1);
+              
+              snprintf (led_info,
+                        IPMI_OEM_IBM_LED_INFO_BUFLEN,
+                        "Sensor '%s' error",
+                        id_string);
+            }
+          else if (led_active_type == IPMI_OEM_IBM_LED_ACTIVE_BY_USER)
+            {
+              snprintf (led_info,
+                        IPMI_OEM_IBM_LED_INFO_BUFLEN,
+                        "LED Activated by User");
+            }
+          else if (led_active_type == IPMI_OEM_IBM_LED_ACTIVE_BY_BIOS_OR_ADMINISTRATOR)
+            {
+              snprintf (led_info,
+                        IPMI_OEM_IBM_LED_INFO_BUFLEN,
+                        "LED Activated by BIOS or Administrator");
+            }
+        }
     }
   else
     led_state_str = "N/A";
       
   snprintf (fmt,
-	    IPMI_OEM_FMT_BUFLEN,
-	    "%%-%du | %%-%ds | %%-%ds | %s\n",
-	    sdr_callback_arg->column_width->record_id,
-	    IPMI_OEM_IBM_LED_NAME_COLUMN_SIZE,
-	    IPMI_OEM_IBM_LED_STATE_COLUMN_SIZE,
-	    led_info);
+            IPMI_OEM_FMT_BUFLEN,
+            "%%-%du | %%-%ds | %%-%ds | %s\n",
+            sdr_callback_arg->column_width->record_id,
+            IPMI_OEM_IBM_LED_NAME_COLUMN_SIZE,
+            IPMI_OEM_IBM_LED_STATE_COLUMN_SIZE,
+            led_info);
       
   pstdout_printf (state_data->pstate,
-		  fmt,
-		  record_id,
-		  led_name,
-		  led_state_str,
-		  led_info);
+                  fmt,
+                  record_id,
+                  led_name,
+                  led_state_str,
+                  led_info);
 
   return (0);
 }
@@ -798,7 +798,7 @@ ipmi_oem_ibm_get_led (ipmi_oem_state_data_t *state_data)
                                  state_data->pstate,
                                  state_data->ipmi_ctx,
                                  state_data->hostname,
- 				 &state_data->prog_data->args->common_args) < 0)
+                                 &state_data->prog_data->args->common_args) < 0)
     goto cleanup;
 
   if (calculate_column_widths (state_data->pstate,
@@ -827,13 +827,13 @@ ipmi_oem_ibm_get_led (ipmi_oem_state_data_t *state_data)
   sdr_callback_arg.header_output_flag = 0;
 
   if (ipmi_sdr_cache_iterate (state_data->sdr_ctx,
-			      _get_led_sdr_callback,
-			      &sdr_callback_arg) < 0)
+                              _get_led_sdr_callback,
+                              &sdr_callback_arg) < 0)
     {
       pstdout_fprintf (state_data->pstate,
-		       stderr,
-		       "ipmi_sdr_cache_iterate: %s\n",
-		       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
+                       stderr,
+                       "ipmi_sdr_cache_iterate: %s\n",
+                       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       goto cleanup;
     }
   

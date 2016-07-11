@@ -85,24 +85,24 @@ ipmi_sdr_parse_record_id_and_type (ipmi_sdr_ctx_t ctx,
   if (!sdr_record || !sdr_record_len)
     {
       if (ctx->operation == IPMI_SDR_OPERATION_READ_CACHE
-	  && !sdr_record
-	  && !sdr_record_len)
-	{
-	  if ((sdr_record_buf_len = ipmi_sdr_cache_record_read (ctx,
-								sdr_record_buf,
-								IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
-	    {
-	      SDR_SET_INTERNAL_ERRNUM (ctx);
-	      return (-1);
-	    }
-	  sdr_record_to_use = sdr_record_buf;
-	  sdr_record_len_to_use = sdr_record_buf_len;
-	}
+          && !sdr_record
+          && !sdr_record_len)
+        {
+          if ((sdr_record_buf_len = ipmi_sdr_cache_record_read (ctx,
+                                                                sdr_record_buf,
+                                                                IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
+            {
+              SDR_SET_INTERNAL_ERRNUM (ctx);
+              return (-1);
+            }
+          sdr_record_to_use = sdr_record_buf;
+          sdr_record_len_to_use = sdr_record_buf_len;
+        }
       else
-	{
-	  SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-	  return (-1);
-	}
+        {
+          SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
+          return (-1);
+        }
     }
   else
     {
@@ -193,24 +193,24 @@ _sdr_record_get_common (ipmi_sdr_ctx_t ctx,
   if (!sdr_record || !sdr_record_len)
     {
       if (ctx->operation == IPMI_SDR_OPERATION_READ_CACHE
-	  && !sdr_record
-	  && !sdr_record_len)
-	{
-	  if ((sdr_record_buf_len = ipmi_sdr_cache_record_read (ctx,
-								sdr_record_buf,
-								IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
-	    {
-	      SDR_SET_INTERNAL_ERRNUM (ctx);
-	      goto cleanup;
-	    }
-	  sdr_record_to_use = sdr_record_buf;
-	  sdr_record_len_to_use = sdr_record_buf_len;
-	}
+          && !sdr_record
+          && !sdr_record_len)
+        {
+          if ((sdr_record_buf_len = ipmi_sdr_cache_record_read (ctx,
+                                                                sdr_record_buf,
+                                                                IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
+            {
+              SDR_SET_INTERNAL_ERRNUM (ctx);
+              goto cleanup;
+            }
+          sdr_record_to_use = sdr_record_buf;
+          sdr_record_len_to_use = sdr_record_buf_len;
+        }
       else
-	{
-	  SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
-	  goto cleanup;
-	}
+        {
+          SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_PARAMETERS);
+          goto cleanup;
+        }
     }
   else
     {
@@ -3064,9 +3064,9 @@ ipmi_sdr_parse_tolerance (ipmi_sdr_ctx_t ctx,
 
 int
 ipmi_sdr_parse_accuracy (ipmi_sdr_ctx_t ctx,
-			 const void *sdr_record,
-			 unsigned int sdr_record_len,
-			 double **accuracy)
+                         const void *sdr_record,
+                         unsigned int sdr_record_len,
+                         double **accuracy)
 {
   fiid_obj_t obj_sdr_record = NULL;
   uint32_t acceptable_record_types;
@@ -3693,20 +3693,20 @@ ipmi_sdr_parse_management_controller_device_locator_parameters (ipmi_sdr_ctx_t c
                                                                 unsigned int sdr_record_len,
                                                                 uint8_t *device_slave_address,
                                                                 uint8_t *channel_number,
-								uint8_t *global_initialization_event_message_generation,
-								uint8_t *global_initialization_log_initialization_agent_errors,
-								uint8_t *global_initialization_controller_logs_initialization_agent_errors,
-								uint8_t *power_state_notification_controller,
-								uint8_t *power_state_notification_acpi_device_power_state_notification,
-								uint8_t *power_state_notification_acpi_system_power_state_notification,
-								uint8_t *device_capabilities_sensor_device,
-								uint8_t *device_capabilities_sdr_repository_device,
-								uint8_t *device_capabilities_sel_device,
-								uint8_t *device_capabilities_fru_inventory_device,
-								uint8_t *device_capabilities_ipmb_event_receiver,
-								uint8_t *device_capabilities_ipmb_event_generator,
-								uint8_t *device_capabilities_bridge,
-								uint8_t *device_capabilities_chassis_device)
+                                                                uint8_t *global_initialization_event_message_generation,
+                                                                uint8_t *global_initialization_log_initialization_agent_errors,
+                                                                uint8_t *global_initialization_controller_logs_initialization_agent_errors,
+                                                                uint8_t *power_state_notification_controller,
+                                                                uint8_t *power_state_notification_acpi_device_power_state_notification,
+                                                                uint8_t *power_state_notification_acpi_system_power_state_notification,
+                                                                uint8_t *device_capabilities_sensor_device,
+                                                                uint8_t *device_capabilities_sdr_repository_device,
+                                                                uint8_t *device_capabilities_sel_device,
+                                                                uint8_t *device_capabilities_fru_inventory_device,
+                                                                uint8_t *device_capabilities_ipmb_event_receiver,
+                                                                uint8_t *device_capabilities_ipmb_event_generator,
+                                                                uint8_t *device_capabilities_bridge,
+                                                                uint8_t *device_capabilities_chassis_device)
 {
   fiid_obj_t obj_sdr_record = NULL;
   uint32_t acceptable_record_types;

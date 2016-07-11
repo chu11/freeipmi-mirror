@@ -140,100 +140,100 @@ _get_event_offset_type (ipmi_monitoring_ctx_t c,
   else if (event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC)
     {
       if (sdr_sensor_type == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY)
-	event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_PHYSICAL_SECURITY;
+        event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_PHYSICAL_SECURITY;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT)
-	event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT;
+        event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_PROCESSOR)
-	event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_PROCESSOR;
+        event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_PROCESSOR;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY)
-	event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_POWER_SUPPLY;
+        event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_POWER_SUPPLY;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_POWER_UNIT)
-	event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_POWER_UNIT;
+        event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_POWER_UNIT;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_COOLING_DEVICE)
-	event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_COOLING_DEVICE;
+        event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_COOLING_DEVICE;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_OTHER_UNITS_BASED_SENSOR)
-	event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_OTHER_UNITS_BASED_SENSOR;
+        event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_OTHER_UNITS_BASED_SENSOR;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_MEMORY)
-	event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_MEMORY;
+        event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_MEMORY;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT)
-	event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_DRIVE_SLOT;
+        event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_DRIVE_SLOT;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_POST_MEMORY_RESIZE)
-	event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_POST_MEMORY_RESIZE;
+        event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_POST_MEMORY_RESIZE;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS)
-	event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_SYSTEM_FIRMWARE_PROGRESS;
+        event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_SYSTEM_FIRMWARE_PROGRESS;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED)
-	event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_EVENT_LOGGING_DISABLED;
+        event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_EVENT_LOGGING_DISABLED;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_WATCHDOG1)
-	event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_WATCHDOG1;
+        event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_WATCHDOG1;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_SYSTEM_EVENT)
-	event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_SYSTEM_EVENT;
+        event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_SYSTEM_EVENT;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
-	event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_CRITICAL_INTERRUPT;
+        event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_CRITICAL_INTERRUPT;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_BUTTON_SWITCH)
-	event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_BUTTON_SWITCH;
+        event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_BUTTON_SWITCH;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_MODULE_BOARD)
-	event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_MODULE_BOARD;
+        event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_MODULE_BOARD;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_MICROCONTROLLER_COPROCESSOR)
-	event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_MICROCONTROLLER_COPROCESSOR;
+        event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_MICROCONTROLLER_COPROCESSOR;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_ADD_IN_CARD)
-	event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_ADD_IN_CARD;
+        event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_ADD_IN_CARD;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_CHASSIS)
-	event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_CHASSIS;
+        event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_CHASSIS;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_CHIP_SET)
-	event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_CHIP_SET;
+        event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_CHIP_SET;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_OTHER_FRU)
-	event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_OTHER_FRU;
+        event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_OTHER_FRU;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_CABLE_INTERCONNECT)
-	event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_CABLE_INTERCONNECT;
+        event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_CABLE_INTERCONNECT;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_TERMINATOR)
-	event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_TERMINATOR;
+        event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_TERMINATOR;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_SYSTEM_BOOT_INITIATED)
-	event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_SYSTEM_BOOT_INITIATED;
+        event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_SYSTEM_BOOT_INITIATED;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_BOOT_ERROR)
-	event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_BOOT_ERROR;
+        event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_BOOT_ERROR;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_OS_BOOT)
-	event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_OS_BOOT;
+        event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_OS_BOOT;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_OS_CRITICAL_STOP)
-	event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_OS_CRITICAL_STOP;
+        event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_OS_CRITICAL_STOP;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_SLOT_CONNECTOR)
-	event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_SLOT_CONNECTOR;
+        event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_SLOT_CONNECTOR;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE)
-	event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_SYSTEM_ACPI_POWER_STATE;
+        event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_SYSTEM_ACPI_POWER_STATE;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_WATCHDOG2)
-	event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_WATCHDOG2;
+        event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_WATCHDOG2;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_PLATFORM_ALERT)
-	event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_PLATFORM_ALERT;
+        event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_PLATFORM_ALERT;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_ENTITY_PRESENCE)
-	event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_ENTITY_PRESENCE;
+        event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_ENTITY_PRESENCE;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_MONITOR_ASIC_IC)
-	event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_MONITOR_ASIC_IC;
+        event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_MONITOR_ASIC_IC;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_LAN)
-	event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_LAN;
+        event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_LAN;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH)
-	event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH;
+        event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_BATTERY)
-	event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_BATTERY;
+        event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_BATTERY;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_SESSION_AUDIT)
-	event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_SESSION_AUDIT;
+        event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_SESSION_AUDIT;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE)
-	event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_VERSION_CHANGE;
+        event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_VERSION_CHANGE;
       else if (sdr_sensor_type == IPMI_SENSOR_TYPE_FRU_STATE)
-	event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_FRU_STATE;
+        event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_FRU_STATE;
       /* To avoid gcc warnings, subtract -1 in comparison */
       else if (sdr_sensor_type >= IPMI_SENSOR_TYPE_OEM_MIN
-	       && (sdr_sensor_type - 1) <= (IPMI_SENSOR_TYPE_OEM_MAX - 1))
-	{
-	  IPMI_MONITORING_DEBUG (("sensor_type '0x%X' event offset is OEM", sdr_sensor_type));
-	  event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_OEM;
-	}
+               && (sdr_sensor_type - 1) <= (IPMI_SENSOR_TYPE_OEM_MAX - 1))
+        {
+          IPMI_MONITORING_DEBUG (("sensor_type '0x%X' event offset is OEM", sdr_sensor_type));
+          event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_OEM;
+        }
       else
-	{
-	  IPMI_MONITORING_DEBUG (("sensor_type '0x%X' event offset not supported", sdr_sensor_type));
-	  event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_UNKNOWN;
-	}
+        {
+          IPMI_MONITORING_DEBUG (("sensor_type '0x%X' event offset not supported", sdr_sensor_type));
+          event_offset_type = IPMI_MONITORING_EVENT_OFFSET_TYPE_UNKNOWN;
+        }
     }
   else if (event_type_code >= IPMI_EVENT_READING_TYPE_CODE_OEM_MIN
-	   && event_type_code <= IPMI_EVENT_READING_TYPE_CODE_OEM_MAX)
+           && event_type_code <= IPMI_EVENT_READING_TYPE_CODE_OEM_MAX)
     {
       IPMI_MONITORING_DEBUG (("event_type_code '0x%X' event offset is OEM",
                               event_type_code));
@@ -278,7 +278,7 @@ _sel_parse_ctx_error_convert (ipmi_monitoring_ctx_t c)
 static int
 _ipmi_monitoring_sel_parse_system_event_record (ipmi_monitoring_ctx_t c,
                                                 struct ipmi_monitoring_sel_record *s,
-						unsigned int sel_flags)
+                                                unsigned int sel_flags)
 {
   uint32_t timestamp;
   uint8_t sel_sensor_type;
@@ -299,9 +299,9 @@ _ipmi_monitoring_sel_parse_system_event_record (ipmi_monitoring_ctx_t c,
   assert (s);
 
   if (ipmi_sel_parse_read_timestamp (c->sel_parse_ctx,
-				     NULL,
-				     0,
-				     &timestamp) < 0)
+                                     NULL,
+                                     0,
+                                     &timestamp) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_timestamp: %s",
                               ipmi_sel_ctx_errnum (c->sel_parse_ctx)));
@@ -311,9 +311,9 @@ _ipmi_monitoring_sel_parse_system_event_record (ipmi_monitoring_ctx_t c,
   s->timestamp = timestamp;
 
   if (ipmi_sel_parse_read_sensor_type (c->sel_parse_ctx,
-				       NULL,
-				       0,
-				       &sel_sensor_type) < 0)
+                                       NULL,
+                                       0,
+                                       &sel_sensor_type) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_sensor_type: %s",
                               ipmi_sel_ctx_errnum (c->sel_parse_ctx)));
@@ -327,9 +327,9 @@ _ipmi_monitoring_sel_parse_system_event_record (ipmi_monitoring_ctx_t c,
   s->sensor_type = sensor_type;
 
   if (ipmi_sel_parse_read_sensor_number (c->sel_parse_ctx,
-					 NULL,
-					 0,
-					 &sensor_number) < 0)
+                                         NULL,
+                                         0,
+                                         &sensor_number) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_sensor_number: %s",
                               ipmi_sel_ctx_errnum (c->sel_parse_ctx)));
@@ -340,9 +340,9 @@ _ipmi_monitoring_sel_parse_system_event_record (ipmi_monitoring_ctx_t c,
   s->sensor_number = sensor_number;
   
   if (ipmi_sel_parse_read_event_direction (c->sel_parse_ctx,
-					   NULL,
-					   0,
-					   &event_direction) < 0)
+                                           NULL,
+                                           0,
+                                           &event_direction) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_event_direction: %s",
                               ipmi_sel_ctx_errnum (c->sel_parse_ctx)));
@@ -356,9 +356,9 @@ _ipmi_monitoring_sel_parse_system_event_record (ipmi_monitoring_ctx_t c,
     s->event_direction = IPMI_MONITORING_SEL_EVENT_DIRECTION_DEASSERTION;
       
   if (ipmi_sel_parse_read_event_data1_offset_from_event_reading_type_code (c->sel_parse_ctx,
-									   NULL,
-									   0,
-									   &event_offset) < 0)
+                                                                           NULL,
+                                                                           0,
+                                                                           &event_offset) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_event_data1_offset_from_event_reading_type_code: %s",
                               ipmi_sel_ctx_errnum (c->sel_parse_ctx)));
@@ -368,9 +368,9 @@ _ipmi_monitoring_sel_parse_system_event_record (ipmi_monitoring_ctx_t c,
   s->event_offset = event_offset;
 
   if (ipmi_sel_parse_read_event_type_code (c->sel_parse_ctx,
-					   NULL,
-					   0,
-					   &event_type_code) < 0)
+                                           NULL,
+                                           0,
+                                           &event_type_code) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_event_type_code: %s",
                               ipmi_sel_ctx_errnum (c->sel_parse_ctx)));
@@ -385,9 +385,9 @@ _ipmi_monitoring_sel_parse_system_event_record (ipmi_monitoring_ctx_t c,
     return (-1);
 
   if (ipmi_sel_parse_read_event_data1 (c->sel_parse_ctx,
-				       NULL,
-				       0,
-				       &event_data1) < 0)
+                                       NULL,
+                                       0,
+                                       &event_data1) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_event_data1: %s",
                               ipmi_sel_ctx_errnum (c->sel_parse_ctx)));
@@ -397,9 +397,9 @@ _ipmi_monitoring_sel_parse_system_event_record (ipmi_monitoring_ctx_t c,
   s->event_data1 = event_data1;
 
   if (ipmi_sel_parse_read_event_data2 (c->sel_parse_ctx,
-				       NULL,
-				       0,
-				       &event_data2) < 0)
+                                       NULL,
+                                       0,
+                                       &event_data2) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_event_data2: %s",
                               ipmi_sel_ctx_errnum (c->sel_parse_ctx)));
@@ -409,9 +409,9 @@ _ipmi_monitoring_sel_parse_system_event_record (ipmi_monitoring_ctx_t c,
   s->event_data2 = event_data2;
 
   if (ipmi_sel_parse_read_event_data3 (c->sel_parse_ctx,
-				       NULL,
-				       0,
-				       &event_data3) < 0)
+                                       NULL,
+                                       0,
+                                       &event_data3) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_event_data3: %s",
                               ipmi_sel_ctx_errnum (c->sel_parse_ctx)));
@@ -426,8 +426,8 @@ _ipmi_monitoring_sel_parse_system_event_record (ipmi_monitoring_ctx_t c,
   
   if (ipmi_sel_parse_read_record_string (c->sel_parse_ctx,
                                          "%s",
-					 NULL,
-					 0,
+                                         NULL,
+                                         0,
                                          s->sensor_name,
                                          IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH,
                                          sel_string_flags) < 0)
@@ -444,11 +444,11 @@ _ipmi_monitoring_sel_parse_system_event_record (ipmi_monitoring_ctx_t c,
 
   if ((ret = ipmi_sel_parse_read_record_string (c->sel_parse_ctx,
                                                 "%e",
-						NULL,
-						0,
+                                                NULL,
+                                                0,
                                                 event_offset_string,
                                                 IPMI_MONITORING_SEL_EVENT_OFFSET_STRING_MAX,
-						sel_string_flags)) < 0)
+                                                sel_string_flags)) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_record_string: %s",
                               ipmi_sel_ctx_errnum (c->sel_parse_ctx)));
@@ -492,9 +492,9 @@ _ipmi_monitoring_sel_parse_timestamped_oem_record (ipmi_monitoring_ctx_t c,
   assert (s);
 
   if (ipmi_sel_parse_read_timestamp (c->sel_parse_ctx,
-				     NULL,
-				     0,
-				     &timestamp) < 0)
+                                     NULL,
+                                     0,
+                                     &timestamp) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_timestamp: %s",
                               ipmi_sel_ctx_errnum (c->sel_parse_ctx)));
@@ -504,9 +504,9 @@ _ipmi_monitoring_sel_parse_timestamped_oem_record (ipmi_monitoring_ctx_t c,
   s->timestamp = timestamp;
   
   if (ipmi_sel_parse_read_manufacturer_id (c->sel_parse_ctx,
-					   NULL,
-					   0,
-					   &manufacturer_id) < 0)
+                                           NULL,
+                                           0,
+                                           &manufacturer_id) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_manufacturer_id: %s",
                               ipmi_sel_ctx_errnum (c->sel_parse_ctx)));
@@ -516,8 +516,8 @@ _ipmi_monitoring_sel_parse_timestamped_oem_record (ipmi_monitoring_ctx_t c,
   s->manufacturer_id = manufacturer_id;
 
   if ((ret = ipmi_sel_parse_read_oem (c->sel_parse_ctx,
-				      NULL,
-				      0,
+                                      NULL,
+                                      0,
                                       s->oem_data,
                                       IPMI_MONITORING_OEM_DATA_MAX)) < 0)
     {
@@ -542,8 +542,8 @@ _ipmi_monitoring_sel_parse_non_timestamped_oem_record (ipmi_monitoring_ctx_t c,
   assert (s);
 
   if ((ret = ipmi_sel_parse_read_oem (c->sel_parse_ctx,
-				      NULL,
-				      0,
+                                      NULL,
+                                      0,
                                       s->oem_data,
                                       IPMI_MONITORING_OEM_DATA_MAX)) < 0)
     {
@@ -592,9 +592,9 @@ _store_sel_record (ipmi_monitoring_ctx_t c, unsigned int sel_flags)
     }
   
   if (ipmi_sel_parse_read_record_id (c->sel_parse_ctx,
-				     NULL,
-				     0,
-				     &record_id) < 0)
+                                     NULL,
+                                     0,
+                                     &record_id) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_record_id: %s",
                               ipmi_sel_ctx_errnum (c->sel_parse_ctx)));
@@ -603,9 +603,9 @@ _store_sel_record (ipmi_monitoring_ctx_t c, unsigned int sel_flags)
     }
 
   if (ipmi_sel_parse_read_record_type (c->sel_parse_ctx,
-				       NULL,
-				       0,
-				       &record_type) < 0)
+                                       NULL,
+                                       0,
+                                       &record_type) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_record_id: %s",
                               ipmi_sel_ctx_errnum (c->sel_parse_ctx)));
@@ -734,9 +734,9 @@ _ipmi_monitoring_sel_parse_sensor_types (ipmi_sel_ctx_t ctx, void *callback_data
   spd = (struct sel_parse_data *)callback_data;
 
   if (ipmi_sel_parse_read_record_type (spd->c->sel_parse_ctx,
-				       NULL,
-				       0,
-				       &record_type) < 0)
+                                       NULL,
+                                       0,
+                                       &record_type) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_record_id: %s",
                               ipmi_sel_ctx_errnum (spd->c->sel_parse_ctx)));
@@ -765,9 +765,9 @@ _ipmi_monitoring_sel_parse_sensor_types (ipmi_sel_ctx_t ctx, void *callback_data
       int found = 0;
 
       if (ipmi_sel_parse_read_sensor_type (spd->c->sel_parse_ctx,
-					   NULL,
-					   0,
-					   &sel_sensor_type) < 0)
+                                           NULL,
+                                           0,
+                                           &sel_sensor_type) < 0)
         {
           IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_sensor_type: %s",
                                   ipmi_sel_ctx_errnum (spd->c->sel_parse_ctx)));
@@ -810,9 +810,9 @@ _ipmi_monitoring_sel_parse_date_range (ipmi_sel_ctx_t ctx, void *callback_data)
   spd = (struct sel_parse_data *)callback_data;
 
   if (ipmi_sel_parse_read_record_type (spd->c->sel_parse_ctx,
-				       NULL,
-				       0,
-				       &record_type) < 0)
+                                       NULL,
+                                       0,
+                                       &record_type) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_record_id: %s",
                               ipmi_sel_ctx_errnum (spd->c->sel_parse_ctx)));
@@ -839,9 +839,9 @@ _ipmi_monitoring_sel_parse_date_range (ipmi_sel_ctx_t ctx, void *callback_data)
       uint32_t timestamp;
 
       if (ipmi_sel_parse_read_timestamp (spd->c->sel_parse_ctx,
-					 NULL,
-					 0,
-					 &timestamp) < 0)
+                                         NULL,
+                                         0,
+                                         &timestamp) < 0)
         {
           IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_timestamp: %s",
                                   ipmi_sel_ctx_errnum (spd->c->sel_parse_ctx)));

@@ -86,17 +86,17 @@ ipmi_raw_cmdline (ipmi_raw_state_data_t *state_data)
     }
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
-			      bytes_rq[0],
-			      bytes_rq[1],
-			      &bytes_rq[2],
-			      send_len - 2,
-			      bytes_rs,
-			      IPMI_RAW_MAX_ARGS)) < 0)
+                              bytes_rq[0],
+                              bytes_rq[1],
+                              &bytes_rq[2],
+                              send_len - 2,
+                              bytes_rs,
+                              IPMI_RAW_MAX_ARGS)) < 0)
     {
       pstdout_fprintf (state_data->pstate,
-		       stderr,
-		       "ipmi_cmd_raw: %s\n",
-		       ipmi_ctx_errormsg (state_data->ipmi_ctx));
+                       stderr,
+                       "ipmi_cmd_raw: %s\n",
+                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
   
@@ -116,7 +116,7 @@ string2bytes (ipmi_raw_state_data_t *state_data,
               const char *line,
               unsigned char **buf,
               unsigned int *len,
-	      unsigned int line_count)
+              unsigned int line_count)
 {
   const char delim[] = " \t\f\v\r\n";
   char *str = NULL;
@@ -186,7 +186,7 @@ string2bytes (ipmi_raw_state_data_t *state_data,
                   pstdout_fprintf (state_data->pstate,
                                    stderr,
                                    "invalid input line: %u\n",
-				   line_count);
+                                   line_count);
                   goto cleanup;
                 }
               l = strlen (token);
@@ -198,7 +198,7 @@ string2bytes (ipmi_raw_state_data_t *state_data,
           pstdout_fprintf (state_data->pstate,
                            stderr,
                            "invalid input line: %u\n",
-			   line_count);
+                           line_count);
           goto cleanup;
         }
 
@@ -209,7 +209,7 @@ string2bytes (ipmi_raw_state_data_t *state_data,
               pstdout_fprintf (state_data->pstate,
                                stderr,
                                "invalid input line: %u\n",
-			       line_count);
+                               line_count);
               goto cleanup;
             }
         }
@@ -217,14 +217,14 @@ string2bytes (ipmi_raw_state_data_t *state_data,
       errno = 0;
       value = strtol (token, &endptr, 16);
       if (errno
-	  || endptr[0] != '\0')
-	{
-	  pstdout_fprintf (state_data->pstate,
-			   stderr,
-			   "invalid input line: %u\n",
-			   line_count);
-	  goto cleanup;
-	}
+          || endptr[0] != '\0')
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "invalid input line: %u\n",
+                           line_count);
+          goto cleanup;
+        }
       (*buf)[count++] = (unsigned char) value;
     }
 
@@ -279,7 +279,7 @@ ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
 
       /* Check for empty line */
       if (!send_len)
-	continue;
+        continue;
 
       if (send_len <= 2)
         {
@@ -291,13 +291,13 @@ ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
         }
 
       if (!IPMI_NET_FN_RQ_VALID (bytes_rq[1]))
-	{
-	  pstdout_fprintf (state_data->pstate,
-			   stderr,
-			   "Invalid netfn value on line %d\n",
-			   line_count);
-	  goto end_loop;
-	}
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "Invalid netfn value on line %d\n",
+                           line_count);
+          goto end_loop;
+        }
 
       if (!(bytes_rs = calloc (IPMI_RAW_MAX_ARGS, sizeof (uint8_t))))
         {
@@ -306,19 +306,19 @@ ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
         }
   
       if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
-				  bytes_rq[0],
-				  bytes_rq[1],
-				  &bytes_rq[2],
-				  send_len - 2,
-				  bytes_rs,
-				  IPMI_RAW_MAX_ARGS)) < 0)
-	{
-	  pstdout_fprintf (state_data->pstate,
-			   stderr,
-			   "ipmi_cmd_raw: %s\n",
-			   ipmi_ctx_errormsg (state_data->ipmi_ctx));
-	  goto end_loop;
-	}
+                                  bytes_rq[0],
+                                  bytes_rq[1],
+                                  &bytes_rq[2],
+                                  send_len - 2,
+                                  bytes_rs,
+                                  IPMI_RAW_MAX_ARGS)) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_cmd_raw: %s\n",
+                           ipmi_ctx_errormsg (state_data->ipmi_ctx));
+          goto end_loop;
+        }
 
       pstdout_printf (state_data->pstate, "rcvd: ");
       for (i = 0; i < rs_len; i++)
@@ -404,7 +404,7 @@ _ipmi_raw (pstdout_state_t pstate,
   if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
                                          hostname,
                                          &(prog_data->args->common_args),
-					 state_data.pstate)))
+                                         state_data.pstate)))
     goto cleanup;
 
   if (run_cmd_args (&state_data) < 0)
@@ -433,7 +433,7 @@ main (int argc, char **argv)
   prog_data.args = &cmd_args;
 
   if ((hosts_count = pstdout_setup (&(prog_data.args->common_args.hostname),
-				    &(prog_data.args->common_args))) < 0)
+                                    &(prog_data.args->common_args))) < 0)
     return (EXIT_FAILURE);
 
   if (!hosts_count)

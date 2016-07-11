@@ -86,7 +86,7 @@ createpacket (const char *destination,
                                 obj_rmcp_cmd,
                                 buf,
                                 buflen,
-				IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
+                                IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
     ipmi_ping_err_exit ("assemble_rmcp_pkt: %s", strerror (errno));
 
   if (debug)
@@ -95,7 +95,7 @@ createpacket (const char *destination,
 
       debug_hdr_str (DEBUG_UTIL_TYPE_NONE,
                      DEBUG_UTIL_DIRECTION_NONE,
-		     DEBUG_UTIL_FLAGS_DEFAULT,
+                     DEBUG_UTIL_FLAGS_DEFAULT,
                      DEBUG_UTIL_RMCPPING_STR,
                      hdrbuf,
                      DEBUG_UTIL_HDR_BUFLEN);
@@ -149,7 +149,7 @@ parsepacket (const char *destination,
 
       debug_hdr_str (DEBUG_UTIL_TYPE_NONE,
                      DEBUG_UTIL_DIRECTION_NONE,
-		     DEBUG_UTIL_FLAGS_DEFAULT,
+                     DEBUG_UTIL_FLAGS_DEFAULT,
                      DEBUG_UTIL_RMCPPONG_STR,
                      hdrbuf,
                      DEBUG_UTIL_HDR_BUFLEN);
@@ -168,7 +168,7 @@ parsepacket (const char *destination,
                                   buflen,
                                   obj_rmcp_hdr,
                                   obj_rmcp_cmd,
-				  IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
+                                  IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
     ipmi_ping_err_exit ("unassemble_rmcp_pkt: %s", strerror (errno));
 
   if (!ret)

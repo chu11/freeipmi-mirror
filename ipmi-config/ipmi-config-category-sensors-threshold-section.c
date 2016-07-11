@@ -66,8 +66,8 @@ _get_sdr_decoding_data (ipmi_config_state_data_t *state_data,
   assert (analog_data_format);
 
   if (ipmi_sdr_parse_sensor_decoding_data (state_data->sdr_ctx,
-					   NULL,
-					   0,
+                                           NULL,
+                                           0,
                                            r_exponent,
                                            b_exponent,
                                            m,
@@ -147,9 +147,9 @@ _decode_value (ipmi_config_state_data_t *state_data,
                                 value_calc) < 0)
     {
       pstdout_fprintf (state_data->pstate,
-		       stderr,
-		       "ipmi_sensor_decode_value: %s\n",
-		       strerror (errno));
+                       stderr,
+                       "ipmi_sensor_decode_value: %s\n",
+                       strerror (errno));
       goto cleanup;
     }
 
@@ -193,9 +193,9 @@ _decode_value_raw (ipmi_config_state_data_t *state_data,
       || ptr[0] != '\0')
     {
       pstdout_fprintf (state_data->pstate,
-		       stderr,
-		       "Invalid input: %s\n",
-		       threshold_input);
+                       stderr,
+                       "Invalid input: %s\n",
+                       threshold_input);
       /* fatal error, should have been validated earlier */
       goto cleanup;
     }
@@ -210,9 +210,9 @@ _decode_value_raw (ipmi_config_state_data_t *state_data,
                                     threshold_raw) < 0)
     {
       pstdout_fprintf (state_data->pstate,
-		       stderr,
-		       "ipmi_sensor_decode_raw_value: %s\n",
-		       strerror (errno));
+                       stderr,
+                       "ipmi_sensor_decode_raw_value: %s\n",
+                       strerror (errno));
       goto cleanup;
     }
 
@@ -223,7 +223,7 @@ _decode_value_raw (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 threshold_checkout (ipmi_config_state_data_t *state_data,
-		    const char *section_name,
+                    const char *section_name,
                     struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -242,15 +242,15 @@ threshold_checkout (ipmi_config_state_data_t *state_data,
   assert (kv);
 
   if ((ret = ipmi_config_sensors_seek_to_sdr_record (state_data,
-						     section_name)) != IPMI_CONFIG_ERR_SUCCESS)
+                                                     section_name)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
 
   if (ipmi_sdr_parse_sensor_number (state_data->sdr_ctx,
-				    NULL,
-				    0,
+                                    NULL,
+                                    0,
                                     &sensor_number) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -274,8 +274,8 @@ threshold_checkout (ipmi_config_state_data_t *state_data,
                                       obj_cmd_rs) < 0)
     {
       if (ipmi_errnum_is_non_fatal (state_data,
-				    obj_cmd_rs,
-				    &ret))
+                                    obj_cmd_rs,
+                                    &ret))
         rv = ret;
 
       /*
@@ -295,7 +295,7 @@ threshold_checkout (ipmi_config_state_data_t *state_data,
         rv = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_sensor_thresholds: %s\n",
@@ -383,8 +383,8 @@ threshold_checkout (ipmi_config_state_data_t *state_data,
     }
 
   if (ipmi_config_section_update_keyvalue_output_double (state_data,
-							 kv,
-							 threshold_calc) < 0)
+                                                         kv,
+                                                         threshold_calc) < 0)
     goto cleanup;
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
@@ -395,7 +395,7 @@ threshold_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 threshold_commit (ipmi_config_state_data_t *state_data,
-		  const char *section_name,
+                  const char *section_name,
                   const struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -415,15 +415,15 @@ threshold_commit (ipmi_config_state_data_t *state_data,
   assert (kv);
 
   if ((ret = ipmi_config_sensors_seek_to_sdr_record (state_data,
-						     section_name)) != IPMI_CONFIG_ERR_SUCCESS)
+                                                     section_name)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
 
   if (ipmi_sdr_parse_sensor_number (state_data->sdr_ctx,
-				    NULL,
-				    0,
+                                    NULL,
+                                    0,
                                     &sensor_number) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -477,12 +477,12 @@ threshold_commit (ipmi_config_state_data_t *state_data,
                                       obj_cmd_rs) < 0)
     {
       if (ipmi_errnum_is_non_fatal (state_data,
-				    obj_cmd_rs,
-				    &ret))
+                                    obj_cmd_rs,
+                                    &ret))
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_sensor_thresholds: %s\n",
@@ -528,12 +528,12 @@ _get_hysteresis (ipmi_config_state_data_t *state_data,
       ipmi_config_err_t ret;
 
       if (ipmi_errnum_is_non_fatal (state_data,
-				    obj_cmd_rs,
-				    &ret))
+                                    obj_cmd_rs,
+                                    &ret))
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_sensor_hysteresis: %s\n",
@@ -570,7 +570,7 @@ _get_hysteresis (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 hysteresis_threshold_checkout (ipmi_config_state_data_t *state_data,
-			       const char *section_name,
+                               const char *section_name,
                                struct ipmi_config_keyvalue *kv)
 {
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
@@ -587,15 +587,15 @@ hysteresis_threshold_checkout (ipmi_config_state_data_t *state_data,
   assert (kv);
 
   if ((ret = ipmi_config_sensors_seek_to_sdr_record (state_data,
-						     section_name)) != IPMI_CONFIG_ERR_SUCCESS)
+                                                     section_name)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
 
   if (ipmi_sdr_parse_sensor_capabilities (state_data->sdr_ctx,
-					  NULL,
-					  0,
+                                          NULL,
+                                          0,
                                           NULL,
                                           NULL,
                                           &hysteresis_support,
@@ -620,8 +620,8 @@ hysteresis_threshold_checkout (ipmi_config_state_data_t *state_data,
     }
 
   if (ipmi_sdr_parse_sensor_number (state_data->sdr_ctx,
-				    NULL,
-				    0,
+                                    NULL,
+                                    0,
                                     &sensor_number) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -652,8 +652,8 @@ hysteresis_threshold_checkout (ipmi_config_state_data_t *state_data,
   if (value_raw == 0)
     {
       if (ipmi_config_section_update_keyvalue_output (state_data,
-						      kv,
-						      "None") < 0)
+                                                      kv,
+                                                      "None") < 0)
         goto cleanup;
     }
   else
@@ -667,8 +667,8 @@ hysteresis_threshold_checkout (ipmi_config_state_data_t *state_data,
         }
 
       if (ipmi_config_section_update_keyvalue_output_double (state_data,
-							     kv,
-							     value_calc) < 0)
+                                                             kv,
+                                                             value_calc) < 0)
         goto cleanup;
     }
 
@@ -679,7 +679,7 @@ hysteresis_threshold_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 hysteresis_threshold_commit (ipmi_config_state_data_t *state_data,
-			     const char *section_name,
+                             const char *section_name,
                              const struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -696,15 +696,15 @@ hysteresis_threshold_commit (ipmi_config_state_data_t *state_data,
   assert (kv);
 
   if ((ret = ipmi_config_sensors_seek_to_sdr_record (state_data,
-						     section_name)) != IPMI_CONFIG_ERR_SUCCESS)
+                                                     section_name)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
 
   if (ipmi_sdr_parse_sensor_capabilities (state_data->sdr_ctx,
-					  NULL,
-					  0,
+                                          NULL,
+                                          0,
                                           NULL,
                                           NULL,
                                           &hysteresis_support,
@@ -727,8 +727,8 @@ hysteresis_threshold_commit (ipmi_config_state_data_t *state_data,
     }
 
   if (ipmi_sdr_parse_sensor_number (state_data->sdr_ctx,
-				    NULL,
-				    0,
+                                    NULL,
+                                    0,
                                     &sensor_number) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -787,12 +787,12 @@ hysteresis_threshold_commit (ipmi_config_state_data_t *state_data,
                                       obj_cmd_rs) < 0)
     {
       if (ipmi_errnum_is_non_fatal (state_data,
-				    obj_cmd_rs,
-				    &ret))
+                                    obj_cmd_rs,
+                                    &ret))
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_sensor_hysteresis: %s\n",
@@ -824,7 +824,7 @@ hysteresis_threshold_commit (ipmi_config_state_data_t *state_data,
  */
 static ipmi_config_validate_t
 _floating_point_in_range (ipmi_config_state_data_t *state_data,
-			  const char *section_name,
+                          const char *section_name,
                           const char *key_name,
                           const char *value,
                           double value_input)
@@ -842,7 +842,7 @@ _floating_point_in_range (ipmi_config_state_data_t *state_data,
   assert (value);
 
   if ((ret = ipmi_config_sensors_seek_to_sdr_record (state_data,
-						     section_name)) != IPMI_CONFIG_ERR_SUCCESS)
+                                                     section_name)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       if (ret == IPMI_CONFIG_ERR_NON_FATAL_ERROR)
         rv = IPMI_CONFIG_VALIDATE_NON_FATAL_ERROR;
@@ -850,8 +850,8 @@ _floating_point_in_range (ipmi_config_state_data_t *state_data,
     }
 
   if (ipmi_sdr_parse_sensor_number (state_data->sdr_ctx,
-				    NULL,
-				    0,
+                                    NULL,
+                                    0,
                                     &sensor_number) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -901,7 +901,7 @@ _floating_point_in_range (ipmi_config_state_data_t *state_data,
 
 ipmi_config_validate_t
 threshold_validate (ipmi_config_state_data_t *state_data,
-		    const char *section_name,
+                    const char *section_name,
                     const char *key_name,
                     const char *value)
 {
@@ -919,7 +919,7 @@ threshold_validate (ipmi_config_state_data_t *state_data,
     return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
 
   return (_floating_point_in_range (state_data,
-				    section_name,
+                                    section_name,
                                     key_name,
                                     value,
                                     conv));
@@ -927,7 +927,7 @@ threshold_validate (ipmi_config_state_data_t *state_data,
 
 ipmi_config_validate_t
 threshold_validate_positive (ipmi_config_state_data_t *state_data,
-			     const char *section_name,
+                             const char *section_name,
                              const char *key_name,
                              const char *value)
 {
@@ -948,7 +948,7 @@ threshold_validate_positive (ipmi_config_state_data_t *state_data,
     return (IPMI_CONFIG_VALIDATE_OUT_OF_RANGE_VALUE);
 
   return (_floating_point_in_range (state_data,
-				    section_name,
+                                    section_name,
                                     key_name,
                                     value,
                                     conv));
@@ -956,7 +956,7 @@ threshold_validate_positive (ipmi_config_state_data_t *state_data,
 
 ipmi_config_validate_t
 hysteresis_threshold_validate (ipmi_config_state_data_t *state_data,
-			       const char *section_name,
+                               const char *section_name,
                                const char *key_name,
                                const char *value)
 {
@@ -977,7 +977,7 @@ hysteresis_threshold_validate (ipmi_config_state_data_t *state_data,
     return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
 
   return (_floating_point_in_range (state_data,
-				    section_name,
+                                    section_name,
                                     key_name,
                                     value,
                                     conv));
@@ -985,7 +985,7 @@ hysteresis_threshold_validate (ipmi_config_state_data_t *state_data,
 
 ipmi_config_validate_t
 hysteresis_threshold_validate_positive (ipmi_config_state_data_t *state_data,
-					const char *section_name,
+                                        const char *section_name,
                                         const char *key_name,
                                         const char *value)
 {
@@ -1009,7 +1009,7 @@ hysteresis_threshold_validate_positive (ipmi_config_state_data_t *state_data,
     return (IPMI_CONFIG_VALIDATE_OUT_OF_RANGE_VALUE);
 
   return (_floating_point_in_range (state_data,
-				    section_name,
+                                    section_name,
                                     key_name,
                                     value,
                                     conv));
@@ -1044,13 +1044,13 @@ _setup_threshold_key (ipmi_config_state_data_t *state_data,
         }
 
       if (ipmi_config_section_add_key (state_data,
-				       section,
-				       key_name,
-				       description,
-				       flags,
-				       threshold_checkout,
-				       threshold_commit,
-				       threshold_validate_ptr) < 0)
+                                       section,
+                                       key_name,
+                                       description,
+                                       flags,
+                                       threshold_checkout,
+                                       threshold_commit,
+                                       threshold_validate_ptr) < 0)
         goto cleanup;
     }
 
@@ -1096,8 +1096,8 @@ _setup_threshold_fields (ipmi_config_state_data_t *state_data,
     threshold_validate_ptr = threshold_validate;
 
   if (ipmi_sdr_parse_threshold_readable (state_data->sdr_ctx,
-					 NULL,
-					 0,
+                                         NULL,
+                                         0,
                                          &lower_non_critical_threshold_readable,
                                          &lower_critical_threshold_readable,
                                          &lower_non_recoverable_threshold_readable,
@@ -1113,8 +1113,8 @@ _setup_threshold_fields (ipmi_config_state_data_t *state_data,
     }
 
   if (ipmi_sdr_parse_threshold_settable (state_data->sdr_ctx,
-					 NULL,
-					 0,
+                                         NULL,
+                                         0,
                                          &lower_non_critical_threshold_settable,
                                          &lower_critical_threshold_settable,
                                          &lower_non_recoverable_threshold_settable,
@@ -1234,23 +1234,23 @@ _setup_threshold_hysteresis_fields (ipmi_config_state_data_t *state_data,
     hysteresis_threshold_validate_ptr = hysteresis_threshold_validate;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Positive_Going_Threshold_Hysteresis",
-				   description_hysteresis,
-				   flags,
-				   hysteresis_threshold_checkout,
-				   hysteresis_threshold_commit,
-				   hysteresis_threshold_validate_ptr) < 0)
+                                   section,
+                                   "Positive_Going_Threshold_Hysteresis",
+                                   description_hysteresis,
+                                   flags,
+                                   hysteresis_threshold_checkout,
+                                   hysteresis_threshold_commit,
+                                   hysteresis_threshold_validate_ptr) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Negative_Going_Threshold_Hysteresis",
-				   description_hysteresis,
-				   flags,
-				   hysteresis_threshold_checkout,
-				   hysteresis_threshold_commit,
-				   hysteresis_threshold_validate_ptr) < 0)
+                                   section,
+                                   "Negative_Going_Threshold_Hysteresis",
+                                   description_hysteresis,
+                                   flags,
+                                   hysteresis_threshold_checkout,
+                                   hysteresis_threshold_commit,
+                                   hysteresis_threshold_validate_ptr) < 0)
     goto cleanup;
 
   rv = 0;
@@ -1283,13 +1283,13 @@ ipmi_config_sensors_threshold_section (ipmi_config_state_data_t *state_data,
   assert (section_ptr);
 
   if ((ret = ipmi_config_sensors_create_section_name (state_data,
-						      section_name,
-						      IPMI_CONFIG_MAX_SECTION_NAME_LEN)) != IPMI_CONFIG_ERR_SUCCESS)
+                                                      section_name,
+                                                      IPMI_CONFIG_MAX_SECTION_NAME_LEN)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_config_sensors_create_section_name: %s\n",
@@ -1299,17 +1299,17 @@ ipmi_config_sensors_threshold_section (ipmi_config_state_data_t *state_data,
     }
 
   if (!(section = ipmi_config_section_create (state_data,
-					      section_name,
-					      NULL,
-					      NULL,
-					      0,
-					      NULL,
-					      NULL)))
+                                              section_name,
+                                              NULL,
+                                              NULL,
+                                              0,
+                                              NULL,
+                                              NULL)))
     goto cleanup;
 
   if (ipmi_sdr_parse_sensor_capabilities (state_data->sdr_ctx,
-					  NULL,
-					  0,
+                                          NULL,
+                                          0,
                                           NULL,
                                           &threshold_access_support,
                                           &hysteresis_support,
@@ -1324,8 +1324,8 @@ ipmi_config_sensors_threshold_section (ipmi_config_state_data_t *state_data,
     }
 
   if (ipmi_sdr_parse_sensor_type (state_data->sdr_ctx,
-				  NULL,
-				  0,
+                                  NULL,
+                                  0,
                                   &sensor_type) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -1336,8 +1336,8 @@ ipmi_config_sensors_threshold_section (ipmi_config_state_data_t *state_data,
     }
 
   if (ipmi_sdr_parse_sensor_units (state_data->sdr_ctx,
-				   NULL,
-				   0,
+                                   NULL,
+                                   0,
                                    &sensor_units_percentage,
                                    &sensor_units_modifier,
                                    &sensor_units_rate,

@@ -46,14 +46,14 @@ extern struct ipmipower_arguments cmd_args;
 
 int
 ipmipower_check_checksum (ipmipower_powercmd_t ip,
-			  ipmipower_packet_type_t pkt)
+                          ipmipower_packet_type_t pkt)
 {
   fiid_obj_t obj_cmd;
   int rv;
 
   assert (ip);
   assert (IPMIPOWER_PACKET_TYPE_IPMI_1_5_SETUP_RS (pkt)
-	  || IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RS (pkt)); /* 1.5 or 2.0 */
+          || IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RS (pkt)); /* 1.5 or 2.0 */
 
   /* IPMI Workaround (achu)
    *
@@ -92,7 +92,7 @@ ipmipower_check_authentication_code (ipmipower_powercmd_t ip,
 
   assert (ip);
   assert (pkt == IPMIPOWER_PACKET_TYPE_ACTIVATE_SESSION_RS
-	  || IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RS (pkt));
+          || IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RS (pkt));
   assert (buf && buflen);
 
   /* IPMI 1.5 Checks */
@@ -110,10 +110,10 @@ ipmipower_check_authentication_code (ipmipower_powercmd_t ip,
        * using "Straight Password Key".
        */
       if (cmd_args.common_args.workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_NO_AUTH_CODE_CHECK)
-	{
-	  rv = 1;
-	  goto out;
-	}
+        {
+          rv = 1;
+          goto out;
+        }
 
       if (pkt == IPMIPOWER_PACKET_TYPE_ACTIVATE_SESSION_RS)
         authentication_type = cmd_args.common_args.authentication_type;
@@ -216,7 +216,7 @@ ipmipower_check_authentication_code (ipmipower_powercmd_t ip,
 
 int
 ipmipower_check_outbound_sequence_number (ipmipower_powercmd_t ip,
-					  ipmipower_packet_type_t pkt)
+                                          ipmipower_packet_type_t pkt)
 {
   uint32_t session_sequence_number = 0;
   uint64_t val;
@@ -329,7 +329,7 @@ ipmipower_check_outbound_sequence_number (ipmipower_powercmd_t ip,
 
 int
 ipmipower_check_session_id (ipmipower_powercmd_t ip,
-			    ipmipower_packet_type_t pkt)
+                            ipmipower_packet_type_t pkt)
 {
   uint32_t session_id = 0;
   uint32_t expected_session_id = 0;
@@ -337,7 +337,7 @@ ipmipower_check_session_id (ipmipower_powercmd_t ip,
 
   assert (ip);
   assert (IPMIPOWER_PACKET_TYPE_IPMI_2_0_SETUP_RS (pkt)
-	  || IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RS (pkt));
+          || IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RS (pkt));
 
   if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN
       && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RS (pkt))
@@ -363,7 +363,7 @@ ipmipower_check_session_id (ipmipower_powercmd_t ip,
       expected_session_id = val;
     }
   else if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN_2_0
-	   && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RS (pkt))
+           && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RS (pkt))
     {
       if (FIID_OBJ_GET (ip->obj_rmcpplus_session_hdr_rs,
                         "session_id",
@@ -419,7 +419,7 @@ ipmipower_check_session_id (ipmipower_powercmd_t ip,
 
 int
 ipmipower_check_network_function (ipmipower_powercmd_t ip,
-				  ipmipower_packet_type_t pkt)
+                                  ipmipower_packet_type_t pkt)
 {
   uint8_t netfn = 0;
   uint8_t expected_netfn;
@@ -428,7 +428,7 @@ ipmipower_check_network_function (ipmipower_powercmd_t ip,
   assert (ip);
   /* Assert this is not an IPMI 2.0 Session Setup Packet */
   assert (IPMIPOWER_PACKET_TYPE_IPMI_1_5_SETUP_RS (pkt)
-	  || IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RS (pkt));
+          || IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RS (pkt));
 
   if (FIID_OBJ_GET (ip->obj_lan_msg_hdr_rs,
                     "net_fn",
@@ -449,10 +449,10 @@ ipmipower_check_network_function (ipmipower_powercmd_t ip,
   else if (pkt == IPMIPOWER_PACKET_TYPE_C410X_SLOT_POWER_CONTROL_RS)
     expected_netfn = IPMI_NET_FN_OEM_DELL_GENERIC_RS;
   else /* pkt == IPMIPOWER_PACKET_TYPE_AUTHENTICATION_CAPABILITIES_RS
-	  || pkt == IPMIPOWER_PACKET_TYPE_GET_SESSION_CHALLENGE_RS
-	  || pkt == IPMIPOWER_PACKET_TYPE_ACTIVATE_SESSION_RS
-	  || pkt == IPMIPOWER_PACKET_TYPE_CLOSE_SESSION_RS
-	*/
+          || pkt == IPMIPOWER_PACKET_TYPE_GET_SESSION_CHALLENGE_RS
+          || pkt == IPMIPOWER_PACKET_TYPE_ACTIVATE_SESSION_RS
+          || pkt == IPMIPOWER_PACKET_TYPE_CLOSE_SESSION_RS
+        */
     expected_netfn = IPMI_NET_FN_APP_RS;
   
   if (netfn != expected_netfn)
@@ -467,7 +467,7 @@ ipmipower_check_network_function (ipmipower_powercmd_t ip,
 
 int
 ipmipower_check_command (ipmipower_powercmd_t ip,
-			 ipmipower_packet_type_t pkt)
+                         ipmipower_packet_type_t pkt)
 {
   uint8_t cmd = 0;
   uint8_t expected_cmd = 0;
@@ -476,7 +476,7 @@ ipmipower_check_command (ipmipower_powercmd_t ip,
 
   assert (ip);
   assert (IPMIPOWER_PACKET_TYPE_IPMI_1_5_SETUP_RS (pkt)
-	  || IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RS (pkt));
+          || IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RS (pkt));
 
   obj_cmd = ipmipower_packet_cmd_obj (ip, pkt);
 
@@ -539,7 +539,7 @@ ipmipower_check_command (ipmipower_powercmd_t ip,
 
 int
 ipmipower_check_requester_sequence_number (ipmipower_powercmd_t ip,
-					   ipmipower_packet_type_t pkt)
+                                           ipmipower_packet_type_t pkt)
 {
   uint8_t req_seq = 0;
   uint8_t expected_req_seq = 0;
@@ -547,7 +547,7 @@ ipmipower_check_requester_sequence_number (ipmipower_powercmd_t ip,
 
   assert (ip);
   assert (IPMIPOWER_PACKET_TYPE_IPMI_1_5_SETUP_RS (pkt)
-	  || IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RS (pkt));
+          || IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RS (pkt));
 
   expected_req_seq = ip->ic->ipmi_requester_sequence_number_counter % (IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX + 1);
 
@@ -573,7 +573,7 @@ ipmipower_check_requester_sequence_number (ipmipower_powercmd_t ip,
 
 int
 ipmipower_check_completion_code (ipmipower_powercmd_t ip,
-				 ipmipower_packet_type_t pkt)
+                                 ipmipower_packet_type_t pkt)
 {
   uint8_t comp_code = 0;
   fiid_obj_t obj_cmd;
@@ -582,7 +582,7 @@ ipmipower_check_completion_code (ipmipower_powercmd_t ip,
   assert (ip);
   assert (IPMIPOWER_PACKET_TYPE_RS (pkt));
   assert (IPMIPOWER_PACKET_TYPE_IPMI_1_5_SETUP_RS (pkt)
-	  || IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RS (pkt));
+          || IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RS (pkt));
 
   obj_cmd = ipmipower_packet_cmd_obj (ip, pkt);
 
@@ -607,7 +607,7 @@ ipmipower_check_completion_code (ipmipower_powercmd_t ip,
 
 int
 ipmipower_check_payload_type (ipmipower_powercmd_t ip,
-			      ipmipower_packet_type_t pkt)
+                              ipmipower_packet_type_t pkt)
 {
   uint8_t payload_type;
   uint8_t expected_payload_type;
@@ -649,7 +649,7 @@ ipmipower_check_payload_type (ipmipower_powercmd_t ip,
 
 int
 ipmipower_check_message_tag (ipmipower_powercmd_t ip,
-			     ipmipower_packet_type_t pkt)
+                             ipmipower_packet_type_t pkt)
 {
   uint8_t message_tag;
   uint8_t expected_message_tag;
@@ -685,7 +685,7 @@ ipmipower_check_message_tag (ipmipower_powercmd_t ip,
 
 int
 ipmipower_check_rmcpplus_status_code (ipmipower_powercmd_t ip,
-				      ipmipower_packet_type_t pkt)
+                                      ipmipower_packet_type_t pkt)
 {
   uint8_t rmcpplus_status_code;
   fiid_obj_t obj_cmd;
@@ -717,7 +717,7 @@ ipmipower_check_rmcpplus_status_code (ipmipower_powercmd_t ip,
 
 int
 ipmipower_check_packet (ipmipower_powercmd_t ip,
-			ipmipower_packet_type_t pkt)
+                        ipmipower_packet_type_t pkt)
 {
   fiid_obj_t obj_cmd;
   int ret;
@@ -744,7 +744,7 @@ ipmipower_check_packet (ipmipower_powercmd_t ip,
 
 int
 ipmipower_check_open_session_response_privilege (ipmipower_powercmd_t ip,
-						 ipmipower_packet_type_t pkt)
+                                                 ipmipower_packet_type_t pkt)
 {
   uint8_t maximum_privilege_level;
   uint64_t val;
@@ -796,7 +796,7 @@ ipmipower_check_open_session_response_privilege (ipmipower_powercmd_t ip,
 
 int
 ipmipower_check_rakp_2_key_exchange_authentication_code (ipmipower_powercmd_t ip,
-							 ipmipower_packet_type_t pkt)
+                                                         ipmipower_packet_type_t pkt)
 {
   uint8_t managed_system_random_number[IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH];
   int managed_system_random_number_len;
@@ -1029,7 +1029,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code (ipmipower_powercmd_t ip
 
 int
 ipmipower_check_rakp_4_integrity_check_value (ipmipower_powercmd_t ip,
-					      ipmipower_packet_type_t pkt)
+                                              ipmipower_packet_type_t pkt)
 {
   uint8_t managed_system_guid[IPMI_MANAGED_SYSTEM_GUID_LENGTH];
   int managed_system_guid_len;
@@ -1142,7 +1142,7 @@ ipmipower_check_rakp_4_integrity_check_value (ipmipower_powercmd_t ip,
 
 int
 ipmipower_check_payload_pad (ipmipower_powercmd_t ip,
-			     ipmipower_packet_type_t pkt)
+                             ipmipower_packet_type_t pkt)
 {
   uint8_t confidentiality_algorithm;
   int rv;
@@ -1170,7 +1170,7 @@ ipmipower_check_payload_pad (ipmipower_powercmd_t ip,
 
 int
 ipmipower_check_integrity_pad (ipmipower_powercmd_t ip,
-			       ipmipower_packet_type_t pkt)
+                               ipmipower_packet_type_t pkt)
 {
   int rv;
 

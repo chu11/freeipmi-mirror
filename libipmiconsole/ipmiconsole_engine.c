@@ -170,12 +170,12 @@ _ipmiconsole_garbage_collector_create (void)
   while (!garbage_collector_active)
     {
       if ((perr = pthread_cond_wait (&garbage_collector_active_cond,
-				     &garbage_collector_active_mutex)))
-	{
-	  IPMICONSOLE_DEBUG (("pthread_cond_wait: %s", strerror (perr)));
-	  errno = perr;
-	  goto cleanup;
-	}
+                                     &garbage_collector_active_mutex)))
+        {
+          IPMICONSOLE_DEBUG (("pthread_cond_wait: %s", strerror (perr)));
+          errno = perr;
+          goto cleanup;
+        }
     }
 
   if ((perr = pthread_mutex_unlock (&garbage_collector_active_mutex)))
@@ -629,26 +629,26 @@ _ipmi_sendto (ipmiconsole_ctx_t c)
   if (ipmi_is_ipmi_1_5_packet (buffer, n))
     {
       do
-	{
-	  len = ipmi_lan_sendto (c->connection.ipmi_fd,
-				 buffer,
-				 n,
-				 0,
-				 (struct sockaddr *)&(c->session.addr),
-				 sizeof (struct sockaddr_in));
-	} while (len < 0 && errno == EINTR);
+        {
+          len = ipmi_lan_sendto (c->connection.ipmi_fd,
+                                 buffer,
+                                 n,
+                                 0,
+                                 (struct sockaddr *)&(c->session.addr),
+                                 sizeof (struct sockaddr_in));
+        } while (len < 0 && errno == EINTR);
     }
   else
     {
       do
-	{
-	  len = ipmi_rmcpplus_sendto (c->connection.ipmi_fd,
-				      buffer,
-				      n,
-				      0,
-				      (struct sockaddr *)&(c->session.addr),
-				      sizeof (struct sockaddr_in));
-	} while (len < 0 && errno == EINTR);
+        {
+          len = ipmi_rmcpplus_sendto (c->connection.ipmi_fd,
+                                      buffer,
+                                      n,
+                                      0,
+                                      (struct sockaddr *)&(c->session.addr),
+                                      sizeof (struct sockaddr_in));
+        } while (len < 0 && errno == EINTR);
     }
 
   if (len < 0)
@@ -1480,11 +1480,11 @@ ipmiconsole_engine_cleanup (int cleanup_sol_sessions)
   while (garbage_collector_active)
     {
       if ((perr = pthread_cond_wait (&garbage_collector_active_cond,
-				     &garbage_collector_active_mutex)))
-	{
-	  IPMICONSOLE_DEBUG (("pthread_cond_wait: %s", strerror (perr)));
-	  goto engine_cleanup;
-	}
+                                     &garbage_collector_active_mutex)))
+        {
+          IPMICONSOLE_DEBUG (("pthread_cond_wait: %s", strerror (perr)));
+          goto engine_cleanup;
+        }
     }
 
   if ((perr = pthread_mutex_unlock (&garbage_collector_active_mutex)))

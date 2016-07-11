@@ -49,13 +49,13 @@ ipmi_config_sensors_discrete_section (ipmi_config_state_data_t *state_data,
   assert (section_ptr);
 
   if ((ret = ipmi_config_sensors_create_section_name (state_data,
-						      section_name,
-						      IPMI_CONFIG_MAX_SECTION_NAME_LEN)) != IPMI_CONFIG_ERR_SUCCESS)
+                                                      section_name,
+                                                      IPMI_CONFIG_MAX_SECTION_NAME_LEN)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_config_sensors_create_section_name: %s\n",
@@ -65,12 +65,12 @@ ipmi_config_sensors_discrete_section (ipmi_config_state_data_t *state_data,
     }
 
   if (!(section = ipmi_config_section_create (state_data,
-					      section_name,
-					      NULL,
-					      NULL,
-					      0,
-					      NULL,
-					      NULL)))
+                                              section_name,
+                                              NULL,
+                                              NULL,
+                                              0,
+                                              NULL,
+                                              NULL)))
     goto cleanup;
 
   if (setup_sensor_event_enable_fields (state_data, section) < 0)

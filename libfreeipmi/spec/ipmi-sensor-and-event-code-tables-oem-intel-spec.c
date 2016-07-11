@@ -229,7 +229,7 @@ const char * const ipmi_oem_intel_s2600jf_specific_opi_fatal_error_2[] =
     NULL
   };
 unsigned int ipmi_oem_intel_s2600jf_specific_opi_fatal_error_2_max_index = 0x05;
-#endif	/* !0 */
+#endif  /* !0 */
 
 const char * const ipmi_oem_intel_s2600jf_specific_qpi_link_width_reduced[] =
   {

@@ -38,7 +38,7 @@
 enum ipmidetectd_argp_option_keys
   {
     IPMIDETECTD_CONFIG_FILE_KEY = 'c',
-    IPMIDETECTD_LEGACY_CONFIG_FILE_KEY = 160,	/* legacy */
+    IPMIDETECTD_LEGACY_CONFIG_FILE_KEY = 160,   /* legacy */
     IPMIDETECTD_DEBUG_KEY = 'd',
   };
 

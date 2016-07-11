@@ -544,8 +544,8 @@ ipmi_oem_quanta_get_processor_information (ipmi_oem_state_data_t *state_data)
        * fall through to normal error output below.
        */
       if (rs_len >= 2
-	  && (bytes_rs[1] == IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE
-	      || bytes_rs[1] == IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST)
+          && (bytes_rs[1] == IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE
+              || bytes_rs[1] == IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST)
           && processor_index_init != processor_index_max
           && processor_index != 1)
         break;
@@ -564,69 +564,69 @@ ipmi_oem_quanta_get_processor_information (ipmi_oem_state_data_t *state_data)
       processor_mhz = (bytes_rs[3] | (bytes_rs[4] << 8));
 
       if (processor_type == IPMI_OEM_QUANTA_PROCESSOR_TYPE_NO_CPU_PRESENT)
-	pstdout_printf (state_data->pstate,
-			"Processor %u: No CPU Present\n",
+        pstdout_printf (state_data->pstate,
+                        "Processor %u: No CPU Present\n",
                         processor_index);
       else
-	{
-	  switch (processor_type)
-	    {
-	    case IPMI_OEM_QUANTA_PROCESSOR_TYPE_CELERON:
-	      processor_type_str = "Celeron";
-	      break;
-	    case IPMI_OEM_QUANTA_PROCESSOR_TYPE_PENTIUM_3:
-	      processor_type_str = "Pentium 3";
-	      break;
-	    case IPMI_OEM_QUANTA_PROCESSOR_TYPE_PENTIUM_4:
-	      processor_type_str = "Pentium 4";
-	      break;
-	    case IPMI_OEM_QUANTA_PROCESSOR_TYPE_XEON:
-	      processor_type_str = "Xeon";
-	      break;
-	    case IPMI_OEM_QUANTA_PROCESSOR_TYPE_PRESTONIA:
-	      processor_type_str = "Prestonia";
-	      break;
-	    case IPMI_OEM_QUANTA_PROCESSOR_TYPE_NOCONA:
-	      processor_type_str = "Nocona";
-	      break;
-	    case IPMI_OEM_QUANTA_PROCESSOR_TYPE_OPTERON:
-	      processor_type_str = "Opteron";
-	      break;
-	    case IPMI_OEM_QUANTA_PROCESSOR_TYPE_DEMPSEY:
-	      processor_type_str = "Dempsey";
-	      break;
-	    case IPMI_OEM_QUANTA_PROCESSOR_TYPE_CLOVERTOWN:
-	      processor_type_str = "Clovertown";
-	      break;
-	    case IPMI_OEM_QUANTA_PROCESSOR_TYPE_TIGERTON:
-	      processor_type_str = "Tigerton";
-	      break;
-	    case IPMI_OEM_QUANTA_PROCESSOR_TYPE_DUNNINGTON:
-	      processor_type_str = "Dunnington";
-	      break;
-	    case IPMI_OEM_QUANTA_PROCESSOR_TYPE_HARPERTOWN:
-	      processor_type_str = "Harpertown";
-	      break;
-	    case IPMI_OEM_QUANTA_PROCESSOR_TYPE_WOLFDALE_DP:
-	      /* achu: listed as "WolfDale-Dp" in spec, I don't like that output */
-	      processor_type_str = "Wolfdale-DP";
-	      break;
-	    case IPMI_OEM_QUANTA_PROCESSOR_TYPE_NEHALEM_EP:
-	      processor_type_str = "Nehalem-EP";
-	      break;
-	    case IPMI_OEM_QUANTA_PROCESSOR_TYPE_WESTMERE_EP:
-	      processor_type_str = "Westmere-EP";
-	      break;
-	    default:
-	      processor_type_str = "Unknown Processor";
-	    }
-	  
-	  pstdout_printf (state_data->pstate,
-			  "Processor %u: %s %.2f Ghz\n",
-			  processor_index,
-			  processor_type_str,
-			  (double)processor_mhz / 1000);
-	}
+        {
+          switch (processor_type)
+            {
+            case IPMI_OEM_QUANTA_PROCESSOR_TYPE_CELERON:
+              processor_type_str = "Celeron";
+              break;
+            case IPMI_OEM_QUANTA_PROCESSOR_TYPE_PENTIUM_3:
+              processor_type_str = "Pentium 3";
+              break;
+            case IPMI_OEM_QUANTA_PROCESSOR_TYPE_PENTIUM_4:
+              processor_type_str = "Pentium 4";
+              break;
+            case IPMI_OEM_QUANTA_PROCESSOR_TYPE_XEON:
+              processor_type_str = "Xeon";
+              break;
+            case IPMI_OEM_QUANTA_PROCESSOR_TYPE_PRESTONIA:
+              processor_type_str = "Prestonia";
+              break;
+            case IPMI_OEM_QUANTA_PROCESSOR_TYPE_NOCONA:
+              processor_type_str = "Nocona";
+              break;
+            case IPMI_OEM_QUANTA_PROCESSOR_TYPE_OPTERON:
+              processor_type_str = "Opteron";
+              break;
+            case IPMI_OEM_QUANTA_PROCESSOR_TYPE_DEMPSEY:
+              processor_type_str = "Dempsey";
+              break;
+            case IPMI_OEM_QUANTA_PROCESSOR_TYPE_CLOVERTOWN:
+              processor_type_str = "Clovertown";
+              break;
+            case IPMI_OEM_QUANTA_PROCESSOR_TYPE_TIGERTON:
+              processor_type_str = "Tigerton";
+              break;
+            case IPMI_OEM_QUANTA_PROCESSOR_TYPE_DUNNINGTON:
+              processor_type_str = "Dunnington";
+              break;
+            case IPMI_OEM_QUANTA_PROCESSOR_TYPE_HARPERTOWN:
+              processor_type_str = "Harpertown";
+              break;
+            case IPMI_OEM_QUANTA_PROCESSOR_TYPE_WOLFDALE_DP:
+              /* achu: listed as "WolfDale-Dp" in spec, I don't like that output */
+              processor_type_str = "Wolfdale-DP";
+              break;
+            case IPMI_OEM_QUANTA_PROCESSOR_TYPE_NEHALEM_EP:
+              processor_type_str = "Nehalem-EP";
+              break;
+            case IPMI_OEM_QUANTA_PROCESSOR_TYPE_WESTMERE_EP:
+              processor_type_str = "Westmere-EP";
+              break;
+            default:
+              processor_type_str = "Unknown Processor";
+            }
+          
+          pstdout_printf (state_data->pstate,
+                          "Processor %u: %s %.2f Ghz\n",
+                          processor_index,
+                          processor_type_str,
+                          (double)processor_mhz / 1000);
+        }
     }
 
   rv = 0;

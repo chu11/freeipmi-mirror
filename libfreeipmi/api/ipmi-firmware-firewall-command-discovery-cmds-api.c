@@ -43,8 +43,8 @@
 
 int
 ipmi_cmd_get_netfn_support (ipmi_ctx_t ctx, 
-			    uint8_t channel_number,
-			    fiid_obj_t obj_cmd_rs)
+                            uint8_t channel_number,
+                            fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int rv = -1;
@@ -76,7 +76,7 @@ ipmi_cmd_get_netfn_support (ipmi_ctx_t ctx,
     }
   
   if (fill_cmd_get_netfn_support (channel_number,
-				  obj_cmd_rq) < 0)
+                                  obj_cmd_rq) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
@@ -100,12 +100,12 @@ ipmi_cmd_get_netfn_support (ipmi_ctx_t ctx,
 
 int
 ipmi_cmd_get_command_support (ipmi_ctx_t ctx, 
-			      uint8_t channel_number,
-			      uint8_t net_fn,
-			      uint8_t operation,
-			      uint8_t lun,
-			      uint32_t net_fn_data,
-			      fiid_obj_t obj_cmd_rs)
+                              uint8_t channel_number,
+                              uint8_t net_fn,
+                              uint8_t operation,
+                              uint8_t lun,
+                              uint32_t net_fn_data,
+                              fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int rv = -1;
@@ -137,11 +137,11 @@ ipmi_cmd_get_command_support (ipmi_ctx_t ctx,
     }
   
   if (fill_cmd_get_command_support (channel_number,
-				    net_fn,
-				    operation,
-				    lun,
-				    net_fn_data,
-				    obj_cmd_rq) < 0)
+                                    net_fn,
+                                    operation,
+                                    lun,
+                                    net_fn_data,
+                                    obj_cmd_rq) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
@@ -165,12 +165,12 @@ ipmi_cmd_get_command_support (ipmi_ctx_t ctx,
 
 int
 ipmi_cmd_get_command_sub_function_support (ipmi_ctx_t ctx, 
-					   uint8_t channel_number,
-					   uint8_t net_fn,
-					   uint8_t lun,
-					   uint8_t command,
-					   uint32_t net_fn_data,
-					   fiid_obj_t obj_cmd_rs)
+                                           uint8_t channel_number,
+                                           uint8_t net_fn,
+                                           uint8_t lun,
+                                           uint8_t command,
+                                           uint32_t net_fn_data,
+                                           fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int rv = -1;
@@ -189,9 +189,9 @@ ipmi_cmd_get_command_sub_function_support (ipmi_ctx_t ctx,
     }
   
   if ((FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
-				  tmpl_cmd_get_command_sub_function_support_specification_errata_rs) < 0)
+                                  tmpl_cmd_get_command_sub_function_support_specification_errata_rs) < 0)
       && (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
-				     tmpl_cmd_get_command_sub_function_support_extension_errata_rs) < 0))
+                                     tmpl_cmd_get_command_sub_function_support_extension_errata_rs) < 0))
     {
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
@@ -204,11 +204,11 @@ ipmi_cmd_get_command_sub_function_support (ipmi_ctx_t ctx,
     }
   
   if (fill_cmd_get_command_sub_function_support (channel_number,
-						 net_fn,
-						 lun,
-						 command,
-						 net_fn_data,
-						 obj_cmd_rq) < 0)
+                                                 net_fn,
+                                                 lun,
+                                                 command,
+                                                 net_fn_data,
+                                                 obj_cmd_rq) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
@@ -232,12 +232,12 @@ ipmi_cmd_get_command_sub_function_support (ipmi_ctx_t ctx,
 
 int
 ipmi_cmd_get_configurable_commands (ipmi_ctx_t ctx, 
-				    uint8_t channel_number,
-				    uint8_t net_fn,
-				    uint8_t operation,
-				    uint8_t lun,
-				    uint32_t net_fn_data,
-				    fiid_obj_t obj_cmd_rs)
+                                    uint8_t channel_number,
+                                    uint8_t net_fn,
+                                    uint8_t operation,
+                                    uint8_t lun,
+                                    uint32_t net_fn_data,
+                                    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int rv = -1;
@@ -269,11 +269,11 @@ ipmi_cmd_get_configurable_commands (ipmi_ctx_t ctx,
     }
   
   if (fill_cmd_get_configurable_commands (channel_number,
-					  net_fn,
-					  operation,
-					  lun,
-					  net_fn_data,
-					  obj_cmd_rq) < 0)
+                                          net_fn,
+                                          operation,
+                                          lun,
+                                          net_fn_data,
+                                          obj_cmd_rq) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
@@ -297,12 +297,12 @@ ipmi_cmd_get_configurable_commands (ipmi_ctx_t ctx,
 
 int
 ipmi_cmd_get_configurable_command_sub_functions (ipmi_ctx_t ctx, 
-						 uint8_t channel_number,
-						 uint8_t net_fn,
-						 uint8_t lun,
-						 uint8_t command,
-						 uint32_t net_fn_data,
-						 fiid_obj_t obj_cmd_rs)
+                                                 uint8_t channel_number,
+                                                 uint8_t net_fn,
+                                                 uint8_t lun,
+                                                 uint8_t command,
+                                                 uint32_t net_fn_data,
+                                                 fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int rv = -1;
@@ -334,11 +334,11 @@ ipmi_cmd_get_configurable_command_sub_functions (ipmi_ctx_t ctx,
     }
   
   if (fill_cmd_get_configurable_command_sub_functions (channel_number,
-						       net_fn,
-						       lun,
-						       command,
-						       net_fn_data,
-						       obj_cmd_rq) < 0)
+                                                       net_fn,
+                                                       lun,
+                                                       command,
+                                                       net_fn_data,
+                                                       obj_cmd_rq) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
@@ -362,14 +362,14 @@ ipmi_cmd_get_configurable_command_sub_functions (ipmi_ctx_t ctx,
 
 int
 ipmi_cmd_set_command_enables (ipmi_ctx_t ctx, 
-			      uint8_t channel_number,
-			      uint8_t net_fn,
-			      uint8_t operation,
-			      uint8_t lun,
-			      uint8_t *enable_disable_bitmask,
-			      unsigned int enable_disable_bitmask_len,
-			      uint32_t net_fn_data,
-			      fiid_obj_t obj_cmd_rs)
+                              uint8_t channel_number,
+                              uint8_t net_fn,
+                              uint8_t operation,
+                              uint8_t lun,
+                              uint8_t *enable_disable_bitmask,
+                              unsigned int enable_disable_bitmask_len,
+                              uint32_t net_fn_data,
+                              fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int rv = -1;
@@ -401,13 +401,13 @@ ipmi_cmd_set_command_enables (ipmi_ctx_t ctx,
     }
   
   if (fill_cmd_set_command_enables (channel_number,
-				    net_fn,
-				    operation,
-				    lun,
-				    enable_disable_bitmask,
-				    enable_disable_bitmask_len,
-				    net_fn_data,
-				    obj_cmd_rq) < 0)
+                                    net_fn,
+                                    operation,
+                                    lun,
+                                    enable_disable_bitmask,
+                                    enable_disable_bitmask_len,
+                                    net_fn_data,
+                                    obj_cmd_rq) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
@@ -431,12 +431,12 @@ ipmi_cmd_set_command_enables (ipmi_ctx_t ctx,
 
 int
 ipmi_cmd_get_command_enables (ipmi_ctx_t ctx, 
-			      uint8_t channel_number,
-			      uint8_t net_fn,
-			      uint8_t operation,
-			      uint8_t lun,
-			      uint32_t net_fn_data,
-			      fiid_obj_t obj_cmd_rs)
+                              uint8_t channel_number,
+                              uint8_t net_fn,
+                              uint8_t operation,
+                              uint8_t lun,
+                              uint32_t net_fn_data,
+                              fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int rv = -1;
@@ -468,11 +468,11 @@ ipmi_cmd_get_command_enables (ipmi_ctx_t ctx,
     }
   
   if (fill_cmd_get_command_enables (channel_number,
-				    net_fn,
-				    operation,
-				    lun,
-				    net_fn_data,
-				    obj_cmd_rq) < 0)
+                                    net_fn,
+                                    operation,
+                                    lun,
+                                    net_fn_data,
+                                    obj_cmd_rq) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
@@ -496,13 +496,13 @@ ipmi_cmd_get_command_enables (ipmi_ctx_t ctx,
 
 int
 ipmi_cmd_set_command_sub_function_enables (ipmi_ctx_t ctx, 
-					   uint8_t channel_number,
-					   uint8_t net_fn,
-					   uint8_t lun,
-					   uint8_t command,
-					   uint32_t sub_function_enables1,
-					   uint32_t *sub_function_enables2,
-					   fiid_obj_t obj_cmd_rs)
+                                           uint8_t channel_number,
+                                           uint8_t net_fn,
+                                           uint8_t lun,
+                                           uint8_t command,
+                                           uint32_t sub_function_enables1,
+                                           uint32_t *sub_function_enables2,
+                                           fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int rv = -1;
@@ -534,12 +534,12 @@ ipmi_cmd_set_command_sub_function_enables (ipmi_ctx_t ctx,
     }
   
   if (fill_cmd_set_command_sub_function_enables (channel_number,
-						 net_fn,
-						 lun,
-						 command,
-						 sub_function_enables1,
-						 sub_function_enables2,
-						 obj_cmd_rq) < 0)
+                                                 net_fn,
+                                                 lun,
+                                                 command,
+                                                 sub_function_enables1,
+                                                 sub_function_enables2,
+                                                 obj_cmd_rq) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
@@ -563,14 +563,14 @@ ipmi_cmd_set_command_sub_function_enables (ipmi_ctx_t ctx,
 
 int
 ipmi_cmd_set_command_sub_function_enables_defining_body_code (ipmi_ctx_t ctx, 
-							      uint8_t channel_number,
-							      uint8_t net_fn,
-							      uint8_t lun,
-							      uint8_t command,
-							      uint8_t defining_body_code,
-							      uint32_t sub_function_enables1,
-							      uint32_t *sub_function_enables2,
-							      fiid_obj_t obj_cmd_rs)
+                                                              uint8_t channel_number,
+                                                              uint8_t net_fn,
+                                                              uint8_t lun,
+                                                              uint8_t command,
+                                                              uint8_t defining_body_code,
+                                                              uint32_t sub_function_enables1,
+                                                              uint32_t *sub_function_enables2,
+                                                              fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int rv = -1;
@@ -602,13 +602,13 @@ ipmi_cmd_set_command_sub_function_enables_defining_body_code (ipmi_ctx_t ctx,
     }
   
   if (fill_cmd_set_command_sub_function_enables_defining_body_code (channel_number,
-								    net_fn,
-								    lun,
-								    command,
-								    defining_body_code,
-								    sub_function_enables1,
-								    sub_function_enables2,
-								    obj_cmd_rq) < 0)
+                                                                    net_fn,
+                                                                    lun,
+                                                                    command,
+                                                                    defining_body_code,
+                                                                    sub_function_enables1,
+                                                                    sub_function_enables2,
+                                                                    obj_cmd_rq) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
@@ -632,14 +632,14 @@ ipmi_cmd_set_command_sub_function_enables_defining_body_code (ipmi_ctx_t ctx,
 
 int
 ipmi_cmd_set_command_sub_function_enables_oem_iana (ipmi_ctx_t ctx, 
-						    uint8_t channel_number,
-						    uint8_t net_fn,
-						    uint8_t lun,
-						    uint8_t command,
-						    uint32_t oem_iana,
-						    uint32_t sub_function_enables1,
-						    uint32_t *sub_function_enables2,
-						    fiid_obj_t obj_cmd_rs)
+                                                    uint8_t channel_number,
+                                                    uint8_t net_fn,
+                                                    uint8_t lun,
+                                                    uint8_t command,
+                                                    uint32_t oem_iana,
+                                                    uint32_t sub_function_enables1,
+                                                    uint32_t *sub_function_enables2,
+                                                    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int rv = -1;
@@ -671,13 +671,13 @@ ipmi_cmd_set_command_sub_function_enables_oem_iana (ipmi_ctx_t ctx,
     }
   
   if (fill_cmd_set_command_sub_function_enables_oem_iana (channel_number,
-								    net_fn,
-								    lun,
-								    command,
-								    oem_iana,
-								    sub_function_enables1,
-								    sub_function_enables2,
-								    obj_cmd_rq) < 0)
+                                                                    net_fn,
+                                                                    lun,
+                                                                    command,
+                                                                    oem_iana,
+                                                                    sub_function_enables1,
+                                                                    sub_function_enables2,
+                                                                    obj_cmd_rq) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
@@ -701,12 +701,12 @@ ipmi_cmd_set_command_sub_function_enables_oem_iana (ipmi_ctx_t ctx,
 
 int
 ipmi_cmd_get_command_sub_function_enables (ipmi_ctx_t ctx, 
-					   uint8_t channel_number,
-					   uint8_t net_fn,
-					   uint8_t lun,
-					   uint8_t command,
-					   uint32_t net_fn_data,
-					   fiid_obj_t obj_cmd_rs)
+                                           uint8_t channel_number,
+                                           uint8_t net_fn,
+                                           uint8_t lun,
+                                           uint8_t command,
+                                           uint32_t net_fn_data,
+                                           fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int rv = -1;
@@ -738,11 +738,11 @@ ipmi_cmd_get_command_sub_function_enables (ipmi_ctx_t ctx,
     }
   
   if (fill_cmd_get_command_sub_function_enables (channel_number,
-						 net_fn,
-						 lun,
-						 command,
-						 net_fn_data,
-						 obj_cmd_rq) < 0)
+                                                 net_fn,
+                                                 lun,
+                                                 command,
+                                                 net_fn_data,
+                                                 obj_cmd_rq) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
@@ -766,10 +766,10 @@ ipmi_cmd_get_command_sub_function_enables (ipmi_ctx_t ctx,
 
 int
 ipmi_cmd_get_oem_netfn_iana_support (ipmi_ctx_t ctx, 
-				     uint8_t channel_number,
-				     uint8_t net_fn,
-				     uint8_t list_index,
-				     fiid_obj_t obj_cmd_rs)
+                                     uint8_t channel_number,
+                                     uint8_t net_fn,
+                                     uint8_t list_index,
+                                     fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int rv = -1;
@@ -801,9 +801,9 @@ ipmi_cmd_get_oem_netfn_iana_support (ipmi_ctx_t ctx,
     }
   
   if (fill_cmd_get_oem_netfn_iana_support (channel_number,
-					   net_fn,
-					   list_index,
-					   obj_cmd_rq) < 0)
+                                           net_fn,
+                                           list_index,
+                                           obj_cmd_rq) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;

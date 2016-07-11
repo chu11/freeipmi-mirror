@@ -37,10 +37,10 @@ int debug_output_str (int fd, const char *prefix, const char *str);
 int debug_output_byte_array (int fd, const char *prefix, const uint8_t *buf, unsigned int buf_len);
 
 int debug_dump_ipmb (int fd,
-		     const char *prefix,
-		     const uint8_t *ipmb_buf,
-		     unsigned int ipmb_buf_len,
-		     fiid_template_t tmpl_ipmb_msg_hdr,
-		     fiid_template_t tmpl_ipmb_cmd);
+                     const char *prefix,
+                     const uint8_t *ipmb_buf,
+                     unsigned int ipmb_buf_len,
+                     fiid_template_t tmpl_ipmb_msg_hdr,
+                     fiid_template_t tmpl_ipmb_cmd);
 
 #endif /* IPMI_DEBUG_COMMON_H */

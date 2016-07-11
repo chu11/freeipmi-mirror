@@ -61,10 +61,10 @@ _last_errnum_manage (ipmiseld_host_data_t *host_data)
     {
       host_data->last_ipmi_errnum_count++;
       if (host_data->last_ipmi_errnum_count > IPMISELD_ERROR_OUTPUT_LIMIT)
-	{
-	  host_data->last_ipmi_errnum = 0;
-	  host_data->last_ipmi_errnum_count = 0;
-	}
+        {
+          host_data->last_ipmi_errnum = 0;
+          host_data->last_ipmi_errnum_count = 0;
+        }
     }
 }
 
@@ -108,30 +108,30 @@ ipmiseld_ipmi_setup (ipmiseld_host_data_t *host_data)
                                            workaround_flags,
                                            (common_args->debug > 1) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT) < 0)
             {
-	      if (host_data->last_ipmi_errnum != ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx)
-		  || host_data->prog_data->args->verbose_count)
-		{
-		  if (ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_USERNAME_INVALID
-		      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_PASSWORD_INVALID
-		      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_K_G_INVALID
-		      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_PRIVILEGE_LEVEL_INSUFFICIENT
-		      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED
-		      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_CIPHER_SUITE_ID_UNAVAILABLE
-		      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_PASSWORD_VERIFICATION_TIMEOUT
-		      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_IPMI_2_0_UNAVAILABLE
-		      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_CONNECTION_TIMEOUT
-		      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_SESSION_TIMEOUT
-		      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_HOSTNAME_INVALID)
-		    ipmiseld_err_output (host_data,
-					 "Error connecting: %s",
-					 ipmi_ctx_errormsg (host_data->host_poll->ipmi_ctx));
-		  else
-		    ipmiseld_err_output (host_data,
-					 "ipmi_ctx_open_outofband_2_0: %s",
-					 ipmi_ctx_errormsg (host_data->host_poll->ipmi_ctx));
-		}
+              if (host_data->last_ipmi_errnum != ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx)
+                  || host_data->prog_data->args->verbose_count)
+                {
+                  if (ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_USERNAME_INVALID
+                      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_PASSWORD_INVALID
+                      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_K_G_INVALID
+                      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_PRIVILEGE_LEVEL_INSUFFICIENT
+                      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED
+                      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_CIPHER_SUITE_ID_UNAVAILABLE
+                      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_PASSWORD_VERIFICATION_TIMEOUT
+                      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_IPMI_2_0_UNAVAILABLE
+                      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_CONNECTION_TIMEOUT
+                      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_SESSION_TIMEOUT
+                      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_HOSTNAME_INVALID)
+                    ipmiseld_err_output (host_data,
+                                         "Error connecting: %s",
+                                         ipmi_ctx_errormsg (host_data->host_poll->ipmi_ctx));
+                  else
+                    ipmiseld_err_output (host_data,
+                                         "ipmi_ctx_open_outofband_2_0: %s",
+                                         ipmi_ctx_errormsg (host_data->host_poll->ipmi_ctx));
+                }
 
-	      _last_errnum_manage (host_data);
+              _last_errnum_manage (host_data);
 
               goto cleanup;
             }
@@ -149,28 +149,28 @@ ipmiseld_ipmi_setup (ipmiseld_host_data_t *host_data)
                                        workaround_flags,
                                        (common_args->debug > 1) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT) < 0)
             {
-	      if (host_data->last_ipmi_errnum != ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx)
-		  || host_data->prog_data->args->verbose_count)
-		{
-		  if (ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_USERNAME_INVALID
-		      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_PASSWORD_INVALID
-		      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_PRIVILEGE_LEVEL_INSUFFICIENT
-		      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED
-		      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_AUTHENTICATION_TYPE_UNAVAILABLE
-		      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_PASSWORD_VERIFICATION_TIMEOUT
-		      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_CONNECTION_TIMEOUT
-		      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_SESSION_TIMEOUT
-		      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_HOSTNAME_INVALID)
-		    ipmiseld_err_output (host_data,
-					 "Error connecting: %s",
-					 ipmi_ctx_errormsg (host_data->host_poll->ipmi_ctx));
-		  else
-		    ipmiseld_err_output (host_data,
-					 "ipmi_ctx_open_outofband: %s",
-					 ipmi_ctx_errormsg (host_data->host_poll->ipmi_ctx));
-		}
+              if (host_data->last_ipmi_errnum != ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx)
+                  || host_data->prog_data->args->verbose_count)
+                {
+                  if (ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_USERNAME_INVALID
+                      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_PASSWORD_INVALID
+                      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_PRIVILEGE_LEVEL_INSUFFICIENT
+                      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED
+                      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_AUTHENTICATION_TYPE_UNAVAILABLE
+                      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_PASSWORD_VERIFICATION_TIMEOUT
+                      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_CONNECTION_TIMEOUT
+                      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_SESSION_TIMEOUT
+                      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_HOSTNAME_INVALID)
+                    ipmiseld_err_output (host_data,
+                                         "Error connecting: %s",
+                                         ipmi_ctx_errormsg (host_data->host_poll->ipmi_ctx));
+                  else
+                    ipmiseld_err_output (host_data,
+                                         "ipmi_ctx_open_outofband: %s",
+                                         ipmi_ctx_errormsg (host_data->host_poll->ipmi_ctx));
+                }
 
-	      _last_errnum_manage (host_data);
+              _last_errnum_manage (host_data);
 
               goto cleanup;
             }
@@ -180,7 +180,7 @@ ipmiseld_ipmi_setup (ipmiseld_host_data_t *host_data)
     {
       if (!ipmi_is_root ())
         {
-	  ipmiseld_err_output (host_data, "%s", ipmi_ctx_strerror (IPMI_ERR_PERMISSION));
+          ipmiseld_err_output (host_data, "%s", ipmi_ctx_strerror (IPMI_ERR_PERMISSION));
           goto cleanup;
         }
 
@@ -200,36 +200,36 @@ ipmiseld_ipmi_setup (ipmiseld_host_data_t *host_data)
                                            workaround_flags,
                                            (common_args->debug > 1) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT)) < 0)
             {
-	      if (host_data->last_ipmi_errnum != ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx)
-		  || host_data->prog_data->args->verbose_count)
-		{
-		  if (ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_PERMISSION
-		      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_DRIVER_BUSY
-		      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_DRIVER_TIMEOUT)
-		    ipmiseld_err_output (host_data,
-					 "Error loading driver: %s",
-					 ipmi_ctx_errormsg (host_data->host_poll->ipmi_ctx));
-		  else
-		    ipmiseld_err_output (host_data,
-					 "ipmi_ctx_find_inband: %s",
-					 ipmi_ctx_errormsg (host_data->host_poll->ipmi_ctx));
-		}
+              if (host_data->last_ipmi_errnum != ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx)
+                  || host_data->prog_data->args->verbose_count)
+                {
+                  if (ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_PERMISSION
+                      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_DRIVER_BUSY
+                      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_DRIVER_TIMEOUT)
+                    ipmiseld_err_output (host_data,
+                                         "Error loading driver: %s",
+                                         ipmi_ctx_errormsg (host_data->host_poll->ipmi_ctx));
+                  else
+                    ipmiseld_err_output (host_data,
+                                         "ipmi_ctx_find_inband: %s",
+                                         ipmi_ctx_errormsg (host_data->host_poll->ipmi_ctx));
+                }
 
-	      _last_errnum_manage (host_data);
+              _last_errnum_manage (host_data);
 
-	      goto cleanup;
-	    }
+              goto cleanup;
+            }
 
           if (!ret)
             {
-	      /* XXX deal w/ specific errors */
+              /* XXX deal w/ specific errors */
               ipmiseld_err_output (host_data, "could not find inband device");
               goto cleanup;
             }
         }
       else
         {
-	  if (ipmi_ctx_open_inband (host_data->host_poll->ipmi_ctx,
+          if (ipmi_ctx_open_inband (host_data->host_poll->ipmi_ctx,
                                     common_args->driver_type,
                                     common_args->disable_auto_probe,
                                     common_args->driver_address,
@@ -238,23 +238,23 @@ ipmiseld_ipmi_setup (ipmiseld_host_data_t *host_data)
                                     workaround_flags,
                                     (common_args->debug > 1) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT) < 0)
             {
-	      if (host_data->last_ipmi_errnum != ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx)
-		  || host_data->prog_data->args->verbose_count)
-		{
-		  if (ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_PERMISSION
-		      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_DEVICE_NOT_FOUND
-		      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_DRIVER_BUSY
-		      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_DRIVER_TIMEOUT)
-		    ipmiseld_err_output (host_data,
-					 "Error loading driver: %s",
-					 ipmi_ctx_errormsg (host_data->host_poll->ipmi_ctx));
-		  else
-		    ipmiseld_err_output (host_data,
-					 "ipmi_ctx_open_inband: %s",
-					 ipmi_ctx_errormsg (host_data->host_poll->ipmi_ctx));
-		}
+              if (host_data->last_ipmi_errnum != ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx)
+                  || host_data->prog_data->args->verbose_count)
+                {
+                  if (ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_PERMISSION
+                      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_DEVICE_NOT_FOUND
+                      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_DRIVER_BUSY
+                      || ipmi_ctx_errnum (host_data->host_poll->ipmi_ctx) == IPMI_ERR_DRIVER_TIMEOUT)
+                    ipmiseld_err_output (host_data,
+                                         "Error loading driver: %s",
+                                         ipmi_ctx_errormsg (host_data->host_poll->ipmi_ctx));
+                  else
+                    ipmiseld_err_output (host_data,
+                                         "ipmi_ctx_open_inband: %s",
+                                         ipmi_ctx_errormsg (host_data->host_poll->ipmi_ctx));
+                }
 
-	      _last_errnum_manage (host_data);
+              _last_errnum_manage (host_data);
 
               goto cleanup;
             }
@@ -268,9 +268,9 @@ ipmiseld_ipmi_setup (ipmiseld_host_data_t *host_data)
                                common_args->target_channel_number_is_set ? &common_args->target_channel_number : NULL,
                                common_args->target_slave_address_is_set ? &common_args->target_slave_address : NULL) < 0)
         {
-	  ipmiseld_err_output (host_data,
-			       "ipmi_ctx_set_target: %s",
-			       ipmi_ctx_errormsg (host_data->host_poll->ipmi_ctx));
+          ipmiseld_err_output (host_data,
+                               "ipmi_ctx_set_target: %s",
+                               ipmi_ctx_errormsg (host_data->host_poll->ipmi_ctx));
           goto cleanup;
         } 
     }

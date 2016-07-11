@@ -216,35 +216,35 @@ _nodes_setup (void)
       memset (info, '\0', sizeof (struct ipmidetectd_info));
 
       if (strchr (host, ':'))
-	{
-	  char *ptr;
+        {
+          char *ptr;
 
-	  if (!(host_copy = strdup (host)))
-	    err_exit ("strdup: %s", strerror (errno));
-	  
-	  if ((ptr = strchr (host_copy, ':')))
-	    {
-	      char *endptr;
-	      int tmp;
+          if (!(host_copy = strdup (host)))
+            err_exit ("strdup: %s", strerror (errno));
+          
+          if ((ptr = strchr (host_copy, ':')))
+            {
+              char *endptr;
+              int tmp;
 
-	      *ptr = '\0';
-	      ptr++;
-	      
-	      errno = 0;
-	      tmp = strtol (ptr, &endptr, 0);
-	      if (errno
-		  || endptr[0] != '\0'
-		  || tmp <= 0
-		  || tmp > USHRT_MAX)
-		err_exit ("invalid port specified: %s", host);
-	      
-	      port = tmp;
-	    }
+              *ptr = '\0';
+              ptr++;
+              
+              errno = 0;
+              tmp = strtol (ptr, &endptr, 0);
+              if (errno
+                  || endptr[0] != '\0'
+                  || tmp <= 0
+                  || tmp > USHRT_MAX)
+                err_exit ("invalid port specified: %s", host);
+              
+              port = tmp;
+            }
 
-	  host_ptr = host_copy;
-	}
+          host_ptr = host_copy;
+        }
       else
-	host_ptr = host;
+        host_ptr = host;
 
       if (!(info->hostname = strdup (host_ptr)))
         err_exit ("strdup: %s", strerror (errno));
@@ -362,7 +362,7 @@ _ipmi_ping_build (struct ipmidetectd_info *info, uint8_t *buf, unsigned int bufl
                                     0,
                                     buf,
                                     buflen,
-				    IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
+                                    IPMI_INTERFACE_FLAGS_DEFAULT)) < 0)
     err_exit ("assemble_ipmi_lan_pkt: %s", strerror (errno));
 
 #if 0

@@ -40,15 +40,15 @@ int ipmiseld_log_facility_parse (const char *str);
 int ipmiseld_log_priority_parse (const char *str);
 
 void ipmiseld_syslog (ipmiseld_host_data_t *host_data,
-		      const char *message,
-		      ...);
+                      const char *message,
+                      ...);
 
 void ipmiseld_syslog_host (ipmiseld_host_data_t *host_data,
-			   const char *message,
-			   ...);
+                           const char *message,
+                           ...);
 
 void ipmiseld_err_output (ipmiseld_host_data_t *host_data,
-			  const char *message,
-			  ...);
+                          const char *message,
+                          ...);
 
 #endif /* IPMISELD_COMMON_H */

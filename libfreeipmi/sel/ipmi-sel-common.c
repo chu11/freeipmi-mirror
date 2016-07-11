@@ -49,8 +49,8 @@
 
 int
 sel_get_reservation_id (ipmi_sel_ctx_t ctx,
-			uint16_t *reservation_id,
-			unsigned int *is_insufficient_privilege_level)
+                        uint16_t *reservation_id,
+                        unsigned int *is_insufficient_privilege_level)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -122,9 +122,9 @@ sel_get_reservation_id (ipmi_sel_ctx_t ctx,
 
 int
 sel_get_record_header_info (ipmi_sel_ctx_t ctx,
-			    struct ipmi_sel_entry *sel_entry,
-			    uint16_t *record_id,
-			    uint8_t *record_type)
+                            struct ipmi_sel_entry *sel_entry,
+                            uint16_t *record_id,
+                            uint8_t *record_type)
 {
   fiid_obj_t obj_sel_record_header = NULL;
   uint64_t val;
@@ -178,8 +178,8 @@ sel_get_record_header_info (ipmi_sel_ctx_t ctx,
       (*record_type) = val;
 
       if (ctx->flags & IPMI_SEL_FLAGS_ASSUME_SYTEM_EVENT_RECORDS
-	  && !IPMI_SEL_RECORD_TYPE_VALID ((*record_type)))
-	(*record_type) = IPMI_SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD;
+          && !IPMI_SEL_RECORD_TYPE_VALID ((*record_type)))
+        (*record_type) = IPMI_SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD;
     }
 
   rv = 0;
@@ -190,8 +190,8 @@ sel_get_record_header_info (ipmi_sel_ctx_t ctx,
 
 int
 sel_get_timestamp (ipmi_sel_ctx_t ctx,
-		   struct ipmi_sel_entry *sel_entry,
-		   uint32_t *timestamp)
+                   struct ipmi_sel_entry *sel_entry,
+                   uint32_t *timestamp)
 {
   fiid_obj_t obj_sel_record = NULL;
   uint8_t record_type;
@@ -210,9 +210,9 @@ sel_get_timestamp (ipmi_sel_ctx_t ctx,
     }
 
   if (sel_get_record_header_info (ctx,
-				  sel_entry,
-				  NULL,
-				  &record_type) < 0)
+                                  sel_entry,
+                                  NULL,
+                                  &record_type) < 0)
     goto cleanup;
 
   record_type_class = ipmi_sel_record_type_class (record_type);
@@ -252,12 +252,12 @@ sel_get_timestamp (ipmi_sel_ctx_t ctx,
   if (timestamp)
     {
       if (FIID_OBJ_GET (obj_sel_record,
-			"timestamp",
-			&val) < 0)
-	{
-	  SEL_FIID_OBJECT_ERROR_TO_SEL_ERRNUM (ctx, obj_sel_record);
-	  goto cleanup;
-	}
+                        "timestamp",
+                        &val) < 0)
+        {
+          SEL_FIID_OBJECT_ERROR_TO_SEL_ERRNUM (ctx, obj_sel_record);
+          goto cleanup;
+        }
       (*timestamp) = val;
     }
 
@@ -269,8 +269,8 @@ sel_get_timestamp (ipmi_sel_ctx_t ctx,
 
 int
 sel_get_manufacturer_id (ipmi_sel_ctx_t ctx,
-			 struct ipmi_sel_entry *sel_entry,
-			 uint32_t *manufacturer_id)
+                         struct ipmi_sel_entry *sel_entry,
+                         uint32_t *manufacturer_id)
 {
   fiid_obj_t obj_sel_record = NULL;
   uint8_t record_type;
@@ -289,9 +289,9 @@ sel_get_manufacturer_id (ipmi_sel_ctx_t ctx,
     }
 
   if (sel_get_record_header_info (ctx,
-				  sel_entry,
-				  NULL,
-				  &record_type) < 0)
+                                  sel_entry,
+                                  NULL,
+                                  &record_type) < 0)
     goto cleanup;
 
   record_type_class = ipmi_sel_record_type_class (record_type);
@@ -319,12 +319,12 @@ sel_get_manufacturer_id (ipmi_sel_ctx_t ctx,
   if (manufacturer_id)
     {
       if (FIID_OBJ_GET (obj_sel_record,
-			"manufacturer_id",
-			&val) < 0)
-	{
-	  SEL_FIID_OBJECT_ERROR_TO_SEL_ERRNUM (ctx, obj_sel_record);
-	  goto cleanup;
-	}
+                        "manufacturer_id",
+                        &val) < 0)
+        {
+          SEL_FIID_OBJECT_ERROR_TO_SEL_ERRNUM (ctx, obj_sel_record);
+          goto cleanup;
+        }
       (*manufacturer_id) = val;
     }
 
@@ -336,9 +336,9 @@ sel_get_manufacturer_id (ipmi_sel_ctx_t ctx,
 
 int
 sel_get_oem (ipmi_sel_ctx_t ctx,
-	     struct ipmi_sel_entry *sel_entry,
-	     uint8_t *buf,
-	     unsigned int buflen)
+             struct ipmi_sel_entry *sel_entry,
+             uint8_t *buf,
+             unsigned int buflen)
 {
   fiid_obj_t obj_sel_record = NULL;
   uint8_t record_type;
@@ -359,9 +359,9 @@ sel_get_oem (ipmi_sel_ctx_t ctx,
     }
 
   if (sel_get_record_header_info (ctx,
-				  sel_entry,
-				  NULL,
-				  &record_type) < 0)
+                                  sel_entry,
+                                  NULL,
+                                  &record_type) < 0)
     goto cleanup;
 
   record_type_class = ipmi_sel_record_type_class (record_type);
@@ -415,8 +415,8 @@ sel_get_oem (ipmi_sel_ctx_t ctx,
 
 int
 sel_get_system_event_record (ipmi_sel_ctx_t ctx,
-			     struct ipmi_sel_entry *sel_entry,
-			     struct ipmi_sel_system_event_record_data *system_event_record_data)
+                             struct ipmi_sel_entry *sel_entry,
+                             struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   fiid_obj_t obj_sel_system_event_record = NULL;
   fiid_obj_t obj_sel_system_event_record_event_fields = NULL;
@@ -439,9 +439,9 @@ sel_get_system_event_record (ipmi_sel_ctx_t ctx,
     }
 
   if (sel_get_record_header_info (ctx,
-				  sel_entry,
-				  NULL,
-				  &record_type) < 0)
+                                  sel_entry,
+                                  NULL,
+                                  &record_type) < 0)
     goto cleanup;
 
   record_type_class = ipmi_sel_record_type_class (record_type);

@@ -56,7 +56,7 @@ int debug_hdr_cmd (uint8_t packet_type,
                    uint8_t packet_direction,
                    uint8_t net_fn,
                    uint8_t cmd,
-		   uint8_t group_extension,
+                   uint8_t group_extension,
                    char *hdrbuf,
                    unsigned int hdrbuf_len);
 

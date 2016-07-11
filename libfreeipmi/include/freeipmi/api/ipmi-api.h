@@ -314,12 +314,12 @@ int ipmi_ctx_find_inband (ipmi_ctx_t ctx,
  * Can only be called after device opened. 
  */ 
 int ipmi_ctx_set_target (ipmi_ctx_t ctx, 
-			 uint8_t *channel_number,
-			 uint8_t *rs_addr);
+                         uint8_t *channel_number,
+                         uint8_t *rs_addr);
 
 int ipmi_ctx_get_target (ipmi_ctx_t ctx, 
-			 uint8_t *channel_number,
-			 uint8_t *rs_addr);
+                         uint8_t *channel_number,
+                         uint8_t *rs_addr);
 
 int ipmi_cmd (ipmi_ctx_t ctx,
               uint8_t lun,
@@ -355,14 +355,14 @@ int ipmi_cmd_raw (ipmi_ctx_t ctx,
  * then will set targets back to prior originals.
  */
 int ipmi_cmd_raw_ipmb (ipmi_ctx_t ctx,
-		       uint8_t channel_number,
-		       uint8_t rs_addr,
-		       uint8_t lun,
-		       uint8_t net_fn,
-		       const void *buf_rq,
-		       unsigned int buf_rq_len,
-		       void *buf_rs,
-		       unsigned int buf_rs_len);
+                       uint8_t channel_number,
+                       uint8_t rs_addr,
+                       uint8_t lun,
+                       uint8_t net_fn,
+                       const void *buf_rq,
+                       unsigned int buf_rq_len,
+                       void *buf_rs,
+                       unsigned int buf_rs_len);
 
 int ipmi_ctx_close (ipmi_ctx_t ctx);
 

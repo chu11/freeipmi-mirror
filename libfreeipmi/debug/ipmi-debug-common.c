@@ -209,11 +209,11 @@ debug_output_byte_array (int fd, const char *prefix, const uint8_t *buf, unsigne
 
 int
 debug_dump_ipmb (int fd,
-		 const char *prefix,
-		 const uint8_t *ipmb_buf,
-		 unsigned int ipmb_buf_len,
-		 fiid_template_t tmpl_ipmb_msg_hdr,
-		 fiid_template_t tmpl_ipmb_cmd)
+                 const char *prefix,
+                 const uint8_t *ipmb_buf,
+                 unsigned int ipmb_buf_len,
+                 fiid_template_t tmpl_ipmb_msg_hdr,
+                 fiid_template_t tmpl_ipmb_cmd)
 {
   char *ipmb_msg_hdr =
     "IPMB Message Header:\n"

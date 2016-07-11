@@ -831,13 +831,13 @@ _construct_payload_confidentiality_aes_cbc_128 (uint8_t payload_type,
 
   /* +1 for pad length field */
   if ((encrypt_len = crypt_cipher_encrypt (IPMI_CRYPT_CIPHER_AES,
-					   IPMI_CRYPT_CIPHER_MODE_CBC,
-					   confidentiality_key,
-					   confidentiality_key_len,
-					   iv,
-					   iv_len,
-					   payload_buf,
-					   payload_len + pad_len + 1)) < 0)
+                                           IPMI_CRYPT_CIPHER_MODE_CBC,
+                                           confidentiality_key,
+                                           confidentiality_key_len,
+                                           iv,
+                                           iv_len,
+                                           payload_buf,
+                                           payload_len + pad_len + 1)) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -938,7 +938,7 @@ _construct_payload (uint8_t payload_type,
            || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1
            || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3)
           && IPMI_AUTHENTICATION_ALGORITHM_SUPPORTED (authentication_algorithm)
-	  && IPMI_CONFIDENTIALITY_ALGORITHM_SUPPORTED (confidentiality_algorithm)
+          && IPMI_CONFIDENTIALITY_ALGORITHM_SUPPORTED (confidentiality_algorithm)
           && !(payload_type == IPMI_PAYLOAD_TYPE_IPMI
                && !fiid_obj_valid (obj_lan_msg_hdr))
           && fiid_obj_valid (obj_cmd)
@@ -1197,13 +1197,13 @@ _construct_session_trlr_authentication_code (uint8_t integrity_algorithm,
     }
 
   if ((integrity_digest_len = crypt_hash (hash_algorithm,
-					  hash_flags,
-					  integrity_key,
-					  integrity_key_len,
-					  hash_data,
-					  hash_data_len,
-					  integrity_digest,
-					  IPMI_MAX_INTEGRITY_DATA_LENGTH)) < 0)
+                                          hash_flags,
+                                          integrity_key,
+                                          integrity_key_len,
+                                          hash_data,
+                                          hash_data_len,
+                                          integrity_digest,
+                                          IPMI_MAX_INTEGRITY_DATA_LENGTH)) < 0)
     {
       ERRNO_TRACE (errno);
       goto cleanup;
@@ -1246,7 +1246,7 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                             fiid_obj_t obj_rmcpplus_session_trlr,
                             void *pkt,
                             unsigned int pkt_len,
-			    unsigned int flags)
+                            unsigned int flags)
 {
   unsigned int indx = 0;
   int obj_rmcp_hdr_len, obj_len, oem_iana_len, oem_payload_id_len, payload_len, len, rv = -1;
@@ -1970,13 +1970,13 @@ _deconstruct_payload_confidentiality_aes_cbc_128 (uint8_t payload_type,
     }
 
   if ((decrypt_len = crypt_cipher_decrypt (IPMI_CRYPT_CIPHER_AES,
-					   IPMI_CRYPT_CIPHER_MODE_CBC,
-					   confidentiality_key,
-					   confidentiality_key_len,
-					   iv,
-					   IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH,
-					   payload_buf,
-					   payload_data_len)) < 0)
+                                           IPMI_CRYPT_CIPHER_MODE_CBC,
+                                           confidentiality_key,
+                                           confidentiality_key_len,
+                                           iv,
+                                           IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH,
+                                           payload_buf,
+                                           payload_data_len)) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -2105,7 +2105,7 @@ _deconstruct_payload (uint8_t payload_type,
            || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4)
           && IPMI_PAYLOAD_ENCRYPTED_FLAG_VALID (payload_encrypted)
           && IPMI_AUTHENTICATION_ALGORITHM_SUPPORTED (authentication_algorithm)
-	  && IPMI_CONFIDENTIALITY_ALGORITHM_SUPPORTED (confidentiality_algorithm)
+          && IPMI_CONFIDENTIALITY_ALGORITHM_SUPPORTED (confidentiality_algorithm)
           && fiid_obj_valid (obj_rmcpplus_payload)
           && fiid_obj_template_compare (obj_rmcpplus_payload, tmpl_rmcpplus_payload) == 1
           && fiid_obj_valid (obj_cmd)
@@ -2163,7 +2163,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                               fiid_obj_t obj_cmd,
                               fiid_obj_t obj_lan_msg_trlr,
                               fiid_obj_t obj_rmcpplus_session_trlr,
-			      unsigned int flags)
+                              unsigned int flags)
 {
   unsigned int indx = 0;
   int obj_rmcp_hdr_len, obj_len;
@@ -2633,7 +2633,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
           && FIID_OBJ_PACKET_VALID (obj_rmcpplus_session_hdr) == 1
           && FIID_OBJ_PACKET_VALID (obj_rmcpplus_payload) == 1
           && FIID_OBJ_PACKET_VALID (obj_lan_msg_hdr) == 1
-	  && ((flags & IPMI_INTERFACE_FLAGS_NO_LEGAL_CHECK) || FIID_OBJ_PACKET_SUFFICIENT (obj_cmd) == 1)
+          && ((flags & IPMI_INTERFACE_FLAGS_NO_LEGAL_CHECK) || FIID_OBJ_PACKET_SUFFICIENT (obj_cmd) == 1)
           && FIID_OBJ_PACKET_VALID (obj_lan_msg_trlr) == 1
           && (!check_session_trlr_valid
               || FIID_OBJ_PACKET_VALID (obj_rmcpplus_session_trlr) == 1))
@@ -2644,7 +2644,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       if (FIID_OBJ_PACKET_VALID (obj_rmcp_hdr) == 1
           && FIID_OBJ_PACKET_VALID (obj_rmcpplus_session_hdr) == 1
           && FIID_OBJ_PACKET_VALID (obj_rmcpplus_payload) == 1
-	  && ((flags & IPMI_INTERFACE_FLAGS_NO_LEGAL_CHECK) || FIID_OBJ_PACKET_SUFFICIENT (obj_cmd) == 1)
+          && ((flags & IPMI_INTERFACE_FLAGS_NO_LEGAL_CHECK) || FIID_OBJ_PACKET_SUFFICIENT (obj_cmd) == 1)
           && (!check_session_trlr_valid
               || FIID_OBJ_PACKET_VALID (obj_rmcpplus_session_trlr) == 1))
         return (1);
@@ -2655,11 +2655,11 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
 
 ssize_t
 ipmi_rmcpplus_sendto (int s,
-		      const void *buf,
-		      size_t len,
-		      int flags,
-		      const struct sockaddr *to,
-		      socklen_t tolen)
+                      const void *buf,
+                      size_t len,
+                      int flags,
+                      const struct sockaddr *to,
+                      socklen_t tolen)
 {
   /* achu: Per specification table 13-8, no legacy padding for IPMI
    * 2.0 packets, so call common sendto.
@@ -2669,11 +2669,11 @@ ipmi_rmcpplus_sendto (int s,
  
 ssize_t
 ipmi_rmcpplus_recvfrom (int s,
-			void *buf,
-			size_t len,
-			int flags,
-			struct sockaddr *from,
-			socklen_t *fromlen)
+                        void *buf,
+                        size_t len,
+                        int flags,
+                        struct sockaddr *from,
+                        socklen_t *fromlen)
 {
   return (ipmi_network_recvfrom (s, buf, len, flags, from, fromlen));
 }

@@ -24,43 +24,43 @@
 #include <freeipmi/fiid/fiid.h>
 
 int api_lan_cmd (ipmi_ctx_t ctx,
-		 fiid_obj_t obj_cmd_rq,
-		 fiid_obj_t obj_cmd_rs);
+                 fiid_obj_t obj_cmd_rq,
+                 fiid_obj_t obj_cmd_rs);
 
 int api_lan_cmd_ipmb (ipmi_ctx_t ctx,
-		      fiid_obj_t obj_cmd_rq,
-		      fiid_obj_t obj_cmd_rs);
+                      fiid_obj_t obj_cmd_rq,
+                      fiid_obj_t obj_cmd_rs);
 
 int api_lan_cmd_raw (ipmi_ctx_t ctx,
-		     const void *buf_rq,
-		     unsigned int buf_rq_len,
-		     void *buf_rs,
-		     unsigned int buf_rs_len);
+                     const void *buf_rq,
+                     unsigned int buf_rq_len,
+                     void *buf_rs,
+                     unsigned int buf_rs_len);
 
 int api_lan_cmd_raw_ipmb (ipmi_ctx_t ctx,
-			  const void *buf_rq,
-			  unsigned int buf_rq_len,
-			  void *buf_rs,
-			  unsigned int buf_rs_len);
+                          const void *buf_rq,
+                          unsigned int buf_rq_len,
+                          void *buf_rs,
+                          unsigned int buf_rs_len);
 
 int api_lan_2_0_cmd (ipmi_ctx_t ctx,
-		     fiid_obj_t obj_cmd_rq,
-		     fiid_obj_t obj_cmd_rs);
+                     fiid_obj_t obj_cmd_rq,
+                     fiid_obj_t obj_cmd_rs);
 
 int api_lan_2_0_cmd_ipmb (ipmi_ctx_t ctx,
-			  fiid_obj_t obj_cmd_rq,
-			  fiid_obj_t obj_cmd_rs);
+                          fiid_obj_t obj_cmd_rq,
+                          fiid_obj_t obj_cmd_rs);
 
 int api_lan_2_0_cmd_raw (ipmi_ctx_t ctx,
-			 const void *buf_rq,
-			 unsigned int buf_rq_len,
-			 void *buf_rs,
-			 unsigned int buf_rs_len);
+                         const void *buf_rq,
+                         unsigned int buf_rq_len,
+                         void *buf_rs,
+                         unsigned int buf_rs_len);
 
 int api_lan_2_0_cmd_raw_ipmb (ipmi_ctx_t ctx,
-			      const void *buf_rq,
-			      unsigned int buf_rq_len,
-			      void *buf_rs,
-			      unsigned int buf_rs_len);
+                              const void *buf_rq,
+                              unsigned int buf_rq_len,
+                              void *buf_rs,
+                              unsigned int buf_rs_len);
 
 #endif /* IPMI_LAN_INTERFACE_API_H */

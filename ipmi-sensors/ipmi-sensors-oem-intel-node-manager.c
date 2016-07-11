@@ -60,49 +60,49 @@ ipmi_sensors_oem_intel_node_manager_output_oem_record (ipmi_sensors_state_data_t
       int ret;
       
       if ((ret = ipmi_sdr_oem_parse_intel_node_manager (state_data->sdr_ctx,
-							NULL,
-							0,
-							&nm_device_slave_address,
-							&sensor_owner_lun,
-							&channel_number,
-							&nm_health_event_sensor_number,
-							&nm_exception_event_sensor_number,
-							&nm_operational_capabilities_sensor_number,
-							&nm_alert_threshold_exceeded_sensor_number)) < 0)
-	{
-	  pstdout_fprintf (state_data->pstate,
-			   stderr,
-			   "ipmi_sdr_oem_parse_intel_node_manager: %s\n",
-			   ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
-	  return (-1);
-	}
+                                                        NULL,
+                                                        0,
+                                                        &nm_device_slave_address,
+                                                        &sensor_owner_lun,
+                                                        &channel_number,
+                                                        &nm_health_event_sensor_number,
+                                                        &nm_exception_event_sensor_number,
+                                                        &nm_operational_capabilities_sensor_number,
+                                                        &nm_alert_threshold_exceeded_sensor_number)) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_sdr_oem_parse_intel_node_manager: %s\n",
+                           ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
+          return (-1);
+        }
       
       if (ret)
-	{
-	  pstdout_printf (state_data->pstate,
-			  "Node Manager Device Slave Address: %Xh\n",
-			  nm_device_slave_address);
-	  pstdout_printf (state_data->pstate,
-			  "Sensor Owner LUN: %Xh\n",
-			  sensor_owner_lun);
-	  pstdout_printf (state_data->pstate,
-			  "Channel Number: %Xh\n",
-			  channel_number);
-	  pstdout_printf (state_data->pstate,
-			  "Node Manager Health Event Sensor Number: %u\n",
-			  nm_health_event_sensor_number);
-	  pstdout_printf (state_data->pstate,
-			  "Node Manager Exception Event Sensor Number: %u\n",
-			  nm_exception_event_sensor_number);
-	  pstdout_printf (state_data->pstate,
-			  "Node Manager Operational Capabilities Sensor Number: %u\n",
-			  nm_operational_capabilities_sensor_number);
-	  pstdout_printf (state_data->pstate,
-			  "Node Manager Alert Threshold Exceeded Sensor Number: %u\n",
-			  nm_alert_threshold_exceeded_sensor_number);
+        {
+          pstdout_printf (state_data->pstate,
+                          "Node Manager Device Slave Address: %Xh\n",
+                          nm_device_slave_address);
+          pstdout_printf (state_data->pstate,
+                          "Sensor Owner LUN: %Xh\n",
+                          sensor_owner_lun);
+          pstdout_printf (state_data->pstate,
+                          "Channel Number: %Xh\n",
+                          channel_number);
+          pstdout_printf (state_data->pstate,
+                          "Node Manager Health Event Sensor Number: %u\n",
+                          nm_health_event_sensor_number);
+          pstdout_printf (state_data->pstate,
+                          "Node Manager Exception Event Sensor Number: %u\n",
+                          nm_exception_event_sensor_number);
+          pstdout_printf (state_data->pstate,
+                          "Node Manager Operational Capabilities Sensor Number: %u\n",
+                          nm_operational_capabilities_sensor_number);
+          pstdout_printf (state_data->pstate,
+                          "Node Manager Alert Threshold Exceeded Sensor Number: %u\n",
+                          nm_alert_threshold_exceeded_sensor_number);
 
-	  return (1);
-	}
+          return (1);
+        }
     }
 
   return (0);

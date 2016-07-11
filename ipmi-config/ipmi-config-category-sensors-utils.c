@@ -36,7 +36,7 @@
 
 static ipmi_config_err_t
 _convert_id_string (ipmi_config_state_data_t *state_data,
-		    char *id_string)
+                    char *id_string)
 {
   char *ptr;
 
@@ -57,8 +57,8 @@ _convert_id_string (ipmi_config_state_data_t *state_data,
 
 ipmi_config_err_t
 ipmi_config_sensors_create_section_name (ipmi_config_state_data_t *state_data,
-					 char *section_name,
-					 unsigned int section_name_len)
+                                         char *section_name,
+                                         unsigned int section_name_len)
 {
   char id_string[IPMI_SDR_MAX_ID_STRING_LENGTH + 1];
   uint16_t record_id;
@@ -73,8 +73,8 @@ ipmi_config_sensors_create_section_name (ipmi_config_state_data_t *state_data,
   memset (id_string, '\0', IPMI_SDR_MAX_ID_STRING_LENGTH + 1);
 
   if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_ctx,
-					 NULL,
-					 0,
+                                         NULL,
+                                         0,
                                          &record_id,
                                          NULL) < 0)
     {
@@ -86,8 +86,8 @@ ipmi_config_sensors_create_section_name (ipmi_config_state_data_t *state_data,
     }
 
   if (ipmi_sdr_parse_id_string (state_data->sdr_ctx,
-				NULL,
-				0,
+                                NULL,
+                                0,
                                 id_string,
                                 IPMI_SDR_MAX_ID_STRING_LENGTH) < 0)
     {
@@ -99,12 +99,12 @@ ipmi_config_sensors_create_section_name (ipmi_config_state_data_t *state_data,
     }
 
   if ((ret = _convert_id_string (state_data,
-				 id_string)) != IPMI_CONFIG_ERR_SUCCESS)
+                                 id_string)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "_convert_id_string: %s\n",
@@ -139,7 +139,7 @@ ipmi_config_sensors_create_section_name (ipmi_config_state_data_t *state_data,
 
 ipmi_config_err_t
 ipmi_config_sensors_seek_to_sdr_record (ipmi_config_state_data_t *state_data,
-					const char *section_name)
+                                        const char *section_name)
 {
   uint16_t record_id;
   char *str = NULL;
@@ -159,9 +159,9 @@ ipmi_config_sensors_seek_to_sdr_record (ipmi_config_state_data_t *state_data,
   if (!(ptr = strchr (str, '_')))
     {
       pstdout_fprintf (state_data->pstate,
-		       stderr,
-		       "Invalid section_name: %s\n",
-		       section_name);
+                       stderr,
+                       "Invalid section_name: %s\n",
+                       section_name);
       goto cleanup;
     }
 
@@ -173,9 +173,9 @@ ipmi_config_sensors_seek_to_sdr_record (ipmi_config_state_data_t *state_data,
       || endptr[0] != '\0')
     {
       pstdout_fprintf (state_data->pstate,
-		       stderr,
-		       "Invalid section_name: %s\n",
-		       section_name);
+                       stderr,
+                       "Invalid section_name: %s\n",
+                       section_name);
       goto cleanup;
     }
 

@@ -28,6 +28,6 @@ int interpret_sel_init (ipmi_interpret_ctx_t ctx);
 void interpret_sel_destroy (ipmi_interpret_ctx_t ctx);
 
 int interpret_sel_config_parse (ipmi_interpret_ctx_t ctx,
-				const char *sel_config_file);
+                                const char *sel_config_file);
 
 #endif /* IPMI_INTERPRET_CONFIG_SEL_H */

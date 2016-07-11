@@ -102,8 +102,8 @@ _rmcpplus_cipher_suite_id_privilege_setup (ipmi_config_state_data_t *state_data,
                                                      &ret))
             rv = ret;
 
-	  if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	      || state_data->prog_data->args->common_args.debug)
+          if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+              || state_data->prog_data->args->common_args.debug)
             pstdout_fprintf (state_data->pstate,
                              stderr,
                              "ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support: %s\n",
@@ -152,8 +152,8 @@ _rmcpplus_cipher_suite_id_privilege_setup (ipmi_config_state_data_t *state_data,
                                                      &ret))
             rv = ret;
 
-	  if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	      || state_data->prog_data->args->common_args.debug)
+          if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+              || state_data->prog_data->args->common_args.debug)
             pstdout_fprintf (state_data->pstate,
                              stderr,
                              "ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries: %s\n",
@@ -240,8 +240,8 @@ _rmcpplus_cipher_suite_id_privilege_setup (ipmi_config_state_data_t *state_data,
                                                      &ret))
             rv = ret;
 
-	  if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	      || state_data->prog_data->args->common_args.debug)
+          if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+              || state_data->prog_data->args->common_args.debug)
             pstdout_fprintf (state_data->pstate,
                              stderr,
                              "ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_level: %s\n",
@@ -327,7 +327,7 @@ _rmcpplus_cipher_suite_id_privilege_setup (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 id_checkout (ipmi_config_state_data_t *state_data,
-	     const char *section_name,
+             const char *section_name,
              struct ipmi_config_keyvalue *kv,
              int id)
 {
@@ -390,7 +390,7 @@ id_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 id_commit (ipmi_config_state_data_t *state_data,
-	   const char *section_name,
+           const char *section_name,
            const struct ipmi_config_keyvalue *kv,
            int id)
 {
@@ -490,10 +490,10 @@ id_commit (ipmi_config_state_data_t *state_data,
               /* This is a fatal error, we're already in this section,
                * it should be findable
                */
-	      pstdout_fprintf (state_data->pstate,
-			       stderr,
-			       "Cannot find section '%s'\n",
-			       section_name);
+              pstdout_fprintf (state_data->pstate,
+                               stderr,
+                               "Cannot find section '%s'\n",
+                               section_name);
               
               goto cleanup;
             }
@@ -526,7 +526,7 @@ id_commit (ipmi_config_state_data_t *state_data,
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels: %s\n",
@@ -549,7 +549,7 @@ id_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 id_checkout_cb (ipmi_config_state_data_t *state_data,
-		const char *section_name,
+                const char *section_name,
                 struct ipmi_config_keyvalue *kv)
 {
   uint8_t id = atoi (kv->key->key_name + strlen ("Maximum_Privilege_Cipher_Suite_Id_"));
@@ -558,7 +558,7 @@ id_checkout_cb (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 id_commit_cb (ipmi_config_state_data_t *state_data,
-	      const char *section_name,
+              const char *section_name,
               const struct ipmi_config_keyvalue *kv)
 {
   uint8_t id = atoi (kv->key->key_name + strlen ("Maximum_Privilege_Cipher_Suite_Id_"));
@@ -567,8 +567,8 @@ id_commit_cb (ipmi_config_state_data_t *state_data,
 
 struct ipmi_config_section *
 ipmi_config_core_rmcpplus_conf_privilege_section_get (ipmi_config_state_data_t *state_data,
-						      unsigned int config_flags,
-						      int channel_index)
+                                                      unsigned int config_flags,
+                                                      int channel_index)
 {
   struct ipmi_config_section *section = NULL;
   char *section_comment =

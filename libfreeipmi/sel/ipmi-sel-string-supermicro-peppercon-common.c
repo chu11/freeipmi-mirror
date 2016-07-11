@@ -49,13 +49,13 @@
  */
 int
 sel_string_output_supermicro_peppercon_common_event_data1_class_oem (ipmi_sel_ctx_t ctx,
-								       struct ipmi_sel_entry *sel_entry,
-								       uint8_t sel_record_type,
-								       char *tmpbuf,
-								       unsigned int tmpbuflen,
-								       unsigned int flags,
-								       unsigned int *wlen,
-								       struct ipmi_sel_system_event_record_data *system_event_record_data)
+                                                                       struct ipmi_sel_entry *sel_entry,
+                                                                       uint8_t sel_record_type,
+                                                                       char *tmpbuf,
+                                                                       unsigned int tmpbuflen,
+                                                                       unsigned int flags,
+                                                                       unsigned int *wlen,
+                                                                       struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   int ret;
 
@@ -70,10 +70,10 @@ sel_string_output_supermicro_peppercon_common_event_data1_class_oem (ipmi_sel_ct
   assert (wlen);
   assert (system_event_record_data);
   assert (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_PEPPERCON_X7DBR_3
-	  || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_PEPPERCON_X7DB8
-	  || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_PEPPERCON_X8DTN
-	  || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_PEPPERCON_X7SBI_LN4);
-	  
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_PEPPERCON_X7DB8
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_PEPPERCON_X8DTN
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_PEPPERCON_X7SBI_LN4);
+          
   /* achu: Via reverse engineering, see 
    *
    * "Supermicro X8DTG-QF System Event Log" thread in late
@@ -81,13 +81,13 @@ sel_string_output_supermicro_peppercon_common_event_data1_class_oem (ipmi_sel_ct
    */
 
   if ((ret = sel_string_output_supermicro_overheat_event_data1_class_oem (ctx,
-									  sel_entry,
-									  sel_record_type,
-									  tmpbuf,
-									  tmpbuflen,
-									  flags,
-									  wlen,
-									  system_event_record_data)) < 0)
+                                                                          sel_entry,
+                                                                          sel_record_type,
+                                                                          tmpbuf,
+                                                                          tmpbuflen,
+                                                                          flags,
+                                                                          wlen,
+                                                                          system_event_record_data)) < 0)
 
     if (ret)
       return (1);

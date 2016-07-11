@@ -960,7 +960,7 @@ fiid_template_t tmpl_cmd_set_sensor_reading_and_event_status_rs =
 
 int
 fill_cmd_get_device_sdr_info (uint8_t operation,
-			      fiid_obj_t obj_cmd_rq)
+                              fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_SENSOR_GET_SDR_INFO_OPERATION_VALID (operation)
       || !fiid_obj_valid (obj_cmd_rq))
@@ -984,10 +984,10 @@ fill_cmd_get_device_sdr_info (uint8_t operation,
 
 int
 fill_cmd_get_device_sdr (uint16_t reservation_id,
-			 uint16_t record_id,
-			 uint8_t offset_into_record,
-			 uint8_t bytes_to_read,
-			 fiid_obj_t obj_cmd_rq)
+                         uint16_t record_id,
+                         uint8_t offset_into_record,
+                         uint8_t bytes_to_read,
+                         fiid_obj_t obj_cmd_rq)
 {
   if (!fiid_obj_valid (obj_cmd_rq))
     {
@@ -1507,10 +1507,10 @@ fill_cmd_get_sensor_event_enable (uint8_t sensor_number, fiid_obj_t obj_cmd_rq)
 
 int
 fill_cmd_re_arm_sensor_events (uint8_t sensor_number,
-			       uint8_t re_arm_all_event_status_from_this_sensor,
-			       uint16_t *re_arm_assertion_event,
-			       uint16_t *re_arm_deassertion_event,
-			       fiid_obj_t obj_cmd_rq)
+                               uint8_t re_arm_all_event_status_from_this_sensor,
+                               uint16_t *re_arm_assertion_event,
+                               uint16_t *re_arm_deassertion_event,
+                               fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_SENSOR_RE_ARM_ALL_EVENT_STATUS_VALID (re_arm_all_event_status_from_this_sensor)
       || !fiid_obj_valid (obj_cmd_rq))
@@ -1563,17 +1563,17 @@ fill_cmd_get_sensor_reading (uint8_t sensor_number, fiid_obj_t obj_cmd_rq)
 
 int
 fill_cmd_set_sensor_reading_and_event_status (uint8_t sensor_number,
-					      uint8_t sensor_reading_operation,
-					      uint8_t deassertion_bits_operation,
-					      uint8_t assertion_bits_operation,
-					      uint8_t event_data_bytes_operation,
-					      uint8_t sensor_reading,
-					      uint16_t assertion_event_bitmask,
-					      uint16_t deassertion_event_bitmask,
-					      uint8_t event_data1,
-					      uint8_t event_data2,
-					      uint8_t event_data3,
-					      fiid_obj_t obj_cmd_rq)
+                                              uint8_t sensor_reading_operation,
+                                              uint8_t deassertion_bits_operation,
+                                              uint8_t assertion_bits_operation,
+                                              uint8_t event_data_bytes_operation,
+                                              uint8_t sensor_reading,
+                                              uint16_t assertion_event_bitmask,
+                                              uint16_t deassertion_event_bitmask,
+                                              uint8_t event_data1,
+                                              uint8_t event_data2,
+                                              uint8_t event_data3,
+                                              fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_SENSOR_READING_OPERATION_VALID (sensor_reading_operation)
       || !IPMI_ASSERTION_DEASSERTION_EVENT_STATUS_BITS_OPERATION_VALID (deassertion_bits_operation)

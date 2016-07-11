@@ -176,17 +176,17 @@ int parse_workaround_flags (const char *str,
                             unsigned int *workaround_flags_outofband,
                             unsigned int *workaround_flags_outofband_2_0,
                             unsigned int *workaround_flags_inband,
-			    unsigned int *workaround_flags_sdr,
+                            unsigned int *workaround_flags_sdr,
                             unsigned int *tool_specific_workaround_flags);
 
 /* returns 0 on success, -1 on error, flags set in in/out parameters */
 /* specifically should be called by tools for user input situations and not libraries */
 int parse_workaround_flags_tool (const char *str,
-				 unsigned int *workaround_flags_outofband,
-				 unsigned int *workaround_flags_outofband_2_0,
-				 unsigned int *workaround_flags_inband,
-				 unsigned int *workaround_flags_sdr,
-				 unsigned int *tool_specific_workaround_flags);
+                                 unsigned int *workaround_flags_outofband,
+                                 unsigned int *workaround_flags_outofband_2_0,
+                                 unsigned int *workaround_flags_inband,
+                                 unsigned int *workaround_flags_sdr,
+                                 unsigned int *tool_specific_workaround_flags);
 
 /* Turn an input string into a 20-byte binary k_g key, length written
  *  into out on success, -1 on error
@@ -194,12 +194,12 @@ int parse_workaround_flags_tool (const char *str,
 int parse_kg (void *out, unsigned int outlen, const char *in);
 
 void parse_get_freeipmi_outofband_flags (unsigned int parse_workaround_flags_outofband,
-					 unsigned int *freeipmi_workaround_flags_outofband);
+                                         unsigned int *freeipmi_workaround_flags_outofband);
 
 void parse_get_freeipmi_outofband_2_0_flags (unsigned int parse_workaround_flags_outofband_2_0,
-					     unsigned int *freeipmi_workaround_flags_outofband_2_0);
+                                             unsigned int *freeipmi_workaround_flags_outofband_2_0);
 
 void parse_get_freeipmi_inband_flags (unsigned int parse_workaround_flags_inband,
-				      unsigned int *freeipmi_workaround_flags_inband);
+                                      unsigned int *freeipmi_workaround_flags_inband);
 
 #endif /* PARSE_COMMON_H */

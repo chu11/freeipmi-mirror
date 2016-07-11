@@ -71,9 +71,9 @@
 
 int
 fru_dump_hex (ipmi_fru_ctx_t ctx,
-	      const void *frubuf,
-	      unsigned int length_in_bytes,
-	      const char *debug_hdr)
+              const void *frubuf,
+              unsigned int length_in_bytes,
+              const char *debug_hdr)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_FRU_CTX_MAGIC);
@@ -87,7 +87,7 @@ fru_dump_hex (ipmi_fru_ctx_t ctx,
 
       debug_hdr_str (DEBUG_UTIL_TYPE_NONE,
                      DEBUG_UTIL_DIRECTION_NONE,
-		     DEBUG_UTIL_FLAGS_DEFAULT,
+                     DEBUG_UTIL_FLAGS_DEFAULT,
                      debug_hdr,
                      hdrbuf,
                      DEBUG_UTIL_HDR_BUFLEN);
@@ -109,8 +109,8 @@ fru_dump_hex (ipmi_fru_ctx_t ctx,
 
 int
 fru_dump_obj (ipmi_fru_ctx_t ctx,
-	      fiid_obj_t obj,
-	      const char *debug_hdr)
+              fiid_obj_t obj,
+              const char *debug_hdr)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_FRU_CTX_MAGIC);
@@ -123,7 +123,7 @@ fru_dump_obj (ipmi_fru_ctx_t ctx,
 
       debug_hdr_str (DEBUG_UTIL_TYPE_NONE,
                      DEBUG_UTIL_DIRECTION_NONE,
-		     DEBUG_UTIL_FLAGS_DEFAULT,
+                     DEBUG_UTIL_FLAGS_DEFAULT,
                      debug_hdr,
                      hdrbuf,
                      DEBUG_UTIL_HDR_BUFLEN);

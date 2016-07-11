@@ -132,7 +132,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       errno = 0;
       tmp = strtol (arg, &endptr, 0);
       if (errno
-	  || endptr[0] != '\0')
+          || endptr[0] != '\0')
         {
           fprintf (stderr, "invalid device id\n");
           exit (EXIT_FAILURE);
@@ -216,13 +216,13 @@ _ipmi_fru_args_validate (struct ipmi_fru_arguments *cmd_args)
   if (cmd_args->fru_file)
     {
       if (access (cmd_args->fru_file, R_OK) < 0)
-	{
-	  fprintf (stderr,
-		   "Cannot read '%s': %s\n",
-		   cmd_args->fru_file,
-		   strerror (errno));
-	  exit (EXIT_FAILURE);
-	}
+        {
+          fprintf (stderr,
+                   "Cannot read '%s': %s\n",
+                   cmd_args->fru_file,
+                   strerror (errno));
+          exit (EXIT_FAILURE);
+        }
     }
 }
 

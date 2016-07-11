@@ -85,12 +85,12 @@ _get_boot_flags (ipmi_config_state_data_t *state_data,
       ipmi_config_err_t ret;
 
       if (ipmi_config_param_errnum_is_non_fatal (state_data,
-						 obj_cmd_rs,
-						 &ret))
+                                                 obj_cmd_rs,
+                                                 &ret))
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_system_boot_options_boot_flags: %s\n",
@@ -315,12 +315,12 @@ _set_boot_flags (ipmi_config_state_data_t *state_data,
       ipmi_config_err_t ret;
 
       if (ipmi_config_param_errnum_is_non_fatal (state_data,
-						 obj_cmd_rs,
-						 &ret))
+                                                 obj_cmd_rs,
+                                                 &ret))
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_system_boot_options_boot_flags: %s\n",
@@ -337,7 +337,7 @@ _set_boot_flags (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 boot_flags_persistent_checkout (ipmi_config_state_data_t *state_data,
-				const char *section_name,
+                                const char *section_name,
                                 struct ipmi_config_keyvalue *kv)
 {
   struct boot_flags_data data;
@@ -351,8 +351,8 @@ boot_flags_persistent_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  data.boot_flags_persistent ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  data.boot_flags_persistent ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -360,7 +360,7 @@ boot_flags_persistent_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 boot_flags_persistent_commit (ipmi_config_state_data_t *state_data,
-			      const char *section_name,
+                              const char *section_name,
                               const struct ipmi_config_keyvalue *kv)
 {
   struct boot_flags_data data;
@@ -383,7 +383,7 @@ boot_flags_persistent_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 bios_boot_type_checkout (ipmi_config_state_data_t *state_data,
-			 const char *section_name,
+                         const char *section_name,
                          struct ipmi_config_keyvalue *kv)
 {
   struct boot_flags_data data;
@@ -397,8 +397,8 @@ bios_boot_type_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  bios_boot_type_string (data.bios_boot_type)) < 0)
+                                                  kv,
+                                                  bios_boot_type_string (data.bios_boot_type)) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -406,7 +406,7 @@ bios_boot_type_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 bios_boot_type_commit (ipmi_config_state_data_t *state_data,
-		       const char *section_name,
+                       const char *section_name,
                        const struct ipmi_config_keyvalue *kv)
 {
   struct boot_flags_data data;
@@ -429,7 +429,7 @@ bios_boot_type_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 cmos_clear_checkout (ipmi_config_state_data_t *state_data,
-		     const char *section_name,
+                     const char *section_name,
                      struct ipmi_config_keyvalue *kv)
 {
   struct boot_flags_data data;
@@ -443,8 +443,8 @@ cmos_clear_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  data.cmos_clear ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  data.cmos_clear ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -452,7 +452,7 @@ cmos_clear_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 cmos_clear_commit (ipmi_config_state_data_t *state_data,
-		   const char *section_name,
+                   const char *section_name,
                    const struct ipmi_config_keyvalue *kv)
 {
   struct boot_flags_data data;
@@ -475,7 +475,7 @@ cmos_clear_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 lock_keyboard_checkout (ipmi_config_state_data_t *state_data,
-			const char *section_name,
+                        const char *section_name,
                         struct ipmi_config_keyvalue *kv)
 {
   struct boot_flags_data data;
@@ -489,8 +489,8 @@ lock_keyboard_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  data.lock_keyboard ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  data.lock_keyboard ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -498,7 +498,7 @@ lock_keyboard_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 lock_keyboard_commit (ipmi_config_state_data_t *state_data,
-		      const char *section_name,
+                      const char *section_name,
                       const struct ipmi_config_keyvalue *kv)
 {
   struct boot_flags_data data;
@@ -521,7 +521,7 @@ lock_keyboard_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 screen_blank_checkout (ipmi_config_state_data_t *state_data,
-		       const char *section_name,
+                       const char *section_name,
                        struct ipmi_config_keyvalue *kv)
 {
   struct boot_flags_data data;
@@ -535,8 +535,8 @@ screen_blank_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  data.screen_blank ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  data.screen_blank ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -544,7 +544,7 @@ screen_blank_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 screen_blank_commit (ipmi_config_state_data_t *state_data,
-		     const char *section_name,
+                     const char *section_name,
                      const struct ipmi_config_keyvalue *kv)
 {
   struct boot_flags_data data;
@@ -567,7 +567,7 @@ screen_blank_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 boot_device_checkout (ipmi_config_state_data_t *state_data,
-		      const char *section_name,
+                      const char *section_name,
                       struct ipmi_config_keyvalue *kv)
 {
   struct boot_flags_data data;
@@ -581,8 +581,8 @@ boot_device_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  boot_device_string (data.boot_device)) < 0)
+                                                  kv,
+                                                  boot_device_string (data.boot_device)) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -590,7 +590,7 @@ boot_device_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 boot_device_commit (ipmi_config_state_data_t *state_data,
-		    const char *section_name,
+                    const char *section_name,
                     const struct ipmi_config_keyvalue *kv)
 {
   struct boot_flags_data data;
@@ -613,7 +613,7 @@ boot_device_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 device_instance_selector_checkout (ipmi_config_state_data_t *state_data,
-				   const char *section_name,
+                                   const char *section_name,
                                    struct ipmi_config_keyvalue *kv)
 {
   struct boot_flags_data data;
@@ -627,8 +627,8 @@ device_instance_selector_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  device_instance_selector_string (data.device_instance_selector)) < 0)
+                                                  kv,
+                                                  device_instance_selector_string (data.device_instance_selector)) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -636,7 +636,7 @@ device_instance_selector_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 device_instance_selector_commit (ipmi_config_state_data_t *state_data,
-				 const char *section_name,
+                                 const char *section_name,
                                  const struct ipmi_config_keyvalue *kv)
 {
   struct boot_flags_data data;
@@ -659,7 +659,7 @@ device_instance_selector_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 lock_out_reset_button_checkout (ipmi_config_state_data_t *state_data,
-				const char *section_name,
+                                const char *section_name,
                                 struct ipmi_config_keyvalue *kv)
 {
   struct boot_flags_data data;
@@ -673,8 +673,8 @@ lock_out_reset_button_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  data.lock_out_reset_button ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  data.lock_out_reset_button ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -682,7 +682,7 @@ lock_out_reset_button_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 lock_out_reset_button_commit (ipmi_config_state_data_t *state_data,
-			      const char *section_name,
+                              const char *section_name,
                               const struct ipmi_config_keyvalue *kv)
 {
   struct boot_flags_data data;
@@ -705,7 +705,7 @@ lock_out_reset_button_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 lock_out_power_button_checkout (ipmi_config_state_data_t *state_data,
-				const char *section_name,
+                                const char *section_name,
                                 struct ipmi_config_keyvalue *kv)
 {
   struct boot_flags_data data;
@@ -719,8 +719,8 @@ lock_out_power_button_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  data.lock_out_power_button ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  data.lock_out_power_button ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -728,7 +728,7 @@ lock_out_power_button_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 lock_out_power_button_commit (ipmi_config_state_data_t *state_data,
-			      const char *section_name,
+                              const char *section_name,
                               const struct ipmi_config_keyvalue *kv)
 {
   struct boot_flags_data data;
@@ -751,7 +751,7 @@ lock_out_power_button_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 lock_out_sleep_button_checkout (ipmi_config_state_data_t *state_data,
-				const char *section_name,
+                                const char *section_name,
                                 struct ipmi_config_keyvalue *kv)
 {
   struct boot_flags_data data;
@@ -765,8 +765,8 @@ lock_out_sleep_button_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  data.lock_out_sleep_button ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  data.lock_out_sleep_button ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -774,7 +774,7 @@ lock_out_sleep_button_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 lock_out_sleep_button_commit (ipmi_config_state_data_t *state_data,
-			      const char *section_name,
+                              const char *section_name,
                               const struct ipmi_config_keyvalue *kv)
 {
   struct boot_flags_data data;
@@ -824,12 +824,12 @@ _set_system_boot_options_BMC_boot_flag_valid_bit_clearing (ipmi_config_state_dat
       ipmi_config_err_t ret;
       
       if (ipmi_config_param_errnum_is_non_fatal (state_data,
-						 obj_cmd_rs,
-						 &ret))
+                                                 obj_cmd_rs,
+                                                 &ret))
         rv = ret;
       
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing: %s\n",
@@ -874,12 +874,12 @@ _set_system_boot_options_boot_info_acknowledge (ipmi_config_state_data_t *state_
       ipmi_config_err_t ret;
 
       if (ipmi_config_param_errnum_is_non_fatal (state_data,
-						 obj_cmd_rs,
-						 &ret))
+                                                 obj_cmd_rs,
+                                                 &ret))
         rv = ret;
       
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_set_system_boot_options_boot_info_acknowledge: %s\n",
@@ -896,7 +896,7 @@ _set_system_boot_options_boot_info_acknowledge (ipmi_config_state_data_t *state_
 
 static ipmi_config_err_t
 chassis_boot_flags_post (ipmi_config_state_data_t *state_data,
-			 const char *section_name)
+                         const char *section_name)
 {
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   ipmi_config_err_t ret;
@@ -935,7 +935,7 @@ chassis_boot_flags_post (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 firmware_bios_verbosity_checkout (ipmi_config_state_data_t *state_data,
-				  const char *section_name,
+                                  const char *section_name,
                                   struct ipmi_config_keyvalue *kv)
 {
   struct boot_flags_data data;
@@ -949,8 +949,8 @@ firmware_bios_verbosity_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  firmware_bios_verbosity_string (data.firmware_bios_verbosity)) < 0)
+                                                  kv,
+                                                  firmware_bios_verbosity_string (data.firmware_bios_verbosity)) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -958,7 +958,7 @@ firmware_bios_verbosity_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 firmware_bios_verbosity_commit (ipmi_config_state_data_t *state_data,
-				const char *section_name,
+                                const char *section_name,
                                 const struct ipmi_config_keyvalue *kv)
 {
   struct boot_flags_data data;
@@ -981,7 +981,7 @@ firmware_bios_verbosity_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 force_progress_event_traps_checkout (ipmi_config_state_data_t *state_data,
-				     const char *section_name,
+                                     const char *section_name,
                                      struct ipmi_config_keyvalue *kv)
 {
   struct boot_flags_data data;
@@ -995,8 +995,8 @@ force_progress_event_traps_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  data.force_progress_event_traps ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  data.force_progress_event_traps ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -1004,7 +1004,7 @@ force_progress_event_traps_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 force_progress_event_traps_commit (ipmi_config_state_data_t *state_data,
-				   const char *section_name,
+                                   const char *section_name,
                                    const struct ipmi_config_keyvalue *kv)
 {
   struct boot_flags_data data;
@@ -1027,7 +1027,7 @@ force_progress_event_traps_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 user_password_bypass_checkout (ipmi_config_state_data_t *state_data,
-			       const char *section_name,
+                               const char *section_name,
                                struct ipmi_config_keyvalue *kv)
 {
   struct boot_flags_data data;
@@ -1041,8 +1041,8 @@ user_password_bypass_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  data.user_password_bypass ? "Yes" : "No") < 0)
+                                                  kv,
+                                                  data.user_password_bypass ? "Yes" : "No") < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -1050,7 +1050,7 @@ user_password_bypass_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 user_password_bypass_commit (ipmi_config_state_data_t *state_data,
-			     const char *section_name,
+                             const char *section_name,
                              const struct ipmi_config_keyvalue *kv)
 {
   struct boot_flags_data data;
@@ -1073,7 +1073,7 @@ user_password_bypass_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 console_redirection_checkout (ipmi_config_state_data_t *state_data,
-			      const char *section_name,
+                              const char *section_name,
                               struct ipmi_config_keyvalue *kv)
 {
   struct boot_flags_data data;
@@ -1087,8 +1087,8 @@ console_redirection_checkout (ipmi_config_state_data_t *state_data,
     return (ret);
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
-						  kv,
-						  console_redirection_string (data.console_redirection)) < 0)
+                                                  kv,
+                                                  console_redirection_string (data.console_redirection)) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   return (IPMI_CONFIG_ERR_SUCCESS);
@@ -1096,7 +1096,7 @@ console_redirection_checkout (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 console_redirection_commit (ipmi_config_state_data_t *state_data,
-			    const char *section_name,
+                            const char *section_name,
                             const struct ipmi_config_keyvalue *kv)
 {
   struct boot_flags_data data;
@@ -1139,154 +1139,154 @@ ipmi_config_chassis_boot_flags_get (ipmi_config_state_data_t *state_data)
   assert (state_data);
 
   if (!(section = ipmi_config_section_create (state_data,
-					      "Chassis_Boot_Flags",
-					      "Chassis_Boot_Flags",
-					      section_comment,
-					      0,
-					      NULL,
-					      chassis_boot_flags_post)))
+                                              "Chassis_Boot_Flags",
+                                              "Chassis_Boot_Flags",
+                                              section_comment,
+                                              0,
+                                              NULL,
+                                              chassis_boot_flags_post)))
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Boot_Flags_Persistent",
-				   "Possible values: Yes/No (Yes = All Future Boots; No = Next Boot Only)",
-				   0,
-				   boot_flags_persistent_checkout,
-				   boot_flags_persistent_commit,
-				   yes_no_validate) < 0)
+                                   section,
+                                   "Boot_Flags_Persistent",
+                                   "Possible values: Yes/No (Yes = All Future Boots; No = Next Boot Only)",
+                                   0,
+                                   boot_flags_persistent_checkout,
+                                   boot_flags_persistent_commit,
+                                   yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "BIOS_Boot_Type",
-				   "Possible values: PC-COMPATIBLE/EFI",
-				   0,
-				   bios_boot_type_checkout,
-				   bios_boot_type_commit,
-				   bios_boot_type_number_validate) < 0)
+                                   section,
+                                   "BIOS_Boot_Type",
+                                   "Possible values: PC-COMPATIBLE/EFI",
+                                   0,
+                                   bios_boot_type_checkout,
+                                   bios_boot_type_commit,
+                                   bios_boot_type_number_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "CMOS_Clear",
-				   "Possible values: Yes/No (Only applies to Next Boot)",
-				   0,
-				   cmos_clear_checkout,
-				   cmos_clear_commit,
-				   yes_no_validate) < 0)
+                                   section,
+                                   "CMOS_Clear",
+                                   "Possible values: Yes/No (Only applies to Next Boot)",
+                                   0,
+                                   cmos_clear_checkout,
+                                   cmos_clear_commit,
+                                   yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Lock_Keyboard",
-				   "Possible values: Yes/No (Only applies to Next Boot)",
-				   0,
-				   lock_keyboard_checkout,
-				   lock_keyboard_commit,
-				   yes_no_validate) < 0)
+                                   section,
+                                   "Lock_Keyboard",
+                                   "Possible values: Yes/No (Only applies to Next Boot)",
+                                   0,
+                                   lock_keyboard_checkout,
+                                   lock_keyboard_commit,
+                                   yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Screen_Blank",
-				   "Possible values: Yes/No (Only applies to Next Boot)",
-				   0,
-				   screen_blank_checkout,
-				   screen_blank_commit,
-				   yes_no_validate) < 0)
+                                   section,
+                                   "Screen_Blank",
+                                   "Possible values: Yes/No (Only applies to Next Boot)",
+                                   0,
+                                   screen_blank_checkout,
+                                   screen_blank_commit,
+                                   yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Boot_Device",
-				   "Possible values: NO-OVERRIDE/PXE/HARD-DRIVE/HARD-DRIVE-SAFE-MODE/\n"
-				   "                 DIAGNOSTIC_PARTITION/CD-DVD/BIOS-SETUP/REMOTE-FLOPPY\n"
-				   "                 PRIMARY-REMOTE-MEDIA/REMOTE-CD-DVD/REMOTE-HARD-DRIVE/FLOPPY",
-				   0,
-				   boot_device_checkout,
-				   boot_device_commit,
-				   boot_device_number_validate) < 0)
+                                   section,
+                                   "Boot_Device",
+                                   "Possible values: NO-OVERRIDE/PXE/HARD-DRIVE/HARD-DRIVE-SAFE-MODE/\n"
+                                   "                 DIAGNOSTIC_PARTITION/CD-DVD/BIOS-SETUP/REMOTE-FLOPPY\n"
+                                   "                 PRIMARY-REMOTE-MEDIA/REMOTE-CD-DVD/REMOTE-HARD-DRIVE/FLOPPY",
+                                   0,
+                                   boot_device_checkout,
+                                   boot_device_commit,
+                                   boot_device_number_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Device_Instance_Selector",
-				   "Possible values: None/Internal-{1-15}/External-{1-15} (e.g. Internal-5)",
-				   0,
-				   device_instance_selector_checkout,
-				   device_instance_selector_commit,
-				   device_instance_selector_number_validate) < 0)
+                                   section,
+                                   "Device_Instance_Selector",
+                                   "Possible values: None/Internal-{1-15}/External-{1-15} (e.g. Internal-5)",
+                                   0,
+                                   device_instance_selector_checkout,
+                                   device_instance_selector_commit,
+                                   device_instance_selector_number_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Lock_Out_Reset_Button",
-				   "Possible values: Yes/No",
-				   0,
-				   lock_out_reset_button_checkout,
-				   lock_out_reset_button_commit,
-				   yes_no_validate) < 0)
+                                   section,
+                                   "Lock_Out_Reset_Button",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   lock_out_reset_button_checkout,
+                                   lock_out_reset_button_commit,
+                                   yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Lock_Out_Power_Button",
-				   "Possible values: Yes/No",
-				   0,
-				   lock_out_power_button_checkout,
-				   lock_out_power_button_commit,
-				   yes_no_validate) < 0)
+                                   section,
+                                   "Lock_Out_Power_Button",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   lock_out_power_button_checkout,
+                                   lock_out_power_button_commit,
+                                   yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Lock_Out_Sleep_Button",
-				   "Possible values: Yes/No",
-				   0,
-				   lock_out_sleep_button_checkout,
-				   lock_out_sleep_button_commit,
-				   yes_no_validate) < 0)
+                                   section,
+                                   "Lock_Out_Sleep_Button",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   lock_out_sleep_button_checkout,
+                                   lock_out_sleep_button_commit,
+                                   yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Firmware_Bios_Verbosity",
-				   "Possible values: DEFAULT/QUIET/VERBOSE",
-				   0,
-				   firmware_bios_verbosity_checkout,
-				   firmware_bios_verbosity_commit,
-				   firmware_bios_verbosity_number_validate) < 0)
+                                   section,
+                                   "Firmware_Bios_Verbosity",
+                                   "Possible values: DEFAULT/QUIET/VERBOSE",
+                                   0,
+                                   firmware_bios_verbosity_checkout,
+                                   firmware_bios_verbosity_commit,
+                                   firmware_bios_verbosity_number_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Force_Progress_Event_Traps",
-				   "Possible values: Yes/No",
-				   0,
-				   force_progress_event_traps_checkout,
-				   force_progress_event_traps_commit,
-				   yes_no_validate) < 0)
+                                   section,
+                                   "Force_Progress_Event_Traps",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   force_progress_event_traps_checkout,
+                                   force_progress_event_traps_commit,
+                                   yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "User_Password_Bypass",
-				   "Possible values: Yes/No",
-				   0,
-				   user_password_bypass_checkout,
-				   user_password_bypass_commit,
-				   yes_no_validate) < 0)
+                                   section,
+                                   "User_Password_Bypass",
+                                   "Possible values: Yes/No",
+                                   0,
+                                   user_password_bypass_checkout,
+                                   user_password_bypass_commit,
+                                   yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
-				   section,
-				   "Console_Redirection",
-				   "Possible values: BIOS-SETTING/SUPPRESS/ENABLE",
-				   0,
-				   console_redirection_checkout,
-				   console_redirection_commit,
-				   console_redirection_number_validate) < 0)
+                                   section,
+                                   "Console_Redirection",
+                                   "Possible values: BIOS-SETTING/SUPPRESS/ENABLE",
+                                   0,
+                                   console_redirection_checkout,
+                                   console_redirection_commit,
+                                   console_redirection_number_validate) < 0)
     goto cleanup;
 
   return (section);

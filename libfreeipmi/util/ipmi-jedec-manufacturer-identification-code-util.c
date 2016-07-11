@@ -43,7 +43,7 @@ _find_str (uint8_t id, const struct ipmi_jedec_manufacturer_id_pair *pairs)
   while (tmppair->str)
     {
       if (tmppair->id == id)
-	return (tmppair->str);
+        return (tmppair->str);
       tmppair++;
     }
 

@@ -61,14 +61,14 @@
  */
 int
 sel_string_output_inventec_5442_sensor_name (ipmi_sel_ctx_t ctx,
-					     struct ipmi_sel_entry *sel_entry,
-					     uint8_t sel_record_type,
-					     char *buf,
-					     unsigned int buflen,
-					     unsigned int flags,
-					     unsigned int *wlen,
-					     struct ipmi_sel_system_event_record_data *system_event_record_data,
-					     int *oem_rv)
+                                             struct ipmi_sel_entry *sel_entry,
+                                             uint8_t sel_record_type,
+                                             char *buf,
+                                             unsigned int buflen,
+                                             unsigned int flags,
+                                             unsigned int *wlen,
+                                             struct ipmi_sel_system_event_record_data *system_event_record_data,
+                                             int *oem_rv)
 {
   int ret;
 
@@ -89,14 +89,14 @@ sel_string_output_inventec_5442_sensor_name (ipmi_sel_ctx_t ctx,
    * Inventec 5442/Dell Xanadu III
    */
   if ((ret = sel_string_output_inventec_5441_5442_common_sensor_name (ctx,
-								      sel_entry,
-								      sel_record_type,
-								      buf,
-								      buflen,
-								      flags,
-								      wlen,
-								      system_event_record_data,
-								      oem_rv)) < 0)
+                                                                      sel_entry,
+                                                                      sel_record_type,
+                                                                      buf,
+                                                                      buflen,
+                                                                      flags,
+                                                                      wlen,
+                                                                      system_event_record_data,
+                                                                      oem_rv)) < 0)
     return (-1);
 
   if (ret)
@@ -111,13 +111,13 @@ sel_string_output_inventec_5442_sensor_name (ipmi_sel_ctx_t ctx,
  */
 int
 sel_string_output_inventec_5442_event_data1_class_oem (ipmi_sel_ctx_t ctx,
-						       struct ipmi_sel_entry *sel_entry,
-						       uint8_t sel_record_type,
-						       char *tmpbuf,
-						       unsigned int tmpbuflen,
-						       unsigned int flags,
-						       unsigned int *wlen,
-						       struct ipmi_sel_system_event_record_data *system_event_record_data)
+                                                       struct ipmi_sel_entry *sel_entry,
+                                                       uint8_t sel_record_type,
+                                                       char *tmpbuf,
+                                                       unsigned int tmpbuflen,
+                                                       unsigned int flags,
+                                                       unsigned int *wlen,
+                                                       struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   int ret;
 
@@ -137,13 +137,13 @@ sel_string_output_inventec_5442_event_data1_class_oem (ipmi_sel_ctx_t ctx,
    * Inventec 5442/Dell Xanadu III
    */
   if ((ret = sel_string_output_inventec_5441_5442_common_event_data1_class_oem (ctx,
-										sel_entry,
-										sel_record_type,
-										tmpbuf,
-										tmpbuflen,
-										flags,
-										wlen,
-										system_event_record_data)) < 0)
+                                                                                sel_entry,
+                                                                                sel_record_type,
+                                                                                tmpbuf,
+                                                                                tmpbuflen,
+                                                                                flags,
+                                                                                wlen,
+                                                                                system_event_record_data)) < 0)
     return (-1);
 
   if (ret)
@@ -158,13 +158,13 @@ sel_string_output_inventec_5442_event_data1_class_oem (ipmi_sel_ctx_t ctx,
  */
 int
 sel_string_output_inventec_5442_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
-							  struct ipmi_sel_entry *sel_entry,
-							  uint8_t sel_record_type,
-							  char *tmpbuf,
-							  unsigned int tmpbuflen,
-							  unsigned int flags,
-							  unsigned int *wlen,
-							  struct ipmi_sel_system_event_record_data *system_event_record_data)
+                                                          struct ipmi_sel_entry *sel_entry,
+                                                          uint8_t sel_record_type,
+                                                          char *tmpbuf,
+                                                          unsigned int tmpbuflen,
+                                                          unsigned int flags,
+                                                          unsigned int *wlen,
+                                                          struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   int ret;
 
@@ -185,13 +185,13 @@ sel_string_output_inventec_5442_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
    * Inventec 5442/Dell Xanadu III
    */
   if ((ret = sel_string_output_inventec_5441_5442_common_event_data2_discrete_oem (ctx,
-										   sel_entry,
-										   sel_record_type,
-										   tmpbuf,
-										   tmpbuflen,
-										   flags,
-										   wlen,
-										   system_event_record_data)) < 0)
+                                                                                   sel_entry,
+                                                                                   sel_record_type,
+                                                                                   tmpbuf,
+                                                                                   tmpbuflen,
+                                                                                   flags,
+                                                                                   wlen,
+                                                                                   system_event_record_data)) < 0)
     return (-1);
 
   if (ret)
@@ -206,13 +206,13 @@ sel_string_output_inventec_5442_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
  */
 int
 sel_string_output_inventec_5442_event_data2_class_oem (ipmi_sel_ctx_t ctx,
-						       struct ipmi_sel_entry *sel_entry,
-						       uint8_t sel_record_type,
-						       char *tmpbuf,
-						       unsigned int tmpbuflen,
-						       unsigned int flags,
-						       unsigned int *wlen,
-						       struct ipmi_sel_system_event_record_data *system_event_record_data)
+                                                       struct ipmi_sel_entry *sel_entry,
+                                                       uint8_t sel_record_type,
+                                                       char *tmpbuf,
+                                                       unsigned int tmpbuflen,
+                                                       unsigned int flags,
+                                                       unsigned int *wlen,
+                                                       struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   int ret;
 
@@ -232,13 +232,13 @@ sel_string_output_inventec_5442_event_data2_class_oem (ipmi_sel_ctx_t ctx,
    * Inventec 5442/Dell Xanadu III
    */
   if ((ret = sel_string_output_inventec_5441_5442_common_event_data2_class_oem (ctx,
-										sel_entry,
-										sel_record_type,
-										tmpbuf,
-										tmpbuflen,
-										flags,
-										wlen,
-										system_event_record_data)) < 0)
+                                                                                sel_entry,
+                                                                                sel_record_type,
+                                                                                tmpbuf,
+                                                                                tmpbuflen,
+                                                                                flags,
+                                                                                wlen,
+                                                                                system_event_record_data)) < 0)
     return (-1);
 
   if (ret)
@@ -253,13 +253,13 @@ sel_string_output_inventec_5442_event_data2_class_oem (ipmi_sel_ctx_t ctx,
  */
 int
 sel_string_output_inventec_5442_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
-							  struct ipmi_sel_entry *sel_entry,
-							  uint8_t sel_record_type,
-							  char *tmpbuf,
-							  unsigned int tmpbuflen,
-							  unsigned int flags,
-							  unsigned int *wlen,
-							  struct ipmi_sel_system_event_record_data *system_event_record_data)
+                                                          struct ipmi_sel_entry *sel_entry,
+                                                          uint8_t sel_record_type,
+                                                          char *tmpbuf,
+                                                          unsigned int tmpbuflen,
+                                                          unsigned int flags,
+                                                          unsigned int *wlen,
+                                                          struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   int ret;
 
@@ -303,7 +303,7 @@ sel_string_output_inventec_5442_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
               || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU1_CH2_DIM1
               || system_event_record_data->event_data3 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU1_CH2_DIM0))
         {
-	  char *str;
+          char *str;
 
           /* achu: technically there is a pattern here for this
            * motherboard and I could make some of this code shorter
@@ -312,49 +312,49 @@ sel_string_output_inventec_5442_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
            * later.
            */
 
-	  switch (system_event_record_data->event_data3)
-	    {
-	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU0_CH0_DIM1:
-	      str = "Dimm Number - CPU0/Ch0/DIM1";
-	      break;
-	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU0_CH0_DIM0:
-	      str = "Dimm Number - CPU0/Ch0/DIM0";
-	      break;
-	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU0_CH1_DIM1:
-	      str = "Dimm Number - CPU0/Ch1/DIM1";
-	      break;
-	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU0_CH1_DIM0:
-	      str = "Dimm Number - CPU0/Ch1/DIM0";
-	      break;
-	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU0_CH2_DIM1:
-	      str = "Dimm Number - CPU0/Ch2/DIM1";
-	      break;
-	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU0_CH2_DIM0:
-	      str = "Dimm Number - CPU0/Ch2/DIM0";
-	      break;
-	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU1_CH0_DIM1:
-	      str = "Dimm Number - CPU1/Ch0/DIM1";
-	      break;
-	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU1_CH0_DIM0:
-	      str = "Dimm Number - CPU1/Ch0/DIM0";
-	      break;
-	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU1_CH1_DIM1:
-	      str = "Dimm Number - CPU1/Ch1/DIM1";
-	      break;
-	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU1_CH1_DIM0:
-	      str = "Dimm Number - CPU1/Ch1/DIM0";
-	      break;
-	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU1_CH2_DIM1:
-	      str = "Dimm Number - CPU1/Ch2/DIM1";
-	      break;
-	    case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU1_CH2_DIM0:
-	      str = "Dimm Number - CPU1/Ch2/DIM0";
-	      break;
-	    default:
-	      str = "Internal Logic Error";
-	    }
+          switch (system_event_record_data->event_data3)
+            {
+            case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU0_CH0_DIM1:
+              str = "Dimm Number - CPU0/Ch0/DIM1";
+              break;
+            case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU0_CH0_DIM0:
+              str = "Dimm Number - CPU0/Ch0/DIM0";
+              break;
+            case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU0_CH1_DIM1:
+              str = "Dimm Number - CPU0/Ch1/DIM1";
+              break;
+            case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU0_CH1_DIM0:
+              str = "Dimm Number - CPU0/Ch1/DIM0";
+              break;
+            case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU0_CH2_DIM1:
+              str = "Dimm Number - CPU0/Ch2/DIM1";
+              break;
+            case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU0_CH2_DIM0:
+              str = "Dimm Number - CPU0/Ch2/DIM0";
+              break;
+            case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU1_CH0_DIM1:
+              str = "Dimm Number - CPU1/Ch0/DIM1";
+              break;
+            case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU1_CH0_DIM0:
+              str = "Dimm Number - CPU1/Ch0/DIM0";
+              break;
+            case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU1_CH1_DIM1:
+              str = "Dimm Number - CPU1/Ch1/DIM1";
+              break;
+            case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU1_CH1_DIM0:
+              str = "Dimm Number - CPU1/Ch1/DIM0";
+              break;
+            case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU1_CH2_DIM1:
+              str = "Dimm Number - CPU1/Ch2/DIM1";
+              break;
+            case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INVENTEC_5442_DIMM_CPU1_CH2_DIM0:
+              str = "Dimm Number - CPU1/Ch2/DIM0";
+              break;
+            default:
+              str = "Internal Logic Error";
+            }
           
-	  snprintf (tmpbuf, tmpbuflen, "%s", str);
+          snprintf (tmpbuf, tmpbuflen, "%s", str);
 
           return (1);
         }
@@ -365,13 +365,13 @@ sel_string_output_inventec_5442_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
    */
 
   if ((ret = sel_string_output_inventec_5441_5442_common_event_data3_discrete_oem (ctx,
-										   sel_entry,
-										   sel_record_type,
-										   tmpbuf,
-										   tmpbuflen,
-										   flags,
-										   wlen,
-										   system_event_record_data)) < 0)
+                                                                                   sel_entry,
+                                                                                   sel_record_type,
+                                                                                   tmpbuf,
+                                                                                   tmpbuflen,
+                                                                                   flags,
+                                                                                   wlen,
+                                                                                   system_event_record_data)) < 0)
     return (-1);
 
   if (ret)
@@ -386,13 +386,13 @@ sel_string_output_inventec_5442_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
  */
 int
 sel_string_output_inventec_5442_event_data3_class_oem (ipmi_sel_ctx_t ctx,
-						       struct ipmi_sel_entry *sel_entry,
-						       uint8_t sel_record_type,
-						       char *tmpbuf,
-						       unsigned int tmpbuflen,
-						       unsigned int flags,
-						       unsigned int *wlen,
-						       struct ipmi_sel_system_event_record_data *system_event_record_data)
+                                                       struct ipmi_sel_entry *sel_entry,
+                                                       uint8_t sel_record_type,
+                                                       char *tmpbuf,
+                                                       unsigned int tmpbuflen,
+                                                       unsigned int flags,
+                                                       unsigned int *wlen,
+                                                       struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   int ret;
 
@@ -412,13 +412,13 @@ sel_string_output_inventec_5442_event_data3_class_oem (ipmi_sel_ctx_t ctx,
    * Inventec 5442/Dell Xanadu III
    */
   if ((ret = sel_string_output_inventec_5441_5442_common_event_data3_class_oem (ctx,
-										sel_entry,
-										sel_record_type,
-										tmpbuf,
-										tmpbuflen,
-										flags,
-										wlen,
-										system_event_record_data)) < 0)
+                                                                                sel_entry,
+                                                                                sel_record_type,
+                                                                                tmpbuf,
+                                                                                tmpbuflen,
+                                                                                flags,
+                                                                                wlen,
+                                                                                system_event_record_data)) < 0)
     return (-1);
 
   if (ret)
@@ -437,14 +437,14 @@ sel_string_output_inventec_5442_event_data3_class_oem (ipmi_sel_ctx_t ctx,
  */
 int
 sel_string_output_inventec_5442_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
-							 struct ipmi_sel_entry *sel_entry,
-							 uint8_t sel_record_type,
-							 char *buf,
-							 unsigned int buflen,
-							 unsigned int flags,
-							 unsigned int *wlen,
-							 struct ipmi_sel_system_event_record_data *system_event_record_data,
-							 int *oem_rv)
+                                                         struct ipmi_sel_entry *sel_entry,
+                                                         uint8_t sel_record_type,
+                                                         char *buf,
+                                                         unsigned int buflen,
+                                                         unsigned int flags,
+                                                         unsigned int *wlen,
+                                                         struct ipmi_sel_system_event_record_data *system_event_record_data,
+                                                         int *oem_rv)
 {
   int ret;
 
@@ -465,14 +465,14 @@ sel_string_output_inventec_5442_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
    * Inventec 5442/Dell Xanadu III
    */
   if ((ret = sel_string_output_inventec_5441_5442_common_event_data2_event_data3 (ctx,
-										  sel_entry,
-										  sel_record_type,
-										  buf,
-										  buflen,
-										  flags,
-										  wlen,
-										  system_event_record_data,
-										  oem_rv)) < 0)
+                                                                                  sel_entry,
+                                                                                  sel_record_type,
+                                                                                  buf,
+                                                                                  buflen,
+                                                                                  flags,
+                                                                                  wlen,
+                                                                                  system_event_record_data,
+                                                                                  oem_rv)) < 0)
     return (-1);
 
   if (ret)

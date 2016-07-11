@@ -342,7 +342,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
 
   pstdout_printf (state_data->pstate,
                   "Power restore policy                : %s\n",
-		  str);
+                  str);
 
   temp_val = IPMI_LAST_POWER_EVENT_UNKNOWN;
 
@@ -443,8 +443,8 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-		  "Last Power Event                    : %s\n",
-		  str);
+                  "Last Power Event                    : %s\n",
+                  str);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "misc_chassis_state.chassis_intrusion_active", &val) < 0)
     {
@@ -539,7 +539,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
 
       pstdout_printf (state_data->pstate,
                       "Chassis Identify state              : %s\n",
-		      str);
+                      str);
 
     }
 
@@ -1662,7 +1662,7 @@ _ipmi_chassis (pstdout_state_t pstate,
   if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
                                          hostname,
                                          &(prog_data->args->common_args),
-					 state_data.pstate)))
+                                         state_data.pstate)))
     goto cleanup;
 
   if (run_cmd_args (&state_data) < 0)
@@ -1692,7 +1692,7 @@ main (int argc, char **argv)
   prog_data.args = &cmd_args;
 
   if ((hosts_count = pstdout_setup (&(prog_data.args->common_args.hostname),
-				    &(prog_data.args->common_args))) < 0)
+                                    &(prog_data.args->common_args))) < 0)
     return (EXIT_FAILURE);
 
   if (!hosts_count)

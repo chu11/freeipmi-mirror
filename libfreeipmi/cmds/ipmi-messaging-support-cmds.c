@@ -1443,13 +1443,13 @@ fill_cmd_set_system_info_parameters_set_in_progress (uint8_t state,
 
 static int
 _fill_cmd_set_system_info_parameters_string_first_set_common (uint8_t set_selector,
-							      uint8_t encoding,
-							      uint8_t string_length,
-							      const void *string_block,
-							      unsigned int string_block_length,
-							      fiid_obj_t obj_cmd_rq,
-							      fiid_field_t *tmpl_cmd_rq_expected,
-							      uint8_t parameter_selector)
+                                                              uint8_t encoding,
+                                                              uint8_t string_length,
+                                                              const void *string_block,
+                                                              unsigned int string_block_length,
+                                                              fiid_obj_t obj_cmd_rq,
+                                                              fiid_field_t *tmpl_cmd_rq_expected,
+                                                              uint8_t parameter_selector)
 {
   uint8_t stringbuf[IPMI_SYSTEM_INFO_FIRST_SET_STRING_LEN_MAX];
 
@@ -1490,11 +1490,11 @@ _fill_cmd_set_system_info_parameters_string_first_set_common (uint8_t set_select
 
 static int
 _fill_cmd_set_system_info_parameters_string_set_common (uint8_t set_selector,
-							const void *string_block,
-							unsigned int string_block_length,
-							fiid_obj_t obj_cmd_rq,
-							fiid_field_t *tmpl_cmd_rq_expected,
-							uint8_t parameter_selector)
+                                                        const void *string_block,
+                                                        unsigned int string_block_length,
+                                                        fiid_obj_t obj_cmd_rq,
+                                                        fiid_field_t *tmpl_cmd_rq_expected,
+                                                        uint8_t parameter_selector)
 {
   uint8_t stringbuf[IPMI_SYSTEM_INFO_SET_STRING_LEN_MAX];
 
@@ -1538,13 +1538,13 @@ fill_cmd_set_system_info_parameters_system_firmware_version_first_set (uint8_t s
                                                                        fiid_obj_t obj_cmd_rq)
 {
   if (_fill_cmd_set_system_info_parameters_string_first_set_common (set_selector,
-								    encoding,
-								    string_length,
-								    string_block,
-								    string_block_length,
-								    obj_cmd_rq,
-								    tmpl_cmd_set_system_info_parameters_system_firmware_version_first_set_rq,
-								    IPMI_SYSTEM_INFO_PARAMETER_SYSTEM_FIRMWARE_VERSION) < 0)
+                                                                    encoding,
+                                                                    string_length,
+                                                                    string_block,
+                                                                    string_block_length,
+                                                                    obj_cmd_rq,
+                                                                    tmpl_cmd_set_system_info_parameters_system_firmware_version_first_set_rq,
+                                                                    IPMI_SYSTEM_INFO_PARAMETER_SYSTEM_FIRMWARE_VERSION) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -1560,11 +1560,11 @@ fill_cmd_set_system_info_parameters_system_firmware_version (uint8_t set_selecto
                                                              fiid_obj_t obj_cmd_rq)
 {
   if (_fill_cmd_set_system_info_parameters_string_set_common (set_selector,
-							      string_block,
-							      string_block_length,
-							      obj_cmd_rq,
-							      tmpl_cmd_set_system_info_parameters_system_firmware_version_rq,
-							      IPMI_SYSTEM_INFO_PARAMETER_SYSTEM_FIRMWARE_VERSION) < 0)
+                                                              string_block,
+                                                              string_block_length,
+                                                              obj_cmd_rq,
+                                                              tmpl_cmd_set_system_info_parameters_system_firmware_version_rq,
+                                                              IPMI_SYSTEM_INFO_PARAMETER_SYSTEM_FIRMWARE_VERSION) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -1582,13 +1582,13 @@ fill_cmd_set_system_info_parameters_system_name_first_set (uint8_t set_selector,
                                                            fiid_obj_t obj_cmd_rq)
 {
   if (_fill_cmd_set_system_info_parameters_string_first_set_common (set_selector,
-								    encoding,
-								    string_length,
-								    string_block,
-								    string_block_length,
-								    obj_cmd_rq,
-								    tmpl_cmd_set_system_info_parameters_system_name_first_set_rq,
-								    IPMI_SYSTEM_INFO_PARAMETER_SYSTEM_NAME) < 0)
+                                                                    encoding,
+                                                                    string_length,
+                                                                    string_block,
+                                                                    string_block_length,
+                                                                    obj_cmd_rq,
+                                                                    tmpl_cmd_set_system_info_parameters_system_name_first_set_rq,
+                                                                    IPMI_SYSTEM_INFO_PARAMETER_SYSTEM_NAME) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -1604,11 +1604,11 @@ fill_cmd_set_system_info_parameters_system_name (uint8_t set_selector,
                                                  fiid_obj_t obj_cmd_rq)
 {
   if (_fill_cmd_set_system_info_parameters_string_set_common (set_selector,
-							      string_block,
-							      string_block_length,
-							      obj_cmd_rq,
-							      tmpl_cmd_set_system_info_parameters_system_name_rq,
-							      IPMI_SYSTEM_INFO_PARAMETER_SYSTEM_NAME) < 0)
+                                                              string_block,
+                                                              string_block_length,
+                                                              obj_cmd_rq,
+                                                              tmpl_cmd_set_system_info_parameters_system_name_rq,
+                                                              IPMI_SYSTEM_INFO_PARAMETER_SYSTEM_NAME) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -1626,13 +1626,13 @@ fill_cmd_set_system_info_parameters_primary_operating_system_name_first_set (uin
                                                                              fiid_obj_t obj_cmd_rq)
 {
   if (_fill_cmd_set_system_info_parameters_string_first_set_common (set_selector,
-								    encoding,
-								    string_length,
-								    string_block,
-								    string_block_length,
-								    obj_cmd_rq,
-								    tmpl_cmd_set_system_info_parameters_primary_operating_system_name_first_set_rq,
-								    IPMI_SYSTEM_INFO_PARAMETER_PRIMARY_OPERATING_SYSTEM_NAME) < 0)
+                                                                    encoding,
+                                                                    string_length,
+                                                                    string_block,
+                                                                    string_block_length,
+                                                                    obj_cmd_rq,
+                                                                    tmpl_cmd_set_system_info_parameters_primary_operating_system_name_first_set_rq,
+                                                                    IPMI_SYSTEM_INFO_PARAMETER_PRIMARY_OPERATING_SYSTEM_NAME) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -1648,11 +1648,11 @@ fill_cmd_set_system_info_parameters_primary_operating_system_name (uint8_t set_s
                                                                    fiid_obj_t obj_cmd_rq)
 {
   if (_fill_cmd_set_system_info_parameters_string_set_common (set_selector,
-							      string_block,
-							      string_block_length,
-							      obj_cmd_rq,
-							      tmpl_cmd_set_system_info_parameters_primary_operating_system_name_rq,
-							      IPMI_SYSTEM_INFO_PARAMETER_PRIMARY_OPERATING_SYSTEM_NAME) < 0)
+                                                              string_block,
+                                                              string_block_length,
+                                                              obj_cmd_rq,
+                                                              tmpl_cmd_set_system_info_parameters_primary_operating_system_name_rq,
+                                                              IPMI_SYSTEM_INFO_PARAMETER_PRIMARY_OPERATING_SYSTEM_NAME) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -1670,13 +1670,13 @@ fill_cmd_set_system_info_parameters_operating_system_name_first_set (uint8_t set
                                                                      fiid_obj_t obj_cmd_rq)
 {
   if (_fill_cmd_set_system_info_parameters_string_first_set_common (set_selector,
-								    encoding,
-								    string_length,
-								    string_block,
-								    string_block_length,
-								    obj_cmd_rq,
-								    tmpl_cmd_set_system_info_parameters_operating_system_name_first_set_rq,
-								    IPMI_SYSTEM_INFO_PARAMETER_OPERATING_SYSTEM_NAME) < 0)
+                                                                    encoding,
+                                                                    string_length,
+                                                                    string_block,
+                                                                    string_block_length,
+                                                                    obj_cmd_rq,
+                                                                    tmpl_cmd_set_system_info_parameters_operating_system_name_first_set_rq,
+                                                                    IPMI_SYSTEM_INFO_PARAMETER_OPERATING_SYSTEM_NAME) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -1692,11 +1692,11 @@ fill_cmd_set_system_info_parameters_operating_system_name (uint8_t set_selector,
                                                            fiid_obj_t obj_cmd_rq)
 {
   if (_fill_cmd_set_system_info_parameters_string_set_common (set_selector,
-							      string_block,
-							      string_block_length,
-							      obj_cmd_rq,
-							      tmpl_cmd_set_system_info_parameters_operating_system_name_rq,
-							      IPMI_SYSTEM_INFO_PARAMETER_OPERATING_SYSTEM_NAME) < 0)
+                                                              string_block,
+                                                              string_block_length,
+                                                              obj_cmd_rq,
+                                                              tmpl_cmd_set_system_info_parameters_operating_system_name_rq,
+                                                              IPMI_SYSTEM_INFO_PARAMETER_OPERATING_SYSTEM_NAME) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -1707,20 +1707,20 @@ fill_cmd_set_system_info_parameters_operating_system_name (uint8_t set_selector,
 
 int
 fill_cmd_set_system_info_parameters_present_os_version_number_first_set (uint8_t set_selector,
-									 uint8_t encoding,
-									 uint8_t string_length,
-									 const void *string_block,
-									 unsigned int string_block_length,
-									 fiid_obj_t obj_cmd_rq)
+                                                                         uint8_t encoding,
+                                                                         uint8_t string_length,
+                                                                         const void *string_block,
+                                                                         unsigned int string_block_length,
+                                                                         fiid_obj_t obj_cmd_rq)
 {
   if (_fill_cmd_set_system_info_parameters_string_first_set_common (set_selector,
-								    encoding,
-								    string_length,
-								    string_block,
-								    string_block_length,
-								    obj_cmd_rq,
-								    tmpl_cmd_set_system_info_parameters_present_os_version_number_first_set_rq,
-								    IPMI_SYSTEM_INFO_PARAMETER_PRESENT_OS_VERSION_NUMBER) < 0)
+                                                                    encoding,
+                                                                    string_length,
+                                                                    string_block,
+                                                                    string_block_length,
+                                                                    obj_cmd_rq,
+                                                                    tmpl_cmd_set_system_info_parameters_present_os_version_number_first_set_rq,
+                                                                    IPMI_SYSTEM_INFO_PARAMETER_PRESENT_OS_VERSION_NUMBER) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -1731,16 +1731,16 @@ fill_cmd_set_system_info_parameters_present_os_version_number_first_set (uint8_t
 
 int
 fill_cmd_set_system_info_parameters_present_os_version_number (uint8_t set_selector,
-							       const void *string_block,
-							       unsigned int string_block_length,
-							       fiid_obj_t obj_cmd_rq)
+                                                               const void *string_block,
+                                                               unsigned int string_block_length,
+                                                               fiid_obj_t obj_cmd_rq)
 {
   if (_fill_cmd_set_system_info_parameters_string_set_common (set_selector,
-							      string_block,
-							      string_block_length,
-							      obj_cmd_rq,
-							      tmpl_cmd_set_system_info_parameters_present_os_version_number_rq,
-							      IPMI_SYSTEM_INFO_PARAMETER_PRESENT_OS_VERSION_NUMBER) < 0)
+                                                              string_block,
+                                                              string_block_length,
+                                                              obj_cmd_rq,
+                                                              tmpl_cmd_set_system_info_parameters_present_os_version_number_rq,
+                                                              IPMI_SYSTEM_INFO_PARAMETER_PRESENT_OS_VERSION_NUMBER) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -1751,20 +1751,20 @@ fill_cmd_set_system_info_parameters_present_os_version_number (uint8_t set_selec
 
 int
 fill_cmd_set_system_info_parameters_bmc_url_first_set (uint8_t set_selector,
-						       uint8_t encoding,
-						       uint8_t string_length,
-						       const void *string_block,
-						       unsigned int string_block_length,
-						       fiid_obj_t obj_cmd_rq)
+                                                       uint8_t encoding,
+                                                       uint8_t string_length,
+                                                       const void *string_block,
+                                                       unsigned int string_block_length,
+                                                       fiid_obj_t obj_cmd_rq)
 {
   if (_fill_cmd_set_system_info_parameters_string_first_set_common (set_selector,
-								    encoding,
-								    string_length,
-								    string_block,
-								    string_block_length,
-								    obj_cmd_rq,
-								    tmpl_cmd_set_system_info_parameters_bmc_url_first_set_rq,
-								    IPMI_SYSTEM_INFO_PARAMETER_BMC_URL) < 0)
+                                                                    encoding,
+                                                                    string_length,
+                                                                    string_block,
+                                                                    string_block_length,
+                                                                    obj_cmd_rq,
+                                                                    tmpl_cmd_set_system_info_parameters_bmc_url_first_set_rq,
+                                                                    IPMI_SYSTEM_INFO_PARAMETER_BMC_URL) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -1775,16 +1775,16 @@ fill_cmd_set_system_info_parameters_bmc_url_first_set (uint8_t set_selector,
 
 int
 fill_cmd_set_system_info_parameters_bmc_url (uint8_t set_selector,
-					     const void *string_block,
-					     unsigned int string_block_length,
-					     fiid_obj_t obj_cmd_rq)
+                                             const void *string_block,
+                                             unsigned int string_block_length,
+                                             fiid_obj_t obj_cmd_rq)
 {
   if (_fill_cmd_set_system_info_parameters_string_set_common (set_selector,
-							      string_block,
-							      string_block_length,
-							      obj_cmd_rq,
-							      tmpl_cmd_set_system_info_parameters_bmc_url_rq,
-							      IPMI_SYSTEM_INFO_PARAMETER_BMC_URL) < 0)
+                                                              string_block,
+                                                              string_block_length,
+                                                              obj_cmd_rq,
+                                                              tmpl_cmd_set_system_info_parameters_bmc_url_rq,
+                                                              IPMI_SYSTEM_INFO_PARAMETER_BMC_URL) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -1795,20 +1795,20 @@ fill_cmd_set_system_info_parameters_bmc_url (uint8_t set_selector,
 
 int
 fill_cmd_set_system_info_parameters_base_os_hypervisor_url_first_set (uint8_t set_selector,
-								      uint8_t encoding,
-								      uint8_t string_length,
-								      const void *string_block,
-								      unsigned int string_block_length,
-								      fiid_obj_t obj_cmd_rq)
+                                                                      uint8_t encoding,
+                                                                      uint8_t string_length,
+                                                                      const void *string_block,
+                                                                      unsigned int string_block_length,
+                                                                      fiid_obj_t obj_cmd_rq)
 {
   if (_fill_cmd_set_system_info_parameters_string_first_set_common (set_selector,
-								    encoding,
-								    string_length,
-								    string_block,
-								    string_block_length,
-								    obj_cmd_rq,
-								    tmpl_cmd_set_system_info_parameters_base_os_hypervisor_url_first_set_rq,
-								    IPMI_SYSTEM_INFO_PARAMETER_BASE_OS_HYPERVISOR_URL) < 0)
+                                                                    encoding,
+                                                                    string_length,
+                                                                    string_block,
+                                                                    string_block_length,
+                                                                    obj_cmd_rq,
+                                                                    tmpl_cmd_set_system_info_parameters_base_os_hypervisor_url_first_set_rq,
+                                                                    IPMI_SYSTEM_INFO_PARAMETER_BASE_OS_HYPERVISOR_URL) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -1819,16 +1819,16 @@ fill_cmd_set_system_info_parameters_base_os_hypervisor_url_first_set (uint8_t se
 
 int
 fill_cmd_set_system_info_parameters_base_os_hypervisor_url (uint8_t set_selector,
-							    const void *string_block,
-							    unsigned int string_block_length,
-							    fiid_obj_t obj_cmd_rq)
+                                                            const void *string_block,
+                                                            unsigned int string_block_length,
+                                                            fiid_obj_t obj_cmd_rq)
 {
   if (_fill_cmd_set_system_info_parameters_string_set_common (set_selector,
-							      string_block,
-							      string_block_length,
-							      obj_cmd_rq,
-							      tmpl_cmd_set_system_info_parameters_base_os_hypervisor_url_rq,
-							      IPMI_SYSTEM_INFO_PARAMETER_BASE_OS_HYPERVISOR_URL) < 0)
+                                                              string_block,
+                                                              string_block_length,
+                                                              obj_cmd_rq,
+                                                              tmpl_cmd_set_system_info_parameters_base_os_hypervisor_url_rq,
+                                                              IPMI_SYSTEM_INFO_PARAMETER_BASE_OS_HYPERVISOR_URL) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);

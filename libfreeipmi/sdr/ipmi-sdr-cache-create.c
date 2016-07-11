@@ -234,10 +234,10 @@ _sdr_cache_header_write (ipmi_sdr_ctx_t ctx,
 
 static int
 _sdr_cache_trailer_write (ipmi_sdr_ctx_t ctx,
-			  ipmi_ctx_t ipmi_ctx,
-			  int fd,
-			  unsigned int total_bytes_written,
-			  uint8_t trailer_checksum)
+                          ipmi_ctx_t ipmi_ctx,
+                          int fd,
+                          unsigned int total_bytes_written,
+                          uint8_t trailer_checksum)
 {
   char total_bytes_written_buf[4];
   ssize_t n;
@@ -383,16 +383,16 @@ _sdr_cache_get_record (ipmi_sdr_ctx_t ctx,
   while (!offset_into_record)
     {
       if (ipmi_cmd_get_sdr (ipmi_ctx,
-			    *reservation_id,
-			    record_id,
-			    0,
-			    IPMI_SDR_READ_ENTIRE_RECORD_BYTES_TO_READ,
-			    obj_cmd_rs) < 0)
-	{
+                            *reservation_id,
+                            record_id,
+                            0,
+                            IPMI_SDR_READ_ENTIRE_RECORD_BYTES_TO_READ,
+                            obj_cmd_rs) < 0)
+        {
           if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
-	    {
+            {
               uint8_t comp_code;
-	      
+              
               if (FIID_OBJ_GET (obj_cmd_rs,
                                 "comp_code",
                                 &val) < 0)
@@ -413,18 +413,18 @@ _sdr_cache_get_record (ipmi_sdr_ctx_t ctx,
                   continue;
                 }
             }
-	  
-	  goto partial_read;
-	}
+          
+          goto partial_read;
+        }
   
       if ((sdr_record_len = fiid_obj_get_data (obj_cmd_rs,
-					       "record_data",
-					       temp_record_buf,
-					       IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
-	{
-	  SDR_FIID_OBJECT_ERROR_TO_SDR_ERRNUM (ctx, obj_cmd_rs);
-	  goto cleanup;
-	}
+                                               "record_data",
+                                               temp_record_buf,
+                                               IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
+        {
+          SDR_FIID_OBJECT_ERROR_TO_SDR_ERRNUM (ctx, obj_cmd_rs);
+          goto cleanup;
+        }
       
       /* Assume this is an "IPMI Error", fall through to partial reads */
       if (sdr_record_len < sdr_record_header_length)
@@ -443,21 +443,21 @@ _sdr_cache_get_record (ipmi_sdr_ctx_t ctx,
        * a partial read.
        */
       if ((((uint8_t)temp_record_buf[IPMI_SDR_RECORD_LENGTH_INDEX]) + IPMI_SDR_RECORD_HEADER_LENGTH) > sdr_record_len)
-	goto partial_read;
+        goto partial_read;
   
       if (sdr_record_len > record_buf_len)
-	{
-	  SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_INTERNAL_ERROR);
-	  goto cleanup;
-	}
+        {
+          SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_INTERNAL_ERROR);
+          goto cleanup;
+        }
   
       if (FIID_OBJ_GET (obj_cmd_rs,
-			"next_record_id",
-			&val) < 0)
-	{
-	  SDR_FIID_OBJECT_ERROR_TO_SDR_ERRNUM (ctx, obj_cmd_rs);
-	  goto cleanup;
-	}
+                        "next_record_id",
+                        &val) < 0)
+        {
+          SDR_FIID_OBJECT_ERROR_TO_SDR_ERRNUM (ctx, obj_cmd_rs);
+          goto cleanup;
+        }
       *next_record_id = val;
 
       memcpy (record_buf, temp_record_buf, sdr_record_len);
@@ -546,10 +546,10 @@ _sdr_cache_get_record (ipmi_sdr_ctx_t ctx,
         }
 
       if (sdr_record_header_len > record_buf_len)
-	{
-	  SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_INTERNAL_ERROR);
-	  goto cleanup;
-	}
+        {
+          SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_INTERNAL_ERROR);
+          goto cleanup;
+        }
 
       /* copy header into buf */
       memcpy (record_buf, record_header_buf, sdr_record_header_len);
@@ -658,7 +658,7 @@ _sdr_cache_record_write (ipmi_sdr_ctx_t ctx,
                          unsigned int *record_ids_count,
                          uint8_t *buf,
                          unsigned int buflen,
-			 uint8_t *trailer_checksum)
+                         uint8_t *trailer_checksum)
 {
   ssize_t n;
 
@@ -692,12 +692,12 @@ _sdr_cache_record_write (ipmi_sdr_ctx_t ctx,
        * truncates the buffer length to the correct size.
        */
       if ((((uint8_t)buf[IPMI_SDR_RECORD_LENGTH_INDEX]) + IPMI_SDR_RECORD_HEADER_LENGTH) <= buflen)
-	buflen = ((uint8_t)buf[IPMI_SDR_RECORD_LENGTH_INDEX]) + IPMI_SDR_RECORD_HEADER_LENGTH;
+        buflen = ((uint8_t)buf[IPMI_SDR_RECORD_LENGTH_INDEX]) + IPMI_SDR_RECORD_HEADER_LENGTH;
       else
-	{
-	  SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_CACHE_CREATE_INVALID_RECORD_LENGTH);
-	  return (-1);
-	}
+        {
+          SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_CACHE_CREATE_INVALID_RECORD_LENGTH);
+          return (-1);
+        }
     }
 
   if (record_ids)
@@ -759,8 +759,8 @@ ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
   uint16_t *record_ids = NULL;
   unsigned int record_ids_count = 0;
   unsigned int cache_create_flags_mask = (IPMI_SDR_CACHE_CREATE_FLAGS_OVERWRITE
-					  | IPMI_SDR_CACHE_CREATE_FLAGS_DUPLICATE_RECORD_ID
-					  | IPMI_SDR_CACHE_CREATE_FLAGS_ASSUME_MAX_SDR_RECORD_COUNT);
+                                          | IPMI_SDR_CACHE_CREATE_FLAGS_DUPLICATE_RECORD_ID
+                                          | IPMI_SDR_CACHE_CREATE_FLAGS_ASSUME_MAX_SDR_RECORD_COUNT);
   uint8_t trailer_checksum = 0;
   int fd = -1;
   int rv = -1;
@@ -821,11 +821,11 @@ ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
     }
 
   if (sdr_info (ctx,
-		ipmi_ctx,
-		&sdr_version,
-		&record_count,
-		&most_recent_addition_timestamp,
-		&most_recent_erase_timestamp) < 0)
+                ipmi_ctx,
+                &sdr_version,
+                &record_count,
+                &most_recent_addition_timestamp,
+                &most_recent_erase_timestamp) < 0)
     goto cleanup;
 
   if (!record_count)
@@ -873,19 +873,19 @@ ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
 
       if (record_count_written >= ctx->record_count)
         {
-	  /* IPMI Workaround
-	   *
-	   * Discovered on unspecified Inspur motherboard
-	   *
-	   * SDR record reading is broken, the IPMI_SDR_RECORD_ID_LAST
-	   * record id never occurs.  So this workaround allows the
-	   * user to not error out and avoids this loop from looping
-	   * infinitely.
-	   *
-	   */
+          /* IPMI Workaround
+           *
+           * Discovered on unspecified Inspur motherboard
+           *
+           * SDR record reading is broken, the IPMI_SDR_RECORD_ID_LAST
+           * record id never occurs.  So this workaround allows the
+           * user to not error out and avoids this loop from looping
+           * infinitely.
+           *
+           */
 
-	  if (cache_create_flags & IPMI_SDR_CACHE_CREATE_FLAGS_ASSUME_MAX_SDR_RECORD_COUNT)
-	    break;
+          if (cache_create_flags & IPMI_SDR_CACHE_CREATE_FLAGS_ASSUME_MAX_SDR_RECORD_COUNT)
+            break;
 
           SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_CACHE_CREATE_INVALID_RECORD_COUNT);
           goto cleanup;
@@ -908,14 +908,14 @@ ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
               const char *record_str;
 
               if ((record_str = sdr_record_type_str (ctx,
-						     record_buf,
-						     record_len)))
+                                                     record_buf,
+                                                     record_len)))
                 {
                   char hdrbuf[IPMI_SDR_CACHE_DEBUG_BUFLEN];
 
                   debug_hdr_str (DEBUG_UTIL_TYPE_NONE,
                                  DEBUG_UTIL_DIRECTION_NONE,
-				 DEBUG_UTIL_FLAGS_DEFAULT,
+                                 DEBUG_UTIL_FLAGS_DEFAULT,
                                  record_str,
                                  hdrbuf,
                                  IPMI_SDR_CACHE_DEBUG_BUFLEN);
@@ -936,7 +936,7 @@ ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
                                        &record_ids_count,
                                        record_buf,
                                        record_len,
-				       &trailer_checksum) < 0)
+                                       &trailer_checksum) < 0)
             goto cleanup;
 
           record_count_written++;
@@ -994,9 +994,9 @@ ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
                                        ctx->most_recent_erase_timestamp) < 0)
             goto cleanup;
 
-	  /* need to seek back to the end of the file to write the
-	   * trailer below
-	   */
+          /* need to seek back to the end of the file to write the
+           * trailer below
+           */
           if (lseek (fd, 0, SEEK_END) < 0)
             {
               SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_SYSTEM_ERROR);
@@ -1011,10 +1011,10 @@ ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
     }
 
   if (_sdr_cache_trailer_write (ctx,
-				ipmi_ctx,
-				fd,
-				total_bytes_written,
-				trailer_checksum) < 0)
+                                ipmi_ctx,
+                                fd,
+                                total_bytes_written,
+                                trailer_checksum) < 0)
             goto cleanup;
 
   if (fsync (fd) < 0)

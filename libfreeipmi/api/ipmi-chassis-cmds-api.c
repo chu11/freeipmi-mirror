@@ -1090,11 +1090,11 @@ ipmi_cmd_set_system_boot_options_boot_initiator_mailbox (ipmi_ctx_t ctx,
 
 static int
 _ipmi_cmd_get_system_boot_options_common (ipmi_ctx_t ctx,
-					  uint8_t set_selector,
-					  uint8_t block_selector,
-					  fiid_obj_t obj_cmd_rs,
-					  fiid_field_t *tmpl_cmd_rs_expected,
-					  uint8_t parameter_selector)
+                                          uint8_t set_selector,
+                                          uint8_t block_selector,
+                                          fiid_obj_t obj_cmd_rs,
+                                          fiid_field_t *tmpl_cmd_rs_expected,
+                                          uint8_t parameter_selector)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int rv = -1;
@@ -1158,11 +1158,11 @@ ipmi_cmd_get_system_boot_options (ipmi_ctx_t ctx,
                                   fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_system_boot_options_common (ctx,
-						set_selector,
-						block_selector,
-						obj_cmd_rs,
-						tmpl_cmd_get_system_boot_options_rs,
-						parameter_selector) < 0)
+                                                set_selector,
+                                                block_selector,
+                                                obj_cmd_rs,
+                                                tmpl_cmd_get_system_boot_options_rs,
+                                                parameter_selector) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1178,11 +1178,11 @@ ipmi_cmd_get_system_boot_options_set_in_progress (ipmi_ctx_t ctx,
                                                   fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_system_boot_options_common (ctx,
-						set_selector,
-						block_selector,
-						obj_cmd_rs,
-						tmpl_cmd_get_system_boot_options_set_in_progress_rs,
-						IPMI_SYSTEM_BOOT_OPTION_PARAMETER_SET_IN_PROGRESS) < 0)
+                                                set_selector,
+                                                block_selector,
+                                                obj_cmd_rs,
+                                                tmpl_cmd_get_system_boot_options_set_in_progress_rs,
+                                                IPMI_SYSTEM_BOOT_OPTION_PARAMETER_SET_IN_PROGRESS) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1198,11 +1198,11 @@ ipmi_cmd_get_system_boot_options_service_partition_selector (ipmi_ctx_t ctx,
                                                              fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_system_boot_options_common (ctx,
-						set_selector,
-						block_selector,
-						obj_cmd_rs,
-						tmpl_cmd_get_system_boot_options_service_partition_selector_rs,
-						IPMI_SYSTEM_BOOT_OPTION_PARAMETER_SERVICE_PARTITION_SELECTOR) < 0)
+                                                set_selector,
+                                                block_selector,
+                                                obj_cmd_rs,
+                                                tmpl_cmd_get_system_boot_options_service_partition_selector_rs,
+                                                IPMI_SYSTEM_BOOT_OPTION_PARAMETER_SERVICE_PARTITION_SELECTOR) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1218,11 +1218,11 @@ ipmi_cmd_get_system_boot_options_service_partition_scan (ipmi_ctx_t ctx,
                                                          fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_system_boot_options_common (ctx,
-						set_selector,
-						block_selector,
-						obj_cmd_rs,
-						tmpl_cmd_get_system_boot_options_service_partition_scan_rs,
-						IPMI_SYSTEM_BOOT_OPTION_PARAMETER_SERVICE_PARTITION_SCAN) < 0)
+                                                set_selector,
+                                                block_selector,
+                                                obj_cmd_rs,
+                                                tmpl_cmd_get_system_boot_options_service_partition_scan_rs,
+                                                IPMI_SYSTEM_BOOT_OPTION_PARAMETER_SERVICE_PARTITION_SCAN) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1238,11 +1238,11 @@ ipmi_cmd_get_system_boot_options_BMC_boot_flag_valid_bit_clearing (ipmi_ctx_t ct
                                                                    fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_system_boot_options_common (ctx,
-						set_selector,
-						block_selector,
-						obj_cmd_rs,
-						tmpl_cmd_get_system_boot_options_BMC_boot_flag_valid_bit_clearing_rs,
-						IPMI_SYSTEM_BOOT_OPTION_PARAMETER_BMC_BOOT_FLAG_VALID_BIT_CLEARING) < 0)
+                                                set_selector,
+                                                block_selector,
+                                                obj_cmd_rs,
+                                                tmpl_cmd_get_system_boot_options_BMC_boot_flag_valid_bit_clearing_rs,
+                                                IPMI_SYSTEM_BOOT_OPTION_PARAMETER_BMC_BOOT_FLAG_VALID_BIT_CLEARING) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1258,11 +1258,11 @@ ipmi_cmd_get_system_boot_options_boot_info_acknowledge (ipmi_ctx_t ctx,
                                                         fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_system_boot_options_common (ctx,
-						set_selector,
-						block_selector,
-						obj_cmd_rs,
-						tmpl_cmd_get_system_boot_options_boot_info_acknowledge_rs,
-						IPMI_SYSTEM_BOOT_OPTION_PARAMETER_BOOT_INFO_ACKNOWLEDGE) < 0)
+                                                set_selector,
+                                                block_selector,
+                                                obj_cmd_rs,
+                                                tmpl_cmd_get_system_boot_options_boot_info_acknowledge_rs,
+                                                IPMI_SYSTEM_BOOT_OPTION_PARAMETER_BOOT_INFO_ACKNOWLEDGE) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1278,11 +1278,11 @@ ipmi_cmd_get_system_boot_options_boot_flags (ipmi_ctx_t ctx,
                                              fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_system_boot_options_common (ctx,
-						set_selector,
-						block_selector,
-						obj_cmd_rs,
-						tmpl_cmd_get_system_boot_options_boot_flags_rs,
-						IPMI_SYSTEM_BOOT_OPTION_PARAMETER_BOOT_FLAGS) < 0)
+                                                set_selector,
+                                                block_selector,
+                                                obj_cmd_rs,
+                                                tmpl_cmd_get_system_boot_options_boot_flags_rs,
+                                                IPMI_SYSTEM_BOOT_OPTION_PARAMETER_BOOT_FLAGS) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1298,11 +1298,11 @@ ipmi_cmd_get_system_boot_options_boot_initiator_info (ipmi_ctx_t ctx,
                                              fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_system_boot_options_common (ctx,
-						set_selector,
-						block_selector,
-						obj_cmd_rs,
-						tmpl_cmd_get_system_boot_options_boot_initiator_info_rs,
-						IPMI_SYSTEM_BOOT_OPTION_PARAMETER_BOOT_INITIATOR_INFO) < 0)
+                                                set_selector,
+                                                block_selector,
+                                                obj_cmd_rs,
+                                                tmpl_cmd_get_system_boot_options_boot_initiator_info_rs,
+                                                IPMI_SYSTEM_BOOT_OPTION_PARAMETER_BOOT_INITIATOR_INFO) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1318,11 +1318,11 @@ ipmi_cmd_get_system_boot_options_boot_initiator_mailbox (ipmi_ctx_t ctx,
                                                          fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_system_boot_options_common (ctx,
-						set_selector,
-						block_selector,
-						obj_cmd_rs,
-						tmpl_cmd_get_system_boot_options_boot_initiator_mailbox_rs,
-						IPMI_SYSTEM_BOOT_OPTION_PARAMETER_BOOT_INITIATOR_MAILBOX) < 0)
+                                                set_selector,
+                                                block_selector,
+                                                obj_cmd_rs,
+                                                tmpl_cmd_get_system_boot_options_boot_initiator_mailbox_rs,
+                                                IPMI_SYSTEM_BOOT_OPTION_PARAMETER_BOOT_INITIATOR_MAILBOX) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);

@@ -93,7 +93,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case IPMIDETECTD_CONFIG_FILE_KEY:
     case IPMIDETECTD_LEGACY_CONFIG_FILE_KEY:
       if (!(cmd_args->config_file = strdup (arg)))
-	err_exit ("strdup: %s", strerror (errno));
+        err_exit ("strdup: %s", strerror (errno));
       break;
     case IPMIDETECTD_DEBUG_KEY:
       cmd_args->debug++;

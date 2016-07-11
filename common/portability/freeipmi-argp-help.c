@@ -19,7 +19,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _GNU_SOURCE
-# define _GNU_SOURCE	1
+# define _GNU_SOURCE    1
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -102,15 +102,15 @@ char *alloca ();
    UPARAM_NAMES vector, below.  */
 
 /* Default parameters.  */
-#define DUP_ARGS      0		/* True if option argument can be duplicated. */
-#define DUP_ARGS_NOTE 1		/* True to print a note about duplicate args. */
-#define SHORT_OPT_COL 2		/* column in which short options start */
-#define LONG_OPT_COL  6		/* column in which long options start */
-#define DOC_OPT_COL   2		/* column in which doc options start */
-#define OPT_DOC_COL  29		/* column in which option text starts */
-#define HEADER_COL    1		/* column in which group headers are printed */
-#define USAGE_INDENT 12		/* indentation of wrapped usage lines */
-#define RMARGIN      79		/* right margin used for wrapping */
+#define DUP_ARGS      0         /* True if option argument can be duplicated. */
+#define DUP_ARGS_NOTE 1         /* True to print a note about duplicate args. */
+#define SHORT_OPT_COL 2         /* column in which short options start */
+#define LONG_OPT_COL  6         /* column in which long options start */
+#define DOC_OPT_COL   2         /* column in which doc options start */
+#define OPT_DOC_COL  29         /* column in which option text starts */
+#define HEADER_COL    1         /* column in which group headers are printed */
+#define USAGE_INDENT 12         /* indentation of wrapped usage lines */
+#define RMARGIN      79         /* right margin used for wrapping */
 
 /* User-selectable (using an environment variable) formatting parameters.
    They must all be of type `int' for the parsing code to work.  */
@@ -136,7 +136,7 @@ struct uparams
   int usage_indent;
   int rmargin;
 
-  int valid;			/* True when the values in here are valid.  */
+  int valid;                    /* True when the values in here are valid.  */
 };
 
 /* This is a global variable, as user options are only ever read once.  */
@@ -150,9 +150,9 @@ static struct uparams uparams = {
 /* A particular uparam, and what the user name is.  */
 struct uparam_name
 {
-  const char *name;		/* User name.  */
-  int is_bool;			/* Whether it's `boolean'.  */
-  size_t uparams_offs;		/* Location of the (int) field in UPARAMS.  */
+  const char *name;             /* User name.  */
+  int is_bool;                  /* Whether it's `boolean'.  */
+  size_t uparams_offs;          /* Location of the (int) field in UPARAMS.  */
 };
 
 /* The name-field mappings we know about.  */
@@ -183,78 +183,78 @@ fill_in_uparams (const struct argp_state *state)
     /* Parse var. */
     while (*var)
       {
-	SKIPWS (var);
+        SKIPWS (var);
 
-	if (isalpha (*var))
-	  {
-	    size_t var_len;
-	    const struct uparam_name *un;
-	    int unspec = 0, val = 0;
-	    const unsigned char *arg = var;
+        if (isalpha (*var))
+          {
+            size_t var_len;
+            const struct uparam_name *un;
+            int unspec = 0, val = 0;
+            const unsigned char *arg = var;
 
-	    while (isalnum (*arg) || *arg == '-' || *arg == '_')
-	      arg++;
-	    var_len = arg - var;
+            while (isalnum (*arg) || *arg == '-' || *arg == '_')
+              arg++;
+            var_len = arg - var;
 
-	    SKIPWS (arg);
+            SKIPWS (arg);
 
-	    if (*arg == '\0' || *arg == ',')
-	      unspec = 1;
-	    else if (*arg == '=')
-	      {
-		arg++;
-		SKIPWS (arg);
-	      }
+            if (*arg == '\0' || *arg == ',')
+              unspec = 1;
+            else if (*arg == '=')
+              {
+                arg++;
+                SKIPWS (arg);
+              }
 
-	    if (unspec)
-	      {
-		if (var[0] == 'n' && var[1] == 'o' && var[2] == '-')
-		  {
-		    val = 0;
-		    var += 3;
-		    var_len -= 3;
-		  }
-		else
-		  val = 1;
-	      }
-	    else if (isdigit (*arg))
-	      {
-		val = atoi (arg);
-		while (isdigit (*arg))
-		  arg++;
-		SKIPWS (arg);
-	      }
+            if (unspec)
+              {
+                if (var[0] == 'n' && var[1] == 'o' && var[2] == '-')
+                  {
+                    val = 0;
+                    var += 3;
+                    var_len -= 3;
+                  }
+                else
+                  val = 1;
+              }
+            else if (isdigit (*arg))
+              {
+                val = atoi (arg);
+                while (isdigit (*arg))
+                  arg++;
+                SKIPWS (arg);
+              }
 
-	    for (un = uparam_names; un->name; un++)
-	      if (strlen (un->name) == var_len
-		  && strncmp (var, un->name, var_len) == 0)
-		{
-		  if (unspec && !un->is_bool)
-		    __argp_failure (state, 0, 0,
-				    dgettext (state->root_argp->argp_domain, "\
+            for (un = uparam_names; un->name; un++)
+              if (strlen (un->name) == var_len
+                  && strncmp (var, un->name, var_len) == 0)
+                {
+                  if (unspec && !un->is_bool)
+                    __argp_failure (state, 0, 0,
+                                    dgettext (state->root_argp->argp_domain, "\
 %.*s: ARGP_HELP_FMT parameter requires a value"),
-				    (int) var_len, var);
-		  else
-		    *(int *)((char *)&uparams + un->uparams_offs) = val;
-		  break;
-		}
-	    if (! un->name)
-	      __argp_failure (state, 0, 0,
-			      dgettext (state->root_argp->argp_domain, "\
+                                    (int) var_len, var);
+                  else
+                    *(int *)((char *)&uparams + un->uparams_offs) = val;
+                  break;
+                }
+            if (! un->name)
+              __argp_failure (state, 0, 0,
+                              dgettext (state->root_argp->argp_domain, "\
 %.*s: Unknown ARGP_HELP_FMT parameter"),
-			      (int) var_len, var);
+                              (int) var_len, var);
 
-	    var = arg;
-	    if (*var == ',')
-	      var++;
-	  }
-	else if (*var)
-	  {
-	    __argp_failure (state, 0, 0,
-			    dgettext (state->root_argp->argp_domain,
-				      "Garbage in ARGP_HELP_FMT: %s"), var);
-	    break;
-	  }
+            var = arg;
+            if (*var == ',')
+              var++;
+          }
+        else if (*var)
+          {
+            __argp_failure (state, 0, 0,
+                            dgettext (state->root_argp->argp_domain,
+                                      "Garbage in ARGP_HELP_FMT: %s"), var);
+            break;
+          }
       }
 }
 
@@ -290,22 +290,22 @@ fill_in_uparams (const struct argp_state *state)
    For example, the following output (from ps):
 
      -p PID, --pid=PID          List the process PID
-	 --pgrp=PGRP            List processes in the process group PGRP
+         --pgrp=PGRP            List processes in the process group PGRP
      -P, -x, --no-parent        Include processes without parents
      -Q, --all-fields           Don't elide unusable fields (normally if there's
-				some reason ps can't print a field for any
-				process, it's removed from the output entirely)
+                                some reason ps can't print a field for any
+                                process, it's removed from the output entirely)
      -r, --reverse, --gratuitously-long-reverse-option
-				Reverse the order of any sort
-	 --session[=SID]        Add the processes from the session SID (which
-				defaults to the sid of the current process)
+                                Reverse the order of any sort
+         --session[=SID]        Add the processes from the session SID (which
+                                defaults to the sid of the current process)
 
     Here are some more options:
      -f ZOT, --foonly=ZOT       Glork a foonly
      -z, --zaza                 Snit a zar
 
      -?, --help                 Give this help list
-	 --usage                Give a short usage message
+         --usage                Give a short usage message
      -V, --version              Print program version
 
    The struct argp_option array for the above could look like:
@@ -313,18 +313,18 @@ fill_in_uparams (const struct argp_state *state)
    {
      {"pid",       'p',      "PID",  0, "List the process PID"},
      {"pgrp",      OPT_PGRP, "PGRP", 0, "List processes in the process group PGRP"},
-     {"no-parent", 'P',	      0,     0, "Include processes without parents"},
+     {"no-parent", 'P',       0,     0, "Include processes without parents"},
      {0,           'x',       0,     OPTION_ALIAS},
      {"all-fields",'Q',       0,     0, "Don't elide unusable fields (normally"
                                         " if there's some reason ps can't"
-					" print a field for any process, it's"
+                                        " print a field for any process, it's"
                                         " removed from the output entirely)" },
      {"reverse",   'r',       0,     0, "Reverse the order of any sort"},
      {"gratuitously-long-reverse-option", 0, 0, OPTION_ALIAS},
      {"session",   OPT_SESS,  "SID", OPTION_ARG_OPTIONAL,
                                         "Add the processes from the session"
-					" SID (which defaults to the sid of"
-					" the current process)" },
+                                        " SID (which defaults to the sid of"
+                                        " the current process)" },
 
      {0,0,0,0, "Here are some more options:"},
      {"foonly", 'f', "ZOT", 0, "Glork a foonly"},
@@ -350,7 +350,7 @@ find_char (char ch, char *beg, char *end)
   return 0;
 }
 
-struct hol_cluster;		/* fwd decl */
+struct hol_cluster;             /* fwd decl */
 
 struct hol_entry
 {
@@ -452,12 +452,12 @@ make_hol (const struct argp *argp, struct hol_cluster *cluster)
 
       /* Calculate the space needed.  */
       for (o = opts; ! oend (o); o++)
-	{
-	  if (! oalias (o))
-	    hol->num_entries++;
-	  if (oshort (o))
-	    num_short_options++;	/* This is an upper bound.  */
-	}
+        {
+          if (! oalias (o))
+            hol->num_entries++;
+          if (oshort (o))
+            num_short_options++;        /* This is an upper bound.  */
+        }
 
       hol->entries = malloc (sizeof (struct hol_entry) * hol->num_entries);
       hol->short_options = malloc (num_short_options + 1);
@@ -467,30 +467,30 @@ make_hol (const struct argp *argp, struct hol_cluster *cluster)
       /* Fill in the entries.  */
       so = hol->short_options;
       for (o = opts, entry = hol->entries; ! oend (o); entry++)
-	{
-	  entry->opt = o;
-	  entry->num = 0;
-	  entry->short_options = so;
-	  entry->group = cur_group =
-	    o->group
-	    ? o->group
-	    : ((!o->name && !o->key)
-	       ? cur_group + 1
-	       : cur_group);
-	  entry->cluster = cluster;
-	  entry->argp = argp;
+        {
+          entry->opt = o;
+          entry->num = 0;
+          entry->short_options = so;
+          entry->group = cur_group =
+            o->group
+            ? o->group
+            : ((!o->name && !o->key)
+               ? cur_group + 1
+               : cur_group);
+          entry->cluster = cluster;
+          entry->argp = argp;
 
-	  do
-	    {
-	      entry->num++;
-	      if (oshort (o) && ! find_char (o->key, hol->short_options, so))
-		/* O has a valid short option which hasn't already been used.*/
-		*so++ = o->key;
-	      o++;
-	    }
-	  while (! oend (o) && oalias (o));
-	}
-      *so = '\0';		/* null terminated so we can find the length */
+          do
+            {
+              entry->num++;
+              if (oshort (o) && ! find_char (o->key, hol->short_options, so))
+                /* O has a valid short option which hasn't already been used.*/
+                *so++ = o->key;
+              o++;
+            }
+          while (! oend (o) && oalias (o));
+        }
+      *so = '\0';               /* null terminated so we can find the length */
     }
 
   return hol;
@@ -501,7 +501,7 @@ make_hol (const struct argp *argp, struct hol_cluster *cluster)
    to it.  ARGP is the argp that this cluster results from.  */
 static struct hol_cluster *
 hol_add_cluster (struct hol *hol, int group, const char *header, int index,
-		 struct hol_cluster *parent, const struct argp *argp)
+                 struct hol_cluster *parent, const struct argp *argp)
 {
   struct hol_cluster *cl = malloc (sizeof (struct hol_cluster));
   if (cl)
@@ -544,10 +544,10 @@ hol_free (struct hol *hol)
 
 static inline int
 hol_entry_short_iterate (const struct hol_entry *entry,
-			 int (*func)(const struct argp_option *opt,
-				     const struct argp_option *real,
-				     const char *domain, void *cookie),
-			 const char *domain, void *cookie)
+                         int (*func)(const struct argp_option *opt,
+                                     const struct argp_option *real,
+                                     const char *domain, void *cookie),
+                         const char *domain, void *cookie)
 {
   unsigned nopts;
   int val = 0;
@@ -557,11 +557,11 @@ hol_entry_short_iterate (const struct hol_entry *entry,
   for (opt = real, nopts = entry->num; nopts > 0 && !val; opt++, nopts--)
     if (oshort (opt) && *so == opt->key)
       {
-	if (!oalias (opt))
-	  real = opt;
-	if (ovisible (opt))
-	  val = (*func)(opt, real, domain, cookie);
-	so++;
+        if (!oalias (opt))
+          real = opt;
+        if (ovisible (opt))
+          val = (*func)(opt, real, domain, cookie);
+        so++;
       }
 
   return val;
@@ -569,10 +569,10 @@ hol_entry_short_iterate (const struct hol_entry *entry,
 
 static inline int
 hol_entry_long_iterate (const struct hol_entry *entry,
-			int (*func)(const struct argp_option *opt,
-				    const struct argp_option *real,
-				    const char *domain, void *cookie),
-			const char *domain, void *cookie)
+                        int (*func)(const struct argp_option *opt,
+                                    const struct argp_option *real,
+                                    const char *domain, void *cookie),
+                        const char *domain, void *cookie)
 {
   unsigned nopts;
   int val = 0;
@@ -581,10 +581,10 @@ hol_entry_long_iterate (const struct hol_entry *entry,
   for (opt = real, nopts = entry->num; nopts > 0 && !val; opt++, nopts--)
     if (opt->name)
       {
-	if (!oalias (opt))
-	  real = opt;
-	if (ovisible (opt))
-	  val = (*func)(opt, real, domain, cookie);
+        if (!oalias (opt))
+          real = opt;
+        if (ovisible (opt))
+          val = (*func)(opt, real, domain, cookie);
       }
 
   return val;
@@ -593,7 +593,7 @@ hol_entry_long_iterate (const struct hol_entry *entry,
 /* Iterator that returns true for the first short option.  */
 static inline int
 until_short (const struct argp_option *opt, const struct argp_option *real UNUSED,
-	     const char *domain UNUSED, void *cookie UNUSED)
+             const char *domain UNUSED, void *cookie UNUSED)
 {
   return oshort (opt) ? opt->key : 0;
 }
@@ -603,7 +603,7 @@ static char
 hol_entry_first_short (const struct hol_entry *entry)
 {
   return hol_entry_short_iterate (entry, until_short,
-				  entry->argp->argp_domain, 0);
+                                  entry->argp->argp_domain, 0);
 }
 
 /* Returns the first valid long option in ENTRY, or 0 if there is none.  */
@@ -632,10 +632,10 @@ hol_find_entry (struct hol *hol, const char *name)
       unsigned num_opts = entry->num;
 
       while (num_opts-- > 0)
-	if (opt->name && ovisible (opt) && strcmp (opt->name, name) == 0)
-	  return entry;
-	else
-	  opt++;
+        if (opt->name && ovisible (opt) && strcmp (opt->name, name) == 0)
+          return entry;
+        else
+          opt++;
 
       entry++;
     }
@@ -699,7 +699,7 @@ hol_cluster_base (struct hol_cluster *cl)
 /* Return true if CL1 is a child of CL2.  */
 static int
 hol_cluster_is_child (const struct hol_cluster *cl1,
-		      const struct hol_cluster *cl2)
+                      const struct hol_cluster *cl2)
 {
   while (cl1 && cl1 != cl2)
     cl1 = cl1->parent;
@@ -730,7 +730,7 @@ canon_doc_option (const char **name)
    listing.  */
 static int
 hol_entry_cmp (const struct hol_entry *entry1,
-	       const struct hol_entry *entry2)
+               const struct hol_entry *entry2)
 {
   /* The group numbers by which the entries should be ordered; if either is
      in a cluster, then this is just the group within the cluster.  */
@@ -739,19 +739,19 @@ hol_entry_cmp (const struct hol_entry *entry1,
   if (entry1->cluster != entry2->cluster)
     {
       /* The entries are not within the same cluster, so we can't compare them
-	 directly, we have to use the appropiate clustering level too.  */
+         directly, we have to use the appropiate clustering level too.  */
       if (! entry1->cluster)
-	/* ENTRY1 is at the `base level', not in a cluster, so we have to
-	   compare it's group number with that of the base cluster in which
-	   ENTRY2 resides.  Note that if they're in the same group, the
-	   clustered option always comes laster.  */
-	return group_cmp (group1, hol_cluster_base (entry2->cluster)->group, -1);
+        /* ENTRY1 is at the `base level', not in a cluster, so we have to
+           compare it's group number with that of the base cluster in which
+           ENTRY2 resides.  Note that if they're in the same group, the
+           clustered option always comes laster.  */
+        return group_cmp (group1, hol_cluster_base (entry2->cluster)->group, -1);
       else if (! entry2->cluster)
-	/* Likewise, but ENTRY2's not in a cluster.  */
-	return group_cmp (hol_cluster_base (entry1->cluster)->group, group2, 1);
+        /* Likewise, but ENTRY2's not in a cluster.  */
+        return group_cmp (hol_cluster_base (entry1->cluster)->group, group2, 1);
       else
-	/* Both entries are in clusters, we can just compare the clusters.  */
-	return hol_cluster_cmp (entry1->cluster, entry2->cluster);
+        /* Both entries are in clusters, we can just compare the clusters.  */
+        return hol_cluster_cmp (entry1->cluster, entry2->cluster);
     }
   else if (group1 == group2)
     /* The entries are both in the same cluster and group, so compare them
@@ -766,38 +766,38 @@ hol_entry_cmp (const struct hol_entry *entry1,
       const char *long2 = hol_entry_first_long (entry2);
 
       if (doc1)
-	doc1 = canon_doc_option (&long1);
+        doc1 = canon_doc_option (&long1);
       if (doc2)
-	doc2 = canon_doc_option (&long2);
+        doc2 = canon_doc_option (&long2);
 
       if (doc1 != doc2)
-	/* `documentation' options always follow normal options (or
-	   documentation options that *look* like normal options).  */
-	return doc1 - doc2;
+        /* `documentation' options always follow normal options (or
+           documentation options that *look* like normal options).  */
+        return doc1 - doc2;
       else if (!short1 && !short2 && long1 && long2)
-	/* Only long options.  */
-	return __strcasecmp (long1, long2);
+        /* Only long options.  */
+        return __strcasecmp (long1, long2);
       else
-	/* Compare short/short, long/short, short/long, using the first
-	   character of long options.  Entries without *any* valid
-	   options (such as options with OPTION_HIDDEN set) will be put
-	   first, but as they're not displayed, it doesn't matter where
-	   they are.  */
-	{
-	  unsigned char first1 = short1 ? short1 : long1 ? *long1 : 0;
-	  unsigned char first2 = short2 ? short2 : long2 ? *long2 : 0;
+        /* Compare short/short, long/short, short/long, using the first
+           character of long options.  Entries without *any* valid
+           options (such as options with OPTION_HIDDEN set) will be put
+           first, but as they're not displayed, it doesn't matter where
+           they are.  */
+        {
+          unsigned char first1 = short1 ? short1 : long1 ? *long1 : 0;
+          unsigned char first2 = short2 ? short2 : long2 ? *long2 : 0;
 #ifdef _tolower
-	  int lower_cmp = _tolower (first1) - _tolower (first2);
+          int lower_cmp = _tolower (first1) - _tolower (first2);
 #else
-	  int lower_cmp = tolower (first1) - tolower (first2);
+          int lower_cmp = tolower (first1) - tolower (first2);
 #endif
-	  /* Compare ignoring case, except when the options are both the
-	     same letter, in which case lower-case always comes first.  */
-	  /* NOTE: The subtraction below does the right thing
-	     even with eight-bit chars: first1 and first2 are
-	     converted to int *before* the subtraction. */
-	  return lower_cmp ? lower_cmp : first2 - first1;
-	}
+          /* Compare ignoring case, except when the options are both the
+             same letter, in which case lower-case always comes first.  */
+          /* NOTE: The subtraction below does the right thing
+             even with eight-bit chars: first1 and first2 are
+             converted to int *before* the subtraction. */
+          return lower_cmp ? lower_cmp : first2 - first1;
+        }
     }
   else
     /* Within the same cluster, but not the same group, so just compare
@@ -820,7 +820,7 @@ hol_sort (struct hol *hol)
 {
   if (hol->num_entries > 0)
     qsort (hol->entries, hol->num_entries, sizeof (struct hol_entry),
-	   hol_entry_qcmp);
+           hol_entry_qcmp);
 }
 
 /* Append MORE to HOL, destroying MORE in the process.  Options in HOL shadow
@@ -840,73 +840,73 @@ hol_append (struct hol *hol, struct hol *more)
   if (more->num_entries > 0)
     {
       if (hol->num_entries == 0)
-	{
-	  hol->num_entries = more->num_entries;
-	  hol->entries = more->entries;
-	  hol->short_options = more->short_options;
-	  more->num_entries = 0;	/* Mark MORE's fields as invalid.  */
-	}
+        {
+          hol->num_entries = more->num_entries;
+          hol->entries = more->entries;
+          hol->short_options = more->short_options;
+          more->num_entries = 0;        /* Mark MORE's fields as invalid.  */
+        }
       else
-	/* Append the entries in MORE to those in HOL, taking care to only add
-	   non-shadowed SHORT_OPTIONS values.  */
-	{
-	  unsigned left;
-	  char *so, *more_so;
-	  struct hol_entry *e;
-	  unsigned num_entries = hol->num_entries + more->num_entries;
-	  struct hol_entry *entries =
-	    malloc (num_entries * sizeof (struct hol_entry));
-	  unsigned hol_so_len = strlen (hol->short_options);
-	  char *short_options =
-	    malloc (hol_so_len + strlen (more->short_options) + 1);
+        /* Append the entries in MORE to those in HOL, taking care to only add
+           non-shadowed SHORT_OPTIONS values.  */
+        {
+          unsigned left;
+          char *so, *more_so;
+          struct hol_entry *e;
+          unsigned num_entries = hol->num_entries + more->num_entries;
+          struct hol_entry *entries =
+            malloc (num_entries * sizeof (struct hol_entry));
+          unsigned hol_so_len = strlen (hol->short_options);
+          char *short_options =
+            malloc (hol_so_len + strlen (more->short_options) + 1);
 
-	  __mempcpy (__mempcpy (entries, hol->entries,
-				hol->num_entries * sizeof (struct hol_entry)),
-		     more->entries,
-		     more->num_entries * sizeof (struct hol_entry));
+          __mempcpy (__mempcpy (entries, hol->entries,
+                                hol->num_entries * sizeof (struct hol_entry)),
+                     more->entries,
+                     more->num_entries * sizeof (struct hol_entry));
 
-	  __mempcpy (short_options, hol->short_options, hol_so_len);
+          __mempcpy (short_options, hol->short_options, hol_so_len);
 
-	  /* Fix up the short options pointers from HOL.  */
-	  for (e = entries, left = hol->num_entries; left > 0; e++, left--)
-	    e->short_options += (short_options - hol->short_options);
+          /* Fix up the short options pointers from HOL.  */
+          for (e = entries, left = hol->num_entries; left > 0; e++, left--)
+            e->short_options += (short_options - hol->short_options);
 
-	  /* Now add the short options from MORE, fixing up its entries
-	     too.  */
-	  so = short_options + hol_so_len;
-	  more_so = more->short_options;
-	  for (left = more->num_entries; left > 0; e++, left--)
-	    {
-	      int opts_left;
-	      const struct argp_option *opt;
+          /* Now add the short options from MORE, fixing up its entries
+             too.  */
+          so = short_options + hol_so_len;
+          more_so = more->short_options;
+          for (left = more->num_entries; left > 0; e++, left--)
+            {
+              int opts_left;
+              const struct argp_option *opt;
 
-	      e->short_options = so;
+              e->short_options = so;
 
-	      for (opts_left = e->num, opt = e->opt; opts_left; opt++, opts_left--)
-		{
-		  int ch = *more_so;
-		  if (oshort (opt) && ch == opt->key)
-		    /* The next short option in MORE_SO, CH, is from OPT.  */
-		    {
-		      if (! find_char (ch, short_options,
-				       short_options + hol_so_len))
-			/* The short option CH isn't shadowed by HOL's options,
-			   so add it to the sum.  */
-			*so++ = ch;
-		      more_so++;
-		    }
-		}
-	    }
+              for (opts_left = e->num, opt = e->opt; opts_left; opt++, opts_left--)
+                {
+                  int ch = *more_so;
+                  if (oshort (opt) && ch == opt->key)
+                    /* The next short option in MORE_SO, CH, is from OPT.  */
+                    {
+                      if (! find_char (ch, short_options,
+                                       short_options + hol_so_len))
+                        /* The short option CH isn't shadowed by HOL's options,
+                           so add it to the sum.  */
+                        *so++ = ch;
+                      more_so++;
+                    }
+                }
+            }
 
-	  *so = '\0';
+          *so = '\0';
 
-	  free (hol->entries);
-	  free (hol->short_options);
+          free (hol->entries);
+          free (hol->short_options);
 
-	  hol->entries = entries;
-	  hol->num_entries = num_entries;
-	  hol->short_options = short_options;
-	}
+          hol->entries = entries;
+          hol->num_entries = num_entries;
+          hol->short_options = short_options;
+        }
     }
 
   hol_free (more);
@@ -943,11 +943,11 @@ arg (const struct argp_option *real, const char *req_fmt, const char *opt_fmt,
   if (real->arg)
     {
       if (real->flags & OPTION_ARG_OPTIONAL)
-	__argp_fmtstream_printf (stream, opt_fmt,
-				 dgettext (domain, real->arg));
+        __argp_fmtstream_printf (stream, opt_fmt,
+                                 dgettext (domain, real->arg));
       else
-	__argp_fmtstream_printf (stream, req_fmt,
-				 dgettext (domain, real->arg));
+        __argp_fmtstream_printf (stream, req_fmt,
+                                 dgettext (domain, real->arg));
     }
 }
 
@@ -987,7 +987,7 @@ struct pentry_state
 /* If a user doc filter should be applied to DOC, do so.  */
 static const char *
 filter_doc (const char *doc, int key, const struct argp *argp,
-	    const struct argp_state *state)
+            const struct argp_state *state)
 {
   if (argp->help_filter)
     /* We must apply a user filter to this output.  */
@@ -1007,7 +1007,7 @@ filter_doc (const char *doc, int key, const struct argp *argp,
    to 0.  */
 static void
 print_header (const char *str, const struct argp *argp,
-	      struct pentry_state *pest)
+              struct pentry_state *pest)
 {
   const char *tstr = dgettext (argp->argp_domain, str);
   const char *fstr = filter_doc (tstr, ARGP_KEY_HELP_HEADER, argp, pest->state);
@@ -1015,17 +1015,17 @@ print_header (const char *str, const struct argp *argp,
   if (fstr)
     {
       if (*fstr)
-	{
-	  if (pest->hhstate->prev_entry)
-	    /* Precede with a blank line.  */
-	    __argp_fmtstream_putc (pest->stream, '\n');
-	  indent_to (pest->stream, uparams.header_col);
-	  __argp_fmtstream_set_lmargin (pest->stream, uparams.header_col);
-	  __argp_fmtstream_set_wmargin (pest->stream, uparams.header_col);
-	  __argp_fmtstream_puts (pest->stream, fstr);
-	  __argp_fmtstream_set_lmargin (pest->stream, 0);
-	  __argp_fmtstream_putc (pest->stream, '\n');
-	}
+        {
+          if (pest->hhstate->prev_entry)
+            /* Precede with a blank line.  */
+            __argp_fmtstream_putc (pest->stream, '\n');
+          indent_to (pest->stream, uparams.header_col);
+          __argp_fmtstream_set_lmargin (pest->stream, uparams.header_col);
+          __argp_fmtstream_set_wmargin (pest->stream, uparams.header_col);
+          __argp_fmtstream_puts (pest->stream, fstr);
+          __argp_fmtstream_set_lmargin (pest->stream, 0);
+          __argp_fmtstream_putc (pest->stream, '\n');
+        }
 
       pest->hhstate->sep_groups = 1; /* Separate subsequent groups. */
     }
@@ -1047,21 +1047,21 @@ comma (unsigned col, struct pentry_state *pest)
       const struct hol_cluster *cl = pest->entry->cluster;
 
       if (pest->hhstate->sep_groups && pe && pest->entry->group != pe->group)
-	__argp_fmtstream_putc (pest->stream, '\n');
+        __argp_fmtstream_putc (pest->stream, '\n');
 
       if (cl && cl->header && *cl->header
-	  && (!pe
-	      || (pe->cluster != cl
-		  && !hol_cluster_is_child (pe->cluster, cl))))
-	/* If we're changing clusters, then this must be the start of the
-	   ENTRY's cluster unless that is an ancestor of the previous one
-	   (in which case we had just popped into a sub-cluster for a bit).
-	   If so, then print the cluster's header line.  */
-	{
-	  int old_wm = __argp_fmtstream_wmargin (pest->stream);
-	  print_header (cl->header, cl->argp, pest);
-	  __argp_fmtstream_set_wmargin (pest->stream, old_wm);
-	}
+          && (!pe
+              || (pe->cluster != cl
+                  && !hol_cluster_is_child (pe->cluster, cl))))
+        /* If we're changing clusters, then this must be the start of the
+           ENTRY's cluster unless that is an ancestor of the previous one
+           (in which case we had just popped into a sub-cluster for a bit).
+           If so, then print the cluster's header line.  */
+        {
+          int old_wm = __argp_fmtstream_wmargin (pest->stream);
+          print_header (cl->header, cl->argp, pest);
+          __argp_fmtstream_set_wmargin (pest->stream, old_wm);
+        }
 
       pest->first = 0;
     }
@@ -1074,12 +1074,12 @@ comma (unsigned col, struct pentry_state *pest)
 /* Print help for ENTRY to STREAM.  */
 static void
 hol_entry_help (struct hol_entry *entry, const struct argp_state *state,
-		argp_fmtstream_t stream, struct hol_help_state *hhstate)
+                argp_fmtstream_t stream, struct hol_help_state *hhstate)
 {
   unsigned num;
   const struct argp_option *real = entry->opt, *opt;
   char *so = entry->short_options;
-  int have_long_opt = 0;	/* We have any long options.  */
+  int have_long_opt = 0;        /* We have any long options.  */
   /* Saved margins.  */
   int old_lm = __argp_fmtstream_set_lmargin (stream, 0);
   int old_wm = __argp_fmtstream_wmargin (stream);
@@ -1097,10 +1097,10 @@ hol_entry_help (struct hol_entry *entry, const struct argp_state *state,
   if (! odoc (real))
     for (opt = real, num = entry->num; num > 0; opt++, num--)
       if (opt->name && ovisible (opt))
-	{
-	  have_long_opt = 1;
-	  break;
-	}
+        {
+          have_long_opt = 1;
+          break;
+        }
 
   /* First emit short options.  */
   __argp_fmtstream_set_wmargin (stream, uparams.short_opt_col); /* For truly bizarre cases. */
@@ -1108,17 +1108,17 @@ hol_entry_help (struct hol_entry *entry, const struct argp_state *state,
     if (oshort (opt) && opt->key == *so)
       /* OPT has a valid (non shadowed) short option.  */
       {
-	if (ovisible (opt))
-	  {
-	    comma (uparams.short_opt_col, &pest);
-	    __argp_fmtstream_putc (stream, '-');
-	    __argp_fmtstream_putc (stream, *so);
-	    if (!have_long_opt || uparams.dup_args)
-	      arg (real, " %s", "[%s]", state->root_argp->argp_domain, stream);
-	    else if (real->arg)
-	      hhstate->suppressed_dup_arg = 1;
-	  }
-	so++;
+        if (ovisible (opt))
+          {
+            comma (uparams.short_opt_col, &pest);
+            __argp_fmtstream_putc (stream, '-');
+            __argp_fmtstream_putc (stream, *so);
+            if (!have_long_opt || uparams.dup_args)
+              arg (real, " %s", "[%s]", state->root_argp->argp_domain, stream);
+            else if (real->arg)
+              hhstate->suppressed_dup_arg = 1;
+          }
+        so++;
       }
 
   /* Now, long options.  */
@@ -1127,16 +1127,16 @@ hol_entry_help (struct hol_entry *entry, const struct argp_state *state,
     {
       __argp_fmtstream_set_wmargin (stream, uparams.doc_opt_col);
       for (opt = real, num = entry->num; num > 0; opt++, num--)
-	if (opt->name && ovisible (opt))
-	  {
-	    comma (uparams.doc_opt_col, &pest);
-	    /* Calling gettext here isn't quite right, since sorting will
-	       have been done on the original; but documentation options
-	       should be pretty rare anyway...  */
-	    __argp_fmtstream_puts (stream,
-				   dgettext (state->root_argp->argp_domain,
-					     opt->name));
-	  }
+        if (opt->name && ovisible (opt))
+          {
+            comma (uparams.doc_opt_col, &pest);
+            /* Calling gettext here isn't quite right, since sorting will
+               have been done on the original; but documentation options
+               should be pretty rare anyway...  */
+            __argp_fmtstream_puts (stream,
+                                   dgettext (state->root_argp->argp_domain,
+                                             opt->name));
+          }
     }
   else
     /* A real long option.  */
@@ -1145,16 +1145,16 @@ hol_entry_help (struct hol_entry *entry, const struct argp_state *state,
 
       __argp_fmtstream_set_wmargin (stream, uparams.long_opt_col);
       for (opt = real, num = entry->num; num > 0; opt++, num--)
-	if (opt->name && ovisible (opt))
-	  {
-	    comma (uparams.long_opt_col, &pest);
-	    __argp_fmtstream_printf (stream, "--%s", opt->name);
-	    if (first_long_opt || uparams.dup_args)
-	      arg (real, "=%s", "[=%s]", state->root_argp->argp_domain,
-		   stream);
-	    else if (real->arg)
-	      hhstate->suppressed_dup_arg = 1;
-	  }
+        if (opt->name && ovisible (opt))
+          {
+            comma (uparams.long_opt_col, &pest);
+            __argp_fmtstream_printf (stream, "--%s", opt->name);
+            if (first_long_opt || uparams.dup_args)
+              arg (real, "=%s", "[=%s]", state->root_argp->argp_domain,
+                   stream);
+            else if (real->arg)
+              hhstate->suppressed_dup_arg = 1;
+          }
     }
 
   /* Next, documentation strings.  */
@@ -1164,35 +1164,35 @@ hol_entry_help (struct hol_entry *entry, const struct argp_state *state,
     {
       /* Didn't print any switches, what's up?  */
       if (!oshort (real) && !real->name)
-	/* This is a group header, print it nicely.  */
-	print_header (real->doc, entry->argp, &pest);
+        /* This is a group header, print it nicely.  */
+        print_header (real->doc, entry->argp, &pest);
       else
-	/* Just a totally shadowed option or null header; print nothing.  */
-	goto cleanup;		/* Just return, after cleaning up.  */
+        /* Just a totally shadowed option or null header; print nothing.  */
+        goto cleanup;           /* Just return, after cleaning up.  */
     }
   else
     {
       const char *tstr = real->doc ? dgettext (state->root_argp->argp_domain,
-					       real->doc) : 0;
+                                               real->doc) : 0;
       const char *fstr = filter_doc (tstr, real->key, entry->argp, state);
       if (fstr && *fstr)
-	{
-	  unsigned int col = __argp_fmtstream_point (stream);
+        {
+          unsigned int col = __argp_fmtstream_point (stream);
 
-	  __argp_fmtstream_set_lmargin (stream, uparams.opt_doc_col);
-	  __argp_fmtstream_set_wmargin (stream, uparams.opt_doc_col);
+          __argp_fmtstream_set_lmargin (stream, uparams.opt_doc_col);
+          __argp_fmtstream_set_wmargin (stream, uparams.opt_doc_col);
 
-	  if (col > (unsigned int) (uparams.opt_doc_col + 3))
-	    __argp_fmtstream_putc (stream, '\n');
-	  else if (col >= (unsigned int) uparams.opt_doc_col)
-	    __argp_fmtstream_puts (stream, "   ");
-	  else
-	    indent_to (stream, uparams.opt_doc_col);
+          if (col > (unsigned int) (uparams.opt_doc_col + 3))
+            __argp_fmtstream_putc (stream, '\n');
+          else if (col >= (unsigned int) uparams.opt_doc_col)
+            __argp_fmtstream_puts (stream, "   ");
+          else
+            indent_to (stream, uparams.opt_doc_col);
 
-	  __argp_fmtstream_puts (stream, fstr);
-	}
+          __argp_fmtstream_puts (stream, fstr);
+        }
       if (fstr && fstr != tstr)
-	free ((char *) fstr);
+        free ((char *) fstr);
 
       /* Reset the left margin.  */
       __argp_fmtstream_set_lmargin (stream, 0);
@@ -1209,7 +1209,7 @@ cleanup:
 /* Output a long help message about the options in HOL to STREAM.  */
 static void
 hol_help (struct hol *hol, const struct argp_state *state,
-	  argp_fmtstream_t stream)
+          argp_fmtstream_t stream)
 {
   unsigned num;
   struct hol_entry *entry;
@@ -1224,15 +1224,15 @@ hol_help (struct hol *hol, const struct argp_state *state,
 Mandatory or optional arguments to long options are also mandatory or \
 optional for any corresponding short options.");
       const char *fstr = filter_doc (tstr, ARGP_KEY_HELP_DUP_ARGS_NOTE,
-				     state ? state->root_argp : 0, state);
+                                     state ? state->root_argp : 0, state);
       if (fstr && *fstr)
-	{
-	  __argp_fmtstream_putc (stream, '\n');
-	  __argp_fmtstream_puts (stream, fstr);
-	  __argp_fmtstream_putc (stream, '\n');
-	}
+        {
+          __argp_fmtstream_putc (stream, '\n');
+          __argp_fmtstream_puts (stream, fstr);
+          __argp_fmtstream_putc (stream, '\n');
+        }
       if (fstr && fstr != tstr)
-	free ((char *) fstr);
+        free ((char *) fstr);
     }
 }
 
@@ -1242,8 +1242,8 @@ optional for any corresponding short options.");
    pointer pointer to by COOKIE, and advance the pointer.  */
 static int
 add_argless_short_opt (const struct argp_option *opt,
-		       const struct argp_option *real,
-		       const char *domain UNUSED, void *cookie)
+                       const struct argp_option *real,
+                       const char *domain UNUSED, void *cookie)
 {
   char **snao_end = cookie;
   if (!(opt->arg || real->arg)
@@ -1256,8 +1256,8 @@ add_argless_short_opt (const struct argp_option *opt,
    stream pointed at by COOKIE.  */
 static int
 usage_argful_short_opt (const struct argp_option *opt,
-			const struct argp_option *real,
-			const char *domain UNUSED, void *cookie)
+                        const struct argp_option *real,
+                        const char *domain UNUSED, void *cookie)
 {
   argp_fmtstream_t stream = cookie;
   const char *arg = opt->arg;
@@ -1271,14 +1271,14 @@ usage_argful_short_opt (const struct argp_option *opt,
       arg = dgettext (domain, arg);
 
       if (flags & OPTION_ARG_OPTIONAL)
-	__argp_fmtstream_printf (stream, " [-%c[%s]]", opt->key, arg);
+        __argp_fmtstream_printf (stream, " [-%c[%s]]", opt->key, arg);
       else
-	{
-	  /* Manually do line wrapping so that it (probably) won't
-	     get wrapped at the embedded space.  */
-	  space (stream, 6 + strlen (arg));
-	  __argp_fmtstream_printf (stream, "[-%c %s]", opt->key, arg);
-	}
+        {
+          /* Manually do line wrapping so that it (probably) won't
+             get wrapped at the embedded space.  */
+          space (stream, 6 + strlen (arg));
+          __argp_fmtstream_printf (stream, "[-%c %s]", opt->key, arg);
+        }
     }
 
   return 0;
@@ -1288,8 +1288,8 @@ usage_argful_short_opt (const struct argp_option *opt,
    COOKIE.  */
 static int
 usage_long_opt (const struct argp_option *opt,
-		const struct argp_option *real,
-		const char *domain UNUSED, void *cookie)
+                const struct argp_option *real,
+                const char *domain UNUSED, void *cookie)
 {
   argp_fmtstream_t stream = cookie;
   const char *arg = opt->arg;
@@ -1301,15 +1301,15 @@ usage_long_opt (const struct argp_option *opt,
   if (! (flags & OPTION_NO_USAGE))
     {
       if (arg)
-	{
-	  arg = dgettext (domain, arg);
-	  if (flags & OPTION_ARG_OPTIONAL)
-	    __argp_fmtstream_printf (stream, " [--%s[=%s]]", opt->name, arg);
-	  else
-	    __argp_fmtstream_printf (stream, " [--%s=%s]", opt->name, arg);
-	}
+        {
+          arg = dgettext (domain, arg);
+          if (flags & OPTION_ARG_OPTIONAL)
+            __argp_fmtstream_printf (stream, " [--%s[=%s]]", opt->name, arg);
+          else
+            __argp_fmtstream_printf (stream, " [--%s=%s]", opt->name, arg);
+        }
       else
-	__argp_fmtstream_printf (stream, " [--%s]", opt->name);
+        __argp_fmtstream_printf (stream, " [--%s]", opt->name);
     }
 
   return 0;
@@ -1328,29 +1328,29 @@ hol_usage (struct hol *hol, argp_fmtstream_t stream)
 
       /* First we put a list of short options without arguments.  */
       for (entry = hol->entries, nentries = hol->num_entries
-	   ; nentries > 0
-	   ; entry++, nentries--)
-	hol_entry_short_iterate (entry, add_argless_short_opt,
-				 entry->argp->argp_domain, &snao_end);
+           ; nentries > 0
+           ; entry++, nentries--)
+        hol_entry_short_iterate (entry, add_argless_short_opt,
+                                 entry->argp->argp_domain, &snao_end);
       if (snao_end > short_no_arg_opts)
-	{
-	  *snao_end++ = 0;
-	  __argp_fmtstream_printf (stream, " [-%s]", short_no_arg_opts);
-	}
+        {
+          *snao_end++ = 0;
+          __argp_fmtstream_printf (stream, " [-%s]", short_no_arg_opts);
+        }
 
       /* Now a list of short options *with* arguments.  */
       for (entry = hol->entries, nentries = hol->num_entries
-	   ; nentries > 0
-	   ; entry++, nentries--)
-	hol_entry_short_iterate (entry, usage_argful_short_opt,
-				 entry->argp->argp_domain, stream);
+           ; nentries > 0
+           ; entry++, nentries--)
+        hol_entry_short_iterate (entry, usage_argful_short_opt,
+                                 entry->argp->argp_domain, stream);
 
       /* Finally, a list of long options (whew!).  */
       for (entry = hol->entries, nentries = hol->num_entries
-	   ; nentries > 0
-	   ; entry++, nentries--)
-	hol_entry_long_iterate (entry, usage_long_opt,
-				entry->argp->argp_domain, stream);
+           ; nentries > 0
+           ; entry++, nentries--)
+        hol_entry_long_iterate (entry, usage_long_opt,
+                                entry->argp->argp_domain, stream);
     }
 }
 
@@ -1364,15 +1364,15 @@ argp_hol (const struct argp *argp, struct hol_cluster *cluster)
   if (child)
     while (child->argp)
       {
-	struct hol_cluster *child_cluster =
-	  ((child->group || child->header)
-	   /* Put CHILD->argp within its own cluster.  */
-	   ? hol_add_cluster (hol, child->group, child->header,
-			      child - argp->children, cluster, argp)
-	   /* Just merge it into the parent's cluster.  */
-	   : cluster);
-	hol_append (hol, argp_hol (child->argp, child_cluster)) ;
-	child++;
+        struct hol_cluster *child_cluster =
+          ((child->group || child->header)
+           /* Put CHILD->argp within its own cluster.  */
+           ? hol_add_cluster (hol, child->group, child->header,
+                              child - argp->children, cluster, argp)
+           /* Just merge it into the parent's cluster.  */
+           : cluster);
+        hol_append (hol, argp_hol (child->argp, child_cluster)) ;
+        child++;
       }
   return hol;
 }
@@ -1402,7 +1402,7 @@ argp_args_levels (const struct argp *argp)
    returned as long as there are more patterns to output.  */
 static int
 argp_args_usage (const struct argp *argp, const struct argp_state *state,
-		 char **levels, int advance, argp_fmtstream_t stream)
+                 char **levels, int advance, argp_fmtstream_t stream)
 {
   char *our_level = *levels;
   int multiple = 0;
@@ -1415,24 +1415,24 @@ argp_args_usage (const struct argp *argp, const struct argp_state *state,
       const char *cp = fdoc;
       nl = __strchrnul (cp, '\n');
       if (*nl != '\0')
-	/* This is a `multi-level' args doc; advance to the correct position
-	   as determined by our state in LEVELS, and update LEVELS.  */
-	{
-	  int i;
-	  multiple = 1;
-	  for (i = 0; i < *our_level; i++)
-	    cp = nl + 1, nl = __strchrnul (cp, '\n');
-	  (*levels)++;
-	}
+        /* This is a `multi-level' args doc; advance to the correct position
+           as determined by our state in LEVELS, and update LEVELS.  */
+        {
+          int i;
+          multiple = 1;
+          for (i = 0; i < *our_level; i++)
+            cp = nl + 1, nl = __strchrnul (cp, '\n');
+          (*levels)++;
+        }
 
       /* Manually do line wrapping so that it (probably) won't get wrapped at
-	 any embedded spaces.  */
+         any embedded spaces.  */
       space (stream, 1 + nl - cp);
 
       __argp_fmtstream_write (stream, cp, nl - cp);
     }
   if (fdoc && fdoc != tdoc)
-    free ((char *)fdoc);	/* Free user's modified doc string.  */
+    free ((char *)fdoc);        /* Free user's modified doc string.  */
 
   if (child)
     while (child->argp)
@@ -1442,14 +1442,14 @@ argp_args_usage (const struct argp *argp, const struct argp_state *state,
     {
       /* Need to increment our level.  */
       if (*nl)
-	/* There's more we can do here.  */
-	{
-	  (*our_level)++;
-	  advance = 0;		/* Our parent shouldn't advance also. */
-	}
+        /* There's more we can do here.  */
+        {
+          (*our_level)++;
+          advance = 0;          /* Our parent shouldn't advance also. */
+        }
       else if (*our_level > 0)
-	/* We had multiple levels, but used them up; reset to zero.  */
-	*our_level = 0;
+        /* We had multiple levels, but used them up; reset to zero.  */
+        *our_level = 0;
     }
 
   return !advance;
@@ -1464,8 +1464,8 @@ argp_args_usage (const struct argp *argp, const struct argp_state *state,
    occurrence is output.  Returns true if anything was output.  */
 static int
 argp_doc (const struct argp *argp, const struct argp_state *state,
-	  int post, int pre_blank, int first_only,
-	  argp_fmtstream_t stream)
+          int post, int pre_blank, int first_only,
+          argp_fmtstream_t stream)
 {
   const char *text;
   const char *inp_text;
@@ -1488,14 +1488,14 @@ argp_doc (const struct argp *argp, const struct argp_state *state,
     /* We have to filter the doc strings.  */
     {
       if (inp_text_limit)
-	/* Copy INP_TEXT so that it's nul-terminated.  */
-	inp_text = STRNDUP (inp_text, inp_text_limit);
+        /* Copy INP_TEXT so that it's nul-terminated.  */
+        inp_text = STRNDUP (inp_text, inp_text_limit);
       input = __argp_input (argp, state);
       text =
-	(*argp->help_filter) (post
-			      ? ARGP_KEY_HELP_POST_DOC
-			      : ARGP_KEY_HELP_PRE_DOC,
-			      inp_text, input);
+        (*argp->help_filter) (post
+                              ? ARGP_KEY_HELP_POST_DOC
+                              : ARGP_KEY_HELP_PRE_DOC,
+                              inp_text, input);
     }
   else
     text = (const char *) inp_text;
@@ -1503,47 +1503,47 @@ argp_doc (const struct argp *argp, const struct argp_state *state,
   if (text)
     {
       if (pre_blank)
-	__argp_fmtstream_putc (stream, '\n');
+        __argp_fmtstream_putc (stream, '\n');
 
       if (text == inp_text && inp_text_limit)
-	__argp_fmtstream_write (stream, inp_text, inp_text_limit);
+        __argp_fmtstream_write (stream, inp_text, inp_text_limit);
       else
-	__argp_fmtstream_puts (stream, text);
+        __argp_fmtstream_puts (stream, text);
 
       if (__argp_fmtstream_point (stream) > __argp_fmtstream_lmargin (stream))
-	__argp_fmtstream_putc (stream, '\n');
+        __argp_fmtstream_putc (stream, '\n');
 
       anything = 1;
     }
 
   if (text && text != inp_text)
-    free ((char *) text);	/* Free TEXT returned from the help filter.  */
+    free ((char *) text);       /* Free TEXT returned from the help filter.  */
   if (inp_text && inp_text_limit && argp->help_filter)
-    free ((char *) inp_text);	/* We copied INP_TEXT, so free it now.  */
+    free ((char *) inp_text);   /* We copied INP_TEXT, so free it now.  */
 
   if (post && argp->help_filter)
     /* Now see if we have to output a ARGP_KEY_HELP_EXTRA text.  */
     {
       text = (*argp->help_filter) (ARGP_KEY_HELP_EXTRA, 0, input);
       if (text)
-	{
-	  if (anything || pre_blank)
-	    __argp_fmtstream_putc (stream, '\n');
-	  __argp_fmtstream_puts (stream, text);
-	  free ((char *) text);
-	  if (__argp_fmtstream_point (stream)
-	      > __argp_fmtstream_lmargin (stream))
-	    __argp_fmtstream_putc (stream, '\n');
-	  anything = 1;
-	}
+        {
+          if (anything || pre_blank)
+            __argp_fmtstream_putc (stream, '\n');
+          __argp_fmtstream_puts (stream, text);
+          free ((char *) text);
+          if (__argp_fmtstream_point (stream)
+              > __argp_fmtstream_lmargin (stream))
+            __argp_fmtstream_putc (stream, '\n');
+          anything = 1;
+        }
     }
 
   if (child)
     while (child->argp && !(first_only && anything))
       anything |=
-	argp_doc ((child++)->argp, state,
-		  post, anything || pre_blank, first_only,
-		  stream);
+        argp_doc ((child++)->argp, state,
+                  post, anything || pre_blank, first_only,
+                  stream);
 
   return anything;
 }
@@ -1557,7 +1557,7 @@ static void
 _help (const struct argp *argp, const struct argp_state *state, FILE *stream,
        unsigned flags, const char *name)
 {
-  int anything = 0;		/* Whether we've output anything.  */
+  int anything = 0;             /* Whether we've output anything.  */
   struct hol *hol = 0;
   argp_fmtstream_t fs;
 
@@ -1597,48 +1597,48 @@ _help (const struct argp *argp, const struct argp_state *state, FILE *stream,
       memset (pattern_levels, 0, num_pattern_levels);
 
       do
-	{
-	  int old_lm;
-	  int old_wm = __argp_fmtstream_set_wmargin (fs, uparams.usage_indent);
-	  char *levels = pattern_levels;
+        {
+          int old_lm;
+          int old_wm = __argp_fmtstream_set_wmargin (fs, uparams.usage_indent);
+          char *levels = pattern_levels;
 
-	  if (first_pattern)
-	    __argp_fmtstream_printf (fs, "%s %s",
-				     dgettext (argp->argp_domain, "Usage:"),
-				     name);
-	  else
-	    __argp_fmtstream_printf (fs, "%s %s",
-				     dgettext (argp->argp_domain, "  or: "),
-				     name);
+          if (first_pattern)
+            __argp_fmtstream_printf (fs, "%s %s",
+                                     dgettext (argp->argp_domain, "Usage:"),
+                                     name);
+          else
+            __argp_fmtstream_printf (fs, "%s %s",
+                                     dgettext (argp->argp_domain, "  or: "),
+                                     name);
 
-	  /* We set the lmargin as well as the wmargin, because hol_usage
-	     manually wraps options with newline to avoid annoying breaks.  */
-	  old_lm = __argp_fmtstream_set_lmargin (fs, uparams.usage_indent);
+          /* We set the lmargin as well as the wmargin, because hol_usage
+             manually wraps options with newline to avoid annoying breaks.  */
+          old_lm = __argp_fmtstream_set_lmargin (fs, uparams.usage_indent);
 
-	  if (flags & ARGP_HELP_SHORT_USAGE)
-	    /* Just show where the options go.  */
-	    {
-	      if (hol->num_entries > 0)
-		__argp_fmtstream_puts (fs, dgettext (argp->argp_domain,
-						     " [OPTION...]"));
-	    }
-	  else
-	    /* Actually print the options.  */
-	    {
-	      hol_usage (hol, fs);
-	      flags |= ARGP_HELP_SHORT_USAGE; /* But only do so once.  */
-	    }
+          if (flags & ARGP_HELP_SHORT_USAGE)
+            /* Just show where the options go.  */
+            {
+              if (hol->num_entries > 0)
+                __argp_fmtstream_puts (fs, dgettext (argp->argp_domain,
+                                                     " [OPTION...]"));
+            }
+          else
+            /* Actually print the options.  */
+            {
+              hol_usage (hol, fs);
+              flags |= ARGP_HELP_SHORT_USAGE; /* But only do so once.  */
+            }
 
-	  more_patterns = argp_args_usage (argp, state, &levels, 1, fs);
+          more_patterns = argp_args_usage (argp, state, &levels, 1, fs);
 
-	  __argp_fmtstream_set_wmargin (fs, old_wm);
-	  __argp_fmtstream_set_lmargin (fs, old_lm);
+          __argp_fmtstream_set_wmargin (fs, old_wm);
+          __argp_fmtstream_set_lmargin (fs, old_lm);
 
-	  __argp_fmtstream_putc (fs, '\n');
-	  anything = 1;
+          __argp_fmtstream_putc (fs, '\n');
+          anything = 1;
 
-	  first_pattern = 0;
-	}
+          first_pattern = 0;
+        }
       while (more_patterns);
     }
 
@@ -1649,7 +1649,7 @@ _help (const struct argp *argp, const struct argp_state *state, FILE *stream,
     {
       __argp_fmtstream_printf (fs, dgettext (argp->argp_domain, "\
 Try `%s --help' or `%s --usage' for more information.\n"),
-			       name, name);
+                               name, name);
       anything = 1;
     }
 
@@ -1658,12 +1658,12 @@ Try `%s --help' or `%s --usage' for more information.\n"),
     {
       /* Print info about all the options.  */
       if (hol->num_entries > 0)
-	{
-	  if (anything)
-	    __argp_fmtstream_putc (fs, '\n');
-	  hol_help (hol, state, fs);
-	  anything = 1;
-	}
+        {
+          if (anything)
+            __argp_fmtstream_putc (fs, '\n');
+          hol_help (hol, state, fs);
+          anything = 1;
+        }
     }
 
   if (flags & ARGP_HELP_POST_DOC)
@@ -1673,10 +1673,10 @@ Try `%s --help' or `%s --usage' for more information.\n"),
   if ((flags & ARGP_HELP_BUG_ADDR) && argp_program_bug_address)
     {
       if (anything)
-	__argp_fmtstream_putc (fs, '\n');
+        __argp_fmtstream_putc (fs, '\n');
       __argp_fmtstream_printf (fs, dgettext (argp->argp_domain,
-					     "Report bugs to %s.\n"),
- 			       argp_program_bug_address);
+                                             "Report bugs to %s.\n"),
+                               argp_program_bug_address);
       anything = 1;
     }
 
@@ -1691,7 +1691,7 @@ Try `%s --help' or `%s --usage' for more information.\n"),
 /* Output a usage message for ARGP to STREAM.  FLAGS are from the set
    ARGP_HELP_*.  NAME is what to use wherever a `program name' is needed. */
 void __argp_help (const struct argp *argp, FILE *stream,
-		  unsigned flags, char *name)
+                  unsigned flags, char *name)
 {
   _help (argp, 0, stream, flags, name);
 }
@@ -1733,18 +1733,18 @@ __argp_state_help (const struct argp_state *state, FILE *stream, unsigned flags)
   if ((!state || ! (state->flags & ARGP_NO_ERRS)) && stream)
     {
       if (state && (state->flags & ARGP_LONG_ONLY))
-	flags |= ARGP_HELP_LONG_ONLY;
+        flags |= ARGP_HELP_LONG_ONLY;
 
       _help (state ? state->root_argp : 0, state, stream, flags,
-	     __argp_short_program_name(state));
+             __argp_short_program_name(state));
 
       if (!state || ! (state->flags & ARGP_NO_EXIT))
-	{
-	  if (flags & ARGP_HELP_EXIT_ERR)
-	    exit (argp_err_exit_status);
-	  if (flags & ARGP_HELP_EXIT_OK)
-	    exit (0);
-	}
+        {
+          if (flags & ARGP_HELP_EXIT_ERR)
+            exit (argp_err_exit_status);
+          if (flags & ARGP_HELP_EXIT_OK)
+            exit (0);
+        }
   }
 }
 #ifdef weak_alias
@@ -1762,26 +1762,26 @@ __argp_error (const struct argp_state *state, const char *fmt, ...)
       FILE *stream = state ? state->err_stream : stderr;
 
       if (stream)
-	{
-	  va_list ap;
+        {
+          va_list ap;
 
-	  FLOCKFILE (stream);
+          FLOCKFILE (stream);
 
-	  FPUTS_UNLOCKED (__argp_short_program_name(state),
-			  stream);
-	  PUTC_UNLOCKED (':', stream);
-	  PUTC_UNLOCKED (' ', stream);
+          FPUTS_UNLOCKED (__argp_short_program_name(state),
+                          stream);
+          PUTC_UNLOCKED (':', stream);
+          PUTC_UNLOCKED (' ', stream);
 
-	  va_start (ap, fmt);
-	  vfprintf (stream, fmt, ap);
-	  va_end (ap);
+          va_start (ap, fmt);
+          vfprintf (stream, fmt, ap);
+          va_end (ap);
 
-	  PUTC_UNLOCKED ('\n', stream);
+          PUTC_UNLOCKED ('\n', stream);
 
-	  __argp_state_help (state, stream, ARGP_HELP_STD_ERR);
+          __argp_state_help (state, stream, ARGP_HELP_STD_ERR);
 
-	  FUNLOCKFILE (stream);
-	}
+          FUNLOCKFILE (stream);
+        }
     }
 }
 #ifdef weak_alias
@@ -1798,45 +1798,45 @@ weak_alias (__argp_error, argp_error)
    parsing but don't reflect a (syntactic) problem with the input.  */
 void
 __argp_failure (const struct argp_state *state, int status, int errnum,
-		const char *fmt, ...)
+                const char *fmt, ...)
 {
   if (!state || !(state->flags & ARGP_NO_ERRS))
     {
       FILE *stream = state ? state->err_stream : stderr;
 
       if (stream)
-	{
-	  FLOCKFILE (stream);
+        {
+          FLOCKFILE (stream);
 
-	  FPUTS_UNLOCKED (__argp_short_program_name(state),
-			  stream);
+          FPUTS_UNLOCKED (__argp_short_program_name(state),
+                          stream);
 
-	  if (fmt)
-	    {
-	      va_list ap;
+          if (fmt)
+            {
+              va_list ap;
 
-	      PUTC_UNLOCKED (':', stream);
-	      PUTC_UNLOCKED (' ', stream);
+              PUTC_UNLOCKED (':', stream);
+              PUTC_UNLOCKED (' ', stream);
 
-	      va_start (ap, fmt);
-	      vfprintf (stream, fmt, ap);
-	      va_end (ap);
-	    }
+              va_start (ap, fmt);
+              vfprintf (stream, fmt, ap);
+              va_end (ap);
+            }
 
-	  if (errnum)
-	    {
-	      PUTC_UNLOCKED (':', stream);
-	      PUTC_UNLOCKED (' ', stream);
-	      fputs (STRERROR (errnum), stream);
-	    }
+          if (errnum)
+            {
+              PUTC_UNLOCKED (':', stream);
+              PUTC_UNLOCKED (' ', stream);
+              fputs (STRERROR (errnum), stream);
+            }
 
-	  PUTC_UNLOCKED ('\n', stream);
+          PUTC_UNLOCKED ('\n', stream);
 
-	  FUNLOCKFILE (stream);
+          FUNLOCKFILE (stream);
 
-	  if (status && (!state || !(state->flags & ARGP_NO_EXIT)))
-	    exit (status);
-	}
+          if (status && (!state || !(state->flags & ARGP_NO_EXIT)))
+            exit (status);
+        }
     }
 }
 #ifdef weak_alias

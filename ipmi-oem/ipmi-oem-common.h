@@ -55,19 +55,19 @@ int ipmi_oem_parse_enable (ipmi_oem_state_data_t *state_data,
                            uint8_t *enable);
 
 int ipmi_oem_parse_1_byte_field (ipmi_oem_state_data_t *state_data,
-				 unsigned int option_num,
-				 const char *value,
-				 uint8_t *value_out);
+                                 unsigned int option_num,
+                                 const char *value,
+                                 uint8_t *value_out);
 
 int ipmi_oem_parse_2_byte_field (ipmi_oem_state_data_t *state_data,
-				 unsigned int option_num,
-				 const char *value,
-				 uint16_t *value_out);
+                                 unsigned int option_num,
+                                 const char *value,
+                                 uint16_t *value_out);
 
 int ipmi_oem_parse_4_byte_field (ipmi_oem_state_data_t *state_data,
-				 unsigned int option_num,
-				 const char *value,
-				 uint32_t *value_out);
+                                 unsigned int option_num,
+                                 const char *value,
+                                 uint32_t *value_out);
 
 int ipmi_oem_parse_unsigned_int_range (ipmi_oem_state_data_t *state_data,
                                        unsigned int option_num,
@@ -94,11 +94,11 @@ int ipmi_oem_parse_string (ipmi_oem_state_data_t *state_data,
                            unsigned int stringbuflen);
 
 int ipmi_oem_get_system_info_string (ipmi_oem_state_data_t *state_data,
-				     uint8_t parameter_selector,
-				     uint8_t set_selector,
-				     uint8_t block_selector,
-				     char *string,
-				     unsigned int string_len,
-				     unsigned int *string_len_ret);
+                                     uint8_t parameter_selector,
+                                     uint8_t set_selector,
+                                     uint8_t block_selector,
+                                     char *string,
+                                     unsigned int string_len,
+                                     unsigned int *string_len_ret);
 
 #endif /* IPMI_OEM_COMMON_H */

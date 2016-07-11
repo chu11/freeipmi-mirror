@@ -142,8 +142,8 @@ int ipmi_fru_close_device_id (ipmi_fru_ctx_t ctx);
 
 /* Identical to ipmi_fru_open_device_id, but do not read from IPMI, use data in buffer */
 int ipmi_fru_open_device_id_with_buffer (ipmi_fru_ctx_t ctx, 
-					 const void *areabuf,
-					 unsigned int areabuflen);
+                                         const void *areabuf,
+                                         unsigned int areabuflen);
 
 /* FRU data iterator functions */
 int ipmi_fru_first (ipmi_fru_ctx_t ctx);
@@ -157,172 +157,172 @@ int ipmi_fru_next (ipmi_fru_ctx_t ctx);
  * - area_type will return IPMI_FRU_AREA_TYPE_RAW_DATA
  */
 int ipmi_fru_read_data_area (ipmi_fru_ctx_t ctx,
-			     unsigned int *area_type,
-			     unsigned int *area_length,
-			     void *areabuf,
-			     unsigned int areabuflen);
+                             unsigned int *area_type,
+                             unsigned int *area_length,
+                             void *areabuf,
+                             unsigned int areabuflen);
 
 /* most useful for OEM record handling, will error if not at a multirecord area */
 int ipmi_fru_read_multirecord_record_type_id (ipmi_fru_ctx_t ctx,
-					      uint8_t *record_type_id);
+                                              uint8_t *record_type_id);
                          
 /* FRU area parsing */
 /* Functions assume record headers have been stripped out */
 
 int ipmi_fru_chassis_info_area (ipmi_fru_ctx_t ctx,
-				const void *areabuf,
-				unsigned int areabuflen,
-				uint8_t *chassis_type,
-				ipmi_fru_field_t *chassis_part_number,
-				ipmi_fru_field_t *chassis_serial_number,
-				ipmi_fru_field_t *chassis_custom_fields,
-				unsigned int chassis_custom_fields_len);
+                                const void *areabuf,
+                                unsigned int areabuflen,
+                                uint8_t *chassis_type,
+                                ipmi_fru_field_t *chassis_part_number,
+                                ipmi_fru_field_t *chassis_serial_number,
+                                ipmi_fru_field_t *chassis_custom_fields,
+                                unsigned int chassis_custom_fields_len);
 
 /* mfg_date_time returned in seconds since unix epoch, not FRU defined epoch */
 int ipmi_fru_board_info_area (ipmi_fru_ctx_t ctx,
-			      const void *areabuf,
-			      unsigned int areabuflen,
-			      uint8_t *language_code,
-			      uint32_t *mfg_date_time,
-			      ipmi_fru_field_t *board_manufacturer,
-			      ipmi_fru_field_t *board_product_name,
-			      ipmi_fru_field_t *board_serial_number,
-			      ipmi_fru_field_t *board_part_number,
-			      ipmi_fru_field_t *board_fru_file_id,
-			      ipmi_fru_field_t *board_custom_fields,
-			      unsigned int chassis_custom_fields_len);
+                              const void *areabuf,
+                              unsigned int areabuflen,
+                              uint8_t *language_code,
+                              uint32_t *mfg_date_time,
+                              ipmi_fru_field_t *board_manufacturer,
+                              ipmi_fru_field_t *board_product_name,
+                              ipmi_fru_field_t *board_serial_number,
+                              ipmi_fru_field_t *board_part_number,
+                              ipmi_fru_field_t *board_fru_file_id,
+                              ipmi_fru_field_t *board_custom_fields,
+                              unsigned int chassis_custom_fields_len);
 
 int ipmi_fru_product_info_area (ipmi_fru_ctx_t ctx,
-				const void *areabuf,
-				unsigned int areabuflen,
-				uint8_t *language_code,
-				ipmi_fru_field_t *product_manufacturer_name,
-				ipmi_fru_field_t *product_name,
-				ipmi_fru_field_t *product_part_model_number,
-				ipmi_fru_field_t *product_version,
-				ipmi_fru_field_t *product_serial_number,
-				ipmi_fru_field_t *product_asset_tag,
-				ipmi_fru_field_t *product_fru_file_id,
-				ipmi_fru_field_t *product_custom_fields,
-				unsigned int product_custom_fields_len);
+                                const void *areabuf,
+                                unsigned int areabuflen,
+                                uint8_t *language_code,
+                                ipmi_fru_field_t *product_manufacturer_name,
+                                ipmi_fru_field_t *product_name,
+                                ipmi_fru_field_t *product_part_model_number,
+                                ipmi_fru_field_t *product_version,
+                                ipmi_fru_field_t *product_serial_number,
+                                ipmi_fru_field_t *product_asset_tag,
+                                ipmi_fru_field_t *product_fru_file_id,
+                                ipmi_fru_field_t *product_custom_fields,
+                                unsigned int product_custom_fields_len);
 
 /* 10 mV multipliers factored in return voltages */
 /* FRU Revision 1.2 renamed ac_dropout_tolerance to input_dropout_tolerance, are identical */
 int ipmi_fru_multirecord_power_supply_information (ipmi_fru_ctx_t ctx,
-						   const void *areabuf,
-						   unsigned int areabuflen,
-						   unsigned int *overall_capacity,
-						   unsigned int *peak_va,
-						   unsigned int *inrush_current,
-						   unsigned int *inrush_interval,
-						   int *low_end_input_voltage_range_1,
-						   int *high_end_input_voltage_range_1,
-						   int *low_end_input_voltage_range_2,
-						   int *high_end_input_voltage_range_2,
-						   unsigned int *low_end_input_frequency_range,
-						   unsigned int *high_end_input_frequency_range,
-						   unsigned int *ac_dropout_tolerance,
-						   unsigned int *predictive_fail_support,
-						   unsigned int *power_factor_correction,
-						   unsigned int *autoswitch,
-						   unsigned int *hot_swap_support,
-						   unsigned int *tachometer_pulses_per_rotation_predictive_fail_polarity,
-						   unsigned int *peak_capacity,
-						   unsigned int *hold_up_time,
-						   unsigned int *voltage_1,
-						   unsigned int *voltage_2,
-						   unsigned int *total_combined_wattage,
-						   unsigned int *predictive_fail_tachometer_lower_threshold);
+                                                   const void *areabuf,
+                                                   unsigned int areabuflen,
+                                                   unsigned int *overall_capacity,
+                                                   unsigned int *peak_va,
+                                                   unsigned int *inrush_current,
+                                                   unsigned int *inrush_interval,
+                                                   int *low_end_input_voltage_range_1,
+                                                   int *high_end_input_voltage_range_1,
+                                                   int *low_end_input_voltage_range_2,
+                                                   int *high_end_input_voltage_range_2,
+                                                   unsigned int *low_end_input_frequency_range,
+                                                   unsigned int *high_end_input_frequency_range,
+                                                   unsigned int *ac_dropout_tolerance,
+                                                   unsigned int *predictive_fail_support,
+                                                   unsigned int *power_factor_correction,
+                                                   unsigned int *autoswitch,
+                                                   unsigned int *hot_swap_support,
+                                                   unsigned int *tachometer_pulses_per_rotation_predictive_fail_polarity,
+                                                   unsigned int *peak_capacity,
+                                                   unsigned int *hold_up_time,
+                                                   unsigned int *voltage_1,
+                                                   unsigned int *voltage_2,
+                                                   unsigned int *total_combined_wattage,
+                                                   unsigned int *predictive_fail_tachometer_lower_threshold);
 
 /* 10 mV multipliers factored in return voltages */
 int ipmi_fru_multirecord_dc_output (ipmi_fru_ctx_t ctx,
-				    const void *areabuf,
-				    unsigned int areabuflen,
-				    unsigned int *output_number,
-				    unsigned int *standby,
-				    int *nominal_voltage,
-				    int *maximum_negative_voltage_deviation,
-				    int *maximum_positive_voltage_deviation,
-				    unsigned int *ripple_and_noise_pk_pk,
-				    unsigned int *minimum_current_draw,
-				    unsigned int *maximum_current_draw);
+                                    const void *areabuf,
+                                    unsigned int areabuflen,
+                                    unsigned int *output_number,
+                                    unsigned int *standby,
+                                    int *nominal_voltage,
+                                    int *maximum_negative_voltage_deviation,
+                                    int *maximum_positive_voltage_deviation,
+                                    unsigned int *ripple_and_noise_pk_pk,
+                                    unsigned int *minimum_current_draw,
+                                    unsigned int *maximum_current_draw);
 
 /* 10 mV multipliers factored in return voltages */
 int ipmi_fru_multirecord_dc_load (ipmi_fru_ctx_t ctx,
-				  const void *areabuf,
-				  unsigned int areabuflen,
-				  unsigned int *output_number,
-				  unsigned int *standby,
-				  int *nominal_voltage,
-				  int *specd_minimum_voltage,
-				  int *specd_maximum_voltage,
-				  unsigned int *specd_ripple_and_noise_pk_pk,
-				  unsigned int *minimum_current_load,
-				  unsigned int *maximum_current_load);
+                                  const void *areabuf,
+                                  unsigned int areabuflen,
+                                  unsigned int *output_number,
+                                  unsigned int *standby,
+                                  int *nominal_voltage,
+                                  int *specd_minimum_voltage,
+                                  int *specd_maximum_voltage,
+                                  unsigned int *specd_ripple_and_noise_pk_pk,
+                                  unsigned int *minimum_current_load,
+                                  unsigned int *maximum_current_load);
 
 int ipmi_fru_multirecord_management_access_record (ipmi_fru_ctx_t ctx,
-						   const void *areabuf,
-						   unsigned int areabuflen,
-						   uint8_t *sub_record_type,
-						   void *sub_record_data,
-						   unsigned int *sub_record_data_len);
+                                                   const void *areabuf,
+                                                   unsigned int areabuflen,
+                                                   uint8_t *sub_record_type,
+                                                   void *sub_record_data,
+                                                   unsigned int *sub_record_data_len);
   
 int ipmi_fru_multirecord_base_compatibility_record (ipmi_fru_ctx_t ctx,
-						    const void *areabuf,
-						    unsigned int areabuflen,
-						    uint32_t *manufacturer_id,
-						    unsigned int *entity_id_code,
-						    unsigned int *compatibility_base,
-						    unsigned int *compatibility_code_start_value,
-						    uint8_t *code_range_mask,
-						    unsigned int *code_range_mask_len);
+                                                    const void *areabuf,
+                                                    unsigned int areabuflen,
+                                                    uint32_t *manufacturer_id,
+                                                    unsigned int *entity_id_code,
+                                                    unsigned int *compatibility_base,
+                                                    unsigned int *compatibility_code_start_value,
+                                                    uint8_t *code_range_mask,
+                                                    unsigned int *code_range_mask_len);
 
 int ipmi_fru_multirecord_extended_compatibility_record (ipmi_fru_ctx_t ctx,
-							const void *areabuf,
-							unsigned int areabuflen,
-							uint32_t *manufacturer_id,
-							unsigned int *entity_id_code,
-							unsigned int *compatibility_base,
-							unsigned int *compatibility_code_start_value,
-							uint8_t *code_range_mask,
-							unsigned int *code_range_mask_len);
+                                                        const void *areabuf,
+                                                        unsigned int areabuflen,
+                                                        uint32_t *manufacturer_id,
+                                                        unsigned int *entity_id_code,
+                                                        unsigned int *compatibility_base,
+                                                        unsigned int *compatibility_code_start_value,
+                                                        uint8_t *code_range_mask,
+                                                        unsigned int *code_range_mask_len);
 
 /* 10 mV multipliers factored in return voltages */
 /* draw in mA units, already factoring in current_units */
 int ipmi_fru_multirecord_extended_dc_output (ipmi_fru_ctx_t ctx,
-					     const void *areabuf,
-					     unsigned int areabuflen,
-					     unsigned int *output_number,
-					     unsigned int *current_units,
-					     unsigned int *standby,
-					     int *nominal_voltage,
-					     int *maximum_negative_voltage_deviation,
-					     int *maximum_positive_voltage_deviation,
-					     unsigned int *ripple_and_noise_pk_pk,
-					     unsigned int *minimum_current_draw,
-					     unsigned int *maximum_current_draw);
+                                             const void *areabuf,
+                                             unsigned int areabuflen,
+                                             unsigned int *output_number,
+                                             unsigned int *current_units,
+                                             unsigned int *standby,
+                                             int *nominal_voltage,
+                                             int *maximum_negative_voltage_deviation,
+                                             int *maximum_positive_voltage_deviation,
+                                             unsigned int *ripple_and_noise_pk_pk,
+                                             unsigned int *minimum_current_draw,
+                                             unsigned int *maximum_current_draw);
 
 /* 10 mV multipliers factored in return voltages */
 /* load in mA units, already factoring in current_units */
 int ipmi_fru_multirecord_extended_dc_load (ipmi_fru_ctx_t ctx,
-					   const void *areabuf,
-					   unsigned int areabuflen,
-					   unsigned int *output_number,
-					   unsigned int *current_units,
-					   unsigned int *standby,
-					   int *nominal_voltage,
-					   int *specd_minimum_voltage,
-					   int *specd_maximum_voltage,
-					   unsigned int *specd_ripple_and_noise_pk_pk,
-					   unsigned int *minimum_current_load,
-					   unsigned int *maximum_current_load);
+                                           const void *areabuf,
+                                           unsigned int areabuflen,
+                                           unsigned int *output_number,
+                                           unsigned int *current_units,
+                                           unsigned int *standby,
+                                           int *nominal_voltage,
+                                           int *specd_minimum_voltage,
+                                           int *specd_maximum_voltage,
+                                           unsigned int *specd_ripple_and_noise_pk_pk,
+                                           unsigned int *minimum_current_load,
+                                           unsigned int *maximum_current_load);
 
 int ipmi_fru_multirecord_oem_record (ipmi_fru_ctx_t ctx,
-				     const void *areabuf,
-				     unsigned int areabuflen,
-				     uint32_t *manufacturer_id,
-				     void *oem_data,
-				     unsigned int *oem_data_len);
+                                     const void *areabuf,
+                                     unsigned int areabuflen,
+                                     uint32_t *manufacturer_id,
+                                     void *oem_data,
+                                     unsigned int *oem_data_len);
 
 /* FRU utility functions */
 /* Typically pass in buffer and length from ipmi_fru_field_t
@@ -331,11 +331,11 @@ int ipmi_fru_multirecord_oem_record (ipmi_fru_ctx_t ctx,
  * buffer.
  */
 int ipmi_fru_type_length_field_to_string (ipmi_fru_ctx_t ctx,
-					  const uint8_t *type_length_buf,
-					  unsigned int type_length_buflen,
-					  uint8_t language_code,
-					  char *strbuf,
-					  unsigned int *strbuflen);
+                                          const uint8_t *type_length_buf,
+                                          unsigned int type_length_buflen,
+                                          uint8_t language_code,
+                                          char *strbuf,
+                                          unsigned int *strbuflen);
 
 #ifdef __cplusplus
 }

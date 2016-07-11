@@ -67,10 +67,10 @@
 
 struct ipmi_ctx_target
 {
-  uint8_t channel_number;	/* for ipmb */
-  int channel_number_is_set;	/* for ipmb */
-  uint8_t rs_addr;		/* for ipmb */
-  int rs_addr_is_set;		/* for ipmb */
+  uint8_t channel_number;       /* for ipmb */
+  int channel_number_is_set;    /* for ipmb */
+  uint8_t rs_addr;              /* for ipmb */
+  int rs_addr_is_set;           /* for ipmb */
   uint8_t lun;
   uint8_t net_fn;
 };

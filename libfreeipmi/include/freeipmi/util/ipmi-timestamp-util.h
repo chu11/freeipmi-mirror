@@ -54,11 +54,11 @@ extern "C" {
 
 /* format uses format from strftime(), pass NULL for default one */
 int ipmi_timestamp_string (uint32_t timestamp,
-			   int utc_offset,
-			   unsigned int flags,
-			   const char *format,
-			   char *buf,
-			   unsigned int buflen);
+                           int utc_offset,
+                           unsigned int flags,
+                           const char *format,
+                           char *buf,
+                           unsigned int buflen);
 
 #ifdef __cplusplus
 }

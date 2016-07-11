@@ -205,7 +205,7 @@ static int
 _ipmi_monitoring_sdr_cache_retrieve (ipmi_monitoring_ctx_t c,
                                      const char *hostname,
                                      char *filename,
-				     unsigned int sdr_create_flags)
+                                     unsigned int sdr_create_flags)
 {
   assert (c);
   assert (c->magic == IPMI_MONITORING_MAGIC);
@@ -216,7 +216,7 @@ _ipmi_monitoring_sdr_cache_retrieve (ipmi_monitoring_ctx_t c,
   if (ipmi_sdr_cache_create (c->sdr_ctx,
                              c->ipmi_ctx,
                              filename,
-			     sdr_create_flags,
+                             sdr_create_flags,
                              NULL,
                              NULL) < 0)
     {
@@ -265,7 +265,7 @@ _ipmi_monitoring_sdr_cache_delete (ipmi_monitoring_ctx_t c,
 int
 ipmi_monitoring_sdr_cache_load (ipmi_monitoring_ctx_t c,
                                 const char *hostname,
-				unsigned int sdr_create_flags)
+                                unsigned int sdr_create_flags)
 {
   char filename[MAXPATHLEN+1];
 

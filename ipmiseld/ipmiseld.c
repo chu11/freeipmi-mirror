@@ -102,14 +102,14 @@ ipmiseld_sel_info_get (ipmiseld_host_data_t *host_data, ipmiseld_sel_info_t *sel
   if (ipmi_cmd_get_sel_info (host_data->host_poll->ipmi_ctx, obj_cmd_rs) < 0)
     {
       ipmiseld_err_output (host_data, "ipmi_cmd_get_sel_info: %s",
-		  ipmi_ctx_errormsg (host_data->host_poll->ipmi_ctx));
+                  ipmi_ctx_errormsg (host_data->host_poll->ipmi_ctx));
       goto cleanup;
     }
 
   if (FIID_OBJ_GET (obj_cmd_rs, "entries", &val) < 0)
     {
       ipmiseld_err_output (host_data, "fiid_obj_get: 'entries': %s",
-		  fiid_obj_errormsg (obj_cmd_rs));
+                  fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
   sel_info->entries = val;
@@ -117,7 +117,7 @@ ipmiseld_sel_info_get (ipmiseld_host_data_t *host_data, ipmiseld_sel_info_t *sel
   if (FIID_OBJ_GET (obj_cmd_rs, "free_space", &val) < 0)
     {
       ipmiseld_err_output (host_data, "fiid_obj_get: 'free_space': %s",
-		  fiid_obj_errormsg (obj_cmd_rs));
+                  fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
   sel_info->free_space = val;
@@ -125,7 +125,7 @@ ipmiseld_sel_info_get (ipmiseld_host_data_t *host_data, ipmiseld_sel_info_t *sel
   if (FIID_OBJ_GET (obj_cmd_rs, "most_recent_addition_timestamp", &val) < 0)
     {
       ipmiseld_err_output (host_data, "fiid_obj_get: 'most_recent_addition_timestamp': %s",
-		  fiid_obj_errormsg (obj_cmd_rs));
+                  fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
   sel_info->most_recent_addition_timestamp = val;
@@ -133,7 +133,7 @@ ipmiseld_sel_info_get (ipmiseld_host_data_t *host_data, ipmiseld_sel_info_t *sel
   if (FIID_OBJ_GET (obj_cmd_rs, "most_recent_erase_timestamp", &val) < 0)
     {
       ipmiseld_err_output (host_data, "fiid_obj_get: 'most_recent_erase_timestamp': %s",
-		  fiid_obj_errormsg (obj_cmd_rs));
+                  fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
   sel_info->most_recent_erase_timestamp = val;
@@ -141,7 +141,7 @@ ipmiseld_sel_info_get (ipmiseld_host_data_t *host_data, ipmiseld_sel_info_t *sel
   if (FIID_OBJ_GET (obj_cmd_rs, "delete_sel_command_supported", &val) < 0)
     {
       ipmiseld_err_output (host_data, "fiid_obj_get: 'delete_sel_command_supported': %s",
-		  fiid_obj_errormsg (obj_cmd_rs));
+                  fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
  sel_info->delete_sel_command_supported = val;
@@ -149,7 +149,7 @@ ipmiseld_sel_info_get (ipmiseld_host_data_t *host_data, ipmiseld_sel_info_t *sel
   if (FIID_OBJ_GET (obj_cmd_rs, "reserve_sel_command_supported", &val) < 0)
     {
       ipmiseld_err_output (host_data, "fiid_obj_get: 'reserve_sel_command_supported': %s",
-		  fiid_obj_errormsg (obj_cmd_rs));
+                  fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
   sel_info->reserve_sel_command_supported = val;
@@ -157,7 +157,7 @@ ipmiseld_sel_info_get (ipmiseld_host_data_t *host_data, ipmiseld_sel_info_t *sel
   if (FIID_OBJ_GET (obj_cmd_rs, "overflow_flag", &val) < 0)
     {
       ipmiseld_err_output (host_data, "fiid_obj_get: 'overflow_flag': %s",
-		  fiid_obj_errormsg (obj_cmd_rs));
+                  fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
   sel_info->overflow_flag = val;
@@ -181,10 +181,10 @@ _sel_last_record_id_callback (ipmi_sel_ctx_t ctx, void *callback_data)
   if (ipmi_sel_parse_read_record_id (ctx,
                                      NULL,
                                      0,
-				     &(last_record_id->record_id)) < 0)
+                                     &(last_record_id->record_id)) < 0)
     {
       err_output ("ipmi_sel_parse_read_record_id: %s",
-		  ipmi_sel_ctx_errormsg (ctx));
+                  ipmi_sel_ctx_errormsg (ctx));
       return (-1);
     }
   
@@ -194,7 +194,7 @@ _sel_last_record_id_callback (ipmi_sel_ctx_t ctx, void *callback_data)
 
 static int
 ipmiseld_get_last_record_id (ipmiseld_host_data_t *host_data,
-			     ipmiseld_last_record_id_t *last_record_id)
+                             ipmiseld_last_record_id_t *last_record_id)
 {
   assert (host_data);
   assert (host_data->host_poll);
@@ -204,14 +204,14 @@ ipmiseld_get_last_record_id (ipmiseld_host_data_t *host_data,
   last_record_id->loaded = 0;
 
   if (ipmi_sel_parse (host_data->host_poll->sel_ctx,
-		      IPMI_SEL_RECORD_ID_LAST,
-		      IPMI_SEL_RECORD_ID_LAST,
-		      _sel_last_record_id_callback,
-		      last_record_id) < 0)
+                      IPMI_SEL_RECORD_ID_LAST,
+                      IPMI_SEL_RECORD_ID_LAST,
+                      _sel_last_record_id_callback,
+                      last_record_id) < 0)
     {
       /* A general IPMI error (busy, timeout, etc.) is ok, it happens */
       if (ipmi_sel_ctx_errnum (host_data->host_poll->sel_ctx) != IPMI_SEL_ERR_IPMI_ERROR)
-	ipmiseld_err_output (host_data, "ipmi_sel_parse: %s", ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
+        ipmiseld_err_output (host_data, "ipmi_sel_parse: %s", ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
       return (-1);
     }
 
@@ -220,7 +220,7 @@ ipmiseld_get_last_record_id (ipmiseld_host_data_t *host_data,
 
 static unsigned int
 ipmiseld_calc_percent_full (ipmiseld_host_data_t *host_data,
-			    ipmiseld_sel_info_t *sel_info)
+                            ipmiseld_sel_info_t *sel_info)
 {
   unsigned int used_bytes;
   unsigned int total_bytes;
@@ -237,10 +237,10 @@ ipmiseld_calc_percent_full (ipmiseld_host_data_t *host_data,
     {
       /* Some rounding errors could occur, we accept small ones */
       if (percent > 105)
-	{
-	  if (host_data->prog_data->args->verbose_count)
-	    ipmiseld_syslog_host (host_data, "SEL percent calc error: %u", percent);
-	}
+        {
+          if (host_data->prog_data->args->verbose_count)
+            ipmiseld_syslog_host (host_data, "SEL percent calc error: %u", percent);
+        }
       percent = 100;
     }
 
@@ -288,13 +288,13 @@ _sel_parse_err_handle (ipmiseld_host_data_t *host_data, char *func)
     {
       /* maybe a bad SEL entry returned from remote system, don't error out */
       if (host_data->prog_data->args->verbose_count)
-	ipmiseld_syslog_host (host_data, "Invalid SEL entry read");
+        ipmiseld_syslog_host (host_data, "Invalid SEL entry read");
       return (0);
     }
 
   ipmiseld_err_output (host_data, "%s: %s",
-	      func,
-	      ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
+              func,
+              ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
 
   return (-1);
 }
@@ -302,10 +302,10 @@ _sel_parse_err_handle (ipmiseld_host_data_t *host_data, char *func)
 /* returns 0 on success, 1 on success but w/ truncation */
 static int
 _snprintf (char *buf,
-	   unsigned int buflen,
-	   unsigned int *wlen,
-	   const char *fmt,
-	   ...)
+           unsigned int buflen,
+           unsigned int *wlen,
+           const char *fmt,
+           ...)
 {
   va_list ap;
   int ret;
@@ -329,9 +329,9 @@ _snprintf (char *buf,
 
 static int
 _sel_log_format (ipmiseld_host_data_t *host_data,
-		 const char *fmt_str,
-		 char *fmtbuf,
-		 unsigned int fmtbuf_len)
+                 const char *fmt_str,
+                 char *fmtbuf,
+                 unsigned int fmtbuf_len)
 {
   unsigned int wlen = 0;
   int percent_flag = 0;
@@ -344,27 +344,27 @@ _sel_log_format (ipmiseld_host_data_t *host_data,
   while (*ptr)
     {
       if (*ptr == '%')
-	{
-	  if (percent_flag)
-	    {
-	      if (_snprintf (fmtbuf, fmtbuf_len, &wlen, "%%"))
+        {
+          if (percent_flag)
+            {
+              if (_snprintf (fmtbuf, fmtbuf_len, &wlen, "%%"))
                 return (0);
               percent_flag = 0;
-	    }
-	  else
-	    percent_flag = 1;
-	  goto end_loop;
-	}
+            }
+          else
+            percent_flag = 1;
+          goto end_loop;
+        }
       else if (percent_flag && *ptr == 'h')
-	{
-	  if (_snprintf (fmtbuf, fmtbuf_len, &wlen, "%s",
-			 host_data->hostname ? host_data->hostname : "localhost"))
+        {
+          if (_snprintf (fmtbuf, fmtbuf_len, &wlen, "%s",
+                         host_data->hostname ? host_data->hostname : "localhost"))
             return (0);
-	  percent_flag = 0;
-	}
+          percent_flag = 0;
+        }
       else
-	{
-	  if (percent_flag)
+        {
+          if (percent_flag)
             {
               if (_snprintf (fmtbuf, fmtbuf_len, &wlen, "%%%c", *ptr))
                 return (0);
@@ -375,7 +375,7 @@ _sel_log_format (ipmiseld_host_data_t *host_data,
               if (_snprintf (fmtbuf, fmtbuf_len, &wlen, "%c", *ptr))
                 return (0);
             }
-	}
+        }
 
     end_loop:
       ptr++;
@@ -406,7 +406,7 @@ _sel_log_output (ipmiseld_host_data_t *host_data, uint8_t record_type)
                                      &record_id) < 0)
     {
       ipmiseld_err_output (host_data, "ipmi_sel_parse_read_record_id: %s",
-		  ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
+                  ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
       return (-1);
     }
 
@@ -453,64 +453,64 @@ _sel_log_output (ipmiseld_host_data_t *host_data, uint8_t record_type)
   if (record_type_class == IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
     {
       if (host_data->prog_data->args->system_event_format_str)
-	format_str = host_data->prog_data->args->system_event_format_str;
+        format_str = host_data->prog_data->args->system_event_format_str;
       else
-	{
-	  if (host_data->hostname)
-	    format_str = IPMISELD_SYSTEM_EVENT_FORMAT_OUTOFBAND_STR_DEFAULT;
-	  else
-	    format_str = IPMISELD_SYSTEM_EVENT_FORMAT_STR_DEFAULT;
-	}
+        {
+          if (host_data->hostname)
+            format_str = IPMISELD_SYSTEM_EVENT_FORMAT_OUTOFBAND_STR_DEFAULT;
+          else
+            format_str = IPMISELD_SYSTEM_EVENT_FORMAT_STR_DEFAULT;
+        }
     }
   else if (record_type_class == IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD)
     {
       if (host_data->prog_data->args->oem_timestamped_event_format_str)
-	format_str = host_data->prog_data->args->oem_timestamped_event_format_str;
+        format_str = host_data->prog_data->args->oem_timestamped_event_format_str;
       else
-	{
-	  if (host_data->hostname)
-	    format_str = IPMISELD_OEM_TIMESTAMPED_EVENT_FORMAT_OUTOFBAND_STR_DEFAULT;
-	  else
-	    format_str = IPMISELD_OEM_TIMESTAMPED_EVENT_FORMAT_STR_DEFAULT;
-	}
+        {
+          if (host_data->hostname)
+            format_str = IPMISELD_OEM_TIMESTAMPED_EVENT_FORMAT_OUTOFBAND_STR_DEFAULT;
+          else
+            format_str = IPMISELD_OEM_TIMESTAMPED_EVENT_FORMAT_STR_DEFAULT;
+        }
     }
   else if (record_type_class == IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD)
     {
       if (host_data->prog_data->args->oem_non_timestamped_event_format_str)
-	format_str = host_data->prog_data->args->oem_non_timestamped_event_format_str;
+        format_str = host_data->prog_data->args->oem_non_timestamped_event_format_str;
       else
-	{
-	  if (host_data->hostname)
-	    format_str = IPMISELD_OEM_NON_TIMESTAMPED_EVENT_FORMAT_OUTOFBAND_STR_DEFAULT;
-	  else
-	    format_str = IPMISELD_OEM_NON_TIMESTAMPED_EVENT_FORMAT_STR_DEFAULT;
-	}
+        {
+          if (host_data->hostname)
+            format_str = IPMISELD_OEM_NON_TIMESTAMPED_EVENT_FORMAT_OUTOFBAND_STR_DEFAULT;
+          else
+            format_str = IPMISELD_OEM_NON_TIMESTAMPED_EVENT_FORMAT_STR_DEFAULT;
+        }
     }
   else
     {
       if (host_data->prog_data->args->verbose_count)
-	ipmiseld_syslog_host (host_data,
-			      "SEL Event: Unknown SEL Record Type: %Xh",
-			      record_type);
+        ipmiseld_syslog_host (host_data,
+                              "SEL Event: Unknown SEL Record Type: %Xh",
+                              record_type);
       return (0);
     }
 
   if (_sel_log_format (host_data,
-		       format_str,
-		       fmtbuf,
-		       IPMISELD_FORMAT_BUFLEN) < 0)
+                       format_str,
+                       fmtbuf,
+                       IPMISELD_FORMAT_BUFLEN) < 0)
     return (-1);
   
   if ((outbuf_len = ipmi_sel_parse_read_record_string (host_data->host_poll->sel_ctx,
-						       fmtbuf,
-						       NULL,
-						       0,
-						       outbuf,
-						       IPMISELD_EVENT_OUTPUT_BUFLEN,
-						       flags)) < 0)
+                                                       fmtbuf,
+                                                       NULL,
+                                                       0,
+                                                       outbuf,
+                                                       IPMISELD_EVENT_OUTPUT_BUFLEN,
+                                                       flags)) < 0)
     {
       if (_sel_parse_err_handle (host_data, "ipmi_sel_parse_read_record_string") < 0)
-	return (-1);
+        return (-1);
       return (0);
     }
   
@@ -616,39 +616,39 @@ _sel_parse_callback (ipmi_sel_ctx_t ctx, void *callback_data)
       unsigned int event_state = 0;
 
       if ((sel_record_len = ipmi_sel_parse_read_record (host_data->host_poll->sel_ctx,
-							sel_record,
-							IPMI_SEL_RECORD_MAX_RECORD_LENGTH)) < 0)
-	{
-	  if (_sel_parse_err_handle (host_data, "ipmi_sel_parse_read_record_type") < 0)
-	    goto cleanup;
-	  goto out;
-	}
+                                                        sel_record,
+                                                        IPMI_SEL_RECORD_MAX_RECORD_LENGTH)) < 0)
+        {
+          if (_sel_parse_err_handle (host_data, "ipmi_sel_parse_read_record_type") < 0)
+            goto cleanup;
+          goto out;
+        }
       
       if (ipmi_interpret_sel (host_data->host_poll->interpret_ctx,
-			      sel_record,
-			      sel_record_len,
-			      &event_state) < 0)
-	{
-	  ipmiseld_err_output (host_data, "ipmi_interpret_sel: %s",
-		      ipmi_interpret_ctx_errormsg (host_data->host_poll->interpret_ctx));
-	  goto cleanup;
-	}
+                              sel_record,
+                              sel_record_len,
+                              &event_state) < 0)
+        {
+          ipmiseld_err_output (host_data, "ipmi_interpret_sel: %s",
+                      ipmi_interpret_ctx_errormsg (host_data->host_poll->interpret_ctx));
+          goto cleanup;
+        }
 
       if ((host_data->prog_data->event_state_filter_mask & IPMISELD_NOMINAL_FILTER)
-	  && event_state == IPMI_INTERPRET_STATE_NOMINAL)
-	goto out;
+          && event_state == IPMI_INTERPRET_STATE_NOMINAL)
+        goto out;
 
       if ((host_data->prog_data->event_state_filter_mask & IPMISELD_WARNING_FILTER)
-	  && event_state == IPMI_INTERPRET_STATE_WARNING)
-	goto out;
+          && event_state == IPMI_INTERPRET_STATE_WARNING)
+        goto out;
 
       if ((host_data->prog_data->event_state_filter_mask & IPMISELD_CRITICAL_FILTER)
-	  && event_state == IPMI_INTERPRET_STATE_CRITICAL)
-	goto out;
+          && event_state == IPMI_INTERPRET_STATE_CRITICAL)
+        goto out;
 
       if ((host_data->prog_data->event_state_filter_mask & IPMISELD_NA_FILTER)
-	  && event_state == IPMI_INTERPRET_STATE_UNKNOWN)
-	goto out;
+          && event_state == IPMI_INTERPRET_STATE_UNKNOWN)
+        goto out;
     }
 
   if (_sel_log_output (host_data, record_type) < 0)
@@ -668,15 +668,15 @@ ipmiseld_sel_parse_test_run (ipmiseld_host_data_t *host_data)
   assert (host_data->host_poll->sel_ctx);
 
   if (ipmi_sel_parse (host_data->host_poll->sel_ctx,
-		      IPMI_SEL_RECORD_ID_FIRST,
-		      IPMI_SEL_RECORD_ID_LAST,
-		      _sel_parse_callback,
-		      host_data) < 0)
+                      IPMI_SEL_RECORD_ID_FIRST,
+                      IPMI_SEL_RECORD_ID_LAST,
+                      _sel_parse_callback,
+                      host_data) < 0)
     {
       /* A general IPMI error (busy, timeout, etc.) is ok, it happens */
       if (ipmi_sel_ctx_errnum (host_data->host_poll->sel_ctx) != IPMI_SEL_ERR_IPMI_ERROR)
-	ipmiseld_err_output (host_data, "ipmi_sel_parse: %s",
-		    ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
+        ipmiseld_err_output (host_data, "ipmi_sel_parse: %s",
+                    ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
       return (-1);
     }
 
@@ -685,8 +685,8 @@ ipmiseld_sel_parse_test_run (ipmiseld_host_data_t *host_data)
 
 static void
 _dump_sel_info (ipmiseld_host_data_t *host_data,
-		ipmiseld_sel_info_t *sel_info,
-		const char *prefix)
+                ipmiseld_sel_info_t *sel_info,
+                const char *prefix)
 {
   assert (host_data);
   assert (host_data->prog_data->args->foreground);
@@ -705,8 +705,8 @@ _dump_sel_info (ipmiseld_host_data_t *host_data,
 
 static void
 _dump_host_state (ipmiseld_host_data_t *host_data,
-		  ipmiseld_host_state_t *host_state,
-		  const char *prefix)
+                  ipmiseld_host_state_t *host_state,
+                  const char *prefix)
 {
   assert (host_data);
   assert (host_data->prog_data->args->foreground);
@@ -743,7 +743,7 @@ ipmiseld_check_sel_info (ipmiseld_host_data_t *host_data, uint16_t *record_id_st
        * note this.
        */
       if (host_data->prog_data->args->verbose_count)
-	ipmiseld_syslog_host (host_data, "SEL timestamps modified to earlier time");
+        ipmiseld_syslog_host (host_data, "SEL timestamps modified to earlier time");
     }
 
   if (host_data->now_host_state.sel_info.entries == host_data->last_host_state.sel_info.entries)
@@ -755,125 +755,125 @@ ipmiseld_check_sel_info (ipmiseld_host_data_t *host_data, uint16_t *record_id_st
       
       /* Timestamps unchanged - this is the most common/normal case, no new log entries to log. */
       if (host_data->now_host_state.sel_info.most_recent_addition_timestamp == host_data->last_host_state.sel_info.most_recent_addition_timestamp
-	  && host_data->now_host_state.sel_info.most_recent_erase_timestamp == host_data->last_host_state.sel_info.most_recent_erase_timestamp)
-	{
-	  /* nothing to do except this single copy/save */
-	  host_data->now_host_state.last_record_id.record_id = host_data->last_host_state.last_record_id.record_id;
-	}
+          && host_data->now_host_state.sel_info.most_recent_erase_timestamp == host_data->last_host_state.sel_info.most_recent_erase_timestamp)
+        {
+          /* nothing to do except this single copy/save */
+          host_data->now_host_state.last_record_id.record_id = host_data->last_host_state.last_record_id.record_id;
+        }
       /* If erase timestamp changed but addition timestamp has
        * not.  An out-of-daemon delete/clear occurred, but
        * there are no new entries to log.
        */
       else if (host_data->now_host_state.sel_info.most_recent_addition_timestamp == host_data->last_host_state.sel_info.most_recent_addition_timestamp
-	       && host_data->now_host_state.sel_info.most_recent_erase_timestamp != host_data->last_host_state.sel_info.most_recent_erase_timestamp)
-	{
-	  if (host_data->now_host_state.sel_info.delete_sel_command_supported)
-	    {
-	      /* We don't know if the erase was for some old entries or if it was a clear.
-	       * We will look at the last_record_id to take a guess
-	       */
-	      ipmiseld_last_record_id_t last_record_id;
-	      
-	      if (ipmiseld_get_last_record_id (host_data, &last_record_id) < 0)
-		goto cleanup;
-	      
-	      /* If new last_record_id has changed or there are no
-	       * records, we assume the erase was a clear
-	       */
-	      if (!last_record_id.loaded
-		  || last_record_id.record_id != host_data->last_host_state.last_record_id.record_id)
-		host_data->now_host_state.last_record_id.record_id = 0;
-	      else
-		host_data->now_host_state.last_record_id.record_id = host_data->last_host_state.last_record_id.record_id;
-	    }
-	  else
-	    {
-	      /* If delete not supported, the erase must have been a clear.
-	       * Reset last_record_id to zero. 
-	       */
-	      host_data->now_host_state.last_record_id.record_id = 0;
-	    }
-	}
+               && host_data->now_host_state.sel_info.most_recent_erase_timestamp != host_data->last_host_state.sel_info.most_recent_erase_timestamp)
+        {
+          if (host_data->now_host_state.sel_info.delete_sel_command_supported)
+            {
+              /* We don't know if the erase was for some old entries or if it was a clear.
+               * We will look at the last_record_id to take a guess
+               */
+              ipmiseld_last_record_id_t last_record_id;
+              
+              if (ipmiseld_get_last_record_id (host_data, &last_record_id) < 0)
+                goto cleanup;
+              
+              /* If new last_record_id has changed or there are no
+               * records, we assume the erase was a clear
+               */
+              if (!last_record_id.loaded
+                  || last_record_id.record_id != host_data->last_host_state.last_record_id.record_id)
+                host_data->now_host_state.last_record_id.record_id = 0;
+              else
+                host_data->now_host_state.last_record_id.record_id = host_data->last_host_state.last_record_id.record_id;
+            }
+          else
+            {
+              /* If delete not supported, the erase must have been a clear.
+               * Reset last_record_id to zero. 
+               */
+              host_data->now_host_state.last_record_id.record_id = 0;
+            }
+        }
       /* An erase and addition occured, must determine the type of action that occurred */ 
       else if (host_data->now_host_state.sel_info.most_recent_addition_timestamp != host_data->last_host_state.sel_info.most_recent_addition_timestamp
-	       && host_data->now_host_state.sel_info.most_recent_erase_timestamp != host_data->last_host_state.sel_info.most_recent_erase_timestamp)
-	{
-	  if (host_data->now_host_state.sel_info.delete_sel_command_supported)
-	    {
-	      /* We don't know if the erase was for some old entries or if it was a clear.
-	       * We will look at the last_record_id to take a guess
-	       */
-	      ipmiseld_last_record_id_t last_record_id;
-	      
-	      if (ipmiseld_get_last_record_id (host_data, &last_record_id) < 0)
-		goto cleanup;
-	      
-	      /* If new last_record_id is greater, we assume it's some additional entries
-	       * and the erase was only deleting some old entries.
-	       */
-	      if (last_record_id.loaded
-		  && last_record_id.record_id > host_data->last_host_state.last_record_id.record_id)
-		{
-		  host_data->now_host_state.last_record_id.record_id = host_data->last_host_state.last_record_id.record_id;
-		  if (host_data->last_host_state.last_record_id.record_id)
-		    (*record_id_start) = host_data->last_host_state.last_record_id.record_id;
-		  else
-		    (*record_id_start) = IPMI_SEL_RECORD_ID_FIRST;
-		  log_entries_flag++;
-		}
-	      else
-		{
-		  /* We assume a clear occurred so start from the beginning */
-		  host_data->now_host_state.last_record_id.record_id = 0;
-		  (*record_id_start) = IPMI_SEL_RECORD_ID_FIRST;
-		  log_entries_flag++;
-		}
-	    }
-	  else
-	    {
-	      /* If delete not supported, the erase must have been a clear
-	       * So log all the new entries if some are available and
-	       * reset last_record_id to zero.
-	       */
-	      host_data->now_host_state.last_record_id.record_id = 0;
-	      if (host_data->now_host_state.sel_info.entries)
-		{
-		  (*record_id_start) = IPMI_SEL_RECORD_ID_FIRST;
-		  log_entries_flag++;
-		}
-	    }
-	}
+               && host_data->now_host_state.sel_info.most_recent_erase_timestamp != host_data->last_host_state.sel_info.most_recent_erase_timestamp)
+        {
+          if (host_data->now_host_state.sel_info.delete_sel_command_supported)
+            {
+              /* We don't know if the erase was for some old entries or if it was a clear.
+               * We will look at the last_record_id to take a guess
+               */
+              ipmiseld_last_record_id_t last_record_id;
+              
+              if (ipmiseld_get_last_record_id (host_data, &last_record_id) < 0)
+                goto cleanup;
+              
+              /* If new last_record_id is greater, we assume it's some additional entries
+               * and the erase was only deleting some old entries.
+               */
+              if (last_record_id.loaded
+                  && last_record_id.record_id > host_data->last_host_state.last_record_id.record_id)
+                {
+                  host_data->now_host_state.last_record_id.record_id = host_data->last_host_state.last_record_id.record_id;
+                  if (host_data->last_host_state.last_record_id.record_id)
+                    (*record_id_start) = host_data->last_host_state.last_record_id.record_id;
+                  else
+                    (*record_id_start) = IPMI_SEL_RECORD_ID_FIRST;
+                  log_entries_flag++;
+                }
+              else
+                {
+                  /* We assume a clear occurred so start from the beginning */
+                  host_data->now_host_state.last_record_id.record_id = 0;
+                  (*record_id_start) = IPMI_SEL_RECORD_ID_FIRST;
+                  log_entries_flag++;
+                }
+            }
+          else
+            {
+              /* If delete not supported, the erase must have been a clear
+               * So log all the new entries if some are available and
+               * reset last_record_id to zero.
+               */
+              host_data->now_host_state.last_record_id.record_id = 0;
+              if (host_data->now_host_state.sel_info.entries)
+                {
+                  (*record_id_start) = IPMI_SEL_RECORD_ID_FIRST;
+                  log_entries_flag++;
+                }
+            }
+        }
       else /* host_data->now_host_state.sel_info.most_recent_addition_timestamp != host_data->last_host_state.sel_info.most_recent_addition_timestamp
-	      && host_data->now_host_state.sel_info.most_recent_erase_timestamp == host_data->last_host_state.sel_info.most_recent_erase_timestamp */
-	{
-	  /* This shouldn't be possible and is likely a bug in the
-	   * IPMI firmware (user erased entries but timestamp didn't
-	   * update, SEL added entries and updated timestamp but
-	   * didn't update entry count, etc.) we'll only save off the
-	   * host state for later.
-	   */
-	  if (host_data->prog_data->args->verbose_count)
-	    ipmiseld_syslog_host (host_data, "SEL illegal timestamp situation");
-	  host_data->now_host_state.last_record_id.record_id = host_data->last_host_state.last_record_id.record_id;
-	}
+              && host_data->now_host_state.sel_info.most_recent_erase_timestamp == host_data->last_host_state.sel_info.most_recent_erase_timestamp */
+        {
+          /* This shouldn't be possible and is likely a bug in the
+           * IPMI firmware (user erased entries but timestamp didn't
+           * update, SEL added entries and updated timestamp but
+           * didn't update entry count, etc.) we'll only save off the
+           * host state for later.
+           */
+          if (host_data->prog_data->args->verbose_count)
+            ipmiseld_syslog_host (host_data, "SEL illegal timestamp situation");
+          host_data->now_host_state.last_record_id.record_id = host_data->last_host_state.last_record_id.record_id;
+        }
     }
   else if (host_data->now_host_state.sel_info.entries > host_data->last_host_state.sel_info.entries)
     {
       ipmiseld_last_record_id_t last_record_id;
       
       if (host_data->now_host_state.sel_info.most_recent_addition_timestamp == host_data->last_host_state.sel_info.most_recent_addition_timestamp)
-	{
-	  /* This shouldn't be possible and is likely a bug in the
-	   * IPMI firmware.  Log this, but for rest of this chunk of
-	   * code, we assume the addition timestamp must have changed.
-	   */
-	  if (host_data->prog_data->args->verbose_count)
-	    ipmiseld_syslog_host (host_data, "SEL timestamp error, more entries without addition");
-	}
+        {
+          /* This shouldn't be possible and is likely a bug in the
+           * IPMI firmware.  Log this, but for rest of this chunk of
+           * code, we assume the addition timestamp must have changed.
+           */
+          if (host_data->prog_data->args->verbose_count)
+            ipmiseld_syslog_host (host_data, "SEL timestamp error, more entries without addition");
+        }
 
       if (ipmiseld_get_last_record_id (host_data, &last_record_id) < 0)
-	goto cleanup;
-	  
+        goto cleanup;
+          
       /* There is a small race chance that the last time we got sel
        * info, a new SEL event occurred after it, but before the call
        * to ipmi_sel_parse().  So we check what the last record id to
@@ -882,131 +882,131 @@ ipmiseld_check_sel_info (ipmiseld_host_data_t *host_data, uint16_t *record_id_st
        * happen.
        */ 
       if (last_record_id.loaded
-	  && host_data->last_host_state.last_record_id.record_id == last_record_id.record_id)
-	{
-	  /* nothing to do except this single copy/save */
-	  host_data->now_host_state.last_record_id.record_id = host_data->last_host_state.last_record_id.record_id;
-	}
+          && host_data->last_host_state.last_record_id.record_id == last_record_id.record_id)
+        {
+          /* nothing to do except this single copy/save */
+          host_data->now_host_state.last_record_id.record_id = host_data->last_host_state.last_record_id.record_id;
+        }
       else if (host_data->now_host_state.sel_info.most_recent_erase_timestamp == host_data->last_host_state.sel_info.most_recent_erase_timestamp)
-	{
-	  /* This is the most normal case we should expect, there
-	   * are more entries in the SEL than last time we checked
-	   * and must log them.
-	   */
-	  host_data->now_host_state.last_record_id.record_id = host_data->last_host_state.last_record_id.record_id;
-	  if (host_data->last_host_state.last_record_id.record_id)
-	    (*record_id_start) = host_data->last_host_state.last_record_id.record_id;
-	  else
-	    (*record_id_start) = IPMI_SEL_RECORD_ID_FIRST;
-	  log_entries_flag++;
-	}
+        {
+          /* This is the most normal case we should expect, there
+           * are more entries in the SEL than last time we checked
+           * and must log them.
+           */
+          host_data->now_host_state.last_record_id.record_id = host_data->last_host_state.last_record_id.record_id;
+          if (host_data->last_host_state.last_record_id.record_id)
+            (*record_id_start) = host_data->last_host_state.last_record_id.record_id;
+          else
+            (*record_id_start) = IPMI_SEL_RECORD_ID_FIRST;
+          log_entries_flag++;
+        }
       else
-	{
-	  if (host_data->now_host_state.sel_info.delete_sel_command_supported)
-	    {
-	      /* If new last_record_id is greater, we assume it's some additional entries
-	       * and the erase was only deleting some old entries.
-	       */
-	      if (last_record_id.loaded
-		  && last_record_id.record_id > host_data->last_host_state.last_record_id.record_id)
-		{
-		  host_data->now_host_state.last_record_id.record_id = host_data->last_host_state.last_record_id.record_id;
-		  if (host_data->last_host_state.last_record_id.record_id)
-		    (*record_id_start) = host_data->last_host_state.last_record_id.record_id;
-		  else
-		    (*record_id_start) = IPMI_SEL_RECORD_ID_FIRST;
-		  log_entries_flag++;
-		}
-	      else
-		{
-		  /* We assume a clear occurred so start from the beginning */
-		  host_data->now_host_state.last_record_id.record_id = 0;
-		  (*record_id_start) = IPMI_SEL_RECORD_ID_FIRST;
-		  log_entries_flag++;
-		}
-	    }
-	  else
-	    {
-	      /* If delete not supported, the erase must have been a clear
-	       * So log all the new entries if some are available and
-	       * reset last_record_id to zero.
-	       */
-	      host_data->now_host_state.last_record_id.record_id = 0;
-	      if (host_data->now_host_state.sel_info.entries)
-		{
-		  (*record_id_start) = IPMI_SEL_RECORD_ID_FIRST;
-		  log_entries_flag++;
-		}
-	    }
-	}
+        {
+          if (host_data->now_host_state.sel_info.delete_sel_command_supported)
+            {
+              /* If new last_record_id is greater, we assume it's some additional entries
+               * and the erase was only deleting some old entries.
+               */
+              if (last_record_id.loaded
+                  && last_record_id.record_id > host_data->last_host_state.last_record_id.record_id)
+                {
+                  host_data->now_host_state.last_record_id.record_id = host_data->last_host_state.last_record_id.record_id;
+                  if (host_data->last_host_state.last_record_id.record_id)
+                    (*record_id_start) = host_data->last_host_state.last_record_id.record_id;
+                  else
+                    (*record_id_start) = IPMI_SEL_RECORD_ID_FIRST;
+                  log_entries_flag++;
+                }
+              else
+                {
+                  /* We assume a clear occurred so start from the beginning */
+                  host_data->now_host_state.last_record_id.record_id = 0;
+                  (*record_id_start) = IPMI_SEL_RECORD_ID_FIRST;
+                  log_entries_flag++;
+                }
+            }
+          else
+            {
+              /* If delete not supported, the erase must have been a clear
+               * So log all the new entries if some are available and
+               * reset last_record_id to zero.
+               */
+              host_data->now_host_state.last_record_id.record_id = 0;
+              if (host_data->now_host_state.sel_info.entries)
+                {
+                  (*record_id_start) = IPMI_SEL_RECORD_ID_FIRST;
+                  log_entries_flag++;
+                }
+            }
+        }
     }
   else /* host_data->now_host_state.sel_info.entries < host_data->host_state.sel_info.entries) */
     {
       if (host_data->now_host_state.sel_info.most_recent_erase_timestamp == host_data->last_host_state.sel_info.most_recent_erase_timestamp)
-	{
-	  /* This shouldn't be possible and is likely a bug in the
-	   * IPMI firmware.  Log this, but for rest of this chunk of
-	   * code, we assume the erase timestamp must have changed.
-	   */
-	  if (host_data->prog_data->args->verbose_count)
-	    ipmiseld_syslog_host (host_data, "SEL timestamp error, fewer entries without erase");
-	}
+        {
+          /* This shouldn't be possible and is likely a bug in the
+           * IPMI firmware.  Log this, but for rest of this chunk of
+           * code, we assume the erase timestamp must have changed.
+           */
+          if (host_data->prog_data->args->verbose_count)
+            ipmiseld_syslog_host (host_data, "SEL timestamp error, fewer entries without erase");
+        }
 
       /* if no additional entries, nothing to log */
       if (host_data->now_host_state.sel_info.most_recent_addition_timestamp != host_data->last_host_state.sel_info.most_recent_addition_timestamp)
-	{
-	  if (host_data->now_host_state.sel_info.delete_sel_command_supported)
-	    {
-	      /* We don't know if the erase was for some old entries or if it was a clear.
-	       * We will look at the last_record_id to take a guess
-	       */
-	      ipmiseld_last_record_id_t last_record_id;
-	      
-	      if (ipmiseld_get_last_record_id (host_data, &last_record_id) < 0)
-		goto cleanup;
-	      
-	      /* If new last_record_id is greater, we assume it's some additional entries
-	       * and the erase was only deleting some old entries.
-	       */
-	      if (last_record_id.loaded
-		  && last_record_id.record_id > host_data->last_host_state.last_record_id.record_id)
-		{
-		  host_data->now_host_state.last_record_id.record_id = host_data->last_host_state.last_record_id.record_id;
-		  if (host_data->last_host_state.last_record_id.record_id)
-		    (*record_id_start) = host_data->last_host_state.last_record_id.record_id;
-		  else
-		    (*record_id_start) = IPMI_SEL_RECORD_ID_FIRST;
-		  log_entries_flag++;
-		}
-	      else
-		{
-		  /* We assume a clear occurred so start from the beginning */
-		  host_data->now_host_state.last_record_id.record_id = 0;
-		  (*record_id_start) = IPMI_SEL_RECORD_ID_FIRST;
-		  log_entries_flag++;
-		}
-	    }
-	  else
-	    {
-	      /* If delete not supported, the erase must have been a clear
-	       * So log all the new entries if some are available and
-	       * reset last_record_id to zero.
-	       */
-	      host_data->now_host_state.last_record_id.record_id = 0;
-	      if (host_data->now_host_state.sel_info.entries)
-		{
-		  (*record_id_start) = IPMI_SEL_RECORD_ID_FIRST;
-		  log_entries_flag++;
-		}
-	    }
-	}
+        {
+          if (host_data->now_host_state.sel_info.delete_sel_command_supported)
+            {
+              /* We don't know if the erase was for some old entries or if it was a clear.
+               * We will look at the last_record_id to take a guess
+               */
+              ipmiseld_last_record_id_t last_record_id;
+              
+              if (ipmiseld_get_last_record_id (host_data, &last_record_id) < 0)
+                goto cleanup;
+              
+              /* If new last_record_id is greater, we assume it's some additional entries
+               * and the erase was only deleting some old entries.
+               */
+              if (last_record_id.loaded
+                  && last_record_id.record_id > host_data->last_host_state.last_record_id.record_id)
+                {
+                  host_data->now_host_state.last_record_id.record_id = host_data->last_host_state.last_record_id.record_id;
+                  if (host_data->last_host_state.last_record_id.record_id)
+                    (*record_id_start) = host_data->last_host_state.last_record_id.record_id;
+                  else
+                    (*record_id_start) = IPMI_SEL_RECORD_ID_FIRST;
+                  log_entries_flag++;
+                }
+              else
+                {
+                  /* We assume a clear occurred so start from the beginning */
+                  host_data->now_host_state.last_record_id.record_id = 0;
+                  (*record_id_start) = IPMI_SEL_RECORD_ID_FIRST;
+                  log_entries_flag++;
+                }
+            }
+          else
+            {
+              /* If delete not supported, the erase must have been a clear
+               * So log all the new entries if some are available and
+               * reset last_record_id to zero.
+               */
+              host_data->now_host_state.last_record_id.record_id = 0;
+              if (host_data->now_host_state.sel_info.entries)
+                {
+                  (*record_id_start) = IPMI_SEL_RECORD_ID_FIRST;
+                  log_entries_flag++;
+                }
+            }
+        }
       else
-	{
-	  if (!host_data->now_host_state.sel_info.entries)
-	    host_data->now_host_state.last_record_id.record_id = 0;
-	  else
-	    host_data->now_host_state.last_record_id.record_id = host_data->last_host_state.last_record_id.record_id;
-	}
+        {
+          if (!host_data->now_host_state.sel_info.entries)
+            host_data->now_host_state.last_record_id.record_id = 0;
+          else
+            host_data->now_host_state.last_record_id.record_id = host_data->last_host_state.last_record_id.record_id;
+        }
     }
 
   if (log_entries_flag)
@@ -1033,10 +1033,10 @@ ipmiseld_check_thresholds (ipmiseld_host_data_t *host_data)
   if (host_data->prog_data->args->warning_threshold)
     {
       if (percent > host_data->prog_data->args->warning_threshold)
-	{
-	  if (percent > host_data->last_host_state.last_percent_full)
-	    ipmiseld_syslog_host (host_data, "SEL is %d%% full", percent);
-	}
+        {
+          if (percent > host_data->last_host_state.last_percent_full)
+            ipmiseld_syslog_host (host_data, "SEL is %d%% full", percent);
+        }
     }
 
   if (!host_data->last_host_state.sel_info.overflow_flag
@@ -1046,7 +1046,7 @@ ipmiseld_check_thresholds (ipmiseld_host_data_t *host_data)
   if (host_data->prog_data->args->clear_threshold)
     {
       if (percent > host_data->prog_data->args->clear_threshold)
-	do_clear_flag = 1;
+        do_clear_flag = 1;
     }
 
   host_data->now_host_state.last_percent_full = percent;
@@ -1070,15 +1070,15 @@ ipmiseld_sel_reserve (ipmiseld_host_data_t *host_data)
   if (host_data->now_host_state.sel_info.reserve_sel_command_supported)
     {
       if (ipmi_sel_ctx_register_reservation_id (host_data->host_poll->sel_ctx, NULL) < 0)
-	{
-	  /* If an IPMI error, we assume just can't do reservation, no biggie */
-	  if (ipmi_sel_ctx_errnum (host_data->host_poll->sel_ctx) == IPMI_SEL_ERR_IPMI_ERROR)
-	    return (0);
-	  
-	  ipmiseld_err_output (host_data, "ipmi_sel_ctx_register_reservation_id: %s",
-		      ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
-	  return (-1);
-	}
+        {
+          /* If an IPMI error, we assume just can't do reservation, no biggie */
+          if (ipmi_sel_ctx_errnum (host_data->host_poll->sel_ctx) == IPMI_SEL_ERR_IPMI_ERROR)
+            return (0);
+          
+          ipmiseld_err_output (host_data, "ipmi_sel_ctx_register_reservation_id: %s",
+                      ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
+          return (-1);
+        }
 
       return (1);
     }
@@ -1088,17 +1088,17 @@ ipmiseld_sel_reserve (ipmiseld_host_data_t *host_data)
 
 static int
 ipmiseld_sel_log_entries (ipmiseld_host_data_t *host_data,
-			  uint16_t record_id_start)
+                          uint16_t record_id_start)
 {
   assert (host_data);
   assert (host_data->host_poll);
   assert (host_data->host_poll->sel_ctx);
   
   if (ipmi_sel_parse (host_data->host_poll->sel_ctx,
-		      record_id_start,
-		      IPMI_SEL_RECORD_ID_LAST,
-		      _sel_parse_callback,
-		      host_data) < 0)
+                      record_id_start,
+                      IPMI_SEL_RECORD_ID_LAST,
+                      _sel_parse_callback,
+                      host_data) < 0)
     {
       ipmiseld_err_output (host_data, "ipmi_sel_parse: %s", ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
       return (-1);
@@ -1113,8 +1113,8 @@ ipmiseld_save_state (ipmiseld_host_data_t *host_data)
   assert (host_data);
 
   memcpy (&(host_data->last_host_state),
-	  &(host_data->now_host_state),
-	  sizeof (ipmiseld_host_state_t));
+          &(host_data->now_host_state),
+          sizeof (ipmiseld_host_state_t));
 
   /* ignore error, continue on even if it fails */
   ipmiseld_data_cache_store (host_data);
@@ -1140,43 +1140,43 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
       && !host_data->clear_sel_done)
     {
       if (ipmi_sel_clear_sel (host_data->host_poll->sel_ctx) < 0)
-	{
-	  ipmiseld_err_output (host_data, "ipmi_sel_clear_sel: %s",
-		      ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
-	  goto cleanup;
-	}
+        {
+          ipmiseld_err_output (host_data, "ipmi_sel_clear_sel: %s",
+                      ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
+          goto cleanup;
+        }
       host_data->clear_sel_done = 1;
     }
 
   if (!host_data->last_host_state.initialized)
     {
       if ((ret = ipmiseld_data_cache_load (host_data)) < 0)
-	{
-	  if (host_data->prog_data->args->verbose_count)
-	    ipmiseld_syslog_host (host_data, "Failed to load cached previous state, some SEL entries maybe missed");
-	}
+        {
+          if (host_data->prog_data->args->verbose_count)
+            ipmiseld_syslog_host (host_data, "Failed to load cached previous state, some SEL entries maybe missed");
+        }
 
       if (ret <= 0)
-	{
-	  if (ipmiseld_host_state_init (host_data) < 0)
-	    goto cleanup;
+        {
+          if (ipmiseld_host_state_init (host_data) < 0)
+            goto cleanup;
 
-	  if (host_data->prog_data->args->foreground
-	      && host_data->prog_data->args->common_args.debug)
-	    _dump_host_state (host_data,
-			      &(host_data->last_host_state),
-			      "Initial State");
-	  
-	  goto out;
-	}
+          if (host_data->prog_data->args->foreground
+              && host_data->prog_data->args->common_args.debug)
+            _dump_host_state (host_data,
+                              &(host_data->last_host_state),
+                              "Initial State");
+          
+          goto out;
+        }
       else
-	{
-	  if (host_data->prog_data->args->foreground
-	      && host_data->prog_data->args->common_args.debug)
-	    _dump_host_state (host_data,
-			      &(host_data->last_host_state),
-			      "Loaded State");
-	}
+        {
+          if (host_data->prog_data->args->foreground
+              && host_data->prog_data->args->common_args.debug)
+            _dump_host_state (host_data,
+                              &(host_data->last_host_state),
+                              "Loaded State");
+        }
     }
   
   if (ipmiseld_sel_info_get (host_data, &(host_data->now_host_state.sel_info)) < 0)
@@ -1198,13 +1198,13 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
   if (do_clear_flag)
     {
       if ((reserve_flag = ipmiseld_sel_reserve (host_data)) < 0)
-	goto cleanup;
+        goto cleanup;
     }
 
   if (log_entries_flag)
     {
       if (ipmiseld_sel_log_entries (host_data, record_id_start) < 0)
-	goto cleanup;
+        goto cleanup;
     }
   
   if (do_clear_flag)
@@ -1212,22 +1212,22 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
       ipmiseld_sel_info_t tmp_sel_info;
       
       if ((ret = ipmi_sel_clear_sel (host_data->host_poll->sel_ctx)) < 0)
-	{
-	  if (reserve_flag
-	      && ipmi_sel_ctx_errnum (host_data->host_poll->sel_ctx) == IPMI_SEL_ERR_RESERVATION_CANCELED)
-	    retry_flag++;
-	  else
-	    {
-	      ipmiseld_err_output (host_data, "ipmi_sel_clear_sel: %s",
-			  ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
-	      goto save_state_out;
-	    }
-	}
+        {
+          if (reserve_flag
+              && ipmi_sel_ctx_errnum (host_data->host_poll->sel_ctx) == IPMI_SEL_ERR_RESERVATION_CANCELED)
+            retry_flag++;
+          else
+            {
+              ipmiseld_err_output (host_data, "ipmi_sel_clear_sel: %s",
+                          ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
+              goto save_state_out;
+            }
+        }
       
       ipmiseld_syslog_host (host_data, "SEL cleared");
-	      
+              
       if (ipmiseld_sel_info_get (host_data, &tmp_sel_info) < 0)
-	goto save_state_out;
+        goto save_state_out;
       
       memcpy (&(host_data->now_host_state.sel_info), &tmp_sel_info, sizeof (ipmiseld_sel_info_t));
       host_data->now_host_state.last_record_id.record_id = 0;
@@ -1265,10 +1265,10 @@ ipmiseld_sel_parse (ipmiseld_host_data_t *host_data)
   while (retry_count < IPMISELD_RETRY_ATTEMPT_MAX)
     {
       if ((rv = ipmiseld_sel_parse_log (host_data)) < 0)
-	break;
+        break;
 
       if (!rv)
-	break;
+        break;
 
       retry_count++;
     }
@@ -1304,7 +1304,7 @@ _ipmiseld_poll (void *arg)
   if (!host_data->prog_data->args->ignore_sdr)
     {
       if (ipmiseld_sdr_cache_create_and_load (host_data) < 0)
-	goto cleanup;
+        goto cleanup;
     }
   else
     host_data->host_poll->sdr_ctx = NULL;
@@ -1326,8 +1326,8 @@ _ipmiseld_poll (void *arg)
     {
       /* Don't error out, if this fails we can still continue */
       if (ipmi_sel_ctx_set_flags (host_data->host_poll->sel_ctx, sel_flags) < 0)
-	ipmiseld_err_output (host_data, "ipmi_sel_ctx_set_flags: %s",
-		    ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
+        ipmiseld_err_output (host_data, "ipmi_sel_ctx_set_flags: %s",
+                    ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
     }
 
   if (host_data->prog_data->args->foreground
@@ -1336,7 +1336,7 @@ _ipmiseld_poll (void *arg)
     {
       if (ipmi_sel_ctx_set_debug_prefix (host_data->host_poll->sel_ctx, host_data->hostname) < 0)
         ipmiseld_err_output (host_data, "ipmi_sel_ctx_set_debug_prefix: %s",
-		    ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
+                    ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
     }
   
   if (!(host_data->host_poll->interpret_ctx = ipmi_interpret_ctx_create ()))
@@ -1346,14 +1346,14 @@ _ipmiseld_poll (void *arg)
     }
 
   if (ipmi_interpret_load_sel_config (host_data->host_poll->interpret_ctx,
-				      host_data->prog_data->args->event_state_config_file) < 0)
+                                      host_data->prog_data->args->event_state_config_file) < 0)
     {
       /* if default file is missing its ok */
       if (!(!host_data->prog_data->args->event_state_config_file
-	    && ipmi_interpret_ctx_errnum (host_data->host_poll->interpret_ctx) == IPMI_INTERPRET_ERR_SEL_CONFIG_FILE_DOES_NOT_EXIST))
-	{
-	  ipmiseld_err_output (host_data, "ipmi_interpret_load_sel_config: %s", ipmi_interpret_ctx_errormsg (host_data->host_poll->interpret_ctx));
-	  goto cleanup;
+            && ipmi_interpret_ctx_errnum (host_data->host_poll->interpret_ctx) == IPMI_INTERPRET_ERR_SEL_CONFIG_FILE_DOES_NOT_EXIST))
+        {
+          ipmiseld_err_output (host_data, "ipmi_interpret_load_sel_config: %s", ipmi_interpret_ctx_errormsg (host_data->host_poll->interpret_ctx));
+          goto cleanup;
         }
     }
 
@@ -1363,26 +1363,26 @@ _ipmiseld_poll (void *arg)
   if (interpret_flags)
     {
       if (ipmi_interpret_ctx_set_flags (host_data->host_poll->interpret_ctx, interpret_flags) < 0)
-	{
-	  ipmiseld_err_output (host_data, "ipmi_interpret_ctx_set_flags: %s",
-		      ipmi_interpret_ctx_errormsg (host_data->host_poll->interpret_ctx));
-	  goto cleanup;
-	}
+        {
+          ipmiseld_err_output (host_data, "ipmi_interpret_ctx_set_flags: %s",
+                      ipmi_interpret_ctx_errormsg (host_data->host_poll->interpret_ctx));
+          goto cleanup;
+        }
     }
 
   if (ipmi_sel_ctx_set_parameter (host_data->host_poll->sel_ctx,
-				  IPMI_SEL_PARAMETER_INTERPRET_CONTEXT,
-				  &(host_data->host_poll->interpret_ctx)) < 0)
+                                  IPMI_SEL_PARAMETER_INTERPRET_CONTEXT,
+                                  &(host_data->host_poll->interpret_ctx)) < 0)
     {
       err_output("ipmi_sel_ctx_set_interpret: %s",
-		 ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
+                 ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
       goto cleanup;
     }
   
   if (ipmi_sel_ctx_set_separator (host_data->host_poll->sel_ctx, EVENT_OUTPUT_SEPARATOR) < 0)
     {
       ipmiseld_err_output (host_data, "ipmi_sel_ctx_set_separator: %s",
-		  ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
+                  ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
       return (-1);
     }
 
@@ -1398,7 +1398,7 @@ _ipmiseld_poll (void *arg)
                                             host_data->host_poll->oem_data.manufacturer_id) < 0)
         {
           ipmiseld_err_output (host_data, "ipmi_sel_ctx_set_manufacturer_id: %s",
-		      ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
+                      ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
           return (-1);
         }
       
@@ -1406,7 +1406,7 @@ _ipmiseld_poll (void *arg)
                                        host_data->host_poll->oem_data.product_id) < 0)
         {
           ipmiseld_err_output (host_data, "ipmi_sel_ctx_set_product_id: %s",
-		      ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
+                      ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
           return (-1);
         }
 
@@ -1415,7 +1415,7 @@ _ipmiseld_poll (void *arg)
                                          host_data->host_poll->oem_data.ipmi_version_minor) < 0)
         {
           ipmiseld_err_output (host_data, "ipmi_sel_ctx_set_ipmi_version: %s",
-		      ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
+                      ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
           return (-1);
         }
       
@@ -1425,15 +1425,15 @@ _ipmiseld_poll (void *arg)
                                                       host_data->host_poll->oem_data.manufacturer_id) < 0)
             {
               ipmiseld_err_output (host_data, "ipmi_interpret_ctx_set_manufacturer_id: %s",
-			  ipmi_interpret_ctx_errormsg (host_data->host_poll->interpret_ctx));
+                          ipmi_interpret_ctx_errormsg (host_data->host_poll->interpret_ctx));
               return (-1);
             }
-	  
+          
           if (ipmi_interpret_ctx_set_product_id (host_data->host_poll->interpret_ctx,
                                                  host_data->host_poll->oem_data.product_id) < 0)
             {
               ipmiseld_err_output (host_data, "ipmi_interpret_ctx_set_product_id: %s",
-			  ipmi_interpret_ctx_errormsg (host_data->host_poll->interpret_ctx));
+                          ipmi_interpret_ctx_errormsg (host_data->host_poll->interpret_ctx));
               return (-1);
             }
         }
@@ -1520,11 +1520,11 @@ _alloc_host_data (ipmiseld_prog_data_t *prog_data, const char *hostname)
   if (hostname)
     {
       if (!(host_data->hostname = strdup (hostname)))
-	{
-	  err_output ("strdup: %s", strerror (errno));
-	  free (host_data);
-	  return (NULL);
-	}
+        {
+          err_output ("strdup: %s", strerror (errno));
+          free (host_data);
+          return (NULL);
+        }
     }
   else
     host_data->hostname = NULL;
@@ -1574,14 +1574,14 @@ _ipmiseld (ipmiseld_prog_data_t *prog_data)
     {
       if ((hosts_count = pstdout_hostnames_count (prog_data->args->common_args.hostname)) < 0)
         {
-	  err_output ("pstdout_hostnames_count: %s", pstdout_strerror (pstdout_errnum));
-	  goto cleanup;
+          err_output ("pstdout_hostnames_count: %s", pstdout_strerror (pstdout_errnum));
+          goto cleanup;
         }
       
       if (!hosts_count)
         {
-	  err_output ("invalid number of hosts specified");
-	  goto cleanup;
+          err_output ("invalid number of hosts specified");
+          goto cleanup;
         }
     }
   else /* inband communication, hosts_count = 1 */
@@ -1592,8 +1592,8 @@ _ipmiseld (ipmiseld_prog_data_t *prog_data)
     prog_data->args->threadpool_count = hosts_count;
 
   if (!(host_data_heap = heap_create (hosts_count,
-				      (HeapCmpF)hostdata_timecmp,
-				      (HeapDelF)_free_host_data)))
+                                      (HeapCmpF)hostdata_timecmp,
+                                      (HeapDelF)_free_host_data)))
     {
       err_output ("heap_create: %s", strerror (errno));
       goto cleanup;
@@ -1608,139 +1608,139 @@ _ipmiseld (ipmiseld_prog_data_t *prog_data)
   if (hosts_count == 1)
     {
       if (!(host_data = _alloc_host_data (prog_data, prog_data->args->common_args.hostname)))
-	goto cleanup;
+        goto cleanup;
 
       if (!heap_insert (host_data_heap, host_data))
-	{
-	  err_output ("heap_insert: %s", strerror (errno));
-	  goto cleanup;
-	}
+        {
+          err_output ("heap_insert: %s", strerror (errno));
+          goto cleanup;
+        }
     }
   else
     {
       if (!(hlist = hostlist_create (prog_data->args->common_args.hostname)))
-	{
-	  err_output ("hostlist_create: %s", strerror (errno));
-	  goto cleanup;
-	}
+        {
+          err_output ("hostlist_create: %s", strerror (errno));
+          goto cleanup;
+        }
 
       if (!(hitr = hostlist_iterator_create (hlist)))
-	{
-	  err_output ("hostlist_iterator_create: %s", strerror (errno));
-	  goto cleanup;
-	}
+        {
+          err_output ("hostlist_iterator_create: %s", strerror (errno));
+          goto cleanup;
+        }
 
       while ((host = hostlist_next (hitr)))
-	{
-	  if (!(host_data = _alloc_host_data (prog_data, host)))
-	    goto cleanup;
+        {
+          if (!(host_data = _alloc_host_data (prog_data, host)))
+            goto cleanup;
 
-	  if (!heap_insert (host_data_heap, host_data))
-	    {
-	      err_output ("heap_insert: %s", strerror (errno));
-	      goto cleanup;
-	    }
+          if (!heap_insert (host_data_heap, host_data))
+            {
+              err_output ("heap_insert: %s", strerror (errno));
+              goto cleanup;
+            }
 
-	  free(host);
-	}
+          free(host);
+        }
       host = NULL;
     }
 
   if (ipmiseld_threadpool_init (prog_data,
-				_ipmiseld_poll,
-				_ipmiseld_poll_postprocess) < 0)
+                                _ipmiseld_poll,
+                                _ipmiseld_poll_postprocess) < 0)
     goto cleanup;
 
   if (prog_data->args->test_run)
     {
       while (!heap_is_empty (host_data_heap))
-	{
-	  if (!(host_data = heap_pop (host_data_heap)))
-	    {
-	      err_output ("heap_pop: %s", strerror (errno));
-	      goto cleanup;
-	    }
+        {
+          if (!(host_data = heap_pop (host_data_heap)))
+            {
+              err_output ("heap_pop: %s", strerror (errno));
+              goto cleanup;
+            }
 
-	  _ipmiseld_poll (host_data);
-	}
+          _ipmiseld_poll (host_data);
+        }
     }
   else
     {
       while (exit_flag)
-	{
-	  pthread_mutex_lock (&host_data_heap_lock);
+        {
+          pthread_mutex_lock (&host_data_heap_lock);
 
-	  host_data = heap_pop (host_data_heap);
-	  
-	  pthread_mutex_unlock (&host_data_heap_lock);
+          host_data = heap_pop (host_data_heap);
+          
+          pthread_mutex_unlock (&host_data_heap_lock);
 
-	  /* empty heap, small chance of this happening, but
-	   * everything is processing and previous sleeps didn't sleep
-	   * long enough.  So we just need to wait until something
-	   * else finishes.
-	   *
-	   * There's no way to know the exact right amount of time, so
-	   * we're going to make an estimate.  What we'll do is
-	   * estimate 1/5th the time of a IPMI session timeout.  So in
-	   * the event the previous poll fully timed out, we will
-	   * interrupt and go through this loop only 5 times.
-	   */
-	  if (!host_data)
-	    {
-	      unsigned int waittime;
+          /* empty heap, small chance of this happening, but
+           * everything is processing and previous sleeps didn't sleep
+           * long enough.  So we just need to wait until something
+           * else finishes.
+           *
+           * There's no way to know the exact right amount of time, so
+           * we're going to make an estimate.  What we'll do is
+           * estimate 1/5th the time of a IPMI session timeout.  So in
+           * the event the previous poll fully timed out, we will
+           * interrupt and go through this loop only 5 times.
+           */
+          if (!host_data)
+            {
+              unsigned int waittime;
 
-	      if (prog_data->args->common_args.session_timeout)
-		waittime = prog_data->args->common_args.session_timeout;
-	      else
-		waittime = IPMI_SESSION_TIMEOUT_DEFAULT;
+              if (prog_data->args->common_args.session_timeout)
+                waittime = prog_data->args->common_args.session_timeout;
+              else
+                waittime = IPMI_SESSION_TIMEOUT_DEFAULT;
 
-	      /* session timeout is in milliseconds */
-	      waittime /= 1000;
-	      
-	      /* now take a 5th of it  */
-	      waittime /= 5;
+              /* session timeout is in milliseconds */
+              waittime /= 1000;
+              
+              /* now take a 5th of it  */
+              waittime /= 5;
 
-	      if (!waittime)
-		waittime = 1;
+              if (!waittime)
+                waittime = 1;
 
-	      daemon_sleep (waittime);
-	      continue;
-	    }
-	      
-	  if (ipmiseld_threadpool_queue (host_data) < 0)
-	    {
-	      pthread_mutex_lock (&host_data_heap_lock);
+              daemon_sleep (waittime);
+              continue;
+            }
+              
+          if (ipmiseld_threadpool_queue (host_data) < 0)
+            {
+              pthread_mutex_lock (&host_data_heap_lock);
 
-	      if (!heap_insert (host_data_heap, host_data))
-		ipmiseld_err_output (host_data, "heap_insert: %s", strerror (errno));
+              if (!heap_insert (host_data_heap, host_data))
+                ipmiseld_err_output (host_data, "heap_insert: %s", strerror (errno));
 
-	      pthread_mutex_unlock (&host_data_heap_lock);
-	    }
+              pthread_mutex_unlock (&host_data_heap_lock);
+            }
 
-	  pthread_mutex_lock (&host_data_heap_lock);
+          pthread_mutex_lock (&host_data_heap_lock);
 
-	  host_data = heap_peek (host_data_heap);
-	  
-	  pthread_mutex_unlock (&host_data_heap_lock);
+          host_data = heap_peek (host_data_heap);
+          
+          pthread_mutex_unlock (&host_data_heap_lock);
 
-	  /* empty heap, everything must be processing, so we'll sleep
-	   * for the poll interval, b/c no one should be scheduled
-	   * until after this time has passed anyways.
-	   */
-	  if (!host_data)
-	    daemon_sleep (prog_data->args->poll_interval + 1);
-	  else
-	    {
-	      struct timeval tv;
+          /* empty heap, everything must be processing, so we'll sleep
+           * for the poll interval, b/c no one should be scheduled
+           * until after this time has passed anyways.
+           */
+          if (!host_data)
+            daemon_sleep (prog_data->args->poll_interval + 1);
+          else
+            {
+              struct timeval tv;
 
-	      gettimeofday (&tv, NULL);
-	      
-	      /* If next_poll_time == 0, no sleep, its the first time through */
-	      if (host_data->next_poll_time
-		  && (host_data->next_poll_time > tv.tv_sec)) 
-		daemon_sleep ((host_data->next_poll_time - tv.tv_sec) + 1);
-	    }
- 	}
+              gettimeofday (&tv, NULL);
+              
+              /* If next_poll_time == 0, no sleep, its the first time through */
+              if (host_data->next_poll_time
+                  && (host_data->next_poll_time > tv.tv_sec)) 
+                daemon_sleep ((host_data->next_poll_time - tv.tv_sec) + 1);
+            }
+        }
     }
   
   rv = 0;
@@ -1787,12 +1787,12 @@ main (int argc, char **argv)
   if (!cmd_args.test_run)
     {
       if (!cmd_args.foreground)
-	{
-	  daemonize_common (IPMISELD_PIDFILE);
-	  err_set_flags (ERROR_SYSLOG);
-	}
+        {
+          daemonize_common (IPMISELD_PIDFILE);
+          err_set_flags (ERROR_SYSLOG);
+        }
       else
-	err_set_flags (ERROR_STDERR);
+        err_set_flags (ERROR_STDERR);
       
       daemon_signal_handler_setup (_signal_handler_callback);
 

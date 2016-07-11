@@ -622,7 +622,7 @@ ipmi_config_sections_validate_keyvalue_inputs (ipmi_config_state_data_t *state_d
                 }
 
               if ((v = kv->key->validate (state_data,
-					  s->section_name,
+                                          s->section_name,
                                           kv->key->key_name,
                                           kv->value_input)) == IPMI_CONFIG_VALIDATE_FATAL_ERROR)
                 goto cleanup;

@@ -54,14 +54,14 @@
 
 int
 sel_string_output_quanta_s99q_sensor_name (ipmi_sel_ctx_t ctx,
-					   struct ipmi_sel_entry *sel_entry,
-					   uint8_t sel_record_type,
-					   char *buf,
-					   unsigned int buflen,
-					   unsigned int flags,
-					   unsigned int *wlen,
-					   struct ipmi_sel_system_event_record_data *system_event_record_data,
-					   int *oem_rv)
+                                           struct ipmi_sel_entry *sel_entry,
+                                           uint8_t sel_record_type,
+                                           char *buf,
+                                           unsigned int buflen,
+                                           unsigned int flags,
+                                           unsigned int *wlen,
+                                           struct ipmi_sel_system_event_record_data *system_event_record_data,
+                                           int *oem_rv)
 {
   int nmret;
 
@@ -83,14 +83,14 @@ sel_string_output_quanta_s99q_sensor_name (ipmi_sel_ctx_t ctx,
    */
 
   if ((nmret = sel_string_output_intel_node_manager_sensor_name (ctx,
-								 sel_entry,
-								 sel_record_type,
-								 buf,
-								 buflen,
-								 flags,
-								 wlen,
-								 system_event_record_data,
-								 oem_rv)) < 0)
+                                                                 sel_entry,
+                                                                 sel_record_type,
+                                                                 buf,
+                                                                 buflen,
+                                                                 flags,
+                                                                 wlen,
+                                                                 system_event_record_data,
+                                                                 oem_rv)) < 0)
     return (-1);
       
   if (nmret)
@@ -105,13 +105,13 @@ sel_string_output_quanta_s99q_sensor_name (ipmi_sel_ctx_t ctx,
  */
 int
 sel_string_output_quanta_s99q_event_data1_class_oem (ipmi_sel_ctx_t ctx,
-						     struct ipmi_sel_entry *sel_entry,
-						     uint8_t sel_record_type,
-						     char *tmpbuf,
-						     unsigned int tmpbuflen,
-						     unsigned int flags,
-						     unsigned int *wlen,
-						     struct ipmi_sel_system_event_record_data *system_event_record_data)
+                                                     struct ipmi_sel_entry *sel_entry,
+                                                     uint8_t sel_record_type,
+                                                     char *tmpbuf,
+                                                     unsigned int tmpbuflen,
+                                                     unsigned int flags,
+                                                     unsigned int *wlen,
+                                                     struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   int nmret;
 
@@ -131,13 +131,13 @@ sel_string_output_quanta_s99q_event_data1_class_oem (ipmi_sel_ctx_t ctx,
    * Quanta S99Q/Dell FS12-TY
    */
   if ((nmret = sel_string_output_intel_node_manager_event_data1_class_oem (ctx,
-									   sel_entry,
-									   sel_record_type,
-									   tmpbuf,
-									   tmpbuflen,
-									   flags,
-									   wlen,
-									   system_event_record_data)) < 0)
+                                                                           sel_entry,
+                                                                           sel_record_type,
+                                                                           tmpbuf,
+                                                                           tmpbuflen,
+                                                                           flags,
+                                                                           wlen,
+                                                                           system_event_record_data)) < 0)
     return (-1);
 
   if (nmret)
@@ -152,13 +152,13 @@ sel_string_output_quanta_s99q_event_data1_class_oem (ipmi_sel_ctx_t ctx,
  */
 int
 sel_string_output_quanta_s99q_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
-							struct ipmi_sel_entry *sel_entry,
-							uint8_t sel_record_type,
-							char *tmpbuf,
-							unsigned int tmpbuflen,
-							unsigned int flags,
-							unsigned int *wlen,
-							struct ipmi_sel_system_event_record_data *system_event_record_data)
+                                                        struct ipmi_sel_entry *sel_entry,
+                                                        uint8_t sel_record_type,
+                                                        char *tmpbuf,
+                                                        unsigned int tmpbuflen,
+                                                        unsigned int flags,
+                                                        unsigned int *wlen,
+                                                        struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -182,10 +182,10 @@ sel_string_output_quanta_s99q_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_QUANTA_PCI_SENSORID
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_PERR
-	  || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_SERR
-	  || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_CORRECTABLE_ERROR
-	  || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_UNCORRECTABLE_ERROR
-	  || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_FATAL_ERROR))
+          || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_SERR
+          || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_CORRECTABLE_ERROR
+          || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_UNCORRECTABLE_ERROR
+          || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_FATAL_ERROR))
     {
       uint8_t device, function;
           
@@ -196,10 +196,10 @@ sel_string_output_quanta_s99q_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
       function >>= IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_OEM_QUANTA_EVENT_DATA2_FUNCTION_NUMBER_SHIFT;
           
       snprintf (tmpbuf,
-		tmpbuflen,
-		"Device %u, Function %u",
-		device,
-		function);
+                tmpbuflen,
+                "Device %u, Function %u",
+                device,
+                function);
 
       return (1);
     }
@@ -207,16 +207,16 @@ sel_string_output_quanta_s99q_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
   if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_QUANTA_ERROR
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
       && (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_QUANTA_QPI_SENSORID
-	  || system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_QUANTA_INT_SENSORID)
+          || system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_QUANTA_INT_SENSORID)
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_CORRECTABLE_ERROR
-	  || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_UNCORRECTABLE_ERROR
-	  || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_FATAL_ERROR))
+          || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_UNCORRECTABLE_ERROR
+          || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_FATAL_ERROR))
     {
       snprintf (tmpbuf,
-		tmpbuflen,
-		"Local Error Bit %u",
-		system_event_record_data->event_data2);
+                tmpbuflen,
+                "Local Error Bit %u",
+                system_event_record_data->event_data2);
 
       return (1);
     }
@@ -230,13 +230,13 @@ sel_string_output_quanta_s99q_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
  */
 int
 sel_string_output_quanta_s99q_event_data2_class_oem (ipmi_sel_ctx_t ctx,
-						     struct ipmi_sel_entry *sel_entry,
-						     uint8_t sel_record_type,
-						     char *tmpbuf,
-						     unsigned int tmpbuflen,
-						     unsigned int flags,
-						     unsigned int *wlen,
-						     struct ipmi_sel_system_event_record_data *system_event_record_data)
+                                                     struct ipmi_sel_entry *sel_entry,
+                                                     uint8_t sel_record_type,
+                                                     char *tmpbuf,
+                                                     unsigned int tmpbuflen,
+                                                     unsigned int flags,
+                                                     unsigned int *wlen,
+                                                     struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   int nmret;
 
@@ -257,13 +257,13 @@ sel_string_output_quanta_s99q_event_data2_class_oem (ipmi_sel_ctx_t ctx,
    */
 
   if ((nmret = sel_string_output_intel_node_manager_event_data2_class_oem (ctx,
-									   sel_entry,
-									   sel_record_type,
-									   tmpbuf,
-									   tmpbuflen,
-									   flags,
-									   wlen,
-									   system_event_record_data)) < 0)
+                                                                           sel_entry,
+                                                                           sel_record_type,
+                                                                           tmpbuf,
+                                                                           tmpbuflen,
+                                                                           flags,
+                                                                           wlen,
+                                                                           system_event_record_data)) < 0)
     return (-1);
 
   if (nmret)
@@ -278,13 +278,13 @@ sel_string_output_quanta_s99q_event_data2_class_oem (ipmi_sel_ctx_t ctx,
  */
 int
 sel_string_output_quanta_s99q_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
-							struct ipmi_sel_entry *sel_entry,
-							uint8_t sel_record_type,
-							char *tmpbuf,
-							unsigned int tmpbuflen,
-							unsigned int flags,
-							unsigned int *wlen,
-							struct ipmi_sel_system_event_record_data *system_event_record_data)
+                                                        struct ipmi_sel_entry *sel_entry,
+                                                        uint8_t sel_record_type,
+                                                        char *tmpbuf,
+                                                        unsigned int tmpbuflen,
+                                                        unsigned int flags,
+                                                        unsigned int *wlen,
+                                                        struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -307,80 +307,80 @@ sel_string_output_quanta_s99q_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_QUANTA_MEMORY
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CORRECTABLE_MEMORY_ERROR
-	  || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_UNCORRECTABLE_MEMORY_ERROR
-	  || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_SPARE))
+          || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_UNCORRECTABLE_MEMORY_ERROR
+          || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_SPARE))
     {
       char dimmbuf[QUANTA_EVENT_BUFFER_LENGTH];
       char *dimm_str = NULL;
 
       switch (system_event_record_data->event_data3)
-	{
-	case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_A0:
-	  dimm_str = "DIMM A0";
-	  break;
-	case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_A1:
-	  dimm_str = "DIMM A1";
-	  break;
-	case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_A2:
-	  dimm_str = "DIMM A2";
-	  break;
-	case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_B0:
-	  dimm_str = "DIMM B0";
-	  break;
-	case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_B1:
-	  dimm_str = "DIMM B1";
-	  break;
-	case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_B2:
-	  dimm_str = "DIMM B2";
-	  break;
-	case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_C0:
-	  dimm_str = "DIMM C0";
-	  break;
-	case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_C1:
-	  dimm_str = "DIMM C1";
-	  break;
-	case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_C2:
-	  dimm_str = "DIMM C2";
-	  break;
-	case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_D0:
-	  dimm_str = "DIMM D0";
-	  break;
-	case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_D1:
-	  dimm_str = "DIMM D1";
-	  break;
-	case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_D2:
-	  dimm_str = "DIMM D2";
-	  break;
-	case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_E0:
-	  dimm_str = "DIMM E0";
-	  break;
-	case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_E1:
-	  dimm_str = "DIMM E1";
-	  break;
-	case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_E2:
-	  dimm_str = "DIMM E2";
-	  break;
-	case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_F0:
-	  dimm_str = "DIMM F0";
-	  break;
-	case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_F1:
-	  dimm_str = "DIMM F1";
-	  break;
-	case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_F2:
-	  dimm_str = "DIMM F2";
-	  break;
-	default:
-	  snprintf (dimmbuf,
-		    QUANTA_EVENT_BUFFER_LENGTH,
-		    "Error DIMM %u",
-		    system_event_record_data->event_data3);
-	  dimm_str = dimmbuf;
-	}
+        {
+        case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_A0:
+          dimm_str = "DIMM A0";
+          break;
+        case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_A1:
+          dimm_str = "DIMM A1";
+          break;
+        case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_A2:
+          dimm_str = "DIMM A2";
+          break;
+        case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_B0:
+          dimm_str = "DIMM B0";
+          break;
+        case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_B1:
+          dimm_str = "DIMM B1";
+          break;
+        case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_B2:
+          dimm_str = "DIMM B2";
+          break;
+        case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_C0:
+          dimm_str = "DIMM C0";
+          break;
+        case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_C1:
+          dimm_str = "DIMM C1";
+          break;
+        case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_C2:
+          dimm_str = "DIMM C2";
+          break;
+        case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_D0:
+          dimm_str = "DIMM D0";
+          break;
+        case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_D1:
+          dimm_str = "DIMM D1";
+          break;
+        case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_D2:
+          dimm_str = "DIMM D2";
+          break;
+        case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_E0:
+          dimm_str = "DIMM E0";
+          break;
+        case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_E1:
+          dimm_str = "DIMM E1";
+          break;
+        case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_E2:
+          dimm_str = "DIMM E2";
+          break;
+        case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_F0:
+          dimm_str = "DIMM F0";
+          break;
+        case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_F1:
+          dimm_str = "DIMM F1";
+          break;
+        case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_QUANTA_S99Q_DIMM_F2:
+          dimm_str = "DIMM F2";
+          break;
+        default:
+          snprintf (dimmbuf,
+                    QUANTA_EVENT_BUFFER_LENGTH,
+                    "Error DIMM %u",
+                    system_event_record_data->event_data3);
+          dimm_str = dimmbuf;
+        }
           
       snprintf (tmpbuf,
-		tmpbuflen,
-		"%s",
-		dimm_str);
+                tmpbuflen,
+                "%s",
+                dimm_str);
           
       return (1);
     }
@@ -390,15 +390,15 @@ sel_string_output_quanta_s99q_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_QUANTA_PCI_SENSORID
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_PERR
-	  || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_SERR
-	  || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_CORRECTABLE_ERROR
-	  || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_UNCORRECTABLE_ERROR
-	  || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_FATAL_ERROR))
+          || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_SERR
+          || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_CORRECTABLE_ERROR
+          || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_UNCORRECTABLE_ERROR
+          || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_FATAL_ERROR))
     {
       snprintf (tmpbuf,
-		tmpbuflen,
-		"Bus Number %u",
-		system_event_record_data->event_data3);
+                tmpbuflen,
+                "Bus Number %u",
+                system_event_record_data->event_data3);
 
       return (1);
     }
@@ -406,42 +406,42 @@ sel_string_output_quanta_s99q_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
   if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_QUANTA_ERROR
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
       && (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_QUANTA_QPI_SENSORID
-	  || system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_QUANTA_INT_SENSORID)
+          || system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_QUANTA_INT_SENSORID)
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_CORRECTABLE_ERROR
-	  || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_UNCORRECTABLE_ERROR
-	  || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_FATAL_ERROR))
+          || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_UNCORRECTABLE_ERROR
+          || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_FATAL_ERROR))
     {
       char *errstr = NULL;
 
       switch (system_event_record_data->event_data3)
-	{
-	case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_OEM_QUANTA_EVENT_DATA3_QPI0_ERROR:
-	  errstr = "QPI[0] Error";
-	  break;
-	case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_OEM_QUANTA_EVENT_DATA3_QPI1_ERROR:
-	  errstr = "QPI[1] Error";
-	  break;
-	case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_OEM_QUANTA_EVENT_DATA3_QPI2_ERROR:
-	  errstr = "QPI[2] Error";
-	  break;
-	case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_OEM_QUANTA_EVENT_DATA3_QPI3_ERROR:
-	  errstr = "QPI[3] Error";
-	  break;
-	case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_OEM_QUANTA_EVENT_DATA3_MISCELLANEOUS_ERROR:
-	  errstr = "Miscellaneous Error";
-	  break;
-	case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_OEM_QUANTA_EVENT_DATA3_IOH_CORE_ERROR:
-	  errstr = "IOH Core Error";
-	  break;
-	default:
-	  errstr = "Unknown Error";
-	}
+        {
+        case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_OEM_QUANTA_EVENT_DATA3_QPI0_ERROR:
+          errstr = "QPI[0] Error";
+          break;
+        case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_OEM_QUANTA_EVENT_DATA3_QPI1_ERROR:
+          errstr = "QPI[1] Error";
+          break;
+        case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_OEM_QUANTA_EVENT_DATA3_QPI2_ERROR:
+          errstr = "QPI[2] Error";
+          break;
+        case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_OEM_QUANTA_EVENT_DATA3_QPI3_ERROR:
+          errstr = "QPI[3] Error";
+          break;
+        case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_OEM_QUANTA_EVENT_DATA3_MISCELLANEOUS_ERROR:
+          errstr = "Miscellaneous Error";
+          break;
+        case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_OEM_QUANTA_EVENT_DATA3_IOH_CORE_ERROR:
+          errstr = "IOH Core Error";
+          break;
+        default:
+          errstr = "Unknown Error";
+        }
 
       snprintf (tmpbuf,
-		tmpbuflen,
-		"%s",
-		errstr);
+                tmpbuflen,
+                "%s",
+                errstr);
           
       return (1);
     }
@@ -455,13 +455,13 @@ sel_string_output_quanta_s99q_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
  */
 int
 sel_string_output_quanta_s99q_event_data3_class_oem (ipmi_sel_ctx_t ctx,
-						     struct ipmi_sel_entry *sel_entry,
-						     uint8_t sel_record_type,
-						     char *tmpbuf,
-						     unsigned int tmpbuflen,
-						     unsigned int flags,
-						     unsigned int *wlen,
-						     struct ipmi_sel_system_event_record_data *system_event_record_data)
+                                                     struct ipmi_sel_entry *sel_entry,
+                                                     uint8_t sel_record_type,
+                                                     char *tmpbuf,
+                                                     unsigned int tmpbuflen,
+                                                     unsigned int flags,
+                                                     unsigned int *wlen,
+                                                     struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   int nmret;
 
@@ -482,13 +482,13 @@ sel_string_output_quanta_s99q_event_data3_class_oem (ipmi_sel_ctx_t ctx,
    */
 
   if ((nmret = sel_string_output_intel_node_manager_event_data3_class_oem (ctx,
-									   sel_entry,
-									   sel_record_type,
-									   tmpbuf,
-									   tmpbuflen,
-									   flags,
-									   wlen,
-									   system_event_record_data)) < 0)
+                                                                           sel_entry,
+                                                                           sel_record_type,
+                                                                           tmpbuf,
+                                                                           tmpbuflen,
+                                                                           flags,
+                                                                           wlen,
+                                                                           system_event_record_data)) < 0)
     return (-1);
       
   if (nmret)

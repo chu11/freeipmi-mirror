@@ -270,8 +270,8 @@ ipmi_oem_supermicro_get_bmc_services_status (ipmi_oem_state_data_t *state_data)
     pstdout_printf (state_data->pstate, "enabled\n");
   else
     pstdout_fprintf (state_data->pstate,
-		     stderr,
-		     "Unknown Non-IPMI Ports Status\n");
+                     stderr,
+                     "Unknown Non-IPMI Ports Status\n");
   rv = 0;
  cleanup:
   return (rv);
@@ -418,7 +418,7 @@ ipmi_oem_supermicro_get_power_supply_status (ipmi_oem_state_data_t *state_data)
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
-			      IPMI_NET_FN_APP_RQ,
+                              IPMI_NET_FN_APP_RQ,
                               bytes_rq, /* data */
                               5, /* num bytes */
                               bytes_rs,
@@ -434,7 +434,7 @@ ipmi_oem_supermicro_get_power_supply_status (ipmi_oem_state_data_t *state_data)
   if (ipmi_oem_check_response_and_completion_code (state_data,
                                                    bytes_rs,
                                                    rs_len,
-						   3,
+                                                   3,
                                                    IPMI_CMD_MASTER_WRITE_READ,
                                                    IPMI_NET_FN_APP_RQ,
                                                    NULL) < 0)
@@ -507,7 +507,7 @@ ipmi_oem_supermicro_get_power_supply_status2 (ipmi_oem_state_data_t *state_data)
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
-			      IPMI_NET_FN_APP_RQ,
+                              IPMI_NET_FN_APP_RQ,
                               bytes_rq, /* data */
                               5, /* num bytes */
                               bytes_rs,
@@ -523,7 +523,7 @@ ipmi_oem_supermicro_get_power_supply_status2 (ipmi_oem_state_data_t *state_data)
   if (ipmi_oem_check_response_and_completion_code (state_data,
                                                    bytes_rs,
                                                    rs_len,
-						   3,
+                                                   3,
                                                    IPMI_CMD_MASTER_WRITE_READ,
                                                    IPMI_NET_FN_APP_RQ,
                                                    NULL) < 0)
@@ -600,7 +600,7 @@ ipmi_oem_supermicro_get_pmbus_power_supply_status (ipmi_oem_state_data_t *state_
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
-			      IPMI_NET_FN_APP_RQ,
+                              IPMI_NET_FN_APP_RQ,
                               bytes_rq, /* data */
                               5, /* num bytes */
                               bytes_rs,
@@ -616,7 +616,7 @@ ipmi_oem_supermicro_get_pmbus_power_supply_status (ipmi_oem_state_data_t *state_
   if (ipmi_oem_check_response_and_completion_code (state_data,
                                                    bytes_rs,
                                                    rs_len,
-						   3,
+                                                   3,
                                                    IPMI_CMD_MASTER_WRITE_READ,
                                                    IPMI_NET_FN_APP_RQ,
                                                    NULL) < 0)

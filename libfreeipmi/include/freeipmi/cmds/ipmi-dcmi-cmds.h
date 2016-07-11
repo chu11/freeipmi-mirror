@@ -244,37 +244,37 @@ int fill_cmd_dcmi_get_dcmi_capability_info (uint8_t parameter_selector,
                                             fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_dcmi_set_dcmi_configuration_parameters (uint8_t parameter_selector,
-						     uint8_t set_selector,
-						     const void *configuration_parameter_data,
-						     unsigned int configuration_parameter_data_len,
-						     fiid_obj_t obj_cmd_rq);
+                                                     uint8_t set_selector,
+                                                     const void *configuration_parameter_data,
+                                                     unsigned int configuration_parameter_data_len,
+                                                     fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_dcmi_set_dcmi_configuration_parameters_activate_dhcp (uint8_t set_selector,
-								   uint8_t activate,
-								   fiid_obj_t obj_cmd_rq);
+                                                                   uint8_t activate,
+                                                                   fiid_obj_t obj_cmd_rq);
 
 
 int fill_cmd_dcmi_set_dcmi_configuration_parameters_discovery_configuration (uint8_t set_selector,
-									     uint8_t option_12,
-									     uint8_t option_60_with_option_43,
-									     uint8_t random_back_off,
-									     fiid_obj_t obj_cmd_rq);
+                                                                             uint8_t option_12,
+                                                                             uint8_t option_60_with_option_43,
+                                                                             uint8_t random_back_off,
+                                                                             fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_dcmi_set_dcmi_configuration_parameters_dhcp_timing_1 (uint8_t set_selector,
-								   uint8_t initial_timeout_interval,
-								   fiid_obj_t obj_cmd_rq);
+                                                                   uint8_t initial_timeout_interval,
+                                                                   fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_dcmi_set_dcmi_configuration_parameters_dhcp_timing_2 (uint8_t set_selector,
-								   uint16_t server_contact_timeout_interval,
-								   fiid_obj_t obj_cmd_rq);
+                                                                   uint16_t server_contact_timeout_interval,
+                                                                   fiid_obj_t obj_cmd_rq);
   
 int fill_cmd_dcmi_set_dcmi_configuration_parameters_dhcp_timing_3 (uint8_t set_selector,
-								   uint16_t server_contact_retry_interval,
-								   fiid_obj_t obj_cmd_rq);
+                                                                   uint16_t server_contact_retry_interval,
+                                                                   fiid_obj_t obj_cmd_rq);
   
 int fill_cmd_dcmi_get_dcmi_configuration_parameters (uint8_t parameter_selector,
-						     uint8_t set_selector,
-						     fiid_obj_t obj_cmd_rq);
+                                                     uint8_t set_selector,
+                                                     fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_dcmi_get_asset_tag (uint8_t offset_to_read,
                                  uint8_t number_of_bytes_to_read,
@@ -318,22 +318,22 @@ int fill_cmd_dcmi_activate_deactivate_power_limit (uint8_t power_limit_activatio
                                                    fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_dcmi_get_thermal_limit (uint8_t entity_id,
-				     uint8_t entity_instance,
-				     fiid_obj_t obj_cmd_rq);
+                                     uint8_t entity_instance,
+                                     fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_dcmi_set_thermal_limit (uint8_t entity_id,
-				     uint8_t entity_instance,
-				     uint8_t temperature_limit,
-				     uint8_t exception_actions_log_event_to_sel_only,
-				     uint8_t exception_actions_hard_power_off_system_and_log_event,
-				     uint16_t exception_time,
-				     fiid_obj_t obj_cmd_rq);
+                                     uint8_t entity_instance,
+                                     uint8_t temperature_limit,
+                                     uint8_t exception_actions_log_event_to_sel_only,
+                                     uint8_t exception_actions_hard_power_off_system_and_log_event,
+                                     uint16_t exception_time,
+                                     fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_dcmi_get_temperature_reading (uint8_t sensor_type,
-					   uint8_t entity_id,
-					   uint8_t entity_instance,
-					   uint8_t entity_instance_start,
-					   fiid_obj_t obj_cmd_rq);
+                                           uint8_t entity_id,
+                                           uint8_t entity_instance,
+                                           uint8_t entity_instance_start,
+                                           fiid_obj_t obj_cmd_rq);
 
 #ifdef __cplusplus
 }

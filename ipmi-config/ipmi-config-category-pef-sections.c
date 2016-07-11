@@ -78,12 +78,12 @@ _get_number_of_lan_alert_destinations (struct ipmi_config_state_data *state_data
                                                                         obj_cmd_rs) < 0)
     {
       if (ipmi_errnum_is_non_fatal (state_data,
-				    obj_cmd_rs,
-				    &ret))
+                                    obj_cmd_rs,
+                                    &ret))
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_lan_configuration_parameters_number_of_destinations: %s\n",
@@ -134,12 +134,12 @@ _get_number_of_alert_strings (struct ipmi_config_state_data *state_data, uint8_t
                                                                          obj_cmd_rs) < 0)
     {
       if (ipmi_errnum_is_non_fatal (state_data,
-				    obj_cmd_rs,
-				    &ret))
+                                    obj_cmd_rs,
+                                    &ret))
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings: %s\n",
@@ -190,12 +190,12 @@ _get_number_of_alert_policy_entries (struct ipmi_config_state_data *state_data, 
                                                                                 obj_cmd_rs) < 0)
     {
       if (ipmi_errnum_is_non_fatal (state_data,
-				    obj_cmd_rs,
-				    &ret))
+                                    obj_cmd_rs,
+                                    &ret))
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries: %s\n",
@@ -246,12 +246,12 @@ _get_number_of_event_filters (struct ipmi_config_state_data *state_data, uint8_t
                                                                          obj_cmd_rs) < 0)
     {
       if (ipmi_errnum_is_non_fatal (state_data,
-				    obj_cmd_rs,
-				    &ret))
+                                    obj_cmd_rs,
+                                    &ret))
         rv = ret;
 
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-	  || state_data->prog_data->args->common_args.debug)
+          || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
                          "ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters: %s\n",
@@ -293,7 +293,7 @@ ipmi_config_pef_sections_create (ipmi_config_state_data_t *state_data)
     return (NULL);
 
   if (_get_number_of_lan_alert_destinations (state_data,
-					     &number_of_lan_alert_destinations) != IPMI_CONFIG_ERR_SUCCESS)
+                                             &number_of_lan_alert_destinations) != IPMI_CONFIG_ERR_SUCCESS)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -302,7 +302,7 @@ ipmi_config_pef_sections_create (ipmi_config_state_data_t *state_data)
     }
 
   if (_get_number_of_alert_policy_entries (state_data,
-					   &number_of_alert_policy_entries) != IPMI_CONFIG_ERR_SUCCESS)
+                                           &number_of_alert_policy_entries) != IPMI_CONFIG_ERR_SUCCESS)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -311,7 +311,7 @@ ipmi_config_pef_sections_create (ipmi_config_state_data_t *state_data)
     }
 
   if (_get_number_of_alert_strings (state_data,
-				    &number_of_alert_strings) != IPMI_CONFIG_ERR_SUCCESS)
+                                    &number_of_alert_strings) != IPMI_CONFIG_ERR_SUCCESS)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -320,7 +320,7 @@ ipmi_config_pef_sections_create (ipmi_config_state_data_t *state_data)
     }
 
   if (_get_number_of_event_filters (state_data,
-				    &number_of_event_filters) != IPMI_CONFIG_ERR_SUCCESS)
+                                    &number_of_event_filters) != IPMI_CONFIG_ERR_SUCCESS)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -350,8 +350,8 @@ ipmi_config_pef_sections_create (ipmi_config_state_data_t *state_data)
   /* Community_String Section(s) */
 
   if (!(section = ipmi_config_pef_community_string_section_get (state_data,
-								state_data->lan_base_config_flags,
-								-1)))
+                                                                state_data->lan_base_config_flags,
+                                                                -1)))
     goto cleanup;
   if (ipmi_config_section_append (&sections, section) < 0)
     goto cleanup;
@@ -361,8 +361,8 @@ ipmi_config_pef_sections_create (ipmi_config_state_data_t *state_data)
       for (channelindex = 0; channelindex < state_data->lan_channel_numbers_count; channelindex++)
         {
           if (!(section = ipmi_config_pef_community_string_section_get (state_data,
-									state_data->lan_channel_config_flags,
-									channelindex)))
+                                                                        state_data->lan_channel_config_flags,
+                                                                        channelindex)))
             goto cleanup;
           if (ipmi_config_section_append (&sections, section) < 0)
             goto cleanup;
@@ -375,9 +375,9 @@ ipmi_config_pef_sections_create (ipmi_config_state_data_t *state_data)
   for (i = 0; i <= number_of_lan_alert_destinations; i++)
     {
       if (!(section = ipmi_config_pef_lan_alert_destination_section_get (state_data,
-									 i,
-									 state_data->lan_base_config_flags,
-									 -1)))
+                                                                         i,
+                                                                         state_data->lan_base_config_flags,
+                                                                         -1)))
         goto cleanup;
       if (ipmi_config_section_append (&sections, section) < 0)
         goto cleanup;
@@ -387,16 +387,16 @@ ipmi_config_pef_sections_create (ipmi_config_state_data_t *state_data)
     {
       for (channelindex = 0; channelindex < state_data->lan_channel_numbers_count; channelindex++)
         {
-	  for (i = 0; i < number_of_lan_alert_destinations; i++)
-	    {
-	      if (!(section = ipmi_config_pef_lan_alert_destination_section_get (state_data,
-										 i + 1,
-										 state_data->lan_channel_config_flags,
-										 channelindex)))
-		goto cleanup;
-	      if (ipmi_config_section_append (&sections, section) < 0)
-		goto cleanup;
-	    }
+          for (i = 0; i < number_of_lan_alert_destinations; i++)
+            {
+              if (!(section = ipmi_config_pef_lan_alert_destination_section_get (state_data,
+                                                                                 i + 1,
+                                                                                 state_data->lan_channel_config_flags,
+                                                                                 channelindex)))
+                goto cleanup;
+              if (ipmi_config_section_append (&sections, section) < 0)
+                goto cleanup;
+            }
         }
     }
 

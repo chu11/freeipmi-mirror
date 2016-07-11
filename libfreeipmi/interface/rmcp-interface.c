@@ -90,7 +90,7 @@ assemble_rmcp_pkt (fiid_obj_t obj_rmcp_hdr,
                    fiid_obj_t obj_cmd,
                    void *pkt,
                    unsigned int pkt_len,
-		   unsigned int flags)
+                   unsigned int flags)
 {
   int obj_cmd_len, obj_rmcp_hdr_len;
   unsigned int flags_mask = 0;
@@ -163,7 +163,7 @@ unassemble_rmcp_pkt (const void *pkt,
                      unsigned int pkt_len,
                      fiid_obj_t obj_rmcp_hdr,
                      fiid_obj_t obj_cmd,
-		     unsigned int flags)
+                     unsigned int flags)
 {
   unsigned int indx = 0;
   int len;

@@ -1520,13 +1520,13 @@ ipmi_cmd_set_lan_configuration_parameters_bad_password_threshold (ipmi_ctx_t ctx
 
 static int
 _ipmi_cmd_get_lan_configuration_parameters_common (ipmi_ctx_t ctx,
-						   uint8_t channel_number,
-						   uint8_t get_parameter,
-						   uint8_t set_selector,
-						   uint8_t block_selector,
-						   fiid_obj_t obj_cmd_rs,
-						   fiid_field_t *tmpl_cmd_rs_expected,
-						   uint8_t parameter_selector)
+                                                   uint8_t channel_number,
+                                                   uint8_t get_parameter,
+                                                   uint8_t set_selector,
+                                                   uint8_t block_selector,
+                                                   fiid_obj_t obj_cmd_rs,
+                                                   fiid_field_t *tmpl_cmd_rs_expected,
+                                                   uint8_t parameter_selector)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int rv = -1;
@@ -1560,7 +1560,7 @@ _ipmi_cmd_get_lan_configuration_parameters_common (ipmi_ctx_t ctx,
 
   if (fill_cmd_get_lan_configuration_parameters (channel_number,
                                                  get_parameter,
-						 parameter_selector,
+                                                 parameter_selector,
                                                  set_selector,
                                                  block_selector,
                                                  obj_cmd_rq) < 0)
@@ -1595,13 +1595,13 @@ ipmi_cmd_get_lan_configuration_parameters (ipmi_ctx_t ctx,
                                            fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
-							 channel_number,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_lan_configuration_parameters_rs,
-							 parameter_selector) < 0)
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_rs,
+                                                         parameter_selector) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1619,13 +1619,13 @@ ipmi_cmd_get_lan_configuration_parameters_set_in_progress (ipmi_ctx_t ctx,
                                                            fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
-							 channel_number,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_lan_configuration_parameters_set_in_progress_rs,
-							 IPMI_LAN_CONFIGURATION_PARAMETER_SET_IN_PROGRESS) < 0)
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_set_in_progress_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_SET_IN_PROGRESS) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1643,13 +1643,13 @@ ipmi_cmd_get_lan_configuration_parameters_authentication_type_support (ipmi_ctx_
                                                                        fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
-							 channel_number,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_lan_configuration_parameters_authentication_type_support_rs,
-							 IPMI_LAN_CONFIGURATION_PARAMETER_AUTHENTICATION_TYPE_SUPPORT) < 0)
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_authentication_type_support_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_AUTHENTICATION_TYPE_SUPPORT) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1667,13 +1667,13 @@ ipmi_cmd_get_lan_configuration_parameters_authentication_type_enables (ipmi_ctx_
                                                                        fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
-							 channel_number,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_lan_configuration_parameters_authentication_type_enables_rs,
-							 IPMI_LAN_CONFIGURATION_PARAMETER_AUTHENTICATION_TYPE_ENABLES) < 0)
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_authentication_type_enables_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_AUTHENTICATION_TYPE_ENABLES) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1691,13 +1691,13 @@ ipmi_cmd_get_lan_configuration_parameters_ip_address (ipmi_ctx_t ctx,
                                                       fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
-							 channel_number,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_lan_configuration_parameters_ip_address_rs,
-							 IPMI_LAN_CONFIGURATION_PARAMETER_IP_ADDRESS) < 0)
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_ip_address_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_IP_ADDRESS) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1715,13 +1715,13 @@ ipmi_cmd_get_lan_configuration_parameters_ip_address_source (ipmi_ctx_t ctx,
                                                              fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
-							 channel_number,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_lan_configuration_parameters_ip_address_source_rs,
-							 IPMI_LAN_CONFIGURATION_PARAMETER_IP_ADDRESS_SOURCE) < 0)
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_ip_address_source_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_IP_ADDRESS_SOURCE) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1739,13 +1739,13 @@ ipmi_cmd_get_lan_configuration_parameters_mac_address (ipmi_ctx_t ctx,
                                                        fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
-							 channel_number,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_lan_configuration_parameters_mac_address_rs,
-							 IPMI_LAN_CONFIGURATION_PARAMETER_MAC_ADDRESS) < 0)
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_mac_address_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_MAC_ADDRESS) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1763,13 +1763,13 @@ ipmi_cmd_get_lan_configuration_parameters_subnet_mask (ipmi_ctx_t ctx,
                                                        fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
-							 channel_number,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_lan_configuration_parameters_subnet_mask_rs,
-							 IPMI_LAN_CONFIGURATION_PARAMETER_SUBNET_MASK) < 0)
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_subnet_mask_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_SUBNET_MASK) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1787,13 +1787,13 @@ ipmi_cmd_get_lan_configuration_parameters_ipv4_header_parameters (ipmi_ctx_t ctx
                                                                   fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
-							 channel_number,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_lan_configuration_parameters_ipv4_header_parameters_rs,
-							 IPMI_LAN_CONFIGURATION_PARAMETER_IPV4_HEADER_PARAMETERS) < 0)
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_ipv4_header_parameters_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_IPV4_HEADER_PARAMETERS) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1804,20 +1804,20 @@ ipmi_cmd_get_lan_configuration_parameters_ipv4_header_parameters (ipmi_ctx_t ctx
 
 int
 ipmi_cmd_get_lan_configuration_parameters_primary_rmcp_port_number (ipmi_ctx_t ctx,
-								    uint8_t channel_number,
-								    uint8_t get_parameter,
-								    uint8_t set_selector,
-								    uint8_t block_selector,
-								    fiid_obj_t obj_cmd_rs)
+                                                                    uint8_t channel_number,
+                                                                    uint8_t get_parameter,
+                                                                    uint8_t set_selector,
+                                                                    uint8_t block_selector,
+                                                                    fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
-							 channel_number,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_lan_configuration_parameters_primary_rmcp_port_number_rs,
-							 IPMI_LAN_CONFIGURATION_PARAMETER_PRIMARY_RMCP_PORT_NUMBER) < 0)
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_primary_rmcp_port_number_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_PRIMARY_RMCP_PORT_NUMBER) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1828,20 +1828,20 @@ ipmi_cmd_get_lan_configuration_parameters_primary_rmcp_port_number (ipmi_ctx_t c
 
 int
 ipmi_cmd_get_lan_configuration_parameters_secondary_rmcp_port_number (ipmi_ctx_t ctx,
-								      uint8_t channel_number,
-								      uint8_t get_parameter,
-								      uint8_t set_selector,
-								      uint8_t block_selector,
-								      fiid_obj_t obj_cmd_rs)
+                                                                      uint8_t channel_number,
+                                                                      uint8_t get_parameter,
+                                                                      uint8_t set_selector,
+                                                                      uint8_t block_selector,
+                                                                      fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
-							 channel_number,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_lan_configuration_parameters_secondary_rmcp_port_number_rs,
-							 IPMI_LAN_CONFIGURATION_PARAMETER_SECONDARY_RMCP_PORT_NUMBER) < 0)
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_secondary_rmcp_port_number_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_SECONDARY_RMCP_PORT_NUMBER) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1852,20 +1852,20 @@ ipmi_cmd_get_lan_configuration_parameters_secondary_rmcp_port_number (ipmi_ctx_t
 
 int
 ipmi_cmd_get_lan_configuration_parameters_bmc_generated_arp_control (ipmi_ctx_t ctx,
-								     uint8_t channel_number,
-								     uint8_t get_parameter,
-								     uint8_t set_selector,
-								     uint8_t block_selector,
-								     fiid_obj_t obj_cmd_rs)
+                                                                     uint8_t channel_number,
+                                                                     uint8_t get_parameter,
+                                                                     uint8_t set_selector,
+                                                                     uint8_t block_selector,
+                                                                     fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
-							 channel_number,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_lan_configuration_parameters_bmc_generated_arp_control_rs,
-							 IPMI_LAN_CONFIGURATION_PARAMETER_BMC_GENERATED_ARP_CONTROL) < 0)
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_bmc_generated_arp_control_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_BMC_GENERATED_ARP_CONTROL) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1876,20 +1876,20 @@ ipmi_cmd_get_lan_configuration_parameters_bmc_generated_arp_control (ipmi_ctx_t 
 
 int
 ipmi_cmd_get_lan_configuration_parameters_gratuitous_arp_interval (ipmi_ctx_t ctx,
-								   uint8_t channel_number,
-								   uint8_t get_parameter,
-								   uint8_t set_selector,
-								   uint8_t block_selector,
-								   fiid_obj_t obj_cmd_rs)
+                                                                   uint8_t channel_number,
+                                                                   uint8_t get_parameter,
+                                                                   uint8_t set_selector,
+                                                                   uint8_t block_selector,
+                                                                   fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
-							 channel_number,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_lan_configuration_parameters_gratuitous_arp_interval_rs,
-							 IPMI_LAN_CONFIGURATION_PARAMETER_GRATUITOUS_ARP_INTERVAL) < 0)
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_gratuitous_arp_interval_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_GRATUITOUS_ARP_INTERVAL) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1900,20 +1900,20 @@ ipmi_cmd_get_lan_configuration_parameters_gratuitous_arp_interval (ipmi_ctx_t ct
 
 int
 ipmi_cmd_get_lan_configuration_parameters_default_gateway_address (ipmi_ctx_t ctx,
-								   uint8_t channel_number,
-								   uint8_t get_parameter,
-								   uint8_t set_selector,
-								   uint8_t block_selector,
-								   fiid_obj_t obj_cmd_rs)
+                                                                   uint8_t channel_number,
+                                                                   uint8_t get_parameter,
+                                                                   uint8_t set_selector,
+                                                                   uint8_t block_selector,
+                                                                   fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
-							 channel_number,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_lan_configuration_parameters_default_gateway_address_rs,
-							 IPMI_LAN_CONFIGURATION_PARAMETER_DEFAULT_GATEWAY_ADDRESS) < 0)
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_default_gateway_address_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_DEFAULT_GATEWAY_ADDRESS) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1924,20 +1924,20 @@ ipmi_cmd_get_lan_configuration_parameters_default_gateway_address (ipmi_ctx_t ct
 
 int
 ipmi_cmd_get_lan_configuration_parameters_default_gateway_mac_address (ipmi_ctx_t ctx,
-								       uint8_t channel_number,
-								       uint8_t get_parameter,
-								       uint8_t set_selector,
-								       uint8_t block_selector,
-								       fiid_obj_t obj_cmd_rs)
+                                                                       uint8_t channel_number,
+                                                                       uint8_t get_parameter,
+                                                                       uint8_t set_selector,
+                                                                       uint8_t block_selector,
+                                                                       fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
-							 channel_number,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_lan_configuration_parameters_mac_address_rs,
-							 IPMI_LAN_CONFIGURATION_PARAMETER_DEFAULT_GATEWAY_MAC_ADDRESS) < 0)
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_mac_address_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_DEFAULT_GATEWAY_MAC_ADDRESS) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1948,20 +1948,20 @@ ipmi_cmd_get_lan_configuration_parameters_default_gateway_mac_address (ipmi_ctx_
 
 int
 ipmi_cmd_get_lan_configuration_parameters_backup_gateway_address (ipmi_ctx_t ctx,
-								  uint8_t channel_number,
-								  uint8_t get_parameter,
-								  uint8_t set_selector,
-								  uint8_t block_selector,
-								  fiid_obj_t obj_cmd_rs)
+                                                                  uint8_t channel_number,
+                                                                  uint8_t get_parameter,
+                                                                  uint8_t set_selector,
+                                                                  uint8_t block_selector,
+                                                                  fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
-							 channel_number,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_lan_configuration_parameters_backup_gateway_address_rs,
-							 IPMI_LAN_CONFIGURATION_PARAMETER_BACKUP_GATEWAY_ADDRESS) < 0)
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_backup_gateway_address_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_BACKUP_GATEWAY_ADDRESS) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1972,20 +1972,20 @@ ipmi_cmd_get_lan_configuration_parameters_backup_gateway_address (ipmi_ctx_t ctx
 
 int
 ipmi_cmd_get_lan_configuration_parameters_backup_gateway_mac_address (ipmi_ctx_t ctx,
-								      uint8_t channel_number,
-								      uint8_t get_parameter,
-								      uint8_t set_selector,
-								      uint8_t block_selector,
-								      fiid_obj_t obj_cmd_rs)
+                                                                      uint8_t channel_number,
+                                                                      uint8_t get_parameter,
+                                                                      uint8_t set_selector,
+                                                                      uint8_t block_selector,
+                                                                      fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
-							 channel_number,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_lan_configuration_parameters_mac_address_rs,
-							 IPMI_LAN_CONFIGURATION_PARAMETER_BACKUP_GATEWAY_MAC_ADDRESS) < 0)
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_mac_address_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_BACKUP_GATEWAY_MAC_ADDRESS) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -1996,20 +1996,20 @@ ipmi_cmd_get_lan_configuration_parameters_backup_gateway_mac_address (ipmi_ctx_t
 
 int
 ipmi_cmd_get_lan_configuration_parameters_community_string (ipmi_ctx_t ctx,
-							    uint8_t channel_number,
-							    uint8_t get_parameter,
-							    uint8_t set_selector,
-							    uint8_t block_selector,
-							    fiid_obj_t obj_cmd_rs)
+                                                            uint8_t channel_number,
+                                                            uint8_t get_parameter,
+                                                            uint8_t set_selector,
+                                                            uint8_t block_selector,
+                                                            fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
-							 channel_number,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_lan_configuration_parameters_community_string_rs,
-							 IPMI_LAN_CONFIGURATION_PARAMETER_COMMUNITY_STRING) < 0)
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_community_string_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_COMMUNITY_STRING) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -2020,20 +2020,20 @@ ipmi_cmd_get_lan_configuration_parameters_community_string (ipmi_ctx_t ctx,
 
 int
 ipmi_cmd_get_lan_configuration_parameters_number_of_destinations (ipmi_ctx_t ctx,
-								  uint8_t channel_number,
-								  uint8_t get_parameter,
-								  uint8_t set_selector,
-								  uint8_t block_selector,
-								  fiid_obj_t obj_cmd_rs)
+                                                                  uint8_t channel_number,
+                                                                  uint8_t get_parameter,
+                                                                  uint8_t set_selector,
+                                                                  uint8_t block_selector,
+                                                                  fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
-							 channel_number,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_lan_configuration_parameters_number_of_destinations_rs,
-							 IPMI_LAN_CONFIGURATION_PARAMETER_NUMBER_OF_DESTINATIONS) < 0)
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_number_of_destinations_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_NUMBER_OF_DESTINATIONS) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -2044,20 +2044,20 @@ ipmi_cmd_get_lan_configuration_parameters_number_of_destinations (ipmi_ctx_t ctx
 
 int
 ipmi_cmd_get_lan_configuration_parameters_destination_type (ipmi_ctx_t ctx,
-							    uint8_t channel_number,
-							    uint8_t get_parameter,
-							    uint8_t set_selector,
-							    uint8_t block_selector,
-							    fiid_obj_t obj_cmd_rs)
+                                                            uint8_t channel_number,
+                                                            uint8_t get_parameter,
+                                                            uint8_t set_selector,
+                                                            uint8_t block_selector,
+                                                            fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
-							 channel_number,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_lan_configuration_parameters_destination_type_rs,
-							 IPMI_LAN_CONFIGURATION_PARAMETER_DESTINATION_TYPE) < 0)
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_destination_type_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_DESTINATION_TYPE) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -2068,20 +2068,20 @@ ipmi_cmd_get_lan_configuration_parameters_destination_type (ipmi_ctx_t ctx,
 
 int
 ipmi_cmd_get_lan_configuration_parameters_destination_addresses (ipmi_ctx_t ctx,
-								 uint8_t channel_number,
-								 uint8_t get_parameter,
-								 uint8_t set_selector,
-								 uint8_t block_selector,
-								 fiid_obj_t obj_cmd_rs)
+                                                                 uint8_t channel_number,
+                                                                 uint8_t get_parameter,
+                                                                 uint8_t set_selector,
+                                                                 uint8_t block_selector,
+                                                                 fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
-							 channel_number,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_lan_configuration_parameters_destination_addresses_rs,
-							 IPMI_LAN_CONFIGURATION_PARAMETER_DESTINATION_ADDRESSES) < 0)
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_destination_addresses_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_DESTINATION_ADDRESSES) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -2092,20 +2092,20 @@ ipmi_cmd_get_lan_configuration_parameters_destination_addresses (ipmi_ctx_t ctx,
 
 int
 ipmi_cmd_get_lan_configuration_parameters_vlan_id (ipmi_ctx_t ctx,
-						   uint8_t channel_number,
-						   uint8_t get_parameter,
-						   uint8_t set_selector,
-						   uint8_t block_selector,
-						   fiid_obj_t obj_cmd_rs)
+                                                   uint8_t channel_number,
+                                                   uint8_t get_parameter,
+                                                   uint8_t set_selector,
+                                                   uint8_t block_selector,
+                                                   fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
-							 channel_number,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_lan_configuration_parameters_vlan_id_rs,
-							 IPMI_LAN_CONFIGURATION_PARAMETER_VLAN_ID) < 0)
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_vlan_id_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_VLAN_ID) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -2116,20 +2116,20 @@ ipmi_cmd_get_lan_configuration_parameters_vlan_id (ipmi_ctx_t ctx,
 
 int
 ipmi_cmd_get_lan_configuration_parameters_vlan_priority (ipmi_ctx_t ctx,
-							 uint8_t channel_number,
-							 uint8_t get_parameter,
-							 uint8_t set_selector,
-							 uint8_t block_selector,
-							 fiid_obj_t obj_cmd_rs)
+                                                         uint8_t channel_number,
+                                                         uint8_t get_parameter,
+                                                         uint8_t set_selector,
+                                                         uint8_t block_selector,
+                                                         fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
-							 channel_number,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_lan_configuration_parameters_vlan_priority_rs,
-							 IPMI_LAN_CONFIGURATION_PARAMETER_VLAN_PRIORITY) < 0)
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_vlan_priority_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_VLAN_PRIORITY) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -2140,19 +2140,19 @@ ipmi_cmd_get_lan_configuration_parameters_vlan_priority (ipmi_ctx_t ctx,
 
 int
 ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support (ipmi_ctx_t ctx,
-											 uint8_t channel_number,
-											 uint8_t get_parameter,
-											 uint8_t set_selector,
-											 uint8_t block_selector,
-											 fiid_obj_t obj_cmd_rs)
+                                                                                         uint8_t channel_number,
+                                                                                         uint8_t get_parameter,
+                                                                                         uint8_t set_selector,
+                                                                                         uint8_t block_selector,
+                                                                                         fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
-							 channel_number,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support_rs,                                                 IPMI_LAN_CONFIGURATION_PARAMETER_RMCPPLUS_MESSAGING_CIPHER_SUITE_ENTRY_SUPPORT) < 0)
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support_rs,                                                 IPMI_LAN_CONFIGURATION_PARAMETER_RMCPPLUS_MESSAGING_CIPHER_SUITE_ENTRY_SUPPORT) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -2163,20 +2163,20 @@ ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_
 
 int
 ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries (ipmi_ctx_t ctx,
-										   uint8_t channel_number,
-										   uint8_t get_parameter,
-										   uint8_t set_selector,
-										   uint8_t block_selector,
-										   fiid_obj_t obj_cmd_rs)
+                                                                                   uint8_t channel_number,
+                                                                                   uint8_t get_parameter,
+                                                                                   uint8_t set_selector,
+                                                                                   uint8_t block_selector,
+                                                                                   fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
-							 channel_number,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries_rs,
-							 IPMI_LAN_CONFIGURATION_PARAMETER_RMCPPLUS_MESSAGING_CIPHER_SUITE_ENTRIES) < 0)
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_RMCPPLUS_MESSAGING_CIPHER_SUITE_ENTRIES) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -2187,20 +2187,20 @@ ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entrie
 
 int
 ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels (ipmi_ctx_t ctx,
-											    uint8_t channel_number,
-											    uint8_t get_parameter,
-											    uint8_t set_selector,
-											    uint8_t block_selector,
-											    fiid_obj_t obj_cmd_rs)
+                                                                                            uint8_t channel_number,
+                                                                                            uint8_t get_parameter,
+                                                                                            uint8_t set_selector,
+                                                                                            uint8_t block_selector,
+                                                                                            fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
-							 channel_number,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels_rs,
-							 IPMI_LAN_CONFIGURATION_PARAMETER_RMCPPLUS_MESSAGING_CIPHER_SUITE_PRIVILEGE_LEVELS) < 0)
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_RMCPPLUS_MESSAGING_CIPHER_SUITE_PRIVILEGE_LEVELS) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
@@ -2211,20 +2211,20 @@ ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privil
 
 int
 ipmi_cmd_get_lan_configuration_parameters_bad_password_threshold (ipmi_ctx_t ctx,
-								  uint8_t channel_number,
-								  uint8_t get_parameter,
-								  uint8_t set_selector,
-								  uint8_t block_selector,
-								  fiid_obj_t obj_cmd_rs)
+                                                                  uint8_t channel_number,
+                                                                  uint8_t get_parameter,
+                                                                  uint8_t set_selector,
+                                                                  uint8_t block_selector,
+                                                                  fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
-							 channel_number,
-							 get_parameter,
-							 set_selector,
-							 block_selector,
-							 obj_cmd_rs,
-							 tmpl_cmd_get_lan_configuration_parameters_bad_password_threshold_rs,
-							 IPMI_LAN_CONFIGURATION_PARAMETER_BAD_PASSWORD_THRESHOLD) < 0)
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_bad_password_threshold_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_BAD_PASSWORD_THRESHOLD) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);

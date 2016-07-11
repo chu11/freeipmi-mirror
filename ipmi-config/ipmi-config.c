@@ -97,82 +97,82 @@ _ipmi_config (pstdout_state_t pstate,
   if (prog_data->args->category_mask & IPMI_CONFIG_CATEGORY_MASK_CORE)
     {
       if (!(tmp_sections = ipmi_config_core_sections_create (&state_data)))
-	goto cleanup;
+        goto cleanup;
 
       if (ipmi_config_set_category (tmp_sections, IPMI_CONFIG_CATEGORY_MASK_CORE) < 0)
-	goto cleanup;
+        goto cleanup;
 
       if (ipmi_config_section_append (&state_data.sections, tmp_sections) < 0)
-	goto cleanup;
+        goto cleanup;
     }
 
   if (prog_data->args->category_mask & IPMI_CONFIG_CATEGORY_MASK_CHASSIS)
     {
       if (!(tmp_sections = ipmi_config_chassis_sections_create (&state_data)))
-	goto cleanup;
+        goto cleanup;
 
       if (ipmi_config_set_category (tmp_sections, IPMI_CONFIG_CATEGORY_MASK_CHASSIS) < 0)
-	goto cleanup;
+        goto cleanup;
 
       if (ipmi_config_section_append (&state_data.sections, tmp_sections) < 0)
-	goto cleanup;
+        goto cleanup;
     }
 
   if (prog_data->args->category_mask & IPMI_CONFIG_CATEGORY_MASK_SENSORS)
     {
       if (!(state_data.sdr_ctx = ipmi_sdr_ctx_create ()))
-	{
-	  pstdout_perror (pstate, "ipmi_sdr_ctx_create()");
-	  goto cleanup;
-	}
+        {
+          pstdout_perror (pstate, "ipmi_sdr_ctx_create()");
+          goto cleanup;
+        }
 
       if (sdr_cache_create_and_load (state_data.sdr_ctx,
-				     NULL,
-				     state_data.ipmi_ctx,
-				     hostname,
-				     &(prog_data->args->common_args)) < 0)
-	goto cleanup;
+                                     NULL,
+                                     state_data.ipmi_ctx,
+                                     hostname,
+                                     &(prog_data->args->common_args)) < 0)
+        goto cleanup;
 
       if (!(tmp_sections = ipmi_config_sensors_sections_create (&state_data)))
-	goto cleanup;
+        goto cleanup;
 
       if (ipmi_config_set_category (tmp_sections, IPMI_CONFIG_CATEGORY_MASK_SENSORS) < 0)
-	goto cleanup;
+        goto cleanup;
 
       /* Many fields long in length, use average of 75 for this section */
       if (ipmi_config_set_line_length (tmp_sections, 75) < 0)
-	goto cleanup;
+        goto cleanup;
 
       if (ipmi_config_section_append (&state_data.sections, tmp_sections) < 0)
-	goto cleanup;
+        goto cleanup;
     }
 
   if (prog_data->args->category_mask & IPMI_CONFIG_CATEGORY_MASK_PEF)
     {
       if (!(tmp_sections = ipmi_config_pef_sections_create (&state_data)))
-	goto cleanup;
+        goto cleanup;
 
       if (ipmi_config_set_category (tmp_sections, IPMI_CONFIG_CATEGORY_MASK_PEF) < 0)
-	goto cleanup;
+        goto cleanup;
 
       if (ipmi_config_section_append (&state_data.sections, tmp_sections) < 0)
-	goto cleanup;
+        goto cleanup;
     }
 
   if (prog_data->args->category_mask & IPMI_CONFIG_CATEGORY_MASK_DCMI)
     {
       if (!(tmp_sections = ipmi_config_dcmi_sections_create (&state_data)))
-	goto cleanup;
+        goto cleanup;
 
       if (ipmi_config_set_category (tmp_sections, IPMI_CONFIG_CATEGORY_MASK_DCMI) < 0)
-	goto cleanup;
+        goto cleanup;
 
       /* Many fields long in length, use average of 60 for this section */
       if (ipmi_config_set_line_length (tmp_sections, 60) < 0)
-	goto cleanup;
+        goto cleanup;
 
       if (ipmi_config_section_append (&state_data.sections, tmp_sections) < 0)
-	goto cleanup;
+        goto cleanup;
     }
 
   assert (state_data.sections);
@@ -288,91 +288,91 @@ _ipmi_config (pstdout_state_t pstate,
        * for this fact.  See workaround details in user section code.
        */
       if (prog_data->args->action == IPMI_CONFIG_ACTION_COMMIT)
-	{
-	  struct ipmi_config_section *section;
-	  unsigned int user_count = 0;
-	  
-	  /* First, see how many user sections there are */
-	  section = state_data.sections;
-	  while (section)
-	    {
-	      if (stristr (section->section_name, "User"))
-		user_count++;
-	      section = section->next;
-	    }
+        {
+          struct ipmi_config_section *section;
+          unsigned int user_count = 0;
+          
+          /* First, see how many user sections there are */
+          section = state_data.sections;
+          while (section)
+            {
+              if (stristr (section->section_name, "User"))
+                user_count++;
+              section = section->next;
+            }
 
-	  if (user_count)
-	    {
-	      unsigned int enable_user_found = 0;
-	      unsigned int datasize;
-	      
-	      section = state_data.sections;
-	      while (section)
-		{
-		  struct ipmi_config_keyvalue *kv;
-		  
-		  if (stristr (section->section_name, "User"))
-		    {
-		      uint8_t userid;
+          if (user_count)
+            {
+              unsigned int enable_user_found = 0;
+              unsigned int datasize;
+              
+              section = state_data.sections;
+              while (section)
+                {
+                  struct ipmi_config_keyvalue *kv;
+                  
+                  if (stristr (section->section_name, "User"))
+                    {
+                      uint8_t userid;
 
-		      userid = atoi (section->section_name + strlen ("User"));
-		      
-		      if (userid < user_count)
-			{
-			  if ((kv = ipmi_config_find_keyvalue (section,
-							       "Enable_User")))
-			    enable_user_found = 1;
-			}
-		    }
-		  
-		  section = section->next;
-		}
-	      
-	      if (enable_user_found)
-		{
-		  datasize = sizeof (ipmi_config_enable_user_after_password_t) * user_count;
-		  
-		  if (!(state_data.enable_user_after_password = (ipmi_config_enable_user_after_password_t *)malloc (datasize)))
-		    {
-		      pstdout_perror (pstate, "malloc");
-		      goto cleanup;
-		    }
-		  state_data.enable_user_after_password_len = user_count;
-		  memset (state_data.enable_user_after_password, '\0', datasize);
-		}
-	    }
-	}
+                      userid = atoi (section->section_name + strlen ("User"));
+                      
+                      if (userid < user_count)
+                        {
+                          if ((kv = ipmi_config_find_keyvalue (section,
+                                                               "Enable_User")))
+                            enable_user_found = 1;
+                        }
+                    }
+                  
+                  section = section->next;
+                }
+              
+              if (enable_user_found)
+                {
+                  datasize = sizeof (ipmi_config_enable_user_after_password_t) * user_count;
+                  
+                  if (!(state_data.enable_user_after_password = (ipmi_config_enable_user_after_password_t *)malloc (datasize)))
+                    {
+                      pstdout_perror (pstate, "malloc");
+                      goto cleanup;
+                    }
+                  state_data.enable_user_after_password_len = user_count;
+                  memset (state_data.enable_user_after_password, '\0', datasize);
+                }
+            }
+        }
 
       /* Special case: IP addresses and MAC addresses cannot be configured
        * in parallel.  Reject input if user attempts to configure the same
        * IP or MAC on multiple hosts.
        */
       if (prog_data->args->action == IPMI_CONFIG_ACTION_COMMIT
-	  && prog_data->hosts_count > 1)
-	{
-	  struct ipmi_config_section *section;
-	  
-	  if ((section = ipmi_config_find_section (&state_data, "Lan_Conf")))
-	    {
-	      if (ipmi_config_find_keyvalue (section,
-					     "IP_Address"))
-		{
-		  pstdout_fprintf (pstate,
-				   stderr,
-				   "Cannot configure Lan_Conf:IP_Address on multiple hosts\n");
-		  goto cleanup;
-		}
-	      
-	      if (ipmi_config_find_keyvalue (section,
-					     "MAC_Address"))
-		{
-		  pstdout_fprintf (pstate,
-				   stderr,
-				   "Cannot configure Lan_Conf:MAC_Address on multiple hosts\n");
-		  goto cleanup;
-		}
-	    }
-	}
+          && prog_data->hosts_count > 1)
+        {
+          struct ipmi_config_section *section;
+          
+          if ((section = ipmi_config_find_section (&state_data, "Lan_Conf")))
+            {
+              if (ipmi_config_find_keyvalue (section,
+                                             "IP_Address"))
+                {
+                  pstdout_fprintf (pstate,
+                                   stderr,
+                                   "Cannot configure Lan_Conf:IP_Address on multiple hosts\n");
+                  goto cleanup;
+                }
+              
+              if (ipmi_config_find_keyvalue (section,
+                                             "MAC_Address"))
+                {
+                  pstdout_fprintf (pstate,
+                                   stderr,
+                                   "Cannot configure Lan_Conf:MAC_Address on multiple hosts\n");
+                  goto cleanup;
+                }
+            }
+        }
     }
   else if (prog_data->args->category_mask & IPMI_CONFIG_CATEGORY_MASK_CHASSIS)
     {
@@ -381,47 +381,47 @@ _ipmi_config (pstdout_state_t pstate,
        * commit it.
        */
       if (prog_data->args->action == IPMI_CONFIG_ACTION_COMMIT)
-	{
-	  struct ipmi_config_section *section;
+        {
+          struct ipmi_config_section *section;
 
-	  section = state_data.sections;
-	  while (section)
-	    {
-	      struct ipmi_config_keyvalue *kv;
+          section = state_data.sections;
+          while (section)
+            {
+              struct ipmi_config_keyvalue *kv;
 
-	      if (!strcasecmp (section->section_name, "Chassis_Front_Panel_Buttons"))
-		{
-		  if ((kv = ipmi_config_find_keyvalue (section,
-						       "Enable_Standby_Button_For_Entering_Standby")))
-		    {
-		      state_data.front_panel_enable_standby_button_for_entering_standby_initialized++;
-		      state_data.front_panel_enable_standby_button_for_entering_standby = same (kv->value_input, "yes") ? IPMI_CHASSIS_BUTTON_ENABLE : IPMI_CHASSIS_BUTTON_DISABLE;
-		    }
-		  
-		  if ((kv = ipmi_config_find_keyvalue (section,
-						       "Enable_Diagnostic_Interrupt_Button")))
-		    {
-		      state_data.front_panel_enable_diagnostic_interrupt_button_initialized++;
-		      state_data.front_panel_enable_diagnostic_interrupt_button = same (kv->value_input, "yes") ? IPMI_CHASSIS_BUTTON_ENABLE : IPMI_CHASSIS_BUTTON_DISABLE;
-		    }
-		  
-		  if ((kv = ipmi_config_find_keyvalue (section,
-						       "Enable_Reset_Button")))
-		    {
-		      state_data.front_panel_enable_reset_button_initialized++;
-		      state_data.front_panel_enable_reset_button = same (kv->value_input, "yes") ? IPMI_CHASSIS_BUTTON_ENABLE : IPMI_CHASSIS_BUTTON_DISABLE;
-		    }
-		  
-		  if ((kv = ipmi_config_find_keyvalue (section,
-						       "Enable_Power_Off_Button_For_Power_Off_Only")))
-		    {
-		      state_data.front_panel_enable_power_off_button_for_power_off_only_initialized++;
-		      state_data.front_panel_enable_power_off_button_for_power_off_only = same (kv->value_input, "yes") ? IPMI_CHASSIS_BUTTON_ENABLE : IPMI_CHASSIS_BUTTON_DISABLE;
-		    }
-		}
-	      section = section->next;
-	    }
-	}
+              if (!strcasecmp (section->section_name, "Chassis_Front_Panel_Buttons"))
+                {
+                  if ((kv = ipmi_config_find_keyvalue (section,
+                                                       "Enable_Standby_Button_For_Entering_Standby")))
+                    {
+                      state_data.front_panel_enable_standby_button_for_entering_standby_initialized++;
+                      state_data.front_panel_enable_standby_button_for_entering_standby = same (kv->value_input, "yes") ? IPMI_CHASSIS_BUTTON_ENABLE : IPMI_CHASSIS_BUTTON_DISABLE;
+                    }
+                  
+                  if ((kv = ipmi_config_find_keyvalue (section,
+                                                       "Enable_Diagnostic_Interrupt_Button")))
+                    {
+                      state_data.front_panel_enable_diagnostic_interrupt_button_initialized++;
+                      state_data.front_panel_enable_diagnostic_interrupt_button = same (kv->value_input, "yes") ? IPMI_CHASSIS_BUTTON_ENABLE : IPMI_CHASSIS_BUTTON_DISABLE;
+                    }
+                  
+                  if ((kv = ipmi_config_find_keyvalue (section,
+                                                       "Enable_Reset_Button")))
+                    {
+                      state_data.front_panel_enable_reset_button_initialized++;
+                      state_data.front_panel_enable_reset_button = same (kv->value_input, "yes") ? IPMI_CHASSIS_BUTTON_ENABLE : IPMI_CHASSIS_BUTTON_DISABLE;
+                    }
+                  
+                  if ((kv = ipmi_config_find_keyvalue (section,
+                                                       "Enable_Power_Off_Button_For_Power_Off_Only")))
+                    {
+                      state_data.front_panel_enable_power_off_button_for_power_off_only_initialized++;
+                      state_data.front_panel_enable_power_off_button_for_power_off_only = same (kv->value_input, "yes") ? IPMI_CHASSIS_BUTTON_ENABLE : IPMI_CHASSIS_BUTTON_DISABLE;
+                    }
+                }
+              section = section->next;
+            }
+        }
     }
 
   if (prog_data->args->info)
@@ -470,7 +470,7 @@ _ipmi_config (pstdout_state_t pstate,
         }
       else
         {
-	  int all_keys_if_none_specified = 0;
+          int all_keys_if_none_specified = 0;
 
           if (!prog_data->args->keypairs)
             all_keys_if_none_specified++;

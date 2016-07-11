@@ -227,24 +227,24 @@ _sensor_reading_corner_case_checks (ipmi_sensor_read_ctx_t ctx,
    */
   else if ((ipmi_check_completion_code (obj_cmd_rs,
                                         IPMI_COMP_CODE_REQUESTED_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)
-	   || (ipmi_check_completion_code (obj_cmd_rs,
-					   IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE) == 1)
+           || (ipmi_check_completion_code (obj_cmd_rs,
+                                           IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE) == 1)
            || (ipmi_check_completion_code (obj_cmd_rs,
                                            IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE) == 1)
            || (ipmi_check_completion_code (obj_cmd_rs,
                                            IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1)
-	   || (ipmi_check_completion_code (obj_cmd_rs, 
-					   IPMI_COMP_CODE_COMMAND_RESPONSE_COULD_NOT_BE_PROVIDED) == 1)
-	   || (ipmi_check_completion_code (obj_cmd_rs,
+           || (ipmi_check_completion_code (obj_cmd_rs, 
+                                           IPMI_COMP_CODE_COMMAND_RESPONSE_COULD_NOT_BE_PROVIDED) == 1)
+           || (ipmi_check_completion_code (obj_cmd_rs,
                                            IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED) == 1)
-	   || (ipmi_check_completion_code (obj_cmd_rs,
-					   IPMI_COMP_CODE_DESTINATION_UNAVAILABLE) == 1))
+           || (ipmi_check_completion_code (obj_cmd_rs,
+                                           IPMI_COMP_CODE_DESTINATION_UNAVAILABLE) == 1))
     {
       SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_SENSOR_READING_UNAVAILABLE);
       return (-1);
     }
   else if ((ipmi_check_completion_code (obj_cmd_rs,
-					IPMI_COMP_CODE_UNSPECIFIED_ERROR) == 1))
+                                        IPMI_COMP_CODE_UNSPECIFIED_ERROR) == 1))
     {
       uint64_t val; 
       int flag;
@@ -267,35 +267,35 @@ _sensor_reading_corner_case_checks (ipmi_sensor_read_ctx_t ctx,
        */
       
       if ((flag = fiid_obj_get (obj_cmd_rs,
-				"reading_state",
-				&val)) < 0)
-	{
-	  SENSOR_READ_FIID_OBJECT_ERROR_TO_SENSOR_READ_ERRNUM (ctx, obj_cmd_rs);
-	  return (-1);
-	}
+                                "reading_state",
+                                &val)) < 0)
+        {
+          SENSOR_READ_FIID_OBJECT_ERROR_TO_SENSOR_READ_ERRNUM (ctx, obj_cmd_rs);
+          return (-1);
+        }
       
       if (flag && val == IPMI_SENSOR_READING_STATE_UNAVAILABLE)
-	{
-	  SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_SENSOR_READING_UNAVAILABLE);
-	  return (-1);
-	}
+        {
+          SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_SENSOR_READING_UNAVAILABLE);
+          return (-1);
+        }
       
       if (!(ctx->flags & IPMI_SENSOR_READ_FLAGS_IGNORE_SCANNING_DISABLED))
-	{
-	  if ((flag = fiid_obj_get (obj_cmd_rs,
-				    "sensor_scanning",
-				    &val)) < 0)
-	    {
-	      SENSOR_READ_FIID_OBJECT_ERROR_TO_SENSOR_READ_ERRNUM (ctx, obj_cmd_rs);
-	      return (-1);
-	    }
-	  
-	  if (flag && val == IPMI_SENSOR_SCANNING_ON_THIS_SENSOR_DISABLE)
-	    {
-	      SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_SENSOR_SCANNING_DISABLED);
-	      return (-1);
-	    }
-	}
+        {
+          if ((flag = fiid_obj_get (obj_cmd_rs,
+                                    "sensor_scanning",
+                                    &val)) < 0)
+            {
+              SENSOR_READ_FIID_OBJECT_ERROR_TO_SENSOR_READ_ERRNUM (ctx, obj_cmd_rs);
+              return (-1);
+            }
+          
+          if (flag && val == IPMI_SENSOR_SCANNING_ON_THIS_SENSOR_DISABLE)
+            {
+              SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_SENSOR_SCANNING_DISABLED);
+              return (-1);
+            }
+        }
 
       /* else fall through like normal */
     }
@@ -564,29 +564,29 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
   if (!(ctx->flags & IPMI_SENSOR_READ_FLAGS_ASSUME_BMC_OWNER))
     {
       if (slave_address == IPMI_SLAVE_ADDRESS_BMC)
-	{
-	  if (_get_sensor_reading (ctx,
-				   sensor_number,
-				   obj_cmd_rs) < 0)
-	    goto cleanup;
-	}
+        {
+          if (_get_sensor_reading (ctx,
+                                   sensor_number,
+                                   obj_cmd_rs) < 0)
+            goto cleanup;
+        }
       else
-	{
-	  if (_get_sensor_reading_ipmb (ctx,
-					slave_address,
-					sensor_owner_lun,
-					channel_number,
-					sensor_number,
-					obj_cmd_rs) < 0)
-	    goto cleanup;
-	}
+        {
+          if (_get_sensor_reading_ipmb (ctx,
+                                        slave_address,
+                                        sensor_owner_lun,
+                                        channel_number,
+                                        sensor_number,
+                                        obj_cmd_rs) < 0)
+            goto cleanup;
+        }
     }
   else
     {
       if (_get_sensor_reading (ctx,
-			       sensor_number,
-			       obj_cmd_rs) < 0)
-	goto cleanup;
+                               sensor_number,
+                               obj_cmd_rs) < 0)
+        goto cleanup;
     }
 
   /* 
@@ -628,19 +628,19 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
   if (!(ctx->flags & IPMI_SENSOR_READ_FLAGS_IGNORE_SCANNING_DISABLED))
     {
       if (FIID_OBJ_GET (obj_cmd_rs,
-			"sensor_scanning",
-			&val) < 0)
-	{
-	  SENSOR_READ_FIID_OBJECT_ERROR_TO_SENSOR_READ_ERRNUM (ctx, obj_cmd_rs);
-	  goto cleanup;
-	}
+                        "sensor_scanning",
+                        &val) < 0)
+        {
+          SENSOR_READ_FIID_OBJECT_ERROR_TO_SENSOR_READ_ERRNUM (ctx, obj_cmd_rs);
+          goto cleanup;
+        }
       sensor_scanning = val;
       
       if (sensor_scanning == IPMI_SENSOR_SCANNING_ON_THIS_SENSOR_DISABLE)
-	{
-	  SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_SENSOR_SCANNING_DISABLED);
-	  goto cleanup;
-	}
+        {
+          SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_SENSOR_SCANNING_DISABLED);
+          goto cleanup;
+        }
     }
 
   /* achu:
@@ -800,16 +800,16 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
        * decoding data does not exist in compact records.
        */
       if (ctx->flags & IPMI_SENSOR_READ_FLAGS_DISCRETE_READING
-	  && record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
-	{
+          && record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
+        {
           int8_t r_exponent, b_exponent;
           int16_t m, b;
           uint8_t linearization, analog_data_format;
-	  uint8_t sensor_units_percentage;
-	  uint8_t sensor_units_modifier;
-	  uint8_t sensor_units_rate;
-	  uint8_t sensor_base_unit_type;
-	  uint8_t sensor_modifier_unit_type;
+          uint8_t sensor_units_percentage;
+          uint8_t sensor_units_modifier;
+          uint8_t sensor_units_rate;
+          uint8_t sensor_base_unit_type;
+          uint8_t sensor_modifier_unit_type;
 
           if (ipmi_sdr_parse_sensor_decoding_data (ctx->sdr_ctx,
                                                    sdr_record,
@@ -825,37 +825,37 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
               goto cleanup;
             }
 
-	  if (ipmi_sdr_parse_sensor_units (ctx->sdr_ctx,
-					   sdr_record,
-					   sdr_record_len,
-					   &sensor_units_percentage,
-					   &sensor_units_modifier,
-					   &sensor_units_rate,
-					   &sensor_base_unit_type,
-					   &sensor_modifier_unit_type) < 0)
-	    {
+          if (ipmi_sdr_parse_sensor_units (ctx->sdr_ctx,
+                                           sdr_record,
+                                           sdr_record_len,
+                                           &sensor_units_percentage,
+                                           &sensor_units_modifier,
+                                           &sensor_units_rate,
+                                           &sensor_base_unit_type,
+                                           &sensor_modifier_unit_type) < 0)
+            {
               SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_SDR_ENTRY_ERROR);
-	      goto cleanup;
-	    }
+              goto cleanup;
+            }
 
           /* if the sensor is not analog, this is normal expected
-	   * case, fallthrough to normal expectations
+           * case, fallthrough to normal expectations
            */
           if (!IPMI_SDR_ANALOG_DATA_FORMAT_VALID (analog_data_format))
             {
-	      rv = 1;
-	      goto cleanup;
+              rv = 1;
+              goto cleanup;
             }
 
-	  /* if the sensor units are not specified, this is the normal expected
-	   * case, fallthrough to normal expectations
-	   */
-	  if (sensor_units_percentage != IPMI_SDR_PERCENTAGE_YES
-	      && sensor_base_unit_type == IPMI_SENSOR_UNIT_UNSPECIFIED)
-	    {
-	      rv = 1;
-	      goto cleanup;
-	    }
+          /* if the sensor units are not specified, this is the normal expected
+           * case, fallthrough to normal expectations
+           */
+          if (sensor_units_percentage != IPMI_SDR_PERCENTAGE_YES
+              && sensor_base_unit_type == IPMI_SENSOR_UNIT_UNSPECIFIED)
+            {
+              rv = 1;
+              goto cleanup;
+            }
 
           /* if the sensor is non-linear, I just don't know what to do,
            * let the tool figure out what to output.
@@ -887,7 +887,7 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
             }
 
           *sensor_reading = tmp_sensor_reading;
-	}
+        }
       rv = 1;
     }
   else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_OEM)

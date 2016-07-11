@@ -586,8 +586,8 @@ _mandatory_platform_attributes (ipmi_dcmi_state_data_t *state_data)
       int flag;
 
       if ((flag = fiid_obj_get (obj_cmd_rs,
-				"temperature_monitoring.sampling_period",
-				&val)) < 0)
+                                "temperature_monitoring.sampling_period",
+                                &val)) < 0)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
@@ -649,9 +649,9 @@ _optional_platform_attributes (ipmi_dcmi_state_data_t *state_data)
        */
       if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
           && ((ipmi_check_completion_code (obj_cmd_rs,
-					   IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED) == 1)
-	      || (ipmi_check_completion_code (obj_cmd_rs,
-					      IPMI_COMP_CODE_REQUESTED_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)))
+                                           IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED) == 1)
+              || (ipmi_check_completion_code (obj_cmd_rs,
+                                              IPMI_COMP_CODE_REQUESTED_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)))
         {
           rv = 0;
           goto cleanup;
@@ -847,9 +847,9 @@ _get_enhanced_system_power_statistics_attributes (ipmi_dcmi_state_data_t *state_
       /* this optional parameter is not supported */
       if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
           && ((ipmi_check_completion_code (obj_cmd_rs,
-					   IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED) == 1)
-	      || (ipmi_check_completion_code (obj_cmd_rs,
-					      IPMI_COMP_CODE_REQUESTED_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)))
+                                           IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED) == 1)
+              || (ipmi_check_completion_code (obj_cmd_rs,
+                                              IPMI_COMP_CODE_REQUESTED_SENSOR_DATA_OR_RECORD_NOT_PRESENT) == 1)))
         {
           rv = 0;
           goto cleanup;
@@ -1162,9 +1162,9 @@ get_asset_tag (ipmi_dcmi_state_data_t *state_data)
       if (asset_tag_data[0] == IPMI_DCMI_ASSET_TAG_UTF8_BOM_BYTE0
           && asset_tag_data[1] == IPMI_DCMI_ASSET_TAG_UTF8_BOM_BYTE1
           && asset_tag_data[2] == IPMI_DCMI_ASSET_TAG_UTF8_BOM_BYTE2)
-	/* achu: I think this is right for UTF-8 in libc and is
-	 * portable, but I would bet some systems won't like this.
-	 */
+        /* achu: I think this is right for UTF-8 in libc and is
+         * portable, but I would bet some systems won't like this.
+         */
         pstdout_printf (state_data->pstate,
                         "%ls\n",
                         &asset_tag_data[3]);
@@ -1804,17 +1804,17 @@ _output_power_statistics (ipmi_dcmi_state_data_t *state_data,
   memset (timestr, '\0', IPMI_DCMI_TIME_BUFLEN + 1);
 
   if (ipmi_timestamp_string (time_stamp,
-			     state_data->prog_data->args->common_args.utc_offset,
-			     get_timestamp_flags (&(state_data->prog_data->args->common_args),
-						  IPMI_TIMESTAMP_FLAG_DEFAULT), 
-			     "%m/%d/%Y - %H:%M:%S",
-			     timestr,
-			     IPMI_DCMI_TIME_BUFLEN) < 0)
+                             state_data->prog_data->args->common_args.utc_offset,
+                             get_timestamp_flags (&(state_data->prog_data->args->common_args),
+                                                  IPMI_TIMESTAMP_FLAG_DEFAULT), 
+                             "%m/%d/%Y - %H:%M:%S",
+                             timestr,
+                             IPMI_DCMI_TIME_BUFLEN) < 0)
     {
       pstdout_fprintf (state_data->pstate,
-		       stderr,
-		       "ipmi_timestamp_string: %s\n",
-		       strerror (errno));
+                       stderr,
+                       "ipmi_timestamp_string: %s\n",
+                       strerror (errno));
       goto cleanup;
     }
 
@@ -2391,7 +2391,7 @@ _ipmi_dcmi (pstdout_state_t pstate,
   if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
                                          hostname,
                                          &(prog_data->args->common_args),
-					 state_data.pstate)))
+                                         state_data.pstate)))
     goto cleanup;
 
   if (run_cmd_args (&state_data) < 0)
@@ -2420,7 +2420,7 @@ main (int argc, char **argv)
   prog_data.args = &cmd_args;
 
   if ((hosts_count = pstdout_setup (&(prog_data.args->common_args.hostname),
-				    &(prog_data.args->common_args))) < 0)
+                                    &(prog_data.args->common_args))) < 0)
     return (EXIT_FAILURE);
 
   if (!hosts_count)
