@@ -1,3 +1,7 @@
+2016-07-11 Albert Chu <chu11@llnl.gov>
+
+	* Document support of Intel S2600KPR.
+
 2016-07-05 Holger Liebig <holger.liebig@ts.fujitsu.com>
 
 	* libfreeipmi/include/freeipmi/spec/ipmi-product-id-spec.h: Update
