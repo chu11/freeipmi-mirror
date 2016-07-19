@@ -4,14 +4,14 @@ by
 
 Albert Chu
 chu11@llnl.gov
-Last Updated: August 27, 2013
+Last Updated: July 19, 2016
 
 1) Introduction with Pdsh
 -------------------------
 
 Much of the hostrange input/output in FreeIPMI is modeled off the
-input/output in the tool pdsh (http://pdsh.sourceforge.net).  Pdsh is
-a parallel shell utility which allows you to execute an arbitrary
+input/output in the tool pdsh (https://github.com/grondo/pdsh).  Pdsh
+is a parallel shell utility which allows you to execute an arbitrary
 command across a cluster.  Algorithmically, pdsh creates a sliding
 window of threads, each which generates a remote shell using an
 underlying 'rcmd" functionality (such as rcmd(3) or ssh(1)).  As
@@ -181,7 +181,7 @@ list of nodes to communicate with.
 
 The -v option in pdsh is used to selectively eliminate those nodes
 that are considered down by whatsup and the libnodeupdown library
-(http://whatsup.sourceforge.net).
+(https://github.com/chaos/whatsup).
 
 Whatsup currently shows that wopr6 is down.
 
