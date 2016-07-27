@@ -5,6 +5,8 @@
 
 	* Use new ipmi_open() function call appropriately in all tools.
 
+	* ipmi-raw/: Support new --no-session option.
+
 2016-09-26 Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/ipmipower_powercmd.c (ipmipower_powercmd_queue): Fix

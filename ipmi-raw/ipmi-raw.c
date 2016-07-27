@@ -405,7 +405,7 @@ _ipmi_raw (pstdout_state_t pstate,
                                          hostname,
                                          &(prog_data->args->common_args),
                                          state_data.pstate,
-                                         0)))
+                                         state_data.prog_data->args->no_session ? IPMI_FLAGS_NOSESSION : 0)))
     goto cleanup;
 
   if (run_cmd_args (&state_data) < 0)
