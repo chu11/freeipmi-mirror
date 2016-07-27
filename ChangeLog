@@ -1,3 +1,8 @@
+2016-07-27 Albert Chu <chu11@llnl.gov>
+
+	* common/toolcommon/tool-common.h,
+	common/toolcommon/tool-common.c (ipmi_open): Add flags option.
+	
 2016-07-11 Albert Chu <chu11@llnl.gov>
 
 	* Document support of Intel S2600KPR.
