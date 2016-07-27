@@ -46,7 +46,8 @@ ipmi_ctx_t
 ipmi_open (const char *progname,
            const char *hostname,
            struct common_cmd_args *common_args,
-           pstdout_state_t pstate)
+           pstdout_state_t pstate,
+           unsigned int flags)
 {
   ipmi_ctx_t ipmi_ctx = NULL;
   unsigned int workaround_flags = 0;
@@ -71,7 +72,7 @@ ipmi_open (const char *progname,
         {
           parse_get_freeipmi_outofband_2_0_flags (common_args->workaround_flags_outofband_2_0,
                                                   &workaround_flags);
-          
+
           if (ipmi_ctx_open_outofband_2_0 (ipmi_ctx,
                                            hostname,
                                            common_args->username,
@@ -83,7 +84,7 @@ ipmi_open (const char *progname,
                                            common_args->session_timeout,
                                            common_args->retransmission_timeout,
                                            workaround_flags,
-                                           (common_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT) < 0)
+                                           flags | ((common_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT)) < 0)
             {
               if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_USERNAME_INVALID
                   || ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_PASSWORD_INVALID
@@ -123,7 +124,7 @@ ipmi_open (const char *progname,
                                        common_args->session_timeout,
                                        common_args->retransmission_timeout,
                                        workaround_flags,
-                                       (common_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT) < 0)
+                                       flags | ((common_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT)) < 0)
             {
               if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_USERNAME_INVALID
                   || ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_PASSWORD_INVALID
@@ -173,7 +174,7 @@ ipmi_open (const char *progname,
                                            common_args->register_spacing,
                                            common_args->driver_device,
                                            workaround_flags,
-                                           (common_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT)) < 0)
+                                           flags | ((common_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT))) < 0)
             {
               PSTDOUT_FPRINTF (pstate,
                                stderr,
@@ -199,7 +200,7 @@ ipmi_open (const char *progname,
                                     common_args->register_spacing,
                                     common_args->driver_device,
                                     workaround_flags,
-                                    (common_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT) < 0)
+                                    flags | ((common_args->debug) ? IPMI_FLAGS_DEBUG_DUMP : IPMI_FLAGS_DEFAULT)) < 0)
             {
               if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_DEVICE_NOT_FOUND)
                 PSTDOUT_FPRINTF (pstate,
