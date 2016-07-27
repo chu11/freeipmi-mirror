@@ -356,7 +356,7 @@ locations.
 @item
 @command{dmidecode} may be similarly used to probe for devices that
 support @acronym{IPMI} on your system.  You may grep for
-@acronym{IPMI} or specifying the @acronym{IPMI} DMI type on the
+@acronym{IPMI} or specify the @acronym{IPMI} DMI type on the
 command line.
 
 @example
