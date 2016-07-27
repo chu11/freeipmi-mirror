@@ -32,12 +32,14 @@ enum ipmi_raw_argp_option_keys
     CHANNEL_NUMBER_KEY = 160,   /* legacy */
     SLAVE_ADDRESS_KEY = 161,    /* legacy */
     CMD_FILE_KEY = 162,
+    NO_SESSION_KEY = 163,
   };
 
 struct ipmi_raw_arguments
 {
   struct common_cmd_args common_args;
   char *cmd_file;
+  int no_session;
   uint8_t cmd[IPMI_RAW_MAX_ARGS];
   unsigned int cmd_length;
 };

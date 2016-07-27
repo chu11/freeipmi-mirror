@@ -75,6 +75,8 @@ static struct argp_option cmdline_options[] =
       "Specify an alternate slave address to bridge raw commands to.", 41},
     { "file", CMD_FILE_KEY, "CMD-FILE", 0,
       "Specify a file to read command requests from.", 42},
+    { "no-session", NO_SESSION_KEY, NULL, 0,
+      "Do not establish an IPMI session if doing out of band IPMI.", 43},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -119,6 +121,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           perror ("strdup");
           exit (EXIT_FAILURE);
         }
+      break;
+    case NO_SESSION_KEY:
+      cmd_args->no_session = 1;
       break;
     case ARGP_KEY_ARG:
       {
@@ -208,6 +213,7 @@ ipmi_raw_argp_parse (int argc, char **argv, struct ipmi_raw_arguments *cmd_args)
   init_common_cmd_args_admin (&(cmd_args->common_args));
 
   cmd_args->cmd_file = NULL;
+  cmd_args->no_session = 0;
   memset (cmd_args->cmd, '\0', sizeof (uint8_t) * IPMI_RAW_MAX_ARGS);
   cmd_args->cmd_length = 0;
 

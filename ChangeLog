@@ -4,6 +4,8 @@
 	common/toolcommon/tool-common.c (ipmi_open): Add flags option.
 
 	* Use new ipmi_open() function call appropriately in all tools.
+
+	* ipmi-raw?: Support new --no-session option.
 	
 2016-07-11 Albert Chu <chu11@llnl.gov>
 
