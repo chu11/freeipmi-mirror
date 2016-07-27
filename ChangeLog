@@ -3,6 +3,8 @@
 	* common/toolcommon/tool-common.h,
 	common/toolcommon/tool-common.c (ipmi_open): Add flags option.
 
+	* Use new ipmi_open() function call appropriately in all tools.
+
 2016-09-26 Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/ipmipower_powercmd.c (ipmipower_powercmd_queue): Fix

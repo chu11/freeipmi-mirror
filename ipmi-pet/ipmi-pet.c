@@ -2097,7 +2097,8 @@ _ipmi_pet (ipmi_pet_prog_data_t *prog_data)
       if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
                                              prog_data->args->common_args.hostname,
                                              &(prog_data->args->common_args),
-                                             NULL)))
+                                             NULL,
+                                             0)))
         goto cleanup;
     }
 
