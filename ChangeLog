@@ -6,6 +6,9 @@
 	* Use new ipmi_open() function call appropriately in all tools.
 
 	* ipmi-raw?: Support new --no-session option.
+
+	* b/libfreeipmi/api/ipmi-api.c (ipmi_cmd_raw): Fix corner case
+	when using IPMI_FLAGS_NOSESSION.
 	
 2016-07-11 Albert Chu <chu11@llnl.gov>
 
