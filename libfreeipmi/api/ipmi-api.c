@@ -1949,7 +1949,8 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (ctx->flags & IPMI_FLAGS_NOSESSION)
+  if (ctx->flags & IPMI_FLAGS_NOSESSION
+      && ctx->type != IPMI_DEVICE_LAN)
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_NOT_OPEN);
       return (-1);

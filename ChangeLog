@@ -7,6 +7,9 @@
 
 	* ipmi-raw/: Support new --no-session option.
 
+	* libfreeipmi/api/ipmi-api.c (ipmi_cmd_raw): Fix corner case
+	when using IPMI_FLAGS_NOSESSION.
+
 2016-09-26 Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/ipmipower_powercmd.c (ipmipower_powercmd_queue): Fix
