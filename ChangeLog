@@ -1,5 +1,10 @@
 2016-07-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/spec/: Add Gigabyte IANA manufacturer macro
+	and Product MD90-FS0-ZB macro.
+
+2016-07-29 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-oem/: Support get/set-bmc-services for Intel motherboards.
 
 2016-07-11 Albert Chu <chu11@llnl.gov>
