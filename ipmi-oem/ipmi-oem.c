@@ -550,22 +550,20 @@ struct ipmi_oem_command oem_intel[] =
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_intel_set_power_restore_delay
     },
-#if 0
     {
-      "get-bmc-service-status",
+      "get-bmc-services",
       NULL,
       0,
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
-      ipmi_oem_intel_get_bmc_service_status
+      ipmi_oem_intel_get_bmc_services
     },
     {
-      "set-bmc-service-status",
-      "<enable|disable> <ssh|http|kvm>",
+      "set-bmc-services",
+      "<enable|disable> <ssh|http|rmcp|kvm>",
       2,
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
-      ipmi_oem_intel_set_bmc_service_status
+      ipmi_oem_intel_set_bmc_services
     },
-#endif
     {
       "restore-configuration",
       NULL,

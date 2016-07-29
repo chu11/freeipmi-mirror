@@ -1265,10 +1265,8 @@ ipmi_oem_intel_set_power_restore_delay (ipmi_oem_state_data_t *state_data)
   return (rv);
 }
 
-#if 0
-/* Cannot verify - need newer firmware from Intel */ 
 int
-ipmi_oem_intel_get_bmc_service_status (ipmi_oem_state_data_t *state_data)
+ipmi_oem_intel_get_bmc_services (ipmi_oem_state_data_t *state_data)
 {
   uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
   uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
@@ -1278,7 +1276,7 @@ ipmi_oem_intel_get_bmc_service_status (ipmi_oem_state_data_t *state_data)
   assert (state_data);
   assert (!state_data->prog_data->args->oem_options_count);
 
-  /* Intel S2600JF/Appro 512X
+  /* Intel S2600WT2
    *
    * Request 
    *
@@ -1290,15 +1288,14 @@ ipmi_oem_intel_get_bmc_service_status (ipmi_oem_state_data_t *state_data)
    * 0xB2 - OEM cmd
    * 0x?? - Completion Code
    * 0x?? - Standard Services bit pattern
-   *      - bit 7 - 0 - ssh service is not running
-   *                1 - ssh service is running
+   *      - bit 7 - SSH
    *        bit 6 - reserved
-   *        bit 5 - 0 - http/https services not running
-   *                1 - http/https services running
-   *        bit 4:0 - reserved
+   *        bit 5 - HTTP/HTTPs
+   *        bit 4 - reserved
+   *        bit 3 - RMCP/RMCP+
+   *        bit 2:0 - reserved
    * 0x?? - OEM specific Services bit pattern
-   *      - bit 7 - 0 - kvm service is not running
-   *                1 - kvm service is running
+   *      - bit 7 - KVM
    *        bit 6:0 - reserved 
    */
 
@@ -1308,7 +1305,7 @@ ipmi_oem_intel_get_bmc_service_status (ipmi_oem_state_data_t *state_data)
                               0, /* lun */
                               IPMI_NET_FN_OEM_INTEL_GENERIC_RQ, /* network function */
                               bytes_rq, /* data */
-                              2, /* num bytes */
+                              1, /* num bytes */
                               bytes_rs,
                               IPMI_OEM_MAX_BYTES)) < 0)
     {
@@ -1332,10 +1329,13 @@ ipmi_oem_intel_get_bmc_service_status (ipmi_oem_state_data_t *state_data)
 		  (bytes_rs[2] & IPMI_OEM_INTEL_STANDARD_SERVICES_SSH) ? "Enabled" : "Disabled");
   
   pstdout_printf (state_data->pstate, "HTTP/HTTPS: %s\n",
-		  (bytes_rs[2] & IPMI_OEM_INTEL_STANDARD_SERVICES_HTTP) ? "Enabled" : "Disabled");
+                  (bytes_rs[2] & IPMI_OEM_INTEL_STANDARD_SERVICES_HTTP) ? "Enabled" : "Disabled");
+
+  pstdout_printf (state_data->pstate, "RMCP/RMCP+: %s\n",
+                  (bytes_rs[2] & IPMI_OEM_INTEL_STANDARD_SERVICES_RMCP) ? "Enabled" : "Disabled");
   
   pstdout_printf (state_data->pstate, "KVM: %s\n",
-		  (bytes_rs[2] & IPMI_OEM_INTEL_OEM_SPECIFIC_SERVICES_KVM) ? "Enabled" : "Disabled");
+                  (bytes_rs[3] & IPMI_OEM_INTEL_OEM_SPECIFIC_SERVICES_KVM) ? "Enabled" : "Disabled");
 
   rv = 0;
  cleanup:
@@ -1343,7 +1343,7 @@ ipmi_oem_intel_get_bmc_service_status (ipmi_oem_state_data_t *state_data)
 }
 
 int
-ipmi_oem_intel_set_bmc_service_status (ipmi_oem_state_data_t *state_data)
+ipmi_oem_intel_set_bmc_services (ipmi_oem_state_data_t *state_data)
 {
   uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
   uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
@@ -1369,6 +1369,7 @@ ipmi_oem_intel_set_bmc_service_status (ipmi_oem_state_data_t *state_data)
   
   if (strcasecmp (state_data->prog_data->args->oem_options[1], "ssh")
       && strcasecmp (state_data->prog_data->args->oem_options[1], "http")
+      && strcasecmp (state_data->prog_data->args->oem_options[1], "rmcp")
       && strcasecmp (state_data->prog_data->args->oem_options[1], "kvm"))
     {
       pstdout_fprintf (state_data->pstate,
@@ -1380,7 +1381,7 @@ ipmi_oem_intel_set_bmc_service_status (ipmi_oem_state_data_t *state_data)
       goto cleanup;
     }
 
-  /* Intel S2600JF/Appro 512X
+  /* Intel S2600WT2
    *
    * Request 
    *
@@ -1389,15 +1390,14 @@ ipmi_oem_intel_set_bmc_service_status (ipmi_oem_state_data_t *state_data)
    * 0x?? - 00h - disable given services
    *        01h - enable given services
    * 0x?? - Standard Services bit pattern
-   *      - bit 7 - 0 - ssh service is not running
-   *                1 - ssh service is running
+   *      - bit 7 - SSH
    *        bit 6 - reserved
-   *        bit 5 - 0 - http/https services not running
-   *                1 - http/https services running
-   *        bit 4:0 - reserved
+   *        bit 5 - HTTP/HTTPs
+   *        bit 4 - reserved
+   *        bit 3 - RMCP/RMCP+
+   *        bit 2:0 - reserved
    * 0x?? - OEM specific Services bit pattern
-   *      - bit 7 - 0 - kvm service is not running
-   *                1 - kvm service is running
+   *      - bit 7 - KVM
    *        bit 6:0 - reserved 
    *
    * Response 
@@ -1420,6 +1420,11 @@ ipmi_oem_intel_set_bmc_service_status (ipmi_oem_state_data_t *state_data)
   else if (!strcasecmp (state_data->prog_data->args->oem_options[1], "http"))
     {
       bytes_rq[2] = IPMI_OEM_INTEL_STANDARD_SERVICES_HTTP;
+      bytes_rq[3] = 0;
+    }
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[1], "rmcp"))
+    {
+      bytes_rq[2] = IPMI_OEM_INTEL_STANDARD_SERVICES_RMCP;
       bytes_rq[3] = 0;
     }
   else if (!strcasecmp (state_data->prog_data->args->oem_options[1], "kvm"))
@@ -1456,7 +1461,6 @@ ipmi_oem_intel_set_bmc_service_status (ipmi_oem_state_data_t *state_data)
  cleanup:
   return (rv);
 }
-#endif
 
 int
 ipmi_oem_intel_restore_configuration (ipmi_oem_state_data_t *state_data)
