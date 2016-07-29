@@ -189,6 +189,7 @@ libfreeipmi_la_SOURCES = \
 	sel/ipmi-sel-string.h \
 	sel/ipmi-sel-string-dell-poweredge.c \
 	sel/ipmi-sel-string-fujitsu-irmc-common.c \
+	sel/ipmi-sel-string-gigabyte-md90fs0zb.c \
 	sel/ipmi-sel-string-intel-node-manager.c \
 	sel/ipmi-sel-string-intel-node-manager.h \
 	sel/ipmi-sel-string-intel-s5500wb.c \
