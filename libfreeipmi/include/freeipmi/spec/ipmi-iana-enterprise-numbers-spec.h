@@ -35,6 +35,7 @@ extern "C" {
 #define IPMI_IANA_ENTERPRISE_ID_PEPPERCON             10437
 #define IPMI_IANA_ENTERPRISE_ID_SUPERMICRO            10876
 #define IPMI_IANA_ENTERPRISE_ID_WISTRON               11161
+#define IPMI_IANA_ENTERPRISE_ID_GIGABYTE              15370
 #define IPMI_IANA_ENTERPRISE_ID_INVENTEC              20569
 
 /* Workarounds for motherboards with invalid enterprise IDs */

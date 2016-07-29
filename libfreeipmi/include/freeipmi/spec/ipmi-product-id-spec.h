@@ -187,6 +187,12 @@ extern "C" {
 #define IPMI_DELL_PRODUCT_ID_XANADU_III IPMI_INVENTEC_PRODUCT_ID_5442
 
 /******************************************* 
+ * Gigabyte                                *
+ *******************************************/
+
+#define IPMI_GIGABYTE_PRODUCT_ID_MD90_FS0_ZB 266
+
+/******************************************* 
  * Quanta                                *
  *******************************************/
  
