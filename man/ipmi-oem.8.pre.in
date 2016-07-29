@@ -428,19 +428,16 @@ This OEM command will set the power on delay.  (See
 \fIget\-power\-restore\-delay\fR above for description on power
 restore delay).  Command confirmed to work on Intel S2600JF (Appro
 512X).
-.if 0 \{
 .TP
-.B get-bmc-service-status
+.B get-bmc-services
 This OEM command will get the current status of BMC services such as
-ssh, http, and kvm.  Command confirmed to work on Intel S2600JF (Appro
-512X).
+ssh, http, rmcp, and kvm.  Command confirmed to work on Intel S2600WT2.
 .TP
 .B
-set-bmc-service-status \fIenable|disable\fR \fIssh|http|kvm\fR
+set-bmc-services \fIenable|disable\fR \fIssh|http|rmcp|kvm\fR
 This OEM command will enable or disable BMC services besides IPMI.
 Note that \fIhttp\fR refers to both http and https.  Command confirmed
-to work on Intel S2600JF (Appro 512X).
-\}
+to work on Intel S2600WT2.
 .TP
 .B restore-configuration
 This OEM command will restore BMC configuration values back to default
