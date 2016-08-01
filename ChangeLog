@@ -1,3 +1,8 @@
+2016-08-01 Albert Chu <chu11@llnl.gov>
+
+	* common/toolcommon/tool-sensor-common.h: Increase max sensor
+	types to 128.
+
 2016-08-01 Thomas Grohmann <thomas.grohmann@atos.net>
 
 	* common/toolcommon/tool-sensor-common.h: Increase max record ids
