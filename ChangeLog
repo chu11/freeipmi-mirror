@@ -1,5 +1,11 @@
 2016-08-01 Albert Chu <chu11@llnl.gov>
 
+        * Tagged freeipmi-1-5-3
+
+        * NEWS, configure.ac: Update for release.
+
+2016-08-01 Albert Chu <chu11@llnl.gov>
+
 	* common/toolcommon/tool-sensor-common.h: Increase max sensor
 	types to 128.
 
