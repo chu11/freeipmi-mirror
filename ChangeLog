@@ -1,3 +1,8 @@
+2016-08-01 Thomas Grohmann <thomas.grohmann@atos.net>
+
+	* common/toolcommon/tool-sensor-common.h: Increase max record ids
+	to 4096.
+
 2016-07-11 Albert Chu <chu11@llnl.gov>
 
 	* Document support of Intel S2600KPR.
