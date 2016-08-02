@@ -34,6 +34,7 @@
 #include "ipmi-oem-common.h"
 #include "ipmi-oem-dell.h"
 #include "ipmi-oem-fujitsu.h"
+#include "ipmi-oem-gigabyte.h"
 #include "ipmi-oem-ibm.h"
 #include "ipmi-oem-intel.h"
 #include "ipmi-oem-intelnm.h"
@@ -492,6 +493,31 @@ struct ipmi_oem_command oem_fujitsu[] =
       1,
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_fujitsu_get_sel_entry_long_text
+    },
+    {
+      NULL,
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      NULL
+    },
+  };
+
+struct ipmi_oem_command oem_gigabyte[] =
+  {
+    {
+      "get-nic-mode",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_gigabyte_get_nic_mode
+    },
+    {
+      "set-nic-mode",
+      "<dedicated|shared|failover>",
+      1,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_gigabyte_set_nic_mode
     },
     {
       NULL,
@@ -1587,6 +1613,10 @@ struct ipmi_oem_id oem_cb[] =
     {
       "IBM",
       oem_ibm
+    },
+    {
+      "GIGABYTE",
+      oem_gigabyte
     },
     {
       "Intel",

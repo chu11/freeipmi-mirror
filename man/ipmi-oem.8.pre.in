@@ -382,6 +382,23 @@ RX100
 S5.
 .RE
 .TP
+.B GIGABYTE
+.RS
+.TP .B get-nic-mode
+This OEM command will determine the current NIC mode as dedicated,
+shared, or failover.  Dedicated indicates IPMI is only available on
+the dedicated management port.  Shared indicates IPMI is also
+available on one of the primary ethernet ports.  Failover indicates
+IPMI is dedicated but can failover to another if the primary port
+fails.  Command confirmed to work on GIGABYTE MD90-FS0-ZB.
+.TP
+.B set-nic-mode \fIdedicated|shared|failover\fR
+This OEM command will set the current NIC mode to dedicated, shared,
+or failover.  (See \fIget\-nic\-mode\fR above for description on
+dedicated vs. shared vs failover modes.)  Command confirmed to work on
+GIGABYTE MD90-FS0-ZB.
+.RE
+.TP
 .B IBM
 .RS
 .TP
