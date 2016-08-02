@@ -1,3 +1,7 @@
+2016-08-02 Albert Chu <chu11@llnl.gov>
+	
+	* ipmi-oem/: Add Gigabyte get/set-nic-mode commands.
+
 2016-07-29 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/spec/: Add Gigabyte IANA manufacturer macro

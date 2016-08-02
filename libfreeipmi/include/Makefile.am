@@ -125,6 +125,7 @@ nobase_include_HEADERS = \
 	freeipmi/spec/ipmi-timestamp-spec.h \
 	freeipmi/spec/oem/ipmi-cmd-oem-dell-spec.h \
 	freeipmi/spec/oem/ipmi-cmd-oem-fujitsu-spec.h \
+	freeipmi/spec/oem/ipmi-cmd-oem-gigabyte-spec.h \
 	freeipmi/spec/oem/ipmi-cmd-oem-ibm-spec.h \
 	freeipmi/spec/oem/ipmi-cmd-oem-intel-node-manager-spec.h \
 	freeipmi/spec/oem/ipmi-cmd-oem-intel-spec.h \
@@ -156,6 +157,7 @@ nobase_include_HEADERS = \
 	freeipmi/spec/oem/ipmi-netfn-oem-wistron-spec.h \
 	freeipmi/spec/oem/ipmi-oem-dell-spec.h \
 	freeipmi/spec/oem/ipmi-oem-fujitsu-spec.h \
+	freeipmi/spec/oem/ipmi-oem-gigabyte-spec.h \
 	freeipmi/spec/oem/ipmi-oem-ibm-spec.h \
 	freeipmi/spec/oem/ipmi-oem-intel-spec.h \
 	freeipmi/spec/oem/ipmi-oem-inventec-spec.h \

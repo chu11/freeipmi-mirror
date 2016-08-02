@@ -29,6 +29,8 @@ ipmi_oem_SOURCES = \
 	ipmi-oem-dell.h \
 	ipmi-oem-fujitsu.c \
 	ipmi-oem-fujitsu.h \
+	ipmi-oem-gigabyte.c \
+	ipmi-oem-gigabyte.h \
 	ipmi-oem-ibm.c \
 	ipmi-oem-ibm.h \
 	ipmi-oem-intel.c \
