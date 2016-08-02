@@ -1,3 +1,7 @@
+FreeIPMI 1.5.4 - 08/01/16
+-------------------------
+o In ipmi-oem, support Intel get-bmc-services and set-bmc-services commands.
+
 FreeIPMI 1.5.3 - 08/01/16
 -------------------------
 o Update Fujitsu OEM extension product id support range.
