@@ -453,7 +453,7 @@ ipmi_cmd_str (uint8_t net_fn, uint8_t cmd)
         case IPMI_CMD_GET_SESSION_CHALLENGE:
           return "Get Session Challenge";
         case IPMI_CMD_ACTIVATE_SESSION:
-          return "Activiate Session";
+          return "Activate Session";
         case IPMI_CMD_SET_SESSION_PRIVILEGE_LEVEL:
           return "Set Session Privilege Level";
         case IPMI_CMD_CLOSE_SESSION:

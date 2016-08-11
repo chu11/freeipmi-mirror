@@ -748,8 +748,8 @@ FIID Template: tmpl_cmd_get_session_challenge_rs
 
   Notes: Session id LS byte first.
 
-Activiate Session Request
--------------------------
+Activate Session Request
+------------------------
 
 FIID Template: tmpl_cmd_activate_session_rq
 
@@ -761,8 +761,8 @@ FIID Template: tmpl_cmd_activate_session_rq
     { 128, "challenge_string", REQUIRED, LENGTH-FIXED }
     { 32, "initial_outbound_sequence_number", REQUIRED, LENGTH-FIXED }
 
-Activiate Session Response
---------------------------
+Activate Session Response
+-------------------------
 
 FIID Template: tmpl_cmd_activate_session_rs
 
