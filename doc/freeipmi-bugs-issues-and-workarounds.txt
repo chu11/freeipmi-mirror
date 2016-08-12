@@ -478,6 +478,18 @@ LAN Session Issue #7: [COMPLIANCE]
   Resolution: Workaround option added to inform software to ignore bad
   checksums.
 
+LAN Session Issue #8: [IMPLEMENTATION]
+
+  LAN session defaults to max privilege of CALLBACK, regardless of
+  maximum privilege level requested or maximum configured privilege.
+  Almost all IPMI commands can therefore not be used.  In particular,
+  the "Set Session Privilege" level command cannot be called to raise
+  the privilege to a desired level.
+
+  Seen on: Gigabyte MD90-FS0-ZB
+
+  Resolution: None
+
 ----------------------------------------------------------------------
 
 --------------
