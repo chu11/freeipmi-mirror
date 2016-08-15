@@ -1,6 +1,8 @@
 FreeIPMI 1.5.4 - 08/01/16
 -------------------------
 o In ipmi-oem, support Intel get-bmc-services and set-bmc-services commands.
+o In ipmi-oem, support Gigabyte get-nic-mode and set-nic-mode commands.
+o Support Gigabyte MD90-FS0-ZB OEM SEL events.
 
 FreeIPMI 1.5.3 - 08/01/16
 -------------------------
