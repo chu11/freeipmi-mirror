@@ -30,6 +30,10 @@ extern "C" {
 /* achu: not official names, named based on use context */
 #define IPMI_CMD_OEM_GIGABYTE_CONFIGURATION 0xCC
 
+/* IPMI_NET_FN_OEM_GROUP_RQ / IPMI_NET_FN_OEM_GROUP_RS */
+/* achu: not official names, named based on use context */
+#define IPMI_CMD_OEM_GIGABYTE_PORT_CONFIGURATION 0x20
+
 #ifdef __cplusplus
 }
 #endif

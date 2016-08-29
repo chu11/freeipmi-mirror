@@ -24,4 +24,6 @@
 int ipmi_oem_gigabyte_get_nic_mode (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_gigabyte_set_nic_mode (ipmi_oem_state_data_t *state_data);
 
+int ipmi_oem_gigabyte_set_bmc_services (ipmi_oem_state_data_t *state_data);
+
 #endif /* IPMI_OEM_GIGABYTE_H */
