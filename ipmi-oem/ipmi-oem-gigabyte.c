@@ -66,6 +66,8 @@ ipmi_oem_gigabyte_get_nic_mode (ipmi_oem_state_data_t *state_data)
 
   /* From Gigabyte Provided Information
    *
+   * GIGABYTE MD90-FS0-ZB
+   *
    * Get NIC Mode Request
    *
    * 0x2E - OEM network function (IPMI_NET_FN_OEM_GROUP_RQ)
@@ -170,6 +172,8 @@ ipmi_oem_gigabyte_set_nic_mode (ipmi_oem_state_data_t *state_data)
     }
   
   /* From Gigabyte Provided Information 
+   *
+   * GIGABYTE MD90-FS0-ZB
    *
    * Set NIC Mode Request
    *
