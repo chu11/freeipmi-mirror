@@ -726,7 +726,7 @@ AC_MSG_RESULT([${ac_with_random_device=yes}])
 
 if test x"${ac_with_random_device}" = xyes; then
    AC_CHECK_FILE([/dev/urandom], AC_DEFINE([HAVE_DEVURANDOM], [1], [Define that you found /dev/urandom]))
-   AC_CHECK_FILE([/dev/random], AC_DEFINE([HAVE_DEVRANDOM], [1], [Define that you found /dev/urandom]))
+   AC_CHECK_FILE([/dev/random], AC_DEFINE([HAVE_DEVRANDOM], [1], [Define that you found /dev/random]))
 fi
 
 

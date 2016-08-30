@@ -1,3 +1,7 @@
+2016-08-30 Albert Chu <chu11@llnl.gov>
+	
+	* configure.ac; Fix output comment error.
+
 2016-08-02 Albert Chu <chu11@llnl.gov>
 	
 	* ipmi-oem/: Add Gigabyte get/set-nic-mode commands.
