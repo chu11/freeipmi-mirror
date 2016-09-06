@@ -1052,6 +1052,7 @@ __ipmiconsole_ctx_connection_cleanup (ipmiconsole_ctx_t c, int session_submitted
 
   if (c->signal.user_has_destroyed)
     {
+      ipmiconsole_ctx_config_cleanup (c);
       ipmiconsole_ctx_debug_cleanup (c);
       ipmiconsole_ctx_signal_cleanup (c);
       ipmiconsole_ctx_blocking_cleanup (c);
