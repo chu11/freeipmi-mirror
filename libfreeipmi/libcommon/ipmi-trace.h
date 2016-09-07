@@ -37,7 +37,7 @@
 #define ERR_WRAPPER_STR_MAX_LEN 4096
 
 #if defined (IPMI_TRACE)
-#define TRACE_MSG_OUT(__msgtracestr, __msgtracenum)       \
+#define TRACE_MSG_OUT(__msgtracestr, __msgtracenum)     \
   do {                                                  \
     fprintf (stderr,                                    \
              "%s: %d: %s: error '%s' (%d)\n",           \
@@ -46,7 +46,7 @@
     fflush (stderr);                                    \
   } while (0)
 
-#define TRACE_ERRNO_OUT(__errno_orig)                                     \
+#define TRACE_ERRNO_OUT(__errno_orig)                                   \
   do {                                                                  \
     extern int errno;                                                   \
     int __save_errno = __errno_orig;                                    \
