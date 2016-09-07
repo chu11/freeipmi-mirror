@@ -3,6 +3,10 @@
 	* libipmiconsole/ipmiconsole_ctx.c (__ipmiconsole_ctx_connection_cleanup):
 	Add missing call to ipmiconsole_ctx_config_cleanup.
 
+	* libfreeipmi/libcommon/ipmi-crypt.c: Fix potential issue with
+	multithreaded tracing, call gpg_strerror_r intead of gcry_strerror
+	when tracing.
+
 2016-08-30 Albert Chu <chu11@llnl.gov>
 	
 	* configure.ac; Fix output comment error.

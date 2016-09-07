@@ -29,6 +29,9 @@
 #include <string.h>
 #endif /* STDC_HEADERS */
 #include <errno.h>
+#ifdef WITH_ENCRYPTION
+#include <gpg-error.h>
+#endif /* !WITH_ENCRYPTION */
 
 #include "freeipmi/fiid/fiid.h"
 
@@ -60,9 +63,27 @@
     fflush (stderr);                                                    \
     __errno_orig = __save_errno;                                        \
   } while (0)
+
+#ifdef WITH_ENCRYPTION
+#define TRACE_GCRYPT_OUT(__error_orig)                                  \
+  do {                                                                  \
+    char __errorstr[ERR_WRAPPER_STR_MAX_LEN];                           \
+    memset (__errorstr, '\0', ERR_WRAPPER_STR_MAX_LEN);                 \
+    gpg_strerror_r (__error_orig, __errorstr, ERR_WRAPPER_STR_MAX_LEN); \
+    fprintf (stderr,                                                    \
+             "%s: %d: %s: gcrypt error '%s' (%d)\n",                    \
+             __FILE__, __LINE__, __FUNCTION__,                          \
+             __errorstr, __error_orig);                                 \
+    fflush (stderr);                                                    \
+  } while (0)
+#else /* !WITH_ENCRYPTION */
+#define TRACE_GCRYPT_OUT(__error_orig)
+#endif /* !WITH_ENCRYPTION */
+
 #else /* !IPMI_TRACE */
 #define TRACE_MSG_OUT(__msgtracestr, __msgtracenum)
 #define TRACE_ERRNO_OUT(__errno_orig)
+#define TRACE_GCRYPT_OUT(__error_orig)
 #endif /* !IPMI_TRACE */
 
 #define ERR_TRACE(__str, __num)                 \
@@ -91,6 +112,11 @@
   do {                                                                                  \
     set_errno_by_fiid_iterator ((__iter));                                              \
     TRACE_MSG_OUT (fiid_iterator_errormsg ((__iter)), fiid_iterator_errnum ((__iter))); \
+  } while (0)
+
+#define ERR_GCRYPT_TRACE(__error) \
+  do {                            \
+    TRACE_GCRYPT_OUT (__error);   \
   } while (0)
 
 #endif /* IPMI_TRACE_H */

@@ -83,7 +83,7 @@ crypt_init (void)
     {
       if ((e = gcry_control (GCRYCTL_SET_THREAD_CBS, &gcry_threads_pthread)) != GPG_ERR_NO_ERROR)
         {
-          ERR_TRACE (gcry_strerror (e), e);
+          ERR_GCRYPT_TRACE (e);
           SET_ERRNO (_gpg_error_to_errno (e));
           return (-1);
         }
@@ -105,14 +105,14 @@ crypt_init (void)
 
   if ((e = gcry_control (GCRYCTL_DISABLE_SECMEM, 0)) != GPG_ERR_NO_ERROR)
     {
-      ERR_TRACE (gcry_strerror (e), e);
+      ERR_GCRYPT_TRACE (e);
       SET_ERRNO (_gpg_error_to_errno (e));
       return (-1);
     }
 
   if ((e = gcry_control (GCRYCTL_INITIALIZATION_FINISHED, 0)) != GPG_ERR_NO_ERROR)
     {
-      ERR_TRACE (gcry_strerror (e), e);
+      ERR_GCRYPT_TRACE (e);
       SET_ERRNO (_gpg_error_to_errno (e));
       return (-1);
     }
@@ -176,7 +176,7 @@ crypt_hash (unsigned int hash_algorithm,
 
   if ((e = gcry_md_open (&h, gcry_md_algorithm, gcry_md_flags)) != GPG_ERR_NO_ERROR)
     {
-      ERR_TRACE (gcry_strerror (e), e);
+      ERR_GCRYPT_TRACE (e);
       SET_ERRNO (_gpg_error_to_errno (e));
       return (-1);
     }
@@ -197,7 +197,7 @@ crypt_hash (unsigned int hash_algorithm,
     {
       if ((e = gcry_md_setkey (h, key, key_len)) != GPG_ERR_NO_ERROR)
         {
-          ERR_TRACE (gcry_strerror (e), e);
+          ERR_GCRYPT_TRACE (e);
           SET_ERRNO (_gpg_error_to_errno (e));
           goto cleanup;
         }
@@ -351,7 +351,7 @@ _cipher_crypt (unsigned int cipher_algorithm,
                              gcry_cipher_mode,
                              0) != GPG_ERR_NO_ERROR))
     {
-      ERR_TRACE (gcry_strerror (e), e);
+      ERR_GCRYPT_TRACE (e);
       SET_ERRNO (_gpg_error_to_errno (e));
       return (-1);
     }
@@ -362,7 +362,7 @@ _cipher_crypt (unsigned int cipher_algorithm,
                                    (void *)key,
                                    key_len)) != GPG_ERR_NO_ERROR)
         {
-          ERR_TRACE (gcry_strerror (e), e);
+          ERR_GCRYPT_TRACE (e);
           SET_ERRNO (_gpg_error_to_errno (e));
           goto cleanup;
         }
@@ -372,7 +372,7 @@ _cipher_crypt (unsigned int cipher_algorithm,
     {
       if ((e = gcry_cipher_setiv (h, (void *)iv, iv_len)) != GPG_ERR_NO_ERROR)
         {
-          ERR_TRACE (gcry_strerror (e), e);
+          ERR_GCRYPT_TRACE (e);
           SET_ERRNO (_gpg_error_to_errno (e));
           goto cleanup;
         }
@@ -386,7 +386,7 @@ _cipher_crypt (unsigned int cipher_algorithm,
                                     NULL,
                                     0)) != GPG_ERR_NO_ERROR)
         {
-          ERR_TRACE (gcry_strerror (e), e);
+          ERR_GCRYPT_TRACE (e);
           SET_ERRNO (_gpg_error_to_errno (e));
           goto cleanup;
         }
@@ -399,7 +399,7 @@ _cipher_crypt (unsigned int cipher_algorithm,
                                     NULL,
                                     0)) != GPG_ERR_NO_ERROR)
         {
-          ERR_TRACE (gcry_strerror (e), e);
+          ERR_GCRYPT_TRACE (e);
           SET_ERRNO (_gpg_error_to_errno (e));
           goto cleanup;
         }
@@ -504,7 +504,7 @@ _crypt_cipher_info (unsigned int cipher_algorithm, unsigned int cipher_info)
                                   NULL,
                                   &len)) != GPG_ERR_NO_ERROR)
     {
-      ERR_TRACE (gcry_strerror (e), e);
+      ERR_GCRYPT_TRACE (e);
       SET_ERRNO (_gpg_error_to_errno (e));
       return (-1);
     }
