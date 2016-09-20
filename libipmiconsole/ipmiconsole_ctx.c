@@ -406,7 +406,7 @@ ipmiconsole_ctx_signal_setup (ipmiconsole_ctx_t c)
     }
   c->signal.status = IPMICONSOLE_CTX_STATUS_NOT_SUBMITTED;
 
-  if ((perr = pthread_mutex_init (&c->signal.destroyed_mutex, NULL)) != 0)
+  if ((perr = pthread_mutex_init (&c->signal.mutex_ctx_state, NULL)) != 0)
     {
       errno = perr;
       return (-1);
@@ -424,7 +424,7 @@ ipmiconsole_ctx_signal_cleanup (ipmiconsole_ctx_t c)
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
 
   pthread_mutex_destroy (&(c->signal.status_mutex));
-  pthread_mutex_destroy (&(c->signal.destroyed_mutex));
+  pthread_mutex_destroy (&(c->signal.mutex_ctx_state));
 }
 
 int
@@ -1039,15 +1039,15 @@ __ipmiconsole_ctx_connection_cleanup (ipmiconsole_ctx_t c, int session_submitted
   /* Note: the code in __ipmiconsole_ctx_connection_cleanup() and
    * ipmiconsole_garbage_collector() may look like it may race and
    * could deadlock.  (ABBA and BAAB deadlock situation).  However,
-   * the context mutex c->signal.destroyed_mutex is accessed in
+   * the context mutex c->signal.mutex_ctx_state is accessed in
    * __ipmiconsole_ctx_connection_cleanup() when trying to add this item
    * to the console_engine_ctxs_to_destroy list.  It is accessed in
    * ipmiconsole_garbage_collector() only on the items already in the
    * console_engine_ctxs_to_destroy list.  So the
-   * c->signal.destroyed_mutex can never be raced against in these two
+   * c->signal.mutex_ctx_state can never be raced against in these two
    * functions.
    */
-  if ((perr = pthread_mutex_lock (&(c->signal.destroyed_mutex))) != 0)
+  if ((perr = pthread_mutex_lock (&(c->signal.mutex_ctx_state))) != 0)
     IPMICONSOLE_DEBUG (("pthread_mutex_lock: %s", strerror (perr)));
 
   if (c->signal.user_has_destroyed)
@@ -1081,7 +1081,7 @@ __ipmiconsole_ctx_connection_cleanup (ipmiconsole_ctx_t c, int session_submitted
             IPMICONSOLE_DEBUG (("pthread_mutex_unlock: %s", strerror (perr)));
         }
 
-      if ((perr = pthread_mutex_unlock (&(c->signal.destroyed_mutex))) != 0)
+      if ((perr = pthread_mutex_unlock (&(c->signal.mutex_ctx_state))) != 0)
         IPMICONSOLE_DEBUG (("pthread_mutex_unlock: %s", strerror (perr)));
     }
 }

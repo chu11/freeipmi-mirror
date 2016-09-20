@@ -1511,7 +1511,7 @@ ipmiconsole_ctx_destroy (ipmiconsole_ctx_t c)
        */
       ipmiconsole_ctx_fds_cleanup (c);
 
-      if ((perr = pthread_mutex_lock (&(c->signal.destroyed_mutex))) != 0)
+      if ((perr = pthread_mutex_lock (&(c->signal.mutex_ctx_state))) != 0)
         IPMICONSOLE_DEBUG (("pthread_mutex_lock: %s", strerror (perr)));
 
       if (!c->signal.user_has_destroyed)
@@ -1522,7 +1522,7 @@ ipmiconsole_ctx_destroy (ipmiconsole_ctx_t c)
        */
       c->api_magic = ~IPMICONSOLE_CTX_API_MAGIC;
 
-      if ((perr = pthread_mutex_unlock (&(c->signal.destroyed_mutex))) != 0)
+      if ((perr = pthread_mutex_unlock (&(c->signal.mutex_ctx_state))) != 0)
         IPMICONSOLE_DEBUG (("pthread_mutex_unlock: %s", strerror (perr)));
 
       return;

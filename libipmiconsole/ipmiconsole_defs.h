@@ -448,7 +448,7 @@ struct ipmiconsole_ctx_signal {
    * engine/garbage-collector to cleanup.  Need to mutex to avoid
    * destroy races.
    */
-  pthread_mutex_t destroyed_mutex;
+  pthread_mutex_t mutex_ctx_state;
   unsigned int user_has_destroyed;
   unsigned int moved_to_destroyed;
 };
