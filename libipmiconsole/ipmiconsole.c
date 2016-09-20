@@ -873,6 +873,15 @@ ipmiconsole_engine_submit (ipmiconsole_ctx_t c,
 
   /* may have been set already */
   c->session_submitted++;
+
+  if ((perr = pthread_mutex_lock (&(c->signal.mutex_ctx_state))) != 0)
+    IPMICONSOLE_DEBUG (("pthread_mutex_lock: %s", strerror (perr)));
+
+  c->signal.ctx_state = IPMICONSOLE_CTX_STATE_ENGINE_SUBMITTED;
+
+  if ((perr = pthread_mutex_unlock (&(c->signal.mutex_ctx_state))) != 0)
+    IPMICONSOLE_DEBUG (("pthread_mutex_unlock: %s", strerror (perr)));
+
   ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SUCCESS);
   return (0);
 
@@ -1109,6 +1118,15 @@ ipmiconsole_engine_submit_block (ipmiconsole_ctx_t c)
 
   /* may have been set already */
   c->session_submitted++;
+
+  if ((perr = pthread_mutex_lock (&(c->signal.mutex_ctx_state))) != 0)
+    IPMICONSOLE_DEBUG (("pthread_mutex_lock: %s", strerror (perr)));
+
+  c->signal.ctx_state = IPMICONSOLE_CTX_STATE_ENGINE_SUBMITTED;
+
+  if ((perr = pthread_mutex_unlock (&(c->signal.mutex_ctx_state))) != 0)
+    IPMICONSOLE_DEBUG (("pthread_mutex_unlock: %s", strerror (perr)));
+
   ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SUCCESS);
   return (0);
 
@@ -1514,21 +1532,67 @@ ipmiconsole_ctx_destroy (ipmiconsole_ctx_t c)
       if ((perr = pthread_mutex_lock (&(c->signal.mutex_ctx_state))) != 0)
         IPMICONSOLE_DEBUG (("pthread_mutex_lock: %s", strerror (perr)));
 
-      if (!c->signal.user_has_destroyed)
-        c->signal.user_has_destroyed++;
+      assert (c->signal.ctx_state == IPMICONSOLE_CTX_STATE_ENGINE_SUBMITTED
+              || c->signal.ctx_state == IPMICONSOLE_CTX_STATE_GARBAGE_COLLECTION_WAIT
+              || c->signal.ctx_state == IPMICONSOLE_CTX_STATE_ENGINE_DESTROYED);
 
-      /* must change magic in this mutex, to avoid racing
-       * to destroy the context.
-       */
-      c->api_magic = ~IPMICONSOLE_CTX_API_MAGIC;
+      /* Be careful, if the mutex is destroyed we shouldn't unlock it. */
 
-      if ((perr = pthread_mutex_unlock (&(c->signal.mutex_ctx_state))) != 0)
-        IPMICONSOLE_DEBUG (("pthread_mutex_unlock: %s", strerror (perr)));
+      if (c->signal.ctx_state == IPMICONSOLE_CTX_STATE_ENGINE_SUBMITTED)
+        {
+          c->signal.ctx_state = IPMICONSOLE_CTX_STATE_USER_DESTROYED;
+
+          /* must change magic in this mutex, to avoid racing
+           * to destroy the context.
+           */
+          c->api_magic = ~IPMICONSOLE_CTX_API_MAGIC;
+
+          if ((perr = pthread_mutex_unlock (&(c->signal.mutex_ctx_state))) != 0)
+            IPMICONSOLE_DEBUG (("pthread_mutex_unlock: %s", strerror (perr)));
+        }
+      else if (c->signal.ctx_state == IPMICONSOLE_CTX_STATE_GARBAGE_COLLECTION_WAIT)
+        {
+          c->signal.ctx_state = IPMICONSOLE_CTX_STATE_GARBAGE_COLLECTION_USER_DESTROYED;
+
+          /* must change magic in this mutex, to avoid racing
+           * to destroy the context.
+           */
+          c->api_magic = ~IPMICONSOLE_CTX_API_MAGIC;
+
+          if ((perr = pthread_mutex_unlock (&(c->signal.mutex_ctx_state))) != 0)
+            IPMICONSOLE_DEBUG (("pthread_mutex_unlock: %s", strerror (perr)));
+        }
+      else if (c->signal.ctx_state == IPMICONSOLE_CTX_STATE_ENGINE_DESTROYED)
+        {
+          /* Engine has torndown, clean this thing up */
+          ipmiconsole_ctx_config_cleanup (c);
+          ipmiconsole_ctx_debug_cleanup (c);
+          ipmiconsole_ctx_signal_cleanup (c);
+          ipmiconsole_ctx_blocking_cleanup (c);
+          ipmiconsole_ctx_cleanup (c);
+
+          /* No unlocking, mutex is now destroyed */
+        }
+      else
+        {
+          /* State IPMICONSOLE_CTX_STATE_INIT shouldn't be possible if submitted */
+          /* State IPMICONSOLE_CTX_STATE_GARBAGE_COLLECTION_USER_DESTROYED or
+           * IPMICONSOLE_CTX_STATE_USER_DESTROYED shouldn't be possible,
+           * api_magic != IPMICONSOLE_CTX_API_MAGIC and we shouldn't be
+           * at this point.
+           */
+          IPMICONSOLE_DEBUG (("invalid ctx_state in ipmiconsole_ctx_destroy: %d", c->signal.ctx_state));
+
+          if ((perr = pthread_mutex_unlock (&(c->signal.mutex_ctx_state))) != 0)
+            IPMICONSOLE_DEBUG (("pthread_mutex_unlock: %s", strerror (perr)));
+        }
 
       return;
     }
 
   /* else session never submitted, so we have to cleanup */
+  assert(c->signal.ctx_state == IPMICONSOLE_CTX_STATE_INIT);
+
   c->api_magic = ~IPMICONSOLE_CTX_API_MAGIC;
   ipmiconsole_ctx_config_cleanup (c);
   ipmiconsole_ctx_debug_cleanup (c);

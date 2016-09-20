@@ -1,3 +1,8 @@
+2016-09-20 Albert Chu <chu11@llnl.gov>
+
+	* libipmiconsole/: Create state variable to manage context destroy
+	state remove corner case of potential segfault on teardown.
+
 2016-09-06 Albert Chu <chu11@llnl.gov>
 
 	* libipmiconsole/ipmiconsole_ctx.c (__ipmiconsole_ctx_connection_cleanup):
