@@ -432,6 +432,30 @@ struct ipmiconsole_ctx_debug {
 };
 
 /* Mutexes + flags for signaling between the API and engine */
+
+/* state of context
+ * - INIT, user has not submitted it to the engine, user cleans up all
+ *   - can move to ENGINE_SUBMITTED state
+ * - ENGINE_SUBMITTED, in engine being used
+ *   - can move to USER_DESTROYED if user destroys first
+ *   - can move to GARBAGE_COLLECTION_WAIT if engine finished first
+ * - GARBAGE_COLLECTION_WAIT, waiting for user to destroy 
+ *   - can move to GARBAGE_COLLECTION_USER_DESTROYED
+ *   - can move to ENGINE_DESTROYED
+ * - GARBAGE_COLLECTION_USER_DESTROYED, user done, garbage collection
+ *   should finish up destruction
+ * - USER_DESTROYED, user destroyed, garbage collector will clean it up
+ * - ENGINE_DESTROYED, engine done with it, user side complete cleanup
+ */
+typedef enum {
+  IPMICONSOLE_CTX_STATE_INIT,
+  IPMICONSOLE_CTX_STATE_ENGINE_SUBMITTED,
+  IPMICONSOLE_CTX_STATE_GARBAGE_COLLECTION_WAIT,
+  IPMICONSOLE_CTX_STATE_GARBAGE_COLLECTION_USER_DESTROYED,
+  IPMICONSOLE_CTX_STATE_USER_DESTROYED,
+  IPMICONSOLE_CTX_STATE_ENGINE_DESTROYED,
+} ipmiconsole_ctx_state;
+
 struct ipmiconsole_ctx_signal {
   /* Conceptually there is not a race with the status.  The API initializes
    * the status, and the engine is the only one that modifies it.
@@ -443,14 +467,13 @@ struct ipmiconsole_ctx_signal {
   pthread_mutex_t status_mutex;
   unsigned int status;
 
-  /* user_has_destroyed - flags and mutex used when the user has
+  /* ctx_state - state and mutex used to determine when the user has
    * destroyed the context and it is now the responsibility of the
-   * engine/garbage-collector to cleanup.  Need to mutex to avoid
-   * destroy races.
+   * engine/garbage-collector to cleanup, or vice versa.  Need to
+   * mutex to avoid destroy races.
    */
   pthread_mutex_t mutex_ctx_state;
-  unsigned int user_has_destroyed;
-  unsigned int moved_to_destroyed;
+  ipmiconsole_ctx_state ctx_state;
 };
 
 /* non-blocking potential parameters */

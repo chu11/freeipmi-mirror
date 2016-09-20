@@ -782,7 +782,8 @@ int ipmiconsole_engine_submit_block (ipmiconsole_ctx_t c);
  * ipmiconsole_engine_teardown
  *
  * Teardown the ipmiconsole engine.  This function will destroy
- * all threads and contexts managed by the engine.
+ * all threads managed by the engine.  Users are still required to
+ * destroy remaining contexts with ipmiconsole_ctx_destroy().
  *
  * Parameters:
  *
@@ -938,8 +939,10 @@ int ipmiconsole_ctx_generate_break (ipmiconsole_ctx_t c);
 /*
  * ipmiconsole_ctx_destroy
  *
- * Destroy a context.  Will close file descriptor retrieved from
- * ipmiconsole_ctx_fd().
+ * Destroy a context.  May not destroy/release the context resources
+ * immediately if the session is still being cleaned up.  Will instead
+ * be moved to garbage collection. Will close file descriptor
+ * retrieved from ipmiconsole_ctx_fd().
  */
 void ipmiconsole_ctx_destroy (ipmiconsole_ctx_t c);
 

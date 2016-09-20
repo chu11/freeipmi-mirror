@@ -158,12 +158,15 @@ ipmiconsole_garbage_collector (void *arg)
           if ((perr = pthread_mutex_lock (&(c->signal.mutex_ctx_state))) != 0)
             IPMICONSOLE_DEBUG (("pthread_mutex_lock: %s", strerror (perr)));
 
-          /* Be careful, if the user requested to destroy the context, we can
-           * destroy it here.  But if we destroy it, there is no mutex to
-           * unlock.
-           */
-          if (c->signal.user_has_destroyed)
+          assert (c->signal.ctx_state == IPMICONSOLE_CTX_STATE_GARBAGE_COLLECTION_WAIT
+                  || c->signal.ctx_state == IPMICONSOLE_CTX_STATE_GARBAGE_COLLECTION_USER_DESTROYED);
+                  
+          if (c->signal.ctx_state == IPMICONSOLE_CTX_STATE_GARBAGE_COLLECTION_USER_DESTROYED)
             {
+              /* Must unlock here, b/c will be grabbed in delete */
+              if ((perr = pthread_mutex_unlock (&(c->signal.mutex_ctx_state))) != 0)
+                IPMICONSOLE_DEBUG (("pthread_mutex_unlock: %s", strerror (perr)));
+
               if (!list_delete (itr))
                 IPMICONSOLE_DEBUG (("list_delete: %s", strerror (errno)));
             }
