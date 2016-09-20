@@ -290,7 +290,7 @@ ipmiconsole_engine_setup (unsigned int thread_count)
       goto cleanup;
     }
 
-  if (!(console_engine_ctxs_to_destroy = list_create ((ListDelF)ipmiconsole_ctx_list_cleanup)))
+  if (!(console_engine_ctxs_to_destroy = list_create ((ListDelF)ipmiconsole_ctx_garbage_collection_cleanup)))
     {
       IPMICONSOLE_DEBUG (("list_create: %s", strerror (errno)));
       goto cleanup;
