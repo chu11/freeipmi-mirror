@@ -121,9 +121,9 @@ ipmiconsole_ctx_cleanup (ipmiconsole_ctx_t c)
     free (c);
 }
 
-/* Wrapper for list callback */
+/* Wrapper for list callback on console_engine_ctxs_to_destroy */
 void
-ipmiconsole_ctx_list_cleanup (ipmiconsole_ctx_t c)
+ipmiconsole_ctx_garbage_collection_cleanup (ipmiconsole_ctx_t c)
 {
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
