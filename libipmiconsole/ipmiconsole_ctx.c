@@ -944,7 +944,7 @@ __ipmiconsole_ctx_connection_cleanup (ipmiconsole_ctx_t c, int session_submitted
    *
    * On error situations (i.e. ipmiconsole_engine_submit() doesn't
    * return to the user w/ success), it is the responsibility of other
-   * code to call _ipmiconsole_ctx_api_managed_session_data_cleanup().
+   * code to call __ipmiconsole_ctx_connection_cleanup().
    *
    * The exception to this is when the user specifies the
    * IPMICONSOLE_ENGINE_CLOSE_FD flag.  Then we close it here
