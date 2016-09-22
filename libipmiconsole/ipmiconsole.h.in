@@ -262,13 +262,13 @@ extern "C" {
  * CLOSE_FD
  *
  * By default, the ipmiconsole engine will not close the file
- * descriptor (returned by ipmiconsole_ctx_fd()) when an error occurs
- * within the ipmiconsole engine (such as a session timeout).  A user
- * will subsequently see an EOF on a read() or an EPIPE on a write()
- * to know an error occurred.
+ * descriptor (returned by ipmiconsole_ctx_fd()) within the
+ * ipmiconsole engine (such as a session timeout).  On errors (such as
+ * session timeout), a user will subsequently see an EOF on a read()
+ * or an EPIPE on a write() to know an error occurred.
  *
- * This flag will inform the engine to close the file descriptor on
- * error.  This will change the behavior of how the user should
+ * This flag will inform the engine to close the file descriptor for
+ * the user.  This will change the behavior of how the user should
  * program with the file descriptor.  For example, calls to read() and
  * write() would likely return with EBADF errors instead of EOF or
  * EPIPE errors respectively.  Calls to select() may return with EBADF
