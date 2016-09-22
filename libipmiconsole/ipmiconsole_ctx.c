@@ -511,6 +511,7 @@ _ipmiconsole_ctx_connection_init (ipmiconsole_ctx_t c)
 
   memset (&(c->connection), '\0', sizeof (struct ipmiconsole_ctx_connection));
   c->connection.user_fd = -1;
+  c->connection.user_fd_retrieved = 0;
   c->connection.ipmiconsole_fd = -1;
   c->connection.ipmi_fd = -1;
   c->connection.asynccomm[0] = -1;
@@ -953,7 +954,10 @@ __ipmiconsole_ctx_connection_cleanup (ipmiconsole_ctx_t c, int session_submitted
     {
       /* ignore potential error, cleanup path */
       if (c->connection.user_fd >= 0)
-        close (c->connection.user_fd);
+	{
+	  close (c->connection.user_fd);
+          c->connection.user_fd_retrieved = 0;
+	}
     }
   /* ignore potential error, cleanup path */
   if (c->connection.ipmiconsole_fd >= 0)
@@ -1372,8 +1376,11 @@ ipmiconsole_ctx_fds_cleanup (ipmiconsole_ctx_t c)
    * engine.  Closing asynccomm[1] first could result in a EPIPE
    * instead.
    */
-  /* ignore potential error, cleanup path */
-  close (c->fds.user_fd);
+  if (c->connection.user_fd_retrieved)
+    {
+      /* ignore potential error, cleanup path */
+      close (c->fds.user_fd);
+    }
   /* ignore potential error, cleanup path */
   close (c->fds.asynccomm[0]);
   /* ignore potential error, cleanup path */

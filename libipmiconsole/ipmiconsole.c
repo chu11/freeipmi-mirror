@@ -1481,6 +1481,7 @@ ipmiconsole_ctx_fd (ipmiconsole_ctx_t c)
     }
 
   ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SUCCESS);
+  c->connection.user_fd_retrieved++;
   return (c->fds.user_fd);
 }
 
