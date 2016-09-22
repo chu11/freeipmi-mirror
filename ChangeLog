@@ -1,3 +1,9 @@
+2016-09-22 Albert Chu <chu11@llnl.gov>
+
+	* libipmiconsole/: Do not close user fd if use has retrieved it
+	from ipmiconsole_ctx_fd.  Double close can lead to race
+	conditions.
+
 2016-09-20 Albert Chu <chu11@llnl.gov>
 
 	* libipmiconsole/: Create state variable to manage context destroy

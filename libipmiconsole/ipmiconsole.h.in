@@ -923,6 +923,12 @@ ipmiconsole_ctx_status_t ipmiconsole_ctx_status (ipmiconsole_ctx_t c);
  * typically see this affect via an EOF on a read() or an EPIPE on a
  * write().  For alternate file descriptor behavior, see ENGINE flags
  * above.
+ *
+ * If the user successfully retrieves the file descriptor via this
+ * function, the user is required to close the file descriptor.  The
+ * ipmiconsole engine will not do so, with the exception of when the
+ * IPMICONSOLE_ENGINE_CLOSE_FD flag is set.  If the user does not
+ * close the file descriptor, a file descriptor leak may occur.
  */
 int ipmiconsole_ctx_fd (ipmiconsole_ctx_t c);
 
@@ -941,8 +947,9 @@ int ipmiconsole_ctx_generate_break (ipmiconsole_ctx_t c);
  *
  * Destroy a context.  May not destroy/release the context resources
  * immediately if the session is still being cleaned up.  Will instead
- * be moved to garbage collection. Will close file descriptor
- * retrieved from ipmiconsole_ctx_fd().
+ * be moved to garbage collection.  Will not close file descriptor if
+ * it was retrieved from ipmiconsole_ctx_fd().  User is required to
+ * close it.
  */
 void ipmiconsole_ctx_destroy (ipmiconsole_ctx_t c);
 
