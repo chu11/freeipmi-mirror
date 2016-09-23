@@ -1,5 +1,23 @@
 FreeIPMI 1.5.4 - 08/01/16
 -------------------------
+o Various changes/fixes in libipmiconsole
+  - If user retrieves file descriptor from ipmiconsole_ctx_fd, user is
+    required to close it.  ipmiconsole_ctx_destroy no longer closes
+    it.  This is to avoid a potential double close which can be a
+    problem for multithreaded applications.  This is a change in
+    behavior, but we do not believe this will affect most applications
+    since most users close the file descriptor under most scenarios
+    anyways.
+  - ipmiconsole_ctx_destroy() should now be called to free resources
+    even if ipmiconsole_engine_teardown() has been called.  This has
+    been done to create consistent behavior in the API and avoid a
+    former segfault possibility.  This is a change in behavior, but we
+    do not believe this will affect most applications since
+    ipmiconsole_engine_teardown() is only called when an application
+    is being shutdown.
+  - The use of IPMICONSOLE_ENGINE_CLOSE_FD has been clarified in the
+    header file.  Some of the prior text was unclear.  Behavior has
+    not been changed.
 o In ipmi-oem, support Intel get-bmc-services and set-bmc-services commands.
 o In ipmi-oem, support Gigabyte get-nic-mode and set-nic-mode commands.
 o Support Gigabyte MD90-FS0-ZB OEM SEL events.
