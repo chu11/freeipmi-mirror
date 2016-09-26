@@ -9,6 +9,10 @@
 
 	* libfreeipmi/interface/ipmi-rmcpplus-interface.c (_construct_payload_confidentiality_aes_cbc_128):
 	Use crypt_get_random appropriately.
+
+	* libfreeipmi/include/freeipmi/interface/ipmi-rmcpplus-interface.h,
+	libfreeipmi/interface/ipmi-rmcpplus-interface.c (ipmi_rmcpplus_get_random):
+	Add new convenience function.
 	
 2016-09-22 Albert Chu <chu11@llnl.gov>
 

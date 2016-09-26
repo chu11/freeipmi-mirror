@@ -221,6 +221,21 @@ ipmi_rmcpplus_init (void)
 }
 
 int
+ipmi_rmcpplus_get_random (void *buf, unsigned int buflen)
+{
+  if (!buf)
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+  
+  if (!buflen)
+    return (0);
+  
+  return (crypt_get_random (buf, buflen));
+}
+
+int
 fill_rmcpplus_session_hdr (uint8_t payload_type,
                            uint8_t payload_authenticated,
                            uint8_t payload_encrypted,
