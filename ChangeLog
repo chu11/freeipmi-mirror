@@ -2,6 +2,10 @@
 
 	* libfreeipmi/util/ipmi-util.c (ipmi_get_random): Remove call to
 	gcry_randomize.  There's no guarantee gcrypt was initialized.
+
+	* libfreeipmi/libcommon/ipmi-crypt.h,
+	libfreeipmi/libcommon/ipmi-crypt.c (crypt_get_random): New
+	function that uses gcry_randomize.
 	
 2016-09-22 Albert Chu <chu11@llnl.gov>
 
