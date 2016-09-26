@@ -6,6 +6,9 @@
 	* libfreeipmi/libcommon/ipmi-crypt.h,
 	libfreeipmi/libcommon/ipmi-crypt.c (crypt_get_random): New
 	function that uses gcry_randomize.
+
+	* libfreeipmi/interface/ipmi-rmcpplus-interface.c (_construct_payload_confidentiality_aes_cbc_128):
+	Use crypt_get_random appropriately.
 	
 2016-09-22 Albert Chu <chu11@llnl.gov>
 

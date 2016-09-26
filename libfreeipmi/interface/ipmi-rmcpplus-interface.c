@@ -784,7 +784,7 @@ _construct_payload_confidentiality_aes_cbc_128 (uint8_t payload_type,
 
   assert (cipher_blocklen == IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH);
 
-  if ((iv_len = ipmi_get_random (iv, IPMI_CRYPT_AES_CBC_128_IV_LENGTH)) < 0)
+  if ((iv_len = crypt_get_random (iv, IPMI_CRYPT_AES_CBC_128_IV_LENGTH)) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
