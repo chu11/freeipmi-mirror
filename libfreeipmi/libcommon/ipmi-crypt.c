@@ -68,6 +68,13 @@ crypt_init (void)
   
   /* achu:
    *
+   * Documentation is not clear on whether only GCRYCTL_SET_THREAD_CBS
+   * needs to be set before threads are created or if all
+   * initialization (including gcry_check_version,
+   * CRYCTL_DISABLE_SECMEM, and GCRYCTL_INITIALIZATION_FINISHED need
+   * to be.  Only putting GCRYCTL_SET_THREAD_CBS in mutex section for
+   * time being and it appears to work.
+   *
    * For reasons that are unclear to me, gcry_control and
    * GCRYCTL_SET_THREAD_CBS are no longer reentrant starting with
    * libgcrypt 1.6.0.  Calling it simultaneously leads to segfaults.
