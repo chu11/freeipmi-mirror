@@ -172,7 +172,7 @@ int
 ipmi_get_random (void *buf, unsigned int buflen)
 {
 #if (HAVE_DEVURANDOM || HAVE_DEVRANDOM)
-  int fd, rv;
+  int fd, len, rv = -1;
 #endif /* !(HAVE_DEVURANDOM || HAVE_DEVRANDOM) */
 
   if (!buf)
@@ -187,40 +187,27 @@ ipmi_get_random (void *buf, unsigned int buflen)
 #if (HAVE_DEVURANDOM || HAVE_DEVRANDOM)
 #if HAVE_DEVURANDOM
   if ((fd = open ("/dev/urandom", O_RDONLY)) < 0)
-    goto gcrypt_rand;
+    goto cleanup;
 #else  /* !HAVE_DEVURANDOM */
   if ((fd = open ("/dev/random", O_RDONLY)) < 0)
-    goto gcrypt_rand;
+    goto cleanup;
 #endif /* !HAVE_DEVURANDOM */
 
-  if ((rv = read (fd, buf, buflen)) < 0)
-    {
-      close (fd);
-      goto gcrypt_rand;
-    }
+  if ((len = read (fd, buf, buflen)) < 0)
+    goto cleanup;
 
-  if (((unsigned int)rv) < buflen)
-    {
-      close (fd);
-      goto gcrypt_rand;
-    }
+  if (((unsigned int)len) < buflen)
+    goto cleanup;
 
+  rv = len;
+ cleanup:
   /* ignore potential error, cleanup path */
   close (fd);
   return (rv);
-#endif /* !(HAVE_DEVURANDOM || HAVE_DEVRANDOM) */
-
- gcrypt_rand:
-/* achu: nothing to do with encryption, but the gcrypt lib isn't loaded 
- * hopefully the user has /dev/random or /dev/urandom.
- */
-#ifdef WITH_ENCRYPTION
-  gcry_randomize ((unsigned char *)buf, buflen, GCRY_STRONG_RANDOM);
-  return (buflen);
-#else /* !WITH_ENCRYPTION */
+#else /* !(HAVE_DEVURANDOM || HAVE_DEVRANDOM) */
   SET_ERRNO (EPERM);
   return (-1);
-#endif /* !WITH_ENCRYPTION */
+#endif /* !(HAVE_DEVURANDOM || HAVE_DEVRANDOM) */
 }
 
 const char *

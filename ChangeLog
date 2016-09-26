@@ -1,3 +1,8 @@
+2016-09-26 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/util/ipmi-util.c (ipmi_get_random): Remove call to
+	gcry_randomize.  There's no guarantee gcrypt was initialized.
+	
 2016-09-22 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/util/ipmi-util.c (ipmi_get_random): Fix corner case
