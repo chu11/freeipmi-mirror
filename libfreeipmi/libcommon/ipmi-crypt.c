@@ -68,6 +68,13 @@ crypt_init (void)
   
   /* achu:
    *
+   * Documentation is not clear on whether only GCRYCTL_SET_THREAD_CBS
+   * needs to be set before threads are created or if all
+   * initialization (including gcry_check_version,
+   * CRYCTL_DISABLE_SECMEM, and GCRYCTL_INITIALIZATION_FINISHED need
+   * to be.  Only putting GCRYCTL_SET_THREAD_CBS in mutex section for
+   * time being and it appears to work.
+   *
    * For reasons that are unclear to me, gcry_control and
    * GCRYCTL_SET_THREAD_CBS are no longer reentrant starting with
    * libgcrypt 1.6.0.  Calling it simultaneously leads to segfaults.
@@ -83,7 +90,7 @@ crypt_init (void)
     {
       if ((e = gcry_control (GCRYCTL_SET_THREAD_CBS, &gcry_threads_pthread)) != GPG_ERR_NO_ERROR)
         {
-          ERR_TRACE (gcry_strerror (e), e);
+          ERR_GCRYPT_TRACE (e);
           SET_ERRNO (_gpg_error_to_errno (e));
           return (-1);
         }
@@ -105,14 +112,14 @@ crypt_init (void)
 
   if ((e = gcry_control (GCRYCTL_DISABLE_SECMEM, 0)) != GPG_ERR_NO_ERROR)
     {
-      ERR_TRACE (gcry_strerror (e), e);
+      ERR_GCRYPT_TRACE (e);
       SET_ERRNO (_gpg_error_to_errno (e));
       return (-1);
     }
 
   if ((e = gcry_control (GCRYCTL_INITIALIZATION_FINISHED, 0)) != GPG_ERR_NO_ERROR)
     {
-      ERR_TRACE (gcry_strerror (e), e);
+      ERR_GCRYPT_TRACE (e);
       SET_ERRNO (_gpg_error_to_errno (e));
       return (-1);
     }
@@ -176,7 +183,7 @@ crypt_hash (unsigned int hash_algorithm,
 
   if ((e = gcry_md_open (&h, gcry_md_algorithm, gcry_md_flags)) != GPG_ERR_NO_ERROR)
     {
-      ERR_TRACE (gcry_strerror (e), e);
+      ERR_GCRYPT_TRACE (e);
       SET_ERRNO (_gpg_error_to_errno (e));
       return (-1);
     }
@@ -197,7 +204,7 @@ crypt_hash (unsigned int hash_algorithm,
     {
       if ((e = gcry_md_setkey (h, key, key_len)) != GPG_ERR_NO_ERROR)
         {
-          ERR_TRACE (gcry_strerror (e), e);
+          ERR_GCRYPT_TRACE (e);
           SET_ERRNO (_gpg_error_to_errno (e));
           goto cleanup;
         }
@@ -351,7 +358,7 @@ _cipher_crypt (unsigned int cipher_algorithm,
                              gcry_cipher_mode,
                              0) != GPG_ERR_NO_ERROR))
     {
-      ERR_TRACE (gcry_strerror (e), e);
+      ERR_GCRYPT_TRACE (e);
       SET_ERRNO (_gpg_error_to_errno (e));
       return (-1);
     }
@@ -362,7 +369,7 @@ _cipher_crypt (unsigned int cipher_algorithm,
                                    (void *)key,
                                    key_len)) != GPG_ERR_NO_ERROR)
         {
-          ERR_TRACE (gcry_strerror (e), e);
+          ERR_GCRYPT_TRACE (e);
           SET_ERRNO (_gpg_error_to_errno (e));
           goto cleanup;
         }
@@ -372,7 +379,7 @@ _cipher_crypt (unsigned int cipher_algorithm,
     {
       if ((e = gcry_cipher_setiv (h, (void *)iv, iv_len)) != GPG_ERR_NO_ERROR)
         {
-          ERR_TRACE (gcry_strerror (e), e);
+          ERR_GCRYPT_TRACE (e);
           SET_ERRNO (_gpg_error_to_errno (e));
           goto cleanup;
         }
@@ -386,7 +393,7 @@ _cipher_crypt (unsigned int cipher_algorithm,
                                     NULL,
                                     0)) != GPG_ERR_NO_ERROR)
         {
-          ERR_TRACE (gcry_strerror (e), e);
+          ERR_GCRYPT_TRACE (e);
           SET_ERRNO (_gpg_error_to_errno (e));
           goto cleanup;
         }
@@ -399,7 +406,7 @@ _cipher_crypt (unsigned int cipher_algorithm,
                                     NULL,
                                     0)) != GPG_ERR_NO_ERROR)
         {
-          ERR_TRACE (gcry_strerror (e), e);
+          ERR_GCRYPT_TRACE (e);
           SET_ERRNO (_gpg_error_to_errno (e));
           goto cleanup;
         }
@@ -504,7 +511,7 @@ _crypt_cipher_info (unsigned int cipher_algorithm, unsigned int cipher_info)
                                   NULL,
                                   &len)) != GPG_ERR_NO_ERROR)
     {
-      ERR_TRACE (gcry_strerror (e), e);
+      ERR_GCRYPT_TRACE (e);
       SET_ERRNO (_gpg_error_to_errno (e));
       return (-1);
     }
@@ -539,4 +546,26 @@ crypt_cipher_block_len (unsigned int cipher_algorithm)
   SET_ERRNO (EPERM);
   return (-1);
 #endif /* !WITH_ENCRYPTION */
+}
+
+int
+crypt_get_random (void *buf, unsigned int buflen)
+{
+  if (!crypt_initialized)
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+  
+  if (!buf)
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (!buflen)
+    return (0);
+  
+  gcry_randomize ((unsigned char *)buf, buflen, GCRY_STRONG_RANDOM);
+  return (buflen);
 }

@@ -1,3 +1,70 @@
+2016-07-27 Albert Chu <chu11@llnl.gov>
+
+	* common/toolcommon/tool-common.h,
+	common/toolcommon/tool-common.c (ipmi_open): Add flags option.
+
+	* Use new ipmi_open() function call appropriately in all tools.
+
+	* ipmi-raw/: Support new --no-session option.
+
+	* libfreeipmi/api/ipmi-api.c (ipmi_cmd_raw): Fix corner case
+	when using IPMI_FLAGS_NOSESSION.
+
+2016-09-26 Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/ipmipower_powercmd.c (ipmipower_powercmd_queue): Fix
+	initialization of variables in wrong branch.
+
+2016-09-26 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/util/ipmi-util.c (ipmi_get_random): Remove call to
+	gcry_randomize.  There's no guarantee gcrypt was initialized.
+
+	* libfreeipmi/libcommon/ipmi-crypt.h,
+	libfreeipmi/libcommon/ipmi-crypt.c (crypt_get_random): New
+	function that uses gcry_randomize.
+
+	* libfreeipmi/interface/ipmi-rmcpplus-interface.c (_construct_payload_confidentiality_aes_cbc_128):
+	Use crypt_get_random appropriately.
+
+	* libfreeipmi/include/freeipmi/interface/ipmi-rmcpplus-interface.h,
+	libfreeipmi/interface/ipmi-rmcpplus-interface.c (ipmi_rmcpplus_get_random):
+	Add new convenience function.
+
+	* libfreeipmi/api/ipmi-lan-session-common.c (api_lan_2_0_open_session),
+	libipmiconsole/ipmiconsole_ctx.c (ipmiconsole_ctx_session_setup),
+	ipmipower/ipmipower_powercmd.c (ipmipower_powercmd_queue): Use new
+	ipmi_rmcpplus_get_random appropriately.
+	
+2016-09-22 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/util/ipmi-util.c (ipmi_get_random): Fix corner case
+	where signed/unsigned ints are compared.
+
+2016-09-22 Albert Chu <chu11@llnl.gov>
+
+	* libipmiconsole/: Do not close user fd if use has retrieved it
+	from ipmiconsole_ctx_fd.  Double close can lead to race
+	conditions.
+
+2016-09-20 Albert Chu <chu11@llnl.gov>
+
+	* libipmiconsole/: Create state variable to manage context destroy
+	state remove corner case of potential segfault on teardown.
+
+2016-09-06 Albert Chu <chu11@llnl.gov>
+
+	* libipmiconsole/ipmiconsole_ctx.c (__ipmiconsole_ctx_connection_cleanup):
+	Add missing call to ipmiconsole_ctx_config_cleanup.
+
+	* libfreeipmi/libcommon/ipmi-crypt.c: Fix potential issue with
+	multithreaded tracing, call gpg_strerror_r intead of gcry_strerror
+	when tracing.
+
+2016-08-30 Albert Chu <chu11@llnl.gov>
+	
+	* configure.ac; Fix output comment error.
+
 2016-08-02 Albert Chu <chu11@llnl.gov>
 	
 	* ipmi-oem/: Add Gigabyte get/set-nic-mode commands.

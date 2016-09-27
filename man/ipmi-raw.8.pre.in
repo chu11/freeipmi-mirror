@@ -37,6 +37,12 @@ The following options are specific to
 .TP
 \fB\-\-file\fR=\fICMD\-FILE\fR
 Specify a file to read command requests from.
+\fB\-\-no\-session\fR
+If performing out of band communication, do not establish an IPMI
+session and send raw packets without having established a
+session/authenticating.  This option is predominantly for testing the
+few IPMI packets that can work outside of a session and should not be
+used by the majority of users.
 #include <@top_srcdir@/man/manpage-common-hostranged-options-header.man>
 #include <@top_srcdir@/man/manpage-common-hostranged-buffer.man>
 #include <@top_srcdir@/man/manpage-common-hostranged-consolidate.man>

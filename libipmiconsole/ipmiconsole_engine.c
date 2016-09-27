@@ -290,7 +290,7 @@ ipmiconsole_engine_setup (unsigned int thread_count)
       goto cleanup;
     }
 
-  if (!(console_engine_ctxs_to_destroy = list_create ((ListDelF)ipmiconsole_ctx_list_cleanup)))
+  if (!(console_engine_ctxs_to_destroy = list_create ((ListDelF)ipmiconsole_ctx_garbage_collection_cleanup)))
     {
       IPMICONSOLE_DEBUG (("list_create: %s", strerror (errno)));
       goto cleanup;
@@ -1359,6 +1359,14 @@ ipmiconsole_engine_submit_ctx (ipmiconsole_ctx_t c)
    */
   c->session_submitted++;
 
+  if ((perr = pthread_mutex_lock (&(c->signal.mutex_ctx_state))) != 0)
+    IPMICONSOLE_DEBUG (("pthread_mutex_lock: %s", strerror (perr)));
+
+  c->signal.ctx_state = IPMICONSOLE_CTX_STATE_ENGINE_SUBMITTED;
+
+  if ((perr = pthread_mutex_unlock (&(c->signal.mutex_ctx_state))) != 0)
+    IPMICONSOLE_DEBUG (("pthread_mutex_unlock: %s", strerror (perr)));
+
   /* "Interrupt" the engine and tell it to get moving along w/ the new context */
   if (write (console_engine_ctxs_notifier[index][1], "1", 1) < 0)
     IPMICONSOLE_DEBUG (("write: %s", strerror (errno)));
@@ -1517,11 +1525,9 @@ ipmiconsole_engine_cleanup (int cleanup_sol_sessions)
    * been shut down.  So we don't need to lock w/ the
    * console_engine_ctxs_to_destroy_mutex.
    * 
-   * This list destruction could race w/ API code b/c the user could
-   * still be running around trying to use the contexts post
-   * engine_teardown() (e.g. calling ipmiconsole_ctx_destroy() after
-   * calling ipmiconsole_engine_teardown()).  We assume the user won't
-   * do this.
+   * This list destruction will cleanup everything except the minimal
+   * data within a context for the user to destroy with
+   * ipmiconsole_ctx_destroy.
    */
 
   list_destroy (console_engine_ctxs_to_destroy);

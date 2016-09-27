@@ -2203,7 +2203,8 @@ _ipmi_sel (pstdout_state_t pstate,
   if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
                                          hostname,
                                          &(prog_data->args->common_args),
-                                         state_data.pstate)))
+                                         state_data.pstate,
+                                         0)))
     goto cleanup;
 
   /* need to create/open cache before creating sel_ctx */
