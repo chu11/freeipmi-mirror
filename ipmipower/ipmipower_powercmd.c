@@ -352,10 +352,10 @@ ipmipower_powercmd_queue (ipmipower_power_cmd_t cmd,
       ip->confidentiality_key_ptr = ip->confidentiality_key;
       ip->confidentiality_key_len = IPMI_MAX_CONFIDENTIALITY_KEY_LENGTH;
 
-      if (ipmi_get_random (&ip->initial_message_tag,
-                           sizeof (ip->initial_message_tag)) < 0)
+      if (ipmi_rmcpplus_get_random (&ip->initial_message_tag,
+                                    sizeof (ip->initial_message_tag)) < 0)
         {
-          IPMIPOWER_ERROR (("ipmi_get_random: %s", strerror (errno)));
+          IPMIPOWER_ERROR (("ipmi_rmcpplus_get_random: %s", strerror (errno)));
           exit (EXIT_FAILURE);
         }
 
@@ -366,16 +366,16 @@ ipmipower_powercmd_queue (ipmipower_power_cmd_t cmd,
       /* In IPMI 2.0, session_ids of 0 are special */
       do
         {
-          if (ipmi_get_random (&ip->remote_console_session_id,
-                               sizeof (ip->remote_console_session_id)) < 0)
+          if (ipmi_rmcpplus_get_random (&ip->remote_console_session_id,
+                                        sizeof (ip->remote_console_session_id)) < 0)
             {
-              IPMIPOWER_ERROR (("ipmi_get_random: %s", strerror (errno)));
+              IPMIPOWER_ERROR (("ipmi_rmcpplus_get_random: %s", strerror (errno)));
               exit (EXIT_FAILURE);
             }
         } while (!ip->remote_console_session_id);
 
-      if (ipmi_get_random (ip->remote_console_random_number,
-                           IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH) < 0)
+      if (ipmi_rmcpplus_get_random (ip->remote_console_random_number,
+                                    IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH) < 0)
         {
           IPMIPOWER_ERROR (("ipmi_get_random: %s", strerror (errno)));
           exit (EXIT_FAILURE);

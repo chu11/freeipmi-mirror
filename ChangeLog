@@ -13,6 +13,11 @@
 	* libfreeipmi/include/freeipmi/interface/ipmi-rmcpplus-interface.h,
 	libfreeipmi/interface/ipmi-rmcpplus-interface.c (ipmi_rmcpplus_get_random):
 	Add new convenience function.
+
+	* libfreeipmi/api/ipmi-lan-session-common.c (api_lan_2_0_open_session),
+	libipmiconsole/ipmiconsole_ctx.c (ipmiconsole_ctx_session_setup),
+	ipmipower/ipmipower_powercmd.c (ipmipower_powercmd_queue): Use new
+	ipmi_rmcpplus_get_random appropriately.
 	
 2016-09-22 Albert Chu <chu11@llnl.gov>
 

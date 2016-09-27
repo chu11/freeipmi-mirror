@@ -3482,8 +3482,8 @@ api_lan_2_0_open_session (ipmi_ctx_t ctx)
   /* In IPMI 2.0, session_ids of 0 are special */
   do
     {
-      if (ipmi_get_random (&(ctx->io.outofband.remote_console_session_id),
-                           sizeof (ctx->io.outofband.remote_console_session_id)) < 0)
+      if (ipmi_rmcpplus_get_random (&(ctx->io.outofband.remote_console_session_id),
+                                    sizeof (ctx->io.outofband.remote_console_session_id)) < 0)
         {
           API_ERRNO_TO_API_ERRNUM (ctx, errno);
           goto cleanup;
@@ -3669,8 +3669,8 @@ api_lan_2_0_open_session (ipmi_ctx_t ctx)
       goto cleanup;
     }
 
-  if (ipmi_get_random (remote_console_random_number,
-                       IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH) < 0)
+  if (ipmi_rmcpplus_get_random (remote_console_random_number,
+                                IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
