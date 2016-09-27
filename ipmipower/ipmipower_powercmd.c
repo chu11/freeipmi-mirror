@@ -380,10 +380,10 @@ ipmipower_powercmd_queue (ipmipower_power_cmd_t cmd,
           IPMIPOWER_ERROR (("ipmi_get_random: %s", strerror (errno)));
           exit (EXIT_FAILURE);
         }
-
-      ip->wait_until_on_state = 0;
-      ip->wait_until_off_state = 0;
     }
+
+  ip->wait_until_on_state = 0;
+  ip->wait_until_off_state = 0;
 
   ip->ic = ic;
 
