@@ -1,9 +1,13 @@
 FreeIPMI 1.6.1 - 03/01/14
 -------------------------
+o Add --no-session option in ipmi-raw.
 o Add SDR cache options to ipmi-config.
 o Legacy -f short option for --flush-cache and -Q short option for
   quiet-cache.  Backwards compatible for tools that supported it
   before.
+o New libfreeipmi function ipmi_rmcpplus_get_random() to be used by
+  rmcpplus interface.  Allows code to use optimized crypt library
+  random functions.
 
 FreeIPMI 1.5.1 - 03/01/14
 -------------------------
