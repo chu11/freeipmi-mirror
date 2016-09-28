@@ -1,3 +1,11 @@
+2016-09-28 Albert Chu <chu11@llnl.gov>
+
+	Cleanup over-excessive use of secure_memset, should only be used
+	to clear buffers containing cryptographic keys (i.e. passwords).
+
+	* libipmimonitoring/ipmi_monitoring.c (ipmi_monitoring_ctx_create):
+	Remove unnecessary call to secure_memset().
+	
 2016-09-29 Albert Chu <chu11@llnl.gov>
 
 	* libipmiconsole/ipmiconsole_ctx.c (ipmiconsole_ctx_fds_cleanup):

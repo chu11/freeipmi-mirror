@@ -244,7 +244,7 @@ ipmi_monitoring_ctx_create (void)
     {
       if (!(c = (ipmi_monitoring_ctx_t)malloc (sizeof (struct ipmi_monitoring_ctx))))
         return (NULL);
-      secure_memset (c, '\0', sizeof (struct ipmi_monitoring_ctx));
+      memset (c, '\0', sizeof (struct ipmi_monitoring_ctx));
     }
   c->magic = IPMI_MONITORING_MAGIC;
 
