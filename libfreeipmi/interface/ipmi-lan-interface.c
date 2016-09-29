@@ -548,7 +548,6 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
                   md2_init (&ctx);
 
                   memcpy (authentication_code_field_ptr, digest, IPMI_1_5_MAX_PASSWORD_LENGTH);
-                  secure_memset (digest, '\0', MD2_DIGEST_LENGTH);
                 }
               else if (authentication_type == IPMI_AUTHENTICATION_TYPE_MD5)
                 {
@@ -567,7 +566,6 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
                   md5_init (&ctx);
 
                   memcpy (authentication_code_field_ptr, digest, IPMI_1_5_MAX_PASSWORD_LENGTH);
-                  secure_memset (digest, '\0', MD5_DIGEST_LENGTH);
                 }
             }
         }
@@ -582,8 +580,13 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
   rv = indx;
  cleanup:
   if (rv < 0)
-    secure_memset (pkt, '\0', pkt_len);
+    {
+      /* If plain password, pkt may contain it */
+      if (authentication_type == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY)
+        secure_memset (pkt, '\0', pkt_len);
+    }
   fiid_obj_destroy (obj_lan_msg_trlr);
+  /* secure_memset because can contain password */
   secure_memset (pwbuf, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
   return (rv);
 }

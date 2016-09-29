@@ -18,6 +18,9 @@
 	(ipmi_calculate_rakp_3_key_exchange_authentication_code)
 	(ipmi_rmcpplus_check_rakp_4_integrity_check_value): Fix secure
 	memset of invalid/unnecessary buffers.
+
+	* libfreeipmi/interface/ipmi-lan-interface.c (assemble_ipmi_lan_pkt):
+	Fix secure memset of unnecessary buffers.
 	
 2016-09-29 Albert Chu <chu11@llnl.gov>
 
