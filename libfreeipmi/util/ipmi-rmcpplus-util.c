@@ -187,8 +187,6 @@ ipmi_calculate_sik (uint8_t authentication_algorithm,
 
   rv = computed_digest_len;
  cleanup:
-  /* secure_memset b/c contains username */
-  secure_memset (hash_data, '\0', IPMI_MAX_KEY_DATA_LENGTH);
   return (rv);
 }
 
@@ -816,8 +814,6 @@ ipmi_calculate_rakp_3_key_exchange_authentication_code (uint8_t authentication_a
   memcpy (key_exchange_authentication_code, digest, digest_len);
   rv = digest_len;
  cleanup:
-  /* secure_memset b/c buf contains username */
-  secure_memset (buf, '\0', IPMI_MAX_KEY_DATA_LENGTH);
   return (rv);
 }
 
@@ -1103,8 +1099,6 @@ ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code (uint8_t authenticat
 
   rv = memcmp (digest, key_exchange_authentication_code, digest_len) ? 0 : 1;
  cleanup:
-  /* secure_memset b/c buf contains username */
-  secure_memset (buf, '\0', IPMI_MAX_KEY_DATA_LENGTH);
   return (rv);
 }
 

@@ -1,5 +1,11 @@
 2016-09-28 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/util/ipmi-rmcpplus-util.c: Do not secure_memset
+	buffers with usernames.  Do not consider username to be
+	secure_memset necessary.
+
+2016-09-28 Albert Chu <chu11@llnl.gov>
+
 	Cleanup over-excessive use of secure_memset, should only be used
 	to clear buffers containing cryptographic keys (i.e. passwords).
 
