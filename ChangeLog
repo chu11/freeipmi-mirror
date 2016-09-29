@@ -1,5 +1,10 @@
 2016-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/debug/ipmi-debug-lan.c (_ipmi_dump_lan_packet):
+	Clear data on obj_session_hdr not obj_lan_msg_hdr.
+
+2016-09-29 Albert Chu <chu11@llnl.gov>
+
 	* ipmipower/ipmipower_powercmd.c (_recv_packet),
 	libfreeipmi/debug/ipmi-debug-rmcpplus.c (_dump_rmcpplus_session_trlr),
 	libipmiconsole/ipmiconsole_processing.c (_receive_packet),

@@ -236,6 +236,13 @@ _ipmi_dump_lan_packet (int fd,
       goto cleanup;
     }
 
+  /* Clear out data */
+  if (fiid_obj_clear (obj_session_hdr) < 0)
+    {
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_session_hdr);
+      goto cleanup;
+    }
+
   if (pkt_len <= indx)
     goto out;
 
@@ -263,13 +270,6 @@ _ipmi_dump_lan_packet (int fd,
                      obj_lan_msg_hdr) < 0)
     {
       ERRNO_TRACE (errno);
-      goto cleanup;
-    }
-
-  /* Clear out data */
-  if (fiid_obj_clear (obj_lan_msg_hdr) < 0)
-    {
-      FIID_OBJECT_ERROR_TO_ERRNO (obj_lan_msg_hdr);
       goto cleanup;
     }
 
