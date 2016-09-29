@@ -1189,7 +1189,6 @@ _construct_session_trlr_authentication_code (uint8_t integrity_algorithm,
       memcpy (hash_data + hash_data_len,
               pwbuf,
               IPMI_2_0_MAX_PASSWORD_LENGTH);
-      secure_memset (pwbuf, '\0', IPMI_2_0_MAX_PASSWORD_LENGTH);
       hash_data_len += IPMI_2_0_MAX_PASSWORD_LENGTH;
     }
 
@@ -1198,16 +1197,9 @@ _construct_session_trlr_authentication_code (uint8_t integrity_algorithm,
 
   if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128)
     {
-      /* achu: Password must be zero padded */
-      memset (pwbuf, '\0', IPMI_2_0_MAX_PASSWORD_LENGTH);
-
-      if (authentication_code_data && authentication_code_data_len)
-        memcpy (pwbuf, authentication_code_data, authentication_code_data_len);
-
       memcpy (hash_data + hash_data_len,
               pwbuf,
               IPMI_2_0_MAX_PASSWORD_LENGTH);
-      secure_memset (pwbuf, '\0', IPMI_2_0_MAX_PASSWORD_LENGTH);
       hash_data_len += IPMI_2_0_MAX_PASSWORD_LENGTH;
     }
 
@@ -1240,7 +1232,8 @@ _construct_session_trlr_authentication_code (uint8_t integrity_algorithm,
 
   rv = copy_digest_len;
  cleanup:
-  secure_memset (integrity_digest, '\0', IPMI_MAX_INTEGRITY_DATA_LENGTH);
+  /* secure_memset b/c contains password */
+  secure_memset (pwbuf, '\0', IPMI_2_0_MAX_PASSWORD_LENGTH);
   return (rv);
 }
 

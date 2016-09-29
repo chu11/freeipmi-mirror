@@ -21,6 +21,9 @@
 
 	* libfreeipmi/interface/ipmi-lan-interface.c (assemble_ipmi_lan_pkt):
 	Fix secure memset of unnecessary buffers.
+
+	* libfreeipmi/interface/ipmi-rmcpplus-interface.c (_construct_session_trlr_authentication_code):
+	Fix secure memset of unnecessary buffers.
 	
 2016-09-29 Albert Chu <chu11@llnl.gov>
 
