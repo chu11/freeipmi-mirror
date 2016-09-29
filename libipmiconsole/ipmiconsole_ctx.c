@@ -1376,7 +1376,7 @@ ipmiconsole_ctx_fds_cleanup (ipmiconsole_ctx_t c)
    * engine.  Closing asynccomm[1] first could result in a EPIPE
    * instead.
    */
-  if (c->connection.user_fd_retrieved)
+  if (!c->connection.user_fd_retrieved)
     {
       /* ignore potential error, cleanup path */
       close (c->fds.user_fd);
