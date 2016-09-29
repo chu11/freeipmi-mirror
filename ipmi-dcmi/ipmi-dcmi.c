@@ -1518,8 +1518,6 @@ _sensor_info_output (ipmi_dcmi_state_data_t *state_data,
       int sdr_record_ids_len;
       int i;
 
-      fiid_obj_clear (obj_cmd_rs);
-
       if (ipmi_cmd_dcmi_get_dcmi_sensor_info (state_data->ipmi_ctx,
                                               sensor_type,
                                               entity_id,

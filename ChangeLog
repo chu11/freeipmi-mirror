@@ -1,5 +1,26 @@
 2016-09-29 Albert Chu <chu11@llnl.gov>
 
+	* bmc-info/bmc-info.c (display_system_info_common),
+	bmc-device/bmc-device.c (set_system_info_common),
+	ipmi-config/ipmi-config-category-pef-alert-string.c (alert_string_checkout),
+	ipmi-dcmi/ipmi-dcmi.c (_sensor_info_output),
+	ipmi-oem/ipmi-oem/ipmi-oem-dell.c (_get_dell_system_info_long_string), 
+	ipmi-oem/ipmi-oem-thirdparty.c (ipmi_oem_thirdparty_get_system_info_block_pstring,
+	ipmi_oem_thirdparty_get_account_status): Remove unnecessary fiid object
+	clear which is also done in unassemble deep in API.
+
+	* ipmi-oem/ipmi-oem-inventec.c (_ipmi_oem_inventec_read_eeprom_at24c256n,
+	_ipmi_oem_inventec_clear_eeprom_at24c256n), ipmi-oem/ipmi-oem-quanta.c
+	(_ipmi_oem_quanta_read_mac_address_s99q, _ipmi_oem_quanta_write_mac_address_s99q):
+	Remove useless fiid obj clear call.
+
+	* libfreeipmi/interface/ipmi-rmcpplus-interface.c (assemble_ipmi_rmcpplus_pkt),
+	libfreeipmi/fru/ipmi-fru.c (_read_fru_data),
+	libfreeipmi/debug/ipmi-debug-rmcpplus.c (_dump_rmcpplus_payload_data):
+	Remove unnecessary fiid obj clears.
+
+2016-09-29 Albert Chu <chu11@llnl.gov>
+	
 	* ipmipower/ipmipower_packet.c (ipmipower_packet_store,
 	_ipmi_1_5_packet_create, _ipmi_2_0_packet_create): Remove unnecessary
 	fiid object clears which are already done inside the fill & unassemble
@@ -14,7 +35,7 @@
 	_api_lan_2_0_cmd_send, _api_lan_cmd_recv, _api_lan_2_0_cmd_recv):
 	Remove unnecessary fiid object clears which are done inside fill &
 	unassemble functions.
-	
+
 2016-09-29 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/fiid/fiid.h,

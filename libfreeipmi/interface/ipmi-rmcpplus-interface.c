@@ -1562,12 +1562,6 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       goto cleanup;
     }
 
-  if (fiid_obj_clear (obj_session_hdr_temp) < 0)
-    {
-      FIID_OBJECT_ERROR_TO_ERRNO (obj_session_hdr_temp);
-      goto cleanup;
-    }
-
   if (fiid_obj_set (obj_session_hdr_temp,
                     "ipmi_payload_len",
                     payload_len) < 0)
@@ -1706,8 +1700,6 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
  cleanup:
   fiid_obj_destroy (obj_rmcpplus_payload);
   fiid_obj_destroy (obj_session_hdr_temp);
-  if (obj_rmcpplus_session_trlr_temp)
-    fiid_obj_clear (obj_rmcpplus_session_trlr_temp);
   fiid_obj_destroy (obj_rmcpplus_session_trlr_temp);
   return (rv);
 }

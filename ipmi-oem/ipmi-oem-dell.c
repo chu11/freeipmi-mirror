@@ -307,15 +307,6 @@ _get_dell_system_info_long_string (ipmi_oem_state_data_t *state_data,
   set_selector++;
   while (string_count < string_length && set_selector < 17)
     {
-      if (fiid_obj_clear (obj_cmd_rs) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "fiid_obj_clear: %s\n",
-                           fiid_obj_errormsg (obj_cmd_rs));
-          goto cleanup;
-        }
-      
       if (ipmi_cmd_get_system_info_parameters (state_data->ipmi_ctx,
                                                IPMI_GET_SYSTEM_INFO_PARAMETER,
                                                parameter_selector,

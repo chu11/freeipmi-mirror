@@ -392,12 +392,6 @@ _dump_rmcpplus_payload_data (int fd,
           goto cleanup;
         }
 
-      if (fiid_obj_clear (obj_cmd) < 0)
-        {
-          FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
-          goto cleanup;
-        }
-
       if ((len = fiid_obj_set_all (obj_cmd,
                                    pkt + indx,
                                    obj_cmd_len)) < 0)

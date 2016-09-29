@@ -683,15 +683,6 @@ _ipmi_oem_quanta_read_mac_address_s99q (ipmi_oem_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (fiid_obj_clear (obj_cmd_rs) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_clear: %s\n",
-                       fiid_obj_errormsg (obj_cmd_rs));
-      goto cleanup;
-    }
-
   data_rq[0] = (IPMI_OEM_QUANTA_MAC_ADDRESS_BASE_OFFSET & 0xFF00) >> 8;
   data_rq[1] = (IPMI_OEM_QUANTA_MAC_ADDRESS_BASE_OFFSET & 0x00FF);
 
@@ -839,15 +830,6 @@ _ipmi_oem_quanta_write_mac_address_s99q (ipmi_oem_state_data_t *state_data)
                        stderr,
                        "fiid_obj_create: %s\n",
                        strerror (errno));
-      goto cleanup;
-    }
-
-  if (fiid_obj_clear (obj_cmd_rs) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_clear: %s\n",
-                       fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
 

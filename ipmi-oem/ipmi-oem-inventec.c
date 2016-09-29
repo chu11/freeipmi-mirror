@@ -2497,15 +2497,6 @@ _ipmi_oem_inventec_read_eeprom_at24c256n (ipmi_oem_state_data_t *state_data)
       goto cleanup;
     }
   
-  if (fiid_obj_clear (obj_cmd_rs) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_clear: %s\n",
-                       fiid_obj_errormsg (obj_cmd_rs));
-      goto cleanup;
-    }
-  
   while (read_count <= IPMI_OEM_INVENTEC_EEPROM_AT24C256N_ADDRESS_MAX)
     {
       data_rq[0] = (read_count & 0xFF00) >> 8;
@@ -2618,15 +2609,6 @@ _ipmi_oem_inventec_clear_eeprom_at24c256n (ipmi_oem_state_data_t *state_data)
                        stderr,
                        "fiid_obj_create: %s\n",
                        strerror (errno));
-      goto cleanup;
-    }
-
-  if (fiid_obj_clear (obj_cmd_rs) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_clear: %s\n",
-                       fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
 

@@ -2598,15 +2598,6 @@ set_system_info_common (bmc_device_state_data_t *state_data,
   set_selector++;
   while (string_count < string_length && set_selector < 17)
     {
-      if (fiid_obj_clear (obj_cmd_rs) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "fiid_obj_clear: %s\n", 
-                           fiid_obj_errormsg (obj_cmd_rs));
-          goto cleanup;
-        }
-      
       if ((string_length - string_count) > IPMI_SYSTEM_INFO_SET_STRING_LEN_MAX)
         string_block_length = IPMI_SYSTEM_INFO_SET_STRING_LEN_MAX;
       else

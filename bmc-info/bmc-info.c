@@ -853,15 +853,6 @@ display_system_info_common (bmc_info_state_data_t *state_data,
   set_selector++;
   while (string_count < string_length && set_selector < 17)
     {
-      if (fiid_obj_clear (obj_cmd_rs) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "fiid_obj_clear: %s\n", 
-                           fiid_obj_errormsg (obj_cmd_rs));
-          goto cleanup;
-        }
-      
       if (func_cmd (state_data->ipmi_ctx,
                     IPMI_GET_SYSTEM_INFO_PARAMETER,
                     set_selector,

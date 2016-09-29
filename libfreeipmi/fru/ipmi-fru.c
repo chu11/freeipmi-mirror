@@ -413,12 +413,6 @@ _read_fru_data (ipmi_fru_ctx_t ctx,
 
       memset (buf, '\0', IPMI_FRU_BUF_LEN+1);
 
-      if (fiid_obj_clear (fru_read_data_rs) < 0)
-        {
-          FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, fru_read_data_rs);
-          goto cleanup;
-        }
-
       if ((fru_read_bytes - num_bytes_read) < IPMI_FRU_COUNT_TO_READ_BLOCK_SIZE)
         count_to_read = fru_read_bytes - num_bytes_read;
       else

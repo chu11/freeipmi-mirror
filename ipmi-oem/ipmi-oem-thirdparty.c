@@ -174,15 +174,6 @@ ipmi_oem_thirdparty_get_system_info_block_pstring (ipmi_oem_state_data_t *state_
   set_selector++;
   while (string_count < string_length && set_selector < 17)
     {
-      if (fiid_obj_clear (obj_cmd_rs) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "fiid_obj_clear: %s\n",
-                           fiid_obj_errormsg (obj_cmd_rs));
-          goto cleanup;
-        }
-      
       if (ipmi_cmd_get_system_info_parameters (state_data->ipmi_ctx,
                                                IPMI_GET_SYSTEM_INFO_PARAMETER,
                                                parameter_selector,
@@ -1191,15 +1182,6 @@ ipmi_oem_thirdparty_get_account_status (ipmi_oem_state_data_t *state_data)
        * IPMI get username function instead.
        */
 
-      if (fiid_obj_clear (get_user_name_obj_cmd_rs) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "fiid_obj_clear: %s\n",
-                           fiid_obj_errormsg (get_user_name_obj_cmd_rs));
-          goto cleanup;
-        }
-      
       if (ipmi_cmd_get_user_name (state_data->ipmi_ctx,
                                   i + 1,
                                   get_user_name_obj_cmd_rs) < 0)

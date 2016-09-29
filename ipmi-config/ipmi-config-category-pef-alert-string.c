@@ -312,12 +312,6 @@ alert_string_checkout (ipmi_config_state_data_t *state_data,
     {
       int j;
 
-      if (fiid_obj_clear (obj_cmd_rs) < 0)
-        {
-          pstdout_perror (state_data->pstate, "fiid_obj_clear");
-          goto cleanup;
-        }
-
       if (ipmi_cmd_get_pef_configuration_parameters_alert_string (state_data->ipmi_ctx,
                                                                   IPMI_GET_PEF_PARAMETER,
                                                                   string_selector,
