@@ -295,8 +295,6 @@ _send_sol_packet_with_character_data (ipmiconsole_ctx_t c,
   c->session.sol_input_waiting_for_ack++;
   rv = 0;
  cleanup:
-  /* Clear out data */
-  secure_memset (pkt, '\0', IPMICONSOLE_PACKET_BUFLEN);
   return (rv);
 }
 
@@ -1336,7 +1334,6 @@ _receive_packet (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
   rv = 1;
 
  cleanup:
-  secure_memset (pkt, '\0', IPMICONSOLE_PACKET_BUFLEN);
   if (fiid_obj_clear (c->connection.obj_lan_session_hdr_rs) < 0)
     IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_clear: %s", fiid_obj_errormsg (c->connection.obj_lan_session_hdr_rs)));
   if (fiid_obj_clear (c->connection.obj_rmcpplus_session_trlr_rs) < 0)
@@ -2784,9 +2781,6 @@ _sol_bmc_to_remote_console_packet (ipmiconsole_ctx_t c, int *sol_deactivating_fl
                            character_data_len_to_write,
                            &dropped,
                            secure_malloc_flag);
-
-          /* Clear out data */
-          secure_memset (character_data, '\0', IPMICONSOLE_MAX_CHARACTER_DATA+1);
 
           if (n < 0)
             {
