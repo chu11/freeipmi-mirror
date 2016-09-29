@@ -667,9 +667,6 @@ ipmi_calculate_rmcpplus_session_keys (uint8_t authentication_algorithm,
  cleanup:
   /* secure_memset b/c k_g is a key */
   secure_memset (k_g_buf, '\0', IPMI_2_0_MAX_PASSWORD_LENGTH);
-  secure_memset (sik, '\0', IPMI_MAX_SIK_KEY_LENGTH);
-  secure_memset (k1, '\0', IPMI_MAX_K1_LENGTH);
-  secure_memset (k2, '\0', IPMI_MAX_K2_LENGTH);
   return (rv);
 }
 
@@ -819,9 +816,8 @@ ipmi_calculate_rakp_3_key_exchange_authentication_code (uint8_t authentication_a
   memcpy (key_exchange_authentication_code, digest, digest_len);
   rv = digest_len;
  cleanup:
-  secure_memset (k_uid_buf, '\0', IPMI_2_0_MAX_PASSWORD_LENGTH);
+  /* secure_memset b/c buf contains username */
   secure_memset (buf, '\0', IPMI_MAX_KEY_DATA_LENGTH);
-  secure_memset (digest, '\0', IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH);
   return (rv);
 }
 
@@ -1107,10 +1103,8 @@ ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code (uint8_t authenticat
 
   rv = memcmp (digest, key_exchange_authentication_code, digest_len) ? 0 : 1;
  cleanup:
-  secure_memset (k_uid_buf, '\0', IPMI_2_0_MAX_PASSWORD_LENGTH);
+  /* secure_memset b/c buf contains username */
   secure_memset (buf, '\0', IPMI_MAX_KEY_DATA_LENGTH);
-  secure_memset (digest, '\0', IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH);
-  secure_memset (key_exchange_authentication_code, '\0', IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH);
   return (rv);
 }
 
@@ -1252,8 +1246,6 @@ ipmi_rmcpplus_check_rakp_4_integrity_check_value (uint8_t authentication_algorit
 
   rv = memcmp (digest, integrity_check_value, compare_len) ? 0 : 1;
  cleanup:
-  secure_memset (buf, '\0', IPMI_MAX_KEY_DATA_LENGTH);
-  secure_memset (digest, '\0', IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH);
   return (rv);
 }
 
@@ -1268,7 +1260,7 @@ ipmi_rmcpplus_check_packet_session_authentication_code (uint8_t integrity_algori
                                                         fiid_obj_t obj_rmcpplus_session_trlr)
 {
   unsigned int hash_algorithm, hash_flags;
-  unsigned int expected_digest_len, compare_digest_len, hash_data_len;
+  unsigned int expected_digest_len, compare_digest_len, hash_data_len = 0;
   uint8_t hash_data[IPMI_MAX_PAYLOAD_LENGTH];
   uint8_t integrity_digest[IPMI_MAX_INTEGRITY_DATA_LENGTH];
   uint8_t authentication_code[IPMI_MAX_INTEGRITY_DATA_LENGTH];
@@ -1372,8 +1364,6 @@ ipmi_rmcpplus_check_packet_session_authentication_code (uint8_t integrity_algori
 
   memset (hash_data, '\0', IPMI_MAX_PAYLOAD_LENGTH);
 
-  hash_data_len = 0;
-
   if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128)
     {
       /* achu: Password must be zero padded */
@@ -1420,8 +1410,10 @@ ipmi_rmcpplus_check_packet_session_authentication_code (uint8_t integrity_algori
 
   rv = memcmp (integrity_digest, authentication_code, compare_digest_len) ? 0 : 1;
  cleanup:
-  secure_memset (integrity_digest, '\0', IPMI_MAX_INTEGRITY_DATA_LENGTH);
-  secure_memset (authentication_code, '\0', IPMI_MAX_INTEGRITY_DATA_LENGTH);
+  /* secure_memset b/c contains password */
+  secure_memset (pwbuf, '\0', IPMI_2_0_MAX_PASSWORD_LENGTH);
+  /* secure_memset b/c contains password */
+  secure_memset (hash_data, '\0', hash_data_len);
   return (rv);
 }
 
