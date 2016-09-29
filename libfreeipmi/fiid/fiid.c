@@ -1525,7 +1525,7 @@ fiid_obj_clear (fiid_obj_t obj)
   if (!obj || obj->magic != FIID_OBJ_MAGIC)
     return (-1);
 
-  secure_memset (obj->data, '\0', obj->data_len);
+  memset (obj->data, '\0', obj->data_len);
   for (i =0; i < obj->field_data_len; i++)
     obj->field_data[i].set_field_len = 0;
 
@@ -1591,7 +1591,7 @@ fiid_obj_clear_field (fiid_obj_t obj, const char *field)
         }
 
       field_offset = BITS_ROUND_BYTES (field_start);
-      secure_memset (obj->data + field_offset, '\0', bytes_len);
+      memset (obj->data + field_offset, '\0', bytes_len);
     }
 
   obj->field_data[key_index].set_field_len = 0;

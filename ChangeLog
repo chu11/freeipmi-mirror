@@ -27,6 +27,10 @@
 
 	* libipmiconsole/ipmiconsole_processing.c: Remove secure memset of
 	unnecessary buffers.
+
+	* libfreeipmi/fiid/fiid.c (fiid_obj_clear, fiid_obj_clear_field):
+	Change secure_memset to memset.  Will adjust via new fiid flag in
+	later change.
 	
 2016-09-29 Albert Chu <chu11@llnl.gov>
 
