@@ -1,3 +1,8 @@
+2016-09-29 Albert Chu <chu11@llnl.gov>
+
+	* libipmiconsole/ipmiconsole_ctx.c (ipmiconsole_ctx_fds_cleanup):
+	Fix error in cleanup that could lead to fd leak.
+
 2016-07-27 Albert Chu <chu11@llnl.gov>
 
 	* common/toolcommon/tool-common.h,
