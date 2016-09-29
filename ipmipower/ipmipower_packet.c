@@ -370,52 +370,6 @@ ipmipower_packet_store (ipmipower_powercmd_t ip,
 
   obj = ipmipower_packet_cmd_obj (ip, pkt);
 
-  if (fiid_obj_clear (ip->obj_rmcp_hdr_rs) < 0)
-    {
-      IPMIPOWER_ERROR (("fiid_obj_clear: %s", fiid_obj_errormsg (ip->obj_rmcp_hdr_rs)));
-      exit (EXIT_FAILURE);
-    }
-  if (fiid_obj_clear (ip->obj_lan_session_hdr_rs) < 0)
-    {
-      IPMIPOWER_ERROR (("fiid_obj_clear: %s", fiid_obj_errormsg (ip->obj_lan_session_hdr_rs)));
-      exit (EXIT_FAILURE);
-    }
-  if (fiid_obj_clear (ip->obj_lan_msg_hdr_rs) < 0)
-    {
-      IPMIPOWER_ERROR (("fiid_obj_clear: %s", fiid_obj_errormsg (ip->obj_lan_msg_hdr_rs)));
-      exit (EXIT_FAILURE);
-    }
-  if (fiid_obj_clear (ip->obj_lan_msg_trlr_rs) < 0)
-    {
-      IPMIPOWER_ERROR (("fiid_obj_clear: %s", fiid_obj_errormsg (ip->obj_lan_msg_trlr_rs)));
-      exit (EXIT_FAILURE);
-    }
-
-  if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN_2_0)
-    {
-      if (fiid_obj_clear (ip->obj_rmcpplus_session_hdr_rs) < 0)
-        {
-          IPMIPOWER_ERROR (("fiid_obj_clear: %s", fiid_obj_errormsg (ip->obj_rmcpplus_session_hdr_rs)));
-          exit (EXIT_FAILURE);
-        }
-      if (fiid_obj_clear (ip->obj_rmcpplus_payload_rs) < 0)
-        {
-          IPMIPOWER_ERROR (("fiid_obj_clear: %s", fiid_obj_errormsg (ip->obj_rmcpplus_payload_rs)));
-          exit (EXIT_FAILURE);
-        }
-      if (fiid_obj_clear (ip->obj_rmcpplus_session_trlr_rs) < 0)
-        {
-          IPMIPOWER_ERROR (("fiid_obj_clear: %s", fiid_obj_errormsg (ip->obj_rmcpplus_session_trlr_rs)));
-          exit (EXIT_FAILURE);
-        }
-    }
-
-  if (fiid_obj_clear (obj) < 0)
-    {
-      IPMIPOWER_ERROR (("fiid_obj_clear: %s", fiid_obj_errormsg (obj)));
-      exit (EXIT_FAILURE);
-    }
-
   if (IPMIPOWER_PACKET_TYPE_IPMI_1_5_SETUP_RS (pkt)
       || cmd_args.common_args.driver_type == IPMI_DEVICE_LAN)
     {
@@ -508,22 +462,6 @@ _ipmi_1_5_packet_create (ipmipower_powercmd_t ip,
   assert (buf);
   assert (buflen);
 
-  if (fiid_obj_clear (ip->obj_rmcp_hdr_rq) < 0)
-    {
-      IPMIPOWER_ERROR (("fiid_obj_clear: %s", fiid_obj_errormsg (ip->obj_rmcp_hdr_rq)));
-      exit (EXIT_FAILURE);
-    }
-  if (fiid_obj_clear (ip->obj_lan_session_hdr_rq) < 0)
-    {
-      IPMIPOWER_ERROR (("fiid_obj_clear: %s", fiid_obj_errormsg (ip->obj_lan_session_hdr_rq)));
-      exit (EXIT_FAILURE);
-    }
-  if (fiid_obj_clear (ip->obj_lan_msg_hdr_rq) < 0)
-    {
-      IPMIPOWER_ERROR (("fiid_obj_clear: %s", fiid_obj_errormsg (ip->obj_lan_msg_hdr_rq)));
-      exit (EXIT_FAILURE);
-    }
-
   if (fill_rmcp_hdr_ipmi (ip->obj_rmcp_hdr_rq) < 0)
     {
       IPMIPOWER_ERROR (("fill_rmcp_hdr_ipmi: %s", strerror (errno)));
@@ -595,27 +533,6 @@ _ipmi_2_0_packet_create (ipmipower_powercmd_t ip,
   assert (fiid_obj_valid (obj_cmd_rq));
   assert (buf);
   assert (buflen);
-
-  if (fiid_obj_clear (ip->obj_rmcp_hdr_rq) < 0)
-    {
-      IPMIPOWER_ERROR (("fiid_obj_clear: %s", fiid_obj_errormsg (ip->obj_rmcp_hdr_rq)));
-      exit (EXIT_FAILURE);
-    }
-  if (fiid_obj_clear (ip->obj_lan_msg_hdr_rq) < 0)
-    {
-      IPMIPOWER_ERROR (("fiid_obj_clear: %s", fiid_obj_errormsg (ip->obj_lan_msg_hdr_rq)));
-      exit (EXIT_FAILURE);
-    }
-  if (fiid_obj_clear (ip->obj_rmcpplus_session_hdr_rq) < 0)
-    {
-      IPMIPOWER_ERROR (("fiid_obj_clear: %s", fiid_obj_errormsg (ip->obj_rmcpplus_session_hdr_rq)));
-      exit (EXIT_FAILURE);
-    }
-  if (fiid_obj_clear (ip->obj_rmcpplus_session_trlr_rq) < 0)
-    {
-      IPMIPOWER_ERROR (("fiid_obj_clear: %s", fiid_obj_errormsg (ip->obj_rmcpplus_session_trlr_rq)));
-      exit (EXIT_FAILURE);
-    }
 
   if (fill_rmcp_hdr_ipmi (ip->obj_rmcp_hdr_rq) < 0)
     {

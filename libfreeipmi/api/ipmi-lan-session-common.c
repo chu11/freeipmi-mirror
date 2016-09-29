@@ -500,22 +500,6 @@ _api_lan_cmd_send (ipmi_ctx_t ctx,
           && fiid_obj_valid (obj_cmd_rq)
           && fiid_obj_packet_valid (obj_cmd_rq) == 1);
 
-  if (fiid_obj_clear (ctx->io.outofband.rq.obj_rmcp_hdr) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, ctx->io.outofband.rq.obj_rmcp_hdr);
-      goto cleanup;
-    }
-  if (fiid_obj_clear (ctx->io.outofband.rq.obj_lan_session_hdr) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, ctx->io.outofband.rq.obj_lan_session_hdr);
-      goto cleanup;
-    }
-  if (fiid_obj_clear (ctx->io.outofband.rq.obj_lan_msg_hdr) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, ctx->io.outofband.rq.obj_lan_msg_hdr);
-      goto cleanup;
-    }
-
   if ((cmd_len = fiid_obj_len_bytes (obj_cmd_rq)) < 0)
     {
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
@@ -629,27 +613,6 @@ _api_lan_cmd_recv (ipmi_ctx_t ctx,
   if (gettimeofday (&recv_starttime, NULL) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      return (-1);
-    }
-
-  if (fiid_obj_clear (ctx->io.outofband.rs.obj_rmcp_hdr) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, ctx->io.outofband.rs.obj_rmcp_hdr);
-      return (-1);
-    }
-  if (fiid_obj_clear (ctx->io.outofband.rs.obj_lan_session_hdr) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, ctx->io.outofband.rs.obj_lan_session_hdr);
-      return (-1);
-    }
-  if (fiid_obj_clear (ctx->io.outofband.rs.obj_lan_msg_hdr) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, ctx->io.outofband.rs.obj_lan_msg_hdr);
-      return (-1);
-    }
-  if (fiid_obj_clear (ctx->io.outofband.rs.obj_lan_msg_trlr) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, ctx->io.outofband.rs.obj_lan_msg_trlr);
       return (-1);
     }
 
@@ -2204,27 +2167,6 @@ _api_lan_2_0_cmd_send (ipmi_ctx_t ctx,
           && fiid_obj_valid (obj_cmd_rq)
           && fiid_obj_packet_valid (obj_cmd_rq) == 1);
 
-  if (fiid_obj_clear (ctx->io.outofband.rq.obj_rmcp_hdr) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, ctx->io.outofband.rq.obj_rmcp_hdr);
-      goto cleanup;
-    }
-  if (fiid_obj_clear (ctx->io.outofband.rq.obj_rmcpplus_session_hdr) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, ctx->io.outofband.rq.obj_rmcpplus_session_hdr);
-      goto cleanup;
-    }
-  if (fiid_obj_clear (ctx->io.outofband.rq.obj_lan_msg_hdr) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, ctx->io.outofband.rq.obj_lan_msg_hdr);
-      goto cleanup;
-    }
-  if (fiid_obj_clear (ctx->io.outofband.rq.obj_rmcpplus_session_trlr) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, ctx->io.outofband.rq.obj_rmcpplus_session_trlr);
-      goto cleanup;
-    }
-
   if ((cmd_len = fiid_obj_len_bytes (obj_cmd_rq)) < 0)
     {
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
@@ -2371,37 +2313,6 @@ _api_lan_2_0_cmd_recv (ipmi_ctx_t ctx,
   if (gettimeofday (&recv_starttime, NULL) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
-      return (-1);
-    }
-
-  if (fiid_obj_clear (ctx->io.outofband.rs.obj_rmcp_hdr) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, ctx->io.outofband.rs.obj_rmcp_hdr);
-      return (-1);
-    }
-  if (fiid_obj_clear (ctx->io.outofband.rs.obj_rmcpplus_session_hdr) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, ctx->io.outofband.rs.obj_rmcpplus_session_hdr);
-      return (-1);
-    }
-  if (fiid_obj_clear (ctx->io.outofband.rs.obj_lan_msg_hdr) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, ctx->io.outofband.rs.obj_lan_msg_hdr);
-      return (-1);
-    }
-  if (fiid_obj_clear (ctx->io.outofband.rs.obj_rmcpplus_payload) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, ctx->io.outofband.rs.obj_rmcpplus_payload);
-      return (-1);
-    }
-  if (fiid_obj_clear (ctx->io.outofband.rs.obj_lan_msg_trlr) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, ctx->io.outofband.rs.obj_lan_msg_trlr);
-      return (-1);
-    }
-  if (fiid_obj_clear (ctx->io.outofband.rs.obj_rmcpplus_session_trlr) < 0)
-    {
-      API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, ctx->io.outofband.rs.obj_rmcpplus_session_trlr);
       return (-1);
     }
 

@@ -1,5 +1,22 @@
 2016-09-29 Albert Chu <chu11@llnl.gov>
 
+	* ipmipower/ipmipower_packet.c (ipmipower_packet_store,
+	_ipmi_1_5_packet_create, _ipmi_2_0_packet_create): Remove unnecessary
+	fiid object clears which are already done inside the fill & unassemble
+	functions.
+
+	* libipmiconsole/ipmiconsole_packet.c (_ipmi_1_5_packet_assemble,
+	_ipmi_2_0_packet_assemble, ipmiconsole_packet_unassemble): Remove
+	unnecessary fiid object clears which are done inside fill & unassemble
+	functions. 
+
+	* libfreeipmi/api/ipmi-lan-session-common.c (_api_lan_cmd_send,
+	_api_lan_2_0_cmd_send, _api_lan_cmd_recv, _api_lan_2_0_cmd_recv):
+	Remove unnecessary fiid object clears which are done inside fill &
+	unassemble functions.
+	
+2016-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/fiid/fiid.h,
 	libfreeipmi/fiid/fiid.c: Support new
 	FIID_FIELD_SECURE_MEMSET_ON_CLEAR flag.
