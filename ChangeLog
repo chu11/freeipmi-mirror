@@ -5,6 +5,9 @@
 
 	* libipmimonitoring/ipmi_monitoring.c (ipmi_monitoring_ctx_create):
 	Remove unnecessary call to secure_memset().
+
+	* ipmipower/ipmipower_powercmd.c (_send_packet, _recv_packet):
+	Call secure_memset only when necessary (using plain passwords).
 	
 2016-09-29 Albert Chu <chu11@llnl.gov>
 
