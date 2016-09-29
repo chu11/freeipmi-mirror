@@ -547,25 +547,3 @@ crypt_cipher_block_len (unsigned int cipher_algorithm)
   return (-1);
 #endif /* !WITH_ENCRYPTION */
 }
-
-int
-crypt_get_random (void *buf, unsigned int buflen)
-{
-  if (!crypt_initialized)
-    {
-      SET_ERRNO (EINVAL);
-      return (-1);
-    }
-  
-  if (!buf)
-    {
-      SET_ERRNO (EINVAL);
-      return (-1);
-    }
-
-  if (!buflen)
-    return (0);
-  
-  gcry_randomize ((unsigned char *)buf, buflen, GCRY_STRONG_RANDOM);
-  return (buflen);
-}

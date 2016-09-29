@@ -1,5 +1,16 @@
 2016-09-29 Albert Chu <chu11@llnl.gov>
 
+	* Remove additions of ipmi_rmcpplus_get_random and
+	crypt_get_random from 2016-09-26.  Older versions of gcrypt do not
+	allow multiple threads into gcry_randomize simultaneously, which
+	could greatly hurt initialization performance in multi-threaded
+	applications.  In addition, since ipmi_get_random() is only called
+	during initialization in all libraries/code, the somewhat slower
+	ipmi_get_random() shouldn't affect long running performance of
+	applications.  Reconsider change again in the future.
+
+2016-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/fiid/fiid.c (_fiid_template_field_start)
 	(_fiid_template_field_end, _fiid_template_field_len)
 	(_fiid_template_block_len): Create various internal versions of

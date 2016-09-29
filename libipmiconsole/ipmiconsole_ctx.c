@@ -1271,17 +1271,17 @@ ipmiconsole_ctx_session_setup (ipmiconsole_ctx_t c)
       return (-1);
     }
 
-  if (ipmi_rmcpplus_get_random (&(c->session.message_tag),
-                                sizeof (c->session.message_tag)) < 0)
+  if (ipmi_get_random (&(c->session.message_tag),
+                       sizeof (c->session.message_tag)) < 0)
     {
-      IPMICONSOLE_DEBUG (("ipmi_rmcpplus_get_random: %s", strerror (errno)));
+      IPMICONSOLE_DEBUG (("ipmi_get_random: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return (-1);
     }
-  if (ipmi_rmcpplus_get_random (&(c->session.requester_sequence_number),
-                                sizeof (c->session.requester_sequence_number)) < 0)
+  if (ipmi_get_random (&(c->session.requester_sequence_number),
+                       sizeof (c->session.requester_sequence_number)) < 0)
     {
-      IPMICONSOLE_DEBUG (("ipmi_rmcpplus_get_random: %s", strerror (errno)));
+      IPMICONSOLE_DEBUG (("ipmi_get_random: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return (-1);
     }
@@ -1293,19 +1293,19 @@ ipmiconsole_ctx_session_setup (ipmiconsole_ctx_t c)
   /* In IPMI 2.0, session_ids of 0 are special */
   do
     {
-      if (ipmi_rmcpplus_get_random (&(c->session.remote_console_session_id),
-                                    sizeof (c->session.remote_console_session_id)) < 0)
+      if (ipmi_get_random (&(c->session.remote_console_session_id),
+                           sizeof (c->session.remote_console_session_id)) < 0)
         {
-          IPMICONSOLE_DEBUG (("ipmi_rmcpplus_get_random: %s", strerror (errno)));
+          IPMICONSOLE_DEBUG (("ipmi_get_random: %s", strerror (errno)));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
           return (-1);
         }
     } while (!c->session.remote_console_session_id);
 
-  if (ipmi_rmcpplus_get_random (c->session.remote_console_random_number,
-                                IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH) < 0)
+  if (ipmi_get_random (c->session.remote_console_random_number,
+                       IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH) < 0)
     {
-      IPMICONSOLE_DEBUG (("ipmi_rmcpplus_get_random: %s", strerror (errno)));
+      IPMICONSOLE_DEBUG (("ipmi_get_random: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return (-1);
     }

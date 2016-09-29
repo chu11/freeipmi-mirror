@@ -101,6 +101,4 @@ int crypt_cipher_key_len (unsigned int cipher_algorithm);
 
 int crypt_cipher_block_len (unsigned int cipher_algorithm);
 
-int crypt_get_random (void *buf, unsigned int buflen);
-
 #endif /* IPMI_CRYPT_H */

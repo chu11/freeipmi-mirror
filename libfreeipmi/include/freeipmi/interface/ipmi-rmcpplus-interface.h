@@ -235,13 +235,6 @@ extern fiid_template_t tmpl_rmcpplus_rakp_message_4;
  */
 int ipmi_rmcpplus_init (void);
 
-/* ipmi_rmcpplus_get_random
- *
- * Convenience function to use optimized crypt library random function.
- * Must be used after ipmi_rmcpplus_init() initialization.
- */
-int ipmi_rmcpplus_get_random (void *buf, unsigned int buflen);
-
 int fill_rmcpplus_session_hdr (uint8_t payload_type,
                                uint8_t payload_authenticated,
                                uint8_t payload_encrypted,
