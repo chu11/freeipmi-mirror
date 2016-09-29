@@ -1,5 +1,14 @@
 2016-09-29 Albert Chu <chu11@llnl.gov>
 
+	* ipmipower/ipmipower_powercmd.c (_recv_packet),
+	libfreeipmi/debug/ipmi-debug-rmcpplus.c (_dump_rmcpplus_session_trlr),
+	libipmiconsole/ipmiconsole_processing.c (_receive_packet),
+	libipmiconsole/ipmiconsole_packet.c (ipmiconsole_sol_packet_assemble),
+	libipmiconsole/ipmiconsole_processing.c (_sol_bmc_to_remote_console_packet):
+	Remove unnecessary fiid obj clear for security purposes.
+	
+2016-09-29 Albert Chu <chu11@llnl.gov>
+
 	* bmc-info/bmc-info.c (display_system_info_common),
 	bmc-device/bmc-device.c (set_system_info_common),
 	ipmi-config/ipmi-config-category-pef-alert-string.c (alert_string_checkout),

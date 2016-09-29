@@ -1409,8 +1409,6 @@ ipmiconsole_sol_packet_assemble (ipmiconsole_ctx_t c,
 
   rv = pkt_len;
  cleanup:
-  /* Clear out data */
-  fiid_obj_clear (c->connection.obj_sol_payload_data_rq);
   return (rv);
 }
 

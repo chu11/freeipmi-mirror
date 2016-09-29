@@ -1265,11 +1265,6 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
       IPMIPOWER_ERROR (("fiid_obj_clear: %s", fiid_obj_errormsg (ip->obj_lan_session_hdr_rs)));
       exit (EXIT_FAILURE);
     }
-  if (fiid_obj_clear (ip->obj_rmcpplus_session_trlr_rs) < 0)
-    {
-      IPMIPOWER_ERROR (("fiid_obj_clear: %s", fiid_obj_errormsg (ip->obj_rmcpplus_session_trlr_rs)));
-      exit (EXIT_FAILURE);
-    }
   return (rv);
 }
 

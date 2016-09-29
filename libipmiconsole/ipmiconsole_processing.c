@@ -1334,10 +1334,6 @@ _receive_packet (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
   rv = 1;
 
  cleanup:
-  if (fiid_obj_clear (c->connection.obj_lan_session_hdr_rs) < 0)
-    IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_clear: %s", fiid_obj_errormsg (c->connection.obj_lan_session_hdr_rs)));
-  if (fiid_obj_clear (c->connection.obj_rmcpplus_session_trlr_rs) < 0)
-    IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_clear: %s", fiid_obj_errormsg (c->connection.obj_rmcpplus_session_trlr_rs)));
   return (rv);
 }
 
@@ -2843,8 +2839,6 @@ _sol_bmc_to_remote_console_packet (ipmiconsole_ctx_t c, int *sol_deactivating_fl
 
   rv = 0;
  cleanup:
-  /* Clear out data */
-  fiid_obj_clear (c->connection.obj_sol_payload_data_rs);
   return (rv);
 }
 

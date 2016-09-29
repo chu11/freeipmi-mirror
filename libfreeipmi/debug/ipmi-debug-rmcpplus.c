@@ -1124,13 +1124,6 @@ _dump_rmcpplus_session_trlr (int fd,
       goto cleanup;
     }
 
-  /* Clear out data */
-  if (fiid_obj_clear (obj_rmcpplus_session_trlr) < 0)
-    {
-      FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_trlr);
-      goto cleanup;
-    }
-
   rv = indx;
  cleanup:
   fiid_obj_destroy (obj_rmcpplus_session_trlr);
