@@ -8,6 +8,9 @@
 
 	* ipmipower/ipmipower_powercmd.c (_send_packet, _recv_packet):
 	Call secure_memset only when necessary (using plain passwords).
+
+	* ipmiconsole/ipmiconsole.c (main, _stdin): Remove unnecessary and
+	excessive calls to secure_memset.
 	
 2016-09-29 Albert Chu <chu11@llnl.gov>
 

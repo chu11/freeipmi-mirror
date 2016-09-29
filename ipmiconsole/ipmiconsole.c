@@ -60,7 +60,6 @@
 #include "ipmiconsole-argp.h"
 
 #include "freeipmi-portability.h"
-#include "secure.h"
 
 static struct termios saved_tty;
 static int raw_mode_set = 0;
@@ -150,9 +149,6 @@ _stdin (ipmiconsole_ctx_t c,
                 {
                   n = write (fd, tbuf, tbuflen);
 
-                  /* Clear out data */
-                  secure_memset (tbuf, '\0', IPMICONSOLE_BUFLEN);
-
                   if (n < 0)
                     {
                       perror ("write");
@@ -174,8 +170,8 @@ _stdin (ipmiconsole_ctx_t c,
                 {
                   n = write (fd, tbuf, tbuflen);
 
-                  /* Clear out data */
-                  secure_memset (tbuf, '\0', IPMICONSOLE_BUFLEN);
+                  /* Clear out data, may still use buffer */
+                  memset (tbuf, '\0', IPMICONSOLE_BUFLEN);
 
                   if (n < 0)
                     {
@@ -223,9 +219,6 @@ _stdin (ipmiconsole_ctx_t c,
   if (tbuflen)
     {
       n = write (fd, tbuf, tbuflen);
-
-      /* Clear out data */
-      secure_memset (tbuf, '\0', IPMICONSOLE_BUFLEN);
 
       if (n < 0)
         {
@@ -517,8 +510,8 @@ main (int argc, char **argv)
 
         }
 
-      /* Clear out data */
-      secure_memset (buf, '\0', IPMICONSOLE_BUFLEN);
+      /* Clear out data, may still use buffer */
+      memset (buf, '\0', IPMICONSOLE_BUFLEN);
     }
 
  cleanup:
