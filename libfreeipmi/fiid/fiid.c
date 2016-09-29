@@ -346,26 +346,15 @@ _fiid_template_field_start_end (fiid_template_t tmpl,
   return (-1);
 }
 
-int
-fiid_template_field_start (fiid_template_t tmpl,
-                           const char *field)
+static int
+_fiid_template_field_start (fiid_template_t tmpl,
+                            const char *field)
 {
   unsigned int start = 0;
   unsigned int end = 0;
 
-  if (!tmpl || !field)
-    {
-      /* FIID_ERR_PARAMETERS */
-      errno = EINVAL;
-      return (-1);
-    }
-
-  if (_fiid_template_check_valid_keys (tmpl) < 0)
-    {
-      /* FIID_ERR_PARAMETERS */
-      errno = EINVAL;
-      return (-1);
-    }
+  assert (tmpl);
+  assert (field);
 
   if (_fiid_template_field_start_end (tmpl,
                                       field,
@@ -381,6 +370,27 @@ fiid_template_field_start (fiid_template_t tmpl,
     }
   
   return (start);
+}
+
+int
+fiid_template_field_start (fiid_template_t tmpl,
+                           const char *field)
+{
+  if (!tmpl || !field)
+    {
+      /* FIID_ERR_PARAMETERS */
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if (_fiid_template_check_valid_keys (tmpl) < 0)
+    {
+      /* FIID_ERR_PARAMETERS */
+      errno = EINVAL;
+      return (-1);
+    }
+
+  return (_fiid_template_field_start (tmpl, field));
 }
 
 int
@@ -403,8 +413,8 @@ fiid_template_field_start_bytes (fiid_template_t tmpl,
       return (-1);
     }
 
-  if ((start = fiid_template_field_start (tmpl,
-                                          field)) < 0)
+  if ((start = _fiid_template_field_start (tmpl,
+                                           field)) < 0)
     return (-1);
 
   if (start % 8)
@@ -417,26 +427,15 @@ fiid_template_field_start_bytes (fiid_template_t tmpl,
   return (BITS_ROUND_BYTES (start));
 }
 
-int
-fiid_template_field_end (fiid_template_t tmpl,
-                         const char *field)
+static int
+_fiid_template_field_end (fiid_template_t tmpl,
+                          const char *field)
 {
   unsigned int start = 0;
   unsigned int end = 0;
 
-  if (!tmpl || !field)
-    {
-      /* FIID_ERR_PARAMETERS */
-      errno = EINVAL;
-      return (-1);
-    }
-
-  if (_fiid_template_check_valid_keys (tmpl) < 0)
-    {
-      /* FIID_ERR_PARAMETERS */
-      errno = EINVAL;
-      return (-1);
-    }
+  assert (tmpl);
+  assert (field);
 
   if (_fiid_template_field_start_end (tmpl,
                                       field,
@@ -452,6 +451,27 @@ fiid_template_field_end (fiid_template_t tmpl,
     }
 
   return (end);
+}
+
+int
+fiid_template_field_end (fiid_template_t tmpl,
+                         const char *field)
+{
+  if (!tmpl || !field)
+    {
+      /* FIID_ERR_PARAMETERS */
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if (_fiid_template_check_valid_keys (tmpl) < 0)
+    {
+      /* FIID_ERR_PARAMETERS */
+      errno = EINVAL;
+      return (-1);
+    }
+
+  return (_fiid_template_field_end (tmpl, field));
 }
 
 int
@@ -474,8 +494,8 @@ fiid_template_field_end_bytes (fiid_template_t tmpl,
       return (-1);
     }
 
-  if ((end = fiid_template_field_end (tmpl,
-                                      field)) < 0)
+  if ((end = _fiid_template_field_end (tmpl,
+                                       field)) < 0)
     return (-1);
 
   if (end % 8)
@@ -488,25 +508,14 @@ fiid_template_field_end_bytes (fiid_template_t tmpl,
   return (BITS_ROUND_BYTES (end));
 }
 
-int
-fiid_template_field_len (fiid_template_t tmpl,
+static int
+_fiid_template_field_len (fiid_template_t tmpl,
                          const char *field)
 {
   unsigned int i;
 
-  if (!tmpl || !field)
-    {
-      /* FIID_ERR_PARAMETERS */
-      errno = EINVAL;
-      return (-1);
-    }
-
-  if (_fiid_template_check_valid_keys (tmpl) < 0)
-    {
-      /* FIID_ERR_PARAMETERS */
-      errno = EINVAL;
-      return (-1);
-    }
+  assert (tmpl);
+  assert (field);
 
   for (i = 0; tmpl[i].max_field_len; i++)
     {     
@@ -529,6 +538,27 @@ fiid_template_field_len (fiid_template_t tmpl,
 }
 
 int
+fiid_template_field_len (fiid_template_t tmpl,
+                         const char *field)
+{
+  if (!tmpl || !field)
+    {
+      /* FIID_ERR_PARAMETERS */
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if (_fiid_template_check_valid_keys (tmpl) < 0)
+    {
+      /* FIID_ERR_PARAMETERS */
+      errno = EINVAL;
+      return (-1);
+    }
+
+  return (_fiid_template_field_len (tmpl, field));
+}
+
+int
 fiid_template_field_len_bytes (fiid_template_t tmpl,
                                const char *field)
 {
@@ -548,8 +578,8 @@ fiid_template_field_len_bytes (fiid_template_t tmpl,
       return (-1);
     }
 
-  if ((len = fiid_template_field_len (tmpl,
-                                      field)) < 0)
+  if ((len = _fiid_template_field_len (tmpl,
+                                       field)) < 0)
     return (-1);
 
   if (len % 8)
@@ -562,14 +592,41 @@ fiid_template_field_len_bytes (fiid_template_t tmpl,
   return (BITS_ROUND_BYTES (len));
 }
 
+static int
+_fiid_template_block_len (fiid_template_t tmpl,
+                          const char *field_start,
+                          const char *field_end)
+{
+  int start;
+  int end;
+
+  assert (tmpl);
+  assert (field_start);
+  assert (field_end);
+
+  if ((end = _fiid_template_field_end (tmpl,
+                                       field_end)) < 0)
+    return (-1);
+
+  if ((start = _fiid_template_field_start (tmpl,
+                                           field_start)) < 0)
+    return (-1);
+
+  if (start > end)
+    {
+      /* FIID_ERR_PARAMETERS */
+      errno = EINVAL;
+      return (-1);
+    }
+
+  return (end - start);
+}
+
 int
 fiid_template_block_len (fiid_template_t tmpl,
                          const char *field_start,
                          const char *field_end)
 {
-  int start;
-  int end;
-
   if (!tmpl || !field_start || !field_end)
     {
       /* FIID_ERR_PARAMETERS */
@@ -584,22 +641,7 @@ fiid_template_block_len (fiid_template_t tmpl,
       return (-1);
     }
 
-  if ((end = fiid_template_field_end (tmpl,
-                                      field_end)) < 0)
-    return (-1);
-
-  if ((start = fiid_template_field_start (tmpl,
-                                          field_start)) < 0)
-    return (-1);
-
-  if (start > end)
-    {
-      /* FIID_ERR_PARAMETERS */
-      errno = EINVAL;
-      return (-1);
-    }
-
-  return (end - start);
+  return (_fiid_template_block_len (tmpl, field_start, field_end));
 }
 
 int
@@ -623,9 +665,9 @@ fiid_template_block_len_bytes (fiid_template_t tmpl,
       return (-1);
     }
 
-  if ((len = fiid_template_block_len (tmpl,
-                                      field_start,
-                                      field_end)) < 0)
+  if ((len = _fiid_template_block_len (tmpl,
+                                       field_start,
+                                       field_end)) < 0)
     return (-1);
 
   if (len % 8)

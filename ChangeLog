@@ -1,3 +1,11 @@
+2016-09-29 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/fiid/fiid.c (_fiid_template_field_start)
+	(_fiid_template_field_end, _fiid_template_field_len)
+	(_fiid_template_block_len): Create various internal versions of
+	functions which can be used internally to avoid duplicate API
+	checks in _fiid_template_check_valid_keys.
+	
 2016-09-28 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/util/ipmi-rmcpplus-util.c: Do not secure_memset
