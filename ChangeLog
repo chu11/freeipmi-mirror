@@ -3,6 +3,10 @@
 	* libfreeipmi/include/freeipmi/fiid/fiid.h,
 	libfreeipmi/fiid/fiid.c: Support new
 	FIID_FIELD_SECURE_MEMSET_ON_CLEAR flag.
+
+	* libfreeipmi/interface/ipmi-lan-interface.c,
+	libfreeipmi/include/freeipmi/templates/ipmi-lan-interface-templates.h:
+	In Lan Session Header, always securely clear authentication_code.
 	
 2016-09-29 Albert Chu <chu11@llnl.gov>
 

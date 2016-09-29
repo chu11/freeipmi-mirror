@@ -56,6 +56,8 @@ field flags - flags indicating qualities of the field.  The following
                               and not malformed, but not necessarily a
                               complete packet/record.
 
+    SECURE_MEMSET_ON_CLEAR - when clearing field, securely memset field.
+
 LAN Session Header
 ------------------
 
@@ -64,7 +66,7 @@ FIID Template: tmpl_lan_session_hdr
     { 8, "authentication_type", REQUIRED, LENGTH-FIXED }
     { 32, "session_sequence_number", REQUIRED, LENGTH-FIXED }
     { 32, "session_id", REQUIRED, LENGTH-FIXED }
-    { 128, "authentication_code", OPTIONAL, LENGTH-FIXED }
+    { 128, "authentication_code", OPTIONAL, LENGTH-FIXED, SECURE_MEMSET_ON_CLEAR }
     { 8, "ipmi_msg_len", REQUIRED, LENGTH-FIXED }
  
 LAN Message Header Request

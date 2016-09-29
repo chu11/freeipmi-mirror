@@ -52,12 +52,13 @@
 
 #define IPMI_LAN_PKT_PAD_SIZE   1
 
+/* authentication code may contain plain password, always securely clear it */
 fiid_template_t tmpl_lan_session_hdr =
   {
     { 8, "authentication_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 32, "session_sequence_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 32, "session_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 128, "authentication_code", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    { 128, "authentication_code", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_SECURE_MEMSET_ON_CLEAR},
     { 8, "ipmi_msg_len", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
   };
