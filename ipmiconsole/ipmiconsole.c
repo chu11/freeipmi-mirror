@@ -202,7 +202,7 @@ _stdin (ipmiconsole_ctx_t c,
             }
           else if (buf[i] == 'D')
             {
-              /* achu: Some keywords don't send DEL when you press
+              /* achu: Some keyboards don't send DEL when you press
                  delete, they send some other funky crap. */
               tbuf[tbuflen++] = 0x7F;
             }
