@@ -1259,11 +1259,13 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
   /* Clear out data */
   if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN
       && cmd_args.common_args.authentication_type == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY)
-    secure_memset (recv_buf, '\0', IPMIPOWER_PACKET_BUFLEN);
-  if (fiid_obj_clear (ip->obj_lan_session_hdr_rs) < 0)
     {
-      IPMIPOWER_ERROR (("fiid_obj_clear: %s", fiid_obj_errormsg (ip->obj_lan_session_hdr_rs)));
-      exit (EXIT_FAILURE);
+      secure_memset (recv_buf, '\0', IPMIPOWER_PACKET_BUFLEN);
+      if (fiid_obj_clear (ip->obj_lan_session_hdr_rs) < 0)
+        {
+          IPMIPOWER_ERROR (("fiid_obj_clear: %s", fiid_obj_errormsg (ip->obj_lan_session_hdr_rs)));
+          exit (EXIT_FAILURE);
+        }
     }
   return (rv);
 }

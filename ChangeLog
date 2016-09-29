@@ -3,6 +3,10 @@
 	* libfreeipmi/debug/ipmi-debug-lan.c (_ipmi_dump_lan_packet):
 	Clear data on obj_session_hdr not obj_lan_msg_hdr.
 
+	* ipmipower/ipmipower_powercmd.c (_recv_packet): Clear
+	obj_lan_session_hdr_rs only if using authentication straight
+	password key.
+
 2016-09-29 Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/ipmipower_powercmd.c (_recv_packet),
