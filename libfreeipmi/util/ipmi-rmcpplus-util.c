@@ -187,6 +187,7 @@ ipmi_calculate_sik (uint8_t authentication_algorithm,
 
   rv = computed_digest_len;
  cleanup:
+  /* secure_memset b/c contains username */
   secure_memset (hash_data, '\0', IPMI_MAX_KEY_DATA_LENGTH);
   return (rv);
 }
@@ -664,6 +665,7 @@ ipmi_calculate_rmcpplus_session_keys (uint8_t authentication_algorithm,
   *confidentiality_key_len = confidentiality_key_buf_len;
   rv = 0;
  cleanup:
+  /* secure_memset b/c k_g is a key */
   secure_memset (k_g_buf, '\0', IPMI_2_0_MAX_PASSWORD_LENGTH);
   secure_memset (sik, '\0', IPMI_MAX_SIK_KEY_LENGTH);
   secure_memset (k1, '\0', IPMI_MAX_K1_LENGTH);

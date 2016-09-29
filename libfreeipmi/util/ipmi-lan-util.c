@@ -315,6 +315,7 @@ ipmi_lan_check_session_authentication_code (fiid_obj_t obj_lan_session_hdr_rs,
 
  cleanup:
   free (buf);
+  /* secure_memset b/c could contain cleartext password */
   secure_memset (authentication_code_recv, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
   secure_memset (authentication_code_calc, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
   secure_memset (pwbuf, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
@@ -502,6 +503,7 @@ ipmi_lan_check_packet_session_authentication_code (const void *pkt,
     rv = 0;
 
  cleanup:
+  /* secure_memset b/c could contain cleartext password */
   secure_memset (authentication_code_buf, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
   secure_memset (pwbuf, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
   return (rv);
