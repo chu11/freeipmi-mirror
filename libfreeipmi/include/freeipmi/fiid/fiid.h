@@ -136,6 +136,7 @@ typedef enum fiid_err fiid_err_t;
     || FIID_FIELD_LENGTH_FLAG (__flags) ==  FIID_FIELD_LENGTH_VARIABLE) ? 1 : 0)
 
 #define FIID_FIELD_MAKES_PACKET_SUFFICIENT 0x00010000
+#define FIID_FIELD_SECURE_MEMSET_ON_CLEAR  0x00100000
 
 /*
  * fiid_field_t

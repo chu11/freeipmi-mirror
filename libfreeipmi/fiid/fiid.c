@@ -56,7 +56,8 @@ struct fiid_obj
   unsigned int data_len;
   struct fiid_field_data *field_data;
   unsigned int field_data_len;
-  int makes_packet_sufficient;
+  int makes_packet_sufficient;  /* flag for internal use */
+  int secure_memset_on_clear;   /* flag for internal use */
 };
 
 struct fiid_iterator
@@ -938,6 +939,9 @@ fiid_obj_create (fiid_template_t tmpl)
 
       if (obj->field_data[i].flags & FIID_FIELD_MAKES_PACKET_SUFFICIENT)
         obj->makes_packet_sufficient = 1;
+
+      if (obj->field_data[i].flags & FIID_FIELD_SECURE_MEMSET_ON_CLEAR)
+        obj->secure_memset_on_clear = 1;
     }
 
   if (max_pkt_len % 8)
@@ -1567,7 +1571,11 @@ fiid_obj_clear (fiid_obj_t obj)
   if (!obj || obj->magic != FIID_OBJ_MAGIC)
     return (-1);
 
-  memset (obj->data, '\0', obj->data_len);
+  if (obj->secure_memset_on_clear)
+    secure_memset (obj->data, '\0', obj->data_len);
+  else
+    memset (obj->data, '\0', obj->data_len);
+
   for (i =0; i < obj->field_data_len; i++)
     obj->field_data[i].set_field_len = 0;
 
@@ -1633,7 +1641,10 @@ fiid_obj_clear_field (fiid_obj_t obj, const char *field)
         }
 
       field_offset = BITS_ROUND_BYTES (field_start);
-      memset (obj->data + field_offset, '\0', bytes_len);
+      if (obj->field_data[key_index].flags & FIID_FIELD_SECURE_MEMSET_ON_CLEAR)
+        secure_memset (obj->data + field_offset, '\0', bytes_len);
+      else
+        memset (obj->data + field_offset, '\0', bytes_len);
     }
 
   obj->field_data[key_index].set_field_len = 0;

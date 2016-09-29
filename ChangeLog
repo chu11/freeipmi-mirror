@@ -1,5 +1,11 @@
 2016-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/fiid/fiid.h,
+	libfreeipmi/fiid/fiid.c: Support new
+	FIID_FIELD_SECURE_MEMSET_ON_CLEAR flag.
+	
+2016-09-29 Albert Chu <chu11@llnl.gov>
+
 	* Remove additions of ipmi_rmcpplus_get_random and
 	crypt_get_random from 2016-09-26.  Older versions of gcrypt do not
 	allow multiple threads into gcry_randomize simultaneously, which
