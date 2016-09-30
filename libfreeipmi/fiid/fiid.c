@@ -1348,12 +1348,6 @@ fiid_obj_template_compare (fiid_obj_t obj, fiid_template_t tmpl)
     }
 #endif /* NDEBUG */
 
-  if (_fiid_template_check_valid_flags (tmpl) < 0)
-    {
-      obj->errnum = FIID_ERR_TEMPLATE_INVALID;
-      return (-1);
-    }
-
   for (i = 0; obj->field_data[i].max_field_len; i++)
     {
       if (obj->field_data[i].max_field_len != tmpl[i].max_field_len)

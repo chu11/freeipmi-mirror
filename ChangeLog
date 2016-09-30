@@ -5,6 +5,9 @@
 	checking will be "key not found" errors on fiid_obj_get and
 	similar.
 
+	* libfreeipmi/fiid/fiid.c (fiid_obj_template_compare): Remove
+	unnecessary call to _fiid_template_check_valid_flags.
+
 2016-09-29 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/debug/ipmi-debug-lan.c (_ipmi_dump_lan_packet):
