@@ -46,6 +46,7 @@ struct fiid_field_data
   char key[FIID_FIELD_MAX_KEY_LEN + 1];
   unsigned int set_field_len;
   unsigned int flags;
+  unsigned int index;           /* for lookup */
 };
 
 struct fiid_obj
@@ -961,6 +962,7 @@ fiid_obj_create (fiid_template_t tmpl)
       strncpy (obj->field_data[i].key, tmpl[i].key, FIID_FIELD_MAX_KEY_LEN);
       obj->field_data[i].set_field_len = 0;
       obj->field_data[i].flags = tmpl[i].flags;
+      obj->field_data[i].index = i;
       max_pkt_len += tmpl[i].max_field_len;
 
       if (obj->field_data[i].flags & FIID_FIELD_MAKES_PACKET_SUFFICIENT)
@@ -1427,7 +1429,7 @@ _fiid_obj_lookup_field_index (fiid_obj_t obj, const char *field, unsigned int *i
     {
       if (!strcmp (obj->field_data[i].key, field))
         {
-          (*index) = i;
+          (*index) = obj->field_data[i].index;
           return (0);
         }
     }

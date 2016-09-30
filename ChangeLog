@@ -1,5 +1,10 @@
 2016-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/fiid/fiid.c: Put index into fiid_field_data so does
+	not have to be calculated later.
+
+2016-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/fiid/fiid.c (_fiid_template_check_valid_keys):
 	Remove expensive check in production builds.  The fall out by not
 	checking will be "key not found" errors on fiid_obj_get and
