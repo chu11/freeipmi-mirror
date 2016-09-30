@@ -47,6 +47,8 @@ struct fiid_field_data
   unsigned int set_field_len;
   unsigned int flags;
   unsigned int index;           /* for lookup */
+  unsigned int start;           /* for lookup */
+  unsigned int end;             /* for lookup */
 };
 
 struct fiid_obj
@@ -782,8 +784,6 @@ _fiid_obj_field_start_end (fiid_obj_t obj,
                            unsigned int *end)
 {
   unsigned int i = 0;
-  unsigned int _start = 0;
-  unsigned int _end = 0;
 
   assert (obj);
   assert (obj->magic == FIID_OBJ_MAGIC);
@@ -796,12 +796,10 @@ _fiid_obj_field_start_end (fiid_obj_t obj,
     {
       if (!strcmp (obj->field_data[i].key, field))
         {
-          _end = _start + obj->field_data[i].max_field_len;
-          *start = _start;
-          *end = _end;
+          *start = obj->field_data[i].start;
+          *end = obj->field_data[i].end;
           return (obj->field_data[i].max_field_len);
         }
-      _start += obj->field_data[i].max_field_len;
     }
 
   obj->errnum = FIID_ERR_FIELD_NOT_FOUND;
@@ -874,6 +872,7 @@ fiid_obj_create (fiid_template_t tmpl)
   fiid_obj_t obj = NULL;
   unsigned int max_pkt_len = 0;
   unsigned int i;
+  unsigned int start = 0;
   int data_len;
 
   if (!tmpl)
@@ -963,6 +962,8 @@ fiid_obj_create (fiid_template_t tmpl)
       obj->field_data[i].set_field_len = 0;
       obj->field_data[i].flags = tmpl[i].flags;
       obj->field_data[i].index = i;
+      obj->field_data[i].start = start;
+      obj->field_data[i].end = start + obj->field_data[i].max_field_len;
       max_pkt_len += tmpl[i].max_field_len;
 
       if (obj->field_data[i].flags & FIID_FIELD_MAKES_PACKET_SUFFICIENT)
@@ -970,6 +971,8 @@ fiid_obj_create (fiid_template_t tmpl)
 
       if (obj->field_data[i].flags & FIID_FIELD_SECURE_MEMSET_ON_CLEAR)
         obj->secure_memset_on_clear = 1;
+
+      start += obj->field_data[i].max_field_len;
     }
 
   if (max_pkt_len % 8)
