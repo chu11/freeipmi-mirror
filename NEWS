@@ -13,6 +13,7 @@ o Various performance improvements:
     Fallout from this may include FIID_ERR_FIELD_NOT_FOUND errors in
     different fiid functions.
   - Remove unnecessary input checks in libfreeipmi fiid library.
+  - Add recent 'lookups' of fields in fiid library to internal cache.
 
 FreeIPMI 1.5.1 - 03/01/14
 -------------------------
