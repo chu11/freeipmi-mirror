@@ -35,6 +35,7 @@
 #include "libcommon/ipmi-bit-ops.h"
 
 #include "freeipmi-portability.h"
+#include "hash.h"
 #include "secure.h"
 
 #define FIID_OBJ_MAGIC 0xf00fd00d
@@ -59,6 +60,7 @@ struct fiid_obj
   unsigned int data_len;
   struct fiid_field_data *field_data;
   unsigned int field_data_len;
+  hash_t lookup;
   int makes_packet_sufficient;  /* flag for internal use */
   int secure_memset_on_clear;   /* flag for internal use */
 };
@@ -783,7 +785,7 @@ _fiid_obj_field_start_end (fiid_obj_t obj,
                            unsigned int *start,
                            unsigned int *end)
 {
-  unsigned int i = 0;
+  struct fiid_field_data *ffdptr;
 
   assert (obj);
   assert (obj->magic == FIID_OBJ_MAGIC);
@@ -791,15 +793,11 @@ _fiid_obj_field_start_end (fiid_obj_t obj,
   assert (start);
   assert (end);
 
-  /* integer overflow conditions checked during object creation */
-  for (i = 0; obj->field_data[i].max_field_len; i++)
+  if ((ffdptr = hash_find (obj->lookup, field)))
     {
-      if (!strcmp (obj->field_data[i].key, field))
-        {
-          *start = obj->field_data[i].start;
-          *end = obj->field_data[i].end;
-          return (obj->field_data[i].max_field_len);
-        }
+      *start = ffdptr->start;
+      *end = ffdptr->end;
+      return (ffdptr->max_field_len);
     }
 
   obj->errnum = FIID_ERR_FIELD_NOT_FOUND;
@@ -841,17 +839,14 @@ _fiid_obj_field_end (fiid_obj_t obj, const char *field)
 static int
 _fiid_obj_field_len (fiid_obj_t obj, const char *field)
 {
-  unsigned int i;
+  struct fiid_field_data *ffdptr;
 
   assert (obj);
   assert (obj->magic == FIID_OBJ_MAGIC);
   assert (field);
 
-  for (i = 0; obj->field_data[i].max_field_len; i++)
-    {
-      if (!strcmp (obj->field_data[i].key, field))
-        return (obj->field_data[i].max_field_len);
-    }
+  if ((ffdptr = hash_find (obj->lookup, field)))
+    return (ffdptr->max_field_len);
 
   obj->errnum = FIID_ERR_FIELD_NOT_FOUND;
   return (-1);
@@ -937,7 +932,16 @@ fiid_obj_create (fiid_template_t tmpl)
       goto cleanup;
     }
   memset (obj->field_data, '\0', obj->field_data_len * sizeof (struct fiid_field_data));
-
+  
+  if (!(obj->lookup = hash_create (obj->field_data_len,
+                                   (hash_key_f)hash_key_string,
+                                   (hash_cmp_f)strcmp,
+                                   NULL)))
+    {
+      errno = ENOMEM;
+      goto cleanup;
+    }
+  
   for (i = 0; i < obj->field_data_len; i++)
     {
 #ifndef NDEBUG
@@ -973,6 +977,12 @@ fiid_obj_create (fiid_template_t tmpl)
         obj->secure_memset_on_clear = 1;
 
       start += obj->field_data[i].max_field_len;
+
+      /* sets errno on error */
+      if (!hash_insert (obj->lookup,
+                        obj->field_data[i].key,
+                        &(obj->field_data[i])))
+        goto cleanup;
     }
 
   if (max_pkt_len % 8)
@@ -990,6 +1000,7 @@ fiid_obj_create (fiid_template_t tmpl)
     {
       free (obj->data);
       free (obj->field_data);
+      hash_destroy (obj->lookup);
       free (obj);
     }
 
@@ -1006,6 +1017,7 @@ fiid_obj_destroy (fiid_obj_t obj)
   obj->errnum = FIID_ERR_SUCCESS;
   free (obj->data);
   free (obj->field_data);
+  hash_destroy (obj->lookup);
   free (obj);
 }
 
@@ -1013,6 +1025,7 @@ fiid_obj_t
 fiid_obj_dup (fiid_obj_t src_obj)
 {
   fiid_obj_t dest_obj = NULL;
+  unsigned int i;
 
   if (!src_obj || src_obj->magic != FIID_OBJ_MAGIC)
     goto cleanup;
@@ -1044,6 +1057,24 @@ fiid_obj_dup (fiid_obj_t src_obj)
           src_obj->field_data,
           src_obj->field_data_len * sizeof (struct fiid_field_data));
 
+  if (!(dest_obj->lookup = hash_create (dest_obj->field_data_len,
+                                        (hash_key_f)hash_key_string,
+                                        (hash_cmp_f)strcmp,
+                                        NULL)))
+    {
+      src_obj->errnum = FIID_ERR_OUT_OF_MEMORY;
+      goto cleanup;
+    }
+  
+  for (i = 0; i < dest_obj->field_data_len; i++)
+    {
+      /* sets errno on error */
+      if (!hash_insert (dest_obj->lookup,
+                        dest_obj->field_data[i].key,
+                        &(dest_obj->field_data[i])))
+        goto cleanup;
+    }
+  
   src_obj->errnum = FIID_ERR_SUCCESS;
   dest_obj->errnum = FIID_ERR_SUCCESS;
   return (dest_obj);
@@ -1053,6 +1084,7 @@ fiid_obj_dup (fiid_obj_t src_obj)
     {
       free (dest_obj->data);
       free (dest_obj->field_data);
+      hash_destroy (dest_obj->lookup);
       free (dest_obj);
     }
   return (NULL);
@@ -1421,22 +1453,19 @@ fiid_obj_errormsg (fiid_obj_t obj)
 static int
 _fiid_obj_lookup_field_index (fiid_obj_t obj, const char *field, unsigned int *index)
 {
-  unsigned int i;
+  struct fiid_field_data *ffdptr;
 
   assert (obj);
   assert (obj->magic == FIID_OBJ_MAGIC);
   assert (field);
   assert (index);
 
-  for (i = 0; obj->field_data[i].max_field_len; i++)
+  if ((ffdptr = hash_find (obj->lookup, field)))
     {
-      if (!strcmp (obj->field_data[i].key, field))
-        {
-          (*index) = obj->field_data[i].index;
-          return (0);
-        }
+      (*index) = ffdptr->index;
+      return (0);
     }
-
+  
   obj->errnum = FIID_ERR_FIELD_NOT_FOUND;
   return (-1);
 }

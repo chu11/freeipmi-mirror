@@ -6,6 +6,10 @@
 	* libfreeipmi/fiid/fiid.c: Put start & end bytes into
 	fiid_field_data so does not have to be calculated later.
 
+	* libfreeipmi/fiid/fiid.c: Put internal hash/lookup table to
+	remove constant iteration/loops looking for indexes, field
+	lengths, and start & end points.
+
 2016-09-30 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/fiid/fiid.c (_fiid_template_check_valid_keys):
