@@ -9,6 +9,9 @@ o Various performance improvements:
   - Remove excessive calls to secure_memset to clear memory.
   - Remove excessive memsets and clears of data.
   - Remove unnecessary "double input checks". 
+  - Remove expensive input checks in libfreeipmi fiid library.
+    Fallout from this may include FIID_ERR_FIELD_NOT_FOUND errors in
+    different fiid functions.
 
 FreeIPMI 1.5.1 - 03/01/14
 -------------------------

@@ -99,6 +99,7 @@ static char * fiid_errmsg[] =
     "errnum out of range",
   };
 
+#ifndef NDEBUG
 static int
 _fiid_template_check_valid_keys (fiid_template_t tmpl)
 {
@@ -117,6 +118,7 @@ _fiid_template_check_valid_keys (fiid_template_t tmpl)
 
   return (0);
 }
+#endif /* NDEBUG */
 
 static int
 _fiid_template_check_valid_flags (fiid_template_t tmpl)
@@ -211,12 +213,14 @@ fiid_template_field_lookup (fiid_template_t tmpl,
       return (-1);
     }
 
+#ifndef NDEBUG
   if (_fiid_template_check_valid_keys (tmpl) < 0)
     {
       /* FIID_ERR_PARAMETERS */
       errno = EINVAL;
       return (-1);
     }
+#endif /* NDEBUG */
 
   for (i = 0; tmpl[i].max_field_len; i++)
     {
@@ -384,12 +388,14 @@ fiid_template_field_start (fiid_template_t tmpl,
       return (-1);
     }
 
+#ifndef NDEBUG
   if (_fiid_template_check_valid_keys (tmpl) < 0)
     {
       /* FIID_ERR_PARAMETERS */
       errno = EINVAL;
       return (-1);
     }
+#endif /* NDEBUG */
 
   return (_fiid_template_field_start (tmpl, field));
 }
@@ -407,12 +413,14 @@ fiid_template_field_start_bytes (fiid_template_t tmpl,
       return (-1);
     }
 
+#ifndef NDEBUG
   if (_fiid_template_check_valid_keys (tmpl) < 0)
     {
       /* FIID_ERR_PARAMETERS */
       errno = EINVAL;
       return (-1);
     }
+#endif /* NDEBUG */
 
   if ((start = _fiid_template_field_start (tmpl,
                                            field)) < 0)
@@ -465,12 +473,14 @@ fiid_template_field_end (fiid_template_t tmpl,
       return (-1);
     }
 
+#ifndef NDEBUG
   if (_fiid_template_check_valid_keys (tmpl) < 0)
     {
       /* FIID_ERR_PARAMETERS */
       errno = EINVAL;
       return (-1);
     }
+#endif /* NDEBUG */
 
   return (_fiid_template_field_end (tmpl, field));
 }
@@ -488,12 +498,14 @@ fiid_template_field_end_bytes (fiid_template_t tmpl,
       return (-1);
     }
 
+#ifndef NDEBUG
   if (_fiid_template_check_valid_keys (tmpl) < 0)
     {
       /* FIID_ERR_PARAMETERS */
       errno = EINVAL;
       return (-1);
     }
+#endif /* NDEBUG */
 
   if ((end = _fiid_template_field_end (tmpl,
                                        field)) < 0)
@@ -549,12 +561,14 @@ fiid_template_field_len (fiid_template_t tmpl,
       return (-1);
     }
 
+#ifndef NDEBUG
   if (_fiid_template_check_valid_keys (tmpl) < 0)
     {
       /* FIID_ERR_PARAMETERS */
       errno = EINVAL;
       return (-1);
     }
+#endif /* NDEBUG */
 
   return (_fiid_template_field_len (tmpl, field));
 }
@@ -572,12 +586,14 @@ fiid_template_field_len_bytes (fiid_template_t tmpl,
       return (-1);
     }
 
+#ifndef NDEBUG
   if (_fiid_template_check_valid_keys (tmpl) < 0)
     {
       /* FIID_ERR_PARAMETERS */
       errno = EINVAL;
       return (-1);
     }
+#endif /* NDEBUG */
 
   if ((len = _fiid_template_field_len (tmpl,
                                        field)) < 0)
@@ -635,12 +651,14 @@ fiid_template_block_len (fiid_template_t tmpl,
       return (-1);
     }
 
+#ifndef NDEBUG
   if (_fiid_template_check_valid_keys (tmpl) < 0)
     {
       /* FIID_ERR_PARAMETERS */
       errno = EINVAL;
       return (-1);
     }
+#endif /* NDEBUG */
 
   return (_fiid_template_block_len (tmpl, field_start, field_end));
 }
@@ -659,12 +677,14 @@ fiid_template_block_len_bytes (fiid_template_t tmpl,
       return (-1);
     }
 
+#ifndef NDEBUG
   if (_fiid_template_check_valid_keys (tmpl) < 0)
     {
       /* FIID_ERR_PARAMETERS */
       errno = EINVAL;
       return (-1);
     }
+#endif /* NDEBUG */
 
   if ((len = _fiid_template_block_len (tmpl,
                                        field_start,
@@ -694,19 +714,23 @@ fiid_template_compare (fiid_template_t tmpl1,
       return (-1);
     }
 
+#ifndef NDEBUG
   if (_fiid_template_check_valid_keys (tmpl1) < 0)
     {
       /* FIID_ERR_PARAMETERS */
       errno = EINVAL;
       return (-1);
     }
+#endif /* NDEBUG */
 
+#ifndef NDEBUG
   if (_fiid_template_check_valid_keys (tmpl2) < 0)
     {
       /* FIID_ERR_PARAMETERS */
       errno = EINVAL;
       return (-1);
     }
+#endif /* NDEBUG */
 
   for (i = 0; tmpl1[i].max_field_len; i++)
     {
@@ -858,12 +882,14 @@ fiid_obj_create (fiid_template_t tmpl)
       goto cleanup;
     }
 
+#ifndef NDEBUG
   if (_fiid_template_check_valid_keys (tmpl) < 0)
     {
       /* FIID_ERR_TEMPLATE_INVALID */
       errno = EINVAL;
       goto cleanup;
     }
+#endif /* NDEBUG */
 
   if (_fiid_template_check_valid_flags (tmpl) < 0)
     {
@@ -1314,11 +1340,13 @@ fiid_obj_template_compare (fiid_obj_t obj, fiid_template_t tmpl)
       return (-1);
     }
 
+#ifndef NDEBUG
   if (_fiid_template_check_valid_keys (tmpl) < 0)
     {
       obj->errnum = FIID_ERR_TEMPLATE_INVALID;
       return (-1);
     }
+#endif /* NDEBUG */
 
   if (_fiid_template_check_valid_flags (tmpl) < 0)
     {
