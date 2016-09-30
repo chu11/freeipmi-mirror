@@ -1,4 +1,4 @@
-FreeIPMI 1.5.4 - 08/01/16
+FreeIPMI 1.5.4 - 09/30/16
 -------------------------
 o Various changes/fixes in libipmiconsole
   - If user retrieves file descriptor from ipmiconsole_ctx_fd, user is
