@@ -8,6 +8,10 @@
 	ipmi_fru_output_board_info_area, ipmi_fru_output_product_info_area): 
 	Remove unnecessary memsets, are performed within API functions.
 
+	* ipmi-oem/ipmi-oem-dell.c (_ipmi_oem_dell_power_supply_info_sdr_callback):
+	Memset sensor name buffer before calling
+	ipmi_sdr_parse_entity_sensor_name.
+
 2016-09-30 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/fiid/fiid.c: Put index into fiid_field_data so does

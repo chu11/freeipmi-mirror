@@ -5423,6 +5423,8 @@ _ipmi_oem_dell_power_supply_info_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
        * Dell code does not check for potential sdr record
        * sharing, so I won't either.
        */
+
+      memset (sensor_name_buf, '\0', IPMI_SDR_MAX_SENSOR_NAME_LENGTH + 1);
           
       if (ipmi_sdr_parse_entity_sensor_name (state_data->sdr_ctx,
                                              NULL,
