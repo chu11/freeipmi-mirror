@@ -197,8 +197,6 @@ ipmi_sdr_parse_sensor_name (ipmi_sdr_ctx_t ctx,
       return (-1);
     }
 
-  memset (buf, '\0', buflen);
-
   if (ipmi_sdr_parse_record_id_and_type (ctx,
                                          sdr_record,
                                          sdr_record_len,
@@ -306,7 +304,6 @@ ipmi_sdr_parse_entity_sensor_name (ipmi_sdr_ctx_t ctx,
       return (-1);
     }
 
-  memset (buf, '\0', buflen);
   memset (entity_name_buf, '\0', IPMI_SDR_ENTITY_NAME_BUFLEN + 1);
 
   if (ipmi_sdr_parse_record_id_and_type (ctx,
