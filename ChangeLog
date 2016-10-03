@@ -4,6 +4,10 @@
 	ipmipower/ipmipower_prompt.c (_cmd_k_g): Fix memset of buffer to
 	correct length.
 
+	* ipmi-fru/ipmi-fru-output.c (ipmi_fru_output_chassis_info_area,
+	ipmi_fru_output_board_info_area, ipmi_fru_output_product_info_area): 
+	Remove unnecessary memsets, are performed within API functions.
+
 2016-09-30 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/fiid/fiid.c: Put index into fiid_field_data so does

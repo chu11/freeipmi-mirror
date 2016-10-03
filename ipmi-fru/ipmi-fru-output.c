@@ -125,12 +125,6 @@ ipmi_fru_output_chassis_info_area (ipmi_fru_state_data_t *state_data,
   assert (areabuf);
   assert (area_length);
 
-  memset (&chassis_part_number, '\0', sizeof (ipmi_fru_field_t));
-  memset (&chassis_serial_number, '\0', sizeof (ipmi_fru_field_t));
-  memset (&chassis_custom_fields[0],
-          '\0',
-          sizeof (ipmi_fru_field_t) * IPMI_FRU_CUSTOM_FIELDS);
-
   if (ipmi_fru_chassis_info_area (state_data->fru_ctx,
                                   areabuf,
                                   area_length,
@@ -209,14 +203,6 @@ ipmi_fru_output_board_info_area (ipmi_fru_state_data_t *state_data,
   assert (state_data);
   assert (areabuf);
   assert (area_length);
-
-  memset (&board_manufacturer, '\0', sizeof (ipmi_fru_field_t));
-  memset (&board_product_name, '\0', sizeof (ipmi_fru_field_t));
-  memset (&board_serial_number, '\0', sizeof (ipmi_fru_field_t));
-  memset (&board_fru_file_id, '\0', sizeof (ipmi_fru_field_t));
-  memset (&board_custom_fields[0],
-          '\0',
-          sizeof (ipmi_fru_field_t) * IPMI_FRU_CUSTOM_FIELDS);
 
   if (ipmi_fru_board_info_area (state_data->fru_ctx,
                                 areabuf,
@@ -347,17 +333,6 @@ ipmi_fru_output_product_info_area (ipmi_fru_state_data_t *state_data,
   assert (state_data);
   assert (areabuf);
   assert (area_length);
-  
-  memset (&product_manufacturer_name, '\0', sizeof (ipmi_fru_field_t));
-  memset (&product_name, '\0', sizeof (ipmi_fru_field_t));
-  memset (&product_part_model_number, '\0', sizeof (ipmi_fru_field_t));
-  memset (&product_version, '\0', sizeof (ipmi_fru_field_t));
-  memset (&product_serial_number, '\0', sizeof (ipmi_fru_field_t));
-  memset (&product_asset_tag, '\0', sizeof (ipmi_fru_field_t));
-  memset (&product_fru_file_id, '\0', sizeof (ipmi_fru_field_t));
-  memset (&product_custom_fields[0],
-          '\0',
-          sizeof (ipmi_fru_field_t) * IPMI_FRU_CUSTOM_FIELDS);
   
   if (ipmi_fru_product_info_area (state_data->fru_ctx,
                                   areabuf,
