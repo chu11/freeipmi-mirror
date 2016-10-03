@@ -247,7 +247,7 @@ _cmd_k_g (char **argv)
     ipmipower_cbuf_printf (ttyout, "k_g is only used for IPMI 2.0");
   else
     {
-      memset (cmd_args.common_args.k_g, '\0', IPMI_MAX_K_G_LENGTH);
+      memset (cmd_args.common_args.k_g, '\0', IPMI_MAX_K_G_LENGTH + 1);
 
       if (argv[1])
         rv = parse_kg (cmd_args.common_args.k_g, IPMI_MAX_K_G_LENGTH + 1, argv[1]);
