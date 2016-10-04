@@ -15,6 +15,9 @@
 	* ipmi-dcmi/ipmi-dcmi.c: Audit and fix, +1 for string buffers, use
 	char not uint8_t for strings.
 
+	* ipmi-fru/: Audit and fix, no need to memset buffers, remove +1s
+	length on buffers.
+
 2016-10-03 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/fru/ipmi-fru-data.c: Remove unnecessary memsets. 

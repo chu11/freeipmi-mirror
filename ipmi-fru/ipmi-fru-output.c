@@ -936,7 +936,7 @@ ipmi_fru_output_base_compatibility_record (ipmi_fru_state_data_t *state_data,
   unsigned int entity_id_code;
   unsigned int compatibility_base;
   unsigned int compatibility_code_start_value;
-  uint8_t code_range_mask[IPMI_FRU_AREA_TYPE_LENGTH_FIELD_MAX + 1];
+  uint8_t code_range_mask[IPMI_FRU_AREA_TYPE_LENGTH_FIELD_MAX];
   unsigned int code_range_mask_len = IPMI_FRU_AREA_TYPE_LENGTH_FIELD_MAX;
   char iana_buf[IPMI_FRU_STR_BUFLEN + 1];
   int ret;
@@ -944,8 +944,6 @@ ipmi_fru_output_base_compatibility_record (ipmi_fru_state_data_t *state_data,
   assert (state_data);
   assert (areabuf);
   assert (area_length);
-
-  memset (code_range_mask, '\0', IPMI_FRU_AREA_TYPE_LENGTH_FIELD_MAX + 1);
 
   if (ipmi_fru_multirecord_base_compatibility_record (state_data->fru_ctx,
                                                       areabuf,
@@ -1032,7 +1030,7 @@ ipmi_fru_output_extended_compatibility_record (ipmi_fru_state_data_t *state_data
   unsigned int entity_id_code;
   unsigned int compatibility_base;
   unsigned int compatibility_code_start_value;
-  uint8_t code_range_mask[IPMI_FRU_AREA_TYPE_LENGTH_FIELD_MAX + 1];
+  uint8_t code_range_mask[IPMI_FRU_AREA_TYPE_LENGTH_FIELD_MAX];
   unsigned int code_range_mask_len = IPMI_FRU_AREA_TYPE_LENGTH_FIELD_MAX;
   char iana_buf[IPMI_FRU_STR_BUFLEN + 1];
   int ret;
@@ -1040,8 +1038,6 @@ ipmi_fru_output_extended_compatibility_record (ipmi_fru_state_data_t *state_data
   assert (state_data);
   assert (areabuf);
   assert (area_length);
-
-  memset (code_range_mask, '\0', IPMI_FRU_AREA_TYPE_LENGTH_FIELD_MAX + 1);
 
   if (ipmi_fru_multirecord_extended_compatibility_record (state_data->fru_ctx,
                                                           areabuf,
@@ -1125,7 +1121,7 @@ ipmi_fru_output_oem_record (ipmi_fru_state_data_t *state_data,
                             unsigned int area_length)
 {
   uint32_t manufacturer_id;
-  uint8_t oem_data[IPMI_FRU_AREA_TYPE_LENGTH_FIELD_MAX + 1];
+  uint8_t oem_data[IPMI_FRU_AREA_TYPE_LENGTH_FIELD_MAX];
   unsigned int oem_data_len = IPMI_FRU_AREA_TYPE_LENGTH_FIELD_MAX;
   char iana_buf[IPMI_FRU_STR_BUFLEN + 1];
   uint8_t record_type_id;
@@ -1134,8 +1130,6 @@ ipmi_fru_output_oem_record (ipmi_fru_state_data_t *state_data,
   assert (state_data);
   assert (areabuf);
   assert (area_length);
-
-  memset (oem_data, '\0', IPMI_FRU_AREA_TYPE_LENGTH_FIELD_MAX + 1);
 
   if (ipmi_fru_multirecord_oem_record (state_data->fru_ctx,
                                        areabuf,
