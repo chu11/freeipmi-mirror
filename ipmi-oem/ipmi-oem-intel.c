@@ -53,6 +53,7 @@
 #include "tool-oem-common.h"
 #include "tool-sdr-cache-common.h"
 #include "tool-sensor-common.h"
+#include "secure.h"
 
 /* Intel S5500WB/Penguin Computing Relion 700
  *
@@ -1347,8 +1348,6 @@ ipmi_oem_intel_set_bmc_services (ipmi_oem_state_data_t *state_data)
 {
   uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
   uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
-  uint8_t standard_services = 0;
-  uint8_t oem_specific_services = 0;
   int rs_len;
   int rv = -1;
 

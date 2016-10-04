@@ -1056,7 +1056,6 @@ fiid_obj_t
 fiid_obj_dup (fiid_obj_t src_obj)
 {
   fiid_obj_t dest_obj = NULL;
-  unsigned int i;
 
   if (!src_obj || src_obj->magic != FIID_OBJ_MAGIC)
     goto cleanup;
