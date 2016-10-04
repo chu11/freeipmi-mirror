@@ -133,7 +133,6 @@ ipmiseld_threadpool_init (struct ipmiseld_prog_data *prog_data,
       err_output ("malloc: %s", strerror (errno));
       goto cleanup;
     }
-  memset (threadpool_data_array, '\0', sizeof (struct ipmiseld_threadpool_data) * prog_data->args->threadpool_count);
 
   if (!(threadpool_queue = list_create (NULL)))
     {

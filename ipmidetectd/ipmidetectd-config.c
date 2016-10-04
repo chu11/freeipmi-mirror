@@ -62,8 +62,6 @@ extern struct ipmidetectd_config conf;
 static void
 _config_default (void)
 {
-  memset (&conf, '\0', sizeof (struct ipmidetectd_config));
-
   conf.ipmiping_period = IPMIDETECTD_IPMIPING_PERIOD;
   conf.ipmidetectd_server_port = IPMIDETECTD_SERVER_PORT_DEFAULT;
 

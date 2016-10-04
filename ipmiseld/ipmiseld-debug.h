@@ -46,9 +46,9 @@
 
 #define IPMISELD_HOST_DEBUG(__msg) \
   do { \
-    char __err[IPMISELD_DEBUG_BUFFER_LEN]; \
+    char __err[IPMISELD_DEBUG_BUFFER_LEN + 1]; \
     int __len; \
-    memset (__err, '\0', IPMISELD_DEBUG_BUFFER_LEN); \
+    memset (__err, '\0', IPMISELD_DEBUG_BUFFER_LEN + 1); \
     __len = snprintf (__err, \
                       IPMISELD_DEBUG_BUFFER_LEN, \
                       "(%s, %s, %d): hostname = %s; ", \
@@ -61,7 +61,7 @@
         char *__str; \
         if ((__str = ipmiseld_debug_msg_create __msg)) \
           { \
-            strncat (__err, __str, IPMISELD_DEBUG_BUFFER_LEN - __len - 1); \
+            strncat (__err, __str, IPMISELD_DEBUG_BUFFER_LEN - __len); \
             free (__str); \
           } \
       } \
@@ -72,9 +72,9 @@
 
 #define IPMISELD_HOST_DEBUG(__msg) \
   do { \
-    char __err[IPMISELD_DEBUG_BUFFER_LEN]; \
+    char __err[IPMISELD_DEBUG_BUFFER_LEN + 1]; \
     int __len; \
-    memset (__err, '\0', IPMISELD_DEBUG_BUFFER_LEN); \
+    memset (__err, '\0', IPMISELD_DEBUG_BUFFER_LEN + 1); \
     __len = snprintf (__err, \
                       IPMISELD_DEBUG_BUFFER_LEN, \
                       "hostname = %s ; ", \
@@ -84,7 +84,7 @@
         char *__str; \
         if ((__str = ipmiseld_debug_msg_create __msg)) \
           { \
-            strncat (__err, __str, IPMISELD_DEBUG_BUFFER_LEN - __len - 1); \
+            strncat (__err, __str, IPMISELD_DEBUG_BUFFER_LEN - __len); \
             free (__str); \
           } \
       } \
