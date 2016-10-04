@@ -1,3 +1,7 @@
+2016-10-03 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/fru/ipmi-fru-data.c: Remove unnecessary memsets. 
+	
 2016-08-29 Albert Chu <chu11@llnl.gov>
 	
 	* ipmi-oem/: Add Gigabyte get/set-bmc-services commands.
