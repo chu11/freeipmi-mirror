@@ -101,7 +101,7 @@
 /*
  * ipmiseld_debug_msg_create
  *
- * create a buffer and put the a mesage inside it
+ * create a buffer and put the a message inside it
  *
  * Returns message buffer or NULL on error
  */
