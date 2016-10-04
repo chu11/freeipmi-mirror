@@ -700,7 +700,7 @@ display_system_info_common (bmc_info_state_data_t *state_data,
   uint8_t encoding;
 #endif
   uint8_t string_length;
-  char string[BMC_INFO_SYSTEM_INFO_STRING_MAX];
+  char string[BMC_INFO_SYSTEM_INFO_STRING_MAX + 1];
   uint64_t val;
   uint8_t set_selector = 0;
   unsigned int string_count = 0;
@@ -719,7 +719,7 @@ display_system_info_common (bmc_info_state_data_t *state_data,
 
   assert (state_data);
 
-  memset (string, '\0', BMC_INFO_SYSTEM_INFO_STRING_MAX);
+  memset (string, '\0', BMC_INFO_SYSTEM_INFO_STRING_MAX + 1);
 
   if (!(obj_cmd_first_set_rs = fiid_obj_create (tmpl_cmd_first_set)))
     {
@@ -1110,7 +1110,15 @@ get_channel_info_list (bmc_info_state_data_t *state_data, channel_info_t *channe
       if (ipmi_cmd_get_channel_info (state_data->ipmi_ctx,
                                      i,
                                      obj_cmd_rs) < 0)
-        continue;
+        {
+          channel_info_list[ci].actual_channel_number = 0;
+          channel_info_list[ci].channel_medium_type = 0;
+          channel_info_list[ci].channel_protocol_type = 0;
+          channel_info_list[ci].active_session_count = 0;
+          channel_info_list[ci].session_support = 0;
+          channel_info_list[ci].vendor_id = 0;
+          continue;
+        }
 
       if (FIID_OBJ_GET (obj_cmd_rs,
                         "actual_channel_number",
@@ -1208,7 +1216,6 @@ display_channel_info (bmc_info_state_data_t *state_data)
 
   assert (state_data);
 
-  memset (channel_info_list, '\0', sizeof (channel_info_t) * IPMI_CHANNEL_NUMBERS_MAX);
   if (get_channel_info_list (state_data, channel_info_list) < 0)
     return (-1);
 

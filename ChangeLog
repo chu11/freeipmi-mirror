@@ -6,6 +6,12 @@
 	* bmc-device/: Audit and fix, remove +1 for data buffers, don't
 	memset when unnecessary.
 
+	* bmc-info/bmc-info.c (display_system_info_common): Add +1 for string buffer.
+
+	* bmc-info/bmcinfo.c (get_channel_info_list)
+	(display_channel_info): Don't memset channel array, clear values
+	if not available.
+
 2016-10-03 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/fru/ipmi-fru-data.c: Remove unnecessary memsets. 
