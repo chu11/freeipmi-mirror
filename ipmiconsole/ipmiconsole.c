@@ -287,7 +287,6 @@ main (int argc, char **argv)
 
   /* convert config information to ipmiconsole configuration */
 
-  memset (&ipmi_config, '\0', sizeof (struct ipmiconsole_ipmi_config));
   ipmi_config.username = cmd_args.common_args.username;
   ipmi_config.password = cmd_args.common_args.password;
   ipmi_config.k_g = cmd_args.common_args.k_g;
@@ -306,6 +305,8 @@ main (int argc, char **argv)
     }
 
   ipmi_config.cipher_suite_id = cmd_args.common_args.cipher_suite_id;
+
+  ipmi_config.workaround_flags = 0;
 
   if (cmd_args.common_args.workaround_flags_outofband_2_0 & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_2_0_AUTHENTICATION_CAPABILITIES)
     ipmi_config.workaround_flags |= IPMICONSOLE_WORKAROUND_AUTHENTICATION_CAPABILITIES;
@@ -335,7 +336,6 @@ main (int argc, char **argv)
   if (cmd_args.common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_INCREMENT_SOL_PACKET_SEQUENCE)
     ipmi_config.workaround_flags |= IPMICONSOLE_WORKAROUND_INCREMENT_SOL_PACKET_SEQUENCE;
 
-  memset (&protocol_config, '\0', sizeof (struct ipmiconsole_protocol_config));
   protocol_config.session_timeout_len = cmd_args.common_args.session_timeout;
   protocol_config.retransmission_timeout_len = cmd_args.common_args.retransmission_timeout;
   protocol_config.retransmission_backoff_count = -1;
@@ -343,8 +343,6 @@ main (int argc, char **argv)
   protocol_config.retransmission_keepalive_timeout_len = -1;
   protocol_config.acceptable_packet_errors_count = -1;
   protocol_config.maximum_retransmission_count = -1;
-
-  memset (&engine_config, '\0', sizeof (struct ipmiconsole_engine_config));
 
   engine_config.engine_flags = 0;
   if (cmd_args.serial_keepalive)

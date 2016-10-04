@@ -20,6 +20,8 @@
 
 	* ipmi-sensors/: Audit and fix, remove unnecessary memset.
 
+	* ipmiconsole/: Audit and remove unnecessary memsets.
+
 2016-10-03 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/fru/ipmi-fru-data.c: Remove unnecessary memsets. 
