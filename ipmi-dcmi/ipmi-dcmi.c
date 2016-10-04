@@ -1285,7 +1285,7 @@ static int
 get_management_controller_identifier_string (ipmi_dcmi_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  uint8_t management_controller_identifier_string_data[IPMI_DCMI_MAX_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_LENGTH];
+  char management_controller_identifier_string_data[IPMI_DCMI_MAX_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_LENGTH + 1];
   int data_len;
   unsigned int offset = 0;
   uint8_t total_length = 0;
@@ -1303,7 +1303,7 @@ get_management_controller_identifier_string (ipmi_dcmi_state_data_t *state_data)
       goto cleanup;
     }
 
-  memset (management_controller_identifier_string_data, '\0', IPMI_DCMI_MAX_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_LENGTH);
+  memset (management_controller_identifier_string_data, '\0', IPMI_DCMI_MAX_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_LENGTH + 1);
 
   while (1)
     {
@@ -1375,7 +1375,7 @@ set_management_controller_identifier_string (ipmi_dcmi_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   unsigned int offset = 0;
-  char data_buf[IPMI_DCMI_MAX_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_LENGTH];
+  char data_buf[IPMI_DCMI_MAX_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_LENGTH + 1];
   unsigned int data_len;
   uint8_t bytes_to_write = IPMI_DCMI_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_NUMBER_OF_BYTES_TO_WRITE_MAX;
   int rv = -1;
@@ -1397,7 +1397,7 @@ set_management_controller_identifier_string (ipmi_dcmi_state_data_t *state_data)
   /* +1 for NUL char */
   data_len = strlen (state_data->prog_data->args->set_management_controller_identifier_string_arg) + 1;
 
-  memset (data_buf, '\0', IPMI_DCMI_MAX_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_LENGTH);
+  memset (data_buf, '\0', IPMI_DCMI_MAX_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_LENGTH + 1);
 
   memcpy (data_buf,
           state_data->prog_data->args->set_management_controller_identifier_string_arg,

@@ -12,6 +12,9 @@
 	(display_channel_info): Don't memset channel array, clear values
 	if not available.
 
+	* ipmi-dcmi/ipmi-dcmi.c: Audit and fix, +1 for string buffers, use
+	char not uint8_t for strings.
+
 2016-10-03 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/fru/ipmi-fru-data.c: Remove unnecessary memsets. 
