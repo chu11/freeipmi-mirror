@@ -2322,14 +2322,6 @@ run_cmd_args (ipmi_dcmi_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
-  if (args->interpret_oem_data)
-    {
-      if (ipmi_get_oem_data (state_data->pstate,
-                             state_data->ipmi_ctx,
-                             &state_data->oem_data) < 0)
-        goto cleanup;
-    }
-
   if (args->get_dcmi_capability_info)
     return (get_dcmi_capability_info (state_data));
 
@@ -2364,7 +2356,6 @@ run_cmd_args (ipmi_dcmi_state_data_t *state_data)
     return (activate_deactivate_power_limit (state_data));
 
   rv = 0;
- cleanup:
   return (rv);
 }
 

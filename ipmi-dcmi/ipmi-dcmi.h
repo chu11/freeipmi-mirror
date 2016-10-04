@@ -92,7 +92,6 @@ typedef struct ipmi_dcmi_state_data
   ipmi_dcmi_prog_data_t *prog_data;
   ipmi_ctx_t ipmi_ctx;
   pstdout_state_t pstate;
-  struct ipmi_oem_data oem_data;
 } ipmi_dcmi_state_data_t;
 
 #endif /* IPMI_DCMI_H */
