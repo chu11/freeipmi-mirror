@@ -1206,8 +1206,6 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
   if (_output_setup (state_data) < 0)
     goto cleanup;
 
-  memset (output_record_ids, '\0', sizeof (unsigned int) * MAX_SENSOR_RECORD_IDS);
-
   if (_calculate_record_ids (state_data,
                              output_record_ids,
                              &output_record_ids_length) < 0)

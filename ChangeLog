@@ -18,6 +18,8 @@
 	* ipmi-fru/: Audit and fix, no need to memset buffers, remove +1s
 	length on buffers.
 
+	* ipmi-sensors/: Audit and fix, remove unnecessary memset.
+
 2016-10-03 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/fru/ipmi-fru-data.c: Remove unnecessary memsets. 
