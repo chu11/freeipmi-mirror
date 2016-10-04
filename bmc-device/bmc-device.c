@@ -2724,7 +2724,7 @@ set_base_os_hypervisor_url (bmc_device_state_data_t *state_data)
 static int
 read_fru (bmc_device_state_data_t *state_data)
 {
-  uint8_t areabuf[IPMI_FRU_AREA_SIZE_MAX+1];
+  uint8_t areabuf[IPMI_FRU_AREA_SIZE_MAX];
   unsigned int area_type = 0;
   unsigned int area_length = 0;
   unsigned int flags = 0;
@@ -2764,7 +2764,6 @@ read_fru (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  memset (areabuf, '\0', IPMI_FRU_AREA_SIZE_MAX + 1);
   if (ipmi_fru_read_data_area (state_data->fru_ctx,
                                &area_type,
                                &area_length,
@@ -2826,7 +2825,7 @@ read_fru (bmc_device_state_data_t *state_data)
 static int
 write_fru (bmc_device_state_data_t *state_data)
 {
-  uint8_t areabuf[IPMI_FRU_AREA_SIZE_MAX+1];
+  uint8_t areabuf[IPMI_FRU_AREA_SIZE_MAX];
   fiid_obj_t fru_get_inventory_rs = NULL;
   fiid_obj_t obj_cmd_rs = NULL;
   struct stat sbuf;
@@ -2904,7 +2903,6 @@ write_fru (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  memset (areabuf, '\0', IPMI_FRU_AREA_SIZE_MAX + 1);
   if ((fd = open (state_data->prog_data->args->write_fru_filename, O_RDONLY)) < 0)
     {
       pstdout_fprintf (state_data->pstate,

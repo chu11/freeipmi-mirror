@@ -3,6 +3,9 @@
 	* ipmi-oem/: Audit and fix, add +1 to string buffers, use
 	secure_memset when appropriate.
 
+	* bmc-device/: Audit and fix, remove +1 for data buffers, don't
+	memset when unnecessary.
+
 2016-10-03 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/fru/ipmi-fru-data.c: Remove unnecessary memsets. 
