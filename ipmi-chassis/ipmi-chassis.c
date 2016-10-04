@@ -764,7 +764,8 @@ set_power_restore_policy (ipmi_chassis_state_data_t *state_data)
   if (args->set_power_restore_policy_arg == IPMI_POWER_RESTORE_POLICY_NO_CHANGE)
     {
       char policy_supported[100];
-      memset (policy_supported, 0, sizeof (policy_supported));
+
+      memset (policy_supported, '\0', sizeof (policy_supported));
 
       if (FIID_OBJ_GET (obj_cmd_rs, "powered_off_after_ac_mains_returns", &val) < 0)
         {
