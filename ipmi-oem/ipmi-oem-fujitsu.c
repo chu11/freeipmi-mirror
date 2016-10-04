@@ -135,7 +135,7 @@ int
 ipmi_oem_fujitsu_get_power_on_source (ipmi_oem_state_data_t *state_data)
 {
   uint8_t source = 0;
-  char str[IPMI_OEM_STR_BUFLEN];
+  char str[IPMI_OEM_STR_BUFLEN + 1];
   int rv = -1;
 
   assert (state_data);
@@ -146,7 +146,7 @@ ipmi_oem_fujitsu_get_power_on_source (ipmi_oem_state_data_t *state_data)
                                   &source) < 0)
     goto cleanup;
 
-  memset (str, '\0', IPMI_OEM_STR_BUFLEN);
+  memset (str, '\0', IPMI_OEM_STR_BUFLEN + 1);
 
   switch (source)
     {
@@ -211,7 +211,7 @@ int
 ipmi_oem_fujitsu_get_power_off_source (ipmi_oem_state_data_t *state_data)
 {
   uint8_t source = 0;
-  char str[IPMI_OEM_STR_BUFLEN];
+  char str[IPMI_OEM_STR_BUFLEN + 1];
   int rv = -1;
 
   assert (state_data);
@@ -222,7 +222,7 @@ ipmi_oem_fujitsu_get_power_off_source (ipmi_oem_state_data_t *state_data)
                                   &source) < 0)
     goto cleanup;
 
-  memset (str, '\0', IPMI_OEM_STR_BUFLEN);
+  memset (str, '\0', IPMI_OEM_STR_BUFLEN + 1);
 
   switch (source)
     {

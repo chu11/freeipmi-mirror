@@ -977,9 +977,9 @@ ipmi_oem_intel_set_smtp_config (ipmi_oem_state_data_t *state_data)
 
           /* clear out buffers for security */
 
-          memset (value, '\0', strlen (value));
+          secure_memset (value, '\0', strlen (value));
           
-          memset (state_data->prog_data->args->oem_options[i], '\0', strlen (state_data->prog_data->args->oem_options[i]));
+          secure_memset (state_data->prog_data->args->oem_options[i], '\0', strlen (state_data->prog_data->args->oem_options[i]));
 
           if (_set_smtp_configuration_string (state_data,
                                               channel_numbers,
@@ -991,7 +991,7 @@ ipmi_oem_intel_set_smtp_config (ipmi_oem_state_data_t *state_data)
 
           /* clear out buffers for security */
           
-          memset (user_password, '\0', IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_STRING_LENGTH_MAX + 1);
+          secure_memset (user_password, '\0', IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_STRING_LENGTH_MAX + 1);
         }
       else if (!strcasecmp (key, "emailaddress"))
         {

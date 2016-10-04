@@ -1333,8 +1333,8 @@ ipmi_oem_wistron_get_ipv6_settings (ipmi_oem_state_data_t *state_data)
   uint8_t ipv6autoconfig;
   char ipv6linklocaladdress[IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_LINK_LOCAL_ADDRESS_LEN + 1];
   uint8_t ipv6autodns;
-  char ipv6dnsserver1[IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_DNS_SERVER1_LEN];
-  char ipv6dnsserver2[IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_DNS_SERVER2_LEN];
+  char ipv6dnsserver1[IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_DNS_SERVER1_LEN + 1];
+  char ipv6dnsserver2[IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_DNS_SERVER2_LEN + 1];
   int rv = -1;
 
   assert (state_data);
@@ -1343,8 +1343,8 @@ ipmi_oem_wistron_get_ipv6_settings (ipmi_oem_state_data_t *state_data)
   memset (ipv6address, '\0', IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_ADDRESS_LEN + 1);
   memset (ipv6gatewayipaddress, '\0', IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_GATEWAY_IP_ADDRESS_LEN + 1);
   memset (ipv6linklocaladdress, '\0', IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_LINK_LOCAL_ADDRESS_LEN + 1);
-  memset (ipv6dnsserver1, '\0', IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_DNS_SERVER1_LEN);
-  memset (ipv6dnsserver2, '\0', IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_DNS_SERVER2_LEN);
+  memset (ipv6dnsserver1, '\0', IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_DNS_SERVER1_LEN + 1);
+  memset (ipv6dnsserver2, '\0', IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_DNS_SERVER2_LEN + 1);
 
   if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
                                                      IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_IPV6_SETTING,
@@ -1474,8 +1474,8 @@ ipmi_oem_wistron_set_ipv6_settings (ipmi_oem_state_data_t *state_data)
   uint8_t ipv6autoconfig;
   char ipv6linklocaladdress[IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_LINK_LOCAL_ADDRESS_LEN + 1];
   uint8_t ipv6autodns;
-  char ipv6dnsserver1[IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_DNS_SERVER1_LEN];
-  char ipv6dnsserver2[IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_DNS_SERVER2_LEN];
+  char ipv6dnsserver1[IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_DNS_SERVER1_LEN + 1];
+  char ipv6dnsserver2[IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_DNS_SERVER2_LEN + 1];
   int rv = -1;
   unsigned int i;
 
@@ -1484,8 +1484,8 @@ ipmi_oem_wistron_set_ipv6_settings (ipmi_oem_state_data_t *state_data)
   memset (ipv6address, '\0', IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_ADDRESS_LEN + 1);
   memset (ipv6gatewayipaddress, '\0', IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_GATEWAY_IP_ADDRESS_LEN + 1);
   memset (ipv6linklocaladdress, '\0', IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_LINK_LOCAL_ADDRESS_LEN + 1);
-  memset (ipv6dnsserver1, '\0', IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_DNS_SERVER1_LEN);
-  memset (ipv6dnsserver2, '\0', IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_DNS_SERVER2_LEN);
+  memset (ipv6dnsserver1, '\0', IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_DNS_SERVER1_LEN + 1);
+  memset (ipv6dnsserver2, '\0', IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_DNS_SERVER2_LEN + 1);
 
   if (!state_data->prog_data->args->oem_options_count)
     {
