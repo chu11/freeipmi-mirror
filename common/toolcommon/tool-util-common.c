@@ -135,7 +135,7 @@ format_kg (char *out, unsigned int outlen, const void *k_g)
 
   if (printable)
     {
-      if (outlen < IPMI_MAX_K_G_LENGTH+1)
+      if (outlen < IPMI_MAX_K_G_LENGTH)
         return (NULL);
       p = out;
       for (i = 0; i < IPMI_MAX_K_G_LENGTH; i++)

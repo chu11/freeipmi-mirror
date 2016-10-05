@@ -208,19 +208,19 @@ _config_file_password (conffile_t cf,
 
 static int
 _config_file_k_g (conffile_t cf,
-                       struct conffile_data *data,
-                       char *optionname,
-                       int option_type,
-                       void *option_ptr,
-                       int option_data,
-                       void *app_ptr,
-                       int app_data)
+                  struct conffile_data *data,
+                  char *optionname,
+                  int option_type,
+                  void *option_ptr,
+                  int option_data,
+                  void *app_ptr,
+                  int app_data)
 {
   int rv;
 
   assert (data);
 
-  if ((rv = parse_kg (default_config.k_g, IPMI_MAX_K_G_LENGTH + 1, data->string)) < 0)
+  if ((rv = parse_kg (default_config.k_g, IPMI_MAX_K_G_LENGTH, data->string)) < 0)
     {
       IPMICONSOLE_DEBUG (("libipmiconsole config file k_g invalid format"));
       return (0);

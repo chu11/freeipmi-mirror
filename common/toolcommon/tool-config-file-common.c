@@ -421,7 +421,7 @@ _config_file_k_g (conffile_t cf,
   if (common_cmd_args_config->tool_option_k_g_set)
     return (0);
 
-  if ((rv = parse_kg (common_cmd_args_config->k_g, IPMI_MAX_K_G_LENGTH + 1, data->string)) < 0)
+  if ((rv = parse_kg (common_cmd_args_config->k_g, IPMI_MAX_K_G_LENGTH, data->string)) < 0)
     {
       fprintf (stderr, "Config File Error: k_g input formatted incorrectly\n");
       exit (EXIT_FAILURE);
@@ -707,7 +707,7 @@ _config_file_tool_option_k_g (conffile_t cf,
   if (common_cmd_args_config->k_g_set)
     memset (common_cmd_args_config->k_g, '\0', IPMI_MAX_K_G_LENGTH + 1);
 
-  if ((rv = parse_kg (common_cmd_args_config->k_g, IPMI_MAX_K_G_LENGTH + 1, data->string)) < 0)
+  if ((rv = parse_kg (common_cmd_args_config->k_g, IPMI_MAX_K_G_LENGTH, data->string)) < 0)
     {
       fprintf (stderr, "Config File Error: k_g input formatted incorrectly\n");
       exit (EXIT_FAILURE);

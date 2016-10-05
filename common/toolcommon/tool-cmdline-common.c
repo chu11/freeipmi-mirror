@@ -269,7 +269,7 @@ common_parse_opt (int key,
             exit (EXIT_FAILURE);
           }
         
-        if ((rv = parse_kg (common_args->k_g, IPMI_MAX_K_G_LENGTH + 1, arg)) < 0)
+        if ((rv = parse_kg (common_args->k_g, IPMI_MAX_K_G_LENGTH, arg)) < 0)
           {
             fprintf (stderr, "k_g input formatted incorrectly\n");
             exit (EXIT_FAILURE);
@@ -298,7 +298,7 @@ common_parse_opt (int key,
             exit (EXIT_FAILURE);
           }
         
-        if ((rv = parse_kg (common_args->k_g, IPMI_MAX_K_G_LENGTH + 1, arg)) < 0)
+        if ((rv = parse_kg (common_args->k_g, IPMI_MAX_K_G_LENGTH, arg)) < 0)
           {
             fprintf (stderr, "k_g input formatted incorrectly\n");
             exit (EXIT_FAILURE);

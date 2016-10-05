@@ -353,7 +353,7 @@ parse_kg (void *out, unsigned int outlen, const char *in)
 
   assert (out);
   assert (in);
-  assert (outlen > IPMI_MAX_K_G_LENGTH);
+  assert (outlen >= IPMI_MAX_K_G_LENGTH);
 
   if (!strlen (in))
     return (0);
@@ -363,7 +363,8 @@ parse_kg (void *out, unsigned int outlen, const char *in)
       if (strlen (in) > IPMI_MAX_K_G_LENGTH*2+2)
         return (-1);
       p = (char *)in + 2;
-      memset (out, 0, IPMI_MAX_K_G_LENGTH);
+      /* wipe buffer, '\0', possibly ok */
+      memset (out, '\0', IPMI_MAX_K_G_LENGTH);
       for (i = j = 0; i < strlen (p); i+=2, j++)
         {
           if (!isxdigit (p[i])
@@ -388,7 +389,8 @@ parse_kg (void *out, unsigned int outlen, const char *in)
     {
       if (strlen (in) > IPMI_MAX_K_G_LENGTH)
         return (-1);
-      memset (out, 0, IPMI_MAX_K_G_LENGTH);
+      /* wipe buffer, '\0', possibly ok */
+      memset (out, '\0', IPMI_MAX_K_G_LENGTH);
       memcpy (out, in, strlen (in));
       rv = strlen (in);
     }

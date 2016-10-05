@@ -250,7 +250,7 @@ _cmd_k_g (char **argv)
       memset (cmd_args.common_args.k_g, '\0', IPMI_MAX_K_G_LENGTH + 1);
 
       if (argv[1])
-        rv = parse_kg (cmd_args.common_args.k_g, IPMI_MAX_K_G_LENGTH + 1, argv[1]);
+        rv = parse_kg (cmd_args.common_args.k_g, IPMI_MAX_K_G_LENGTH, argv[1]);
 
       if (rv < 0)
         ipmipower_cbuf_printf (ttyout, "k_g invalid\n");

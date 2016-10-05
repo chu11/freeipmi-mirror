@@ -276,7 +276,7 @@ k_g_checkout (ipmi_config_state_data_t *state_data,
       uint8_t kv_k_g[IPMI_MAX_K_G_LENGTH+1];
 
       memset (kv_k_g, '\0', IPMI_MAX_K_G_LENGTH + 1);
-      if (parse_kg (kv_k_g, IPMI_MAX_K_G_LENGTH + 1, kv->value_input) < 0)
+      if (parse_kg (kv_k_g, IPMI_MAX_K_G_LENGTH, kv->value_input) < 0)
         return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
       if (!memcmp (kv_k_g, k_g, IPMI_MAX_K_G_LENGTH))
