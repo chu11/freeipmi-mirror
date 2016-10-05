@@ -333,7 +333,6 @@ _get_sensor_reading (ipmi_monitoring_ctx_t c,
   assert (sensor_reading);
   assert (sensor_event_bitmask);
 
-  memset (sdr_record, '\0', IPMI_SDR_MAX_RECORD_LENGTH);
   if ((sdr_record_len = ipmi_sdr_cache_record_read (c->sdr_ctx,
                                                     sdr_record,
                                                     IPMI_SDR_MAX_RECORD_LENGTH)) < 0)

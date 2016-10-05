@@ -101,8 +101,6 @@ _ipmi_monitoring_sdr_cache_filename (ipmi_monitoring_ctx_t c,
   assert (buf);
   assert (buflen);
 
-  memset (buf, '\0', buflen);
-
   if (c->sdr_cache_directory_set)
     dir = c->sdr_cache_directory;
   else
@@ -370,6 +368,8 @@ ipmi_monitoring_sdr_cache_flush (ipmi_monitoring_ctx_t c,
 
   assert (c);
   assert (c->magic == IPMI_MONITORING_MAGIC);
+
+  memset (filename, '\0', MAXPATHLEN + 1);
 
   if (_ipmi_monitoring_sdr_cache_filename (c, hostname, filename, MAXPATHLEN + 1) < 0)
     goto cleanup;

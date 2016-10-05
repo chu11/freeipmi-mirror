@@ -35,9 +35,9 @@
 
 #define IPMI_MONITORING_DEBUG(__msg)                                                \
   do {                                                                              \
-    char __err[IPMI_MONITORING_DEBUG_ERROR_BUFLEN];                                 \
+    char __err[IPMI_MONITORING_DEBUG_ERROR_BUFLEN + 1];                             \
     int __len;                                                                      \
-    memset (__err, '\0', IPMI_MONITORING_DEBUG_ERROR_BUFLEN);                       \
+    memset (__err, '\0', IPMI_MONITORING_DEBUG_ERROR_BUFLEN + 1);                   \
     __len = snprintf (__err,                                                        \
                       IPMI_MONITORING_DEBUG_ERROR_BUFLEN,                           \
                       "(%s, %s, %d): ",                                             \
@@ -49,7 +49,7 @@
         char *__str;                                                                \
         if ((__str = __debug_msg_create __msg))                                     \
           {                                                                         \
-            strncat (__err, __str, IPMI_MONITORING_DEBUG_ERROR_BUFLEN - __len - 1); \
+            strncat (__err, __str, IPMI_MONITORING_DEBUG_ERROR_BUFLEN - __len);     \
             free (__str);                                                           \
           }                                                                         \
       }                                                                             \

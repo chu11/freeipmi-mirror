@@ -896,8 +896,6 @@ ipmi_monitoring_get_sel (ipmi_monitoring_ctx_t c,
           goto cleanup;
         }
 
-      memset (record_ids_tmp, '\0', sizeof (uint16_t) * record_ids_len);
-
       for (i = 0; i < record_ids_len; i++)
         record_ids_tmp[i] = record_ids[i];
       
