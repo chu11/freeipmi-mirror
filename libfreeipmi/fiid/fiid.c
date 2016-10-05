@@ -2330,8 +2330,6 @@ fiid_obj_get_all (fiid_obj_t obj,
       return (-1);
     }
 
-  memset (data, '\0', data_len);
-
   if (bytes_len == obj->data_len)
     memcpy (data, obj->data, bytes_len);
   else
@@ -2434,8 +2432,6 @@ fiid_obj_get_all (fiid_obj_t obj,
   return (bytes_len);
 
  cleanup:
-  if (data)
-    memset (data, '\0', data_len);
   return (-1);
 }
 
