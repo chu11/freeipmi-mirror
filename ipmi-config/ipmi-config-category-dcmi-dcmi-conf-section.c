@@ -301,7 +301,7 @@ management_controller_identifier_string_checkout (ipmi_config_state_data_t *stat
                                                   struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  char management_controller_identifier_string_data[IPMI_DCMI_MAX_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_LENGTH];
+  char management_controller_identifier_string_data[IPMI_DCMI_MAX_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_LENGTH + 1];
   int data_len;
   unsigned int offset = 0;
   uint8_t total_length = 0;
@@ -322,7 +322,7 @@ management_controller_identifier_string_checkout (ipmi_config_state_data_t *stat
       goto cleanup;
     }
 
-  memset (management_controller_identifier_string_data, '\0', IPMI_DCMI_MAX_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_LENGTH);
+  memset (management_controller_identifier_string_data, '\0', IPMI_DCMI_MAX_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_LENGTH + 1);
 
   while (1)
     {
@@ -404,7 +404,7 @@ management_controller_identifier_string_commit (ipmi_config_state_data_t *state_
 {
   fiid_obj_t obj_cmd_rs = NULL;
   unsigned int offset = 0;
-  char data_buf[IPMI_DCMI_MAX_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_LENGTH];
+  char data_buf[IPMI_DCMI_MAX_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_LENGTH + 1];
   unsigned int data_len;
   uint8_t bytes_to_write = IPMI_DCMI_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_NUMBER_OF_BYTES_TO_WRITE_MAX;
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
@@ -433,7 +433,7 @@ management_controller_identifier_string_commit (ipmi_config_state_data_t *state_
   if (!data_len)
     data_len = 1;
 
-  memset (data_buf, '\0', IPMI_DCMI_MAX_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_LENGTH);
+  memset (data_buf, '\0', IPMI_DCMI_MAX_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_LENGTH + 1);
 
   memcpy (data_buf, kv->value_input, strlen (kv->value_input));
 

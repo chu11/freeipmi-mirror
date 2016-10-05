@@ -83,7 +83,14 @@ ipmi_config_section_create (ipmi_config_state_data_t *state_data,
       pstdout_perror (state_data->pstate, "malloc");
       goto cleanup;
     }
-  memset (section, '\0', sizeof (struct ipmi_config_section));
+  section->section_name = NULL;
+  section->section_comment_section_name = NULL;
+  section->section_comment = NULL;
+  section->section_pre_commit = NULL;
+  section->section_post_commit = NULL;
+  section->keys = NULL;
+  section->keyvalues = NULL;
+  section->next = NULL;
 
   if (!(section->section_name = strdup (section_name)))
     {
@@ -312,7 +319,13 @@ ipmi_config_section_add_key (ipmi_config_state_data_t *state_data,
       pstdout_perror (state_data->pstate, "malloc");
       goto cleanup;
     }
-  memset (k, '\0', sizeof (struct ipmi_config_key));
+
+  k->key_name = NULL;
+  k->description = NULL;
+  k->checkout = NULL;
+  k->commit = NULL;
+  k->validate = NULL;
+  k->next = NULL;
 
   if (!(k->key_name = strdup (key_name)))
     {
@@ -423,7 +436,11 @@ ipmi_config_section_add_keyvalue (ipmi_config_state_data_t *state_data,
       pstdout_perror (state_data->pstate, "malloc");
       goto cleanup;
     }
-  memset (kv, '\0', sizeof (struct ipmi_config_keyvalue));
+
+  kv->key = NULL;
+  kv->value_input = NULL;
+  kv->value_output = NULL;
+  kv->next = NULL;
 
   /* back pointer */
   kv->key = key;

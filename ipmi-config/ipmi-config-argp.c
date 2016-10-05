@@ -350,7 +350,11 @@ _ipmi_config_keypair_create (const char *section_name,
       perror ("malloc");
       goto cleanup;
     }
-  memset (keypair, '\0', sizeof (struct ipmi_config_keypair));
+
+  keypair->section_name = NULL;
+  keypair->key_name = NULL;
+  keypair->value_input = NULL;
+  keypair->next = NULL;
 
   if (!(keypair->section_name = strdup (section_name)))
     {
@@ -397,12 +401,14 @@ _ipmi_config_section_str_create (const char *section_name)
       goto cleanup;
     }
 
+  sstr->section_name = NULL;
+  sstr->next = NULL;
+
   if (!(sstr->section_name = strdup (section_name)))
     {
       perror ("strdup");
       goto cleanup;
     }
-  sstr->next = NULL;
 
   return (sstr);
 

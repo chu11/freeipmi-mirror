@@ -294,7 +294,6 @@ front_panel_buttons_checkout (ipmi_config_state_data_t *state_data,
   assert (section_name);
   assert (kv);
 
-  memset (&data, '\0', sizeof (struct front_panel_buttons));
   if ((ret = _get_front_panel_buttons (state_data, &data)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
@@ -352,7 +351,6 @@ front_panel_buttons_commit (ipmi_config_state_data_t *state_data,
   assert (section_name);
   assert (kv);
 
-  memset (&data, '\0', sizeof (struct front_panel_buttons));
   if ((ret = _get_front_panel_buttons (state_data, &data)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;

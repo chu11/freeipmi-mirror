@@ -33,6 +33,9 @@
 
 	* libipmiconsole/: Audit, remove unnecessary memsets, add +1 to string buffers.
 
+	* ipmi-config/: Audit, remove unnecessary memsets, add +1 to
+	string buffers, minor fixes.
+
 2016-10-03 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/fru/ipmi-fru-data.c: Remove unnecessary memsets. 

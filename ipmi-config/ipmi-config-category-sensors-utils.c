@@ -69,7 +69,6 @@ ipmi_config_sensors_create_section_name (ipmi_config_state_data_t *state_data,
   assert (section_name);
   assert (section_name_len);
 
-  memset (section_name, '\0', section_name_len);
   memset (id_string, '\0', IPMI_SDR_MAX_ID_STRING_LENGTH + 1);
 
   if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_ctx,
@@ -118,7 +117,7 @@ ipmi_config_sensors_create_section_name (ipmi_config_state_data_t *state_data,
    */
   if (strlen (id_string) > 0)
     snprintf (section_name,
-              IPMI_CONFIG_MAX_SECTION_NAME_LEN,
+              section_name_len,
               "%u_%s",
               record_id,
               id_string);
@@ -127,7 +126,7 @@ ipmi_config_sensors_create_section_name (ipmi_config_state_data_t *state_data,
      * make one up.
      */
     snprintf (section_name,
-              IPMI_CONFIG_MAX_SECTION_NAME_LEN,
+              section_name_len,
               "%u_%s",
               record_id,
               "Unknown_Sensor_Name");

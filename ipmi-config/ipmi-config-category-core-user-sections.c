@@ -2350,8 +2350,6 @@ ipmi_config_core_user_section_get (ipmi_config_state_data_t *state_data, unsigne
 
   if (userid == 1)
     {
-      memset (section_comment, '\0', 4096);
-
       snprintf (section_comment,
                 4096,
                 section_comment_text,

@@ -1196,7 +1196,7 @@ _setup_threshold_hysteresis_fields (ipmi_config_state_data_t *state_data,
                                     uint8_t hysteresis_support)
 {
   unsigned int flags = 0;
-  char description_hysteresis[IPMI_CONFIG_MAX_DESCRIPTION_LEN];
+  char description_hysteresis[IPMI_CONFIG_MAX_DESCRIPTION_LEN + 1];
   Key_Validate hysteresis_threshold_validate_ptr = NULL;
   int rv = -1;
 
@@ -1217,7 +1217,7 @@ _setup_threshold_hysteresis_fields (ipmi_config_state_data_t *state_data,
   else /* state_data->prog_data->args->verbose_count */
     flags = IPMI_CONFIG_UNDEFINED;
 
-  memset (description_hysteresis, '\0', IPMI_CONFIG_MAX_DESCRIPTION_LEN);
+  memset (description_hysteresis, '\0', IPMI_CONFIG_MAX_DESCRIPTION_LEN + 1);
   snprintf (description_hysteresis,
             IPMI_CONFIG_MAX_DESCRIPTION_LEN,
             "%s; 'None' to not use hysteresis",
@@ -1263,7 +1263,7 @@ ipmi_config_sensors_threshold_section (ipmi_config_state_data_t *state_data,
                                        struct ipmi_config_section **section_ptr)
 {
   struct ipmi_config_section *section = NULL;
-  char section_name[IPMI_CONFIG_MAX_SECTION_NAME_LEN];
+  char section_name[IPMI_CONFIG_MAX_SECTION_NAME_LEN + 1];
   uint8_t threshold_access_support = 0;
   uint8_t hysteresis_support = 0;
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
@@ -1274,13 +1274,15 @@ ipmi_config_sensors_threshold_section (ipmi_config_state_data_t *state_data,
   uint8_t sensor_units_rate;
   uint8_t sensor_base_unit_type;
   uint8_t sensor_modifier_unit_type;
-  char description[IPMI_CONFIG_MAX_DESCRIPTION_LEN];
+  char description[IPMI_CONFIG_MAX_DESCRIPTION_LEN + 1];
   char sensor_units_buf[IPMI_CONFIG_CATEGORY_SENSORS_UNITS_BUFLEN+1];
   int sensor_units_ret;
   const char *sensor_type_str = NULL;
 
   assert (state_data);
   assert (section_ptr);
+
+  memset (section_name, '\0', IPMI_CONFIG_MAX_SECTION_NAME_LEN + 1);
 
   if ((ret = ipmi_config_sensors_create_section_name (state_data,
                                                       section_name,
@@ -1351,7 +1353,7 @@ ipmi_config_sensors_threshold_section (ipmi_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  memset (sensor_units_buf, '\0', IPMI_CONFIG_CATEGORY_SENSORS_UNITS_BUFLEN);
+  memset (sensor_units_buf, '\0', IPMI_CONFIG_CATEGORY_SENSORS_UNITS_BUFLEN + 1);
   sensor_units_ret = ipmi_sensor_units_string (sensor_units_percentage,
                                                sensor_units_modifier,
                                                sensor_units_rate,
@@ -1363,7 +1365,7 @@ ipmi_config_sensors_threshold_section (ipmi_config_state_data_t *state_data,
 
   sensor_type_str = ipmi_get_sensor_type_string (sensor_type);
 
-  memset (description, '\0', IPMI_CONFIG_MAX_DESCRIPTION_LEN);
+  memset (description, '\0', IPMI_CONFIG_MAX_DESCRIPTION_LEN + 1);
   if (sensor_units_ret > 0)
     snprintf (description,
               IPMI_CONFIG_MAX_DESCRIPTION_LEN,
