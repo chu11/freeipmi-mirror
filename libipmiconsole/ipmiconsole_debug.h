@@ -40,9 +40,9 @@
 
 #define IPMICONSOLE_DEBUG(__msg)                                                \
   do {                                                                          \
-    char __err[IPMICONSOLE_DEBUG_ERROR_BUFLEN];                                 \
+    char __err[IPMICONSOLE_DEBUG_ERROR_BUFLEN + 1];                             \
     int __len;                                                                  \
-    memset (__err, '\0', IPMICONSOLE_DEBUG_ERROR_BUFLEN);                       \
+    memset (__err, '\0', IPMICONSOLE_DEBUG_ERROR_BUFLEN + 1);                   \
     __len = snprintf (__err,                                                    \
                       IPMICONSOLE_DEBUG_ERROR_BUFLEN,                           \
                       "(%s, %s, %d): ",                                         \
@@ -54,7 +54,7 @@
         char *__str;                                                            \
         if ((__str = __debug_msg_create __msg))                                 \
           {                                                                     \
-            strncat (__err, __str, IPMICONSOLE_DEBUG_ERROR_BUFLEN - __len - 1); \
+            strncat (__err, __str, IPMICONSOLE_DEBUG_ERROR_BUFLEN - __len);     \
             free (__str);                                                       \
           }                                                                     \
       }                                                                         \
@@ -63,9 +63,9 @@
 
 #define IPMICONSOLE_CTX_DEBUG(__c, __msg)                                       \
   do {                                                                          \
-    char __err[IPMICONSOLE_DEBUG_ERROR_BUFLEN];                                 \
+    char __err[IPMICONSOLE_DEBUG_ERROR_BUFLEN + 1];                             \
     int __len;                                                                  \
-    memset (__err, '\0', IPMICONSOLE_DEBUG_ERROR_BUFLEN);                       \
+    memset (__err, '\0', IPMICONSOLE_DEBUG_ERROR_BUFLEN + 1);                   \
     __len = snprintf (__err,                                                    \
                       IPMICONSOLE_DEBUG_ERROR_BUFLEN,                           \
                       "(%s, %s, %d): "                                          \
@@ -81,7 +81,7 @@
         char *__str;                                                            \
         if ((__str = __debug_msg_create __msg))                                 \
           {                                                                     \
-            strncat (__err, __str, IPMICONSOLE_DEBUG_ERROR_BUFLEN - __len - 1); \
+            strncat (__err, __str, IPMICONSOLE_DEBUG_ERROR_BUFLEN - __len);     \
             free (__str);                                                       \
           }                                                                     \
       }                                                                         \

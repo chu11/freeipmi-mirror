@@ -2165,7 +2165,6 @@ _check_sol_instance_activated (ipmiconsole_ctx_t c, uint8_t instance)
   assert (!c->session.deactivate_payload_instances);
   assert (!c->session.deactivate_payload_instances_and_try_again_flag);
           
-  memset (fieldstr, '\0', 64);
   snprintf (fieldstr, 64, "instance_%d", instance);
 
   if (FIID_OBJ_GET (c->connection.obj_get_payload_activation_status_rs,
@@ -2734,12 +2733,10 @@ _sol_bmc_to_remote_console_packet (ipmiconsole_ctx_t c, int *sol_deactivating_fl
   if (packet_sequence_number)
     {
       /* There is some data for the user */
-      char character_data[IPMICONSOLE_MAX_CHARACTER_DATA+1];
+      char character_data[IPMICONSOLE_MAX_CHARACTER_DATA];
       int character_data_len = 0;
       unsigned int character_data_len_to_write = 0;
       unsigned int character_data_index = 0;
-
-      memset (character_data, '\0', IPMICONSOLE_MAX_CHARACTER_DATA + 1);
 
       if ((character_data_len = fiid_obj_get_data (c->connection.obj_sol_payload_data_rs,
                                                    "character_data",
