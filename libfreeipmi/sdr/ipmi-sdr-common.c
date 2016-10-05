@@ -281,7 +281,9 @@ sdr_check_read_status (ipmi_sdr_ctx_t ctx)
                                              ctx->sdr_cache + ctx->current_offset.offset,
                                              record_length + IPMI_SDR_RECORD_HEADER_LENGTH)))
         {
-          char hdrbuf[IPMI_SDR_CACHE_DEBUG_BUFLEN];
+          char hdrbuf[IPMI_SDR_CACHE_DEBUG_BUFLEN + 1];
+
+          memset (hdrbuf, '\0', IPMI_SDR_CACHE_DEBUG_BUFLEN + 1);
 
           debug_hdr_str (DEBUG_UTIL_TYPE_NONE,
                          DEBUG_UTIL_DIRECTION_NONE,

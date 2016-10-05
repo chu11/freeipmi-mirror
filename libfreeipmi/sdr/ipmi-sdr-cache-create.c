@@ -911,7 +911,9 @@ ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
                                                      record_buf,
                                                      record_len)))
                 {
-                  char hdrbuf[IPMI_SDR_CACHE_DEBUG_BUFLEN];
+                  char hdrbuf[IPMI_SDR_CACHE_DEBUG_BUFLEN + 1];
+
+                  memset (hdrbuf, '\0', IPMI_SDR_CACHE_DEBUG_BUFLEN + 1);
 
                   debug_hdr_str (DEBUG_UTIL_TYPE_NONE,
                                  DEBUG_UTIL_DIRECTION_NONE,

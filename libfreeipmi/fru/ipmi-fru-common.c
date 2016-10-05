@@ -83,7 +83,9 @@ fru_dump_hex (ipmi_fru_ctx_t ctx,
 
   if (ctx->flags & IPMI_FRU_FLAGS_DEBUG_DUMP)
     {
-      char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
+      char hdrbuf[DEBUG_UTIL_HDR_BUFLEN + 1];
+
+      memset (hdrbuf, '\0', DEBUG_UTIL_HDR_BUFLEN + 1);
 
       debug_hdr_str (DEBUG_UTIL_TYPE_NONE,
                      DEBUG_UTIL_DIRECTION_NONE,
@@ -119,7 +121,9 @@ fru_dump_obj (ipmi_fru_ctx_t ctx,
 
   if (ctx->flags & IPMI_FRU_FLAGS_DEBUG_DUMP)
     {
-      char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
+      char hdrbuf[DEBUG_UTIL_HDR_BUFLEN + 1];
+
+      memset (hdrbuf, '\0', DEBUG_UTIL_HDR_BUFLEN + 1);
 
       debug_hdr_str (DEBUG_UTIL_TYPE_NONE,
                      DEBUG_UTIL_DIRECTION_NONE,

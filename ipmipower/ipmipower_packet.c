@@ -199,7 +199,7 @@ ipmipower_packet_dump (ipmipower_powercmd_t ip,
   if (cmd_args.common_args.debug)
     {
       fiid_field_t *tmpl_lan_msg_hdr;
-      char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
+      char hdrbuf[DEBUG_UTIL_HDR_BUFLEN + 1];
       uint8_t packet_type;
       uint8_t packet_direction;
       const char *str_cmd = NULL;
@@ -277,6 +277,7 @@ ipmipower_packet_dump (ipmipower_powercmd_t ip,
       else
         packet_direction = DEBUG_UTIL_DIRECTION_RESPONSE;
 
+      memset (hdrbuf, '\0', DEBUG_UTIL_HDR_BUFLEN + 1);
       debug_hdr_str (packet_type,
                      packet_direction,
                      DEBUG_UTIL_FLAGS_DEFAULT,

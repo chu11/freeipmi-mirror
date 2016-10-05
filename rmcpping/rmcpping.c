@@ -91,7 +91,9 @@ createpacket (const char *destination,
 
   if (debug)
     {
-      char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
+      char hdrbuf[DEBUG_UTIL_HDR_BUFLEN + 1];
+
+      memset (hdrbuf, '\0', DEBUG_UTIL_HDR_BUFLEN + 1);
 
       debug_hdr_str (DEBUG_UTIL_TYPE_NONE,
                      DEBUG_UTIL_DIRECTION_NONE,
@@ -145,7 +147,9 @@ parsepacket (const char *destination,
 
   if (debug)
     {
-      char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
+      char hdrbuf[DEBUG_UTIL_HDR_BUFLEN + 1];
+
+      memset (hdrbuf, '\0', DEBUG_UTIL_HDR_BUFLEN + 1);
 
       debug_hdr_str (DEBUG_UTIL_TYPE_NONE,
                      DEBUG_UTIL_DIRECTION_NONE,

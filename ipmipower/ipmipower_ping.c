@@ -229,10 +229,12 @@ ipmipower_ping_process_pings (int *timeout)
 #ifndef NDEBUG
               if (cmd_args.rmcpdump)
                 {
-                  char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
+                  char hdrbuf[DEBUG_UTIL_HDR_BUFLEN + 1];
                   const char *str_cmd = NULL;
 
                   str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES);
+
+                  memset (hdrbuf, '\0', DEBUG_UTIL_HDR_BUFLEN + 1);
 
                   debug_hdr_str (DEBUG_UTIL_TYPE_IPMI_1_5,
                                  DEBUG_UTIL_DIRECTION_REQUEST,
@@ -302,8 +304,10 @@ ipmipower_ping_process_pings (int *timeout)
 #ifndef NDEBUG
               if (cmd_args.rmcpdump)
                 {
-                  char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
+                  char hdrbuf[DEBUG_UTIL_HDR_BUFLEN + 1];
                   
+                  memset (hdrbuf, '\0', DEBUG_UTIL_HDR_BUFLEN + 1);
+
                   debug_hdr_str (DEBUG_UTIL_TYPE_NONE,
                                  DEBUG_UTIL_DIRECTION_NONE,
                                  DEBUG_UTIL_FLAGS_DEFAULT,
@@ -405,10 +409,12 @@ ipmipower_ping_process_pings (int *timeout)
 #ifndef NDEBUG
               if (cmd_args.rmcpdump)
                 {
-                  char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
+                  char hdrbuf[DEBUG_UTIL_HDR_BUFLEN + 1];
                   const char *str_cmd = NULL;
 
                   str_cmd = ipmi_cmd_str (IPMI_NET_FN_APP_RQ, IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES);
+
+                  memset (hdrbuf, '\0', DEBUG_UTIL_HDR_BUFLEN + 1);
 
                   debug_hdr_str (DEBUG_UTIL_TYPE_IPMI_1_5,
                                  DEBUG_UTIL_DIRECTION_RESPONSE,
@@ -497,8 +503,10 @@ ipmipower_ping_process_pings (int *timeout)
 #ifndef NDEBUG
               if (cmd_args.rmcpdump)
                 {
-                  char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
+                  char hdrbuf[DEBUG_UTIL_HDR_BUFLEN + 1];
                   
+                  memset (hdrbuf, '\0', DEBUG_UTIL_HDR_BUFLEN + 1);
+
                   debug_hdr_str (DEBUG_UTIL_TYPE_NONE,
                                  DEBUG_UTIL_DIRECTION_NONE,
                                  DEBUG_UTIL_FLAGS_DEFAULT,

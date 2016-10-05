@@ -637,7 +637,7 @@ static void
 _sel_entry_dump (ipmi_sel_ctx_t ctx, struct ipmi_sel_entry *sel_entry)
 {
   fiid_obj_t obj_sel_record = NULL;
-  char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
+  char hdrbuf[DEBUG_UTIL_HDR_BUFLEN + 1];
   uint8_t record_type;
   int record_type_class;
 
@@ -750,6 +750,9 @@ _sel_entry_dump (ipmi_sel_ctx_t ctx, struct ipmi_sel_entry *sel_entry)
     }
 
  output:
+
+  memset (hdrbuf, '\0', DEBUG_UTIL_HDR_BUFLEN + 1);
+
   debug_hdr_str (DEBUG_UTIL_TYPE_NONE,
                  DEBUG_UTIL_DIRECTION_NONE,
                  DEBUG_UTIL_FLAGS_DEFAULT,

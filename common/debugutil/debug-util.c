@@ -65,8 +65,6 @@ debug_hdr_str (uint8_t packet_type,
   assert (hdrbuf);
   assert (hdrbuf_len);
 
-  memset (hdrbuf, '\0', hdrbuf_len);
-
   if (packet_direction == DEBUG_UTIL_DIRECTION_REQUEST)
     str_direction = "Request";
   else if (packet_direction == DEBUG_UTIL_DIRECTION_RESPONSE)

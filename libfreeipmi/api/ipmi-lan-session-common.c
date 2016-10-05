@@ -1975,7 +1975,7 @@ _api_lan_2_0_dump_rq (ipmi_ctx_t ctx,
 
   if ((tmpl_cmd = fiid_obj_template (obj_cmd_rq)))
     {
-      char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
+      char hdrbuf[DEBUG_UTIL_HDR_BUFLEN + 1];
       const char *cmd_str = NULL;
 
       /* Handle a few IPMI 2.0 special cases */
@@ -1985,6 +1985,8 @@ _api_lan_2_0_dump_rq (ipmi_ctx_t ctx,
         cmd_str = DEBUG_UTIL_RAKP_1_STR;
       else if (fiid_template_compare (tmpl_cmd, tmpl_rmcpplus_rakp_message_3) == 1)
         cmd_str = DEBUG_UTIL_RAKP_3_STR;
+
+      memset (hdrbuf, '\0', DEBUG_UTIL_HDR_BUFLEN + 1);
 
       if (cmd_str)
         debug_hdr_str (DEBUG_UTIL_TYPE_IPMI_2_0,
@@ -2073,7 +2075,7 @@ _api_lan_2_0_dump_rs (ipmi_ctx_t ctx,
 
   if ((tmpl_cmd = fiid_obj_template (obj_cmd_rs)))
     {
-      char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
+      char hdrbuf[DEBUG_UTIL_HDR_BUFLEN + 1];
       const char *cmd_str = NULL;
 
       /* Handle a few IPMI 2.0 special cases */
@@ -2083,6 +2085,8 @@ _api_lan_2_0_dump_rs (ipmi_ctx_t ctx,
         cmd_str = DEBUG_UTIL_RAKP_2_STR;
       else if (fiid_template_compare (tmpl_cmd, tmpl_rmcpplus_rakp_message_4) == 1)
         cmd_str = DEBUG_UTIL_RAKP_4_STR;
+
+      memset (hdrbuf, '\0', DEBUG_UTIL_HDR_BUFLEN + 1);
 
       if (cmd_str)
         debug_hdr_str (DEBUG_UTIL_TYPE_IPMI_2_0,
