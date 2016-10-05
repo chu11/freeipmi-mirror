@@ -1316,9 +1316,9 @@ get_management_controller_identifier_string (ipmi_dcmi_state_data_t *state_data)
         bytes_to_read = total_length - offset;
       
       if (ipmi_cmd_dcmi_get_management_controller_identifier_string (state_data->ipmi_ctx,
-                                       offset,
-                                       bytes_to_read,
-                                       obj_cmd_rs) < 0)
+                                                                     offset,
+                                                                     bytes_to_read,
+                                                                     obj_cmd_rs) < 0)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
