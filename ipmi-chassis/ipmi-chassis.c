@@ -1687,10 +1687,8 @@ main (int argc, char **argv)
 
   ipmi_disable_coredump ();
 
-  memset (&prog_data, '\0', sizeof (ipmi_chassis_prog_data_t));
   prog_data.progname = argv[0];
   ipmi_chassis_argp_parse (argc, argv, &cmd_args);
-
   prog_data.args = &cmd_args;
 
   if ((hosts_count = pstdout_setup (&(prog_data.args->common_args.hostname),

@@ -38,6 +38,8 @@
 
 	* Properly memset hdr buffers when outputting debug output.
 
+	* Remove unnecessary memset of "prog_data" in all tools.
+
 2016-10-03 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/fru/ipmi-fru-data.c: Remove unnecessary memsets. 
