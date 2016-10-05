@@ -1440,6 +1440,7 @@ api_lan_open_session (ipmi_ctx_t ctx)
   uint8_t authentication_type;
   uint32_t temp_session_id = 0;
   uint8_t challenge_string[IPMI_CHALLENGE_STRING_LENGTH];
+  int challenge_string_len;
   uint32_t initial_outbound_sequence_number = 0;
   char *tmp_username_ptr = NULL;
   char *tmp_password_ptr = NULL;
@@ -1647,10 +1648,10 @@ api_lan_open_session (ipmi_ctx_t ctx)
     }
   temp_session_id = val;
 
-  if (fiid_obj_get_data (obj_cmd_rs,
-                         "challenge_string",
-                         challenge_string,
-                         IPMI_CHALLENGE_STRING_LENGTH) < 0)
+  if ((challenge_string_len = fiid_obj_get_data (obj_cmd_rs,
+                                                 "challenge_string",
+                                                 challenge_string,
+                                                 IPMI_CHALLENGE_STRING_LENGTH)) < 0)
     {
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       goto cleanup;
@@ -1677,7 +1678,7 @@ api_lan_open_session (ipmi_ctx_t ctx)
   if (fill_cmd_activate_session (ctx->io.outofband.authentication_type,
                                  ctx->io.outofband.privilege_level,
                                  challenge_string,
-                                 IPMI_CHALLENGE_STRING_LENGTH,
+                                 challenge_string_len,
                                  initial_outbound_sequence_number,
                                  obj_cmd_rq) < 0)
     {

@@ -40,7 +40,7 @@ community_string_checkout (ipmi_config_state_data_t *state_data,
                            const char *section_name,
                            struct ipmi_config_keyvalue *kv)
 {
-  char community_string[IPMI_MAX_COMMUNITY_STRING_LENGTH+1] = { 0, };
+  char community_string[IPMI_MAX_COMMUNITY_STRING_LENGTH+1];
   fiid_obj_t obj_cmd_rs = NULL;
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   ipmi_config_err_t ret;
@@ -91,7 +91,7 @@ community_string_checkout (ipmi_config_state_data_t *state_data,
   if (fiid_obj_get_data (obj_cmd_rs,
                          "community_string",
                          community_string,
-                         IPMI_MAX_COMMUNITY_STRING_LENGTH+1) < 0)
+                         IPMI_MAX_COMMUNITY_STRING_LENGTH) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,

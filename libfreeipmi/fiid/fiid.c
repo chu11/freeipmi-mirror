@@ -2223,7 +2223,6 @@ fiid_obj_get_data (fiid_obj_t obj,
 
   field_offset = BITS_ROUND_BYTES (field_start);
 
-  memset (data, '\0', data_len);
   memcpy (data, (obj->data + field_offset), bytes_len);
 
   obj->errnum = FIID_ERR_SUCCESS;
