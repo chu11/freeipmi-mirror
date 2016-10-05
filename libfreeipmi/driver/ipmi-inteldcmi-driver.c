@@ -279,7 +279,6 @@ ipmi_inteldcmi_ctx_create (void)
       ERRNO_TRACE (errno);
       return (NULL);
     }
-  memset (ctx, '\0', sizeof (struct ipmi_inteldcmi_ctx));
 
   ctx->magic = IPMI_INTELDCMI_CTX_MAGIC;
   ctx->flags = IPMI_INTELDCMI_FLAGS_DEFAULT;
@@ -514,8 +513,6 @@ _inteldcmi_write_read (ipmi_inteldcmi_ctx_t ctx,
   /* Due to API differences, we need to extract the cmd out of the
    * request.
    */
-  memset (rq_temp, '\0', IPMI_INTELDCMI_BUFLEN);
-
   if ((len = fiid_obj_get_all (obj_cmd_rq,
                                rq_temp,
                                IPMI_INTELDCMI_BUFLEN)) <= 0)

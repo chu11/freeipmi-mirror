@@ -64,10 +64,8 @@ ipmi_locate_ctx_create (void)
       ERRNO_TRACE (errno);
       return (NULL);
     }
-  memset (ctx, '\0', sizeof (struct ipmi_locate_ctx));
 
   ctx->magic = IPMI_LOCATE_CTX_MAGIC;
-
   ctx->errnum = IPMI_LOCATE_ERR_SUCCESS;
   return (ctx);
 }

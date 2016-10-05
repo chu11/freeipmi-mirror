@@ -45,7 +45,7 @@ eliminate_nodes (char **hosts)
   hostlist_iterator_t hitr = NULL;
   ipmidetect_t id = NULL;
   char *host = NULL;
-  char hostbuf[HOSTLIST_BUFLEN];
+  char hostbuf[HOSTLIST_BUFLEN + 1];
   int rv = -1;
 
   assert (hosts);
@@ -124,7 +124,9 @@ eliminate_nodes (char **hosts)
       rv = 0;
       goto cleanup;
     }
-  
+ 
+  memset (hostbuf, '\0', HOSTLIST_BUFLEN + 1);
+ 
   if (hostlist_ranged_string (hlnew, HOSTLIST_BUFLEN, hostbuf) < 0)
     {
       fprintf (stderr,

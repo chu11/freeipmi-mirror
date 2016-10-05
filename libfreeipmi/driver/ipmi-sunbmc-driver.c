@@ -153,7 +153,6 @@ ipmi_sunbmc_ctx_create (void)
       ERRNO_TRACE (errno);
       return (NULL);
     }
-  memset (ctx, '\0', sizeof (struct ipmi_sunbmc_ctx));
 
   ctx->magic = IPMI_SUNBMC_CTX_MAGIC;
   ctx->flags = IPMI_SUNBMC_FLAGS_DEFAULT;
@@ -426,7 +425,6 @@ _sunbmc_write (ipmi_sunbmc_ctx_t ctx,
   /* Due to API differences, we need to extract the cmd out of the
    * request.
    */
-  memset (rq_buf_temp, '\0', IPMI_SUNBMC_BUFLEN);
 
   if ((len = fiid_obj_get_all (obj_cmd_rq,
                                rq_buf_temp,
@@ -684,7 +682,6 @@ ipmi_sunbmc_cmd (ipmi_sunbmc_ctx_t ctx,
       /* Due to API differences, we need to extract the cmd out of the
        * request.
        */
-      memset (rq_buf_temp, '\0', IPMI_SUNBMC_BUFLEN);
 
       if ((len = fiid_obj_get_all (obj_cmd_rq,
                                    rq_buf_temp,

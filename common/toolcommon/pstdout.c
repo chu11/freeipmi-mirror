@@ -143,7 +143,8 @@ _pstdout_consolidated_data_create(const char *hostname, const char *output)
       pstdout_errnum = PSTDOUT_ERR_OUTMEM;
       goto cleanup;
     }
-  memset(cdata, '\0', sizeof(struct pstdout_consolidated_data));
+  cdata->h = NULL;
+  cdata->output = NULL;
 
   if (!(cdata->h = hostlist_create(hostname)))
     {
@@ -1186,9 +1187,9 @@ _pstdout_output_consolidated(FILE *stream,
 
   while ((cdata = list_next(itr)))
     {
-      char hbuf[PSTDOUT_BUFLEN];
+      char hbuf[PSTDOUT_BUFLEN + 1];
       
-      memset(hbuf, '\0', PSTDOUT_BUFLEN);
+      memset(hbuf, '\0', PSTDOUT_BUFLEN + 1);
       hostlist_sort(cdata->h);
       if (hostlist_ranged_string(cdata->h, PSTDOUT_BUFLEN, hbuf) < 0)
         {

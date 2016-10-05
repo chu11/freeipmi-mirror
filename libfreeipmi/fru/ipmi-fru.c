@@ -406,12 +406,10 @@ _read_fru_data (ipmi_fru_ctx_t ctx,
 
   while (num_bytes_read < fru_read_bytes)
     {
-      uint8_t buf[IPMI_FRU_BUF_LEN+1];
+      uint8_t buf[IPMI_FRU_BUF_LEN];
       uint8_t count_to_read;
       uint8_t count_returned;
       uint64_t val;
-
-      memset (buf, '\0', IPMI_FRU_BUF_LEN+1);
 
       if ((fru_read_bytes - num_bytes_read) < IPMI_FRU_COUNT_TO_READ_BLOCK_SIZE)
         count_to_read = fru_read_bytes - num_bytes_read;
@@ -1745,7 +1743,7 @@ ipmi_fru_type_length_field_to_string (ipmi_fru_ctx_t ctx,
                                       unsigned int *strbuflen)
 {
   uint8_t type_length;
-  uint8_t databuf[IPMI_FRU_BUF_LEN+1];
+  uint8_t databuf[IPMI_FRU_BUF_LEN];
   char strtmpbuf[IPMI_FRU_AREA_STRING_MAX+1];
   unsigned int strtmpbuflen = 0;
   uint8_t type_code;
@@ -1769,9 +1767,6 @@ ipmi_fru_type_length_field_to_string (ipmi_fru_ctx_t ctx,
       return (-1);
     }
 
-  memset (strbuf, '\0', (*strbuflen));
-
-  memset (databuf, '\0', IPMI_FRU_BUF_LEN+1);
   memset (strtmpbuf, '\0', IPMI_FRU_AREA_STRING_MAX+1);
 
   if (fru_dump_hex (ctx,
@@ -1786,6 +1781,7 @@ ipmi_fru_type_length_field_to_string (ipmi_fru_ctx_t ctx,
 
   if (!number_of_data_bytes)
     {
+      memset (strbuf, '\0', (*strbuflen));
       (*strbuflen) = 0;
       goto out;
     }

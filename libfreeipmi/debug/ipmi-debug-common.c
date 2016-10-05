@@ -92,6 +92,7 @@ debug_set_prefix (char *buf, unsigned int buflen, const char *prefix)
 {
   assert (buf && buflen > 3);
 
+  /* clear buffer, empty prefix allowed */
   memset (buf, '\0', buflen);
   if (prefix)
     {

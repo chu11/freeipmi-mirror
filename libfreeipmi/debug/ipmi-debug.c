@@ -247,8 +247,6 @@ ipmi_obj_dump_ipmb (int fd,
       goto cleanup;
     }
 
-  memset (ipmb_buf, '\0', IPMI_DEBUG_MAX_PKT_LEN);
-
   if ((ipmb_buf_len = fiid_obj_get_data (obj_cmd,
                                          "message_data",
                                          ipmb_buf,

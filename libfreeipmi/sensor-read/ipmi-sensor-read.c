@@ -104,11 +104,11 @@ ipmi_sensor_read_ctx_create (ipmi_ctx_t ipmi_ctx)
       ERRNO_TRACE (errno);
       return (NULL);
     }
-  memset (ctx, '\0', sizeof (struct ipmi_sensor_read_ctx));
+
   ctx->magic = IPMI_SENSOR_READ_CTX_MAGIC;
   ctx->flags = IPMI_SENSOR_READ_FLAGS_DEFAULT;
-
   ctx->ipmi_ctx = ipmi_ctx;
+  ctx->sdr_ctx = NULL;
 
   if (!(ctx->sdr_ctx = ipmi_sdr_ctx_create ()))
     {

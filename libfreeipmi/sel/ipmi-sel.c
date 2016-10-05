@@ -969,8 +969,6 @@ ipmi_sel_parse (ipmi_sel_ctx_t ctx,
           goto cleanup;
         }
 
-      memset (&tmp_sel_entry, '\0', sizeof (struct ipmi_sel_entry));
-          
       if ((len = fiid_obj_get_data (obj_cmd_rs,
                                     "record_data",
                                     tmp_sel_entry.sel_event_record,
@@ -1523,7 +1521,6 @@ _sel_parse_read_common (ipmi_sel_ctx_t ctx,
           return (-1);
         }
 
-      memset (sel_entry_buf, '\0', sizeof (struct ipmi_sel_entry));
       sel_entry_buf->sel_event_record_len = sel_record_len > IPMI_SEL_RECORD_LENGTH ? IPMI_SEL_RECORD_LENGTH : sel_record_len;
       memcpy (sel_entry_buf->sel_event_record,
               sel_record,
@@ -1642,7 +1639,6 @@ _sel_parse_system_event_common (ipmi_sel_ctx_t ctx,
           return (-1);
         }
 
-      memset (&sel_entry_buf, '\0', sizeof (struct ipmi_sel_entry));
       sel_entry_buf.sel_event_record_len = sel_record_len > IPMI_SEL_RECORD_LENGTH ? IPMI_SEL_RECORD_LENGTH : sel_record_len;
       memcpy (sel_entry_buf.sel_event_record,
               sel_record,

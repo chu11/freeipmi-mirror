@@ -53,8 +53,8 @@
   do {                                                                  \
     extern int errno;                                                   \
     int __save_errno = __errno_orig;                                    \
-    char __errnostr[ERR_WRAPPER_STR_MAX_LEN];                           \
-    memset (__errnostr, '\0', ERR_WRAPPER_STR_MAX_LEN);                 \
+    char __errnostr[ERR_WRAPPER_STR_MAX_LEN + 1];                       \
+    memset (__errnostr, '\0', ERR_WRAPPER_STR_MAX_LEN + 1);             \
     strerror_r (__save_errno, __errnostr, ERR_WRAPPER_STR_MAX_LEN);     \
     fprintf (stderr,                                                    \
              "%s: %d: %s: errno '%s' (%d)\n",                           \
@@ -67,8 +67,8 @@
 #ifdef WITH_ENCRYPTION
 #define TRACE_GCRYPT_OUT(__error_orig)                                  \
   do {                                                                  \
-    char __errorstr[ERR_WRAPPER_STR_MAX_LEN];                           \
-    memset (__errorstr, '\0', ERR_WRAPPER_STR_MAX_LEN);                 \
+    char __errorstr[ERR_WRAPPER_STR_MAX_LEN + 1];                       \
+    memset (__errorstr, '\0', ERR_WRAPPER_STR_MAX_LEN + 1);             \
     gpg_strerror_r (__error_orig, __errorstr, ERR_WRAPPER_STR_MAX_LEN); \
     fprintf (stderr,                                                    \
              "%s: %d: %s: gcrypt error '%s' (%d)\n",                    \

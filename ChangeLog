@@ -40,6 +40,9 @@
 
 	* Remove unnecessary memset of "prog_data" in all tools.
 
+	* libfreeipmi/: Audit, remove unnecessary memsets, add +1 to
+	string buffers, misc fixes.
+
 2016-10-03 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/fru/ipmi-fru-data.c: Remove unnecessary memsets. 

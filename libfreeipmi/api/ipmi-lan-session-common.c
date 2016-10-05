@@ -514,7 +514,6 @@ _api_lan_cmd_send (ipmi_ctx_t ctx,
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  memset (pkt, '\0', pkt_len);
 
   if (fill_rmcp_hdr_ipmi (ctx->io.outofband.rq.obj_rmcp_hdr) < 0)
     {
@@ -983,7 +982,6 @@ api_lan_cmd_wrapper (ipmi_ctx_t ctx,
           break;
         }
 
-      memset (pkt, '\0', IPMI_MAX_PKT_LEN);
       if ((recv_len = _api_lan_cmd_recv (ctx,
                                          pkt,
                                          IPMI_MAX_PKT_LEN,
@@ -1202,7 +1200,6 @@ _ipmi_cmd_send_ipmb (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rq)
       goto cleanup;
     }
 
-  memset (tbuf, '\0', IPMI_MAX_PKT_LEN);
   if ((len = fiid_obj_get_all (obj_ipmb_msg_rq,
                                tbuf,
                                IPMI_MAX_PKT_LEN)) < 0)
@@ -1324,7 +1321,6 @@ api_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
           break;
         }
 
-      memset (pkt, '\0', IPMI_MAX_PKT_LEN);
       if ((recv_len = _api_lan_cmd_recv (ctx,
                                          pkt,
                                          IPMI_MAX_PKT_LEN,
@@ -2185,7 +2181,6 @@ _api_lan_2_0_cmd_send (ipmi_ctx_t ctx,
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  memset (pkt, '\0', pkt_len);
 
   if (fill_rmcp_hdr_ipmi (ctx->io.outofband.rq.obj_rmcp_hdr) < 0)
     {
@@ -2859,7 +2854,6 @@ api_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
         }
 
       /* its ok to use the "request" net_fn, dump code doesn't care */
-      memset (pkt, '\0', IPMI_MAX_PKT_LEN);
       if ((recv_len = _api_lan_2_0_cmd_recv (ctx,
                                              authentication_algorithm,
                                              integrity_algorithm,
@@ -3099,7 +3093,6 @@ api_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
         }
 
       /* its ok to use the "request" net_fn, dump code doesn't care */
-      memset (pkt, '\0', IPMI_MAX_PKT_LEN);
       if ((recv_len = _api_lan_2_0_cmd_recv (ctx,
                                              ctx->io.outofband.authentication_algorithm,
                                              ctx->io.outofband.integrity_algorithm,

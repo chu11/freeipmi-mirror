@@ -139,7 +139,6 @@ assemble_rmcp_pkt (fiid_obj_t obj_rmcp_hdr,
       return (-1);
     }
 
-  memset (pkt, '\0', pkt_len);
   if ((obj_rmcp_hdr_len = fiid_obj_get_all (obj_rmcp_hdr,
                                             pkt,
                                             pkt_len)) < 0)

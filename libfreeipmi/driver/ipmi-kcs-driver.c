@@ -269,13 +269,17 @@ ipmi_kcs_ctx_create (void)
       ERRNO_TRACE (errno);
       return (NULL);
     }
-  memset (ctx, '\0', sizeof (struct ipmi_kcs_ctx));
 
   ctx->magic = IPMI_KCS_CTX_MAGIC;
   ctx->driver_address = IPMI_KCS_SMS_IO_BASE_DEFAULT;
   ctx->register_spacing = IPMI_KCS_SMS_REGISTER_SPACING_DEFAULT;
   ctx->flags = IPMI_KCS_FLAGS_DEFAULT;
   ctx->poll_interval = IPMI_KCS_SLEEP_USECS;
+#ifdef __FreeBSD__
+#ifndef USE_IOPERM
+  ctx->dev_fd = -1;
+#endif
+#endif /* __FreeBSD__ */
   ctx->io_init = 0;
 
   if ((ctx->semid = driver_mutex_init ()) < 0)
@@ -1052,8 +1056,6 @@ _ipmi_kcs_cmd_write (ipmi_kcs_ctx_t ctx,
       goto cleanup;
     }
 
-  memset (pkt, 0, pkt_len);
-
   if (fill_hdr_ipmi_kcs (lun,
                          net_fn,
                          obj_hdr) < 0)
@@ -1127,8 +1129,6 @@ _ipmi_kcs_cmd_read (ipmi_kcs_ctx_t ctx,
       KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_OUT_OF_MEMORY);
       goto cleanup;
     }
-
-  memset (pkt, 0, pkt_len);
 
   if ((read_len = ipmi_kcs_read (ctx,
                                  pkt,

@@ -207,7 +207,6 @@ ipmi_openipmi_ctx_create (void)
       ERRNO_TRACE (errno);
       return (NULL);
     }
-  memset (ctx, '\0', sizeof (struct ipmi_openipmi_ctx));
 
   ctx->magic = IPMI_OPENIPMI_CTX_MAGIC;
   ctx->flags = IPMI_OPENIPMI_FLAGS_DEFAULT;
@@ -437,7 +436,6 @@ _openipmi_write (ipmi_openipmi_ctx_t ctx,
   /* Due to API differences, we need to extract the cmd out of the
    * request.
    */
-  memset (rq_buf_temp, '\0', IPMI_OPENIPMI_BUFLEN);
 
   if ((len = fiid_obj_get_all (obj_cmd_rq,
                                rq_buf_temp,

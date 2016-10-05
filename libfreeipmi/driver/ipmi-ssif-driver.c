@@ -483,18 +483,20 @@ ipmi_ssif_ctx_create (void)
       ERRNO_TRACE (errno);
       return (NULL);
     }
-  memset (ctx, '\0', sizeof (struct ipmi_ssif_ctx));
 
   ctx->magic = IPMI_SSIF_CTX_MAGIC;
+  ctx->driver_device = NULL;
+  ctx->driver_address = IPMI_DEFAULT_SSIF_IPMB_ADDR;
+  ctx->flags = IPMI_SSIF_FLAGS_DEFAULT;
+  ctx->device_fd = -1;
+  ctx->io_init = 0;
+  ctx->semid = -1;
+
   if (!(ctx->driver_device = strdup (IPMI_DEFAULT_I2C_DEVICE)))
     {
       ERRNO_TRACE (errno);
       goto cleanup;
     }
-  ctx->driver_address = IPMI_DEFAULT_SSIF_IPMB_ADDR;
-  ctx->flags = IPMI_SSIF_FLAGS_DEFAULT;
-  ctx->device_fd = -1;
-  ctx->io_init = 0;
 
   if ((ctx->semid = driver_mutex_init ()) < 0)
     {
@@ -891,8 +893,6 @@ _ipmi_ssif_cmd_write (ipmi_ssif_ctx_t ctx,
       goto cleanup;
     }
 
-  memset (pkt, 0, pkt_len);
-
   if (fill_hdr_ipmi_kcs (lun,
                          net_fn,
                          obj_hdr) < 0)
@@ -966,8 +966,6 @@ _ipmi_ssif_cmd_read (ipmi_ssif_ctx_t ctx,
       SSIF_SET_ERRNUM (ctx, IPMI_SSIF_ERR_OUT_OF_MEMORY);
       goto cleanup;
     }
-
-  memset (pkt, 0, pkt_len);
 
   if ((read_len = ipmi_ssif_read (ctx,
                                   pkt,

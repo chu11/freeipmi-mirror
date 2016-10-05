@@ -44,10 +44,10 @@
   do {                                                                      \
     int __rserrnum = 0;                                                     \
     uint64_t __rsval = 0;                                                   \
-    char __rserrstr[IPMI_ERR_STR_MAX_LEN];                                  \
+    char __rserrstr[IPMI_ERR_STR_MAX_LEN + 1];                              \
     fiid_obj_get (___rs, "comp_code", &__rsval);                            \
     __rserrnum = __rsval;                                                   \
-    memset (__rserrstr, '\0', IPMI_ERR_STR_MAX_LEN);                        \
+    memset (__rserrstr, '\0', IPMI_ERR_STR_MAX_LEN + 1);                    \
     ipmi_completion_code_strerror_cmd_r ((___rs),                           \
                                          (___ctx)->target.net_fn,           \
                                          __rserrstr,                        \

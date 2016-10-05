@@ -2232,8 +2232,8 @@ sel_string_output_dell_poweredge_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
       uint8_t data2_number, data3_number;
       char *data2_entity_str = NULL;
       char *data3_entity_str = NULL;
-      char data2_number_str[DELL_EVENT_BUFFER_LENGTH];
-      char data3_number_str[DELL_EVENT_BUFFER_LENGTH];
+      char data2_number_str[DELL_EVENT_BUFFER_LENGTH + 1];
+      char data3_number_str[DELL_EVENT_BUFFER_LENGTH + 1];
 
       data2_entity = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_OEM_DELL_VERSION_CHANGE_ENTITY_BITMASK);
       data2_entity >>= IPMI_SENSOR_TYPE_MEMORY_OEM_DELL_VERSION_CHANGE_ENTITY_SHIFT;
@@ -2250,8 +2250,8 @@ sel_string_output_dell_poweredge_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
       data2_entity_str = _dell_version_change_entity_string (data2_entity);
       data3_entity_str = _dell_version_change_entity_string (data3_entity);
 
-      memset (data2_number_str, '\0', DELL_EVENT_BUFFER_LENGTH);
-      memset (data3_number_str, '\0', DELL_EVENT_BUFFER_LENGTH);
+      memset (data2_number_str, '\0', DELL_EVENT_BUFFER_LENGTH + 1);
+      memset (data3_number_str, '\0', DELL_EVENT_BUFFER_LENGTH + 1);
 
       if (data2_number != IPMI_SENSOR_TYPE_MEMORY_OEM_DELL_VERSION_CHANGE_NUMBER_INVALID)
         snprintf (data2_number_str,

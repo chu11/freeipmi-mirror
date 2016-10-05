@@ -134,8 +134,6 @@ ipmi_calculate_sik (uint8_t authentication_algorithm,
 
   k_g_len = (k_g_len > IPMI_MAX_SIK_KEY_LENGTH) ? IPMI_MAX_SIK_KEY_LENGTH : k_g_len;
 
-  memset (hash_data, '\0', IPMI_MAX_KEY_DATA_LENGTH);
-
   /*
    * Build up data for hashing.
    */
@@ -755,7 +753,6 @@ ipmi_calculate_rakp_3_key_exchange_authentication_code (uint8_t authentication_a
     }
 
   /* checks above and memcpy limits below ensure can't overflow unsigned int */
-  memset (buf, '\0', IPMI_MAX_KEY_DATA_LENGTH);
   memcpy (buf + buf_index, managed_system_random_number, IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH);
   buf_index += IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH;
   buf[buf_index] = (remote_console_session_id & 0x000000ff);
@@ -905,7 +902,6 @@ ipmi_rmcpplus_check_integrity_pad (fiid_obj_t obj_rmcpplus_session_trlr)
   if (pad_length > IPMI_INTEGRITY_PAD_MULTIPLE)
     return (0);
 
-  memset (integrity_pad, '\0', IPMI_MAX_INTEGRITY_PAD_LENGTH);
   if (fiid_obj_get_data (obj_rmcpplus_session_trlr,
                          "integrity_pad",
                          integrity_pad,
@@ -1029,7 +1025,6 @@ ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code (uint8_t authenticat
     }
 
   /* checks above and memcpy limits below ensure we can't overflow an unsigned int */
-  memset (buf, '\0', IPMI_MAX_KEY_DATA_LENGTH);
   buf[buf_index] = (remote_console_session_id & 0x000000ff);
   buf_index++;
   buf[buf_index] = (remote_console_session_id & 0x0000ff00) >> 8;
@@ -1205,7 +1200,6 @@ ipmi_rmcpplus_check_rakp_4_integrity_check_value (uint8_t authentication_algorit
     }
 
   /* checks above and memcpy limits below ensure can't overflow unsigned int */
-  memset (buf, '\0', IPMI_MAX_KEY_DATA_LENGTH);
   memcpy (buf + buf_index, remote_console_random_number, IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH);
   buf_index += IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH;
   buf[buf_index] = (managed_system_session_id & 0x000000ff);
@@ -1355,8 +1349,6 @@ ipmi_rmcpplus_check_packet_session_authentication_code (uint8_t integrity_algori
       rv = 0;
       goto cleanup;
     }
-
-  memset (hash_data, '\0', IPMI_MAX_PAYLOAD_LENGTH);
 
   if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128)
     {

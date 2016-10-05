@@ -202,7 +202,6 @@ _ssif_cmd_write (ipmi_ctx_t ctx,
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  memset (pkt, '\0', pkt_len);
   
   if (fill_hdr_ipmi_kcs (ctx->target.lun,
                          ctx->target.net_fn,
@@ -288,7 +287,6 @@ _ssif_cmd_read (ipmi_ctx_t ctx,
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  memset (pkt, '\0', pkt_len);
   
   if ((read_len = ipmi_ssif_read (ctx->io.inband.ssif_ctx, pkt, pkt_len)) < 0)
     {
@@ -466,7 +464,6 @@ _api_ssif_ipmb_send (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  memset (buf, '\0', IPMI_MAX_PKT_LEN);
   if ((len = fiid_obj_get_all (obj_ipmb_msg_rq,
                                buf,
                                IPMI_MAX_PKT_LEN)) < 0)

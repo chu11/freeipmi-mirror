@@ -284,7 +284,6 @@ get_sensor_units_output_string (pstdout_state_t pstate,
       goto cleanup;
     }
   
-  memset (sensor_units_buf, '\0', sensor_units_buflen);
   sensor_units_ret = ipmi_sensor_units_string (sensor_units_percentage,
                                                sensor_units_modifier,
                                                sensor_units_rate,

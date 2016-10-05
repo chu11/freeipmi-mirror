@@ -174,7 +174,6 @@ ipmi_lan_check_session_authentication_code (fiid_obj_t obj_lan_session_hdr_rs,
   if (authentication_type != l_authentication_type)
     return (0);
 
-  memset (authentication_code_recv, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
   if ((authentication_code_recv_len = fiid_obj_get_data (obj_lan_session_hdr_rs,
                                                          "authentication_code",
                                                          authentication_code_recv,
@@ -193,7 +192,12 @@ ipmi_lan_check_session_authentication_code (fiid_obj_t obj_lan_session_hdr_rs,
       goto cleanup;
     }
 
-  memset (authentication_code_calc, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
+  if (authentication_code_recv_len != IPMI_1_5_MAX_PASSWORD_LENGTH)
+    {
+      rv = 0;
+      goto cleanup;
+    }
+
   if (authentication_type == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY)
     memcpy (authentication_code_calc, authentication_code_data, authentication_code_data_len);
   else if (authentication_type == IPMI_AUTHENTICATION_TYPE_MD2
@@ -386,7 +390,6 @@ ipmi_lan_check_packet_session_authentication_code (const void *pkt,
   if (pkt_len < (authentication_code_offset + IPMI_1_5_MAX_PASSWORD_LENGTH))
     return (0);
 
-  memset (authentication_code_buf, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
   if (authentication_type == IPMI_AUTHENTICATION_TYPE_MD2
       || authentication_type == IPMI_AUTHENTICATION_TYPE_MD5)
     {

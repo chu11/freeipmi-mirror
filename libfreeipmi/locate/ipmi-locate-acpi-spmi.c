@@ -829,7 +829,6 @@ _ipmi_acpi_get_rsdp (ipmi_locate_ctx_t ctx,
       LOCATE_ERRNO_TO_LOCATE_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  memset (memdata, '\0', rsdp_window_size);
 
   if ((acpi_rsdp_descriptor_len = fiid_template_len_bytes (tmpl_acpi_rsdp_descriptor)) < 0)
     {
@@ -937,7 +936,6 @@ _ipmi_acpi_get_rsdp (ipmi_locate_ctx_t ctx,
                 LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_OUT_OF_MEMORY);
                 goto cleanup;
               }
-            memset (memdata, '\0', acpi_rsdp_descriptor_len);
             
             if (_ipmi_get_physical_mem_data (ctx,
                                              rsdt_xsdt_address,
@@ -1030,13 +1028,13 @@ _ipmi_acpi_get_table (ipmi_locate_ctx_t ctx,
       goto cleanup;
     }
 
-  table_signature_length = len + 1;
-  if (!(table_signature = malloc (table_signature_length)))
+  table_signature_length = len;
+  if (!(table_signature = malloc (table_signature_length + 1)))
     {
       LOCATE_ERRNO_TO_LOCATE_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  memset (table_signature, '\0', table_signature_length);
+  memset (table_signature, '\0', table_signature_length + 1);
 
   if ((acpi_table_hdr_length = fiid_template_len_bytes (tmpl_acpi_table_hdr)) < 0)
     {
@@ -1055,7 +1053,6 @@ _ipmi_acpi_get_table (ipmi_locate_ctx_t ctx,
       LOCATE_ERRNO_TO_LOCATE_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  memset (acpi_table_buf, '\0', acpi_table_hdr_length);
 
   if (_ipmi_get_physical_mem_data (ctx,
                                    table_address,

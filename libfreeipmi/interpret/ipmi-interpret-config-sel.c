@@ -909,7 +909,6 @@ _interpret_config_sel_init (ipmi_interpret_ctx_t ctx,
           INTERPRET_SET_ERRNUM (ctx, IPMI_INTERPRET_ERR_OUT_OF_MEMORY);
           goto cleanup;
         }
-      memset ((*config_dest)[i], '\0', mlen);
 
       (*config_dest)[i]->option_str = config_src[i].option_str;
       (*config_dest)[i]->assertion_state = config_src[i].assertion_state;

@@ -312,8 +312,6 @@ _ipmi_dump_lan_packet (int fd,
   
   if (tmpl_ipmb_msg_hdr && tmpl_ipmb_cmd)
     {
-      memset (ipmb_buf, '\0', IPMI_DEBUG_MAX_PKT_LEN);
-      
       if ((ipmb_buf_len = fiid_obj_get_data (obj_cmd,
                                              "message_data",
                                              ipmb_buf,

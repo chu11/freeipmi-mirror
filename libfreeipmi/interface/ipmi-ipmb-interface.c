@@ -211,8 +211,6 @@ assemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg_hdr,
       return (-1);
     }
 
-  memset (buf, '\0', IPMB_MAX_LEN+1);
-
   if ((len = fiid_obj_get_block (obj_ipmb_msg_hdr,
                                  "rs_addr",
                                  "checksum1",
@@ -312,8 +310,6 @@ unassemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg,
       ERRNO_TRACE (errno);
       return (-1);
     }
-
-  memset (buf, '\0', IPMB_MAX_LEN+1);
 
   if ((buf_len = fiid_obj_get_all (obj_ipmb_msg, buf, IPMB_MAX_LEN)) < 0)
     {

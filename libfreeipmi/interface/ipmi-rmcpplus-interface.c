@@ -589,8 +589,6 @@ _construct_payload_buf (uint8_t payload_type,
           && payload_buf
           && payload_buf_len);
 
-  memset (payload_buf, '\0', payload_buf_len);
-
   if (payload_type == IPMI_PAYLOAD_TYPE_IPMI)
     {
       if ((obj_lan_msg_hdr_len = fiid_obj_len_bytes (obj_lan_msg_hdr)) < 0)
@@ -680,8 +678,6 @@ _construct_payload_buf (uint8_t payload_type,
 
   rv = indx;
  cleanup:
-  if (rv < 0)
-    memset (payload_buf, '\0', payload_buf_len);
   fiid_obj_destroy (obj_lan_msg_trlr);
   return (rv);
 }
@@ -1092,8 +1088,6 @@ _construct_session_trlr_authentication_code (uint8_t integrity_algorithm,
 
   /* Check if the user provided an authentication code, if so, use it */
 
-  memset (authentication_code_buf, '\0', authentication_code_buf_len);
-
   if ((len = fiid_obj_field_len_bytes (obj_rmcpplus_session_trlr,
                                        "authentication_code")) < 0)
     {
@@ -1158,8 +1152,6 @@ _construct_session_trlr_authentication_code (uint8_t integrity_algorithm,
     }
 
   assert (crypt_digest_len == expected_digest_len);
-
-  memset (hash_data, '\0', IPMI_MAX_PAYLOAD_LENGTH);
 
   hash_data_len = 0;
 
@@ -1474,8 +1466,6 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
           return (-1);
         }
     }
-
-  memset (pkt, '\0', pkt_len);
 
   /*
    * Copy RMCP header into packet

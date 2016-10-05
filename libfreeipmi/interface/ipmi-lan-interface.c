@@ -356,8 +356,6 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
       return (-1);
     }
 
-  memset (pkt, 0, pkt_len);
-
   if ((len = fiid_obj_get_all (obj_rmcp_hdr, pkt + indx, pkt_len - indx)) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcp_hdr);
@@ -471,6 +469,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
     {
       int authentication_len;
 
+      /* clear out, might need empty buf */
       memset (pwbuf, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
 
       if ((authentication_len = fiid_obj_field_len_bytes (obj_lan_session_hdr,

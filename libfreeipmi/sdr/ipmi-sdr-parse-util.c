@@ -96,10 +96,6 @@ _get_shared_sensor_name (ipmi_sdr_ctx_t ctx,
       
       if (id_string_instance_modifier_type == IPMI_SDR_ID_STRING_INSTANCE_MODIFIER_TYPE_ALPHA)
         {
-          char modifierbuf[IPMI_SDR_MODIFIER_BUFLEN];
-          
-          memset (modifierbuf, '\0', IPMI_SDR_MODIFIER_BUFLEN);
-              
           /* IPMI spec example is:
            *
            * "If the modifier = alpha, offset=0
