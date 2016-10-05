@@ -227,7 +227,6 @@ ipmipower_powercmd_queue (ipmipower_power_cmd_t cmd,
       IPMIPOWER_ERROR (("malloc: %s", strerror (errno)));
       exit (EXIT_FAILURE);
     }
-  memset (ip, '\0', sizeof (struct ipmipower_powercmd));
 
   ip->cmd = cmd;
   ip->protocol_state = IPMIPOWER_PROTOCOL_STATE_START;
@@ -236,13 +235,17 @@ ipmipower_powercmd_queue (ipmipower_power_cmd_t cmd,
    * Protocol State Machine Variables
    */
 #if 0
-  /* Initialize when protocol really begins.  Necessary b/c of fanout support */
+  /* Initialize when protocol really begins.  Necessary b/c of fanout support
+   * For now just clear it.
+   */
   if (gettimeofday (&(ip->time_begin), NULL) < 0)
     {
       IPMIPOWER_ERROR (("gettimeofday: %s", strerror (errno)));
       exit (EXIT_FAILURE);
     }
-#endif
+#else  /* 0 */
+  memset (&(ip->time_begin), '\0', sizeof (struct timeval));
+#endif  /* 0 */
   ip->retransmission_count = 0;
   ip->close_timeout = 0;
 
@@ -279,7 +282,10 @@ ipmipower_powercmd_queue (ipmipower_power_cmd_t cmd,
        * Capabilities Response and/or Activate Session Response is
        * received
        */
+      /* set to 0 below for time being */
     }
+#else  /* 0 */
+  ip->permsgauth_enabled = 0;
 #endif /* 0 */
 
   /* IPMI 2.0 */
@@ -573,6 +579,13 @@ ipmipower_powercmd_queue (ipmipower_power_cmd_t cmd,
               exit (EXIT_FAILURE);
             }
         }
+    }
+  else
+    {
+      ip->obj_c410x_get_sensor_reading_rq = NULL;
+      ip->obj_c410x_get_sensor_reading_rs = NULL;
+      ip->obj_c410x_slot_power_control_rq = NULL;
+      ip->obj_c410x_slot_power_control_rs = NULL;
     }
   
   if (!(ip->obj_close_session_rq = fiid_obj_create (tmpl_cmd_close_session_rq)))

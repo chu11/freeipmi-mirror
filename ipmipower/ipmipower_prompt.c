@@ -1420,7 +1420,7 @@ ipmipower_prompt_process_cmdline (void)
            * safe
            */
           i = 0;
-          while(argv[i])
+          while (argv[i])
             {
               memset (argv[i], '\0', strlen (argv[i]));
               i++;

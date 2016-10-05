@@ -65,9 +65,9 @@
 
 #define IPMIPOWER_ERROR(__msg)                                                  \
   do {                                                                          \
-    char __err[IPMIPOWER_ERROR_BUFLEN];                                         \
+    char __err[IPMIPOWER_ERROR_BUFLEN + 1];                                     \
     int __len = 0;                                                              \
-    memset (__err, '\0', IPMIPOWER_ERROR_BUFLEN);                               \
+    memset (__err, '\0', IPMIPOWER_ERROR_BUFLEN + 1);                           \
     if (cmd_args.common_args.debug)                                             \
       __len = snprintf (__err,                                                  \
                         IPMIPOWER_ERROR_BUFLEN,                                 \
@@ -80,7 +80,7 @@
         char *__str;                                                            \
         if ((__str = __error_msg_create __msg))                                 \
           {                                                                     \
-            strncat (__err, __str, IPMIPOWER_ERROR_BUFLEN - __len - 1);         \
+            strncat (__err, __str, IPMIPOWER_ERROR_BUFLEN - __len);             \
             free (__str);                                                       \
           }                                                                     \
       }                                                                         \
@@ -89,11 +89,11 @@
 
 #define IPMIPOWER_DEBUG(__msg)                                                  \
   do {                                                                          \
-    char __err[IPMIPOWER_ERROR_BUFLEN];                                         \
+    char __err[IPMIPOWER_ERROR_BUFLEN + 1];                                     \
     int __len = 0;                                                              \
     if (cmd_args.common_args.debug)                                             \
       {                                                                         \
-        memset (__err, '\0', IPMIPOWER_ERROR_BUFLEN);                           \
+        memset (__err, '\0', IPMIPOWER_ERROR_BUFLEN + 1);                       \
         __len = snprintf (__err,                                                \
                           IPMIPOWER_ERROR_BUFLEN,                               \
                           "(%s, %s, %d): ",                                     \
@@ -105,7 +105,7 @@
             char *__str;                                                        \
             if ((__str = __error_msg_create __msg))                             \
               {                                                                 \
-                strncat (__err, __str, IPMIPOWER_ERROR_BUFLEN - __len - 1);     \
+                strncat (__err, __str, IPMIPOWER_ERROR_BUFLEN - __len);         \
                 free (__str);                                                   \
               }                                                                 \
           }                                                                     \

@@ -114,8 +114,6 @@ ipmipower_ping_process_pings (int *timeout)
         {
           int dropped = 0;
           
-          memset (buf, '\0', IPMIPOWER_PACKET_BUFLEN);
-
           /* deal with packet heuristics */
           if (cmd_args.ping_packet_count && cmd_args.ping_percent)
             {
@@ -351,7 +349,6 @@ ipmipower_ping_process_pings (int *timeout)
         }
 
       /* Did we receive something? */
-      memset (buf, '\0', IPMIPOWER_PACKET_BUFLEN);
       len = ipmipower_cbuf_peek_and_drop (ics[i].ping_in, buf, IPMIPOWER_PACKET_BUFLEN);
       if (len > 0)
         {

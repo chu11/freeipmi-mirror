@@ -113,13 +113,13 @@ ipmipower_output_finish (void)
       && !IPMIPOWER_OEM_POWER_TYPE_REQUIRES_EXTRA_ARGUMENT (cmd_args.oem_power_type))
     {
       int i, rv;
-      char buf[IPMIPOWER_OUTPUT_BUFLEN];
+      char buf[IPMIPOWER_OUTPUT_BUFLEN + 1];
 
       for (i = 0; i < IPMIPOWER_MSG_TYPE_NUM_ENTRIES; i++)
         {
           if (hostlist_count (output_hostrange[i]) > 0)
             {
-              memset (buf, '\0', IPMIPOWER_OUTPUT_BUFLEN);
+              memset (buf, '\0', IPMIPOWER_OUTPUT_BUFLEN + 1);
               
               hostlist_sort (output_hostrange[i]);
               
