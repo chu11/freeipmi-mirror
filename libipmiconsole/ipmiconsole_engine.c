@@ -941,6 +941,11 @@ _ipmiconsole_engine (void *arg)
       int spin_wait_flag = 0;
       char buf[IPMICONSOLE_PIPE_BUFLEN];
 
+      poll_data.pfds = NULL;
+      poll_data.pfds_ctxs = NULL;
+      poll_data.ctxs_len = 0;
+      poll_data.pfds_index = 0;
+
       if ((perr = pthread_mutex_lock (&console_engine_teardown_mutex)))
         {
           /* This is one of the only truly "fatal" conditions */
@@ -1007,10 +1012,7 @@ _ipmiconsole_engine (void *arg)
           spin_wait_flag++;
           goto continue_loop;
         }
-      poll_data.pfds = NULL;
-      poll_data.pfds_ctxs = NULL;
       poll_data.ctxs_len = ctxs_count;
-      poll_data.pfds_index = 0;
 
       /* achu: I always wonder if this poll() loop could be done far
        * more elegantly and efficiently without all this crazy
