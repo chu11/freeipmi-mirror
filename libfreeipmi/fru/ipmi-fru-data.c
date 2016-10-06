@@ -181,6 +181,19 @@ ipmi_fru_chassis_info_area (ipmi_fru_ctx_t ctx,
       return (-1);
     }
 
+  if (chassis_part_number)
+    memset (chassis_part_number,
+            '\0',
+            sizeof (ipmi_fru_field_t));
+  if (chassis_serial_number)
+    memset (chassis_serial_number,
+            '\0',
+            sizeof (ipmi_fru_field_t));
+  if (chassis_custom_fields && chassis_custom_fields_len)
+    memset (chassis_custom_fields,
+            '\0',
+            sizeof (ipmi_fru_field_t) * chassis_custom_fields_len);
+
   if (chassis_type)
     (*chassis_type) = areabufptr[area_offset];
   area_offset++;
@@ -286,6 +299,31 @@ ipmi_fru_board_info_area (ipmi_fru_ctx_t ctx,
       FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_PARAMETERS);
       return (-1);
     }
+
+  if (board_manufacturer)
+    memset (board_manufacturer,
+            '\0',
+            sizeof (ipmi_fru_field_t));
+  if (board_product_name)
+    memset (board_product_name,
+            '\0',
+            sizeof (ipmi_fru_field_t));
+  if (board_serial_number)
+    memset (board_serial_number,
+            '\0',
+            sizeof (ipmi_fru_field_t));
+  if (board_part_number)
+    memset (board_part_number,
+            '\0',
+            sizeof (ipmi_fru_field_t));
+  if (board_fru_file_id)
+    memset (board_fru_file_id,
+            '\0',
+            sizeof (ipmi_fru_field_t));
+  if (board_custom_fields && board_custom_fields_len)
+    memset (board_custom_fields,
+            '\0',
+            sizeof (ipmi_fru_field_t) * board_custom_fields_len);
 
   if (language_code)
     (*language_code) = areabufptr[area_offset];
@@ -478,6 +516,39 @@ ipmi_fru_product_info_area (ipmi_fru_ctx_t ctx,
       FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_PARAMETERS);
       return (-1);
     }
+
+  if (product_manufacturer_name)
+    memset (product_manufacturer_name,
+            '\0',
+            sizeof (ipmi_fru_field_t));
+  if (product_name)
+    memset (product_name,
+            '\0',
+            sizeof (ipmi_fru_field_t));
+  if (product_part_model_number)
+    memset (product_part_model_number,
+            '\0',
+            sizeof (ipmi_fru_field_t));
+  if (product_version)
+    memset (product_version,
+            '\0',
+            sizeof (ipmi_fru_field_t));
+  if (product_serial_number)
+    memset (product_serial_number,
+            '\0',
+            sizeof (ipmi_fru_field_t));
+  if (product_asset_tag)
+    memset (product_asset_tag,
+            '\0',
+            sizeof (ipmi_fru_field_t));
+  if (product_fru_file_id)
+    memset (product_fru_file_id,
+            '\0',
+            sizeof (ipmi_fru_field_t));
+  if (product_custom_fields && product_custom_fields_len)
+    memset (product_custom_fields,
+            '\0',
+            sizeof (ipmi_fru_field_t) * product_custom_fields_len);
 
   if (language_code)
     (*language_code) = areabufptr[area_offset];
