@@ -2,6 +2,9 @@
 
 	* libfreeipmi/fru/: Revert removal of memsets libfreeipmi/fru/.
 	Are necessary b/c fields are optional.
+
+	* Revert removal of memset of config file data.  Necessary b/c
+	data may never be set by config_file_parse if file not found.
 	
 2016-10-04 Albert Chu <chu11@llnl.gov>
 
