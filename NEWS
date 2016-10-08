@@ -1,3 +1,8 @@
+FreeIPMI 1.5.5 - 09/30/16
+-------------------------
+o Fix invalid flag clear in libipmiconsole that can lead to a potential
+  double close on a file descriptor.
+
 FreeIPMI 1.5.4 - 09/30/16
 -------------------------
 o Various changes/fixes in libipmiconsole
