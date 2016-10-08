@@ -503,21 +503,6 @@ ipmiconsole_ctx_blocking_cleanup (ipmiconsole_ctx_t c)
   pthread_mutex_destroy (&(c->blocking.blocking_mutex));
 }
 
-static void
-_ipmiconsole_ctx_connection_init (ipmiconsole_ctx_t c)
-{
-  assert (c);
-  assert (c->magic == IPMICONSOLE_CTX_MAGIC);
-
-  memset (&(c->connection), '\0', sizeof (struct ipmiconsole_ctx_connection));
-  c->connection.user_fd = -1;
-  c->connection.user_fd_retrieved = 0;
-  c->connection.ipmiconsole_fd = -1;
-  c->connection.ipmi_fd = -1;
-  c->connection.asynccomm[0] = -1;
-  c->connection.asynccomm[1] = -1;
-}
-
 int
 ipmiconsole_ctx_connection_setup (ipmiconsole_ctx_t c)
 {
@@ -529,7 +514,13 @@ ipmiconsole_ctx_connection_setup (ipmiconsole_ctx_t c)
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
   assert (!(c->session_submitted));
 
-  _ipmiconsole_ctx_connection_init (c);
+  memset (&(c->connection), '\0', sizeof (struct ipmiconsole_ctx_connection));
+  c->connection.user_fd = -1;
+  c->connection.user_fd_retrieved = 0;
+  c->connection.ipmiconsole_fd = -1;
+  c->connection.ipmi_fd = -1;
+  c->connection.asynccomm[0] = -1;
+  c->connection.asynccomm[1] = -1;
 
   /* File Descriptor User Interface */
 
@@ -959,20 +950,32 @@ __ipmiconsole_ctx_connection_cleanup (ipmiconsole_ctx_t c, int session_submitted
           c->connection.user_fd_retrieved = 0;
 	}
     }
+  c->connection.user_fd = -1;
+
   /* ignore potential error, cleanup path */
   if (c->connection.ipmiconsole_fd >= 0)
     close (c->connection.ipmiconsole_fd);
+  c->connection.ipmiconsole_fd = -1;
+
   if (c->connection.console_remote_console_to_bmc)
     scbuf_destroy (c->connection.console_remote_console_to_bmc, secure_malloc_flag);
   if (c->connection.console_bmc_to_remote_console)
     scbuf_destroy (c->connection.console_bmc_to_remote_console, secure_malloc_flag);
+
   /* ignore potential error, cleanup path */
   if (c->connection.ipmi_fd >= 0)
     close (c->connection.ipmi_fd);
+  c->connection.ipmi_fd = -1;
+
   if (c->connection.ipmi_from_bmc)
     scbuf_destroy (c->connection.ipmi_from_bmc, secure_malloc_flag);
   if (c->connection.ipmi_to_bmc)
     scbuf_destroy (c->connection.ipmi_to_bmc, secure_malloc_flag);
+
+  /* Set to -1, closing is handled on user end when calling ipmiconsole_ctx_destroy() */
+  c->connection.asynccomm[0] = -1;
+  c->connection.asynccomm[1] = -1;
+
   /* Similarly to the user_fd above, it is the responsibility of other
    * code to close asynccomm[0] and asynccomm[1], which is replicated
    * in the context.
@@ -1049,8 +1052,6 @@ __ipmiconsole_ctx_connection_cleanup (ipmiconsole_ctx_t c, int session_submitted
     fiid_obj_destroy (c->connection.obj_close_session_rq);
   if (c->connection.obj_close_session_rs)
     fiid_obj_destroy (c->connection.obj_close_session_rs);
-
-  _ipmiconsole_ctx_connection_init (c);
 
   /* If the session was never submitted (i.e. error in API land), don't
    * move this around.
