@@ -1,3 +1,20 @@
+2016-10-07 Albert Chu <chu11@llnl.gov>
+
+	Fix invalid clearing of ctx info in
+	__ipmiconsole_ctx_connection_cleanup in
+	libipmiconsole/ipmiconsole_ctx.c
+
+	* libipmiconsole/ipmiconsole_ctx.c (_ipmiconsole_ctx_connection_init):
+	Remove function.
+
+	* libipmiconsole/ipmiconsole_ctx.c (ipmiconsole_ctx_connection_setup):
+	Move remnants of _ipmiconsole_ctx_connection_init into this
+	function.
+
+	* libipmiconsole/ipmiconsole_ctx.c (__ipmiconsole_ctx_connection_cleanup):
+	Do not call _ipmiconsole_ctx_connection_init.  Clear only data
+	__ipmiconsole_ctx_connection_cleanup should clear.
+
 2016-09-29 Albert Chu <chu11@llnl.gov>
 
 	* libipmiconsole/ipmiconsole_ctx.c (ipmiconsole_ctx_fds_cleanup):
