@@ -281,8 +281,7 @@ struct ipmiconsole_ctx_config {
 struct ipmiconsole_ctx_connection {
 
   /* File Descriptor User Interface */
-  int user_fd;                  /* never touched internally by the library, except ... */
-  int user_fd_retrieved;        /* if user never grabbed it */
+  int user_fd;                  /* never touched internally by the library ... */
   int ipmiconsole_fd;
   scbuf_t console_remote_console_to_bmc;
   scbuf_t console_bmc_to_remote_console;
@@ -528,6 +527,7 @@ struct ipmiconsole_ctx_fds {
    *
    */
   int user_fd;
+  int user_fd_retrieved;        /* if user ever grabbed it */
   int asynccomm[2];
 };
 
