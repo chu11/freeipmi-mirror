@@ -516,7 +516,6 @@ ipmiconsole_ctx_connection_setup (ipmiconsole_ctx_t c)
 
   memset (&(c->connection), '\0', sizeof (struct ipmiconsole_ctx_connection));
   c->connection.user_fd = -1;
-  c->connection.user_fd_retrieved = 0;
   c->connection.ipmiconsole_fd = -1;
   c->connection.ipmi_fd = -1;
   c->connection.asynccomm[0] = -1;
@@ -549,6 +548,7 @@ ipmiconsole_ctx_connection_setup (ipmiconsole_ctx_t c)
 
   /* Copy for API level */
   c->fds.user_fd = c->connection.user_fd;
+  c->fds.user_fd_retrieved = 0;
 
   secure_malloc_flag = (c->config.engine_flags & IPMICONSOLE_ENGINE_LOCK_MEMORY) ? 1 : 0;
 
@@ -947,7 +947,7 @@ __ipmiconsole_ctx_connection_cleanup (ipmiconsole_ctx_t c, int session_submitted
       if (c->connection.user_fd >= 0)
 	{
 	  close (c->connection.user_fd);
-          c->connection.user_fd_retrieved = 0;
+          c->fds.user_fd_retrieved = 0;
 	}
     }
   c->connection.user_fd = -1;
@@ -1361,8 +1361,9 @@ ipmiconsole_ctx_fds_setup (ipmiconsole_ctx_t c)
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
 
-  /* init to -1 b/c -1 isn't a legit fd */
+  /* init fds to -1 b/c -1 isn't a legit fd */
   c->fds.user_fd = -1;
+  c->fds.user_fd_retrieved = 0;
   c->fds.asynccomm[0] = -1;
   c->fds.asynccomm[1] = -1;
 }
@@ -1377,7 +1378,7 @@ ipmiconsole_ctx_fds_cleanup (ipmiconsole_ctx_t c)
    * engine.  Closing asynccomm[1] first could result in a EPIPE
    * instead.
    */
-  if (!c->connection.user_fd_retrieved)
+  if (!c->fds.user_fd_retrieved)
     {
       /* ignore potential error, cleanup path */
       close (c->fds.user_fd);

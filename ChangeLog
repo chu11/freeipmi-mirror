@@ -1,5 +1,10 @@
 2016-10-07 Albert Chu <chu11@llnl.gov>
 
+	* libipmiconsole/: Move "user_fd_retrieved" from connection struct
+	to fds struct for clarity.
+	
+2016-10-07 Albert Chu <chu11@llnl.gov>
+
 	Fix invalid clearing of ctx info in
 	__ipmiconsole_ctx_connection_cleanup in
 	libipmiconsole/ipmiconsole_ctx.c
