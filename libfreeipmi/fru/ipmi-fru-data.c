@@ -141,9 +141,6 @@ _parse_type_length (ipmi_fru_ctx_t ctx,
 
   if (field)
     {
-      memset (field->type_length_field,
-              '\0',
-              IPMI_FRU_AREA_TYPE_LENGTH_FIELD_MAX);
       memcpy (field->type_length_field,
               &areabufptr[current_area_offset],
               1 + (*number_of_data_bytes));
