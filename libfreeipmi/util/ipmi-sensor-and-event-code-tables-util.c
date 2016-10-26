@@ -2382,6 +2382,7 @@ _supermicro_oem_temp_level_sensor_supported (uint32_t manufacturer_id, uint16_t 
    * Supermicro X9DRI-LN4F+ (X9DRI_LN4F_PLUS)
    * Supermicro X9SPU-F-O (X9SPU_F_O)
    * Supermicro X9SCM-iiF (X9SCM_IIF)
+   * Supermicro H8SGL-F (H8SGL_F)
    *
    * Event Reading Type Code = IPMI_EVENT_READING_TYPE_CODE_OEM_SUPERMICRO_GENERIC
    * Sensor Type = IPMI_SENSOR_TYPE_OEM_SUPERMICRO_CPU_TEMP
@@ -2400,27 +2401,28 @@ _supermicro_oem_temp_level_sensor_supported (uint32_t manufacturer_id, uint16_t 
 	   || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTN
 	   || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X7SBI_LN4))
       || ((manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUPERMICRO
-	   || manufacturer_id ==  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND)
-	  && (product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTH
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTG
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DT3_LN4F
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU_6PLUS
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL_3F
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8SIL_F
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCL
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCM
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTNPLUS_F
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8SIE
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCA_F_O
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8DGU_F
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8DGU
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8DG6
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9DRI_F
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9DRI_LN4F_PLUS
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SPU_F_O
-	      || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCM_IIF))
+           || manufacturer_id ==  IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND)
+          && (product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTH
+              || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTG
+              || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU
+              || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DT3_LN4F
+              || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU_6PLUS
+              || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL
+              || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL_3F
+              || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8SIL_F
+              || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCL
+              || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCM
+              || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTNPLUS_F
+              || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8SIE
+              || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCA_F_O
+              || product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8DGU_F
+              || product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8DGU
+              || product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8DG6
+              || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9DRI_F
+              || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9DRI_LN4F_PLUS
+              || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SPU_F_O
+              || product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCM_IIF
+              || product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8SGL_F))
       || (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_MAGNUM_TECHNOLOGIES
 	  && product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL))
     return (1);

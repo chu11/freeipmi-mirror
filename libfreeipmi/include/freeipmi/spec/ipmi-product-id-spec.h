@@ -251,6 +251,7 @@ extern "C" {
 #define IPMI_SUPERMICRO_PRODUCT_ID_H8DG6           48145
 #define IPMI_SUPERMICRO_PRODUCT_ID_H8DGU           4520
 #define IPMI_SUPERMICRO_PRODUCT_ID_X9DRI_LN4F_PLUS 1574
+#define IPMI_SUPERMICRO_PRODUCT_ID_H8SGL_F         42769
 
 /* Seen in the wild w/ proper IANA number 10876 */
 /* defined above: IPMI_SUPERMICRO_PRODUCT_ID_X9SCM */

@@ -215,6 +215,7 @@ libfreeipmi_la_SOURCES = \
 	sel/ipmi-sel-string-supermicro-h8dg6.c \
 	sel/ipmi-sel-string-supermicro-h8dgu-f.c \
 	sel/ipmi-sel-string-supermicro-h8dgu.c \
+	sel/ipmi-sel-string-supermicro-h8sgl-f.c \
 	sel/ipmi-sel-string-supermicro-x8dt-common.c \
 	sel/ipmi-sel-string-supermicro-x8dtl-common.c \
 	sel/ipmi-sel-string-supermicro-x8dtnplus-f.c \

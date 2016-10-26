@@ -1476,7 +1476,7 @@ _interpret_sel_oem_supermicro_discrete_cpu_temp (ipmi_interpret_ctx_t ctx)
   
   /* Supermicro CPU Temperature Overheat
    * X7DBR-3/X7DB8/X8DTN/X7SBI-LN4/X8DTH/X8DTG/X8DTU/X8DT3-LN4F/X8DTU-6+/X8DTL/X8DTL-3F
-   * X8SIL-F/X9SCL/X9SCM/X8DTN+-F/X8SIE/X9SCA-F-O/H8DGU-F/X9DRi-F/X9DRI-LN4F+/X9SPU-F-O/X9SCM-iiF
+   * X8SIL-F/X9SCL/X9SCM/X8DTN+-F/X8SIE/X9SCA-F-O/H8DGU-F/X9DRi-F/X9DRI-LN4F+/X9SPU-F-O/X9SCM-iiF/H8SGL-F
    *
    * Manufacturer ID = 10876 (Supermicro), 10437 (Peppercon, IPMI card manufacturer),
    *                   47488 (Supermicro, not IANA number, special case)
@@ -1485,7 +1485,7 @@ _interpret_sel_oem_supermicro_discrete_cpu_temp (ipmi_interpret_ctx_t ctx)
    *              1549 (X8DTU-6+ / X8DTU_6PLUS), 6 (X8DTL, X8DTL-3F / X8DTL_3F), 1541 (X8SIL-F / X8SIL_F), 1572 (X9SCL, X9SCM),
    *              1551 (X8DTN+-F / X8DTNPLUS_F), 1037 (X8SIE), 1585 (X9SCA-F-O / X9SCA_F_O), 43025 (H8DGU-F / H8DGU_F),
    *              1576 (X9DRi-F, X9DRI_F), 1574 (X9DRI-LN4F+ / X9DRI_LN4F_PLUS), 1603 (X9SPU-F-O / X9SPU_F_O),
-   *              1600 (X9SCM-iiF / X9SCM_IIF)
+   *              1600 (X9SCM-iiF / X9SCM_IIF), 42769 (H8SGL-F / H8SGL_F)
    * Event/Reading Type Code = 70h (OEM)
    * Sensor Type = C0h (OEM)
    * EventData1 0x02 = "Overheat"
@@ -1577,10 +1577,15 @@ _interpret_sel_oem_supermicro_discrete_cpu_temp (ipmi_interpret_ctx_t ctx)
     return (-1);
 
   if (_interpret_sel_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
-							       IPMI_IANA_ENTERPRISE_ID_MAGNUM_TECHNOLOGIES,
-							       IPMI_SUPERMICRO_PRODUCT_ID_X8DTL_BASE) < 0)
+                                                               IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
+                                                               IPMI_SUPERMICRO_PRODUCT_ID_H8SGL_F) < 0)
     return (-1);
- 
+
+  if (_interpret_sel_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
+                                                               IPMI_IANA_ENTERPRISE_ID_MAGNUM_TECHNOLOGIES,
+                                                               IPMI_SUPERMICRO_PRODUCT_ID_X8DTL_BASE) < 0)
+    return (-1);
+
   return (0);
 }
 
