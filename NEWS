@@ -2,6 +2,7 @@ FreeIPMI 1.5.5 - 09/30/16
 -------------------------
 o Fix invalid flag clear in libipmiconsole that can lead to a potential
   double close on a file descriptor.
+o Support Supermicro H8SGL-F OEM sensors and events.
 
 FreeIPMI 1.5.4 - 09/30/16
 -------------------------
