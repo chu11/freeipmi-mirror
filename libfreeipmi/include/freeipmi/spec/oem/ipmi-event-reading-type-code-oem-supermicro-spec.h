@@ -46,6 +46,7 @@ extern "C" {
  * Supermicro X9DRI-LN4F+ (X9DRI_LN4F_PLUS)
  * Supermicro X9SPU-F-O (X9SPU_F_O)
  * Supermicro X9SCM-iiF (X9SCM_IIF)
+ * Supermicro H8SGL-F (H8SGL_F)
  */
 
 /* achu: not official names, named based on use context */

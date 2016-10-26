@@ -1,4 +1,8 @@
 2016-10-26 Albert Chu <chu11@llnl.gov>
+
+	* Support OEM sensors/sel events for SuperMicro H8SGL-F.
+
+2016-10-26 Albert Chu <chu11@llnl.gov>
 	
 	* doc/freeipmi-bugs-and-workarounds.txt: Document issue with
 	SuperMicro H8SGL-F.

@@ -90,6 +90,7 @@ extern struct sel_string_oem sel_string_oem_sun_x4140;
 extern struct sel_string_oem sel_string_oem_supermicro_h8dg6;
 extern struct sel_string_oem sel_string_oem_supermicro_h8dgu_f;
 extern struct sel_string_oem sel_string_oem_supermicro_h8dgu;
+extern struct sel_string_oem sel_string_oem_supermicro_h8sgl_f;
 extern struct sel_string_oem sel_string_oem_supermicro_magnum_technologies_x8dtl;
 extern struct sel_string_oem sel_string_oem_supermicro_peppercon_common;
 extern struct sel_string_oem sel_string_oem_supermicro_x8dt_common;
@@ -295,6 +296,8 @@ _find_motherboard_oem_support (ipmi_sel_ctx_t ctx,
         (*sel_string_oem) = &sel_string_oem_supermicro_x9spu_f_o;
       else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCM_IIF)
         (*sel_string_oem) = &sel_string_oem_supermicro_x9scm_iif;
+      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8SGL_F)
+        (*sel_string_oem) = &sel_string_oem_supermicro_h8sgl_f;
     }
   else if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_MAGNUM_TECHNOLOGIES) /* Supermicro variant */
     {
