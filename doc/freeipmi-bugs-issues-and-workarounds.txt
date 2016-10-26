@@ -1335,7 +1335,16 @@ Sensors Issue #2: [COMPLIANCE]
   sensor state of 0x40 is returned, but 0x1 through 0x20 are the only
   legal ones.
 
-  Seen on: Dell 2950, SuperMicro X9DRI-LN4F+
+  For example, this output occurs in ipmi-sensors for the SuperMicro
+  H8SGL-F.
+
+  1411 | PS Status | Power Supply | N/A | N/A | N/A | 'Presence
+  detected' 'Unrecognized Event = 0100h' 'Unrecognized Event = 0200h'
+  'Unrecognized Event = 0400h' 'Unrecognized Event = 0800h'
+  'Unrecognized Event = 1000h' 'Unrecognized Event = 2000h'
+  'Unrecognized Event = 4000h'
+
+  Seen on: Dell 2950, SuperMicro X9DRI-LN4F+, SuperMicro H8SGL-F
 
   Resolution: Workaround added to ignore invalid sensor states.
 
