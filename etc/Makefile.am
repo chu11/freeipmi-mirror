@@ -50,12 +50,12 @@ uninstall-local: $(UNINSTALL_DAEMON_SCRIPTS)
 	$(RM) -f $(DESTDIR)$(IPMISELD_CONFIG_FILE_DEFAULT)
 	$(RM) -f $(DESTDIR)$(LIBIPMICONSOLE_CONFIG_FILE_DEFAULT)
 
-uninstall-init-local:
+uninstall-init-scripts:
 	$(RM) -f $(DESTDIR)$(sysconfdir)/init.d/bmc-watchdog
 	$(RM) -f $(DESTDIR)$(sysconfdir)/init.d/ipmidetectd
 	$(RM) -f $(DESTDIR)$(sysconfdir)/init.d/ipmiseld
 
-uninstall-systemd-local:
+uninstall-systemd-scripts:
 	$(RM) -f $(DESTDIR)$(systemdsystemunitdir)/bmc-watchdog.service
 	$(RM) -f $(DESTDIR)$(systemdsystemunitdir)/ipmidetectd.service
 	$(RM) -f $(DESTDIR)$(systemdsystemunitdir)/ipmiseld.service
