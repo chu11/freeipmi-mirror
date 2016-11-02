@@ -1,5 +1,9 @@
 2016-11-02 Albert Chu <chu11@llnl.gov>
 
+	* Tagged freeipmi-1-5-5
+
+2016-11-02 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/Makefile.am, etc/Makefile.am: Fix distcheck.
 
 2016-10-26 Albert Chu <chu11@llnl.gov>
@@ -33,6 +37,10 @@
 	Do not call _ipmiconsole_ctx_connection_init.  Clear only data
 	__ipmiconsole_ctx_connection_cleanup should clear.
 
+2016-09-30 Albert Chu <chu11@llnl.gov>
+
+	* Tagged freeipmi-1-5-4
+	
 2016-09-29 Albert Chu <chu11@llnl.gov>
 
 	* libipmiconsole/ipmiconsole_ctx.c (ipmiconsole_ctx_fds_cleanup):
