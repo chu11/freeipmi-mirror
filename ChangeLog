@@ -1,3 +1,7 @@
+2016-11-02 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/Makefile.am, etc/Makefile.am: Fix distcheck.
+
 2016-10-26 Albert Chu <chu11@llnl.gov>
 
 	* Support OEM sensors/sel events for SuperMicro H8SGL-F.

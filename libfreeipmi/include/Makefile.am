@@ -167,6 +167,7 @@ nobase_include_HEADERS = \
 	freeipmi/spec/oem/ipmi-oem-wistron-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-dell-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-fujitsu-spec.h \
+	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-gigabyte-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-hp-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-intel-node-manager-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-intel-spec.h \
