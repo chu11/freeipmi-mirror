@@ -35,6 +35,7 @@ FreeIPMI general
 - audit, loop on select/poll if EINTR everywhere
 - dynamically loadable modules for SEL OEM extensions?
   - sensor & FRU & etc. too?
+- NLS/gettext support
 
 FreeIPMI new stuff
 ------------------
