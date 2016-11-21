@@ -478,13 +478,15 @@ LAN Session Issue #7: [COMPLIANCE]
   Resolution: Workaround option added to inform software to ignore bad
   checksums.
 
-LAN Session Issue #8: [IMPLEMENTATION]
+LAN Session Issue #8: [INTERPRETATION]
 
-  LAN session defaults to max privilege of CALLBACK, regardless of
-  maximum privilege level requested or maximum configured privilege.
-  Almost all IPMI commands can therefore not be used.  In particular,
-  the "Set Session Privilege" level command cannot be called to raise
-  the privilege to a desired level.
+  LAN session is restricted to callback privilege level when
+  "user_restricted_to_callback" field is enabled.  The field was
+  initially used only for serial connections.  It appears, most
+  vendors ignore the field if a LAN connection is used.  However, some
+  vendors (such as below) honor the field.  By honoring the field, a
+  session can never be authenticated at privilege level above
+  CALLBACK, leading to almost no IPMI commands being able to be used.
 
   Seen on: Gigabyte MD90-FS0-ZB
 
