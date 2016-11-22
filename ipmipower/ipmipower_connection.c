@@ -254,8 +254,8 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
   else
     hostname_first_parse_ptr = hostname;
 
-  if (hostname_first_parse_ptr[0] == '{'
-      && strchr(hostname_first_parse_ptr, '}'))
+  if (hostname_first_parse_ptr[0] == '['
+      && strchr(hostname_first_parse_ptr, ']'))
     {
       char *ptr;
 
@@ -267,7 +267,7 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
 	}
 
       hostname_second_parse_ptr = hostname_second_parse_copy;
-      ptr = strchr (hostname_second_parse_copy, '}');
+      ptr = strchr (hostname_second_parse_copy, ']');
       *ptr = '\0';
       ptr++;
       if (*ptr == ':')

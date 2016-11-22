@@ -45,6 +45,7 @@
 #include <ctype.h>
 #include <sys/param.h>
 #include <unistd.h>
+#include <arpa/inet.h>
 
 #include "hostlist.h"
 
@@ -1539,17 +1540,29 @@ _hostlist_create_bracketed(const char *hostlist, char *sep, char *r_op)
             *p++ = '\0';
 
             if ((q = strchr(p, ']'))) {
-                *q = '\0';
-                nr = _parse_range_list(p, ranges, MAX_RANGES);
-                if (nr < 0) 
-                    goto error;
+                struct sockaddr_in6 addr;
+                *q++ = '\0';
+                /* Now remove any trailing ":digits" */
+                if (*q == ':') {
+                    q++;
+                    while (isdigit(*q)) q++;
+                }
+                /* For this to be a (valid) bracketed IPv6 address, the next
+                * character needs to be a separtor, and we need to have an IPv6
+                * address. */
+                if (strchr(sep, *q) != NULL
+                    && inet_pton(AF_INET6, p, &addr) == 1) {
+                    hostlist_push_host(new, cur_tok);
+                } else {
+                    nr = _parse_range_list(p, ranges, MAX_RANGES);
+                    if (nr < 0)
+                        goto error;
 
-                if (*(++q) != '\0')
-                    _push_range_list_with_suffix (new, prefix, q, ranges, nr);
-                else
-                    _push_range_list(new, prefix, ranges, nr);
-
-                
+                    if (*(++q) != '\0')
+                        _push_range_list_with_suffix (new, prefix, q, ranges, nr);
+                    else
+                        _push_range_list(new, prefix, ranges, nr);
+                }
             } else
                 hostlist_push_host(new, cur_tok);
 
