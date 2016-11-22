@@ -209,7 +209,7 @@ _eliminate_nodes (void)
 }
 
 static void
-_sendto (cbuf_t cbuf, int fd, struct sockaddr_in *destaddr)
+_sendto (cbuf_t cbuf, int fd, struct sockaddr_in6 *destaddr)
 {
   int n, rv;
   uint8_t buf[IPMIPOWER_PACKET_BUFLEN];
@@ -234,7 +234,7 @@ _sendto (cbuf_t cbuf, int fd, struct sockaddr_in *destaddr)
                               n,
                               0,
                               (struct sockaddr *)destaddr,
-                              sizeof (struct sockaddr_in));
+                              sizeof (struct sockaddr_in6));
       else
         {
           if (ipmi_is_ipmi_1_5_packet (buf, n))
@@ -243,14 +243,14 @@ _sendto (cbuf_t cbuf, int fd, struct sockaddr_in *destaddr)
                                   n,
                                   0,
                                   (struct sockaddr *)destaddr,
-                                  sizeof (struct sockaddr_in));
+                                  sizeof (struct sockaddr_in6));
           else
             rv = ipmi_rmcpplus_sendto (fd,
                                        buf,
                                        n,
                                        0,
                                        (struct sockaddr *)destaddr,
-                                       sizeof (struct sockaddr_in));
+                                       sizeof (struct sockaddr_in6));
         }
     } while (rv < 0 && errno == EINTR);
 
@@ -269,12 +269,13 @@ _sendto (cbuf_t cbuf, int fd, struct sockaddr_in *destaddr)
 }
 
 static void
-_recvfrom (cbuf_t cbuf, int fd, struct sockaddr_in *srcaddr)
+_recvfrom (cbuf_t cbuf, int fd, struct sockaddr_in6 *srcaddr)
 {
   int n, rv, dropped = 0;
   uint8_t buf[IPMIPOWER_PACKET_BUFLEN];
-  struct sockaddr_in from;
-  unsigned int fromlen = sizeof (struct sockaddr_in);
+  struct sockaddr_in6 from;
+  struct sockaddr_in *from4;
+  unsigned int fromlen = sizeof (struct sockaddr_in6);
 
   do
     {
@@ -343,9 +344,11 @@ _recvfrom (cbuf_t cbuf, int fd, struct sockaddr_in *srcaddr)
       exit (EXIT_FAILURE);
     }
 
+  from4 = (struct sockaddr_in*)&from;
   /* Don't store if this packet is strange for some reason */
-  if (from.sin_family != AF_INET
-      || from.sin_addr.s_addr != srcaddr->sin_addr.s_addr)
+  if (!(from4->sin_family == AF_INET
+	&& from4->sin_addr.s_addr == ((struct sockaddr_in*)srcaddr)->sin_addr.s_addr) &&
+      !(from.sin6_family == AF_INET6 && memcmp (&from.sin6_addr, &srcaddr->sin6_addr, sizeof(from.sin6_addr)) == 0))
     return;
 
   /* cbuf should be empty, but if it isn't, empty it */

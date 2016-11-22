@@ -1,3 +1,7 @@
+2016-12-06 LaMont Jones <lamont@mmjgroup.com>
+
+	* ipmipower/: Initial pass at IPv6 support.
+
 2016-12-05 Albert Chu <chu11@llnl.gov>
 
 	Support IPv6 addresses in FreeIPMI
