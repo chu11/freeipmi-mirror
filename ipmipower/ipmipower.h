@@ -467,7 +467,7 @@ struct ipmipower_connection
   char hostname[MAXHOSTNAMELEN+1];
   /* for oem power types ; extra arg passed in via "+extra" at end of hostname */
   struct ipmipower_connection_extra_arg *extra_args;
-  struct sockaddr_in destaddr;
+  struct sockaddr_in6 destaddr;
 
   /* for eliminate option */
   int skip;
