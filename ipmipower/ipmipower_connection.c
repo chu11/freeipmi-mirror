@@ -61,8 +61,6 @@
 #include "cbuf.h"
 #include "hostlist.h"
 
-extern int h_errno;
-
 extern cbuf_t ttyout;
 
 extern struct ipmipower_arguments cmd_args;
@@ -339,17 +337,13 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
   ai_hints.ai_family = AF_UNSPEC;
   ai_hints.ai_socktype = SOCK_DGRAM;
   ai_hints.ai_flags = (AI_V4MAPPED | AI_ADDRCONFIG);
-  if ((result = getaddrinfo (ic->hostname, port_str, &ai_hints, &ai_res )) < 0)
+  if ((result = getaddrinfo (ic->hostname, port_str, &ai_hints, &ai_res )) != 0)
     {
-      if (h_errno == HOST_NOT_FOUND)
+      if (result == EAI_NODATA)
         ipmipower_output (IPMIPOWER_MSG_TYPE_HOSTNAME_INVALID, ic->hostname, NULL);
       else
         {
-#if HAVE_HSTRERROR
-          IPMIPOWER_ERROR (("getaddrinfo() %s: %s", ic->hostname, hstrerror (h_errno)));
-#else /* !HAVE_HSTRERROR */
-          IPMIPOWER_ERROR (("getaddrinfo() %s: h_errno = %d", ic->hostname, h_errno));
-#endif /* !HAVE_HSTRERROR */
+          IPMIPOWER_ERROR (("getaddrinfo() %s: %s", ic->hostname, gai_strerror (result)));
           exit (EXIT_FAILURE);
         }
       goto cleanup;
@@ -401,7 +395,7 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
       break;
     }
 
-  if (ai == NULL)
+  if (!ai)
     {
       IPMIPOWER_ERROR (("socket/bind: %s", strerror (errno)));
       exit (EXIT_FAILURE);
