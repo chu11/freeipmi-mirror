@@ -14,6 +14,8 @@ libmiscutil_la_SOURCES = \
 	error.h \
 	fd.c \
 	fd.h \
+	fi_hostlist.c \
+	fi_hostlist.h \
 	hash.c \
 	hash.h \
 	heap.c \
