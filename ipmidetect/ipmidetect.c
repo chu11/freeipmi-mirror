@@ -64,7 +64,7 @@
 #include "freeipmi-portability.h"
 #include "error.h"
 #include "fd.h"
-#include "hostlist.h"
+#include "fi_hostlist.h"
 
 /*
  * Definitions
@@ -98,20 +98,20 @@ struct ipmidetect_arguments cmd_args;
 static void
 _get_input_nodes (char *buf, int buflen, int which)
 {
-  hostlist_t hl = NULL;
-  hostlist_iterator_t iter = NULL;
+  fi_hostlist_t hl = NULL;
+  fi_hostlist_iterator_t iter = NULL;
   char *node = NULL;
 
   assert (buf && buflen);
   assert (which == IPMIDETECT_DETECTED_NODES || which == IPMIDETECT_UNDETECTED_NODES);
 
-  if (!(hl = hostlist_create (NULL)))
-    err_exit ("hostlist_create");
+  if (!(hl = fi_hostlist_create (NULL)))
+    err_exit ("fi_hostlist_create");
 
-  if (!(iter = hostlist_iterator_create (cmd_args.inputted_nodes)))
-    err_exit ("hostlist_iterator_create");
+  if (!(iter = fi_hostlist_iterator_create (cmd_args.inputted_nodes)))
+    err_exit ("fi_hostlist_iterator_create");
 
-  while ((node = hostlist_next (iter)))
+  while ((node = fi_hostlist_next (iter)))
     {
       int rv;
 
@@ -136,20 +136,20 @@ _get_input_nodes (char *buf, int buflen, int which)
 
       if (rv)
         {
-          if (!hostlist_push_host (hl, node))
-            err_exit ("hostlist_push_host");
+          if (!fi_hostlist_push_host (hl, node))
+            err_exit ("fi_hostlist_push_host");
         }
 
       free (node);
     }
 
-  hostlist_sort (hl);
+  fi_hostlist_sort (hl);
 
-  if (hostlist_ranged_string (hl, buflen, buf) < 0)
-    err_exit ("hostlist_ranged_string");
+  if (fi_hostlist_ranged_string (hl, buflen, buf) < 0)
+    err_exit ("fi_hostlist_ranged_string");
 
-  hostlist_iterator_destroy (iter);
-  hostlist_destroy (hl);
+  fi_hostlist_iterator_destroy (iter);
+  fi_hostlist_destroy (hl);
 }
 
 /*
@@ -189,22 +189,22 @@ _get_all_nodes (char *buf, int buflen, int which)
 static void
 _get_nodes (char *buf, int buflen, int which, int *count)
 {
-  hostlist_t hl = NULL;
+  fi_hostlist_t hl = NULL;
 
   assert (buf && buflen > 0 && count);
   assert (which == IPMIDETECT_DETECTED_NODES || which == IPMIDETECT_UNDETECTED_NODES);
   
-  if (hostlist_count (cmd_args.inputted_nodes) > 0)
+  if (fi_hostlist_count (cmd_args.inputted_nodes) > 0)
     _get_input_nodes (buf, buflen, which);
   else
     _get_all_nodes (buf, buflen, which);
 
-  if (!(hl = hostlist_create (buf)))
-    err_exit ("hostlist_create");
+  if (!(hl = fi_hostlist_create (buf)))
+    err_exit ("fi_hostlist_create");
 
-  *count = hostlist_count (hl);
+  *count = fi_hostlist_count (hl);
 
-  hostlist_destroy (hl);
+  fi_hostlist_destroy (hl);
 }
 
 /*
@@ -222,17 +222,17 @@ _output_nodes (char *nodebuf)
   else
     {
       char tbuf[IPMIDETECT_BUFFERLEN];
-      hostlist_t hl = NULL;
+      fi_hostlist_t hl = NULL;
       char *ptr;
 
       /* output nodes separated by some break type */
       memset (tbuf, '\0', IPMIDETECT_BUFFERLEN);
 
-      if (!(hl = hostlist_create (nodebuf)))
-        err_exit ("hostlist_create");
+      if (!(hl = fi_hostlist_create (nodebuf)))
+        err_exit ("fi_hostlist_create");
 
-      if (hostlist_deranged_string (hl, IPMIDETECT_BUFFERLEN, tbuf) < 0)
-        err_exit ("hostlist_deranged_string");
+      if (fi_hostlist_deranged_string (hl, IPMIDETECT_BUFFERLEN, tbuf) < 0)
+        err_exit ("fi_hostlist_deranged_string");
 
       /* convert commas to appropriate break types */
       if (cmd_args.output_format != ',')
@@ -247,7 +247,7 @@ _output_nodes (char *nodebuf)
         fprintf (stdout, "\n");
 
       fprintf (stdout,"%s\n", tbuf);
-      hostlist_destroy (hl);
+      fi_hostlist_destroy (hl);
     }
 }
 
@@ -399,7 +399,7 @@ main (int argc, char *argv[])
   exit_val = _output_data ();
 
   (void)ipmidetect_handle_destroy (handle);
-  hostlist_destroy (cmd_args.inputted_nodes);
+  fi_hostlist_destroy (cmd_args.inputted_nodes);
 
   exit (exit_val);
 }

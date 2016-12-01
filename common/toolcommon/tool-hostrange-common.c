@@ -31,21 +31,21 @@
 #include <ipmidetect.h>
 
 #include "freeipmi-portability.h"
-#include "hostlist.h"
+#include "fi_hostlist.h"
 #include "pstdout.h"
 #include "tool-hostrange-common.h"
 
-#define HOSTLIST_BUFLEN 1024
+#define FI_HOSTLIST_BUFLEN 1024
 
 static int
 eliminate_nodes (char **hosts)
 {
-  hostlist_t hl = NULL;
-  hostlist_t hlnew = NULL;
-  hostlist_iterator_t hitr = NULL;
+  fi_hostlist_t hl = NULL;
+  fi_hostlist_t hlnew = NULL;
+  fi_hostlist_iterator_t hitr = NULL;
   ipmidetect_t id = NULL;
   char *host = NULL;
-  char hostbuf[HOSTLIST_BUFLEN + 1];
+  char hostbuf[FI_HOSTLIST_BUFLEN + 1];
   int rv = -1;
 
   assert (hosts);
@@ -73,31 +73,31 @@ eliminate_nodes (char **hosts)
       goto cleanup;
     }
 
-  if (!(hl = hostlist_create (*hosts)))
+  if (!(hl = fi_hostlist_create (*hosts)))
     {
       fprintf (stderr,
-               "hostlist_create: %s\n",
+               "fi_hostlist_create: %s\n",
                strerror (errno));
       goto cleanup;
     }
 
-  if (!(hlnew = hostlist_create (*hosts)))
+  if (!(hlnew = fi_hostlist_create (*hosts)))
     {
       fprintf (stderr,
-               "hostlist_create: %s\n",
+               "fi_hostlist_create: %s\n",
                strerror (errno));
       goto cleanup;
     }
 
-  if (!(hitr = hostlist_iterator_create (hl)))
+  if (!(hitr = fi_hostlist_iterator_create (hl)))
     {
       fprintf (stderr,
-               "hostlist_iterator_create: %s\n",
+               "fi_hostlist_iterator_create: %s\n",
                strerror (errno));
       goto cleanup;
     }
 
-  while ((host = hostlist_next (hitr)))
+  while ((host = fi_hostlist_next (hitr)))
     {
       int ret;
 
@@ -113,24 +113,24 @@ eliminate_nodes (char **hosts)
         }
 
       if (!ret)
-        hostlist_delete (hlnew, host);
+        fi_hostlist_delete (hlnew, host);
 
       free (host);
     }
   host = NULL;
 
-  if (!hostlist_count (hlnew))
+  if (!fi_hostlist_count (hlnew))
     {
       rv = 0;
       goto cleanup;
     }
  
-  memset (hostbuf, '\0', HOSTLIST_BUFLEN + 1);
+  memset (hostbuf, '\0', FI_HOSTLIST_BUFLEN + 1);
  
-  if (hostlist_ranged_string (hlnew, HOSTLIST_BUFLEN, hostbuf) < 0)
+  if (fi_hostlist_ranged_string (hlnew, FI_HOSTLIST_BUFLEN, hostbuf) < 0)
     {
       fprintf (stderr,
-               "hostlist_ranged_string: truncation\n");
+               "fi_hostlist_ranged_string: truncation\n");
       goto cleanup;
     }
 
@@ -141,16 +141,16 @@ eliminate_nodes (char **hosts)
       goto cleanup;
     }
 
-  rv = hostlist_count (hlnew);
+  rv = fi_hostlist_count (hlnew);
  cleanup:
   if (id)
     ipmidetect_handle_destroy (id);
   if (hitr)
-    hostlist_iterator_destroy (hitr);
+    fi_hostlist_iterator_destroy (hitr);
   if (hl)
-    hostlist_destroy (hl);
+    fi_hostlist_destroy (hl);
   if (hlnew)
-    hostlist_destroy (hlnew);
+    fi_hostlist_destroy (hlnew);
   free (host);
   return (rv);
 }

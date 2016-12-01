@@ -70,7 +70,7 @@
 
 #include "freeipmi-portability.h"
 #include "cbuf.h"
-#include "hostlist.h"
+#include "fi_hostlist.h"
 #include "tool-common.h"
 #include "tool-util-common.h"
 
@@ -84,9 +84,9 @@ struct ipmipower_arguments cmd_args;
 struct ipmipower_connection *ics = NULL;
 unsigned int ics_len = 0;
 
-/* Array of hostlists for short output */
+/* Array of fi_hostlists for short output */
 int output_hostrange_flag = 0;
-hostlist_t output_hostrange[IPMIPOWER_MSG_TYPE_NUM_ENTRIES];
+fi_hostlist_t output_hostrange[IPMIPOWER_MSG_TYPE_NUM_ENTRIES];
 
 /* Array of outputs for determining exit value */
 unsigned int output_counts[IPMIPOWER_MSG_TYPE_NUM_ENTRIES];
@@ -133,9 +133,9 @@ _ipmipower_setup (void)
 
   for (i = 0; i < IPMIPOWER_MSG_TYPE_NUM_ENTRIES; i++)
     {
-      if (!(output_hostrange[i] = hostlist_create (NULL)))
+      if (!(output_hostrange[i] = fi_hostlist_create (NULL)))
         {
-          IPMIPOWER_ERROR (("hostlist_create: %s", strerror (errno)));
+          IPMIPOWER_ERROR (("fi_hostlist_create: %s", strerror (errno)));
           exit (EXIT_FAILURE);
         }
     }
@@ -157,7 +157,7 @@ _ipmipower_cleanup (void)
   ipmipower_connection_array_destroy (ics, ics_len);
 
   for (i = 0; i < IPMIPOWER_MSG_TYPE_NUM_ENTRIES; i++)
-    hostlist_destroy (output_hostrange[i]);
+    fi_hostlist_destroy (output_hostrange[i]);
 }
 
 static void

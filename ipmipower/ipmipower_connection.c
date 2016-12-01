@@ -59,7 +59,7 @@
 
 #include "freeipmi-portability.h"
 #include "cbuf.h"
-#include "hostlist.h"
+#include "fi_hostlist.h"
 
 extern int h_errno;
 
@@ -425,35 +425,35 @@ _connection_add_extra_arg (struct ipmipower_connection *ic, const char *extra_ar
   if (cmd_args.oem_power_type == IPMIPOWER_OEM_POWER_TYPE_C410X
       && extra_arg)
     {
-      hostlist_t h = NULL;
+      fi_hostlist_t h = NULL;
 
-      /* if invalid to hostlist, it still may be valid in general, so fall through */
-      if (!(h = hostlist_create (extra_arg)))
+      /* if invalid to fi_hostlist, it still may be valid in general, so fall through */
+      if (!(h = fi_hostlist_create (extra_arg)))
         goto one_extra_arg;
 
-      if (hostlist_count (h) > 1)
+      if (fi_hostlist_count (h) > 1)
         {
-          hostlist_iterator_t hitr = NULL;
+          fi_hostlist_iterator_t hitr = NULL;
           char *extrastr;
 
-          if (!(hitr = hostlist_iterator_create (h)))
+          if (!(hitr = fi_hostlist_iterator_create (h)))
             {
-              IPMIPOWER_ERROR (("hostlist_iterator_create: %s", strerror (errno)));
+              IPMIPOWER_ERROR (("fi_hostlist_iterator_create: %s", strerror (errno)));
               exit (EXIT_FAILURE);
             }
           
-          while ((extrastr = hostlist_next (hitr)))
+          while ((extrastr = fi_hostlist_next (hitr)))
             {
               _connection_add_extra_arg_base (ic, extrastr);
               free (extrastr);
             }
           
-          hostlist_iterator_destroy (hitr);
-          hostlist_destroy (h);
+          fi_hostlist_iterator_destroy (hitr);
+          fi_hostlist_destroy (h);
           return;
         }
       
-      hostlist_destroy (h);
+      fi_hostlist_destroy (h);
       goto one_extra_arg;
     }
 
@@ -464,9 +464,9 @@ _connection_add_extra_arg (struct ipmipower_connection *ic, const char *extra_ar
 int
 _hostname_count (const char *hostname)
 {
-  hostlist_t h = NULL;
-  hostlist_t h2 = NULL;
-  hostlist_iterator_t hitr = NULL;
+  fi_hostlist_t h = NULL;
+  fi_hostlist_t h2 = NULL;
+  fi_hostlist_iterator_t hitr = NULL;
   char *hstr = NULL;
   int rv = -1;
 
@@ -480,7 +480,7 @@ _hostname_count (const char *hostname)
    * foohost[1-3]+[1-3] is 3 hosts
    *
    * The issue is that makes this complicated is when something like
-   * foohost[1-3]+[1-3] is parsed with the hostlist library, it can be
+   * foohost[1-3]+[1-3] is parsed with the fi_hostlist library, it can be
    * parsed as foohost[1-3]+1, foohost[1-3]+2, foohost[1-3]+3.  So it
    * can appear like 9 hosts when in fact it is 3.
    *
@@ -488,27 +488,27 @@ _hostname_count (const char *hostname)
    * everything appropriately.
    */
 
-  if (!(h = hostlist_create (hostname)))
+  if (!(h = fi_hostlist_create (hostname)))
     {
       ipmipower_output (IPMIPOWER_MSG_TYPE_HOSTNAME_INVALID, hostname, NULL);
       goto cleanup;
     }
 
-  if (!(h2 = hostlist_create (NULL)))
+  if (!(h2 = fi_hostlist_create (NULL)))
     {
-      IPMIPOWER_ERROR (("hostlist_create: %s", strerror (errno)));
+      IPMIPOWER_ERROR (("fi_hostlist_create: %s", strerror (errno)));
       exit (EXIT_FAILURE);
     }
 
-  hostlist_uniq (h);
+  fi_hostlist_uniq (h);
 
-  if (!(hitr = hostlist_iterator_create (h)))
+  if (!(hitr = fi_hostlist_iterator_create (h)))
     {
-      IPMIPOWER_ERROR (("hostlist_iterator_create: %s", strerror (errno)));
+      IPMIPOWER_ERROR (("fi_hostlist_iterator_create: %s", strerror (errno)));
       exit (EXIT_FAILURE);
     }
       
-  while ((hstr = hostlist_next (hitr)))
+  while ((hstr = fi_hostlist_next (hitr)))
     {
       char *ptr;
       
@@ -518,23 +518,23 @@ _hostname_count (const char *hostname)
             *ptr = '\0';
         }
 
-      if (!hostlist_push (h2, hstr))
+      if (!fi_hostlist_push (h2, hstr))
         {
-          IPMIPOWER_ERROR (("hostlist_push: %s", strerror(errno)));
+          IPMIPOWER_ERROR (("fi_hostlist_push: %s", strerror(errno)));
           exit (EXIT_FAILURE);
         }
       
       free (hstr);
     }
 
-  hostlist_uniq (h2);
+  fi_hostlist_uniq (h2);
   
-  rv = hostlist_count (h2);
+  rv = fi_hostlist_count (h2);
 
  cleanup:
-  hostlist_iterator_destroy (hitr);
-  hostlist_destroy (h);
-  hostlist_destroy (h2);
+  fi_hostlist_iterator_destroy (hitr);
+  fi_hostlist_destroy (h);
+  fi_hostlist_destroy (h2);
   return (rv);
 }
 
@@ -542,10 +542,10 @@ struct ipmipower_connection *
 ipmipower_connection_array_create (const char *hostname, unsigned int *len)
 {
   int index = 0;
-  hostlist_t h = NULL;
-  hostlist_iterator_t hitr = NULL;
-  hostlist_t h2 = NULL;
-  hostlist_iterator_t h2itr = NULL;
+  fi_hostlist_t h = NULL;
+  fi_hostlist_iterator_t hitr = NULL;
+  fi_hostlist_t h2 = NULL;
+  fi_hostlist_iterator_t h2itr = NULL;
   char *hstr = NULL;
   char *h2str = NULL;
   struct ipmipower_connection *ics = NULL;
@@ -575,29 +575,29 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
       ics[i].ping_fd = -1;
     }
  
-  if (!(h = hostlist_create (hostname)))
+  if (!(h = fi_hostlist_create (hostname)))
     {
       ipmipower_output (IPMIPOWER_MSG_TYPE_HOSTNAME_INVALID, hostname, NULL);
       errflag++;
       goto cleanup;
     }
 
-  hostlist_uniq (h);
+  fi_hostlist_uniq (h);
 
-  if (!(hitr = hostlist_iterator_create (h)))
+  if (!(hitr = fi_hostlist_iterator_create (h)))
     {
-      IPMIPOWER_ERROR (("hostlist_iterator_create: %s", strerror (errno)));
+      IPMIPOWER_ERROR (("fi_hostlist_iterator_create: %s", strerror (errno)));
       exit (EXIT_FAILURE);
     }
 
-  while ((hstr = hostlist_next (hitr)))
+  while ((hstr = fi_hostlist_next (hitr)))
     {
-      /* achu: The double hostlist_create is to handle the corner case
+      /* achu: The double fi_hostlist_create is to handle the corner case
        * of someone inputting.
        *
        * foohost[1-3]+[1-3]
        *
-       * We need to double hostlist to get all the hosts and extra
+       * We need to double fi_hostlist to get all the hosts and extra
        * args.
        *
        * Under most scenarios, this is just inefficient code.
@@ -607,22 +607,22 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
        * bunch of wacky if-check scenarios to make it more efficient.
        */
 
-      if (!(h2 = hostlist_create (hstr)))
+      if (!(h2 = fi_hostlist_create (hstr)))
         {
           ipmipower_output (IPMIPOWER_MSG_TYPE_HOSTNAME_INVALID, hostname, NULL);
           errflag++;
           goto cleanup;
         }
       
-      hostlist_uniq (h2);
+      fi_hostlist_uniq (h2);
 
-      if (!(h2itr = hostlist_iterator_create (h2)))
+      if (!(h2itr = fi_hostlist_iterator_create (h2)))
         {
-          IPMIPOWER_ERROR (("hostlist_iterator_create: %s", strerror (errno)));
+          IPMIPOWER_ERROR (("fi_hostlist_iterator_create: %s", strerror (errno)));
           exit (EXIT_FAILURE);
         }
 
-      while ((h2str = hostlist_next (h2itr)))
+      while ((h2str = fi_hostlist_next (h2itr)))
         {
           /* We need to see if the host has already been saved to the
            * ics array.  It's possible under many circumstances with
@@ -703,8 +703,8 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
           index++;
         }
 
-      hostlist_iterator_destroy (h2itr);
-      hostlist_destroy (h2);
+      fi_hostlist_iterator_destroy (h2itr);
+      fi_hostlist_destroy (h2);
       h2itr = NULL;
       h2 = NULL;
       free (hstr);
@@ -712,10 +712,10 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
     }
 
  cleanup:
-  hostlist_iterator_destroy (h2itr);
-  hostlist_destroy (h2);
-  hostlist_iterator_destroy (hitr);
-  hostlist_destroy (h);
+  fi_hostlist_iterator_destroy (h2itr);
+  fi_hostlist_destroy (h2);
+  fi_hostlist_iterator_destroy (hitr);
+  fi_hostlist_destroy (h);
   free (h2str);
   free (hstr);
 

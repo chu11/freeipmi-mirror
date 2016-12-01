@@ -65,8 +65,8 @@ _config_default (void)
   conf.ipmiping_period = IPMIDETECTD_IPMIPING_PERIOD;
   conf.ipmidetectd_server_port = IPMIDETECTD_SERVER_PORT_DEFAULT;
 
-  if (!(conf.hosts = hostlist_create (NULL)))
-    err_exit ("hostlist_create: %s", strerror (errno));
+  if (!(conf.hosts = fi_hostlist_create (NULL)))
+    err_exit ("fi_hostlist_create: %s", strerror (errno));
 }
 
 static int
@@ -79,8 +79,8 @@ _cb_host (conffile_t cf,
           void *app_ptr,
           int app_data)
 {
-  if (!hostlist_push (conf.hosts, data->string))
-    err_exit ("hostlist_push: %s", strerror (errno));
+  if (!fi_hostlist_push (conf.hosts, data->string))
+    err_exit ("fi_hostlist_push: %s", strerror (errno));
   return (0);
 }
 
@@ -189,6 +189,6 @@ ipmidetectd_config_setup (int argc, char **argv)
   _config_default ();
   _config_file_parse ();
 
-  if (!hostlist_count (conf.hosts))
+  if (!fi_hostlist_count (conf.hosts))
     err_exit ("No nodes configured");
 }

@@ -47,7 +47,7 @@
 #include "freeipmi-portability.h"
 #include "error.h"
 #include "fd.h"
-#include "hostlist.h"
+#include "fi_hostlist.h"
 
 const char *argp_program_version =
   "ipmidetect - " PACKAGE_VERSION "\n"
@@ -107,7 +107,7 @@ _push_inputted_nodes (struct ipmidetect_arguments *cmd_args,
   if (strchr (nodes, '.'))
     err_exit ("nodes must be listed in short hostname format");
 
-  if (!hostlist_push (cmd_args->inputted_nodes, nodes))
+  if (!fi_hostlist_push (cmd_args->inputted_nodes, nodes))
     err_exit ("nodes improperly formatted");
 }
 
@@ -185,7 +185,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
         _read_nodes_from_stdin (cmd_args);
       else
         _push_inputted_nodes (cmd_args, arg);
-      hostlist_uniq (cmd_args->inputted_nodes);
+      fi_hostlist_uniq (cmd_args->inputted_nodes);
       break;
     case ARGP_KEY_END:
       break;
@@ -208,8 +208,8 @@ ipmidetect_argp_parse (int argc, char **argv, struct ipmidetect_arguments *cmd_a
   cmd_args->output_type = IPMIDETECT_DETECTED_AND_UNDETECTED_NODES;
   cmd_args->output_format = 0;
   
-  if (!(cmd_args->inputted_nodes = hostlist_create (NULL)))
-    err_exit ("hostlist_create");
+  if (!(cmd_args->inputted_nodes = fi_hostlist_create (NULL)))
+    err_exit ("fi_hostlist_create");
 
   argp_parse (&cmdline_argp,
               argc,

@@ -57,7 +57,7 @@
 
 #include "freeipmi-portability.h"
 #include "cbuf.h"
-#include "hostlist.h"
+#include "fi_hostlist.h"
 #include "pstdout.h"
 #include "tool-cmdline-common.h"
 #include "tool-util-common.h"
@@ -471,10 +471,10 @@ _cmd_power_all_nodes (ipmipower_power_cmd_t cmd)
 static void
 _cmd_power_specific_nodes (char **argv, ipmipower_power_cmd_t cmd)
 {
-  hostlist_t h = NULL;
-  hostlist_iterator_t hitr = NULL;
-  hostlist_t h2 = NULL;
-  hostlist_iterator_t h2itr = NULL;
+  fi_hostlist_t h = NULL;
+  fi_hostlist_iterator_t hitr = NULL;
+  fi_hostlist_t h2 = NULL;
+  fi_hostlist_iterator_t h2itr = NULL;
   char *hstr = NULL; 
   char *h2str = NULL;
 
@@ -482,28 +482,28 @@ _cmd_power_specific_nodes (char **argv, ipmipower_power_cmd_t cmd)
   assert (IPMIPOWER_POWER_CMD_VALID (cmd));
   assert (IPMIPOWER_OEM_POWER_TYPE_VALID (cmd_args.oem_power_type));
       
-  if (!(h = hostlist_create (argv[1])))
+  if (!(h = fi_hostlist_create (argv[1])))
     {
       ipmipower_cbuf_printf (ttyout, "invalid hostname(s) specified\n");
       goto cleanup;
     }
   
-  if (!(hitr = hostlist_iterator_create (h)))
+  if (!(hitr = fi_hostlist_iterator_create (h)))
     {
-      IPMIPOWER_ERROR (("hostlist_iterator_create: %s", strerror (errno)));
+      IPMIPOWER_ERROR (("fi_hostlist_iterator_create: %s", strerror (errno)));
       exit (EXIT_FAILURE);
     }
   
   memset (output_counts, '\0', sizeof (output_counts));
 
-  while ((hstr = hostlist_next (hitr)))
+  while ((hstr = fi_hostlist_next (hitr)))
     {
-      /* achu: The double hostlist_create is to handle the corner case
+      /* achu: The double fi_hostlist_create is to handle the corner case
        * of someone inputting.
        *
        * foohost[1-3]+[1-3]
        *
-       * We need to double hostlist to get all the hosts and extra
+       * We need to double fi_hostlist to get all the hosts and extra
        * args.
        *
        * Under most scenarios, this is just inefficient code.  But we
@@ -513,21 +513,21 @@ _cmd_power_specific_nodes (char **argv, ipmipower_power_cmd_t cmd)
        * We'll revisit as necessary in the future.
        */
 
-      if (!(h2 = hostlist_create (hstr)))
+      if (!(h2 = fi_hostlist_create (hstr)))
         {
           ipmipower_cbuf_printf (ttyout, "invalid hostname(s) specified\n");
           goto cleanup;
         }
 
-      hostlist_uniq (h2);
+      fi_hostlist_uniq (h2);
 
-      if (!(h2itr = hostlist_iterator_create (h2)))
+      if (!(h2itr = fi_hostlist_iterator_create (h2)))
         {
-          IPMIPOWER_ERROR (("hostlist_iterator_create: %s", strerror (errno)));
+          IPMIPOWER_ERROR (("fi_hostlist_iterator_create: %s", strerror (errno)));
           exit (EXIT_FAILURE);
         }
 
-      while ((h2str = hostlist_next (h2itr)))
+      while ((h2str = fi_hostlist_next (h2itr)))
         {
           char *h2str_extra_arg = NULL;
           int i;
@@ -590,17 +590,17 @@ _cmd_power_specific_nodes (char **argv, ipmipower_power_cmd_t cmd)
           h2str = NULL;
         }
       
-      hostlist_iterator_destroy (h2itr);
-      hostlist_destroy (h2);
+      fi_hostlist_iterator_destroy (h2itr);
+      fi_hostlist_destroy (h2);
       h2itr = NULL;
       h2 = NULL;
     }
   
  cleanup:
-  hostlist_iterator_destroy (h2itr);
-  hostlist_destroy (h2);
-  hostlist_iterator_destroy (hitr);
-  hostlist_destroy (h);
+  fi_hostlist_iterator_destroy (h2itr);
+  fi_hostlist_destroy (h2);
+  fi_hostlist_iterator_destroy (hitr);
+  fi_hostlist_destroy (h);
   free (hstr);
   free (h2str);
 }
@@ -771,9 +771,9 @@ _cmd_config (void)
     {
 #ifndef NDEBUG
       int i;
-      hostlist_t discovered = NULL;
-      hostlist_t undiscovered = NULL;
-      hostlist_t badconnection = NULL;
+      fi_hostlist_t discovered = NULL;
+      fi_hostlist_t undiscovered = NULL;
+      fi_hostlist_t badconnection = NULL;
       char buf[IPMIPOWER_OUTPUT_BUFLEN];
       int rv;
 #endif /* NDEBUG */
@@ -783,33 +783,33 @@ _cmd_config (void)
                              cmd_args.common_args.hostname);
 
 #ifndef NDEBUG
-      if (!(discovered = hostlist_create (NULL)))
+      if (!(discovered = fi_hostlist_create (NULL)))
         goto cleanup;
-      if (!(undiscovered = hostlist_create (NULL)))
+      if (!(undiscovered = fi_hostlist_create (NULL)))
         goto cleanup;
-      if (!(badconnection = hostlist_create (NULL)))
+      if (!(badconnection = fi_hostlist_create (NULL)))
         goto cleanup;
 
       for (i = 0; i < ics_len; i++)
         {
           if (ics[i].discover_state == IPMIPOWER_DISCOVER_STATE_DISCOVERED)
-            rv = hostlist_push_host (discovered, ics[i].hostname);
+            rv = fi_hostlist_push_host (discovered, ics[i].hostname);
           else if (ics[i].discover_state == IPMIPOWER_DISCOVER_STATE_UNDISCOVERED)
-            rv = hostlist_push_host (undiscovered, ics[i].hostname);
+            rv = fi_hostlist_push_host (undiscovered, ics[i].hostname);
           else
-            rv = hostlist_push_host (badconnection, ics[i].hostname);
+            rv = fi_hostlist_push_host (badconnection, ics[i].hostname);
           
           if (!rv)
             goto cleanup;
         }
       
-      hostlist_sort (discovered);
-      hostlist_sort (undiscovered);
-      hostlist_sort (badconnection);
+      fi_hostlist_sort (discovered);
+      fi_hostlist_sort (undiscovered);
+      fi_hostlist_sort (badconnection);
 
-      if ((rv = hostlist_ranged_string (discovered, IPMIPOWER_OUTPUT_BUFLEN, buf)) < 0)
+      if ((rv = fi_hostlist_ranged_string (discovered, IPMIPOWER_OUTPUT_BUFLEN, buf)) < 0)
         {
-          IPMIPOWER_ERROR (("hostlist_ranged_string: %s", strerror (errno)));
+          IPMIPOWER_ERROR (("fi_hostlist_ranged_string: %s", strerror (errno)));
           exit (EXIT_FAILURE);
         }
 
@@ -818,9 +818,9 @@ _cmd_config (void)
                                "Discovered:                   %s\n",
                                buf);
 
-      if ((rv = hostlist_ranged_string (undiscovered, IPMIPOWER_OUTPUT_BUFLEN, buf)) < 0)
+      if ((rv = fi_hostlist_ranged_string (undiscovered, IPMIPOWER_OUTPUT_BUFLEN, buf)) < 0)
         {
-          IPMIPOWER_ERROR (("hostlist_ranged_string: %s", strerror (errno)));
+          IPMIPOWER_ERROR (("fi_hostlist_ranged_string: %s", strerror (errno)));
           exit (EXIT_FAILURE);
         }
 
@@ -829,9 +829,9 @@ _cmd_config (void)
                                "Undiscovered:                 %s\n",
                                buf);
 
-      if ((rv = hostlist_ranged_string (badconnection, IPMIPOWER_OUTPUT_BUFLEN, buf)) < 0)
+      if ((rv = fi_hostlist_ranged_string (badconnection, IPMIPOWER_OUTPUT_BUFLEN, buf)) < 0)
         {
-          IPMIPOWER_ERROR (("hostlist_ranged_string: %s", strerror (errno)));
+          IPMIPOWER_ERROR (("fi_hostlist_ranged_string: %s", strerror (errno)));
           exit (EXIT_FAILURE);
         }
 
@@ -841,9 +841,9 @@ _cmd_config (void)
                                buf);
 
     cleanup:
-      hostlist_destroy (discovered);
-      hostlist_destroy (undiscovered);
-      hostlist_destroy (badconnection);
+      fi_hostlist_destroy (discovered);
+      fi_hostlist_destroy (undiscovered);
+      fi_hostlist_destroy (badconnection);
 #endif /* NDEBUG */
     }
   else

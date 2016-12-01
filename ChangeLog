@@ -4,6 +4,8 @@
 
 	* common/miscutil/fi_hostlist.h, common/miscutil/fi_hostlist.c:
 	New files.  Wrapper around hostlist.[ch].
+
+	* Update all tools to use fi_hostlist.[ch].
 	
 2017-01-13 Albert Chu <chu11@llnl.gov>
 

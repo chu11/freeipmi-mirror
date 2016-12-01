@@ -72,8 +72,8 @@
 #include "freeipmi-portability.h"
 #include "error.h"
 #include "fd.h"
+#include "fi_hostlist.h"
 #include "hash.h"
-#include "hostlist.h"
 #include "list.h"
 #include "timeval.h"
 
@@ -127,7 +127,7 @@ _fds_setup (void)
   assert (!nodes_count);
   assert (!server_fd);
 
-  nodes_count = hostlist_count (conf.hosts);
+  nodes_count = fi_hostlist_count (conf.hosts);
   fds_count = nodes_count/IPMIDETECTD_NODES_PER_SOCKET;
   if (nodes_count % IPMIDETECTD_NODES_PER_SOCKET)
     fds_count++;
@@ -178,7 +178,7 @@ _fds_setup (void)
 static void
 _nodes_setup (void)
 {
-  hostlist_iterator_t itr = NULL;
+  fi_hostlist_iterator_t itr = NULL;
   char *host = NULL;
   int i = 0;
 
@@ -197,10 +197,10 @@ _nodes_setup (void)
                                    NULL)))
     err_exit ("hash_create: %s", strerror (errno));
 
-  if (!(itr = hostlist_iterator_create (conf.hosts)))
-    err_exit ("hostlist_iterator_create: %s", strerror (errno));
+  if (!(itr = fi_hostlist_iterator_create (conf.hosts)))
+    err_exit ("fi_hostlist_iterator_create: %s", strerror (errno));
 
-  while ((host = hostlist_next (itr)))
+  while ((host = fi_hostlist_next (itr)))
     {
       struct ipmidetectd_info *info = NULL;
       struct hostent *h;
@@ -293,7 +293,7 @@ _nodes_setup (void)
       i++;
     }
 
-  hostlist_iterator_destroy (itr);
+  fi_hostlist_iterator_destroy (itr);
 }
 
 static void

@@ -33,7 +33,7 @@
 
 #include <freeipmi/freeipmi.h>
 
-#include "hostlist.h"
+#include "fi_hostlist.h"
 
 enum ipmidetectd_argp_option_keys
   {
@@ -46,7 +46,7 @@ struct ipmidetectd_config
 {
   int ipmiping_period;
   int ipmidetectd_server_port;
-  hostlist_t hosts;
+  fi_hostlist_t hosts;
 };
 
 struct ipmidetectd_arguments

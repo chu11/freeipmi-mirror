@@ -42,11 +42,11 @@
 
 #include "freeipmi-portability.h"
 #include "cbuf.h"
-#include "hostlist.h"
+#include "fi_hostlist.h"
 
 extern cbuf_t ttyout;
 extern struct ipmipower_arguments cmd_args;
-extern hostlist_t output_hostrange[IPMIPOWER_MSG_TYPE_NUM_ENTRIES];
+extern fi_hostlist_t output_hostrange[IPMIPOWER_MSG_TYPE_NUM_ENTRIES];
 extern unsigned int output_counts[IPMIPOWER_MSG_TYPE_NUM_ENTRIES];
 
 static char *ipmipower_outputs[] =
@@ -88,9 +88,9 @@ ipmipower_output (ipmipower_msg_type_t num, const char *hostname, const char *ex
   if (cmd_args.common_args.consolidate_output
       && !IPMIPOWER_OEM_POWER_TYPE_REQUIRES_EXTRA_ARGUMENT (cmd_args.oem_power_type))
     {
-      if (!hostlist_push_host (output_hostrange[num], hostname))
+      if (!fi_hostlist_push_host (output_hostrange[num], hostname))
         {
-          IPMIPOWER_ERROR (("hostlist_push_host: %s", strerror(errno)));
+          IPMIPOWER_ERROR (("fi_hostlist_push_host: %s", strerror(errno)));
           exit (EXIT_FAILURE);
         }
     }
@@ -117,17 +117,17 @@ ipmipower_output_finish (void)
 
       for (i = 0; i < IPMIPOWER_MSG_TYPE_NUM_ENTRIES; i++)
         {
-          if (hostlist_count (output_hostrange[i]) > 0)
+          if (fi_hostlist_count (output_hostrange[i]) > 0)
             {
               memset (buf, '\0', IPMIPOWER_OUTPUT_BUFLEN + 1);
               
-              hostlist_sort (output_hostrange[i]);
+              fi_hostlist_sort (output_hostrange[i]);
               
-              if ((rv = hostlist_ranged_string (output_hostrange[i],
-                                                IPMIPOWER_OUTPUT_BUFLEN,
-                                                buf)) < 0)
+              if ((rv = fi_hostlist_ranged_string (output_hostrange[i],
+                                                   IPMIPOWER_OUTPUT_BUFLEN,
+                                                   buf)) < 0)
                 {
-                  IPMIPOWER_ERROR (("hostlist_ranged_string: %s", strerror(errno)));
+                  IPMIPOWER_ERROR (("fi_hostlist_ranged_string: %s", strerror(errno)));
                   exit (EXIT_FAILURE);
                 }
               
@@ -143,10 +143,10 @@ ipmipower_output_finish (void)
                   ipmipower_cbuf_printf (ttyout,
                                          " %s\n",
                                          ipmipower_outputs[i]);
-                  hostlist_delete (output_hostrange[i], buf);
+                  fi_hostlist_delete (output_hostrange[i], buf);
                 }
               
-              assert (!hostlist_count (output_hostrange[i]));
+              assert (!fi_hostlist_count (output_hostrange[i]));
             }
         }
     }

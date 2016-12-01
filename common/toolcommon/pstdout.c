@@ -50,7 +50,7 @@
 
 #include "pstdout.h"
 #include "cbuf.h"
-#include "hostlist.h"
+#include "fi_hostlist.h"
 #include "list.h"
 
 /* max hostrange size is typically 16 bytes
@@ -109,7 +109,7 @@ struct pstdout_state {
 int pstdout_errnum = PSTDOUT_ERR_SUCCESS;
 
 struct pstdout_consolidated_data {
-  hostlist_t h;
+  fi_hostlist_t h;
   char *output;
 };
 
@@ -146,7 +146,7 @@ _pstdout_consolidated_data_create(const char *hostname, const char *output)
   cdata->h = NULL;
   cdata->output = NULL;
 
-  if (!(cdata->h = hostlist_create(hostname)))
+  if (!(cdata->h = fi_hostlist_create(hostname)))
     {
       pstdout_errnum = PSTDOUT_ERR_OUTMEM;
       goto cleanup;
@@ -164,7 +164,7 @@ _pstdout_consolidated_data_create(const char *hostname, const char *output)
   if (cdata)
     {
       if (cdata->h)
-        hostlist_destroy(cdata->h);
+        fi_hostlist_destroy(cdata->h);
       free(cdata->output);
       free(cdata);
     }
@@ -180,7 +180,7 @@ _pstdout_consolidated_data_destroy(void *x)
 
   cdata = (struct pstdout_consolidated_data *)x;
   if (cdata->h)
-    hostlist_destroy(cdata->h);
+    fi_hostlist_destroy(cdata->h);
   free(cdata->output);
   free(cdata);
 }
@@ -201,8 +201,8 @@ _pstdout_consolidated_data_compare(void *x, void *y)
   assert(cdataX->h);
   assert(cdataY->h);
 
-  h_countX = hostlist_count(cdataX->h);
-  h_countY = hostlist_count(cdataY->h);
+  h_countX = fi_hostlist_count(cdataX->h);
+  h_countY = fi_hostlist_count(cdataY->h);
 
   if (h_countX < h_countY)
     return -1;
@@ -450,7 +450,7 @@ pstdout_get_fanout(void)
 int 
 pstdout_hostnames_count(const char *hostnames)
 {
-  hostlist_t h = NULL;
+  fi_hostlist_t h = NULL;
   int count = 0;
   int rv = -1;
 
@@ -460,13 +460,13 @@ pstdout_hostnames_count(const char *hostnames)
       return -1;
     }
 
-  if (!(h = hostlist_create(hostnames)))
+  if (!(h = fi_hostlist_create(hostnames)))
     {
       pstdout_errnum = PSTDOUT_ERR_OUTMEM;
       goto cleanup;
     }
 
-  if (!(count = hostlist_count(h)))
+  if (!(count = fi_hostlist_count(h)))
     {
       if (pstdout_debug_flags & PSTDOUT_DEBUG_STANDARD)
         fprintf(stderr, "hostnames count == 0\n");
@@ -477,7 +477,7 @@ pstdout_hostnames_count(const char *hostnames)
   rv = count;
  cleanup:
   if (h)
-    hostlist_destroy(h);
+    fi_hostlist_destroy(h);
   return rv;
 }
 
@@ -990,10 +990,10 @@ _pstdout_output_buffer_data(pstdout_state_t pstate,
             }
           else
             {
-              if (!hostlist_push(cdata->h, pstate->hostname))
+              if (!fi_hostlist_push(cdata->h, pstate->hostname))
                 {
                   if (pstdout_debug_flags & PSTDOUT_DEBUG_STANDARD)
-                    fprintf(stderr, "hostlist_push: %s\n", strerror(errno));
+                    fprintf(stderr, "fi_hostlist_push: %s\n", strerror(errno));
                   pstdout_errnum = PSTDOUT_ERR_INTERNAL;
                   goto cleanup;
                 }
@@ -1190,11 +1190,11 @@ _pstdout_output_consolidated(FILE *stream,
       char hbuf[PSTDOUT_BUFLEN + 1];
       
       memset(hbuf, '\0', PSTDOUT_BUFLEN + 1);
-      hostlist_sort(cdata->h);
-      if (hostlist_ranged_string(cdata->h, PSTDOUT_BUFLEN, hbuf) < 0)
+      fi_hostlist_sort(cdata->h);
+      if (fi_hostlist_ranged_string(cdata->h, PSTDOUT_BUFLEN, hbuf) < 0)
         {
           if (pstdout_debug_flags & PSTDOUT_DEBUG_STANDARD)
-            fprintf(stderr, "hostlist_ranged_string: %s\n", strerror(errno));
+            fprintf(stderr, "fi_hostlist_ranged_string: %s\n", strerror(errno));
           pstdout_errnum = PSTDOUT_ERR_INTERNAL;
           goto cleanup;
         }
@@ -1313,7 +1313,7 @@ _pstdout_sigint(int s)
   if ((rc = pthread_mutex_lock(&pstdout_states_mutex)))
     {
       if (pstdout_debug_flags & PSTDOUT_DEBUG_STANDARD)
-        fprintf(stderr, "hostlist_ranged_string: %s\n", strerror(rc));
+        fprintf(stderr, "fi_hostlist_ranged_string: %s\n", strerror(rc));
     }
 
   if (list_for_each(pstdout_states, _pstdout_sigint_finish_output, NULL) < 0)
@@ -1332,8 +1332,8 @@ pstdout_launch(const char *hostnames, Pstdout_Thread pstdout_func, void *arg)
   struct pstdout_thread_data **tdata = NULL;
   struct pstdout_state pstate;
   unsigned int pstate_init = 0;
-  hostlist_iterator_t hitr = NULL;
-  hostlist_t h = NULL;
+  fi_hostlist_iterator_t hitr = NULL;
+  fi_hostlist_t h = NULL;
   int h_count = 0;
   char *host = NULL;
   int exit_code = -1;
@@ -1374,12 +1374,12 @@ pstdout_launch(const char *hostnames, Pstdout_Thread pstdout_func, void *arg)
       goto cleanup;
     }
   
-  if (!(h = hostlist_create(hostnames)))
+  if (!(h = fi_hostlist_create(hostnames)))
     {
       pstdout_errnum = PSTDOUT_ERR_OUTMEM;
       goto cleanup;
     }
-  h_count = hostlist_count(h);
+  h_count = fi_hostlist_count(h);
 
   /* Sanity check */
   if (h_count <= 0)
@@ -1411,7 +1411,7 @@ pstdout_launch(const char *hostnames, Pstdout_Thread pstdout_func, void *arg)
     }
   sighandler_set++;
 
-  if (!(hitr = hostlist_iterator_create(h)))
+  if (!(hitr = fi_hostlist_iterator_create(h)))
     {
       pstdout_errnum = PSTDOUT_ERR_OUTMEM;
       goto cleanup;
@@ -1425,7 +1425,7 @@ pstdout_launch(const char *hostnames, Pstdout_Thread pstdout_func, void *arg)
   memset(tdata, '\0', sizeof(struct pstdout_thread_data *) * h_count);
 
   i = 0;
-  while ((host = hostlist_next(hitr)))
+  while ((host = fi_hostlist_next(hitr)))
     {
       if (!(tdata[i] = (struct pstdout_thread_data *)malloc(sizeof(struct pstdout_thread_data))))
         {
@@ -1463,10 +1463,10 @@ pstdout_launch(const char *hostnames, Pstdout_Thread pstdout_func, void *arg)
     }
   host = NULL;
 
-  hostlist_iterator_destroy(hitr);
+  fi_hostlist_iterator_destroy(hitr);
   hitr = NULL;
 
-  hostlist_destroy(h);
+  fi_hostlist_destroy(h);
   h = NULL;
 
   /* Launch threads up to fanout */
@@ -1565,9 +1565,9 @@ pstdout_launch(const char *hostnames, Pstdout_Thread pstdout_func, void *arg)
       free(tdata);
     }
   if (hitr)
-    hostlist_iterator_destroy(hitr);
+    fi_hostlist_iterator_destroy(hitr);
   if (h)
-    hostlist_destroy(h);
+    fi_hostlist_destroy(h);
   free(host);
   if ((rc = pthread_mutex_unlock(&pstdout_launch_mutex)))
     {

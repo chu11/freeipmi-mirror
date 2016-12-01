@@ -39,7 +39,7 @@
 #include "config.h"
 #endif /* HAVE_CONFIG_H */
 
-#include "hostlist.h"
+#include "fi_hostlist.h"
 
 enum ipmidetect_argp_option_keys
   {
@@ -67,7 +67,7 @@ struct ipmidetect_arguments
   int port;
   int output_type;
   char output_format;
-  hostlist_t inputted_nodes;
+  fi_hostlist_t inputted_nodes;
 };
 
 #endif /* IPMIDETECT__H */

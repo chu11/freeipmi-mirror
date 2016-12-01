@@ -60,8 +60,8 @@
 
 #include "freeipmi-portability.h"
 #include "error.h"
+#include "fi_hostlist.h"
 #include "heap.h"
-#include "hostlist.h"
 #include "pstdout.h"
 #include "tool-common.h"
 #include "tool-daemon-common.h"
@@ -1560,8 +1560,8 @@ static int
 _ipmiseld (ipmiseld_prog_data_t *prog_data)
 {
   int hosts_count = 0;
-  hostlist_t hlist = NULL;
-  hostlist_iterator_t hitr = NULL;
+  fi_hostlist_t hlist = NULL;
+  fi_hostlist_iterator_t hitr = NULL;
   ipmiseld_host_data_t *host_data;
   char *host = NULL;
   int rv = -1;
@@ -1618,19 +1618,19 @@ _ipmiseld (ipmiseld_prog_data_t *prog_data)
     }
   else
     {
-      if (!(hlist = hostlist_create (prog_data->args->common_args.hostname)))
+      if (!(hlist = fi_hostlist_create (prog_data->args->common_args.hostname)))
         {
-          err_output ("hostlist_create: %s", strerror (errno));
+          err_output ("fi_hostlist_create: %s", strerror (errno));
           goto cleanup;
         }
 
-      if (!(hitr = hostlist_iterator_create (hlist)))
+      if (!(hitr = fi_hostlist_iterator_create (hlist)))
         {
-          err_output ("hostlist_iterator_create: %s", strerror (errno));
+          err_output ("fi_hostlist_iterator_create: %s", strerror (errno));
           goto cleanup;
         }
 
-      while ((host = hostlist_next (hitr)))
+      while ((host = fi_hostlist_next (hitr)))
         {
           if (!(host_data = _alloc_host_data (prog_data, host)))
             goto cleanup;
@@ -1747,8 +1747,8 @@ _ipmiseld (ipmiseld_prog_data_t *prog_data)
  cleanup:
   ipmiseld_threadpool_destroy ();
   heap_destroy (host_data_heap);
-  hostlist_iterator_destroy (hitr);
-  hostlist_destroy (hlist);
+  fi_hostlist_iterator_destroy (hitr);
+  fi_hostlist_destroy (hlist);
   free (host);
   return (rv);
 }

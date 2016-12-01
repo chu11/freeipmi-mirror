@@ -50,8 +50,8 @@
 
 #include <freeipmi/freeipmi.h>
 
-#include "hostlist.h"
 #include "cbuf.h"
+#include "fi_hostlist.h"
 #include "list.h"
 #include "tool-cmdline-common.h"
 

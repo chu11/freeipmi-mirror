@@ -66,8 +66,8 @@
 
 #include "conffile.h"
 #include "fd.h"
+#include "fi_hostlist.h"
 #include "freeipmi-portability.h"
-#include "hostlist.h"
 
 /*
  * ipmidetect_errmsg
@@ -118,8 +118,8 @@ struct ipmidetect {
   int magic;
   int errnum;
   int load_state;
-  hostlist_t detected_nodes;
-  hostlist_t undetected_nodes;
+  fi_hostlist_t detected_nodes;
+  fi_hostlist_t undetected_nodes;
 };
 
 struct ipmidetect_config
@@ -240,8 +240,8 @@ ipmidetect_handle_create ()
 static void
 _free_handle_data (ipmidetect_t handle)
 {
-  hostlist_destroy (handle->detected_nodes);
-  hostlist_destroy (handle->undetected_nodes);
+  fi_hostlist_destroy (handle->detected_nodes);
+  fi_hostlist_destroy (handle->undetected_nodes);
   _initialize_handle (handle);
 }
 
@@ -536,9 +536,9 @@ _get_data (ipmidetect_t handle,
         }
 
       if (abs (localtime - tv.tv_sec) < timeout_len)
-        ret = hostlist_push (handle->detected_nodes, hostname);
+        ret = fi_hostlist_push (handle->detected_nodes, hostname);
       else
-        ret = hostlist_push (handle->undetected_nodes, hostname);
+        ret = fi_hostlist_push (handle->undetected_nodes, hostname);
 
       if (!ret)
         {
@@ -571,13 +571,13 @@ ipmidetect_load_data (ipmidetect_t handle,
   if (_read_conffile (handle, &conffile_config) < 0)
     goto cleanup;
 
-  if (!(handle->detected_nodes = hostlist_create (NULL)))
+  if (!(handle->detected_nodes = fi_hostlist_create (NULL)))
     {
       handle->errnum = IPMIDETECT_ERR_OUT_OF_MEMORY;
       goto cleanup;
     }
 
-  if (!(handle->undetected_nodes = hostlist_create (NULL)))
+  if (!(handle->undetected_nodes = fi_hostlist_create (NULL)))
     {
       handle->errnum = IPMIDETECT_ERR_OUT_OF_MEMORY;
       goto cleanup;
@@ -655,8 +655,8 @@ ipmidetect_load_data (ipmidetect_t handle,
         goto cleanup;
     }
 
-  hostlist_sort (handle->detected_nodes);
-  hostlist_sort (handle->undetected_nodes);
+  fi_hostlist_sort (handle->detected_nodes);
+  fi_hostlist_sort (handle->undetected_nodes);
 
   /* loading complete */
   handle->load_state = IPMIDETECT_LOAD_STATE_LOADED;
@@ -717,7 +717,7 @@ ipmidetect_perror (ipmidetect_t handle, const char *msg)
 static int
 _get_nodes_string (ipmidetect_t handle, char *buf, int buflen, int which)
 {
-  hostlist_t hl;
+  fi_hostlist_t hl;
 
   if (_loaded_handle_error_check (handle) < 0)
     return (-1);
@@ -733,7 +733,7 @@ _get_nodes_string (ipmidetect_t handle, char *buf, int buflen, int which)
   else
     hl = handle->undetected_nodes;
 
-  if (hostlist_ranged_string (hl, buflen, buf) < 0)
+  if (fi_hostlist_ranged_string (hl, buflen, buf) < 0)
     {
       handle->errnum = IPMIDETECT_ERR_OVERFLOW;
       return (-1);
@@ -777,17 +777,17 @@ _is_node (ipmidetect_t handle, const char *node, int which)
       return (-1);
     }
 
-  if (hostlist_find (handle->detected_nodes, node) < 0
-      && hostlist_find (handle->undetected_nodes, node) < 0)
+  if (fi_hostlist_find (handle->detected_nodes, node) < 0
+      && fi_hostlist_find (handle->undetected_nodes, node) < 0)
     {
       handle->errnum = IPMIDETECT_ERR_NOTFOUND;
       return (-1);
     }
 
   if (which == IPMIDETECT_DETECTED_NODES)
-    temp = hostlist_find (handle->detected_nodes, node);
+    temp = fi_hostlist_find (handle->detected_nodes, node);
   else
-    temp = hostlist_find (handle->undetected_nodes, node);
+    temp = fi_hostlist_find (handle->undetected_nodes, node);
 
   if (temp != -1)
     rv = 1;
