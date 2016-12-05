@@ -31,9 +31,18 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#if STDC_HEADERS
+#include <string.h>
+#include <ctype.h>
+#endif /* STDC_HEADERS */
 #include <assert.h>
 #include <errno.h>
 #include <unistd.h>
+#include <arpa/inet.h>
+#include <limits.h>             /* MAXHOSTNAMELEN */
+#ifdef HAVE_NETDB_H
+#include <netdb.h>              /* MAXHOSTNAMELEN Solaris */
+#endif /* HAVE_NETDB_H */
 
 #include "fi_hostlist.h"
 #include "hostlist.h"
@@ -53,6 +62,273 @@ struct fi_hostlist_iterator {
 #endif
   hostlist_iterator_t itr;
 };
+
+#ifndef MAXHOSTNAMELEN
+#define MAXHOSTNAMELEN 64
+#endif
+
+/* achu: _advance_past_brackets and _next_tok ripped from hostlist.c
+ */
+
+static int _advance_past_brackets (char *tok, char **str)
+{
+  /* if _single_ opening bracket exists b/w tok and str, push str
+   * past first closing bracket to next seperator */
+  if (   memchr(tok, '[', *str - tok) != NULL
+         && memchr(tok, ']', *str - tok) == NULL ) {
+    char *q = strchr(*str, ']');
+    if (q && memchr(*str, '[', q - *str) == NULL) {
+      *str = q + 1;
+      return (1);
+    }
+  }
+
+  return 0;
+}
+
+/*
+ * Helper function for host list string parsing routines 
+ * Returns a pointer to the next token; additionally advance *str
+ * to the next separator.
+ *
+ * next_tok was taken directly from pdsh courtesy of Jim Garlick.
+ * (with modifications to support bracketed hostlists, i.e.:
+ *  xxx[xx,xx,xx] is a single token)
+ *
+ */
+static char * _next_tok(char *sep, char **str)
+{
+  char *tok;
+
+  /* push str past any leading separators */
+  while (**str != '\0' && strchr(sep, **str) != '\0')
+    (*str)++;
+
+  if (**str == '\0')
+    return NULL;
+
+  /* assign token ptr */
+  tok = *str;
+
+  /*
+   * Advance str past any separators, but if a separator occurs between
+   *  brackets, e.g. foo[0-3,5], then advance str past closing brackets and
+   *  try again.
+   */
+  do {
+    /* push str past token and leave pointing to first separator */
+    while (**str != '\0' && strchr(sep, **str) == '\0')
+      (*str)++;
+  } while (_advance_past_brackets (tok, str));
+
+  /* nullify consecutive separators and push str beyond them */
+  while (**str != '\0' && strchr(sep, **str) != '\0')
+    *(*str)++ = '\0';
+
+  return tok;
+}
+
+/* achu: Bulk from
+ *
+ * http://stackoverflow.com/questions/779875/what-is-the-function-to-replace-string-in-c
+ *
+ * as a starting point.  Adjusting code style and library needs.
+ */
+static char *
+_str_replace (const char *orig, const char *replace, const char *with) {
+  int len_replace;
+  int len_with;
+  int count = 0;
+  char *new = NULL;
+  char *tmp, *newp, *p;
+  char *rv = NULL;
+
+  assert (orig);
+  assert (replace);
+  assert (strlen (replace) > 0);
+  assert (with);
+  assert (strlen (with) > 0);
+
+  len_replace = strlen (replace);
+  len_with = strlen (with);
+
+  /* count number of replacements needed */
+  p = (char *)orig;
+  while ((tmp = strstr (p, replace)))
+    {
+      p = tmp + len_replace;
+      count++;
+    }
+
+  /* No substitutions special case */
+  if (!count)
+    {
+      if (!(new = strdup (orig)))
+        goto cleanup;
+      return (new);
+    }
+
+  new = newp = (char *) malloc (strlen(orig) + (len_with - len_replace) * count + 1);
+  if (!new)
+    goto cleanup;
+
+  /* p - points to remainder of orig */
+  /* newp - walks the new string buffer */
+  p = (char *)orig;
+  while (count)
+    {
+      char *ins;
+      int len_front;
+
+      ins = strstr (p, replace);
+      len_front = ins - p;
+      strncpy (newp, p, len_front);
+      newp += len_front;
+      strncpy (newp, with, len_with);
+      newp += len_with;
+      p += len_front + len_replace;
+      count--;
+    }
+  /* copy the rest over */
+  strcpy (newp, p);
+
+  rv = new;
+ cleanup:
+  if (!rv)
+    free (new);
+  return (rv);
+}
+
+static char *
+_fi_unparse_string (const char *hosts)
+{
+  char *str1 = NULL;
+  char *str2 = NULL;
+  char *rv = NULL;
+
+  if (!(str1 = _str_replace (hosts, FI_LEFT_BRACKET, "[")))
+    goto cleanup;
+
+  if (!(str2 = _str_replace (str1, FI_RIGHT_BRACKET, "]")))
+    goto cleanup;
+
+  rv = strdup (str2);
+ cleanup:
+  free (str1);
+  free (str2);
+  return (rv);
+}
+
+static char *
+_fi_preparse_host (const char *host)
+{
+  char *new = NULL;
+  char *rv = NULL;
+
+  /* Handle special IPv6 address with port format, i.e.
+   * "[Ipv6 address]:port"
+   */
+
+  if (fi_host_is_ipv6_with_port (host, NULL, NULL))
+    {
+      unsigned int len = 0;
+      char *pl;
+      char *pr;
+
+      /* +4 for extra 2 chars on left & right bracket, +1 for NUL char */
+      if (!(new = (char *) malloc (strlen (host) + 5)))
+        goto cleanup;
+
+      pl = strchr (host, '[');
+      memcpy (new, host, pl - host);
+      len += (pl - host);
+
+      memcpy (new + len, FI_LEFT_BRACKET, strlen (FI_LEFT_BRACKET));
+      len += strlen (FI_LEFT_BRACKET);
+
+      /* move past left bracket */
+      pl++;
+
+      pr = strchr (pl, ']');
+      memcpy (new + len, pl, pr - pl);
+      len += (pr - pl);
+
+      memcpy (new + len, FI_RIGHT_BRACKET, strlen (FI_RIGHT_BRACKET));
+      len += strlen (FI_RIGHT_BRACKET);
+
+      pr++;
+      memcpy (new + len, pr, host + strlen (host) - pr);
+      len += (host + strlen (host) - pr);
+
+      new[len] = '\0';
+    }
+  else
+    {
+      if (!(new = strdup (host)))
+        goto cleanup;
+    }
+
+  rv = new;
+ cleanup:
+  if (!rv)
+    free (new);
+  return (rv);
+}
+
+typedef int (HostlistFn)(hostlist_t, const char *);
+
+static int _fi_hosts (const char *hosts,
+                      fi_hostlist_t fihl,
+                      HostlistFn hfn)
+{
+  char *orig = NULL;
+  char *copy = NULL;
+  char *tok;
+  int rv = -1;
+  int count = 0;
+
+  assert (hosts);
+  assert (fihl);
+  assert (hfn);
+
+  if (!(orig = copy = strdup (hosts)))
+    goto cleanup;
+
+  while ((tok = _next_tok (FI_HOSTLIST_SEPERATOR, &copy)))
+    {
+      char *tok_parsed;
+      int ret;
+
+      tok_parsed = _fi_preparse_host (tok);
+
+      ret = hfn (fihl->hl, tok_parsed);
+
+      free (tok_parsed);
+
+      if (!ret)
+        goto cleanup;
+
+      count += ret;
+    }
+
+  rv = count;
+ cleanup:
+  free (orig);
+  return (rv);
+}
+
+
+static int
+_fi_push_hosts (const char *hosts, fi_hostlist_t fihl)
+{
+  return (_fi_hosts (hosts, fihl, hostlist_push));
+}
+
+static int
+_fi_delete_hosts (const char *hosts, fi_hostlist_t fihl)
+{
+  return (_fi_hosts (hosts, fihl, hostlist_delete));
+}
 
 static fi_hostlist_t
 _fi_hostlist_new (void)
@@ -295,3 +571,191 @@ fi_hostlist_remove (fi_hostlist_iterator_t fiitr)
   return hostlist_remove (fiitr->itr);
 }
 
+int
+fi_host_is_ipv6_with_port (const char *host, char **addr, char **port)
+{
+  char *str = NULL;
+  int is_ipv6_with_port = 0;
+  int rv = -1;
+
+  assert (host);
+
+  if (!(str = strdup (host)))
+    goto cleanup;
+
+  /* achu:
+   *
+   * Some of this code is from
+   *
+   * LaMont Jones <lamont@mmjgroup.com>
+   *
+   * In his experimental patch
+   *
+   * git pull https://github.com/lamontj/freeipmi-mirror.git ipmipower-ipv6
+   *
+   */
+
+  if (str[0] == '[')
+    {
+      char *addrptr = &str[1];
+      char *tmp;
+
+      if ((tmp = strchr (addrptr, ']')))
+        {
+          *tmp = '\0';
+          tmp++;
+
+          /* Is character after the right bracket a colon? */
+          if (*tmp == ':')
+            {
+              char *portptr;
+
+              /* is everything after the colon a number? */
+              tmp++;
+              portptr = tmp;
+              while (isdigit (*tmp))
+                tmp++;
+
+              /* are we at the end of the string? */
+              /* and did we find a port */
+              if (*tmp == '\0' && strlen (portptr))
+                {
+                  struct sockaddr_in6 saddr;
+
+                  /* is what's in between the brackets an IPv6 address? */
+                  if (inet_pton(AF_INET6, addrptr, &saddr) == 1)
+                    {
+                      /* if yes, we've got the special IPv6/port combo */
+                      is_ipv6_with_port = 1;
+
+                      if (addr)
+                        {
+                          if (!(*addr = strdup (addrptr)))
+                            goto cleanup;
+                        }
+
+                      if (port)
+                        {
+                          if (!(*port = strdup (portptr)))
+                            {
+                              free (*addr);
+                              goto cleanup;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+  rv = is_ipv6_with_port;
+ cleanup:
+  free (str);
+  return (rv);
+}
+
+int
+fi_host_is_host_with_port (const char *host, char **addr, char **port)
+{
+  char *str = NULL;
+  int rv = -1;
+  int is_host_with_port = 0;
+  int ret;
+
+  assert (host);
+
+  if ((ret = fi_host_is_ipv6_with_port (host, addr, port)) < 0)
+    goto cleanup;
+
+  if (ret)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (strchr (host, ':'))
+    {
+      char *addrptr;
+      char *portptr;
+      char *lastcolonptr;
+      char *tmp;
+
+      if (!(str = strdup (host)))
+        goto cleanup;
+
+      addrptr = str;
+
+      /* find last colon */
+      portptr = addrptr;
+      while ((tmp = strchr (portptr, ':')))
+        {
+          lastcolonptr = tmp;
+          portptr = tmp + 1;
+        }
+
+      *lastcolonptr = '\0';
+
+      /* is everything after the colon a number? */
+      tmp = portptr;
+      while (isdigit (*tmp))
+        tmp++;
+
+      /* are we at the end of the string? */
+      /* and did we find a port */
+      if (*tmp == '\0' && strlen (portptr))
+        {
+          is_host_with_port = 1;
+
+          if (addr)
+            {
+              if (!(*addr = strdup (addrptr)))
+                goto cleanup;
+            }
+
+          if (port)
+            {
+              if (!(*port = strdup (portptr)))
+                {
+                  free (*addr);
+                  goto cleanup;
+                }
+            }
+        }
+    }
+
+  rv = is_host_with_port;
+ cleanup:
+  free (str);
+  return (rv);
+}
+
+int
+fi_host_is_valid (const char *addr, const char *port, uint16_t *portptr)
+{
+  assert (addr);
+
+  /* achu: max length IPv6 is 45 chars
+   * ABCD:ABCD:ABCD:ABCD:ABCD:ABCD:192.168.100.200
+   */
+  if (strlen (addr) > MAXHOSTNAMELEN)
+    return (0);
+
+  if (port)
+    {
+      char *endptr;
+      int tmp;
+
+      errno = 0;
+      tmp = strtol (port, &endptr, 0);
+      if (errno
+          || endptr[0] != '\0'
+          || tmp <= 0
+          || tmp > USHRT_MAX)
+        return 0;
+
+      if (portptr)
+        *portptr = tmp;
+    }
+
+  return (1);
+}
