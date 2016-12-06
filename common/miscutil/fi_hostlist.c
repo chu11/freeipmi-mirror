@@ -49,6 +49,12 @@
 
 #define FI_HOSTLIST_MAGIC 57006
 
+#define FI_HOSTLIST_SEPERATOR "\t, "
+
+/* "impossible" legal hostnames to replace brackets with */
+#define FI_LEFT_BRACKET  "@l@"
+#define FI_RIGHT_BRACKET "@r@"
+
 struct fi_hostlist {
 #ifndef NDEBUG
   int magic;
@@ -348,20 +354,33 @@ _fi_hostlist_new (void)
 fi_hostlist_t
 fi_hostlist_create (const char *hostlist)
 {
-  hostlist_t hl;
-  fi_hostlist_t fihl;
+  fi_hostlist_t fihl = NULL;
+  hostlist_t hl = NULL;
+  fi_hostlist_t rv = NULL;
 
-  if (!(hl = hostlist_create (hostlist)))
-    return (NULL);
+  if (!(hl = hostlist_create (NULL)))
+    goto cleanup;
 
   if (!(fihl = _fi_hostlist_new ()))
+    goto cleanup;
+  fihl->hl = hl;
+
+  if (hostlist)
     {
-      hostlist_destroy (hl);
-      return (NULL);
+      if (_fi_push_hosts (hostlist, fihl) < 0)
+	goto cleanup;
     }
 
-  fihl->hl = hl;
-  return (fihl);
+  rv = fihl;
+ cleanup:
+  if (!rv)
+    {
+      if (fihl)
+        fi_hostlist_destroy (fihl);
+      else if (hl)
+        hostlist_destroy (hl);
+    }
+  return (rv);
 }
 
 fi_hostlist_t
@@ -398,19 +417,27 @@ fi_hostlist_destroy (fi_hostlist_t fihl)
 int
 fi_hostlist_push (fi_hostlist_t fihl, const char *hosts)
 {
+  int rv;
+
   assert (fihl);
   assert (fihl->magic == FI_HOSTLIST_MAGIC);
 
-  return hostlist_push (fihl->hl, hosts);
+  if ((rv = _fi_push_hosts (hosts, fihl)) < 0)
+    return (0);
+  return (rv);
 }
 
 int
 fi_hostlist_push_host (fi_hostlist_t fihl, const char *host)
 {
+  int rv;
+
   assert (fihl);
   assert (fihl->magic == FI_HOSTLIST_MAGIC);
 
-  return hostlist_push_host (fihl->hl, host);
+  if ((rv = _fi_push_hosts (host, fihl)) < 0)
+    return (0);
+  return (rv);
 }
 
 int
@@ -427,28 +454,45 @@ fi_hostlist_push_list (fi_hostlist_t fihl1, fi_hostlist_t fihl2)
 int
 fi_hostlist_find (fi_hostlist_t fihl, const char *hostname)
 {
+  char *p;
+  int rv;
+
   assert (fihl);
   assert (fihl->magic == FI_HOSTLIST_MAGIC);
 
-  return hostlist_find (fihl->hl, hostname);
+  p = _fi_preparse_host (hostname);
+
+  rv = hostlist_find (fihl->hl, p);
+
+  free (p);
+
+  return (rv);
 }
 
 int
 fi_hostlist_delete (fi_hostlist_t fihl, const char *hosts)
 {
+  int rv;
+
   assert (fihl);
   assert (fihl->magic == FI_HOSTLIST_MAGIC);
 
-  return hostlist_delete (fihl->hl, hosts);
+  if ((rv = _fi_delete_hosts (hosts, fihl)) < 0)
+    return (0);
+  return (rv);
 }
 
 int
 fi_hostlist_delete_host (fi_hostlist_t fihl, const char *hostname)
 {
+  int rv;
+
   assert (fihl);
   assert (fihl->magic == FI_HOSTLIST_MAGIC);
 
-  return hostlist_delete_host (fihl->hl, hostname);
+  if ((rv = _fi_delete_hosts (hostname, fihl)) < 0)
+    return (0);
+  return (rv);
 }
 
 int
@@ -478,22 +522,53 @@ fi_hostlist_uniq (fi_hostlist_t fihl)
   return hostlist_uniq (fihl->hl);
 }
 
+typedef ssize_t (HostlistStrFn)(hostlist_t, size_t, char *);
+
+static int _fi_hostlist_string (fi_hostlist_t fihl,
+                                size_t n,
+                                char *buf,
+                                HostlistStrFn hfn)
+{
+  char *tmpbuf = NULL;
+  char *str = NULL;
+  ssize_t rv = -1;
+
+  assert (fihl);
+  assert (fihl->magic == FI_HOSTLIST_MAGIC);
+  assert (hfn);
+
+  /* +1 to guarantee NUL byte */
+  if (!(tmpbuf = (char *) malloc (n + 1)))
+    return -1;
+  memset (tmpbuf, '\0', n + 1);
+
+  if (hfn (fihl->hl, n, tmpbuf) < 0)
+    goto cleanup;
+
+  if (!(str = _fi_unparse_string (tmpbuf)))
+    goto cleanup;
+
+  if (strlen (str) > n)
+    goto cleanup;
+
+  strncpy (buf, str, n);
+  rv = strlen (str);
+ cleanup:
+  free (tmpbuf);
+  free (str);
+  return (rv);
+}
+
 ssize_t
 fi_hostlist_ranged_string (fi_hostlist_t fihl, size_t n, char *buf)
 {
-  assert (fihl);
-  assert (fihl->magic == FI_HOSTLIST_MAGIC);
-
-  return hostlist_ranged_string (fihl->hl, n, buf);
+  return (_fi_hostlist_string (fihl, n, buf, hostlist_ranged_string));
 }
 
 ssize_t
 fi_hostlist_deranged_string (fi_hostlist_t fihl, size_t n, char *buf)
 {
-  assert (fihl);
-  assert (fihl->magic == FI_HOSTLIST_MAGIC);
-
-  return hostlist_deranged_string (fihl->hl, n, buf);
+  return (_fi_hostlist_string (fihl, n, buf, hostlist_deranged_string));
 }
 
 static fi_hostlist_iterator_t
@@ -556,10 +631,17 @@ fi_hostlist_iterator_reset (fi_hostlist_iterator_t fiitr)
 char *
 fi_hostlist_next (fi_hostlist_iterator_t fiitr)
 {
+  char *str = NULL;
+  char *rv = NULL;
+
   assert (fiitr);
   assert (fiitr->magic == FI_HOSTLIST_MAGIC);
 
-  return hostlist_next (fiitr->itr);
+  if ((str = hostlist_next (fiitr->itr)))
+    rv = _fi_unparse_string (str);
+
+  free (str);
+  return (rv);
 }
 
 int
