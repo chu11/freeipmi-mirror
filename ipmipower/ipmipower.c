@@ -209,7 +209,7 @@ _eliminate_nodes (void)
 }
 
 static void
-_sendto (cbuf_t cbuf, int fd, struct sockaddr_in6 *destaddr)
+_sendto (cbuf_t cbuf, int fd, struct sockaddr *destaddr, socklen_t destaddrlen)
 {
   int n, rv;
   uint8_t buf[IPMIPOWER_PACKET_BUFLEN];
@@ -226,15 +226,15 @@ _sendto (cbuf_t cbuf, int fd, struct sockaddr_in6 *destaddr)
       exit (EXIT_FAILURE);
     }
 
-  do 
+  do
     {
       if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN)
         rv = ipmi_lan_sendto (fd,
                               buf,
                               n,
                               0,
-                              (struct sockaddr *)destaddr,
-                              sizeof (struct sockaddr_in6));
+                              destaddr,
+                              destaddrlen);
       else
         {
           if (ipmi_is_ipmi_1_5_packet (buf, n))
@@ -242,15 +242,15 @@ _sendto (cbuf_t cbuf, int fd, struct sockaddr_in6 *destaddr)
                                   buf,
                                   n,
                                   0,
-                                  (struct sockaddr *)destaddr,
-                                  sizeof (struct sockaddr_in6));
+                                  destaddr,
+                                  destaddrlen);
           else
             rv = ipmi_rmcpplus_sendto (fd,
                                        buf,
                                        n,
                                        0,
-                                       (struct sockaddr *)destaddr,
-                                       sizeof (struct sockaddr_in6));
+                                       destaddr,
+                                       destaddrlen);
         }
     } while (rv < 0 && errno == EINTR);
 
@@ -269,13 +269,13 @@ _sendto (cbuf_t cbuf, int fd, struct sockaddr_in6 *destaddr)
 }
 
 static void
-_recvfrom (cbuf_t cbuf, int fd, struct sockaddr_in6 *srcaddr)
+_recvfrom (cbuf_t cbuf, int fd, struct sockaddr *srcaddr, socklen_t srcaddrlen)
 {
   int n, rv, dropped = 0;
   uint8_t buf[IPMIPOWER_PACKET_BUFLEN];
-  struct sockaddr_in6 from;
-  struct sockaddr_in *from4;
-  unsigned int fromlen = sizeof (struct sockaddr_in6);
+  struct sockaddr_in6 from6;
+  struct sockaddr *from = (struct sockaddr *)&from6;
+  socklen_t fromlen = sizeof (struct sockaddr_in6);
 
   do
     {
@@ -291,7 +291,7 @@ _recvfrom (cbuf_t cbuf, int fd, struct sockaddr_in6 *srcaddr)
                               buf,
                               IPMIPOWER_PACKET_BUFLEN,
                               0,
-                              (struct sockaddr *)&from,
+                              from,
                               &fromlen);
     } while (rv < 0 && errno == EINTR);
 
@@ -344,12 +344,25 @@ _recvfrom (cbuf_t cbuf, int fd, struct sockaddr_in6 *srcaddr)
       exit (EXIT_FAILURE);
     }
 
-  from4 = (struct sockaddr_in*)&from;
-  /* Don't store if this packet is strange for some reason */
-  if (!(from4->sin_family == AF_INET
-	&& from4->sin_addr.s_addr == ((struct sockaddr_in*)srcaddr)->sin_addr.s_addr) &&
-      !(from.sin6_family == AF_INET6 && memcmp (&from.sin6_addr, &srcaddr->sin6_addr, sizeof(from.sin6_addr)) == 0))
-    return;
+  if (from6.sin6_family == AF_INET6)
+    {
+      if (memcmp (&from6.sin6_addr,
+                  &(((struct sockaddr_in6 *)srcaddr)->sin6_addr),
+                  sizeof (from6.sin6_addr)))
+        return;
+    }
+  else
+    {
+      /* memcpy hacks to avoid warnings, i.e.
+       * warning: dereferencing pointer 'X' does break strict-aliasing rules
+       */
+      struct sockaddr_in from4;
+
+      memcpy (&from4, from, fromlen);
+
+      if (from4.sin_addr.s_addr != ((struct sockaddr_in *)srcaddr)->sin_addr.s_addr)
+        return;
+    }
 
   /* cbuf should be empty, but if it isn't, empty it */
   if (!cbuf_is_empty (cbuf))
@@ -496,15 +509,15 @@ _poll_loop (int non_interactive)
             {
               IPMIPOWER_DEBUG (("host = %s; IPMI POLLERR", ics[i].hostname));
               /* See comments in _ipmi_recvfrom() regarding ECONNRESET/ECONNREFUSED */
-              _recvfrom (ics[i].ipmi_in, ics[i].ipmi_fd, &(ics[i].destaddr));
+              _recvfrom (ics[i].ipmi_in, ics[i].ipmi_fd, ics[i].destaddr, ics[i].destaddrlen);
             }
           else
             {
               if (pfds[i*2].revents & POLLIN)
-                _recvfrom (ics[i].ipmi_in, ics[i].ipmi_fd, &(ics[i].destaddr));
+                _recvfrom (ics[i].ipmi_in, ics[i].ipmi_fd, ics[i].destaddr, ics[i].destaddrlen);
               
               if (pfds[i*2].revents & POLLOUT)
-                _sendto (ics[i].ipmi_out, ics[i].ipmi_fd, &(ics[i].destaddr));
+                _sendto (ics[i].ipmi_out, ics[i].ipmi_fd, ics[i].destaddr, ics[i].destaddrlen);
             }
 
           if (!cmd_args.ping_interval)
@@ -513,15 +526,15 @@ _poll_loop (int non_interactive)
           if (pfds[i*2+1].revents & POLLERR)
             {
               IPMIPOWER_DEBUG (("host = %s; PING_POLLERR", ics[i].hostname));
-              _recvfrom (ics[i].ping_in, ics[i].ping_fd, &(ics[i].destaddr));
+              _recvfrom (ics[i].ping_in, ics[i].ping_fd, ics[i].destaddr, ics[i].destaddrlen);
             }
           else
             {
               if (pfds[i*2+1].revents & POLLIN)
-                _recvfrom (ics[i].ping_in, ics[i].ping_fd, &(ics[i].destaddr));
+                _recvfrom (ics[i].ping_in, ics[i].ping_fd, ics[i].destaddr, ics[i].destaddrlen);
               
               if (pfds[i*2+1].revents & POLLOUT)
-                _sendto (ics[i].ping_out, ics[i].ping_fd, &(ics[i].destaddr));
+                _sendto (ics[i].ping_out, ics[i].ping_fd, ics[i].destaddr, ics[i].destaddrlen);
             }
         }
 

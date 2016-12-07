@@ -1411,42 +1411,36 @@ _retry_packets (ipmipower_powercmd_t ip)
          * past the Get Session Challenge phase of the protocol.
          */
         int new_fd, *old_fd;
-        struct sockaddr_in srcaddr;
-        
-        if ((new_fd = socket (AF_INET, SOCK_DGRAM, 0)) < 0)
+
+        if ((new_fd = socket (ip->ic->srcaddr->sa_family, SOCK_DGRAM, 0)) < 0)
           {
             if (errno != EMFILE)
               {
                 IPMIPOWER_ERROR (("socket: %s", strerror (errno)));
                 exit (EXIT_FAILURE);
               }
-            
+
             ipmipower_output (IPMIPOWER_MSG_TYPE_RESOURCES, ip->ic->hostname, ip->extra_arg);
             return (-1);
           }
-        
-        bzero (&srcaddr, sizeof (struct sockaddr_in));
-        srcaddr.sin_family = AF_INET;
-        srcaddr.sin_port = htons (0);
-        srcaddr.sin_addr.s_addr = htonl (INADDR_ANY);
-        
-        if (bind (new_fd, &srcaddr, sizeof (struct sockaddr_in)) < 0)
+
+        if (bind (new_fd, ip->ic->srcaddr, ip->ic->srcaddrlen) < 0)
           {
             IPMIPOWER_ERROR (("bind: %s", strerror (errno)));
             exit (EXIT_FAILURE);
           }
-        
+
         if (!(old_fd = (int *)malloc (sizeof (int))))
           {
             IPMIPOWER_ERROR (("malloc: %s", strerror (errno)));
             exit (EXIT_FAILURE);
           }
-        
+
         *old_fd = ip->ic->ipmi_fd;
         list_push (ip->sockets_to_close, old_fd);
-        
+
         ip->ic->ipmi_fd = new_fd;
-        
+
         _send_packet (ip, IPMIPOWER_PACKET_TYPE_GET_SESSION_CHALLENGE_RQ);
       }
       break;

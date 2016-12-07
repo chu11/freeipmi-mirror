@@ -126,15 +126,13 @@ ipmipower_connection_clear (struct ipmipower_connection *ic)
 static int
 _connection_setup (struct ipmipower_connection *ic, const char *hostname)
 {
-  struct sockaddr_in6 srcaddr;
-  struct hostent *result;
   char *hostname_first_parse_copy = NULL;
   const char *hostname_first_parse_ptr = NULL;
   char *hostname_second_parse_copy = NULL;
   const char *hostname_second_parse_ptr = NULL;
   uint16_t port = RMCP_PRIMARY_RMCP_PORT;
-  char port_str[12];
-  struct addrinfo ai_hints, *ai_res, *ai;
+  char port_str[MAXPORTBUFLEN + 1];
+  struct addrinfo ai_hints, *ai_res = NULL, *ai = NULL;
   int rv = -1;
 
   assert (ic);
@@ -332,22 +330,26 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
   strncpy (ic->hostname, hostname_second_parse_ptr, MAXHOSTNAMELEN);
   ic->hostname[MAXHOSTNAMELEN] = '\0';
 
-  snprintf(port_str, sizeof (port_str), "%d", port);
-  memset(&ai_hints, 0, sizeof (struct addrinfo));
+  memset (port_str, '\0', MAXPORTBUFLEN + 1);
+  snprintf (port_str, MAXPORTBUFLEN, "%d", port);
+  memset (&ai_hints, 0, sizeof (struct addrinfo));
   ai_hints.ai_family = AF_UNSPEC;
   ai_hints.ai_socktype = SOCK_DGRAM;
   ai_hints.ai_flags = (AI_V4MAPPED | AI_ADDRCONFIG);
-  if ((result = getaddrinfo (ic->hostname, port_str, &ai_hints, &ai_res )) != 0)
+
+  if ((ret = getaddrinfo (ic->hostname, port_str, &ai_hints, &ai_res)))
     {
-      if (result == EAI_NODATA)
+      if (ret == EAI_NODATA
+	  || ret == EAI_NONAME)
         ipmipower_output (IPMIPOWER_MSG_TYPE_HOSTNAME_INVALID, ic->hostname, NULL);
       else
         {
-          IPMIPOWER_ERROR (("getaddrinfo() %s: %s", ic->hostname, gai_strerror (result)));
+          IPMIPOWER_ERROR (("getaddrinfo() %s: %s", ic->hostname, gai_strerror (ret)));
           exit (EXIT_FAILURE);
         }
       goto cleanup;
     }
+
   /* Try all of the different answers we got, until we succeed. */
   for (ai = ai_res; ai != NULL; ai = ai->ai_next)
     {
@@ -370,39 +372,60 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
 	      return (-1);
 	    }
 	}
-      /* Secure ephemeral ports */
-      bzero (&srcaddr, sizeof (struct sockaddr_in6));
-      srcaddr.sin6_family = ai->ai_family; /* always the same place */
-      /* All zero is otherwise correct. */
 
-      if ((bind (ic->ipmi_fd, &srcaddr, sizeof (struct sockaddr_in6)) < 0)
-          || (bind (ic->ping_fd, &srcaddr, sizeof (struct sockaddr_in6)) < 0))
+      if (ai->ai_family == AF_INET)
+        {
+          memcpy (&(ic->destaddr4), ai->ai_addr, ai->ai_addrlen);
+          ic->destaddr = (struct sockaddr *)&(ic->destaddr4);
+          ic->destaddrlen = sizeof (struct sockaddr_in);
+
+          /* zero everywhere, secure ephemeral port */
+          memset (&(ic->srcaddr4), '\0', sizeof (struct sockaddr_in));
+          ic->srcaddr4.sin_family = AF_INET;
+
+          ic->srcaddr = (struct sockaddr *)&(ic->srcaddr4);
+          ic->srcaddrlen = sizeof (struct sockaddr_in);
+        }
+      else if (ai->ai_family == AF_INET6)
+        {
+          memcpy (&(ic->destaddr6), ai->ai_addr, ai->ai_addrlen);
+          ic->destaddr = (struct sockaddr *)&(ic->destaddr6);
+          ic->destaddrlen = sizeof (struct sockaddr_in6);
+
+          /* zero everywhere, secure ephemeral port */
+          memset (&(ic->srcaddr6), '\0', sizeof (struct sockaddr_in6));
+          ic->srcaddr6.sin6_family = AF_INET6;
+          ic->srcaddr = (struct sockaddr *)&(ic->srcaddr6);
+          ic->srcaddrlen = sizeof (struct sockaddr_in6);
+        }
+      else
+        {
+	  close(ic->ipmi_fd);
+	  close(ic->ping_fd);
+	  continue;
+        }
+
+      if ((bind (ic->ipmi_fd, ic->srcaddr, ic->srcaddrlen) < 0)
+          || (bind (ic->ping_fd, ic->srcaddr, ic->srcaddrlen) < 0))
 	{
 	  close(ic->ipmi_fd);
 	  close(ic->ping_fd);
 	  continue;
 	}
 
-      /* Determine the destination address */
-      if (ai->ai_addrlen > sizeof (struct sockaddr_in6))
-	{
-	  IPMIPOWER_ERROR (("getaddrinfo: unexpected address length %d",
-			    ai->ai_addrlen));
-	  exit (EXIT_FAILURE);
-	}
-      memcpy (&(ic->destaddr), ai->ai_addr, ai->ai_addrlen);
       ic->skip = 0;
       break;
     }
 
   if (!ai)
     {
-      IPMIPOWER_ERROR (("socket/bind: %s", strerror (errno)));
-      exit (EXIT_FAILURE);
+      ipmipower_output (IPMIPOWER_MSG_TYPE_HOSTNAME_INVALID, hostname_second_parse_ptr, NULL);
+      goto cleanup;
     }
 
   rv = 0;
  cleanup:
+  freeaddrinfo (ai_res);
   free (hostname_first_parse_copy);
   free (hostname_second_parse_copy);
   return (rv);

@@ -61,6 +61,8 @@
 #define MAXHOSTNAMELEN 64
 #endif /* MAXHOSTNAMELEN */
 
+#define MAXPORTBUFLEN 16
+
 #define IPMIPOWER_MIN_TTY_BUF 1024*4
 #define IPMIPOWER_MAX_TTY_BUF 1024*32
 
@@ -467,7 +469,14 @@ struct ipmipower_connection
   char hostname[MAXHOSTNAMELEN+1];
   /* for oem power types ; extra arg passed in via "+extra" at end of hostname */
   struct ipmipower_connection_extra_arg *extra_args;
-  struct sockaddr_in6 destaddr;
+  struct sockaddr *srcaddr;
+  socklen_t srcaddrlen;
+  struct sockaddr_in srcaddr4;
+  struct sockaddr_in6 srcaddr6;
+  struct sockaddr *destaddr;
+  socklen_t destaddrlen;
+  struct sockaddr_in destaddr4;
+  struct sockaddr_in6 destaddr6;
 
   /* for eliminate option */
   int skip;
