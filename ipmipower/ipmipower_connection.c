@@ -129,11 +129,14 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
   char *hostname_first_parse_copy = NULL;
   const char *hostname_first_parse_ptr = NULL;
   char *hostname_second_parse_copy = NULL;
+  char *port_second_parse_copy = NULL;
   const char *hostname_second_parse_ptr = NULL;
   uint16_t port = RMCP_PRIMARY_RMCP_PORT;
+  const char *port_ptr = NULL;
   char port_str[MAXPORTBUFLEN + 1];
   struct addrinfo ai_hints, *ai_res = NULL, *ai = NULL;
   int rv = -1;
+  int ret;
 
   assert (ic);
   assert (hostname);
@@ -250,82 +253,36 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
   else
     hostname_first_parse_ptr = hostname;
 
-  if (hostname_first_parse_ptr[0] == '['
-      && strchr (hostname_first_parse_ptr, ']'))
+  /* Check for host:port or [Ipv6]:port format */
+  if ((ret = fi_host_is_host_with_port (hostname_first_parse_ptr,
+                                        &hostname_second_parse_copy,
+                                        &port_second_parse_copy)) < 0)
     {
-      char *ptr;
-
-      /* IPv6 address */
-      if (!(hostname_second_parse_copy = strdup (hostname_first_parse_ptr+1)))
-	{
-	  IPMIPOWER_ERROR (("strdup: %s", strerror (errno)));
-	  exit (EXIT_FAILURE);
-	}
-
-      hostname_second_parse_ptr = hostname_second_parse_copy;
-      ptr = strchr (hostname_second_parse_copy, ']');
-      *ptr = '\0';
-      ptr++;
-      if (*ptr == ':')
-	{
-	  char *endptr;
-          int tmp;
-
-	  *ptr = '\0';
-          ptr++;
-
-          errno = 0;
-          tmp = strtol (ptr, &endptr, 0);
-          if (errno
-              || endptr[0] != '\0'
-              || tmp <= 0
-              || tmp > USHRT_MAX)
-            {
-	      ipmipower_output (IPMIPOWER_MSG_TYPE_HOSTNAME_INVALID, hostname_second_parse_ptr, NULL);
-	      goto cleanup;
-            }
-
-          port = tmp;
-	}
+      IPMIPOWER_ERROR (("fi_host_is_host_with_port: %s", strerror (errno)));
+      exit (EXIT_FAILURE);
     }
-  else if (strchr (hostname_first_parse_ptr, ':'))
+
+  if (ret)
     {
-      char *ptr;
-
-      if (!(hostname_second_parse_copy = strdup (hostname_first_parse_ptr)))
-        {
-          IPMIPOWER_ERROR (("strdup: %s", strerror (errno)));
-          exit (EXIT_FAILURE);
-        }
-
-      if ((ptr = strchr (hostname_second_parse_copy, ':')))
-        {
-          char *endptr;
-          int tmp;
-
-          *ptr = '\0';
-          ptr++;
-          
-          hostname_second_parse_ptr = hostname_second_parse_copy;
-
-          errno = 0;
-          tmp = strtol (ptr, &endptr, 0);
-          if (errno
-              || endptr[0] != '\0'
-              || tmp <= 0
-              || tmp > USHRT_MAX)
-            {
-              ipmipower_output (IPMIPOWER_MSG_TYPE_HOSTNAME_INVALID, hostname_second_parse_ptr, NULL);
-              goto cleanup;
-            }
-          
-          port = tmp;
-        }
-      else
-        hostname_second_parse_ptr = hostname_second_parse_copy;
+      hostname_second_parse_ptr = hostname_second_parse_copy;
+      port_ptr = port_second_parse_copy;
     }
   else
     hostname_second_parse_ptr = hostname_first_parse_ptr;
+
+  if ((ret = fi_host_is_valid (hostname_second_parse_ptr,
+                               port_ptr,
+                               &port)) < 0)
+    {
+      IPMIPOWER_ERROR (("fi_host_is_valid: %s", strerror (errno)));
+      exit (EXIT_FAILURE);
+    }
+
+  if (!ret)
+    {
+      ipmipower_output (IPMIPOWER_MSG_TYPE_HOSTNAME_INVALID, hostname_second_parse_ptr, NULL);
+      goto cleanup;
+    }
 
   strncpy (ic->hostname, hostname_second_parse_ptr, MAXHOSTNAMELEN);
   ic->hostname[MAXHOSTNAMELEN] = '\0';
@@ -428,6 +385,7 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
   freeaddrinfo (ai_res);
   free (hostname_first_parse_copy);
   free (hostname_second_parse_copy);
+  free (port_second_parse_copy);
   return (rv);
 }
 
