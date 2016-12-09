@@ -1,3 +1,9 @@
+2016-12-09 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/api/ipmi-lan-session-common.c (_api_lan_recvfrom):
+	Convert from select() to poll() to avoid issues with high number
+	of threads. (GNU issue #49813)
+
 2016-11-02 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/Makefile.am, etc/Makefile.am: Fix distcheck.

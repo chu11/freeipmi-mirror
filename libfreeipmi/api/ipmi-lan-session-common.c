@@ -38,7 +38,7 @@
 #endif /* !HAVE_SYS_TIME_H */
 #endif  /* !TIME_WITH_SYS_TIME */
 #include <sys/types.h>
-#include <sys/select.h>
+#include <sys/poll.h>
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
@@ -231,8 +231,6 @@ _api_lan_recvfrom (ipmi_ctx_t ctx,
                    unsigned int retransmission_count,
                    struct timeval *recv_starttime)
 {
-  struct timeval timeout;
-  fd_set read_set;
   int status = 0;
   int recv_len;
   int ret;
@@ -248,8 +246,9 @@ _api_lan_recvfrom (ipmi_ctx_t ctx,
 
   if (ctx->io.outofband.retransmission_timeout)
     {
-      FD_ZERO (&read_set);
-      FD_SET (ctx->io.outofband.sockfd, &read_set);
+      struct timeval timeout;
+      struct pollfd pfd_read;
+      int timeoutms;
 
       if ((ret = _calculate_timeout (ctx,
                                      retransmission_count,
@@ -260,11 +259,14 @@ _api_lan_recvfrom (ipmi_ctx_t ctx,
       if (!ret)
         return (0);
 
-      if ((status = select ((ctx->io.outofband.sockfd + 1),
-                            &read_set,
-                            NULL,
-                            NULL,
-                            &timeout)) < 0)
+      pfd_read.fd = ctx->io.outofband.sockfd;
+      pfd_read.events = POLLIN;
+      pfd_read.revents = 0;
+
+      /* XXX: potential overflow scenarios? */
+      timeoutms = (timeout.tv_sec * 1000) + (timeout.tv_usec / 1000);
+
+      if ((status = poll (&pfd_read, 1, timeoutms)) < 0)
         {
           API_ERRNO_TO_API_ERRNUM (ctx, errno);
           return (-1);
