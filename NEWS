@@ -14,6 +14,9 @@ o Various performance improvements:
     different fiid functions.
   - Remove unnecessary input checks in libfreeipmi fiid library.
   - Add recent 'lookups' of fields in fiid library to internal cache.
+o Various minor fixes/improvements
+  - Update libfreeipmi core API to use poll() instead of select(), to
+    avoid issues with applications with a high number of threads.
 
 FreeIPMI 1.5.1 - 03/01/14
 -------------------------
