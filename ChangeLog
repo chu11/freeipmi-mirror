@@ -1,3 +1,10 @@
+2016-12-13 Albert Chu <chu11@llnl.gov>
+
+	* freeipmi.spec.in: Remove ExclusiveArch, as ppc now has iopl()
+	support.
+
+	https://lists.fedoraproject.org/pipermail/scm-commits/2011-October/676773.html
+	
 2016-11-02 Albert Chu <chu11@llnl.gov>
 
 	* Tagged freeipmi-1-5-5
