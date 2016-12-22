@@ -74,8 +74,6 @@
 
 #include "freeipmi-portability.h"
 
-#define GETHOSTBYNAME_AUX_BUFLEN 1024
-
 extern List console_engine_ctxs_to_destroy;
 extern pthread_mutex_t console_engine_ctxs_to_destroy_mutex;
 extern struct ipmiconsole_ctx_config default_config;
@@ -506,13 +504,20 @@ ipmiconsole_ctx_blocking_cleanup (ipmiconsole_ctx_t c)
 int
 ipmiconsole_ctx_connection_setup (ipmiconsole_ctx_t c)
 {
-  struct sockaddr_in srcaddr;
+  struct sockaddr *srcaddr;
+  socklen_t srcaddr_len;
+  struct sockaddr_in srcaddr4;
+  struct sockaddr_in6 srcaddr6;
+  int domain;
   int sv[2];
   int secure_malloc_flag;
 
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
   assert (!(c->session_submitted));
+
+  /* session info must be setup first so we know how to setup IPv4 vs IPv6 */
+  assert (c->session.session_info_setup);
 
   memset (&(c->connection), '\0', sizeof (struct ipmiconsole_ctx_connection));
   c->connection.user_fd = -1;
@@ -568,7 +573,26 @@ ipmiconsole_ctx_connection_setup (ipmiconsole_ctx_t c)
 
   /* Connection Data */
 
-  if ((c->connection.ipmi_fd = socket (AF_INET, SOCK_DGRAM, 0)) < 0)
+  if (c->session.addr->sa_family == AF_INET)
+    {
+      memset (&srcaddr4, '\0', sizeof (struct sockaddr_in));
+      srcaddr4.sin_family = AF_INET;
+      srcaddr4.sin_port = htons (0);
+      srcaddr = (struct sockaddr *)&srcaddr4;
+      srcaddr_len = sizeof (struct sockaddr_in);
+      domain = AF_INET;		/* to remove dereference warning on srcaddr below */
+    }
+  else
+    {
+      memset (&srcaddr6, '\0', sizeof (struct sockaddr_in6));
+      srcaddr6.sin6_family = AF_INET6;
+      srcaddr6.sin6_port = htons (0);
+      srcaddr = (struct sockaddr *)&srcaddr6;
+      srcaddr_len = sizeof (struct sockaddr_in6);
+      domain = AF_INET6;	/* to remove dereference warning on srcaddr below */
+    }
+
+  if ((c->connection.ipmi_fd = socket (domain, SOCK_DGRAM, 0)) < 0)
     {
       IPMICONSOLE_DEBUG (("socket: %s", strerror (errno)));
       if (errno == EMFILE)
@@ -584,12 +608,7 @@ ipmiconsole_ctx_connection_setup (ipmiconsole_ctx_t c)
       goto cleanup;
     }
 
-  memset (&srcaddr, '\0', sizeof (struct sockaddr_in));
-  srcaddr.sin_family = AF_INET;
-  srcaddr.sin_port = htons (0);
-  srcaddr.sin_addr.s_addr = htonl (INADDR_ANY);
-
-  if (bind (c->connection.ipmi_fd, (struct sockaddr *)&srcaddr, sizeof (struct sockaddr_in)) < 0)
+  if (bind (c->connection.ipmi_fd, srcaddr, srcaddr_len) < 0)
     {
       IPMICONSOLE_DEBUG (("bind: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
@@ -1148,24 +1167,15 @@ ipmiconsole_ctx_connection_cleanup_session_not_submitted (ipmiconsole_ctx_t c)
 int
 ipmiconsole_ctx_session_setup (ipmiconsole_ctx_t c)
 {
-  struct hostent hent;
-  int h_errnop;
-  char buf[GETHOSTBYNAME_AUX_BUFLEN];
-#if defined(HAVE_FUNC_GETHOSTBYNAME_R_6)
-  struct hostent *hptr;
-#elif defined(HAVE_FUNC_GETHOSTBYNAME_R_5)
-#else /* !HAVE_FUNC_GETHOSTBYNAME_R */
-  struct hostent *hptr;
-#endif /* !HAVE_FUNC_GETHOSTBYNAME_R */
+  struct addrinfo ai_hints, *ai_res = NULL, *ai = NULL;
+  char port_str[MAXPORTBUFLEN + 1];
+  int ret;
+  int rv = -1;
 
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
 
   c->session.console_port = c->config.port;
-
-  memset (&(c->session.addr), '\0', sizeof (struct sockaddr_in));
-  c->session.addr.sin_family = AF_INET;
-  c->session.addr.sin_port = htons (c->session.console_port);
 
   timeval_clear (&(c->session.last_ipmi_packet_sent));
 
@@ -1180,7 +1190,7 @@ ipmiconsole_ctx_session_setup (ipmiconsole_ctx_t c)
     {
       IPMICONSOLE_DEBUG (("gettimeofday: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
-      return (-1);
+      goto cleanup;
     }
 
   timeval_clear (&(c->session.last_keepalive_packet_sent));
@@ -1189,65 +1199,49 @@ ipmiconsole_ctx_session_setup (ipmiconsole_ctx_t c)
     {
       IPMICONSOLE_DEBUG (("gettimeofday: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
-      return (-1);
+      goto cleanup;
     }
 
-  memset (&hent, '\0', sizeof (struct hostent));
-#if defined(HAVE_FUNC_GETHOSTBYNAME_R_6)
-  if (gethostbyname_r (c->config.hostname,
-                       &hent,
-                       buf,
-                       GETHOSTBYNAME_AUX_BUFLEN,
-                       &hptr,
-                       &h_errnop))
-#elif defined(HAVE_FUNC_GETHOSTBYNAME_R_5)
-  /* Jan Forch - Solaris gethostbyname_r returns ptr, not integer */
-  if (!gethostbyname_r (c->config.hostname,
-                        &hent,
-                        buf,
-                        GETHOSTBYNAME_AUX_BUFLEN,
-                        &h_errnop))
-#else /* !HAVE_FUNC_GETHOSTBYNAME_R */
-  if (freeipmi_gethostbyname_r (c->config.hostname,
-                                &hent,
-                                buf,
-                                GETHOSTBYNAME_AUX_BUFLEN,
-                                &hptr,
-                                &h_errnop))
-#endif /* !HAVE_FUNC_GETHOSTBYNAME_R */
+  memset (port_str, '\0', MAXPORTBUFLEN + 1);
+  snprintf (port_str, MAXPORTBUFLEN, "%d", c->session.console_port);
+  memset (&ai_hints, 0, sizeof (struct addrinfo));
+  ai_hints.ai_family = AF_UNSPEC;
+  ai_hints.ai_socktype = SOCK_DGRAM;
+  ai_hints.ai_flags = (AI_V4MAPPED | AI_ADDRCONFIG);
+
+  if ((ret = getaddrinfo (c->config.hostname, port_str, &ai_hints, &ai_res)))
     {
-      if (h_errnop == HOST_NOT_FOUND
-          || h_errnop == NO_ADDRESS
-          || h_errnop == NO_DATA)
+      IPMICONSOLE_DEBUG (("getaddrinfo: %s", gai_strerror (ret)));
+      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_HOSTNAME_INVALID);
+      goto cleanup;
+    }
+
+  /* Try all of the different answers we got, until we succeed. */
+  for (ai = ai_res; ai != NULL; ai = ai->ai_next)
+    {
+      if (ai->ai_family == AF_INET)
         {
-          ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_HOSTNAME_INVALID);
-          return (-1);
+          memcpy (&(c->session.addr4), ai->ai_addr, ai->ai_addrlen);
+          c->session.addr = (struct sockaddr *)&(c->session.addr4);
+          c->session.addr_len = sizeof (struct sockaddr_in);
         }
-#if HAVE_HSTRERROR
-      IPMICONSOLE_DEBUG (("gethostbyname_r: %s", hstrerror (h_errnop)));
-#else /* !HAVE_HSTRERROR */
-      IPMICONSOLE_DEBUG (("gethostbyname_r: h_errno = %d", h_errnop));
-#endif /* !HAVE_HSTRERROR */
-      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
-      return (-1);
+      else if (ai->ai_family == AF_INET6)
+        {
+          memcpy (&(c->session.addr6), ai->ai_addr, ai->ai_addrlen);
+          c->session.addr = (struct sockaddr *)&(c->session.addr6);
+          c->session.addr_len = sizeof (struct sockaddr_in6);
+        }
+      else
+        continue;
+      break;
     }
 
-#if defined(HAVE_FUNC_GETHOSTBYNAME_R_6)
-  if (!hptr)
+  if (!ai)
     {
+      IPMICONSOLE_DEBUG (("getaddrinfo: no entry found"));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_HOSTNAME_INVALID);
-      return (-1);
+      goto cleanup;
     }
-#elif defined(HAVE_FUNC_GETHOSTBYNAME_R_5)
-#else /* !HAVE_FUNC_GETHOSTBYNAME_R */
-  if (!hptr)
-    {
-      ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_HOSTNAME_INVALID);
-      return (-1);
-    }
-#endif /* !HAVE_FUNC_GETHOSTBYNAME_R */
-
-  c->session.addr.sin_addr = *((struct in_addr *)hent.h_addr);
 
   c->session.protocol_state = IPMICONSOLE_PROTOCOL_STATE_START;
   c->session.close_session_flag = 0;
@@ -1269,7 +1263,7 @@ ipmiconsole_ctx_session_setup (ipmiconsole_ctx_t c)
     {
       IPMICONSOLE_DEBUG (("ipmi_check_session_sequence_number_2_0_init: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return (-1);
+      goto cleanup;
     }
 
   if (ipmi_get_random (&(c->session.message_tag),
@@ -1277,14 +1271,14 @@ ipmiconsole_ctx_session_setup (ipmiconsole_ctx_t c)
     {
       IPMICONSOLE_DEBUG (("ipmi_get_random: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return (-1);
+      goto cleanup;
     }
   if (ipmi_get_random (&(c->session.requester_sequence_number),
                        sizeof (c->session.requester_sequence_number)) < 0)
     {
       IPMICONSOLE_DEBUG (("ipmi_get_random: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return (-1);
+      goto cleanup;
     }
   c->session.requester_sequence_number %= (IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX + 1);
 
@@ -1299,7 +1293,7 @@ ipmiconsole_ctx_session_setup (ipmiconsole_ctx_t c)
         {
           IPMICONSOLE_DEBUG (("ipmi_get_random: %s", strerror (errno)));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-          return (-1);
+          goto cleanup;
         }
     } while (!c->session.remote_console_session_id);
 
@@ -1308,7 +1302,7 @@ ipmiconsole_ctx_session_setup (ipmiconsole_ctx_t c)
     {
       IPMICONSOLE_DEBUG (("ipmi_get_random: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
-      return (-1);
+      goto cleanup;
     }
 
   /* Keys and ptrs will be calculated during session setup.  We just
@@ -1352,7 +1346,12 @@ ipmiconsole_ctx_session_setup (ipmiconsole_ctx_t c)
   c->session.last_sol_output_packet_sequence_number = 0;
   c->session.last_sol_output_accepted_character_count = 0;
 
-  return (0);
+  c->session.session_info_setup = 1;
+
+  rv = 0;
+ cleanup:
+  freeaddrinfo (ai_res);
+  return (rv);
 }
 
 void

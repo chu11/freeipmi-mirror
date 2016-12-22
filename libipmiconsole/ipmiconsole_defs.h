@@ -61,8 +61,7 @@
 #define MAXHOSTNAMELEN 64
 #endif /* MAXHOSTNAMELEN */
 
-/* +5 for digits (max 65535) and +1 for colon ':' */
-#define MAXHOSTNAMELEN_WITH_PORT (MAXHOSTNAMELEN + 6)
+#define MAXPORTBUFLEN 16
 
 #ifndef MAXPATHLEN
 #define MAXPATHLEN 4096
@@ -347,7 +346,10 @@ struct ipmiconsole_ctx_connection {
 struct ipmiconsole_ctx_session {
   int16_t console_port;
 
-  struct sockaddr_in addr;
+  struct sockaddr *addr;
+  socklen_t addr_len;
+  struct sockaddr_in addr4;
+  struct sockaddr_in6 addr6;
 
   /* Session timeout, retransmission timeout, keepalive timeout maintenance */
   struct timeval last_ipmi_packet_sent;
@@ -424,6 +426,9 @@ struct ipmiconsole_ctx_session {
   /* SOL Output (BMC to remote console) */
   uint8_t last_sol_output_packet_sequence_number;
   uint8_t last_sol_output_accepted_character_count;
+
+  /* Flag indicating session info is setup */
+  int session_info_setup;
 };
 
 /* Context debug stuff */
@@ -552,9 +557,9 @@ struct ipmiconsole_ctx {
 
   struct ipmiconsole_ctx_blocking blocking;
 
-  struct ipmiconsole_ctx_connection connection;
-
   struct ipmiconsole_ctx_session session;
+
+  struct ipmiconsole_ctx_connection connection;
 
   struct ipmiconsole_ctx_fds fds;
 

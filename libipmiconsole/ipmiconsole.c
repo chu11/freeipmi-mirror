@@ -69,6 +69,7 @@
 
 #include "freeipmi-portability.h"
 #include "conffile.h"
+#include "fi_hostlist.h"
 #include "parse-common.h"
 #include "secure.h"
 
@@ -836,10 +837,13 @@ ipmiconsole_engine_submit (ipmiconsole_ctx_t c,
                                           callback_arg) < 0)
     goto cleanup;
 
-  if (ipmiconsole_ctx_connection_setup (c) < 0)
+  /* session setup required before connection setup, so
+   * connection knows if IPv4 or IPv6 used
+   */
+  if (ipmiconsole_ctx_session_setup (c) < 0)
     goto cleanup;
 
-  if (ipmiconsole_ctx_session_setup (c) < 0)
+  if (ipmiconsole_ctx_connection_setup (c) < 0)
     goto cleanup;
 
   if (ipmiconsole_engine_submit_ctx (c) < 0)
@@ -1068,10 +1072,13 @@ ipmiconsole_engine_submit_block (ipmiconsole_ctx_t c)
   /* Set to success, so we know if an IPMI error occurred later */
   ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SUCCESS);
 
-  if (ipmiconsole_ctx_connection_setup (c) < 0)
+  /* session setup required before connection setup, so
+   * connection knows if IPv4 or IPv6 used
+   */
+  if (ipmiconsole_ctx_session_setup (c) < 0)
     goto cleanup;
 
-  if (ipmiconsole_ctx_session_setup (c) < 0)
+  if (ipmiconsole_ctx_connection_setup (c) < 0)
     goto cleanup;
 
   if (_ipmiconsole_blocking_notification_setup (c) < 0)
@@ -1153,9 +1160,12 @@ ipmiconsole_ctx_create (const char *hostname,
                         struct ipmiconsole_engine_config *engine_config)
 {
   ipmiconsole_ctx_t c = NULL;
-  char hostnamebuf[MAXHOSTNAMELEN_WITH_PORT + 1];
-  char *hostname_ptr;
+  char *hostname_copy = NULL;
+  char *port_copy = NULL;
+  const char *hostname_ptr = NULL;
+  const char *port_ptr = NULL;
   uint16_t port = RMCP_PRIMARY_RMCP_PORT;
+  int ret;
 
   if (!hostname
       || !ipmi_config
@@ -1184,62 +1194,38 @@ ipmiconsole_ctx_create (const char *hostname,
       return (NULL);
     }
 
-  if (strchr (hostname, ':'))
+  /* Check for host:port or [Ipv6]:port format */
+  if ((ret = fi_host_is_host_with_port (hostname,
+                                        &hostname_copy,
+                                        &port_copy)) < 0)
     {
-      char *ptr;
+      IPMICONSOLE_DEBUG (("fi_host_is_host_with_port: %s", errno));
+      errno = EINVAL;
+      return (NULL);
+    }
 
-      if (strlen (hostname) > MAXHOSTNAMELEN_WITH_PORT)
-        {
-          IPMICONSOLE_DEBUG (("invalid input parameters"));
-          errno = EINVAL;
-          return (NULL);
-        } 
-      
-      memset (hostnamebuf, '\0', MAXHOSTNAMELEN_WITH_PORT + 1);
-      strcpy (hostnamebuf, hostname);
-      
-      if ((ptr = strchr (hostnamebuf, ':')))
-        {
-          char *endptr;
-          int tmp;
-          
-          *ptr = '\0';
-          ptr++;
-          
-          if (strlen (hostnamebuf) > MAXHOSTNAMELEN)
-            {
-              IPMICONSOLE_DEBUG (("invalid input parameters"));
-              errno = EINVAL;
-              return (NULL);
-            } 
-          
-          errno = 0;
-          tmp = strtol (ptr, &endptr, 0);
-          if (errno
-              || endptr[0] != '\0'
-              || tmp <= 0
-              || tmp > USHRT_MAX)
-            {
-              IPMICONSOLE_DEBUG (("invalid input parameters"));
-              errno = EINVAL;
-              return (NULL);
-            }
-          
-          port = tmp;
-        }
-
-      hostname_ptr = hostnamebuf;
+  if (ret)
+    {
+      hostname_ptr = hostname_copy;
+      port_ptr = port_copy;
     }
   else
-    {
-      if (strlen (hostname) > MAXHOSTNAMELEN)
-        {
-          IPMICONSOLE_DEBUG (("invalid input parameters"));
-          errno = EINVAL;
-          return (NULL);
-        }
+    hostname_ptr = hostname;
 
-      hostname_ptr = (char *)hostname;
+  if ((ret = fi_host_is_valid (hostname_ptr,
+                               port_ptr,
+                               &port)) < 0)
+    {
+      IPMICONSOLE_DEBUG (("fi_host_is_valid: %s", errno));
+      errno = EINVAL;
+      goto free_cleanup;
+    }
+
+  if (!ret)
+    {
+      IPMICONSOLE_DEBUG (("invalid input parameters"));
+      errno = EINVAL;
+      goto free_cleanup;
     }
 
   /* If engine is not setup, the default_config is not yet known */
@@ -1247,7 +1233,7 @@ ipmiconsole_ctx_create (const char *hostname,
     {
       IPMICONSOLE_DEBUG (("engine not initialized"));
       errno = EAGAIN;
-      return (NULL);
+      goto free_cleanup;
     }
 
   if ((engine_config->engine_flags != IPMICONSOLE_ENGINE_DEFAULT
@@ -1257,7 +1243,7 @@ ipmiconsole_ctx_create (const char *hostname,
       if (!(c = (ipmiconsole_ctx_t)secure_malloc (sizeof (struct ipmiconsole_ctx))))
         {
           errno = ENOMEM;
-          return (NULL);
+          goto free_cleanup;
         }
     }
   else
@@ -1265,7 +1251,7 @@ ipmiconsole_ctx_create (const char *hostname,
       if (!(c = (ipmiconsole_ctx_t)malloc (sizeof (struct ipmiconsole_ctx))))
         {
           errno = ENOMEM;
-          return (NULL);
+          goto free_cleanup;
         }
     }
 
@@ -1299,6 +1285,9 @@ ipmiconsole_ctx_create (const char *hostname,
 
   c->session_submitted = 0;
 
+  free (hostname_copy);
+  free (port_copy);
+
   ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SUCCESS);
   return (c);
 
@@ -1321,6 +1310,12 @@ ipmiconsole_ctx_create (const char *hostname,
     secure_free (c, sizeof (struct ipmiconsole_ctx));
   else
     free (c);
+
+ free_cleanup:
+
+  free (hostname_copy);
+  free (port_copy);
+
   return (NULL);
 }
 

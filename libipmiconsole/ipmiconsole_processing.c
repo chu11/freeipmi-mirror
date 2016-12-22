@@ -3926,9 +3926,17 @@ _process_protocol_state_close_session_sent (ipmiconsole_ctx_t c)
       /* now reset up w/ new console port */
       c->session.console_port = console_port;
 
-      memset (&(c->session.addr), '\0', sizeof (struct sockaddr_in));
-      c->session.addr.sin_family = AF_INET;
-      c->session.addr.sin_port = htons (c->session.console_port);
+      if (c->session.addr_len == sizeof (struct sockaddr_in))
+        c->session.addr4.sin_port = htons (c->session.console_port);
+      else if (c->session.addr_len == sizeof (struct sockaddr_in6))
+        c->session.addr6.sin6_port = htons (c->session.console_port);
+      else
+        {
+          /* Shouldn't be possible to reach here */
+          IPMICONSOLE_CTX_DEBUG (c, ("reset port logic bug"));
+          ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
+          return (-1);
+        }
 
       IPMICONSOLE_CTX_DEBUG (c, ("trying new port: %Xh", c->session.console_port));
 

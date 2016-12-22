@@ -478,8 +478,9 @@ static int
 _ipmi_recvfrom (ipmiconsole_ctx_t c)
 {
   char buffer[IPMICONSOLE_PACKET_BUFLEN];
-  struct sockaddr_in from;
-  unsigned int fromlen = sizeof (struct sockaddr_in);
+  struct sockaddr_in6 from6;
+  struct sockaddr *from = (struct sockaddr *)&from6;
+  unsigned int fromlen = sizeof (struct sockaddr_in6);
   ssize_t len;
   int n, dropped = 0;
   int secure_malloc_flag;
@@ -503,7 +504,7 @@ _ipmi_recvfrom (ipmiconsole_ctx_t c)
                                buffer,
                                IPMICONSOLE_PACKET_BUFLEN,
                                0,
-                               (struct sockaddr *)&from,
+                               from,
                                &fromlen);
     } while (len < 0 && errno == EINTR);
 
@@ -559,12 +560,32 @@ _ipmi_recvfrom (ipmiconsole_ctx_t c)
     }
 
   /* Sanity Check */
-  if (from.sin_family != AF_INET
-      || from.sin_addr.s_addr != c->session.addr.sin_addr.s_addr)
+  if (from6.sin6_family == AF_INET6)
     {
-      IPMICONSOLE_CTX_DEBUG (c, ("received from invalid address"));
-      /* Note: Not a fatal error, just return */
-      return (0);
+      if (memcmp (&from6.sin6_addr,
+                  &(c->session.addr6.sin6_addr),
+                  sizeof (from6.sin6_addr)))
+        {
+          IPMICONSOLE_CTX_DEBUG (c, ("received from invalid address"));
+          /* Note: Not a fatal error, just return */
+          return (0);
+        }
+    }
+  else
+    {
+      /* memcpy hacks to avoid warnings, i.e.
+       * warning: dereferencing pointer 'X' does break strict-aliasing rules
+       */
+      struct sockaddr_in from4;
+
+      memcpy (&from4, from, fromlen);
+
+      if (from4.sin_addr.s_addr != c->session.addr4.sin_addr.s_addr)
+        {
+          IPMICONSOLE_CTX_DEBUG (c, ("received from invalid address"));
+          /* Note: Not a fatal error, just return */
+          return (0);
+        }
     }
 
   /* Empty the scbuf if it's not empty */
@@ -634,8 +655,8 @@ _ipmi_sendto (ipmiconsole_ctx_t c)
                                  buffer,
                                  n,
                                  0,
-                                 (struct sockaddr *)&(c->session.addr),
-                                 sizeof (struct sockaddr_in));
+                                 c->session.addr,
+                                 c->session.addr_len);
         } while (len < 0 && errno == EINTR);
     }
   else
@@ -646,8 +667,8 @@ _ipmi_sendto (ipmiconsole_ctx_t c)
                                       buffer,
                                       n,
                                       0,
-                                      (struct sockaddr *)&(c->session.addr),
-                                      sizeof (struct sockaddr_in));
+                                      c->session.addr,
+                                      c->session.addr_len);
         } while (len < 0 && errno == EINTR);
     }
 
