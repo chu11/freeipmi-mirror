@@ -89,6 +89,7 @@
 
 #include "freeipmi-portability.h"
 #include "debug-util.h"
+#include "fi_hostlist.h"
 #include "secure.h"
 
 #define IPMI_POLL_INTERVAL_USECS             10
@@ -326,146 +327,109 @@ _ipmi_inband_free (ipmi_ctx_t ctx)
 static int
 _setup_hostname (ipmi_ctx_t ctx, const char *hostname)
 {
-  struct hostent hent;
-  int h_errnop;
-  char buf[GETHOSTBYNAME_AUX_BUFLEN];
-#if defined(HAVE_FUNC_GETHOSTBYNAME_R_6)
-  struct hostent *hptr;
-#elif defined(HAVE_FUNC_GETHOSTBYNAME_R_5)
-#else /* !HAVE_FUNC_GETHOSTBYNAME_R */
-  struct hostent *hptr;
-#endif /* !HAVE_FUNC_GETHOSTBYNAME_R */
   char *hostname_copy = NULL;
-  char *hostname_ptr;
+  char *port_copy = NULL;
+  const char *hostname_ptr = NULL;
+  const char *port_ptr = NULL;
   uint16_t port = RMCP_AUX_BUS_SHUNT;
+  struct addrinfo ai_hints, *ai_res = NULL, *ai = NULL;
+  char port_str[MAXPORTBUFLEN + 1];
   int rv = -1;
+  int ret;
 
   assert (ctx);
   assert (ctx->magic == IPMI_CTX_MAGIC);
   assert (hostname);
 
-  if (strchr (hostname, ':'))
+  if ((ret = fi_host_is_host_with_port (hostname, &hostname_copy, &port_copy)) < 0)
     {
-      char *ptr;
+      API_SET_ERRNUM (ctx, IPMI_ERR_INTERNAL_ERROR);
+      goto cleanup;
+    }
 
-      if (!(hostname_copy = strdup ((char *)hostname)))
-        {
-          API_SET_ERRNUM (ctx, IPMI_ERR_OUT_OF_MEMORY);
-          goto cleanup;
-        }
-
-      if ((ptr = strchr (hostname_copy, ':')))
-        {
-          char *endptr;
-          int tmp;
-
-          *ptr = '\0';
-          ptr++;
-
-          if (strlen (hostname_copy) > MAXHOSTNAMELEN)
-            {
-              API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-              goto cleanup;
-            }
-          
-          errno = 0;
-          tmp = strtol (ptr, &endptr, 0);
-          if (errno
-              || endptr[0] != '\0'
-              || tmp <= 0
-              || tmp > USHRT_MAX)
-            {
-              API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-              goto cleanup;
-            }
-          
-          port = tmp;
-        }
+  if (ret)
+    {
       hostname_ptr = hostname_copy;
+      port_ptr = port_copy;
     }
   else
-    {
-      if (strlen (hostname) > MAXHOSTNAMELEN)
-        {
-          API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-          goto cleanup;
-        }
+    hostname_ptr = hostname;
 
-      hostname_ptr = (char *)hostname;
+  if ((ret = fi_host_is_valid (hostname_ptr,
+                               port_ptr,
+                               &port)) < 0)
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_INTERNAL_ERROR);
+      goto cleanup;
     }
-  
-  memset (&hent, '\0', sizeof (struct hostent));
-#if defined(HAVE_FUNC_GETHOSTBYNAME_R_6)
-  if (gethostbyname_r (hostname_ptr,
-                       &hent,
-                       buf,
-                       GETHOSTBYNAME_AUX_BUFLEN,
-                       &hptr,
-                       &h_errnop))
+
+  if (!ret)
+    {
+      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
+      goto cleanup;
+    }
+
+  memset (port_str, '\0', MAXPORTBUFLEN + 1);
+  snprintf (port_str, MAXPORTBUFLEN, "%d", port);
+  memset (&ai_hints, 0, sizeof (struct addrinfo));
+  ai_hints.ai_family = AF_UNSPEC;
+  ai_hints.ai_socktype = SOCK_DGRAM;
+  ai_hints.ai_flags = (AI_V4MAPPED | AI_ADDRCONFIG);
+
+  if (getaddrinfo (hostname_ptr, port_str, &ai_hints, &ai_res))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_HOSTNAME_INVALID);
       goto cleanup;
     }
-  if (!hptr)
+
+  /* Try all of the different answers we got, until we succeed. */
+  for (ai = ai_res; ai != NULL; ai = ai->ai_next)
+    {
+      if (ai->ai_family == AF_INET)
+        {
+          memcpy (&(ctx->io.outofband.remote_host4), ai->ai_addr, ai->ai_addrlen);
+          ctx->io.outofband.remote_host = (struct sockaddr *)&(ctx->io.outofband.remote_host4);
+          ctx->io.outofband.remote_host_len = sizeof (struct sockaddr_in);
+        }
+      else if (ai->ai_family == AF_INET6)
+        {
+          memcpy (&(ctx->io.outofband.remote_host6), ai->ai_addr, ai->ai_addrlen);
+          ctx->io.outofband.remote_host = (struct sockaddr *)&(ctx->io.outofband.remote_host6);
+          ctx->io.outofband.remote_host_len = sizeof (struct sockaddr_in6);
+        }
+      else
+        continue;
+      break;
+    }
+
+  if (!ai)
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_HOSTNAME_INVALID);
       goto cleanup;
     }
-#elif defined(HAVE_FUNC_GETHOSTBYNAME_R_5)
-  /* Jan Forch - Solaris gethostbyname_r returns ptr, not integer */
-  if (!gethostbyname_r (hostname_ptr,
-                        &hent,
-                        buf,
-                        GETHOSTBYNAME_AUX_BUFLEN,
-                        &h_errnop))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_HOSTNAME_INVALID);
-      goto cleanup;
-    }
-#else  /* !HAVE_FUNC_GETHOSTBYNAME_R */
-  if (freeipmi_gethostbyname_r (hostname_ptr,
-                                &hent,
-                                buf,
-                                GETHOSTBYNAME_AUX_BUFLEN,
-                                &hptr,
-                                &h_errnop))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_HOSTNAME_INVALID);
-      goto cleanup;
-    }
-  if (!hptr)
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_HOSTNAME_INVALID);
-      goto cleanup;
-    }
-#endif /* !HAVE_FUNC_GETHOSTBYNAME_R */
 
   strncpy (ctx->io.outofband.hostname,
            hostname_ptr,
            MAXHOSTNAMELEN);
 
-  ctx->io.outofband.remote_host.sin_family = AF_INET;
-  ctx->io.outofband.remote_host.sin_port = htons (port);
-  ctx->io.outofband.remote_host.sin_addr = *(struct in_addr *) hent.h_addr;
-
   rv = 0;
  cleanup:
   free (hostname_copy);
+  free (port_copy);
+  freeaddrinfo (ai_res);
   return (rv);
 }
 
 static int
 _setup_socket (ipmi_ctx_t ctx)
 {
-  struct sockaddr_in addr;
-
   assert (ctx);
   assert (ctx->magic == IPMI_CTX_MAGIC);
 
   /* Open client (local) UDP socket */
   /* achu: ephemeral ports are > 1023, so no way we will bind to an IPMI port */
 
-  if ((ctx->io.outofband.sockfd = socket (AF_INET,
+  if ((ctx->io.outofband.sockfd = socket (ctx->io.outofband.remote_host->sa_family,
                                           SOCK_DGRAM,
                                           0)) < 0)
     {
@@ -473,14 +437,26 @@ _setup_socket (ipmi_ctx_t ctx)
       return (-1);
     }
 
-  memset (&addr, 0, sizeof (struct sockaddr_in));
-  addr.sin_family = AF_INET;
-  addr.sin_port   = htons (0);
-  addr.sin_addr.s_addr = htonl (INADDR_ANY);
+  if (ctx->io.outofband.remote_host->sa_family == AF_INET)
+    {
+      /* zero everywhere, secure ephemeral port */
+      memset (&(ctx->io.outofband.srcaddr4), 0, sizeof (struct sockaddr_in));
+      ctx->io.outofband.srcaddr4.sin_family = AF_INET;
+      ctx->io.outofband.srcaddr = (struct sockaddr *)&(ctx->io.outofband.srcaddr4);
+      ctx->io.outofband.srcaddr_len = sizeof (struct sockaddr_in);
+    }
+  else
+    {
+      /* zero everywhere, secure ephemeral port */
+      memset (&(ctx->io.outofband.srcaddr6), 0, sizeof (struct sockaddr_in6));
+      ctx->io.outofband.srcaddr6.sin6_family = AF_INET6;
+      ctx->io.outofband.srcaddr = (struct sockaddr *)&(ctx->io.outofband.srcaddr6);
+      ctx->io.outofband.srcaddr_len = sizeof (struct sockaddr_in6);
+    }
 
   if (bind (ctx->io.outofband.sockfd,
-            (struct sockaddr *)&addr,
-            sizeof (struct sockaddr_in)) < 0)
+            ctx->io.outofband.srcaddr,
+            ctx->io.outofband.srcaddr_len) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       return (-1);

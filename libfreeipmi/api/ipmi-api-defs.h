@@ -65,6 +65,8 @@
 #define MAXHOSTNAMELEN 64
 #endif
 
+#define MAXPORTBUFLEN 16
+
 struct ipmi_ctx_target
 {
   uint8_t channel_number;       /* for ipmb */
@@ -121,7 +123,15 @@ struct ipmi_ctx
 
       char hostname[MAXHOSTNAMELEN+1];
 
-      struct sockaddr_in remote_host;
+      struct sockaddr *remote_host;
+      socklen_t remote_host_len;
+      struct sockaddr_in remote_host4;
+      struct sockaddr_in6 remote_host6;
+
+      struct sockaddr *srcaddr;
+      socklen_t srcaddr_len;
+      struct sockaddr_in srcaddr4;
+      struct sockaddr_in6 srcaddr6;
 
       /* Configured by User for IPMI 1.5 and IPMI 2.0*/
       char username[IPMI_MAX_USER_NAME_LENGTH+1];

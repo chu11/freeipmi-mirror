@@ -571,8 +571,8 @@ _api_lan_cmd_send (ipmi_ctx_t ctx,
                              pkt,
                              send_len,
                              0,
-                             (struct sockaddr *)&(ctx->io.outofband.remote_host),
-                             sizeof (struct sockaddr_in));
+                             ctx->io.outofband.remote_host,
+                             ctx->io.outofband.remote_host_len);
     } while (ret < 0 && errno == EINTR);
   
   if (ret < 0)
@@ -1030,7 +1030,6 @@ api_lan_cmd_wrapper (ipmi_ctx_t ctx,
           if (internal_workaround_flags & IPMI_INTERNAL_WORKAROUND_FLAGS_GET_SESSION_CHALLENGE)
             {
               struct socket_to_close *s;
-              struct sockaddr_in addr;
 
               if (!(s = (struct socket_to_close *)malloc (sizeof (struct socket_to_close))))
                 {
@@ -1041,7 +1040,7 @@ api_lan_cmd_wrapper (ipmi_ctx_t ctx,
               s->next = sockets;
               sockets = s;
 
-              if ((ctx->io.outofband.sockfd = socket (AF_INET,
+              if ((ctx->io.outofband.sockfd = socket (ctx->io.outofband.srcaddr->sa_family,
                                                       SOCK_DGRAM,
                                                       0)) < 0)
                 {
@@ -1049,14 +1048,9 @@ api_lan_cmd_wrapper (ipmi_ctx_t ctx,
                   goto cleanup;
                 }
 
-              memset (&addr, 0, sizeof (struct sockaddr_in));
-              addr.sin_family = AF_INET;
-              addr.sin_port = htons (0);
-              addr.sin_addr.s_addr = htonl (INADDR_ANY);
-
               if (bind (ctx->io.outofband.sockfd,
-                        (struct sockaddr *)&addr,
-                        sizeof (struct sockaddr_in)) < 0)
+                        ctx->io.outofband.srcaddr,
+                        ctx->io.outofband.srcaddr_len) < 0)
                 {
                   API_ERRNO_TO_API_ERRNUM (ctx, errno);
                   goto cleanup;
@@ -2264,8 +2258,8 @@ _api_lan_2_0_cmd_send (ipmi_ctx_t ctx,
                                   pkt,
                                   send_len,
                                   0,
-                                  (struct sockaddr *)&(ctx->io.outofband.remote_host),
-                                  sizeof (struct sockaddr_in));
+                                  ctx->io.outofband.remote_host,
+                                  ctx->io.outofband.remote_host_len);
     } while (ret < 0 && errno == EINTR);
   
   if (ret < 0)
