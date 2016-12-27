@@ -45,10 +45,6 @@
 #include <sys/types.h>
 #include <sys/select.h>
 #include <sys/socket.h>
-#include <sys/ioctl.h>
-#if HAVE_SYS_SOCKIO_H
-#include <sys/sockio.h>
-#endif /* HAVE_SYS_SOCKIO_H */
 #include <sys/param.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -72,6 +68,7 @@
 #include <netdb.h>              /* MAXHOSTNAMELEN Solaris */
 #endif /* HAVE_NETDB_H */
 #include <assert.h>
+#include <ifaddrs.h>
 
 #include <freeipmi/freeipmi.h>
 
@@ -79,13 +76,18 @@
 
 #include "ping-tool-common.h"
 
-#ifndef INET_ADDRSTRLEN
-#define INET_ADDRSTRLEN 16
+/* achu: max length IPv6 is 45 chars, add +1 for NUL
+ * ABCD:ABCD:ABCD:ABCD:ABCD:ABCD:192.168.100.200
+ */
+#ifndef INET6_ADDRSTRLEN
+#define INET6_ADDRSTRLEN 46
 #endif
 
 #ifndef MAXHOSTNAMELEN
 #define MAXHOSTNAMELEN 64
 #endif
+
+#define MAXPORTBUFLEN 16
 
 #define IPMI_PING_MAX_PKT_LEN      1024
 #define IPMI_PING_MAX_ERR_LEN      1024
@@ -117,9 +119,15 @@ static int pingtool_sockfd = 0;
 static char *pingtool_progname = NULL;
 static char *pingtool_interface = NULL;
 static char pingtool_dest[MAXHOSTNAMELEN+1];
-static char pingtool_dest_ip[INET_ADDRSTRLEN+1];
-static struct sockaddr_in pingtool_srcaddr;
-static struct sockaddr_in pingtool_destaddr;
+static char pingtool_dest_ip[INET6_ADDRSTRLEN+1];
+static struct sockaddr *pingtool_srcaddr;
+static socklen_t pingtool_srcaddr_len;
+static struct sockaddr *pingtool_destaddr;
+static socklen_t pingtool_destaddr_len;
+static struct sockaddr_in pingtool_srcaddr4;
+static struct sockaddr_in pingtool_destaddr4;
+static struct sockaddr_in6 pingtool_srcaddr6;
+static struct sockaddr_in6 pingtool_destaddr6;
 static unsigned int pingtool_pkt_sent = 0;
 static unsigned int pingtool_pkt_recv = 0;
 static Ipmi_Ping_EndResult pingtool_end_result = NULL;
@@ -330,76 +338,194 @@ _signal_handler (int sig)
 static void
 _setup (void)
 {
-  struct hostent *hptr;
-  char *temp;
+  struct addrinfo ai_hints, *ai_res = NULL, *ai = NULL;
+  uint16_t port = RMCP_PRIMARY_RMCP_PORT;
+  char port_str[MAXPORTBUFLEN + 1];
+  int ret;
 
   if (signal (SIGINT, _signal_handler) == SIG_ERR)
     ipmi_ping_err_exit ("signal setup failed");
 
-  if ((pingtool_sockfd = socket (AF_INET, SOCK_DGRAM, 0)) < 0)
-    ipmi_ping_err_exit ("socket: %s", strerror (errno));
+  memset (port_str, '\0', MAXPORTBUFLEN + 1);
+  snprintf (port_str, MAXPORTBUFLEN, "%d", port);
+  memset (&ai_hints, 0, sizeof (struct addrinfo));
+  ai_hints.ai_family = AF_UNSPEC;
+  ai_hints.ai_socktype = SOCK_DGRAM;
+  ai_hints.ai_flags = (AI_V4MAPPED | AI_ADDRCONFIG);
 
-  memset (&pingtool_srcaddr, '\0', sizeof (pingtool_srcaddr));
-  pingtool_srcaddr.sin_family = AF_INET;
-  pingtool_srcaddr.sin_port = htons (0);
+  if ((ret = getaddrinfo (pingtool_dest, port_str, &ai_hints, &ai_res)))
+    ipmi_ping_err_exit ("getaddrinfo: %s", gai_strerror (ret));
 
-  if (!pingtool_interface)
-    pingtool_srcaddr.sin_addr.s_addr = htonl (INADDR_ANY);
-  else
+  /* Try all of the different answers we got, until we succeed. */
+  for (ai = ai_res; ai != NULL; ai = ai->ai_next)
     {
-      /* If there is a period, assume user input an IP address.  No
-       * period, assume user input an interface name
-       */
-      if (strchr (pingtool_interface, '.'))
+      if (ai->ai_family == AF_INET)
         {
-          int rv;
+          memcpy (&pingtool_destaddr4, ai->ai_addr, ai->ai_addrlen);
+          pingtool_destaddr4.sin_family = AF_INET;
+          pingtool_destaddr4.sin_port = htons (RMCP_PRIMARY_RMCP_PORT);
 
-          if ((rv = inet_pton (AF_INET,
-                               pingtool_interface,
-                               &pingtool_srcaddr.sin_addr)) < 0)
-            ipmi_ping_err_exit ("inet_pton: %s", strerror (errno));
-          if (!rv)
-            ipmi_ping_err_exit ("invalid interface address");
+	  memset (pingtool_dest_ip, '\0', INET6_ADDRSTRLEN + 1);
+          if (!inet_ntop (AF_INET,
+                          &pingtool_destaddr4.sin_addr,
+                          pingtool_dest_ip,
+                          INET6_ADDRSTRLEN))
+            ipmi_ping_err_exit ("inet_ntop: %s\n", strerror (errno));
+
+          pingtool_destaddr = (struct sockaddr *)&pingtool_destaddr4;
+          pingtool_destaddr_len = sizeof (struct sockaddr_in);
+
+          /* zero everywhere, secure ephemeral port */
+          memset (&pingtool_srcaddr4, '\0', sizeof (struct sockaddr_in));
+          pingtool_srcaddr4.sin_family = AF_INET;
+
+          pingtool_srcaddr = (struct sockaddr *)&pingtool_srcaddr4;
+          pingtool_srcaddr_len = sizeof (struct sockaddr_in);
+
+          if (pingtool_interface)
+            {
+              struct in_addr in4;
+
+              /* If inet_pton fails, assume its an interface name */
+              if (inet_pton (AF_INET,
+                             pingtool_interface,
+                             &in4) == 1)
+                memcpy (&pingtool_srcaddr4.sin_addr,
+                        &in4,
+                        sizeof (struct in_addr));
+              else
+                {
+                  /* User did not pass in IPv4 or IPv6, so assume it's an interface
+                   */
+                  struct ifaddrs *ifaddr = NULL, *ifa = NULL;
+
+                  if (getifaddrs (&ifaddr) < 0)
+                    ipmi_ping_err_exit ("getifaddrs: %s", strerror (errno));
+
+                  for (ifa = ifaddr; ifa != NULL; ifa = ifa->ifa_next)
+                    {
+                      if (!ifa->ifa_addr
+                          || !ifa->ifa_name)
+                        continue;
+
+                      if (!strcmp (ifa->ifa_name, pingtool_interface)
+                          && ifa->ifa_addr->sa_family == AF_INET)
+                        {
+                          struct sockaddr_in tmpaddr;
+
+                          /* memcpy to avoid warnings */
+                          memcpy (&tmpaddr, ifa->ifa_addr, sizeof (struct sockaddr_in));
+
+                          memcpy (&pingtool_srcaddr4.sin_addr.s_addr,
+                                  &tmpaddr.sin_addr.s_addr,
+                                  sizeof (pingtool_srcaddr4.sin_addr.s_addr));
+                          break;
+                        }
+
+                    }
+
+                  if (!ifa)
+                    ipmi_ping_err_exit ("Cannot find interface: %s", pingtool_interface);
+
+                  freeifaddrs (ifaddr);
+                }
+            }
+        }
+      else if (ai->ai_family == AF_INET6)
+        {
+          memcpy (&pingtool_destaddr6, ai->ai_addr, ai->ai_addrlen);
+          pingtool_destaddr6.sin6_family = AF_INET6;
+          pingtool_destaddr6.sin6_port = htons (RMCP_PRIMARY_RMCP_PORT);
+
+	  memset (pingtool_dest_ip, '\0', INET6_ADDRSTRLEN + 1);
+          if (!inet_ntop (AF_INET6,
+                          &pingtool_destaddr6.sin6_addr,
+                          pingtool_dest_ip,
+                          INET6_ADDRSTRLEN))
+            ipmi_ping_err_exit ("inet_ntop: %s\n", strerror (errno));
+
+          pingtool_destaddr = (struct sockaddr *)&pingtool_destaddr6;
+          pingtool_destaddr_len = sizeof (struct sockaddr_in6);
+
+          /* zero everywhere, secure ephemeral port */
+          memset (&pingtool_srcaddr6, '\0', sizeof (struct sockaddr_in6));
+          pingtool_srcaddr6.sin6_family = AF_INET6;
+
+          pingtool_srcaddr = (struct sockaddr *)&pingtool_srcaddr6;
+          pingtool_srcaddr_len = sizeof (struct sockaddr_in6);
+
+          if (pingtool_interface)
+            {
+	      struct ifaddrs *ifaddr = NULL, *ifa = NULL;
+              struct in6_addr in6;
+	      int is_interfacename = 0;
+
+              /* If inet_pton fails, assume its an interface name */
+              if (inet_pton (AF_INET6,
+                             pingtool_interface,
+                             &in6) != 1)
+		is_interfacename = 1;
+
+	      if (getifaddrs (&ifaddr) < 0)
+		ipmi_ping_err_exit ("getifaddrs: %s", strerror (errno));
+
+	      for (ifa = ifaddr; ifa != NULL; ifa = ifa->ifa_next)
+		{
+		  if (!ifa->ifa_addr
+		      || !ifa->ifa_name)
+		    continue;
+		  
+		  if (ifa->ifa_addr->sa_family == AF_INET6)
+		    {
+		      struct sockaddr_in6 tmpaddr;
+		      
+		      /* memcpy to avoid warnings */
+		      memcpy (&tmpaddr, ifa->ifa_addr, sizeof (struct sockaddr_in6));
+		      
+		      if ((is_interfacename && !strcmp (ifa->ifa_name, pingtool_interface))
+			  || !memcmp (&tmpaddr.sin6_addr, &in6, sizeof (struct in6_addr)))
+                        {
+                          memcpy (&pingtool_srcaddr6.sin6_addr,
+                                  &tmpaddr.sin6_addr,
+                                  sizeof (pingtool_srcaddr6.sin6_addr));
+			  
+			  memcpy (&pingtool_srcaddr6.sin6_scope_id,
+				  &tmpaddr.sin6_scope_id,
+				  sizeof (pingtool_srcaddr6.sin6_scope_id));
+                          break;
+                        }
+                    }
+		  
+                  if (!ifa)
+                    ipmi_ping_err_exit ("Cannot find interface: %s", pingtool_interface);
+		}
+	      
+	      freeifaddrs (ifaddr);
+            }
         }
       else
+        continue;
+
+      if ((pingtool_sockfd = socket (ai->ai_family,
+                                     ai->ai_socktype,
+                                     ai->ai_protocol)) < 0)
+        ipmi_ping_err_exit ("socket: %s", strerror (errno));
+
+      if (bind (pingtool_sockfd, pingtool_srcaddr, pingtool_srcaddr_len) < 0)
         {
-          struct ifreq ifr;
-          struct sockaddr_in temp_sockaddr;
-
-          _strncpy (ifr.ifr_name, pingtool_interface, IFNAMSIZ);
-          ifr.ifr_addr.sa_family = AF_INET;
-          if (ioctl (pingtool_sockfd, SIOCGIFADDR, &ifr) < 0)
-            ipmi_ping_err_exit ("ioctl: %s", strerror (errno));
-
-          temp_sockaddr = *((struct sockaddr_in *)&ifr.ifr_addr);
-          memcpy (&pingtool_srcaddr.sin_addr.s_addr,
-                  &temp_sockaddr.sin_addr.s_addr,
-                  sizeof (pingtool_srcaddr.sin_addr.s_addr));
+          close (pingtool_sockfd);
+          continue;
         }
+
+      break;
     }
 
-  if (bind (pingtool_sockfd,
-            (struct sockaddr *)&pingtool_srcaddr,
-            sizeof (pingtool_srcaddr)) < 0)
-    ipmi_ping_err_exit ("bind: %s", strerror (errno));
-
-  memset (&pingtool_destaddr, '\0', sizeof (pingtool_destaddr));
-  pingtool_destaddr.sin_family = AF_INET;
-  pingtool_destaddr.sin_port = htons (RMCP_PRIMARY_RMCP_PORT);
-
-  if (!(hptr = gethostbyname (pingtool_dest)))
-    {
-#if HAVE_HSTRERROR
-      ipmi_ping_err_exit ("gethostbyname: %s", hstrerror (h_errno));
-#else /* !HAVE_HSTRERROR */
-      ipmi_ping_err_exit ("gethostbyname: h_errno = %d", h_errno);
-#endif /* !HAVE_HSTRERROR */
-    }
-  pingtool_destaddr.sin_addr = *((struct in_addr *)hptr->h_addr);
-  temp = inet_ntoa (pingtool_destaddr.sin_addr);
-  _strncpy (pingtool_dest_ip, temp, INET_ADDRSTRLEN);
+  if (!ai)
+    ipmi_ping_err_exit ("Error determining destination IP");
 
   srand (time (NULL));
+
+  freeaddrinfo (ai_res);
 }
 
 static void
@@ -458,8 +584,8 @@ _main_loop (Ipmi_Ping_CreatePacket create,
                             buf,
                             len,
                             0,
-                            (struct sockaddr *)&pingtool_destaddr,
-                            sizeof (pingtool_destaddr));
+                            pingtool_destaddr,
+                            pingtool_destaddr_len);
       if (rv < 0)
         ipmi_ping_err_exit ("ipmi_sendto: %s", strerror (errno));
 
@@ -486,17 +612,18 @@ _main_loop (Ipmi_Ping_CreatePacket create,
 
           if (rv == 1)
             {
-              struct sockaddr_in from;
+              struct sockaddr_in6 from6;
               socklen_t fromlen;
+              char fromstr[INET6_ADDRSTRLEN+1];
 
-              fromlen = sizeof (from);
+              fromlen = sizeof (from6);
               len = ipmi_lan_recvfrom (pingtool_sockfd,
                                        buf,
                                        IPMI_PING_MAX_PKT_LEN,
                                        0,
-                                       (struct sockaddr *)&from,
+                                       (struct sockaddr *)&from6,
                                        &fromlen);
-              
+
               /* achu & hliebig:
                *
                * Premise from ipmitool (http://ipmitool.sourceforge.net/)
@@ -535,10 +662,29 @@ _main_loop (Ipmi_Ping_CreatePacket create,
               if (len < 0)
                 ipmi_ping_err_exit ("ipmi_recvfrom: %s", strerror (errno));
 
+	      memset (fromstr, '\0', INET6_ADDRSTRLEN + 1);
+              if (from6.sin6_family == AF_INET6)
+                {
+                  if (!inet_ntop (AF_INET6, &from6.sin6_addr, fromstr, INET6_ADDRSTRLEN))
+                    ipmi_ping_err_exit ("inet_ntop: %s\n", strerror (errno));
+                }
+              else
+                {
+                  /* memcpy hacks to avoid warnings, i.e.
+                   * warning: dereferencing pointer 'X' does break strict-aliasing rules
+                   */
+                  struct sockaddr_in from4;
+
+                  memcpy (&from4, &from6, fromlen);
+
+                  if (!inet_ntop (AF_INET, &from4.sin_addr, fromstr, INET6_ADDRSTRLEN))
+                    ipmi_ping_err_exit ("inet_ntop: %s\n", strerror (errno));
+                }
+
               if ((rv = parse (pingtool_dest,
                                buf,
                                len,
-                               inet_ntoa (from.sin_addr),
+                               fromstr,
                                sequence_number,
                                pingtool_verbose,
                                pingtool_version,
