@@ -103,4 +103,10 @@ int fi_host_is_host_with_port (const char *host, char **addr, char **port);
  */
 int fi_host_is_valid (const char *addr, const char *port, uint16_t *portptr);
 
+/* Determine if hostname is a "localhost" or equivalent string,
+ * returns 1 for yes, 0 for no.  No host resolution will be done, only
+ * string matching for common strings.
+ */
+int fi_host_is_localhost (const char *host);
+
 #endif /* !_FI_HOSTLIST_H */

@@ -841,3 +841,38 @@ fi_host_is_valid (const char *addr, const char *port, uint16_t *portptr)
 
   return (1);
 }
+
+/* Note that we do not do address resolution to map hypothetical
+ * situations (e.g. "foobar" resolves to "127.0.0.1").  We only
+ * hardcode and check for the known popular strings.
+ *
+ * The reason is that most of FreeIPMI supports mapping "localhost" to
+ * "inband" communication primarily for convenience.  Programmers
+ * don't have to handle "inband" communication differenly than
+ * "outofband" cases.  e.g.  you can script/program with the hosts
+ * "node1,node2,node3,localhost,node4" and not have to program a
+ * special case for "inband" communication.
+ *
+ * If a user truly wants some funky host/string to resolve to
+ * "localhost", we suggest they use one of the known popular strings
+ * instead.  We don't want to have to do host resolution checks for
+ * every host/IP ever input into FreeIPMI.
+ */
+int
+fi_host_is_localhost (const char *host)
+{
+  struct in6_addr in6;
+
+  assert (host);
+
+  /* Ordered by my assumption of most popular */
+  if (!strcasecmp (host, "localhost")
+      || !strcmp (host, "127.0.0.1")
+      || !strcasecmp (host, "ipv6-localhost")
+      || !strcmp (host, "::1")
+      || !strcasecmp (host, "ip6-localhost")
+      || !strcmp (host, "0:0:0:0:0:0:0:1"))
+    return (1);
+
+  return (0);
+}
