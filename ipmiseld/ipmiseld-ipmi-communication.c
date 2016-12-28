@@ -86,15 +86,13 @@ ipmiseld_ipmi_setup (ipmiseld_host_data_t *host_data)
       goto cleanup;
     }
 
-  if (host_data->hostname
-      && strcasecmp (host_data->hostname, "localhost") != 0
-      && strcmp (host_data->hostname, "127.0.0.1") != 0)
+  if (host_data->hostname && !fi_host_is_localhost (host_data->hostname))
     {
       if (common_args->driver_type == IPMI_DEVICE_LAN_2_0)
         {
           parse_get_freeipmi_outofband_2_0_flags (common_args->workaround_flags_outofband_2_0,
                                                   &workaround_flags);
-          
+
           if (ipmi_ctx_open_outofband_2_0 (host_data->host_poll->ipmi_ctx,
                                            host_data->hostname,
                                            common_args->username,

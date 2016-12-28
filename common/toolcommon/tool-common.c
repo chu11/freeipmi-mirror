@@ -64,9 +64,7 @@ ipmi_open (const char *progname,
       goto cleanup;
     }
 
-  if (hostname
-      && strcasecmp (hostname, "localhost") != 0
-      && strcmp (hostname, "127.0.0.1") != 0)
+  if (hostname && !fi_host_is_localhost (hostname))
     {
       if (common_args->driver_type == IPMI_DEVICE_LAN_2_0)
         {
