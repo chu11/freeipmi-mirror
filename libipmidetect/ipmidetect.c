@@ -113,7 +113,6 @@ static char * ipmidetect_errmsg[] =
 #define IPMIDETECT_TIMEOUT_LEN_DEFAULT  60
 #define IPMIDETECT_BACKEND_CONNECT_LEN  5
 
-
 struct ipmidetect {
   int magic;
   int errnum;
@@ -377,27 +376,62 @@ _low_timeout_connect (ipmidetect_t handle,
                       int port,
                       int connect_timeout)
 {
-  int rv, old_flags, fd = -1;
-  struct sockaddr_in servaddr;
-  struct hostent *hptr;
+  int ret, old_flags, fd = -1;
+  struct sockaddr *servaddr;
+  socklen_t servaddr_len;
+  struct sockaddr_in servaddr4;
+  struct sockaddr_in6 servaddr6;
+  struct addrinfo ai_hints, *ai_res = NULL, *ai = NULL;
+  char port_str[IPMIDETECT_BUFLEN + 1];
+  int rv = -1;
 
-  /* valgrind will report a mem-leak in gethostbyname() */
-  if (!(hptr = gethostbyname (hostname)))
+  memset (port_str, '\0', IPMIDETECT_BUFLEN + 1);
+  snprintf (port_str, IPMIDETECT_BUFLEN, "%d", port);
+  memset (&ai_hints, 0, sizeof (struct addrinfo));
+  ai_hints.ai_family = AF_UNSPEC;
+  ai_hints.ai_socktype = SOCK_STREAM;
+  ai_hints.ai_flags = (AI_V4MAPPED | AI_ADDRCONFIG);
+
+  if (getaddrinfo (hostname, port_str, &ai_hints, &ai_res))
     {
       handle->errnum = IPMIDETECT_ERR_HOSTNAME_INVALID;
-      return (-1);
-    }
-
-  /* Alot of this code is from Unix Network Programming, by Stevens */
-  if ((fd = socket (AF_INET, SOCK_STREAM, 0)) < 0)
-    {
-      handle->errnum = IPMIDETECT_ERR_INTERNAL;
       goto cleanup;
     }
-  bzero (&servaddr, sizeof (servaddr));
-  servaddr.sin_family = AF_INET;
-  servaddr.sin_port = htons (port);
-  servaddr.sin_addr = *((struct in_addr *)hptr->h_addr);
+
+  /* Try all of the different answers we got, until we succeed. */
+  for (ai = ai_res; ai != NULL; ai = ai->ai_next)
+    {
+      if (ai->ai_family == AF_INET)
+        {
+          memcpy (&servaddr4, ai->ai_addr, ai->ai_addrlen);
+          servaddr = (struct sockaddr *)&(servaddr4);
+          servaddr_len = sizeof (struct sockaddr_in);
+        }
+      else if (ai->ai_family == AF_INET6)
+        {
+          memcpy (&servaddr6, ai->ai_addr, ai->ai_addrlen);
+          servaddr = (struct sockaddr *)&(servaddr6);
+          servaddr_len = sizeof (struct sockaddr_in6);
+        }
+      else
+        continue;
+
+      if ((fd = socket (ai->ai_family,
+                        ai->ai_socktype,
+                        ai->ai_protocol)) < 0)
+        {
+          handle->errnum = IPMIDETECT_ERR_INTERNAL;
+          goto cleanup;
+        }
+
+      break;
+    }
+
+  if (!ai)
+    {
+      handle->errnum = IPMIDETECT_ERR_HOSTNAME_INVALID;
+      goto cleanup;
+    }
 
   if ((old_flags = fcntl (fd, F_GETFL, 0)) < 0)
     {
@@ -411,13 +445,13 @@ _low_timeout_connect (ipmidetect_t handle,
       goto cleanup;
     }
 
-  rv = connect (fd, (struct sockaddr *)&servaddr, sizeof (struct sockaddr_in));
-  if (rv < 0 && errno != EINPROGRESS)
+  ret = connect (fd, servaddr, servaddr_len);
+  if (ret < 0 && errno != EINPROGRESS)
     {
       handle->errnum = IPMIDETECT_ERR_CONNECT;
       goto cleanup;
     }
-  else if (rv < 0 && errno == EINPROGRESS)
+  else if (ret < 0 && errno == EINPROGRESS)
     {
       fd_set rset, wset;
       struct timeval tval;
@@ -429,13 +463,13 @@ _low_timeout_connect (ipmidetect_t handle,
       tval.tv_sec = connect_timeout;
       tval.tv_usec = 0;
 
-      if ((rv = select (fd+1, &rset, &wset, NULL, &tval)) < 0)
+      if ((ret = select (fd+1, &rset, &wset, NULL, &tval)) < 0)
         {
           handle->errnum = IPMIDETECT_ERR_INTERNAL;
           goto cleanup;
         }
 
-      if (!rv)
+      if (!ret)
         {
           handle->errnum = IPMIDETECT_ERR_CONNECT_TIMEOUT;
           goto cleanup;
@@ -482,12 +516,13 @@ _low_timeout_connect (ipmidetect_t handle,
       goto cleanup;
     }
 
-  return (fd);
-
+  rv = fd;
  cleanup:
+  freeaddrinfo (ai_res);
   /* ignore potential error, error path */
-  close (fd);
-  return (-1);
+  if (rv < 0)
+    close (fd);
+  return (rv);
 }
 
 static int
