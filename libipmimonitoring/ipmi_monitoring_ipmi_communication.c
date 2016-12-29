@@ -49,6 +49,7 @@
 
 #include "freeipmi-portability.h"
 #include "fi_hostlist.h"
+#include "network.h"
 
 extern uint32_t _ipmi_monitoring_flags;
 
@@ -555,7 +556,7 @@ ipmi_monitoring_ipmi_communication_init (ipmi_monitoring_ctx_t c,
       goto cleanup;
     }
 
-  if (!hostname || fi_host_is_localhost (hostname))
+  if (!hostname || host_is_localhost (hostname))
     {
       if (_inband_init (c, config) < 0)
         goto cleanup;

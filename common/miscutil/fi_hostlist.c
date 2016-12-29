@@ -31,21 +31,17 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #if STDC_HEADERS
 #include <string.h>
-#include <ctype.h>
 #endif /* STDC_HEADERS */
 #include <assert.h>
 #include <errno.h>
 #include <unistd.h>
-#include <arpa/inet.h>
-#include <limits.h>             /* MAXHOSTNAMELEN */
-#ifdef HAVE_NETDB_H
-#include <netdb.h>              /* MAXHOSTNAMELEN Solaris */
-#endif /* HAVE_NETDB_H */
 
 #include "fi_hostlist.h"
 #include "hostlist.h"
+#include "network.h"
 
 #define FI_HOSTLIST_MAGIC 57006
 
@@ -68,10 +64,6 @@ struct fi_hostlist_iterator {
 #endif
   hostlist_iterator_t itr;
 };
-
-#ifndef MAXHOSTNAMELEN
-#define MAXHOSTNAMELEN 64
-#endif
 
 /* achu: _advance_past_brackets and _next_tok ripped from hostlist.c
  */
@@ -235,7 +227,7 @@ _fi_preparse_host (const char *host)
    * "[Ipv6 address]:port"
    */
 
-  if (fi_host_is_ipv6_with_port (host, NULL, NULL))
+  if (host_is_ipv6_with_port (host, NULL, NULL))
     {
       unsigned int len = 0;
       char *pl;
@@ -651,228 +643,4 @@ fi_hostlist_remove (fi_hostlist_iterator_t fiitr)
   assert (fiitr->magic == FI_HOSTLIST_MAGIC);
 
   return hostlist_remove (fiitr->itr);
-}
-
-int
-fi_host_is_ipv6_with_port (const char *host, char **addr, char **port)
-{
-  char *str = NULL;
-  int is_ipv6_with_port = 0;
-  int rv = -1;
-
-  assert (host);
-
-  if (!(str = strdup (host)))
-    goto cleanup;
-
-  /* achu:
-   *
-   * Some of this code is from
-   *
-   * LaMont Jones <lamont@mmjgroup.com>
-   *
-   * In his experimental patch
-   *
-   * git pull https://github.com/lamontj/freeipmi-mirror.git ipmipower-ipv6
-   *
-   */
-
-  if (str[0] == '[')
-    {
-      char *addrptr = &str[1];
-      char *tmp;
-
-      if ((tmp = strchr (addrptr, ']')))
-        {
-          *tmp = '\0';
-          tmp++;
-
-          /* Is character after the right bracket a colon? */
-          if (*tmp == ':')
-            {
-              char *portptr;
-
-              /* is everything after the colon a number? */
-              tmp++;
-              portptr = tmp;
-              while (isdigit (*tmp))
-                tmp++;
-
-              /* are we at the end of the string? */
-              /* and did we find a port */
-              if (*tmp == '\0' && strlen (portptr))
-                {
-                  struct sockaddr_in6 saddr;
-
-                  /* is what's in between the brackets an IPv6 address? */
-                  if (inet_pton(AF_INET6, addrptr, &saddr) == 1)
-                    {
-                      /* if yes, we've got the special IPv6/port combo */
-                      is_ipv6_with_port = 1;
-
-                      if (addr)
-                        {
-                          if (!(*addr = strdup (addrptr)))
-                            goto cleanup;
-                        }
-
-                      if (port)
-                        {
-                          if (!(*port = strdup (portptr)))
-                            {
-                              free (*addr);
-                              goto cleanup;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-  rv = is_ipv6_with_port;
- cleanup:
-  free (str);
-  return (rv);
-}
-
-int
-fi_host_is_host_with_port (const char *host, char **addr, char **port)
-{
-  char *str = NULL;
-  int rv = -1;
-  int is_host_with_port = 0;
-  int ret;
-
-  assert (host);
-
-  if ((ret = fi_host_is_ipv6_with_port (host, addr, port)) < 0)
-    goto cleanup;
-
-  if (ret)
-    {
-      rv = ret;
-      goto cleanup;
-    }
-
-  if (strchr (host, ':'))
-    {
-      char *addrptr;
-      char *portptr;
-      char *lastcolonptr;
-      char *tmp;
-
-      if (!(str = strdup (host)))
-        goto cleanup;
-
-      addrptr = str;
-
-      /* find last colon */
-      portptr = addrptr;
-      while ((tmp = strchr (portptr, ':')))
-        {
-          lastcolonptr = tmp;
-          portptr = tmp + 1;
-        }
-
-      *lastcolonptr = '\0';
-
-      /* is everything after the colon a number? */
-      tmp = portptr;
-      while (isdigit (*tmp))
-        tmp++;
-
-      /* are we at the end of the string? */
-      /* and did we find a port */
-      if (*tmp == '\0' && strlen (portptr))
-        {
-          is_host_with_port = 1;
-
-          if (addr)
-            {
-              if (!(*addr = strdup (addrptr)))
-                goto cleanup;
-            }
-
-          if (port)
-            {
-              if (!(*port = strdup (portptr)))
-                {
-                  free (*addr);
-                  goto cleanup;
-                }
-            }
-        }
-    }
-
-  rv = is_host_with_port;
- cleanup:
-  free (str);
-  return (rv);
-}
-
-int
-fi_host_is_valid (const char *addr, const char *port, uint16_t *portptr)
-{
-  assert (addr);
-
-  /* achu: max length IPv6 is 45 chars
-   * ABCD:ABCD:ABCD:ABCD:ABCD:ABCD:192.168.100.200
-   */
-  if (strlen (addr) > MAXHOSTNAMELEN)
-    return (0);
-
-  if (port)
-    {
-      char *endptr;
-      int tmp;
-
-      errno = 0;
-      tmp = strtol (port, &endptr, 0);
-      if (errno
-          || endptr[0] != '\0'
-          || tmp <= 0
-          || tmp > USHRT_MAX)
-        return 0;
-
-      if (portptr)
-        *portptr = tmp;
-    }
-
-  return (1);
-}
-
-/* Note that we do not do address resolution to map hypothetical
- * situations (e.g. "foobar" resolves to "127.0.0.1").  We only
- * hardcode and check for the known popular strings.
- *
- * The reason is that most of FreeIPMI supports mapping "localhost" to
- * "inband" communication primarily for convenience.  Programmers
- * don't have to handle "inband" communication differenly than
- * "outofband" cases.  e.g.  you can script/program with the hosts
- * "node1,node2,node3,localhost,node4" and not have to program a
- * special case for "inband" communication.
- *
- * If a user truly wants some funky host/string to resolve to
- * "localhost", we suggest they use one of the known popular strings
- * instead.  We don't want to have to do host resolution checks for
- * every host/IP ever input into FreeIPMI.
- */
-int
-fi_host_is_localhost (const char *host)
-{
-  struct in6_addr in6;
-
-  assert (host);
-
-  /* Ordered by my assumption of most popular */
-  if (!strcasecmp (host, "localhost")
-      || !strcmp (host, "127.0.0.1")
-      || !strcasecmp (host, "ipv6-localhost")
-      || !strcmp (host, "::1")
-      || !strcasecmp (host, "ip6-localhost")
-      || !strcmp (host, "0:0:0:0:0:0:0:1"))
-    return (1);
-
-  return (0);
 }

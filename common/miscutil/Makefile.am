@@ -24,6 +24,8 @@ libmiscutil_la_SOURCES = \
 	hostlist.h \
 	list.c \
 	list.h \
+	network.c \
+	network.h \
 	secure.c \
 	secure.h \
 	timeval.c \

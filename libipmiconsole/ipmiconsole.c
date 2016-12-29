@@ -70,6 +70,7 @@
 #include "freeipmi-portability.h"
 #include "conffile.h"
 #include "fi_hostlist.h"
+#include "network.h"
 #include "parse-common.h"
 #include "secure.h"
 
@@ -1195,11 +1196,11 @@ ipmiconsole_ctx_create (const char *hostname,
     }
 
   /* Check for host:port or [Ipv6]:port format */
-  if ((ret = fi_host_is_host_with_port (hostname,
-                                        &hostname_copy,
-                                        &port_copy)) < 0)
+  if ((ret = host_is_host_with_port (hostname,
+                                     &hostname_copy,
+                                     &port_copy)) < 0)
     {
-      IPMICONSOLE_DEBUG (("fi_host_is_host_with_port: %s", errno));
+      IPMICONSOLE_DEBUG (("host_is_host_with_port: %s", errno));
       errno = EINVAL;
       return (NULL);
     }
@@ -1212,11 +1213,11 @@ ipmiconsole_ctx_create (const char *hostname,
   else
     hostname_ptr = hostname;
 
-  if ((ret = fi_host_is_valid (hostname_ptr,
-                               port_ptr,
-                               &port)) < 0)
+  if ((ret = host_is_valid (hostname_ptr,
+                            port_ptr,
+                            &port)) < 0)
     {
-      IPMICONSOLE_DEBUG (("fi_host_is_valid: %s", errno));
+      IPMICONSOLE_DEBUG (("host_is_valid: %s", errno));
       errno = EINVAL;
       goto free_cleanup;
     }

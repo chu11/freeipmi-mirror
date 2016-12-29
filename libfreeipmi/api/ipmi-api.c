@@ -90,6 +90,7 @@
 #include "freeipmi-portability.h"
 #include "debug-util.h"
 #include "fi_hostlist.h"
+#include "network.h"
 #include "secure.h"
 
 #define IPMI_POLL_INTERVAL_USECS             10
@@ -341,7 +342,7 @@ _setup_hostname (ipmi_ctx_t ctx, const char *hostname)
   assert (ctx->magic == IPMI_CTX_MAGIC);
   assert (hostname);
 
-  if ((ret = fi_host_is_host_with_port (hostname, &hostname_copy, &port_copy)) < 0)
+  if ((ret = host_is_host_with_port (hostname, &hostname_copy, &port_copy)) < 0)
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_INTERNAL_ERROR);
       goto cleanup;
@@ -355,9 +356,9 @@ _setup_hostname (ipmi_ctx_t ctx, const char *hostname)
   else
     hostname_ptr = hostname;
 
-  if ((ret = fi_host_is_valid (hostname_ptr,
-                               port_ptr,
-                               &port)) < 0)
+  if ((ret = host_is_valid (hostname_ptr,
+                            port_ptr,
+                            &port)) < 0)
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_INTERNAL_ERROR);
       goto cleanup;

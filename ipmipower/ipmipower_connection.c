@@ -60,6 +60,7 @@
 #include "freeipmi-portability.h"
 #include "cbuf.h"
 #include "fi_hostlist.h"
+#include "network.h"
 
 extern cbuf_t ttyout;
 
@@ -254,11 +255,11 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
     hostname_first_parse_ptr = hostname;
 
   /* Check for host:port or [Ipv6]:port format */
-  if ((ret = fi_host_is_host_with_port (hostname_first_parse_ptr,
-                                        &hostname_second_parse_copy,
-                                        &port_second_parse_copy)) < 0)
+  if ((ret = host_is_host_with_port (hostname_first_parse_ptr,
+                                     &hostname_second_parse_copy,
+                                     &port_second_parse_copy)) < 0)
     {
-      IPMIPOWER_ERROR (("fi_host_is_host_with_port: %s", strerror (errno)));
+      IPMIPOWER_ERROR (("host_is_host_with_port: %s", strerror (errno)));
       exit (EXIT_FAILURE);
     }
 
@@ -270,11 +271,11 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
   else
     hostname_second_parse_ptr = hostname_first_parse_ptr;
 
-  if ((ret = fi_host_is_valid (hostname_second_parse_ptr,
-                               port_ptr,
-                               &port)) < 0)
+  if ((ret = host_is_valid (hostname_second_parse_ptr,
+                            port_ptr,
+                            &port)) < 0)
     {
-      IPMIPOWER_ERROR (("fi_host_is_valid: %s", strerror (errno)));
+      IPMIPOWER_ERROR (("host_is_valid: %s", strerror (errno)));
       exit (EXIT_FAILURE);
     }
 

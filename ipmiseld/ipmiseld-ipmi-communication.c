@@ -45,6 +45,7 @@
 
 #include "freeipmi-portability.h"
 #include "error.h"
+#include "network.h"
 #include "tool-util-common.h"
 
 static void
@@ -86,7 +87,7 @@ ipmiseld_ipmi_setup (ipmiseld_host_data_t *host_data)
       goto cleanup;
     }
 
-  if (host_data->hostname && !fi_host_is_localhost (host_data->hostname))
+  if (host_data->hostname && !host_is_localhost (host_data->hostname))
     {
       if (common_args->driver_type == IPMI_DEVICE_LAN_2_0)
         {

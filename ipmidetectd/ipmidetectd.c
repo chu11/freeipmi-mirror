@@ -75,6 +75,7 @@
 #include "fi_hostlist.h"
 #include "hash.h"
 #include "list.h"
+#include "network.h"
 #include "timeval.h"
 
 #include "tool-daemon-common.h"
@@ -226,8 +227,8 @@ _nodes_setup (void)
         err_exit ("malloc: %s", strerror (errno));
       memset (info, '\0', sizeof (struct ipmidetectd_info));
 
-      if ((ret = fi_host_is_host_with_port (host, &host_copy, &port_copy)) < 0)
-        err_exit ("fi_host_is_host_with_port: %s", strerror (errno));
+      if ((ret = host_is_host_with_port (host, &host_copy, &port_copy)) < 0)
+        err_exit ("host_is_host_with_port: %s", strerror (errno));
 
       if (ret)
         {
@@ -237,8 +238,8 @@ _nodes_setup (void)
       else
         host_ptr = host;
 
-      if ((ret = fi_host_is_valid (host_ptr, port_ptr, &port)) < 0)
-        err_exit ("fi_host_is_valid: %s", strerror (errno));
+      if ((ret = host_is_valid (host_ptr, port_ptr, &port)) < 0)
+        err_exit ("host_is_valid: %s", strerror (errno));
 
       if (!ret)
         err_exit ("Invalid host specified: %s", host);

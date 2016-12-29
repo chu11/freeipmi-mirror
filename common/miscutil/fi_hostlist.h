@@ -33,8 +33,6 @@
 #ifndef _FI_HOSTLIST_H
 #define _FI_HOSTLIST_H
 
-#include <stdint.h>
-
 typedef struct fi_hostlist * fi_hostlist_t;
 
 typedef struct fi_hostlist_iterator * fi_hostlist_iterator_t;
@@ -78,35 +76,5 @@ void fi_hostlist_iterator_reset (fi_hostlist_iterator_t fiitr);
 char * fi_hostlist_next (fi_hostlist_iterator_t fiitr);
 
 int fi_hostlist_remove (fi_hostlist_iterator_t fiitr);
-
-/* Convenience functions */
-
-/* Determine if host is in "[Ipv6 address]:port" format
- *
- * If true and addr and/or port are non-NULL, set addr and port
- * appropriately.  User is required to free addr & port appropriately.
- */
-int fi_host_is_ipv6_with_port (const char *host, char **addr, char **port);
-
-/* Determine if host is in hostname & port format, will check for IPv6
- * format [Ipv6 address]:port or normal Ipv4:port.
- *
- * If true and addr and/or port are non-NULL, set addr and port
- * appropriately.  User is required to free addr & port appropriately.
- */
-int fi_host_is_host_with_port (const char *host, char **addr, char **port);
-
-/* Determine if strings returned from fi_host_is_host_with_port() are
- * valid.  'addr' is required to be passed in, 'port' is optional.  If
- * 'port' passed in and 'portptr' not NULL, set port value in
- * 'portptr'.  Returns 1 if valid, 0 if not, -1 on error.
- */
-int fi_host_is_valid (const char *addr, const char *port, uint16_t *portptr);
-
-/* Determine if hostname is a "localhost" or equivalent string,
- * returns 1 for yes, 0 for no.  No host resolution will be done, only
- * string matching for common strings.
- */
-int fi_host_is_localhost (const char *host);
 
 #endif /* !_FI_HOSTLIST_H */

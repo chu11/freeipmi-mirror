@@ -41,6 +41,7 @@
 #include "parse-common.h"
 
 #include "freeipmi-portability.h"
+#include "network.h"
 
 ipmi_ctx_t
 ipmi_open (const char *progname,
@@ -64,7 +65,7 @@ ipmi_open (const char *progname,
       goto cleanup;
     }
 
-  if (hostname && !fi_host_is_localhost (hostname))
+  if (hostname && !host_is_localhost (hostname))
     {
       if (common_args->driver_type == IPMI_DEVICE_LAN_2_0)
         {
