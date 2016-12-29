@@ -1,3 +1,10 @@
+2016-12-28 Albert Chu <chu11@llnl.gov>
+
+	* Globally support IPv6 address support in all tools as options,
+	parameters, or inputs.  Globally support [ADDRESS]:PORT format for
+	IPv6 address + ports.  Support additional strings indicating
+	"localhost", such as "ipv6-localhost".
+
 2016-12-06 LaMont Jones <lamont@mmjgroup.com>
 
 	* ipmipower/: Initial pass at IPv6 support.
