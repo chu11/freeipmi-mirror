@@ -98,7 +98,11 @@ struct ipmidetectd_info
 {
   char *hostname;
   int fd;
-  struct sockaddr_in destaddr;
+  struct sockaddr *destaddr;
+  socklen_t destaddr_len;
+  struct sockaddr_in destaddr4;
+  struct sockaddr_in6 destaddr6;
+  char ipstr[IPMIDETECTD_BUFLEN + 1];
   unsigned int sequence_number;
   struct timeval last_received;
 };
@@ -117,7 +121,9 @@ static int exit_flag = 1;
 static void
 _fds_setup (void)
 {
-  struct sockaddr_in addr;
+  struct sockaddr_in addr4;
+  struct sockaddr_in6 addr6;
+  struct sockaddr_in6 servaddr;
   int option_value;
   socklen_t option_value_len;
   unsigned int i;
@@ -126,7 +132,12 @@ _fds_setup (void)
   assert (!fds_count);
   assert (!nodes_count);
   assert (!server_fd);
-
+  
+  /* IPv4 and IPv6 fds are not needed in the general sense, however b/c
+   * we're doing up/down based on IP/string matching, we need binding so
+   * that what is received back on recvfrom() calls matches what we sent
+   * via IPv4 or IPv6.
+   */
   nodes_count = fi_hostlist_count (conf.hosts);
   fds_count = nodes_count/IPMIDETECTD_NODES_PER_SOCKET;
   if (nodes_count % IPMIDETECTD_NODES_PER_SOCKET)
@@ -137,27 +148,25 @@ _fds_setup (void)
 
   for (i = 0; i < fds_count; i++)
     {
-      if ((fds[i] = socket (AF_INET, SOCK_DGRAM, 0)) < 0)
+      if ((fds[i] = socket (AF_INET6, SOCK_DGRAM, 0)) < 0)
         err_exit ("socket: %s", strerror (errno));
 
-      memset (&addr, '\0', sizeof (struct sockaddr_in));
-      addr.sin_family = AF_INET;
-      addr.sin_port = htons (0);
-      addr.sin_addr.s_addr = htonl (INADDR_ANY);
+      memset (&addr6, '\0', sizeof (struct sockaddr_in6));
+      addr6.sin6_family = AF_INET6;
+      addr6.sin6_port = htons (0);
 
-      if (bind (fds[i], (struct sockaddr *)&addr, sizeof (struct sockaddr_in)) < 0)
+      if (bind (fds[i], (struct sockaddr *)&addr6, sizeof (struct sockaddr_in6)) < 0)
         err_exit ("bind: %s", strerror (errno));
     }
 
-  if ((server_fd = socket (AF_INET, SOCK_STREAM, 0)) < 0)
+  if ((server_fd = socket (AF_INET6, SOCK_STREAM, 0)) < 0)
     err_exit ("socket: %s", strerror (errno));
 
-  memset (&addr, '\0', sizeof (struct sockaddr_in));
-  addr.sin_family = AF_INET;
-  addr.sin_port = htons (conf.ipmidetectd_server_port);
-  addr.sin_addr.s_addr = htonl (INADDR_ANY);
+  memset (&servaddr, '\0', sizeof (struct sockaddr_in6));
+  servaddr.sin6_family = AF_INET6;
+  servaddr.sin6_port = htons (conf.ipmidetectd_server_port);
 
-  if (bind (server_fd, (struct sockaddr *)&addr, sizeof (struct sockaddr_in)) < 0)
+  if (bind (server_fd, (struct sockaddr *)&servaddr, sizeof (struct sockaddr_in6)) < 0)
     err_exit ("bind: %s", strerror (errno));
 
   /* For quick start/restart */
@@ -180,7 +189,7 @@ _nodes_setup (void)
 {
   fi_hostlist_iterator_t itr = NULL;
   char *host = NULL;
-  int i = 0;
+  int count = 0;
 
   assert (fds);
   assert (fds_count);
@@ -203,48 +212,36 @@ _nodes_setup (void)
   while ((host = fi_hostlist_next (itr)))
     {
       struct ipmidetectd_info *info = NULL;
-      struct hostent *h;
-      char *tmpstr;
-      char *ip;
       int len;
       char *host_copy = NULL;
-      char *host_ptr;
+      char *host_ptr = NULL;
+      char *port_copy = NULL;
+      char *port_ptr = NULL;
       uint16_t port = RMCP_PRIMARY_RMCP_PORT;
+      char port_str[IPMIDETECTD_BUFLEN + 1];
+      struct addrinfo ai_hints, *ai_res = NULL, *ai = NULL;
+      int ret;
 
       if (!(info = (struct ipmidetectd_info *)malloc (sizeof (struct ipmidetectd_info))))
         err_exit ("malloc: %s", strerror (errno));
       memset (info, '\0', sizeof (struct ipmidetectd_info));
 
-      if (strchr (host, ':'))
+      if ((ret = fi_host_is_host_with_port (host, &host_copy, &port_copy)) < 0)
+        err_exit ("fi_host_is_host_with_port: %s", strerror (errno));
+
+      if (ret)
         {
-          char *ptr;
-
-          if (!(host_copy = strdup (host)))
-            err_exit ("strdup: %s", strerror (errno));
-          
-          if ((ptr = strchr (host_copy, ':')))
-            {
-              char *endptr;
-              int tmp;
-
-              *ptr = '\0';
-              ptr++;
-              
-              errno = 0;
-              tmp = strtol (ptr, &endptr, 0);
-              if (errno
-                  || endptr[0] != '\0'
-                  || tmp <= 0
-                  || tmp > USHRT_MAX)
-                err_exit ("invalid port specified: %s", host);
-              
-              port = tmp;
-            }
-
           host_ptr = host_copy;
+          port_ptr = port_copy;
         }
       else
         host_ptr = host;
+
+      if ((ret = fi_host_is_valid (host_ptr, port_ptr, &port)) < 0)
+        err_exit ("fi_host_is_valid: %s", strerror (errno));
+
+      if (!ret)
+        err_exit ("Invalid host specified: %s", host);
 
       if (!(info->hostname = strdup (host_ptr)))
         err_exit ("strdup: %s", strerror (errno));
@@ -258,39 +255,103 @@ _nodes_setup (void)
       if (len != sizeof (info->sequence_number))
         err_exit ("ipmi_get_random: invalid len returned");
 
-      info->fd = fds[i/IPMIDETECTD_NODES_PER_SOCKET];
+      memset (port_str, '\0', IPMIDETECTD_BUFLEN + 1);
+      snprintf (port_str, IPMIDETECTD_BUFLEN, "%d", port);
+      memset (&ai_hints, 0, sizeof (struct addrinfo));
+      ai_hints.ai_family = AF_UNSPEC;
+      ai_hints.ai_socktype = SOCK_DGRAM;
+      ai_hints.ai_flags = (AI_V4MAPPED | AI_ADDRCONFIG);
 
-      if (!(h = gethostbyname (host_ptr)))
+      if ((ret = getaddrinfo (host_ptr, port_str, &ai_hints, &ai_res)))
         {
-#if HAVE_HSTRERROR
-          err_exit ("gethostbyname: %s", hstrerror (h_errno));
-#else /* !HAVE_HSTRERROR */
-          err_exit ("gethostbyname: h_errno = %d", h_errno);
-#endif /* !HAVE_HSTRERROR */
+          if (ret == EAI_NODATA)
+            err_exit ("Invalid hostname: %s", host_ptr);
+          else
+            err_exit ("getaddrinfo %s: %s", host_ptr, gai_strerror (ret));
         }
 
-      info->destaddr.sin_family = AF_INET;
-      info->destaddr.sin_addr = *((struct in_addr *)h->h_addr);
-      info->destaddr.sin_port = htons (port);
+      /* Try all of the different answers we got, until we succeed. */
+      for (ai = ai_res; ai != NULL; ai = ai->ai_next)
+        {
+          if (ai->ai_family == AF_INET)
+            {
+              char tmpipv4buf[IPMIDETECTD_BUFLEN + 1];
+              char tmpipv6buf[IPMIDETECTD_BUFLEN + 1];
+              struct in6_addr in6;
+
+              memcpy (&(info->destaddr4), ai->ai_addr, ai->ai_addrlen);
+              info->destaddr = (struct sockaddr *)&(info->destaddr4);
+              info->destaddr_len = sizeof (struct sockaddr_in);
+
+              /* We're using a IPv6 socket, so get IPv4 mapped IPv6 string  */
+
+              memset (tmpipv4buf, '\0', IPMIDETECTD_BUFLEN + 1);
+              if (!inet_ntop (AF_INET,
+                              &(info->destaddr4.sin_addr),
+                              tmpipv4buf,
+                              IPMIDETECTD_BUFLEN))
+                err_exit ("inet_ntop: %s", strerror (errno));
+
+              memset (tmpipv6buf, '\0', IPMIDETECTD_BUFLEN + 1);
+              snprintf (tmpipv6buf, IPMIDETECTD_BUFLEN,
+                        "::ffff:%s", tmpipv4buf);
+
+              if (inet_pton (AF_INET6,
+                             tmpipv6buf,
+                             &in6) != 1)
+                err_exit ("inet_pton: %s", strerror (errno));
+
+              /* We inet_ntop() one more time to get the consistent
+               * string result we can always expect from inet_ntop(),
+               * b/c inet_ntop() may not use the style format we use
+               * above
+               */
+              if (!inet_ntop (AF_INET6,
+                              &in6,
+                              info->ipstr,
+                              IPMIDETECTD_BUFLEN))
+                err_exit ("inet_ntop: %s", strerror (errno));
+
+	      info->fd = fds[count/IPMIDETECTD_NODES_PER_SOCKET];
+	      count++;
+            }
+          else if (ai->ai_family == AF_INET6)
+            {
+              memcpy (&(info->destaddr6), ai->ai_addr, ai->ai_addrlen);
+              info->destaddr = (struct sockaddr *)&(info->destaddr6);
+              info->destaddr_len = sizeof (struct sockaddr_in6);
+
+              if (!inet_ntop (AF_INET6,
+                              &(info->destaddr6.sin6_addr),
+                              info->ipstr,
+                              IPMIDETECTD_BUFLEN))
+                err_exit ("inet_ntop: %s", strerror (errno));
+
+	      info->fd = fds[count/IPMIDETECTD_NODES_PER_SOCKET];
+	      count++;
+            }
+          else
+            continue;
+
+          break;
+        }
+
+      if (!ai)
+        err_exit ("Invalid hostname: %s", host_ptr);
+
+      freeaddrinfo (ai_res);
       free (host_copy);
+      free (port_copy);
       free (host);
 
       if (!list_append (nodes, info))
         err_exit ("list_append: %s", strerror (errno));
 
-      if (!(tmpstr = inet_ntoa (info->destaddr.sin_addr)))
-        err_exit ("inet_ntoa: %s", strerror (errno)); /* strerror? */
+      if (hash_find (nodes_index, info->ipstr))
+        err_exit ("Duplicate host ip: %s", info->ipstr);
 
-      if (!(ip = strdup (tmpstr)))
-        err_exit ("strdup: %s", strerror (errno));
-
-      if (hash_find (nodes_index, ip))
-        err_exit ("Duplicate host ip: %s", ip);
-
-      if (!hash_insert (nodes_index, ip, info))
+      if (!hash_insert (nodes_index, info->ipstr, info))
         err_exit ("hash_insert: %s", strerror (errno));
-
-      i++;
     }
 
   fi_hostlist_iterator_destroy (itr);
@@ -413,8 +474,8 @@ _ipmidetectd_send_pings (void)
                            buf,
                            len,
                            0,
-                           (struct sockaddr *)&(info->destaddr),
-                           sizeof (struct sockaddr_in)) < 0)
+                           info->destaddr,
+                           info->destaddr_len) < 0)
         err_exit ("ipmi_lan_sendto: %s", strerror (errno));
 
       if (cmd_args.debug)
@@ -446,24 +507,24 @@ _setup_pfds (struct pollfd *pfds)
 static void
 _receive_ping (int fd)
 {
-  struct sockaddr_in from;
+  struct sockaddr_in6 from6;
+  struct sockaddr *from = (struct sockaddr *)&from6;
   struct ipmidetectd_info *info;
   uint8_t buf[IPMIDETECTD_BUFLEN];
+  char ipbuf[IPMIDETECTD_BUFLEN + 1];
   int len;
-  socklen_t fromlen = sizeof (struct sockaddr_in);
-  char *tmpstr;
+  socklen_t fromlen = sizeof (struct sockaddr_in6);
 
   /* We're happy as long as we receive something.  We don't bother
    * checking sequence numbers or anything like that.
    */
-
   len = ipmi_lan_recvfrom (fd,
                            buf,
                            IPMIDETECTD_BUFLEN,
                            0,
-                           (struct sockaddr *)&from,
+                           from,
                            &fromlen);
-  
+
   /* achu & hliebig:
    *
    * Premise from ipmitool (http://ipmitool.sourceforge.net/)
@@ -497,14 +558,30 @@ _receive_ping (int fd)
       && (errno == ECONNRESET
           || errno == ECONNREFUSED))
     return;
-    
+
   if (len < 0)
     err_exit ("ipmi_lan_recvfrom: %s", strerror (errno));
 
-  if (!(tmpstr = inet_ntoa (from.sin_addr)))
-    err_exit ("inet_ntoa: %s", strerror (errno)); /* strerror? */
+  memset (ipbuf, '\0', IPMIDETECTD_BUFLEN + 1);
+  if (from6.sin6_family == AF_INET6)
+    {
+      if (!inet_ntop (AF_INET6, &from6.sin6_addr, ipbuf, IPMIDETECTD_BUFLEN))
+        err_exit ("inet_ntop: %s", strerror (errno));
+    }
+  else
+    {
+      /* memcpy hacks to avoid warnings, i.e.
+       * warning: dereferencing pointer 'X' does break strict-aliasing rules
+       */
+      struct sockaddr_in from4;
 
-  if ((info = hash_find (nodes_index, tmpstr)))
+      memcpy (&from4, from, fromlen);
+
+      if (!inet_ntop (AF_INET, &from4.sin_addr, ipbuf, IPMIDETECTD_BUFLEN))
+        err_exit ("inet_ntop: %s", strerror (errno));
+    }
+
+  if ((info = hash_find (nodes_index, ipbuf)))
     {
       if (gettimeofday (&(info->last_received), NULL) < 0)
         err_exit ("gettimeofday: %s", strerror (errno));
@@ -518,9 +595,9 @@ static void
 _send_ping_data (void)
 {
   ListIterator itr;
-  struct sockaddr_in rhost;
+  struct sockaddr_in6 rhost;
   struct ipmidetectd_info *info;
-  socklen_t rhost_len = sizeof (struct sockaddr_in);
+  socklen_t rhost_len = sizeof (struct sockaddr_in6);
   int rhost_fd;
 
   assert (nodes);
@@ -612,10 +689,9 @@ _ipmidetectd_loop (void)
         {
           for (i = 0; i < fds_count; i++)
             {
-              if (pfds[i].revents & POLLERR)
-                _receive_ping (fds[i]);
-              else if (pfds[i].revents & POLLIN)
-                _receive_ping (fds[i]);
+              if (pfds[i].revents & POLLERR
+		  || pfds[i].revents & POLLIN)
+		_receive_ping (fds[i]);
             }
 
           if (pfds[fds_count].revents & POLLIN)
