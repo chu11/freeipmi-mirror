@@ -59,7 +59,8 @@ pings to.  Can be specified as many times as necessary.  An optional
 port can be specified.  Can accept host ranges as input.  See
 HOSTRANGED SUPPORT in
 .B ipmidetect(8)
-for information on ranged formats.
+for information on ranged formats.  If specifying an IPv6 address and
+port, use the format [ADDRESS]:PORT.
 .SH "FILES"
 @IPMIDETECTD_CONFIG_FILE_DEFAULT@
 #include <@top_srcdir@/man/manpage-common-reporting-bugs.man>

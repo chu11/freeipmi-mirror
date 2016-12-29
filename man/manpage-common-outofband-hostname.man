@@ -2,4 +2,5 @@
 \fB\-h\fR \fIIPMIHOST\FR, \fB\-\-hostname\fR=\fIIPMIHOST[:PORT]\fR
 Specify the remote host to communicate with.  An optional port can be
 specified, which may be useful in port forwarding or similar
-situations.
+situations.  If specifying an IPv6 address and port, use the format
+[ADDRESS]:PORT.

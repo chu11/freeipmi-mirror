@@ -4,4 +4,5 @@ Specify the remote host(s) to communicate with.  Multiple hostnames
 may be separated by comma or may be specified in a range format; see
 HOSTRANGED SUPPORT below.  An optional port can be specified with each
 host, which may be useful in port forwarding or similar situations.
+If specifying an IPv6 address and port, use the format [ADDRESS]:PORT.
 
