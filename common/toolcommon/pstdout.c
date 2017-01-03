@@ -460,17 +460,17 @@ pstdout_hostnames_count(const char *hostnames)
       return -1;
     }
 
-  if (!(h = fi_hostlist_create(hostnames)))
+  if (!(h = fi_hostlist_create(NULL)))
     {
       pstdout_errnum = PSTDOUT_ERR_OUTMEM;
       goto cleanup;
     }
 
-  if (!(count = fi_hostlist_count(h)))
+  if (!(count = fi_hostlist_push(h, hostnames)))
     {
       if (pstdout_debug_flags & PSTDOUT_DEBUG_STANDARD)
-        fprintf(stderr, "hostnames count == 0\n");
-      pstdout_errnum = PSTDOUT_ERR_INTERNAL;
+        fprintf(stderr, "valid hostnames count == 0\n");
+      pstdout_errnum = PSTDOUT_ERR_PARAMETERS;
       goto cleanup;
     }
 
