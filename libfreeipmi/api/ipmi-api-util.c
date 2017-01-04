@@ -69,6 +69,10 @@ api_set_api_errnum_by_errno (ipmi_ctx_t ctx, int __errno)
     case EINVAL:
       ctx->errnum = IPMI_ERR_PARAMETERS;
       break;
+    case ENETUNREACH:
+    case EHOSTUNREACH:
+      ctx->errnum = IPMI_ERR_SYSTEM_ERROR;
+      break;
     default:
       ctx->errnum = IPMI_ERR_INTERNAL_ERROR;
     }
