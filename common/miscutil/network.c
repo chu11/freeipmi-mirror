@@ -155,10 +155,15 @@ host_is_host_with_port (const char *host, char **addr, char **port)
 
   if (strchr (host, ':'))
     {
+      struct sockaddr_in6 saddr;
       char *addrptr;
       char *portptr;
       char *lastcolonptr = NULL; /* remove warning */
       char *tmp;
+
+      /* First check, maybe it's a valid IPv6 address straight up */
+      if (inet_pton (AF_INET6, host, &saddr) == 1)
+        goto out;
 
       if (!(str = strdup (host)))
         goto cleanup;
@@ -203,6 +208,7 @@ host_is_host_with_port (const char *host, char **addr, char **port)
         }
     }
 
+ out:
   rv = is_host_with_port;
  cleanup:
   free (str);
