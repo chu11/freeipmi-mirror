@@ -1,3 +1,7 @@
+2017-01-09 Albert Chu <chu11@llnl.gov>
+
+	* man/manpage-common-known-issues-ping.man: Fix spelling typo. 
+	
 2016-12-13 Albert Chu <chu11@llnl.gov>
 
 	* freeipmi.spec.in: Remove ExclusiveArch, as ppc now has iopl()
