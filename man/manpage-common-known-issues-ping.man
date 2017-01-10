@@ -6,5 +6,5 @@ to cleanly deal with a "confused" BMC other than the wait awhile.
 .PP
 Unlike
 .B ping(8),
-local network devicess (e.g. 127.0.0.1) cannot be "pinged".
+local network devices (e.g. 127.0.0.1) cannot be "pinged".
 
