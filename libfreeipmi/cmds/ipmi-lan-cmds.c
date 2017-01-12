@@ -803,7 +803,7 @@ fiid_template_t tmpl_cmd_get_ip_udp_rmcp_statistics_rs =
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_support_rq =
+fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_ipv4_support_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -816,7 +816,7 @@ fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_support_rq =
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_addressing_enables_rq =
+fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_ipv4_addressing_enables_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -826,7 +826,7 @@ fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_addressing_enable
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_header_static_traffic_class_rq =
+fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_header_static_traffic_class_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -836,7 +836,7 @@ fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_header_static_tra
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_header_static_hop_limit_rq =
+fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_header_static_hop_limit_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -846,7 +846,7 @@ fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_header_static_hop
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_header_flow_label_rq =
+fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_header_flow_label_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -857,7 +857,7 @@ fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_header_flow_label
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_status_rq =
+fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_status_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -871,7 +871,7 @@ fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_status_rq =
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_static_addresses_rq =
+fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_static_addresses_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -887,7 +887,7 @@ fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_static_addresses_
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_dhcpv6_static_duid_storage_length_rq =
+fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_dhcpv6_static_duid_storage_length_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -897,7 +897,7 @@ fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_dhcpv6_static_dui
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_static_duids_rq =
+fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_dhcpv6_static_duids_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -909,7 +909,7 @@ fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_static_duids_rq =
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_dynamic_addresses_rq =
+fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_dynamic_addresses_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -924,7 +924,7 @@ fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_dynamic_addresses
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_dhcpv6_dynamic_duid_storage_length_rq =
+fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_dhcpv6_dynamic_duid_storage_length_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -934,7 +934,7 @@ fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_dhcpv6_dynamic_du
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_dynamic_duids_rq =
+fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_dhcpv6_dynamic_duids_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -946,7 +946,7 @@ fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_dynamic_duids_rq 
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_dhcpv6_timing_configuration_support_rq =
+fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_dhcpv6_timing_configuration_support_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -957,7 +957,7 @@ fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_dhcpv6_timing_con
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_dhcpv6_timing_and_configuration_rq =
+fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_dhcpv6_timing_and_configuration_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -968,7 +968,7 @@ fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_dhcpv6_timing_and
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_router_address_configuration_control_rq =
+fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_router_address_configuration_control_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -980,7 +980,7 @@ fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_router_address_co
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_1_ip_address_rq =
+fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_static_router_1_ip_address_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -989,7 +989,7 @@ fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_1_i
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_1_mac_address_rq =
+fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_static_router_1_mac_address_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -998,7 +998,7 @@ fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_1_m
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_1_prefix_length_rq =
+fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_static_router_1_prefix_length_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -1007,7 +1007,7 @@ fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_1_p
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_1_prefix_value_rq =
+fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_static_router_1_prefix_value_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -1016,7 +1016,7 @@ fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_1_p
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_2_ip_address_rq =
+fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_static_router_2_ip_address_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -1025,7 +1025,7 @@ fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_2_i
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_2_mac_address_rq =
+fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_static_router_2_mac_address_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -1034,7 +1034,7 @@ fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_2_m
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_2_prefix_length_rq =
+fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_static_router_2_prefix_length_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -1043,7 +1043,7 @@ fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_2_p
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_2_prefix_value_rq =
+fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_static_router_2_prefix_value_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -1052,7 +1052,7 @@ fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_2_p
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_cmd_set_lan_configuration_parameters_number_of_dynamic_router_info_sets_rq =
+fiid_template_t tmpl_cmd_get_lan_configuration_parameters_number_of_dynamic_router_info_sets_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -1061,7 +1061,7 @@ fiid_template_t tmpl_cmd_set_lan_configuration_parameters_number_of_dynamic_rout
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_dynamic_router_info_ip_address_rq =
+fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_dynamic_router_info_ip_address_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -1071,7 +1071,7 @@ fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_dynamic_router_in
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_dynamic_router_info_mac_address_rq =
+fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_dynamic_router_info_mac_address_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -1081,7 +1081,7 @@ fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_dynamic_router_in
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_dynamic_router_info_prefix_length_rq =
+fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_dynamic_router_info_prefix_length_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -1091,7 +1091,7 @@ fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_dynamic_router_in
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_dynamic_router_info_prefix_value_rq =
+fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_dynamic_router_info_prefix_value_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -1101,7 +1101,7 @@ fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_dynamic_router_in
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_dynamic_router_received_hop_limit_rq =
+fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_dynamic_router_received_hop_limit_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -1110,7 +1110,7 @@ fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_dynamic_router_re
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_slaac_timing_and_configuration_support_rq =
+fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_neighbor_discovery_slaac_timing_configuration_support_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -1121,7 +1121,7 @@ fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_slaac_timing_and_
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_slaac_timing_and_configuration_rq =
+fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_neighbor_discovery_slaac_timing_configuration_rs =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
