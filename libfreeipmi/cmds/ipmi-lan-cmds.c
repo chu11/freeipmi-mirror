@@ -811,7 +811,7 @@ fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_support_rq =
     { 8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "supports_ipv6_only", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "supports_ipv6_and_ipv4_simultaneously", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "supports_ipv6_destination_address_for_allert", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "supports_ipv6_destination_address_for_lan_alert", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 5, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
   };
@@ -916,7 +916,7 @@ fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_dynamic_addresses
     { 4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8, "set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 4, "source", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "source_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 128, "address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8, "address_prefix_length", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -974,8 +974,8 @@ fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_router_address_co
     { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "enable_static_router_addresses", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "enable_dynamic_router_addresses", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "enable_static_router_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "enable_dynamic_router_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 6, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
   };
