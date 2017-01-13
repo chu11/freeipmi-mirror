@@ -61,8 +61,6 @@
 #include "cbuf.h"
 #include "hostlist.h"
 
-extern int h_errno;
-
 extern cbuf_t ttyout;
 
 extern struct ipmipower_arguments cmd_args;
@@ -128,13 +126,15 @@ ipmipower_connection_clear (struct ipmipower_connection *ic)
 static int
 _connection_setup (struct ipmipower_connection *ic, const char *hostname)
 {
-  struct sockaddr_in srcaddr;
+  struct sockaddr_in6 srcaddr;
   struct hostent *result;
   char *hostname_first_parse_copy = NULL;
   const char *hostname_first_parse_ptr = NULL;
   char *hostname_second_parse_copy = NULL;
   const char *hostname_second_parse_ptr = NULL;
   uint16_t port = RMCP_PRIMARY_RMCP_PORT;
+  char port_str[12];
+  struct addrinfo ai_hints, *ai_res, *ai;
   int rv = -1;
 
   assert (ic);
@@ -143,47 +143,6 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
   /* Don't use wrapper function, need to exit cleanly on EMFILE errno */
 
   errno = 0;
-
-  if ((ic->ipmi_fd = socket (AF_INET, SOCK_DGRAM, 0)) < 0)
-    {
-      if (errno == EMFILE)
-        {
-          IPMIPOWER_DEBUG (("file descriptor limit reached"));
-          return (-1);
-        }
-      
-      IPMIPOWER_ERROR (("socket: %s", strerror (errno)));
-      exit (EXIT_FAILURE);
-    }
-
-  if ((ic->ping_fd = socket (AF_INET, SOCK_DGRAM, 0)) < 0)
-    {
-      if (errno == EMFILE)
-        {
-          IPMIPOWER_DEBUG (("file descriptor limit reached"));
-          return (-1);
-        }
-
-      IPMIPOWER_ERROR (("socket: %s", strerror (errno)));
-      exit (EXIT_FAILURE);
-    }
-
-  /* Secure ephemeral ports */
-  bzero (&srcaddr, sizeof (struct sockaddr_in));
-  srcaddr.sin_family = AF_INET;
-  srcaddr.sin_port = htons (0);
-  srcaddr.sin_addr.s_addr = htonl (INADDR_ANY);
-
-  if (bind (ic->ipmi_fd, &srcaddr, sizeof (struct sockaddr_in)) < 0)
-    {
-      IPMIPOWER_ERROR (("bind: %s", strerror (errno)));
-      exit (EXIT_FAILURE);
-    }
-  if (bind (ic->ping_fd, &srcaddr, sizeof (struct sockaddr_in)) < 0)
-    {
-      IPMIPOWER_ERROR (("bind: %s", strerror (errno)));
-      exit (EXIT_FAILURE);
-    }
 
   if (!(ic->ipmi_in  = cbuf_create (IPMIPOWER_MIN_CONNECTION_BUF,
                                     IPMIPOWER_MAX_CONNECTION_BUF)))
@@ -293,7 +252,45 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
   else
     hostname_first_parse_ptr = hostname;
 
-  if (strchr (hostname_first_parse_ptr, ':'))
+  if (hostname_first_parse_ptr[0] == '['
+      && strchr(hostname_first_parse_ptr, ']'))
+    {
+      char *ptr;
+
+      /* IPv6 address */
+      if (!(hostname_second_parse_copy = strdup (hostname_first_parse_ptr+1)))
+	{
+	  IPMIPOWER_ERROR (("strdup: %s", strerror (errno)));
+	  exit (EXIT_FAILURE);
+	}
+
+      hostname_second_parse_ptr = hostname_second_parse_copy;
+      ptr = strchr (hostname_second_parse_copy, ']');
+      *ptr = '\0';
+      ptr++;
+      if (*ptr == ':')
+	{
+	  char *endptr;
+          int tmp;
+
+	  *ptr = '\0';
+          ptr++;
+
+          errno = 0;
+          tmp = strtol (ptr, &endptr, 0);
+          if (errno
+              || endptr[0] != '\0'
+              || tmp <= 0
+              || tmp > USHRT_MAX)
+            {
+	      ipmipower_output (IPMIPOWER_MSG_TYPE_HOSTNAME_INVALID, hostname_second_parse_ptr, NULL);
+	      goto cleanup;
+            }
+
+          port = tmp;
+	}
+    }
+  else if (strchr (hostname_first_parse_ptr, ':'))
     {
       char *ptr;
 
@@ -335,29 +332,74 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
   strncpy (ic->hostname, hostname_second_parse_ptr, MAXHOSTNAMELEN);
   ic->hostname[MAXHOSTNAMELEN] = '\0';
 
-  /* Determine the destination address */
-  bzero (&(ic->destaddr), sizeof (struct sockaddr_in));
-  ic->destaddr.sin_family = AF_INET;
-  ic->destaddr.sin_port = htons (port);
-
-  if (!(result = gethostbyname (ic->hostname)))
+  snprintf(port_str, sizeof (port_str), "%d", port);
+  memset(&ai_hints, 0, sizeof (struct addrinfo));
+  ai_hints.ai_family = AF_UNSPEC;
+  ai_hints.ai_socktype = SOCK_DGRAM;
+  ai_hints.ai_flags = (AI_V4MAPPED | AI_ADDRCONFIG);
+  if ((result = getaddrinfo (ic->hostname, port_str, &ai_hints, &ai_res )) != 0)
     {
-      if (h_errno == HOST_NOT_FOUND)
+      if (result == EAI_NODATA)
         ipmipower_output (IPMIPOWER_MSG_TYPE_HOSTNAME_INVALID, ic->hostname, NULL);
       else
         {
-#if HAVE_HSTRERROR
-          IPMIPOWER_ERROR (("gethostbyname() %s: %s", ic->hostname, hstrerror (h_errno)));
-#else /* !HAVE_HSTRERROR */
-          IPMIPOWER_ERROR (("gethostbyname() %s: h_errno = %d", ic->hostname, h_errno));
-#endif /* !HAVE_HSTRERROR */
+          IPMIPOWER_ERROR (("getaddrinfo() %s: %s", ic->hostname, gai_strerror (result)));
           exit (EXIT_FAILURE);
         }
       goto cleanup;
     }
-  ic->destaddr.sin_addr = *((struct in_addr *)result->h_addr);
+  /* Try all of the different answers we got, until we succeed. */
+  for (ai = ai_res; ai != NULL; ai = ai->ai_next)
+    {
+      if ((ic->ipmi_fd = socket (ai->ai_family,
+				 ai->ai_socktype, ai->ai_protocol)) < 0)
+	{
+	  if (errno == EMFILE)
+	    {
+	      IPMIPOWER_DEBUG (("file descriptor limit reached"));
+	      return (-1);
+	    }
+	}
 
-  ic->skip = 0;
+      if ((ic->ping_fd = socket (ai->ai_family,
+				 ai->ai_socktype, ai->ai_protocol)) < 0)
+	{
+	  if (errno == EMFILE)
+	    {
+	      IPMIPOWER_DEBUG (("file descriptor limit reached"));
+	      return (-1);
+	    }
+	}
+      /* Secure ephemeral ports */
+      bzero (&srcaddr, sizeof (struct sockaddr_in6));
+      srcaddr.sin6_family = ai->ai_family; /* always the same place */
+      /* All zero is otherwise correct. */
+
+      if ((bind (ic->ipmi_fd, &srcaddr, sizeof (struct sockaddr_in6)) < 0)
+          || (bind (ic->ping_fd, &srcaddr, sizeof (struct sockaddr_in6)) < 0))
+	{
+	  close(ic->ipmi_fd);
+	  close(ic->ping_fd);
+	  continue;
+	}
+
+      /* Determine the destination address */
+      if (ai->ai_addrlen > sizeof (struct sockaddr_in6))
+	{
+	  IPMIPOWER_ERROR (("getaddrinfo: unexpected address length %d",
+			    ai->ai_addrlen));
+	  exit (EXIT_FAILURE);
+	}
+      memcpy (&(ic->destaddr), ai->ai_addr, ai->ai_addrlen);
+      ic->skip = 0;
+      break;
+    }
+
+  if (!ai)
+    {
+      IPMIPOWER_ERROR (("socket/bind: %s", strerror (errno)));
+      exit (EXIT_FAILURE);
+    }
 
   rv = 0;
  cleanup:
