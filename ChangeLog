@@ -1,3 +1,7 @@
+2017-01-13 Albert Chu <chu11@llnl.gov>
+
+	* man/bmc-config.conf.5: Fix pointer of correct manpage.
+	
 2016-12-22 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/api/ipmi-api.c (_setup_hostname): Fix cleanup path
