@@ -365,7 +365,7 @@ _setup_hostname (ipmi_ctx_t ctx, const char *hostname)
 	  if (strlen (hostname_copy) > MAXHOSTNAMELEN)
 	    {
 	      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-	      return (-1);
+	      goto cleanup;
 	    }
 	  
 	  errno = 0;
@@ -388,7 +388,7 @@ _setup_hostname (ipmi_ctx_t ctx, const char *hostname)
       if (strlen (hostname) > MAXHOSTNAMELEN)
 	{
 	  API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-	  return (-1);
+          goto cleanup;
 	}
 
       hostname_ptr = (char *)hostname;
