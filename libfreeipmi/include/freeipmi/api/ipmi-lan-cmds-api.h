@@ -397,17 +397,6 @@ int ipmi_cmd_get_lan_configuration_parameters_bad_password_threshold (ipmi_ctx_t
                                                                       uint8_t block_selector,
                                                                       fiid_obj_t obj_cmd_rs);
 
-int ipmi_cmd_suspend_bmc_arps (ipmi_ctx_t ctx,
-                               uint8_t channel_number,
-                               uint8_t gratuitous_arp_suspend,
-                               uint8_t arp_response_suspend,
-                               fiid_obj_t obj_cmd_rs);
-
-int ipmi_cmd_get_ip_udp_rmcp_statistics (ipmi_ctx_t ctx,
-                                         uint8_t channel_number,
-                                         uint8_t clear_all_statistics,
-                                         fiid_obj_t obj_cmd_rs);
-
 int ipmi_cmd_get_lan_configuration_parameters_ipv6_ipv4_support (ipmi_ctx_t ctx,
                                                                  uint8_t channel_number,
                                                                  uint8_t get_parameter,
@@ -624,6 +613,17 @@ int ipmi_cmd_get_lan_configuration_parameters_ipv6_neighbor_discovery_slaac_timi
                                                                                                   uint8_t set_selector,
                                                                                                   uint8_t block_selector,
                                                                                                   fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_suspend_bmc_arps (ipmi_ctx_t ctx,
+                               uint8_t channel_number,
+                               uint8_t gratuitous_arp_suspend,
+                               uint8_t arp_response_suspend,
+                               fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_ip_udp_rmcp_statistics (ipmi_ctx_t ctx,
+                                         uint8_t channel_number,
+                                         uint8_t clear_all_statistics,
+                                         fiid_obj_t obj_cmd_rs);
 
 #ifdef __cplusplus
 }

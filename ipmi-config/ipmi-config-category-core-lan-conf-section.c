@@ -37,8 +37,8 @@
 #include "freeipmi-portability.h"
 #include "pstdout.h"
 
-#define BMC_MAXIPV6ADDRLEN 40
 #define BMC_MAXIPADDRLEN 16
+#define BMC_MAXIPV6ADDRLEN 45
 #define BMC_MAXMACADDRLEN 24
 
 /* convenience struct */
@@ -277,6 +277,87 @@ ip_address_checkout (ipmi_config_state_data_t *state_data,
 }
 
 static ipmi_config_err_t
+ipv6_ipv4_support_checkout (ipmi_config_state_data_t *state_data,
+                            const char *section_name,
+                            struct ipmi_config_keyvalue *kv)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  char ipv6_ipv4_support_str[5];
+  uint8_t ipv6_ipv4_support_bytes[1];
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t ret;
+  uint8_t channel_number;
+
+  assert (state_data);
+  assert (section_name);
+  assert (kv);
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_lan_configuration_parameters_ipv6_ipv4_support_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if ((ret = get_lan_channel_number (state_data,
+                                     section_name,
+                                     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_get_lan_configuration_parameters_ipv6_ipv4_support (state_data->ipmi_ctx,
+                                                                   channel_number,
+                                                                   IPMI_GET_LAN_PARAMETER,
+                                                                   IPMI_LAN_CONFIGURATION_PARAMETERS_NO_SET_SELECTOR,
+                                                                   IPMI_LAN_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
+                                                                   obj_cmd_rs) < 0)
+    {
+      if (ipmi_config_param_errnum_is_non_fatal (state_data,
+                                                 obj_cmd_rs,
+                                                 &ret))
+        rv = ret;
+
+      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+          || state_data->prog_data->args->common_args.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_get_lan_configuration_parameters_ipv6_ipv4_support: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
+
+      goto cleanup;
+    }
+
+  if (fiid_obj_get_data (obj_cmd_rs,
+                         "ipv6_ipv4_support",
+                         ipv6_ipv4_support_bytes,
+                         1) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'ipv6_ipv4_support': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+
+  memset (ipv6_ipv4_support_str, '\0', 5);
+  sprintf(ipv6_ipv4_support_str, "0x%02x", ipv6_ipv4_support_bytes[0]);
+
+  if (ipmi_config_section_update_keyvalue_output (state_data,
+                                                  kv,
+                                                  ipv6_ipv4_support_str) < 0)
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
+
+  rv = IPMI_CONFIG_ERR_SUCCESS;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+static ipmi_config_err_t
 ipv6_static_addresses_checkout (ipmi_config_state_data_t *state_data,
                                 const char *section_name,
                                 struct ipmi_config_keyvalue *kv)
@@ -344,7 +425,15 @@ ipv6_static_addresses_checkout (ipmi_config_state_data_t *state_data,
     }
 
   memset (ipv6_address_str, '\0', BMC_MAXIPV6ADDRLEN+1);
-  inet_ntop(AF_INET6, ipv6_static_ip_address_bytes, ipv6_address_str, BMC_MAXIPV6ADDRLEN);
+  if (NULL == inet_ntop(AF_INET6, ipv6_static_ip_address_bytes, ipv6_address_str, BMC_MAXIPV6ADDRLEN))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get_data: 'ipv6_static_ip_address': %s\n",
+                       strerror (errno));
+      goto cleanup;
+
+    }
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
@@ -2409,6 +2498,16 @@ ipmi_config_core_lan_conf_section_get (ipmi_config_state_data_t *state_data,
                                    ip_address_checkout,
                                    ip_address_commit,
                                    ip_address_validate) < 0)
+    goto cleanup;
+
+  if (ipmi_config_section_add_key (state_data,
+                                   section,
+                                   "IPv6_IPv4_Support",
+                                   "IPv6_IPv4_Support",
+                                   0,
+                                   ipv6_static_addresses_checkout,
+                                   ipv6_static_addresses_commit,
+                                   ipv6_address_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
