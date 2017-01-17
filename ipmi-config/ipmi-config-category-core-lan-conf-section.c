@@ -25,6 +25,7 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#include <arpa/inet.h>
 #include <assert.h>
 
 #include "ipmi-config.h"
@@ -255,13 +256,17 @@ ip_address_checkout (ipmi_config_state_data_t *state_data,
     }
 
   memset (ip_address_str, '\0', BMC_MAXIPADDRLEN+1);
-  snprintf (ip_address_str,
-            BMC_MAXIPADDRLEN,
-            "%u.%u.%u.%u",
-            ip_address_bytes[0],
-            ip_address_bytes[1],
-            ip_address_bytes[2],
-            ip_address_bytes[3]);
+  if (!inet_ntop (AF_INET,
+                  ip_address_bytes,
+                  ip_address_str,
+                  BMC_MAXIPADDRLEN))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "inet_ntop: %s",
+                       strerror (errno));
+      goto cleanup;
+    }
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
@@ -558,13 +563,17 @@ subnet_mask_checkout (ipmi_config_state_data_t *state_data,
     }
 
   memset (subnet_mask_str, '\0', BMC_MAXIPADDRLEN + 1);
-  snprintf (subnet_mask_str,
-            BMC_MAXIPADDRLEN,
-            "%u.%u.%u.%u",
-            subnet_mask_bytes[0],
-            subnet_mask_bytes[1],
-            subnet_mask_bytes[2],
-            subnet_mask_bytes[3]);
+  if (!inet_ntop (AF_INET,
+                  subnet_mask_bytes,
+                  subnet_mask_str,
+                  BMC_MAXIPADDRLEN))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "inet_ntop: %s",
+                       strerror (errno));
+      goto cleanup;
+    }
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
@@ -708,13 +717,17 @@ default_gateway_address_checkout (ipmi_config_state_data_t *state_data,
     }
 
   memset (ip_address_str, '\0', BMC_MAXIPADDRLEN + 1);
-  snprintf (ip_address_str,
-            BMC_MAXIPADDRLEN,
-            "%u.%u.%u.%u",
-            ip_address_bytes[0],
-            ip_address_bytes[1],
-            ip_address_bytes[2],
-            ip_address_bytes[3]);
+  if (!inet_ntop (AF_INET,
+                  ip_address_bytes,
+                  ip_address_str,
+                  BMC_MAXIPADDRLEN))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "inet_ntop: %s",
+                       strerror (errno));
+      goto cleanup;
+    }
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
@@ -1012,13 +1025,17 @@ backup_gateway_address_checkout (ipmi_config_state_data_t *state_data,
     }
 
   memset (ip_address_str, '\0', BMC_MAXIPADDRLEN+1);
-  snprintf (ip_address_str,
-            BMC_MAXIPADDRLEN,
-            "%u.%u.%u.%u",
-            ip_address_bytes[0],
-            ip_address_bytes[1],
-            ip_address_bytes[2],
-            ip_address_bytes[3]);
+  if (!inet_ntop (AF_INET,
+                  ip_address_bytes,
+                  ip_address_str,
+                  BMC_MAXIPADDRLEN))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "inet_ntop: %s",
+                       strerror (errno));
+      goto cleanup;
+    }
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
