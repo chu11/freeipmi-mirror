@@ -575,6 +575,17 @@ ipv6_static_addresses_commit (ipmi_config_state_data_t *state_data,
 }
 
 static ipmi_config_err_t
+ipv6_ipv4_support_commit (ipmi_config_state_data_t *state_data,
+                              const char *section_name,
+                              const struct ipmi_config_keyvalue *kv)
+{
+  pstdout_fprintf (state_data->pstate,
+                   stderr,
+                   "Read only parameter: ipv6_ipv4_support\n");
+  return IPMI_CONFIG_ERR_FATAL_ERROR;
+}
+
+static ipmi_config_err_t
 mac_address_checkout (ipmi_config_state_data_t *state_data,
                       const char *section_name,
                       struct ipmi_config_keyvalue *kv)
@@ -2505,9 +2516,9 @@ ipmi_config_core_lan_conf_section_get (ipmi_config_state_data_t *state_data,
                                    "IPv6_IPv4_Support",
                                    "IPv6_IPv4_Support",
                                    0,
-                                   ipv6_static_addresses_checkout,
-                                   ipv6_static_addresses_commit,
-                                   ipv6_address_validate) < 0)
+                                   ipv6_ipv4_support_checkout,
+                                   ipv6_ipv4_support_commit,
+                                   yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
