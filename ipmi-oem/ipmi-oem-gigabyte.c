@@ -58,6 +58,11 @@
 #define IPMI_CMD_OEM_GIGABYTE_PORT_CONFIGURATION_SET_BMC_SERVICES_BYTE_2 0x00
 #define IPMI_CMD_OEM_GIGABYTE_PORT_CONFIGURATION_SET_BMC_SERVICES_BYTE_3 0x15
 
+#define IPMI_CMD_OEM_GIGABYTE_PORT_CONFIGURATION_GET_BMC_SERVICES_BYTE_0 0x0A
+#define IPMI_CMD_OEM_GIGABYTE_PORT_CONFIGURATION_GET_BMC_SERVICES_BYTE_1 0x3C
+#define IPMI_CMD_OEM_GIGABYTE_PORT_CONFIGURATION_GET_BMC_SERVICES_BYTE_2 0x00
+#define IPMI_CMD_OEM_GIGABYTE_PORT_CONFIGURATION_GET_BMC_SERVICES_BYTE_3 0x21
+
 #define IPMI_CMD_OEM_GIGABYTE_PORT_CONFIGURATION_SSH        22
 #define IPMI_CMD_OEM_GIGABYTE_PORT_CONFIGURATION_HTTP       80
 #define IPMI_CMD_OEM_GIGABYTE_PORT_CONFIGURATION_RPCBIND    111
@@ -244,6 +249,117 @@ ipmi_oem_gigabyte_set_nic_mode (ipmi_oem_state_data_t *state_data)
                                                    IPMI_NET_FN_OEM_GROUP_RS,
                                                    NULL) < 0)
     goto cleanup;
+
+  rv = 0;
+ cleanup:
+  return (rv);
+}
+
+int
+ipmi_oem_gigabyte_get_bmc_services (ipmi_oem_state_data_t *state_data)
+{
+  uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
+  uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
+  int rs_len;
+  int rv = -1;
+  int ports[] = { IPMI_CMD_OEM_GIGABYTE_PORT_CONFIGURATION_SSH,
+                  IPMI_CMD_OEM_GIGABYTE_PORT_CONFIGURATION_HTTP,
+                  IPMI_CMD_OEM_GIGABYTE_PORT_CONFIGURATION_RPCBIND,
+                  IPMI_CMD_OEM_GIGABYTE_PORT_CONFIGURATION_SVRLOC,
+                  IPMI_CMD_OEM_GIGABYTE_PORT_CONFIGURATION_HTTPS,
+                  IPMI_CMD_OEM_GIGABYTE_PORT_CONFIGURATION_AVOCENTKVM,
+                  IPMI_CMD_OEM_GIGABYTE_PORT_CONFIGURATION_WBEM_HTTP,
+                  IPMI_CMD_OEM_GIGABYTE_PORT_CONFIGURATION_WBEM_HTTPS,
+                  0 };
+  char *portsstr[] = { "ssh",
+                       "http",
+                       "rpcbind",
+                       "svrloc",
+                       "https",
+                       "avocentkvm",
+                       "wbem-http",
+                       "wbem-https",
+                       NULL };
+  int i;
+
+  assert (state_data);
+  assert (state_data->prog_data->args->oem_options_count == 0);
+
+  /* From Gigabyte Provided Information 
+   *
+   * GIGABYTE MD90-FS0-ZB
+   *
+   * Request 
+   *
+   * 0x2E - OEM network function
+   * 0x21 - OEM cmd
+   * 0x0A - ??? - no idea, given by vendor
+   * 0x3C - ??? - no idea, given by vendor
+   * 0x00 - ??? - no idea, given by vendor
+   * 0x21 - ??? - no idea, given by vendor
+   * 0x?? - lsb port number to block/unblock
+   * 0x?? - msb port number to block/unblock
+   *
+   * Response 
+   *
+   * 0x21 - OEM cmd
+   * 0x?? - Completion Code
+   * 0x0A - ??? - no idea, given by vendor
+   * 0x3C - ??? - no idea, given by vendor
+   * 0x00 - ??? - no idea, given by vendor
+   * 0x?? - enabled/disabled
+   *      - 0 - disabled
+   *      - 1 - enabled
+   */
+
+  bytes_rq[0] = IPMI_CMD_OEM_GIGABYTE_PORT_CONFIGURATION2;
+  bytes_rq[1] = IPMI_CMD_OEM_GIGABYTE_PORT_CONFIGURATION_GET_BMC_SERVICES_BYTE_0;
+  bytes_rq[2] = IPMI_CMD_OEM_GIGABYTE_PORT_CONFIGURATION_GET_BMC_SERVICES_BYTE_1;
+  bytes_rq[3] = IPMI_CMD_OEM_GIGABYTE_PORT_CONFIGURATION_GET_BMC_SERVICES_BYTE_2;
+  bytes_rq[4] = IPMI_CMD_OEM_GIGABYTE_PORT_CONFIGURATION_GET_BMC_SERVICES_BYTE_3;
+
+  i = 0;
+  while (ports[i])
+    {
+      char *outputstr = NULL;
+
+      bytes_rq[5] = (ports[i] & 0x00FF);
+      bytes_rq[6] = (ports[i] & 0xFF00) >> 8;
+
+      if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
+                                  0, /* lun */
+                                  IPMI_NET_FN_OEM_GROUP_RQ, /* network function */
+                                  bytes_rq, /* data */
+                                  7, /* num bytes */
+                                  bytes_rs,
+                                  IPMI_OEM_MAX_BYTES)) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_cmd_raw: %s\n",
+                           ipmi_ctx_errormsg (state_data->ipmi_ctx));
+          goto cleanup;
+        }
+
+      if (ipmi_oem_check_response_and_completion_code (state_data,
+                                                       bytes_rs,
+                                                       rs_len,
+                                                       6,
+                                                       IPMI_CMD_OEM_GIGABYTE_PORT_CONFIGURATION2,
+                                                       IPMI_NET_FN_OEM_GROUP_RS,
+                                                       NULL) < 0)
+        goto cleanup;
+
+      if (bytes_rs[5] == IPMI_OEM_GIGABYTE_PORT_ENABLED)
+        outputstr = "enabled";
+      else if (bytes_rs[5] == IPMI_OEM_GIGABYTE_PORT_DISABLED)
+        outputstr = "disabled";
+      else
+        outputstr = "unknown";
+
+      pstdout_printf (state_data->pstate,
+                      "%s: %s\n", portsstr[i], outputstr);
+    }
 
   rv = 0;
  cleanup:

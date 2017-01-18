@@ -520,6 +520,13 @@ struct ipmi_oem_command oem_gigabyte[] =
       ipmi_oem_gigabyte_set_nic_mode
     },
     {
+      "get-bmc-services",
+      NULL,
+      0,
+      IPMI_OEM_COMMAND_FLAGS_DEFAULT,
+      ipmi_oem_gigabyte_get_bmc_services
+    },
+    {
       "set-bmc-services",
       "<enable|disable> <ssh|http|rpcbind|svrloc|https|avocenkvm|wbem-http|wbem-https>",
       2,
