@@ -222,6 +222,35 @@ ip_address_source_string (uint8_t value)
 }
 
 int
+ipv6_ipv4_addressing_enables_number (const char *string)
+{
+  assert (string);
+
+  if (same (string, "IPv6_disabled"))
+    return (IPMI_IPV6_IPV4_ADDRESSING_ENABLES_IPV6_DISABLED);
+  if (same (string, "IPv6_only"))
+    return (IPMI_IPV6_IPV4_ADDRESSING_ENABLES_IPV6_ONLY);
+  if (same (string, "IPv6_and_IPv4"))
+    return (IPMI_IPV6_IPV4_ADDRESSING_ENABLES_IPV6_AND_IPV4);
+  return (-1);
+}
+
+char *
+ipv6_ipv4_addressing_enables_string (uint8_t value)
+{
+  switch (value)
+    {
+    case IPMI_IPV6_IPV4_ADDRESSING_ENABLES_IPV6_DISABLED:
+      return  "IPv6_disabled";
+    case IPMI_IPV6_IPV4_ADDRESSING_ENABLES_IPV6_ONLY:
+      return  "IPv6_only";
+    case IPMI_IPV6_IPV4_ADDRESSING_ENABLES_IPV6_AND_IPV4:
+      return  "IPv6_and_IPv4";
+    }
+  return "";
+}
+
+int
 power_restore_policy_number (const char *string)
 {
   assert (string);
