@@ -37,6 +37,7 @@ The following options are specific to
 .TP
 \fB\-\-file\fR=\fICMD\-FILE\fR
 Specify a file to read command requests from.
+.TP
 \fB\-\-no\-session\fR
 If performing out of band communication, do not establish an IPMI
 session and send raw packets without having established a

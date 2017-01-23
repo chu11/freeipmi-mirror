@@ -1,3 +1,7 @@
+2017-01-21 Albert Chu <chu11@llnl.gov>
+
+	* man/ipmi-raw.8.pre.in: Fix formatting error.
+	
 2017-01-18 Albert Chu <chu11@llnl.gov>
 
 	* man/ipmi-oem.8.pre.in: Fix cut and paste documentation error.
