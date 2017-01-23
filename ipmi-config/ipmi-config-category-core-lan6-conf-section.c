@@ -434,7 +434,7 @@ ipv6_static_addresses_checkout (ipmi_config_state_data_t *state_data,
 	  goto cleanup;
 	}
 
-      memset (ipv6_addresses_str, '\0', (BMC_MAXIPV6ADDRLEN+1)*255);
+      memset (ipv6_address_str, '\0', BMC_MAXIPV6ADDRLEN+1);
       if (NULL == inet_ntop(AF_INET6, ipv6_static_ip_address_bytes, ipv6_address_str, BMC_MAXIPV6ADDRLEN))
 	{
 	  pstdout_fprintf (state_data->pstate,
@@ -444,7 +444,10 @@ ipv6_static_addresses_checkout (ipmi_config_state_data_t *state_data,
 	  goto cleanup;
 
 	}
-      sprintf(ipv6_addresses_str+strlen(ipv6_addresses_str), "%s ", ipv6_address_str);
+      if (!same (ipv6_address_str, "::"))
+	{
+	  sprintf(ipv6_addresses_str+strlen(ipv6_addresses_str), "%s ", ipv6_address_str);
+	}
       fiid_obj_destroy (obj_cmd_rs);
       obj_cmd_rs = NULL;
   }
@@ -663,7 +666,7 @@ ipv6_dynamic_addresses_checkout (ipmi_config_state_data_t *state_data,
 	      goto cleanup;
 	    }
 
-	  memset (ipv6_addresses_str, '\0', (BMC_MAXIPV6ADDRLEN+1)*255);
+	  memset (ipv6_address_str, '\0', BMC_MAXIPV6ADDRLEN+1);
 	  if (NULL == inet_ntop(AF_INET6, ipv6_dynamic_ip_address_bytes, ipv6_address_str, BMC_MAXIPV6ADDRLEN))
 	    {
 	      pstdout_fprintf (state_data->pstate,
@@ -673,7 +676,10 @@ ipv6_dynamic_addresses_checkout (ipmi_config_state_data_t *state_data,
 	      goto cleanup;
 
 	    }
-	  sprintf(ipv6_addresses_str+strlen(ipv6_addresses_str), "%s ", ipv6_address_str);
+	  if (!same (ipv6_address_str, "::"))
+	    {
+	      sprintf(ipv6_addresses_str+strlen(ipv6_addresses_str), "%s ", ipv6_address_str);
+	    }
 	}
       fiid_obj_destroy (obj_cmd_rs);
       obj_cmd_rs = NULL;
