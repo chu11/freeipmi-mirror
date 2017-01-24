@@ -94,33 +94,6 @@ extern "C" {
   (((__parameter_selector) >= IPMI_LAN_CONFIGURATION_PARAMETER_OEM_MIN \
     && ((__parameter_selector) - 1) <= (IPMI_LAN_CONFIGURATION_PARAMETER_OEM_MAX - 1)) ? 1 : 0)
 
-#define IPMI_IPV6_ADDRESS_SOURCE_STATIC      0x00
-#define IPMI_IPV6_ADDRESS_SOURCE_SLAAC       0x01
-#define IPMI_IPV6_ADDRESS_SOURCE_DHCPV6      0x02
-
-#define IPMI_IPV6_STATIC_ADDRESS_SOURCE_VALID(__address_status) \
-  (((__address_status) == IPMI_IPV6_ADDRESS_SOURCE_STATIC) ? 1 : 0)
-
-#define IPMI_IPV6_DYNAMIC_ADDRESS_SOURCE_VALID(__address_status) \
-  (((__address_status) == IPMI_IPV6_ADDRESS_SOURCE_SLAAC         \
-  || (__address_status) == IPMI_IPV6_ADDRESS_SOURCE_DHCPV6) ? 1 : 0)
-
-
-#define IPMI_IPV6_ADDRESS_STATUS_ACTIVE      0x00
-#define IPMI_IPV6_ADDRESS_STATUS_DISABLED    0x01
-#define IPMI_IPV6_ADDRESS_STATUS_PENDING     0x02
-#define IPMI_IPV6_ADDRESS_STATUS_FAILED      0x03
-#define IPMI_IPV6_ADDRESS_STATUS_DEPRECATED  0x04
-#define IPMI_IPV6_ADDRESS_STATUS_INVALID     0x05
-
-#define IPMI_IPV6_ADDRESS_STATUS_VALID(__address_status)           \
-  (((__address_status) == IPMI_IPV6_ADDRESS_STATUS_ACTIVE          \
-    || (__address_status) == IPMI_IPV6_ADDRESS_STATUS_DISABLED     \
-    || (__address_status) == IPMI_IPV6_ADDRESS_STATUS_PENDING      \
-    || (__address_status) == IPMI_IPV6_ADDRESS_STATUS_FAILED       \
-    || (__address_status) == IPMI_IPV6_ADDRESS_STATUS_DEPRECATED   \
-    || (__address_status) == IPMI_IPV6_ADDRESS_STATUS_INVALID) ? 1 : 0)
-
 #ifdef __cplusplus
 }
 #endif
