@@ -137,12 +137,15 @@ _get_ipv6_ipv4_support (ipmi_config_state_data_t *state_data,
 }
 
 static ipmi_config_err_t
-ipv6_ipv4_support_commit (ipmi_config_state_data_t *state_data,
-                          const char *section_name,
-                          const struct ipmi_config_keyvalue *kv)
+read_only_commit (ipmi_config_state_data_t *state_data,
+                  const char *section_name,
+                  const struct ipmi_config_keyvalue *kv)
 {
   /* Read only parameter */
-  return (IPMI_CONFIG_ERR_FATAL_ERROR);
+  pstdout_fprintf (state_data->pstate,
+                   stderr,
+                   "Ignoring attempt to set read-only configuration variable.\n");
+  return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
 static ipmi_config_err_t
@@ -316,7 +319,9 @@ ipv6_static_addresses_checkout (ipmi_config_state_data_t *state_data,
 {
   fiid_obj_t obj_cmd_rs = NULL;
   char ipv6_address_str[BMC_MAXIPV6ADDRLEN + 1];
-  char ipv6_addresses_str[(BMC_MAXIPV6ADDRLEN + 1)*255];
+  char *ipv6_addresses_str = NULL;
+  int ipv6_addresses_len;
+  int ipv6_addresses_pos = 0;
   uint8_t ipv6_static_ip_address_bytes[16];
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   ipmi_config_err_t ret;
@@ -380,7 +385,9 @@ ipv6_static_addresses_checkout (ipmi_config_state_data_t *state_data,
   fiid_obj_destroy (obj_cmd_rs);
   obj_cmd_rs = NULL;
 
-  memset (ipv6_addresses_str, '\0', (BMC_MAXIPV6ADDRLEN+1)*255);
+  ipv6_addresses_len = (BMC_MAXIPV6ADDRLEN+1)*address_max;
+  ipv6_addresses_str = malloc(ipv6_addresses_len);
+  memset (ipv6_addresses_str, '\0', ipv6_addresses_len);
   for (set = 0; set < address_max; set++)
     {
       if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_lan_configuration_parameters_ipv6_static_addresses_rs)))
@@ -446,11 +453,16 @@ ipv6_static_addresses_checkout (ipmi_config_state_data_t *state_data,
 	}
       if (!same (ipv6_address_str, "::"))
 	{
-	  sprintf(ipv6_addresses_str+strlen(ipv6_addresses_str), "%s ", ipv6_address_str);
+	  sprintf(ipv6_addresses_str+ipv6_addresses_pos, "%s ", ipv6_address_str);
+          ipv6_addresses_pos += strlen(ipv6_address_str) + 1;
 	}
       fiid_obj_destroy (obj_cmd_rs);
       obj_cmd_rs = NULL;
   }
+  if (ipv6_addresses_pos)
+    {
+      ipv6_addresses_str[ipv6_addresses_pos - 1] = '\0';
+    }
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
@@ -459,6 +471,10 @@ ipv6_static_addresses_checkout (ipmi_config_state_data_t *state_data,
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
+  if (ipv6_addresses_str)
+    {
+      free(ipv6_addresses_str);
+    }
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
@@ -478,7 +494,7 @@ ipv6_static_addresses_commit (ipmi_config_state_data_t *state_data,
   assert (section_name);
   assert (kv);
 
-  return IPMI_CONFIG_ERR_SUCCESS; /* XXX TODO lamont -- yet to be implemented. */
+  return IPMI_CONFIG_ERR_FATAL_ERROR; /* XXX TODO lamont -- yet to be implemented. */
 
   if (ipv4_address_string2int (state_data,
                                kv->value_input,
@@ -530,12 +546,14 @@ ipv6_static_addresses_commit (ipmi_config_state_data_t *state_data,
 
 static ipmi_config_err_t
 ipv6_dynamic_addresses_checkout (ipmi_config_state_data_t *state_data,
-                                const char *section_name,
-                                struct ipmi_config_keyvalue *kv)
+                                 const char *section_name,
+                                 struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   char ipv6_address_str[BMC_MAXIPV6ADDRLEN + 1];
-  char ipv6_addresses_str[(BMC_MAXIPV6ADDRLEN + 1)*255];
+  char *ipv6_addresses_str = NULL;
+  int ipv6_addresses_len;
+  int ipv6_addresses_pos = 0;
   uint8_t ipv6_dynamic_ip_address_bytes[16];
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   ipmi_config_err_t ret;
@@ -600,7 +618,9 @@ ipv6_dynamic_addresses_checkout (ipmi_config_state_data_t *state_data,
   fiid_obj_destroy (obj_cmd_rs);
   obj_cmd_rs = NULL;
 
-  memset (ipv6_addresses_str, '\0', (BMC_MAXIPV6ADDRLEN+1)*255);
+  ipv6_addresses_len = (BMC_MAXIPV6ADDRLEN+1)*address_max;
+  ipv6_addresses_str = malloc(ipv6_addresses_len);
+  memset (ipv6_addresses_str, '\0', ipv6_addresses_len);
   for (set = 0; set < address_max; set++)
     {
       if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_lan_configuration_parameters_ipv6_dynamic_addresses_rs)))
@@ -678,12 +698,17 @@ ipv6_dynamic_addresses_checkout (ipmi_config_state_data_t *state_data,
 	    }
 	  if (!same (ipv6_address_str, "::"))
 	    {
-	      sprintf(ipv6_addresses_str+strlen(ipv6_addresses_str), "%s ", ipv6_address_str);
+              sprintf(ipv6_addresses_str+ipv6_addresses_pos, "%s ", ipv6_address_str);
+              ipv6_addresses_pos += strlen(ipv6_address_str) + 1;
 	    }
 	}
       fiid_obj_destroy (obj_cmd_rs);
       obj_cmd_rs = NULL;
   }
+  if (ipv6_addresses_pos)
+    {
+      ipv6_addresses_str[ipv6_addresses_pos - 1] = '\0';
+    }
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
@@ -692,6 +717,10 @@ ipv6_dynamic_addresses_checkout (ipmi_config_state_data_t *state_data,
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
+  if (ipv6_addresses_str)
+    {
+      free(ipv6_addresses_str);
+    }
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
@@ -747,37 +776,37 @@ ipmi_config_core_lan6_conf_section_get (ipmi_config_state_data_t *state_data,
   if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Supports_IPv6_Only",
-                                   "Supports IPv6-only",
+                                   "READ-ONLY: Supports IPv6-only",
                                    0,
                                    ipv6_ipv4_support_ipv6_only_checkout,
-                                   ipv6_ipv4_support_commit,
+                                   read_only_commit,
                                    yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Supports_IPv6_And_IPv4_Simultaneously",
-                                   "Supports IPv6 And IPv4 Simultaneously",
+                                   "READ-ONLY: Supports IPv6 And IPv4 Simultaneously",
                                    0,
 				   ipv6_ipv4_support_ipv6_and_ipv4_simultaneously_checkout,
-                                   ipv6_ipv4_support_commit,
+                                   read_only_commit,
                                    yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Supports_IPv6_Destination_Address_For_Lan_Alert",
-                                   "Supports IPv6 Destination Address For Lan Alert",
+                                   "READ-ONLY: Supports IPv6 Destination Address For Lan Alert",
                                    verbose_option_config_flags,
 				   ipv6_ipv4_support_ipv6_destination_address_for_lan_alert_checkout,
-                                   ipv6_ipv4_support_commit,
+                                   read_only_commit,
                                    yes_no_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "IPv6_IPv4_Addressing_Enables",
-                                   "One of 0 (IPv4-only), 1 (IPv6-only), or 2 (IPv4 and IPv6 simultaneously)",
+                                   "One of 0, IPv4-Only, 1, IPv6-Only, 2, or, IPv4-and-IPv6-Simultaneously)",
                                    0,
                                    ipv6_ipv4_addressing_enables_checkout,
                                    ipv6_ipv4_addressing_enables_commit,
@@ -797,10 +826,10 @@ ipmi_config_core_lan6_conf_section_get (ipmi_config_state_data_t *state_data,
   if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "IPv6_Dynamic_Addresses",
-                                   "Give valid IPv6 address",
+                                   "READ-ONLY: Give valid IPv6 address",
                                    0,
                                    ipv6_dynamic_addresses_checkout,
-                                   ipv6_dynamic_addresses_commit,
+                                   read_only_commit,
                                    ipv6_address_validate) < 0)
     goto cleanup;
 
