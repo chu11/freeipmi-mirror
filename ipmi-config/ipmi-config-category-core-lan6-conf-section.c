@@ -308,7 +308,7 @@ ipv6_ipv4_addressing_enables_commit (ipmi_config_state_data_t *state_data,
 				     const char *section_name,
 				     const struct ipmi_config_keyvalue *kv)
 {
-  /* XXX LJ TODO: we need this.. */
+  /* XXX TODO lamont -- we need this.. */
   return (IPMI_CONFIG_ERR_FATAL_ERROR);
 }
 
@@ -322,7 +322,7 @@ ipv6_static_addresses_checkout (ipmi_config_state_data_t *state_data,
   char *ipv6_addresses_str = NULL;
   int ipv6_addresses_len;
   int ipv6_addresses_pos = 0;
-  uint8_t ipv6_static_ip_address_bytes[16];
+  uint8_t ipv6_ip_address_bytes[16];
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   ipmi_config_err_t ret;
   uint8_t channel_number;
@@ -431,7 +431,7 @@ ipv6_static_addresses_checkout (ipmi_config_state_data_t *state_data,
 
       if (fiid_obj_get_data (obj_cmd_rs,
 			     "address",
-			     ipv6_static_ip_address_bytes,
+			     ipv6_ip_address_bytes,
 			     16) < 0)
 	{
 	  pstdout_fprintf (state_data->pstate,
@@ -442,7 +442,7 @@ ipv6_static_addresses_checkout (ipmi_config_state_data_t *state_data,
 	}
 
       memset (ipv6_address_str, '\0', BMC_MAXIPV6ADDRLEN+1);
-      if (NULL == inet_ntop(AF_INET6, ipv6_static_ip_address_bytes, ipv6_address_str, BMC_MAXIPV6ADDRLEN))
+      if (NULL == inet_ntop(AF_INET6, ipv6_ip_address_bytes, ipv6_address_str, BMC_MAXIPV6ADDRLEN))
 	{
 	  pstdout_fprintf (state_data->pstate,
 			   stderr,
@@ -485,7 +485,7 @@ ipv6_static_addresses_commit (ipmi_config_state_data_t *state_data,
                               const struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  uint32_t ip_address_val = 0;
+  uint8_t ipv6_address_bytes[16];
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   ipmi_config_err_t ret;
   uint8_t channel_number;
@@ -494,14 +494,18 @@ ipv6_static_addresses_commit (ipmi_config_state_data_t *state_data,
   assert (section_name);
   assert (kv);
 
-  return IPMI_CONFIG_ERR_FATAL_ERROR; /* XXX TODO lamont -- yet to be implemented. */
-
-  if (ipv4_address_string2int (state_data,
-                               kv->value_input,
-                               &ip_address_val) < 0)
+#if 0
+  /* XXX TODO lamont -- kv->value_input is a collection of IP addresess.  We need to:
+   * 1. break it up.
+   * 2. make sure that static_address_max is sufficent
+   * 3. iterate through the values setting them one at a time.
+   */
+  if (inet_pton (AF_INET6,
+                 kv->value_input,
+                 ipv6_address_bytes) != 1)
     goto cleanup;
 
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_lan_configuration_parameters_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_lan_configuration_parameters_ipv6_rs)))
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -518,10 +522,10 @@ ipv6_static_addresses_commit (ipmi_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (ipmi_cmd_set_lan_configuration_parameters_ip_address (state_data->ipmi_ctx,
-                                                            channel_number,
-                                                            ip_address_val,
-                                                            obj_cmd_rs) < 0)
+  if (ipmi_cmd_set_lan_configuration_parameters_ipv6_static_addresses (state_data->ipmi_ctx,
+                                                                       channel_number,
+                                                                       ip_address_val,
+                                                                       obj_cmd_rs) < 0)
     {
       if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                  obj_cmd_rs,
@@ -541,6 +545,7 @@ ipv6_static_addresses_commit (ipmi_config_state_data_t *state_data,
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
+#endif
   return (rv);
 }
 
@@ -554,7 +559,7 @@ ipv6_dynamic_addresses_checkout (ipmi_config_state_data_t *state_data,
   char *ipv6_addresses_str = NULL;
   int ipv6_addresses_len;
   int ipv6_addresses_pos = 0;
-  uint8_t ipv6_dynamic_ip_address_bytes[16];
+  uint8_t ipv6_ip_address_bytes[16];
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   ipmi_config_err_t ret;
   uint8_t channel_number;
@@ -671,12 +676,11 @@ ipv6_dynamic_addresses_checkout (ipmi_config_state_data_t *state_data,
 	  goto cleanup;
 	}
 
-      /* XXX LJ: Need defines for ipv6_dynamic_address_status */
-      if (val == 0)
+      if (val == IPMI_IPV6_ADDRESS_STATUS_ACTIVE)
 	{
 	  if (fiid_obj_get_data (obj_cmd_rs,
 				 "address",
-				 ipv6_dynamic_ip_address_bytes,
+				 ipv6_ip_address_bytes,
 				 16) < 0)
 	    {
 	      pstdout_fprintf (state_data->pstate,
@@ -687,7 +691,7 @@ ipv6_dynamic_addresses_checkout (ipmi_config_state_data_t *state_data,
 	    }
 
 	  memset (ipv6_address_str, '\0', BMC_MAXIPV6ADDRLEN+1);
-	  if (NULL == inet_ntop(AF_INET6, ipv6_dynamic_ip_address_bytes, ipv6_address_str, BMC_MAXIPV6ADDRLEN))
+	  if (NULL == inet_ntop(AF_INET6, ipv6_ip_address_bytes, ipv6_address_str, BMC_MAXIPV6ADDRLEN))
 	    {
 	      pstdout_fprintf (state_data->pstate,
 			       stderr,
