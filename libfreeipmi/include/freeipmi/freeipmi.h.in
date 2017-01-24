@@ -103,7 +103,6 @@ extern "C" {
 #include <freeipmi/spec/ipmi-fru-language-codes-spec.h>
 #include <freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h>
 #include <freeipmi/spec/ipmi-ipmb-lun-spec.h>
-#include <freeipmi/spec/ipmi-ipv6-address-status-spec.h>
 #include <freeipmi/spec/ipmi-jedec-manufacturer-identification-code-spec.h>
 #include <freeipmi/spec/ipmi-lan-configuration-parameters-spec.h>
 #include <freeipmi/spec/ipmi-netfn-spec.h>

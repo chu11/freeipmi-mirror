@@ -137,18 +137,6 @@ _get_ipv6_ipv4_support (ipmi_config_state_data_t *state_data,
 }
 
 static ipmi_config_err_t
-read_only_commit (ipmi_config_state_data_t *state_data,
-                  const char *section_name,
-                  const struct ipmi_config_keyvalue *kv)
-{
-  /* Read only parameter */
-  pstdout_fprintf (state_data->pstate,
-                   stderr,
-                   "Ignoring attempt to set read-only configuration variable.\n");
-  return (IPMI_CONFIG_ERR_SUCCESS);
-}
-
-static ipmi_config_err_t
 ipv6_ipv4_support_ipv6_only_checkout (ipmi_config_state_data_t *state_data,
                             const char *section_name,
                             struct ipmi_config_keyvalue *kv)
@@ -460,9 +448,7 @@ ipv6_static_addresses_checkout (ipmi_config_state_data_t *state_data,
       obj_cmd_rs = NULL;
   }
   if (ipv6_addresses_pos)
-    {
       ipv6_addresses_str[ipv6_addresses_pos - 1] = '\0';
-    }
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
@@ -472,9 +458,7 @@ ipv6_static_addresses_checkout (ipmi_config_state_data_t *state_data,
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   if (ipv6_addresses_str)
-    {
       free(ipv6_addresses_str);
-    }
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
@@ -710,9 +694,7 @@ ipv6_dynamic_addresses_checkout (ipmi_config_state_data_t *state_data,
       obj_cmd_rs = NULL;
   }
   if (ipv6_addresses_pos)
-    {
       ipv6_addresses_str[ipv6_addresses_pos - 1] = '\0';
-    }
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
@@ -722,9 +704,7 @@ ipv6_dynamic_addresses_checkout (ipmi_config_state_data_t *state_data,
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   if (ipv6_addresses_str)
-    {
       free(ipv6_addresses_str);
-    }
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
@@ -781,7 +761,7 @@ ipmi_config_core_lan6_conf_section_get (ipmi_config_state_data_t *state_data,
                                    section,
                                    "Supports_IPv6_Only",
                                    "READ-ONLY: Supports IPv6-only",
-                                   0,
+                                   IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT | IPMI_CONFIG_READABLE_ONLY,
                                    ipv6_ipv4_support_ipv6_only_checkout,
                                    read_only_commit,
                                    yes_no_validate) < 0)
@@ -791,7 +771,7 @@ ipmi_config_core_lan6_conf_section_get (ipmi_config_state_data_t *state_data,
                                    section,
                                    "Supports_IPv6_And_IPv4_Simultaneously",
                                    "READ-ONLY: Supports IPv6 And IPv4 Simultaneously",
-                                   0,
+                                   IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT | IPMI_CONFIG_READABLE_ONLY,
 				   ipv6_ipv4_support_ipv6_and_ipv4_simultaneously_checkout,
                                    read_only_commit,
                                    yes_no_validate) < 0)
@@ -801,7 +781,7 @@ ipmi_config_core_lan6_conf_section_get (ipmi_config_state_data_t *state_data,
                                    section,
                                    "Supports_IPv6_Destination_Address_For_Lan_Alert",
                                    "READ-ONLY: Supports IPv6 Destination Address For Lan Alert",
-                                   verbose_option_config_flags,
+                                   verbose_option_config_flags | IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT | IPMI_CONFIG_READABLE_ONLY,
 				   ipv6_ipv4_support_ipv6_destination_address_for_lan_alert_checkout,
                                    read_only_commit,
                                    yes_no_validate) < 0)
@@ -810,7 +790,7 @@ ipmi_config_core_lan6_conf_section_get (ipmi_config_state_data_t *state_data,
   if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "IPv6_IPv4_Addressing_Enables",
-                                   "One of 0, IPv4-Only, 1, IPv6-Only, 2, or, IPv4-and-IPv6-Simultaneously)",
+                                   "One of 0, IPv4-Only, 1, IPv6-Only, 2, or, IPv4-and-IPv6)",
                                    0,
                                    ipv6_ipv4_addressing_enables_checkout,
                                    ipv6_ipv4_addressing_enables_commit,
@@ -830,8 +810,8 @@ ipmi_config_core_lan6_conf_section_get (ipmi_config_state_data_t *state_data,
   if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "IPv6_Dynamic_Addresses",
-                                   "READ-ONLY: Give valid IPv6 address",
-                                   0,
+                                   "READ-ONLY: IPv6 dynamic address",
+                                   IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT | IPMI_CONFIG_READABLE_ONLY,
                                    ipv6_dynamic_addresses_checkout,
                                    read_only_commit,
                                    ipv6_address_validate) < 0)

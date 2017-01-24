@@ -226,9 +226,9 @@ ipv6_ipv4_addressing_enables_number (const char *string)
 {
   assert (string);
 
-  if (same (string, "IPv6_disabled"))
+  if (same (string, "IPv6_Disabled"))
     return (IPMI_IPV6_IPV4_ADDRESSING_ENABLES_IPV6_DISABLED);
-  if (same (string, "IPv6_only"))
+  if (same (string, "IPv6_Only"))
     return (IPMI_IPV6_IPV4_ADDRESSING_ENABLES_IPV6_ONLY);
   if (same (string, "IPv6_and_IPv4"))
     return (IPMI_IPV6_IPV4_ADDRESSING_ENABLES_IPV6_AND_IPV4);
@@ -241,9 +241,9 @@ ipv6_ipv4_addressing_enables_string (uint8_t value)
   switch (value)
     {
     case IPMI_IPV6_IPV4_ADDRESSING_ENABLES_IPV6_DISABLED:
-      return  "IPv6_disabled";
+      return  "IPv6_Disabled";
     case IPMI_IPV6_IPV4_ADDRESSING_ENABLES_IPV6_ONLY:
-      return  "IPv6_only";
+      return  "IPv6_Only";
     case IPMI_IPV6_IPV4_ADDRESSING_ENABLES_IPV6_AND_IPV4:
       return  "IPv6_and_IPv4";
     }
