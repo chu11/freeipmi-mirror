@@ -88,6 +88,16 @@ _get_ipv6_ipv4_support (ipmi_config_state_data_t *state_data,
                                                  &ret))
         rv = ret;
 
+      if (rv == IPMI_CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED)
+        {
+          state_data->ipv6_ipv4_support_supports_ipv6 = 0;
+          state_data->ipv6_ipv4_support_supports_ipv6_only = 0;
+          state_data->ipv6_ipv4_support_supports_ipv6_and_ipv4_simultaneously = 0;
+          state_data->ipv6_ipv4_support_supports_ipv6_destination_address_for_lan_alert = 0;
+          state_data->ipv6_ipv4_support_initialized++;
+          goto out;
+        }
+
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
           || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
@@ -97,6 +107,7 @@ _get_ipv6_ipv4_support (ipmi_config_state_data_t *state_data,
 
       goto cleanup;
     }
+  state_data->ipv6_ipv4_support_supports_ipv6 = 1;
 
   if (FIID_OBJ_GET (obj_cmd_rs, "supports_ipv6_only", &val) < 0)
     {
@@ -732,9 +743,8 @@ ipmi_config_core_lan6_conf_section_get (ipmi_config_state_data_t *state_data,
   struct ipmi_config_section *section = NULL;
   char *section_comment =
     "In the Lan6_Conf section, typical networking configuration is setup.  "
-    "Most users will choose to set \"Static\" for the \"IP_Address_Source\" "
-    "and set the appropriate \"IP_Address\", \"MAC_Address\", "
-    "\"Subnet_Mask\", etc. for the machine.";
+    "Most users will choose to set an address in  \"IPv6_Static_Addresses\" "
+    "and set the appropriate routing for the machine.";
   char *section_name_base_str = "Lan6_Conf";
   unsigned int verbose_option_config_flags = 0;
 
