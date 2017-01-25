@@ -1477,7 +1477,7 @@ ipmi_cmd_set_lan_configuration_parameters_bad_password_threshold (ipmi_ctx_t ctx
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
-  
+
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
                                  tmpl_cmd_set_lan_configuration_parameters_rs) < 0)
     {
@@ -1798,7 +1798,7 @@ ipmi_cmd_get_lan_configuration_parameters_ipv4_header_parameters (ipmi_ctx_t ctx
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
     }
-  
+
   return (0);
 }
 
@@ -2225,6 +2225,750 @@ ipmi_cmd_get_lan_configuration_parameters_bad_password_threshold (ipmi_ctx_t ctx
                                                          obj_cmd_rs,
                                                          tmpl_cmd_get_lan_configuration_parameters_bad_password_threshold_rs,
                                                          IPMI_LAN_CONFIGURATION_PARAMETER_BAD_PASSWORD_THRESHOLD) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
+ipmi_cmd_get_lan_configuration_parameters_ipv6_ipv4_support (ipmi_ctx_t ctx,
+                                                             uint8_t channel_number,
+                                                             uint8_t get_parameter,
+                                                             uint8_t set_selector,
+                                                             uint8_t block_selector,
+                                                             fiid_obj_t obj_cmd_rs)
+{
+  if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_ipv6_ipv4_support_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_IPV4_SUPPORT) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
+ipmi_cmd_get_lan_configuration_parameters_ipv6_ipv4_addressing_enables (ipmi_ctx_t ctx,
+                                                                        uint8_t channel_number,
+                                                                        uint8_t get_parameter,
+                                                                        uint8_t set_selector,
+                                                                        uint8_t block_selector,
+                                                                        fiid_obj_t obj_cmd_rs)
+{
+  if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_ipv6_ipv4_addressing_enables_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_IPV4_ADDRESSING_ENABLES) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
+ipmi_cmd_get_lan_configuration_parameters_ipv6_header_static_traffic_class (ipmi_ctx_t ctx,
+                                                                            uint8_t channel_number,
+                                                                            uint8_t get_parameter,
+                                                                            uint8_t set_selector,
+                                                                            uint8_t block_selector,
+                                                                            fiid_obj_t obj_cmd_rs)
+{
+  if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_ipv6_header_static_traffic_class_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_HEADER_STATIC_TRAFFIC_CLASS) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
+ipmi_cmd_get_lan_configuration_parameters_ipv6_header_static_hop_limit (ipmi_ctx_t ctx,
+                                                                        uint8_t channel_number,
+                                                                        uint8_t get_parameter,
+                                                                        uint8_t set_selector,
+                                                                        uint8_t block_selector,
+                                                                        fiid_obj_t obj_cmd_rs)
+{
+  if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_ipv6_header_static_hop_limit_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_HEADER_STATIC_HOP_LIMIT) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
+ipmi_cmd_get_lan_configuration_parameters_ipv6_header_flow_label (ipmi_ctx_t ctx,
+                                                                  uint8_t channel_number,
+                                                                  uint8_t get_parameter,
+                                                                  uint8_t set_selector,
+                                                                  uint8_t block_selector,
+                                                                  fiid_obj_t obj_cmd_rs)
+{
+  if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_ipv6_header_flow_label_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_HEADER_FLOW_LABEL) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
+ipmi_cmd_get_lan_configuration_parameters_ipv6_status (ipmi_ctx_t ctx,
+                                                       uint8_t channel_number,
+                                                       uint8_t get_parameter,
+                                                       uint8_t set_selector,
+                                                       uint8_t block_selector,
+                                                       fiid_obj_t obj_cmd_rs)
+{
+  if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_ipv6_status_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_STATUS) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
+ipmi_cmd_get_lan_configuration_parameters_ipv6_static_addresses (ipmi_ctx_t ctx,
+                                                                 uint8_t channel_number,
+                                                                 uint8_t get_parameter,
+                                                                 uint8_t set_selector,
+                                                                 uint8_t block_selector,
+                                                                 fiid_obj_t obj_cmd_rs)
+{
+  if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_ipv6_static_addresses_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_STATIC_ADDRESSES) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
+ipmi_cmd_get_lan_configuration_parameters_ipv6_dhcpv6_static_duid_storage_length (ipmi_ctx_t ctx,
+                                                                                  uint8_t channel_number,
+                                                                                  uint8_t get_parameter,
+                                                                                  uint8_t set_selector,
+                                                                                  uint8_t block_selector,
+                                                                                  fiid_obj_t obj_cmd_rs)
+{
+  if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_ipv6_dhcpv6_static_duid_storage_length_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_DHCPV6_STATIC_DUID_STORAGE_LENGTH) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
+ipmi_cmd_get_lan_configuration_parameters_ipv6_dhcpv6_static_duids (ipmi_ctx_t ctx,
+                                                                    uint8_t channel_number,
+                                                                    uint8_t get_parameter,
+                                                                    uint8_t set_selector,
+                                                                    uint8_t block_selector,
+                                                                    fiid_obj_t obj_cmd_rs)
+{
+  if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_ipv6_dhcpv6_static_duids_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_DHCPV6_STATIC_DUIDS) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
+ipmi_cmd_get_lan_configuration_parameters_ipv6_dynamic_addresses (ipmi_ctx_t ctx,
+                                                                  uint8_t channel_number,
+                                                                  uint8_t get_parameter,
+                                                                  uint8_t set_selector,
+                                                                  uint8_t block_selector,
+                                                                  fiid_obj_t obj_cmd_rs)
+{
+  if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_ipv6_dynamic_addresses_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_DYNAMIC_ADDRESSES) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
+ipmi_cmd_get_lan_configuration_parameters_ipv6_dhcpv6_dynamic_duid_storage_length (ipmi_ctx_t ctx,
+                                                                                   uint8_t channel_number,
+                                                                                   uint8_t get_parameter,
+                                                                                   uint8_t set_selector,
+                                                                                   uint8_t block_selector,
+                                                                                   fiid_obj_t obj_cmd_rs)
+{
+  if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_ipv6_dhcpv6_dynamic_duid_storage_length_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_DHCPV6_DYNAMIC_DUID_STORAGE_LENGTH) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
+ipmi_cmd_get_lan_configuration_parameters_ipv6_dhcpv6_dynamic_duids (ipmi_ctx_t ctx,
+                                                                     uint8_t channel_number,
+                                                                     uint8_t get_parameter,
+                                                                     uint8_t set_selector,
+                                                                     uint8_t block_selector,
+                                                                     fiid_obj_t obj_cmd_rs)
+{
+  if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_ipv6_dhcpv6_dynamic_duids_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_DHCPV6_DYNAMIC_DUIDS) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
+ipmi_cmd_get_lan_configuration_parameters_ipv6_dhcpv6_timing_configuration_support (ipmi_ctx_t ctx,
+                                                                                    uint8_t channel_number,
+                                                                                    uint8_t get_parameter,
+                                                                                    uint8_t set_selector,
+                                                                                    uint8_t block_selector,
+                                                                                    fiid_obj_t obj_cmd_rs)
+{
+  if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_ipv6_dhcpv6_timing_configuration_support_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_DHCPV6_TIMING_CONFIGURATION_SUPPORT) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
+ipmi_cmd_get_lan_configuration_parameters_ipv6_dhcpv6_timing_and_configuration (ipmi_ctx_t ctx,
+                                                                                uint8_t channel_number,
+                                                                                uint8_t get_parameter,
+                                                                                uint8_t set_selector,
+                                                                                uint8_t block_selector,
+                                                                                fiid_obj_t obj_cmd_rs)
+{
+  if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_ipv6_dhcpv6_timing_and_configuration_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_DHCPV6_TIMING_AND_CONFIGURATION) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
+ipmi_cmd_get_lan_configuration_parameters_ipv6_router_address_configuration_control (ipmi_ctx_t ctx,
+                                                                                     uint8_t channel_number,
+                                                                                     uint8_t get_parameter,
+                                                                                     uint8_t set_selector,
+                                                                                     uint8_t block_selector,
+                                                                                     fiid_obj_t obj_cmd_rs)
+{
+  if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_ipv6_router_address_configuration_control_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_ROUTER_ADDRESS_CONFIGURATION_CONTROL) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
+ipmi_cmd_get_lan_configuration_parameters_ipv6_static_router_1_ip_address (ipmi_ctx_t ctx,
+                                                                           uint8_t channel_number,
+                                                                           uint8_t get_parameter,
+                                                                           uint8_t set_selector,
+                                                                           uint8_t block_selector,
+                                                                           fiid_obj_t obj_cmd_rs)
+{
+  if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_ipv6_static_router_1_ip_address_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_STATIC_ROUTER_1_IP_ADDRESS) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
+ipmi_cmd_get_lan_configuration_parameters_ipv6_static_router_1_mac_address (ipmi_ctx_t ctx,
+                                                                            uint8_t channel_number,
+                                                                            uint8_t get_parameter,
+                                                                            uint8_t set_selector,
+                                                                            uint8_t block_selector,
+                                                                            fiid_obj_t obj_cmd_rs)
+{
+  if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_ipv6_static_router_1_mac_address_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_STATIC_ROUTER_1_MAC_ADDRESS) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
+ipmi_cmd_get_lan_configuration_parameters_ipv6_static_router_1_prefix_length (ipmi_ctx_t ctx,
+                                                                              uint8_t channel_number,
+                                                                              uint8_t get_parameter,
+                                                                              uint8_t set_selector,
+                                                                              uint8_t block_selector,
+                                                                              fiid_obj_t obj_cmd_rs)
+{
+  if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_ipv6_static_router_1_prefix_length_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_STATIC_ROUTER_1_PREFIX_LENGTH) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
+ipmi_cmd_get_lan_configuration_parameters_ipv6_static_router_1_prefix_value (ipmi_ctx_t ctx,
+                                                                             uint8_t channel_number,
+                                                                             uint8_t get_parameter,
+                                                                             uint8_t set_selector,
+                                                                             uint8_t block_selector,
+                                                                             fiid_obj_t obj_cmd_rs)
+{
+  if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_ipv6_static_router_1_prefix_value_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_STATIC_ROUTER_1_PREFIX_VALUE) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
+ipmi_cmd_get_lan_configuration_parameters_ipv6_static_router_2_ip_address (ipmi_ctx_t ctx,
+                                                                           uint8_t channel_number,
+                                                                           uint8_t get_parameter,
+                                                                           uint8_t set_selector,
+                                                                           uint8_t block_selector,
+                                                                           fiid_obj_t obj_cmd_rs)
+{
+  if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_ipv6_static_router_2_ip_address_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_STATIC_ROUTER_2_IP_ADDRESS) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
+ipmi_cmd_get_lan_configuration_parameters_ipv6_static_router_2_mac_address (ipmi_ctx_t ctx,
+                                                                            uint8_t channel_number,
+                                                                            uint8_t get_parameter,
+                                                                            uint8_t set_selector,
+                                                                            uint8_t block_selector,
+                                                                            fiid_obj_t obj_cmd_rs)
+{
+  if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_ipv6_static_router_2_mac_address_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_STATIC_ROUTER_2_MAC_ADDRESS) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
+ipmi_cmd_get_lan_configuration_parameters_ipv6_static_router_2_prefix_length (ipmi_ctx_t ctx,
+                                                                              uint8_t channel_number,
+                                                                              uint8_t get_parameter,
+                                                                              uint8_t set_selector,
+                                                                              uint8_t block_selector,
+                                                                              fiid_obj_t obj_cmd_rs)
+{
+  if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_ipv6_static_router_2_prefix_length_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_STATIC_ROUTER_2_PREFIX_LENGTH) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
+ipmi_cmd_get_lan_configuration_parameters_ipv6_static_router_2_prefix_value (ipmi_ctx_t ctx,
+                                                                             uint8_t channel_number,
+                                                                             uint8_t get_parameter,
+                                                                             uint8_t set_selector,
+                                                                             uint8_t block_selector,
+                                                                             fiid_obj_t obj_cmd_rs)
+{
+  if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_ipv6_static_router_2_prefix_value_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_STATIC_ROUTER_2_PREFIX_VALUE) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
+ipmi_cmd_get_lan_configuration_parameters_number_of_dynamic_router_info_sets (ipmi_ctx_t ctx,
+                                                                              uint8_t channel_number,
+                                                                              uint8_t get_parameter,
+                                                                              uint8_t set_selector,
+                                                                              uint8_t block_selector,
+                                                                              fiid_obj_t obj_cmd_rs)
+{
+  if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_number_of_dynamic_router_info_sets_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_NUMBER_OF_DYNAMIC_ROUTER_INFO_SETS) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
+ipmi_cmd_get_lan_configuration_parameters_ipv6_dynamic_router_info_ip_address (ipmi_ctx_t ctx,
+                                                                               uint8_t channel_number,
+                                                                               uint8_t get_parameter,
+                                                                               uint8_t set_selector,
+                                                                               uint8_t block_selector,
+                                                                               fiid_obj_t obj_cmd_rs)
+{
+  if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_ipv6_dynamic_router_info_ip_address_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_DYNAMIC_ROUTER_INFO_IP_ADDRESS) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
+ipmi_cmd_get_lan_configuration_parameters_ipv6_dynamic_router_info_mac_address (ipmi_ctx_t ctx,
+                                                                                uint8_t channel_number,
+                                                                                uint8_t get_parameter,
+                                                                                uint8_t set_selector,
+                                                                                uint8_t block_selector,
+                                                                                fiid_obj_t obj_cmd_rs)
+{
+  if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_ipv6_dynamic_router_info_mac_address_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_DYNAMIC_ROUTER_INFO_MAC_ADDRESS) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
+ipmi_cmd_get_lan_configuration_parameters_ipv6_dynamic_router_info_prefix_length (ipmi_ctx_t ctx,
+                                                                                  uint8_t channel_number,
+                                                                                  uint8_t get_parameter,
+                                                                                  uint8_t set_selector,
+                                                                                  uint8_t block_selector,
+                                                                                  fiid_obj_t obj_cmd_rs)
+{
+  if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_ipv6_dynamic_router_info_prefix_length_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_DYNAMIC_ROUTER_INFO_PREFIX_LENGTH) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
+ipmi_cmd_get_lan_configuration_parameters_ipv6_dynamic_router_info_prefix_value (ipmi_ctx_t ctx,
+                                                                                 uint8_t channel_number,
+                                                                                 uint8_t get_parameter,
+                                                                                 uint8_t set_selector,
+                                                                                 uint8_t block_selector,
+                                                                                 fiid_obj_t obj_cmd_rs)
+{
+  if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_ipv6_dynamic_router_info_prefix_value_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_DYNAMIC_ROUTER_INFO_PREFIX_VALUE) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
+ipmi_cmd_get_lan_configuration_parameters_ipv6_dynamic_router_received_hop_limit (ipmi_ctx_t ctx,
+                                                                                  uint8_t channel_number,
+                                                                                  uint8_t get_parameter,
+                                                                                  uint8_t set_selector,
+                                                                                  uint8_t block_selector,
+                                                                                  fiid_obj_t obj_cmd_rs)
+{
+  if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_ipv6_dynamic_router_received_hop_limit_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_DYNAMIC_ROUTER_RECEIVED_HOP_LIMIT) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
+ipmi_cmd_get_lan_configuration_parameters_ipv6_neighbor_discovery_slaac_timing_configuration_support (ipmi_ctx_t ctx,
+                                                                                                      uint8_t channel_number,
+                                                                                                      uint8_t get_parameter,
+                                                                                                      uint8_t set_selector,
+                                                                                                      uint8_t block_selector,
+                                                                                                      fiid_obj_t obj_cmd_rs)
+{
+  if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_ipv6_neighbor_discovery_slaac_timing_configuration_support_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_NEIGHBOR_DISCOVERY_SLAAC_TIMING_CONFIGURATION_SUPPORT) < 0)
+    {
+      ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
+ipmi_cmd_get_lan_configuration_parameters_ipv6_neighbor_discovery_slaac_timing_configuration (ipmi_ctx_t ctx,
+                                                                                              uint8_t channel_number,
+                                                                                              uint8_t get_parameter,
+                                                                                              uint8_t set_selector,
+                                                                                              uint8_t block_selector,
+                                                                                              fiid_obj_t obj_cmd_rs)
+{
+  if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
+                                                         channel_number,
+                                                         get_parameter,
+                                                         set_selector,
+                                                         block_selector,
+                                                         obj_cmd_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_ipv6_neighbor_discovery_slaac_timing_configuration_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_NEIGHBOR_DISCOVERY_SLAAC_TIMING_CONFIGURATION) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);

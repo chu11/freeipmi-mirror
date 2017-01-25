@@ -39,6 +39,7 @@
 #include "ipmi-config-category-core-lan-conf-security-keys-section.h"
 #include "ipmi-config-category-core-lan-conf-misc-section.h"
 #include "ipmi-config-category-core-lan-conf-user-security-section.h"
+#include "ipmi-config-category-core-lan6-conf-section.h"
 #include "ipmi-config-category-core-misc-section.h"
 #include "ipmi-config-category-core-pef-conf-section.h"
 #include "ipmi-config-category-core-rmcpplus-conf-privilege-section.h"
@@ -224,6 +225,28 @@ ipmi_config_core_sections_create (ipmi_config_state_data_t *state_data)
           if (!(section = ipmi_config_core_lan_conf_section_get (state_data,
                                                                  state_data->lan_channel_config_flags,
                                                                  channelindex)))
+            goto cleanup;
+          if (ipmi_config_section_append (&sections, section) < 0)
+            goto cleanup;
+        }
+    }
+
+  /* Lan6_Conf Section(s) */
+
+  if (!(section = ipmi_config_core_lan6_conf_section_get (state_data,
+                                                          state_data->lan_base_config_flags,
+                                                          -1)))
+    goto cleanup;
+  if (ipmi_config_section_append (&sections, section) < 0)
+    goto cleanup;
+
+  if (state_data->lan_channel_numbers_count > 1)
+    {
+      for (channelindex = 0; channelindex < state_data->lan_channel_numbers_count; channelindex++)
+        {
+          if (!(section = ipmi_config_core_lan6_conf_section_get (state_data,
+                                                                  state_data->lan_channel_config_flags,
+                                                                  channelindex)))
             goto cleanup;
           if (ipmi_config_section_append (&sections, section) < 0)
             goto cleanup;
