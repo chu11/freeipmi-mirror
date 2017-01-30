@@ -492,6 +492,19 @@ LAN Session Issue #8: [INTERPRETATION]
 
   Resolution: None
 
+LAN Session Issue #9: [COMPLIANCE]
+
+  On some motherboards IPMI over LAN can be done in shared mode or
+  dedicated mode.  When operating in shared mode LAN session sequence
+  numbers "skip" (i.e. 1, 3, 5) instead of be sequential (i.e. 1, 2,
+  3) as normal behavior during a specific session.  The problem is not
+  exhibited during dedicated mode.
+
+  Seen on: ASROCK MT-C224
+
+  Resolution: None, the probability of a session drop is only
+  increased because the session window is effectively cut in half.
+
 ----------------------------------------------------------------------
 
 --------------

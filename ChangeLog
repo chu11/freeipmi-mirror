@@ -1,3 +1,8 @@
+2017-01-30 Albert Chu <chu11@llnl.gov>
+	
+	* doc/freeipmi-bugs-and-workarounds.txt: Document issue with
+	ASROCK MT-C224.
+
 2017-01-21 Albert Chu <chu11@llnl.gov>
 
 	* man/ipmi-raw.8.pre.in: Fix formatting error.
