@@ -61,6 +61,15 @@ extern "C" {
     || (__val) == IPMI_IP_ADDRESS_SOURCE_BIOS     \
     || (__val) == IPMI_IP_ADDRESS_SOURCE_OTHER) ? 1 : 0)
 
+#define IPMI_IPV6_IPV4_ADDRESSING_ENABLES_IPV6_DISABLED 0x0
+#define IPMI_IPV6_IPV4_ADDRESSING_ENABLES_IPV6_ONLY     0x1
+#define IPMI_IPV6_IPV4_ADDRESSING_ENABLES_IPV6_AND_IPV4 0x2
+
+#define IPMI_IPV6_IPV4_ADDRESSING_ENABLES_VALID(__val)       \
+  (((__val) == IPMI_IPV6_IPV4_ADDRESSING_ENABLES_IPV6_DISABLED \
+    || (__val) == IPMI_IPV6_IPV4_ADDRESSING_ENABLES_IPV6_ONLY   \
+    || (__val) == IPMI_IPV6_IPV4_ADDRESSING_ENABLES_IPV6_AND_IPV4) ? 1 : 0)
+
 #define IPMI_BMC_GENERATED_GRATUITOUS_ARPS_ENABLE     0x1
 #define IPMI_BMC_GENERATED_GRATUITOUS_ARPS_DISABLE    0x0
 
@@ -156,6 +165,33 @@ extern "C" {
   (((__val) == IPMI_CLEAR_ALL_STATISTICS       \
     || (__val) == IPMI_DONT_CLEAR_ALL_STATISTICS) ? 1 : 0)
 
+#define IPMI_IPV6_ADDRESS_SOURCE_STATIC      0x00
+#define IPMI_IPV6_ADDRESS_SOURCE_SLAAC       0x01
+#define IPMI_IPV6_ADDRESS_SOURCE_DHCPV6      0x02
+
+#define IPMI_IPV6_STATIC_ADDRESS_SOURCE_VALID(__address_status) \
+  (((__address_status) == IPMI_IPV6_ADDRESS_SOURCE_STATIC) ? 1 : 0)
+
+#define IPMI_IPV6_DYNAMIC_ADDRESS_SOURCE_VALID(__address_status) \
+  (((__address_status) == IPMI_IPV6_ADDRESS_SOURCE_SLAAC         \
+  || (__address_status) == IPMI_IPV6_ADDRESS_SOURCE_DHCPV6) ? 1 : 0)
+
+
+#define IPMI_IPV6_ADDRESS_STATUS_ACTIVE      0x00
+#define IPMI_IPV6_ADDRESS_STATUS_DISABLED    0x01
+#define IPMI_IPV6_ADDRESS_STATUS_PENDING     0x02
+#define IPMI_IPV6_ADDRESS_STATUS_FAILED      0x03
+#define IPMI_IPV6_ADDRESS_STATUS_DEPRECATED  0x04
+#define IPMI_IPV6_ADDRESS_STATUS_INVALID     0x05
+
+#define IPMI_IPV6_ADDRESS_STATUS_VALID(__address_status)           \
+  (((__address_status) == IPMI_IPV6_ADDRESS_STATUS_ACTIVE          \
+    || (__address_status) == IPMI_IPV6_ADDRESS_STATUS_DISABLED     \
+    || (__address_status) == IPMI_IPV6_ADDRESS_STATUS_PENDING      \
+    || (__address_status) == IPMI_IPV6_ADDRESS_STATUS_FAILED       \
+    || (__address_status) == IPMI_IPV6_ADDRESS_STATUS_DEPRECATED   \
+    || (__address_status) == IPMI_IPV6_ADDRESS_STATUS_INVALID) ? 1 : 0)
+
 /* 
  * fill* functions return 0 on success, -1 on error.
  *
@@ -220,6 +256,37 @@ extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messag
 extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries_rs;
 extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels_rs;
 extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_bad_password_threshold_rs;
+extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_ipv4_support_rs;
+extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_ipv4_addressing_enables_rs;
+extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_header_static_traffic_class_rs;
+extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_header_static_hop_limit_rs;
+extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_header_flow_label_rs;
+extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_status_rs;
+extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_static_addresses_rs;
+extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_dhcpv6_static_duid_storage_length_rs;
+extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_dhcpv6_static_duids_rs;
+extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_dynamic_address_rs;
+extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_dhcpv6_dynamic_duid_storage_length_rs;
+extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_dhcpv6_dynamic_duids_rs;
+extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_dhcpv6_timing_configuration_support_rs;
+extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_dhcpv6_timing_and_configuration_rs;
+extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_router_address_configuration_control_rs;
+extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_static_router_1_ip_address_rs;
+extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_static_router_1_mac_address_rs;
+extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_static_router_1_prefix_length_rs;
+extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_static_router_1_prefix_value_rs;
+extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_static_router_2_ip_address_rs;
+extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_static_router_2_mac_address_rs;
+extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_static_router_2_prefix_length_rs;
+extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_static_router_2_prefix_value_rs;
+extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_number_of_dynamic_router_info_sets_rs;
+extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_dynamic_router_info_ip_address_rs;
+extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_dynamic_router_info_mac_address_rs;
+extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_dynamic_router_info_prefix_length_rs;
+extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_dynamic_router_info_prefix_value_rs;
+extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_dynamic_router_received_hop_limit_rs;
+extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_neighbor_discovery_slaac_timing_configuration_support_rs;
+extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_neighbor_discovery_slaac_timing_configuration_rs;
 
 extern fiid_template_t tmpl_cmd_suspend_bmc_arps_rq;
 extern fiid_template_t tmpl_cmd_suspend_bmc_arps_rs;
