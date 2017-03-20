@@ -2,6 +2,7 @@ FreeIPMI 1.5.6 - XX/XX/XX
 -------------------------
 o Minor mem-leak corner case fix in libfreeipmi.
 o Minor documentation fixes.
+o Minor error message clarifications.
 
 FreeIPMI 1.5.5 - 11/02/16
 -------------------------
