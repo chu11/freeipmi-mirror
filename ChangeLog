@@ -1,3 +1,8 @@
+2017-03-20 Albert Chu <chu11@llnl.gov>
+	
+	* man/ipmiseld.8.pre.in: Clarify --test-run and --foreground
+	options.
+
 2017-01-30 Albert Chu <chu11@llnl.gov>
 	
 	* doc/freeipmi-bugs-and-workarounds.txt: Document issue with
