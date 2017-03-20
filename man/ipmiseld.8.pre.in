@@ -205,10 +205,12 @@ of threads.
 .TP
 \fB\-\-test\-run\fR
 Do not daemonize, output the current SEL of configured hosts as a test
-of current settings and configuration.
+of current settings and configuration.  SEL entries will be output to
+stdout instead of syslog.
 .TP
 \fB\-\-foreground\fR
-Run daemon in the foreground.
+Run daemon in the foreground.  SEL entries will be output to stdout
+instead of syslog.
 .SH "SEL LOG FORMAT STRING"
 The output format of log messages can be adjusted via the
 \fB\-\-system\-event\-format\fR,
