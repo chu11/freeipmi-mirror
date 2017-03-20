@@ -100,7 +100,7 @@ daemonize_common (const char *pidfile)
       (void) unlink (pidfile);
 
       if (!(pf = fopen (pidfile, "w")))
-	err_exit ("fopen: %s", strerror (errno));
+        err_exit ("Cannot open pidfile '%s': %s", pidfile, strerror (errno));
 
       /* write the 2nd child PID to the pidfile */
       fprintf (pf, "%u\n", pid);
