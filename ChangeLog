@@ -3,6 +3,9 @@
 	* man/ipmiseld.8.pre.in: Clarify --test-run and --foreground
 	options.
 
+	* common/toolcommon/tool-daemon-common.c (daemonize_common):
+	Clarify fopen error on daemon pidfile
+
 2017-01-30 Albert Chu <chu11@llnl.gov>
 	
 	* doc/freeipmi-bugs-and-workarounds.txt: Document issue with
