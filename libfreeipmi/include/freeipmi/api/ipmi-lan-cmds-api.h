@@ -460,12 +460,12 @@ int ipmi_cmd_get_lan_configuration_parameters_ipv6_dhcpv6_static_duids (ipmi_ctx
                                                                         uint8_t block_selector,
                                                                         fiid_obj_t obj_cmd_rs);
 
-int ipmi_cmd_get_lan_configuration_parameters_ipv6_dynamic_addresses (ipmi_ctx_t ctx,
-                                                                      uint8_t channel_number,
-                                                                      uint8_t get_parameter,
-                                                                      uint8_t set_selector,
-                                                                      uint8_t block_selector,
-                                                                      fiid_obj_t obj_cmd_rs);
+int ipmi_cmd_get_lan_configuration_parameters_ipv6_dynamic_address (ipmi_ctx_t ctx,
+                                                                    uint8_t channel_number,
+                                                                    uint8_t get_parameter,
+                                                                    uint8_t set_selector,
+                                                                    uint8_t block_selector,
+                                                                    fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_get_lan_configuration_parameters_ipv6_dhcpv6_dynamic_duid_storage_length (ipmi_ctx_t ctx,
                                                                                        uint8_t channel_number,

@@ -1477,7 +1477,7 @@ ipmi_cmd_set_lan_configuration_parameters_bad_password_threshold (ipmi_ctx_t ctx
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
-
+  
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
                                  tmpl_cmd_set_lan_configuration_parameters_rs) < 0)
     {
@@ -1798,7 +1798,7 @@ ipmi_cmd_get_lan_configuration_parameters_ipv4_header_parameters (ipmi_ctx_t ctx
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
     }
-
+  
   return (0);
 }
 
@@ -2450,12 +2450,12 @@ ipmi_cmd_get_lan_configuration_parameters_ipv6_dhcpv6_static_duids (ipmi_ctx_t c
 }
 
 int
-ipmi_cmd_get_lan_configuration_parameters_ipv6_dynamic_addresses (ipmi_ctx_t ctx,
-                                                                  uint8_t channel_number,
-                                                                  uint8_t get_parameter,
-                                                                  uint8_t set_selector,
-                                                                  uint8_t block_selector,
-                                                                  fiid_obj_t obj_cmd_rs)
+ipmi_cmd_get_lan_configuration_parameters_ipv6_dynamic_address (ipmi_ctx_t ctx,
+                                                                uint8_t channel_number,
+                                                                uint8_t get_parameter,
+                                                                uint8_t set_selector,
+                                                                uint8_t block_selector,
+                                                                fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_lan_configuration_parameters_common (ctx,
                                                          channel_number,
@@ -2463,8 +2463,8 @@ ipmi_cmd_get_lan_configuration_parameters_ipv6_dynamic_addresses (ipmi_ctx_t ctx
                                                          set_selector,
                                                          block_selector,
                                                          obj_cmd_rs,
-                                                         tmpl_cmd_get_lan_configuration_parameters_ipv6_dynamic_addresses_rs,
-                                                         IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_DYNAMIC_ADDRESSES) < 0)
+                                                         tmpl_cmd_get_lan_configuration_parameters_ipv6_dynamic_address_rs,
+                                                         IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_DYNAMIC_ADDRESS) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
