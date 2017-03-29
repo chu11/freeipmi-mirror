@@ -53,6 +53,8 @@ ipmi_config_SOURCES = \
 	ipmi-config-category-core-lan-conf-security-keys-section.h \
 	ipmi-config-category-core-lan-conf-user-security-section.c \
 	ipmi-config-category-core-lan-conf-user-security-section.h \
+	ipmi-config-category-core-lan6-conf-section.c \
+	ipmi-config-category-core-lan6-conf-section.h \
 	ipmi-config-category-core-misc-section.c \
 	ipmi-config-category-core-misc-section.h \
 	ipmi-config-category-core-pef-conf-section.c \
