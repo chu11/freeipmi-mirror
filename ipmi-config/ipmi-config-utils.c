@@ -645,3 +645,15 @@ get_sol_channel_number (ipmi_config_state_data_t *state_data,
   return (rv);
 }
 
+ipmi_config_err_t
+read_only_commit (ipmi_config_state_data_t *state_data,
+                  const char *section_name,
+                  const struct ipmi_config_keyvalue *kv)
+{
+  /* Read only parameter */
+  pstdout_fprintf (state_data->pstate,
+                   stderr,
+                   "Ignoring attempt to set read-only configuration variable.\n");
+  return (IPMI_CONFIG_ERR_SUCCESS);
+}
+

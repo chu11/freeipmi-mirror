@@ -41,6 +41,10 @@ int ip_address_source_number (const char *source);
 
 char *ip_address_source_string (uint8_t source);
 
+int ipv6_ipv4_addressing_enables_number (const char *source);
+
+char *ipv6_ipv4_addressing_enables_string (uint8_t source);
+
 int power_restore_policy_number (const char *string);
 
 char *power_restore_policy_string (uint8_t value);
