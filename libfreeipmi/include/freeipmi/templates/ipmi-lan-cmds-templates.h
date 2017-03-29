@@ -1055,6 +1055,7 @@ FIID Template: tmpl_cmd_get_lan_configuration_parameters_ipv6_dynamic_router_inf
     { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
     { 4, "present_revision", REQUIRED | LENGTH_FIXED},
     { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED},
+    { 8, "set_selector", REQUIRED | FIXED},
     { 128, "router_ip_address", REQUIRED | LENGTH_FIXED},
 
 Get LAN Configuration Parameters (IPv6 Dynamic Router Info Mac Address) Response
@@ -1066,6 +1067,7 @@ FIID Template: tmpl_cmd_get_lan_configuration_parameters_ipv6_dynamic_router_inf
     { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
     { 4, "present_revision", REQUIRED | LENGTH_FIXED},
     { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED},
+    { 8, "set_selector", REQUIRED | FIXED},
     { 48, "router_mac_address", REQUIRED | LENGTH_FIXED},
 
 Get LAN Configuration Parameters (IPv6 Dynamic Router Info Prefix Length) Response
@@ -1077,6 +1079,7 @@ FIID Template: tmpl_cmd_get_lan_configuration_parameters_ipv6_dynamic_router_inf
     { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
     { 4, "present_revision", REQUIRED | LENGTH_FIXED},
     { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED},
+    { 8, "set_selector", REQUIRED | FIXED},
     { 8, "prefix_length", REQUIRED | LENGTH_FIXED},
 
 Get LAN Configuration Parameters (IPv6 Dynamic Router Info Prefix Value) Response
@@ -1088,6 +1091,7 @@ FIID Template: tmpl_cmd_get_lan_configuration_parameters_ipv6_dynamic_router_inf
     { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
     { 4, "present_revision", REQUIRED | LENGTH_FIXED},
     { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED},
+    { 8, "set_selector", REQUIRED | FIXED},
     { 128, "prefix_value", REQUIRED | LENGTH_FIXED},
 
 Get LAN Configuration Parameters (IPv6 Dynamic Router Received Hop Limit) Response
