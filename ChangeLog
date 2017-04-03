@@ -1,3 +1,7 @@
+2017-04-03 LaMont Jones <lamont@mmjgroup.com>
+
+	* libfreeipmi/: Add support to read IPv6 configuration.
+	
 2017-03-20 Albert Chu <chu11@llnl.gov>
 	
 	* man/ipmiseld.8.pre.in: Clarify --test-run and --foreground

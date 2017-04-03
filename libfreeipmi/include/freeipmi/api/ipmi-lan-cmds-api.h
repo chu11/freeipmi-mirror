@@ -397,6 +397,223 @@ int ipmi_cmd_get_lan_configuration_parameters_bad_password_threshold (ipmi_ctx_t
                                                                       uint8_t block_selector,
                                                                       fiid_obj_t obj_cmd_rs);
 
+int ipmi_cmd_get_lan_configuration_parameters_ipv6_ipv4_support (ipmi_ctx_t ctx,
+                                                                 uint8_t channel_number,
+                                                                 uint8_t get_parameter,
+                                                                 uint8_t set_selector,
+                                                                 uint8_t block_selector,
+                                                                 fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_lan_configuration_parameters_ipv6_ipv4_addressing_enables (ipmi_ctx_t ctx,
+                                                                            uint8_t channel_number,
+                                                                            uint8_t get_parameter,
+                                                                            uint8_t set_selector,
+                                                                            uint8_t block_selector,
+                                                                            fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_lan_configuration_parameters_ipv6_header_static_traffic_class (ipmi_ctx_t ctx,
+                                                                                uint8_t channel_number,
+                                                                                uint8_t get_parameter,
+                                                                                uint8_t set_selector,
+                                                                                uint8_t block_selector,
+                                                                                fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_lan_configuration_parameters_ipv6_header_static_hop_limit (ipmi_ctx_t ctx,
+                                                                            uint8_t channel_number,
+                                                                            uint8_t get_parameter,
+                                                                            uint8_t set_selector,
+                                                                            uint8_t block_selector,
+                                                                            fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_lan_configuration_parameters_ipv6_header_flow_label (ipmi_ctx_t ctx,
+                                                                      uint8_t channel_number,
+                                                                      uint8_t get_parameter,
+                                                                      uint8_t set_selector,
+                                                                      uint8_t block_selector,
+                                                                      fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_lan_configuration_parameters_ipv6_status (ipmi_ctx_t ctx,
+                                                           uint8_t channel_number,
+                                                           uint8_t get_parameter,
+                                                           uint8_t set_selector,
+                                                           uint8_t block_selector,
+                                                           fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_lan_configuration_parameters_ipv6_static_addresses (ipmi_ctx_t ctx,
+                                                                     uint8_t channel_number,
+                                                                     uint8_t get_parameter,
+                                                                     uint8_t set_selector,
+                                                                     uint8_t block_selector,
+                                                                     fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_lan_configuration_parameters_ipv6_dhcpv6_static_duid_storage_length (ipmi_ctx_t ctx,
+                                                                                      uint8_t channel_number,
+                                                                                      uint8_t get_parameter,
+                                                                                      uint8_t set_selector,
+                                                                                      uint8_t block_selector,
+                                                                                      fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_lan_configuration_parameters_ipv6_dhcpv6_static_duids (ipmi_ctx_t ctx,
+                                                                        uint8_t channel_number,
+                                                                        uint8_t get_parameter,
+                                                                        uint8_t set_selector,
+                                                                        uint8_t block_selector,
+                                                                        fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_lan_configuration_parameters_ipv6_dynamic_address (ipmi_ctx_t ctx,
+                                                                    uint8_t channel_number,
+                                                                    uint8_t get_parameter,
+                                                                    uint8_t set_selector,
+                                                                    uint8_t block_selector,
+                                                                    fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_lan_configuration_parameters_ipv6_dhcpv6_dynamic_duid_storage_length (ipmi_ctx_t ctx,
+                                                                                       uint8_t channel_number,
+                                                                                       uint8_t get_parameter,
+                                                                                       uint8_t set_selector,
+                                                                                       uint8_t block_selector,
+                                                                                       fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_lan_configuration_parameters_ipv6_dhcpv6_dynamic_duids (ipmi_ctx_t ctx,
+                                                                         uint8_t channel_number,
+                                                                         uint8_t get_parameter,
+                                                                         uint8_t set_selector,
+                                                                         uint8_t block_selector,
+                                                                         fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_lan_configuration_parameters_ipv6_dhcpv6_timing_configuration_support (ipmi_ctx_t ctx,
+                                                                                        uint8_t channel_number,
+                                                                                        uint8_t get_parameter,
+                                                                                        uint8_t set_selector,
+                                                                                        uint8_t block_selector,
+                                                                                        fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_lan_configuration_parameters_ipv6_dhcpv6_timing_and_configuration (ipmi_ctx_t ctx,
+                                                                                    uint8_t channel_number,
+                                                                                    uint8_t get_parameter,
+                                                                                    uint8_t set_selector,
+                                                                                    uint8_t block_selector,
+                                                                                    fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_lan_configuration_parameters_ipv6_router_address_configuration_control (ipmi_ctx_t ctx,
+                                                                                         uint8_t channel_number,
+                                                                                         uint8_t get_parameter,
+                                                                                         uint8_t set_selector,
+                                                                                         uint8_t block_selector,
+                                                                                         fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_lan_configuration_parameters_ipv6_static_router_1_ip_address (ipmi_ctx_t ctx,
+                                                                               uint8_t channel_number,
+                                                                               uint8_t get_parameter,
+                                                                               uint8_t set_selector,
+                                                                               uint8_t block_selector,
+                                                                               fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_lan_configuration_parameters_ipv6_static_router_1_mac_address (ipmi_ctx_t ctx,
+                                                                                uint8_t channel_number,
+                                                                                uint8_t get_parameter,
+                                                                                uint8_t set_selector,
+                                                                                uint8_t block_selector,
+                                                                                fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_lan_configuration_parameters_ipv6_static_router_1_prefix_length (ipmi_ctx_t ctx,
+                                                                                  uint8_t channel_number,
+                                                                                  uint8_t get_parameter,
+                                                                                  uint8_t set_selector,
+                                                                                  uint8_t block_selector,
+                                                                                  fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_lan_configuration_parameters_ipv6_static_router_1_prefix_value (ipmi_ctx_t ctx,
+                                                                                 uint8_t channel_number,
+                                                                                 uint8_t get_parameter,
+                                                                                 uint8_t set_selector,
+                                                                                 uint8_t block_selector,
+                                                                                 fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_lan_configuration_parameters_ipv6_static_router_2_ip_address (ipmi_ctx_t ctx,
+                                                                               uint8_t channel_number,
+                                                                               uint8_t get_parameter,
+                                                                               uint8_t set_selector,
+                                                                               uint8_t block_selector,
+                                                                               fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_lan_configuration_parameters_ipv6_static_router_2_mac_address (ipmi_ctx_t ctx,
+                                                                                uint8_t channel_number,
+                                                                                uint8_t get_parameter,
+                                                                                uint8_t set_selector,
+                                                                                uint8_t block_selector,
+                                                                                fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_lan_configuration_parameters_ipv6_static_router_2_prefix_length (ipmi_ctx_t ctx,
+                                                                                  uint8_t channel_number,
+                                                                                  uint8_t get_parameter,
+                                                                                  uint8_t set_selector,
+                                                                                  uint8_t block_selector,
+                                                                                  fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_lan_configuration_parameters_ipv6_static_router_2_prefix_value (ipmi_ctx_t ctx,
+                                                                                 uint8_t channel_number,
+                                                                                 uint8_t get_parameter,
+                                                                                 uint8_t set_selector,
+                                                                                 uint8_t block_selector,
+                                                                                 fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_lan_configuration_parameters_number_of_dynamic_router_info_sets (ipmi_ctx_t ctx,
+                                                                                  uint8_t channel_number,
+                                                                                  uint8_t get_parameter,
+                                                                                  uint8_t set_selector,
+                                                                                  uint8_t block_selector,
+                                                                                  fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_lan_configuration_parameters_ipv6_dynamic_router_info_ip_address (ipmi_ctx_t ctx,
+                                                                                   uint8_t channel_number,
+                                                                                   uint8_t get_parameter,
+                                                                                   uint8_t set_selector,
+                                                                                   uint8_t block_selector,
+                                                                                   fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_lan_configuration_parameters_ipv6_dynamic_router_info_mac_address (ipmi_ctx_t ctx,
+                                                                                    uint8_t channel_number,
+                                                                                    uint8_t get_parameter,
+                                                                                    uint8_t set_selector,
+                                                                                    uint8_t block_selector,
+                                                                                    fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_lan_configuration_parameters_ipv6_dynamic_router_info_prefix_length (ipmi_ctx_t ctx,
+                                                                                      uint8_t channel_number,
+                                                                                      uint8_t get_parameter,
+                                                                                      uint8_t set_selector,
+                                                                                      uint8_t block_selector,
+                                                                                      fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_lan_configuration_parameters_ipv6_dynamic_router_info_prefix_value (ipmi_ctx_t ctx,
+                                                                                     uint8_t channel_number,
+                                                                                     uint8_t get_parameter,
+                                                                                     uint8_t set_selector,
+                                                                                     uint8_t block_selector,
+                                                                                     fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_lan_configuration_parameters_ipv6_dynamic_router_received_hop_limit (ipmi_ctx_t ctx,
+                                                                                      uint8_t channel_number,
+                                                                                      uint8_t get_parameter,
+                                                                                      uint8_t set_selector,
+                                                                                      uint8_t block_selector,
+                                                                                      fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_lan_configuration_parameters_ipv6_neighbor_discovery_slaac_timing_configuration_support (ipmi_ctx_t ctx,
+                                                                                                          uint8_t channel_number,
+                                                                                                          uint8_t get_parameter,
+                                                                                                          uint8_t set_selector,
+                                                                                                          uint8_t block_selector,
+                                                                                                          fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_get_lan_configuration_parameters_ipv6_neighbor_discovery_slaac_timing_configuration (ipmi_ctx_t ctx,
+                                                                                                  uint8_t channel_number,
+                                                                                                  uint8_t get_parameter,
+                                                                                                  uint8_t set_selector,
+                                                                                                  uint8_t block_selector,
+                                                                                                  fiid_obj_t obj_cmd_rs);
+
 int ipmi_cmd_suspend_bmc_arps (ipmi_ctx_t ctx,
                                uint8_t channel_number,
                                uint8_t gratuitous_arp_suspend,
