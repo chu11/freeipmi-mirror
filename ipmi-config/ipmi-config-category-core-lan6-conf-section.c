@@ -809,7 +809,7 @@ ipmi_config_core_lan6_conf_section_get (ipmi_config_state_data_t *state_data,
                                    section,
                                    "IPv6_IPv4_Addressing_Enables",
                                    "Possible values: IPv4-Only/IPv6-Only/IPv4-and-IPv6",
-                                   0,
+                                   IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT | IPMI_CONFIG_READABLE_ONLY,  /* TODO: make this read-write. */
                                    ipv6_ipv4_addressing_enables_checkout,
                                    ipv6_ipv4_addressing_enables_commit,
                                    ipv6_ipv4_addressing_enables_validate) < 0)
@@ -819,7 +819,7 @@ ipmi_config_core_lan6_conf_section_get (ipmi_config_state_data_t *state_data,
                                    section,
                                    "IPv6_Static_Addresses",
                                    "Give valid IPv6 address",
-                                   0,
+                                   IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT | IPMI_CONFIG_READABLE_ONLY,  /* TODO: make this read-write. */
                                    ipv6_static_addresses_checkout,
                                    ipv6_static_addresses_commit,
                                    ipv6_address_validate) < 0)
