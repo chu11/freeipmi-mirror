@@ -90,7 +90,6 @@ _get_ipv6_ipv4_support (ipmi_config_state_data_t *state_data,
 
       if (rv == IPMI_CONFIG_ERR_NON_FATAL_ERROR_NOT_SUPPORTED)
         {
-          state_data->ipv6_ipv4_support_supports_ipv6 = 0;
           state_data->ipv6_ipv4_support_supports_ipv6_only = 0;
           state_data->ipv6_ipv4_support_supports_ipv6_and_ipv4_simultaneously = 0;
           state_data->ipv6_ipv4_support_supports_ipv6_destination_address_for_lan_alert = 0;
@@ -108,7 +107,6 @@ _get_ipv6_ipv4_support (ipmi_config_state_data_t *state_data,
 
       goto cleanup;
     }
-  state_data->ipv6_ipv4_support_supports_ipv6 = 1;
 
   if (FIID_OBJ_GET (obj_cmd_rs, "supports_ipv6_only", &val) < 0)
     {
@@ -312,7 +310,7 @@ ipv6_ipv4_addressing_enables_commit (ipmi_config_state_data_t *state_data,
 				     const char *section_name,
 				     const struct ipmi_config_keyvalue *kv)
 {
-  /* XXX TODO lamont -- we need this.. */
+  /* XXX TODO lamont -- Not needed for Read-Only. */
   return (IPMI_CONFIG_ERR_FATAL_ERROR);
 }
 
@@ -498,7 +496,8 @@ ipv6_static_addresses_commit (ipmi_config_state_data_t *state_data,
   assert (kv);
 
 #if 0
-  /* XXX TODO lamont -- kv->value_input is a collection of IP addresess.  We need to:
+  /* XXX TODO lamont -- Not needed for Read-Only.
+   * -- kv->value_input is a collection of IP addresess.  We need to:
    * 1. break it up.
    * 2. make sure that static_address_max is sufficent
    * 3. iterate through the values setting them one at a time.

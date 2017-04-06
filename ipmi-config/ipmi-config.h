@@ -279,7 +279,6 @@ struct ipmi_config_state_data
   /* lamont: caching to make ipv6 go faster */
   int ipv6_ipv4_support_initialized;
   uint8_t ipv6_ipv4_support_channel_number;
-  uint8_t ipv6_ipv4_support_supports_ipv6;
   uint8_t ipv6_ipv4_support_supports_ipv6_only;
   uint8_t ipv6_ipv4_support_supports_ipv6_and_ipv4_simultaneously;
   uint8_t ipv6_ipv4_support_supports_ipv6_destination_address_for_lan_alert;
