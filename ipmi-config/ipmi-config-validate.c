@@ -231,6 +231,24 @@ ip_address_validate (ipmi_config_state_data_t *state_data,
 }
 
 ipmi_config_validate_t
+ipv6_address_validate (ipmi_config_state_data_t *state_data,
+                     const char *section_name,
+                     const char *key_name,
+                     const char *value)
+{
+  struct in6_addr a;
+
+  assert (state_data);
+  assert (section_name);
+  assert (key_name);
+  assert (value);
+
+  if (inet_pton (AF_INET6, value, &a))
+    return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
+  return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
+}
+
+ipmi_config_validate_t
 mac_address_validate (ipmi_config_state_data_t *state_data,
                       const char *section_name,
                       const char *key_name,
@@ -331,6 +349,22 @@ ip_address_source_number_validate (ipmi_config_state_data_t *state_data,
   assert (value);
 
   if (ip_address_source_number (value) >= 0)
+    return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
+  return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
+}
+
+ipmi_config_validate_t
+ipv6_ipv4_addressing_enables_validate (ipmi_config_state_data_t *state_data,
+				       const char *section_name,
+				       const char *key_name,
+				       const char *value)
+{
+  assert (state_data);
+  assert (section_name);
+  assert (key_name);
+  assert (value);
+
+  if (ipv6_ipv4_addressing_enables_number (value) >= 0)
     return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
   return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
 }

@@ -69,4 +69,8 @@ ipmi_config_err_t get_sol_channel_number (ipmi_config_state_data_t *state_data,
                                           const char *section_name,
                                           uint8_t *channel_number);
 
+ipmi_config_err_t read_only_commit (ipmi_config_state_data_t *state_data,
+                                    const char *section_name,
+                                    const struct ipmi_config_keyvalue *kv);
+
 #endif /* IPMI_CONFIG_UTILS_H */
