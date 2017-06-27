@@ -1,3 +1,9 @@
+2017-06-27 Ike Panhc <ike.pan@canonical.com>
+
+	* libfreeipmi/locate/ipmi-locate-dmidecode.c: Use dmi firmware in
+	sysfs if available.  mmap() does not work on DMI tables so also
+	fallback to read if mmap() failed.
+
 2017-04-07 LaMont Jones <lamont@mmjgroup.com>
 
 	* ipmi-config/: Support ability to read some IPv6 config
