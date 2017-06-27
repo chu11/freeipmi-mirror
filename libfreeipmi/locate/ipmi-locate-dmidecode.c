@@ -115,7 +115,6 @@ struct dmi_header
   fipmiu16 handle;
 };
 
-#ifndef HAVE_MMAP
 static int
 _myread (ipmi_locate_ctx_t ctx,
          int fd,
@@ -155,7 +154,6 @@ _myread (ipmi_locate_ctx_t ctx,
 
   return (0);
 }
-#endif
 
 static int
 _checksum (const fipmiu8 *buf, size_t len)
@@ -233,14 +231,16 @@ _mem_chunk (ipmi_locate_ctx_t ctx,
                    base - mmoffset)) == MAP_FAILED)
     {
       LOCATE_ERRNO_TO_LOCATE_ERRNUM (ctx, errno);
-      goto cleanup;
+      goto try_read;
     }
 
   memcpy (p, (fipmiu8 *) mmp + mmoffset, len);
   rv = p;
   /* ignore potential error, just return result */
   munmap (mmp, mmoffset + len);
-#else /* HAVE_MMAP */
+  goto cleanup;
+ try_read:
+#endif /* HAVE_MMAP */
 
   if (lseek (fd, base, SEEK_SET) < 0)
     {
@@ -252,7 +252,6 @@ _mem_chunk (ipmi_locate_ctx_t ctx,
     goto cleanup;
 
   rv = p;
-#endif /* HAVE_MMAP */
 
  cleanup:
   /* ignore potential error, cleanup path */
@@ -457,6 +456,8 @@ ipmi_locate_dmidecode_get_device_info (ipmi_locate_ctx_t ctx,
   char linebuf[64];
   fipmiu8 *buf = NULL;
   int rv = -1;
+  static char const sys_fw_dmi_tables[] = "/sys/firmware/dmi/tables/DMI";
+  struct stat st;
 
   if (!ctx || ctx->magic != IPMI_LOCATE_CTX_MAGIC)
     {
@@ -471,6 +472,23 @@ ipmi_locate_dmidecode_get_device_info (ipmi_locate_ctx_t ctx,
     }
 
   memset (&locate_info, '\0', sizeof (struct ipmi_locate_info));
+
+  /* if DMI firmware exist, use it and do not dig into /dev/mem */
+  if (!(stat (sys_fw_dmi_tables, &st)))
+    {
+      rv = _dmi_table (ctx,
+                        0,
+                        st.st_size,
+                        st.st_size / 4,
+                        0,
+                        sys_fw_dmi_tables,
+                        type,
+                        &locate_info);
+      if (!(rv))
+        memcpy (info, &locate_info, sizeof (struct ipmi_locate_info));
+      return (rv);
+    }
+
   /*
    * Linux up to 2.6.6-rc2: /proc/efi/systab
    * Linux 2.6.6-rc3 and up: /sys/firmware/efi/systab
