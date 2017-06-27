@@ -1,5 +1,7 @@
 FreeIPMI 1.5.6 - XX/XX/XX
 -------------------------
+o In libfreeipmi locate (used by ipmi-locate), use DMI firmware in
+  sysfs if it exists.
 o Minor mem-leak corner case fix in libfreeipmi.
 o Minor documentation fixes.
 o Minor error message clarifications.
