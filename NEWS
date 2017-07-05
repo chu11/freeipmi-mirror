@@ -1,4 +1,4 @@
-FreeIPMI 1.5.6 - XX/XX/XX
+FreeIPMI 1.5.6 - 07/05/17
 -------------------------
 o In libfreeipmi locate (used by ipmi-locate), use DMI firmware in
   sysfs if it exists.
