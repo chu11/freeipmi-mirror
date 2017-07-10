@@ -1827,7 +1827,7 @@ config_file_parse (const char *filename,
    */
 
   /*
-   * Bmc-device
+   * bmc-device
    */
   struct conffile_option bmc_device_options[] =
     {
@@ -1911,7 +1911,7 @@ config_file_parse (const char *filename,
     };
 
   /*
-   * Bmc-info
+   * bmc-info
    */
   struct conffile_option bmc_info_options[] =
     {
@@ -2006,7 +2006,7 @@ config_file_parse (const char *filename,
     };
 
   /*
-   * Bmc-watchdog
+   * bmc-watchdog
    */
 
   struct conffile_option bmc_watchdog_options[] =
@@ -2059,7 +2059,7 @@ config_file_parse (const char *filename,
     };
 
   /*
-   * Ipmi-chassis
+   * ipmi-chassis
    */
   struct conffile_option ipmi_chassis_options[] =
     {
@@ -2143,7 +2143,7 @@ config_file_parse (const char *filename,
     };
 
   /*
-   * Ipmi-config
+   * ipmi-config
    */
   struct conffile_option ipmi_config_options[] =
     {
@@ -2718,7 +2718,7 @@ config_file_parse (const char *filename,
     };
 
   /*
-   * Ipmi-dcmi
+   * ipmi-dcmi
    */
 
   struct conffile_option ipmi_dcmi_options[] =
@@ -2814,7 +2814,7 @@ config_file_parse (const char *filename,
     };
 
   /*
-   * Ipmi-fru
+   * ipmi-fru
    */
 
   struct conffile_option ipmi_fru_options[] =
@@ -2944,7 +2944,7 @@ config_file_parse (const char *filename,
     };
 
   /*
-   * Ipmi-oem
+   * ipmi-oem
    */
   struct conffile_option ipmi_oem_options[] =
     {
@@ -3039,7 +3039,7 @@ config_file_parse (const char *filename,
     };
 
   /*
-   * Ipmi-raw
+   * ipmi-raw
    */
   struct conffile_option ipmi_raw_options[] =
     {
@@ -3123,7 +3123,7 @@ config_file_parse (const char *filename,
     };
 
   /*
-   * Ipmi-pet
+   * ipmi-pet
    */
   struct conffile_option ipmi_pet_options[] =
     {
@@ -3317,7 +3317,7 @@ config_file_parse (const char *filename,
     };
 
   /*
-   * Ipmi-sel
+   * ipmi-sel
    */
   struct conffile_option ipmi_sel_options[] =
     {
@@ -3589,7 +3589,7 @@ config_file_parse (const char *filename,
     };
 
   /*
-   * Ipmi-sensors
+   * ipmi-sensors
    */
 
   struct conffile_option ipmi_sensors_options[] =
@@ -4266,7 +4266,7 @@ config_file_parse (const char *filename,
     };
 
   /*
-   * Ipmiconsole
+   * ipmiconsole
    */
 
   /* Notes:
@@ -4469,7 +4469,7 @@ config_file_parse (const char *filename,
     };
 
   /*
-   * Ipmipower
+   * ipmipower
    */
 
   struct conffile_option ipmipower_options[] =
@@ -4831,7 +4831,7 @@ config_file_parse (const char *filename,
     };
 
   /*
-   * Ipmiseld
+   * ipmiseld
    */
   struct conffile_option ipmiseld_options[] =
     {

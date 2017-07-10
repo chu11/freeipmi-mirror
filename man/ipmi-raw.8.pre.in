@@ -33,7 +33,7 @@ required user privilege will depend on the raw commands executed.
 #include <@top_srcdir@/man/manpage-common-misc.man>
 .SH "IPMI-RAW OPTIONS"
 The following options are specific to
-.B Ipmi-raw.
+.B ipmi-raw.
 .TP
 \fB\-\-file\fR=\fICMD\-FILE\fR
 Specify a file to read command requests from.

@@ -9,7 +9,7 @@ Last Updated: May 18, 2012
 The following is a short summary of the libraries and APIs available for
 use in FreeIPMI.
 
-Libfreeipmi
+libfreeipmi
 -----------
 
 Libfreeipmi is the primary library that most of the FreeIPMI tools are based
@@ -90,7 +90,7 @@ tables in IPMI.  Utilized by tools such as ipmi-sensors(8).
 util - Provides various utility functions for the calculation of keys,
 sensor readings, etc.  Utilized by most of the rest of FreeIPMI.
 
-Libipmiconsole
+libipmiconsole
 --------------
 
 Libipmiconsole implements a high level serial-over-lan (SOL) API for
@@ -99,14 +99,14 @@ multiple IPMI 2.0 SOL sessions.  The goal of this library is to
 abstract away all of the underlying IPMI/SOL details away from the
 user into a relatively simple file descriptor interface.
 
-Libipmimonitoring
+libipmimonitoring
 -----------------
 
 Libipmimonitoring implements a high level SEL and sensor monitoring
 API.  An iterator interface is provided that allows the user to
 iterate through sensor values, groups, units, and states.
 
-Libipmidetect
+libipmidetect
 -------------
 
 Libipmidetect implements a high level API for determing which nodes in

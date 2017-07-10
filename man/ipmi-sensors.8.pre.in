@@ -57,7 +57,7 @@ To perform some advanced SDR management, please see
 #include <@top_srcdir@/man/manpage-common-misc.man>
 .SH "IPMI-SENSORS OPTIONS"
 The following options are specific to
-.B Ipmi-sensors.
+.B ipmi-sensors.
 .TP
 \fB\-v\fR, \fB\-\-verbose\fR
 Output verbose sensor output.  This option will output additional

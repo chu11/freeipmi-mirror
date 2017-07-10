@@ -77,20 +77,20 @@ General Use
 The primary tools that most users of FreeIPMI will be interested in
 for system management are the following:
 
-Ipmi-sensors
+ipmi-sensors
 
 A tool to read IPMI sensor readings to aid in system monitoring.
 
-Ipmi-sel
+ipmi-sel
 
 A tool to read and manage IPMI System Event Log (SEL) records to aid
 in system debugging.
 
-Ipmipower
+ipmipower
 
 A tool for remote power control.
 
-Ipmiconsole
+ipmiconsole
 
 A tool for Serial-over-Lan (SOL) console access.
 
@@ -139,47 +139,47 @@ Project Tools
 
 The following tools are distributed and supported by FreeIPMI.
 
-Bmc-info
+bmc-info
 
 A tool to read information about a BMC such as device version numbers,
 device support, and globally unique IDs (guids).
 
-Bmc-watchdog
+bmc-watchdog
 
 A tool/daemon to manage a BMC Watchdog. This tool is typically used
 for system timeout management and automatic system restarts in the
 event of a system crash.  
 
-Ipmi-chassis
+ipmi-chassis
 
 A tool to manage/monitor a chassis, such as chassis power,
 identification (i.e. LED control), and status.
 
-Ipmi-fru
+ipmi-fru
 
 A tool to read field replaceable unit (FRU) information from a
 motherboard/machine.
 
-Ipmi-sel
+ipmi-sel
 
 A tool to read and manage IPMI System Event Log (SEL) records.  SEL
 records store system event information and may be useful for debugging
 problems.
 
-Ipmi-sensors
+ipmi-sensors
 
 A tool to read IPMI sensor readings and sensor data repository (SDR)
 information.
 
-Ipmipower
+ipmipower
 
 A tool for remote power control.
 
-Ipmiconsole
+ipmiconsole
 
 A tool for Serial-over-Lan (SOL) console access.
 
-Ipmi-config
+ipmi-config
 
 A tool to configure BMC and IPMI information.  In can be used to
 configured usernames, passwords, networking information, security,
@@ -187,48 +187,48 @@ Serial-over-LAN (SOL), Platform Event Filtering (PEF), boot devices,
 power restoration policy, sensor thresholds, sensor events, and many
 more configuration options.
 
-Ipmi-raw
+ipmi-raw
 
 A tool that provides hex input/output of IPMI commands.
 
-Ipmi-locate
+ipmi-locate
 
 A tool that can probe for information about the location of a BMC
 device, such as device addresses.
 
-Ipmi-pet
+ipmi-pet
 
 A tool to parse and interpret Platform Event Traps (PET).
 
-Ipmi-dcmi
+ipmi-dcmi
 
 A tool to perform Data Center Manageability Interface (DCMI) IPMI
 extension commands.  Supports extensions for asset management and
 power usage management.
 
-Bmc-device
+bmc-device
 
 A tool to perform advanced BMC commands, such as resetting the BMC,
 configuring ACPI, configuring SDR/SEL time, manually generating
 events, re-arming sensors, and configuring manufacturer settings.
 
-Ipmiping
+ipmiping
 
 An IPMI ping tool for debugging. 
 
-Rmcpping
+rmcpping
 
 A RMCP ping tool for debugging. 
 
-Ipmi-oem
+ipmi-oem
 
 An IPMI tool for OEM specific commands.
 
-Ipmidetect/Ipmidetectd
+ipmidetect/ipmidetectd
 
 A tool and daemon for IPMI node detection.
 
-Ipmiseld
+ipmiseld
 
 A daemon that regularly polls the SEL and stores the events to the
 local syslog.
@@ -241,7 +241,7 @@ Project Libraries
 
 The following libraries are distributed and supported by FreeIPMI.
 
-Libfreeipmi
+libfreeipmi
 
 A C library that includes KCS, SSIF, OpenIPMI Linux, and Solaris BMC
 drivers, IPMI 1.5 and IPMI 2.0 LAN communication interfaces, IPMI
@@ -250,19 +250,19 @@ reading/interpreting/managing IPMI.  This library is for programmers
 intimately familiar with the IPMI protocol and IPMI specification.
 Most users may wish to use the libraries listed below.
 
-Libipmiconsole
+libipmiconsole
 
 A library for Serial-over-Lan (SOL) console access.  SOL console
 access is abstracted into a file descriptor interface, so users may
 read and write console data through a file descriptor.
 
-Libipmimonitoring
+libipmimonitoring
 
 A library for sensor and system event log (SEL) monitoring that
 abstracts away most IPMI details.  Interpretation of those sensors and
 events is abstracted into an API with an iterator interface.
 
-Libipmidetect
+libipmidetect
 
 A library for IPMI node detection.
 

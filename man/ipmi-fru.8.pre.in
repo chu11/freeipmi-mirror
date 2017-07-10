@@ -56,7 +56,7 @@ information, serial numbers, and part numbers.
 #include <@top_srcdir@/man/manpage-common-misc.man>
 .SH "IPMI-FRU OPTIONS"
 The following options are specific to
-.B Ipmi-fru.
+.B ipmi-fru.
 .TP
 \fB\-e\fR, \fB\-\-device-id\fR=\fIIDNUM\fR
 Specify a specific FRU device ID.

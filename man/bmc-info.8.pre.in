@@ -28,7 +28,7 @@ support, and globally unique IDs (guids).
 #include <@top_srcdir@/man/manpage-common-misc.man>
 .SH "BMC-INFO OPTIONS"
 The following options are specific to
-.B Bmc-info.
+.B bmc-info.
 .TP
 \fB\-\-get\-device\-id\fR
 Display only device ID information.

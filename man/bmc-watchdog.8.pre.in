@@ -31,7 +31,7 @@ bmc-watchdog \- BMC watchdog timer daemon and control utility
 command [\fIOPTION\fR...] [\fICOMMAND_OPTIONS\fR...]
 .br
 .SH "DESCRIPTION"
-.B bmc-watchdog
+.B Bmc-watchdog
 controls a Baseboard Management Controller (BMC) watchdog timer.  The
 .B bmc-watchdog
 tool typically executes as a cronjob or daemon to manage the watchdog
@@ -69,7 +69,9 @@ the timer never counts down to zero.  When the system crashes, the
 timer cannot be reset by the OS or userspace program.  Eventually, the
 timer will countdown to zero and reset the machine.
 .LP
-See EXAMPLES below for examples of how bmc-watchdog is commonly used.
+See EXAMPLES below for examples of how
+.B bmc-watchdog
+is commonly used.
 
 .SH "COMMANDS"
 The following commands are available to
@@ -292,7 +294,9 @@ work around compliances issues on Sun x4100, x4200, and x4500.
 
 .SH "EXAMPLES" 
 .LP 
-Setup a bmc-watchdog daemon that resets the machine after 15 minutes
+Setup a
+.B bmc-watchdog
+daemon that resets the machine after 15 minutes
 (900 seconds) if the OS has crashed (see default bmc-watchdog rc
 script /etc/init.d/bmc-watchdog for a more complete example):
         bmc-watchdog -d -u 4 -p 0 -a 1 -i 900

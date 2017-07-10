@@ -68,7 +68,7 @@ via SDR information.
 #include <@top_srcdir@/man/manpage-common-misc.man>
 .SH "IPMI-PET OPTIONS"
 The following options are specific to
-.B Ipmi-pet.
+.B ipmi-pet.
 .TP
 \fB\-v\fR
 Output verbose output.  This option will output event direction and

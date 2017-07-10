@@ -57,7 +57,7 @@ required user privilege will depend on the oem commands executed.
 #include <@top_srcdir@/man/manpage-common-hostranged-always-prefix.man>
 .SH "IPMI-OEM OPTIONS"
 The following options are specific to
-.B Ipmi-oem.
+.B ipmi-oem.
 .TP
 \fB\-L\fR, \fB\-\-list\fR
 List supported OEM IDs and Commands.

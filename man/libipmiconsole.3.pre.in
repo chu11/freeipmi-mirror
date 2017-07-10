@@ -61,7 +61,7 @@ underlying IPMI/SOL details away from the user into a relatively
 simple file descriptor interface.
 
 Alternate default configuration value can be set for
-.B Libipmiconsole
+.B libipmiconsole
 via the libipmiconsole.conf file.  See
 . B libipmiconsole.conf(5)
 for more information.

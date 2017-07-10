@@ -66,7 +66,7 @@ configuration file.
 #include <@top_srcdir@/man/manpage-common-misc.man>
 .SH "IPMISELD OPTIONS"
 The following options are specific to
-.B Ipmiseld.
+.B ipmiseld.
 .TP
 \fB\-v\fR
 Log verbose information.  This option will log additional information.

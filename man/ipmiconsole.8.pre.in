@@ -88,7 +88,7 @@ cipher suite ids are currently supported:
 #include <@top_srcdir@/man/manpage-common-misc.man>
 .SH "IPMICONSOLE OPTIONS"
 The following options are specific to
-.B Ipmiconsole.
+.B ipmiconsole.
 .TP
 \fB\-e\fR \fICHAR\fR, \fB\-\-escape-char\fR=\fICHAR\fR
 Specify an alternate escape character (default char '&').

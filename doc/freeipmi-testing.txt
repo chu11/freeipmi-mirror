@@ -66,7 +66,7 @@ SOL1 - A non-null username, with a password, the highest privilege
 this user can authenticate with is identical to the SOL privilege
 level, and SOL payload access is enabled.
 
-Ipmi-config Testing
+ipmi-config Testing
 -------------------
 
 Goal: The goal of the ipmi-config testing is to ensure that all IPMI
@@ -344,7 +344,7 @@ If any parameters on the system are read only, does ipmi-config output
 If not, is the field returning the proper completion code (typically
 0x82)?
 
-Bmc-info Testing
+bmc-info Testing
 ----------------
 
 Goal: Ensure all important values are output and are correct.
@@ -372,7 +372,7 @@ Execute bmc-info with no bmc-info specific options, verify tool:
   * Channel Information - Vendor ID
     o Most if not all should be == "Intelligent Platform Management Interface forum (7154)"
 
-Ipmi-chassis Testing
+ipmi-chassis Testing
 --------------------
 
 Goal: Ensure all important features function properly.
@@ -393,7 +393,7 @@ Execute ipmi-chassis with --chassis-identify=30, verify remote system:
 - Has LED turned on for approximately 30 seconds, then turns itself
   off.
 
-Ipmi-sensors Testing
+ipmi-sensors Testing
 --------------------
 
 Goal: Ensure all important values are output and are correct.
@@ -489,7 +489,7 @@ Testing Intrusion Sensors:
 - Verify ipmi-sensors now lists the intrusion sensor with an
   appropriate event message, such as "General Chassis Intrusion".
 
-Ipmi-sel Testing
+ipmi-sel Testing
 ----------------
 
 Goal: Ensure all important values are output and are correct.
@@ -542,7 +542,7 @@ Execute ipmi-sel with no ipmi-sel specific options, verify tool:
     (most likely event-only records) in the SDR could help make the
     output of ipmi-sel cleaner, nicer, and better for the end user.
 
-Ipmi-fru Testing
+ipmi-fru Testing
 ----------------
 
 Goal: Ensure all important values are output and are correct.
@@ -556,7 +556,7 @@ Execute ipmi-fru with no ipmi-fru specific options, verify tool:
   * If checksum errors are output, are checksums valid?
 - No error message outputs (keyword "Error" is output).
 
-Ipmiconsole Testing
+ipmiconsole Testing
 -------------------
 
 Goal: Ensure all important features function properly.
@@ -776,7 +776,7 @@ verify tool:
   each test.
 
 
-Ipmipower Testing
+ipmipower Testing
 -----------------
 
 Goal: Ensure all important features function properly.

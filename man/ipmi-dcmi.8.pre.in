@@ -79,7 +79,7 @@ for configuration.
 #include <@top_srcdir@/man/manpage-common-misc.man>
 .SH "IPMI-DCMI OPTIONS"
 The following options are specific to
-.B Ipmi-dcmi.
+.B ipmi-dcmi.
 .TP
 \fB\-\-get\-dcmi\-capability\-info\fR
 Get DCMI capability information.

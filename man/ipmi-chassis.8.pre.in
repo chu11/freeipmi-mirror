@@ -37,7 +37,7 @@ For a more powerful chassis power control utility, please see
 #include <@top_srcdir@/man/manpage-common-misc.man>
 .SH "IPMI-CHASSIS OPTIONS"
 The following options are specific to
-.B Ipmi-chassis.
+.B ipmi-chassis.
 .TP
 \fB\-\-get\-chassis\-capabilities\fR
 Get chassis capabilities.  This command returns information on which

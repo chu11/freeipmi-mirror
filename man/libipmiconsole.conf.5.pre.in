@@ -30,12 +30,12 @@ libipmiconsole.conf \- specify default values for libipmiconsole
 The
 .B Libipmiconsole
 configuration file can be used to set alternate default values for the
-.B Libipmiconsole
+.B libipmiconsole
 library.  The configuration of these defaults may be useful for
 environments in which programs link to libipmiconsole but do not
 support configuration of libipmiconsole parameters.  Users should be ware
 that setting alternate default values into
-.B Libipmiconsole
+.B libipmiconsole
 will affect all tools that link to the library, such as the
 .B ipmiconsole(8)
 tool.  For users wishing to set alternate defaults to

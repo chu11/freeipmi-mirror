@@ -38,7 +38,7 @@ To perform some advanced SEL management, please see
 #include <@top_srcdir@/man/manpage-common-misc.man>
 .SH "IPMI-SEL OPTIONS"
 The following options are specific to
-.B Ipmi-sel.
+.B ipmi-sel.
 .TP
 \fB\-v\fR
 Output verbose output.  This option will output event direction.

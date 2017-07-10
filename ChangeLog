@@ -1,3 +1,8 @@
+2017-07-10 Albert Chu <chu11@llnl.gov>
+
+	* Update various documentation for consistency, "Ipmi" to "ipmi"
+	when appropriate, "Bmc" to "bmc", etc.
+	
 2017-07-10 Josef Ridky <jridky@redhat.com>
 
 	* man/freeipmi.7.pre.in: Lower case "Ipmi" to "ipmi".
