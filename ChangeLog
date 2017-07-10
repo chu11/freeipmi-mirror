@@ -1,3 +1,7 @@
+2017-07-10 Josef Ridky <jridky@redhat.com>
+
+	* man/freeipmi.7.pre.in: Lower case "Ipmi" to "ipmi".
+	
 2017-06-27 Ike Panhc <ike.pan@canonical.com>
 
 	* libfreeipmi/locate/ipmi-locate-dmidecode.c: Use dmi firmware in

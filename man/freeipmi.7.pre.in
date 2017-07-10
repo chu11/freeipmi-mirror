@@ -87,20 +87,20 @@ found in each of the tool manpages.
 The primary tools that most users of FreeIPMI will be interested in
 for system management are the following:
 .PP
-.B Ipmi-sensors
+.B ipmi-sensors
 .PP
 A tool to read IPMI sensor readings to aid in system monitoring.
 .PP
-.B Ipmi-sel
+.B ipmi-sel
 .PP
 A tool to read and manage IPMI System Event Log (SEL) records to aid
 in system debugging.
 .PP
-.B Ipmipower
+.B ipmipower
 .PP
 A tool for remote power control.
 .PP
-.B Ipmiconsole
+.B ipmiconsole
 .PP
 A tool for Serial-over-Lan (SOL) console access.
 .PP
