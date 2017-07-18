@@ -445,6 +445,20 @@ _get_sensor_units (ipmi_monitoring_ctx_t c,
   return (IPMI_MONITORING_SENSOR_UNITS_UNKNOWN);
 }
 
+static void _free_sensor_bitmask_strings (char **sensor_bitmask_strings)
+{
+  if (sensor_bitmask_strings)
+    {
+      unsigned int i = 0;
+      while (sensor_bitmask_strings[i])
+        {
+          free (sensor_bitmask_strings[i]);
+          i++;
+        }
+      free (sensor_bitmask_strings);
+    }
+}
+
 static int
 _get_sensor_bitmask_strings (ipmi_monitoring_ctx_t c,
                              unsigned int sensor_reading_flags,
@@ -459,7 +473,6 @@ _get_sensor_bitmask_strings (ipmi_monitoring_ctx_t c,
   uint32_t manufacturer_id = 0;
   uint16_t product_id = 0;
   unsigned int flags;
-  unsigned int i;
   int rv = -1;
 
   assert (c);
@@ -496,14 +509,7 @@ _get_sensor_bitmask_strings (ipmi_monitoring_ctx_t c,
   rv = 0;
  cleanup:
   if (rv < 0)
-    {
-      if (tmp_sensor_bitmask_strings)
-        {
-          for (i = 0; i < tmp_sensor_bitmask_strings_count; i++)
-            free (tmp_sensor_bitmask_strings[i]);
-          free (tmp_sensor_bitmask_strings);
-        }
-    }
+    _free_sensor_bitmask_strings (tmp_sensor_bitmask_strings);
   return (rv);
 }
 
@@ -610,7 +616,10 @@ _threshold_sensor_reading (ipmi_monitoring_ctx_t c,
                              sensor_bitmask_strings,
                              &sensor_reading,
                              event_reading_type_code) < 0)
-    return (-1);
+    {
+      _free_sensor_bitmask_strings (sensor_bitmask_strings);
+      return (-1);
+    }
 
   return (0);
 }
@@ -844,7 +853,10 @@ _digital_sensor_reading (ipmi_monitoring_ctx_t c,
                              sensor_bitmask_strings,
                              NULL,
                              event_reading_type_code) < 0)
-    return (-1);
+    {
+      _free_sensor_bitmask_strings (sensor_bitmask_strings);
+      return (-1);
+    }
 
   return (0);
 }
@@ -929,7 +941,10 @@ _specific_sensor_reading (ipmi_monitoring_ctx_t c,
                              sensor_bitmask_strings,
                              NULL,
                              event_reading_type_code) < 0)
-    return (-1);
+    {
+      _free_sensor_bitmask_strings (sensor_bitmask_strings);
+      return (-1);
+    }
 
   return (0);
 }
@@ -1014,7 +1029,10 @@ _oem_sensor_reading (ipmi_monitoring_ctx_t c,
                              sensor_bitmask_strings,
                              NULL,
                              event_reading_type_code) < 0)
-    return (-1);
+    {
+      _free_sensor_bitmask_strings (sensor_bitmask_strings);
+      return (-1);
+    }
 
   return (0);
 }
