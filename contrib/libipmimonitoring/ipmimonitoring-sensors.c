@@ -57,6 +57,9 @@
 char *hostname = NULL; 
 
 /* In-band Communication Configuration */
+/* On linux, you may wish to change driver_type to
+ * IPMI_MONITORING_DRIVER_TYPE_OPENIPMI if you use /dev/ipmi0
+ */
 int driver_type = IPMI_MONITORING_DRIVER_TYPE_KCS; /* or -1 for default */
 int disable_auto_probe = 0;     /* probe for in-band device */
 unsigned int driver_address = 0; /* not used if probing */
