@@ -1,5 +1,9 @@
 FreeIPMI 1.5.6 - 07/05/17
 -------------------------
+o In libipmimonitoring, fix several mem-leak corner cases.
+
+FreeIPMI 1.5.6 - 07/05/17
+-------------------------
 o In libfreeipmi locate (used by ipmi-locate), use DMI firmware in
   sysfs if it exists.
 o Minor mem-leak corner case fix in libfreeipmi.
