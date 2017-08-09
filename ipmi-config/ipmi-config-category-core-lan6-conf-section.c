@@ -37,8 +37,11 @@
 #include "freeipmi-portability.h"
 #include "pstdout.h"
 
-#define BMC_MAXIPADDRLEN 16
-#define BMC_MAXIPV6ADDRLEN 45
+#ifdef INET6_ADDRSTRLEN
+#define BMC_MAXIPV6ADDRLEN INET6_ADDRSTRLEN
+#else
+#define BMC_MAXIPV6ADDRLEN 46
+#endif
 #define BMC_MAXMACADDRLEN 24
 
 static ipmi_config_err_t
