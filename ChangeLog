@@ -6,6 +6,8 @@
 	* Fix compiler warnings.
 
 	* libfreeipmi/cmds/ipmi-lan-cmds.c: Fix incorrect LS vs. MS comment.
+
+	* ipmi-config/: Minor code cleanup.
 	
 2017-07-18 Albert Chu <chu11@llnl.gov>
 
