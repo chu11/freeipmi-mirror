@@ -2,6 +2,8 @@
 
 	* ipmi-config/ipmi-config-category-core-lan6-conf-section.c: Check
 	malloc for errors.
+
+	* Fix compiler warnings.
 	
 2017-07-18 Albert Chu <chu11@llnl.gov>
 

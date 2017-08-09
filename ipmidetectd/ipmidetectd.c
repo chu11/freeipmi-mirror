@@ -122,7 +122,6 @@ static int exit_flag = 1;
 static void
 _fds_setup (void)
 {
-  struct sockaddr_in addr4;
   struct sockaddr_in6 addr6;
   struct sockaddr_in6 servaddr;
   int option_value;
