@@ -363,6 +363,155 @@ fiid_template_t tmpl_cmd_set_lan_configuration_parameters_bad_password_threshold
     { 0, "", 0}
   };
 
+fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_ipv4_addressing_enables_rq =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "enables", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_header_static_traffic_class_rq =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "traffic_class", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_header_static_hop_limit_rq =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "static_hop_limit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_header_flow_label_rq =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 20, "flow_label", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, /* MS byte first */
+    { 4, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_static_addresses_rq =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "source", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 3, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "enable", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 128, "address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "address_prefix_length", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "address_status", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_router_address_configuration_control_rq =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "enable_static_router_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "enable_dynamic_router_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 6, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_1_ip_address_rq =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 128, "ipv6_router_ip_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_1_mac_address_rq =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 48, "router_mac_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_1_prefix_length_rq =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "prefix_length", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_1_prefix_value_rq =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 128, "prefix_value", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, /* MS byte first */
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_2_ip_address_rq =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 128, "ipv6_router_ip_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_2_mac_address_rq =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 48, "router_mac_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_2_prefix_length_rq =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "prefix_length", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_2_prefix_value_rq =
+  {
+    { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 128, "prefix_value", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, /* MS byte first */
+    { 0, "", 0}
+  };
+
 fiid_template_t tmpl_cmd_get_lan_configuration_parameters_rq =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -969,7 +1118,7 @@ fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_static_router_1_p
     { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 128, "prefix_value", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 128, "prefix_value", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, /* MS byte first */
     { 0, "", 0}
   };
 
@@ -1009,7 +1158,7 @@ fiid_template_t tmpl_cmd_get_lan_configuration_parameters_ipv6_static_router_2_p
     { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 128, "prefix_value", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 128, "prefix_value", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, /* MS byte first */
     { 0, "", 0}
   };
 
@@ -2041,6 +2190,476 @@ fill_cmd_set_lan_configuration_parameters_bad_password_threshold (uint8_t channe
 }
 
 int
+fill_cmd_set_lan_configuration_parameters_ipv6_ipv4_addressing_enables (uint8_t channel_number,
+                                                                        uint8_t enables,
+                                                                        fiid_obj_t obj_cmd_rq)
+{
+  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
+      || !IPMI_IPV6_IPV4_ADDRESSING_ENABLES_VALID (enables)
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_ipv6_ipv4_addressing_enables_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_IPV4_ADDRESSING_ENABLES);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "enables", enables);
+
+  return (0);
+}
+
+int
+fill_cmd_set_lan_configuration_parameters_ipv6_header_static_traffic_class (uint8_t channel_number,
+                                                                            uint8_t traffic_class,
+                                                                            fiid_obj_t obj_cmd_rq)
+{
+  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_ipv6_header_static_traffic_class_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_HEADER_STATIC_TRAFFIC_CLASS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "traffic_class", traffic_class);
+
+  return (0);
+}
+
+int
+fill_cmd_set_lan_configuration_parameters_ipv6_header_static_hop_limit (uint8_t channel_number,
+                                                                        uint8_t static_hop_limit,
+                                                                        fiid_obj_t obj_cmd_rq)
+{
+  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_ipv6_header_static_hop_limit_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_HEADER_STATIC_HOP_LIMIT);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "static_hop_limit", static_hop_limit);
+
+  return (0);
+}
+
+int
+fill_cmd_set_lan_configuration_parameters_ipv6_header_flow_label (uint8_t channel_number,
+                                                                  uint64_t flow_label,
+                                                                  fiid_obj_t obj_cmd_rq)
+{
+  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_ipv6_header_flow_label_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_HEADER_FLOW_LABEL);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "flow_label", flow_label);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
+
+  return (0);
+}
+
+int
+fill_cmd_set_lan_configuration_parameters_ipv6_static_addresses (uint8_t channel_number,
+                                                                 uint8_t set_selector,
+                                                                 uint8_t source,
+                                                                 uint8_t enable,
+                                                                 uint8_t address[IPMI_IPV6_BYTES],
+                                                                 uint8_t address_prefix_length,
+                                                                 uint8_t address_status,
+                                                                 fiid_obj_t obj_cmd_rq)
+{
+  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
+      || !IPMI_IPV6_STATIC_ADDRESS_SOURCE_VALID (source)
+      || !IPMI_IPV6_ADDRESS_SOURCE_ENABLE_VALID (enable)
+      || address_prefix_length > IPMI_IPV6_PREFIX_LENGTH_MAX
+      || !IPMI_IPV6_ADDRESS_STATUS_VALID (address_status)
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_ipv6_header_flow_label_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_STATIC_ADDRESSES);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "source", source);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "enable", enable);
+  FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "address", address, IPMI_IPV6_BYTES);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "address_prefix_length", address_prefix_length);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "address_status", address_status);
+
+  return (0);
+}
+
+int
+fill_cmd_set_lan_configuration_parameters_ipv6_router_address_configuration_control (uint8_t channel_number,
+                                                                                     uint8_t enable_static_router_address,
+                                                                                     uint8_t enable_dynamic_router_address,
+                                                                                     fiid_obj_t obj_cmd_rq)
+{
+  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
+      || !IPMI_IPV6_STATIC_ROUTER_ADDRESS_ENABLE_VALID (enable_static_router_address)
+      || !IPMI_IPV6_DYNAMIC_ROUTER_ADDRESS_ENABLE_VALID (enable_dynamic_router_address)
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_ipv6_router_address_configuration_control_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_ROUTER_ADDRESS_CONFIGURATION_CONTROL);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "enable_static_router_address", enable_static_router_address);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "enable_dynamic_router_address", enable_dynamic_router_address);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
+
+  return (0);
+}
+
+static int
+_fill_router_ip_address (uint8_t parameter_selector,
+                         uint8_t channel_number,
+                         uint8_t router_ip_address[IPMI_IPV6_BYTES],
+                         fiid_obj_t obj_cmd_rq)
+{
+  assert ((parameter_selector == IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_STATIC_ROUTER_1_IP_ADDRESS
+           || parameter_selector == IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_STATIC_ROUTER_2_IP_ADDRESS)
+          && IPMI_CHANNEL_NUMBER_VALID (channel_number)
+          && fiid_obj_valid (obj_cmd_rq));
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", parameter_selector);
+  FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "ipv6_router_ip_address", router_ip_address, IPMI_IPV6_BYTES);
+
+  return (0);
+}
+
+int
+fill_cmd_set_lan_configuration_parameters_ipv6_static_router_1_ip_address (uint8_t channel_number,
+                                                                           uint8_t router_ip_address[IPMI_IPV6_BYTES],
+                                                                           fiid_obj_t obj_cmd_rq)
+{
+  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_1_ip_address_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  return (_fill_router_ip_address (IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_STATIC_ROUTER_1_IP_ADDRESS,
+                                   channel_number,
+                                   router_ip_address,
+                                   obj_cmd_rq));
+}
+
+static int
+_fill_router_mac_address (uint8_t parameter_selector,
+                          uint8_t channel_number,
+                          uint64_t router_mac_address,
+                          fiid_obj_t obj_cmd_rq)
+{
+  assert ((parameter_selector == IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_STATIC_ROUTER_1_MAC_ADDRESS
+           || parameter_selector == IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_STATIC_ROUTER_2_MAC_ADDRESS)
+          && IPMI_CHANNEL_NUMBER_VALID (channel_number)
+          && fiid_obj_valid (obj_cmd_rq));
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", parameter_selector);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "router_mac_address", router_mac_address);
+
+  return (0);
+}
+
+int
+fill_cmd_set_lan_configuration_parameters_ipv6_static_router_1_mac_address (uint8_t channel_number,
+                                                                            uint64_t router_mac_address,
+                                                                            fiid_obj_t obj_cmd_rq)
+{
+  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_1_mac_address_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  return (_fill_router_mac_address (IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_STATIC_ROUTER_1_MAC_ADDRESS,
+                                    channel_number,
+                                    router_mac_address,
+                                    obj_cmd_rq));
+}
+
+static int
+_fill_router_prefix_length (uint8_t parameter_selector,
+                            uint8_t channel_number,
+                            uint8_t prefix_length,
+                            fiid_obj_t obj_cmd_rq)
+{
+  assert ((parameter_selector == IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_STATIC_ROUTER_1_PREFIX_LENGTH
+           || parameter_selector == IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_STATIC_ROUTER_2_PREFIX_LENGTH)
+          && IPMI_CHANNEL_NUMBER_VALID (channel_number)
+          && fiid_obj_valid (obj_cmd_rq));
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", parameter_selector);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "prefix_length", prefix_length);
+
+  return (0);
+}
+
+int
+fill_cmd_set_lan_configuration_parameters_ipv6_static_router_1_prefix_length (uint8_t channel_number,
+                                                                              uint8_t prefix_length,
+                                                                              fiid_obj_t obj_cmd_rq)
+{
+  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
+      || prefix_length > IPMI_IPV6_PREFIX_LENGTH_MAX
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_1_prefix_length_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  return (_fill_router_prefix_length (IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_STATIC_ROUTER_1_PREFIX_LENGTH,
+                                      channel_number,
+                                      prefix_length,
+                                      obj_cmd_rq));
+}
+
+static int
+_fill_router_prefix_value (uint8_t parameter_selector,
+                           uint8_t channel_number,
+                           uint8_t prefix_value[IPMI_IPV6_BYTES],
+                           fiid_obj_t obj_cmd_rq)
+{
+  assert ((parameter_selector == IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_STATIC_ROUTER_1_PREFIX_VALUE
+           || parameter_selector == IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_STATIC_ROUTER_2_PREFIX_VALUE)
+          && IPMI_CHANNEL_NUMBER_VALID (channel_number)
+          && fiid_obj_valid (obj_cmd_rq));
+
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", parameter_selector);
+  FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "prefix_value", prefix_value, IPMI_IPV6_BYTES);
+
+  return (0);
+}
+
+int
+fill_cmd_set_lan_configuration_parameters_ipv6_static_router_1_prefix_value (uint8_t channel_number,
+                                                                             uint8_t prefix_value[IPMI_IPV6_BYTES],
+                                                                             fiid_obj_t obj_cmd_rq)
+{
+  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_1_prefix_value_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  return (_fill_router_prefix_value (IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_STATIC_ROUTER_1_PREFIX_VALUE,
+                                     channel_number,
+                                     prefix_value,
+                                     obj_cmd_rq));
+}
+
+int
+fill_cmd_set_lan_configuration_parameters_ipv6_static_router_2_ip_address (uint8_t channel_number,
+                                                                           uint8_t router_ip_address[IPMI_IPV6_BYTES],
+                                                                           fiid_obj_t obj_cmd_rq)
+{
+  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_2_ip_address_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  return (_fill_router_ip_address (IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_STATIC_ROUTER_2_IP_ADDRESS,
+                                   channel_number,
+                                   router_ip_address,
+                                   obj_cmd_rq));
+}
+
+int
+fill_cmd_set_lan_configuration_parameters_ipv6_static_router_2_mac_address (uint8_t channel_number,
+                                                                            uint64_t router_mac_address,
+                                                                            fiid_obj_t obj_cmd_rq)
+{
+  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_2_mac_address_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  return (_fill_router_mac_address (IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_STATIC_ROUTER_2_MAC_ADDRESS,
+                                    channel_number,
+                                    router_mac_address,
+                                    obj_cmd_rq));
+}
+
+int
+fill_cmd_set_lan_configuration_parameters_ipv6_static_router_2_prefix_length (uint8_t channel_number,
+                                                                              uint8_t prefix_length,
+                                                                              fiid_obj_t obj_cmd_rq)
+{
+  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
+      || prefix_length > IPMI_IPV6_PREFIX_LENGTH_MAX
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_2_prefix_length_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  return (_fill_router_prefix_length (IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_STATIC_ROUTER_2_PREFIX_LENGTH,
+                                      channel_number,
+                                      prefix_length,
+                                      obj_cmd_rq));
+
+  return (0);
+}
+
+int
+fill_cmd_set_lan_configuration_parameters_ipv6_static_router_2_prefix_value (uint8_t channel_number,
+                                                                             uint8_t prefix_value[IPMI_IPV6_BYTES],
+                                                                             fiid_obj_t obj_cmd_rq)
+{
+  if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
+      || !fiid_obj_valid (obj_cmd_rq))
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_2_prefix_value_rq) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
+  return (_fill_router_prefix_value (IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_STATIC_ROUTER_2_PREFIX_VALUE,
+                                     channel_number,
+                                     prefix_value,
+                                     obj_cmd_rq));
+}
+
+int
 fill_cmd_get_lan_configuration_parameters (uint8_t channel_number,
                                            uint8_t get_parameter,
                                            uint8_t parameter_selector,
@@ -2136,6 +2755,4 @@ fill_cmd_get_ip_udp_rmcp_statistics (uint8_t channel_number,
 
   return (0);
 }
-
-
 

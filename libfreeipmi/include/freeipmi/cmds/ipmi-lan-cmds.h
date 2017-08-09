@@ -161,6 +161,10 @@ extern "C" {
 #define IPMI_CLEAR_ALL_STATISTICS                       0x1
 #define IPMI_DONT_CLEAR_ALL_STATISTICS                  0x0
 
+#define IPMI_IPV6_BYTES 16
+
+#define IPMI_IPV6_PREFIX_LENGTH_MAX 128
+
 #define IPMI_CLEAR_ALL_STATISTICS_VALID(__val) \
   (((__val) == IPMI_CLEAR_ALL_STATISTICS       \
     || (__val) == IPMI_DONT_CLEAR_ALL_STATISTICS) ? 1 : 0)
@@ -176,6 +180,12 @@ extern "C" {
   (((__address_status) == IPMI_IPV6_ADDRESS_SOURCE_SLAAC         \
   || (__address_status) == IPMI_IPV6_ADDRESS_SOURCE_DHCPV6) ? 1 : 0)
 
+#define IPMI_IPV6_ADDRESS_SOURCE_ENABLE      0x01
+#define IPMI_IPV6_ADDRESS_SOURCE_DISABLE     0x00
+
+#define IPMI_IPV6_ADDRESS_SOURCE_ENABLE_VALID(__val) \
+  (((__val) == IPMI_IPV6_ADDRESS_SOURCE_ENABLE       \
+    || (__val) == IPMI_IPV6_ADDRESS_SOURCE_DISABLE) ? 1 : 0)
 
 #define IPMI_IPV6_ADDRESS_STATUS_ACTIVE      0x00
 #define IPMI_IPV6_ADDRESS_STATUS_DISABLED    0x01
@@ -191,6 +201,20 @@ extern "C" {
     || (__address_status) == IPMI_IPV6_ADDRESS_STATUS_FAILED       \
     || (__address_status) == IPMI_IPV6_ADDRESS_STATUS_DEPRECATED   \
     || (__address_status) == IPMI_IPV6_ADDRESS_STATUS_INVALID) ? 1 : 0)
+
+#define IPMI_IPV6_STATIC_ROUTER_ADDRESS_ENABLE           0x1
+#define IPMI_IPV6_STATIC_ROUTER_ADDRESS_DISABLE          0x0
+
+#define IPMI_IPV6_STATIC_ROUTER_ADDRESS_ENABLE_VALID(__val) \
+  (((__val) == IPMI_IPV6_STATIC_ROUTER_ADDRESS_ENABLE       \
+    || (__val) == IPMI_IPV6_STATIC_ROUTER_ADDRESS_DISABLE) ? 1 : 0)
+
+#define IPMI_IPV6_DYNAMIC_ROUTER_ADDRESS_ENABLE          0x1
+#define IPMI_IPV6_DYNAMIC_ROUTER_ADDRESS_DISABLE         0x0
+
+#define IPMI_IPV6_DYNAMIC_ROUTER_ADDRESS_ENABLE_VALID(__val) \
+  (((__val) == IPMI_IPV6_DYNAMIC_ROUTER_ADDRESS_ENABLE       \
+    || (__val) == IPMI_IPV6_DYNAMIC_ROUTER_ADDRESS_DISABLE) ? 1 : 0)
 
 /* 
  * fill* functions return 0 on success, -1 on error.
@@ -226,6 +250,25 @@ extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_vlan_id_rq;
 extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_vlan_priority_rq;
 extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels_rq;
 extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_bad_password_threshold_rq;
+
+extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_ipv4_addressing_enables_rq;
+extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_header_static_traffic_class_rq;
+extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_header_static_hop_limit_rq;
+extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_header_flow_label_rq;
+extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_static_addresses_rq;
+/* TODO extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_dhcpv6_static_duids_rq; */
+/* TODO extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_dhcpv6_dynamic_duids_rq; */
+/* TODO extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_dhcpv6_timing_and_configuration_rq; */
+extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_router_address_configuration_control_rq;
+extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_1_ip_address_rq;
+extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_1_mac_address_rq;
+extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_1_prefix_length_rq;
+extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_1_prefix_value_rq;
+extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_2_ip_address_rq;
+extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_2_mac_address_rq;
+extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_2_prefix_length_rq;
+extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_2_prefix_value_rq;
+/* TODO extern fiid_template_t tmpl_cmd_set_lan_configuration_parameters_ipv6_neighbor_discovery_slaac_timing_configuration_rq; */
 
 extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_rq;
 extern fiid_template_t tmpl_cmd_get_lan_configuration_parameters_rs;
@@ -299,7 +342,7 @@ int fill_cmd_set_lan_configuration_parameters (uint8_t channel_number,
                                                const void *configuration_parameter_data,
                                                unsigned int configuration_parameter_data_len,
                                                fiid_obj_t obj_cmd_rq);
-  
+
 int fill_cmd_set_lan_configuration_parameters_set_in_progress (uint8_t channel_number,
                                                                uint8_t state,
                                                                fiid_obj_t obj_cmd_rq);
@@ -442,6 +485,68 @@ int fill_cmd_set_lan_configuration_parameters_bad_password_threshold (uint8_t ch
                                                                       uint16_t attempt_count_reset_interval,
                                                                       uint16_t user_lockout_interval,
                                                                       fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_set_lan_configuration_parameters_ipv6_ipv4_addressing_enables (uint8_t channel_number,
+                                                                            uint8_t enables,
+                                                                            fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_set_lan_configuration_parameters_ipv6_header_static_traffic_class (uint8_t channel_number,
+                                                                                uint8_t traffic_class,
+                                                                                fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_set_lan_configuration_parameters_ipv6_header_static_hop_limit (uint8_t channel_number,
+                                                                            uint8_t static_hop_limit,
+                                                                            fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_set_lan_configuration_parameters_ipv6_header_flow_label (uint8_t channel_number,
+                                                                      uint64_t flow_label,
+                                                                      fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_set_lan_configuration_parameters_ipv6_static_addresses (uint8_t channel_number,
+                                                                     uint8_t set_selector,
+                                                                     uint8_t source,
+                                                                     uint8_t enable,
+                                                                     uint8_t address[IPMI_IPV6_BYTES],
+                                                                     uint8_t address_prefix_length,
+                                                                     uint8_t address_status,
+                                                                     fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_set_lan_configuration_parameters_ipv6_router_address_configuration_control (uint8_t channel_number,
+                                                                                         uint8_t enable_static_router_address,
+                                                                                         uint8_t enable_dynamic_router_address,
+                                                                                         fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_set_lan_configuration_parameters_ipv6_static_router_1_ip_address (uint8_t channel_number,
+                                                                               uint8_t router_ip_address[IPMI_IPV6_BYTES],
+                                                                               fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_set_lan_configuration_parameters_ipv6_static_router_1_mac_address (uint8_t channel_number,
+                                                                                uint64_t router_mac_address,
+                                                                                fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_set_lan_configuration_parameters_ipv6_static_router_1_prefix_length (uint8_t channel_number,
+                                                                                  uint8_t prefix_length,
+                                                                                  fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_set_lan_configuration_parameters_ipv6_static_router_1_prefix_value (uint8_t channel_number,
+                                                                                 uint8_t prefix_value[IPMI_IPV6_BYTES],
+                                                                                 fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_set_lan_configuration_parameters_ipv6_static_router_2_ip_address (uint8_t channel_number,
+                                                                               uint8_t router_ip_address[IPMI_IPV6_BYTES],
+                                                                               fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_set_lan_configuration_parameters_ipv6_static_router_2_mac_address (uint8_t channel_number,
+                                                                                uint64_t router_mac_address,
+                                                                                fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_set_lan_configuration_parameters_ipv6_static_router_2_prefix_length (uint8_t channel_number,
+                                                                                  uint8_t prefix_length,
+                                                                                  fiid_obj_t obj_cmd_rq);
+
+int fill_cmd_set_lan_configuration_parameters_ipv6_static_router_2_prefix_value (uint8_t channel_number,
+                                                                                 uint8_t prefix_value[IPMI_IPV6_BYTES],
+                                                                                 fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_get_lan_configuration_parameters (uint8_t channel_number,
                                                uint8_t get_parameter,

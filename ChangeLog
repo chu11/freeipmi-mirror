@@ -8,6 +8,8 @@
 	* libfreeipmi/cmds/ipmi-lan-cmds.c: Fix incorrect LS vs. MS comment.
 
 	* ipmi-config/: Minor code cleanup.
+
+	* libfreeipmi/: Support IPv6 configuration templates and commands.
 	
 2017-07-18 Albert Chu <chu11@llnl.gov>
 
