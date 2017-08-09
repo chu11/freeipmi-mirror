@@ -390,7 +390,11 @@ ipv6_static_addresses_checkout (ipmi_config_state_data_t *state_data,
   if (address_max)
     {
       ipv6_addresses_len = (BMC_MAXIPV6ADDRLEN+1)*address_max;
-      ipv6_addresses_str = malloc(ipv6_addresses_len);
+      if (!(ipv6_addresses_str = malloc(ipv6_addresses_len)))
+        {
+          pstdout_perror (state_data->pstate, "malloc");
+          goto cleanup;
+        }
       memset (ipv6_addresses_str, '\0', ipv6_addresses_len);
       for (set = 0; set < address_max; set++)
         {
@@ -628,7 +632,11 @@ ipv6_dynamic_address_checkout (ipmi_config_state_data_t *state_data,
   if (address_max)
     {
       ipv6_addresses_len = (BMC_MAXIPV6ADDRLEN+1)*address_max;
-      ipv6_addresses_str = malloc(ipv6_addresses_len);
+      if (!(ipv6_addresses_str = malloc(ipv6_addresses_len)))
+        {
+          pstdout_perror (state_data->pstate, "malloc");
+          goto cleanup;
+        }
       memset (ipv6_addresses_str, '\0', ipv6_addresses_len);
       for (set = 0; set < address_max; set++)
         {

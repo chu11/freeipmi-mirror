@@ -1,3 +1,8 @@
+2017-08-09 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-config/ipmi-config-category-core-lan6-conf-section.c: Check
+	malloc for errors.
+	
 2017-07-18 Albert Chu <chu11@llnl.gov>
 
 	* libipmimonitoring/ipmi_monitoring_sensor_reading.c
