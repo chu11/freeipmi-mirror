@@ -115,7 +115,7 @@ _get_ipv6_ipv4_support (ipmi_config_state_data_t *state_data,
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get_data: 'supports_ipv6_only': %s\n",
+                       "fiid_obj_get: 'supports_ipv6_only': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -125,7 +125,7 @@ _get_ipv6_ipv4_support (ipmi_config_state_data_t *state_data,
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get_data: 'supports_ipv6_and_ipv4_simultaneously': %s\n",
+                       "fiid_obj_get: 'supports_ipv6_and_ipv4_simultaneously': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -135,7 +135,7 @@ _get_ipv6_ipv4_support (ipmi_config_state_data_t *state_data,
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get_data: 'supports_ipv6_destination_address_for_lan_alert': %s\n",
+                       "fiid_obj_get: 'supports_ipv6_destination_address_for_lan_alert': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -420,7 +420,7 @@ ipv6_static_addresses_checkout (ipmi_config_state_data_t *state_data,
           || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
-                         "ipmi_cmd_get_lan_configuration_parameters_ipv6_static_ip_address: %s\n",
+                         "ipmi_cmd_get_lan_configuration_parameters_ipv6_status: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       goto cleanup;
@@ -430,7 +430,7 @@ ipv6_static_addresses_checkout (ipmi_config_state_data_t *state_data,
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get_data: 'supports_ipv6_only': %s\n",
+                       "fiid_obj_get: 'static_address_max': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -505,7 +505,7 @@ ipv6_static_addresses_checkout (ipmi_config_state_data_t *state_data,
             {
               pstdout_fprintf (state_data->pstate,
                                stderr,
-                               "fiid_obj_get_data: 'address': %s\n",
+                               "inet_ntop: %s\n",
                                strerror (errno));
               goto cleanup;
 
@@ -593,7 +593,7 @@ ipv6_static_addresses_commit (ipmi_config_state_data_t *state_data,
           || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
-                         "ipmi_cmd_set_lan_configuration_parameters_ip_address: %s\n",
+                         "ipmi_cmd_set_lan_configuration_parameters_ipv6_static_addresses: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       goto cleanup;
@@ -661,7 +661,7 @@ ipv6_dynamic_address_checkout (ipmi_config_state_data_t *state_data,
           || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
-                         "ipmi_cmd_get_lan_configuration_parameters_ipv6_dynamic_ip_address: %s\n",
+                         "ipmi_cmd_get_lan_configuration_parameters_ipv6_status: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       goto cleanup;
@@ -671,7 +671,7 @@ ipv6_dynamic_address_checkout (ipmi_config_state_data_t *state_data,
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get_data: 'supports_ipv6_only': %s\n",
+                       "fiid_obj_get: 'dynamic_address_max': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -724,7 +724,7 @@ ipv6_dynamic_address_checkout (ipmi_config_state_data_t *state_data,
                   || state_data->prog_data->args->common_args.debug)
                 pstdout_fprintf (state_data->pstate,
                                  stderr,
-                                 "ipmi_cmd_get_lan_configuration_parameters_ipv6_dynamic_ip_address: %s\n",
+                                 "ipmi_cmd_get_lan_configuration_parameters_ipv6_dynamic_address: %s\n",
                                  ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
               goto cleanup;
@@ -734,7 +734,7 @@ ipv6_dynamic_address_checkout (ipmi_config_state_data_t *state_data,
             {
               pstdout_fprintf (state_data->pstate,
                                stderr,
-                               "fiid_obj_get_data: 'address_status': %s\n",
+                               "fiid_obj_get: 'address_status': %s\n",
                                fiid_obj_errormsg (obj_cmd_rs));
               goto cleanup;
             }
@@ -758,7 +758,7 @@ ipv6_dynamic_address_checkout (ipmi_config_state_data_t *state_data,
                 {
                   pstdout_fprintf (state_data->pstate,
                                    stderr,
-                                   "fiid_obj_get_data: 'address': %s\n",
+                                   "inet_ntop: %s\n",
                                    strerror (errno));
                   goto cleanup;
 
