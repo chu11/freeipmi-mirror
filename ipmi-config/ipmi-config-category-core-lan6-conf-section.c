@@ -313,8 +313,56 @@ ipv6_ipv4_addressing_enables_commit (ipmi_config_state_data_t *state_data,
 				     const char *section_name,
 				     const struct ipmi_config_keyvalue *kv)
 {
-  /* XXX TODO lamont -- Not needed for Read-Only. */
-  return (IPMI_CONFIG_ERR_FATAL_ERROR);
+  fiid_obj_t obj_cmd_rs = NULL;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t ret;
+  uint8_t channel_number;
+
+  assert (state_data);
+  assert (section_name);
+  assert (kv);
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_lan_configuration_parameters_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if ((ret = get_lan_channel_number (state_data,
+                                     section_name,
+                                     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_lan_configuration_parameters_ipv6_ipv4_addressing_enables (state_data->ipmi_ctx,
+                                                                              channel_number,
+                                                                              ipv6_ipv4_addressing_enables_number (kv->value_input),
+                                                                              obj_cmd_rs) < 0)
+    {
+      if (ipmi_config_param_errnum_is_non_fatal (state_data,
+                                                 obj_cmd_rs,
+                                                 &ret))
+        rv = ret;
+
+      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+          || state_data->prog_data->args->common_args.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_set_lan_configuration_parameters_ipv6_ipv4_addressing_enables: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
+
+      goto cleanup;
+    }
+
+  rv = IPMI_CONFIG_ERR_SUCCESS;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
 }
 
 static ipmi_config_err_t
@@ -820,7 +868,7 @@ ipmi_config_core_lan6_conf_section_get (ipmi_config_state_data_t *state_data,
                                    section,
                                    "IPv6_IPv4_Addressing_Enables",
                                    "Possible values: IPv4-Only/IPv6-Only/IPv4-and-IPv6",
-                                   IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT | IPMI_CONFIG_READABLE_ONLY,  /* TODO: make this read-write. */
+                                   0,
                                    ipv6_ipv4_addressing_enables_checkout,
                                    ipv6_ipv4_addressing_enables_commit,
                                    ipv6_ipv4_addressing_enables_validate) < 0)

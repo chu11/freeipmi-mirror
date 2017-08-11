@@ -1,3 +1,8 @@
+2017-08-11 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-config/ipmi-config-category-core-lan6-conf-section.c:
+	Support configuring IPv6/ipv4 addressing.
+	
 2017-08-09 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-config/ipmi-config-category-core-lan6-conf-section.c: Check
