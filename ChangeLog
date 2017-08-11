@@ -4,6 +4,10 @@
 	Support configuring IPv6/ipv4 addressing.  Fix error message
 	outputs.
 	
+	* ipmi-config/ipmi-config-category-core-lan6-conf-section.c:
+	Re-work output of IPv6 addresses, a separate key is not generated
+	for each possible address output.
+
 2017-08-09 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-config/ipmi-config-category-core-lan6-conf-section.c: Check
