@@ -1201,6 +1201,7 @@ ipmi_config_core_lan6_conf_section_get (ipmi_config_state_data_t *state_data,
   unsigned int verbose_option_config_flags = 0;
   uint8_t number_of_static_addresses = 0;
   uint8_t number_of_dynamic_addresses = 0;
+  ipmi_config_err_t ret;
   unsigned int i;
 
   assert (state_data);
@@ -1219,17 +1220,6 @@ ipmi_config_core_lan6_conf_section_get (ipmi_config_state_data_t *state_data,
                                                             state_data->lan_channel_numbers_count)))
     goto cleanup;
 
-
-  if (_get_number_of_ipv6_addresses (state_data,
-                                     section->section_name,
-                                     &number_of_static_addresses,
-                                     &number_of_dynamic_addresses) != IPMI_CONFIG_ERR_SUCCESS)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "Unable to get number of addresses\n");
-      return (NULL);
-    }
 
   if (ipmi_config_section_add_key (state_data,
                                    section,
@@ -1270,6 +1260,27 @@ ipmi_config_core_lan6_conf_section_get (ipmi_config_state_data_t *state_data,
                                    ipv6_ipv4_addressing_enables_commit,
                                    ipv6_ipv4_addressing_enables_validate) < 0)
     goto cleanup;
+
+  /* Do not return error if this returns != IPMI_CONFIG_ERR_SUCCESS,
+   * as the motherboard may report it doesn't support IPv6 above.  If
+   * this fails, we just assume all other IPv6 configuration below
+   * isn't available.
+   */
+  if ((ret = _get_number_of_ipv6_addresses (state_data,
+                                            section->section_name,
+                                            &number_of_static_addresses,
+                                            &number_of_dynamic_addresses)) != IPMI_CONFIG_ERR_SUCCESS)
+    {
+      if (ret == IPMI_CONFIG_ERR_FATAL_ERROR
+          || state_data->prog_data->args->common_args.debug)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "Unable to get number of addresses\n");
+          return (NULL);
+        }
+      goto done;
+    }
 
   for (i = 0; i < number_of_static_addresses; i++)
     {
@@ -1385,6 +1396,7 @@ ipmi_config_core_lan6_conf_section_get (ipmi_config_state_data_t *state_data,
         goto cleanup;
     }
 
+ done:
   return (section);
 
  cleanup:
