@@ -44,6 +44,14 @@
 #endif
 #define BMC_MAXMACADDRLEN 24
 
+struct ipv6_address_data {
+  uint8_t source;
+  uint8_t enable;               /* not used w/ dynamic */
+  uint8_t address[IPMI_IPV6_BYTES];
+  uint8_t address_prefix_length;
+  uint8_t address_status;
+};
+
 static ipmi_config_err_t
 _get_number_of_ipv6_addresses (struct ipmi_config_state_data *state_data,
                                const char *section_name,
@@ -448,23 +456,24 @@ ipv6_ipv4_addressing_enables_commit (ipmi_config_state_data_t *state_data,
 }
 
 static ipmi_config_err_t
-ipv6_static_address_checkout (ipmi_config_state_data_t *state_data,
-                              const char *section_name,
-                              struct ipmi_config_keyvalue *kv)
+_get_ipv6_static_address (ipmi_config_state_data_t *state_data,
+                          const char *section_name,
+                          const char *key_name,
+                          struct ipv6_address_data *ipv6_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  char ipv6_address_str[BMC_MAXIPV6ADDRLEN + 1];
-  uint8_t ipv6_ip_address_bytes[IPMI_IPV6_BYTES];
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   ipmi_config_err_t ret;
   uint8_t channel_number;
   uint8_t set;
+  uint64_t val;
 
   assert (state_data);
   assert (section_name);
-  assert (kv);
+  assert (key_name);
+  assert (ipv6_data);
 
-  set = atoi (kv->key->key_name + strlen ("IPv6_Static_Address_"));
+  set = atoi (key_name + strlen ("IPv6_Static_Address_"));
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_lan_configuration_parameters_ipv6_static_addresses_rs)))
     {
@@ -505,9 +514,29 @@ ipv6_static_address_checkout (ipmi_config_state_data_t *state_data,
       goto cleanup;
     }
 
+  if (FIID_OBJ_GET (obj_cmd_rs, "source", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'source': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  data->source = val;
+
+  if (FIID_OBJ_GET (obj_cmd_rs, "enable", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'enable': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  data->enable = val;
+
   if (fiid_obj_get_data (obj_cmd_rs,
                          "address",
-                         ipv6_ip_address_bytes,
+                         ipv6_data->address,
                          IPMI_IPV6_BYTES) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -517,8 +546,60 @@ ipv6_static_address_checkout (ipmi_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  memset (ipv6_address_str, '\0', BMC_MAXIPV6ADDRLEN+1);
-  if (!inet_ntop (AF_INET6, ipv6_ip_address_bytes, ipv6_address_str, BMC_MAXIPV6ADDRLEN))
+  if (FIID_OBJ_GET (obj_cmd_rs, "address_prefix_length", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'address_prefix_length': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  data->address_prefix_length = val;
+
+  if (FIID_OBJ_GET (obj_cmd_rs, "address_status", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'address_status': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  data->address_status = val;
+
+  rv = IPMI_CONFIG_ERR_SUCCESS;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+static ipmi_config_err_t
+ipv6_static_address_checkout (ipmi_config_state_data_t *state_data,
+                              const char *section_name,
+                              struct ipmi_config_keyvalue *kv)
+{
+  struct ipv6_address_data ipv6_data;
+  char address_str[BMC_MAXIPV6ADDRLEN + 1];
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t ret;
+
+  assert (state_data);
+  assert (section_name);
+  assert (kv);
+
+  if ((ret = _get_ipv6_static_address (state_data,
+                                       section_name,
+                                       kv->key->key_name,
+                                       &ipv6_data)) != IPMI_CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  memset (address_str, '\0', BMC_MAXIPV6ADDRLEN+1);
+  if (!inet_ntop (AF_INET6,
+                  ipv6_data.address,
+                  address_str,
+                  BMC_MAXIPV6ADDRLEN))
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -526,16 +607,15 @@ ipv6_static_address_checkout (ipmi_config_state_data_t *state_data,
                        strerror (errno));
       goto cleanup;
     }
-  /* handle special case? !same (ipv6_address_str, "::") */
+  /* handle special case? !same (address_str, "::") */
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
-                                                  ipv6_address_str) < 0)
+                                                  address_str) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
-  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
@@ -614,13 +694,12 @@ ipv6_static_address_commit (ipmi_config_state_data_t *state_data,
 }
 
 static ipmi_config_err_t
-ipv6_dynamic_address_checkout (ipmi_config_state_data_t *state_data,
-                               const char *section_name,
-                               struct ipmi_config_keyvalue *kv)
+_get_ipv6_dynamic_address (ipmi_config_state_data_t *state_data,
+                           const char *section_name,
+                           const char *key_name,
+                           struct ipv6_address_data *ipv6_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  char ipv6_address_str[BMC_MAXIPV6ADDRLEN + 1];
-  uint8_t ipv6_ip_address_bytes[IPMI_IPV6_BYTES];
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   ipmi_config_err_t ret;
   uint8_t channel_number;
@@ -628,9 +707,10 @@ ipv6_dynamic_address_checkout (ipmi_config_state_data_t *state_data,
 
   assert (state_data);
   assert (section_name);
-  assert (kv);
+  assert (key_name);
+  assert (ipv6_data);
 
-  set = atoi (kv->key->key_name + strlen ("IPv6_Dynamic_Address_"));
+  set = atoi (key_name + strlen ("IPv6_Dynamic_Address_"));
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_lan_configuration_parameters_ipv6_dynamic_address_rs)))
     {
@@ -671,9 +751,19 @@ ipv6_dynamic_address_checkout (ipmi_config_state_data_t *state_data,
       goto cleanup;
     }
 
+  if (FIID_OBJ_GET (obj_cmd_rs, "source", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'source': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  data->source = val;
+
   if (fiid_obj_get_data (obj_cmd_rs,
                          "address",
-                         ipv6_ip_address_bytes,
+                         ipv6_data->address,
                          IPMI_IPV6_BYTES) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -683,8 +773,60 @@ ipv6_dynamic_address_checkout (ipmi_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  memset (ipv6_address_str, '\0', BMC_MAXIPV6ADDRLEN+1);
-  if (!inet_ntop (AF_INET6, ipv6_ip_address_bytes, ipv6_address_str, BMC_MAXIPV6ADDRLEN))
+  if (FIID_OBJ_GET (obj_cmd_rs, "address_prefix_length", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'address_prefix_length': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  data->address_prefix_length = val;
+
+  if (FIID_OBJ_GET (obj_cmd_rs, "address_status", &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'address_status': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  data->address_status = val;
+
+  rv = IPMI_CONFIG_ERR_SUCCESS;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+static ipmi_config_err_t
+ipv6_dynamic_address_checkout (ipmi_config_state_data_t *state_data,
+                               const char *section_name,
+                               struct ipmi_config_keyvalue *kv)
+{
+  struct ipv6_address_data ipv6_data;
+  char address_str[BMC_MAXIPV6ADDRLEN + 1];
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t ret;
+
+  assert (state_data);
+  assert (section_name);
+  assert (kv);
+
+  if ((ret = _get_ipv6_dynamic_address (state_data,
+                                        section_name,
+                                        kv->key->key_name,
+                                        &ipv6_data)) != IPMI_CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  memset (address_str, '\0', BMC_MAXIPV6ADDRLEN+1);
+  if (!inet_ntop (AF_INET6,
+                  ipv6_data.address,
+                  address_str,
+                  BMC_MAXIPV6ADDRLEN))
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -692,17 +834,15 @@ ipv6_dynamic_address_checkout (ipmi_config_state_data_t *state_data,
                        strerror (errno));
       goto cleanup;
     }
-
-  /* handle special case? !same (ipv6_address_str, "::") */
+  /* handle special case? !same (address_str, "::") */
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
-                                                  ipv6_address_str) < 0)
+                                                  address_str) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
-  fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
 
