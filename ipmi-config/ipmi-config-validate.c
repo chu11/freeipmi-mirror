@@ -243,7 +243,7 @@ ipv6_address_validate (ipmi_config_state_data_t *state_data,
   assert (key_name);
   assert (value);
 
-  if (inet_pton (AF_INET6, value, &a))
+  if (inet_pton (AF_INET6, value, &a) == 1)
     return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
   return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
 }

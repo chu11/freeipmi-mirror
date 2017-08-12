@@ -26,6 +26,7 @@
 #include <string.h>
 #endif /* STDC_HEADERS */
 #include <assert.h>
+#include <netinet/in.h>
 #include <arpa/inet.h>
 
 #include "ipmi-config.h"
@@ -639,6 +640,69 @@ _get_ipv6_static_address (ipmi_config_state_data_t *state_data,
   return (rv);
 }
 
+static ipmi_config_err_t
+_set_ipv6_static_address (ipmi_config_state_data_t *state_data,
+                          const char *section_name,
+                          uint8_t set_selector,
+                          struct ipv6_address_data *ipv6_data)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t ret;
+  uint8_t channel_number;
+
+  assert (state_data);
+  assert (section_name);
+  assert (ipv6_data);
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_lan_configuration_parameters_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if ((ret = get_lan_channel_number (state_data,
+                                     section_name,
+                                     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (ipmi_cmd_set_lan_configuration_parameters_ipv6_static_addresses (state_data->ipmi_ctx,
+                                                                       channel_number,
+                                                                       set_selector,
+                                                                       ipv6_data->source,
+                                                                       ipv6_data->enable,
+                                                                       ipv6_data->address,
+                                                                       ipv6_data->address_prefix_length,
+                                                                       ipv6_data->address_status,
+                                                                       obj_cmd_rs) < 0)
+    {
+      if (ipmi_config_param_errnum_is_non_fatal (state_data,
+                                                 obj_cmd_rs,
+                                                 &ret))
+        rv = ret;
+
+      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+          || state_data->prog_data->args->common_args.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_set_lan_configuration_parameters_ipv6_static_ip_address: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
+
+      goto cleanup;
+    }
+
+  rv = IPMI_CONFIG_ERR_SUCCESS;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
 uint8_t
 get_static_address_source_number (const char *string)
 {
@@ -697,9 +761,25 @@ ipv6_static_address_source_commit (ipmi_config_state_data_t *state_data,
                                    const char *section_name,
                                    const struct ipmi_config_keyvalue *kv)
 {
-  /* TODO */
-  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
-  return (rv);
+  struct ipv6_address_data ipv6_data;
+  ipmi_config_err_t ret;
+
+  assert (state_data);
+  assert (section_name);
+  assert (kv);
+
+  if ((ret = _get_ipv6_static_address (state_data,
+                                       section_name,
+                                       atoi (kv->key->key_name + strlen ("IPv6_Static_Address_Source_")),
+                                       &ipv6_data)) != IPMI_CONFIG_ERR_SUCCESS)
+    return (ret);
+
+  ipv6_data.source = get_static_address_source_number (kv->value_input);
+
+  return (_set_ipv6_static_address (state_data,
+                                    section_name,
+                                    atoi (kv->key->key_name + strlen ("IPv6_Static_Address_Source_")),
+                                    &ipv6_data));
 }
 
 static ipmi_config_validate_t
@@ -755,9 +835,25 @@ ipv6_static_address_enable_commit (ipmi_config_state_data_t *state_data,
                                    const char *section_name,
                                    const struct ipmi_config_keyvalue *kv)
 {
-  /* TODO */
-  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
-  return (rv);
+  struct ipv6_address_data ipv6_data;
+  ipmi_config_err_t ret;
+
+  assert (state_data);
+  assert (section_name);
+  assert (kv);
+
+  if ((ret = _get_ipv6_static_address (state_data,
+                                       section_name,
+                                       atoi (kv->key->key_name + strlen ("IPv6_Static_Address_Enable_")),
+                                       &ipv6_data)) != IPMI_CONFIG_ERR_SUCCESS)
+    return (ret);
+
+  ipv6_data.enable = same (kv->value_input, "yes");
+
+  return (_set_ipv6_static_address (state_data,
+                                    section_name,
+                                    atoi (kv->key->key_name + strlen ("IPv6_Static_Address_Enable_")),
+                                    &ipv6_data));
 }
 
 static ipmi_config_err_t
@@ -812,9 +908,36 @@ ipv6_static_address_commit (ipmi_config_state_data_t *state_data,
                             const char *section_name,
                             const struct ipmi_config_keyvalue *kv)
 {
-  /* TODO */
-  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
-  return (rv);
+  struct ipv6_address_data ipv6_data;
+  ipmi_config_err_t ret;
+  struct in6_addr addr;
+
+  assert (state_data);
+  assert (section_name);
+  assert (kv);
+
+  if ((ret = _get_ipv6_static_address (state_data,
+                                       section_name,
+                                       atoi (kv->key->key_name + strlen ("IPv6_Static_Address_")),
+                                       &ipv6_data)) != IPMI_CONFIG_ERR_SUCCESS)
+    return (ret);
+
+  if (inet_pton (AF_INET6, kv->value_input, &addr) != 1)
+    {
+      if (state_data->prog_data->args->common_args.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "inet_pton: %s\n",
+                         strerror (errno));
+      return (IPMI_CONFIG_ERR_FATAL_ERROR);
+    }
+
+  memcpy (ipv6_data.address, &addr, IPMI_IPV6_BYTES);
+
+  return (_set_ipv6_static_address (state_data,
+                                    section_name,
+                                    atoi (kv->key->key_name + strlen ("IPv6_Static_Address_")),
+                                    &ipv6_data));
 }
 
 static ipmi_config_err_t
@@ -854,9 +977,25 @@ ipv6_static_address_prefix_length_commit (ipmi_config_state_data_t *state_data,
                                           const char *section_name,
                                           const struct ipmi_config_keyvalue *kv)
 {
-  /* TODO */
-  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
-  return (rv);
+  struct ipv6_address_data ipv6_data;
+  ipmi_config_err_t ret;
+
+  assert (state_data);
+  assert (section_name);
+  assert (kv);
+
+  if ((ret = _get_ipv6_static_address (state_data,
+                                       section_name,
+                                       atoi (kv->key->key_name + strlen ("IPv6_Static_Address_Prefix_Length_")),
+                                       &ipv6_data)) != IPMI_CONFIG_ERR_SUCCESS)
+    return (ret);
+
+  ipv6_data.address_prefix_length = strtol (kv->value_input, NULL, 0);
+
+  return (_set_ipv6_static_address (state_data,
+                                    section_name,
+                                    atoi (kv->key->key_name + strlen ("IPv6_Static_Address_Prefix_Length_")),
+                                    &ipv6_data));
 }
 
 static ipmi_config_err_t
@@ -1284,7 +1423,7 @@ ipmi_config_core_lan6_conf_section_get (ipmi_config_state_data_t *state_data,
                                        "Possible values: Static",
                                        IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT | IPMI_CONFIG_READABLE_ONLY,
                                        ipv6_static_address_source_checkout,
-                                       ipv6_static_address_source_commit, /* TODO: make this read-write */
+                                       ipv6_static_address_source_commit,
                                        ipv6_static_address_source_validate) < 0)
         goto cleanup;
 
@@ -1296,7 +1435,7 @@ ipmi_config_core_lan6_conf_section_get (ipmi_config_state_data_t *state_data,
                                        "Possible values: Yes/No",
                                        IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT | IPMI_CONFIG_READABLE_ONLY,
                                        ipv6_static_address_enable_checkout,
-                                       ipv6_static_address_enable_commit, /* TODO: make this read-write */
+                                       ipv6_static_address_enable_commit,
                                        yes_no_validate) < 0)
         goto cleanup;
 
@@ -1306,7 +1445,7 @@ ipmi_config_core_lan6_conf_section_get (ipmi_config_state_data_t *state_data,
                                        section,
                                        key_name,
                                        "Give valid IPv6 address",
-                                       IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT | IPMI_CONFIG_READABLE_ONLY,  /* TODO: make this read-write. */
+                                       IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT | IPMI_CONFIG_READABLE_ONLY,
                                        ipv6_static_address_checkout,
                                        ipv6_static_address_commit,
                                        ipv6_address_validate) < 0)
@@ -1320,7 +1459,7 @@ ipmi_config_core_lan6_conf_section_get (ipmi_config_state_data_t *state_data,
                                        "Give valid prefix length",
                                        IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT | IPMI_CONFIG_READABLE_ONLY,
                                        ipv6_static_address_prefix_length_checkout,
-                                       ipv6_static_address_prefix_length_commit, /* TODO: make this read-write */
+                                       ipv6_static_address_prefix_length_commit,
                                        ipv6_address_prefix_length_validate) < 0)
         goto cleanup;
 
