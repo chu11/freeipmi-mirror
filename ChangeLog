@@ -1,7 +1,8 @@
 2017-08-12 Albert Chu <chu11@llnl.gov>
 
-	* ipmi-config/ipmi-config-category-core-lan6-conf-section.c: Support
-	checkout of all dynamic address info (source, status, prefix_length)
+	* ipmi-config/ipmi-config-category-core-lan6-conf-section.c:
+	Support checkout of all static & dynamic address info (source,
+	enable, status, prefix_length)
 	
 2017-08-11 Albert Chu <chu11@llnl.gov>
 
