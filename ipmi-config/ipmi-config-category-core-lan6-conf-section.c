@@ -625,7 +625,6 @@ ipv6_dynamic_address_checkout (ipmi_config_state_data_t *state_data,
   ipmi_config_err_t ret;
   uint8_t channel_number;
   uint8_t set;
-  uint64_t val;
 
   assert (state_data);
   assert (section_name);
@@ -672,55 +671,34 @@ ipv6_dynamic_address_checkout (ipmi_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (FIID_OBJ_GET (obj_cmd_rs, "address_status", &val) < 0)
+  if (fiid_obj_get_data (obj_cmd_rs,
+                         "address",
+                         ipv6_ip_address_bytes,
+                         IPMI_IPV6_BYTES) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'address_status': %s\n",
+                       "fiid_obj_get_data: 'address': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
 
-  /* only on active? */
-  if (val == IPMI_IPV6_ADDRESS_STATUS_ACTIVE)
+  memset (ipv6_address_str, '\0', BMC_MAXIPV6ADDRLEN+1);
+  if (!inet_ntop (AF_INET6, ipv6_ip_address_bytes, ipv6_address_str, BMC_MAXIPV6ADDRLEN))
     {
-      if (fiid_obj_get_data (obj_cmd_rs,
-                             "address",
-                             ipv6_ip_address_bytes,
-                             IPMI_IPV6_BYTES) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "fiid_obj_get_data: 'address': %s\n",
-                           fiid_obj_errormsg (obj_cmd_rs));
-          goto cleanup;
-        }
-
-      memset (ipv6_address_str, '\0', BMC_MAXIPV6ADDRLEN+1);
-      if (!inet_ntop (AF_INET6, ipv6_ip_address_bytes, ipv6_address_str, BMC_MAXIPV6ADDRLEN))
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "inet_ntop: %s\n",
-                           strerror (errno));
-          goto cleanup;
-
-        }
-
-      /* handle special case? !same (ipv6_address_str, "::") */
-
-      if (ipmi_config_section_update_keyvalue_output (state_data,
-                                                      kv,
-                                                      ipv6_address_str) < 0)
-        return (IPMI_CONFIG_ERR_FATAL_ERROR);
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "inet_ntop: %s\n",
+                       strerror (errno));
+      goto cleanup;
     }
-  else
-    {
-      if (ipmi_config_section_update_keyvalue_output (state_data,
-                                                      kv,
-                                                      "") < 0)
-        return (IPMI_CONFIG_ERR_FATAL_ERROR);
-    }
+
+  /* handle special case? !same (ipv6_address_str, "::") */
+
+  if (ipmi_config_section_update_keyvalue_output (state_data,
+                                                  kv,
+                                                  ipv6_address_str) < 0)
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
