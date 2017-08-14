@@ -1,4 +1,4 @@
-FreeIPMI 1.6.1 - 03/01/14
+FreeIPMI 1.6.1 - XX/XX/XX
 -------------------------
 o Add IPv6 hostname support to FreeIPMI, all of FreeIPMI can now take
   IPv6 addresses as inputs to "host" parameters, options, or inputs.
