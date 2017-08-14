@@ -1695,6 +1695,176 @@ ipv6_static_router_mac_address_commit (ipmi_config_state_data_t *state_data,
   return (rv);
 }
 
+static ipmi_config_err_t
+ipv6_static_router_prefix_length_checkout (ipmi_config_state_data_t *state_data,
+                                           const char *section_name,
+                                           struct ipmi_config_keyvalue *kv)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t ret;
+  uint8_t channel_number;
+  uint64_t val;
+  uint8_t prefix_length;
+  int num;
+  int tmp;
+
+  assert (state_data);
+  assert (section_name);
+  assert (kv);
+
+  /* router 1 or 2 */
+  num = atoi (kv->key->key_name + strlen ("IPv6_Static_Router_Prefix_Length_"));
+
+  if (num == 1)
+    obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_lan_configuration_parameters_ipv6_static_router_1_prefix_length_rs);
+  else
+    obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_lan_configuration_parameters_ipv6_static_router_2_prefix_length_rs);
+
+  if (!obj_cmd_rs)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if ((ret = get_lan_channel_number (state_data,
+                                     section_name,
+                                     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (num == 1)
+    tmp = ipmi_cmd_get_lan_configuration_parameters_ipv6_static_router_1_prefix_length (state_data->ipmi_ctx,
+                                                                                        channel_number,
+                                                                                        IPMI_GET_LAN_PARAMETER,
+                                                                                        IPMI_LAN_CONFIGURATION_PARAMETERS_NO_SET_SELECTOR,
+                                                                                        IPMI_LAN_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
+                                                                                        obj_cmd_rs);
+  else
+    tmp = ipmi_cmd_get_lan_configuration_parameters_ipv6_static_router_2_prefix_length (state_data->ipmi_ctx,
+                                                                                        channel_number,
+                                                                                        IPMI_GET_LAN_PARAMETER,
+                                                                                        IPMI_LAN_CONFIGURATION_PARAMETERS_NO_SET_SELECTOR,
+                                                                                        IPMI_LAN_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
+                                                                                        obj_cmd_rs);
+
+  if (tmp < 0)
+    {
+      if (ipmi_config_param_errnum_is_non_fatal (state_data,
+                                                 obj_cmd_rs,
+                                                 &ret))
+        rv = ret;
+
+      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+          || state_data->prog_data->args->common_args.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_get_lan_configuration_parameters_ipv6_static_router_X_prefix_length: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
+
+      goto cleanup;
+    }
+
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "prefix_length",
+                    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'prefix_length': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      goto cleanup;
+    }
+  prefix_length = val;
+
+  if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
+                                                               kv,
+                                                               prefix_length) < 0)
+
+  rv = IPMI_CONFIG_ERR_SUCCESS;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
+static ipmi_config_err_t
+ipv6_static_router_prefix_length_commit (ipmi_config_state_data_t *state_data,
+                                         const char *section_name,
+                                         const struct ipmi_config_keyvalue *kv)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
+  ipmi_config_err_t ret;
+  uint8_t channel_number;
+  uint8_t prefix_length;
+  int num;
+  int tmp;
+
+  assert (state_data);
+  assert (section_name);
+  assert (kv);
+
+  /* router 1 or 2 */
+  num = atoi (kv->key->key_name + strlen ("IPv6_Static_Router_Prefix_Length_"));
+
+  prefix_length = atoi (kv->value_input);
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_lan_configuration_parameters_rs)))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_create: %s\n",
+                       strerror (errno));
+      goto cleanup;
+    }
+
+  if ((ret = get_lan_channel_number (state_data,
+                                     section_name,
+                                     &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
+    {
+      rv = ret;
+      goto cleanup;
+    }
+
+  if (num == 1)
+    tmp = ipmi_cmd_set_lan_configuration_parameters_ipv6_static_router_1_prefix_length (state_data->ipmi_ctx,
+                                                                                        channel_number,
+                                                                                        prefix_length,
+                                                                                        obj_cmd_rs);
+  else
+    tmp = ipmi_cmd_set_lan_configuration_parameters_ipv6_static_router_2_prefix_length (state_data->ipmi_ctx,
+                                                                                        channel_number,
+                                                                                        prefix_length,
+                                                                                        obj_cmd_rs);
+
+  if (tmp)
+    {
+      if (ipmi_config_param_errnum_is_non_fatal (state_data,
+                                                 obj_cmd_rs,
+                                                 &ret))
+        rv = ret;
+
+      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
+          || state_data->prog_data->args->common_args.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "ipmi_cmd_set_lan_configuration_parameters_ipv6_static_router_X_prefix_length: %s\n",
+                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
+
+      goto cleanup;
+    }
+
+  rv = IPMI_CONFIG_ERR_SUCCESS;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rs);
+  return (rv);
+}
+
 struct ipmi_config_section *
 ipmi_config_core_lan6_conf_section_get (ipmi_config_state_data_t *state_data,
                                         unsigned int config_flags,
@@ -1943,6 +2113,26 @@ ipmi_config_core_lan6_conf_section_get (ipmi_config_state_data_t *state_data,
                                    ipv6_static_router_mac_address_checkout,
                                    ipv6_static_router_mac_address_commit,
                                    mac_address_validate) < 0)
+    goto cleanup;
+
+  if (ipmi_config_section_add_key (state_data,
+                                   section,
+                                   "IPv6_Static_Router_Prefix_Length_1",
+                                   "Give valid IPv6 prefix length",
+                                   IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT | IPMI_CONFIG_READABLE_ONLY,
+                                   ipv6_static_router_prefix_length_checkout,
+                                   ipv6_static_router_prefix_length_commit,
+                                   ipv6_address_prefix_length_validate) < 0)
+    goto cleanup;
+
+  if (ipmi_config_section_add_key (state_data,
+                                   section,
+                                   "IPv6_Static_Router_Prefix_Length_2",
+                                   "Give valid IPv6 prefix length",
+                                   IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT | IPMI_CONFIG_READABLE_ONLY,
+                                   ipv6_static_router_prefix_length_checkout,
+                                   ipv6_static_router_prefix_length_commit,
+                                   ipv6_address_prefix_length_validate) < 0)
     goto cleanup;
 
  done:
