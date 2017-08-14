@@ -1,3 +1,8 @@
+2017-08-13 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-config/ipmi-config-category-core-lan6-conf-section.c: Add
+	configuration support for static router ips.
+	
 2017-08-12 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-config/ipmi-config-category-core-lan6-conf-section.c:
