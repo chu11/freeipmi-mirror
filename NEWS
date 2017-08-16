@@ -24,6 +24,64 @@ o Various minor fixes/improvements
   - Update libfreeipmi core API to use poll() instead of select(), to
     avoid issues with applications with a high number of threads.
 
+FreeIPMI 1.5.6 - 07/05/17
+-------------------------
+o In libfreeipmi locate (used by ipmi-locate), use DMI firmware in
+  sysfs if it exists.
+o Minor mem-leak corner case fix in libfreeipmi.
+o Minor documentation fixes.
+o Minor error message clarifications.
+
+FreeIPMI 1.5.5 - 11/02/16
+-------------------------
+o Fix invalid flag clear in libipmiconsole that can lead to a potential
+  double close on a file descriptor.
+o Support Supermicro H8SGL-F OEM sensors and events.
+
+FreeIPMI 1.5.4 - 09/30/16
+-------------------------
+o Various changes/fixes in libipmiconsole
+  - If user retrieves file descriptor from ipmiconsole_ctx_fd, user is
+    required to close it.  ipmiconsole_ctx_destroy no longer closes
+    it.  This is to avoid a potential double close which can be a
+    problem for multithreaded applications.  This is a change in
+    behavior, but we do not believe this will affect most applications
+    since most users close the file descriptor under most scenarios
+    anyways.
+  - ipmiconsole_ctx_destroy() should now be called to free resources
+    even if ipmiconsole_engine_teardown() has been called.  This has
+    been done to create consistent behavior in the API and avoid a
+    former segfault possibility.  This is a change in behavior, but we
+    do not believe this will affect most applications since
+    ipmiconsole_engine_teardown() is only called when an application
+    is being shutdown.
+  - The use of IPMICONSOLE_ENGINE_CLOSE_FD has been clarified in the
+    header file.  Some of the prior text was unclear.  Behavior has
+    not been changed.
+o In ipmi-oem, support Intel get-bmc-services and set-bmc-services commands.
+o In ipmi-oem, support Gigabyte get-nic-mode and set-nic-mode commands.
+o Support Gigabyte MD90-FS0-ZB OEM SEL events.
+
+FreeIPMI 1.5.3 - 08/01/16
+-------------------------
+o Update Fujitsu OEM extension product id support range.
+o In ipmiconsole, support --debugfile option for more difficult
+  debugging scenarios.
+o In all sensor related tools, increase max number of record ids and
+  sensor types that can be handled.
+o Fix several invalid completion code errors/values.
+
+FreeIPMI 1.5.2 - 05/24/16
+-------------------------
+o Update configuration file parsing code to handle values up to 1024
+  characters in length.
+o Set FD_CLOEXEC for ipmi driver device files opened within
+  libfreeipmi.
+o Support --read-fru, --write-fru, and --device-id option in
+  bmc-device.
+o Support --fru-file option in ipmi-fru.
+o Various library updates in libfreeipmi to handle new features.
+
 FreeIPMI 1.5.1 - 03/01/14
 -------------------------
 o Update Intel Node Manager support for 3.0 specification.
