@@ -368,6 +368,169 @@ FIID Template: tmpl_cmd_set_lan_configuration_parameters_bad_password_threshold_
     { 16, "attempt_count_reset_interval", REQUIRED, LENGTH-FIXED }
     { 16, "user_lockout_interval", REQUIRED, LENGTH-FIXED }
 
+Set LAN Configuration Parameters (IPv6/IPv4 Addressing Enables) Request
+-----------------------------------------------------------------------
+
+FIID Template: tmpl_cmd_set_lan_configuration_parameters_ipv6_ipv4_addressing_enables_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED}
+    { 4, "channel_number", REQUIRED, LENGTH-FIXED}
+    { 4, "reserved", REQUIRED, LENGTH-FIXED}
+    { 8, "parameter_selector", REQUIRED, LENGTH-FIXED}
+    { 8, "enables", REQUIRED, LENGTH-FIXED}
+
+Set LAN Configuration Parameters (IPv6 Header Static Traffic Class) Request
+---------------------------------------------------------------------------
+
+FIID Template: tmpl_cmd_set_lan_configuration_parameters_ipv6_header_static_traffic_class_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED}
+    { 4, "channel_number", REQUIRED, LENGTH-FIXED}
+    { 4, "reserved", REQUIRED, LENGTH-FIXED}
+    { 8, "parameter_selector", REQUIRED, LENGTH-FIXED}
+    { 8, "traffic_class", REQUIRED, LENGTH-FIXED}
+
+Set LAN Configuration Parameters (IPv6 Header Static Hop Limit) Request
+-----------------------------------------------------------------------
+
+FIID Template: tmpl_cmd_set_lan_configuration_parameters_ipv6_header_static_hop_limit_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED}
+    { 4, "channel_number", REQUIRED, LENGTH-FIXED}
+    { 4, "reserved", REQUIRED, LENGTH-FIXED}
+    { 8, "parameter_selector", REQUIRED, LENGTH-FIXED}
+    { 8, "static_hop_limit", REQUIRED, LENGTH-FIXED}
+
+Set LAN Configuration Parameters (IPv6 Header Flow Label) Request
+-----------------------------------------------------------------
+
+FIID Template: tmpl_cmd_set_lan_configuration_parameters_ipv6_header_flow_label_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED}
+    { 4, "channel_number", REQUIRED, LENGTH-FIXED}
+    { 4, "reserved1", REQUIRED, LENGTH-FIXED}
+    { 8, "parameter_selector", REQUIRED, LENGTH-FIXED}
+    { 20, "flow_label", REQUIRED, LENGTH-FIXED} /* MS byte first */
+    { 4, "reserved2", REQUIRED, LENGTH-FIXED}
+
+Set LAN Configuration Parameters (IPv6 Static Addresses) Request
+----------------------------------------------------------------
+
+FIID Template: tmpl_cmd_set_lan_configuration_parameters_ipv6_static_addresses_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED}
+    { 4, "channel_number", REQUIRED, LENGTH-FIXED}
+    { 4, "reserved1", REQUIRED, LENGTH-FIXED}
+    { 8, "parameter_selector", REQUIRED, LENGTH-FIXED}
+    { 8, "set_selector", REQUIRED, LENGTH-FIXED}
+    { 4, "source", REQUIRED, LENGTH-FIXED}
+    { 3, "reserved2", REQUIRED, LENGTH-FIXED}
+    { 1, "enable", REQUIRED, LENGTH-FIXED}
+    { 128, "address", REQUIRED, LENGTH-FIXED}
+    { 8, "address_prefix_length", REQUIRED, LENGTH-FIXED}
+    { 8, "address_status", REQUIRED, LENGTH-FIXED}
+
+Set LAN Configuration Parameters (IPv6 Router Address Configuration Control) Request
+------------------------------------------------------------------------------------
+
+FIID Template: tmpl_cmd_set_lan_configuration_parameters_ipv6_router_address_configuration_control_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED}
+    { 4, "channel_number", REQUIRED, LENGTH-FIXED}
+    { 4, "reserved1", REQUIRED, LENGTH-FIXED}
+    { 8, "parameter_selector", REQUIRED, LENGTH-FIXED}
+    { 1, "enable_static_router_address", REQUIRED, LENGTH-FIXED}
+    { 1, "enable_dynamic_router_address", REQUIRED, LENGTH-FIXED}
+    { 6, "reserved2", REQUIRED, LENGTH-FIXED}
+
+Set LAN Configuration Parameters (IPv6 Static Router 2 IP Address) Request
+--------------------------------------------------------------------------
+
+FIID Template: tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_1_ip_address_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED}
+    { 4, "channel_number", REQUIRED, LENGTH-FIXED}
+    { 4, "reserved", REQUIRED, LENGTH-FIXED}
+    { 8, "parameter_selector", REQUIRED, LENGTH-FIXED}
+    { 128, "ipv6_router_ip_address", REQUIRED, LENGTH-FIXED}
+
+Set LAN Configuration Parameters (IPv6 Static Router 1 MAC Address) Request
+---------------------------------------------------------------------------
+
+FIID Template: tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_1_mac_address_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED}
+    { 4, "channel_number", REQUIRED, LENGTH-FIXED}
+    { 4, "reserved", REQUIRED, LENGTH-FIXED}
+    { 8, "parameter_selector", REQUIRED, LENGTH-FIXED}
+    { 48, "router_mac_address", REQUIRED, LENGTH-FIXED}
+
+Set LAN Configuration Parameters (IPv6 Static Router 1 Prefix Length) Request
+-----------------------------------------------------------------------------
+
+FIID Template: tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_1_prefix_length_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED}
+    { 4, "channel_number", REQUIRED, LENGTH-FIXED}
+    { 4, "reserved", REQUIRED, LENGTH-FIXED}
+    { 8, "parameter_selector", REQUIRED, LENGTH-FIXED}
+    { 8, "prefix_length", REQUIRED, LENGTH-FIXED}
+
+Set LAN Configuration Parameters (IPv6 Static Router 1 Prefix Value) Request
+----------------------------------------------------------------------------
+
+FIID Template: tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_1_prefix_value_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED}
+    { 4, "channel_number", REQUIRED, LENGTH-FIXED}
+    { 4, "reserved", REQUIRED, LENGTH-FIXED}
+    { 8, "parameter_selector", REQUIRED, LENGTH-FIXED}
+    { 128, "prefix_value", REQUIRED, LENGTH-FIXED} /* MS byte first */
+
+Set LAN Configuration Parameters (IPv6 Static Router 2 IP Address) Request
+--------------------------------------------------------------------------
+
+FIID Template: tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_2_ip_address_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED}
+    { 4, "channel_number", REQUIRED, LENGTH-FIXED}
+    { 4, "reserved", REQUIRED, LENGTH-FIXED}
+    { 8, "parameter_selector", REQUIRED, LENGTH-FIXED}
+    { 128, "ipv6_router_ip_address", REQUIRED, LENGTH-FIXED}
+
+Set LAN Configuration Parameters (IPv6 Static Router 2 MAC Address) Request
+---------------------------------------------------------------------------
+
+FIID Template: tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_2_mac_address_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED}
+    { 4, "channel_number", REQUIRED, LENGTH-FIXED}
+    { 4, "reserved", REQUIRED, LENGTH-FIXED}
+    { 8, "parameter_selector", REQUIRED, LENGTH-FIXED}
+    { 48, "router_mac_address", REQUIRED, LENGTH-FIXED}
+
+Set LAN Configuration Parameters (IPv6 Static Router 2 Prefix Length) Request
+-----------------------------------------------------------------------------
+
+FIID Template: tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_2_prefix_length_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED}
+    { 4, "channel_number", REQUIRED, LENGTH-FIXED}
+    { 4, "reserved", REQUIRED, LENGTH-FIXED}
+    { 8, "parameter_selector", REQUIRED, LENGTH-FIXED}
+    { 8, "prefix_length", REQUIRED, LENGTH-FIXED}
+
+Set LAN Configuration Parameters (IPv6 Static Router 2 Prefix Value) Request
+----------------------------------------------------------------------------
+
+FIID Template: tmpl_cmd_set_lan_configuration_parameters_ipv6_static_router_2_prefix_value_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED}
+    { 4, "channel_number", REQUIRED, LENGTH-FIXED}
+    { 4, "reserved", REQUIRED, LENGTH-FIXED}
+    { 8, "parameter_selector", REQUIRED, LENGTH-FIXED}
+    { 128, "prefix_value", REQUIRED, LENGTH-FIXED} /* MS byte first */
+
 Get LAN Configuration Parameters Request
 ----------------------------------------
 
@@ -760,374 +923,374 @@ Get LAN Configuration Parameters (IPv6 IPv4 Support) Response
 
 FIID Template: tmpl_cmd_get_lan_configuration_parameters_ipv6_ipv4_support_rs
 
-    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", REQUIRED | LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED},
-    { 1, "supports_ipv6_only", REQUIRED | LENGTH_FIXED},
-    { 1, "supports_ipv6_and_ipv4_simultaneously", REQUIRED | LENGTH_FIXED},
-    { 1, "supports_ipv6_destination_address_for_lan_alert", REQUIRED | LENGTH_FIXED},
-    { 5, "reserved2", REQUIRED | LENGTH_FIXED},
+    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 4, "present_revision", REQUIRED | LENGTH_FIXED}
+    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED}
+    { 1, "supports_ipv6_only", REQUIRED | LENGTH_FIXED}
+    { 1, "supports_ipv6_and_ipv4_simultaneously", REQUIRED | LENGTH_FIXED}
+    { 1, "supports_ipv6_destination_address_for_lan_alert", REQUIRED | LENGTH_FIXED}
+    { 5, "reserved2", REQUIRED | LENGTH_FIXED}
 
 Get LAN Configuration Parameters (IPv6 IPv4 Addressing Enables) Response
 ------------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_lan_configuration_parameters_ipv6_ipv4_addressing_enables_rs
 
-    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", REQUIRED | LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED},
-    { 8, "enables", REQUIRED | LENGTH_FIXED},
+    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 4, "present_revision", REQUIRED | LENGTH_FIXED}
+    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED}
+    { 8, "enables", REQUIRED | LENGTH_FIXED}
 
 Get LAN Configuration Parameters (IPv6 Header Static Traffic Class) Response
 ----------------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_lan_configuration_parameters_ipv6_header_static_traffic_class_rs
 
-    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", REQUIRED | LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED},
-    { 8, "traffic_class", REQUIRED | LENGTH_FIXED},
+    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 4, "present_revision", REQUIRED | LENGTH_FIXED}
+    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED}
+    { 8, "traffic_class", REQUIRED | LENGTH_FIXED}
 
 Get LAN Configuration Parameters (IPv6 Header Static Hop Limit) Response
 ------------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_lan_configuration_parameters_ipv6_header_static_hop_limit_rs
 
-    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", REQUIRED | LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED},
-    { 8, "static_hop_limit", REQUIRED | LENGTH_FIXED},
+    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 4, "present_revision", REQUIRED | LENGTH_FIXED}
+    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED}
+    { 8, "static_hop_limit", REQUIRED | LENGTH_FIXED}
 
 Get LAN Configuration Parameters (IPv6 Header Flow Label) Response
 ------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_lan_configuration_parameters_ipv6_header_flow_label_rs
 
-    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", REQUIRED | LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED},
-    { 20, "flow_label", REQUIRED | LENGTH_FIXED}, /* LS byte first */
-    { 4, "reserved2", REQUIRED | LENGTH_FIXED},
+    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 4, "present_revision", REQUIRED | LENGTH_FIXED}
+    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED}
+    { 20, "flow_label", REQUIRED | LENGTH_FIXED} /* LS byte first */
+    { 4, "reserved2", REQUIRED | LENGTH_FIXED}
 
 Get LAN Configuration Parameters (IPv6 Status) Response
 -------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_lan_configuration_parameters_ipv6_status_rs
 
-    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", REQUIRED | LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED},
-    { 8, "static_address_max", REQUIRED | LENGTH_FIXED},
-    { 8, "dynamic_address_max", REQUIRED | LENGTH_FIXED},
-    { 1, "dhcpv6_addressing_supported", REQUIRED | LENGTH_FIXED},
-    { 1, "slaac_addressing_supported", REQUIRED | LENGTH_FIXED},
-    { 6, "reserved2", REQUIRED | LENGTH_FIXED},
+    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 4, "present_revision", REQUIRED | LENGTH_FIXED}
+    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED}
+    { 8, "static_address_max", REQUIRED | LENGTH_FIXED}
+    { 8, "dynamic_address_max", REQUIRED | LENGTH_FIXED}
+    { 1, "dhcpv6_addressing_supported", REQUIRED | LENGTH_FIXED}
+    { 1, "slaac_addressing_supported", REQUIRED | LENGTH_FIXED}
+    { 6, "reserved2", REQUIRED | LENGTH_FIXED}
 
 Get LAN Configuration Parameters (IPv6 Static Addresses) Response
 -----------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_lan_configuration_parameters_ipv6_static_addresses_rs
 
-    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", REQUIRED | LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED},
-    { 8, "set_selector", REQUIRED | LENGTH_FIXED},
-    { 4, "source", REQUIRED | LENGTH_FIXED},
-    { 3, "reserved2", REQUIRED | LENGTH_FIXED},
-    { 1, "enable", REQUIRED | LENGTH_FIXED},
-    { 128, "address", REQUIRED | LENGTH_FIXED},
-    { 8, "address_prefix_length", REQUIRED | LENGTH_FIXED},
-    { 8, "address_status", REQUIRED | LENGTH_FIXED},
+    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 4, "present_revision", REQUIRED | LENGTH_FIXED}
+    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED}
+    { 8, "set_selector", REQUIRED | LENGTH_FIXED}
+    { 4, "source", REQUIRED | LENGTH_FIXED}
+    { 3, "reserved2", REQUIRED | LENGTH_FIXED}
+    { 1, "enable", REQUIRED | LENGTH_FIXED}
+    { 128, "address", REQUIRED | LENGTH_FIXED}
+    { 8, "address_prefix_length", REQUIRED | LENGTH_FIXED}
+    { 8, "address_status", REQUIRED | LENGTH_FIXED}
 
 Get LAN Configuration Parameters (IPv6 Dhcpv6 Static Duid Storage Length) Response
 ----------------------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_lan_configuration_parameters_ipv6_dhcpv6_static_duid_storage_length_rs
 
-    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", REQUIRED | LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED},
-    { 8, "maximum_blocks", REQUIRED | LENGTH_FIXED},
+    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 4, "present_revision", REQUIRED | LENGTH_FIXED}
+    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED}
+    { 8, "maximum_blocks", REQUIRED | LENGTH_FIXED}
 
 Get LAN Configuration Parameters (IPv6 Dhcpv6 Static Duids) Response
 --------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_lan_configuration_parameters_ipv6_dhcpv6_static_duids_rs
 
-    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", REQUIRED | LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED},
-    { 8, "set_selector", REQUIRED | LENGTH_FIXED},
-    { 8, "block_selector", REQUIRED | LENGTH_FIXED},
-    { 128, "duid", REQUIRED | LENGTH_FIXED},
+    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 4, "present_revision", REQUIRED | LENGTH_FIXED}
+    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED}
+    { 8, "set_selector", REQUIRED | LENGTH_FIXED}
+    { 8, "block_selector", REQUIRED | LENGTH_FIXED}
+    { 128, "duid", REQUIRED | LENGTH_FIXED}
 
 Get LAN Configuration Parameters (IPv6 Dynamic Address) Response
 ----------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_lan_configuration_parameters_ipv6_dynamic_address_rs
 
-    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", REQUIRED | LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED},
-    { 8, "set_selector", REQUIRED | LENGTH_FIXED},
-    { 4, "source_type", REQUIRED | LENGTH_FIXED},
-    { 4, "reserved2", REQUIRED | LENGTH_FIXED},
-    { 128, "address", REQUIRED | LENGTH_FIXED},
-    { 8, "address_prefix_length", REQUIRED | LENGTH_FIXED},
-    { 8, "address_status", REQUIRED | LENGTH_FIXED},
+    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 4, "present_revision", REQUIRED | LENGTH_FIXED}
+    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED}
+    { 8, "set_selector", REQUIRED | LENGTH_FIXED}
+    { 4, "source_type", REQUIRED | LENGTH_FIXED}
+    { 4, "reserved2", REQUIRED | LENGTH_FIXED}
+    { 128, "address", REQUIRED | LENGTH_FIXED}
+    { 8, "address_prefix_length", REQUIRED | LENGTH_FIXED}
+    { 8, "address_status", REQUIRED | LENGTH_FIXED}
 
 Get LAN Configuration Parameters (IPv6 Dhcpv6 Dynamic Duid Storage Length) Response
 -----------------------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_lan_configuration_parameters_ipv6_dhcpv6_dynamic_duid_storage_length_rs
 
-    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", REQUIRED | LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED},
-    { 8, "maximum_blocks", REQUIRED | LENGTH_FIXED},
+    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 4, "present_revision", REQUIRED | LENGTH_FIXED}
+    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED}
+    { 8, "maximum_blocks", REQUIRED | LENGTH_FIXED}
 
 Get LAN Configuration Parameters (IPv6 Dhcpv6 Dynamic Duids) Response
 ---------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_lan_configuration_parameters_ipv6_dhcpv6_dynamic_duids_rs
 
-    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", REQUIRED | LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED},
-    { 8, "set_selector", REQUIRED | LENGTH_FIXED},
-    { 8, "block_selector", REQUIRED | LENGTH_FIXED},
-    { 128, "duid", REQUIRED | LENGTH_FIXED},
+    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 4, "present_revision", REQUIRED | LENGTH_FIXED}
+    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED}
+    { 8, "set_selector", REQUIRED | LENGTH_FIXED}
+    { 8, "block_selector", REQUIRED | LENGTH_FIXED}
+    { 128, "duid", REQUIRED | LENGTH_FIXED}
 
 Get LAN Configuration Parameters (IPv6 Dhcpv6 Timing Configuration Support) Response
 ------------------------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_lan_configuration_parameters_ipv6_dhcpv6_timing_configuration_support_rs
 
-    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", REQUIRED | LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED},
-    { 2, "timing_configuration", REQUIRED | LENGTH_FIXED},
-    { 6, "reserved2", REQUIRED | LENGTH_FIXED},
+    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 4, "present_revision", REQUIRED | LENGTH_FIXED}
+    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED}
+    { 2, "timing_configuration", REQUIRED | LENGTH_FIXED}
+    { 6, "reserved2", REQUIRED | LENGTH_FIXED}
 
 Get LAN Configuration Parameters (IPv6 Dhcpv6 Timing And Configuration) Response
 --------------------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_lan_configuration_parameters_ipv6_dhcpv6_timing_and_configuration_rs
 
-    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", REQUIRED | LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED},
-    { 8, "set_selector", REQUIRED | LENGTH_FIXED},
-    { 8, "block_selector", REQUIRED | LENGTH_FIXED},
+    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 4, "present_revision", REQUIRED | LENGTH_FIXED}
+    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED}
+    { 8, "set_selector", REQUIRED | LENGTH_FIXED}
+    { 8, "block_selector", REQUIRED | LENGTH_FIXED}
 
 Get LAN Configuration Parameters (IPv6 Router Address Configuration Control) Response
 -------------------------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_lan_configuration_parameters_ipv6_router_address_configuration_control_rs
 
-    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", REQUIRED | LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED},
-    { 1, "enable_static_router_address", REQUIRED | LENGTH_FIXED},
-    { 1, "enable_dynamic_router_address", REQUIRED | LENGTH_FIXED},
-    { 6, "reserved2", REQUIRED | LENGTH_FIXED},
+    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 4, "present_revision", REQUIRED | LENGTH_FIXED}
+    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED}
+    { 1, "enable_static_router_address", REQUIRED | LENGTH_FIXED}
+    { 1, "enable_dynamic_router_address", REQUIRED | LENGTH_FIXED}
+    { 6, "reserved2", REQUIRED | LENGTH_FIXED}
 
 Get LAN Configuration Parameters (IPv6 Static Router 1 IP Address) Response
 ---------------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_lan_configuration_parameters_ipv6_static_router_1_ip_address_rs
 
-    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", REQUIRED | LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED},
-    { 128, "ipv6_router_ip_address", REQUIRED | LENGTH_FIXED},
+    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 4, "present_revision", REQUIRED | LENGTH_FIXED}
+    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED}
+    { 128, "ipv6_router_ip_address", REQUIRED | LENGTH_FIXED}
 
 Get LAN Configuration Parameters (IPv6 Static Router 1 Mac Address) Response
 ----------------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_lan_configuration_parameters_ipv6_static_router_1_mac_address_rs
 
-    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", REQUIRED | LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED},
-    { 48, "router_mac_address", REQUIRED | LENGTH_FIXED},
+    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 4, "present_revision", REQUIRED | LENGTH_FIXED}
+    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED}
+    { 48, "router_mac_address", REQUIRED | LENGTH_FIXED}
 
 Get LAN Configuration Parameters (IPv6 Static Router 1 Prefix Length) Response
 ------------------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_lan_configuration_parameters_ipv6_static_router_1_prefix_length_rs
 
-    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", REQUIRED | LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED},
-    { 8, "prefix_length", REQUIRED | LENGTH_FIXED},
+    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 4, "present_revision", REQUIRED | LENGTH_FIXED}
+    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED}
+    { 8, "prefix_length", REQUIRED | LENGTH_FIXED}
 
 Get LAN Configuration Parameters (IPv6 Static Router 1 Prefix Value) Response
 -----------------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_lan_configuration_parameters_ipv6_static_router_1_prefix_value_rs
 
-    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", REQUIRED | LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED},
-    { 128, "prefix_value", REQUIRED | LENGTH_FIXED},
+    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 4, "present_revision", REQUIRED | LENGTH_FIXED}
+    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED}
+    { 128, "prefix_value", REQUIRED | LENGTH_FIXED}
 
 Get LAN Configuration Parameters (IPv6 Static Router 2 IP Address) Response
 ---------------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_lan_configuration_parameters_ipv6_static_router_2_ip_address_rs
 
-    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", REQUIRED | LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED},
-    { 128, "ipv6_router_ip_address", REQUIRED | LENGTH_FIXED},
+    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 4, "present_revision", REQUIRED | LENGTH_FIXED}
+    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED}
+    { 128, "ipv6_router_ip_address", REQUIRED | LENGTH_FIXED}
 
 Get LAN Configuration Parameters (IPv6 Static Router 2 Mac Address) Response
 ----------------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_lan_configuration_parameters_ipv6_static_router_2_mac_address_rs
 
-    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", REQUIRED | LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED},
-    { 48, "router_mac_address", REQUIRED | LENGTH_FIXED},
+    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 4, "present_revision", REQUIRED | LENGTH_FIXED}
+    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED}
+    { 48, "router_mac_address", REQUIRED | LENGTH_FIXED}
 
 Get LAN Configuration Parameters (IPv6 Static Router 2 Prefix Length) Response
 ------------------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_lan_configuration_parameters_ipv6_static_router_2_prefix_length_rs
 
-    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", REQUIRED | LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED},
-    { 8, "prefix_length", REQUIRED | LENGTH_FIXED},
+    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 4, "present_revision", REQUIRED | LENGTH_FIXED}
+    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED}
+    { 8, "prefix_length", REQUIRED | LENGTH_FIXED}
 
 Get LAN Configuration Parameters (IPv6 Static Router 2 Prefix Value) Response
 -----------------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_lan_configuration_parameters_ipv6_static_router_2_prefix_value_rs
 
-    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", REQUIRED | LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED},
-    { 128, "prefix_value", REQUIRED | LENGTH_FIXED},
+    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 4, "present_revision", REQUIRED | LENGTH_FIXED}
+    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED}
+    { 128, "prefix_value", REQUIRED | LENGTH_FIXED}
 
 Get LAN Configuration Parameters (Number Of Dynamic Router Info Sets) Response
 ------------------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_lan_configuration_parameters_number_of_dynamic_router_info_sets_rs
 
-    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", REQUIRED | LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED},
-    { 8, "number_of_dynamic_router_address_information_entries", REQUIRED | LENGTH_FIXED},
+    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 4, "present_revision", REQUIRED | LENGTH_FIXED}
+    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED}
+    { 8, "number_of_dynamic_router_address_information_entries", REQUIRED | LENGTH_FIXED}
 
 Get LAN Configuration Parameters (IPv6 Dynamic Router Info IP Address) Response
 -------------------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_lan_configuration_parameters_ipv6_dynamic_router_info_ip_address_rs
 
-    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", REQUIRED | LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED},
-    { 8, "set_selector", REQUIRED | FIXED},
-    { 128, "router_ip_address", REQUIRED | LENGTH_FIXED},
+    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 4, "present_revision", REQUIRED | LENGTH_FIXED}
+    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED}
+    { 8, "set_selector", REQUIRED | FIXED}
+    { 128, "router_ip_address", REQUIRED | LENGTH_FIXED}
 
 Get LAN Configuration Parameters (IPv6 Dynamic Router Info Mac Address) Response
 --------------------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_lan_configuration_parameters_ipv6_dynamic_router_info_mac_address_rs
 
-    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", REQUIRED | LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED},
-    { 8, "set_selector", REQUIRED | FIXED},
-    { 48, "router_mac_address", REQUIRED | LENGTH_FIXED},
+    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 4, "present_revision", REQUIRED | LENGTH_FIXED}
+    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED}
+    { 8, "set_selector", REQUIRED | FIXED}
+    { 48, "router_mac_address", REQUIRED | LENGTH_FIXED}
 
 Get LAN Configuration Parameters (IPv6 Dynamic Router Info Prefix Length) Response
 ----------------------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_lan_configuration_parameters_ipv6_dynamic_router_info_prefix_length_rs
 
-    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", REQUIRED | LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED},
-    { 8, "set_selector", REQUIRED | FIXED},
-    { 8, "prefix_length", REQUIRED | LENGTH_FIXED},
+    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 4, "present_revision", REQUIRED | LENGTH_FIXED}
+    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED}
+    { 8, "set_selector", REQUIRED | FIXED}
+    { 8, "prefix_length", REQUIRED | LENGTH_FIXED}
 
 Get LAN Configuration Parameters (IPv6 Dynamic Router Info Prefix Value) Response
 ---------------------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_lan_configuration_parameters_ipv6_dynamic_router_info_prefix_value_rs
 
-    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", REQUIRED | LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED},
-    { 8, "set_selector", REQUIRED | FIXED},
-    { 128, "prefix_value", REQUIRED | LENGTH_FIXED},
+    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 4, "present_revision", REQUIRED | LENGTH_FIXED}
+    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED}
+    { 8, "set_selector", REQUIRED | FIXED}
+    { 128, "prefix_value", REQUIRED | LENGTH_FIXED}
 
 Get LAN Configuration Parameters (IPv6 Dynamic Router Received Hop Limit) Response
 ----------------------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_lan_configuration_parameters_ipv6_dynamic_router_received_hop_limit_rs
 
-    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", REQUIRED | LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED},
-    { 8, "hop_limit", REQUIRED | LENGTH_FIXED},
+    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 4, "present_revision", REQUIRED | LENGTH_FIXED}
+    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED}
+    { 8, "hop_limit", REQUIRED | LENGTH_FIXED}
 
 Get LAN Configuration Parameters (IPv6 Neighbor Discovery Slaac Timing Configuration Support) Response
 ------------------------------------------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_lan_configuration_parameters_ipv6_neighbor_discovery_slaac_timing_configuration_support_rs
 
-    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", REQUIRED | LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED},
-    { 2, "timing_configuration", REQUIRED | LENGTH_FIXED},
-    { 6, "reserved2", REQUIRED | LENGTH_FIXED},
+    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 4, "present_revision", REQUIRED | LENGTH_FIXED}
+    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED}
+    { 2, "timing_configuration", REQUIRED | LENGTH_FIXED}
+    { 6, "reserved2", REQUIRED | LENGTH_FIXED}
 
 Get LAN Configuration Parameters (IPv6 Neighbor Discovery Slaac Timing Configuration) Response
 ----------------------------------------------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_lan_configuration_parameters_ipv6_neighbor_discovery_slaac_timing_configuration_rs
 
-    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT},
-    { 4, "present_revision", REQUIRED | LENGTH_FIXED},
-    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED},
-    { 8, "set_selector", REQUIRED | LENGTH_FIXED},
-    { 8, "block_selector", REQUIRED | LENGTH_FIXED},
+    { 8, "cmd", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 8, "comp_code", REQUIRED | LENGTH_FIXED | MAKES_PACKET_SUFFICIENT}
+    { 4, "present_revision", REQUIRED | LENGTH_FIXED}
+    { 4, "oldest_revision_parameter", REQUIRED | LENGTH_FIXED}
+    { 8, "set_selector", REQUIRED | LENGTH_FIXED}
+    { 8, "block_selector", REQUIRED | LENGTH_FIXED}
 
 Suspend BMC ARPs Request
 ------------------------
