@@ -1,4 +1,4 @@
-FreeIPMI 1.5.6 - 07/05/17
+FreeIPMI 1.5.7 - 08/16/17
 -------------------------
 o In libipmimonitoring, fix several mem-leak corner cases.
 
