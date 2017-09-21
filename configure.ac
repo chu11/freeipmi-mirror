@@ -106,7 +106,7 @@ AC_CONFIG_FILES([
 	man/rmcpping.8.pre
         rmcpping/Makefile])
 
-ISODATE=`date +%Y-%m-%d`
+ISODATE=`date -u -r ChangeLog +%Y-%m-%d`
 AC_SUBST([ISODATE])
 
 # libfreeipmi libtool versioning

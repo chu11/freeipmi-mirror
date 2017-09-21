@@ -1,3 +1,7 @@
+2017-09-22 Bernhard M. Wiedemann <bwiedemann@suse.de>
+
+	* configure.ac: Use ChangeLog date instead of build date.
+
 2017-07-18 Albert Chu <chu11@llnl.gov>
 
 	* libipmimonitoring/ipmi_monitoring_sensor_reading.c
