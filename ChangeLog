@@ -1,3 +1,7 @@
+2017-09-22 Bernhard M. Wiedemann <bwiedemann@suse.de>
+
+	* configure.ac: Use ChangeLog date instead of build date.
+
 2017-08-13 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-config/ipmi-config-category-core-lan6-conf-section.c: Add
