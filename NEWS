@@ -82,7 +82,7 @@ o Support --read-fru, --write-fru, and --device-id option in
 o Support --fru-file option in ipmi-fru.
 o Various library updates in libfreeipmi to handle new features.
 
-FreeIPMI 1.5.1 - 03/01/14
+FreeIPMI 1.5.1 - 12/01/15
 -------------------------
 o Update Intel Node Manager support for 3.0 specification.
   - Update API and fiid templates in libfreeipmi.
