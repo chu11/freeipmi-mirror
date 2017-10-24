@@ -24,6 +24,10 @@ o Various minor fixes/improvements
   - Update libfreeipmi core API to use poll() instead of select(), to
     avoid issues with applications with a high number of threads.
 
+FreeIPMI 1.5.7 - 08/16/17
+-------------------------
+o In libipmimonitoring, fix several mem-leak corner cases.
+
 FreeIPMI 1.5.6 - 07/05/17
 -------------------------
 o In libfreeipmi locate (used by ipmi-locate), use DMI firmware in
