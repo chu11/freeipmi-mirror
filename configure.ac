@@ -283,10 +283,12 @@ AC_PROG_CC
 dnl Needed for per-target flags
 AM_PROG_CC_C_O
 AC_PROG_LIBTOOL
-AC_PATH_PROG([CPP], [cpp])
-if test -z "${CPP}"; then
+AC_PROG_CPP
+AC_PATH_PROG([CPP_FOR_BUILD], [cpp])
+if test -z "${CPP_FOR_BUILD}"; then
   AC_MSG_ERROR([cannot find cpp])
 fi
+AC_SUBST([CPP_FOR_BUILD])
 AM_CONDITIONAL(WITH_GNU_LD, test "$with_gnu_ld" = "yes")
 AC_PROG_MAKE_SET
 AC_PROG_LN_S
