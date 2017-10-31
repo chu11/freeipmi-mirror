@@ -1,3 +1,7 @@
+FreeIPMI 1.5.8 - XX/XX/XX
+-------------------------
+o Fix cross compilation build error.
+
 FreeIPMI 1.5.7 - 08/16/17
 -------------------------
 o In libipmimonitoring, fix several mem-leak corner cases.
