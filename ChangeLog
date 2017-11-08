@@ -1,3 +1,8 @@
+2017-11-08 Michel Ferland <Michel.Ferland@kontron.com>
+
+	* ipmipower/ipmipower_arg.c: Fix invalid parsing of
+	--wait-until-on and --wait-until-off options.
+
 2017-10-31 Bernd Zeimetz <bernd@bzed.de>
 
 	* configure.ac: Fix cross compilation (bug #52290)
