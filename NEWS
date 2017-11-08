@@ -1,6 +1,8 @@
 FreeIPMI 1.5.8 - XX/XX/XX
 -------------------------
 o Fix cross compilation build error.
+o In ipmipower, fix option parsing bug with --wait-until-on and
+  --wait-until-off.
 
 FreeIPMI 1.5.7 - 08/16/17
 -------------------------

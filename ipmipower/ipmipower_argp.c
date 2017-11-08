@@ -215,10 +215,10 @@ cmdline_parse (int key,
     case ON_IF_OFF_KEY:       /* --on-if-off */
       cmd_args->on_if_off++;
       break;
-    case WAIT_UNTIL_OFF_KEY:       /* --wait-until-on */
+    case WAIT_UNTIL_ON_KEY:        /* --wait-until-on */
       cmd_args->wait_until_on++;
       break;
-    case WAIT_UNTIL_ON_KEY:       /* --wait-until-off */
+    case WAIT_UNTIL_OFF_KEY:       /* --wait-until-off */
       cmd_args->wait_until_off++;
       break;
     case OEM_POWER_TYPE_KEY:
