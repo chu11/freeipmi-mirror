@@ -511,7 +511,6 @@ _pstdout_print(pstdout_state_t pstate,
   assert(stream);
   assert(stream == stdout || stream == stderr);
   assert(format);
-  assert(ap);
 
   if (stream == stdout)
     {

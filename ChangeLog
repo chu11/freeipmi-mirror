@@ -3,6 +3,9 @@
 	* common/toolcommon/tool-common.c (ipmi_open): Fix error output
 	corner case.  Newline necessary to allow pstdout library to output
 	buffer on error.
+
+	* common/toolcommon/pstdout.c (_pstdout_print): Fix debug build
+	corner case.
 	
 2017-11-08 Michel Ferland <Michel.Ferland@kontron.com>
 
