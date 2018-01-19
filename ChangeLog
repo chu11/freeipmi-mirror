@@ -1,3 +1,9 @@
+2018-01-18 Albert Chu <chu11@llnl.gov>
+
+	* common/toolcommon/tool-common.c (ipmi_open): Fix error output
+	corner case.  Newline necessary to allow pstdout library to output
+	buffer on error.
+	
 2017-11-08 Michel Ferland <Michel.Ferland@kontron.com>
 
 	* ipmipower/ipmipower_arg.c: Fix invalid parsing of

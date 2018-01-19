@@ -185,8 +185,8 @@ ipmi_open (const char *progname,
           if (!ret)
             {
               PSTDOUT_FPRINTF (pstate,
-			       stderr,
-			       "could not find inband device");
+                               stderr,
+                               "could not find inband device\n");
               goto cleanup;
             }
         }
