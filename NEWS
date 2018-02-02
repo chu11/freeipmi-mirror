@@ -2,7 +2,6 @@ FreeIPMI 1.6.1 - 02/02/18
 -------------------------
 o Add IPv6 hostname support to FreeIPMI, all of FreeIPMI can now take
   IPv6 addresses as inputs to "host" parameters, options, or inputs.
-o Support some IPv6 configuration in ipmi-config.
 o Support significant portions of IPMI IPv6 configuration in
   libfreeipmi.
 o Add --no-session option in ipmi-raw.
