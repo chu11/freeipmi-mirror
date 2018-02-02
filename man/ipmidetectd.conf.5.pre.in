@@ -27,13 +27,13 @@
 .SH "NAME"
 ipmidetectd.conf \- ipmidetectd configuration file
 .SH "DESCRIPTION"
-The 
+The
 .B ipmidetectd
-configuration file configures the 
+configuration file configures the
 .B ipmidetectd
 daemon.
 .LP
-The default configuration file loaded is @IPMIDETECTD_CONFIG_FILE_DEFAULT@. 
+The default configuration file loaded is @IPMIDETECTD_CONFIG_FILE_DEFAULT@.
 .LP
 The configuration options that can be specified in the configuration
 file are listed below.  Each configuration option must be listed on a
@@ -48,12 +48,12 @@ lines can be continued on the next using backslash ("\\").
 .I ipmiping_period num
 Specify the period time in milliseconds that IPMI pings should be
 regularly sent out.  Default is 15000.
-.TP 
+.TP
 .I ipmidetectd_server_port port
 Specify the alternate default port the ipmidetectd server should listen
 for requests off of.  Default is 9225.
-.TP 
-.I host string[:port] 
+.TP
+.I host string[:port]
 Specify a host or IP address the ipmidetectd daemon should send IPMI
 pings to.  Can be specified as many times as necessary.  An optional
 port can be specified.  Can accept host ranges as input.  See

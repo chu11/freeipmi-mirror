@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_OEM_INTEL_NODE_MANAGER_CMDS_API_H
@@ -27,7 +27,7 @@ extern "C" {
 #include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/fiid/fiid.h>
 
-/* 
+/*
  * ipmi_cmd* functions return 0 on success, -1 on error.
  *
  * obj_cmd_rs must be for the function's respective fiid template
@@ -104,7 +104,7 @@ int ipmi_cmd_oem_intel_node_manager_set_node_manager_policy_boot_time_policy (ip
                                                                               uint16_t policy_trigger_limit,
                                                                               uint16_t statistics_reporting_period,
                                                                               fiid_obj_t obj_cmd_rs);
-  
+
 int ipmi_cmd_oem_intel_node_manager_get_node_manager_policy (ipmi_ctx_t ctx,
                                                              uint8_t target_channel_number,
                                                              uint8_t target_slave_address,
@@ -131,7 +131,7 @@ int ipmi_cmd_oem_intel_node_manager_get_node_manager_policy_alert_thresholds (ip
                                                                               uint8_t domain_id,
                                                                               uint8_t policy_id,
                                                                               fiid_obj_t obj_cmd_rs);
-  
+
 int ipmi_cmd_oem_intel_node_manager_set_node_manager_policy_suspend_periods (ipmi_ctx_t ctx,
                                                                              uint8_t target_channel_number,
                                                                              uint8_t target_slave_address,
@@ -220,7 +220,7 @@ int ipmi_cmd_oem_intel_node_manager_get_node_manager_capabilities (ipmi_ctx_t ct
                                                                    uint8_t policy_type,
                                                                    uint8_t policy_power_domain,
                                                                    fiid_obj_t obj_cmd_rs);
-  
+
 int ipmi_cmd_oem_intel_node_manager_get_node_manager_version (ipmi_ctx_t ctx,
                                                               uint8_t target_channel_number,
                                                               uint8_t target_slave_address,
@@ -257,7 +257,7 @@ int ipmi_cmd_oem_intel_node_manager_set_node_manager_alert_destination_ipmb (ipm
                                                                              uint8_t alert_string_selector,
                                                                              uint8_t send_alert_string,
                                                                              fiid_obj_t obj_cmd_rs);
-  
+
 int ipmi_cmd_oem_intel_node_manager_set_node_manager_alert_destination_lan (ipmi_ctx_t ctx,
                                                                             uint8_t target_channel_number,
                                                                             uint8_t target_slave_address,

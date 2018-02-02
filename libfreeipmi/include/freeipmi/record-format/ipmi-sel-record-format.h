@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_SEL_RECORD_FORMAT_H
@@ -73,8 +73,8 @@ extern "C" {
 
 #define IPMI_SEL_RECORD_MAX_RECORD_LENGTH  16
 
-/* 
- * see freeipmi/templates/ for template definitions 
+/*
+ * see freeipmi/templates/ for template definitions
  */
 
 extern fiid_template_t tmpl_sel_record_header;

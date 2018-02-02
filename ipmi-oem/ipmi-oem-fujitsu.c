@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2008-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -71,7 +71,7 @@ _ipmi_oem_get_power_source (ipmi_oem_state_data_t *state_data,
   assert (source);
 
   /* Fujitsu OEM
-   * 
+   *
    * http://manuals.ts.fujitsu.com/file/4390/irmc_s2-en.pdf
    *
    * Request
@@ -93,7 +93,7 @@ _ipmi_oem_get_power_source (ipmi_oem_state_data_t *state_data,
    * 0x01 - data length
    * 0x?? - power on/off source
    */
-  
+
   bytes_rq[0] = IPMI_CMD_OEM_FUJITSU_POWER;
   bytes_rq[1] = (IPMI_IANA_ENTERPRISE_ID_FUJITSU & 0x0000FF);
   bytes_rq[2] = (IPMI_IANA_ENTERPRISE_ID_FUJITSU & 0x00FF00) >> 8;
@@ -114,7 +114,7 @@ _ipmi_oem_get_power_source (ipmi_oem_state_data_t *state_data,
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
-  
+
   if (ipmi_oem_check_response_and_completion_code (state_data,
                                                    bytes_rs,
                                                    rs_len,
@@ -197,7 +197,7 @@ ipmi_oem_fujitsu_get_power_on_source (ipmi_oem_state_data_t *state_data)
     default:
       snprintf (str, IPMI_OEM_STR_BUFLEN, "Unrecognized source: %02Xh", source);
     }
-  
+
   pstdout_printf (state_data->pstate,
                   "%s\n",
                   str);
@@ -257,7 +257,7 @@ ipmi_oem_fujitsu_get_power_off_source (ipmi_oem_state_data_t *state_data)
     default:
       snprintf (str, IPMI_OEM_STR_BUFLEN, "Unrecognized source: %02Xh", source);
     }
-  
+
   pstdout_printf (state_data->pstate,
                   "%s\n",
                   str);
@@ -284,7 +284,7 @@ ipmi_oem_fujitsu_get_remote_storage_status (ipmi_oem_state_data_t *state_data)
 
   assert (state_data);
   assert (state_data->prog_data->args->oem_options_count == 1);
-  
+
   errno = 0;
 
   tmp = strtol (state_data->prog_data->args->oem_options[0],
@@ -318,7 +318,7 @@ ipmi_oem_fujitsu_get_remote_storage_status (ipmi_oem_state_data_t *state_data)
   connection = tmp;
 
   /* Fujitsu OEM
-   * 
+   *
    * http://manuals.ts.fujitsu.com/file/4390/irmc_s2-en.pdf
    *
    * Request
@@ -358,7 +358,7 @@ ipmi_oem_fujitsu_get_remote_storage_status (ipmi_oem_state_data_t *state_data)
    *      - if command specifier == 0x02
    *        - remote storage type
    */
-  
+
   /* achu: we won't bother checking if there are any remote
    * connections, just check the connection indicated by the user
    */
@@ -382,7 +382,7 @@ ipmi_oem_fujitsu_get_remote_storage_status (ipmi_oem_state_data_t *state_data)
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
-  
+
   if (ipmi_oem_check_response_and_completion_code (state_data,
                                                    bytes_rs,
                                                    rs_len,
@@ -443,7 +443,7 @@ ipmi_oem_fujitsu_get_remote_storage_status (ipmi_oem_state_data_t *state_data)
     default:
       storage_type_str = "Unknown Storage Type";
     }
-  
+
   pstdout_printf (state_data->pstate,
                   "Storage Type   : %s\n",
                   storage_type_str);
@@ -479,7 +479,7 @@ ipmi_oem_fujitsu_get_system_status (ipmi_oem_state_data_t *state_data)
   assert (!state_data->prog_data->args->oem_options_count);
 
   /* Fujitsu OEM
-   * 
+   *
    * http://manuals.ts.fujitsu.com/file/4390/irmc_s2-en.pdf
    *
    * Request
@@ -504,18 +504,18 @@ ipmi_oem_fujitsu_get_system_status (ipmi_oem_state_data_t *state_data)
    * 0x?? - Fujitsu IANA
    * 0x?? - System Status
    *      bit 7 - System ON
-   *      bit 6 - 
-   *      bit 5 - 
+   *      bit 6 -
+   *      bit 5 -
    *      bit 4 - SEL entries available
-   *      bit 3 - 
+   *      bit 3 -
    *      bit 2 - Watchdog active
    *      bit 1 - Agent connected
    *      bit 0 - Post State
    * 0x?? - Signaling
    *      bit 7 - Identify LED (sometimes refered as "Localize")
-   *      bit 6 - 
-   *      bit 5 - 
-   *      bit 4 - 
+   *      bit 6 -
+   *      bit 5 -
+   *      bit 4 -
    *      bit 3 - CSS LED (Customer Self Service LED)
    *      bit 2 - CSS LED (Customer Self Service LED)
    *      bit 1 - Global Error LED
@@ -526,8 +526,8 @@ ipmi_oem_fujitsu_get_system_status (ipmi_oem_state_data_t *state_data)
    *      bit 5 - SDR Modified
    *      bit 4 - Nonvolatile IPMI Variable Modified
    *      bit 3 - ConfigSpace Modified
-   *      bit 2 - 
-   *      bit 1 - 
+   *      bit 2 -
+   *      bit 1 -
    *      bit 0 - New Output on LocalView display
    * 0x?? - Last POST Code (Port 80) (HLiebig: renamed from "Post Code" in doc)
    *
@@ -535,7 +535,7 @@ ipmi_oem_fujitsu_get_system_status (ipmi_oem_state_data_t *state_data)
    * Notifications Byte".  I assume this is because the Notifications
    * timestamp indicates if things have changed in the SEL/SDR.
    */
-  
+
   if (gettimeofday (&t, NULL) < 0)
     {
       pstdout_perror (state_data->pstate, "gettimeofday");
@@ -566,7 +566,7 @@ ipmi_oem_fujitsu_get_system_status (ipmi_oem_state_data_t *state_data)
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
-  
+
   if (ipmi_oem_check_response_and_completion_code (state_data,
                                                    bytes_rs,
                                                    rs_len,
@@ -579,7 +579,7 @@ ipmi_oem_fujitsu_get_system_status (ipmi_oem_state_data_t *state_data)
   /* achu: the "Notifications" are dependent on the timestamp input,
    * we won't bother outputting them
    */
-  
+
   system_status = bytes_rs[5];
   signaling = bytes_rs[6];
   post_code = bytes_rs[8];
@@ -604,7 +604,7 @@ ipmi_oem_fujitsu_get_system_status (ipmi_oem_state_data_t *state_data)
 
   css_led = (signaling & IPMI_OEM_FUJITSU_SYSTEM_STATUS_SIGNALING_CSS_LED_BITMASK);
   css_led >>= IPMI_OEM_FUJITSU_SYSTEM_STATUS_SIGNALING_CSS_LED_SHIFT;
-  
+
   global_error_led = (signaling & IPMI_OEM_FUJITSU_SYSTEM_STATUS_SIGNALING_GLOBAL_ERROR_LED_BITMASK);
   global_error_led >>= IPMI_OEM_FUJITSU_SYSTEM_STATUS_SIGNALING_GLOBAL_ERROR_LED_SHIFT;
 
@@ -651,7 +651,7 @@ ipmi_oem_fujitsu_get_system_status (ipmi_oem_state_data_t *state_data)
   pstdout_printf (state_data->pstate,
                   "CSS LED                  : %s\n",
                   css_led_str);
-  
+
   switch (global_error_led)
     {
     case IPMI_OEM_FUJITSU_GLOBAL_ERROR_LED_OFF:
@@ -712,7 +712,7 @@ ipmi_oem_fujitsu_get_eeprom_version_info (ipmi_oem_state_data_t *state_data)
 
   assert (state_data);
   assert (state_data->prog_data->args->oem_options_count == 1);
-  
+
   errno = 0;
 
   tmp = strtol (state_data->prog_data->args->oem_options[0],
@@ -744,9 +744,9 @@ ipmi_oem_fujitsu_get_eeprom_version_info (ipmi_oem_state_data_t *state_data)
       goto cleanup;
     }
   eeprom_number = tmp;
-  
+
   /* Fujitsu OEM
-   * 
+   *
    * http://manuals.ts.fujitsu.com/file/4390/irmc_s2-en.pdf
    *
    * Request
@@ -784,7 +784,7 @@ ipmi_oem_fujitsu_get_eeprom_version_info (ipmi_oem_state_data_t *state_data)
    * 0x?? - aux booter revision (lsb first) - binary coded, major/minor
    * 0x?? - aux booter revision
    */
-     
+
   bytes_rq[0] = IPMI_CMD_OEM_FUJITSU_SYSTEM;
   bytes_rq[1] = (IPMI_IANA_ENTERPRISE_ID_FUJITSU & 0x0000FF);
   bytes_rq[2] = (IPMI_IANA_ENTERPRISE_ID_FUJITSU & 0x00FF00) >> 8;
@@ -806,7 +806,7 @@ ipmi_oem_fujitsu_get_eeprom_version_info (ipmi_oem_state_data_t *state_data)
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
-  
+
   if (ipmi_oem_check_response_and_completion_code (state_data,
                                                    bytes_rs,
                                                    rs_len,
@@ -825,7 +825,7 @@ ipmi_oem_fujitsu_get_eeprom_version_info (ipmi_oem_state_data_t *state_data)
                        "Check Error Runtime\n");
       goto cleanup;
     }
-  
+
   major_firmware_revision = bytes_rs[6];
   minor_firmware_revision = bytes_rs[7];
   aux_firmware_revision_major = bytes_rs[8];
@@ -847,7 +847,7 @@ ipmi_oem_fujitsu_get_eeprom_version_info (ipmi_oem_state_data_t *state_data)
   minor_booter_revision = bytes_rs[18];
   aux_booter_revision_major = bytes_rs[19];
   aux_booter_revision_minor = bytes_rs[20];
-  
+
   /* make sure char is atleast legit */
   /* HLiebig: minor_firmware_revision listed incorrectly as BCD in doc */
   if (isalnum(major_firmware_revision_char))
@@ -909,7 +909,7 @@ ipmi_oem_fujitsu_get_identify_led (ipmi_oem_state_data_t *state_data)
   assert (!state_data->prog_data->args->oem_options_count);
 
   /* Fujitsu OEM
-   * 
+   *
    * http://manuals.ts.fujitsu.com/file/4390/irmc_s2-en.pdf
    *
    * Request
@@ -930,7 +930,7 @@ ipmi_oem_fujitsu_get_identify_led (ipmi_oem_state_data_t *state_data)
    * 0x?? - Fujitsu IANA
    * 0x?? - led on/off state (0 == off, 1 == on)
    */
-  
+
   bytes_rq[0] = IPMI_CMD_OEM_FUJITSU_SYSTEM;
   bytes_rq[1] = (IPMI_IANA_ENTERPRISE_ID_FUJITSU & 0x0000FF);
   bytes_rq[2] = (IPMI_IANA_ENTERPRISE_ID_FUJITSU & 0x00FF00) >> 8;
@@ -951,7 +951,7 @@ ipmi_oem_fujitsu_get_identify_led (ipmi_oem_state_data_t *state_data)
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
-  
+
   if (ipmi_oem_check_response_and_completion_code (state_data,
                                                    bytes_rs,
                                                    rs_len,
@@ -998,7 +998,7 @@ ipmi_oem_fujitsu_set_identify_led (ipmi_oem_state_data_t *state_data)
     }
 
   /* Fujitsu OEM
-   * 
+   *
    * http://manuals.ts.fujitsu.com/file/4390/irmc_s2-en.pdf
    *
    * Request
@@ -1019,7 +1019,7 @@ ipmi_oem_fujitsu_set_identify_led (ipmi_oem_state_data_t *state_data)
    * 0x?? - Fujitsu IANA
    * 0x?? - Fujitsu IANA
    */
-  
+
   bytes_rq[0] = IPMI_CMD_OEM_FUJITSU_SYSTEM;
   bytes_rq[1] = (IPMI_IANA_ENTERPRISE_ID_FUJITSU & 0x0000FF);
   bytes_rq[2] = (IPMI_IANA_ENTERPRISE_ID_FUJITSU & 0x00FF00) >> 8;
@@ -1045,7 +1045,7 @@ ipmi_oem_fujitsu_set_identify_led (ipmi_oem_state_data_t *state_data)
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
-  
+
   if (ipmi_oem_check_response_and_completion_code (state_data,
                                                    bytes_rs,
                                                    rs_len,
@@ -1073,7 +1073,7 @@ ipmi_oem_fujitsu_get_error_led (ipmi_oem_state_data_t *state_data)
   assert (!state_data->prog_data->args->oem_options_count);
 
   /* Fujitsu OEM
-   * 
+   *
    * http://manuals.ts.fujitsu.com/file/4390/irmc_s2-en.pdf
    *
    * Request
@@ -1093,7 +1093,7 @@ ipmi_oem_fujitsu_get_error_led (ipmi_oem_state_data_t *state_data)
    * 0x?? - Fujitsu IANA
    * 0x?? - Fujitsu IANA
    * 0x?? - error led state
-   * 
+   *
    * GEL - Global Error LED
    * CSS - Customer Self Service LED
    *
@@ -1107,7 +1107,7 @@ ipmi_oem_fujitsu_get_error_led (ipmi_oem_state_data_t *state_data)
    * 7 - CSS blink / GEL on
    * 8 - CSS blink / GEL blink
    */
-  
+
   bytes_rq[0] = IPMI_CMD_OEM_FUJITSU_SYSTEM;
   bytes_rq[1] = (IPMI_IANA_ENTERPRISE_ID_FUJITSU & 0x0000FF);
   bytes_rq[2] = (IPMI_IANA_ENTERPRISE_ID_FUJITSU & 0x00FF00) >> 8;
@@ -1128,7 +1128,7 @@ ipmi_oem_fujitsu_get_error_led (ipmi_oem_state_data_t *state_data)
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
-  
+
   if (ipmi_oem_check_response_and_completion_code (state_data,
                                                    bytes_rs,
                                                    rs_len,
@@ -1219,9 +1219,9 @@ ipmi_oem_fujitsu_get_sel_entry_long_text (ipmi_oem_state_data_t *state_data)
 
   assert (state_data);
   assert (state_data->prog_data->args->oem_options_count == 1);
-  
+
   errno = 0;
-  
+
   value = strtol (state_data->prog_data->args->oem_options[0], &endptr, 0);
   if (errno
       || endptr[0] != '\0'
@@ -1250,14 +1250,14 @@ ipmi_oem_fujitsu_get_sel_entry_long_text (ipmi_oem_state_data_t *state_data)
       max_read_length = IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_IRMC_S1_MAX_READ_LENGTH;
       data_length = IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_IRMC_S1_MAX_DATA_LENGTH;
     }
-  else 
+  else
     {
       max_read_length = IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_IRMC_S2_MAX_READ_LENGTH;
       data_length = IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_IRMC_S2_MAX_DATA_LENGTH;
     }
 
   /* Fujitsu OEM
-   * 
+   *
    * http://manuals.ts.fujitsu.com/file/4390/irmc_s2-ug-en.pdf
    *
    * Request
@@ -1289,7 +1289,7 @@ ipmi_oem_fujitsu_get_sel_entry_long_text (ipmi_oem_state_data_t *state_data)
    * 0x?? - timestamp
    * 0x?? - timestamp
    * 0x?? - timestamp
-   * 0x?? - severity   
+   * 0x?? - severity
    *      bit 7   - CSS component
    *              - 0 - No CSS component
    *              - 1 - CSS component
@@ -1304,7 +1304,7 @@ ipmi_oem_fujitsu_get_sel_entry_long_text (ipmi_oem_state_data_t *state_data)
    *      - requested number of bytes starting at requested offset (MaxResponseDataSize-1 bytes of data)
    * 0x00 - trailing '\0' character
    */
-     
+
   bytes_rq[0] = IPMI_CMD_OEM_FUJITSU_SYSTEM;
   bytes_rq[1] = (IPMI_IANA_ENTERPRISE_ID_FUJITSU & 0x0000FF);
   bytes_rq[2] = (IPMI_IANA_ENTERPRISE_ID_FUJITSU & 0x00FF00) >> 8;
@@ -1333,10 +1333,10 @@ ipmi_oem_fujitsu_get_sel_entry_long_text (ipmi_oem_state_data_t *state_data)
     {
       bytes_rq[7] = offset;
 
-      /* BMC checks for boundaries, offset + len has to be <= 80 (iRMC S1) <= 100 (iRMC S2) */ 
+      /* BMC checks for boundaries, offset + len has to be <= 80 (iRMC S1) <= 100 (iRMC S2) */
       if (offset + bytes_rq[8] > data_length)
          bytes_rq[8] = data_length - offset;
-      
+
       if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                                   0, /* lun */
                                   IPMI_NET_FN_OEM_GROUP_RQ, /* network function */
@@ -1351,7 +1351,7 @@ ipmi_oem_fujitsu_get_sel_entry_long_text (ipmi_oem_state_data_t *state_data)
                            ipmi_ctx_errormsg (state_data->ipmi_ctx));
           goto cleanup;
         }
-      
+
       if (ipmi_oem_check_response_and_completion_code (state_data,
                                                        bytes_rs,
                                                        rs_len,
@@ -1360,7 +1360,7 @@ ipmi_oem_fujitsu_get_sel_entry_long_text (ipmi_oem_state_data_t *state_data)
                                                        IPMI_NET_FN_OEM_GROUP_RS,
                                                        NULL) < 0)
         goto cleanup;
-  
+
       /* achu: assume a lot of this will be the same not matter how many times we loop */
       if (!offset)
         {
@@ -1375,16 +1375,16 @@ ipmi_oem_fujitsu_get_sel_entry_long_text (ipmi_oem_state_data_t *state_data)
           timestamp |= (bytes_rs[11] << 8);
           timestamp |= (bytes_rs[12] << 16);
           timestamp |= (bytes_rs[13] << 24);
-          
+
           css = (bytes_rs[14] & IPMI_OEM_FUJITSU_CSS_BITMASK);
           css >>= IPMI_OEM_FUJITSU_CSS_SHIFT;
-          
+
           severity = (bytes_rs[14] & IPMI_OEM_FUJITSU_SEVERITY_BITMASK);
           severity >>= IPMI_OEM_FUJITSU_SEVERITY_SHIFT;
         }
-      
+
       data_length = bytes_rs[15];
-      
+
       /* Every response should be NUL terminated, not just the last
        * component.
        */
@@ -1392,7 +1392,7 @@ ipmi_oem_fujitsu_get_sel_entry_long_text (ipmi_oem_state_data_t *state_data)
       bytes_rs[rs_len - 1] = '\0'; /* just to be sure it's terminated */
 
       component_length = strlen ((char *)bytes_rs + 16);
-  
+
       /* achu: truncate if there is overflow */
       if (offset + component_length > data_length)
         {
@@ -1409,7 +1409,7 @@ ipmi_oem_fujitsu_get_sel_entry_long_text (ipmi_oem_state_data_t *state_data)
           offset += component_length;
         }
     }
-  
+
   if (css == IPMI_OEM_FUJITSU_CSS_COMPONENT)
     css_str = "CSS Component";
 
@@ -1432,11 +1432,11 @@ ipmi_oem_fujitsu_get_sel_entry_long_text (ipmi_oem_state_data_t *state_data)
     }
 
   memset (time_buf, '\0', IPMI_OEM_TIME_BUFLEN + 1);
-  
+
   if (ipmi_timestamp_string (timestamp,
                              state_data->prog_data->args->common_args.utc_offset,
                              get_timestamp_flags (&(state_data->prog_data->args->common_args),
-                                                  IPMI_TIMESTAMP_FLAG_DEFAULT), 
+                                                  IPMI_TIMESTAMP_FLAG_DEFAULT),
                              "%b-%d-%Y | %H:%M:%S",
                              time_buf,
                              IPMI_OEM_TIME_BUFLEN) < 0)

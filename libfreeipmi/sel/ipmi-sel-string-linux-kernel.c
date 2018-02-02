@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -72,7 +72,7 @@ sel_string_output_linux_kernel_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
                                                         int *oem_rv)
 {
   char panic_str[LINUX_KERNEL_EVENT_BUFFER_LENGTH];
-      
+
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (sel_entry);
@@ -83,13 +83,13 @@ sel_string_output_linux_kernel_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
   assert (wlen);
   assert (system_event_record_data);
   assert (oem_rv);
-  
+
   assert (system_event_record_data->generator_id == IPMI_SLAVE_ADDRESS_OEM_LINUX_KERNEL);
   assert (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC);
   assert (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OS_CRITICAL_STOP);
   assert (system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
   assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
-  
+
   /* Format of Linux kernel panic is
    *
    * Sensor Number = First byte of panic
@@ -111,8 +111,8 @@ sel_string_output_linux_kernel_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
     (*oem_rv) = 1;
   else
     (*oem_rv) = 0;
-  
-  return (1);     
+
+  return (1);
 }
 
 /* return (0) - no OEM match
@@ -168,6 +168,6 @@ sel_string_output_linux_kernel_oem_record_data (ipmi_sel_ctx_t ctx,
     (*oem_rv) = 1;
   else
     (*oem_rv) = 0;
-  
+
   return (1);
 }

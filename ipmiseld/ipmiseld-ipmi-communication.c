@@ -271,9 +271,9 @@ ipmiseld_ipmi_setup (ipmiseld_host_data_t *host_data)
                                "ipmi_ctx_set_target: %s",
                                ipmi_ctx_errormsg (host_data->host_poll->ipmi_ctx));
           goto cleanup;
-        } 
+        }
     }
-  
+
   rv = 0;
  cleanup:
   if (rv < 0)

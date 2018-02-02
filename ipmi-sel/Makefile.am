@@ -19,13 +19,13 @@ ipmi_sel_LDADD = \
 	$(top_builddir)/common/portability/libportability.la \
 	$(top_builddir)/libipmidetect/libipmidetect.la \
 	$(top_builddir)/libfreeipmi/libfreeipmi.la
- 
+
 ipmi_sel_SOURCES = \
 	ipmi-sel.c \
 	ipmi-sel_.h \
 	ipmi-sel-argp.c \
 	ipmi-sel-argp.h
- 
+
 $(top_builddir)/common/toolcommon/libtoolcommon.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 

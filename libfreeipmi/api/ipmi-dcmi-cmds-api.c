@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 /*****************************************************************************\
  *  $Id: ipmi-dcmi-cmds-api.c,v 1.4 2010-05-17 17:42:45 chu11 Exp $
@@ -215,7 +215,7 @@ ipmi_cmd_dcmi_get_dcmi_capability_info_enhanced_system_power_statistics_attribut
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
     }
-  
+
   return (0);
 }
 
@@ -753,7 +753,7 @@ ipmi_cmd_dcmi_get_dcmi_configuration_parameters_dhcp_timing_1 (ipmi_ctx_t ctx,
   fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
-  
+
 int
 ipmi_cmd_dcmi_get_dcmi_configuration_parameters_dhcp_timing_2 (ipmi_ctx_t ctx,
                                                                uint8_t set_selector,
@@ -810,7 +810,7 @@ ipmi_cmd_dcmi_get_dcmi_configuration_parameters_dhcp_timing_2 (ipmi_ctx_t ctx,
   fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
-  
+
 int
 ipmi_cmd_dcmi_get_dcmi_configuration_parameters_dhcp_timing_3 (ipmi_ctx_t ctx,
                                                                uint8_t set_selector,
@@ -889,7 +889,7 @@ ipmi_cmd_dcmi_get_asset_tag (ipmi_ctx_t ctx,
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
-  
+
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
                                  tmpl_cmd_dcmi_get_asset_tag_rs) < 0)
     {
@@ -937,20 +937,20 @@ ipmi_cmd_dcmi_set_asset_tag (ipmi_ctx_t ctx,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int rv = -1;
-  
+
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
     }
-  
+
   /* remaining parameter checks in fill function */
   if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
-  
+
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
                                  tmpl_cmd_dcmi_set_asset_tag_rs) < 0)
     {
@@ -1011,7 +1011,7 @@ ipmi_cmd_dcmi_get_management_controller_identifier_string (ipmi_ctx_t ctx,
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
-  
+
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
                                  tmpl_cmd_dcmi_get_management_controller_identifier_string_rs) < 0)
     {
@@ -1059,20 +1059,20 @@ ipmi_cmd_dcmi_set_management_controller_identifier_string (ipmi_ctx_t ctx,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int rv = -1;
-  
+
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
     }
-  
+
   /* remaining parameter checks in fill function */
   if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
-  
+
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
                                  tmpl_cmd_dcmi_set_management_controller_identifier_string_rs) < 0)
     {
@@ -1492,7 +1492,7 @@ ipmi_cmd_dcmi_set_thermal_limit (ipmi_ctx_t ctx,
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
-  
+
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
                                  tmpl_cmd_dcmi_set_thermal_limit_rs) < 0)
     {
@@ -1557,20 +1557,20 @@ ipmi_cmd_dcmi_get_temperature_reading (ipmi_ctx_t ctx,
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
-  
+
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
                                  tmpl_cmd_dcmi_get_temperature_reading_rs) < 0)
     {
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
-  
+
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_dcmi_get_temperature_reading_rq)))
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   if (fill_cmd_dcmi_get_temperature_reading (sensor_type,
                                              entity_id,
                                              entity_instance,

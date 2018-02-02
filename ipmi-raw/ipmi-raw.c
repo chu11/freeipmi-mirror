@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -78,7 +78,7 @@ ipmi_raw_cmdline (ipmi_raw_state_data_t *state_data)
                        "Invalid netfn value\n");
       goto cleanup;
     }
-  
+
   if (!(bytes_rs = calloc (IPMI_RAW_MAX_ARGS, sizeof (uint8_t))))
     {
       pstdout_perror (state_data->pstate, "calloc");
@@ -99,12 +99,12 @@ ipmi_raw_cmdline (ipmi_raw_state_data_t *state_data)
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
-  
+
   pstdout_printf (state_data->pstate, "rcvd: ");
   for (i = 0; i < rs_len; i++)
     pstdout_printf (state_data->pstate, "%02X ", bytes_rs[i]);
   pstdout_printf (state_data->pstate, "\n");
-  
+
   rv = 0;
  cleanup:
   free (bytes_rs);
@@ -266,7 +266,7 @@ ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
           break;
         }
       line_count++;
-      
+
       /* On invalid inputs, we exit instead of goto end loop.
        *
        * We could continue and read the next line, but the assumption
@@ -304,7 +304,7 @@ ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
           pstdout_perror (state_data->pstate, "calloc");
           goto cleanup;
         }
-  
+
       if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                                   bytes_rq[0],
                                   bytes_rq[1],

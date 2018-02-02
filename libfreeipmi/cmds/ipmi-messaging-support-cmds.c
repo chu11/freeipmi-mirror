@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -259,7 +259,7 @@ fiid_template_t tmpl_cmd_get_bt_interface_capabilities_rs =
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_cmd_master_write_read_rq = 
+fiid_template_t tmpl_cmd_master_write_read_rq =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "bus_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -1413,7 +1413,7 @@ fill_cmd_set_system_info_parameters (uint8_t parameter_selector,
 
   return (0);
 }
-  
+
 int
 fill_cmd_set_system_info_parameters_set_in_progress (uint8_t state,
                                                      fiid_obj_t obj_cmd_rq)
@@ -1512,12 +1512,12 @@ _fill_cmd_set_system_info_parameters_string_set_common (uint8_t set_selector,
       ERRNO_TRACE (errno);
       return (-1);
     }
-    
+
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_INFO_PARAMETERS);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", parameter_selector);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
-   
+
   /* achu: spec is not clear if this data should be 0 extended, we
    * will do it to be on the safe side
    */
@@ -1525,7 +1525,7 @@ _fill_cmd_set_system_info_parameters_string_set_common (uint8_t set_selector,
   if (string_block && string_block_length)
     memcpy (stringbuf, string_block, string_block_length);
   FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "string", stringbuf, IPMI_SYSTEM_INFO_SET_STRING_LEN_MAX);
-   
+
   return (0);
 }
 
@@ -1596,7 +1596,7 @@ fill_cmd_set_system_info_parameters_system_name_first_set (uint8_t set_selector,
 
   return (0);
 }
-  
+
 int
 fill_cmd_set_system_info_parameters_system_name (uint8_t set_selector,
                                                  const void *string_block,

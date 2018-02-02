@@ -51,7 +51,7 @@
 extern struct ipmipower_arguments cmd_args;
 
 struct oem_power_type_data oem_power_type_data[] =
-  { 
+  {
     /*
      * IPMIPOWER_OEM_POWER_TYPE_NONE
      */
@@ -158,15 +158,15 @@ ipmipower_oem_power_cmd_check_support_and_privilege (ipmipower_power_cmd_t cmd,
   unsigned int oem_power_type_support_mask;
   char *power_cmd_str;
   int rv = -1;
-  
+
   assert (IPMIPOWER_POWER_CMD_VALID (cmd));
   /* errbuf & errbuflen can be NULL/0 if doing an assert check */
   assert (cmd_args.oem_power_type != IPMIPOWER_OEM_POWER_TYPE_NONE);
 
   oem_power_type_support_mask = _ipmipower_power_cmd_to_oem_power_type_support (cmd);
-  
+
   power_cmd_str = ipmipower_power_cmd_to_string (cmd);
-  
+
   if (!(oem_power_type_data[cmd_args.oem_power_type].supported_operations & oem_power_type_support_mask))
     {
       if (errbuf && errbuflen)
@@ -178,7 +178,7 @@ ipmipower_oem_power_cmd_check_support_and_privilege (ipmipower_power_cmd_t cmd,
       rv = 0;
       goto cleanup;
     }
-  
+
   if (cmd_args.oem_power_type == IPMIPOWER_OEM_POWER_TYPE_C410X)
     {
       /* XXX - I'm pretty sure */
@@ -195,7 +195,7 @@ ipmipower_oem_power_cmd_check_support_and_privilege (ipmipower_power_cmd_t cmd,
                       oem_power_type_data[cmd_args.oem_power_type].name);
           rv = 0;
           goto cleanup;
-        } 
+        }
     }
 
   rv = 1;
@@ -213,12 +213,12 @@ ipmipower_oem_power_cmd_check_extra_arg (const char *extra_arg,
   /* extra_arg can be NULL, user didn't input one */
   /* errbuf & errbuflen can be NULL/0 if doing an assert check */
   assert (cmd_args.oem_power_type != IPMIPOWER_OEM_POWER_TYPE_NONE);
-  
+
   if (cmd_args.oem_power_type == IPMIPOWER_OEM_POWER_TYPE_C410X)
     {
       char *endptr;
       unsigned int tmp;
-      
+
       if (!extra_arg)
         {
           if (errbuf && errbuflen)
@@ -229,8 +229,8 @@ ipmipower_oem_power_cmd_check_extra_arg (const char *extra_arg,
           rv = 0;
           goto cleanup;
         }
-      
-      errno = 0; 
+
+      errno = 0;
       tmp = strtol (extra_arg, &endptr, 0);
       if (errno
           || endptr[0] != '\0')
@@ -244,7 +244,7 @@ ipmipower_oem_power_cmd_check_extra_arg (const char *extra_arg,
           rv = 0;
           goto cleanup;
         }
-      
+
       if (tmp < IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MIN
           || tmp > IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MAX)
         {
@@ -258,7 +258,7 @@ ipmipower_oem_power_cmd_check_extra_arg (const char *extra_arg,
           goto cleanup;
         }
     }
-  
+
   rv = 1;
  cleanup:
   return (rv);

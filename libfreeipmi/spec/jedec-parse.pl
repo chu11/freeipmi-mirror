@@ -28,7 +28,7 @@ sub trim
     return $string;
 }
 
-if (!defined($ARGV[0])) 
+if (!defined($ARGV[0]))
 {
     usage();
 }

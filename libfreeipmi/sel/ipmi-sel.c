@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -269,7 +269,7 @@ ipmi_sel_ctx_set_flags (ipmi_sel_ctx_t ctx, unsigned int flags)
         interpret_flags |= IPMI_INTERPRET_FLAGS_SEL_ASSUME_SYSTEM_EVENT_RECORDS;
       else
         interpret_flags &= ~IPMI_INTERPRET_FLAGS_SEL_ASSUME_SYSTEM_EVENT_RECORDS;
-      
+
       if (ipmi_interpret_ctx_set_flags (ctx->interpret_ctx, interpret_flags) < 0)
         {
           SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERPRET_ERROR);
@@ -440,10 +440,10 @@ ipmi_sel_ctx_get_parameter (ipmi_sel_ctx_t ctx,
       SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_PARAMETERS);
       return (-1);
     }
-  
+
   ctx->errnum = IPMI_SEL_ERR_SUCCESS;
   return (0);
-} 
+}
 
 int
 ipmi_sel_ctx_set_parameter (ipmi_sel_ctx_t ctx,
@@ -463,7 +463,7 @@ ipmi_sel_ctx_set_parameter (ipmi_sel_ctx_t ctx,
         {
           ipmi_interpret_ctx_t interpret_ctx;
           uint16_t tmp;
-          
+
           interpret_ctx = *((ipmi_interpret_ctx_t *)ptr);
 
           /* test to make sure interpret_ctx legit */
@@ -481,7 +481,7 @@ ipmi_sel_ctx_set_parameter (ipmi_sel_ctx_t ctx,
       if (ptr)
         {
           int tmp = *((int *)ptr);
-          
+
           if (!IPMI_UTC_OFFSET_VALID (tmp))
             {
               SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_PARAMETERS);
@@ -496,10 +496,10 @@ ipmi_sel_ctx_set_parameter (ipmi_sel_ctx_t ctx,
       SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_PARAMETERS);
       return (-1);
     }
-  
+
   ctx->errnum = IPMI_SEL_ERR_SUCCESS;
   return (0);
-} 
+}
 
 char *
 ipmi_sel_ctx_get_debug_prefix (ipmi_sel_ctx_t ctx)
@@ -607,7 +607,7 @@ ipmi_sel_ctx_register_reservation_id (ipmi_sel_ctx_t ctx, uint16_t *reservation_
       SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_IPMI_ERROR);
       return (-1);
     }
-    
+
   if (reservation_id)
     *reservation_id = ctx->reservation_id;
 
@@ -854,7 +854,7 @@ _get_sel_entry (ipmi_sel_ctx_t ctx,
             }
           (*reservation_id_initialized)++;
         }
-      
+
       if (ipmi_cmd_get_sel_entry (ctx->ipmi_ctx,
                                   (*reservation_id),
                                   record_id,
@@ -876,13 +876,13 @@ _get_sel_entry (ipmi_sel_ctx_t ctx,
                   reservation_id_retry_count++;
                   reservation_canceled++;
                   (*reservation_id_initialized) = 0;
-                  
+
                   if (reservation_id_retry_count > IPMI_SEL_RESERVATION_ID_RETRY)
                     {
                       SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_IPMI_ERROR);
                       goto cleanup;
                     }
-                  
+
                   continue;
                 }
             }
@@ -892,10 +892,10 @@ _get_sel_entry (ipmi_sel_ctx_t ctx,
               goto cleanup;
             }
         }
-      
+
       break;
     }
-  
+
   rv = 0;
  cleanup:
   return (rv);
@@ -977,7 +977,7 @@ ipmi_sel_parse (ipmi_sel_ctx_t ctx,
           SEL_FIID_OBJECT_ERROR_TO_SEL_ERRNUM (ctx, obj_cmd_rs);
           goto cleanup;
         }
-      
+
       tmp_sel_entry.sel_event_record_len = len;
 
       if (sel_get_record_header_info (ctx,
@@ -1023,11 +1023,11 @@ ipmi_sel_parse (ipmi_sel_ctx_t ctx,
           SEL_FIID_OBJECT_ERROR_TO_SEL_ERRNUM (ctx, obj_cmd_rs);
           goto cleanup;
         }
-      
+
       sel_entry->sel_event_record_len = len;
-     
+
       _sel_entry_dump (ctx, sel_entry);
-      
+
       /* achu: should come before list_append to avoid having a freed entry on the list */
       if (callback)
         {
@@ -1083,7 +1083,7 @@ ipmi_sel_parse (ipmi_sel_ctx_t ctx,
 
       if (!parsed_atleast_one_entry)
         parsed_atleast_one_entry++;
-      
+
       if (FIID_OBJ_GET (obj_cmd_rs, "next_record_id", &val) < 0)
         {
           SEL_FIID_OBJECT_ERROR_TO_SEL_ERRNUM (ctx, obj_cmd_rs);
@@ -1105,11 +1105,11 @@ ipmi_sel_parse (ipmi_sel_ctx_t ctx,
           SEL_FIID_OBJECT_ERROR_TO_SEL_ERRNUM (ctx, obj_cmd_rs);
           goto cleanup;
         }
-      
+
       sel_entry->sel_event_record_len = len;
-      
+
       _sel_entry_dump (ctx, sel_entry);
-      
+
       /* achu: should come before list_append to avoid having a freed entry on the list */
       if (callback)
         {
@@ -1140,7 +1140,7 @@ ipmi_sel_parse (ipmi_sel_ctx_t ctx,
         }
       ctx->current_sel_entry = list_next (ctx->sel_entries_itr);
     }
-  ctx->sel_entries_loaded = 1; 
+  ctx->sel_entries_loaded = 1;
 
   ctx->errnum = IPMI_SEL_ERR_SUCCESS;
  cleanup:
@@ -1224,11 +1224,11 @@ ipmi_sel_parse_record_ids (ipmi_sel_ctx_t ctx,
           SEL_FIID_OBJECT_ERROR_TO_SEL_ERRNUM (ctx, obj_cmd_rs);
           goto cleanup;
         }
-      
+
       sel_entry->sel_event_record_len = len;
-      
+
       _sel_entry_dump (ctx, sel_entry);
-      
+
       /* achu: should come before list_append to avoid having a freed entry on the list */
       if (callback)
         {
@@ -1257,7 +1257,7 @@ ipmi_sel_parse_record_ids (ipmi_sel_ctx_t ctx,
         }
       ctx->current_sel_entry = list_next (ctx->sel_entries_itr);
     }
-  ctx->sel_entries_loaded = 1; 
+  ctx->sel_entries_loaded = 1;
 
   ctx->errnum = IPMI_SEL_ERR_SUCCESS;
  cleanup:
@@ -1436,7 +1436,7 @@ _get_parse_sel_entry_common (ipmi_sel_ctx_t ctx,
           SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_SEL_ENTRIES_NOT_LOADED);
           return (-1);
         }
-      
+
       if (!ctx->sel_entries_itr)
         {
           SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_NO_SEL_ENTRIES);
@@ -1618,7 +1618,7 @@ _sel_parse_system_event_common (ipmi_sel_ctx_t ctx,
   struct ipmi_sel_entry sel_entry_buf;
 
   assert (system_event_record_data);
-  
+
   if (!ctx || ctx->magic != IPMI_SEL_CTX_MAGIC)
     {
       ERR_TRACE (ipmi_sel_ctx_errormsg (ctx), ipmi_sel_ctx_errnum (ctx));
@@ -1645,12 +1645,12 @@ _sel_parse_system_event_common (ipmi_sel_ctx_t ctx,
               sel_entry_buf.sel_event_record_len);
       sel_entry_ptr = &sel_entry_buf;
     }
-  
+
   if (sel_get_system_event_record (ctx,
                                    sel_entry_ptr,
                                    system_event_record_data) < 0)
     return (-1);
-  
+
   return (0);
 }
 
@@ -1848,7 +1848,7 @@ ipmi_sel_parse_read_event_data1 (ipmi_sel_ctx_t ctx,
     *event_data1 = (system_event_record_data.offset_from_event_reading_type_code
                     | system_event_record_data.event_data3_flag << 4
                     | system_event_record_data.event_data2_flag << 6);
-  
+
   ctx->errnum = IPMI_SEL_ERR_SUCCESS;
   return (0);
 }
@@ -1966,7 +1966,7 @@ ipmi_sel_parse_read_manufacturer_id (ipmi_sel_ctx_t ctx,
 {
   struct ipmi_sel_entry *sel_entry_ptr = NULL;
   struct ipmi_sel_entry sel_entry;
-  
+
   if (_sel_parse_read_common (ctx,
                               sel_record,
                               sel_record_len,
@@ -2128,13 +2128,13 @@ ipmi_sel_clear_sel (ipmi_sel_ctx_t ctx)
               else
                 {
                   reservation_id_retry_count++;
-                  
+
                   if (reservation_id_retry_count > IPMI_SEL_RESERVATION_ID_RETRY)
                     {
                       SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_IPMI_ERROR);
                       goto cleanup;
                     }
-                  
+
                   if (sel_get_reservation_id (ctx, &reservation_id, NULL) < 0)
                     goto cleanup;
 
@@ -2220,7 +2220,7 @@ ipmi_sel_delete_sel_entry (ipmi_sel_ctx_t ctx, uint16_t record_id)
               else
                 {
                   reservation_id_retry_count++;
-                  
+
                   if (reservation_id_retry_count > IPMI_SEL_RESERVATION_ID_RETRY)
                     {
                       SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_IPMI_ERROR);

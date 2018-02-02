@@ -61,25 +61,25 @@ ipmi_fru_oem_wistron_oem_record (ipmi_fru_state_data_t *state_data,
         {
           char string[IPMI_OEM_WISTRON_PROPRIETARY_STRING_MAX + 1];
           unsigned int len;
-          
+
           memset (string, '\0', IPMI_OEM_WISTRON_PROPRIETARY_STRING_MAX + 1);
-          
+
           len = oem_data_len;
           if (len > IPMI_OEM_WISTRON_PROPRIETARY_STRING_MAX)
             len = IPMI_OEM_WISTRON_PROPRIETARY_STRING_MAX;
-          
+
           memcpy (string,
                   oem_data,
                   len);
-          
+
           pstdout_printf (state_data->pstate,
                           "  FRU Proprietary String: %s\n",
                           string);
-          
+
           return (1);
         }
     }
-  
+
   return (0);
 }
 

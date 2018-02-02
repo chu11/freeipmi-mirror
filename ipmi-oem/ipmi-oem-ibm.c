@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2008-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -354,8 +354,8 @@ _get_led_name (ipmi_oem_state_data_t *state_data,
      snprintf (led_name,
                led_name_len,
                "LED = %04Xh",
-               led_id);      
-   
+               led_id);
+
    return (0);
 }
 
@@ -403,7 +403,7 @@ _find_sensor_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
                                     sdr_callback_arg->id_string,
                                     sdr_callback_arg->id_string_len) < 0)
         return (-1);
-      
+
       sdr_callback_arg->found = 1;
       return (1);
     }
@@ -574,13 +574,13 @@ _get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
                        ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       return (-1);
     }
-      
+
   /* If not enough data, skip it */
   if (oem_data_buf_len < IPMI_SDR_RECORD_OEM_IBM_LED_OEM_DATA_MIN_LENGTH)
     return (0);
 
   sensor_type = oem_data_buf[IPMI_SDR_RECORD_OEM_IBM_SENSOR_TYPE_OEM_DATA_INDEX];
-      
+
   /* If not LED sensor type, skip it */
   if (sensor_type != IPMI_SDR_RECORD_OEM_IBM_LED_SENSOR_TYPE)
     return (0);
@@ -588,7 +588,7 @@ _get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
   /* IBM systems use inconsistent endian, guess endian by assuming
    * LED IDs are numerically started at 0
    */
-      
+
   if (oem_data_buf[IPMI_SDR_RECORD_OEM_IBM_LED_ID_LS_OEM_DATA_INDEX] > oem_data_buf[IPMI_SDR_RECORD_OEM_IBM_LED_ID_MS_OEM_DATA_INDEX])
     {
       led_id_ls = oem_data_buf[IPMI_SDR_RECORD_OEM_IBM_LED_ID_LS_OEM_DATA_INDEX];
@@ -605,7 +605,7 @@ _get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
   bytes_rq[0] = IPMI_CMD_OEM_IBM_GET_LED;
   bytes_rq[1] = led_id_ms;
   bytes_rq[2] = led_id_ls;
-      
+
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
                               IPMI_NET_FN_OEM_IBM_LED_RQ, /* network function */
@@ -620,7 +620,7 @@ _get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       return (-1);
     }
-      
+
   /* If get parameter out of range, assume LED ID endian wrong and try again */
   if (rs_len >= 2 && bytes_rs[1] == IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE)
     {
@@ -662,38 +662,38 @@ _get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
                                                        IPMI_NET_FN_OEM_IBM_LED_RS,
                                                        NULL) < 0)
         return (-1);
-      
+
       available_led = 1;
     }
 
   if (!sdr_callback_arg->header_output_flag)
     {
       memset (fmt, '\0', IPMI_OEM_FMT_BUFLEN + 1);
-      
+
       snprintf (fmt,
                 IPMI_OEM_FMT_BUFLEN,
                 "%%-%ds | LED               | State    | LED Information\n",
                 sdr_callback_arg->column_width->record_id);
-      
+
       pstdout_printf (state_data->pstate,
                       fmt,
                       SENSORS_HEADER_RECORD_ID_STR);
-      
+
       sdr_callback_arg->header_output_flag++;
     }
-      
+
   memset (led_name, '\0', IPMI_OEM_IBM_LED_NAME_BUFLEN + 1);
   memset (led_pointer_name, '\0', IPMI_OEM_IBM_LED_NAME_BUFLEN + 1);
   memset (id_string, '\0', IPMI_OEM_IBM_LED_ID_STRING_BUFLEN + 1);
   memset (led_info, '\0', IPMI_OEM_IBM_LED_INFO_BUFLEN + 1);
-      
+
   if (_get_led_name (state_data,
                      sdr_callback_arg->oem_data,
                      led_id,
                      led_name,
                      IPMI_OEM_IBM_LED_NAME_BUFLEN) < 0)
     return (-1);
-      
+
   if (available_led)
     {
       led_state = bytes_rs[3];
@@ -705,7 +705,7 @@ _get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
         led_state_str = "Inactive";
       else
         led_state_str = "Active";
-      
+
       if (led_state != IPMI_OEM_IBM_LED_STATE_INACTIVE)
         {
           /* Location LED special case */
@@ -723,7 +723,7 @@ _get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
                                  led_pointer_name,
                                  IPMI_OEM_IBM_LED_NAME_BUFLEN) < 0)
                 return (-1);
-              
+
               snprintf (led_info,
                         IPMI_OEM_IBM_LED_INFO_BUFLEN,
                         "'%s' Active",
@@ -742,7 +742,7 @@ _get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
                                 id_string,
                                 IPMI_OEM_IBM_LED_ID_STRING_BUFLEN) < 0)
                 return (-1);
-              
+
               snprintf (led_info,
                         IPMI_OEM_IBM_LED_INFO_BUFLEN,
                         "Sensor '%s' error",
@@ -764,7 +764,7 @@ _get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
     }
   else
     led_state_str = "N/A";
-      
+
   snprintf (fmt,
             IPMI_OEM_FMT_BUFLEN,
             "%%-%du | %%-%ds | %%-%ds | %s\n",
@@ -772,7 +772,7 @@ _get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
             IPMI_OEM_IBM_LED_NAME_COLUMN_SIZE,
             IPMI_OEM_IBM_LED_STATE_COLUMN_SIZE,
             led_info);
-      
+
   pstdout_printf (state_data->pstate,
                   fmt,
                   record_id,
@@ -790,7 +790,7 @@ ipmi_oem_ibm_get_led (ipmi_oem_state_data_t *state_data)
   struct sensor_column_width column_width;
   struct ipmi_oem_data oem_data;
   int rv = -1;
-  
+
   assert (state_data);
   assert (!state_data->prog_data->args->oem_options_count);
 
@@ -836,7 +836,7 @@ ipmi_oem_ibm_get_led (ipmi_oem_state_data_t *state_data)
                        ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       goto cleanup;
     }
-  
+
   rv = 0;
  cleanup:
   return (rv);

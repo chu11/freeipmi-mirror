@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 /*****************************************************************************\
  *  $Id: ipmi-fru-data.c,v 1.14 2010-02-08 22:09:40 chu11 Exp $
@@ -103,10 +103,10 @@ _parse_type_length (ipmi_fru_ctx_t ctx,
   assert (areabuf);
   assert (areabuflen);
   assert (number_of_data_bytes);
-  
+
   type_length = areabufptr[current_area_offset];
 
-  /* IPMI Workaround 
+  /* IPMI Workaround
    *
    * Dell Poweredge R610
    *
@@ -146,10 +146,10 @@ _parse_type_length (ipmi_fru_ctx_t ctx,
               1 + (*number_of_data_bytes));
       field->type_length_field_length = 1 + (*number_of_data_bytes);
     }
-      
+
   return (0);
 }
-                    
+
 int
 ipmi_fru_chassis_info_area (ipmi_fru_ctx_t ctx,
                             const void *areabuf,
@@ -171,7 +171,7 @@ ipmi_fru_chassis_info_area (ipmi_fru_ctx_t ctx,
       ERR_TRACE (ipmi_fru_ctx_errormsg (ctx), ipmi_fru_ctx_errnum (ctx));
       return (-1);
     }
-  
+
   if (!areabuf || !areabuflen)
     {
       FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_PARAMETERS);
@@ -290,7 +290,7 @@ ipmi_fru_board_info_area (ipmi_fru_ctx_t ctx,
       ERR_TRACE (ipmi_fru_ctx_errormsg (ctx), ipmi_fru_ctx_errnum (ctx));
       return (-1);
     }
-  
+
   if (!areabuf || !areabuflen)
     {
       FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_PARAMETERS);
@@ -338,7 +338,7 @@ ipmi_fru_board_info_area (ipmi_fru_ctx_t ctx,
       area_offset++;
       mfg_date_time_tmp |= (areabufptr[area_offset] << 16);
       area_offset++;
-      
+
       /* mfg_date_time is in minutes, so multiple by 60 to get seconds */
       mfg_date_time_tmp *= 60;
 
@@ -507,7 +507,7 @@ ipmi_fru_product_info_area (ipmi_fru_ctx_t ctx,
       ERR_TRACE (ipmi_fru_ctx_errormsg (ctx), ipmi_fru_ctx_errnum (ctx));
       return (-1);
     }
-  
+
   if (!areabuf || !areabuflen)
     {
       FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_PARAMETERS);
@@ -722,7 +722,7 @@ ipmi_fru_multirecord_power_supply_information (ipmi_fru_ctx_t ctx,
       ERR_TRACE (ipmi_fru_ctx_errormsg (ctx), ipmi_fru_ctx_errnum (ctx));
       return (-1);
     }
-  
+
   if (!areabuf || !areabuflen)
     {
       FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_PARAMETERS);
@@ -1032,7 +1032,7 @@ ipmi_fru_multirecord_dc_output (ipmi_fru_ctx_t ctx,
       ERR_TRACE (ipmi_fru_ctx_errormsg (ctx), ipmi_fru_ctx_errnum (ctx));
       return (-1);
     }
-  
+
   if (!areabuf || !areabuflen)
     {
       FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_PARAMETERS);
@@ -1188,7 +1188,7 @@ ipmi_fru_multirecord_dc_load (ipmi_fru_ctx_t ctx,
       ERR_TRACE (ipmi_fru_ctx_errormsg (ctx), ipmi_fru_ctx_errnum (ctx));
       return (-1);
     }
-  
+
   if (!areabuf || !areabuflen)
     {
       FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_PARAMETERS);
@@ -1339,7 +1339,7 @@ ipmi_fru_multirecord_management_access_record (ipmi_fru_ctx_t ctx,
       ERR_TRACE (ipmi_fru_ctx_errormsg (ctx), ipmi_fru_ctx_errnum (ctx));
       return (-1);
     }
-  
+
   if (!areabuf || !areabuflen)
     {
       FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_PARAMETERS);
@@ -1371,7 +1371,7 @@ ipmi_fru_multirecord_management_access_record (ipmi_fru_ctx_t ctx,
       FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, obj_record);
       goto cleanup;
     }
-  
+
   if (fru_dump_obj (ctx,
                     obj_record,
                     "FRU Management Access Record") < 0)
@@ -1392,7 +1392,7 @@ ipmi_fru_multirecord_management_access_record (ipmi_fru_ctx_t ctx,
   if (sub_record_data && sub_record_data_len && (*sub_record_data_len))
     {
       int len;
-      
+
       if ((len = fiid_obj_get_data (obj_record,
                                     "record",
                                     sub_record_data,
@@ -1432,7 +1432,7 @@ ipmi_fru_multirecord_base_compatibility_record (ipmi_fru_ctx_t ctx,
       ERR_TRACE (ipmi_fru_ctx_errormsg (ctx), ipmi_fru_ctx_errnum (ctx));
       return (-1);
     }
-  
+
   if (!areabuf || !areabuflen)
     {
       FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_PARAMETERS);
@@ -1464,7 +1464,7 @@ ipmi_fru_multirecord_base_compatibility_record (ipmi_fru_ctx_t ctx,
       FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, obj_record);
       goto cleanup;
     }
-  
+
   if (fru_dump_obj (ctx,
                     obj_record,
                     "FRU Base Compatibility Record") < 0)
@@ -1521,7 +1521,7 @@ ipmi_fru_multirecord_base_compatibility_record (ipmi_fru_ctx_t ctx,
   if (code_range_mask && code_range_mask_len && (*code_range_mask_len))
     {
       int len;
-      
+
       if ((len = fiid_obj_get_data (obj_record,
                                     "code_range_mask",
                                     code_range_mask,
@@ -1561,7 +1561,7 @@ ipmi_fru_multirecord_extended_compatibility_record (ipmi_fru_ctx_t ctx,
       ERR_TRACE (ipmi_fru_ctx_errormsg (ctx), ipmi_fru_ctx_errnum (ctx));
       return (-1);
     }
-  
+
   if (!areabuf || !areabuflen)
     {
       FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_PARAMETERS);
@@ -1593,7 +1593,7 @@ ipmi_fru_multirecord_extended_compatibility_record (ipmi_fru_ctx_t ctx,
       FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, obj_record);
       goto cleanup;
     }
-  
+
   if (fru_dump_obj (ctx,
                     obj_record,
                     "FRU Extended Compatibility Record") < 0)
@@ -1650,7 +1650,7 @@ ipmi_fru_multirecord_extended_compatibility_record (ipmi_fru_ctx_t ctx,
   if (code_range_mask && code_range_mask_len && (*code_range_mask_len))
     {
       int len;
-      
+
       if ((len = fiid_obj_get_data (obj_record,
                                     "code_range_mask",
                                     code_range_mask,
@@ -1694,7 +1694,7 @@ ipmi_fru_multirecord_extended_dc_output (ipmi_fru_ctx_t ctx,
       ERR_TRACE (ipmi_fru_ctx_errormsg (ctx), ipmi_fru_ctx_errnum (ctx));
       return (-1);
     }
-  
+
   if (!areabuf || !areabuflen)
     {
       FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_PARAMETERS);
@@ -1871,7 +1871,7 @@ ipmi_fru_multirecord_extended_dc_load (ipmi_fru_ctx_t ctx,
       ERR_TRACE (ipmi_fru_ctx_errormsg (ctx), ipmi_fru_ctx_errnum (ctx));
       return (-1);
     }
-  
+
   if (!areabuf || !areabuflen)
     {
       FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_PARAMETERS);
@@ -2040,7 +2040,7 @@ ipmi_fru_multirecord_oem_record (ipmi_fru_ctx_t ctx,
       ERR_TRACE (ipmi_fru_ctx_errormsg (ctx), ipmi_fru_ctx_errnum (ctx));
       return (-1);
     }
-  
+
   if (!areabuf || !areabuflen)
     {
       FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_PARAMETERS);
@@ -2072,7 +2072,7 @@ ipmi_fru_multirecord_oem_record (ipmi_fru_ctx_t ctx,
       FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, obj_record);
       goto cleanup;
     }
-  
+
   if (fru_dump_obj (ctx,
                     obj_record,
                     "FRU OEM Record") < 0)
@@ -2093,7 +2093,7 @@ ipmi_fru_multirecord_oem_record (ipmi_fru_ctx_t ctx,
   if (oem_data && oem_data_len && (*oem_data_len))
     {
       int len;
-      
+
       if ((len = fiid_obj_get_data (obj_record,
                                     "oem_data",
                                     oem_data,

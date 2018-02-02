@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -72,7 +72,7 @@ sel_string_output_supermicro_x9dri_ln4f_plus_event_data1_class_oem (ipmi_sel_ctx
   assert (system_event_record_data);
   assert (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9DRI_LN4F_PLUS);
 
-  /* achu: Via reverse engineering, see 
+  /* achu: Via reverse engineering, see
    *
    * "Supermicro X8DTG-QF System Event Log" thread in late
    * January/early February 2012.

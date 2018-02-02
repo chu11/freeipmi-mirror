@@ -193,7 +193,7 @@ _destroy_ctx (ipmi_monitoring_ctx_t c)
   assert (c->magic == IPMI_MONITORING_MAGIC);
 
   ipmi_interpret_ctx_destroy (c->interpret_ctx);
-    
+
   /* Note: destroy iterator first */
   if (c->sel_records_itr)
     {
@@ -327,14 +327,14 @@ ipmi_monitoring_ctx_sel_config_file (ipmi_monitoring_ctx_t c,
 {
   if (!c || c->magic != IPMI_MONITORING_MAGIC)
     return (-1);
-  
+
   if (ipmi_interpret_load_sel_config (c->interpret_ctx,
                                       sel_config_file) < 0)
     {
       _interpret_ctx_error_convert (c);
       return (-1);
     }
-  
+
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
   return (0);
 }
@@ -345,7 +345,7 @@ ipmi_monitoring_ctx_sensor_config_file (ipmi_monitoring_ctx_t c,
 {
   if (!c || c->magic != IPMI_MONITORING_MAGIC)
     return (-1);
-  
+
   if (sensor_config_file)
     {
       if (ipmi_interpret_load_sensor_config (c->interpret_ctx,
@@ -376,7 +376,7 @@ ipmi_monitoring_ctx_sensor_config_file (ipmi_monitoring_ctx_t c,
           return (-1);
         }
     }
-  
+
  out:
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
   return (0);
@@ -467,7 +467,7 @@ _ipmi_monitoring_interpret_oem_data (ipmi_monitoring_ctx_t c, int enable_interpr
   assert (c->interpret_ctx);
   assert (c->ipmi_ctx);
   assert (_ipmi_monitoring_initialized);
-  
+
   if (enable_interpret_oem_data)
     {
       if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_device_id_rs)))
@@ -491,7 +491,7 @@ _ipmi_monitoring_interpret_oem_data (ipmi_monitoring_ctx_t c, int enable_interpr
           goto cleanup;
         }
       c->manufacturer_id = val;
-          
+
       if (FIID_OBJ_GET (obj_cmd_rs, "product_id", &val) < 0)
         {
           IPMI_MONITORING_DEBUG (("FIID_OBJ_GET: %s", fiid_obj_errormsg (obj_cmd_rs)));
@@ -682,7 +682,7 @@ ipmi_monitoring_sel_by_record_id (ipmi_monitoring_ctx_t c,
   c->callback_sel_record = NULL;
 
   return (rv);
-}                             
+}
 
 int
 ipmi_monitoring_sel_by_sensor_type (ipmi_monitoring_ctx_t c,
@@ -750,7 +750,7 @@ _ipmi_monitoring_date_parse (ipmi_monitoring_ctx_t c,
    * have issues.  So we need to memset.
    */
   memset (&tm, '\0', sizeof (struct tm));
-  
+
   if (!strptime (date, "%m/%d/%Y", &tm))
     {
       if (!strptime (date, "%b/%d/%Y", &tm))
@@ -776,7 +776,7 @@ _ipmi_monitoring_date_parse (ipmi_monitoring_ctx_t c,
       c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
       return (-1);
     }
-  
+
   (*date_val) = t;
   return (0);
 }
@@ -819,7 +819,7 @@ ipmi_monitoring_sel_by_date_range (ipmi_monitoring_ctx_t c,
     }
   else
     date_begin_val = 0;
-  
+
   if (date_end)
     {
       if (_ipmi_monitoring_date_parse (c,
@@ -963,7 +963,7 @@ _ipmi_monitoring_sel_record_common (ipmi_monitoring_ctx_t c,
       c->errnum = IPMI_MONITORING_ERR_SEL_RECORD_DATA_NOT_AVAILABLE;
       return (-1);
     }
-  
+
   (*sel_record) = c->current_sel_record;
   return (0);
 }
@@ -1306,7 +1306,7 @@ _ipmi_monitoring_get_sensor_reading_shared (ipmi_monitoring_ctx_t c,
   assert (_ipmi_monitoring_initialized);
   assert (!(sensor_reading_flags & ~IPMI_MONITORING_SENSOR_READING_FLAGS_MASK));
   assert (sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_SHARED_SENSORS);
-  
+
   if (ipmi_sdr_parse_record_id_and_type (c->sdr_ctx,
                                          NULL,
                                          0,
@@ -1318,7 +1318,7 @@ _ipmi_monitoring_get_sensor_reading_shared (ipmi_monitoring_ctx_t c,
       c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       return (-1);
     }
-  
+
   if (record_type != IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
     return (0);
 
@@ -1338,7 +1338,7 @@ _ipmi_monitoring_get_sensor_reading_shared (ipmi_monitoring_ctx_t c,
 
   if (share_count <= 1)
     return (0);
-  
+
   /* IPMI spec gives the following example:
    *
    * "If the starting sensor number was 10, and the share
@@ -1383,7 +1383,7 @@ _ipmi_monitoring_sensor_readings_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
                                                                     sdr_callback_arg->sensor_types_len)) < 0)
         return (-1);
     }
-          
+
   if (!shared_ret)
     {
       if (ipmi_monitoring_get_sensor_reading (sdr_callback_arg->c,
@@ -1880,10 +1880,10 @@ char **
 ipmi_monitoring_sensor_read_sensor_bitmask_strings (ipmi_monitoring_ctx_t c)
 {
   struct ipmi_monitoring_sensor_reading *sensor_reading = NULL;
-  
+
   if (_ipmi_monitoring_sensor_read_common (c, &sensor_reading) < 0)
     return (NULL);
-  
+
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
   return (sensor_reading->sensor_bitmask_strings);
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -309,7 +309,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
       goto cleanup;
     }
   major = val;
-  
+
   if (FIID_OBJ_GET (obj_cmd_rs, "ipmi_version_minor", &val) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -483,7 +483,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
       goto cleanup;
     }
   auxiliary_firmware_revision_information = val;
-  
+
   if (flag)
     {
       /* OEM Interpretation
@@ -791,7 +791,7 @@ display_system_info_common (bmc_info_state_data_t *state_data,
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
-  
+
   if ((ret = fiid_obj_get (obj_cmd_first_set_rs,
                            "encoding",
                            &val)) < 0)
@@ -802,7 +802,7 @@ display_system_info_common (bmc_info_state_data_t *state_data,
                        fiid_obj_errormsg (obj_cmd_first_set_rs));
       goto cleanup;
     }
-  
+
   if (!ret)
     goto output;
 
@@ -810,7 +810,7 @@ display_system_info_common (bmc_info_state_data_t *state_data,
   /* Code currently assumes ASCII, remove to remove warning */
   encoding = val;
 #endif
-  
+
   if ((ret = fiid_obj_get (obj_cmd_first_set_rs,
                            "string_length",
                            &val)) < 0)
@@ -897,7 +897,7 @@ display_system_info_common (bmc_info_state_data_t *state_data,
 
 
  output:
-  
+
   /* XXX: assume ascii, or if not, user has set locale properly?? */
   pstdout_printf (state_data->pstate,
                   "%s %s\n",
@@ -1229,7 +1229,7 @@ display_channel_info (bmc_info_state_data_t *state_data)
       char *session_support_str = NULL;
       char iana_buf[BMC_INFO_IANA_STRING_MAX + 1];
       int ret;
-      
+
       memset (iana_buf, '\0', BMC_INFO_IANA_STRING_MAX + 1);
 
       if (IPMI_CHANNEL_MEDIUM_TYPE_IS_RESERVED (channel_info_list[i].channel_medium_type))
@@ -1314,7 +1314,7 @@ display_channel_info (bmc_info_state_data_t *state_data)
           else
             protocol_type_str = "unknown";
         }
-      
+
       switch (channel_info_list[i].session_support)
         {
         case IPMI_SESSION_SUPPORT_SESSION_LESS:
@@ -1332,7 +1332,7 @@ display_channel_info (bmc_info_state_data_t *state_data)
         default:
           session_support_str = "unknown";
         }
-        
+
       if (!state_data->prog_data->args->get_channel_info || first_newline_output)
         pstdout_printf (state_data->pstate, "\n");
 
@@ -1362,7 +1362,7 @@ display_channel_info (bmc_info_state_data_t *state_data)
       ret = ipmi_iana_enterprise_numbers_string (channel_info_list[i].vendor_id,
                                                  iana_buf,
                                                  BMC_INFO_IANA_STRING_MAX);
-      
+
       if (ret > 0)
         pstdout_printf (state_data->pstate,
                         "Vendor ID            : %s (%u)\n",
@@ -1403,7 +1403,7 @@ run_cmd_args (bmc_info_state_data_t *state_data)
 
   if (args->get_system_guid)
     return (display_get_system_guid (state_data));
- 
+
   if (args->get_system_info)
     return (display_system_info (state_data));
 

@@ -98,12 +98,12 @@ _output_fru (ipmi_fru_state_data_t *state_data)
       goto cleanup;
     }
 
-  do 
+  do
     {
       uint8_t areabuf[IPMI_FRU_AREA_SIZE_MAX+1];
       unsigned int area_type = 0;
       unsigned int area_length = 0;
-      
+
       memset (areabuf, '\0', IPMI_FRU_AREA_SIZE_MAX + 1);
       if (ipmi_fru_read_data_area (state_data->fru_ctx,
                                    &area_type,
@@ -123,7 +123,7 @@ _output_fru (ipmi_fru_state_data_t *state_data)
                 }
               goto next;
             }
-          
+
           pstdout_fprintf (state_data->pstate,
                            stderr,
                            "ipmi_fru_read_data_area: %s\n",
@@ -214,7 +214,7 @@ _output_fru (ipmi_fru_state_data_t *state_data)
     next:
       ;
     } while ((ret = ipmi_fru_next (state_data->fru_ctx)) == 1);
-    
+
   if (ret < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -264,7 +264,7 @@ _open_and_output_fru (ipmi_fru_state_data_t *state_data,
             }
           goto out;
         }
-      
+
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_fru_open_device_id: %s\n",
@@ -316,7 +316,7 @@ _use_buffer_and_output_fru (ipmi_fru_state_data_t *state_data,
             }
           goto out;
         }
-      
+
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_fru_open_device_id: %s\n",
@@ -363,13 +363,13 @@ _open_and_output_fru_with_sdr (ipmi_fru_state_data_t *state_data,
                        ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       goto cleanup;
     }
-  
+
   if (_open_and_output_fru (state_data,
                             output_count,
                             device_id,
                             device_id_string) < 0)
     goto cleanup;
-  
+
   rv = 0;
  cleanup:
   return (rv);
@@ -409,7 +409,7 @@ _output_dimm (ipmi_fru_state_data_t *state_data,
                        ipmi_fru_ctx_errormsg (state_data->fru_ctx));
       goto cleanup;
     }
-   
+
   if (ipmi_fru_ctx_set_flags (state_data->fru_ctx, orig_flags | IPMI_FRU_FLAGS_READ_RAW) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -433,7 +433,7 @@ _output_dimm (ipmi_fru_state_data_t *state_data,
             }
           goto out;
         }
-      
+
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_fru_open_device_id: %s\n",
@@ -460,7 +460,7 @@ _output_dimm (ipmi_fru_state_data_t *state_data,
             }
           goto out;
         }
-          
+
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_fru_read_data_area: %s\n",
@@ -534,9 +534,9 @@ _output_dimm_with_sdr (ipmi_fru_state_data_t *state_data,
   assert (output_count);
   assert (sdr_record);
   assert (sdr_record_len);
-  
+
   memset (device_id_string, '\0', IPMI_SDR_MAX_DEVICE_ID_STRING_LENGTH+1);
-  
+
   if (ipmi_sdr_parse_device_id_string (state_data->sdr_ctx,
                                        sdr_record,
                                        sdr_record_len,
@@ -549,13 +549,13 @@ _output_dimm_with_sdr (ipmi_fru_state_data_t *state_data,
                        ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       goto cleanup;
     }
-  
+
   if (_output_dimm (state_data,
                     output_count,
                     device_id,
                     device_id_string) < 0)
     goto cleanup;
-  
+
   rv = 0;
  cleanup:
   return (rv);
@@ -736,7 +736,7 @@ _print_except_default_fru_cb (ipmi_fru_state_data_t *state_data,
                                                  logical_fru_device_device_slave_address) < 0)
                         goto cleanup;
                     }
-                  
+
                   if (ipmi_ctx_set_target (state_data->ipmi_ctx, NULL, NULL) < 0)
                     {
                       pstdout_fprintf (state_data->pstate,
@@ -782,14 +782,14 @@ _print_except_default_fru_cb (ipmi_fru_state_data_t *state_data,
                                                                           NULL,
                                                                           NULL) < 0)
         {
-          
+
           pstdout_fprintf (state_data->pstate,
                            stderr,
                            "ipmi_sdr_parse_management_controller_device_locator_parameters: %s\n",
                            ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
           goto cleanup;
         }
-      
+
       /* stored in 7-bit form, unlike sensor owner ids, need to shift */
       device_slave_address <<= 1;
 
@@ -803,7 +803,7 @@ _print_except_default_fru_cb (ipmi_fru_state_data_t *state_data,
 
       if (!device_capabilities_fru_inventory_device)
         goto out;
-      
+
       if (ipmi_ctx_set_target (state_data->ipmi_ctx,
                                &channel_number,
                                &device_slave_address) < 0)
@@ -814,7 +814,7 @@ _print_except_default_fru_cb (ipmi_fru_state_data_t *state_data,
                            ipmi_ctx_errormsg (state_data->ipmi_ctx));
           goto cleanup;
         }
-                               
+
       /* 0 is defined FRU device ID when bridging - see IPMI spec SDR record info */
       if (_open_and_output_fru_with_sdr (state_data,
                                          output_count,
@@ -880,7 +880,7 @@ _find_device_id_fru_cb (ipmi_fru_state_data_t *state_data,
                            ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
           goto cleanup;
         }
-      
+
       /* Check 'found' flag too - some SDRs list the device 0 twice */
       if (logical_physical_fru_device
           && find_data->device_id == logical_fru_device_device_slave_address
@@ -892,7 +892,7 @@ _find_device_id_fru_cb (ipmi_fru_state_data_t *state_data,
                                              sdr_record_len,
                                              logical_fru_device_device_slave_address) < 0)
             goto cleanup;
-          
+
           find_data->found = 1;
         }
     }
@@ -923,7 +923,7 @@ _loop_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
   if (record_type != IPMI_SDR_FORMAT_FRU_DEVICE_LOCATOR_RECORD
       && record_type != IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD)
     return (0);
-      
+
   if (!state_data->prog_data->args->bridge_fru
       && record_type == IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD)
     return (0);
@@ -1099,7 +1099,7 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
                            sbuf.st_size);
           goto cleanup;
         }
-      
+
       if ((fd = open (state_data->prog_data->args->fru_file, O_RDONLY)) < 0)
         {
           pstdout_fprintf (state_data->pstate,
@@ -1205,7 +1205,7 @@ _ipmi_fru (pstdout_state_t pstate,
       pstdout_perror (pstate, "ipmi_fru_ctx_create()");
       goto cleanup;
     }
-  
+
   if (hostname)
     {
       if (ipmi_fru_ctx_set_debug_prefix (state_data.fru_ctx,
@@ -1215,14 +1215,14 @@ _ipmi_fru (pstdout_state_t pstate,
                          "ipmi_fru_ctx_set_debug_prefix: %s\n",
                          ipmi_fru_ctx_errormsg (state_data.fru_ctx));
     }
-      
+
   if (state_data.prog_data->args->common_args.debug)
     flags |= IPMI_FRU_FLAGS_DEBUG_DUMP;
   if (state_data.prog_data->args->skip_checks)
     flags |= IPMI_FRU_FLAGS_SKIP_CHECKSUM_CHECKS;
   if (state_data.prog_data->args->interpret_oem_data)
     flags |= IPMI_FRU_FLAGS_INTERPRET_OEM_DATA;
-  
+
   if (flags)
     {
       if (ipmi_fru_ctx_set_flags (state_data.fru_ctx, flags) < 0)

@@ -15,7 +15,7 @@ AC_DEFUN([AC_DONT_CHECK_FOR_ROOT],
     [ case "$withval" in
         yes) ac_dont_check_for_root=yes ;;
         no)  ac_dont_check_for_root=no ;;
-        *)   ac_dont_check_for_root=yes ;; 
+        *)   ac_dont_check_for_root=yes ;;
       esac
     ]
   )

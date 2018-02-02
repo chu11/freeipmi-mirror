@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_MESSAGING_SUPPORT_CMDS_H
@@ -298,13 +298,13 @@ extern "C" {
 #define IPMI_USER_ID_ENABLE_STATUS_ENABLED     0x1
 #define IPMI_USER_ID_ENABLE_STATUS_DISABLED    0x2
 
-/* 
+/*
  * fill* functions return 0 on success, -1 on error.
  *
  * obj_cmd_rq must be for the fill function's respective fiid
  * template request.
  *
- * see freeipmi/templates/ for template definitions 
+ * see freeipmi/templates/ for template definitions
  */
 
 extern fiid_template_t tmpl_cmd_set_bmc_global_enables_rq;
@@ -476,7 +476,7 @@ int fill_cmd_set_system_info_parameters (uint8_t parameter_selector,
                                          const void *configuration_parameter_data,
                                          unsigned int configuration_parameter_data_len,
                                          fiid_obj_t obj_cmd_rq);
-  
+
 int fill_cmd_set_system_info_parameters_set_in_progress (uint8_t state,
                                                          fiid_obj_t obj_cmd_rq);
 
@@ -498,7 +498,7 @@ int fill_cmd_set_system_info_parameters_system_name_first_set (uint8_t set_selec
                                                                const void *string_block,
                                                                unsigned int string_block_length,
                                                                fiid_obj_t obj_cmd_rq);
-  
+
 int fill_cmd_set_system_info_parameters_system_name (uint8_t set_selector,
                                                      const void *string_block,
                                                      unsigned int string_block_length,
@@ -563,7 +563,7 @@ int fill_cmd_set_system_info_parameters_base_os_hypervisor_url (uint8_t set_sele
                                                                 const void *string_block,
                                                                 unsigned int string_block_length,
                                                                 fiid_obj_t obj_cmd_rq);
-  
+
 int fill_cmd_get_system_info_parameters (uint8_t get_parameter,
                                          uint8_t parameter_selector,
                                          uint8_t set_selector,

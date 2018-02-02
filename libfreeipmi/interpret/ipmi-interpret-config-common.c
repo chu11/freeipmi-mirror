@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 /*****************************************************************************\
  *  Copyright (C) 2007-2015 Lawrence Livermore National Security, LLC.
@@ -84,11 +84,11 @@ interpret_config_parse_strtoul (conffile_t cf,
                                 uint32_t *value)
 {
   char *endptr = NULL;
-  
+
   assert (cf);
   assert (str);
   assert (value);
-  
+
   errno = 0;
 
   (*value) = strtoul (str, &endptr, 0);
@@ -100,7 +100,7 @@ interpret_config_parse_strtoul (conffile_t cf,
       conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_INVALID);
       return (-1);
     }
-  
+
   return (0);
 }
 
@@ -140,24 +140,24 @@ interpret_config_parse_manufactuer_id_product_id (conffile_t cf,
           conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_INVALID);
           goto cleanup;
         }
-      
+
       (*ptr) = '\0';
       product_ids_ptr = ptr + 1;
-      
+
       if (interpret_config_parse_strtoul (cf,
                                           manufacturer_id_ptr,
                                           0x00FFFFFF,  /* 24 bit manufacturer ID */
                                           &tmp) < 0)
         goto cleanup;
       ids[(*ids_count)].manufacturer_id = tmp;
-      
+
       if ((ptr = strchr (product_ids_ptr, '-')))
         {
           char *product_id1_ptr;
           char *product_id2_ptr;
           uint16_t product_id1;
           uint16_t product_id2;
-          
+
           product_id1_ptr = product_ids_ptr;
           (*ptr) = '\0';
           product_id2_ptr = ptr + 1;
@@ -181,7 +181,7 @@ interpret_config_parse_manufactuer_id_product_id (conffile_t cf,
               conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_INVALID);
               return (-1);
             }
-          
+
           if ((product_id2 - product_id1 + 1) > IPMI_INTERPRET_CONFIG_FILE_PRODUCT_ID_MAX)
             {
               conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_TOOMANY);
@@ -193,7 +193,7 @@ interpret_config_parse_manufactuer_id_product_id (conffile_t cf,
           ids[(*ids_count)].product_ids_count = product_id2 - product_id1 + 1;
         }
       else if ((ptr = strchr (product_ids_ptr, '+')))
-        {  
+        {
           unsigned int index = 0;
           uint16_t product_id;
 
@@ -201,7 +201,7 @@ interpret_config_parse_manufactuer_id_product_id (conffile_t cf,
                  && index < IPMI_INTERPRET_CONFIG_FILE_PRODUCT_ID_MAX)
             {
               char *product_id_ptr;
-              
+
               product_id_ptr = product_ids_ptr;
               (*ptr) = '\0';
               product_ids_ptr = ptr + 1;
@@ -212,9 +212,9 @@ interpret_config_parse_manufactuer_id_product_id (conffile_t cf,
                                                   &tmp) < 0)
                 goto cleanup;
               product_id = tmp;
-              
+
               ids[(*ids_count)].product_ids[index] = product_id;
-              
+
               index++;
             }
 
@@ -224,9 +224,9 @@ interpret_config_parse_manufactuer_id_product_id (conffile_t cf,
                                               &tmp) < 0)
             goto cleanup;
           product_id = tmp;
-          
+
           ids[(*ids_count)].product_ids[index] = product_id;
-          
+
           index++;
 
           ids[(*ids_count)].product_ids_count = index;

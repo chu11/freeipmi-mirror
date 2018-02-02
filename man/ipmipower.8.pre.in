@@ -6,20 +6,20 @@
 .\"  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
 .\"  Written by Albert Chu <chu11@llnl.gov>
 .\"  UCRL-CODE-155698
-.\"  
-.\"  This file is part of Ipmipower, a remote power control utility. 
+.\"
+.\"  This file is part of Ipmipower, a remote power control utility.
 .\"  For details, see http://www.llnl.gov/linux/.
 .\"
 .\"  Ipmipower is free software; you can redistribute it and/or modify it under
 .\"  the terms of the GNU General Public License as published by the Free
 .\"  Software Foundation; either version 3 of the License, or (at your option)
 .\"  any later version.
-.\"  
-.\"  Ipmipower is distributed in the hope that it will be useful, but WITHOUT 
-.\"  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
-.\"  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License 
+.\"
+.\"  Ipmipower is distributed in the hope that it will be useful, but WITHOUT
+.\"  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+.\"  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 .\"  for more details.
-.\"  
+.\"
 .\"  You should have received a copy of the GNU General Public License along
 .\"  with Ipmipower.  If not, see <http://www.gnu.org/licenses/>.
 .\"############################################################################
@@ -38,12 +38,12 @@ soft-shutdown of the OS via ACPI through the IPMI over LAN protocol.
 When a power command (\fB\-\-on\fR, \fB\-\-off\fR, \fB\-\-cycle\fR,
 \fB\-\-reset\fR, \fB\-\-stat\fR, \fB\-\-pulse\fR, or \fB\-\-soft\fR)
 is specified on the command line,
-.B Ipmipower 
+.B Ipmipower
 will attempt to run the power command on all hostnames listed on the
 command line then exit.
 .LP
-If no power commands are specified on the command line, 
-.B ipmipower 
+If no power commands are specified on the command line,
+.B ipmipower
 will run in interactive mode.  Interactive mode gives the user a
 command line interface to enter various commands.  Details of the
 interactive command line interface can be found below under
@@ -84,7 +84,7 @@ to 400 milliseconds (0.4 seconds) if not specified.
 .if @WITH_DEBUG@ \{
 .TP
 \fB\-\-rmcpdump\fR
-Turn on RMCP packet dump output.  Warning, the dump output can get 
+Turn on RMCP packet dump output.  Warning, the dump output can get
 extremely long.
 \}
 
@@ -117,21 +117,21 @@ Initiate a soft-shutdown of the OS via ACPI.
 The IPMI specification does not require the power cycle or hard reset
 commands to turn on a machine that is currently powered off.  This
 option will force
-.B ipmipower 
+.B ipmipower
 to issue a power on command instead of a power cycle or hard reset
 command if the remote machine's power is currently off.
 .TP
 \fB\-\-wait\-until\-on\fR
 The IPMI specification allows power on commands to return prior to the
 power on actually taking place.  This option will force
-.B ipmipower 
+.B ipmipower
 to regularly query the remote BMC and return only after the machine
 has powered on.
 .TP
 \fB\-\-wait\-until\-off\fR
 The IPMI specification allows power off commands to return prior the
 power off actually taking place.  This option will force
-.B ipmipower 
+.B ipmipower
 to regularly query the remote BMC and return only after the machine
 has powered off.
 .TP
@@ -194,17 +194,17 @@ network connection in interactive mode.  when running in interactive
 mode.  For example, suppose a link consistently drops 80% of the
 packets to a particular machine.  The power control operation may have
 difficulty completing, although a recent pong response from RMCP makes
-.B ipmipower 
+.B ipmipower
 believe the machine is up and functioning properly.
 
 The ping packet acount and percent options are used to alleviate this
 problem.
-.B Ipmipower 
+.B Ipmipower
 will monitor RMCP ping packets in packet count chunks.  If
-.B ipmipower 
+.B ipmipower
 does not receive a response to greater than ping percent of those
 packets,
-.B ipmipower 
+.B ipmipower
 will assume the link to this node is bad and will not send power
 control operations to that node until the connection is determined to
 be reliable.  This heuristic can be disabled by setting either the
@@ -235,7 +235,7 @@ control operations that can be executed in parallel.
 provides the following interactive commands at the ipmipower> prompt.
 Before any power commands (on, off, cycle, reset, stat, pulse, or
 soft) can be used, hostnames must be configured into
-.B ipmipower, 
+.B ipmipower,
 either through the command prompt or the hostname command below.  The
 parameters and options to the commands below mirror their appropriate
 command line options.
@@ -301,7 +301,7 @@ Query power status for all configured hosts or specified hosts.
 Pulse diagnostic interrupt all configured hosts or specified hosts.
 .TP
 \fBsoft\fR \fI[IPMIHOST(s)]\fR
-Initiate a soft-shutdown for all configured hosts or specified hosts. 
+Initiate a soft-shutdown for all configured hosts or specified hosts.
 .TP
 \fBidentify-on\fR \fI[IPMIHOST(s)]\fR
 Turn on physical system identification.
@@ -380,7 +380,7 @@ to execute alternate power control implementations over the standard
 ones.  Depending on the OEM extension, some power control commands may
 no longer be available.  For example, an OEM
 extension may allow
-\fBon\fR but not \fBcycle\fR.  Specific 
+\fBon\fR but not \fBcycle\fR.  Specific
 .B ipmipower
 options may not longer function either.
 .LP
@@ -497,7 +497,7 @@ power operation executed.
 IPMI specifications do not require BMCs to perform a power control
 operation before returning a completion code to the caller.
 Therefore, it is possible for
-.B ipmipower 
+.B ipmipower
 to return power status queries opposite of what you are expecting.
 For example, if a "power off" operation is performed, a BMC may return
 a successful completion code to
@@ -509,7 +509,7 @@ BMC actually performs the "power off" operation.
 .if @WITH_DEBUG@ \{
 This version of ipmipower was compiled with debugging.  When compiled
 with debugging,
-.B ipmipower 
+.B ipmipower
 is insecure.  The following were intentionally
 left in
 .B ipmipower

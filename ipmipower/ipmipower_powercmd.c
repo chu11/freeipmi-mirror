@@ -90,7 +90,7 @@ _find_ipmipower_powercmd (void *x, void *key)
 
   assert (x);
   assert (key);
-  
+
   ip = (ipmipower_powercmd_t)x;
   hostname = (char *)key;
 
@@ -166,7 +166,7 @@ _destroy_ipmipower_powercmd (void *x)
           free (fd);
         }
     }
-  
+
   list_destroy (ip->sockets_to_close);
 
   free (ip->extra_arg);
@@ -204,7 +204,7 @@ ipmipower_powercmd_cleanup ()
 {
   assert (pending);  /* did not run ipmipower_powercmd_setup() */
   list_destroy (pending);
-  list_destroy (add_to_pending); 
+  list_destroy (add_to_pending);
   pending = NULL;
   add_to_pending = NULL;
 }
@@ -257,7 +257,7 @@ ipmipower_powercmd_queue (ipmipower_power_cmd_t cmd,
 
   if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN)
     {
-      if (ipmi_check_session_sequence_number_1_5_init (&(ip->highest_received_sequence_number), 
+      if (ipmi_check_session_sequence_number_1_5_init (&(ip->highest_received_sequence_number),
                                                        &(ip->previously_received_list)) < 0)
         {
           IPMIPOWER_ERROR (("ipmi_check_session_sequence_number_1_5_init: %s", strerror (errno)));
@@ -266,7 +266,7 @@ ipmipower_powercmd_queue (ipmipower_power_cmd_t cmd,
     }
   else
     {
-      if (ipmi_check_session_sequence_number_2_0_init (&(ip->highest_received_sequence_number), 
+      if (ipmi_check_session_sequence_number_2_0_init (&(ip->highest_received_sequence_number),
                                                        &(ip->previously_received_list)) < 0)
         {
           IPMIPOWER_ERROR (("ipmi_check_session_sequence_number_2_0_init: %s", strerror (errno)));
@@ -553,7 +553,7 @@ ipmipower_powercmd_queue (ipmipower_power_cmd_t cmd,
       IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
       exit (EXIT_FAILURE);
     }
-  
+
   if (cmd_args.oem_power_type != IPMIPOWER_OEM_POWER_TYPE_NONE)
     {
       if (cmd_args.oem_power_type == IPMIPOWER_OEM_POWER_TYPE_C410X)
@@ -587,7 +587,7 @@ ipmipower_powercmd_queue (ipmipower_power_cmd_t cmd,
       ip->obj_c410x_slot_power_control_rq = NULL;
       ip->obj_c410x_slot_power_control_rs = NULL;
     }
-  
+
   if (!(ip->obj_close_session_rq = fiid_obj_create (tmpl_cmd_close_session_rq)))
     {
       IPMIPOWER_ERROR (("fiid_obj_create: %s", strerror (errno)));
@@ -650,7 +650,7 @@ ipmipower_powercmd_queue (ipmipower_power_cmd_t cmd,
    * be an overall performance issue for ipmipower.  If it does become
    * an issue, a bigger rearchitecture will be required.
    */
-  
+
   ip->next = NULL;
 
   if (cmd_args.oem_power_type == IPMIPOWER_OEM_POWER_TYPE_C410X)
@@ -732,7 +732,7 @@ _send_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
       IPMIPOWER_ERROR (("cbuf_write: incorrect bytes written %d", ret));
       exit (EXIT_FAILURE);
     }
-  
+
   if (dropped)
     IPMIPOWER_DEBUG (("cbuf_write: dropped %d bytes", dropped));
 
@@ -750,7 +750,7 @@ _send_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
       break;
     case IPMIPOWER_PACKET_TYPE_ACTIVATE_SESSION_RQ:
       ip->protocol_state = IPMIPOWER_PROTOCOL_STATE_ACTIVATE_SESSION_SENT;
-        
+
       /* IPMI Workaround (achu)
        *
        * Close all sockets that were saved during the Get Session
@@ -967,7 +967,7 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
        * because we are going to clear out the lan session header (b/c
        * it has sensitive information in it), we'll do this here.
        */
-      
+
       if (FIID_OBJ_GET (ip->obj_lan_session_hdr_rs,
                         "session_sequence_number",
                         &val) < 0)
@@ -976,9 +976,9 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
                             fiid_obj_errormsg (ip->obj_lan_session_hdr_rs)));
           exit (EXIT_FAILURE);
         }
-      
+
       ip->highest_received_sequence_number = val;
-      
+
       /* IPMI Workaround (achu)
        *
        * Discovered on Sun Fire 4100.
@@ -989,7 +989,7 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
       if (cmd_args.common_args.workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_BIG_ENDIAN_SEQUENCE_NUMBER)
         {
           uint32_t tmp_session_sequence_number = ip->highest_received_sequence_number;
-          
+
           ip->highest_received_sequence_number =
             ((tmp_session_sequence_number & 0xFF000000) >> 24)
             | ((tmp_session_sequence_number & 0x00FF0000) >> 8)
@@ -1083,13 +1083,13 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
           rv = 0;
           goto cleanup;
         }
-      
+
       if (!ipmipower_check_message_tag (ip, pkt))
         {
           rv = 0;
           goto cleanup;
         }
-      
+
       /* I don't think there is a guarantee the data (authentication
        * keys, session id's, etc.) in the RAKP response will be valid
        * if there is a status code error.  So we check this status
@@ -1171,19 +1171,19 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
           rv = 0;
           goto cleanup;
         }
-      
+
       if (!ipmipower_check_integrity_pad (ip, pkt))
         {
           rv = 0;
           goto cleanup;
         }
-      
+
       if (!ipmipower_check_checksum (ip, pkt))
         {
           rv = 0;
           goto cleanup;
         }
-      
+
       if (!ipmipower_check_authentication_code (ip,
                                                 pkt,
                                                 recv_buf,
@@ -1192,19 +1192,19 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
           rv = 0;
           goto cleanup;
         }
-      
+
       if (!ipmipower_check_outbound_sequence_number (ip, pkt))
         {
           rv = 0;
           goto cleanup;
         }
-      
+
       if (!ipmipower_check_session_id (ip, pkt))
         {
           rv = 0;
           goto cleanup;
         }
-      
+
       if (!ipmipower_check_network_function (ip, pkt))
         {
           rv = 0;
@@ -1224,7 +1224,7 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
           rv = 0;
           goto cleanup;
         }
-      
+
       /* If everything else is correct besides completion code, packet
        * returned an error.
        */
@@ -1232,7 +1232,7 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
         {
           if (pkt == IPMIPOWER_PACKET_TYPE_CLOSE_SESSION_RS)
             goto close_session_workaround;
-          
+
           ip->retransmission_count = 0;  /* important to reset */
           if (gettimeofday (&ip->ic->last_ipmi_recv, NULL) < 0)
             {
@@ -1499,7 +1499,7 @@ _retry_packets (ipmipower_powercmd_t ip)
                         ip->protocol_state));
       exit (EXIT_FAILURE);
     }
-  
+
   return (1);
 }
 
@@ -1573,14 +1573,14 @@ _check_ipmi_1_5_authentication_capabilities (ipmipower_powercmd_t ip)
                             strerror (errno)));
           exit (EXIT_FAILURE);
         }
-      
+
       if (!ret)
         {
           ipmipower_output (IPMIPOWER_MSG_TYPE_AUTHENTICATION_TYPE_UNAVAILABLE, ip->ic->hostname, ip->extra_arg);
           return (-1);
         }
     }
-      
+
   /* IPMI Workaround (achu)
    *
    * Discovered on IBM eServer 325
@@ -1917,19 +1917,19 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
             return (-1);
           goto done;
         }
-      
+
       if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN_2_0)
         {
           if (_check_ipmi_2_0_authentication_capabilities (ip) < 0)
             return (-1);
-          
+
           _send_packet (ip, IPMIPOWER_PACKET_TYPE_OPEN_SESSION_REQUEST);
         }
       else
         {
           if (_check_ipmi_1_5_authentication_capabilities (ip) < 0)
             return (-1);
-          
+
           _send_packet (ip, IPMIPOWER_PACKET_TYPE_GET_SESSION_CHALLENGE_RQ);
         }
     }
@@ -1961,7 +1961,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
         /* XXX Session is not up, is it ok to quit here?  Or
          * should we timeout?? */
         return (-1);
-     
+
       _send_packet (ip, IPMIPOWER_PACKET_TYPE_SET_SESSION_PRIVILEGE_LEVEL_RQ);
     }
   else if (ip->protocol_state == IPMIPOWER_PROTOCOL_STATE_OPEN_SESSION_REQUEST_SENT)
@@ -2496,7 +2496,7 @@ ipmipower_powercmd_process_pending (int *timeout)
 
       if (cmd_args.common_args.retransmission_timeout < min_timeout)
         min_timeout = cmd_args.common_args.retransmission_timeout;
-    } 
+    }
 
   if (!(num_pending = list_count (pending)))
     ipmipower_output_finish ();

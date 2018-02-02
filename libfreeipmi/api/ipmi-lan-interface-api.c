@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -172,7 +172,7 @@ api_lan_cmd_raw (ipmi_ctx_t ctx,
                    obj_cmd_rq,
                    obj_cmd_rs) < 0)
     goto cleanup;
-  
+
   if ((len = fiid_obj_get_all (obj_cmd_rs,
                                buf_rs,
                                buf_rs_len)) < 0)
@@ -231,7 +231,7 @@ api_lan_cmd_raw_ipmb (ipmi_ctx_t ctx,
                         obj_cmd_rq,
                         obj_cmd_rs) < 0)
     goto cleanup;
-  
+
   if ((len = fiid_obj_get_all (obj_cmd_rs,
                                buf_rs,
                                buf_rs_len)) < 0)
@@ -352,7 +352,7 @@ api_lan_2_0_cmd_raw (ipmi_ctx_t ctx,
                        obj_cmd_rq,
                        obj_cmd_rs) < 0)
     goto cleanup;
-  
+
   if ((len = fiid_obj_get_all (obj_cmd_rs,
                                buf_rs,
                                buf_rs_len)) < 0)
@@ -361,7 +361,7 @@ api_lan_2_0_cmd_raw (ipmi_ctx_t ctx,
       goto cleanup;
     }
   rv = len;
-  
+
  cleanup:
   fiid_obj_destroy (obj_cmd_rq);
   fiid_obj_destroy (obj_cmd_rs);
@@ -411,7 +411,7 @@ api_lan_2_0_cmd_raw_ipmb (ipmi_ctx_t ctx,
                             obj_cmd_rq,
                             obj_cmd_rs) < 0)
     goto cleanup;
-  
+
   if ((len = fiid_obj_get_all (obj_cmd_rs,
                                buf_rs,
                                buf_rs_len)) < 0)
@@ -420,7 +420,7 @@ api_lan_2_0_cmd_raw_ipmb (ipmi_ctx_t ctx,
       goto cleanup;
     }
   rv = len;
-  
+
  cleanup:
   fiid_obj_destroy (obj_cmd_rq);
   fiid_obj_destroy (obj_cmd_rs);

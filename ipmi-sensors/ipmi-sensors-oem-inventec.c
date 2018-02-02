@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -57,7 +57,7 @@ ipmi_sensors_oem_inventec_output_oem_record (ipmi_sensors_state_data_t *state_da
   assert (state_data->prog_data->args->verbose_count >= 2);
   assert (state_data->prog_data->args->interpret_oem_data);
   assert (state_data->oem_data.manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC);
-  
+
   /*
    * Inventec 5441/Dell Xanadu II
    */
@@ -87,6 +87,6 @@ ipmi_sensors_oem_inventec_output_oem_record (ipmi_sensors_state_data_t *state_da
       if (ret)
         return (1);
     }
-  
+
   return (0);
 }

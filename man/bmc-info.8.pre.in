@@ -5,7 +5,7 @@ bmc-info \- display BMC information
 .B bmc-info
 [\fIOPTION\fR...]
 .SH "DESCRIPTION"
-.B Bmc-info 
+.B Bmc-info
 displays BMC information, such as device version numbers, device
 support, and globally unique IDs (guids).
 #include <@top_srcdir@/man/manpage-common-table-of-contents.man>
@@ -95,7 +95,7 @@ Get BMC information across a cluster using IPMI over LAN.
 #include <@top_srcdir@/man/manpage-common-known-issues.man>
 #include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
 .SH "COPYRIGHT"
-Copyright \(co 2003-2015 FreeIPMI Core Team.  
+Copyright \(co 2003-2015 FreeIPMI Core Team.
 #include <@top_srcdir@/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
 freeipmi.conf(5), freeipmi(7), ipmi-config(8)

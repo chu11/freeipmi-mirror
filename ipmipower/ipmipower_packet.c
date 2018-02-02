@@ -663,7 +663,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
 
   /* Calculate Password */
   if (pkt == IPMIPOWER_PACKET_TYPE_ACTIVATE_SESSION_RQ
-      || IPMIPOWER_PACKET_TYPE_IPMI_2_0_SETUP_RQ (pkt) 
+      || IPMIPOWER_PACKET_TYPE_IPMI_2_0_SETUP_RQ (pkt)
       || IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt))
     password = cmd_args.common_args.password;
   else
@@ -840,12 +840,12 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
   if (pkt == IPMIPOWER_PACKET_TYPE_AUTHENTICATION_CAPABILITIES_RQ)
     {
       uint8_t get_ipmi_v20_extended_data;
-      
+
       if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN_2_0)
         get_ipmi_v20_extended_data = IPMI_GET_IPMI_V20_EXTENDED_DATA;
       else
         get_ipmi_v20_extended_data = IPMI_GET_IPMI_V15_DATA;
-      
+
       if (fill_cmd_get_channel_authentication_capabilities (IPMI_CHANNEL_NUMBER_CURRENT_CHANNEL,
                                                             cmd_args.common_args.privilege_level,
                                                             get_ipmi_v20_extended_data,
@@ -1118,7 +1118,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
       assert (endptr[0] == '\0');
       assert (slot_number >= IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MIN
               && slot_number <= IPMI_OEM_DELL_SLOT_POWER_CONTROL_SLOT_NUMBER_MAX);
-      
+
       if (fill_cmd_get_sensor_reading (IPMI_SENSOR_NUMBER_OEM_DELL_C410X_PCIE_1_WATT + (slot_number - 1),
                                        ip->obj_c410x_get_sensor_reading_rq) < 0)
         {
@@ -1135,10 +1135,10 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
       uint16_t slot_number_bitmask;
 
       assert (ip->extra_arg);
-      
+
       errno = 0;
       slot_number = strtol (ip->extra_arg, &endptr, 0);
-      
+
       /* tons of error checks by now, should not error out here */
       assert (!errno);
       assert (endptr[0] == '\0');
@@ -1327,7 +1327,7 @@ ipmipower_packet_errmsg (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
         return (IPMIPOWER_MSG_TYPE_BMC_BUSY);
       /*
        * IPMI Workaround
-       * 
+       *
        * Discovered on Xyratex HB-F8-SRAY
        *
        * For some reason on this system, if you do not specify a

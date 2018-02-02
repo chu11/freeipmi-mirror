@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 /*****************************************************************************\
  *  Copyright (C) 2007-2015 Lawrence Livermore National Security, LLC.
@@ -57,13 +57,13 @@ extern "C" {
 #define IPMI_FRU_INVENTORY_AREA_SIZE_MAX   65536 /* 16 bit field for length */
 #define IPMI_FRU_DATA_MAX                  255
 
-/* 
+/*
  * fill* functions return 0 on success, -1 on error.
  *
  * obj_cmd_rq must be for the fill function's respective fiid
  * template request.
  *
- * see freeipmi/templates/ for template definitions 
+ * see freeipmi/templates/ for template definitions
  */
 
 extern fiid_template_t tmpl_cmd_get_fru_inventory_area_info_rq;

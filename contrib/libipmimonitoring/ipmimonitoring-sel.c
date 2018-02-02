@@ -54,7 +54,7 @@
 /* Communication Configuration - Initialize accordingly */
 
 /* Hostname, NULL for In-band communication, non-null for a hostname */
-char *hostname = NULL; 
+char *hostname = NULL;
 
 /* In-band Communication Configuration */
 /* On linux, you may wish to change driver_type to
@@ -108,7 +108,7 @@ int assume_system_event_record = 0;
 int entity_sensor_names = 0;
 
 /* Initialization flags
- * 
+ *
  * Most commonly bitwise OR IPMI_MONITORING_FLAGS_DEBUG and/or
  * IPMI_MONITORING_FLAGS_DEBUG_IPMI_PACKETS for extra debugging
  * information.
@@ -214,7 +214,7 @@ _get_sensor_type_string (int sensor_type)
 
   return ("Unrecognized");
 }
- 
+
 static int
 _ipmimonitoring (struct ipmi_monitoring_ipmi_config *ipmi_config)
 {
@@ -273,7 +273,7 @@ _ipmimonitoring (struct ipmi_monitoring_ipmi_config *ipmi_config)
           goto cleanup;
         }
     }
-  
+
   if (reread_sdr_cache)
     sel_flags |= IPMI_MONITORING_SEL_FLAGS_REREAD_SDR_CACHE;
 
@@ -429,11 +429,11 @@ _ipmimonitoring (struct ipmi_monitoring_ipmi_config *ipmi_config)
               record_id,
               record_type,
               sel_state_str);
-      
+
       if (record_type_class == IPMI_MONITORING_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD
           || record_type_class == IPMI_MONITORING_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD)
         {
-          
+
           if (ipmi_monitoring_sel_read_timestamp (ctx, &timestamp) < 0)
             {
               fprintf (stderr,
@@ -441,7 +441,7 @@ _ipmimonitoring (struct ipmi_monitoring_ipmi_config *ipmi_config)
                        ipmi_monitoring_ctx_errormsg (ctx));
               goto cleanup;
             }
-          
+
           /* XXX: This should be converted to a nice date output using
            * your favorite timestamp -> string conversion functions.
            */
@@ -451,7 +451,7 @@ _ipmimonitoring (struct ipmi_monitoring_ipmi_config *ipmi_config)
         printf (", N/A");
 
       if (record_type_class == IPMI_MONITORING_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
-        {         
+        {
           /* If you are integrating ipmimonitoring SEL into a monitoring application,
            * you may wish to count the number of times a specific error occurred
            * and report that to the monitoring application.
@@ -513,7 +513,7 @@ _ipmimonitoring (struct ipmi_monitoring_ipmi_config *ipmi_config)
                        "ipmi_monitoring_sel_read_event_data: %s\n",
                        ipmi_monitoring_ctx_errormsg (ctx));
               goto cleanup;
-            }         
+            }
 
           if ((event_offset_type = ipmi_monitoring_sel_read_event_offset_type (ctx)) < 0)
             {
@@ -522,7 +522,7 @@ _ipmimonitoring (struct ipmi_monitoring_ipmi_config *ipmi_config)
                        ipmi_monitoring_ctx_errormsg (ctx));
               goto cleanup;
             }
-          
+
           if ((event_offset = ipmi_monitoring_sel_read_event_offset (ctx)) < 0)
             {
               fprintf (stderr,
@@ -530,7 +530,7 @@ _ipmimonitoring (struct ipmi_monitoring_ipmi_config *ipmi_config)
                        ipmi_monitoring_ctx_errormsg (ctx));
               goto cleanup;
             }
-          
+
           if (!(event_offset_string = ipmi_monitoring_sel_read_event_offset_string (ctx)))
             {
               fprintf (stderr,
@@ -541,7 +541,7 @@ _ipmimonitoring (struct ipmi_monitoring_ipmi_config *ipmi_config)
 
           if (!strlen (sensor_name))
             sensor_name = "N/A";
-          
+
           sensor_type_str = _get_sensor_type_string (sensor_type);
 
           if (event_direction == IPMI_MONITORING_SEL_EVENT_DIRECTION_ASSERTION)
@@ -558,12 +558,12 @@ _ipmimonitoring (struct ipmi_monitoring_ipmi_config *ipmi_config)
                   event_data1,
                   event_data2,
                   event_data3);
-                  
+
           if (event_offset_type != IPMI_MONITORING_EVENT_OFFSET_TYPE_UNKNOWN)
             printf (", %Xh", event_offset);
           else
             printf (", N/A");
-          
+
           if (event_offset_type != IPMI_MONITORING_EVENT_OFFSET_TYPE_UNKNOWN)
             printf (", %s", event_offset_string);
           else
@@ -581,7 +581,7 @@ _ipmimonitoring (struct ipmi_monitoring_ipmi_config *ipmi_config)
                            ipmi_monitoring_ctx_errormsg (ctx));
                   goto cleanup;
                 }
-              
+
               printf (", Manufacturer ID = %Xh", manufacturer_id);
             }
 
@@ -600,7 +600,7 @@ _ipmimonitoring (struct ipmi_monitoring_ipmi_config *ipmi_config)
         }
       else
         printf (", N/A, N/A, N/A, N/A, N/A, N/A, N/A");
-      
+
       printf ("\n");
     }
 

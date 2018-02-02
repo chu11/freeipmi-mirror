@@ -18,7 +18,7 @@
 #
 # ganglia_ipmi_sensors.pl
 #
-# Author: 
+# Author:
 #
 # Albert Chu <chu11 at llnl dot gov>
 #
@@ -103,10 +103,10 @@
 # Most users will want to set this script to execute in cron(8).
 # Using cron you may monitor at whatever interval you wish.  The
 # recommended interval should be atleast longer than 20 seconds, since
-# that is the default session timeout length.  
+# that is the default session timeout length.
 #
 # Help:
-# 
+#
 # Report bugs to freeipmi-users@gnu.org or freeipmi-devel@gnu.org.
 #
 #############################################################################
@@ -240,7 +240,7 @@ if ($ENV{"GMETRIC_PATH"})
     $GMETRIC_PATH = $ENV{"GMETRIC_PATH"};
 }
 
-if ($ENV{"GMETRIC_ARGS"}) 
+if ($ENV{"GMETRIC_ARGS"})
 {
     $GMETRIC_ARGS = $ENV{"GMETRIC_ARGS"};
 }
@@ -348,7 +348,7 @@ foreach $line (@IPMI_SENSORS_OUTPUT_LINES)
     # make name better, convert spaces and slashes into underscores
     $id_string =~ s/ /_/g;
     $id_string =~ s/\//_/g;
-    
+
     if ($IPMI_HOSTS_SUBST) {
         @subst = split(/:/, $IPMI_HOSTS_SUBST);
         $hostname =~ s/$subst[0]/$subst[1]/;
@@ -357,7 +357,7 @@ foreach $line (@IPMI_SENSORS_OUTPUT_LINES)
     if ($hostname ne "localhost" && $hostname ne "127.0.0.1")
     {
         my $packet_ip = gethostbyname($hostname);
-        
+
         if (defined($packet_ip))
         {
             $ip_address = inet_ntoa($packet_ip);
@@ -368,7 +368,7 @@ foreach $line (@IPMI_SENSORS_OUTPUT_LINES)
             next;
         }
     }
-   
+
     if (!$no_sensor_state)
     {
         if ($state ne "N/A")

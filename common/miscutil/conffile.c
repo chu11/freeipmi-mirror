@@ -50,8 +50,8 @@
 #define CONFFILE_MAGIC           0x0a1b2c3d
 
 /* struct conffile
- * 
- * structure for conffile handle.  
+ *
+ * structure for conffile handle.
  * - magic - magic number
  * - errnum - error code
  * - options - options array passed in conffile_parse()
@@ -99,13 +99,13 @@ static char *_errmsg[] = {
     "out of memory",
     "invalid parameters",
     "incorrect magic number",
-    "null handle", 
+    "null handle",
     "internal error",
     "error number out of range"
 };
 
 conffile_t
-conffile_handle_create(void) 
+conffile_handle_create(void)
 {
     conffile_t cf;
 
@@ -120,7 +120,7 @@ conffile_handle_create(void)
 }
 
 int
-conffile_handle_destroy(conffile_t cf) 
+conffile_handle_destroy(conffile_t cf)
 {
     if (cf == NULL || cf->magic != CONFFILE_MAGIC)
         return -1;
@@ -147,40 +147,40 @@ conffile_errmsg(conffile_t cf, char *buf, int buflen)
     int rv;
     char errbuf[CONFFILE_MAX_ERRMSGLEN];
 
-    if (cf == NULL) 
-        rv = snprintf(errbuf, CONFFILE_MAX_ERRMSGLEN, 
+    if (cf == NULL)
+        rv = snprintf(errbuf, CONFFILE_MAX_ERRMSGLEN,
                       "%s", _errmsg[CONFFILE_ERR_NULLHANDLE]);
     else if (cf->magic != CONFFILE_MAGIC)
-        rv = snprintf(errbuf, CONFFILE_MAX_ERRMSGLEN, 
+        rv = snprintf(errbuf, CONFFILE_MAX_ERRMSGLEN,
                       "%s", _errmsg[CONFFILE_ERR_MAGIC]);
-    else if (cf->errnum < CONFFILE_ERR_SUCCESS 
+    else if (cf->errnum < CONFFILE_ERR_SUCCESS
              || cf->errnum > CONFFILE_ERR_ERRNUMRANGE)
-        rv = snprintf(errbuf, CONFFILE_MAX_ERRMSGLEN, 
+        rv = snprintf(errbuf, CONFFILE_MAX_ERRMSGLEN,
                       "%s", _errmsg[CONFFILE_ERR_ERRNUMRANGE]);
     else if (cf->errnum == CONFFILE_ERR_PARSE_OPTION_UNKNOWN
              || cf->errnum == CONFFILE_ERR_PARSE_ARG_MISSING
              || cf->errnum == CONFFILE_ERR_PARSE_ARG_TOOMANY
              || cf->errnum == CONFFILE_ERR_PARSE_ARG_INVALID)
-        rv = snprintf(errbuf, CONFFILE_MAX_ERRMSGLEN, 
+        rv = snprintf(errbuf, CONFFILE_MAX_ERRMSGLEN,
                       _errmsg[cf->errnum], cf->optionname, cf->line_num);
     else if (cf->errnum == CONFFILE_ERR_PARSE_OPTION_TOOMANY
              || cf->errnum == CONFFILE_ERR_PARSE_OPTION_TOOFEW)
-        rv = snprintf(errbuf, CONFFILE_MAX_ERRMSGLEN, 
+        rv = snprintf(errbuf, CONFFILE_MAX_ERRMSGLEN,
                       _errmsg[cf->errnum], cf->optionname);
     else if (cf->errnum == CONFFILE_ERR_PARSE_OVERFLOW_LINELEN
              || cf->errnum == CONFFILE_ERR_PARSE_OVERFLOW_OPTIONLEN
              || cf->errnum == CONFFILE_ERR_PARSE_OVERFLOW_ARGLEN
              || cf->errnum == CONFFILE_ERR_PARSE_QUOTE
              || cf->errnum == CONFFILE_ERR_PARSE_CONTINUATION)
-        rv = snprintf(errbuf, CONFFILE_MAX_ERRMSGLEN, 
+        rv = snprintf(errbuf, CONFFILE_MAX_ERRMSGLEN,
                       _errmsg[cf->errnum], cf->line_num);
     else
-        rv = snprintf(errbuf, CONFFILE_MAX_ERRMSGLEN, 
+        rv = snprintf(errbuf, CONFFILE_MAX_ERRMSGLEN,
                       "%s", _errmsg[cf->errnum]);
 
     if (rv >= buflen)
         return -1;
-             
+
     strcpy(buf, errbuf);
     return 0;
 }
@@ -207,7 +207,7 @@ conffile_line_number(conffile_t cf)
         return -1;
 
     return cf->line_num;
-} 
+}
 
 static int
 _setup(conffile_t cf,
@@ -219,9 +219,9 @@ _setup(conffile_t cf,
        int flags)
 {
     int i;
-    
+
     /* If it doesn't exist for real or can't be read, we consider it
-     * non-existant 
+     * non-existant
      */
     if (access(filename, R_OK) < 0) {
         cf->errnum = CONFFILE_ERR_EXIST;
@@ -252,7 +252,7 @@ _setup(conffile_t cf,
 }
 
 static int
-_remove_trailing_whitespace(conffile_t cf, char *linebuf, int linebuflen) 
+_remove_trailing_whitespace(conffile_t cf, char *linebuf, int linebuflen)
 {
     char *temp;
 
@@ -272,14 +272,14 @@ static int
 _remove_comments(conffile_t cf, char *linebuf, int linebuflen)
 {
     int i, newlen, previous_is_escape = 0, comment_remaining_buf = 0;
-  
+
     /* Cannot do check like the following:
      *
      * if (linebuf[i] == '#' && linebuf[i-1] != '\\')
      *
      * Would fail on parse situation such as the following:
      *
-     * \\# 
+     * \\#
      *
      */
     i = 0;
@@ -300,9 +300,9 @@ _remove_comments(conffile_t cf, char *linebuf, int linebuflen)
             previous_is_escape = 0;
         i++;
     }
-    
+
     return newlen;
-} 
+}
 
 static int
 _readline(conffile_t cf, char *linebuf, int linebuflen)
@@ -310,7 +310,7 @@ _readline(conffile_t cf, char *linebuf, int linebuflen)
     int ret, len = 0;
     int continuation = 0;
     char buf[CONFFILE_MAX_LINELEN];
-    
+
     if (linebuflen < CONFFILE_MAX_LINELEN) {
         cf->errnum = CONFFILE_ERR_INTERNAL;
         return -1;
@@ -328,7 +328,7 @@ _readline(conffile_t cf, char *linebuf, int linebuflen)
             /* Ok to break here. All continuation characters and
              * comments taken care of earlier
              */
-            cf->end_of_file++; 
+            cf->end_of_file++;
             break;
         }
 
@@ -365,7 +365,7 @@ _readline(conffile_t cf, char *linebuf, int linebuflen)
          *
          * optionname arg1 \    # my comment
          *
-         *                  ^^^^ need to remove this whitespace 
+         *                  ^^^^ need to remove this whitespace
          */
         len = _remove_trailing_whitespace(cf, linebuf, len);
         if (len == 0) {
@@ -375,7 +375,7 @@ _readline(conffile_t cf, char *linebuf, int linebuflen)
 
         if (linebuf[len-1] == '\\') {
             continuation++;
-            linebuf[len-1] = '\0'; 
+            linebuf[len-1] = '\0';
             len--;
             continue;
         }
@@ -394,13 +394,13 @@ _move_past_whitespace(conffile_t cf, char *linebuf)
 
     if (*linebuf == '\0')
         return NULL;
-    
+
     return linebuf;
 }
 
 int
-_parse_args(conffile_t cf, 
-            char *linebuf, 
+_parse_args(conffile_t cf,
+            char *linebuf,
             char args[CONFFILE_MAX_ARGS][CONFFILE_MAX_ARGLEN])
 {
     int quote_flag, numargs = 0;
@@ -420,10 +420,10 @@ _parse_args(conffile_t cf,
          */
          if ((linebuf = _move_past_whitespace(cf, linebuf)) == NULL)
             break;
-        
+
         quote_flag = 0;
         memset(args[numargs], '\0', CONFFILE_MAX_ARGLEN);
-        while (*linebuf != '\0' 
+        while (*linebuf != '\0'
                && (quote_flag == 1 || !isspace(*linebuf))) {
 
             if (*linebuf == '"') {
@@ -464,7 +464,7 @@ _parse_args(conffile_t cf,
         }
 
         numargs++;
-                                
+
         if (*linebuf == '\0')
             break;
     }
@@ -492,7 +492,7 @@ _parseline(conffile_t cf, char *linebuf, int linebuflen)
 
     optionlen = 0;
     memset(cf->optionname, '\0', CONFFILE_MAX_OPTIONNAMELEN);
-    while (optionlen < (CONFFILE_MAX_OPTIONNAMELEN-1) 
+    while (optionlen < (CONFFILE_MAX_OPTIONNAMELEN-1)
            && !isspace(*linebuf)
            && *linebuf != '\0') {
         cf->optionname[optionlen++] = *linebuf;
@@ -507,7 +507,7 @@ _parseline(conffile_t cf, char *linebuf, int linebuflen)
 
     for (i = 0; i < cf->options_len; i++) {
         int rv;
-        if (cf->flags & CONFFILE_FLAG_OPTION_CASESENSITIVE) 
+        if (cf->flags & CONFFILE_FLAG_OPTION_CASESENSITIVE)
             rv = strcmp(cf->options[i].optionname, cf->optionname);
         else
             rv = strcasecmp(cf->options[i].optionname, cf->optionname);
@@ -709,7 +709,7 @@ conffile_parse(conffile_t cf,
         return -1;
     }
 
-    /* Ensure option array is legitimate */ 
+    /* Ensure option array is legitimate */
     for (i = 0; i < options_len; i++) {
         if (options[i].optionname == NULL
             || strlen(options[i].optionname) >= CONFFILE_MAX_OPTIONNAMELEN
@@ -742,13 +742,13 @@ conffile_parse(conffile_t cf,
     if (_setup(cf, filename, options, options_len, app_ptr, app_data, flags) < 0)
         goto cleanup;
 
-    while (cf->end_of_file == 0 && 
+    while (cf->end_of_file == 0 &&
            (len = _readline(cf, linebuf, CONFFILE_MAX_LINELEN)) > 0) {
 
         if (_parseline(cf, linebuf, len) < 0)
             goto cleanup;
     }
-  
+
     if (len < 0)
         goto cleanup;
 
@@ -773,7 +773,7 @@ conffile_parse(conffile_t cf,
     return retval;
 }
 
-     
+
 CONFFILE_OPTION_FUNC(conffile_empty)
 {
     return 0;

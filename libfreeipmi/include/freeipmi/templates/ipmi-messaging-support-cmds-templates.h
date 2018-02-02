@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_MESSAGING_SUPPORT_CMDS_TEMPLATES_H
@@ -296,7 +296,7 @@ FIID Template: tmpl_cmd_get_bt_interface_capabilities_rs
 Master Write-Read Request
 -------------------------
 
-FIID Template: tmpl_cmd_master_write_read_rq 
+FIID Template: tmpl_cmd_master_write_read_rq
 
     { 8, "cmd", REQUIRED, LENGTH-FIXED }
     { 1, "bus_type", REQUIRED, LENGTH-FIXED }
@@ -387,7 +387,7 @@ FIID Template: tmpl_cmd_get_system_guid_format_rs
     { 16, "time_mid", REQUIRED, LENGTH-FIXED }
     { 32, "time_low", REQUIRED, LENGTH-FIXED }
 
-  Notes: node and time values LS byte first. 
+  Notes: node and time values LS byte first.
 
 Set System Info Parameters Request
 ----------------------------------

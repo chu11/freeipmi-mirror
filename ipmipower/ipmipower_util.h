@@ -38,7 +38,7 @@ char *ipmipower_power_cmd_to_string (ipmipower_power_cmd_t cmd);
 /* ipmipower_power_cmd_check_privilege
  * - check if privilege level ok for power cmd
  * - returns 1 if ok, 0 if not, -1 on error
- * - if returns 0 or -1, error message in buf 
+ * - if returns 0 or -1, error message in buf
  */
 int ipmipower_power_cmd_check_privilege (ipmipower_power_cmd_t cmd,
                                          char *errbuf,

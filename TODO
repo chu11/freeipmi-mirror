@@ -46,7 +46,7 @@ FreeIPMI new stuff
   - doable via FreeIPMI?  Can pass through Smbus to PmBus to do power control monitoring?
 - server simulator
   - support testing at scale
-  - test larger set of corner cases, possibilities, workarounds, etc. 
+  - test larger set of corner cases, possibilities, workarounds, etc.
   - different SDR combos
   - different SEL entries
   - all permutations of sensors, etc.
@@ -56,7 +56,7 @@ FreeIPMI new stuff
       checkout/commit fashion.  Policies are created, then removed.
       In addition, policies must be disabled before they can be
       reconfigured.
-    
+
       some of these mechanisms could be hidden (i.e. if user changed
       any configuration, disable policy, then re-configure it, then
       re-enable it), but some would require blatant assumptions, such
@@ -125,11 +125,11 @@ libfreeipmi-driver
 ------------------
 - kcs/ssif/etc
   - how to deal with servers w/ multiple BMCs (***)
-  - need knew inband option on tools? 
+  - need knew inband option on tools?
 - ssif userspace implementation
   - see ipmiutil for example
 
-  
+
 libfreeipmi-api
 ---------------
 --fail-if-ipmi-not-detected
@@ -149,8 +149,8 @@ libfreeipmi-interpret
   SENSOROK    | State Asserted
   - need mechanism to specify record ids/sensor number/entity/generator?
 - some sensor interpretations dependent on sensor number, way to add?
-  - QSSCS4R SMI Timeout & Power Throttled sensors 
-    - same event-type/sensor-type/etc., but different interpretation??  
+  - QSSCS4R SMI Timeout & Power Throttled sensors
+    - same event-type/sensor-type/etc., but different interpretation??
 
 libfreeipmi-sdr
 ---------------
@@ -165,7 +165,7 @@ libfreeipmi-sel
 libipmiconsole
 --------------
 - "learn" workarounds function - to figure out workaround flags for user support simultaneous SOL sessions
-  - very hard, almost impossible to do?? 
+  - very hard, almost impossible to do??
 - "check" function, to see if session currently running
 - engine_submit() - try and move initialization/setup code into engine
   to reduce time spent in engine_submit(), this is the core loop used by
@@ -176,7 +176,7 @@ libipmiconsole
   - perhaps ~100ms of character data to reduce packets send?
   - as far as I can tell, most ssh implementations send 1 char at a time,
     to most users that libipmiconsole will get similar interaction.
- 
+
 libipmimonitoring
 -----------------
 - select sensors via sensor name?
@@ -207,7 +207,7 @@ tools common
 - convenience function to loop infinite times necessary to expand (***)
   hostrange until done.
   - i.e. node[0-4]-[3-10]
-  - hack is in ipmipower right now for 2s, no where else supported 
+  - hack is in ipmipower right now for 2s, no where else supported
 
 ipmi-sensors
 ------------
@@ -222,10 +222,10 @@ ipmi-sensors
   - issue for libipmimonitoring too?
 - remove shared sensor option
   - make default like it should be
-  - this really ties to many other shared sensor issues 
+  - this really ties to many other shared sensor issues
 - do not error out on unexpected sensor_read errors, move on? (***)
   - i.e. unexpected completion code error?
-  - require rework of sensor-read lib?  How detect session timeout, etc. 
+  - require rework of sensor-read lib?  How detect session timeout, etc.
 - make 'discretereading' on by default?
   - it does not appear that to be illegal by IPMI spec.
 
@@ -338,7 +338,7 @@ Workaround for CVE 2012-3386
 
 perl -pe 's/chmod a\+w \$\(distdir\)/chmod u\+w \$\(distdir\)/' Makefile.in > Makefile.in.new
 
-info-gnu@gnu.org template e-mail 
+info-gnu@gnu.org template e-mail
 
 FreeIPMI X.X.X has been released. It can be downloaded at:
 
@@ -376,7 +376,7 @@ To do this:
 
 gpg -b foo.tar.gz
 
-3. A clearsigned directive file, (for example, foo.tar.gz.directive.asc). 
+3. A clearsigned directive file, (for example, foo.tar.gz.directive.asc).
 
 Format is:
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_OEM_INTEL_NODE_MANAGER_CMDS_H
@@ -296,7 +296,7 @@ extern "C" {
 
 #define IPMI_OEM_INTEL_NODE_MANAGER_DESTINATION_SELECTOR_OPERATOR_USE_VOLATILE_DESTINATION_INFO 0x0
 
-#define IPMI_OEM_INTEL_NODE_MANAGER_CPU_SOCKET_MIN 0 
+#define IPMI_OEM_INTEL_NODE_MANAGER_CPU_SOCKET_MIN 0
 #define IPMI_OEM_INTEL_NODE_MANAGER_CPU_SOCKET_MAX 7
 #define IPMI_OEM_INTEL_NODE_MANAGER_CPU_SOCKET_ALL_SOCKETS 0xFF
 
@@ -318,15 +318,15 @@ extern "C" {
 
 #define IPMI_OEM_INTEL_NODE_MANAGER_TURBO_RATIO_LIMIT_RESTORE_DEFAULT_SETTINGS 0x00
 
-/* 
+/*
  * fill* functions return 0 on success, -1 on error.
  *
  * obj_cmd_rq must be for the fill function's respective fiid
  * template request.
  *
- * see freeipmi/templates/ for template definitions 
+ * see freeipmi/templates/ for template definitions
  */
- 
+
 extern fiid_template_t tmpl_cmd_oem_intel_node_manager_enable_disable_node_manager_policy_control_rq;
 extern fiid_template_t tmpl_cmd_oem_intel_node_manager_enable_disable_node_manager_policy_control_rs;
 extern fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_rq;
@@ -414,11 +414,11 @@ int fill_cmd_oem_intel_node_manager_set_node_manager_policy_alert_thresholds (ui
                                                                               uint16_t *alert_threshold2,
                                                                               uint16_t *alert_threshold3,
                                                                               fiid_obj_t obj_cmd_rq);
- 
+
 int fill_cmd_oem_intel_node_manager_get_node_manager_policy_alert_thresholds (uint8_t domain_id,
                                                                               uint8_t policy_id,
                                                                               fiid_obj_t obj_cmd_rq);
-  
+
 int fill_cmd_oem_intel_node_manager_set_node_manager_policy_suspend_periods (uint8_t domain_id,
                                                                              uint8_t policy_id,
                                                                              uint8_t *policy1_suspend_start_time,
@@ -471,7 +471,7 @@ int fill_cmd_oem_intel_node_manager_set_node_manager_policy_suspend_periods (uin
 int fill_cmd_oem_intel_node_manager_get_node_manager_policy_suspend_periods (uint8_t domain_id,
                                                                              uint8_t policy_id,
                                                                              fiid_obj_t obj_cmd_rq);
-  
+
 int fill_cmd_oem_intel_node_manager_reset_node_manager_statistics (uint8_t mode,
                                                                    uint8_t domain_id,
                                                                    uint8_t policy_id,
@@ -508,7 +508,7 @@ int fill_cmd_oem_intel_node_manager_set_node_manager_alert_destination_ipmb (uin
                                                                              uint8_t alert_string_selector,
                                                                              uint8_t send_alert_string,
                                                                              fiid_obj_t obj_cmd_rq);
-  
+
 int fill_cmd_oem_intel_node_manager_set_node_manager_alert_destination_lan (uint8_t channel_number,
                                                                             uint8_t alert_receiver_deactivation,
                                                                             uint8_t destination_selector,

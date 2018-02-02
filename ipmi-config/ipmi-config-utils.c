@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -206,7 +206,7 @@ ipmi_errnum_is_non_fatal (ipmi_config_state_data_t *state_data,
         (*non_fatal_err) = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
       return (1);
     }
-  
+
   return (0);
 }
 
@@ -229,7 +229,7 @@ ipmi_config_param_errnum_is_non_fatal (ipmi_config_state_data_t *state_data,
   assert (IPMI_COMP_CODE_SET_LAN_CONFIGURATION_PARAMETERS_WRITE_READ_ONLY_PARAMETER == IPMI_COMP_CODE_SET_PEF_CONFIGURATION_PARAMETERS_WRITE_READ_ONLY_PARAMETER);
   assert (IPMI_COMP_CODE_SET_LAN_CONFIGURATION_PARAMETERS_WRITE_READ_ONLY_PARAMETER == IPMI_COMP_CODE_SET_SOL_CONFIGURATION_PARAMETERS_WRITE_READ_ONLY_PARAMETER);
   assert (IPMI_COMP_CODE_SET_LAN_CONFIGURATION_PARAMETERS_WRITE_READ_ONLY_PARAMETER == IPMI_COMP_CODE_SET_BOOT_OPTIONS_WRITE_READ_ONLY_PARAMETER);
-  
+
   if (!IPMI_CTX_ERRNUM_IS_FATAL_ERROR (state_data->ipmi_ctx))
     {
       if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
@@ -261,7 +261,7 @@ ipmi_config_pstdout_fprintf (ipmi_config_state_data_t *state_data,
                              const char *format, ...)
 {
   va_list ap;
-  int rv; 
+  int rv;
 
   assert (state_data);
 
@@ -300,7 +300,7 @@ load_lan_channel_numbers (ipmi_config_state_data_t *state_data)
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
       return (IPMI_CONFIG_ERR_NON_FATAL_ERROR);
     }
-  
+
   state_data->lan_channel_numbers_count = (unsigned int)ret;
   state_data->lan_channel_numbers_loaded++;
 
@@ -326,7 +326,7 @@ load_serial_channel_numbers (ipmi_config_state_data_t *state_data)
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
       return (IPMI_CONFIG_ERR_NON_FATAL_ERROR);
     }
-  
+
   state_data->serial_channel_numbers_count = (unsigned int)ret;
   state_data->serial_channel_numbers_loaded++;
 
@@ -411,7 +411,7 @@ _get_sol_channel_number_for_channel (ipmi_config_state_data_t *state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
-      
+
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
           || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
@@ -445,7 +445,7 @@ load_sol_channel_numbers (ipmi_config_state_data_t *state_data)
   unsigned int channelindex;
 
   assert (state_data);
-  
+
   /* There's a lot of trickery here.  Even if motherboard specifies
    * multiple LAN channels, they could map to a fewer number of SOL
    * channels.  So we need to calculate the number of unique SOL
@@ -522,7 +522,7 @@ get_lan_channel_number (ipmi_config_state_data_t *state_data,
     }
   else
     (*channel_number) = state_data->prog_data->args->lan_channel_number;
-  
+
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   return (rv);
@@ -535,7 +535,7 @@ get_serial_channel_number (ipmi_config_state_data_t *state_data,
 {
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   ipmi_config_err_t ret;
- 
+
   assert (state_data);
   /* section_name can be NULL if want to force IPMI search */
   assert (channel_number);
@@ -584,7 +584,7 @@ get_serial_channel_number (ipmi_config_state_data_t *state_data,
     }
   else
     (*channel_number) = state_data->prog_data->args->serial_channel_number;
-  
+
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   return (rv);
@@ -628,18 +628,18 @@ get_sol_channel_number (ipmi_config_state_data_t *state_data,
               goto cleanup;
             }
         }
-      
+
       if (!state_data->sol_channel_numbers_count)
         {
           rv = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
           goto cleanup;
         }
-      
+
       (*channel_number) = state_data->sol_channel_numbers_unique[0];
     }
   else
     (*channel_number) = state_data->prog_data->args->sol_channel_number;
-  
+
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   return (rv);

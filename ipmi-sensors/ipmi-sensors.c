@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -155,11 +155,11 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
     }
 
   memset (timestr, '\0', IPMI_SENSORS_TIME_BUFLEN + 1);
-  
+
   if (ipmi_timestamp_string ((uint32_t)val,
                              state_data->prog_data->args->common_args.utc_offset,
                              get_timestamp_flags (&(state_data->prog_data->args->common_args),
-                                                  IPMI_TIMESTAMP_FLAG_DEFAULT), 
+                                                  IPMI_TIMESTAMP_FLAG_DEFAULT),
                              "%m/%d/%Y - %H:%M:%S",
                              timestr,
                              IPMI_SENSORS_TIME_BUFLEN) < 0)
@@ -185,11 +185,11 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
     }
 
   memset (timestr, '\0', IPMI_SENSORS_TIME_BUFLEN + 1);
-  
+
   if (ipmi_timestamp_string ((uint32_t)val,
                              state_data->prog_data->args->common_args.utc_offset,
                              get_timestamp_flags (&(state_data->prog_data->args->common_args),
-                                                  IPMI_TIMESTAMP_FLAG_DEFAULT), 
+                                                  IPMI_TIMESTAMP_FLAG_DEFAULT),
                              "%m/%d/%Y - %H:%M:%S",
                              timestr,
                              IPMI_SENSORS_TIME_BUFLEN) < 0)
@@ -285,7 +285,7 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
     default:
       str = "unknown";
     }
-  
+
   pstdout_printf (state_data->pstate,
                   "Modal/non-modal SDR Repository Update operation   : %s\n",
                   str);
@@ -341,7 +341,7 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
           goto cleanup;
         }
       number_of_possible_allocation_units = val;
-       
+
       if (FIID_OBJ_GET (obj_cmd_rs, "allocation_unit_size", &val) < 0)
         {
           pstdout_fprintf (state_data->pstate,
@@ -389,7 +389,7 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
         pstdout_printf (state_data->pstate,
                         "Number of possible allocation units               : %u\n",
                         number_of_possible_allocation_units);
-      
+
       if (!allocation_unit_size)
         pstdout_printf (state_data->pstate,
                         "Allocation unit size                              : unspecified\n");
@@ -397,11 +397,11 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
         pstdout_printf (state_data->pstate,
                         "Allocation unit size                              : %u bytes\n",
                         allocation_unit_size);
-      
+
       pstdout_printf (state_data->pstate,
                       "Number of free allocation units                   : %u\n",
                       number_of_free_allocation_units);
-      
+
       pstdout_printf (state_data->pstate,
                       "Largest free block                                : %u allocation units\n",
                       largest_free_block);
@@ -455,7 +455,7 @@ _calculate_record_ids (ipmi_sensors_state_data_t *state_data,
       return (-1);
     }
 
-  /* 
+  /*
    * achu: This code could be done far more concisely, but it got
    * confusing and hard to understand.  We will divide this up into
    * simple chunks, if the user specified neither record_ids and
@@ -485,7 +485,7 @@ _calculate_record_ids (ipmi_sensors_state_data_t *state_data,
           if (state_data->prog_data->args->exclude_record_ids_length)
             {
               int found_exclude = 0;
-              
+
               for (j = 0; j < state_data->prog_data->args->exclude_record_ids_length; j++)
                 {
                   if (record_id == state_data->prog_data->args->exclude_record_ids[j])
@@ -494,7 +494,7 @@ _calculate_record_ids (ipmi_sensors_state_data_t *state_data,
                       break;
                     }
                 }
-              
+
               if (found_exclude)
                 continue;
             }
@@ -512,7 +512,7 @@ _calculate_record_ids (ipmi_sensors_state_data_t *state_data,
               if (flag)
                 continue;
             }
-          
+
           output_record_ids[(*output_record_ids_length)] = record_id;
           (*output_record_ids_length)++;
 
@@ -533,7 +533,7 @@ _calculate_record_ids (ipmi_sensors_state_data_t *state_data,
           if (state_data->prog_data->args->exclude_record_ids_length)
             {
               int found_exclude = 0;
-              
+
               for (j = 0; j < state_data->prog_data->args->exclude_record_ids_length; j++)
                 {
                   if (state_data->prog_data->args->record_ids[i] == state_data->prog_data->args->exclude_record_ids[j])
@@ -542,7 +542,7 @@ _calculate_record_ids (ipmi_sensors_state_data_t *state_data,
                       break;
                     }
                 }
-              
+
               if (found_exclude)
                 continue;
             }
@@ -569,7 +569,7 @@ _calculate_record_ids (ipmi_sensors_state_data_t *state_data,
           if (state_data->prog_data->args->exclude_sensor_types_length)
             {
               int flag;
-              
+
               if ((flag = sensor_type_listed_sdr (state_data->pstate,
                                                   state_data->sdr_ctx,
                                                   state_data->prog_data->args->exclude_sensor_types,
@@ -579,7 +579,7 @@ _calculate_record_ids (ipmi_sensors_state_data_t *state_data,
               if (flag)
                 continue;
             }
-          
+
           output_record_ids[(*output_record_ids_length)] = state_data->prog_data->args->record_ids[i];
           (*output_record_ids_length)++;
 
@@ -624,7 +624,7 @@ _calculate_record_ids (ipmi_sensors_state_data_t *state_data,
           if (state_data->prog_data->args->exclude_record_ids)
             {
               int found_exclude = 0;
-              
+
               for (j = 0; j < state_data->prog_data->args->exclude_record_ids_length; j++)
                 {
                   if (record_id == state_data->prog_data->args->exclude_record_ids[j])
@@ -633,7 +633,7 @@ _calculate_record_ids (ipmi_sensors_state_data_t *state_data,
                       break;
                     }
                 }
-              
+
               if (found_exclude)
                 continue;
             }
@@ -645,14 +645,14 @@ _calculate_record_ids (ipmi_sensors_state_data_t *state_data,
                                                   state_data->prog_data->args->exclude_sensor_types,
                                                   state_data->prog_data->args->exclude_sensor_types_length)) < 0)
                 return (-1);
-              
+
               if (flag)
                 continue;
             }
-          
+
           output_record_ids[(*output_record_ids_length)] = record_id;
           (*output_record_ids_length)++;
-          
+
           if ((*output_record_ids_length) >= MAX_SENSOR_RECORD_IDS)
             {
               pstdout_fprintf (state_data->pstate,
@@ -760,7 +760,7 @@ _intel_nm_oem_event_message (ipmi_sensors_state_data_t *state_data,
                 IPMI_SENSORS_MESSAGE_LENGTH,
                 "Power Limiting Capability %s",
                 (power_limiting_capability == IPMI_OEM_INTEL_NODE_MANAGER_OPERATIONAL_CAPABILITIES_CHANGE_EVENT_AVAILABLE) ? "Available" : "Not Available");
- 
+
       if (!(tmp_event_message_list = (char **) malloc (sizeof (char *) * 4)))
         {
           pstdout_perror (state_data->pstate, "malloc");
@@ -846,7 +846,7 @@ _get_event_message (ipmi_sensors_state_data_t *state_data,
                        ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       goto cleanup;
     }
-  
+
   if (ipmi_sdr_parse_event_reading_type_code (state_data->sdr_ctx,
                                               NULL,
                                               0,
@@ -858,7 +858,7 @@ _get_event_message (ipmi_sensors_state_data_t *state_data,
                        ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       goto cleanup;
     }
-  
+
   flags |= IPMI_GET_EVENT_MESSAGES_FLAGS_SENSOR_READING;
 
   if (!state_data->prog_data->args->verbose_count)
@@ -980,9 +980,9 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
                              stderr,
                              "Sensor reading/event_bitmask retrieval error: %s\n",
                              ipmi_sensor_read_ctx_errormsg (state_data->sensor_read_ctx));
-          
+
           event_message_output_type = IPMI_SENSORS_EVENT_UNKNOWN;
-          
+
           goto output;
         }
 
@@ -1032,7 +1032,7 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
                                                                   &event_message_list_len)) < 0)
             goto cleanup;
         }
-      
+
       if (!event_msg_generated)
         {
           if (_get_event_message (state_data,
@@ -1060,7 +1060,7 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
                                      sensor_event_bitmask,
                                      event_message_list,
                                      event_message_list_len);
-  
+
  cleanup:
   free (sensor_reading);
   if (event_message_list)
@@ -1161,7 +1161,7 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
                                    ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
                   goto cleanup;
                 }
-              
+
               if (ret)
                 {
                   state_data->intel_node_manager.node_manager_data_found = 1;
@@ -1221,7 +1221,7 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
                            ipmi_ctx_errormsg (state_data->ipmi_ctx));
           goto cleanup;
         }
-      
+
       if (ipmi_ctx_set_flags (state_data->ipmi_ctx, ctx_flags_orig | IPMI_FLAGS_IGNORE_AUTHENTICATION_CODE) < 0)
         {
           pstdout_fprintf (state_data->pstate,
@@ -1248,7 +1248,7 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
                            ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
           goto cleanup;
         }
-    
+
       if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_ctx,
                                              NULL,
                                              0,
@@ -1301,7 +1301,7 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
                                ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
               goto cleanup;
             }
-          
+
           if (share_count <= 1)
             goto fallthrough;
 
@@ -1389,7 +1389,7 @@ _ipmi_sensors (pstdout_state_t pstate,
   prog_data = (ipmi_sensors_prog_data_t *)arg;
 
   assert (!prog_data->args->list_sensor_types);
-  
+
   if (prog_data->args->common_args.flush_cache)
     {
       if (sdr_cache_flush_cache (pstate,
@@ -1403,7 +1403,7 @@ _ipmi_sensors (pstdout_state_t pstate,
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;
   state_data.hostname = (char *)hostname;
-  
+
   if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
                                          hostname,
                                          &(prog_data->args->common_args),
@@ -1425,16 +1425,16 @@ _ipmi_sensors (pstdout_state_t pstate,
 
   if (state_data.prog_data->args->bridge_sensors)
     sensor_read_flags |= IPMI_SENSOR_READ_FLAGS_BRIDGE_SENSORS;
-  
+
   if (state_data.prog_data->args->common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_DISCRETE_READING)
     sensor_read_flags |= IPMI_SENSOR_READ_FLAGS_DISCRETE_READING;
-  
+
   if (state_data.prog_data->args->common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_SCANNING_DISABLED)
     sensor_read_flags |= IPMI_SENSOR_READ_FLAGS_IGNORE_SCANNING_DISABLED;
-  
+
   if (state_data.prog_data->args->common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_ASSUME_BMC_OWNER)
     sensor_read_flags |= IPMI_SENSOR_READ_FLAGS_ASSUME_BMC_OWNER;
-  
+
   if (sensor_read_flags)
     {
       /* Don't error out, if this fails we can still continue */
@@ -1493,7 +1493,7 @@ _ipmi_sensors (pstdout_state_t pstate,
             }
         }
 
-      if (prog_data->args->interpret_oem_data 
+      if (prog_data->args->interpret_oem_data
           || prog_data->args->ignore_unrecognized_events)
         {
           unsigned int flags = 0;
@@ -1547,10 +1547,10 @@ main (int argc, char **argv)
     {
       if (list_sensor_types () < 0)
         return (EXIT_FAILURE);
-      
+
       return (EXIT_SUCCESS);
     }
-  
+
   if ((hosts_count = pstdout_setup (&(prog_data.args->common_args.hostname),
                                     &(prog_data.args->common_args))) < 0)
     return (EXIT_FAILURE);

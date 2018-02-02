@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -123,11 +123,11 @@ _detailed_output_record_type_and_id (ipmi_sensors_state_data_t *state_data)
   pstdout_printf (state_data->pstate,
                   "Record ID: %u\n",
                   record_id);
-  
+
   if (state_data->prog_data->args->verbose_count >= 2)
     {
       char *record_type_str = _get_record_type_string (state_data, record_type);
-      
+
       pstdout_printf (state_data->pstate,
                       "Record Type: %s (%Xh)\n",
                       record_type_str,
@@ -293,7 +293,7 @@ _detailed_output_header (ipmi_sensors_state_data_t *state_data,
                                                             event_reading_type_code,
                                                             state_data->oem_data.manufacturer_id,
                                                             state_data->oem_data.product_id);
-  else 
+  else
     sensor_type_string = get_sensor_type_output_string (sensor_type);
 
   pstdout_printf (state_data->pstate,
@@ -671,7 +671,7 @@ _detailed_output_resolution (ipmi_sensors_state_data_t *state_data,
    * else in the SDR is read/required.  See section 36.4.2 in the
    * spec.
    */
-  
+
   if (ipmi_sdr_parse_sensor_decoding_data (state_data->sdr_ctx,
                                            NULL,
                                            0,
@@ -688,8 +688,8 @@ _detailed_output_resolution (ipmi_sensors_state_data_t *state_data,
                        ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       goto cleanup;
     }
-  
-  
+
+
   if (ipmi_sensor_decode_resolution (r_exponent, m, &resolution) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -698,7 +698,7 @@ _detailed_output_resolution (ipmi_sensors_state_data_t *state_data,
                        strerror (errno));
       goto cleanup;
     }
-  
+
   pstdout_printf (state_data->pstate,
                   "Resolution: %f %s\n",
                   resolution,
@@ -729,7 +729,7 @@ _detailed_output_accuracy (ipmi_sensors_state_data_t *state_data)
                        ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       goto cleanup;
     }
-  
+
   if (accuracy)
     pstdout_printf (state_data->pstate,
                     "Accuracy: %f%\n",
@@ -738,7 +738,7 @@ _detailed_output_accuracy (ipmi_sensors_state_data_t *state_data)
     pstdout_printf (state_data->pstate,
                     "Accuracy: %s\n",
                     IPMI_SENSORS_NA_STRING_OUTPUT);
-  
+
   rv = 0;
  cleanup:
   free (accuracy);
@@ -870,7 +870,7 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
    * hysteresis value.  Perhaps that's a typo in the spec?  We just
    * output the integer values?  That's the best guess I can make.
    */
-  
+
   if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_ctx,
                                          NULL,
                                          0,
@@ -1397,22 +1397,22 @@ _detailed_output_sensor_state (ipmi_sensors_state_data_t *state_data,
                                uint16_t sensor_event_bitmask)
 {
   assert (state_data);
-  
+
   if (state_data->prog_data->args->output_sensor_state)
     {
       char *sensor_state_str = NULL;
-      
+
       if (ipmi_sensors_get_sensor_state (state_data,
                                          event_message_output_type,
                                          sensor_event_bitmask,
                                          &sensor_state_str) < 0)
         return (-1);
-      
+
       pstdout_printf (state_data->pstate,
                       "Sensor State: %s\n",
                       sensor_state_str);
     }
-  
+
   return (0);
 }
 
@@ -1568,7 +1568,7 @@ _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
                         "Sensor Reading: %s\n",
                         IPMI_SENSORS_NA_STRING_OUTPUT);
     }
-  
+
   if (_detailed_output_event_message_list (state_data,
                                            event_message_output_type,
                                            sensor_event_bitmask,
@@ -1637,7 +1637,7 @@ _detailed_output_compact_record (ipmi_sensors_state_data_t *state_data,
       else
         pstdout_printf (state_data->pstate,
                         "ID String Instance Modifier Type: Numeric\n");
-      
+
       pstdout_printf (state_data->pstate,
                       "ID String Instance Modifier Offset: %u\n",
                       id_string_instance_modifier_offset);
@@ -1828,7 +1828,7 @@ _output_device_type_and_modifier (ipmi_sensors_state_data_t *state_data)
                     device_type);
 
   memset (device_type_modifier_buf, '\0', IPMI_SENSORS_DEVICE_TYPE_BUFLEN + 1);
-  
+
   if ((len = ipmi_device_type_modifer_message (device_type,
                                                device_type_modifier,
                                                device_type_modifier_buf,
@@ -1863,7 +1863,7 @@ _output_entity_id_and_instance (ipmi_sensors_state_data_t *state_data)
 
   assert (state_data);
   assert (state_data->prog_data->args->verbose_count >= 2);
-  
+
   if (ipmi_sdr_parse_entity_id_instance_type (state_data->sdr_ctx,
                                               NULL,
                                               0,
@@ -2125,7 +2125,7 @@ _detailed_output_management_controller_device_locator_record (ipmi_sensors_state
   pstdout_printf (state_data->pstate,
                   "IPMB Event Generator: %s\n",
                   device_capabilities_ipmb_event_generator ? "Yes" : "No");
-  
+
   pstdout_printf (state_data->pstate,
                   "Bridge Support: %s\n",
                   device_capabilities_bridge ? "Yes" : "No");
@@ -2182,7 +2182,7 @@ _output_manufacturer_id (ipmi_sensors_state_data_t *state_data)
     pstdout_printf (state_data->pstate,
                     "Manufacturer ID: %Xh\n",
                     manufacturer_id);
-  
+
   return (0);
 }
 
@@ -2332,14 +2332,14 @@ _detailed_output_oem_record (ipmi_sensors_state_data_t *state_data)
 
   pstdout_printf (state_data->pstate,
                   "OEM Data: ");
-      
+
   for (i = 0; i < len; i++)
     pstdout_printf (state_data->pstate,
                     "%02X ",
                     oem_data[i]);
   pstdout_printf (state_data->pstate, "\n");
 
- out:      
+ out:
   pstdout_printf (state_data->pstate, "\n");
 
   return (0);

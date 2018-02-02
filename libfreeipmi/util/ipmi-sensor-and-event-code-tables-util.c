@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -964,29 +964,29 @@ get_event_logging_disabled_event_data3_message (unsigned int offset, uint8_t eve
         char *str = NULL;
         fiid_obj_t obj = NULL;
         int rv = -1;
-        
+
         if (!(obj = fiid_obj_create (tmpl_event_data3)))
           {
             ERRNO_TRACE (errno);
             goto cleanup2;
           }
-        
+
         if (fiid_obj_set_all (obj, &event_data3, sizeof (uint8_t)) < 0)
           {
             FIID_OBJECT_ERROR_TO_ERRNO (obj);
             goto cleanup2;
           }
-        
+
         if (FIID_OBJ_GET (obj, "number_type", &val) < 0)
           {
             FIID_OBJECT_ERROR_TO_ERRNO (obj);
             goto cleanup2;
           }
         number_type = val;
-        
+
         if (number_type == IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED_EVENT_DATA3_OFFSET_CORRECTABLE_MACHINE_CHECK_ERROR_LOGGING_DISABLED_ENTITY_INSTANCE_NUMBER)
           str = "Entity Instance Number";
-        else 
+        else
           str = "Vendor-specific Processor Number";
 
         rv = _snprintf (buf,
@@ -994,7 +994,7 @@ get_event_logging_disabled_event_data3_message (unsigned int offset, uint8_t eve
                         "%s = #%d",
                         str,
                         event_data2);
-        
+
       cleanup2:
         fiid_obj_destroy (obj);
         return (rv);
@@ -1066,7 +1066,7 @@ get_session_audit_event_data3_message (unsigned int offset, uint8_t event_data2,
   fiid_obj_t obj = NULL;
   char *str = NULL;
   int rv = -1;
-  
+
   assert (buf && buflen);
 
   if (!(obj = fiid_obj_create (tmpl_event_data3)))
@@ -1074,39 +1074,39 @@ get_session_audit_event_data3_message (unsigned int offset, uint8_t event_data2,
       ERRNO_TRACE (errno);
       goto cleanup;
     }
-  
+
   if (fiid_obj_set_all (obj, &event_data3, sizeof (uint8_t)) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj);
       goto cleanup;
     }
-  
+
   if (FIID_OBJ_GET (obj, "channel_number", &val) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj);
       goto cleanup;
     }
   channel_number = val;
-  
+
   if (FIID_OBJ_GET (obj, "deactivation_cause", &val) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj);
       goto cleanup;
     }
   deactivation_cause = val;
-  
+
   /* output deactivation case only if deactivation offset occurred */
   if (offset == IPMI_SENSOR_TYPE_SESSION_AUDIT_SESSION_DEACTIVATED)
     {
       if (deactivation_cause <= ipmi_sensor_type_session_audit_event_data3_offset_session_deactivated_deactivation_cause_max_index)
         str = (char *)ipmi_sensor_type_session_audit_event_data3_offset_session_deactivated_deactivation_cause[deactivation_cause];
     }
-  
+
   rv = _snprintf (buf, buflen, "Channel number that session was activated/deactivated = %d%s%s",
                   channel_number,
                   (str) ? _ipmi_event_message_separator : "",
                   str ? str : "");
-  
+
  cleanup:
   fiid_obj_destroy (obj);
   return (rv);
@@ -1920,14 +1920,14 @@ ipmi_get_oem_sensor_type_message (uint32_t manufacturer_id,
         }
     }
 
-  /* 
+  /*
    * OEM Interpretation
    *
    * Fujitsu iRMC S1 / iRMC S2
    *
    */
   if (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU
-      && (product_id >= IPMI_FUJITSU_PRODUCT_ID_MIN 
+      && (product_id >= IPMI_FUJITSU_PRODUCT_ID_MIN
           && product_id <= IPMI_FUJITSU_PRODUCT_ID_MAX))
     {
       switch (sensor_type)
@@ -2036,7 +2036,7 @@ ipmi_get_oem_sensor_type_message (uint32_t manufacturer_id,
    * (Quanta Winterfell)
    * (Wiwynn Windmill)
    */
-  /* 
+  /*
    * achu: Ugh .. vendor uses same sensor type for multiple OEM
    * sensors ... gotta use sensor number to differentiate.  This is
    * awful.
@@ -2055,7 +2055,7 @@ ipmi_get_oem_sensor_type_message (uint32_t manufacturer_id,
         }
       else if (sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_WINDMILL_CHASSIS_POWER_STATUS)
         {
-          /* achu: A/C Lost is 4h, not 3h, so the below may not be correct.  Had to guess */  
+          /* achu: A/C Lost is 4h, not 3h, so the below may not be correct.  Had to guess */
           if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_CHASSIS_POWER_STATUS_POWER_DOWN))
             return (snprintf (buf, buflen, "Power Down"));
           else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_CHASSIS_POWER_STATUS_POWER_CYCLE_RESET))
@@ -2147,7 +2147,7 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
       SET_ERRNO (EINVAL);
       return (-1);
     }
-  
+
   /* OEM Interpretation
    *
    * HP Proliant DL160 G8
@@ -2161,7 +2161,7 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
                                     buflen,
                                     ipmi_oem_hp_uid_light_max_index,
                                     ipmi_oem_hp_uid_light));
-      
+
       if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_HP_HEALTH_LED
           && sensor_type == IPMI_SENSOR_TYPE_OEM_HP_LED)
         return (_get_event_message (offset,
@@ -2188,7 +2188,7 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
                                         buflen,
                                         ipmi_oem_intel_specific_pci_fatal_sensor_max_index,
                                         ipmi_oem_intel_specific_pci_fatal_sensor));
-          
+
           if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_CORRECTABLE_SENSOR
               && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
             return (_get_event_message (offset,
@@ -2206,7 +2206,7 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
                                         buflen,
                                         ipmi_oem_intel_quanta_qssc_s4r_specific_pci_fatal_sensor_max_index,
                                         ipmi_oem_intel_quanta_qssc_s4r_specific_pci_fatal_sensor));
-          
+
           if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QUANTA_QSSC_S4R_PCIE_CORRECTABLE_SENSOR
               && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
             return (_get_event_message (offset,
@@ -2232,7 +2232,7 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
                                         buflen,
                                         ipmi_oem_intel_s2600jf_specific_pci_fatal_error_2_max_index,
                                         ipmi_oem_intel_s2600jf_specific_pci_fatal_error_2));
-          
+
           if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_PCIE_CORRECTABLE_ERROR
               && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
             return (_get_event_message (offset,
@@ -2256,7 +2256,7 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
                                         buflen,
                                         ipmi_oem_intel_s2600jf_specific_opi_fatal_error_2_max_index,
                                         ipmi_oem_intel_s2600jf_specific_opi_fatal_error_2));
-          
+
           if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_QPI_LINK_WIDTH_REDUCED
               && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
             return (_get_event_message (offset,
@@ -2308,7 +2308,7 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
                                         buflen,
                                         ipmi_oem_intel_e52600v3_specific_pci_express_fatal_errors_2_max_index,
                                         ipmi_oem_intel_e52600v3_specific_pci_express_fatal_errors_2));
-            
+
           if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_PCI_EXPRESS_CORRECTABLE_ERRORS
               && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
             return (_get_event_message (offset,
@@ -2316,7 +2316,7 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
                                         buflen,
                                         ipmi_oem_intel_e52600v3_specific_pci_express_correctable_errors_max_index,
                                         ipmi_oem_intel_e52600v3_specific_pci_express_correctable_errors));
- 
+
           if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_FIRMWARE_UPDATE_STATUS_SENSOR
               && sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE)
             return (_get_event_message (offset,
@@ -2350,7 +2350,7 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
                                         ipmi_oem_intel_e52600v3_specific_ierr_recovery_dump_info));
         }
     }
-  
+
   SET_ERRNO (EINVAL);
   return (-1);
 }
@@ -2546,16 +2546,16 @@ ipmi_get_event_messages (uint8_t event_reading_type_code,
       for (j = 5; j >= 0; j--)
         {
           bitmask = 0x1 << j;
-          
+
           if (event_bitmask & bitmask)
             {
               memset (buf, '\0', EVENT_BUFLEN + 1);
-              
+
               if ((len = ipmi_get_threshold_message (j,
                                                      buf,
                                                      EVENT_BUFLEN)) < 0)
                 goto cleanup;
-              
+
               if (len)
                 {
                   if (!(tmp_event_messages[tmp_event_messages_count] = strdup (buf)))
@@ -2689,20 +2689,20 @@ ipmi_get_event_messages (uint8_t event_reading_type_code,
                                 EVENT_BUFLEN,
                                 "Unrecognized Event = %04Xh",
                                 bitmask);
-                      
+
                       if (!(tmp_event_messages[tmp_event_messages_count] = strdup (buf)))
                         {
                           SET_ERRNO (ENOMEM);
                           goto cleanup;
                         }
-                      
+
                       tmp_event_messages_count++;
                       continue;
                     }
                   else
                     continue;
                 }
-              
+
               if (len)
                 {
                   if (!(tmp_event_messages[tmp_event_messages_count] = strdup (buf)))
@@ -2710,7 +2710,7 @@ ipmi_get_event_messages (uint8_t event_reading_type_code,
                       SET_ERRNO (ENOMEM);
                       goto cleanup;
                     }
-                  
+
                   tmp_event_messages_count++;
                   continue;
                 }
@@ -2733,7 +2733,7 @@ ipmi_get_event_messages (uint8_t event_reading_type_code,
                                                 event_bitmask,
                                                 buf,
                                                 EVENT_BUFLEN);
-      
+
       if (len > 0)
         {
           if (!(tmp_event_messages[tmp_event_messages_count] = strdup (buf)))
@@ -2741,7 +2741,7 @@ ipmi_get_event_messages (uint8_t event_reading_type_code,
               SET_ERRNO (ENOMEM);
               goto cleanup;
             }
-          
+
           tmp_event_messages_count++;
         }
       else
@@ -2780,7 +2780,7 @@ ipmi_get_event_messages (uint8_t event_reading_type_code,
                       SET_ERRNO (ENOMEM);
                       goto cleanup;
                     }
-                  
+
                   tmp_event_messages_count++;
                   break;
                 }
@@ -2794,12 +2794,12 @@ ipmi_get_event_messages (uint8_t event_reading_type_code,
     oem_default_output:
 
       memset (buf, '\0', EVENT_BUFLEN + 1);
-      
+
       snprintf (buf,
                 EVENT_BUFLEN,
                 "OEM Event = %04Xh",
                 event_bitmask);
-      
+
       if (!(tmp_event_messages[tmp_event_messages_count] = strdup (buf)))
         {
           SET_ERRNO (ENOMEM);
@@ -2811,16 +2811,16 @@ ipmi_get_event_messages (uint8_t event_reading_type_code,
 
   if (!tmp_event_messages_count
       && no_event_message_string)
-    {     
+    {
       if (!(tmp_event_messages[0] = strdup (no_event_message_string)))
         {
           SET_ERRNO (ENOMEM);
           goto cleanup;
         }
-      
+
       tmp_event_messages_count++;
     }
-  
+
   if (tmp_event_messages_count)
     {
       if (!(tmp_event_messages_ptr = (char **) malloc (sizeof (char *) * (tmp_event_messages_count + 1))))
@@ -2828,16 +2828,16 @@ ipmi_get_event_messages (uint8_t event_reading_type_code,
           SET_ERRNO (ENOMEM);
           goto cleanup;
         }
-      
+
       for (i = 0; i < tmp_event_messages_count; i++)
         tmp_event_messages_ptr[i] = tmp_event_messages[i];
-      
+
       tmp_event_messages_ptr[tmp_event_messages_count] = NULL;
     }
 
   (*event_messages) = tmp_event_messages_ptr;
   (*event_messages_count) = tmp_event_messages_count;
-  
+
   return (0);
 
  cleanup:

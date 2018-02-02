@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_CMD_OEM_INVENTEC_SPEC_H
@@ -46,7 +46,7 @@ extern "C" {
 #define IPMI_CMD_OEM_INVENTEC_GET_RESTORE_STATUS              0x05
 #define IPMI_CMD_OEM_INVENTEC_SET_SYSTEM_GUID                 0xB3
 
-/* IPMI_NET_FN_OEM_INVENTEC_SPECIFIC_RQ / IPMI_NET_FN_OEM_INVENTEC_SPECIFIC_RS */ 
+/* IPMI_NET_FN_OEM_INVENTEC_SPECIFIC_RQ / IPMI_NET_FN_OEM_INVENTEC_SPECIFIC_RS */
 #define IPMI_CMD_OEM_INVENTEC_SET_WEB_PORT_NUM                0x02
 #define IPMI_CMD_OEM_INVENTEC_GET_WEB_PORT_NUM                0x03
 #define IPMI_CMD_OEM_INVENTEC_SET_BOARD_ID                    0x10

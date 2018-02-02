@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -94,7 +94,7 @@ ipmi_get_oem_sensor_type_string (uint8_t sensor_type,
           && (product_id >= IPMI_FUJITSU_PRODUCT_ID_MIN
               && product_id <= IPMI_FUJITSU_PRODUCT_ID_MAX))
         {
-          if (event_reading_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC) 
+          if (event_reading_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC)
             {
               switch (sensor_type)
                 {
@@ -126,19 +126,19 @@ ipmi_get_oem_sensor_type_string (uint8_t sensor_type,
                   /* fall into generic case below */
                   break;
                 }
-            } 
+            }
           else if (event_reading_code == IPMI_EVENT_READING_TYPE_CODE_THRESHOLD)
             {
               /* Currently only one combination */
               if (sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_I2C_BUS)
                 return ("OEM I2C Bus");
             }
-          
+
         }
-      
+
       return (ipmi_oem_sensor_type);
     }
-  
+
   return (NULL);
 }
 
@@ -213,7 +213,7 @@ ipmi_sensor_units_string (uint8_t sensor_units_percentage,
                      sensor_units[sensor_base_unit_type]);
       return (rv);
     }
-  
+
   if (sensor_units_rate != IPMI_SENSOR_RATE_UNIT_NONE)
     {
       /* Special case, RPM is inheritly per minute
@@ -235,7 +235,7 @@ ipmi_sensor_units_string (uint8_t sensor_units_percentage,
                        ipmi_sensor_rate_units[sensor_units_rate]);
       return (rv);
     }
-  
+
   /* else sensor_units_modifier != IPMI_SDR_MODIFIER_UNIT_NONE */
 
   /* achu: corner case, some vendors messed up */

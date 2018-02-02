@@ -59,9 +59,9 @@
 #define IPMI_OEM_FUJITSU_MAX_BYTES 256
 
 /*
- * HLiebig: This is a stripped down version of ipmi_oem_fujitsu_get_sel_entry_long_text() 
+ * HLiebig: This is a stripped down version of ipmi_oem_fujitsu_get_sel_entry_long_text()
  * in ipmi-oem/src/ipmi-oem-fujitsu.c
- * tested against 
+ * tested against
  * TX200S3 (iRMC S1)
  * TX120S2/TX300S6 (iRMC S2)
  */
@@ -112,14 +112,14 @@ _ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_ctx_t ctx,
       max_read_length = IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_IRMC_S1_MAX_READ_LENGTH;
       data_length = IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_IRMC_S1_MAX_DATA_LENGTH;
     }
-  else 
+  else
     {
       max_read_length = IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_IRMC_S2_MAX_READ_LENGTH;
       data_length = IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_IRMC_S2_MAX_DATA_LENGTH;
     }
 
   /* Fujitsu OEM Command
-   * 
+   *
    * http://manuals.ts.fujitsu.com/file/4390/irmc_s2-ug-en.pdf
    *
    * Request
@@ -151,7 +151,7 @@ _ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_ctx_t ctx,
    * 0x?? - timestamp
    * 0x?? - timestamp
    * 0x?? - timestamp
-   * 0x?? - severity   
+   * 0x?? - severity
    *      bit 7   - CSS component
    *              - 0 - No CSS component
    *              - 1 - CSS component
@@ -166,7 +166,7 @@ _ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_ctx_t ctx,
    *      - requested number of bytes starting at requested offset (MaxResponseDataSize-1 bytes of data)
    * 0x00 - trailing '\0' character
    */
-     
+
   bytes_rq[0] = IPMI_CMD_OEM_FUJITSU_SYSTEM;
   bytes_rq[1] = (IPMI_IANA_ENTERPRISE_ID_FUJITSU & 0x0000FF);
   bytes_rq[2] = (IPMI_IANA_ENTERPRISE_ID_FUJITSU & 0x00FF00) >> 8;
@@ -181,7 +181,7 @@ _ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_ctx_t ctx,
     {
       bytes_rq[7] = offset;
 
-      /* BMC checks for boundaries, offset + len has to be <= 80 (iRMC S1) <= 100 (iRMC S2) */ 
+      /* BMC checks for boundaries, offset + len has to be <= 80 (iRMC S1) <= 100 (iRMC S2) */
       if (offset + bytes_rq[8] > data_length)
         bytes_rq[8] = data_length - offset;
 
@@ -196,7 +196,7 @@ _ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_ctx_t ctx,
           SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_IPMI_ERROR);
           goto cleanup;
         }
-      
+
       if (rs_len < 17)
         {
           if (rs_len >= 2 && bytes_rs[1] != IPMI_COMP_CODE_COMMAND_SUCCESS)
@@ -211,22 +211,22 @@ _ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_ctx_t ctx,
               goto cleanup;
             }
         }
-      
+
       /* Get severity and CSS flag only once */
       if (!offset)
         {
           css = (bytes_rs[14] & IPMI_OEM_FUJITSU_CSS_BITMASK);
           css >>= IPMI_OEM_FUJITSU_CSS_SHIFT;
-          
+
           severity = (bytes_rs[14] & IPMI_OEM_FUJITSU_SEVERITY_BITMASK);
           severity >>= IPMI_OEM_FUJITSU_SEVERITY_SHIFT;
         }
-      
+
       data_length = bytes_rs[15];
-      
+
       bytes_rs[rs_len-1] = '\0'; /* just to be sure it's terminated */
       component_length = strlen ((char *)bytes_rs + 16);
-      
+
       /* achu: truncate if there is overflow */
       if (offset + component_length > data_length)
         {
@@ -243,10 +243,10 @@ _ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_ctx_t ctx,
           offset += component_length;
         }
     }
-  
+
   if (css == IPMI_OEM_FUJITSU_CSS_COMPONENT)
     css_str = "CSS Component";
-  
+
   if (include_severity)
     {
       switch (severity)
@@ -274,7 +274,7 @@ _ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_ctx_t ctx,
                   severity_str,
                   data_buf,
                   css_str);
-      else 
+      else
         snprintf (string_buf,
                   IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH,
                   "%s: %s",
@@ -295,7 +295,7 @@ _ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_ctx_t ctx,
                   "%s",
                   data_buf);
     }
-  
+
  out:
 
   if (strlen (string_buf) > buflen)
@@ -303,9 +303,9 @@ _ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_ctx_t ctx,
       SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERNAL_ERROR);
       goto cleanup;
     }
-  
+
   memcpy (buf, string_buf, strlen (string_buf));
-  
+
   rv = 0;
  cleanup:
   return (rv);
@@ -340,7 +340,7 @@ sel_string_output_fujitsu_irmc_common_event_data1_class_sensor_specific_discrete
   assert (ctx->product_id >= IPMI_FUJITSU_PRODUCT_ID_MIN
           && ctx->product_id <= IPMI_FUJITSU_PRODUCT_ID_MAX);
 
-  /* 
+  /*
    * Fujitsu iRMC / iRMC S2
    */
   if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_FUJITSU_I2C_BUS
@@ -369,7 +369,7 @@ sel_string_output_fujitsu_irmc_common_event_data1_class_sensor_specific_discrete
       if (ret > 0)
         return (1);
     }
-  
+
   return (0);
 }
 
@@ -406,16 +406,16 @@ sel_string_output_fujitsu_irmc_common_event_data2_event_data3 (ipmi_sel_ctx_t ct
   assert (ctx->product_id >= IPMI_FUJITSU_PRODUCT_ID_MIN
           && ctx->product_id <= IPMI_FUJITSU_PRODUCT_ID_MAX);
 
-  /* 
+  /*
    * Fujitsu iRMC / iRMC S2
    */
   if (system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
       && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
     {
       char selbuf[IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH + 1];
-      
+
       memset (selbuf, '\0', IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH + 1);
-      
+
       /* don't output severity since this is not event data 1 */
       if (_ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ctx,
                                                          sel_entry,
@@ -423,7 +423,7 @@ sel_string_output_fujitsu_irmc_common_event_data2_event_data3 (ipmi_sel_ctx_t ct
                                                          IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH,
                                                          0) < 0)
         return (-1);
-      
+
       if (strlen (selbuf))
         {
           if (sel_string_snprintf (buf,
@@ -434,7 +434,7 @@ sel_string_output_fujitsu_irmc_common_event_data2_event_data3 (ipmi_sel_ctx_t ct
             (*oem_rv) = 1;
           else
             (*oem_rv) = 0;
-          
+
           return (1);
         }
     }
@@ -477,7 +477,7 @@ sel_string_output_fujitsu_irmc_common_oem_record_data (ipmi_sel_ctx_t ctx,
   assert (ctx->product_id >= IPMI_FUJITSU_PRODUCT_ID_MIN
           && ctx->product_id <= IPMI_FUJITSU_PRODUCT_ID_MAX);
 
-  /* 
+  /*
    * Fujitsu iRMC / iRMC S2
    */
 
@@ -489,7 +489,7 @@ sel_string_output_fujitsu_irmc_common_oem_record_data (ipmi_sel_ctx_t ctx,
                                                      IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH,
                                                      1) < 0)
     return (-1);
-  
+
   if (strlen (selbuf))
     {
       if (sel_string_snprintf (buf,
@@ -500,7 +500,7 @@ sel_string_output_fujitsu_irmc_common_oem_record_data (ipmi_sel_ctx_t ctx,
         (*oem_rv) = 1;
       else
         (*oem_rv) = 0;
-      
+
       return (1);
     }
 
@@ -526,7 +526,7 @@ sel_string_output_fujitsu_irmc_common_oem_string (ipmi_sel_ctx_t ctx,
                                                   int *oem_rv)
 {
   char selbuf[IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH + 1];
-      
+
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_FUJITSU);
@@ -538,8 +538,8 @@ sel_string_output_fujitsu_irmc_common_oem_string (ipmi_sel_ctx_t ctx,
   assert (oem_rv);
   assert (ctx->product_id >= IPMI_FUJITSU_PRODUCT_ID_MIN
           && ctx->product_id <= IPMI_FUJITSU_PRODUCT_ID_MAX);
-  
-  /* 
+
+  /*
    * Fujitsu iRMC / iRMC S2
    */
 
@@ -551,7 +551,7 @@ sel_string_output_fujitsu_irmc_common_oem_string (ipmi_sel_ctx_t ctx,
                                                      IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH,
                                                      1) < 0)
     return (-1);
-  
+
   if (strlen (selbuf))
     {
       if (sel_string_snprintf (buf,
@@ -562,7 +562,7 @@ sel_string_output_fujitsu_irmc_common_oem_string (ipmi_sel_ctx_t ctx,
         (*oem_rv) = 1;
       else
         (*oem_rv) = 0;
-      
+
       return (1);
     }
 

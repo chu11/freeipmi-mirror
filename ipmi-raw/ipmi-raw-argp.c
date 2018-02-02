@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -100,7 +100,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   char *endptr;
 
   assert (state);
-  
+
   cmd_args = state->input;
 
   switch (key)
@@ -129,19 +129,19 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       {
         unsigned int i;
         long value;
-        
+
         if (strlen (arg) >= 2)
           {
             if (!strncmp (arg, "0x", 2))
               arg+=2;
           }
-        
+
         if (*arg == '\0')
           {
             fprintf (stderr, "invalid hex byte argument\n");
             exit (EXIT_FAILURE);
           }
-        
+
         for (i = 0; arg[i] != '\0'; i++)
           {
             if (i >= 2)
@@ -149,14 +149,14 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
                 fprintf (stderr, "invalid hex byte argument\n");
                 exit (EXIT_FAILURE);
               }
-            
+
             if (!isxdigit (arg[i]))
               {
                 fprintf (stderr, "invalid hex byte argument\n");
                 exit (EXIT_FAILURE);
               }
           }
-        
+
         if (cmd_args->cmd_length < IPMI_RAW_MAX_ARGS)
           {
             errno = 0;
@@ -174,7 +174,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
             fprintf (stderr, "Too many arguments specified\n");
             exit (EXIT_FAILURE);
           }
-        
+
         break;
       }
     case ARGP_KEY_END:

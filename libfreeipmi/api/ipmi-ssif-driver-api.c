@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -108,7 +108,7 @@ _api_ssif_dump (ipmi_ctx_t ctx,
                  group_extension,
                  hdrbuf,
                  DEBUG_UTIL_HDR_BUFLEN);
-  
+
   ipmi_dump_ssif_packet (STDERR_FILENO,
                          NULL,
                          hdrbuf,
@@ -178,31 +178,31 @@ _ssif_cmd_write (ipmi_ctx_t ctx,
   unsigned int pkt_len;
   int hdr_len, cmd_len, send_len;
   int rv = -1;
-  
+
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
           && fiid_obj_valid (obj_cmd_rq));
-  
+
   if ((hdr_len = fiid_template_len_bytes (tmpl_hdr_kcs)) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   if ((cmd_len = fiid_obj_len_bytes (obj_cmd_rq)) < 0)
     {
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
       goto cleanup;
     }
-  
+
   pkt_len = hdr_len + cmd_len;
-  
+
   if (!(pkt = malloc (pkt_len)))
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   if (fill_hdr_ipmi_kcs (ctx->target.lun,
                          ctx->target.net_fn,
                          ctx->io.inband.rq.obj_hdr) < 0)
@@ -210,7 +210,7 @@ _ssif_cmd_write (ipmi_ctx_t ctx,
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   if ((send_len = assemble_ipmi_kcs_pkt (ctx->io.inband.rq.obj_hdr,
                                          obj_cmd_rq,
                                          pkt,
@@ -254,7 +254,7 @@ _ssif_cmd_read (ipmi_ctx_t ctx,
   fiid_field_t *tmpl = NULL;
   int ret, rv = -1;
   unsigned int intf_flags = IPMI_INTERFACE_FLAGS_DEFAULT;
-  
+
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
           && fiid_obj_valid (obj_cmd_rs));
@@ -267,27 +267,27 @@ _ssif_cmd_read (ipmi_ctx_t ctx,
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   if (!(tmpl = fiid_obj_template (obj_cmd_rs)))
     {
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       goto cleanup;
     }
-  
+
   if ((cmd_len = fiid_template_len_bytes (tmpl)) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   pkt_len = hdr_len + cmd_len;
-  
+
   if (!(pkt = malloc (pkt_len)))
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   if ((read_len = ipmi_ssif_read (ctx->io.inband.ssif_ctx, pkt, pkt_len)) < 0)
     {
       API_SSIF_ERRNUM_TO_API_ERRNUM (ctx, ipmi_ssif_ctx_errnum (ctx->io.inband.ssif_ctx));
@@ -299,7 +299,7 @@ _ssif_cmd_read (ipmi_ctx_t ctx,
       API_SET_ERRNUM (ctx, IPMI_ERR_SYSTEM_ERROR);
       goto cleanup;
     }
-  
+
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP && read_len)
     _api_ssif_dump_rs (ctx,
                        pkt,
@@ -343,7 +343,7 @@ api_ssif_cmd (ipmi_ctx_t ctx,
   uint64_t val;
   struct timespec request, remain;
   uint8_t retry = IPMI_SSIF_RETRY_DEFAULT;
-  
+
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
           && ctx->type == IPMI_DEVICE_SSIF
@@ -377,12 +377,12 @@ api_ssif_cmd (ipmi_ctx_t ctx,
   /******************************************************************************
     12.9 SMBus NACKs and Error Recovery:
     ====================================
-    The BMC can NACK the SMBus host controller if it is not ready to accept a new 
-    transaction. Typically, this will be exhibited by the BMC NACK'ing its slave 
-    address. 
-    
-    If the BMC NACKs a single part transaction, software can simply retry it. 
-    If a 'middle' or 'end' transaction is NACK'd, software should not retry the 
+    The BMC can NACK the SMBus host controller if it is not ready to accept a new
+    transaction. Typically, this will be exhibited by the BMC NACK'ing its slave
+    address.
+
+    If the BMC NACKs a single part transaction, software can simply retry it.
+    If a 'middle' or 'end' transaction is NACK'd, software should not retry the
     particular but should restart the multi-part read or write from the beginning
     Start transaction for the transfer.
   *******************************************************************************/
@@ -390,7 +390,7 @@ api_ssif_cmd (ipmi_ctx_t ctx,
     {
       while (1)
         {
-          request.tv_sec = 0; 
+          request.tv_sec = 0;
           request.tv_nsec = IPMI_SSIF_TIMEOUT_DEFAULT;
           if (nanosleep (&request, &remain) < 0 )
             return (-1);
@@ -399,8 +399,8 @@ api_ssif_cmd (ipmi_ctx_t ctx,
             {
               if (retry == 0)
                 return (-1);
-        
-              retry--;        
+
+              retry--;
             }
             else
               break;
@@ -476,7 +476,7 @@ _api_ssif_ipmb_send (ipmi_ctx_t ctx,
   memcpy (&target_save, &ctx->target, sizeof (target_save));
   ctx->target.channel_number_is_set = 0;
   ctx->target.rs_addr_is_set = 0;
-  
+
   ret = ipmi_cmd_send_message (ctx,
                                target_save.channel_number,
                                IPMI_SEND_MESSAGE_AUTHENTICATION_NOT_REQUIRED,
@@ -542,12 +542,12 @@ _api_ssif_ipmb_recv (ipmi_ctx_t ctx,
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   /* get_message will send to the BMC, so clear out target information */
   memcpy (&target_save, &ctx->target, sizeof (target_save));
   ctx->target.channel_number_is_set = 0;
   ctx->target.rs_addr_is_set = 0;
-  
+
   ret = ipmi_cmd_get_message (ctx, obj_get_cmd_rs);
 
   /* restore target info */
@@ -810,7 +810,7 @@ api_ssif_cmd_raw_ipmb (ipmi_ctx_t ctx,
                          obj_cmd_rq,
                          obj_cmd_rs) < 0)
     goto cleanup;
-  
+
   if ((len = fiid_obj_get_all (obj_cmd_rs,
                                buf_rs,
                                buf_rs_len)) < 0)
@@ -818,7 +818,7 @@ api_ssif_cmd_raw_ipmb (ipmi_ctx_t ctx,
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       goto cleanup;
     }
-  
+
   rv = len;
  cleanup:
   fiid_obj_destroy (obj_cmd_rq);

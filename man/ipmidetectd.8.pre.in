@@ -27,7 +27,7 @@
 .SH "NAME"
 ipmidetectd \- IPMI node detection monitoring daemon
 .SH "SYNOPSIS"
-.B ipmidetectd 
+.B ipmidetectd
 [\fIOPTION\fR...]
 .br
 .SH "DESCRIPTION"
@@ -39,13 +39,13 @@ those nodes in the cluster that are not functioning properly, allowing
 IPMI commands to be executed across the cluster faster by skipping those
 nodes that would automatically timeout.
 .LP
-The 
+The
 .B ipmidetectd
-daemon must be configured using the 
-.B ipmidetectd 
+daemon must be configured using the
+.B ipmidetectd
 configuration file.  Until
-hosts to be pinged are configured, 
-.B ipmidetectd 
+hosts to be pinged are configured,
+.B ipmidetectd
 will not function properly.
 .LP
 See the

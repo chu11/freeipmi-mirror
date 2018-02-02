@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 /*****************************************************************************\
  *  Copyright (C) 2007-2015 Lawrence Livermore National Security, LLC.
@@ -90,7 +90,7 @@ extern "C" {
   (((__multirecord_area_type) >= IPMI_FRU_MULTIRECORD_AREA_TYPE_OEM_MIN \
     && (__multirecord_area_type) <= IPMI_FRU_MULTIRECORD_AREA_TYPE_OEM_MAX) ? 1 : 0)
 
-#define IPMI_FRU_MFG_DATE_TIME_UNSPECIFIED 0x000000 
+#define IPMI_FRU_MFG_DATE_TIME_UNSPECIFIED 0x000000
 
 #define IPMI_FRU_ONE_PULSE_PER_ROTATION  0x0
 #define IPMI_FRU_TWO_PULSES_PER_ROTATION 0x1
@@ -135,8 +135,8 @@ extern "C" {
 
 #define IPMI_FRU_SENTINEL_VALUE                        0xC1
 
-/* 
- * see freeipmi/templates/ for template definitions 
+/*
+ * see freeipmi/templates/ for template definitions
  */
 
 extern fiid_template_t tmpl_fru_common_header;

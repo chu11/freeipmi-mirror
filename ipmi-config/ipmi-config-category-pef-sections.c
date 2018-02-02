@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2007-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -289,7 +289,7 @@ ipmi_config_pef_sections_create (ipmi_config_state_data_t *state_data)
 
   assert (state_data);
 
-  if (load_lan_channel_numbers (state_data) == IPMI_CONFIG_ERR_FATAL_ERROR) 
+  if (load_lan_channel_numbers (state_data) == IPMI_CONFIG_ERR_FATAL_ERROR)
     return (NULL);
 
   if (_get_number_of_lan_alert_destinations (state_data,

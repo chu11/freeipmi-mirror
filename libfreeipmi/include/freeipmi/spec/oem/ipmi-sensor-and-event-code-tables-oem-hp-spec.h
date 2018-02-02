@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_SENSOR_AND_EVENT_CODE_TABLES_OEM_HP_SPEC_H
@@ -34,8 +34,8 @@ extern "C" {
 #define IPMI_OEM_HP_UID_LIGHT_BLINKING 0x02
 
 #define IPMI_OEM_HP_HEALTH_LED_GREEN   0x00
-#define IPMI_OEM_HP_HEALTH_LED_AMBER   0x01 
-#define IPMI_OEM_HP_HEALTH_LED_RED     0x02 
+#define IPMI_OEM_HP_HEALTH_LED_AMBER   0x01
+#define IPMI_OEM_HP_HEALTH_LED_RED     0x02
 
 /*
  * String arrays for above

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_SENSOR_AND_EVENT_CODE_TABLES_SPEC_H
@@ -97,7 +97,7 @@ extern "C" {
 #define IPMI_GENERIC_EVENT_READING_TYPE_CODE_ACPI_POWER_STATE_D1_POWER_STATE 0x01
 #define IPMI_GENERIC_EVENT_READING_TYPE_CODE_ACPI_POWER_STATE_D2_POWER_STATE 0x02
 #define IPMI_GENERIC_EVENT_READING_TYPE_CODE_ACPI_POWER_STATE_D3_POWER_STATE 0x03
-  
+
 /*
  * String arrays for above
  */
@@ -195,7 +195,7 @@ extern unsigned int ipmi_generic_event_reading_type_code_acpi_power_state_short_
 #define IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT_PRE_BOOT_PASSWORD_VIOLATION_NETWORK_BOOT_PASSWORD  0x03
 #define IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT_OTHER_PRE_BOOT_PASSWORD_VIOLATION                  0x04
 #define IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION_ATTEMPT_OUT_OF_BAND_ACCESS_PASSWORD_VIOLATION              0x05
-  
+
 #define IPMI_SENSOR_TYPE_PROCESSOR_IERR                                          0x00
 #define IPMI_SENSOR_TYPE_PROCESSOR_THERMAL_TRIP                                  0x01
 #define IPMI_SENSOR_TYPE_PROCESSOR_FRB1_BIST_FAILURE                             0x02

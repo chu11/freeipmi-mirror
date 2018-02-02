@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -127,7 +127,7 @@ ipmi_sensors_output_event_message_list (ipmi_sensors_state_data_t *state_data,
               if (each_on_newline)
                 pstdout_printf (state_data->pstate,
                                 "\n");
-              
+
               if (state_data->prog_data->args->legacy_output)
                 pstdout_printf (state_data->pstate,
                                 "%s[%s]",
@@ -148,7 +148,7 @@ ipmi_sensors_output_event_message_list (ipmi_sensors_state_data_t *state_data,
                                 event_message_list[i]);
             }
         }
-      
+
       pstdout_printf (state_data->pstate,
                       "\n");
     }
@@ -602,14 +602,14 @@ ipmi_sensors_get_thresholds (ipmi_sensors_state_data_t *state_data,
             pstdout_fprintf (state_data->pstate,
                              stderr,
                              "Get Sensor Thresholds failed, using SDR information\n");
-          
+
           if (_get_sdr_sensor_thresholds (state_data, obj_cmd_rs) < 0)
             goto cleanup;
-          
+
           goto continue_get_sensor_thresholds;
         }
 
-      /* IPMI Workaround 
+      /* IPMI Workaround
        *
        * HP DL 585
        *
@@ -1003,7 +1003,7 @@ ipmi_sensors_get_sensor_state (ipmi_sensors_state_data_t *state_data,
                            ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
           return (-1);
         }
-      
+
       if (ipmi_sdr_parse_event_reading_type_code (state_data->sdr_ctx,
                                                   NULL,
                                                   0,
@@ -1015,7 +1015,7 @@ ipmi_sensors_get_sensor_state (ipmi_sensors_state_data_t *state_data,
                            ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
           return (-1);
         }
-      
+
       if (ipmi_interpret_sensor (state_data->interpret_ctx,
                                  event_reading_type_code,
                                  sensor_type,
@@ -1028,7 +1028,7 @@ ipmi_sensors_get_sensor_state (ipmi_sensors_state_data_t *state_data,
                            ipmi_interpret_ctx_errormsg (state_data->interpret_ctx));
           return (-1);
         }
-      
+
       if (sensor_state == IPMI_INTERPRET_STATE_NOMINAL)
         (*sensor_state_str) = "Nominal";
       else if (sensor_state == IPMI_INTERPRET_STATE_WARNING)

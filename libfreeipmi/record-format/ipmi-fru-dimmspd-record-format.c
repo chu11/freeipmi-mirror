@@ -40,12 +40,12 @@
 /* From "Annex K: Serial Presence Detect (SPD) for DDR3 SDRAM Modules"
  * and
  * "Annex L: Serial Presence Detect (SPD) for DDR4 SDRAM Modules"
- * 
+ *
  * Released by JEDEC
  */
 
 fiid_template_t tmpl_fru_dimm_spd_ddr_header =
-  { 
+  {
     /* Byte 0: Number of Bytes Used/ Number of Bytes in SPD Device / CRC Coverage */
     { 4, "spd_bytes_used", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 3, "spd_bytes_total", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -77,7 +77,7 @@ fiid_template_t tmpl_fru_dimm_spd_ddr3_record =
     { 4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* Byte 4: SDRAM Density and Banks */
     /* in megabits */
-    { 4, "total_sdram_capacity", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    { 4, "total_sdram_capacity", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 3, "bank_address_bits", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* Byte 5: SDRAM Addressing */
@@ -135,7 +135,7 @@ fiid_template_t tmpl_fru_dimm_spd_ddr3_record =
     /* Byte 28: Upper Nibble for t_faw */
     { 4, "t_faw_msn", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "reserved8", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    /* Byte 29: Minimum Four Active Window Delay Time (t_faw min), LSB (MTB Units) */ 
+    /* Byte 29: Minimum Four Active Window Delay Time (t_faw min), LSB (MTB Units) */
     { 8, "minimum_four_active_window_delay_time", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* Byte 30: SDRAM Optional Features */
     { 1, "rzq_6_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -212,7 +212,7 @@ fiid_template_t tmpl_fru_dimm_spd_ddr4_record =
     { 4, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* Byte 4: SDRAM Density and Banks */
     /* in megabits */
-    { 4, "total_sdram_capacity", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    { 4, "total_sdram_capacity", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 2, "bank_address_bits", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 2, "bank_group_bits", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* Byte 5: SDRAM Addressing */

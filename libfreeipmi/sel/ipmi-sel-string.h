@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_SEL_STRING_H
@@ -123,7 +123,7 @@ typedef int (*Sel_string_output_event_data2_event_data3) (ipmi_sel_ctx_t ctx,
                                                           unsigned int *wlen,
                                                           struct ipmi_sel_system_event_record_data *system_event_record_data,
                                                           int *oem_rv);
- 
+
 typedef int (*Sel_string_output_oem_record_data) (ipmi_sel_ctx_t ctx,
                                                   struct ipmi_sel_entry *sel_entry,
                                                   uint8_t sel_record_type,
@@ -167,7 +167,7 @@ int sel_string_snprintf (char *buf,
                          ...);
 
 /* returns 0 on success, 1 on success but w/ truncation
- * 
+ *
  * Just like sel_string_snprintf, but just appends and does non-zero check beforehand
  */
 int sel_string_strcat_comma_separate (char *buf,

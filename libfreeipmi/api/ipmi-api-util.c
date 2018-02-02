@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -339,7 +339,7 @@ _api_ipmi_cmd_post (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
        * Fallthrough to normal error if it's an alternate fiid error
        * (invalid packet, field not found, etc.)
        */
-      
+
       if (FIID_OBJ_GET (obj_cmd_rs, "comp_code", &val) < 0)
         {
           if (fiid_obj_errnum (obj_cmd_rs) == FIID_ERR_DATA_NOT_AVAILABLE)
@@ -352,7 +352,7 @@ _api_ipmi_cmd_post (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rs)
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       return (-1);
     }
-  
+
   if (!ret)
     {
       API_BAD_RESPONSE_TO_API_ERRNUM (ctx, obj_cmd_rs);

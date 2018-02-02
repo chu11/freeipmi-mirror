@@ -95,7 +95,7 @@ ipmiconsole
 A tool for Serial-over-Lan (SOL) console access.
 
 Many other tools and libraries are listed below that cover additional
-features and areas of IPMI.  
+features and areas of IPMI.
 
 Additional information, examples, and general trouble-shooting can be
 found in each of the tool manpages.
@@ -148,7 +148,7 @@ bmc-watchdog
 
 A tool/daemon to manage a BMC Watchdog. This tool is typically used
 for system timeout management and automatic system restarts in the
-event of a system crash.  
+event of a system crash.
 
 ipmi-chassis
 
@@ -214,11 +214,11 @@ events, re-arming sensors, and configuring manufacturer settings.
 
 ipmiping
 
-An IPMI ping tool for debugging. 
+An IPMI ping tool for debugging.
 
 rmcpping
 
-A RMCP ping tool for debugging. 
+A RMCP ping tool for debugging.
 
 ipmi-oem
 

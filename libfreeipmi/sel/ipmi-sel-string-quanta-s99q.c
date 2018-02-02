@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -78,7 +78,7 @@ sel_string_output_quanta_s99q_sensor_name (ipmi_sel_ctx_t ctx,
   assert (oem_rv);
   assert (ctx->product_id == IPMI_QUANTA_PRODUCT_ID_S99Q);
 
-  /* 
+  /*
    * Quanta S99Q/Dell FS12-TY
    */
 
@@ -92,10 +92,10 @@ sel_string_output_quanta_s99q_sensor_name (ipmi_sel_ctx_t ctx,
                                                                  system_event_record_data,
                                                                  oem_rv)) < 0)
     return (-1);
-      
+
   if (nmret)
-    return (1);      
-  
+    return (1);
+
   return (0);
 }
 
@@ -127,7 +127,7 @@ sel_string_output_quanta_s99q_event_data1_class_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data);
   assert (ctx->product_id == IPMI_QUANTA_PRODUCT_ID_S99Q);
 
-  /* 
+  /*
    * Quanta S99Q/Dell FS12-TY
    */
   if ((nmret = sel_string_output_intel_node_manager_event_data1_class_oem (ctx,
@@ -173,7 +173,7 @@ sel_string_output_quanta_s99q_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
   assert (ctx->product_id == IPMI_QUANTA_PRODUCT_ID_S99Q);
 
-  /* 
+  /*
    * Quanta S99Q/Dell FS12-TY
    */
 
@@ -188,13 +188,13 @@ sel_string_output_quanta_s99q_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
           || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_FATAL_ERROR))
     {
       uint8_t device, function;
-          
+
       device = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_OEM_QUANTA_EVENT_DATA2_DEVICE_NUMBER_BITMASK);
       device >>= IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_OEM_QUANTA_EVENT_DATA2_DEVICE_NUMBER_SHIFT;
-          
+
       function = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_OEM_QUANTA_EVENT_DATA2_FUNCTION_NUMBER_BITMASK);
       function >>= IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_OEM_QUANTA_EVENT_DATA2_FUNCTION_NUMBER_SHIFT;
-          
+
       snprintf (tmpbuf,
                 tmpbuflen,
                 "Device %u, Function %u",
@@ -252,7 +252,7 @@ sel_string_output_quanta_s99q_event_data2_class_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data);
   assert (ctx->product_id == IPMI_QUANTA_PRODUCT_ID_S99Q);
 
-  /* 
+  /*
    * Quanta S99Q/Dell FS12-TY
    */
 
@@ -299,7 +299,7 @@ sel_string_output_quanta_s99q_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
   assert (ctx->product_id == IPMI_QUANTA_PRODUCT_ID_S99Q);
 
-  /* 
+  /*
    * Quanta S99Q/Dell FS12-TY
    */
   if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_QUANTA_ERROR
@@ -376,12 +376,12 @@ sel_string_output_quanta_s99q_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
                     system_event_record_data->event_data3);
           dimm_str = dimmbuf;
         }
-          
+
       snprintf (tmpbuf,
                 tmpbuflen,
                 "%s",
                 dimm_str);
-          
+
       return (1);
     }
 
@@ -442,7 +442,7 @@ sel_string_output_quanta_s99q_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
                 tmpbuflen,
                 "%s",
                 errstr);
-          
+
       return (1);
     }
 
@@ -477,7 +477,7 @@ sel_string_output_quanta_s99q_event_data3_class_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data);
   assert (ctx->product_id == IPMI_QUANTA_PRODUCT_ID_S99Q);
 
-  /* 
+  /*
    * Quanta S99Q/Dell FS12-TY
    */
 
@@ -490,7 +490,7 @@ sel_string_output_quanta_s99q_event_data3_class_oem (ipmi_sel_ctx_t ctx,
                                                                            wlen,
                                                                            system_event_record_data)) < 0)
     return (-1);
-      
+
   if (nmret)
     return (1);
 

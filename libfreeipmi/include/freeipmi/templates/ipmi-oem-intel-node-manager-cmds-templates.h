@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_OEM_INTEL_NODE_MANAGER_CMDS_TEMPLATES_H
@@ -92,7 +92,7 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_enable_disable_node_manager_polic
 
     { 8,  "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
     { 8,  "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
-    { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }   
+    { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
 
 Set Node Manager Policy Request
 -------------------------------
@@ -139,7 +139,7 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_boot_time
     { 1,  "policy_power_domain", REQUIRED, LENGTH-FIXED }
     { 1,  "policy_target_limit.platform_booting_mode", REQUIRED, LENGTH-FIXED }
     { 7,  "policy_target_limit.cores_disabled", REQUIRED, LENGTH-FIXED }
-    { 8,  "policy_target_limit.reserved", REQUIRED, LENGTH-FIXED } 
+    { 8,  "policy_target_limit.reserved", REQUIRED, LENGTH-FIXED }
     { 16, "policy_target_limit", REQUIRED, LENGTH-FIXED }
     { 32, "correction_time_limit", REQUIRED, LENGTH-FIXED }
     { 16, "policy_trigger_limit", REQUIRED, LENGTH-FIXED }

@@ -1,6 +1,6 @@
 FreeIPMI Coding
 
-by 
+by
 
 Albert Chu
 chu11@llnl.gov
@@ -112,7 +112,7 @@ This includes:
 - matching parameter lists to the templates and in the same order
 - ordering functions/templates/parameters/files/etc. consistently with the spec.
 
-For example: 
+For example:
 
 ipmi-messaging-support-cmds.c
 
@@ -181,7 +181,7 @@ very long parameter lists.  We accept this annoyance (or poor coding
 style, we admit it), as we consider matching the specification as a
 more important need in libfreeipmi.
 
-For example: 
+For example:
 
 int
 fill_cmd_set_lan_configuration_parameters_authentication_type_enables (uint8_t channel_number,

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_CONFIG_H
@@ -241,7 +241,7 @@ struct ipmi_config_arguments
   struct ipmi_config_keypair *keypairs;
   struct ipmi_config_section_str *section_strs;
 
-  /* 
+  /*
    * Legacy options
    */
   int info;
@@ -268,7 +268,7 @@ struct ipmi_config_state_data
   struct ipmi_config_section *sections;
   ipmi_sdr_ctx_t sdr_ctx;
 
-  /* 
+  /*
    * For Core / BMC configuration
    */
 
@@ -320,7 +320,7 @@ struct ipmi_config_state_data
   uint8_t serial_channel_numbers[IPMI_CHANNEL_NUMBERS_MAX];
   unsigned int serial_channel_numbers_count;
   unsigned int serial_channel_numbers_loaded;
-  
+
   /* cache for multi-channel */
   uint8_t sol_channel_numbers_lan_channel[IPMI_CHANNEL_NUMBERS_MAX];
   uint8_t sol_channel_numbers_sol_channel[IPMI_CHANNEL_NUMBERS_MAX];
@@ -329,7 +329,7 @@ struct ipmi_config_state_data
   unsigned int sol_channel_numbers_unique_count;
   unsigned int sol_channel_numbers_loaded;
 
-  /* 
+  /*
    * For Chassis configuration
    */
 

@@ -123,7 +123,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   int tmp;
 
   assert (state);
-  
+
   cmd_args = state->input;
 
   switch (key)
@@ -137,7 +137,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           fprintf (stderr, "invalid device id\n");
           exit (EXIT_FAILURE);
         }
-      
+
       if (tmp == IPMI_FRU_DEVICE_ID_RESERVED
           || tmp < IPMI_FRU_DEVICE_ID_MIN
           || tmp > IPMI_FRU_DEVICE_ID_MAX)

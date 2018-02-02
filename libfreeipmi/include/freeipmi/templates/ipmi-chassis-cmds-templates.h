@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_CHASSIS_CMDS_TEMPLATES_H
@@ -533,7 +533,7 @@ FIID Template: tmpl_cmd_get_system_boot_options_boot_initiator_info_rs
     { 4, "boot_source.reserved", REQUIRED, LENGTH-FIXED }
     { 32, "session_id", REQUIRED, LENGTH-FIXED }
     { 32, "boot_info_timestamp", REQUIRED, LENGTH-FIXED }
-  
+
 Get System Boot Options (Boot Initiator Mailbox) Response
 ---------------------------------------------------------
 

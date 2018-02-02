@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -936,7 +936,7 @@ _ipmi_acpi_get_rsdp (ipmi_locate_ctx_t ctx,
                 LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_OUT_OF_MEMORY);
                 goto cleanup;
               }
-            
+
             if (_ipmi_get_physical_mem_data (ctx,
                                              rsdt_xsdt_address,
                                              acpi_rsdp_descriptor_len,
@@ -1528,7 +1528,7 @@ ipmi_locate_acpi_spmi_get_device_info (ipmi_locate_ctx_t ctx,
 #if 0
   {
     uint8_t ipmi_legacy;
-    
+
     if (FIID_OBJ_GET (obj_acpi_spmi_table_descriptor,
                       tmpl_acpi_spmi_table_descriptor,
                       "ipmi_legacy",
@@ -1538,7 +1538,7 @@ ipmi_locate_acpi_spmi_get_device_info (ipmi_locate_ctx_t ctx,
         goto cleanup;
       }
     ipmi_legacy = val;
-    
+
     if (ipmi_legacy != 1)
       {
         LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
@@ -1559,7 +1559,7 @@ ipmi_locate_acpi_spmi_get_device_info (ipmi_locate_ctx_t ctx,
         goto cleanup;
       }
     ipmi_version_major = val;
-    
+
     if (FIID_OBJ_GET (obj_acpi_spmi_table_descriptor,
                       "specification_revision.minor",
                       &val) < 0)

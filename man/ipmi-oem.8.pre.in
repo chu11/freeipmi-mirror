@@ -67,7 +67,7 @@ Output verbose information.  Additional output will depend on specific
 OEM ID and OEM COMMANDS specified.
 .SH "SUPPORTED OEM IDS and COMMANDS"
 The currently supported OEM IDs and COMMANDs are listed below.  The
-special OEM ID of 
+special OEM ID of
 .B list
 may be passed into the list all supported OEM IDs and Commands.  The
 special OEM command
@@ -517,7 +517,7 @@ additional error messages will be output as valid policies are being
 searched for.  Command confirmed to work on Intel S2600JF (Appro
 512X).
 .TP
-.B node-manager-policy-control \fI<enable|disable>\fR \fI[domainid=platform|cpu|memory|highpowerio]\fR \fI[policyid=num]\fR 
+.B node-manager-policy-control \fI<enable|disable>\fR \fI[domainid=platform|cpu|memory|highpowerio]\fR \fI[policyid=num]\fR
 This OEM command will enable or disable the current global, domain, or
 policies used by the Intel Node Manager.  If no \fIdomainid\fR is
 specified, then the Node Manager will be enabled or globally disabled.
@@ -596,7 +596,7 @@ This OEM command will remove the indicated policy ID from the domain
 ID.  Both the \fIdomainid\fR and \fIpolicyid\fR are required.  Command
 confirmed to work on Intel S2600JF (Appro 512X).
 .TP
-.B get-node-manager-policy-alert-thresholds \fI[domainid=platform|cpu|memory|highpowerio]\fR \fI[policyid=num]\fR 
+.B get-node-manager-policy-alert-thresholds \fI[domainid=platform|cpu|memory|highpowerio]\fR \fI[policyid=num]\fR
 This OEM command will get the current alert thresholds.  If no
 \fIdomainid\fR is specified, all alert thresholds for domain IDs and
 policy Ids will be attempted to be output.  If a \fIdomainid\fR is
@@ -678,7 +678,7 @@ determined via
 .B ipmi-config(8).
 Command confirmed to work on Intel S2600JF (Appro 512X).
 .TP
-.B get-turbo-synchronization-ratio \fIactivecoresconfig=num|all\fR \fI[cpusocket=num|all]\fR 
+.B get-turbo-synchronization-ratio \fIactivecoresconfig=num|all\fR \fI[cpusocket=num|all]\fR
 This OEM command will get the current Turbo Synchronization Ratio.  If
 \fIcpusocket\fR is not set to a specific cpu socket, all sockets will
 return maximum settings.

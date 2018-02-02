@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -47,9 +47,9 @@
 
 #include "freeipmi-portability.h"
 
-/* return (1) - is oem intel node manager, fully parsed                                                                                     
- * return (0) - is not oem intel node manager                                                                                               
- * return (-1) - error                                                                                                                      
+/* return (1) - is oem intel node manager, fully parsed
+ * return (0) - is not oem intel node manager
+ * return (-1) - error
  */
 int
 ipmi_sdr_oem_parse_intel_node_manager (ipmi_sdr_ctx_t ctx,
@@ -111,7 +111,7 @@ ipmi_sdr_oem_parse_intel_node_manager (ipmi_sdr_ctx_t ctx,
       SDR_ERRNO_TO_SDR_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   if (sdr_record_len_to_use < expected_record_len)
     {
       rv = 0;
@@ -144,7 +144,7 @@ ipmi_sdr_oem_parse_intel_node_manager (ipmi_sdr_ctx_t ctx,
       SDR_FIID_OBJECT_ERROR_TO_SDR_ERRNUM (ctx, obj_oem_record);
       goto cleanup;
     }
-  
+
   if (val != IPMI_SDR_OEM_INTEL_NODE_MANAGER_RECORD_SUBTYPE_NM_DISCOVERY)
     {
       rv = 0;
@@ -164,7 +164,7 @@ ipmi_sdr_oem_parse_intel_node_manager (ipmi_sdr_ctx_t ctx,
       rv = 0;
       goto cleanup;
     }
-     
+
   if (nm_device_slave_address)
     {
       if (FIID_OBJ_GET (obj_oem_record,
@@ -236,7 +236,7 @@ ipmi_sdr_oem_parse_intel_node_manager (ipmi_sdr_ctx_t ctx,
         }
       (*nm_operational_capabilities_sensor_number) = val;
     }
-  
+
   if (nm_alert_threshold_exceeded_sensor_number)
     {
       if (FIID_OBJ_GET (obj_oem_record,

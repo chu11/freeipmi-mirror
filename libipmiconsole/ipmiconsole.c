@@ -149,7 +149,7 @@ _config_file_unsigned_int_positive (conffile_t cf,
   assert (option_ptr);
 
   value = (unsigned int *)option_ptr;
-  
+
   if (data->intval <= 0)
     {
       IPMICONSOLE_DEBUG (("libipmiconsole config file %s invalid", optionname));
@@ -420,7 +420,7 @@ _config_file_behavior_flags (conffile_t cf,
     }
 
   default_config.behavior_flags = behavior_flags;
-  
+
   IPMICONSOLE_DEBUG (("libipmiconsole loaded alternate default behavior flag"));
   return (0);
 }
@@ -478,7 +478,7 @@ _config_file_sol_payload_instance (conffile_t cf,
   assert (option_ptr);
 
   value = (unsigned int *)option_ptr;
-  
+
   if (data->intval <= 0
       || !IPMI_PAYLOAD_INSTANCE_VALID (data->intval))
     {
@@ -735,18 +735,18 @@ _ipmiconsole_defaults_setup (void)
                       0) < 0)
     {
       char buf[CONFFILE_MAX_ERRMSGLEN];
-      
+
       /* Its not an error if the default configuration file doesn't exist */
       if (conffile_errnum (cf) == CONFFILE_ERR_EXIST)
         goto out;
-      
+
       if (conffile_errmsg (cf, buf, CONFFILE_MAX_ERRMSGLEN) < 0)
         {
           IPMICONSOLE_DEBUG (("libipmiconsole loaded alternate default debug flag"));
           goto cleanup;
         }
     }
-  
+
  out:
   rv = 0;
  cleanup:

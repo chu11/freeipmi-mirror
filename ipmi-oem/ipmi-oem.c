@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2008-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -385,7 +385,7 @@ struct ipmi_oem_command oem_dell[] =
       ipmi_oem_dell_get_blade_slot_id
     },
 #endif
-    { 
+    {
       "get-last-post-code",
       NULL,
       0,
@@ -1764,7 +1764,7 @@ _run_oem_cmd (ipmi_oem_state_data_t *state_data)
                                        state_data->prog_data->args->oem_command);
                       goto cleanup;
                     }
-                  
+
 
                   if (((*oem_cmd->func)(state_data)) < 0)
                     goto cleanup;
@@ -1878,7 +1878,7 @@ _ipmi_oem (pstdout_state_t pstate,
 
   if (run_cmd_args (&state_data) < 0)
     goto cleanup;
-  
+
   exit_code = EXIT_SUCCESS;
  cleanup:
   ipmi_sdr_ctx_destroy (state_data.sdr_ctx);

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -74,7 +74,7 @@ ipmi_iana_enterprise_numbers_string (uint32_t manufacturer_id,
   else
     {
       /* it's a special case manufacturer id */
-      
+
       if (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND)
         str = (char *)ipmi_iana_enterprise_numbers[IPMI_IANA_ENTERPRISE_ID_SUPERMICRO];
 

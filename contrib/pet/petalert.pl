@@ -1,17 +1,17 @@
 #!/usr/bin/perl -w
 
 # This is snmptrapd handler script to alert Platform Event Traps (PET).
-# I wrote it because traptoemail distributed with net-snmp-5.3.2.2 is 
-# incapable of handling multi-line hexstrings and restricted to email alert. 
+# I wrote it because traptoemail distributed with net-snmp-5.3.2.2 is
+# incapable of handling multi-line hexstrings and restricted to email alert.
 #
-# This script operates in two modes, traphandle or embperl.  When in 
-# traphandle mode, it concatenates the quoted hex string into one long line, 
-# then builds structures to resemble embperl mode. Both modes then invokes 
+# This script operates in two modes, traphandle or embperl.  When in
+# traphandle mode, it concatenates the quoted hex string into one long line,
+# then builds structures to resemble embperl mode. Both modes then invokes
 # helper decoder, ipmi-pet(8) from FreeIPMI, parses the output and alerts
-# in given way like email, nagios external command, etc. See README for 
+# in given way like email, nagios external command, etc. See README for
 # a simple tutorial.
 #
-# This script is tested on Dell PowerEdge 1950 and PowerEdge R610 servers. 
+# This script is tested on Dell PowerEdge 1950 and PowerEdge R610 servers.
 # Feel free to adjust to meet your need. It's BSD-licensed.
 #
 # ChangeLog
@@ -61,7 +61,7 @@ sub stop {
   my $t1 = [gettimeofday];
   my $t = tv_interval($obj->{_start}, $t1);
   $obj->{_elapsed} += $t;
-  if ($name) { 
+  if ($name) {
     $obj->{_laps}{$name} = $t;
   }
   return $t;
@@ -108,7 +108,7 @@ $0 [OPTIONS] -- [ALERT_SPECIFIC_OPTIONS] ALERT_SPECIFIC_ARGS
 
   OPTIONS
     -m
-    --mode  {traphandle|embperl} 
+    --mode  {traphandle|embperl}
                 Specify mode of execution. Required.
     --ack
                 Acknowledge the trap before alert.
@@ -119,7 +119,7 @@ $0 [OPTIONS] -- [ALERT_SPECIFIC_OPTIONS] ALERT_SPECIFIC_ARGS
     --trapoid  OID
                 Sets trapoid in embperl mode, or defaults to "all".
     -c
-    --sdrcache  sdr_cache_config 
+    --sdrcache  sdr_cache_config
                 Specify the sdr cache configuration file.
     -f
     --log  log_file
@@ -142,7 +142,7 @@ $0 [OPTIONS] -- [ALERT_SPECIFIC_OPTIONS] ALERT_SPECIFIC_ARGS
                 Defaults to "root".
     to_addresses
                 Sets where you want Net::SMTP to send the email to. Required.
-    
+
   nagios
     --host  {fqdn|short}
                 Sets host in nagios external commands. Defaults to short (first component).
@@ -412,7 +412,7 @@ sub process {
     elsif ($M > 0) { $uptime = "${M}m${S}s" }
     else           { $uptime = "${S}.${x}s" }
   }
-  
+
   # convert event string to human readable form
   for my $v (@{$varbindings}) {
     if ($v->[0] =~ /^\Q$event_oid\E$/) {
@@ -424,7 +424,7 @@ sub process {
       }
 
       my $sdrcache = resolve_sdrcache($ip);
-  
+
       # decode octet hex string
       $event = decode_pet($specific, $v->[1], $sdrcache);
     }
@@ -464,7 +464,7 @@ sub get_from_stdin {
     errorindex         =>  0,
     requestid          =>  0,
   );
-  
+
   my @varbindings= ();
   my ($oid,$value);
   my $more = 0;
@@ -476,7 +476,7 @@ sub get_from_stdin {
           $line = "";
           push @varbindings, [$oid, $value, "="];
       }
-  
+
       # recognize doubly quoted context
       my $count = 0;
       my $x = -1;
@@ -491,7 +491,7 @@ sub get_from_stdin {
       if ($count % 2 == 1) {
           $more = $more == 1 ? 0 : 1;
       }
-  
+
       $line .= "$_\n";
   }
   if ($line) {
@@ -501,7 +501,7 @@ sub get_from_stdin {
       push @varbindings, [$oid, $value];
   }
 
-  # Notice the assembled varbindings slightly differs from that in embperl. 
+  # Notice the assembled varbindings slightly differs from that in embperl.
   # For instance, hex string is surrounded by doubly quote, and never
   # prefixed by "Hex-STRING: ".
   return (\%pdu_info, \@varbindings);

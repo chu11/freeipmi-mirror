@@ -187,7 +187,7 @@ parsepacket (const char *destination,
     ipmi_ping_err_exit ("fiid_obj_get: 'message_type': %s",
                         fiid_obj_errormsg (obj_rmcp_cmd));
   message_type = val;
-  
+
   if (message_type != RMCP_ASF_MESSAGE_TYPE_PRESENCE_PONG)
     {
       rv = 0;
@@ -200,7 +200,7 @@ parsepacket (const char *destination,
     ipmi_ping_err_exit ("fiid_obj_get: 'message_tag': %s",
                         fiid_obj_errormsg (obj_rmcp_cmd));
   message_tag = val;
-  
+
   if (message_tag != (sequence_number % (RMCP_ASF_MESSAGE_TAG_MAX + 1)))
     {
       rv = 0;
@@ -211,14 +211,14 @@ parsepacket (const char *destination,
   if (verbose)
     {
       uint8_t ipmi_supported;
-      
+
       if (FIID_OBJ_GET (obj_rmcp_cmd,
                         "supported_entities.ipmi_supported",
                         &val) < 0)
         ipmi_ping_err_exit ("fiid_obj_get: 'supported_entities.ipmi_supported': %s",
                             fiid_obj_errormsg (obj_rmcp_cmd));
       ipmi_supported = val;
-      
+
       printf (", ipmi %s", _supported (ipmi_supported));
     }
   printf ("\n");

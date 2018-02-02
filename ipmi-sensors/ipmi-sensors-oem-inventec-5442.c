@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -63,9 +63,9 @@ ipmi_sensors_oem_inventec_5442_output_oem_record (ipmi_sensors_state_data_t *sta
    */
   if ((ret = ipmi_sensors_oem_intel_node_manager_output_oem_record (state_data)) < 0)
     return (-1);
-  
+
   if (ret)
     return (1);
-  
+
   return (0);
 }

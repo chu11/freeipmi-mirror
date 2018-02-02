@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -90,9 +90,9 @@ sel_string_output_intel_s2600jf_sensor_name (ipmi_sel_ctx_t ctx,
                                                                system_event_record_data,
                                                                oem_rv)) < 0)
     return (-1);
-  
+
   if (ret)
-    return (1);      
+    return (1);
 
   return (0);
 }
@@ -125,7 +125,7 @@ sel_string_output_intel_s2600jf_event_data1_class_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data);
   assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600JF);
 
-  /* 
+  /*
    * Intel S2600JF/Appro 512X
    */
 
@@ -138,7 +138,7 @@ sel_string_output_intel_s2600jf_event_data1_class_oem (ipmi_sel_ctx_t ctx,
                                                                          wlen,
                                                                          system_event_record_data)) < 0)
     return (-1);
-      
+
   if (ret)
     return (1);
 
@@ -165,11 +165,11 @@ sel_string_output_intel_s2600jf_event_data1_class_oem (ipmi_sel_ctx_t ctx,
                                            system_event_record_data->offset_from_event_reading_type_code,
                                            tmpbuf,
                                            tmpbuflen);
-      
+
       if (ret > 0)
         return (1);
     }
-  
+
   if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600JF_BIOS_SMI_HANDLER
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_QPI_CORRECTABLE_ERRORS
@@ -179,10 +179,10 @@ sel_string_output_intel_s2600jf_event_data1_class_oem (ipmi_sel_ctx_t ctx,
                 tmpbuflen,
                 "QPI Correctable Errors Event = %02Xh",
                 system_event_record_data->offset_from_event_reading_type_code);
-      
+
       return (1);
     }
-  
+
   if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600JF_BIOS_SMI_HANDLER
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_CHIPSET_PROPRIETARY
@@ -192,10 +192,10 @@ sel_string_output_intel_s2600jf_event_data1_class_oem (ipmi_sel_ctx_t ctx,
                 tmpbuflen,
                 "Chipset Proprietary Event = %02Xh",
                 system_event_record_data->offset_from_event_reading_type_code);
-      
+
       return (1);
     }
-  
+
   if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600JF_BIOS_SMI_HANDLER
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_MEMORY_ERROR_EXTENSION
@@ -205,7 +205,7 @@ sel_string_output_intel_s2600jf_event_data1_class_oem (ipmi_sel_ctx_t ctx,
                 tmpbuflen,
                 "Memory Error Extension Event = %02Xh",
                 system_event_record_data->offset_from_event_reading_type_code);
-          
+
       return (1);
     }
 
@@ -228,7 +228,7 @@ _sel_string_output_intel_s2600jf_bus (ipmi_sel_ctx_t ctx,
   assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (system_event_record_data);
   assert (system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
-  
+
   snprintf (tmpbuf,
             tmpbuflen,
             "Bus %u",
@@ -236,18 +236,18 @@ _sel_string_output_intel_s2600jf_bus (ipmi_sel_ctx_t ctx,
 }
 
 static const char *
-_sel_string_output_intel_s2600jf_ras_mode (uint8_t event_data) 
+_sel_string_output_intel_s2600jf_ras_mode (uint8_t event_data)
 {
   uint8_t ras_mode;
   char *ras_mode_str;
 
   ras_mode = (event_data & IPMI_SENSOR_MEMORY_DEVICE_ENABLED_EVENT_DATA2_OR_EVENT_DATA3_OEM_INTEL_S2600JF_RAS_MODE_BITMASK);
   ras_mode >>= IPMI_SENSOR_MEMORY_DEVICE_ENABLED_EVENT_DATA2_OR_EVENT_DATA3_OEM_INTEL_S2600JF_RAS_MODE_SHIFT;
-          
+
   switch (ras_mode)
     {
     case IPMI_SENSOR_MEMORY_DEVICE_ENABLED_EVENT_DATA2_OR_EVENT_DATA3_OEM_INTEL_S2600JF_RAS_MODE_NONE:
-      ras_mode_str = "None"; 
+      ras_mode_str = "None";
       break;
     case IPMI_SENSOR_MEMORY_DEVICE_ENABLED_EVENT_DATA2_OR_EVENT_DATA3_OEM_INTEL_S2600JF_RAS_MODE_MIRRORING:
       ras_mode_str = "Mirroring";
@@ -292,7 +292,7 @@ sel_string_output_intel_s2600jf_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
   assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600JF);
 
-  /* 
+  /*
    * Intel S2600JF/Appro 512X
    */
 
@@ -305,19 +305,19 @@ sel_string_output_intel_s2600jf_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
     {
       uint8_t mirroring_domain_channel;
       uint8_t dimm_rank_number;
-      
+
       mirroring_domain_channel = (system_event_record_data->event_data2 & IPMI_SENSOR_MEMORY_REDUNDANCY_EVENT_DATA2_OEM_INTEL_S2600JF_MIRRORING_DOMAIN_CHANNEL_BITMASK);
       mirroring_domain_channel >>= IPMI_SENSOR_MEMORY_REDUNDANCY_EVENT_DATA2_OEM_INTEL_S2600JF_MIRRORING_DOMAIN_CHANNEL_SHIFT;
-      
+
       dimm_rank_number = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_S2600JF_DIMM_RANK_NUMBER_BITMASK);
       dimm_rank_number >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_S2600JF_DIMM_RANK_NUMBER_SHIFT;
-          
+
       snprintf (tmpbuf,
                 tmpbuflen,
                 "Mirroring Domain Channel Pair for Socket = %u, DIMM Rank Number = %u",
                 mirroring_domain_channel,
                 dimm_rank_number);
-      
+
       return (1);
     }
 
@@ -333,11 +333,11 @@ sel_string_output_intel_s2600jf_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 
       config_error = (system_event_record_data->event_data2 & IPMI_SENSOR_MEMORY_DEVICE_ENABLED_EVENT_DATA2_OEM_INTEL_S2600JF_CONFIG_ERROR_BITMASK);
       config_error >>= IPMI_SENSOR_MEMORY_DEVICE_ENABLED_EVENT_DATA2_OEM_INTEL_S2600JF_CONFIG_ERROR_SHIFT;
-          
+
       switch (config_error)
         {
         case IPMI_SENSOR_MEMORY_DEVICE_ENABLED_EVENT_DATA2_OEM_INTEL_S2600JF_CONFIG_ERROR_NONE:
-          config_error_str = "None"; 
+          config_error_str = "None";
           break;
         case IPMI_SENSOR_MEMORY_DEVICE_ENABLED_EVENT_DATA2_OEM_INTEL_S2600JF_CONFIG_ERROR_INVALID_DIMM_CONFIG_FOR_RAS_MODE:
           config_error_str = "Invalid";
@@ -345,12 +345,12 @@ sel_string_output_intel_s2600jf_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
         default:
           config_error_str = "Unknown";
         }
-      
+
       snprintf (tmpbuf,
                 tmpbuflen,
                 "Config Error = %s",
                 config_error_str);
-      
+
       return (1);
     }
 
@@ -362,15 +362,15 @@ sel_string_output_intel_s2600jf_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
           || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_UNCORRECTABLE_MEMORY_ERROR))
     {
       uint8_t dimm_rank_number;
-      
+
       dimm_rank_number = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_S2600JF_DIMM_RANK_NUMBER_BITMASK);
       dimm_rank_number >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_S2600JF_DIMM_RANK_NUMBER_SHIFT;
-      
+
       snprintf (tmpbuf,
                 tmpbuflen,
                 "DIMM Rank Number = %u",
                 dimm_rank_number);
-      
+
       return (1);
     }
 
@@ -382,10 +382,10 @@ sel_string_output_intel_s2600jf_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
           || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_SERR))
     {
       _sel_string_output_intel_s2600jf_bus (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
-      
+
       return (1);
     }
-  
+
   if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600JF_BIOS_SMI_HANDLER
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
@@ -399,10 +399,10 @@ sel_string_output_intel_s2600jf_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 
       sparing_domain_channel = (system_event_record_data->event_data2 & IPMI_SENSOR_MEMORY_REDUNDANCY_EVENT_DATA2_OEM_INTEL_S2600JF_SPARING_DOMAIN_CHANNEL_BITMASK);
       sparing_domain_channel >>= IPMI_SENSOR_MEMORY_REDUNDANCY_EVENT_DATA2_OEM_INTEL_S2600JF_SPARING_DOMAIN_CHANNEL_SHIFT;
-          
+
       dimm_rank_number = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_S2600JF_DIMM_RANK_NUMBER_BITMASK);
       dimm_rank_number >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_S2600JF_DIMM_RANK_NUMBER_SHIFT;
-          
+
       switch (sparing_domain_channel)
         {
         case IPMI_SENSOR_MEMORY_REDUNDANCY_EVENT_DATA2_OEM_INTEL_S2600JF_SPARING_DOMAIN_CHANNEL_A:
@@ -426,7 +426,7 @@ sel_string_output_intel_s2600jf_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
                 "Sparing Domain Channel Pair for Socket = %s, DIMM Rank Number = %u",
                 sparing_domain_channel_str,
                 dimm_rank_number);
-          
+
       return (1);
     }
 
@@ -438,14 +438,14 @@ sel_string_output_intel_s2600jf_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
           || system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_DEVICE_ENABLED_DEVICE_ENABLED))
     {
       const char *ras_mode_str;
-          
+
       ras_mode_str = _sel_string_output_intel_s2600jf_ras_mode (system_event_record_data->event_data2);
-          
+
       snprintf (tmpbuf,
                 tmpbuflen,
                 "Previous RAS Mode = %s",
                 ras_mode_str);
-          
+
       return (1);
     }
 
@@ -480,7 +480,7 @@ sel_string_output_intel_s2600jf_event_data2_class_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data);
   assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600JF);
 
-  /* 
+  /*
    * Intel S2600JF/Appro 512X
    */
 
@@ -493,7 +493,7 @@ sel_string_output_intel_s2600jf_event_data2_class_oem (ipmi_sel_ctx_t ctx,
                                                                          wlen,
                                                                          system_event_record_data)) < 0)
     return (-1);
-  
+
   if (ret)
     return (1);
 
@@ -507,7 +507,7 @@ sel_string_output_intel_s2600jf_event_data2_class_oem (ipmi_sel_ctx_t ctx,
               && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_PCIE_CORRECTABLE_ERROR)))
     {
       _sel_string_output_intel_s2600jf_bus (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
-          
+
       return (1);
     }
 
@@ -523,9 +523,9 @@ sel_string_output_intel_s2600jf_event_data2_class_oem (ipmi_sel_ctx_t ctx,
     {
       uint8_t node_id;
       char *node_id_str;
-          
+
       node_id = system_event_record_data->event_data2;
-          
+
       switch (node_id)
         {
         case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA2_OEM_INTEL_S2600JF_NODE_ID_CPU_1:
@@ -543,12 +543,12 @@ sel_string_output_intel_s2600jf_event_data2_class_oem (ipmi_sel_ctx_t ctx,
         default:
           node_id_str = "Unknown";
         }
-          
+
       snprintf (tmpbuf,
                 tmpbuflen,
                 "CPU = %s",
                 node_id_str);
-          
+
       return (1);
     }
 
@@ -573,7 +573,7 @@ _sel_string_output_intel_s2600jf_device_function (ipmi_sel_ctx_t ctx,
   assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (system_event_record_data);
   assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
-  
+
   /* From Bill Hannon @ Intel
    *
    * [7:3] = Device Number
@@ -620,7 +620,7 @@ sel_string_output_intel_s2600jf_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
   assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600JF);
 
-  /* 
+  /*
    * Intel S2600JF/Appro 512X
    */
 
@@ -647,13 +647,13 @@ sel_string_output_intel_s2600jf_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 
       socket_id = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_S2600JF_SOCKET_ID_BITMASK);
       socket_id >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_S2600JF_SOCKET_ID_SHIFT;
-          
+
       channel = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_S2600JF_CHANNEL_BITMASK);
       channel >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_S2600JF_CHANNEL_SHIFT;
-  
+
       dimm = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_S2600JF_DIMM_BITMASK);
       dimm >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_S2600JF_DIMM_SHIFT;
-          
+
       switch (socket_id)
         {
         case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_S2600JF_SOCKET_ID_CPU_1:
@@ -671,7 +671,7 @@ sel_string_output_intel_s2600jf_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
         default:
           socket_id_str = "Unknown";
         }
-          
+
       switch (channel)
         {
         case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_S2600JF_CHANNEL_A:
@@ -689,7 +689,7 @@ sel_string_output_intel_s2600jf_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
         default:
           channel_str = "Unknown";
         }
-          
+
       switch (dimm)
         {
         case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_S2600JF_DIMM_1:
@@ -704,16 +704,16 @@ sel_string_output_intel_s2600jf_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
         default:
           dimm_str = "Unknown";
         }
-          
+
       snprintf (tmpbuf,
                 tmpbuflen,
                 "CPU = %s, Channel = %s, DIMM = %s",
                 socket_id_str,
                 channel_str,
                 dimm_str);
-          
+
       return (1);
-    }     
+    }
 
   if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600JF_BIOS_POST
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_ENABLED
@@ -725,15 +725,15 @@ sel_string_output_intel_s2600jf_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
       const char *ras_mode_str;
 
       ras_mode_str = _sel_string_output_intel_s2600jf_ras_mode (system_event_record_data->event_data3);
-          
+
       snprintf (tmpbuf,
                 tmpbuflen,
                 "RAS Mode = %s",
                 ras_mode_str);
-          
+
       return (1);
     }
-      
+
   if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600JF_BIOS_POST
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_ENABLED
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
@@ -742,17 +742,17 @@ sel_string_output_intel_s2600jf_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
           || system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_DEVICE_ENABLED_DEVICE_ENABLED))
     {
       const char *ras_mode_str;
-          
+
       ras_mode_str = _sel_string_output_intel_s2600jf_ras_mode (system_event_record_data->event_data3);
-          
+
       snprintf (tmpbuf,
                 tmpbuflen,
                 "Selected RAS Mode = %s",
                 ras_mode_str);
-          
+
       return (1);
     }
-  
+
   if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600JF_BIOS_SMI_HANDLER
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
@@ -761,7 +761,7 @@ sel_string_output_intel_s2600jf_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
           || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_SERR))
     {
       _sel_string_output_intel_s2600jf_device_function (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
-          
+
       return (1);
     }
 
@@ -796,7 +796,7 @@ sel_string_output_intel_s2600jf_event_data3_class_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data);
   assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600JF);
 
-  /* 
+  /*
    * Intel S2600JF/Appro 512X
    */
 
@@ -809,7 +809,7 @@ sel_string_output_intel_s2600jf_event_data3_class_oem (ipmi_sel_ctx_t ctx,
                                                                          wlen,
                                                                          system_event_record_data)) < 0)
     return (-1);
-  
+
   if (ret)
     return (1);
 
@@ -823,7 +823,7 @@ sel_string_output_intel_s2600jf_event_data3_class_oem (ipmi_sel_ctx_t ctx,
               && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_PCIE_CORRECTABLE_ERROR)))
     {
       _sel_string_output_intel_s2600jf_device_function (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
-      
+
       return (1);
     }
 
@@ -862,7 +862,7 @@ sel_string_output_intel_s2600jf_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
   assert (oem_rv);
   assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600JF);
 
-  /* 
+  /*
    * Intel S2600JF/Appro 512X
    */
   if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600JF_BIOS_POST
@@ -875,10 +875,10 @@ sel_string_output_intel_s2600jf_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
     {
       uint16_t error_code;
       char *error_code_str = NULL;
-          
+
       error_code = system_event_record_data->event_data2;
       error_code |= (system_event_record_data->event_data3 << 8);
-          
+
       switch (error_code)
         {
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_S2600JF_POST_ERROR_CODE_CMOS_DATE_TIME_NOT_SET:
@@ -1268,7 +1268,7 @@ sel_string_output_intel_s2600jf_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
         (*oem_rv) = 1;
       else
         (*oem_rv) = 0;
-      
+
       return (1);
     }
 
@@ -1302,13 +1302,13 @@ sel_string_output_intel_s2600jf_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 
       socket_id = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_S2600JF_SOCKET_ID_BITMASK);
       socket_id >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_S2600JF_SOCKET_ID_SHIFT;
-          
+
       channel = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_S2600JF_CHANNEL_BITMASK);
       channel >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_S2600JF_CHANNEL_SHIFT;
-  
+
       dimm = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_S2600JF_DIMM_BITMASK);
       dimm >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_S2600JF_DIMM_SHIFT;
-          
+
       switch (error_type)
         {
         case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_S2600JF_ERROR_TYPE_NOT_KNOWN:
@@ -1338,7 +1338,7 @@ sel_string_output_intel_s2600jf_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
         default:
           socket_id_str = "Unknown";
         }
-          
+
       switch (channel)
         {
         case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_S2600JF_CHANNEL_A:
@@ -1356,7 +1356,7 @@ sel_string_output_intel_s2600jf_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
         default:
           channel_str = "Unknown";
         }
-          
+
       switch (dimm)
         {
         case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_S2600JF_DIMM_1:
@@ -1371,7 +1371,7 @@ sel_string_output_intel_s2600jf_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
         default:
           dimm_str = "Unknown";
         }
-          
+
       if (sel_string_snprintf (buf,
                                buflen,
                                wlen,
@@ -1385,9 +1385,9 @@ sel_string_output_intel_s2600jf_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
         (*oem_rv) = 1;
       else
         (*oem_rv) = 0;
-          
+
       return (1);
-    }     
+    }
 
   return (0);
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -58,7 +58,7 @@ fiid_template_t tmpl_cmd_oem_intel_node_manager_enable_disable_node_manager_poli
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
-    { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},   
+    { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
   };
 
@@ -103,7 +103,7 @@ fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_boot_tim
     { 1,  "policy_power_domain", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1,  "policy_target_limit.platform_booting_mode", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 7,  "policy_target_limit.cores_disabled", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8,  "policy_target_limit.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    { 8,  "policy_target_limit.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 16, "policy_target_limit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 32, "correction_time_limit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 16, "policy_trigger_limit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -581,7 +581,7 @@ fiid_template_t tmpl_cmd_oem_intel_node_manager_get_turbo_synchronization_ratio_
     { 8,  "minimum_turbo_ratio_limit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
   };
- 
+
 fiid_template_t tmpl_cmd_oem_intel_node_manager_get_limiting_policy_id_rq =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -1079,7 +1079,7 @@ fill_cmd_oem_intel_node_manager_set_node_manager_policy_suspend_periods (uint8_t
   FILL_FIID_OBJ_SET (obj_cmd_rq, "domain_id", domain_id);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "policy_id", policy_id);
-  
+
   /* Note: Do not need to "order" these, these fields are optional, and thus
    * the fiid library can "pack" them accordingly.
    */
@@ -1430,7 +1430,7 @@ fill_cmd_oem_intel_node_manager_set_node_manager_alert_destination_ipmb (uint8_t
 
   return (0);
 }
-  
+
 int
 fill_cmd_oem_intel_node_manager_set_node_manager_alert_destination_lan (uint8_t channel_number,
                                                                         uint8_t alert_receiver_deactivation,

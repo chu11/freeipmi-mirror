@@ -338,7 +338,7 @@ _ipmi_monitoring_sel_parse_system_event_record (ipmi_monitoring_ctx_t c,
     }
 
   s->sensor_number = sensor_number;
-  
+
   if (ipmi_sel_parse_read_event_direction (c->sel_parse_ctx,
                                            NULL,
                                            0,
@@ -354,7 +354,7 @@ _ipmi_monitoring_sel_parse_system_event_record (ipmi_monitoring_ctx_t c,
     s->event_direction = IPMI_MONITORING_SEL_EVENT_DIRECTION_ASSERTION;
   else
     s->event_direction = IPMI_MONITORING_SEL_EVENT_DIRECTION_DEASSERTION;
-      
+
   if (ipmi_sel_parse_read_event_data1_offset_from_event_reading_type_code (c->sel_parse_ctx,
                                                                            NULL,
                                                                            0,
@@ -423,7 +423,7 @@ _ipmi_monitoring_sel_parse_system_event_record (ipmi_monitoring_ctx_t c,
   sel_string_flags = IPMI_SEL_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD | IPMI_SEL_STRING_FLAGS_OUTPUT_NOT_AVAILABLE;
   if (sel_flags & IPMI_MONITORING_SEL_FLAGS_ENTITY_SENSOR_NAMES)
     sel_string_flags |= IPMI_SEL_STRING_FLAGS_ENTITY_SENSOR_NAMES;
-  
+
   if (ipmi_sel_parse_read_record_string (c->sel_parse_ctx,
                                          "%s",
                                          NULL,
@@ -455,7 +455,7 @@ _ipmi_monitoring_sel_parse_system_event_record (ipmi_monitoring_ctx_t c,
       _sel_parse_ctx_error_convert (c);
       return (-1);
     }
-  
+
   if (ret)
     {
       if (!(s->event_offset_string = strdup (event_offset_string)))
@@ -502,7 +502,7 @@ _ipmi_monitoring_sel_parse_timestamped_oem_record (ipmi_monitoring_ctx_t c,
       return (-1);
     }
   s->timestamp = timestamp;
-  
+
   if (ipmi_sel_parse_read_manufacturer_id (c->sel_parse_ctx,
                                            NULL,
                                            0,
@@ -571,7 +571,7 @@ _store_sel_record (ipmi_monitoring_ctx_t c, unsigned int sel_flags)
   assert (c);
   assert (c->magic == IPMI_MONITORING_MAGIC);
   assert (c->sel_records);
-  
+
   if (!(s = (struct ipmi_monitoring_sel_record *)malloc (sizeof (struct ipmi_monitoring_sel_record))))
     {
       IPMI_MONITORING_DEBUG (("malloc: %s", strerror (errno)));
@@ -590,7 +590,7 @@ _store_sel_record (ipmi_monitoring_ctx_t c, unsigned int sel_flags)
       _sel_parse_ctx_error_convert (c);
       goto cleanup;
     }
-  
+
   if (ipmi_sel_parse_read_record_id (c->sel_parse_ctx,
                                      NULL,
                                      0,
@@ -672,7 +672,7 @@ _store_sel_record (ipmi_monitoring_ctx_t c, unsigned int sel_flags)
     }
   else
     s->record_type_class = IPMI_MONITORING_SEL_RECORD_TYPE_CLASS_UNKNOWN;
-  
+
 
   /* achu: should come before list_append to avoid having a freed entry on the list */
   if (c->callback)
@@ -754,7 +754,7 @@ _ipmi_monitoring_sel_parse_sensor_types (ipmi_sel_ctx_t ctx, void *callback_data
   if (spd->sel_flags & IPMI_MONITORING_SEL_FLAGS_ASSUME_SYSTEM_EVENT_RECORD
       && !IPMI_SEL_RECORD_TYPE_VALID (record_type))
     record_type = IPMI_SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD;
-  
+
   record_type_class = ipmi_sel_record_type_class (record_type);
 
   if (record_type_class == IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
@@ -777,7 +777,7 @@ _ipmi_monitoring_sel_parse_sensor_types (ipmi_sel_ctx_t ctx, void *callback_data
 
       if ((sensor_type = ipmi_monitoring_get_sensor_type (spd->c, sel_sensor_type)) < 0)
         return (-1);
-      
+
       for (i = 0; i < spd->sensor_types_len; i++)
         {
           if (spd->sensor_types[i] == sensor_type)
@@ -786,7 +786,7 @@ _ipmi_monitoring_sel_parse_sensor_types (ipmi_sel_ctx_t ctx, void *callback_data
               break;
             }
         }
-      
+
       if (found)
         {
           if (_store_sel_record (spd->c, spd->sel_flags) < 0)
@@ -830,7 +830,7 @@ _ipmi_monitoring_sel_parse_date_range (ipmi_sel_ctx_t ctx, void *callback_data)
   if (spd->sel_flags & IPMI_MONITORING_SEL_FLAGS_ASSUME_SYSTEM_EVENT_RECORD
       && !IPMI_SEL_RECORD_TYPE_VALID (record_type))
     record_type = IPMI_SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD;
-  
+
   record_type_class = ipmi_sel_record_type_class (record_type);
 
   if (record_type_class == IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD
@@ -898,7 +898,7 @@ ipmi_monitoring_get_sel (ipmi_monitoring_ctx_t c,
 
       for (i = 0; i < record_ids_len; i++)
         record_ids_tmp[i] = record_ids[i];
-      
+
       if (ipmi_sel_parse_record_ids (c->sel_parse_ctx,
                                      record_ids_tmp,
                                      record_ids_len,

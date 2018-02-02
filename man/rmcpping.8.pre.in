@@ -27,7 +27,7 @@
 .SH "NAME"
 rmcpping \- send RMCP Ping to network hosts
 .SH "SYNOPSIS"
-.B rmcpping 
+.B rmcpping
 [\fIOPTION\fR...] destination
 .SH "DESCRIPTION"
 .B rmcpping
@@ -48,7 +48,7 @@ Copyright (C) 2007-2015 Lawrence Livermore National Security, LLC.
 Copyright (C) 2003-2007 The Regents of the University of California.
 #include <@top_srcdir@/man/manpage-common-gpl-program-text.man>
 .SH "ORIGIN"
-Command and manpage based off 
+Command and manpage based off
 .B ping(8).
 .SH "SEE ALSO"
 freeipmi(7), ping(8), ipmiping(8)

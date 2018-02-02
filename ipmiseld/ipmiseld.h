@@ -120,7 +120,7 @@ struct ipmiseld_arguments
   char *system_event_format_str;
   char *oem_timestamped_event_format_str;
   char *oem_non_timestamped_event_format_str;
-  unsigned int poll_interval; 
+  unsigned int poll_interval;
   char *log_facility_str;
   char *log_priority_str;
   char *cache_directory;
@@ -156,7 +156,7 @@ typedef struct ipmiseld_sel_info
   uint8_t delete_sel_command_supported;
   uint8_t reserve_sel_command_supported;
   uint8_t overflow_flag;
-} ipmiseld_sel_info_t; 
+} ipmiseld_sel_info_t;
 
 typedef struct ipmiseld_host_state
 {

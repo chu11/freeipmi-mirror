@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -285,5 +285,5 @@ ipmi_cmd_platform_event (ipmi_ctx_t ctx,
   rv = 0;
  cleanup:
   fiid_obj_destroy (obj_cmd_rq);
-  return (rv); 
+  return (rv);
 }

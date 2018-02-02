@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_OEM_INVENTEC_SPEC_H
@@ -49,7 +49,7 @@ extern "C" {
 
 /* sol idle timeout - 2 bytes, ls byte first, 0h = no timeout, default = 01h
  *
- * telnet/ssh redirect enable - 1 byte, 0 = disable, 1 = enabled 
+ * telnet/ssh redirect enable - 1 byte, 0 = disable, 1 = enabled
  */
 #define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_SOL_SOL_IDLE_TIMEOUT           0x01
 #define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_SSH_REDIRECT_ENABLE 0x02
@@ -169,7 +169,7 @@ extern "C" {
  *
  * branch - 1-16 bytes (read only)
  *
- * build information - 1-16 bytes (read only) 
+ * build information - 1-16 bytes (read only)
  *
  */
 #define IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_NAME              0x01

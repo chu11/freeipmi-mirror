@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2008-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -41,7 +41,7 @@
 struct ipmi_config_sensors_sdr_callback {
   ipmi_config_state_data_t *state_data;
   struct ipmi_config_section *sections;
-}; 
+};
 
 static int
 _sections_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
@@ -79,7 +79,7 @@ _sections_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
    * threshold masks for compact sensor records is a cut and paste
    * typo.  It shouldn't be there.
    */
-  
+
   if (record_type != IPMI_SDR_FORMAT_FULL_SENSOR_RECORD
       && record_type != IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
     {
@@ -90,7 +90,7 @@ _sections_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
                          record_type);
       return (0);
     }
-  
+
   if (ipmi_sdr_parse_event_reading_type_code (state_data->sdr_ctx,
                                               sdr_record,
                                               sdr_record_len,

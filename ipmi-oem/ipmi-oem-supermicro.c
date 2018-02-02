@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2008-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -127,12 +127,12 @@ ipmi_oem_supermicro_extra_firmware_info (ipmi_oem_state_data_t *state_data)
   firmware_build_number |= (bytes_rs[17] << 24);
 
   firmware_hardware_id = bytes_rs[18];
-  
+
   if (rs_len > 19)
     memcpy (firmware_tag, &bytes_rs[19], rs_len - 19);
 
   /* assume minor version is BCD, just like in Get Device ID command */
-  /* assume sub version is also BCD */ 
+  /* assume sub version is also BCD */
   pstdout_printf (state_data->pstate,
                   "Firmware Version      : %u.%02x.%02x\n",
                   firmware_major_version,
@@ -217,7 +217,7 @@ ipmi_oem_supermicro_get_bmc_services_status (ipmi_oem_state_data_t *state_data)
 
   /* Supermicro OEM
    *
-   * Request 
+   * Request
    *
    * 0x30 - OEM network function
    * 0x70 - OEM cmd
@@ -227,7 +227,7 @@ ipmi_oem_supermicro_get_bmc_services_status (ipmi_oem_state_data_t *state_data)
    *      - 0x01 - enable
    *      - 0x02 - status
    *
-   * Response 
+   * Response
    *
    * 0x70 - OEM cmd
    * 0x?? - Completion Code
@@ -254,7 +254,7 @@ ipmi_oem_supermicro_get_bmc_services_status (ipmi_oem_state_data_t *state_data)
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
-  
+
   if (ipmi_oem_check_response_and_completion_code (state_data,
                                                    bytes_rs,
                                                    rs_len,
@@ -302,7 +302,7 @@ ipmi_oem_supermicro_set_bmc_services_status (ipmi_oem_state_data_t *state_data)
 
   /* Supermicro OEM
    *
-   * Request 
+   * Request
    *
    * 0x30 - OEM network function
    * 0x70 - OEM cmd
@@ -312,7 +312,7 @@ ipmi_oem_supermicro_set_bmc_services_status (ipmi_oem_state_data_t *state_data)
    *      - 0x01 - enable
    *      - 0x02 - status
    *
-   * Response 
+   * Response
    *
    * 0x70 - OEM cmd
    * 0x?? - Completion Code
@@ -352,7 +352,7 @@ ipmi_oem_supermicro_set_bmc_services_status (ipmi_oem_state_data_t *state_data)
                                                    IPMI_NET_FN_OEM_SUPERMICRO_GENERIC_RS,
                                                    NULL) < 0)
     goto cleanup;
-  
+
   rv = 0;
  cleanup:
   return (rv);
@@ -383,28 +383,28 @@ ipmi_oem_supermicro_get_power_supply_status (ipmi_oem_state_data_t *state_data)
     }
 
   /* Supermicro OEM
-   * From Supermicro Engineer 
+   * From Supermicro Engineer
    *
-   * Request 
+   * Request
    *
    * 0x06 - network function
    * 0x52 - cmd (master read/write)
-   * 0x07 - (channel = 0, bus id = 3, bus type = private) 
+   * 0x07 - (channel = 0, bus id = 3, bus type = private)
    * 0x?? - slave address
-   *      - 0x70 - ps 1 
-   *      - 0x72 - ps 2 
-   *      - 0x74 - ps 3 
+   *      - 0x70 - ps 1
+   *      - 0x72 - ps 2
+   *      - 0x74 - ps 3
    * 0x01 - read count
    * 0x0c - data to write ... no idea why 0x0c
    *
-   * Response 
+   * Response
    *
    * 0x52 - cmd
    * 0x?? - Completion Code
    * 0x?? - 0x01 - good
    *      - 0x00 - bad
    */
-  
+
   bytes_rq[0] = IPMI_CMD_MASTER_WRITE_READ;
   bytes_rq[1] = IPMI_OEM_SUPERMICRO_GET_POWER_SUPPLY_STATUS_CHANNEL;
   if (!strcasecmp (state_data->prog_data->args->oem_options[0], "1"))
@@ -446,7 +446,7 @@ ipmi_oem_supermicro_get_power_supply_status (ipmi_oem_state_data_t *state_data)
     pstdout_printf (state_data->pstate, "bad\n");
   else
     pstdout_printf (state_data->pstate, "unknown\n");
-  
+
   rv = 0;
  cleanup:
   return (rv);
@@ -476,26 +476,26 @@ ipmi_oem_supermicro_get_power_supply_status2 (ipmi_oem_state_data_t *state_data)
     }
 
   /* Supermicro OEM
-   * From Supermicro Engineer 
+   * From Supermicro Engineer
    *
-   * Request 
+   * Request
    *
    * 0x06 - network function
    * 0x52 - cmd (master read/write)
-   * 0x07 - (channel = 0, bus id = 3, bus type = private) 
+   * 0x07 - (channel = 0, bus id = 3, bus type = private)
    * 0x?? - slave address
-   *      - 0xb0 - ps 1 
-   *      - 0xb2 - ps 2 
+   *      - 0xb0 - ps 1
+   *      - 0xb2 - ps 2
    * 0x02 - read count
    * 0x79 - data to write ... no idea why 0x0c
    *
-   * Response 
+   * Response
    *
    * 0x52 - cmd
    * 0x?? - Completion Code
    * 0x?? - 0x00 or 0x02 good, anything else bad
    */
-  
+
   bytes_rq[0] = IPMI_CMD_MASTER_WRITE_READ;
   bytes_rq[1] = IPMI_OEM_SUPERMICRO_GET_POWER_SUPPLY_STATUS2_CHANNEL;
   if (!strcasecmp (state_data->prog_data->args->oem_options[0], "1"))
@@ -532,9 +532,9 @@ ipmi_oem_supermicro_get_power_supply_status2 (ipmi_oem_state_data_t *state_data)
   if (bytes_rs[2] == IPMI_OEM_SUPERMICRO_GET_POWER_SUPPLY_STATUS2_GOOD1
       || bytes_rs[2] == IPMI_OEM_SUPERMICRO_GET_POWER_SUPPLY_STATUS2_GOOD2)
     pstdout_printf (state_data->pstate, "good\n");
-  else 
+  else
     pstdout_printf (state_data->pstate, "bad\n");
-  
+
   rv = 0;
  cleanup:
   return (rv);
@@ -565,28 +565,28 @@ ipmi_oem_supermicro_get_pmbus_power_supply_status (ipmi_oem_state_data_t *state_
     }
 
   /* Supermicro OEM
-   * From Supermicro Engineer 
+   * From Supermicro Engineer
    *
-   * Request 
+   * Request
    *
    * 0x06 - network function
    * 0x52 - cmd (master read/write)
-   * 0x07 - (channel = 0, bus id = 3, bus type = private) 
+   * 0x07 - (channel = 0, bus id = 3, bus type = private)
    * 0x?? - slave address
-   *      - 0x78 - ps 1 
-   *      - 0x7a - ps 2 
-   *      - 0x7c - ps 3 
+   *      - 0x78 - ps 1
+   *      - 0x7a - ps 2
+   *      - 0x7c - ps 3
    * 0x01 - read count
    * 0x78 - data to write ... no idea why 0x78
    *
-   * Response 
+   * Response
    *
    * 0x52 - cmd
    * 0x?? - Completion Code
    * 0x?? - 0x01 - good
    *      - 0x00 - bad
    */
-  
+
   bytes_rq[0] = IPMI_CMD_MASTER_WRITE_READ;
   bytes_rq[1] = IPMI_OEM_SUPERMICRO_GET_PMBUS_POWER_SUPPLY_STATUS_CHANNEL;
   if (!strcasecmp (state_data->prog_data->args->oem_options[0], "1"))
@@ -621,7 +621,7 @@ ipmi_oem_supermicro_get_pmbus_power_supply_status (ipmi_oem_state_data_t *state_
                                                    IPMI_NET_FN_APP_RQ,
                                                    NULL) < 0)
     goto cleanup;
-  
+
   if (bytes_rs[2] == IPMI_OEM_SUPERMICRO_GET_PMBUS_POWER_SUPPLY_STATUS_GOOD)
     pstdout_printf (state_data->pstate, "good\n");
   else if (bytes_rs[2] == IPMI_OEM_SUPERMICRO_GET_PMBUS_POWER_SUPPLY_STATUS_BAD)

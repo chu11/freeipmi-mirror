@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -230,7 +230,7 @@ ipmi_cmd_oem_intel_node_manager_set_node_manager_policy (ipmi_ctx_t ctx,
   fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
-  
+
 int
 ipmi_cmd_oem_intel_node_manager_set_node_manager_policy_boot_time_policy (ipmi_ctx_t ctx,
                                                                           uint8_t target_channel_number,
@@ -1423,7 +1423,7 @@ ipmi_cmd_oem_intel_node_manager_set_node_manager_alert_destination_ipmb (ipmi_ct
   fiid_obj_destroy (obj_cmd_rq);
   return (rv);
 }
-  
+
 int
 ipmi_cmd_oem_intel_node_manager_set_node_manager_alert_destination_lan (ipmi_ctx_t ctx,
                                                                         uint8_t target_channel_number,

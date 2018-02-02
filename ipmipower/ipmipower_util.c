@@ -91,7 +91,7 @@ ipmipower_power_cmd_to_string (ipmipower_power_cmd_t cmd)
       IPMIPOWER_ERROR (("ipmipower_power_cmd_to_string: invalid power cmd type: %d", cmd));
       exit (EXIT_FAILURE);
     }
-  
+
   return (NULL);                /* NOT REACHED */
 }
 
@@ -101,29 +101,29 @@ ipmipower_power_cmd_check_privilege (ipmipower_power_cmd_t cmd,
                                      unsigned int errbuflen)
 {
   int rv = -1;
-  
+
   assert (IPMIPOWER_POWER_CMD_VALID (cmd));
   assert (errbuf);
   assert (errbuflen);
   assert (cmd_args.oem_power_type == IPMIPOWER_OEM_POWER_TYPE_NONE);
-  
+
   if (cmd_args.common_args.privilege_level == IPMI_PRIVILEGE_LEVEL_USER
       && IPMIPOWER_POWER_CMD_REQUIRES_OPERATOR_PRIVILEGE_LEVEL (cmd))
     {
       char *power_cmd_str;
-      
+
       power_cmd_str = ipmipower_power_cmd_to_string (cmd);
-      
+
       snprintf (errbuf,
-                errbuflen, 
+                errbuflen,
                 "'%s' requires atleast operator privilege",
                 power_cmd_str);
-      
+
       rv = 0;
       goto cleanup;
     }
 
-  rv = 1; 
+  rv = 1;
  cleanup:
   return (rv);
 }
@@ -195,14 +195,14 @@ ipmipower_cbuf_printf(cbuf_t cbuf, const char *fmt, ...)
 
   /* overflow ignored */
   len = vsnprintf (buf, IPMIPOWER_OUTPUT_BUFLEN, fmt, ap);
-  
+
   written = cbuf_write (cbuf, buf, len, &dropped);
   if (written < 0)
     {
       IPMIPOWER_ERROR (("cbuf_write: %s", strerror (errno)));
       exit (EXIT_FAILURE);
     }
-  
+
   va_end(ap);
 }
 
@@ -245,6 +245,6 @@ ipmipower_cbuf_peek_and_drop (cbuf_t buf, void *buffer, int len)
 
   if (rv > 0)
     IPMIPOWER_DEBUG (("cbuf_drop dropped data: %d", rv));
-  
+
   return (r_len);
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -330,7 +330,7 @@ _sdr_cache_get_cache_filename (pstdout_state_t pstate,
       /* shorten hostname if necessary */
       if ((ptr = strchr (hostnamebuf, '.')))
         *ptr = '\0';
-      
+
       if (_sdr_cache_get_cache_directory (pstate,
                                           common_args->sdr_cache_directory,
                                           sdrcachebuf,
@@ -344,7 +344,7 @@ _sdr_cache_get_cache_filename (pstdout_state_t pstate,
                            SDR_CACHE_FILENAME_PREFIX,
                            hostnamebuf,
                            hostname ? hostname : "localhost")) < 0)
-        
+
         {
           PSTDOUT_PERROR (pstate, "snprintf");
           return (-1);
@@ -367,7 +367,7 @@ _sdr_cache_get_cache_filename (pstdout_state_t pstate,
                            "internal overflow error\n");
           return (-1);
         }
-      
+
       if (access (common_args->sdr_cache_file, R_OK) < 0)
         {
           if (errno != ENOENT)
@@ -386,7 +386,7 @@ _sdr_cache_get_cache_filename (pstdout_state_t pstate,
               strcpy (cachedirbuf, common_args->sdr_cache_file);
 
               cachedirptr = dirname (cachedirbuf);
-              
+
               if (_sdr_cache_get_cache_directory (pstate,
                                                   cachedirptr,
                                                   sdrcachebuf,
@@ -395,7 +395,7 @@ _sdr_cache_get_cache_filename (pstdout_state_t pstate,
 
             }
         }
-      
+
       if ((ret = snprintf (buf,
                            buflen,
                            "%s",
@@ -684,7 +684,7 @@ sdr_cache_create_and_load (ipmi_sdr_ctx_t sdr_ctx,
                          stderr,
                          "ipmi_sdr_ctx_set_flags: %s\n",
                          ipmi_sdr_ctx_errormsg (sdr_ctx));
-  
+
       if (hostname)
         {
           if (ipmi_sdr_ctx_set_debug_prefix (sdr_ctx, hostname) < 0)
@@ -694,7 +694,7 @@ sdr_cache_create_and_load (ipmi_sdr_ctx_t sdr_ctx,
                              ipmi_sdr_ctx_errormsg (sdr_ctx));
         }
     }
-  
+
   rv = 0;
  cleanup:
   return (rv);
@@ -736,7 +736,7 @@ sdr_cache_flush_cache (pstdout_state_t pstate,
                        ipmi_sdr_ctx_errormsg (ctx));
       goto cleanup;
     }
-  
+
   rv = 0;
  cleanup:
   ipmi_sdr_ctx_destroy (ctx);
@@ -751,15 +751,15 @@ ipmi_sdr_cache_search_sensor_wrapper (ipmi_sdr_ctx_t sdr_ctx,
   int rv;
 
   assert (sdr_ctx);
-  
+
   if ((rv = ipmi_sdr_cache_search_sensor (sdr_ctx,
                                           sensor_number,
                                           generator_id)) < 0)
     {
-      /* IPMI Workaround (achu)                                                                              
-       *                                                                                                     
-       * Discovered on Supermicro H8QME with SIMSO daughter card.                                            
-       *                                                                                                     
+      /* IPMI Workaround (achu)
+       *
+       * Discovered on Supermicro H8QME with SIMSO daughter card.
+       *
        * The slave address is reported incorrectly by having the
        * generator_id be shifted over by one.  This is a special "try
        * again" corner case.
@@ -773,10 +773,10 @@ ipmi_sdr_cache_search_sensor_wrapper (ipmi_sdr_ctx_t sdr_ctx,
             return (0);
           /* else fall through to normal error case */
         }
-      
+
       return (rv);
     }
-  
+
   return (rv);
 }
 

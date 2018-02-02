@@ -196,4 +196,4 @@ DISTCLEANFILES = $(MANS_CPP) $(MANS_CPP:%=%.pre) .deps/*.P
 
 EXTRA_DIST = \
 	$(MANS_COMMON) \
-	$(MANS_NOCPP) 
+	$(MANS_NOCPP)

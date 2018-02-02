@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -79,7 +79,7 @@ sel_string_output_intel_s5500wb_sensor_name (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data);
   assert (oem_rv);
   assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S5500WB);
-  
+
   if ((ret = sel_string_output_intel_node_manager_sensor_name (ctx,
                                                                sel_entry,
                                                                sel_record_type,
@@ -90,9 +90,9 @@ sel_string_output_intel_s5500wb_sensor_name (ipmi_sel_ctx_t ctx,
                                                                system_event_record_data,
                                                                oem_rv)) < 0)
     return (-1);
-  
+
   if (ret)
-    return (1);      
+    return (1);
 
   return (0);
 }
@@ -134,7 +134,7 @@ sel_string_output_intel_s5500wb_event_data1_class_oem (ipmi_sel_ctx_t ctx,
                                                                          wlen,
                                                                          system_event_record_data)) < 0)
     return (-1);
-      
+
   if (ret)
     return (1);
 
@@ -151,7 +151,7 @@ sel_string_output_intel_s5500wb_event_data1_class_oem (ipmi_sel_ctx_t ctx,
                                            system_event_record_data->offset_from_event_reading_type_code,
                                            tmpbuf,
                                            tmpbuflen);
-          
+
       if (ret > 0)
         return (1);
     }
@@ -165,10 +165,10 @@ sel_string_output_intel_s5500wb_event_data1_class_oem (ipmi_sel_ctx_t ctx,
                 tmpbuflen,
                 "QPI Correctable Sensor Event = %02Xh",
                 system_event_record_data->offset_from_event_reading_type_code);
-          
+
       return (1);
     }
-      
+
   if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_QPI_NON_FATAL_SENSOR
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_NON_FATAL_SENSOR)
@@ -177,7 +177,7 @@ sel_string_output_intel_s5500wb_event_data1_class_oem (ipmi_sel_ctx_t ctx,
                 tmpbuflen,
                 "QPI Non-Fatal Sensor Event = %02Xh",
                 system_event_record_data->offset_from_event_reading_type_code);
-          
+
       return (1);
     }
 
@@ -189,7 +189,7 @@ sel_string_output_intel_s5500wb_event_data1_class_oem (ipmi_sel_ctx_t ctx,
                 tmpbuflen,
                 "QPI Fatal Sensor A Event = %02Xh",
                 system_event_record_data->offset_from_event_reading_type_code);
-          
+
       return (1);
     }
 
@@ -201,7 +201,7 @@ sel_string_output_intel_s5500wb_event_data1_class_oem (ipmi_sel_ctx_t ctx,
                 tmpbuflen,
                 "QPI Fatal Sensor B Event = %02Xh",
                 system_event_record_data->offset_from_event_reading_type_code);
-          
+
       return (1);
     }
 
@@ -224,7 +224,7 @@ _sel_string_output_intel_s5500wb_bus (ipmi_sel_ctx_t ctx,
   assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (system_event_record_data);
   assert (system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
-  
+
   snprintf (tmpbuf,
             tmpbuflen,
             "Bus %u",
@@ -265,10 +265,10 @@ sel_string_output_intel_s5500wb_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
           || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_SERR))
     {
       _sel_string_output_intel_s5500wb_bus (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
-          
+
       return (1);
     }
-      
+
   if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_MEMORY_ECC_ERROR
@@ -276,15 +276,15 @@ sel_string_output_intel_s5500wb_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
           || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_UNCORRECTABLE_MEMORY_ERROR))
     {
       uint8_t logical_rank;
-          
+
       logical_rank = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_LOGICAL_RANK_BITMASK);
       logical_rank >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_LOGICAL_RANK_SHIFT;
-          
+
       snprintf (tmpbuf,
                 tmpbuflen,
                 "Logical Rank %u",
                 logical_rank);
-          
+
       return (1);
     }
 
@@ -339,7 +339,7 @@ sel_string_output_intel_s5500wb_event_data2_class_oem (ipmi_sel_ctx_t ctx,
               && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_CORRECTABLE_SENSOR)))
     {
       _sel_string_output_intel_s5500wb_bus (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
-          
+
       return (1);
     }
 
@@ -356,7 +356,7 @@ sel_string_output_intel_s5500wb_event_data2_class_oem (ipmi_sel_ctx_t ctx,
                 tmpbuflen,
                 "Socket %u",
                 system_event_record_data->event_data2);
-          
+
       return (1);
     }
 
@@ -381,7 +381,7 @@ _sel_string_output_intel_s5500wb_device_function (ipmi_sel_ctx_t ctx,
   assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (system_event_record_data);
   assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
-  
+
   /* From Bill Hannon @ Intel
    *
    * [7:3] = Device Number
@@ -435,7 +435,7 @@ sel_string_output_intel_s5500wb_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
           || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_SERR))
     {
       _sel_string_output_intel_s5500wb_device_function (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
-          
+
       return (1);
     }
 
@@ -524,7 +524,7 @@ sel_string_output_intel_s5500wb_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
         }
       else
         dimm_slot_id_str = "Unknown";
-          
+
       if (processor_socket_valid && channel_number_valid && dimm_slot_id_valid)
         {
           snprintf (tmpbuf,
@@ -540,7 +540,7 @@ sel_string_output_intel_s5500wb_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
                   processor_socket_str,
                   channel_number_str,
                   dimm_slot_id_str);
-          
+
       return (1);
     }
 
@@ -584,7 +584,7 @@ sel_string_output_intel_s5500wb_event_data3_class_oem (ipmi_sel_ctx_t ctx,
                                                                          wlen,
                                                                          system_event_record_data)) < 0)
     return (-1);
-      
+
   if (ret)
     return (1);
 
@@ -595,7 +595,7 @@ sel_string_output_intel_s5500wb_event_data3_class_oem (ipmi_sel_ctx_t ctx,
               && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_CORRECTABLE_SENSOR)))
     {
       _sel_string_output_intel_s5500wb_device_function (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
-          
+
       return (1);
     }
 
@@ -644,10 +644,10 @@ sel_string_output_intel_s5500wb_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
     {
       uint16_t error_code;
       char *error_code_str = NULL;
-          
+
       error_code = system_event_record_data->event_data2;
       error_code |= (system_event_record_data->event_data3 << 8);
-          
+
       switch (error_code)
         {
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_POST_ERROR_CODE_CMOS_DATE_TIME_NOT_SET:
@@ -1037,7 +1037,7 @@ sel_string_output_intel_s5500wb_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
         (*oem_rv) = 1;
       else
         (*oem_rv) = 0;
-      
+
       return (1);
     }
 
@@ -1062,10 +1062,10 @@ sel_string_output_intel_s5500wb_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
       int processor_socket_valid = 0;
       int channel_number_valid = 0;
       int dimm_slot_id_valid = 0;
-  
+
       channel_information_validity = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_CHANNEL_INFORMATION_VALIDITY_BITMASK);
       channel_information_validity >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_CHANNEL_INFORMATION_VALIDITY_SHIFT;
-          
+
       dimm_information_validity = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_DIMM_INFORMATION_VALIDITY_BITMASK);
       dimm_information_validity >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_DIMM_INFORMATION_VALIDITY_SHIFT;
 
@@ -1129,12 +1129,12 @@ sel_string_output_intel_s5500wb_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 
       memset (channel_number_str, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
       if (channel_number_valid && channel_number_char)
-        snprintf(channel_number_str, 
+        snprintf(channel_number_str,
                  INTEL_EVENT_BUFFER_LENGTH,
                  "%c",
                  channel_number_char);
       else
-        snprintf(channel_number_str, 
+        snprintf(channel_number_str,
                  INTEL_EVENT_BUFFER_LENGTH,
                  "Unknown");
 
@@ -1155,7 +1155,7 @@ sel_string_output_intel_s5500wb_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
         }
       else
         dimm_slot_id_str = "Unknown";
-          
+
       if (processor_socket_valid && channel_number_valid && dimm_slot_id_valid)
         {
           if (sel_string_snprintf (buf,
@@ -1183,7 +1183,7 @@ sel_string_output_intel_s5500wb_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
           else
             (*oem_rv) = 0;
         }
-          
+
       return (1);
     }
 
@@ -1204,7 +1204,7 @@ sel_string_output_intel_s5500wb_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 
       instance_id = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_INSTANCE_ID_BITMASK);
       instance_id >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_INSTANCE_ID_SHIFT;
-          
+
       if (domain_instance_type == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_DOMAIN_INSTANCE_TYPE_LOCAL)
         {
           uint8_t mirroring_domain_local_subinstance;
@@ -1220,7 +1220,7 @@ sel_string_output_intel_s5500wb_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 
           socket_id = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_LOCAL_SOCKET_ID_BITMASK);
           socket_id >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_LOCAL_SOCKET_ID_SHIFT;
-              
+
           if (mirroring_domain_local_subinstance != IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_UNUSED_FIELD)
             {
               char *mirroring_domain_local_subinstance_str = NULL;
@@ -1245,7 +1245,7 @@ sel_string_output_intel_s5500wb_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
                         ", Subinstance = %s",
                         mirroring_domain_local_subinstance_str);
             }
-              
+
           if (socket_id != IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_UNUSED_FIELD)
             {
               if (socket_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_LOCAL_SOCKET_ID_APPLIES_TO_ALL_SOCKETS)
@@ -1309,7 +1309,7 @@ sel_string_output_intel_s5500wb_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
           else
             (*oem_rv) = 0;
         }
-          
+
       return (1);
     }
 

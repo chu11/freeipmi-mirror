@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2007-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -438,7 +438,7 @@ alert_string_commit (ipmi_config_state_data_t *state_data,
                                                                    obj_cmd_rs) < 0)
         {
           ipmi_config_err_t ret;
-      
+
           if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                      obj_cmd_rs,
                                                      &ret))

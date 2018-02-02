@@ -228,7 +228,7 @@ ipmi_sdr_cache_open (ipmi_sdr_ctx_t ctx,
        * most_recent_erase_timestamp-buf + header_checksum + trailer
        * bytes written + trailer records checksum.
        */
-      
+
       header_bytes_len = 4 + 4 + 1 + 2 + 4 + 4 + 1;
       trailer_bytes_len = 4 + 1;
 
@@ -253,7 +253,7 @@ ipmi_sdr_cache_open (ipmi_sdr_ctx_t ctx,
       header_checksum_buf_len += 4;
       memcpy(&header_checksum_buf[header_checksum_buf_len], most_recent_erase_timestamp_buf, 4);
       header_checksum_buf_len += 4;
-      
+
       header_checksum = ipmi_checksum (header_checksum_buf, header_checksum_buf_len);
       if (header_checksum != header_checksum_cache)
         {
@@ -616,7 +616,7 @@ ipmi_sdr_cache_search_sensor (ipmi_sdr_ctx_t ctx, uint8_t sensor_number, uint8_t
                   || record_type_current == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD))
             {
               uint8_t share_count;
-              
+
               if (record_type_current == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
                 {
                   share_count = ptr[IPMI_SDR_RECORD_COMPACT_SHARE_COUNT];
@@ -629,7 +629,7 @@ ipmi_sdr_cache_search_sensor (ipmi_sdr_ctx_t ctx, uint8_t sensor_number, uint8_t
                   share_count &= IPMI_SDR_RECORD_EVENT_SHARE_COUNT_BITMASK;
                   share_count >>= IPMI_SDR_RECORD_EVENT_SHARE_COUNT_SHIFT;
                 }
-              
+
               /* IPMI spec gives the following example:
                *
                * "If the starting sensor number was 10, and the share
@@ -726,7 +726,7 @@ _sdr_save_current_offset (ipmi_sdr_ctx_t ctx)
     {
       SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_INTERNAL_ERROR);
       goto cleanup;
-    }   
+    }
 
   return (0);
 
@@ -806,7 +806,7 @@ ipmi_sdr_cache_iterate (ipmi_sdr_ctx_t ctx,
       int ret;
 
       memset (sdr_record, '\0', IPMI_SDR_MAX_RECORD_LENGTH);
-      
+
       if ((sdr_record_len = ipmi_sdr_cache_record_read (ctx,
                                                         sdr_record,
                                                         IPMI_SDR_MAX_RECORD_LENGTH)) < 0)
@@ -816,7 +816,7 @@ ipmi_sdr_cache_iterate (ipmi_sdr_ctx_t ctx,
         }
 
       record_type = sdr_record[IPMI_SDR_RECORD_TYPE_INDEX];
-      
+
       ctx->callback_lock = 1;
       ret = iterate_callback (ctx,
                               record_type,
@@ -824,7 +824,7 @@ ipmi_sdr_cache_iterate (ipmi_sdr_ctx_t ctx,
                               (unsigned int)sdr_record_len,
                               iterate_callback_data);
       ctx->callback_lock = 0;
-      
+
       if (ret < 0)
         {
           rv = ret;
@@ -838,7 +838,7 @@ ipmi_sdr_cache_iterate (ipmi_sdr_ctx_t ctx,
           goto out;
         }
     }
-  
+
   rv = 0;
  out:
   ctx->errnum = IPMI_SDR_ERR_SUCCESS;

@@ -18,7 +18,7 @@
 #
 # nagios_ipmi_sensors.pl
 #
-# Author: 
+# Author:
 #
 # Albert Chu <chu11 at llnl dot gov>
 #
@@ -100,7 +100,7 @@
 # that.
 #
 # Help:
-# 
+#
 # Report bugs to freeipmi-users@gnu.org or freeipmi-devel@gnu.org.
 #
 #############################################################################
@@ -248,7 +248,7 @@ foreach $line (@IPMI_SENSORS_OUTPUT_LINES)
         $reading = $10;
         $units = $12;
         $event = $14;
-        
+
         # trim whitespace off end of string
         $record_id =~ s/\s+$//;
         $id_string =~ s/\s+$//;
@@ -268,7 +268,7 @@ foreach $line (@IPMI_SENSORS_OUTPUT_LINES)
     $id_string =~ s/ /_/g;
     $id_string =~ s/\//_/g;
 
-    if ($state eq "Nominal") 
+    if ($state eq "Nominal")
     {
         next;
     }
@@ -293,7 +293,7 @@ foreach $line (@IPMI_SENSORS_OUTPUT_LINES)
         print "State not parsable\n";
         $fatal_error++;
         next;
-    } 
+    }
 
     if ($num_output)
     {
@@ -311,7 +311,7 @@ foreach $line (@IPMI_SENSORS_OUTPUT_LINES)
 
 if ($fatal_error)
 {
-    exit 3;                     
+    exit 3;
 }
 
 if ($critical_num)

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef TOOL_SENSOR_COMMON_H
@@ -119,5 +119,5 @@ int calculate_column_widths (pstdout_state_t pstate,
 
 int calculate_column_widths_ignored_sdr_cache (unsigned int non_abbreviated_units,
                                                struct sensor_column_width *column_width);
-                                               
+
 #endif /* TOOL_SENSOR_COMMON_H */

@@ -25,7 +25,7 @@
  *  Copyright (C) 2001-2002 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
  *  Written by Chris Dunlap <cdunlap@llnl.gov>.
- *  
+ *
  *  This file is from LSD-Tools, the LLNL Software Development Toolbox.
  *
  *  LSD-Tools is free software; you can redistribute it and/or modify it under
@@ -118,7 +118,7 @@ struct heap
   HeapCmpF              fCmp;         /* function to compare data          */
   HeapDelF              fDel;         /* function to delete data           */
   unsigned int          count;        /* number of items in heap           */
-  unsigned int          heap_size;    /* next power of 2 to use for size   */  
+  unsigned int          heap_size;    /* next power of 2 to use for size   */
   struct heapNode **    heaparray;    /* heap array to store pointers      */
 #ifdef WITH_PTHREADS
   pthread_mutex_t       mutex;        /* mutex to protect access to list   */
@@ -420,7 +420,7 @@ heap_pop (Heap h)
       h->heaparray[index] = h->heaparray[tmp];
       index = tmp;
     }
-  
+
   h->heaparray[index] = p;
   h->heaparray[h->count - 1] = NULL;
   h->count--;

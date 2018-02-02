@@ -155,7 +155,7 @@ values remain.
 .LP
 Comments will be listed on occassion in checked out files with information
 on how to configure fields.
-The 
+The
 .B ipmi-config.conf(5)
 manpage also provides additional information on the meaning of
 different fields.
@@ -172,8 +172,8 @@ determine the correct IP address and MAC address to use.
 .LP
 .B # ipmi-config --commit -k "Lan_Conf:Ip_Address=$MY_IP" -k "Lan_Conf:Mac_Address=$MY_MAC" --filename=my_bmc.conf
 .SH "CORE SPECIAL CASE CONFIGURATION INFORMATION"
-The 
-.B UserN:Password 
+The
+.B UserN:Password
 fields (where N is a number) cannot be checked out on some systems,
 therefore the checked out value will always be blank.
 .LP
@@ -182,9 +182,9 @@ The
 field (where N is a number) cannot be checked out on older IPMI
 systems, therefore the checked out value will sometime be blank.
 .LP
-The 
-.B UserN:Lan_Session_Limit 
-and 
+The
+.B UserN:Lan_Session_Limit
+and
 .B UserN:Serial_Session_Limit
 fields (where N is a number) cannot be checked out on some systems,
 therefore the checked out value will always be blank.  If not
@@ -197,10 +197,10 @@ IPMI standards, and may result in errors when attempting to configure
 it to a non-zero value.  If errors to occur, setting the value back to
 0 should resolve problems.
 .LP
-The fields 
-.B Lan_Conf:IP_Address 
-and 
-.B Lan_Conf:MAC_Address 
+The fields
+.B Lan_Conf:IP_Address
+and
+.B Lan_Conf:MAC_Address
 cannot be committed in parallel via hostrange support.  Each machine
 must be configured with a unique IP Address and MAC Address tuple,
 therefore we disallow this configuration in
@@ -252,11 +252,11 @@ The
 and
 .B Chassis_Front_Panel_Buttons:Enable_Power_Off_Button_For_Power_Off_Only
 fields may not be able to be checked out on some IPMI systems, therefore
-the checked out value may be blank.  Some of these fields may be 
+the checked out value may be blank.  Some of these fields may be
 disableable, while some are not.
 
 The
-.B Chassis_Power_Conf:Power_Control_Interval 
+.B Chassis_Power_Conf:Power_Control_Interval
 field cannot be checked out.  Therefore the checked out value will
 always be blank.
 
@@ -271,9 +271,9 @@ and \fICommunity_String_Channel_3\fR, where you can configure the
 Community String on Channels 1 and 3 respectively.
 
 The following are the options suitable for input for Sensor_Type in
-PEF configuration. 
+PEF configuration.
 .TP
-\fBSensor_Type Options\fR 
+\fBSensor_Type Options\fR
 Reserved, Temperature, Voltage, Current, Fan, Physical_Security,
 Platform_Security_Violation_Attempt, Processor, Power_Supply,
 Power_Unit, Cooling_Device, Other_Units_Based_Sensor, Memory,
@@ -329,7 +329,7 @@ incorrectly, leading to incorrect configuration.  Most notably, this
 problem has come up when attempting to configure multiple channels.
 Issue observed on Intel S5500WBV/Penguin Relion 700.
 .SH "EXAMPLES"
-.B # ipmi-config --checkout 
+.B # ipmi-config --checkout
 .PP
 Output all core configuration information to the console.
 .B # ipmi-config --checkout --category=pef
@@ -374,7 +374,7 @@ status is 2.
 #include <@top_srcdir@/man/manpage-common-known-issues.man>
 #include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
 .SH "COPYRIGHT"
-Copyright \(co 2003-2015 FreeIPMI Core Team.  
+Copyright \(co 2003-2015 FreeIPMI Core Team.
 #include <@top_srcdir@/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
 ipmi-config.conf(5), freeipmi(7), bmc-device(8)

@@ -547,7 +547,7 @@ ipmiconsole_check_packet (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
 {
   fiid_obj_t obj_cmd;
   int rv;
-  
+
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
   assert (IPMICONSOLE_PACKET_TYPE_RESPONSE (p));
@@ -594,7 +594,7 @@ ipmiconsole_check_open_session_response_privilege (ipmiconsole_ctx_t c, ipmicons
           return (-1);
         }
       maximum_privilege_level = val;
-      
+
       rv = (maximum_privilege_level == c->config.privilege_level) ? 1 : 0;
     }
   else
@@ -934,7 +934,7 @@ ipmiconsole_check_rakp_4_integrity_check_value (ipmiconsole_ctx_t c, ipmiconsole
    * For whatever reason, with cipher suite 0, the RAKP 4 response
    * returns with an Integrity Check Value when it should be empty.
    */
-  
+
   if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_NON_EMPTY_INTEGRITY_CHECK_VALUE
       && !c->config.cipher_suite_id)
     {

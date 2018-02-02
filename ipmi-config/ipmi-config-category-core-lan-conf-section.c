@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -119,7 +119,7 @@ ip_address_source_checkout (ipmi_config_state_data_t *state_data,
       goto cleanup;
     }
   ip_address_source = val;
-  
+
   if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   ip_address_source_string (ip_address_source)) < 0)
@@ -1657,7 +1657,7 @@ _get_ipv4_header_parameters (ipmi_config_state_data_t *state_data,
                        strerror (errno));
       goto cleanup;
     }
-  
+
   if ((ret = get_lan_channel_number (state_data,
                                      section_name,
                                      &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
@@ -1665,7 +1665,7 @@ _get_ipv4_header_parameters (ipmi_config_state_data_t *state_data,
       rv = ret;
       goto cleanup;
     }
-  
+
   if (ipmi_cmd_get_lan_configuration_parameters_ipv4_header_parameters (state_data->ipmi_ctx,
                                                                         channel_number,
                                                                         IPMI_GET_LAN_PARAMETER,
@@ -1677,7 +1677,7 @@ _get_ipv4_header_parameters (ipmi_config_state_data_t *state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
-      
+
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
           || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
@@ -1687,7 +1687,7 @@ _get_ipv4_header_parameters (ipmi_config_state_data_t *state_data,
 
       goto cleanup;
     }
-  
+
   if (FIID_OBJ_GET (obj_cmd_rs, "time_to_live", &val) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -1697,7 +1697,7 @@ _get_ipv4_header_parameters (ipmi_config_state_data_t *state_data,
       goto cleanup;
     }
   ihp->time_to_live = val;
-  
+
   if (FIID_OBJ_GET (obj_cmd_rs, "flags", &val) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -1777,7 +1777,7 @@ _set_ipv4_header_parameters (ipmi_config_state_data_t *state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
-      
+
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
           || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
@@ -1801,14 +1801,14 @@ ipv4_header_time_to_live_checkout (ipmi_config_state_data_t *state_data,
 {
   struct ipv4_header_parameters ihp;
   ipmi_config_err_t ret;
-  
+
   assert (state_data);
   assert (section_name);
   assert (kv);
-  
+
   if ((ret = _get_ipv4_header_parameters (state_data, section_name, &ihp)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
-  
+
   if (ipmi_config_section_update_keyvalue_output_hex (state_data,
                                                       kv,
                                                       ihp.time_to_live) < 0)
@@ -1824,11 +1824,11 @@ ipv4_header_time_to_live_commit (ipmi_config_state_data_t *state_data,
 {
   struct ipv4_header_parameters ihp;
   ipmi_config_err_t ret;
-  
+
   assert (state_data);
   assert (section_name);
   assert (kv);
-  
+
   if ((ret = _get_ipv4_header_parameters (state_data, section_name, &ihp)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
@@ -1845,14 +1845,14 @@ ipv4_header_flags_checkout (ipmi_config_state_data_t *state_data,
 {
   struct ipv4_header_parameters ihp;
   ipmi_config_err_t ret;
-  
+
   assert (state_data);
   assert (section_name);
   assert (kv);
-  
+
   if ((ret = _get_ipv4_header_parameters (state_data, section_name, &ihp)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
-  
+
   if (ipmi_config_section_update_keyvalue_output_hex (state_data,
                                                       kv,
                                                       ihp.flags) < 0)
@@ -1868,11 +1868,11 @@ ipv4_header_flags_commit (ipmi_config_state_data_t *state_data,
 {
   struct ipv4_header_parameters ihp;
   ipmi_config_err_t ret;
-  
+
   assert (state_data);
   assert (section_name);
   assert (kv);
-  
+
   if ((ret = _get_ipv4_header_parameters (state_data, section_name, &ihp)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
@@ -1889,14 +1889,14 @@ ipv4_header_type_of_service_checkout (ipmi_config_state_data_t *state_data,
 {
   struct ipv4_header_parameters ihp;
   ipmi_config_err_t ret;
-  
+
   assert (state_data);
   assert (section_name);
   assert (kv);
-  
+
   if ((ret = _get_ipv4_header_parameters (state_data, section_name, &ihp)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
-  
+
   if (ipmi_config_section_update_keyvalue_output_hex (state_data,
                                                       kv,
                                                       ihp.type_of_service) < 0)
@@ -1912,11 +1912,11 @@ ipv4_header_type_of_service_commit (ipmi_config_state_data_t *state_data,
 {
   struct ipv4_header_parameters ihp;
   ipmi_config_err_t ret;
-  
+
   assert (state_data);
   assert (section_name);
   assert (kv);
-  
+
   if ((ret = _get_ipv4_header_parameters (state_data, section_name, &ihp)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
@@ -1933,14 +1933,14 @@ ipv4_header_precedence_checkout (ipmi_config_state_data_t *state_data,
 {
   struct ipv4_header_parameters ihp;
   ipmi_config_err_t ret;
-  
+
   assert (state_data);
   assert (section_name);
   assert (kv);
-  
+
   if ((ret = _get_ipv4_header_parameters (state_data, section_name, &ihp)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
-  
+
   if (ipmi_config_section_update_keyvalue_output_hex (state_data,
                                                       kv,
                                                       ihp.precedence) < 0)
@@ -1956,11 +1956,11 @@ ipv4_header_precedence_commit (ipmi_config_state_data_t *state_data,
 {
   struct ipv4_header_parameters ihp;
   ipmi_config_err_t ret;
-  
+
   assert (state_data);
   assert (section_name);
   assert (kv);
-  
+
   if ((ret = _get_ipv4_header_parameters (state_data, section_name, &ihp)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
@@ -1981,11 +1981,11 @@ primary_rmcp_port_checkout (ipmi_config_state_data_t *state_data,
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   ipmi_config_err_t ret;
   uint8_t channel_number;
-  
+
   assert (state_data);
   assert (section_name);
   assert (kv);
-  
+
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_lan_configuration_parameters_primary_rmcp_port_number_rs)))
     {
       pstdout_fprintf (state_data->pstate,
@@ -2012,7 +2012,7 @@ primary_rmcp_port_checkout (ipmi_config_state_data_t *state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
-      
+
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
           || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
@@ -2022,7 +2022,7 @@ primary_rmcp_port_checkout (ipmi_config_state_data_t *state_data,
 
       goto cleanup;
     }
-  
+
   if (FIID_OBJ_GET (obj_cmd_rs, "primary_rmcp_port_number", &val) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -2057,7 +2057,7 @@ primary_rmcp_port_commit (ipmi_config_state_data_t *state_data,
   assert (state_data);
   assert (section_name);
   assert (kv);
-  
+
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_lan_configuration_parameters_rs)))
     {
       pstdout_fprintf (state_data->pstate,
@@ -2066,13 +2066,13 @@ primary_rmcp_port_commit (ipmi_config_state_data_t *state_data,
                        strerror (errno));
       goto cleanup;
     }
-  
+
   if ((ret = get_lan_channel_number (state_data, section_name, &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
-  
+
   if (ipmi_cmd_set_lan_configuration_parameters_primary_rmcp_port_number (state_data->ipmi_ctx,
                                                                           channel_number,
                                                                           atoi (kv->value_input),
@@ -2082,7 +2082,7 @@ primary_rmcp_port_commit (ipmi_config_state_data_t *state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
-      
+
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
           || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
@@ -2092,7 +2092,7 @@ primary_rmcp_port_commit (ipmi_config_state_data_t *state_data,
 
       goto cleanup;
     }
-  
+
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
@@ -2110,11 +2110,11 @@ secondary_rmcp_port_checkout (ipmi_config_state_data_t *state_data,
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   ipmi_config_err_t ret;
   uint8_t channel_number;
-  
+
   assert (state_data);
   assert (section_name);
   assert (kv);
-  
+
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_lan_configuration_parameters_secondary_rmcp_port_number_rs)))
     {
       pstdout_fprintf (state_data->pstate,
@@ -2141,7 +2141,7 @@ secondary_rmcp_port_checkout (ipmi_config_state_data_t *state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
-      
+
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
           || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
@@ -2151,7 +2151,7 @@ secondary_rmcp_port_checkout (ipmi_config_state_data_t *state_data,
 
       goto cleanup;
     }
-  
+
   if (FIID_OBJ_GET (obj_cmd_rs, "secondary_rmcp_port_number", &val) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -2186,7 +2186,7 @@ secondary_rmcp_port_commit (ipmi_config_state_data_t *state_data,
   assert (state_data);
   assert (section_name);
   assert (kv);
-  
+
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_lan_configuration_parameters_rs)))
     {
       pstdout_fprintf (state_data->pstate,
@@ -2195,13 +2195,13 @@ secondary_rmcp_port_commit (ipmi_config_state_data_t *state_data,
                        strerror (errno));
       goto cleanup;
     }
-  
+
   if ((ret = get_lan_channel_number (state_data, section_name, &channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
       goto cleanup;
     }
-  
+
   if (ipmi_cmd_set_lan_configuration_parameters_secondary_rmcp_port_number (state_data->ipmi_ctx,
                                                                             channel_number,
                                                                             atoi (kv->value_input),
@@ -2211,7 +2211,7 @@ secondary_rmcp_port_commit (ipmi_config_state_data_t *state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
-      
+
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
           || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
@@ -2221,7 +2221,7 @@ secondary_rmcp_port_commit (ipmi_config_state_data_t *state_data,
 
       goto cleanup;
     }
-  
+
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);

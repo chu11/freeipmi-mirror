@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_PRODUCT_ID_SPEC_H
@@ -23,7 +23,7 @@
 extern "C" {
 #endif
 
-/******************************************* 
+/*******************************************
  * Dell                                    *
  *******************************************/
 
@@ -43,7 +43,7 @@ extern "C" {
  */
 #define IPMI_DELL_PRODUCT_ID_POWEREDGE_C410X 0
 
-/******************************************* 
+/*******************************************
  * Fujitsu                                 *
  *******************************************/
 
@@ -55,7 +55,7 @@ extern "C" {
 #define IPMI_FUJITSU_PRODUCT_ID_MIN                 0x0200
 #define IPMI_FUJITSU_PRODUCT_ID_MAX                 0x05FF
 
-// iRMC-S1 based systems        
+// iRMC-S1 based systems
 #define IPMI_FUJITSU_PRODUCT_ID_TX200S3             0x0200
 #define IPMI_FUJITSU_PRODUCT_ID_TX300S3             0x0201
 #define IPMI_FUJITSU_PRODUCT_ID_RX200S3             0x0202
@@ -87,7 +87,7 @@ extern "C" {
     || (__product_id) == IPMI_FUJITSU_PRODUCT_ID_RX330S1_SHA       \
     || (__product_id) == IPMI_FUJITSU_PRODUCT_ID_BX630S2_SHA) ? 1 : 0)
 
-// iRMC-S2 based systems        
+// iRMC-S2 based systems
 #define IPMI_FUJITSU_PRODUCT_ID_RX600S4             0x0218
 #define IPMI_FUJITSU_PRODUCT_ID_TX200S4             0x0220
 #define IPMI_FUJITSU_PRODUCT_ID_TX300S4             0x0221
@@ -120,7 +120,7 @@ extern "C" {
 #define IPMI_FUJITSU_PRODUCT_ID_RX200S6             0x0262
 #define IPMI_FUJITSU_PRODUCT_ID_RX300S6             0x0263
 
-/******************************************* 
+/*******************************************
  * HP                                      *
  *******************************************/
 
@@ -150,7 +150,7 @@ extern "C" {
 #define IPMI_INTEL_PRODUCT_ID_S2600WT2 112
 #define IPMI_INTEL_PRODUCT_ID_S2600WTT 112
 
-/* 
+/*
  * Intel derived
  */
 
@@ -173,45 +173,45 @@ extern "C" {
 #define IPMI_IBM_PRODUCT_ID_X3455 20566
 #define IPMI_IBM_PRODUCT_ID_X3755 14
 
-/******************************************* 
+/*******************************************
  * Inventec                                *
  *******************************************/
 
 #define IPMI_INVENTEC_PRODUCT_ID_5441 51
 #define IPMI_INVENTEC_PRODUCT_ID_5442 52
 
-/* 
+/*
  * Inventec derived
  */
 
 #define IPMI_DELL_PRODUCT_ID_XANADU_II  IPMI_INVENTEC_PRODUCT_ID_5441
 #define IPMI_DELL_PRODUCT_ID_XANADU_III IPMI_INVENTEC_PRODUCT_ID_5442
 
-/******************************************* 
+/*******************************************
  * Gigabyte                                *
  *******************************************/
 
 #define IPMI_GIGABYTE_PRODUCT_ID_MD90_FS0_ZB 266
 
-/******************************************* 
+/*******************************************
  * Quanta                                *
  *******************************************/
- 
+
 #define IPMI_QUANTA_PRODUCT_ID_S99Q 21401
 
-/* 
+/*
  * Quanta derived
  */
 
 #define IPMI_DELL_PRODUCT_ID_FS12_TY IPMI_QUANTA_PRODUCT_ID_S99Q
 
-/******************************************* 
+/*******************************************
  * Sun Microsystems                        *
  *******************************************/
 
 #define IPMI_SUN_MICROSYSTEMS_PRODUCT_ID_X4140 18177
 
-/******************************************* 
+/*******************************************
  * Supermicro                              *
  *******************************************/
 
@@ -263,16 +263,16 @@ extern "C" {
 /* Seen in the wild w/ Magnum Technologies IANA number 5593 */
 #define IPMI_SUPERMICRO_PRODUCT_ID_MAGNUM_TECHNOLOGIES_X8DTL IPMI_SUPERMICRO_PRODUCT_ID_X8DTL
 
-/******************************************* 
+/*******************************************
  * Wistron                                 *
  *******************************************/
 
-/* achu: don't know original product name, so just using C6220. 
- * Will readjust as needed if learned later. 
+/* achu: don't know original product name, so just using C6220.
+ * Will readjust as needed if learned later.
  */
 #define IPMI_WISTRON_PRODUCT_ID_C6220          131
 
-/* 
+/*
  * Wistron derived
  */
 

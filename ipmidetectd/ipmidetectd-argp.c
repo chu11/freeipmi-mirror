@@ -85,7 +85,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   struct ipmidetectd_arguments *cmd_args;
 
   assert (state);
-  
+
   cmd_args = state->input;
 
   switch (key)

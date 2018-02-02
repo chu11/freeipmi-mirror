@@ -54,33 +54,33 @@ release @value{VERSION} of the FreeIPMI.
 @end ifinfo
 
 @menu
-* What is IPMI?::                
-* What is FreeIPMI?::       
-* How did FreeIPMI start?::           
+* What is IPMI?::
+* What is FreeIPMI?::
+* How did FreeIPMI start?::
 * What operating systems does FreeIPMI run on?::
 * FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil::
-* What is special about FreeIPMI?::  
+* What is special about FreeIPMI?::
 * Does my system support IPMI?::
 * How do I compile FreeIPMI?::
-* libgcrypt requirement::          
-* x86-64 Compilation::          
+* libgcrypt requirement::
+* x86-64 Compilation::
 * Installing FreeIPMI on FreeBSD::
 * What are some IPMI terminology or acronyms I should be aware of?::
 * What setup is needed for FreeIPMI to communicate over LAN?::
 * What setup is needed for Serial over LAN (SOL) or Ipmiconsole?::
-* Do I need to install or configure a driver to perform IPMI inband?:: 
-* SSIF Driver Configuration::   
+* Do I need to install or configure a driver to perform IPMI inband?::
+* SSIF Driver Configuration::
 * How do you setup Powerman with ipmipower?::
 * How do you setup Conman with ipmiconsole or libipmiconsole?::
 * How do you setup Ganglia or Nagios to monitor IPMI sensors via FreeIPMI?::
-* Why are times reported by FreeIPMI tools wrong?:: 
+* Why are times reported by FreeIPMI tools wrong?::
 * Why is the IPMI kernel driver faster than the KCS driver?::
 * Why is the output from FreeIPMI different than another software?::
 * Why are there so many IPMI compliance bugs?::
 * How do I get around an IPMI compliance bug on my motherboard?::
 * Why am I seeing so many 'internal IPMI error' or 'driver busy' messages?::
 * How do I program with the FreeIPMI libraries?::
-* Where can I get additional help or support?:: 
+* Where can I get additional help or support?::
 @end menu
 
 @c Output the table of contents at the beginning.
@@ -436,7 +436,7 @@ in The FreeBSD Handbook.
 Please contact port maintainer (MAINTAINER line in the port's Makefile),
 if you have problems building from the port.
 
-@node What are some IPMI terminology or acronyms I should be aware of?, What setup is needed for FreeIPMI to communicate over LAN?, Installing FreeIPMI on FreeBSD, Top 
+@node What are some IPMI terminology or acronyms I should be aware of?, What setup is needed for FreeIPMI to communicate over LAN?, Installing FreeIPMI on FreeBSD, Top
 @section What are some IPMI terminology or acronyms I should be aware of?
 
 Good question, here are some terms and acronyms with general
@@ -568,7 +568,7 @@ changed.
 
 @end enumerate
 
-@node Do I need to install or configure a driver to perform IPMI inband?, SSIF Driver Configuration, What setup is needed for Serial over LAN (SOL) or Ipmiconsole?, Top 
+@node Do I need to install or configure a driver to perform IPMI inband?, SSIF Driver Configuration, What setup is needed for Serial over LAN (SOL) or Ipmiconsole?, Top
 @section Do I need to install or configure a driver to perform IPMI inband?
 
 For most people the answer is no.
@@ -608,7 +608,7 @@ interface.
 Under GNU/Linux load these kernel modules: i2c-dev, i2c-i801, i2c-core
 before using FreeIPMI.
 
-To identify SSIF device address: 
+To identify SSIF device address:
 
 Example:
 @example
@@ -864,7 +864,7 @@ The 0x0b indicates that the power supply has errors (you normally want to see 0x
 @end itemize
 
 @node Why are there so many IPMI compliance bugs?, How do I get around an IPMI compliance bug on my motherboard?, Why is the output from FreeIPMI different than another software?, Top
-@section Why are there so many IPMI compliance bugs? 
+@section Why are there so many IPMI compliance bugs?
 
 The @acronym{IPMI} specification is very large.  At last check, the
 @acronym{IPMI} specification was 601 pages.  This does not count the
@@ -924,7 +924,7 @@ thus eliminating racing with the IPMI occurring in the kernel.
 The other option is to disable the IPMI kernel thread so that FreeIPMI
 can perform inband communication with the BMC through its own
 mechanisms.  The following is from the Linux kernel documentation.
- 
+
 @example
 When compiled into the kernel, the parameters can be specified on the
 kernel command line as:
@@ -939,8 +939,8 @@ kernel command line as:
        ipmi_si.force_kipmid=<enable1>,<enable2>,...
        ipmi_si.kipmid_max_busy_us=<ustime1>,<ustime2>,...
 
-...     
-    
+...
+
 If your IPMI interface does not support interrupts and is a KCS or
 SMIC interface, the IPMI driver will start a kernel thread for the
 interface to help speed things up.  This is a low-priority kernel

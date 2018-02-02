@@ -56,7 +56,7 @@ struct ipmiseld_threadpool_data
 };
 
 static struct ipmiseld_threadpool_data *threadpool_data_array = NULL;
-static unsigned int threadpool_data_array_len = 0; 
+static unsigned int threadpool_data_array_len = 0;
 
 static List threadpool_queue = NULL;
 static pthread_mutex_t threadpool_queue_lock = PTHREAD_MUTEX_INITIALIZER;
@@ -84,7 +84,7 @@ _threadpool_func (void *arg)
       while (!list_count (threadpool_queue)
              && !threadpool_data->exit_flag)
         pthread_cond_wait (&threadpool_queue_cond, &threadpool_queue_lock);
-      
+
       if (threadpool_data->exit_flag)
         {
           pthread_mutex_unlock (&threadpool_queue_lock);
@@ -93,13 +93,13 @@ _threadpool_func (void *arg)
 
       if (!(queue_arg = list_dequeue (threadpool_queue)))
         err_output ("list_dequeue: %s", strerror (errno));
-      
+
       pthread_mutex_unlock (&threadpool_queue_lock);
-      
+
       if (queue_arg)
         {
           threadpool_data->callback (queue_arg);
-          
+
           if (threadpool_data->postprocess)
             threadpool_data->postprocess (queue_arg);
         }
@@ -161,7 +161,7 @@ ipmiseld_threadpool_init (struct ipmiseld_prog_data *prog_data,
           err_output ("pthread_create: %s", strerror (ret));
           goto cleanup;
         }
-      
+
       pthread_mutex_lock (&threadpool_count_lock);
       threadpool_count++;
       pthread_mutex_unlock (&threadpool_count_lock);
@@ -179,7 +179,7 @@ ipmiseld_threadpool_destroy (void)
 {
   int i;
   int ret;
-  
+
   /* achu: We want any current SEL poll to complete, so we won't
    * pthread_cancel() here (and likewise won't use
    * pthread_cleanup_push/pthread_cleanup_pop).
@@ -194,7 +194,7 @@ ipmiseld_threadpool_destroy (void)
   for (i = 0; i < threadpool_data_array_len; i++)
     {
       if ((ret = pthread_cond_signal (&threadpool_queue_cond)))
-        err_output ("pthread_cond_signal: %s", strerror (ret)); 
+        err_output ("pthread_cond_signal: %s", strerror (ret));
     }
 
   while (threadpool_count > 0)
@@ -206,7 +206,7 @@ ipmiseld_threadpool_destroy (void)
 
   if (threadpool_queue)
     list_destroy (threadpool_queue);
-}  
+}
 
 int
 ipmiseld_threadpool_queue (void *arg)
@@ -221,7 +221,7 @@ ipmiseld_threadpool_queue (void *arg)
       err_output ("list_enqueue: %s", strerror (errno));
       return (-1);
     }
-  
+
   pthread_cond_signal (&threadpool_queue_cond);
 
   pthread_mutex_unlock (&threadpool_queue_lock);

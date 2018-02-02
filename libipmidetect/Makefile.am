@@ -9,7 +9,7 @@ endif
 
 nodist_include_HEADERS = ipmidetect.h
 
-lib_LTLIBRARIES = libipmidetect.la 
+lib_LTLIBRARIES = libipmidetect.la
 
 libipmidetect_la_CPPFLAGS = \
 	-I$(top_srcdir)/common/miscutil \

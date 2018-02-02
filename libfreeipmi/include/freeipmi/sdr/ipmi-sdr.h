@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 /*****************************************************************************\
  *  Copyright (C) 2007-2015 Lawrence Livermore National Security, LLC.
@@ -86,7 +86,7 @@ extern "C" {
  *
  * OVERWRITE - overwrite any previously created cache.
  *
- * DUPLICATE_RECORD_ID - check for duplicate record IDs and return error if one is found. 
+ * DUPLICATE_RECORD_ID - check for duplicate record IDs and return error if one is found.
  *
  * ASSUME_MAX_SDR_RECORD_COUNT - If motherboard does not implement SDR
  * record reading properly, this workaround will allow code to not
@@ -188,7 +188,7 @@ int ipmi_sdr_cache_record_read (ipmi_sdr_ctx_t ctx,
                                 void *buf,
                                 unsigned int buflen);
 
-/* ipmi_sdr_cache_iterate 
+/* ipmi_sdr_cache_iterate
  * - iterate through all SDR records calling callback for each one.
  * - if callback returns < 0, that will break iteration and return
  *   value is returned here.

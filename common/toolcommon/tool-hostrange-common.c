@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -124,9 +124,9 @@ eliminate_nodes (char **hosts)
       rv = 0;
       goto cleanup;
     }
- 
+
   memset (hostbuf, '\0', FI_HOSTLIST_BUFLEN + 1);
- 
+
   if (fi_hostlist_ranged_string (hlnew, FI_HOSTLIST_BUFLEN, hostbuf) < 0)
     {
       fprintf (stderr,
@@ -242,7 +242,7 @@ pstdout_setup (char **hosts, struct common_cmd_args *common_args)
   if (*hosts && common_args->eliminate)
     {
       int hosts_count_new;
-      
+
       if ((hosts_count_new = eliminate_nodes (hosts)) < 0)
         goto cleanup;
 

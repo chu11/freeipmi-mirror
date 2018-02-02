@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -130,7 +130,7 @@ _get_user_access (ipmi_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  /* 
+  /*
    * IPMI Workaround (achu)
    *
    * Quanta S99Q/Dell FS12-TY
@@ -168,7 +168,7 @@ _get_user_access (ipmi_config_state_data_t *state_data,
                                  stderr,
                                  "ipmi_cmd_get_user_access: %s\n",
                                  ipmi_ctx_errormsg (state_data->ipmi_ctx));
-              
+
               continue;
             }
 
@@ -184,24 +184,24 @@ _get_user_access (ipmi_config_state_data_t *state_data,
            * Although not seen on the Get User Access command, we're going
            * to assume it's possible on some other motherboards.
            */
-          
+
           if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
               && (ipmi_check_completion_code (obj_cmd_rs,
                                               IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
             (*username_not_set_yet) = 1;
-          
+
           if (ipmi_errnum_is_non_fatal (state_data,
                                         obj_cmd_rs,
                                         &ret))
             rv = ret;
-          
+
           if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
               || state_data->prog_data->args->common_args.debug)
             pstdout_fprintf (state_data->pstate,
                              stderr,
                              "ipmi_cmd_get_user_access: %s\n",
                              ipmi_ctx_errormsg (state_data->ipmi_ctx));
-          
+
           goto cleanup;
         }
 
@@ -327,7 +327,7 @@ _set_user_access (ipmi_config_state_data_t *state_data,
       int lan_flag = 0;
 
       memset (keynametmp, '\0', IPMI_CONFIG_MAX_KEY_NAME_LEN + 1);
-              
+
       if (stristr (key_name, "Channel_"))
         channel_flag++;
 
@@ -345,7 +345,7 @@ _set_user_access (ipmi_config_state_data_t *state_data,
                   IPMI_CONFIG_MAX_KEY_NAME_LEN,
                   "%s_Session_Limit",
                   (lan_flag) ? "Lan" : "Serial");
-      
+
       if ((kvtmp = ipmi_config_find_keyvalue (section, keynametmp)))
         ua->session_limit = atoi (kvtmp->value_input);
     }
@@ -358,7 +358,7 @@ _set_user_access (ipmi_config_state_data_t *state_data,
                        stderr,
                        "Cannot find section '%s'\n",
                        section_name);
-      
+
       goto cleanup;
     }
 
@@ -386,7 +386,7 @@ _set_user_access (ipmi_config_state_data_t *state_data,
         {
           if ((kvtmp = ipmi_config_find_keyvalue (section, "Lan_Privilege_Limit")))
             ua->privilege_limit = get_privilege_limit_number (kvtmp->value_input);
-          
+
           if (!(ipmi_cmd_set_user_access (state_data->ipmi_ctx,
                                           channel_number,
                                           ua->user_ipmi_messaging,
@@ -450,7 +450,7 @@ username_checkout (ipmi_config_state_data_t *state_data,
   assert (state_data);
   assert (section_name);
   assert (kv);
-  
+
   userid = atoi (section_name + strlen ("User"));
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_user_name_rs)))
@@ -488,7 +488,7 @@ username_checkout (ipmi_config_state_data_t *state_data,
                                           IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1))
         {
           strcpy (username, IPMI_CONFIG_USERNAME_NOT_SET_YET_STR);
-          
+
           if (state_data->prog_data->args->common_args.debug)
             pstdout_fprintf (state_data->pstate,
                              stderr,
@@ -651,7 +651,7 @@ username_commit (ipmi_config_state_data_t *state_data,
                                fiid_obj_errormsg (obj_get_user_name_cmd_rs));
               goto cleanup;
             }
-          
+
           if (!strcmp(username, kv->value_input))
             goto out;
         }
@@ -798,7 +798,7 @@ password_checkout (ipmi_config_state_data_t *state_data,
   assert (state_data);
   assert (section_name);
   assert (kv);
-  
+
   if (state_data->prog_data->args->action == IPMI_CONFIG_ACTION_DIFF)
     {
       uint8_t userid;
@@ -945,7 +945,7 @@ password_commit (ipmi_config_state_data_t *state_data,
           /* now it has passed, reset to 0 just in case */
           state_data->enable_user_after_password[userid-1].enable_user_failed  = 0;
           pstdout_fprintf (state_data->pstate,
-                           stderr, 
+                           stderr,
                            "RETRY: Success on retry to commit `%s:%s'\n",
                            section_name,
                            state_data->enable_user_after_password[userid-1].kv->key->key_name);
@@ -971,7 +971,7 @@ password_validate (ipmi_config_state_data_t *state_data,
 
   if (strlen (value) > IPMI_2_0_MAX_PASSWORD_LENGTH)
     return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
-  
+
   if (strlen (value) > IPMI_1_5_MAX_PASSWORD_LENGTH)
     {
       uint8_t userid;
@@ -981,7 +981,7 @@ password_validate (ipmi_config_state_data_t *state_data,
       userid = atoi (section_name + strlen ("User"));
 
       /* if _check_bmc_user_password() fails, that means IPMI 2.0
-       * isn't supported, so this password is too long 
+       * isn't supported, so this password is too long
        */
       if ((ret = _check_bmc_user_password (state_data,
                                            userid,
@@ -1012,7 +1012,7 @@ password20_checkout (ipmi_config_state_data_t *state_data,
   assert (state_data);
   assert (section_name);
   assert (kv);
-  
+
   userid = atoi (section_name + strlen ("User"));
 
   /*
@@ -1148,7 +1148,7 @@ enable_user_checkout (ipmi_config_state_data_t *state_data,
   assert (state_data);
   assert (section_name);
   assert (kv);
-  
+
   if ((ret = _get_user_access (state_data,
                                section_name,
                                kv->key->key_name,
@@ -1225,7 +1225,7 @@ enable_user_commit (ipmi_config_state_data_t *state_data,
   else
     user_status = IPMI_PASSWORD_OPERATION_DISABLE_USER;
 
-  /* 
+  /*
    * IPMI Workaround (achu)
    *
    * Quanta S99Q/Dell FS12-TY
@@ -1267,7 +1267,7 @@ enable_user_commit (ipmi_config_state_data_t *state_data,
                                  stderr,
                                  "ipmi_cmd_set_user_password: %s\n",
                                  ipmi_ctx_errormsg (state_data->ipmi_ctx));
-              
+
               continue;
             }
 
@@ -1283,7 +1283,7 @@ enable_user_commit (ipmi_config_state_data_t *state_data,
            * some random password length (even though the password will be
            * ignored)
            */
-          
+
           if ((ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
                && (ipmi_check_completion_code (obj_cmd_rs,
                                                IPMI_COMP_CODE_REQUEST_DATA_LENGTH_INVALID) == 1))
@@ -1295,7 +1295,7 @@ enable_user_commit (ipmi_config_state_data_t *state_data,
                 pstdout_fprintf (state_data->pstate,
                                  stderr,
                                  "ipmi_cmd_set_user_password: attempting workaround\n");
-              
+
               if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_set_user_password_rq)))
                 {
                   pstdout_fprintf (state_data->pstate,
@@ -1304,7 +1304,7 @@ enable_user_commit (ipmi_config_state_data_t *state_data,
                                    strerror (errno));
                   goto cleanup;
                 }
-              
+
               if (fill_cmd_set_user_password (userid,
                                               IPMI_PASSWORD_SIZE_16_BYTES,
                                               user_status,
@@ -1319,7 +1319,7 @@ enable_user_commit (ipmi_config_state_data_t *state_data,
 
                   goto cleanup;
                 }
-              
+
               /* Force the password to be filled in with a length */
               if (fiid_obj_set_data (obj_cmd_rq,
                                      "password",
@@ -1333,7 +1333,7 @@ enable_user_commit (ipmi_config_state_data_t *state_data,
 
                   goto cleanup;
                 }
-              
+
               if (ipmi_cmd (state_data->ipmi_ctx,
                             IPMI_BMC_IPMB_LUN_BMC,
                             IPMI_NET_FN_APP_RQ,
@@ -1344,7 +1344,7 @@ enable_user_commit (ipmi_config_state_data_t *state_data,
                                                 obj_cmd_rs,
                                                 &ret))
                     rv = ret;
-                  
+
                   if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
                       || state_data->prog_data->args->common_args.debug)
                     pstdout_fprintf (state_data->pstate,
@@ -1361,7 +1361,7 @@ enable_user_commit (ipmi_config_state_data_t *state_data,
                                                 obj_cmd_rs,
                                                 &ret))
                     rv = ret;
-                  
+
                   if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
                       || state_data->prog_data->args->common_args.debug)
                     pstdout_fprintf (state_data->pstate,
@@ -1392,12 +1392,12 @@ enable_user_commit (ipmi_config_state_data_t *state_data,
                   state_data->enable_user_after_password[userid-1].enable_user_failed = 1;
                   state_data->enable_user_after_password[userid-1].kv = (struct ipmi_config_keyvalue *)kv;
                 }
-              
+
               if (ipmi_errnum_is_non_fatal (state_data,
                                             obj_cmd_rs,
                                             &ret))
                 rv = ret;
-              
+
               goto cleanup;
             }
           else
@@ -1450,7 +1450,7 @@ lan_enable_ipmi_messaging_checkout (ipmi_config_state_data_t *state_data,
   assert (state_data);
   assert (section_name);
   assert (kv);
-  
+
   if ((ret = _get_user_access (state_data,
                                section_name,
                                kv->key->key_name,
@@ -1489,7 +1489,7 @@ lan_enable_ipmi_messaging_commit (ipmi_config_state_data_t *state_data,
   assert (state_data);
   assert (section_name);
   assert (kv);
-  
+
   if ((ret = _get_user_access (state_data,
                                section_name,
                                kv->key->key_name,
@@ -1518,7 +1518,7 @@ lan_enable_link_auth_checkout (ipmi_config_state_data_t *state_data,
   assert (state_data);
   assert (section_name);
   assert (kv);
-  
+
   if ((ret = _get_user_access (state_data,
                                section_name,
                                kv->key->key_name,
@@ -1557,7 +1557,7 @@ lan_enable_link_auth_commit (ipmi_config_state_data_t *state_data,
   assert (state_data);
   assert (section_name);
   assert (kv);
-  
+
   /* ignore username_not_set_yet return value, if username_not_set_yet
    * conditions arise, we should get an error appriately (b/c the user
    * needs to configure the username first)
@@ -1590,7 +1590,7 @@ lan_enable_restricted_to_callback_checkout (ipmi_config_state_data_t *state_data
   assert (state_data);
   assert (section_name);
   assert (kv);
-  
+
   if ((ret = _get_user_access (state_data,
                                section_name,
                                kv->key->key_name,
@@ -1629,7 +1629,7 @@ lan_enable_restricted_to_callback_commit (ipmi_config_state_data_t *state_data,
   assert (state_data);
   assert (section_name);
   assert (kv);
-  
+
   /* ignore username_not_set_yet return value, if username_not_set_yet
    * conditions arise, we should get an error appriately (b/c the user
    * needs to configure the username first)
@@ -1662,7 +1662,7 @@ lan_privilege_limit_checkout (ipmi_config_state_data_t *state_data,
   assert (state_data);
   assert (section_name);
   assert (kv);
-  
+
   if ((ret = _get_user_access (state_data,
                                section_name,
                                kv->key->key_name,
@@ -1701,7 +1701,7 @@ lan_privilege_limit_commit (ipmi_config_state_data_t *state_data,
   assert (state_data);
   assert (section_name);
   assert (kv);
-  
+
   /* ignore username_not_set_yet return value, if username_not_set_yet
    * conditions arise, we should get an error appriately (b/c the user
    * needs to configure the username first)
@@ -1730,7 +1730,7 @@ lan_session_limit_checkout (ipmi_config_state_data_t *state_data,
   assert (state_data);
   assert (section_name);
   assert (kv);
-  
+
   /* Special case: There is no way to check out this value */
   if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
@@ -1752,7 +1752,7 @@ lan_session_limit_commit (ipmi_config_state_data_t *state_data,
   assert (state_data);
   assert (section_name);
   assert (kv);
-  
+
   /* ignore username_not_set_yet return value, if username_not_set_yet
    * conditions arise, we should get an error appriately (b/c the user
    * needs to configure the username first)
@@ -1787,7 +1787,7 @@ sol_payload_access_checkout (ipmi_config_state_data_t *state_data,
   assert (state_data);
   assert (section_name);
   assert (kv);
-  
+
   userid = atoi (section_name + strlen ("User"));
 
   if ((ret = _channel_info (state_data,
@@ -1833,7 +1833,7 @@ sol_payload_access_checkout (ipmi_config_state_data_t *state_data,
             return (IPMI_CONFIG_ERR_FATAL_ERROR);
           goto out;
         }
-      
+
       if (ipmi_errnum_is_non_fatal (state_data,
                                     obj_cmd_rs,
                                     &ret))
@@ -2035,7 +2035,7 @@ serial_enable_link_auth_checkout (ipmi_config_state_data_t *state_data,
   assert (state_data);
   assert (section_name);
   assert (kv);
-  
+
   if ((ret = _get_user_access (state_data,
                                section_name,
                                kv->key->key_name,
@@ -2107,7 +2107,7 @@ serial_enable_restricted_to_callback_checkout (ipmi_config_state_data_t *state_d
   assert (state_data);
   assert (section_name);
   assert (kv);
-  
+
   if ((ret = _get_user_access (state_data,
                                section_name,
                                kv->key->key_name,
@@ -2179,7 +2179,7 @@ serial_privilege_limit_checkout (ipmi_config_state_data_t *state_data,
   assert (state_data);
   assert (section_name);
   assert (kv);
-  
+
   if ((ret = _get_user_access (state_data,
                                section_name,
                                kv->key->key_name,
@@ -2247,7 +2247,7 @@ serial_session_limit_checkout (ipmi_config_state_data_t *state_data,
   assert (state_data);
   assert (section_name);
   assert (kv);
-  
+
   /* Special case: There is no way to check out this value */
   if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
@@ -2484,7 +2484,7 @@ ipmi_config_core_user_section_get (ipmi_config_state_data_t *state_data, unsigne
                                                      state_data->lan_channel_numbers,
                                                      state_data->lan_channel_numbers_count) < 0)
         goto cleanup;
-      
+
       /* achu: For backwards compatability to ipmi-config in 0.2.0 */
       if (ipmi_config_section_multi_channel_add_key (state_data,
                                                      section,
@@ -2511,7 +2511,7 @@ ipmi_config_core_user_section_get (ipmi_config_state_data_t *state_data, unsigne
                                                      state_data->lan_channel_numbers,
                                                      state_data->lan_channel_numbers_count) < 0)
         goto cleanup;
-      
+
       if (ipmi_config_section_multi_channel_add_key (state_data,
                                                      section,
                                                      "Lan_Session_Limit",
@@ -2524,7 +2524,7 @@ ipmi_config_core_user_section_get (ipmi_config_state_data_t *state_data, unsigne
                                                      state_data->lan_channel_numbers,
                                                      state_data->lan_channel_numbers_count) < 0)
         goto cleanup;
-      
+
       if (ipmi_config_section_multi_channel_add_key (state_data,
                                                      section,
                                                      "SOL_Payload_Access",
@@ -2583,7 +2583,7 @@ ipmi_config_core_user_section_get (ipmi_config_state_data_t *state_data, unsigne
                                                      state_data->serial_channel_numbers,
                                                      state_data->serial_channel_numbers_count) < 0)
         goto cleanup;
-      
+
       if (ipmi_config_section_multi_channel_add_key (state_data,
                                                      section,
                                                      "Serial_Enable_Restricted_to_Callback",
@@ -2623,7 +2623,7 @@ ipmi_config_core_user_section_get (ipmi_config_state_data_t *state_data, unsigne
                                                      state_data->serial_channel_numbers,
                                                      state_data->serial_channel_numbers_count) < 0)
         goto cleanup;
-      
+
       if (ipmi_config_section_multi_channel_add_key (state_data,
                                                      section,
                                                      "Serial_Session_Limit",

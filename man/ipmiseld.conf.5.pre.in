@@ -5,7 +5,7 @@
 .\"  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
 .\"  Written by Albert Chu <chu11@llnl.gov>
 .\"  LLNL-CODE-559172
-.\"  
+.\"
 .\"  This file is part of Ipmiseld, an IPMI SEL syslog logging daemon.
 .\"  For details, see http://www.llnl.gov/linux/.
 .\"
@@ -13,12 +13,12 @@
 .\"  the terms of the GNU General Public License as published by the Free
 .\"  Software Foundation; either version 3 of the License, or (at your option)
 .\"  any later version.
-.\"  
-.\"  Ipmiseld is distributed in the hope that it will be useful, but WITHOUT 
-.\"  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
-.\"  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License 
+.\"
+.\"  Ipmiseld is distributed in the hope that it will be useful, but WITHOUT
+.\"  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+.\"  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 .\"  for more details.
-.\"  
+.\"
 .\"  You should have received a copy of the GNU General Public License along
 .\"  with Ipmiseld.  If not, see <http://www.gnu.org/licenses/>.
 .\"#############################################################################
@@ -26,13 +26,13 @@
 .SH "NAME"
 ipmiseld.conf \- ipmiseld configuration file
 .SH "DESCRIPTION"
-The 
+The
 .B ipmiseld
-configuration file configures the 
+configuration file configures the
 .B ipmiseld
 daemon.
 .LP
-The default configuration file loaded is @IPMISELD_CONFIG_FILE_DEFAULT@. 
+The default configuration file loaded is @IPMISELD_CONFIG_FILE_DEFAULT@.
 .LP
 The configuration options that can be specified in the configuration
 file are listed below.  Each configuration option must be listed on a
@@ -49,7 +49,7 @@ limit access to this file.
 .SH "IPMISELD CONFIGURATION OPTIONS"
 .TP
 \fBdriver\-type\fR \fIIPMIDRIVER\fR
-Specify the driver type to use.  
+Specify the driver type to use.
 .TP
 \fBdisable\-auto\-probe\fR \fIENABLE|DISABLE\fR
 Specify if IPMI devices should be probed for settings.
@@ -185,10 +185,10 @@ Specify the log priority to use.
 Specify the cache directory to use.
 .TP
 \fBignore\-sdr\fR \fIDISABLE\fR
-Specify if the SDR should be ignored. 
+Specify if the SDR should be ignored.
 .TP
 \fBre\-download\-sdr\fR \fIDISABLE\fR
-Specify if the SDR should be re-downloaded on start. 
+Specify if the SDR should be re-downloaded on start.
 .TP
 \fBclear\-sel\fR \fIDISABLE\fR
 Specify if the SEL should be cleared on start.

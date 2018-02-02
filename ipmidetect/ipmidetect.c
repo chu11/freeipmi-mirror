@@ -193,7 +193,7 @@ _get_nodes (char *buf, int buflen, int which, int *count)
 
   assert (buf && buflen > 0 && count);
   assert (which == IPMIDETECT_DETECTED_NODES || which == IPMIDETECT_UNDETECTED_NODES);
-  
+
   if (fi_hostlist_count (cmd_args.inputted_nodes) > 0)
     _get_input_nodes (buf, buflen, which);
   else

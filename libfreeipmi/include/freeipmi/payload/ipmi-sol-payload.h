@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_SOL_PAYLOAD_H
@@ -93,19 +93,19 @@ extern "C" {
 #define IPMI_SOL_CHARACTER_TRANSFER_UNAVAILABLE 0x1
 #define IPMI_SOL_CHARACTER_TRANSFER_AVAILABLE   0x0
 
-/* 
+/*
  * fill* functions return 0 on success, -1 on error.
  *
  * obj_sol_payload must be for the fill function's respective fiid
  * template request.
  *
- * see freeipmi/templates/ for template definitions 
+ * see freeipmi/templates/ for template definitions
  */
 
 extern fiid_template_t tmpl_sol_payload_data;
 extern fiid_template_t tmpl_sol_payload_data_remote_console_to_bmc;
 extern fiid_template_t tmpl_sol_payload_data_bmc_to_remote_console;
-  
+
 int fill_sol_payload_data (uint8_t packet_sequence_number,
                            uint8_t packet_ack_nack_sequence_number,
                            uint8_t accepted_character_count,

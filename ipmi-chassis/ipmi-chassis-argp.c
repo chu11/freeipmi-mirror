@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2007-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -82,7 +82,7 @@ static struct argp_option cmdline_options[] =
       "Control the chassis.", 42},
     { "chassis-identify", CHASSIS_IDENTIFY_KEY, "IDENTIFY", 0,
       "Set chassis Identification.", 43},
-    /* All chassis "set" operations are legacy, see ipmi-config for chassis configuration */ 
+    /* All chassis "set" operations are legacy, see ipmi-config for chassis configuration */
     { "set-power-restore-policy", SET_POWER_RESTORE_POLICY_KEY, "POLICY", OPTION_HIDDEN,
       "Set power restore policy.", 44},
     { "set-power-cycle-interval", SET_POWER_CYCLE_INTERVAL_KEY, "SECONDS", OPTION_HIDDEN,
@@ -132,7 +132,7 @@ static struct argp cmdline_config_file_argp = { cmdline_options,
 
 static error_t boot_flag_parse (int key, char *arg, struct argp_state *state);
 
-/* All chassis "set" operations are legacy, see ipmi-config for chassis configuration */ 
+/* All chassis "set" operations are legacy, see ipmi-config for chassis configuration */
 static error_t
 boot_flag_parse (int key, char *arg, struct argp_state *state)
 {
@@ -140,7 +140,7 @@ boot_flag_parse (int key, char *arg, struct argp_state *state)
   uint8_t value = 0;
 
   assert (state);
-  
+
   cmd_args = state->input;
 
   switch (key)
@@ -331,7 +331,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   int tmp;
 
   assert (state);
-  
+
   cmd_args = state->input;
 
   switch (key)
@@ -466,7 +466,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
 
     default:
-      /* All chassis "set" operations are legacy, see ipmi-config for chassis configuration */ 
+      /* All chassis "set" operations are legacy, see ipmi-config for chassis configuration */
       ret = boot_flag_parse (key, arg, state);
       if (ret == ARGP_ERR_UNKNOWN)
         ret = common_parse_opt (key, arg, &(cmd_args->common_args));

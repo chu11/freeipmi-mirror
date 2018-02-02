@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -233,14 +233,14 @@ ipmi_cmd_set_pef_configuration_parameters_set_in_progress (ipmi_ctx_t ctx,
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
-  
+
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
                                  tmpl_cmd_set_pef_configuration_parameters_rs) < 0)
     {
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
-  
+
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_set_pef_configuration_parameters_set_in_progress_rq)))
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
@@ -1389,7 +1389,7 @@ ipmi_cmd_alert_immediate (ipmi_ctx_t ctx,
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
-  
+
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
                                  tmpl_cmd_alert_immediate_rs) < 0)
     {

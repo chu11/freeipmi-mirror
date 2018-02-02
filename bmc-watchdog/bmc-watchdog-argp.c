@@ -301,7 +301,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   int tmp;
 
   assert (state);
-  
+
   cmd_args = state->input;
 
   switch (key)

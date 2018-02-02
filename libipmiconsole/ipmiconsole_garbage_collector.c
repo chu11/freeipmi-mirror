@@ -86,18 +86,18 @@ ipmiconsole_garbage_collector (void *arg)
   /* What do we do if a mutex lock/unlock fails here?  Ignore for
    * now.
    */
-  
+
   if ((perr = pthread_mutex_lock (&garbage_collector_active_mutex)))
     IPMICONSOLE_DEBUG (("pthread_mutex_lock: %s", strerror (perr)));
-  
+
   garbage_collector_active++;
-  
+
   if ((perr = pthread_cond_signal(&garbage_collector_active_cond)))
     IPMICONSOLE_DEBUG (("pthread_cond_signal: %s", strerror (perr)));
 
   if ((perr = pthread_mutex_unlock (&garbage_collector_active_mutex)) != 0)
     IPMICONSOLE_DEBUG (("pthread_mutex_unlock: %s", strerror (perr)));
- 
+
   while (1)
     {
       ListIterator itr = NULL;
@@ -160,7 +160,7 @@ ipmiconsole_garbage_collector (void *arg)
 
           assert (c->signal.ctx_state == IPMICONSOLE_CTX_STATE_GARBAGE_COLLECTION_WAIT
                   || c->signal.ctx_state == IPMICONSOLE_CTX_STATE_GARBAGE_COLLECTION_USER_DESTROYED);
-                  
+
           if (c->signal.ctx_state == IPMICONSOLE_CTX_STATE_GARBAGE_COLLECTION_USER_DESTROYED)
             {
               /* Must unlock here, b/c will be grabbed in delete */

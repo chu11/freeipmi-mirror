@@ -1,6 +1,6 @@
 FreeIPMI Bugs, Issues, and Workarounds
 
-by 
+by
 
 Albert Chu
 chu11@llnl.gov
@@ -122,7 +122,7 @@ LAN Authentication Issue #5: [COMPLIANCE]
   Resolution: Workaround option added to inform software to ignore
   flags in the Get Authentication Capabilities response.
 
-LAN Authentication Issue #6: [COMPLIANCE] 
+LAN Authentication Issue #6: [COMPLIANCE]
 
   The IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL flag does not work in the
   Open Session phase of IPMI 2.0 connections.  The Open Session
@@ -182,7 +182,7 @@ LAN Authentication Issue #10: [COMPLIANCE]
 
   Resolution: Workaround option added to inform software to disable
   the field.
-  
+
 LAN Authentication Issue #11: [COMPLIANCE]
 
   Cipher suite IDs are are incorrectly attached to specific privilege
@@ -344,7 +344,7 @@ LAN Authentication Issue #23: [COMPLIANCE]
   has been stored as a 20-byte password cannot be used for
   establishing an IPMI v1.5 session."
 
-  Seen on: Supermicro X8DTG-D 
+  Seen on: Supermicro X8DTG-D
 
 LAN Authentication Issue #24: [COMPLIANCE]
 
@@ -416,7 +416,7 @@ LAN Session Issue #2: [COMPLIANCE]
 
   Resolution: Workaround option added to inform software to accept
   empty session IDs.
-  
+
   Notes: Problem is reported to be fixed in newer firmware for Tyan
   S2882 with m3289 BMC.
 
@@ -436,7 +436,7 @@ LAN Session Issue #3: [COMPLIANCE]
 LAN Session Issue #4: [COMPLIANCE]
 
   The remote BMC will advertise that Per Message Authentication is
-  disabled, but actually require it for the protocol. 
+  disabled, but actually require it for the protocol.
 
   Seen on: IBM eServer 325
 
@@ -676,8 +676,8 @@ Serial-Over-LAN Issue #6: [COMPLIANCE]
   5441/Dell Xanadu II, Inventec 5442/Dell Xanadu III, Dell Poweredge
   R610, Dell Poweredge R710, Quanta S99Q/Dell FS12-TY, Supermicro
   X8DTG, Supermicro X8DTU, Intel S2600JF/Appro 512X, Quanta
-  QSSC-S4R/Appro GB812X-CN, Wistron / Dell Poweredge C6220. 
- 
+  QSSC-S4R/Appro GB812X-CN, Wistron / Dell Poweredge C6220.
+
   Resolution: None
 
   Notes: Confirmed fixed in newer firmware for Supermicro H8QME with
@@ -780,7 +780,7 @@ Serial-Over-LAN Issue #14: [COMPLIANCE]
   Seen on: MSI MS-91D2
 
   Resolution: None
- 
+
 Serial-Over-LAN Issue #15: [COMPLIANCE]
 
   The Activate / Deactivate Payload commands appear to require Admin
@@ -813,7 +813,7 @@ Serial-Over-LAN Issue #17: [COMPLIANCE] or [IMPLEMENTATION]
   (0x80) completion code.  This could lead to a loop that continually
   believes a SOL session is activated when calling Activate Payload,
   and deactivated when calling Deactivate Payload.
-  
+
   Seen on: Dell Poweredge M605, Dell Poweredge M610, Dell Poweredge
   M915
 
@@ -845,7 +845,7 @@ Serial-Over-LAN Issue #19: [COMPLIANCE]
   payload instance #Y.
 
   Seen on: Supermicro X8DTG-D, Inventec 5442/Dell Xanadu III
-  Resolution: None 
+  Resolution: None
 
 Serial-Over-LAN Issue #20: [COMPLIANCE]
 
@@ -1024,7 +1024,7 @@ BMC/IPMI Configuration Issue #13: [COMPLIANCE]
 
   Seen on: Inventec 5441/Dell Xanadu II, Intel S5500WBV/Penguin Relion
   700, Supermicro X8DTH
-  
+
   Resolution: None
 
 BMC/IPMI Configuration Issue #14: [COMPLIANCE]
@@ -1135,7 +1135,7 @@ BMC/IPMI Configuration Issue #23: [COMPLIANCE]
   MAC address can be configured.
 
   Seen on: Quanta S99Q/Dell FS12-TY
- 
+
   Resolution: None
 
 BMC/IPMI Configuration Issue #24: [COMPLIANCE]
@@ -1147,12 +1147,12 @@ BMC/IPMI Configuration Issue #24: [COMPLIANCE]
   Seen on: Quanta S99Q/Dell FS12-TY
 
   Resolution: None
- 
+
 BMC/IPMI Configuration Issue #25: [IMPLEMENTATION]
 
   A default username cannot be changed.
 
-  Seen on: Supermicro X8DTG, Supermicro X8DTU, Intel S5500WBV/Penguin Relion 700 
+  Seen on: Supermicro X8DTG, Supermicro X8DTU, Intel S5500WBV/Penguin Relion 700
 
   Resolution: None
 
@@ -1214,7 +1214,7 @@ BMC/IPMI Configuration Issue #30: [COMPLIANCE]
 BMC/IPMI Configuration Issue #31: [IMPLEMENTATION]
 
   Some new IPMI configuration are not accepted by the BMC until after
-  a system reboot is done.  
+  a system reboot is done.
 
   Seen on: Dell Poweredge R610, Dell Poweredge R710, Inventec
   5441/Dell Xanadu II
@@ -1229,7 +1229,7 @@ BMC/IPMI Configuration Issue #32: [COMPLIANCE]
   Motherboard errors out with unspecified password when trying to set
   a new user password (completion code 0x8F).
 
-  Seen on: Wistron / Dell Poweredge C6220 
+  Seen on: Wistron / Dell Poweredge C6220
 
   Resolution: None
 
@@ -1244,7 +1244,7 @@ BMC/IPMI Configuration Issue #33: [COMPLIANCE]
 
   Seen on: HP DL380 G5
 
-  Resolution: None 
+  Resolution: None
 
 BMC/IPMI Configuration Issue #34: [COMPLIANCE]
 
@@ -1261,7 +1261,7 @@ BMC/IPMI Configuration Issue #35: [COMPLIANCE]
 
   User #1 cannot be enabled/disabled.  It is permanently enabled.
 
-  Seen on: Supermicro X10DDW-i 
+  Seen on: Supermicro X10DDW-i
 
   Resolution: None
 
@@ -1336,7 +1336,7 @@ Field Replaceable Unit Issue #2: [IMPLEMENTATION]
 
   Seen on: Quanta S99Q/Dell FS12-TY
 
-  Resolution: None 
+  Resolution: None
 
 ----------------------------------------------------------------------
 
@@ -1755,7 +1755,7 @@ DCMI Issue #2: [INTERPRETATION]
   Conformance test suite implements the latter.  In addition to this,
   with the latter interpretation, it need not be an indication of an
   error, but rather a flag.  So the rest of the packet can be
-  completely full of legitimate data.  
+  completely full of legitimate data.
 
   Seen on: Various, this is a general issue.
 
@@ -1785,7 +1785,7 @@ DCMI Issue #3: [INTERPRETATION]
   write, where <= the bytes passed in may be written.  Or is it an
   indication of the total length of bytes stored?  The management
   identifier string is stated to be NUL terminated, but the asset tag
-  is not stated with this requirement.  
+  is not stated with this requirement.
 
   Seen on: Various, this is a general issue.
 

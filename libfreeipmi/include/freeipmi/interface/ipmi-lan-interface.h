@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_LAN_INTERFACE_H
@@ -31,7 +31,7 @@ extern "C" {
 
 #define IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX    0x3F /* 111111b */
 
-/* 
+/*
  * fill* functions return 0 on success, -1 on error.
  *
  * object must be for the fill function's respective fiid
@@ -40,7 +40,7 @@ extern "C" {
  * assemble/unassemble functions must be passed fiid objects of the
  * respective expected header/trailer templates.
  *
- * see freeipmi/templates/ for template definitions 
+ * see freeipmi/templates/ for template definitions
  */
 
 extern fiid_template_t tmpl_lan_session_hdr;

@@ -6,7 +6,7 @@
 .\"  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
 .\"  Written by Albert Chu <chu11@llnl.gov>
 .\"  UCRL-CODE-221226
-.\"  
+.\"
 .\"  This file is part of Ipmiconsole, a set of IPMI 2.0 SOL librarie
 .\"  and utilities.  For details, see http://www.llnl.gov/linux/.
 .\"
@@ -14,12 +14,12 @@
 .\"  the terms of the GNU General Public License as published by the Free
 .\"  Software Foundation; either version 3 of the License, or (at your option)
 .\"  any later version.
-.\"  
-.\"  Ipmiconsole is distributed in the hope that it will be useful, but WITHOUT 
-.\"  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
-.\"  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License 
+.\"
+.\"  Ipmiconsole is distributed in the hope that it will be useful, but WITHOUT
+.\"  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+.\"  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 .\"  for more details.
-.\"  
+.\"
 .\"  You should have received a copy of the GNU General Public License along
 .\"  with Ipmiconsole.  If not, see <http://www.gnu.org/licenses/>.
 .\"############################################################################
@@ -34,12 +34,12 @@ ipmiconsole \- IPMI console utility
 is a Serial-over-LAN (SOL) console utility.  It can be used to establish
 console sessions to remote machines using the IPMI 2.0 SOL protocol.
 
-.B Ipmiconsole 
+.B Ipmiconsole
 communicates with a remote machine's Baseboard Management Controller
 (BMC) to establish a console session.  Before any SOL communication
 can take place, the remote machine's BMC must be configured properly.
 The FreeIPMI tool
-.B ipmi-config(8) 
+.B ipmi-config(8)
 may be used to do this configuration.
 .LP
 Often (although not always), console redirection must be also be
@@ -119,7 +119,7 @@ is only detected once there is user interaction.  By sending the
 occasional NUL character, the underlying loss of serial data transfer
 can be detected far more quickly.  There is some risk with this option,
 as the NUL character byte may affect the remote system depending on
-what data it may or may not be expecting. 
+what data it may or may not be expecting.
 .TP
 \fB\-\-serial\-keepalive\-empty\fR
 This option is identical to \fB\-\-serial\-keepalive\fR except that
@@ -154,7 +154,7 @@ Don't enter terminal raw mode.
 .LP
 .SH "ESCAPE CHARACTERS"
 The following escape sequences are supported.  The default supported
-escape character is '&', but can be changed with the 
+escape character is '&', but can be changed with the
 \fB\-e\fR
 option.
 .TP
@@ -191,7 +191,7 @@ configured on the remote BMC.
 "SOL in use" - SOL is already in use on the remote BMC.  If you do not
 specify the
 .I --dont-steal
-option, 
+option,
 .B ipmiconsole
 will attempt to steal the SOL session away from the other session.  Not
 all BMCs support the ability to steal away a SOL session.
@@ -215,14 +215,14 @@ below for possible workarounds.  If additional vendor workarounds are
 required, please contact the authors.
 .LP
 "excess retransmissions sent" - An excessive number of retransmissions
-of SOL packets has occurred and 
+of SOL packets has occurred and
 .B ipmiconsole
 has given up.  This may be due to network issues or SOL issues.  Some
 of the same issues involved with "connection timeout" or "session
 timeout" errors may be involved.  Please try to reconnect.
 .LP
 "excess errors received" - An excessive number of SOL packet errors
-has occurred and 
+has occurred and
 .B ipmiconsole
 has given up.  This may be due to network issues or SOL issues.
 Please try to reconnect.
@@ -289,8 +289,8 @@ timeout errors.  Please see OEM notes for information on modifying
 this parameter if you wish for sessions to stay active longer.
 .SH "SPECIFIC HARDWARE NOTES"
 Intel SR1520ML/X38ML: After a reboot, the SOL session appears to
-"disconnect" from the motherboard but stay alive.  
-Character data input from the 
+"disconnect" from the motherboard but stay alive.
+Character data input from the
 .B ipmiconsole
 client is accepted by the remote machine, but no character data or
 console data is ever sent back from the remote machine.  The SOL
@@ -307,7 +307,7 @@ Establish a console sesssion with a remote host.
 
 This version of ipmiconsole was compiled with debugging.  When compiled
 with debugging,
-.B ipmiconsole 
+.B ipmiconsole
 is insecure.  The following were intentionally
 left in
 .B ipmiconsole

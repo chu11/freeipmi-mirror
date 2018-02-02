@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -324,7 +324,7 @@ _fiid_template_field_start_end (fiid_template_t tmpl,
               errno = EINVAL;
               return (-1);
             }
-          
+
           _end = _start + tmpl[i].max_field_len;
 
           /* check for integer overflow */
@@ -378,7 +378,7 @@ _fiid_template_field_start (fiid_template_t tmpl,
       errno = EINVAL;
       return (-1);
     }
-  
+
   return (start);
 }
 
@@ -536,7 +536,7 @@ _fiid_template_field_len (fiid_template_t tmpl,
   assert (field);
 
   for (i = 0; tmpl[i].max_field_len; i++)
-    {     
+    {
       if (!strcmp (tmpl[i].key, field))
         {
           if (tmpl[i].max_field_len > INT_MAX)
@@ -545,7 +545,7 @@ _fiid_template_field_len (fiid_template_t tmpl,
               errno = EINVAL;
               return (-1);
             }
-          
+
           return (tmpl[i].max_field_len);
         }
     }
@@ -813,7 +813,7 @@ _fiid_obj_field_start_end (fiid_obj_t obj,
               obj->errnum = FIID_ERR_INTERNAL_ERROR;
               return (-1);
             }
-          
+
           *start = obj->field_data[i].start;
           *end = obj->field_data[i].end;
           return (obj->field_data[i].max_field_len);
@@ -865,10 +865,10 @@ _fiid_obj_field_len (fiid_obj_t obj, const char *field)
   assert (obj);
   assert (obj->magic == FIID_OBJ_MAGIC);
   assert (field);
-  
+
   if ((ffdptr = hash_find (obj->lookup, field)))
     return (ffdptr->max_field_len);
-  
+
   for (i = 0; obj->field_data[i].max_field_len; i++)
     {
       if (!strcmp (obj->field_data[i].key, field))
@@ -880,7 +880,7 @@ _fiid_obj_field_len (fiid_obj_t obj, const char *field)
               obj->errnum = FIID_ERR_INTERNAL_ERROR;
               return (-1);
             }
-          
+
           return (obj->field_data[i].max_field_len);
         }
     }
@@ -969,7 +969,7 @@ fiid_obj_create (fiid_template_t tmpl)
       goto cleanup;
     }
   memset (obj->field_data, '\0', obj->field_data_len * sizeof (struct fiid_field_data));
-  
+
   if (!(obj->lookup = hash_create (obj->field_data_len,
                                    (hash_key_f)hash_key_string,
                                    (hash_cmp_f)strcmp,
@@ -978,7 +978,7 @@ fiid_obj_create (fiid_template_t tmpl)
       errno = ENOMEM;
       goto cleanup;
     }
-  
+
   for (i = 0; i < obj->field_data_len; i++)
     {
 #ifndef NDEBUG
@@ -1095,7 +1095,7 @@ fiid_obj_dup (fiid_obj_t src_obj)
       src_obj->errnum = FIID_ERR_OUT_OF_MEMORY;
       goto cleanup;
     }
-  
+
   src_obj->errnum = FIID_ERR_SUCCESS;
   dest_obj->errnum = FIID_ERR_SUCCESS;
   return (dest_obj);
@@ -1193,7 +1193,7 @@ _fiid_obj_packet_valid (fiid_obj_t obj, int makes_packet_sufficient_checks)
             {
               if (!set_field_len)
                 return (0);
-              
+
               if (length_flag == FIID_FIELD_LENGTH_FIXED && max_field_len != set_field_len)
                 return (0);
             }
@@ -1205,11 +1205,11 @@ _fiid_obj_packet_valid (fiid_obj_t obj, int makes_packet_sufficient_checks)
               obj->errnum = FIID_ERR_REQUIRED_FIELD_MISSING;
               return (0);
             }
-          
+
           if ((length_flag == FIID_FIELD_LENGTH_FIXED && max_field_len != set_field_len)
               && (required_flag == FIID_FIELD_REQUIRED
                   || (required_flag == FIID_FIELD_OPTIONAL && set_field_len)))
-            
+
             {
               obj->errnum = FIID_ERR_FIXED_LENGTH_FIELD_INVALID;
               return (0);
@@ -1335,7 +1335,7 @@ fiid_obj_packet_sufficient (fiid_obj_t obj)
 
       if (_fiid_obj_packet_valid (obj, 1) == 1)
         return (1);
-      
+
       obj->errnum = save_errnum;
     }
   return (ret);
@@ -1487,7 +1487,7 @@ _fiid_obj_lookup_field_index (fiid_obj_t obj, const char *field, unsigned int *i
       (*index) = ffdptr->index;
       return (0);
     }
-  
+
   for (i = 0; obj->field_data[i].max_field_len; i++)
     {
       if (!strcmp (obj->field_data[i].key, field))

@@ -6,7 +6,7 @@
 	* src/ipmi-kcs-interfa.ce (ipmi_kcs_write,
 	ipmi_kcs_write_interruptible): Fixed return value bug.  Unlock
 	semaphore if a EBUSY failure occurs.
-	
+
 2004-04-30  A Balamurugan  <bala.a@californiadigital.com>
 
 	* src/ipmi-lan-param-spec.h:  new file.
@@ -31,7 +31,7 @@
 2004-04-27  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi.spec.in: Fixed packaging issues.
-	
+
 2004-04-22  Anand Babu  <ab@gnu.org.in>
 
 	CVS tagged as release-0_1_0_alpha5_qa3-tag
@@ -45,15 +45,15 @@
 2004-04-15  Anand Babu  <ab@gnu.org.in>
 
 	CVS tagged as release-0_1_0_alpha5_qa2-tag
-	
+
 
 2004-04-10  Anand Babu  <ab@gnu.org.in>
 
-	* configure.ac: Mysteriously --enable-trace code dissappeared. 
+	* configure.ac: Mysteriously --enable-trace code dissappeared.
 	Added again.
 
 	* src/ipmi-error.h: ERR macros - check for IPMI_TRACE definition.
-	
+
 
 2004-04-06  Albert Chu  <chu11@llnl.gov>
 
@@ -70,14 +70,14 @@
 
 	* src/ipmi-chassis-cmds.c (ipmi_set_power_restore_policy,
 	ipmi_get_chassis_status): Updated with function name changes.
-	
+
 2004-04-05  Anand Babu  <ab@gnu.org.in>
 
 	* src/ipmi-error.h: Pass facility argument via LOG_FAC macro to
 	LOG_MAKEPRI.
 
 	* src/xmalloc.c: Like wise.
-	
+
 
 2004-04-05  Albert Chu  <chu11@llnl.gov>
 
@@ -85,14 +85,14 @@
 	syslog parameter bug.
 
 	* src/ipmi-utils.c (ipmi_comp_test): Fixed syslog parameter bug.
-	
+
 2004-04-05  Anand Babu  <ab@gnu.org.in>
 
 	* configure.ac: added --enable-trace option.
 
 	* src/ipmi-error.h (ERR): display error info only when IPMI_TRACE
 	is on.
-	
+
 
 2004-04-05  Anand Babu  <ab@gnu.org.in>
 
@@ -101,7 +101,7 @@
 	* TODO: garbaged done tasks.
 
 	* THANKS: updated.
-	
+
 
 2004-04-01  Albert Chu  <chu11@llnl.gov>
 
@@ -113,9 +113,9 @@
 	* src/ipmi-sensor-types.c: added event-reading-code-desc for
 	4,5,7,9,10 and 12. Bug #8406 fixed by passing double variables to
 	ipmi_sensor_threshold_health_check()
-	
+
 	* src/ipmi-utils.c: added new function ipmi_is_root().
-	
+
 
 2004-04-01  Albert Chu  <chu11@llnl.gov>
 
@@ -145,10 +145,10 @@
 	* src/ipmi-semaphores.[c,h]: locking and synchrinization core.
 
 	* src/ipmi-kcs-interface.c: Now supports locking and
-	synchronization transparently. 
+	synchronization transparently.
 
 	CVS tagged as release-0_1_0_alpha5_qa1-tag
-	
+
 
 2004-03-31  A Balamurugan  <bala.a@californiadigital.com>
 
@@ -156,54 +156,54 @@
 
 	* src/ipmi-msg-support-cmds.c: updated fill_kcs_set_user_name()
 	and fill_kcs_set_user_password().
-	
+
 
 2004-03-31  A Balamurugan  <bala.a@californiadigital.com>
 
 	* src/fiid.c: fixed a bug in fiid_obj_get_data().
-	
+
 
 2004-03-30  A Balamurugan  <bala.a@californiadigital.com>
 
 	* src/fiid.c: added new function fiid_obj_get_data().
-	
+
 	* src/ipmi-kcs-interface.c: fixed a bug in ipmi_kcs_cmd().
-	
+
 	* src/ipmi-sdr-repo-cache.c: updated ipmi_sdr_repo_info_write()
 	and ipmi_sdr_records_write().
-	
+
 	* src/ipmi-sel-record-types.c: updated ipmi_sel_get_first_entry()
 	and ipmi_sel_get_next_entry().
-	
+
 	* src/ipmi-chassis-cmds.[ch]: complete rewritten with
 	ipmi_kcs_cmd().
-	
+
 	* src/ipmi-lan-cmds.[ch]: like wise
-	
+
 	* src/ipmi-msg-support-cmds.[ch]: like wise
-	
+
 	* src/ipmi-sdr-repo-cmds.[ch]: like wise
-	
+
 	* src/ipmi-sel-cmds.[ch]: like wise
-	
+
 	* src/ipmi-sensor-cmds.[ch]: like wise
-	
+
 	* src/ipmi-serial-cmds.[ch]: like wise
-	
+
 	* src/ipmi-sol-cmds.[ch]: like wise
-	
+
 
 2004-03-30  Albert Chu  <chu11@llnl.gov>
 
 	* src/ipmi-sdr-repo-cache.c (ipmi_sdr_repo_cache_get_sensor_name):
 	New function.
-	
+
 2004-03-30  A Balamurugan  <bala.a@californiadigital.com>
 
 	* src/ipmi-sensor-types.c: added new functions
 	ipmi_sensor_threshold_health_check() and
 	ipmi_sensor_discrete_health_check().
-	
+
 
 2004-03-30  Anand Babu  <ab@gnu.org.in>
 
@@ -211,7 +211,7 @@
 
 	* src/ipmi-dev-global-cmds.c (ipmi_kcs_get_dev_id): rewritten to
 	use ipmi_kcs_cmd.
-	
+
 
 2004-03-29  A Balamurugan  <bala.a@californiadigital.com>
 
@@ -219,7 +219,7 @@
 	IPMI_SENSOR_CLASS_DIGITAL_DISCRETE to
 	IPMI_SENSOR_CLASS_GENERIC_DISCRETE and IPMI_SENSOR_CLASS_DISCRETE
 	to IPMI_SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE.
-	
+
 
 2004-03-29  Albert Chu  <chu11@llnl.gov>
 
@@ -236,38 +236,38 @@
 	* src/ipmi-sensor-types.c: updated struct
 	ipmi_sensor_type_slot_connector.
 
-	
+
 2004-03-29  Anand Babu  <ab@gnu.org.in>
 
 	* src/fiid.h (FIID_OBJ_GET): fixed a critical type casting bug.
 
 	* src/ipmi-dev-global-cmds.c: new definitions for product IDs and
 	manifacturer IDs. New device info response template for Intel
-	products. 
-	
+	products.
+
 
 2004-03-29  A Balamurugan  <bala.a@californiadigital.com>
 
 	* src/ipmi-sel-cmds.c: added new functions
 	ipmi_kcs_delete_sel_entry() and ipmi_kcs_clear_sel().
-	
+
 
 2004-03-28  A Balamurugan  <bala.a@californiadigital.com>
 
 	* src/ipmi-msg-interface-desc.c: new file.
-	
+
 	* src/Makefile.am: updated
-	
-	* src/freeipmi.h: updated 
-	
+
+	* src/freeipmi.h: updated
+
 	* src/ipmi-msg-interface-desc.h: added enum system_software_type.
-	
+
 	* src/ipmi-sdr-repo-cache.c: now
 	ipmi_is_sensor_reading_available() returns false if
 	system_software_id > 0x47.
-	
+
 	* src/ipmi-sensor-types.c: added ipmi_sensor_type_threshold_desc
-	
+
 
 2004-03-26  Albert Chu <chu11@llnl.gov>
 
@@ -284,7 +284,7 @@
 
 	* src/ipmi-sdr-repo-cache.c (ipmi_sdr_repo_cache_sensor_classify):
 	Use correct template based on type.
-	
+
 2004-03-26  Anand Babu  <ab@gnu.org.in>
 
 	* src/fiid.h (FIID_OBJ_GET): fixed ptr argument bug.
@@ -292,17 +292,17 @@
 	* src/ipmi-dev-global-cmds.c (ipmi_kcs_get_dev_id): fixed ERR checks.
 
 	* src/ipmi-dev-global-cmds.c: prototype updated.
-	
+
 	* Makefile.am: rewrote support for doc/examples.
-	
+
 2004-03-25  A Balamurugan  <bala.a@californiadigital.com>
 
 	* src/ipmi-sel-cmds.c: modified function ipmi_kcs_get_sel_entry().
 
 	* src/ipmi-sel-record-types.c: added new function
 	ipmi_sel_get_first_entry() and ipmi_sel_get_next_entry().
-	
-	
+
+
 2004-03-25  Albert Chu <chu11@llnl.gov>
 
 	* src/ipmi-sdr-repo-cache.h: Removed filename from
@@ -321,7 +321,7 @@
 	* src/ipmi-sel-record-types.c: added new function
 	ipmi_get_sel_record_type(), template tmpl_sel_record_header and
 	enum ipmi_sel_record_type.
-	
+
 
 2004-03-23  Albert Chu <chu11@llnl.gov>
 
@@ -329,7 +329,7 @@
 	(display_verbose_current_digital_discrete_sensor_compact_record,
 	display_verbose_current_discrete_sensor_compact_record): Fixed
 	minor bug in which string name was printed from the wrong address.
-	
+
 2004-03-23  Anand Babu  <ab@gnu.org.in>
 
 	* doc/examples/hello-sensors.c: Added Bala's Sensors subsystem
@@ -339,18 +339,18 @@
 
 	* doc/Makefile.am: recognize examples folder. Changed
 	$(prefix)/doc to $(datadir)/doc now.
-	
+
 
 2004-03-23  A Balamurugan  <bala.a@californiadigital.com>
 
 	* src/ipmi-msg-support-cmds.h: added new macro
 	IPMI_PASSWORD_OPERATION_TEST_FAILED.
-	
+
 
 2004-03-22  Albert Chu     <chu11@llnl.gov>
 
 	* libfreeipmi.spec.in: Updated release.
-	
+
 2004-03-21  A Balamurugan  <bala.a@californiadigital.com>
 
 	* src/ipmi-chassis-cmds.c: added new function
@@ -358,7 +358,7 @@
 
 	* src/ipmi-msg-support-cmds.c: modified function
 	ipmi_kcs_set_channel_access().
-	
+
 
 2004-03-20  Albert Chu <chu11@llnl.gov>
 
@@ -386,7 +386,7 @@
 	values rather than masks.
 
 	* src/ipmi-sessions.c (check_hdr_session_authcode): Rewritten.
-	
+
 	* src/ipmi-msg-support-cmds.h, src/ipmi-msg-support-cmds.c
 	(fill_cmd_get_session_challenge): Added username_len parameter.
 
@@ -451,15 +451,15 @@
 	function parameters to be more consistent with the libc
 	strerror_r.  The new ipmi_strerror_cmd_r function takes the place
 	of the old ipmi_strerror_r.
-	
+
 	* src/ipmi-utils.c (ipmi_comp_test): Modified to use new
 	ipmi_strerror_cmd_r.
-	
+
 2004-03-10  A Balamurugan  <bala.a@californiadigital.com>
 
 	* src/ipmi-sensor-utils.c: now ipmi_sensor_decode_value() decodes
 	-ve values.
-	
+
 2004-03-09  Albert Chu <chu11@llnl.gov>
 
 	* src/ipmi-msg-support-cmds.h: Flipped value of
@@ -477,7 +477,7 @@
 	which incorrectly sized messages were never unassembled.
 
 	* src/ipmi-utils.h (FREEIPMI_MIN): New macro.
-	
+
 2004-03-09  Anand Babu  <ab@gnu.org.in>
 
 	* src/ipmi-smic-interface.[ch]: new SMIC driver.
@@ -487,7 +487,7 @@
 	* src/ipmi-kcs-interface.c: renamed get_kcs_poll_count () to
 	ipmi_kcs_get_poll_count (). Fixed few naming conventions and
 	variable types.
-	
+
 
 2004-03-06  Anand Babu  <ab@gnu.org.in>
 
@@ -510,18 +510,18 @@
 
 	* src/ipmi-sensor-utils.c: ipmi_sensor_decode_value() and
 	ipmi_sensor_get_decode_params() now handles negative values.
-	
+
 
 2004-03-03  A Balamurugan  <bala.a@californiadigital.com>
 
 	* src/ipmi-sensor-types.c: added new element 'Unknown' in
 	ipmi_sensor_types.
-	
+
 
 2004-03-02  Anand Babu  <ab@gnu.org.in>
 
 	* src/ipmi-utils.h: added bool type with safe macro checks.
-	
+
 	* src/ipmi-sensor-types.[ch]: fixed unresolved symbol problem and
 	naming conventions for ipmi_sensor_types and ipmi_sensor_units*
 	definitions.
@@ -530,8 +530,8 @@
 	function. kcs_poll_count is a readonly counter.
 
 	* src/ipmi-sensor-types.[c,h]: whole bunch of new definitions and
-	tables for discrete and digital-descrete sensors. 
-	
+	tables for discrete and digital-descrete sensors.
+
 
 2004-03-02  A Balamurugan  <bala.a@californiadigital.com>
 
@@ -546,7 +546,7 @@
 
 	* src/ipmi-sensor-types.c: added functions ipmi_sensor_classify()
 	and ipmi_is_oem_reserved_sensor_type().
-	
+
 
 2004-03-02  Albert Chu <chu11@llnl.gov>
 
@@ -569,7 +569,7 @@
 
 	* src/ipmi-msg-support-cmds.c (fill_cmd_set_session_priv_level):
 	Use new IPMI_PRIV_LEVEL_VALID macro.
-	
+
 2004-03-01  Albert Chu <chu11@llnl.gov>
 
 	* src/ipmi-debug.c (_set_prefix_str, _output_str,
@@ -577,19 +577,19 @@
 
 	* src/ipmi-debug (fiid_obj_dump_perror, fiid_obj_dump_lan): Use
 	new functions _set_prefix_str, _output_str, and
-	_output_byte_array.  Fix several output bugs. 
+	_output_byte_array.  Fix several output bugs.
 
 	* src/ipmi-lan-interface.c (ipmi_lan_check_net_fn,
 	ipmi_lan_check_rq_seq): Fix input corner case.
 
 	* src/ipmi-msg-support-cmds.h, src/ipmi-msg-support-cmds.c
 	(ipmi_check_cmd, ipmi_check_comp_code): New functions.
-	
+
 2004-02-29  Albert Chu <chu11@llnl.gov>
 
 	* src/ipmi-debug.h, src/ipmi-debug.c (fiid_obj_dump_perror,
 	fiid_obj_dump_lan): New functions.
-	
+
 	* src/ipmi-debug.c (fiid_obj_dump): Output to appropriate file
 	descriptor.  Use fiid_obj_dump_perror.
 
@@ -625,7 +625,7 @@
 	ipmi_lan_set_session_priv_level, ipmi_lan_open_session,
 	ipmi_lan_close_session): Modified to support change to
 	ipmi_lan_cmd().
-	
+
 	* src/ipmi-utils.h, src/ipmi-utils.c (ipmi_lan_chksum_test):
 	Removed function.
 
@@ -643,13 +643,13 @@
 
 	* src/ipmi-lan-interface.c (unassemble_ipmi_lan_pkt): Fix md2/md5
 	checksum calculations bug.  Add support for
-	tmpl_hdr_session_auth_calc template.  
-	
+	tmpl_hdr_session_auth_calc template.
+
 2004-02-24  Anand Babu  <ab@gnu.org.in>
 
 	* src/ipmi-sensor-types.c: sensor_unit_type_code_short_str new
 	short type codes.
-	
+
 2004-02-21  Albert Chu <chu11@llnl.gov>
 
 	* src/ipmi-sessions.h: Added IPMI_SESSION_AUTH_TYPE_VALID macro.
@@ -689,7 +689,7 @@
 	* src/ipmi-error.h (ERR): Add newlines to error outputs.
 
 	* src/ipmi-error.c (ERR_EXIT): New macro.
-	
+
 	* src/ipmi-md5.c (_ipmi_md5_append_padding_and_length): Changed
 	"else if" to "else" that caused compiler warning.
 
@@ -698,13 +698,13 @@
 
 	* src/ipmi-utils.c (ipmi_lan_chksum_test): Modified to support
 	checksum checks of multiple authentication types.
-	
+
 2004-02-18  Anand Babu  <ab@gnu.org.in>
 
 	* QA-RELEASE: freeipmi-0.1.0-alpha3-qa0 release. Will TAG CVS after
-	passing QA. Downloads will be available from 
+	passing QA. Downloads will be available from
 	ftp://ftp.californiadigital.com/pub/freeipmi/
-	
+
 2004-02-17  Albert Chu <chu11@llnl.gov>
 
 	* Tagged current repository state libfreeipmi-0-0-0-0-alpha2.
@@ -713,21 +713,21 @@
 	autogen.  Added /usr/doc files.
 
 	* BUGS: New file.
-	
+
 2004-02-16  A Balamurugan  <bala.a@californiadigital.com>
 
 	* src/bits-ops.c: bits_merge msb/lsb bug fixed.
-	
+
 	* src/ipmi-lan-cmds.c: modified fiid template for
 	kcs_lan_set_auth_type_enables.
-	
+
 	* src/ipmi-msg-support-cmds.c: fixed wrong command macro to
 	IPMI_CMD_GET_USER_ACCESS_CMD in ipmi_kcs_get_user_access().
-	
+
 	* src/ipmi-msg-support-cmds.h: added macros
 	IPMI_PRIV_LEVEL_NO_ACCESS, IPMI_CHANNEL_ACCESS_GET_NON_VOLATILE
 	and IPMI_CHANNEL_ACCESS_GET_VOLATILE.
-	
+
 	* src/ipmi-serial-cmds.h: added missing 'parameter_selector' in
 	tmpl_set_serial_conf_param_connmode_rq,
 	tmpl_set_serial_conf_param_pageblackout_rq,
@@ -737,21 +737,21 @@
 	* src/ipmi-serial-cmds.h: added macros
 	IPMI_SERIAL_CONF_GET_PARAMETER and
 	IPMI_SERIAL_CONF_GET_PARAMETER_REVISION.
-	
+
 
 2004-02-15  Anand Babu  <ab@gnu.org.in>
 
 	* src/ipmi-kcs-interface.c: changed return type to int from void
 	for ipmi_kcs_io_init ().
-	
+
 
 2004-02-13  A Balamurugan  <bala.a@californiadigital.com>
-	
+
 	* src/ipmi-kcs-interface.c: add new ipmi_kcs_sleep_usecs and
 	kcs_poll_count control variables.  Add new functions
 	init_kcs_poll_count(), get_kcs_poll_count() and
 	fill_hdr_ipmi_kcs().
-	
+
 
 2004-02-13  Ian Zimmerman <itz@californiadigital.com>
 
@@ -763,10 +763,10 @@
 
 	* src/ipmi-msg-support.c, src/ipmi-msg-support.h: add new commands to
 	be used in bmcconfig
-	
+
 	* src/ipmi-lan-cmds.c, src/ipmi-lan-cmds.h: add new commands to
 	be used in bmcconfig
-	
+
 
 2004-02-13  Albert Chu  <chu11@llnl.gov>
 
@@ -778,7 +778,7 @@
 2004-02-11  Anand Babu  <ab@gnu.org.in>
 
 	* ipmi-sensor-types.c: new file. Sensor type strings.
-	
+
 
 2004-02-10  Anand Babu  <ab@gnu.org.in>
 
@@ -789,10 +789,10 @@
 	Patch from Bala <bala.a@californiadigital.com> - added
 	functions/macros to create dynamic fiid templates
 	fiid_template_make(), __fiid_template_make(),
-	fiid_template_free(). 
+	fiid_template_free().
 
 	* src/ipmi-lan-interface.c: rewritten from scratch - easier,
-	cleaner and layered. Now supports new fiid model. 
+	cleaner and layered. Now supports new fiid model.
 
 	* src/ipmi-dev-global-cmds.c: ported to fiid model.
 
@@ -823,7 +823,7 @@
 	types. Patch from Bala <bala.a@californiadigital.com>
 
 	* src/ipmi-sdr-repo-cmds.[c,h]: New file - SDR commands - Get
-	Repository Info, Get SDR Repository Allocation Info, Reserve SDR 
+	Repository Info, Get SDR Repository Allocation Info, Reserve SDR
 	Repository and Get SDR. Patch from Bala
 	<bala.a@californiadigital.com>. Replaced function prefix from
 	ipmi_sdr_ to ipmi_kcs_.
@@ -850,31 +850,31 @@
 	scratch. All new APIs and functionalities.
 
 	* src/smbios.c: copy_impi_dev_info(...) initialized *result to
-	NULL. 
+	NULL.
 
 	* TODO: updated
 
 	* AUTHORS: added Ian Zimmerman <itz@californiadigital.com> and
 	Balamurugan <bala.a@californiadigital.com>
 
-	
+
 2003-12-24  Anand Babu  <ab@gnu.org.in>
 
 	* src/ipmi-kcs-interface.c, src/ipmi-dev-global-cmds.c,
 	src/fiid.c: fixed serious bugs. All lengths are represented as
-	bytes at the top level. bit-level len is abstracted. 
+	bytes at the top level. bit-level len is abstracted.
 
 
 2003-12-23  Anand Babu  <ab@gnu.org.in>
 
 	* src/ipmi-kcs-interface.c: fixed fiid_alloc allocation size bug
-	reported by Ian <itz@californiadigital.com>. 
-	
+	reported by Ian <itz@californiadigital.com>.
+
 	* src/ipmi-dev-global-cmds.c: fixed memory freeing bug reported by
 	Al <chu11@llnl.gov>
 	* src/smbios.c, src/smbios.h: integrated Ian's  SMBIOS probe
 	functionality.
-	
+
 	* libfreeipmi: merged with old savannah code base. LAN-fiid in
 	next commit.
 
@@ -883,10 +883,10 @@
 
 	* src/fiid.c: new FreeIPMI Interface Definition framework jointly
 	developed by Bala <bala.a@californiadigital.com> and myself.
-	
+
 	* src/bit-ops.[c,h]: rich set of BIT manipulation
 	macros and functions.
-	
+
 	* src/ipmi-kcs-interface.c: ported to new FIID framework. Now
 	accepts port from user.
 	* src/ipmi-dev-global-cmds.c: ported to new FIID framework.
@@ -920,7 +920,7 @@
 	* src/ipmi-error.c: new kcs status code str error
 	function. Split ERR_RET macro to _ERR and _ERR_RET. Fixed
 	"unspecified control code" return 0 bug.
-	
+
 
 2003-12-03  Albert Chu  <chu11@llnl.gov>
 
@@ -944,12 +944,12 @@
 	IPMI_NULL_USERNAMES_ENABLED, IPMI_NON_NULL_USERNAMES_ENABLED):
 	Modified for change in struct ipmi_cmd_get_channel_auth_caps_rs.
 
-	
+
 2003-12-02  Anand Babu  <ab@gnu.org.in>
 
 	* src/ipmi-lan-core.c, src/ipmi-lan-core.h: removed. Related code moved to
-	ipmi-lan-interface.{c,h}. 
-	
+	ipmi-lan-interface.{c,h}.
+
 	* src/ipmi-msg-support.h: moved net_fn_t to ipmi-netfn-spec.h. Renamed
 	ipmi_msg_rq and ipmi_msg_rs as ipmi_lan_msg_rq and ipmi_lan_msg_rs
 	to ipmi_lan_interface.{c,h}. Removed ipmi_session_t and
@@ -957,27 +957,27 @@
 	anonymous_login with u_int8_t:3 for packing. Added
 	anonymous_login_status macro definitions. All functions and
 	structs will deal only the command part from now on.
-	
+
 	* src/ipmi-chassis-cmds.h: Removed ipmi_session_t and
 	ipmi_lan_msg_rq_t headers from all commands.
-	
+
 	* src/ipmi-kcs-interface.c, src/ipmi-kcs-interface.c: new BMC SMS
 		interface for inband userspace communication.
-	
+
 	* src/ipmi-sessions.c, src/ipmi-sessions.h: moved sessions related code
 	from ipmi-msg-support-cmds.h
-	
+
 	* src/ipmi-utils.c: 2 new functions ipmi_lan_pre_session_chksum_test,
 	ipmi_lan_chksum_test.
-	
+
 	* src/ipmi-debug.c: broken. Needs rework for the new interface.
-	
+
 	* src/rmcp.c: swapped msg_tag and presence_pong.
-	
+
 	* refresh: renamed to autogen.sh. Thanks to Ben Woodard
 	<bwoodard@llnl.gov>.
-	
-	
+
+
 2003-11-28  Albert Chu  <chu11@llnl.gov>
 
 	* src/rmcp.h: Added RMCP_ASF_PRESENCE_PONG_MESSAGE_TAG_MAX macro.
@@ -987,14 +987,14 @@
 	message_tag parameter.  Parameter check also ensures tag is within
 	range.
 
-	* src/rmcp.h, src/rmcp.c (rmcp_hdr): New function.  
+	* src/rmcp.h, src/rmcp.c (rmcp_hdr): New function.
 
 	* src/rmcp.c (rmcp_ipmi_hdr, rmcp_asf_hdr): Modified functions to
 	use new rmcp_hdr function.
 
 	* Tagged current repository state libfreeipmi-0-0-0-0-alpha1.
 
-	
+
 2003-11-26  Albert Chu  <chu11@llnl.gov>
 
 	* src/ipmi-debug.c (rmcp_hdr_dump): Added missing dump fields.
@@ -1002,20 +1002,20 @@
 	* src/ipmi-debug.c: Cast all checksum output to unsigned char, to
 	avoid sign extended output.
 
-	
+
 2003-11-26  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi.spec.in: Made release 0.alpha0.
 
 	* Tagged current repository state libfreeipmi-0-0-0-0-alpha0.
 
-	
+
 2003-11-25  Albert Chu  <chu11@llnl.gov>
 
 	* src/ipmi-debug.c: Removed IPMI_DEBUG_FD_OK macro and all fd
 	parameter checks.  File descriptor error checks will now fall
         through to write().
-	
+
 
 2003-11-24  Albert Chu  <chu11@llnl.gov>
 
@@ -1036,15 +1036,15 @@
 	src/ipmi-msg-cmds.h, src/ipmi-debug.h, src/ipmi-debug.c: "chassis
 	status" command is actually called "get chassis status" in the
 	ipmi specification.  Globally renamed everything around this fact.
-	
+
 
 2003-11-21  Albert Chu  <chu11@llnl.gov>
 
 	RMCP Changes
-	
+
 	* src/rmcp.h, src/rmcp.c (rmcp_ipmi_hdr, rmcp_asf_hdr): New
 	functions, for consistency with ipmi functions.
-	
+
 	* src/rmcp.h: Modified struct rmcp_hdr to be more consistent with
 	style of other packet structures.  Removed numerous macros that
 	should not longer be used because of new rmcp_ipmi_hdr and
@@ -1063,11 +1063,11 @@
 	Misc
 
 	* configure.ac: Added checks for sys/bitypes.h and sys/inttypes.h.
-	
+
 2003-11-20  Albert Chu  <chu11@llnl.gov>
 
 	LAN Core fixes
-	
+
 	* src/ipmi-lan-core.c (ipmi_sendto, ipmi_recvfrom): Fixed bug in
 	which IPMI Lan packet padding incorrectly used.
 
@@ -1090,10 +1090,10 @@
 	* src/rmcp.c (rmcp_asf_presence_ping): Wrapped
 	RMCP_ASF_IANA_ENTERPRISE_NUM within htonl, because rmcp is
 	supposed to be big endian.
-	
+
 	* libfreeipmi.spec.in: Made initial changes to make this spec file
 	work.
-	
+
 2003-11-19  Albert Chu  <chu11@llnl.gov>
 
 	* src/ipmi-debug.h, src/ipmi-debug.c: Added verbose flags to
@@ -1113,7 +1113,7 @@
 	* src/ipmi-lan-core.h, src/ipmi-lan-core.c (ipmi_sendto,
 	ipmi_recvfrom): Changed socklen_t to unsigned int, to fix
 	potential port issues.
-	
+
 	* TODO: Updated TODO list.
 
 	* acinclude.m4: Added TYPE_SOCKLEN_T check.
@@ -1149,7 +1149,7 @@
 
 	* src/ipmi-debug.c (ipmi_get_channel_auth_caps_rs_dump): Updated
 	for above changes.
-	
+
 	* src/ipmi-chassis-cmds.h: Renamed all chassis status response
 	macros to more readable and make more sense.  Removed the
 	ipmi_chassis_status_restore_policy macro.  Renamed
@@ -1161,12 +1161,12 @@
 
 	* src/ipmi-msg-support-cmds.h: Added generic response message
 	macros.
-	
+
 	Misc
 
 	* src/ipmi-msg-support.h: Renamed _IPMI_MESG_SUPPORT_CMDS_H to
 	_IPMI_MSG_SUPPORT_CMDS_H.
-	
+
 	* src/ipmi-sessions.h: Renamed _IPMI_MESG_SUPPORT_CMDS_H to
 	_IPMI_SESSIONS_H.
 
@@ -1190,29 +1190,29 @@
 2003-11-17  Anand Babu  <ab@gnu.org.in>
 
 	* TODO: updated ab's section
-	
+
 	* AUTHORS: Added Jim Garlick
-	
+
 	* INSTALL: added ./refresh execution
-	
+
 	* THANKS: added LLNL
-	
+
 	* Makefile.in, src/Makefile.in, config.h.in, doc/Makefile.in,
 	configure, aclocal.m4: removed from CVS
 	* doc/libfreeipmi.texinfo: moved to freeipmi-hg.texinfo and
-	cleaned up 
-	
+	cleaned up
+
 	* doc/authors.texinfo: new
-	
+
 	* doc/gpl.texinfo: removed
-	
+
 	* www: updated http://www.nongnu.org/freeipmi/ home page
 
-	
+
 2003-11-17   Albert Chu  <chu11@llnl.gov>
 
 	* src/ipmi-debug.h, src/ipmi-debug.c: New files.
-	
+
 	* src/ipmi-msg-support-cmds.h: Split max_priv_level field in
 	struct ipmi_get_channel_auth_caps_rq and new_priv_level field in
 	struct ipmi_set_session_priv_level_rs into privilege and reserved
@@ -1264,7 +1264,7 @@
 	all status bit types.  Modified oem_id field to be a array of
 	u_int8_t types instead of a u_int32_t type aligned on 24 bits.
 	Created an IPMI_OEM_ID_LEN macro for the oem_id length.
-	
+
 2003-11-16   Albert Chu  <chu11@llnl.gov>
 
 	IPMI packet creation fixes
@@ -1272,7 +1272,7 @@
 	* src/ipmi-chassis-cmds.h, src/ipmi-chassis-cmds.c
 	(ipmi_chassis_status_rq): Fixed bug with lun parameter being set
 	incorrectly.
-	
+
 	* src/ipmi-chassis-cmds.h, src/ipmi-chassis-cmds.c
 	(ipmi_chassis_ctrl_rq, ipmi_chassis_status_rq): Changed return
 	code from u_int8_t to int.  Return -1 on parameter errors and set
@@ -1292,20 +1292,20 @@
 	* src/ipmi-error.h: Removed ipmi_errno_t type.
 
 	* src/ipmi-error.c: Removed ipmi_errno global variable
-	
+
 	* src/ipmi-error.c (ERANGE_CHECK): Fixed bug with ERANGE_CHECK
 	macro, which incorrectly returns ERANGE, should actually set errno
 	then return -1.  Removed ERANGE_CHECK macro and moved code in
 	ERR_RET since it was only used in there.
- 	
+
 	* src/ipmi-error.c (ERR_RET): Fixed bug, should use strlen on
 	errdesc string length, not errstr buffer.
-	
+
 	* src/ipmi-error.c (ipmi_strerror_r): Fixed bug which incorrecly
 	returned EINVAL on error, should set errno to EINVAL and return
 	-1.  Use ERR_RET on completion code error string to avoid buffer
 	overflow.
-	
+
 	Misc
 
 	* src/ipmi-msg-support-cmds.h, src/ipmi-netfn-spec.h: Moved
@@ -1321,7 +1321,7 @@
 
 	* srd/freeipmi.h: Updated with new header files.
 
-	
+
 2003-11-15   Albert Chu  <chu11@llnl.gov>
 
 	Fixed ipmi_sendto framework as discussed in e-mails
@@ -1348,10 +1348,10 @@
 
 	* src/ipmi-msg-support-cmds.h, src/ipmi-msg-support-cmds.c
 	(ipmi_set_chassis_status_rq): New function.
-	
+
 	Misc
-	
-	* src/ipmi-chassis-cmds.h: Added #pragma pack(1). 
+
+	* src/ipmi-chassis-cmds.h: Added #pragma pack(1).
 
 	* src/ipmi-msg-support-cmds.h: Removed htonl on
 	IPMI_INITIAL_OUTBOUND_SEQ_NUM.  Removed htonl comments.
@@ -1359,7 +1359,7 @@
 	* src/ipmi-chassis-cmds.c, src/ipmi-msg-support-cmds.c: Removed
 	#include <netinet/in.h>, no longer necessary due to above change.
 
-	
+
 2003-11-14  Albert Chu  <chu11@llnl.gov>
 
 	IPMI packet creation fixes
@@ -1369,7 +1369,7 @@
 	ipmi_activate_session_rq): Added rq_seq parameter to function.
 	Set requester sequence number fields to rq_seq parameter rather
 	0x00.
-	
+
 	* src/ipmi-msg-support-cmds.h, src/ipmi-msg-support-cmds.c
         (ipmi_get_session_challenge_rq): Added username_len parameter.
 	Memcpy username buffer based on new parameter.
@@ -1379,7 +1379,7 @@
 	ipmi_chassis_ctrl_rq, ipmi_close_session_rq): Added auth_code_len
 	parameter to function.  Memcpy auth_code buffer based on new
 	parameter.
-	
+
 	* src/ipmi-msg-support-cmds.h, src/ipmi-msg-support-cmds.c
 	(ipmi_activate_session_rq): Added challenge_str_len parameter.
 	Memcpy challenge_str buffer based on new parameter.
@@ -1391,81 +1391,81 @@
         * src/ipmi-msg-support-cmds.h: Modified
 	IPMI_INITIAL_OUTBOUND_SEQ_NUM to explicitly be a 32 bit number,
 	because outbound sequence numbers are 32 bits.
-	
+
 	Misc
 
 	* AUTHORS: Added me :-)
 
-	
+
 2003-11-14  Anand Babu  <ab@gnu.org.in>
 
 	* src/ipmi-chassis.c: new file, moved chassis control command and
 	defns to here.
-	
+
 	* src/ipmi-msg-support-cmds.c: rs_lun is now passed as arg. Fixed
 	inbound_seq_num bug. Thanks to Albert Chu <chu11@llnl.gov> for
 	reporting varoious enhancements and bugs. Macro IPMI_DEFAULT_LUN
 	removed. Use IPMI_BMC_IPMB_LUN_BMC instead.
-	
+
 	* src/ipmi-ipmb-interface.h: new file, added new IPMI definitions.
 
-	
+
 2003-11-10  Anand Babu  <ab@gnu.org.in>
 
 	* src/ipmi-lan-core.c: rewrote ipmi_sendto and ipmi_recvfrom.
-	
+
 	* src/ipmi-msg-support-cmds.h: rmcp_hdr_t separated from all
 	structures. Also structures are checksum friendly.
-	
+
 	* src/ipmi-msg-support-cmds.c: new functions -
 	ipmi_get_channel_auth_caps_rq, ipmi_get_session_challenge_rq,
 	ipmi_activate_session_rq, ipmi_set_session_priv_level_rq,
 	ipmi_chassis_ctrl_rq, close_session_rq and corresponding
 	request/response structures/macros.
-	
+
 	* src/rmcp.h: new macro for rmcp header values.
-	
+
 	* src/freeipmi.h: #pragma pack(1) moved to respective files, where
 	ever required. Removed verbose flag handling, we need to be thread
 	safe.
-	
+
 	* src/ipmi-errno.h: added new command specific codes. Removed
 	FI_PERROR.
-	
+
 	* src/ipmi-cmd-spec.h: added new definitions for network functions
-	
+
 	* libfreeipmi: this checkin freezes core framework for LAN for
 	now. Major facelift through out the code and are not logged here.
 
-	
+
 2003-10-28  Anand Babu  <ab@gnu.org.in>
 
 	* src/lfi-utils.[c,h]: removed
-	
+
 	* src/ipmi-utils.[c,h]: replaced lfi-utils
-	
+
 	* src/ipmi-cmd-spec.h: new file, IPMI command definitions
-	
+
 	* src/ipmi-errno.[c,h]: new file, IPMI error handler
-	
+
 	* src/ipmi-msg-support-cmds.[c,h]: new file, IPMI message support
 	functions
-	
+
 	* src/ipmi-lan-core.[c,h]: new file, core lan functions
-	
+
 
 2003-09-22  Anand Babu  <ab@gnu.org.in>
 
 	* libfreeipmi: checking into savannah.gnu.org
-	
+
 
 2002-10-09  Anand Babu  <ab@gnu.org.in>
 
 	* libfreeipmi: initial version.
 
 ---------------------------------------------------------------------
-Do not add anything here. All your logs should be added to beginning 
-of the file. 
+Do not add anything here. All your logs should be added to beginning
+of the file.
 
 GUIDELINES:
 * RUN 'make distclean' BEFORE YOU COMMIT.
@@ -1475,6 +1475,6 @@ EXAMPLE BEGIN
 
 	* ChangeLog: added guidelines
 
-	
+
 EXAMPLE END
 

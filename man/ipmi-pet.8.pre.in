@@ -107,7 +107,7 @@ condition.  This differs from the output of
 \fB\-\-output\-event\-state\fR, as event severity is not interpreted,
 it is a value reported in the SNMP trap.  However, not all events may
 report a severity, or some manufacturers may not support the report of
-a severity.  Event severity will automatically be output under 
+a severity.  Event severity will automatically be output under
 verbose output.
 .TP
 \fB\-\-output\-event\-state\fR

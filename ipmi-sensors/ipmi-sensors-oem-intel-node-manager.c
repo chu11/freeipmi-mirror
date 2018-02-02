@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -58,7 +58,7 @@ ipmi_sensors_oem_intel_node_manager_output_oem_record (ipmi_sensors_state_data_t
       uint8_t nm_operational_capabilities_sensor_number;
       uint8_t nm_alert_threshold_exceeded_sensor_number;
       int ret;
-      
+
       if ((ret = ipmi_sdr_oem_parse_intel_node_manager (state_data->sdr_ctx,
                                                         NULL,
                                                         0,
@@ -76,7 +76,7 @@ ipmi_sensors_oem_intel_node_manager_output_oem_record (ipmi_sensors_state_data_t
                            ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
           return (-1);
         }
-      
+
       if (ret)
         {
           pstdout_printf (state_data->pstate,

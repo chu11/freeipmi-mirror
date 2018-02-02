@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2007-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -158,7 +158,7 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
       goto cleanup;
     }
   sdr_device_address = val;
- 
+
   pstdout_printf (state_data->pstate,
                   "SDR Device Address      : %Xh\n",
                   sdr_device_address);
@@ -925,7 +925,7 @@ get_system_restart_cause (ipmi_chassis_state_data_t *state_data)
     default:
       restart_cause_str = "unknown";
     }
-  
+
   pstdout_printf (state_data->pstate,
                   "Restart cause : %s\n",
                   restart_cause_str);
@@ -1174,7 +1174,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
   pstdout_printf (state_data->pstate,
                   "Console redirection control   : %s\n",
                   str);
-  
+
   if (FIID_OBJ_GET (obj_cmd_rs, "lock_out_sleep_button", &val) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -1264,7 +1264,7 @@ get_boot_flags (ipmi_chassis_state_data_t *state_data)
     str = "Default";
   else
     str = "unknown";
-  
+
   pstdout_printf (state_data->pstate,
                   "Firmware BIOS verbosity level : %s\n",
                   str);
@@ -1607,7 +1607,7 @@ run_cmd_args (ipmi_chassis_state_data_t *state_data)
 
   if (args->get_chassis_capabilities)
     return (get_chassis_capabilities (state_data));
-            
+
   if (args->get_chassis_status)
     return (get_chassis_status (state_data));
 
@@ -1617,18 +1617,18 @@ run_cmd_args (ipmi_chassis_state_data_t *state_data)
   if (args->chassis_identify)
     return (chassis_identify (state_data));
 
-  /* All chassis "set" operations are legacy, see ipmi-config for chassis configuration */ 
+  /* All chassis "set" operations are legacy, see ipmi-config for chassis configuration */
   if (args->set_power_restore_policy)
     return (set_power_restore_policy (state_data));
 
-  /* All chassis "set" operations are legacy, see ipmi-config for chassis configuration */ 
+  /* All chassis "set" operations are legacy, see ipmi-config for chassis configuration */
   if (args->set_power_cycle_interval)
     return (set_power_cycle_interval (state_data));
 
   if (args->get_system_restart_cause)
     return (get_system_restart_cause (state_data));
 
-  /* All chassis "set" operations are legacy, see ipmi-config for chassis configuration */ 
+  /* All chassis "set" operations are legacy, see ipmi-config for chassis configuration */
   if (args->set_system_boot_options)
     return (set_boot_flags (state_data));
 

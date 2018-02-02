@@ -9,9 +9,9 @@ interpreted.  IPMI based sensors specify a number of
 states/thresholds when they are read.  Based on those
 states/thresholds, libraries and tools such as
 .B libfreeipmi(3),
-.B libipmimonitoring(3) 
+.B libipmimonitoring(3)
 and
-.B ipmi-sensors(8) 
+.B ipmi-sensors(8)
 can report if a sensor reading is "good" or "bad" via a report of a
 NOMINAL, WARNING, or CRITICAL state.
 .LP
@@ -19,8 +19,8 @@ Each of the states listed below are (hopefully) descriptive enough
 to describe the state conditions that may be set/unset for each
 sensor type.  For more detailed information on each of the
 individual states listed below, please see the IPMI Specification
-"Sensor and Event Code Tables". 
-.B Ipmi-sensors(8) 
+"Sensor and Event Code Tables".
+.B Ipmi-sensors(8)
 can be used to determine the sensor types and the states/thresholds
 that exist on a system by outputting very verbose output and seeing
 what types of Assertion or Deassertion events are possible.

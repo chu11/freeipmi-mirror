@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2007-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -236,7 +236,7 @@ _set_alert_policy_table (struct ipmi_config_state_data *state_data,
         {
           struct ipmi_config_section *section;
           struct ipmi_config_keyvalue *kv;
-          
+
           if (!(section = ipmi_config_find_section (state_data, section_name)))
             {
               /* This should be impossible */
@@ -246,7 +246,7 @@ _set_alert_policy_table (struct ipmi_config_state_data *state_data,
                                section_name);
               goto cleanup;
             }
-          
+
           if ((kv = ipmi_config_find_keyvalue (section,
                                                "Policy_Type")))
             apt->policy_type = policy_type_number (kv->value_input);
@@ -262,7 +262,7 @@ _set_alert_policy_table (struct ipmi_config_state_data *state_data,
           if ((kv = ipmi_config_find_keyvalue (section,
                                                "Destination_Selector")))
             apt->destination_selector = atoi (kv->value_input);
-          
+
           if ((kv = ipmi_config_find_keyvalue (section,
                                                "Channel_Number")))
             apt->channel_number = atoi (kv->value_input);
@@ -270,7 +270,7 @@ _set_alert_policy_table (struct ipmi_config_state_data *state_data,
           if ((kv = ipmi_config_find_keyvalue (section,
                                                "Alert_String_Set_Selector")))
             apt->alert_string_set_selector = atoi (kv->value_input);
-          
+
           if ((kv = ipmi_config_find_keyvalue (section,
                                                "Event_Specific_Alert_String")))
             apt->event_specific_alert_string = same (kv->value_input, "yes");
@@ -757,7 +757,7 @@ ipmi_config_pef_alert_policy_table_section_get (ipmi_config_state_data_t *state_
                     IPMI_CONFIG_MAX_DESCRIPTION_LEN,
                     ", %u",
                     state_data->lan_channel_numbers[i]);
-          
+
           strcat (description, tempbuf);
         }
 

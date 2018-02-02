@@ -6,7 +6,7 @@
 .\"  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
 .\"  Written by Albert Chu <chu11@llnl.gov>
 .\"  UCRL-CODE-155913
-.\"  
+.\"
 .\"  This file is part of Bmc-Watchdog, a base management controller (BMC)
 .\"  watchdog timer management tool.  For details, see http://www.llnl.gov/linux/.
 .\"
@@ -14,12 +14,12 @@
 .\"  the terms of the GNU General Public License as published by the Free
 .\"  Software Foundation; either version 3 of the License, or (at your option)
 .\"  any later version.
-.\"  
-.\"  Bmc-Watchdog is distributed in the hope that it will be useful, but WITHOUT 
-.\"  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
-.\"  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License 
+.\"
+.\"  Bmc-Watchdog is distributed in the hope that it will be useful, but WITHOUT
+.\"  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+.\"  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 .\"  for more details.
-.\"  
+.\"
 .\"  You should have received a copy of the GNU General Public License along
 .\"  with Bmc-Watchdog.  If not, see <http://www.gnu.org/licenses/>.
 .\"############################################################################
@@ -27,7 +27,7 @@
 .SH "NAME"
 bmc-watchdog \- BMC watchdog timer daemon and control utility
 .SH "SYNOPSIS"
-.B bmc-watchdog 
+.B bmc-watchdog
 command [\fIOPTION\fR...] [\fICOMMAND_OPTIONS\fR...]
 .br
 .SH "DESCRIPTION"
@@ -36,12 +36,12 @@ controls a Baseboard Management Controller (BMC) watchdog timer.  The
 .B bmc-watchdog
 tool typically executes as a cronjob or daemon to manage the watchdog
 timer.  A user must be root in order to run
-.B bmc-watchdog. 
+.B bmc-watchdog.
 .LP
 Listed below are
 .B bmc-watchdog
 details, option details, examples, and known issues.  For a general
-introduction to FreeIPMI please see 
+introduction to FreeIPMI please see
 .B freeipmi(7).
 
 .SH "BMC WATCHDOG DETAILS"
@@ -89,9 +89,9 @@ Get BMC Watchdog Configuration and State.  The current
 configuration and state is printed to standard output.
 .TP
 \fB\-r\fR, \fB\-\-reset\fR
-Reset BMC Watchdog Timer.  
+Reset BMC Watchdog Timer.
 .TP
-\fB\-t\fR, \fB\-\-start\fR                   
+\fB\-t\fR, \fB\-\-start\fR
 Start BMC Watchdog Timer.  Does nothing if the timer is currently
 running.  Identical to \fB\-\-reset\fR command when the timer is
 stopped with the exception of the start command options listed below
@@ -102,12 +102,12 @@ Stop BMC Watchdog Timer.  Stops the current timer.
 .TP
 \fB\-c\fR, \fB\-\-clear\fR
 Clear BMC Watchdog Configuration.  Clears all configuration values
-for the watchdog timer, except for timer use, which is kept at 
+for the watchdog timer, except for timer use, which is kept at
 its current value.
 .TP
 \fB\-d\fR, \fB\-\-daemon\fR
-Run 
-.B bmc-watchdog 
+Run
+.B bmc-watchdog
 as a daemon.  Configurable BMC watchdog timer options are listed below
 under DAEMON OPTIONS.  The configuration values are set once, then the
 daemon will reset the timer at specified periodic intervals.  The
@@ -116,7 +116,7 @@ daemon can be stopped using the \fB\-\-stop\fR command,
 \fB\-\-set\fR command.
 #include <@top_srcdir@/man/manpage-common-general-options-header.man>
 These options are generic and can be used by any command.
-.TP 
+.TP
 \fB\-D\fR \fIIPMIDRIVER\fR, \fB\-\-driver\-type\fR=\fIIPMIDRIVER\fR
 Specify the driver type to use instead of doing an auto selection.
 The currently available inband drivers are KCS, SSIF, OPENIPMI,
@@ -127,8 +127,8 @@ SUNBMC, and INTELDCMI.
 Increase verbosity of logging.
 .TP
 \fB\-n\fR, \fB\-\-no\-logging\fR
-Turns off all logging done by 
-.B bmc-watchdog.  
+Turns off all logging done by
+.B bmc-watchdog.
 #include <@top_srcdir@/man/manpage-common-config-file.man>
 #include <@top_srcdir@/man/manpage-common-workaround-flags.man>
 #include <@top_srcdir@/man/manpage-common-debug.man>
@@ -160,7 +160,7 @@ Set pre-timeout interrupt.  The pre timeout interrupt can be set to
 one of the following: 0 = None, 1 = SMI, 2 = NMI, 3 = Messaging
 Interrupt.
 .TP
-\fB\-z\fR \fISECONDS\fR, \fB\-\-pre-timeout-interval=\fISECONDS\fR  
+\fB\-z\fR \fISECONDS\fR, \fB\-\-pre-timeout-interval=\fISECONDS\fR
 Set pre-timeout interval in seconds.
 .TP
 \fB\-F\fR, \fB\-\-clear-bios-frb2\fR
@@ -239,7 +239,7 @@ Set pre-timeout interrupt.  The pre timeout interrupt can be set to
 one of the following: 0 = None, 1 = SMI, 2 = NMI, 3 = Messaging
 Interrupt.
 .TP
-\fB\-z\fR \fISECONDS\fR, \fB\-\-pre-timeout\-interval\fR=\fISECONDS\fR  
+\fB\-z\fR \fISECONDS\fR, \fB\-\-pre-timeout\-interval\fR=\fISECONDS\fR
 Set pre-timeout interval in seconds.
 .TP
 \fB\-F\fR, \fB\-\-clear-bios-frb2\fR
@@ -292,8 +292,8 @@ the implementation of this workaround, if another process stops the
 watchdog timer, it may be detectable.  This option is confirmed to
 work around compliances issues on Sun x4100, x4200, and x4500.
 
-.SH "EXAMPLES" 
-.LP 
+.SH "EXAMPLES"
+.LP
 Setup a
 .B bmc-watchdog
 daemon that resets the machine after 15 minutes
@@ -305,7 +305,7 @@ script /etc/init.d/bmc-watchdog for a more complete example):
 .SH "KNOWN ISSUES"
 .B Bmc-watchdog
 may fail to reset the watchdog timer if it is not scheduled properly.
-It is always recommended that 
+It is always recommended that
 .B bmc-watchdog
 be executed with a high scheduling priority.
 .LP

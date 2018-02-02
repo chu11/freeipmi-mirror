@@ -454,7 +454,7 @@ ipmipower_check_network_function (ipmipower_powercmd_t ip,
           || pkt == IPMIPOWER_PACKET_TYPE_CLOSE_SESSION_RS
         */
     expected_netfn = IPMI_NET_FN_APP_RS;
-  
+
   if (netfn != expected_netfn)
     IPMIPOWER_DEBUG (("host = %s; p = %d; netfn failed: %Xh; expected = %Xh",
                       ip->ic->hostname,
@@ -862,7 +862,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code (ipmipower_powercmd_t ip
                             fiid_obj_errormsg (ip->obj_rakp_message_2_rs)));
           exit (EXIT_FAILURE);
         }
-      
+
       if (ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
           && keybuf_len == 1)
         {
@@ -939,7 +939,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code (ipmipower_powercmd_t ip
                         fiid_obj_errormsg (ip->obj_rakp_message_2_rs)));
       exit (EXIT_FAILURE);
     }
-  
+
   if ((managed_system_guid_len = fiid_obj_get_data (ip->obj_rakp_message_2_rs,
                                                     "managed_system_guid",
                                                     managed_system_guid,

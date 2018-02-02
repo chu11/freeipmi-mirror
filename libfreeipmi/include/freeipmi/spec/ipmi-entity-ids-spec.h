@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_ENTITY_IDS_SPEC_H
@@ -63,7 +63,7 @@ extern "C" {
 #define IPMI_ENTITY_ID_GROUP                                     0x25
 #define IPMI_ENTITY_ID_REMOTE_MANAGEMENT_COMMUNICATION_DEVICE    0x26
 #define IPMI_ENTITY_ID_EXTERNAL_ENVIRONMENT                      0x27
-#define IPMI_ENTITY_ID_BATTERY                                   0x28   
+#define IPMI_ENTITY_ID_BATTERY                                   0x28
 #define IPMI_ENTITY_ID_PROCESSING_BLADE                          0x29
 #define IPMI_ENTITY_ID_CONNECTIVITY_SWTICH                       0x2A
 #define IPMI_ENTITY_ID_PROCESSOR_MEMORY_MODULE                   0x2B
@@ -134,7 +134,7 @@ extern "C" {
 #define IPMI_ENTITY_INSTANCE_DEVICE_RELATIVE(__entity_instance) \
   (((__entity_instance) >= IPMI_ENTITY_INSTANCE_DEVICE_RELATIVE_MIN)    \
    && ((__entity_instance) >= IPMI_ENTITY_INSTANCE_DEVICE_RELATIVE_MAX) ? 1 : 0)
-  
+
 extern const char *const ipmi_entity_ids[];
 extern const char *const ipmi_entity_id_chassis_specific;
 extern const char *const ipmi_entity_id_board_set_specific;

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_OEM_FUJITSU_SPEC_H
@@ -204,7 +204,7 @@ extern "C" {
 #define IPMI_OEM_FUJITSU_IDENTIFY_LED_OFF 0x0
 
 #define IPMI_OEM_FUJITSU_IDENTIFY_LED_BITMASK 0x01
-#define IPMI_OEM_FUJITSU_IDENTIFY_LED_SHIFT      0 
+#define IPMI_OEM_FUJITSU_IDENTIFY_LED_SHIFT      0
 
 /* IPMI_OEM_FUJITSU_COMMAND_SPECIFIER_GET_ERROR_LED */
 #define IPMI_OEM_FUJITSU_ERROR_LED_CSS_OFF_GEL_OFF     0

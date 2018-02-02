@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_SENSOR_NUMBERS_OEM_INTEL_SPEC_H
@@ -154,7 +154,7 @@ extern "C" {
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_BASEBOARD_TEMPERATURE6                              0x15
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_IO_MODULE2_TEMPERATURE                              0x16
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_PCI_RISER3_TEMPERATURE                              0x17
-#define IPMI_SENSOR_NUMBER_OEM_INTEL_PCI_RISER4_TEMPERATURE                              0x18 
+#define IPMI_SENSOR_NUMBER_OEM_INTEL_PCI_RISER4_TEMPERATURE                              0x18
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_BASEBOARD_TEMPERATURE1                              0x20
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_FRONT_PANEL_TEMPERATURE                             0x21
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_SSB_TEMPERATURE                                     0x22
@@ -164,7 +164,7 @@ extern "C" {
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_IO_MODULE_TEMPERATURE                               0x26
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_PCI_RISER1_TEMPERATURE                              0x27
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_IO_RISER_TEMPERATURE                                0x28
-#define IPMI_SENSOR_NUMBER_OEM_INTEL_HOT_SWAP_BACK_PLANE1_TEMPERATURE                    0x29  
+#define IPMI_SENSOR_NUMBER_OEM_INTEL_HOT_SWAP_BACK_PLANE1_TEMPERATURE                    0x29
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_HOT_SWAP_BACK_PLANE2_TEMPERATURE                    0x2A
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_HOT_SWAP_BACK_PLANE3_TEMPERATURE                    0x2B
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_PCI_RISER2_TEMPERATURE                              0x2C
@@ -181,7 +181,7 @@ extern "C" {
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_POWER_SUPPLY2_AC_POWER_INPUT                        0x55
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_POWER_SUPPLY1_12V_PERCENT_OF_MAXIMUM_CURRENT_OUTPUT 0x58
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_POWER_SUPPLY2_12V_PERCENT_OF_MAXIMUM_CURRENT_OUTPUT 0x59
-#define IPMI_SENSOR_NUMBER_OEM_INTEL_POWER_SUPPLY1_TEMPERATURE                           0x5C 
+#define IPMI_SENSOR_NUMBER_OEM_INTEL_POWER_SUPPLY1_TEMPERATURE                           0x5C
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_POWER_SUPPLY2_TEMPERATURE                           0x5D
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_HARD_DISK_DRIVE15                                   0x60
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_HARD_DISK_DRIVE16                                   0x61
@@ -260,7 +260,7 @@ extern "C" {
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_HOT_SWAP_BACKPLANE4_TEMPERATURE                     0xE0
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_REAR_HARD_DISK_DRIVE0_STATUS                        0xE2
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_REAR_HARD_DISK_DRIVE1_STATUS                        0xE3
-#define IPMI_SENSOR_NUMBER_OEM_INTEL_HARD_DISK_DRIVE0_STATUS                             0xF0 
+#define IPMI_SENSOR_NUMBER_OEM_INTEL_HARD_DISK_DRIVE0_STATUS                             0xF0
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_HARD_DISK_DRIVE1_STATUS                             0xF1
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_HARD_DISK_DRIVE2_STATUS                             0xF2
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_HARD_DISK_DRIVE3_STATUS                             0xF3

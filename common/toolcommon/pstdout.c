@@ -25,7 +25,7 @@
  *  with Pstdout.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-/* 
+/*
  * Notes:
  *
  * Needs to be compiled with -D_REENTRANT
@@ -91,7 +91,7 @@ struct pstdout_thread_data {
 
 struct pstdout_state {
   uint32_t magic;
-  char *hostname; 
+  char *hostname;
   cbuf_t p_stdout;
   cbuf_t p_stderr;
   char *buffer_stdout;
@@ -175,7 +175,7 @@ static void
 _pstdout_consolidated_data_destroy(void *x)
 {
   struct pstdout_consolidated_data *cdata;
-  
+
   assert(x);
 
   cdata = (struct pstdout_consolidated_data *)x;
@@ -220,9 +220,9 @@ _pstdout_consolidated_data_find(void *x, void *key)
   assert(key);
 
   cdata = (struct pstdout_consolidated_data *)x;
-  
+
   assert(cdata->output);
-  
+
   if (!strcmp(cdata->output, (char *)key))
     return 1;
   return 0;
@@ -242,7 +242,7 @@ _pstdout_states_delete_pointer(void *x, void *key)
   return 0;
 }
 
-int 
+int
 pstdout_init(void)
 {
   if (!pstdout_initialized)
@@ -447,7 +447,7 @@ pstdout_get_fanout(void)
   return pstdout_fanout;
 }
 
-int 
+int
 pstdout_hostnames_count(const char *hostnames)
 {
   fi_hostlist_t h = NULL;
@@ -482,10 +482,10 @@ pstdout_hostnames_count(const char *hostnames)
 }
 
 static int
-_pstdout_print(pstdout_state_t pstate, 
+_pstdout_print(pstdout_state_t pstate,
                int internal_to_pstdout,
                FILE *stream,
-               const char *format, 
+               const char *format,
                va_list ap)
 {
   char *buf = NULL;
@@ -582,17 +582,17 @@ _pstdout_print(pstdout_state_t pstate,
           goto cleanup;
         }
       memset(linebuf, '\0', PSTDOUT_BUFLEN);
-      
+
       while ((linelen = cbuf_read_line (whichcbuf, linebuf, linebuflen, 1)) > 0)
         {
           if (linelen >= linebuflen)
             break;
 
-          if (!pstate->hostname 
+          if (!pstate->hostname
               || ((pstdout_output_flags & whichdefaultmask)
                   && !(pstdout_output_flags & whichbuffermask)
                   && !(pstdout_output_flags & whichconsolidatemask)))
-                      
+
             {
               rv = fprintf(stream, "%s", linebuf);
               fflush(stream);
@@ -613,7 +613,7 @@ _pstdout_print(pstdout_state_t pstate,
                   pstdout_errnum = PSTDOUT_ERR_OUTMEM;
                   goto cleanup;
                 }
-                  
+
               /* Don't use snprintf, it will truncate b/c "snprintf and
                  vsnprintf do not write more than size bytes (including
                  the trailing '\0'). " */
@@ -626,7 +626,7 @@ _pstdout_print(pstdout_state_t pstate,
             {
               unsigned int hostname_len;
               unsigned int extra_len;
-                  
+
               /* + 2 is for the ": " */
               hostname_len = strlen(pstate->hostname);
               extra_len = hostname_len + 2;
@@ -635,29 +635,29 @@ _pstdout_print(pstdout_state_t pstate,
                   pstdout_errnum = PSTDOUT_ERR_OUTMEM;
                   goto cleanup;
                 }
-              
+
               /* Don't use snprintf, it will truncate b/c "snprintf and
                  vsnprintf do not write more than size bytes (including
                  the trailing '\0'). " */
-              memcpy(*whichbuffer + *whichbufferlen, 
-                     pstate->hostname, 
+              memcpy(*whichbuffer + *whichbufferlen,
+                     pstate->hostname,
                      hostname_len);
-              memcpy(*whichbuffer + *whichbufferlen + hostname_len, 
+              memcpy(*whichbuffer + *whichbufferlen + hostname_len,
                      ": ",
                      2);
-              memcpy(*whichbuffer + *whichbufferlen + hostname_len + 2, 
-                     linebuf, 
+              memcpy(*whichbuffer + *whichbufferlen + hostname_len + 2,
+                     linebuf,
                      linelen);
               *whichbufferlen += linelen + extra_len;
               rv = linelen + extra_len;
             }
-          else 
+          else
             {
               pstdout_errnum = PSTDOUT_ERR_INTERNAL;
               return -1;
             }
         }
-      
+
       if (linelen < 0)
         {
           if (pstdout_debug_flags & PSTDOUT_DEBUG_STANDARD)
@@ -692,13 +692,13 @@ _pstdout_print(pstdout_state_t pstate,
 }
 
 static void
-_pstdout_print_wrapper(pstdout_state_t pstate, 
+_pstdout_print_wrapper(pstdout_state_t pstate,
                        int internal_to_pstdout,
-                       FILE *stream, 
+                       FILE *stream,
                        const char *format, ...)
 {
   va_list ap;
-  
+
   assert(pstate);
   assert(pstate->magic == PSTDOUT_STATE_MAGIC);
   assert(stream);
@@ -772,7 +772,7 @@ pstdout_vprintf(pstdout_state_t pstate, const char *format, va_list ap)
   return rv;
 }
 
-int 
+int
 pstdout_fprintf(pstdout_state_t pstate, FILE *stream, const char *format, ...)
 {
   va_list ap;
@@ -801,14 +801,14 @@ pstdout_fprintf(pstdout_state_t pstate, FILE *stream, const char *format, ...)
       pstdout_errnum = PSTDOUT_ERR_PARAMETERS;
       return -1;
     }
-  
+
   va_start(ap, format);
   rv = _pstdout_print(pstate, 0, stream, format, ap);
   va_end(ap);
   return rv;
 }
 
-int 
+int
 pstdout_vfprintf(pstdout_state_t pstate, FILE *stream, const char *format,
                  va_list ap)
 {
@@ -837,12 +837,12 @@ pstdout_vfprintf(pstdout_state_t pstate, FILE *stream, const char *format,
       pstdout_errnum = PSTDOUT_ERR_PARAMETERS;
       return -1;
     }
-  
+
   rv = _pstdout_print(pstate, 0, stream, format, ap);
   return rv;
 }
 
-void 
+void
 pstdout_perror(pstdout_state_t pstate, const char *s)
 {
   if (!pstdout_initialized)
@@ -908,11 +908,11 @@ _pstdout_state_init(pstdout_state_t pstate, const char *hostname)
 }
 
 static int
-_pstdout_output_buffer_data(pstdout_state_t pstate, 
+_pstdout_output_buffer_data(pstdout_state_t pstate,
                             FILE *stream,
                             char **whichbuffer,
                             unsigned int *whichbufferlen,
-                            uint32_t whichprependmask, 
+                            uint32_t whichprependmask,
                             uint32_t whichbuffermask,
                             uint32_t whichconsolidatemask,
                             List whichconsolidatedlist,
@@ -926,9 +926,9 @@ _pstdout_output_buffer_data(pstdout_state_t pstate,
   assert(stream == stdout || stream == stderr);
   assert(whichbuffer);
   assert(whichbufferlen);
-  assert(whichprependmask == PSTDOUT_OUTPUT_STDOUT_PREPEND_HOSTNAME 
+  assert(whichprependmask == PSTDOUT_OUTPUT_STDOUT_PREPEND_HOSTNAME
          || whichprependmask == PSTDOUT_OUTPUT_STDERR_PREPEND_HOSTNAME);
-  assert(whichbuffermask == PSTDOUT_OUTPUT_BUFFER_STDOUT 
+  assert(whichbuffermask == PSTDOUT_OUTPUT_BUFFER_STDOUT
          || whichbuffermask == PSTDOUT_OUTPUT_BUFFER_STDERR);
   assert(whichconsolidatemask == PSTDOUT_OUTPUT_STDOUT_CONSOLIDATE
          || whichconsolidatemask == PSTDOUT_OUTPUT_STDERR_CONSOLIDATE);
@@ -1040,10 +1040,10 @@ _pstdout_output_finish(pstdout_state_t pstate)
    */
   if (!cbuf_is_empty(pstate->p_stdout))
     _pstdout_print_wrapper(pstate, 1, stdout, "\n");
-  
+
   if (!cbuf_is_empty(pstate->p_stderr))
     _pstdout_print_wrapper(pstate, 1, stderr, "\n");
-  
+
   if (_pstdout_output_buffer_data(pstate,
                                   stdout,
                                   &(pstate->buffer_stdout),
@@ -1117,7 +1117,7 @@ _pstdout_func_entry(void *arg)
       pstdout_errnum = PSTDOUT_ERR_INTERNAL;
       goto cleanup;
     }
-  
+
   if (!list_append(pstdout_states, &pstate))
     {
       if (pstdout_debug_flags & PSTDOUT_DEBUG_STANDARD)
@@ -1136,7 +1136,7 @@ _pstdout_func_entry(void *arg)
     }
 
   tdata->exit_code = (tdata->pstdout_func)(&pstate, tdata->hostname, tdata->arg);
-  
+
   if (_pstdout_output_finish(&pstate) < 0)
     goto cleanup;
 
@@ -1177,7 +1177,7 @@ _pstdout_output_consolidated(FILE *stream,
   mutex_locked++;
 
   list_sort(whichconsolidatedlist, _pstdout_consolidated_data_compare);
-  
+
   if (!(itr = list_iterator_create (whichconsolidatedlist)))
     {
       pstdout_errnum = PSTDOUT_ERR_OUTMEM;
@@ -1187,7 +1187,7 @@ _pstdout_output_consolidated(FILE *stream,
   while ((cdata = list_next(itr)))
     {
       char hbuf[PSTDOUT_BUFLEN + 1];
-      
+
       memset(hbuf, '\0', PSTDOUT_BUFLEN + 1);
       fi_hostlist_sort(cdata->h);
       if (fi_hostlist_ranged_string(cdata->h, PSTDOUT_BUFLEN, hbuf) < 0)
@@ -1197,7 +1197,7 @@ _pstdout_output_consolidated(FILE *stream,
           pstdout_errnum = PSTDOUT_ERR_INTERNAL;
           goto cleanup;
         }
-      
+
       fprintf(stream, "----------------\n");
       fprintf(stream, "%s\n", hbuf);
       fprintf(stream, "----------------\n");
@@ -1205,7 +1205,7 @@ _pstdout_output_consolidated(FILE *stream,
     }
 
   rv = 0;
- cleanup:  
+ cleanup:
   if (mutex_locked)
     {
       if ((rc = pthread_mutex_unlock(whichconsolidatedmutex)))
@@ -1226,7 +1226,7 @@ _pstdout_output_consolidated_finish(void)
   /* Output consolidated data */
   if (pstdout_output_flags & PSTDOUT_OUTPUT_STDOUT_CONSOLIDATE)
     {
-      if (_pstdout_output_consolidated(stdout, 
+      if (_pstdout_output_consolidated(stdout,
                                        pstdout_consolidated_stdout,
                                        &pstdout_consolidated_stdout_mutex) < 0)
         goto cleanup;
@@ -1253,7 +1253,7 @@ _pstdout_sigint_finish_output(void *x, void *arg)
   assert(x);
 
   pstate = (struct pstdout_state *)x;
-       
+
   if (_pstdout_output_finish(pstate) < 0)
     return -1;
 
@@ -1261,7 +1261,7 @@ _pstdout_sigint_finish_output(void *x, void *arg)
    * protects from extraneous extra output from other threads after
    * this output.
    */
-  
+
   if (pstate->hostname
       && (pstdout_output_flags & PSTDOUT_OUTPUT_STDOUT_PREPEND_HOSTNAME)
       && !(pstdout_output_flags & PSTDOUT_OUTPUT_BUFFER_STDOUT)
@@ -1301,11 +1301,11 @@ _pstdout_sigint_finish_output(void *x, void *arg)
   return 0;
 }
 
-void  
+void
 _pstdout_sigint(int s)
 {
   int rc;
-  
+
   /* This is a last ditch effort, so no need to worry if we don't get
    * a lock or get an error or whatever.
    */
@@ -1352,7 +1352,7 @@ pstdout_launch(const char *hostnames, Pstdout_Thread pstdout_func, void *arg)
       pstdout_errnum = PSTDOUT_ERR_PARAMETERS;
       return -1;
     }
-  
+
   if ((rc = pthread_mutex_lock(&pstdout_launch_mutex)))
     {
       if (pstdout_debug_flags & PSTDOUT_DEBUG_STANDARD)
@@ -1372,7 +1372,7 @@ pstdout_launch(const char *hostnames, Pstdout_Thread pstdout_func, void *arg)
       pstdout_errnum = PSTDOUT_ERR_SUCCESS;
       goto cleanup;
     }
-  
+
   if (!(h = fi_hostlist_create(hostnames)))
     {
       pstdout_errnum = PSTDOUT_ERR_OUTMEM;
@@ -1432,7 +1432,7 @@ pstdout_launch(const char *hostnames, Pstdout_Thread pstdout_func, void *arg)
           goto cleanup;
         }
       memset(tdata[i], '\0', sizeof(struct pstdout_thread_data));
-      
+
       if (!(tdata[i]->hostname = strdup(host)))
         {
           pstdout_errnum = PSTDOUT_ERR_OUTMEM;
@@ -1440,7 +1440,7 @@ pstdout_launch(const char *hostnames, Pstdout_Thread pstdout_func, void *arg)
         }
       tdata[i]->pstdout_func = pstdout_func;
       tdata[i]->arg = arg;
-      
+
       if ((rc = pthread_attr_init(&(tdata[i]->attr))))
         {
           if (pstdout_debug_flags & PSTDOUT_DEBUG_STANDARD)
@@ -1448,7 +1448,7 @@ pstdout_launch(const char *hostnames, Pstdout_Thread pstdout_func, void *arg)
           pstdout_errnum = PSTDOUT_ERR_INTERNAL;
           goto cleanup;
         }
-      
+
       if ((rc = pthread_attr_setdetachstate(&(tdata[i]->attr), PTHREAD_CREATE_DETACHED)))
         {
           if (pstdout_debug_flags & PSTDOUT_DEBUG_STANDARD)
@@ -1456,7 +1456,7 @@ pstdout_launch(const char *hostnames, Pstdout_Thread pstdout_func, void *arg)
           pstdout_errnum = PSTDOUT_ERR_INTERNAL;
           goto cleanup;
         }
-      
+
       free(host);
       i++;
     }
@@ -1579,7 +1579,7 @@ pstdout_launch(const char *hostnames, Pstdout_Thread pstdout_func, void *arg)
   return exit_code;
 }
 
-int 
+int
 PSTDOUT_PRINTF(pstdout_state_t pstate, const char *format, ...)
 {
   va_list ap;
@@ -1602,7 +1602,7 @@ PSTDOUT_PRINTF(pstdout_state_t pstate, const char *format, ...)
   return rv;
 }
 
-int 
+int
 PSTDOUT_FPRINTF(pstdout_state_t pstate, FILE *stream, const char *format, ...)
 {
   va_list ap;
@@ -1615,7 +1615,7 @@ PSTDOUT_FPRINTF(pstdout_state_t pstate, FILE *stream, const char *format, ...)
     }
 
   va_start(ap, format);
-  if (!pstate 
+  if (!pstate
       || pstate->magic != PSTDOUT_STATE_MAGIC
       || (stream != stdout && stream != stderr)
       || !pstdout_initialized)
@@ -1626,7 +1626,7 @@ PSTDOUT_FPRINTF(pstdout_state_t pstate, FILE *stream, const char *format, ...)
   return rv;
 }
 
-void 
+void
 PSTDOUT_PERROR(pstdout_state_t pstate, const char *s)
 {
   if (!s)

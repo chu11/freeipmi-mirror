@@ -113,7 +113,7 @@ ipmipower_ping_process_pings (int *timeout)
       if (send_pings_flag)
         {
           int dropped = 0;
-          
+
           /* deal with packet heuristics */
           if (cmd_args.ping_packet_count && cmd_args.ping_percent)
             {
@@ -242,7 +242,7 @@ ipmipower_ping_process_pings (int *timeout)
                                  str_cmd,
                                  hdrbuf,
                                  DEBUG_UTIL_HDR_BUFLEN);
-                  
+
                   if (ipmi_dump_lan_packet (STDERR_FILENO,
                                             ics[i].hostname,
                                             hdrbuf,
@@ -305,7 +305,7 @@ ipmipower_ping_process_pings (int *timeout)
               if (cmd_args.rmcpdump)
                 {
                   char hdrbuf[DEBUG_UTIL_HDR_BUFLEN + 1];
-                  
+
                   memset (hdrbuf, '\0', DEBUG_UTIL_HDR_BUFLEN + 1);
 
                   debug_hdr_str (DEBUG_UTIL_TYPE_NONE,
@@ -314,7 +314,7 @@ ipmipower_ping_process_pings (int *timeout)
                                  DEBUG_UTIL_RMCPPING_STR,
                                  hdrbuf,
                                  DEBUG_UTIL_HDR_BUFLEN);
-                  
+
                   if (ipmi_dump_rmcp_packet (STDERR_FILENO,
                                              ics[i].hostname,
                                              hdrbuf,
@@ -422,7 +422,7 @@ ipmipower_ping_process_pings (int *timeout)
                                  str_cmd,
                                  hdrbuf,
                                  DEBUG_UTIL_HDR_BUFLEN);
-                  
+
                   if (ipmi_dump_lan_packet (STDERR_FILENO,
                                             ics[i].hostname,
                                             hdrbuf,
@@ -469,7 +469,7 @@ ipmipower_ping_process_pings (int *timeout)
                   IPMIPOWER_ERROR (("ipmi_check_cmd: %s", strerror (errno)));
                   exit (EXIT_FAILURE);
                 }
-              
+
               if (checksum_ret && unassemble_ret && cmd_ret)
                 {
                   /* We'll say this is equivalent to what pong response from RMCP */
@@ -504,7 +504,7 @@ ipmipower_ping_process_pings (int *timeout)
               if (cmd_args.rmcpdump)
                 {
                   char hdrbuf[DEBUG_UTIL_HDR_BUFLEN + 1];
-                  
+
                   memset (hdrbuf, '\0', DEBUG_UTIL_HDR_BUFLEN + 1);
 
                   debug_hdr_str (DEBUG_UTIL_TYPE_NONE,
@@ -513,7 +513,7 @@ ipmipower_ping_process_pings (int *timeout)
                                  DEBUG_UTIL_RMCPPING_STR,
                                  hdrbuf,
                                  DEBUG_UTIL_HDR_BUFLEN);
-                  
+
                   if (ipmi_dump_rmcp_packet (STDERR_FILENO,
                                              ics[i].hostname,
                                              hdrbuf,
@@ -545,7 +545,7 @@ ipmipower_ping_process_pings (int *timeout)
                    * need to make sure we get something back from the BMC to
                    * ensure the machine is still there.
                    */
-                  
+
                   if (FIID_OBJ_GET (rmcp_pong,
                                     "message_type",
                                     &val) < 0)
@@ -555,7 +555,7 @@ ipmipower_ping_process_pings (int *timeout)
                       exit (EXIT_FAILURE);
                     }
                   message_type = val;
-                  
+
                   if (FIID_OBJ_GET (rmcp_pong,
                                     "supported_entities.ipmi_supported",
                                     &val) < 0)
@@ -575,7 +575,7 @@ ipmipower_ping_process_pings (int *timeout)
             {
               if (cmd_args.ping_packet_count && cmd_args.ping_percent)
                 ics[i].ping_packet_count_recv++;
-              
+
               if (cmd_args.ping_consec_count)
                 {
                   /* Don't increment twice, its possible a previous pong
@@ -584,10 +584,10 @@ ipmipower_ping_process_pings (int *timeout)
                    */
                   if (!ics[i].ping_last_packet_recv_flag)
                     ics[i].ping_consec_count++;
-                  
+
                   ics[i].ping_last_packet_recv_flag++;
                 }
-              
+
               if (cmd_args.ping_packet_count && cmd_args.ping_percent)
                 {
                   if (ics[i].link_state == IPMIPOWER_LINK_STATE_GOOD)
@@ -607,7 +607,7 @@ ipmipower_ping_process_pings (int *timeout)
                 }
               ics[i].last_ping_recv.tv_sec = cur_time.tv_sec;
               ics[i].last_ping_recv.tv_usec = cur_time.tv_usec;
-              
+
             }
         } /* !IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IPMIPING */
 

@@ -131,7 +131,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   long long lltmp;
 
   assert (state);
-  
+
   cmd_args = state->input;
 
   switch (key)
@@ -352,7 +352,7 @@ _ipmi_dcmi_args_validate (struct ipmi_dcmi_arguments *cmd_args)
                "No command specified.\n");
       exit (EXIT_FAILURE);
     }
-  
+
   if ((cmd_args->get_dcmi_capability_info
        + cmd_args->get_asset_tag
        + cmd_args->set_asset_tag
@@ -390,7 +390,7 @@ ipmi_dcmi_argp_parse (int argc, char **argv, struct ipmi_dcmi_arguments *cmd_arg
   assert (cmd_args);
 
   init_common_cmd_args_admin (&(cmd_args->common_args));
-  
+
   cmd_args->get_dcmi_capability_info = 0;
   cmd_args->get_asset_tag = 0;
   cmd_args->set_asset_tag = 0;

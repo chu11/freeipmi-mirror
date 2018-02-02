@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2008-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef BMC_DEVICE_H
@@ -48,7 +48,7 @@ enum bmc_device_argp_option_keys
     GET_BT_INTERFACE_CAPABILITIES_KEY = 179,
     GET_BMC_GLOBAL_ENABLES_KEY = 180,
     SET_SYSTEM_FIRMWARE_VERSION_KEY = 181,
-    SET_SYSTEM_NAME_KEY = 182, 
+    SET_SYSTEM_NAME_KEY = 182,
     SET_PRIMARY_OPERATING_SYSTEM_NAME_KEY = 183,
     SET_OPERATING_SYSTEM_NAME_KEY = 184,
     SET_PRESENT_OS_VERSION_NUMBER_KEY = 185,

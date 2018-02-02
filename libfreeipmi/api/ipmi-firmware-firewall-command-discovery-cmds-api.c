@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -42,7 +42,7 @@
 #include "freeipmi-portability.h"
 
 int
-ipmi_cmd_get_netfn_support (ipmi_ctx_t ctx, 
+ipmi_cmd_get_netfn_support (ipmi_ctx_t ctx,
                             uint8_t channel_number,
                             fiid_obj_t obj_cmd_rs)
 {
@@ -61,27 +61,27 @@ ipmi_cmd_get_netfn_support (ipmi_ctx_t ctx,
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
-  
+
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
                                  tmpl_cmd_get_netfn_support_rs) < 0)
     {
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
-  
+
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_netfn_support_rq)))
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   if (fill_cmd_get_netfn_support (channel_number,
                                   obj_cmd_rq) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   if (api_ipmi_cmd (ctx,
                     IPMI_BMC_IPMB_LUN_BMC,
                     IPMI_NET_FN_APP_RQ,
@@ -99,7 +99,7 @@ ipmi_cmd_get_netfn_support (ipmi_ctx_t ctx,
 }
 
 int
-ipmi_cmd_get_command_support (ipmi_ctx_t ctx, 
+ipmi_cmd_get_command_support (ipmi_ctx_t ctx,
                               uint8_t channel_number,
                               uint8_t net_fn,
                               uint8_t operation,
@@ -122,20 +122,20 @@ ipmi_cmd_get_command_support (ipmi_ctx_t ctx,
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
-  
+
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
                                  tmpl_cmd_get_command_support_rs) < 0)
     {
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
-  
+
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_command_support_rq)))
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   if (fill_cmd_get_command_support (channel_number,
                                     net_fn,
                                     operation,
@@ -146,7 +146,7 @@ ipmi_cmd_get_command_support (ipmi_ctx_t ctx,
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   if (api_ipmi_cmd (ctx,
                     IPMI_BMC_IPMB_LUN_BMC,
                     IPMI_NET_FN_APP_RQ,
@@ -164,7 +164,7 @@ ipmi_cmd_get_command_support (ipmi_ctx_t ctx,
 }
 
 int
-ipmi_cmd_get_command_sub_function_support (ipmi_ctx_t ctx, 
+ipmi_cmd_get_command_sub_function_support (ipmi_ctx_t ctx,
                                            uint8_t channel_number,
                                            uint8_t net_fn,
                                            uint8_t lun,
@@ -187,7 +187,7 @@ ipmi_cmd_get_command_sub_function_support (ipmi_ctx_t ctx,
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
-  
+
   if ((FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
                                   tmpl_cmd_get_command_sub_function_support_specification_errata_rs) < 0)
       && (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
@@ -196,13 +196,13 @@ ipmi_cmd_get_command_sub_function_support (ipmi_ctx_t ctx,
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
-  
+
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_command_sub_function_support_rq)))
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   if (fill_cmd_get_command_sub_function_support (channel_number,
                                                  net_fn,
                                                  lun,
@@ -213,7 +213,7 @@ ipmi_cmd_get_command_sub_function_support (ipmi_ctx_t ctx,
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   if (api_ipmi_cmd (ctx,
                     IPMI_BMC_IPMB_LUN_BMC,
                     IPMI_NET_FN_APP_RQ,
@@ -231,7 +231,7 @@ ipmi_cmd_get_command_sub_function_support (ipmi_ctx_t ctx,
 }
 
 int
-ipmi_cmd_get_configurable_commands (ipmi_ctx_t ctx, 
+ipmi_cmd_get_configurable_commands (ipmi_ctx_t ctx,
                                     uint8_t channel_number,
                                     uint8_t net_fn,
                                     uint8_t operation,
@@ -254,20 +254,20 @@ ipmi_cmd_get_configurable_commands (ipmi_ctx_t ctx,
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
-  
+
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
                                  tmpl_cmd_get_configurable_commands_rs) < 0)
     {
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
-  
+
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_configurable_commands_rq)))
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   if (fill_cmd_get_configurable_commands (channel_number,
                                           net_fn,
                                           operation,
@@ -278,7 +278,7 @@ ipmi_cmd_get_configurable_commands (ipmi_ctx_t ctx,
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   if (api_ipmi_cmd (ctx,
                     IPMI_BMC_IPMB_LUN_BMC,
                     IPMI_NET_FN_APP_RQ,
@@ -296,7 +296,7 @@ ipmi_cmd_get_configurable_commands (ipmi_ctx_t ctx,
 }
 
 int
-ipmi_cmd_get_configurable_command_sub_functions (ipmi_ctx_t ctx, 
+ipmi_cmd_get_configurable_command_sub_functions (ipmi_ctx_t ctx,
                                                  uint8_t channel_number,
                                                  uint8_t net_fn,
                                                  uint8_t lun,
@@ -319,20 +319,20 @@ ipmi_cmd_get_configurable_command_sub_functions (ipmi_ctx_t ctx,
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
-  
+
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
                                  tmpl_cmd_get_configurable_command_sub_functions_rs) < 0)
     {
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
-  
+
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_configurable_command_sub_functions_rq)))
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   if (fill_cmd_get_configurable_command_sub_functions (channel_number,
                                                        net_fn,
                                                        lun,
@@ -343,7 +343,7 @@ ipmi_cmd_get_configurable_command_sub_functions (ipmi_ctx_t ctx,
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   if (api_ipmi_cmd (ctx,
                     IPMI_BMC_IPMB_LUN_BMC,
                     IPMI_NET_FN_APP_RQ,
@@ -361,7 +361,7 @@ ipmi_cmd_get_configurable_command_sub_functions (ipmi_ctx_t ctx,
 }
 
 int
-ipmi_cmd_set_command_enables (ipmi_ctx_t ctx, 
+ipmi_cmd_set_command_enables (ipmi_ctx_t ctx,
                               uint8_t channel_number,
                               uint8_t net_fn,
                               uint8_t operation,
@@ -386,20 +386,20 @@ ipmi_cmd_set_command_enables (ipmi_ctx_t ctx,
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
-  
+
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
                                  tmpl_cmd_set_command_enables_rs) < 0)
     {
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
-  
+
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_set_command_enables_rq)))
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   if (fill_cmd_set_command_enables (channel_number,
                                     net_fn,
                                     operation,
@@ -412,7 +412,7 @@ ipmi_cmd_set_command_enables (ipmi_ctx_t ctx,
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   if (api_ipmi_cmd (ctx,
                     IPMI_BMC_IPMB_LUN_BMC,
                     IPMI_NET_FN_APP_RQ,
@@ -430,7 +430,7 @@ ipmi_cmd_set_command_enables (ipmi_ctx_t ctx,
 }
 
 int
-ipmi_cmd_get_command_enables (ipmi_ctx_t ctx, 
+ipmi_cmd_get_command_enables (ipmi_ctx_t ctx,
                               uint8_t channel_number,
                               uint8_t net_fn,
                               uint8_t operation,
@@ -453,20 +453,20 @@ ipmi_cmd_get_command_enables (ipmi_ctx_t ctx,
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
-  
+
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
                                  tmpl_cmd_get_command_enables_rs) < 0)
     {
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
-  
+
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_command_enables_rq)))
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   if (fill_cmd_get_command_enables (channel_number,
                                     net_fn,
                                     operation,
@@ -477,7 +477,7 @@ ipmi_cmd_get_command_enables (ipmi_ctx_t ctx,
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   if (api_ipmi_cmd (ctx,
                     IPMI_BMC_IPMB_LUN_BMC,
                     IPMI_NET_FN_APP_RQ,
@@ -495,7 +495,7 @@ ipmi_cmd_get_command_enables (ipmi_ctx_t ctx,
 }
 
 int
-ipmi_cmd_set_command_sub_function_enables (ipmi_ctx_t ctx, 
+ipmi_cmd_set_command_sub_function_enables (ipmi_ctx_t ctx,
                                            uint8_t channel_number,
                                            uint8_t net_fn,
                                            uint8_t lun,
@@ -519,20 +519,20 @@ ipmi_cmd_set_command_sub_function_enables (ipmi_ctx_t ctx,
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
-  
+
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
                                  tmpl_cmd_set_command_sub_function_enables_rs) < 0)
     {
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
-  
+
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_set_command_sub_function_enables_rq)))
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   if (fill_cmd_set_command_sub_function_enables (channel_number,
                                                  net_fn,
                                                  lun,
@@ -544,7 +544,7 @@ ipmi_cmd_set_command_sub_function_enables (ipmi_ctx_t ctx,
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   if (api_ipmi_cmd (ctx,
                     IPMI_BMC_IPMB_LUN_BMC,
                     IPMI_NET_FN_APP_RQ,
@@ -562,7 +562,7 @@ ipmi_cmd_set_command_sub_function_enables (ipmi_ctx_t ctx,
 }
 
 int
-ipmi_cmd_set_command_sub_function_enables_defining_body_code (ipmi_ctx_t ctx, 
+ipmi_cmd_set_command_sub_function_enables_defining_body_code (ipmi_ctx_t ctx,
                                                               uint8_t channel_number,
                                                               uint8_t net_fn,
                                                               uint8_t lun,
@@ -587,20 +587,20 @@ ipmi_cmd_set_command_sub_function_enables_defining_body_code (ipmi_ctx_t ctx,
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
-  
+
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
                                  tmpl_cmd_set_command_sub_function_enables_rs) < 0)
     {
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
-  
+
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_set_command_sub_function_enables_defining_body_code_rq)))
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   if (fill_cmd_set_command_sub_function_enables_defining_body_code (channel_number,
                                                                     net_fn,
                                                                     lun,
@@ -613,7 +613,7 @@ ipmi_cmd_set_command_sub_function_enables_defining_body_code (ipmi_ctx_t ctx,
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   if (api_ipmi_cmd (ctx,
                     IPMI_BMC_IPMB_LUN_BMC,
                     IPMI_NET_FN_APP_RQ,
@@ -631,7 +631,7 @@ ipmi_cmd_set_command_sub_function_enables_defining_body_code (ipmi_ctx_t ctx,
 }
 
 int
-ipmi_cmd_set_command_sub_function_enables_oem_iana (ipmi_ctx_t ctx, 
+ipmi_cmd_set_command_sub_function_enables_oem_iana (ipmi_ctx_t ctx,
                                                     uint8_t channel_number,
                                                     uint8_t net_fn,
                                                     uint8_t lun,
@@ -656,20 +656,20 @@ ipmi_cmd_set_command_sub_function_enables_oem_iana (ipmi_ctx_t ctx,
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
-  
+
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
                                  tmpl_cmd_set_command_sub_function_enables_rs) < 0)
     {
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
-  
+
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_set_command_sub_function_enables_oem_iana_rq)))
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   if (fill_cmd_set_command_sub_function_enables_oem_iana (channel_number,
                                                                     net_fn,
                                                                     lun,
@@ -682,7 +682,7 @@ ipmi_cmd_set_command_sub_function_enables_oem_iana (ipmi_ctx_t ctx,
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   if (api_ipmi_cmd (ctx,
                     IPMI_BMC_IPMB_LUN_BMC,
                     IPMI_NET_FN_APP_RQ,
@@ -700,7 +700,7 @@ ipmi_cmd_set_command_sub_function_enables_oem_iana (ipmi_ctx_t ctx,
 }
 
 int
-ipmi_cmd_get_command_sub_function_enables (ipmi_ctx_t ctx, 
+ipmi_cmd_get_command_sub_function_enables (ipmi_ctx_t ctx,
                                            uint8_t channel_number,
                                            uint8_t net_fn,
                                            uint8_t lun,
@@ -723,20 +723,20 @@ ipmi_cmd_get_command_sub_function_enables (ipmi_ctx_t ctx,
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
-  
+
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
                                  tmpl_cmd_get_command_sub_function_enables_rs) < 0)
     {
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
-  
+
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_command_sub_function_enables_rq)))
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   if (fill_cmd_get_command_sub_function_enables (channel_number,
                                                  net_fn,
                                                  lun,
@@ -747,7 +747,7 @@ ipmi_cmd_get_command_sub_function_enables (ipmi_ctx_t ctx,
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   if (api_ipmi_cmd (ctx,
                     IPMI_BMC_IPMB_LUN_BMC,
                     IPMI_NET_FN_APP_RQ,
@@ -765,7 +765,7 @@ ipmi_cmd_get_command_sub_function_enables (ipmi_ctx_t ctx,
 }
 
 int
-ipmi_cmd_get_oem_netfn_iana_support (ipmi_ctx_t ctx, 
+ipmi_cmd_get_oem_netfn_iana_support (ipmi_ctx_t ctx,
                                      uint8_t channel_number,
                                      uint8_t net_fn,
                                      uint8_t list_index,
@@ -786,20 +786,20 @@ ipmi_cmd_get_oem_netfn_iana_support (ipmi_ctx_t ctx,
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
-  
+
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
                                  tmpl_cmd_get_oem_netfn_iana_support_rs) < 0)
     {
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
-  
+
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_oem_netfn_iana_support_rq)))
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   if (fill_cmd_get_oem_netfn_iana_support (channel_number,
                                            net_fn,
                                            list_index,
@@ -808,7 +808,7 @@ ipmi_cmd_get_oem_netfn_iana_support (ipmi_ctx_t ctx,
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   if (api_ipmi_cmd (ctx,
                     IPMI_BMC_IPMB_LUN_BMC,
                     IPMI_NET_FN_APP_RQ,

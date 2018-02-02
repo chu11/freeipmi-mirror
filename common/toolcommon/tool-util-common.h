@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef TOOL_UTIL_COMMON_H
@@ -35,6 +35,6 @@ int check_kg_len (const char *in);
 char *format_kg (char *out, unsigned int outlen, const void *k_g);
 
 unsigned int get_timestamp_flags (struct common_cmd_args *common_args,
-                                  unsigned int defaultflags); 
+                                  unsigned int defaultflags);
 
 #endif /* TOOL_UTIL_COMMON_H */

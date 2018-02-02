@@ -358,7 +358,7 @@ struct ipmiconsole_ctx_session {
 
   /* Serial keepalive timeout maintenance */
   struct timeval last_sol_packet_received;
- 
+
   /*
    * Protocol State Machine Variables
    */
@@ -444,7 +444,7 @@ struct ipmiconsole_ctx_debug {
  * - ENGINE_SUBMITTED, in engine being used
  *   - can move to USER_DESTROYED if user destroys first
  *   - can move to GARBAGE_COLLECTION_WAIT if engine finished first
- * - GARBAGE_COLLECTION_WAIT, waiting for user to destroy 
+ * - GARBAGE_COLLECTION_WAIT, waiting for user to destroy
  *   - can move to GARBAGE_COLLECTION_USER_DESTROYED
  *   - can move to ENGINE_DESTROYED
  * - GARBAGE_COLLECTION_USER_DESTROYED, user done, garbage collection

@@ -39,13 +39,13 @@
 
 #include "error.h"
 
-static char *err_prog = NULL;  
+static char *err_prog = NULL;
 static int err_flags = 0;
 static int exit_value = EXIT_FAILURE;
 
 #define ERROR_BUFLEN   1024
 
-void 
+void
 err_init(char *prog)
 {
   char *p = strrchr(prog, '/');
@@ -58,7 +58,7 @@ err_init_exit_value(int val)
   exit_value = val;
 }
 
-int 
+int
 err_get_flags(void)
 {
   assert(err_prog);
@@ -66,7 +66,7 @@ err_get_flags(void)
   return err_flags;
 }
 
-void 
+void
 err_set_flags(int flags)
 {
   assert(err_prog);
@@ -74,7 +74,7 @@ err_set_flags(int flags)
   err_flags = flags;
 }
 
-static void 
+static void
 _err(int syslog_level, const char *fmt, va_list ap)
 {
   char buf[ERROR_BUFLEN];
@@ -102,7 +102,7 @@ err_debug(const char *fmt, ...)
   va_end(ap);
 }
 
-void 
+void
 err_output(const char *fmt, ...)
 {
   va_list ap;

@@ -11,19 +11,19 @@ AC_DEFUN([AC_IPMISELD_CACHE_DIRECTORY],
 
   AC_MSG_CHECKING([for ipmiseld cache dir default path])
   AC_ARG_WITH([ipmiseld-cache-dir],
-    AC_HELP_STRING([--with-ipmiseld-cache-dir=PATH], 
+    AC_HELP_STRING([--with-ipmiseld-cache-dir=PATH],
                    [Specify default ipmiseld cache dir path]),
     [ case "$withval" in
         no)  ;;
         yes) ;;
-        *)   IPMISELD_CACHE_DIRECTORY=$withval 
+        *)   IPMISELD_CACHE_DIRECTORY=$withval
       esac
     ]
   )
   AC_MSG_RESULT($IPMISELD_CACHE_DIRECTORY)
 
-  AC_DEFINE_UNQUOTED([IPMISELD_CACHE_DIRECTORY], 
-                     ["$IPMISELD_CACHE_DIRECTORY"], 
+  AC_DEFINE_UNQUOTED([IPMISELD_CACHE_DIRECTORY],
+                     ["$IPMISELD_CACHE_DIRECTORY"],
                      [Define default ipmiseld cache dir.])
   AC_SUBST(IPMISELD_CACHE_DIRECTORY)
 ])

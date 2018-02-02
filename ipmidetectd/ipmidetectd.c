@@ -132,7 +132,7 @@ _fds_setup (void)
   assert (!fds_count);
   assert (!nodes_count);
   assert (!server_fd);
-  
+
   /* IPv4 and IPv6 fds are not needed in the general sense, however b/c
    * we're doing up/down based on IP/string matching, we need binding so
    * that what is received back on recvfrom() calls matches what we sent

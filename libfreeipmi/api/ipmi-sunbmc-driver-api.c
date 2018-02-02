@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -90,7 +90,7 @@ api_sunbmc_cmd_raw (ipmi_ctx_t ctx,
           && buf_rq_len
           && buf_rs
           && buf_rs_len);
- 
+
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_sunbmc_raw)))
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);

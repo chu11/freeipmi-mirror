@@ -8,7 +8,7 @@ ipmi_oem_CPPFLAGS = \
 	-I$(top_builddir)/libfreeipmi/include \
 	-I$(top_srcdir)/libfreeipmi/include \
 	-D_GNU_SOURCE \
-	-D_REENTRANT 
+	-D_REENTRANT
 
 ipmi_oem_LDADD = \
 	$(top_builddir)/common/toolcommon/libtoolcommon.la \

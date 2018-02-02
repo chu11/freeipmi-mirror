@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_SEL_H
@@ -39,9 +39,9 @@ extern "C" {
 #define IPMI_SEL_ERR_NO_SEL_ENTRIES                          7
 #define IPMI_SEL_ERR_SEL_ENTRIES_LIST_END                    8
 #define IPMI_SEL_ERR_INVALID_SEL_ENTRY                       9
-#define IPMI_SEL_ERR_NOT_FOUND                              10 
+#define IPMI_SEL_ERR_NOT_FOUND                              10
 #define IPMI_SEL_ERR_RESERVATION_CANCELED                   11
-#define IPMI_SEL_ERR_INTERPRET_ERROR                        12 
+#define IPMI_SEL_ERR_INTERPRET_ERROR                        12
 #define IPMI_SEL_ERR_CALLBACK_ERROR                         13
 #define IPMI_SEL_ERR_IPMI_ERROR                             14
 #define IPMI_SEL_ERR_SYSTEM_ERROR                           15
@@ -87,7 +87,7 @@ typedef struct ipmi_sel_ctx *ipmi_sel_ctx_t;
 
 typedef int (*Ipmi_Sel_Parse_Callback)(ipmi_sel_ctx_t ctx, void *callback_data);
 
-/* 
+/*
  * SEL Context Functions
  */
 
@@ -288,7 +288,7 @@ int ipmi_sel_parse_read_event_direction (ipmi_sel_ctx_t ctx,
 
 int ipmi_sel_parse_read_event_type_code (ipmi_sel_ctx_t ctx,
                                          const void *sel_record,
-                                         unsigned int sel_record_len,   
+                                         unsigned int sel_record_len,
                                          uint8_t *event_type_code);
 
 int ipmi_sel_parse_read_event_data1 (ipmi_sel_ctx_t ctx,

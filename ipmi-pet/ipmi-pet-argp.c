@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2011-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -120,7 +120,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   unsigned long tmp;
 
   assert (state);
-  
+
   cmd_args = state->input;
 
   switch (key)
@@ -219,24 +219,24 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
                 fprintf (stderr, "invalid specific trap argument\n");
                 exit (EXIT_FAILURE);
               }
-            
+
             cmd_args->specific_trap = uvalue;
             cmd_args->specific_trap_set = 1;
             break;
           }
-        
+
         if (strlen (arg) >= 2)
           {
             if (!strncmp (arg, "0x", 2))
               arg+=2;
           }
-        
+
         if (*arg == '\0')
           {
             fprintf (stderr, "invalid variable binding hex byte argument\n");
             exit (EXIT_FAILURE);
           }
-        
+
         for (i = 0; arg[i] != '\0'; i++)
           {
             if (i >= 2)
@@ -244,14 +244,14 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
                 fprintf (stderr, "invalid variable binding hex byte argument\n");
                 exit (EXIT_FAILURE);
               }
-            
+
             if (!isxdigit (arg[i]))
               {
                 fprintf (stderr, "invalid variable binding hex byte argument\n");
                 exit (EXIT_FAILURE);
               }
           }
-        
+
         if (cmd_args->variable_bindings_length < IPMI_PET_MAX_ARGS)
           {
             errno = 0;
@@ -269,7 +269,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
             fprintf (stderr, "Too many arguments specified\n");
             exit (EXIT_FAILURE);
           }
-        
+
         break;
       }
     case ARGP_KEY_END:
@@ -379,16 +379,16 @@ ipmi_pet_argp_parse (int argc, char **argv, struct ipmi_pet_arguments *cmd_args)
           '\0',
           sizeof (uint8_t) * IPMI_PET_MAX_ARGS);
   cmd_args->variable_bindings_length = 0;
-  
+
   argp_parse (&cmdline_config_file_argp,
               argc,
               argv,
               ARGP_IN_ORDER,
               NULL,
               &(cmd_args->common_args));
-  
+
   _ipmi_pet_config_file_parse (cmd_args);
-  
+
   argp_parse (&cmdline_argp,
               argc,
               argv,

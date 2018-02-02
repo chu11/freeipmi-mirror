@@ -1,6 +1,6 @@
 FreeIPMI Testing
 
-by 
+by
 
 Albert Chu
 chu11@llnl.gov
@@ -143,7 +143,7 @@ listed below should be output:
   * Maximum_Privilege_Cipher_Suite_Id_2
   * Maximum_Privilege_Cipher_Suite_Id_3
 - For SOL_Conf section (if IPMI 2.0 is supported):
-  * Enable_SOL 
+  * Enable_SOL
   * SOL_Privilege_Level
   * Force_SOL_Payload_Authentication
   * Force_SOL_Payload_Encryption
@@ -278,7 +278,7 @@ Configuration changes to try:
   * Maximum_Privilege_Cipher_Suite_Id_3
     o Can configure Unused, User, Operator, and Administrator.
 - For SOL_Conf section (if IPMI 2.0 is supported):
-  * Enable_SOL 
+  * Enable_SOL
     o Can configure both Yes and No
   * SOL_Privilege_Level
     o Can configure User, Operator, and Administrator.
@@ -358,11 +358,11 @@ Execute bmc-info with no bmc-info specific options, verify tool:
   * IPMI Version
   * Manufacturer ID
     o The name of the manufacter outputs
- 
+
       e.g. "Manufacturer ID       : SOME-COMPANY (1234)"
            vs.
            "Manufacturer ID       : 1234"
-      
+
       If the above is not the case, and the vendor is registered with
       IANA, is there a firmware bug?
   * Product ID
@@ -427,7 +427,7 @@ Execute ipmi-sensors with very verbose output (-vv), verify tool:
     o The combination of Sensor Owner ID and Sensor Number should
       point to a unique sensor.
   * Entity ID
-    o The name of the Entity ID outputs 
+    o The name of the Entity ID outputs
       e.g. "Entity ID: system board (7)"
            vs.
            "Entity ID: 7"
@@ -872,7 +872,7 @@ Section User1
         ## Possible values: Yes/No or blank to not set
         Enable_User                                   No
         ## Give password or blank to clear. MAX 16 chars.
-        Password                                   
+        Password
         ## Possible values: Yes/No
         Lan_Enable_IPMI_Msgs                          Yes
         ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
@@ -1123,7 +1123,7 @@ Section User1
         ## Possible values: Yes/No or blank to not set
         Enable_User                                   No
         ## Give password or blank to clear. MAX 16 chars.
-        Password                                   
+        Password
         ## Possible values: Yes/No
         Lan_Enable_IPMI_Msgs                          Yes
         ## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
@@ -1171,7 +1171,7 @@ EndSection
 
 Section Lan_Conf_Security_Keys
         ## Give string or blank to clear. Max 20 chars
-        K_G                                          
+        K_G
 EndSection
 
 Section Rmcpplus_Conf_Privilege
@@ -1449,7 +1449,7 @@ Test)
 Configure both Gratuitous ARPs and ARP Responses Off
 
 Verify that IPMI over LAN still functions if you manually insert the
-remote MAC address into your local ARP cache.  
+remote MAC address into your local ARP cache.
 
 In Linux, 'arp -s <hostname> <mac_addr>' adds the MAC address to the
 local ARP cache.

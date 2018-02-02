@@ -30,7 +30,7 @@ for your particular machine.
 .LP
 The below configuration file and most of this manpage assume the user
 is interested in configuring a BMC for use with IPMI over LAN.
-Various configuration options from 
+Various configuration options from
 .B ipmi-config(8)
 have been left out or skipped because it is considered unnecessary.
 Future versions of this manpage will try to include more information.
@@ -326,11 +326,11 @@ To instead setup your BMC network information via DHCP, the field
 \fIIP_Address_Source\fR should be configured with "Use_DHCP".
 .LP
 It is recommended that static IP addresses be configured for address
-resolution reasons.  See 
-.B Lan_Conf_Misc 
+resolution reasons.  See
+.B Lan_Conf_Misc
 below for a more detailed explanation.
 
-.SH "Section Lan_Conf_Auth" 
+.SH "Section Lan_Conf_Auth"
 This section determines what types of password authentication
 mechanisms are allowed for users at different privilege levels under
 the IPMI 1.5 protocol.  The currently supported authentication methods
@@ -391,12 +391,12 @@ Instead of gratuitous ARPs some BMCs are able to respond to ARP
 requests, even when powered off.  If offerred, this feature can be
 enabled through the \fIEnable_Arp_Response\fR option.
 .LP
-Generally speaking, turning on gratuitous ARPs is acceptable.  
-However, it will increase traffic on your network.  
+Generally speaking, turning on gratuitous ARPs is acceptable.
+However, it will increase traffic on your network.
 If you are using IPMI on a large cluster, the gratuitous ARPs
 may easily flood your network.  They should be tuned to occur less
 frequently or disabled.  If disabled, the remote machine's MAC address
-should be permanently stored in the local ARP cache through 
+should be permanently stored in the local ARP cache through
 .B arp(8).
 .LP
 See
@@ -458,7 +458,7 @@ HMAC-MD5, which are better than MD5-128 algorithms.  AES-CBC-128
 confidentiality algorithms are stronger than xRC4-128 algorithms,
 which are better than xRC4-40 algorithms.  Cipher suite ID 3 is
 therefore typically considered the most secure.  Some users may wish
-to set cipher suite ID 3 to a privilege level and disable all 
+to set cipher suite ID 3 to a privilege level and disable all
 remaining cipher suite IDs.
 .LP
 The above example configuration has decided to allow any user with
@@ -468,7 +468,7 @@ Typically, the maximum privilege level configured to a username should
 be set for atleast one cipher suite ID.  Typically, this is the
 "Administrator" privilege.
 .LP
-A number of cipher suite IDs are optionally implemented, so the 
+A number of cipher suite IDs are optionally implemented, so the
 available cipher suite IDs available your system may vary.
 
 .SH "Section SOL_Conf"
@@ -501,16 +501,16 @@ values for faster SOL throughput.
 The \fINon_Volatile_Bit_Rate\fR and \fIVolatile_Bit_Rate\fR determine
 the baudrate the BMC should use.  This should match the baudrate set
 in the BIOS and operating system, such as
-.B agetty(8).  
+.B agetty(8).
 Generally speaking, both the \fIVolatile\fR and \fINon_Volatile\fR
 options should be set identically.
 .LP
 In addition to enabling SOL in this section, individual users most
-also be capable of connecting with SOL.  See the section 
-.B "Section User1, User2, ..." 
-above for details.  
+also be capable of connecting with SOL.  See the section
+.B "Section User1, User2, ..."
+above for details.
 
 #include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
 .SH "SEE ALSO"
-freeipmi(7), bmc-watchdog(8), ipmi-config(8), agetty(8)	
+freeipmi(7), bmc-watchdog(8), ipmi-config(8), agetty(8)
 #include <@top_srcdir@/man/manpage-common-homepage.man>

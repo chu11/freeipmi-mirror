@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2014 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -107,11 +107,11 @@ sel_string_output_dell_poweredge_event_data1_class_sensor_specific_discrete (ipm
                                               system_event_record_data->offset_from_event_reading_type_code,
                                               tmpbuf,
                                               tmpbuflen);
-      
+
       if (ret > 0)
         return (1);
     }
-  
+
   return (0);
 }
 
@@ -205,7 +205,7 @@ sel_string_output_dell_poweredge_event_data1_class_oem (ipmi_sel_ctx_t ctx,
       snprintf (tmpbuf,
                 tmpbuflen,
                 "OEM Diagnostic Data Event");
-      
+
       return (1);
     }
 
@@ -260,7 +260,7 @@ sel_string_output_dell_poweredge_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
           snprintf (tmpbuf,
                     tmpbuflen,
                     "Intrusion while system On");
-              
+
           return (1);
         }
       else if (system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY_INTRUSION_WHILE_SYSTEM_OFF)
@@ -268,7 +268,7 @@ sel_string_output_dell_poweredge_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
           snprintf (tmpbuf,
                     tmpbuflen,
                     "Intrusion while system Off");
-              
+
           return (1);
         }
     }
@@ -285,7 +285,7 @@ sel_string_output_dell_poweredge_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
       unsigned int num = 0;
       int found = 0;
       int i;
-          
+
       for (i = 0; i < 8; i++)
         {
           if (system_event_record_data->event_data2 & (0x1 << i))
@@ -295,14 +295,14 @@ sel_string_output_dell_poweredge_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
               break;
             }
         }
-          
+
       if (found)
         {
           snprintf (tmpbuf,
                     tmpbuflen,
                     "CPU %u",
                     num);
-              
+
           return (1);
         }
     }
@@ -316,7 +316,7 @@ sel_string_output_dell_poweredge_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
       unsigned int num = 0;
       int found = 0;
       int i;
-          
+
       for (i = 0; i < 8; i++)
         {
           if (system_event_record_data->event_data2 & (0x1 << i))
@@ -326,14 +326,14 @@ sel_string_output_dell_poweredge_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
               break;
             }
         }
-          
+
       if (found)
         {
           snprintf (tmpbuf,
                     tmpbuflen,
                     "Front Side Bus %u",
                     num);
-              
+
           return (1);
         }
     }
@@ -379,7 +379,7 @@ sel_string_output_dell_poweredge_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
         default:
           str = "Internal Logic Error";
         }
-          
+
       snprintf (tmpbuf, tmpbuflen, "%s", str);
 
       return (1);
@@ -391,19 +391,19 @@ sel_string_output_dell_poweredge_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
       && system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_FULLY_REDUNDANT)
     {
       char *str = NULL;
-          
+
       if (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_SPARE_MODE_BITMASK)
         str = "Memory is in Spare mode";
       else if (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_RAID_MODE_BITMASK)
         str = "Memory is in RAID mode";
       else /* system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_MIRROR_MODE_BITMASK */
         str = "Memory is in Mirror mode";
-          
+
       snprintf (tmpbuf,
                 tmpbuflen,
                 "%s",
                 str);
-          
+
       return (1);
     }
 
@@ -480,7 +480,7 @@ sel_string_output_dell_poweredge_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
                     "BIOS Fatal Error code: %02Xh",
                     system_event_record_data->event_data2);
         }
-          
+
       if (error_code_str)
         snprintf (tmpbuf,
                   tmpbuflen,
@@ -499,19 +499,19 @@ sel_string_output_dell_poweredge_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
               && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_DELL_CHIPSET_ERROR)))
     {
       uint8_t device, function;
-          
+
       device = (system_event_record_data->event_data2 & IPMI_OEM_DELL_EVENT_DATA2_DEVICE_NUMBER_BITMASK);
       device >>= IPMI_OEM_DELL_EVENT_DATA2_DEVICE_NUMBER_SHIFT;
-          
+
       function = (system_event_record_data->event_data2 & IPMI_OEM_DELL_EVENT_DATA2_FUNCTION_NUMBER_BITMASK);
       function >>= IPMI_OEM_DELL_EVENT_DATA2_FUNCTION_NUMBER_SHIFT;
-          
+
       snprintf (tmpbuf,
                 tmpbuflen,
                 "Device %u, Function %u",
                 device,
                 function);
-          
+
       return (1);
     }
 
@@ -1108,7 +1108,7 @@ sel_string_output_dell_poweredge_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 
   /* achu: I don't know what motherboards this applies to, probably very old ones */
 #if 0
-  /* OEM Interpretation   
+  /* OEM Interpretation
    *
    * From Dell Spec and Dell Code
    */
@@ -1121,7 +1121,7 @@ sel_string_output_dell_poweredge_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
     {
       uint8_t memory_card;
       uint8_t bank_number;
-          
+
       memory_card = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_MEMORY_CARD_BITMASK);
       memory_card >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_MEMORY_CARD_SHIFT;
 
@@ -1207,18 +1207,18 @@ sel_string_output_dell_poweredge_event_data2_class_oem (ipmi_sel_ctx_t ctx,
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING)
     {
       uint16_t register_offset;
-      
+
       register_offset = system_event_record_data->event_data2;
       register_offset |= (system_event_record_data->offset_from_event_reading_type_code) << 8;
-      
+
       snprintf (tmpbuf,
                 tmpbuflen,
                 "Register Offset = %Xh",
                 register_offset);
-      
+
       return (1);
     }
-  
+
   return (0);
 }
 
@@ -1273,10 +1273,10 @@ sel_string_output_dell_poweredge_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
                 tmpbuflen,
                 "APIC ID %u",
                 system_event_record_data->event_data3);
-          
+
       return (1);
     }
-      
+
   /* From Dell Spec and Dell Code
    *
    * [7] - 0 = device with option ROM is embedded, 1 = device with option ROM is in a slot
@@ -1290,17 +1290,17 @@ sel_string_output_dell_poweredge_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
       && system_event_record_data->event_direction == IPMI_SEL_RECORD_DEASSERTION_EVENT)
     {
       uint8_t option_rom;
-          
+
       option_rom = (system_event_record_data->event_data3 & IPMI_OEM_DELL_EVENT_DATA3_OPTION_ROM_BITMASK);
       option_rom >>= IPMI_OEM_DELL_EVENT_DATA3_OPTION_ROM_SHIFT;
-          
+
       if (option_rom == IPMI_OEM_DELL_EVENT_DATA3_OPTION_ROM_SLOT)
         {
           uint8_t slot;
-              
+
           slot = (system_event_record_data->event_data3 & IPMI_OEM_DELL_EVENT_DATA3_OPTION_ROM_SLOT_BITMASK);
           slot >>= IPMI_OEM_DELL_EVENT_DATA3_OPTION_ROM_SLOT_SHIFT;
-              
+
           snprintf (tmpbuf,
                     tmpbuflen,
                     "Device Slot %u",
@@ -1310,7 +1310,7 @@ sel_string_output_dell_poweredge_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
         snprintf (tmpbuf,
                   tmpbuflen,
                   "Device Embedded");
-          
+
       return (1);
     }
 
@@ -1326,7 +1326,7 @@ sel_string_output_dell_poweredge_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
                 tmpbuflen,
                 "Bus %u",
                 system_event_record_data->event_data3);
-          
+
       return (1);
     }
 
@@ -1399,7 +1399,7 @@ sel_string_output_dell_poweredge_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
                 reporting_agent_type_str,
                 partner_agent_type_str,
                 error_type_str);
-          
+
       return (1);
     }
 
@@ -1440,7 +1440,7 @@ sel_string_output_dell_poweredge_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
                 tmpbuflen,
                 "TXT Error Type = %s",
                 error_type_str);
-          
+
       return (1);
     }
 
@@ -1463,7 +1463,7 @@ sel_string_output_dell_poweredge_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
                     tmpbuflen,
                     "DIMM %c",
                     'A' + system_event_record_data->event_data3);
-          
+
           return (1);
         }
     }
@@ -1519,10 +1519,10 @@ sel_string_output_dell_poweredge_event_data3_class_oem (ipmi_sel_ctx_t ctx,
                 tmpbuflen,
                 "Register Value = %02Xh",
                 system_event_record_data->event_data3);
-      
+
       return (1);
     }
-  
+
   return (0);
 }
 
@@ -1583,7 +1583,7 @@ _dell_calculate_dimm_location (ipmi_sel_ctx_t ctx,
           || ctx->product_id == IPMI_DELL_PRODUCT_ID_POWEREDGE_R720);
 
   /* achu:
-   * 
+   *
    * DIMM locations can be thought of in this mapping, lets
    * say dimms per node is 4.
    *
@@ -1595,7 +1595,7 @@ _dell_calculate_dimm_location (ipmi_sel_ctx_t ctx,
    * 5 = B1
    * 6 = B2
    * ...
-   * 
+   *
    * lets say dimms per node is 9
    *
    * Dimm # = Location
@@ -1606,7 +1606,7 @@ _dell_calculate_dimm_location (ipmi_sel_ctx_t ctx,
    * 10 = B1
    * ...
    */
-  
+
   memset (dimmstr, '\0', DELL_EVENT_BUFFER_LENGTH + 1);
 
   dimm_counter = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_DIMM_COUNTER_BITMASK);
@@ -1619,11 +1619,11 @@ _dell_calculate_dimm_location (ipmi_sel_ctx_t ctx,
         {
           uint8_t node;
           uint8_t dimmnum;
-                      
+
           node = (dimm_counter + i) / dimms_per_node;
-          
+
           dimmnum  = ((dimm_counter + i) % dimms_per_node) + 1;
-          
+
           if (!found)
             len = snprintf (dimmstr + offset,
                             DELL_EVENT_BUFFER_LENGTH - offset,
@@ -1636,17 +1636,17 @@ _dell_calculate_dimm_location (ipmi_sel_ctx_t ctx,
                             ", DIMM %c%u",
                             'A' + node,
                             dimmnum);
-                      
+
           offset += len;
           found++;
 
           if (offset >= DELL_EVENT_BUFFER_LENGTH)
             break;
-          
+
           break;
         }
     }
-  
+
   if (found)
     {
       if (sel_string_snprintf (buf,
@@ -1657,7 +1657,7 @@ _dell_calculate_dimm_location (ipmi_sel_ctx_t ctx,
         (*oem_rv) = 1;
       else
         (*oem_rv) = 0;
-      
+
       return (1);
     }
 
@@ -1720,21 +1720,21 @@ sel_string_output_dell_poweredge_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 
       event_data3_error_type = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA3_OEM_DELL_OFFSET_CONFIGURATION_ERROR_ERROR_TYPE_BITMASK);
       event_data3_error_type >>= IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA3_OEM_DELL_OFFSET_CONFIGURATION_ERROR_ERROR_TYPE_SHIFT;
-          
+
       if (event_data3_error_type == IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA3_OFFSET_CONFIGURATION_ERROR_ERROR_TYPE_POWER_SUPPLY_RATING_MISMATCH)
         {
           unsigned int watts2;
           unsigned int watts3;
           unsigned int watts;
-              
+
           /* achu: that's not a typo, it's '+=' not a '|=', I'm just
            * copying Dell source at this point in time, don't know why
-           * this is 
+           * this is
            */
           watts2 = system_event_record_data->event_data2 << IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA2_OEM_DELL_OFFSET_CONFIGURATION_ERROR_WATTS_SHIFT;
           watts3 = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA3_OEM_DELL_OFFSET_CONFIGURATION_ERROR_WATTS_BITMASK);
           watts3 >>= IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA3_OEM_DELL_OFFSET_CONFIGURATION_ERROR_WATTS_SHIFT;
-              
+
           watts = watts2 + watts3;
 
           if (sel_string_snprintf (buf,
@@ -1745,7 +1745,7 @@ sel_string_output_dell_poweredge_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
             (*oem_rv) = 1;
           else
             (*oem_rv) = 0;
-              
+
           return (1);
         }
     }
@@ -1801,7 +1801,7 @@ sel_string_output_dell_poweredge_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 
       memory_card = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_MEMORY_CARD_BITMASK);
       memory_card >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_MEMORY_CARD_SHIFT;
-          
+
       if (memory_card == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_4_DIMMS_PER_NODE
           || memory_card == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_6_DIMMS_PER_NODE
           || memory_card == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_8_DIMMS_PER_NODE
@@ -1823,7 +1823,7 @@ sel_string_output_dell_poweredge_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
             dimms_per_node = 12;
           else /* memory_card == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_24_DIMMS_PER_NODE */
             dimms_per_node = 24;
-              
+
           if (_dell_calculate_dimm_location (ctx,
                                              sel_entry,
                                              sel_record_type,
@@ -1844,13 +1844,13 @@ sel_string_output_dell_poweredge_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
           int found = 0;
           int len;
           int i;
-             
+
           memset (dimmstr, '\0', DELL_EVENT_BUFFER_LENGTH + 1);
 
           dimm_counter = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_DIMM_COUNTER_BITMASK);
           dimm_counter >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_DIMM_COUNTER_SHIFT;
           dimm_counter *= 8;
-              
+
           for (i = 0; i < 8; i++)
             {
               if (system_event_record_data->event_data3 & (0x1 << i))
@@ -1865,7 +1865,7 @@ sel_string_output_dell_poweredge_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
                                     DELL_EVENT_BUFFER_LENGTH - offset,
                                     ", DIMM %u",
                                     (dimm_counter + i + 1));
-                      
+
                   offset += len;
 
                   found++;
@@ -1876,7 +1876,7 @@ sel_string_output_dell_poweredge_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
                   break;
                 }
             }
-              
+
           if (found)
             {
               if (memory_card != IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_NO_CARD)
@@ -1904,7 +1904,7 @@ sel_string_output_dell_poweredge_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
                 }
               return (1);
             }
-              
+
         }
     }
 
@@ -1934,18 +1934,18 @@ sel_string_output_dell_poweredge_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
     {
       uint8_t slot_flag;
       uint8_t bus_slot_number;
-          
+
       /* Dell documentation says to watch out for this specific case */
       if (system_event_record_data->event_data2 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT
           && system_event_record_data->event_data3 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT)
         return (0);
-          
+
       slot_flag = (system_event_record_data->event_data3 & IPMI_OEM_DELL_EVENT_DATA3_BUS_SLOT_FLAG_BITMASK);
       slot_flag >>= IPMI_OEM_DELL_EVENT_DATA3_BUS_SLOT_FLAG_SHIFT;
-          
+
       bus_slot_number = (system_event_record_data->event_data3 & IPMI_OEM_DELL_EVENT_DATA3_BUS_SLOT_BITMASK);
       bus_slot_number >>= IPMI_OEM_DELL_EVENT_DATA3_BUS_SLOT_SHIFT;
-          
+
       if (slot_flag)
         {
           if (sel_string_snprintf (buf,
@@ -1956,19 +1956,19 @@ sel_string_output_dell_poweredge_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
             (*oem_rv) = 1;
           else
             (*oem_rv) = 0;
-              
+
           return (1);
         }
       else
         {
           uint8_t device, function;
-              
+
           device = (system_event_record_data->event_data2 & IPMI_OEM_DELL_EVENT_DATA2_DEVICE_NUMBER_BITMASK);
           device >>= IPMI_OEM_DELL_EVENT_DATA2_DEVICE_NUMBER_SHIFT;
-              
+
           function = (system_event_record_data->event_data2 & IPMI_OEM_DELL_EVENT_DATA2_FUNCTION_NUMBER_BITMASK);
           function >>= IPMI_OEM_DELL_EVENT_DATA2_FUNCTION_NUMBER_SHIFT;
-              
+
           if (sel_string_snprintf (buf,
                                    buflen,
                                    wlen,
@@ -2024,13 +2024,13 @@ sel_string_output_dell_poweredge_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
               else
                 (*oem_rv) = 0;
             }
-              
+
           return (1);
         }
     }
 
   /* From Dell Spec and Dell Code
-   * 
+   *
    * Data2
    * [7:6] - blade format
    *         0 - single height (e.g. Mezz B, Mezz C)
@@ -2049,20 +2049,20 @@ sel_string_output_dell_poweredge_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
       && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
     {
       uint8_t option_rom;
-          
+
       option_rom = (system_event_record_data->event_data3 & IPMI_OEM_DELL_EVENT_DATA3_OPTION_ROM_BITMASK);
       option_rom >>= IPMI_OEM_DELL_EVENT_DATA3_OPTION_ROM_SHIFT;
-          
+
       if (option_rom == IPMI_OEM_DELL_EVENT_DATA3_OPTION_ROM_SLOT)
         {
           uint8_t blade_format;
           uint8_t slots_per_node;
           uint8_t slot_number;
           char mezzanine;
-              
+
           blade_format = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING_EVENT_DATA2_BLADE_FORMAT_BITMASK);
           blade_format >>= IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING_EVENT_DATA2_BLADE_FORMAT_SHIFT;
-              
+
           if (blade_format == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING_EVENT_DATA2_BLADE_FORMAT_SINGLE_HEIGHT)
             slots_per_node = 1;
           else if (blade_format == IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING_EVENT_DATA2_BLADE_FORMAT_DOUBLE_HEIGHT)
@@ -2071,11 +2071,11 @@ sel_string_output_dell_poweredge_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
             slots_per_node = 4;
           else
             return (0);
-              
+
           slot_number = (system_event_record_data->event_data3 & IPMI_OEM_DELL_EVENT_DATA3_BUS_SLOT_BITMASK);
           slot_number >>= IPMI_OEM_DELL_EVENT_DATA3_BUS_SLOT_SHIFT;
-              
-          /* Comments in Dell code refer to 
+
+          /* Comments in Dell code refer to
            *
            * "Odd number is B"
            * "Even number is C"
@@ -2084,15 +2084,15 @@ sel_string_output_dell_poweredge_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
             mezzanine = 'B';
           else
             mezzanine = 'C';
-              
+
           if (slots_per_node >= 2)
             {
               uint8_t slot_position;
-                  
+
               /* need slot number zero based for determining position */
-                  
+
               slot_position = ((slot_number - 1)/ slots_per_node) + 1;
-                  
+
               if (sel_string_snprintf (buf,
                                        buflen,
                                        wlen,
@@ -2125,7 +2125,7 @@ sel_string_output_dell_poweredge_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
           else
             (*oem_rv) = 0;
         }
-          
+
       return (1);
     }
 
@@ -2183,7 +2183,7 @@ sel_string_output_dell_poweredge_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
           /* For future expansion, I know it looks silly right now */
           if (memory_card == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA1_OEM_DELL_DIMMS_PER_PACKAGE_3)
             dimms_per_node = 3;
-              
+
           if (_dell_calculate_dimm_location (ctx,
                                              sel_entry,
                                              sel_record_type,
@@ -2278,8 +2278,8 @@ sel_string_output_dell_poweredge_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
         (*oem_rv) = 1;
       else
         (*oem_rv) = 0;
-      
-      return (1);     
+
+      return (1);
     }
 #endif
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_SEL_OEM_INTEL_RECORD_FORMAT_H
@@ -72,7 +72,7 @@ extern "C" {
 #define IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_RECEIVED_A_REQUEST_FROM_A_DOWNSTREAM_COMPONENT_THAT_IS_UNSUPPORTED             0x89
 #define IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_RECEIVED_A_REQUEST_FROM_A_DOWNSTREAM_COMPONENT_THAT_IS_TO_BE_COMPLETER_ABORTED 0x8A
 #define IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_ACS_VIOLATION                                                                  0x8B
-#define IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_PCI_EXPRESS_MALFORMED_TLP                                                      0x90 
+#define IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_PCI_EXPRESS_MALFORMED_TLP                                                      0x90
 #define IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_PCI_EXPRESS_DATA_LINK_PROTOCOL_ERROR                                           0x91
 #define IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_PCI_EXPRESS_RECEIVER_OVERFLOW                                                  0x92
 #define IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_SURPRISE_DOWN                                                                  0x93

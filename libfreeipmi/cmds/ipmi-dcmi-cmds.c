@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 /*****************************************************************************\
  *  $Id: ipmi-dcmi-cmds.c,v 1.7 2010-07-28 21:19:56 chu11 Exp $
@@ -271,7 +271,7 @@ fiid_template_t tmpl_cmd_dcmi_get_dcmi_configuration_parameters_rq =
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8, "group_extension_identification", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 8, "set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},   
+    { 8, "set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
   };
 
@@ -441,7 +441,7 @@ fiid_template_t tmpl_cmd_dcmi_get_dcmi_sensor_info_rq =
     { 0, "", 0}
   };
 
-/* presumably a max of 256 entity_instances (b/c 1 byte field), so 
+/* presumably a max of 256 entity_instances (b/c 1 byte field), so
  * assume max record ids of 256.  record_id = 16 bits, so 256 * 16 = 4096
  */
 fiid_template_t tmpl_cmd_dcmi_get_dcmi_sensor_info_rs =
@@ -617,7 +617,7 @@ fiid_template_t tmpl_cmd_dcmi_get_temperature_reading_rs =
     { 0, "", 0}
   };
 
-/* 
+/*
  * Fill Functions
  */
 
@@ -642,7 +642,7 @@ fill_cmd_dcmi_get_dcmi_capability_info (uint8_t parameter_selector,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_DCMI_GET_DCMI_CAPABILITY_INFO);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "group_extension_identification", IPMI_NET_FN_GROUP_EXTENSION_IDENTIFICATION_DCMI);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", parameter_selector);
-  
+
   return (0);
 }
 
@@ -848,7 +848,7 @@ fill_cmd_dcmi_get_dcmi_configuration_parameters (uint8_t parameter_selector,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "group_extension_identification", IPMI_NET_FN_GROUP_EXTENSION_IDENTIFICATION_DCMI);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", parameter_selector);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
-  
+
   return (0);
 }
 
@@ -958,13 +958,13 @@ fill_cmd_dcmi_set_management_controller_identifier_string (uint8_t offset_to_wri
       SET_ERRNO (EINVAL);
       return (-1);
     }
-  
+
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_dcmi_set_management_controller_identifier_string_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
     }
-  
+
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_DCMI_SET_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "group_extension_identification", IPMI_NET_FN_GROUP_EXTENSION_IDENTIFICATION_DCMI);
@@ -974,7 +974,7 @@ fill_cmd_dcmi_set_management_controller_identifier_string (uint8_t offset_to_wri
                           "data",
                           data,
                           number_of_bytes_to_write);
-  
+
   return (0);
 }
 

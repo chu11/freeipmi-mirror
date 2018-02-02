@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #include <stdio.h>
@@ -226,12 +226,12 @@ ipmi_locate_pci_get_device_info (ipmi_locate_ctx_t ctx,
   while (fgets (buf, sizeof (buf), fp_devices) != NULL)
     {
       pci_class_regs_t regs;
-      
+
       items = sscanf (buf, "%x %x %x " FORMAT_X64 " " FORMAT_X64 " " FORMAT_X64 " " FORMAT_X64 " " FORMAT_X64 " " FORMAT_X64,
                       &dfn, &vendor, &irq,
                       &base_address[0], &base_address[1], &base_address[2], &base_address[3], &base_address[4], &base_address[5]);
       linfo.intr_num = (uint16_t)irq;
-      
+
       if (items != 9)
         {
           LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
@@ -240,20 +240,20 @@ ipmi_locate_pci_get_device_info (ipmi_locate_ctx_t ctx,
       bus = dfn >> 8U;
       dev = PCI_SLOT (dfn & 0xff);
       func = PCI_FUNC (dfn & 0xff);
-      
+
       if (_pci_get_regs (ctx, bus, dev, func, &regs) < 0)
         goto cleanup;
-      
+
       if (regs.pci_class != IPMI_CLASS ||
           regs.pci_subclass != IPMI_SUBCLASS ||
           regs.pci_prog_interface + 1 != type)
         continue;
-      
+
       for (i = 0; i < 6; i++)
         {
           if (base_address[i] == 0 || base_address[i] == ~0)
             continue;
-          
+
           switch (base_address[i] & PCI_BASE_ADDRESS_SPACE)
             {
             case past_io:
@@ -262,7 +262,7 @@ ipmi_locate_pci_get_device_info (ipmi_locate_ctx_t ctx,
               memcpy (info, &linfo, sizeof (struct ipmi_locate_info));
               rv = 0;
               goto cleanup;
-              
+
             case past_memory:
               linfo.address_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_IO;
               linfo.driver_address = base_address[i] & ~PCI_BASE_ADDRESS_MEM_MASK;

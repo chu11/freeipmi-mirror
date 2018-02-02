@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -81,9 +81,9 @@ asset_tag_checkout (ipmi_config_state_data_t *state_data,
       if (!offset
           || ((total_asset_tag_length - offset) >= IPMI_DCMI_ASSET_TAG_NUMBER_OF_BYTES_TO_READ_MAX))
         bytes_to_read = IPMI_DCMI_ASSET_TAG_NUMBER_OF_BYTES_TO_READ_MAX;
-      else 
+      else
         bytes_to_read = total_asset_tag_length - offset;
-      
+
       if (ipmi_cmd_dcmi_get_asset_tag (state_data->ipmi_ctx,
                                        offset,
                                        bytes_to_read,
@@ -100,7 +100,7 @@ asset_tag_checkout (ipmi_config_state_data_t *state_data,
                              stderr,
                              "ipmi_cmd_dcmi_get_asset_tag: %s\n",
                              ipmi_ctx_errormsg (state_data->ipmi_ctx));
-          
+
           goto cleanup;
         }
 
@@ -197,7 +197,7 @@ asset_tag_commit (ipmi_config_state_data_t *state_data,
    */
 
   data_len = strlen (kv->value_input);
-  
+
   /* Write empty buffer */
   if (!data_len)
     data_len = IPMI_DCMI_MAX_ASSET_TAG_LENGTH;
@@ -221,9 +221,9 @@ asset_tag_commit (ipmi_config_state_data_t *state_data,
 
       if ((data_len - offset) >= IPMI_DCMI_ASSET_TAG_NUMBER_OF_BYTES_TO_WRITE_MAX)
         bytes_to_write = IPMI_DCMI_ASSET_TAG_NUMBER_OF_BYTES_TO_WRITE_MAX;
-      else 
+      else
         bytes_to_write = data_len - offset;
-      
+
       if (ipmi_cmd_dcmi_set_asset_tag (state_data->ipmi_ctx,
                                        offset,
                                        bytes_to_write,
@@ -235,14 +235,14 @@ asset_tag_commit (ipmi_config_state_data_t *state_data,
                                                      obj_cmd_rs,
                                                      &ret))
             rv = ret;
-          
+
           if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
               || state_data->prog_data->args->common_args.debug)
             pstdout_fprintf (state_data->pstate,
                              stderr,
                              "ipmi_cmd_dcmi_set_asset_tag: %s\n",
                              ipmi_ctx_errormsg (state_data->ipmi_ctx));
-          
+
           goto cleanup;
         }
 
@@ -259,7 +259,7 @@ asset_tag_commit (ipmi_config_state_data_t *state_data,
 
       /* DCMI 1.1 spec is unclear on "total_length_written", is it the
        * number of bytes just written or total bytes written so far?
-       * 
+       *
        * DCMI 1.5 spec makes it clear that this is the number of bytes
        * written in total.  To defend against vendor mistakes, we
        * handle both situations.
@@ -294,7 +294,7 @@ asset_tag_validate (ipmi_config_state_data_t *state_data,
     return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
   return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
 }
-    
+
 static ipmi_config_err_t
 management_controller_identifier_string_checkout (ipmi_config_state_data_t *state_data,
                                                   const char *section_name,
@@ -331,9 +331,9 @@ management_controller_identifier_string_checkout (ipmi_config_state_data_t *stat
       if (!offset
           || ((total_length - offset) >= IPMI_DCMI_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_NUMBER_OF_BYTES_TO_READ_MAX))
         bytes_to_read = IPMI_DCMI_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_NUMBER_OF_BYTES_TO_READ_MAX;
-      else 
+      else
         bytes_to_read = total_length - offset;
-      
+
       if (ipmi_cmd_dcmi_get_management_controller_identifier_string (state_data->ipmi_ctx,
                                                                      offset,
                                                                      bytes_to_read,
@@ -343,7 +343,7 @@ management_controller_identifier_string_checkout (ipmi_config_state_data_t *stat
                                                      obj_cmd_rs,
                                                      &ret))
             rv = ret;
-          
+
           if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
               || state_data->prog_data->args->common_args.debug)
             pstdout_fprintf (state_data->pstate,
@@ -353,7 +353,7 @@ management_controller_identifier_string_checkout (ipmi_config_state_data_t *stat
 
           goto cleanup;
         }
-      
+
       if (FIID_OBJ_GET (obj_cmd_rs,
                         "total_length",
                         &val) < 0)
@@ -381,11 +381,11 @@ management_controller_identifier_string_checkout (ipmi_config_state_data_t *stat
           goto cleanup;
         }
       offset += data_len;
-      
+
       if (offset >= total_length)
         break;
     }
-  
+
   if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   management_controller_identifier_string_data) < 0)
@@ -417,7 +417,7 @@ management_controller_identifier_string_commit (ipmi_config_state_data_t *state_
   /* achu:
    *
    * According to DCMI v1.5 draft
-   * 
+   *
    * "The presence of the null terminator among bytes to shall be
    * considered as indicating the last transfer of the Management
    * Controller Identifier string"
@@ -452,9 +452,9 @@ management_controller_identifier_string_commit (ipmi_config_state_data_t *state_
 
       if ((data_len - offset) >= IPMI_DCMI_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_NUMBER_OF_BYTES_TO_WRITE_MAX)
         bytes_to_write = IPMI_DCMI_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_NUMBER_OF_BYTES_TO_WRITE_MAX;
-      else 
+      else
         bytes_to_write = data_len - offset;
-      
+
       if (ipmi_cmd_dcmi_set_management_controller_identifier_string (state_data->ipmi_ctx,
                                                                      offset,
                                                                      bytes_to_write,
@@ -466,7 +466,7 @@ management_controller_identifier_string_commit (ipmi_config_state_data_t *state_
                                                      obj_cmd_rs,
                                                      &ret))
             rv = ret;
-          
+
           if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
               || state_data->prog_data->args->common_args.debug)
             pstdout_fprintf (state_data->pstate,
@@ -489,7 +489,7 @@ management_controller_identifier_string_commit (ipmi_config_state_data_t *state_
 
       /* DCMI 1.1 spec is unclear on "total_length_written", is it the
        * number of bytes just written or total bytes written so far?
-       * 
+       *
        * DCMI 1.5 spec makes it clear that this is the number of bytes
        * written in total.  To defend against vendor mistakes, we
        * handle both situations.
@@ -502,7 +502,7 @@ management_controller_identifier_string_commit (ipmi_config_state_data_t *state_
       if (offset >= data_len)
         break;
     }
-  
+
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
@@ -591,7 +591,7 @@ _get_power_limit (ipmi_config_state_data_t *state_data,
 
           if (no_set_power_limit_flag)
             (*no_set_power_limit_flag) = 1;
- 
+
           no_set_power_limit_error_flag++;
           goto read_data;
         }
@@ -630,7 +630,7 @@ _get_power_limit (ipmi_config_state_data_t *state_data,
       goto cleanup;
     }
   gpld->exception_actions = val;
-  
+
   if (FIID_OBJ_GET (obj_cmd_rs,
                     "power_limit_requested",
                     &val) < 0)
@@ -720,12 +720,12 @@ _set_power_limit (ipmi_config_state_data_t *state_data,
    * In addition to this, with the latter interpretation, it need
    * not be an indication of an error, but rather a flag.  So the
    * rest of the packet can be completely full of legitimate data.
-   * 
+   *
    * So we will do the following.
    *
-   * If the "No Set Power Limit" completion code is returned and 
+   * If the "No Set Power Limit" completion code is returned and
    * we were able to read all of the fields, _get_power_limit() will
-   * return normally, so we don't need to worry about this case. 
+   * return normally, so we don't need to worry about this case.
    *
    * If the "No Set Power Limit", completion code is returned and
    * we were *not* able to read all of the fields, we won't have
@@ -780,7 +780,7 @@ _set_power_limit (ipmi_config_state_data_t *state_data,
                        strerror (errno));
       goto cleanup;
     }
-  
+
   if (ipmi_cmd_dcmi_set_power_limit (state_data->ipmi_ctx,
                                      gpld->exception_actions,
                                      gpld->power_limit_requested,
@@ -861,12 +861,12 @@ power_limit_requested_checkout (ipmi_config_state_data_t *state_data,
                                &gpld,
                                NULL)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
-  
+
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
                                                                kv,
                                                                gpld.power_limit_requested) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
-  
+
   return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
@@ -914,7 +914,7 @@ correction_time_limit_checkout (ipmi_config_state_data_t *state_data,
                                &gpld,
                                NULL)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
-  
+
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
                                                                kv,
                                                                gpld.correction_time_limit) < 0)
@@ -968,7 +968,7 @@ management_application_statistics_sampling_period_checkout (ipmi_config_state_da
                                &gpld,
                                NULL)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
-  
+
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
                                                                kv,
                                                                gpld.management_application_statistics_sampling_period) < 0)
@@ -1022,7 +1022,7 @@ exception_actions_checkout (ipmi_config_state_data_t *state_data,
                                &gpld,
                                NULL)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
-  
+
   str = exception_actions_string (gpld.exception_actions);
 
   if (str && strlen (str))

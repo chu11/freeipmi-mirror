@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 /*****************************************************************************\
  *  Copyright (C) 2009-2015 Lawrence Livermore National Security, LLC.
@@ -50,7 +50,7 @@ extern "C" {
 #include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/fiid/fiid.h>
 
-/* 
+/*
  * ipmi_cmd* functions return 0 on success, -1 on error.
  *
  * obj_cmd_rs must be for the function's respective fiid template
@@ -100,12 +100,12 @@ int ipmi_cmd_dcmi_set_dcmi_configuration_parameters_dhcp_timing_1 (ipmi_ctx_t ct
                                                                    uint8_t set_selector,
                                                                    uint8_t initial_timeout_interval,
                                                                    fiid_obj_t obj_cmd_rs);
-  
+
 int ipmi_cmd_dcmi_set_dcmi_configuration_parameters_dhcp_timing_2 (ipmi_ctx_t ctx,
                                                                    uint8_t set_selector,
                                                                    uint16_t server_contact_timeout_interval,
                                                                    fiid_obj_t obj_cmd_rs);
-  
+
 int ipmi_cmd_dcmi_set_dcmi_configuration_parameters_dhcp_timing_3 (ipmi_ctx_t ctx,
                                                                    uint8_t set_selector,
                                                                    uint16_t server_contact_retry_interval,
@@ -123,11 +123,11 @@ int ipmi_cmd_dcmi_get_dcmi_configuration_parameters_discovery_configuration (ipm
 int ipmi_cmd_dcmi_get_dcmi_configuration_parameters_dhcp_timing_1 (ipmi_ctx_t ctx,
                                                                    uint8_t set_selector,
                                                                    fiid_obj_t obj_cmd_rs);
-  
+
 int ipmi_cmd_dcmi_get_dcmi_configuration_parameters_dhcp_timing_2 (ipmi_ctx_t ctx,
                                                                    uint8_t set_selector,
                                                                    fiid_obj_t obj_cmd_rs);
-  
+
 int ipmi_cmd_dcmi_get_dcmi_configuration_parameters_dhcp_timing_3 (ipmi_ctx_t ctx,
                                                                    uint8_t set_selector,
                                                                    fiid_obj_t obj_cmd_rs);
@@ -170,14 +170,14 @@ int ipmi_cmd_dcmi_get_power_reading (ipmi_ctx_t ctx,
 
 int ipmi_cmd_dcmi_get_power_limit (ipmi_ctx_t ctx,
                                    fiid_obj_t obj_cmd_rs);
-  
+
 int ipmi_cmd_dcmi_set_power_limit (ipmi_ctx_t ctx,
                                    uint8_t exception_actions,
                                    uint16_t power_limit_requested,
                                    uint32_t correction_time_limit,
                                    uint16_t management_application_statistics_sampling_period,
                                    fiid_obj_t obj_cmd_rs);
-  
+
 int ipmi_cmd_dcmi_activate_deactivate_power_limit (ipmi_ctx_t ctx,
                                                    uint8_t power_limit_activation,
                                                    fiid_obj_t obj_cmd_rs);

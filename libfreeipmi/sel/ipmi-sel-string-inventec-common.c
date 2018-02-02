@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -88,16 +88,16 @@ sel_string_output_inventec_5441_5442_common_sensor_name (ipmi_sel_ctx_t ctx,
   assert (oem_rv);
   assert (ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441 || ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5442);
 
-  /* 
+  /*
    * Inventec 5441/Dell Xanadu II
    * Inventec 5442/Dell Xanadu III
    */
 
-  if (((system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INVENTEC_BIOS 
+  if (((system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INVENTEC_BIOS
         && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INVENTEC_BIOS
         && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INVENTEC_BIOS
         && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_POST_START)
-       || (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INVENTEC_BIOS 
+       || (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INVENTEC_BIOS
            && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
            && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_EVENT
            && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_POST_OK)
@@ -117,7 +117,7 @@ sel_string_output_inventec_5441_5442_common_sensor_name (ipmi_sel_ctx_t ctx,
         (*oem_rv) = 1;
       else
         (*oem_rv) = 0;
-      
+
       return (1);
     }
 
@@ -131,10 +131,10 @@ sel_string_output_inventec_5441_5442_common_sensor_name (ipmi_sel_ctx_t ctx,
                                                                  system_event_record_data,
                                                                  oem_rv)) < 0)
     return (-1);
-  
+
   if (nmret)
-    return (1);      
-  
+    return (1);
+
   return (0);
 }
 
@@ -166,7 +166,7 @@ sel_string_output_inventec_5441_5442_common_event_data1_class_oem (ipmi_sel_ctx_
   assert (system_event_record_data);
   assert (ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441 || ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5442);
 
-  /* 
+  /*
    * Inventec 5441/Dell Xanadu II
    * Inventec 5442/Dell Xanadu III
    *
@@ -185,10 +185,10 @@ sel_string_output_inventec_5441_5442_common_event_data1_class_oem (ipmi_sel_ctx_
       snprintf (tmpbuf,
                 tmpbuflen,
                 "BMC enabled by BIOS");
-      
+
       return (1);
     }
-  
+
   if ((nmret = sel_string_output_intel_node_manager_event_data1_class_oem (ctx,
                                                                            sel_entry,
                                                                            sel_record_type,
@@ -198,7 +198,7 @@ sel_string_output_inventec_5441_5442_common_event_data1_class_oem (ipmi_sel_ctx_
                                                                            wlen,
                                                                            system_event_record_data)) < 0)
     return (-1);
-  
+
   if (nmret)
     return (1);
 
@@ -232,7 +232,7 @@ sel_string_output_inventec_5441_5442_common_event_data2_discrete_oem (ipmi_sel_c
   assert (system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
   assert (ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441 || ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5442);
 
-  /* 
+  /*
    * Inventec 5441/Dell Xanadu II
    * Inventec 5442/Dell Xanadu III
    *
@@ -258,7 +258,7 @@ sel_string_output_inventec_5441_5442_common_event_data2_discrete_oem (ipmi_sel_c
       /* achu: I'm assuming no output for this one */
       if (system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INVENTEC_OTHER)
         return (0);
-      
+
       if (system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INVENTEC_SBE_WARNING_THRESHOLD)
         snprintf (tmpbuf,
                   tmpbuflen,
@@ -302,7 +302,7 @@ sel_string_output_inventec_5441_5442_common_event_data2_class_oem (ipmi_sel_ctx_
   assert (system_event_record_data);
   assert (ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441 || ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5442);
 
-  /* 
+  /*
    * Inventec 5441/Dell Xanadu II
    * Inventec 5442/Dell Xanadu III
    */
@@ -319,10 +319,10 @@ sel_string_output_inventec_5441_5442_common_event_data2_class_oem (ipmi_sel_ctx_
                 tmpbuflen,
                 "BIOS Major Version %X",
                 system_event_record_data->event_data2);
-      
+
       return (1);
     }
-  
+
   if ((nmret = sel_string_output_intel_node_manager_event_data2_class_oem (ctx,
                                                                            sel_entry,
                                                                            sel_record_type,
@@ -332,10 +332,10 @@ sel_string_output_inventec_5441_5442_common_event_data2_class_oem (ipmi_sel_ctx_
                                                                            wlen,
                                                                            system_event_record_data)) < 0)
     return (-1);
-  
+
   if (nmret)
     return (1);
-  
+
   return (0);
 }
 
@@ -366,7 +366,7 @@ sel_string_output_inventec_5441_5442_common_event_data3_discrete_oem (ipmi_sel_c
   assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
   assert (ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441 || ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5442);
 
-  /* 
+  /*
    * Inventec 5441/Dell Xanadu II
    * Inventec 5442/Dell Xanadu III
    */
@@ -377,7 +377,7 @@ sel_string_output_inventec_5441_5442_common_event_data3_discrete_oem (ipmi_sel_c
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INVENTEC_PORT80_CODE_EVENT)
     {
       char *str = NULL;
-      
+
       switch (system_event_record_data->event_data3)
         {
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_EVENT_DATA3_OEM_INVENTEC_PORT80_CODE_EXTENDED_MEMORY_TEST:
@@ -395,10 +395,10 @@ sel_string_output_inventec_5441_5442_common_event_data3_discrete_oem (ipmi_sel_c
                     "PORT80 Code Event = %02Xh",
                     system_event_record_data->event_data3);
         }
-      
+
       if (str)
         snprintf (tmpbuf, tmpbuflen, "%s", str);
-      
+
       return (1);
     }
 
@@ -433,7 +433,7 @@ sel_string_output_inventec_5441_5442_common_event_data3_class_oem (ipmi_sel_ctx_
   assert (system_event_record_data);
   assert (ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441 || ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5442);
 
-  /* 
+  /*
    * Inventec 5441/Dell Xanadu II
    * Inventec 5442/Dell Xanadu III
    */
@@ -450,7 +450,7 @@ sel_string_output_inventec_5441_5442_common_event_data3_class_oem (ipmi_sel_ctx_
                 tmpbuflen,
                 "BIOS Minor Version %02X",
                 system_event_record_data->event_data3);
-      
+
       return (1);
     }
 
@@ -463,10 +463,10 @@ sel_string_output_inventec_5441_5442_common_event_data3_class_oem (ipmi_sel_ctx_
                                                                            wlen,
                                                                            system_event_record_data)) < 0)
     return (-1);
-  
+
   if (nmret)
     return (1);
-  
+
   return (0);
 }
 
@@ -502,7 +502,7 @@ sel_string_output_inventec_5441_5442_common_event_data2_event_data3 (ipmi_sel_ct
   assert (oem_rv);
   assert (ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5441 || ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5442);
 
-  /* 
+  /*
    * Inventec 5441/Dell Xanadu II
    * Inventec 5442/Dell Xanadu III
    */
@@ -515,10 +515,10 @@ sel_string_output_inventec_5441_5442_common_event_data2_event_data3 (ipmi_sel_ct
     {
       uint16_t error_code;
       char *error_code_str = NULL;
-      
+
       error_code = system_event_record_data->event_data2;
       error_code |= (system_event_record_data->event_data3 << 8);
-      
+
       switch (error_code)
         {
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INVENTEC_POST_ERROR_CODE_TIMER_COUNT_READ_WRITE_ERROR:
@@ -731,7 +731,7 @@ sel_string_output_inventec_5441_5442_common_event_data2_event_data3 (ipmi_sel_ct
         default:
           error_code_str = "Undefined BIOS Error";
         }
-      
+
       if (sel_string_snprintf (buf,
                                buflen,
                                wlen,
@@ -740,7 +740,7 @@ sel_string_output_inventec_5441_5442_common_event_data2_event_data3 (ipmi_sel_ct
         (*oem_rv) = 1;
       else
         (*oem_rv) = 0;
-      
+
       return (1);
     }
 
@@ -761,7 +761,7 @@ sel_string_output_inventec_5441_5442_common_event_data2_event_data3 (ipmi_sel_ct
         (*oem_rv) = 1;
       else
         (*oem_rv) = 0;
-          
+
       return (1);
     }
 

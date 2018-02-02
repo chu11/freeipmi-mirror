@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -82,10 +82,10 @@ sel_string_output_intel_s2600wt_common_sensor_name (ipmi_sel_ctx_t ctx,
                                                            system_event_record_data,
                                                            oem_rv)) < 0)
     return (-1);
-      
+
   if (ret)
-    return (1);      
-  
+    return (1);
+
   return (0);
 }
 
@@ -127,7 +127,7 @@ sel_string_output_intel_s2600wt_common_event_data1_class_oem (ipmi_sel_ctx_t ctx
                                                                      wlen,
                                                                      system_event_record_data)) < 0)
     return (-1);
-  
+
   if (ret)
     return (1);
 
@@ -218,7 +218,7 @@ sel_string_output_intel_s2600wt_common_event_data2_class_oem (ipmi_sel_ctx_t ctx
                                                                      wlen,
                                                                      system_event_record_data)) < 0)
     return (-1);
-  
+
   if (ret)
     return (1);
 
@@ -264,7 +264,7 @@ sel_string_output_intel_s2600wt_common_event_data3_discrete_oem (ipmi_sel_ctx_t 
                                                                         wlen,
                                                                         system_event_record_data)) < 0)
     return (-1);
-  
+
   if (ret)
     return (1);
 
@@ -309,7 +309,7 @@ sel_string_output_intel_s2600wt_common_event_data3_class_oem (ipmi_sel_ctx_t ctx
                                                                      wlen,
                                                                      system_event_record_data)) < 0)
     return (-1);
-  
+
   if (ret)
     return (1);
 
@@ -361,7 +361,7 @@ sel_string_output_intel_s2600wt_common_event_data2_event_data3 (ipmi_sel_ctx_t c
                                                                        system_event_record_data,
                                                                        oem_rv)) < 0)
     return (-1);
-  
+
   if (ret)
     return (1);
 

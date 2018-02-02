@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -113,7 +113,7 @@ ipmi_completion_code_dcmi_strerror_cmd_r (fiid_obj_t obj_cmd,
 {
   uint8_t cmd, comp_code;
   uint64_t val;
-  
+
   /* The netfn need not be valid */
   if (!fiid_obj_valid (obj_cmd)
       || !errstr)
@@ -121,32 +121,32 @@ ipmi_completion_code_dcmi_strerror_cmd_r (fiid_obj_t obj_cmd,
       SET_ERRNO (EINVAL);
       return (-1);
     }
-  
+
   if (FIID_OBJ_FIELD_LOOKUP (obj_cmd, "cmd") < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
       return (-1);
     }
-  
+
   if (FIID_OBJ_FIELD_LOOKUP (obj_cmd, "comp_code") < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
       return (-1);
     }
-  
+
   if (FIID_OBJ_GET (obj_cmd, "cmd", &val) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
       return (-1);
     }
   cmd = val;
-  
+
   if (FIID_OBJ_GET (obj_cmd, "comp_code", &val) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
       return (-1);
     }
   comp_code = val;
-  
+
   return (ipmi_completion_code_dcmi_strerror_r (cmd, netfn, comp_code, errstr, len));
 }

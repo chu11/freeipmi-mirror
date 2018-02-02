@@ -77,7 +77,7 @@ _output_field (ipmi_fru_state_data_t *state_data,
     return (0);
 
   memset (strbuf, '\0', IPMI_FRU_AREA_STRING_MAX + 1);
-      
+
   if (ipmi_fru_type_length_field_to_string (state_data->fru_ctx,
                                             field->type_length_field,
                                             field->type_length_field_length,
@@ -93,7 +93,7 @@ _output_field (ipmi_fru_state_data_t *state_data,
                           ipmi_fru_ctx_errormsg (state_data->fru_ctx));
           return (0);
         }
-      
+
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_fru_type_length_field_to_string: %s\n",
@@ -141,7 +141,7 @@ ipmi_fru_output_chassis_info_area (ipmi_fru_state_data_t *state_data,
                           ipmi_fru_ctx_errormsg (state_data->fru_ctx));
           return (0);
         }
-      
+
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_fru_chassis_info_area: %s\n",
@@ -224,7 +224,7 @@ ipmi_fru_output_board_info_area (ipmi_fru_state_data_t *state_data,
                           ipmi_fru_ctx_errormsg (state_data->fru_ctx));
           return (0);
         }
-      
+
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_fru_board_info_area: %s\n",
@@ -251,7 +251,7 @@ ipmi_fru_output_board_info_area (ipmi_fru_state_data_t *state_data,
       if (ipmi_timestamp_string (mfg_date_time,
                                  state_data->prog_data->args->common_args.utc_offset,
                                  get_timestamp_flags (&(state_data->prog_data->args->common_args),
-                                                      IPMI_TIMESTAMP_FLAG_DEFAULT), 
+                                                      IPMI_TIMESTAMP_FLAG_DEFAULT),
                                  "%D - %T",
                                  mfg_date_time_buf,
                                  IPMI_FRU_STR_BUFLEN) < 0)
@@ -262,7 +262,7 @@ ipmi_fru_output_board_info_area (ipmi_fru_state_data_t *state_data,
                            strerror (errno));
           return (-1);
         }
-      
+
       pstdout_printf (state_data->pstate,
                       "  FRU Board Manufacturing Date/Time: %s\n",
                       mfg_date_time_buf);
@@ -270,7 +270,7 @@ ipmi_fru_output_board_info_area (ipmi_fru_state_data_t *state_data,
   else
     pstdout_printf (state_data->pstate,
                     "  FRU Board Manufacturing Date/Time: unspecified\n");
-  
+
   if (_output_field (state_data,
                      language_code,
                      &board_manufacturer,
@@ -333,7 +333,7 @@ ipmi_fru_output_product_info_area (ipmi_fru_state_data_t *state_data,
   assert (state_data);
   assert (areabuf);
   assert (area_length);
-  
+
   if (ipmi_fru_product_info_area (state_data->fru_ctx,
                                   areabuf,
                                   area_length,
@@ -355,7 +355,7 @@ ipmi_fru_output_product_info_area (ipmi_fru_state_data_t *state_data,
                           ipmi_fru_ctx_errormsg (state_data->fru_ctx));
           return (0);
         }
-      
+
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_fru_product_info_area: %s\n",
@@ -515,7 +515,7 @@ ipmi_fru_output_power_supply_information (ipmi_fru_state_data_t *state_data,
                           ipmi_fru_ctx_errormsg (state_data->fru_ctx));
           return (0);
         }
-      
+
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_fru_multirecord_power_supply_information: %s\n",
@@ -657,7 +657,7 @@ ipmi_fru_output_dc_output (ipmi_fru_state_data_t *state_data,
                               ipmi_fru_ctx_errormsg (state_data->fru_ctx));
               return (0);
             }
-      
+
           pstdout_fprintf (state_data->pstate,
                            stderr,
                            "ipmi_fru_multirecord_dc_output: %s\n",
@@ -687,7 +687,7 @@ ipmi_fru_output_dc_output (ipmi_fru_state_data_t *state_data,
                               ipmi_fru_ctx_errormsg (state_data->fru_ctx));
               return (0);
             }
-          
+
           pstdout_fprintf (state_data->pstate,
                            stderr,
                            "ipmi_fru_multirecord_extended_dc_output: %s\n",
@@ -766,7 +766,7 @@ ipmi_fru_output_dc_load (ipmi_fru_state_data_t *state_data,
                               ipmi_fru_ctx_errormsg (state_data->fru_ctx));
               return (0);
             }
-          
+
           pstdout_fprintf (state_data->pstate,
                            stderr,
                            "ipmi_fru_multirecord_dc_load: %s\n",
@@ -796,7 +796,7 @@ ipmi_fru_output_dc_load (ipmi_fru_state_data_t *state_data,
                               ipmi_fru_ctx_errormsg (state_data->fru_ctx));
               return (0);
             }
-          
+
           pstdout_fprintf (state_data->pstate,
                            stderr,
                            "ipmi_fru_multirecord_extended_dc_load: %s\n",
@@ -839,13 +839,13 @@ ipmi_fru_output_management_access_record (ipmi_fru_state_data_t *state_data,
   uint8_t sub_record_data[IPMI_FRU_AREA_TYPE_LENGTH_FIELD_MAX + 1];
   unsigned int sub_record_data_len = IPMI_FRU_AREA_TYPE_LENGTH_FIELD_MAX;
   unsigned int i;
-  
+
   assert (state_data);
   assert (areabuf);
   assert (area_length);
-  
+
   memset (sub_record_data, '\0', IPMI_FRU_AREA_TYPE_LENGTH_FIELD_MAX + 1);
-  
+
   if (ipmi_fru_multirecord_management_access_record (state_data->fru_ctx,
                                                      areabuf,
                                                      area_length,
@@ -860,7 +860,7 @@ ipmi_fru_output_management_access_record (ipmi_fru_state_data_t *state_data,
                           ipmi_fru_ctx_errormsg (state_data->fru_ctx));
           return (0);
         }
-      
+
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_fru_multirecord_management_access_record: %s\n",
@@ -962,7 +962,7 @@ ipmi_fru_output_base_compatibility_record (ipmi_fru_state_data_t *state_data,
                           ipmi_fru_ctx_errormsg (state_data->fru_ctx));
           return (0);
         }
-      
+
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_fru_multirecord_base_compatibility_record: %s\n",
@@ -971,7 +971,7 @@ ipmi_fru_output_base_compatibility_record (ipmi_fru_state_data_t *state_data,
     }
 
   memset (iana_buf, '\0', IPMI_FRU_STR_BUFLEN + 1);
-  
+
   /* if ret == 0 means no string, < 0 means bad manufacturer id
    * either way, output just the number
    */
@@ -1010,7 +1010,7 @@ ipmi_fru_output_base_compatibility_record (ipmi_fru_state_data_t *state_data,
         {
           if (code_range_mask_len > 8 && (i % 8) == 0)
             pstdout_printf (state_data->pstate, "\n    ");
-          
+
           pstdout_printf (state_data->pstate,
                           " %02Xh",
                           code_range_mask[i]);
@@ -1056,7 +1056,7 @@ ipmi_fru_output_extended_compatibility_record (ipmi_fru_state_data_t *state_data
                           ipmi_fru_ctx_errormsg (state_data->fru_ctx));
           return (0);
         }
-      
+
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_fru_multirecord_extended_compatibility_record: %s\n",
@@ -1065,7 +1065,7 @@ ipmi_fru_output_extended_compatibility_record (ipmi_fru_state_data_t *state_data
     }
 
   memset (iana_buf, '\0', IPMI_FRU_STR_BUFLEN + 1);
-  
+
   /* if ret == 0 means no string, < 0 means bad manufacturer id
    * either way, output just the number
    */
@@ -1104,7 +1104,7 @@ ipmi_fru_output_extended_compatibility_record (ipmi_fru_state_data_t *state_data
         {
           if (code_range_mask_len > 8 && (i % 8) == 0)
             pstdout_printf (state_data->pstate, "\n    ");
-          
+
           pstdout_printf (state_data->pstate,
                           " %02Xh",
                           code_range_mask[i]);
@@ -1145,23 +1145,23 @@ ipmi_fru_output_oem_record (ipmi_fru_state_data_t *state_data,
                           ipmi_fru_ctx_errormsg (state_data->fru_ctx));
           return (0);
         }
-      
+
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_fru_multirecord_oem_record: %s\n",
                        ipmi_fru_ctx_errormsg (state_data->fru_ctx));
       return (-1);
     }
-  
+
   memset (iana_buf, '\0', IPMI_FRU_STR_BUFLEN + 1);
-  
+
   /* if ret == 0 means no string, < 0 means bad manufacturer id
    * either way, output just the number
    */
   ret = ipmi_iana_enterprise_numbers_string (manufacturer_id,
                                              iana_buf,
                                              IPMI_FRU_STR_BUFLEN);
-  
+
   if (ret > 0)
     pstdout_printf (state_data->pstate,
                     "  FRU OEM Manufacturer ID: %s (%Xh)\n",
@@ -1184,7 +1184,7 @@ ipmi_fru_output_oem_record (ipmi_fru_state_data_t *state_data,
                               ipmi_fru_ctx_errormsg (state_data->fru_ctx));
               return (0);
             }
-          
+
           pstdout_fprintf (state_data->pstate,
                            stderr,
                            "ipmi_fru_multirecord_oem_record: %s\n",
@@ -1236,7 +1236,7 @@ _ipmi_fru_output_dimm_ddr3 (ipmi_fru_state_data_t *state_data,
   fiid_obj_t obj_record = NULL;
   uint8_t total_sdram_capacity;
   char *total_sdram_capacity_str = NULL;
-  uint32_t total_sdram_capacity_val = 0; 
+  uint32_t total_sdram_capacity_val = 0;
   uint8_t total_sdram_capacity_valid;
   uint8_t bank_address_bits;
   char *bank_address_bits_str = NULL;
@@ -1245,15 +1245,15 @@ _ipmi_fru_output_dimm_ddr3 (ipmi_fru_state_data_t *state_data,
   uint8_t module_minimum_nominal_voltage_1_25;
   uint8_t sdram_device_width;
   char *sdram_device_width_str = NULL;
-  uint32_t sdram_device_width_val = 0; 
+  uint32_t sdram_device_width_val = 0;
   uint8_t sdram_device_width_valid;
   uint8_t number_of_ranks;
   char *number_of_ranks_str = NULL;
-  uint32_t number_of_ranks_val = 0; 
+  uint32_t number_of_ranks_val = 0;
   uint8_t number_of_ranks_valid;
   uint8_t primary_bus_width;
   char *primary_bus_width_str = NULL;
-  uint32_t primary_bus_width_val = 0; 
+  uint32_t primary_bus_width_val = 0;
   uint8_t primary_bus_width_valid;
   uint8_t bus_width_extension;
   char *bus_width_extension_str;
@@ -1282,7 +1282,7 @@ _ipmi_fru_output_dimm_ddr3 (ipmi_fru_state_data_t *state_data,
   assert (state_data);
   assert (areabuf);
   assert (area_length);
- 
+
   if (!(obj_record = fiid_obj_create (tmpl_fru_dimm_spd_ddr3_record)))
     {
       pstdout_fprintf (state_data->pstate,
@@ -1334,7 +1334,7 @@ _ipmi_fru_output_dimm_ddr3 (ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
   total_sdram_capacity = val;
-  
+
   switch (total_sdram_capacity)
     {
     case IPMI_FRU_DIMMSPD_TOTAL_SDRAM_CAPACITY_256_MB:
@@ -1358,7 +1358,7 @@ _ipmi_fru_output_dimm_ddr3 (ipmi_fru_state_data_t *state_data,
     case IPMI_FRU_DIMMSPD_TOTAL_SDRAM_CAPACITY_2_GB:
       total_sdram_capacity_str = "2 Gb";
       total_sdram_capacity_val = 2048;
-      total_sdram_capacity_valid = 1; 
+      total_sdram_capacity_valid = 1;
       total_memory_capacity_units_str = "GB";
      break;
     case IPMI_FRU_DIMMSPD_TOTAL_SDRAM_CAPACITY_4_GB:
@@ -1643,7 +1643,7 @@ _ipmi_fru_output_dimm_ddr3 (ipmi_fru_state_data_t *state_data,
     {
       /* Per JEDEC document, in section "Byte 8"
        *
-       * SDRAM CAPCITY / 8 * PRIMARY BUS WIDTH / SDRAM WIDTH * RANKS 
+       * SDRAM CAPCITY / 8 * PRIMARY BUS WIDTH / SDRAM WIDTH * RANKS
        */
       total_memory_capacity = (total_sdram_capacity_val / 8) * (primary_bus_width_val / sdram_device_width_val) * number_of_ranks_val;
 
@@ -1688,7 +1688,7 @@ _ipmi_fru_output_dimm_ddr3 (ipmi_fru_state_data_t *state_data,
     default:
       die_count_str = "Unknown";
       break;
-    } 
+    }
 
   pstdout_printf (state_data->pstate,
                   "  FRU Die Count : %s\n",
@@ -1722,7 +1722,7 @@ _ipmi_fru_output_dimm_ddr3 (ipmi_fru_state_data_t *state_data,
   pstdout_printf (state_data->pstate,
                   "  FRU SDRAM Device Type : %s\n",
                   sdram_device_type_str);
-  
+
   if (FIID_OBJ_GET (obj_record,
                     "number_of_continuation_codes_module_manufacturer",
                     &val) < 0)
@@ -1891,7 +1891,7 @@ _ipmi_fru_output_dimm_ddr4 (ipmi_fru_state_data_t *state_data,
   fiid_obj_t obj_record = NULL;
   uint8_t total_sdram_capacity;
   char *total_sdram_capacity_str = NULL;
-  uint32_t total_sdram_capacity_val = 0; 
+  uint32_t total_sdram_capacity_val = 0;
   uint8_t total_sdram_capacity_valid;
   uint8_t bank_address_bits;
   char *bank_address_bits_str = NULL;
@@ -1906,15 +1906,15 @@ _ipmi_fru_output_dimm_ddr4 (ipmi_fru_state_data_t *state_data,
   uint8_t module_nominal_voltage_TBD2;
   uint8_t sdram_device_width;
   char *sdram_device_width_str = NULL;
-  uint32_t sdram_device_width_val = 0; 
+  uint32_t sdram_device_width_val = 0;
   uint8_t sdram_device_width_valid;
   uint8_t number_of_package_ranks_per_dimm;
   char *number_of_package_ranks_per_dimm_str = NULL;
-  uint32_t number_of_package_ranks_per_dimm_val = 0; 
+  uint32_t number_of_package_ranks_per_dimm_val = 0;
   uint8_t number_of_package_ranks_per_dimm_valid;
   uint8_t primary_bus_width;
   char *primary_bus_width_str = NULL;
-  uint32_t primary_bus_width_val = 0; 
+  uint32_t primary_bus_width_val = 0;
   uint8_t primary_bus_width_valid;
   uint8_t bus_width_extension;
   char *bus_width_extension_str;
@@ -1940,7 +1940,7 @@ _ipmi_fru_output_dimm_ddr4 (ipmi_fru_state_data_t *state_data,
   assert (state_data);
   assert (areabuf);
   assert (area_length);
- 
+
   if (!(obj_record = fiid_obj_create (tmpl_fru_dimm_spd_ddr4_record)))
     {
       pstdout_fprintf (state_data->pstate,
@@ -1992,7 +1992,7 @@ _ipmi_fru_output_dimm_ddr4 (ipmi_fru_state_data_t *state_data,
       goto cleanup;
     }
   total_sdram_capacity = val;
-  
+
   switch (total_sdram_capacity)
     {
     case IPMI_FRU_DIMMSPD_DDR4_TOTAL_SDRAM_CAPACITY_256_MB:
@@ -2016,7 +2016,7 @@ _ipmi_fru_output_dimm_ddr4 (ipmi_fru_state_data_t *state_data,
     case IPMI_FRU_DIMMSPD_DDR4_TOTAL_SDRAM_CAPACITY_2_GB:
       total_sdram_capacity_str = "2 Gb";
       total_sdram_capacity_val = 2048;
-      total_sdram_capacity_valid = 1; 
+      total_sdram_capacity_valid = 1;
       total_memory_capacity_units_str = "GB";
      break;
     case IPMI_FRU_DIMMSPD_DDR4_TOTAL_SDRAM_CAPACITY_4_GB:
@@ -2155,7 +2155,7 @@ _ipmi_fru_output_dimm_ddr4 (ipmi_fru_state_data_t *state_data,
     default:
       die_count_str = "Unknown";
       break;
-    } 
+    }
 
   pstdout_printf (state_data->pstate,
                   "  FRU Die Count : %s\n",
@@ -2189,7 +2189,7 @@ _ipmi_fru_output_dimm_ddr4 (ipmi_fru_state_data_t *state_data,
   pstdout_printf (state_data->pstate,
                   "  FRU SDRAM Package Type : %s\n",
                   sdram_package_type_str);
-  
+
   if (FIID_OBJ_GET (obj_record,
                     "module_nominal_voltage.dram_vdd.1_2_operable",
                     &val) < 0)
@@ -2412,7 +2412,7 @@ _ipmi_fru_output_dimm_ddr4 (ipmi_fru_state_data_t *state_data,
     {
       /* Per JEDEC document, in section "Byte 8"
        *
-       * SDRAM CAPCITY / 8 * PRIMARY BUS WIDTH / SDRAM WIDTH * RANKS 
+       * SDRAM CAPCITY / 8 * PRIMARY BUS WIDTH / SDRAM WIDTH * RANKS
        */
       total_memory_capacity = (total_sdram_capacity_val / 8) * (primary_bus_width_val / sdram_device_width_val) * number_of_package_ranks_per_dimm_val;
 
@@ -2691,11 +2691,11 @@ ipmi_fru_output_dimm (ipmi_fru_state_data_t *state_data,
       dram_device_type_str = "Unrecognized";
       break;
     }
-  
+
   pstdout_printf (state_data->pstate,
                   "  FRU DRAM Device Type: %s\n",
                   dram_device_type_str);
-                    
+
   if (dram_device_type == IPMI_FRU_DIMMSPD_DRAM_DEVICE_TYPE_DDR3_SDRAM)
     {
       if (_ipmi_fru_output_dimm_ddr3 (state_data, areabuf, area_length) < 0)

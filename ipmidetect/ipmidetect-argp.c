@@ -145,7 +145,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   char *endptr;
 
   assert (state);
-  
+
   cmd_args = state->input;
 
   switch (key)
@@ -207,7 +207,7 @@ ipmidetect_argp_parse (int argc, char **argv, struct ipmidetect_arguments *cmd_a
   cmd_args->port = 0;
   cmd_args->output_type = IPMIDETECT_DETECTED_AND_UNDETECTED_NODES;
   cmd_args->output_format = 0;
-  
+
   if (!(cmd_args->inputted_nodes = fi_hostlist_create (NULL)))
     err_exit ("fi_hostlist_create");
 

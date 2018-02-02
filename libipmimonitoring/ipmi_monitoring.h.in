@@ -250,9 +250,9 @@ enum ipmi_monitoring_workaround_flags
 
     /* For use w/ an In-band driver */
     IPMI_MONITORING_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS                        = 0x00000001,
-    IPMI_MONITORING_WORKAROUND_FLAGS_INBAND_SPIN_POLL                                     = 0x00000002,	
+    IPMI_MONITORING_WORKAROUND_FLAGS_INBAND_SPIN_POLL                                     = 0x00000002,
   };
-  
+
 /* REREAD_SDR_CACHE - Re-read the SDR cache
  *
  * INTERPRET_OEM_DATA - Attempt to interpret OEM data if read.
@@ -314,7 +314,7 @@ enum ipmi_monitoring_sensor_reading_flags
     IPMI_MONITORING_SENSOR_READING_FLAGS_INTERPRET_OEM_DATA               = 0x00000008,
     IPMI_MONITORING_SENSOR_READING_FLAGS_SHARED_SENSORS                   = 0x00000010,
     IPMI_MONITORING_SENSOR_READING_FLAGS_DISCRETE_READING                 = 0x00000020,
-    IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_SCANNING_DISABLED         = 0x00000040,	
+    IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_SCANNING_DISABLED         = 0x00000040,
     IPMI_MONITORING_SENSOR_READING_FLAGS_ASSUME_BMC_OWNER                 = 0x00000080,
     IPMI_MONITORING_SENSOR_READING_FLAGS_ENTITY_SENSOR_NAMES              = 0x00000100,
     IPMI_MONITORING_SENSOR_READING_FLAGS_ASSUME_MAX_SDR_RECORD_COUNT      = 0x00000200,
@@ -567,7 +567,7 @@ int ipmi_monitoring_ctx_sel_config_file (ipmi_monitoring_ctx_t c,
  */
 int ipmi_monitoring_ctx_sensor_config_file (ipmi_monitoring_ctx_t c,
                                             const char *sensor_config_file);
-  
+
 /*
  * ipmi_monitoring_ctx_sdr_cache_directory
  *

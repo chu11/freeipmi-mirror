@@ -265,7 +265,7 @@ _get_sensor_state (ipmi_monitoring_ctx_t c,
 
   assert (c);
   assert (c->magic == IPMI_MONITORING_MAGIC);
-  
+
   if (ipmi_interpret_sensor (c->interpret_ctx,
                              event_reading_type_code,
                              sensor_type,
@@ -277,7 +277,7 @@ _get_sensor_state (ipmi_monitoring_ctx_t c,
       c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       return (-1);
     }
-  
+
   if (sensor_state == IPMI_INTERPRET_STATE_NOMINAL)
     rv = IPMI_MONITORING_STATE_NOMINAL;
   else if (sensor_state == IPMI_INTERPRET_STATE_WARNING)
@@ -342,7 +342,7 @@ _get_sensor_reading (ipmi_monitoring_ctx_t c,
       c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       goto cleanup;
     }
-  
+
   if (ipmi_sensor_read (c->sensor_read_ctx,
                         sdr_record,
                         sdr_record_len,
@@ -478,9 +478,9 @@ _get_sensor_bitmask_strings (ipmi_monitoring_ctx_t c,
   assert (c);
   assert (c->magic == IPMI_MONITORING_MAGIC);
   assert (sensor_bitmask_strings);
-  
+
   flags = IPMI_GET_EVENT_MESSAGES_FLAGS_SENSOR_READING;
-  
+
   if (sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_INTERPRET_OEM_DATA)
     {
       manufacturer_id = c->manufacturer_id;
@@ -1139,7 +1139,7 @@ ipmi_monitoring_get_sensor_reading (ipmi_monitoring_ctx_t c,
 
   if (!(sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_SHARED_SENSORS))
     sensor_name_flags |= IPMI_SDR_SENSOR_NAME_FLAGS_IGNORE_SHARED_SENSORS;
-  
+
   if (sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_ENTITY_SENSOR_NAMES)
     {
       if ((len = ipmi_sdr_parse_entity_sensor_name (c->sdr_ctx,

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -81,7 +81,7 @@ sel_string_output_intel_windmill_event_data1_class_sensor_specific_discrete (ipm
   assert (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC);
   assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_WINDMILL);
 
-  /* 
+  /*
    * Intel Windmill
    * (Quanta Winterfell)
    * (Wiwynn Windmill)
@@ -103,7 +103,7 @@ sel_string_output_intel_windmill_event_data1_class_sensor_specific_discrete (ipm
           snprintf (tmpbuf,
                     tmpbuflen,
                     "SEL Clear");
-          
+
           return (1);
         }
 
@@ -112,7 +112,7 @@ sel_string_output_intel_windmill_event_data1_class_sensor_specific_discrete (ipm
           snprintf (tmpbuf,
                     tmpbuflen,
                     "SEL Rollover");
-          
+
           return (1);
         }
     }
@@ -145,7 +145,7 @@ sel_string_output_intel_windmill_event_data1_class_sensor_specific_discrete (ipm
                 tmpbuflen,
                 "Power Status = %s",
                 chassis_power_status_str);
-          
+
       return (1);
     }
 
@@ -180,7 +180,7 @@ sel_string_output_intel_windmill_event_data1_class_sensor_specific_discrete (ipm
                 tmpbuflen,
                 "Status = %s",
                 hsc_str);
-          
+
       return (1);
     }
 
@@ -215,7 +215,7 @@ sel_string_output_intel_windmill_event_data1_class_sensor_specific_discrete (ipm
                 tmpbuflen,
                 "Status = %s",
                 hsc_str);
-          
+
       return (1);
     }
 
@@ -262,7 +262,7 @@ sel_string_output_intel_windmill_event_data1_class_sensor_specific_discrete (ipm
                 tmpbuflen,
                 "Status = %s",
                 hsc_str);
-          
+
       return (1);
     }
 
@@ -297,7 +297,7 @@ sel_string_output_intel_windmill_event_data1_class_sensor_specific_discrete (ipm
                 tmpbuflen,
                 "Status = %s",
                 hsc_str);
-          
+
       return (1);
     }
 
@@ -356,7 +356,7 @@ sel_string_output_intel_windmill_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
   assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_WINDMILL);
 
-  /* 
+  /*
    * Intel Windmill
    * (Quanta Winterfell)
    * (Wiwynn Windmill)
@@ -417,10 +417,10 @@ sel_string_output_intel_windmill_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 
       device = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA2_OEM_INTEL_DEVICE_NUMBER_BITMASK);
       device >>= IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA2_OEM_INTEL_DEVICE_NUMBER_SHIFT;
-          
+
       function = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA2_OEM_INTEL_FUNCTION_NUMBER_BITMASK);
       function >>= IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA2_OEM_INTEL_FUNCTION_NUMBER_SHIFT;
-          
+
       snprintf (tmpbuf,
                 tmpbuflen,
                 "Device %u, Function %u",
@@ -439,7 +439,7 @@ sel_string_output_intel_windmill_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 
       logical_rank = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_WINDMILL_LOGICAL_RANK_BITMASK);
       logical_rank >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_WINDMILL_LOGICAL_RANK_SHIFT;
-          
+
       snprintf (tmpbuf,
                 tmpbuflen,
                 "Logical Rank = %u",
@@ -477,7 +477,7 @@ sel_string_output_intel_windmill_event_data2_class_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data);
   assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_WINDMILL);
 
-  /* 
+  /*
    * Intel Windmill
    * (Quanta Winterfell)
    * (Wiwynn Windmill)
@@ -488,9 +488,9 @@ sel_string_output_intel_windmill_event_data2_class_oem (ipmi_sel_ctx_t ctx,
     {
       uint8_t health_event;
       char *health_event_str;
-          
+
       health_event = system_event_record_data->event_data2;
-          
+
       switch (health_event)
         {
         case IPMI_OEM_INTEL_WINDMILL_ME_FIRMWARE_HEALTH_EVENT_EVENT_DATA2_RECOVERY_GPIO_FORCED:
@@ -523,12 +523,12 @@ sel_string_output_intel_windmill_event_data2_class_oem (ipmi_sel_ctx_t ctx,
         default:
           health_event_str = "Unknown";
         }
-          
+
       snprintf (tmpbuf,
                 tmpbuflen,
                 "Health Event = %s",
                 health_event_str);
-          
+
       return (1);
     }
 
@@ -575,7 +575,7 @@ sel_string_output_intel_windmill_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
   assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_WINDMILL);
 
-  /* 
+  /*
    * Intel Windmill
    * (Quanta Winterfell)
    * (Wiwynn Windmill)
@@ -593,7 +593,7 @@ sel_string_output_intel_windmill_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
                 tmpbuflen,
                 "CPU/VR = %u",
                 cpu_vr);
-          
+
       return (1);
     }
 
@@ -662,7 +662,7 @@ sel_string_output_intel_windmill_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
           snprintf (tmpbuf,
                     tmpbuflen,
                     "CPU = %u, Source = %s",
-                    cpu_number, 
+                    cpu_number,
                     qpi_str);
         }
       else if (source == IPMI_SENSOR_TYPE_PROCESSOR_EVENT_DATA2_OEM_INTEL_WINDMILL_MACHINE_CHECK_ERROR_SOURCE_LLC)
@@ -670,7 +670,7 @@ sel_string_output_intel_windmill_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
           snprintf (tmpbuf,
                     tmpbuflen,
                     "CPU = %u, Core = %u",
-                    cpu_number, 
+                    cpu_number,
                     source_extra);
         }
       else
@@ -678,7 +678,7 @@ sel_string_output_intel_windmill_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
           snprintf (tmpbuf,
                     tmpbuflen,
                     "CPU = %u, Source = %s",
-                    cpu_number, 
+                    cpu_number,
                     "Unknown");
         }
 
@@ -756,7 +756,7 @@ sel_string_output_intel_windmill_event_data3_class_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data);
   assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_WINDMILL);
 
-  /* 
+  /*
    * Intel Windmill
    * (Quanta Winterfell)
    * (Wiwynn Windmill)
@@ -769,7 +769,7 @@ sel_string_output_intel_windmill_event_data3_class_oem (ipmi_sel_ctx_t ctx,
                 tmpbuflen,
                 "Extended Error Info = %02X",
                 system_event_record_data->event_data3);
-          
+
     }
 
   if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_WINDMILL_OTHER_IIO_ERROR_SENSOR
@@ -849,7 +849,7 @@ sel_string_output_intel_windmill_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
   assert (oem_rv);
   assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_WINDMILL);
 
-  /* 
+  /*
    * Intel Windmill
    * (Quanta Winterfell)
    * (Wiwynn Windmill)
@@ -864,10 +864,10 @@ sel_string_output_intel_windmill_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
     {
       uint16_t error_code;
       char *error_code_str = NULL;
-          
+
       error_code = system_event_record_data->event_data2;
       error_code |= (system_event_record_data->event_data3 << 8);
-          
+
       switch (error_code)
         {
           /* These are from WiWynn doc */
@@ -968,7 +968,7 @@ sel_string_output_intel_windmill_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
         (*oem_rv) = 1;
       else
         (*oem_rv) = 0;
-      
+
       return (1);
     }
 
@@ -1025,13 +1025,13 @@ sel_string_output_intel_windmill_oem_record_data (ipmi_sel_ctx_t ctx,
       char *device_identification_number_str;
       uint16_t error_code;
       char *error_code_str;
-          
+
       device_id = sel_entry->sel_event_record[IPMI_SEL_OEM_INTEL_WINDMILL_DEVICE_IDENTIFICATION_NUMBER_INDEX_LSB_INDEX];
       device_id |= (sel_entry->sel_event_record[IPMI_SEL_OEM_INTEL_WINDMILL_DEVICE_IDENTIFICATION_NUMBER_INDEX_MSB_INDEX] << 8);
 
       device_identification_number = sel_entry->sel_event_record[IPMI_SEL_OEM_INTEL_WINDMILL_DEVICE_IDENTIFICATION_NUMBER_INDEX_LSB_INDEX];
       device_identification_number |= (sel_entry->sel_event_record[IPMI_SEL_OEM_INTEL_WINDMILL_DEVICE_IDENTIFICATION_NUMBER_INDEX_MSB_INDEX] << 8);
-          
+
       error_code = sel_entry->sel_event_record[IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_INDEX_LSB_INDEX];
       error_code |= (sel_entry->sel_event_record[IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_INDEX_MSB_INDEX] << 8);
 
@@ -1176,7 +1176,7 @@ sel_string_output_intel_windmill_oem_record_data (ipmi_sel_ctx_t ctx,
         (*oem_rv) = 1;
       else
         (*oem_rv) = 0;
-          
+
       return (1);
     }
 

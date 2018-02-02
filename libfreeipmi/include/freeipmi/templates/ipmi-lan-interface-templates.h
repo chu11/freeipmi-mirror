@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_LAN_INTERFACE_TEMPLATES_H
@@ -68,7 +68,7 @@ FIID Template: tmpl_lan_session_hdr
     { 32, "session_id", REQUIRED, LENGTH-FIXED }
     { 128, "authentication_code", OPTIONAL, LENGTH-FIXED, SECURE_MEMSET_ON_CLEAR }
     { 8, "ipmi_msg_len", REQUIRED, LENGTH-FIXED }
- 
+
 LAN Message Header Request
 --------------------------
 

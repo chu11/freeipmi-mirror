@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -553,7 +553,7 @@ _ipmi_kcs_timeval_diff (struct timeval *start, struct timeval *end)
       t += (IPMI_KCS_MICROSECONDS_IN_SECOND - start->tv_usec);
       t += end->tv_usec;
     }
-  
+
   return (t);
 }
 
@@ -576,11 +576,11 @@ _ipmi_kcs_spin_sleep (ipmi_kcs_ctx_t ctx)
       KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_SYSTEM_ERROR);
       return (-1);
     }
-  
+
   while (1)
     {
       unsigned long t;
-      
+
       if (gettimeofday (&spinend, NULL) < 0)
         {
           KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_SYSTEM_ERROR);
@@ -635,7 +635,7 @@ _ipmi_kcs_sleep (ipmi_kcs_ctx_t ctx, struct timeval *start)
       if (_ipmi_kcs_spin_sleep (ctx) < 0)
         return (-1);
     }
-  
+
   return (0);
 }
 
@@ -908,7 +908,7 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
       exit (EXIT_FAILURE);
     }
 #endif
-  
+
   if (count > INT_MAX)
     {
       KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_OVERFLOW);

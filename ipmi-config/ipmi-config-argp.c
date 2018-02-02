@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -468,7 +468,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   char *value = NULL;
 
   assert (state);
-  
+
   cmd_args = state->input;
 
   switch (key)
@@ -580,13 +580,13 @@ static void
 _ipmi_config_config_file_parse (struct ipmi_config_arguments *cmd_args)
 {
   struct config_file_data_ipmi_config config_file_data;
-  
+
   assert (cmd_args);
 
   memset (&config_file_data,
           '\0',
           sizeof (struct config_file_data_ipmi_config));
-  
+
   if (config_file_parse (cmd_args->common_args.config_file,
                          0,
                          &(cmd_args->common_args),
@@ -665,7 +665,7 @@ _ipmi_config_args_validate (struct ipmi_config_arguments *cmd_args)
           else
             {
               int fd;
-              
+
               if ((fd = open (cmd_args->filename, O_CREAT, 0644)) < 0)
                 {
                   fprintf (stderr,

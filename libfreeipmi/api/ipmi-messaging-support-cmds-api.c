@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -78,7 +78,7 @@ ipmi_cmd_set_bmc_global_enables (ipmi_ctx_t ctx,
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
-  
+
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_set_bmc_global_enables_rq)))
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
@@ -139,7 +139,7 @@ ipmi_cmd_get_bmc_global_enables (ipmi_ctx_t ctx,
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
-  
+
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_bmc_global_enables_rq)))
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
@@ -805,7 +805,7 @@ ipmi_cmd_master_write_read (ipmi_ctx_t ctx,
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
-  
+
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
                                  tmpl_cmd_master_write_read_rs) < 0)
     {
@@ -1043,7 +1043,7 @@ ipmi_cmd_set_system_info_parameters_set_in_progress (ipmi_ctx_t ctx,
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
-  
+
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs,
                                  tmpl_cmd_set_system_info_parameters_rs) < 0)
     {
@@ -1093,7 +1093,7 @@ _ipmi_cmd_set_system_info_parameters_string_first_set_common (ipmi_ctx_t ctx,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int rv = -1;
-  
+
   assert (tmpl_cmd_rq);
   assert (fill_func);
 
@@ -1109,7 +1109,7 @@ _ipmi_cmd_set_system_info_parameters_string_first_set_common (ipmi_ctx_t ctx,
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
     }
-                                                                      
+
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rs, tmpl_cmd_set_system_info_parameters_rs) < 0)
     {
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
@@ -1132,7 +1132,7 @@ _ipmi_cmd_set_system_info_parameters_string_first_set_common (ipmi_ctx_t ctx,
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   if (api_ipmi_cmd (ctx,
                     IPMI_BMC_IPMB_LUN_BMC,
                     IPMI_NET_FN_APP_RQ,
@@ -1142,7 +1142,7 @@ _ipmi_cmd_set_system_info_parameters_string_first_set_common (ipmi_ctx_t ctx,
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       goto cleanup;
     }
-  
+
   rv = 0;
  cleanup:
   fiid_obj_destroy (obj_cmd_rq);

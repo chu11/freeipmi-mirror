@@ -33,29 +33,29 @@ may execute the tools on the command line to begin using them.  Some
 motherboards may require you to determine driver type, addresses,
 paths, etc. on your own and pass them as command line options to the
 tools.  You may use
-.B ipmi-locate(8) 
+.B ipmi-locate(8)
 to help determine
-this information.  Other tools such as 
+this information.  Other tools such as
 .B dmidecode(8)
 may also provide
 this information.
 .PP
-To use IPMI out-of-band with tools such as 
-.B ipmipower(8) 
+To use IPMI out-of-band with tools such as
+.B ipmipower(8)
 or
-.B ipmi-sensors(8), 
+.B ipmi-sensors(8),
 the remote machine's BMC must first be configured for out of band
 communication.  Typically, this involves setting a username, password,
 IP address, MAC address, and a few other parameters.  This can be done
 using the tool
-.B ipmi-config(8).  
+.B ipmi-config(8).
 Additional information on how to configure with
-.B ipmi-config(8) 
+.B ipmi-config(8)
 can be found
 in the
-.B ipmi-config.conf(5) 
+.B ipmi-config.conf(5)
 manpage.  Some vendors may pre-configure their motherboards with
-default values so that 
+default values so that
 .B ipmi-config(8)
 can be used remotely to configure the machine.  However, most of the
 time, the BMC must be configured in-band before out-of-band access can
@@ -115,23 +115,23 @@ In order to avoid typing in a long list of command line options to
 specify IPMI communication requirements everytime a command is
 executed (e.g. driver paths, usernames, passwords, etc.), an
 alternate set of default values can be set for most FreeIPMI
-tools in the FreeIPMI configuration file.  See 
+tools in the FreeIPMI configuration file.  See
 .B freeipmi.conf(5)
 for more information.
 
 .SH "HPC Support"
-Much of FreeIPMI was written with HPC support in mind.  
+Much of FreeIPMI was written with HPC support in mind.
 .B Ipmi-config(8)
 comes with file input/output support so that configuration can be
 copied and verified across nodes in a cluster.  Most tools (like
-.B ipmipower(8) 
-and 
+.B ipmipower(8)
+and
 .B ipmi-sensors(8)
 ) come with hostrange support so multiple hosts can be specified on
 the command line at the same time and IPMI can be executed against
 the hosts in parallel.  See tool manpages for more information.
-Also see the document 
-\fIfreeipmi-hostrange.txt\fR 
+Also see the document
+\fIfreeipmi-hostrange.txt\fR
 for detailed usage and explanation.
 .B Ipmi-sensors(8)
 and the
@@ -144,12 +144,12 @@ large numbers of nodes.
 .SH "Development"
 
 For information on the libraries that can be used to program IPMI
-applications with, please see 
-.B libfreeipmi(3), 
+applications with, please see
+.B libfreeipmi(3),
 .B libipmiconsole(3),
-.B libipmimonitoring(3), 
+.B libipmimonitoring(3),
 .B and libipmidetect(3).
-Or see the document 
+Or see the document
 \fIfreeipmi-libraries.txt\fR.
 
 .SH "Project Tools"
@@ -283,7 +283,7 @@ A library for IPMI node detection.
 #include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
 
 .SH "COPYRIGHT"
-Copyright \(co 2003-2015 FreeIPMI Core Team.  
+Copyright \(co 2003-2015 FreeIPMI Core Team.
 #include <@top_srcdir@/man/manpage-common-gpl-freeipmi-text.man>
 
 .SH "SEE ALSO"

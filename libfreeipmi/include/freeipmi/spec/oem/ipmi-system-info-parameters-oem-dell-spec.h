@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_SYSTEM_INFO_PARAMETERS_OEM_DELL_SPEC_H
@@ -92,7 +92,7 @@ extern "C" {
 /* w/ IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_PLATFORM_MODEL_NAME,
  * IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_SLOT_NUMBER,
  * IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_IDRAC_IPV4_URL,
- * IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_IDRAC_INFO, 
+ * IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_IDRAC_INFO,
  * IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_CMC_IPV4_URL,
  * IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_CMC_IPV6_INFO,
  * IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_CMC_IPV6_URL
@@ -125,7 +125,7 @@ extern "C" {
 #define IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_STATUS_PLAYING_DEAD 2
 #define IPMI_OEM_DELL_SYSTEM_INFO_MAC_ADDRESS_STATUS_RESERVED     3
 
-#define IPMI_OEM_DELL_SYSTEM_INFO_11G_OR_12G_MAC_ADDRESS_LENGTH   8 
+#define IPMI_OEM_DELL_SYSTEM_INFO_11G_OR_12G_MAC_ADDRESS_LENGTH   8
 
 /* w/ IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_IDRAC_INFO */
 #define IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_INFO_MIN_LEN 41

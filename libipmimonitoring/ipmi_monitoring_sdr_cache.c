@@ -75,7 +75,7 @@ _ipmi_monitoring_sdr_ctx_init (ipmi_monitoring_ctx_t c, const char *hostname)
       /* Don't error out, if this fails we can still continue */
       if (ipmi_sdr_ctx_set_flags (c->sdr_ctx, IPMI_SDR_FLAGS_DEBUG_DUMP) < 0)
         IPMI_MONITORING_DEBUG (("ipmi_sdr_ctx_set_flags: %s", ipmi_sdr_ctx_errormsg (c->sdr_ctx)));
-      
+
       if (hostname)
         {
           if (ipmi_sdr_ctx_set_debug_prefix (c->sdr_ctx, hostname) < 0)

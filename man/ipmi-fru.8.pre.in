@@ -8,7 +8,7 @@
 .\"  UCRL-CODE-228523
 .\"
 .\"  This file is part of Ipmi-fru, a tool used for retrieving motherboard
-.\"  field replaceable unit (FRU) information. For details, 
+.\"  field replaceable unit (FRU) information. For details,
 .\"  see http://www.llnl.gov/linux/.
 .\"
 .\"  Ipmi-fru is free software; you can redistribute it and/or modify it under
@@ -123,7 +123,7 @@ motherboards.
 .LP
 Wistron/Dell Poweredge C6220
 .SH "EXAMPLES"
-.B # ipmi-fru 
+.B # ipmi-fru
 .PP
 Get FRU information of the local machine.
 .PP
@@ -140,7 +140,7 @@ Get FRU information of a remote machine using IPMI over LAN.
 Get FRU information across a cluster using IPMI over LAN.
 .PP
 .SH "IPMI-FRU KNOWN ISSUES"
-Not all language codes are supported in 
+Not all language codes are supported in
 .B ipmi-fru.
 If additional language code support is required please contact the
 FreeIPMI maintainers.

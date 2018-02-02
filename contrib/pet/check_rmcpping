@@ -7,7 +7,7 @@ PACKETS=3
 
 while getopts ":H:w:c:p:" opt
 do
-  case $opt in 
+  case $opt in
   H)
     HOST=$OPTARG
     ;;
@@ -36,7 +36,7 @@ done
   exit 3
 }
 
-PROG=/usr/sbin/rmcpping 
+PROG=/usr/sbin/rmcpping
 [[ -x $PROG ]] || {
   echo "RMCPPING UNKNOWN - check $PROG executable"
   exit 3

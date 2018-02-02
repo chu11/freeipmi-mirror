@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2008-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -144,7 +144,7 @@
  * 0x6B - OEM cmd
  *
  * Get FCB Power Throttling Status Response
- * 
+ *
  * 0x6B - OEM cmd
  * 0x?? - Completion Code
  * 0x?? - FCB Power Throttling status
@@ -155,7 +155,7 @@
  * 0x70 - OEM cmd
  *
  * OEM Get PIC Model Response
- * 
+ *
  * 0x70 - OEM cmd
  * 0x?? - Completion Code
  * 0x?? - PIC model
@@ -170,7 +170,7 @@
  * 0x?? - Value
  *
  * OEM Set Flash Pin Response
- * 
+ *
  * 0x71 - OEM cmd
  * 0x?? - Completion Code
  *
@@ -181,7 +181,7 @@
  * 0x?? - Pin Number
  *
  * OEM Get Flash Pin Response
- * 
+ *
  * 0x72 - OEM cmd
  * 0x?? - Completion Code
  * 0x?? - Pin Value
@@ -195,7 +195,7 @@
  * 3:52 - data
  *
  * OEM New Master Write Read Response
- * 
+ *
  * 0x73 - OEM cmd
  * 0x?? - Completion Code
  * 2:51 - data
@@ -212,7 +212,7 @@
  * 0x?? - Power Capping Max Value (high byte)
  *
  * Set Power Throttling Behavior Response
- * 
+ *
  * 0xB1 - OEM cmd
  * 0x?? - Completion Code
  *
@@ -222,7 +222,7 @@
  * 0xB2 - OEM cmd
  *
  * Get Power Throttling Behavior Response
- * 
+ *
  * 0xB2 - OEM cmd
  * 0x?? - Completion Code
  * 0x?? - Power Throttling Enable (01h - enable)
@@ -317,7 +317,7 @@ ipmi_oem_inventec_get_mac_address (ipmi_oem_state_data_t *state_data)
                        strerror (errno));
       goto cleanup;
     }
-  
+
   if (ipmi_cmd_get_lan_configuration_parameters_mac_address (state_data->ipmi_ctx,
                                                              lan_channel_number,
                                                              IPMI_GET_LAN_PARAMETER,
@@ -343,7 +343,7 @@ ipmi_oem_inventec_get_mac_address (ipmi_oem_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
-  
+
   memset (mac_address_str, '\0', IPMI_OEM_INVENTEC_MAX_MACADDRLEN+1);
   snprintf (mac_address_str,
             IPMI_OEM_INVENTEC_MAX_MACADDRLEN,
@@ -417,7 +417,7 @@ ipmi_oem_inventec_set_mac_address (ipmi_oem_state_data_t *state_data)
    * 0x21 | 0x23 - OEM cmd - 0x21 = dedicated, 0x23 = shared
    * bytes 1-17: MAC address in ASCII (including semicolons)
    * 0x00 - sentinel value 0x00
-   * 
+   *
    * Set MAC Address Response
    *
    * 0x21 | 0x23 - OEM cmd - 0x21 = dedicated, 0x23 = shared
@@ -428,13 +428,13 @@ ipmi_oem_inventec_set_mac_address (ipmi_oem_state_data_t *state_data)
     cmd = IPMI_CMD_OEM_INVENTEC_SET_DEDICATED_MAC_ADDRESS;
   else
     cmd = IPMI_CMD_OEM_INVENTEC_SET_SHARED_MAC_ADDRESS;
-  
+
   bytes_rq[0] = cmd;
   memcpy (&bytes_rq[1],
           state_data->prog_data->args->oem_options[1],
           17);
   bytes_rq[18] = 0x00;
-  
+
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
                               IPMI_NET_FN_OEM_GROUP_RQ, /* network function */
@@ -449,7 +449,7 @@ ipmi_oem_inventec_set_mac_address (ipmi_oem_state_data_t *state_data)
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
-  
+
   if (ipmi_oem_check_response_and_completion_code (state_data,
                                                    bytes_rs,
                                                    rs_len,
@@ -458,7 +458,7 @@ ipmi_oem_inventec_set_mac_address (ipmi_oem_state_data_t *state_data)
                                                    IPMI_NET_FN_OEM_GROUP_RS,
                                                    NULL) < 0)
     goto cleanup;
-  
+
   rv = 0;
  cleanup:
   return (rv);
@@ -502,7 +502,7 @@ ipmi_oem_inventec_get_authentication_config (ipmi_oem_state_data_t *state_data)
                                                      &tmpvalue) < 0)
     goto cleanup;
   maxauthenticationfailures = tmpvalue;
-  
+
   if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
                                                      IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_SECURITY,
                                                      IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_SECURITY_LOCKOUT_WINDOW,
@@ -511,7 +511,7 @@ ipmi_oem_inventec_get_authentication_config (ipmi_oem_state_data_t *state_data)
                                                      &tmpvalue) < 0)
     goto cleanup;
   lockoutwindow = tmpvalue;
-  
+
   if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
                                                      IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_SECURITY,
                                                      IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_SECURITY_LOCKOUT_TIME,
@@ -520,15 +520,15 @@ ipmi_oem_inventec_get_authentication_config (ipmi_oem_state_data_t *state_data)
                                                      &tmpvalue) < 0)
     goto cleanup;
   lockouttime = tmpvalue;
-  
+
   pstdout_printf (state_data->pstate,
                   "Max Authentication Failures : %u\n",
                   maxauthenticationfailures);
-  
+
   pstdout_printf (state_data->pstate,
                   "Lockout Window              : %u seconds\n",
                   lockoutwindow);
-  
+
   pstdout_printf (state_data->pstate,
                   "Lockout Time                : %u seconds\n",
                   lockouttime);
@@ -555,14 +555,14 @@ ipmi_oem_inventec_set_authentication_config (ipmi_oem_state_data_t *state_data)
                       "Option: maxauthenticationfailures=count\n"
                       "Option: lockoutwindow=seconds\n"
                       "Option: lockouttime=seconds\n");
-      return (0); 
+      return (0);
     }
 
   for (i = 0; i < state_data->prog_data->args->oem_options_count; i++)
     {
       char *key = NULL;
       char *value = NULL;
-      
+
       if (ipmi_oem_parse_key_value (state_data,
                                     i,
                                     &key,
@@ -586,7 +586,7 @@ ipmi_oem_inventec_set_authentication_config (ipmi_oem_state_data_t *state_data)
         {
           if (ipmi_oem_parse_2_byte_field (state_data, i, value, &lockoutwindow) < 0)
             goto cleanup;
-          
+
           if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
                                                              IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_SECURITY,
                                                              IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_SECURITY_LOCKOUT_WINDOW,
@@ -599,7 +599,7 @@ ipmi_oem_inventec_set_authentication_config (ipmi_oem_state_data_t *state_data)
         {
           if (ipmi_oem_parse_2_byte_field (state_data, i, value, &lockouttime) < 0)
             goto cleanup;
-          
+
           if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
                                                              IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_SECURITY,
                                                              IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_SECURITY_LOCKOUT_TIME,
@@ -751,7 +751,7 @@ ipmi_oem_inventec_get_firmware_update_config (ipmi_oem_state_data_t *state_data)
                                                      &tmpvalue) < 0)
     goto cleanup;
   remote_update_enable = tmpvalue;
-  
+
   if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
                                                      IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_FIRMWARE_UPDATE,
                                                      IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_PROTOCOL,
@@ -768,7 +768,7 @@ ipmi_oem_inventec_get_firmware_update_config (ipmi_oem_state_data_t *state_data)
                                                       uri,
                                                       IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_URI_LEN) < 0)
     goto cleanup;
-  
+
   if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
                                                      IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_FIRMWARE_UPDATE,
                                                      IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_CONNECTION_RETRY,
@@ -777,7 +777,7 @@ ipmi_oem_inventec_get_firmware_update_config (ipmi_oem_state_data_t *state_data)
                                                      &tmpvalue) < 0)
     goto cleanup;
   connection_retry = tmpvalue;
-  
+
   if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
                                                      IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_FIRMWARE_UPDATE,
                                                      IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_RETRY_INTERVAL,
@@ -786,7 +786,7 @@ ipmi_oem_inventec_get_firmware_update_config (ipmi_oem_state_data_t *state_data)
                                                      &tmpvalue) < 0)
     goto cleanup;
   retry_interval = tmpvalue;
-  
+
   if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
                                                      IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_FIRMWARE_UPDATE,
                                                      IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_DELAY_TIME,
@@ -795,23 +795,23 @@ ipmi_oem_inventec_get_firmware_update_config (ipmi_oem_state_data_t *state_data)
                                                      &tmpvalue) < 0)
     goto cleanup;
   delay_time = tmpvalue;
-  
+
   pstdout_printf (state_data->pstate,
                   "Remote Update    : %s\n",
                   remote_update_enable ? "Enabled" : "Disabled");
- 
+
   pstdout_printf (state_data->pstate,
                   "Protocol TFTP    : %s\n",
                   (protocol & IPMI_OEM_INVENTEC_EXTENDED_CONFIG_FIRMWARE_UPDATE_PROTOCOL_BITMASK_TFTP) ? "Supported" : "Not Supported");
- 
+
   pstdout_printf (state_data->pstate,
                   "Protocol FTP     : %s\n",
                   (protocol & IPMI_OEM_INVENTEC_EXTENDED_CONFIG_FIRMWARE_UPDATE_PROTOCOL_BITMASK_FTP) ? "Supported" : "Not Supported");
- 
+
   pstdout_printf (state_data->pstate,
                   "Protocol HTTP    : %s\n",
                   (protocol & IPMI_OEM_INVENTEC_EXTENDED_CONFIG_FIRMWARE_UPDATE_PROTOCOL_BITMASK_HTTP) ? "Supported" : "Not Supported");
- 
+
   /* First char will be a separator, don't bother outputting if necessary */
   if (uri[0] == 0x1C
       || uri[0] == 0x1D
@@ -824,16 +824,16 @@ ipmi_oem_inventec_get_firmware_update_config (ipmi_oem_state_data_t *state_data)
     pstdout_printf (state_data->pstate,
                     "URI              : %s\n",
                     uri);
- 
+
   pstdout_printf (state_data->pstate,
                   "Connection Retry : %u\n",
                   connection_retry);
- 
+
   /* is in 5 second increments */
   pstdout_printf (state_data->pstate,
                   "Retry Interval   : %u seconds\n",
                   retry_interval * IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_RETRY_INTERVAL_INCREMENTS);
- 
+
   if (delay_time == IPMI_OEM_INVENTEC_EXTENDED_CONFIG_FIRMWARE_UPDATE_DELAY_TIME_RANDOM)
     pstdout_printf (state_data->pstate,
                     "Delay Time       : random\n",
@@ -842,7 +842,7 @@ ipmi_oem_inventec_get_firmware_update_config (ipmi_oem_state_data_t *state_data)
     pstdout_printf (state_data->pstate,
                     "Delay Time       : %u seconds\n",
                     delay_time);
- 
+
   rv = 0;
  cleanup:
   return (rv);
@@ -870,14 +870,14 @@ ipmi_oem_inventec_set_firmware_update_config (ipmi_oem_state_data_t *state_data)
                       "Option: connectionretry=num\n"
                       "Option: retryinterval=seconds\n"
                       "Option: delaytime=seconds|random\n");
-      return (0); 
+      return (0);
     }
 
   for (i = 0; i < state_data->prog_data->args->oem_options_count; i++)
     {
       char *key = NULL;
       char *value = NULL;
-      
+
       if (ipmi_oem_parse_key_value (state_data,
                                     i,
                                     &key,
@@ -888,7 +888,7 @@ ipmi_oem_inventec_set_firmware_update_config (ipmi_oem_state_data_t *state_data)
         {
           if (ipmi_oem_parse_enable (state_data, i, value, &remote_update_enable) < 0)
             goto cleanup;
-          
+
           if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
                                                              IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_FIRMWARE_UPDATE,
                                                              IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_REMOTE_UPDATE_ENABLE,
@@ -914,14 +914,14 @@ ipmi_oem_inventec_set_firmware_update_config (ipmi_oem_state_data_t *state_data)
                                state_data->prog_data->args->oem_options[i]);
               goto cleanup;
             }
-          
+
           /* has to be atleast 1 char after what the prefix */
           if (!strncasecmp (value, "tftp://", 7)
               || !strncasecmp (value, "http://", 7))
             min_required = 8;
           else /* !strncasecmp (value, "ftp://", 6) */
             min_required = 7;
-          
+
           /* - 1 for separator unit */
           if (strlen (value) < min_required
               || strlen (value) > (IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_URI_LEN - 1))
@@ -936,7 +936,7 @@ ipmi_oem_inventec_set_firmware_update_config (ipmi_oem_state_data_t *state_data)
             }
 
           value_len = strlen (value);
-          
+
           /* First char should be a separator */
           uri[0] = 0x1F;
           memcpy (&uri[1], value, value_len);
@@ -1085,7 +1085,7 @@ ipmi_oem_inventec_get_firmware_information (ipmi_oem_state_data_t *state_data)
                                                       product_info,
                                                       IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_PRODUCT_INFO_LEN) < 0)
     goto cleanup;
- 
+
   if (ipmi_oem_thirdparty_get_extended_config_string (state_data,
                                                       IPMI_OEM_INVENTEC_EXTENDED_CONFIGURATION_ID_FIRMWARE_INFORMATION,
                                                       IPMI_OEM_INVENTEC_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_FIRMWARE_VERSION,
@@ -1225,13 +1225,13 @@ ipmi_oem_inventec_update_firmware (ipmi_oem_state_data_t *state_data)
                        state_data->prog_data->args->oem_options[0]);
       goto cleanup;
     }
-  
+
   /* start at index 1 - first option is required */
   for (i = 1; i < state_data->prog_data->args->oem_options_count; i++)
     {
       char *key = NULL;
       char *value = NULL;
-      
+
       if (ipmi_oem_parse_key_value (state_data,
                                     i,
                                     &key,
@@ -1251,7 +1251,7 @@ ipmi_oem_inventec_update_firmware (ipmi_oem_state_data_t *state_data)
                                state_data->prog_data->args->oem_options[i]);
               goto cleanup;
             }
-          
+
           config_parsed++;
 
           /* has to be atleast 1 char after what the prefix */
@@ -1286,7 +1286,7 @@ ipmi_oem_inventec_update_firmware (ipmi_oem_state_data_t *state_data)
       || !strcasecmp (state_data->prog_data->args->oem_options[0], "ftp")
       || !strcasecmp (state_data->prog_data->args->oem_options[0], "http"))
     bytes_rq[1] = IPMI_OEM_INVENTEC_UPDATE_FIRMWARE_INTERFACE_NETWORKING;
-  
+
   bytes_rq[2] = IPMI_OEM_INVENTEC_UPDATE_FIRMWARE_UPDATE_TYPE_NORMAL_UPDATE;
   bytes_rq[2] <<= IPMI_OEM_INVENTEC_UPDATE_FIRMWARE_UPDATE_TYPE_SHIFT;
 
@@ -1323,7 +1323,7 @@ ipmi_oem_inventec_update_firmware (ipmi_oem_state_data_t *state_data)
     goto cleanup;
 
   task_id = bytes_rs[2];
-  
+
   /* loop until it's done */
   while (1)
     {
@@ -1376,7 +1376,7 @@ ipmi_oem_inventec_update_firmware (ipmi_oem_state_data_t *state_data)
                            ipmi_ctx_errormsg (state_data->ipmi_ctx));
           goto cleanup;
         }
-      
+
       if (ipmi_oem_check_response_and_completion_code (state_data,
                                                        bytes_rs,
                                                        rs_len,
@@ -1464,9 +1464,9 @@ ipmi_oem_inventec_update_firmware (ipmi_oem_state_data_t *state_data)
               ready_to_accept_image++;
             }
         }
-      
+
       sleep (1);
-    } 
+    }
 
   rv = 0;
  cleanup:
@@ -1529,7 +1529,7 @@ ipmi_oem_inventec_get_board_id (ipmi_oem_state_data_t *state_data)
   pstdout_printf (state_data->pstate,
                   "%Xh\n",
                   bytes_rs[2]);
-  
+
   rv = 0;
  cleanup:
   return (rv);
@@ -1550,7 +1550,7 @@ ipmi_oem_inventec_set_board_id (ipmi_oem_state_data_t *state_data)
   assert (state_data->prog_data->args->oem_options_count == 1);
 
   errno = 0;
-  
+
   tmp = strtoul (state_data->prog_data->args->oem_options[0],
                  &endptr,
                  IPMI_OEM_HEX_BASE);
@@ -1792,7 +1792,7 @@ ipmi_oem_inventec_set_asset_tag (ipmi_oem_state_data_t *state_data)
   int rs_len;
   int rv = -1;
   int i;
-  
+
   assert (state_data);
   assert (state_data->prog_data->args->oem_options_count == 1);
 
@@ -1808,7 +1808,7 @@ ipmi_oem_inventec_set_asset_tag (ipmi_oem_state_data_t *state_data)
                        IPMI_OEM_INVENTEC_ASSET_TAG_MAX);
       goto cleanup;
     }
-  
+
   /* Inventec 5441/Dell Xanadu II
    * Inventec 5442/Dell Xanadu III
    *
@@ -1847,7 +1847,7 @@ ipmi_oem_inventec_set_asset_tag (ipmi_oem_state_data_t *state_data)
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
-  
+
   if (ipmi_oem_check_response_and_completion_code (state_data,
                                                    bytes_rs,
                                                    rs_len,
@@ -1856,7 +1856,7 @@ ipmi_oem_inventec_set_asset_tag (ipmi_oem_state_data_t *state_data)
                                                    IPMI_NET_FN_OEM_INVENTEC_SPECIFIC_RS,
                                                    NULL) < 0)
     goto cleanup;
-  
+
   rv = 0;
  cleanup:
   return (rv);
@@ -1956,7 +1956,7 @@ ipmi_oem_inventec_get_dhcp_retry (ipmi_oem_state_data_t *state_data)
     pstdout_printf (state_data->pstate, "Retry Count    : %u\n", configuration_parameter_data[0]);
   pstdout_printf (state_data->pstate, "Retry Interval : %u seconds\n", configuration_parameter_data[1] * 10);
   pstdout_printf (state_data->pstate, "Retry Timeout  : %u minutes\n", configuration_parameter_data[2]);
-                  
+
   rv = 0;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
@@ -2064,7 +2064,7 @@ ipmi_oem_inventec_get_sol_inactivity_timeout (ipmi_oem_state_data_t *state_data)
     pstdout_printf (state_data->pstate, "SOL Inactivity Timeout : %u minutes\n", sol_inactivity_timeout);
   else
     pstdout_printf (state_data->pstate, "SOL Inactivity Timeout : no timeout\n", sol_inactivity_timeout);
-                  
+
   rv = 0;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
@@ -2089,7 +2089,7 @@ ipmi_oem_inventec_set_sol_inactivity_timeout (ipmi_oem_state_data_t *state_data)
       unsigned int temp;
 
       errno = 0;
-      
+
       temp = strtoul (state_data->prog_data->args->oem_options[0], &endptr, 10);
       if (errno
           || endptr[0] != '\0'
@@ -2108,7 +2108,7 @@ ipmi_oem_inventec_set_sol_inactivity_timeout (ipmi_oem_state_data_t *state_data)
     }
   else
     sol_inactivity_timeout = 0;
-  
+
   /* Inventec 5441/Dell Xanadu II
    * Inventec 5442/Dell Xanadu III
    *
@@ -2194,7 +2194,7 @@ ipmi_oem_inventec_restore_to_defaults (ipmi_oem_state_data_t *state_data)
                        state_data->prog_data->args->oem_options[0]);
       goto cleanup;
     }
-  
+
   /* Inventec 5442/Dell Xanadu III OEM
    *
    * Request Restore To Defaults
@@ -2209,7 +2209,7 @@ ipmi_oem_inventec_restore_to_defaults (ipmi_oem_state_data_t *state_data)
    *      [2] = 1b = restore SOL configuration parameters to default
    *      [1] = 1b = restore LAN configuration parameters to default
    *      [0] = 1b = restore user accounts to default
-   * 
+   *
    * Response Restore To Defaults
    *
    * 0x04 - OEM cmd
@@ -2234,7 +2234,7 @@ ipmi_oem_inventec_restore_to_defaults (ipmi_oem_state_data_t *state_data)
    */
 
   bytes_rq[0] = IPMI_CMD_OEM_INVENTEC_RESTORE_TO_DEFAULTS;
-   
+
   bytes_rq[1] = IPMI_OEM_INVENTEC_RESTORE_TO_DEFAULTS_RESTORE_FLAG_REMAINING_PARAMETERS_STAY_WHAT_IT_IS;
   bytes_rq[1] <<= IPMI_OEM_INVENTEC_RESTORE_TO_DEFAULTS_RESTORE_FLAG_SHIFT;
 
@@ -2263,7 +2263,7 @@ ipmi_oem_inventec_restore_to_defaults (ipmi_oem_state_data_t *state_data)
     bytes_rq[1] |= IPMI_OEM_INVENTEC_RESTORE_TO_DEFAULTS_SERIAL_CONFIGURATION_BITMASK;
   else  /* !strcasecmp (state_data->prog_data->args->oem_options[0], "pef" */
     bytes_rq[1] |= IPMI_OEM_INVENTEC_RESTORE_TO_DEFAULTS_PEF_BITMASK;
-           
+
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
                               IPMI_NET_FN_OEM_INVENTEC_GENERIC_RQ, /* network function */
@@ -2278,7 +2278,7 @@ ipmi_oem_inventec_restore_to_defaults (ipmi_oem_state_data_t *state_data)
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
-  
+
   if (ipmi_oem_check_response_and_completion_code (state_data,
                                                    bytes_rs,
                                                    rs_len,
@@ -2287,15 +2287,15 @@ ipmi_oem_inventec_restore_to_defaults (ipmi_oem_state_data_t *state_data)
                                                    IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS,
                                                    NULL) < 0)
     goto cleanup;
-  
+
   task_id = bytes_rs[2];
-  
+
   /* don't quit until it is done */
   while (1)
     {
       bytes_rq[0] = IPMI_CMD_OEM_INVENTEC_GET_RESTORE_STATUS;
       bytes_rq[1] = task_id;
-      
+
       if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                                   0, /* lun */
                                   IPMI_NET_FN_OEM_INVENTEC_GENERIC_RQ, /* network function */
@@ -2310,7 +2310,7 @@ ipmi_oem_inventec_restore_to_defaults (ipmi_oem_state_data_t *state_data)
                            ipmi_ctx_errormsg (state_data->ipmi_ctx));
           goto cleanup;
         }
-      
+
       if (ipmi_oem_check_response_and_completion_code (state_data,
                                                        bytes_rs,
                                                        rs_len,
@@ -2325,7 +2325,7 @@ ipmi_oem_inventec_restore_to_defaults (ipmi_oem_state_data_t *state_data)
 
       sleep (1);
     }
-  
+
   rv = 0;
  cleanup:
   return (rv);
@@ -2356,7 +2356,7 @@ ipmi_oem_inventec_set_system_guid (ipmi_oem_state_data_t *state_data)
                        (IPMI_SYSTEM_GUID_LENGTH * 2));
       goto cleanup;
     }
-  
+
   for (i = 0; i < (IPMI_SYSTEM_GUID_LENGTH * 2); i++)
     {
       if (!isxdigit (state_data->prog_data->args->oem_options[0][i]))
@@ -2391,7 +2391,7 @@ ipmi_oem_inventec_set_system_guid (ipmi_oem_state_data_t *state_data)
       char strbuf[IPMI_OEM_BUFLEN];
       char *endptr;
       long val;
-      
+
       /* achu: there *must* be something faster than this, I just
        * can't find the magic lib call to do 1-char to 1-hex.  All the
        * strxxx() functions take NUL terminated strings.
@@ -2399,7 +2399,7 @@ ipmi_oem_inventec_set_system_guid (ipmi_oem_state_data_t *state_data)
 
       memset (strbuf, '\0', IPMI_OEM_BUFLEN);
       strbuf[0] = state_data->prog_data->args->oem_options[0][i];
-      errno = 0; 
+      errno = 0;
       val = strtol (strbuf, &endptr, IPMI_OEM_HEX_BASE);
       if (errno
           || endptr[0] != '\0')
@@ -2414,7 +2414,7 @@ ipmi_oem_inventec_set_system_guid (ipmi_oem_state_data_t *state_data)
 
       memset (strbuf, '\0', IPMI_OEM_BUFLEN);
       strbuf[0] = state_data->prog_data->args->oem_options[0][i + 1];
-      errno = 0; 
+      errno = 0;
       val = strtol (strbuf, &endptr, IPMI_OEM_HEX_BASE);
       if (errno
           || endptr[0] != '\0')
@@ -2442,7 +2442,7 @@ ipmi_oem_inventec_set_system_guid (ipmi_oem_state_data_t *state_data)
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
-  
+
   if (ipmi_oem_check_response_and_completion_code (state_data,
                                                    bytes_rs,
                                                    rs_len,
@@ -2451,7 +2451,7 @@ ipmi_oem_inventec_set_system_guid (ipmi_oem_state_data_t *state_data)
                                                    IPMI_NET_FN_OEM_INVENTEC_GENERIC_RS,
                                                    NULL) < 0)
     goto cleanup;
-  
+
   rv = 0;
  cleanup:
   return (rv);
@@ -2479,7 +2479,7 @@ _ipmi_oem_inventec_read_eeprom_at24c256n (ipmi_oem_state_data_t *state_data)
    * byte 2 = 0xA6 (slave address 7 bit = 0x53, lowest bit for r/w, 0b = read, 1b = write)
    * byte 3 = read count, we'll use 1
    * byte 4/5 - address to read, msb first
-   * 
+   *
    * response
    *
    * byte 1 = comp-code
@@ -2496,12 +2496,12 @@ _ipmi_oem_inventec_read_eeprom_at24c256n (ipmi_oem_state_data_t *state_data)
                        strerror (errno));
       goto cleanup;
     }
-  
+
   while (read_count <= IPMI_OEM_INVENTEC_EEPROM_AT24C256N_ADDRESS_MAX)
     {
       data_rq[0] = (read_count & 0xFF00) >> 8;
       data_rq[1] = (read_count & 0x00FF);
-      
+
       if (ipmi_cmd_master_write_read (state_data->ipmi_ctx,
                                       IPMI_BUS_TYPE_PRIVATE,
                                       IPMI_OEM_INVENTEC_EEPROM_AT24C256N_BUS_ID,
@@ -2530,25 +2530,25 @@ _ipmi_oem_inventec_read_eeprom_at24c256n (ipmi_oem_state_data_t *state_data)
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
-      
+
       if (len)
         {
           int i;
-          
+
           for (i = read_count; i < (read_count + len); i++)
             {
               if (i && (i % 8) == 0)
                 pstdout_printf (state_data->pstate, "\n");
-              
+
               pstdout_printf (state_data->pstate, "0x%02X ", data_rs[i - read_count]);
             }
-          
+
           read_count += len;
         }
     }
 
   pstdout_printf (state_data->pstate, "\n");
-  
+
   rv = 0;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
@@ -2563,7 +2563,7 @@ ipmi_oem_inventec_read_eeprom (ipmi_oem_state_data_t *state_data)
 
   if (!strcasecmp (state_data->prog_data->args->oem_options[0], "at24c256n"))
     return _ipmi_oem_inventec_read_eeprom_at24c256n (state_data);
-  
+
   pstdout_fprintf (state_data->pstate,
                    stderr,
                    "%s:%s invalid OEM option argument '%s'\n",
@@ -2594,7 +2594,7 @@ _ipmi_oem_inventec_clear_eeprom_at24c256n (ipmi_oem_state_data_t *state_data)
    * byte 3 = read count, 0 to write
    * byte 4/5 - address to read, msb first
    * byte 6 - data to write
-   * 
+   *
    * response
    *
    * byte 1 = comp-code
@@ -2667,7 +2667,7 @@ ipmi_oem_inventec_clear_eeprom (ipmi_oem_state_data_t *state_data)
 
   if (!strcasecmp (state_data->prog_data->args->oem_options[0], "at24c256n"))
     return _ipmi_oem_inventec_clear_eeprom_at24c256n (state_data);
-  
+
   pstdout_fprintf (state_data->pstate,
                    stderr,
                    "%s:%s invalid OEM option argument '%s'\n",

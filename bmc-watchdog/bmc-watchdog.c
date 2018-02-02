@@ -79,7 +79,7 @@ static char comp_code_errbuf[BMC_WATCHDOG_ERR_BUFLEN];
 
 static int shutdown_flag = 1;
 
-/* for verbosity limiting */                                                                                                                  
+/* for verbosity limiting */
 static int last_ipmi_ctx_errnum = -1;
 static uint8_t last_cmd = -1;
 static uint8_t last_netfn = -1;
@@ -104,18 +104,18 @@ _init_bmc_watchdog (void)
 
   parse_get_freeipmi_inband_flags (cmd_args.common_args.workaround_flags_inband,
                                    &workaround_flags);
-  
+
   flags = IPMI_FLAGS_NONBLOCKING;
   if (cmd_args.common_args.debug)
-    flags |= IPMI_FLAGS_DEBUG_DUMP; 
-  
+    flags |= IPMI_FLAGS_DEBUG_DUMP;
+
   if (!(ipmi_ctx = ipmi_ctx_create ()))
     err_exit ("ipmi_ctx_create: %s", strerror (errno));
-  
+
   if (cmd_args.common_args.driver_type == IPMI_DEVICE_UNKNOWN)
     {
       int ret;
-      
+
       if ((ret = ipmi_ctx_find_inband (ipmi_ctx,
                                        NULL,
                                        cmd_args.common_args.disable_auto_probe,
@@ -125,7 +125,7 @@ _init_bmc_watchdog (void)
                                        workaround_flags,
                                        flags)) < 0)
         err_exit ("ipmi_ctx_find_inband: %s", ipmi_ctx_errormsg (ipmi_ctx));
-      
+
       if (!ret)
         err_exit ("could not find inband device");
     }
@@ -154,7 +154,7 @@ _ipmi_err_exit (const char *str)
     err_exit ("%s: %s", str, ipmi_ctx_errormsg (ipmi_ctx));
 }
 
-/* return 0 on success, -1 on non-critical error, exits on fatal error */ 
+/* return 0 on success, -1 on non-critical error, exits on fatal error */
 static int
 _fiid_obj_get_safe(fiid_obj_t obj_cmd_rs, const char *field, uint64_t *val)
 {
@@ -232,10 +232,10 @@ _cmd (const char *str,
                                                            BMC_WATCHDOG_ERR_BUFLEN) < 0)
                     {
                       uint64_t val;
-                      
+
                       _fiid_obj_get (obj_cmd_rs, "comp_code", &val);
                       last_comp_code = val;
-                      
+
                       snprintf (comp_code_errbuf,
                                 BMC_WATCHDOG_ERR_BUFLEN,
                                 "Comp Code 0x%X",
@@ -254,7 +254,7 @@ _cmd (const char *str,
               err_output ("%s: BMC Timeout: %s", str, ipmi_ctx_errormsg (ipmi_ctx));
               return (-1);
             }
-          
+
           daemon_sleep (retry_wait_time);
           retry_count++;
         }
@@ -517,10 +517,10 @@ _get_channel_number (uint8_t *channel_number)
             dev_id_obj_cmd_rq,
             dev_id_obj_cmd_rs) < 0)
     _ipmi_err_exit ("Get Device Id Error");
-  
+
   _fiid_obj_get (dev_id_obj_cmd_rs, "manufacturer_id.id", &val);
   manufacturer_id = val;
-  
+
   _fiid_obj_get (dev_id_obj_cmd_rs, "product_id", &val);
   product_id = val;
 
@@ -651,7 +651,7 @@ _set_cmd (void)
     {
       if (_reset_watchdog_timer_cmd () < 0)
         _ipmi_err_exit ("Reset Watchdog Timer Error");
-      return; 
+      return;
       return;
     }
 
@@ -783,7 +783,7 @@ _pre_timeout_interrupt_str (uint8_t pre_timeout_interrupt)
     default:
       return "Reserved";
     }
-  
+
   return (NULL);                /* NOT REACHED */
 }
 
@@ -913,7 +913,7 @@ _start_cmd (void)
         _ipmi_err_exit ("Suspend BMC ARPs Error");
 
       if (!ret)
-        err_exit ("cannot suspend BMC ARPs"); 
+        err_exit ("cannot suspend BMC ARPs");
     }
 }
 
@@ -1164,7 +1164,7 @@ _daemon_setup (void)
             }
 
           if (!ret)
-            err_output ("cannot suspend BMC ARPs"); 
+            err_output ("cannot suspend BMC ARPs");
 
           break;
         }
@@ -1331,7 +1331,7 @@ _daemon_cmd (const char *progname)
               _daemon_cmd_err_no_exit ("Get Watchdog Timer");
               goto sleep_now;
             }
-          
+
           previous_present_countdown_seconds = present_countdown_seconds;
         }
 

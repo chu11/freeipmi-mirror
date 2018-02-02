@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_API_H
@@ -88,7 +88,7 @@ extern "C" {
  *
  * IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
  * - IPMI_COMP_CODE_INVALID_COMMAND
- * - IPMI_COMP_CODE_COMMAND_INVALID_FOR_LUN  
+ * - IPMI_COMP_CODE_COMMAND_INVALID_FOR_LUN
  * - IPMI_COMP_CODE_REQUEST_DATA_LENGTH_INVALID
  * - IPMI_COMP_CODE_REQUEST_DATA_LENGTH_LIMIT_EXCEEDED
  * - IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE
@@ -197,7 +197,7 @@ typedef enum ipmi_driver_type ipmi_driver_type_t;
  * during opening, not later using ipmi_ctx_set_flags().  If set, you
  * cannot call most IPMI payload functions, only those few that send
  * data without a session.
- * 
+ *
  * DEBUG_DUMP - for all interfaces
  *
  * NO_VALID_CHECK - do not check if IPMI response payloads are valid
@@ -311,13 +311,13 @@ int ipmi_ctx_find_inband (ipmi_ctx_t ctx,
  *
  * To reset to defaults, pass in NULL for both parameters.
  *
- * Can only be called after device opened. 
- */ 
-int ipmi_ctx_set_target (ipmi_ctx_t ctx, 
+ * Can only be called after device opened.
+ */
+int ipmi_ctx_set_target (ipmi_ctx_t ctx,
                          uint8_t *channel_number,
                          uint8_t *rs_addr);
 
-int ipmi_ctx_get_target (ipmi_ctx_t ctx, 
+int ipmi_ctx_get_target (ipmi_ctx_t ctx,
                          uint8_t *channel_number,
                          uint8_t *rs_addr);
 

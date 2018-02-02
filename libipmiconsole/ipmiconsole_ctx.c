@@ -152,7 +152,7 @@ ipmiconsole_ctx_garbage_collection_cleanup (ipmiconsole_ctx_t c)
    */
   else if (c->signal.ctx_state == IPMICONSOLE_CTX_STATE_GARBAGE_COLLECTION_WAIT)
     {
-      c->signal.ctx_state = IPMICONSOLE_CTX_STATE_ENGINE_DESTROYED; 
+      c->signal.ctx_state = IPMICONSOLE_CTX_STATE_ENGINE_DESTROYED;
 
       if ((perr = pthread_mutex_unlock (&(c->signal.mutex_ctx_state))) != 0)
         IPMICONSOLE_DEBUG (("pthread_mutex_unlock: %s", strerror (perr)));
@@ -230,7 +230,7 @@ ipmiconsole_ctx_config_setup (ipmiconsole_ctx_t c,
               break;
             }
         }
-      
+
       if (all_zeroes)
         c->config.k_g_len = 0;
     }
@@ -301,7 +301,7 @@ ipmiconsole_ctx_config_setup (ipmiconsole_ctx_t c,
     c->config.behavior_flags = engine_config->behavior_flags;
   else
     c->config.behavior_flags = default_config.behavior_flags;
-  
+
   if (engine_config->debug_flags != IPMICONSOLE_DEBUG_DEFAULT)
     c->config.debug_flags = engine_config->debug_flags;
   else
@@ -1125,18 +1125,18 @@ __ipmiconsole_ctx_connection_cleanup (ipmiconsole_ctx_t c, int session_submitted
       void *ptr;
 
       c->signal.ctx_state = IPMICONSOLE_CTX_STATE_GARBAGE_COLLECTION_WAIT;
-      
+
       /* I suppose if we fail here, we mem-leak?? Log for now ... */
-      
+
       if ((perr = pthread_mutex_lock (&(console_engine_ctxs_to_destroy_mutex))) != 0)
         IPMICONSOLE_DEBUG (("pthread_mutex_lock: %s", strerror (perr)));
-      
+
       if (!(ptr = list_append (console_engine_ctxs_to_destroy, c)))
         IPMICONSOLE_DEBUG (("list_append: %s", strerror (errno)));
-      
+
       if (ptr != (void *)c)
         IPMICONSOLE_DEBUG (("list_append: invalid pointer: ptr=%p; c=%p", ptr, c));
-      
+
       if ((perr = pthread_mutex_unlock (&(console_engine_ctxs_to_destroy_mutex))) != 0)
         IPMICONSOLE_DEBUG (("pthread_mutex_unlock: %s", strerror (perr)));
 
@@ -1146,7 +1146,7 @@ __ipmiconsole_ctx_connection_cleanup (ipmiconsole_ctx_t c, int session_submitted
   else
     {
       IPMICONSOLE_DEBUG (("invalid ctx_state in __ipmiconsole_ctx_connection_cleanup: %d", c->signal.ctx_state));
-      
+
       if ((perr = pthread_mutex_unlock (&(c->signal.mutex_ctx_state))) != 0)
         IPMICONSOLE_DEBUG (("pthread_mutex_unlock: %s", strerror (perr)));
     }

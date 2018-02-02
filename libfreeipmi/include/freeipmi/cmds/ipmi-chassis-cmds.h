@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_CHASSIS_CMDS_H
@@ -249,19 +249,19 @@ extern "C" {
   (((__value) >= IPMI_SYSTEM_BOOT_OPTION_DEVICE_INSTANCE_SELECTOR_RANGE_MIN \
     && (__value) <= IPMI_SYSTEM_BOOT_OPTION_DEVICE_INSTANCE_SELECTOR_RANGE_MAX) ? 1 : 0)
 
-#define IPMI_SYSTEM_BOOT_OPTION_DEVICE_INSTANCE_SELECTOR_INTERNAL_BITMASK 0x10 
+#define IPMI_SYSTEM_BOOT_OPTION_DEVICE_INSTANCE_SELECTOR_INTERNAL_BITMASK 0x10
 
 #define IPMI_SYSTEM_BOOT_OPTION_BLOCK_DATA_LEN_MAX 16
 
-/* 
+/*
  * fill* functions return 0 on success, -1 on error.
  *
  * obj_cmd_rq must be for the fill function's respective fiid
  * template request.
  *
- * see freeipmi/templates/ for template definitions 
+ * see freeipmi/templates/ for template definitions
  */
- 
+
 extern fiid_template_t tmpl_cmd_get_chassis_capabilities_rq;
 extern fiid_template_t tmpl_cmd_get_chassis_capabilities_rs;
 extern fiid_template_t tmpl_cmd_get_chassis_status_rq;

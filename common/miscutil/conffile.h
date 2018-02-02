@@ -31,7 +31,7 @@
  * This is a generic configuration file parsing library.  Some library
  * ideas were from libdotconf by Lukas Schroder <lukas@azzit.de>.
  * http://www.azzit.de/dotconf/.
- * 
+ *
  * This library parses configuration files in the form:
  *
  * optionname arg1 arg2 arg3 ...
@@ -68,7 +68,7 @@
  *
  * optioname     arg1 arg2 \\
  *               arg3 arg4
- * 
+ *
  * It is necessary to use an additional escape character, as follows
  *
  * optionname    arg1 arg2 \\\
@@ -81,7 +81,7 @@
  * optionname    arg1 arg2\
  * arg3
  *
- * This example has 2 arguments, "arg1" and "arg2arg3".  
+ * This example has 2 arguments, "arg1" and "arg2arg3".
  *
  * When a parse error with quotes occurs, a PARSE_QUOTE error code is
  * returned.  When a parse error occurs with a '\' character, a
@@ -91,13 +91,13 @@
  */
 
 /* OPTION TYPES
- * 
+ *
  * The following are option types an option may take.
- * 
+ *
  * IGNORE - up to MAX_ARGS arguments, will not call a callback function
  *        - useful for deprecating old configuration options
  * FLAG - no arguments, returns no arguments
- * BOOL - 1 argument, returns 1 or 0 
+ * BOOL - 1 argument, returns 1 or 0
  *      - true strings - "1", "y", "yes", "on", "t", "true", "enable"
  *      - false strings- "0", "n", "no" "off", "f", "false", "disable"
  * INT - 1 argument, returns an integer
@@ -105,9 +105,9 @@
  * STRING - 1 argument, returns a string
  * LIST_INT - up to MAX_ARGS integer args
  * LIST_DOUBLE - up to MAX_ARGS double args
- * LIST_STRING - up to MAX_ARGS string args, each string up to 
+ * LIST_STRING - up to MAX_ARGS string args, each string up to
  *               MAX_ARGLEN in length
- *  
+ *
  * For LIST_INT, LIST_DOUBLE, and LIST_STRING, option_type_arg in
  * struct conffile_option can be set to the length of the list
  * desired, or < 0 for a variable length list.  For all other option
@@ -120,7 +120,7 @@
  * incorrect number of arguments is listed, PARSE_NUM_ARGS is
  * returned.  If an invalid argument is listed, PARSE_INVALID_ARG is
  * returned.
- *   
+ *
  */
 #define CONFFILE_OPTION_IGNORE                 0x00
 #define CONFFILE_OPTION_FLAG                   0x01
@@ -145,7 +145,7 @@
 #define CONFFILE_MAX_ERRMSGLEN                 1024
 
 /* ERROR CODES
- * 
+ *
  * The following are the error codes that may be returned to the user.
  * The error codes and strings describing the error codes can be
  * accessed through conffile_errnum(), conffile_errmsg(), and
@@ -180,20 +180,20 @@
                                    && (x) <= CONFFILE_ERR_PARSE_CALLBACK)
 
 /* FLAGS
- * 
+ *
  * The following flags can be passed to conffile_parse() to alter
  * behavior of conffile parsing.
  *
  * OPTION_CASESENSITIVE - By default option names are case
  *                        insensitive.  This flag informs the parser
  *                        to make option names case sensitive
- * 
+ *
  * OPTION_IGNORE_UNKNOWN - Instead of returning a
  *                         CONFFILE_ERR_PARSE_OPTION_UNKNOWN error
  *                         when a unknown configuration file option
  *                         is found, just ignore it and move on.
  */
- 
+
 #define CONFFILE_FLAG_OPTION_CASESENSITIVE      0x00000001
 #define CONFFILE_FLAG_OPTION_IGNORE_UNKNOWN     0x00000002
 
@@ -205,7 +205,7 @@
 typedef struct conffile *conffile_t;
 
 /* conffile_data
- * 
+ *
  * This stores data from an options arguments and is passed to the
  * callback function so the data can be read or copied.
  *
@@ -227,7 +227,7 @@ struct conffile_data {
 };
 
 /* conffile_option_func
- * 
+ *
  * This is the callback function type, functions that are called after
  * an option name and its potential arguments have been parsed by the
  * conffile parser.
@@ -236,7 +236,7 @@ struct conffile_data {
  * 'data' is a pointer to argument data.  The data that should be
  *     accessed depends on the option type.
  * 'optionname' is the option name that was just parsed.
- * 'option_type' is the option type specified in conffile through a 
+ * 'option_type' is the option type specified in conffile through a
  *     struct conffile_option type.  See below.
  * 'option_ptr' is a pointer to data specified through a
  *     struct conffile_option type.  See below.
@@ -251,7 +251,7 @@ struct conffile_data {
  * 'data' pointer.  However, they may be used for any purpose.
  *
  * The app_ptr and app_data are passed via the conffile_parse()
- * function.  Typically, they are used to handle contexts within 
+ * function.  Typically, they are used to handle contexts within
  * the configuration file, but they may be used for any purpose.
  *
  * The function should return 0 if the argument was read properly and
@@ -288,7 +288,7 @@ typedef int (*conffile_option_func)(conffile_t cf,
  * in the configuration file.
  *
  * 'optionname' is the option name that should be serached for.
- * 'option_type' is the option type specified in conffile.  See 
+ * 'option_type' is the option type specified in conffile.  See
  *      OPTION TYPES above.
  * 'option_type_arg' argument for the option type.  See OPTION TYPES above.
  * 'callback_func' is the callback function to be called when the
@@ -324,28 +324,28 @@ struct conffile_option {
 /* API */
 
 /* conffile_handle_create
- * 
- * Create a conffile handle.  
+ *
+ * Create a conffile handle.
  * Returns handle on success, NULL on error.
  */
 conffile_t conffile_handle_create(void);
 
 /* conffile_handle_destroy
- * 
+ *
  * Destroy a conffile handle.
  * Returns 0 on success, -1 on error.
  */
 int conffile_handle_destroy(conffile_t cf);
 
 /* conffile_errnum
- * 
+ *
  * Get the most recent error code number.
  * Returns errnum
  */
 int conffile_errnum(conffile_t cf);
 
 /* conffile_errmsg
- * 
+ *
  * Get an error message of the most recent error.  When appropriate,
  * the error message returned in the buffer will include information
  * on the optionname or line number of the parse error.  Returns 0 on
@@ -354,12 +354,12 @@ int conffile_errnum(conffile_t cf);
 int conffile_errmsg(conffile_t cf, char *buf, int buflen);
 
 /* conffile_seterrnum
- * 
+ *
  * Set the error code number in a conffile handle.  This is primarily
  * used in an error handler or callback function to set error codes
  * when an error has occurred within user space parsing.  Returns 0 on
  * success, -1 if errnum is out of range.
- */   
+ */
 int conffile_seterrnum(conffile_t cf, int errnum);
 
 /* conffile_line_number
@@ -371,7 +371,7 @@ int conffile_line_number(conffile_t cf);
 
 /* conffile_parse
  *
- * Parse a configuration file.  
+ * Parse a configuration file.
  * Returns 0 on success, -1 on error.
  */
 int conffile_parse(conffile_t cf, const char *filename,

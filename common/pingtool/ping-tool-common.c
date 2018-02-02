@@ -474,32 +474,32 @@ _setup (void)
 		  if (!ifa->ifa_addr
 		      || !ifa->ifa_name)
 		    continue;
-		  
+
 		  if (ifa->ifa_addr->sa_family == AF_INET6)
 		    {
 		      struct sockaddr_in6 tmpaddr;
-		      
+
 		      /* memcpy to avoid warnings */
 		      memcpy (&tmpaddr, ifa->ifa_addr, sizeof (struct sockaddr_in6));
-		      
+
 		      if ((is_interfacename && !strcmp (ifa->ifa_name, pingtool_interface))
 			  || !memcmp (&tmpaddr.sin6_addr, &in6, sizeof (struct in6_addr)))
                         {
                           memcpy (&pingtool_srcaddr6.sin6_addr,
                                   &tmpaddr.sin6_addr,
                                   sizeof (pingtool_srcaddr6.sin6_addr));
-			  
+
 			  memcpy (&pingtool_srcaddr6.sin6_scope_id,
 				  &tmpaddr.sin6_scope_id,
 				  sizeof (pingtool_srcaddr6.sin6_scope_id));
                           break;
                         }
                     }
-		  
+
                   if (!ifa)
                     ipmi_ping_err_exit ("Cannot find interface: %s", pingtool_interface);
 		}
-	      
+
 	      freeifaddrs (ifaddr);
             }
         }

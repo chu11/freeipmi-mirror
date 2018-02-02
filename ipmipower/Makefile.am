@@ -50,7 +50,7 @@ ipmipower_SOURCES = \
 	ipmipower_prompt.h \
 	ipmipower_util.c \
 	ipmipower_util.h
- 
+
 $(top_builddir)/common/toolcommon/libtoolcommon.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 

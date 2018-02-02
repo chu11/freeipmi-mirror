@@ -113,7 +113,7 @@ _cmd_hostname_clear (void)
 {
   free (cmd_args.common_args.hostname);
   cmd_args.common_args.hostname = NULL;
-      
+
   ipmipower_connection_array_destroy (ics, ics_len);
   ics = NULL;
   ics_len = 0;
@@ -133,7 +133,7 @@ _cmd_hostname (char **argv)
     {
       struct ipmipower_connection *icsPtr;
       unsigned int len = 0;
-      
+
       if (!(icsPtr = ipmipower_connection_array_create (argv[1], &len)))
         {
           /* dump error outputs here, most notably invalid hostname output */
@@ -145,12 +145,12 @@ _cmd_hostname (char **argv)
                                    strerror (errno));
           return;
         }
-      
+
       _cmd_hostname_clear ();
 
       ics = icsPtr;
       ics_len = len;
-      
+
       if (!(cmd_args.common_args.hostname = strdup (argv[1])))
         {
           IPMIPOWER_ERROR (("strdup: %s", strerror(errno)));
@@ -419,7 +419,7 @@ _cmd_power_all_nodes (ipmipower_power_cmd_t cmd)
   int i;
 
   assert (IPMIPOWER_POWER_CMD_VALID (cmd));
-     
+
   memset (output_counts, '\0', sizeof (output_counts));
 
   for (i = 0; i < ics_len; i++)
@@ -462,7 +462,7 @@ _cmd_power_all_nodes (ipmipower_power_cmd_t cmd)
             }
         }
     }
-  
+
   /* Special corner case when no nodes are discovered */
   if (!nodes_queued)
     ipmipower_output_finish ();
@@ -475,25 +475,25 @@ _cmd_power_specific_nodes (char **argv, ipmipower_power_cmd_t cmd)
   fi_hostlist_iterator_t hitr = NULL;
   fi_hostlist_t h2 = NULL;
   fi_hostlist_iterator_t h2itr = NULL;
-  char *hstr = NULL; 
+  char *hstr = NULL;
   char *h2str = NULL;
 
   assert (argv);
   assert (IPMIPOWER_POWER_CMD_VALID (cmd));
   assert (IPMIPOWER_OEM_POWER_TYPE_VALID (cmd_args.oem_power_type));
-      
+
   if (!(h = fi_hostlist_create (argv[1])))
     {
       ipmipower_cbuf_printf (ttyout, "invalid hostname(s) specified\n");
       goto cleanup;
     }
-  
+
   if (!(hitr = fi_hostlist_iterator_create (h)))
     {
       IPMIPOWER_ERROR (("fi_hostlist_iterator_create: %s", strerror (errno)));
       exit (EXIT_FAILURE);
     }
-  
+
   memset (output_counts, '\0', sizeof (output_counts));
 
   while ((hstr = fi_hostlist_next (hitr)))
@@ -531,16 +531,16 @@ _cmd_power_specific_nodes (char **argv, ipmipower_power_cmd_t cmd)
         {
           char *h2str_extra_arg = NULL;
           int i;
-          
+
           if (cmd_args.oem_power_type != IPMIPOWER_OEM_POWER_TYPE_NONE)
             {
               char *ptr;
-              
+
               if ((ptr = strchr (h2str, '+')))
                 {
                   *ptr = '\0';
                   ptr++;
-                  
+
                   if (!(h2str_extra_arg = strdup (ptr)))
                     {
                       IPMIPOWER_ERROR (("strdup: %s", strerror(errno)));
@@ -548,9 +548,9 @@ _cmd_power_specific_nodes (char **argv, ipmipower_power_cmd_t cmd)
                     }
                 }
             }
-          
+
           i = ipmipower_connection_hostname_index (ics, ics_len, h2str);
-          
+
           if (i < 0)
             ipmipower_output (IPMIPOWER_MSG_TYPE_UNCONFIGURED_HOSTNAME, h2str, NULL);
           else if (cmd_args.ping_interval
@@ -583,19 +583,19 @@ _cmd_power_specific_nodes (char **argv, ipmipower_power_cmd_t cmd)
                   ipmipower_powercmd_queue (cmd, &ics[i], NULL);
                 }
             }
-          
+
         end_inner_loop:
           free (h2str_extra_arg);
           free (h2str);
           h2str = NULL;
         }
-      
+
       fi_hostlist_iterator_destroy (h2itr);
       fi_hostlist_destroy (h2);
       h2itr = NULL;
       h2 = NULL;
     }
-  
+
  cleanup:
   fi_hostlist_iterator_destroy (h2itr);
   fi_hostlist_destroy (h2);
@@ -613,13 +613,13 @@ _cmd_power (char **argv, ipmipower_power_cmd_t cmd)
   assert (argv);
   assert (IPMIPOWER_POWER_CMD_VALID (cmd));
   assert (IPMIPOWER_OEM_POWER_TYPE_VALID (cmd_args.oem_power_type));
-  
+
   if (!cmd_args.common_args.hostname)
     {
       ipmipower_cbuf_printf (ttyout, "no hostname(s) configured\n");
       return;
     }
-  
+
   memset (errbuf, '\0', IPMIPOWER_OUTPUT_BUFLEN + 1);
   if (cmd_args.oem_power_type == IPMIPOWER_OEM_POWER_TYPE_NONE)
     {
@@ -641,7 +641,7 @@ _cmd_power (char **argv, ipmipower_power_cmd_t cmd)
           return;
         }
     }
-  
+
   /* all nodes */
   if (!argv[1])
     _cmd_power_all_nodes (cmd);
@@ -798,11 +798,11 @@ _cmd_config (void)
             rv = fi_hostlist_push_host (undiscovered, ics[i].hostname);
           else
             rv = fi_hostlist_push_host (badconnection, ics[i].hostname);
-          
+
           if (!rv)
             goto cleanup;
         }
-      
+
       fi_hostlist_sort (discovered);
       fi_hostlist_sort (undiscovered);
       fi_hostlist_sort (badconnection);

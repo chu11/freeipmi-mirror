@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 /* 2's complement checksum of preceding bytes in the connection header
@@ -273,7 +273,7 @@ _check_session_sequence_number (uint32_t session_sequence_number,
           return (1);
         }
     }
-  
+
   return (0);
 }
 
@@ -467,7 +467,7 @@ ipmi_check_authentication_capabilities_ipmi_2_0 (fiid_obj_t obj_cmd)
       return (-1);
     }
   ipmi_v20_extended_capabilities_available = val;
-  
+
   if (FIID_OBJ_GET (obj_cmd,
                     "channel_supports_ipmi_v2.0_connections",
                     &val) < 0)

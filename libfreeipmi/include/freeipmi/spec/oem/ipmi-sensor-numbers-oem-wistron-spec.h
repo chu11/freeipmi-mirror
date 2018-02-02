@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_SENSOR_NUMBERS_OEM_WISTRON_SPEC_H
@@ -34,8 +34,8 @@ extern "C" {
 #define IPMI_SENSOR_NUMBER_OEM_WISTRON_PCI_SENSOR_ID      0x73
 #define IPMI_SENSOR_NUMBER_OEM_WISTRON_SB_SENSOR_ID       0x77
 #define IPMI_SENSOR_NUMBER_OEM_WISTRON_POST_START         0x81
-#define IPMI_SENSOR_NUMBER_OEM_WISTRON_POST_END           0x85 
-#define IPMI_SENSOR_NUMBER_OEM_WISTRON_POST_ERROR         0x86 
+#define IPMI_SENSOR_NUMBER_OEM_WISTRON_POST_END           0x85
+#define IPMI_SENSOR_NUMBER_OEM_WISTRON_POST_ERROR         0x86
 #define IPMI_SENSOR_NUMBER_OEM_WISTRON_BIOS_RECOVERY_FAIL 0x89
 #define IPMI_SENSOR_NUMBER_OEM_WISTRON_ME_FAIL            0x8A
 

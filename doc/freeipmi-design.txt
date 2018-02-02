@@ -1,6 +1,6 @@
 FreeIPMI Design
 
-by 
+by
 
 Albert Chu
 chu11@llnl.gov
@@ -57,7 +57,7 @@ general_usage_example()
    struct packet pkt;
    char buf[1024];
    int len;
- 
+
    pkt.field_1 = 1;
    pkt.field_2 = 2;
    pkt.field_3 = 3;
@@ -108,7 +108,7 @@ struct packet
   uint8_t field_1 : 1;
   uint8_t field_2 : 3;
   uint8_t field_3 : 4;
-  int16_t field_4; 
+  int16_t field_4;
 };
 
 my_marshall_function(struct packet *pkt, char *buf, unsigned int buflen)
@@ -132,7 +132,7 @@ general_usage_example()
    struct packet pkt;
    char buf[1024];
    int len;
- 
+
    pkt.field_1 = 1;
    pkt.field_2 = 2;
    pkt.field_3 = 3;
@@ -225,8 +225,8 @@ general_usage_example()
 
    /* "unmarshall" the packet */
    fiid_obj_set_all(obj, buf, len);
-  
-   fiid_obj_get(obj, "field_1", &val);   
+
+   fiid_obj_get(obj, "field_1", &val);
    printf("field_1 is: %d\n", (int16_t)val);
 }
 
@@ -250,7 +250,7 @@ G) Significantly reduce the amount of marshalling, unmarshalling, and
 F) Template changes (e.g. due to IPMI errata changes) shouldn't break
    ABI.  (You can publish the template strings, need not publish the
    template itself.)
- 
+
 Cons:
 
 A) Need to learn/use a reasonably large API and learn/use all the
@@ -260,7 +260,7 @@ C) General usage code size is increased.
 D) General usage must determine and cast field to appropriate type
    (e.g. is it an unsigned or signed integer).
 
-(Side Comments: 
+(Side Comments:
 
 Some other networking APIs have a similar API, but use
 macros/enums for the field names rather than strings.  Many of the
@@ -356,7 +356,7 @@ message just doesn't seem worth it now.
 --------------------------------------------------
 
 The Get Channel Authentication Capabilities Command is typically the
-first packet sent in the IPMI session.  It returns information 
+first packet sent in the IPMI session.  It returns information
 on the remote machine's support of:
 
 A) IPMI 1.5 authentication mechanisms (e.g. md2, md5, etc.)
@@ -445,7 +445,7 @@ would require 5 read requests to read all 5 values.  It would require
 1 read request for FieldA, 4 read requests for FieldB.1-FieldB.4, and
 5 write requests to write the values.
 
-Obviously, this sounds like (and is!) very inefficient. 
+Obviously, this sounds like (and is!) very inefficient.
 
 The authors acknowledge that the code is very inefficient b/c it will
 cause an excess number of request/response packets to be generated.  With

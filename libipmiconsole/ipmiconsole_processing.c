@@ -904,7 +904,7 @@ _receive_packet (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
                                 "comp_code",
                                 &val) < 0)
                 {
-                  IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'comp_code': %s", 
+                  IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'comp_code': %s",
                                              fiid_obj_errormsg (c->connection.obj_activate_payload_rs)));
                   ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
                   goto cleanup;
@@ -1217,7 +1217,7 @@ _receive_packet (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
                             "comp_code",
                             &val) < 0)
             {
-              IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'comp_code': %s", 
+              IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'comp_code': %s",
                                          fiid_obj_errormsg (c->connection.obj_deactivate_payload_rs)));
               ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
               goto cleanup;
@@ -1632,7 +1632,7 @@ _sol_retransmission_timeout (ipmiconsole_ctx_t c, int *dont_deactivate_flag)
        * stolen but we did not receive a flag indicating SOL is
        * deactivating.  We don't want to deactivate the SOL payload,
        * because that would kill the new session's SOL.
-       */ 
+       */
 
       /* Workaround
        *
@@ -1822,7 +1822,7 @@ _serial_keepalive_timeout (ipmiconsole_ctx_t c)
   if (rv)
     {
       /* Shouldn't reach this point unless the following is true */
-      
+
       if (scbuf_is_empty (c->connection.console_remote_console_to_bmc)
           && !c->session.break_requested
           && !c->session.console_remote_console_to_bmc_bytes_before_break)
@@ -1836,12 +1836,12 @@ _serial_keepalive_timeout (ipmiconsole_ctx_t c)
               ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
               return (-1);
             }
-          
+
           timeval_add_ms (&(c->session.last_sol_input_packet_sent), c->config.retransmission_timeout_len, &timeout);
           if (!timeval_gt (&current, &timeout))
             return (0);
           /* else send a keepalive */
-          
+
           if (c->config.engine_flags & IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE)
             {
               char buf[1] = { '\0' };
@@ -1850,7 +1850,7 @@ _serial_keepalive_timeout (ipmiconsole_ctx_t c)
               int n;
 
               secure_malloc_flag = (c->config.engine_flags & IPMICONSOLE_ENGINE_LOCK_MEMORY) ? 1 : 0;
-              
+
               if ((n = scbuf_write (c->connection.console_remote_console_to_bmc,
                                     buf,
                                     1,
@@ -1861,14 +1861,14 @@ _serial_keepalive_timeout (ipmiconsole_ctx_t c)
                   ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
                   return (-1);
                 }
-              
+
               if (n != 1)
                 {
                   IPMICONSOLE_CTX_DEBUG (c, ("scbuf_write: invalid bytes written; n=%d"));
                   ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
                   return (-1);
                 }
-          
+
               if (dropped)
                 {
                   IPMICONSOLE_CTX_DEBUG (c, ("scbuf_write: dropped data: dropped=%d", dropped));
@@ -1959,7 +1959,7 @@ _check_for_authentication_support (ipmiconsole_ctx_t c)
 
       if (strlen (c->config.password))
         tmp_password_ptr = c->config.password;
-      
+
       if ((ret = ipmi_check_authentication_capabilities_username (tmp_username_ptr,
                                                                   tmp_password_ptr,
                                                                   c->connection.obj_authentication_capabilities_rs)) < 0)
@@ -1974,10 +1974,10 @@ _check_for_authentication_support (ipmiconsole_ctx_t c)
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_USERNAME_INVALID);
           return (-1);
         }
-      
+
       if (c->config.k_g_len)
         tmp_k_g_ptr = c->config.k_g;
-      
+
       if ((ret = ipmi_check_authentication_capabilities_k_g (tmp_k_g_ptr,
                                                              c->connection.obj_authentication_capabilities_rs)) < 0)
         {
@@ -1985,7 +1985,7 @@ _check_for_authentication_support (ipmiconsole_ctx_t c)
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
           return (-1);
         }
-      
+
       if (!ret)
         {
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_K_G_INVALID);
@@ -2138,7 +2138,7 @@ _check_sol_supported (ipmiconsole_ctx_t c)
                     "standard_payload_type_1_supported",
                     &val) < 0)
     {
-      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'standard_payload_type_1_supported': %s", 
+      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'standard_payload_type_1_supported': %s",
                                  fiid_obj_errormsg (c->connection.obj_get_channel_payload_support_rs)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return (-1);
@@ -2164,7 +2164,7 @@ _check_sol_instance_activated (ipmiconsole_ctx_t c, uint8_t instance)
   assert (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_GET_PAYLOAD_ACTIVATION_STATUS_SENT);
   assert (!c->session.deactivate_payload_instances);
   assert (!c->session.deactivate_payload_instances_and_try_again_flag);
-          
+
   snprintf (fieldstr, 64, "instance_%d", instance);
 
   if (FIID_OBJ_GET (c->connection.obj_get_payload_activation_status_rs,
@@ -2177,7 +2177,7 @@ _check_sol_instance_activated (ipmiconsole_ctx_t c, uint8_t instance)
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return (-1);
     }
-          
+
   return ((int)val);
 }
 
@@ -2214,7 +2214,7 @@ _check_sol_activated (ipmiconsole_ctx_t c)
                     "instance_capacity",
                     &val) < 0)
     {
-      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'instance_capacity': %s", 
+      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'instance_capacity': %s",
                                  fiid_obj_errormsg (c->connection.obj_get_payload_activation_status_rs)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return (-1);
@@ -2267,7 +2267,7 @@ _check_sol_activated (ipmiconsole_ctx_t c)
           c->session.sol_instances_activated_count++;
         }
     }
-  
+
   if (c->config.behavior_flags & IPMICONSOLE_BEHAVIOR_ERROR_ON_SOL_INUSE
       && c->session.sol_instances_activated_count)
     {
@@ -2297,7 +2297,7 @@ _check_sol_activated2 (ipmiconsole_ctx_t c)
                     "comp_code",
                     &val) < 0)
     {
-      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'comp_code': %s", 
+      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'comp_code': %s",
                                  fiid_obj_errormsg (c->connection.obj_activate_payload_rs)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return (-1);
@@ -2378,7 +2378,7 @@ _check_payload_sizes_legitimate (ipmiconsole_ctx_t c)
                     "inbound_payload_size",
                     &val) < 0)
     {
-      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'inbound_payload_size': %s", 
+      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'inbound_payload_size': %s",
                                  fiid_obj_errormsg (c->connection.obj_activate_payload_rs)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return (-1);
@@ -2389,7 +2389,7 @@ _check_payload_sizes_legitimate (ipmiconsole_ctx_t c)
                     "outbound_payload_size",
                     &val) < 0)
     {
-      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'outbound_payload_size': %s", 
+      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'outbound_payload_size': %s",
                                  fiid_obj_errormsg (c->connection.obj_activate_payload_rs)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return (-1);
@@ -2467,7 +2467,7 @@ _check_try_new_port (ipmiconsole_ctx_t c)
                     "payload_udp_port_number",
                     &val) < 0)
     {
-      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'payload_udp_port_number': %s", 
+      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'payload_udp_port_number': %s",
                                  fiid_obj_errormsg (c->connection.obj_activate_payload_rs)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       return (-1);
@@ -2569,7 +2569,7 @@ _sol_bmc_to_remote_console_packet (ipmiconsole_ctx_t c, int *sol_deactivating_fl
                     "packet_sequence_number",
                     &val) < 0)
     {
-      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'packet_sequence_number': %s", 
+      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'packet_sequence_number': %s",
                                  fiid_obj_errormsg (c->connection.obj_sol_payload_data_rs)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       goto cleanup;
@@ -2580,7 +2580,7 @@ _sol_bmc_to_remote_console_packet (ipmiconsole_ctx_t c, int *sol_deactivating_fl
                     "packet_ack_nack_sequence_number",
                     &val) < 0)
     {
-      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'packet_ack_nack_sequence_number': %s", 
+      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'packet_ack_nack_sequence_number': %s",
                                  fiid_obj_errormsg (c->connection.obj_sol_payload_data_rs)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       goto cleanup;
@@ -2591,7 +2591,7 @@ _sol_bmc_to_remote_console_packet (ipmiconsole_ctx_t c, int *sol_deactivating_fl
                     "accepted_character_count",
                     &val) < 0)
     {
-      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'accepted_character_count': %s", 
+      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'accepted_character_count': %s",
                                  fiid_obj_errormsg (c->connection.obj_sol_payload_data_rs)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       goto cleanup;
@@ -2604,7 +2604,7 @@ _sol_bmc_to_remote_console_packet (ipmiconsole_ctx_t c, int *sol_deactivating_fl
                     "break_condition",
                     &val) < 0)
     {
-      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'break_condition': %s", 
+      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'break_condition': %s",
                                  fiid_obj_errormsg (c->connection.obj_sol_payload_data_rs)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       goto cleanup;
@@ -2616,7 +2616,7 @@ _sol_bmc_to_remote_console_packet (ipmiconsole_ctx_t c, int *sol_deactivating_fl
                     "transmit_overrun",
                     &val) < 0)
     {
-      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'transmit_overrun': %s", 
+      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'transmit_overrun': %s",
                                  fiid_obj_errormsg (c->connection.obj_sol_payload_data_rs)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       goto cleanup;
@@ -2627,7 +2627,7 @@ _sol_bmc_to_remote_console_packet (ipmiconsole_ctx_t c, int *sol_deactivating_fl
                     "sol_deactivating",
                     &val) < 0)
     {
-      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'sol_deactivating': %s", 
+      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'sol_deactivating': %s",
                                  fiid_obj_errormsg (c->connection.obj_sol_payload_data_rs)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       goto cleanup;
@@ -2638,7 +2638,7 @@ _sol_bmc_to_remote_console_packet (ipmiconsole_ctx_t c, int *sol_deactivating_fl
                     "nack",
                     &val) < 0)
     {
-      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'nack': %s", 
+      IPMICONSOLE_CTX_DEBUG (c, ("FIID_OBJ_GET: 'nack': %s",
                                  fiid_obj_errormsg (c->connection.obj_sol_payload_data_rs)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       goto cleanup;
@@ -3131,7 +3131,7 @@ _process_protocol_state_set_session_privilege_level_sent (ipmiconsole_ctx_t c)
    *
    * The Get Channel Payload Support isn't supported.  Skip this part
    * of the state machine and pray for the best I guess.
-   * 
+   *
    */
   if (c->config.workaround_flags & IPMICONSOLE_WORKAROUND_SUN_2_0_SESSION
       || c->config.workaround_flags & IPMICONSOLE_WORKAROUND_SKIP_CHANNEL_PAYLOAD_SUPPORT)
@@ -3808,7 +3808,7 @@ _process_protocol_state_deactivate_payload_sent (ipmiconsole_ctx_t c)
       c->session.sol_instances_deactivated_count++;
       if (c->session.sol_instances_activated_count == c->session.sol_instances_deactivated_count)
         {
-          c->session.deactivate_payload_instances = 0; 
+          c->session.deactivate_payload_instances = 0;
           c->session.deactivate_payload_instances_and_try_again_flag = 0;
           c->session.deactivate_active_payloads_count++;
 

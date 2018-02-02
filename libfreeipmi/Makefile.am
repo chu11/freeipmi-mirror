@@ -33,7 +33,7 @@ libfreeipmi_la_LDFLAGS = \
 	$(OTHER_FLAGS) \
         $(PTHREAD_LIBS) \
 	@GCRYPT_LIBS@ \
-	-lm 
+	-lm
 
 libfreeipmi_la_LIBADD = \
 	$(top_builddir)/common/debugutil/libdebugutil.la \

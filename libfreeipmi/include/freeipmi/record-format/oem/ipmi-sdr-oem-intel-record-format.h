@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_SDR_OEM_INTEL_RECORD_FORMAT_H
@@ -23,8 +23,8 @@
 extern "C" {
 #endif
 
-/* 
- * see freeipmi/templates/ for template definitions 
+/*
+ * see freeipmi/templates/ for template definitions
  */
 
 /*
@@ -42,8 +42,8 @@ extern "C" {
 #define IPMI_SDR_OEM_INTEL_QUANTA_QSSC_S4R_THERMAL_PROFILE_DATA_RECORD_MEMORY_THROTTLING_MODE_BITMASK 0x03
 #define IPMI_SDR_OEM_INTEL_QUANTA_QSSC_S4R_THERMAL_PROFILE_DATA_RECORD_MEMORY_THROTTLING_MODE_SHIFT   0
 
-#define IPMI_SDR_OEM_INTEL_QUANTA_QSSC_S4R_THERMAL_PROFILE_DATA_RECORD_MEMORY_THROTTLING_MODE_NONE_SUPPORTED                  0 
-#define IPMI_SDR_OEM_INTEL_QUANTA_QSSC_S4R_THERMAL_PROFILE_DATA_RECORD_MEMORY_THROTTLING_MODE_OPEN_LOOP_THROUGHPUT_THROTTLING 1 
+#define IPMI_SDR_OEM_INTEL_QUANTA_QSSC_S4R_THERMAL_PROFILE_DATA_RECORD_MEMORY_THROTTLING_MODE_NONE_SUPPORTED                  0
+#define IPMI_SDR_OEM_INTEL_QUANTA_QSSC_S4R_THERMAL_PROFILE_DATA_RECORD_MEMORY_THROTTLING_MODE_OPEN_LOOP_THROUGHPUT_THROTTLING 1
 #define IPMI_SDR_OEM_INTEL_QUANTA_QSSC_S4R_THERMAL_PROFILE_DATA_RECORD_MEMORY_THROTTLING_MODE_CLOSE_LOOP_THERMAL_THROTTLING   2
 
 #define IPMI_SDR_OEM_INTEL_QUANTA_QSSC_S4R_THERMAL_PROFILE_DATA_RECORD_FAN_PROFILE_INDEX 2

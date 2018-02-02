@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -674,7 +674,7 @@ unassemble_ipmi_lan_pkt (const void *pkt,
       FIID_OBJECT_ERROR_TO_ERRNO (obj_lan_msg_hdr);
       return (-1);
     }
-  
+
   if (fiid_obj_clear (obj_cmd) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
@@ -814,7 +814,7 @@ unassemble_ipmi_lan_pkt (const void *pkt,
       return (-1);
     }
   indx += len;
-  
+
   if (FIID_OBJ_PACKET_VALID (obj_rmcp_hdr) == 1
       && FIID_OBJ_PACKET_VALID (obj_lan_session_hdr) == 1
       && FIID_OBJ_PACKET_VALID (obj_lan_msg_hdr) == 1
@@ -833,7 +833,7 @@ ipmi_lan_sendto (int s,
                  const struct sockaddr *to,
                  socklen_t tolen)
 {
-  /* achu: Specification table 13-8, indicates legacy padding for IPMI 1.5, but 
+  /* achu: Specification table 13-8, indicates legacy padding for IPMI 1.5, but
    * it appears it is specific to Ethernet 10/100 lan chips.
    *
    * It is so legacy at this point it is probably not worth providing.
@@ -843,7 +843,7 @@ ipmi_lan_sendto (int s,
    *
    * Why not just remove this function?  Leave just in case a legacy
    * pad situation pops up and we gotta implement something.
-   */ 
+   */
   return (ipmi_network_sendto (s, buf, len, flags, to, tolen));
 }
 

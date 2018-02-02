@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -80,7 +80,7 @@ debug_hdr_str (uint8_t packet_type,
     str_prefix = "OEM - ";
   else
     str_prefix = "";
-  
+
   if (packet_type == DEBUG_UTIL_TYPE_NONE
       || packet_type == DEBUG_UTIL_TYPE_INBAND)
     len = snprintf (hdrbuf,
@@ -142,7 +142,7 @@ debug_hdr_cmd (uint8_t packet_type,
     {
       str_cmd = "Unknown";
       packet_flags = DEBUG_UTIL_FLAGS_OEM;
-    } 
+    }
   else
     str_cmd = ipmi_cmd_str (net_fn, cmd);
 

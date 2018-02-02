@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -627,7 +627,7 @@ fill_cmd_set_pef_configuration_parameters_set_in_progress (uint8_t state,
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_PEF_CONFIGURATION_PARAMETER_SET_IN_PROGRESS);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);  
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "state", state);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
   return (0);

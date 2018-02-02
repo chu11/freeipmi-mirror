@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -84,11 +84,11 @@ _get_channel_numbers (ipmi_ctx_t ctx,
           goto cleanup;
         }
       channel_medium_type_read = val;
-      
+
       if (channel_medium_type_read == channel_medium_type)
         {
           uint8_t actual_channel_number;
-          
+
           if (FIID_OBJ_GET (obj_cmd_rs,
                             "actual_channel_number",
                             &val) < 0)
@@ -103,7 +103,7 @@ _get_channel_numbers (ipmi_ctx_t ctx,
           (*channels_found)++;
         }
     }
-  
+
   if (rv < 0)
     API_SET_ERRNUM (ctx, IPMI_ERR_NOT_FOUND);
  cleanup:
@@ -133,10 +133,10 @@ _get_channel_number_special (ipmi_ctx_t ctx,
           API_ERRNO_TO_API_ERRNUM (ctx, errno);
           goto cleanup;
         }
-      
+
       if (ipmi_cmd_get_device_id (ctx, obj_cmd_rs) < 0)
         goto cleanup;
-      
+
       if (FIID_OBJ_GET (obj_cmd_rs,
                         "manufacturer_id.id",
                         &val) < 0)
@@ -145,7 +145,7 @@ _get_channel_number_special (ipmi_ctx_t ctx,
           goto cleanup;
         }
       manufacturer_id = val;
-      
+
       if (FIID_OBJ_GET (obj_cmd_rs,
                         "product_id",
                         &val) < 0)
@@ -154,7 +154,7 @@ _get_channel_number_special (ipmi_ctx_t ctx,
           goto cleanup;
         }
       product_id = val;
-      
+
       switch (manufacturer_id)
         {
         case IPMI_IANA_ENTERPRISE_ID_INTEL:
@@ -237,7 +237,7 @@ ipmi_get_channel_numbers (ipmi_ctx_t ctx,
                           uint8_t channel_medium_type,
                           uint8_t *channel_numbers,
                           unsigned int channel_numbers_len)
-{ 
+{
   uint8_t channels[IPMI_NUM_CHANNELS];
   unsigned int channels_found = 0;
   uint8_t special_channel_number = 0;

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -76,7 +76,7 @@ unsigned int ipmi_oem_intel_specific_pci_correctable_sensor_max_index = 0x06;
 
 /*
  * Quanta QSSC-S4R/Appro GB812X-CN
- * (Quanta motherboard contains Intel manufacturer ID)          
+ * (Quanta motherboard contains Intel manufacturer ID)
  */
 
 /* achu: Similar to above, but some events text changed, so new arrays to differentiate */
@@ -204,7 +204,7 @@ unsigned int ipmi_oem_intel_s2600jf_specific_opi_fatal_error_max_index = 0x0E;
 #if 0
 /* achu: Intel informed me there was an error in their documentation and the following was not correct.
  * I'll leave this here for legacy documentation
- */ 
+ */
 const char * const ipmi_oem_intel_s2600jf_specific_opi_fatal_error_2[] =
   {
     "Illegal inbound request",
@@ -241,9 +241,9 @@ const char * const ipmi_oem_intel_s2600jf_specific_qpi_link_width_reduced[] =
 unsigned int ipmi_oem_intel_s2600jf_specific_qpi_link_width_reduced_max_index = 0x02;
 
 /*
- * Intel S2600KP                                                                                                                                                                                   
- * Intel S2600WT2                                                                                                                                                                                  
- * Intel S2600WTT  
+ * Intel S2600KP
+ * Intel S2600WT2
+ * Intel S2600WTT
  */
 
 const char * const ipmi_oem_intel_e52600v3_specific_qpi_fatal_error[] =

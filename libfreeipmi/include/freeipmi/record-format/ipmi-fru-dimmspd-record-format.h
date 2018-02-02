@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_FRU_DIMMSPD_RECORD_FORMAT_H
@@ -25,14 +25,14 @@ extern "C" {
 
 #include <freeipmi/fiid/fiid.h>
 
-/* 
- * see freeipmi/templates/ for template definitions 
+/*
+ * see freeipmi/templates/ for template definitions
  */
 
 /* From "Annex K: Serial Presence Detect (SPD) for DDR3 SDRAM Modules"
  * and
  * "Annex L: Serial Presence Detect (SPD) for DDR4 SDRAM Modules"
- * 
+ *
  * Released by JEDEC
  */
 
@@ -51,7 +51,7 @@ extern "C" {
 #define IPMI_FRU_DIMMSPD_DRAM_DEVICE_TYPE_DDR4_SDRAM               0x0C
 
 /* From "Annex K: Serial Presence Detect (SPD) for DDR3 SDRAM Modules"
- * 
+ *
  * Released by JEDEC
  */
 
@@ -66,11 +66,11 @@ extern "C" {
 #define IPMI_FRU_DIMMSPD_CRC_COVERAGE_0_TO_125     0x0
 #define IPMI_FRU_DIMMSPD_CRC_COVERAGE_0_TO_116     0x1
 
-/* RDIMM - Registered Dual In-Line Memory Module 
- * LRDIMM - Load Reduction DIMM 
+/* RDIMM - Registered Dual In-Line Memory Module
+ * LRDIMM - Load Reduction DIMM
  * UDIMM - Unbuffered DIMM
- * SO-DIMM - Unbuffered 64-bit Small Outline DIMM 
- * Micro-DIMM - Micro DIMM 
+ * SO-DIMM - Unbuffered 64-bit Small Outline DIMM
+ * Micro-DIMM - Micro DIMM
  * Mini-RDIMM - Mini RDIMM
  * Mini-UDIMM - Mini UDIMM
  * Mini-CDIMM - Clocked 72-bit Mini DIMM
@@ -90,7 +90,7 @@ extern "C" {
 #define IPMI_FRU_DIMMSPD_DRAM_MODULE_TYPE_MINI_CDIMM   0x7
 #define IPMI_FRU_DIMMSPD_DRAM_MODULE_TYPE_72B_SO_UDIMM 0x8
 #define IPMI_FRU_DIMMSPD_DRAM_MODULE_TYPE_72B_SO_RDIMM 0x9
-#define IPMI_FRU_DIMMSPD_DRAM_MODULE_TYPE_72B_SO_CDIMM 0xA 
+#define IPMI_FRU_DIMMSPD_DRAM_MODULE_TYPE_72B_SO_CDIMM 0xA
 #define IPMI_FRU_DIMMSPD_DRAM_MODULE_TYPE_LRDIMM       0xB
 #define IPMI_FRU_DIMMSPD_DRAM_MODULE_TYPE_16B_SO_DIMM  0xC
 #define IPMI_FRU_DIMMSPD_DRAM_MODULE_TYPE_32B_SO_DIMM  0xD
@@ -193,7 +193,7 @@ extern "C" {
 #define IPMI_FRU_DIMMSPD_SDRAM_DEVICE_TYPE_NON_STANDARD_DEVICE             0x1
 
 /* From "Annex L: Serial Presence Detect (SPD) for DDR4 SDRAM Modules"
- * 
+ *
  * Released by JEDEC
  */
 
@@ -207,10 +207,10 @@ extern "C" {
 #define IPMI_FRU_DIMMSPD_DDR4_SPD_BYTES_TOTAL_256       0x1
 #define IPMI_FRU_DIMMSPD_DDR4_SPD_BYTES_TOTAL_512       0x2
 
-/* RDIMM - Registered Dual In-Line Memory Module 
- * UDIMM - Unbuffered Dual In-Line Memory Module 
+/* RDIMM - Registered Dual In-Line Memory Module
+ * UDIMM - Unbuffered Dual In-Line Memory Module
  * SO-DIMM - Unbuffered Small Outline Dual In-Line Memory Module, 64-bit data bus
- * LRDIMM - Load Reduced Dual In-Line Memory Module 
+ * LRDIMM - Load Reduced Dual In-Line Memory Module
  * Mini-RDIMM - Mini RDIMM
  * Mini-UDIMM - Mini UDIMM
  * 72b-SO-RDIMM - Small Outline Registered DIMM, 72-bit data bus
@@ -331,7 +331,7 @@ extern "C" {
 
 #define IPMI_FRU_DIMMSPD_DDR4_THERMAL_SENSOR_NOT_INCORPORATED_ONTO_THIS_ASSEMBLY 0x0
 #define IPMI_FRU_DIMMSPD_DDR4_THERMAL_SENSOR_INCORPORATED_ONTO_THIS_ASSEMBLY     0x1
- 
+
 #define IPMI_FRU_DIMMSPD_DDR4_CAS_NOT_SUPPORTED 0x0
 #define IPMI_FRU_DIMMSPD_DDR4_CAS_SUPPORTED     0x1
 
@@ -402,7 +402,7 @@ extern "C" {
 #define IPMI_FRU_DIMMSPD_DDR4_REFERENCE_RAW_CARD_EXTENSION_AM_THROUGH_B    0x1
 
 #define IPMI_FRU_DIMMSPD_DDR4_REFERENCE_RAW_CARD_REVISION_0 0x0
-#define IPMI_FRU_DIMMSPD_DDR4_REFERENCE_RAW_CARD_REVISION_1 0x1 
+#define IPMI_FRU_DIMMSPD_DDR4_REFERENCE_RAW_CARD_REVISION_1 0x1
 #define IPMI_FRU_DIMMSPD_DDR4_REFERENCE_RAW_CARD_REVISION_2 0x2
 #define IPMI_FRU_DIMMSPD_DDR4_REFERENCE_RAW_CARD_REVISION_3 0x3
 

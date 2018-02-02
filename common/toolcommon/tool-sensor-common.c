@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -56,9 +56,9 @@ _str_replace_char (char *str, char chr, char with)
 {
   char *p = NULL;
   char *s = NULL;
-  
+
   assert (str);
-  
+
   for (s = str;
        (p = strchr (s, chr));
        s = p + 1)
@@ -76,7 +76,7 @@ get_sensor_type_output_string (unsigned int sensor_type)
   return (UNRECOGNIZED_SENSOR_TYPE);
 }
 
-const char * 
+const char *
 get_oem_sensor_type_output_string (uint8_t sensor_type,
                                    uint8_t event_reading_code,
                                    uint32_t manufacturer_id,
@@ -89,7 +89,7 @@ get_oem_sensor_type_output_string (uint8_t sensor_type,
                                                           manufacturer_id,
                                                           product_id)))
     return (sensor_type_str);
-  
+
   return (UNRECOGNIZED_SENSOR_TYPE);
 }
 
@@ -116,9 +116,9 @@ _output_sensor_type (const char *sensor_type_str)
     }
 
   _get_sensor_type_cmdline_string (tmpstr);
-  
+
   printf ("%s\n", tmpstr);
-  
+
   free (tmpstr);
   return (0);
 }
@@ -174,10 +174,10 @@ list_sensor_types (void)
       if (_output_sensor_type (ipmi_sensor_types[i]) < 0)
         return (-1);
     }
-  
+
   if (_output_sensor_type (ipmi_oem_sensor_type) < 0)
     return (-1);
-  
+
   return (0);
 }
 
@@ -211,10 +211,10 @@ valid_sensor_types (char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
           while (ipmi_sensor_types[j])
             {
               char sensor_type_cmdline[MAX_SENSOR_TYPES_STRING_LENGTH];
-              
+
               strcpy (sensor_type_cmdline, ipmi_sensor_types[j]);
               _get_sensor_type_cmdline_string (sensor_type_cmdline);
-              
+
               if (!strcasecmp (sensor_types[i], ipmi_sensor_types[j])
                   || !strcasecmp (sensor_types[i], sensor_type_cmdline))
                 {
@@ -224,19 +224,19 @@ valid_sensor_types (char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
               j++;
             }
         }
-      
+
       if (!found)
         {
           char sensor_type_cmdline[MAX_SENSOR_TYPES_STRING_LENGTH];
-          
+
           strcpy (sensor_type_cmdline, ipmi_oem_sensor_type);
           _get_sensor_type_cmdline_string (sensor_type_cmdline);
-              
+
           if (!strcasecmp (sensor_types[i], ipmi_oem_sensor_type)
               || !strcasecmp (sensor_types[i], sensor_type_cmdline))
             found++;
         }
-      
+
       if (!found)
         {
           fprintf (stderr,
@@ -283,7 +283,7 @@ get_sensor_units_output_string (pstdout_state_t pstate,
                        ipmi_sdr_ctx_errormsg (sdr_ctx));
       goto cleanup;
     }
-  
+
   sensor_units_ret = ipmi_sensor_units_string (sensor_units_percentage,
                                                sensor_units_modifier,
                                                sensor_units_rate,
@@ -292,13 +292,13 @@ get_sensor_units_output_string (pstdout_state_t pstate,
                                                sensor_units_buf,
                                                sensor_units_buflen,
                                                !non_abbreviated_units_flag);
-  
+
   if (sensor_units_ret <= 0)
     snprintf (sensor_units_buf,
               sensor_units_buflen,
               "%s",
               ipmi_sensor_units[IPMI_SENSOR_UNIT_UNSPECIFIED]);
-  
+
   rv = 0;
  cleanup:
   return rv;
@@ -316,7 +316,7 @@ _sensor_type_strcmp (pstdout_state_t pstate,
   char *ptr = NULL;
 
   assert (sensor_type_str_input);
-  
+
   errno = 0;
   value = strtol (sensor_type_str_input, &ptr, 0);
 
@@ -333,30 +333,30 @@ _sensor_type_strcmp (pstdout_state_t pstate,
 
   /* Don't use get_sensor_type_output_string() - want NULL if invalid */
   sensor_type_str = ipmi_get_sensor_type_string (sensor_type);
-  
+
   if (!sensor_type_str)
-    { 
+    {
       rv = 0;
       goto cleanup;
-    } 
-  
+    }
+
   if (!(tmpstr = strdup (sensor_type_str)))
-    { 
+    {
       PSTDOUT_FPRINTF (pstate,
                        stderr,
                        "strdup: %s\n",
                        strerror (errno));
       goto cleanup;
-    } 
-  
+    }
+
   _get_sensor_type_cmdline_string (tmpstr);
-  
+
   if (!strcasecmp (sensor_type_str_input, sensor_type_str)
       || !strcasecmp (sensor_type_str_input, tmpstr))
     rv = 1;
   else
     rv = 0;
-  
+
  cleanup:
   free (tmpstr);
   return (rv);
@@ -385,7 +385,7 @@ sensor_type_listed (pstdout_state_t pstate,
       if (ret)
         return (1);
     }
-  
+
   return (0);
 }
 
@@ -607,7 +607,7 @@ _store_column_widths (pstdout_state_t pstate,
       if (ipmi_event_reading_type_code_class (event_reading_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD)
         {
           char sensor_units_buf[SENSOR_UNITS_BUFLEN + 1];
-          
+
           memset (sensor_units_buf, '\0', SENSOR_UNITS_BUFLEN + 1);
           if (get_sensor_units_output_string (pstate,
                                               sdr_ctx,
@@ -615,13 +615,13 @@ _store_column_widths (pstdout_state_t pstate,
                                               SENSOR_UNITS_BUFLEN,
                                               non_abbreviated_units) < 0)
             return (-1);
-          
+
           len = strlen (sensor_units_buf);
           if (len > column_width->sensor_units)
             column_width->sensor_units = len;
         }
     }
-  
+
   return (0);
 }
 
@@ -672,7 +672,7 @@ _store_column_widths_shared (pstdout_state_t pstate,
         return (-1);
       return (0);
     }
-  
+
   if (ipmi_sdr_parse_sensor_record_sharing (sdr_ctx,
                                             NULL,
                                             0,
@@ -687,7 +687,7 @@ _store_column_widths_shared (pstdout_state_t pstate,
                        ipmi_sdr_ctx_errormsg (sdr_ctx));
       return (-1);
     }
-  
+
   if (share_count <= 1)
     {
       if (_store_column_widths (pstate,
@@ -716,7 +716,7 @@ _store_column_widths_shared (pstdout_state_t pstate,
       return (-1);
     }
 
-  
+
   /* IPMI spec gives the following example:
    *
    * "If the starting sensor number was 10, and the share
@@ -726,9 +726,9 @@ _store_column_widths_shared (pstdout_state_t pstate,
   for (i = 0; i < share_count; i++)
     {
       uint8_t sensor_number;
-      
+
       sensor_number = sensor_number_base + i;
-      
+
       if (_store_column_widths (pstate,
                                 sdr_ctx,
                                 sensor_number,

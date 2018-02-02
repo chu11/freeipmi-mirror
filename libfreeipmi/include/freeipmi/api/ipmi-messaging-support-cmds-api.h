@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_MESSAGING_SUPPORT_CMDS_API_H
@@ -27,7 +27,7 @@ extern "C" {
 #include <freeipmi/api/ipmi-api.h>
 #include <freeipmi/fiid/fiid.h>
 
-/* 
+/*
  * ipmi_cmd* functions return 0 on success, -1 on error.
  *
  * obj_cmd_rs must be for the function's respective fiid template
@@ -261,7 +261,7 @@ int ipmi_cmd_get_system_info_parameters_primary_operating_system_name_first_set 
                                                                                  uint8_t set_selector,
                                                                                  uint8_t block_selector,
                                                                                  fiid_obj_t obj_cmd_rs);
-  
+
 int ipmi_cmd_get_system_info_parameters_primary_operating_system_name (ipmi_ctx_t ctx,
                                                                        uint8_t get_parameter,
                                                                        uint8_t set_selector,
@@ -273,7 +273,7 @@ int ipmi_cmd_get_system_info_parameters_operating_system_name_first_set (ipmi_ct
                                                                          uint8_t set_selector,
                                                                          uint8_t block_selector,
                                                                          fiid_obj_t obj_cmd_rs);
-  
+
 int ipmi_cmd_get_system_info_parameters_operating_system_name (ipmi_ctx_t ctx,
                                                                uint8_t get_parameter,
                                                                uint8_t set_selector,
@@ -285,7 +285,7 @@ int ipmi_cmd_get_system_info_parameters_present_os_version_number_first_set (ipm
                                                                              uint8_t set_selector,
                                                                              uint8_t block_selector,
                                                                              fiid_obj_t obj_cmd_rs);
-  
+
 int ipmi_cmd_get_system_info_parameters_present_os_version_number (ipmi_ctx_t ctx,
                                                                    uint8_t get_parameter,
                                                                    uint8_t set_selector,
@@ -297,7 +297,7 @@ int ipmi_cmd_get_system_info_parameters_bmc_url_first_set (ipmi_ctx_t ctx,
                                                            uint8_t set_selector,
                                                            uint8_t block_selector,
                                                            fiid_obj_t obj_cmd_rs);
-  
+
 int ipmi_cmd_get_system_info_parameters_bmc_url (ipmi_ctx_t ctx,
                                                  uint8_t get_parameter,
                                                  uint8_t set_selector,
@@ -309,7 +309,7 @@ int ipmi_cmd_get_system_info_parameters_base_os_hypervisor_url_first_set (ipmi_c
                                                                           uint8_t set_selector,
                                                                           uint8_t block_selector,
                                                                           fiid_obj_t obj_cmd_rs);
-  
+
 int ipmi_cmd_get_system_info_parameters_base_os_hypervisor_url (ipmi_ctx_t ctx,
                                                                 uint8_t get_parameter,
                                                                 uint8_t set_selector,

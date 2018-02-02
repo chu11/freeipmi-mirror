@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_SENSOR_AND_EVENT_CODE_TABLES_UTIL_H
@@ -116,7 +116,7 @@ int ipmi_get_oem_specific_message (uint32_t manufacturer_id,
                                    unsigned int buflen);
 
 /* return length of string written into buffer on success, -1 on error */
-/* some vendors return values instead of event bitmasks in the 
+/* some vendors return values instead of event bitmasks in the
  * sensor or SEL event, this is to handle this special case
  */
 int ipmi_get_oem_event_bitmask_message (uint32_t manufacturer_id,
@@ -165,7 +165,7 @@ int ipmi_get_oem_event_bitmask_message (uint32_t manufacturer_id,
  * 'event_messages' is returned in 'event_messages_count'.
  *
  * User responsible for clearing memory created in 'event_messages'.
- */ 
+ */
 int ipmi_get_event_messages (uint8_t event_reading_type_code,
                              uint8_t sensor_type, /* ignored if not relevant for event_reading_type_code */
                              uint8_t sensor_number, /* ignored if not relevant for event_reading_type_code or sensor_type */
@@ -176,7 +176,7 @@ int ipmi_get_event_messages (uint8_t event_reading_type_code,
                              unsigned int *event_messages_count,
                              const char *no_event_message_string,
                              unsigned int flags);
- 
+
 #ifdef __cplusplus
 }
 #endif

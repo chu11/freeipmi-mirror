@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -167,12 +167,12 @@ _rmcpplus_cipher_suite_id_privilege_setup (ipmi_config_state_data_t *state_data,
           char field[IPMI_CONFIG_FIELD_LENGTH_MAX + 1];
 
           memset (field, '\0', IPMI_CONFIG_FIELD_LENGTH_MAX + 1);
-          
+
           snprintf (field,
                     IPMI_CONFIG_FIELD_LENGTH_MAX,
                     "cipher_suite_id_entry_%c",
                     'A' + i);
-          
+
           if (FIID_OBJ_GET (obj_cmd_id_rs, field, &val) < 0)
             {
               pstdout_fprintf (state_data->pstate,
@@ -197,7 +197,7 @@ _rmcpplus_cipher_suite_id_privilege_setup (ipmi_config_state_data_t *state_data,
       if (state_data->cipher_suite_entry_count == IPMI_CONFIG_CIPHER_SUITE_INCORRECT_RANGE_LEN)
         {
           int workaround_condition_not_found = 0;
-          
+
           for (i = 0; i < state_data->cipher_suite_entry_count; i++)
             {
               if (state_data->cipher_suite_id_supported[i] != (i + 1))
@@ -206,14 +206,14 @@ _rmcpplus_cipher_suite_id_privilege_setup (ipmi_config_state_data_t *state_data,
                   break;
                 }
             }
-          
+
           if (!workaround_condition_not_found)
             {
               for (i = 0; i < state_data->cipher_suite_entry_count; i++)
                 state_data->cipher_suite_id_supported[i] -= 1;
             }
         }
-      
+
       state_data->cipher_suite_id_supported_set++;
     }
 
@@ -253,9 +253,9 @@ _rmcpplus_cipher_suite_id_privilege_setup (ipmi_config_state_data_t *state_data,
       for (i = 0; i < IPMI_CONFIG_CIPHER_SUITE_LEN; i++)
         {
           char field[IPMI_CONFIG_FIELD_LENGTH_MAX + 1];
-          
+
           memset (field, '\0', IPMI_CONFIG_FIELD_LENGTH_MAX + 1);
-          
+
           snprintf (field,
                     IPMI_CONFIG_FIELD_LENGTH_MAX,
                     "maximum_privilege_for_cipher_suite_%u",
@@ -282,7 +282,7 @@ _rmcpplus_cipher_suite_id_privilege_setup (ipmi_config_state_data_t *state_data,
               if (fiid_obj_errnum (obj_cmd_priv_rs) == FIID_ERR_DATA_NOT_AVAILABLE)
                 {
                   unsigned int j;
-                  
+
                   for (j = 0; j < state_data->cipher_suite_entry_count; j++)
                     {
                       if (state_data->cipher_suite_id_supported[j] == i)
@@ -310,7 +310,7 @@ _rmcpplus_cipher_suite_id_privilege_setup (ipmi_config_state_data_t *state_data,
                     val = IPMI_PRIVILEGE_LEVEL_UNSPECIFIED;
                 }
             }
-          
+
           state_data->cipher_suite_priv[i] = val;
         }
 
@@ -339,7 +339,7 @@ id_checkout (ipmi_config_state_data_t *state_data,
   assert (state_data);
   assert (section_name);
   assert (kv);
-  
+
   if ((ret = _rmcpplus_cipher_suite_id_privilege_setup (state_data, section_name)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
@@ -405,7 +405,7 @@ id_commit (ipmi_config_state_data_t *state_data,
   assert (state_data);
   assert (section_name);
   assert (kv);
-  
+
   if ((ret = _rmcpplus_cipher_suite_id_privilege_setup (state_data, section_name)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
@@ -433,7 +433,7 @@ id_commit (ipmi_config_state_data_t *state_data,
    * IPMI spec is_supported does not map to privileges array, you want to index at [id] not a searched [i]
    */
   privs[id] = privilege;
-  
+
   /* IPMI Workaround (achu)
    *
    * HP DL145
@@ -454,15 +454,15 @@ id_commit (ipmi_config_state_data_t *state_data,
       if (privs[i] == IPMI_CONFIG_PRIVILEGE_LEVEL_SUPPORTED_BUT_NOT_READABLE)
         {
           struct ipmi_config_section *section;
-                  
+
           if ((section = ipmi_config_find_section (state_data,
                                                    section_name)))
             {
               char keynametmp[IPMI_CONFIG_MAX_KEY_NAME_LEN + 1];
               struct ipmi_config_keyvalue *kvtmp;
-              
+
               memset (keynametmp, '\0', IPMI_CONFIG_MAX_KEY_NAME_LEN + 1);
-              
+
               snprintf (keynametmp,
                         IPMI_CONFIG_MAX_KEY_NAME_LEN,
                         "Maximum_Privilege_Cipher_Suite_Id_%u",
@@ -494,7 +494,7 @@ id_commit (ipmi_config_state_data_t *state_data,
                                stderr,
                                "Cannot find section '%s'\n",
                                section_name);
-              
+
               goto cleanup;
             }
         }
@@ -584,7 +584,7 @@ ipmi_config_core_rmcpplus_conf_privilege_section_get (ipmi_config_state_data_t *
   char *section_name_base_str = "Rmcpplus_Conf_Privilege";
 
   assert (state_data);
-  
+
   if (!(section = ipmi_config_section_multi_channel_create (state_data,
                                                             section_name_base_str,
                                                             section_comment,

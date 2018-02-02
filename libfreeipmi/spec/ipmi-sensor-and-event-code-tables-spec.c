@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -205,7 +205,7 @@ const char * const ipmi_generic_event_reading_type_code_transition_state_short[]
   };
 unsigned int ipmi_generic_event_reading_type_code_transition_state_short_max_index = 0x02;
 
-const char * const ipmi_generic_event_reading_type_code_state_short[] = 
+const char * const ipmi_generic_event_reading_type_code_state_short[] =
   {
     "State Deasserted",
     "State Asserted",

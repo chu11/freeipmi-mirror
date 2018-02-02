@@ -1,2 +1,2 @@
 .SH "GENERAL TROUBLESHOOTING"
-Most often, IPMI problems are due to configuration problems.  
+Most often, IPMI problems are due to configuration problems.

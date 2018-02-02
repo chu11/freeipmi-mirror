@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_OEM_INTEL_SPEC_H
@@ -62,12 +62,12 @@ extern "C" {
 /* XXX: document says max 20 bytes, but fails on second block, so we use 1 block */
 #define IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_USER_PASSWORD_MAX_BLOCKS        1
 #define IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_EMAIL_ADDRESS_MAX_BLOCKS        2
-#define IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_SUBJECT_MAX_BLOCKS              2 
+#define IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_SUBJECT_MAX_BLOCKS              2
 #define IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_MESSAGE_CONTENT_MAX_BLOCKS      4
 /* XXX: document indicates 2 blocks, but firmware has errors on > 1 block, so we use 1 block */
 #define IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_SENDER_EMAIL_ADDRESS_MAX_BLOCKS 1
 /* XXX: document indicates 2 blocks, but firmware has errors on > 1 block, so we use 1 block */
-#define IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_SMTP_HOST_NAME_MAX_BLOCKS       1 
+#define IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_SMTP_HOST_NAME_MAX_BLOCKS       1
 
 #define IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_STRING_LENGTH_MAX               (4*IPMI_OEM_INTEL_SMTP_STRING_BLOCK_LENGTH)
 

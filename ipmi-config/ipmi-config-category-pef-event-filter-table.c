@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2007-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 
@@ -1243,13 +1243,13 @@ sensor_type_commit (ipmi_config_state_data_t *state_data,
     return (ret);
 
   num = sensor_type_number (kv->value_input);
-  
+
   if (num < 0)
     /* previously checked for correctness, so no error check */
     eft.sensor_type = strtol (kv->value_input, NULL, 0);
   else
     eft.sensor_type = num;
-  
+
   return (_set_event_filter_table (state_data,
                                    section_name,
                                    &eft));

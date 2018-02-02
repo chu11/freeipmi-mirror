@@ -371,14 +371,14 @@ _sdr_cache_get_record (ipmi_sdr_ctx_t ctx,
       SDR_ERRNO_TO_SDR_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   /* achu:
    *
    * Many motherboards now allow you to read the full SDR record, try
    * that first.  If it fails for any reason, bail and try to read via
    * partial reads.
    */
- 
+
   reservation_id_retry_count = 0;
   while (!offset_into_record)
     {
@@ -392,7 +392,7 @@ _sdr_cache_get_record (ipmi_sdr_ctx_t ctx,
           if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
             {
               uint8_t comp_code;
-              
+
               if (FIID_OBJ_GET (obj_cmd_rs,
                                 "comp_code",
                                 &val) < 0)
@@ -413,10 +413,10 @@ _sdr_cache_get_record (ipmi_sdr_ctx_t ctx,
                   continue;
                 }
             }
-          
+
           goto partial_read;
         }
-  
+
       if ((sdr_record_len = fiid_obj_get_data (obj_cmd_rs,
                                                "record_data",
                                                temp_record_buf,
@@ -425,12 +425,12 @@ _sdr_cache_get_record (ipmi_sdr_ctx_t ctx,
           SDR_FIID_OBJECT_ERROR_TO_SDR_ERRNUM (ctx, obj_cmd_rs);
           goto cleanup;
         }
-      
+
       /* Assume this is an "IPMI Error", fall through to partial reads */
       if (sdr_record_len < sdr_record_header_length)
         goto partial_read;
 
-      /* 
+      /*
        * IPMI Workaround (achu)
        *
        * Discovered on Xyratex HB-F8-SRAY
@@ -444,13 +444,13 @@ _sdr_cache_get_record (ipmi_sdr_ctx_t ctx,
        */
       if ((((uint8_t)temp_record_buf[IPMI_SDR_RECORD_LENGTH_INDEX]) + IPMI_SDR_RECORD_HEADER_LENGTH) > sdr_record_len)
         goto partial_read;
-  
+
       if (sdr_record_len > record_buf_len)
         {
           SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_INTERNAL_ERROR);
           goto cleanup;
         }
-  
+
       if (FIID_OBJ_GET (obj_cmd_rs,
                         "next_record_id",
                         &val) < 0)
@@ -681,7 +681,7 @@ _sdr_cache_record_write (ipmi_sdr_ctx_t ctx,
   /* Record Length plus the header bytes should match buflen. */
   if ((((uint8_t)buf[IPMI_SDR_RECORD_LENGTH_INDEX]) + IPMI_SDR_RECORD_HEADER_LENGTH) != buflen)
     {
-      /* 
+      /*
        * IPMI Workaround (achu)
        *
        * Discovered on HP Proliant DL585G7
@@ -789,14 +789,14 @@ ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
         SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_INTERNAL_ERROR);
       return (-1);
     }
-  
+
   ctx->operation = IPMI_SDR_OPERATION_CREATE_CACHE;
-  
+
   if (cache_create_flags & IPMI_SDR_CACHE_CREATE_FLAGS_OVERWRITE)
     open_flags = O_CREAT | O_TRUNC | O_WRONLY;
   else
     open_flags = O_CREAT | O_EXCL | O_WRONLY;
-  
+
   if ((fd = open (filename, open_flags, 0644)) < 0)
     {
       if (!(cache_create_flags & IPMI_SDR_CACHE_CREATE_FLAGS_OVERWRITE)
@@ -974,7 +974,7 @@ ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
           unsigned int total_bytes_written_temp = 0;
 
           ctx->record_count = record_count_written;
-          
+
           /* need to seek back to the beginning of the file and
            * re-write the header info with the correct number of
            * records

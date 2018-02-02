@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -233,7 +233,7 @@ _sensor_reading_corner_case_checks (ipmi_sensor_read_ctx_t ctx,
                                            IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE) == 1)
            || (ipmi_check_completion_code (obj_cmd_rs,
                                            IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1)
-           || (ipmi_check_completion_code (obj_cmd_rs, 
+           || (ipmi_check_completion_code (obj_cmd_rs,
                                            IPMI_COMP_CODE_COMMAND_RESPONSE_COULD_NOT_BE_PROVIDED) == 1)
            || (ipmi_check_completion_code (obj_cmd_rs,
                                            IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED) == 1)
@@ -246,7 +246,7 @@ _sensor_reading_corner_case_checks (ipmi_sensor_read_ctx_t ctx,
   else if ((ipmi_check_completion_code (obj_cmd_rs,
                                         IPMI_COMP_CODE_UNSPECIFIED_ERROR) == 1))
     {
-      uint64_t val; 
+      uint64_t val;
       int flag;
 
       /* IPMI Workaround
@@ -265,7 +265,7 @@ _sensor_reading_corner_case_checks (ipmi_sensor_read_ctx_t ctx,
        * sensor is not available.  The error code "Unspecified Error"
        * could mean anything.
        */
-      
+
       if ((flag = fiid_obj_get (obj_cmd_rs,
                                 "reading_state",
                                 &val)) < 0)
@@ -273,13 +273,13 @@ _sensor_reading_corner_case_checks (ipmi_sensor_read_ctx_t ctx,
           SENSOR_READ_FIID_OBJECT_ERROR_TO_SENSOR_READ_ERRNUM (ctx, obj_cmd_rs);
           return (-1);
         }
-      
+
       if (flag && val == IPMI_SENSOR_READING_STATE_UNAVAILABLE)
         {
           SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_SENSOR_READING_UNAVAILABLE);
           return (-1);
         }
-      
+
       if (!(ctx->flags & IPMI_SENSOR_READ_FLAGS_IGNORE_SCANNING_DISABLED))
         {
           if ((flag = fiid_obj_get (obj_cmd_rs,
@@ -289,7 +289,7 @@ _sensor_reading_corner_case_checks (ipmi_sensor_read_ctx_t ctx,
               SENSOR_READ_FIID_OBJECT_ERROR_TO_SENSOR_READ_ERRNUM (ctx, obj_cmd_rs);
               return (-1);
             }
-          
+
           if (flag && val == IPMI_SENSOR_SCANNING_ON_THIS_SENSOR_DISABLE)
             {
               SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_SENSOR_SCANNING_DISABLED);
@@ -535,7 +535,7 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
       goto cleanup;
     }
 
-  /* 
+  /*
    * IPMI Workaround (achu)
    *
    * See comments below concerning sensor_event_bitmask.
@@ -557,7 +557,7 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
    *
    * Discovered on Fujitsu RX300
    * Discovered on Fujitsu RX300S2
-   * 
+   *
    * On some motherboards, the sensor owner is invalid.  The sensor
    * owner as atually the BMC.
    */
@@ -589,7 +589,7 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
         goto cleanup;
     }
 
-  /* 
+  /*
    * IPMI Workaround (achu)
    *
    * See comments below concerning sensor_event_bitmask.
@@ -622,8 +622,8 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
    * Discovered on Dell Poweredge 2950
    * Discovered on Dell Poweredge R410
    * Discovered on Dell Poweredge R610
-   * 
-   * On some motherboards, the sensor scanning bit is invalid for sensors. 
+   *
+   * On some motherboards, the sensor scanning bit is invalid for sensors.
    */
   if (!(ctx->flags & IPMI_SENSOR_READ_FLAGS_IGNORE_SCANNING_DISABLED))
     {
@@ -635,7 +635,7 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
           goto cleanup;
         }
       sensor_scanning = val;
-      
+
       if (sensor_scanning == IPMI_SENSOR_SCANNING_ON_THIS_SENSOR_DISABLE)
         {
           SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_SENSOR_SCANNING_DISABLED);
@@ -706,7 +706,7 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
       goto cleanup;
     }
   local_sensor_reading_raw = val;
-  
+
   if (sensor_reading_raw)
     (*sensor_reading_raw) = local_sensor_reading_raw;
 

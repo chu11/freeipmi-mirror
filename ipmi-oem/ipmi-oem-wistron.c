@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2008-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -94,7 +94,7 @@ ipmi_oem_wistron_get_system_info (ipmi_oem_state_data_t *state_data)
                        state_data->prog_data->args->oem_options[0]);
       goto cleanup;
     }
-  
+
   /* Wistron/Dell Poweredge C6220
    *
    * Some from Dell Provided Docs
@@ -121,7 +121,7 @@ ipmi_oem_wistron_get_system_info (ipmi_oem_state_data_t *state_data)
    * 1st byte = set selector
    * 2nd byte
    * - 7:4 - reserved
-   * - 3:0 - string encoding, 0 = printable ascii  
+   * - 3:0 - string encoding, 0 = printable ascii
    * 3rd byte = string length
    * ? bytes = string
    *
@@ -172,12 +172,12 @@ ipmi_oem_wistron_get_system_info (ipmi_oem_state_data_t *state_data)
                                                              productname,
                                                              IPMI_OEM_WISTRON_SYSTEM_INFO_MAX_STRING_BYTES) < 0)
         goto cleanup;
-      
+
       pstdout_printf (state_data->pstate,
                       "%s\n",
                       productname);
     }
- 
+
   rv = 0;
  cleanup:
   return (rv);
@@ -376,7 +376,7 @@ ipmi_oem_wistron_set_bmc_services (ipmi_oem_state_data_t *state_data)
 
   if (!strcasecmp (state_data->prog_data->args->oem_options[0], "enable"))
     enable = 1;
-        
+
   /* if all, it's an easy special case */
   if (!strcasecmp (state_data->prog_data->args->oem_options[1], "all"))
     {
@@ -506,7 +506,7 @@ ipmi_oem_wistron_get_dns_config (ipmi_oem_state_data_t *state_data)
                                                      &tmpvalue) < 0)
     goto cleanup;
   dnsserver2 = tmpvalue;
-  
+
   if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
                                                      IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_DNS,
                                                      IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_DNS_DNS_REGISTER_BMC,
@@ -567,23 +567,23 @@ ipmi_oem_wistron_get_dns_config (ipmi_oem_state_data_t *state_data)
                   (dnsserver2 & 0x0000FF00) >> 8,
                   (dnsserver2 & 0x00FF0000) >> 16,
                   (dnsserver2 & 0xFF000000) >> 24);
-  
+
   pstdout_printf (state_data->pstate,
                   "DNS Register BMC       : %s\n",
                   (dnsregisterbmc) ? "Enabled" : "Disabled");
-  
+
   pstdout_printf (state_data->pstate,
                   "DNS BMC Host Name      : %s\n",
                   dnsbmchostname);
-  
+
   pstdout_printf (state_data->pstate,
                   "DNS Domain Name DHCP   : %s\n",
                   (dnsdomainnamedhcpenable) ? "Enabled" : "Disabled");
-  
+
   pstdout_printf (state_data->pstate,
                   "DNS Domain Name        : %s\n",
                   dnsdomainname);
-  
+
   pstdout_printf (state_data->pstate,
                   "DNS Registration Delay : %u seconds\n",
                   dnsregistrationdelay);
@@ -623,14 +623,14 @@ ipmi_oem_wistron_set_dns_config (ipmi_oem_state_data_t *state_data)
                       "Option: dnsdomainnamedhcp=enable|disable\n"
                       "Option: dnsdomainname=string\n"
                       "Option: dnsregistrationdelay=seconds\n");
-      return (0); 
+      return (0);
     }
 
   for (i = 0; i < state_data->prog_data->args->oem_options_count; i++)
     {
       char *key = NULL;
       char *value = NULL;
-      
+
       if (ipmi_oem_parse_key_value (state_data,
                                     i,
                                     &key,
@@ -641,8 +641,8 @@ ipmi_oem_wistron_set_dns_config (ipmi_oem_state_data_t *state_data)
         {
           if (ipmi_oem_parse_enable (state_data, i, value, &dnsdhcpenable) < 0)
             goto cleanup;
-          
-          
+
+
           if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
                                                              IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_DNS,
                                                              IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_DNS_DNS_DHCP_ENABLE,
@@ -655,8 +655,8 @@ ipmi_oem_wistron_set_dns_config (ipmi_oem_state_data_t *state_data)
         {
           if (ipmi_oem_parse_ip_address (state_data, i, value, &dnsserver1) < 0)
             goto cleanup;
-          
-          
+
+
           if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
                                                              IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_DNS,
                                                              IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_DNS_DNS_SERVER1,
@@ -669,8 +669,8 @@ ipmi_oem_wistron_set_dns_config (ipmi_oem_state_data_t *state_data)
         {
           if (ipmi_oem_parse_ip_address (state_data, i, value, &dnsserver2) < 0)
             goto cleanup;
-          
-          
+
+
           if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
                                                              IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_DNS,
                                                              IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_DNS_DNS_SERVER2,
@@ -683,8 +683,8 @@ ipmi_oem_wistron_set_dns_config (ipmi_oem_state_data_t *state_data)
         {
           if (ipmi_oem_parse_enable (state_data, i, value, &dnsregisterbmc) < 0)
             goto cleanup;
-          
-          
+
+
           if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
                                                              IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_DNS,
                                                              IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_DNS_DNS_REGISTER_BMC,
@@ -704,7 +704,7 @@ ipmi_oem_wistron_set_dns_config (ipmi_oem_state_data_t *state_data)
                                      dnsbmchostname,
                                      IPMI_OEM_WISTRON_EXTENDED_CONFIG_DNS_DNS_BMC_HOST_NAME_MAX) < 0)
             goto cleanup;
-          
+
           if (ipmi_oem_thirdparty_set_extended_config_string (state_data,
                                                               IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_DNS,
                                                               IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_DNS_DNS_BMC_HOST_NAME,
@@ -717,8 +717,8 @@ ipmi_oem_wistron_set_dns_config (ipmi_oem_state_data_t *state_data)
         {
           if (ipmi_oem_parse_enable (state_data, i, value, &dnsdomainnamedhcpenable) < 0)
             goto cleanup;
-          
-          
+
+
           if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
                                                              IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_DNS,
                                                              IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_DNS_DNS_DOMAIN_NAME_DHCP_ENABLE,
@@ -738,7 +738,7 @@ ipmi_oem_wistron_set_dns_config (ipmi_oem_state_data_t *state_data)
                                      dnsdomainname,
                                      IPMI_OEM_WISTRON_EXTENDED_CONFIG_DNS_DNS_DOMAIN_NAME_MAX) < 0)
             goto cleanup;
-          
+
           if (ipmi_oem_thirdparty_set_extended_config_string (state_data,
                                                               IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_DNS,
                                                               IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_DNS_DNS_DOMAIN_NAME,
@@ -751,7 +751,7 @@ ipmi_oem_wistron_set_dns_config (ipmi_oem_state_data_t *state_data)
         {
           if (ipmi_oem_parse_1_byte_field (state_data, i, value, &dnsregistrationdelay) < 0)
             goto cleanup;
-          
+
           if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
                                                              IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_DNS,
                                                              IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_DNS_DNS_REGISTRATION_DELAY,
@@ -770,7 +770,7 @@ ipmi_oem_wistron_set_dns_config (ipmi_oem_state_data_t *state_data)
                            state_data->prog_data->args->oem_options[i]);
           goto cleanup;
         }
-      
+
       free (key);
       free (value);
     }
@@ -884,14 +884,14 @@ ipmi_oem_wistron_set_server_services_config (ipmi_oem_state_data_t *state_data)
                       "Option: kvmportnumber=num\n"
                       "Option: telnetportnumber=num\n"
                       "Option: sshportnumber=num\n");
-      return (0); 
+      return (0);
     }
 
   for (i = 0; i < state_data->prog_data->args->oem_options_count; i++)
     {
       char *key = NULL;
       char *value = NULL;
-      
+
       if (ipmi_oem_parse_key_value (state_data,
                                     i,
                                     &key,
@@ -902,7 +902,7 @@ ipmi_oem_wistron_set_server_services_config (ipmi_oem_state_data_t *state_data)
         {
           if (ipmi_oem_parse_2_byte_field (state_data, i, value, &kvmportnumber) < 0)
             goto cleanup;
-          
+
           if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
                                                              IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
                                                              IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_KVM_PORT_NUM,
@@ -915,7 +915,7 @@ ipmi_oem_wistron_set_server_services_config (ipmi_oem_state_data_t *state_data)
         {
           if (ipmi_oem_parse_2_byte_field (state_data, i, value, &telnetportnumber) < 0)
             goto cleanup;
-          
+
           if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
                                                              IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
                                                              IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_TELNET_PORT_NUM,
@@ -928,7 +928,7 @@ ipmi_oem_wistron_set_server_services_config (ipmi_oem_state_data_t *state_data)
         {
           if (ipmi_oem_parse_2_byte_field (state_data, i, value, &sshportnumber) < 0)
             goto cleanup;
-          
+
           if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
                                                              IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_WEB_SERVER_CONFIGURATION,
                                                              IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_WEB_SERVER_CONFIGURATION_SSH_PORT_NUM,
@@ -979,7 +979,7 @@ ipmi_oem_wistron_get_power_management_config (ipmi_oem_state_data_t *state_data)
                                                      &tmpvalue) < 0)
     goto cleanup;
   powerstaggeringacrecovery = tmpvalue;
-  
+
   if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
                                                      IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
                                                      IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_POWER_ON_DELAY,
@@ -996,7 +996,7 @@ ipmi_oem_wistron_get_power_management_config (ipmi_oem_state_data_t *state_data)
                                                      2,
                                                      &tmpvalue) < 0)
     goto cleanup;
-  minpowerondelay = tmpvalue; 
+  minpowerondelay = tmpvalue;
 
   if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
                                                      IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
@@ -1005,8 +1005,8 @@ ipmi_oem_wistron_get_power_management_config (ipmi_oem_state_data_t *state_data)
                                                      2,
                                                      &tmpvalue) < 0)
     goto cleanup;
-  maxpowerondelay = tmpvalue; 
-  
+  maxpowerondelay = tmpvalue;
+
   if (powerstaggeringacrecovery == IPMI_OEM_WISTRON_EXTENDED_CONFIG_POWER_STAGGERING_AC_RECOVERY_IMMEDIATE)
     pstdout_printf (state_data->pstate,
                     "Power Staggering AC Recovery : Immediate\n");
@@ -1020,11 +1020,11 @@ ipmi_oem_wistron_get_power_management_config (ipmi_oem_state_data_t *state_data)
     pstdout_printf (state_data->pstate,
                     "Power Staggering AC Recovery : %Xh\n",
                     powerstaggeringacrecovery);
-  
+
   pstdout_printf (state_data->pstate,
                   "Power On Delay               : %u seconds\n",
                   powerondelay);
-  
+
   pstdout_printf (state_data->pstate,
                   "Minimum Power On Delay       : %u seconds\n",
                   minpowerondelay);
@@ -1055,14 +1055,14 @@ ipmi_oem_wistron_set_power_management_config (ipmi_oem_state_data_t *state_data)
                       "Option: powerstaggeringacrecovery=immediate|auto|user\n"
                       "Option: powerondelay=seconds\n"
                       "Option: maxpowerondelay=seconds\n");
-      return (0); 
+      return (0);
     }
 
   for (i = 0; i < state_data->prog_data->args->oem_options_count; i++)
     {
       char *key = NULL;
       char *value = NULL;
-      
+
       if (ipmi_oem_parse_key_value (state_data,
                                     i,
                                     &key,
@@ -1103,7 +1103,7 @@ ipmi_oem_wistron_set_power_management_config (ipmi_oem_state_data_t *state_data)
         {
           if (ipmi_oem_parse_2_byte_field (state_data, i, value, &powerondelay) < 0)
             goto cleanup;
-          
+
           if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
                                                              IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
                                                              IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_POWER_ON_DELAY,
@@ -1116,7 +1116,7 @@ ipmi_oem_wistron_set_power_management_config (ipmi_oem_state_data_t *state_data)
         {
           if (ipmi_oem_parse_2_byte_field (state_data, i, value, &maxpowerondelay) < 0)
             goto cleanup;
-          
+
           if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
                                                              IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_POWER_MANAGEMENT,
                                                              IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_POWER_MANAGEMENT_MAXIMUM_POWER_ON_DELAY,
@@ -1203,7 +1203,7 @@ ipmi_oem_wistron_get_firmware_information (ipmi_oem_state_data_t *state_data)
                                                       product_info,
                                                       IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_PRODUCT_INFO_LEN) < 0)
     goto cleanup;
- 
+
   if (ipmi_oem_thirdparty_get_extended_config_string (state_data,
                                                       IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_FIRMWARE_INFORMATION,
                                                       IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_FIRMWARE_INFORMATION_FIRMWARE_VERSION,
@@ -1424,7 +1424,7 @@ ipmi_oem_wistron_get_ipv6_settings (ipmi_oem_state_data_t *state_data)
 
   pstdout_printf (state_data->pstate,
                   "IPv6 Enable             : %s\n",
-                  (ipv6enable == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_ENABLE_FALSE) ? "false" : "true"); 
+                  (ipv6enable == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_ENABLE_FALSE) ? "false" : "true");
 
   pstdout_printf (state_data->pstate,
                   "IPv6 Address            : %s\n",
@@ -1440,7 +1440,7 @@ ipmi_oem_wistron_get_ipv6_settings (ipmi_oem_state_data_t *state_data)
 
   pstdout_printf (state_data->pstate,
                   "IPv6 Auto Config        : %s\n",
-                  (ipv6autoconfig == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_AUTOCONFIG_ENABLE_FALSE) ? "false" : "true"); 
+                  (ipv6autoconfig == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_AUTOCONFIG_ENABLE_FALSE) ? "false" : "true");
 
   pstdout_printf (state_data->pstate,
                   "IPv6 Link Local Address : %s\n",
@@ -1448,7 +1448,7 @@ ipmi_oem_wistron_get_ipv6_settings (ipmi_oem_state_data_t *state_data)
 
   pstdout_printf (state_data->pstate,
                   "IPv6 Auto DNS           : %s\n",
-                  (ipv6autodns == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_AUTO_DNS_ENABLE_FALSE) ? "false" : "true"); 
+                  (ipv6autodns == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_AUTO_DNS_ENABLE_FALSE) ? "false" : "true");
 
   pstdout_printf (state_data->pstate,
                   "IPv6 DNS Server 1       : %s\n",
@@ -1498,14 +1498,14 @@ ipmi_oem_wistron_set_ipv6_settings (ipmi_oem_state_data_t *state_data)
                       "Option: ipv6autodns=enable|disable\n"
                       "Option: ipv6dnsserver1=ipaddress\n"
                       "Option: ipv6dnsserver2=ipaddress\n");
-      return (0); 
+      return (0);
     }
 
   for (i = 0; i < state_data->prog_data->args->oem_options_count; i++)
     {
       char *key = NULL;
       char *value = NULL;
-      
+
       if (ipmi_oem_parse_key_value (state_data,
                                     i,
                                     &key,
@@ -1516,12 +1516,12 @@ ipmi_oem_wistron_set_ipv6_settings (ipmi_oem_state_data_t *state_data)
         {
           if (ipmi_oem_parse_enable (state_data, i, value, &tmpenablevalue) < 0)
             goto cleanup;
-          
+
           if (tmpenablevalue)
             ipv6enable = IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_ENABLE_TRUE;
           else
             ipv6enable = IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_ENABLE_FALSE;
-          
+
           if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
                                                              IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_IPV6_SETTING,
                                                              IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_ENABLE,
@@ -1541,7 +1541,7 @@ ipmi_oem_wistron_set_ipv6_settings (ipmi_oem_state_data_t *state_data)
                                      ipv6address,
                                      IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_ADDRESS_LEN) < 0)
             goto cleanup;
-          
+
           if (ipmi_oem_thirdparty_set_extended_config_string (state_data,
                                                               IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_IPV6_SETTING,
                                                               IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_ADDRESS,
@@ -1561,7 +1561,7 @@ ipmi_oem_wistron_set_ipv6_settings (ipmi_oem_state_data_t *state_data)
                                      ipv6gatewayipaddress,
                                      IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_GATEWAY_IP_ADDRESS_LEN) < 0)
             goto cleanup;
-          
+
           if (ipmi_oem_thirdparty_set_extended_config_string (state_data,
                                                               IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_IPV6_SETTING,
                                                               IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_GATEWAY_IP_ADDRESS,
@@ -1574,7 +1574,7 @@ ipmi_oem_wistron_set_ipv6_settings (ipmi_oem_state_data_t *state_data)
         {
           if (ipmi_oem_parse_1_byte_field (state_data, i, value, &ipv6prefixlength) < 0)
             goto cleanup;
-          
+
           if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
                                                              IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_IPV6_SETTING,
                                                              IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_PREFIX_LENGTH,
@@ -1587,7 +1587,7 @@ ipmi_oem_wistron_set_ipv6_settings (ipmi_oem_state_data_t *state_data)
         {
           if (ipmi_oem_parse_enable (state_data, i, value, &tmpenablevalue) < 0)
             goto cleanup;
-          
+
           if (tmpenablevalue)
             ipv6autoconfig = IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_AUTOCONFIG_ENABLE_TRUE;
           else
@@ -1605,7 +1605,7 @@ ipmi_oem_wistron_set_ipv6_settings (ipmi_oem_state_data_t *state_data)
         {
           if (ipmi_oem_parse_enable (state_data, i, value, &tmpenablevalue) < 0)
             goto cleanup;
-          
+
           if (tmpenablevalue)
             ipv6autodns = IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_AUTO_DNS_ENABLE_TRUE;
           else
@@ -1630,7 +1630,7 @@ ipmi_oem_wistron_set_ipv6_settings (ipmi_oem_state_data_t *state_data)
                                      ipv6dnsserver1,
                                      IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_DNS_SERVER1_LEN) < 0)
             goto cleanup;
-          
+
           if (ipmi_oem_thirdparty_set_extended_config_string (state_data,
                                                               IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_IPV6_SETTING,
                                                               IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_DNS_SERVER1,
@@ -1650,7 +1650,7 @@ ipmi_oem_wistron_set_ipv6_settings (ipmi_oem_state_data_t *state_data)
                                      ipv6dnsserver2,
                                      IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_DNS_SERVER2_LEN) < 0)
             goto cleanup;
-          
+
           if (ipmi_oem_thirdparty_set_extended_config_string (state_data,
                                                               IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_IPV6_SETTING,
                                                               IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SETTING_IPV6_DNS_SERVER2,
@@ -1669,7 +1669,7 @@ ipmi_oem_wistron_set_ipv6_settings (ipmi_oem_state_data_t *state_data)
                            state_data->prog_data->args->oem_options[i]);
           goto cleanup;
         }
-      
+
       free (key);
       free (value);
     }
@@ -1721,8 +1721,8 @@ ipmi_oem_wistron_get_ipv6_trap_settings (ipmi_oem_state_data_t *state_data)
        * one int?  Why couldn't this be three fields.
        */
       destination_type = (ipv6snmptrapdestinationsetting & 0x000000FF);
-      alertacktimeout = (ipv6snmptrapdestinationsetting & 0x0000FF00) >> 8; 
-      retries = (ipv6snmptrapdestinationsetting & 0x00FF0000) >> 16; 
+      alertacktimeout = (ipv6snmptrapdestinationsetting & 0x0000FF00) >> 8;
+      retries = (ipv6snmptrapdestinationsetting & 0x00FF0000) >> 16;
 
       if (ipmi_oem_thirdparty_get_extended_config_string (state_data,
                                                           IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_IPV6_TRAP_SETTING,
@@ -1772,7 +1772,7 @@ ipmi_oem_wistron_get_ipv6_trap_settings (ipmi_oem_state_data_t *state_data)
                       i,
                       ipv6snmptrapaddress);
     }
-  
+
   rv = 0;
  cleanup:
   return (rv);
@@ -1801,14 +1801,14 @@ ipmi_oem_wistron_set_ipv6_trap_settings (ipmi_oem_state_data_t *state_data)
   memset (ipv6snmptrapaddress, '\0', IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SNMP_TRAP_DESTINATION_ADDRESS_LEN + 1);
 
   if (!state_data->prog_data->args->oem_options_count
-      || state_data->prog_data->args->oem_options_count == 1) 
+      || state_data->prog_data->args->oem_options_count == 1)
     {
       pstdout_printf (state_data->pstate,
                       "Option: destinationtype=pet|oem1|oem2\n"
                       "Option: alertacktimeout=seconds\n"
                       "Option: retries=count\n"
                       "Option: ipv6snmptrapaddress=ipaddress\n");
-      return (0); 
+      return (0);
     }
 
   /* first field is the index, get that first */
@@ -1849,7 +1849,7 @@ ipmi_oem_wistron_set_ipv6_trap_settings (ipmi_oem_state_data_t *state_data)
                        state_data->prog_data->args->oem_command,
                        state_data->prog_data->args->oem_options[0]);
       return (-1);
-    } 
+    }
 
   for (i = 1; i < state_data->prog_data->args->oem_options_count; i++)
     {
@@ -1950,7 +1950,7 @@ ipmi_oem_wistron_set_ipv6_trap_settings (ipmi_oem_state_data_t *state_data)
       else if (!strcasecmp (key, "ipv6snmptrapaddress"))
         {
           uint8_t string_length = 0;
-          
+
           if (ipmi_oem_parse_string (state_data,
                                      i,
                                      value,
@@ -1958,7 +1958,7 @@ ipmi_oem_wistron_set_ipv6_trap_settings (ipmi_oem_state_data_t *state_data)
                                      ipv6snmptrapaddress,
                                      IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SNMP_TRAP_DESTINATION_ADDRESS_LEN) < 0)
             goto cleanup;
-          
+
           if (ipmi_oem_thirdparty_set_extended_config_string (state_data,
                                                               IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_IPV6_TRAP_SETTING,
                                                               IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SNMP_TRAP_DESTINATION_ADDRESS,
@@ -1977,7 +1977,7 @@ ipmi_oem_wistron_set_ipv6_trap_settings (ipmi_oem_state_data_t *state_data)
                            state_data->prog_data->args->oem_options[i]);
           goto cleanup;
         }
-      
+
       free (key);
       free (value);
     }
@@ -2026,7 +2026,7 @@ _wistron_get_telnet_ssh_redirect_function (ipmi_oem_state_data_t *state_data, ui
                                                      1,
                                                      &tmpvalue) < 0)
     goto cleanup;
-  
+
   switch (tmpvalue)
     {
     case IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION_DISABLE:
@@ -2042,7 +2042,7 @@ _wistron_get_telnet_ssh_redirect_function (ipmi_oem_state_data_t *state_data, ui
       pstdout_printf (state_data->pstate, "unknown redirect: %Xh\n", tmpvalue);
       break;
     }
-  
+
   rv = 0;
  cleanup:
   return (rv);
@@ -2053,7 +2053,7 @@ _wistron_set_telnet_ssh_redirect_function (ipmi_oem_state_data_t *state_data, ui
 {
   uint8_t tmpvalue = 0;
   int rv = -1;
-  
+
   assert (state_data);
   assert (state_data->prog_data->args->oem_options_count == 1);
   assert (attribute_id == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION
@@ -2061,7 +2061,7 @@ _wistron_set_telnet_ssh_redirect_function (ipmi_oem_state_data_t *state_data, ui
   assert (IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION_DISABLE == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_SSH_REDIRECT_FUNCTION_SELECTION_DISABLE);
   assert (IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION_SOL_ENABLED == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_SSH_REDIRECT_FUNCTION_SELECTION_SOL_ENABLED);
   assert (IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION_SMASH_ENABLED == IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_SSH_REDIRECT_FUNCTION_SELECTION_SMASH_ENABLED);
-  
+
   if (strcasecmp (state_data->prog_data->args->oem_options[0], "disable")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "solenable")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "smashenable"))
@@ -2074,14 +2074,14 @@ _wistron_set_telnet_ssh_redirect_function (ipmi_oem_state_data_t *state_data, ui
                        state_data->prog_data->args->oem_options[0]);
       goto cleanup;
     }
-  
+
   if (!strcasecmp (state_data->prog_data->args->oem_options[0], "disable"))
     tmpvalue = IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION_DISABLE;
   else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "solenable"))
     tmpvalue = IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION_SOL_ENABLED;
   else
     tmpvalue = IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_SOL_TELNET_REDIRECT_FUNCTION_SELECTION_SMASH_ENABLED;
-  
+
   if (ipmi_oem_thirdparty_set_extended_config_value (state_data,
                                                      IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_SOL,
                                                      attribute_id,
@@ -2223,7 +2223,7 @@ ipmi_oem_wistron_get_chassis_power_readings (ipmi_oem_state_data_t *state_data)
   assert (!state_data->prog_data->args->oem_options_count);
 
   /* Wistron/Dell Poweredge C6220 OEM
-   * 
+   *
    * Get Chassis Power Reading Request
    *
    * 0x30 - OEM network function
@@ -2240,9 +2240,9 @@ ipmi_oem_wistron_get_chassis_power_readings (ipmi_oem_state_data_t *state_data)
    *        - 2-7 - reserved
    * bytes 7-8 - chassis total power consumption in watts (LSB first)
    * bytes 9-10  - chassis cooling power consumption in watts (LSB first)
-   * bytes 11-14 - reserved 
+   * bytes 11-14 - reserved
    */
-  
+
   bytes_rq[0] = IPMI_CMD_OEM_WISTRON_GET_CHASSIS_POWER_READINGS;
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
@@ -2259,7 +2259,7 @@ ipmi_oem_wistron_get_chassis_power_readings (ipmi_oem_state_data_t *state_data)
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
-  
+
   /* don't care about reserved bytes, saying only require 11 bytes */
   if (ipmi_oem_check_response_and_completion_code (state_data,
                                                    bytes_rs,
@@ -2274,7 +2274,7 @@ ipmi_oem_wistron_get_chassis_power_readings (ipmi_oem_state_data_t *state_data)
   ipmitimestamp |= (bytes_rs[3] << 8);
   ipmitimestamp |= (bytes_rs[4] << 16);
   ipmitimestamp |= (bytes_rs[5] << 24);
-  
+
   totalpowerconsumption_supported = bytes_rs[6] & IPMI_OEM_WISTRON_CHASSIS_TOTAL_POWER_CONSUMPTION_AVAILABLE_BITMASK;
   totalpowerconsumption_supported >>= IPMI_OEM_WISTRON_CHASSIS_TOTAL_POWER_CONSUMPTION_AVAILABLE_SHIFT;
 
@@ -2282,17 +2282,17 @@ ipmi_oem_wistron_get_chassis_power_readings (ipmi_oem_state_data_t *state_data)
   coolingpowerconsumption_supported >>= IPMI_OEM_WISTRON_CHASSIS_COOLING_POWER_CONSUMPTION_AVAILABLE_SHIFT;
 
   totalpowerconsumption = bytes_rs[7];
-  totalpowerconsumption |= (bytes_rs[8] << 8); 
+  totalpowerconsumption |= (bytes_rs[8] << 8);
 
   coolingpowerconsumption = bytes_rs[9];
   coolingpowerconsumption |= (bytes_rs[10] << 8);
-  
+
   memset (time_buf, '\0', IPMI_OEM_TIME_BUFLEN + 1);
-  
+
   if (ipmi_timestamp_string (ipmitimestamp,
                              state_data->prog_data->args->common_args.utc_offset,
                              get_timestamp_flags (&(state_data->prog_data->args->common_args),
-                                                  IPMI_TIMESTAMP_FLAG_DEFAULT), 
+                                                  IPMI_TIMESTAMP_FLAG_DEFAULT),
                              "%b-%d-%Y | %H:%M:%S",
                              time_buf,
                              IPMI_OEM_TIME_BUFLEN) < 0)
@@ -2312,7 +2312,7 @@ ipmi_oem_wistron_get_chassis_power_readings (ipmi_oem_state_data_t *state_data)
     pstdout_printf (state_data->pstate,
                     "Chassis Total Power Consumption   : %u Watts\n",
                     totalpowerconsumption);
-  
+
   if (coolingpowerconsumption_supported)
     pstdout_printf (state_data->pstate,
                     "Chassis Cooling Power Consumption : %u Watts\n",
@@ -2342,7 +2342,7 @@ ipmi_oem_wistron_get_chassis_led_status (ipmi_oem_state_data_t *state_data)
   assert (!state_data->prog_data->args->oem_options_count);
 
   /* Wistron/Dell Poweredge C6220 OEM
-   * 
+   *
    * Get Chassis LED Status Request
    *
    * 0x30 - OEM network function
@@ -2356,13 +2356,13 @@ ipmi_oem_wistron_get_chassis_led_status (ipmi_oem_state_data_t *state_data)
    * 0x?? - LED Support
    *        0 bit = chassis identification LED controlled by SC (0 = not supported, 1 = supported)
    *        1 bit = fault LED controlled by SC (0 = not supported, 1 = supported)
-   *        2-7 = reserved 
+   *        2-7 = reserved
    * 0x?? - Chassis Identification LED Status
    *      - 0 - off, 1 solid, 2 blink
    * 0x?? - Chassis Fault LED Status
    *      - 0 - off, 1 solid, 2 blink
    */
-  
+
   bytes_rq[0] = IPMI_CMD_OEM_WISTRON_GET_CHASSIS_LED_STATUS;
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
@@ -2379,7 +2379,7 @@ ipmi_oem_wistron_get_chassis_led_status (ipmi_oem_state_data_t *state_data)
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
-  
+
   if (ipmi_oem_check_response_and_completion_code (state_data,
                                                    bytes_rs,
                                                    rs_len,
@@ -2446,7 +2446,7 @@ ipmi_oem_wistron_get_chassis_led_status (ipmi_oem_state_data_t *state_data)
           break;
         }
     }
-  
+
   rv = 0;
     cleanup:
   return (rv);
@@ -2462,7 +2462,7 @@ ipmi_oem_wistron_set_chassis_led_status (ipmi_oem_state_data_t *state_data)
 
   assert (state_data);
   assert (state_data->prog_data->args->oem_options_count == 2);
-  
+
   if (strcasecmp (state_data->prog_data->args->oem_options[0], "identify-off")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "identify-solid")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "identify-blink"))
@@ -2490,7 +2490,7 @@ ipmi_oem_wistron_set_chassis_led_status (ipmi_oem_state_data_t *state_data)
     }
 
   /* Wistron/Dell Poweredge C6220 OEM
-   * 
+   *
    * Set Chassis LED Status Request
    *
    * 0x30 - OEM network function
@@ -2506,7 +2506,7 @@ ipmi_oem_wistron_set_chassis_led_status (ipmi_oem_state_data_t *state_data)
    * 0x1C - OEM cmd
    * 0x?? - Completion code
    */
-  
+
   bytes_rq[0] = IPMI_CMD_OEM_WISTRON_SET_CHASSIS_LED_STATUS;
   bytes_rq[1] = IPMI_OEM_WISTRON_SC_BMC_COMMUNICATION_PROTOCOL_VERSION;
 
@@ -2538,7 +2538,7 @@ ipmi_oem_wistron_set_chassis_led_status (ipmi_oem_state_data_t *state_data)
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
-  
+
   if (ipmi_oem_check_response_and_completion_code (state_data,
                                                    bytes_rs,
                                                    rs_len,
@@ -2547,7 +2547,7 @@ ipmi_oem_wistron_set_chassis_led_status (ipmi_oem_state_data_t *state_data)
                                                    IPMI_NET_FN_OEM_WISTRON_GENERIC_RS,
                                                    _wistron_oem_strerror) < 0)
     goto cleanup;
-  
+
   rv = 0;
     cleanup:
   return (rv);
@@ -2599,7 +2599,7 @@ ipmi_oem_wistron_get_dhcp_retry (ipmi_oem_state_data_t *state_data)
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
-  
+
   if (ipmi_cmd_get_lan_configuration_parameters (state_data->ipmi_ctx,
                                                  lan_channel_number,
                                                  IPMI_GET_LAN_PARAMETER,
@@ -2644,7 +2644,7 @@ ipmi_oem_wistron_get_dhcp_retry (ipmi_oem_state_data_t *state_data)
     pstdout_printf (state_data->pstate, "Retry Count    : %u\n", configuration_parameter_data[0]);
   pstdout_printf (state_data->pstate, "Retry Interval : %u seconds\n", configuration_parameter_data[1] * 10);
   pstdout_printf (state_data->pstate, "Retry Timeout  : %u minutes\n", configuration_parameter_data[2]);
-                  
+
   rv = 0;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
@@ -2706,7 +2706,7 @@ ipmi_oem_wistron_set_dhcp_retry (ipmi_oem_state_data_t *state_data)
                        state_data->prog_data->args->oem_options[1]);
       goto cleanup;
     }
-  
+
   retry_interval = value;
 
   errno = 0;
@@ -2723,7 +2723,7 @@ ipmi_oem_wistron_set_dhcp_retry (ipmi_oem_state_data_t *state_data)
                        state_data->prog_data->args->oem_options[2]);
       goto cleanup;
     }
-  
+
   retry_timeout = value;
 
   /* Wistron 5441/Dell Poweredge C6220
@@ -2763,7 +2763,7 @@ ipmi_oem_wistron_set_dhcp_retry (ipmi_oem_state_data_t *state_data)
   configuration_parameter_data[0] = retry_count;
   configuration_parameter_data[1] = retry_interval;
   configuration_parameter_data[2] = retry_timeout;
-  
+
   if (ipmi_cmd_set_lan_configuration_parameters (state_data->ipmi_ctx,
                                                  lan_channel_number,
                                                  IPMI_LAN_CONFIGURATION_PARAMETER_OEM_WISTRON_DHCP_RETRY,
@@ -2808,7 +2808,7 @@ ipmi_oem_wistron_get_link_status_change_control (ipmi_oem_state_data_t *state_da
    * 1st byte = 7b - 1b = link down resilience enabled
    *                 0b = dhcp re-discovery enabled
    *                 default = 0b
-   *            0:6 - reserved  
+   *            0:6 - reserved
    */
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_lan_configuration_parameters_rs)))
@@ -2830,7 +2830,7 @@ ipmi_oem_wistron_get_link_status_change_control (ipmi_oem_state_data_t *state_da
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
-  
+
   if (ipmi_cmd_get_lan_configuration_parameters (state_data->ipmi_ctx,
                                                  lan_channel_number,
                                                  IPMI_GET_LAN_PARAMETER,
@@ -2874,7 +2874,7 @@ ipmi_oem_wistron_get_link_status_change_control (ipmi_oem_state_data_t *state_da
     pstdout_printf (state_data->pstate, "Link Down Resilience Enabled\n");
   else
     pstdout_printf (state_data->pstate, "DHCP Re-Discovery Enabled\n");
-                  
+
   rv = 0;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
@@ -2916,7 +2916,7 @@ ipmi_oem_wistron_set_link_status_change_control (ipmi_oem_state_data_t *state_da
    * 1st byte = 7b - 1b = link down resilience enabled
    *                 0b = dhcp re-discovery enabled
    *                 default = 0b
-   *            0:6 - reserved  
+   *            0:6 - reserved
    */
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_lan_configuration_parameters_rs)))
@@ -2946,7 +2946,7 @@ ipmi_oem_wistron_set_link_status_change_control (ipmi_oem_state_data_t *state_da
 
   configuration_parameter_data[0] = 0;
   configuration_parameter_data[0] |= (status << IPMI_LAN_CONFIGURATION_PARAMETER_OEM_WISTRON_LINK_STATUS_CHANGE_CONTROL_SHIFT);
-  
+
   if (ipmi_cmd_set_lan_configuration_parameters (state_data->ipmi_ctx,
                                                  lan_channel_number,
                                                  IPMI_LAN_CONFIGURATION_PARAMETER_OEM_WISTRON_LINK_STATUS_CHANGE_CONTROL,
@@ -2996,7 +2996,7 @@ ipmi_oem_wistron_set_password_policy (ipmi_oem_state_data_t *state_data)
    * 0x51 - OEM cmd
    * 0x?? - 0x00 = disabled
    *      - 0x01 = enabled
-   * 
+   *
    * Set Password Policy Response
    *
    * 0x51 - OEM cmd
@@ -3007,7 +3007,7 @@ ipmi_oem_wistron_set_password_policy (ipmi_oem_state_data_t *state_data)
 
   if (!strcasecmp (state_data->prog_data->args->oem_options[0], "enable"))
     bytes_rq[1] = IPMI_OEM_WISTRON_PASSWORD_POLICY_ENABLE;
-  else 
+  else
     bytes_rq[1] = IPMI_OEM_WISTRON_PASSWORD_POLICY_DISABLE;
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
@@ -3057,19 +3057,19 @@ ipmi_oem_wistron_read_proprietary_string (ipmi_oem_state_data_t *state_data)
    * 0x0B - OEM cmd
    * 0x?? - offset of the string
    * 0x?? - byte cont
-   * 
+   *
    * Read Proprietary String Response
    *
    * 0x0B - cmd
    * 0x?? - Completion Code
    * 0x?? - offset of the string
    * 0x?? - byte cont
-   * 0x??-0x?? - proprietary string 
+   * 0x??-0x?? - proprietary string
    */
 
   bytes_rq[0] = IPMI_CMD_OEM_WISTRON_READ_PROPRIETARY_STRING;
   bytes_rq[1] = 0;
-  bytes_rq[2] = IPMI_OEM_WISTRON_PROPRIETARY_STRING_MAX; 
+  bytes_rq[2] = IPMI_OEM_WISTRON_PROPRIETARY_STRING_MAX;
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
@@ -3140,7 +3140,7 @@ ipmi_oem_wistron_write_proprietary_string (ipmi_oem_state_data_t *state_data)
    * 0x?? - offset of the string
    * 0x?? - byte cont
    * 0x?? - 0x?? - string
-   * 
+   *
    * Write Proprietary String Response
    *
    * 0x0C - cmd
@@ -3159,7 +3159,7 @@ ipmi_oem_wistron_write_proprietary_string (ipmi_oem_state_data_t *state_data)
     }
 
   len = strlen (state_data->prog_data->args->oem_options[0]);
-  
+
   for (i = 0; i < ((len - 1) / IPMI_OEM_WISTRON_PROPRIETARY_STRING_BLOCK) + 1; i++)
     {
       bytes_rq[0] = IPMI_CMD_OEM_WISTRON_WRITE_PROPRIETARY_STRING;
@@ -3172,7 +3172,7 @@ ipmi_oem_wistron_write_proprietary_string (ipmi_oem_state_data_t *state_data)
       memcpy (&bytes_rq[3],
               state_data->prog_data->args->oem_options[0] + (i * IPMI_OEM_WISTRON_PROPRIETARY_STRING_BLOCK),
               bytes_rq[2]);
-            
+
       if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                                   0, /* lun */
                                   IPMI_NET_FN_FIRMWARE_RQ, /* network function */
@@ -3187,7 +3187,7 @@ ipmi_oem_wistron_write_proprietary_string (ipmi_oem_state_data_t *state_data)
                            ipmi_ctx_errormsg (state_data->ipmi_ctx));
           goto cleanup;
         }
-      
+
       if (ipmi_oem_check_response_and_completion_code (state_data,
                                                        bytes_rs,
                                                        rs_len,
@@ -3218,7 +3218,7 @@ ipmi_oem_wistron_clear_proprietary_string (ipmi_oem_state_data_t *state_data)
    *
    * 0x08 - network function (firmware)
    * 0x0D - OEM cmd
-   * 
+   *
    * Clear Proprietary String Response
    *
    * 0x0D - cmd
@@ -3286,7 +3286,7 @@ ipmi_oem_wistron_reset_to_defaults (ipmi_oem_state_data_t *state_data)
       goto cleanup;
     }
 
-  /* Wistron/Dell Poweredge C6220 
+  /* Wistron/Dell Poweredge C6220
    *
    * Request Reset To Defaults
    *

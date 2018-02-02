@@ -337,7 +337,7 @@ _read_conffile (ipmidetect_t handle, struct ipmidetect_config *conf)
                        0,
                        0))
     legacy_file_loaded++;
-  
+
   if (!legacy_file_loaded)
     {
       /* IPMIDETECT_CONFIG_FILE_DEFAULT defined in config.h */
@@ -363,7 +363,7 @@ _read_conffile (ipmidetect_t handle, struct ipmidetect_config *conf)
             }
         }
     }
-  
+
   rv = 0;
  cleanup:
   conffile_handle_destroy (cf);

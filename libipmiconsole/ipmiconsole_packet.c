@@ -1070,7 +1070,7 @@ ipmiconsole_ipmi_packet_assemble (ipmiconsole_ctx_t c,
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
           return (-1);
         }
-      
+
       if (managed_system_random_number_len != IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH)
         {
           IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_get_data: invalid managed system random number length: %d", managed_system_random_number_len));

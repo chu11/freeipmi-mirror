@@ -27,11 +27,11 @@ AC_CONFIG_HEADERS([config/config.h])
 dnl define output files
 AC_CONFIG_FILES([
 	freeipmi.spec
-        Makefile 
+        Makefile
         bmc-device/Makefile
         bmc-info/Makefile
-        bmc-watchdog/Makefile 
-        common/Makefile 
+        bmc-watchdog/Makefile
+        common/Makefile
         common/debugutil/Makefile
         common/miscutil/Makefile
         common/parsecommon/Makefile
@@ -39,7 +39,7 @@ AC_CONFIG_FILES([
         common/portability/Makefile
         common/toolcommon/Makefile
         contrib/Makefile
-        doc/Makefile 
+        doc/Makefile
         etc/Makefile
         ipmi-chassis/Makefile
 	ipmi-config/Makefile
@@ -55,11 +55,11 @@ AC_CONFIG_FILES([
         ipmidetect/Makefile
         ipmidetectd/Makefile
         ipmiping/Makefile
-        ipmipower/Makefile 
+        ipmipower/Makefile
         ipmiseld/Makefile
-        libfreeipmi/Makefile 
+        libfreeipmi/Makefile
         libfreeipmi/libfreeipmi.pc
-        libfreeipmi/include/Makefile 
+        libfreeipmi/include/Makefile
         libfreeipmi/include/freeipmi/freeipmi.h
         libipmiconsole/Makefile
         libipmiconsole/ipmiconsole.h
@@ -313,9 +313,9 @@ dnl Turn off all optimizations when debugging
 AC_ARG_ENABLE(debug,
               AC_HELP_STRING([--enable-debug], [turn on debugging]))
 if test "x${enable_debug}" = "xyes"; then
-   if test "$GCC" = "yes" && test "x${enable_profiling}" = "xyes"; then 
+   if test "$GCC" = "yes" && test "x${enable_profiling}" = "xyes"; then
       CFLAGS="$CFLAGS -ggdb -Wall -pg"
-   elif test "$GCC" = "yes" && test "x${enable_profiling}" = "xno"; then 
+   elif test "$GCC" = "yes" && test "x${enable_profiling}" = "xno"; then
       CFLAGS="$CFLAGS -ggdb -Wall"
    elif test "$ac_cv_prog_cc_g" = "yes"; then
       CFLAGS="$CFLAGS -g"
@@ -403,7 +403,7 @@ if test x"${ac_with_encryption}" = xyes; then
   if test "x${have_gcrypt_header}" = "xno"; then
      AC_MSG_ERROR([gcrypt.h not found])
   fi
-  AC_CHECK_DECL([GCRYCTL_SET_THREAD_CBS], 
+  AC_CHECK_DECL([GCRYCTL_SET_THREAD_CBS],
                 [have_gcrypt_threads=yes],
                 [have_gcrypt_threads=no],
                 [#include <gcrypt.h>])
@@ -440,7 +440,7 @@ AC_CHECK_HEADERS([linux/types.h error.h netdb.h sys/io.h sys/sockio.h asm/io.h s
 AC_CHECK_HEADERS([linux/ipmi_msgdefs.h])
 AC_CHECK_HEADERS([linux/compiler.h])
 AC_CHECK_HEADERS([stropts.h sys/stropts.h])
-AC_CHECK_HEADERS([linux/ipmi.h], [], [], 
+AC_CHECK_HEADERS([linux/ipmi.h], [], [],
 [#ifdef HAVE_LINUX_IPMI_MSGDEFS_H
  #include <linux/ipmi_msgdefs.h>
  #endif
@@ -474,7 +474,7 @@ AC_CHECK_TYPES([sighandler_t], [], [], [[#include <signal.h>]])
 
 # At least on freebsd, putc_unlocked is a macro, so the standard
 # AC_CHECK_FUNCS doesn't work well.
-AC_TRY_LINK([#include <stdio.h>], 
+AC_TRY_LINK([#include <stdio.h>],
             [putc_unlocked('x', stdout)],
             [AC_DEFINE_UNQUOTED(HAVE_PUTC_UNLOCKED, [1], [Define to 1 if you have putc_unlocked])])
 
@@ -484,7 +484,7 @@ AC_CHECK_LIB([m], [exp2])
 AC_CHECK_LIB([m], [log2])
 
 dnl Solaris needs -lsocket
-AC_CHECK_FUNC([socket], 
+AC_CHECK_FUNC([socket],
               ,
               AC_CHECK_LIB([socket],
                            [socket]))
@@ -498,12 +498,12 @@ dnl
 dnl See original: http://www.csn.ul.ie/~caolan/publink/gethostbyname_r
 dnl
 
-AC_CHECK_FUNC([gethostbyname_r], 
-              [have_gethostbyname_r=yes], 
+AC_CHECK_FUNC([gethostbyname_r],
+              [have_gethostbyname_r=yes],
               AC_CHECK_LIB([nsl],
                            [gethostbyname_r],
                            [LIBS="$LIBS -lnsl" have_gethostbyname_r=yes],
-                           [have_gethostbyname_r=no]))             
+                           [have_gethostbyname_r=no]))
 
 if test "x${have_gethostbyname_r}" = "xyes"; then
    AC_TRY_LINK(
@@ -581,8 +581,8 @@ else
    AC_MSG_RESULT([no])
 fi
 
-AC_CHECK_FUNC([hstrerror], 
-              [have_hstrerror=yes], 
+AC_CHECK_FUNC([hstrerror],
+              [have_hstrerror=yes],
               AC_CHECK_LIB([nsl],
                            [hstrerror],
                            [have_hstrerror=yes],
@@ -621,7 +621,7 @@ if test "x${have_getpwuid_r}" = "xyes"; then
         int bufsize;
         (void) getpwuid_r (uid, &pwd, buffer, bufsize);
    ],
-   [ac_cv_func_which_getpwuid_r=four], 
+   [ac_cv_func_which_getpwuid_r=four],
         [ac_cv_func_which_getpwuid_r=no])
    ])
 
@@ -645,15 +645,15 @@ dnl strndup() will be detected, which is wrong. So place argp check _after_
 dnl strndup() check.
 dnl
 dnl Solaris has no argp library
-AC_CHECK_FUNC([argp_parse], 
+AC_CHECK_FUNC([argp_parse],
               [have_argp=yes],
-              AC_CHECK_LIB([argp], 
-                           [argp_parse], 
+              AC_CHECK_LIB([argp],
+                           [argp_parse],
                            [have_argp=yes; LIBS="-largp $LIBS"],
                            [have_argp=no]))
 
 if test "x$have_argp" = "xyes"; then
-   AC_CHECK_HEADER([argp.h], 
+   AC_CHECK_HEADER([argp.h],
          AC_DEFINE([HAVE_ARGP_H], [1], [Define if you have argp.h]),
                    AC_MSG_ERROR([argp header cannot be found]))
 else

@@ -5,7 +5,7 @@ bmc-device \- perform advanced BMC commands
 .B bmc-device
 [\fIOPTION\fR...]
 .SH "DESCRIPTION"
-.B bmc-device 
+.B bmc-device
 supports a variety of IPMI commands to perform advanced BMC functions.
 This tool is primarily used for development debugging, BMC error
 recovery, retrieving detailed technical information, and other advanced
@@ -48,7 +48,7 @@ Output BMC self test results.
 Get ACPI system and device power state.
 .TP
 \fB\-\-set\-acpi\-power\-state\fR
-Set ACPI power state.  Must be specified to use the 
+Set ACPI power state.  Must be specified to use the
 \fB\-\-set\-acpi\-system\-power\-state\fR,
 and
 \fB\-\-set\-acpi\-device\-power\-state\fR
@@ -104,7 +104,7 @@ Get SEL time UTC offset.
 \fB\-\-set\-sel\-time\-utc\-offset\fR=\fIMINUTES\fR
 Set SEL time UTC offset.  Input is in minutes difference from UTC
 time, ranging from -1440 to 1440 minutes.  A special case value of
-"none" can be specified so no UTC offset is specified. 
+"none" can be specified so no UTC offset is specified.
 .TP
 \fB\-\-platform\-event\fR=\fI"[generator_id] <event_message_format_version> <sensor_type> <sensor_number> <event_type> <event_direction> <event_data1> <event_data2> <event_data3>"\fR
 Instruct the BMC to process the specified event data.  Typically, this
@@ -231,7 +231,7 @@ Perform a cold reset across a cluster using IPMI over LAN.
 #include <@top_srcdir@/man/manpage-common-known-issues.man>
 #include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
 .SH "COPYRIGHT"
-Copyright \(co 2008-2015 FreeIPMI Core Team.  
+Copyright \(co 2008-2015 FreeIPMI Core Team.
 #include <@top_srcdir@/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
 freeipmi.conf(5), freeipmi(7)

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2008-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -73,9 +73,9 @@
  * 0x08 - network function
  * 0x02 - OEM cmd
  * 0x?? - task ID
- * 
+ *
  * Get Update Status Response
- *      
+ *
  * 0x08 - network function
  * 0x02 - OEM cmd
  * 0x?? - completion code
@@ -193,7 +193,7 @@ ipmi_oem_quanta_set_bmc_services (ipmi_oem_state_data_t *state_data)
 {
   assert (state_data);
   assert (state_data->prog_data->args->oem_options_count == 2);
-  
+
   return (ipmi_oem_thirdparty_set_bmc_services_v1 (state_data));
 }
 
@@ -473,7 +473,7 @@ ipmi_oem_quanta_get_processor_information (ipmi_oem_state_data_t *state_data)
    * 0x30 - OEM network function
    * 0x18 - OEM cmd
    * 0x?? - Processor Index, 1 based
-   * 
+   *
    * Response Get Processor Information
    *
    * 0x18 - OEM cmd
@@ -483,7 +483,7 @@ ipmi_oem_quanta_get_processor_information (ipmi_oem_state_data_t *state_data)
    */
 
   assert (state_data);
-  
+
   if (state_data->prog_data->args->oem_options_count > 1)
     {
       pstdout_fprintf (state_data->pstate,
@@ -512,7 +512,7 @@ ipmi_oem_quanta_get_processor_information (ipmi_oem_state_data_t *state_data)
                            state_data->prog_data->args->oem_options[0]);
           goto cleanup;
         }
-      
+
       processor_index_init = temp;
 
       processor_index_max = processor_index_init;
@@ -620,7 +620,7 @@ ipmi_oem_quanta_get_processor_information (ipmi_oem_state_data_t *state_data)
             default:
               processor_type_str = "Unknown Processor";
             }
-          
+
           pstdout_printf (state_data->pstate,
                           "Processor %u: %s %.2f Ghz\n",
                           processor_index,
@@ -666,7 +666,7 @@ _ipmi_oem_quanta_read_mac_address_s99q (ipmi_oem_state_data_t *state_data)
    * byte 2 = 0xAA (slave address 7 bit = 0x55, lowest bit for r/w, 0b = read, 1b = write)
    * byte 3 = 0x0C - read count
    * byte 4/5 - 0x0000 - address to read, msb first
-   * 
+   *
    * response
    *
    * byte 1 = comp-code
@@ -757,7 +757,7 @@ ipmi_oem_quanta_read_mac_address (ipmi_oem_state_data_t *state_data)
 
   if (!strcasecmp (state_data->prog_data->args->oem_options[0], "s99q"))
     return _ipmi_oem_quanta_read_mac_address_s99q (state_data);
-  
+
   pstdout_fprintf (state_data->pstate,
                    stderr,
                    "%s:%s invalid OEM option argument '%s'\n",
@@ -789,7 +789,7 @@ _ipmi_oem_quanta_write_mac_address_s99q (ipmi_oem_state_data_t *state_data)
                        state_data->prog_data->args->oem_options[1]);
       goto cleanup;
     }
-  
+
   if (sscanf (state_data->prog_data->args->oem_options[2],
               "%02x:%02x:%02x:%02x:%02x:%02x",
               &b1,
@@ -818,7 +818,7 @@ _ipmi_oem_quanta_write_mac_address_s99q (ipmi_oem_state_data_t *state_data)
    * byte 4/5 - 0x0000 | 0x0006 - address to read, msb first
    *          - 0x0000 for dedicated
    *          - 0x0006 for shared
-   * 
+   *
    * response
    *
    * byte 1 = comp-code
@@ -882,7 +882,7 @@ ipmi_oem_quanta_write_mac_address (ipmi_oem_state_data_t *state_data)
 
   if (!strcasecmp (state_data->prog_data->args->oem_options[0], "s99q"))
     return _ipmi_oem_quanta_write_mac_address_s99q (state_data);
-  
+
   pstdout_fprintf (state_data->pstate,
                    stderr,
                    "%s:%s invalid OEM option argument '%s'\n",

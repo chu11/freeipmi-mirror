@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_CMD_OEM_SUPERMICRO_SPEC_H
@@ -22,7 +22,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
- 
+
 /*
  * Supermicro H8QME
  */
@@ -36,7 +36,7 @@ extern "C" {
  */
 
 /* achu: not official names, named based on use context */
-#define IPMI_CMD_OEM_SUPERMICRO_GENERIC_EXTENSION   0x70 
+#define IPMI_CMD_OEM_SUPERMICRO_GENERIC_EXTENSION   0x70
 
 #ifdef __cplusplus
 }

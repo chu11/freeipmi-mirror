@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -2269,7 +2269,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       ERR_TRACE ("malformed packet", EINVAL);
       return (0);
     }
-  
+
 #if 0
   /*
    * Extract OEM IANA and OEM Payload ID
@@ -2603,7 +2603,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
     }
 
   if (payload_type == IPMI_PAYLOAD_TYPE_IPMI)
-    {  
+    {
       if (FIID_OBJ_PACKET_VALID (obj_rmcp_hdr) == 1
           && FIID_OBJ_PACKET_VALID (obj_rmcpplus_session_hdr) == 1
           && FIID_OBJ_PACKET_VALID (obj_rmcpplus_payload) == 1
@@ -2614,7 +2614,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
               || FIID_OBJ_PACKET_VALID (obj_rmcpplus_session_trlr) == 1))
         return (1);
     }
-  else 
+  else
     {
       if (FIID_OBJ_PACKET_VALID (obj_rmcp_hdr) == 1
           && FIID_OBJ_PACKET_VALID (obj_rmcpplus_session_hdr) == 1
@@ -2641,7 +2641,7 @@ ipmi_rmcpplus_sendto (int s,
    */
   return (ipmi_network_sendto (s, buf, len, flags, to, tolen));
 }
- 
+
 ssize_t
 ipmi_rmcpplus_recvfrom (int s,
                         void *buf,

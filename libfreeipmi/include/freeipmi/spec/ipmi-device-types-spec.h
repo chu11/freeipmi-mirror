@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_DEVICE_TYPES_SPEC_H
@@ -25,7 +25,7 @@ extern "C" {
 
 /* Note that the macros are not in sequential order, per spec table 43-12 */
 
-#define IPMI_DEVICE_TYPE_DS1624_TEMPERATURE_SENSOR_EEPROM_OR_EQUIVALENT               0x02  
+#define IPMI_DEVICE_TYPE_DS1624_TEMPERATURE_SENSOR_EEPROM_OR_EQUIVALENT               0x02
 #define IPMI_DEVICE_TYPE_DS1621_TEMPERATURE_SENSOR_OR_EQUIVALENT                      0x03
 #define IPMI_DEVICE_TYPE_LM75_TEMPERATURE_SENSOR_OR_EQUIVALENT                        0x04
 #define IPMI_DEVICE_TYPE_HECETA_ASIC_OR_SIMILAR                                       0x05

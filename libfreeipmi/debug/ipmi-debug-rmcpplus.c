@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -160,7 +160,7 @@ _dump_rmcpplus_session_hdr (int fd,
       goto cleanup;
     }
   (*payload_encrypted) = val;
-  
+
   if (FIID_OBJ_GET (obj_rmcpplus_session_hdr,
                     "session_id",
                     &val) < 0)
@@ -290,15 +290,15 @@ _dump_rmcpplus_payload_data (int fd,
 
       if ((ipmi_payload_len - indx) <= obj_lan_msg_trlr_len)
         goto dump_payload_extra;
-      
+
       obj_cmd_len = (ipmi_payload_len - indx) - obj_lan_msg_trlr_len;
-      
+
       if (!(obj_cmd = fiid_obj_create (tmpl_cmd)))
         {
           ERRNO_TRACE (errno);
           goto cleanup;
         }
-      
+
       if ((len = fiid_obj_set_all (obj_cmd,
                                    pkt + indx,
                                    obj_cmd_len)) < 0)
@@ -318,7 +318,7 @@ _dump_rmcpplus_payload_data (int fd,
               FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
               goto cleanup;
             }
-          
+
           if (fiid_obj_clear_field (obj_cmd, "message_data") < 0)
             {
               FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
@@ -335,7 +335,7 @@ _dump_rmcpplus_payload_data (int fd,
           ERRNO_TRACE (errno);
           goto cleanup;
         }
-      
+
       if (tmpl_ipmb_msg_hdr && tmpl_ipmb_cmd && ipmb_buf_len)
         {
           if (debug_dump_ipmb (fd,
@@ -352,15 +352,15 @@ _dump_rmcpplus_payload_data (int fd,
           rv = 0;
           goto cleanup;
         }
-          
+
       /* Dump trailer */
-      
+
       if (!(obj_lan_msg_trlr = fiid_obj_create (tmpl_lan_msg_trlr)))
         {
           ERRNO_TRACE (errno);
           goto cleanup;
         }
-          
+
       if ((len = fiid_obj_set_all (obj_lan_msg_trlr,
                                    pkt + indx,
                                    ipmi_payload_len - indx)) < 0)
@@ -369,7 +369,7 @@ _dump_rmcpplus_payload_data (int fd,
           goto cleanup;
         }
       indx += len;
-      
+
       if (ipmi_obj_dump (fd,
                          prefix,
                          trailer_hdr,
@@ -622,7 +622,7 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128 (int fd,
       rv = 0;
       goto cleanup;
     }
-  
+
   payload_data_len = ipmi_payload_len - IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH;
 
   if (!payload_data_len)

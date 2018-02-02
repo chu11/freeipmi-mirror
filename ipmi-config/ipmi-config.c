@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -177,7 +177,7 @@ _ipmi_config (pstdout_state_t pstate,
     }
 
   assert (state_data.sections);
-  
+
   if (prog_data->args->action == IPMI_CONFIG_ACTION_CHECKOUT)
     {
       if (prog_data->args->filename)
@@ -232,7 +232,7 @@ _ipmi_config (pstdout_state_t pstate,
       if (ipmi_config_parse (&state_data, fp) < 0)
         goto cleanup;
     }
-  
+
   /* note: argp validation catches if user specified keypair and
      filename for a diff
   */
@@ -292,7 +292,7 @@ _ipmi_config (pstdout_state_t pstate,
         {
           struct ipmi_config_section *section;
           unsigned int user_count = 0;
-          
+
           /* First, see how many user sections there are */
           section = state_data.sections;
           while (section)
@@ -306,18 +306,18 @@ _ipmi_config (pstdout_state_t pstate,
             {
               unsigned int enable_user_found = 0;
               unsigned int datasize;
-              
+
               section = state_data.sections;
               while (section)
                 {
                   struct ipmi_config_keyvalue *kv;
-                  
+
                   if (stristr (section->section_name, "User"))
                     {
                       uint8_t userid;
 
                       userid = atoi (section->section_name + strlen ("User"));
-                      
+
                       if (userid < user_count)
                         {
                           if ((kv = ipmi_config_find_keyvalue (section,
@@ -325,14 +325,14 @@ _ipmi_config (pstdout_state_t pstate,
                             enable_user_found = 1;
                         }
                     }
-                  
+
                   section = section->next;
                 }
-              
+
               if (enable_user_found)
                 {
                   datasize = sizeof (ipmi_config_enable_user_after_password_t) * user_count;
-                  
+
                   if (!(state_data.enable_user_after_password = (ipmi_config_enable_user_after_password_t *)malloc (datasize)))
                     {
                       pstdout_perror (pstate, "malloc");
@@ -352,7 +352,7 @@ _ipmi_config (pstdout_state_t pstate,
           && prog_data->hosts_count > 1)
         {
           struct ipmi_config_section *section;
-          
+
           if ((section = ipmi_config_find_section (&state_data, "Lan_Conf")))
             {
               if (ipmi_config_find_keyvalue (section,
@@ -363,7 +363,7 @@ _ipmi_config (pstdout_state_t pstate,
                                    "Cannot configure Lan_Conf:IP_Address on multiple hosts\n");
                   goto cleanup;
                 }
-              
+
               if (ipmi_config_find_keyvalue (section,
                                              "MAC_Address"))
                 {
@@ -398,21 +398,21 @@ _ipmi_config (pstdout_state_t pstate,
                       state_data.front_panel_enable_standby_button_for_entering_standby_initialized++;
                       state_data.front_panel_enable_standby_button_for_entering_standby = same (kv->value_input, "yes") ? IPMI_CHASSIS_BUTTON_ENABLE : IPMI_CHASSIS_BUTTON_DISABLE;
                     }
-                  
+
                   if ((kv = ipmi_config_find_keyvalue (section,
                                                        "Enable_Diagnostic_Interrupt_Button")))
                     {
                       state_data.front_panel_enable_diagnostic_interrupt_button_initialized++;
                       state_data.front_panel_enable_diagnostic_interrupt_button = same (kv->value_input, "yes") ? IPMI_CHASSIS_BUTTON_ENABLE : IPMI_CHASSIS_BUTTON_DISABLE;
                     }
-                  
+
                   if ((kv = ipmi_config_find_keyvalue (section,
                                                        "Enable_Reset_Button")))
                     {
                       state_data.front_panel_enable_reset_button_initialized++;
                       state_data.front_panel_enable_reset_button = same (kv->value_input, "yes") ? IPMI_CHASSIS_BUTTON_ENABLE : IPMI_CHASSIS_BUTTON_DISABLE;
                     }
-                  
+
                   if ((kv = ipmi_config_find_keyvalue (section,
                                                        "Enable_Power_Off_Button_For_Power_Off_Only")))
                     {
@@ -437,7 +437,7 @@ _ipmi_config (pstdout_state_t pstate,
       if (prog_data->args->section_strs)
         {
           struct ipmi_config_section_str *sstr;
-          
+
           /* note: argp validation catches if user specified --section
            * and --keypair, so all_keys_if_none_specified should be '1'.
            */

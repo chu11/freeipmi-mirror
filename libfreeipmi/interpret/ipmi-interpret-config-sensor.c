@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 /*****************************************************************************\
  *  Copyright (C) 2007-2015 Lawrence Livermore National Security, LLC.
@@ -969,13 +969,13 @@ _interpret_sensor_oem_config_create (ipmi_interpret_ctx_t ctx,
     }
 
   memset (tmp_oem_conf, '\0', sizeof (struct ipmi_interpret_sensor_oem_config));
-  
+
   memcpy (tmp_oem_conf->key, keybuf, IPMI_OEM_HASH_KEY_BUFLEN);
   tmp_oem_conf->manufacturer_id = manufacturer_id;
   tmp_oem_conf->product_id = product_id;
   tmp_oem_conf->event_reading_type_code = event_reading_type_code;
   tmp_oem_conf->sensor_type = sensor_type;
-  
+
   if (!hash_insert (ctx->interpret_sensor.sensor_oem_config,
                     tmp_oem_conf->key,
                     tmp_oem_conf))
@@ -983,7 +983,7 @@ _interpret_sensor_oem_config_create (ipmi_interpret_ctx_t ctx,
       INTERPRET_SET_ERRNUM (ctx, IPMI_INTERPRET_ERR_INTERNAL_ERROR);
       goto cleanup;
     }
-  
+
   (*oem_conf) = tmp_oem_conf;
   rv = 0;
  cleanup:
@@ -1016,7 +1016,7 @@ _interpret_sensor_oem_dell_power_optimized (ipmi_interpret_ctx_t ctx)
    * Bitmask 0x0040 = "Halted, system power exceeds capacity"
    * Bitmask 0x0080 = "Degraded, system power exceeds capacity"
    */
-  
+
   if (_interpret_sensor_oem_config_create (ctx,
                                            IPMI_IANA_ENTERPRISE_ID_DELL,
                                            IPMI_DELL_PRODUCT_ID_POWEREDGE_R610,
@@ -1091,7 +1091,7 @@ _interpret_sensor_oem_dell_module_board_status (ipmi_interpret_ctx_t ctx)
    * Bitmask 0x0080 = "Booting"
    * Bitmask 0x0100 = "Write protected"
    */
-  
+
   if (_interpret_sensor_oem_config_create (ctx,
                                            IPMI_IANA_ENTERPRISE_ID_DELL,
                                            IPMI_DELL_PRODUCT_ID_POWEREDGE_R610,
@@ -1211,7 +1211,7 @@ _interpret_sensor_oem_supermicro_discrete_cpu_temp (ipmi_interpret_ctx_t ctx)
   assert (ctx);
   assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
   assert (ctx->interpret_sensor.sensor_oem_config);
-  
+
   /* Supermicro CPU Temperature Sensor
    * X7DBR-3/X7DB8/X8DTN/X7SBI-LN4/X8DTH/X8DTG/X8DTU/X8DT3-LN4F/X8DTU-6+/X8DTL/X8DTL-3F
    * X8SIL-F/X9SCL/X9SCM/X8DTN+-F/X8SIE/X9SCA-F-O/H8DGU-F/X9DRi-F/X9DRI-LN4F+/X9SPU-F-O/X9SCM-iiF/H8SGL-F
@@ -1267,17 +1267,17 @@ _interpret_sensor_oem_supermicro_discrete_cpu_temp (ipmi_interpret_ctx_t ctx)
                                                                   IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
                                                                   IPMI_SUPERMICRO_PRODUCT_ID_X8DT_BASE) < 0)
     return (-1);
-  
+
   if (_interpret_sensor_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
                                                                   IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
                                                                   IPMI_SUPERMICRO_PRODUCT_ID_X8DTU_6PLUS) < 0)
     return (-1);
-  
+
   if (_interpret_sensor_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
                                                                   IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
                                                                   IPMI_SUPERMICRO_PRODUCT_ID_X8DTL_BASE) < 0)
     return (-1);
-  
+
   if (_interpret_sensor_oem_supermicro_discrete_cpu_temp_wrapper (ctx,
                                                                   IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND,
                                                                   IPMI_SUPERMICRO_PRODUCT_ID_X8SIL_F) < 0)
@@ -1362,7 +1362,7 @@ _interpret_sensor_oem_intel_smi_timeout_power_throttled_wrapper (ipmi_interpret_
                                            IPMI_SENSOR_TYPE_OEM_INTEL_SMI_TIMEOUT,
                                            &oem_conf) < 0)
     return (-1);
-  
+
   oem_conf->oem_state[0].sensor_event_bitmask = 0;
   oem_conf->oem_state[0].sensor_state = IPMI_INTERPRET_STATE_NOMINAL;
   oem_conf->oem_state[0].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
@@ -1376,10 +1376,10 @@ _interpret_sensor_oem_intel_smi_timeout_power_throttled_wrapper (ipmi_interpret_
   oem_conf->oem_state[2].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
 
   oem_conf->oem_state_count = 3;
-  
+
   return (0);
 }
-                                                 
+
 
 static int
 _interpret_sensor_oem_intel_smi_timeout_power_throttled (ipmi_interpret_ctx_t ctx)
@@ -1406,7 +1406,7 @@ _interpret_sensor_oem_intel_smi_timeout_power_throttled (ipmi_interpret_ctx_t ct
    * Bitmask 0x0001 = "State Deasserted"
    * Bitmask 0x0002 = "State Asserted"
    */
-  
+
   /* From Intel
    *
    * The BMC supports an SMI timeout sensor (sensor type OEM (F3h),
@@ -1460,7 +1460,7 @@ _interpret_sensor_oem_intel_nmi_state_wrapper (ipmi_interpret_ctx_t ctx,
                                            IPMI_SENSOR_TYPE_OEM_INTEL_NMI_STATE,
                                            &oem_conf) < 0)
     return (-1);
-  
+
   oem_conf->oem_state[0].sensor_event_bitmask = 0;
   oem_conf->oem_state[0].sensor_state = IPMI_INTERPRET_STATE_NOMINAL;
   oem_conf->oem_state[0].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
@@ -1468,13 +1468,13 @@ _interpret_sensor_oem_intel_nmi_state_wrapper (ipmi_interpret_ctx_t ctx,
   oem_conf->oem_state[1].sensor_event_bitmask = (0x1 << IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_DEASSERTED);
   oem_conf->oem_state[1].sensor_state = IPMI_INTERPRET_STATE_NOMINAL;
   oem_conf->oem_state[1].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
-  
+
   oem_conf->oem_state[2].sensor_event_bitmask = (0x1 << IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED);
   oem_conf->oem_state[2].sensor_state = IPMI_INTERPRET_STATE_CRITICAL;
   oem_conf->oem_state[2].oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
 
   oem_conf->oem_state_count = 3;
-  
+
   return (0);
 }
 
@@ -1501,7 +1501,7 @@ _interpret_sensor_oem_intel_nmi_state (ipmi_interpret_ctx_t ctx)
                                                      IPMI_IANA_ENTERPRISE_ID_INTEL,
                                                      IPMI_INTEL_PRODUCT_ID_S5000PAL) < 0)
     return (-1);
-  
+
   return (0);
 }
 
@@ -2292,7 +2292,7 @@ _cb_sensor_oem_parse (conffile_t cf,
         conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_TOOMANY);
       return (-1);
     }
-  
+
   if (interpret_config_parse_manufactuer_id_product_id (cf,
                                                         data->stringlist[0],
                                                         ids,
@@ -2312,7 +2312,7 @@ _cb_sensor_oem_parse (conffile_t cf,
                                       &tmp) < 0)
     return (-1);
   sensor_type = tmp;
-  
+
   /* achu: sensor event bitmask bit 16 not legal, but we will allow it
    * b/c perhaps some OEM sensors will break legality of events, or
    * perhaps there is a bug and some vendors need to have the 16th bit
@@ -2327,7 +2327,7 @@ _cb_sensor_oem_parse (conffile_t cf,
 
   if ((sensor_state = interpret_config_parse_state (cf, data->stringlist[4])) < 0)
     return (-1);
-  
+
   if (!strcasecmp (optionname, "IPMI_OEM_Bitmask"))
     oem_state_type = IPMI_OEM_STATE_TYPE_BITMASK;
   else if (!strcasecmp (optionname, "IPMI_OEM_Value"))
@@ -2337,7 +2337,7 @@ _cb_sensor_oem_parse (conffile_t cf,
       conffile_seterrnum (cf, CONFFILE_ERR_INTERNAL);
       return (-1);
     }
-  
+
   for (i = 0; i < ids_count; i++)
     {
       for (j = 0; j < ids[i].product_ids_count; j++)
@@ -2349,7 +2349,7 @@ _cb_sensor_oem_parse (conffile_t cf,
                     ids[i].product_ids[j],
                     event_reading_type_code,
                     sensor_type);
-      
+
           if (!(oem_conf = hash_find ((*h), keybuf)))
             {
               if (!(oem_conf = (struct ipmi_interpret_sensor_oem_config *)malloc (sizeof (struct ipmi_interpret_sensor_oem_config))))
@@ -2358,13 +2358,13 @@ _cb_sensor_oem_parse (conffile_t cf,
                   return (-1);
                 }
               memset (oem_conf, '\0', sizeof (struct ipmi_interpret_sensor_oem_config));
-              
+
               memcpy (oem_conf->key, keybuf, IPMI_OEM_HASH_KEY_BUFLEN);
               oem_conf->manufacturer_id = ids[i].manufacturer_id;
               oem_conf->product_id = ids[i].product_ids[j];
               oem_conf->event_reading_type_code = event_reading_type_code;
               oem_conf->sensor_type = sensor_type;
-              
+
               if (!hash_insert ((*h), oem_conf->key, oem_conf))
                 {
                   conffile_seterrnum (cf, CONFFILE_ERR_INTERNAL);
@@ -2372,13 +2372,13 @@ _cb_sensor_oem_parse (conffile_t cf,
                   return (-1);
                 }
             }
-          
+
           if (oem_conf->oem_state_count >= IPMI_INTERPRET_MAX_BITMASKS)
             {
               conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_TOOMANY);
               return (-1);
             }
-      
+
           /* check for duplicates */
           for (k = 0; k < oem_conf->oem_state_count; k++)
             {
@@ -2390,7 +2390,7 @@ _cb_sensor_oem_parse (conffile_t cf,
                   break;
                 }
             }
-      
+
           if (!found)
             {
               oem_conf->oem_state[oem_conf->oem_state_count].sensor_event_bitmask = sensor_event_bitmask;
@@ -2412,7 +2412,7 @@ _fill_sensor_config_options (struct conffile_option *to_options,
                              unsigned int from_config_len)
 {
   unsigned int i;
-    
+
   assert (to_options
           && to_options_len
           && from_config
@@ -2983,17 +2983,17 @@ interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
               goto cleanup;
             }
         }
-      
+
       if (CONFFILE_IS_PARSE_ERR (conffile_errnum (cf)))
         INTERPRET_SET_ERRNUM (ctx, IPMI_INTERPRET_ERR_SENSOR_CONFIG_FILE_PARSE);
       else if (conffile_errnum (cf) == CONFFILE_ERR_OUTMEM)
         INTERPRET_SET_ERRNUM (ctx, IPMI_INTERPRET_ERR_OUT_OF_MEMORY);
       else
         INTERPRET_SET_ERRNUM (ctx, IPMI_INTERPRET_ERR_INTERNAL_ERROR);
-      
+
       goto cleanup;
     }
-  
+
   rv = 0;
  cleanup:
   conffile_handle_destroy (cf);

@@ -369,7 +369,7 @@ md5_finish (md5_t *ctx, void *digest, unsigned int digestlen)
   /* Note there are no endian issues here, compiler is required to
    * handle bitmasks and shifts correctly
    */
-  
+
   buf[0]  = (A & 0x000000ff);
   buf[1]  = (A & 0x0000ff00) >> 8;
   buf[2]  = (A & 0x00ff0000) >> 16;

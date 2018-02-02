@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -309,7 +309,7 @@ _read_date_range (int *flag,
       perror ("strdup");
       exit (EXIT_FAILURE);
     }
-  
+
   /* Count number of dashes, to see what format user input */
   ptr = range_str;
   do {
@@ -484,7 +484,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   int value;
 
   assert (state);
-  
+
   cmd_args = state->input;
 
   switch (key)
@@ -551,7 +551,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case TAIL_KEY:
       errno = 0;
       value = strtol (arg, &endptr, 10);
-      
+
       if (errno
           || endptr[0] != '\0'
           || value <= 0
@@ -739,7 +739,7 @@ _ipmi_sel_args_validate (struct ipmi_sel_arguments *cmd_args)
                               cmd_args->sensor_types_length) < 0)
         exit (EXIT_FAILURE);
     }
-  
+
   if (cmd_args->exclude_sensor_types_length)
     {
       if (valid_sensor_types (cmd_args->exclude_sensor_types,

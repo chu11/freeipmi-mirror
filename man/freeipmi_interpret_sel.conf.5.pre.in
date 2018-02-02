@@ -8,9 +8,9 @@ defines how IPMI system event log entries should be
 interpreted.  IPMI system events specify a number of
 states/thresholds when they are read.  Based on those
 states/thresholds, libraries and tools such as
-.B libipmimonitoring(3) 
+.B libipmimonitoring(3)
 and
-.B ipmi-sel(8) 
+.B ipmi-sel(8)
 can report if an event is "good" or "bad" via a report of a NOMINAL,
 WARNING, or CRITICAL state.  A different state can be reported for an
 event depending on if it is asserted or deasserted.
@@ -19,8 +19,8 @@ Each of the states listed below are (hopefully) descriptive enough
 to describe the state conditions that may be set/unset for each
 sensor or event type.  For more detailed information on each of the
 individual states listed below, please see the IPMI Specification
-"Sensor and Event Code Tables". 
-.B Ipmi-sensors(8) 
+"Sensor and Event Code Tables".
+.B Ipmi-sensors(8)
 can be used to determine the sensor types and the states/thresholds
 that exist on a system by outputting very verbose output and seeing
 what types of Assertion or Deassertion events are possible.

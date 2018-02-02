@@ -46,7 +46,7 @@ SOLSession [label="SOL Session"]
 
 DeactivatePayload [label="Deactivate Payload"]
 
-CloseSession [label="Close Session"] 
+CloseSession [label="Close Session"]
 
 ErrorOut [label="Error Out"]
 
@@ -106,6 +106,6 @@ DeactivatePayload -> CloseSession [label="Quit SOL Session / SOL on Different Po
 
 CloseSession -> GetAuthenticationCapabilities [label="SOL on Different Port (change IPMI Port)"]
 
-CloseSession -> End [label="Quit SOL Session / SOL Session Stolen"] 
+CloseSession -> End [label="Quit SOL Session / SOL Session Stolen"]
 
 }

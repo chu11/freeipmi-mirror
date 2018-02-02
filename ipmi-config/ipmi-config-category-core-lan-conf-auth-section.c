@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -82,11 +82,11 @@ _get_authentication_type_support (ipmi_config_state_data_t *state_data,
       rv = ret;
       goto cleanup;
     }
-  
+
   if (state_data->authentication_type_initialized
       && state_data->authentication_type_channel_number == channel_number)
     goto out;
-  
+
   state_data->authentication_type_initialized = 0;
   state_data->authentication_type_channel_number = 0;
 
@@ -564,7 +564,7 @@ _set_authentication_type_enables (ipmi_config_state_data_t *state_data,
         {
           struct ipmi_config_section *section;
           struct ipmi_config_keyvalue *kv;
-          
+
           section = state_data->sections;
           while (section)
             {
@@ -572,47 +572,47 @@ _set_authentication_type_enables (ipmi_config_state_data_t *state_data,
                 break;
               section = section->next;
             }
-          
+
           /* shouldn't be possible */
           if (!section)
             goto cleanup;
-          
+
           if ((kv = ipmi_config_find_keyvalue (section,
                                                "Callback_Enable_Auth_Type_OEM_Proprietary")))
             al->callback_level_oem_proprietary = same (kv->value_input, "yes");
-          
+
           if ((kv = ipmi_config_find_keyvalue (section,
                                                "User_Enable_Auth_Type_OEM_Proprietary")))
             al->user_level_oem_proprietary = same (kv->value_input, "yes");
-          
+
           if ((kv = ipmi_config_find_keyvalue (section,
                                                "Operator_Enable_Auth_Type_OEM_Proprietary")))
             al->operator_level_oem_proprietary = same (kv->value_input, "yes");
-          
+
           if ((kv = ipmi_config_find_keyvalue (section,
                                                "Admin_Enable_Auth_Type_OEM_Proprietary")))
             al->admin_level_oem_proprietary = same (kv->value_input, "yes");
-          
+
           if ((kv = ipmi_config_find_keyvalue (section,
                                                "OEM_Enable_Auth_Type_None")))
             al->oem_level_none = same (kv->value_input, "yes");
-          
+
           if ((kv = ipmi_config_find_keyvalue (section,
                                                "OEM_Enable_Auth_Type_MD2")))
             al->oem_level_md2 = same (kv->value_input, "yes");
-          
+
           if ((kv = ipmi_config_find_keyvalue (section,
                                                "OEM_Enable_Auth_Type_MD5")))
             al->oem_level_md5 = same (kv->value_input, "yes");
-          
+
           if ((kv = ipmi_config_find_keyvalue (section,
                                                "OEM_Enable_Auth_Type_Straight_Password")))
             al->oem_level_straight_password = same (kv->value_input, "yes");
-          
+
           if ((kv = ipmi_config_find_keyvalue (section,
                                                "OEM_Enable_Auth_Type_OEM_Proprietary")))
             al->oem_level_oem_proprietary = same (kv->value_input, "yes");
-          
+
           if (ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables (state_data->ipmi_ctx,
                                                                                      channel_number,
                                                                                      al->callback_level_none,
@@ -646,7 +646,7 @@ _set_authentication_type_enables (ipmi_config_state_data_t *state_data,
                                                          obj_cmd_rs,
                                                          &ret))
                 rv = ret;
-              
+
               if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
                   || state_data->prog_data->args->common_args.debug)
                 pstdout_fprintf (state_data->pstate,
@@ -656,7 +656,7 @@ _set_authentication_type_enables (ipmi_config_state_data_t *state_data,
 
               goto cleanup;
             }
-          
+
           /* success!! */
           goto out;
         }

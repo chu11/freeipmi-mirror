@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2008-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -166,7 +166,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   int tmp;
 
   assert (state);
-  
+
   cmd_args = state->input;
 
   switch (key)
@@ -343,7 +343,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           fprintf (stderr, "invalid device id\n");
           exit (EXIT_FAILURE);
         }
-      
+
       if (tmp == IPMI_FRU_DEVICE_ID_RESERVED
           || tmp < IPMI_FRU_DEVICE_ID_MIN
           || tmp > IPMI_FRU_DEVICE_ID_MAX)
@@ -465,7 +465,7 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
                "Multiple commands specified.\n");
       exit (EXIT_FAILURE);
     }
-  
+
   if (cmd_args->set_acpi_power_state
       && (cmd_args->set_acpi_power_state_args.system_power_state == IPMI_ACPI_SYSTEM_POWER_STATE_NO_CHANGE
           && cmd_args->set_acpi_power_state_args.device_power_state == IPMI_ACPI_DEVICE_POWER_STATE_NO_CHANGE))
@@ -482,7 +482,7 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
                "system firmware version string too long\n");
       exit (EXIT_FAILURE);
     }
-  
+
   if (cmd_args->set_system_name
       && strlen (cmd_args->set_system_name_arg) > IPMI_SYSTEM_INFO_STRING_LEN_MAX)
     {
@@ -490,7 +490,7 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
                "system name string too long\n");
       exit (EXIT_FAILURE);
     }
-  
+
   if (cmd_args->set_primary_operating_system_name
       && strlen (cmd_args->set_primary_operating_system_name_arg) > IPMI_SYSTEM_INFO_STRING_LEN_MAX)
     {
@@ -498,7 +498,7 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
                "primary operating system name string too long\n");
       exit (EXIT_FAILURE);
     }
-  
+
   if (cmd_args->set_operating_system_name
       && strlen (cmd_args->set_operating_system_name_arg) > IPMI_SYSTEM_INFO_STRING_LEN_MAX)
     {

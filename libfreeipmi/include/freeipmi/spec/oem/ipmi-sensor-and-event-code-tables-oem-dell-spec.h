@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_SENSOR_AND_EVENT_CODE_TABLES_OEM_DELL_SPEC_H
@@ -24,7 +24,7 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-  
+
 /*
  * Dell Poweredge R610
  * Dell Poweredge R710
@@ -132,8 +132,8 @@ extern unsigned int ipmi_sensor_type_oem_dell_upgrade_max_index;
 #define IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA3_OEM_DELL_OFFSET_CONFIGURATION_ERROR_WATTS_BITMASK 0xF0
 #define IPMI_SENSOR_TYPE_POWER_SUPPLY_EVENT_DATA3_OEM_DELL_OFFSET_CONFIGURATION_ERROR_WATTS_SHIFT   4
 
-#define IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_SPARE_MODE_BITMASK  0x1    
-#define IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_RAID_MODE_BITMASK   0x2   
+#define IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_SPARE_MODE_BITMASK  0x1
+#define IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_RAID_MODE_BITMASK   0x2
 #define IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_MIRROR_MODE_BITMASK 0x4
 
 #define IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_MEMORY_CARD_BITMASK 0xF0
@@ -181,7 +181,7 @@ extern unsigned int ipmi_sensor_type_oem_dell_upgrade_max_index;
 #define IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA1_OEM_DELL_DIMMS_PER_PACKAGE_BITMASK 0xF0
 #define IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA1_OEM_DELL_DIMMS_PER_PACKAGE_SHIFT   4
 
-#define IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA1_OEM_DELL_DIMMS_PER_PACKAGE_3       0x00   
+#define IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA1_OEM_DELL_DIMMS_PER_PACKAGE_3       0x00
 
 #define IPMI_SENSOR_TYPE_VERSION_CHANGE_EVENT_DATA2_OEM_DELL_MANAGEMENT_CONTROLLER_FIRMWARE_REVISION 0x02
 
@@ -223,7 +223,7 @@ extern unsigned int ipmi_sensor_type_oem_dell_upgrade_max_index;
 #define IPMI_OEM_DELL_EVENT_DATA3_OPTION_ROM_SLOT_SHIFT   0
 
 /* BIOS Progress and Fatal Error Codes */
-/*  
+/*
  * 00h and FFh are reserved
  * Progress codes range from 01h to 7Fh
  * Fatal error codes range from 80h to FEh
@@ -270,13 +270,13 @@ extern unsigned int ipmi_sensor_type_oem_dell_upgrade_max_index;
  * Dell Poweredge R720
  */
 
-#define IPMI_OEM_DELL_EVENT_DATA2_QPI_LINK_ERROR_REPORTING_AGENT_ID_BITMASK      0x03 
+#define IPMI_OEM_DELL_EVENT_DATA2_QPI_LINK_ERROR_REPORTING_AGENT_ID_BITMASK      0x03
 #define IPMI_OEM_DELL_EVENT_DATA2_QPI_LINK_ERROR_REPORTING_AGENT_ID_SHIFT        0
 
 #define IPMI_OEM_DELL_EVENT_DATA2_QPI_LINK_ERROR_REPORTING_AGENT_LINK_ID_BITMASK 0x0C
 #define IPMI_OEM_DELL_EVENT_DATA2_QPI_LINK_ERROR_REPORTING_AGENT_LINK_ID_SHIFT   2
 
-#define IPMI_OEM_DELL_EVENT_DATA2_QPI_LINK_ERROR_PARTNER_AGENT_ID_BITMASK        0x30 
+#define IPMI_OEM_DELL_EVENT_DATA2_QPI_LINK_ERROR_PARTNER_AGENT_ID_BITMASK        0x30
 #define IPMI_OEM_DELL_EVENT_DATA2_QPI_LINK_ERROR_PARTNER_AGENT_ID_SHIFT          4
 
 #define IPMI_OEM_DELL_EVENT_DATA2_QPI_LINK_ERROR_PARTNER_LINK_ID_BITMASK         0xC0

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -76,24 +76,24 @@ _get_shared_sensor_name (ipmi_sdr_ctx_t ctx,
                                             &id_string_instance_modifier_offset,
                                             NULL) < 0)
     return (-1);
-      
+
   if (share_count > 1)
     {
       uint8_t sensor_number_base;
       uint8_t sensor_number_offset;
-      
+
       if (ipmi_sdr_parse_sensor_number (ctx,
                                         sdr_record,
                                         sdr_record_len,
                                         &sensor_number_base) < 0)
         return (-1);
-      
+
       /* I guess it's a bug if the sensor number passed in is bad */
       if (sensor_number >= sensor_number_base)
         sensor_number_offset = sensor_number - sensor_number_base;
       else
         goto fallthrough;
-      
+
       if (id_string_instance_modifier_type == IPMI_SDR_ID_STRING_INSTANCE_MODIFIER_TYPE_ALPHA)
         {
           /* IPMI spec example is:
@@ -112,7 +112,7 @@ _get_shared_sensor_name (ipmi_sdr_ctx_t ctx,
            * 'A' + (127/26) = 4 => 'E'
            * 'A' + (127 % 26) = 23 => 'X'
            */
-              
+
           if ((id_string_instance_modifier_type + sensor_number_offset) < IPMI_SDR_CHARS_IN_ALPHABET)
             snprintf (buf,
                       buflen,
@@ -143,10 +143,10 @@ _get_shared_sensor_name (ipmi_sdr_ctx_t ctx,
                     id_string,
                     id_string_instance_modifier_offset + sensor_number_offset);
         }
-          
+
       return (0);
     }
-  
+
  fallthrough:
   snprintf (buf,
             buflen,
@@ -227,7 +227,7 @@ ipmi_sdr_parse_sensor_name (ipmi_sdr_ctx_t ctx,
                                            device_id_string,
                                            IPMI_SDR_MAX_DEVICE_ID_STRING_LENGTH) < 0)
         return (-1);
-      
+
       id_string_ptr = device_id_string;
     }
   else
@@ -335,7 +335,7 @@ ipmi_sdr_parse_entity_sensor_name (ipmi_sdr_ctx_t ctx,
                                            device_id_string,
                                            IPMI_SDR_MAX_DEVICE_ID_STRING_LENGTH) < 0)
         return (-1);
-      
+
       id_string_ptr = device_id_string;
     }
   else
@@ -404,18 +404,18 @@ ipmi_sdr_parse_entity_sensor_name (ipmi_sdr_ctx_t ctx,
                                                         NULL,
                                                         &entity_instance_sharing) < 0)
                 return (-1);
-      
+
               if (share_count > 1
                   && entity_instance_sharing == IPMI_SDR_ENTITY_INSTANCE_INCREMENTS_FOR_EACH_SHARED_RECORD)
                 {
                   uint8_t sensor_number_base;
-      
+
                   if (ipmi_sdr_parse_sensor_number (ctx,
                                                     sdr_record,
                                                     sdr_record_len,
                                                     &sensor_number_base) < 0)
                     return (-1);
-      
+
                   /* I guess it's a bug if the sensor number passed in is bad */
                   if (sensor_number >= sensor_number_base)
                     entity_instance += (sensor_number - sensor_number_base);
@@ -424,7 +424,7 @@ ipmi_sdr_parse_entity_sensor_name (ipmi_sdr_ctx_t ctx,
                 }
 
               memset (sensor_name_buf, '\0', IPMI_SDR_MAX_SENSOR_NAME_LENGTH + 1);
-              
+
               if (_get_shared_sensor_name (ctx,
                                            sdr_record,
                                            sdr_record_len,
@@ -461,7 +461,7 @@ ipmi_sdr_parse_entity_sensor_name (ipmi_sdr_ctx_t ctx,
                         "%s %u",
                         entity_id_str,
                         entity_instance);
-              
+
               /* In odd chance the strings end up identical */
               if (!strcasecmp (entity_name_buf, id_string_ptr))
                 snprintf (buf,
@@ -485,7 +485,7 @@ ipmi_sdr_parse_entity_sensor_name (ipmi_sdr_ctx_t ctx,
                         "%s %u",
                         entity_id_str,
                         entity_instance);
-              
+
               /* In odd chance the strings end up identical */
               if (!strcasecmp (entity_name_buf, id_string_ptr))
                 snprintf (buf,

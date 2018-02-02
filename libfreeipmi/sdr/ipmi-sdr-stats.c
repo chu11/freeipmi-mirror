@@ -107,7 +107,7 @@ _entity_id_instances_count (ipmi_sdr_ctx_t ctx,
       && record_type != IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD
       && record_type != IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD)
     return (0);
-  
+
   if (ipmi_sdr_parse_entity_id_instance_type (ctx,
                                               sdr_record,
                                               sdr_record_len,
@@ -125,14 +125,14 @@ _entity_id_instances_count (ipmi_sdr_ctx_t ctx,
 
   if (_entity_id_add_instance (ctx, entity_id, entity_instance) < 0)
     return (-1);
-  
+
   /* special case if sensor sharing is involved */
   if (record_type == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD
       || record_type == IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
     {
       uint8_t share_count;
       uint8_t entity_instance_sharing;
-      
+
       if (ipmi_sdr_parse_sensor_record_sharing (ctx,
                                                 sdr_record,
                                                 sdr_record_len,
@@ -144,12 +144,12 @@ _entity_id_instances_count (ipmi_sdr_ctx_t ctx,
           SDR_SET_INTERNAL_ERRNUM (ctx);
           return (-1);
         }
-      
+
       if (share_count > 1
           && entity_instance_sharing == IPMI_SDR_ENTITY_INSTANCE_INCREMENTS_FOR_EACH_SHARED_RECORD)
         {
           unsigned int i;
-          
+
           for (i = 1; i < share_count; i++)
             {
               if (_entity_id_add_instance (ctx, entity_id, entity_instance + i) < 0)

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_SLAVE_ADDRESS_OEM_INTEL_SPEC_H
@@ -43,9 +43,9 @@ extern "C" {
 #define IPMI_GENERATOR_ID_OEM_INTEL_S2600JF_BIOS_SMI_HANDLER   0x33
 
 /*
- * Intel S2600KP                                                                                                                                                                                   
- * Intel S2600WT2                                                                                                                                                                                  
- * Intel S2600WTT  
+ * Intel S2600KP
+ * Intel S2600WT2
+ * Intel S2600WTT
  */
 #define IPMI_GENERATOR_ID_OEM_INTEL_E52600V3_BIOS_POST          0x01
 #define IPMI_GENERATOR_ID_OEM_INTEL_E52600V3_BIOS_SMI_HANDLER   0x33

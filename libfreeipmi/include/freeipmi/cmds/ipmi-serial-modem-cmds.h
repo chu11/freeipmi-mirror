@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_SERIAL_MODEM_CMDS_H
@@ -103,13 +103,13 @@ extern "C" {
   (((__flag) == IPMI_GET_SERIAL_MODEM_PARAMETER       \
     || (__flag) == IPMI_GET_SERIAL_MODEM_PARAMETER_REVISION_ONLY) ? 1 : 0)
 
-/* 
+/*
  * fill* functions return 0 on success, -1 on error.
  *
  * obj_cmd_rq must be for the fill function's respective fiid
  * template request.
  *
- * see freeipmi/templates/ for template definitions 
+ * see freeipmi/templates/ for template definitions
  */
 
 extern fiid_template_t tmpl_cmd_set_serial_modem_configuration_rq;

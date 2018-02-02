@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -800,7 +800,7 @@ fill_cmd_set_system_boot_options_service_partition_selector (uint8_t parameter_v
       SET_ERRNO (EINVAL);
       return (-1);
     }
-  
+
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_system_boot_options_service_partition_selector_rq) < 0)
     {
       ERRNO_TRACE (errno);
@@ -833,20 +833,20 @@ fill_cmd_set_system_boot_options_service_partition_scan (uint8_t parameter_valid
       SET_ERRNO (EINVAL);
       return (-1);
     }
-  
+
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_system_boot_options_service_partition_scan_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
     }
-  
+
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
-  
+
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
 
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SYSTEM_BOOT_OPTION_PARAMETER_SERVICE_PARTITION_SCAN);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_valid", parameter_valid);
-  
+
   FILL_FIID_OBJ_SET (obj_cmd_rq, "service_partition_discovered", service_partition_discovered);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "service_partition_scan", service_partition_scan);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
@@ -1068,7 +1068,7 @@ fill_cmd_set_system_boot_options_boot_flags (uint8_t parameter_valid,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "bios_mux_control_override", bios_mux_control_override);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "bios_shared_mode_override", bios_shared_mode_override);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "device_instance_selector", device_instance_selector); 
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "device_instance_selector", device_instance_selector);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved3", 0);
 
   return (0);
@@ -1121,13 +1121,13 @@ fill_cmd_set_system_boot_options_boot_initiator_mailbox (uint8_t parameter_valid
       SET_ERRNO (EINVAL);
       return (-1);
     }
-  
+
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_system_boot_options_boot_initiator_mailbox_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
     }
-  
+
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_BOOT_OPTIONS);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SYSTEM_BOOT_OPTION_PARAMETER_BOOT_INITIATOR_MAILBOX);
@@ -1135,7 +1135,7 @@ fill_cmd_set_system_boot_options_boot_initiator_mailbox (uint8_t parameter_valid
   FILL_FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
   if (block_data && block_data_length)
     FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "block_data", block_data, block_data_length);
-  
+
   return (0);
 }
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -71,7 +71,7 @@ _channel_info (ipmi_config_state_data_t *state_data,
                                             channel_number)) != IPMI_CONFIG_ERR_SUCCESS)
         return (ret);
     }
-  
+
   return (IPMI_CONFIG_ERR_SUCCESS);
 }
 

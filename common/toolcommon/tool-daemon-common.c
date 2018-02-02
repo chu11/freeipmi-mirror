@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -61,7 +61,7 @@ daemonize_common (const char *pidfile)
   unsigned int i;
   pid_t pid;
   int fds[2];
-  
+
   assert (pidfile);
 
   /* Based on code in Unix network programming by R. Stevens */
@@ -93,10 +93,10 @@ daemonize_common (const char *pidfile)
   if (pid)
     {
       FILE *pf;
-          
+
       /* Do not want pidfile writable to group/other */
       umask(022);
-          
+
       (void) unlink (pidfile);
 
       if (!(pf = fopen (pidfile, "w")))
@@ -108,7 +108,7 @@ daemonize_common (const char *pidfile)
 
       exit (0);                   /* 1st child terminates */
     }
-      
+
   if (chdir ("/") < 0)
     err_exit ("chdir: %s", strerror (errno));
 
@@ -159,10 +159,10 @@ int
 daemon_sleep (unsigned int sleep_len)
 {
   struct timeval tv;
-  
+
   if (!sleep_len)
     return (0);
-  
+
   tv.tv_sec = sleep_len;
   tv.tv_usec = 0;
   if (select (1, NULL, NULL, NULL, &tv) < 0)

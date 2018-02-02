@@ -8,7 +8,7 @@ ipmi_fru_CPPFLAGS = \
 	-I$(top_builddir)/libfreeipmi/include \
 	-I$(top_srcdir)/libfreeipmi/include \
 	-D_GNU_SOURCE \
-	-D_REENTRANT 
+	-D_REENTRANT
 
 ipmi_fru_LDADD = \
 	$(top_builddir)/common/toolcommon/libtoolcommon.la \
@@ -47,4 +47,4 @@ $(top_builddir)/libfreeipmi/libfreeipmi.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`
 
 force-dependency-check:
- 
+

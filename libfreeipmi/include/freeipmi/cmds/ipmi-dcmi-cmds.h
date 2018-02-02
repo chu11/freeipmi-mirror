@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 /*****************************************************************************\
  *  Copyright (C) 2009-2015 Lawrence Livermore National Security, LLC.
@@ -180,7 +180,7 @@ extern "C" {
 
 #define IPMI_DCMI_POWER_LIMIT_ACTIVATION_DEACTIVATE_POWER_LIMIT 0x0
 #define IPMI_DCMI_POWER_LIMIT_ACTIVATION_ACTIVATE_POWER_LIMIT   0x1
-  
+
 #define IPMI_DCMI_POWER_LIMIT_ACTIVATION_VALID(__power_limit_activation) \
   (((__power_limit_activation) == IPMI_DCMI_POWER_LIMIT_ACTIVATION_DEACTIVATE_POWER_LIMIT \
     || (__power_limit_activation) == IPMI_DCMI_POWER_LIMIT_ACTIVATION_ACTIVATE_POWER_LIMIT) ? 1 : 0)
@@ -267,11 +267,11 @@ int fill_cmd_dcmi_set_dcmi_configuration_parameters_dhcp_timing_1 (uint8_t set_s
 int fill_cmd_dcmi_set_dcmi_configuration_parameters_dhcp_timing_2 (uint8_t set_selector,
                                                                    uint16_t server_contact_timeout_interval,
                                                                    fiid_obj_t obj_cmd_rq);
-  
+
 int fill_cmd_dcmi_set_dcmi_configuration_parameters_dhcp_timing_3 (uint8_t set_selector,
                                                                    uint16_t server_contact_retry_interval,
                                                                    fiid_obj_t obj_cmd_rq);
-  
+
 int fill_cmd_dcmi_get_dcmi_configuration_parameters (uint8_t parameter_selector,
                                                      uint8_t set_selector,
                                                      fiid_obj_t obj_cmd_rq);
@@ -279,7 +279,7 @@ int fill_cmd_dcmi_get_dcmi_configuration_parameters (uint8_t parameter_selector,
 int fill_cmd_dcmi_get_asset_tag (uint8_t offset_to_read,
                                  uint8_t number_of_bytes_to_read,
                                  fiid_obj_t obj_cmd_rq);
-  
+
 int fill_cmd_dcmi_set_asset_tag (uint8_t offset_to_write,
                                  uint8_t number_of_bytes_to_write,
                                  const void *data,
@@ -289,7 +289,7 @@ int fill_cmd_dcmi_set_asset_tag (uint8_t offset_to_write,
 int fill_cmd_dcmi_get_management_controller_identifier_string (uint8_t offset_to_read,
                                                                uint8_t number_of_bytes_to_read,
                                                                fiid_obj_t obj_cmd_rq);
-  
+
 int fill_cmd_dcmi_set_management_controller_identifier_string (uint8_t offset_to_write,
                                                                uint8_t number_of_bytes_to_write,
                                                                const void *data,
@@ -301,7 +301,7 @@ int fill_cmd_dcmi_get_dcmi_sensor_info (uint8_t sensor_type,
                                         uint8_t entity_instance,
                                         uint8_t entity_instance_start,
                                         fiid_obj_t obj_cmd_rq);
-  
+
 int fill_cmd_dcmi_get_power_reading (uint8_t mode,
                                      uint8_t mode_attributes,
                                      fiid_obj_t obj_cmd_rq);

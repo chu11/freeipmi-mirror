@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -74,7 +74,7 @@ sel_string_output_gigabyte_md90fs0zb_event_data2_discrete_oem (ipmi_sel_ctx_t ct
   assert (system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
   assert (ctx->product_id == IPMI_GIGABYTE_PRODUCT_ID_MD90_FS0_ZB);
 
-  /* 
+  /*
    * Gigabyte MD90-FS0-ZB
    */
 
@@ -87,7 +87,7 @@ sel_string_output_gigabyte_md90fs0zb_event_data2_discrete_oem (ipmi_sel_ctx_t ct
                 tmpbuflen,
                 "Bus %u",
                 system_event_record_data->event_data2);
-      
+
       return (1);
     }
 
@@ -121,10 +121,10 @@ sel_string_output_gigabyte_md90fs0zb_event_data3_discrete_oem (ipmi_sel_ctx_t ct
   assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
   assert (ctx->product_id == IPMI_GIGABYTE_PRODUCT_ID_MD90_FS0_ZB);
 
-  /* 
+  /*
    * Gigabyte MD90-FS0-ZB
    */
-  
+
   if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_PERR
@@ -134,16 +134,16 @@ sel_string_output_gigabyte_md90fs0zb_event_data3_discrete_oem (ipmi_sel_ctx_t ct
 
       device = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA3_OEM_GIGABYTE_DEVICE_NUMBER_BITMASK);
       device >>= IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA3_OEM_GIGABYTE_DEVICE_NUMBER_SHIFT;
-      
+
       function = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA3_OEM_GIGABYTE_FUNCTION_NUMBER_BITMASK);
       function >>= IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA3_OEM_GIGABYTE_FUNCTION_NUMBER_SHIFT;
-      
+
       snprintf (tmpbuf,
                 tmpbuflen,
                 "Device %u, Function %u",
                 device,
                 function);
-      
+
       return (1);
     }
 
@@ -200,7 +200,7 @@ sel_string_output_gigabyte_md90fs0zb_event_data3_discrete_oem (ipmi_sel_ctx_t ct
           channel_str = "Unknown";
           break;
         }
-      
+
       switch (dimm)
         {
         case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_GIGABYTE_DIMM_0:
@@ -225,7 +225,7 @@ sel_string_output_gigabyte_md90fs0zb_event_data3_discrete_oem (ipmi_sel_ctx_t ct
                 "Channel %s, DIMM %s",
                 channel_str,
                 dimm_str);
-      
+
       return (1);
     }
 

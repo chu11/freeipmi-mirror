@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -78,7 +78,7 @@ sel_string_output_wistron_c6220_event_data1_class_sensor_specific_discrete (ipmi
   assert (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC);
   assert (ctx->product_id == IPMI_WISTRON_PRODUCT_ID_C6220);
 
-  /* 
+  /*
    * Wistron / Dell Poweredge C6220
    */
   if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_WISTRON_IOH_CORE_ERROR)
@@ -92,11 +92,11 @@ sel_string_output_wistron_c6220_event_data1_class_sensor_specific_discrete (ipmi
                                               system_event_record_data->offset_from_event_reading_type_code,
                                               tmpbuf,
                                               tmpbuflen);
-      
+
       if (ret > 0)
         return (1);
     }
-  
+
   return (0);
 }
 
@@ -130,7 +130,7 @@ sel_string_output_wistron_c6220_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
   /*
    * Wistron / Dell Poweredge C6220
    */
-  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS 
+  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PROCESSOR
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_WISTRON_PROCESSOR
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
@@ -143,9 +143,9 @@ sel_string_output_wistron_c6220_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
     {
       uint8_t processor;
       char *processor_str = NULL;
-          
+
       processor = system_event_record_data->event_data2;
-          
+
       switch (processor)
         {
         case IPMI_SENSOR_TYPE_PROCESSOR_EVENT_DATA2_OEM_WISTRON_PROCESSOR_1:
@@ -163,13 +163,13 @@ sel_string_output_wistron_c6220_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
         default:
           processor_str = "Unspecified Processor";
         }
-          
+
       snprintf (tmpbuf, tmpbuflen, "%s", processor_str);
-          
+
       return (1);
     }
 
-  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS 
+  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_WISTRON_PCI_SENSOR_ID
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
@@ -180,23 +180,23 @@ sel_string_output_wistron_c6220_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
           || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_BUS_FATAL_ERROR))
     {
       uint8_t device, function;
-          
+
       device = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_OEM_WISTRON_EVENT_DATA2_DEVICE_NUMBER_BITMASK);
       device >>= IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_OEM_WISTRON_EVENT_DATA2_DEVICE_NUMBER_SHIFT;
-          
+
       function = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_OEM_WISTRON_EVENT_DATA2_FUNCTION_NUMBER_BITMASK);
       function >>= IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_OEM_WISTRON_EVENT_DATA2_FUNCTION_NUMBER_SHIFT;
-          
+
       snprintf (tmpbuf,
                 tmpbuflen,
                 "Device %u, Function %u",
                 device,
                 function);
-        
+
       return (1);
     }
 
-  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS 
+  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_WISTRON_IOH_CORE_ERROR
       && (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_WISTRON_QPI_SENSOR_ID
           || system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_WISTRON_INT_SENSOR_ID)
@@ -209,7 +209,7 @@ sel_string_output_wistron_c6220_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
       return (1);
     }
 
-  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS 
+  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_WISTRON_SB_SENSOR_ID
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
@@ -218,10 +218,10 @@ sel_string_output_wistron_c6220_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
     {
       uint8_t local_error_bit;
       char *local_error_bit_str = NULL;
-        
+
       local_error_bit = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA2_OEM_WISTRON_LOCAL_ERROR_BIT_BITMASK);
       local_error_bit >>= IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA2_OEM_WISTRON_LOCAL_ERROR_BIT_SHIFT;
-        
+
       switch (local_error_bit)
         {
         case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA2_OEM_WISTRON_LOCAL_ERROR_BIT_HT_PERIODIC_CRC_ERROR:
@@ -248,13 +248,13 @@ sel_string_output_wistron_c6220_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
         default:
           local_error_bit_str = "Unspecified Local Error";
         }
-        
+
       snprintf (tmpbuf, tmpbuflen, "%s", local_error_bit_str);
-        
+
       return (1);
     }
-      
-  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS 
+
+  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_EVENT
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_WISTRON_POST_END
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
@@ -264,7 +264,7 @@ sel_string_output_wistron_c6220_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
       char *boot_type_str = NULL;
       uint8_t boot_device;
       char *boot_device_str = NULL;
-  
+
       boot_type = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_SYSTEM_EVENT_EVENT_DATA2_OEM_WISTRON_BOOT_TYPE_BITMASK);
       boot_type >>= IPMI_SENSOR_TYPE_SYSTEM_EVENT_EVENT_DATA2_OEM_WISTRON_BOOT_TYPE_SHIFT;
 
@@ -308,17 +308,17 @@ sel_string_output_wistron_c6220_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
         default:
           boot_device_str = "Unspecified";
         }
-        
+
       snprintf (tmpbuf,
                 tmpbuflen,
                 "Boot Type = %s, Boot Device = %s",
                 boot_type_str,
                 boot_device_str);
-  
+
       return (1);
     }
 
-  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS 
+  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_EVENT
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_WISTRON_BIOS_RECOVERY_FAIL
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
@@ -326,9 +326,9 @@ sel_string_output_wistron_c6220_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
     {
       uint8_t bios_recover_event;
       char *bios_recover_event_str = NULL;
-        
+
       bios_recover_event = system_event_record_data->event_data2;
-        
+
       switch (bios_recover_event)
         {
         case IPMI_SENSOR_TYPE_SYSTEM_EVENT_EVENT_DATA2_OEM_WISTRON_BIOS_RECOVERY_START_RECOVERY:
@@ -346,13 +346,13 @@ sel_string_output_wistron_c6220_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
         default:
           bios_recover_event_str = "Unspecified";
         }
-        
+
       snprintf (tmpbuf, tmpbuflen, "BIOS Recovery Event = %s", bios_recover_event_str);
-        
+
       return (1);
     }
 
-  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS 
+  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_EVENT
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_WISTRON_ME_FAIL
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
@@ -393,10 +393,10 @@ sel_string_output_wistron_c6220_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
   assert (ctx->product_id == IPMI_WISTRON_PRODUCT_ID_C6220);
 
-  /* 
+  /*
    * Wistron / Dell Poweredge C6220
    */
-  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS 
+  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_WISTRON_PCI_SENSOR_ID
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
@@ -410,11 +410,11 @@ sel_string_output_wistron_c6220_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
                 tmpbuflen,
                 "Bus %u",
                 system_event_record_data->event_data3);
-          
+
       return (1);
     }
 
-  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS 
+  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_WISTRON_IOH_CORE_ERROR
       && (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_WISTRON_QPI_SENSOR_ID
           || system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_WISTRON_INT_SENSOR_ID)
@@ -463,12 +463,12 @@ sel_string_output_wistron_c6220_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
         default:
           error_str = "Unspecified Error";
         }
-          
+
       snprintf (tmpbuf,
                 tmpbuflen,
                 "%s",
                 error_str);
-          
+
       return (1);
     }
 
@@ -507,10 +507,10 @@ sel_string_output_wistron_c6220_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
   assert (oem_rv);
   assert (ctx->product_id == IPMI_WISTRON_PRODUCT_ID_C6220);
 
-  /* 
+  /*
    * Wistron / Dell Poweredge C6220
    */
-  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS 
+  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_WISTRON_MEMORY
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
@@ -606,11 +606,11 @@ sel_string_output_wistron_c6220_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
         (*oem_rv) = 1;
       else
         (*oem_rv) = 0;
-  
+
       return (1);
     }
 
-  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS 
+  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_EVENT
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_WISTRON_POST_START
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
@@ -620,7 +620,7 @@ sel_string_output_wistron_c6220_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
       uint8_t second_field;
       uint8_t third_field;
       uint8_t tmp;
-  
+
       first_field = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_SYSTEM_EVENT_EVENT_DATA2_OEM_WISTRON_BIOS_FIRST_FIELD_BITMASK);
       first_field >>= IPMI_SENSOR_TYPE_SYSTEM_EVENT_EVENT_DATA2_OEM_WISTRON_BIOS_FIRST_FIELD_SHIFT;
 
@@ -634,7 +634,7 @@ sel_string_output_wistron_c6220_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 
       third_field = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_SYSTEM_EVENT_EVENT_DATA3_OEM_WISTRON_BIOS_THIRD_FIELD_BITMASK);
       third_field >>= IPMI_SENSOR_TYPE_SYSTEM_EVENT_EVENT_DATA3_OEM_WISTRON_BIOS_THIRD_FIELD_SHIFT;
-  
+
       if (sel_string_snprintf (buf,
                                buflen,
                                wlen,
@@ -645,11 +645,11 @@ sel_string_output_wistron_c6220_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
         (*oem_rv) = 1;
       else
         (*oem_rv) = 0;
-  
+
       return (1);
     }
 
-  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS 
+  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_WISTRON_BIOS
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_WISTRON_POST_ERROR
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
@@ -657,7 +657,7 @@ sel_string_output_wistron_c6220_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
     {
       uint16_t error_code;
       char *error_code_str = NULL;
-          
+
       error_code = system_event_record_data->event_data2;
       error_code |= (system_event_record_data->event_data3 << 8);
 
@@ -786,7 +786,7 @@ sel_string_output_wistron_c6220_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
         default:
           error_code_str = "Undefined Post Error";
         }
-  
+
       if (sel_string_snprintf (buf,
                                buflen,
                                wlen,
@@ -795,7 +795,7 @@ sel_string_output_wistron_c6220_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
         (*oem_rv) = 1;
       else
         (*oem_rv) = 0;
-  
+
       return (1);
     }
 

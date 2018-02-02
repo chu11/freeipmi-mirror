@@ -8,7 +8,7 @@ bmc_info_CPPFLAGS = \
 	-I$(top_builddir)/libfreeipmi/include \
 	-I$(top_srcdir)/libfreeipmi/include \
 	-D_GNU_SOURCE \
-	-D_REENTRANT 
+	-D_REENTRANT
 
 bmc_info_LDADD = \
 	$(top_builddir)/common/toolcommon/libtoolcommon.la \
@@ -17,12 +17,12 @@ bmc_info_LDADD = \
 	$(top_builddir)/common/portability/libportability.la \
 	$(top_builddir)/libipmidetect/libipmidetect.la \
 	$(top_builddir)/libfreeipmi/libfreeipmi.la
- 
+
 bmc_info_SOURCES = \
 	bmc-info.c \
 	bmc-info.h \
 	bmc-info-argp.c \
-	bmc-info-argp.h 
+	bmc-info-argp.h
 
 $(top_builddir)/common/toolcommon/libtoolcommon.la : force-dependency-check
 	@cd `dirname $@` && $(MAKE) `basename $@`

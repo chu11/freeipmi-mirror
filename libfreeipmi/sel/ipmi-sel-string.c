@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -144,7 +144,7 @@ sel_string_strcat_comma_separate (char *buf,
   assert (buf);
   assert (buflen);
   assert (wlen);
-  assert (str); 
+  assert (str);
 
   if (strlen (buf) > 0)
     {
@@ -418,7 +418,7 @@ _get_sensor_name (ipmi_sel_ctx_t ctx,
 
   if (!ret)
     {
-      rv = 0;      
+      rv = 0;
       goto cleanup;
     }
 
@@ -721,7 +721,7 @@ _output_event_interpretation (ipmi_sel_ctx_t ctx,
     }
 
   interpret_flags = interpret_flags_save;
-  
+
   if (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA)
     interpret_flags |= IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA;
 
@@ -739,15 +739,15 @@ _output_event_interpretation (ipmi_sel_ctx_t ctx,
       SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERPRET_ERROR);
       return (-1);
     }
-  
+
   if (ipmi_interpret_ctx_set_flags (ctx->interpret_ctx, interpret_flags_save) < 0)
     {
       SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERPRET_ERROR);
       return (-1);
     }
-  
+
   /* achu
-   * 
+   *
    * NOT_AVAILABLE and IGNORE_UNAVAILABLE_FIELD not applicable here.
    * This output is always possible, the N/A indicates that there is
    * no interpretation available for the current event.
@@ -763,7 +763,7 @@ _output_event_interpretation (ipmi_sel_ctx_t ctx,
 
   if (sel_string_snprintf (buf, buflen, wlen, "%s", sel_state_str))
     return (1);
-  
+
   return (0);
 }
 
@@ -878,7 +878,7 @@ _output_date (ipmi_sel_ctx_t ctx,
     }
 
   memset (tmpbuf, '\0', SEL_BUFFER_LENGTH + 1);
-  
+
   timestamp_flags = IPMI_TIMESTAMP_FLAG_ABBREVIATE;
   if (flags & IPMI_SEL_STRING_FLAGS_UTC_TO_LOCALTIME)
     timestamp_flags |= IPMI_TIMESTAMP_FLAG_UTC_TO_LOCALTIME;
@@ -895,7 +895,7 @@ _output_date (ipmi_sel_ctx_t ctx,
       SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERNAL_ERROR);
       return (-1);
     }
-  
+
   if (sel_string_snprintf (buf, buflen, wlen, "%s", tmpbuf))
     return (1);
   return (0);
@@ -924,27 +924,27 @@ _output_sensor_type (ipmi_sel_ctx_t ctx,
   assert (buflen);
   assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
   assert (wlen);
-  
+
   if (ipmi_sel_record_type_class (sel_record_type) != IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
     return (_invalid_sel_entry_common (ctx, buf, buflen, flags, wlen));
-  
+
   if (sel_get_system_event_record (ctx, sel_entry, &system_event_record_data) < 0)
     return (-1);
-  
+
   if (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA)
     sensor_type_str = ipmi_get_oem_sensor_type_string (system_event_record_data.sensor_type,
-                                                       (system_event_record_data.event_type_code & 0x7F), 
+                                                       (system_event_record_data.event_type_code & 0x7F),
                                                        ctx->manufacturer_id,
                                                        ctx->product_id);
-  else 
+  else
     sensor_type_str = ipmi_get_sensor_type_string (system_event_record_data.sensor_type);
-  
+
   if (sensor_type_str)
     {
       if (sel_string_snprintf (buf, buflen, wlen, "%s", sensor_type_str))
         return (1);
     }
-  
+
   return (0);
 }
 
@@ -987,7 +987,7 @@ _output_sensor_name (ipmi_sel_ctx_t ctx,
                                sensor_name_buf,
                                SENSOR_NAME_LENGTH)) < 0)
     return (-1);
-  
+
   if (ret)
     {
       if (sel_string_snprintf (buf,
@@ -1016,7 +1016,7 @@ _output_sensor_name (ipmi_sel_ctx_t ctx,
                                                          &system_event_record_data,
                                                          &oem_rv)) < 0)
             return (-1);
-          
+
           if (ret)
             return (oem_rv);
         }
@@ -1035,7 +1035,7 @@ _output_sensor_name (ipmi_sel_ctx_t ctx,
   else
     {
       if (flags & IPMI_SEL_STRING_FLAGS_LEGACY)
-        { 
+        {
           if (sel_string_snprintf (buf,
                                    buflen,
                                    wlen,
@@ -1121,7 +1121,7 @@ _output_event_data1 (ipmi_sel_ctx_t ctx,
                                                                                             wlen,
                                                                                             &system_event_record_data)) < 0)
                 return (-1);
-              
+
               if (ret)
                 {
                   output_flag++;
@@ -1129,8 +1129,8 @@ _output_event_data1 (ipmi_sel_ctx_t ctx,
                 }
             }
         }
-      
-      /* 
+
+      /*
        * From Dell Spec and Dell Code
        *
        * Dell Poweredge R610
@@ -1176,7 +1176,7 @@ _output_event_data1 (ipmi_sel_ctx_t ctx,
                                                                        wlen,
                                                                        &system_event_record_data)) < 0)
                 return (-1);
-              
+
               if (ret)
                 {
                   output_flag++;
@@ -1365,7 +1365,7 @@ _output_event_data2 (ipmi_sel_ctx_t ctx,
                                                                                wlen,
                                                                                &system_event_record_data)) < 0)
                     return (-1);
-                  
+
                   if (ret)
                     {
                       output_flag++;
@@ -1492,7 +1492,7 @@ _output_event_data2 (ipmi_sel_ctx_t ctx,
             output_flag++;
           break;
         case IPMI_SEL_EVENT_DATA_OEM_CODE:
-          
+
           if (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA)
             {
               if (sel_string_oem && sel_string_oem->output_event_data2_discrete_oem)
@@ -1506,7 +1506,7 @@ _output_event_data2 (ipmi_sel_ctx_t ctx,
                                                                               wlen,
                                                                               &system_event_record_data)) < 0)
                     return (-1);
-                  
+
                   if (ret)
                     {
                       output_flag++;
@@ -1514,7 +1514,7 @@ _output_event_data2 (ipmi_sel_ctx_t ctx,
                     }
                 }
             }
-          
+
           if (system_event_record_data.event_data2 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT)
             {
               no_output_flag++;
@@ -1563,7 +1563,7 @@ _output_event_data2 (ipmi_sel_ctx_t ctx,
                                                                        wlen,
                                                                        &system_event_record_data)) < 0)
                 return (-1);
-              
+
               if (ret)
                 {
                   output_flag++;
@@ -1571,7 +1571,7 @@ _output_event_data2 (ipmi_sel_ctx_t ctx,
                 }
             }
         }
-      
+
       if (system_event_record_data.event_data2 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT
           || system_event_record_data.event_data2_flag == IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE)
         {
@@ -1685,7 +1685,7 @@ _output_event_data3 (ipmi_sel_ctx_t ctx,
           {
             double reading;
             char sensor_units_buf[UNITS_BUFFER_LENGTH+1];
-            
+
             memset (sensor_units_buf, '\0', UNITS_BUFFER_LENGTH+1);
             if ((ret = _get_sensor_reading (ctx,
                                             &system_event_record_data,
@@ -1695,7 +1695,7 @@ _output_event_data3 (ipmi_sel_ctx_t ctx,
                                             sensor_units_buf,
                                             UNITS_BUFFER_LENGTH)) < 0)
               return (-1);
-            
+
             if (ret)
               snprintf (tmpbuf,
                         EVENT_BUFFER_LENGTH,
@@ -1711,7 +1711,7 @@ _output_event_data3 (ipmi_sel_ctx_t ctx,
           }
           break;
         case IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE:
-          
+
           if (system_event_record_data.event_data3 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT)
             {
               no_output_flag++;
@@ -1742,7 +1742,7 @@ _output_event_data3 (ipmi_sel_ctx_t ctx,
                                                                                wlen,
                                                                                &system_event_record_data)) < 0)
                     return (-1);
-      
+
                   if (ret)
                     {
                       output_flag++;
@@ -1818,7 +1818,7 @@ _output_event_data3 (ipmi_sel_ctx_t ctx,
                                                                               wlen,
                                                                               &system_event_record_data)) < 0)
                     return (-1);
-                  
+
                   if (ret)
                     {
                       output_flag++;
@@ -1826,7 +1826,7 @@ _output_event_data3 (ipmi_sel_ctx_t ctx,
                     }
                 }
             }
-          
+
           if (system_event_record_data.event_data3 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT)
             {
               no_output_flag++;
@@ -1875,7 +1875,7 @@ _output_event_data3 (ipmi_sel_ctx_t ctx,
                                                                        wlen,
                                                                        &system_event_record_data)) < 0)
                 return (-1);
-              
+
               if (ret)
                 {
                   output_flag++;
@@ -1883,7 +1883,7 @@ _output_event_data3 (ipmi_sel_ctx_t ctx,
                 }
             }
         }
-     
+
       if (system_event_record_data.event_data3 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT
           || system_event_record_data.event_data3_flag == IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE)
         {
@@ -2012,7 +2012,7 @@ _output_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
                                             &tmpbufdata3_wlen,
                                             sel_string_oem)) < 0)
         return (-1);
-      
+
       if (data3_ret)
         {
           SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERNAL_ERROR);
@@ -2050,11 +2050,11 @@ _output_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
                                                                              &system_event_record_data,
                                                                              &oem_rv)) < 0)
             return (-1);
-          
+
           if (ret)
             return (oem_rv);
         }
-      
+
       if (sel_string_oem && sel_string_oem->output_event_data2_event_data3)
         {
           if ((ret = sel_string_oem->output_event_data2_event_data3 (ctx,
@@ -2067,7 +2067,7 @@ _output_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
                                                                      &system_event_record_data,
                                                                      &oem_rv)) < 0)
             return (-1);
-          
+
           if (ret)
             return (oem_rv);
         }
@@ -2099,7 +2099,7 @@ _output_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
       return (-1);
     }
 
-  if ((strlen (tmpbufdata2) 
+  if ((strlen (tmpbufdata2)
        && strcasecmp (tmpbufdata2, NA_STRING))
       && (strlen (tmpbufdata3)
           && strcasecmp (tmpbufdata3, NA_STRING)))
@@ -2400,14 +2400,14 @@ _output_event_data1_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
                                                      &tmpbufeventdata23_wlen,
                                                      sel_string_oem)) < 0)
     return (-1);
-  
+
   if (data1_ret || data23_ret)
     {
       SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERNAL_ERROR);
       return (-1);
     }
-  
-  if ((strlen (tmpbufeventdata1) 
+
+  if ((strlen (tmpbufeventdata1)
        && strcasecmp (tmpbufeventdata1, NA_STRING))
       && (strlen (tmpbufeventdata23)
           && strcasecmp (tmpbufeventdata23, NA_STRING)))
@@ -2538,7 +2538,7 @@ _output_manufacturer_id (ipmi_sel_ctx_t ctx,
       int ret;
 
       memset (iana_buf, '\0', IANA_LENGTH + 1);
-      
+
       /* if ret == 0 means no string, < 0 means bad manufacturer id
        * either way, output just the number
        */
@@ -2604,7 +2604,7 @@ _output_oem_record_data (ipmi_sel_ctx_t ctx,
     {
       int ret;
       int oem_rv = 0;
-      
+
       /* Linux kernel case is special, not vendor specific
        *
        * achu: hoping no vendor violates this
@@ -2620,11 +2620,11 @@ _output_oem_record_data (ipmi_sel_ctx_t ctx,
                                                                      wlen,
                                                                      &oem_rv)) < 0)
             return (-1);
-          
+
           if (ret)
             return (oem_rv);
         }
-      
+
       if (sel_string_oem && sel_string_oem->output_oem_record_data)
         {
           if ((ret = sel_string_oem->output_oem_record_data (ctx,
@@ -2636,7 +2636,7 @@ _output_oem_record_data (ipmi_sel_ctx_t ctx,
                                                              wlen,
                                                              &oem_rv)) < 0)
             return (-1);
-          
+
           if (ret)
             return (oem_rv);
         }
@@ -2655,7 +2655,7 @@ _output_oem_record_data (ipmi_sel_ctx_t ctx,
       if (sel_string_snprintf (buf, buflen, wlen, "OEM defined = "))
         return (1);
     }
-  
+
   for (oem_index = 0; oem_index < oem_len; oem_index++)
     {
       if (oem_index)
@@ -2693,11 +2693,11 @@ _output_oem_string (ipmi_sel_ctx_t ctx,
   assert (buflen);
   assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
   assert (wlen);
-  
+
   if (sel_string_oem && sel_string_oem->output_oem_string)
     {
       int oem_rv = 0;
-      
+
       if ((ret = sel_string_oem->output_oem_string (ctx,
                                                     sel_entry,
                                                     sel_record_type,
@@ -2707,17 +2707,17 @@ _output_oem_string (ipmi_sel_ctx_t ctx,
                                                     wlen,
                                                     &oem_rv)) < 0)
         return (-1);
-      
+
       if (ret)
         return (oem_rv);
     }
-  
+
   if (flags & IPMI_SEL_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
     {
       if (sel_string_snprintf (buf, buflen, wlen, "%s", NA_STRING))
         return (1);
     }
-  
+
   return (0);
 }
 

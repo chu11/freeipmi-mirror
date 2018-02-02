@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_OEM_IBM_SPEC_H
@@ -51,7 +51,7 @@ extern "C" {
 
 #define IPMI_OEM_IBM_LED_X3755_DIMM_1            0x0060
 #define IPMI_OEM_IBM_LED_X3755_DIMM_2            0x0061
-#define IPMI_OEM_IBM_LED_X3755_DIMM_3            0x0062 
+#define IPMI_OEM_IBM_LED_X3755_DIMM_3            0x0062
 #define IPMI_OEM_IBM_LED_X3755_DIMM_4            0x0063
 #define IPMI_OEM_IBM_LED_X3755_DIMM_5            0x0064
 #define IPMI_OEM_IBM_LED_X3755_DIMM_6            0x0065
@@ -120,7 +120,7 @@ extern "C" {
 #define IPMI_OEM_IBM_LED_X3755_SP                0x001E
 #define IPMI_OEM_IBM_LED_X3755_TEMP              0x001C
 #define IPMI_OEM_IBM_LED_X3755_VRM               0x0011
- 
+
 #define IPMI_OEM_IBM_LED_X3755_UNKNOWN1          0x0040
 #define IPMI_OEM_IBM_LED_X3755_UNKNOWN2          0x0041
 #define IPMI_OEM_IBM_LED_X3755_UNKNOWN3          0x0047

@@ -85,7 +85,7 @@ static int _advance_past_brackets (char *tok, char **str)
 }
 
 /*
- * Helper function for host list string parsing routines 
+ * Helper function for host list string parsing routines
  * Returns a pointer to the next token; additionally advance *str
  * to the next separator.
  *

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_FRU_H
@@ -63,7 +63,7 @@ extern "C" {
 #define IPMI_FRU_FLAGS_INTERPRET_OEM_DATA                   0x0004
 /* Do not parse FRU inventory information like normal
  * - iterator functions no longer serve purpose
- * - ipmi_fru_read_data_area will read as much data as in 
+ * - ipmi_fru_read_data_area will read as much data as in
  *   can into buffer.
  */
 #define IPMI_FRU_FLAGS_READ_RAW                             0x0008
@@ -141,7 +141,7 @@ int ipmi_fru_open_device_id (ipmi_fru_ctx_t ctx, uint8_t fru_device_id);
 int ipmi_fru_close_device_id (ipmi_fru_ctx_t ctx);
 
 /* Identical to ipmi_fru_open_device_id, but do not read from IPMI, use data in buffer */
-int ipmi_fru_open_device_id_with_buffer (ipmi_fru_ctx_t ctx, 
+int ipmi_fru_open_device_id_with_buffer (ipmi_fru_ctx_t ctx,
                                          const void *areabuf,
                                          unsigned int areabuflen);
 
@@ -165,7 +165,7 @@ int ipmi_fru_read_data_area (ipmi_fru_ctx_t ctx,
 /* most useful for OEM record handling, will error if not at a multirecord area */
 int ipmi_fru_read_multirecord_record_type_id (ipmi_fru_ctx_t ctx,
                                               uint8_t *record_type_id);
-                         
+
 /* FRU area parsing */
 /* Functions assume record headers have been stripped out */
 
@@ -266,7 +266,7 @@ int ipmi_fru_multirecord_management_access_record (ipmi_fru_ctx_t ctx,
                                                    uint8_t *sub_record_type,
                                                    void *sub_record_data,
                                                    unsigned int *sub_record_data_len);
-  
+
 int ipmi_fru_multirecord_base_compatibility_record (ipmi_fru_ctx_t ctx,
                                                     const void *areabuf,
                                                     unsigned int areabuflen,

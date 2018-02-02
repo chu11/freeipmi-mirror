@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -85,7 +85,7 @@ sel_string_output_inventec_5442_sensor_name (ipmi_sel_ctx_t ctx,
   assert (oem_rv);
   assert (ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5442);
 
-  /* 
+  /*
    * Inventec 5442/Dell Xanadu III
    */
   if ((ret = sel_string_output_inventec_5441_5442_common_sensor_name (ctx,
@@ -101,7 +101,7 @@ sel_string_output_inventec_5442_sensor_name (ipmi_sel_ctx_t ctx,
 
   if (ret)
     return (1);
-  
+
   return (0);
 }
 
@@ -133,7 +133,7 @@ sel_string_output_inventec_5442_event_data1_class_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data);
   assert (ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5442);
 
-  /* 
+  /*
    * Inventec 5442/Dell Xanadu III
    */
   if ((ret = sel_string_output_inventec_5441_5442_common_event_data1_class_oem (ctx,
@@ -181,7 +181,7 @@ sel_string_output_inventec_5442_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
   assert (ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5442);
 
-  /* 
+  /*
    * Inventec 5442/Dell Xanadu III
    */
   if ((ret = sel_string_output_inventec_5441_5442_common_event_data2_discrete_oem (ctx,
@@ -228,7 +228,7 @@ sel_string_output_inventec_5442_event_data2_class_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data);
   assert (ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5442);
 
-  /* 
+  /*
    * Inventec 5442/Dell Xanadu III
    */
   if ((ret = sel_string_output_inventec_5441_5442_common_event_data2_class_oem (ctx,
@@ -243,7 +243,7 @@ sel_string_output_inventec_5442_event_data2_class_oem (ipmi_sel_ctx_t ctx,
 
   if (ret)
     return (1);
-  
+
   return (0);
 }
 
@@ -276,7 +276,7 @@ sel_string_output_inventec_5442_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
   assert (ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5442);
 
-  /* 
+  /*
    * Inventec 5442/Dell Xanadu III
    */
 
@@ -353,14 +353,14 @@ sel_string_output_inventec_5442_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
             default:
               str = "Internal Logic Error";
             }
-          
+
           snprintf (tmpbuf, tmpbuflen, "%s", str);
 
           return (1);
         }
     }
 
-  /* 
+  /*
    * Inventec 5442/Dell Xanadu III
    */
 
@@ -408,7 +408,7 @@ sel_string_output_inventec_5442_event_data3_class_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data);
   assert (ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5442);
 
-  /* 
+  /*
    * Inventec 5442/Dell Xanadu III
    */
   if ((ret = sel_string_output_inventec_5441_5442_common_event_data3_class_oem (ctx,
@@ -423,7 +423,7 @@ sel_string_output_inventec_5442_event_data3_class_oem (ipmi_sel_ctx_t ctx,
 
   if (ret)
     return (1);
-  
+
   return (0);
 }
 
@@ -461,7 +461,7 @@ sel_string_output_inventec_5442_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
   assert (oem_rv);
   assert (ctx->product_id == IPMI_INVENTEC_PRODUCT_ID_5442);
 
-  /* 
+  /*
    * Inventec 5442/Dell Xanadu III
    */
   if ((ret = sel_string_output_inventec_5441_5442_common_event_data2_event_data3 (ctx,

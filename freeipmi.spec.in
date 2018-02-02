@@ -151,7 +151,7 @@ fi
 %systemd_preun bmc-watchdog.service
 %else
 #
-# Stop bmc-watchdog if it is running 
+# Stop bmc-watchdog if it is running
 #
 if [ "$1" = 0 ]; then
     if [ -x %{_initrddir}/bmc-watchdog ]; then
@@ -194,7 +194,7 @@ fi
 %systemd_preun ipmidetectd.service
 %else
 #
-# Stop ipmidetectd if it is running 
+# Stop ipmidetectd if it is running
 #
 if [ "$1" = 0 ]; then
     if [ -x %{_initrddir}/ipmidetectd ]; then
@@ -237,7 +237,7 @@ fi
 %systemd_preun ipmiseld.service
 %else
 #
-# Stop ipmiseld if it is running 
+# Stop ipmiseld if it is running
 #
 if [ "$1" = 0 ]; then
     if [ -x %{_initrddir}/ipmiseld ]; then
@@ -539,7 +539,7 @@ fi
 - Add ipmi-chassis-config.
 
 * Thu Jul 10 2008 Albert Chu <chu11@llnl.gov> 0.7.0
-- Add freeipmi.conf default file. 
+- Add freeipmi.conf default file.
 - Make 0644 perms default for config files.
 
 * Sat May 21 2008 Albert Chu <chu11@llnl.gov> 0.7.0

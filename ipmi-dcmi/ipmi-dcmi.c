@@ -180,7 +180,7 @@ _supported_dcmi_capabilities (ipmi_dcmi_state_data_t *state_data)
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
-  
+
   if (FIID_OBJ_GET (obj_cmd_rs,
                     "parameter_revision",
                     &val) < 0)
@@ -206,11 +206,11 @@ _supported_dcmi_capabilities (ipmi_dcmi_state_data_t *state_data)
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
-      
+
       pstdout_printf (state_data->pstate,
                       "Identification Support                             : %s\n",
                       val ? "Compliant with DCMI Specification" : "Not Compliant with DCMI Specification");
-      
+
       if (FIID_OBJ_GET (obj_cmd_rs,
                         "mandatory_platform_capabilities.sel_logging",
                         &val) < 0)
@@ -221,11 +221,11 @@ _supported_dcmi_capabilities (ipmi_dcmi_state_data_t *state_data)
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
-      
+
       pstdout_printf (state_data->pstate,
                       "SEL logging                                        : %s\n",
                       val ? "Compliant with DCMI Specification" : "Not Compliant with DCMI Specification");
-      
+
       if (FIID_OBJ_GET (obj_cmd_rs,
                         "mandatory_platform_capabilities.chassis_power",
                         &val) < 0)
@@ -236,11 +236,11 @@ _supported_dcmi_capabilities (ipmi_dcmi_state_data_t *state_data)
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
-      
+
       pstdout_printf (state_data->pstate,
                       "Chassis Power                                      : %s\n",
                       val ? "Compliant with DCMI Specification" : "Not Compliant with DCMI Specification");
-      
+
       if (FIID_OBJ_GET (obj_cmd_rs,
                         "mandatory_platform_capabilities.temperature_monitor",
                         &val) < 0)
@@ -251,7 +251,7 @@ _supported_dcmi_capabilities (ipmi_dcmi_state_data_t *state_data)
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
-      
+
       pstdout_printf (state_data->pstate,
                       "Temperature Monitor                                : %s\n",
                       val ? "Compliant with DCMI Specification" : "Not Compliant with DCMI Specification");
@@ -330,11 +330,11 @@ _supported_dcmi_capabilities (ipmi_dcmi_state_data_t *state_data)
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
-      
+
       pstdout_printf (state_data->pstate,
                       "Out-Of-Band Primary LAN Channel                    : %s\n",
                       val ? "Available" : "Not present");
-      
+
       if (FIID_OBJ_GET (obj_cmd_rs,
                         "manageability_access_capabilities.sol_supported",
                         &val) < 0)
@@ -345,12 +345,12 @@ _supported_dcmi_capabilities (ipmi_dcmi_state_data_t *state_data)
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
-      
+
       /* SOL Supported - removed "supported" */
       pstdout_printf (state_data->pstate,
                       "SOL                                                : %s\n",
                       val ? "Available" : "Not present");
-      
+
       if (FIID_OBJ_GET (obj_cmd_rs,
                         "manageability_access_capabilities.vlan_capable",
                         &val) < 0)
@@ -446,7 +446,7 @@ _mandatory_platform_attributes (ipmi_dcmi_state_data_t *state_data)
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
-      
+
       pstdout_printf (state_data->pstate,
                       "Record Level SEL Flush upon Rollover               : %s\n",
                       val ? "Available" : "Not present");
@@ -461,12 +461,12 @@ _mandatory_platform_attributes (ipmi_dcmi_state_data_t *state_data)
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
-      
+
       pstdout_printf (state_data->pstate,
                       "Entire SEL Flush upon Rollover                     : %s\n",
                       val ? "Available" : "Not present");
     }
-  
+
   if (FIID_OBJ_GET (obj_cmd_rs,
                     "sel_attributes.sel_automatic_rollover_enabled",
                     &val) < 0)
@@ -495,7 +495,7 @@ _mandatory_platform_attributes (ipmi_dcmi_state_data_t *state_data)
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
-      
+
       pstdout_printf (state_data->pstate,
                       "GUID                                               : %s\n",
                       val ? "Available" : "Not present");
@@ -544,11 +544,11 @@ _mandatory_platform_attributes (ipmi_dcmi_state_data_t *state_data)
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
-      
+
       pstdout_printf (state_data->pstate,
                       "Inlet temperature                                  : %s\n",
                       val ? "At least 1 present" : "Not present");
-      
+
       if (FIID_OBJ_GET (obj_cmd_rs,
                         "temperature_monitoring.processors_temperature",
                         &val) < 0)
@@ -559,11 +559,11 @@ _mandatory_platform_attributes (ipmi_dcmi_state_data_t *state_data)
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
-      
+
       pstdout_printf (state_data->pstate,
                       "Processors temperature                             : %s\n",
                       val ? "At least 1 present" : "Not present");
-      
+
       if (FIID_OBJ_GET (obj_cmd_rs,
                         "temperature_monitoring.baseboard_temperature",
                         &val) < 0)
@@ -574,7 +574,7 @@ _mandatory_platform_attributes (ipmi_dcmi_state_data_t *state_data)
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
-      
+
       pstdout_printf (state_data->pstate,
                       "Baseboard temperature                              : %s\n",
                       val ? "At least 1 present" : "Not present");
@@ -741,7 +741,7 @@ _manageability_access_attributes (ipmi_dcmi_state_data_t *state_data)
 
   if (ipmi_cmd_dcmi_get_dcmi_capability_info_manageability_access_attributes (state_data->ipmi_ctx,
                                                                               obj_cmd_rs) < 0)
-    {     
+    {
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_cmd_dcmi_get_dcmi_capability_info_manageability_access_attributes: %s\n",
@@ -885,7 +885,7 @@ _get_enhanced_system_power_statistics_attributes (ipmi_dcmi_state_data_t *state_
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
-  
+
   if ((*number_of_supported_rolling_average_time_periods) != len)
     {
       pstdout_fprintf (state_data->pstate,
@@ -895,7 +895,7 @@ _get_enhanced_system_power_statistics_attributes (ipmi_dcmi_state_data_t *state_
                        len);
       goto cleanup;
     }
-  
+
   if ((len = fiid_template_len_bytes (tmpl_dcmi_rolling_average_time_period)) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -967,7 +967,7 @@ _get_time_duration_info (ipmi_dcmi_state_data_t *state_data,
       goto cleanup;
     }
   (*time_duration) = val;
-  
+
   if (FIID_OBJ_GET (obj_rolling_average_time_period,
                     "time_duration_units",
                     &val) < 0)
@@ -979,7 +979,7 @@ _get_time_duration_info (ipmi_dcmi_state_data_t *state_data,
       goto cleanup;
     }
   time_duration_units = val;
-  
+
   if (time_duration_units == IPMI_DCMI_TIME_DURATION_UNITS_SECONDS)
     (*time_duration_units_str) = "Seconds";
   else if (time_duration_units == IPMI_DCMI_TIME_DURATION_UNITS_MINUTES)
@@ -988,7 +988,7 @@ _get_time_duration_info (ipmi_dcmi_state_data_t *state_data,
     (*time_duration_units_str) = "Hours";
   else
     (*time_duration_units_str) = "Days";
-  
+
   rv = 0;
  cleanup:
   fiid_obj_destroy (obj_rolling_average_time_period);
@@ -1041,7 +1041,7 @@ get_dcmi_capability_info (ipmi_dcmi_state_data_t *state_data)
 
   if ((ret = _dcmi_specification_conformance (state_data, &parameter_revision)) < 0)
     return (-1);
-  
+
   if (ret)
     pstdout_printf (state_data->pstate, "\n");
 
@@ -1070,7 +1070,7 @@ get_dcmi_capability_info (ipmi_dcmi_state_data_t *state_data)
     {
       if (ret)
         pstdout_printf (state_data->pstate, "\n");
-      
+
       if ((ret = _enhanced_system_power_statistics_attributes (state_data)) < 0)
         return (-1);
     }
@@ -1109,9 +1109,9 @@ get_asset_tag (ipmi_dcmi_state_data_t *state_data)
       if (!offset
           || ((total_asset_tag_length - offset) >= IPMI_DCMI_ASSET_TAG_NUMBER_OF_BYTES_TO_READ_MAX))
         bytes_to_read = IPMI_DCMI_ASSET_TAG_NUMBER_OF_BYTES_TO_READ_MAX;
-      else 
+      else
         bytes_to_read = total_asset_tag_length - offset;
-      
+
       if (ipmi_cmd_dcmi_get_asset_tag (state_data->ipmi_ctx,
                                        offset,
                                        bytes_to_read,
@@ -1231,9 +1231,9 @@ set_asset_tag (ipmi_dcmi_state_data_t *state_data)
 
       if ((data_len - offset) >= IPMI_DCMI_ASSET_TAG_NUMBER_OF_BYTES_TO_WRITE_MAX)
         bytes_to_write = IPMI_DCMI_ASSET_TAG_NUMBER_OF_BYTES_TO_WRITE_MAX;
-      else 
+      else
         bytes_to_write = data_len - offset;
-      
+
       if (ipmi_cmd_dcmi_set_asset_tag (state_data->ipmi_ctx,
                                        offset,
                                        bytes_to_write,
@@ -1261,7 +1261,7 @@ set_asset_tag (ipmi_dcmi_state_data_t *state_data)
 
       /* DCMI 1.1 spec is unclear on "total_length_written", is it the
        * number of bytes just written or total bytes written so far?
-       * 
+       *
        * DCMI 1.5 spec makes it clear that this is the number of bytes
        * written in total.  To defend against vendor mistakes, we
        * handle both situations.
@@ -1312,9 +1312,9 @@ get_management_controller_identifier_string (ipmi_dcmi_state_data_t *state_data)
       if (!offset
           || ((total_length - offset) >= IPMI_DCMI_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_NUMBER_OF_BYTES_TO_READ_MAX))
         bytes_to_read = IPMI_DCMI_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_NUMBER_OF_BYTES_TO_READ_MAX;
-      else 
+      else
         bytes_to_read = total_length - offset;
-      
+
       if (ipmi_cmd_dcmi_get_management_controller_identifier_string (state_data->ipmi_ctx,
                                                                      offset,
                                                                      bytes_to_read,
@@ -1385,7 +1385,7 @@ set_management_controller_identifier_string (ipmi_dcmi_state_data_t *state_data)
   /* achu:
    *
    * According to DCMI v1.5 draft
-   * 
+   *
    * "The presence of the null terminator among bytes to shall be
    * considered as indicating the last transfer of the Management
    * Controller Identifier string"
@@ -1418,9 +1418,9 @@ set_management_controller_identifier_string (ipmi_dcmi_state_data_t *state_data)
 
       if ((data_len - offset) >= IPMI_DCMI_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_NUMBER_OF_BYTES_TO_WRITE_MAX)
         bytes_to_write = IPMI_DCMI_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_NUMBER_OF_BYTES_TO_WRITE_MAX;
-      else 
+      else
         bytes_to_write = data_len - offset;
-      
+
       if (ipmi_cmd_dcmi_set_management_controller_identifier_string (state_data->ipmi_ctx,
                                                                      offset,
                                                                      bytes_to_write,
@@ -1449,7 +1449,7 @@ set_management_controller_identifier_string (ipmi_dcmi_state_data_t *state_data)
 
       /* DCMI 1.1 spec is unclear on "total_length_written", is it the
        * number of bytes just written or total bytes written so far?
-       * 
+       *
        * DCMI 1.5 spec makes it clear that this is the number of bytes
        * written in total.  To defend against vendor mistakes, we
        * handle both situations.
@@ -1495,7 +1495,7 @@ _sensor_info_output (ipmi_dcmi_state_data_t *state_data,
   assert (state_data);
   assert (IPMI_SENSOR_TYPE_VALID (sensor_type));
   assert (IPMI_DCMI_ENTITY_ID_VALID (entity_id));
-  
+
   pstdout_printf (state_data->pstate,
                   "%s SDR Record IDs\n",
                   _entity_string (entity_id));
@@ -1573,7 +1573,7 @@ _sensor_info_output (ipmi_dcmi_state_data_t *state_data,
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
-      
+
       if (sdr_record_ids_len % 2)
         {
           pstdout_fprintf (state_data->pstate,
@@ -1596,26 +1596,26 @@ _sensor_info_output (ipmi_dcmi_state_data_t *state_data,
       for (i = 0; i < (number_of_record_ids_in_this_response * 2); i += 2)
         {
           uint16_t record_id = 0;
-          
+
           record_id |= sdr_record_ids[i];
           record_id |= (sdr_record_ids[i+1] << 8);
-          
+
           pstdout_printf (state_data->pstate,
                           "%u\n",
                           record_id);
           total_entity_instances_parsed++;
         }
-      
+
       /* achu: entity IDs are returned sequentially?  If not, I'm not
        * sure how this API can even work, you wouldn't know where to
        * start the next time around.  Hopefully this is a correct
        * assumption
        */
-      /* HLiebig: Note: Intel simply increments the offset by 8 (max number of 
+      /* HLiebig: Note: Intel simply increments the offset by 8 (max number of
        * SDR Id's per response.
        * See dcmitool from www.intel.com/go/DCMI (a modified ipmitool)
        */
-  
+
       entity_instance_start += number_of_record_ids_in_this_response;
 
       if (total_entity_instances_parsed >= total_number_of_available_instances)
@@ -1646,7 +1646,7 @@ get_dcmi_sensor_info (ipmi_dcmi_state_data_t *state_data)
                            IPMI_SENSOR_TYPE_TEMPERATURE,
                            IPMI_DCMI_ENTITY_ID_CPU_TEMPERATURE) < 0)
     goto cleanup;
-  
+
   pstdout_printf (state_data->pstate, "\n");
 
   if (_sensor_info_output (state_data,
@@ -1804,7 +1804,7 @@ _output_power_statistics (ipmi_dcmi_state_data_t *state_data,
   if (ipmi_timestamp_string (time_stamp,
                              state_data->prog_data->args->common_args.utc_offset,
                              get_timestamp_flags (&(state_data->prog_data->args->common_args),
-                                                  IPMI_TIMESTAMP_FLAG_DEFAULT), 
+                                                  IPMI_TIMESTAMP_FLAG_DEFAULT),
                              "%m/%d/%Y - %H:%M:%S",
                              timestr,
                              IPMI_DCMI_TIME_BUFLEN) < 0)
@@ -1878,9 +1878,9 @@ get_enhanced_system_power_statistics (ipmi_dcmi_state_data_t *state_data)
                       "Power Statistics for Rolling Average Time Period %u %s\n",
                       time_duration,
                       time_duration_units_str);
-      
+
       pstdout_printf (state_data->pstate, "\n");
-      
+
       if (_output_power_statistics (state_data,
                                     IPMI_DCMI_POWER_READING_MODE_ENHANCED_SYSTEM_POWER_STATISTICS,
                                     rolling_average_time_periods[i]) < 0)
@@ -1963,7 +1963,7 @@ _get_power_limit (ipmi_dcmi_state_data_t *state_data,
             }
           (*comp_code) = val;
         }
-      
+
       if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
           && ipmi_check_completion_code (obj_cmd_rs,
                                          IPMI_COMP_CODE_DCMI_NO_SET_POWER_LIMIT) == 1)
@@ -1999,7 +1999,7 @@ _get_power_limit (ipmi_dcmi_state_data_t *state_data,
       goto cleanup;
     }
   (*exception_actions) = val;
-  
+
   if (FIID_OBJ_GET (obj_cmd_rs,
                     "power_limit_requested",
                     &val) < 0)
@@ -2079,7 +2079,7 @@ get_power_limit (ipmi_dcmi_state_data_t *state_data)
     }
 
   /* XXX: figure out OEM specifics, and list details given manufacturer ID/product ID */
-  /* 
+  /*
 
   From Holger Liebig at Fujitsu
 
@@ -2107,11 +2107,11 @@ get_power_limit (ipmi_dcmi_state_data_t *state_data)
     pstdout_printf (state_data->pstate,
                     "Exception Actions                                 : OEM action (%Xh)\n",
                     exception_actions);
-  else 
+  else
     pstdout_printf (state_data->pstate,
                     "Exception Actions                                 : Unknown action (%Xh)\n",
                     exception_actions);
-   
+
   pstdout_printf (state_data->pstate,
                   "Power Limit Requested                             : %u watts\n",
                   power_limit_requested);
@@ -2175,10 +2175,10 @@ set_power_limit (ipmi_dcmi_state_data_t *state_data)
        * In addition to this, with the latter interpretation, it need
        * not be an indication of an error, but rather a flag.  So the
        * rest of the packet can be completely full of legitimate data.
-       * 
+       *
        * So we will do the following.
        *
-       * If the "No Set Power Limit" completion code is returned and 
+       * If the "No Set Power Limit" completion code is returned and
        * we were able to read all of the fields, _get_power_limit() will
        * return normally and this error fallthrough won't occur.
        *

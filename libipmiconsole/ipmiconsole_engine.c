@@ -1548,7 +1548,7 @@ ipmiconsole_engine_cleanup (int cleanup_sol_sessions)
    * console_engine_ctxs_to_destroy, and the garbage collector has
    * been shut down.  So we don't need to lock w/ the
    * console_engine_ctxs_to_destroy_mutex.
-   * 
+   *
    * This list destruction will cleanup everything except the minimal
    * data within a context for the user to destroy with
    * ipmiconsole_ctx_destroy.

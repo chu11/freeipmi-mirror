@@ -250,7 +250,7 @@ Supermicro H8DGU-F, Supermicro X9DRi-F, Supermicro X9DRI-LN4F+,
 Supermicro X9SPU-F-O, Supermicro X9SCM-iiF, Wiwynn Windmill,
 Wistron/Dell Poweredge C6220.
 .SH "EXAMPLES"
-.B # ipmi-sel 
+.B # ipmi-sel
 .PP
 Show all SEL records on the local machine.
 .PP
@@ -279,7 +279,7 @@ Delete SEL entries in the range 12 to 42 on the local machine.
 #include <@top_srcdir@/man/manpage-common-known-issues.man>
 #include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
 .SH "COPYRIGHT"
-Copyright \(co 2003-2015 FreeIPMI Core Team.  
+Copyright \(co 2003-2015 FreeIPMI Core Team.
 #include <@top_srcdir@/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
 freeipmi(7), bmc-device(8), ipmiseld(8), ipmi-config(8),

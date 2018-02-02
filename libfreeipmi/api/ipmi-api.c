@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -239,7 +239,7 @@ ipmi_ctx_set_flags (ipmi_ctx_t ctx, unsigned int flags)
   if (ctx->type != IPMI_DEVICE_UNKNOWN)
     {
       flags_mask = IPMI_FLAGS_NOSESSION;
-      
+
       if ((ctx->flags & flags_mask) != (flags & flags_mask))
         {
           API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
@@ -723,7 +723,7 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
               break;
             }
         }
-      
+
       if (all_zeroes)
         ctx->io.outofband.k_g_configured = 0;
     }
@@ -1179,7 +1179,7 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
               goto cleanup;
             }
         }
-      
+
       if (ipmi_inteldcmi_ctx_io_init (ctx->io.inband.inteldcmi_ctx) < 0)
         {
           API_INTELDCMI_ERRNUM_TO_API_ERRNUM (ctx, ipmi_inteldcmi_ctx_errnum (ctx->io.inband.inteldcmi_ctx));
@@ -1221,7 +1221,7 @@ _is_ctx_fatal_error (ipmi_ctx_t ctx)
   /* some are fatal b/c they are outfoband and shouldn't happen */
   /* note parameters is not fatal, for some drivers, inputs from users may not be ok */
   /* note internal error is not fatal, could be a bad errno from a syscall */
-  
+
   assert (ctx);
   assert (ctx->magic == IPMI_CTX_MAGIC);
 
@@ -1253,7 +1253,7 @@ _is_locate_ctx_fatal_error (ipmi_locate_ctx_t locate_ctx)
   /* some are fatal b/c they are outfoband and shouldn't happen */
   /* note parameters is not fatal, for some drivers, inputs from users may not be ok */
   /* note internal error is not fatal, could be a bad errno from a syscall */
-  
+
   assert (locate_ctx);
 
   if (ipmi_locate_ctx_errnum (locate_ctx) == IPMI_LOCATE_ERR_NULL
@@ -1283,7 +1283,7 @@ ipmi_ctx_find_inband (ipmi_ctx_t ctx,
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
     }
-  
+
   if (ctx->type != IPMI_DEVICE_UNKNOWN)
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_ALREADY_OPEN);
@@ -1316,13 +1316,13 @@ ipmi_ctx_find_inband (ipmi_ctx_t ctx,
       if (_is_ctx_fatal_error (ctx))
         goto cleanup;
     }
-  
+
   if (!ret)
     {
       rv = 1;
       goto out;
     }
-  
+
   if ((ret = ipmi_ctx_open_inband (ctx,
                                    IPMI_DEVICE_SUNBMC,
                                    disable_auto_probe,
@@ -1348,13 +1348,13 @@ ipmi_ctx_find_inband (ipmi_ctx_t ctx,
       if (_is_ctx_fatal_error (ctx))
         goto cleanup;
     }
-  
+
   if (!ret)
     {
       rv = 1;
       goto out;
     }
-  
+
   /* achu
    *
    * If one of KCS or SSIF is found, we try that one first.
@@ -1367,7 +1367,7 @@ ipmi_ctx_find_inband (ipmi_ctx_t ctx,
    * This does mean in-band communication is slower (doing
    * excessive early probing).  It's a justified cost to me.
    */
-      
+
   if ((ret = ipmi_locate_discover_device_info (locate_ctx,
                                                IPMI_INTERFACE_KCS,
                                                &locate_info)) < 0)
@@ -1375,7 +1375,7 @@ ipmi_ctx_find_inband (ipmi_ctx_t ctx,
       if (_is_locate_ctx_fatal_error (locate_ctx))
         goto cleanup;
     }
-  
+
   if (!ret)
     {
       if ((ret = ipmi_ctx_open_inband (ctx,
@@ -1390,7 +1390,7 @@ ipmi_ctx_find_inband (ipmi_ctx_t ctx,
           if (_is_ctx_fatal_error (ctx))
             goto cleanup;
         }
-      
+
       if (!ret)
         {
           rv = 1;
@@ -1420,7 +1420,7 @@ ipmi_ctx_find_inband (ipmi_ctx_t ctx,
           if (_is_ctx_fatal_error (ctx))
             goto cleanup;
         }
-      
+
       if (!ret)
         {
           rv = 1;
@@ -1445,13 +1445,13 @@ ipmi_ctx_find_inband (ipmi_ctx_t ctx,
       if (_is_ctx_fatal_error (ctx))
         goto cleanup;
     }
-  
+
   if (!ret)
     {
       rv = 1;
       goto out;
     }
-  
+
   if ((ret = ipmi_ctx_open_inband (ctx,
                                    IPMI_DEVICE_SSIF,
                                    disable_auto_probe,
@@ -1504,7 +1504,7 @@ ipmi_ctx_set_target (ipmi_ctx_t ctx,
       ctx->target.rs_addr_is_set = 0;
       goto out;
     }
-  
+
   /* Special case, don't want to do bridging */
   if ((channel_number
        && (*channel_number) == IPMI_CHANNEL_NUMBER_PRIMARY_IPMB)
@@ -1530,13 +1530,13 @@ ipmi_ctx_set_target (ipmi_ctx_t ctx,
   else
     ctx->target.channel_number = IPMI_CHANNEL_NUMBER_PRIMARY_IPMB;
   ctx->target.channel_number_is_set = 1;
-  
+
   if (rs_addr)
     ctx->target.rs_addr = *rs_addr;
   else
     ctx->target.rs_addr = IPMI_SLAVE_ADDRESS_BMC;
   ctx->target.rs_addr_is_set = 1;
-  
+
  out:
   ctx->errnum = IPMI_ERR_SUCCESS;
   return (0);
@@ -1558,7 +1558,7 @@ ipmi_ctx_get_target (ipmi_ctx_t ctx,
       API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_NOT_OPEN);
       return (-1);
     }
-  
+
   if (channel_number)
     {
       if (ctx->target.channel_number_is_set)
@@ -1599,20 +1599,20 @@ ipmi_cmd (ipmi_ctx_t ctx,
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
     }
-  
+
   if (ctx->type == IPMI_DEVICE_UNKNOWN)
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_NOT_OPEN);
       return (-1);
     }
-  
+
   if (ctx->flags & IPMI_FLAGS_NOSESSION
       && ctx->type != IPMI_DEVICE_LAN)
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_DEVICE_NOT_OPEN);
       return (-1);
     }
-  
+
   if (ctx->type != IPMI_DEVICE_LAN
       && ctx->type != IPMI_DEVICE_LAN_2_0
       && ctx->type != IPMI_DEVICE_KCS
@@ -1624,7 +1624,7 @@ ipmi_cmd (ipmi_ctx_t ctx,
       API_SET_ERRNUM (ctx, IPMI_ERR_INTERNAL_ERROR);
       return (-1);
     }
-  
+
   if (!fiid_obj_valid (obj_cmd_rq)
       || !fiid_obj_valid (obj_cmd_rs))
     {
@@ -1874,16 +1874,16 @@ ipmi_cmd_ipmb (ipmi_ctx_t ctx,
     }
 
   memcpy (&target_save, &ctx->target, sizeof (target_save));
-  
+
   ctx->target.channel_number = channel_number;
   ctx->target.channel_number_is_set = 1;
   ctx->target.rs_addr = rs_addr;
   ctx->target.rs_addr_is_set = 1;
-  
+
   rv = ipmi_cmd (ctx, lun, net_fn, obj_cmd_rq, obj_cmd_rs);
-  
+
   memcpy (&ctx->target, &target_save, sizeof (target_save));
-  
+
   /* errnum set in ipmi_cmd() */
   return (rv);
 }
@@ -1968,7 +1968,7 @@ ipmi_cmd_raw (ipmi_ctx_t ctx,
               if (buf_rq_len > 1)
                 group_extension = ((uint8_t *)buf_rq)[1];
             }
-    
+
           debug_hdr_cmd (DEBUG_UTIL_TYPE_INBAND,
                          DEBUG_UTIL_DIRECTION_REQUEST,
                          ctx->target.net_fn,
@@ -2191,7 +2191,7 @@ _ipmi_outofband_2_0_close (ipmi_ctx_t ctx)
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
           && ctx->type == IPMI_DEVICE_LAN_2_0);
-  
+
   /* No need to set errnum - if the anything in close session
    * fails, session will eventually timeout anyways
    */
@@ -2255,7 +2255,7 @@ ipmi_ctx_close (ipmi_ctx_t ctx)
   /* closing session - end channel/slave targeting */
   ctx->target.channel_number_is_set = 0;
   ctx->target.rs_addr_is_set = 0;
-  
+
   if (ctx->type == IPMI_DEVICE_LAN)
     _ipmi_outofband_close (ctx);
   else if (ctx->type == IPMI_DEVICE_LAN_2_0)

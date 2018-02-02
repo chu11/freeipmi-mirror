@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef TOOL_EVENT_COMMON_H
@@ -51,7 +51,7 @@ int event_output_time (pstdout_state_t pstate,
                        int comma_separated_output,
                        int debug,
                        unsigned int flags);
-                                       
+
 int event_output_not_available_time (pstdout_state_t pstate,
                                      int comma_separated_output);
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2008-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -653,7 +653,7 @@ device_instance_selector_commit (ipmi_config_state_data_t *state_data,
 
   if ((ret = _set_boot_flags (state_data, &data)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
-  
+
   return (IPMI_CONFIG_ERR_SUCCESS);
 }
 
@@ -822,12 +822,12 @@ _set_system_boot_options_BMC_boot_flag_valid_bit_clearing (ipmi_config_state_dat
                                                                          obj_cmd_rs) < 0)
     {
       ipmi_config_err_t ret;
-      
+
       if (ipmi_config_param_errnum_is_non_fatal (state_data,
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
-      
+
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
           || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
@@ -837,11 +837,11 @@ _set_system_boot_options_BMC_boot_flag_valid_bit_clearing (ipmi_config_state_dat
 
       goto cleanup;
     }
-  
+
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
-  return (rv); 
+  return (rv);
 }
 
 static ipmi_config_err_t
@@ -850,7 +850,7 @@ _set_system_boot_options_boot_info_acknowledge (ipmi_config_state_data_t *state_
   uint8_t boot_info_acknowledge = IPMI_SYSTEM_BOOT_OPTION_BOOT_INFO_UNACKNOWLEDGE;
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   fiid_obj_t obj_cmd_rs = NULL;
-  
+
   assert (state_data);
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_system_boot_options_rs)))
@@ -877,7 +877,7 @@ _set_system_boot_options_boot_info_acknowledge (ipmi_config_state_data_t *state_
                                                  obj_cmd_rs,
                                                  &ret))
         rv = ret;
-      
+
       if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
           || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,

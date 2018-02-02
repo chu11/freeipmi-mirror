@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2008-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -68,7 +68,7 @@
  * tpanel system status. ... This command also supports additional
  * parameters to control BMC-owned component fault LEDs associated
  * with teh specified fault condition."
- * 
+ *
  * Set Fault Indication Request
  *
  * 0x30 - OEM network function
@@ -118,7 +118,7 @@
  *      - 1 - Fan profile 1
  *      - 2 - Fan profile 2
  *      - 3 - Fan profile 3
- *      - 4 - Fan profile 4 
+ *      - 4 - Fan profile 4
  *      - 5 - Fan profile 5 (not valid for QSSC-S4R)
  *      - 6 - Fan profile 6 (not valid for QSSC-S4R)
  *      - 7 - Fan profile 7 (not valid for QSSC-S4R)
@@ -134,10 +134,10 @@
  *            - 2 - Close-loop thermal throttling (CLTT)
  *            - 3 - None specified (do not change current setting)
  * 0x?? - Memory Device Group ID
- *      - 0 - cpu #1 group              
- *      - 1 - cpu #2 group              
- *      - 2 - cpu #3 group             
- *      - 3 - cpu #4 group             
+ *      - 0 - cpu #1 group
+ *      - 1 - cpu #2 group
+ *      - 2 - cpu #3 group
+ *      - 3 - cpu #4 group
  *      - 0xff - none specified
  *
  * bytes 4-11 - memory device presence bit map
@@ -201,7 +201,7 @@ _get_smtp_configuration_data (ipmi_oem_state_data_t *state_data,
   bytes_rq[2] = parameter_selector;
   bytes_rq[3] = set_selector;
   bytes_rq[4] = block_selector;
-  
+
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
                               IPMI_NET_FN_OEM_INTEL_CONFIG_RQ, /* network function */
@@ -286,7 +286,7 @@ _get_smtp_configuration_value (ipmi_oem_state_data_t *state_data,
                        stderr,
                        "%u configuration data bytes returned, expected 4\n",
                        buflen);
-      
+
       goto cleanup;
     }
 
@@ -359,7 +359,7 @@ _get_smtp_configuration_string (ipmi_oem_state_data_t *state_data,
                                         buf,
                                         &buflen) < 0)
         goto cleanup;
-      
+
       if (!buflen)
         {
           pstdout_fprintf (state_data->pstate,
@@ -367,7 +367,7 @@ _get_smtp_configuration_string (ipmi_oem_state_data_t *state_data,
                            "zero configuration data bytes returned\n");
           goto cleanup;
         }
-      
+
       if ((buflen + string_count) > stringlen)
         {
           pstdout_fprintf (state_data->pstate,
@@ -439,7 +439,7 @@ ipmi_oem_intel_get_smtp_config (ipmi_oem_state_data_t *state_data)
                            state_data->prog_data->args->oem_options[0]);
           goto cleanup;
         }
-      
+
       channel_numbers[0] = temp;
       channel_numbers_count = 1;
     }
@@ -458,7 +458,7 @@ ipmi_oem_intel_get_smtp_config (ipmi_oem_state_data_t *state_data)
                            ipmi_ctx_errormsg (state_data->ipmi_ctx));
           goto cleanup;
         }
-      
+
       if (!ret)
         {
           pstdout_fprintf (state_data->pstate,
@@ -482,7 +482,7 @@ ipmi_oem_intel_get_smtp_config (ipmi_oem_state_data_t *state_data)
       char sender_email_address[IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_STRING_LENGTH_MAX + 1];
       char smtp_host_name[IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_STRING_LENGTH_MAX + 1];
       uint32_t value;
-      
+
       if (channel_numbers_count > 1)
         pstdout_printf (state_data->pstate,
                         "LAN Channel %u\n",
@@ -513,7 +513,7 @@ ipmi_oem_intel_get_smtp_config (ipmi_oem_state_data_t *state_data)
                                           smtp_user_name,
                                           IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_STRING_LENGTH_MAX) < 0)
         goto cleanup;
-      
+
       memset (email_address, '\0', IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_STRING_LENGTH_MAX + 1);
 
       if (_get_smtp_configuration_string (state_data,
@@ -569,7 +569,7 @@ ipmi_oem_intel_get_smtp_config (ipmi_oem_state_data_t *state_data)
                       (smtpserveraddress & 0x0000FF00) >> 8,
                       (smtpserveraddress & 0x00FF0000) >> 16,
                       (smtpserveraddress & 0xFF000000) >> 24);
-      
+
       pstdout_printf (state_data->pstate,
                       "SMTP User Name       : %s\n",
                       smtp_user_name);
@@ -648,7 +648,7 @@ _set_smtp_configuration_data (ipmi_oem_state_data_t *state_data,
   bytes_rq[3] = set_selector;
   bytes_rq[4] = block_selector;
   memcpy (&bytes_rq[5], buf, buflen);
-  
+
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
                               IPMI_NET_FN_OEM_INTEL_CONFIG_RQ, /* network function */
@@ -663,7 +663,7 @@ _set_smtp_configuration_data (ipmi_oem_state_data_t *state_data,
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
-  
+
   if (ipmi_oem_check_response_and_completion_code (state_data,
                                                    bytes_rs,
                                                    rs_len,
@@ -780,7 +780,7 @@ _set_smtp_configuration_string (ipmi_oem_state_data_t *state_data,
       max_blocks = IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_SMTP_HOST_NAME_MAX_BLOCKS;
       break;
     }
-  
+
   if (strlen (string) > (max_blocks * IPMI_OEM_INTEL_SMTP_STRING_BLOCK_LENGTH))
     {
       pstdout_fprintf (state_data->pstate,
@@ -800,7 +800,7 @@ _set_smtp_configuration_string (ipmi_oem_state_data_t *state_data,
                        key);
       goto cleanup;
     }
-  
+
   /* according to docs, must pad 00h to max blocks */
   memset (buf, '\0', IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_STRING_LENGTH_MAX);
   memcpy (buf, string, strlen (string));
@@ -859,7 +859,7 @@ ipmi_oem_intel_set_smtp_config (ipmi_oem_state_data_t *state_data)
                       "Option: messagecontent=string\n"
                       "Option: senderemailaddress=string\n"
                       "Option: smtphostname=string\n");
-      return (0); 
+      return (0);
     }
 
   /* Check if user selected a channel number */
@@ -884,7 +884,7 @@ ipmi_oem_intel_set_smtp_config (ipmi_oem_state_data_t *state_data)
   if (load_channel_numbers)
     {
       int ret;
-      
+
       if ((ret = ipmi_get_channel_numbers (state_data->ipmi_ctx,
                                            IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3,
                                            channel_numbers,
@@ -896,7 +896,7 @@ ipmi_oem_intel_set_smtp_config (ipmi_oem_state_data_t *state_data)
                            ipmi_ctx_errormsg (state_data->ipmi_ctx));
           goto cleanup;
         }
-      
+
       if (!ret)
         {
           pstdout_fprintf (state_data->pstate,
@@ -908,12 +908,12 @@ ipmi_oem_intel_set_smtp_config (ipmi_oem_state_data_t *state_data)
 
       channel_numbers_count = ret;
     }
- 
+
   for (i = (load_channel_numbers ? 0 : 1); i < state_data->prog_data->args->oem_options_count; i++)
     {
       char *key = NULL;
       char *value = NULL;
-      
+
       if (ipmi_oem_parse_key_value (state_data,
                                     i,
                                     &key,
@@ -950,7 +950,7 @@ ipmi_oem_intel_set_smtp_config (ipmi_oem_state_data_t *state_data)
 
           if (ipmi_oem_parse_string (state_data,
                                      i,
-                                     value, 
+                                     value,
                                      &string_length,
                                      smtp_user_name,
                                      IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_STRING_LENGTH_MAX) < 0)
@@ -970,7 +970,7 @@ ipmi_oem_intel_set_smtp_config (ipmi_oem_state_data_t *state_data)
 
           if (ipmi_oem_parse_string (state_data,
                                      i,
-                                     value, 
+                                     value,
                                      &string_length,
                                      user_password,
                                      IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_STRING_LENGTH_MAX) < 0)
@@ -979,7 +979,7 @@ ipmi_oem_intel_set_smtp_config (ipmi_oem_state_data_t *state_data)
           /* clear out buffers for security */
 
           secure_memset (value, '\0', strlen (value));
-          
+
           secure_memset (state_data->prog_data->args->oem_options[i], '\0', strlen (state_data->prog_data->args->oem_options[i]));
 
           if (_set_smtp_configuration_string (state_data,
@@ -991,7 +991,7 @@ ipmi_oem_intel_set_smtp_config (ipmi_oem_state_data_t *state_data)
             goto cleanup;
 
           /* clear out buffers for security */
-          
+
           secure_memset (user_password, '\0', IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_STRING_LENGTH_MAX + 1);
         }
       else if (!strcasecmp (key, "emailaddress"))
@@ -1000,7 +1000,7 @@ ipmi_oem_intel_set_smtp_config (ipmi_oem_state_data_t *state_data)
 
           if (ipmi_oem_parse_string (state_data,
                                      i,
-                                     value, 
+                                     value,
                                      &string_length,
                                      email_address,
                                      IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_STRING_LENGTH_MAX) < 0)
@@ -1020,7 +1020,7 @@ ipmi_oem_intel_set_smtp_config (ipmi_oem_state_data_t *state_data)
 
           if (ipmi_oem_parse_string (state_data,
                                      i,
-                                     value, 
+                                     value,
                                      &string_length,
                                      subject,
                                      IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_STRING_LENGTH_MAX) < 0)
@@ -1040,7 +1040,7 @@ ipmi_oem_intel_set_smtp_config (ipmi_oem_state_data_t *state_data)
 
           if (ipmi_oem_parse_string (state_data,
                                      i,
-                                     value, 
+                                     value,
                                      &string_length,
                                      message_content,
                                      IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_STRING_LENGTH_MAX) < 0)
@@ -1060,7 +1060,7 @@ ipmi_oem_intel_set_smtp_config (ipmi_oem_state_data_t *state_data)
 
           if (ipmi_oem_parse_string (state_data,
                                      i,
-                                     value, 
+                                     value,
                                      &string_length,
                                      sender_email_address,
                                      IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_STRING_LENGTH_MAX) < 0)
@@ -1080,7 +1080,7 @@ ipmi_oem_intel_set_smtp_config (ipmi_oem_state_data_t *state_data)
 
           if (ipmi_oem_parse_string (state_data,
                                      i,
-                                     value, 
+                                     value,
                                      &string_length,
                                      smtp_host_name,
                                      IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_STRING_LENGTH_MAX) < 0)
@@ -1119,7 +1119,7 @@ ipmi_oem_intel_get_power_restore_delay (ipmi_oem_state_data_t *state_data)
 {
   uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
   uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
-  uint16_t delay = 0; 
+  uint16_t delay = 0;
   int rs_len;
   int rv = -1;
 
@@ -1128,12 +1128,12 @@ ipmi_oem_intel_get_power_restore_delay (ipmi_oem_state_data_t *state_data)
 
   /* Intel S2600JF/Appro 512X
    *
-   * Request 
+   * Request
    *
    * 0x30 - OEM network function
    * 0x55 - OEM cmd
    *
-   * Response 
+   * Response
    *
    * 0x55 - OEM cmd
    * 0x?? - Completion Code
@@ -1161,7 +1161,7 @@ ipmi_oem_intel_get_power_restore_delay (ipmi_oem_state_data_t *state_data)
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
-  
+
   if (ipmi_oem_check_response_and_completion_code (state_data,
                                                    bytes_rs,
                                                    rs_len,
@@ -1187,7 +1187,7 @@ ipmi_oem_intel_set_power_restore_delay (ipmi_oem_state_data_t *state_data)
   uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
   unsigned int tmp;
   char *endptr;
-  uint16_t delay = 0; 
+  uint16_t delay = 0;
   int rs_len;
   int rv = -1;
 
@@ -1195,7 +1195,7 @@ ipmi_oem_intel_set_power_restore_delay (ipmi_oem_state_data_t *state_data)
   assert (state_data->prog_data->args->oem_options_count == 1);
 
   errno = 0;
-  
+
   tmp = strtoul (state_data->prog_data->args->oem_options[0],
                  &endptr,
                  10);
@@ -1211,12 +1211,12 @@ ipmi_oem_intel_set_power_restore_delay (ipmi_oem_state_data_t *state_data)
                        state_data->prog_data->args->oem_options[0]);
       goto cleanup;
     }
-  
+
   delay = tmp;
-  
+
   /* Intel S2600JF/Appro 512X
    *
-   * Request 
+   * Request
    *
    * 0x30 - OEM network function
    * 0x54 - OEM cmd
@@ -1225,7 +1225,7 @@ ipmi_oem_intel_set_power_restore_delay (ipmi_oem_state_data_t *state_data)
    *      - [2:0] - most significant 3 bits
    * 0x?? - delay setting (LSB)
    *
-   * Response 
+   * Response
    *
    * 0x55 - OEM cmd
    * 0x?? - Completion Code
@@ -1251,7 +1251,7 @@ ipmi_oem_intel_set_power_restore_delay (ipmi_oem_state_data_t *state_data)
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
-  
+
   if (ipmi_oem_check_response_and_completion_code (state_data,
                                                    bytes_rs,
                                                    rs_len,
@@ -1279,12 +1279,12 @@ ipmi_oem_intel_get_bmc_services (ipmi_oem_state_data_t *state_data)
 
   /* Intel S2600WT2
    *
-   * Request 
+   * Request
    *
    * 0x30 - OEM network function
    * 0xB2 - OEM cmd
    *
-   * Response 
+   * Response
    *
    * 0xB2 - OEM cmd
    * 0x?? - Completion Code
@@ -1297,7 +1297,7 @@ ipmi_oem_intel_get_bmc_services (ipmi_oem_state_data_t *state_data)
    *        bit 2:0 - reserved
    * 0x?? - OEM specific Services bit pattern
    *      - bit 7 - KVM
-   *        bit 6:0 - reserved 
+   *        bit 6:0 - reserved
    */
 
   bytes_rq[0] = IPMI_CMD_OEM_INTEL_GET_BMC_SERVICE_STATUS;
@@ -1316,7 +1316,7 @@ ipmi_oem_intel_get_bmc_services (ipmi_oem_state_data_t *state_data)
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
-  
+
   if (ipmi_oem_check_response_and_completion_code (state_data,
                                                    bytes_rs,
                                                    rs_len,
@@ -1328,13 +1328,13 @@ ipmi_oem_intel_get_bmc_services (ipmi_oem_state_data_t *state_data)
 
   pstdout_printf (state_data->pstate, "SSH: %s\n",
                   (bytes_rs[2] & IPMI_OEM_INTEL_STANDARD_SERVICES_SSH) ? "Enabled" : "Disabled");
-  
+
   pstdout_printf (state_data->pstate, "HTTP/HTTPS: %s\n",
                   (bytes_rs[2] & IPMI_OEM_INTEL_STANDARD_SERVICES_HTTP) ? "Enabled" : "Disabled");
 
   pstdout_printf (state_data->pstate, "RMCP/RMCP+: %s\n",
                   (bytes_rs[2] & IPMI_OEM_INTEL_STANDARD_SERVICES_RMCP) ? "Enabled" : "Disabled");
-  
+
   pstdout_printf (state_data->pstate, "KVM: %s\n",
                   (bytes_rs[3] & IPMI_OEM_INTEL_OEM_SPECIFIC_SERVICES_KVM) ? "Enabled" : "Disabled");
 
@@ -1365,7 +1365,7 @@ ipmi_oem_intel_set_bmc_services (ipmi_oem_state_data_t *state_data)
                        state_data->prog_data->args->oem_options[0]);
       goto cleanup;
     }
-  
+
   if (strcasecmp (state_data->prog_data->args->oem_options[1], "ssh")
       && strcasecmp (state_data->prog_data->args->oem_options[1], "http")
       && strcasecmp (state_data->prog_data->args->oem_options[1], "rmcp")
@@ -1382,7 +1382,7 @@ ipmi_oem_intel_set_bmc_services (ipmi_oem_state_data_t *state_data)
 
   /* Intel S2600WT2
    *
-   * Request 
+   * Request
    *
    * 0x30 - OEM network function
    * 0xB1 - OEM cmd
@@ -1397,9 +1397,9 @@ ipmi_oem_intel_set_bmc_services (ipmi_oem_state_data_t *state_data)
    *        bit 2:0 - reserved
    * 0x?? - OEM specific Services bit pattern
    *      - bit 7 - KVM
-   *        bit 6:0 - reserved 
+   *        bit 6:0 - reserved
    *
-   * Response 
+   * Response
    *
    * 0xB1 - OEM cmd
    * 0x?? - Completion Code
@@ -1446,7 +1446,7 @@ ipmi_oem_intel_set_bmc_services (ipmi_oem_state_data_t *state_data)
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
-  
+
   if (ipmi_oem_check_response_and_completion_code (state_data,
                                                    bytes_rs,
                                                    rs_len,
@@ -1455,7 +1455,7 @@ ipmi_oem_intel_set_bmc_services (ipmi_oem_state_data_t *state_data)
                                                    IPMI_NET_FN_OEM_INTEL_GENERIC_RS,
                                                    NULL) < 0)
     goto cleanup;
-  
+
   rv = 0;
  cleanup:
   return (rv);
@@ -1485,7 +1485,7 @@ ipmi_oem_intel_restore_configuration (ipmi_oem_state_data_t *state_data)
    * 0x?? - Operation
    *      - 0x00 - restore status
    *      - 0xAA - initiate restore
-   * 
+   *
    * Restore Configuration Response
    *
    * 0x02 - OEM cmd
@@ -1500,7 +1500,7 @@ ipmi_oem_intel_restore_configuration (ipmi_oem_state_data_t *state_data)
   bytes_rq[2] = 'L';
   bytes_rq[3] = 'R';
   bytes_rq[4] = IPMI_OEM_INTEL_RESTORE_CONFIGURATION_OPERATION_INITIATE_RESTORE;
-   
+
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
                               IPMI_NET_FN_OEM_INTEL_GENERIC_RQ, /* network function */
@@ -1515,7 +1515,7 @@ ipmi_oem_intel_restore_configuration (ipmi_oem_state_data_t *state_data)
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
-  
+
   if (ipmi_oem_check_response_and_completion_code (state_data,
                                                    bytes_rs,
                                                    rs_len,
@@ -1524,12 +1524,12 @@ ipmi_oem_intel_restore_configuration (ipmi_oem_state_data_t *state_data)
                                                    IPMI_NET_FN_OEM_INTEL_GENERIC_RS,
                                                    NULL) < 0)
     goto cleanup;
-  
+
   /* don't quit until it is done */
   while (1)
     {
       bytes_rq[4] = IPMI_OEM_INTEL_RESTORE_CONFIGURATION_OPERATION_GET_RESTORE_STATUS;
-      
+
       if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                                   0, /* lun */
                                   IPMI_NET_FN_OEM_INTEL_GENERIC_RQ, /* network function */
@@ -1544,7 +1544,7 @@ ipmi_oem_intel_restore_configuration (ipmi_oem_state_data_t *state_data)
                            ipmi_ctx_errormsg (state_data->ipmi_ctx));
           goto cleanup;
         }
-      
+
       if (ipmi_oem_check_response_and_completion_code (state_data,
                                                        bytes_rs,
                                                        rs_len,
@@ -1553,13 +1553,13 @@ ipmi_oem_intel_restore_configuration (ipmi_oem_state_data_t *state_data)
                                                        IPMI_NET_FN_OEM_INTEL_GENERIC_RS,
                                                        NULL) < 0)
         goto cleanup;
-      
+
       if (bytes_rs[2] == IPMI_OEM_INTEL_RESTORE_CONFIGURATION_RESTORE_PROGRESS_RESTORE_COMPLETED)
         break;
 
       sleep (1);
     }
-  
+
   rv = 0;
  cleanup:
   return (rv);

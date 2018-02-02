@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -74,35 +74,35 @@ sel_string_output_supermicro_overheat_event_data1_class_oem (ipmi_sel_ctx_t ctx,
   assert (wlen);
   assert (system_event_record_data);
 
-  /* 
-   * Supermicro X7DBR-3 (X7DBR_3)     
-   * Supermicro X7DB8       
-   * Supermicro X8DTN       
-   * Supermicro X7SBI-LN4 (X7SBI_LN4) 
-   * Supermicro X8DTH       
-   * Supermicro X8DTG       
-   * Supermicro X8DTU       
-   * Supermicro X8DT3-LN4F (X8DT3_LN4F)         
+  /*
+   * Supermicro X7DBR-3 (X7DBR_3)
+   * Supermicro X7DB8
+   * Supermicro X8DTN
+   * Supermicro X7SBI-LN4 (X7SBI_LN4)
+   * Supermicro X8DTH
+   * Supermicro X8DTG
+   * Supermicro X8DTU
+   * Supermicro X8DT3-LN4F (X8DT3_LN4F)
    * Supermicro X8DTU-6+ (X8DTU_6PLUS)
-   * Supermicro X8DTL       
-   * Supermicro X8DTL-3F (X8DTL_3F)   
-   * Supermicro X8SIL-F  (X8SIL_F)    
-   * Supermicro X9SCL       
-   * Supermicro X9SCM       
+   * Supermicro X8DTL
+   * Supermicro X8DTL-3F (X8DTL_3F)
+   * Supermicro X8SIL-F  (X8SIL_F)
+   * Supermicro X9SCL
+   * Supermicro X9SCM
    * Supermicro X8DTN+-F (X8DTNPLUS_F)
-   * Supermicro X8SIE       
-   * Supermicro X9SCA-F-O (X9SCA_F_O) 
+   * Supermicro X8SIE
+   * Supermicro X9SCA-F-O (X9SCA_F_O)
    * Supermicro H8DGU-F (H8DGU_F)
    * Supermicro X9DRi-F (X9DRI_F)
    * Supermicro X9DRI-LN4F+ (X9DRI_LN4F_PLUS)
-   * Supermicro X9SPU-F-O (X9SPU_F_O) 
+   * Supermicro X9SPU-F-O (X9SPU_F_O)
    * Supermicro X9SCM-iiF (X9SCM_IIF)
-   *    
-   * Note: Early Supermicro motherboards used the "Peppercon" Manufacturer ID 
-   * Note: Some Supermicro motherboards are rebranded with random manufacturer IDs    
+   *
+   * Note: Early Supermicro motherboards used the "Peppercon" Manufacturer ID
+   * Note: Some Supermicro motherboards are rebranded with random manufacturer IDs
    */
 
-  /* achu: Via reverse engineering, see 
+  /* achu: Via reverse engineering, see
    *
    * "Supermicro X8DTG-QF System Event Log" thread in late
    * January/early February 2012.
@@ -115,7 +115,7 @@ sel_string_output_supermicro_overheat_event_data1_class_oem (ipmi_sel_ctx_t ctx,
       snprintf (tmpbuf,
                 tmpbuflen,
                 "Overheat");
-  
+
       return (1);
     }
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_INTERPRET_H
@@ -33,7 +33,7 @@ extern "C" {
 #define IPMI_INTERPRET_ERR_PERMISSION                         5
 #define IPMI_INTERPRET_ERR_SEL_CONFIG_FILE_DOES_NOT_EXIST     6
 #define IPMI_INTERPRET_ERR_SEL_CONFIG_FILE_PARSE              7
-#define IPMI_INTERPRET_ERR_SENSOR_CONFIG_FILE_DOES_NOT_EXIST  8        
+#define IPMI_INTERPRET_ERR_SENSOR_CONFIG_FILE_DOES_NOT_EXIST  8
 #define IPMI_INTERPRET_ERR_SENSOR_CONFIG_FILE_PARSE           9
 #define IPMI_INTERPRET_ERR_INVALID_SEL_RECORD                10
 #define IPMI_INTERPRET_ERR_SYSTEM_ERROR                      11

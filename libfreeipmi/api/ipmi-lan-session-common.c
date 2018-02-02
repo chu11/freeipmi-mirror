@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -217,7 +217,7 @@ _calculate_timeout (ipmi_ctx_t ctx,
    */
 
   timersub (&current, recv_starttime, &already_timedout_check);
-  
+
   if (timercmp (timeout, &already_timedout_check, <))
     return (0);
 
@@ -574,13 +574,13 @@ _api_lan_cmd_send (ipmi_ctx_t ctx,
                              ctx->io.outofband.remote_host,
                              ctx->io.outofband.remote_host_len);
     } while (ret < 0 && errno == EINTR);
-  
+
   if (ret < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   if (gettimeofday (&ctx->io.outofband.last_send, NULL) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
@@ -665,7 +665,7 @@ _api_lan_cmd_recv (ipmi_ctx_t ctx,
                                     pkt_len,
                                     retransmission_count,
                                     &recv_starttime);
-      
+
       if (!recv_len)
         return (0); /* resend the request */
     }
@@ -738,7 +738,7 @@ _api_lan_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
 
           /*
            * IPMI Workaround
-           * 
+           *
            * Discovered on Xyratex HB-F8-SRAY
            *
            * The session ID is zero if there is an error.  So if there
@@ -770,7 +770,7 @@ _api_lan_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
           API_ERRNO_TO_API_ERRNUM (ctx, errno);
           goto cleanup;
         }
-      
+
       if (!ret)
         {
           rv = 0;
@@ -805,7 +805,7 @@ _api_lan_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
           API_ERRNO_TO_API_ERRNUM (ctx, errno);
           goto cleanup;
         }
-      
+
       /* IPMI Workaround (achu)
        *
        * Discovered on Dell PowerEdge 2850
@@ -817,7 +817,7 @@ _api_lan_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
        * here is our second session-authcode check attempt under these
        * circumstances.
        */
-      
+
       if ((internal_workaround_flags & IPMI_INTERNAL_WORKAROUND_FLAGS_CHECK_UNEXPECTED_AUTHCODE)
           && !ret)
         {
@@ -1098,10 +1098,10 @@ api_lan_cmd_wrapper (ipmi_ctx_t ctx,
           API_ERRNO_TO_API_ERRNUM (ctx, errno);
           return (-1);
         }
-  
+
       if (!ret)
         continue;
-  
+
       if ((ret = _api_lan_cmd_wrapper_verify_packet (ctx,
                                                      internal_workaround_flags,
                                                      authentication_type,
@@ -1113,16 +1113,16 @@ api_lan_cmd_wrapper (ipmi_ctx_t ctx,
                                                      password_len,
                                                      obj_cmd_rs)) < 0)
         goto cleanup;
-      
+
       if (!ret)
         continue;
-      
+
       if (gettimeofday (&(ctx->io.outofband.last_received), NULL) < 0)
         {
           API_ERRNO_TO_API_ERRNUM (ctx, errno);
           return (-1);
         }
-      
+
       rv = 0;
       break;
     }
@@ -1217,10 +1217,10 @@ _ipmi_cmd_send_ipmb (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rq)
                                tbuf,
                                len,
                                obj_send_cmd_rs);
-  
+
   /* restore target info */
   memcpy (&ctx->target, &target_save, sizeof (target_save));
-  
+
   if (ret < 0)
     {
       API_BAD_RESPONSE_TO_API_ERRNUM (ctx, obj_send_cmd_rs);
@@ -1322,7 +1322,7 @@ api_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
                                          IPMI_MAX_PKT_LEN,
                                          retransmission_count)) < 0)
         break;
-      
+
       if (!recv_len)
         {
           retransmission_count++;
@@ -1571,7 +1571,7 @@ api_lan_open_session (ipmi_ctx_t ctx)
           API_ERRNO_TO_API_ERRNUM (ctx, errno);
           goto cleanup;
         }
-      
+
       if (!ret)
         {
           API_SET_ERRNUM (ctx, IPMI_ERR_AUTHENTICATION_TYPE_UNAVAILABLE);
@@ -1727,7 +1727,7 @@ api_lan_open_session (ipmi_ctx_t ctx)
 #endif
       /*
        * IPMI Workaround
-       * 
+       *
        * Discovered on Xyratex HB-F8-SRAY
        *
        * For some reason on this system, if you do not specify a
@@ -1927,7 +1927,7 @@ api_lan_close_session (ipmi_ctx_t ctx)
       API_BAD_RESPONSE_TO_API_ERRNUM (ctx, obj_cmd_rs);
       goto out;
     }
-  
+
  out:
   rv = 0;
  cleanup:
@@ -2112,7 +2112,7 @@ _api_lan_2_0_dump_rs (ipmi_ctx_t ctx,
                                  pkt_len,
                                  tmpl_lan_msg_hdr_rs,
                                  tmpl_cmd);
-      
+
       fiid_template_free (tmpl_cmd);
     }
 }
@@ -2261,7 +2261,7 @@ _api_lan_2_0_cmd_send (ipmi_ctx_t ctx,
                                   ctx->io.outofband.remote_host,
                                   ctx->io.outofband.remote_host_len);
     } while (ret < 0 && errno == EINTR);
-  
+
   if (ret < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
@@ -2352,11 +2352,11 @@ _api_lan_2_0_cmd_recv (ipmi_ctx_t ctx,
                                     pkt_len,
                                     retransmission_count,
                                     &recv_starttime);
-      
+
       if (!recv_len)
         return (0); /* resend the request */
     }
- 
+
   if (recv_len < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
@@ -2455,7 +2455,7 @@ _api_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
               API_ERRNO_TO_API_ERRNUM (ctx, errno);
               goto cleanup;
             }
-          
+
           if (!ret)
             {
               rv = 0;
@@ -2530,7 +2530,7 @@ _api_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
           goto cleanup;
         }
       l_payload_type = val;
-      
+
       if (l_payload_type != IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE)
         {
           rv = 0;
@@ -2547,7 +2547,7 @@ _api_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
               goto cleanup;
             }
           l_message_tag = val;
-          
+
           if (l_message_tag != *message_tag)
             {
               rv = 0;
@@ -2578,7 +2578,7 @@ _api_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
           goto cleanup;
         }
       l_session_id = val;
-      
+
       if (rmcpplus_status_code == RMCPPLUS_STATUS_NO_ERRORS
           && l_session_id != ctx->io.outofband.remote_console_session_id)
         {
@@ -2614,7 +2614,7 @@ _api_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
               goto cleanup;
             }
           l_message_tag = val;
-          
+
           if (l_message_tag != *message_tag)
             {
               rv = 0;
@@ -2663,7 +2663,7 @@ _api_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
           goto cleanup;
         }
       l_payload_type = val;
-      
+
       if (l_payload_type != IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4)
         {
           rv = 0;
@@ -2680,7 +2680,7 @@ _api_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
               goto cleanup;
             }
           l_message_tag = val;
-          
+
           if (l_message_tag != *message_tag)
             {
               rv = 0;
@@ -2702,7 +2702,7 @@ _api_lan_2_0_cmd_wrapper_verify_packet (ipmi_ctx_t ctx,
           goto cleanup;
         }
       rmcpplus_status_code = val;
-      
+
       if (FIID_OBJ_GET (obj_cmd_rs,
                         "remote_console_session_id",
                         &val) < 0)
@@ -2967,7 +2967,7 @@ api_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
           API_ERRNO_TO_API_ERRNUM (ctx, errno);
           return (-1);
         }
-      
+
       if (!ret)
         continue;
 
@@ -3163,7 +3163,7 @@ api_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
           API_ERRNO_TO_API_ERRNUM (ctx, errno);
           return (-1);
         }
-      
+
       if (!ret)
         continue;
 
@@ -3331,10 +3331,10 @@ api_lan_2_0_open_session (ipmi_ctx_t ctx)
     {
       if (strlen (ctx->io.outofband.username))
         tmp_username_ptr = ctx->io.outofband.username;
-      
+
       if (strlen (ctx->io.outofband.password))
         tmp_password_ptr = ctx->io.outofband.password;
-      
+
       if ((ret = ipmi_check_authentication_capabilities_username (tmp_username_ptr,
                                                                   tmp_password_ptr,
                                                                   obj_cmd_rs)) < 0)
@@ -3342,7 +3342,7 @@ api_lan_2_0_open_session (ipmi_ctx_t ctx)
           API_ERRNO_TO_API_ERRNUM (ctx, errno);
           goto cleanup;
         }
-      
+
       if (!ret)
         {
           ctx->errnum = IPMI_ERR_USERNAME_INVALID;
@@ -3530,7 +3530,7 @@ api_lan_2_0_open_session (ipmi_ctx_t ctx)
           goto cleanup;
         }
       maximum_privilege_level = val;
-      
+
       ret = (maximum_privilege_level == requested_maximum_privilege) ? 1 : 0;
     }
   else
@@ -4062,7 +4062,7 @@ api_lan_2_0_open_session (ipmi_ctx_t ctx)
    * For whatever reason, with cipher suite 0, the RAKP 4 response
    * returns with an Integrity Check Value when it should be empty.
    */
-  
+
   if (ctx->workaround_flags_outofband_2_0 & IPMI_WORKAROUND_FLAGS_OUTOFBAND_2_0_NON_EMPTY_INTEGRITY_CHECK_VALUE
       && !ctx->io.outofband.cipher_suite_id)
     {
@@ -4073,7 +4073,7 @@ api_lan_2_0_open_session (ipmi_ctx_t ctx)
           goto cleanup;
         }
     }
-  
+
   if ((ret = ipmi_rmcpplus_check_rakp_4_integrity_check_value (authentication_algorithm,
                                                                ctx->io.outofband.sik_key_ptr,
                                                                ctx->io.outofband.sik_key_len,
@@ -4087,7 +4087,7 @@ api_lan_2_0_open_session (ipmi_ctx_t ctx)
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   if (!ret)
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_K_G_INVALID);
@@ -4172,13 +4172,13 @@ api_lan_2_0_close_session (ipmi_ctx_t ctx)
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   api_lan_2_0_cmd_get_session_parameters (ctx,
                                           &payload_authenticated,
                                           &payload_encrypted);
-  
+
   internal_workaround_flags |= IPMI_INTERNAL_WORKAROUND_FLAGS_CLOSE_SESSION_SKIP_RETRANSMIT;
-  
+
   if (api_lan_2_0_cmd_wrapper (ctx,
                                internal_workaround_flags,
                                IPMI_BMC_IPMB_LUN_BMC,
@@ -4202,7 +4202,7 @@ api_lan_2_0_close_session (ipmi_ctx_t ctx)
                                obj_cmd_rq,
                                obj_cmd_rs) < 0)
     goto cleanup;
-  
+
   /* Check completion code just for tracing, but don't return error */
 
   if ((ret = ipmi_check_completion_code_success (obj_cmd_rs)) < 0)
@@ -4216,7 +4216,7 @@ api_lan_2_0_close_session (ipmi_ctx_t ctx)
       API_BAD_RESPONSE_TO_API_ERRNUM (ctx, obj_cmd_rs);
       goto out;
     }
-  
+
  out:
   rv = 0;
  cleanup:

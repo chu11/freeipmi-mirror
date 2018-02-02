@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -625,13 +625,13 @@ ipmi_cmd_set_system_boot_options_service_partition_selector (ipmi_ctx_t ctx,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int rv = -1;
-  
+
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
     }
-  
+
   /* remaining parameter checks in fill function */
   if (!fiid_obj_valid (obj_cmd_rs))
     {
@@ -659,7 +659,7 @@ ipmi_cmd_set_system_boot_options_service_partition_selector (ipmi_ctx_t ctx,
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   if (api_ipmi_cmd (ctx,
                     IPMI_BMC_IPMB_LUN_BMC,
                     IPMI_NET_FN_CHASSIS_RQ,
@@ -669,7 +669,7 @@ ipmi_cmd_set_system_boot_options_service_partition_selector (ipmi_ctx_t ctx,
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       goto cleanup;
     }
-  
+
   rv = 0;
  cleanup:
   fiid_obj_destroy (obj_cmd_rq);
@@ -685,13 +685,13 @@ ipmi_cmd_set_system_boot_options_service_partition_scan (ipmi_ctx_t ctx,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int rv = -1;
-  
+
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       return (-1);
     }
-  
+
   /* remaining parameter checks in fill function */
   if (!fiid_obj_valid (obj_cmd_rs))
     {
@@ -705,7 +705,7 @@ ipmi_cmd_set_system_boot_options_service_partition_scan (ipmi_ctx_t ctx,
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       return (-1);
     }
-  
+
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_set_system_boot_options_service_partition_scan_rq)))
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
@@ -720,7 +720,7 @@ ipmi_cmd_set_system_boot_options_service_partition_scan (ipmi_ctx_t ctx,
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   if (api_ipmi_cmd (ctx,
                     IPMI_BMC_IPMB_LUN_BMC,
                     IPMI_NET_FN_CHASSIS_RQ,
@@ -730,7 +730,7 @@ ipmi_cmd_set_system_boot_options_service_partition_scan (ipmi_ctx_t ctx,
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
       goto cleanup;
     }
-  
+
   rv = 0;
  cleanup:
   fiid_obj_destroy (obj_cmd_rq);

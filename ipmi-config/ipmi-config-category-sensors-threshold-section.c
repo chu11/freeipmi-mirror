@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2008-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -1377,7 +1377,7 @@ ipmi_config_sensors_threshold_section (ipmi_config_state_data_t *state_data,
               IPMI_CONFIG_MAX_DESCRIPTION_LEN,
               "Give valid input for sensor type = %s",
               sensor_type_str ? sensor_type_str : UNRECOGNIZED_SENSOR_TYPE);
-  
+
   if (setup_sensor_event_enable_fields (state_data, section) < 0)
     goto cleanup;
 

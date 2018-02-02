@@ -190,7 +190,7 @@ _eliminate_nodes (void)
       for (i = 0; i < ics_len; i++)
         {
           int ret;
-          
+
           if ((ret = ipmidetect_is_node_detected (id, ics[i].hostname)) < 0)
             {
               if (ipmidetect_errnum (id) == IPMIDETECT_ERR_NOTFOUND)
@@ -371,7 +371,7 @@ _recvfrom (cbuf_t cbuf, int fd, struct sockaddr *srcaddr, socklen_t srcaddrlen)
       do
         {
           uint8_t tempbuf[IPMIPOWER_PACKET_BUFLEN];
-          
+
           if (cbuf_read (cbuf, tempbuf, IPMIPOWER_PACKET_BUFLEN) < 0)
             {
               IPMIPOWER_ERROR (("cbuf_read: %s", strerror (errno)));
@@ -515,7 +515,7 @@ _poll_loop (int non_interactive)
             {
               if (pfds[i*2].revents & POLLIN)
                 _recvfrom (ics[i].ipmi_in, ics[i].ipmi_fd, ics[i].destaddr, ics[i].destaddrlen);
-              
+
               if (pfds[i*2].revents & POLLOUT)
                 _sendto (ics[i].ipmi_out, ics[i].ipmi_fd, ics[i].destaddr, ics[i].destaddrlen);
             }
@@ -532,7 +532,7 @@ _poll_loop (int non_interactive)
             {
               if (pfds[i*2+1].revents & POLLIN)
                 _recvfrom (ics[i].ping_in, ics[i].ping_fd, ics[i].destaddr, ics[i].destaddrlen);
-              
+
               if (pfds[i*2+1].revents & POLLOUT)
                 _sendto (ics[i].ping_out, ics[i].ping_fd, ics[i].destaddr, ics[i].destaddrlen);
             }
@@ -560,7 +560,7 @@ _poll_loop (int non_interactive)
            */
           if (!n)
             exit (EXIT_FAILURE);
-          
+
           if (dropped)
             IPMIPOWER_DEBUG (("cbuf_write_from_fd: read dropped %d bytes", dropped));
         }
@@ -588,13 +588,13 @@ main (int argc, char *argv[])
   ipmipower_argp_parse (argc, argv, &cmd_args);
 
   /* after ipmipower_argp_parse - IPMIPOWER_ERROR/IPMIPOWER_DEBUG
-   * macros used 
+   * macros used
    */
   if (cmd_args.powercmd == IPMIPOWER_POWER_CMD_NONE)
     ipmipower_error_setup (IPMIPOWER_ERROR_STDERR | IPMIPOWER_ERROR_SYSLOG);
   else
     ipmipower_error_setup (IPMIPOWER_ERROR_STDERR);
-  
+
   _ipmipower_setup ();
 
   ipmipower_powercmd_setup ();
@@ -650,7 +650,7 @@ main (int argc, char *argv[])
         }
 
       _eliminate_nodes ();
-      
+
       /* Because can input multiple hosts, check all args before doing
        * powercmd queue so we don't do any if any single argument is
        * invalid
@@ -663,12 +663,12 @@ main (int argc, char *argv[])
 
               if (ics[i].skip)
                 continue;
-              
+
               eanode = ics[i].extra_args;
               while (eanode)
                 {
                   memset (errbuf, '\0', IPMIPOWER_OUTPUT_BUFLEN + 1);
-                  
+
                   if (ipmipower_oem_power_cmd_check_extra_arg (eanode->extra_arg,
                                                                errbuf,
                                                                IPMIPOWER_OUTPUT_BUFLEN) <= 0)
@@ -676,7 +676,7 @@ main (int argc, char *argv[])
                       IPMIPOWER_ERROR (("%s", errbuf));
                       exit (EXIT_FAILURE);
                     }
-                  
+
                   eanode = eanode->next;
                 }
             }

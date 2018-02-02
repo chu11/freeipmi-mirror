@@ -81,7 +81,7 @@ Get power on hours (POH) counter.
 .\".flag settings.
 .\"..TP
 .\".\fB\-\-set\-boot\-flags\fR
-.\".Set system boot flags.  Must be specified to use the 
+.\".Set system boot flags.  Must be specified to use the
 .\".\fB\-\-boot\-type\fR,
 .\".\fB\-\-lock\-out\-reset\-button\fR,
 .\".\fB\-\-blank\-screen\fR,
@@ -114,7 +114,7 @@ Get power on hours (POH) counter.
 .\".BIOS, FLOPPY. Used with the \fB\-\-set\-boot\-flags\fR option.
 .\"..TP
 .\".\fB\-\-lock\-keyboard\fR=\fILOCK_KEYBOARD\fR
-.\".Modify lock keyboard support. Supported values: YES/NO. 
+.\".Modify lock keyboard support. Supported values: YES/NO.
 .\".Used with the \fB\-\-set\-boot\-flags\fR option.
 .\"..TP
 .\".\fB\-\-clear\-cmos\fR=\fICMOS_CLEAR\fR

@@ -120,9 +120,9 @@ ipmipower_output_finish (void)
           if (fi_hostlist_count (output_hostrange[i]) > 0)
             {
               memset (buf, '\0', IPMIPOWER_OUTPUT_BUFLEN + 1);
-              
+
               fi_hostlist_sort (output_hostrange[i]);
-              
+
               if ((rv = fi_hostlist_ranged_string (output_hostrange[i],
                                                    IPMIPOWER_OUTPUT_BUFLEN,
                                                    buf)) < 0)
@@ -130,7 +130,7 @@ ipmipower_output_finish (void)
                   IPMIPOWER_ERROR (("fi_hostlist_ranged_string: %s", strerror(errno)));
                   exit (EXIT_FAILURE);
                 }
-              
+
               if (rv > 0)
                 {
                   ipmipower_cbuf_printf (ttyout,
@@ -145,12 +145,12 @@ ipmipower_output_finish (void)
                                          ipmipower_outputs[i]);
                   fi_hostlist_delete (output_hostrange[i], buf);
                 }
-              
+
               assert (!fi_hostlist_count (output_hostrange[i]));
             }
         }
     }
-  
+
   return;
 }
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -328,7 +328,7 @@ unassemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg,
       FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
       return (-1);
     }
-  
+
   if (fiid_obj_clear (obj_ipmb_msg_trlr) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_ipmb_msg_trlr);
@@ -341,20 +341,20 @@ unassemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg,
       return (-1);
     }
   indx += len;
-  
+
   if (buf_len <= indx)
     {
       /* cannot parse packet */
       ERR_TRACE ("malformed packet", EINVAL);
       return (0);
     }
-  
+
   if ((obj_ipmb_msg_trlr_len = fiid_template_len_bytes (tmpl_ipmb_msg_trlr)) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
     }
-  
+
   if ((buf_len - indx) <= obj_ipmb_msg_trlr_len)
     {
       /* cannot parse packet */
@@ -370,7 +370,7 @@ unassemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg,
       return (-1);
     }
   indx += len;
-      
+
   if (buf_len <= indx)
     {
       /* cannot parse packet */
@@ -384,7 +384,7 @@ unassemble_ipmi_ipmb_msg (fiid_obj_t obj_ipmb_msg,
       return (-1);
     }
   indx += len;
-  
+
   if (FIID_OBJ_PACKET_VALID (obj_ipmb_msg_hdr) == 1
       && ((flags & IPMI_INTERFACE_FLAGS_NO_LEGAL_CHECK) || FIID_OBJ_PACKET_SUFFICIENT (obj_cmd) == 1)
       && FIID_OBJ_PACKET_VALID (obj_ipmb_msg_trlr) == 1)

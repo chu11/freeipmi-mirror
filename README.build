@@ -10,7 +10,7 @@ work for most people.
      Running `configure' takes awhile.  While running, it prints some
      messages telling which features it is checking for.  If your system
      requires additional packages and/or libraries in order for FreeIPMI
-     to be built, appropriate messages should be displayed.  These 
+     to be built, appropriate messages should be displayed.  These
      packages and/or libraries should be installed and `./configure' should
      be executed again.
 
@@ -19,7 +19,7 @@ work for most people.
 
   3. Type `make install' to install the programs and any data files and
      documentation.
-     
+
      You may need to be root in order for files to be installed into
      the proper locations on your system.
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -341,11 +341,11 @@ debug_dump_ipmb (int fd,
       ERRNO_TRACE (errno);
       goto cleanup;
     }
-  
+
   /* Dump IPMB unexpected stuff */
-  
+
  dump_ipmb_extra:
-  
+
   if ((ipmb_buf_len - ipmb_indx) > 0)
     {
       if (!(obj_ipmb_unexpected_data = fiid_obj_create (tmpl_unexpected_data)))
@@ -353,7 +353,7 @@ debug_dump_ipmb (int fd,
           ERRNO_TRACE (errno);
           goto cleanup;
         }
-      
+
       if ((len = fiid_obj_set_all (obj_ipmb_unexpected_data,
                                    ipmb_buf + ipmb_indx,
                                    ipmb_buf_len - ipmb_indx)) < 0)
@@ -362,7 +362,7 @@ debug_dump_ipmb (int fd,
           goto cleanup;
         }
       ipmb_indx += len;
-      
+
       if (ipmi_obj_dump (fd,
                          prefix,
                          ipmb_unexpected_hdr,
@@ -373,7 +373,7 @@ debug_dump_ipmb (int fd,
           goto cleanup;
         }
     }
-  
+
   rv = 0;
  cleanup:
   fiid_obj_destroy (obj_ipmb_msg_hdr);

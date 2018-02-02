@@ -19,7 +19,7 @@ ipmi_sensors_LDADD = \
 	$(top_builddir)/common/portability/libportability.la \
 	$(top_builddir)/libipmidetect/libipmidetect.la \
 	$(top_builddir)/libfreeipmi/libfreeipmi.la
- 
+
 ipmi_sensors_SOURCES = \
 	ipmi-sensors.c \
 	ipmi-sensors.h \

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -196,13 +196,13 @@ ipmi_interpret_ctx_set_flags (ipmi_interpret_ctx_t ctx, unsigned int flags)
   if (flags & IPMI_INTERPRET_FLAGS_SEL_ASSUME_SYSTEM_EVENT_RECORDS)
     tmpflags |= IPMI_SEL_FLAGS_ASSUME_SYTEM_EVENT_RECORDS;
 
-  
+
   if (ipmi_sel_ctx_set_flags (ctx->sel_ctx, tmpflags) < 0)
     {
       INTERPRET_SEL_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_ctx);
       return (-1);
     }
-  
+
   ctx->flags = flags;
   ctx->errnum = IPMI_INTERPRET_ERR_SUCCESS;
   return (0);
@@ -402,7 +402,7 @@ _get_sel_oem_sensor_state (ipmi_interpret_ctx_t ctx,
             ctx->product_id,
             event_reading_type_code,
             sensor_type);
-  
+
   if ((oem_conf = hash_find (ctx->interpret_sel.sel_oem_sensor_config,
                              keybuf)))
     {
@@ -412,9 +412,9 @@ _get_sel_oem_sensor_state (ipmi_interpret_ctx_t ctx,
       uint8_t event_data2;
       uint8_t event_data3;
       int found = 0;
-      
+
       (*sel_state) = IPMI_INTERPRET_STATE_NOMINAL;
-      
+
       if (ipmi_sel_parse_read_sensor_type (ctx->sel_ctx,
                                            sel_record,
                                            sel_record_len,
@@ -450,7 +450,7 @@ _get_sel_oem_sensor_state (ipmi_interpret_ctx_t ctx,
           INTERPRET_SEL_CTX_ERROR_TO_INTERPRET_ERRNUM (ctx, ctx->sel_ctx);
           return (-1);
         }
-      
+
       if (ipmi_sel_parse_read_event_data3 (ctx->sel_ctx,
                                            sel_record,
                                            sel_record_len,
@@ -476,7 +476,7 @@ _get_sel_oem_sensor_state (ipmi_interpret_ctx_t ctx,
               found++;
             }
         }
-      
+
       if (!found)
         (*sel_state) = IPMI_INTERPRET_STATE_UNKNOWN;
     }
@@ -556,7 +556,7 @@ _get_sel_oem_record_state (ipmi_interpret_ctx_t ctx,
             ctx->manufacturer_id,
             ctx->product_id,
             record_type);
-  
+
   if ((oem_conf = hash_find (ctx->interpret_sel.sel_oem_record_config,
                              keybuf)))
     {
@@ -564,9 +564,9 @@ _get_sel_oem_record_state (ipmi_interpret_ctx_t ctx,
       uint8_t oem_data[IPMI_SEL_OEM_DATA_MAX];
       int oem_data_len;
       int found = 0;
-      
+
       (*sel_state) = IPMI_INTERPRET_STATE_NOMINAL;
-      
+
       if ((oem_data_len = ipmi_sel_parse_read_oem (ctx->sel_ctx,
                                                    sel_record,
                                                    sel_record_len,
@@ -580,7 +580,7 @@ _get_sel_oem_record_state (ipmi_interpret_ctx_t ctx,
       for (i = 0; i < oem_conf->oem_record_count; i++)
         {
           int match = 1;
-          
+
           if (oem_data_len != oem_conf->oem_record[i].oem_bytes_count)
             continue;
 
@@ -593,7 +593,7 @@ _get_sel_oem_record_state (ipmi_interpret_ctx_t ctx,
                   break;
                 }
             }
-          
+
           if (match)
             {
               if (oem_conf->oem_record[i].sel_state > (*sel_state))
@@ -601,7 +601,7 @@ _get_sel_oem_record_state (ipmi_interpret_ctx_t ctx,
               found++;
             }
         }
-      
+
       if (!found)
         (*sel_state) = IPMI_INTERPRET_STATE_UNKNOWN;
     }
@@ -922,7 +922,7 @@ ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
           else if (sensor_type == IPMI_SENSOR_TYPE_ENTITY_PRESENCE)
             sel_config = ctx->interpret_sel.ipmi_interpret_sel_entity_presence_config;
           else if (sensor_type == IPMI_SENSOR_TYPE_LAN)
-            sel_config = ctx->interpret_sel.ipmi_interpret_sel_lan_config;       
+            sel_config = ctx->interpret_sel.ipmi_interpret_sel_lan_config;
           else if (sensor_type == IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH)
             sel_config = ctx->interpret_sel.ipmi_interpret_sel_management_subsystem_health_config;
           else if (sensor_type == IPMI_SENSOR_TYPE_BATTERY)
@@ -1096,7 +1096,7 @@ _get_sensor_oem_state (ipmi_interpret_ctx_t ctx,
                 }
             }
         }
-      
+
       if (!found)
         (*sensor_state) = IPMI_INTERPRET_STATE_UNKNOWN;
     }
@@ -1148,7 +1148,7 @@ _get_sensor_state (ipmi_interpret_ctx_t ctx,
       if (ctx->flags & IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA)
         {
           unsigned int sensor_state_tmp = IPMI_INTERPRET_STATE_NOMINAL;
-          
+
           if (_get_sensor_oem_state (ctx,
                                      event_reading_type_code,
                                      sensor_type,

@@ -54,7 +54,7 @@
 /* Communication Configuration - Initialize accordingly */
 
 /* Hostname, NULL for In-band communication, non-null for a hostname */
-char *hostname = NULL; 
+char *hostname = NULL;
 
 /* In-band Communication Configuration */
 /* On linux, you may wish to change driver_type to
@@ -104,12 +104,12 @@ int bridge_sensors = 0;
 int interpret_oem_data = 0;
 int shared_sensors = 0;
 int discrete_reading = 0;
-int ignore_scanning_disabled = 0; 
+int ignore_scanning_disabled = 0;
 int assume_bmc_owner = 0;
 int entity_sensor_names = 0;
 
 /* Initialization flags
- * 
+ *
  * Most commonly bitwise OR IPMI_MONITORING_FLAGS_DEBUG and/or
  * IPMI_MONITORING_FLAGS_DEBUG_IPMI_PACKETS for extra debugging
  * information.
@@ -215,7 +215,7 @@ _get_sensor_type_string (int sensor_type)
 
   return ("Unrecognized");
 }
- 
+
 static int
 _ipmimonitoring (struct ipmi_monitoring_ipmi_config *ipmi_config)
 {
@@ -273,14 +273,14 @@ _ipmimonitoring (struct ipmi_monitoring_ipmi_config *ipmi_config)
                    ipmi_monitoring_ctx_errormsg (ctx));
           goto cleanup;
         }
-    } 
+    }
 
   if (reread_sdr_cache)
     sensor_reading_flags |= IPMI_MONITORING_SENSOR_READING_FLAGS_REREAD_SDR_CACHE;
 
   if (ignore_non_interpretable_sensors)
     sensor_reading_flags |= IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_NON_INTERPRETABLE_SENSORS;
-  
+
   if (bridge_sensors)
     sensor_reading_flags |= IPMI_MONITORING_SENSOR_READING_FLAGS_BRIDGE_SENSORS;
 
@@ -526,9 +526,9 @@ _ipmimonitoring (struct ipmi_monitoring_ipmi_config *ipmi_config)
         }
       else
         printf (", N/A, N/A");
-  
+
       printf (", %Xh", event_reading_type_code);
- 
+
       /* It is possible you may want to monitor specific event
        * conditions that may occur.  If that is the case, you may want
        * to check out what specific bitmask type and bitmask events
@@ -540,20 +540,20 @@ _ipmimonitoring (struct ipmi_monitoring_ipmi_config *ipmi_config)
         printf (", %Xh", sensor_bitmask);
       else
         printf (", N/A");
-  
+
       if (sensor_bitmask_type != IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN)
-        {     
+        {
           unsigned int i = 0;
-          
+
           printf (",");
-          
+
           while (sensor_bitmask_strings[i])
             {
               printf (" ");
-              
+
               printf ("'%s'",
                       sensor_bitmask_strings[i]);
-              
+
               i++;
             }
         }

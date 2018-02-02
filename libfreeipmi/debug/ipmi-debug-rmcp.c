@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -142,14 +142,14 @@ ipmi_dump_rmcp_packet (int fd,
           ERRNO_TRACE (errno);
           goto cleanup;
         }
-      
+
       if ((len = fiid_obj_set_all (obj_unexpected_data, pkt + indx, pkt_len - indx)) < 0)
         {
           FIID_OBJECT_ERROR_TO_ERRNO (obj_unexpected_data);
           goto cleanup;
         }
       indx += len;
-      
+
       if (ipmi_obj_dump (fd, prefix, unexpected_hdr, NULL, obj_unexpected_data) < 0)
         {
           ERRNO_TRACE (errno);
@@ -179,7 +179,7 @@ ipmi_dump_rmcp_packet (int fd,
       goto cleanup;
     }
 #endif
-  
+
   rv = 0;
  cleanup:
   fiid_obj_destroy (obj_rmcp_hdr);

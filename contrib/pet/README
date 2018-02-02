@@ -61,7 +61,7 @@ one) Put a line like these in your snmptrapd.conf file:
   /usr/share/doc/freeipmi/contrib/pet/petalert.pl --mode=traphandle \
     --alert=email --sdrcache SDRCONF -- -f FROM -s SMTPSERVER ADDRESSES
 
-Or, if you prefer embedded perl, 
+Or, if you prefer embedded perl,
 
   perl do "/usr/share/doc/freeipmi/contrib/pet/petalert.pl";
   perl IpmiPET::main(qw(--mode=embperl --trapoid=OID --sdrcache=SDRCONF \
@@ -118,7 +118,7 @@ passive check gets foo as host; use "-H fqdn" to pass foo.example.com
 to Nagios. In addition, "-S PET" sets service description.
 
 If Nagios process is on remote host, normally you turns to NSCA which
-consists of NSCA daemon on the Nagios host and the send_nsca client 
+consists of NSCA daemon on the Nagios host and the send_nsca client
 program. To alert by send_nsca,
 
   perl do "/usr/share/doc/freeipmi/contrib/pet/petalert.pl";
@@ -127,7 +127,7 @@ program. To alert by send_nsca,
     -- -H NAGIOS_HOST -c SEND_NSCA_CONF));
 
 Notice the unattached -- appears two times in the configuration line
-separating three steps of arguments processing, namely generic args, 
+separating three steps of arguments processing, namely generic args,
 alert specific args, and external helper args.
 
 
@@ -156,7 +156,7 @@ For example,
 |  10.2.3.4           # one node
 |  10.2.3.5  10.2.3.6 # two nodes
 |  10.2.3.[7-9]       # trhee nodes in range form
-|  
+|
 ^-- this is the beginning of lines
 
 3.1 SDR CACHE INITIALIZATION
@@ -165,9 +165,9 @@ The sdr cache file can be initialized by ipmi-sel(8) and the
 --sdr-cache-file option.
 
 # ipmi-sel -h 10.2.3.4 -u root -P --sdr-cache-file=/path/to/sdr-cache-file-X
-Password: 
+Password:
 Caching SDR repository information: /path/to/sdr-cache-file-X
-Caching SDR record 125 of 125 (current record ID 125) 
+Caching SDR record 125 of 125 (current record ID 125)
 ID  | Date        | Time     | Name             | Type                     | Event
 1   | Dec-12-2011 | 16:41:51 | SEL              | Event Logging Disabled   | Log Area Reset/Cleared
 ...
@@ -193,8 +193,8 @@ pet.example.com
 UDP: [10.2.3.4]:32768
 .1.3.6.1.2.1.1.3.0 60:5:11:46.26
 .1.3.6.1.6.3.1.1.4.1.0 .1.3.6.1.4.1.3183.1.1.0.356096
-.1.3.6.1.4.1.3183.1.1.1 "44 45 4C 4C 50 00 10 59 80 43 B2 C0 4F 33 33 58 
-00 42 19 EE AB 64 FF FF 20 20 00 41 73 18 00 80 
+.1.3.6.1.4.1.3183.1.1.1 "44 45 4C 4C 50 00 10 59 80 43 B2 C0 4F 33 33 58
+00 42 19 EE AB 64 FF FF 20 20 00 41 73 18 00 80
 01 FF 00 00 00 00 00 19 00 00 02 A2 01 00 C1 "
 .1.3.6.1.6.3.18.1.3.0 10.2.3.4
 .1.3.6.1.6.3.18.1.4.0 "public"
@@ -252,9 +252,9 @@ EOF
 # ipmi-config --category=pef --diff <<EOF
 Section Lan_Alert_Destination_1
     Alert_Destination_Type                   PET_Trap
-    Alert_Acknowledge                        Yes 
-    Alert_Acknowledge_Timeout                5   
-    Alert_Retries                            2   
+    Alert_Acknowledge                        Yes
+    Alert_Acknowledge_Timeout                5
+    Alert_Retries                            2
     Alert_Gateway                            Default
     Alert_IP_Address                         10.2.3.254
     Alert_MAC_Address                        00:00:00:00:00:00
@@ -280,7 +280,7 @@ host to do further configuration.
 # ipmi-config --category=pef -h 10.2.3.4 -u root -P --diff <<EOF
 ...
 EOF
-Password: 
+Password:
 
 In addition, FreeIPMI is featured by configuring many hosts in one
 run, see "HOSTRANGED SUPPORT" of ipmi-config(8) and others from
@@ -292,7 +292,7 @@ can use bmc-device to generate a software generated platform event:
 # bmc-device --platform-event="41 04 05 73 6f assertion 80 01 ff"
 
 You should get notified about the event a few seconds later, otherwise
-check vendor rules. If the node is Dell PowerEdge R610 or 1950, you 
+check vendor rules. If the node is Dell PowerEdge R610 or 1950, you
 have to make a catch-all filter for the software generated event,
 
 # ipmi-config --category=pef --commit <<EOF
@@ -385,7 +385,7 @@ requires log permission, see "ACCESS CONTROL" from snmptrapd.conf for
 more information.
 
 NSCA daemon logs to syslog, set "debug=1" in nsca.cfg to get detailed
-connection handling. Nagios is also able to log to syslog, set 
+connection handling. Nagios is also able to log to syslog, set
 "use_syslog=1" in nagios.cfg to help debugging alert.
 
 
@@ -404,7 +404,7 @@ bugs were spotted, see BUGS.
 Any setup, packets could be captured like this
 # tcpdump -i any -nn -vvv -s0 -w pet.pcap 'host 10.2.3.4 and udp'
 
-Then you can browse the interactions with the help of Wireshark. 
+Then you can browse the interactions with the help of Wireshark.
 
 
 7. BUGS
@@ -414,12 +414,12 @@ PowerEdge R610 don't match software generated events. You need to make
 a catch-all filter rule to report those events. However, hardware
 gernerated events are not subject to such limitation. To verify this
 situation, open the case to generate a hardware generated intrusion
-event. Dell PowerEdge 1950 with BMC has similiar problem. The 
+event. Dell PowerEdge 1950 with BMC has similiar problem. The
 difference is that 1950 has 31 filter rules, so you don't worry about
 overwriting an existent one.
 
-It's spotted that Dell PowerEdge 1950 with BMC suffers clock drift, 
-remarkably SEL timestamps. bmc-device(8) from FreeIPMI could be used 
+It's spotted that Dell PowerEdge 1950 with BMC suffers clock drift,
+remarkably SEL timestamps. bmc-device(8) from FreeIPMI could be used
 to adjust SEL time and SDR repository time,
 # bmc-device --set-sdr-repository-time=now
 # bmc-device --set-sel-time=now
@@ -438,7 +438,7 @@ timeout error "ipmi_cmd_pet_acknowledge: message timeout". You may use
 '-W malformedack', which is simply passed through, to instruct the
 underlying helper ipmi-pet(8) to disable such detection and to
 immediately return. Timeout hurts snmptrapd because slow handler
-hinders the main loop. To discover potential time consuming cases, 
+hinders the main loop. To discover potential time consuming cases,
 use "-D perf" and observe the log.
 
 It's spotted that some DNS servers return "localhost" on private ip

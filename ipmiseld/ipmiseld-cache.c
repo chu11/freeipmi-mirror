@@ -61,13 +61,13 @@
 
 #define IPMISELD_SDR_CACHE_FILENAME       "ipmiseldsdrcache"
 
-/* 
+/*
  * Data Cache Format
  *
  * All numbers stored little endian
  *
  * uint32_t file_magic
- * uint32_t file_version_ 
+ * uint32_t file_version_
  * uint16_t last_record_id
  * uint32_t last_percent_full
  * uint16_t entries
@@ -132,15 +132,15 @@ ipmiseld_sdr_cache_create_and_load (ipmiseld_host_data_t *host_data)
   assert (host_data);
   assert (host_data->host_poll);
   assert (host_data->host_poll->ipmi_ctx);
-  
+
   memset (filename, '\0', MAXPATHLEN + 1);
-  
+
   if (!(host_data->host_poll->sdr_ctx = ipmi_sdr_ctx_create ()))
     {
       ipmiseld_err_output (host_data, "ipmi_sdr_ctx_create: %s", strerror (errno));
       goto cleanup;
     }
-  
+
   if (host_data->prog_data->args->foreground
       && host_data->prog_data->args->common_args.debug > 1)
     {
@@ -149,7 +149,7 @@ ipmiseld_sdr_cache_create_and_load (ipmiseld_host_data_t *host_data)
         ipmiseld_err_output (host_data,
                              "ipmi_sdr_ctx_set_flags: %s",
                              ipmi_sdr_ctx_errormsg (host_data->host_poll->sdr_ctx));
-      
+
       if (host_data->hostname)
         {
           if (ipmi_sdr_ctx_set_debug_prefix (host_data->host_poll->sdr_ctx, host_data->hostname) < 0)
@@ -158,16 +158,16 @@ ipmiseld_sdr_cache_create_and_load (ipmiseld_host_data_t *host_data)
                                  ipmi_sdr_ctx_errormsg (host_data->host_poll->sdr_ctx));
         }
     }
-  
+
   if (host_data->prog_data->args->cache_directory)
     sdr_cache_dir = host_data->prog_data->args->cache_directory;
   else
     sdr_cache_dir = IPMISELD_CACHE_DIRECTORY;
-  
+
   hostname = host_data->hostname;
   if (!hostname)
     hostname = IPMISELD_CACHE_INBAND;
-  
+
   snprintf (filename,
             MAXPATHLEN,
             "%s/%s.%s",
@@ -190,7 +190,7 @@ ipmiseld_sdr_cache_create_and_load (ipmiseld_host_data_t *host_data)
         }
       host_data->re_download_sdr_done = 1;
     }
-  
+
   if (ipmi_sdr_cache_open (host_data->host_poll->sdr_ctx,
                            host_data->host_poll->ipmi_ctx,
                            filename) < 0)
@@ -208,7 +208,7 @@ ipmiseld_sdr_cache_create_and_load (ipmiseld_host_data_t *host_data)
         {
           if (host_data->prog_data->args->common_args.debug)
             IPMISELD_HOST_DEBUG (("SDR cache invalid - delete and recreate cache"));
-          
+
           if (ipmi_sdr_cache_delete (host_data->host_poll->sdr_ctx, filename) < 0)
             {
               ipmiseld_err_output (host_data,
@@ -216,7 +216,7 @@ ipmiseld_sdr_cache_create_and_load (ipmiseld_host_data_t *host_data)
                                    ipmi_sdr_ctx_errormsg (host_data->host_poll->sdr_ctx));
               goto cleanup;
             }
-          
+
           if (_ipmiseld_sdr_cache_create (host_data, filename) < 0)
             goto cleanup;
         }
@@ -227,7 +227,7 @@ ipmiseld_sdr_cache_create_and_load (ipmiseld_host_data_t *host_data)
                                ipmi_sdr_ctx_errormsg (host_data->host_poll->sdr_ctx));
           goto cleanup;
         }
-      
+
       /* 2nd try after the sdr was retrieved */
       if (ipmi_sdr_cache_open (host_data->host_poll->sdr_ctx,
                                host_data->host_poll->ipmi_ctx,
@@ -239,9 +239,9 @@ ipmiseld_sdr_cache_create_and_load (ipmiseld_host_data_t *host_data)
           goto cleanup;
         }
     }
-  
+
   return (0);
-  
+
  cleanup:
   if (strlen (filename))
     ipmi_sdr_cache_delete (host_data->host_poll->sdr_ctx, filename);
@@ -265,11 +265,11 @@ _data_cache_filename (ipmiseld_host_data_t *host_data,
     sdr_cache_dir = host_data->prog_data->args->cache_directory;
   else
     sdr_cache_dir = IPMISELD_CACHE_DIRECTORY;
-  
+
   hostname = host_data->hostname;
   if (!hostname)
     hostname = IPMISELD_CACHE_INBAND;
-  
+
   snprintf (filename_buf,
             filename_buflen,
             "%s/%s.%s",
@@ -283,13 +283,13 @@ _unmarshall_uint32 (uint8_t *databuf, uint32_t *value)
 {
   assert (databuf);
   assert (value);
-  
+
   /* stored little endian */
   (*value) = databuf[0];
   (*value) |= (databuf[1] << 8);
   (*value) |= (databuf[2] << 16);
   (*value) |= (databuf[3] << 24);
-  
+
   return (sizeof (uint32_t));
 }
 
@@ -333,7 +333,7 @@ ipmiseld_data_cache_load (ipmiseld_host_data_t *host_data)
   unsigned int i;
   int fd = -1;
   int rv = -1;
-  
+
   assert (host_data);
 
   memset (filename, '\0', MAXPATHLEN + 1);
@@ -361,7 +361,7 @@ ipmiseld_data_cache_load (ipmiseld_host_data_t *host_data)
           goto cleanup;
         }
     }
-  
+
   if ((fd = open (filename, O_RDONLY)) < 0)
     {
       ipmiseld_err_output (host_data, "Error opening '%s': %s", filename, strerror (errno));
@@ -378,7 +378,7 @@ ipmiseld_data_cache_load (ipmiseld_host_data_t *host_data)
     {
       ipmiseld_err_output (host_data, "invalid read length = %d", databuflen);
       goto cleanup;
-    } 
+    }
 
   for (i = 0; i < databuflen; i++)
     zerosumchecksum += databuf[i];
@@ -396,7 +396,7 @@ ipmiseld_data_cache_load (ipmiseld_host_data_t *host_data)
       ipmiseld_err_output (host_data, "data cache corrupted");
       goto cleanup;
     }
-  
+
   databuf_offset += _unmarshall_uint32 (databuf + databuf_offset, &file_version);
 
   if (file_version != IPMISELD_DATA_CACHE_FILE_VERSION)
@@ -404,9 +404,9 @@ ipmiseld_data_cache_load (ipmiseld_host_data_t *host_data)
       ipmiseld_err_output (host_data, "data cache out of date");
       goto cleanup;
     }
-  
+
   databuf_offset += _unmarshall_uint16 (databuf + databuf_offset, &host_data->last_host_state.last_record_id.record_id);
-  host_data->last_host_state.last_record_id.loaded = 1; 
+  host_data->last_host_state.last_record_id.loaded = 1;
   databuf_offset += _unmarshall_uint32 (databuf + databuf_offset, &host_data->last_host_state.last_percent_full);
   databuf_offset += _unmarshall_uint16 (databuf + databuf_offset, &host_data->last_host_state.sel_info.entries);
   databuf_offset += _unmarshall_uint16 (databuf + databuf_offset, &host_data->last_host_state.sel_info.free_space);
@@ -416,7 +416,7 @@ ipmiseld_data_cache_load (ipmiseld_host_data_t *host_data)
   databuf_offset += _unmarshall_uint8 (databuf + databuf_offset, &host_data->last_host_state.sel_info.reserve_sel_command_supported);
   databuf_offset += _unmarshall_uint8 (databuf + databuf_offset, &host_data->last_host_state.sel_info.overflow_flag);
   host_data->last_host_state.initialized = 1;
-  
+
   rv = 1;
  cleanup:
   close (fd);
@@ -498,10 +498,10 @@ ipmiseld_data_cache_store (ipmiseld_host_data_t *host_data)
           ipmiseld_err_output (host_data, "Error write accesing '%s': %s", filename, strerror (errno));
           goto cleanup;
         }
-      
+
       file_found++;
     }
-  
+
   if (file_found)
     open_flags = O_CREAT | O_TRUNC | O_WRONLY;
   else
@@ -531,7 +531,7 @@ ipmiseld_data_cache_store (ipmiseld_host_data_t *host_data)
   databuf_offset += _marshall_uint8 (databuf + databuf_offset, 0xFF - zerosumchecksum + 1);
 
   assert (databuf_offset == IPMISELD_DATA_CACHE_LENGTH);
-  
+
   if ((n = fd_write_n (fd, databuf, databuf_offset)) < 0)
     {
       ipmiseld_err_output (host_data, "fd_write_n: %s", strerror (errno));

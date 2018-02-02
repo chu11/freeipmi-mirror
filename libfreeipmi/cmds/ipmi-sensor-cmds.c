@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -1518,24 +1518,24 @@ fill_cmd_re_arm_sensor_events (uint8_t sensor_number,
       SET_ERRNO (EINVAL);
       return (-1);
     }
-  
+
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_re_arm_sensor_events_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
     }
-  
+
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_RE_ARM_SENSOR_EVENTS);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "sensor_number", sensor_number);
-  
+
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "re_arm_all_event_status_from_this_sensor", re_arm_all_event_status_from_this_sensor);
   if (re_arm_assertion_event)
     FILL_FIID_OBJ_SET (obj_cmd_rq, "re_arm_assertion_event", *re_arm_assertion_event);
   if (re_arm_deassertion_event)
     FILL_FIID_OBJ_SET (obj_cmd_rq, "re_arm_deassertion_event", *re_arm_deassertion_event);
-  
+
   return (0);
 }
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -504,7 +504,7 @@ ipmi_locate_dmidecode_get_device_info (ipmi_locate_ctx_t ctx,
           if (!strcmp (linebuf, "SMBIOS"))
             {
               char *endptr;
-          
+
               errno = 0;
               fp = strtoul (addr, &endptr, 0);
               if (errno
@@ -569,7 +569,7 @@ ipmi_locate_dmidecode_get_device_info (ipmi_locate_ctx_t ctx,
       free (buf);
     }
 #endif
-  
+
   if (found)
     {
       memcpy (info, &locate_info, sizeof (struct ipmi_locate_info));
@@ -577,6 +577,6 @@ ipmi_locate_dmidecode_get_device_info (ipmi_locate_ctx_t ctx,
     }
   else
     LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
-  
+
   return (rv);
 }

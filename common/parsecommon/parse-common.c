@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -180,7 +180,7 @@ _parse_workaround_flags (const char *str,
             (*section_specific_workaround_flags) = 0;
           break;
         }
-      
+
       /* special case, may apply to outofband and outofband_2_0 */
       if (!strcasecmp (tok, IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_AUTHENTICATION_CAPABILITIES_STR))
         {
@@ -456,7 +456,7 @@ parse_get_freeipmi_inband_flags (unsigned int parse_workaround_flags_inband,
 
   if (parse_workaround_flags_inband & IPMI_PARSE_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS)
     (*freeipmi_workaround_flags_inband) |= IPMI_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS;
-  
+
   if (parse_workaround_flags_inband & IPMI_PARSE_WORKAROUND_FLAGS_INBAND_SPIN_POLL)
     (*freeipmi_workaround_flags_inband) |= IPMI_WORKAROUND_FLAGS_INBAND_SPIN_POLL;
 }

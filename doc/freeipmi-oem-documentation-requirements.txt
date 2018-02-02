@@ -18,7 +18,7 @@ problems, etc.  Or in more general terms, OEM command
 extensions/additions necessary to help manage the system.
 
 Examples include:
- 
+
 OEM commands for configuring the hardware for IPMI.  For example,
 configuring the ethernet port to be shared or dedicated (ipmi-oem's
 Inventec's get/set-nic-mode commands are an example of this).
@@ -130,7 +130,7 @@ know what each byte does or what additional options are available.
 A specific packet/record layout similar to what is in the IPMI
 spec should be documented.
 
-B) 
+B)
 
 Hex to string/flag mapping information in sensors, system event logs,
 configuration fields, etc. should be documented.
@@ -168,7 +168,7 @@ OR
 0x81 = error message 2
 0x82 = error message 3
 
-C) 
+C)
 
 Enough detail should be documented to calculate, determine, handle
 errors, etc. of various packet or record fields.  This is especially

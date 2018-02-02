@@ -165,10 +165,10 @@ extern "C" {
  * authentication issues.  The issues covered include invalid lengthed
  * hash keys, improperly hashed keys, and invalid cipher suite
  * records.  This workaround automatically includes the
- * OPEN_SESSION_PRIVILEGE workaround.  
+ * OPEN_SESSION_PRIVILEGE workaround.
  *
  * OPEN_SESSION_PRIVILEGE
- * 
+ *
  * This workaround flag will slightly alter FreeIPMI's IPMI 2.0
  * connection protocol to workaround an invalid hashing algorithm used
  * by the remote system.  The privilege level sent during the Open
@@ -257,7 +257,7 @@ extern "C" {
  * Engine Flags
  *
  * Utilized with struct ipmiconsole_engine_config below to alter
- * libipmiconsole engine behavior. 
+ * libipmiconsole engine behavior.
  *
  * CLOSE_FD
  *
@@ -300,9 +300,9 @@ extern "C" {
  * On some motherboards, it's been observed that IPMI connections
  * between the IPMI client and remote BMC/server can stay alive while
  * the remote server's internal connection between the BMC and serial
- * chip can be lost.  This has been observed under several situations, 
+ * chip can be lost.  This has been observed under several situations,
  * such as when the remote system is rebooted or a IPMI SOL session is
- * stolen.   
+ * stolen.
  *
  * The affect is that this loss of the serial connection will not be
  * noticed by the IPMI client until serial data is transfered from the
@@ -313,7 +313,7 @@ extern "C" {
  * serial data or display serial output without user interactivity.
  * From the IPMI client perspective, there is simply no output from
  * the serial port and no error has actually occurred.
- * 
+ *
  * This option will inform the libipmiconsole engine to send serial
  * keepalive packets in addition to the IPMI keepalive packets that
  * normally keep a connection alive.  The serial keepalive packets are
@@ -330,7 +330,7 @@ extern "C" {
  * far more quickly.  However, caution should be maintained, as the
  * NUL character byte may affect the remote system depending on what
  * input it may or may not be expecting.
- * 
+ *
  * SERIAL_KEEPALIVE_EMPTY
  *
  * This option is identical to SERIAL_KEEPALIVE, except that the
@@ -383,7 +383,7 @@ extern "C" {
  * libipmiconsole to deactivate all presently activated instances.
  * This may be useful in a few circumstances where a user might want
  * to deactivate all current sessions.
- * 
+ *
  * DEFAULT
  *
  * Informs library to use default, may it be the standard default or

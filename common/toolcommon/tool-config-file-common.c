@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -588,7 +588,7 @@ _config_file_workaround_flags (conffile_t cf,
           fprintf (stderr, "Config File Error: invalid value for %s\n", optionname);
           exit (EXIT_FAILURE);
         }
-      
+
       if (outofband_flags
           || outofband_2_0_flags
           || inband_flags
@@ -861,7 +861,7 @@ _config_file_tool_option_workaround_flags (conffile_t cf,
           fprintf (stderr, "Config File Error: invalid value for %s\n", optionname);
           exit (EXIT_FAILURE);
         }
-      
+
       if (outofband_flags
           || outofband_2_0_flags
           || inband_flags
@@ -1054,7 +1054,7 @@ _config_file_sensor_record_ids (struct conffile_data *data,
                    optionname);
           exit (EXIT_FAILURE);
         }
-      
+
       record_ids[i] = (unsigned int)data->intlist[i];
       (*record_ids_length)++;
     }
@@ -1203,7 +1203,7 @@ _config_file_ipmiconsole_sol_payload_instance (conffile_t cf,
       fprintf (stderr, "Config File Error: invalid value for %s\n", optionname);
       exit (EXIT_FAILURE);
     }
-  
+
   *value = data->intval;
   return (0);
 }
@@ -5416,13 +5416,13 @@ config_file_parse (const char *filename,
                            0))
         legacy_file_loaded++;
     }
-  
+
   if (!legacy_file_loaded)
     {
       /* FREEIPMI_CONFIG_FILE_DEFAULT defined in config.h */
       if (!filename)
         filename = FREEIPMI_CONFIG_FILE_DEFAULT;
-      
+
       if (conffile_parse (cf,
                           filename,
                           config_file_options,
@@ -5432,17 +5432,17 @@ config_file_parse (const char *filename,
                           0) < 0)
         {
           char buf[CONFFILE_MAX_ERRMSGLEN];
-          
+
           /* don't exit, but return (-1) */
           if (conffile_errnum (cf) == CONFFILE_ERR_EXIST
               && no_error_if_not_found)
             goto cleanup;
-          
+
           /* Its not an error if the default configuration file doesn't exist */
           if (!strcmp (filename, FREEIPMI_CONFIG_FILE_DEFAULT)
               && conffile_errnum (cf) == CONFFILE_ERR_EXIST)
             goto out;
-          
+
           if (conffile_errmsg (cf, buf, CONFFILE_MAX_ERRMSGLEN) < 0)
             {
               fprintf (stderr, "conffile_parse: %d\n", conffile_errnum (cf));

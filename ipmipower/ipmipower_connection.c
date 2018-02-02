@@ -177,14 +177,14 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
       exit (EXIT_FAILURE);
     }
   cbuf_opt_set (ic->ping_out, CBUF_OPT_OVERWRITE, CBUF_WRAP_MANY);
-  
+
   if (ipmi_get_random (&ic->ipmi_requester_sequence_number_counter,
                        sizeof (ic->ipmi_requester_sequence_number_counter)) < 0)
     {
       IPMIPOWER_ERROR (("ipmi_get_random: %s", strerror (errno)));
       exit (EXIT_FAILURE);
     }
-  
+
   if (ipmi_get_random (&ic->ping_sequence_number_counter,
                        sizeof (ic->ping_sequence_number_counter)) < 0)
     {
@@ -236,7 +236,7 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
           IPMIPOWER_ERROR (("malloc: %s", strerror (errno)));
           exit (EXIT_FAILURE);
         }
-      
+
       if (extra_arg)
         {
           if (!(ea->extra_arg = strdup (extra_arg)))
@@ -399,7 +399,7 @@ _connection_add_extra_arg_base (struct ipmipower_connection *ic, const char *ext
   assert (ic);
   assert (ic->extra_args);
   assert (cmd_args.oem_power_type != IPMIPOWER_OEM_POWER_TYPE_NONE);
-  
+
   eanode = ic->extra_args;
   while (eanode)
     {
@@ -408,7 +408,7 @@ _connection_add_extra_arg_base (struct ipmipower_connection *ic, const char *ext
       if (!eanode->extra_arg && !extra_arg)
         return;
       if (eanode->extra_arg
-          && extra_arg 
+          && extra_arg
           && !strcmp (eanode->extra_arg, extra_arg))
         return;
       eanode = eanode->next;
@@ -419,7 +419,7 @@ _connection_add_extra_arg_base (struct ipmipower_connection *ic, const char *ext
       IPMIPOWER_ERROR (("malloc: %s", strerror (errno)));
       exit (EXIT_FAILURE);
     }
-  
+
   if (extra_arg)
     {
       if (!(ea->extra_arg = strdup (extra_arg)))
@@ -435,7 +435,7 @@ _connection_add_extra_arg_base (struct ipmipower_connection *ic, const char *ext
   eanode = ic->extra_args;
   while (eanode->next)
     eanode = eanode->next;
-  eanode->next = ea; 
+  eanode->next = ea;
 }
 
 static void
@@ -465,18 +465,18 @@ _connection_add_extra_arg (struct ipmipower_connection *ic, const char *extra_ar
               IPMIPOWER_ERROR (("fi_hostlist_iterator_create: %s", strerror (errno)));
               exit (EXIT_FAILURE);
             }
-          
+
           while ((extrastr = fi_hostlist_next (hitr)))
             {
               _connection_add_extra_arg_base (ic, extrastr);
               free (extrastr);
             }
-          
+
           fi_hostlist_iterator_destroy (hitr);
           fi_hostlist_destroy (h);
           return;
         }
-      
+
       fi_hostlist_destroy (h);
       goto one_extra_arg;
     }
@@ -531,11 +531,11 @@ _hostname_count (const char *hostname)
       IPMIPOWER_ERROR (("fi_hostlist_iterator_create: %s", strerror (errno)));
       exit (EXIT_FAILURE);
     }
-      
+
   while ((hstr = fi_hostlist_next (hitr)))
     {
       char *ptr;
-      
+
       if (cmd_args.oem_power_type != IPMIPOWER_OEM_POWER_TYPE_NONE)
         {
           if ((ptr = strchr (hstr, '+')))
@@ -547,12 +547,12 @@ _hostname_count (const char *hostname)
           IPMIPOWER_ERROR (("fi_hostlist_push: %s", strerror(errno)));
           exit (EXIT_FAILURE);
         }
-      
+
       free (hstr);
     }
 
   fi_hostlist_uniq (h2);
-  
+
   rv = fi_hostlist_count (h2);
 
  cleanup:
@@ -598,7 +598,7 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
       ics[i].ipmi_fd = -1;
       ics[i].ping_fd = -1;
     }
- 
+
   if (!(h = fi_hostlist_create (hostname)))
     {
       ipmipower_output (IPMIPOWER_MSG_TYPE_HOSTNAME_INVALID, hostname, NULL);
@@ -637,7 +637,7 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
           errflag++;
           goto cleanup;
         }
-      
+
       fi_hostlist_uniq (h2);
 
       if (!(h2itr = fi_hostlist_iterator_create (h2)))
@@ -654,7 +654,7 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
            *
            * foohost+1,foohost+2
            *
-           * that it's already in the list. 
+           * that it's already in the list.
            */
 
           if (cmd_args.oem_power_type != IPMIPOWER_OEM_POWER_TYPE_NONE)
@@ -662,52 +662,52 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
               char *h2str_copy;
               char *ptr;
               int found = 0;
-              
+
               if (!(h2str_copy = strdup (h2str)))
                 {
                   IPMIPOWER_ERROR (("strdup: %s", strerror(errno)));
                   exit (EXIT_FAILURE);
                 }
-              
+
               if ((ptr = strchr (h2str_copy, '+')))
                 {
                   *ptr = '\0';
                   ptr++;
-                  
+
                   /* XXX: This is O(n^2) slow.  99% of the time it's a one
                    * time setup cost, so we consider the slowness ok.  If
                    * it becomes a problem later, we'll need to
                    * rearchitect.
                    */
-                  
+
                   for (i = 0; i < index; i++)
                     {
                       if (!strcmp (ics[i].hostname, h2str_copy))
                         {
                           found++;
-                          
+
                           _connection_add_extra_arg (&ics[i], ptr);
-                          
+
                           break;
                         }
                     }
                 }
-              
+
               free (h2str_copy);
-              
+
               if (found)
                 {
                   free (h2str);
                   continue;
                 }
             }
-          
+
           if (index >= host_count)
             {
               IPMIPOWER_ERROR (("Invalid host count: %d", host_count));
               exit (EXIT_FAILURE);
             }
-          
+
           /* cleanup only at the end, gather all error outputs for
            * later
            */
@@ -721,7 +721,7 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
                 }
               errflag++;
             }
-          
+
           free (h2str);
           h2str = NULL;
           index++;
@@ -764,13 +764,13 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
             {
               struct ipmipower_connection_extra_arg *eanode;
               assert (ics[i].extra_args);
-              
+
               eanode = ics[i].extra_args;
               while (eanode)
                 {
                   struct ipmipower_connection_extra_arg *eatmp;
                   eatmp = eanode->next;
-                  
+
                   free (eanode->extra_arg);
                   free (eanode);
 
@@ -809,16 +809,16 @@ ipmipower_connection_array_destroy (struct ipmipower_connection *ics,
         {
           struct ipmipower_connection_extra_arg *eanode;
           assert (ics[i].extra_args);
-          
+
           eanode = ics[i].extra_args;
           while (eanode)
             {
               struct ipmipower_connection_extra_arg *eatmp;
               eatmp = eanode->next;
-              
+
               free (eanode->extra_arg);
               free (eanode);
-              
+
               eanode = eatmp;
             }
         }

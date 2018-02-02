@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -95,10 +95,10 @@ sel_string_output_intel_e52600v3_sensor_name (ipmi_sel_ctx_t ctx,
                                                                  system_event_record_data,
                                                                  oem_rv)) < 0)
     return (-1);
-      
+
   if (nmret)
-    return (1);      
-  
+    return (1);
+
   return (0);
 }
 
@@ -141,7 +141,7 @@ sel_string_output_intel_e52600v3_event_data1_class_oem (ipmi_sel_ctx_t ctx,
                                                                            wlen,
                                                                            system_event_record_data)) < 0)
     return (-1);
-  
+
   if (nmret)
     return (1);
 
@@ -184,7 +184,7 @@ sel_string_output_intel_e52600v3_event_data1_class_oem (ipmi_sel_ctx_t ctx,
           && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_IERR_RECOVERY_DUMP_INFO))
     {
       int ret;
-          
+
       ret = ipmi_get_oem_specific_message (ctx->manufacturer_id,
                                            ctx->product_id,
                                            system_event_record_data->event_type_code,
@@ -192,7 +192,7 @@ sel_string_output_intel_e52600v3_event_data1_class_oem (ipmi_sel_ctx_t ctx,
                                            system_event_record_data->offset_from_event_reading_type_code,
                                            tmpbuf,
                                            tmpbuflen);
-          
+
       if (ret > 0)
         return (1);
     }
@@ -206,7 +206,7 @@ sel_string_output_intel_e52600v3_event_data1_class_oem (ipmi_sel_ctx_t ctx,
                 tmpbuflen,
                 "QPI Correctable Error Event = %02Xh",
                 system_event_record_data->offset_from_event_reading_type_code);
-          
+
       return (1);
     }
 
@@ -229,7 +229,7 @@ _sel_string_output_intel_e52600v3_pci_bus (ipmi_sel_ctx_t ctx,
   assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (system_event_record_data);
   assert (system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
-  
+
   snprintf (tmpbuf,
             tmpbuflen,
             "PCI Bus Number %u",
@@ -238,18 +238,18 @@ _sel_string_output_intel_e52600v3_pci_bus (ipmi_sel_ctx_t ctx,
 
 
 static const char *
-_sel_string_output_intel_e52600v3_ras_mode (uint8_t event_data) 
+_sel_string_output_intel_e52600v3_ras_mode (uint8_t event_data)
 {
   uint8_t ras_mode;
   char *ras_mode_str;
 
   ras_mode = (event_data & IPMI_SENSOR_MEMORY_DEVICE_ENABLED_EVENT_DATA2_OR_EVENT_DATA3_OEM_INTEL_E52600V3_RAS_MODE_BITMASK);
   ras_mode >>= IPMI_SENSOR_MEMORY_DEVICE_ENABLED_EVENT_DATA2_OR_EVENT_DATA3_OEM_INTEL_E52600V3_RAS_MODE_SHIFT;
-          
+
   switch (ras_mode)
     {
     case IPMI_SENSOR_MEMORY_DEVICE_ENABLED_EVENT_DATA2_OR_EVENT_DATA3_OEM_INTEL_E52600V3_RAS_MODE_NONE:
-      ras_mode_str = "None (Independent Channel Mode)"; 
+      ras_mode_str = "None (Independent Channel Mode)";
       break;
     case IPMI_SENSOR_MEMORY_DEVICE_ENABLED_EVENT_DATA2_OR_EVENT_DATA3_OEM_INTEL_E52600V3_RAS_MODE_MIRRORING:
       ras_mode_str = "Mirroring Mode";
@@ -331,7 +331,7 @@ sel_string_output_intel_e52600v3_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
                     tmpbuflen,
                     "%s",
                     power_supply_status_str);
-          
+
           return (1);
         }
 
@@ -373,7 +373,7 @@ sel_string_output_intel_e52600v3_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
                     tmpbuflen,
                     "%s",
                     power_supply_status_str);
-          
+
           return (1);
         }
 
@@ -406,7 +406,7 @@ sel_string_output_intel_e52600v3_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
                     tmpbuflen,
                     "%s",
                     power_supply_status_str);
-          
+
           return (1);
         }
     }
@@ -457,12 +457,12 @@ sel_string_output_intel_e52600v3_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
           if (sel_string_strcat_comma_separate (cpu_bitmask_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "CPU4"))
             return (1);
         }
-          
+
       snprintf (tmpbuf,
                 tmpbuflen,
                 "CPU = %s",
                 cpu_bitmask_str);
-          
+
       return (1);
     }
 
@@ -494,7 +494,7 @@ sel_string_output_intel_e52600v3_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
                 tmpbuflen,
                 "%s",
                 str);
-          
+
       return (1);
     }
 
@@ -529,7 +529,7 @@ sel_string_output_intel_e52600v3_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
                 tmpbuflen,
                 "%s",
                 str);
-          
+
       return (1);
     }
 
@@ -568,7 +568,7 @@ sel_string_output_intel_e52600v3_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
                 tmpbuflen,
                 "%s",
                 str);
-          
+
       return (1);
     }
 
@@ -581,14 +581,14 @@ sel_string_output_intel_e52600v3_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
     {
       uint8_t config_error;
       char *config_error_str;
-          
+
       config_error = (system_event_record_data->event_data2 & IPMI_SENSOR_MEMORY_DEVICE_ENABLED_EVENT_DATA2_OEM_INTEL_E52600V3_CONFIG_ERROR_BITMASK);
       config_error >>= IPMI_SENSOR_MEMORY_DEVICE_ENABLED_EVENT_DATA2_OEM_INTEL_E52600V3_CONFIG_ERROR_SHIFT;
-          
+
       switch (config_error)
         {
         case IPMI_SENSOR_MEMORY_DEVICE_ENABLED_EVENT_DATA2_OEM_INTEL_E52600V3_CONFIG_ERROR_NONE:
-          config_error_str = "None"; 
+          config_error_str = "None";
           break;
         case IPMI_SENSOR_MEMORY_DEVICE_ENABLED_EVENT_DATA2_OEM_INTEL_E52600V3_CONFIG_ERROR_INVALID_DIMM_CONFIGURATION_FOR_RAS_MODE:
           config_error_str = "Invalid DIMM Configuration for RAS Mode";
@@ -596,7 +596,7 @@ sel_string_output_intel_e52600v3_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
         default:
           config_error_str = "Unknown";
         }
-          
+
       snprintf (tmpbuf,
                 tmpbuflen,
                 "Config Error = %s",
@@ -613,14 +613,14 @@ sel_string_output_intel_e52600v3_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
           || system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_DEVICE_ENABLED_DEVICE_ENABLED))
     {
       const char *ras_mode_str;
-                   
+
       ras_mode_str = _sel_string_output_intel_e52600v3_ras_mode (system_event_record_data->event_data2);
-          
+
       snprintf (tmpbuf,
                 tmpbuflen,
                 "Prior RAS Mode = %s",
                 ras_mode_str);
-          
+
       return (1);
     }
 
@@ -632,7 +632,7 @@ sel_string_output_intel_e52600v3_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
           || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_SERR))
     {
       _sel_string_output_intel_e52600v3_pci_bus (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
-          
+
       return (1);
     }
 
@@ -670,7 +670,7 @@ sel_string_output_intel_e52600v3_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
                 "Mirroring Domain = %s, Rank on DIMM = %u",
                 mirroring_domain_str,
                 rank_on_dimm);
-          
+
       return (1);
     }
 
@@ -714,7 +714,7 @@ sel_string_output_intel_e52600v3_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
                 "Sparing Domain = %s, Rank on DIMM = %u",
                 sparing_domain_str,
                 rank_on_dimm);
-          
+
       return (1);
     }
 
@@ -734,7 +734,7 @@ sel_string_output_intel_e52600v3_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
                 tmpbuflen,
                 "Rank on DIMM = %u",
                 rank_on_dimm);
-          
+
       return (1);
     }
 
@@ -780,7 +780,7 @@ sel_string_output_intel_e52600v3_event_data2_class_oem (ipmi_sel_ctx_t ctx,
                                                                            wlen,
                                                                            system_event_record_data)) < 0)
     return (-1);
-  
+
   if (nmret)
     return (1);
 
@@ -803,9 +803,9 @@ sel_string_output_intel_e52600v3_event_data2_class_oem (ipmi_sel_ctx_t ctx,
     {
       uint8_t cpu;
       char *cpu_str;
-          
+
       cpu = system_event_record_data->event_data2;
-          
+
       switch (cpu)
         {
         case IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA2_OEM_INTEL_E52600V3_CPU_1:
@@ -823,12 +823,12 @@ sel_string_output_intel_e52600v3_event_data2_class_oem (ipmi_sel_ctx_t ctx,
         default:
           cpu_str = "Unknown";
         }
-          
+
       snprintf (tmpbuf,
                 tmpbuflen,
                 "CPU = %s",
                 cpu_str);
-          
+
       return (1);
     }
 
@@ -867,7 +867,7 @@ sel_string_output_intel_e52600v3_event_data2_class_oem (ipmi_sel_ctx_t ctx,
                 tmpbuflen,
                 "Target of update = %s, Instance = %u",
                 target_of_update_str, target_instance);
-          
+
       return (1);
     }
 
@@ -885,7 +885,7 @@ sel_string_output_intel_e52600v3_event_data2_class_oem (ipmi_sel_ctx_t ctx,
           && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_PCI_EXPRESS_CORRECTABLE_ERRORS))
     {
       _sel_string_output_intel_e52600v3_pci_bus (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
-          
+
       return (1);
     }
 
@@ -933,12 +933,12 @@ sel_string_output_intel_e52600v3_event_data2_class_oem (ipmi_sel_ctx_t ctx,
           if (sel_string_strcat_comma_separate (failed_register_type_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "MCA error source register"))
             return (1);
         }
-          
+
       snprintf (tmpbuf,
                 tmpbuflen,
                 "Failed register = %s",
                 failed_register_type_str);
-          
+
       return (1);
     }
 
@@ -963,13 +963,13 @@ _sel_string_output_intel_e52600v3_pci_device_function (ipmi_sel_ctx_t ctx,
   assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (system_event_record_data);
   assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
-  
+
   pci_device = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA3_OEM_INTEL_E52600V3_PCI_DEVICE_NUMBER_BITMASK);
   pci_device >>= IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA3_OEM_INTEL_E52600V3_PCI_DEVICE_NUMBER_SHIFT;
-  
+
   pci_function = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA3_OEM_INTEL_E52600V3_PCI_FUNCTION_NUMBER_BITMASK);
   pci_function >>= IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA3_OEM_INTEL_E52600V3_PCI_FUNCTION_NUMBER_SHIFT;
-  
+
   snprintf (tmpbuf,
             tmpbuflen,
             "PCI_Device number %u, PCI Function number %u",
@@ -998,7 +998,7 @@ _sel_string_output_intel_e52600v3_memory_dimm (ipmi_sel_ctx_t ctx,
   assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (system_event_record_data);
   assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
-  
+
   socket_id = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_SOCKET_ID_BITMASK);
   socket_id >>= IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_SOCKET_ID_SHIFT;
 
@@ -1083,7 +1083,7 @@ _sel_string_output_intel_e52600v3_memory_dimm (ipmi_sel_ctx_t ctx,
             }
         }
       else
-        channel_str = "Indeterminate"; 
+        channel_str = "Indeterminate";
       break;
     case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA3_SOCKET_ID_CPU4:
       socket_id_str = "4";
@@ -1183,7 +1183,7 @@ sel_string_output_intel_e52600v3_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
                                                                               wlen,
                                                                               system_event_record_data)) < 0)
     return (-1);
-  
+
   if (nmret)
     return (1);
 
@@ -1232,7 +1232,7 @@ sel_string_output_intel_e52600v3_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
           if (sel_string_strcat_comma_separate (memory_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "CPU2 - DIMM Channel 3/4"))
             return (1);
         }
-          
+
       if (memory_bitmask & IPMI_SENSOR_TYPE_TEMPERATURE_EVENT_DATA3_OEM_INTEL_E52600V3_MEMORY_VRD_HOT_BITMAP_CPU3_DIMM_CHANNEL_1_2)
         {
           if (sel_string_strcat_comma_separate (memory_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "CPU3 - DIMM Channel 1/2"))
@@ -1261,7 +1261,7 @@ sel_string_output_intel_e52600v3_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
                 tmpbuflen,
                 "Memory = %s",
                 memory_str);
-          
+
       return (1);
     }
 
@@ -1329,7 +1329,7 @@ sel_string_output_intel_e52600v3_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
           channel_char = '?';
           break;
         }
-          
+
       switch (dimm)
         {
         case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_E52600V3_DIMM_1:
@@ -1402,7 +1402,7 @@ sel_string_output_intel_e52600v3_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
                 tmpbuflen,
                 "%s caused CATERR",
                 cpu_str);
-          
+
       return (1);
     }
 
@@ -1444,7 +1444,7 @@ sel_string_output_intel_e52600v3_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
                 tmpbuflen,
                 "Auto Config Error = %s",
                 str);
-          
+
       return (1);
     }
 
@@ -1458,12 +1458,12 @@ sel_string_output_intel_e52600v3_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
       const char *ras_mode_str;
 
       ras_mode_str = _sel_string_output_intel_e52600v3_ras_mode (system_event_record_data->event_data3);
-          
+
       snprintf (tmpbuf,
                 tmpbuflen,
                 "RAS Mode Configured = %s",
                 ras_mode_str);
-          
+
       return (1);
     }
 
@@ -1475,14 +1475,14 @@ sel_string_output_intel_e52600v3_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
           || system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_DEVICE_ENABLED_DEVICE_ENABLED))
     {
       const char *ras_mode_str;
-          
+
       ras_mode_str = _sel_string_output_intel_e52600v3_ras_mode (system_event_record_data->event_data3);
-          
+
       snprintf (tmpbuf,
                 tmpbuflen,
                 "Selected RAS Mode = %s",
                 ras_mode_str);
-          
+
       return (1);
     }
 
@@ -1576,10 +1576,10 @@ sel_string_output_intel_e52600v3_event_data3_class_oem (ipmi_sel_ctx_t ctx,
                                                                            wlen,
                                                                            system_event_record_data)) < 0)
     return (-1);
-  
+
   if (nmret)
     return (1);
-  
+
   if ((system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_E52600V3_BIOS_SMI_HANDLER
        && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
        && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_PCI_EXPRESS_FATAL_ERROR
@@ -1594,7 +1594,7 @@ sel_string_output_intel_e52600v3_event_data3_class_oem (ipmi_sel_ctx_t ctx,
           && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_PCI_EXPRESS_CORRECTABLE_ERRORS))
     {
       _sel_string_output_intel_e52600v3_pci_device_function (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
-      
+
       return (1);
     }
 
@@ -1645,10 +1645,10 @@ sel_string_output_intel_e52600v3_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
     {
       uint16_t error_code;
       char *error_code_str = NULL;
-          
+
       error_code = system_event_record_data->event_data2;
       error_code |= (system_event_record_data->event_data3 << 8);
-          
+
       switch (error_code)
         {
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_SYSTEM_RTC_DATE_TIME_NOT_SET:
@@ -1778,436 +1778,436 @@ sel_string_output_intel_e52600v3_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
           error_code_str = "DIMM Population Error";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_A1_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_A1 failed test/initialization"; 
+          error_code_str = "DIMM_A1 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_A2_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_A2 failed test/initialization"; 
+          error_code_str = "DIMM_A2 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_A3_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_A3 failed test/initialization"; 
+          error_code_str = "DIMM_A3 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_B1_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_B1 failed test/initialization"; 
+          error_code_str = "DIMM_B1 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_B2_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_B2 failed test/initialization"; 
+          error_code_str = "DIMM_B2 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_B3_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_B3 failed test/initialization"; 
+          error_code_str = "DIMM_B3 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_C1_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_C1 failed test/initialization"; 
+          error_code_str = "DIMM_C1 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_C2_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_C2 failed test/initialization"; 
+          error_code_str = "DIMM_C2 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_C3_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_C3 failed test/initialization"; 
+          error_code_str = "DIMM_C3 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_D1_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_D1 failed test/initialization"; 
+          error_code_str = "DIMM_D1 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_D2_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_D2 failed test/initialization"; 
+          error_code_str = "DIMM_D2 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_D3_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_D3 failed test/initialization"; 
+          error_code_str = "DIMM_D3 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_E1_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_E1 failed test/initialization"; 
+          error_code_str = "DIMM_E1 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_E2_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_E2 failed test/initialization"; 
+          error_code_str = "DIMM_E2 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_E3_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_E3 failed test/initialization"; 
+          error_code_str = "DIMM_E3 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_F1_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_F1 failed test/initialization"; 
+          error_code_str = "DIMM_F1 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_F2_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_F2 failed test/initialization"; 
+          error_code_str = "DIMM_F2 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_F3_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_F3 failed test/initialization"; 
+          error_code_str = "DIMM_F3 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_G1_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_G1 failed test/initialization"; 
+          error_code_str = "DIMM_G1 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_G2_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_G2 failed test/initialization"; 
+          error_code_str = "DIMM_G2 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_G3_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_G3 failed test/initialization"; 
+          error_code_str = "DIMM_G3 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_H1_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_H1 failed test/initialization"; 
+          error_code_str = "DIMM_H1 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_H2_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_H2 failed test/initialization"; 
+          error_code_str = "DIMM_H2 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_H3_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_H3 failed test/initialization"; 
+          error_code_str = "DIMM_H3 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_J1_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_J1 failed test/initialization"; 
+          error_code_str = "DIMM_J1 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_J2_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_J2 failed test/initialization"; 
+          error_code_str = "DIMM_J2 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_J3_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_J3 failed test/initialization"; 
+          error_code_str = "DIMM_J3 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_K1_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_K1 failed test/initialization"; 
+          error_code_str = "DIMM_K1 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_K2_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_K2 failed test/initialization"; 
+          error_code_str = "DIMM_K2 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_K3_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_K3 failed test/initialization"; 
+          error_code_str = "DIMM_K3 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_L1_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_L1 failed test/initialization"; 
+          error_code_str = "DIMM_L1 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_L2_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_L2 failed test/initialization"; 
+          error_code_str = "DIMM_L2 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_L3_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_L3 failed test/initialization"; 
+          error_code_str = "DIMM_L3 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_M1_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_M1 failed test/initialization"; 
+          error_code_str = "DIMM_M1 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_M2_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_M2 failed test/initialization"; 
+          error_code_str = "DIMM_M2 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_M3_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_M3 failed test/initialization"; 
+          error_code_str = "DIMM_M3 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_N1_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_N1 failed test/initialization"; 
+          error_code_str = "DIMM_N1 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_N2_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_N2 failed test/initialization"; 
+          error_code_str = "DIMM_N2 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_N3_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_N3 failed test/initialization"; 
+          error_code_str = "DIMM_N3 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_P1_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_P1 failed test/initialization"; 
+          error_code_str = "DIMM_P1 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_P2_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_P2 failed test/initialization"; 
+          error_code_str = "DIMM_P2 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_P3_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_P3 failed test/initialization"; 
+          error_code_str = "DIMM_P3 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_R1_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_R1 failed test/initialization"; 
+          error_code_str = "DIMM_R1 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_R2_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_R2 failed test/initialization"; 
+          error_code_str = "DIMM_R2 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_R3_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_R3 failed test/initialization"; 
+          error_code_str = "DIMM_R3 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_T1_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_T1 failed test/initialization"; 
+          error_code_str = "DIMM_T1 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_T2_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_T2 failed test/initialization"; 
+          error_code_str = "DIMM_T2 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_T3_FAILED_SELF_TEST_INITIALIZATION:
-          error_code_str = "DIMM_T3 failed test/initialization"; 
+          error_code_str = "DIMM_T3 failed test/initialization";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_A1_DISABLED:
-          error_code_str = "DIMM_A1 disabled"; 
+          error_code_str = "DIMM_A1 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_A2_DISABLED:
-          error_code_str = "DIMM_A2 disabled"; 
+          error_code_str = "DIMM_A2 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_A3_DISABLED:
-          error_code_str = "DIMM_A3 disabled"; 
+          error_code_str = "DIMM_A3 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_B1_DISABLED:
-          error_code_str = "DIMM_B1 disabled"; 
+          error_code_str = "DIMM_B1 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_B2_DISABLED:
-          error_code_str = "DIMM_B2 disabled"; 
+          error_code_str = "DIMM_B2 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_B3_DISABLED:
-          error_code_str = "DIMM_B3 disabled"; 
+          error_code_str = "DIMM_B3 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_C1_DISABLED:
-          error_code_str = "DIMM_C1 disabled"; 
+          error_code_str = "DIMM_C1 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_C2_DISABLED:
-          error_code_str = "DIMM_C2 disabled"; 
+          error_code_str = "DIMM_C2 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_C3_DISABLED:
-          error_code_str = "DIMM_C3 disabled"; 
+          error_code_str = "DIMM_C3 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_D1_DISABLED:
-          error_code_str = "DIMM_D1 disabled"; 
+          error_code_str = "DIMM_D1 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_D2_DISABLED:
-          error_code_str = "DIMM_D2 disabled"; 
+          error_code_str = "DIMM_D2 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_D3_DISABLED:
-          error_code_str = "DIMM_D3 disabled"; 
+          error_code_str = "DIMM_D3 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_E1_DISABLED:
-          error_code_str = "DIMM_E1 disabled"; 
+          error_code_str = "DIMM_E1 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_E2_DISABLED:
-          error_code_str = "DIMM_E2 disabled"; 
+          error_code_str = "DIMM_E2 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_E3_DISABLED:
-          error_code_str = "DIMM_E3 disabled"; 
+          error_code_str = "DIMM_E3 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_F1_DISABLED:
-          error_code_str = "DIMM_F1 disabled"; 
+          error_code_str = "DIMM_F1 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_F2_DISABLED:
-          error_code_str = "DIMM_F2 disabled"; 
+          error_code_str = "DIMM_F2 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_F3_DISABLED:
-          error_code_str = "DIMM_F3 disabled"; 
+          error_code_str = "DIMM_F3 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_G1_DISABLED:
-          error_code_str = "DIMM_G1 disabled"; 
+          error_code_str = "DIMM_G1 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_G2_DISABLED:
-          error_code_str = "DIMM_G2 disabled"; 
+          error_code_str = "DIMM_G2 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_G3_DISABLED:
-          error_code_str = "DIMM_G3 disabled"; 
+          error_code_str = "DIMM_G3 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_H1_DISABLED:
-          error_code_str = "DIMM_H1 disabled"; 
+          error_code_str = "DIMM_H1 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_H2_DISABLED:
-          error_code_str = "DIMM_H2 disabled"; 
+          error_code_str = "DIMM_H2 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_H3_DISABLED:
-          error_code_str = "DIMM_H3 disabled"; 
+          error_code_str = "DIMM_H3 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_J1_DISABLED:
-          error_code_str = "DIMM_J1 disabled"; 
+          error_code_str = "DIMM_J1 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_J2_DISABLED:
-          error_code_str = "DIMM_J2 disabled"; 
+          error_code_str = "DIMM_J2 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_J3_DISABLED:
-          error_code_str = "DIMM_J3 disabled"; 
+          error_code_str = "DIMM_J3 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_K1_DISABLED:
-          error_code_str = "DIMM_K1 disabled"; 
+          error_code_str = "DIMM_K1 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_K2_DISABLED:
-          error_code_str = "DIMM_K2 disabled"; 
+          error_code_str = "DIMM_K2 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_K3_DISABLED:
-          error_code_str = "DIMM_K3 disabled"; 
+          error_code_str = "DIMM_K3 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_L1_DISABLED:
-          error_code_str = "DIMM_L1 disabled"; 
+          error_code_str = "DIMM_L1 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_L2_DISABLED:
-          error_code_str = "DIMM_L2 disabled"; 
+          error_code_str = "DIMM_L2 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_L3_DISABLED:
-          error_code_str = "DIMM_L3 disabled"; 
+          error_code_str = "DIMM_L3 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_M1_DISABLED:
-          error_code_str = "DIMM_M1 disabled"; 
+          error_code_str = "DIMM_M1 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_M2_DISABLED:
-          error_code_str = "DIMM_M2 disabled"; 
+          error_code_str = "DIMM_M2 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_M3_DISABLED:
-          error_code_str = "DIMM_M3 disabled"; 
+          error_code_str = "DIMM_M3 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_N1_DISABLED:
-          error_code_str = "DIMM_N1 disabled"; 
+          error_code_str = "DIMM_N1 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_N2_DISABLED:
-          error_code_str = "DIMM_N2 disabled"; 
+          error_code_str = "DIMM_N2 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_N3_DISABLED:
-          error_code_str = "DIMM_N3 disabled"; 
+          error_code_str = "DIMM_N3 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_P1_DISABLED:
-          error_code_str = "DIMM_P1 disabled"; 
+          error_code_str = "DIMM_P1 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_P2_DISABLED:
-          error_code_str = "DIMM_P2 disabled"; 
+          error_code_str = "DIMM_P2 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_P3_DISABLED:
-          error_code_str = "DIMM_P3 disabled"; 
+          error_code_str = "DIMM_P3 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_R1_DISABLED:
-          error_code_str = "DIMM_R1 disabled"; 
+          error_code_str = "DIMM_R1 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_R2_DISABLED:
-          error_code_str = "DIMM_R2 disabled"; 
+          error_code_str = "DIMM_R2 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_R3_DISABLED:
-          error_code_str = "DIMM_R3 disabled"; 
+          error_code_str = "DIMM_R3 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_T1_DISABLED:
-          error_code_str = "DIMM_T1 disabled"; 
+          error_code_str = "DIMM_T1 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_T2_DISABLED:
-          error_code_str = "DIMM_T2 disabled"; 
+          error_code_str = "DIMM_T2 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_T3_DISABLED:
-          error_code_str = "DIMM_T3 disabled"; 
+          error_code_str = "DIMM_T3 disabled";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_A1_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_A1 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_A1 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_A2_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_A2 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_A2 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_A3_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_A3 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_A3 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_B1_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_B1 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_B1 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_B2_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_B2 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_B2 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_B3_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_B3 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_B3 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_C1_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_C1 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_C1 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_C2_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_C2 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_C2 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_C3_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_C3 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_C3 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_D1_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_D1 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_D1 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_D2_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_D2 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_D2 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_D3_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_D3 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_D3 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_E1_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_E1 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_E1 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_E2_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_E2 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_E2 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_E3_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_E3 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_E3 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_F1_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_F1 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_F1 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_F2_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_F2 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_F2 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_F3_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_F3 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_F3 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_G1_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_G1 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_G1 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_G2_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_G2 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_G2 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_G3_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_G3 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_G3 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_H1_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_H1 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_H1 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_H2_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_H2 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_H2 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_H3_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_H3 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_H3 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_J1_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_J1 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_J1 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_J2_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_J2 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_J2 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_J3_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_J3 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_J3 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_K1_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_K1 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_K1 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_K2_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_K2 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_K2 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_K3_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_K3 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_K3 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_L1_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_L1 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_L1 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_L2_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_L2 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_L2 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_L3_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_L3 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_L3 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_M1_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_M1 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_M1 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_M2_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_M2 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_M2 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_M3_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_M3 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_M3 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_N1_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_N1 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_N1 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_N2_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_N2 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_N2 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_N3_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_N3 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_N3 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_P1_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_P1 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_P1 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_P2_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_P2 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_P2 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_P3_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_P3 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_P3 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_R1_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_R1 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_R1 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_R2_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_R2 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_R2 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_R3_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_R3 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_R3 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_T1_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_T1 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_T1 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_T2_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_T2 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_T2 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_DIMM_T3_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED:
-          error_code_str = "DIMM_T3 encountered a Serial Presence Detection (SPD) failure"; 
+          error_code_str = "DIMM_T3 encountered a Serial Presence Detection (SPD) failure";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_E52600V3_POST_ERROR_CODE_POST_RECLAIM_OF_NON_CRITICAL_VARIABLES:
           error_code_str = "POST Reclaim of non-critical variables";
@@ -2263,14 +2263,14 @@ sel_string_output_intel_e52600v3_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
         (*oem_rv) = 1;
       else
         (*oem_rv) = 0;
-      
+
       return (1);
     }
 
   /* achu: Documentation states only
    * IPMI_SENSOR_TYPE_MEMORY_MEMORY_SCRUB_FAILED, but I think
    * that's a typo. It should be IPMI_SENSOR_TYPE_MEMORY_PARITY.
-   * Gonna check for both 
+   * Gonna check for both
    */
   if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_E52600V3_BIOS_SMI_HANDLER
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
@@ -2284,7 +2284,7 @@ sel_string_output_intel_e52600v3_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
       uint8_t channel_information_validity_check, dimm_information_validity_check, error_type;
       char *error_type_str;
       char dimm_str[INTEL_EVENT_BUFFER_LENGTH + 1];
-          
+
       memset (dimm_str, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
 
       channel_information_validity_check = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA2_CHANNEL_INFORMATON_VALIDITY_CHECK_BITMASK);
@@ -2318,7 +2318,7 @@ sel_string_output_intel_e52600v3_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
                                                      system_event_record_data,
                                                      channel_information_validity_check,
                                                      dimm_information_validity_check);
-            
+
       if (sel_string_snprintf (buf,
                                buflen,
                                wlen,
@@ -2328,7 +2328,7 @@ sel_string_output_intel_e52600v3_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
         (*oem_rv) = 1;
       else
         (*oem_rv) = 0;
-      
+
       return (1);
     }
 

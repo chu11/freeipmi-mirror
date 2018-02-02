@@ -4,4 +4,4 @@ with the hostname prepended to each line.  Although this output is
 readable in many situations, it may be difficult to read in other
 situations. For example, output from multiple nodes may be mixed
 together.  The \fB\-B\fR and \fB\-C\fR options can be used to change
-this default.  
+this default.

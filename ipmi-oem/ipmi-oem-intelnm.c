@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2008-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -61,11 +61,11 @@ _ipmi_oem_intelnm_parse_domainid (ipmi_oem_state_data_t *state_data,
                                   uint8_t *value_out)
 {
   int rv = -1;
-  
+
   assert (state_data);
   assert (value);
   assert (value_out);
-  
+
   if (!strcasecmp (value, "platform"))
     (*value_out) = IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_ENTIRE_PLATFORM;
   else if (!strcasecmp (value, "cpu"))
@@ -126,7 +126,7 @@ _ipmi_oem_intelnm_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 
   sdr_callback_arg = (struct ipmi_oem_intelnm_sdr_callback *)arg;
   state_data = sdr_callback_arg->state_data;
-  
+
   if (record_type != IPMI_SDR_FORMAT_OEM_RECORD)
     return (0);
 
@@ -147,7 +147,7 @@ _ipmi_oem_intelnm_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
                        ipmi_sdr_ctx_errormsg (sdr_ctx));
       goto cleanup;
     }
-  
+
   if (ret)
     sdr_callback_arg->found = 1;
   rv = ret;
@@ -193,7 +193,7 @@ _ipmi_oem_intelnm_node_manager_init (ipmi_oem_state_data_t *state_data,
                        ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       goto cleanup;
     }
-  
+
   if (!sdr_callback_arg.found)
     {
       pstdout_fprintf (state_data->pstate,
@@ -201,12 +201,12 @@ _ipmi_oem_intelnm_node_manager_init (ipmi_oem_state_data_t *state_data,
                        "Intel Node Manager not found\n");
       goto cleanup;
     }
-  
+
   /* slave address is stored as 7-bit i2c in SDR, we need the 8 bit
    * version for the communication
    */
   (*target_slave_address) <<= 1;
-  
+
   rv = 0;
  cleanup:
   return (rv);
@@ -495,7 +495,7 @@ ipmi_oem_intelnm_get_node_manager_statistics (ipmi_oem_state_data_t *state_data)
   uint64_t val;
   int rv = -1;
   unsigned int i;
-      
+
   assert (state_data);
   assert (state_data->prog_data->args->oem_options_count >= 1);
 
@@ -503,7 +503,7 @@ ipmi_oem_intelnm_get_node_manager_statistics (ipmi_oem_state_data_t *state_data)
     {
       char *key = NULL;
       char *value = NULL;
-      
+
       if (ipmi_oem_parse_key_value (state_data,
                                     i,
                                     &key,
@@ -562,7 +562,7 @@ ipmi_oem_intelnm_get_node_manager_statistics (ipmi_oem_state_data_t *state_data)
             mode = IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_CPU_THROTTLING_STATISTICS;
           else if (!strcasecmp (value, "memorythrottling"))
             mode = IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_MEMORY_THROTTLING_STATISTICS;
-          else /* !strcasecmp (value, "hostcommfailure") */ 
+          else /* !strcasecmp (value, "hostcommfailure") */
             mode = IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_HOST_COMMUNICATION_FAILURE_STATISTICS;
 
           mode_specified++;
@@ -691,7 +691,7 @@ ipmi_oem_intelnm_get_node_manager_statistics (ipmi_oem_state_data_t *state_data)
       goto cleanup;
     }
   current = val;
-  
+
   if (FIID_OBJ_GET (obj_cmd_rs,
                     "minimum",
                     &val) < 0)
@@ -787,7 +787,7 @@ ipmi_oem_intelnm_get_node_manager_statistics (ipmi_oem_state_data_t *state_data)
       goto cleanup;
     }
   policy_activation_state = val;
-      
+
   if (mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_POWER_STATISTICS
       || mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_CHASSIS_POWER_STATISTICS
       || mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_PER_POLICY_POWER_STATISTICS)
@@ -795,15 +795,15 @@ ipmi_oem_intelnm_get_node_manager_statistics (ipmi_oem_state_data_t *state_data)
       pstdout_printf (state_data->pstate,
                       "Current Power                                 : %u Watts\n",
                       current);
-      
+
       pstdout_printf (state_data->pstate,
                       "Minimum Power                                 : %u Watts\n",
                       minimum);
-      
+
       pstdout_printf (state_data->pstate,
                       "Maximum Power                                 : %u Watts\n",
                       maximum);
-      
+
       pstdout_printf (state_data->pstate,
                       "Average Power                                 : %u Watts\n",
                       average);
@@ -815,15 +815,15 @@ ipmi_oem_intelnm_get_node_manager_statistics (ipmi_oem_state_data_t *state_data)
       pstdout_printf (state_data->pstate,
                       "Current Temperature                           : %u Celsius\n",
                       current);
-    
+
       pstdout_printf (state_data->pstate,
                       "Minimum Temperature                           : %u Celsius\n",
                       minimum);
-    
+
       pstdout_printf (state_data->pstate,
                       "Maximum Temperature                           : %u Celsius\n",
                       maximum);
-    
+
       pstdout_printf (state_data->pstate,
                       "Average Temperature                           : %u Celsius\n",
                       average);
@@ -836,15 +836,15 @@ ipmi_oem_intelnm_get_node_manager_statistics (ipmi_oem_state_data_t *state_data)
       pstdout_printf (state_data->pstate,
                       "Current Throttling Percent                    : %u%%\n",
                       current);
-    
+
       pstdout_printf (state_data->pstate,
                       "Minimum Throttling Percent                    : %u%%\n",
                       minimum);
-    
+
       pstdout_printf (state_data->pstate,
                       "Maximum Throttling Percent                    : %u%%\n",
                       maximum);
-    
+
       pstdout_printf (state_data->pstate,
                       "Average Throttling Percent                    : %u%%\n",
                       average);
@@ -857,25 +857,25 @@ ipmi_oem_intelnm_get_node_manager_statistics (ipmi_oem_state_data_t *state_data)
       pstdout_printf (state_data->pstate,
                       "Current Time                                  : %u ms\n",
                       current * 10);
-    
+
       pstdout_printf (state_data->pstate,
                       "Minimum Time                                  : %u ms\n",
                       minimum * 10);
-    
+
       pstdout_printf (state_data->pstate,
                       "Maximum Time                                  : %u ms\n",
                       maximum * 10);
-    
+
       pstdout_printf (state_data->pstate,
                       "Average Time                                  : %u ms\n",
                       average * 10);
-    } 
+    }
   else if (mode == IPMI_OEM_INTEL_NODE_MANAGER_STATISTICS_MODE_GLOBAL_HOST_UNHANDLED_REQUESTS_STATISTICS)
     {
       pstdout_printf (state_data->pstate,
                       "Current Unhandled Requests                    : %u\n",
                       current);
-    
+
       pstdout_printf (state_data->pstate,
                       "Maximum Unhandled Requests                    : %u\n",
                       maximum);
@@ -886,15 +886,15 @@ ipmi_oem_intelnm_get_node_manager_statistics (ipmi_oem_state_data_t *state_data)
       pstdout_printf (state_data->pstate,
                       "Current CFM                                   : %0.1f CFM\n",
                       (double)current / 10);
-    
+
       pstdout_printf (state_data->pstate,
                       "Minimum CFM                                   : %01.f CFM\n",
                       (double)minimum / 10);
-    
+
       pstdout_printf (state_data->pstate,
                       "Maximum CFM                                   : %01.f CFM\n",
                       (double)maximum / 10);
-    
+
       pstdout_printf (state_data->pstate,
                       "Average CFM                                   : %01.f CFM\n",
                       (double)average / 10);
@@ -903,12 +903,12 @@ ipmi_oem_intelnm_get_node_manager_statistics (ipmi_oem_state_data_t *state_data)
   pstdout_printf (state_data->pstate,
                   "Statistics Reporting Period                   : %u seconds\n",
                   statistics_reporting_period);
-  
+
 
   pstdout_printf (state_data->pstate,
                   "Policy/Global Administrative State            : %s\n",
                   (policy_global_administrative_state == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_GLOBAL_ADMINISTRATIVE_STATE_ENABLED) ? "Enabled" : "Disabled");
-  
+
   if (policyid_specified)
     pstdout_printf (state_data->pstate,
                     "Policy Operational State                      : %s\n",
@@ -922,11 +922,11 @@ ipmi_oem_intelnm_get_node_manager_statistics (ipmi_oem_state_data_t *state_data)
     pstdout_printf (state_data->pstate,
                     "Policy Activation State                       : %s\n",
                     (policy_activation_state == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_ACTIVATION_STATE_TRIGGERED_AND_ACTIVELY_LIMITING_TARGET) ? "Triggered" : "Not Triggered");
-  
+
   rv = 0;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
-  return (rv); 
+  return (rv);
 }
 
 int
@@ -949,7 +949,7 @@ ipmi_oem_intelnm_reset_node_manager_statistics (ipmi_oem_state_data_t *state_dat
   if (state_data->prog_data->args->oem_options_count)
     {
       unsigned int i;
-      
+
       for (i = 0; i < state_data->prog_data->args->oem_options_count; i++)
         {
           char *key = NULL;
@@ -992,7 +992,7 @@ ipmi_oem_intelnm_reset_node_manager_statistics (ipmi_oem_state_data_t *state_dat
                 mode = IPMI_OEM_INTEL_NODE_MANAGER_RESET_MODE_CPU_THROTTLING_STATISTICS;
               else if (!strcasecmp (value, "memorythrottling"))
                 mode = IPMI_OEM_INTEL_NODE_MANAGER_RESET_MODE_MEMORY_THROTTLING_STATISTICS;
-              else /* !strcasecmp (value, "hostcommfailure") */ 
+              else /* !strcasecmp (value, "hostcommfailure") */
                 mode = IPMI_OEM_INTEL_NODE_MANAGER_RESET_MODE_HOST_COMMUNICATION_FAILURE_STATISTICS;
 
               mode_specified++;
@@ -1004,7 +1004,7 @@ ipmi_oem_intelnm_reset_node_manager_statistics (ipmi_oem_state_data_t *state_dat
                                                     value,
                                                     &domainid) < 0)
                 goto cleanup;
-              
+
               domainid_specified++;
             }
           else if (!strcasecmp (key, "policyid"))
@@ -1082,7 +1082,7 @@ ipmi_oem_intelnm_reset_node_manager_statistics (ipmi_oem_state_data_t *state_dat
           goto cleanup;
         }
     }
-      
+
   if (ipmi_cmd_oem_intel_node_manager_reset_node_manager_statistics (state_data->ipmi_ctx,
                                                                      target_channel_number,
                                                                      target_slave_address,
@@ -1114,7 +1114,7 @@ ipmi_oem_intelnm_reset_node_manager_statistics (ipmi_oem_state_data_t *state_dat
         }
       goto cleanup;
     }
-  
+
   rv = 0;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
@@ -1156,12 +1156,12 @@ _ipmi_oem_intelnm_get_node_manager_version_common (ipmi_oem_state_data_t *state_
       if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
         {
           int eret;
-          
+
           if ((eret = _ipmi_oem_intelnm_bad_completion_code (state_data,
                                                              NULL,
                                                              obj_cmd_rs)) < 0)
             goto cleanup;
-          
+
           if (!eret)
             goto efallthrough;
         }
@@ -1220,7 +1220,7 @@ _ipmi_oem_intelnm_get_node_manager_version_common (ipmi_oem_state_data_t *state_
         }
       (*patch_version) = val;
     }
-     
+
   if (major_firmware_revision)
     {
       if (FIID_OBJ_GET (obj_cmd_rs,
@@ -1429,7 +1429,7 @@ _ipmi_oem_intelnm_get_node_manager_capabilities_common (ipmi_oem_state_data_t *s
       if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
         {
           int eret;
-          
+
           if (!state_data->prog_data->args->verbose_count)
             {
               if ((searching_domain_id
@@ -1458,7 +1458,7 @@ _ipmi_oem_intelnm_get_node_manager_capabilities_common (ipmi_oem_state_data_t *s
                                                              "Error",
                                                              obj_cmd_rs)) < 0)
             goto cleanup;
-          
+
           if (!eret)
             goto efallthrough;
         }
@@ -1480,7 +1480,7 @@ _ipmi_oem_intelnm_get_node_manager_capabilities_common (ipmi_oem_state_data_t *s
 
       goto cleanup;
     }
-  
+
   if (FIID_OBJ_GET (obj_cmd_rs,
                     "max_concurrent_settings",
                     &val) < 0)
@@ -1492,7 +1492,7 @@ _ipmi_oem_intelnm_get_node_manager_capabilities_common (ipmi_oem_state_data_t *s
       goto cleanup;
     }
   max_concurrent_settings = val;
-  
+
   if (FIID_OBJ_GET (obj_cmd_rs,
                     "max_power_thermal_time_after_reset",
                     &val) < 0)
@@ -1629,7 +1629,7 @@ _ipmi_oem_intelnm_get_node_manager_capabilities_common (ipmi_oem_state_data_t *s
   if (policy_trigger_type == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_NO_POLICY_TRIGGER)
     {
       char thermal_str[IPMI_OEM_INTELNM_STRING_MAX + 1];
-      
+
       memset (thermal_str, '\0', IPMI_OEM_INTELNM_STRING_MAX + 1);
       if (!max_power_thermal_time_after_reset)
         snprintf (thermal_str,
@@ -1644,7 +1644,7 @@ _ipmi_oem_intelnm_get_node_manager_capabilities_common (ipmi_oem_state_data_t *s
       pstdout_printf (state_data->pstate,
                       "Max Power                       : %s\n",
                       thermal_str);
-      
+
       if (!min_power_thermal_time_after_reset)
         snprintf (thermal_str,
                   IPMI_OEM_INTELNM_STRING_MAX,
@@ -1664,7 +1664,7 @@ _ipmi_oem_intelnm_get_node_manager_capabilities_common (ipmi_oem_state_data_t *s
       pstdout_printf (state_data->pstate,
                       "Max Thermal                     : %u C\n",
                       max_power_thermal_time_after_reset);
-      
+
       pstdout_printf (state_data->pstate,
                       "Min Thermal                     : %u C\n",
                       min_power_thermal_time_after_reset);
@@ -1675,25 +1675,25 @@ _ipmi_oem_intelnm_get_node_manager_capabilities_common (ipmi_oem_state_data_t *s
       pstdout_printf (state_data->pstate,
                       "Max Trigger Time                : %0.1f s\n",
                       ((float)max_power_thermal_time_after_reset / 10));
-      
+
       pstdout_printf (state_data->pstate,
                       "Min Trigger Time                : %0.1f s\n",
                       ((float)min_power_thermal_time_after_reset / 10));
     }
   /* policy_trigger_type == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_BOOT_TIME_POLICY not applicable */
-  
+
   pstdout_printf (state_data->pstate,
                   "Max Correction Time             : %u ms\n",
                   max_correction_time);
-  
+
   pstdout_printf (state_data->pstate,
                   "Min Correction Time             : %u ms\n",
                   min_correction_time);
-  
+
   pstdout_printf (state_data->pstate,
                   "Max Statistics Reporting Period : %u s\n",
                   max_statistics_reporting_period);
-  
+
   pstdout_printf (state_data->pstate,
                   "Min Statistics Reporting Period : %u s\n",
                   min_statistics_reporting_period);
@@ -1709,7 +1709,7 @@ _ipmi_oem_intelnm_get_node_manager_capabilities_common (ipmi_oem_state_data_t *s
   rv = 1;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
-  return (rv); 
+  return (rv);
 }
 
 int
@@ -1764,7 +1764,7 @@ ipmi_oem_intelnm_get_node_manager_capabilities (ipmi_oem_state_data_t *state_dat
   int ret;
 
   assert (state_data);
-  
+
   policytype_array = policytype_defaults;
   policytype_array_len = policytype_defaults_len;
 
@@ -1814,7 +1814,7 @@ ipmi_oem_intelnm_get_node_manager_capabilities (ipmi_oem_state_data_t *state_dat
                                    state_data->prog_data->args->oem_options[i]);
                   goto cleanup;
                 }
-              
+
               if (!strcasecmp (value, "none"))
                 policytrigger_input[0] = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_NO_POLICY_TRIGGER;
               else if (!strcasecmp (value, "inlettemperaturelimitpolicytrigger")
@@ -2007,7 +2007,7 @@ ipmi_oem_intelnm_get_node_manager_capabilities (ipmi_oem_state_data_t *state_dat
 
   rv = 0;
  cleanup:
-  return (rv); 
+  return (rv);
 }
 
 int
@@ -2025,7 +2025,7 @@ ipmi_oem_intelnm_node_manager_policy_control (ipmi_oem_state_data_t *state_data)
   int rv = -1;
 
   assert (state_data);
-  assert (state_data->prog_data->args->oem_options_count >= 1); 
+  assert (state_data->prog_data->args->oem_options_count >= 1);
 
   if (strcasecmp (state_data->prog_data->args->oem_options[0], "enable")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "disable"))
@@ -2042,7 +2042,7 @@ ipmi_oem_intelnm_node_manager_policy_control (ipmi_oem_state_data_t *state_data)
   if (state_data->prog_data->args->oem_options_count > 1)
     {
       unsigned int i;
-      
+
       for (i = 1; i < state_data->prog_data->args->oem_options_count; i++)
         {
           char *key = NULL;
@@ -2061,7 +2061,7 @@ ipmi_oem_intelnm_node_manager_policy_control (ipmi_oem_state_data_t *state_data)
                                                     value,
                                                     &domainid) < 0)
                 goto cleanup;
-              
+
               domainid_specified++;
             }
           else if (!strcasecmp (key, "policyid"))
@@ -2129,7 +2129,7 @@ ipmi_oem_intelnm_node_manager_policy_control (ipmi_oem_state_data_t *state_data)
                        strerror (errno));
       goto cleanup;
     }
-  
+
   if (ipmi_cmd_oem_intel_node_manager_enable_disable_node_manager_policy_control (state_data->ipmi_ctx,
                                                                                   target_channel_number,
                                                                                   target_slave_address,
@@ -2142,12 +2142,12 @@ ipmi_oem_intelnm_node_manager_policy_control (ipmi_oem_state_data_t *state_data)
       if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
         {
           int eret;
-          
+
           if ((eret = _ipmi_oem_intelnm_bad_completion_code (state_data,
                                                              NULL,
                                                              obj_cmd_rs)) < 0)
             goto cleanup;
-          
+
           if (!eret)
             goto efallthrough;
         }
@@ -2161,11 +2161,11 @@ ipmi_oem_intelnm_node_manager_policy_control (ipmi_oem_state_data_t *state_data)
           goto cleanup;
         }
     }
-  
+
   rv = 0;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
-  return (rv); 
+  return (rv);
 }
 
 static void
@@ -2270,7 +2270,7 @@ _ipmi_oem_intelnm_get_node_manager_policy_common (ipmi_oem_state_data_t *state_d
                                                              "Error",
                                                              obj_cmd_rs)) < 0)
             goto cleanup;
-          
+
           if (!eret)
             goto efallthrough;
         }
@@ -2286,11 +2286,11 @@ _ipmi_oem_intelnm_get_node_manager_policy_common (ipmi_oem_state_data_t *state_d
       if ((searching_domain_id
            || searching_policy_id)
           && state_data->prog_data->args->verbose_count)
-        rv = 1; 
+        rv = 1;
 
       goto cleanup;
     }
-  
+
   if (FIID_OBJ_GET (obj_cmd_rs,
                     "policy_enabled",
                     &val) < 0)
@@ -2534,7 +2534,7 @@ _ipmi_oem_intelnm_get_node_manager_policy_common (ipmi_oem_state_data_t *state_d
   pstdout_printf (state_data->pstate,
                   "Policy                                  : %s\n",
                   (policy_enabled == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_ENABLED) ? "enabled" : "disabled");
-  
+
   pstdout_printf (state_data->pstate,
                   "Per Domain Node Manager Policy Control  : %s\n",
                   (per_domain_node_manager_policy_control_enabled == IPMI_OEM_INTEL_NODE_MANAGER_PER_DOMAIN_NODE_MANAGER_POLICY_CONTROL_ENABLED) ? "enabled" : "disabled");
@@ -2564,7 +2564,7 @@ _ipmi_oem_intelnm_get_node_manager_policy_common (ipmi_oem_state_data_t *state_d
   pstdout_printf (state_data->pstate,
                   "Policy Storage Option:                  : %s\n",
                   policy_storage_option_str);
-  
+
   pstdout_printf (state_data->pstate,
                   "Policy Exception Send Alert Action      : %s\n",
                   (policy_exception_actions_send_alert == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_EXCEPTION_ACTION_ENABLE) ? "enabled" : "disabled");
@@ -2577,7 +2577,7 @@ _ipmi_oem_intelnm_get_node_manager_policy_common (ipmi_oem_state_data_t *state_d
     pstdout_printf (state_data->pstate,
                     "Policy Power Domain                     : %s\n",
                     policy_power_domain_str);
-                  
+
   switch (policy_trigger_type)
     {
     case IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_NO_POLICY_TRIGGER:
@@ -2631,7 +2631,7 @@ _ipmi_oem_intelnm_get_node_manager_policy_common (ipmi_oem_state_data_t *state_d
     default:
       break;
     }
-  
+
   pstdout_printf (state_data->pstate,
                   "Statistics Reporting Period             : %u s\n",
                   statistics_reporting_period);
@@ -2639,7 +2639,7 @@ _ipmi_oem_intelnm_get_node_manager_policy_common (ipmi_oem_state_data_t *state_d
   rv = 1;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
-  return (rv); 
+  return (rv);
 }
 
 int
@@ -2669,7 +2669,7 @@ ipmi_oem_intelnm_get_node_manager_policy (ipmi_oem_state_data_t *state_data)
   int ret;
 
   assert (state_data);
-  
+
   if (state_data->prog_data->args->oem_options_count)
     {
       for (i = 0; i < state_data->prog_data->args->oem_options_count; i++)
@@ -2708,7 +2708,7 @@ ipmi_oem_intelnm_get_node_manager_policy (ipmi_oem_state_data_t *state_data)
                                                value,
                                                &policyid_tmp) < 0)
                 goto cleanup;
-              
+
               policyid_min = policyid_tmp;
               policyid_max = policyid_tmp;
               policyid_specified++;
@@ -2748,7 +2748,7 @@ ipmi_oem_intelnm_get_node_manager_policy (ipmi_oem_state_data_t *state_data)
                                                              NULL,
                                                              NULL) < 0)
         goto cleanup;
-      
+
       if (node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_0
           || node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_5
           ||node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_3_0)
@@ -2779,7 +2779,7 @@ ipmi_oem_intelnm_get_node_manager_policy (ipmi_oem_state_data_t *state_data)
                                                                        domainid_specified ? 0 : 1,
                                                                        policyid_specified ? 0 : 1)) < 0)
             goto cleanup;
-          
+
           if (ret > 0)
             output_newline_flag = 1;
           else
@@ -2789,7 +2789,7 @@ ipmi_oem_intelnm_get_node_manager_policy (ipmi_oem_state_data_t *state_data)
 
   rv = 0;
  cleanup:
-  return (rv); 
+  return (rv);
 }
 
 int
@@ -2833,7 +2833,7 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
     {
       char *key = NULL;
       char *value = NULL;
-      
+
       if (ipmi_oem_parse_key_value (state_data,
                                     i,
                                     &key,
@@ -2847,7 +2847,7 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
                                                 value,
                                                 &domainid) < 0)
             goto cleanup;
-          
+
           domainid_specified++;
         }
       else if (!strcasecmp (key, "policyid"))
@@ -2857,7 +2857,7 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
                                            value,
                                            &policyid) < 0)
             goto cleanup;
-          
+
           policyid_specified++;
         }
       else if (!strcasecmp (key, "policytrigger"))
@@ -2877,7 +2877,7 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
                                state_data->prog_data->args->oem_options[i]);
               goto cleanup;
             }
-          
+
           if (!strcasecmp (value, "none"))
             policytrigger = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_NO_POLICY_TRIGGER;
           else if (!strcasecmp (value, "inlettemperaturelimitpolicytrigger")
@@ -2896,7 +2896,7 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
         {
           if (ipmi_oem_parse_2_byte_field (state_data, i, value, &policytargetlimit) < 0)
             goto cleanup;
-          
+
           policytargetlimit_specified++;
         }
       else if (!strcasecmp (key, "platformbootingmode"))
@@ -2912,7 +2912,7 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
                                state_data->prog_data->args->oem_options[i]);
               goto cleanup;
             }
-          
+
           if (!strcasecmp (value, "performance"))
             platformbootingmode = IPMI_OEM_INTEL_NODE_MANAGER_PLATFORM_BOOTING_MODE_BOOT_IN_PERFORMANCE_OPTIMIZED_MODE;
           else /* !strcasecmp (value, "power") */
@@ -2923,21 +2923,21 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
         {
           if (ipmi_oem_parse_4_byte_field (state_data, i, value, &correctiontimelimit) < 0)
             goto cleanup;
-          
+
           correctiontimelimit_specified++;
         }
       else if (!strcasecmp (key, "policytriggerlimit"))
         {
           if (ipmi_oem_parse_2_byte_field (state_data, i, value, &policytriggerlimit) < 0)
             goto cleanup;
-          
+
           policytriggerlimit_specified++;
         }
       else if (!strcasecmp (key, "statisticsreportingperiod"))
         {
           if (ipmi_oem_parse_2_byte_field (state_data, i, value, &statisticsreportingperiod) < 0)
             goto cleanup;
-          
+
           statisticsreportingperiod_specified++;
         }
       else if (!strcasecmp (key, "policystorage"))
@@ -2953,7 +2953,7 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
                                state_data->prog_data->args->oem_options[i]);
               goto cleanup;
             }
-          
+
           if (!strcasecmp (value, "persistent"))
             policystorage = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_STORAGE_PERSISTENT_STORAGE;
           else
@@ -2974,7 +2974,7 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
                                state_data->prog_data->args->oem_options[i]);
               goto cleanup;
             }
-          
+
           if (!strcasecmp (value, "enable"))
             policystate = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_ENABLED;
           else
@@ -2993,12 +2993,12 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
                                state_data->prog_data->args->oem_options[i]);
               goto cleanup;
             }
-          
+
           if (!strcasecmp (value, "alert"))
-            policyexceptionaction_alert = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_EXCEPTION_ACTION_ENABLE; 
-          
+            policyexceptionaction_alert = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_EXCEPTION_ACTION_ENABLE;
+
           if (!strcasecmp (value, "shutdown"))
-            policyexceptionaction_shutdown = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_EXCEPTION_ACTION_ENABLE; 
+            policyexceptionaction_shutdown = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_EXCEPTION_ACTION_ENABLE;
         }
       else if (!strcasecmp (key, "policypowerdomain"))
         {
@@ -3013,7 +3013,7 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
                                state_data->prog_data->args->oem_options[i]);
               goto cleanup;
             }
-          
+
           if (!strcasecmp (value, "primary"))
             policypowerdomain = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_POWER_DOMAIN_POWER_PRIMARY_SIDE_POWER_DOMAIN;
           else /* !strcasecmp (value, "secondary") */
@@ -3042,7 +3042,7 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
             aggressivepowercorrection = IPMI_OEM_INTEL_NODE_MANAGER_AGGRESSIVE_CPU_POWER_CORRECTION_AGGRESSIVE;
 
           aggressivepowercorrection_specified++;
-        } 
+        }
       else
         {
           pstdout_fprintf (state_data->pstate,
@@ -3053,7 +3053,7 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
                            state_data->prog_data->args->oem_options[i]);
           goto cleanup;
         }
-      
+
       free (key);
       free (value);
     }
@@ -3144,21 +3144,21 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
                            stderr,
                            "policy target limit out of range\n");
           goto cleanup;
-        } 
+        }
     }
 
   if (policytrigger == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_MISSING_POWER_READING_TIMEOUT
       || policytrigger == IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_TIME_AFTER_PLATFORM_RESET_TRIGGER)
     {
       /* User specifies in seconds, but we need to convert to 1/10th of seconds */
-      
+
       if (policytriggerlimit >= (USHRT_MAX / 10))
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
                            "policy trigger limit out of range\n");
           goto cleanup;
-        } 
+        }
 
       policytriggerlimit *= 10;
     }
@@ -3215,12 +3215,12 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
           if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
             {
               int eret;
-              
+
               if ((eret = _ipmi_oem_intelnm_bad_completion_code (state_data,
                                                                  NULL,
                                                                  obj_cmd_rs)) < 0)
                 goto cleanup;
-              
+
               if (!eret)
                 goto efallthrough1;
             }
@@ -3260,12 +3260,12 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
           if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
             {
               int eret;
-              
+
               if ((eret = _ipmi_oem_intelnm_bad_completion_code (state_data,
                                                                  NULL,
                                                                  obj_cmd_rs)) < 0)
                 goto cleanup;
-              
+
               if (!eret)
                 goto efallthrough2;
             }
@@ -3308,13 +3308,13 @@ ipmi_oem_intelnm_remove_node_manager_policy (ipmi_oem_state_data_t *state_data)
     {
       char *key = NULL;
       char *value = NULL;
-      
+
       if (ipmi_oem_parse_key_value (state_data,
                                     i,
                                     &key,
                                     &value) < 0)
         goto cleanup;
-      
+
       if (!strcasecmp (key, "domainid"))
         {
           if (_ipmi_oem_intelnm_parse_domainid (state_data,
@@ -3322,7 +3322,7 @@ ipmi_oem_intelnm_remove_node_manager_policy (ipmi_oem_state_data_t *state_data)
                                                 value,
                                                 &domainid) < 0)
             goto cleanup;
-          
+
           domainid_specified++;
         }
       else if (!strcasecmp (key, "policyid"))
@@ -3332,7 +3332,7 @@ ipmi_oem_intelnm_remove_node_manager_policy (ipmi_oem_state_data_t *state_data)
                                            value,
                                            &policyid) < 0)
             goto cleanup;
-          
+
           policyid_specified++;
         }
       else
@@ -3345,7 +3345,7 @@ ipmi_oem_intelnm_remove_node_manager_policy (ipmi_oem_state_data_t *state_data)
                            state_data->prog_data->args->oem_options[i]);
           goto cleanup;
         }
-      
+
       free (key);
       free (value);
     }
@@ -3405,12 +3405,12 @@ ipmi_oem_intelnm_remove_node_manager_policy (ipmi_oem_state_data_t *state_data)
       if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
         {
           int eret;
-          
+
           if ((eret = _ipmi_oem_intelnm_bad_completion_code (state_data,
                                                              NULL,
                                                              obj_cmd_rs)) < 0)
             goto cleanup;
-          
+
           if (!eret)
             goto efallthrough;
         }
@@ -3446,7 +3446,7 @@ _ipmi_oem_intelnm_get_node_manager_policy_alert_thresholds_output_header (ipmi_o
                                        domain_id,
                                        domain_id_str,
                                        IPMI_OEM_INTELNM_STRING_MAX);
-  
+
   pstdout_printf (state_data->pstate,
                   "Thresholds for Domain ID = %s, Policy ID = %u\n\n",
                   domain_id_str,
@@ -3519,7 +3519,7 @@ _ipmi_oem_intelnm_get_node_manager_policy_alert_thresholds_common (ipmi_oem_stat
                                                              "Error",
                                                              alert_threshold_obj_cmd_rs)) < 0)
             goto cleanup;
-          
+
           if (!eret)
             goto efallthrough_alert_thresholds;
         }
@@ -3531,15 +3531,15 @@ _ipmi_oem_intelnm_get_node_manager_policy_alert_thresholds_common (ipmi_oem_stat
                            "ipmi_cmd_oem_intel_node_manager_get_node_manager_policy_alert_thresholds: %s\n",
                            ipmi_ctx_errormsg (state_data->ipmi_ctx));
         }
-      
+
       if ((searching_domain_id
            || searching_policy_id)
           && state_data->prog_data->args->verbose_count)
-        rv = 1; 
-      
+        rv = 1;
+
       goto cleanup;
     }
-  
+
   if (FIID_OBJ_GET (alert_threshold_obj_cmd_rs,
                     "number_of_alert_thresholds",
                     &val) < 0)
@@ -3551,7 +3551,7 @@ _ipmi_oem_intelnm_get_node_manager_policy_alert_thresholds_common (ipmi_oem_stat
       goto cleanup;
     }
   number_of_alert_thresholds = val;
-  
+
   /* just in case */
   if (number_of_alert_thresholds > IPMI_OEM_INTEL_NODE_MANAGER_POLICY_ALERT_THRESHOLDS_MAX)
     number_of_alert_thresholds = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_ALERT_THRESHOLDS_MAX;
@@ -3572,7 +3572,7 @@ _ipmi_oem_intelnm_get_node_manager_policy_alert_thresholds_common (ipmi_oem_stat
             }
           alert_threshold1 = val;
         }
-      
+
       if (number_of_alert_thresholds >= 2)
         {
           if (FIID_OBJ_GET (alert_threshold_obj_cmd_rs,
@@ -3587,7 +3587,7 @@ _ipmi_oem_intelnm_get_node_manager_policy_alert_thresholds_common (ipmi_oem_stat
             }
           alert_threshold2 = val;
         }
-      
+
       if (number_of_alert_thresholds >= 3)
         {
           if (FIID_OBJ_GET (alert_threshold_obj_cmd_rs,
@@ -3611,7 +3611,7 @@ _ipmi_oem_intelnm_get_node_manager_policy_alert_thresholds_common (ipmi_oem_stat
                            strerror (errno));
           goto cleanup;
         }
-      
+
       if (ipmi_cmd_oem_intel_node_manager_get_node_manager_policy (state_data->ipmi_ctx,
                                                                    target_channel_number,
                                                                    target_slave_address,
@@ -3623,7 +3623,7 @@ _ipmi_oem_intelnm_get_node_manager_policy_alert_thresholds_common (ipmi_oem_stat
           if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
             {
               int eret;
-              
+
               if (!state_data->prog_data->args->verbose_count)
                 {
                   if ((searching_domain_id
@@ -3635,16 +3635,16 @@ _ipmi_oem_intelnm_get_node_manager_policy_alert_thresholds_common (ipmi_oem_stat
                       goto cleanup;
                     }
                 }
-              
+
               if (searching_domain_id
                   || searching_policy_id)
                 _ipmi_oem_intelnm_get_node_manager_policy_alert_thresholds_output_header (state_data, domain_id, policy_id);
-              
+
               if ((eret = _ipmi_oem_intelnm_bad_completion_code (state_data,
                                                                  "Error",
                                                                  policy_obj_cmd_rs)) < 0)
                 goto cleanup;
-              
+
               if (!eret)
                 goto efallthrough_policy;
             }
@@ -3656,15 +3656,15 @@ _ipmi_oem_intelnm_get_node_manager_policy_alert_thresholds_common (ipmi_oem_stat
                                "ipmi_cmd_oem_intel_node_manager_get_node_manager_policy: %s\n",
                                ipmi_ctx_errormsg (state_data->ipmi_ctx));
             }
-          
+
           if ((searching_domain_id
                || searching_policy_id)
               && state_data->prog_data->args->verbose_count)
-            rv = 1; 
-          
+            rv = 1;
+
           goto cleanup;
         }
-      
+
       if (FIID_OBJ_GET (policy_obj_cmd_rs,
                         "policy_trigger_type",
                         &val) < 0)
@@ -3676,7 +3676,7 @@ _ipmi_oem_intelnm_get_node_manager_policy_alert_thresholds_common (ipmi_oem_stat
           goto cleanup;
         }
       policy_trigger_type = val;
-      
+
       switch (policy_trigger_type)
         {
         case IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_NO_POLICY_TRIGGER:
@@ -3690,11 +3690,11 @@ _ipmi_oem_intelnm_get_node_manager_policy_alert_thresholds_common (ipmi_oem_stat
           break;
         }
     }
-      
+
   if (searching_domain_id
       || searching_policy_id)
     _ipmi_oem_intelnm_get_node_manager_policy_alert_thresholds_output_header (state_data, domain_id, policy_id);
-  
+
   pstdout_printf (state_data->pstate,
                   "Number of Alert Thresholds : %u\n",
                   number_of_alert_thresholds);
@@ -3730,7 +3730,7 @@ _ipmi_oem_intelnm_get_node_manager_policy_alert_thresholds_common (ipmi_oem_stat
  cleanup:
   fiid_obj_destroy (alert_threshold_obj_cmd_rs);
   fiid_obj_destroy (policy_obj_cmd_rs);
-  return (rv); 
+  return (rv);
 }
 
 int
@@ -3760,7 +3760,7 @@ ipmi_oem_intelnm_get_node_manager_policy_alert_thresholds (ipmi_oem_state_data_t
   int ret;
 
   assert (state_data);
-  
+
   if (state_data->prog_data->args->oem_options_count)
     {
       for (i = 0; i < state_data->prog_data->args->oem_options_count; i++)
@@ -3799,7 +3799,7 @@ ipmi_oem_intelnm_get_node_manager_policy_alert_thresholds (ipmi_oem_state_data_t
                                                value,
                                                &policyid_tmp) < 0)
                 goto cleanup;
-              
+
               policyid_min = policyid_tmp;
               policyid_max = policyid_tmp;
               policyid_specified++;
@@ -3838,7 +3838,7 @@ ipmi_oem_intelnm_get_node_manager_policy_alert_thresholds (ipmi_oem_state_data_t
                                                              NULL,
                                                              NULL) < 0)
         goto cleanup;
-      
+
       if (node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_0
           || node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_5
           || node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_3_0)
@@ -3859,7 +3859,7 @@ ipmi_oem_intelnm_get_node_manager_policy_alert_thresholds (ipmi_oem_state_data_t
         {
           if (output_newline_flag)
             pstdout_printf (state_data->pstate, "\n");
-          
+
           if ((ret = _ipmi_oem_intelnm_get_node_manager_policy_alert_thresholds_common (state_data,
                                                                                         target_channel_number,
                                                                                         target_slave_address,
@@ -3869,17 +3869,17 @@ ipmi_oem_intelnm_get_node_manager_policy_alert_thresholds (ipmi_oem_state_data_t
                                                                                         domainid_specified ? 0 : 1,
                                                                                         policyid_specified ? 0 : 1)) < 0)
             goto cleanup;
-          
+
           if (ret > 0)
             output_newline_flag = 1;
           else
             output_newline_flag = 0;
         }
     }
-  
+
   rv = 0;
  cleanup:
-  return (rv); 
+  return (rv);
 }
 
 int
@@ -3909,7 +3909,7 @@ ipmi_oem_intelnm_set_node_manager_policy_alert_thresholds (ipmi_oem_state_data_t
     {
       char *key = NULL;
       char *value = NULL;
-      
+
       if (ipmi_oem_parse_key_value (state_data,
                                     i,
                                     &key,
@@ -3923,7 +3923,7 @@ ipmi_oem_intelnm_set_node_manager_policy_alert_thresholds (ipmi_oem_state_data_t
                                                 value,
                                                 &domainid) < 0)
             goto cleanup;
-          
+
           domainid_specified++;
         }
       else if (!strcasecmp (key, "policyid"))
@@ -3940,21 +3940,21 @@ ipmi_oem_intelnm_set_node_manager_policy_alert_thresholds (ipmi_oem_state_data_t
         {
           if (ipmi_oem_parse_2_byte_field (state_data, i, value, &threshold1) < 0)
             goto cleanup;
-          
+
           threshold1_specified++;
         }
       else if (!strcasecmp (key, "threshold2"))
         {
           if (ipmi_oem_parse_2_byte_field (state_data, i, value, &threshold2) < 0)
             goto cleanup;
-          
+
           threshold2_specified++;
         }
       else if (!strcasecmp (key, "threshold3"))
         {
           if (ipmi_oem_parse_2_byte_field (state_data, i, value, &threshold3) < 0)
             goto cleanup;
-          
+
           threshold3_specified++;
         }
       else
@@ -3967,7 +3967,7 @@ ipmi_oem_intelnm_set_node_manager_policy_alert_thresholds (ipmi_oem_state_data_t
                            state_data->prog_data->args->oem_options[i]);
           goto cleanup;
         }
-      
+
       free (key);
       free (value);
     }
@@ -4017,12 +4017,12 @@ ipmi_oem_intelnm_set_node_manager_policy_alert_thresholds (ipmi_oem_state_data_t
       if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
         {
           int eret;
-          
+
           if ((eret = _ipmi_oem_intelnm_bad_completion_code (state_data,
                                                              NULL,
                                                              obj_cmd_rs)) < 0)
             goto cleanup;
-          
+
           if (!eret)
             goto efallthrough;
         }
@@ -4058,7 +4058,7 @@ _ipmi_oem_intelnm_get_node_manager_policy_suspend_periods_output_header (ipmi_oe
                                        domain_id,
                                        domain_id_str,
                                        IPMI_OEM_INTELNM_STRING_MAX);
-  
+
   pstdout_printf (state_data->pstate,
                   "Suspend Periods for Domain ID = %s, Policy ID = %u\n\n",
                   domain_id_str,
@@ -4135,7 +4135,7 @@ _ipmi_oem_intelnm_get_node_manager_policy_suspend_periods_common (ipmi_oem_state
                                                              "Error",
                                                              obj_cmd_rs)) < 0)
             goto cleanup;
-          
+
           if (!eret)
             goto efallthrough_suspend_periods;
         }
@@ -4147,15 +4147,15 @@ _ipmi_oem_intelnm_get_node_manager_policy_suspend_periods_common (ipmi_oem_state
                            "ipmi_cmd_oem_intel_node_manager_get_node_manager_policy_suspend_periods: %s\n",
                            ipmi_ctx_errormsg (state_data->ipmi_ctx));
         }
-      
+
       if ((searching_domain_id
            || searching_policy_id)
           && state_data->prog_data->args->verbose_count)
-        rv = 1; 
-      
+        rv = 1;
+
       goto cleanup;
     }
-  
+
   if (FIID_OBJ_GET (obj_cmd_rs,
                     "number_of_policy_suspend_periods",
                     &val) < 0)
@@ -4167,7 +4167,7 @@ _ipmi_oem_intelnm_get_node_manager_policy_suspend_periods_common (ipmi_oem_state
       goto cleanup;
     }
   number_of_policy_suspend_periods = val;
-  
+
   /* just in case */
   if (number_of_policy_suspend_periods > IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_PERIODS_MAX)
     number_of_policy_suspend_periods = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_PERIODS_MAX;
@@ -4351,11 +4351,11 @@ _ipmi_oem_intelnm_get_node_manager_policy_suspend_periods_common (ipmi_oem_state
           policy_suspend_period_recurrence_sunday[i] = val;
         }
     }
-  
+
   if (searching_domain_id
       || searching_policy_id)
     _ipmi_oem_intelnm_get_node_manager_policy_suspend_periods_output_header (state_data, domain_id, policy_id);
-  
+
   pstdout_printf (state_data->pstate,
                   "Number of Policy Suspend Periods     : %u\n",
                   number_of_policy_suspend_periods);
@@ -4374,8 +4374,8 @@ _ipmi_oem_intelnm_get_node_manager_policy_suspend_periods_common (ipmi_oem_state
                             i + 1,
                             (policy_suspend_start_time[i] * 6) / 60,
                             (policy_suspend_start_time[i] * 6) % 60);
-          
-          
+
+
           if (!IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_STOP_TIME_VALID (policy_suspend_stop_time[i]))
             pstdout_printf (state_data->pstate,
                             "Policy %d Suspend Stop Time           : Invalid\n");
@@ -4450,7 +4450,7 @@ _ipmi_oem_intelnm_get_node_manager_policy_suspend_periods_common (ipmi_oem_state
   rv = 1;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
-  return (rv); 
+  return (rv);
 }
 
 int
@@ -4480,11 +4480,11 @@ ipmi_oem_intelnm_get_node_manager_policy_suspend_periods (ipmi_oem_state_data_t 
   int ret;
 
   assert (state_data);
-  
+
   if (state_data->prog_data->args->oem_options_count)
     {
       int i;
-      
+
       for (i = 0; i < state_data->prog_data->args->oem_options_count; i++)
         {
           char *key = NULL;
@@ -4521,7 +4521,7 @@ ipmi_oem_intelnm_get_node_manager_policy_suspend_periods (ipmi_oem_state_data_t 
                                                value,
                                                &policyid_tmp) < 0)
                 goto cleanup;
-              
+
               policyid_min = policyid_tmp;
               policyid_max = policyid_tmp;
               policyid_specified++;
@@ -4581,7 +4581,7 @@ ipmi_oem_intelnm_get_node_manager_policy_suspend_periods (ipmi_oem_state_data_t 
         {
           if (output_newline_flag)
             pstdout_printf (state_data->pstate, "\n");
-          
+
           if ((ret = _ipmi_oem_intelnm_get_node_manager_policy_suspend_periods_common (state_data,
                                                                                        target_channel_number,
                                                                                        target_slave_address,
@@ -4591,17 +4591,17 @@ ipmi_oem_intelnm_get_node_manager_policy_suspend_periods (ipmi_oem_state_data_t 
                                                                                        domainid_specified ? 0 : 1,
                                                                                        policyid_specified ? 0 : 1)) < 0)
             goto cleanup;
-          
+
           if (ret > 0)
             output_newline_flag = 1;
           else
             output_newline_flag = 0;
         }
     }
-  
+
   rv = 0;
  cleanup:
-  return (rv); 
+  return (rv);
 }
 
 static int
@@ -4657,7 +4657,7 @@ _parse_suspend_period_time (ipmi_oem_state_data_t *state_data,
   assert (value);
   assert (suspend_period_time);
 
-  memset (buf, '\0', IPMI_OEM_STR_BUFLEN + 1); 
+  memset (buf, '\0', IPMI_OEM_STR_BUFLEN + 1);
 
   strncpy (buf, value, IPMI_OEM_STR_BUFLEN);
 
@@ -4742,7 +4742,7 @@ ipmi_oem_intelnm_set_node_manager_policy_suspend_periods (ipmi_oem_state_data_t 
   assert (state_data->prog_data->args->oem_options_count >= 2);
 
   /* initialize */
-  
+
   memset (policy_suspend_start_time_specified, '\0', sizeof (int) * IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_PERIODS_MAX);
   memset (policy_suspend_stop_time_specified, '\0', sizeof (int) * IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_PERIODS_MAX);
 
@@ -4761,7 +4761,7 @@ ipmi_oem_intelnm_set_node_manager_policy_suspend_periods (ipmi_oem_state_data_t 
     {
       char *key = NULL;
       char *value = NULL;
-      
+
       if (ipmi_oem_parse_key_value (state_data,
                                     i,
                                     &key,
@@ -4775,7 +4775,7 @@ ipmi_oem_intelnm_set_node_manager_policy_suspend_periods (ipmi_oem_state_data_t 
                                                 value,
                                                 &domainid) < 0)
             goto cleanup;
-          
+
           domainid_specified++;
         }
       else if (!strcasecmp (key, "policyid"))
@@ -4785,7 +4785,7 @@ ipmi_oem_intelnm_set_node_manager_policy_suspend_periods (ipmi_oem_state_data_t 
                                            value,
                                            &policyid) < 0)
             goto cleanup;
-          
+
           policyid_specified++;
         }
       else if (!strncasecmp (key, "suspendperiodstart", 18))
@@ -4844,7 +4844,7 @@ ipmi_oem_intelnm_set_node_manager_policy_suspend_periods (ipmi_oem_state_data_t 
                                state_data->prog_data->args->oem_options[i]);
               goto cleanup;
             }
-          
+
           if (!strcasecmp (value, "monday"))
             policy_suspend_period_recurrence_monday[suspend_period_number - 1] = IPMI_OEM_INTEL_NODE_MANAGER_REPEAT_THE_SUSPEND_PERIOD;
           else if (! strcasecmp (value, "tuesday"))
@@ -4870,7 +4870,7 @@ ipmi_oem_intelnm_set_node_manager_policy_suspend_periods (ipmi_oem_state_data_t 
                            state_data->prog_data->args->oem_options[i]);
           goto cleanup;
         }
-      
+
       free (key);
       free (value);
     }
@@ -4995,12 +4995,12 @@ ipmi_oem_intelnm_set_node_manager_policy_suspend_periods (ipmi_oem_state_data_t 
       if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
         {
           int eret;
-          
+
           if ((eret = _ipmi_oem_intelnm_bad_completion_code (state_data,
                                                              NULL,
                                                              obj_cmd_rs)) < 0)
             goto cleanup;
-          
+
           if (!eret)
             goto efallthrough;
         }
@@ -5031,9 +5031,9 @@ ipmi_oem_intelnm_set_node_manager_power_draw_range (ipmi_oem_state_data_t *state
   uint8_t domainid = IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_ENTIRE_PLATFORM;
   int domainid_specified = 0;
   uint16_t minpowerdrawrange = 0;
-  int minpowerdrawrange_specified = 0; 
+  int minpowerdrawrange_specified = 0;
   uint16_t maxpowerdrawrange = 0;
-  int maxpowerdrawrange_specified = 0; 
+  int maxpowerdrawrange_specified = 0;
   int rv = -1;
   unsigned int i;
 
@@ -5044,7 +5044,7 @@ ipmi_oem_intelnm_set_node_manager_power_draw_range (ipmi_oem_state_data_t *state
     {
       char *key = NULL;
       char *value = NULL;
-      
+
       if (ipmi_oem_parse_key_value (state_data,
                                     i,
                                     &key,
@@ -5058,7 +5058,7 @@ ipmi_oem_intelnm_set_node_manager_power_draw_range (ipmi_oem_state_data_t *state
                                                 value,
                                                 &domainid) < 0)
             goto cleanup;
-          
+
           domainid_specified++;
         }
       else if (!strcasecmp (key, "minpowerdrawrange"))
@@ -5068,7 +5068,7 @@ ipmi_oem_intelnm_set_node_manager_power_draw_range (ipmi_oem_state_data_t *state
                                            value,
                                            &minpowerdrawrange) < 0)
             goto cleanup;
-          
+
           minpowerdrawrange_specified++;
         }
       else if (!strcasecmp (key, "maxpowerdrawrange"))
@@ -5078,7 +5078,7 @@ ipmi_oem_intelnm_set_node_manager_power_draw_range (ipmi_oem_state_data_t *state
                                            value,
                                            &maxpowerdrawrange) < 0)
             goto cleanup;
-          
+
           maxpowerdrawrange_specified++;
         }
       else
@@ -5091,7 +5091,7 @@ ipmi_oem_intelnm_set_node_manager_power_draw_range (ipmi_oem_state_data_t *state
                            state_data->prog_data->args->oem_options[i]);
           goto cleanup;
         }
-      
+
       free (key);
       free (value);
     }
@@ -5147,12 +5147,12 @@ ipmi_oem_intelnm_set_node_manager_power_draw_range (ipmi_oem_state_data_t *state
       if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
         {
           int eret;
-          
+
           if ((eret = _ipmi_oem_intelnm_bad_completion_code (state_data,
                                                              NULL,
                                                              obj_cmd_rs)) < 0)
             goto cleanup;
-          
+
           if (!eret)
             goto efallthrough;
         }
@@ -5196,7 +5196,7 @@ ipmi_oem_intelnm_get_limiting_policy_id (ipmi_oem_state_data_t *state_data)
     {
       char *key = NULL;
       char *value = NULL;
-      
+
       if (ipmi_oem_parse_key_value (state_data,
                                     i,
                                     &key,
@@ -5210,7 +5210,7 @@ ipmi_oem_intelnm_get_limiting_policy_id (ipmi_oem_state_data_t *state_data)
                                                 value,
                                                 &domainid) < 0)
             goto cleanup;
-          
+
           domainid_specified++;
         }
       else
@@ -5223,7 +5223,7 @@ ipmi_oem_intelnm_get_limiting_policy_id (ipmi_oem_state_data_t *state_data)
                            state_data->prog_data->args->oem_options[i]);
           goto cleanup;
         }
-      
+
       free (key);
       free (value);
     }
@@ -5271,12 +5271,12 @@ ipmi_oem_intelnm_get_limiting_policy_id (ipmi_oem_state_data_t *state_data)
       if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
         {
           int eret;
-          
+
           if ((eret = _ipmi_oem_intelnm_bad_completion_code (state_data,
                                                              NULL,
                                                              obj_cmd_rs)) < 0)
             goto cleanup;
-          
+
           if (!eret)
             goto efallthrough;
         }
@@ -5356,12 +5356,12 @@ ipmi_oem_intelnm_get_node_manager_alert_destination (ipmi_oem_state_data_t *stat
       if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
         {
           int eret;
-          
+
           if ((eret = _ipmi_oem_intelnm_bad_completion_code (state_data,
                                                              NULL,
                                                              obj_cmd_rs)) < 0)
             goto cleanup;
-          
+
           if (!eret)
             goto efallthrough;
         }
@@ -5454,7 +5454,7 @@ ipmi_oem_intelnm_get_node_manager_alert_destination (ipmi_oem_state_data_t *stat
 
   pstdout_printf (state_data->pstate,
                   "Send Alert String     : %s\n",
-                  send_alert_string == IPMI_OEM_INTEL_NODE_MANAGER_DONT_SEND_AN_ALERT_STRING ? "No" : "Yes"); 
+                  send_alert_string == IPMI_OEM_INTEL_NODE_MANAGER_DONT_SEND_AN_ALERT_STRING ? "No" : "Yes");
 
   rv = 0;
  cleanup:
@@ -5493,7 +5493,7 @@ ipmi_oem_intelnm_set_node_manager_alert_destination (ipmi_oem_state_data_t *stat
     {
       char *key = NULL;
       char *value = NULL;
-      
+
       if (ipmi_oem_parse_key_value (state_data,
                                     i,
                                     &key,
@@ -5518,7 +5518,7 @@ ipmi_oem_intelnm_set_node_manager_alert_destination (ipmi_oem_state_data_t *stat
                                state_data->prog_data->args->oem_options[i]);
               goto cleanup;
             }
-          
+
           channelnumber_specified++;
         }
       else if (!strcasecmp (key, "slaveaddress"))
@@ -5528,7 +5528,7 @@ ipmi_oem_intelnm_set_node_manager_alert_destination (ipmi_oem_state_data_t *stat
                                            value,
                                            &slaveaddress) < 0)
             goto cleanup;
-          
+
           slaveaddress_specified++;
         }
       else if (!strcasecmp (key, "destinationselector"))
@@ -5538,7 +5538,7 @@ ipmi_oem_intelnm_set_node_manager_alert_destination (ipmi_oem_state_data_t *stat
                                            value,
                                            &destinationselector) < 0)
             goto cleanup;
-          
+
           destinationselector_specified++;
         }
       else if (!strcasecmp (key, "alertstringselector"))
@@ -5548,7 +5548,7 @@ ipmi_oem_intelnm_set_node_manager_alert_destination (ipmi_oem_state_data_t *stat
                                            value,
                                            &alertstringselector) < 0)
             goto cleanup;
-          
+
           alertstringselector_specified++;
         }
       else if (!strcasecmp (key, "register"))
@@ -5564,12 +5564,12 @@ ipmi_oem_intelnm_set_node_manager_alert_destination (ipmi_oem_state_data_t *stat
                                state_data->prog_data->args->oem_options[i]);
               goto cleanup;
             }
-          
+
           if (!strcasecmp (value, "yes"))
             registerX = IPMI_OEM_INTEL_NODE_MANAGER_ALERT_RECEIVER_DEACTIVATION_REGISTER_ALERT_RECEIVER;
           else
             registerX = IPMI_OEM_INTEL_NODE_MANAGER_ALERT_RECEIVER_DEACTIVATION_UNREGISTER_ALERT_RECEIVER;
-          
+
           registerX_specified++;
         }
       else if (!strcasecmp (key, "sendalertstring"))
@@ -5585,12 +5585,12 @@ ipmi_oem_intelnm_set_node_manager_alert_destination (ipmi_oem_state_data_t *stat
                                state_data->prog_data->args->oem_options[i]);
               goto cleanup;
             }
-          
+
           if (!strcasecmp (value, "yes"))
             sendalertstring = IPMI_OEM_INTEL_NODE_MANAGER_SEND_ALERT_STRING_IDENTIFIED_BY_STRING_SELECTOR;
           else
             sendalertstring = IPMI_OEM_INTEL_NODE_MANAGER_DONT_SEND_AN_ALERT_STRING;
-          
+
           sendalertstring_specified++;
         }
       else
@@ -5603,7 +5603,7 @@ ipmi_oem_intelnm_set_node_manager_alert_destination (ipmi_oem_state_data_t *stat
                            state_data->prog_data->args->oem_options[i]);
           goto cleanup;
         }
-      
+
       free (key);
       free (value);
     }
@@ -5702,18 +5702,18 @@ ipmi_oem_intelnm_set_node_manager_alert_destination (ipmi_oem_state_data_t *stat
                                                                                        sendalertstring,
                                                                                        obj_cmd_rs);
     }
-  
+
   if (ret < 0)
     {
       if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
         {
           int eret;
-          
+
           if ((eret = _ipmi_oem_intelnm_bad_completion_code (state_data,
                                                              NULL,
                                                              obj_cmd_rs)) < 0)
             goto cleanup;
-          
+
           if (!eret)
             goto efallthrough;
         }
@@ -5752,7 +5752,7 @@ ipmi_oem_intelnm_get_turbo_synchronization_ratio (ipmi_oem_state_data_t *state_d
   uint64_t val;
   int rv = -1;
   unsigned int i;
-      
+
   assert (state_data);
   assert (state_data->prog_data->args->oem_options_count >= 1);
 
@@ -5760,7 +5760,7 @@ ipmi_oem_intelnm_get_turbo_synchronization_ratio (ipmi_oem_state_data_t *state_d
     {
       char *key = NULL;
       char *value = NULL;
-      
+
       if (ipmi_oem_parse_key_value (state_data,
                                     i,
                                     &key,
@@ -5810,7 +5810,7 @@ ipmi_oem_intelnm_get_turbo_synchronization_ratio (ipmi_oem_state_data_t *state_d
                                                value,
                                                &active_cores_configuration) < 0)
                 goto cleanup;
-              
+
               if (!IPMI_OEM_INTEL_NODE_MANAGER_GET_ACTIVE_CORES_CONFIGURATION_VALID(active_cores_configuration))
                 {
                   pstdout_fprintf (state_data->pstate,
@@ -5950,7 +5950,7 @@ ipmi_oem_intelnm_get_turbo_synchronization_ratio (ipmi_oem_state_data_t *state_d
   pstdout_printf (state_data->pstate,
                   "Default Turbo Ratio Limit : %u\n",
                   default_turbo_ratio_limit);
-      
+
   pstdout_printf (state_data->pstate,
                   "Maximum Turbo Ratio Limit : %u\n",
                   maximum_turbo_ratio_limit);
@@ -5962,7 +5962,7 @@ ipmi_oem_intelnm_get_turbo_synchronization_ratio (ipmi_oem_state_data_t *state_d
   rv = 0;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
-  return (rv); 
+  return (rv);
 }
 
 int
@@ -5980,7 +5980,7 @@ ipmi_oem_intelnm_set_turbo_synchronization_ratio (ipmi_oem_state_data_t *state_d
   int turbo_ratio_limit_specified = 0;
   int rv = -1;
   unsigned int i;
-      
+
   assert (state_data);
   assert (state_data->prog_data->args->oem_options_count >= 1);
 
@@ -5988,7 +5988,7 @@ ipmi_oem_intelnm_set_turbo_synchronization_ratio (ipmi_oem_state_data_t *state_d
     {
       char *key = NULL;
       char *value = NULL;
-      
+
       if (ipmi_oem_parse_key_value (state_data,
                                     i,
                                     &key,
@@ -6038,7 +6038,7 @@ ipmi_oem_intelnm_set_turbo_synchronization_ratio (ipmi_oem_state_data_t *state_d
                                                value,
                                                &active_cores_configuration) < 0)
                 goto cleanup;
-              
+
               if (!IPMI_OEM_INTEL_NODE_MANAGER_SET_ACTIVE_CORES_CONFIGURATION_VALID(active_cores_configuration))
                 {
                   pstdout_fprintf (state_data->pstate,
@@ -6155,7 +6155,7 @@ ipmi_oem_intelnm_set_turbo_synchronization_ratio (ipmi_oem_state_data_t *state_d
   rv = 0;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
-  return (rv); 
+  return (rv);
 }
 
 int
@@ -6228,7 +6228,7 @@ ipmi_oem_intelnm_get_node_manager_version (ipmi_oem_state_data_t *state_data)
   pstdout_printf (state_data->pstate,
                   "Patch Version          : %u\n",
                   patch_version);
-  
+
   /* minor firmware revision is BCD */
   pstdout_printf (state_data->pstate,
                   "Firmware Revision      : %u.%02X\n",

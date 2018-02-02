@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -194,16 +194,16 @@ k_r_checkout (ipmi_config_state_data_t *state_data,
   assert (kv);
 
   memset (k_r, 0, IPMI_MAX_K_R_LENGTH + 1);
-  
+
   if ((ret = _get_key (state_data,
                        section_name,
                        IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_R,
                        k_r,
                        IPMI_MAX_K_R_LENGTH)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
-  
+
   k_r[IPMI_MAX_K_R_LENGTH] = '\0';
-  
+
   if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   (char *)k_r) < 0)

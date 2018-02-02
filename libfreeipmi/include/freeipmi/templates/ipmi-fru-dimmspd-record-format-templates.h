@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_FRU_DIMMSPD_RECORD_FORMAT_TEMPLATES_H
@@ -93,7 +93,7 @@ FIID Template: tmpl_fru_dimm_spd_ddr3_record
     { 4, "reserved1", REQUIRED, LENGTH-FIXED }
     /* Byte 4: SDRAM Density and Banks */
     /* in megabits */
-    { 4, "total_sdram_capacity", REQUIRED, LENGTH-FIXED } 
+    { 4, "total_sdram_capacity", REQUIRED, LENGTH-FIXED }
     { 3, "bank_address_bits", REQUIRED, LENGTH-FIXED }
     { 1, "reserved2", REQUIRED, LENGTH-FIXED }
     /* Byte 5: SDRAM Addressing */
@@ -151,7 +151,7 @@ FIID Template: tmpl_fru_dimm_spd_ddr3_record
     /* Byte 28: Upper Nibble for t_faw */
     { 4, "t_faw_msn", REQUIRED, LENGTH-FIXED }
     { 4, "reserved8", REQUIRED, LENGTH-FIXED }
-    /* Byte 29: Minimum Four Active Window Delay Time (t_faw min), LSB (MTB Units) */ 
+    /* Byte 29: Minimum Four Active Window Delay Time (t_faw min), LSB (MTB Units) */
     { 8, "minimum_four_active_window_delay_time", REQUIRED, LENGTH-FIXED }
     /* Byte 30: SDRAM Optional Features */
     { 1, "rzq_6_supported", REQUIRED, LENGTH-FIXED }
@@ -229,7 +229,7 @@ FIID Template: tmpl_fru_dimm_spd_ddr4_record
     { 4, "reserved2", REQUIRED, LENGTH-FIXED }
     /* Byte 4: SDRAM Density and Banks */
     /* in megabits */
-    { 4, "total_sdram_capacity", REQUIRED, LENGTH-FIXED } 
+    { 4, "total_sdram_capacity", REQUIRED, LENGTH-FIXED }
     { 2, "bank_address_bits", REQUIRED, LENGTH-FIXED }
     { 2, "bank_group_bits", REQUIRED, LENGTH-FIXED }
     /* Byte 5: SDRAM Addressing */

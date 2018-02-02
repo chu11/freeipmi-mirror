@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2008-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -187,7 +187,7 @@ get_self_test_results (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
   self_test_result = val;
-  
+
   if (self_test_result == IPMI_SELF_TEST_RESULT_NO_ERROR)
     pstdout_printf (state_data->pstate,
                     "Self Test Result : No Error\n");
@@ -724,7 +724,7 @@ get_lan_statistics (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
   udp_proxy_packets_received = val;
-  
+
   pstdout_printf (state_data->pstate,
                   "UDP Proxy Packets Received     : %u\n",
                   udp_proxy_packets_received);
@@ -899,10 +899,10 @@ parse_hex_uint16 (bmc_device_state_data_t *state_data,
                        str);
       return (-1);
     }
-  
+
   if (parse_check_hex (state_data, from, str, 2) < 0)
     return (-1);
-  
+
   errno = 0;
   (*to) = strtol (from, &endptr, 16);
   if (errno
@@ -1021,7 +1021,7 @@ rearm_sensor (bmc_device_state_data_t *state_data)
                             &assertion_bitmask,
                             "assertion_bitmask") < 0)
         goto cleanup;
-      
+
       if (parse_hex_uint16 (state_data,
                             str_args[2],
                             &deassertion_bitmask,
@@ -1045,7 +1045,7 @@ rearm_sensor (bmc_device_state_data_t *state_data)
                                  state_data->hostname,
                                  &state_data->prog_data->args->common_args) < 0)
     goto cleanup;
-  
+
   if (ipmi_sdr_cache_search_record_id (state_data->sdr_ctx,
                                        record_id) < 0)
     {
@@ -1055,7 +1055,7 @@ rearm_sensor (bmc_device_state_data_t *state_data)
                        ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       goto cleanup;
     }
-  
+
   if (ipmi_sdr_parse_record_id_and_type (state_data->sdr_ctx,
                                          NULL,
                                          0,
@@ -1079,7 +1079,7 @@ rearm_sensor (bmc_device_state_data_t *state_data)
                        record_type);
       goto cleanup;
     }
-  
+
   if (ipmi_sdr_parse_sensor_number (state_data->sdr_ctx,
                                     NULL,
                                     0,
@@ -1164,7 +1164,7 @@ rearm_sensor (bmc_device_state_data_t *state_data)
           goto cleanup;
         }
     }
-  
+
   rv = 0;
  cleanup:
   free (rearm_sensor_arg_cpy);
@@ -1214,7 +1214,7 @@ get_sdr_repository_time (bmc_device_state_data_t *state_data)
   if (ipmi_timestamp_string ((uint32_t)val,
                              state_data->prog_data->args->common_args.utc_offset,
                              get_timestamp_flags (&(state_data->prog_data->args->common_args),
-                                                  IPMI_TIMESTAMP_FLAG_DEFAULT), 
+                                                  IPMI_TIMESTAMP_FLAG_DEFAULT),
                              "%m/%d/%Y - %H:%M:%S",
                              timestr,
                              BMC_DEVICE_TIME_BUFLEN) < 0)
@@ -1225,7 +1225,7 @@ get_sdr_repository_time (bmc_device_state_data_t *state_data)
                        strerror (errno));
       goto cleanup;
     }
-                             
+
   pstdout_printf (state_data->pstate,
                   "SDR Repository Time : %s\n",
                   timestr);
@@ -1348,7 +1348,7 @@ get_sel_time (bmc_device_state_data_t *state_data)
   if (ipmi_timestamp_string ((uint32_t)val,
                              state_data->prog_data->args->common_args.utc_offset,
                              get_timestamp_flags (&(state_data->prog_data->args->common_args),
-                                                  IPMI_TIMESTAMP_FLAG_DEFAULT), 
+                                                  IPMI_TIMESTAMP_FLAG_DEFAULT),
                              "%m/%d/%Y - %H:%M:%S",
                              timestr,
                              BMC_DEVICE_TIME_BUFLEN) < 0)
@@ -1566,7 +1566,7 @@ parse_hex_byte (bmc_device_state_data_t *state_data,
                        str);
       return (-1);
     }
-  
+
   if (parse_check_hex (state_data, from, str, 1) < 0)
     return (-1);
 
@@ -1679,7 +1679,7 @@ platform_event (bmc_device_state_data_t *state_data)
                        "Generator ID required for given system interface\n");
       goto cleanup;
     }
-  
+
   /* see if generator_id specified */
   if (num_str_args == BMC_DEVICE_MAX_PLATFORM_EVENT_ARGS)
     {
@@ -1691,14 +1691,14 @@ platform_event (bmc_device_state_data_t *state_data)
       generator_id_ptr = &generator_id;
       str_args_index++;
     }
-  
+
   if (parse_hex_byte (state_data,
                       str_args[str_args_index],
                       &event_message_format_version,
                       "event message format version") < 0)
     goto cleanup;
   str_args_index++;
-  
+
   if (parse_hex_byte (state_data,
                       str_args[str_args_index],
                       &sensor_type,
@@ -1741,7 +1741,7 @@ platform_event (bmc_device_state_data_t *state_data)
         }
     }
   str_args_index++;
-    
+
   if (parse_hex_byte (state_data,
                       str_args[str_args_index],
                       &event_data1,
@@ -1856,7 +1856,7 @@ set_sensor_reading_and_event_status (bmc_device_state_data_t *state_data)
                       "sensor number") < 0)
     goto cleanup;
   str_args_index++;
-  
+
   if (parse_hex_byte (state_data,
                       str_args[str_args_index],
                       &sensor_reading,
@@ -1872,7 +1872,7 @@ set_sensor_reading_and_event_status (bmc_device_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "Invalid sensor reading operation specified\n"); 
+                       "Invalid sensor reading operation specified\n");
       goto cleanup;
     }
   str_args_index++;
@@ -1896,7 +1896,7 @@ set_sensor_reading_and_event_status (bmc_device_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "Invalid assertion bitmask operation specified\n"); 
+                       "Invalid assertion bitmask operation specified\n");
       goto cleanup;
     }
   str_args_index++;
@@ -1920,7 +1920,7 @@ set_sensor_reading_and_event_status (bmc_device_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "Invalid deassertion bitmask operation specified\n"); 
+                       "Invalid deassertion bitmask operation specified\n");
       goto cleanup;
     }
   str_args_index++;
@@ -1945,7 +1945,7 @@ set_sensor_reading_and_event_status (bmc_device_state_data_t *state_data)
                       "event data3") < 0)
     goto cleanup;
   str_args_index++;
-    
+
   if (!strcasecmp (str_args[str_args_index], "write"))
     event_data_operation = IPMI_EVENT_DATA_BYTES_OPERATION_WRITE_EVENT_DATA_BYTES_INCLUDING_EVENT_OFFSET;
   else if (!strcasecmp (str_args[str_args_index], "nooffsetwrite"))
@@ -1956,7 +1956,7 @@ set_sensor_reading_and_event_status (bmc_device_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "Invalid event data operation specified\n"); 
+                       "Invalid event data operation specified\n");
       goto cleanup;
     }
   str_args_index++;
@@ -2078,7 +2078,7 @@ get_mca_auxiliary_log_status (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
   mca_log_entry_count = val;
-  
+
   pstdout_printf (state_data->pstate,
                   "Number of entries in MCA log : %u\n",
                   mca_log_entry_count);
@@ -2162,7 +2162,7 @@ get_ssif_interface_capabilities (bmc_device_state_data_t *state_data)
   pstdout_printf (state_data->pstate,
                   "SSIF PEC Support                 : %s\n",
                   str);
-  
+
   if (FIID_OBJ_GET (obj_cmd_rs, "transaction_support", &val) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -2433,7 +2433,7 @@ get_bmc_global_enables (bmc_device_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
-  
+
   pstdout_printf (state_data->pstate,
                   "Receive Message Queue Interrupt : %s\n",
                   (val == IPMI_BMC_GLOBAL_ENABLES_ENABLED) ? "enabled" : "disabled");
@@ -2446,7 +2446,7 @@ get_bmc_global_enables (bmc_device_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
-  
+
   pstdout_printf (state_data->pstate,
                   "Event Message Buffer Full       : %s\n",
                   (val == IPMI_BMC_GLOBAL_ENABLES_ENABLED) ? "enabled" : "disabled");
@@ -2459,7 +2459,7 @@ get_bmc_global_enables (bmc_device_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
-  
+
   pstdout_printf (state_data->pstate,
                   "Event Message Buffer            : %s\n",
                   (val == IPMI_BMC_GLOBAL_ENABLES_ENABLED) ? "enabled" : "disabled");
@@ -2472,7 +2472,7 @@ get_bmc_global_enables (bmc_device_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
-  
+
   pstdout_printf (state_data->pstate,
                   "System Event Logging            : %s\n",
                   (val == IPMI_BMC_GLOBAL_ENABLES_ENABLED) ? "enabled" : "disabled");
@@ -2485,7 +2485,7 @@ get_bmc_global_enables (bmc_device_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
-  
+
   pstdout_printf (state_data->pstate,
                   "OEM 0                           : %s\n",
                   (val == IPMI_BMC_GLOBAL_ENABLES_ENABLED) ? "enabled" : "disabled");
@@ -2498,7 +2498,7 @@ get_bmc_global_enables (bmc_device_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
-  
+
   pstdout_printf (state_data->pstate,
                   "OEM 1                           : %s\n",
                   (val == IPMI_BMC_GLOBAL_ENABLES_ENABLED) ? "enabled" : "disabled");
@@ -2511,7 +2511,7 @@ get_bmc_global_enables (bmc_device_state_data_t *state_data)
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
-  
+
   pstdout_printf (state_data->pstate,
                   "OEM 2                           : %s\n",
                   (val == IPMI_BMC_GLOBAL_ENABLES_ENABLED) ? "enabled" : "disabled");
@@ -2586,7 +2586,7 @@ set_system_info_common (bmc_device_state_data_t *state_data,
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
-  
+
   string_count += string_block_length;
 
   /* string_length is 8 bits, so we should not call >= 17 times,
@@ -2602,7 +2602,7 @@ set_system_info_common (bmc_device_state_data_t *state_data,
         string_block_length = IPMI_SYSTEM_INFO_SET_STRING_LEN_MAX;
       else
         string_block_length = string_length - string_count;
-      
+
       if (func_cmd (state_data->ipmi_ctx,
                     set_selector,
                     string + string_count,
@@ -2738,7 +2738,7 @@ read_fru (bmc_device_state_data_t *state_data)
       pstdout_perror (state_data->pstate, "ipmi_fru_ctx_create()");
       goto cleanup;
     }
-  
+
   if (state_data->prog_data->args->common_args.debug)
     flags |= IPMI_FRU_FLAGS_DEBUG_DUMP;
 
@@ -2754,7 +2754,7 @@ read_fru (bmc_device_state_data_t *state_data)
                        ipmi_fru_ctx_strerror (ipmi_fru_ctx_errnum (state_data->fru_ctx)));
       goto cleanup;
     }
-  
+
   if (ipmi_fru_open_device_id (state_data->fru_ctx, state_data->prog_data->args->device_id) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -2812,7 +2812,7 @@ read_fru (bmc_device_state_data_t *state_data)
       goto out;
     }
 
-  
+
  /* Close of fru_ctx in run_cmd_args */
  out:
   rv = 0;
@@ -2912,7 +2912,7 @@ write_fru (bmc_device_state_data_t *state_data)
                        strerror (errno));
       goto cleanup;
     }
-  
+
   if ((len = fd_read_n (fd, areabuf, area_size)) < 0)
     {
       pstdout_fprintf (state_data->pstate,
@@ -2958,7 +2958,7 @@ write_fru (bmc_device_state_data_t *state_data)
                   else
                     goto error_out;
                 }
-              
+
               if (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_WRITE_FRU_DATA_FRU_DEVICE_BUSY) == 1)
                 {
                   loop_errors++;
@@ -3097,7 +3097,7 @@ run_cmd_args (bmc_device_state_data_t *state_data)
 
   if (args->set_primary_operating_system_name)
     return (set_primary_operating_system_name (state_data));
-  
+
   if (args->set_operating_system_name)
     return (set_operating_system_name (state_data));
 
@@ -3112,7 +3112,7 @@ run_cmd_args (bmc_device_state_data_t *state_data)
 
   if (args->read_fru)
     return (read_fru (state_data));
-  
+
   if (args->write_fru)
     return (write_fru (state_data));
 
@@ -3160,7 +3160,7 @@ _bmc_device (pstdout_state_t pstate,
       pstdout_perror (pstate, "ipmi_sdr_ctx_create()");
       goto cleanup;
     }
-  
+
   if (run_cmd_args (&state_data) < 0)
     goto cleanup;
 

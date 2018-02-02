@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2008-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -66,11 +66,11 @@ ipmi_oem_check_response_and_completion_code (ipmi_oem_state_data_t *state_data,
       return (-1);
     }
 
- output_comp_code_error:  
+ output_comp_code_error:
   if (bytes_rs_ptr[1] != IPMI_COMP_CODE_COMMAND_SUCCESS)
     {
       char errbuf[IPMI_OEM_ERR_BUFLEN + 1];
-      
+
       memset (errbuf, '\0', IPMI_OEM_ERR_BUFLEN + 1);
 
       if (comp_code_strerror)
@@ -84,7 +84,7 @@ ipmi_oem_check_response_and_completion_code (ipmi_oem_state_data_t *state_data,
                                          errbuf,
                                          IPMI_OEM_ERR_BUFLEN)) < 0)
             snprintf (errbuf, IPMI_OEM_ERR_BUFLEN, "completion-code = 0x%X", bytes_rs_ptr[1]);
-          
+
           if (!ret)
             goto standard_output_comp_code_error;
         }
@@ -103,7 +103,7 @@ ipmi_oem_check_response_and_completion_code (ipmi_oem_state_data_t *state_data,
               snprintf (errbuf, IPMI_OEM_ERR_BUFLEN, "completion-code = 0x%X", bytes_rs_ptr[1]);
             }
         }
-      
+
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "%s:%s failed: %s\n",
@@ -116,28 +116,28 @@ ipmi_oem_check_response_and_completion_code (ipmi_oem_state_data_t *state_data,
   return (0);
 }
 
-int 
+int
 ipmi_oem_parse_key_value (ipmi_oem_state_data_t *state_data,
                           unsigned int option_num,
                           char **key,
                           char **value)
-{  
+{
   char *tempstr = NULL;
   char *tempptr = NULL;
   char *tempkey = NULL;
   char *tempvalue = NULL;
   int rv = -1;
-   
+
   assert (state_data);
   assert (key);
   assert (value);
-   
+
   if (!(tempstr = strdup (state_data->prog_data->args->oem_options[option_num])))
     {
       pstdout_perror (state_data->pstate, "strdup");
       goto cleanup;
     }
-   
+
   tempptr = strchr (tempstr, '=');
   if (!tempptr)
     {
@@ -150,7 +150,7 @@ ipmi_oem_parse_key_value (ipmi_oem_state_data_t *state_data,
       goto cleanup;
     }
 
-  (*tempptr) = '\0'; 
+  (*tempptr) = '\0';
   tempptr++;
 
   if (!(tempkey = strdup (tempstr)))
@@ -162,12 +162,12 @@ ipmi_oem_parse_key_value (ipmi_oem_state_data_t *state_data,
   if (!(tempvalue = strdup (tempptr)))
     {
       pstdout_perror (state_data->pstate, "strdup");
-      goto cleanup; 
+      goto cleanup;
     }
-  
+
   (*key) = tempkey;
   (*value) = tempvalue;
-  
+
   rv = 0;
  cleanup:
   free (tempstr);
@@ -199,12 +199,12 @@ ipmi_oem_parse_enable (ipmi_oem_state_data_t *state_data,
                        state_data->prog_data->args->oem_options[option_num]);
       return (-1);
     }
-  
+
   if (!strcasecmp (value, "enable"))
     (*enable) = 1;
   else
     (*enable) = 0;
-  
+
   return (0);
 }
 
@@ -216,15 +216,15 @@ ipmi_oem_parse_1_byte_field (ipmi_oem_state_data_t *state_data,
 {
   unsigned int temp;
   char *ptr = NULL;
-  
+
   assert (state_data);
   assert (value);
   assert (value_out);
-  
+
   errno = 0;
-  
+
   temp = strtoul (value, &ptr, 10);
-  
+
   if (errno
       || ptr[0] != '\0'
       || temp > UCHAR_MAX)
@@ -237,7 +237,7 @@ ipmi_oem_parse_1_byte_field (ipmi_oem_state_data_t *state_data,
                        state_data->prog_data->args->oem_options[option_num]);
       return (-1);
     }
-  
+
   (*value_out) = temp;
   return (0);
 }
@@ -250,15 +250,15 @@ ipmi_oem_parse_2_byte_field (ipmi_oem_state_data_t *state_data,
 {
   unsigned int temp;
   char *ptr = NULL;
-  
+
   assert (state_data);
   assert (value);
   assert (value_out);
-  
+
   errno = 0;
-  
+
   temp = strtoul (value, &ptr, 10);
-  
+
   if (errno
       || ptr[0] != '\0'
       || temp > USHRT_MAX)
@@ -271,7 +271,7 @@ ipmi_oem_parse_2_byte_field (ipmi_oem_state_data_t *state_data,
                        state_data->prog_data->args->oem_options[option_num]);
       return (-1);
     }
-  
+
   (*value_out) = temp;
   return (0);
 }
@@ -281,18 +281,18 @@ ipmi_oem_parse_4_byte_field (ipmi_oem_state_data_t *state_data,
                              unsigned int option_num,
                              const char *value,
                              uint32_t *value_out)
-{ 
+{
   unsigned int temp;
   char *ptr = NULL;
-  
+
   assert (state_data);
   assert (value);
   assert (value_out);
-  
+
   errno = 0;
-  
+
   temp = strtoul (value, &ptr, 10);
-  
+
   if (errno
       || ptr[0] != '\0')
     {
@@ -304,7 +304,7 @@ ipmi_oem_parse_4_byte_field (ipmi_oem_state_data_t *state_data,
                        state_data->prog_data->args->oem_options[option_num]);
       return (-1);
     }
-  
+
   (*value_out) = temp;
   return (0);
 }
@@ -319,16 +319,16 @@ ipmi_oem_parse_unsigned_int_range (ipmi_oem_state_data_t *state_data,
 {
   unsigned int temp;
   char *ptr = NULL;
-  
+
   assert (state_data);
   assert (value);
   assert (value_out);
   assert (min < max);
-  
+
   errno = 0;
-  
+
   temp = strtoul (value, &ptr, 10);
-  
+
   if (errno
       || ptr[0] != '\0')
     {
@@ -340,7 +340,7 @@ ipmi_oem_parse_unsigned_int_range (ipmi_oem_state_data_t *state_data,
                        state_data->prog_data->args->oem_options[option_num]);
       return (-1);
     }
-  
+
   if (temp < min
       || temp > max)
     {
@@ -422,7 +422,7 @@ ipmi_oem_parse_string (ipmi_oem_state_data_t *state_data,
   assert (string_length);
   assert (stringbuf);
   assert (stringbuflen);
-  
+
   if (strlen (value) > stringbuflen)
     {
       pstdout_fprintf (state_data->pstate,
@@ -441,7 +441,7 @@ ipmi_oem_parse_string (ipmi_oem_state_data_t *state_data,
     memcpy (stringbuf,
             value,
             (*string_length));
-  
+
   return (0);
 }
 
@@ -494,7 +494,7 @@ ipmi_oem_get_system_info_string (ipmi_oem_state_data_t *state_data,
                            state_data->prog_data->args->oem_options[0]);
           goto cleanup;
         }
-      
+
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_cmd_get_system_info_parameters: %s\n",
@@ -521,7 +521,7 @@ ipmi_oem_get_system_info_string (ipmi_oem_state_data_t *state_data,
                        "buffer overflow\n");
       goto cleanup;
     }
-  
+
   memcpy (string,
           &(configuration_parameter_data[0]),
           len);

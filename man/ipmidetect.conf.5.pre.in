@@ -28,9 +28,9 @@
 ipmidetect.conf \- specify alternate default values for the ipmidetect library
 .SH "DESCRIPTION"
 Through a configuration file, system administrators may override the
-default values used in the 
+default values used in the
 .BR ipmidetect_load_data(3)
-API function. 
+API function.
 .LP
 The configuration file is stored at @IPMIDETECT_CONFIG_FILE_DEFAULT@.
 

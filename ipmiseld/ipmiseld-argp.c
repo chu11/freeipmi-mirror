@@ -97,7 +97,7 @@ static struct argp_option cmdline_options[] =
     { "non-abbreviated-units", IPMISELD_NON_ABBREVIATED_UNITS_KEY, 0, 0,
       "Output non-abbreviated units (e.g. 'Amps' instead of 'A').", 49},
     { "event-state-filter", IPMISELD_EVENT_STATE_FILTER_KEY, "FILTERSTRING", 0,
-      "Specify event states to filter out and not log.", 50}, 
+      "Specify event states to filter out and not log.", 50},
     { "warning-threshold", IPMISELD_WARNING_THRESHOLD_KEY, "PERCENTINT", 0,
       "Specify SEL fullness warning threshold as an integer percentage.", 51},
     { "clear-threshold", IPMISELD_CLEAR_THRESHOLD_KEY, "PERCENTINT", 0,
@@ -151,7 +151,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   int tmp;
 
   assert (state);
-  
+
   cmd_args = state->input;
 
   switch (key)
@@ -211,7 +211,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       if (errno
           || endptr[0] != '\0'
           || tmp < 0
-          || tmp > 100) 
+          || tmp > 100)
         {
           fprintf (stderr, "invalid warning threshold\n");
           exit (EXIT_FAILURE);
@@ -224,7 +224,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       if (errno
           || endptr[0] != '\0'
           || tmp < 0
-          || tmp > 100) 
+          || tmp > 100)
         {
           fprintf (stderr, "invalid clear threshold\n");
           exit (EXIT_FAILURE);
@@ -257,7 +257,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       tmp = strtol (arg, &endptr, 0);
       if (errno
           || endptr[0] != '\0'
-          || tmp <= 0) 
+          || tmp <= 0)
         {
           fprintf (stderr, "invalid poll interval\n");
           exit (EXIT_FAILURE);
@@ -299,7 +299,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       tmp = strtol (arg, &endptr, 0);
       if (errno
           || endptr[0] != '\0'
-          || tmp <= 0) 
+          || tmp <= 0)
         {
           fprintf (stderr, "invalid threadpool count\n");
           exit (EXIT_FAILURE);
@@ -342,7 +342,7 @@ _ipmiseld_config_file_parse (struct ipmiseld_arguments *cmd_args)
   if (cmd_args->common_args.config_file)
     {
       filename = cmd_args->common_args.config_file;
-      no_error_if_not_found = 0;  
+      no_error_if_not_found = 0;
     }
   else
     {
@@ -448,7 +448,7 @@ _ipmiseld_args_validate (struct ipmiseld_arguments *cmd_args)
                               cmd_args->sensor_types_length) < 0)
         exit (EXIT_FAILURE);
     }
-  
+
   if (cmd_args->exclude_sensor_types_length)
     {
       if (valid_sensor_types (cmd_args->exclude_sensor_types,
@@ -493,7 +493,7 @@ ipmiseld_argp_parse (int argc, char **argv, struct ipmiseld_arguments *cmd_args)
   assert (argc >= 0);
   assert (argv);
   assert (cmd_args);
-  
+
   init_common_cmd_args_operator (&(cmd_args->common_args));
 
   cmd_args->verbose_count = 0;

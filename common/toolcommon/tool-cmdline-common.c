@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -192,7 +192,7 @@ common_parse_opt (int key,
       common_args->target_slave_address_is_set = 1;
       break;
 
-      /* 
+      /*
        * outofband options
        */
     case ARGP_HOSTNAME_KEY:
@@ -256,19 +256,19 @@ common_parse_opt (int key,
     case ARGP_K_G_KEY:
       {
         int rv;
-        
+
         if (common_args->k_g_len)
           {
             memset (common_args->k_g, '\0', IPMI_MAX_K_G_LENGTH + 1);
             common_args->k_g_len = 0;
           }
-        
+
         if ((rv = check_kg_len (arg)) < 0)
           {
             fprintf (stderr, "k_g too long\n");
             exit (EXIT_FAILURE);
           }
-        
+
         if ((rv = parse_kg (common_args->k_g, IPMI_MAX_K_G_LENGTH, arg)) < 0)
           {
             fprintf (stderr, "k_g input formatted incorrectly\n");
@@ -283,21 +283,21 @@ common_parse_opt (int key,
     case ARGP_K_G_PROMPT_KEY:
       {
         int rv;
-        
+
         if (common_args->k_g_len)
           {
             memset (common_args->k_g, '\0', IPMI_MAX_K_G_LENGTH + 1);
             common_args->k_g_len = 0;
           }
-        
+
         arg = getpass ("K_g: ");
-        
+
         if ((rv = check_kg_len (arg)) < 0)
           {
             fprintf (stderr, "k_g too long\n");
             exit (EXIT_FAILURE);
           }
-        
+
         if ((rv = parse_kg (common_args->k_g, IPMI_MAX_K_G_LENGTH, arg)) < 0)
           {
             fprintf (stderr, "k_g input formatted incorrectly\n");
@@ -376,7 +376,7 @@ common_parse_opt (int key,
       common_args->privilege_level = tmp;
       break;
 
-      /* 
+      /*
        * misc options
        */
 
@@ -406,7 +406,7 @@ common_parse_opt (int key,
       common_args->debug++;
       break;
 
-      /* 
+      /*
        * sdr options
        */
     case ARGP_FLUSH_CACHE_KEY:
@@ -440,7 +440,7 @@ common_parse_opt (int key,
       common_args->ignore_sdr_cache = 1;
       break;
 
-      /* 
+      /*
        * time options
        */
     case ARGP_UTC_TO_LOCALTIME_KEY:
@@ -462,7 +462,7 @@ common_parse_opt (int key,
       common_args->utc_offset = tmp;
       break;
 
-      /* 
+      /*
        * hostrange options
        */
     case ARGP_BUFFER_OUTPUT_KEY:
@@ -640,7 +640,7 @@ verify_common_cmd_args_outofband (struct common_cmd_args *common_args, int check
               break;
             }
         }
-      
+
       if (all_zeroes)
         common_args->k_g_len = 0;
     }

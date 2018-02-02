@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -154,7 +154,7 @@ _ipmi_dump_inband_packet (int fd,
       goto cleanup;
     }
   indx += len;
-  
+
   if (tmpl_ipmb_msg_hdr && tmpl_ipmb_cmd)
     {
       if ((ipmb_buf_len = fiid_obj_get_data (obj_cmd,
@@ -165,14 +165,14 @@ _ipmi_dump_inband_packet (int fd,
           FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
           goto cleanup;
         }
-      
+
       if (fiid_obj_clear_field (obj_cmd, "message_data") < 0)
         {
           FIID_OBJECT_ERROR_TO_ERRNO (obj_cmd);
           goto cleanup;
         }
     }
-  
+
   if (ipmi_obj_dump (fd,
                      prefix,
                      cmd_hdr,
@@ -193,7 +193,7 @@ _ipmi_dump_inband_packet (int fd,
                            tmpl_ipmb_cmd) < 0)
         goto cleanup;
     }
-  
+
   /* Dump unexpected stuff */
 
   if ((pkt_len - indx) > 0)
@@ -203,7 +203,7 @@ _ipmi_dump_inband_packet (int fd,
           ERRNO_TRACE (errno);
           goto cleanup;
         }
-      
+
       if ((len = fiid_obj_set_all (obj_unexpected_data,
                                    pkt + indx,
                                    pkt_len - indx)) < 0)
@@ -212,7 +212,7 @@ _ipmi_dump_inband_packet (int fd,
           goto cleanup;
         }
       indx += len;
-  
+
       if (ipmi_obj_dump (fd,
                          prefix,
                          unexpected_hdr,

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -209,15 +209,15 @@ _kcs_cmd_write (ipmi_ctx_t ctx,
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   if ((cmd_len = fiid_obj_len_bytes (obj_cmd_rq)) < 0)
     {
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
       goto cleanup;
     }
-  
+
   pkt_len = hdr_len + cmd_len;
-    
+
   if (!(pkt = malloc (pkt_len)))
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
@@ -231,7 +231,7 @@ _kcs_cmd_write (ipmi_ctx_t ctx,
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   if ((send_len = assemble_ipmi_kcs_pkt (ctx->io.inband.rq.obj_hdr,
                                          obj_cmd_rq,
                                          pkt,
@@ -241,7 +241,7 @@ _kcs_cmd_write (ipmi_ctx_t ctx,
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP && send_len)
     _api_kcs_dump_rq (ctx,
                       pkt,
@@ -250,7 +250,7 @@ _kcs_cmd_write (ipmi_ctx_t ctx,
                       ctx->target.net_fn,
                       group_extension,
                       obj_cmd_rq);
-  
+
   if (ipmi_kcs_write (ctx->io.inband.kcs_ctx, pkt, send_len) < 0)
     {
       API_KCS_ERRNUM_TO_API_ERRNUM (ctx, ipmi_kcs_ctx_errnum (ctx->io.inband.kcs_ctx));
@@ -302,7 +302,7 @@ _kcs_cmd_read (ipmi_ctx_t ctx,
     }
 
   pkt_len = hdr_len + cmd_len;
-  
+
   if (!(pkt = malloc (pkt_len)))
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
@@ -316,13 +316,13 @@ _kcs_cmd_read (ipmi_ctx_t ctx,
       API_KCS_ERRNUM_TO_API_ERRNUM (ctx, ipmi_kcs_ctx_errnum (ctx->io.inband.kcs_ctx));
       goto cleanup;
     }
-  
+
   if (!read_len)
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_SYSTEM_ERROR);
       goto cleanup;
     }
-  
+
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP && read_len)
     _api_kcs_dump_rs (ctx,
                       pkt,
@@ -331,7 +331,7 @@ _kcs_cmd_read (ipmi_ctx_t ctx,
                       ctx->target.net_fn,
                       group_extension,
                       obj_cmd_rs);
-  
+
   if ((ret = unassemble_ipmi_kcs_pkt (pkt,
                                       read_len,
                                       ctx->io.inband.rs.obj_hdr,
@@ -348,7 +348,7 @@ _kcs_cmd_read (ipmi_ctx_t ctx,
       API_SET_ERRNUM (ctx, IPMI_ERR_IPMI_ERROR);
       goto cleanup;
     }
-  
+
   rv = 0;
  cleanup:
   free (pkt);
@@ -371,7 +371,7 @@ api_kcs_cmd (ipmi_ctx_t ctx,
           && fiid_obj_valid (obj_cmd_rq)
           && fiid_obj_packet_valid (obj_cmd_rq) == 1
           && fiid_obj_valid (obj_cmd_rs));
-  
+
   if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
     {
       /* ignore error, continue on */
@@ -467,7 +467,7 @@ _api_kcs_ipmb_send (ipmi_ctx_t ctx,
   memcpy (&target_save, &ctx->target, sizeof (target_save));
   ctx->target.channel_number_is_set = 0;
   ctx->target.rs_addr_is_set = 0;
-  
+
   ret = ipmi_cmd_send_message (ctx,
                                target_save.channel_number,
                                IPMI_SEND_MESSAGE_AUTHENTICATION_NOT_REQUIRED,
@@ -533,12 +533,12 @@ _api_kcs_ipmb_recv (ipmi_ctx_t ctx,
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
     }
-  
+
   /* get_message will send to the BMC, so clear out target information */
   memcpy (&target_save, &ctx->target, sizeof (target_save));
   ctx->target.channel_number_is_set = 0;
   ctx->target.rs_addr_is_set = 0;
-  
+
   ret = ipmi_cmd_get_message (ctx, obj_get_cmd_rs);
 
   /* restore target info */
@@ -747,7 +747,7 @@ api_kcs_cmd_raw (ipmi_ctx_t ctx,
                    obj_cmd_rq,
                    obj_cmd_rs) < 0)
     goto cleanup;
-  
+
   if ((len = fiid_obj_get_all (obj_cmd_rs,
                                buf_rs,
                                buf_rs_len)) < 0)
@@ -755,7 +755,7 @@ api_kcs_cmd_raw (ipmi_ctx_t ctx,
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       goto cleanup;
     }
-  
+
   rv = len;
  cleanup:
   fiid_obj_destroy (obj_cmd_rq);
@@ -805,7 +805,7 @@ api_kcs_cmd_raw_ipmb (ipmi_ctx_t ctx,
                         obj_cmd_rq,
                         obj_cmd_rs) < 0)
     goto cleanup;
-  
+
   if ((len = fiid_obj_get_all (obj_cmd_rs,
                                buf_rs,
                                buf_rs_len)) < 0)
@@ -813,7 +813,7 @@ api_kcs_cmd_raw_ipmb (ipmi_ctx_t ctx,
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rs);
       goto cleanup;
     }
-  
+
   rv = len;
  cleanup:
   fiid_obj_destroy (obj_cmd_rq);

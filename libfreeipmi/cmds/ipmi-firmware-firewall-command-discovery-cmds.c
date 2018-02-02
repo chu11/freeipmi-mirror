@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -337,7 +337,7 @@ fill_cmd_get_netfn_support (uint8_t channel_number,
       SET_ERRNO (EINVAL);
       return (-1);
     }
-  
+
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_netfn_support_rq) < 0)
     {
       ERRNO_TRACE (errno);
@@ -348,7 +348,7 @@ fill_cmd_get_netfn_support (uint8_t channel_number,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_NETFN_SUPPORT);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
-  
+
   return (0);
 }
 
@@ -369,7 +369,7 @@ fill_cmd_get_command_support (uint8_t channel_number,
       SET_ERRNO (EINVAL);
       return (-1);
     }
-  
+
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_command_support_rq) < 0)
     {
       ERRNO_TRACE (errno);
@@ -393,7 +393,7 @@ fill_cmd_get_command_support (uint8_t channel_number,
   else if (net_fn == IPMI_NET_FN_OEM_GROUP_RQ
            || net_fn == IPMI_NET_FN_OEM_GROUP_RS)
     FILL_FIID_OBJ_SET (obj_cmd_rq, "net_fn_data", net_fn_data);
-  
+
   return (0);
 }
 
@@ -413,7 +413,7 @@ fill_cmd_get_command_sub_function_support (uint8_t channel_number,
       SET_ERRNO (EINVAL);
       return (-1);
     }
-  
+
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_command_sub_function_support_rq) < 0)
     {
       ERRNO_TRACE (errno);
@@ -438,7 +438,7 @@ fill_cmd_get_command_sub_function_support (uint8_t channel_number,
   else if (net_fn == IPMI_NET_FN_OEM_GROUP_RQ
            || net_fn == IPMI_NET_FN_OEM_GROUP_RS)
     FILL_FIID_OBJ_SET (obj_cmd_rq, "net_fn_data", net_fn_data);
-  
+
   return (0);
 }
 
@@ -459,7 +459,7 @@ fill_cmd_get_configurable_commands (uint8_t channel_number,
       SET_ERRNO (EINVAL);
       return (-1);
     }
-  
+
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_configurable_commands_rq) < 0)
     {
       ERRNO_TRACE (errno);
@@ -483,7 +483,7 @@ fill_cmd_get_configurable_commands (uint8_t channel_number,
   else if (net_fn == IPMI_NET_FN_OEM_GROUP_RQ
            || net_fn == IPMI_NET_FN_OEM_GROUP_RS)
     FILL_FIID_OBJ_SET (obj_cmd_rq, "net_fn_data", net_fn_data);
-  
+
   return (0);
 }
 
@@ -503,7 +503,7 @@ fill_cmd_get_configurable_command_sub_functions (uint8_t channel_number,
       SET_ERRNO (EINVAL);
       return (-1);
     }
-  
+
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_configurable_command_sub_functions_rq) < 0)
     {
       ERRNO_TRACE (errno);
@@ -528,7 +528,7 @@ fill_cmd_get_configurable_command_sub_functions (uint8_t channel_number,
   else if (net_fn == IPMI_NET_FN_OEM_GROUP_RQ
            || net_fn == IPMI_NET_FN_OEM_GROUP_RS)
     FILL_FIID_OBJ_SET (obj_cmd_rq, "net_fn_data", net_fn_data);
-  
+
   return (0);
 }
 
@@ -553,7 +553,7 @@ fill_cmd_set_command_enables (uint8_t channel_number,
       SET_ERRNO (EINVAL);
       return (-1);
     }
-  
+
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_command_enables_rq) < 0)
     {
       ERRNO_TRACE (errno);
@@ -581,7 +581,7 @@ fill_cmd_set_command_enables (uint8_t channel_number,
   else if (net_fn == IPMI_NET_FN_OEM_GROUP_RQ
            || net_fn == IPMI_NET_FN_OEM_GROUP_RS)
     FILL_FIID_OBJ_SET (obj_cmd_rq, "net_fn_data", net_fn_data);
-  
+
   return (0);
 }
 
@@ -602,7 +602,7 @@ fill_cmd_get_command_enables (uint8_t channel_number,
       SET_ERRNO (EINVAL);
       return (-1);
     }
-  
+
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_command_enables_rq) < 0)
     {
       ERRNO_TRACE (errno);
@@ -626,7 +626,7 @@ fill_cmd_get_command_enables (uint8_t channel_number,
   else if (net_fn == IPMI_NET_FN_OEM_GROUP_RQ
            || net_fn == IPMI_NET_FN_OEM_GROUP_RS)
     FILL_FIID_OBJ_SET (obj_cmd_rq, "net_fn_data", net_fn_data);
-  
+
   return (0);
 }
 
@@ -651,7 +651,7 @@ fill_cmd_set_command_sub_function_enables (uint8_t channel_number,
       SET_ERRNO (EINVAL);
       return (-1);
     }
-  
+
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_command_sub_function_enables_rq) < 0)
     {
       ERRNO_TRACE (errno);
@@ -670,7 +670,7 @@ fill_cmd_set_command_sub_function_enables (uint8_t channel_number,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "sub_function_enables1", sub_function_enables1);
   if (sub_function_enables2)
     FILL_FIID_OBJ_SET (obj_cmd_rq, "sub_function_enables2", *sub_function_enables2);
-  
+
   return (0);
 }
 
@@ -693,7 +693,7 @@ fill_cmd_set_command_sub_function_enables_defining_body_code (uint8_t channel_nu
       SET_ERRNO (EINVAL);
       return (-1);
     }
-  
+
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_command_sub_function_enables_rq) < 0)
     {
       ERRNO_TRACE (errno);
@@ -713,7 +713,7 @@ fill_cmd_set_command_sub_function_enables_defining_body_code (uint8_t channel_nu
   FILL_FIID_OBJ_SET (obj_cmd_rq, "sub_function_enables1", sub_function_enables1);
   if (sub_function_enables2)
     FILL_FIID_OBJ_SET (obj_cmd_rq, "sub_function_enables2", *sub_function_enables2);
-  
+
   return (0);
 }
 
@@ -736,7 +736,7 @@ fill_cmd_set_command_sub_function_enables_oem_iana (uint8_t channel_number,
       SET_ERRNO (EINVAL);
       return (-1);
     }
-  
+
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_command_sub_function_enables_rq) < 0)
     {
       ERRNO_TRACE (errno);
@@ -756,7 +756,7 @@ fill_cmd_set_command_sub_function_enables_oem_iana (uint8_t channel_number,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "sub_function_enables1", sub_function_enables1);
   if (sub_function_enables2)
     FILL_FIID_OBJ_SET (obj_cmd_rq, "sub_function_enables2", *sub_function_enables2);
-  
+
   return (0);
 }
 
@@ -776,7 +776,7 @@ fill_cmd_get_command_sub_function_enables (uint8_t channel_number,
       SET_ERRNO (EINVAL);
       return (-1);
     }
-  
+
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_command_sub_function_enables_rq) < 0)
     {
       ERRNO_TRACE (errno);
@@ -801,7 +801,7 @@ fill_cmd_get_command_sub_function_enables (uint8_t channel_number,
   else if (net_fn == IPMI_NET_FN_OEM_GROUP_RQ
            || net_fn == IPMI_NET_FN_OEM_GROUP_RS)
     FILL_FIID_OBJ_SET (obj_cmd_rq, "net_fn_data", net_fn_data);
-  
+
   return (0);
 }
 
@@ -819,7 +819,7 @@ fill_cmd_get_oem_netfn_iana_support (uint8_t channel_number,
       SET_ERRNO (EINVAL);
       return (-1);
     }
-  
+
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_oem_netfn_iana_support_rq) < 0)
     {
       ERRNO_TRACE (errno);
@@ -834,6 +834,6 @@ fill_cmd_get_oem_netfn_iana_support (uint8_t channel_number,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "list_index", list_index);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved3", 0);
-  
+
   return (0);
 }

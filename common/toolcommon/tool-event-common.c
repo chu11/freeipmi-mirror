@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -81,7 +81,7 @@ event_load_event_state_config_file (pstdout_state_t pstate,
           return (-1);
         }
     }
-  
+
   return (0);
 }
 
@@ -94,7 +94,7 @@ _sel_parse_err_handle (pstdout_state_t pstate,
 {
   assert (sel_ctx);
   assert (func);
-  
+
   if (ipmi_sel_ctx_errnum (sel_ctx) == IPMI_SEL_ERR_INVALID_SEL_ENTRY)
     {
       /* most likely bad event data from remote system or user input */
@@ -105,7 +105,7 @@ _sel_parse_err_handle (pstdout_state_t pstate,
 
       return (0);
     }
-  
+
   PSTDOUT_FPRINTF (pstate,
                    stderr,
                    "%s: %s\n",
@@ -129,7 +129,7 @@ _sel_parse_record_string (pstdout_state_t pstate,
   assert (sel_ctx);
   assert (outbuf);
   assert (outbuf_len);
-  
+
   memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
   if ((*outbuf_len = ipmi_sel_parse_read_record_string (sel_ctx,
                                                         fmt,
@@ -238,7 +238,7 @@ event_output_sensor_name (pstdout_state_t pstate,
                                        &outbuf_len,
                                        "%s")) < 0)
     return (-1);
-  
+
   if (!ret)
     return (0);
 
@@ -319,7 +319,7 @@ event_output_sensor_type (pstdout_state_t pstate,
                                        &outbuf_len,
                                        "%T")) < 0)
     return (-1);
-  
+
   if (!ret)
     return (0);
 
@@ -343,7 +343,7 @@ event_output_sensor_type (pstdout_state_t pstate,
     PSTDOUT_PRINTF (pstate, fmt, outbuf);
   else
     PSTDOUT_PRINTF (pstate, fmt, EVENT_NA_STRING);
-  
+
   return (1);
 }
 
@@ -355,7 +355,7 @@ event_output_not_available_sensor_type (pstdout_state_t pstate,
   char fmt[EVENT_FMT_BUFLEN + 1];
 
   assert (column_width || (!column_width && comma_separated_output));
-  
+
   memset (fmt, '\0', EVENT_FMT_BUFLEN + 1);
   if (comma_separated_output)
     snprintf (fmt,
@@ -366,7 +366,7 @@ event_output_not_available_sensor_type (pstdout_state_t pstate,
               EVENT_FMT_BUFLEN,
               " | %%-%ds",
               column_width->sensor_type);
-  
+
   PSTDOUT_PRINTF (pstate, fmt, EVENT_NA_STRING);
 
   return (1);
@@ -386,7 +386,7 @@ event_output_event_state (pstdout_state_t pstate,
   int ret;
 
   assert (sel_ctx);
-  
+
   if ((ret = _sel_parse_record_string (pstate,
                                        sel_ctx,
                                        sel_record,
@@ -397,10 +397,10 @@ event_output_event_state (pstdout_state_t pstate,
                                        &outbuf_len,
                                        "%I")) < 0)
     return (-1);
-  
+
   if (!ret)
     return (0);
-  
+
   if (comma_separated_output)
     {
       if (outbuf_len)
@@ -433,7 +433,7 @@ event_output_event_direction (pstdout_state_t pstate,
   int ret;
 
   assert (sel_ctx);
-  
+
   if ((ret = _sel_parse_record_string (pstate,
                                        sel_ctx,
                                        sel_record,
@@ -444,7 +444,7 @@ event_output_event_direction (pstdout_state_t pstate,
                                        &outbuf_len,
                                        "%k")) < 0)
     return (-1);
-  
+
   if (!ret)
     return (0);
 
@@ -474,7 +474,7 @@ event_output_not_available_event_direction (pstdout_state_t pstate,
     PSTDOUT_PRINTF (pstate, ",%s", EVENT_NA_STRING);
   else
     PSTDOUT_PRINTF (pstate, " | %-17s", EVENT_NA_STRING);
-  
+
   return (1);
 }
 
@@ -490,9 +490,9 @@ event_output_event (pstdout_state_t pstate,
   char outbuf[EVENT_OUTPUT_BUFLEN+1];
   int outbuf_len = 0;
   int ret;
-  
+
   assert (sel_ctx);
-  
+
   if ((ret = _sel_parse_record_string (pstate,
                                        sel_ctx,
                                        sel_record,
@@ -503,10 +503,10 @@ event_output_event (pstdout_state_t pstate,
                                        &outbuf_len,
                                        "%E")) < 0)
     return (-1);
-  
+
   if (!ret)
-    return (0); 
-  
+    return (0);
+
   if (comma_separated_output)
     {
       if (outbuf_len)

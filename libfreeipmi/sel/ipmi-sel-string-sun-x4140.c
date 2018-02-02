@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -56,7 +56,7 @@ _sel_string_output_sun_x4140_event_data3_fru_position_number (ipmi_sel_ctx_t ctx
   assert (tmpbuflen);
   assert (system_event_record_data);
   assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
-  
+
   /* From Sun:
    *
    * "In general, the data stored in SEL EvtData3 (OEM) field for our
@@ -109,7 +109,7 @@ sel_string_output_sun_x4140_event_data3_threshold_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
   assert (ctx->product_id == IPMI_SUN_MICROSYSTEMS_PRODUCT_ID_X4140);
 
-  /* 
+  /*
    * Sun X4140
    */
 
@@ -154,7 +154,7 @@ sel_string_output_sun_x4140_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
   assert (ctx->product_id == IPMI_SUN_MICROSYSTEMS_PRODUCT_ID_X4140);
 
-  /* 
+  /*
    * Sun X4140
    */
 

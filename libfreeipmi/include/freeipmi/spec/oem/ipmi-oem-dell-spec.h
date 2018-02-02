@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_OEM_DELL_SPEC_H
@@ -150,7 +150,7 @@ extern "C" {
  * dnsserver2 - uint8 * 4
  * dnsregister rac - boolean
  * dns rac name string length - uint8
- * dns rac name string - 0-63 
+ * dns rac name string - 0-63
  * dns domain name dhcp enable - boolean
  * dns domain name string length - uint8
  * dns domain name string - 0-255
@@ -187,17 +187,17 @@ extern "C" {
  * crl state - uint8 (drac5)
  * ad sso enable - boolean
  * ad dc filter1 string length - uint8
- * ad dc filter1 string - 0-255   
+ * ad dc filter1 string - 0-255
  * ad dc filter2 string length - uint8
- * ad dc filter2 string - 0-255   
+ * ad dc filter2 string - 0-255
  * ad dc filter3 string length - uint8
- * ad dc filter3 string - 0-255   
+ * ad dc filter3 string - 0-255
  * ad gc filter1 string length - uint8
- * ad gc filter1 string - 0-255   
+ * ad gc filter1 string - 0-255
  * ad gc filter2 string length - uint8
- * ad gc filter2 string - 0-255   
+ * ad gc filter2 string - 0-255
  * ad gc filter3 string length - uint8
- * ad gc filter3 string - 0-255   
+ * ad gc filter3 string - 0-255
  * ad certificate validation enable - boolean
  */
 #define IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_AD_ENABLE_FIELD_MASK                        0x0001
@@ -267,11 +267,11 @@ extern "C" {
  * csr organization unit string length - uint8
  * csr organization unit string - 0-255
  * csr locality name string length - uint8
- * csr locality name string - 0-255 
+ * csr locality name string - 0-255
  * csr state name string length - uint8
  * csr state name string - 0-255
  * csr country code string length - uint8
- * csr country code string - 0-4 
+ * csr country code string - 0-4
  * csr email address string length - uint8
  * csr email address string - 0-255
  * csr data set type - uint8
@@ -342,7 +342,7 @@ extern "C" {
    | IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_PORT_NUMBER_FIELD_MASK \
    | IPMI_OEM_DELL_EXTENDED_CONFIG_TELNET_CONFIGURATION_7FLS_BACKSPACE_FIELD_MASK)
 
-/* w/ IPMI_OEM_DELL_TOKEN_ID_WEB_SERVER_CONFIGURATION 
+/* w/ IPMI_OEM_DELL_TOKEN_ID_WEB_SERVER_CONFIGURATION
  *
  * web server enable - boolean
  * max sessions - uint8 (read only)
@@ -401,7 +401,7 @@ extern "C" {
    | IPMI_OEM_DELL_EXTENDED_CONFIG_CR_CONFIGURATION_LOCAL_SERVER_VIDEO_MASK \
    | IPMI_OEM_DELL_EXTENDED_CONFIG_CR_CONFIGURATION_IE_CONSOLE_USE_JAVA_MASK \
    | IPMI_OEM_DELL_EXTENDED_CONFIG_CR_CONFIGURATION_AUTHORIZE_MULTIPLE_SESSIONS_MASK)
-  
+
 /* w/ IPMI_OEM_DELL_TOKEN_ID_VM_CONFIGURATION
  *
  * vm enable - uint8 (achu: boolean??)
@@ -417,7 +417,7 @@ extern "C" {
  * vm image filename string - 0-255
  * vm auto-eject enable - boolean
  * vm floppy emul - boolean
- * sd card read write status - boolean (read only) 
+ * sd card read write status - boolean (read only)
  */
 #define IPMI_OEM_DELL_EXTENDED_CONFIG_VM_CONFIGURATION_VM_ENABLE_MASK                 0x0001
 #define IPMI_OEM_DELL_EXTENDED_CONFIG_VM_CONFIGURATION_MAX_SESSIONS_MASK              0x0002
@@ -542,7 +542,7 @@ extern "C" {
 /* w/ IPMI_OEM_DELL_TOKEN_ID_MISC
  *
  * remote racadm enable - boolean
- * smtp sever ip address - uint8 * 4 (obsolete) 
+ * smtp sever ip address - uint8 * 4 (obsolete)
  * remote racadm max sessions - uint8
  * remote racadm session timeout - uint32
  * smtp server ipv4/ipv6/dns address string length
@@ -781,7 +781,7 @@ extern "C" {
  * ipv6 extended addr X prefix length - uint8 (read only)
  * ipv6 extended addr X string length - uint8 (read only)
  * ipv6 extended addr X string - 0-39
- * 
+ *
  * achu: doc says 1-13 extended address possible.  have to use index?
  * unclear.
  */
@@ -823,7 +823,7 @@ extern "C" {
  * ldrac ipv6 url string length - uint8
  * ldrac ipv6 url string - 0-80
  */
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_IPV6_URL_GROUP_LDRAC_IPV6_URL_MASK 0x0001 
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_IPV6_URL_GROUP_LDRAC_IPV6_URL_MASK 0x0001
 
 #define IPMI_OEM_DELL_EXTENDED_CONFIG_IPV6_URL_GROUP_ALL_FIELD_MASK \
   (IPMI_OEM_DELL_EXTENDED_CONFIG_IPV6_URL_GROUP_LDRAC_IPV6_URL_MASK)
@@ -844,7 +844,7 @@ extern "C" {
  *
  * scl state - uint8 (0,1,2)
  * crl state - uint8
- * 
+ *
  * used only by ldrac (achu: what is ldrac?)
  */
 #define IPMI_OEM_DELL_EXTENDED_CONFIG_SMART_CARD_GROUP_SCL_STATE_MASK 0x0001
@@ -928,7 +928,7 @@ extern "C" {
  * ldap bind password string - 0-253
  * ldap search filter string length - uint16
  * ldap search filter string - 0-1023
- * 
+ *
  */
 #define IPMI_OEM_DELL_EXTENDED_CONFIG_GENERIC_LDAP_GROUP_LDAP_ENABLE_MASK          0x0001
 #define IPMI_OEM_DELL_EXTENDED_CONFIG_GENERIC_LDAP_GROUP_LDAP_SERVER_MASK          0x0002
@@ -1044,7 +1044,7 @@ extern "C" {
  */
 #define IPMI_OEM_DELL_EXTENDED_CONFIG_IPV4_STATIC_EXTENDED_GROUP_IPV4_STATIC_ENABLE_MASK              0x0001
 #define IPMI_OEM_DELL_EXTENDED_CONFIG_IPV4_STATIC_EXTENDED_GROUP_IPV4_STATIC_DHCP_ENABLE_MASK         0x0002
-#define IPMI_OEM_DELL_EXTENDED_CONFIG_IPV4_STATIC_EXTENDED_GROUP_IPV4_STATIC_ADDRESS_MASK             0x0004  
+#define IPMI_OEM_DELL_EXTENDED_CONFIG_IPV4_STATIC_EXTENDED_GROUP_IPV4_STATIC_ADDRESS_MASK             0x0004
 #define IPMI_OEM_DELL_EXTENDED_CONFIG_IPV4_STATIC_EXTENDED_GROUP_IPV4_STATIC_NETMASK_MASK             0x0008
 #define IPMI_OEM_DELL_EXTENDED_CONFIG_IPV4_STATIC_EXTENDED_GROUP_IPV4_STATIC_GATEWAY_IP_ADDRESS_MASK  0x0010
 #define IPMI_OEM_DELL_EXTENDED_CONFIG_IPV4_STATIC_EXTENDED_GROUP_IPV4_STATIC_AUTO_DNS_MASK            0x0020

@@ -73,11 +73,11 @@ sdr_init_ctx (ipmi_sdr_ctx_t ctx)
   ctx->current_offset.offset = 0;
   ctx->current_offset.offset_dumped = 0;
   ctx->callback_lock = 0;
-  
+
   ctx->stats_compiled = 0;
   memset (ctx->entity_counts,
           '\0',
-          sizeof (struct ipmi_sdr_entity_count) * IPMI_MAX_ENTITY_IDS); 
+          sizeof (struct ipmi_sdr_entity_count) * IPMI_MAX_ENTITY_IDS);
 }
 
 int
@@ -274,7 +274,7 @@ sdr_check_read_status (ipmi_sdr_ctx_t ctx)
     {
       unsigned int record_length;
       const char *record_str;
-      
+
       record_length = (uint8_t)((ctx->sdr_cache + ctx->current_offset.offset)[IPMI_SDR_RECORD_LENGTH_INDEX]);
 
       if ((record_str = sdr_record_type_str (ctx,

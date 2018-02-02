@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  */
 
 #ifndef IPMI_API_DEFS_H
@@ -80,15 +80,15 @@ struct ipmi_ctx_target
 struct ipmi_ctx
 {
   uint32_t magic;
-  
+
   ipmi_driver_type_t type;
   unsigned int workaround_flags_outofband;
   unsigned int workaround_flags_outofband_2_0;
   unsigned int workaround_flags_inband;
   unsigned int flags;
-  
+
   struct ipmi_ctx_target target;
-  
+
   fiid_field_t      *tmpl_ipmb_cmd_rq;
   fiid_field_t      *tmpl_ipmb_cmd_rs;
 

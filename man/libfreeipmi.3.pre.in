@@ -11,8 +11,8 @@ details of inband and outofband protocols from the user.  It also
 provides useful error codes for the user to easily interpret IPMI
 problems.  'api' is used by most FreeIPMI tools and libraries, such as
 .B bmc-info(8),
-.B ipmi-sensors(8), 
-and 
+.B ipmi-sensors(8),
+and
 .B libipmimonitoring(3).
 .TP
 .B cmds
@@ -20,14 +20,14 @@ Provides fiid templates and 'fill' functions for IPMI
 commands.  Also provides macros definining common parameters for
 IPMI commands.  The cmds are used by most other portions of
 libfreeipmi including the 'api' sub-section and tools such as
-.B ipmipower(8) 
-and 
+.B ipmipower(8)
+and
 .B ipmiconsole(8).
 .TP
 .B debug
 Provides various packet/record dumping utility functions.
-Utilized by the 'api' subsection and by tools such as 
-.B ipmipower(8) 
+Utilized by the 'api' subsection and by tools such as
+.B ipmipower(8)
 and
 .B ipmiconsole(8).
 .TP
@@ -35,7 +35,7 @@ and
 Provides APIs for in-band IPMI communication.  Currently supported
 drivers are KCS, SSIF, OpenIPMI, and SUNBMC.  The 'driver' subsction
 is used by tools such as
-.B bmc-watchdog(8) 
+.B bmc-watchdog(8)
 and the 'api' sub-section.
 .TP
 .B fiid
@@ -59,8 +59,8 @@ Provides 'assemble' and 'disassemble' functions for building packets
 for individual in-band or out-of-band protocols.  Also provides all
 necessary fiid templates, 'fill' functions, and other utility
 functions necessary to communicate on an IPMI interface.  Utilized by
-the 'api' sub-section and tools such as 
-.B ipmipower(8) and 
+the 'api' sub-section and tools such as
+.B ipmipower(8) and
 .B ipmiconsole(8).
 .TP
 .B interpret
@@ -74,12 +74,12 @@ and
 .B locate
 Provides an API to probe several standards to find default values for
 in-band IPMI communication.  Utilized by the 'api' sub-section and the
-.B ipmi-locate(8) 
+.B ipmi-locate(8)
 tool.
 .TP
 .B record-format
 Provides macros, fiid-templates, and information on records used in
-IPMI.  Utilized by the 'sdr-cache' subsection and tools like 
+IPMI.  Utilized by the 'sdr-cache' subsection and tools like
 .B ipmi-sensors(8).
 .TP
 .B sdr-cache
@@ -97,7 +97,7 @@ and
 .TP
 .B sel-parse
 Provides an API for reading and parsing System Event Log (SEL) entries.
-Utilized by tools such as 
+Utilized by tools such as
 .B ipmi-sel(8).
 .TP
 .B sensor-read
@@ -106,7 +106,7 @@ Provides an API for reading a sensor.  Utilized by tools such as
 .TP
 .B spec
 Provides macros and arrays for various other definitions and tables in
-IPMI.  Utilized by tools such as 
+IPMI.  Utilized by tools such as
 .B ipmi-sensors(8).
 .TP
 .B util
@@ -119,7 +119,7 @@ readings, etc.  Utilized by most of the rest of FreeIPMI.
 /usr/include/freeipmi/
 
 .SH "COPYRIGHT"
-Copyright \(co 2003-2015 FreeIPMI Core Team.  
+Copyright \(co 2003-2015 FreeIPMI Core Team.
 #include <@top_srcdir@/man/manpage-common-gpl-library-text.man>
 
 .SH "SEE ALSO"
