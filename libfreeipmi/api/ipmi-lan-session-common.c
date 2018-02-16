@@ -1179,7 +1179,7 @@ _ipmi_cmd_send_ipmb (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rq)
                          ctx->target.net_fn,
                          ctx->target.lun,
                          IPMI_SLAVE_ADDRESS_BMC,
-                         IPMI_BMC_IPMB_LUN_SMS_MSG_LUN,
+                         IPMI_BMC_IPMB_LUN_BMC,
                          ctx->io.outofband.rq_seq,
                          obj_ipmb_msg_hdr_rq) < 0)
     {
