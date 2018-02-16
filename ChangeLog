@@ -1,3 +1,10 @@
+2018-02-16 GIRARD, MARC <marc.girard@atos.net>
+
+	* libfreeipmi/api/ipmi-kcs-driver-api.c,
+	libfreeipmi/api/ipmi-lan-session-common.c,
+	libfreeipmi/api/ipmi-ssif-driver-api.c: When bridging, target the
+	BMC LUN not the SMS LUN.
+	
 2018-01-18 Albert Chu <chu11@llnl.gov>
 
 	* common/toolcommon/tool-common.c (ipmi_open): Fix error output
