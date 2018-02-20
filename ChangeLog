@@ -1,3 +1,8 @@
+2018-02-20 Jo Fahlke <jorrit@jorrit.de>
+
+	* ipmi-config/: Simplify legacy command scripts to not mangle
+	shell parameters.
+	
 2018-02-16 GIRARD, MARC <marc.girard@atos.net>
 
 	* libfreeipmi/api/ipmi-kcs-driver-api.c,

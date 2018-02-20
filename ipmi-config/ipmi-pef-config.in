@@ -1,15 +1,3 @@
 #!/bin/sh
 
-options="--category=pef"
-
-while test $# != 0
-  do
-  case "$1" in
-      *)
-          options="$options $1"
-	  ;;
-  esac
-  shift
-done
-
-exec @CONFIGSBINDIR@/ipmi-config $options
+exec @CONFIGSBINDIR@/ipmi-config --category=pef "$@"
