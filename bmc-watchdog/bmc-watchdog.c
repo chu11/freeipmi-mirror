@@ -1431,8 +1431,11 @@ main (int argc, char **argv)
     _stop_cmd ();
   else if (cmd_args.clear)
     _clear_cmd ();
-  else if (cmd_args.daemon)
+  else if (cmd_args.daemon) {
+    if (argv[0][0] == '/')
+      argv[0] = strrchr(argv[0], '/') + 1;
     _daemon_cmd (argv[0]);
+  }
   else
     err_exit ("internal error, command not set");
 

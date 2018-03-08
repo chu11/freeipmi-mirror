@@ -1,3 +1,9 @@
+2018-03-08 Sevag Hanssian <sevag.hanssian@gmail.com>
+
+	* ipmiseld/ipmiseld.c,
+	ipmidetectd/ipmidetectd.c,
+	bmc-watchdog/bmc-watchdog.c: Strip path from argv[0] in syslog
+
 2018-02-20 Jo Fahlke <jorrit@jorrit.de>
 
 	* ipmi-config/: Simplify legacy command scripts to not mangle
