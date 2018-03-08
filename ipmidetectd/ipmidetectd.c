@@ -723,6 +723,8 @@ main (int argc, char **argv)
   /* Call after daemonization, since daemonization closes currently
    * open fds
    */
+  if (argv[0][0] == '/')
+    argv[0] = strrchr(argv[0], '/') + 1;
   openlog (argv[0], LOG_ODELAY | LOG_PID, LOG_DAEMON);
 
   _ipmidetectd_loop ();
