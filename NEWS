@@ -4,6 +4,8 @@ o Fix error in bridging where bridged requests were sent to the wrong
   LUN.
 o Fix command parsing bugs in legacy ipmi-config scripts
   (i.e. bmc-config, ipmi-pef-config, etc.)
+o Do not output full path of daemons in syslog, output only the daemon
+  name (i.e. output "ipmidetected" instead of "/usr/sbin/ipmidetectd").
 
 FreeIPMI 1.6.1 - 02/02/18
 -------------------------
