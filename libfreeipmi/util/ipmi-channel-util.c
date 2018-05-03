@@ -43,7 +43,7 @@
 
 #include "freeipmi-portability.h"
 
-#define IPMI_NUM_CHANNELS 8
+#define IPMI_NUM_CHANNELS 12
 
 static int
 _get_channel_numbers (ipmi_ctx_t ctx,
@@ -68,7 +68,7 @@ _get_channel_numbers (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  /* Channel numbers range from 0 - 7 */
+  /* Channel numbers range from 0 - 11 */
   for (i = 0; i < IPMI_NUM_CHANNELS; i++)
     {
       uint8_t channel_medium_type_read;
