@@ -6,6 +6,7 @@ o Fix command parsing bugs in legacy ipmi-config scripts
   (i.e. bmc-config, ipmi-pef-config, etc.)
 o Do not output full path of daemons in syslog, output only the daemon
   name (i.e. output "ipmidetected" instead of "/usr/sbin/ipmidetectd").
+o Update channel range from 0-7 to 0-11, per errata IPMI update.
 
 FreeIPMI 1.6.1 - 02/02/18
 -------------------------
