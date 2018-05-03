@@ -1,4 +1,4 @@
-FreeIPMI 1.6.2 - XX/XX/18
+FreeIPMI 1.6.2 - 05/03/18
 -------------------------
 o Fix error in bridging where bridged requests were sent to the wrong
   LUN.
