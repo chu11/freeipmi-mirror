@@ -686,7 +686,7 @@ int ipmi_monitoring_sel_iterator_first (ipmi_monitoring_ctx_t c);
  *
  * Advance iterator to the next sel record information
  *
- * Returns 0 on success, -1 on error
+ * Returns 1 on iterator advancing, 0 on end, -1 on error
  */
 int ipmi_monitoring_sel_iterator_next (ipmi_monitoring_ctx_t c);
 

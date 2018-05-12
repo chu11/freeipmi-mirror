@@ -3,6 +3,9 @@
 	* libipmiconsole/ipmiconsole.h.in: Update number of comments for
 	clarity.
 
+	* libipmimonitoring/ipmi_monitoring.h.in: Correct invalid comments
+	return code from ipmi_monitoring_sel_iterator_next.
+
 2018-05-03 Albert Chu <chu11@llnl.gov> and Anonymous
 
 	* libfreeipmi/include/spec/ipmi-channel-spec.h,
