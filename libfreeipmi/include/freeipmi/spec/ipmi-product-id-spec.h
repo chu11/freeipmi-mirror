@@ -193,6 +193,14 @@ extern "C" {
 
 #define IPMI_GIGABYTE_PRODUCT_ID_MD90_FS0_ZB 266
 
+#define IPMI_GIGABYTE_PRODUCT_ID_MG20_OP0_ZB 280
+
+/*
+ * Gigabyte derived
+ */
+
+#define IPMI_PENGUIN_COMPUTING_PRODUCT_ID_RELION_X1904GT IPMI_GIGABYTE_PRODUCT_ID_MG20_OP0_ZB
+
 /*******************************************
  * Quanta                                *
  *******************************************/
