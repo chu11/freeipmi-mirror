@@ -1,5 +1,10 @@
 2018-05-11 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/spec/ipmi-product-id-spec.h: Add
+	Gigabyte MG20-OP0-ZB product id and derived motherboards.
+
+2018-05-11 Albert Chu <chu11@llnl.gov>
+
 	* libipmiconsole/ipmiconsole.h.in: Update number of comments for
 	clarity.
 
