@@ -1,3 +1,8 @@
+2018-05-11 Albert Chu <chu11@llnl.gov>
+
+	* libipmiconsole/ipmiconsole.h.in: Update number of comments for
+	clarity.
+
 2018-05-03 Albert Chu <chu11@llnl.gov> and Anonymous
 
 	* libfreeipmi/include/spec/ipmi-channel-spec.h,

@@ -110,8 +110,8 @@ extern "C" {
  * SYSLOG       - Output debugging to the Syslog
  * FILE         - Output debugging to files in current working directory
  * IPMI_PACKETS - Dump IPMI Packets too
- * DEFAULT      - Informs library to use default, may it be standard
- *                or configured via libipmiconsole.conf.
+ * DEFAULT      - Informs library to use default, may it be the internal default
+ *                or an alternate default configured via libipmiconsole.conf.
  */
 #define IPMICONSOLE_DEBUG_STDOUT           0x00000001
 #define IPMICONSOLE_DEBUG_STDERR           0x00000002
@@ -232,8 +232,8 @@ extern "C" {
  *
  * DEFAULT
  *
- * Informs library to use default, may it be the standard default or
- * a default configured via libipmiconsole.conf.
+ * Informs library to use default, may it be the internal default or
+ * an alternate default configured via libipmiconsole.conf.
  *
  * Note: The non-logical bitmask order below is set for future
  * expansion and matching w/ libfreeipmi.
@@ -342,8 +342,8 @@ extern "C" {
  *
  * DEFAULT
  *
- * Informs library to use default, may it be the standard default or
- * a default configured via libipmiconsole.conf.
+ * Informs library to use default, may it be the internal default or
+ * an alternate default configured via libipmiconsole.conf.
  */
 #define IPMICONSOLE_ENGINE_CLOSE_FD                  0x00000001
 #define IPMICONSOLE_ENGINE_OUTPUT_ON_SOL_ESTABLISHED 0x00000002
@@ -386,8 +386,8 @@ extern "C" {
  *
  * DEFAULT
  *
- * Informs library to use default, may it be the standard default or
- * a default configured via libipmiconsole.conf.
+ * Informs library to use default, may it be the internal default or
+ * an alternate default configured via libipmiconsole.conf.
  */
 #define IPMICONSOLE_BEHAVIOR_ERROR_ON_SOL_INUSE       0x00000001
 #define IPMICONSOLE_BEHAVIOR_DEACTIVATE_ONLY          0x00000002
@@ -439,22 +439,23 @@ typedef enum ipmiconsole_ctx_status ipmiconsole_ctx_status_t;
  *
  * username
  *
- *   BMC username. Pass NULL ptr for default username.  Standard
- *   default is the null (e.g. empty) username.  Maximum length of 16
- *   bytes.
+ *   BMC username. Pass NULL ptr for default username of null
+ *   (e.g. empty) username or the configured value in
+ *   libipmiconsole.conf.  Maximum length of 16 bytes.
  *
  * password
  *
- *   BMC password. Pass NULL ptr for default password.  Standard
- *   default is the null (e.g. empty) password.  Maximum length of 20
- *   bytes.
+ *   BMC password. Pass NULL ptr for default of null (e.g. empty)
+ *   password or the configured value in libipmiconsole.conf.  Maximum
+ *   length of 20 bytes.
  *
  * k_g
  *
  *   BMC Key for 2-key authentication.  Pass NULL ptr to use the
- *   default.  Standard default is the null (e.g. empty) k_g,
- *   which will use the password as the BMC key.  The k_g key need not
- *   be an ascii string.
+ *   default of null (e.g. empty) k_g or the configured value in
+ *   libipmiconsole.conf.  The null/empty k_g key equates to using the
+ *   password as the BMC key.  The k_g key need not be an ascii
+ *   string.
  *
  * k_g_len
  *
@@ -471,8 +472,8 @@ typedef enum ipmiconsole_ctx_status ipmiconsole_ctx_status_t;
  *   IPMICONSOLE_PRIVILEGE_OPERATOR
  *   IPMICONSOLE_PRIVILEGE_ADMIN
  *
- *   Pass < 0 for default.  Standard default is
- *   IPMICONSOLE_PRIVILEGE_ADMIN.
+ *   Pass < 0 for default of IPMICONSOLE_PRIVILEGE_ADMIN or the
+ *   configured value in libipmiconsole.conf
  *
  * cipher_suite_id
  *
@@ -497,15 +498,16 @@ typedef enum ipmiconsole_ctx_status ipmiconsole_ctx_status_t;
  *   16 - A = HMAC-SHA256; I = HMAC-SHA256-128; C = None
  *   17 - A = HMAC-SHA256; I = HMAC-SHA256-128; C = AES-CBC-128
  *
- *   Pass < 0 for default.  Standard default is 3.
+ *   Pass < 0 for default of 3 or the configured value in
+ *   libipmiconsole.conf
  *
  * workaround_flags
  *
  *   Bitwise OR of flags indicating IPMI implementation changes.  Some
  *   BMCs which are non-compliant and may require a workaround flag
  *   for correct operation. Pass IPMICONSOLE_WORKAROUND_DEFAULT for
- *   default.  Standard default is 0, no modifications to the IPMI
- *   protocol.
+ *   default of 0 (i.e. no modifications to the IPMI protocol) or the
+ *   configured value in libipmiconsole.conf
  */
 struct ipmiconsole_ipmi_config
 {
@@ -527,38 +529,39 @@ struct ipmiconsole_ipmi_config
  * session_timeout_len
  *
  *   Specifies the session timeout length in milliseconds.  Pass <= 0
- *   for default.  Standard default is 60000 (60 seconds).
+ *   for default of 60000 (60 seconds) or the configured value in
+ *   libipmiconsole.conf.
  *
  * retransmission_timeout_len
  *
  *   Specifies the packet retransmission timeout length in
- *   milliseconds.  Pass <= 0 for default.  Standard default is
- *   500 (0.5 seconds).
+ *   milliseconds.  Pass <= 0 for default of 500 (0.5 seconds) or the
+ *   configured value in libipmiconsole.conf.
  *
  * retransmission_backoff_count
  *
  *   Specifies the packet retransmission count until retransmission
- *   timeout lengths will be backed off.  Pass <= 0 for default.
- *   Standard default is 2.
+ *   timeout lengths will be backed off.  Pass <= 0 for default of 2
+ *   or the configured value in libipmiconsole.conf.
  *
  * keepalive_timeout_len
  *
  *   Specifies the session timeout length in milliseconds until a
- *   keepalive packet is sent.  Pass <= 0 for default.  Standard
- *   default is 20000 (20 seconds).
+ *   keepalive packet is sent.  Pass <= 0 for default of 20000 (20
+ *   seconds) or the configured value in libipmiconsole.conf.
  *
  * retransmission_keepalive_timeout_len
  *
  *   Specifies the keepalive packet retransmission timeout length in
- *   milliseconds.  Pass <= 0 for default.  Standard default is
- *   5000 (5 seconds).
+ *   milliseconds.  Pass <= 0 for default of 5000 (5 seconds) or the
+ *   configured value in libipmiconsole.conf.
  *
  * acceptable_packet_errors_count
  *
  *   Specifies the maximum number of consecutive packet errors that
  *   can be received from a remote BMC before an error is returned and
- *   the session ended.  Pass <= 0 for default.  Standard
- *   default is 16.
+ *   the session ended.  Pass <= 0 for default of 16 or the configured
+ *   value in libipmiconsole.conf.
  *
  *   Note: This has been added to the behavior of the IPMI engine due
  *   to issues where remote BMCs can become "un-synced" with sequence
@@ -571,7 +574,8 @@ struct ipmiconsole_ipmi_config
  *
  *   Specifies the maximum number of retransmissions that can be sent
  *   for any IPMI packet before an error is returned and the session
- *   ended.  Pass <= 0 for default.  Standard default is 16.
+ *   ended.  Pass <= 0 for default of 16 or the configured value in
+ *   libipmiconsole.conf.
  *
  *   Note: This has been added to the behavior of the IPMI engine due
  *   to issues where remote BMCs can become "un-synced" with sequence
@@ -602,19 +606,19 @@ struct ipmiconsole_protocol_config
  *
  *   Bitwise OR of flags indicating how the ipmiconsole engine should
  *   behave for a particular context.  Pass IPMICONSOLE_ENGINE_DEFAULT
- *   for default.  Standard default is 0.
+ *   for default of 0 or the configured value in libipmiconsole.conf.
  *
  * behavior_flags
  *
  *   Bitwise OR of flags indicating any protocol behavior that should
  *   be changed from the default.  Pass IPMICONSOLE_BEHAVIOR_DEFAULT
- *   for default.  Standard default is 0.
+ *   for default of 0 or the configured value in libipmiconsole.conf.
  *
  * debug_flags
  *
  *   Bitwise OR of flags indicating how debug output should (or should
- *   not) be output. Pass IPMICONSOLE_DEBUG_DEFAULT for default.
- *   Standard default is 0.
+ *   not) be output. Pass IPMICONSOLE_DEBUG_DEFAULT for default of 0
+ *   or the configured value in libipmiconsole.conf.
  *
  */
 struct ipmiconsole_engine_config
