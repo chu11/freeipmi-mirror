@@ -1,3 +1,7 @@
+FreeIPMI 1.6.3 - XX/XX/18
+-------------------------
+o Various documentation updates/fixes.
+
 FreeIPMI 1.6.2 - 05/03/18
 -------------------------
 o Fix error in bridging where bridged requests were sent to the wrong
