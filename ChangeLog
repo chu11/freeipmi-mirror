@@ -3,6 +3,9 @@
 	* libfreeipmi/include/freeipmi/spec/ipmi-product-id-spec.h: Add
 	Gigabyte MG20-OP0-ZB product id and derived motherboards.
 
+	* libfreeipmi/sel: Support Gigabyte MG20-OP0-ZB motherboard OEM
+	sel events.
+
 2018-05-11 Albert Chu <chu11@llnl.gov>
 
 	* libipmiconsole/ipmiconsole.h.in: Update number of comments for

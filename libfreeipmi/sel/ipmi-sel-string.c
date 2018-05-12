@@ -76,6 +76,7 @@
 extern struct sel_string_oem sel_string_oem_dell_poweredge;
 extern struct sel_string_oem sel_string_oem_fujitsu_irmc_common;
 extern struct sel_string_oem sel_string_oem_gigabyte_md90fs0zb;
+extern struct sel_string_oem sel_string_oem_gigabyte_mg20op0zb;
 extern struct sel_string_oem sel_string_oem_intel_quanta_qssc_s4r;
 extern struct sel_string_oem sel_string_oem_intel_s2600jf;
 extern struct sel_string_oem sel_string_oem_intel_s2600kp;
@@ -190,6 +191,8 @@ _find_motherboard_oem_support (ipmi_sel_ctx_t ctx,
     {
       if (ctx->product_id == IPMI_GIGABYTE_PRODUCT_ID_MD90_FS0_ZB)
         (*sel_string_oem) = &sel_string_oem_gigabyte_md90fs0zb;
+      else if (ctx->product_id == IPMI_GIGABYTE_PRODUCT_ID_MG20_OP0_ZB)
+        (*sel_string_oem) = &sel_string_oem_gigabyte_mg20op0zb;
     }
   else if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL)
     {

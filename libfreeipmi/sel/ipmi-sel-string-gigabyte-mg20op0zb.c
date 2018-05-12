@@ -53,7 +53,7 @@
  * return (-1) - error, cleanup and return error
  */
 int
-sel_string_output_gigabyte_md90fs0zb_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
+sel_string_output_gigabyte_mg20op0zb_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
                                                                struct ipmi_sel_entry *sel_entry,
                                                                uint8_t sel_record_type,
                                                                char *tmpbuf,
@@ -75,10 +75,10 @@ sel_string_output_gigabyte_md90fs0zb_event_data2_discrete_oem (ipmi_sel_ctx_t ct
   assert (wlen);
   assert (system_event_record_data);
   assert (system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
-  assert (ctx->product_id == IPMI_GIGABYTE_PRODUCT_ID_MD90_FS0_ZB);
+  assert (ctx->product_id == IPMI_GIGABYTE_PRODUCT_ID_MG20_OP0_ZB);
 
   /*
-   * Gigabyte MD90-FS0-ZB
+   * Gigabyte MG20-OP0-ZB
    */
   if ((ret = sel_string_output_gigabyte_common_event_data2_discrete_oem (ctx,
                                                                          sel_entry,
@@ -101,7 +101,7 @@ sel_string_output_gigabyte_md90fs0zb_event_data2_discrete_oem (ipmi_sel_ctx_t ct
  * return (-1) - error, cleanup and return error
  */
 int
-sel_string_output_gigabyte_md90fs0zb_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
+sel_string_output_gigabyte_mg20op0zb_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
                                                                struct ipmi_sel_entry *sel_entry,
                                                                uint8_t sel_record_type,
                                                                char *tmpbuf,
@@ -123,10 +123,10 @@ sel_string_output_gigabyte_md90fs0zb_event_data3_discrete_oem (ipmi_sel_ctx_t ct
   assert (wlen);
   assert (system_event_record_data);
   assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
-  assert (ctx->product_id == IPMI_GIGABYTE_PRODUCT_ID_MD90_FS0_ZB);
+  assert (ctx->product_id == IPMI_GIGABYTE_PRODUCT_ID_MG20_OP0_ZB);
 
   /*
-   * Gigabyte MD90-FS0-ZB
+   * Gigabyte MG20-OP0-ZB
    */
 
   if ((ret = sel_string_output_gigabyte_common_event_data3_discrete_oem (ctx,
@@ -145,16 +145,16 @@ sel_string_output_gigabyte_md90fs0zb_event_data3_discrete_oem (ipmi_sel_ctx_t ct
   return (0);
 }
 
-struct sel_string_oem sel_string_oem_gigabyte_md90fs0zb =
+struct sel_string_oem sel_string_oem_gigabyte_mg20op0zb =
   {
     NULL,
     NULL,
     NULL,
     NULL,
-    sel_string_output_gigabyte_md90fs0zb_event_data2_discrete_oem,
+    sel_string_output_gigabyte_mg20op0zb_event_data2_discrete_oem,
     NULL,
     NULL,
-    sel_string_output_gigabyte_md90fs0zb_event_data3_discrete_oem,
+    sel_string_output_gigabyte_mg20op0zb_event_data3_discrete_oem,
     NULL,
     NULL,
     NULL,
