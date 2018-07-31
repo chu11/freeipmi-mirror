@@ -2267,7 +2267,8 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
         }
       else if (product_id == IPMI_INTEL_PRODUCT_ID_S2600KP
                || product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
-               || product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT)
+               || product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT
+               || product_id == IPMI_INTEL_PRODUCT_ID_S2600GZ)
         {
           if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_QPI_FATAL_ERROR
               && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)

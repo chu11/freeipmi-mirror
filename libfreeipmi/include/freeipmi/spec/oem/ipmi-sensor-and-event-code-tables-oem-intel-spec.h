@@ -1057,6 +1057,7 @@ extern unsigned int ipmi_oem_intel_s2600jf_specific_qpi_link_width_reduced_max_i
  * Intel S2600KP
  * Intel S2600WT2
  * Intel S2600WTT
+ * Intel S2600GZ
  */
 
 #define IPMI_SENSOR_TYPE_POWER_SUPPLY_POWER_SUPPLY_FAILURE_DETECTED_EVENT_DATA2_OEM_INTEL_E52600V3_OUTPUT_VOLTAGE_FAULT      0x01

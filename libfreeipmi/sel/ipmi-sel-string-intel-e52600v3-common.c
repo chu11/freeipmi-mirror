@@ -83,7 +83,8 @@ sel_string_output_intel_e52600v3_sensor_name (ipmi_sel_ctx_t ctx,
   assert (oem_rv);
   assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600KP
           || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
-          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT);
+          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT
+          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600GZ);
 
   if ((nmret = sel_string_output_intel_node_manager_sensor_name (ctx,
                                                                  sel_entry,
@@ -130,7 +131,8 @@ sel_string_output_intel_e52600v3_event_data1_class_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data);
   assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600KP
           || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
-          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT);
+          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT
+          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600GZ);
 
   if ((nmret = sel_string_output_intel_node_manager_event_data1_class_oem (ctx,
                                                                            sel_entry,
@@ -294,7 +296,8 @@ sel_string_output_intel_e52600v3_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
   assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600KP
           || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
-          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT);
+          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT
+          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600GZ);
 
   if (system_event_record_data->generator_id == IPMI_SLAVE_ADDRESS_BMC
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY
@@ -769,7 +772,8 @@ sel_string_output_intel_e52600v3_event_data2_class_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data);
   assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600KP
           || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
-          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT);
+          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT
+          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600GZ);
 
   if ((nmret = sel_string_output_intel_node_manager_event_data2_class_oem (ctx,
                                                                            sel_entry,
@@ -1172,7 +1176,8 @@ sel_string_output_intel_e52600v3_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
   assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600KP
           || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
-          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT);
+          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT
+          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600GZ);
 
   if ((nmret = sel_string_output_intel_node_manager_event_data3_discrete_oem (ctx,
                                                                               sel_entry,
@@ -1565,7 +1570,8 @@ sel_string_output_intel_e52600v3_event_data3_class_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data);
   assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600KP
           || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
-          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT);
+          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT
+          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600GZ);
 
   if ((nmret = sel_string_output_intel_node_manager_event_data3_class_oem (ctx,
                                                                            sel_entry,
@@ -1633,7 +1639,8 @@ sel_string_output_intel_e52600v3_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
   assert (oem_rv);
   assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600KP
           || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
-          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT);
+          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT
+          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600GZ);
 
   if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_E52600V3_BIOS_POST
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS

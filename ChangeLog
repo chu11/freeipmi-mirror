@@ -1,3 +1,7 @@
+2018-07-30 Albert Chu <chu11@llnl.gov>
+
+	* Support Intel S2600GZ OEM sensors and SEL events.
+
 2018-08-01 dann frazier <dann.frazier@canonical.com>
 
 	* libfreeipmi/locate/ipmi-locate-acpi-spmi.c: Don't try to
