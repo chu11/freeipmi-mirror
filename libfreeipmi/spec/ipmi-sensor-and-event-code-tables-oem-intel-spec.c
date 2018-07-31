@@ -244,6 +244,7 @@ unsigned int ipmi_oem_intel_s2600jf_specific_qpi_link_width_reduced_max_index = 
  * Intel S2600KP
  * Intel S2600WT2
  * Intel S2600WTT
+ * Intel S2600GZ
  */
 
 const char * const ipmi_oem_intel_e52600v3_specific_qpi_fatal_error[] =

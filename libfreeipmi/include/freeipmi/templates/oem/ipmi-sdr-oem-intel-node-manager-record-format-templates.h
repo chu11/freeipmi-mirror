@@ -66,6 +66,7 @@ field flags - flags indicating qualities of the field.  The following
  * Intel S2600KP
  * Intel S2600WT2
  * Intel S2600WTT
+ * Intel S2600GZ
  * Inventec 5441/Dell Xanadu II
  * Inventec 5442/Dell Xanadu III
  * Quanta S99Q/Dell FS12-TY

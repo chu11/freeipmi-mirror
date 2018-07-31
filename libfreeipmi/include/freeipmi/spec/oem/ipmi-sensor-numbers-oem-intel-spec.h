@@ -128,6 +128,7 @@ extern "C" {
 /* Intel S2600KP
  * Intel S2600WT2
  * Intel S2600WTT
+ * Intel S2600GZ
  */
 
 /* BMC owned sensors (GID = 0020h) */

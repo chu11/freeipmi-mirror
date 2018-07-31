@@ -80,6 +80,7 @@ extern struct sel_string_oem sel_string_oem_gigabyte_mg20op0zb;
 extern struct sel_string_oem sel_string_oem_intel_quanta_qssc_s4r;
 extern struct sel_string_oem sel_string_oem_intel_s2600jf;
 extern struct sel_string_oem sel_string_oem_intel_s2600kp;
+extern struct sel_string_oem sel_string_oem_intel_s2600gz;
 extern struct sel_string_oem sel_string_oem_intel_s2600wt_common;
 extern struct sel_string_oem sel_string_oem_intel_s5500wb;
 extern struct sel_string_oem sel_string_oem_intel_windmill;
@@ -215,6 +216,8 @@ _find_motherboard_oem_support (ipmi_sel_ctx_t ctx,
         (*sel_string_oem) = &sel_string_oem_intel_s2600jf;
       else if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600KP)
         (*sel_string_oem) = &sel_string_oem_intel_s2600kp;
+      else if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600GZ)
+        (*sel_string_oem) = &sel_string_oem_intel_s2600gz;
       else if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
                || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT
                || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600KPR)
