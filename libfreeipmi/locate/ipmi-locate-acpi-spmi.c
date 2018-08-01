@@ -598,6 +598,11 @@ static int _ipmi_acpi_get_table_dev_mem (ipmi_locate_ctx_t ctx,
                                          unsigned int table_instance,
                                          uint8_t **acpi_table,
                                          uint32_t *acpi_table_length);
+static int _ipmi_acpi_get_table_sysfs (ipmi_locate_ctx_t ctx,
+                                       char *signature,
+                                       unsigned int table_instance,
+                                       uint8_t **acpi_table,
+                                       uint32_t *acpi_table_length);
 static int _ipmi_acpi_get_firmware_table (ipmi_locate_ctx_t ctx,
                                           char *signature,
                                           unsigned int table_instance,
@@ -1136,6 +1141,105 @@ _ipmi_acpi_get_table (ipmi_locate_ctx_t ctx,
 /*******************************************************************************
  *
  * FUNCTION:
+ *   _ipmi_acpi_get_table_sysfs
+ *
+ * PARAMETERS:
+ *   signature         - signature of the table
+ *   table_instance    - Which instance of the firmware table
+ *   acpi_table        - ACPI table in malloc'ed memory
+ *   acpi_table_length - ACPI table length
+ *
+ * RETURN:
+ *   A return value of 0 means success. ACPI table (including header) is
+ *   returned through acpi_table parameter.
+ *
+ * DESCRIPTION:
+ *   Retrieve any ACPI table (including header) from sysfs.
+ *
+ ******************************************************************************/
+static int
+_ipmi_acpi_get_table_sysfs (ipmi_locate_ctx_t ctx,
+                            char *signature,
+                            unsigned int table_instance,
+                            uint8_t **acpi_table,
+                            uint32_t *acpi_table_length)
+{
+  int sysfs_acpi_fd = -1;
+  int rv = -1;
+  static char const sysfs_fw_acpi_tables[] = "/sys/firmware/acpi/tables";
+  char *sysfs_path;
+  int instance_length;
+  int sysfs_path_length;
+  uint8_t *acpi_table_buf = NULL;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_LOCATE_CTX_MAGIC);
+  assert (signature);
+  assert (table_instance >= 0);
+  assert (acpi_table);
+  assert (acpi_table_length);
+
+  *acpi_table = NULL;
+
+  instance_length = (table_instance + 1) / 10 + 1;
+  sysfs_path_length = strlen (sysfs_fw_acpi_tables) + strlen(signature) + \
+    instance_length + 2;
+
+  if (!(sysfs_path = malloc (sysfs_path_length)))
+    {
+      LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_OUT_OF_MEMORY);
+      return (-1);
+    }
+
+  snprintf (sysfs_path, sysfs_path_length, "%s/%s%d",
+            sysfs_fw_acpi_tables, signature, table_instance + 1);
+  if ((sysfs_acpi_fd = open (sysfs_path, O_RDONLY)) < 0)
+    {
+      if (table_instance > 0)
+        goto cleanup;
+      /* If there is only 1 instance of a table on the system, the sysfs
+         file will be the same as the signature, (e.g.
+         /sys/firmware/acpi/tables/SPMI). If there are multiple instances
+         of the same table, they will have the instance # as a suffix (e.g.:
+         /sys/firmware/acpi/tables/SPMI1 & /sys/firmware/acpi/tables/SPMI2).
+         So, for table_instance == 0, we need to try both */
+      snprintf (sysfs_path, sysfs_path_length, "%s/%s",
+                sysfs_fw_acpi_tables, signature);
+      if ((sysfs_acpi_fd = open (sysfs_path, O_RDONLY)) < 0)
+	  goto cleanup;
+    }
+  if ((*acpi_table_length = lseek (sysfs_acpi_fd, 0, SEEK_END)) == -1)
+    {
+      LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
+      goto cleanup;
+    }
+  if ((lseek (sysfs_acpi_fd, 0, SEEK_SET)) == -1)
+    {
+      LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
+      goto cleanup;
+    }
+  if (!(acpi_table_buf = malloc (*acpi_table_length)))
+    {
+      LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_OUT_OF_MEMORY);
+      goto cleanup;
+    }
+  if ((read (sysfs_acpi_fd, acpi_table_buf, *acpi_table_length)) !=
+      *acpi_table_length)
+    {
+      LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
+      goto cleanup;
+    }
+
+  *acpi_table = acpi_table_buf;
+  rv = 0;
+ cleanup:
+  close (sysfs_acpi_fd);
+  return rv;
+}
+
+/*******************************************************************************
+ *
+ * FUNCTION:
  *   _ipmi_acpi_get_firmware_table_dev_mem
  *
  * PARAMETERS:
@@ -1393,12 +1497,14 @@ _ipmi_acpi_get_firmware_table (ipmi_locate_ctx_t ctx,
 
   *sign_table_data = NULL;
 
-  if ((_ipmi_acpi_get_table_dev_mem (ctx, signature,
-                                     table_instance,
-                                     &acpi_table,
-                                     &acpi_table_length) != 0))
+  if ((_ipmi_acpi_get_table_sysfs (ctx, signature, table_instance,
+				   &acpi_table, &acpi_table_length) != 0))
     {
-      LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
+      if ((_ipmi_acpi_get_table_dev_mem (ctx, signature,
+                                         table_instance,
+                                         &acpi_table,
+                                         &acpi_table_length) != 0))
+        LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
       goto cleanup;
     }
 
