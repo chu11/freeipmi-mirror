@@ -1461,7 +1461,10 @@ _ipmi_acpi_get_spmi_table (ipmi_locate_ctx_t ctx,
 
       table_interface_type = val;
       if (table_interface_type == interface_type)
-        rv = 0;
+        {
+          rv = 0;
+          break;
+        }
     }
 
  cleanup:

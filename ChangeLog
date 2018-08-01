@@ -1,3 +1,9 @@
+2018-07-31 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/locate/ipmi-locate-acpi-spmi.c
+	(_ipmi_acpi_get_spmi_table): Fix corner case, break out of loop
+	once data found.
+
 2018-05-11 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/spec/ipmi-product-id-spec.h: Add
