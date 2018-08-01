@@ -1,6 +1,8 @@
 FreeIPMI 1.6.3 - XX/XX/18
 -------------------------
+o In ipmi-locate, support parsing SPMI tables exported via sysfs.
 o Support Gigabyte MG20-OP0-ZB OEM SEL events.
+o Minor bug fixes.
 o Various documentation updates/fixes.
 
 FreeIPMI 1.6.2 - 05/03/18
