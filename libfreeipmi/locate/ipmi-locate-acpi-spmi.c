@@ -184,8 +184,8 @@ fiid_template_t tmpl_acpi_spmi_table_descriptor =
        e.g. a value of 0x0150 indicates the interface is
        compatible with IPMI version v1.5. */
     /*     {16, "specification_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},  */
-    { 8, "specification_revision.major", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8, "specification_revision.minor", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "specification_revision.major", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* Interrupt type(s) used by
        the interface:
        [0] - SCI triggered through GPE

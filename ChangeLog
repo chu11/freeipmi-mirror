@@ -10,6 +10,9 @@
 	* libfreeipmi/locate/ipmi-locate-acpi-spmi.c: Allow sysfs SPMI
 	parsing on ARM platforms.
 
+	* libfreeipmi/locate/ipmi-locate-acpi-spmi.c: Correct order of
+	bytes in specification_revision field of ACPI SPMI table.
+
 2018-07-31 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/locate/ipmi-locate-acpi-spmi.c
