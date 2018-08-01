@@ -596,12 +596,10 @@ static int _ipmi_acpi_get_table (ipmi_locate_ctx_t ctx,
 static int _ipmi_acpi_get_firmware_table (ipmi_locate_ctx_t ctx,
                                           char *signature,
                                           unsigned int table_instance,
-                                          fiid_obj_t obj_acpi_table_hdr,
                                           uint8_t **sign_table_data,
                                           uint32_t *sign_table_data_length);
 static int _ipmi_acpi_get_spmi_table (ipmi_locate_ctx_t ctx,
                                       uint8_t interface_type,
-                                      fiid_obj_t obj_acpi_table_hdr,
                                       fiid_obj_t obj_acpi_spmi_table_descriptor);
 
 #define IPMI_INTERFACE_COUNT 5
@@ -1138,14 +1136,12 @@ _ipmi_acpi_get_table (ipmi_locate_ctx_t ctx,
  * PARAMETERS:
  *   signature               - ACPI signature for firmware table header
  *   table_instance          - Which instance of the firmware table
- *   obj_acpi_table_hdr      - Initialized ACPI table header
  *   sign_table_data         - Initialized with malloc'ed ACPI firmware table data
  *   sign_table_data_length  - ACPI table DATA length
  *
  * RETURN:
  *   return (0) for success. ACPI table header and firmware table DATA are
- *   returned through obj_acpi_table_hdr and signed_table_data
- *   parameters.
+ *   returned through the signed_table_data parameter.
  *
  * DESCRIPTION:
  *   Top level call for any ACPI firmware table by table signature string.
@@ -1156,7 +1152,6 @@ static int
 _ipmi_acpi_get_firmware_table (ipmi_locate_ctx_t ctx,
                                char *signature,
                                unsigned int table_instance,
-                               fiid_obj_t obj_acpi_table_hdr,
                                uint8_t **sign_table_data,
                                uint32_t *sign_table_data_length)
 {
@@ -1197,10 +1192,8 @@ _ipmi_acpi_get_firmware_table (ipmi_locate_ctx_t ctx,
   assert (ctx);
   assert (ctx->magic == IPMI_LOCATE_CTX_MAGIC);
   assert (signature);
-  assert (fiid_obj_valid (obj_acpi_table_hdr));
   assert (sign_table_data);
   assert (sign_table_data_length);
-  assert (fiid_obj_template_compare (obj_acpi_table_hdr, tmpl_acpi_table_hdr) == 1);
 
   *sign_table_data = NULL;
 
@@ -1345,16 +1338,13 @@ _ipmi_acpi_get_firmware_table (ipmi_locate_ctx_t ctx,
       goto cleanup;
     }
 
-  memcpy (obj_acpi_table_hdr, acpi_table, acpi_table_hdr_length);
-  *sign_table_data_length = acpi_table_length - acpi_table_hdr_length;
+  *sign_table_data_length = acpi_table_length;
   if (!(*sign_table_data = malloc (*sign_table_data_length)))
     {
       LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_OUT_OF_MEMORY);
       goto cleanup;
     }
-  memcpy (*sign_table_data,
-          (acpi_table + acpi_table_hdr_length),
-          *sign_table_data_length);
+  memcpy (*sign_table_data, acpi_table, *sign_table_data_length);
 
   rv = 0;
  cleanup:
@@ -1372,13 +1362,11 @@ _ipmi_acpi_get_firmware_table (ipmi_locate_ctx_t ctx,
  *
  * PARAMETERS:
  *   interface_type           - Type of interface to look for (KCS, SSIF, SMIC, BT)
- *   obj_acpi_table_hdr       - Initialized ACPI table header
  *   acpi_table_firmware      - Initialized ACPI firmware table
  *
  * RETURN:
- *   return (0) for success. ACPI table header and SPMI table is
- *   returned through obj_acpi_table_hdr and obj_acpi_spmi_table_descriptor
- *   parameters.
+ *   return (0) for success. ACPI SPMI table (including header) is
+ *   returned through the obj_acpi_spmi_table_descriptor parameter.
  *
  * DESCRIPTION:
  *   Get SPMI table for the given interface type.
@@ -1387,7 +1375,6 @@ _ipmi_acpi_get_firmware_table (ipmi_locate_ctx_t ctx,
 static int
 _ipmi_acpi_get_spmi_table (ipmi_locate_ctx_t ctx,
                            uint8_t interface_type,
-                           fiid_obj_t obj_acpi_table_hdr,
                            fiid_obj_t obj_acpi_spmi_table_descriptor)
 {
   uint64_t val;
@@ -1401,9 +1388,7 @@ _ipmi_acpi_get_spmi_table (ipmi_locate_ctx_t ctx,
 
   assert (ctx);
   assert (ctx->magic == IPMI_LOCATE_CTX_MAGIC);
-  assert (fiid_obj_valid (obj_acpi_table_hdr));
   assert (fiid_obj_valid (obj_acpi_spmi_table_descriptor));
-  assert (fiid_obj_template_compare (obj_acpi_table_hdr, tmpl_acpi_table_hdr) == 1);
   assert (fiid_obj_template_compare (obj_acpi_spmi_table_descriptor, tmpl_acpi_spmi_table_descriptor) == 1);
 
   for (instance = 0; instance < IPMI_INTERFACE_COUNT; instance++)
@@ -1411,7 +1396,6 @@ _ipmi_acpi_get_spmi_table (ipmi_locate_ctx_t ctx,
       if (_ipmi_acpi_get_firmware_table (ctx,
                                          IPMI_ACPI_SPMI_SIG,
                                          instance,
-                                         obj_acpi_table_hdr,
                                          &table_data,
                                          &table_data_length) < 0)
         continue;
@@ -1477,7 +1461,6 @@ ipmi_locate_acpi_spmi_get_device_info (ipmi_locate_ctx_t ctx,
                                        ipmi_interface_type_t type,
                                        struct ipmi_locate_info *info)
 {
-  fiid_obj_t obj_acpi_table_hdr = NULL;
   fiid_obj_t obj_acpi_spmi_table_descriptor = NULL;
   struct ipmi_locate_info linfo;
   uint64_t val;
@@ -1507,12 +1490,6 @@ ipmi_locate_acpi_spmi_get_device_info (ipmi_locate_ctx_t ctx,
     }
   linfo.locate_driver_type = IPMI_LOCATE_DRIVER_ACPI;
 
-  if (!(obj_acpi_table_hdr = fiid_obj_create (tmpl_acpi_table_hdr)))
-    {
-      LOCATE_ERRNO_TO_LOCATE_ERRNUM (ctx, errno);
-      goto cleanup;
-    }
-
   if (!(obj_acpi_spmi_table_descriptor = fiid_obj_create (tmpl_acpi_spmi_table_descriptor)))
     {
       LOCATE_ERRNO_TO_LOCATE_ERRNUM (ctx, errno);
@@ -1521,7 +1498,6 @@ ipmi_locate_acpi_spmi_get_device_info (ipmi_locate_ctx_t ctx,
 
   if (_ipmi_acpi_get_spmi_table (ctx,
                                  type,
-                                 obj_acpi_table_hdr,
                                  obj_acpi_spmi_table_descriptor) < 0)
     goto cleanup;
 
@@ -1666,7 +1642,6 @@ ipmi_locate_acpi_spmi_get_device_info (ipmi_locate_ctx_t ctx,
   memcpy (info, &linfo, sizeof (struct ipmi_locate_info));
   rv = 0;
  cleanup:
-  fiid_obj_destroy (obj_acpi_table_hdr);
   fiid_obj_destroy (obj_acpi_spmi_table_descriptor);
   return (rv);
 #endif /* defined(__arm__) || defined(__aarch64__) */
