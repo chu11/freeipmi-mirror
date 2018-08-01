@@ -593,6 +593,11 @@ static int _ipmi_acpi_get_table (ipmi_locate_ctx_t ctx,
                                  char *signature,
                                  uint8_t **acpi_table,
                                  uint32_t *acpi_table_length);
+static int _ipmi_acpi_get_table_dev_mem (ipmi_locate_ctx_t ctx,
+                                         char *signature,
+                                         unsigned int table_instance,
+                                         uint8_t **acpi_table,
+                                         uint32_t *acpi_table_length);
 static int _ipmi_acpi_get_firmware_table (ipmi_locate_ctx_t ctx,
                                           char *signature,
                                           unsigned int table_instance,
@@ -1131,16 +1136,16 @@ _ipmi_acpi_get_table (ipmi_locate_ctx_t ctx,
 /*******************************************************************************
  *
  * FUNCTION:
- *   _ipmi_acpi_get_firmware_table
+ *   _ipmi_acpi_get_firmware_table_dev_mem
  *
  * PARAMETERS:
- *   signature               - ACPI signature for firmware table header
- *   table_instance          - Which instance of the firmware table
- *   sign_table_data         - Initialized with malloc'ed ACPI firmware table data
- *   sign_table_data_length  - ACPI table DATA length
+ *   signature          - ACPI signature for firmware table header
+ *   table_instance     - Which instance of the firmware table
+ *   acpi_table         - Initialized with malloc'ed ACPI firmware table data
+ *   acpi_table_length  - ACPI table DATA length
  *
  * RETURN:
- *   return (0) for success. ACPI table header and firmware table DATA are
+ *   return (0) for success. ACPI table (including header) is
  *   returned through the signed_table_data parameter.
  *
  * DESCRIPTION:
@@ -1149,11 +1154,11 @@ _ipmi_acpi_get_table (ipmi_locate_ctx_t ctx,
  *
  ******************************************************************************/
 static int
-_ipmi_acpi_get_firmware_table (ipmi_locate_ctx_t ctx,
-                               char *signature,
-                               unsigned int table_instance,
-                               uint8_t **sign_table_data,
-                               uint32_t *sign_table_data_length)
+_ipmi_acpi_get_table_dev_mem (ipmi_locate_ctx_t ctx,
+                              char *signature,
+                              unsigned int table_instance,
+                              uint8_t **acpi_table,
+                              uint32_t *acpi_table_length)
 {
   uint64_t val;
 
@@ -1170,8 +1175,6 @@ _ipmi_acpi_get_firmware_table (ipmi_locate_ctx_t ctx,
   uint8_t *rsdt_xsdt_table_data;
   uint32_t rsdt_xsdt_table_data_length;
   unsigned int acpi_table_count;
-  uint8_t *acpi_table = NULL;
-  uint32_t acpi_table_length;
 
   fiid_obj_t obj_table = NULL;
   uint64_t table_address;
@@ -1192,10 +1195,10 @@ _ipmi_acpi_get_firmware_table (ipmi_locate_ctx_t ctx,
   assert (ctx);
   assert (ctx->magic == IPMI_LOCATE_CTX_MAGIC);
   assert (signature);
-  assert (sign_table_data);
-  assert (sign_table_data_length);
+  assert (acpi_table);
+  assert (acpi_table_length);
 
-  *sign_table_data = NULL;
+  *acpi_table = NULL;
 
   if ((acpi_table_hdr_length = fiid_template_len_bytes (tmpl_acpi_table_hdr)) < 0)
     {
@@ -1319,8 +1322,8 @@ _ipmi_acpi_get_firmware_table (ipmi_locate_ctx_t ctx,
       if (_ipmi_acpi_get_table (ctx,
                                 table_address,
                                 signature,
-                                &acpi_table,
-                                &acpi_table_length) < 0)
+                                acpi_table,
+                                acpi_table_length) < 0)
         continue;
 
       signature_table_count++;
@@ -1330,6 +1333,73 @@ _ipmi_acpi_get_firmware_table (ipmi_locate_ctx_t ctx,
       free (acpi_table);
       acpi_table = NULL;
       acpi_table_length = 0;
+    }
+
+  if (!acpi_table)
+    {
+      LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  free (rsdt_xsdt_table);
+  fiid_obj_destroy (obj_table);
+  fiid_obj_destroy (obj_acpi_rsdp_descriptor);
+  return (rv);
+}
+
+/*******************************************************************************
+ *
+ * FUNCTION:
+ *   _ipmi_acpi_get_firmware_table
+ *
+ * PARAMETERS:
+ *   signature               - ACPI signature for firmware table header
+ *   table_instance          - Which instance of the firmware table
+ *   sign_table_data         - Initialized with malloc'ed ACPI firmware table data
+ *   sign_table_data_length  - ACPI table DATA length
+ *
+ * RETURN:
+ *   return (0) for success. ACPI table (including header) is returned
+ *   through the signed_table_data parameter.
+ *
+ * DESCRIPTION:
+ *   Top level call for any ACPI firmware table by table signature string.
+ *
+ ******************************************************************************/
+static int
+_ipmi_acpi_get_firmware_table (ipmi_locate_ctx_t ctx,
+                               char *signature,
+                               unsigned int table_instance,
+                               uint8_t **sign_table_data,
+                               uint32_t *sign_table_data_length)
+{
+  uint64_t val;
+
+  int acpi_table_hdr_length;
+  int acpi_rsdp_descriptor_length;
+
+  uint8_t *acpi_table = NULL;
+  uint32_t acpi_table_length;
+
+  int rv = -1;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_LOCATE_CTX_MAGIC);
+  assert (signature);
+  assert (sign_table_data);
+  assert (sign_table_data_length);
+
+  *sign_table_data = NULL;
+
+  if ((_ipmi_acpi_get_table_dev_mem (ctx, signature,
+                                     table_instance,
+                                     &acpi_table,
+                                     &acpi_table_length) != 0))
+    {
+      LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
+      goto cleanup;
     }
 
   if (!acpi_table)
@@ -1349,9 +1419,6 @@ _ipmi_acpi_get_firmware_table (ipmi_locate_ctx_t ctx,
   rv = 0;
  cleanup:
   free (acpi_table);
-  free (rsdt_xsdt_table);
-  fiid_obj_destroy (obj_table);
-  fiid_obj_destroy (obj_acpi_rsdp_descriptor);
   return (rv);
 }
 
