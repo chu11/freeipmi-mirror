@@ -4,6 +4,9 @@
 	split the header off of the ACPI table, as it will be consumed
 	by the SPMI table template.
 
+	* libfreeipmi/locate/ipmi-locate-acpi-spmi.c: Add support for
+	parsing SPMI tables exposed via sysfs.
+
 2018-07-31 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/locate/ipmi-locate-acpi-spmi.c
