@@ -1,3 +1,9 @@
+2018-08-01 dann frazier <dann.frazier@canonical.com>
+
+	* libfreeipmi/locate/ipmi-locate-acpi-spmi.c: Don't try to
+	split the header off of the ACPI table, as it will be consumed
+	by the SPMI table template.
+
 2018-07-31 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/locate/ipmi-locate-acpi-spmi.c
