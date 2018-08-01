@@ -7,6 +7,9 @@
 	* libfreeipmi/locate/ipmi-locate-acpi-spmi.c: Add support for
 	parsing SPMI tables exposed via sysfs.
 
+	* libfreeipmi/locate/ipmi-locate-acpi-spmi.c: Allow sysfs SPMI
+	parsing on ARM platforms.
+
 2018-07-31 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/locate/ipmi-locate-acpi-spmi.c
