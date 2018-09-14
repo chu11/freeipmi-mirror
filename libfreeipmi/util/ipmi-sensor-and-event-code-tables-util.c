@@ -2315,6 +2315,14 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
                                         buflen,
                                         ipmi_oem_intel_s2600wp_specific_qpi_link_width_reduced_max_index,
                                         ipmi_oem_intel_s2600wp_specific_qpi_link_width_reduced));
+
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600WP_FIRMWARE_UPDATE_STATUS_SENSOR
+              && sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE)
+            return (_get_event_message (offset,
+                                        buf,
+                                        buflen,
+                                        ipmi_oem_intel_s2600wp_specific_firmware_update_status_sensor_max_index,
+                                        ipmi_oem_intel_s2600wp_specific_firmware_update_status_sensor));
         }
       else if (product_id == IPMI_INTEL_PRODUCT_ID_S2600KP
                || product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
