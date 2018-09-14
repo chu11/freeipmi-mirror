@@ -1,3 +1,13 @@
+2018-09-14 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-product-id-spec.h: Add
+	Intel S2600WP product id.
+
+	* libfreeipmi/sel: Support Intel S2600WP motherboard OEM sel
+	events.
+
+	* ipmi-sensors: Support Intel S2600WP OEM sensors.
+
 2018-12-13 Albert Chu <chu11@llnl.gov>
 
 	* libipmimonitoring: Fix discrete reading working.
