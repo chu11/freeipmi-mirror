@@ -2176,6 +2176,7 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
    * Quanta QSSC-S4R/Appro GB812X-CN
    * (Quanta motherboard contains Intel manufacturer ID)
    * Intel S2600JF/Appro 512X
+   * Intel S2600WP
    */
   else if (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL)
     {
@@ -2264,6 +2265,56 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
                                         buflen,
                                         ipmi_oem_intel_s2600jf_specific_qpi_link_width_reduced_max_index,
                                         ipmi_oem_intel_s2600jf_specific_qpi_link_width_reduced));
+        }
+      else if (product_id == IPMI_INTEL_PRODUCT_ID_S2600WP)
+        {
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600WP_PCIE_FATAL_ERROR
+              && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+            return (_get_event_message (offset,
+                                        buf,
+                                        buflen,
+                                        ipmi_oem_intel_s2600wp_specific_pcie_fatal_error_max_index,
+                                        ipmi_oem_intel_s2600wp_specific_pcie_fatal_error));
+
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600WP_PCIE_FATAL_ERROR_2
+              && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+            return (_get_event_message (offset,
+                                        buf,
+                                        buflen,
+                                        ipmi_oem_intel_s2600wp_specific_pcie_fatal_error_2_max_index,
+                                        ipmi_oem_intel_s2600wp_specific_pcie_fatal_error_2));
+
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600WP_PCIE_CORRECTABLE_ERROR
+              && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+            return (_get_event_message (offset,
+                                        buf,
+                                        buflen,
+                                        ipmi_oem_intel_s2600wp_specific_pcie_correctable_error_max_index,
+                                        ipmi_oem_intel_s2600wp_specific_pcie_correctable_error));
+
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600WP_QPI_FATAL_ERROR
+              && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+            return (_get_event_message (offset,
+                                        buf,
+                                        buflen,
+                                        ipmi_oem_intel_s2600wp_specific_qpi_fatal_error_max_index,
+                                        ipmi_oem_intel_s2600wp_specific_qpi_fatal_error));
+
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600WP_QPI_FATAL_ERROR_2
+              && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+            return (_get_event_message (offset,
+                                        buf,
+                                        buflen,
+                                        ipmi_oem_intel_s2600wp_specific_qpi_fatal_error_2_max_index,
+                                        ipmi_oem_intel_s2600wp_specific_qpi_fatal_error_2));
+
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600WP_QPI_LINK_WIDTH_REDUCED
+              && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+            return (_get_event_message (offset,
+                                        buf,
+                                        buflen,
+                                        ipmi_oem_intel_s2600wp_specific_qpi_link_width_reduced_max_index,
+                                        ipmi_oem_intel_s2600wp_specific_qpi_link_width_reduced));
         }
       else if (product_id == IPMI_INTEL_PRODUCT_ID_S2600KP
                || product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
