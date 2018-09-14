@@ -91,6 +91,21 @@ ipmi_sensors_oem_intel_output_oem_record (ipmi_sensors_state_data_t *state_data,
     }
 
   /*
+   * Intel S2600WP/Appro 512X
+   */
+  if (state_data->oem_data.product_id == IPMI_INTEL_PRODUCT_ID_S2600WP)
+    {
+      if ((ret = ipmi_sensors_oem_intel_s2600wp_output_oem_record (state_data,
+                                                                   oem_record_manufacturer_id,
+                                                                   oem_data,
+                                                                   oem_data_len)) < 0)
+        return (-1);
+
+      if (ret)
+        return (1);
+    }
+
+  /*
    * Quanta QSSC-S4R/Appro GB812X-CN
    * (Quanta motherboard contains Intel manufacturer ID)
    */
