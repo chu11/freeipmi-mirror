@@ -35,6 +35,8 @@ ipmi_sensors_SOURCES = \
 	ipmi-sensors-oem-intel-s5500wb.h \
 	ipmi-sensors-oem-intel-s2600jf.c \
 	ipmi-sensors-oem-intel-s2600jf.h \
+	ipmi-sensors-oem-intel-s2600wp.c \
+	ipmi-sensors-oem-intel-s2600wp.h \
 	ipmi-sensors-oem-intel-quanta-qssc-s4r.c \
 	ipmi-sensors-oem-intel-quanta-qssc-s4r.h \
 	ipmi-sensors-oem-inventec.c \
