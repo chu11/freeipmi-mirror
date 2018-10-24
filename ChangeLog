@@ -1,3 +1,8 @@
+2018-10-24 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/locate/ipmi-locate-acpi-spmi.c: Fix compiler
+	warnings.
+
 2018-07-30 Albert Chu <chu11@llnl.gov>
 
 	* Support Intel S2600GZ OEM sensors and SEL events.

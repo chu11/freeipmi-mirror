@@ -1482,11 +1482,6 @@ _ipmi_acpi_get_firmware_table (ipmi_locate_ctx_t ctx,
                                uint8_t **sign_table_data,
                                uint32_t *sign_table_data_length)
 {
-  uint64_t val;
-
-  int acpi_table_hdr_length;
-  int acpi_rsdp_descriptor_length;
-
   uint8_t *acpi_table = NULL;
   uint32_t acpi_table_length;
 
