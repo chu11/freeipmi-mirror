@@ -315,12 +315,16 @@ _sensor_read_ctx_error_convert (ipmi_monitoring_ctx_t c)
 
 /*
  * return value -1 = error, 0 = unreadable sensor reading, 1 = sensor reading success
+ *
+ * sensor_reading_valid flag indicates if `sensor_reading` variable
+ * contains valid reading.
  */
 static int
 _get_sensor_reading (ipmi_monitoring_ctx_t c,
                      unsigned int sensor_reading_flags,
                      unsigned int shared_sensor_number_offset,
                      double *sensor_reading,
+                     int *sensor_reading_valid,
                      uint16_t *sensor_event_bitmask)
 {
   uint8_t sdr_record[IPMI_SDR_MAX_RECORD_LENGTH];
@@ -332,6 +336,7 @@ _get_sensor_reading (ipmi_monitoring_ctx_t c,
   assert (c->magic == IPMI_MONITORING_MAGIC);
   assert (c->sensor_readings);
   assert (sensor_reading);
+  assert (sensor_reading_valid);
   assert (sensor_event_bitmask);
 
   if ((sdr_record_len = ipmi_sdr_cache_record_read (c->sdr_ctx,
@@ -377,7 +382,10 @@ _get_sensor_reading (ipmi_monitoring_ctx_t c,
     {
       (*sensor_reading) = (*l_sensor_reading);
       free (l_sensor_reading);
+      (*sensor_reading_valid) = 1;
     }
+  else
+    (*sensor_reading_valid) = 0;
 
   rv = 1;
  cleanup:
@@ -530,6 +538,7 @@ _threshold_sensor_reading (ipmi_monitoring_ctx_t c,
   uint8_t sensor_base_unit_type;
   uint8_t sensor_modifier_unit_type;
   double sensor_reading;
+  int sensor_reading_valid;
   uint16_t sensor_event_bitmask;
   char **sensor_bitmask_strings = NULL;
   int sensor_units;
@@ -569,10 +578,11 @@ _threshold_sensor_reading (ipmi_monitoring_ctx_t c,
                                   sensor_reading_flags,
                                   shared_sensor_number_offset,
                                   &sensor_reading,
+                                  &sensor_reading_valid,
                                   &sensor_event_bitmask)) < 0)
     return (-1);
 
-  if (!ret)
+  if (!ret || sensor_reading_valid == 0)
     {
       IPMI_MONITORING_DEBUG (("cannot read sensor for record id '%u'", record_id));
       if (_store_unreadable_sensor_reading (c,
@@ -784,6 +794,7 @@ _digital_sensor_reading (ipmi_monitoring_ctx_t c,
                          char *sensor_name)
 {
   double sensor_reading;
+  int sensor_reading_valid;
   uint16_t sensor_event_bitmask;
   char **sensor_bitmask_strings = NULL;
   int sensor_state;
@@ -801,6 +812,7 @@ _digital_sensor_reading (ipmi_monitoring_ctx_t c,
                                   sensor_reading_flags,
                                   shared_sensor_number_offset,
                                   &sensor_reading,
+                                  &sensor_reading_valid,
                                   &sensor_event_bitmask)) < 0)
     return (-1);
 
@@ -875,6 +887,7 @@ _specific_sensor_reading (ipmi_monitoring_ctx_t c,
                           char *sensor_name)
 {
   double sensor_reading;
+  int sensor_reading_valid;
   uint16_t sensor_event_bitmask;
   char **sensor_bitmask_strings = NULL;
   int sensor_state;
@@ -890,6 +903,7 @@ _specific_sensor_reading (ipmi_monitoring_ctx_t c,
                                   sensor_reading_flags,
                                   shared_sensor_number_offset,
                                   &sensor_reading,
+                                  &sensor_reading_valid,
                                   &sensor_event_bitmask)) < 0)
     return (-1);
 
@@ -964,6 +978,7 @@ _oem_sensor_reading (ipmi_monitoring_ctx_t c,
                      char *sensor_name)
 {
   double sensor_reading;
+  int sensor_reading_valid;
   uint16_t sensor_event_bitmask;
   char **sensor_bitmask_strings = NULL;
   int sensor_state;
@@ -979,6 +994,7 @@ _oem_sensor_reading (ipmi_monitoring_ctx_t c,
                                   sensor_reading_flags,
                                   shared_sensor_number_offset,
                                   &sensor_reading,
+                                  &sensor_reading_valid,
                                   &sensor_event_bitmask)) < 0)
     return (-1);
 
