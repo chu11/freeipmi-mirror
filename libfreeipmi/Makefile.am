@@ -232,6 +232,7 @@ libfreeipmi_la_SOURCES = \
 	sel/ipmi-sel-string-supermicro-x9sc_common.c \
 	sel/ipmi-sel-string-supermicro-x9scm-iif.c \
 	sel/ipmi-sel-string-supermicro-x9spu-f-o.c \
+	sel/ipmi-sel-string-supermicro-x10slmplus-f.c \
 	sel/ipmi-sel-string-wistron-c6220.c \
 	sel/ipmi-sel-trace.h \
 	sel/ipmi-sel-util.c \

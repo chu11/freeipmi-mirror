@@ -107,6 +107,7 @@ extern struct sel_string_oem sel_string_oem_supermicro_x9sca_f_o;
 extern struct sel_string_oem sel_string_oem_supermicro_x9sc_common;
 extern struct sel_string_oem sel_string_oem_supermicro_x9scm_iif;
 extern struct sel_string_oem sel_string_oem_supermicro_x9spu_f_o;
+extern struct sel_string_oem sel_string_oem_supermicro_x10slmplus_f;
 extern struct sel_string_oem sel_string_oem_wistron_c6220;
 
 /* returns 0 on success, 1 on success but w/ truncation */
@@ -304,6 +305,8 @@ _find_motherboard_oem_support (ipmi_sel_ctx_t ctx,
         (*sel_string_oem) = &sel_string_oem_supermicro_x9scm_iif;
       else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8SGL_F)
         (*sel_string_oem) = &sel_string_oem_supermicro_h8sgl_f;
+      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X10SLMPLUS_F)
+        (*sel_string_oem) = &sel_string_oem_supermicro_x10slmplus_f;
     }
   else if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_MAGNUM_TECHNOLOGIES) /* Supermicro variant */
     {
