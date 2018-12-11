@@ -218,6 +218,7 @@ libfreeipmi_la_SOURCES = \
 	sel/ipmi-sel-string-supermicro-overheat-common.c \
 	sel/ipmi-sel-string-supermicro-magnum-technologies-x8dtl.c \
 	sel/ipmi-sel-string-supermicro-peppercon-common.c \
+	sel/ipmi-sel-string-supermicro-x10dimm-common.c \
 	sel/ipmi-sel-string-wistron-c6220.c \
 	sel/ipmi-sel-trace.h \
 	sel/ipmi-sel-util.c \
