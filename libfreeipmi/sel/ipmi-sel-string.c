@@ -92,6 +92,7 @@ extern struct sel_string_oem sel_string_oem_sun_x4140;
 extern struct sel_string_oem sel_string_oem_supermicro_overheat_common;
 extern struct sel_string_oem sel_string_oem_supermicro_magnum_technologies_x8dtl;
 extern struct sel_string_oem sel_string_oem_supermicro_peppercon_common;
+extern struct sel_string_oem sel_string_oem_supermicro_x10dimm;
 extern struct sel_string_oem sel_string_oem_wistron_c6220;
 
 /* returns 0 on success, 1 on success but w/ truncation */
@@ -255,42 +256,6 @@ _find_motherboard_oem_support (ipmi_sel_ctx_t ctx,
       if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTH
           || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTG
           || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU
-<<<<<<< HEAD
-          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DT3_LN4F)
-        (*sel_string_oem) = &sel_string_oem_supermicro_x8dt_common;
-      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU_6PLUS)
-        (*sel_string_oem) = &sel_string_oem_supermicro_x8dtu_6plus;
-      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL
-               || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL_3F)
-        (*sel_string_oem) = &sel_string_oem_supermicro_x8dtl_common;
-      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8SIL_F)
-        (*sel_string_oem) = &sel_string_oem_supermicro_x8sil_f;
-      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCL
-               || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCM)
-        (*sel_string_oem) = &sel_string_oem_supermicro_x9sc_common;
-      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTNPLUS_F)
-        (*sel_string_oem) = &sel_string_oem_supermicro_x8dtnplus_f;
-      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8SIE)
-        (*sel_string_oem) = &sel_string_oem_supermicro_x8sie;
-      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCA_F_O)
-        (*sel_string_oem) = &sel_string_oem_supermicro_x9sca_f_o;
-      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8DGU_F)
-        (*sel_string_oem) = &sel_string_oem_supermicro_h8dgu_f;
-      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8DGU)
-        (*sel_string_oem) = &sel_string_oem_supermicro_h8dgu;
-      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8DG6)
-        (*sel_string_oem) = &sel_string_oem_supermicro_h8dg6;
-      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9DRI_F)
-        (*sel_string_oem) = &sel_string_oem_supermicro_x9dri_f;
-      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9DRI_LN4F_PLUS)
-        (*sel_string_oem) = &sel_string_oem_supermicro_x9dri_ln4f_plus;
-      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SPU_F_O)
-        (*sel_string_oem) = &sel_string_oem_supermicro_x9spu_f_o;
-      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCM_IIF)
-        (*sel_string_oem) = &sel_string_oem_supermicro_x9scm_iif;
-      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8SGL_F)
-        (*sel_string_oem) = &sel_string_oem_supermicro_h8sgl_f;
-=======
           || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DT3_LN4F
           || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU_6PLUS
           || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL
@@ -310,9 +275,20 @@ _find_motherboard_oem_support (ipmi_sel_ctx_t ctx,
           || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCM_IIF
           || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8SGL_F)
         (*sel_string_oem) = &sel_string_oem_supermicro_overheat_common;
-      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X10SLMPLUS_F)
-        (*sel_string_oem) = &sel_string_oem_supermicro_x10slmplus_f;
->>>>>>> 4832a01... libfreeipmi/sel: Refactor supermicro motherboard support
+      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X10DRH_BASE
+               || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X10DRW_BASE
+               || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X10DRI_BASE
+               || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X10SL_BASE
+               || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X10SLL_F
+               || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X10DRL_I
+               || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X10SLM_F
+               || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X10SRW_F
+               || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X10SRI_F
+               || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X10DRW_I
+               || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X10SRL_F
+               || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X10DDW_I
+               || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X10DRG_HT)
+        (*sel_string_oem) = &sel_string_oem_supermicro_x10dimm;
     }
   else if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_MAGNUM_TECHNOLOGIES) /* Supermicro variant */
     {
