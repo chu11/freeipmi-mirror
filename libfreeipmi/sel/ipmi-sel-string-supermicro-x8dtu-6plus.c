@@ -86,9 +86,10 @@ sel_string_output_supermicro_x8dtu_6plus_event_data1_class_oem (ipmi_sel_ctx_t c
                                                                           flags,
                                                                           wlen,
                                                                           system_event_record_data)) < 0)
+    return (-1);
 
-    if (ret)
-      return (1);
+  if (ret)
+    return (1);
 
   return (0);
 }
