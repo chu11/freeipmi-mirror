@@ -440,13 +440,15 @@ _ipmimonitoring (struct ipmi_monitoring_ipmi_config *ipmi_config)
                    ipmi_monitoring_ctx_errormsg (ctx));
           goto cleanup;
         }
-
-      if (!(sensor_bitmask_strings = ipmi_monitoring_sensor_read_sensor_bitmask_strings (ctx)))
+      else if (sensor_bitmask != IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN)
         {
-          fprintf (stderr,
-                   "ipmi_monitoring_sensor_read_sensor_bitmask_strings: %s\n",
-                   ipmi_monitoring_ctx_errormsg (ctx));
-          goto cleanup;
+          if (!(sensor_bitmask_strings = ipmi_monitoring_sensor_read_sensor_bitmask_strings (ctx)))
+            {
+              fprintf (stderr,
+                       "ipmi_monitoring_sensor_read_sensor_bitmask_strings: %s\n",
+                       ipmi_monitoring_ctx_errormsg (ctx));
+              goto cleanup;
+            }
         }
 
       if ((sensor_reading_type = ipmi_monitoring_sensor_read_sensor_reading_type (ctx)) < 0)
@@ -541,7 +543,8 @@ _ipmimonitoring (struct ipmi_monitoring_ipmi_config *ipmi_config)
       else
         printf (", N/A");
 
-      if (sensor_bitmask_type != IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN)
+      if (sensor_bitmask_type != IPMI_MONITORING_SENSOR_BITMASK_TYPE_UNKNOWN
+          && sensor_bitmask_strings)
         {
           unsigned int i = 0;
 
