@@ -86,9 +86,10 @@ sel_string_output_supermicro_h8dg6_event_data1_class_oem (ipmi_sel_ctx_t ctx,
                                                                           flags,
                                                                           wlen,
                                                                           system_event_record_data)) < 0)
+    return (-1);
 
-    if (ret)
-      return (1);
+  if (ret)
+    return (1);
 
   return (0);
 }

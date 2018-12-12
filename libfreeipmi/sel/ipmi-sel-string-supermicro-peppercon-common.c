@@ -88,9 +88,10 @@ sel_string_output_supermicro_peppercon_common_event_data1_class_oem (ipmi_sel_ct
                                                                           flags,
                                                                           wlen,
                                                                           system_event_record_data)) < 0)
+    return (-1);
 
-    if (ret)
-      return (1);
+  if (ret)
+    return (1);
 
   return (0);
 }
