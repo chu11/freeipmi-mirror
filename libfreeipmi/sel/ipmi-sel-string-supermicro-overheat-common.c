@@ -48,14 +48,14 @@
  * return (-1) - error, cleanup and return error
  */
 int
-sel_string_output_supermicro_h8sgl_f_event_data1_class_oem (ipmi_sel_ctx_t ctx,
-                                                            struct ipmi_sel_entry *sel_entry,
-                                                            uint8_t sel_record_type,
-                                                            char *tmpbuf,
-                                                            unsigned int tmpbuflen,
-                                                            unsigned int flags,
-                                                            unsigned int *wlen,
-                                                            struct ipmi_sel_system_event_record_data *system_event_record_data)
+sel_string_output_supermicro_overheat_mobo_event_data1_class_oem (ipmi_sel_ctx_t ctx,
+                                                                  struct ipmi_sel_entry *sel_entry,
+                                                                  uint8_t sel_record_type,
+                                                                  char *tmpbuf,
+                                                                  unsigned int tmpbuflen,
+                                                                  unsigned int flags,
+                                                                  unsigned int *wlen,
+                                                                  struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   int ret;
 
@@ -70,13 +70,27 @@ sel_string_output_supermicro_h8sgl_f_event_data1_class_oem (ipmi_sel_ctx_t ctx,
   assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
   assert (wlen);
   assert (system_event_record_data);
-  assert (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8SGL_F);
-
-  /* achu: Via reverse engineering, see
-   *
-   * "Supermicro X8DTG-QF System Event Log" thread in late
-   * January/early February 2012.
-   */
+  assert (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTH
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTG
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DT3_LN4F
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU_6PLUS
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL_3F
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8SIL_F
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCL
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCM
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTNPLUS_F
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8SIE
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCA_F_O
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8DGU_F
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8DGU
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8DG6
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9DRI_F
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9DRI_LN4F_PLUS
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SPU_F_O
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCM_IIF
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8SGL_F);
 
   if ((ret = sel_string_output_supermicro_overheat_event_data1_class_oem (ctx,
                                                                           sel_entry,
@@ -94,11 +108,11 @@ sel_string_output_supermicro_h8sgl_f_event_data1_class_oem (ipmi_sel_ctx_t ctx,
   return (0);
 }
 
-struct sel_string_oem sel_string_oem_supermicro_h8sgl_f =
+struct sel_string_oem sel_string_oem_supermicro_overheat_common =
   {
     NULL,
     NULL,
-    &sel_string_output_supermicro_h8sgl_f_event_data1_class_oem,
+    &sel_string_output_supermicro_overheat_mobo_event_data1_class_oem,
     NULL,
     NULL,
     NULL,
