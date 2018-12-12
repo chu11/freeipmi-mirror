@@ -85,9 +85,10 @@ sel_string_output_supermicro_magnum_technologies_x8dtl_event_data1_class_oem (ip
                                                                           flags,
                                                                           wlen,
                                                                           system_event_record_data)) < 0)
+    return (-1);
 
-    if (ret)
-      return (1);
+  if (ret)
+    return (1);
 
   return (0);
 }
