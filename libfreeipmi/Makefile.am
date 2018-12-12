@@ -214,24 +214,9 @@ libfreeipmi_la_SOURCES = \
 	sel/ipmi-sel-string-sun-x4140.c \
 	sel/ipmi-sel-string-supermicro-common.c \
 	sel/ipmi-sel-string-supermicro-common.h \
+	sel/ipmi-sel-string-supermicro-overheat-common.c \
 	sel/ipmi-sel-string-supermicro-magnum-technologies-x8dtl.c \
 	sel/ipmi-sel-string-supermicro-peppercon-common.c \
-	sel/ipmi-sel-string-supermicro-h8dg6.c \
-	sel/ipmi-sel-string-supermicro-h8dgu-f.c \
-	sel/ipmi-sel-string-supermicro-h8dgu.c \
-	sel/ipmi-sel-string-supermicro-h8sgl-f.c \
-	sel/ipmi-sel-string-supermicro-x8dt-common.c \
-	sel/ipmi-sel-string-supermicro-x8dtl-common.c \
-	sel/ipmi-sel-string-supermicro-x8dtnplus-f.c \
-	sel/ipmi-sel-string-supermicro-x8dtu-6plus.c \
-	sel/ipmi-sel-string-supermicro-x8sie.c \
-	sel/ipmi-sel-string-supermicro-x8sil-f.c \
-	sel/ipmi-sel-string-supermicro-x9dri-f.c \
-	sel/ipmi-sel-string-supermicro-x9dri-ln4f-plus.c \
-	sel/ipmi-sel-string-supermicro-x9sca-f-o.c \
-	sel/ipmi-sel-string-supermicro-x9sc_common.c \
-	sel/ipmi-sel-string-supermicro-x9scm-iif.c \
-	sel/ipmi-sel-string-supermicro-x9spu-f-o.c \
 	sel/ipmi-sel-string-wistron-c6220.c \
 	sel/ipmi-sel-trace.h \
 	sel/ipmi-sel-util.c \
