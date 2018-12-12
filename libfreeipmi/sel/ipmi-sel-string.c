@@ -90,24 +90,9 @@ extern struct sel_string_oem sel_string_oem_inventec_5442;
 extern struct sel_string_oem sel_string_oem_linux_kernel;
 extern struct sel_string_oem sel_string_oem_quanta_s99q;
 extern struct sel_string_oem sel_string_oem_sun_x4140;
-extern struct sel_string_oem sel_string_oem_supermicro_h8dg6;
-extern struct sel_string_oem sel_string_oem_supermicro_h8dgu_f;
-extern struct sel_string_oem sel_string_oem_supermicro_h8dgu;
-extern struct sel_string_oem sel_string_oem_supermicro_h8sgl_f;
+extern struct sel_string_oem sel_string_oem_supermicro_overheat_common;
 extern struct sel_string_oem sel_string_oem_supermicro_magnum_technologies_x8dtl;
 extern struct sel_string_oem sel_string_oem_supermicro_peppercon_common;
-extern struct sel_string_oem sel_string_oem_supermicro_x8dt_common;
-extern struct sel_string_oem sel_string_oem_supermicro_x8dtl_common;
-extern struct sel_string_oem sel_string_oem_supermicro_x8dtnplus_f;
-extern struct sel_string_oem sel_string_oem_supermicro_x8dtu_6plus;
-extern struct sel_string_oem sel_string_oem_supermicro_x8sie;
-extern struct sel_string_oem sel_string_oem_supermicro_x8sil_f;
-extern struct sel_string_oem sel_string_oem_supermicro_x9dri_f;
-extern struct sel_string_oem sel_string_oem_supermicro_x9dri_ln4f_plus;
-extern struct sel_string_oem sel_string_oem_supermicro_x9sca_f_o;
-extern struct sel_string_oem sel_string_oem_supermicro_x9sc_common;
-extern struct sel_string_oem sel_string_oem_supermicro_x9scm_iif;
-extern struct sel_string_oem sel_string_oem_supermicro_x9spu_f_o;
 extern struct sel_string_oem sel_string_oem_wistron_c6220;
 
 /* returns 0 on success, 1 on success but w/ truncation */
@@ -273,6 +258,7 @@ _find_motherboard_oem_support (ipmi_sel_ctx_t ctx,
       if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTH
           || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTG
           || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU
+<<<<<<< HEAD
           || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DT3_LN4F)
         (*sel_string_oem) = &sel_string_oem_supermicro_x8dt_common;
       else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU_6PLUS)
@@ -307,6 +293,29 @@ _find_motherboard_oem_support (ipmi_sel_ctx_t ctx,
         (*sel_string_oem) = &sel_string_oem_supermicro_x9scm_iif;
       else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8SGL_F)
         (*sel_string_oem) = &sel_string_oem_supermicro_h8sgl_f;
+=======
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DT3_LN4F
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTU_6PLUS
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTL_3F
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8SIL_F
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCL
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCM
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8DTNPLUS_F
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X8SIE
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCA_F_O
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8DGU_F
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8DGU
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8DG6
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9DRI_F
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9DRI_LN4F_PLUS
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SPU_F_O
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X9SCM_IIF
+          || ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_H8SGL_F)
+        (*sel_string_oem) = &sel_string_oem_supermicro_overheat_common;
+      else if (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X10SLMPLUS_F)
+        (*sel_string_oem) = &sel_string_oem_supermicro_x10slmplus_f;
+>>>>>>> 4832a01... libfreeipmi/sel: Refactor supermicro motherboard support
     }
   else if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_MAGNUM_TECHNOLOGIES) /* Supermicro variant */
     {
