@@ -1,3 +1,9 @@
+2018-12-13 Albert Chu <chu11@llnl.gov>
+
+	* libipmimonitoring: Fix discrete reading working.
+
+	* contrib: Fix corner case libipmimonitoring-sensors example.
+
 2018-10-24 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/locate/ipmi-locate-acpi-spmi.c: Fix compiler
