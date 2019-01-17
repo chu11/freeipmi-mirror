@@ -48,11 +48,12 @@ extern "C" {
 #define IPMI_SENSOR_READ_ERR_NODE_BUSY                              13
 #define IPMI_SENSOR_READ_ERR_INVALID_SDR_RECORD_TYPE                14
 #define IPMI_SENSOR_READ_ERR_SDR_ENTRY_ERROR                        15
-#define IPMI_SENSOR_READ_ERR_IPMI_ERROR                             16
-#define IPMI_SENSOR_READ_ERR_SYSTEM_ERROR                           17
-#define IPMI_SENSOR_READ_ERR_OVERFLOW                               18
-#define IPMI_SENSOR_READ_ERR_INTERNAL_ERROR                         19
-#define IPMI_SENSOR_READ_ERR_ERRNUMRANGE                            20
+#define IPMI_SENSOR_READ_ERR_PRIVILEGE_LEVEL_INSUFFICIENT           16
+#define IPMI_SENSOR_READ_ERR_IPMI_ERROR                             17
+#define IPMI_SENSOR_READ_ERR_SYSTEM_ERROR                           18
+#define IPMI_SENSOR_READ_ERR_OVERFLOW                               19
+#define IPMI_SENSOR_READ_ERR_INTERNAL_ERROR                         20
+#define IPMI_SENSOR_READ_ERR_ERRNUMRANGE                            21
 
 #define IPMI_SENSOR_READ_FLAGS_DEFAULT                              0x0000
 #define IPMI_SENSOR_READ_FLAGS_BRIDGE_SENSORS                       0x0001

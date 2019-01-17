@@ -73,6 +73,7 @@ static char *ipmi_sensor_read_errmsgs[] =
     "node busy",
     "invalid sdr record type",
     "sdr entry error",
+    "privilege level insufficient",
     "internal IPMI error",
     "internal system error",
     "buffer overflow",
@@ -358,6 +359,11 @@ _get_sensor_reading_ipmb (ipmi_sensor_read_ctx_t ctx,
               goto cleanup;
             }
           else if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_MESSAGE_TIMEOUT)
+            {
+              SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_SENSOR_READING_CANNOT_BE_OBTAINED);
+              goto cleanup;
+            }
+          else if (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_PRIVILEGE_LEVEL_INSUFFICIENT)
             {
               SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_SENSOR_READING_CANNOT_BE_OBTAINED);
               goto cleanup;
