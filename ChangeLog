@@ -1,3 +1,8 @@
+2019-01-17 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/api: Add workaround for out of order packets with
+	lan / rmcpplus ipmb.
+
 2018-09-14 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/spec/ipmi-product-id-spec.h: Add
