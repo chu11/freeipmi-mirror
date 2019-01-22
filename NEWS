@@ -1,3 +1,9 @@
+FreeIPMI 1.7.1 - XX/XX/XX
+-------------------------
+Libraries
+---------
+o libfreeipmi/sensor-read: Add error for privilege level insufficient.
+
 FreeIPMI 1.6.1 - 02/02/18
 -------------------------
 o Add IPv6 hostname support to FreeIPMI, all of FreeIPMI can now take
