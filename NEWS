@@ -5,8 +5,8 @@ o Support Intel S2600GZ OEM sensor and SEL events.
 o Support Intel S2600WP OEM sensor and SEL events.
 o Support Gigabyte MG20-OP0-ZB OEM SEL events.
 o Fix DISCRETE_READING workaround in libipmimonitoring.
-o In libfreeipmi, add working for packets that are re-ordered during
-  sensor bridging.
+o In libfreeipmi, add workaround for packets that are re-ordered
+  during sensor bridging.
 o Minor bug fixes.
 o Various documentation updates/fixes.
 
