@@ -1,4 +1,4 @@
-FreeIPMI 1.6.3 - XX/XX/18
+FreeIPMI 1.6.3 - 01/23/19
 -------------------------
 o In ipmi-locate, support parsing SPMI tables exported via sysfs.
 o Support Intel S2600GZ OEM sensor and SEL events.
