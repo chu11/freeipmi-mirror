@@ -220,7 +220,7 @@ LAN Authentication Issue #13: [COMPLIANCE]
   Seen on: Sun Fire X4150, Inventec 5441/Dell Xanadu II, Supermicro
   X8DTH, Supermicro X8DTG, Supermicro X8DTU, Intel S5500WBV/Penguin
   Relion 700, Intel S2600JF/Appro 512X, Quanta QSSC-S4R/Appro
-  GB812X-CN
+  GB812X-CN, Dell C5220
 
   Resolution: Workaround option added to inform software to pass a
   specific privilege level instead of
