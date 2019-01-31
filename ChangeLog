@@ -1,3 +1,8 @@
+2019-01-31 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/api: Fix workaround for out of order packets with
+	lan / rmcpplus ipmb to handle raw packets and packets with errors.
+
 2019-01-23 Albert Chu <chu11@llnl.gov>
 
 	* Document that "opensesspriv" workaround works on Dell C5220.
