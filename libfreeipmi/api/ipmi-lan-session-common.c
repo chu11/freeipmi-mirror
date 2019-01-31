@@ -1142,9 +1142,12 @@ api_lan_cmd_wrapper (ipmi_ctx_t ctx,
   return (rv);
 }
 
-/* see workaround _ipmi_check_ipmb_out_of_order() regarding obj_rs pointer */
+/* see workaround _ipmi_check_ipmb_out_of_order() regarding obj_rs & obj_rs_errnum pointer */
 static int
-_ipmi_cmd_send_ipmb (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rq, fiid_obj_t *obj_rs)
+_ipmi_cmd_send_ipmb (ipmi_ctx_t ctx,
+                     fiid_obj_t obj_cmd_rq,
+                     fiid_obj_t *obj_rs,
+                     ipmi_errnum_type_t *obj_rs_errnum)
 {
   struct ipmi_ctx_target target_save;
   uint8_t tbuf[IPMI_MAX_PKT_LEN];
@@ -1160,6 +1163,8 @@ _ipmi_cmd_send_ipmb (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rq, fiid_obj_t *obj_rs)
           && ctx->io.outofband.sockfd
           && fiid_obj_valid (obj_cmd_rq)
           && fiid_obj_packet_valid (obj_cmd_rq) == 1);
+
+  (*obj_rs_errnum) = IPMI_ERR_SUCCESS;
 
   if (!(obj_ipmb_msg_hdr_rq = fiid_obj_create (tmpl_ipmb_msg_hdr_rq)))
     {
@@ -1225,10 +1230,31 @@ _ipmi_cmd_send_ipmb (ipmi_ctx_t ctx, fiid_obj_t obj_cmd_rq, fiid_obj_t *obj_rs)
 
   if (ret < 0)
     {
+      uint64_t cmd;
+
       API_BAD_RESPONSE_TO_API_ERRNUM (ctx, obj_send_cmd_rs);
+
+      /* Check for potential out of order condition.  See
+       * _ipmi_check_ipmb_out_of_order() for more details.
+       *
+       * Basically, we will return success if the completion code is
+       * one in which we would expect another message to arrive.
+       */
+      if (FIID_OBJ_GET (obj_send_cmd_rs, "cmd", &cmd) == 1) {
+        if (cmd != IPMI_CMD_SEND_MESSAGE
+            && ipmi_check_completion_code (obj_send_cmd_rs,
+                                           IPMI_COMP_CODE_COMMAND_SUCCESS) == 0) {
+          TRACE_MSG_OUT ("accept out-of-order with bad completion code", 0);
+          (*obj_rs_errnum) = ctx->errnum;
+          ctx->errnum = IPMI_ERR_SUCCESS;
+          goto out_of_order_workaround;
+        }
+      }
+
       goto cleanup;
     }
 
+ out_of_order_workaround:
   /* "pretend" a request was just sent */
   if (gettimeofday (&ctx->io.outofband.last_send, NULL) < 0)
     {
@@ -1253,7 +1279,8 @@ static int
 _ipmi_check_ipmb_out_of_order (ipmi_ctx_t ctx,
                                fiid_obj_t obj_cmd_rq,
                                fiid_obj_t obj_cmd_rs,
-                               fiid_obj_t obj_send_cmd_rs)
+                               fiid_obj_t obj_send_cmd_rs,
+                               ipmi_errnum_type_t obj_rs_errnum)
 {
   uint8_t buf[IPMI_MAX_PKT_LEN];
   uint64_t val;
@@ -1269,27 +1296,45 @@ _ipmi_check_ipmb_out_of_order (ipmi_ctx_t ctx,
    * XXX: Add a mechanism to re-dump the full packet?
    */
 
-  if (FIID_OBJ_GET (obj_cmd_rs, "cmd", &val) != 1)
+  if ((len = fiid_obj_get_all (obj_cmd_rs, buf, IPMI_MAX_PKT_LEN)) < 0)
     return (0);
-  cmd_rs = val;
 
+  if (!len)
+    return (0);
+
+  /* get "cmd" for the response.  Don't use fiid_obj_get(), b/c this could be a raw packet */
+  cmd_rs = buf[0];
+
+  /* if cmd_rs isn't send message, assume things weren't out of order
+   * and all is good
+   */
   if (cmd_rs != IPMI_CMD_SEND_MESSAGE)
     return (0);
+
   /* else, we've probably got an out of order */
 
-  if (FIID_OBJ_GET (obj_cmd_rq, "cmd", &val) != 1)
+  if ((len = fiid_obj_get_all (obj_cmd_rq, buf, IPMI_MAX_PKT_LEN)) < 0)
     return (0);
-  cmd_rq = val;
 
-  if (FIID_OBJ_GET (obj_send_cmd_rs, "cmd", &val) != 1)
+  if (!len)
     return (0);
-  send_cmd_rs = val;
 
-  if (cmd_rq != send_cmd_rs)
-    return (0);
-  /* else, we've got an out of order */
+  cmd_rq = buf[0];
 
   if ((len = fiid_obj_get_all (obj_send_cmd_rs, buf, IPMI_MAX_PKT_LEN)) < 0)
+    return (0);
+
+  if (!len)
+    return (0);
+
+  send_cmd_rs = buf[0];
+
+  /* if the command sent in the request is the same as the command
+   * returned in the send message response, assume we've got an out of
+   * order
+   */
+
+  if (cmd_rq != send_cmd_rs)
     return (0);
 
   /* this is the one function we can't fail */
@@ -1299,6 +1344,12 @@ _ipmi_check_ipmb_out_of_order (ipmi_ctx_t ctx,
   }
 
   TRACE_MSG_OUT ("reversed obj_cmd responses", 0);
+
+  if (obj_rs_errnum != IPMI_ERR_SUCCESS) {
+    API_SET_ERRNUM (ctx, obj_rs_errnum);
+    return (-1);
+  }
+
   return (0);
 }
 
@@ -1316,6 +1367,7 @@ api_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
   uint64_t val;
   unsigned int intf_flags = IPMI_INTERFACE_FLAGS_DEFAULT;
   fiid_obj_t obj_send_rs = NULL;
+  ipmi_errnum_type_t obj_rs_errnum;
 
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
@@ -1361,7 +1413,10 @@ api_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
 
   rq_seq_orig = ctx->io.outofband.rq_seq;
 
-  if (_ipmi_cmd_send_ipmb (ctx, obj_cmd_rq, &obj_send_rs) < 0)
+  if (_ipmi_cmd_send_ipmb (ctx,
+                           obj_cmd_rq,
+                           &obj_send_rs,
+                           &obj_rs_errnum) < 0)
     goto cleanup;
 
   while (1)
@@ -1401,7 +1456,10 @@ api_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
             obj_send_rs = NULL;
           }
 
-          if (_ipmi_cmd_send_ipmb (ctx, obj_cmd_rq, &obj_send_rs) < 0)
+          if (_ipmi_cmd_send_ipmb (ctx,
+                                   obj_cmd_rq,
+                                   &obj_send_rs,
+                                   &obj_rs_errnum) < 0)
             goto cleanup;
 
           continue;
@@ -1463,7 +1521,8 @@ api_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
       if (_ipmi_check_ipmb_out_of_order (ctx,
                                          obj_cmd_rq,
                                          obj_cmd_rs,
-                                         obj_send_rs) < 0)
+                                         obj_send_rs,
+                                         obj_rs_errnum) < 0)
         goto cleanup;
 
       rv = 0;
@@ -3102,6 +3161,7 @@ api_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
   uint64_t val;
   unsigned int intf_flags = IPMI_INTERFACE_FLAGS_DEFAULT;
   fiid_obj_t obj_send_rs = NULL;
+  ipmi_errnum_type_t obj_rs_errnum;
 
   assert (ctx
           && ctx->magic == IPMI_CTX_MAGIC
@@ -3146,7 +3206,10 @@ api_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
 
   rq_seq_orig = ctx->io.outofband.rq_seq;
 
-  if (_ipmi_cmd_send_ipmb (ctx, obj_cmd_rq, &obj_send_rs) < 0)
+  if (_ipmi_cmd_send_ipmb (ctx,
+                           obj_cmd_rq,
+                           &obj_send_rs,
+                           &obj_rs_errnum) < 0)
     goto cleanup;
 
   while (1)
@@ -3197,7 +3260,10 @@ api_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
             obj_send_rs = NULL;
           }
 
-          if (_ipmi_cmd_send_ipmb (ctx, obj_cmd_rq, &obj_send_rs) < 0)
+          if (_ipmi_cmd_send_ipmb (ctx,
+                                   obj_cmd_rq,
+                                   &obj_send_rs,
+                                   &obj_rs_errnum) < 0)
             goto cleanup;
 
           continue;
@@ -3278,7 +3344,8 @@ api_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
       if (_ipmi_check_ipmb_out_of_order (ctx,
                                          obj_cmd_rq,
                                          obj_cmd_rs,
-                                         obj_send_rs) < 0)
+                                         obj_send_rs,
+                                         obj_rs_errnum) < 0)
         goto cleanup;
 
       rv = 0;
