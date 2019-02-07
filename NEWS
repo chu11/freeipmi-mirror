@@ -1,3 +1,8 @@
+FreeIPMI 1.6.4 - 01/23/19
+-------------------------
+o In libfreeipmi, add additional workarounds for packets that are
+  re-ordered during sensor bridging.
+
 FreeIPMI 1.6.3 - 01/23/19
 -------------------------
 o In ipmi-locate, support parsing SPMI tables exported via sysfs.
