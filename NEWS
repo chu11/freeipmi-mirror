@@ -2,6 +2,8 @@ FreeIPMI 1.6.4 - 01/23/19
 -------------------------
 o In libfreeipmi, add additional workarounds for packets that are
   re-ordered during sensor bridging.
+o In libfreeipmi, add additional sensor / event interpretations.
+o Support Supermicro X10 OEM dimm events.
 
 FreeIPMI 1.6.3 - 01/23/19
 -------------------------
