@@ -763,6 +763,12 @@ ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
           else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
                    && sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY)
             sel_config = ctx->interpret_sel.ipmi_interpret_sel_power_supply_redundancy_config;
+          else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
+                   && sensor_type == IPMI_SENSOR_TYPE_POWER_UNIT)
+            sel_config = ctx->interpret_sel.ipmi_interpret_sel_power_unit_state_config;
+          else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
+                   && sensor_type == IPMI_SENSOR_TYPE_POWER_UNIT)
+            sel_config = ctx->interpret_sel.ipmi_interpret_sel_power_unit_transition_severity_config;
           else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
                    && sensor_type == IPMI_SENSOR_TYPE_POWER_UNIT)
             sel_config = ctx->interpret_sel.ipmi_interpret_sel_power_unit_device_present_config;
@@ -1258,6 +1264,12 @@ ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
                && sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY)
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_power_supply_redundancy_config;
+      else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
+               && sensor_type == IPMI_SENSOR_TYPE_POWER_UNIT)
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_power_unit_state_config;
+      else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
+               && sensor_type == IPMI_SENSOR_TYPE_POWER_UNIT)
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_power_unit_transition_severity_config;
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
                && sensor_type == IPMI_SENSOR_TYPE_POWER_UNIT)
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_power_unit_device_present_config;
