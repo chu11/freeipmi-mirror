@@ -896,6 +896,29 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_management_subs
   };
 static unsigned int ipmi_interpret_sensor_management_subsystem_health_config_len = 7;
 
+static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_management_subsystem_health_transition_severity_config[] =
+  {
+    { "IPMI_Management_Subsystem_Health_Transition_Severity_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Management_Subsystem_Health_Transition_Severity_Transition_To_OK", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Management_Subsystem_Health_Transition_Severity_Transition_To_Non_Critical_From_OK", IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_Management_Subsystem_Health_Transition_Severity_Transition_To_Critical_From_Less_Severe", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Management_Subsystem_Health_Transition_Severity_Transition_To_Non_Recoverable_From_Less_Severe", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Management_Subsystem_Health_Transition_Severity_Transition_To_Non_Critical_From_More_Severe", IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_Management_Subsystem_Health_Transition_Severity_Transition_To_Critical_From_Non_Recoverable", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Management_Subsystem_Health_Transition_Severity_Transition_To_Non_Recoverable", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Management_Subsystem_Health_Transition_Severity_Monitor", IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_Management_Subsystem_Health_Transition_Severity_Informational", IPMI_INTERPRET_STATE_NOMINAL},
+  };
+static unsigned int ipmi_interpret_sensor_management_subsystem_health_transition_severity_config_len = 10;
+
+static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_management_subsystem_health_device_present_config[] =
+  {
+    { "IPMI_Management_Subsystem_Health_Device_Present_Device_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Management_Subsystem_Health_Device_Present_Device_Removed_Device_Absent", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Management_Subsystem_Health_Device_Present_Device_Inserted_Device_Present", IPMI_INTERPRET_STATE_NOMINAL},
+  };
+static unsigned int ipmi_interpret_sensor_management_subsystem_health_device_present_config_len = 3;
+
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_battery_config[] =
   {
     { "IPMI_Battery_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
@@ -2018,6 +2041,18 @@ interpret_sensor_init (ipmi_interpret_ctx_t ctx)
     goto cleanup;
 
   if (_interpret_config_sensor_init (ctx,
+                                     &ctx->interpret_sensor.ipmi_interpret_sensor_management_subsystem_health_transition_severity_config,
+                                     ipmi_interpret_sensor_management_subsystem_health_transition_severity_config,
+                                     ipmi_interpret_sensor_management_subsystem_health_transition_severity_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_config_sensor_init (ctx,
+                                     &ctx->interpret_sensor.ipmi_interpret_sensor_management_subsystem_health_device_present_config,
+                                     ipmi_interpret_sensor_management_subsystem_health_device_present_config,
+                                     ipmi_interpret_sensor_management_subsystem_health_device_present_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_config_sensor_init (ctx,
                                      &ctx->interpret_sensor.ipmi_interpret_sensor_battery_config,
                                      ipmi_interpret_sensor_battery_config,
                                      ipmi_interpret_sensor_battery_config_len) < 0)
@@ -2290,6 +2325,12 @@ interpret_sensor_destroy (ipmi_interpret_ctx_t ctx)
 
   _interpret_config_sensor_destroy (ctx,
                                     ctx->interpret_sensor.ipmi_interpret_sensor_management_subsystem_health_config);
+
+  _interpret_config_sensor_destroy (ctx,
+                                    ctx->interpret_sensor.ipmi_interpret_sensor_management_subsystem_health_transition_severity_config);
+
+  _interpret_config_sensor_destroy (ctx,
+                                    ctx->interpret_sensor.ipmi_interpret_sensor_management_subsystem_health_device_present_config);
 
   _interpret_config_sensor_destroy (ctx,
                                     ctx->interpret_sensor.ipmi_interpret_sensor_battery_config);
@@ -2609,6 +2650,8 @@ interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
   int ipmi_interpret_sensor_entity_presence_flags[ipmi_interpret_sensor_entity_presence_config_len];
   int ipmi_interpret_sensor_entity_presence_device_present_flags[ipmi_interpret_sensor_entity_presence_device_present_config_len];
   int ipmi_interpret_sensor_management_subsystem_health_flags[ipmi_interpret_sensor_management_subsystem_health_config_len];
+  int ipmi_interpret_sensor_management_subsystem_health_transition_severity_flags[ipmi_interpret_sensor_management_subsystem_health_transition_severity_config_len];
+  int ipmi_interpret_sensor_management_subsystem_health_device_present_flags[ipmi_interpret_sensor_management_subsystem_health_device_present_config_len];
   int ipmi_interpret_sensor_battery_flags[ipmi_interpret_sensor_battery_config_len];
   int ipmi_interpret_sensor_session_audit_flags[ipmi_interpret_sensor_session_audit_config_len];
   int ipmi_interpret_sensor_version_change_flags[ipmi_interpret_sensor_version_change_config_len];
@@ -3042,6 +3085,18 @@ interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
                                ctx->interpret_sensor.ipmi_interpret_sensor_management_subsystem_health_config,
                                ipmi_interpret_sensor_management_subsystem_health_flags,
                                ipmi_interpret_sensor_management_subsystem_health_config_len);
+
+  _fill_sensor_config_options (config_file_options,
+                               &config_file_options_len,
+                               ctx->interpret_sensor.ipmi_interpret_sensor_management_subsystem_health_transition_severity_config,
+                               ipmi_interpret_sensor_management_subsystem_health_transition_severity_flags,
+                               ipmi_interpret_sensor_management_subsystem_health_transition_severity_config_len);
+
+  _fill_sensor_config_options (config_file_options,
+                               &config_file_options_len,
+                               ctx->interpret_sensor.ipmi_interpret_sensor_management_subsystem_health_device_present_config,
+                               ipmi_interpret_sensor_management_subsystem_health_device_present_flags,
+                               ipmi_interpret_sensor_management_subsystem_health_device_present_config_len);
 
   _fill_sensor_config_options (config_file_options,
                                &config_file_options_len,

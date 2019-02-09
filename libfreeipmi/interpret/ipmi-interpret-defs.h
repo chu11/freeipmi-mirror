@@ -202,6 +202,8 @@ struct ipmi_interpret_sel {
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_entity_presence_device_present_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_lan_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_management_subsystem_health_config;
+  struct ipmi_interpret_sel_config **ipmi_interpret_sel_management_subsystem_health_transition_severity_config;
+  struct ipmi_interpret_sel_config **ipmi_interpret_sel_management_subsystem_health_device_present_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_battery_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_session_audit_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_version_change_config;
@@ -297,6 +299,8 @@ struct ipmi_interpret_sensor {
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_entity_presence_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_entity_presence_device_present_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_management_subsystem_health_config;
+  struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_management_subsystem_health_transition_severity_config;
+  struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_management_subsystem_health_device_present_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_battery_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_session_audit_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_version_change_config;
