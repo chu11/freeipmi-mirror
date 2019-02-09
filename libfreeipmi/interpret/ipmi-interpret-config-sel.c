@@ -503,6 +503,13 @@ static struct ipmi_interpret_sel_config ipmi_interpret_sel_system_firmware_progr
   };
 static unsigned int ipmi_interpret_sel_system_firmware_progress_config_len = 3;
 
+static struct ipmi_interpret_sel_config ipmi_interpret_sel_system_firmware_progress_state_config[] =
+  {
+    { "IPMI_System_Firmware_Progress_State_Deasserted", IPMI_INTERPRET_STATE_NOMINAL, IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_System_Firmware_Progress_State_Asserted", IPMI_INTERPRET_STATE_WARNING, IPMI_INTERPRET_STATE_WARNING},
+  };
+static unsigned int ipmi_interpret_sel_system_firmware_progress_state_config_len = 2;
+
 static struct ipmi_interpret_sel_config ipmi_interpret_sel_system_firmware_progress_device_present_config[] =
   {
     { "IPMI_System_Firmware_Progress_Device_Present_Device_Removed_Device_Absent", IPMI_INTERPRET_STATE_CRITICAL, IPMI_INTERPRET_STATE_CRITICAL},
@@ -1924,6 +1931,12 @@ interpret_sel_init (ipmi_interpret_ctx_t ctx)
     goto cleanup;
 
   if (_interpret_config_sel_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_sel_system_firmware_progress_state_config,
+                                  ipmi_interpret_sel_system_firmware_progress_state_config,
+                                  ipmi_interpret_sel_system_firmware_progress_state_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_config_sel_init (ctx,
                                   &ctx->interpret_sel.ipmi_interpret_sel_system_firmware_progress_device_present_config,
                                   ipmi_interpret_sel_system_firmware_progress_device_present_config,
                                   ipmi_interpret_sel_system_firmware_progress_device_present_config_len) < 0)
@@ -2319,6 +2332,9 @@ interpret_sel_destroy (ipmi_interpret_ctx_t ctx)
 
   _interpret_config_sel_destroy (ctx,
                                  ctx->interpret_sel.ipmi_interpret_sel_system_firmware_progress_config);
+
+  _interpret_config_sel_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_sel_system_firmware_progress_state_config);
 
   _interpret_config_sel_destroy (ctx,
                                  ctx->interpret_sel.ipmi_interpret_sel_system_firmware_progress_device_present_config);
@@ -2966,6 +2982,7 @@ interpret_sel_config_parse (ipmi_interpret_ctx_t ctx,
   int ipmi_interpret_sel_drive_slot_device_present_flags[ipmi_interpret_sel_drive_slot_device_present_config_len];
   int ipmi_interpret_sel_post_memory_resize_state_flags[ipmi_interpret_sel_post_memory_resize_state_config_len];
   int ipmi_interpret_sel_system_firmware_progress_flags[ipmi_interpret_sel_system_firmware_progress_config_len];
+  int ipmi_interpret_sel_system_firmware_progress_state_flags[ipmi_interpret_sel_system_firmware_progress_state_config_len];
   int ipmi_interpret_sel_system_firmware_progress_device_present_flags[ipmi_interpret_sel_system_firmware_progress_device_present_config_len];
   int ipmi_interpret_sel_system_firmware_progress_transition_severity_flags[ipmi_interpret_sel_system_firmware_progress_transition_severity_config_len];
   int ipmi_interpret_sel_event_logging_disabled_flags[ipmi_interpret_sel_event_logging_disabled_config_len];
@@ -3254,6 +3271,12 @@ interpret_sel_config_parse (ipmi_interpret_ctx_t ctx,
                             ctx->interpret_sel.ipmi_interpret_sel_system_firmware_progress_config,
                             ipmi_interpret_sel_system_firmware_progress_flags,
                             ipmi_interpret_sel_system_firmware_progress_config_len);
+
+  _fill_sel_config_options (config_file_options,
+                            &config_file_options_len,
+                            ctx->interpret_sel.ipmi_interpret_sel_system_firmware_progress_state_config,
+                            ipmi_interpret_sel_system_firmware_progress_state_flags,
+                            ipmi_interpret_sel_system_firmware_progress_state_config_len);
 
   _fill_sel_config_options (config_file_options,
                             &config_file_options_len,
