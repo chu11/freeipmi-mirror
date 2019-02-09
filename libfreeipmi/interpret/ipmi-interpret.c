@@ -856,6 +856,12 @@ ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
           else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
                    && sensor_type == IPMI_SENSOR_TYPE_ENTITY_PRESENCE)
             sel_config = ctx->interpret_sel.ipmi_interpret_sel_entity_presence_device_present_config;
+          else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
+                   && sensor_type == IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH)
+            sel_config = ctx->interpret_sel.ipmi_interpret_sel_management_subsystem_health_transition_severity_config;
+          else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
+                   && sensor_type == IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH)
+            sel_config = ctx->interpret_sel.ipmi_interpret_sel_management_subsystem_health_device_present_config;
           else if (ctx->flags & IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA
                    && IPMI_SENSOR_TYPE_IS_OEM (sensor_type))
             {
@@ -1363,6 +1369,12 @@ ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
                && sensor_type == IPMI_SENSOR_TYPE_ENTITY_PRESENCE)
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_entity_presence_device_present_config;
+      else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
+               && sensor_type == IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH)
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_management_subsystem_health_transition_severity_config;
+      else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
+               && sensor_type == IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH)
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_management_subsystem_health_device_present_config;
       else if (ctx->flags & IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA
                && IPMI_SENSOR_TYPE_IS_OEM (sensor_type))
         {
