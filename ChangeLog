@@ -5,7 +5,8 @@
 	events.
 
 	* libfreeipmi/interpret: Support intepretation of system firmware
-	progress + device present sensors / events.
+	progress + device present sensors / events, system firmware
+	progress + state sensors / events.
 
 2019-02-07 Albert Chu <chu11@llnl.gov>
 
