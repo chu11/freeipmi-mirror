@@ -609,6 +609,21 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_system_event_st
   };
 static unsigned int ipmi_interpret_sensor_system_event_state_config_len = 3;
 
+static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_system_event_transition_severity_config[] =
+  {
+    { "IPMI_System_Event_Transition_Severity_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_System_Event_Transition_Severity_Transition_To_OK", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_System_Event_Transition_Severity_Transition_To_Non_Critical_From_OK", IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_System_Event_Transition_Severity_Transition_To_Critical_From_Less_Severe", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_System_Event_Transition_Severity_Transition_To_Non_Recoverable_From_Less_Severe", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_System_Event_Transition_Severity_Transition_To_Non_Critical_From_More_Severe", IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_System_Event_Transition_Severity_Transition_To_Critical_From_Non_Recoverable", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_System_Event_Transition_Severity_Transition_To_Non_Recoverable", IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_System_Event_Transition_Severity_Monitor", IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_System_Event_Transition_Severity_Informational", IPMI_INTERPRET_STATE_NOMINAL},
+  };
+static unsigned int ipmi_interpret_sensor_system_event_transition_severity_config_len = 10;
+
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_critical_interrupt_config[] =
   {
     { "IPMI_Critical_Interrupt_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
@@ -1903,6 +1918,12 @@ interpret_sensor_init (ipmi_interpret_ctx_t ctx)
     goto cleanup;
 
   if (_interpret_config_sensor_init (ctx,
+                                     &ctx->interpret_sensor.ipmi_interpret_sensor_system_event_transition_severity_config,
+                                     ipmi_interpret_sensor_system_event_transition_severity_config,
+                                     ipmi_interpret_sensor_system_event_transition_severity_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_config_sensor_init (ctx,
                                      &ctx->interpret_sensor.ipmi_interpret_sensor_critical_interrupt_config,
                                      ipmi_interpret_sensor_critical_interrupt_config,
                                      ipmi_interpret_sensor_critical_interrupt_config_len) < 0)
@@ -2256,6 +2277,9 @@ interpret_sensor_destroy (ipmi_interpret_ctx_t ctx)
 
   _interpret_config_sensor_destroy (ctx,
                                     ctx->interpret_sensor.ipmi_interpret_sensor_system_event_state_config);
+
+  _interpret_config_sensor_destroy (ctx,
+                                    ctx->interpret_sensor.ipmi_interpret_sensor_system_event_transition_severity_config);
 
   _interpret_config_sensor_destroy (ctx,
                                     ctx->interpret_sensor.ipmi_interpret_sensor_critical_interrupt_config);
@@ -2627,6 +2651,7 @@ interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
   int ipmi_interpret_sensor_system_event_flags[ipmi_interpret_sensor_system_event_config_len];
   int ipmi_interpret_sensor_system_event_transition_state_flags[ipmi_interpret_sensor_system_event_transition_state_config_len];
   int ipmi_interpret_sensor_system_event_state_flags[ipmi_interpret_sensor_system_event_state_config_len];
+  int ipmi_interpret_sensor_system_event_transition_severity_flags[ipmi_interpret_sensor_system_event_transition_severity_config_len];
   int ipmi_interpret_sensor_critical_interrupt_flags[ipmi_interpret_sensor_critical_interrupt_config_len];
   int ipmi_interpret_sensor_button_switch_flags[ipmi_interpret_sensor_button_switch_config_len];
   int ipmi_interpret_sensor_button_switch_state_flags[ipmi_interpret_sensor_button_switch_state_config_len];
@@ -2947,6 +2972,12 @@ interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
                                ctx->interpret_sensor.ipmi_interpret_sensor_system_event_state_config,
                                ipmi_interpret_sensor_system_event_state_flags,
                                ipmi_interpret_sensor_system_event_state_config_len);
+
+  _fill_sensor_config_options (config_file_options,
+                               &config_file_options_len,
+                               ctx->interpret_sensor.ipmi_interpret_sensor_system_event_transition_severity_config,
+                               ipmi_interpret_sensor_system_event_transition_severity_flags,
+                               ipmi_interpret_sensor_system_event_transition_severity_config_len);
 
   _fill_sensor_config_options (config_file_options,
                                &config_file_options_len,

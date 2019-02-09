@@ -12,6 +12,9 @@
 	health + transition severity sensors / events, management subsystem
 	health + device present sensors / events.
 
+	* libfreeipmi/interpret: Support intepretation of system event +
+	transition severity sensors / events
+
 2019-02-07 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/interpret: Support interpretation of drive slot +
