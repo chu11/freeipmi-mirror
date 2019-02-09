@@ -802,6 +802,9 @@ ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
           else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
                    && sensor_type == IPMI_SENSOR_TYPE_POST_MEMORY_RESIZE)
             sel_config = ctx->interpret_sel.ipmi_interpret_sel_post_memory_resize_state_config;
+          else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
+                   && sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS)
+            sel_config = ctx->interpret_sel.ipmi_interpret_sel_system_firmware_progress_device_present_config;
           else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
                    && sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS)
             sel_config = ctx->interpret_sel.ipmi_interpret_sel_system_firmware_progress_transition_severity_config;
@@ -1303,6 +1306,9 @@ ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
                && sensor_type == IPMI_SENSOR_TYPE_POST_MEMORY_RESIZE)
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_post_memory_resize_state_config;
+      else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_PRESENT
+               && sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS)
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_system_firmware_progress_device_present_config;
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_SEVERITY
                && sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS)
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_system_firmware_progress_transition_severity_config;

@@ -4,6 +4,9 @@
 	transition severity sensors / events, power unit + state sensors /
 	events.
 
+	* libfreeipmi/interpret: Support intepretation of system firmware
+	progress + device present sensors / events.
+
 2019-02-07 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/interpret: Support interpretation of drive slot +
