@@ -174,6 +174,7 @@ struct ipmi_interpret_sel {
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_system_event_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_system_event_transition_state_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_system_event_state_config;
+  struct ipmi_interpret_sel_config **ipmi_interpret_sel_system_event_transition_severity_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_critical_interrupt_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_button_switch_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_button_switch_state_config;
@@ -276,6 +277,7 @@ struct ipmi_interpret_sensor {
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_system_event_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_system_event_transition_state_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_system_event_state_config;
+  struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_system_event_transition_severity_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_critical_interrupt_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_button_switch_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_button_switch_state_config;
