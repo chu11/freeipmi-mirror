@@ -1,3 +1,7 @@
+2019-04-09 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/api: Fix invalid error code return.
+
 2019-02-08 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/interpret: Support interpretation of power unit +

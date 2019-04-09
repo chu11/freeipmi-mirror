@@ -1232,24 +1232,24 @@ _ipmi_cmd_send_ipmb (ipmi_ctx_t ctx,
     {
       uint64_t cmd;
 
-      API_BAD_RESPONSE_TO_API_ERRNUM (ctx, obj_send_cmd_rs);
-
       /* Check for potential out of order condition.  See
        * _ipmi_check_ipmb_out_of_order() for more details.
        *
        * Basically, we will return success if the completion code is
        * one in which we would expect another message to arrive.
        */
-      if (FIID_OBJ_GET (obj_send_cmd_rs, "cmd", &cmd) == 1) {
-        if (cmd != IPMI_CMD_SEND_MESSAGE
-            && ipmi_check_completion_code (obj_send_cmd_rs,
-                                           IPMI_COMP_CODE_COMMAND_SUCCESS) == 0) {
-          TRACE_MSG_OUT ("accept out-of-order with bad completion code", 0);
-          (*obj_rs_errnum) = ctx->errnum;
-          ctx->errnum = IPMI_ERR_SUCCESS;
-          goto out_of_order_workaround;
+      if (FIID_OBJ_GET (obj_send_cmd_rs, "cmd", &cmd) == 1)
+        {
+          if (cmd != IPMI_CMD_SEND_MESSAGE
+              && ipmi_check_completion_code (obj_send_cmd_rs,
+                                             IPMI_COMP_CODE_COMMAND_SUCCESS) == 0)
+            {
+              TRACE_MSG_OUT ("accept out-of-order with bad completion code", 0);
+              (*obj_rs_errnum) = ctx->errnum;
+              ctx->errnum = IPMI_ERR_SUCCESS;
+              goto out_of_order_workaround;
+            }
         }
-      }
 
       goto cleanup;
     }
@@ -1262,10 +1262,11 @@ _ipmi_cmd_send_ipmb (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  if (obj_rs) {
-    (*obj_rs) = obj_send_cmd_rs;
-    obj_send_cmd_rs = NULL;
-  }
+  if (obj_rs)
+    {
+      (*obj_rs) = obj_send_cmd_rs;
+      obj_send_cmd_rs = NULL;
+    }
 
   rv = 0;
  cleanup:
