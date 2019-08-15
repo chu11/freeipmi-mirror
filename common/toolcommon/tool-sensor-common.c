@@ -249,12 +249,13 @@ valid_sensor_types (char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
   return (0);
 }
 
-int
-get_sensor_units_output_string (pstdout_state_t pstate,
-                                ipmi_sdr_ctx_t sdr_ctx,
-                                char *sensor_units_buf,
-                                unsigned int sensor_units_buflen,
-                                unsigned int non_abbreviated_units_flag)
+static int
+_sensor_units_output_string (pstdout_state_t pstate,
+                             ipmi_sdr_ctx_t sdr_ctx,
+                             char *sensor_units_buf,
+                             unsigned int sensor_units_buflen,
+                             unsigned int non_abbreviated_units_flag,
+                             int output_on_error)
 {
   uint8_t sensor_units_percentage;
   uint8_t sensor_units_modifier;
@@ -277,10 +278,11 @@ get_sensor_units_output_string (pstdout_state_t pstate,
                                    &sensor_base_unit_type,
                                    &sensor_modifier_unit_type) < 0)
     {
-      PSTDOUT_FPRINTF (pstate,
-                       stderr,
-                       "ipmi_sdr_parse_sensor_units: %s\n",
-                       ipmi_sdr_ctx_errormsg (sdr_ctx));
+      if (output_on_error)
+        PSTDOUT_FPRINTF (pstate,
+                         stderr,
+                         "ipmi_sdr_parse_sensor_units: %s\n",
+                         ipmi_sdr_ctx_errormsg (sdr_ctx));
       goto cleanup;
     }
 
@@ -302,6 +304,21 @@ get_sensor_units_output_string (pstdout_state_t pstate,
   rv = 0;
  cleanup:
   return rv;
+}
+
+int
+get_sensor_units_output_string (pstdout_state_t pstate,
+                                ipmi_sdr_ctx_t sdr_ctx,
+                                char *sensor_units_buf,
+                                unsigned int sensor_units_buflen,
+                                unsigned int non_abbreviated_units_flag)
+{
+  return _sensor_units_output_string (pstate,
+                                      sdr_ctx,
+                                      sensor_units_buf,
+                                      sensor_units_buflen,
+                                      non_abbreviated_units_flag,
+                                      1);
 }
 
 static int
@@ -604,16 +621,18 @@ _store_column_widths (pstdout_state_t pstate,
           return (-1);
         }
 
-      if (ipmi_event_reading_type_code_class (event_reading_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD)
+      if (ipmi_event_reading_type_code_class (event_reading_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD
+          && record_type != IPMI_SDR_FORMAT_EVENT_ONLY_RECORD)
         {
           char sensor_units_buf[SENSOR_UNITS_BUFLEN + 1];
 
           memset (sensor_units_buf, '\0', SENSOR_UNITS_BUFLEN + 1);
-          if (get_sensor_units_output_string (pstate,
-                                              sdr_ctx,
-                                              sensor_units_buf,
-                                              SENSOR_UNITS_BUFLEN,
-                                              non_abbreviated_units) < 0)
+          if (_sensor_units_output_string (pstate,
+                                           sdr_ctx,
+                                           sensor_units_buf,
+                                           SENSOR_UNITS_BUFLEN,
+                                           non_abbreviated_units,
+                                           0) < 0)
             return (-1);
 
           len = strlen (sensor_units_buf);

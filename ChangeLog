@@ -1,3 +1,10 @@
+2019-08-15 Albert Chu <chu11@llnl.gov>
+
+	* common/toolcommon/tool-sensor-common.c: Workaround QuantaPlex
+	T42D-2U issue, where an event only record states that it is a
+	threshold sensor and a "other units based sensor", but does not
+	provide any units.
+
 2019-04-09 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/api: Fix invalid error code return.
