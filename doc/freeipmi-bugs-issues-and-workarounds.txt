@@ -28,6 +28,8 @@ categories:
                    implementations, but implementation choices makes
                    IPMI poorer, confusing, or more difficult to use.
 
+[FUNCTIONALITY] - Vendor appears to just have a bug
+
 For the record, I have nothing against the vendors and the products
 that have these issues.  I am just as prone to programming bugs as
 they are.  The IPMI specification is gigantic and mistakes will
@@ -599,6 +601,15 @@ SDR Issue #8: [COMPLIANCE]
   Seen on: QuantaPlex T42D-2U
 
   Resolution: Workaround to ignore such event records
+
+SDR Issue #9: [FUNCTIONALITY]
+
+  The last record entry in the SDR always returns 0xC3 when being
+  read.
+
+  Seen on: Dell Poweredge FC830
+
+  Resolution: Workaround to ignore last SDR entry
 
 ----------------------------------------------------------------------
 

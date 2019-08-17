@@ -624,6 +624,20 @@ _sdr_cache_get_record (ipmi_sdr_ctx_t ctx,
                     bytes_to_read = sdr_record_header_length;
                   continue;
                 }
+              /* Workaround
+               *
+               * Dell Poweredge FC830
+               *
+               * Last SDR record can't be read, it always returns
+               * 0xC3.  If this is the last record, just don't return
+               * a record back to the caller.
+               */
+              else if (comp_code == IPMI_COMP_CODE_COMMAND_TIMEOUT
+                       && (*next_record_id) == IPMI_SDR_RECORD_ID_LAST)
+                {
+                  offset_into_record = 0;
+                  goto out;
+                }
 
               SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_IPMI_ERROR);
               goto cleanup;
@@ -967,6 +981,9 @@ ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
        * We will assume that if we reached the end of the SDR record
        * list (i.e. next_record_id == 0xFFFF), a non-zero number of
        * records were written, it's ok and we can continue on.
+       */
+      /* Note Dell Poweredge FC830 workaround above, this code is used
+       * as a consequence of that workaround
        */
       if (next_record_id == IPMI_SDR_RECORD_ID_LAST
           && record_count_written)

@@ -1,3 +1,11 @@
+2019-08-16 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/sdr/ipmi-sdr-cache-create.c: Workaround Dell
+	Poweredge FC830 issue, where the last SDR entry returns errors
+	when being read.  Since it's the last entry, we assume there is a
+	bug in the motherboard's implementation.  Just forget about the
+	last entry and move on.
+
 2019-08-15 Albert Chu <chu11@llnl.gov>
 
 	* common/toolcommon/tool-sensor-common.c: Workaround QuantaPlex
