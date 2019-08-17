@@ -588,7 +588,7 @@ SDR Issue #7: [COMPLIANCE]
 
   Resolution: None
 
-SDR Issue #8: [COMPLIANCE]
+SDR Issue #8: [IMPLEMENTATION]
 
   Atleast 1 event only record lists an event reading type code of
   "threshold" and the sensor type of "other units based sensor", yet
