@@ -598,7 +598,7 @@ _sdr_cache_get_record (ipmi_sdr_ctx_t ctx,
           fprintf (stderr, "%s:%d\n", __FUNCTION__, __LINE__);
           if (ipmi_ctx_errnum (ipmi_ctx) != IPMI_ERR_BAD_COMPLETION_CODE)
             {
-              fprintf (stderr, "%s:%d\n", __FUNCTION__, __LINE__);
+              fprintf (stderr, "%s:%d %s\n", __FUNCTION__, __LINE__, ipmi_ctx_strerror (ipmi_ctx_errnum (ipmi_ctx)));
               SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_IPMI_ERROR);
               goto cleanup;
             }
