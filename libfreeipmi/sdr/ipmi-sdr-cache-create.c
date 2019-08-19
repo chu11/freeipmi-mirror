@@ -596,6 +596,38 @@ _sdr_cache_get_record (ipmi_sdr_ctx_t ctx,
                             obj_cmd_rs) < 0)
         {
           fprintf (stderr, "%s:%d\n", __FUNCTION__, __LINE__);
+          /* Workaround
+           *
+           * Dell Poweredge FC830
+           *
+           * Last SDR record can't be read, it always returns
+           * 0xC3.  If this is the last record, just don't return
+           * a record back to the caller.
+           */
+          if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_MESSAGE_TIMEOUT)
+            {
+              uint8_t comp_code;
+
+              fprintf (stderr, "%s:%d\n", __FUNCTION__, __LINE__);
+              if (FIID_OBJ_GET (obj_cmd_rs,
+                                "comp_code",
+                                &val) < 0)
+                {
+                  SDR_FIID_OBJECT_ERROR_TO_SDR_ERRNUM (ctx, obj_cmd_rs);
+                  goto cleanup;
+                }
+              comp_code = val;
+
+              fprintf (stderr, "%s:%d - comp code %u\n", __FUNCTION__, __LINE__, comp_code);
+              if (comp_code == IPMI_COMP_CODE_COMMAND_TIMEOUT
+                  && (*next_record_id) == IPMI_SDR_RECORD_ID_LAST)
+                {
+                  fprintf (stderr, "%s:%d\n", __FUNCTION__, __LINE__);
+                  offset_into_record = 0;
+                  goto out;
+                }
+            }
+
           if (ipmi_ctx_errnum (ipmi_ctx) != IPMI_ERR_BAD_COMPLETION_CODE)
             {
               fprintf (stderr, "%s:%d %s\n", __FUNCTION__, __LINE__, ipmi_ctx_strerror (ipmi_ctx_errnum (ipmi_ctx)));
@@ -636,21 +668,6 @@ _sdr_cache_get_record (ipmi_sdr_ctx_t ctx,
                   if (bytes_to_read < sdr_record_header_length)
                     bytes_to_read = sdr_record_header_length;
                   continue;
-                }
-              /* Workaround
-               *
-               * Dell Poweredge FC830
-               *
-               * Last SDR record can't be read, it always returns
-               * 0xC3.  If this is the last record, just don't return
-               * a record back to the caller.
-               */
-              else if (comp_code == IPMI_COMP_CODE_COMMAND_TIMEOUT
-                       && (*next_record_id) == IPMI_SDR_RECORD_ID_LAST)
-                {
-                  fprintf (stderr, "%s:%d\n", __FUNCTION__, __LINE__);
-                  offset_into_record = 0;
-                  goto out;
                 }
 
               SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_IPMI_ERROR);
