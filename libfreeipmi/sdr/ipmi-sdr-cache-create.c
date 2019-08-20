@@ -467,14 +467,12 @@ _sdr_cache_get_record (ipmi_sdr_ctx_t ctx,
 
  partial_read:
 
-  fprintf (stderr, "%s:%d\n", __FUNCTION__, __LINE__);
   reservation_id_retry_count = 0;
   while (!record_length)
     {
       uint8_t record_header_buf[IPMI_SDR_MAX_RECORD_LENGTH];
       int sdr_record_header_len;
 
-      fprintf (stderr, "%s:%d\n", __FUNCTION__, __LINE__);
       if (ipmi_cmd_get_sdr (ipmi_ctx,
                             *reservation_id,
                             record_id,
@@ -553,21 +551,18 @@ _sdr_cache_get_record (ipmi_sdr_ctx_t ctx,
           goto cleanup;
         }
 
-      fprintf (stderr, "%s:%d\n", __FUNCTION__, __LINE__);
       /* copy header into buf */
       memcpy (record_buf, record_header_buf, sdr_record_header_len);
       offset_into_record += sdr_record_header_len;
       record_length = val + sdr_record_header_length;
     }
 
-  fprintf (stderr, "%s:%d\n", __FUNCTION__, __LINE__);
   if (record_length > record_buf_len)
     {
       SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_INTERNAL_ERROR);
       goto cleanup;
     }
 
-  fprintf (stderr, "%s:%d\n", __FUNCTION__, __LINE__);
   if (FIID_OBJ_GET (obj_cmd_rs,
                     "next_record_id",
                     &val) < 0)
@@ -577,17 +572,14 @@ _sdr_cache_get_record (ipmi_sdr_ctx_t ctx,
     }
   *next_record_id = val;
 
-  fprintf (stderr, "%s:%d record length %u\n", __FUNCTION__, __LINE__, record_length);
   reservation_id_retry_count = 0;
   while (offset_into_record < record_length)
     {
       int record_data_len;
 
-      fprintf (stderr, "%s:%d\n", __FUNCTION__, __LINE__);
       if ((record_length - offset_into_record) < bytes_to_read)
         bytes_to_read = record_length - offset_into_record;
 
-      fprintf (stderr, "%s:%d - bytes to read %u\n", __FUNCTION__, __LINE__, bytes_to_read);
       if (ipmi_cmd_get_sdr (ipmi_ctx,
                             *reservation_id,
                             record_id,
@@ -595,7 +587,6 @@ _sdr_cache_get_record (ipmi_sdr_ctx_t ctx,
                             bytes_to_read,
                             obj_cmd_rs) < 0)
         {
-          fprintf (stderr, "%s:%d\n", __FUNCTION__, __LINE__);
           /* Workaround
            *
            * Dell Poweredge FC830
@@ -608,7 +599,6 @@ _sdr_cache_get_record (ipmi_sdr_ctx_t ctx,
             {
               uint8_t comp_code;
 
-              fprintf (stderr, "%s:%d\n", __FUNCTION__, __LINE__);
               if (FIID_OBJ_GET (obj_cmd_rs,
                                 "comp_code",
                                 &val) < 0)
@@ -618,11 +608,9 @@ _sdr_cache_get_record (ipmi_sdr_ctx_t ctx,
                 }
               comp_code = val;
 
-              fprintf (stderr, "%s:%d - comp code %u\n", __FUNCTION__, __LINE__, comp_code);
               if (comp_code == IPMI_COMP_CODE_COMMAND_TIMEOUT
                   && (*next_record_id) == IPMI_SDR_RECORD_ID_LAST)
                 {
-                  fprintf (stderr, "%s:%d\n", __FUNCTION__, __LINE__);
                   offset_into_record = 0;
                   goto out;
                 }
@@ -630,7 +618,6 @@ _sdr_cache_get_record (ipmi_sdr_ctx_t ctx,
 
           if (ipmi_ctx_errnum (ipmi_ctx) != IPMI_ERR_BAD_COMPLETION_CODE)
             {
-              fprintf (stderr, "%s:%d %s\n", __FUNCTION__, __LINE__, ipmi_ctx_strerror (ipmi_ctx_errnum (ipmi_ctx)));
               SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_IPMI_ERROR);
               goto cleanup;
             }
@@ -647,11 +634,9 @@ _sdr_cache_get_record (ipmi_sdr_ctx_t ctx,
                 }
               comp_code = val;
 
-              fprintf (stderr, "%s:%d\n", __FUNCTION__, __LINE__);
               if (comp_code == IPMI_COMP_CODE_RESERVATION_CANCELLED
                   && (reservation_id_retry_count < IPMI_SDR_CACHE_MAX_RESERVATION_ID_RETRY))
                 {
-                  fprintf (stderr, "%s:%d\n", __FUNCTION__, __LINE__);
                   if (_sdr_cache_reservation_id (ctx,
                                                  ipmi_ctx,
                                                  reservation_id) < 0)
@@ -663,7 +648,6 @@ _sdr_cache_get_record (ipmi_sdr_ctx_t ctx,
                          || comp_code == IPMI_COMP_CODE_UNSPECIFIED_ERROR)
                         && bytes_to_read > sdr_record_header_length)
                 {
-                  fprintf (stderr, "%s:%d\n", __FUNCTION__, __LINE__);
                   bytes_to_read -= IPMI_SDR_CACHE_BYTES_TO_READ_DECREMENT;
                   if (bytes_to_read < sdr_record_header_length)
                     bytes_to_read = sdr_record_header_length;
@@ -685,7 +669,6 @@ _sdr_cache_get_record (ipmi_sdr_ctx_t ctx,
         }
 
       offset_into_record += record_data_len;
-      fprintf (stderr, "%s:%d offset into record %u\n", __FUNCTION__, __LINE__, offset_into_record);
     }
 
  out:
@@ -999,7 +982,6 @@ ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
         }
     }
 
-  fprintf (stderr, "%s:%d record count written %u, record_count %u\n", __FUNCTION__, __LINE__, record_count_written, ctx->record_count);
   if (record_count_written != ctx->record_count)
     {
       /*
@@ -1018,13 +1000,11 @@ ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
       /* Note Dell Poweredge FC830 workaround above, this code is used
        * as a consequence of that workaround
        */
-      fprintf (stderr, "%s:%d next record id %u record last %u\n", __FUNCTION__, __LINE__, next_record_id, IPMI_SDR_RECORD_ID_LAST);
       if (next_record_id == IPMI_SDR_RECORD_ID_LAST
           && record_count_written)
         {
           unsigned int total_bytes_written_temp = 0;
 
-          fprintf (stderr, "%s:%d\n", __FUNCTION__, __LINE__);
           ctx->record_count = record_count_written;
 
           /* need to seek back to the beginning of the file and
