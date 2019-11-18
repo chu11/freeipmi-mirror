@@ -440,7 +440,7 @@ _read_fru_data (ipmi_fru_ctx_t ctx,
                    && ipmi_check_completion_code (fru_read_data_rs, IPMI_COMP_CODE_INVALID_DATA_FIELD_IN_REQUEST) == 1)
                   || (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_MESSAGE_TIMEOUT
                       && ipmi_check_completion_code (fru_read_data_rs, IPMI_COMP_CODE_COMMAND_TIMEOUT) == 1)
-                  || (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_INTERNAL_ERROR
+                  || (ipmi_ctx_errnum (ctx->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
                       && ipmi_check_completion_code (fru_read_data_rs, IPMI_COMP_CODE_COMMAND_RESPONSE_COULD_NOT_BE_PROVIDED) == 1)))
             {
               FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_NO_FRU_INFORMATION);
