@@ -1,3 +1,8 @@
+FreeIPMI 1.6.5 - XX/XX/XX
+-------------------------
+o Add FRU parsing workaround for Fujitsu Primergy RX1330, in which a
+  CEh is used to indicate that no FRU data is available.
+
 FreeIPMI 1.6.4 - 08/23/19
 -------------------------
 o In libfreeipmi, add additional workarounds for packets that are
