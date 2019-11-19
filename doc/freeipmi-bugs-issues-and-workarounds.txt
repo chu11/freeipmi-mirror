@@ -1361,6 +1361,14 @@ Field Replaceable Unit Issue #2: [IMPLEMENTATION]
 
   Resolution: None
 
+Field Replaceable Unit Issue #3: [INTERPRETATION]
+
+  Inconsistent error codes returned to indicate "no FRU data available".
+
+  Seen on: General issue
+
+  Resolution: Workaround as error codes discovered.
+
 ----------------------------------------------------------------------
 
 ------------------
