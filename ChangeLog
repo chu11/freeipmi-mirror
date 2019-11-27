@@ -1,3 +1,9 @@
+2019-11-27 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/sdr/ipmi-sdr-parse-util.c
+	(ipmi_sdr_parse_sensor_name, ipmi_sdr_parse_entity_sensor_name):
+	Fix invalid parameter check to fix compiler warning.
+
 2019-11-18 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/fru/ipmi-fru.c: Workaround unexpected completion

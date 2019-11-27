@@ -183,7 +183,7 @@ ipmi_sdr_parse_sensor_name (ipmi_sdr_ctx_t ctx,
       return (-1);
     }
 
-  if (((sdr_record_len && !sdr_record_len)
+  if (((sdr_record && !sdr_record_len)
        || (!sdr_record && sdr_record_len))
       || (flags & ~flags_mask)
       || !buf
@@ -290,7 +290,7 @@ ipmi_sdr_parse_entity_sensor_name (ipmi_sdr_ctx_t ctx,
       return (-1);
     }
 
-  if (((sdr_record_len && !sdr_record_len)
+  if (((sdr_record && !sdr_record_len)
        || (!sdr_record && sdr_record_len))
       || (flags & ~flags_mask)
       || !buf
