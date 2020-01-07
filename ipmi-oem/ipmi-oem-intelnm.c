@@ -4367,7 +4367,8 @@ _ipmi_oem_intelnm_get_node_manager_policy_suspend_periods_common (ipmi_oem_state
           /* encoded as minutes starting from midnight divided by 6 */
           if (!IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_START_TIME_VALID (policy_suspend_start_time[i]))
             pstdout_printf (state_data->pstate,
-                            "Policy %d Suspend Start Time          : Invalid\n");
+                            "Policy %d Suspend Start Time          : Invalid\n",
+                            i + 1);
           else
             pstdout_printf (state_data->pstate,
                             "Policy %d Suspend Start Time          : %02u:%02u\n",
@@ -4378,7 +4379,8 @@ _ipmi_oem_intelnm_get_node_manager_policy_suspend_periods_common (ipmi_oem_state
 
           if (!IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_STOP_TIME_VALID (policy_suspend_stop_time[i]))
             pstdout_printf (state_data->pstate,
-                            "Policy %d Suspend Stop Time           : Invalid\n");
+                            "Policy %d Suspend Stop Time           : Invalid\n",
+                            i + 1);
           else
             pstdout_printf (state_data->pstate,
                             "Policy %d Suspend Stop Time           : %02u:%02u\n",
