@@ -21,6 +21,9 @@
 	(_serial_keepalive_timeout): Fix bad debug trace without parameter
 	for output.
 
+	* common/toolcommon/pstdout.c (pstdout_set_debug_flags): Fix typo
+	&& instead of &.
+
 2019-11-27 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/sdr/ipmi-sdr-parse-util.c

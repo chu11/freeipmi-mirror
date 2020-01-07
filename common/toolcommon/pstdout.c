@@ -298,7 +298,7 @@ pstdout_set_debug_flags(unsigned int debug_flags)
     }
 
   if (debug_flags & PSTDOUT_DEBUG_NONE
-      && debug_flags && PSTDOUT_DEBUG_STANDARD)
+      && debug_flags & PSTDOUT_DEBUG_STANDARD)
     {
       pstdout_errnum = PSTDOUT_ERR_PARAMETERS;
       return -1;
