@@ -9,6 +9,9 @@
 	* ipmi-dcmi/ipmi-dcmi.c (get_asset_tag): Fix lgtm.com warning by
 	casting unsigned char * to wchar_t *.
 
+	* ipmi-fru/ipmi-fru.c (run_cmd_args): Fix lgtm.com warning correct
+	output type in pstdout_printf().
+
 2019-11-27 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/sdr/ipmi-sdr-parse-util.c
