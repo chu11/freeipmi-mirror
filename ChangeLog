@@ -57,6 +57,10 @@
 	Return int instead of uint8_t when a negative value can be
 	returned.  Cast to uint8_t when appropriate.
 
+        * ipmi-config/ipmi-config-category-dcmi-dcmi-conf-section.c
+	(asset_tag_checkout): Fix potential issue with comparing char to
+	values > 127.  Cast uint8_t array to char * when appropriate.
+
 2019-11-27 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/sdr/ipmi-sdr-parse-util.c

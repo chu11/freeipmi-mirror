@@ -51,7 +51,7 @@ asset_tag_checkout (ipmi_config_state_data_t *state_data,
                     struct ipmi_config_keyvalue *kv)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  char asset_tag_data[IPMI_DCMI_MAX_ASSET_TAG_LENGTH + 1];
+  uint8_t asset_tag_data[IPMI_DCMI_MAX_ASSET_TAG_LENGTH + 1];
   int data_len;
   unsigned int offset = 0;
   uint8_t total_asset_tag_length = 0;
@@ -146,14 +146,14 @@ asset_tag_checkout (ipmi_config_state_data_t *state_data,
        */
       if (ipmi_config_section_update_keyvalue_output (state_data,
                                                       kv,
-                                                      &asset_tag_data[3]) < 0)
+                                                      (char *)&asset_tag_data[3]) < 0)
         return (IPMI_CONFIG_ERR_FATAL_ERROR);
     }
   else
     {
       if (ipmi_config_section_update_keyvalue_output (state_data,
                                                       kv,
-                                                      asset_tag_data) < 0)
+                                                      (char *)asset_tag_data) < 0)
         return (IPMI_CONFIG_ERR_FATAL_ERROR);
     }
 
