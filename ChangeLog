@@ -2,6 +2,9 @@
 
 	* ipmi-sensors/ipmi-sensors-oem-intel-quanta-qssc-s4r.h: Fix header guard.
 
+	* libipmiconsole/ipmiconsole_defs.h: Move header guard macros to
+	top of file.
+
 2024-04-12 Albert Chu <chu11@llnl.gov>
 
 	* man/ipmipower.8.pre.in: Add help about "ipmiping" workaround and
