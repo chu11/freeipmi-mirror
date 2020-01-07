@@ -47,6 +47,9 @@
 	* libipmidetect/ipmidetect.c (_get_data): Rename local variable
 	that masked outside scope variable name.
 
+	* common/miscutil/hostlist.c (_get_bracketed_list): Remove
+	unnecessary comparison.
+
 2019-11-27 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/sdr/ipmi-sdr-parse-util.c
