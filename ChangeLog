@@ -13,6 +13,10 @@
 	(_ipmi_oem_intelnm_get_node_manager_policy_suspend_periods_common):
 	Fix invalid call to pstdout_printf(), forgot output parameter.
 
+	* ipmi-oem/ipmi-oem-quanta.c
+	(ipmi_oem_quanta_get_processor_information): Fix invalid call to
+	pstdout_printf(), forgot output parameters.
+
 2019-11-27 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/sdr/ipmi-sdr-parse-util.c
