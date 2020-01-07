@@ -37,6 +37,11 @@
 	(_serial_keepalive_timeout): Fix bad debug trace without parameter
 	for output.
 
+	* libfreeipmi/sel/ipmi-sel-string-intel-e52600v3-common.c
+	(sel_string_output_intel_e52600v3_event_data2_discrete_oem)
+	(sel_string_output_intel_e52600v3_event_data2_class_oem): Rename
+	local variable that masked outside scope variable name.
+
 2019-11-27 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/sdr/ipmi-sdr-parse-util.c

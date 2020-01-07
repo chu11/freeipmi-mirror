@@ -430,7 +430,7 @@ sel_string_output_intel_e52600v3_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
     {
       char cpu_bitmask_str[INTEL_EVENT_BUFFER_LENGTH + 1];
       uint8_t cpu_bitmask;
-      unsigned int wlen = 0;
+      unsigned int lentmp = 0;
 
       memset (cpu_bitmask_str, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
 
@@ -439,25 +439,25 @@ sel_string_output_intel_e52600v3_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 
       if (cpu_bitmask & IPMI_SENSOR_TYPE_TEMPERATURE_EVENT_DATA2_OEM_INTEL_E52600V3_PROCESSOR_VRD_HOT_BITMAP_CPU1)
         {
-          if (sel_string_strcat_comma_separate (cpu_bitmask_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "CPU1"))
+          if (sel_string_strcat_comma_separate (cpu_bitmask_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "CPU1"))
             return (1);
         }
 
       if (cpu_bitmask & IPMI_SENSOR_TYPE_TEMPERATURE_EVENT_DATA2_OEM_INTEL_E52600V3_PROCESSOR_VRD_HOT_BITMAP_CPU2)
         {
-          if (sel_string_strcat_comma_separate (cpu_bitmask_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "CPU2"))
+          if (sel_string_strcat_comma_separate (cpu_bitmask_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "CPU2"))
             return (1);
         }
 
       if (cpu_bitmask & IPMI_SENSOR_TYPE_TEMPERATURE_EVENT_DATA2_OEM_INTEL_E52600V3_PROCESSOR_VRD_HOT_BITMAP_CPU3)
         {
-          if (sel_string_strcat_comma_separate (cpu_bitmask_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "CPU3"))
+          if (sel_string_strcat_comma_separate (cpu_bitmask_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "CPU3"))
             return (1);
         }
 
       if (cpu_bitmask & IPMI_SENSOR_TYPE_TEMPERATURE_EVENT_DATA2_OEM_INTEL_E52600V3_PROCESSOR_VRD_HOT_BITMAP_CPU4)
         {
-          if (sel_string_strcat_comma_separate (cpu_bitmask_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "CPU4"))
+          if (sel_string_strcat_comma_separate (cpu_bitmask_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "CPU4"))
             return (1);
         }
 
@@ -901,7 +901,7 @@ sel_string_output_intel_e52600v3_event_data2_class_oem (ipmi_sel_ctx_t ctx,
     {
       char failed_register_type_str[INTEL_EVENT_BUFFER_LENGTH + 1];
       uint8_t failed_register_type;
-      unsigned int wlen = 0;
+      unsigned int lentmp = 0;
 
       memset (failed_register_type_str, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
 
@@ -910,31 +910,31 @@ sel_string_output_intel_e52600v3_event_data2_class_oem (ipmi_sel_ctx_t ctx,
 
       if (failed_register_type & IPMI_SENSOR_TYPE_OEM_INTEL_E52600V3_IERR_RECOVERY_DUMP_INFO_EVENT_DATA2_FAILED_REGISTER_TYPE_UNCORE_MSR_REGISTER)
         {
-          if (sel_string_strcat_comma_separate (failed_register_type_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "Uncore MSR register"))
+          if (sel_string_strcat_comma_separate (failed_register_type_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "Uncore MSR register"))
             return (1);
         }
 
       if (failed_register_type & IPMI_SENSOR_TYPE_OEM_INTEL_E52600V3_IERR_RECOVERY_DUMP_INFO_EVENT_DATA2_FAILED_REGISTER_TYPE_CORE_MSR_REGISTERS)
         {
-          if (sel_string_strcat_comma_separate (failed_register_type_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "Core MSR registers"))
+          if (sel_string_strcat_comma_separate (failed_register_type_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "Core MSR registers"))
             return (1);
         }
 
       if (failed_register_type & IPMI_SENSOR_TYPE_OEM_INTEL_E52600V3_IERR_RECOVERY_DUMP_INFO_EVENT_DATA2_FAILED_REGISTER_TYPE_IIO_REGISTER)
         {
-          if (sel_string_strcat_comma_separate (failed_register_type_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "IIO register"))
+          if (sel_string_strcat_comma_separate (failed_register_type_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "IIO register"))
             return (1);
         }
 
       if (failed_register_type & IPMI_SENSOR_TYPE_OEM_INTEL_E52600V3_IERR_RECOVERY_DUMP_INFO_EVENT_DATA2_FAILED_REGISTER_TYPE_PCI_CONFIG_SPACE)
         {
-          if (sel_string_strcat_comma_separate (failed_register_type_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "PCI config space"))
+          if (sel_string_strcat_comma_separate (failed_register_type_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "PCI config space"))
             return (1);
         }
 
       if (failed_register_type & IPMI_SENSOR_TYPE_OEM_INTEL_E52600V3_IERR_RECOVERY_DUMP_INFO_EVENT_DATA2_FAILED_REGISTER_TYPE_MCA_ERROR_SOURCE_REGISTER)
         {
-          if (sel_string_strcat_comma_separate (failed_register_type_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "MCA error source register"))
+          if (sel_string_strcat_comma_separate (failed_register_type_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "MCA error source register"))
             return (1);
         }
 
