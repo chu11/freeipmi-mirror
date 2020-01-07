@@ -3,6 +3,9 @@
 	* bmc-device/bmc-device.c (write_fru): Fix invalid number of args
 	to pstdout_printf.
 
+	* ipmi-oem/ipmi-oem-dell.c (ipmi_oem_dell_get_system_info): Fix
+	invalid output with invalid variable passed to pstdout_printf().
+
 2019-11-27 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/sdr/ipmi-sdr-parse-util.c
