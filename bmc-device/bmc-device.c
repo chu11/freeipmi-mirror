@@ -2898,6 +2898,7 @@ write_fru (bmc_device_state_data_t *state_data)
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "FRU file '%s':  size (%u) does not match area size (%u)\n",
+                       state_data->prog_data->args->write_fru_filename,
                        sbuf.st_size,
                        area_size);
       goto cleanup;
