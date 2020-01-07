@@ -1168,7 +1168,7 @@ get_asset_tag (ipmi_dcmi_state_data_t *state_data)
          */
         pstdout_printf (state_data->pstate,
                         "%ls\n",
-                        &asset_tag_data[3]);
+                        (wchar_t *)&asset_tag_data[3]);
       else
         pstdout_printf (state_data->pstate,
                         "%s\n",
