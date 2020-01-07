@@ -1284,7 +1284,6 @@ _ipmi_check_ipmb_out_of_order (ipmi_ctx_t ctx,
                                ipmi_errnum_type_t obj_rs_errnum)
 {
   uint8_t buf[IPMI_MAX_PKT_LEN];
-  uint64_t val;
   uint8_t cmd_rq;
   uint8_t cmd_rs;
   uint8_t send_cmd_rs;

@@ -74,6 +74,11 @@
 	* libipmiconsole/ipmiconsole_defs.h: Move header guard macros to
 	top of file.
 
+	Fix compiler warnings
+
+	* libfreeipmi/api/ipmi-lan-session-common.c
+	(_ipmi_check_ipmb_out_of_order): Remove unused variable
+
 2019-11-27 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/sdr/ipmi-sdr-parse-util.c
