@@ -169,9 +169,7 @@ _get_channel_number_special (ipmi_ctx_t ctx,
         }
     }
 
-  if (rv < 0)
-    rv = 0;
-
+  rv = 0;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);

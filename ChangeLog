@@ -68,6 +68,9 @@
 	* libfreeipmi/api/ipmi-messaging-support-cmds-api.c
 	(ipmi_cmd_set_user_password): Remove unnecessary parameter checks.
 
+	* libfreeipmi/util/ipmi-channel-util.c
+	(_get_channel_number_special): Remove superfluous if check.
+
 2019-11-27 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/sdr/ipmi-sdr-parse-util.c
