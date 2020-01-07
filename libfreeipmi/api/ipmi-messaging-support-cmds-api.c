@@ -2718,15 +2718,7 @@ ipmi_cmd_set_user_password (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_PASSWORD_OPERATION_VALID (operation)
-      && !IPMI_PASSWORD_SIZE_VALID (password_size)
-      && (password
-          && password_size == IPMI_PASSWORD_SIZE_16_BYTES
-          && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
-      && (password
-          && password_size == IPMI_PASSWORD_SIZE_20_BYTES
-          && password_len > IPMI_2_0_MAX_PASSWORD_LENGTH)
-      && !fiid_obj_valid (obj_cmd_rs))
+  if (!fiid_obj_valid (obj_cmd_rs))
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
       return (-1);
