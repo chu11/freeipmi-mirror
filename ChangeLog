@@ -82,6 +82,8 @@
 	* libfreeipmi/sel/ipmi-sel-string-supermicro-common.h: Add missing
 	functions.
 
+	* ipmi-sensors/ipmi-sensors-oem-intel.c: Add missing header.
+
 2019-11-27 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/sdr/ipmi-sdr-parse-util.c
