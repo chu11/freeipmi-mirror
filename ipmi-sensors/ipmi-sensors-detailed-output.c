@@ -732,7 +732,7 @@ _detailed_output_accuracy (ipmi_sensors_state_data_t *state_data)
 
   if (accuracy)
     pstdout_printf (state_data->pstate,
-                    "Accuracy: %f%\n",
+                    "Accuracy: %f%%\n",
                     *accuracy);
   else
     pstdout_printf (state_data->pstate,

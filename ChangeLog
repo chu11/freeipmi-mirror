@@ -26,6 +26,9 @@
 	(ipmi_oem_quanta_get_processor_information): Fix invalid call to
 	pstdout_printf(), forgot output parameters.
 
+	* ipmi-sensors/ipmi-sensors-detailed-output.c
+	(_detailed_output_accuracy): Escape % character for clarity.
+
 2019-11-27 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/sdr/ipmi-sdr-parse-util.c
