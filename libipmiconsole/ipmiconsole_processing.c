@@ -1864,7 +1864,7 @@ _serial_keepalive_timeout (ipmiconsole_ctx_t c)
 
               if (n != 1)
                 {
-                  IPMICONSOLE_CTX_DEBUG (c, ("scbuf_write: invalid bytes written; n=%d"));
+                  IPMICONSOLE_CTX_DEBUG (c, ("scbuf_write: invalid bytes written; n=%d", n));
                   ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
                   return (-1);
                 }

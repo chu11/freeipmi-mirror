@@ -17,6 +17,10 @@
 	(ipmi_oem_quanta_get_processor_information): Fix invalid call to
 	pstdout_printf(), forgot output parameters.
 
+	* libipmiconsole/ipmiconsole_processing
+	(_serial_keepalive_timeout): Fix bad debug trace without parameter
+	for output.
+
 2019-11-27 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/sdr/ipmi-sdr-parse-util.c
