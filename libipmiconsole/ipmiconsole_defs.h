@@ -24,6 +24,9 @@
  *  with Ipmiconsole.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
+#ifndef IPMICONSOLE_DEFS_H
+#define IPMICONSOLE_DEFS_H
+
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif /* HAVE_CONFIG_H */
@@ -53,9 +56,6 @@
 #include <freeipmi/freeipmi.h>
 
 #include "scbuf.h"
-
-#ifndef IPMICONSOLE_DEFS_H
-#define IPMICONSOLE_DEFS_H
 
 #ifndef MAXHOSTNAMELEN
 #define MAXHOSTNAMELEN 64

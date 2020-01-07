@@ -71,6 +71,9 @@
 	* libfreeipmi/util/ipmi-channel-util.c
 	(_get_channel_number_special): Remove superfluous if check.
 
+	* libipmiconsole/ipmiconsole_defs.h: Move header guard macros to
+	top of file.
+
 2019-11-27 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/sdr/ipmi-sdr-parse-util.c
