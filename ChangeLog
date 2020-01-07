@@ -61,6 +61,10 @@
 	(asset_tag_checkout): Fix potential issue with comparing char to
 	values > 127.  Cast uint8_t array to char * when appropriate.
 
+	* ipmi-sensors/ipmi-sensors-oem-intel-quanta-qssc-s4r.h,
+	ipmi-sensors/ipmi-sensors/ipmi-sensors-oem-intel-s2600jf.h,
+	ipmi-sensors/ipmi-sensors-oem-intel-s5500wb.h: Fix header guard.
+
 2019-11-27 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/sdr/ipmi-sdr-parse-util.c
