@@ -598,9 +598,10 @@ _mandatory_platform_attributes (ipmi_dcmi_state_data_t *state_data)
 
       if (flag)
         {
+          uint8_t sampling_period = val;
           pstdout_printf (state_data->pstate,
-                      "Sampling frequency for Temperature Monitoring      : Every %u Second(s)\n",
-                      val);
+                          "Sampling frequency for Temperature Monitoring      : Every %u Second(s)\n",
+                          sampling_period);
         }
     }
 

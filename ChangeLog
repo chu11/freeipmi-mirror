@@ -3,6 +3,9 @@
 	* bmc-device/bmc-device.c (write_fru): Fix invalid number of args
 	to pstdout_printf.
 
+	* ipmi-dcmi/ipmi-dcmi.c (_mandatory_platform_attributes): Fix
+	argument type passed pstdout_printf().
+
 2019-11-27 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/sdr/ipmi-sdr-parse-util.c
