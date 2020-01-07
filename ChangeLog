@@ -1,5 +1,7 @@
 2020-01-07 Albert Chu <chu11@llnl.gov>
 
+	Mountains of minor fixes found by lgtm.com
+
 	* bmc-device/bmc-device.c (write_fru): Fix invalid number of args
 	to pstdout_printf.
 
@@ -41,6 +43,9 @@
 	(sel_string_output_intel_e52600v3_event_data2_discrete_oem)
 	(sel_string_output_intel_e52600v3_event_data2_class_oem): Rename
 	local variable that masked outside scope variable name.
+
+	* libipmidetect/ipmidetect.c (_get_data): Rename local variable
+	that masked outside scope variable name.
 
 2019-11-27 Albert Chu <chu11@llnl.gov>
 

@@ -550,7 +550,7 @@ _get_data (ipmidetect_t handle,
   while (1)
     {
       char buf[IPMIDETECT_BUFLEN];
-      char hostname[IPMIDETECT_MAXHOSTNAMELEN+1];
+      char l_hostname[IPMIDETECT_MAXHOSTNAMELEN+1];
       unsigned long int localtime;
       int len, num, ret;
 
@@ -563,7 +563,7 @@ _get_data (ipmidetect_t handle,
       if (!len)
         break;
 
-      num = sscanf (buf, "%s %lu\n", hostname, &localtime);
+      num = sscanf (buf, "%s %lu\n", l_hostname, &localtime);
       if (num != 2)
         {
           handle->errnum = IPMIDETECT_ERR_INTERNAL;
@@ -571,9 +571,9 @@ _get_data (ipmidetect_t handle,
         }
 
       if (abs (localtime - tv.tv_sec) < timeout_len)
-        ret = fi_hostlist_push (handle->detected_nodes, hostname);
+        ret = fi_hostlist_push (handle->detected_nodes, l_hostname);
       else
-        ret = fi_hostlist_push (handle->undetected_nodes, hostname);
+        ret = fi_hostlist_push (handle->undetected_nodes, l_hostname);
 
       if (!ret)
         {
