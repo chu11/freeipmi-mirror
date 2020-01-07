@@ -9,6 +9,10 @@
 	* ipmi-oem/ipmi-oem-intel.c (ipmi_oem_intel_get_smtp_config): Fix
 	invalid call to pstdout_printf(), forgot output parameters.
 
+	* ipmi-oem/ipmi-oem-intelnm.c
+	(_ipmi_oem_intelnm_get_node_manager_policy_suspend_periods_common):
+	Fix invalid call to pstdout_printf(), forgot output parameter.
+
 2019-11-27 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/sdr/ipmi-sdr-parse-util.c
