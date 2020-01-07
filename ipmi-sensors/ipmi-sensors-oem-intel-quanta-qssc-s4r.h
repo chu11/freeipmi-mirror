@@ -17,7 +17,7 @@
  */
 
 #ifndef IPMI_SENSORS_OEM_INTEL_QUANTA_QSSC_S4R_H
-#define IPMI_SENSORS_OEM_INTEL_H
+#define IPMI_SENSORS_OEM_INTEL_QUANTA_QSSC_S4R_H
 
 #include "ipmi-sensors.h"
 

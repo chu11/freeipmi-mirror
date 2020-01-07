@@ -1,3 +1,7 @@
+2025-01-02 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/ipmi-sensors-oem-intel-quanta-qssc-s4r.h: Fix header guard.
+
 2024-04-12 Albert Chu <chu11@llnl.gov>
 
 	* man/ipmipower.8.pre.in: Add help about "ipmiping" workaround and
