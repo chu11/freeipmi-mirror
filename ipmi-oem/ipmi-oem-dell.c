@@ -2042,7 +2042,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "Invalid GUID length returned: %s\n",
+                           "Invalid GUID length returned: %u\n",
                            string_len);
           goto cleanup;
         }
