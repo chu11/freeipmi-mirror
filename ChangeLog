@@ -6,6 +6,9 @@
 	* ipmi-oem/ipmi-oem-dell.c (ipmi_oem_dell_get_system_info): Fix
 	invalid output with invalid variable passed to pstdout_printf().
 
+	* ipmi-oem/ipmi-oem-intel.c (ipmi_oem_intel_get_smtp_config): Fix
+	invalid call to pstdout_printf(), forgot output parameters.
+
 2019-11-27 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/sdr/ipmi-sdr-parse-util.c
