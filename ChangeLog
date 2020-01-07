@@ -29,6 +29,10 @@
 	* ipmi-sensors/ipmi-sensors-detailed-output.c
 	(_detailed_output_accuracy): Escape % character for clarity.
 
+	* ipmi-sensors/ipmi-sensors-oem-intel-quanta-qssc-s4r.c
+	(ipmi_sensors_oem_intel_quanta_qssc_s4r_output_oem_record): Fix
+	output type in call to pstdout_printf().
+
 2019-11-27 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/sdr/ipmi-sdr-parse-util.c

@@ -214,7 +214,7 @@ ipmi_sensors_oem_intel_quanta_qssc_s4r_output_oem_record (ipmi_sensors_state_dat
 
           /* Stored in mm/sec units */
           pstdout_printf (state_data->pstate,
-                          "Average air flow velocity in DIMM channel: %u m/sec\n",
+                          "Average air flow velocity in DIMM channel: %.2f m/sec\n",
                           (float)airflow/1000);
 
           /* Stored in 1/1000 in units */
