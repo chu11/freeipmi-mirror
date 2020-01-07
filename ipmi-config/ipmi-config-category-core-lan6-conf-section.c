@@ -59,7 +59,7 @@ struct router_address_configuration_control
   uint8_t enable_dynamic_router_address;
 };
 
-static uint8_t
+static int
 get_address_status_number (const char *string)
 {
   assert (string);
@@ -707,7 +707,7 @@ _set_ipv6_static_address (ipmi_config_state_data_t *state_data,
   return (rv);
 }
 
-uint8_t
+int
 get_static_address_source_number (const char *string)
 {
   assert (string);
@@ -778,7 +778,7 @@ ipv6_static_address_source_commit (ipmi_config_state_data_t *state_data,
                                        &ipv6_data)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  ipv6_data.source = get_static_address_source_number (kv->value_input);
+  ipv6_data.source = (uint8_t)get_static_address_source_number (kv->value_input);
 
   return (_set_ipv6_static_address (state_data,
                                     section_name,
@@ -1137,7 +1137,7 @@ _get_ipv6_dynamic_address (ipmi_config_state_data_t *state_data,
   return (rv);
 }
 
-static uint8_t
+static int
 get_dynamic_address_source_number (const char *string)
 {
   assert (string);

@@ -53,6 +53,10 @@
 	* common/toolcommon/pstdout.c (pstdout_set_debug_flags): Fix typo
 	&& instead of &.
 
+	* ipmi-config/ipmi-config/ipmi-config-category-core-lan6-conf-section.c:
+	Return int instead of uint8_t when a negative value can be
+	returned.  Cast to uint8_t when appropriate.
+
 2019-11-27 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/sdr/ipmi-sdr-parse-util.c
