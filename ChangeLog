@@ -1,3 +1,8 @@
+2020-01-08 Albert Chu <chu11@llnl.gov>
+
+	* bmc-device/bmc-device.c (write_fru): Fix invalid type in
+	pstdout_printf().
+
 2020-01-07 Albert Chu <chu11@llnl.gov>
 
 	Mountains of minor fixes found by lgtm.com
