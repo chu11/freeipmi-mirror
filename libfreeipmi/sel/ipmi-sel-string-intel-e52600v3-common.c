@@ -1208,7 +1208,7 @@ sel_string_output_intel_e52600v3_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
     {
       char memory_str[INTEL_EVENT_BUFFER_LENGTH + 1];
       uint8_t memory_bitmask;
-      unsigned int wlen = 0;
+      unsigned int lentmp = 0;
 
       memset (memory_str, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
 
@@ -1216,49 +1216,49 @@ sel_string_output_intel_e52600v3_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
 
       if (memory_bitmask & IPMI_SENSOR_TYPE_TEMPERATURE_EVENT_DATA3_OEM_INTEL_E52600V3_MEMORY_VRD_HOT_BITMAP_CPU1_DIMM_CHANNEL_1_2)
         {
-          if (sel_string_strcat_comma_separate (memory_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "CPU1 - DIMM Channel 1/2"))
+          if (sel_string_strcat_comma_separate (memory_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "CPU1 - DIMM Channel 1/2"))
             return (1);
         }
 
       if (memory_bitmask & IPMI_SENSOR_TYPE_TEMPERATURE_EVENT_DATA3_OEM_INTEL_E52600V3_MEMORY_VRD_HOT_BITMAP_CPU1_DIMM_CHANNEL_3_4)
         {
-          if (sel_string_strcat_comma_separate (memory_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "CPU1 - DIMM Channel 3/4"))
+          if (sel_string_strcat_comma_separate (memory_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "CPU1 - DIMM Channel 3/4"))
             return (1);
         }
 
       if (memory_bitmask & IPMI_SENSOR_TYPE_TEMPERATURE_EVENT_DATA3_OEM_INTEL_E52600V3_MEMORY_VRD_HOT_BITMAP_CPU2_DIMM_CHANNEL_1_2)
         {
-          if (sel_string_strcat_comma_separate (memory_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "CPU2 - DIMM Channel 1/2"))
+          if (sel_string_strcat_comma_separate (memory_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "CPU2 - DIMM Channel 1/2"))
             return (1);
         }
 
       if (memory_bitmask & IPMI_SENSOR_TYPE_TEMPERATURE_EVENT_DATA3_OEM_INTEL_E52600V3_MEMORY_VRD_HOT_BITMAP_CPU2_DIMM_CHANNEL_3_4)
         {
-          if (sel_string_strcat_comma_separate (memory_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "CPU2 - DIMM Channel 3/4"))
+          if (sel_string_strcat_comma_separate (memory_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "CPU2 - DIMM Channel 3/4"))
             return (1);
         }
 
       if (memory_bitmask & IPMI_SENSOR_TYPE_TEMPERATURE_EVENT_DATA3_OEM_INTEL_E52600V3_MEMORY_VRD_HOT_BITMAP_CPU3_DIMM_CHANNEL_1_2)
         {
-          if (sel_string_strcat_comma_separate (memory_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "CPU3 - DIMM Channel 1/2"))
+          if (sel_string_strcat_comma_separate (memory_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "CPU3 - DIMM Channel 1/2"))
             return (1);
         }
 
       if (memory_bitmask & IPMI_SENSOR_TYPE_TEMPERATURE_EVENT_DATA3_OEM_INTEL_E52600V3_MEMORY_VRD_HOT_BITMAP_CPU3_DIMM_CHANNEL_3_4)
         {
-          if (sel_string_strcat_comma_separate (memory_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "CPU3 - DIMM Channel 3/4"))
+          if (sel_string_strcat_comma_separate (memory_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "CPU3 - DIMM Channel 3/4"))
             return (1);
         }
 
       if (memory_bitmask & IPMI_SENSOR_TYPE_TEMPERATURE_EVENT_DATA3_OEM_INTEL_E52600V3_MEMORY_VRD_HOT_BITMAP_CPU4_DIMM_CHANNEL_1_2)
         {
-          if (sel_string_strcat_comma_separate (memory_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "CPU4 - DIMM Channel 1/2"))
+          if (sel_string_strcat_comma_separate (memory_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "CPU4 - DIMM Channel 1/2"))
             return (1);
         }
 
       if (memory_bitmask & IPMI_SENSOR_TYPE_TEMPERATURE_EVENT_DATA3_OEM_INTEL_E52600V3_MEMORY_VRD_HOT_BITMAP_CPU4_DIMM_CHANNEL_3_4)
         {
-          if (sel_string_strcat_comma_separate (memory_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "CPU4 - DIMM Channel 3/4"))
+          if (sel_string_strcat_comma_separate (memory_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "CPU4 - DIMM Channel 3/4"))
             return (1);
         }
 
@@ -1369,37 +1369,37 @@ sel_string_output_intel_e52600v3_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
       && system_event_record_data->event_data2 == IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_E52600V3_CATERR)
     {
       char cpu_str[INTEL_EVENT_BUFFER_LENGTH + 1];
-      unsigned int wlen = 0;
+      unsigned int lentmp = 0;
 
       memset (cpu_str, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
 
       if (system_event_record_data->event_data3 & IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_E52600V3_CPU1)
         {
-          if (sel_string_strcat_comma_separate (cpu_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "CPU1"))
+          if (sel_string_strcat_comma_separate (cpu_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "CPU1"))
             return (1);
         }
 
       if (system_event_record_data->event_data3 & IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_E52600V3_CPU2)
         {
-          if (sel_string_strcat_comma_separate (cpu_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "CPU2"))
+          if (sel_string_strcat_comma_separate (cpu_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "CPU2"))
             return (1);
         }
 
       if (system_event_record_data->event_data3 & IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_E52600V3_CPU3)
         {
-          if (sel_string_strcat_comma_separate (cpu_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "CPU3"))
+          if (sel_string_strcat_comma_separate (cpu_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "CPU3"))
             return (1);
         }
 
       if (system_event_record_data->event_data3 & IPMI_GENERIC_EVENT_READING_TYPE_CODE_STATE_ASSERTED_PROCESSOR_EVENT_DATA2_OEM_INTEL_E52600V3_CPU4)
         {
-          if (sel_string_strcat_comma_separate (cpu_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "CPU4"))
+          if (sel_string_strcat_comma_separate (cpu_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "CPU4"))
             return (1);
         }
 
       if (!strlen (cpu_str))
         {
-          if (sel_string_strcat_comma_separate (cpu_str, INTEL_EVENT_BUFFER_LENGTH, &wlen, "Unknown CPU"))
+          if (sel_string_strcat_comma_separate (cpu_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "Unknown CPU"))
             return (1);
         }
 
