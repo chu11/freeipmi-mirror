@@ -181,6 +181,7 @@ nobase_include_HEADERS = \
 	freeipmi/spec/oem/ipmi-sensor-numbers-oem-dell-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-numbers-oem-intel-node-manager-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-numbers-oem-intel-spec.h \
+	freeipmi/spec/oem/ipmi-sensor-numbers-oem-intel-s5500wb-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-numbers-oem-inventec-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-numbers-oem-quanta-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-numbers-oem-wistron-spec.h \
