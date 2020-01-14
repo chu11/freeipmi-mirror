@@ -31,8 +31,9 @@
 	variable change changes accordingly.
 
 	* ipmi-oem/ipmi-oem-intel.c (_get_smtp_configuration_data)
-	(_set_smtp_configuration_data): Update missing comments on
-	motherboard support.
+	(_set_smtp_configuration_data),
+	libfreeipmi/include/freeipmi/spec/oem/ipmi-netfn-oem-intel-spec.h:
+	Update missing comments on motherboard support.
 
 2020-01-08 Albert Chu <chu11@llnl.gov>
 
