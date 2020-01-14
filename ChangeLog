@@ -22,6 +22,10 @@
 	libfreeipmi/spec/ipmi-sensor-and-event-code-tables-oem-intel-s5500wb-spec.c:
 	New file(s).
 
+	* ipmi-oem/ipmi-oem-intel.c (_get_smtp_configuration_data)
+	(_set_smtp_configuration_data): Update missing comments on
+	motherboard support.
+
 2020-01-08 Albert Chu <chu11@llnl.gov>
 
 	* bmc-device/bmc-device.c (write_fru): Fix invalid type in

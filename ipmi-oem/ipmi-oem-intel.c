@@ -179,6 +179,7 @@ _get_smtp_configuration_data (ipmi_oem_state_data_t *state_data,
   assert ((*buflen));
 
   /* Intel S5500WB/Penguin Computing Relion 700
+   * Intel S2600JF/Appro 512X
    *
    * Get SMTP Configuration Request
    *
@@ -627,6 +628,7 @@ _set_smtp_configuration_data (ipmi_oem_state_data_t *state_data,
   assert (buflen <= (IPMI_OEM_MAX_BYTES - 5));
 
   /* Intel S5500WB/Penguin Computing Relion 700
+   * Intel S2600JF/Appro 512X
    *
    * Set SMTP Configuration Request
    *
