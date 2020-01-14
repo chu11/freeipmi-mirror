@@ -138,6 +138,7 @@ nobase_include_HEADERS = \
 	freeipmi/spec/oem/ipmi-comp-code-oem-fujitsu-spec.h \
 	freeipmi/spec/oem/ipmi-comp-code-oem-intel-node-manager-spec.h \
 	freeipmi/spec/oem/ipmi-comp-code-oem-intel-spec.h \
+	freeipmi/spec/oem/ipmi-comp-code-oem-intel-s5500wb-spec.h \
 	freeipmi/spec/oem/ipmi-comp-code-oem-wistron-spec.h \
 	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-dell-spec.h \
 	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-hp-spec.h \

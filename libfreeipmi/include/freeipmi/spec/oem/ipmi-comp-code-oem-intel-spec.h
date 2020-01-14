@@ -23,30 +23,7 @@
 extern "C" {
 #endif
 
-/*
- * Intel S5500WB/Penguin Computing Relion 700
- */
-
-/* IPMI_CMD_OEM_INTEL_SET_SMTP_CONFIGURATION */
-
-#define IPMI_COMP_CODE_SET_SMTP_CONFIGURATION_PARAMETER_NOT_SUPPORTED                    0x80
-#define IPMI_COMP_CODE_SET_SMTP_CONFIGURATION_PARAMETER_NOT_SUPPORTED_STR \
-  "parameter not supported."
-
-#define IPMI_COMP_CODE_SET_SMTP_CONFIGURATION_WRITE_READ_ONLY_PARAMETER                  0x82
-#define IPMI_COMP_CODE_SET_SMTP_CONFIGURATION_WRITE_READ_ONLY_PARAMETER_STR \
-  "attempt to write read-only parameter"
-
-/* IPMI_CMD_OEM_INTEL_GET_SMTP_CONFIGURATION */
-
-/* achu: document from Intel also sites a "write read-only parameter"
- * error code, but I assume that is a cut and paste typo.  Shouldn't
- * be possible for the "get" command
- */
-
-#define IPMI_COMP_CODE_GET_SMTP_CONFIGURATION_PARAMETER_NOT_SUPPORTED                    0x80
-#define IPMI_COMP_CODE_GET_SMTP_CONFIGURATION_PARAMETER_NOT_SUPPORTED_STR \
-  "parameter not supported."
+#include <freeipmi/spec/oem/ipmi-comp-code-oem-intel-s5500wb-spec.h>
 
 #ifdef __cplusplus
 }
