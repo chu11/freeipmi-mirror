@@ -23,23 +23,6 @@
 extern "C" {
 #endif
 
-/*******************************************
- * Dell                                    *
- *******************************************/
-
-/*
- * Dell Poweredge R610
- * Dell Poweredge R710
- * Dell Poweredge R720
- */
-
-/* achu: names taken from code, are correct names? */
-#define IPMI_SENSOR_TYPE_OEM_DELL_SYSTEM_PERFORMANCE_DEGRADATION_STATUS 0xC0
-#define IPMI_SENSOR_TYPE_OEM_DELL_LINK_TUNING                           0xC1
-#define IPMI_SENSOR_TYPE_OEM_DELL_NON_FATAL_ERROR                       0xC2
-#define IPMI_SENSOR_TYPE_OEM_DELL_FATAL_IO_ERROR                        0xC3
-#define IPMI_SENSOR_TYPE_OEM_DELL_UPGRADE                               0xC4
-
 /*
  * Intel S5500WB/Penguin Computing Relion 700
  * Intel SR1625
