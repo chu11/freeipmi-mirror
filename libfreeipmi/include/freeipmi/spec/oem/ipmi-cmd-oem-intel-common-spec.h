@@ -16,19 +16,28 @@
  *
  */
 
-#ifndef IPMI_CMD_OEM_INTEL_SPEC_H
-#define IPMI_CMD_OEM_INTEL_SPEC_H
+#ifndef IPMI_CMD_OEM_INTEL_COMMON_SPEC_H
+#define IPMI_CMD_OEM_INTEL_COMMON_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <freeipmi/spec/oem/ipmi-cmd-oem-intel-s5500wb-spec.h>
-#include <freeipmi/spec/oem/ipmi-cmd-oem-intel-s2600jf-spec.h>
-#include <freeipmi/spec/oem/ipmi-cmd-oem-intel-s2600wt2-spec.h>
+/*
+ * Intel S5500WB/Penguin Computing Relion 700
+ * Intel S2600JF/Appro 512X
+ */
+
+/* IPMI_NET_FN_OEM_INTEL_GENERIC_RQ / IPMI_NET_FN_OEM_INTEL_GENERIC_RS */
+#define IPMI_CMD_OEM_INTEL_RESTORE_CONFIGURATION 0x02
+#define IPMI_CMD_OEM_INTEL_SET_FAULT_INDICATION  0x57
+
+/* IPMI_NET_FN_OEM_INTEL_CONFIG_RQ / IPMI_NET_FN_OEM_INTEL_CONFIG_RS */
+#define IPMI_CMD_OEM_INTEL_SET_SMTP_CONFIGURATION 0x37
+#define IPMI_CMD_OEM_INTEL_GET_SMTP_CONFIGURATION 0x38
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* IPMI_CMD_OEM_INTEL_SPEC_H */
+#endif /* IPMI_CMD_OEM_INTEL_COMMON_SPEC_H */

@@ -129,6 +129,10 @@ nobase_include_HEADERS = \
 	freeipmi/spec/oem/ipmi-cmd-oem-ibm-spec.h \
 	freeipmi/spec/oem/ipmi-cmd-oem-intel-node-manager-spec.h \
 	freeipmi/spec/oem/ipmi-cmd-oem-intel-spec.h \
+	freeipmi/spec/oem/ipmi-cmd-oem-intel-common-spec.h \
+	freeipmi/spec/oem/ipmi-cmd-oem-intel-s5500wb-spec.h \
+	freeipmi/spec/oem/ipmi-cmd-oem-intel-s2600jf-spec.h \
+	freeipmi/spec/oem/ipmi-cmd-oem-intel-s2600wt2-spec.h \
 	freeipmi/spec/oem/ipmi-cmd-oem-inventec-spec.h \
 	freeipmi/spec/oem/ipmi-cmd-oem-quanta-spec.h \
 	freeipmi/spec/oem/ipmi-cmd-oem-sun-microsystems-spec.h \

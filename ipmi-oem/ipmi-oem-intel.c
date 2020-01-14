@@ -1149,7 +1149,7 @@ ipmi_oem_intel_get_power_restore_delay (ipmi_oem_state_data_t *state_data)
    * delay setting is 11 bits total.
    */
 
-  bytes_rq[0] = IPMI_CMD_OEM_INTEL_GET_POWER_RESTORE_DELAY;
+  bytes_rq[0] = IPMI_CMD_OEM_INTEL_S2600JF_GET_POWER_RESTORE_DELAY;
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
@@ -1170,7 +1170,7 @@ ipmi_oem_intel_get_power_restore_delay (ipmi_oem_state_data_t *state_data)
                                                    bytes_rs,
                                                    rs_len,
                                                    4,
-                                                   IPMI_CMD_OEM_INTEL_GET_POWER_RESTORE_DELAY,
+                                                   IPMI_CMD_OEM_INTEL_S2600JF_GET_POWER_RESTORE_DELAY,
                                                    IPMI_NET_FN_OEM_INTEL_GENERIC_RS,
                                                    NULL) < 0)
     goto cleanup;
@@ -1237,7 +1237,7 @@ ipmi_oem_intel_set_power_restore_delay (ipmi_oem_state_data_t *state_data)
    * delay setting is 11 bits total.
    */
 
-  bytes_rq[0] = IPMI_CMD_OEM_INTEL_SET_POWER_RESTORE_DELAY;
+  bytes_rq[0] = IPMI_CMD_OEM_INTEL_S2600JF_SET_POWER_RESTORE_DELAY;
   bytes_rq[1] = (delay >> 8) & IPMI_OEM_INTEL_POWER_RESTORE_DELAY_MSB_MASK;
   bytes_rq[2] = (delay & IPMI_OEM_INTEL_POWER_RESTORE_DELAY_LSB_MASK);
 
@@ -1260,7 +1260,7 @@ ipmi_oem_intel_set_power_restore_delay (ipmi_oem_state_data_t *state_data)
                                                    bytes_rs,
                                                    rs_len,
                                                    2,
-                                                   IPMI_CMD_OEM_INTEL_SET_POWER_RESTORE_DELAY,
+                                                   IPMI_CMD_OEM_INTEL_S2600JF_SET_POWER_RESTORE_DELAY,
                                                    IPMI_NET_FN_OEM_INTEL_GENERIC_RS,
                                                    NULL) < 0)
     goto cleanup;
@@ -1282,6 +1282,7 @@ ipmi_oem_intel_get_bmc_services (ipmi_oem_state_data_t *state_data)
   assert (!state_data->prog_data->args->oem_options_count);
 
   /* Intel S2600WT2
+   * (May work with S2600JF as well, untested)
    *
    * Request
    *
@@ -1304,7 +1305,7 @@ ipmi_oem_intel_get_bmc_services (ipmi_oem_state_data_t *state_data)
    *        bit 6:0 - reserved
    */
 
-  bytes_rq[0] = IPMI_CMD_OEM_INTEL_GET_BMC_SERVICE_STATUS;
+  bytes_rq[0] = IPMI_CMD_OEM_INTEL_S2600WT2_GET_BMC_SERVICE_STATUS;
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
@@ -1325,7 +1326,7 @@ ipmi_oem_intel_get_bmc_services (ipmi_oem_state_data_t *state_data)
                                                    bytes_rs,
                                                    rs_len,
                                                    4,
-                                                   IPMI_CMD_OEM_INTEL_GET_BMC_SERVICE_STATUS,
+                                                   IPMI_CMD_OEM_INTEL_S2600WT2_GET_BMC_SERVICE_STATUS,
                                                    IPMI_NET_FN_OEM_INTEL_GENERIC_RS,
                                                    NULL) < 0)
     goto cleanup;
@@ -1385,6 +1386,7 @@ ipmi_oem_intel_set_bmc_services (ipmi_oem_state_data_t *state_data)
     }
 
   /* Intel S2600WT2
+   * (May work with S2600JF as well, untested)
    *
    * Request
    *
@@ -1409,7 +1411,7 @@ ipmi_oem_intel_set_bmc_services (ipmi_oem_state_data_t *state_data)
    * 0x?? - Completion Code
    */
 
-  bytes_rq[0] = IPMI_CMD_OEM_INTEL_CONTROL_BMC_SERVICES;
+  bytes_rq[0] = IPMI_CMD_OEM_INTEL_S2600WT2_CONTROL_BMC_SERVICES;
   if (!strcasecmp (state_data->prog_data->args->oem_options[0], "enable"))
     bytes_rq[1] = IPMI_OEM_INTEL_ENABLE_SERVICES;
   else
@@ -1455,7 +1457,7 @@ ipmi_oem_intel_set_bmc_services (ipmi_oem_state_data_t *state_data)
                                                    bytes_rs,
                                                    rs_len,
                                                    2,
-                                                   IPMI_CMD_OEM_INTEL_CONTROL_BMC_SERVICES,
+                                                   IPMI_CMD_OEM_INTEL_S2600WT2_CONTROL_BMC_SERVICES,
                                                    IPMI_NET_FN_OEM_INTEL_GENERIC_RS,
                                                    NULL) < 0)
     goto cleanup;
