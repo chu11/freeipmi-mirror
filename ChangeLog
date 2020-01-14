@@ -8,17 +8,19 @@
 	* libfreeipmi/include/freeipmi/spec/oem/ipmi-comp-code-oem-intel-spec.h,
 	libfreeipmi/include/freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-spec.h,
 	libfreeipmi/include/freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-intel-spec.h,
-	libfreeipmi/include/freeipmi/spec/oem/ipmi-sensor-number-oem-intel-spec.h:
-	libfreeipmi/include/freeipmi/spec/oem/ipmi-slave-address-oem-intel-spec.h:
+	libfreeipmi/include/freeipmi/spec/oem/ipmi-sensor-number-oem-intel-spec.h,
+	libfreeipmi/include/freeipmi/spec/oem/ipmi-slave-address-oem-intel-spec.h,
+	libfreeipmi/spec/ipmi-sensor-and-event-code-tables-oem-intel-spec.c:
 	Splice out motherboard specific extensions into new files and rename a number of
-	macros accordingly.
+	macros & variables accordingly.
 
 	* libfreeipmi/include/freeipmi/spec/oem/ipmi-comp-code-oem-intel-s5500wb-spec.h,
 	libfreeipmi/include/freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-s5500wb-spec.h,
-	libfreeipmi/include/freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-intel-s5500wb-spec.h:
-	libfreeipmi/include/freeipmi/spec/oem/ipmi-sensor-number-oem-intel-s5500wb-spec.h:
-	libfreeipmi/include/freeipmi/spec/oem/ipmi-slave-address-oem-intel-s5500wb-spec.h:
-	New file.
+	libfreeipmi/include/freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-intel-s5500wb-spec.h,
+	libfreeipmi/include/freeipmi/spec/oem/ipmi-sensor-number-oem-intel-s5500wb-spec.h,
+	libfreeipmi/include/freeipmi/spec/oem/ipmi-slave-address-oem-intel-s5500wb-spec.h,
+	libfreeipmi/spec/ipmi-sensor-and-event-code-tables-oem-intel-s5500wb-spec.c:
+	New file(s).
 
 2020-01-08 Albert Chu <chu11@llnl.gov>
 

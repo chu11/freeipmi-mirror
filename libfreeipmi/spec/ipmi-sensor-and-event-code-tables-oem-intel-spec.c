@@ -38,43 +38,6 @@
 #include "freeipmi-portability.h"
 
 /*
- * Intel S5500WB/Penguin Computing Relion 700
- */
-
-const char * const ipmi_oem_intel_s5500wb_specific_pci_fatal_sensor[] =
-  {
-    "Data Link Layer Protocol Error",
-    "Surprise Link Down",
-    "Unexpected Completion",
-    "Received Unsupported request condition on inbound address decode with exception of SAD",
-    "Poisoned TLP Error",
-    "Flow Control Protocol Error",
-    "Completion Timeout Error",
-    "Completer Abort Error",
-    "Receiver Buffer Overflow Error",
-    "ACS Violation Error",
-    "Malformed TLP Error",
-    "Received ERR_FATAL Message From Downstream Error",
-    "Unexpected Completion",    /* not a typo, identical to above */
-    "Received ERR_NONFATAL Message Error",
-    NULL
-  };
-unsigned int ipmi_oem_intel_s5500wb_specific_pci_fatal_sensor_max_index = 0x0D;
-
-const char * const ipmi_oem_intel_s5500wb_specific_pci_correctable_sensor[] =
-  {
-    "Receiver Error",
-    "Bad DLLP Error",
-    "Bad TLLP Error",
-    "REPLAY_NUM Rollover Error",
-    "REPLAY Timer Timeout Error",
-    "Advisory Non-fatal Error (Received ERR_COR message)",
-    "Link Bandwidth Changed (ECN) Error",
-    NULL
-  };
-unsigned int ipmi_oem_intel_s5500wb_specific_pci_correctable_sensor_max_index = 0x06;
-
-/*
  * Quanta QSSC-S4R/Appro GB812X-CN
  * (Quanta motherboard contains Intel manufacturer ID)
  */

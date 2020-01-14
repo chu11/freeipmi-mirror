@@ -239,6 +239,7 @@ libfreeipmi_la_SOURCES = \
 	spec/ipmi-sensor-and-event-code-tables-oem-fujitsu-spec.c \
 	spec/ipmi-sensor-and-event-code-tables-oem-hp-spec.c \
 	spec/ipmi-sensor-and-event-code-tables-oem-intel-spec.c \
+	spec/ipmi-sensor-and-event-code-tables-oem-intel-s5500wb-spec.c \
 	spec/ipmi-sensor-and-event-code-tables-oem-wistron-spec.c \
 	spec/ipmi-sensor-types-spec.c \
 	spec/ipmi-sensor-units-spec.c \
