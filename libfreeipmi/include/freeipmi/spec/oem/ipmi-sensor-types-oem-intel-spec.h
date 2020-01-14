@@ -23,20 +23,9 @@
 extern "C" {
 #endif
 
-/*
- * Intel S5500WB/Penguin Computing Relion 700
- * Intel SR1625
- * Quanta QSSC-S4R/Appro GB812X-CN
- * (Quanta motherboard contains Intel manufacturer ID)
- */
-
-#define IPMI_SENSOR_TYPE_OEM_INTEL_SMI_TIMEOUT                  0xF3
-
-/*
- * Quanta QSSC-S4R/Appro GB812X-CN
- * (Quanta motherboard contains Intel manufacturer ID)
- */
-#define IPMI_SENSOR_TYPE_OEM_INTEL_POWER_THROTTLED              0xF3
+#include <freeipmi/spec/oem/ipmi-sensor-types-oem-intel-s5500wb-spec.h>
+#include <freeipmi/spec/oem/ipmi-sensor-types-oem-intel-sr1625-spec.h>
+#include <freeipmi/spec/oem/ipmi-sensor-types-oem-intel-quanta-qssc-s4r-spec.h>
 
 /*
  * Intel S5000PAL
