@@ -157,6 +157,10 @@ nobase_include_HEADERS = \
 	freeipmi/spec/oem/ipmi-netfn-oem-fujitsu-spec.h \
 	freeipmi/spec/oem/ipmi-netfn-oem-ibm-spec.h \
 	freeipmi/spec/oem/ipmi-netfn-oem-intel-spec.h \
+	freeipmi/spec/oem/ipmi-netfn-oem-intel-common-spec.h \
+	freeipmi/spec/oem/ipmi-netfn-oem-intel-s5500wb-spec.h \
+	freeipmi/spec/oem/ipmi-netfn-oem-intel-s2600jf-spec.h \
+	freeipmi/spec/oem/ipmi-netfn-oem-intel-s2600wt2-spec.h \
 	freeipmi/spec/oem/ipmi-netfn-oem-inventec-spec.h \
 	freeipmi/spec/oem/ipmi-netfn-oem-quanta-spec.h \
 	freeipmi/spec/oem/ipmi-netfn-oem-supermicro-spec.h \

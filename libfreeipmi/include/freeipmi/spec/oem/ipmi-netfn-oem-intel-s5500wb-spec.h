@@ -16,19 +16,17 @@
  *
  */
 
-#ifndef IPMI_NETFN_OEM_INTEL_SPEC_H
-#define IPMI_NETFN_OEM_INTEL_SPEC_H
+#ifndef IPMI_NETFN_OEM_INTEL_S5500WB_COMMON_SPEC_H
+#define IPMI_NETFN_OEM_INTEL_S5500WB_COMMON_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <freeipmi/spec/oem/ipmi-netfn-oem-intel-s5500wb-spec.h>
-#include <freeipmi/spec/oem/ipmi-netfn-oem-intel-s2600jf-spec.h>
-#include <freeipmi/spec/oem/ipmi-netfn-oem-intel-s2600wt2-spec.h>
+#include <freeipmi/spec/oem/ipmi-netfn-oem-intel-common-spec.h>
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* IPMI_NETFN_OEM_INTEL_SPEC_H */
+#endif /* IPMI_NETFN_OEM_INTEL_S5500WB_SPEC_H */

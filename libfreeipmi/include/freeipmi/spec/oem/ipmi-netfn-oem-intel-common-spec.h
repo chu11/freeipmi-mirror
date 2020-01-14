@@ -16,19 +16,28 @@
  *
  */
 
-#ifndef IPMI_NETFN_OEM_INTEL_SPEC_H
-#define IPMI_NETFN_OEM_INTEL_SPEC_H
+#ifndef IPMI_NETFN_OEM_INTEL_COMMON_SPEC_H
+#define IPMI_NETFN_OEM_INTEL_COMMON_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <freeipmi/spec/oem/ipmi-netfn-oem-intel-s5500wb-spec.h>
-#include <freeipmi/spec/oem/ipmi-netfn-oem-intel-s2600jf-spec.h>
-#include <freeipmi/spec/oem/ipmi-netfn-oem-intel-s2600wt2-spec.h>
+/*
+ * Intel S5500WB/Penguin Computing Relion 700
+ * Intel S2600JF/Appro 512X
+ * Intel S2600WT2
+ */
+
+/* achu: not official names, named based on use context */
+#define IPMI_NET_FN_OEM_INTEL_GENERIC_RQ 0x30
+#define IPMI_NET_FN_OEM_INTEL_GENERIC_RS 0x31
+
+#define IPMI_NET_FN_OEM_INTEL_CONFIG_RQ 0x32
+#define IPMI_NET_FN_OEM_INTEL_CONFIG_RS 0x33
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* IPMI_NETFN_OEM_INTEL_SPEC_H */
+#endif /* IPMI_NETFN_OEM_INTEL_COMMON_SPEC_H */
