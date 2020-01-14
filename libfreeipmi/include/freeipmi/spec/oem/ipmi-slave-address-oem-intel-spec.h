@@ -23,12 +23,7 @@
 extern "C" {
 #endif
 
-/*
- * Intel S5500WB/Penguin Computing Relion 700
- */
-#define IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER   0x33
-#define IPMI_GENERATOR_ID_OEM_INTEL_ME_FIRMWARE        0x2C
-#define IPMI_GENERATOR_ID_OEM_INTEL_HSC_FIRMWARE       0xC0
+#include <freeipmi/spec/oem/ipmi-slave-address-oem-intel-s5500wb-spec.h>
 
 /*
  * Quanta QSSC-S4R/Appro GB812X-CN
