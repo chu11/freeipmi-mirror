@@ -41,7 +41,7 @@
  * Intel S5500WB/Penguin Computing Relion 700
  */
 
-const char * const ipmi_oem_intel_specific_pci_fatal_sensor[] =
+const char * const ipmi_oem_intel_s5500wb_specific_pci_fatal_sensor[] =
   {
     "Data Link Layer Protocol Error",
     "Surprise Link Down",
@@ -59,9 +59,9 @@ const char * const ipmi_oem_intel_specific_pci_fatal_sensor[] =
     "Received ERR_NONFATAL Message Error",
     NULL
   };
-unsigned int ipmi_oem_intel_specific_pci_fatal_sensor_max_index = 0x0D;
+unsigned int ipmi_oem_intel_s5500wb_specific_pci_fatal_sensor_max_index = 0x0D;
 
-const char * const ipmi_oem_intel_specific_pci_correctable_sensor[] =
+const char * const ipmi_oem_intel_s5500wb_specific_pci_correctable_sensor[] =
   {
     "Receiver Error",
     "Bad DLLP Error",
@@ -72,7 +72,7 @@ const char * const ipmi_oem_intel_specific_pci_correctable_sensor[] =
     "Link Bandwidth Changed (ECN) Error",
     NULL
   };
-unsigned int ipmi_oem_intel_specific_pci_correctable_sensor_max_index = 0x06;
+unsigned int ipmi_oem_intel_s5500wb_specific_pci_correctable_sensor_max_index = 0x06;
 
 /*
  * Quanta QSSC-S4R/Appro GB812X-CN
