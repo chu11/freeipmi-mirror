@@ -24,20 +24,9 @@ extern "C" {
 #endif
 
 #include <freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-intel-s5500wb-spec.h>
-
-/*
- * Intel S5500WB/Penguin Computing Relion 700
- * Quanta QSSC-S4R/Appro GB812X-CN
- * (Quanta motherboard contains Intel manufacturer ID)
- * Intel S2600JF/Appro 512X
- * Intel S2600WP
- */
-
-#define IPMI_OEM_INTEL_EVENT_DATA3_DEVICE_NUMBER_BITMASK   0xF8
-#define IPMI_OEM_INTEL_EVENT_DATA3_DEVICE_NUMBER_SHIFT     3
-
-#define IPMI_OEM_INTEL_EVENT_DATA3_FUNCTION_NUMBER_BITMASK 0x07
-#define IPMI_OEM_INTEL_EVENT_DATA3_FUNCTION_NUMBER_SHIFT   0
+#include <freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-intel-s2600jf-spec.h>
+#include <freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-intel-quanta-qssc-s4r-spec.h>
+#include <freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-intel-s2600wp-spec.h>
 
 /*
  * Quanta QSSC-S4R/Appro GB812X-CN

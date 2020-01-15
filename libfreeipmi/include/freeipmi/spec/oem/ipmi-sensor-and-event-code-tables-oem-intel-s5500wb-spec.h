@@ -23,6 +23,8 @@
 extern "C" {
 #endif
 
+#include <freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-intel-common-spec.h>
+
 /*
  * Intel S5500WB/Penguin Computing Relion 700
  */
