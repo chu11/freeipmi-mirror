@@ -16,19 +16,30 @@
  *
  */
 
-#ifndef IPMI_OEM_INTEL_SPEC_H
-#define IPMI_OEM_INTEL_SPEC_H
+#ifndef IPMI_OEM_INTEL_S2600WT2_SPEC_H
+#define IPMI_OEM_INTEL_S2600WT2_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <freeipmi/spec/oem/ipmi-oem-intel-s5500wb-spec.h>
-#include <freeipmi/spec/oem/ipmi-oem-intel-s2600jf-spec.h>
-#include <freeipmi/spec/oem/ipmi-oem-intel-s2600wt2-spec.h>
+/*
+ * Intel S2600WT2
+ */
+
+/* w/ IPMI_CMD_OEM_INTEL_S2600WT2_GET_BMC_SERVICE_STATUS / IPMI_CMD_OEM_INTEL_S2600WT2_CONTROL_BMC_SERVICES */
+
+#define IPMI_OEM_INTEL_S2600WT2_DISABLE_SERVICES 0x00
+#define IPMI_OEM_INTEL_S2600WT2_ENABLE_SERVICES  0x01
+
+#define IPMI_OEM_INTEL_S2600WT2_STANDARD_SERVICES_SSH  0x80
+#define IPMI_OEM_INTEL_S2600WT2_STANDARD_SERVICES_HTTP 0x20
+#define IPMI_OEM_INTEL_S2600WT2_STANDARD_SERVICES_RMCP 0x08
+
+#define IPMI_OEM_INTEL_S2600WT2_OEM_SPECIFIC_SERVICES_KVM 0x80
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* IPMI_OEM_INTEL_SPEC_H */
+#endif /* IPMI_OEM_INTEL_S2600WT2_SPEC_H */

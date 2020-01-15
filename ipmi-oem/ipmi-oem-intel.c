@@ -1175,7 +1175,7 @@ ipmi_oem_intel_get_power_restore_delay (ipmi_oem_state_data_t *state_data)
                                                    NULL) < 0)
     goto cleanup;
 
-  delay = ((bytes_rs[2] & IPMI_OEM_INTEL_POWER_RESTORE_DELAY_MSB_MASK) << 8) | bytes_rs[3];
+  delay = ((bytes_rs[2] & IPMI_OEM_INTEL_S2600JF_POWER_RESTORE_DELAY_MSB_MASK) << 8) | bytes_rs[3];
 
   pstdout_printf (state_data->pstate, "%u\n", delay);
 
@@ -1205,7 +1205,7 @@ ipmi_oem_intel_set_power_restore_delay (ipmi_oem_state_data_t *state_data)
                  10);
   if (errno
       || endptr[0] != '\0'
-      || tmp > IPMI_OEM_INTEL_POWER_RESTORE_DELAY_MAX)
+      || tmp > IPMI_OEM_INTEL_S2600JF_POWER_RESTORE_DELAY_MAX)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -1238,8 +1238,8 @@ ipmi_oem_intel_set_power_restore_delay (ipmi_oem_state_data_t *state_data)
    */
 
   bytes_rq[0] = IPMI_CMD_OEM_INTEL_S2600JF_SET_POWER_RESTORE_DELAY;
-  bytes_rq[1] = (delay >> 8) & IPMI_OEM_INTEL_POWER_RESTORE_DELAY_MSB_MASK;
-  bytes_rq[2] = (delay & IPMI_OEM_INTEL_POWER_RESTORE_DELAY_LSB_MASK);
+  bytes_rq[1] = (delay >> 8) & IPMI_OEM_INTEL_S2600JF_POWER_RESTORE_DELAY_MSB_MASK;
+  bytes_rq[2] = (delay & IPMI_OEM_INTEL_S2600JF_POWER_RESTORE_DELAY_LSB_MASK);
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */
@@ -1332,16 +1332,16 @@ ipmi_oem_intel_get_bmc_services (ipmi_oem_state_data_t *state_data)
     goto cleanup;
 
   pstdout_printf (state_data->pstate, "SSH: %s\n",
-                  (bytes_rs[2] & IPMI_OEM_INTEL_STANDARD_SERVICES_SSH) ? "Enabled" : "Disabled");
+                  (bytes_rs[2] & IPMI_OEM_INTEL_S2600WT2_STANDARD_SERVICES_SSH) ? "Enabled" : "Disabled");
 
   pstdout_printf (state_data->pstate, "HTTP/HTTPS: %s\n",
-                  (bytes_rs[2] & IPMI_OEM_INTEL_STANDARD_SERVICES_HTTP) ? "Enabled" : "Disabled");
+                  (bytes_rs[2] & IPMI_OEM_INTEL_S2600WT2_STANDARD_SERVICES_HTTP) ? "Enabled" : "Disabled");
 
   pstdout_printf (state_data->pstate, "RMCP/RMCP+: %s\n",
-                  (bytes_rs[2] & IPMI_OEM_INTEL_STANDARD_SERVICES_RMCP) ? "Enabled" : "Disabled");
+                  (bytes_rs[2] & IPMI_OEM_INTEL_S2600WT2_STANDARD_SERVICES_RMCP) ? "Enabled" : "Disabled");
 
   pstdout_printf (state_data->pstate, "KVM: %s\n",
-                  (bytes_rs[3] & IPMI_OEM_INTEL_OEM_SPECIFIC_SERVICES_KVM) ? "Enabled" : "Disabled");
+                  (bytes_rs[3] & IPMI_OEM_INTEL_S2600WT2_OEM_SPECIFIC_SERVICES_KVM) ? "Enabled" : "Disabled");
 
   rv = 0;
  cleanup:
@@ -1413,29 +1413,29 @@ ipmi_oem_intel_set_bmc_services (ipmi_oem_state_data_t *state_data)
 
   bytes_rq[0] = IPMI_CMD_OEM_INTEL_S2600WT2_CONTROL_BMC_SERVICES;
   if (!strcasecmp (state_data->prog_data->args->oem_options[0], "enable"))
-    bytes_rq[1] = IPMI_OEM_INTEL_ENABLE_SERVICES;
+    bytes_rq[1] = IPMI_OEM_INTEL_S2600WT2_ENABLE_SERVICES;
   else
-    bytes_rq[1] = IPMI_OEM_INTEL_DISABLE_SERVICES;
+    bytes_rq[1] = IPMI_OEM_INTEL_S2600WT2_DISABLE_SERVICES;
 
   if (!strcasecmp (state_data->prog_data->args->oem_options[1], "ssh"))
     {
-      bytes_rq[2] = IPMI_OEM_INTEL_STANDARD_SERVICES_SSH;
+      bytes_rq[2] = IPMI_OEM_INTEL_S2600WT2_STANDARD_SERVICES_SSH;
       bytes_rq[3] = 0;
     }
   else if (!strcasecmp (state_data->prog_data->args->oem_options[1], "http"))
     {
-      bytes_rq[2] = IPMI_OEM_INTEL_STANDARD_SERVICES_HTTP;
+      bytes_rq[2] = IPMI_OEM_INTEL_S2600WT2_STANDARD_SERVICES_HTTP;
       bytes_rq[3] = 0;
     }
   else if (!strcasecmp (state_data->prog_data->args->oem_options[1], "rmcp"))
     {
-      bytes_rq[2] = IPMI_OEM_INTEL_STANDARD_SERVICES_RMCP;
+      bytes_rq[2] = IPMI_OEM_INTEL_S2600WT2_STANDARD_SERVICES_RMCP;
       bytes_rq[3] = 0;
     }
   else if (!strcasecmp (state_data->prog_data->args->oem_options[1], "kvm"))
     {
       bytes_rq[2] = 0;
-      bytes_rq[3] = IPMI_OEM_INTEL_OEM_SPECIFIC_SERVICES_KVM;
+      bytes_rq[3] = IPMI_OEM_INTEL_S2600WT2_OEM_SPECIFIC_SERVICES_KVM;
     }
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
