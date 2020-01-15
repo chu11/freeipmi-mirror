@@ -23,8 +23,6 @@
 extern "C" {
 #endif
 
-#include <stdint.h>
-
 /*
  * HP Proliant DL160 G8
  */

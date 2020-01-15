@@ -23,8 +23,6 @@
 extern "C" {
 #endif
 
-#include <stdint.h>
-
 /*
  * Intel S5500WB/Penguin Computing Relion 700
  */

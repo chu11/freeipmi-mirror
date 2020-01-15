@@ -23,8 +23,6 @@
 extern "C" {
 #endif
 
-#include <stdint.h>
-
 /*
  * Dell Poweredge R610
  * Dell Poweredge R710

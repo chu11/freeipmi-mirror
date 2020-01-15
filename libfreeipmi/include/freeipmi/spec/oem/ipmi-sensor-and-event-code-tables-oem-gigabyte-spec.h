@@ -23,8 +23,6 @@
 extern "C" {
 #endif
 
-#include <stdint.h>
-
 /*
  * Gigabyte MD90-FS0-ZB
  * Gigabyte MG20-OP0-ZB

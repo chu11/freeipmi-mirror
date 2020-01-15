@@ -11,6 +11,9 @@
 	* libfreeipmi/include/freeipmi/spec/oem/ipmi-sensor-types-oem-intel-spec.h:
 	Remove accidental Dell sensor types included in header.
 
+	* libfreeipmi/include/freeipmi/spec/oem: Remove unnecessary
+	includes of stdint.h.
+
 	Begin Intel OEM extensions refactoring.
 
 	* libfreeipmi/include/freeipmi/spec/oem/ipmi-comp-code-oem-intel-spec.h,

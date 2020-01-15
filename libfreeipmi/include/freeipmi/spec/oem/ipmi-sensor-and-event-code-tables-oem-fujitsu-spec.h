@@ -23,8 +23,6 @@
 extern "C" {
 #endif
 
-#include <stdint.h>
-
 /*
  * Fujitsu Siemens Computers
  * Fujitsu Technology Solutions
