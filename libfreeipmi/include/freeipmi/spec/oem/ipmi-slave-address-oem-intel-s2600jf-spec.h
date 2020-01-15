@@ -16,29 +16,21 @@
  *
  */
 
-#ifndef IPMI_SLAVE_ADDRESS_OEM_INTEL_SPEC_H
-#define IPMI_SLAVE_ADDRESS_OEM_INTEL_SPEC_H
+#ifndef IPMI_SLAVE_ADDRESS_OEM_INTEL_S2600JF_SPEC_H
+#define IPMI_SLAVE_ADDRESS_OEM_INTEL_S2600JF_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <freeipmi/spec/oem/ipmi-slave-address-oem-intel-s5500wb-spec.h>
-#include <freeipmi/spec/oem/ipmi-slave-address-oem-intel-quanta-qssc-s4r-spec.h>
-#include <freeipmi/spec/oem/ipmi-slave-address-oem-intel-s2600jf-spec.h>
-#include <freeipmi/spec/oem/ipmi-slave-address-oem-intel-s2600wp-spec.h>
-
 /*
- * Intel S2600KP
- * Intel S2600WT2
- * Intel S2600WTT
- * Intel S2600GZ
+ * Intel S2600JF/Appro 512X
  */
-#define IPMI_GENERATOR_ID_OEM_INTEL_E52600V3_BIOS_POST          0x01
-#define IPMI_GENERATOR_ID_OEM_INTEL_E52600V3_BIOS_SMI_HANDLER   0x33
+#define IPMI_GENERATOR_ID_OEM_INTEL_S2600JF_BIOS_POST          0x01
+#define IPMI_GENERATOR_ID_OEM_INTEL_S2600JF_BIOS_SMI_HANDLER   0x33
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* IPMI_SLAVE_ADDRESS_OEM_INTEL_SPEC_H */
+#endif /* IPMI_SLAVE_ADDRESS_OEM_INTEL_S2600JF_SPEC_H */
