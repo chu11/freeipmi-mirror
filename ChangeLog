@@ -31,6 +31,10 @@
 
 	* libfreeipmi/include/freeipmi/spec/oem/ipmi-comp-code-oem-intel-s5500wb-spec.h,
 	libfreeipmi/include/freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-s5500wb-spec.h,
+	libfreeipmi/include/freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-quanta-qssc-s4r-spec.h,
+	libfreeipmi/include/freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-s2600jf-spec.h,
+	libfreeipmi/include/freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-s2600wp-spec.h,
+	libfreeipmi/include/freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-windmill-spec.h,
 	libfreeipmi/include/freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-intel-common-spec.h,
 	libfreeipmi/include/freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-intel-s5500wb-spec.h,
 	libfreeipmi/include/freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-intel-quanta-qssc-s4r-spec.h,
