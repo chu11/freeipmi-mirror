@@ -75,7 +75,8 @@ B1;5202;0c2020-01-14 Albert Chu <chu11@llnl.gov>
 	libfreeipmi/spec/ipmi-sensor-and-event-code-tables-oem-intel-common-spec.c,
 	libfreeipmi/spec/ipmi-sensor-and-event-code-tables-oem-intel-s5500wb-spec.c,
 	libfreeipmi/spec/ipmi-sensor-and-event-code-tables-oem-intel-quanta-qssc-s4r-spec.c,
-	libfreeipmi/spec/ipmi-sensor-and-event-code-tables-oem-intel-s2600jf-spec.c:
+	libfreeipmi/spec/ipmi-sensor-and-event-code-tables-oem-intel-s2600jf-spec.c,
+	libfreeipmi/spec/ipmi-sensor-and-event-code-tables-oem-intel-s2600wp-spec.c:
 	New file(s).
 
 	* libfreeipmi/sel, libfreeipmi/util, ipmi-oem: Update for macro /
