@@ -43,7 +43,8 @@ extern "C" {
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_FP_INTERRUPT                                        0x05
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_SMI_TIMEOUT                                         0x06
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_SYSTEM_EVENT_LOG                                    0x07
-#define IPMI_SENSOR_NUMBER_OEM_INTEL_SYSTEM_EVENT                                        0x08
+/* conflicting name, fix later */
+#define IPMI_SENSOR_NUMBER_OEM_INTEL_FIXME_SYSTEM_EVENT                                        0x08
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_BUTTON_SENSOR                                       0x09
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_BMC_WATCHDOG                                        0x0A
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_VOLTAGE_REGULATOR_WATCHDOG                          0x0B

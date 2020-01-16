@@ -23,31 +23,7 @@
 extern "C" {
 #endif
 
-/*
- * Intel S2600WP
- */
-/* achu: Similar to above, but to clearly differentiate motherboards, duplicate them */
-/* achu: note a typo, memory ras configuration status & memory ecc error both 2, not sure why in doc */
-#define IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_MIRRORING_REDUNDANCY_STATE      0x01
-#define IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_MEMORY_RAS_CONFIGURATION_STATUS 0x02
-#define IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_MEMORY_ECC_ERROR                0x02
-#define IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_LEGACY_PCI_ERROR                0x03
-#define IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_PCIE_FATAL_ERROR                0x04
-#define IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_PCIE_CORRECTABLE_ERROR          0x05
-#define IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_BIOS_POST_ERROR                 0x06
-/* not a typo, also 0x06 */
-#define IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_QPI_CORRECTABLE_ERRORS          0x06
-#define IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_QPI_FATAL_ERROR                 0x07
-#define IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_CHIPSET_PROPRIETARY             0x08
-#define IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_QPI_LINK_WIDTH_REDUCED          0x09
-#define IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_MEMORY_ERROR_EXTENSION          0x10
-#define IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_SPARING_REDUNDANCY_STATE        0x11
-#define IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_MEMORY_RAS_MODE_SELECT          0x12
-#define IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_MEMORY_PARITY_ERROR             0x13
-#define IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_PCIE_FATAL_ERROR_2              0x14
-/* not a typo, jumps to 0x17 */
-#define IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_QPI_FATAL_ERROR_2               0x17
-#define IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_SYSTEM_EVENT                    0x83
+#include <freeipmi/spec/oem/ipmi-sensor-numbers-oem-intel-common-spec.h>
 
 #ifdef __cplusplus
 }
