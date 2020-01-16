@@ -2,6 +2,8 @@ FreeIPMI 1.7.1 - XX/XX/XX
 -------------------------
 Libraries
 ---------
+o Significant refactoring of Intel OEM extensions.  Names of
+  variables, macros, etc. may have changed.
 o libfreeipmi/sensor-read: Add error for privilege level insufficient.
 
 FreeIPMI 1.6.1 - 02/02/18
