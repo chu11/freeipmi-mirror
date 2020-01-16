@@ -53,3 +53,127 @@ const char * const ipmi_oem_intel_specific_pci_correctable_sensor[] =
     NULL
   };
 unsigned int ipmi_oem_intel_specific_pci_correctable_sensor_max_index = 0x06;
+
+/*
+ * Intel S2600JF/Appro 512X
+ * Intel S2600WP
+ */
+
+const char * const ipmi_oem_intel_specific_pcie_fatal_error[] =
+  {
+    "Data Link Layer Protocol Error",
+    "Surprise Link Down Error",
+    "Completer Abort",
+    "Unsupported Request",
+    "Poisoned TLP",
+    "Flow Control Protocol",
+    "Completion Timeout",
+    "Receiver Buffer Overflow",
+    "ACS Violation Error",
+    "Malformed TLP Error",
+    "ECRC Error",
+    "Received Fatal Message From Downstream",
+    "Unexpected Completion",
+    "Received ERR_NONFATAL Message",
+    "Uncorrectable Internal",
+    "MC Blocked TLP",
+    NULL
+  };
+unsigned int ipmi_oem_intel_specific_pcie_fatal_error_max_index = 0x0F;
+
+const char * const ipmi_oem_intel_specific_pcie_fatal_error_2[] =
+  {
+    "Atomic Egress Blocked",
+    "TLP Prefix Blocked",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "Unspecified Non-AER Fatal Error",
+    NULL
+  };
+unsigned int ipmi_oem_intel_specific_pcie_fatal_error_2_max_index = 0x0F;
+
+const char * const ipmi_oem_intel_specific_pcie_correctable_error[] =
+  {
+    "Receiver Error",
+    "Bad DLLP",
+    "Bad TLP",
+    "Replay Num Rollover",
+    "Replay Timer timeout",
+    "Advisory Non-fatal",
+    "Link BW Changed",
+    "Correctable Internal",
+    "Header Log Overflow",
+    NULL
+  };
+unsigned int ipmi_oem_intel_specific_pcie_correctable_error_max_index = 0x08;
+
+const char * const ipmi_oem_intel_specific_qpi_fatal_error[] =
+  {
+    "Link Layer Uncorrectable ECC Error",
+    "Protocol Layer Poisoned Packet Reception Error",
+    "LINK/PHY Init Failure with resultant degradation in link width",
+    "CSI PHY Layer detected drift buffer alarm",
+    "CSI PHY detected latency buffer rollover",
+    "CSI PHY Init Failure",
+    "CSI Link Layer generic control error (buffer overflow/underflow, credit underflow and so on.)",
+    "Parity error in link or PHY layer",
+    "Protocol layer timeout detected",
+    "Protocol layer failed response",
+    "Protocol layer illegal packet field, target Node ID and so on.",
+    "Protocol Layer Queue/table overflow/underflow",
+    "Viral Error",
+    "Protocol Layer parity error",
+    "Routing Table Error",
+    NULL
+  };
+unsigned int ipmi_oem_intel_specific_qpi_fatal_error_max_index = 0x0E;
+
+#if 0
+/* achu: Intel informed me there was an error in their documentation and the following was not correct.
+ * I'll leave this here for legacy documentation
+ */
+const char * const ipmi_oem_intel_specific_qpi_fatal_error_2[] =
+  {
+    "Illegal inbound request",
+    "PCH Write Cache Uncorrectable Data ECC Error",
+    "PCH Write Cache Uncorrectable Data ECC Error", /* same not typo, typo in spec? */
+    "PCH Write Cache Uncorrectable Data ECC Error", /* same not typo, typo in spec? */
+    "PCH Received XPF physical/logical redirect interrupt inbound",
+    "PCH Illegal SAD or Illegal or non-existent address or memory",
+    "PCH Write Cache Coherency Violation",
+    NULL
+  };
+unsigned int ipmi_oem_intel_specific_qpi_fatal_error_2_max_index = 0x06;
+#else  /* !0 */
+const char * const ipmi_oem_intel_specific_qpi_fatal_error_2[] =
+  {
+    "Illegal inbound request",
+    "IIO Write Cache Uncorrectable Data ECC Error",
+    "IIO CSR crossing 32-bit boundary Error",
+    "IIO Received XPF physical/logical redirect interrupt inbound",
+    "IIO Illegal SAD or Illegal or non-existent address or memory",
+    "IIO Write Cache Coherency Violation",
+    NULL
+  };
+unsigned int ipmi_oem_intel_specific_qpi_fatal_error_2_max_index = 0x05;
+#endif  /* !0 */
+
+const char * const ipmi_oem_intel_specific_qpi_link_width_reduced[] =
+  {
+    "reserved",
+    "Reduced to 1/2 width",
+    "Reduced to 1/4 width",
+    NULL
+  };
+unsigned int ipmi_oem_intel_specific_qpi_link_width_reduced_max_index = 0x02;

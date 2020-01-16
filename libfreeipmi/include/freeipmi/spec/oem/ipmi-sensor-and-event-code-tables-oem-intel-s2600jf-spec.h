@@ -29,29 +29,6 @@ extern "C" {
  * Intel S2600JF/Appro 512X
  */
 
-/*
- * String arrays for above
- */
-
-/* achu: Similar to above, but some events text changed, so new arrays to differentiate */
-extern const char * const ipmi_oem_intel_s2600jf_specific_pci_fatal_error[];
-extern unsigned int ipmi_oem_intel_s2600jf_specific_pci_fatal_error_max_index;
-
-extern const char * const ipmi_oem_intel_s2600jf_specific_pci_fatal_error_2[];
-extern unsigned int ipmi_oem_intel_s2600jf_specific_pci_fatal_error_2_max_index;
-
-extern const char * const ipmi_oem_intel_s2600jf_specific_pci_correctable_error[];
-extern unsigned int ipmi_oem_intel_s2600jf_specific_pci_correctable_error_max_index;
-
-extern const char * const ipmi_oem_intel_s2600jf_specific_opi_fatal_error[];
-extern unsigned int ipmi_oem_intel_s2600jf_specific_opi_fatal_error_max_index;
-
-extern const char * const ipmi_oem_intel_s2600jf_specific_opi_fatal_error_2[];
-extern unsigned int ipmi_oem_intel_s2600jf_specific_opi_fatal_error_2_max_index;
-
-extern const char * const ipmi_oem_intel_s2600jf_specific_qpi_link_width_reduced[];
-extern unsigned int ipmi_oem_intel_s2600jf_specific_qpi_link_width_reduced_max_index;
-
 #define IPMI_SENSOR_MEMORY_REDUNDANCY_EVENT_DATA2_OEM_INTEL_S2600JF_MIRRORING_DOMAIN_CHANNEL_BITMASK 0xF0
 #define IPMI_SENSOR_MEMORY_REDUNDANCY_EVENT_DATA2_OEM_INTEL_S2600JF_MIRRORING_DOMAIN_CHANNEL_SHIFT   4
 

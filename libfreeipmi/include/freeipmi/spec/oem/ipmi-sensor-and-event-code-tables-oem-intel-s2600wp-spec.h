@@ -42,24 +42,6 @@ extern "C" {
  * String arrays for above
  */
 
-extern const char * const ipmi_oem_intel_s2600wp_specific_pcie_fatal_error[];
-extern unsigned int ipmi_oem_intel_s2600wp_specific_pcie_fatal_error_max_index;
-
-extern const char * const ipmi_oem_intel_s2600wp_specific_pcie_fatal_error_2[];
-extern unsigned int ipmi_oem_intel_s2600wp_specific_pcie_fatal_error_2_max_index;
-
-extern const char * const ipmi_oem_intel_s2600wp_specific_pcie_correctable_error[];
-extern unsigned int ipmi_oem_intel_s2600wp_specific_pcie_correctable_error_max_index;
-
-extern const char * const ipmi_oem_intel_s2600wp_specific_qpi_fatal_error[];
-extern unsigned int ipmi_oem_intel_s2600wp_specific_qpi_fatal_error_max_index;
-
-extern const char * const ipmi_oem_intel_s2600wp_specific_qpi_fatal_error_2[];
-extern unsigned int ipmi_oem_intel_s2600wp_specific_qpi_fatal_error_2_max_index;
-
-extern const char * const ipmi_oem_intel_s2600wp_specific_qpi_link_width_reduced[];
-extern unsigned int ipmi_oem_intel_s2600wp_specific_qpi_link_width_reduced_max_index;
-
 extern const char * const ipmi_oem_intel_s2600wp_specific_firmware_update_status_sensor[];
 extern unsigned int ipmi_oem_intel_s2600wp_specific_firmware_update_status_sensor_max_index;
 
