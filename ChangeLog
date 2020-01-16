@@ -80,6 +80,10 @@
 	libfreeipmi/include/freeipmi/spec/oem/ipmi-sensor-types-oem-intel-quanta-qssc-s4r-spec.h
 	libfreeipmi/include/freeipmi/spec/oem/ipmi-sensor-types-oem-intel-s5000pal-spec.h,
 	libfreeipmi/include/freeipmi/spec/oem/ipmi-sensor-types-oem-intel-windmill-spec.h,
+	libfreeipmi/include/freeipmi/spec/oem/ipmi-sensor-types-oem-intel-s2600kp-spec.h,
+	libfreeipmi/include/freeipmi/spec/oem/ipmi-sensor-types-oem-intel-s2600wt2-spec.h,
+	libfreeipmi/include/freeipmi/spec/oem/ipmi-sensor-types-oem-intel-s2600wtt-spec.h,
+	libfreeipmi/include/freeipmi/spec/oem/ipmi-sensor-types-oem-intel-s2600gz-spec.h,
 	libfreeipmi/spec/ipmi-sensor-and-event-code-tables-oem-intel-common-spec.c,
 	libfreeipmi/spec/ipmi-sensor-and-event-code-tables-oem-intel-s5500wb-spec.c,
 	libfreeipmi/spec/ipmi-sensor-and-event-code-tables-oem-intel-quanta-qssc-s4r-spec.c,

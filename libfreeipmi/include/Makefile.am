@@ -227,6 +227,10 @@ nobase_include_HEADERS = \
 	freeipmi/spec/oem/ipmi-sensor-types-oem-intel-quanta-qssc-s4r-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-types-oem-intel-s5000pal-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-types-oem-intel-windmill-spec.h \
+	freeipmi/spec/oem/ipmi-sensor-types-oem-intel-s2600kp-spec.h \
+	freeipmi/spec/oem/ipmi-sensor-types-oem-intel-s2600wt2-spec.h \
+	freeipmi/spec/oem/ipmi-sensor-types-oem-intel-s2600wtt-spec.h \
+	freeipmi/spec/oem/ipmi-sensor-types-oem-intel-s2600gz-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-types-oem-inventec-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-types-oem-supermicro-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-types-oem-wistron-spec.h \

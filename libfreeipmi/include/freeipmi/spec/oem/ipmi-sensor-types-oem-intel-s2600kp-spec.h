@@ -16,33 +16,17 @@
  *
  */
 
-#ifndef IPMI_SENSOR_TYPES_OEM_INTEL_COMMON_SPEC_H
-#define IPMI_SENSOR_TYPES_OEM_INTEL_COMMON_SPEC_H
+#ifndef IPMI_SENSOR_TYPES_OEM_INTEL_S2600KP_SPEC_H
+#define IPMI_SENSOR_TYPES_OEM_INTEL_S2600KP_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/*
- * Intel S5500WB/Penguin Computing Relion 700
- * Intel SR1625
- * Quanta QSSC-S4R/Appro GB812X-CN
- * (Quanta motherboard contains Intel manufacturer ID)
- */
-
-#define IPMI_SENSOR_TYPE_OEM_INTEL_SMI_TIMEOUT                  0xF3
-
-/*
- * Intel S2600KP
- * Intel S2600WT2
- * Intel S2600WTT
- * Intel S2600GZ
- */
-
-#define IPMI_SENSOR_TYPE_OEM_INTEL_IERR_RECOVERY_DUMP_INFO 0xD1
+#include <freeipmi/spec/oem/ipmi-sensor-types-oem-intel-common-spec.h>
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* IPMI_SENSOR_TYPES_OEM_INTEL_COMMON_SPEC_H */
+#endif /* IPMI_SENSOR_TYPES_OEM_INTEL_S2600KP_SPEC_H */

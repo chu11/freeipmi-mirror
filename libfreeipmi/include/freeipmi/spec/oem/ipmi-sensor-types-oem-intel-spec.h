@@ -28,14 +28,10 @@ extern "C" {
 #include <freeipmi/spec/oem/ipmi-sensor-types-oem-intel-quanta-qssc-s4r-spec.h>
 #include <freeipmi/spec/oem/ipmi-sensor-types-oem-intel-s5000pal-spec.h>
 #include <freeipmi/spec/oem/ipmi-sensor-types-oem-intel-windmill-spec.h>
-
-/*
- * Intel S2600KP
- * Intel S2600WT2
- * Intel S2600WTT
- * Intel S2600GZ
- */
-#define IPMI_SENSOR_TYPE_OEM_INTEL_E52600V3_IERR_RECOVERY_DUMP_INFO 0xD1
+#include <freeipmi/spec/oem/ipmi-sensor-types-oem-intel-s2600kp-spec.h>
+#include <freeipmi/spec/oem/ipmi-sensor-types-oem-intel-s2600wt2-spec.h>
+#include <freeipmi/spec/oem/ipmi-sensor-types-oem-intel-s2600wtt-spec.h>
+#include <freeipmi/spec/oem/ipmi-sensor-types-oem-intel-s2600gz-spec.h>
 
 #ifdef __cplusplus
 }

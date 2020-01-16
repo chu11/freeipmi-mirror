@@ -181,7 +181,7 @@ sel_string_output_intel_e52600v3_event_data1_class_oem (ipmi_sel_ctx_t ctx,
           && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_PCI_EXPRESS_CORRECTABLE_ERROR
           && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_CORRECTABLE_ERROR)
       || (system_event_record_data->generator_id == IPMI_SLAVE_ADDRESS_BMC
-          && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_E52600V3_IERR_RECOVERY_DUMP_INFO
+          && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_IERR_RECOVERY_DUMP_INFO
           && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_IERR_RECOVERY_DUMP_INFO
           && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_IERR_RECOVERY_DUMP_INFO))
     {
@@ -894,7 +894,7 @@ sel_string_output_intel_e52600v3_event_data2_class_oem (ipmi_sel_ctx_t ctx,
     }
 
   if (system_event_record_data->generator_id == IPMI_SLAVE_ADDRESS_BMC
-      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_E52600V3_IERR_RECOVERY_DUMP_INFO
+      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_IERR_RECOVERY_DUMP_INFO
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_IERR_RECOVERY_DUMP_INFO
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_IERR_RECOVERY_DUMP_INFO
       && system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_E52600V3_SPECIFIC_IERR_RECOVERY_DUMP_INFO_DUMP_FAILED)
