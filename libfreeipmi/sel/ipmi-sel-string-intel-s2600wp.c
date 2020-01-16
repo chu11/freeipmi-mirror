@@ -143,7 +143,7 @@ sel_string_output_intel_s2600wp_event_data1_class_oem (ipmi_sel_ctx_t ctx,
     return (1);
 
   if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
-      && ((system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600WP_BIOS_SMI_HANDLER
+      && ((system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER
            && ((system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_ERROR
                 && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_PCIE_FATAL_ERROR)
                || (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_ERROR_2
@@ -154,7 +154,7 @@ sel_string_output_intel_s2600wp_event_data1_class_oem (ipmi_sel_ctx_t ctx,
                    && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_QPI_FATAL_ERROR)
                || (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_FATAL_ERROR_2
                    && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_QPI_FATAL_ERROR_2)))
-          || (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600WP_BIOS_POST
+          || (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_POST
               && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_LINK_WIDTH_REDUCED
               && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_QPI_LINK_WIDTH_REDUCED)))
     {
@@ -170,7 +170,7 @@ sel_string_output_intel_s2600wp_event_data1_class_oem (ipmi_sel_ctx_t ctx,
         return (1);
     }
 
-  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600WP_BIOS_SMI_HANDLER
+  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_QPI_CORRECTABLE_ERRORS
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_CORRECTABLE_ERRORS)
@@ -183,7 +183,7 @@ sel_string_output_intel_s2600wp_event_data1_class_oem (ipmi_sel_ctx_t ctx,
       return (1);
     }
 
-  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600WP_BIOS_SMI_HANDLER
+  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_CHIPSET_PROPRIETARY
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_CHIPSET_PROPRIETARY)
@@ -196,7 +196,7 @@ sel_string_output_intel_s2600wp_event_data1_class_oem (ipmi_sel_ctx_t ctx,
       return (1);
     }
 
-  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600WP_BIOS_SMI_HANDLER
+  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_MEMORY_ERROR_EXTENSION
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_MEMORY_ERROR_EXTENSION)
@@ -296,7 +296,7 @@ sel_string_output_intel_s2600wp_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
    * Intel S2600WP
    */
 
-  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600WP_BIOS_SMI_HANDLER
+  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_MIRRORING_REDUNDANCY_STATE
@@ -321,7 +321,7 @@ sel_string_output_intel_s2600wp_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
       return (1);
     }
 
-  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600WP_BIOS_POST
+  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_POST
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_ENABLED
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_MEMORY_RAS_CONFIGURATION_STATUS
@@ -354,7 +354,7 @@ sel_string_output_intel_s2600wp_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
       return (1);
     }
 
-  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600WP_BIOS_SMI_HANDLER
+  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_MEMORY_ECC_ERROR
@@ -374,7 +374,7 @@ sel_string_output_intel_s2600wp_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
       return (1);
     }
 
-  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600WP_BIOS_SMI_HANDLER
+  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_LEGACY_PCI_ERROR
@@ -386,7 +386,7 @@ sel_string_output_intel_s2600wp_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
       return (1);
     }
 
-  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600WP_BIOS_SMI_HANDLER
+  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_SPARING_REDUNDANCY_STATE
@@ -430,7 +430,7 @@ sel_string_output_intel_s2600wp_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
       return (1);
     }
 
-  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600WP_BIOS_POST
+  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_POST
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_ENABLED
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_MEMORY_RAS_MODE_SELECT
@@ -497,7 +497,7 @@ sel_string_output_intel_s2600wp_event_data2_class_oem (ipmi_sel_ctx_t ctx,
   if (ret)
     return (1);
 
-  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600WP_BIOS_SMI_HANDLER
+  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
       && ((system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_ERROR
            && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_PCIE_FATAL_ERROR)
@@ -512,12 +512,12 @@ sel_string_output_intel_s2600wp_event_data2_class_oem (ipmi_sel_ctx_t ctx,
     }
 
   if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
-      && ((system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600WP_BIOS_SMI_HANDLER
+      && ((system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER
            && ((system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_FATAL_ERROR
                 && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_QPI_FATAL_ERROR)
                || (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_FATAL_ERROR_2
                    && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_QPI_FATAL_ERROR_2)))
-          || (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600WP_BIOS_POST
+          || (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_POST
               && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_LINK_WIDTH_REDUCED
               && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_QPI_LINK_WIDTH_REDUCED)))
     {
@@ -624,14 +624,14 @@ sel_string_output_intel_s2600wp_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
    * Intel S2600WP
    */
 
-  if ((system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600WP_BIOS_SMI_HANDLER
+  if ((system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER
        && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
        && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
        && (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_MIRRORING_REDUNDANCY_STATE
            || system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_SPARING_REDUNDANCY_STATE)
        && (system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_FULLY_REDUNDANT
            || system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_REDUNDANCY_DEGRADED))
-      || (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600WP_BIOS_SMI_HANDLER
+      || (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER
           && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
           && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
           && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_MEMORY_ECC_ERROR
@@ -715,7 +715,7 @@ sel_string_output_intel_s2600wp_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
       return (1);
     }
 
-  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600WP_BIOS_POST
+  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_POST
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_ENABLED
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_MEMORY_RAS_CONFIGURATION_STATUS
@@ -734,7 +734,7 @@ sel_string_output_intel_s2600wp_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
       return (1);
     }
 
-  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600WP_BIOS_POST
+  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_POST
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_DEVICE_ENABLED
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_MEMORY_RAS_MODE_SELECT
@@ -753,7 +753,7 @@ sel_string_output_intel_s2600wp_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
       return (1);
     }
 
-  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600WP_BIOS_SMI_HANDLER
+  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_LEGACY_PCI_ERROR
@@ -813,7 +813,7 @@ sel_string_output_intel_s2600wp_event_data3_class_oem (ipmi_sel_ctx_t ctx,
   if (ret)
     return (1);
 
-  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600WP_BIOS_SMI_HANDLER
+  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
       && ((system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_ERROR
            && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_PCIE_FATAL_ERROR)
@@ -865,7 +865,7 @@ sel_string_output_intel_s2600wp_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
   /*
    * Intel S2600WP
    */
-  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600WP_BIOS_POST
+  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_POST
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_BIOS_POST_ERROR
@@ -1503,7 +1503,7 @@ sel_string_output_intel_s2600wp_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
       return (1);
     }
 
-  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600WP_BIOS_SMI_HANDLER
+  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_MEMORY_PARITY_ERROR

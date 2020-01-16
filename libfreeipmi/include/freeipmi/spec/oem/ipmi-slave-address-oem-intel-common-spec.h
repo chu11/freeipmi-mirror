@@ -16,23 +16,28 @@
  *
  */
 
-#ifndef IPMI_SLAVE_ADDRESS_OEM_INTEL_S5500WB_SPEC_H
-#define IPMI_SLAVE_ADDRESS_OEM_INTEL_S5500WB_SPEC_H
+#ifndef IPMI_SLAVE_ADDRESS_OEM_INTEL_COMMON_SPEC_H
+#define IPMI_SLAVE_ADDRESS_OEM_INTEL_COMMON_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <freeipmi/spec/oem/ipmi-slave-address-oem-intel-common-spec.h>
-
 /*
  * Intel S5500WB/Penguin Computing Relion 700
+ * Intel S2600JF/Appro 512X
+ * Intel S2600WP
  */
-#define IPMI_GENERATOR_ID_OEM_INTEL_S5500WB_ME_FIRMWARE        0x2C
-#define IPMI_GENERATOR_ID_OEM_INTEL_S5500WB_HSC_FIRMWARE       0xC0
+#define IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER   0x33
+
+/*
+ * Intel S2600JF/Appro 512X
+ * Intel S2600WP
+ */
+#define IPMI_GENERATOR_ID_OEM_INTEL_BIOS_POST          0x01
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* IPMI_SLAVE_ADDRESS_OEM_INTEL_S5500WB_SPEC_H */
+#endif /* IPMI_SLAVE_ADDRESS_OEM_INTEL_COMMON_SPEC_H */

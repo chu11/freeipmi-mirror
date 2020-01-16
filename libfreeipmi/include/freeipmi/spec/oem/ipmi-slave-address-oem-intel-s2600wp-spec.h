@@ -23,11 +23,7 @@
 extern "C" {
 #endif
 
-/*
- * Intel S2600WP
- */
-#define IPMI_GENERATOR_ID_OEM_INTEL_S2600WP_BIOS_POST          0x01
-#define IPMI_GENERATOR_ID_OEM_INTEL_S2600WP_BIOS_SMI_HANDLER   0x33
+#include <freeipmi/spec/oem/ipmi-slave-address-oem-intel-common-spec.h>
 
 #ifdef __cplusplus
 }

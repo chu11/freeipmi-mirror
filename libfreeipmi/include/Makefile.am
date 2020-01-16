@@ -226,6 +226,7 @@ nobase_include_HEADERS = \
 	freeipmi/spec/oem/ipmi-sensor-types-oem-supermicro-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-types-oem-wistron-spec.h \
 	freeipmi/spec/oem/ipmi-slave-address-oem-intel-spec.h \
+	freeipmi/spec/oem/ipmi-slave-address-oem-intel-common-spec.h \
 	freeipmi/spec/oem/ipmi-slave-address-oem-intel-s5500wb-spec.h \
 	freeipmi/spec/oem/ipmi-slave-address-oem-intel-quanta-qssc-s4r-spec.h \
 	freeipmi/spec/oem/ipmi-slave-address-oem-intel-s2600jf-spec.h \
