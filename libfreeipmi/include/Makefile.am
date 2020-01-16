@@ -148,6 +148,7 @@ nobase_include_HEADERS = \
 	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-hp-spec.h \
 	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-node-manager-spec.h \
 	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-spec.h \
+	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-common-spec.h \
 	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-s5500wb-spec.h \
 	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-quanta-qssc-s4r-spec.h \
 	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-s2600jf-spec.h \

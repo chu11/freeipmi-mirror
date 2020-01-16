@@ -144,18 +144,18 @@ sel_string_output_intel_s2600wp_event_data1_class_oem (ipmi_sel_ctx_t ctx,
 
   if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
       && ((system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600WP_BIOS_SMI_HANDLER
-           && ((system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600WP_PCIE_FATAL_ERROR
+           && ((system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_ERROR
                 && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_PCIE_FATAL_ERROR)
-               || (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600WP_PCIE_FATAL_ERROR_2
+               || (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_ERROR_2
                    && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_PCIE_FATAL_ERROR_2)
-               || (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600WP_PCIE_CORRECTABLE_ERROR
+               || (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_CORRECTABLE_ERROR
                    && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_PCIE_CORRECTABLE_ERROR)
-               || (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600WP_QPI_FATAL_ERROR
+               || (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_FATAL_ERROR
                    && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_QPI_FATAL_ERROR)
-               || (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600WP_QPI_FATAL_ERROR_2
+               || (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_FATAL_ERROR_2
                    && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_QPI_FATAL_ERROR_2)))
           || (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600WP_BIOS_POST
-              && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600WP_QPI_LINK_WIDTH_REDUCED
+              && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_LINK_WIDTH_REDUCED
               && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_QPI_LINK_WIDTH_REDUCED)))
     {
       ret = ipmi_get_oem_specific_message (ctx->manufacturer_id,
@@ -173,7 +173,7 @@ sel_string_output_intel_s2600wp_event_data1_class_oem (ipmi_sel_ctx_t ctx,
   if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600WP_BIOS_SMI_HANDLER
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_QPI_CORRECTABLE_ERRORS
-      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600WP_QPI_CORRECTABLE_ERRORS)
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_CORRECTABLE_ERRORS)
     {
       snprintf (tmpbuf,
                 tmpbuflen,
@@ -186,7 +186,7 @@ sel_string_output_intel_s2600wp_event_data1_class_oem (ipmi_sel_ctx_t ctx,
   if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600WP_BIOS_SMI_HANDLER
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_CHIPSET_PROPRIETARY
-      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600WP_CHIPSET_PROPRIETARY)
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_CHIPSET_PROPRIETARY)
     {
       snprintf (tmpbuf,
                 tmpbuflen,
@@ -199,7 +199,7 @@ sel_string_output_intel_s2600wp_event_data1_class_oem (ipmi_sel_ctx_t ctx,
   if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600WP_BIOS_SMI_HANDLER
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_MEMORY_ERROR_EXTENSION
-      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600WP_MEMORY_ERROR_EXTENSION)
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_MEMORY_ERROR_EXTENSION)
     {
       snprintf (tmpbuf,
                 tmpbuflen,
@@ -499,11 +499,11 @@ sel_string_output_intel_s2600wp_event_data2_class_oem (ipmi_sel_ctx_t ctx,
 
   if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600WP_BIOS_SMI_HANDLER
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
-      && ((system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600WP_PCIE_FATAL_ERROR
+      && ((system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_ERROR
            && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_PCIE_FATAL_ERROR)
-          || (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600WP_PCIE_FATAL_ERROR_2
+          || (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_ERROR_2
               && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_PCIE_FATAL_ERROR_2)
-          || (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600WP_PCIE_CORRECTABLE_ERROR
+          || (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_CORRECTABLE_ERROR
               && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_PCIE_CORRECTABLE_ERROR)))
     {
       _sel_string_output_intel_s2600wp_bus (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
@@ -513,12 +513,12 @@ sel_string_output_intel_s2600wp_event_data2_class_oem (ipmi_sel_ctx_t ctx,
 
   if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
       && ((system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600WP_BIOS_SMI_HANDLER
-           && ((system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600WP_QPI_FATAL_ERROR
+           && ((system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_FATAL_ERROR
                 && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_QPI_FATAL_ERROR)
-               || (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600WP_QPI_FATAL_ERROR_2
+               || (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_FATAL_ERROR_2
                    && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_QPI_FATAL_ERROR_2)))
           || (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600WP_BIOS_POST
-              && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600WP_QPI_LINK_WIDTH_REDUCED
+              && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_LINK_WIDTH_REDUCED
               && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_QPI_LINK_WIDTH_REDUCED)))
     {
       uint8_t node_id;
@@ -815,11 +815,11 @@ sel_string_output_intel_s2600wp_event_data3_class_oem (ipmi_sel_ctx_t ctx,
 
   if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_S2600WP_BIOS_SMI_HANDLER
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
-      && ((system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600WP_PCIE_FATAL_ERROR
+      && ((system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_ERROR
            && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_PCIE_FATAL_ERROR)
-          || (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600WP_PCIE_FATAL_ERROR_2
+          || (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_ERROR_2
               && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_PCIE_FATAL_ERROR_2)
-          || (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600WP_PCIE_CORRECTABLE_ERROR
+          || (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_CORRECTABLE_ERROR
               && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600WP_PCIE_CORRECTABLE_ERROR)))
     {
       _sel_string_output_intel_s2600wp_device_function (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);

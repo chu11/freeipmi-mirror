@@ -2218,7 +2218,7 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
         }
       else if (product_id == IPMI_INTEL_PRODUCT_ID_S2600JF)
         {
-          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_PCIE_FATAL_ERROR
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_ERROR
               && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
             return (_get_event_message (offset,
                                         buf,
@@ -2226,7 +2226,7 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
                                         ipmi_oem_intel_s2600jf_specific_pci_fatal_error_max_index,
                                         ipmi_oem_intel_s2600jf_specific_pci_fatal_error));
 
-          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_PCIE_FATAL_ERROR_2
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_ERROR_2
               && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
             return (_get_event_message (offset,
                                         buf,
@@ -2234,7 +2234,7 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
                                         ipmi_oem_intel_s2600jf_specific_pci_fatal_error_2_max_index,
                                         ipmi_oem_intel_s2600jf_specific_pci_fatal_error_2));
 
-          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_PCIE_CORRECTABLE_ERROR
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_CORRECTABLE_ERROR
               && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
             return (_get_event_message (offset,
                                         buf,
@@ -2242,7 +2242,7 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
                                         ipmi_oem_intel_s2600jf_specific_pci_correctable_error_max_index,
                                         ipmi_oem_intel_s2600jf_specific_pci_correctable_error));
 
-          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_OPI_FATAL_ERROR
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_FATAL_ERROR
               && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
             return (_get_event_message (offset,
                                         buf,
@@ -2250,7 +2250,7 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
                                         ipmi_oem_intel_s2600jf_specific_opi_fatal_error_max_index,
                                         ipmi_oem_intel_s2600jf_specific_opi_fatal_error));
 
-          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_OPI_FATAL_ERROR_2
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_FATAL_ERROR_2
               && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
             return (_get_event_message (offset,
                                         buf,
@@ -2258,7 +2258,7 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
                                         ipmi_oem_intel_s2600jf_specific_opi_fatal_error_2_max_index,
                                         ipmi_oem_intel_s2600jf_specific_opi_fatal_error_2));
 
-          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600JF_QPI_LINK_WIDTH_REDUCED
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_LINK_WIDTH_REDUCED
               && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
             return (_get_event_message (offset,
                                         buf,
@@ -2268,7 +2268,7 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
         }
       else if (product_id == IPMI_INTEL_PRODUCT_ID_S2600WP)
         {
-          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600WP_PCIE_FATAL_ERROR
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_ERROR
               && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
             return (_get_event_message (offset,
                                         buf,
@@ -2276,7 +2276,7 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
                                         ipmi_oem_intel_s2600wp_specific_pcie_fatal_error_max_index,
                                         ipmi_oem_intel_s2600wp_specific_pcie_fatal_error));
 
-          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600WP_PCIE_FATAL_ERROR_2
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_ERROR_2
               && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
             return (_get_event_message (offset,
                                         buf,
@@ -2284,7 +2284,7 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
                                         ipmi_oem_intel_s2600wp_specific_pcie_fatal_error_2_max_index,
                                         ipmi_oem_intel_s2600wp_specific_pcie_fatal_error_2));
 
-          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600WP_PCIE_CORRECTABLE_ERROR
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_CORRECTABLE_ERROR
               && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
             return (_get_event_message (offset,
                                         buf,
@@ -2292,7 +2292,7 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
                                         ipmi_oem_intel_s2600wp_specific_pcie_correctable_error_max_index,
                                         ipmi_oem_intel_s2600wp_specific_pcie_correctable_error));
 
-          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600WP_QPI_FATAL_ERROR
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_FATAL_ERROR
               && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
             return (_get_event_message (offset,
                                         buf,
@@ -2300,7 +2300,7 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
                                         ipmi_oem_intel_s2600wp_specific_qpi_fatal_error_max_index,
                                         ipmi_oem_intel_s2600wp_specific_qpi_fatal_error));
 
-          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600WP_QPI_FATAL_ERROR_2
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_FATAL_ERROR_2
               && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
             return (_get_event_message (offset,
                                         buf,
@@ -2308,7 +2308,7 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
                                         ipmi_oem_intel_s2600wp_specific_qpi_fatal_error_2_max_index,
                                         ipmi_oem_intel_s2600wp_specific_qpi_fatal_error_2));
 
-          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600WP_QPI_LINK_WIDTH_REDUCED
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_LINK_WIDTH_REDUCED
               && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
             return (_get_event_message (offset,
                                         buf,

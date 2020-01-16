@@ -27,6 +27,8 @@ extern "C" {
  * Intel S5500WB/Penguin Computing Relion 700
  */
 
+/* achu: Similarities to "common" event reading typo codes, but
+   different enough to warrant not being in common */
 #define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S5500WB_PCIE_FATAL_SENSOR       0x70
 #define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S5500WB_PCIE_CORRECTABLE_SENSOR 0x71
 #define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S5500WB_QPI_CORRECTABLE_SENSOR  0x72

@@ -37,7 +37,8 @@ extern "C" {
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_BIOS_POST_ERROR                 0x06
 /* not a typo, also 0x06 */
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_QPI_CORRECTABLE_ERRORS          0x06
-#define IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_OPI_FATAL_ERROR                 0x07
+/* achu: earlier code was "OPI", assumed typo */
+#define IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_QPI_FATAL_ERROR                 0x07
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_CHIPSET_PROPRIETARY             0x08
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_QPI_LINK_WIDTH_REDUCED          0x09
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_MEMORY_ERROR_EXTENSION          0x10
@@ -46,7 +47,8 @@ extern "C" {
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_MEMORY_PARITY_ERROR             0x13
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_PCIE_FATAL_ERROR_2              0x14
 /* not a typo, jumps to 0x17 */
-#define IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_OPI_FATAL_ERROR_2               0x17
+/* achu: earlier code was "OPI", assumed typo */
+#define IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_QPI_FATAL_ERROR_2               0x17
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_S2600JF_SYSTEM_EVENT                    0x83
 
 #ifdef __cplusplus
