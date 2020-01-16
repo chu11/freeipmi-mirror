@@ -26,6 +26,8 @@ extern "C" {
 /*
  * Intel S2600WP
  */
+/* achu: some are similar to others, but different names, new events,
+ * new numbers, so making new macros to differentiate */
 #define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600WP_PCIE_FATAL_ERROR       0x70
 #define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600WP_PCIE_CORRECTABLE_ERROR 0x71
 #define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600WP_QPI_CORRECTABLE_ERRORS 0x72
