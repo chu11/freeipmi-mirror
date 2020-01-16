@@ -27,12 +27,20 @@ extern "C" {
  * Intel S5500WB/Penguin Computing Relion 700
  * Intel S2600JF/Appro 512X
  * Intel S2600WP
+ * Intel S2600KP
+ * Intel S2600WT2
+ * Intel S2600WTT
+ * Intel S2600GZ
  */
 #define IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER   0x33
 
 /*
  * Intel S2600JF/Appro 512X
  * Intel S2600WP
+ * Intel S2600KP
+ * Intel S2600WT2
+ * Intel S2600WTT
+ * Intel S2600GZ
  */
 #define IPMI_GENERATOR_ID_OEM_INTEL_BIOS_POST          0x01
 

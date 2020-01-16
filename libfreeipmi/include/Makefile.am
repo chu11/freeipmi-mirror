@@ -236,6 +236,10 @@ nobase_include_HEADERS = \
 	freeipmi/spec/oem/ipmi-slave-address-oem-intel-quanta-qssc-s4r-spec.h \
 	freeipmi/spec/oem/ipmi-slave-address-oem-intel-s2600jf-spec.h \
 	freeipmi/spec/oem/ipmi-slave-address-oem-intel-s2600wp-spec.h \
+	freeipmi/spec/oem/ipmi-slave-address-oem-intel-s2600kp-spec.h \
+	freeipmi/spec/oem/ipmi-slave-address-oem-intel-s2600wt2-spec.h \
+	freeipmi/spec/oem/ipmi-slave-address-oem-intel-s2600wtt-spec.h \
+	freeipmi/spec/oem/ipmi-slave-address-oem-intel-s2600gz-spec.h \
 	freeipmi/spec/oem/ipmi-slave-address-oem-inventec-spec.h \
 	freeipmi/spec/oem/ipmi-slave-address-oem-linux-kernel-spec.h \
 	freeipmi/spec/oem/ipmi-slave-address-oem-quanta-spec.h \

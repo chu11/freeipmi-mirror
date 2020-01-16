@@ -16,24 +16,17 @@
  *
  */
 
-#ifndef IPMI_SLAVE_ADDRESS_OEM_INTEL_SPEC_H
-#define IPMI_SLAVE_ADDRESS_OEM_INTEL_SPEC_H
+#ifndef IPMI_SLAVE_ADDRESS_OEM_INTEL_S2600KP_SPEC_H
+#define IPMI_SLAVE_ADDRESS_OEM_INTEL_S2600KP_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <freeipmi/spec/oem/ipmi-slave-address-oem-intel-s5500wb-spec.h>
-#include <freeipmi/spec/oem/ipmi-slave-address-oem-intel-quanta-qssc-s4r-spec.h>
-#include <freeipmi/spec/oem/ipmi-slave-address-oem-intel-s2600jf-spec.h>
-#include <freeipmi/spec/oem/ipmi-slave-address-oem-intel-s2600wp-spec.h>
-#include <freeipmi/spec/oem/ipmi-slave-address-oem-intel-s2600kp-spec.h>
-#include <freeipmi/spec/oem/ipmi-slave-address-oem-intel-s2600wt2-spec.h>
-#include <freeipmi/spec/oem/ipmi-slave-address-oem-intel-s2600wtt-spec.h>
-#include <freeipmi/spec/oem/ipmi-slave-address-oem-intel-s2600gz-spec.h>
+#include <freeipmi/spec/oem/ipmi-slave-address-oem-intel-common-spec.h>
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* IPMI_SLAVE_ADDRESS_OEM_INTEL_SPEC_H */
+#endif /* IPMI_SLAVE_ADDRESS_OEM_INTEL_S2600KP_SPEC_H */
