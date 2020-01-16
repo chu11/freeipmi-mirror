@@ -123,10 +123,13 @@ const char * const ipmi_oem_intel_specific_qpi_fatal_error[] =
     "Link Layer Uncorrectable ECC Error",
     "Protocol Layer Poisoned Packet Reception Error",
     "LINK/PHY Init Failure with resultant degradation in link width",
-    "CSI PHY Layer detected drift buffer alarm",
-    "CSI PHY detected latency buffer rollover",
-    "CSI PHY Init Failure",
-    "CSI Link Layer generic control error (buffer overflow/underflow, credit underflow and so on.)",
+    /* achu: earlier implementation for S2600JF & S2600WP next four
+     * prefixed with CSI
+     */
+    "PHY Layer detected drift buffer alarm",
+    "PHY detected latency buffer rollover",
+    "PHY Init Failure",
+    "Link Layer generic control error (buffer overflow/underflow, credit underflow and so on.)",
     "Parity error in link or PHY layer",
     "Protocol layer timeout detected",
     "Protocol layer failed response",
