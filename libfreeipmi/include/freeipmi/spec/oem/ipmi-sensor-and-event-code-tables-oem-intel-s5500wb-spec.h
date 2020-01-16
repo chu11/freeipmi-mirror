@@ -55,9 +55,6 @@ extern "C" {
 extern const char * const ipmi_oem_intel_s5500wb_specific_pci_fatal_sensor[];
 extern unsigned int ipmi_oem_intel_s5500wb_specific_pci_fatal_sensor_max_index;
 
-extern const char * const ipmi_oem_intel_s5500wb_specific_pci_correctable_sensor[];
-extern unsigned int ipmi_oem_intel_s5500wb_specific_pci_correctable_sensor_max_index;
-
 #define IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_S5500WB_CHANNEL_INFORMATION_VALIDITY_BITMASK 0x10
 #define IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_S5500WB_CHANNEL_INFORMATION_VALIDITY_SHIFT   4
 

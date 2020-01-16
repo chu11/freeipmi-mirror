@@ -2195,8 +2195,8 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
             return (_get_event_message (offset,
                                         buf,
                                         buflen,
-                                        ipmi_oem_intel_s5500wb_specific_pci_correctable_sensor_max_index,
-                                        ipmi_oem_intel_s5500wb_specific_pci_correctable_sensor));
+                                        ipmi_oem_intel_specific_pci_correctable_sensor_max_index,
+                                        ipmi_oem_intel_specific_pci_correctable_sensor));
         }
       else if (product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R)
         {
@@ -2213,8 +2213,8 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
             return (_get_event_message (offset,
                                         buf,
                                         buflen,
-                                        ipmi_oem_intel_quanta_qssc_s4r_specific_pci_correctable_sensor_max_index,
-                                        ipmi_oem_intel_quanta_qssc_s4r_specific_pci_correctable_sensor));
+                                        ipmi_oem_intel_specific_pci_correctable_sensor_max_index,
+                                        ipmi_oem_intel_specific_pci_correctable_sensor));
         }
       else if (product_id == IPMI_INTEL_PRODUCT_ID_S2600JF)
         {

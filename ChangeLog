@@ -72,6 +72,7 @@ B1;5202;0c2020-01-14 Albert Chu <chu11@llnl.gov>
 	libfreeipmi/include/freeipmi/spec/oem/ipmi-sensor-types-oem-intel-quanta-qssc-s4r-spec.h
 	libfreeipmi/include/freeipmi/spec/oem/ipmi-sensor-types-oem-intel-s5000pal-spec.h,
 	libfreeipmi/include/freeipmi/spec/oem/ipmi-sensor-types-oem-intel-windmill-spec.h,
+	libfreeipmi/spec/ipmi-sensor-and-event-code-tables-oem-intel-common-spec.c,
 	libfreeipmi/spec/ipmi-sensor-and-event-code-tables-oem-intel-s5500wb-spec.c,
 	libfreeipmi/spec/ipmi-sensor-and-event-code-tables-oem-intel-quanta-qssc-s4r-spec.c,
 	libfreeipmi/spec/ipmi-sensor-and-event-code-tables-oem-intel-s2600jf-spec.c:

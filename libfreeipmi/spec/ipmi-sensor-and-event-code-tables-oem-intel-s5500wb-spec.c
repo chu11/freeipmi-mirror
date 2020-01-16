@@ -60,16 +60,3 @@ const char * const ipmi_oem_intel_s5500wb_specific_pci_fatal_sensor[] =
     NULL
   };
 unsigned int ipmi_oem_intel_s5500wb_specific_pci_fatal_sensor_max_index = 0x0D;
-
-const char * const ipmi_oem_intel_s5500wb_specific_pci_correctable_sensor[] =
-  {
-    "Receiver Error",
-    "Bad DLLP Error",
-    "Bad TLLP Error",
-    "REPLAY_NUM Rollover Error",
-    "REPLAY Timer Timeout Error",
-    "Advisory Non-fatal Error (Received ERR_COR message)",
-    "Link Bandwidth Changed (ECN) Error",
-    NULL
-  };
-unsigned int ipmi_oem_intel_s5500wb_specific_pci_correctable_sensor_max_index = 0x06;

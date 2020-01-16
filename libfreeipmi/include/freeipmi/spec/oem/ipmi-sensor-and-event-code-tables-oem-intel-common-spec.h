@@ -39,6 +39,13 @@ extern "C" {
 #define IPMI_OEM_INTEL_SPECIFIC_PCIE_CORRECTABLE_SENSOR_LINK_BW_CHANGED      0x06
 
 /*
+ * String arrays for above
+ */
+
+extern const char * const ipmi_oem_intel_specific_pci_correctable_sensor[];
+extern unsigned int ipmi_oem_intel_specific_pci_correctable_sensor_max_index;
+
+/*
  * Intel S5500WB/Penguin Computing Relion 700
  * Quanta QSSC-S4R/Appro GB812X-CN
  * (Quanta motherboard contains Intel manufacturer ID)

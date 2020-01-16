@@ -58,9 +58,6 @@ extern "C" {
 extern const char * const ipmi_oem_intel_quanta_qssc_s4r_specific_pci_fatal_sensor[];
 extern unsigned int ipmi_oem_intel_quanta_qssc_s4r_specific_pci_fatal_sensor_max_index;
 
-extern const char * const ipmi_oem_intel_quanta_qssc_s4r_specific_pci_correctable_sensor[];
-extern unsigned int ipmi_oem_intel_quanta_qssc_s4r_specific_pci_correctable_sensor_max_index;
-
 /*
  * Event Reading Type Code = IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QUANTA_QSSC_S4R_CORRECTABLE_ERROR
  * Sensor Type = IPMI_SENSOR_TYPE_MEMORY
