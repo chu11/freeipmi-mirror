@@ -203,6 +203,7 @@ nobase_include_HEADERS = \
 	freeipmi/spec/oem/ipmi-sensor-numbers-oem-dell-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-numbers-oem-intel-node-manager-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-numbers-oem-intel-spec.h \
+	freeipmi/spec/oem/ipmi-sensor-numbers-oem-intel-common-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-numbers-oem-intel-s5500wb-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-numbers-oem-intel-quanta-qssc-s4r-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-numbers-oem-intel-s2600jf-spec.h \
