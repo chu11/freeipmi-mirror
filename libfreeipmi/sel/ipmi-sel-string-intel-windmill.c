@@ -92,11 +92,11 @@ sel_string_output_intel_windmill_event_data1_class_sensor_specific_discrete (ipm
       uint8_t sel_clear;
       uint8_t sel_rollover;
 
-      sel_clear = (system_event_record_data->event_data1 & IPMI_SENSOR_TYPE_OEM_INTEL_SEL_CLEAR_BITMASK);
-      sel_clear >>= IPMI_SENSOR_TYPE_OEM_INTEL_SEL_CLEAR_SHIFT;
+      sel_clear = (system_event_record_data->event_data1 & IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_SEL_CLEAR_BITMASK);
+      sel_clear >>= IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_SEL_CLEAR_SHIFT;
 
-      sel_rollover = (system_event_record_data->event_data1 & IPMI_SENSOR_TYPE_OEM_INTEL_SEL_ROLLOVER_BITMASK);
-      sel_rollover >>= IPMI_SENSOR_TYPE_OEM_INTEL_SEL_ROLLOVER_SHIFT;
+      sel_rollover = (system_event_record_data->event_data1 & IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_SEL_ROLLOVER_BITMASK);
+      sel_rollover >>= IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_SEL_ROLLOVER_SHIFT;
 
       if (sel_clear)
         {
@@ -156,19 +156,19 @@ sel_string_output_intel_windmill_event_data1_class_sensor_specific_discrete (ipm
 
       switch (system_event_record_data->event_data1)
         {
-        case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_LOW_NONE_OF_THE_ABOVE:
+        case IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_LOW_NONE_OF_THE_ABOVE:
           hsc_str = "Active status bits are waiting to be read by one or more status commands.";
           break;
-        case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_LOW_CML_ERROR:
+        case IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_LOW_CML_ERROR:
           hsc_str = "An error was detected on the I2C/PMBus interface.";
           break;
-        case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_LOW_VIN_UV_FAULT:
+        case IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_LOW_VIN_UV_FAULT:
           hsc_str = "An undervoltage input fault was detected on the UV pin.";
           break;
-        case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_LOW_IOUT_OC_FAULT:
+        case IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_LOW_IOUT_OC_FAULT:
           hsc_str = "The hot swap controller detected an overcurrent condition.";
           break;
-        case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_LOW_HOTSWAP_OFF:
+        case IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_LOW_HOTSWAP_OFF:
           hsc_str = "The hot swap gate driver output is disabled.";
           break;
         default:
@@ -191,19 +191,19 @@ sel_string_output_intel_windmill_event_data1_class_sensor_specific_discrete (ipm
 
       switch (system_event_record_data->event_data1)
         {
-        case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_HIGH_POWER_GOOD:
+        case IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_HIGH_POWER_GOOD:
           hsc_str = "The voltage on the FLB pin is below the required threshold.";
           break;
-        case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_HIGH_MFR_STATUS:
+        case IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_HIGH_MFR_STATUS:
           hsc_str = "There are one or more active status bits to be read by STATUS_MFR_SPECIFIC.";
           break;
-        case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_HIGH_INPUT_STATUS:
+        case IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_HIGH_INPUT_STATUS:
           hsc_str = "There are one or more active status bits to be read by STATUS_INPUT.";
           break;
-        case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_HIGH_IOUT_STATUS:
+        case IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_HIGH_IOUT_STATUS:
           hsc_str = "There are one or more active status bits to be read by STATUS_IOUT.";
           break;
-        case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_HIGH_VOUT_STATUS:
+        case IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_HIGH_VOUT_STATUS:
           hsc_str = "There are one or more active status bits to be read by STATUS_VOUT.";
           break;
         default:
@@ -226,7 +226,7 @@ sel_string_output_intel_windmill_event_data1_class_sensor_specific_discrete (ipm
 
       switch (system_event_record_data->event_data1)
         {
-        case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_IOUT_WARN2:
+        case IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_IOUT_WARN2:
           hsc_str = "An undercurrent or overcurrent condition on the output supply detected.";
           break;
           /* achu: HS_SHUTDOWN_CAUSE1 & HS_SHUTDOWN_CAUSE2 list 4 error messages
@@ -235,22 +235,22 @@ sel_string_output_intel_windmill_event_data1_class_sensor_specific_discrete (ipm
            *
            * So all user gets is a generic "hotswap shutdown"
            */
-        case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_HS_SHUTDOWN_CAUSE1:
+        case IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_HS_SHUTDOWN_CAUSE1:
           hsc_str = "Hotswap shutdown";
           break;
-        case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_HS_SHUTDOWN_CAUSE2:
+        case IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_HS_SHUTDOWN_CAUSE2:
           hsc_str = "Hotswap shutdown";
           break;
-        case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_HS_INLIM:
+        case IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_HS_INLIM:
           hsc_str = "The ADM1276 has actively limited current into the load.";
           break;
-        case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_OV_CMP_OUT:
+        case IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_OV_CMP_OUT:
           hsc_str = "Input Voltage to OV pin is above threshold.";
           break;
-        case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_UV_CMP_OUT:
+        case IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_UV_CMP_OUT:
           hsc_str = "Input voltage to UV pin is below threshold.";
           break;
-        case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_FET_HEALTH_BAD:
+        case IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_MFR_SPECIFIC_FET_HEALTH_BAD:
           hsc_str = "FET behavior suggests that the FET may be shorted.";
           break;
         default:
@@ -273,19 +273,19 @@ sel_string_output_intel_windmill_event_data1_class_sensor_specific_discrete (ipm
 
       switch (system_event_record_data->event_data1)
         {
-        case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT_PIN_OP_WARN:
+        case IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT_PIN_OP_WARN:
           hsc_str = "An overpower condition on the input supply was detected by power monitor.";
           break;
-        case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT_VIN_UV_FAULT:
+        case IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT_VIN_UV_FAULT:
           hsc_str = "An undervoltage was detected on the UV pin.";
           break;
-        case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT_VIN_UV_WARN:
+        case IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT_VIN_UV_WARN:
           hsc_str = "An undervoltage condition on the input supply was detected by the power monitor.";
           break;
-        case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT_VIN_OV_WARN:
+        case IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT_VIN_OV_WARN:
           hsc_str = "An overvoltage condition on the input supply was detected by hte power monitor.";
           break;
-        case IPMI_SENSOR_TYPE_OEM_INTEL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT_VIN_OV_FAULT:
+        case IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT_VIN_OV_FAULT:
           hsc_str = "An overvoltage was detected on the OV pin.";
           break;
         default:
@@ -415,11 +415,11 @@ sel_string_output_intel_windmill_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
       uint8_t device;
       uint8_t function;
 
-      device = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA2_OEM_INTEL_DEVICE_NUMBER_BITMASK);
-      device >>= IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA2_OEM_INTEL_DEVICE_NUMBER_SHIFT;
+      device = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA2_OEM_INTEL_WINDMILL_DEVICE_NUMBER_BITMASK);
+      device >>= IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA2_OEM_INTEL_WINDMILL_DEVICE_NUMBER_SHIFT;
 
-      function = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA2_OEM_INTEL_FUNCTION_NUMBER_BITMASK);
-      function >>= IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA2_OEM_INTEL_FUNCTION_NUMBER_SHIFT;
+      function = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA2_OEM_INTEL_WINDMILL_FUNCTION_NUMBER_BITMASK);
+      function >>= IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA2_OEM_INTEL_WINDMILL_FUNCTION_NUMBER_SHIFT;
 
       snprintf (tmpbuf,
                 tmpbuflen,

@@ -194,6 +194,7 @@ nobase_include_HEADERS = \
 	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-intel-s2600jf-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-intel-quanta-qssc-s4r-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-intel-s2600wp-spec.h \
+	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-intel-windmill-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-inventec-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-quanta-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-supermicro-spec.h \
