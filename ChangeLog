@@ -66,7 +66,9 @@
 	libfreeipmi/include/freeipmi/spec/oem/ipmi-sensor-types-oem-intel-common-spec.h,
 	libfreeipmi/include/freeipmi/spec/oem/ipmi-sensor-types-oem-intel-s5500wb-spec.h,
 	libfreeipmi/include/freeipmi/spec/oem/ipmi-sensor-types-oem-intel-sr1625-spec.h,
-	libfreeipmi/include/freeipmi/spec/oem/ipmi-sensor-types-oem-intel-quanta-qssc-s4r-spec.h:
+	libfreeipmi/include/freeipmi/spec/oem/ipmi-sensor-types-oem-intel-quanta-qssc-s4r-spec.h
+	libfreeipmi/include/freeipmi/spec/oem/ipmi-sensor-types-oem-intel-s5000pal-spec.h,
+	libfreeipmi/include/freeipmi/spec/oem/ipmi-sensor-types-oem-intel-windmill-spec.h:
 	New file(s).
 
 	* libfreeipmi/sel, libfreeipmi/util, ipmi-oem: Update for macro /

@@ -16,29 +16,20 @@
  *
  */
 
-#ifndef IPMI_SENSOR_TYPES_OEM_INTEL_SPEC_H
-#define IPMI_SENSOR_TYPES_OEM_INTEL_SPEC_H
+#ifndef IPMI_SENSOR_TYPES_OEM_INTEL_S5000PAL_SPEC_H
+#define IPMI_SENSOR_TYPES_OEM_INTEL_S5000PAL_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <freeipmi/spec/oem/ipmi-sensor-types-oem-intel-s5500wb-spec.h>
-#include <freeipmi/spec/oem/ipmi-sensor-types-oem-intel-sr1625-spec.h>
-#include <freeipmi/spec/oem/ipmi-sensor-types-oem-intel-quanta-qssc-s4r-spec.h>
-#include <freeipmi/spec/oem/ipmi-sensor-types-oem-intel-s5000pal-spec.h>
-#include <freeipmi/spec/oem/ipmi-sensor-types-oem-intel-windmill-spec.h>
-
 /*
- * Intel S2600KP
- * Intel S2600WT2
- * Intel S2600WTT
- * Intel S2600GZ
+ * Intel S5000PAL
  */
-#define IPMI_SENSOR_TYPE_OEM_INTEL_E52600V3_IERR_RECOVERY_DUMP_INFO 0xD1
+#define IPMI_SENSOR_TYPE_OEM_INTEL_S5000PAL_NMI_STATE                    0xC0
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* IPMI_SENSOR_TYPES_OEM_INTEL_SPEC_H */
+#endif /* IPMI_SENSOR_TYPES_OEM_INTEL_S5000PAL_SPEC_H */

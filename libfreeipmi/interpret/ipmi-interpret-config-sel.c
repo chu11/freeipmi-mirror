@@ -1433,6 +1433,17 @@ _interpret_sel_oem_intel_nmi_state_wrapper (ipmi_interpret_ctx_t ctx,
                                             uint32_t manufacturer_id,
                                             uint16_t product_id)
 {
+  assert (ctx);
+  assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
+  assert (ctx->interpret_sel.sel_oem_sensor_config);
+  assert (ctx->interpret_sel.sel_oem_record_config);
+
+  return (0);
+}
+
+static int
+_interpret_sel_oem_intel_nmi_state (ipmi_interpret_ctx_t ctx)
+{
   struct ipmi_interpret_sel_oem_sensor_config *oem_conf;
 
   assert (ctx);
@@ -1440,11 +1451,23 @@ _interpret_sel_oem_intel_nmi_state_wrapper (ipmi_interpret_ctx_t ctx,
   assert (ctx->interpret_sel.sel_oem_sensor_config);
   assert (ctx->interpret_sel.sel_oem_record_config);
 
+  /* Intel NMI State
+   * Intel S5000PAL
+   *
+   * Manufacturer ID = 343 (Intel)
+   * Product ID = 40 (Intel S5000PAL)
+   * Event/Reading Type Code = 3h (State Asserted/Deasserted)
+   * Sensor Type = F3h (OEM)
+   * EventData1 0x00 = "State Deasserted"
+   * EventData1 0x01 = "State Asserted"
+   */
+
+  /* Intel S5000PAL */
   if (_interpret_sel_oem_sensor_config_create (ctx,
-                                               manufacturer_id,
-                                               product_id,
+                                               IPMI_IANA_ENTERPRISE_ID_INTEL,
+                                               IPMI_INTEL_PRODUCT_ID_S5000PAL,
                                                IPMI_EVENT_READING_TYPE_CODE_STATE,
-                                               IPMI_SENSOR_TYPE_OEM_INTEL_NMI_STATE,
+                                               IPMI_SENSOR_TYPE_OEM_INTEL_S5000PAL_NMI_STATE,
                                                &oem_conf) < 0)
     return (-1);
 
@@ -1477,35 +1500,6 @@ _interpret_sel_oem_intel_nmi_state_wrapper (ipmi_interpret_ctx_t ctx,
   oem_conf->oem_sensor_data[1].sel_state = IPMI_INTERPRET_STATE_CRITICAL;
 
   oem_conf->oem_sensor_data_count = 2;
-
-  return (0);
-}
-
-static int
-_interpret_sel_oem_intel_nmi_state (ipmi_interpret_ctx_t ctx)
-{
-
-  assert (ctx);
-  assert (ctx->magic == IPMI_INTERPRET_CTX_MAGIC);
-  assert (ctx->interpret_sel.sel_oem_sensor_config);
-  assert (ctx->interpret_sel.sel_oem_record_config);
-
-  /* Intel NMI State
-   * Intel S5000PAL
-   *
-   * Manufacturer ID = 343 (Intel)
-   * Product ID = 40 (Intel S5000PAL)
-   * Event/Reading Type Code = 3h (State Asserted/Deasserted)
-   * Sensor Type = F3h (OEM)
-   * EventData1 0x00 = "State Deasserted"
-   * EventData1 0x01 = "State Asserted"
-   */
-
-  /* Intel S5000PAL */
-  if (_interpret_sel_oem_intel_nmi_state_wrapper (ctx,
-                                                  IPMI_IANA_ENTERPRISE_ID_INTEL,
-                                                  IPMI_INTEL_PRODUCT_ID_S5000PAL) < 0)
-    return (-1);
 
   return (0);
 }

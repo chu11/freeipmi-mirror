@@ -219,6 +219,8 @@ nobase_include_HEADERS = \
 	freeipmi/spec/oem/ipmi-sensor-types-oem-intel-s5500wb-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-types-oem-intel-sr1625-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-types-oem-intel-quanta-qssc-s4r-spec.h \
+	freeipmi/spec/oem/ipmi-sensor-types-oem-intel-s5000pal-spec.h \
+	freeipmi/spec/oem/ipmi-sensor-types-oem-intel-windmill-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-types-oem-inventec-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-types-oem-supermicro-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-types-oem-wistron-spec.h \
