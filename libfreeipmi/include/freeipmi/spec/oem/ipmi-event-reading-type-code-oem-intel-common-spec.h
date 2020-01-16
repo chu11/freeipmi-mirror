@@ -39,22 +39,67 @@ extern "C" {
 /*
  * Intel S2600JF/Appro 512X
  * Intel S2600WP
+ * Intel S2600KP
+ * Intel S2600WT2
+ * Intel S2600WTT
+ * Intel S2600GZ
  */
 /* achu: In earlier code S2600JF was "OPI" instead of "QPI".  Typo on
  * my part, or was actually OPI in document from Intel (which also was
  * possibly typoed)
  */
+/* achu: In earlier code for S2600KP/S2600WT2/S2600WTT/S2600GZ, below
+ * were named
+ *
+ * PCI_EXPRESS_FATAL_ERRORS
+ * PCI_EXPRESS_CORRECTABLE_ERRORS
+ * PCI_EXPRESS_FATAL_ERRORS_2
+ */
+/* achu: In earlier code, sometimes pluralized "ERRORS", we now make
+   everything singular */
 #define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_ERROR       0x70
 #define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_CORRECTABLE_ERROR 0x71
-#define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_CORRECTABLE_ERRORS 0x72
+#define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_CORRECTABLE_ERROR  0x72
 #define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_FATAL_ERROR        0x73
 /* continuation for IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_FATAL_ERROR for more offsets */
 #define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_FATAL_ERROR_2      0x74
-#define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_CHIPSET_PROPRIETARY    0x75
 /* continuation for IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_ERROR for more offsets */
 #define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_ERROR_2     0x76
 #define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_LINK_WIDTH_REDUCED 0x77
+
+/*
+ * Intel S2600JF/Appro 512X
+ * Intel S2600WP
+ */
+/* achu: In earlier code S2600JF was "OPI" instead of "QPI".  Typo on
+ * my part, or was actually OPI in document from Intel (which also was
+ * possibly typoed)
+ */
+#define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_CHIPSET_PROPRIETARY    0x75
 #define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_MEMORY_ERROR_EXTENSION 0x7F
+
+/*
+ * Intel S2600WP
+ * Intel S2600KP
+ * Intel S2600WT2
+ * Intel S2600WTT
+ * Intel S2600GZ
+ */
+
+#define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_FIRMWARE_UPDATE_STATUS_SENSOR  0x70
+
+/*
+ * Intel S2600KP
+ * Intel S2600WT2
+ * Intel S2600WTT
+ * Intel S2600GZ
+ */
+
+#define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_BIOS_RECOVERY_START            0x70
+#define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_BIOS_RECOVERY_FINISH           0xF0
+
+#define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_IERR_RECOVERY_DUMP_INFO        0x70
+
 
 #ifdef __cplusplus
 }

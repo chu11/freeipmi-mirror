@@ -150,40 +150,40 @@ sel_string_output_intel_e52600v3_event_data1_class_oem (ipmi_sel_ctx_t ctx,
   if ((system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_E52600V3_BIOS_POST
        && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
        && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_POST_INTEL_QUICK_PATH_INTERFACE_LINK_WIDTH_REDUCED
-       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_QPI_LINK_WIDTH_REDUCED)
+       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_LINK_WIDTH_REDUCED)
       || (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_E52600V3_BIOS_SMI_HANDLER
           && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
           && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_INTEL_QUICK_PATH_INTERFACE_FATAL_ERROR
-          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_QPI_FATAL_ERROR)
+          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_FATAL_ERROR)
       || (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_E52600V3_BIOS_SMI_HANDLER
           && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
           && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_INTEL_QUICKPATH_INTERFACE_FATAL_ERROR2
-          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_QPI_FATAL_ERROR_2)
+          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_FATAL_ERROR_2)
       || (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_E52600V3_BIOS_SMI_HANDLER
           && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS
           && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_BIOS_RECOVERY
-          && (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_BIOS_RECOVERY_START
-              || system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_BIOS_RECOVERY_FINISH))
+          && (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_BIOS_RECOVERY_START
+              || system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_BIOS_RECOVERY_FINISH))
       || (system_event_record_data->generator_id == IPMI_SLAVE_ADDRESS_BMC
           && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
           && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_FIRMWARE_UPDATE_STATUS
-          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_FIRMWARE_UPDATE_STATUS_SENSOR)
+          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_FIRMWARE_UPDATE_STATUS_SENSOR)
       || (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_E52600V3_BIOS_SMI_HANDLER
           && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
           && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_PCI_EXPRESS_FATAL_ERROR
-          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_PCI_EXPRESS_FATAL_ERRORS)
+          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_ERROR)
       || (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_E52600V3_BIOS_SMI_HANDLER
           && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
           && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_PCI_EXPRESS_FATAL_ERROR2
-          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_PCI_EXPRESS_FATAL_ERRORS_2)
+          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_ERROR_2)
       || (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_E52600V3_BIOS_SMI_HANDLER
           && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
           && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_PCI_EXPRESS_CORRECTABLE_ERROR
-          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_PCI_EXPRESS_CORRECTABLE_ERRORS)
+          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_CORRECTABLE_ERROR)
       || (system_event_record_data->generator_id == IPMI_SLAVE_ADDRESS_BMC
           && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_E52600V3_IERR_RECOVERY_DUMP_INFO
           && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_IERR_RECOVERY_DUMP_INFO
-          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_IERR_RECOVERY_DUMP_INFO))
+          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_IERR_RECOVERY_DUMP_INFO))
     {
       int ret;
 
@@ -202,7 +202,7 @@ sel_string_output_intel_e52600v3_event_data1_class_oem (ipmi_sel_ctx_t ctx,
   if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_E52600V3_BIOS_SMI_HANDLER
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_INTEL_QUICK_PATH_INTERFACE_CORRECTABLE_ERROR
-      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_QPI_CORRECTABLE_ERROR)
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_CORRECTABLE_ERROR)
     {
       snprintf (tmpbuf,
                 tmpbuflen,
@@ -791,19 +791,19 @@ sel_string_output_intel_e52600v3_event_data2_class_oem (ipmi_sel_ctx_t ctx,
   if ((system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_E52600V3_BIOS_POST
        && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
        && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_POST_INTEL_QUICK_PATH_INTERFACE_LINK_WIDTH_REDUCED
-       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_QPI_LINK_WIDTH_REDUCED)
+       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_LINK_WIDTH_REDUCED)
       || (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_E52600V3_BIOS_SMI_HANDLER
           && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
           && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_INTEL_QUICK_PATH_INTERFACE_CORRECTABLE_ERROR
-          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_QPI_CORRECTABLE_ERROR)
+          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_CORRECTABLE_ERROR)
       || (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_E52600V3_BIOS_SMI_HANDLER
           && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
           && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_INTEL_QUICK_PATH_INTERFACE_FATAL_ERROR
-          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_QPI_FATAL_ERROR)
+          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_FATAL_ERROR)
       || (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_E52600V3_BIOS_SMI_HANDLER
           && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
           && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_INTEL_QUICKPATH_INTERFACE_FATAL_ERROR2
-          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_QPI_FATAL_ERROR_2))
+          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_FATAL_ERROR_2))
     {
       uint8_t cpu;
       char *cpu_str;
@@ -840,7 +840,7 @@ sel_string_output_intel_e52600v3_event_data2_class_oem (ipmi_sel_ctx_t ctx,
   if (system_event_record_data->generator_id == IPMI_SLAVE_ADDRESS_BMC
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_FIRMWARE_UPDATE_STATUS
-      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_FIRMWARE_UPDATE_STATUS_SENSOR)
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_FIRMWARE_UPDATE_STATUS_SENSOR)
     {
       uint8_t target_of_update;
       uint8_t target_instance;
@@ -878,15 +878,15 @@ sel_string_output_intel_e52600v3_event_data2_class_oem (ipmi_sel_ctx_t ctx,
   if ((system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_E52600V3_BIOS_SMI_HANDLER
        && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
        && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_PCI_EXPRESS_FATAL_ERROR
-       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_PCI_EXPRESS_FATAL_ERRORS)
+       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_ERROR)
       || (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_E52600V3_BIOS_SMI_HANDLER
           && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
           && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_PCI_EXPRESS_FATAL_ERROR2
-          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_PCI_EXPRESS_FATAL_ERRORS_2)
+          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_ERROR_2)
       || (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_E52600V3_BIOS_SMI_HANDLER
           && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
           && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_PCI_EXPRESS_CORRECTABLE_ERROR
-          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_PCI_EXPRESS_CORRECTABLE_ERRORS))
+          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_CORRECTABLE_ERROR))
     {
       _sel_string_output_intel_e52600v3_pci_bus (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
 
@@ -896,7 +896,7 @@ sel_string_output_intel_e52600v3_event_data2_class_oem (ipmi_sel_ctx_t ctx,
   if (system_event_record_data->generator_id == IPMI_SLAVE_ADDRESS_BMC
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_E52600V3_IERR_RECOVERY_DUMP_INFO
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_IERR_RECOVERY_DUMP_INFO
-      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_IERR_RECOVERY_DUMP_INFO
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_IERR_RECOVERY_DUMP_INFO
       && system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_E52600V3_SPECIFIC_IERR_RECOVERY_DUMP_INFO_DUMP_FAILED)
     {
       char failed_register_type_str[INTEL_EVENT_BUFFER_LENGTH + 1];
@@ -1589,15 +1589,15 @@ sel_string_output_intel_e52600v3_event_data3_class_oem (ipmi_sel_ctx_t ctx,
   if ((system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_E52600V3_BIOS_SMI_HANDLER
        && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
        && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_PCI_EXPRESS_FATAL_ERROR
-       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_PCI_EXPRESS_FATAL_ERRORS)
+       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_ERROR)
       || (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_E52600V3_BIOS_SMI_HANDLER
           && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
           && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_PCI_EXPRESS_FATAL_ERROR2
-          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_PCI_EXPRESS_FATAL_ERRORS_2)
+          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_ERROR_2)
       || (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_E52600V3_BIOS_SMI_HANDLER
           && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT
           && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_PCI_EXPRESS_CORRECTABLE_ERROR
-          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_PCI_EXPRESS_CORRECTABLE_ERRORS))
+          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_CORRECTABLE_ERROR))
     {
       _sel_string_output_intel_e52600v3_pci_device_function (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
 

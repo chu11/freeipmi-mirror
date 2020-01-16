@@ -28,28 +28,10 @@ extern "C" {
 #include <freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-s2600jf-spec.h>
 #include <freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-s2600wp-spec.h>
 #include <freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-windmill-spec.h>
-
-/*
- * Intel S2600KP
- * Intel S2600WT2
- * Intel S2600WTT
- * Intel S2600GZ
- */
-#define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_QPI_CORRECTABLE_ERROR          0x72
-#define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_QPI_FATAL_ERROR                0x73
-#define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_QPI_FATAL_ERROR_2              0x74
-#define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_QPI_LINK_WIDTH_REDUCED         0x77
-
-#define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_PCI_EXPRESS_FATAL_ERRORS       0x70
-#define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_PCI_EXPRESS_FATAL_ERRORS_2     0x76
-#define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_PCI_EXPRESS_CORRECTABLE_ERRORS 0x71
-
-#define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_FIRMWARE_UPDATE_STATUS_SENSOR  0x70
-
-#define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_BIOS_RECOVERY_START            0x70
-#define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_BIOS_RECOVERY_FINISH           0xF0
-
-#define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_IERR_RECOVERY_DUMP_INFO        0x70
+#include <freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-s2600kp-spec.h>
+#include <freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-s2600wt2-spec.h>
+#include <freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-s2600wtt-spec.h>
+#include <freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-s2600gz-spec.h>
 
 #ifdef __cplusplus
 }

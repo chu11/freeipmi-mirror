@@ -154,6 +154,10 @@ nobase_include_HEADERS = \
 	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-s2600jf-spec.h \
 	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-s2600wp-spec.h \
 	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-windmill-spec.h \
+	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-s2600kp-spec.h \
+	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-s2600wt2-spec.h \
+	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-s2600wtt-spec.h \
+	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-s2600gz-spec.h \
 	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-inventec-spec.h \
 	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-supermicro-spec.h \
 	freeipmi/spec/oem/ipmi-lan-configuration-parameters-oem-inventec-spec.h \
