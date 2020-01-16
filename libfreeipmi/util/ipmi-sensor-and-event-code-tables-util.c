@@ -2182,7 +2182,7 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
     {
       if (product_id == IPMI_INTEL_PRODUCT_ID_S5500WB)
         {
-          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S5500WB_PCIE_FATAL_SENSOR
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_SENSOR
               && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
             return (_get_event_message (offset,
                                         buf,
@@ -2190,7 +2190,7 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
                                         ipmi_oem_intel_s5500wb_specific_pci_fatal_sensor_max_index,
                                         ipmi_oem_intel_s5500wb_specific_pci_fatal_sensor));
 
-          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S5500WB_PCIE_CORRECTABLE_SENSOR
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_CORRECTABLE_SENSOR
               && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
             return (_get_event_message (offset,
                                         buf,
@@ -2200,7 +2200,7 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
         }
       else if (product_id == IPMI_INTEL_PRODUCT_ID_QUANTA_QSSC_S4R)
         {
-          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QUANTA_QSSC_S4R_PCIE_FATAL_SENSOR
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_SENSOR
               && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
             return (_get_event_message (offset,
                                         buf,
@@ -2208,7 +2208,7 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
                                         ipmi_oem_intel_quanta_qssc_s4r_specific_pci_fatal_sensor_max_index,
                                         ipmi_oem_intel_quanta_qssc_s4r_specific_pci_fatal_sensor));
 
-          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QUANTA_QSSC_S4R_PCIE_CORRECTABLE_SENSOR
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_CORRECTABLE_SENSOR
               && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
             return (_get_event_message (offset,
                                         buf,
