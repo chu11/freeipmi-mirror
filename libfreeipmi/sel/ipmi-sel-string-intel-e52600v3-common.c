@@ -415,6 +415,7 @@ sel_string_output_intel_e52600v3_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
     }
 
   /* Document "System Event Log Troubleshooting Guide for PCSD Platforms Based on Intel Xeon Processor E5 2600 V3 Product Families"
+   * Likewise Document "System Event Log (SEL) Troubleshooting Guide" for S2600BPB
    *
    * says 90h = SSB Thermal Trip
    *
@@ -1193,6 +1194,7 @@ sel_string_output_intel_e52600v3_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
     return (1);
 
   /* Document "System Event Log Troubleshooting Guide for PCSD Platforms Based on Intel Xeon Processor E5 2600 V3 Product Families"
+   * Likewise Document "System Event Log (SEL) Troubleshooting Guide" for S2600BPB
    *
    * says 90h = SSB Thermal Trip
    *

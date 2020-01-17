@@ -86,6 +86,7 @@ extern "C" {
  * Intel S2600WT2
  * Intel S2600WTT
  * Intel S2600GZ
+ * Intel S2600BPB
  */
 
 /* BMC owned sensors (GID = 0020h) */
@@ -255,6 +256,16 @@ extern "C" {
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_PCI_EXPRESS_FATAL_ERROR2                     0x14
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_BIOS_RECOVERY                                0x15
 #define IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_INTEL_QUICKPATH_INTERFACE_FATAL_ERROR2       0x17
+
+/*
+ * Intel S2600BPB
+ */
+
+/* BMC owned sensors (GID = 0020h) */
+#define IPMI_SENSOR_NUMBER_OEM_INTEL_FIRMWARE_SECURITY 0x1A
+#define IPMI_SENSOR_NUMBER_OEM_INTEL_BAD_USE_PWD       0xD7
+#define IPMI_SENSOR_NUMBER_OEM_INTEL_KCS_POLICY        0xDA
+#define IPMI_SENSOR_NUMBER_OEM_INTEL_REMOTE_DEBUG      0xDB
 
 #ifdef __cplusplus
 }
