@@ -968,11 +968,11 @@ _sel_string_output_intel_e52600v3_pci_device_function (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data);
   assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
 
-  pci_device = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA3_OEM_INTEL_E52600V3_PCI_DEVICE_NUMBER_BITMASK);
-  pci_device >>= IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA3_OEM_INTEL_E52600V3_PCI_DEVICE_NUMBER_SHIFT;
+  pci_device = (system_event_record_data->event_data3 & IPMI_OEM_INTEL_EVENT_DATA3_DEVICE_NUMBER_BITMASK);
+  pci_device >>= IPMI_OEM_INTEL_EVENT_DATA3_DEVICE_NUMBER_SHIFT;
 
-  pci_function = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA3_OEM_INTEL_E52600V3_PCI_FUNCTION_NUMBER_BITMASK);
-  pci_function >>= IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_EVENT_DATA3_OEM_INTEL_E52600V3_PCI_FUNCTION_NUMBER_SHIFT;
+  pci_function = (system_event_record_data->event_data3 & IPMI_OEM_INTEL_EVENT_DATA3_FUNCTION_NUMBER_BITMASK);
+  pci_function >>= IPMI_OEM_INTEL_EVENT_DATA3_FUNCTION_NUMBER_SHIFT;
 
   snprintf (tmpbuf,
             tmpbuflen,

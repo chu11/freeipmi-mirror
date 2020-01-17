@@ -207,6 +207,10 @@ extern unsigned int ipmi_oem_intel_specific_firmware_update_status_sensor_max_in
  * (Quanta motherboard contains Intel manufacturer ID)
  * Intel S2600JF/Appro 512X
  * Intel S2600WP
+ * Intel S2600KP
+ * Intel S2600WT2
+ * Intel S2600WTT
+ * Intel S2600GZ
  */
 
 #define IPMI_OEM_INTEL_EVENT_DATA3_DEVICE_NUMBER_BITMASK   0xF8
