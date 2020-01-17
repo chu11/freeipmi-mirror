@@ -23,9 +23,9 @@
 extern "C" {
 #endif
 
-#include <freeipmi/spec/oem/ipmi-cmd-oem-intel-s5500wb-spec.h>
-#include <freeipmi/spec/oem/ipmi-cmd-oem-intel-s2600jf-spec.h>
-#include <freeipmi/spec/oem/ipmi-cmd-oem-intel-s2600wt2-spec.h>
+#include <freeipmi/spec/oem/intel/ipmi-cmd-oem-intel-s5500wb-spec.h>
+#include <freeipmi/spec/oem/intel/ipmi-cmd-oem-intel-s2600jf-spec.h>
+#include <freeipmi/spec/oem/intel/ipmi-cmd-oem-intel-s2600wt2-spec.h>
 
 #ifdef __cplusplus
 }

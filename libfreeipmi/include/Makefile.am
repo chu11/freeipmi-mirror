@@ -129,10 +129,6 @@ nobase_include_HEADERS = \
 	freeipmi/spec/oem/ipmi-cmd-oem-ibm-spec.h \
 	freeipmi/spec/oem/ipmi-cmd-oem-intel-node-manager-spec.h \
 	freeipmi/spec/oem/ipmi-cmd-oem-intel-spec.h \
-	freeipmi/spec/oem/ipmi-cmd-oem-intel-common-spec.h \
-	freeipmi/spec/oem/ipmi-cmd-oem-intel-s5500wb-spec.h \
-	freeipmi/spec/oem/ipmi-cmd-oem-intel-s2600jf-spec.h \
-	freeipmi/spec/oem/ipmi-cmd-oem-intel-s2600wt2-spec.h \
 	freeipmi/spec/oem/ipmi-cmd-oem-inventec-spec.h \
 	freeipmi/spec/oem/ipmi-cmd-oem-quanta-spec.h \
 	freeipmi/spec/oem/ipmi-cmd-oem-sun-microsystems-spec.h \
@@ -142,22 +138,11 @@ nobase_include_HEADERS = \
 	freeipmi/spec/oem/ipmi-comp-code-oem-fujitsu-spec.h \
 	freeipmi/spec/oem/ipmi-comp-code-oem-intel-node-manager-spec.h \
 	freeipmi/spec/oem/ipmi-comp-code-oem-intel-spec.h \
-	freeipmi/spec/oem/ipmi-comp-code-oem-intel-s5500wb-spec.h \
 	freeipmi/spec/oem/ipmi-comp-code-oem-wistron-spec.h \
 	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-dell-spec.h \
 	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-hp-spec.h \
 	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-node-manager-spec.h \
 	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-spec.h \
-	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-common-spec.h \
-	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-s5500wb-spec.h \
-	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-quanta-qssc-s4r-spec.h \
-	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-s2600jf-spec.h \
-	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-s2600wp-spec.h \
-	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-windmill-spec.h \
-	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-s2600kp-spec.h \
-	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-s2600wt2-spec.h \
-	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-s2600wtt-spec.h \
-	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-s2600gz-spec.h \
 	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-inventec-spec.h \
 	freeipmi/spec/oem/ipmi-event-reading-type-code-oem-supermicro-spec.h \
 	freeipmi/spec/oem/ipmi-lan-configuration-parameters-oem-inventec-spec.h \
@@ -166,10 +151,6 @@ nobase_include_HEADERS = \
 	freeipmi/spec/oem/ipmi-netfn-oem-fujitsu-spec.h \
 	freeipmi/spec/oem/ipmi-netfn-oem-ibm-spec.h \
 	freeipmi/spec/oem/ipmi-netfn-oem-intel-spec.h \
-	freeipmi/spec/oem/ipmi-netfn-oem-intel-common-spec.h \
-	freeipmi/spec/oem/ipmi-netfn-oem-intel-s5500wb-spec.h \
-	freeipmi/spec/oem/ipmi-netfn-oem-intel-s2600jf-spec.h \
-	freeipmi/spec/oem/ipmi-netfn-oem-intel-s2600wt2-spec.h \
 	freeipmi/spec/oem/ipmi-netfn-oem-inventec-spec.h \
 	freeipmi/spec/oem/ipmi-netfn-oem-quanta-spec.h \
 	freeipmi/spec/oem/ipmi-netfn-oem-supermicro-spec.h \
@@ -179,10 +160,6 @@ nobase_include_HEADERS = \
 	freeipmi/spec/oem/ipmi-oem-gigabyte-spec.h \
 	freeipmi/spec/oem/ipmi-oem-ibm-spec.h \
 	freeipmi/spec/oem/ipmi-oem-intel-spec.h \
-	freeipmi/spec/oem/ipmi-oem-intel-common-spec.h \
-	freeipmi/spec/oem/ipmi-oem-intel-s5500wb-spec.h \
-	freeipmi/spec/oem/ipmi-oem-intel-s2600jf-spec.h \
-	freeipmi/spec/oem/ipmi-oem-intel-s2600wt2-spec.h \
 	freeipmi/spec/oem/ipmi-oem-inventec-spec.h \
 	freeipmi/spec/oem/ipmi-oem-quanta-spec.h \
 	freeipmi/spec/oem/ipmi-oem-sun-microsystems-spec.h \
@@ -194,16 +171,6 @@ nobase_include_HEADERS = \
 	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-hp-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-intel-node-manager-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-intel-spec.h \
-	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-intel-common-spec.h \
-	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-intel-s5500wb-spec.h \
-	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-intel-s2600jf-spec.h \
-	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-intel-quanta-qssc-s4r-spec.h \
-	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-intel-s2600wp-spec.h \
-	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-intel-windmill-spec.h \
-	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-intel-s2600kp-spec.h \
-	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-intel-s2600wt2-spec.h \
-	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-intel-s2600wtt-spec.h \
-	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-intel-s2600gz-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-inventec-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-quanta-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-supermicro-spec.h \
@@ -211,16 +178,6 @@ nobase_include_HEADERS = \
 	freeipmi/spec/oem/ipmi-sensor-numbers-oem-dell-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-numbers-oem-intel-node-manager-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-numbers-oem-intel-spec.h \
-	freeipmi/spec/oem/ipmi-sensor-numbers-oem-intel-common-spec.h \
-	freeipmi/spec/oem/ipmi-sensor-numbers-oem-intel-s5500wb-spec.h \
-	freeipmi/spec/oem/ipmi-sensor-numbers-oem-intel-quanta-qssc-s4r-spec.h \
-	freeipmi/spec/oem/ipmi-sensor-numbers-oem-intel-s2600jf-spec.h \
-	freeipmi/spec/oem/ipmi-sensor-numbers-oem-intel-s2600wp-spec.h \
-	freeipmi/spec/oem/ipmi-sensor-numbers-oem-intel-windmill-spec.h \
-	freeipmi/spec/oem/ipmi-sensor-numbers-oem-intel-s2600kp-spec.h \
-	freeipmi/spec/oem/ipmi-sensor-numbers-oem-intel-s2600wt2-spec.h \
-	freeipmi/spec/oem/ipmi-sensor-numbers-oem-intel-s2600wtt-spec.h \
-	freeipmi/spec/oem/ipmi-sensor-numbers-oem-intel-s2600gz-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-numbers-oem-inventec-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-numbers-oem-quanta-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-numbers-oem-wistron-spec.h \
@@ -229,29 +186,10 @@ nobase_include_HEADERS = \
 	freeipmi/spec/oem/ipmi-sensor-types-oem-hp-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-types-oem-intel-node-manager-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-types-oem-intel-spec.h \
-	freeipmi/spec/oem/ipmi-sensor-types-oem-intel-common-spec.h \
-	freeipmi/spec/oem/ipmi-sensor-types-oem-intel-s5500wb-spec.h \
-	freeipmi/spec/oem/ipmi-sensor-types-oem-intel-sr1625-spec.h \
-	freeipmi/spec/oem/ipmi-sensor-types-oem-intel-quanta-qssc-s4r-spec.h \
-	freeipmi/spec/oem/ipmi-sensor-types-oem-intel-s5000pal-spec.h \
-	freeipmi/spec/oem/ipmi-sensor-types-oem-intel-windmill-spec.h \
-	freeipmi/spec/oem/ipmi-sensor-types-oem-intel-s2600kp-spec.h \
-	freeipmi/spec/oem/ipmi-sensor-types-oem-intel-s2600wt2-spec.h \
-	freeipmi/spec/oem/ipmi-sensor-types-oem-intel-s2600wtt-spec.h \
-	freeipmi/spec/oem/ipmi-sensor-types-oem-intel-s2600gz-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-types-oem-inventec-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-types-oem-supermicro-spec.h \
 	freeipmi/spec/oem/ipmi-sensor-types-oem-wistron-spec.h \
 	freeipmi/spec/oem/ipmi-slave-address-oem-intel-spec.h \
-	freeipmi/spec/oem/ipmi-slave-address-oem-intel-common-spec.h \
-	freeipmi/spec/oem/ipmi-slave-address-oem-intel-s5500wb-spec.h \
-	freeipmi/spec/oem/ipmi-slave-address-oem-intel-quanta-qssc-s4r-spec.h \
-	freeipmi/spec/oem/ipmi-slave-address-oem-intel-s2600jf-spec.h \
-	freeipmi/spec/oem/ipmi-slave-address-oem-intel-s2600wp-spec.h \
-	freeipmi/spec/oem/ipmi-slave-address-oem-intel-s2600kp-spec.h \
-	freeipmi/spec/oem/ipmi-slave-address-oem-intel-s2600wt2-spec.h \
-	freeipmi/spec/oem/ipmi-slave-address-oem-intel-s2600wtt-spec.h \
-	freeipmi/spec/oem/ipmi-slave-address-oem-intel-s2600gz-spec.h \
 	freeipmi/spec/oem/ipmi-slave-address-oem-inventec-spec.h \
 	freeipmi/spec/oem/ipmi-slave-address-oem-linux-kernel-spec.h \
 	freeipmi/spec/oem/ipmi-slave-address-oem-quanta-spec.h \
@@ -260,6 +198,68 @@ nobase_include_HEADERS = \
 	freeipmi/spec/oem/ipmi-sol-configuration-parameters-oem-wistron-spec.h \
 	freeipmi/spec/oem/ipmi-system-info-parameters-oem-dell-spec.h \
 	freeipmi/spec/oem/ipmi-system-info-parameters-oem-wistron-spec.h \
+	freeipmi/spec/oem/intel/ipmi-cmd-oem-intel-common-spec.h \
+	freeipmi/spec/oem/intel/ipmi-cmd-oem-intel-s5500wb-spec.h \
+	freeipmi/spec/oem/intel/ipmi-cmd-oem-intel-s2600jf-spec.h \
+	freeipmi/spec/oem/intel/ipmi-cmd-oem-intel-s2600wt2-spec.h \
+	freeipmi/spec/oem/intel/ipmi-comp-code-oem-intel-s5500wb-spec.h \
+	freeipmi/spec/oem/intel/ipmi-event-reading-type-code-oem-intel-common-spec.h \
+	freeipmi/spec/oem/intel/ipmi-event-reading-type-code-oem-intel-s5500wb-spec.h \
+	freeipmi/spec/oem/intel/ipmi-event-reading-type-code-oem-intel-quanta-qssc-s4r-spec.h \
+	freeipmi/spec/oem/intel/ipmi-event-reading-type-code-oem-intel-s2600jf-spec.h \
+	freeipmi/spec/oem/intel/ipmi-event-reading-type-code-oem-intel-s2600wp-spec.h \
+	freeipmi/spec/oem/intel/ipmi-event-reading-type-code-oem-intel-windmill-spec.h \
+	freeipmi/spec/oem/intel/ipmi-event-reading-type-code-oem-intel-s2600kp-spec.h \
+	freeipmi/spec/oem/intel/ipmi-event-reading-type-code-oem-intel-s2600wt2-spec.h \
+	freeipmi/spec/oem/intel/ipmi-event-reading-type-code-oem-intel-s2600wtt-spec.h \
+	freeipmi/spec/oem/intel/ipmi-event-reading-type-code-oem-intel-s2600gz-spec.h \
+	freeipmi/spec/oem/intel/ipmi-netfn-oem-intel-common-spec.h \
+	freeipmi/spec/oem/intel/ipmi-netfn-oem-intel-s5500wb-spec.h \
+	freeipmi/spec/oem/intel/ipmi-netfn-oem-intel-s2600jf-spec.h \
+	freeipmi/spec/oem/intel/ipmi-netfn-oem-intel-s2600wt2-spec.h \
+	freeipmi/spec/oem/intel/ipmi-oem-intel-common-spec.h \
+	freeipmi/spec/oem/intel/ipmi-oem-intel-s5500wb-spec.h \
+	freeipmi/spec/oem/intel/ipmi-oem-intel-s2600jf-spec.h \
+	freeipmi/spec/oem/intel/ipmi-oem-intel-s2600wt2-spec.h \
+	freeipmi/spec/oem/intel/ipmi-sensor-and-event-code-tables-oem-intel-common-spec.h \
+	freeipmi/spec/oem/intel/ipmi-sensor-and-event-code-tables-oem-intel-s5500wb-spec.h \
+	freeipmi/spec/oem/intel/ipmi-sensor-and-event-code-tables-oem-intel-s2600jf-spec.h \
+	freeipmi/spec/oem/intel/ipmi-sensor-and-event-code-tables-oem-intel-quanta-qssc-s4r-spec.h \
+	freeipmi/spec/oem/intel/ipmi-sensor-and-event-code-tables-oem-intel-s2600wp-spec.h \
+	freeipmi/spec/oem/intel/ipmi-sensor-and-event-code-tables-oem-intel-windmill-spec.h \
+	freeipmi/spec/oem/intel/ipmi-sensor-and-event-code-tables-oem-intel-s2600kp-spec.h \
+	freeipmi/spec/oem/intel/ipmi-sensor-and-event-code-tables-oem-intel-s2600wt2-spec.h \
+	freeipmi/spec/oem/intel/ipmi-sensor-and-event-code-tables-oem-intel-s2600wtt-spec.h \
+	freeipmi/spec/oem/intel/ipmi-sensor-and-event-code-tables-oem-intel-s2600gz-spec.h \
+	freeipmi/spec/oem/intel/ipmi-sensor-numbers-oem-intel-common-spec.h \
+	freeipmi/spec/oem/intel/ipmi-sensor-numbers-oem-intel-s5500wb-spec.h \
+	freeipmi/spec/oem/intel/ipmi-sensor-numbers-oem-intel-quanta-qssc-s4r-spec.h \
+	freeipmi/spec/oem/intel/ipmi-sensor-numbers-oem-intel-s2600jf-spec.h \
+	freeipmi/spec/oem/intel/ipmi-sensor-numbers-oem-intel-s2600wp-spec.h \
+	freeipmi/spec/oem/intel/ipmi-sensor-numbers-oem-intel-windmill-spec.h \
+	freeipmi/spec/oem/intel/ipmi-sensor-numbers-oem-intel-s2600kp-spec.h \
+	freeipmi/spec/oem/intel/ipmi-sensor-numbers-oem-intel-s2600wt2-spec.h \
+	freeipmi/spec/oem/intel/ipmi-sensor-numbers-oem-intel-s2600wtt-spec.h \
+	freeipmi/spec/oem/intel/ipmi-sensor-numbers-oem-intel-s2600gz-spec.h \
+	freeipmi/spec/oem/intel/ipmi-sensor-types-oem-intel-common-spec.h \
+	freeipmi/spec/oem/intel/ipmi-sensor-types-oem-intel-s5500wb-spec.h \
+	freeipmi/spec/oem/intel/ipmi-sensor-types-oem-intel-sr1625-spec.h \
+	freeipmi/spec/oem/intel/ipmi-sensor-types-oem-intel-quanta-qssc-s4r-spec.h \
+	freeipmi/spec/oem/intel/ipmi-sensor-types-oem-intel-s5000pal-spec.h \
+	freeipmi/spec/oem/intel/ipmi-sensor-types-oem-intel-windmill-spec.h \
+	freeipmi/spec/oem/intel/ipmi-sensor-types-oem-intel-s2600kp-spec.h \
+	freeipmi/spec/oem/intel/ipmi-sensor-types-oem-intel-s2600wt2-spec.h \
+	freeipmi/spec/oem/intel/ipmi-sensor-types-oem-intel-s2600wtt-spec.h \
+	freeipmi/spec/oem/intel/ipmi-sensor-types-oem-intel-s2600gz-spec.h \
+	freeipmi/spec/oem/intel/ipmi-slave-address-oem-intel-common-spec.h \
+	freeipmi/spec/oem/intel/ipmi-slave-address-oem-intel-s5500wb-spec.h \
+	freeipmi/spec/oem/intel/ipmi-slave-address-oem-intel-quanta-qssc-s4r-spec.h \
+	freeipmi/spec/oem/intel/ipmi-slave-address-oem-intel-s2600jf-spec.h \
+	freeipmi/spec/oem/intel/ipmi-slave-address-oem-intel-s2600wp-spec.h \
+	freeipmi/spec/oem/intel/ipmi-slave-address-oem-intel-s2600kp-spec.h \
+	freeipmi/spec/oem/intel/ipmi-slave-address-oem-intel-s2600wt2-spec.h \
+	freeipmi/spec/oem/intel/ipmi-slave-address-oem-intel-s2600wtt-spec.h \
+	freeipmi/spec/oem/intel/ipmi-slave-address-oem-intel-s2600gz-spec.h \
 	freeipmi/templates/ipmi-bmc-watchdog-timer-cmds-templates.h \
 	freeipmi/templates/ipmi-chassis-cmds-templates.h \
 	freeipmi/templates/ipmi-dcmi-cmds-templates.h \

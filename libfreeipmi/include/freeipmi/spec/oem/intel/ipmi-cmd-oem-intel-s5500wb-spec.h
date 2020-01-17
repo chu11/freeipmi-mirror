@@ -16,17 +16,17 @@
  *
  */
 
-#ifndef IPMI_COMP_CODE_OEM_INTEL_SPEC_H
-#define IPMI_COMP_CODE_OEM_INTEL_SPEC_H
+#ifndef IPMI_CMD_OEM_INTEL_S5500WB_SPEC_H
+#define IPMI_CMD_OEM_INTEL_S5500WB_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <freeipmi/spec/oem/intel/ipmi-comp-code-oem-intel-s5500wb-spec.h>
+#include <freeipmi/spec/oem/intel/ipmi-cmd-oem-intel-common-spec.h>
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* IPMI_COMP_CODE_OEM_INTEL_SPEC_H */
+#endif /* IPMI_CMD_OEM_INTEL_S5500WB_SPEC_H */

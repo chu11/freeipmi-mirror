@@ -23,15 +23,15 @@
 extern "C" {
 #endif
 
-#include <freeipmi/spec/oem/ipmi-sensor-types-oem-intel-s5500wb-spec.h>
-#include <freeipmi/spec/oem/ipmi-sensor-types-oem-intel-sr1625-spec.h>
-#include <freeipmi/spec/oem/ipmi-sensor-types-oem-intel-quanta-qssc-s4r-spec.h>
-#include <freeipmi/spec/oem/ipmi-sensor-types-oem-intel-s5000pal-spec.h>
-#include <freeipmi/spec/oem/ipmi-sensor-types-oem-intel-windmill-spec.h>
-#include <freeipmi/spec/oem/ipmi-sensor-types-oem-intel-s2600kp-spec.h>
-#include <freeipmi/spec/oem/ipmi-sensor-types-oem-intel-s2600wt2-spec.h>
-#include <freeipmi/spec/oem/ipmi-sensor-types-oem-intel-s2600wtt-spec.h>
-#include <freeipmi/spec/oem/ipmi-sensor-types-oem-intel-s2600gz-spec.h>
+#include <freeipmi/spec/oem/intel/ipmi-sensor-types-oem-intel-s5500wb-spec.h>
+#include <freeipmi/spec/oem/intel/ipmi-sensor-types-oem-intel-sr1625-spec.h>
+#include <freeipmi/spec/oem/intel/ipmi-sensor-types-oem-intel-quanta-qssc-s4r-spec.h>
+#include <freeipmi/spec/oem/intel/ipmi-sensor-types-oem-intel-s5000pal-spec.h>
+#include <freeipmi/spec/oem/intel/ipmi-sensor-types-oem-intel-windmill-spec.h>
+#include <freeipmi/spec/oem/intel/ipmi-sensor-types-oem-intel-s2600kp-spec.h>
+#include <freeipmi/spec/oem/intel/ipmi-sensor-types-oem-intel-s2600wt2-spec.h>
+#include <freeipmi/spec/oem/intel/ipmi-sensor-types-oem-intel-s2600wtt-spec.h>
+#include <freeipmi/spec/oem/intel/ipmi-sensor-types-oem-intel-s2600gz-spec.h>
 
 #ifdef __cplusplus
 }

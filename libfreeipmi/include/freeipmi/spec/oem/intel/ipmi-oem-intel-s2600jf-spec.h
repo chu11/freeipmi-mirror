@@ -16,17 +16,27 @@
  *
  */
 
-#ifndef IPMI_COMP_CODE_OEM_INTEL_SPEC_H
-#define IPMI_COMP_CODE_OEM_INTEL_SPEC_H
+#ifndef IPMI_OEM_INTEL_S2600JF_SPEC_H
+#define IPMI_OEM_INTEL_S2600JF_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <freeipmi/spec/oem/intel/ipmi-comp-code-oem-intel-s5500wb-spec.h>
+#include <freeipmi/spec/oem/intel/ipmi-oem-intel-common-spec.h>
+
+/*
+ * Intel S2600JF/Appro 512X
+ */
+
+/* w/ IPMI_CMD_OEM_INTEL_S2600JF_SET_POWER_RESTORE_DELAY / IPMI_CMD_OEM_INTEL_S2600JF_GET_POWER_RESTORE_DELAY */
+#define IPMI_OEM_INTEL_S2600JF_POWER_RESTORE_DELAY_MSB_MASK 0x07
+#define IPMI_OEM_INTEL_S2600JF_POWER_RESTORE_DELAY_LSB_MASK 0xFF
+
+#define IPMI_OEM_INTEL_S2600JF_POWER_RESTORE_DELAY_MAX 0x07FF
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* IPMI_COMP_CODE_OEM_INTEL_SPEC_H */
+#endif /* IPMI_OEM_INTEL_S2600JF_SPEC_H */

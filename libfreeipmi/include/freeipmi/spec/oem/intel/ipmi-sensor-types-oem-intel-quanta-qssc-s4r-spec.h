@@ -16,17 +16,23 @@
  *
  */
 
-#ifndef IPMI_COMP_CODE_OEM_INTEL_SPEC_H
-#define IPMI_COMP_CODE_OEM_INTEL_SPEC_H
+#ifndef IPMI_SENSOR_TYPES_OEM_INTEL_QUANTA_QSSC_S4R_SPEC_H
+#define IPMI_SENSOR_TYPES_OEM_INTEL_QUANTA_QSSC_S4R_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <freeipmi/spec/oem/intel/ipmi-comp-code-oem-intel-s5500wb-spec.h>
+#include <freeipmi/spec/oem/intel/ipmi-sensor-types-oem-intel-common-spec.h>
+
+/*
+ * Quanta QSSC-S4R/Appro GB812X-CN
+ * (Quanta motherboard contains Intel manufacturer ID)
+ */
+#define IPMI_SENSOR_TYPE_OEM_INTEL_QUANTA_QSSC_S4R_POWER_THROTTLED 0xF3
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* IPMI_COMP_CODE_OEM_INTEL_SPEC_H */
+#endif /* IPMI_SENSOR_TYPES_OEM_INTEL_QUANTA_QSSC_S4R_SPEC_H */

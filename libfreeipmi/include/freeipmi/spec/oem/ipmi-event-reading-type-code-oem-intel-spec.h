@@ -23,15 +23,15 @@
 extern "C" {
 #endif
 
-#include <freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-s5500wb-spec.h>
-#include <freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-quanta-qssc-s4r-spec.h>
-#include <freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-s2600jf-spec.h>
-#include <freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-s2600wp-spec.h>
-#include <freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-windmill-spec.h>
-#include <freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-s2600kp-spec.h>
-#include <freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-s2600wt2-spec.h>
-#include <freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-s2600wtt-spec.h>
-#include <freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-s2600gz-spec.h>
+#include <freeipmi/spec/oem/intel/ipmi-event-reading-type-code-oem-intel-s5500wb-spec.h>
+#include <freeipmi/spec/oem/intel/ipmi-event-reading-type-code-oem-intel-quanta-qssc-s4r-spec.h>
+#include <freeipmi/spec/oem/intel/ipmi-event-reading-type-code-oem-intel-s2600jf-spec.h>
+#include <freeipmi/spec/oem/intel/ipmi-event-reading-type-code-oem-intel-s2600wp-spec.h>
+#include <freeipmi/spec/oem/intel/ipmi-event-reading-type-code-oem-intel-windmill-spec.h>
+#include <freeipmi/spec/oem/intel/ipmi-event-reading-type-code-oem-intel-s2600kp-spec.h>
+#include <freeipmi/spec/oem/intel/ipmi-event-reading-type-code-oem-intel-s2600wt2-spec.h>
+#include <freeipmi/spec/oem/intel/ipmi-event-reading-type-code-oem-intel-s2600wtt-spec.h>
+#include <freeipmi/spec/oem/intel/ipmi-event-reading-type-code-oem-intel-s2600gz-spec.h>
 
 #ifdef __cplusplus
 }
