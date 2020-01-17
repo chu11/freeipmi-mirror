@@ -180,3 +180,21 @@ const char * const ipmi_oem_intel_specific_qpi_link_width_reduced[] =
     NULL
   };
 unsigned int ipmi_oem_intel_specific_qpi_link_width_reduced_max_index = 0x02;
+
+/*
+ * Intel S2600WP
+ * Intel S2600KP
+ * Intel S2600WT2
+ * Intel S2600WTT
+ * Intel S2600GZ
+ */
+
+const char * const ipmi_oem_intel_specific_firmware_update_status_sensor[] =
+  {
+    "Update started",
+    "Update completed successfully",
+    "Update failure",
+    NULL
+  };
+
+unsigned int ipmi_oem_intel_specific_firmware_update_status_sensor_max_index = 0x02;

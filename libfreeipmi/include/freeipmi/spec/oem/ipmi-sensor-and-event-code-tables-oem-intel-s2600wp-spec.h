@@ -29,22 +29,6 @@ extern "C" {
  * Intel S2600WP
  */
 
-/*
- * Event Reading Type Code = IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600WP_FIRMWARE_UPDATE_STATUS_SENSOR
- * Sensor Type = IPMI_SENSOR_TYPE_VERSION_CHANGE
- */
-/* achu: not a typo, no 0x00 offset */
-#define IPMI_OEM_INTEL_S2600WP_SPECIFIC_FIRMWARE_UPDATE_STATUS_SENSOR_UPDATE_STARTED                0x00
-#define IPMI_OEM_INTEL_S2600WP_SPECIFIC_FIRMWARE_UPDATE_STATUS_SENSOR_UPDATE_COMPLETED_SUCCESSFULLY 0x01
-#define IPMI_OEM_INTEL_S2600WP_SPECIFIC_FIRMWARE_UPDATE_STATUS_SENSOR_UPDATE_FAILURE                0x02
-
-/*
- * String arrays for above
- */
-
-extern const char * const ipmi_oem_intel_s2600wp_specific_firmware_update_status_sensor[];
-extern unsigned int ipmi_oem_intel_s2600wp_specific_firmware_update_status_sensor_max_index;
-
 #define IPMI_SENSOR_MEMORY_REDUNDANCY_EVENT_DATA2_OEM_INTEL_S2600WP_MIRRORING_DOMAIN_CHANNEL_BITMASK 0xF0
 #define IPMI_SENSOR_MEMORY_REDUNDANCY_EVENT_DATA2_OEM_INTEL_S2600WP_MIRRORING_DOMAIN_CHANNEL_SHIFT   4
 

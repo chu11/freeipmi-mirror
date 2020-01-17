@@ -422,15 +422,6 @@ extern "C" {
 #define IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA2_ERROR_TYPE_DATA_PARITY_ERROR                0x1
 #define IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_E52600V3_EVENT_DATA2_ERROR_TYPE_COMMAND_AND_ADDRESS_PARITY_ERROR 0x3
 
-/*
- * Event Reading Type Code = IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_E52600V3_FIRMWARE_UPDATE_STATUS_SENSOR
- * Sensor Type = IPMI_SENSOR_TYPE_VERSION_CHANGE
- */
-/* achu: not a typo, no 0x00 offset */
-#define IPMI_OEM_INTEL_E52600V3_SPECIFIC_FIRMWARE_UPDATE_STATUS_SENSOR_UPDATE_STARTED                0x00
-#define IPMI_OEM_INTEL_E52600V3_SPECIFIC_FIRMWARE_UPDATE_STATUS_SENSOR_UPDATE_COMPLETED_SUCCESSFULLY 0x01
-#define IPMI_OEM_INTEL_E52600V3_SPECIFIC_FIRMWARE_UPDATE_STATUS_SENSOR_UPDATE_FAILURE                0x02
-
 #define IPMI_OEM_INTEL_E52600V3_SPECIFIC_FIRMWARE_UPDATE_STATUS_SENSOR_EVENT_DATA2_TARGET_OF_UPDATE_BITMASK 0xF0
 #define IPMI_OEM_INTEL_E52600V3_SPECIFIC_FIRMWARE_UPDATE_STATUS_SENSOR_EVENT_DATA2_TARGET_OF_UPDATE_SHIFT   4
 
@@ -464,9 +455,6 @@ extern "C" {
 /*
  * String arrays for above
  */
-
-extern const char * const ipmi_oem_intel_e52600v3_specific_firmware_update_status_sensor[];
-extern unsigned int ipmi_oem_intel_e52600v3_specific_firmware_update_status_sensor_max_index;
 
 extern const char * const ipmi_oem_intel_e52600v3_specific_bios_recovery_start[];
 extern unsigned int ipmi_oem_intel_e52600v3_specific_bios_recovery_start_max_index;

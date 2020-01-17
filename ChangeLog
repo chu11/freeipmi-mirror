@@ -94,8 +94,7 @@
 	libfreeipmi/include/freeipmi/spec/oem/ipmi-sensor-types-oem-intel-s2600gz-spec.h,
 	libfreeipmi/spec/ipmi-sensor-and-event-code-tables-oem-intel-common-spec.c,
 	libfreeipmi/spec/ipmi-sensor-and-event-code-tables-oem-intel-s5500wb-spec.c,
-	libfreeipmi/spec/ipmi-sensor-and-event-code-tables-oem-intel-quanta-qssc-s4r-spec.c,
-	libfreeipmi/spec/ipmi-sensor-and-event-code-tables-oem-intel-s2600wp-spec.c:
+	libfreeipmi/spec/ipmi-sensor-and-event-code-tables-oem-intel-quanta-qssc-s4r-spec.c:
 	New file(s).
 
 	* libfreeipmi/sel, libfreeipmi/util, ipmi-oem: Update for macro /

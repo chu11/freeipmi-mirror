@@ -178,6 +178,30 @@ extern const char * const ipmi_oem_intel_specific_qpi_link_width_reduced[];
 extern unsigned int ipmi_oem_intel_specific_qpi_link_width_reduced_max_index;
 
 /*
+ * Intel S2600WP
+ * Intel S2600KP
+ * Intel S2600WT2
+ * Intel S2600WTT
+ * Intel S2600GZ
+ */
+
+/*
+ * Event Reading Type Code = IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_FIRMWARE_UPDATE_STATUS_SENSOR
+ * Sensor Type = IPMI_SENSOR_TYPE_VERSION_CHANGE
+ */
+/* achu: not a typo, no 0x00 offset */
+#define IPMI_OEM_INTEL_SPECIFIC_FIRMWARE_UPDATE_STATUS_SENSOR_UPDATE_STARTED                0x00
+#define IPMI_OEM_INTEL_SPECIFIC_FIRMWARE_UPDATE_STATUS_SENSOR_UPDATE_COMPLETED_SUCCESSFULLY 0x01
+#define IPMI_OEM_INTEL_SPECIFIC_FIRMWARE_UPDATE_STATUS_SENSOR_UPDATE_FAILURE                0x02
+
+/*
+ * String arrays for above
+ */
+
+extern const char * const ipmi_oem_intel_specific_firmware_update_status_sensor[];
+extern unsigned int ipmi_oem_intel_specific_firmware_update_status_sensor_max_index;
+
+/*
  * Intel S5500WB/Penguin Computing Relion 700
  * Quanta QSSC-S4R/Appro GB812X-CN
  * (Quanta motherboard contains Intel manufacturer ID)
