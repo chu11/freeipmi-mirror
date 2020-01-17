@@ -198,3 +198,36 @@ const char * const ipmi_oem_intel_specific_firmware_update_status_sensor[] =
   };
 
 unsigned int ipmi_oem_intel_specific_firmware_update_status_sensor_max_index = 0x02;
+
+/*
+ * Intel S2600KP
+ * Intel S2600WT2
+ * Intel S2600WTT
+ * Intel S2600GZ
+ */
+
+const char * const ipmi_oem_intel_specific_bios_recovery_start[] =
+  {
+    "reserved",
+    "BIOS Recovery Start",
+    NULL
+  };
+
+unsigned int ipmi_oem_intel_specific_bios_recovery_start_max_index = 0x01;
+
+const char * const ipmi_oem_intel_specific_bios_recovery_finish[] =
+  {
+    "reserved",
+    "BIOS Recovery Finish",
+    NULL
+  };
+
+unsigned int ipmi_oem_intel_specific_bios_recovery_finish_max_index = 0x01;
+
+const char * const ipmi_oem_intel_specific_ierr_recovery_dump_info[] =
+  {
+    "reserved",
+    "Dump failed",
+    NULL,
+  };
+unsigned int ipmi_oem_intel_specific_ierr_recovery_dump_info_max_index = 0x01;
