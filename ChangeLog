@@ -102,6 +102,14 @@
 	* libfreeipmi/sel, libfreeipmi/util, ipmi-oem: Update for macro /
 	variable change changes accordingly.
 
+	Prepare for S2600BPB support
+
+	* libfreeipmi/include/freeipmi/spec/oem/intel: Document S2600BPB
+	support at appropriate locations, rename macros that are not
+	Broadwell specific.
+
+	* libfreeipmi/sel, libfreeipmi/util: Update code for macro name changes.
+
 2020-01-08 Albert Chu <chu11@llnl.gov>
 
 	* bmc-device/bmc-device.c (write_fru): Fix invalid type in

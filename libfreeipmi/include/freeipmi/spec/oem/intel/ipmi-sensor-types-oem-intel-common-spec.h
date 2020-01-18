@@ -37,6 +37,7 @@ extern "C" {
  * Intel S2600WT2
  * Intel S2600WTT
  * Intel S2600GZ
+ * Intel S2600BPB
  */
 
 #define IPMI_SENSOR_TYPE_OEM_INTEL_IERR_RECOVERY_DUMP_INFO 0xD1

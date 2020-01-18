@@ -31,6 +31,7 @@ extern "C" {
  * Intel S2600WT2
  * Intel S2600WTT
  * Intel S2600GZ
+ * Intel S2600BPB
  */
 #define IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER   0x33
 
@@ -41,6 +42,7 @@ extern "C" {
  * Intel S2600WT2
  * Intel S2600WTT
  * Intel S2600GZ
+ * Intel S2600BPB
  */
 #define IPMI_GENERATOR_ID_OEM_INTEL_BIOS_POST          0x01
 

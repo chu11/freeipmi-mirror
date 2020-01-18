@@ -215,14 +215,15 @@ const char * const ipmi_oem_intel_specific_bios_recovery_start[] =
 
 unsigned int ipmi_oem_intel_specific_bios_recovery_start_max_index = 0x01;
 
-const char * const ipmi_oem_intel_specific_bios_recovery_finish[] =
+/* In S2600KP, S2600WT2, S2600WTT, S2600GZ timeframe, was "Finish" instead of "Complete" */
+const char * const ipmi_oem_intel_specific_bios_recovery_complete[] =
   {
     "reserved",
-    "BIOS Recovery Finish",
+    "BIOS Recovery Complete",
     NULL
   };
 
-unsigned int ipmi_oem_intel_specific_bios_recovery_finish_max_index = 0x01;
+unsigned int ipmi_oem_intel_specific_bios_recovery_complete_max_index = 0x01;
 
 const char * const ipmi_oem_intel_specific_ierr_recovery_dump_info[] =
   {
