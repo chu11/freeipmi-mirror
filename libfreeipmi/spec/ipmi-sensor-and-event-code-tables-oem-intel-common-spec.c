@@ -57,6 +57,11 @@ unsigned int ipmi_oem_intel_specific_pci_correctable_sensor_max_index = 0x06;
 /*
  * Intel S2600JF/Appro 512X
  * Intel S2600WP
+ * Intel S2600KP
+ * Intel S2600WT2
+ * Intel S2600WTT
+ * Intel S2600GZ
+ * Intel S2600BPB
  */
 
 const char * const ipmi_oem_intel_specific_pcie_fatal_error[] =
@@ -187,6 +192,7 @@ unsigned int ipmi_oem_intel_specific_qpi_link_width_reduced_max_index = 0x02;
  * Intel S2600WT2
  * Intel S2600WTT
  * Intel S2600GZ
+ * Intel S2600BPB
  */
 
 const char * const ipmi_oem_intel_specific_firmware_update_status_sensor[] =
@@ -204,6 +210,7 @@ unsigned int ipmi_oem_intel_specific_firmware_update_status_sensor_max_index = 0
  * Intel S2600WT2
  * Intel S2600WTT
  * Intel S2600GZ
+ * Intel S2600BPB
  */
 
 const char * const ipmi_oem_intel_specific_bios_recovery_start[] =

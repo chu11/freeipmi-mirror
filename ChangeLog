@@ -104,11 +104,18 @@
 
 	Prepare for S2600BPB support
 
-	* libfreeipmi/include/freeipmi/spec/oem/intel: Document S2600BPB
-	support at appropriate locations, rename macros that are not
-	Broadwell specific.
+	* libfreeipmi/include/freeipmi/spec/oem/intel, libfreeipmi/spec:
+	Document S2600BPB support at appropriate locations, rename macros
+	that are not Broadwell specific.
 
 	* libfreeipmi/sel, libfreeipmi/util: Update code for macro name changes.
+
+	* libfreeipmi/include/freeipmi/spec/oem/intel/ipmi-event-reading-type-code-oem-intel-s2600bpb-spec.h,
+	libfreeipmi/include/freeipmi/spec/oem/intel/ipmi-sensor-and-event-code-tables-oem-intel-s2600bpb-spec.h,
+	libfreeipmi/include/freeipmi/spec/oem/intel/ipmi-sensor-numbers-oem-intel-s2600bpb-spec.h,
+	libfreeipmi/include/freeipmi/spec/oem/intel/ipmi-slave-address-oem-intel-s2600bpb-spec.h,
+	libfreeipmi/include/freeipmi/spec/oem/intel/ipmi-sensor-types-oem-intel-s2600bpb-spec.h:
+	New file(s).
 
 2020-01-08 Albert Chu <chu11@llnl.gov>
 

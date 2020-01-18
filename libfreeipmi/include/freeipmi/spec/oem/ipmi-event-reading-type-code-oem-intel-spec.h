@@ -32,6 +32,7 @@ extern "C" {
 #include <freeipmi/spec/oem/intel/ipmi-event-reading-type-code-oem-intel-s2600wt2-spec.h>
 #include <freeipmi/spec/oem/intel/ipmi-event-reading-type-code-oem-intel-s2600wtt-spec.h>
 #include <freeipmi/spec/oem/intel/ipmi-event-reading-type-code-oem-intel-s2600gz-spec.h>
+#include <freeipmi/spec/oem/intel/ipmi-event-reading-type-code-oem-intel-s2600bpb-spec.h>
 
 #ifdef __cplusplus
 }
