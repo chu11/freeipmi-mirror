@@ -39,7 +39,7 @@
 #include "ipmi-sel-defs.h"
 #include "ipmi-sel-string.h"
 #include "ipmi-sel-string-intel-node-manager.h"
-#include "ipmi-sel-string-intel-e52600v3-common.h"
+#include "ipmi-sel-string-intel-xeon-common.h"
 #include "ipmi-sel-trace.h"
 #include "ipmi-sel-util.h"
 
@@ -71,15 +71,15 @@ sel_string_output_intel_s2600gz_sensor_name (ipmi_sel_ctx_t ctx,
   assert (oem_rv);
   assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600GZ);
 
-  if ((ret = sel_string_output_intel_e52600v3_sensor_name (ctx,
-                                                           sel_entry,
-                                                           sel_record_type,
-                                                           buf,
-                                                           buflen,
-                                                           flags,
-                                                           wlen,
-                                                           system_event_record_data,
-                                                           oem_rv)) < 0)
+  if ((ret = sel_string_output_intel_xeon_sensor_name (ctx,
+                                                       sel_entry,
+                                                       sel_record_type,
+                                                       buf,
+                                                       buflen,
+                                                       flags,
+                                                       wlen,
+                                                       system_event_record_data,
+                                                       oem_rv)) < 0)
     return (-1);
 
   if (ret)
@@ -116,14 +116,14 @@ sel_string_output_intel_s2600gz_event_data1_class_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data);
   assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600GZ);
 
-  if ((ret = sel_string_output_intel_e52600v3_event_data1_class_oem (ctx,
-                                                                     sel_entry,
-                                                                     sel_record_type,
-                                                                     tmpbuf,
-                                                                     tmpbuflen,
-                                                                     flags,
-                                                                     wlen,
-                                                                     system_event_record_data)) < 0)
+  if ((ret = sel_string_output_intel_xeon_event_data1_class_oem (ctx,
+                                                                 sel_entry,
+                                                                 sel_record_type,
+                                                                 tmpbuf,
+                                                                 tmpbuflen,
+                                                                 flags,
+                                                                 wlen,
+                                                                 system_event_record_data)) < 0)
     return (-1);
 
   if (ret)
@@ -161,14 +161,14 @@ sel_string_output_intel_s2600gz_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
   assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600GZ);
 
-  if ((ret = sel_string_output_intel_e52600v3_event_data2_discrete_oem (ctx,
-                                                                        sel_entry,
-                                                                        sel_record_type,
-                                                                        tmpbuf,
-                                                                        tmpbuflen,
-                                                                        flags,
-                                                                        wlen,
-                                                                        system_event_record_data)) < 0)
+  if ((ret = sel_string_output_intel_xeon_event_data2_discrete_oem (ctx,
+                                                                    sel_entry,
+                                                                    sel_record_type,
+                                                                    tmpbuf,
+                                                                    tmpbuflen,
+                                                                    flags,
+                                                                    wlen,
+                                                                    system_event_record_data)) < 0)
     return (-1);
 
   if (ret)
@@ -205,14 +205,14 @@ sel_string_output_intel_s2600gz_event_data2_class_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data);
   assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600GZ);
 
-  if ((ret = sel_string_output_intel_e52600v3_event_data2_class_oem (ctx,
-                                                                     sel_entry,
-                                                                     sel_record_type,
-                                                                     tmpbuf,
-                                                                     tmpbuflen,
-                                                                     flags,
-                                                                     wlen,
-                                                                     system_event_record_data)) < 0)
+  if ((ret = sel_string_output_intel_xeon_event_data2_class_oem (ctx,
+                                                                 sel_entry,
+                                                                 sel_record_type,
+                                                                 tmpbuf,
+                                                                 tmpbuflen,
+                                                                 flags,
+                                                                 wlen,
+                                                                 system_event_record_data)) < 0)
     return (-1);
 
   if (ret)
@@ -250,14 +250,14 @@ sel_string_output_intel_s2600gz_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
   assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600GZ);
 
-  if ((ret = sel_string_output_intel_e52600v3_event_data3_discrete_oem (ctx,
-                                                                        sel_entry,
-                                                                        sel_record_type,
-                                                                        tmpbuf,
-                                                                        tmpbuflen,
-                                                                        flags,
-                                                                        wlen,
-                                                                        system_event_record_data)) < 0)
+  if ((ret = sel_string_output_intel_xeon_event_data3_discrete_oem (ctx,
+                                                                    sel_entry,
+                                                                    sel_record_type,
+                                                                    tmpbuf,
+                                                                    tmpbuflen,
+                                                                    flags,
+                                                                    wlen,
+                                                                    system_event_record_data)) < 0)
     return (-1);
 
   if (ret)
@@ -294,14 +294,14 @@ sel_string_output_intel_s2600gz_event_data3_class_oem (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data);
   assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600GZ);
 
-  if ((ret = sel_string_output_intel_e52600v3_event_data3_class_oem (ctx,
-                                                                     sel_entry,
-                                                                     sel_record_type,
-                                                                     tmpbuf,
-                                                                     tmpbuflen,
-                                                                     flags,
-                                                                     wlen,
-                                                                     system_event_record_data)) < 0)
+  if ((ret = sel_string_output_intel_xeon_event_data3_class_oem (ctx,
+                                                                 sel_entry,
+                                                                 sel_record_type,
+                                                                 tmpbuf,
+                                                                 tmpbuflen,
+                                                                 flags,
+                                                                 wlen,
+                                                                 system_event_record_data)) < 0)
     return (-1);
 
   if (ret)
@@ -344,15 +344,15 @@ sel_string_output_intel_s2600gz_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
   assert (oem_rv);
   assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600GZ);
 
-  if ((ret = sel_string_output_intel_e52600v3_event_data2_event_data3 (ctx,
-                                                                       sel_entry,
-                                                                       sel_record_type,
-                                                                       buf,
-                                                                       buflen,
-                                                                       flags,
-                                                                       wlen,
-                                                                       system_event_record_data,
-                                                                       oem_rv)) < 0)
+  if ((ret = sel_string_output_intel_xeon_event_data2_event_data3 (ctx,
+                                                                   sel_entry,
+                                                                   sel_record_type,
+                                                                   buf,
+                                                                   buflen,
+                                                                   flags,
+                                                                   wlen,
+                                                                   system_event_record_data,
+                                                                   oem_rv)) < 0)
     return (-1);
 
   if (ret)

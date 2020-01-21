@@ -117,6 +117,10 @@
 	libfreeipmi/include/freeipmi/spec/oem/intel/ipmi-sensor-types-oem-intel-s2600bpb-spec.h:
 	New file(s).
 
+	* libfreeipmi/sel/ipmi-sel-string-intel-e52600v3-common.[ch]:
+	Rename to ipmi-sel-string-intel-xeon-common.[ch].  Adjust
+	functions, headers, and callers appropriately.
+
 2020-01-08 Albert Chu <chu11@llnl.gov>
 
 	* bmc-device/bmc-device.c (write_fru): Fix invalid type in
