@@ -126,6 +126,9 @@
 	ipmi-sel-string-intel-xeon-broadwell-common.[ch].  Update callers
 	accordingly.
 
+	* libfreeipmi/util/ipmi-sensor-and-event-code-tables-util.c
+	(ipmi_get_oem_specific_message): Add S2600BPB support.
+
 2020-01-08 Albert Chu <chu11@llnl.gov>
 
 	* bmc-device/bmc-device.c (write_fru): Fix invalid type in
