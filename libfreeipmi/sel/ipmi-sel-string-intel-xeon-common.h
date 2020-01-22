@@ -30,6 +30,14 @@
 #include "ipmi-sel-defs.h"
 #include "ipmi-sel-common.h"
 
+void sel_string_output_intel_xeon_memory_dimm (ipmi_sel_ctx_t ctx,
+                                               char *tmpbuf,
+                                               unsigned int tmpbuflen,
+                                               unsigned int flags,
+                                               struct ipmi_sel_system_event_record_data *system_event_record_data,
+                                               int channel_valid,
+                                               int dimm_valid);
+
 int sel_string_output_intel_xeon_sensor_name (ipmi_sel_ctx_t ctx,
                                               struct ipmi_sel_entry *sel_entry,
                                               uint8_t sel_record_type,

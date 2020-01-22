@@ -982,14 +982,14 @@ _sel_string_output_intel_xeon_pci_device_function (ipmi_sel_ctx_t ctx,
             pci_function);
 }
 
-static void
-_sel_string_output_intel_xeon_memory_dimm (ipmi_sel_ctx_t ctx,
-                                           char *tmpbuf,
-                                           unsigned int tmpbuflen,
-                                           unsigned int flags,
-                                           struct ipmi_sel_system_event_record_data *system_event_record_data,
-                                           int channel_valid,
-                                           int dimm_valid)
+void
+sel_string_output_intel_xeon_memory_dimm (ipmi_sel_ctx_t ctx,
+                                          char *tmpbuf,
+                                          unsigned int tmpbuflen,
+                                          unsigned int flags,
+                                          struct ipmi_sel_system_event_record_data *system_event_record_data,
+                                          int channel_valid,
+                                          int dimm_valid)
 {
   uint8_t socket_id, channel, dimm;
   char *socket_id_str, *channel_str, *dimm_str;
@@ -1512,7 +1512,7 @@ sel_string_output_intel_xeon_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
       && (system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_FULLY_REDUNDANT
           || system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_REDUNDANCY_DEGRADED))
     {
-      _sel_string_output_intel_xeon_memory_dimm (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data, 1, 1);
+      sel_string_output_intel_xeon_memory_dimm (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data, 1, 1);
 
       return (1);
     }
@@ -1524,7 +1524,7 @@ sel_string_output_intel_xeon_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
       && (system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_FULLY_REDUNDANT
           || system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_REDUNDANCY_DEGRADED))
     {
-      _sel_string_output_intel_xeon_memory_dimm (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data, 1, 1);
+      sel_string_output_intel_xeon_memory_dimm (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data, 1, 1);
 
       return (1);
     }
@@ -1536,7 +1536,7 @@ sel_string_output_intel_xeon_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
       && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CORRECTABLE_MEMORY_ERROR
           || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_UNCORRECTABLE_MEMORY_ERROR))
     {
-      _sel_string_output_intel_xeon_memory_dimm (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data, 1, 1);
+      sel_string_output_intel_xeon_memory_dimm (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data, 1, 1);
 
       return (1);
     }
@@ -1688,13 +1688,13 @@ sel_string_output_intel_xeon_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
           error_type_str = "Unknown";
         }
 
-      _sel_string_output_intel_xeon_memory_dimm (ctx,
-                                                 dimm_str,
-                                                 INTEL_EVENT_BUFFER_LENGTH,
-                                                 flags,
-                                                 system_event_record_data,
-                                                 channel_information_validity_check,
-                                                 dimm_information_validity_check);
+      sel_string_output_intel_xeon_memory_dimm (ctx,
+                                                dimm_str,
+                                                INTEL_EVENT_BUFFER_LENGTH,
+                                                flags,
+                                                system_event_record_data,
+                                                channel_information_validity_check,
+                                                dimm_information_validity_check);
 
       if (sel_string_snprintf (buf,
                                buflen,
