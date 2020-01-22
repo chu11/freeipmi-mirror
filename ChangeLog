@@ -129,6 +129,8 @@
 	* libfreeipmi/util/ipmi-sensor-and-event-code-tables-util.c
 	(ipmi_get_oem_specific_message): Add S2600BPB support.
 
+	* libfreeipmi/sel/ipmi-sel-string-intel-s2600bpb.c: New file.
+
 2020-01-08 Albert Chu <chu11@llnl.gov>
 
 	* bmc-device/bmc-device.c (write_fru): Fix invalid type in

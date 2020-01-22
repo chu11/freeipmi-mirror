@@ -207,6 +207,7 @@ libfreeipmi_la_SOURCES = \
 	sel/ipmi-sel-string-intel-s2600kp.c \
 	sel/ipmi-sel-string-intel-s2600gz.c \
 	sel/ipmi-sel-string-intel-s2600wt-common.c \
+	sel/ipmi-sel-string-intel-s2600bpb.c \
 	sel/ipmi-sel-string-inventec-common.c \
 	sel/ipmi-sel-string-inventec-common.h \
 	sel/ipmi-sel-string-inventec-5441.c \

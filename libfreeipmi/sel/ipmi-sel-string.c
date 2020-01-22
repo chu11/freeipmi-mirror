@@ -85,6 +85,7 @@ extern struct sel_string_oem sel_string_oem_intel_s2600gz;
 extern struct sel_string_oem sel_string_oem_intel_s2600wt_common;
 extern struct sel_string_oem sel_string_oem_intel_s5500wb;
 extern struct sel_string_oem sel_string_oem_intel_windmill;
+extern struct sel_string_oem sel_string_oem_intel_s2600bpb;
 extern struct sel_string_oem sel_string_oem_inventec_5441;
 extern struct sel_string_oem sel_string_oem_inventec_5442;
 extern struct sel_string_oem sel_string_oem_linux_kernel;
@@ -215,6 +216,8 @@ _find_motherboard_oem_support (ipmi_sel_ctx_t ctx,
         (*sel_string_oem) = &sel_string_oem_intel_s5500wb;
       else if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_WINDMILL)
         (*sel_string_oem) = &sel_string_oem_intel_windmill;
+      else if (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600BPB)
+        (*sel_string_oem) = &sel_string_oem_intel_s2600bpb;
     }
   else if (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INVENTEC)
     {
