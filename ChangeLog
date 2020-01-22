@@ -121,6 +121,11 @@
 	Rename to ipmi-sel-string-intel-xeon-common.[ch].  Adjust
 	functions, headers, and callers appropriately.
 
+	* libfreeipmi/sel/ipmi-sel-string-intel-xeon-common.[ch]: Split
+	out firmware post specifics to
+	ipmi-sel-string-intel-xeon-broadwell-common.[ch].  Update callers
+	accordingly.
+
 2020-01-08 Albert Chu <chu11@llnl.gov>
 
 	* bmc-device/bmc-device.c (write_fru): Fix invalid type in

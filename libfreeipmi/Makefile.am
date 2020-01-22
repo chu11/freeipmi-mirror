@@ -202,6 +202,8 @@ libfreeipmi_la_SOURCES = \
 	sel/ipmi-sel-string-intel-windmill.c \
 	sel/ipmi-sel-string-intel-xeon-common.c \
 	sel/ipmi-sel-string-intel-xeon-common.h \
+	sel/ipmi-sel-string-intel-xeon-broadwell-common.c \
+	sel/ipmi-sel-string-intel-xeon-broadwell-common.h \
 	sel/ipmi-sel-string-intel-s2600kp.c \
 	sel/ipmi-sel-string-intel-s2600gz.c \
 	sel/ipmi-sel-string-intel-s2600wt-common.c \
