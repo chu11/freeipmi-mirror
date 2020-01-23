@@ -200,6 +200,44 @@ sel_string_output_intel_s2600bpb_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
   if (ret)
     return (1);
 
+  if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_EVENT
+      && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_XEON_SYSTEM_EVENT
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+      && (system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_SENSOR_TYPE_SYSTEM_EVENT_IMAGE_IS_UPLOADED
+          || system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_SENSOR_TYPE_SYSTEM_EVENT_IMAGE_IS_LOST))
+    {
+      char *str;
+
+      switch (system_event_record_data->event_data2)
+        {
+        case IPMI_OEM_INTEL_SENSOR_TYPE_SYSTEM_EVENT_EVENT_DATA2_BIOS_CONFIGURATION_TABLE:
+          str = "BIOS Configuration Table";
+          break;
+        case IPMI_OEM_INTEL_SENSOR_TYPE_SYSTEM_EVENT_EVENT_DATA2_BIOS_CONFIGURATION_CHANGE:
+          str = "BIOS Configuration change";
+          break;
+        case IPMI_OEM_INTEL_SENSOR_TYPE_SYSTEM_EVENT_EVENT_DATA2_BIOS_IMAGE:
+          str = "BIOS Image";
+          break;
+        case IPMI_OEM_INTEL_SENSOR_TYPE_SYSTEM_EVENT_EVENT_DATA2_ME_IMAGE:
+          str = "ME Image";
+          break;
+        case IPMI_OEM_INTEL_SENSOR_TYPE_SYSTEM_EVENT_EVENT_DATA2_FD_IMAGE:
+          str = "FD Image";
+          break;
+        default:
+          str = "Unknown";
+          break;
+        }
+
+      snprintf (tmpbuf,
+                tmpbuflen,
+                "%s",
+                str);
+
+      return (1);
+    }
+
   return (0);
 }
 
