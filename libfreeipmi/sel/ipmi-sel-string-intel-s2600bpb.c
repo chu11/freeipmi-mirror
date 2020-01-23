@@ -40,6 +40,7 @@
 #include "freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-spec.h"
 #include "freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-intel-spec.h"
 #include "freeipmi/spec/oem/ipmi-sensor-numbers-oem-intel-spec.h"
+#include "freeipmi/spec/oem/ipmi-sensor-types-oem-intel-spec.h"
 
 #include "ipmi-sel-common.h"
 #include "ipmi-sel-defs.h"
@@ -138,21 +139,40 @@ sel_string_output_intel_s2600bpb_event_data1_class_oem (ipmi_sel_ctx_t ctx,
     return (1);
 
   if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT
-      && (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_NVME1_CRIT_WARN
-          || system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_NVME2_CRIT_WARN
-          || system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_NVME3_CRIT_WARN)
-      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_NVME_CRITICAL_WARNING_SENSOR)
+      && (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600BPB_NVME1_CRIT_WARN
+          || system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600BPB_NVME2_CRIT_WARN
+          || system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600BPB_NVME3_CRIT_WARN)
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600BPB_NVME_CRITICAL_WARNING_SENSOR)
     {
       uint8_t drive;
 
-      drive = (system_event_record_data->event_data1 & IPMI_OEM_INTEL_NVME_CRITICAL_WARNING_EVENT_DATA1_DISK_DRIVE_BITMASK);
-      drive >>= IPMI_OEM_INTEL_NVME_CRITICAL_WARNING_EVENT_DATA1_DISK_DRIVE_SHIFT;
+      drive = (system_event_record_data->event_data1 & IPMI_OEM_INTEL_S2600BPB_NVME_CRITICAL_WARNING_EVENT_DATA1_DISK_DRIVE_BITMASK);
+      drive >>= IPMI_OEM_INTEL_S2600BPB_NVME_CRITICAL_WARNING_EVENT_DATA1_DISK_DRIVE_SHIFT;
 
       snprintf (tmpbuf,
                 tmpbuflen,
                 "Drive %u",
                 drive);
       return (1);
+    }
+
+
+  if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_S2600BPB_REMOTE_DEBUG_SENSOR
+      && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600BPB_REMOTE_DEBUG
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600BPB_REMOTE_DEBUG_SENSOR)
+    {
+      int ret;
+
+      ret = ipmi_get_oem_specific_message (ctx->manufacturer_id,
+                                           ctx->product_id,
+                                           system_event_record_data->event_type_code,
+                                           system_event_record_data->sensor_type,
+                                           system_event_record_data->offset_from_event_reading_type_code,
+                                           tmpbuf,
+                                           tmpbuflen);
+
+      if (ret > 0)
+        return (1);
     }
 
   return (0);
@@ -203,26 +223,26 @@ sel_string_output_intel_s2600bpb_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
   if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_EVENT
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_XEON_SYSTEM_EVENT
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
-      && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_SYSTEM_EVENT_OEM_INTEL_IMAGE_IS_UPLOADED
-          || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_SYSTEM_EVENT_OEM_INTEL_IMAGE_IS_LOST))
+      && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_SYSTEM_EVENT_OEM_INTEL_S2600BPB_IMAGE_IS_UPLOADED
+          || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_SYSTEM_EVENT_OEM_INTEL_S2600BPB_IMAGE_IS_LOST))
     {
       char *str;
 
       switch (system_event_record_data->event_data2)
         {
-        case IPMI_SENSOR_TYPE_SYSTEM_EVENT_OEM_INTEL_EVENT_DATA2_BIOS_CONFIGURATION_TABLE:
+        case IPMI_SENSOR_TYPE_SYSTEM_EVENT_OEM_INTEL_S2600BPB_EVENT_DATA2_BIOS_CONFIGURATION_TABLE:
           str = "BIOS Configuration Table";
           break;
-        case IPMI_SENSOR_TYPE_SYSTEM_EVENT_OEM_INTEL_EVENT_DATA2_BIOS_CONFIGURATION_CHANGE:
+        case IPMI_SENSOR_TYPE_SYSTEM_EVENT_OEM_INTEL_S2600BPB_EVENT_DATA2_BIOS_CONFIGURATION_CHANGE:
           str = "BIOS Configuration change";
           break;
-        case IPMI_SENSOR_TYPE_SYSTEM_EVENT_OEM_INTEL_EVENT_DATA2_BIOS_IMAGE:
+        case IPMI_SENSOR_TYPE_SYSTEM_EVENT_OEM_INTEL_S2600BPB_EVENT_DATA2_BIOS_IMAGE:
           str = "BIOS Image";
           break;
-        case IPMI_SENSOR_TYPE_SYSTEM_EVENT_OEM_INTEL_EVENT_DATA2_ME_IMAGE:
+        case IPMI_SENSOR_TYPE_SYSTEM_EVENT_OEM_INTEL_S2600BPB_EVENT_DATA2_ME_IMAGE:
           str = "ME Image";
           break;
-        case IPMI_SENSOR_TYPE_SYSTEM_EVENT_OEM_INTEL_EVENT_DATA2_FD_IMAGE:
+        case IPMI_SENSOR_TYPE_SYSTEM_EVENT_OEM_INTEL_S2600BPB_EVENT_DATA2_FD_IMAGE:
           str = "FD Image";
           break;
         default:
@@ -283,17 +303,17 @@ sel_string_output_intel_s2600bpb_event_data2_class_oem (ipmi_sel_ctx_t ctx,
     return (1);
 
   if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT
-      && (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_NVME1_CRIT_WARN
-          || system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_NVME2_CRIT_WARN
-          || system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_NVME3_CRIT_WARN)
-      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_NVME_CRITICAL_WARNING_SENSOR)
+      && (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600BPB_NVME1_CRIT_WARN
+          || system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600BPB_NVME2_CRIT_WARN
+          || system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600BPB_NVME3_CRIT_WARN)
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600BPB_NVME_CRITICAL_WARNING_SENSOR)
     {
       char smart_warning_str[INTEL_EVENT_BUFFER_LENGTH + 1];
       unsigned int lentmp = 0;
 
       memset (smart_warning_str, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
 
-      if (system_event_record_data->event_data2 & IPMI_OEM_INTEL_NVME_CRITICAL_WARNING_EVENT_DATA2_DISK_DRIVE_SPARE_SPACE_BELOW_THRESHOLD)
+      if (system_event_record_data->event_data2 & IPMI_OEM_INTEL_S2600BPB_NVME_CRITICAL_WARNING_EVENT_DATA2_DISK_DRIVE_SPARE_SPACE_BELOW_THRESHOLD)
         {
           if (sel_string_strcat_comma_separate (smart_warning_str,
                                                 INTEL_EVENT_BUFFER_LENGTH,
@@ -301,7 +321,7 @@ sel_string_output_intel_s2600bpb_event_data2_class_oem (ipmi_sel_ctx_t ctx,
                                                 "Spare space below threshold"))
             return (1);
         }
-      if (system_event_record_data->event_data2 & IPMI_OEM_INTEL_NVME_CRITICAL_WARNING_EVENT_DATA2_DISK_DRIVE_TEMPERATURE_ABOVE_OR_BELOW_THRESHOLD)
+      if (system_event_record_data->event_data2 & IPMI_OEM_INTEL_S2600BPB_NVME_CRITICAL_WARNING_EVENT_DATA2_DISK_DRIVE_TEMPERATURE_ABOVE_OR_BELOW_THRESHOLD)
         {
           if (sel_string_strcat_comma_separate (smart_warning_str,
                                                 INTEL_EVENT_BUFFER_LENGTH,
@@ -309,7 +329,7 @@ sel_string_output_intel_s2600bpb_event_data2_class_oem (ipmi_sel_ctx_t ctx,
                                                 "Temperature above or below threshold"))
             return (1);
         }
-      if (system_event_record_data->event_data2 & IPMI_OEM_INTEL_NVME_CRITICAL_WARNING_EVENT_DATA2_DISK_DRIVE_NVM_RELIABILITY_DEGRADED)
+      if (system_event_record_data->event_data2 & IPMI_OEM_INTEL_S2600BPB_NVME_CRITICAL_WARNING_EVENT_DATA2_DISK_DRIVE_NVM_RELIABILITY_DEGRADED)
         {
           if (sel_string_strcat_comma_separate (smart_warning_str,
                                                 INTEL_EVENT_BUFFER_LENGTH,
@@ -317,7 +337,7 @@ sel_string_output_intel_s2600bpb_event_data2_class_oem (ipmi_sel_ctx_t ctx,
                                                 "NVM reliability degraded"))
             return (1);
         }
-      if (system_event_record_data->event_data2 & IPMI_OEM_INTEL_NVME_CRITICAL_WARNING_EVENT_DATA2_DISK_DRIVE_IN_READ_ONLY_MODE)
+      if (system_event_record_data->event_data2 & IPMI_OEM_INTEL_S2600BPB_NVME_CRITICAL_WARNING_EVENT_DATA2_DISK_DRIVE_IN_READ_ONLY_MODE)
         {
           if (sel_string_strcat_comma_separate (smart_warning_str,
                                                 INTEL_EVENT_BUFFER_LENGTH,
@@ -325,7 +345,7 @@ sel_string_output_intel_s2600bpb_event_data2_class_oem (ipmi_sel_ctx_t ctx,
                                                 "In read-only mode"))
             return (1);
         }
-      if (system_event_record_data->event_data2 & IPMI_OEM_INTEL_NVME_CRITICAL_WARNING_EVENT_DATA2_DISK_DRIVE_VOLATILE_BACKUP_SERVICE_FAILED)
+      if (system_event_record_data->event_data2 & IPMI_OEM_INTEL_S2600BPB_NVME_CRITICAL_WARNING_EVENT_DATA2_DISK_DRIVE_VOLATILE_BACKUP_SERVICE_FAILED)
         {
           if (sel_string_strcat_comma_separate (smart_warning_str,
                                                 INTEL_EVENT_BUFFER_LENGTH,
@@ -399,15 +419,15 @@ sel_string_output_intel_s2600bpb_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
     }
 
   if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SESSION_AUDIT
-      && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BAD_USE_PWD
+      && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600BPB_BAD_USE_PWD
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_SESSION_AUDIT_INVALID_USERNAME_OR_PASSWORD
           || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_SESSION_AUDIT_INVALID_PASSWORD_DISABLE))
     {
       uint8_t channel;
 
-      channel = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_SESSION_AUDIT_EVENT_DATA3_OEM_INTEL_CHANNEL_BITMASK);
-      channel >>= IPMI_SENSOR_TYPE_SESSION_AUDIT_EVENT_DATA3_OEM_INTEL_CHANNEL_SHIFT;
+      channel = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_SESSION_AUDIT_EVENT_DATA3_OEM_INTEL_S2600BPB_CHANNEL_BITMASK);
+      channel >>= IPMI_SENSOR_TYPE_SESSION_AUDIT_EVENT_DATA3_OEM_INTEL_S2600BPB_CHANNEL_SHIFT;
 
       snprintf (tmpbuf,
                 tmpbuflen,

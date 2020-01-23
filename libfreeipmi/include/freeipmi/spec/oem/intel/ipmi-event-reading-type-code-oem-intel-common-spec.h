@@ -43,6 +43,7 @@ extern "C" {
  * Intel S2600WT2
  * Intel S2600WTT
  * Intel S2600GZ
+ * Intel S2600BPB
  */
 /* achu: In earlier code S2600JF was "OPI" instead of "QPI".  Typo on
  * my part, or was actually OPI in document from Intel (which also was

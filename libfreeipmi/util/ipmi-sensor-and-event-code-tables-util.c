@@ -2332,8 +2332,7 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
       else if (product_id == IPMI_INTEL_PRODUCT_ID_S2600KP
                || product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
                || product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT
-               || product_id == IPMI_INTEL_PRODUCT_ID_S2600GZ
-               || product_id == IPMI_INTEL_PRODUCT_ID_S2600BPB)
+               || product_id == IPMI_INTEL_PRODUCT_ID_S2600GZ)
         {
           if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_ERROR
               && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
@@ -2414,6 +2413,96 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
                                         buflen,
                                         ipmi_oem_intel_specific_ierr_recovery_dump_info_max_index,
                                         ipmi_oem_intel_specific_ierr_recovery_dump_info));
+        }
+      else if (product_id == IPMI_INTEL_PRODUCT_ID_S2600BPB)
+        {
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_ERROR
+              && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+            return (_get_event_message (offset,
+                                        buf,
+                                        buflen,
+                                        ipmi_oem_intel_specific_pcie_fatal_error_max_index,
+                                        ipmi_oem_intel_specific_pcie_fatal_error));
+
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_FATAL_ERROR_2
+              && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+            return (_get_event_message (offset,
+                                        buf,
+                                        buflen,
+                                        ipmi_oem_intel_specific_pcie_fatal_error_2_max_index,
+                                        ipmi_oem_intel_specific_pcie_fatal_error_2));
+
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_PCIE_CORRECTABLE_ERROR
+              && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+            return (_get_event_message (offset,
+                                        buf,
+                                        buflen,
+                                        ipmi_oem_intel_specific_pcie_correctable_error_max_index,
+                                        ipmi_oem_intel_specific_pcie_correctable_error));
+
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_FATAL_ERROR
+              && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+            return (_get_event_message (offset,
+                                        buf,
+                                        buflen,
+                                        ipmi_oem_intel_specific_qpi_fatal_error_max_index,
+                                        ipmi_oem_intel_specific_qpi_fatal_error));
+
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_FATAL_ERROR_2
+              && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+            return (_get_event_message (offset,
+                                        buf,
+                                        buflen,
+                                        ipmi_oem_intel_specific_qpi_fatal_error_2_max_index,
+                                        ipmi_oem_intel_specific_qpi_fatal_error_2));
+
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_QPI_LINK_WIDTH_REDUCED
+              && sensor_type == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT)
+            return (_get_event_message (offset,
+                                        buf,
+                                        buflen,
+                                        ipmi_oem_intel_specific_qpi_link_width_reduced_max_index,
+                                        ipmi_oem_intel_specific_qpi_link_width_reduced));
+
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_FIRMWARE_UPDATE_STATUS_SENSOR
+              && sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE)
+            return (_get_event_message (offset,
+                                        buf,
+                                        buflen,
+                                        ipmi_oem_intel_specific_firmware_update_status_sensor_max_index,
+                                        ipmi_oem_intel_specific_firmware_update_status_sensor));
+
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_BIOS_RECOVERY_START
+              && sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS)
+            return (_get_event_message (offset,
+                                        buf,
+                                        buflen,
+                                        ipmi_oem_intel_specific_bios_recovery_start_max_index,
+                                        ipmi_oem_intel_specific_bios_recovery_start));
+
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_BIOS_RECOVERY_COMPLETE
+              && sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS)
+            return (_get_event_message (offset,
+                                        buf,
+                                        buflen,
+                                        ipmi_oem_intel_specific_bios_recovery_complete_max_index,
+                                        ipmi_oem_intel_specific_bios_recovery_complete));
+
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_IERR_RECOVERY_DUMP_INFO
+              && sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_IERR_RECOVERY_DUMP_INFO)
+            return (_get_event_message (offset,
+                                        buf,
+                                        buflen,
+                                        ipmi_oem_intel_specific_ierr_recovery_dump_info_max_index,
+                                        ipmi_oem_intel_specific_ierr_recovery_dump_info));
+
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600BPB_REMOTE_DEBUG_SENSOR
+              && sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_S2600BPB_REMOTE_DEBUG_SENSOR)
+            return (_get_event_message (offset,
+                                        buf,
+                                        buflen,
+                                        ipmi_oem_intel_s2600bpb_specific_remote_debug_sensor_max_index,
+                                        ipmi_oem_intel_s2600bpb_specific_remote_debug_sensor));
         }
     }
 

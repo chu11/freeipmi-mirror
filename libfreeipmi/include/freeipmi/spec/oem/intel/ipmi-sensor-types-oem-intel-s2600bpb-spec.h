@@ -25,6 +25,12 @@ extern "C" {
 
 #include <freeipmi/spec/oem/intel/ipmi-sensor-types-oem-intel-common-spec.h>
 
+/*
+ * S2600BPB
+ */
+
+#define IPMI_SENSOR_TYPE_OEM_INTEL_S2600BPB_REMOTE_DEBUG_SENSOR 0xD8
+
 #ifdef __cplusplus
 }
 #endif
