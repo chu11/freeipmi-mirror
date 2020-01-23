@@ -103,13 +103,13 @@ sel_string_output_intel_s2600bpb_sensor_name (ipmi_sel_ctx_t ctx,
  */
 int
 sel_string_output_intel_s2600bpb_event_data1_class_oem (ipmi_sel_ctx_t ctx,
-                                                       struct ipmi_sel_entry *sel_entry,
-                                                       uint8_t sel_record_type,
-                                                       char *tmpbuf,
-                                                       unsigned int tmpbuflen,
-                                                       unsigned int flags,
-                                                       unsigned int *wlen,
-                                                       struct ipmi_sel_system_event_record_data *system_event_record_data)
+                                                        struct ipmi_sel_entry *sel_entry,
+                                                        uint8_t sel_record_type,
+                                                        char *tmpbuf,
+                                                        unsigned int tmpbuflen,
+                                                        unsigned int flags,
+                                                        unsigned int *wlen,
+                                                        struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   int ret;
 
@@ -184,13 +184,13 @@ sel_string_output_intel_s2600bpb_event_data1_class_oem (ipmi_sel_ctx_t ctx,
  */
 int
 sel_string_output_intel_s2600bpb_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
-                                                          struct ipmi_sel_entry *sel_entry,
-                                                          uint8_t sel_record_type,
-                                                          char *tmpbuf,
-                                                          unsigned int tmpbuflen,
-                                                          unsigned int flags,
-                                                          unsigned int *wlen,
-                                                          struct ipmi_sel_system_event_record_data *system_event_record_data)
+                                                           struct ipmi_sel_entry *sel_entry,
+                                                           uint8_t sel_record_type,
+                                                           char *tmpbuf,
+                                                           unsigned int tmpbuflen,
+                                                           unsigned int flags,
+                                                           unsigned int *wlen,
+                                                           struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   int ret;
 
@@ -261,19 +261,115 @@ sel_string_output_intel_s2600bpb_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
   return (0);
 }
 
+
+/* documentation is ambiguous if this is in event data2 or 3.  It's a
+ * clear error in the document.  So we will try both, with callers
+ * passing in event data 2 or 3 for parsing.
+ */
+static int
+_sel_string_output_intel_s2600bpb_remote_debug_sensor (ipmi_sel_ctx_t ctx,
+                                                       char *tmpbuf,
+                                                       unsigned int tmpbuflen,
+                                                       unsigned int flags,
+                                                       unsigned int *wlen,
+                                                       uint8_t event_data)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL);
+  assert (tmpbuf);
+  assert (tmpbuflen);
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (wlen);
+  assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600BPB);
+
+    {
+      char info_str[INTEL_EVENT_BUFFER_LENGTH + 1];
+      char *str;
+      unsigned int lentmp = 0;
+
+      memset (info_str, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
+
+      if (event_data & IPMI_OEM_INTEL_S2600BPB_SPECIFIC_REMOTE_DEBUG_SENSOR_EVENT_DATA_JTAG_SESSION_STATE_BITMASK)
+        {
+          if (sel_string_strcat_comma_separate (info_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "JTAG Session State In Progress"))
+            return (0);
+        }
+      else
+        {
+          if (sel_string_strcat_comma_separate (info_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "JTAG Session Idle"))
+            return (0);
+        }
+
+      if (event_data & IPMI_OEM_INTEL_S2600BPB_SPECIFIC_REMOTE_DEBUG_SENSOR_EVENT_DATA_JTAG_ENABLED_BITMASK)
+        {
+          if (sel_string_strcat_comma_separate (info_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "JTAG Enabled"))
+            return (0);
+        }
+      else
+        {
+          if (sel_string_strcat_comma_separate (info_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "JTAG Disabled"))
+            return (0);
+        }
+
+      if (event_data & IPMI_OEM_INTEL_S2600BPB_SPECIFIC_REMOTE_DEBUG_SENSOR_EVENT_DATA_JTAG_DEBUG_CONSENT_BITMASK)
+        {
+          if (sel_string_strcat_comma_separate (info_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "JTAG Debug Consent given"))
+            return (0);
+        }
+      else
+        {
+          if (sel_string_strcat_comma_separate (info_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "JTAG Debug Consent not given"))
+            return (0);
+        }
+
+      if (event_data & IPMI_OEM_INTEL_S2600BPB_SPECIFIC_REMOTE_DEBUG_SENSOR_EVENT_DATA_PECI_SESSION_STATE_BITMASK)
+        {
+          if (sel_string_strcat_comma_separate (info_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "PECI Session State In Progress"))
+            return (0);
+        }
+      else
+        {
+          if (sel_string_strcat_comma_separate (info_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "PECI Session Idle"))
+            return (0);
+        }
+
+      if (event_data & IPMI_OEM_INTEL_S2600BPB_SPECIFIC_REMOTE_DEBUG_SENSOR_EVENT_DATA_PECI_ENABLED_BITMASK)
+        {
+          if (sel_string_strcat_comma_separate (info_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "PECI Enabled"))
+            return (0);
+        }
+      else
+        {
+          if (sel_string_strcat_comma_separate (info_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "PECI Disabled"))
+            return (0);
+        }
+
+      snprintf (tmpbuf,
+                tmpbuflen,
+                "%s",
+                info_str);
+
+      return (1);
+    }
+
+  return (0);
+}
+
 /* return (0) - no OEM match
  * return (1) - OEM match
  * return (-1) - error, cleanup and return error
  */
 int
 sel_string_output_intel_s2600bpb_event_data2_class_oem (ipmi_sel_ctx_t ctx,
-                                                       struct ipmi_sel_entry *sel_entry,
-                                                       uint8_t sel_record_type,
-                                                       char *tmpbuf,
-                                                       unsigned int tmpbuflen,
-                                                       unsigned int flags,
-                                                       unsigned int *wlen,
-                                                       struct ipmi_sel_system_event_record_data *system_event_record_data)
+                                                        struct ipmi_sel_entry *sel_entry,
+                                                        uint8_t sel_record_type,
+                                                        char *tmpbuf,
+                                                        unsigned int tmpbuflen,
+                                                        unsigned int flags,
+                                                        unsigned int *wlen,
+                                                        struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   int ret;
 
@@ -319,7 +415,7 @@ sel_string_output_intel_s2600bpb_event_data2_class_oem (ipmi_sel_ctx_t ctx,
                                                 INTEL_EVENT_BUFFER_LENGTH,
                                                 &lentmp,
                                                 "Spare space below threshold"))
-            return (1);
+            return (0);
         }
       if (system_event_record_data->event_data2 & IPMI_OEM_INTEL_S2600BPB_NVME_CRITICAL_WARNING_EVENT_DATA2_DISK_DRIVE_TEMPERATURE_ABOVE_OR_BELOW_THRESHOLD)
         {
@@ -327,7 +423,7 @@ sel_string_output_intel_s2600bpb_event_data2_class_oem (ipmi_sel_ctx_t ctx,
                                                 INTEL_EVENT_BUFFER_LENGTH,
                                                 &lentmp,
                                                 "Temperature above or below threshold"))
-            return (1);
+            return (0);
         }
       if (system_event_record_data->event_data2 & IPMI_OEM_INTEL_S2600BPB_NVME_CRITICAL_WARNING_EVENT_DATA2_DISK_DRIVE_NVM_RELIABILITY_DEGRADED)
         {
@@ -335,7 +431,7 @@ sel_string_output_intel_s2600bpb_event_data2_class_oem (ipmi_sel_ctx_t ctx,
                                                 INTEL_EVENT_BUFFER_LENGTH,
                                                 &lentmp,
                                                 "NVM reliability degraded"))
-            return (1);
+            return (0);
         }
       if (system_event_record_data->event_data2 & IPMI_OEM_INTEL_S2600BPB_NVME_CRITICAL_WARNING_EVENT_DATA2_DISK_DRIVE_IN_READ_ONLY_MODE)
         {
@@ -343,7 +439,7 @@ sel_string_output_intel_s2600bpb_event_data2_class_oem (ipmi_sel_ctx_t ctx,
                                                 INTEL_EVENT_BUFFER_LENGTH,
                                                 &lentmp,
                                                 "In read-only mode"))
-            return (1);
+            return (0);
         }
       if (system_event_record_data->event_data2 & IPMI_OEM_INTEL_S2600BPB_NVME_CRITICAL_WARNING_EVENT_DATA2_DISK_DRIVE_VOLATILE_BACKUP_SERVICE_FAILED)
         {
@@ -351,7 +447,7 @@ sel_string_output_intel_s2600bpb_event_data2_class_oem (ipmi_sel_ctx_t ctx,
                                                 INTEL_EVENT_BUFFER_LENGTH,
                                                 &lentmp,
                                                 "Volatile backup service failed"))
-            return (1);
+            return (0);
         }
 
       snprintf (tmpbuf,
@@ -359,6 +455,24 @@ sel_string_output_intel_s2600bpb_event_data2_class_oem (ipmi_sel_ctx_t ctx,
                 "SMART Warning = %s",
                 smart_warning_str);
       return (1);
+    }
+
+  /* Documentation is ambiguous on event data2 or 3, so we check under both circumstances */
+  if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_S2600BPB_REMOTE_DEBUG_SENSOR
+      && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600BPB_REMOTE_DEBUG
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600BPB_REMOTE_DEBUG_SENSOR
+      && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+    {
+      if ((ret = _sel_string_output_intel_s2600bpb_remote_debug_sensor (ctx,
+                                                                        tmpbuf,
+                                                                        tmpbuflen,
+                                                                        flags,
+                                                                        wlen,
+                                                                        system_event_record_data->event_data2) < 0))
+        return (-1);
+
+      if (ret)
+        return (1);
     }
 
   return (0);
@@ -370,13 +484,13 @@ sel_string_output_intel_s2600bpb_event_data2_class_oem (ipmi_sel_ctx_t ctx,
  */
 int
 sel_string_output_intel_s2600bpb_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
-                                                          struct ipmi_sel_entry *sel_entry,
-                                                          uint8_t sel_record_type,
-                                                          char *tmpbuf,
-                                                          unsigned int tmpbuflen,
-                                                          unsigned int flags,
-                                                          unsigned int *wlen,
-                                                          struct ipmi_sel_system_event_record_data *system_event_record_data)
+                                                           struct ipmi_sel_entry *sel_entry,
+                                                           uint8_t sel_record_type,
+                                                           char *tmpbuf,
+                                                           unsigned int tmpbuflen,
+                                                           unsigned int flags,
+                                                           unsigned int *wlen,
+                                                           struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   int ret;
 
@@ -445,13 +559,13 @@ sel_string_output_intel_s2600bpb_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
  */
 int
 sel_string_output_intel_s2600bpb_event_data3_class_oem (ipmi_sel_ctx_t ctx,
-                                                       struct ipmi_sel_entry *sel_entry,
-                                                       uint8_t sel_record_type,
-                                                       char *tmpbuf,
-                                                       unsigned int tmpbuflen,
-                                                       unsigned int flags,
-                                                       unsigned int *wlen,
-                                                       struct ipmi_sel_system_event_record_data *system_event_record_data)
+                                                        struct ipmi_sel_entry *sel_entry,
+                                                        uint8_t sel_record_type,
+                                                        char *tmpbuf,
+                                                        unsigned int tmpbuflen,
+                                                        unsigned int flags,
+                                                        unsigned int *wlen,
+                                                        struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
   int ret;
 
@@ -480,6 +594,24 @@ sel_string_output_intel_s2600bpb_event_data3_class_oem (ipmi_sel_ctx_t ctx,
   if (ret)
     return (1);
 
+  /* Documentation is ambiguous on event data2 or 3, so we check under both circumstances */
+  if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_S2600BPB_REMOTE_DEBUG_SENSOR
+      && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600BPB_REMOTE_DEBUG
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600BPB_REMOTE_DEBUG_SENSOR
+      && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+    {
+      if ((ret = _sel_string_output_intel_s2600bpb_remote_debug_sensor (ctx,
+                                                                        tmpbuf,
+                                                                        tmpbuflen,
+                                                                        flags,
+                                                                        wlen,
+                                                                        system_event_record_data->event_data3) < 0))
+        return (-1);
+
+      if (ret)
+        return (1);
+    }
+
   return (0);
 }
 
@@ -493,14 +625,14 @@ sel_string_output_intel_s2600bpb_event_data3_class_oem (ipmi_sel_ctx_t ctx,
  */
 int
 sel_string_output_intel_s2600bpb_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
-                                                         struct ipmi_sel_entry *sel_entry,
-                                                         uint8_t sel_record_type,
-                                                         char *buf,
-                                                         unsigned int buflen,
-                                                         unsigned int flags,
-                                                         unsigned int *wlen,
-                                                         struct ipmi_sel_system_event_record_data *system_event_record_data,
-                                                         int *oem_rv)
+                                                          struct ipmi_sel_entry *sel_entry,
+                                                          uint8_t sel_record_type,
+                                                          char *buf,
+                                                          unsigned int buflen,
+                                                          unsigned int flags,
+                                                          unsigned int *wlen,
+                                                          struct ipmi_sel_system_event_record_data *system_event_record_data,
+                                                          int *oem_rv)
 {
   int ret;
 

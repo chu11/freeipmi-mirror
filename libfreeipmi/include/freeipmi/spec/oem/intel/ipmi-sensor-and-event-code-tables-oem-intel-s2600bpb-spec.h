@@ -77,6 +77,15 @@ extern "C" {
 extern const char * const ipmi_oem_intel_s2600bpb_specific_remote_debug_sensor[];
 extern unsigned int ipmi_oem_intel_s2600bpb_specific_remote_debug_sensor_max_index;
 
+/* achu: Document is ambiguous about if this applys to event data 2 or
+ * 3, so we just say "EVENT_DATA"
+ */
+#define IPMI_OEM_INTEL_S2600BPB_SPECIFIC_REMOTE_DEBUG_SENSOR_EVENT_DATA_JTAG_SESSION_STATE_BITMASK 0x01
+#define IPMI_OEM_INTEL_S2600BPB_SPECIFIC_REMOTE_DEBUG_SENSOR_EVENT_DATA_JTAG_ENABLED_BITMASK       0x02
+#define IPMI_OEM_INTEL_S2600BPB_SPECIFIC_REMOTE_DEBUG_SENSOR_EVENT_DATA_JTAG_DEBUG_CONSENT_BITMASK 0x03
+#define IPMI_OEM_INTEL_S2600BPB_SPECIFIC_REMOTE_DEBUG_SENSOR_EVENT_DATA_PECI_SESSION_STATE_BITMASK 0x04
+#define IPMI_OEM_INTEL_S2600BPB_SPECIFIC_REMOTE_DEBUG_SENSOR_EVENT_DATA_PECI_ENABLED_BITMASK       0x05
+
 #ifdef __cplusplus
 }
 #endif
