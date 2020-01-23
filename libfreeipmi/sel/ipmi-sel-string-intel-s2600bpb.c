@@ -203,26 +203,26 @@ sel_string_output_intel_s2600bpb_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
   if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_EVENT
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_XEON_SYSTEM_EVENT
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
-      && (system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_SENSOR_TYPE_SYSTEM_EVENT_IMAGE_IS_UPLOADED
-          || system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_SENSOR_TYPE_SYSTEM_EVENT_IMAGE_IS_LOST))
+      && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_SYSTEM_EVENT_OEM_INTEL_IMAGE_IS_UPLOADED
+          || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_SYSTEM_EVENT_OEM_INTEL_IMAGE_IS_LOST))
     {
       char *str;
 
       switch (system_event_record_data->event_data2)
         {
-        case IPMI_OEM_INTEL_SENSOR_TYPE_SYSTEM_EVENT_EVENT_DATA2_BIOS_CONFIGURATION_TABLE:
+        case IPMI_SENSOR_TYPE_SYSTEM_EVENT_OEM_INTEL_EVENT_DATA2_BIOS_CONFIGURATION_TABLE:
           str = "BIOS Configuration Table";
           break;
-        case IPMI_OEM_INTEL_SENSOR_TYPE_SYSTEM_EVENT_EVENT_DATA2_BIOS_CONFIGURATION_CHANGE:
+        case IPMI_SENSOR_TYPE_SYSTEM_EVENT_OEM_INTEL_EVENT_DATA2_BIOS_CONFIGURATION_CHANGE:
           str = "BIOS Configuration change";
           break;
-        case IPMI_OEM_INTEL_SENSOR_TYPE_SYSTEM_EVENT_EVENT_DATA2_BIOS_IMAGE:
+        case IPMI_SENSOR_TYPE_SYSTEM_EVENT_OEM_INTEL_EVENT_DATA2_BIOS_IMAGE:
           str = "BIOS Image";
           break;
-        case IPMI_OEM_INTEL_SENSOR_TYPE_SYSTEM_EVENT_EVENT_DATA2_ME_IMAGE:
+        case IPMI_SENSOR_TYPE_SYSTEM_EVENT_OEM_INTEL_EVENT_DATA2_ME_IMAGE:
           str = "ME Image";
           break;
-        case IPMI_OEM_INTEL_SENSOR_TYPE_SYSTEM_EVENT_EVENT_DATA2_FD_IMAGE:
+        case IPMI_SENSOR_TYPE_SYSTEM_EVENT_OEM_INTEL_EVENT_DATA2_FD_IMAGE:
           str = "FD Image";
           break;
         default:
@@ -395,6 +395,24 @@ sel_string_output_intel_s2600bpb_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
       && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CRITICAL_OVERTEMPERATURE)
     {
       sel_string_output_intel_xeon_memory_dimm (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data, 1, 1);
+      return (1);
+    }
+
+  if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SESSION_AUDIT
+      && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BAD_USE_PWD
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+      && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_SESSION_AUDIT_INVALID_USERNAME_OR_PASSWORD
+          || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_SESSION_AUDIT_INVALID_PASSWORD_DISABLE))
+    {
+      uint8_t channel;
+
+      channel = (system_event_record_data->event_data3 & IPMI_SENSOR_TYPE_SESSION_AUDIT_EVENT_DATA3_OEM_INTEL_CHANNEL_BITMASK);
+      channel >>= IPMI_SENSOR_TYPE_SESSION_AUDIT_EVENT_DATA3_OEM_INTEL_CHANNEL_SHIFT;
+
+      snprintf (tmpbuf,
+                tmpbuflen,
+                "Channel = %u",
+                channel);
       return (1);
     }
 
