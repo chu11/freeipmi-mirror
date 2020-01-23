@@ -120,7 +120,7 @@
 	* libfreeipmi/sel/ipmi-sel-string-intel-e52600v3-common.[ch]:
 	Rename to ipmi-sel-string-intel-xeon-common.[ch].  Adjust
 	functions, headers, and callers appropriately.  Make some private
-	functions public.
+	functions public.  Add S2600BPB assert checks.
 
 	* libfreeipmi/sel/ipmi-sel-string-intel-xeon-common.[ch]: Split
 	out firmware post specifics to

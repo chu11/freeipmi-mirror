@@ -84,7 +84,8 @@ sel_string_output_intel_xeon_sensor_name (ipmi_sel_ctx_t ctx,
   assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600KP
           || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
           || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT
-          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600GZ);
+          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600GZ
+          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600BPB);
 
   if ((nmret = sel_string_output_intel_node_manager_sensor_name (ctx,
                                                                  sel_entry,
@@ -132,7 +133,8 @@ sel_string_output_intel_xeon_event_data1_class_oem (ipmi_sel_ctx_t ctx,
   assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600KP
           || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
           || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT
-          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600GZ);
+          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600GZ
+          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600BPB);
 
   if ((nmret = sel_string_output_intel_node_manager_event_data1_class_oem (ctx,
                                                                            sel_entry,
@@ -297,7 +299,8 @@ sel_string_output_intel_xeon_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
   assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600KP
           || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
           || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT
-          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600GZ);
+          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600GZ
+          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600BPB);
 
   if (system_event_record_data->generator_id == IPMI_SLAVE_ADDRESS_BMC
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_POWER_SUPPLY
@@ -774,7 +777,8 @@ sel_string_output_intel_xeon_event_data2_class_oem (ipmi_sel_ctx_t ctx,
   assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600KP
           || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
           || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT
-          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600GZ);
+          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600GZ
+          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600BPB);
 
   if ((nmret = sel_string_output_intel_node_manager_event_data2_class_oem (ctx,
                                                                            sel_entry,
@@ -1178,7 +1182,8 @@ sel_string_output_intel_xeon_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
   assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600KP
           || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
           || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT
-          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600GZ);
+          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600GZ
+          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600BPB);
 
   if ((nmret = sel_string_output_intel_node_manager_event_data3_discrete_oem (ctx,
                                                                               sel_entry,
@@ -1573,7 +1578,8 @@ sel_string_output_intel_xeon_event_data3_class_oem (ipmi_sel_ctx_t ctx,
   assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600KP
           || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
           || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT
-          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600GZ);
+          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600GZ
+          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600BPB);
 
   if ((nmret = sel_string_output_intel_node_manager_event_data3_class_oem (ctx,
                                                                            sel_entry,
@@ -1642,7 +1648,8 @@ sel_string_output_intel_xeon_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
   assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600KP
           || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
           || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT
-          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600GZ);
+          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600GZ
+          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600BPB);
 
   /* achu: Documentation states only
    * IPMI_SENSOR_TYPE_MEMORY_MEMORY_SCRUB_FAILED, but I think
