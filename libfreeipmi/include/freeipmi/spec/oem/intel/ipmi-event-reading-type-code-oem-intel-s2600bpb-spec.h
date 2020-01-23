@@ -25,6 +25,12 @@ extern "C" {
 
 #include <freeipmi/spec/oem/intel/ipmi-event-reading-type-code-oem-intel-common-spec.h>
 
+/*
+ * S2600BPB
+ */
+/* achu: unfortunately conflicts with QPI_FATAL_ERROR */
+#define IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_NVME_CRITICAL_WARNING_SENSOR   0x73
+
 #ifdef __cplusplus
 }
 #endif

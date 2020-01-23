@@ -32,8 +32,14 @@
 #include "freeipmi/sel/ipmi-sel.h"
 
 #include "freeipmi/record-format/ipmi-sel-record-format.h"
+#include "freeipmi/spec/ipmi-event-reading-type-code-spec.h"
 #include "freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h"
 #include "freeipmi/spec/ipmi-product-id-spec.h"
+#include "freeipmi/spec/ipmi-sensor-and-event-code-tables-spec.h"
+#include "freeipmi/spec/ipmi-sensor-types-spec.h"
+#include "freeipmi/spec/oem/ipmi-event-reading-type-code-oem-intel-spec.h"
+#include "freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-intel-spec.h"
+#include "freeipmi/spec/oem/ipmi-sensor-numbers-oem-intel-spec.h"
 
 #include "ipmi-sel-common.h"
 #include "ipmi-sel-defs.h"
@@ -44,6 +50,8 @@
 #include "ipmi-sel-util.h"
 
 #include "freeipmi-portability.h"
+
+#define INTEL_EVENT_BUFFER_LENGTH 4096
 
 int
 sel_string_output_intel_s2600bpb_sensor_name (ipmi_sel_ctx_t ctx,
@@ -128,6 +136,24 @@ sel_string_output_intel_s2600bpb_event_data1_class_oem (ipmi_sel_ctx_t ctx,
 
   if (ret)
     return (1);
+
+  if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT
+      && (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_NVME1_CRIT_WARN
+          || system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_NVME2_CRIT_WARN
+          || system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_NVME3_CRIT_WARN)
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_NVME_CRITICAL_WARNING_SENSOR)
+    {
+      uint8_t drive;
+
+      drive = (system_event_record_data->event_data1 & IPMI_OEM_INTEL_NVME_CRITICAL_WARNING_EVENT_DATA1_DISK_DRIVE_BITMASK);
+      drive >>= IPMI_OEM_INTEL_NVME_CRITICAL_WARNING_EVENT_DATA1_DISK_DRIVE_SHIFT;
+
+      snprintf (tmpbuf,
+                tmpbuflen,
+                "Drive %u",
+                drive);
+      return (1);
+    }
 
   return (0);
 }
@@ -217,6 +243,65 @@ sel_string_output_intel_s2600bpb_event_data2_class_oem (ipmi_sel_ctx_t ctx,
 
   if (ret)
     return (1);
+
+  if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_DRIVE_SLOT
+      && (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_NVME1_CRIT_WARN
+          || system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_NVME2_CRIT_WARN
+          || system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_NVME3_CRIT_WARN)
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_NVME_CRITICAL_WARNING_SENSOR)
+    {
+      char smart_warning_str[INTEL_EVENT_BUFFER_LENGTH + 1];
+      unsigned int lentmp = 0;
+
+      memset (smart_warning_str, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
+
+      if (system_event_record_data->event_data2 & IPMI_OEM_INTEL_NVME_CRITICAL_WARNING_EVENT_DATA2_DISK_DRIVE_SPARE_SPACE_BELOW_THRESHOLD)
+        {
+          if (sel_string_strcat_comma_separate (smart_warning_str,
+                                                INTEL_EVENT_BUFFER_LENGTH,
+                                                &lentmp,
+                                                "Spare space below threshold"))
+            return (1);
+        }
+      if (system_event_record_data->event_data2 & IPMI_OEM_INTEL_NVME_CRITICAL_WARNING_EVENT_DATA2_DISK_DRIVE_TEMPERATURE_ABOVE_OR_BELOW_THRESHOLD)
+        {
+          if (sel_string_strcat_comma_separate (smart_warning_str,
+                                                INTEL_EVENT_BUFFER_LENGTH,
+                                                &lentmp,
+                                                "Temperature above or below threshold"))
+            return (1);
+        }
+      if (system_event_record_data->event_data2 & IPMI_OEM_INTEL_NVME_CRITICAL_WARNING_EVENT_DATA2_DISK_DRIVE_NVM_RELIABILITY_DEGRADED)
+        {
+          if (sel_string_strcat_comma_separate (smart_warning_str,
+                                                INTEL_EVENT_BUFFER_LENGTH,
+                                                &lentmp,
+                                                "NVM reliability degraded"))
+            return (1);
+        }
+      if (system_event_record_data->event_data2 & IPMI_OEM_INTEL_NVME_CRITICAL_WARNING_EVENT_DATA2_DISK_DRIVE_IN_READ_ONLY_MODE)
+        {
+          if (sel_string_strcat_comma_separate (smart_warning_str,
+                                                INTEL_EVENT_BUFFER_LENGTH,
+                                                &lentmp,
+                                                "In read-only mode"))
+            return (1);
+        }
+      if (system_event_record_data->event_data2 & IPMI_OEM_INTEL_NVME_CRITICAL_WARNING_EVENT_DATA2_DISK_DRIVE_VOLATILE_BACKUP_SERVICE_FAILED)
+        {
+          if (sel_string_strcat_comma_separate (smart_warning_str,
+                                                INTEL_EVENT_BUFFER_LENGTH,
+                                                &lentmp,
+                                                "Volatile backup service failed"))
+            return (1);
+        }
+
+      snprintf (tmpbuf,
+                tmpbuflen,
+                "SMART Warning = %s",
+                smart_warning_str);
+      return (1);
+    }
 
   return (0);
 }

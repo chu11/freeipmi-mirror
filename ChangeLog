@@ -132,6 +132,11 @@
 
 	* libfreeipmi/sel/ipmi-sel-string-intel-s2600bpb.c: New file.
 
+	* libfreeipmi/include/freeipmi/spec/oem/intel/ipmi-event-reading-type-code-oem-intel-s2600bpb-spec.h,
+	libfreeipmi/include/freeipmi/spec/oem/intel/ipmi-sensor-and-event-code-tables-oem-intel-s2600bpb-spec.h,
+	libfreeipmi/include/freeipmi/spec/oem/intel/ipmi-sensor-numbers-oem-intel-s2600bpb-spec.h:
+	Add S2600BPB specifics.
+
 2020-01-08 Albert Chu <chu11@llnl.gov>
 
 	* bmc-device/bmc-device.c (write_fru): Fix invalid type in
