@@ -50,4 +50,24 @@ const char * const ipmi_oem_intel_s2600bpb_specific_remote_debug_sensor[] =
     "Remote PECI Session",
     NULL
   };
-unsigned int ipmi_oem_intel_s2600bpb_specific_remote_debug_sensor_max_index = 0x0D;
+unsigned int ipmi_oem_intel_s2600bpb_specific_remote_debug_sensor_max_index = 0x04;
+
+const char * const ipmi_oem_intel_s2600bpb_specific_system_firmware_security_sensor[] =
+  {
+    "Authentication Failure of BMC Firmware Image During Boot",
+    "Invalid Security Revision of BMC Firmware Image During Boot",
+    "Authentication Failure of BMC Firmware Image During Update",
+    "Invalid Security Revision of BMC Firmware Image During Update",
+    "Authentication Failure of Signed Region During Update",
+    "Authentication Failure of Signed Region During Boot or Runtime",
+    "Invalid Security Revision of Signed Region During Update",
+    "Invalid Security Revision of Signed Region During Boot or Runtime",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "Factory Image Booted",
+    "Factory Security Revision Downgraded",
+    NULL
+  };
+unsigned int ipmi_oem_intel_s2600bpb_specific_system_firmware_security_sensor_max_index = 0x0D;

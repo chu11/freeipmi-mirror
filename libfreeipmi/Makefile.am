@@ -244,6 +244,7 @@ libfreeipmi_la_SOURCES = \
 	spec/ipmi-sensor-and-event-code-tables-oem-intel-common-spec.c \
 	spec/ipmi-sensor-and-event-code-tables-oem-intel-s5500wb-spec.c \
 	spec/ipmi-sensor-and-event-code-tables-oem-intel-quanta-qssc-s4r-spec.c \
+	spec/ipmi-sensor-and-event-code-tables-oem-intel-s2600bpb-spec.c \
 	spec/ipmi-sensor-and-event-code-tables-oem-wistron-spec.c \
 	spec/ipmi-sensor-types-spec.c \
 	spec/ipmi-sensor-units-spec.c \

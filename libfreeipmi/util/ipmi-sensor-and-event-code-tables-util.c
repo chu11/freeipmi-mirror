@@ -2503,6 +2503,14 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
                                         buflen,
                                         ipmi_oem_intel_s2600bpb_specific_remote_debug_sensor_max_index,
                                         ipmi_oem_intel_s2600bpb_specific_remote_debug_sensor));
+
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600BPB_SYSTEM_FIRMWARE_SECURITY_SENSOR
+              && sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_S2600BPB_SYSTEM_FIRMWARE_SECURITY)
+            return (_get_event_message (offset,
+                                        buf,
+                                        buflen,
+                                        ipmi_oem_intel_s2600bpb_specific_system_firmware_security_sensor_max_index,
+                                        ipmi_oem_intel_s2600bpb_specific_system_firmware_security_sensor));
         }
     }
 
