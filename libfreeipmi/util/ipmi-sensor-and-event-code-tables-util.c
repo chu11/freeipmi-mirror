@@ -2496,21 +2496,29 @@ ipmi_get_oem_specific_message (uint32_t manufacturer_id,
                                         ipmi_oem_intel_specific_ierr_recovery_dump_info_max_index,
                                         ipmi_oem_intel_specific_ierr_recovery_dump_info));
 
-          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600BPB_REMOTE_DEBUG_SENSOR
-              && sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_S2600BPB_REMOTE_DEBUG_SENSOR)
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600BPB_REMOTE_DEBUG
+              && sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_S2600BPB_REMOTE_DEBUG)
             return (_get_event_message (offset,
                                         buf,
                                         buflen,
-                                        ipmi_oem_intel_s2600bpb_specific_remote_debug_sensor_max_index,
-                                        ipmi_oem_intel_s2600bpb_specific_remote_debug_sensor));
+                                        ipmi_oem_intel_s2600bpb_specific_remote_debug_max_index,
+                                        ipmi_oem_intel_s2600bpb_specific_remote_debug));
 
-          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600BPB_SYSTEM_FIRMWARE_SECURITY_SENSOR
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600BPB_SYSTEM_FIRMWARE_SECURITY
               && sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_S2600BPB_SYSTEM_FIRMWARE_SECURITY)
             return (_get_event_message (offset,
                                         buf,
                                         buflen,
-                                        ipmi_oem_intel_s2600bpb_specific_system_firmware_security_sensor_max_index,
-                                        ipmi_oem_intel_s2600bpb_specific_system_firmware_security_sensor));
+                                        ipmi_oem_intel_s2600bpb_specific_system_firmware_security_max_index,
+                                        ipmi_oem_intel_s2600bpb_specific_system_firmware_security));
+
+          if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600BPB_KCS_POLICY
+              && sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_S2600BPB_KCS_POLICY)
+            return (_get_event_message (offset,
+                                        buf,
+                                        buflen,
+                                        ipmi_oem_intel_s2600bpb_specific_kcs_policy_max_index,
+                                        ipmi_oem_intel_s2600bpb_specific_kcs_policy));
         }
     }
 

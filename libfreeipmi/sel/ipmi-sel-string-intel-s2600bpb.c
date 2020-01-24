@@ -142,7 +142,7 @@ sel_string_output_intel_s2600bpb_event_data1_class_oem (ipmi_sel_ctx_t ctx,
       && (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600BPB_NVME1_CRIT_WARN
           || system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600BPB_NVME2_CRIT_WARN
           || system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600BPB_NVME3_CRIT_WARN)
-      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600BPB_NVME_CRITICAL_WARNING_SENSOR)
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600BPB_NVME_CRITICAL_WARNING)
     {
       uint8_t drive;
 
@@ -157,12 +157,15 @@ sel_string_output_intel_s2600bpb_event_data1_class_oem (ipmi_sel_ctx_t ctx,
     }
 
 
-  if ((system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_S2600BPB_REMOTE_DEBUG_SENSOR
+  if ((system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_S2600BPB_REMOTE_DEBUG
        && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600BPB_REMOTE_DEBUG
-       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600BPB_REMOTE_DEBUG_SENSOR)
+       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600BPB_REMOTE_DEBUG)
       || (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_S2600BPB_SYSTEM_FIRMWARE_SECURITY
           && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600BPB_FIRMWARE_SECURITY
-          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600BPB_SYSTEM_FIRMWARE_SECURITY_SENSOR))
+          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600BPB_SYSTEM_FIRMWARE_SECURITY)
+      || (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_S2600BPB_KCS_POLICY
+          && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600BPB_KCS_POLICY
+          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600BPB_KCS_POLICY))
     {
       int ret;
 
@@ -294,7 +297,7 @@ _sel_string_output_intel_s2600bpb_remote_debug_sensor (ipmi_sel_ctx_t ctx,
 
   memset (info_str, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
 
-  if (event_data & IPMI_OEM_INTEL_S2600BPB_SPECIFIC_REMOTE_DEBUG_SENSOR_EVENT_DATA_JTAG_SESSION_STATE_BITMASK)
+  if (event_data & IPMI_OEM_INTEL_S2600BPB_SPECIFIC_REMOTE_DEBUG_EVENT_DATA_JTAG_SESSION_STATE_BITMASK)
     {
       if (sel_string_strcat_comma_separate (info_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "JTAG Session State In Progress"))
         return (0);
@@ -305,7 +308,7 @@ _sel_string_output_intel_s2600bpb_remote_debug_sensor (ipmi_sel_ctx_t ctx,
         return (0);
     }
 
-  if (event_data & IPMI_OEM_INTEL_S2600BPB_SPECIFIC_REMOTE_DEBUG_SENSOR_EVENT_DATA_JTAG_ENABLED_BITMASK)
+  if (event_data & IPMI_OEM_INTEL_S2600BPB_SPECIFIC_REMOTE_DEBUG_EVENT_DATA_JTAG_ENABLED_BITMASK)
     {
       if (sel_string_strcat_comma_separate (info_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "JTAG Enabled"))
         return (0);
@@ -316,7 +319,7 @@ _sel_string_output_intel_s2600bpb_remote_debug_sensor (ipmi_sel_ctx_t ctx,
         return (0);
     }
 
-  if (event_data & IPMI_OEM_INTEL_S2600BPB_SPECIFIC_REMOTE_DEBUG_SENSOR_EVENT_DATA_JTAG_DEBUG_CONSENT_BITMASK)
+  if (event_data & IPMI_OEM_INTEL_S2600BPB_SPECIFIC_REMOTE_DEBUG_EVENT_DATA_JTAG_DEBUG_CONSENT_BITMASK)
     {
       if (sel_string_strcat_comma_separate (info_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "JTAG Debug Consent given"))
         return (0);
@@ -327,7 +330,7 @@ _sel_string_output_intel_s2600bpb_remote_debug_sensor (ipmi_sel_ctx_t ctx,
         return (0);
     }
 
-  if (event_data & IPMI_OEM_INTEL_S2600BPB_SPECIFIC_REMOTE_DEBUG_SENSOR_EVENT_DATA_PECI_SESSION_STATE_BITMASK)
+  if (event_data & IPMI_OEM_INTEL_S2600BPB_SPECIFIC_REMOTE_DEBUG_EVENT_DATA_PECI_SESSION_STATE_BITMASK)
     {
       if (sel_string_strcat_comma_separate (info_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "PECI Session State In Progress"))
         return (0);
@@ -338,7 +341,7 @@ _sel_string_output_intel_s2600bpb_remote_debug_sensor (ipmi_sel_ctx_t ctx,
         return (0);
     }
 
-  if (event_data & IPMI_OEM_INTEL_S2600BPB_SPECIFIC_REMOTE_DEBUG_SENSOR_EVENT_DATA_PECI_ENABLED_BITMASK)
+  if (event_data & IPMI_OEM_INTEL_S2600BPB_SPECIFIC_REMOTE_DEBUG_EVENT_DATA_PECI_ENABLED_BITMASK)
     {
       if (sel_string_strcat_comma_separate (info_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "PECI Enabled"))
         return (0);
@@ -432,7 +435,7 @@ sel_string_output_intel_s2600bpb_event_data2_class_oem (ipmi_sel_ctx_t ctx,
       && (system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600BPB_NVME1_CRIT_WARN
           || system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600BPB_NVME2_CRIT_WARN
           || system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600BPB_NVME3_CRIT_WARN)
-      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600BPB_NVME_CRITICAL_WARNING_SENSOR)
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600BPB_NVME_CRITICAL_WARNING)
     {
       char smart_warning_str[INTEL_EVENT_BUFFER_LENGTH + 1];
       unsigned int lentmp = 0;
@@ -488,9 +491,9 @@ sel_string_output_intel_s2600bpb_event_data2_class_oem (ipmi_sel_ctx_t ctx,
     }
 
   /* Documentation is ambiguous on event data2 or 3, so we check under both circumstances */
-  if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_S2600BPB_REMOTE_DEBUG_SENSOR
+  if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_S2600BPB_REMOTE_DEBUG
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600BPB_REMOTE_DEBUG
-      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600BPB_REMOTE_DEBUG_SENSOR
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600BPB_REMOTE_DEBUG
       && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
     {
       if ((ret = _sel_string_output_intel_s2600bpb_remote_debug_sensor (ctx,
@@ -508,7 +511,7 @@ sel_string_output_intel_s2600bpb_event_data2_class_oem (ipmi_sel_ctx_t ctx,
   /* Documentation is ambiguous on event data2 or 3, so we check under both circumstances */
   if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_S2600BPB_SYSTEM_FIRMWARE_SECURITY
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600BPB_FIRMWARE_SECURITY
-      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600BPB_SYSTEM_FIRMWARE_SECURITY_SENSOR
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600BPB_SYSTEM_FIRMWARE_SECURITY
       && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
     {
       if ((ret = _sel_string_output_intel_s2600bpb_system_firmware_security_sensor (ctx,
@@ -675,9 +678,9 @@ sel_string_output_intel_s2600bpb_event_data3_class_oem (ipmi_sel_ctx_t ctx,
     return (1);
 
   /* Documentation is ambiguous on event data2 or 3, so we check under both circumstances */
-  if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_S2600BPB_REMOTE_DEBUG_SENSOR
+  if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_S2600BPB_REMOTE_DEBUG
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600BPB_REMOTE_DEBUG
-      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600BPB_REMOTE_DEBUG_SENSOR
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600BPB_REMOTE_DEBUG
       && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
     {
       if ((ret = _sel_string_output_intel_s2600bpb_remote_debug_sensor (ctx,
@@ -695,7 +698,7 @@ sel_string_output_intel_s2600bpb_event_data3_class_oem (ipmi_sel_ctx_t ctx,
   /* Documentation is ambiguous on event data2 or 3, so we check under both circumstances */
   if (system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_OEM_INTEL_S2600BPB_SYSTEM_FIRMWARE_SECURITY
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600BPB_FIRMWARE_SECURITY
-      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600BPB_SYSTEM_FIRMWARE_SECURITY_SENSOR
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600BPB_SYSTEM_FIRMWARE_SECURITY
       && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
     {
       if ((ret = _sel_string_output_intel_s2600bpb_system_firmware_security_sensor (ctx,

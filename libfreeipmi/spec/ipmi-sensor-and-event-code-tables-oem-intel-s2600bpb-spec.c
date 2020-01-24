@@ -41,7 +41,7 @@
  * Intel S2600BPB
  */
 
-const char * const ipmi_oem_intel_s2600bpb_specific_remote_debug_sensor[] =
+const char * const ipmi_oem_intel_s2600bpb_specific_remote_debug[] =
   {
     "Remote JTAG Consent",
     "Remote JTAG Enabled",
@@ -50,9 +50,9 @@ const char * const ipmi_oem_intel_s2600bpb_specific_remote_debug_sensor[] =
     "Remote PECI Session",
     NULL
   };
-unsigned int ipmi_oem_intel_s2600bpb_specific_remote_debug_sensor_max_index = 0x04;
+unsigned int ipmi_oem_intel_s2600bpb_specific_remote_debug_max_index = 0x04;
 
-const char * const ipmi_oem_intel_s2600bpb_specific_system_firmware_security_sensor[] =
+const char * const ipmi_oem_intel_s2600bpb_specific_system_firmware_security[] =
   {
     "Authentication Failure of BMC Firmware Image During Boot",
     "Invalid Security Revision of BMC Firmware Image During Boot",
@@ -70,4 +70,16 @@ const char * const ipmi_oem_intel_s2600bpb_specific_system_firmware_security_sen
     "Factory Security Revision Downgraded",
     NULL
   };
-unsigned int ipmi_oem_intel_s2600bpb_specific_system_firmware_security_sensor_max_index = 0x0D;
+unsigned int ipmi_oem_intel_s2600bpb_specific_system_firmware_security_max_index = 0x0D;
+
+const char * const ipmi_oem_intel_s2600bpb_specific_kcs_policy[] =
+  {
+    "reserved",
+    "reserved",
+    "reserved",
+    "KCS Allow all Mode",
+    "KCS Restricted mode",
+    "KCS Deny all mode",
+    NULL
+  };
+unsigned int ipmi_oem_intel_s2600bpb_specific_kcs_policy_max_index = 0x05;
