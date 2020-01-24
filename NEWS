@@ -11,6 +11,12 @@ Tools
 -----
 o In ipmi-sel, support Intel S2600BPB OEM SEL interpretations.
 
+Tools
+-----
+o Remove legacy output support in ipmi-sensors.
+  - ipmimonitoring legacy output support is also removed as a result.
+
+
 FreeIPMI 1.6.1 - 02/02/18
 -------------------------
 o Add IPv6 hostname support to FreeIPMI, all of FreeIPMI can now take

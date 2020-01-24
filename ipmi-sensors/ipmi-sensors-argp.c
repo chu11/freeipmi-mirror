@@ -139,11 +139,6 @@ static struct argp_option cmdline_options[] =
       "Do not output column headers.", 67},
     { "non-abbreviated-units", NON_ABBREVIATED_UNITS_KEY, 0, 0,
       "Output non-abbreviated units (e.g. 'Amps' insetead of 'A').", 68},
-    { "legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
-      "Output in legacy format.", 69},
-    /* ipmimonitoring legacy support */
-    { "ipmimonitoring-legacy-output", IPMIMONITORING_LEGACY_OUTPUT_KEY, 0, 0,
-      "Output in ipmimonitoring legacy format.", 70},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -313,12 +308,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case NON_ABBREVIATED_UNITS_KEY:
       cmd_args->non_abbreviated_units = 1;
       break;
-    case LEGACY_OUTPUT_KEY:
-      cmd_args->legacy_output = 1;
-      break;
-    case IPMIMONITORING_LEGACY_OUTPUT_KEY:
-      cmd_args->ipmimonitoring_legacy_output = 1;
-      break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */
       argp_usage (state);
@@ -432,10 +421,6 @@ _ipmi_sensors_config_file_parse (struct ipmi_sensors_arguments *cmd_args)
     cmd_args->no_header_output = config_file_data.no_header_output;
   if (config_file_data.non_abbreviated_units_count)
     cmd_args->non_abbreviated_units = config_file_data.non_abbreviated_units;
-  if (config_file_data.legacy_output_count)
-    cmd_args->legacy_output = config_file_data.legacy_output;
-  if (config_file_data.ipmimonitoring_legacy_output_count)
-    cmd_args->ipmimonitoring_legacy_output = config_file_data.ipmimonitoring_legacy_output;
 }
 
 static void
@@ -511,8 +496,6 @@ ipmi_sensors_argp_parse (int argc, char **argv, struct ipmi_sensors_arguments *c
   cmd_args->comma_separated_output = 0;
   cmd_args->no_header_output = 0;
   cmd_args->non_abbreviated_units = 0;
-  cmd_args->legacy_output = 0;
-  cmd_args->ipmimonitoring_legacy_output = 0;
 
   argp_parse (&cmdline_config_file_argp,
               argc,

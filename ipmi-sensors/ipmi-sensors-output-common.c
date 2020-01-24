@@ -73,45 +73,19 @@ ipmi_sensors_output_event_message_list (ipmi_sensors_state_data_t *state_data,
 
   if (event_message_output_type == IPMI_SENSORS_EVENT_NA)
     {
-      if (state_data->prog_data->args->legacy_output)
-        pstdout_printf (state_data->pstate,
-                        "[%s]\n",
-                        IPMI_SENSORS_NA_STRING_OUTPUT);
-      else if (state_data->prog_data->args->ipmimonitoring_legacy_output)
-        pstdout_printf (state_data->pstate,
-                        "%s\n",
-                        IPMIMONITORING_NA_STRING_LEGACY);
-      else
-        pstdout_printf (state_data->pstate,
-                        "%s\n",
-                        IPMI_SENSORS_NA_STRING_OUTPUT);
+      pstdout_printf (state_data->pstate,
+                      "%s\n",
+                      IPMI_SENSORS_NA_STRING);
     }
   else if (event_message_output_type == IPMI_SENSORS_EVENT_UNKNOWN)
     {
-      if (state_data->prog_data->args->legacy_output)
-        pstdout_printf (state_data->pstate,
-                        "[%s]\n",
-                        "Unknown");
-      else if (state_data->prog_data->args->ipmimonitoring_legacy_output)
-        pstdout_printf (state_data->pstate,
-                        "'%s'\n",
-                        IPMIMONITORING_NA_STRING_LEGACY);
-      else
-        pstdout_printf (state_data->pstate,
-                        "%s\n",
-                        "Unknown");
+      pstdout_printf (state_data->pstate,
+                      "%s\n",
+                      "Unknown");
     }
   else
     {
-      if (state_data->prog_data->args->legacy_output)
-        pstdout_printf (state_data->pstate,
-                        "[%s]",
-                        event_message_list[0]);
-      else if (state_data->prog_data->args->ipmimonitoring_legacy_output)
-        pstdout_printf (state_data->pstate,
-                        "'%s'",
-                        event_message_list[0]);
-      else if (state_data->prog_data->args->output_event_bitmask)
+      if (state_data->prog_data->args->output_event_bitmask)
         pstdout_printf (state_data->pstate,
                         "%04Xh",
                         sensor_event_bitmask);
@@ -128,16 +102,7 @@ ipmi_sensors_output_event_message_list (ipmi_sensors_state_data_t *state_data,
                 pstdout_printf (state_data->pstate,
                                 "\n");
 
-              if (state_data->prog_data->args->legacy_output)
-                pstdout_printf (state_data->pstate,
-                                "%s[%s]",
-                                spcbuf,
-                                event_message_list[i]);
-              else if (state_data->prog_data->args->ipmimonitoring_legacy_output)
-                pstdout_printf (state_data->pstate,
-                                " '%s'",
-                                event_message_list[i]);
-              else if (prefix)
+              if (prefix)
                 pstdout_printf (state_data->pstate,
                                 "%s'%s'",
                                 prefix,

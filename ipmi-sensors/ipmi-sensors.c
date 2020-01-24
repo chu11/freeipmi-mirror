@@ -1005,8 +1005,7 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
 
  get_events:
 
-  if (!state_data->prog_data->args->output_event_bitmask
-      || state_data->prog_data->args->legacy_output)
+  if (!state_data->prog_data->args->output_event_bitmask)
     {
       int event_msg_generated = 0;
 

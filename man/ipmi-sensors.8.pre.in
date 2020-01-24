@@ -166,12 +166,6 @@ non-recoverable thresholds.
 #include <@top_srcdir@/man/manpage-common-comma-separated-output.man>
 #include <@top_srcdir@/man/manpage-common-no-header-output.man>
 #include <@top_srcdir@/man/manpage-common-non-abbreviated-units.man>
-#include <@top_srcdir@/man/manpage-common-legacy-output.man>
-.TP
-\fB\-\-ipmimonitoring\-legacy\-output\fR
-Output legacy format of legacy
-.B ipmimonitoring
-tool.  Newer options may not be applicable to legacy output.
 #include <@top_srcdir@/man/manpage-common-sdr-cache-options-heading.man>
 #include <@top_srcdir@/man/manpage-common-sdr-cache-options.man>
 #include <@top_srcdir@/man/manpage-common-sdr-cache-file-directory.man>

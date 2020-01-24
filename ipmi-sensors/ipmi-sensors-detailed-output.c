@@ -43,7 +43,6 @@
 #include "tool-sensor-common.h"
 
 #define ALL_EVENT_MESSAGES_DISABLED "All Event Messages Disabled"
-#define SENSOR_SCANNING_DISABLED    "Sensor Scanning Disabled"
 
 #define IPMI_SENSORS_DEVICE_TYPE_BUFLEN  1024
 
@@ -85,17 +84,6 @@ _get_record_type_string (ipmi_sensors_state_data_t *state_data,
     }
 
   return "Unknown Record";
-}
-
-static int
-_abbreviated_units_flag (ipmi_sensors_state_data_t *state_data)
-{
-  assert (state_data);
-
-  if (state_data->prog_data->args->legacy_output)
-    return (0);
-
-  return (state_data->prog_data->args->non_abbreviated_units);
 }
 
 static int
@@ -383,7 +371,7 @@ _detailed_output_thresholds (ipmi_sensors_state_data_t *state_data,
   else
     pstdout_printf (state_data->pstate,
                     "Lower Critical Threshold: %s\n",
-                    IPMI_SENSORS_NA_STRING_OUTPUT);
+                    IPMI_SENSORS_NA_STRING);
 
   if (upper_critical_threshold)
     pstdout_printf (state_data->pstate,
@@ -393,7 +381,7 @@ _detailed_output_thresholds (ipmi_sensors_state_data_t *state_data,
   else
     pstdout_printf (state_data->pstate,
                     "Upper Critical Threshold: %s\n",
-                    IPMI_SENSORS_NA_STRING_OUTPUT);
+                    IPMI_SENSORS_NA_STRING);
 
   if (lower_non_critical_threshold)
     pstdout_printf (state_data->pstate,
@@ -403,7 +391,7 @@ _detailed_output_thresholds (ipmi_sensors_state_data_t *state_data,
   else
     pstdout_printf (state_data->pstate,
                     "Lower Non-Critical Threshold: %s\n",
-                    IPMI_SENSORS_NA_STRING_OUTPUT);
+                    IPMI_SENSORS_NA_STRING);
 
   if (upper_non_critical_threshold)
     pstdout_printf (state_data->pstate,
@@ -413,7 +401,7 @@ _detailed_output_thresholds (ipmi_sensors_state_data_t *state_data,
   else
     pstdout_printf (state_data->pstate,
                     "Upper Non-Critical Threshold: %s\n",
-                    IPMI_SENSORS_NA_STRING_OUTPUT);
+                    IPMI_SENSORS_NA_STRING);
 
   if (lower_non_recoverable_threshold)
     pstdout_printf (state_data->pstate,
@@ -423,7 +411,7 @@ _detailed_output_thresholds (ipmi_sensors_state_data_t *state_data,
   else
     pstdout_printf (state_data->pstate,
                     "Lower Non-Recoverable Threshold: %s\n",
-                    IPMI_SENSORS_NA_STRING_OUTPUT);
+                    IPMI_SENSORS_NA_STRING);
 
   if (upper_non_recoverable_threshold)
     pstdout_printf (state_data->pstate,
@@ -433,7 +421,7 @@ _detailed_output_thresholds (ipmi_sensors_state_data_t *state_data,
   else
     pstdout_printf (state_data->pstate,
                     "Upper Non-Recoverable Threshold: %s\n",
-                    IPMI_SENSORS_NA_STRING_OUTPUT);
+                    IPMI_SENSORS_NA_STRING);
 
   rv = 0;
  cleanup:
@@ -519,7 +507,7 @@ _detailed_output_sensor_reading_ranges (ipmi_sensors_state_data_t *state_data,
   else
     pstdout_printf (state_data->pstate,
                     "Sensor Min. Reading: %s\n",
-                    IPMI_SENSORS_NA_STRING_OUTPUT);
+                    IPMI_SENSORS_NA_STRING);
 
   if (sensor_maximum_reading)
     pstdout_printf (state_data->pstate,
@@ -529,7 +517,7 @@ _detailed_output_sensor_reading_ranges (ipmi_sensors_state_data_t *state_data,
   else
     pstdout_printf (state_data->pstate,
                     "Sensor Max. Reading: %s\n",
-                    IPMI_SENSORS_NA_STRING_OUTPUT);
+                    IPMI_SENSORS_NA_STRING);
 
   if (normal_minimum)
     pstdout_printf (state_data->pstate,
@@ -539,7 +527,7 @@ _detailed_output_sensor_reading_ranges (ipmi_sensors_state_data_t *state_data,
   else
     pstdout_printf (state_data->pstate,
                     "Normal Min.: %s\n",
-                    IPMI_SENSORS_NA_STRING_OUTPUT);
+                    IPMI_SENSORS_NA_STRING);
 
   if (normal_maximum)
     pstdout_printf (state_data->pstate,
@@ -549,7 +537,7 @@ _detailed_output_sensor_reading_ranges (ipmi_sensors_state_data_t *state_data,
   else
     pstdout_printf (state_data->pstate,
                     "Normal Max.: %s\n",
-                    IPMI_SENSORS_NA_STRING_OUTPUT);
+                    IPMI_SENSORS_NA_STRING);
 
   if (nominal_reading)
     pstdout_printf (state_data->pstate,
@@ -559,7 +547,7 @@ _detailed_output_sensor_reading_ranges (ipmi_sensors_state_data_t *state_data,
   else
     pstdout_printf (state_data->pstate,
                     "Nominal Reading: %s\n",
-                    IPMI_SENSORS_NA_STRING_OUTPUT);
+                    IPMI_SENSORS_NA_STRING);
 
   rv = 0;
  cleanup:
@@ -646,7 +634,7 @@ _detailed_output_tolerance (ipmi_sensors_state_data_t *state_data,
   else
     pstdout_printf (state_data->pstate,
                     "Tolerance: %s\n",
-                    IPMI_SENSORS_NA_STRING_OUTPUT);
+                    IPMI_SENSORS_NA_STRING);
 
   rv = 0;
  cleanup:
@@ -737,7 +725,7 @@ _detailed_output_accuracy (ipmi_sensors_state_data_t *state_data)
   else
     pstdout_printf (state_data->pstate,
                     "Accuracy: %s\n",
-                    IPMI_SENSORS_NA_STRING_OUTPUT);
+                    IPMI_SENSORS_NA_STRING);
 
   rv = 0;
  cleanup:
@@ -800,7 +788,7 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
                                       state_data->sdr_ctx,
                                       sensor_units_buf,
                                       IPMI_SENSORS_UNITS_BUFLEN,
-                                      _abbreviated_units_flag (state_data)) < 0)
+                                      state_data->prog_data->args->non_abbreviated_units) < 0)
     goto cleanup;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_sensor_hysteresis_rs)))
@@ -969,7 +957,7 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
       else
         pstdout_printf (state_data->pstate,
                         "Positive Hysteresis: %s\n",
-                        IPMI_SENSORS_NA_STRING_OUTPUT);
+                        IPMI_SENSORS_NA_STRING);
 
       if (negative_going_threshold_hysteresis_raw)
         pstdout_printf (state_data->pstate,
@@ -979,7 +967,7 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
       else
         pstdout_printf (state_data->pstate,
                         "Negative Hysteresis: %s\n",
-                        IPMI_SENSORS_NA_STRING_OUTPUT);
+                        IPMI_SENSORS_NA_STRING);
     }
   else
     {
@@ -992,7 +980,7 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
       else
         pstdout_printf (state_data->pstate,
                         "Positive Hysteresis: %s\n",
-                        IPMI_SENSORS_NA_STRING_OUTPUT);
+                        IPMI_SENSORS_NA_STRING);
 
       if (negative_going_threshold_hysteresis_raw)
         pstdout_printf (state_data->pstate,
@@ -1002,7 +990,7 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
       else
         pstdout_printf (state_data->pstate,
                         "Negative Hysteresis: %s\n",
-                        IPMI_SENSORS_NA_STRING_OUTPUT);
+                        IPMI_SENSORS_NA_STRING);
     }
 
   rv = 0;
@@ -1143,28 +1131,14 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
 
   if (all_event_messages == IPMI_SENSOR_ALL_EVENT_MESSAGES_DISABLE)
     {
-      if (state_data->prog_data->args->legacy_output)
-        {
-          pstdout_printf (state_data->pstate,
-                          "%s[%s]\n",
-                          IPMI_SENSORS_ASSERTION_EVENT_PREFIX_LEGACY,
-                          ALL_EVENT_MESSAGES_DISABLED);
-          pstdout_printf (state_data->pstate,
-                          "%s[%s]\n",
-                          IPMI_SENSORS_DEASSERTION_EVENT_PREFIX_LEGACY,
-                          ALL_EVENT_MESSAGES_DISABLED);
-        }
-      else
-        {
-          pstdout_printf (state_data->pstate,
-                          "%s%s\n",
-                          IPMI_SENSORS_ASSERTION_EVENT_PREFIX,
-                          ALL_EVENT_MESSAGES_DISABLED);
-          pstdout_printf (state_data->pstate,
-                          "%s%s\n",
-                          IPMI_SENSORS_DEASSERTION_EVENT_PREFIX,
-                          ALL_EVENT_MESSAGES_DISABLED);
-        }
+      pstdout_printf (state_data->pstate,
+                      "%s%s\n",
+                      IPMI_SENSORS_ASSERTION_EVENT_PREFIX,
+                      ALL_EVENT_MESSAGES_DISABLED);
+      pstdout_printf (state_data->pstate,
+                      "%s%s\n",
+                      IPMI_SENSORS_DEASSERTION_EVENT_PREFIX,
+                      ALL_EVENT_MESSAGES_DISABLED);
       rv = 0;
       goto cleanup;
     }
@@ -1183,17 +1157,6 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
 
   if (scanning_on_this_sensor == IPMI_SENSOR_SCANNING_ON_THIS_SENSOR_DISABLE)
     {
-      if (state_data->prog_data->args->legacy_output)
-        {
-          pstdout_printf (state_data->pstate,
-                          "%s[%s]\n",
-                          IPMI_SENSORS_ASSERTION_EVENT_PREFIX_LEGACY,
-                          SENSOR_SCANNING_DISABLED);
-          pstdout_printf (state_data->pstate,
-                          "%s[%s]\n",
-                          IPMI_SENSORS_DEASSERTION_EVENT_PREFIX_LEGACY,
-                          SENSOR_SCANNING_DISABLED);
-        }
       rv = 0;
       goto cleanup;
     }
@@ -1250,7 +1213,7 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
                                                   event_bitmask,
                                                   assertion_event_message_list,
                                                   assertion_event_message_list_len,
-                                                  IPMI_SENSORS_ASSERTION_EVENT_PREFIX_OUTPUT,
+                                                  IPMI_SENSORS_ASSERTION_EVENT_PREFIX,
                                                   1) < 0)
         goto cleanup;
     }
@@ -1292,7 +1255,7 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
                                                   event_bitmask,
                                                   deassertion_event_message_list,
                                                   deassertion_event_message_list_len,
-                                                  IPMI_SENSORS_DEASSERTION_EVENT_PREFIX_OUTPUT,
+                                                  IPMI_SENSORS_DEASSERTION_EVENT_PREFIX,
                                                   1) < 0)
         goto cleanup;
     }
@@ -1330,7 +1293,7 @@ _detailed_output_event_message_list (ipmi_sensors_state_data_t *state_data,
                                               sensor_event_bitmask,
                                               event_message_list,
                                               event_message_list_len,
-                                              IPMI_SENSORS_SENSOR_EVENT_PREFIX_OUTPUT,
+                                              IPMI_SENSORS_SENSOR_EVENT_PREFIX,
                                               1) < 0)
     return (-1);
 
@@ -1453,7 +1416,7 @@ _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
                                       state_data->sdr_ctx,
                                       sensor_units_buf,
                                       IPMI_SENSORS_UNITS_BUFLEN,
-                                      _abbreviated_units_flag (state_data)) < 0)
+                                      state_data->prog_data->args->non_abbreviated_units) < 0)
     return (-1);
 
   event_reading_type_code_class = ipmi_event_reading_type_code_class (event_reading_type_code);
@@ -1542,32 +1505,16 @@ _detailed_output_full_record (ipmi_sensors_state_data_t *state_data,
                                      sensor_event_bitmask) < 0)
     return (-1);
 
-  if (state_data->prog_data->args->legacy_output)
-    {
-      if (sensor_reading)
-        pstdout_printf (state_data->pstate,
-                        "Sensor Reading: %f %s\n",
-                        *sensor_reading,
-                        sensor_units_buf);
-      else
-        pstdout_printf (state_data->pstate,
-                        "Sensor Reading: %s\n",
-                        IPMI_SENSORS_NA_STRING_OUTPUT);
-    }
-  else
-    {
-      /* no need to output "N/A" for discrete sensors */
-
-      if (sensor_reading)
-        pstdout_printf (state_data->pstate,
-                        "Sensor Reading: %f %s\n",
-                        *sensor_reading,
-                        sensor_units_buf);
-      else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD)
-        pstdout_printf (state_data->pstate,
-                        "Sensor Reading: %s\n",
-                        IPMI_SENSORS_NA_STRING_OUTPUT);
-    }
+  /* no need to output "N/A" for discrete sensors */
+  if (sensor_reading)
+    pstdout_printf (state_data->pstate,
+                    "Sensor Reading: %f %s\n",
+                    *sensor_reading,
+                    sensor_units_buf);
+  else if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD)
+    pstdout_printf (state_data->pstate,
+                    "Sensor Reading: %s\n",
+                    IPMI_SENSORS_NA_STRING);
 
   if (_detailed_output_event_message_list (state_data,
                                            event_message_output_type,
@@ -2439,13 +2386,6 @@ ipmi_sensors_detailed_output (ipmi_sensors_state_data_t *state_data,
                                                    sensor_event_bitmask,
                                                    event_message_list,
                                                    event_message_list_len));
-        case IPMI_SDR_FORMAT_EVENT_ONLY_RECORD:
-          /* only in legacy output, I don't know why this was output
-           * under verbose before
-           */
-          if (state_data->prog_data->args->legacy_output)
-            return (_detailed_output_event_only_record (state_data,
-                                                        sensor_number));
         default:
           /* don't output any other types in verbose mode */
           break;

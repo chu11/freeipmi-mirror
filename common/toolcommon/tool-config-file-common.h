@@ -231,10 +231,6 @@ struct config_file_data_ipmi_sensors
   int no_header_output_count;
   int non_abbreviated_units;
   int non_abbreviated_units_count;
-  int legacy_output;
-  int legacy_output_count;
-  int ipmimonitoring_legacy_output;
-  int ipmimonitoring_legacy_output_count;
 };
 
 struct config_file_data_ipmiconsole
