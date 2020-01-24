@@ -3575,17 +3575,6 @@ config_file_parse (const char *filename,
         &(ipmi_sel_data.non_abbreviated_units),
         0,
       },
-      {
-        "ipmi-sel-legacy-output",
-        CONFFILE_OPTION_BOOL,
-        -1,
-        _config_file_bool,
-        1,
-        0,
-        &(ipmi_sel_data.legacy_output_count),
-        &(ipmi_sel_data.legacy_output),
-        0,
-      },
     };
 
   /*

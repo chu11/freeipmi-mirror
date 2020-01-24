@@ -70,7 +70,6 @@ enum ipmi_sel_argp_option_keys
     COMMA_SEPARATED_OUTPUT_KEY = 183,
     NO_HEADER_OUTPUT_KEY = 184,
     NON_ABBREVIATED_UNITS_KEY = 185,
-    LEGACY_OUTPUT_KEY = 186,
   };
 
 struct ipmi_sel_arguments
@@ -125,7 +124,6 @@ struct ipmi_sel_arguments
   int comma_separated_output;
   int no_header_output;
   int non_abbreviated_units;
-  int legacy_output;
 };
 
 typedef struct ipmi_sel_prog_data

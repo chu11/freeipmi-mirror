@@ -2,6 +2,8 @@
 
 	* ipmi-sensors: Remove legacy output support.
 
+	* ipmi-sensors, ipmi-sel: Remove legacy output support.
+
 2020-01-28 Albert Chu <chu11@llnl.gov>
 
 	* man/ipmi-oem.8.pre.in: Fix formatting typo that led to line not

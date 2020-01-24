@@ -13,7 +13,7 @@ o In ipmi-sel, support Intel S2600BPB OEM SEL interpretations.
 
 Tools
 -----
-o Remove legacy output support in ipmi-sensors.
+o Remove legacy output support in ipmi-sensors and ipmi-sel.
   - ipmimonitoring legacy output support is also removed as a result.
 
 

@@ -554,163 +554,6 @@ _hex_output (ipmi_sel_state_data_t *state_data)
   return (rv);
 }
 
-static int
-_legacy_normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
-{
-  char fmtbuf[EVENT_FMT_BUFLEN+1];
-  char outbuf[EVENT_OUTPUT_BUFLEN+1];
-  char *fmt;
-  int outbuf_len;
-  unsigned int flags;
-  int record_type_class;
-  int rv = -1;
-
-  assert (state_data);
-  assert (state_data->prog_data->args->legacy_output);
-
-  flags = IPMI_SEL_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD;
-  flags |= IPMI_SEL_STRING_FLAGS_OUTPUT_NOT_AVAILABLE;
-  flags |= IPMI_SEL_STRING_FLAGS_DATE_MONTH_STRING;
-  flags |= IPMI_SEL_STRING_FLAGS_LEGACY;
-
-  /* IPMI Workaround
-   *
-   * HP DL 380 G5
-   * Intel S2600JF/Appro 512X
-   *
-   * Motherboard is reporting invalid SEL Records types (0x00 on HP DL
-   * 380 G5, 0x03 on Intel S2600JF/Appro 512X)
-   */
-  if (state_data->prog_data->args->assume_system_event_records
-      && (!IPMI_SEL_RECORD_TYPE_VALID (record_type)))
-    record_type = IPMI_SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD;
-
-  record_type_class = ipmi_sel_record_type_class (record_type);
-  if (record_type_class == IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
-    {
-      uint8_t event_type_code;
-      uint8_t event_data2_flag;
-      uint8_t event_data3_flag;
-      uint8_t event_data2;
-      uint8_t event_data3;
-
-      if (ipmi_sel_parse_read_event_type_code (state_data->sel_ctx,
-                                               NULL,
-                                               0,
-                                               &event_type_code) < 0)
-        {
-          if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_event_type_code") < 0)
-            goto cleanup;
-          goto out;
-        }
-
-      if (ipmi_sel_parse_read_event_data1_event_data2_flag (state_data->sel_ctx,
-                                                            NULL,
-                                                            0,
-                                                            &event_data2_flag) < 0)
-        {
-          if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_event_data1_event_data2_flag") < 0)
-            goto cleanup;
-          goto out;
-        }
-
-      if (ipmi_sel_parse_read_event_data1_event_data3_flag (state_data->sel_ctx,
-                                                            NULL,
-                                                            0,
-                                                            &event_data3_flag) < 0)
-        {
-          if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_event_data1_event_data3_flag") < 0)
-            goto cleanup;
-          goto out;
-        }
-
-      if (ipmi_sel_parse_read_event_data2 (state_data->sel_ctx,
-                                           NULL,
-                                           0,
-                                           &event_data2) < 0)
-        {
-          if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_event_data2") < 0)
-            goto cleanup;
-          goto out;
-        }
-
-      if (ipmi_sel_parse_read_event_data3 (state_data->sel_ctx,
-                                           NULL,
-                                           0,
-                                           &event_data3) < 0)
-        {
-          if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_event_data3") < 0)
-            goto cleanup;
-          goto out;
-        }
-
-      strcpy (fmtbuf, "%i:%d %t:%T %s:%e");
-
-      /* achu: special case, legacy output didn't support
-         previous/severity output and would not output 0xFF for
-         discrete events.
-      */
-      if (!(((ipmi_event_reading_type_code_class (event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE
-              || ipmi_event_reading_type_code_class (event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE)
-             && event_data2_flag == IPMI_SEL_EVENT_DATA_PREVIOUS_STATE_OR_SEVERITY)
-            || ((ipmi_event_reading_type_code_class (event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD
-                 || ipmi_event_reading_type_code_class (event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE
-                 || ipmi_event_reading_type_code_class (event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE)
-                && event_data2_flag == IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE
-                && event_data2 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT)))
-        {
-          if (event_data2_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE)
-            strcat (fmtbuf, ":%f");
-        }
-
-      if (!((ipmi_event_reading_type_code_class (event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD
-             || ipmi_event_reading_type_code_class (event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_GENERIC_DISCRETE
-             || ipmi_event_reading_type_code_class (event_type_code) == IPMI_EVENT_READING_TYPE_CODE_CLASS_SENSOR_SPECIFIC_DISCRETE)
-            && event_data3_flag == IPMI_SEL_EVENT_DATA_SENSOR_SPECIFIC_EVENT_EXTENSION_CODE
-            && event_data3 == IPMI_SEL_RECORD_UNSPECIFIED_EVENT))
-        {
-          if (event_data3_flag != IPMI_SEL_EVENT_DATA_UNSPECIFIED_BYTE)
-            strcat (fmtbuf, ":%h");
-        }
-
-      fmt = fmtbuf;
-    }
-  else if (record_type_class == IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD)
-    fmt = "%i:%d %t:%m:%o";
-  else if (record_type_class == IPMI_SEL_RECORD_TYPE_CLASS_NON_TIMESTAMPED_OEM_RECORD)
-    fmt = "%i:o";
-  else
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "Unknown SEL Record Type: %Xh\n",
-                       record_type);
-      goto out;
-    }
-
-  memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
-  if ((outbuf_len = ipmi_sel_parse_read_record_string (state_data->sel_ctx,
-                                                       fmt,
-                                                       NULL,
-                                                       0,
-                                                       outbuf,
-                                                       EVENT_OUTPUT_BUFLEN,
-                                                       flags)) < 0)
-    {
-      if (_sel_parse_err_handle (state_data, "ipmi_sel_parse_read_record_string") < 0)
-        goto cleanup;
-      goto out;
-    }
-
-  if (outbuf_len)
-    pstdout_printf (state_data->pstate, "%s\n", outbuf);
-
- out:
-  rv = 0;
- cleanup:
-  return (rv);
-}
-
 /* return 1 on success
  * return (0) on non-success, but don't fail
  * return (-1) on error
@@ -723,7 +566,6 @@ _normal_output_record_id (ipmi_sel_state_data_t *state_data, unsigned int flags)
   int outbuf_len;
 
   assert (state_data);
-  assert (!state_data->prog_data->args->legacy_output);
 
   memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
   if ((outbuf_len = ipmi_sel_parse_read_record_string (state_data->sel_ctx,
@@ -769,7 +611,6 @@ _normal_output_date (ipmi_sel_state_data_t *state_data, unsigned int flags)
   int outbuf_len;
 
   assert (state_data);
-  assert (!state_data->prog_data->args->legacy_output);
 
   memset (outbuf, '\0', EVENT_OUTPUT_BUFLEN+1);
   if ((outbuf_len = ipmi_sel_parse_read_record_string (state_data->sel_ctx,
@@ -811,7 +652,6 @@ static int
 _normal_output_not_available_date (ipmi_sel_state_data_t *state_data)
 {
   assert (state_data);
-  assert (!state_data->prog_data->args->legacy_output);
 
   if (state_data->prog_data->args->comma_separated_output)
     pstdout_printf (state_data->pstate, ",%s", EVENT_NA_STRING);
@@ -829,7 +669,6 @@ static int
 _normal_output_time (ipmi_sel_state_data_t *state_data, unsigned int flags)
 {
   assert (state_data);
-  assert (!state_data->prog_data->args->legacy_output);
 
   return (event_output_time (state_data->pstate,
                              state_data->sel_ctx,
@@ -848,7 +687,6 @@ static int
 _normal_output_not_available_time (ipmi_sel_state_data_t *state_data)
 {
   assert (state_data);
-  assert (!state_data->prog_data->args->legacy_output);
 
   return (event_output_not_available_time (state_data->pstate,
                                            state_data->prog_data->args->comma_separated_output));
@@ -862,7 +700,6 @@ static int
 _normal_output_sensor_name (ipmi_sel_state_data_t *state_data, unsigned int flags)
 {
   assert (state_data);
-  assert (!state_data->prog_data->args->legacy_output);
 
   return (event_output_sensor_name (state_data->pstate,
                                     state_data->sel_ctx,
@@ -882,7 +719,6 @@ static int
 _normal_output_not_available_sensor_name (ipmi_sel_state_data_t *state_data)
 {
   assert (state_data);
-  assert (!state_data->prog_data->args->legacy_output);
 
   return (event_output_not_available_sensor_name (state_data->pstate,
                                                   &state_data->column_width,
@@ -898,7 +734,6 @@ _normal_output_sensor_type (ipmi_sel_state_data_t *state_data, unsigned int flag
 {
   assert (state_data);
   assert (!state_data->prog_data->args->no_sensor_type_output);
-  assert (!state_data->prog_data->args->legacy_output);
 
   return (event_output_sensor_type (state_data->pstate,
                                     state_data->sel_ctx,
@@ -919,7 +754,6 @@ _normal_output_not_available_sensor_type (ipmi_sel_state_data_t *state_data)
 {
   assert (state_data);
   assert (!state_data->prog_data->args->no_sensor_type_output);
-  assert (!state_data->prog_data->args->legacy_output);
 
   return (event_output_not_available_sensor_type (state_data->pstate,
                                                   &state_data->column_width,
@@ -934,7 +768,6 @@ static int
 _normal_output_event_state (ipmi_sel_state_data_t *state_data, unsigned int flags)
 {
   assert (state_data);
-  assert (!state_data->prog_data->args->legacy_output);
   assert (state_data->prog_data->args->output_event_state);
 
   return (event_output_event_state (state_data->pstate,
@@ -954,7 +787,6 @@ static int
 _normal_output_event_direction (ipmi_sel_state_data_t *state_data, unsigned int flags)
 {
   assert (state_data);
-  assert (!state_data->prog_data->args->legacy_output);
   assert (state_data->prog_data->args->verbose_count >= 1);
 
   return (event_output_event_direction (state_data->pstate,
@@ -974,7 +806,6 @@ static int
 _normal_output_not_available_event_direction (ipmi_sel_state_data_t *state_data)
 {
   assert (state_data);
-  assert (!state_data->prog_data->args->legacy_output);
   assert (state_data->prog_data->args->verbose_count >= 1);
 
   return (event_output_not_available_event_direction (state_data->pstate,
@@ -994,7 +825,6 @@ _output_oem_event_strings (ipmi_sel_state_data_t *state_data,
   int ret;
 
   assert (state_data);
-  assert (!state_data->prog_data->args->legacy_output);
 
   if ((ret = ipmi_sel_parse_read_record_string (state_data->sel_ctx,
                                                 "%O",
@@ -1030,7 +860,6 @@ _normal_output_event (ipmi_sel_state_data_t *state_data, unsigned int flags)
   int outbuf_len = 0;
 
   assert (state_data);
-  assert (!state_data->prog_data->args->legacy_output);
 
   if (state_data->prog_data->args->output_oem_event_strings)
     {
@@ -1073,7 +902,6 @@ _normal_output_oem_data (ipmi_sel_state_data_t *state_data,
   int outbuf_len = 0;
 
   assert (state_data);
-  assert (!state_data->prog_data->args->legacy_output);
 
   if (state_data->prog_data->args->output_oem_event_strings)
     {
@@ -1149,7 +977,6 @@ _normal_output (ipmi_sel_state_data_t *state_data, uint8_t record_type)
   int ret;
 
   assert (state_data);
-  assert (!state_data->prog_data->args->legacy_output);
 
   if (!state_data->prog_data->args->no_header_output
       && !state_data->output_headers)
@@ -1620,16 +1447,8 @@ _sel_parse_callback (ipmi_sel_ctx_t ctx, void *callback_data)
     }
   else
     {
-      if (state_data->prog_data->args->legacy_output)
-        {
-          if (_legacy_normal_output (state_data, record_type) < 0)
-            goto cleanup;
-        }
-      else
-        {
-          if (_normal_output (state_data, record_type) < 0)
-            goto cleanup;
-        }
+      if (_normal_output (state_data, record_type) < 0)
+        goto cleanup;
     }
 
  out:
@@ -1744,16 +1563,13 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
 
   args = state_data->prog_data->args;
 
-  if (!args->legacy_output)
+  if (ipmi_sel_ctx_set_separator (state_data->sel_ctx, EVENT_OUTPUT_SEPARATOR) < 0)
     {
-      if (ipmi_sel_ctx_set_separator (state_data->sel_ctx, EVENT_OUTPUT_SEPARATOR) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "ipmi_sel_parse: %s\n",
-                           ipmi_sel_ctx_errormsg (state_data->sel_ctx));
-          goto cleanup;
-        }
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_sel_parse: %s\n",
+                       ipmi_sel_ctx_errormsg (state_data->sel_ctx));
+      goto cleanup;
     }
 
   if (args->post_clear)
@@ -1768,130 +1584,127 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
         }
     }
 
-  if (!args->legacy_output)
+  if (!args->common_args.ignore_sdr_cache)
     {
-      if (!args->common_args.ignore_sdr_cache)
+      if (calculate_column_widths (state_data->pstate,
+                                   state_data->sdr_ctx,
+                                   NULL,
+                                   0,
+                                   NULL,
+                                   0,
+                                   state_data->prog_data->args->non_abbreviated_units,
+                                   (args->entity_sensor_names) ? 1 : 0, /* shared_sensors */
+                                   1, /* count_event_only_records */
+                                   0, /* count_device_locator_records */
+                                   0, /* count_oem_records */
+                                   args->entity_sensor_names,
+                                   &(state_data->column_width)) < 0)
+        goto cleanup;
+
+      /* Unlike sensors output, SEL entries are not predictable,
+       * events can happen w/ sensor numbers and sensor types that are
+       * not listed in the SDR.  So I can't perfectly predict the
+       * largest column size (w/o going through the SEL atleast once).
+       *
+       * Ultimately, there is some balance that must be done to:
+       *
+       * A) make sure the output looks good
+       *
+       * B) not have a ridiculously sized sensor type column that
+       * makes the output look bad.
+       *
+       * The following is the fudging I have elected to do
+       */
+
+      /* Fudging #1 - "System Firmware Progress" is a relatively
+       * common sensor event that isn't mentioned in the SDR.
+       *
+       * However, it's a pretty big string and can lead to a big
+       * column size.  So I will only assume it can happen if there
+       * are sensor types in the SDR that are atleast 2 chars less
+       * than this string.
+       *
+       * I think this is a pretty good guess.  "System Firmware
+       * Progress" is a sensor that seems to exist more on the
+       * major tier 1 vendor motherboards that also include
+       * additional "fancy" sensors such as "Event Logging
+       * Disabled" (2 shorter in string length) or "System ACPI
+       * Power State" (1 shorter in string length).
+       *
+       * The non-tier 1 vendors tend not to include such fancy
+       * sensors on their motherboards, limiting themselves to the
+       * standard temp, voltage, fan, etc. so the probability of
+       * hitting "System Firmware Progress" is lower.
+       */
+      if (state_data->column_width.sensor_type >= (strlen (ipmi_sensor_types[IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS]) - 2))
         {
-          if (calculate_column_widths (state_data->pstate,
-                                       state_data->sdr_ctx,
-                                       NULL,
-                                       0,
-                                       NULL,
-                                       0,
-                                       state_data->prog_data->args->non_abbreviated_units,
-                                       (args->entity_sensor_names) ? 1 : 0, /* shared_sensors */
-                                       1, /* count_event_only_records */
-                                       0, /* count_device_locator_records */
-                                       0, /* count_oem_records */
-                                       args->entity_sensor_names,
-                                       &(state_data->column_width)) < 0)
-            goto cleanup;
-
-          /* Unlike sensors output, SEL entries are not predictable,
-           * events can happen w/ sensor numbers and sensor types that are
-           * not listed in the SDR.  So I can't perfectly predict the
-           * largest column size (w/o going through the SEL atleast once).
-           *
-           * Ultimately, there is some balance that must be done to:
-           *
-           * A) make sure the output looks good
-           *
-           * B) not have a ridiculously sized sensor type column that
-           * makes the output look bad.
-           *
-           * The following is the fudging I have elected to do
-           */
-
-          /* Fudging #1 - "System Firmware Progress" is a relatively
-           * common sensor event that isn't mentioned in the SDR.
-           *
-           * However, it's a pretty big string and can lead to a big
-           * column size.  So I will only assume it can happen if there
-           * are sensor types in the SDR that are atleast 2 chars less
-           * than this string.
-           *
-           * I think this is a pretty good guess.  "System Firmware
-           * Progress" is a sensor that seems to exist more on the
-           * major tier 1 vendor motherboards that also include
-           * additional "fancy" sensors such as "Event Logging
-           * Disabled" (2 shorter in string length) or "System ACPI
-           * Power State" (1 shorter in string length).
-           *
-           * The non-tier 1 vendors tend not to include such fancy
-           * sensors on their motherboards, limiting themselves to the
-           * standard temp, voltage, fan, etc. so the probability of
-           * hitting "System Firmware Progress" is lower.
-           */
-          if (state_data->column_width.sensor_type >= (strlen (ipmi_sensor_types[IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS]) - 2))
-            {
-              if (state_data->column_width.sensor_type < strlen (ipmi_sensor_types[IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS]))
-                state_data->column_width.sensor_type = strlen (ipmi_sensor_types[IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS]);
-            }
+          if (state_data->column_width.sensor_type < strlen (ipmi_sensor_types[IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS]))
+            state_data->column_width.sensor_type = strlen (ipmi_sensor_types[IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS]);
         }
-      else
+    }
+  else
+    {
+      if (calculate_column_widths_ignored_sdr_cache (state_data->prog_data->args->non_abbreviated_units,
+                                                     &(state_data->column_width)) < 0)
+        goto cleanup;
+    }
+
+  /* Record IDs for SEL entries are calculated a bit differently */
+
+  if (state_data->prog_data->args->display)
+    {
+      uint16_t max_record_id = 0;
+      int i;
+
+      for (i = 0; i < state_data->prog_data->args->display_record_list_length; i++)
         {
-          if (calculate_column_widths_ignored_sdr_cache (state_data->prog_data->args->non_abbreviated_units,
-                                                         &(state_data->column_width)) < 0)
-            goto cleanup;
+          if (state_data->prog_data->args->display_record_list[i] > max_record_id)
+            max_record_id = state_data->prog_data->args->display_record_list[i];
         }
 
-      /* Record IDs for SEL entries are calculated a bit differently */
-
-      if (state_data->prog_data->args->display)
+      if (ipmi_sel_parse_record_ids (state_data->sel_ctx,
+                                     &max_record_id,
+                                     1,
+                                     _sel_record_id_callback,
+                                     state_data) < 0)
         {
-          uint16_t max_record_id = 0;
-          int i;
-
-          for (i = 0; i < state_data->prog_data->args->display_record_list_length; i++)
-            {
-              if (state_data->prog_data->args->display_record_list[i] > max_record_id)
-                max_record_id = state_data->prog_data->args->display_record_list[i];
-            }
-
-          if (ipmi_sel_parse_record_ids (state_data->sel_ctx,
-                                         &max_record_id,
-                                         1,
-                                         _sel_record_id_callback,
-                                         state_data) < 0)
-            {
-              pstdout_fprintf (state_data->pstate,
-                               stderr,
-                               "ipmi_sel_parse_record_ids: %s\n",
-                               ipmi_sel_ctx_errormsg (state_data->sel_ctx));
-              goto cleanup;
-            }
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_sel_parse_record_ids: %s\n",
+                           ipmi_sel_ctx_errormsg (state_data->sel_ctx));
+          goto cleanup;
         }
-      else if (state_data->prog_data->args->display_range)
+    }
+  else if (state_data->prog_data->args->display_range)
+    {
+      /* assume biggest record is is the last specified */
+      if (ipmi_sel_parse (state_data->sel_ctx,
+                          state_data->prog_data->args->display_range2,
+                          state_data->prog_data->args->display_range2,
+                          _sel_record_id_callback,
+                          state_data) < 0)
         {
-          /* assume biggest record is is the last specified */
-          if (ipmi_sel_parse (state_data->sel_ctx,
-                              state_data->prog_data->args->display_range2,
-                              state_data->prog_data->args->display_range2,
-                              _sel_record_id_callback,
-                              state_data) < 0)
-            {
-              pstdout_fprintf (state_data->pstate,
-                               stderr,
-                               "ipmi_sel_parse: %s\n",
-                               ipmi_sel_ctx_errormsg (state_data->sel_ctx));
-              goto cleanup;
-            }
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_sel_parse: %s\n",
+                           ipmi_sel_ctx_errormsg (state_data->sel_ctx));
+          goto cleanup;
         }
-      else
+    }
+  else
+    {
+      /* assume biggest record id is the last one */
+      if (ipmi_sel_parse (state_data->sel_ctx,
+                          IPMI_SEL_RECORD_ID_LAST,
+                          IPMI_SEL_RECORD_ID_LAST,
+                          _sel_record_id_callback,
+                          state_data) < 0)
         {
-          /* assume biggest record id is the last one */
-          if (ipmi_sel_parse (state_data->sel_ctx,
-                              IPMI_SEL_RECORD_ID_LAST,
-                              IPMI_SEL_RECORD_ID_LAST,
-                              _sel_record_id_callback,
-                              state_data) < 0)
-            {
-              pstdout_fprintf (state_data->pstate,
-                               stderr,
-                               "ipmi_sel_parse: %s\n",
-                               ipmi_sel_ctx_errormsg (state_data->sel_ctx));
-              goto cleanup;
-            }
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_sel_parse: %s\n",
+                           ipmi_sel_ctx_errormsg (state_data->sel_ctx));
+          goto cleanup;
         }
     }
 

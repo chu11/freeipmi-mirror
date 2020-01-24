@@ -934,9 +934,6 @@ Specify if column headers should be output by default or not.
 .TP
 \fBipmi\-sel\-non\-abbreviated\-units\fR \fIENABLE|DISABLE\fR
 Specify if output should have units abbreviated by default or not.
-.TP
-\fBipmi\-sel\-legacy\-output\fR \fIENABLE|DISABLE\fR
-Specify if output should be in legacy format by default or not.
 
 .SH "IPMI-SENSORS OPTIONS"
 The following options are specific to
