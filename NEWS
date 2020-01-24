@@ -2,9 +2,14 @@ FreeIPMI 1.7.1 - XX/XX/XX
 -------------------------
 Libraries
 ---------
+o libfreeipmi/sensor-read: Add error for privilege level insufficient.
+o In libfreeipmi, support Intel S2600BPB OEM SEL interpretations.
 o Significant refactoring of Intel OEM extensions.  Names of
   variables, macros, etc. may have changed.
-o libfreeipmi/sensor-read: Add error for privilege level insufficient.
+
+Tools
+-----
+o In ipmi-sel, support Intel S2600BPB OEM SEL interpretations.
 
 FreeIPMI 1.6.1 - 02/02/18
 -------------------------
