@@ -71,11 +71,7 @@ static char cmdline_args_doc[] = "";
 static struct argp_option cmdline_options[] =
   {
     ARGP_COMMON_OPTIONS_DRIVER,
-    /* maintain "ipmi-version" for backwards compatability */
-    { "ipmi-version", IPMI_VERSION_KEY, "IPMIVERSION", OPTION_HIDDEN,
-      "Specify the IPMI protocol version to use.", 11},
     ARGP_COMMON_OPTIONS_OUTOFBAND_HOSTRANGED,
-    /* removed legacy short options */
     ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE,
     ARGP_COMMON_OPTIONS_CIPHER_SUITE_ID,
     ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL,
@@ -106,14 +102,8 @@ static struct argp_option cmdline_options[] =
       "Regularly query the remote BMC and return only after the machine has powered on.", 50},
     { "oem-power-type", OEM_POWER_TYPE_KEY, "OEM-POWER-TYPE", 0,
       "Specify an OEM power type to be used.", 51},
-    /* retry-wait-timeout maintained for backwards comptability */
-    { "retry-wait-timeout", RETRY_WAIT_TIMEOUT_KEY, "MILLISECONDS", OPTION_HIDDEN,
-      "Specify the retransmission timeout length in milliseconds.", 52},
     { "retransmission-wait-timeout", RETRANSMISSION_WAIT_TIMEOUT_KEY, "MILLISECONDS", 0,
       "Specify the retransmission timeout length in milliseconds.", 52},
-    /* retry-backoff-count maintained for backwards comptability */
-    { "retry-backoff-count", RETRY_BACKOFF_COUNT_KEY, "COUNT", OPTION_HIDDEN,
-      "Specify the retransmission backoff count for retransmissions.", 53},
     { "retransmission-backoff-count", RETRANSMISSION_BACKOFF_COUNT_KEY, "COUNT", 0,
       "Specify the retransmission backoff count for retransmissions.", 53},
     { "ping-interval", PING_INTERVAL_KEY, "MILLISECONDS", 0,
@@ -173,19 +163,6 @@ cmdline_parse (int key,
 
   switch (key)
     {
-      /* IPMI_VERSION_KEY for backwards compatability */
-    case IPMI_VERSION_KEY:      /* --ipmi-version */
-      if (!strcasecmp (arg, "1.5"))
-        tmp = IPMI_DEVICE_LAN;
-      else if (!strcasecmp (arg, "2.0"))
-        tmp = IPMI_DEVICE_LAN_2_0;
-      else
-        {
-          fprintf (stderr, "invalid driver type specified");
-          exit (EXIT_FAILURE);
-        }
-      cmd_args->common_args.driver_type = tmp;
-      break;
 #ifndef NDEBUG
     case RMCPDUMP_KEY:       /* --rmcpdump */
       cmd_args->rmcpdump++;
@@ -224,8 +201,6 @@ cmdline_parse (int key,
     case OEM_POWER_TYPE_KEY:
       _parse_oem_power_type (cmd_args, arg);
       break;
-      /* RETRY_WAIT_TIMEOUT for backwards compatability */
-    case RETRY_WAIT_TIMEOUT_KEY:
     case RETRANSMISSION_WAIT_TIMEOUT_KEY:       /* --retransmission-wait-timeout */
       errno = 0;
       tmp = strtol (arg, &endptr, 10);
@@ -238,8 +213,6 @@ cmdline_parse (int key,
         }
       cmd_args->retransmission_wait_timeout = tmp;
       break;
-      /* RETRY_BACKOFF_COUNT for backwards compatability */
-    case RETRY_BACKOFF_COUNT_KEY:
     case RETRANSMISSION_BACKOFF_COUNT_KEY:       /* --retransmission-backoff-count */
       errno = 0;
       tmp = strtol (arg, &endptr, 10);

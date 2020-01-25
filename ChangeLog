@@ -4,6 +4,11 @@
 
 	* ipmi-sensors, ipmi-sel: Remove legacy output support.
 
+	* ipmipower: Remove legacy options --ipmi-version (--driver-type
+	since 0.7.1), --retry-wait-timeout (--retransmission-wait-timeout
+	since 0.5.1), --retry-backoff-count
+	(--retransmission-backoff-count since 0.5.1).
+
 2020-01-28 Albert Chu <chu11@llnl.gov>
 
 	* man/ipmi-oem.8.pre.in: Fix formatting typo that led to line not

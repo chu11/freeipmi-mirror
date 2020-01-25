@@ -487,7 +487,6 @@ typedef struct ipmipower_connection *ipmipower_connection_t;
 
 enum ipmipower_argp_option_keys
   {
-    IPMI_VERSION_KEY = 160,       /* legacy option */
     RMCPDUMP_KEY = 161,
 
     ON_KEY = 'n',
@@ -502,9 +501,7 @@ enum ipmipower_argp_option_keys
     WAIT_UNTIL_ON_KEY = 166,
     OEM_POWER_TYPE_KEY = 167,
 
-    RETRY_WAIT_TIMEOUT_KEY = 168,
     RETRANSMISSION_WAIT_TIMEOUT_KEY = 169,
-    RETRY_BACKOFF_COUNT_KEY = 170,
     RETRANSMISSION_BACKOFF_COUNT_KEY = 171,
     PING_INTERVAL_KEY = 172,
     PING_TIMEOUT_KEY = 173,

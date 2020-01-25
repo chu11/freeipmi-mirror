@@ -15,7 +15,10 @@ Tools
 -----
 o Remove legacy output support in ipmi-sensors and ipmi-sel.
   - ipmimonitoring legacy output support is also removed as a result.
-
+o Remove legacy command line options in ipmipower
+  - --ipmi-version (--driver-type since 0.7.1)
+  - --retry-wait-timeout (--retransmission-wait-timeout since 0.5.1)
+  - --retry-backoff-count (--retransmission-backoff-count since 0.5.1)
 
 FreeIPMI 1.6.1 - 02/02/18
 -------------------------
