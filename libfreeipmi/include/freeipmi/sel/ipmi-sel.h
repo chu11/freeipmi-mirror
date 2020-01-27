@@ -73,7 +73,7 @@ extern "C" {
  * for certain purposes.
  */
 #define IPMI_SEL_STRING_FLAGS_LOCALTIME_TO_UTC              0x0400
-#define IPMI_SEL_STRING_FLAGS_LEGACY                        0x1000
+#define IPMI_SEL_STRING_FLAGS_RESERVED                      0x1000
 
 #define IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD               0x0
 #define IPMI_SEL_RECORD_TYPE_CLASS_TIMESTAMPED_OEM_RECORD            0x1

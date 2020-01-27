@@ -15,6 +15,9 @@
 	since 0.5.1), --retry-backoff-count
 	(--retransmission-backoff-count since 0.5.1).
 
+	* libfreeipmi/sel: Remove support of IPMI_SEL_STRING_FLAGS_LEGACY.
+	The macro IPMI_SEL_STRING_FLAGS_LEGACY is no longer legal.
+
 2020-01-28 Albert Chu <chu11@llnl.gov>
 
 	* man/ipmi-oem.8.pre.in: Fix formatting typo that led to line not

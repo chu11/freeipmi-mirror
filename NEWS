@@ -11,10 +11,12 @@ Tools
 -----
 o In ipmi-sel, support Intel S2600BPB OEM SEL interpretations.
 
-Tools
------
+Remove Large Amount of Legacy Support
+-------------------------------------
 o Remove legacy output support in ipmi-sensors and ipmi-sel.
   - ipmimonitoring legacy output support is also removed as a result.
+o libfreeipmi/sel: Remove legacy output support.  Flag
+  IPMI_SEL_STRING_FLAGS_LEGACY is now illegal.
 o Remove legacy command line options in ipmipower
   - --ipmi-version (--driver-type since 0.7.1)
   - --retry-wait-timeout (--retransmission-wait-timeout since 0.5.1)

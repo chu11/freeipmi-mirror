@@ -854,24 +854,19 @@ _output_date (ipmi_sel_ctx_t ctx,
   if (sel_get_timestamp (ctx, sel_entry, &timestamp) < 0)
     return (-1);
 
-  if (flags & IPMI_SEL_STRING_FLAGS_LEGACY)
-    date_format = "%d-%b-%Y";
+  if (flags & IPMI_SEL_STRING_FLAGS_DATE_MONTH_STRING)
+    {
+      if (flags & IPMI_SEL_STRING_FLAGS_DATE_USE_SLASH)
+        date_format = "%b/%d/%Y";
+      else
+        date_format = "%b-%d-%Y";
+    }
   else
     {
-      if (flags & IPMI_SEL_STRING_FLAGS_DATE_MONTH_STRING)
-        {
-          if (flags & IPMI_SEL_STRING_FLAGS_DATE_USE_SLASH)
-            date_format = "%b/%d/%Y";
-          else
-            date_format = "%b-%d-%Y";
-        }
+      if (flags & IPMI_SEL_STRING_FLAGS_DATE_USE_SLASH)
+        date_format = "%m/%d/%Y";
       else
-        {
-          if (flags & IPMI_SEL_STRING_FLAGS_DATE_USE_SLASH)
-            date_format = "%m/%d/%Y";
-          else
-            date_format = "%m-%d-%Y";
-        }
+        date_format = "%m-%d-%Y";
     }
 
   memset (tmpbuf, '\0', SEL_BUFFER_LENGTH + 1);
@@ -1031,24 +1026,12 @@ _output_sensor_name (ipmi_sel_ctx_t ctx,
     }
   else
     {
-      if (flags & IPMI_SEL_STRING_FLAGS_LEGACY)
-        {
-          if (sel_string_snprintf (buf,
-                                   buflen,
-                                   wlen,
-                                   "#%d",
-                                   system_event_record_data.sensor_number))
-            return (1);
-        }
-      else
-        {
-          if (sel_string_snprintf (buf,
-                                   buflen,
-                                   wlen,
-                                   "Sensor #%d",
-                                   system_event_record_data.sensor_number))
-            return (1);
-        }
+      if (sel_string_snprintf (buf,
+                               buflen,
+                               wlen,
+                               "Sensor #%d",
+                               system_event_record_data.sensor_number))
+        return (1);
     }
 
   return (0);
@@ -1182,25 +1165,17 @@ _output_event_data1 (ipmi_sel_ctx_t ctx,
             }
         }
 
-      if (flags & IPMI_SEL_STRING_FLAGS_LEGACY)
+      if (flags & IPMI_SEL_STRING_FLAGS_VERBOSE)
         snprintf (tmpbuf,
                   EVENT_BUFFER_LENGTH,
-                  "Event Type Code = %02Xh",
+                  "OEM Event Offset = %02Xh (Event Type Code = %02Xh)",
+                  system_event_record_data.offset_from_event_reading_type_code,
                   system_event_record_data.event_type_code);
       else
-        {
-          if (flags & IPMI_SEL_STRING_FLAGS_VERBOSE)
-            snprintf (tmpbuf,
-                      EVENT_BUFFER_LENGTH,
-                      "OEM Event Offset = %02Xh (Event Type Code = %02Xh)",
-                      system_event_record_data.offset_from_event_reading_type_code,
-                      system_event_record_data.event_type_code);
-          else
-            snprintf (tmpbuf,
-                      EVENT_BUFFER_LENGTH,
-                      "OEM Event Offset = %02Xh",
-                      system_event_record_data.offset_from_event_reading_type_code);
-        }
+        snprintf (tmpbuf,
+                  EVENT_BUFFER_LENGTH,
+                  "OEM Event Offset = %02Xh",
+                  system_event_record_data.offset_from_event_reading_type_code);
       output_flag++;
       break;
     default:
@@ -1309,20 +1284,11 @@ _output_event_data2 (ipmi_sel_ctx_t ctx,
               return (-1);
 
             if (ret)
-              {
-                if (flags & IPMI_SEL_STRING_FLAGS_LEGACY)
-                  snprintf (tmpbuf,
-                            EVENT_BUFFER_LENGTH,
-                            "Reading = %.2f %s",
-                            _round_double2 (reading),
-                            sensor_units_buf);
-                else
-                  snprintf (tmpbuf,
-                            EVENT_BUFFER_LENGTH,
-                            "Sensor Reading = %.2f %s",
-                            _round_double2 (reading),
-                            sensor_units_buf);
-              }
+              snprintf (tmpbuf,
+                        EVENT_BUFFER_LENGTH,
+                        "Sensor Reading = %.2f %s",
+                        _round_double2 (reading),
+                        sensor_units_buf);
             else
               snprintf (tmpbuf,
                         EVENT_BUFFER_LENGTH,
@@ -1377,16 +1343,10 @@ _output_event_data2 (ipmi_sel_ctx_t ctx,
               break;
             }
 
-          if (flags & IPMI_SEL_STRING_FLAGS_LEGACY)
-            snprintf (tmpbuf,
-                      EVENT_BUFFER_LENGTH,
-                      "OEM code = %02Xh",
-                      system_event_record_data.event_data2);
-          else
-            snprintf (tmpbuf,
-                      EVENT_BUFFER_LENGTH,
-                      "OEM Event Data2 code = %02Xh",
-                      system_event_record_data.event_data2);
+          snprintf (tmpbuf,
+                    EVENT_BUFFER_LENGTH,
+                    "OEM Event Data2 code = %02Xh",
+                    system_event_record_data.event_data2);
           output_flag++;
           break;
         default:
@@ -1518,16 +1478,10 @@ _output_event_data2 (ipmi_sel_ctx_t ctx,
               break;
             }
 
-          if (flags & IPMI_SEL_STRING_FLAGS_LEGACY)
-            snprintf (tmpbuf,
-                      EVENT_BUFFER_LENGTH,
-                      "OEM code = %02Xh",
-                      system_event_record_data.event_data2);
-          else
-            snprintf (tmpbuf,
-                      EVENT_BUFFER_LENGTH,
-                      "OEM Event Data2 code = %02Xh",
-                      system_event_record_data.event_data2);
+          snprintf (tmpbuf,
+                    EVENT_BUFFER_LENGTH,
+                    "OEM Event Data2 code = %02Xh",
+                    system_event_record_data.event_data2);
           output_flag++;
           break;
         default:
@@ -1576,16 +1530,10 @@ _output_event_data2 (ipmi_sel_ctx_t ctx,
           break;
         }
 
-      if (flags & IPMI_SEL_STRING_FLAGS_LEGACY)
-        snprintf (tmpbuf,
-                  EVENT_BUFFER_LENGTH,
-                  "Event data2 = %02Xh",
-                  system_event_record_data.event_data2);
-      else
-        snprintf (tmpbuf,
-                  EVENT_BUFFER_LENGTH,
-                  "OEM Event Data2 code = %02Xh",
-                  system_event_record_data.event_data2);
+      snprintf (tmpbuf,
+                EVENT_BUFFER_LENGTH,
+                "OEM Event Data2 code = %02Xh",
+                system_event_record_data.event_data2);
       output_flag++;
       break;
     default:
@@ -1600,9 +1548,6 @@ _output_event_data2 (ipmi_sel_ctx_t ctx,
     }
   else
     {
-      if (flags & IPMI_SEL_STRING_FLAGS_LEGACY)
-        return (0);
-
       if (no_output_flag)
         {
           if (flags & IPMI_SEL_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
@@ -1754,16 +1699,10 @@ _output_event_data3 (ipmi_sel_ctx_t ctx,
               break;
             }
 
-          if (flags & IPMI_SEL_STRING_FLAGS_LEGACY)
-            snprintf (tmpbuf,
-                      EVENT_BUFFER_LENGTH,
-                      "OEM code = %02Xh",
-                      system_event_record_data.event_data3);
-          else
-            snprintf (tmpbuf,
-                      EVENT_BUFFER_LENGTH,
-                      "OEM Event Data3 code = %02Xh",
-                      system_event_record_data.event_data3);
+          snprintf (tmpbuf,
+                    EVENT_BUFFER_LENGTH,
+                    "OEM Event Data3 code = %02Xh",
+                    system_event_record_data.event_data3);
           output_flag++;
           break;
         default:
@@ -1830,16 +1769,10 @@ _output_event_data3 (ipmi_sel_ctx_t ctx,
               break;
             }
 
-          if (flags & IPMI_SEL_STRING_FLAGS_LEGACY)
-            snprintf (tmpbuf,
-                      EVENT_BUFFER_LENGTH,
-                      "OEM code = %02Xh",
-                      system_event_record_data.event_data3);
-          else
-            snprintf (tmpbuf,
-                      EVENT_BUFFER_LENGTH,
-                      "OEM Event Data3 code = %02Xh",
-                      system_event_record_data.event_data3);
+          snprintf (tmpbuf,
+                    EVENT_BUFFER_LENGTH,
+                    "OEM Event Data3 code = %02Xh",
+                    system_event_record_data.event_data3);
           output_flag++;
           break;
         default:
@@ -1888,16 +1821,10 @@ _output_event_data3 (ipmi_sel_ctx_t ctx,
           break;
         }
 
-      if (flags & IPMI_SEL_STRING_FLAGS_LEGACY)
-        snprintf (tmpbuf,
-                  EVENT_BUFFER_LENGTH,
-                  "Event data3 = %02Xh",
-                  system_event_record_data.event_data3);
-      else
-        snprintf (tmpbuf,
-                  EVENT_BUFFER_LENGTH,
-                  "OEM Event Data3 code = %02Xh",
-                  system_event_record_data.event_data3);
+      snprintf (tmpbuf,
+                EVENT_BUFFER_LENGTH,
+                "OEM Event Data3 code = %02Xh",
+                system_event_record_data.event_data3);
       output_flag++;
       break;
     default:
@@ -1912,9 +1839,6 @@ _output_event_data3 (ipmi_sel_ctx_t ctx,
     }
   else
     {
-      if (flags & IPMI_SEL_STRING_FLAGS_LEGACY)
-        return (0);
-
       if (no_output_flag)
         {
           if (flags & IPMI_SEL_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
@@ -2256,9 +2180,6 @@ _output_event_data2_previous_state_or_severity (ipmi_sel_ctx_t ctx,
     }
   else
     {
-      if (flags & IPMI_SEL_STRING_FLAGS_LEGACY)
-        return (0);
-
       if (no_output_flag)
         {
           if (flags & IPMI_SEL_STRING_FLAGS_OUTPUT_NOT_AVAILABLE)
@@ -2509,6 +2430,8 @@ _output_manufacturer_id (ipmi_sel_ctx_t ctx,
                          unsigned int *wlen)
 {
   uint32_t manufacturer_id;
+  char iana_buf[IANA_LENGTH + 1];
+  int ret;
 
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -2524,44 +2447,32 @@ _output_manufacturer_id (ipmi_sel_ctx_t ctx,
   if (sel_get_manufacturer_id (ctx, sel_entry, &manufacturer_id) < 0)
     return (-1);
 
-  if (flags & IPMI_SEL_STRING_FLAGS_LEGACY)
+  memset (iana_buf, '\0', IANA_LENGTH + 1);
+
+  /* if ret == 0 means no string, < 0 means bad manufacturer id
+   * either way, output just the number
+   */
+  ret = ipmi_iana_enterprise_numbers_string (manufacturer_id,
+                                             iana_buf,
+                                             IANA_LENGTH);
+  if (ret > 0)
     {
-      if (sel_string_snprintf (buf, buflen, wlen, "Manufacturer ID = %02Xh", manufacturer_id))
+      if (sel_string_snprintf (buf,
+                               buflen,
+                               wlen,
+                               "Manufacturer ID = %s (%02Xh)",
+                               iana_buf,
+                               manufacturer_id))
         return (1);
     }
   else
     {
-      char iana_buf[IANA_LENGTH + 1];
-      int ret;
-
-      memset (iana_buf, '\0', IANA_LENGTH + 1);
-
-      /* if ret == 0 means no string, < 0 means bad manufacturer id
-       * either way, output just the number
-       */
-      ret = ipmi_iana_enterprise_numbers_string (manufacturer_id,
-                                                 iana_buf,
-                                                 IANA_LENGTH);
-      if (ret > 0)
-        {
-          if (sel_string_snprintf (buf,
-                                   buflen,
-                                   wlen,
-                                   "Manufacturer ID = %s (%02Xh)",
-                                   iana_buf,
-                                   manufacturer_id))
-            return (1);
-
-        }
-      else
-        {
-          if (sel_string_snprintf (buf,
-                                   buflen,
-                                   wlen,
-                                   "Manufacturer ID = %02Xh",
-                                   manufacturer_id))
-            return (1);
-        }
+      if (sel_string_snprintf (buf,
+                               buflen,
+                               wlen,
+                               "Manufacturer ID = %02Xh",
+                               manufacturer_id))
+        return (1);
     }
 
   return (0);
