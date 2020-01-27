@@ -13,6 +13,15 @@ o In ipmi-sel, support Intel S2600BPB OEM SEL interpretations.
 
 Remove Large Amount of Legacy Support
 -------------------------------------
+o Remove many legacy long options in tools
+  - --no-probing (use --disable-auto-probe)
+  - --reg-space (use --register-spacing)
+  - --timeout (use --session-timeout)
+  - --retry-timeout (use --retransmission-timeout)
+  - --auth-type (use --authentication-type)
+  - --privilege (use --privilege-level)
+  - --priv-level (use --privilege-level)
+  - --config (use --config-file)
 o Remove legacy output support in ipmi-sensors and ipmi-sel.
   - ipmimonitoring legacy output support is also removed as a result.
 o libfreeipmi/sel: Remove legacy output support.  Flag

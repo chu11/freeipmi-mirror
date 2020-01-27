@@ -36,53 +36,45 @@
 enum argp_common_option_keys
   {
     ARGP_DRIVER_TYPE_KEY = 'D',
-    ARGP_NO_PROBING_KEY = 131,      /* for backwards compatability */
     ARGP_DISABLE_AUTO_PROBE_KEY = 130,
-    ARGP_DRIVER_ADDRESS_KEY = 132,
-    ARGP_DRIVER_DEVICE_KEY = 133,
-    ARGP_TIMEOUT_KEY = 134,      /* for backwards compatability */
-    ARGP_SESSION_TIMEOUT_KEY = 135,
-    ARGP_RETRY_TIMEOUT_KEY = 136,     /* for backwards compatability */
-    ARGP_RETRANSMISSION_TIMEOUT_KEY = 137,
-    ARGP_REG_SPACE_KEY = 138,     /* for backwards compatability */
-    ARGP_REGISTER_SPACING_KEY = 139,
-    ARGP_TARGET_CHANNEL_NUMBER_KEY = 140,
-    ARGP_TARGET_SLAVE_ADDRESS_KEY = 141,
+    ARGP_DRIVER_ADDRESS_KEY = 131,
+    ARGP_DRIVER_DEVICE_KEY = 132,
+    ARGP_SESSION_TIMEOUT_KEY = 133,
+    ARGP_RETRANSMISSION_TIMEOUT_KEY = 134,
+    ARGP_REGISTER_SPACING_KEY = 135,
+    ARGP_TARGET_CHANNEL_NUMBER_KEY = 136,
+    ARGP_TARGET_SLAVE_ADDRESS_KEY = 137,
     ARGP_HOSTNAME_KEY = 'h',
     ARGP_USERNAME_KEY = 'u',
     ARGP_PASSWORD_KEY = 'p',
     ARGP_PASSWORD_PROMPT_KEY = 'P',
     ARGP_K_G_KEY = 'k',
     ARGP_K_G_PROMPT_KEY = 'K',
-    ARGP_AUTH_TYPE_KEY = 142,     /* for backwards compatability */
     ARGP_AUTHENTICATION_TYPE_KEY = 'a',
     ARGP_CIPHER_SUITE_ID_KEY = 'I',
-    ARGP_PRIVILEGE_KEY = 143,     /* for backwards compatability */
-    ARGP_PRIV_LEVEL_KEY = 144,     /* for backwards compatability */
     ARGP_PRIVILEGE_LEVEL_KEY = 'l',
-    ARGP_CONFIG_KEY = 145,          /* for backwards compatability */
-    ARGP_CONFIG_FILE_KEY = 146,
+    ARGP_CONFIG_FILE_KEY = 138,
     ARGP_WORKAROUND_FLAGS_KEY = 'W',
-    ARGP_DEBUG_KEY = 147,
+    ARGP_DEBUG_KEY = 139,
     /* sdr options */
-    ARGP_FLUSH_CACHE_KEY = 148,
+    ARGP_FLUSH_CACHE_KEY = 140,
     ARGP_FLUSH_CACHE_LEGACY_KEY = 'f',
-    ARGP_QUIET_CACHE_KEY = 149,
+    ARGP_QUIET_CACHE_KEY = 141,
     ARGP_QUIET_CACHE_LEGACY_KEY = 'Q',
-    ARGP_SDR_CACHE_RECREATE_KEY = 150,
-    ARGP_SDR_CACHE_FILE_KEY = 151,
-    ARGP_SDR_CACHE_DIRECTORY_KEY = 152,
-    ARGP_IGNORE_SDR_CACHE_KEY = 153,
+    ARGP_SDR_CACHE_RECREATE_KEY = 142,
+    ARGP_SDR_CACHE_FILE_KEY = 143,
+    ARGP_SDR_CACHE_DIRECTORY_KEY = 144,
+    ARGP_IGNORE_SDR_CACHE_KEY = 145,
     /* time options */
-    ARGP_UTC_TO_LOCALTIME_KEY = 154,
-    ARGP_LOCALTIME_TO_UTC_KEY = 155,
-    ARGP_UTC_OFFSET_KEY = 156,
+    ARGP_UTC_TO_LOCALTIME_KEY = 146,
+    ARGP_LOCALTIME_TO_UTC_KEY = 147,
+    ARGP_UTC_OFFSET_KEY = 148,
     /* hostrange options */
     ARGP_BUFFER_OUTPUT_KEY = 'B',
     ARGP_CONSOLIDATE_OUTPUT_KEY = 'C',
     ARGP_FANOUT_KEY = 'F',
     ARGP_ELIMINATE_KEY = 'E',
-    ARGP_ALWAYS_PREFIX_KEY = 157,
+    ARGP_ALWAYS_PREFIX_KEY = 149,
   };
 
 /*
@@ -97,19 +89,13 @@ enum argp_common_option_keys
   { "driver-type",    ARGP_DRIVER_TYPE_KEY, "IPMIDRIVER", 0,                                                    \
       "Specify the driver type to use instead of doing an auto selection.", 0}
 
-/* no-probing is maintained for backwards compatability */
-/* reg-space is maintained for backwards compatability */
 #define ARGP_COMMON_OPTIONS_INBAND                                                                              \
-  { "no-probing",     ARGP_NO_PROBING_KEY, 0, OPTION_HIDDEN,                                                    \
-      "Do not probe in-band IPMI devices for default settings.", 1},                                            \
   { "disable-auto-probe", ARGP_DISABLE_AUTO_PROBE_KEY, 0, 0,                                                    \
       "Do not probe in-band IPMI devices for default settings.", 1},                                            \
   { "driver-address", ARGP_DRIVER_ADDRESS_KEY, "DRIVER-ADDRESS", 0,                                             \
       "Specify the in-band driver address to be used instead of the probed value.", 2},                         \
   { "driver-device",  ARGP_DRIVER_DEVICE_KEY, "DEVICE", 0,                                                      \
       "Specify the in-band driver device path to be used instead of the probed path.", 3},                      \
-  { "reg-space", ARGP_REG_SPACE_KEY, "REGISTER-SPACING", OPTION_HIDDEN,                                         \
-      "Specify the in-band driver register spacing instead of the probed value.", 4},                           \
   { "register-spacing", ARGP_REGISTER_SPACING_KEY, "REGISTER-SPACING", 0,                                       \
       "Specify the in-band driver register spacing instead of the probed value.", 4},                           \
   { "target-channel-number", ARGP_TARGET_CHANNEL_NUMBER_KEY, "CHANNEL-NUMBER", 0,                               \
@@ -127,8 +113,6 @@ enum argp_common_option_keys
       "Specify the remote host(s) to communicate with.", 7},                                                    \
     ARGP_COMMON_OPTIONS_OUTOFBAND_COMMON
 
-/* retry-timeout is maintained for backwards compatability */
-/* timeout is maintained for backwards compatability */
 #define ARGP_COMMON_OPTIONS_OUTOFBAND_COMMON                                                                    \
   { "username",       ARGP_USERNAME_KEY, "USERNAME", 0,                                                         \
       "Specify the username to use when authenticating with the remote host.", 8},                              \
@@ -140,19 +124,12 @@ enum argp_common_option_keys
       "Specify the K_g BMC key to use when authenticating with the remote host for IPMI 2.0.", 11},             \
   { "k-g-prompt", ARGP_K_G_PROMPT_KEY, 0, 0,                                                                    \
       "Prompt for k-g to avoid possibility of listing it in process lists.", 12},                               \
-  { "timeout", ARGP_TIMEOUT_KEY, "MILLISECONDS", OPTION_HIDDEN,                                                 \
-      "Specify the session timeout in milliseconds.", 13},                                                      \
   { "session-timeout", ARGP_SESSION_TIMEOUT_KEY, "MILLISECONDS", 0,                                             \
       "Specify the session timeout in milliseconds.", 13},                                                      \
-  { "retry-timeout", ARGP_RETRY_TIMEOUT_KEY, "MILLISECONDS", OPTION_HIDDEN,                                     \
-      "Specify the packet retransmission timeout in milliseconds.", 14},                                        \
   { "retransmission-timeout", ARGP_RETRANSMISSION_TIMEOUT_KEY, "MILLISECONDS", 0,                               \
       "Specify the packet retransmission timeout in milliseconds.", 14}
 
-/* auth-type is maintained for backwards compatability */
 #define ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE                                                                 \
-  { "auth-type", ARGP_AUTH_TYPE_KEY, "AUTHENTICATION-TYPE", OPTION_HIDDEN,                                      \
-      "Specify the IPMI 1.5 authentication type to use.", 15},                                                  \
   { "authentication-type", ARGP_AUTHENTICATION_TYPE_KEY, "AUTHENTICATION-TYPE", 0,                              \
       "Specify the IPMI 1.5 authentication type to use.", 15}
 
@@ -160,13 +137,7 @@ enum argp_common_option_keys
   { "cipher-suite-id",     ARGP_CIPHER_SUITE_ID_KEY, "CIPHER-SUITE-ID", 0,                                      \
       "Specify the IPMI 2.0 cipher suite ID to use.", 16}
 
-/* privilege is maintained for backwards compatability */
-/* priv-level is maintained for backwards compatability */
 #define ARGP_COMMON_OPTIONS_PRIVILEGE_LEVEL                                                                     \
-  { "privilege",  ARGP_PRIVILEGE_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                                         \
-      "Specify the privilege level to be used. ", 17},                                                          \
-  { "priv-level",  ARGP_PRIV_LEVEL_KEY, "PRIVILEGE-LEVEL", OPTION_HIDDEN,                                       \
-      "Specify the privilege level to be used.", 17},                                                           \
   { "privilege-level",  ARGP_PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0,                                         \
       "Specify the privilege level to be used.", 17}
 
