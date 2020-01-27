@@ -185,8 +185,7 @@ MANS_COMMON = \
 	manpage-common-no-sensor-type-output.man \
 	manpage-common-comma-separated-output.man \
 	manpage-common-no-header-output.man \
-	manpage-common-non-abbreviated-units.man \
-	manpage-common-legacy-output.man
+	manpage-common-non-abbreviated-units.man
 
 $(MANS_CPP): $(MANS_CPP:%=%.pre)
 	$(CPP_FOR_BUILD) -nostdinc -w -C -P -I$(top_srcdir)/man $@.pre $@

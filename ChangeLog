@@ -4,6 +4,12 @@
 
 	* ipmi-sensors, ipmi-sel: Remove legacy output support.
 
+	* man/ipmi-sensors.8.pre.in, man/ipmi-sel.8.pre.in,
+	man/freeipmi.conf.5.pre.in: Remove legacy options.
+
+	* man/manpage-common-legacy-output.man: Remove now unnecessary
+	file.
+
 	* ipmipower: Remove legacy options --ipmi-version (--driver-type
 	since 0.7.1), --retry-wait-timeout (--retransmission-wait-timeout
 	since 0.5.1), --retry-backoff-count
