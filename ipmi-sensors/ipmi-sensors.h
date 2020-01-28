@@ -31,13 +31,8 @@ enum ipmi_sensors_argp_option_keys
     VERBOSE_KEY = 'v',
     SDR_INFO_KEY = 'i',
     QUIET_READINGS_KEY = 'q',
-    SENSORS_KEY = 's',          /* legacy */
     RECORD_IDS_KEY = 'r',
     EXCLUDE_RECORD_IDS_KEY = 'R',
-    GROUP_KEY = 160,              /* legacy */
-    GROUPS_KEY = 'g',             /* legacy */
-    EXCLUDE_GROUPS_KEY = 161,   /* legacy */
-    LIST_GROUPS_KEY = 162,      /* legacy */
     SENSOR_TYPE_KEY = 163,
     SENSOR_TYPES_KEY = 't',
     EXCLUDE_SENSOR_TYPES_KEY = 'T',

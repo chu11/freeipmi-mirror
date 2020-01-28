@@ -30,6 +30,14 @@ o Remove legacy command line options in ipmipower
   - --ipmi-version (--driver-type since 0.7.1)
   - --retry-wait-timeout (--retransmission-wait-timeout since 0.5.1)
   - --retry-backoff-count (--retransmission-backoff-count since 0.5.1)
+o Remove legacy command line options in ipmi-sensors
+  - --sensors (use --record-ids)
+  - --group (use --sensor-types)
+  - --groups (use --sensor-types)
+  - --sensor-type (use --sensor-types)
+  - --exclude-groups (use --exclude-sensor-types)
+  - --list-groups (use --list-sensor-types)
+  - --sensor-config-file (from ipmimonitoring, use --sensor-state-config-file)
 
 FreeIPMI 1.6.1 - 02/02/18
 -------------------------

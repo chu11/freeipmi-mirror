@@ -80,28 +80,10 @@ static struct argp_option cmdline_options[] =
       "Show sendor data repository (SDR) information.", 41},
     { "quiet-readings", QUIET_READINGS_KEY,  0, 0,
       "Do not output sensor readings or thresholds on simple output.", 42},
-    /* for backwards compatability */
-    { "sensors",        SENSORS_KEY, "SENSORS-LIST", OPTION_HIDDEN,
-      "Show sensors by record id.  Accepts space or comma separated lists", 43},
     { "record-ids",     RECORD_IDS_KEY, "RECORD-IDS-LIST", 0,
       "Show specific sensors by record id.  Accepts space or comma separated lists", 44},
     { "exclude-record-ids", EXCLUDE_RECORD_IDS_KEY, "RECORD-IDS-LIST", 0,
       "Do not show specific sensors by record id.  Accepts space or comma separated lists", 45},
-    /* maintain "group" options for backwards compatability */
-    { "group",          GROUP_KEY,        "GROUP-NAME", OPTION_HIDDEN,
-      "Show sensors belonging to a specific group.", 46},
-    /* maintain "group" options for backwards compatability */
-    { "groups",         GROUPS_KEY,       "GROUPS-LIST", OPTION_HIDDEN,
-      "Show sensors belonging to a specific group.", 47},
-    /* maintain "group" options for backwards compatability */
-    { "exclude-groups", EXCLUDE_GROUPS_KEY, "GROUPS-LIST", OPTION_HIDDEN,
-      "Do not show sensors belonging to a specific group.", 48},
-    /* maintain "group" options for backwards compatability */
-    { "list-groups",    LIST_GROUPS_KEY, 0, OPTION_HIDDEN,
-      "List sensor groups.", 49},
-    /* for backwards compatability */
-    { "sensor-type",    SENSOR_TYPE_KEY,        "SENSOR-TYPE-NAME", OPTION_HIDDEN,
-      "Show sensors of a specific type.", 50},
     { "sensor-types",   SENSOR_TYPES_KEY,       "SENSOR-TYPES-LIST", 0,
       "Show sensors of a specific type.", 51},
     { "exclude-sensor-types", EXCLUDE_SENSOR_TYPES_KEY, "SENSOR-TYPES-LIST", 0,
@@ -124,9 +106,6 @@ static struct argp_option cmdline_options[] =
       "Output sensor state in output.", 60},
     { "sensor-state-config-file", SENSOR_STATE_CONFIG_FILE_KEY, "FILE", 0,
       "Specify an alternate sensor state configuration file.", 61},
-    /* ipmimonitoring legacy support */
-    { "sensor-config-file", SENSOR_STATE_CONFIG_FILE_KEY, "FILE", OPTION_HIDDEN,
-      "Specify an alternate sensor state configuration  file.", 62},
     { "entity-sensor-names", ENTITY_SENSOR_NAMES_KEY, NULL, 0,
       "Output sensor names with entity ids and instances.", 63},
     { "output-sensor-thresholds", OUTPUT_SENSOR_THRESHOLDS_KEY, NULL, 0,
@@ -174,11 +153,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case SDR_INFO_KEY:
       cmd_args->sdr_info = 1;
       break;
-      /* maintain -s and "--sensors" for backwards compatability */
     case QUIET_READINGS_KEY:
       cmd_args->quiet_readings = 1;
       break;
-    case SENSORS_KEY:
     case RECORD_IDS_KEY:
       tok = strtok (arg, " ,");
       while (tok && cmd_args->record_ids_length < MAX_SENSOR_RECORD_IDS)
@@ -235,14 +212,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           tok = strtok (NULL, " ,");
         }
       break;
-    case GROUP_KEY:             /* legacy */
-    case SENSOR_TYPE_KEY:
-      strncpy (cmd_args->sensor_types[cmd_args->sensor_types_length],
-               arg,
-               MAX_SENSOR_TYPES_STRING_LENGTH);
-      cmd_args->sensor_types_length++;
-      break;
-    case GROUPS_KEY:            /* legacy */
     case SENSOR_TYPES_KEY:
       if (parse_sensor_types (SENSOR_PARSE_ALL_STRING,
                               cmd_args->sensor_types,
@@ -250,7 +219,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
                               arg) < 0)
         exit (EXIT_FAILURE);
       break;
-    case EXCLUDE_GROUPS_KEY:    /* legacy */
     case EXCLUDE_SENSOR_TYPES_KEY:
       if (parse_sensor_types (SENSOR_PARSE_NONE_STRING,
                               cmd_args->exclude_sensor_types,
@@ -258,7 +226,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
                               arg) < 0)
         exit (EXIT_FAILURE);
       break;
-    case LIST_GROUPS_KEY:       /* legacy */
     case LIST_SENSOR_TYPES_KEY:
       cmd_args->list_sensor_types = 1;
       break;

@@ -20,7 +20,13 @@
 
 	* common/toolcommon/tool-cmdline-common.h,
 	common/toolcommon/tool-cmdline-common.c: Remove many legacy
-	command line options.
+	command line options (--no-probing, --reg-space, --timeout,
+	--retry-timeout, --auth-type, --privilege, --priv-level,
+	--config).
+
+	* ipmi-sensors: Remove legacy options (--sensors, --group,
+	--groups, --sensor-type, --exclude-groups, --list-groups,
+	--sensor-config-file).
 
 2020-01-28 Albert Chu <chu11@llnl.gov>
 
