@@ -57,6 +57,8 @@ o Remove legacy support in ipmi-chassis that has been replaced with
   - --force-progress-event-traps
   - --firmware-bios-verbosity
   - --get-boot-flags
+o Remove legacy command line option --delete-all in ipmi-sel (use
+  --clear)
 
 FreeIPMI 1.6.1 - 02/02/18
 -------------------------

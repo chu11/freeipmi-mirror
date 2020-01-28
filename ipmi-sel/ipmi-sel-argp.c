@@ -112,9 +112,6 @@ static struct argp_option cmdline_options[] =
       "Clear SEL.", 50},
     { "post-clear", POST_CLEAR_KEY, 0, 0,
       "Clear SEL after displaying SEL records.", 51},
-    /* legacy */
-    { "delete-all", DELETE_ALL_KEY, 0, OPTION_HIDDEN,
-      "Delete all SEL records.", 52},
     { "delete",     DELETE_KEY,     "RECORD-IDS-LIST", 0,
       "Delete SEL records by record ids.", 53},
     { "delete-range", DELETE_RANGE_KEY, "START-END", 0,
@@ -564,7 +561,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       cmd_args->tail_count = value;
       break;
     case CLEAR_KEY:
-    case DELETE_ALL_KEY:        /* legacy */
       cmd_args->clear = 1;
       break;
     case POST_CLEAR_KEY:

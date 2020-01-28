@@ -35,6 +35,8 @@
 	--user-password-bypass, --force-progress-event-traps, --firmware-bios-verbosity,
 	--get-boot-flags).
 
+	* ipmi-sel: Remove legacy option --delete-all.
+
 2020-01-28 Albert Chu <chu11@llnl.gov>
 
 	* man/ipmi-oem.8.pre.in: Fix formatting typo that led to line not
