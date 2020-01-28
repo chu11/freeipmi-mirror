@@ -257,54 +257,6 @@ struct ipmi_oem_command oem_dell[] =
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_get_chassis_identify_status,
     },
-    /* legacy */
-    {
-      "get-board-id",
-      NULL,
-      0,
-      IPMI_OEM_COMMAND_FLAGS_HIDDEN,
-      ipmi_oem_inventec_get_board_id
-    },
-    /* legacy */
-    {
-      "set-board-id",
-      "<boardid>",
-      1,
-      IPMI_OEM_COMMAND_FLAGS_HIDDEN,
-      ipmi_oem_inventec_set_board_id
-    },
-    /* legacy */
-    {
-      "get-fcb-version",
-      NULL,
-      0,
-      IPMI_OEM_COMMAND_FLAGS_HIDDEN,
-      ipmi_oem_inventec_get_fcb_version
-    },
-    /* legacy */
-    {
-      "set-fcb-version",
-      "<majorversion> <minorversion>",
-      2,
-      IPMI_OEM_COMMAND_FLAGS_HIDDEN,
-      ipmi_oem_inventec_set_fcb_version
-    },
-    /* legacy */
-    {
-      "get-sol-inactivity-timeout",
-      NULL,
-      0,
-      IPMI_OEM_COMMAND_FLAGS_HIDDEN,
-      ipmi_oem_inventec_get_sol_inactivity_timeout
-    },
-    /* legacy */
-    {
-      "set-sol-inactivity-timeout",
-      "<inactivity-timeout>",
-      1,
-      IPMI_OEM_COMMAND_FLAGS_HIDDEN,
-      ipmi_oem_inventec_set_sol_inactivity_timeout
-    },
     {
       "power-monitoring-over-interval",
       "<interval> <systempower|cpu1|cpu2|cpu3|cpu4|memory1|memory2|memory3|memory4|drives|fans|pciecards|gpucables>",

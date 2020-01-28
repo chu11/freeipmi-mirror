@@ -94,6 +94,13 @@ o Remove legacy OEM Dell commands
   - get-power-headroom-info (use get-power-head-room)
   - get-average-power-history (use get-power-consumption-data)
   - get-peak-power-history (use get-power-consumption-data)
+o Remove legacy OEM Dell commands moved to Inventec
+  - get-board-id
+  - set-board-id
+  - get-fcb-version
+  - set-fcb-version
+  - get-sol-inactivity-timeout
+  - set-sol-inactivity-timeout
 
 FreeIPMI 1.6.1 - 02/02/18
 -------------------------
