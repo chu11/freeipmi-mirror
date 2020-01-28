@@ -56,6 +56,124 @@
 /* return (0) - no OEM match
  * return (1) - OEM match
  * return (-1) - error, cleanup and return error
+ */
+int
+sel_string_output_intel_xeon_broadwell_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
+                                                                 struct ipmi_sel_entry *sel_entry,
+                                                                 uint8_t sel_record_type,
+                                                                 char *tmpbuf,
+                                                                 unsigned int tmpbuflen,
+                                                                 unsigned int flags,
+                                                                 unsigned int *wlen,
+                                                                 struct ipmi_sel_system_event_record_data *system_event_record_data)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL);
+  assert (sel_entry);
+  assert (tmpbuf);
+  assert (tmpbuflen);
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (wlen);
+  assert (system_event_record_data);
+  assert (system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
+  assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600KP
+          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
+          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT
+          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600GZ);
+
+  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER
+      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+      && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_MIRRORING_REDUNDANCY_STATE
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
+      && (system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_FULLY_REDUNDANT
+          || system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_REDUNDANCY_DEGRADED))
+    {
+      uint8_t mirroring_domain, rank_on_dimm;
+      char *mirroring_domain_str;
+
+      mirroring_domain = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_MIRRORING_DOMAIN_BITMASK);
+      mirroring_domain >>= IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_MIRRORING_DOMAIN_SHIFT;
+
+      rank_on_dimm = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_RANK_ON_DIMM_BITMASK);
+      rank_on_dimm >>= IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_RANK_ON_DIMM_SHIFT;
+
+      switch (mirroring_domain)
+        {
+        case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_MIRRORING_DOMAIN_0:
+          mirroring_domain_str = "0";
+          break;
+        case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_MIRRORING_DOMAIN_1:
+          mirroring_domain_str = "1";
+          break;
+        default:
+          mirroring_domain_str = "Unknown";
+          break;
+        }
+
+      snprintf (tmpbuf,
+                tmpbuflen,
+                "Mirroring Domain = %s, Rank on DIMM = %u",
+                mirroring_domain_str,
+                rank_on_dimm);
+
+      return (1);
+    }
+
+  return (0);
+}
+
+/* return (0) - no OEM match
+ * return (1) - OEM match
+ * return (-1) - error, cleanup and return error
+ */
+int
+sel_string_output_intel_xeon_broadwell_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
+                                                                 struct ipmi_sel_entry *sel_entry,
+                                                                 uint8_t sel_record_type,
+                                                                 char *tmpbuf,
+                                                                 unsigned int tmpbuflen,
+                                                                 unsigned int flags,
+                                                                 unsigned int *wlen,
+                                                                 struct ipmi_sel_system_event_record_data *system_event_record_data)
+{
+  int nmret;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL);
+  assert (sel_entry);
+  assert (tmpbuf);
+  assert (tmpbuflen);
+  assert (!(flags & ~IPMI_SEL_STRING_FLAGS_MASK));
+  assert (flags & IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA);
+  assert (wlen);
+  assert (system_event_record_data);
+  assert (system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE);
+  assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600KP
+          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WT2
+          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT
+          || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600GZ);
+
+  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER
+      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+      && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_MIRRORING_REDUNDANCY_STATE
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
+      && (system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_FULLY_REDUNDANT
+          || system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_REDUNDANCY_DEGRADED))
+    {
+      sel_string_output_intel_xeon_memory_dimm (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data, 1, 1);
+
+      return (1);
+    }
+
+  return (0);
+}
+
+/* return (0) - no OEM match
+ * return (1) - OEM match
+ * return (-1) - error, cleanup and return error
  *
  * in oem_rv, return
  * 0 - continue on

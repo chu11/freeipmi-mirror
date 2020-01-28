@@ -175,6 +175,19 @@ sel_string_output_intel_s2600kp_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
   if (ret)
     return (1);
 
+  if ((ret = sel_string_output_intel_xeon_broadwell_event_data2_discrete_oem (ctx,
+                                                                              sel_entry,
+                                                                              sel_record_type,
+                                                                              tmpbuf,
+                                                                              tmpbuflen,
+                                                                              flags,
+                                                                              wlen,
+                                                                              system_event_record_data)) < 0)
+    return (-1);
+
+  if (ret)
+    return (1);
+
   return (0);
 }
 
@@ -259,6 +272,19 @@ sel_string_output_intel_s2600kp_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
                                                                     flags,
                                                                     wlen,
                                                                     system_event_record_data)) < 0)
+    return (-1);
+
+  if (ret)
+    return (1);
+
+  if ((ret = sel_string_output_intel_xeon_broadwell_event_data3_discrete_oem (ctx,
+                                                                              sel_entry,
+                                                                              sel_record_type,
+                                                                              tmpbuf,
+                                                                              tmpbuflen,
+                                                                              flags,
+                                                                              wlen,
+                                                                              system_event_record_data)) < 0)
     return (-1);
 
   if (ret)

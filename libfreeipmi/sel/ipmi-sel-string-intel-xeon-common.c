@@ -645,44 +645,6 @@ sel_string_output_intel_xeon_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 
   if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
-      && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_MIRRORING_REDUNDANCY_STATE
-      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
-      && (system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_FULLY_REDUNDANT
-          || system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_REDUNDANCY_DEGRADED))
-    {
-      uint8_t mirroring_domain, rank_on_dimm;
-      char *mirroring_domain_str;
-
-      mirroring_domain = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_MIRRORING_DOMAIN_BITMASK);
-      mirroring_domain >>= IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_MIRRORING_DOMAIN_SHIFT;
-
-      rank_on_dimm = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_RANK_ON_DIMM_BITMASK);
-      rank_on_dimm >>= IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_RANK_ON_DIMM_SHIFT;
-
-      switch (mirroring_domain)
-        {
-        case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_MIRRORING_DOMAIN_0:
-          mirroring_domain_str = "0";
-          break;
-        case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_MIRRORING_DOMAIN_1:
-          mirroring_domain_str = "1";
-          break;
-        default:
-          mirroring_domain_str = "Unknown";
-          break;
-        }
-
-      snprintf (tmpbuf,
-                tmpbuflen,
-                "Mirroring Domain = %s, Rank on DIMM = %u",
-                mirroring_domain_str,
-                rank_on_dimm);
-
-      return (1);
-    }
-
-  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER
-      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_SPARING_REDUNDANCY_STATE
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
       && (system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_FULLY_REDUNDANT
@@ -1506,18 +1468,6 @@ sel_string_output_intel_xeon_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
           || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT_PCI_SERR))
     {
       _sel_string_output_intel_xeon_pci_device_function (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data);
-
-      return (1);
-    }
-
-  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER
-      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
-      && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_MIRRORING_REDUNDANCY_STATE
-      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
-      && (system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_FULLY_REDUNDANT
-          || system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_REDUNDANCY_DEGRADED))
-    {
-      sel_string_output_intel_xeon_memory_dimm (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data, 1, 1);
 
       return (1);
     }
