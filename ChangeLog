@@ -3,8 +3,9 @@
 	* libfreeipmi/include/freeipmi/spec/oem/intel/ipmi-sensor-and-event-code-tables-oem-intel-common-spec.h,
 	libfreeipmi/sel/ipmi-sel-string-intel-xeon-common.c,
 	libfreeipmi/sel/ipmi-sel-string-intel-xeon-broadwell-common.c:
-	Move mirroring redundancy macros / oem extensions from xeon to
-	xeon broadwell common.  They do not belong in s2600bpb support.
+	Move mirroring redundancy and some memory error macros / oem
+	extensions from xeon to xeon broadwell common.  They do not belong
+	in s2600bpb support.
 
 2020-01-16 Albert Chu <chu11@llnl.gov>
 

@@ -238,6 +238,71 @@ sel_string_output_intel_xeon_broadwell_event_data2_event_data3 (ipmi_sel_ctx_t c
           || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600WTT
           || ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600GZ);
 
+  /* achu: Documentation states only
+   * IPMI_SENSOR_TYPE_MEMORY_MEMORY_SCRUB_FAILED, but I think
+   * that's a typo. It should be IPMI_SENSOR_TYPE_MEMORY_PARITY.
+   * Gonna check for both
+   */
+  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER
+      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+      && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_MEMORY_PARITY_ERROR
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+      && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_MEMORY_SCRUB_FAILED
+          || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_PARITY)
+      && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
+      && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+    {
+      uint8_t channel_information_validity_check, dimm_information_validity_check, error_type;
+      char *error_type_str;
+      char dimm_str[INTEL_EVENT_BUFFER_LENGTH + 1];
+
+      memset (dimm_str, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
+
+      channel_information_validity_check = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_CHANNEL_INFORMATON_VALIDITY_CHECK_BITMASK);
+      channel_information_validity_check >>= IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_CHANNEL_INFORMATON_VALIDITY_CHECK_SHIFT;
+
+      dimm_information_validity_check = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_DIMM_INFORMATON_VALIDITY_CHECK_BITMASK);
+      dimm_information_validity_check >>= IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_DIMM_INFORMATON_VALIDITY_CHECK_SHIFT;
+
+      error_type = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_ERROR_TYPE_BITMASK);
+      error_type >>= IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_ERROR_TYPE_SHIFT;
+
+      switch (error_type)
+        {
+        case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_ERROR_TYPE_PARITY_ERROR_TYPE_NOT_KNOWN:
+          error_type_str = "Parity Error Type not known";
+          break;
+        case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_ERROR_TYPE_DATA_PARITY_ERROR:
+          error_type_str = "Data Parity Error";
+          break;
+        case IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_ERROR_TYPE_COMMAND_AND_ADDRESS_PARITY_ERROR:
+          error_type_str = "Command and Address Parity Error";
+          break;
+        default:
+          error_type_str = "Unknown";
+        }
+
+      sel_string_output_intel_xeon_memory_dimm (ctx,
+                                                dimm_str,
+                                                INTEL_EVENT_BUFFER_LENGTH,
+                                                flags,
+                                                system_event_record_data,
+                                                channel_information_validity_check,
+                                                dimm_information_validity_check);
+
+      if (sel_string_snprintf (buf,
+                               buflen,
+                               wlen,
+                               "Error Type = %s, %s",
+                               error_type_str,
+                               dimm_str))
+        (*oem_rv) = 1;
+      else
+        (*oem_rv) = 0;
+
+      return (1);
+    }
+
   if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_POST
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_POST_POST_ERROR

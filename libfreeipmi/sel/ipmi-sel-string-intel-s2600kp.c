@@ -371,20 +371,6 @@ sel_string_output_intel_s2600kp_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
   assert (oem_rv);
   assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600KP);
 
-  if ((ret = sel_string_output_intel_xeon_event_data2_event_data3 (ctx,
-                                                                   sel_entry,
-                                                                   sel_record_type,
-                                                                   buf,
-                                                                   buflen,
-                                                                   flags,
-                                                                   wlen,
-                                                                   system_event_record_data,
-                                                                   oem_rv)) < 0)
-    return (-1);
-
-  if (ret)
-    return (1);
-
   if ((ret = sel_string_output_intel_xeon_broadwell_event_data2_event_data3 (ctx,
                                                                              sel_entry,
                                                                              sel_record_type,
