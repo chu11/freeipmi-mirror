@@ -121,6 +121,26 @@ sel_string_output_intel_xeon_broadwell_event_data2_discrete_oem (ipmi_sel_ctx_t 
       return (1);
     }
 
+  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER
+      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+      && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_MEMORY_ECC_ERROR
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+      && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CORRECTABLE_MEMORY_ERROR
+          || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_UNCORRECTABLE_MEMORY_ERROR))
+    {
+      uint8_t rank_on_dimm;
+
+      rank_on_dimm = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_RANK_ON_DIMM_BITMASK);
+      rank_on_dimm >>= IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_RANK_ON_DIMM_SHIFT;
+
+      snprintf (tmpbuf,
+                tmpbuflen,
+                "Rank on DIMM = %u",
+                rank_on_dimm);
+
+      return (1);
+    }
+
   return (0);
 }
 
@@ -162,6 +182,18 @@ sel_string_output_intel_xeon_broadwell_event_data3_discrete_oem (ipmi_sel_ctx_t 
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
       && (system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_FULLY_REDUNDANT
           || system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_REDUNDANCY_DEGRADED))
+    {
+      sel_string_output_intel_xeon_memory_dimm (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data, 1, 1);
+
+      return (1);
+    }
+
+  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER
+      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+      && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_MEMORY_ECC_ERROR
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+      && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CORRECTABLE_MEMORY_ERROR
+          || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_UNCORRECTABLE_MEMORY_ERROR))
     {
       sel_string_output_intel_xeon_memory_dimm (ctx, tmpbuf, tmpbuflen, flags, system_event_record_data, 1, 1);
 
