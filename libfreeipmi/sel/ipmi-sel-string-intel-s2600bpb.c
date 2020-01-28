@@ -266,6 +266,57 @@ sel_string_output_intel_s2600bpb_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
       return (1);
     }
 
+  if ((system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER
+       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_MIRRORING_REDUNDANCY_STATE
+       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
+       && (system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_FULLY_REDUNDANT
+           || system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_REDUNDANCY_DEGRADED)
+       && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+      || (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER
+          && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+          && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_MEMORY_ECC_ERROR
+          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+          && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CORRECTABLE_MEMORY_ERROR
+              || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_UNCORRECTABLE_MEMORY_ERROR)
+          && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE))
+    {
+      uint8_t dimm_index, rank_index;
+
+      dimm_index = (system_event_record_data->event_data2 & IPMI_OEM_INTEL_S2600BPB_EVENT_DATA2_DIMM_INDEX_BITMASK);
+      dimm_index >>= IPMI_OEM_INTEL_S2600BPB_EVENT_DATA2_DIMM_INDEX_SHIFT;
+
+      rank_index = (system_event_record_data->event_data2 & IPMI_OEM_INTEL_S2600BPB_EVENT_DATA2_RANK_INDEX_BITMASK);
+      rank_index >>= IPMI_OEM_INTEL_S2600BPB_EVENT_DATA2_RANK_INDEX_SHIFT;
+
+      snprintf (tmpbuf,
+                tmpbuflen,
+                "DIMM Index = %u, Rank Index = %u",
+                dimm_index, rank_index);
+
+      return (1);
+    }
+
+  if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER
+      && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+      && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_MEMORY_ECC_ERROR
+      && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+      && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_PARITY
+      && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+    {
+      uint8_t dimm_index;
+
+      dimm_index = (system_event_record_data->event_data2 & IPMI_OEM_INTEL_S2600BPB_EVENT_DATA2_DIMM_INDEX_BITMASK);
+      dimm_index >>= IPMI_OEM_INTEL_S2600BPB_EVENT_DATA2_DIMM_INDEX_SHIFT;
+
+      snprintf (tmpbuf,
+                tmpbuflen,
+                "DIMM Index = %u",
+                dimm_index);
+
+      return (1);
+    }
+
   return (0);
 }
 
@@ -634,6 +685,62 @@ sel_string_output_intel_s2600bpb_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
       return (1);
     }
 
+  if ((system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER
+       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_MIRRORING_REDUNDANCY_STATE
+       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
+       && (system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_FULLY_REDUNDANT
+           || system_event_record_data->offset_from_event_reading_type_code == IPMI_GENERIC_EVENT_READING_TYPE_CODE_REDUNDANCY_REDUNDANCY_DEGRADED)
+       && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+      || (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER
+          && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+          && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_MEMORY_ECC_ERROR
+          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+          && (system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_CORRECTABLE_MEMORY_ERROR
+              || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_UNCORRECTABLE_MEMORY_ERROR)
+          && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
+      || (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_SMI_HANDLER
+          && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_MEMORY
+          && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_BIOS_SMI_MEMORY_ECC_ERROR
+          && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
+          && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_PARITY
+          && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE))
+    {
+      uint8_t socket_index, channel_index;
+      char *str;
+
+      socket_index = (system_event_record_data->event_data3 & IPMI_OEM_INTEL_S2600BPB_EVENT_DATA3_SOCKET_INDEX_BITMASK);
+      socket_index >>= IPMI_OEM_INTEL_S2600BPB_EVENT_DATA3_SOCKET_INDEX_SHIFT;
+
+      channel_index = (system_event_record_data->event_data3 & IPMI_OEM_INTEL_S2600BPB_EVENT_DATA3_CHANNEL_INDEX_BITMASK);
+      channel_index >>= IPMI_OEM_INTEL_S2600BPB_EVENT_DATA3_CHANNEL_INDEX_SHIFT;
+
+      switch (socket_index)
+        {
+        case IPMI_OEM_INTEL_S2600BPB_EVENT_DATA3_SOCKET_INDEX_CPU1:
+          str = "CPU 1";
+          break;
+        case IPMI_OEM_INTEL_S2600BPB_EVENT_DATA3_SOCKET_INDEX_CPU2:
+          str = "CPU 2";
+          break;
+        case IPMI_OEM_INTEL_S2600BPB_EVENT_DATA3_SOCKET_INDEX_CPU3:
+          str = "CPU 3";
+          break;
+        case IPMI_OEM_INTEL_S2600BPB_EVENT_DATA3_SOCKET_INDEX_CPU4:
+          str = "CPU 4";
+          break;
+        default:
+          str = "Unknown";
+        }
+
+      snprintf (tmpbuf,
+                tmpbuflen,
+                "%s, Channel Index = %u",
+                str, channel_index);
+
+      return (1);
+    }
+
   return (0);
 }
 
@@ -750,20 +857,6 @@ sel_string_output_intel_s2600bpb_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
   assert (system_event_record_data);
   assert (oem_rv);
   assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600BPB);
-
-  if ((ret = sel_string_output_intel_xeon_event_data2_event_data3 (ctx,
-                                                                   sel_entry,
-                                                                   sel_record_type,
-                                                                   buf,
-                                                                   buflen,
-                                                                   flags,
-                                                                   wlen,
-                                                                   system_event_record_data,
-                                                                   oem_rv)) < 0)
-    return (-1);
-
-  if (ret)
-    return (1);
 
   if (system_event_record_data->generator_id == IPMI_GENERATOR_ID_OEM_INTEL_BIOS_POST
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS

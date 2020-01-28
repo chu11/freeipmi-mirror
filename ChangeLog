@@ -7,6 +7,10 @@
 	extensions from xeon to xeon broadwell common.  They do not belong
 	in s2600bpb support.
 
+	* libfreeipmi/include/freeipmi/spec/oem/intel/ipmi-sensor-and-event-code-tables-oem-intel-s2600bpb-spec.h,
+	libfreeipmi/sel/ipmi-sel-string-intel-xeon-broadwell-common.c: add
+	S2600BPB dimm OEM specific extensions.
+
 2020-01-16 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/spec/ipmi-product-id-spec.h: Add
