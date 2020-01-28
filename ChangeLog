@@ -57,6 +57,8 @@
 
 	* ipmi-oem: Remove legacy OEM Dell commands.
 
+	* etc/freeipmi.conf: Remove legacy output options.
+
 2020-01-28 Albert Chu <chu11@llnl.gov>
 
 	* man/ipmi-oem.8.pre.in: Fix formatting typo that led to line not
