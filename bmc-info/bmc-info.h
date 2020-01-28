@@ -27,7 +27,6 @@
 enum bmc_info_argp_option_keys
   {
     GET_DEVICE_ID_KEY = 160,
-    GUID_KEY = 'g',             /* legacy */
     GET_DEVICE_GUID_KEY = 161,
     GET_SYSTEM_GUID_KEY = 162,
     GET_SYSTEM_INFO_KEY = 163,

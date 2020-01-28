@@ -59,6 +59,8 @@ o Remove legacy support in ipmi-chassis that has been replaced with
   - --get-boot-flags
 o Remove legacy command line option --delete-all in ipmi-sel (use
   --clear)
+o Remove legacy command line option --guid in bmc-info (use
+  --get-device-id)
 
 FreeIPMI 1.6.1 - 02/02/18
 -------------------------

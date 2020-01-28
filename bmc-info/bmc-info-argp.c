@@ -65,21 +65,18 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
-    /* legacy */
-    { "guid", GUID_KEY, NULL, OPTION_HIDDEN,
-      "Display only device guid.", 40},
     { "get-device-id", GET_DEVICE_ID_KEY, NULL, 0,
-      "Display only device ID information.", 41},
+      "Display only device ID information.", 40},
     { "get-device-guid", GET_DEVICE_GUID_KEY, NULL, 0,
-      "Display only device guid.", 42},
+      "Display only device guid.", 41},
     { "get-system-guid", GET_SYSTEM_GUID_KEY, NULL, 0,
-      "Display only system guid.", 43},
+      "Display only system guid.", 42},
     { "get-system-info", GET_SYSTEM_INFO_KEY, NULL, 0,
-      "Display only system information.", 44},
+      "Display only system information.", 43},
     { "get-channel-info", GET_CHANNEL_INFO_KEY, NULL, 0,
-      "Display only channel information.", 45},
+      "Display only channel information.", 44},
     { "interpret-oem-data", INTERPRET_OEM_DATA_KEY, NULL, 0,
-      "Attempt to interpret OEM data.", 46},
+      "Attempt to interpret OEM data.", 45},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -109,8 +106,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case GET_DEVICE_ID_KEY:
       cmd_args->get_device_id++;
       break;
-      /* legacy */
-    case GUID_KEY:
     case GET_DEVICE_GUID_KEY:
       cmd_args->get_device_guid++;
       break;
