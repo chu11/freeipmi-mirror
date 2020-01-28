@@ -6074,40 +6074,6 @@ ipmi_oem_dell_get_power_consumption_statistics (ipmi_oem_state_data_t *state_dat
   return (rv);
 }
 
-/* legacy */
-int
-ipmi_oem_dell_get_average_power_history (ipmi_oem_state_data_t *state_data)
-{
-  assert (state_data);
-  assert (!state_data->prog_data->args->oem_options_count);
-
-  if (!(state_data->prog_data->args->oem_options[0] = strdup ("average")))
-    {
-      pstdout_perror (state_data->pstate, "strdup");
-      return (-1);
-    }
-  state_data->prog_data->args->oem_options_count++;
-
-  return (ipmi_oem_dell_get_power_consumption_statistics (state_data));
-}
-
-/* legacy */
-int
-ipmi_oem_dell_get_peak_power_history (ipmi_oem_state_data_t *state_data)
-{
-  assert (state_data);
-  assert (!state_data->prog_data->args->oem_options_count);
-
-  if (!(state_data->prog_data->args->oem_options[0] = strdup ("max")))
-    {
-      pstdout_perror (state_data->pstate, "strdup");
-      return (-1);
-    }
-  state_data->prog_data->args->oem_options_count++;
-
-  return (ipmi_oem_dell_get_power_consumption_statistics (state_data));
-}
-
 static int
 _get_power_capacity (ipmi_oem_state_data_t *state_data,
                      uint8_t *configuration_parameter_data,

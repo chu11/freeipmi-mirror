@@ -187,36 +187,12 @@ struct ipmi_oem_command oem_dell[] =
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_get_power_consumption_data
     },
-    /* legacy */
-    {
-      "get-power-info",
-      NULL,
-      0,
-      IPMI_OEM_COMMAND_FLAGS_HIDDEN,
-      ipmi_oem_dell_get_power_consumption_data
-    },
-    /* legacy */
-    {
-      "reset-power-info",
-      "<cumulative|peak>",
-      1,
-      IPMI_OEM_COMMAND_FLAGS_HIDDEN,
-      ipmi_oem_dell_reset_power_consumption_data
-    },
     {
       "reset-power-consumption-data",
       "<cumulative|peak>",
       1,
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_reset_power_consumption_data
-    },
-    /* legacy */
-    {
-      "get-power-supply-info",
-      NULL,
-      0,
-      IPMI_OEM_COMMAND_FLAGS_HIDDEN,
-      ipmi_oem_dell_power_supply_info
     },
     {
       "power-supply-info",
@@ -225,28 +201,12 @@ struct ipmi_oem_command oem_dell[] =
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_power_supply_info
     },
-    /* legacy */
-    {
-      "get-instantaneous-power-consumption-info",
-      "[power_supply_instance]",
-      0,
-      IPMI_OEM_COMMAND_FLAGS_HIDDEN | IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
-      ipmi_oem_dell_get_instantaneous_power_consumption_data
-    },
     {
       "get-instantaneous-power-consumption-data",
       "[power_supply_instance]",
       0,
       IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
       ipmi_oem_dell_get_instantaneous_power_consumption_data
-    },
-    /* legacy */
-    {
-      "get-power-headroom-info",
-      NULL,
-      0,
-      IPMI_OEM_COMMAND_FLAGS_HIDDEN | IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
-      ipmi_oem_dell_get_power_head_room
     },
     {
       "get-power-head-room",
@@ -261,22 +221,6 @@ struct ipmi_oem_command oem_dell[] =
       1,
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_dell_get_power_consumption_statistics
-    },
-    /* legacy */
-    {
-      "get-average-power-history",
-      NULL,
-      0,
-      IPMI_OEM_COMMAND_FLAGS_HIDDEN,
-      ipmi_oem_dell_get_average_power_history
-    },
-    /* legacy */
-    {
-      "get-peak-power-history",
-      NULL,
-      0,
-      IPMI_OEM_COMMAND_FLAGS_HIDDEN,
-      ipmi_oem_dell_get_peak_power_history
     },
     {
       "get-power-capacity",

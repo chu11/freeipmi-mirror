@@ -86,6 +86,14 @@ o Remove legacy command line option --delete-all in ipmi-sel (use
   --clear)
 o Remove legacy command line option --guid in bmc-info (use
   --get-device-id)
+o Remove legacy OEM Dell commands
+  - get-power-info (use get-power-consumption-data)
+  - reset-power-info (use reset-power-consumption-data)
+  - get-power-supplyinfo (use power-supply-info)
+  - get-instantaneous-power-consumption-info (use get-instantaneous-power-consumption-data)
+  - get-power-headroom-info (use get-power-head-room)
+  - get-average-power-history (use get-power-consumption-data)
+  - get-peak-power-history (use get-power-consumption-data)
 
 FreeIPMI 1.6.1 - 02/02/18
 -------------------------

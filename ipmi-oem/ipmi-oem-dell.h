@@ -57,12 +57,6 @@ int ipmi_oem_dell_get_power_head_room (ipmi_oem_state_data_t *state_data);
 
 int ipmi_oem_dell_get_power_consumption_statistics (ipmi_oem_state_data_t *state_data);
 
-/* legacy */
-int ipmi_oem_dell_get_average_power_history (ipmi_oem_state_data_t *state_data);
-
-/* legacy */
-int ipmi_oem_dell_get_peak_power_history (ipmi_oem_state_data_t *state_data);
-
 int ipmi_oem_dell_get_power_capacity (ipmi_oem_state_data_t *state_data);
 int ipmi_oem_dell_set_power_capacity (ipmi_oem_state_data_t *state_data);
 
