@@ -194,18 +194,6 @@ _ipmiconsole_config_file_parse (struct ipmiconsole_arguments *cmd_args)
           '\0',
           sizeof (struct config_file_data_ipmiconsole));
 
-  if (!cmd_args->common_args.config_file)
-    {
-      /* try legacy file first */
-      if (!config_file_parse (IPMICONSOLE_CONFIG_FILE_LEGACY,
-                              1,         /* do not exit if file not found */
-                              &(cmd_args->common_args),
-                              CONFIG_FILE_OUTOFBAND,
-                              CONFIG_FILE_TOOL_IPMICONSOLE,
-                              &config_file_data))
-        goto out;
-    }
-
   if (config_file_parse (cmd_args->common_args.config_file,
                          0,
                          &(cmd_args->common_args),
@@ -217,7 +205,6 @@ _ipmiconsole_config_file_parse (struct ipmiconsole_arguments *cmd_args)
       exit (EXIT_FAILURE);
     }
 
- out:
   if (config_file_data.escape_char_count)
     cmd_args->escape_char = config_file_data.escape_char;
   if (config_file_data.dont_steal_count)

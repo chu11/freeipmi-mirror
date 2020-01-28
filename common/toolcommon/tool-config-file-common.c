@@ -4308,18 +4308,6 @@ config_file_parse (const char *filename,
         &common_cmd_args_config,
         0
       },
-      /* legacy - no ipmiconsole prefix */
-      {
-        "escape-char",
-        CONFFILE_OPTION_STRING,
-        -1,
-        _config_file_ipmiconsole_escape_char,
-        1,
-        0,
-        &(ipmiconsole_data.escape_char_count),
-        &(ipmiconsole_data.escape_char),
-        0
-      },
       {
         "ipmiconsole-escape-char",
         CONFFILE_OPTION_STRING,
@@ -4330,18 +4318,6 @@ config_file_parse (const char *filename,
         &(ipmiconsole_data.escape_char_count),
         &(ipmiconsole_data.escape_char),
         0
-      },
-      /* legacy - no ipmiconsole prefix */
-      {
-        "dont-steal",
-        CONFFILE_OPTION_BOOL,
-        -1,
-        _config_file_bool,
-        1,
-        0,
-        &(ipmiconsole_data.dont_steal_count),
-        &(ipmiconsole_data.dont_steal),
-        0,
       },
       {
         "ipmiconsole-dont-steal",
@@ -4396,18 +4372,6 @@ config_file_parse (const char *filename,
         0,
         &(ipmiconsole_data.deactivate_all_instances_count),
         &(ipmiconsole_data.deactivate_all_instances),
-        0,
-      },
-      /* legacy - no ipmiconsole prefix */
-      {
-        "lock-memory",
-        CONFFILE_OPTION_BOOL,
-        -1,
-        _config_file_bool,
-        1,
-        0,
-        &(ipmiconsole_data.lock_memory_count),
-        &(ipmiconsole_data.lock_memory),
         0,
       },
       {
