@@ -28,6 +28,13 @@
 	--groups, --sensor-type, --exclude-groups, --list-groups,
 	--sensor-config-file).
 
+	* ipmi-chassis: Remove legacy options (--get-capabilities,
+	--get-status, --set-power-restore-policy, --set-power-cycle-interval,
+	--set-boot-flags, --boot-type, --lock-out-reset-button, --blank-screen,
+	--boot-device, --lock-keyboard, --clear-cmos, --console-redirection,
+	--user-password-bypass, --force-progress-event-traps, --firmware-bios-verbosity,
+	--get-boot-flags).
+
 2020-01-28 Albert Chu <chu11@llnl.gov>
 
 	* man/ipmi-oem.8.pre.in: Fix formatting typo that led to line not
