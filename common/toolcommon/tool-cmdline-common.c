@@ -125,7 +125,6 @@ common_parse_opt (int key,
         }
       common_args->driver_type = tmp;
       break;
-      /* ARGP_NO_PROBING_KEY for backwards compatability */
     case ARGP_DISABLE_AUTO_PROBE_KEY:
       common_args->disable_auto_probe = 1;
       break;

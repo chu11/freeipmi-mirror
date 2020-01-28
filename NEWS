@@ -22,6 +22,11 @@ o Remove many legacy long options in tools
   - --privilege (use --privilege-level)
   - --priv-level (use --privilege-level)
   - --config (use --config-file)
+o Remove legacy config file options
+  - timeout (use session-timeout)
+  - retry-timeout (use retransmission-timeout)
+  - cipher_suite_id (use cipher-suite-id)
+  - privilege (use privilege-level)
 o Remove legacy output support in ipmi-sensors and ipmi-sel.
   - ipmimonitoring legacy output support is also removed as a result.
 o libfreeipmi/sel: Remove legacy output support.  Flag

@@ -53,6 +53,8 @@
 
 	* config/ac_ipmipower_config_file.m4: Removed file.
 
+	* common/toolcommon/tool-config-file-common.c: Remove legacy config file options.
+
 2020-01-28 Albert Chu <chu11@llnl.gov>
 
 	* man/ipmi-oem.8.pre.in: Fix formatting typo that led to line not
