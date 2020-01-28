@@ -304,18 +304,6 @@ _ipmipower_config_file_parse (struct ipmipower_arguments *cmd_args)
           '\0',
           sizeof (struct config_file_data_ipmipower));
 
-  /* try legacy file first */
-  if (!cmd_args->common_args.config_file)
-    {
-      if (!config_file_parse (IPMIPOWER_CONFIG_FILE_LEGACY,
-                              1,         /* do not exit if file not found */
-                              &(cmd_args->common_args),
-                              CONFIG_FILE_OUTOFBAND | CONFIG_FILE_HOSTRANGE,
-                              CONFIG_FILE_TOOL_IPMIPOWER,
-                              &config_file_data))
-        goto out;
-    }
-
   if (config_file_parse (cmd_args->common_args.config_file,
                          0,
                          &(cmd_args->common_args),
@@ -327,7 +315,6 @@ _ipmipower_config_file_parse (struct ipmipower_arguments *cmd_args)
       exit (EXIT_FAILURE);
     }
 
- out:
   if (config_file_data.on_if_off_count)
     cmd_args->on_if_off = config_file_data.on_if_off;
   if (config_file_data.wait_until_on_count)

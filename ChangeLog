@@ -45,6 +45,14 @@
 
 	* config/ac_ipmiconsole_config_file.m4: Removed file.
 
+	* ipmipower: Remove support of legacy /etc/ipmipower.conf file.
+
+	* configure.ac: Remove legacy /etc/ipmipower.conf file support.
+
+	* common/toolcommon/tool-config-file-common.c: Remove legacy ipmipower config file support.
+
+	* config/ac_ipmipower_config_file.m4: Removed file.
+
 2020-01-28 Albert Chu <chu11@llnl.gov>
 
 	* man/ipmi-oem.8.pre.in: Fix formatting typo that led to line not

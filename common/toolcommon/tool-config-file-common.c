@@ -4470,30 +4470,6 @@ config_file_parse (const char *filename,
         &common_cmd_args_config,
         0
       },
-      /* ipmi-version maintained for backwards compatability */
-      {
-        "ipmi-version",
-        CONFFILE_OPTION_STRING,
-        -1,
-        _config_file_ipmipower_ipmi_version,
-        1,
-        0,
-        &driver_type_count,
-        common_args,
-        0
-      },
-      /* legacy - no ipmipower prefix */
-      {
-        "on-if-off",
-        CONFFILE_OPTION_BOOL,
-        -1,
-        _config_file_bool,
-        1,
-        0,
-        &(ipmipower_data.on_if_off_count),
-        &(ipmipower_data.on_if_off),
-        0
-      },
       {
         "ipmipower-on-if-off",
         CONFFILE_OPTION_BOOL,
@@ -4505,18 +4481,6 @@ config_file_parse (const char *filename,
         &(ipmipower_data.on_if_off),
         0
       },
-      /* legacy - no ipmipower prefix */
-      {
-        "wait-until-on",
-        CONFFILE_OPTION_BOOL,
-        -1,
-        _config_file_bool,
-        1,
-        0,
-        &(ipmipower_data.wait_until_on_count),
-        &(ipmipower_data.wait_until_on),
-        0
-      },
       {
         "ipmipower-wait-until-on",
         CONFFILE_OPTION_BOOL,
@@ -4526,18 +4490,6 @@ config_file_parse (const char *filename,
         0,
         &(ipmipower_data.wait_until_on_count),
         &(ipmipower_data.wait_until_on),
-        0
-      },
-      /* legacy - no ipmipower prefix */
-      {
-        "wait-until-off",
-        CONFFILE_OPTION_BOOL,
-        -1,
-        _config_file_bool,
-        1,
-        0,
-        &(ipmipower_data.wait_until_off_count),
-        &(ipmipower_data.wait_until_off),
         0
       },
       {
@@ -4562,30 +4514,6 @@ config_file_parse (const char *filename,
         &(ipmipower_data.oem_power_type_str),
         0,
       },
-      /* retry-wait-timeout for backwards comptability */
-      {
-        "retry-wait-timeout",
-        CONFFILE_OPTION_INT,
-        -1,
-        _config_file_positive_unsigned_int,
-        1,
-        0,
-        &(ipmipower_data.retransmission_wait_timeout_count),
-        &(ipmipower_data.retransmission_wait_timeout),
-        0
-      },
-      /* legacy - no ipmipower prefix */
-      {
-        "retransmission-wait-timeout",
-        CONFFILE_OPTION_INT,
-        -1,
-        _config_file_positive_unsigned_int,
-        1,
-        0,
-        &(ipmipower_data.retransmission_wait_timeout_count),
-        &(ipmipower_data.retransmission_wait_timeout),
-        0
-      },
       {
         "ipmipower-retransmission-wait-timeout",
         CONFFILE_OPTION_INT,
@@ -4595,30 +4523,6 @@ config_file_parse (const char *filename,
         0,
         &(ipmipower_data.retransmission_wait_timeout_count),
         &(ipmipower_data.retransmission_wait_timeout),
-        0
-      },
-      /* retry-backoff-count for backwards compatability */
-      {
-        "retry-backoff-count",
-        CONFFILE_OPTION_INT,
-        -1,
-        _config_file_positive_unsigned_int,
-        1,
-        0,
-        &(ipmipower_data.retransmission_backoff_count_count),
-        &(ipmipower_data.retransmission_backoff_count),
-        0
-      },
-      /* legacy - no ipmipower prefix */
-      {
-        "retransmission-backoff-count",
-        CONFFILE_OPTION_INT,
-        -1,
-        _config_file_positive_unsigned_int,
-        1,
-        0,
-        &(ipmipower_data.retransmission_backoff_count_count),
-        &(ipmipower_data.retransmission_backoff_count),
         0
       },
       {
@@ -4632,18 +4536,6 @@ config_file_parse (const char *filename,
         &(ipmipower_data.retransmission_backoff_count),
         0
       },
-      /* legacy - no ipmipower prefix */
-      {
-        "ping-interval",
-        CONFFILE_OPTION_INT,
-        -1,
-        _config_file_unsigned_int,
-        1,
-        0,
-        &(ipmipower_data.ping_interval_count),
-        &(ipmipower_data.ping_interval),
-        0
-      },
       {
         "ipmipower-ping-interval",
         CONFFILE_OPTION_INT,
@@ -4653,18 +4545,6 @@ config_file_parse (const char *filename,
         0,
         &(ipmipower_data.ping_interval_count),
         &(ipmipower_data.ping_interval),
-        0
-      },
-      /* legacy - no ipmipower prefix */
-      {
-        "ping-timeout",
-        CONFFILE_OPTION_INT,
-        -1,
-        _config_file_unsigned_int,
-        1,
-        0,
-        &(ipmipower_data.ping_timeout_count),
-        &(ipmipower_data.ping_timeout),
         0
       },
       {
@@ -4678,18 +4558,6 @@ config_file_parse (const char *filename,
         &(ipmipower_data.ping_timeout),
         0
       },
-      /* legacy - no ipmipower prefix */
-      {
-        "ping-packet-count",
-        CONFFILE_OPTION_INT,
-        -1,
-        _config_file_unsigned_int,
-        1,
-        0,
-        &(ipmipower_data.ping_packet_count_count),
-        &(ipmipower_data.ping_packet_count),
-        0
-      },
       {
         "ipmipower-ping-packet-count",
         CONFFILE_OPTION_INT,
@@ -4701,18 +4569,6 @@ config_file_parse (const char *filename,
         &(ipmipower_data.ping_packet_count),
         0
       },
-      /* legacy - no ipmipower prefix */
-      {
-        "ping-percent",
-        CONFFILE_OPTION_INT,
-        -1,
-        _config_file_unsigned_int,
-        1,
-        0,
-        &(ipmipower_data.ping_percent_count),
-        &(ipmipower_data.ping_percent),
-        0
-      },
       {
         "ipmipower-ping-percent",
         CONFFILE_OPTION_INT,
@@ -4722,18 +4578,6 @@ config_file_parse (const char *filename,
         0,
         &(ipmipower_data.ping_percent_count),
         &(ipmipower_data.ping_percent),
-        0
-      },
-      /* legacy - no ipmipower prefix */
-      {
-        "ping-consec-count",
-        CONFFILE_OPTION_INT,
-        -1,
-        _config_file_unsigned_int,
-        1,
-        0,
-        &(ipmipower_data.ping_consec_count_count),
-        &(ipmipower_data.ping_consec_count),
         0
       },
       {
