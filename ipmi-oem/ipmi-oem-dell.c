@@ -1880,7 +1880,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       && strcasecmp (state_data->prog_data->args->oem_options[0], "product-name") /* legacy */
       && strcasecmp (state_data->prog_data->args->oem_options[0], "platform-model-name")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "slot-number") /* legacy */
-      && strcasecmp (state_data->prog_data->args->oem_options[0], "blade-slot-info") /* legacy */
+      && strcasecmp (state_data->prog_data->args->oem_options[0], "blade-slot-info")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "system-revision")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "embedded-video-status")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "idrac-info")
