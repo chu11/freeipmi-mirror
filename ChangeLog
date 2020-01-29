@@ -1,5 +1,10 @@
 2020-01-28 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-oem.8.pre.in: Fix formatting typo that led to line not
+	appearing in manpage.
+
+2020-01-28 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/oem/intel/ipmi-sensor-and-event-code-tables-oem-intel-common-spec.h,
 	libfreeipmi/sel/ipmi-sel-string-intel-xeon-common.c,
 	libfreeipmi/sel/ipmi-sel-string-intel-xeon-broadwell-common.c:
