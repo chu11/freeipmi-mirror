@@ -674,22 +674,6 @@ struct ipmi_oem_command oem_intelnm[] =
 
 struct ipmi_oem_command oem_inventec[] =
   {
-    /* legacy */
-    {
-      "get-nic-status",
-      NULL,
-      0,
-      IPMI_OEM_COMMAND_FLAGS_HIDDEN,
-      ipmi_oem_inventec_get_nic_mode
-    },
-    /* legacy */
-    {
-      "set-nic-status",
-      "<dedicated|shared>",
-      1,
-      IPMI_OEM_COMMAND_FLAGS_HIDDEN,
-      ipmi_oem_inventec_set_nic_mode
-    },
     {
       "get-nic-mode",
       NULL,

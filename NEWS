@@ -114,6 +114,9 @@ o Remove legacy OEM Dell commands moved to Inventec
   - set-fcb-version
   - get-sol-inactivity-timeout
   - set-sol-inactivity-timeout
+o Remove legacy OEM Inventec commands
+  - get-nic-status (use get-nic-mode)
+  - set-nic-status (use set-nic-mode)
 
 FreeIPMI 1.6.1 - 02/02/18
 -------------------------
