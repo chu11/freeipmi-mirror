@@ -699,7 +699,8 @@ S99Q (Dell FS12-TY), Quanta QSSC-S4R (Appro GB812X-CN), Intel S2600JF
 .TP
 .B Inventec
 .RS
-.TP .B get-nic-mode
+.TP
+.B get-nic-mode
 This OEM command will determine the current NIC mode as dedicated or
 shared.  Dedicated indicates IPMI is only available on the dedicated
 management port.  Shared indicates IPMI is also available on one of
