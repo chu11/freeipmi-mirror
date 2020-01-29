@@ -106,9 +106,7 @@ parse_authentication_type (const char *str)
 
   if (strcasecmp (str, IPMI_PARSE_AUTHENTICATION_TYPE_NONE_STR) == 0)
     return (IPMI_AUTHENTICATION_TYPE_NONE);
-  /* keep "plain" for backwards compatability */
-  else if (strcasecmp (str, IPMI_PARSE_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY_STR) == 0
-           || strcasecmp (str, IPMI_PARSE_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY_STR2) == 0)
+  else if (strcasecmp (str, IPMI_PARSE_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY_STR) == 0)
     return (IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY);
   else if (strcasecmp (str, IPMI_PARSE_AUTHENTICATION_TYPE_MD2_STR) == 0)
     return (IPMI_AUTHENTICATION_TYPE_MD2);

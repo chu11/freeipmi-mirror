@@ -13,6 +13,11 @@ o In ipmi-sel, support Intel S2600BPB OEM SEL interpretations.
 
 Remove Large Amount of Legacy Support
 -------------------------------------
+
+Remove backwards compatibility, legacy output/options/fields, or
+deprecated options.  All verified to have been gone for atleast 10
+years.
+
 o Remove many legacy long options in tools
   - --no-probing (use --disable-auto-probe)
   - --reg-space (use --register-spacing)
@@ -22,6 +27,8 @@ o Remove many legacy long options in tools
   - --privilege (use --privilege-level)
   - --priv-level (use --privilege-level)
   - --config (use --config-file)
+o Remove legacy options in tools
+  - Do not support "plain" as an authentication type.
 o Remove legacy config file options
   - timeout (use session-timeout)
   - retry-timeout (use retransmission-timeout)

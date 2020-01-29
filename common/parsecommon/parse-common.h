@@ -147,7 +147,6 @@
 
 #define IPMI_PARSE_AUTHENTICATION_TYPE_NONE_STR                               "none"
 #define IPMI_PARSE_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY_STR              "straight_password_key"
-#define IPMI_PARSE_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY_STR2             "plain"
 #define IPMI_PARSE_AUTHENTICATION_TYPE_MD2_STR                                "md2"
 #define IPMI_PARSE_AUTHENTICATION_TYPE_MD5_STR                                "md5"
 
