@@ -1004,17 +1004,6 @@ ipmi_config_core_serial_conf_section_get (ipmi_config_state_data_t *state_data,
                                    number_range_one_byte_validate) < 0)
     goto cleanup;
 
-  /* achu: For backwards compatability to ipmi-config in 0.2.0 */
-  if (ipmi_config_section_add_key (state_data,
-                                   section,
-                                   "Call_Retry_Time",
-                                   "Give a valid number",
-                                   IPMI_CONFIG_DO_NOT_CHECKOUT,
-                                   call_retry_interval_checkout,
-                                   call_retry_interval_commit,
-                                   number_range_one_byte_validate) < 0)
-    goto cleanup;
-
   if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Enable_DTR_Hangup",

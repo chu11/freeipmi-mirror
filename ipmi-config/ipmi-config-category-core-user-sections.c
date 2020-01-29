@@ -1000,143 +1000,6 @@ password_validate (ipmi_config_state_data_t *state_data,
 }
 
 static ipmi_config_err_t
-password20_checkout (ipmi_config_state_data_t *state_data,
-                     const char *section_name,
-                     struct ipmi_config_keyvalue *kv)
-{
-  uint8_t userid;
-  char *str = "";
-  ipmi_config_err_t ret;
-  int is_same;
-
-  assert (state_data);
-  assert (section_name);
-  assert (kv);
-
-  userid = atoi (section_name + strlen ("User"));
-
-  /*
-   * IPMI Workaround (achu)
-   *
-   * On some early Supermicro H8QME motherboards, if the username was
-   * not yet set, a password test will automatically fail with 0xff =
-   * "Unspecified Error".
-   *
-   * I don't feel I can work around this issue because 0xff is a
-   * "really bad" error code.  Had to rely on the vendor to fix this
-   * problem.
-   */
-  /* achu: password can't be checked out, but we should make sure IPMI
-   * 2.0 exists on the system.
-   */
-  if ((ret = _check_bmc_user_password (state_data,
-                                       userid,
-                                       "foobar",
-                                       IPMI_PASSWORD_SIZE_20_BYTES,
-                                       &is_same)) != IPMI_CONFIG_ERR_SUCCESS)
-    return (ret);
-
-  if (state_data->prog_data->args->action == IPMI_CONFIG_ACTION_DIFF)
-    {
-      /* special case for diff, since we can't get the password, and
-       * return it, we'll check to see if the password is the same.
-       * If it is, return the inputted password back for proper
-       * diffing.
-       */
-      if ((ret = _check_bmc_user_password (state_data,
-                                           userid,
-                                           kv->value_input,
-                                           IPMI_PASSWORD_SIZE_20_BYTES,
-                                           &is_same)) != IPMI_CONFIG_ERR_SUCCESS)
-        return (ret);
-
-      if (is_same)
-        str = kv->value_input;
-      else
-        str = "<something else>";
-    }
-
-  if (ipmi_config_section_update_keyvalue_output (state_data,
-                                                  kv,
-                                                  str) < 0)
-    return (IPMI_CONFIG_ERR_FATAL_ERROR);
-
-  return (IPMI_CONFIG_ERR_SUCCESS);
-}
-
-static ipmi_config_err_t
-password20_commit (ipmi_config_state_data_t *state_data,
-                   const char *section_name,
-                   const struct ipmi_config_keyvalue *kv)
-{
-  uint8_t userid;
-  fiid_obj_t obj_cmd_rs = NULL;
-  ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
-
-  assert (state_data);
-  assert (section_name);
-  assert (kv);
-
-  userid = atoi (section_name + strlen ("User"));
-
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_user_password_rs)))
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_create: %s\n",
-                       strerror (errno));
-      goto cleanup;
-    }
-
-  if (ipmi_cmd_set_user_password (state_data->ipmi_ctx,
-                                  userid,
-                                  IPMI_PASSWORD_SIZE_20_BYTES,
-                                  IPMI_PASSWORD_OPERATION_SET_PASSWORD,
-                                  kv->value_input,
-                                  strlen (kv->value_input),
-                                  obj_cmd_rs) < 0)
-    {
-      ipmi_config_err_t ret;
-
-      if (ipmi_errnum_is_non_fatal (state_data,
-                                    obj_cmd_rs,
-                                    &ret))
-        rv = ret;
-
-      if (rv == IPMI_CONFIG_ERR_FATAL_ERROR
-          || state_data->prog_data->args->common_args.debug)
-        pstdout_fprintf (state_data->pstate,
-                         stderr,
-                         "ipmi_cmd_set_user_password: %s\n",
-                         ipmi_ctx_errormsg (state_data->ipmi_ctx));
-
-      goto cleanup;
-    }
-
-  rv = IPMI_CONFIG_ERR_SUCCESS;
- cleanup:
-  fiid_obj_destroy (obj_cmd_rs);
-  return (rv);
-
-}
-
-static ipmi_config_validate_t
-password20_validate (ipmi_config_state_data_t *state_data,
-                     const char *section_name,
-                     const char *key_name,
-                     const char *value)
-{
-  assert (state_data);
-  assert (section_name);
-  assert (key_name);
-  assert (value);
-
-  if (strlen (value) <= IPMI_2_0_MAX_PASSWORD_LENGTH)
-    return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
-  return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
-}
-
-static ipmi_config_err_t
 enable_user_checkout (ipmi_config_state_data_t *state_data,
                       const char *section_name,
                       struct ipmi_config_keyvalue *kv)
@@ -2416,17 +2279,6 @@ ipmi_config_core_user_section_get (ipmi_config_state_data_t *state_data, unsigne
                                    yes_no_validate) < 0)
     goto cleanup;
 
-  /* achu: For backwards compatability to earlier ipmi-config, now "absorbed" into Password */
-  if (ipmi_config_section_add_key (state_data,
-                                   section,
-                                   "Password20",
-                                   "Give password for IPMI 2.0 or blank to clear. MAX 20 chars.",
-                                   IPMI_CONFIG_DO_NOT_CHECKOUT | IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT,
-                                   password20_checkout,
-                                   password20_commit,
-                                   password20_validate) < 0)
-    goto cleanup;
-
   /* b/c loop goes from -1 and up, need to make unsigned int an int
    *
    * even if count is 0, make sure to go through loop atleast once, so
@@ -2477,20 +2329,6 @@ ipmi_config_core_user_section_get (ipmi_config_state_data_t *state_data, unsigne
                                                      "Lan_Enable_Restricted_to_Callback",
                                                      "Possible values: Yes/No",
                                                      config_flags | IPMI_CONFIG_USERNAME_NOT_SET_YET,
-                                                     lan_enable_restricted_to_callback_checkout,
-                                                     lan_enable_restricted_to_callback_commit,
-                                                     yes_no_validate,
-                                                     i,
-                                                     state_data->lan_channel_numbers,
-                                                     state_data->lan_channel_numbers_count) < 0)
-        goto cleanup;
-
-      /* achu: For backwards compatability to ipmi-config in 0.2.0 */
-      if (ipmi_config_section_multi_channel_add_key (state_data,
-                                                     section,
-                                                     "Lan_Enable_Restrict_to_Callback",
-                                                     "Possible values: Yes/No",
-                                                     config_flags | IPMI_CONFIG_DO_NOT_CHECKOUT | IPMI_CONFIG_USERNAME_NOT_SET_YET,
                                                      lan_enable_restricted_to_callback_checkout,
                                                      lan_enable_restricted_to_callback_commit,
                                                      yes_no_validate,
@@ -2589,20 +2427,6 @@ ipmi_config_core_user_section_get (ipmi_config_state_data_t *state_data, unsigne
                                                      "Serial_Enable_Restricted_to_Callback",
                                                      "Possible values: Yes/No",
                                                      config_flags | IPMI_CONFIG_USERNAME_NOT_SET_YET,
-                                                     serial_enable_restricted_to_callback_checkout,
-                                                     serial_enable_restricted_to_callback_commit,
-                                                     yes_no_validate,
-                                                     i,
-                                                     state_data->serial_channel_numbers,
-                                                     state_data->serial_channel_numbers_count) < 0)
-        goto cleanup;
-
-      /* achu: For backwards compatability to ipmi-config in 0.2.0 */
-      if (ipmi_config_section_multi_channel_add_key (state_data,
-                                                     section,
-                                                     "Serial_Enable_Restrict_to_Callback",
-                                                     "Possible values: Yes/No",
-                                                     config_flags | IPMI_CONFIG_DO_NOT_CHECKOUT | IPMI_CONFIG_USERNAME_NOT_SET_YET,
                                                      serial_enable_restricted_to_callback_checkout,
                                                      serial_enable_restricted_to_callback_commit,
                                                      yes_no_validate,
