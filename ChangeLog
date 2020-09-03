@@ -1,3 +1,8 @@
+2020-09-03 Christian Ehrhardt <christian.ehrhardt@canonical.com>
+
+	* libfreeipmi/locate/ipmi-locate-acpi-spmi.c
+	(_ipmi_acpi_get_table_dev_mem): Fix segfault
+
 2020-07-28 Albert Chu <chu11@llnl.gov>
 
 	* man/freeipmi.conf.5.pre.in: Fix typo
