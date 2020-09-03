@@ -1384,7 +1384,6 @@ _ipmi_acpi_get_table_dev_mem (ipmi_locate_ctx_t ctx,
   else
     acpi_table_count = rsdt_xsdt_table_data_length / 8;
 
-  acpi_table = NULL;
   acpi_table_length = 0;
   for (i = 0, signature_table_count = 0; i < acpi_table_count; i++)
     {
