@@ -1,3 +1,8 @@
+FreeIPMI 1.6.6 - 09/04/20
+-------------------------
+o In libfreeipmi, fix segfault in SPMI parsing leading to immediate
+  failures on some hardware across all tools.
+
 FreeIPMI 1.6.5 - 05/21/20
 -------------------------
 o Add FRU parsing workaround for Fujitsu Primergy RX1330, in which a
