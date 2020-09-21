@@ -117,7 +117,7 @@ the vendor.
 Clear SEL.
 .TP
 \fB\-\-post\-clear\fR
-Identical to \fB\-\-clear\fR, except the SEL clearning will be
+Identical to \fB\-\-clear\fR, except the SEL clearing will be
 performed after SEL event records are displayed.  This option is
 useful for scripting if users intend to log SEL events to another log,
 then immediately clear SEL.  Unlike calling \fB\-\-clear\fR in another
