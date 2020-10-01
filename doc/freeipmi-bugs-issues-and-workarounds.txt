@@ -391,6 +391,17 @@ LAN Authentication Issue #26: [COMPLIANCE]
   Resolution: Workaround added to ignore these invalid authentication
   codes.
 
+LAN Authentication Issue #27: [COMPLIANCE]
+
+  Cannot authenticate with IPMI 1.5, it is not supported.
+
+  Seen on: HP Proliant DL 145, Supermicro X11DPT-PS, Supermicro
+  X11DPU, Supermicro H11DSU-iN, Supermicro H12DSG-O-CPU.  But other
+  boards from these vendors have also been observed to have the
+  problem.
+
+  Resolution: User must specify they wish to use IPMI 2.0.
+
 ----------------------------------------------------------------------
 
 ----------------------
