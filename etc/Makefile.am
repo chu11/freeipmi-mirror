@@ -32,9 +32,9 @@ install-init-scripts: install-sysconfig
 
 install-systemd-scripts: install-sysconfig
 	$(INSTALL) -m 755 -d $(DESTDIR)$(systemdsystemunitdir)
-	$(INSTALL) -m 755 $(srcdir)/bmc-watchdog.service $(DESTDIR)$(systemdsystemunitdir)/bmc-watchdog.service
-	$(INSTALL) -m 755 $(srcdir)/ipmidetectd.service $(DESTDIR)$(systemdsystemunitdir)/ipmidetectd.service
-	$(INSTALL) -m 755 $(srcdir)/ipmiseld.service $(DESTDIR)$(systemdsystemunitdir)/ipmiseld.service
+	$(INSTALL) -m 644 $(srcdir)/bmc-watchdog.service $(DESTDIR)$(systemdsystemunitdir)/bmc-watchdog.service
+	$(INSTALL) -m 644 $(srcdir)/ipmidetectd.service $(DESTDIR)$(systemdsystemunitdir)/ipmidetectd.service
+	$(INSTALL) -m 644 $(srcdir)/ipmiseld.service $(DESTDIR)$(systemdsystemunitdir)/ipmiseld.service
 
 install-sysconfig:
 	$(INSTALL) -m 755 -d $(DESTDIR)$(sysconfdir)/sysconfig
