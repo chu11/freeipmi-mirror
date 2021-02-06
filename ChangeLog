@@ -1,3 +1,7 @@
+2021-02-06 Fabio Fantoni <fantonifabio@tiscali.it>
+
+	* etc/: Update systemd service files permissions.
+
 2020-09-30 Albert Chu <chu11@llnl.gov>
 
 	* man/manpage-common-workaround-extra-text.man: Document that
