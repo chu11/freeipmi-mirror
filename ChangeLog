@@ -8,6 +8,9 @@
 	* libfreeipmi/fru/ipmi-fru.c: Do not require ipmi_ctx to be set if
 	loading data via buffer in ipmi_fru_open_device_id_with_buffer().
 
+	* ipmi-fru: Do not require opening of an IPMI session if using
+	--fru-file option.
+
 2021-02-07 Albert Chu <chu11@llnl.gov>
 
 	* etc/: Update conf file permissions.
