@@ -708,7 +708,7 @@ sub process_args {
     print STDERR "petalert.pl is logging to $log_filename, use -q to suppress this tip\n";
   }
 
-  # comma-separted debug tokens
+  # comma-separated debug tokens
   if ($opts{'Debug'}) {
     $logger_token{$_} = 1 for split /,+/, $opts{'Debug'};
   }

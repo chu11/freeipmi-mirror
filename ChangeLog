@@ -2,6 +2,8 @@
 
 	* etc/: Update conf file permissions.
 
+	* Globally fix a number of typos.
+
 2021-02-06 Fabio Fantoni <fantonifabio@tiscali.it>
 
 	* etc/: Update systemd service files permissions.

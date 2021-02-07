@@ -112,7 +112,7 @@ Specify an alternate event state configuration file.
 \fB\-\-event\-state\-filter\fR=\fIFILTERSTRING\fR
 Specify event states to be filtered out and not logged.  Possible
 inputs are NOMINAL, WARNING, CRITICAL, and NA.  Multiple states can be
-listed separted by comma.  The special case string of "none" will
+listed separated by comma.  The special case string of "none" will
 indicate no event states should be excluded (may be useful for
 overriding configured defaults).
 .TP

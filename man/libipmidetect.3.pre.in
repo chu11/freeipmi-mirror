@@ -54,9 +54,9 @@ or undetected
 .br
 .SH "DESCRIPTION"
 .B Libipmidetect
-implements a high level API for determing which nodes in
+implements a high level API for determining which nodes in
 a cluster do or do-not support IPMI.  This library is primarily useful
-for detecting whe nodes are removed from a cluster for servicing, so
+for detecting when nodes are removed from a cluster for servicing, so
 that IPMI applications can avoid unnecessary timeouts.
 The library interacts with the
 .B ipmidetectd(8)

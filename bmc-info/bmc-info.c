@@ -298,7 +298,7 @@ display_get_device_id (bmc_info_state_data_t *state_data)
   /* The "yes" vs. "no" is backwards from normal logic */
   pstdout_printf (state_data->pstate,
                   "Device Available      : %s\n",
-                  val ? "no (device firmware, SDR Repository update or self initilization in progress)" : "yes (normal operation)");
+                  val ? "no (device firmware, SDR Repository update or self initialization in progress)" : "yes (normal operation)");
 
   if (FIID_OBJ_GET (obj_cmd_rs, "ipmi_version_major", &val) < 0)
     {

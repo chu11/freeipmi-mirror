@@ -9,7 +9,7 @@ many
 .B FreeIPMI
 tools so values don't have to be configured on the command line.  This
 allows users to avoid typing in a long list of command line options
-everytime a command is executed.  It can also be used to hide
+every time a command is executed.  It can also be used to hide
 usernames, passwords, and other sensitive information from the
 .B ps(1)
 command.

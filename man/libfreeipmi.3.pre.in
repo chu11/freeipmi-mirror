@@ -17,7 +17,7 @@ and
 .TP
 .B cmds
 Provides fiid templates and 'fill' functions for IPMI
-commands.  Also provides macros definining common parameters for
+commands.  Also provides macros defining common parameters for
 IPMI commands.  The cmds are used by most other portions of
 libfreeipmi including the 'api' sub-section and tools such as
 .B ipmipower(8)

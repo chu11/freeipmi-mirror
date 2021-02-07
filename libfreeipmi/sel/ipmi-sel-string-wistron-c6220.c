@@ -565,7 +565,7 @@ sel_string_output_wistron_c6220_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
           cpudimm_str = "CPU4 DIMM D";
           break;
         default:
-          cpudimm_str = "Uknown CPU DIMM ";
+          cpudimm_str = "Unknown CPU DIMM ";
         }
 
       switch (dimmnumber)

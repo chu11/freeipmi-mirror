@@ -512,7 +512,7 @@ extern "C" {
 
 #define IPMI_COMP_CODE_ALERT_IPMI_MESSAGING_SESSION_ACTIVE                                                            0x82
 #define IPMI_COMP_CODE_ALERT_IPMI_MESSAGING_SESSION_ACTIVE_STR \
-  "Alert Immedate rejected due to IPMI messaging session active on this channel"
+  "Alert Immediate rejected due to IPMI messaging session active on this channel"
 
 /*
  * Sensor Device Commands
