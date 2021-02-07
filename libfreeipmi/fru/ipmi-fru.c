@@ -379,7 +379,7 @@ _read_fru_data (ipmi_fru_ctx_t ctx,
 
   assert (ctx);
   assert (ctx->magic == IPMI_FRU_CTX_MAGIC);
-  assert (ctx->ipmi_ctx);
+  assert (ctx->ipmi_ctx || ctx->device_opened_with_buffer);
   assert (frubuf);
   assert (frubuflen);
   assert (fru_read_bytes <= frubuflen);
@@ -547,7 +547,7 @@ _ipmi_fru_open_device_id_common (ipmi_fru_ctx_t ctx,
   assert (fru_device_id != IPMI_FRU_DEVICE_ID_RESERVED
           || (areabuf && areabuflen));
 
-  if (!ctx->ipmi_ctx)
+  if (!ctx->ipmi_ctx && (!areabuf || !areabuflen))
     {
       FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_IPMI_ERROR);
       return (-1);
@@ -844,7 +844,7 @@ _parse_multirecord_header (ipmi_fru_ctx_t ctx,
 
   assert (ctx);
   assert (ctx->magic == IPMI_FRU_CTX_MAGIC);
-  assert (ctx->ipmi_ctx);
+  assert (ctx->ipmi_ctx || ctx->device_opened_with_buffer);
   assert (record_type_id
           || record_format_version
           || end_of_list
@@ -1072,7 +1072,7 @@ _read_info_area_data (ipmi_fru_ctx_t ctx,
 
   assert (ctx);
   assert (ctx->magic == IPMI_FRU_CTX_MAGIC);
-  assert (ctx->ipmi_ctx);
+  assert (ctx->ipmi_ctx || ctx->device_opened_with_buffer);
   assert (area_type);
   assert (area_length);
   assert (areabuf);
@@ -1254,7 +1254,7 @@ _read_multirecord_area_data (ipmi_fru_ctx_t ctx,
 
   assert (ctx);
   assert (ctx->magic == IPMI_FRU_CTX_MAGIC);
-  assert (ctx->ipmi_ctx);
+  assert (ctx->ipmi_ctx || ctx->device_opened_with_buffer);
   assert (area_type);
   assert (area_length);
   assert (areabuf);
@@ -1388,7 +1388,7 @@ _read_raw_data (ipmi_fru_ctx_t ctx,
 
   assert (ctx);
   assert (ctx->magic == IPMI_FRU_CTX_MAGIC);
-  assert (ctx->ipmi_ctx);
+  assert (ctx->ipmi_ctx || ctx->device_opened_with_buffer);
   assert (area_type);
   assert (area_length);
   assert (areabuf);
@@ -1437,7 +1437,7 @@ ipmi_fru_read_data_area (ipmi_fru_ctx_t ctx,
       return (-1);
     }
 
-  if (!ctx->ipmi_ctx)
+  if (!ctx->ipmi_ctx && !ctx->device_opened_with_buffer)
     {
       FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_IPMI_ERROR);
       return (-1);
@@ -1510,7 +1510,7 @@ ipmi_fru_read_multirecord_record_type_id (ipmi_fru_ctx_t ctx,
       return (-1);
     }
 
-  if (!ctx->ipmi_ctx)
+  if (!ctx->ipmi_ctx && !ctx->device_opened_with_buffer)
     {
       FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_IPMI_ERROR);
       return (-1);

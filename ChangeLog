@@ -5,6 +5,11 @@
 
 2021-02-07 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/fru/ipmi-fru.c: Do not require ipmi_ctx to be set if
+	loading data via buffer in ipmi_fru_open_device_id_with_buffer().
+
+2021-02-07 Albert Chu <chu11@llnl.gov>
+
 	* etc/: Update conf file permissions.
 
 	* Globally fix a number of typos.
