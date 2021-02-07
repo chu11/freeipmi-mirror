@@ -986,6 +986,69 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
 
   assert (!args->common_args.flush_cache);
 
+  if (args->fru_file)
+    {
+      struct stat sbuf;
+      ssize_t len;
+
+      if (stat (state_data->prog_data->args->fru_file, &sbuf) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "Cannot read '%s': %s\n",
+                           state_data->prog_data->args->fru_file,
+                           strerror (errno));
+          goto cleanup;
+        }
+
+      if (!sbuf.st_size)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "FRU file '%s' is empty\n",
+                           state_data->prog_data->args->fru_file);
+          goto cleanup;
+        }
+
+      if (sbuf.st_size > IPMI_FRU_AREA_SIZE_MAX)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "FRU file '%s' too large, max area size is %u < %lu\n",
+                           state_data->prog_data->args->fru_file,
+                           IPMI_FRU_AREA_SIZE_MAX,
+                           sbuf.st_size);
+          goto cleanup;
+        }
+
+      if ((fd = open (state_data->prog_data->args->fru_file, O_RDONLY)) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "Cannot open '%s': %s\n",
+                           state_data->prog_data->args->fru_file,
+                           strerror (errno));
+          goto cleanup;
+        }
+
+      if ((len = fd_read_n (fd, frubuf, sbuf.st_size)) < 0)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fd_read_n: %s\n",
+                           strerror (errno));
+          goto cleanup;
+        }
+
+      if (_use_buffer_and_output_fru (state_data,
+                                      &output_count,
+                                      frubuf,
+                                      len) < 0)
+        goto cleanup;
+
+      goto out;
+    }
+
   if (args->common_args.ignore_sdr_cache)
     {
       /* no SDR?  This is all you get :-) */
@@ -1065,66 +1128,6 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
 
       goto out;
     }
-  else if (args->fru_file)
-    {
-      struct stat sbuf;
-      ssize_t len;
-
-      if (stat (state_data->prog_data->args->fru_file, &sbuf) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "Cannot read '%s': %s\n",
-                           state_data->prog_data->args->fru_file,
-                           strerror (errno));
-          goto cleanup;
-        }
-
-      if (!sbuf.st_size)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "FRU file '%s' is empty\n",
-                           state_data->prog_data->args->fru_file);
-          goto cleanup;
-        }
-
-      if (sbuf.st_size > IPMI_FRU_AREA_SIZE_MAX)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "FRU file '%s' too large, max area size is %u < %lu\n",
-                           state_data->prog_data->args->fru_file,
-                           IPMI_FRU_AREA_SIZE_MAX,
-                           sbuf.st_size);
-          goto cleanup;
-        }
-
-      if ((fd = open (state_data->prog_data->args->fru_file, O_RDONLY)) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "Cannot open '%s': %s\n",
-                           state_data->prog_data->args->fru_file,
-                           strerror (errno));
-          goto cleanup;
-        }
-
-      if ((len = fd_read_n (fd, frubuf, sbuf.st_size)) < 0)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "fd_read_n: %s\n",
-                           strerror (errno));
-          goto cleanup;
-        }
-
-      if (_use_buffer_and_output_fru (state_data,
-                                      &output_count,
-                                      frubuf,
-                                      len) < 0)
-        goto cleanup;
-    }
   else
     {
       /* We always print out the default one first */
@@ -1193,12 +1196,16 @@ _ipmi_fru (pstdout_state_t pstate,
   state_data.pstate = pstate;
   state_data.hostname = (char *)hostname;
 
-  if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
-                                         hostname,
-                                         &(prog_data->args->common_args),
-                                         state_data.pstate,
-                                         0)))
-    goto cleanup;
+  /* no need for IPMI communication if reading from binary */
+  if (!prog_data->args->fru_file)
+    {
+      if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
+                                             hostname,
+                                             &(prog_data->args->common_args),
+                                             state_data.pstate,
+                                             0)))
+        goto cleanup;
+    }
 
   if (!(state_data.fru_ctx = ipmi_fru_ctx_create (state_data.ipmi_ctx)))
     {
