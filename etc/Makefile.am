@@ -16,13 +16,13 @@ EXTRA_DIST = \
 
 install-data-local: $(INSTALL_DAEMON_SCRIPTS)
 	$(INSTALL) -m 755 -d $(DESTDIR)$(FREEIPMI_SYSCONFDIR)
-	$(INSTALL) -m 644 $(srcdir)/freeipmi.conf $(DESTDIR)$(FREEIPMI_CONFIG_FILE_DEFAULT)
+	$(INSTALL) -m 640 $(srcdir)/freeipmi.conf $(DESTDIR)$(FREEIPMI_CONFIG_FILE_DEFAULT)
 	$(INSTALL) -m 644 $(srcdir)/freeipmi_interpret_sel.conf $(DESTDIR)$(INTERPRET_SEL_CONFIG_FILE_DEFAULT)
 	$(INSTALL) -m 644 $(srcdir)/freeipmi_interpret_sensor.conf $(DESTDIR)$(INTERPRET_SENSOR_CONFIG_FILE_DEFAULT)
-	$(INSTALL) -m 644 $(srcdir)/ipmidetect.conf $(DESTDIR)$(IPMIDETECT_CONFIG_FILE_DEFAULT)
-	$(INSTALL) -m 644 $(srcdir)/ipmidetectd.conf $(DESTDIR)$(IPMIDETECTD_CONFIG_FILE_DEFAULT)
-	$(INSTALL) -m 644 $(srcdir)/ipmiseld.conf $(DESTDIR)$(IPMISELD_CONFIG_FILE_DEFAULT)
-	$(INSTALL) -m 644 $(srcdir)/libipmiconsole.conf $(DESTDIR)$(LIBIPMICONSOLE_CONFIG_FILE_DEFAULT)
+	$(INSTALL) -m 640 $(srcdir)/ipmidetect.conf $(DESTDIR)$(IPMIDETECT_CONFIG_FILE_DEFAULT)
+	$(INSTALL) -m 640 $(srcdir)/ipmidetectd.conf $(DESTDIR)$(IPMIDETECTD_CONFIG_FILE_DEFAULT)
+	$(INSTALL) -m 640 $(srcdir)/ipmiseld.conf $(DESTDIR)$(IPMISELD_CONFIG_FILE_DEFAULT)
+	$(INSTALL) -m 640 $(srcdir)/libipmiconsole.conf $(DESTDIR)$(LIBIPMICONSOLE_CONFIG_FILE_DEFAULT)
 
 install-init-scripts: install-sysconfig
 	$(INSTALL) -m 755 -d $(DESTDIR)$(sysconfdir)/init.d

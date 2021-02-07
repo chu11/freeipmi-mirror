@@ -1,3 +1,7 @@
+2021-02-07 Albert Chu <chu11@llnl.gov>
+
+	* etc/: Update conf file permissions.
+
 2021-02-06 Fabio Fantoni <fantonifabio@tiscali.it>
 
 	* etc/: Update systemd service files permissions.
