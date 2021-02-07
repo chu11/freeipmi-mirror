@@ -1766,7 +1766,7 @@ is the numeric IANA manufacturer ID for the manufacturer in question.
 The \fI<Product\-ID>\fR is one or more numeric IDs representing the
 manufacturer's product.  The \fI<Product\-ID>\fR can be listed as a
 single numeric number (e.g. 1234), a range of IDs separated by a dash
-(e.g. 12-20), or a list of specific product IDs separted by a plus
+(e.g. 12-20), or a list of specific product IDs separated by a plus
 (e.g. 12+19+22).  Both the \fIManufacturer\-ID\fR and
 \fIProduct\-ID\fR can be found using
 .B bmc-info(8).

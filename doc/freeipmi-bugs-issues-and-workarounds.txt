@@ -299,7 +299,7 @@ LAN Authentication Issue #18: [COMPLIANCE]
 LAN Authentication Issue #19: [IMPLEMENTATION]
 
   When attempting to authenticate with a disabled Cipher Suite ID, a
-  0Ah status ("Unauthorized role or privelege level requested.") is
+  0Ah status ("Unauthorized role or privilege level requested.") is
   returned instead of 11h ("No Cipher Suite match with proposed
   security algorithms.").  The resulting error message is confusing.
 
@@ -1824,7 +1824,7 @@ DCMI Issue #3: [INTERPRETATION]
   Seen on: Various, this is a general issue.
 
   Resolution: Code assumes that all 64 bytes of the buffer must be
-  overwritten everytime the string is modified.  This seems to be the
+  overwritten every time the string is modified.  This seems to be the
   safest approach.
 
 DCMI Issue #4: [COMPLIANCE]

@@ -197,7 +197,7 @@ difficulty completing, although a recent pong response from RMCP makes
 .B ipmipower
 believe the machine is up and functioning properly.
 
-The ping packet acount and percent options are used to alleviate this
+The ping packet count and percent options are used to alleviate this
 problem.
 .B Ipmipower
 will monitor RMCP ping packets in packet count chunks.  If

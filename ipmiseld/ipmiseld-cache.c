@@ -357,7 +357,7 @@ ipmiseld_data_cache_load (ipmiseld_host_data_t *host_data)
     {
       if (access (filename, R_OK) < 0)
         {
-          ipmiseld_err_output (host_data, "Error read accesing '%s': %s", filename, strerror (errno));
+          ipmiseld_err_output (host_data, "Error read accessing '%s': %s", filename, strerror (errno));
           goto cleanup;
         }
     }
@@ -495,7 +495,7 @@ ipmiseld_data_cache_store (ipmiseld_host_data_t *host_data)
     {
       if (access (filename, W_OK) < 0)
         {
-          ipmiseld_err_output (host_data, "Error write accesing '%s': %s", filename, strerror (errno));
+          ipmiseld_err_output (host_data, "Error write accessing '%s': %s", filename, strerror (errno));
           goto cleanup;
         }
 

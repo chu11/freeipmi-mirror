@@ -2318,7 +2318,7 @@ ipmi_config_core_user_section_get (ipmi_config_state_data_t *state_data, unsigne
     "\"Yes\", \"Lan_Enable_IPMI_Msgs\" to \"Yes\", "
     "and \"Lan_Privilege_Limit\" to a privilege level.  The "
     "privilege level is used to limit various IPMI operations for "
-    "individual usernames.  It is recommened that atleast one username be "
+    "individual usernames.  It is recommended that atleast one username be "
     "created with a privilege limit \"Administrator\", so all system "
     "functions are available to atleast one username via IPMI over LAN.  "
     "For security reasons, we recommend not enabling the \"anonymous\" "

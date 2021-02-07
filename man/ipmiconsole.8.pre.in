@@ -300,7 +300,7 @@ place to handle this.  The session must be closed and restarted.
 .SH "EXAMPLES"
 .B # ipmiconsole -h ahost -u myusername -p mypassword
 .PP
-Establish a console sesssion with a remote host.
+Establish a console session with a remote host.
 .PP
 
 .if @WITH_DEBUG@ \{

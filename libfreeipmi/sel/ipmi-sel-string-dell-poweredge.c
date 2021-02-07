@@ -740,7 +740,7 @@ sel_string_output_dell_poweredge_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
           error_code_str = "LPC PS Policy Integrity Failed";
           break;
         case IPMI_SENSOR_TYPE_OS_CRITICAL_STOP_OEM_DELL_TXT_ERROR_CODE_BIOS_ACM_ERROR_STATUS_INTERRUPT_OCCURED:
-          error_code_str = "Interrupt Occured";
+          error_code_str = "Interrupt Occurred";
           break;
         case IPMI_SENSOR_TYPE_OS_CRITICAL_STOP_OEM_DELL_TXT_ERROR_CODE_BIOS_ACM_ERROR_STATUS_CPU_NOT_SUPPORTED_BY_THIS_ACM:
           error_code_str = "CPU not supported by this ACM";

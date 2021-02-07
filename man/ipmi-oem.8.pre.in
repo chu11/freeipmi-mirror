@@ -550,7 +550,7 @@ that will lead to exception actions is the value specified by the
 \fIpolicytargetlimit\fR.  When the \fIpolicytrigger\fR is
 \fIinlettemperaturelimitpolicytrigger\fR,
 \fImissingpowerreadingtimeout\fR, or
-\fItimeafterplatformresettrigger\fR, the tigger that will lead to
+\fItimeafterplatformresettrigger\fR, the trigger that will lead to
 exception actions is the value specified by \fIpolicytriggerlimit\fR.
 When the \fIfIpolicytrigger\fR is \fIboottimepolicy\fR, a power
 profile will simply be maintained by the value specified by
@@ -790,7 +790,7 @@ card.  The possible keys and values are \fIdnsdhcp=enable|disable\fR,
 \fIdnsdomainnamedhcp=enable|disable\fR, and
 \fIdnsdomainname=string\fR.  \fIdnsdhcp\fR specifies if the DNS server
 IP addresses should be assigned from the DHCP server.
-\fIdnsserver1\fR and \fIdnsserver2\fR specify the IP addess for server
+\fIdnsserver1\fR and \fIdnsserver2\fR specify the IP address for server
 1 and 2 respectively.  These fields are read only if \fIdnsdhcp\fR and
 DHCP are enabled.  \fIdnsregisterbmc\fR specifies if the BMC host name
 is registered via the DNS server.  \fIdnsbmchostname\fR specifies the
@@ -828,7 +828,7 @@ on the IPMI card.  The possible keys and values are
 \fIdpnmpowermanagement=enable|disable\fR,
 \fIpowerstaggeringacrecovery=immediate|auto|user\fR,
 \fIpowerondelay=seconds\fR, and \fImaxpowerondelay=seconds\fR.
-\fIdpnmpowermanagement\fR enables or diables DPNM, Dynamic Power Node
+\fIdpnmpowermanagement\fR enables or disables DPNM, Dynamic Power Node
 Management.  For \fIpowerstaggeringacrecovery\fR, \fIimmediate\fR
 specifies no delay, \fIauto\fR generates a delay time between the
 minimum and maximum configured, and \fIuser\fR uses the user defined
@@ -1024,7 +1024,7 @@ card.  The possible keys and values are \fIdnsdhcp=enable|disable\fR,
 \fIdnsdomainnamedhcp=enable|disable\fR, and
 \fIdnsdomainname=string\fR.  \fIdnsdhcp\fR specifies if the DNS server
 IP addresses should be assigned from the DHCP server.
-\fIdnsserver1\fR and \fIdnsserver2\fR specify the IP addess for server
+\fIdnsserver1\fR and \fIdnsserver2\fR specify the IP address for server
 1 and 2 respectively.  These fields are read only if \fIdnsdhcp\fR and
 DHCP are enabled.  \fIdnsregisterbmc\fR specifies if the BMC host name
 is registered via the DNS server.  \fIdnsbmchostname\fR specifies the
@@ -1060,7 +1060,7 @@ on the IPMI card.  The possible keys and values are
 \fIdpnmpowermanagement=enable|disable\fR,
 \fIpowerstaggeringacrecovery=immediate|auto|user\fR,
 \fIpowerondelay=seconds\fR, and \fImaxpowerondelay=seconds\fR.
-\fIdpnmpowermanagement\fR enables or diables DPNM, Dynamic Power Node
+\fIdpnmpowermanagement\fR enables or disables DPNM, Dynamic Power Node
 Management.  For \fIpowerstaggeringacrecovery\fR, \fIimmediate\fR
 specifies no delay, \fIauto\fR generates a delay time between the
 minimum and maximum configured, and \fIuser\fR uses the user defined
@@ -1264,7 +1264,7 @@ card.  The possible keys and values are \fIdnsdhcp=enable|disable\fR,
 \fIdnsdomainnamedhcp=enable|disable\fR, \fIdnsdomainname=string\fR,
 and \fIdnsregistrationdelay=seconds\fR.  \fIdnsdhcp\fR specifies if
 the DNS server IP addresses should be assigned from the DHCP server.
-\fIdnsserver1\fR and \fIdnsserver2\fR specify the IP addess for server
+\fIdnsserver1\fR and \fIdnsserver2\fR specify the IP address for server
 1 and 2 respectively.  These fields are read only if \fIdnsdhcp\fR and
 DHCP are enabled.  \fIdnsregisterbmc\fR specifies if the BMC host name
 is registered via the DNS server.  \fIdnsbmchostname\fR specifies the
@@ -1275,7 +1275,7 @@ specifies the DNS domain name string.  This field is read only if
 \fIdnsdomainnamedhcp\fR is enabled.  \fIdnsregistrationdelay\fR
 specifies the delay the BMC should take after the IPMI process is up
 and running.  Multiple key=value pairs may be specified.  If no
-key=value pairs are specifed, available pairs are output.  Command
+key=value pairs are specified, available pairs are output.  Command
 confirmed to work on Wistron / Dell Poweredge C6220.
 .TP
 .B get-web-server-config
@@ -1288,7 +1288,7 @@ This OEM command will set the current web server configuration on the
 IPMI card.  The possible keys and values are
 \fIwebserver=enable|disable\fR, \fIwebservertimeout=seconds\fR,
 \fIhttpportnumber=num\fR, and \fIhttpsportnumber=num\fR.  Multiple
-key=value pairs may be specified.  If no key=value pairs are specifed,
+key=value pairs may be specified.  If no key=value pairs are specified,
 available pairs are output.  Command confirmed to work on Wistron /
 Dell Poweredge C6220.
 .if 0 \{
@@ -1303,7 +1303,7 @@ This OEM command will set the current server services configuration on
 the IPMI card.  The possible keys and values are
 \fIkvmportnumber=num\fR, \fItelnetportnumber=num\fR, and
 \fIsshportnumber=num\fR.  Multiple key=value pairs may be specified.
-If no key=value pairs are specifed, available pairs are output.
+If no key=value pairs are specified, available pairs are output.
 Command confirmed to work on Wistron / Dell Poweredge C6220.
 \}
 .TP
@@ -1322,7 +1322,7 @@ on the IPMI card.  The possible keys and values are
 configured, and \fIuser\fR uses the user defined time defined by
 \fIpowerondelay\fR.  \fIpowerondelay\fR must be within the minimum and
 maximum power on delay times.  Multiple key=value pairs may be
-specified.  If no key=value pairs are specifed, available pairs are
+specified.  If no key=value pairs are specified, available pairs are
 output.  Command confirmed to work on Wistron / Dell Poweredge C6220.
 .if 0 \{
 .TP
@@ -1354,7 +1354,7 @@ The possible keys and values are \fIipv6=enable|disable\fR,
 \fIipv6address=ipaddress\fR, \fIipv6gatewayaddress=ipaddress\fR,
 \fIipv6prefixlength=length\fR, \fIipv6autoconfig=enable|disable\fR,
 \fIipv6autodns=enable|disable\fR, \fIipv6dnsserver1=ipaddress\fR, and
-\fIipv6dnsserver2=ipaddress\fR.  If no key=value pairs are specifed,
+\fIipv6dnsserver2=ipaddress\fR.  If no key=value pairs are specified,
 available pairs are output.  Some fields may be read-only on specific
 Poweredge systems.  Command confirmed to work on Wistron / Dell
 Poweredge C6220.
@@ -1371,7 +1371,7 @@ configuration.  It is followed by a set of configuration keys and
 values.  The possible keys and values are
 \fIdestinationtype=pet|oem1|oem2\fR, \fIalertacktimeout=seconds\fR,
 \fIretries=count\fR, and \fIipv6snmptrapaddress=ipaddress\fR.  If no
-key=value pairs are specifed, available pairs are output.  Some fields
+key=value pairs are specified, available pairs are output.  Some fields
 may be read-only on specific Poweredge systems.  Command confirmed to
 work on Wistron / Dell Poweredge C6220.
 .TP

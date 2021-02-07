@@ -112,7 +112,7 @@ found in each of the tool manpages.
 
 .SH "Configuration"
 In order to avoid typing in a long list of command line options to
-specify IPMI communication requirements everytime a command is
+specify IPMI communication requirements every time a command is
 executed (e.g. driver paths, usernames, passwords, etc.), an
 alternate set of default values can be set for most FreeIPMI
 tools in the FreeIPMI configuration file.  See
