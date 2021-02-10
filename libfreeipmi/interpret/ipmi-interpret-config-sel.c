@@ -1428,6 +1428,8 @@ _interpret_sel_oem_intel_smi_timeout_power_throttled (ipmi_interpret_ctx_t ctx)
   return (0);
 }
 
+#if 0
+/* Not used right now, but leave in case need in future */
 static int
 _interpret_sel_oem_intel_nmi_state_wrapper (ipmi_interpret_ctx_t ctx,
                                             uint32_t manufacturer_id,
@@ -1440,6 +1442,7 @@ _interpret_sel_oem_intel_nmi_state_wrapper (ipmi_interpret_ctx_t ctx,
 
   return (0);
 }
+#endif
 
 static int
 _interpret_sel_oem_intel_nmi_state (ipmi_interpret_ctx_t ctx)

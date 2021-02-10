@@ -42,6 +42,7 @@
 #include "freeipmi/spec/oem/ipmi-sensor-numbers-oem-intel-spec.h"
 #include "freeipmi/spec/oem/ipmi-sensor-types-oem-intel-spec.h"
 #include "freeipmi/spec/oem/ipmi-slave-address-oem-intel-spec.h"
+#include "freeipmi/util/ipmi-sensor-and-event-code-tables-util.h"
 
 #include "ipmi-sel-common.h"
 #include "ipmi-sel-defs.h"
@@ -334,7 +335,6 @@ _sel_string_output_intel_s2600bpb_remote_debug_sensor (ipmi_sel_ctx_t ctx,
                                                        uint8_t event_data)
 {
   char info_str[INTEL_EVENT_BUFFER_LENGTH + 1];
-  char *str;
   unsigned int lentmp = 0;
 
   assert (ctx);
@@ -843,8 +843,6 @@ sel_string_output_intel_s2600bpb_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
                                                           struct ipmi_sel_system_event_record_data *system_event_record_data,
                                                           int *oem_rv)
 {
-  int ret;
-
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL);

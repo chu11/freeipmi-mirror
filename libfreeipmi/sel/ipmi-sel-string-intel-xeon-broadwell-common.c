@@ -48,6 +48,7 @@
 #include "ipmi-sel-defs.h"
 #include "ipmi-sel-string.h"
 #include "ipmi-sel-string-intel-xeon-broadwell-common.h"
+#include "ipmi-sel-string-intel-xeon-common.h"
 #include "ipmi-sel-trace.h"
 #include "ipmi-sel-util.h"
 
@@ -160,8 +161,6 @@ sel_string_output_intel_xeon_broadwell_event_data3_discrete_oem (ipmi_sel_ctx_t 
                                                                  unsigned int *wlen,
                                                                  struct ipmi_sel_system_event_record_data *system_event_record_data)
 {
-  int nmret;
-
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
   assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_INTEL);

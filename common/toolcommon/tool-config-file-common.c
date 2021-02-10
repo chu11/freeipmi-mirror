@@ -1209,39 +1209,6 @@ _config_file_ipmiconsole_sol_payload_instance (conffile_t cf,
 }
 
 static int
-_config_file_ipmipower_ipmi_version (conffile_t cf,
-                                     struct conffile_data *data,
-                                     char *optionname,
-                                     int option_type,
-                                     void *option_ptr,
-                                     int option_data,
-                                     void *app_ptr,
-                                     int app_data)
-{
-  struct common_cmd_args *common_args;
-  int tmp;
-
-  assert (data);
-  assert (optionname);
-  assert (option_ptr);
-
-  common_args = (struct common_cmd_args *)option_ptr;
-
-  if (!strcasecmp (data->string, "1.5"))
-    tmp = IPMI_DEVICE_LAN;
-  else if (!strcasecmp (data->string, "2.0"))
-    tmp = IPMI_DEVICE_LAN_2_0;
-  else
-    {
-      fprintf (stderr, "Config File Error: invalid value for %s\n", optionname);
-      exit (EXIT_FAILURE);
-    }
-
-  common_args->driver_type = tmp;
-  return (0);
-}
-
-static int
 _config_file_ipmiseld_sensor_types (conffile_t cf,
                                     struct conffile_data *data,
                                     char *optionname,

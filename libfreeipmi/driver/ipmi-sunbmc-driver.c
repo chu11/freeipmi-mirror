@@ -378,7 +378,11 @@ ipmi_sunbmc_ctx_io_init (ipmi_sunbmc_ctx_t ctx)
 
 #endif /* !defined(HAVE_SYS_STROPTS_H) */
 
+#if defined(HAVE_SYS_STROPTS_H)
+#ifdef IOCTL_IPMI_INTERFACE_METHOD
  out_io_init:
+#endif /* !IOCTL_IPMI_INTERFACE_METHOD */
+#endif /* !defined(HAVE_SYS_STROPTS_H) */
   ctx->io_init = 1;
  out:
   ctx->errnum = IPMI_SUNBMC_ERR_SUCCESS;

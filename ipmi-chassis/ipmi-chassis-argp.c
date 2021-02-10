@@ -95,12 +95,9 @@ static struct argp cmdline_config_file_argp = { cmdline_options,
                                                 cmdline_args_doc,
                                                 cmdline_doc };
 
-static error_t boot_flag_parse (int key, char *arg, struct argp_state *state);
-
 static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
-  error_t ret;
   char *endptr = NULL;
   struct ipmi_chassis_arguments *cmd_args;
   int tmp;
