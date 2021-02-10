@@ -1237,17 +1237,6 @@ ipmi_fru_multirecord_dc_load (ipmi_fru_ctx_t ctx,
         }
       (*output_number) = val;
     }
-  if (standby)
-    {
-      if (FIID_OBJ_GET (obj_record,
-                        "standby",
-                        &val) < 0)
-        {
-          FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, obj_record);
-          goto cleanup;
-        }
-      (*standby) = val;
-    }
   if (nominal_voltage)
     {
       if (FIID_OBJ_GET (obj_record,
@@ -1932,17 +1921,6 @@ ipmi_fru_multirecord_extended_dc_load (ipmi_fru_ctx_t ctx,
       if (current_units)
         (*current_units) = val;
       local_current_units = val;
-    }
-  if (standby)
-    {
-      if (FIID_OBJ_GET (obj_record,
-                        "standby",
-                        &val) < 0)
-        {
-          FRU_FIID_OBJECT_ERROR_TO_FRU_ERRNUM (ctx, obj_record);
-          goto cleanup;
-        }
-      (*standby) = val;
     }
   if (nominal_voltage)
     {
