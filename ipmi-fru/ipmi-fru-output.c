@@ -731,7 +731,6 @@ ipmi_fru_output_dc_load (ipmi_fru_state_data_t *state_data,
                          unsigned int area_length)
 {
   unsigned int output_number;
-  unsigned int standby;
   int nominal_voltage;
   int specd_minimum_voltage;
   int specd_maximum_voltage;
@@ -751,7 +750,6 @@ ipmi_fru_output_dc_load (ipmi_fru_state_data_t *state_data,
                                         areabuf,
                                         area_length,
                                         &output_number,
-                                        &standby,
                                         &nominal_voltage,
                                         &specd_minimum_voltage,
                                         &specd_maximum_voltage,
@@ -781,7 +779,6 @@ ipmi_fru_output_dc_load (ipmi_fru_state_data_t *state_data,
                                                  area_length,
                                                  &output_number,
                                                  NULL, /* don't need the current_units */
-                                                 &standby,
                                                  &nominal_voltage,
                                                  &specd_minimum_voltage,
                                                  &specd_maximum_voltage,
