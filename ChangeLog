@@ -1,5 +1,11 @@
 2021-02-10 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/fru/ipmi-fru-data.c: Fix invalid parsing of record
+	in ipmi_fru_multirecord_dc_load() and
+	ipmi_fru_multirecord_extended_dc_load().
+
+2021-02-10 Albert Chu <chu11@llnl.gov>
+
 	* Globally fix minor compiler warnings.  A number are related to
 	the removal of legacy support.
 
