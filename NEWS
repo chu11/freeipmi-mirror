@@ -1,5 +1,7 @@
 FreeIPMI 1.6.7 - 09/04/20
 -------------------------
+o Do not require IPMI access when running ipmi-fru with the --fru-file
+  option.
 o Fix default permissions of various config and system files.
 o Minor documentation updates.
 
