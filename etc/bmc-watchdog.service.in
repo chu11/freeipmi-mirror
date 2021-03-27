@@ -5,8 +5,8 @@ After=network.target
 [Service]
 Type=forking
 PIDFile=/run/bmc-watchdog.pid
-EnvironmentFile=-/etc/sysconfig/bmc-watchdog
-ExecStart=/usr/sbin/bmc-watchdog $OPTIONS
+EnvironmentFile=-@X_SYSCONFDIR@/sysconfig/bmc-watchdog
+ExecStart=@X_SBINDIR@/bmc-watchdog $OPTIONS
 
 [Install]
 WantedBy=multi-user.target

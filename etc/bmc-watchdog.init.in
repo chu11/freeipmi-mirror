@@ -13,10 +13,10 @@
 # Description: BMC watchdog timer daemon
 ### END INIT INFO
 
-DAEMON=/usr/sbin/bmc-watchdog
-PIDFILE=/var/run/bmc-watchdog.pid
-LOCKFILE=/var/lock/subsys/bmc-watchdog
-CONFFILE=/etc/sysconfig/bmc-watchdog
+DAEMON=@X_SBINDIR@/bmc-watchdog
+PIDFILE=@X_LOCALSTATEDIR@/run/bmc-watchdog.pid
+LOCKFILE=@X_LOCALSTATEDIR@/lock/subsys/bmc-watchdog
+CONFFILE=@X_SYSCONFDIR@/sysconfig/bmc-watchdog
 
 [ -f $DAEMON ] || exit 5
 
@@ -25,8 +25,8 @@ if [ -r $CONFFILE ]; then
 fi
 
 # Load Redhat or Suse appropriate libs
-if [ -f /etc/rc.d/init.d/functions ] ; then
-    . /etc/rc.d/init.d/functions
+if [ -f @X_SYSCONFDIR@/rc.d/init.d/functions ] ; then
+    . @X_SYSCONFDIR@/rc.d/init.d/functions
     Xstart() {
 
         # Default deamon mode
@@ -64,8 +64,8 @@ if [ -f /etc/rc.d/init.d/functions ] ; then
     Xexit() {
         exit $RETVAL
     }
-elif [ -f /etc/rc.status ] ; then
-    . /etc/rc.status
+elif [ -f @X_SYSCONFDIR@/rc.status ] ; then
+    . @X_SYSCONFDIR@/rc.status
     Xstart() {
         startproc -20 $DAEMON $OPTIONS
         rc_status -v

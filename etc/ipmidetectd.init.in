@@ -14,16 +14,16 @@
 # Description: IPMI node detection monitoring daemon
 ### END INIT INFO
 
-IPMIDETECTD=/usr/sbin/ipmidetectd
-IPMIDETECTD_CONF=/etc/freeipmi/ipmidetectd.conf
-LOCKFILE=/var/lock/subsys/ipmidetectd
+IPMIDETECTD=@X_SBINDIR@/ipmidetectd
+IPMIDETECTD_CONF=@X_SYSCONFDIR@/freeipmi/ipmidetectd.conf
+LOCKFILE=@X_LOCALSTATEDIR@/lock/subsys/ipmidetectd
 
 [ -f $IPMIDETECTD ] || exit 5
 [ -f $IPMIDETECTD_CONF ] || exit 6
 
 # Load Redhat or Suse appropriate libs
-if [ -f /etc/rc.d/init.d/functions ] ; then
-    . /etc/rc.d/init.d/functions
+if [ -f @X_SYSCONFDIR@/rc.d/init.d/functions ] ; then
+    . @X_SYSCONFDIR@/rc.d/init.d/functions
     Xstart() {
         daemon $IPMIDETECTD
         RETVAL=$?
@@ -51,8 +51,8 @@ if [ -f /etc/rc.d/init.d/functions ] ; then
     Xexit() {
         exit $RETVAL
     }
-elif [ -f /etc/rc.status ] ; then
-    . /etc/rc.status
+elif [ -f @X_SYSCONFDIR@/rc.status ] ; then
+    . @X_SYSCONFDIR@/rc.status
     Xstart() {
         startproc $IPMIDETECTD
         rc_status -v

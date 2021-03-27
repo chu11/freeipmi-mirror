@@ -1,3 +1,8 @@
+2021-03-27 Albert Chu <chu11@llnl.gov>
+
+	* etc: Generate many files via configure to ensure proper paths
+	are set.
+
 2021-02-10 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/fru: Remove unused function parameter 'standby' in
