@@ -41,6 +41,15 @@ AC_CONFIG_FILES([
         contrib/Makefile
         doc/Makefile
         etc/Makefile
+        etc/bmc-watchdog.init
+        etc/bmc-watchdog.service
+        etc/ipmidetectd.init
+        etc/ipmidetectd.service
+        etc/ipmiseld.init
+        etc/ipmiseld.service
+        etc/os-shutdown-event.service
+        etc/os-startup-event.service
+        etc/set-sysinfo-in-bmc.service
         ipmi-chassis/Makefile
 	ipmi-config/Makefile
         ipmi-dcmi/Makefile
