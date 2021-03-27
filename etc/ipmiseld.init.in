@@ -14,16 +14,16 @@
 # Description: IPMI SEL sylog logging daemon
 ### END INIT INFO
 
-IPMISELD=/usr/sbin/ipmiseld
-IPMISELD_CONF=/etc/freeipmi/ipmiseld.conf
-LOCKFILE=/var/lock/subsys/ipmiseld
+IPMISELD=@X_SBINDIR@/ipmiseld
+IPMISELD_CONF=@X_SYSCONFDIR@/freeipmi/ipmiseld.conf
+LOCKFILE=@X_LOCALSTATEDIR@/lock/subsys/ipmiseld
 
 [ -f $IPMISELD ] || exit 5
 [ -f $IPMISELD_CONF ] || exit 6
 
 # Load Redhat or Suse appropriate libs
-if [ -f /etc/rc.d/init.d/functions ] ; then
-    . /etc/rc.d/init.d/functions
+if [ -f @X_SYSCONFDIR@/rc.d/init.d/functions ] ; then
+    . @X_SYSCONFDIR@/rc.d/init.d/functions
     Xstart() {
         daemon $IPMISELD
         RETVAL=$?
@@ -51,8 +51,8 @@ if [ -f /etc/rc.d/init.d/functions ] ; then
     Xexit() {
         exit $RETVAL
     }
-elif [ -f /etc/rc.status ] ; then
-    . /etc/rc.status
+elif [ -f @X_SYSCONFDIR@/rc.status ] ; then
+    . @X_SYSCONFDIR@/rc.status
     Xstart() {
         startproc $IPMISELD
         rc_status -v

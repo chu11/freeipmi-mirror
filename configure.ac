@@ -24,6 +24,8 @@ AM_INIT_AUTOMAKE([tar-ustar subdir-objects 1.9])
 dnl create a config.h file
 AC_CONFIG_HEADERS([config/config.h])
 
+X_AC_EXPAND_INSTALL_DIRS
+
 dnl define output files
 AC_CONFIG_FILES([
 	freeipmi.spec
