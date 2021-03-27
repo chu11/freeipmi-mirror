@@ -297,8 +297,7 @@ work around compliances issues on Sun x4100, x4200, and x4500.
 Setup a
 .B bmc-watchdog
 daemon that resets the machine after 15 minutes
-(900 seconds) if the OS has crashed (see default bmc-watchdog rc
-script /etc/init.d/bmc-watchdog for a more complete example):
+(900 seconds) if the OS has crashed:
         bmc-watchdog -d -u 4 -p 0 -a 1 -i 900
 
 #include <@top_srcdir@/man/manpage-common-diagnostics.man>
