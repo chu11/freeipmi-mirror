@@ -1,3 +1,8 @@
+FreeIPMI 1.6.8 - 02/12/21
+-------------------------
+o Remove hard coded paths from system config files (i.e. mostly files
+  in /etc).  Have paths updated based on options to configure.
+
 FreeIPMI 1.6.7 - 02/12/21
 -------------------------
 o Do not require IPMI access when running ipmi-fru with the --fru-file
