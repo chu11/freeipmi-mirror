@@ -566,7 +566,7 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
    * Discovered on Fujitsu RX300S2
    *
    * On some motherboards, the sensor owner is invalid.  The sensor
-   * owner as atually the BMC.
+   * owner as actually the BMC.
    */
   if (!(ctx->flags & IPMI_SENSOR_READ_FLAGS_ASSUME_BMC_OWNER))
     {
