@@ -1,5 +1,7 @@
 FreeIPMI 1.6.8 - 02/12/21
 -------------------------
+o Fix incorrect sensor read corner case on BMCs that use non-default
+  LUNs (LP#1926299).
 o Remove hard coded paths from system config files (i.e. mostly files
   in /etc).  Have paths updated based on options to configure.
 
