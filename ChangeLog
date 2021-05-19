@@ -1,3 +1,11 @@
+2021-05-29 Heather Lemon <heather.lemon@canonical.com>
+
+	* libfreeipmi/sensor-read/ipmi-sensor-read.c: (LP#1926299)
+	Incorrect sensor reading reported.
+	BMC's that use a non-zero 'LUN' number (00b-10b)
+	will display an incorrect sensor temperature reading unless
+	otherwise specified via the ipmiV2.0 spec and must be accessed via LUN 00b.
+
 2021-03-27 Albert Chu <chu11@llnl.gov>
 
 	* etc: Generate many files via configure to ensure proper paths
