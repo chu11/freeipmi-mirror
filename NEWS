@@ -1,4 +1,4 @@
-FreeIPMI 1.6.8 - 02/12/21
+FreeIPMI 1.6.8 - 05/19/21
 -------------------------
 o Fix incorrect sensor read corner case on BMCs that use non-default
   LUNs (LP#1926299).
