@@ -85,7 +85,7 @@ IPMI SEL syslog logging daemon.
 %build
 %configure --program-prefix=%{?_program_prefix:%{_program_prefix}} \
 	   %{?_with_systemdsystemunitdir} \
-	   --with-systemconfigdir=%{?_systemconfigdir} \
+	   --with-systemconfigdir=%{_systemconfigdir} \
            %{?_enable_debug} --disable-static
 CFLAGS="$RPM_OPT_FLAGS" make %{?_smp_mflags}
 
