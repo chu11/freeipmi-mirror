@@ -16,7 +16,7 @@
 DAEMON=@X_SBINDIR@/bmc-watchdog
 PIDFILE=@X_LOCALSTATEDIR@/run/bmc-watchdog.pid
 LOCKFILE=@X_LOCALSTATEDIR@/lock/subsys/bmc-watchdog
-CONFFILE=@X_SYSCONFDIR@/sysconfig/bmc-watchdog
+CONFFILE=@SYSTEMCONFIGDIR@/bmc-watchdog
 
 [ -f $DAEMON ] || exit 5
 

@@ -765,4 +765,20 @@ fi
 AM_CONDITIONAL(WITH_PKG_CONFIG, test -n "${pkgconfigdir}")
 AC_SUBST(pkgconfigdir)
 
+dnl Option for alternate system config dir
+
+AC_MSG_CHECKING(alternate system config dir)
+AC_ARG_WITH(systemconfigdir,
+	AS_HELP_STRING([--with-systemconfigdir=PATH],
+                       [where to install system config file]),
+                       [SYSTEMCONFIGDIR="${withval}"],
+                       [])
+if test -n "${SYSTEMCONFIGDIR}"; then
+	AC_MSG_RESULT(using ${SYSTEMCONFIGDIR})
+else
+	AC_MSG_RESULT(no)
+        SYSTEMCONFIGDIR="${X_SYSCONFDIR}/sysconfig"
+fi
+AC_SUBST(SYSTEMCONFIGDIR)
+
 AC_OUTPUT

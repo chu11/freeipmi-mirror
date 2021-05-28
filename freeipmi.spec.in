@@ -81,6 +81,7 @@ IPMI SEL syslog logging daemon.
 %build
 %configure --program-prefix=%{?_program_prefix:%{_program_prefix}} \
 	   %{?_with_systemdsystemunitdir} \
+	   %{?_with_systemconfigdir} \
            %{?_enable_debug} --disable-static
 CFLAGS="$RPM_OPT_FLAGS" make %{?_smp_mflags}
 
@@ -493,6 +494,9 @@ fi
 %dir %{_localstatedir}/cache/ipmiseld
 
 %changelog
+* Wed May 28 2021 Albert Chu <chu11@llnl.gov> 1.7.0
+- Add with_systemconfigdir
+
 * Wed Mar 27 2021 Albert Chu <chu11@llnl.gov> 1.7.0
 - Add include/spec/oem/intel dir
 
