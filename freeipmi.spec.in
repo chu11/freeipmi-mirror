@@ -75,13 +75,17 @@ IPMI SEL syslog logging daemon.
   %define _with_systemdsystemunitdir --with-systemdsystemunitdir=%{_unitdir}
 %endif
 
+%if %{?_systemconfigdir:0}%{!?_systemconfigdir:1}
+  %define _systemconfigdir %{_sysconfdir}/sysconfig
+%endif
+
 %prep
 %setup -q
 
 %build
 %configure --program-prefix=%{?_program_prefix:%{_program_prefix}} \
 	   %{?_with_systemdsystemunitdir} \
-	   %{?_with_systemconfigdir} \
+	   --with-systemconfigdir=%{?_systemconfigdir} \
            %{?_enable_debug} --disable-static
 CFLAGS="$RPM_OPT_FLAGS" make %{?_smp_mflags}
 
@@ -462,7 +466,7 @@ fi
 %else
 %config(noreplace) %{_initrddir}/bmc-watchdog
 %endif
-%config(noreplace) %{_sysconfdir}/sysconfig/bmc-watchdog
+%config(noreplace) %{?_systemconfigdir}/bmc-watchdog
 %{_sbindir}/bmc-watchdog
 %{_mandir}/man8/bmc-watchdog.8*
 
