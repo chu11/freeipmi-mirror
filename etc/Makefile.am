@@ -37,8 +37,8 @@ install-systemd-scripts: install-sysconfig
 	$(INSTALL) -m 644 $(srcdir)/ipmiseld.service $(DESTDIR)$(systemdsystemunitdir)/ipmiseld.service
 
 install-sysconfig:
-	$(INSTALL) -m 755 -d $(DESTDIR)$(sysconfdir)/sysconfig
-	$(INSTALL) -m 444 $(srcdir)/bmc-watchdog.sysconfig $(DESTDIR)$(sysconfdir)/sysconfig/bmc-watchdog
+	$(INSTALL) -m 755 -d $(DESTDIR)@SYSTEMCONFIGDIR@
+	$(INSTALL) -m 444 $(srcdir)/bmc-watchdog.sysconfig $(DESTDIR)@SYSTEMCONFIGDIR@/bmc-watchdog
 
 uninstall-local: $(UNINSTALL_DAEMON_SCRIPTS)
 	$(RM) -f $(DESTDIR)$(sysconfdir)/sysconfig/bmc-watchdog
