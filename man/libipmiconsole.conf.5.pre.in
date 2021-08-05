@@ -119,7 +119,9 @@ header file for additional information on the library.
 \fBlibipmiconsole\-context\-engine\-flags\fR \fIFLAGS\fR
 Specify default engine flags to use.  Multiple flags can be specified
 separated by whitespace.  The following flags are supported: closefd,
-outputonsolestablished, lockmemory, serialkeepalive.
+outputonsolestablished, lockmemory, serialkeepalive,
+serialkeepaliveempty.  See "man 8 ipmiconsole" for details of what
+these options do.
 .TP
 \fBlibipmiconsole\-context\-behavior\-flags\fR \fIFLAGS\fR
 Specify default behavior flags to use.  Multiple flags can be
