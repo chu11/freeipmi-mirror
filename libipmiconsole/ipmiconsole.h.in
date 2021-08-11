@@ -329,7 +329,9 @@ extern "C" {
  * high user interactivity, as this may discover broken connections
  * far more quickly.  However, caution should be maintained, as the
  * NUL character byte may affect the remote system depending on what
- * input it may or may not be expecting.
+ * input it may or may not be expecting.  For example, a NUL character
+ * received by getty(8) and its descendants (such as agetty(8)) will
+ * cause a baud rate change, which may lock up the terminal.
  *
  * SERIAL_KEEPALIVE_EMPTY
  *
