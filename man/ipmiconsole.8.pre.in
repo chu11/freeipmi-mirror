@@ -119,7 +119,12 @@ is only detected once there is user interaction.  By sending the
 occasional NUL character, the underlying loss of serial data transfer
 can be detected far more quickly.  There is some risk with this option,
 as the NUL character byte may affect the remote system depending on
-what data it may or may not be expecting.
+what data it may or may not be expecting.  For example,
+a NUL character received by
+.B getty(8)
+and its descendants (such as
+.B agetty(8))
+will cause a baud rate change, which may lock up the terminal.
 .TP
 \fB\-\-serial\-keepalive\-empty\fR
 This option is identical to \fB\-\-serial\-keepalive\fR except that
