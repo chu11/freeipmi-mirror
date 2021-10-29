@@ -479,6 +479,7 @@ AC_CHECK_FUNCS([flockfile fputs_unlocked fwrite_unlocked])
 AC_CHECK_FUNCS([iopl])
 AC_CHECK_FUNCS([asprintf])
 AC_CHECK_FUNCS([cbrt])
+AC_CHECK_FUNCS([getmsg putmsg])
 
 dnl sighandler_t apparently not defined in Apple/OS X
 AC_CHECK_TYPES([sighandler_t], [], [], [[#include <signal.h>]])
