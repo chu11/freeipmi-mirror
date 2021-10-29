@@ -419,7 +419,7 @@ _sunbmc_write (ipmi_sunbmc_ctx_t ctx,
   assert (ctx->io_init);
   assert (ctx->putmsg_intf);
 
-#if defined(HAVE_SYS_STROPTS_H)
+#if defined(HAVE_SYS_STROPTS_H) && defined(HAVE_PUTMSG)
   memset (&sbuf, '\0', sizeof (struct strbuf));
 
   /* Due to API differences, we need to extract the cmd out of the
@@ -569,7 +569,7 @@ _sunbmc_read (ipmi_sunbmc_ctx_t ctx,
       return (-1);
     }
 
-#if defined(HAVE_SYS_STROPTS_H)
+#if defined(HAVE_SYS_STROPTS_H) && defined(HAVE_GETMSG)
   if (getmsg (ctx->device_fd, NULL, &sbuf, &flags) < 0)
     {
       SUNBMC_ERRNO_TO_SUNBMC_ERRNUM (ctx, errno);
