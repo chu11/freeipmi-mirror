@@ -1,3 +1,9 @@
+2021-11-01 Fabrice Fontaine <fontaine.fabrice@gmail.com>
+
+	* libfreeipmi/driver/ipmi-sunbmc-driver.c: musl doesn't provide
+	getmsg or putmsg even if stropts.h is available.  Do not compile
+	respective sections if get/putmsg are not available.
+
 2021-08-11 Robin Lee Powell <rlpowell@digitalkingdom.org>
 
 	* libipmiconsole: Document getty/agetty issue with serial
