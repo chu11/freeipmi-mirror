@@ -72,6 +72,7 @@ release @value{VERSION} of the FreeIPMI.
 * SSIF Driver Configuration::
 * How do you setup Powerman with ipmipower?::
 * How do you setup Conman with ipmiconsole or libipmiconsole?::
+* How do you setup Conserver with libipmiconsole?::
 * How do you setup Ganglia or Nagios to monitor IPMI sensors via FreeIPMI?::
 * Why are times reported by FreeIPMI tools wrong?::
 * Why is the IPMI kernel driver faster than the KCS driver?::
@@ -715,7 +716,7 @@ have completed.  Users may wish to configure @command{ipmipower} with
 using the @file{ipmipower-serial.dev} device file instead of
 @file{ipmipower.dev}.
 
-@node How do you setup Conman with ipmiconsole or libipmiconsole?, How do you setup Ganglia or Nagios to monitor IPMI sensors via FreeIPMI?, How do you setup Powerman with ipmipower?, Top
+@node How do you setup Conman with ipmiconsole or libipmiconsole?, How do you setup Conserver with libipmiconsole?, How do you setup Powerman with ipmipower?, Top
 @section How do you setup Conman with ipmiconsole or libipmiconsole?
 
 There are additional details in the Conman
@@ -761,6 +762,32 @@ file.
 One of the additional advantages of configuring Conman to use the
 libipmiconsole library natively is that Conman is able to detect and
 manage additional @acronym{IPMI} error cases.
+
+@node How do you setup Conserver with libipmiconsole?, How do you setup Ganglia or Nagios to monitor IPMI sensors via FreeIPMI?, How do you setup Conman with ipmiconsole or libipmiconsole?, Top
+@section How do you setup Conserver with libipmiconsole?
+
+You can find more details in the conserver.cf
+(@uref{https://www.conserver.com/docs/conserver.cf.man.html}) manpage.
+
+Here is an example configuration entry from the conserver.cf file that should illustrate the basics:
+
+@example
+break 3 @{ string '"\d\z"'; delay 250; @}
+
+default ipmisol @{
+  break 3;
+  motd "Generic IPMI SOL. Use \"Ctrl+E c ?\" for help, \"Ctrl+E c l 0 <key>\" for SysRq, \"Return [ ?\" for ipmi sol help";
+  username myusername;
+  type ipmi;
+@}
+
+console node42 @{
+  include ipmisol;
+  master conserver.example.com;
+  password mypassword;
+  host node42.bmc.example.com;
+@}
+@end example
 
 @node How do you setup Ganglia or Nagios to monitor IPMI sensors via FreeIPMI?, Why are times reported by FreeIPMI tools wrong?, How do you setup Conman with ipmiconsole or libipmiconsole?, Top
 @section How do you setup Ganglia or Nagios to monitor IPMI sensors via FreeIPMI?
