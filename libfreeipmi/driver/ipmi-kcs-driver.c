@@ -162,7 +162,7 @@
 #if defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)
 # define _INB(port)  inb (port)
 # define _OUTB(data, port)  outb (port, data)
-#elif defined(HAVE_IOPL)
+#elif defined(HAVE_INB) && defined(HAVE_OUTB)
 # define _INB(port)  inb (port)
 # define _OUTB(data, port)  outb (data, port)
 #else

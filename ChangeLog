@@ -1,3 +1,8 @@
+2022-01-04 Fabrice Fontaine <fontaine.fabrice@gmail.com>
+
+	* configure.ac, libfreeipmi/driver/ipmi-kcs-driver.c: Check for
+	inb and outb before using them.
+
 2022-01-04 Fabien Wernli
 
 	* doc/freeipmi-faq.texi: Add conserver setup information.
