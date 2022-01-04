@@ -2,6 +2,8 @@ FreeIPMI 1.6.9 - XX/XX/XX
 -------------------------
 o Support --with-systemconfigdir build option.
 o Fix build issue on musl where putmsg/getmsg are not available.
+o Fix build issue when inb/outb are not available on some systems.
+o Add conserver documentation in faq.
 
 FreeIPMI 1.6.8 - 05/19/21
 -------------------------
