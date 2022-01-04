@@ -1,3 +1,7 @@
+2022-01-04 Fabien Wernli
+
+	* doc/freeipmi-faq.texi: Add conserver setup information.
+
 2021-11-01 Fabrice Fontaine <fontaine.fabrice@gmail.com>
 
 	* libfreeipmi/driver/ipmi-sunbmc-driver.c: musl doesn't provide
