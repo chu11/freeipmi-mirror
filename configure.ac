@@ -405,7 +405,11 @@ fi
 dnl Checks for libraries.
 dnl don\'t include lib if LAN not desired
 if test x"${ac_with_encryption}" = xyes; then
-  AC_CHECK_LIB([gcrypt], [gcry_md_open], [have_gcrypt=yes], [have_gcrypt=no])
+  PKG_CHECK_MODULES([GCRYPT], [libgcrypt], [have_gcrypt=yes], [
+     AC_CHECK_LIB([gcrypt], [gcry_md_open],
+        [have_gcrypt=yes GCRYPT_LIBS=-lgcrypt],
+        [have_gcrypt=no])
+  ])
   if test "x${have_gcrypt}" = "xno"; then
      AC_MSG_ERROR([libgcrypt required to build libfreeipmi])
      AC_MSG_NOTICE([Note: libgpg-error required for libgcrypt])
@@ -421,7 +425,6 @@ if test x"${ac_with_encryption}" = xyes; then
   if test "x${have_gcrypt_threads}" = "xno"; then
      AC_MSG_ERROR([libgcrypt with threads support required for libfreeipmi])
   fi
-  GCRYPT_LIBS=-lgcrypt
 fi
 AC_SUBST(GCRYPT_LIBS)
 
