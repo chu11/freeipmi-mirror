@@ -1134,7 +1134,7 @@ _construct_session_trlr_authentication_code (uint8_t integrity_algorithm,
     {
       hash_algorithm = IPMI_CRYPT_HASH_MD5;
       hash_flags = 0;
-      expected_digest_len = MD5_DIGEST_LENGTH;
+      expected_digest_len = IPMI_MD5_DIGEST_LENGTH;
       copy_digest_len = IPMI_MD5_128_AUTHENTICATION_CODE_LENGTH;
     }
   else /* IPMI_INTEGRITY_ALGORITHM_HMAC_SHA256_128 */

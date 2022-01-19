@@ -533,37 +533,37 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
 
               if (authentication_type == IPMI_AUTHENTICATION_TYPE_MD2)
                 {
-                  md2_t ctx;
-                  uint8_t digest[MD2_DIGEST_LENGTH];
+                  ipmi_md2_t ctx;
+                  uint8_t digest[IPMI_MD2_DIGEST_LENGTH];
 
-                  assert (IPMI_1_5_MAX_PASSWORD_LENGTH == MD2_DIGEST_LENGTH);
+                  assert (IPMI_1_5_MAX_PASSWORD_LENGTH == IPMI_MD2_DIGEST_LENGTH);
 
-                  md2_init (&ctx);
-                  md2_update_data (&ctx, pwbuf, IPMI_1_5_MAX_PASSWORD_LENGTH);
-                  md2_update_data (&ctx, session_id_buf, session_id_len);
-                  md2_update_data (&ctx, msg_data_ptr, msg_data_count);
-                  md2_update_data (&ctx, session_sequence_number_buf, session_sequence_number_len);
-                  md2_update_data (&ctx, pwbuf, IPMI_1_5_MAX_PASSWORD_LENGTH);
-                  md2_finish (&ctx, digest, MD2_DIGEST_LENGTH);
-                  md2_init (&ctx);
+                  ipmi_md2_init (&ctx);
+                  ipmi_md2_update_data (&ctx, pwbuf, IPMI_1_5_MAX_PASSWORD_LENGTH);
+                  ipmi_md2_update_data (&ctx, session_id_buf, session_id_len);
+                  ipmi_md2_update_data (&ctx, msg_data_ptr, msg_data_count);
+                  ipmi_md2_update_data (&ctx, session_sequence_number_buf, session_sequence_number_len);
+                  ipmi_md2_update_data (&ctx, pwbuf, IPMI_1_5_MAX_PASSWORD_LENGTH);
+                  ipmi_md2_finish (&ctx, digest, IPMI_MD2_DIGEST_LENGTH);
+                  ipmi_md2_init (&ctx);
 
                   memcpy (authentication_code_field_ptr, digest, IPMI_1_5_MAX_PASSWORD_LENGTH);
                 }
               else if (authentication_type == IPMI_AUTHENTICATION_TYPE_MD5)
                 {
-                  md5_t ctx;
-                  uint8_t digest[MD5_DIGEST_LENGTH];
+                  ipmi_md5_t ctx;
+                  uint8_t digest[IPMI_MD5_DIGEST_LENGTH];
 
-                  assert (IPMI_1_5_MAX_PASSWORD_LENGTH == MD5_DIGEST_LENGTH);
+                  assert (IPMI_1_5_MAX_PASSWORD_LENGTH == IPMI_MD5_DIGEST_LENGTH);
 
-                  md5_init (&ctx);
-                  md5_update_data (&ctx, pwbuf, IPMI_1_5_MAX_PASSWORD_LENGTH);
-                  md5_update_data (&ctx, session_id_buf, session_id_len);
-                  md5_update_data (&ctx, msg_data_ptr, msg_data_count);
-                  md5_update_data (&ctx, session_sequence_number_buf, session_sequence_number_len);
-                  md5_update_data (&ctx, pwbuf, IPMI_1_5_MAX_PASSWORD_LENGTH);
-                  md5_finish (&ctx, digest, MD5_DIGEST_LENGTH);
-                  md5_init (&ctx);
+                  ipmi_md5_init (&ctx);
+                  ipmi_md5_update_data (&ctx, pwbuf, IPMI_1_5_MAX_PASSWORD_LENGTH);
+                  ipmi_md5_update_data (&ctx, session_id_buf, session_id_len);
+                  ipmi_md5_update_data (&ctx, msg_data_ptr, msg_data_count);
+                  ipmi_md5_update_data (&ctx, session_sequence_number_buf, session_sequence_number_len);
+                  ipmi_md5_update_data (&ctx, pwbuf, IPMI_1_5_MAX_PASSWORD_LENGTH);
+                  ipmi_md5_finish (&ctx, digest, IPMI_MD5_DIGEST_LENGTH);
+                  ipmi_md5_init (&ctx);
 
                   memcpy (authentication_code_field_ptr, digest, IPMI_1_5_MAX_PASSWORD_LENGTH);
                 }

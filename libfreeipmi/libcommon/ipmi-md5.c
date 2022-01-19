@@ -92,7 +92,7 @@ static uint32_t T[64] =
 #define D               ctx->d
 #define M               ctx->m
 #define Mlen            ctx->mlen
-#define MD5_MAGIC       0xfb0fdb0d
+#define IPMI_MD5_MAGIC  0xfb0fdb0d
 
 #define F(x,y,z)  (((x) & (y)) | ((~(x)) & (z)))
 #define G(x,y,z)  (((x) & (z)) | ((y) & (~(z))))
@@ -126,7 +126,7 @@ static uint32_t T[64] =
   } while (0)
 
 int
-md5_init (md5_t *ctx)
+ipmi_md5_init (ipmi_md5_t *ctx)
 {
   if (ctx == NULL)
     {
@@ -134,13 +134,13 @@ md5_init (md5_t *ctx)
       return (-1);
     }
 
-  ctx->magic = MD5_MAGIC;
+  ctx->magic = IPMI_MD5_MAGIC;
 
   Mlen = 0;
   ctx->bytes_mod_64 = 0;
   ctx->bit_count[0] = 0;
   ctx->bit_count[1] = 0;
-  memset (M, '\0', MD5_BLOCK_LENGTH);
+  memset (M, '\0', IPMI_MD5_BLOCK_LENGTH);
 
   /* initial values are listed low-order byte first */
   A = 0x67452301;
@@ -152,16 +152,16 @@ md5_init (md5_t *ctx)
 }
 
 static void
-_md5_update_digest (md5_t *ctx)
+_ipmi_md5_update_digest (ipmi_md5_t *ctx)
 {
   uint32_t AA, BB, CC, DD;
-  uint32_t X[MD5_BLOCK_WORDS_LENGTH];
+  uint32_t X[IPMI_MD5_BLOCK_WORDS_LENGTH];
   unsigned int j;
 
   /* Note there are no endian issues here, compiler is required to
    * handle shifts correctly
    */
-  for (j = 0; j < MD5_BLOCK_WORDS_LENGTH; j++)
+  for (j = 0; j < IPMI_MD5_BLOCK_WORDS_LENGTH; j++)
     X[j] = ((uint32_t)M[j*4]
             | ((uint32_t)M[j*4+1] << 8)
             | ((uint32_t)M[j*4+2] << 16)
@@ -251,7 +251,7 @@ _md5_update_digest (md5_t *ctx)
 }
 
 static void
-_md5_update_count (md5_t *ctx, unsigned int buflen)
+_ipmi_md5_update_count (ipmi_md5_t *ctx, unsigned int buflen)
 {
 
   /* Use two uint32_t integers to hold our 64 bit count.
@@ -272,10 +272,10 @@ _md5_update_count (md5_t *ctx, unsigned int buflen)
 }
 
 int
-md5_update_data (md5_t *ctx, const void *buf, unsigned int buflen)
+ipmi_md5_update_data (ipmi_md5_t *ctx, const void *buf, unsigned int buflen)
 {
 
-  if (ctx == NULL || ctx->magic != MD5_MAGIC || buf == NULL)
+  if (ctx == NULL || ctx->magic != IPMI_MD5_MAGIC || buf == NULL)
     {
       errno = EINVAL;
       return (-1);
@@ -284,28 +284,28 @@ md5_update_data (md5_t *ctx, const void *buf, unsigned int buflen)
   if (buflen == 0)
     return (0);
 
-  if ((Mlen + buflen) >= MD5_BLOCK_LENGTH)
+  if ((Mlen + buflen) >= IPMI_MD5_BLOCK_LENGTH)
     {
       unsigned int bufcount;
 
-      bufcount = (MD5_BLOCK_LENGTH - Mlen);
+      bufcount = (IPMI_MD5_BLOCK_LENGTH - Mlen);
       memcpy (M + Mlen, buf, bufcount);
-      _md5_update_digest (ctx);
-      _md5_update_count (ctx, bufcount);
+      _ipmi_md5_update_digest (ctx);
+      _ipmi_md5_update_count (ctx, bufcount);
 
-      while ((buflen - bufcount) >= MD5_BLOCK_LENGTH)
+      while ((buflen - bufcount) >= IPMI_MD5_BLOCK_LENGTH)
         {
-          memcpy (M, buf + bufcount, MD5_BLOCK_LENGTH);
-          bufcount += MD5_BLOCK_LENGTH;
-          _md5_update_digest (ctx);
-          _md5_update_count (ctx, MD5_BLOCK_LENGTH);
+          memcpy (M, buf + bufcount, IPMI_MD5_BLOCK_LENGTH);
+          bufcount += IPMI_MD5_BLOCK_LENGTH;
+          _ipmi_md5_update_digest (ctx);
+          _ipmi_md5_update_count (ctx, IPMI_MD5_BLOCK_LENGTH);
         }
 
       Mlen = buflen - bufcount;
       if (Mlen > 0)
         {
           memcpy (M, buf + bufcount, Mlen);
-          _md5_update_count (ctx, Mlen);
+          _ipmi_md5_update_count (ctx, Mlen);
         }
     }
   else
@@ -313,14 +313,14 @@ md5_update_data (md5_t *ctx, const void *buf, unsigned int buflen)
       /* Not enough data to update digest, just copy in data */
       memcpy (M + Mlen, buf, buflen);
       Mlen += buflen;
-      _md5_update_count (ctx, buflen);
+      _ipmi_md5_update_count (ctx, buflen);
     }
 
   return (buflen);
 }
 
 static void
-_md5_append_padding_and_length (md5_t *ctx)
+_ipmi_md5_append_padding_and_length (ipmi_md5_t *ctx)
 {
   unsigned int padlen;
   char length[8];
@@ -348,23 +348,23 @@ _md5_append_padding_and_length (md5_t *ctx)
   length[6] = (ctx->bit_count[0] & 0x00ff0000) >> 16;
   length[7] = (ctx->bit_count[0] & 0xff000000) >> 24;
 
-  md5_update_data (ctx, padding, padlen);
-  md5_update_data (ctx, length, 8);
+  ipmi_md5_update_data (ctx, padding, padlen);
+  ipmi_md5_update_data (ctx, length, 8);
 }
 
 int
-md5_finish (md5_t *ctx, void *digest, unsigned int digestlen)
+ipmi_md5_finish (ipmi_md5_t *ctx, void *digest, unsigned int digestlen)
 {
-  uint8_t buf[MD5_DIGEST_LENGTH];
+  uint8_t buf[IPMI_MD5_DIGEST_LENGTH];
 
-  if (ctx == NULL || ctx->magic != MD5_MAGIC
-      || digest == NULL || digestlen < MD5_DIGEST_LENGTH)
+  if (ctx == NULL || ctx->magic != IPMI_MD5_MAGIC
+      || digest == NULL || digestlen < IPMI_MD5_DIGEST_LENGTH)
     {
       errno = EINVAL;
       return (-1);
     }
 
-  _md5_append_padding_and_length (ctx);
+  _ipmi_md5_append_padding_and_length (ctx);
 
   /* Note there are no endian issues here, compiler is required to
    * handle bitmasks and shifts correctly
@@ -387,7 +387,7 @@ md5_finish (md5_t *ctx, void *digest, unsigned int digestlen)
   buf[14] = (D & 0x00ff0000) >> 16;
   buf[15] = (D & 0xff000000) >> 24;
 
-  memcpy (digest, buf, MD5_DIGEST_LENGTH);
-  ctx->magic = ~MD5_MAGIC;
-  return (MD5_DIGEST_LENGTH);
+  memcpy (digest, buf, IPMI_MD5_DIGEST_LENGTH);
+  ctx->magic = ~IPMI_MD5_MAGIC;
+  return (IPMI_MD5_DIGEST_LENGTH);
 }
