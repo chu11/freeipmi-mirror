@@ -34,11 +34,11 @@
 
 #include <stdint.h>
 
-#define MD5_BLOCK_LENGTH       64
-#define MD5_BLOCK_WORDS_LENGTH (MD5_BLOCK_LENGTH/4)
-#define MD5_DIGEST_LENGTH      16
+#define IPMI_MD5_BLOCK_LENGTH       64
+#define IPMI_MD5_BLOCK_WORDS_LENGTH (IPMI_MD5_BLOCK_LENGTH/4)
+#define IPMI_MD5_DIGEST_LENGTH      16
 
-typedef struct __md5 {
+typedef struct __ipmi_md5 {
   uint32_t magic;
   unsigned int mlen;
   unsigned int bytes_mod_64;
@@ -47,13 +47,13 @@ typedef struct __md5 {
   uint32_t b;
   uint32_t c;
   uint32_t d;
-  uint8_t m[MD5_BLOCK_LENGTH];
-} md5_t;
+  uint8_t m[IPMI_MD5_BLOCK_LENGTH];
+} ipmi_md5_t;
 
-int md5_init (md5_t *ctx);
+int ipmi_md5_init (ipmi_md5_t *ctx);
 
-int md5_update_data (md5_t *ctx, const void *buf, unsigned int buflen);
+int ipmi_md5_update_data (ipmi_md5_t *ctx, const void *buf, unsigned int buflen);
 
-int md5_finish (md5_t *ctx, void *digest, unsigned int digestlen);
+int ipmi_md5_finish (ipmi_md5_t *ctx, void *digest, unsigned int digestlen);
 
 #endif /* IPMI_MD5_H */

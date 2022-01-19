@@ -101,15 +101,15 @@ static unsigned char S[256] =
     0xDB, 0x99, 0x8D, 0x33, 0x9F, 0x11, 0x83, 0x14
   };
 
-#define L          ctx->l
-#define X          ctx->x
-#define C          ctx->c
-#define M          ctx->m
-#define Mlen       ctx->mlen
-#define MD2_MAGIC  0xf00fd00d
+#define L               ctx->l
+#define X               ctx->x
+#define C               ctx->c
+#define M               ctx->m
+#define Mlen            ctx->mlen
+#define IPMI_MD2_MAGIC  0xf00fd00d
 
 int
-md2_init (md2_t *ctx)
+ipmi_md2_init (ipmi_md2_t *ctx)
 {
 
   if (ctx == NULL)
@@ -118,26 +118,26 @@ md2_init (md2_t *ctx)
       return (-1);
     }
 
-  ctx->magic = MD2_MAGIC;
+  ctx->magic = IPMI_MD2_MAGIC;
 
   L = 0;
   Mlen = 0;
-  memset (X, '\0', MD2_BUFFER_LENGTH);
-  memset (C, '\0', MD2_CHKSUM_LENGTH);
-  memset (M, '\0', MD2_BLOCK_LENGTH);
+  memset (X, '\0', IPMI_MD2_BUFFER_LENGTH);
+  memset (C, '\0', IPMI_MD2_CHKSUM_LENGTH);
+  memset (M, '\0', IPMI_MD2_BLOCK_LENGTH);
 
   return (0);
 }
 
 static void
-_md2_update_digest_and_checksum (md2_t *ctx)
+_ipmi_md2_update_digest_and_checksum (ipmi_md2_t *ctx)
 {
   unsigned int j, k;
   uint8_t c, t;
 
   /* Update X */
 
-  for (j = 0; j < MD2_BLOCK_LENGTH; j++)
+  for (j = 0; j < IPMI_MD2_BLOCK_LENGTH; j++)
     {
       X[16+j] = M[j];
       X[32+j] = (X[16+j] ^ X[j]);
@@ -145,9 +145,9 @@ _md2_update_digest_and_checksum (md2_t *ctx)
 
   t = 0;
 
-  for (j = 0; j < MD2_ROUNDS_LENGTH; j++)
+  for (j = 0; j < IPMI_MD2_ROUNDS_LENGTH; j++)
     {
-      for (k = 0; k < MD2_BUFFER_LENGTH; k++)
+      for (k = 0; k < IPMI_MD2_BUFFER_LENGTH; k++)
         {
           t = X[k] = (X[k] ^ S[t]);
         }
@@ -166,7 +166,7 @@ _md2_update_digest_and_checksum (md2_t *ctx)
    * Set C[j] to C[j] xor S[c xor L].
    */
 
-  for (j = 0; j < MD2_BLOCK_LENGTH; j++)
+  for (j = 0; j < IPMI_MD2_BLOCK_LENGTH; j++)
     {
       c = M[j];
       C[j] = C[j] ^ S[c ^ L];
@@ -175,10 +175,10 @@ _md2_update_digest_and_checksum (md2_t *ctx)
 }
 
 int
-md2_update_data (md2_t *ctx, const void *buf, unsigned int buflen)
+ipmi_md2_update_data (ipmi_md2_t *ctx, const void *buf, unsigned int buflen)
 {
 
-  if (ctx == NULL || ctx->magic != MD2_MAGIC || buf == NULL)
+  if (ctx == NULL || ctx->magic != IPMI_MD2_MAGIC || buf == NULL)
     {
       errno = EINVAL;
       return (-1);
@@ -187,19 +187,19 @@ md2_update_data (md2_t *ctx, const void *buf, unsigned int buflen)
   if (buflen == 0)
     return (0);
 
-  if ((Mlen + buflen) >= MD2_BLOCK_LENGTH)
+  if ((Mlen + buflen) >= IPMI_MD2_BLOCK_LENGTH)
     {
       unsigned int bufcount;
 
-      bufcount = (MD2_BLOCK_LENGTH - Mlen);
+      bufcount = (IPMI_MD2_BLOCK_LENGTH - Mlen);
       memcpy (M + Mlen, buf, bufcount);
-      _md2_update_digest_and_checksum (ctx);
+      _ipmi_md2_update_digest_and_checksum (ctx);
 
-      while ((buflen - bufcount) >= MD2_BLOCK_LENGTH)
+      while ((buflen - bufcount) >= IPMI_MD2_BLOCK_LENGTH)
         {
-          memcpy (M, buf + bufcount, MD2_BLOCK_LENGTH);
-          bufcount += MD2_BLOCK_LENGTH;
-          _md2_update_digest_and_checksum (ctx);
+          memcpy (M, buf + bufcount, IPMI_MD2_BLOCK_LENGTH);
+          bufcount += IPMI_MD2_BLOCK_LENGTH;
+          _ipmi_md2_update_digest_and_checksum (ctx);
         }
 
       Mlen = buflen - bufcount;
@@ -217,33 +217,33 @@ md2_update_data (md2_t *ctx, const void *buf, unsigned int buflen)
 }
 
 static void
-_md2_append_padding_and_checksum (md2_t *ctx)
+_ipmi_md2_append_padding_and_checksum (ipmi_md2_t *ctx)
 {
   unsigned int padlen;
   int padindex;
 
-  padlen = MD2_PADDING_LENGTH - Mlen;
+  padlen = IPMI_MD2_PADDING_LENGTH - Mlen;
   padindex = padlen - 1;
 
-  md2_update_data (ctx, padding[padindex], padlen);
+  ipmi_md2_update_data (ctx, padding[padindex], padlen);
 
-  md2_update_data (ctx, C, MD2_CHKSUM_LENGTH);
+  ipmi_md2_update_data (ctx, C, IPMI_MD2_CHKSUM_LENGTH);
 }
 
 int
-md2_finish (md2_t *ctx, void *digest, unsigned int digestlen)
+ipmi_md2_finish (ipmi_md2_t *ctx, void *digest, unsigned int digestlen)
 {
-  if (ctx == NULL || ctx->magic != MD2_MAGIC
-      || digest == NULL || digestlen < MD2_DIGEST_LENGTH)
+  if (ctx == NULL || ctx->magic != IPMI_MD2_MAGIC
+      || digest == NULL || digestlen < IPMI_MD2_DIGEST_LENGTH)
     {
       errno = EINVAL;
       return (-1);
     }
 
-  _md2_append_padding_and_checksum (ctx);
-  memcpy (digest, X, MD2_DIGEST_LENGTH);
+  _ipmi_md2_append_padding_and_checksum (ctx);
+  memcpy (digest, X, IPMI_MD2_DIGEST_LENGTH);
 
-  ctx->magic = ~MD2_MAGIC;
-  return (MD2_DIGEST_LENGTH);
+  ctx->magic = ~IPMI_MD2_MAGIC;
+  return (IPMI_MD2_DIGEST_LENGTH);
 }
 

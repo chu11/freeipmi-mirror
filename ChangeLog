@@ -1,3 +1,14 @@
+2021-01-19 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/libcommon/ipmi-md2.h,
+	libfreeipmi/libcommon/ipmi-md2.c,
+	libfreeipmi/libcommon/ipmi-md5.h,
+	libfreeipmi/libcommon/ipmi-md5.c: Static compilation with
+	libfreeipmi can lead to problems if other software has similarly
+	named md2/md5 functions (such as md5_init()).  Prefix all macros
+	and functions with 'ipmi_' as needed.  Update all callers
+	accordingly.
+
 2022-01-18 Fabrice Fontaine <fontaine.fabrice@gmail.com>
 
 	* configure.ac: use pkg-config to find gcrypt

@@ -34,26 +34,26 @@
 
 #include <stdint.h>
 
-#define MD2_BLOCK_LENGTH   16
-#define MD2_BUFFER_LENGTH  48
-#define MD2_CHKSUM_LENGTH  16
-#define MD2_DIGEST_LENGTH  16
-#define MD2_PADDING_LENGTH 16
-#define MD2_ROUNDS_LENGTH  18
+#define IPMI_MD2_BLOCK_LENGTH   16
+#define IPMI_MD2_BUFFER_LENGTH  48
+#define IPMI_MD2_CHKSUM_LENGTH  16
+#define IPMI_MD2_DIGEST_LENGTH  16
+#define IPMI_MD2_PADDING_LENGTH 16
+#define IPMI_MD2_ROUNDS_LENGTH  18
 
-typedef struct __md2 {
+typedef struct __ipmi_md2 {
   uint32_t magic;
   uint8_t l;
   unsigned int mlen;
-  uint8_t x[MD2_BUFFER_LENGTH];
-  uint8_t c[MD2_CHKSUM_LENGTH];
-  uint8_t m[MD2_BLOCK_LENGTH];
-} md2_t;
+  uint8_t x[IPMI_MD2_BUFFER_LENGTH];
+  uint8_t c[IPMI_MD2_CHKSUM_LENGTH];
+  uint8_t m[IPMI_MD2_BLOCK_LENGTH];
+} ipmi_md2_t;
 
-int md2_init (md2_t *ctx);
+int ipmi_md2_init (ipmi_md2_t *ctx);
 
-int md2_update_data (md2_t *ctx, const void *buf, unsigned int buflen);
+int ipmi_md2_update_data (ipmi_md2_t *ctx, const void *buf, unsigned int buflen);
 
-int md2_finish (md2_t *ctx, void *digest, unsigned int digestlen);
+int ipmi_md2_finish (ipmi_md2_t *ctx, void *digest, unsigned int digestlen);
 
 #endif /* IPMI_MD2_H */
