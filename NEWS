@@ -14,7 +14,7 @@ o In ipmi-sel, support Intel S2600BPB OEM SEL interpretations.
 Remove Large Amount of Legacy Support
 -------------------------------------
 
-Remove backwards compatibility, legacy output/options/fields, or
+Remove backwards compatibility, legacy output/options/fields/files, or
 deprecated options.  All verified to have been gone for atleast 10
 years.
 
