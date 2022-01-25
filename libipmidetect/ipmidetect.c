@@ -317,7 +317,6 @@ _read_conffile (ipmidetect_t handle, struct ipmidetect_config *conf)
     };
   conffile_t cf = NULL;
   int num, rv = -1;
-  int legacy_file_loaded = 0;
 
   if (!(cf = conffile_handle_create ()))
     {
@@ -327,40 +326,26 @@ _read_conffile (ipmidetect_t handle, struct ipmidetect_config *conf)
 
   num = sizeof (options)/sizeof (struct conffile_option);
 
-  /* Try legacy file first */
-
-  if (!conffile_parse (cf,
-                       IPMIDETECT_CONFIG_FILE_LEGACY,
-                       options,
-                       num,
-                       NULL,
-                       0,
-                       0))
-    legacy_file_loaded++;
-
-  if (!legacy_file_loaded)
+  /* IPMIDETECT_CONFIG_FILE_DEFAULT defined in config.h */
+  if (conffile_parse (cf,
+                      IPMIDETECT_CONFIG_FILE_DEFAULT,
+                      options,
+                      num,
+                      NULL,
+                      0,
+                      0) < 0)
     {
-      /* IPMIDETECT_CONFIG_FILE_DEFAULT defined in config.h */
-      if (conffile_parse (cf,
-                          IPMIDETECT_CONFIG_FILE_DEFAULT,
-                          options,
-                          num,
-                          NULL,
-                          0,
-                          0) < 0)
+      /* Not an error if the configuration file does not exist */
+      if (conffile_errnum (cf) != CONFFILE_ERR_EXIST)
         {
-          /* Not an error if the configuration file does not exist */
-          if (conffile_errnum (cf) != CONFFILE_ERR_EXIST)
-            {
-              int errnum = conffile_errnum (cf);
-              if (CONFFILE_IS_PARSE_ERR (errnum))
-                handle->errnum = IPMIDETECT_ERR_CONF_PARSE;
-              else if (errnum == CONFFILE_ERR_OUTMEM)
-                handle->errnum = IPMIDETECT_ERR_OUT_OF_MEMORY;
-              else
-                handle->errnum = IPMIDETECT_ERR_CONF_INTERNAL;
-              goto cleanup;
-            }
+          int errnum = conffile_errnum (cf);
+          if (CONFFILE_IS_PARSE_ERR (errnum))
+            handle->errnum = IPMIDETECT_ERR_CONF_PARSE;
+          else if (errnum == CONFFILE_ERR_OUTMEM)
+            handle->errnum = IPMIDETECT_ERR_OUT_OF_MEMORY;
+          else
+            handle->errnum = IPMIDETECT_ERR_CONF_INTERNAL;
+          goto cleanup;
         }
     }
 

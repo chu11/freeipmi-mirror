@@ -1,4 +1,10 @@
-2021-01-19 Albert Chu <chu11@llnl.gov>
+2022-01-25 Albert Chu <chu11@llnl.gov>
+
+	* Remove legacy support for the /etc/freeipmi.conf,
+	/etc/ipmidetect.conf, /etc/ipmidetectd.conf, and
+	/etc/ipmi_monitoring_sensors.conf config files.
+
+2022-01-19 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/libcommon/ipmi-md2.h,
 	libfreeipmi/libcommon/ipmi-md2.c,

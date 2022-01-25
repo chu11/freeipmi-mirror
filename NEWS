@@ -18,6 +18,12 @@ Remove backwards compatibility, legacy output/options/fields, or
 deprecated options.  All verified to have been gone for atleast 10
 years.
 
+o Remove support for legacy config file paths
+  - /etc/freeipmi.conf (use /etc/freeipmi/freeipmi.conf)
+  - /etc/ipmidetect.conf (use /etc/freeipmi/ipmidetect.conf)
+  - /etc/ipmidetectd.conf (use /etc/freeipmi/ipmidetectd.conf)
+  - /etc/ipmi_monitoring_sensors.conf (use
+      /etc/freeipmi/freeipmi_interpret_sensor.conf)
 o Remove many legacy long options in tools
   - --no-probing (use --disable-auto-probe)
   - --reg-space (use --register-spacing)

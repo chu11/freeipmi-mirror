@@ -346,38 +346,13 @@ ipmi_monitoring_ctx_sensor_config_file (ipmi_monitoring_ctx_t c,
   if (!c || c->magic != IPMI_MONITORING_MAGIC)
     return (-1);
 
-  if (sensor_config_file)
+  if (ipmi_interpret_load_sensor_config (c->interpret_ctx,
+                                         sensor_config_file) < 0)
     {
-      if (ipmi_interpret_load_sensor_config (c->interpret_ctx,
-                                             sensor_config_file) < 0)
-        {
-          _interpret_ctx_error_convert (c);
-          return (-1);
-        }
-    }
-  else
-    {
-      /* legacy */
-      if (ipmi_interpret_load_sensor_config (c->interpret_ctx,
-                                             IPMI_MONITORING_SENSOR_CONFIG_FILE_LEGACY) < 0)
-        {
-          if (ipmi_interpret_ctx_errnum (c->interpret_ctx) != IPMI_INTERPRET_ERR_SENSOR_CONFIG_FILE_DOES_NOT_EXIST)
-            {
-              _interpret_ctx_error_convert (c);
-              return (-1);
-            }
-        }
-      else
-        goto out;
-
-      if (ipmi_interpret_load_sensor_config (c->interpret_ctx, NULL) < 0)
-        {
-          _interpret_ctx_error_convert (c);
-          return (-1);
-        }
+      _interpret_ctx_error_convert (c);
+      return (-1);
     }
 
- out:
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;
   return (0);
 }
