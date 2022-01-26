@@ -2,6 +2,9 @@
 
 	* ipmidetect: Remove legacy -o option, use -h or --hostname.
 
+	* ipmidetectd: Remove legacy --config_file option, use
+	--config-file (hyphen not underscore).
+
 2022-01-25 Albert Chu <chu11@llnl.gov>
 
 	* Remove legacy support for the /etc/freeipmi.conf,
