@@ -5,6 +5,9 @@
 	* ipmidetectd: Remove legacy --config_file option, use
 	--config-file (hyphen not underscore).
 
+	* ipmi-raw: Remove legacy --channel-number and --slave-address
+	options.  Use --target-channel-number and --target-slave-address.
+
 2022-01-25 Albert Chu <chu11@llnl.gov>
 
 	* Remove legacy support for the /etc/freeipmi.conf,

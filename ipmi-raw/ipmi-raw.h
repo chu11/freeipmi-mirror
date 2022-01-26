@@ -29,10 +29,8 @@
 
 enum ipmi_raw_argp_option_keys
   {
-    CHANNEL_NUMBER_KEY = 160,   /* legacy */
-    SLAVE_ADDRESS_KEY = 161,    /* legacy */
-    CMD_FILE_KEY = 162,
-    NO_SESSION_KEY = 163,
+    CMD_FILE_KEY = 160,
+    NO_SESSION_KEY = 161,
   };
 
 struct ipmi_raw_arguments

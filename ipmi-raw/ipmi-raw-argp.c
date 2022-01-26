@@ -67,16 +67,10 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
-    /* legacy - overriden by general option in inband options  */
-    { "channel-number", CHANNEL_NUMBER_KEY, "NUMBER", OPTION_HIDDEN,
-      "Specify an alternate channel number to bridge raw commands to.", 40},
-    /* legacy - overriden by general option in inband options  */
-    { "slave-address", SLAVE_ADDRESS_KEY, "ADDRESS", OPTION_HIDDEN,
-      "Specify an alternate slave address to bridge raw commands to.", 41},
     { "file", CMD_FILE_KEY, "CMD-FILE", 0,
-      "Specify a file to read command requests from.", 42},
+      "Specify a file to read command requests from.", 40},
     { "no-session", NO_SESSION_KEY, NULL, 0,
-      "Do not establish an IPMI session if doing out of band IPMI.", 43},
+      "Do not establish an IPMI session if doing out of band IPMI.", 41},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -105,16 +99,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 
   switch (key)
     {
-    case CHANNEL_NUMBER_KEY:
-      ret = common_parse_opt (ARGP_TARGET_CHANNEL_NUMBER_KEY, arg, &(cmd_args->common_args));
-      if (ret == ARGP_ERR_UNKNOWN)
-        return (ret);
-      break;
-    case SLAVE_ADDRESS_KEY:
-      ret = common_parse_opt (ARGP_TARGET_SLAVE_ADDRESS_KEY, arg, &(cmd_args->common_args));
-      if (ret == ARGP_ERR_UNKNOWN)
-        return (ret);
-      break;
     case CMD_FILE_KEY:
       if (!(cmd_args->cmd_file = strdup (arg)))
         {
