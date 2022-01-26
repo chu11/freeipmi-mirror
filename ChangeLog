@@ -8,6 +8,9 @@
 	* ipmi-raw: Remove legacy --channel-number and --slave-address
 	options.  Use --target-channel-number and --target-slave-address.
 
+	* ipmi-fru: Remove legacy --skip-checks option. Use "skipchecks"
+	workaround flag.
+
 2022-01-25 Albert Chu <chu11@llnl.gov>
 
 	* Remove legacy support for the /etc/freeipmi.conf,

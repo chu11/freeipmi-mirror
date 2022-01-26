@@ -2826,18 +2826,6 @@ config_file_parse (const char *filename,
         &(ipmi_fru_data.verbose_count),
         0,
       },
-      /* legacy - maintain for backwards compatability */
-      {
-        "ipmi-fru-skip-checks",
-        CONFFILE_OPTION_BOOL,
-        -1,
-        _config_file_bool,
-        1,
-        0,
-        &(ipmi_fru_data.skip_checks_count),
-        &(ipmi_fru_data.skip_checks),
-        0,
-      },
       {
         "ipmi-fru-bridge-fru",
         CONFFILE_OPTION_BOOL,

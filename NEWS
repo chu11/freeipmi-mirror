@@ -112,6 +112,8 @@ o Remove legacy command line option --delete-all in ipmi-sel (use
   --clear)
 o Remove legacy command line option --guid in bmc-info (use
   --get-device-id)
+o Remove legacy command line option --skip-checks in ipmi-fru (use
+  "skipchecks" workaround flag)
 o Remove legacy commmand line options in ipmi-raw
   - --channel-number (use --target-channel-number)
   - --slave-address (use --target-slave-address)
