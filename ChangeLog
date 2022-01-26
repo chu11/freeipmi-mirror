@@ -1,5 +1,10 @@
 2022-01-25 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmidetect.8.pre.in, man/ipmidetectd.8.pre.in: Correct out
+	of date command line options.
+
+2022-01-25 Albert Chu <chu11@llnl.gov>
+
 	* Remove legacy support for the /etc/freeipmi.conf,
 	/etc/ipmidetect.conf, /etc/ipmidetectd.conf, and
 	/etc/ipmi_monitoring_sensors.conf config files.

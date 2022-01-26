@@ -54,17 +54,14 @@ manpage for additional information.
 
 .SH "OPTIONS"
 .TP
-\fB\-h\fR, \fB\-\-help\fR
-Output help
-.TP
-\fB\-v\fR, \fB\-\-version\fR
-Output version
-.TP
 \fB\-c\fR \fIFILE\fR, \fB\-\-config\-file\fR
 Specify alternate configuration file
 .TP
 \fB\-d\fR, \fB\-\-debug\fR
 Turn on debugging and run daemon in foreground
+.TP
+\fB\-V\fR, \fB\-\-version\fR
+Output version
 
 .SH "ERRORS"
 Errors are logged to syslog.
