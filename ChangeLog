@@ -4,6 +4,10 @@
 	/etc/ipmidetect.conf, /etc/ipmidetectd.conf, and
 	/etc/ipmi_monitoring_sensors.conf config files.
 
+	* ipmi-oem: Remove legacy retrieval key 'product-name' from
+	'get-system-info' command.  Users should use
+	'platform-model-name'.
+
 2022-01-19 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/libcommon/ipmi-md2.h,

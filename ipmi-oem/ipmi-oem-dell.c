@@ -1877,7 +1877,6 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       && strcasecmp (state_data->prog_data->args->oem_options[0], "chassis-service-tag")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "chassis-related-service-tag")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "board-revision")
-      && strcasecmp (state_data->prog_data->args->oem_options[0], "product-name") /* legacy */
       && strcasecmp (state_data->prog_data->args->oem_options[0], "platform-model-name")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "slot-number") /* legacy */
       && strcasecmp (state_data->prog_data->args->oem_options[0], "blade-slot-info")
@@ -2131,8 +2130,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
                       "%s\n",
                       string);
     }
-  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "product-name")
-           || !strcasecmp (state_data->prog_data->args->oem_options[0], "platform-model-name"))
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "platform-model-name"))
     {
       if (_get_dell_system_info_long_string (state_data,
                                              IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_PLATFORM_MODEL_NAME,
