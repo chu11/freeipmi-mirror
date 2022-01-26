@@ -231,7 +231,6 @@ ipmi_config_core_sections_create (ipmi_config_state_data_t *state_data)
         }
     }
 
-#if 0
   /* Lan6_Conf Section(s) */
 
   if (!(section = ipmi_config_core_lan6_conf_section_get (state_data,
@@ -253,7 +252,6 @@ ipmi_config_core_sections_create (ipmi_config_state_data_t *state_data)
             goto cleanup;
         }
     }
-#endif
 
   /* Lan_Conf_Auth Section(s) */
 
