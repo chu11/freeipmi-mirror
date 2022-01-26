@@ -44,7 +44,6 @@
 enum ipmidetect_argp_option_keys
   {
     IPMIDETECT_HOSTNAME_KEY = 'h',
-    IPMIDETECT_LEGACY_HOSTNAME_KEY = 'o',       /* legacy */
     IPMIDETECT_PORT_KEY = 'p',
     IPMIDETECT_DETECTED_KEY = 'd',
     IPMIDETECT_UNDETECTED_KEY = 'u',

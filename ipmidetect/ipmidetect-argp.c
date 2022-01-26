@@ -68,22 +68,20 @@ static struct argp_option cmdline_options[] =
   {
     { "hostname", IPMIDETECT_HOSTNAME_KEY, "HOST", 0,
       "Specify alternate server hostname", 1},
-    { "hostname_legacy", IPMIDETECT_LEGACY_HOSTNAME_KEY, "HOST", OPTION_HIDDEN,
-      "Specify alternate server hostname", 2},
     { "port", IPMIDETECT_PORT_KEY, "PORT", 0,
-      "Specify alternate server port", 3},
+      "Specify alternate server port", 2},
     { "detected", IPMIDETECT_DETECTED_KEY, 0, 0,
-      "Output only detected nodes", 4},
+      "Output only detected nodes", 3},
     { "undetected", IPMIDETECT_UNDETECTED_KEY, 0, 0,
-      "Output only undetected nodes", 5},
+      "Output only undetected nodes", 4},
     { "hostrange", IPMIDETECT_HOSTRANGE_KEY, 0, 0,
-      "Output in hostrange format", 6},
+      "Output in hostrange format", 5},
     { "comma", IPMIDETECT_COMMA_KEY, 0, 0,
-      "Output in comma separated format", 7},
+      "Output in comma separated format", 6},
     { "newline", IPMIDETECT_NEWLINE_KEY, 0, 0,
-      "Output in newline separated format", 8},
+      "Output in newline separated format", 7},
     { "space", IPMIDETECT_SPACE_KEY, 0, 0,
-      "Output in space separated format", 9},
+      "Output in space separated format", 8},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -151,7 +149,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   switch (key)
     {
     case IPMIDETECT_HOSTNAME_KEY:
-    case IPMIDETECT_LEGACY_HOSTNAME_KEY:
       if (!(cmd_args->hostname = strdup (arg)))
         err_exit ("strdup: %s", strerror (errno));
       break;

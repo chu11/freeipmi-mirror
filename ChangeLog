@@ -1,3 +1,7 @@
+2022-08-22 Albert Chu <chu11@llnl.gov>
+
+	* ipmidetect: Remove legacy -o option, use -h or --hostname.
+
 2022-01-25 Albert Chu <chu11@llnl.gov>
 
 	* Remove legacy support for the /etc/freeipmi.conf,
