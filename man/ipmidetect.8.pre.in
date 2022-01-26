@@ -52,13 +52,7 @@ listed must be the shortened names of hostnames.
 
 .SH "OPTIONS"
 .TP
-\fB\-h\fR, \fB\-\-help\fR
-Print help and exit
-.TP
-\fB\-v\fR, \fB\-\-version\fR
-Print version and exit
-.TP
-\fB\-o\fR \fISTRING\fR, \fB\-\-hostname\fR=\fISTRING\fR
+\fB\-h\fR \fISTRING\fR, \fB\-\-hostname\fR=\fISTRING\fR
 server hostname (default=localhost)
 .TP
 \fB\-p\fR \fIINT\fR, \fB\-\-port\fR=\fIINT\fR
@@ -81,6 +75,9 @@ List nodes in newline separated list
 .TP
 \fB\-s\fR, \fB\-\-space\fR
 List nodes in space separated list
+.TP
+\fB\-V\fR, \fB\-\-version\fR
+Print version and exit
 .LP
 #include <@top_srcdir@/man/manpage-common-hostranged-text-main.man>
 .SH "DIAGNOSTICS"

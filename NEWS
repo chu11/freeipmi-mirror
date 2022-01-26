@@ -2,6 +2,7 @@ FreeIPMI 1.6.10 - XX/XX/22
 --------------------------
 o Fix static compilation issues by renaming a number of internal
   functions.
+o Misc documentation corrections.
 
 FreeIPMI 1.6.9 - 01/19/22
 -------------------------
