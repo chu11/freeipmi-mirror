@@ -50,7 +50,7 @@ o Remove legacy command line options in ipmipower
   - --retry-backoff-count (--retransmission-backoff-count since 0.5.1)
 o Remove legacy config file support for ipmipower (use freeipmi.conf)
 o Remove legacy config file options in ipmipower
-  - ipmi-version (use )
+  - ipmi-version (use driver-type)
   - on-if-off (use ipmipower-on-if-off)
   - wait-until-on (use ipmipower-wait-until-on)
   - wait-until-off (use ipmipower-wait-until-off)
