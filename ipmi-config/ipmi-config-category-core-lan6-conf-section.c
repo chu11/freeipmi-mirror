@@ -46,8 +46,9 @@
 #define BMC_MAXMACADDRLEN 24
 
 struct ipv6_address_data {
-  uint8_t source;
-  uint8_t enable;               /* not used w/ dynamic */
+  uint8_t source;               /* static */
+  uint8_t source_type;          /* dynamic */
+  uint8_t enable;               /* static */
   uint8_t address[IPMI_IPV6_BYTES];
   uint8_t address_prefix_length;
   uint8_t address_status;
@@ -1089,15 +1090,15 @@ _get_ipv6_dynamic_address (ipmi_config_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (FIID_OBJ_GET (obj_cmd_rs, "source", &val) < 0)
+  if (FIID_OBJ_GET (obj_cmd_rs, "source_type", &val) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'source': %s\n",
+                       "fiid_obj_get: 'source_type': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
-  ipv6_data->source = val;
+  ipv6_data->source_type = val;
 
   if (fiid_obj_get_data (obj_cmd_rs,
                          "address",
@@ -1138,7 +1139,7 @@ _get_ipv6_dynamic_address (ipmi_config_state_data_t *state_data,
 }
 
 static int
-get_dynamic_address_source_number (const char *string)
+get_dynamic_address_source_type_number (const char *string)
 {
   assert (string);
 
@@ -1150,7 +1151,7 @@ get_dynamic_address_source_number (const char *string)
 }
 
 static char *
-get_dynamic_address_source_string (uint8_t value)
+get_dynamic_address_source_type_string (uint8_t value)
 {
   switch (value)
     {
@@ -1163,9 +1164,9 @@ get_dynamic_address_source_string (uint8_t value)
 }
 
 static ipmi_config_err_t
-ipv6_dynamic_address_source_checkout (ipmi_config_state_data_t *state_data,
-                                      const char *section_name,
-                                      struct ipmi_config_keyvalue *kv)
+ipv6_dynamic_address_source_type_checkout (ipmi_config_state_data_t *state_data,
+                                           const char *section_name,
+                                           struct ipmi_config_keyvalue *kv)
 {
   struct ipv6_address_data ipv6_data;
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
@@ -1177,7 +1178,7 @@ ipv6_dynamic_address_source_checkout (ipmi_config_state_data_t *state_data,
 
   if ((ret = _get_ipv6_dynamic_address (state_data,
                                         section_name,
-                                        atoi (kv->key->key_name + strlen ("IPv6_Dynamic_Address_Source_")),
+                                        atoi (kv->key->key_name + strlen ("IPv6_Dynamic_Address_Source_Type_")),
                                         &ipv6_data)) != IPMI_CONFIG_ERR_SUCCESS)
     {
       rv = ret;
@@ -1186,7 +1187,7 @@ ipv6_dynamic_address_source_checkout (ipmi_config_state_data_t *state_data,
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
-                                                  get_dynamic_address_source_string (ipv6_data.source)) < 0)
+                                                  get_dynamic_address_source_type_string (ipv6_data.source)) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
@@ -1195,17 +1196,17 @@ ipv6_dynamic_address_source_checkout (ipmi_config_state_data_t *state_data,
 }
 
 static ipmi_config_validate_t
-ipv6_dynamic_address_source_validate (ipmi_config_state_data_t *state_data,
-                                      const char *section_name,
-                                      const char *key_name,
-                                      const char *value)
+ipv6_dynamic_address_source_type_validate (ipmi_config_state_data_t *state_data,
+                                           const char *section_name,
+                                           const char *key_name,
+                                           const char *value)
 {
   assert (state_data);
   assert (section_name);
   assert (key_name);
   assert (value);
 
-  if (get_dynamic_address_source_number (value) != -1)
+  if (get_dynamic_address_source_type_number (value) != -1)
     return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
   return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
 }
@@ -2412,16 +2413,16 @@ ipmi_config_core_lan6_conf_section_get (ipmi_config_state_data_t *state_data,
 
   for (i = 0; i < number_of_dynamic_addresses; i++)
     {
-      snprintf (key_name, IPMI_CONFIG_MAX_KEY_NAME_LEN, "IPv6_Dynamic_Address_Source_%u", i);
+      snprintf (key_name, IPMI_CONFIG_MAX_KEY_NAME_LEN, "IPv6_Dynamic_Address_Source_Type_%u", i);
 
       if (ipmi_config_section_add_key (state_data,
                                        section,
                                        key_name,
                                        "READ-ONLY",
                                        IPMI_CONFIG_CHECKOUT_KEY_COMMENTED_OUT | IPMI_CONFIG_READABLE_ONLY,
-                                       ipv6_dynamic_address_source_checkout,
+                                       ipv6_dynamic_address_source_type_checkout,
                                        read_only_commit,
-                                       ipv6_dynamic_address_source_validate) < 0)
+                                       ipv6_dynamic_address_source_type_validate) < 0)
         goto cleanup;
 
       snprintf (key_name, IPMI_CONFIG_MAX_KEY_NAME_LEN, "IPv6_Dynamic_Address_%u", i);
