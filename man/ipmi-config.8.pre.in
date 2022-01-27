@@ -98,10 +98,11 @@ increased.
 Output verbose information.  When used with \fI\-\-checkout\fR,
 additional uncommon sections and/or fields will be shown.  In the
 \fIcore\fR category, this includes checking out Serial Configuration
-parameters, Vlan parameters, IPv4 Header parameters, RMCP port, and
-sections for each channel on a system, if multiple channels exist.  In
-the \fIpef\fR category, this includes checkout out sections for each
-channel on a system, if multiple channels exist.
+parameters, Vlan parameters, IPv4 Header parameters, RMCP port, all
+IPv6 configurable addresses (if > 1 is supported), and sections for
+each channel on a system (if multiple channels exist).  In the
+\fIpef\fR category, this includes checkout out sections for each
+channel on a system (if multiple channels exist).
 .TP
 \fB\-vv\fR
 Output very verbose information.  Output additional detailed
