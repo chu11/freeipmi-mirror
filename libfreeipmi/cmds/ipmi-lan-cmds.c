@@ -2324,7 +2324,7 @@ fill_cmd_set_lan_configuration_parameters_ipv6_static_addresses (uint8_t channel
       return (-1);
     }
 
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_ipv6_header_flow_label_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_lan_configuration_parameters_ipv6_static_addresses_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
