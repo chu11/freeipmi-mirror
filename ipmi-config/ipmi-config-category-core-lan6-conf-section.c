@@ -1800,18 +1800,18 @@ ipv6_static_router_mac_address_checkout (ipmi_config_state_data_t *state_data,
 
   if (num == 1)
     tmp = ipmi_cmd_get_lan_configuration_parameters_ipv6_static_router_1_mac_address (state_data->ipmi_ctx,
-                                                                                     channel_number,
-                                                                                     IPMI_GET_LAN_PARAMETER,
-                                                                                     IPMI_LAN_CONFIGURATION_PARAMETERS_NO_SET_SELECTOR,
-                                                                                     IPMI_LAN_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
-                                                                                     obj_cmd_rs);
+                                                                                      channel_number,
+                                                                                      IPMI_GET_LAN_PARAMETER,
+                                                                                      IPMI_LAN_CONFIGURATION_PARAMETERS_NO_SET_SELECTOR,
+                                                                                      IPMI_LAN_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
+                                                                                      obj_cmd_rs);
   else
     tmp = ipmi_cmd_get_lan_configuration_parameters_ipv6_static_router_2_mac_address (state_data->ipmi_ctx,
-                                                                                     channel_number,
-                                                                                     IPMI_GET_LAN_PARAMETER,
-                                                                                     IPMI_LAN_CONFIGURATION_PARAMETERS_NO_SET_SELECTOR,
-                                                                                     IPMI_LAN_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
-                                                                                     obj_cmd_rs);
+                                                                                      channel_number,
+                                                                                      IPMI_GET_LAN_PARAMETER,
+                                                                                      IPMI_LAN_CONFIGURATION_PARAMETERS_NO_SET_SELECTOR,
+                                                                                      IPMI_LAN_CONFIGURATION_PARAMETERS_NO_BLOCK_SELECTOR,
+                                                                                      obj_cmd_rs);
 
   if (tmp < 0)
     {
@@ -2030,6 +2030,8 @@ ipv6_static_router_prefix_length_checkout (ipmi_config_state_data_t *state_data,
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
                                                                kv,
                                                                prefix_length) < 0)
+
+    return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
