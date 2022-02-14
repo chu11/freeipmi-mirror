@@ -1,3 +1,8 @@
+2022-02-14 Albert Chu <chu11@llnl.gov>
+
+	* man/ipmi-config.8.pre.in: Document additional board that
+	requires the `veryslowcommit` workaround.
+
 2022-01-25 Albert Chu <chu11@llnl.gov>
 
 	* man/ipmidetect.8.pre.in, man/ipmidetectd.8.pre.in: Correct out

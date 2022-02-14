@@ -319,7 +319,8 @@ written to the BMC.  Issue observed on Supermicro H8QME.
 BMC by sleeping one second between the commit of every key.  It works
 around motherboards that have BMCs that can be overwhelmed by commits.
 Those hitting this issue may see commit errors or commits not being
-written to the BMC.  Issue observed on Quanta S99Q/Dell FS12-TY.
+written to the BMC.  Issue observed on Quanta S99Q/Dell FS12-TY and
+Dell PowerEdge T320.
 .LP
 \fIsolchannelassumelanchannel\fR - This workaround will force
 .B ipmi-config
