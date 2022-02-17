@@ -1,3 +1,24 @@
+2022-02-17 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-config/ipmi-config-category-core-sections.c
+	(ipmi_config_core_sections_create): Support IPV6 config in
+	Lan6_Conf section.
+
+	* ipmi-config/ipmi-config-category-core-lan6-conf-section.c:
+	Correct checkout of IPv6 dynamic addresses.
+
+	* ipmi-config/ipmi-config-category-core-lan6-conf-section.c: Do
+	not output all IPv6 addresses by default, only output them all in
+	verbose mode.
+
+	* ipmi-config/ipmi-config-category-core-lan6-conf-section.c
+	(ipv6_static_router_mac_address_checkout): Fix output corner case
+	due to error handling bug.
+
+	* libfreeipmi/cmds/ipmi-lan-cmds.c
+	(fill_cmd_set_lan_configuration_parameters_ipv6_static_addresses):
+	Fix invalid template check error.
+
 2022-02-14 Albert Chu <chu11@llnl.gov>
 
 	* man/ipmi-config.8.pre.in: Document additional board that
