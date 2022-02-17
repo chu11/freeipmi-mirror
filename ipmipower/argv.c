@@ -8,7 +8,7 @@
  *  UCRL-CODE-155698
  *
  *  This file is part of Ipmipower, a remote power control utility.
- *  For details, see http://www.llnl.gov/linux/.
+ *  For details, see https://savannah.gnu.org/projects/freeipmi/.
  *
  *  The code in this file began with the code in the Powerman project.
  *  See below for original copyright information.
@@ -32,7 +32,7 @@
  *  UCRL-CODE-2002-008.
  *
  *  This file is part of PowerMan, a remote power management program.
- *  For details, see <http://www.llnl.gov/linux/powerman/>.
+ *  For details, see <https://github.com/chaos/powerman>.
  *
  *  PowerMan is free software; you can redistribute it and/or modify it under
  *  the terms of the GNU General Public License as published by the Free

@@ -8,7 +8,7 @@
  *  UCRL-CODE-155698
  *
  *  This file is part of Ipmipower, a remote power control utility.
- *  For details, see http://www.llnl.gov/linux/.
+ *  For details, see https://savannah.gnu.org/projects/freeipmi/.
  *
  *  Ipmipower is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by the
@@ -33,7 +33,7 @@
  *  UCRL-CODE-221226
  *
  *  This file is part of Ipmiconsole, a set of IPMI 2.0 SOL libraries
- *  and utilities.  For details, see http://www.llnl.gov/linux/.
+ *  and utilities.  For details, see https://savannah.gnu.org/projects/freeipmi/.
  *
  *  Ipmiconsole is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by the

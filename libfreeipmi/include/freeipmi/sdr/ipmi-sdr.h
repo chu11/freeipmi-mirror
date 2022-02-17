@@ -23,7 +23,7 @@
  *  UCRL-CODE-222073
  *
  *  This file is part of Ipmimonitoring, an IPMI sensor monitoring
- *  library.  For details, see http://www.llnl.gov/linux/.
+ *  library.  For details, see https://savannah.gnu.org/projects/freeipmi/.
  *
  *  Ipmimonitoring is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by the

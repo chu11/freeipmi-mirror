@@ -7,7 +7,7 @@
  *  LLNL-CODE-559172
  *
  *  This file is part of Ipmiseld, an IPMI SEL syslog logging daemon.
- *  For details, see http://www.llnl.gov/linux/.
+ *  For details, see https://savannah.gnu.org/projects/freeipmi/.
  *
  *  Ipmiseld is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by the

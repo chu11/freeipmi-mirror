@@ -4,7 +4,7 @@ Written by Albert Chu <chu11@llnl.gov>
 UCRL-CODE-228523
 
 This file is part of Ipmidetect, tools and libraries for detecting
-IPMI nodes in a cluster. For details, see http://www.llnl.gov/linux/.
+IPMI nodes in a cluster. For details, see https://savannah.gnu.org/projects/freeipmi/.
 
 Ipmidetect is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free

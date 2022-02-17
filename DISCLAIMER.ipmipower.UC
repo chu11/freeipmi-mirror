@@ -4,7 +4,7 @@ Written by Albert Chu <chu11@llnl.gov>
 UCRL-CODE-155698
 
 This file is part of Ipmipower, a remote power control utility.  For
-details, see http://www.llnl.gov/linux/.
+details, see https://savannah.gnu.org/projects/freeipmi/.
 
 Ipmipower is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free

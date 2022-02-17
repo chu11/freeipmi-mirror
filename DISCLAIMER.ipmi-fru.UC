@@ -5,7 +5,7 @@ UCRL-CODE-232183
 
 This file is part of Ipmi-fru, a tool used for retrieving motherboard
 field replaceable unit (FRU) information. For details, see
-http://www.llnl.gov/linux/.
+https://savannah.gnu.org/projects/freeipmi/.
 
 Ipmi-fru is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free

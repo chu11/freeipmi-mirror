@@ -4,7 +4,7 @@ Written by Albert Chu <chu11@llnl.gov>
 UCRL-CODE-221226
 
 This file is part of Ipmiconsole, a set of IPMI 2.0 SOL libraries and
-utilities.  For details, see http://www.llnl.gov/linux/.
+utilities.  For details, see https://savannah.gnu.org/projects/freeipmi/.
 
 Ipmiconsole is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free

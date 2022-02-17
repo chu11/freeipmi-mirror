@@ -23,7 +23,7 @@
  *
  *  This file is part of Ipmi-Dcmi, tools and libraries to support the
  *  data center manageability interface (DCMI).  For details, see
- *  http://www.llnl.gov/linux/.
+ *  https://savannah.gnu.org/projects/freeipmi/.
  *
  *  Ipmi-Dcmi is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by the

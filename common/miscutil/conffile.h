@@ -8,7 +8,7 @@
  *  UCRL-CODE-155699
  *
  *  This file is part of Whatsup, tools and libraries for determining up and
- *  down nodes in a cluster. For details, see http://www.llnl.gov/linux/.
+ *  down nodes in a cluster. For details, see https://savannah.gnu.org/projects/freeipmi/.
  *
  *  Whatsup is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by the

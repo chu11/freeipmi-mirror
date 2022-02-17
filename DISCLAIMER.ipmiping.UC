@@ -4,7 +4,7 @@ Written by Albert Chu <chu11@llnl.gov>
 UCRL-CODE-155448
 
 This file is part of Ipmiping, tools for pinging IPMI and RMCP compliant
-remote systems.  For details, see http://www.llnl.gov/linux/.
+remote systems.  For details, see https://savannah.gnu.org/projects/freeipmi/.
 
 Ipmiping is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free

@@ -5,7 +5,7 @@ UCRL-CODE-227589
 
 This file is part of pstdout, a library used to launch and manage the
 standard output of multiple threads.  For details, see
-http://www.llnl.gov/linux/.
+https://savannah.gnu.org/projects/freeipmi/.
 
 Pstdout is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free

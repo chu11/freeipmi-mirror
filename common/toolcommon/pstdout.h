@@ -9,7 +9,7 @@
  *
  *  This file is part of pstdout, a library used to launch and manage
  *  the standard output of multiple threads. For details, see
- *  http://www.llnl.gov/linux/.
+ *  https://savannah.gnu.org/projects/freeipmi/.
  *
  *  Pstdout is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by the
@@ -34,8 +34,7 @@
  * "parallel" standard output from the launched threads.
  *
  * The idea for pstdout came from the pdsh and dshbak.  (See
- * http://sourceforge.net/projects/pdsh/ or
- * http://www.llnl.gov/linux/pdsh/).  The tool (or code in pdsh) could
+ * https://github.com/chaos/pdsh).  The tool (or code in pdsh) could
  * not be directly used for all projects, thus this library was
  * developed to emulate its functionality. Some of the same basic
  * code/algorithms from pdsh have been re-used here.

@@ -9,7 +9,7 @@
  *
  *  This file is part of Bmc-watchdog, a base management controller
  *  (BMC) watchdog timer management tool. For details, see
- *  http://www.llnl.gov/linux/.
+ *  https://savannah.gnu.org/projects/freeipmi/.
  *
  *  Bmc-Watchdog is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by the
