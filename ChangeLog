@@ -1,5 +1,10 @@
 2022-02-17 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmiconsole.8.pre.in, man/libipmiconsole.3.pre.in,
+	libipmiconsole.conf.5.pre.in: Fix typo in copyright header.
+
+2022-02-17 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config-category-core-sections.c
 	(ipmi_config_core_sections_create): Support IPV6 config in
 	Lan6_Conf section.
