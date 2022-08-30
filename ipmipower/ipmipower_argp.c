@@ -285,7 +285,6 @@ cmdline_parse (int key,
         }
       cmd_args->ping_consec_count = tmp;
       break;
-      /* removed legacy short options */
     default:
       return (common_parse_opt (key, arg, &(cmd_args->common_args)));
     }

@@ -4,6 +4,8 @@
 	(--target-channel-number since 1.2.1), --slave-address
 	(--target-slave-address since 1.2.1).
 
+	* ipmipower: Remove no longer relevant comment.
+
 2022-02-17 Albert Chu <chu11@llnl.gov>
 
 	* man/ipmiconsole.8.pre.in, man/libipmiconsole.3.pre.in,
