@@ -1,4 +1,4 @@
-FreeIPMI 1.6.10 - XX/XX/22
+FreeIPMI 1.6.10 - 08/30/22
 --------------------------
 o Support IPv6 Lan configuration in ipmi-config.  IPv6 configuration
   is supported in the new Lan6_Conf section.
