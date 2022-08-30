@@ -65,10 +65,8 @@ static struct argp_option cmdline_options[] =
   {
     { "config-file", IPMIDETECTD_CONFIG_FILE_KEY, "FILE", 0,
       "Specify alternate config file", 1},
-    { "config_file", IPMIDETECTD_LEGACY_CONFIG_FILE_KEY, "FILE", OPTION_HIDDEN,
-      "Specify alternate config file", 2},
     { "debug", IPMIDETECTD_DEBUG_KEY, 0, 0,
-      "Turn on debugging and run daemon in foreground", 3},
+      "Turn on debugging and run daemon in foreground", 2},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -91,7 +89,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   switch (key)
     {
     case IPMIDETECTD_CONFIG_FILE_KEY:
-    case IPMIDETECTD_LEGACY_CONFIG_FILE_KEY:
       if (!(cmd_args->config_file = strdup (arg)))
         err_exit ("strdup: %s", strerror (errno));
       break;

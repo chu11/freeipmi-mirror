@@ -140,6 +140,8 @@ o Remove legacy OEM Dell command options / keys
 o Remove legacy OEM Inventec commands
   - get-nic-status (use get-nic-mode)
   - set-nic-status (use set-nic-mode)
+o Remove legacy command line option --config_file in ipmidetectd (use
+  --config-file)
 
 FreeIPMI 1.6.1 - 02/02/18
 -------------------------

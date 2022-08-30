@@ -6,6 +6,9 @@
 
 	* ipmipower: Remove no longer relevant comment.
 
+	* ipmidetectd: Remove legacy --config_file support (--config-file
+	since 1.2.1)
+
 2022-02-17 Albert Chu <chu11@llnl.gov>
 
 	* man/ipmiconsole.8.pre.in, man/libipmiconsole.3.pre.in,
