@@ -112,6 +112,9 @@ o Remove legacy command line option --delete-all in ipmi-sel (use
   --clear)
 o Remove legacy command line option --guid in bmc-info (use
   --get-device-id)
+o Remove legacy command line options in ipmi-raw
+  - --channel-number (use --target-channel-number)
+  - --slave-address (use --target-slave-address)
 o Remove legacy config options in ipmi-config
   - Serial_Conf:Call_Retry_time (is now Call_Retry_Interval)
   - User:Password20 (is now just Password)

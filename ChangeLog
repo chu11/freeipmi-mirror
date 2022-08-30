@@ -1,3 +1,9 @@
+2022-08-30 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-raw: Remove legacy options --channel-number
+	(--target-channel-number since 1.2.1), --slave-address
+	(--target-slave-address since 1.2.1).
+
 2022-02-17 Albert Chu <chu11@llnl.gov>
 
 	* man/ipmiconsole.8.pre.in, man/libipmiconsole.3.pre.in,
