@@ -93,6 +93,7 @@ o Remove legacy config file options for ipmi-sensors
   - ipmi-sensors-sensor-config-file (use ipmi-sensors-sensor-state-config-file)
   - ipmi-sensors-groups (use ipmi-sensors-sensor-types)
   - ipmi-sensors-exclude-groups (use ipmi-sensors-exclude-sensor-types)
+  - ipmimonitoring-X backwards compatibility options (use ipmi-sensors-X instead)
 o Remove legacy command line options in ipmi-chassis
   - --get-capabilities (use --get-chassis-capabilities)
   - --get-status (use --get-chassis-status)

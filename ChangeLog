@@ -24,6 +24,9 @@
 	"ipmi-sensors-sensor-types" and
 	"ipmi-sensor-exclude-sensor-types" since 0.8.1).
 
+	* ipmi-sensors: Remove all "ipmimonitoring" legacy config file
+	options.  Use "ipmi-sensors" ones instead (since 0.8.1).
+
 2022-02-17 Albert Chu <chu11@llnl.gov>
 
 	* man/ipmiconsole.8.pre.in, man/libipmiconsole.3.pre.in,
