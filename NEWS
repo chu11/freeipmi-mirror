@@ -142,6 +142,7 @@ o Remove legacy OEM Inventec commands
   - set-nic-status (use set-nic-mode)
 o Remove legacy command line option --config_file in ipmidetectd (use
   --config-file)
+o Remove legacy short option -o in ipmidetect (use -h)
 
 FreeIPMI 1.6.1 - 02/02/18
 -------------------------
