@@ -3405,18 +3405,6 @@ config_file_parse (const char *filename,
         &(ipmi_sel_data.event_state_config_file),
         0,
       },
-      /* legacy - maintain for backwards compatability */
-      {
-        "ipmi-sel-assume-system-event-records",
-        CONFFILE_OPTION_BOOL,
-        -1,
-        _config_file_bool,
-        1,
-        0,
-        &(ipmi_sel_data.assume_system_event_records_count),
-        &(ipmi_sel_data.assume_system_event_records),
-        0,
-      },
       {
         "ipmi-sel-interpret-oem-data",
         CONFFILE_OPTION_BOOL,

@@ -2170,7 +2170,7 @@ main (int argc, char **argv)
       return (EXIT_SUCCESS);
     }
 
-  /* Special case, if user specified workaround via flags instead of option */
+  /* Special case, set flag if user specified workaround */
   if (prog_data.args->common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_ASSUME_SYSTEM_EVENT)
     prog_data.args->assume_system_event_records = 1;
 

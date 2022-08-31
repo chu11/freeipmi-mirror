@@ -114,7 +114,7 @@ struct ipmi_sel_arguments
   int output_event_state;
   char *event_state_config_file;
   int hex_dump;
-  int assume_system_event_records; /* legacy */
+  int assume_system_event_records;
   int interpret_oem_data;
   int output_oem_event_strings;
   int entity_sensor_names;
