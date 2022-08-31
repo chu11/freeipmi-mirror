@@ -448,10 +448,6 @@ int ipmi_sel_parse_read_oem (ipmi_sel_ctx_t ctx,
  * Output a month name (Jan, Feb, Mar, etc.) instead of the month
  * number when outputting the date.
  *
- * LEGACY
- *
- * Output strings in legacy format.
- *
  * Returns length of data written to buffer.  If >= buflen, no null
  * termination exists in buffer.
  */

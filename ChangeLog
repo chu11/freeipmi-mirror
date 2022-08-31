@@ -1,3 +1,8 @@
+2022-08-31 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/sel/: Remove no longer relevant
+	comments.
+
 2022-08-30 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-raw: Remove legacy options --channel-number
