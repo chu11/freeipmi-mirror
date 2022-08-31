@@ -128,23 +128,20 @@ static struct argp_option cmdline_options[] =
       "Specify an alternate event state configuration file.", 59},
     { "hex-dump",   HEX_DUMP_KEY, 0, 0,
       "Hex-dump SEL records.", 60},
-    /* legacy */
-    { "assume-system-event-records", ASSUME_SYSTEM_EVENT_RECORDS_KEY, 0, OPTION_HIDDEN,
-      "Assume invalid record types are system event records.", 61},
     { "interpret-oem-data", INTERPRET_OEM_DATA_KEY, NULL, 0,
-      "Attempt to interpret OEM data.", 62},
+      "Attempt to interpret OEM data.", 61},
     { "output-oem-event-strings", OUTPUT_OEM_EVENT_STRINGS_KEY, NULL, 0,
-      "Attempt to output OEM event strings.", 63},
+      "Attempt to output OEM event strings.", 62},
     { "entity-sensor-names", ENTITY_SENSOR_NAMES_KEY, NULL, 0,
-      "Output sensor names with entity ids and instances.", 64},
+      "Output sensor names with entity ids and instances.", 63},
     { "no-sensor-type-output", NO_SENSOR_TYPE_OUTPUT_KEY, 0, 0,
-      "Do not show sensor type output.", 65},
+      "Do not show sensor type output.", 64},
     { "comma-separated-output", COMMA_SEPARATED_OUTPUT_KEY, 0, 0,
-      "Output fields in comma separated format.", 66},
+      "Output fields in comma separated format.", 65},
     { "no-header-output", NO_HEADER_OUTPUT_KEY, 0, 0,
-      "Do not output column headers.", 67},
+      "Do not output column headers.", 66},
     { "non-abbreviated-units", NON_ABBREVIATED_UNITS_KEY, 0, 0,
-      "Output non-abbreviated units (e.g. 'Amps' instead of 'A').", 68},
+      "Output non-abbreviated units (e.g. 'Amps' instead of 'A').", 67},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -599,10 +596,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case HEX_DUMP_KEY:
       cmd_args->hex_dump = 1;
-      break;
-      /* legacy */
-    case ASSUME_SYSTEM_EVENT_RECORDS_KEY:
-      cmd_args->assume_system_event_records = 1;
       break;
     case INTERPRET_OEM_DATA_KEY:
       cmd_args->interpret_oem_data = 1;

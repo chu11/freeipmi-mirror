@@ -108,8 +108,9 @@ o Remove legacy support in ipmi-chassis that has been replaced with
   - --force-progress-event-traps
   - --firmware-bios-verbosity
   - --get-boot-flags
-o Remove legacy command line option --delete-all in ipmi-sel (use
-  --clear)
+o Remove legacy command line options in ipmi-sel
+  - --delete-all (use --clear)
+  - --assume-system-event-records (use -W assumesystemevent)
 o Remove legacy command line option --guid in bmc-info (use
   --get-device-id)
 o Remove legacy command line options in ipmi-raw
