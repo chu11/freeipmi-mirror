@@ -63,15 +63,6 @@ Specify a specific FRU device ID.
 .TP
 \fB\-v\fR, \fB\-\-verbose\fR
 Increase verbosity in output to include additional output.
-.if 0 \{
-.TP
-\fB\-s\fR, \fB\-\-skip-checks\fR
-Skip FRU checksum checks. Some FRUs have incorrect checksums, but the
-FRU data is correct.  Use this option to skip the checks checksum.
-Output may be unknown, pray for the best.  This option is confirmed to
-work around compliances issues on Inventec 5441/Dell Xanadu II, Dell
-Poweredge R610, and Dell Poweredge R710 motherboards.
-\}
 .TP
 \fB\-\-bridge\-fru\fR
 By default, FRU entries on other satellite controllers will not be

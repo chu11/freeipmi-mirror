@@ -91,15 +91,12 @@ static struct argp_option cmdline_options[] =
       "Specify a specific FRU device ID.", 40},
     { "verbose", VERBOSE_KEY, 0, 0,
       "Increase verbosity in output.", 41},
-    /* legacy */
-    { "skip-checks", SKIP_CHECKS_KEY, 0, OPTION_HIDDEN,
-      "Skip FRU checksum checks", 42},
     { "bridge-fru", BRIDGE_FRU_KEY, 0, 0,
-      "Bridge to read FRU entries on other controllers", 43},
+      "Bridge to read FRU entries on other controllers", 42},
     { "interpret-oem-data", INTERPRET_OEM_DATA_KEY, NULL, 0,
-      "Attempt to interpret OEM data.", 44},
+      "Attempt to interpret OEM data.", 43},
     { "fru-file", FRU_FILE_KEY, "FILENAME", 0,
-      "Output from specified FRU binary file.", 45},
+      "Output from specified FRU binary file.", 44},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -151,10 +148,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
     case VERBOSE_KEY:
       cmd_args->verbose_count++;
       break;
-      /* legacy */
-    case SKIP_CHECKS_KEY:
-      cmd_args->skip_checks = 1;
-      break;
     case BRIDGE_FRU_KEY:
       cmd_args->bridge_fru = 1;
       break;
@@ -201,9 +194,6 @@ _ipmi_fru_config_file_parse (struct ipmi_fru_arguments *cmd_args)
 
   if (config_file_data.verbose_count_count)
     cmd_args->verbose_count = config_file_data.verbose_count;
-  /* legacy */
-  if (config_file_data.skip_checks_count)
-    cmd_args->skip_checks = config_file_data.skip_checks;
   if (config_file_data.bridge_fru_count)
     cmd_args->bridge_fru = config_file_data.bridge_fru;
   if (config_file_data.interpret_oem_data_count)
@@ -238,8 +228,6 @@ ipmi_fru_argp_parse (int argc, char **argv, struct ipmi_fru_arguments *cmd_args)
   cmd_args->device_id = 0;
   cmd_args->device_id_set = 0;
   cmd_args->verbose_count = 0;
-  /* legacy */
-  cmd_args->skip_checks = 0;
   cmd_args->bridge_fru = 0;
   cmd_args->interpret_oem_data = 0;
   cmd_args->fru_file = NULL;

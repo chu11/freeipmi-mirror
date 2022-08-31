@@ -107,8 +107,6 @@ struct config_file_data_ipmi_fru
 {
   unsigned int verbose_count;
   int verbose_count_count;
-  int skip_checks;              /* legacy - parse for backwards compatability */
-  int skip_checks_count;        /* legacy - parse for backwards compatability */
   int bridge_fru;
   int bridge_fru_count;
   int interpret_oem_data;

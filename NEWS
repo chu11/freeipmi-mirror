@@ -111,6 +111,8 @@ o Remove legacy support in ipmi-chassis that has been replaced with
 o Remove legacy command line options in ipmi-sel
   - --delete-all (use --clear)
   - --assume-system-event-records (use -W assumesystemevent)
+o Remove legacy command line option --skip-checks in ipmi-fru (use -W
+  skipchecks)
 o Remove legacy command line option --guid in bmc-info (use
   --get-device-id)
 o Remove legacy command line options in ipmi-raw

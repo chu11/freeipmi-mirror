@@ -14,6 +14,9 @@
 	* ipmi-sel: Remove legacy option --assume-system-event-records
 	(use -W assumesystemevent since 1.2.1)
 
+	* ipmi-fru: Remove legacy option --skip-checks(use -W skipchecks
+	since 1.2.1)
+
 2022-02-17 Albert Chu <chu11@llnl.gov>
 
 	* man/ipmiconsole.8.pre.in, man/libipmiconsole.3.pre.in,

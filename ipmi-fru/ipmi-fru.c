@@ -1225,7 +1225,7 @@ _ipmi_fru (pstdout_state_t pstate,
 
   if (state_data.prog_data->args->common_args.debug)
     flags |= IPMI_FRU_FLAGS_DEBUG_DUMP;
-  if (state_data.prog_data->args->skip_checks)
+  if (state_data.prog_data->args->common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_SKIP_CHECKS)
     flags |= IPMI_FRU_FLAGS_SKIP_CHECKSUM_CHECKS;
   if (state_data.prog_data->args->interpret_oem_data)
     flags |= IPMI_FRU_FLAGS_INTERPRET_OEM_DATA;
@@ -1273,10 +1273,6 @@ main (int argc, char **argv)
   prog_data.progname = argv[0];
   ipmi_fru_argp_parse (argc, argv, &cmd_args);
   prog_data.args = &cmd_args;
-
-  /* Special case, if user specified workaround via flags instead of option */
-  if (prog_data.args->common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_SKIP_CHECKS)
-    prog_data.args->skip_checks = 1;
 
   if ((hosts_count = pstdout_setup (&(prog_data.args->common_args.hostname),
                                     &(prog_data.args->common_args))) < 0)
