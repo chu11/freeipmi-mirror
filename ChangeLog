@@ -17,6 +17,10 @@
 	* ipmi-fru: Remove legacy option --skip-checks(use -W skipchecks
 	since 1.2.1)
 
+	* ipmi-sensors: Remove "ipmi-sensors-sensor-config-file" config
+	file support (use "ipmi-sensors-sensor-state-config-file" since
+	1.0.0).
+
 2022-02-17 Albert Chu <chu11@llnl.gov>
 
 	* man/ipmiconsole.8.pre.in, man/libipmiconsole.3.pre.in,

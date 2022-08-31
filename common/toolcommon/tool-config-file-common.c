@@ -3733,18 +3733,6 @@ config_file_parse (const char *filename,
         &(ipmi_sensors_data.sensor_state_config_file),
         0,
       },
-      /* legacy - ipmimonitoring option */
-      {
-        "ipmi-sensors-sensor-config-file",
-        CONFFILE_OPTION_STRING,
-        -1,
-        _config_file_string,
-        1,
-        0,
-        &(ipmi_sensors_data.sensor_state_config_file_count),
-        &(ipmi_sensors_data.sensor_state_config_file),
-        0
-      },
       {
         "ipmi-sensors-entity-sensor-names",
         CONFFILE_OPTION_BOOL,
