@@ -211,6 +211,7 @@ extern int __argp_fmtstream_ensure (argp_fmtstream_t __fs, size_t __amount);
 #define ARGP_FS_EI extern inline
 #endif
 
+#ifndef __CYGWIN__
 ARGP_FS_EI size_t
 __argp_fmtstream_write (argp_fmtstream_t __fs,
                         __const char *__str, size_t __len)
@@ -291,6 +292,7 @@ __argp_fmtstream_point (argp_fmtstream_t __fs)
     __argp_fmtstream_update (__fs);
   return __fs->point_col >= 0 ? __fs->point_col : 0;
 }
+#endif /* __CYGWIN__ */
 
 #if !_LIBC
 #undef __argp_fmtstream_putc
