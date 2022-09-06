@@ -192,7 +192,7 @@ extern void __argp_fmtstream_update (argp_fmtstream_t __fs);
 extern int _argp_fmtstream_ensure (argp_fmtstream_t __fs, size_t __amount);
 extern int __argp_fmtstream_ensure (argp_fmtstream_t __fs, size_t __amount);
 
-#ifdef __OPTIMIZE__
+#if defined(__OPTIMIZE__) && !defined(__CYGWIN__)
 /* Inline versions of above routines.  */
 
 #if !_LIBC
@@ -304,7 +304,7 @@ __argp_fmtstream_point (argp_fmtstream_t __fs)
 #undef __argp_fmtstream_ensure
 #endif
 
-#endif /* __OPTIMIZE__ */
+#endif /* __OPTIMIZE__ && !__CYGWIN__*/
 
 #endif /* ARGP_FMTSTREAM_USE_LINEWRAP */
 

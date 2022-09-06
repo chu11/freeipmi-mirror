@@ -1,5 +1,9 @@
 2022-08-31 Albert Chu <chu11@llnl.gov>
 
+	* common/portability/freeipmi-argp-fmtstream.h: Do not optimize under
+	cygwin, fixes portability issues.
+
+2022-08-31 Albert Chu <chu11@llnl.gov>
 	* libfreeipmi/include/freeipmi/sel/: Remove no longer relevant
 	comments.
 
