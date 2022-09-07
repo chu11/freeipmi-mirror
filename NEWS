@@ -1,3 +1,7 @@
+FreeIPMI 1.6.11 - XX/XX/XX
+--------------------------
+o Fix portability compilation on cygwin.
+
 FreeIPMI 1.6.10 - 08/30/22
 --------------------------
 o Support IPv6 Lan configuration in ipmi-config.  IPv6 configuration
