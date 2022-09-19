@@ -411,7 +411,8 @@ if test x"${ac_with_encryption}" = xyes; then
         [have_gcrypt=no])
   ])
   if test "x${have_gcrypt}" = "xno"; then
-     AC_MSG_ERROR([libgcrypt required to build libfreeipmi])
+     AC_MSG_ERROR([libgcrypt required to build libfreeipmi with networking/encryption support])
+     AC_MSG_NOTICE([Note: If IPMI over a network is not required, you may consider building with --without-encryption.])
      AC_MSG_NOTICE([Note: libgpg-error required for libgcrypt])
   fi
   AC_CHECK_HEADERS([gcrypt.h], [have_gcrypt_header=yes], [have_gcrypt_header=no])
