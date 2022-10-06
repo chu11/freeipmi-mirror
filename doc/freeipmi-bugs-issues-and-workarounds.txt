@@ -1561,7 +1561,7 @@ Sensors Issue #15: [INTERPRETATION]
 
   IMO, a SDR record that indicates an analog reading w/ a discrete
   event/reading type code is illegal.  At the minimum it makes no
-  sense.  If you report an analog reading without any treshold
+  sense.  If you report an analog reading without any threshold
   information, what is the use?  While it is not explicitly stated in
   the IPMI specification, this is strongly implied to be wrong.  In
   42.1, it states for threshold sensors, "The Get Sensor Reading
