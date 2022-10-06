@@ -1,3 +1,7 @@
+2022-10-06 Albert Chu <chu11@llnl.gov>
+
+	* doc/freeipmi-bugs-and-workarounds.txt: fix typo
+
 2022-09-19 Albert Chu <chu11@llnl.gov>
 
 	* configure.ac: Add extra build help.
