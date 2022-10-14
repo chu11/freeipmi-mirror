@@ -96,9 +96,15 @@ static struct argp_option cmdline_options[] =
       "Display SEL records from record id START to END.", 44},
     { "exclude-display-range", EXCLUDE_DISPLAY_RANGE_KEY, "START-END", 0,
       "Exclude display of SEL records from record id START to END.", 45},
-    { "date-range", DATE_RANGE_KEY, "MM/DD/YYYY-MM/DD/YYYY", 0,
+    { "date-range", DATE_RANGE_KEY,
+      "MM/DD/YYYY-MM/DD/YYYY"
+      "\n                   "
+      "YYYY-MM-DDTHH:MM:SS-YYYY-MM-DDTHH:MM:SS", 0,
       "Display SEL records in the specified date range.", 46},
-    { "exclude-date-range", EXCLUDE_DATE_RANGE_KEY, "MM/DD/YYYY-MM/DD/YYYY", 0,
+    { "exclude-date-range", EXCLUDE_DATE_RANGE_KEY,
+      "MM/DD/YYYY-MM/DD/YYYY"
+      "\n                           "
+      "YYYY-MM-DDTHH:MM:SS-YYYY-MM-DDTHH:MM:SS", 0,
       "Exclude display of SEL records in the specified date range.", 47},
     { "sensor-types",   SENSOR_TYPES_KEY,       "SENSOR-TYPES-LIST", 0,
       "Show sensors of a specific type.", 46},
@@ -296,6 +302,7 @@ _read_date_range (int *flag,
   unsigned int dash_count = 0;
   time_t t;
   struct tm tm;
+  int range2_is_iso8601 = 1;
 
   assert (flag);
   assert (range1);
@@ -384,18 +391,21 @@ _read_date_range (int *flag,
     t = time (NULL);
   else
     {
-      if (!strptime (range1_str, "%m/%d/%Y", &tm))
+      if (!strptime (range1_str, "%FT%T", &tm))
         {
-          if (!strptime (range1_str, "%b/%d/%Y", &tm))
+          if (!strptime (range1_str, "%m/%d/%Y", &tm))
             {
-              if (!strptime (range1_str, "%m-%d-%Y", &tm))
+              if (!strptime (range1_str, "%b/%d/%Y", &tm))
                 {
-                  if (!strptime (range1_str, "%b-%d-%Y", &tm))
+                  if (!strptime (range1_str, "%m-%d-%Y", &tm))
                     {
-                      fprintf (stderr,
-                               "Invalid time specification '%s'.\n",
-                               range1_str);
-                      exit (EXIT_FAILURE);
+                      if (!strptime (range1_str, "%b-%d-%Y", &tm))
+                        {
+                          fprintf (stderr,
+                                   "Invalid time specification '%s'.\n",
+                                   range1_str);
+                          exit (EXIT_FAILURE);
+                        }
                     }
                 }
             }
@@ -427,18 +437,22 @@ _read_date_range (int *flag,
     t = time (NULL);
   else
     {
-      if (!strptime (range2_str, "%m/%d/%Y", &tm))
+      if (!strptime (range2_str, "%FT%T", &tm))
         {
-          if (!strptime (range2_str, "%b/%d/%Y", &tm))
+          range2_is_iso8601 = 0;
+          if (!strptime (range2_str, "%m/%d/%Y", &tm))
             {
-              if (!strptime (range2_str, "%m-%d-%Y", &tm))
+              if (!strptime (range2_str, "%b/%d/%Y", &tm))
                 {
-                  if (!strptime (range2_str, "%b-%d-%Y", &tm))
+                  if (!strptime (range2_str, "%m-%d-%Y", &tm))
                     {
-                      fprintf (stderr,
-                               "Invalid time specification '%s'.\n",
-                               range2_str);
-                      exit (EXIT_FAILURE);
+                      if (!strptime (range2_str, "%b-%d-%Y", &tm))
+                        {
+                          fprintf (stderr,
+                                   "Invalid time specification '%s'.\n",
+                                   range2_str);
+                          exit (EXIT_FAILURE);
+                        }
                     }
                 }
             }
@@ -468,8 +482,10 @@ _read_date_range (int *flag,
 
   /* Date range input means beginning of range1 date to end of range2 date
    * so we might need to add seconds to the end of the range2 date.
+   * Only exceptions to this are when range2 is accurate to the second.
+   * Which happens when either range2 is "now" or given in ISO 8601 format.
    */
-  if (strcasecmp (range2_str, "now"))
+  if (strcasecmp (range2_str, "now") && !range2_is_iso8601)
     (*range2) = (*range2) + (24 * 60 * 60);
 
   free (range1_str);
