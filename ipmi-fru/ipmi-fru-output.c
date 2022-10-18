@@ -51,6 +51,7 @@
 #include "ipmi-fru_.h"
 #include "ipmi-fru-output.h"
 #include "ipmi-fru-oem-wistron.h"
+#include "ipmi-fru-oem-xilinx.h"
 #include "tool-util-common.h"
 
 #include "freeipmi-portability.h"
@@ -1199,6 +1200,19 @@ ipmi_fru_output_oem_record (ipmi_fru_state_data_t *state_data,
                                                       manufacturer_id,
                                                       oem_data,
                                                       oem_data_len)) < 0)
+            return (-1);
+
+          if (ret)
+            return (0);
+        }
+
+      if (manufacturer_id == IPMI_IANA_ENTERPRISE_ID_XILINX)
+        {
+          if ((ret = ipmi_fru_oem_xilinx_oem_record (state_data,
+                                                     record_type_id,
+                                                     manufacturer_id,
+                                                     oem_data,
+                                                     oem_data_len)) < 0)
             return (-1);
 
           if (ret)
