@@ -1,5 +1,6 @@
 FreeIPMI 1.6.11 - XX/XX/XX
 --------------------------
+o Support ISO 8601 date inputs to date range options in ipmi-sel.
 o Fix portability compilation on cygwin.
 
 FreeIPMI 1.6.10 - 08/30/22
