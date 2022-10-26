@@ -75,7 +75,8 @@ Exclude display of SEL records from record id START to END.
 .TP
 \fB\-\-date\-range\fR=\fIDATE\-DATE\fR
 Display SEL records with events occurring in the specified date range.
-Dates may be specified in MM/DD/YYYY or MM-DD-YYYY format.  The month
+Dates may be specified in MM/DD/YYYY, MM-DD-YYYY or the ISO 8601
+YYYY-MM-DDTHH:MM:SS format. For the non ISO 8601 formats, the month
 may be specified as a numeral or its abbreviated string name.  The
 current local system time can be specified with "now".  Note that
 non-timestamped records will not be displayed automatically because
@@ -83,11 +84,12 @@ they do not possess a timestamp.
 .TP
 \fB\-\-exclude\-date\-range\fR=\fIDATE\-DATE\fR
 Exclude display of SEL records with events occurring in the specified
-date range.  Dates may be specified in MM/DD/YYYY or MM-DD-YYYY
-format.  The month may be specified as a numeral or its abbreviated
-string name.  The current local system time can be specified with
-"now".  Note that non-timestamped records will be displayed
-automatically because they do not possess a timestamp.
+date range.  Dates may be specified in MM/DD/YYYY, MM-DD-YYYY or the
+ISO 8601 YYYY-MM-DDTHH:MM:SS format.  For the non ISO 8601 formats,
+the month may be specified as a numeral or its abbreviated string
+name.  The current local system time can be specified with "now".
+Note that non-timestamped records will be displayed automatically
+because they do not possess a timestamp.
 .TP
 \fB\-t\fR \fISENSOR\-TYPE\-LIST\fR, \fB\-\-sensor\-types\fR=\fISENSOR\-TYPE\-LIST\fR
 Specify sensor types to show SEL events for.  Multiple types can be
