@@ -96,16 +96,12 @@ static struct argp_option cmdline_options[] =
       "Display SEL records from record id START to END.", 44},
     { "exclude-display-range", EXCLUDE_DISPLAY_RANGE_KEY, "START-END", 0,
       "Exclude display of SEL records from record id START to END.", 45},
-    { "date-range", DATE_RANGE_KEY,
-      "MM/DD/YYYY-MM/DD/YYYY"
-      "\n                   "
-      "YYYY-MM-DDTHH:MM:SS-YYYY-MM-DDTHH:MM:SS", 0,
-      "Display SEL records in the specified date range.", 46},
-    { "exclude-date-range", EXCLUDE_DATE_RANGE_KEY,
-      "MM/DD/YYYY-MM/DD/YYYY"
-      "\n                           "
-      "YYYY-MM-DDTHH:MM:SS-YYYY-MM-DDTHH:MM:SS", 0,
-      "Exclude display of SEL records in the specified date range.", 47},
+    { "date-range", DATE_RANGE_KEY, "DATE1-DATE2", 0,
+      "Display SEL records in the specified date range. "
+      "See manpage for accepted date formats.", 46},
+    { "exclude-date-range", EXCLUDE_DATE_RANGE_KEY, "DATE1-DATE2", 0,
+      "Exclude display of SEL records in the specified date range. "
+      "See manpage for accepted date formats.", 47},
     { "sensor-types",   SENSOR_TYPES_KEY,       "SENSOR-TYPES-LIST", 0,
       "Show sensors of a specific type.", 46},
     { "exclude-sensor-types", EXCLUDE_SENSOR_TYPES_KEY, "SENSOR-TYPES-LIST", 0,
