@@ -1,3 +1,8 @@
+2022-10-27 Albert Chu <chu11@llnl.gov>
+
+	* doc/freeipmi-bugs-and-workarounds.txt: Document issue with
+	Intel M50CYP.
+
 2022-10-26 Mert Kirpici <mert.kirpici@canonical.com>
 
 	* ipmi-sel: accept ISO 8601 for date range options.
