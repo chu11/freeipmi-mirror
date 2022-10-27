@@ -402,6 +402,16 @@ LAN Authentication Issue #27: [COMPLIANCE]
 
   Resolution: User must specify they wish to use IPMI 2.0.
 
+LAN Authentication Issue #28: [IMPLEMENTATION]
+
+  Can only authenticate with Cipher Suite 17.  Error returned from
+  Open Session Response is 0x1 = "Insufficient resources to create a
+  session.", which is not the most useful error message.
+
+  Seen on: Intel M50CYP
+
+  Resolution: User must specify they wish to use Cipher Suite 17.
+
 ----------------------------------------------------------------------
 
 ----------------------
