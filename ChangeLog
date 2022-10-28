@@ -3,6 +3,10 @@
 	* doc/freeipmi-bugs-and-workarounds.txt: Document issue with
 	Intel M50CYP.
 
+	* doc/ipmi-second-gen-interface-spec-v2-rev1-1.pdf: Store copy of
+	IPMI spec with final revisions.  Since there will be no future
+	updates.
+
 2022-10-26 Mert Kirpici <mert.kirpici@canonical.com>
 
 	* ipmi-sel: accept ISO 8601 for date range options.
