@@ -341,6 +341,10 @@ else
 fi
 AC_SUBST(WITH_DEBUG)
 
+AC_ARG_ENABLE(doc,
+              AC_HELP_STRING([--disable-doc], [turn off documentation]))
+AM_CONDITIONAL(ENABLE_DOC, test "$enable_doc" != "no")
+
 dnl Allow advanced developers to compile with raw dumping
 AC_ARG_ENABLE(rawdumps,
    AC_HELP_STRING([--enable-rawdumps], [output raw packet dumps when debugging]))

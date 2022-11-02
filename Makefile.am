@@ -3,7 +3,6 @@
 ACLOCAL_AMFLAGS = -I config
 
 SUBDIRS = \
-	doc \
 	etc \
 	common \
 	libfreeipmi \
@@ -32,6 +31,11 @@ SUBDIRS = \
 	ipmiseld \
 	rmcpping \
 	contrib
+
+if ENABLE_DOC
+SUBDIRS += \
+	doc
+endif
 
 PACKAGE = @PACKAGE@
 VERSION = @VERSION@
