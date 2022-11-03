@@ -1,3 +1,7 @@
+2022-11-02 Fabrice Fontaine <fontaine.fabrice@gmail.com>
+
+	* configure.ac: support --disable-doc.
+
 2022-10-27 Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-bugs-and-workarounds.txt: Document issue with
