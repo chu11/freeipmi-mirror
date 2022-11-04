@@ -11,7 +11,6 @@ ipmipower_CPPFLAGS = \
 	-I$(top_srcdir)/libfreeipmi/include \
 	-DWITH_LSD_FATAL_ERROR_FUNC=1 \
 	-DWITH_LSD_NOMEM_ERROR_FUNC=1 \
-	-D_GNU_SOURCE \
 	-D_REENTRANT
 
 ipmipower_LDADD = \

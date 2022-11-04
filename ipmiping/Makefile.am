@@ -5,8 +5,7 @@ ipmiping_CPPFLAGS = \
 	-I$(top_srcdir)/common/debugutil \
 	-I$(top_srcdir)/common/portability \
 	-I$(top_builddir)/libfreeipmi/include \
-	-I$(top_srcdir)/libfreeipmi/include \
-	-D_GNU_SOURCE
+	-I$(top_srcdir)/libfreeipmi/include
 
 ipmiping_LDADD = \
 	$(top_builddir)/common/pingtool/libpingtool.la \

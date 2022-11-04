@@ -11,7 +11,6 @@ libtoolcommon_la_CPPFLAGS = \
 	-I$(top_builddir)/libipmidetect \
 	-I$(top_builddir)/libfreeipmi/include \
 	-I$(top_srcdir)/libfreeipmi/include \
-	-D_GNU_SOURCE \
 	-D_REENTRANT
 
 libtoolcommon_la_SOURCES = \

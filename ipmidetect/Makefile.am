@@ -10,7 +10,6 @@ ipmidetect_CPPFLAGS = \
 	-I$(top_srcdir)/common/miscutil \
 	-I$(top_srcdir)/common/portability \
 	-I$(top_builddir)/libipmidetect/ \
-	-D_GNU_SOURCE \
 	-D_REENTRANT
 
 ipmidetect_LDADD = \

@@ -8,7 +8,6 @@ ipmiconsole_CPPFLAGS = \
 	-I$(top_builddir)/libfreeipmi/include \
 	-I$(top_srcdir)/libfreeipmi/include \
 	-I$(top_builddir)/libipmiconsole/ \
-	-D_GNU_SOURCE \
 	-D_REENTRANT
 
 

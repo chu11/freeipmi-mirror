@@ -12,7 +12,7 @@ AC_SUBST(FREEIPMI_PACKAGE_VERSION_MINOR)
 AC_SUBST(FREEIPMI_PACKAGE_VERSION_PATCH)
 
 dnl We require a modern autoconf and automake
-AC_PREREQ([2.57])
+AC_PREREQ([2.60])
 
 AC_CONFIG_AUX_DIR([config])
 
@@ -303,6 +303,8 @@ AC_SUBST([CPP_FOR_BUILD])
 AM_CONDITIONAL(WITH_GNU_LD, test "$with_gnu_ld" = "yes")
 AC_PROG_MAKE_SET
 AC_PROG_LN_S
+
+AC_USE_SYSTEM_EXTENSIONS
 
 dnl Enable error tracing. Lower level calls will spit error messages
 dnl on to the console
