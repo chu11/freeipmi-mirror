@@ -490,7 +490,8 @@ AC_CHECK_FUNCS([cbrt])
 AC_CHECK_FUNCS([getmsg putmsg])
 
 dnl sighandler_t apparently not defined in Apple/OS X
-AC_CHECK_TYPES([sighandler_t], [], [], [[#include <signal.h>]])
+AC_CHECK_TYPES([sighandler_t], [], [], [[#define _GNU_SOURCE
+#include <signal.h>]])
 
 # At least on freebsd, putc_unlocked is a macro, so the standard
 # AC_CHECK_FUNCS doesn't work well.
