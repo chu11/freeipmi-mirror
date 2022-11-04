@@ -2,7 +2,6 @@ noinst_LTLIBRARIES = \
 	libmiscutil.la
 
 libmiscutil_la_CPPFLAGS = \
-	-D_GNU_SOURCE \
 	-D_REENTRANT
 
 libmiscutil_la_SOURCES = \

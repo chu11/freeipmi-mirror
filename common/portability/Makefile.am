@@ -16,7 +16,6 @@ noinst_LTLIBRARIES = \
 	libportability.la
 
 libportability_la_CPPFLAGS = \
-	-D_GNU_SOURCE \
 	-D_REENTRANT
 
 libportability_la_SOURCES = \

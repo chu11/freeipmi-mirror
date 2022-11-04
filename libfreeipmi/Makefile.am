@@ -25,7 +25,6 @@ libfreeipmi_la_CPPFLAGS = \
 	-I$(top_srcdir)/libfreeipmi \
 	-DIPMI_IPCKEY=\"$(localstatedir)/lib/$(PACKAGE_NAME)/ipckey\" \
 	-DIPMI_DEBUG_IPCKEY=\"$(top_builddir)/libfreeipmi/driver/ipmi-semaphores.h\" \
-	-D_GNU_SOURCE \
 	-D_REENTRANT
 
 libfreeipmi_la_LDFLAGS = \

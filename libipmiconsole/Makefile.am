@@ -21,7 +21,6 @@ libipmiconsole_la_CPPFLAGS = \
         -I$(top_builddir)/libfreeipmi/include \
         -I$(top_srcdir)/libfreeipmi/include \
 	-DWITH_PTHREADS=1 \
-	-D_GNU_SOURCE \
 	-D_REENTRANT
 
 libipmiconsole_la_LDFLAGS = \
