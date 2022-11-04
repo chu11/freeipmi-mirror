@@ -692,7 +692,7 @@ fi
 
 AM_CONDITIONAL(WITH_FREEIPMI_ARGP, test "$have_argp" = "no")
 
-AC_TRY_COMPILE([#include <stdlib.h>],
+AC_TRY_COMPILE([#include <stdio.h>],
                [printf("%s\n", __FUNCTION__);],
                [AC_DEFINE([HAVE_FUNCTION_MACRO], [1], [Define is you have __FUNCTION__])])
 
