@@ -118,9 +118,11 @@ ipmi_fru_oem_xilinx_oem_record (ipmi_fru_state_data_t *state_data,
       if (version == IPMI_FRU_OEM_XILINX_MAC_ID_VERSION_DUT_ETHERCAT &&
           len == 4)
         {
+          unsigned int i;
+
           pstdout_printf (state_data->pstate, "  FRU OEM EtherCAT ID: 0x");
 
-          for (unsigned int i = 1; i < len+1; i++)
+          for (i = 1; i < len+1; i++)
             {
               pstdout_printf (state_data->pstate, "%02X", oem_data[i]);
             }
