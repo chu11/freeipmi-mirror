@@ -1,3 +1,7 @@
+2022-11-08 Christian Kohn <chris.kohn@amd.com>
+
+	* libfreeipmi, ipmi-fru: Support xilinx OEM fru records.
+
 2022-11-08 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h:
