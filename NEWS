@@ -10,6 +10,7 @@ o Significant refactoring of Intel OEM extensions.  Names of
 Tools
 -----
 o In ipmi-sel, support Intel S2600BPB OEM SEL interpretations.
+o In ipmi-config, support configuration of Maximum_Privilege_Cipher_Suite_Id_16.
 
 Remove Large Amount of Legacy Support
 -------------------------------------

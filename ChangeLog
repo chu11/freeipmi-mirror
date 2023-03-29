@@ -1,3 +1,8 @@
+2023-03-29 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-config/ipmi-config-category-core-rmcpplus-conf-privilege-section.c:
+	support config Maximum_Privilege_Cipher_Suite_Id_16
+
 2022-11-08 Christian Kohn <chris.kohn@amd.com>
 
 	* libfreeipmi, ipmi-fru: Support xilinx OEM fru records.
