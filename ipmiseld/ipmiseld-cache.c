@@ -246,6 +246,7 @@ ipmiseld_sdr_cache_create_and_load (ipmiseld_host_data_t *host_data)
   if (strlen (filename))
     ipmi_sdr_cache_delete (host_data->host_poll->sdr_ctx, filename);
   ipmi_sdr_ctx_destroy (host_data->host_poll->sdr_ctx);
+  host_data->host_poll->sdr_ctx = NULL;
   return (-1);
 }
 

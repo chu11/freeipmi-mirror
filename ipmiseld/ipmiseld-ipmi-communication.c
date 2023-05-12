@@ -280,6 +280,7 @@ ipmiseld_ipmi_setup (ipmiseld_host_data_t *host_data)
     {
       ipmi_ctx_close (host_data->host_poll->ipmi_ctx);
       ipmi_ctx_destroy (host_data->host_poll->ipmi_ctx);
+      host_data->host_poll->ipmi_ctx = NULL;
     }
   return (rv);
 }
