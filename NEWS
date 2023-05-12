@@ -1,5 +1,6 @@
 FreeIPMI 1.6.11 - XX/XX/XX
 --------------------------
+o Fix double free corner case in ipmiseld.
 o Support ISO 8601 date inputs to date range options in ipmi-sel.
 o Support Xilinx OEM FRU records.
 o Fix portability compilation on cygwin.
