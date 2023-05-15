@@ -11,6 +11,9 @@
 	* libfreeipmi/include/freeipmi/sel/ipmi-sel.h: Fix typo in
 	function prototype parameter.
 
+	* libfreeipmi/include/freeipmi/spec/ipmi-rmcpplus-status-spec.h:
+	Fix typo in error message string.
+
 2023-05-12 Albert Chu <chu11@llnl.gov>
 
 	* ipmiseld/ipmiseld-ipmi-communication.c (ipmiseld_ipmi_setup),

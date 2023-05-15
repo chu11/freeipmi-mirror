@@ -56,7 +56,7 @@ extern "C" {
 
 #define RMCPPLUS_STATUS_NO_MATCHING_INTEGRITY_PAYLOAD                                    0x07
 #define RMCPPLUS_STATUS_NO_MATCHING_INTEGRITY_PAYLOAD_STR \
-  "No mathing integrity payload."
+  "No matching integrity payload."
 
 #define RMCPPLUS_STATUS_INACTIVE_SESSION_ID                                              0x08
 #define RMCPPLUS_STATUS_INACTIVE_SESSION_ID_STR \
