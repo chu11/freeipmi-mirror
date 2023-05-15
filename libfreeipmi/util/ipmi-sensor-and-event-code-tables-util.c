@@ -258,7 +258,7 @@ _get_system_event_event_data2_message_offset_pef_action (unsigned int offset, ui
       { 1, "reset", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
       { 1, "power_cycle", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
       { 1, "oem_action", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-      { 1, "diagonstic_interrupt", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+      { 1, "diagnostic_interrupt", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
       { 2, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
       { 0, "", 0}
     };

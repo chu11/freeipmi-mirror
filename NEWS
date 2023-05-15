@@ -4,6 +4,8 @@ o Fix double free corner case in ipmiseld.
 o Support ISO 8601 date inputs to date range options in ipmi-sel.
 o Support Xilinx OEM FRU records.
 o Fix portability compilation on cygwin.
+o Fix typo in fiid template field that could lead to packet
+  interpretation errors.
 
 FreeIPMI 1.6.10 - 08/30/22
 --------------------------
