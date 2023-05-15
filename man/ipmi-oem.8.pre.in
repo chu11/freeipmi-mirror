@@ -124,7 +124,7 @@ R720 (Dell 12G Poweredge systems).
 This OEM command will get the current NIC being used for out of band
 management and possibly additional information.  Users may specify if
 version 1 or version 2 of this extension should be executed.  If no
-version is specified, version 1 is exectued.  Version 1 of this
+version is specified, version 1 is executed.  Version 1 of this
 command confirmed to work on Dell Poweredge R610 and R710 (Dell 11G
 Poweredge systems).  Version 2 of this command confirmed to work on
 Dell Poweredge R720 (Dell 12G Poweredge systems).
@@ -772,7 +772,7 @@ II/III).
 .TP
 .B get-account-status
 This OEM command will output the current account status of users on
-the BMC.  This command is particularly usefor for determinining which
+the BMC.  This command is particularly usefor for determining which
 users in the system may have been locked out via authentication
 failures configured via \fIset\-authentication\-config\fR.  Command
 confirmed to work on Inventec 5441/5442 (Dell Xanadu II/III).
@@ -1007,7 +1007,7 @@ confirmed to work on Quanta S99Q (Dell FS12-TY).
 .TP
 .B get-account-status
 This OEM command will output the current account status of users on
-the BMC.  This command is particularly usefor for determinining which
+the BMC.  This command is particularly usefor for determining which
 users in the system may have been locked out via authentication
 failures.  Command confirmed to work on Quanta S99Q (Dell FS12-TY).
 .TP
@@ -1246,7 +1246,7 @@ C6220.
 .TP
 .B get-account-status
 This OEM command will output the current account status of users on
-the BMC.  This command is particularly usefor for determinining which
+the BMC.  This command is particularly usefor for determining which
 users in the system may have been locked out via authentication
 failures.  Command confirmed to work on Wistron / Dell Poweredge
 C6220.

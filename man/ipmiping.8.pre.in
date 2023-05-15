@@ -25,7 +25,7 @@
 .\"############################################################################
 .TH IPMIPING 8 "@ISODATE@" "ipmiping @PACKAGE_VERSION@" "System Commands"
 .SH "NAME"
-ipmiping \- send IPMI Get Authentication Capabilitiy request to network hosts
+ipmiping \- send IPMI Get Authentication Capability request to network hosts
 .SH "SYNOPSIS"
 .B ipmiping
 [\fIOPTION\fR...] destination

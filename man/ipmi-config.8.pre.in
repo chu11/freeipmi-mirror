@@ -154,7 +154,7 @@ reboots, some configuration values may have changed.  The user may
 wish to run configuration tools on each boot to ensure configuration
 values remain.
 .LP
-Comments will be listed on occassion in checked out files with information
+Comments will be listed on occasion in checked out files with information
 on how to configure fields.
 The
 .B ipmi-config.conf(5)
@@ -247,7 +247,7 @@ accomplished through a cold-reset.  A cold-reset can be executed via
 
 .SH "CHASSIS SPECIAL CASE CONFIGURATION INFORMATION"
 The
-.B Chassis_Front_Panel_Buttons:Enable_Standby_Button_For_Entering_Standy,
+.B Chassis_Front_Panel_Buttons:Enable_Standby_Button_For_Entering_Standby,
 .B Chassis_Front_Panel_Buttons:Enable_Diagnostic_Interrupt_Button
 .B Chassis_Front_Panel_Buttons:Enable_Reset_Button,
 and
