@@ -2176,9 +2176,9 @@ get_ssif_interface_capabilities (bmc_device_state_data_t *state_data)
   if (transaction_support == IPMI_SSIF_SYSTEM_INTERFACE_TRANSACTION_SUPPORT_SINGLE_PART_READS_WRITES_SUPPORTED)
     str = "Only single-part reads/writes supported.";
   else if (transaction_support == IPMI_SSIF_SYSTEM_INTERFACE_TRANSACTION_SUPPORT_MULTI_PART_READS_WRITES_SUPPORTED_START_AND_END_ONLY)
-    str = "multi-part reads/writes upported.  Start and End transactions only.";
+    str = "multi-part reads/writes supported.  Start and End transactions only.";
   else if (transaction_support == IPMI_SSIF_SYSTEM_INTERFACE_TRANSACTION_SUPPORT_MULTI_PART_READS_WRITES_SUPPORTED_START_MIDDLE_END)
-    str = "multi-part reads/writes upported.  Start, Middle, and End transactions supported.";
+    str = "multi-part reads/writes supported.  Start, Middle, and End transactions supported.";
   else
     str = "unknown";
 
