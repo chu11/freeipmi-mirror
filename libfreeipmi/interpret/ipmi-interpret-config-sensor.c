@@ -2440,10 +2440,10 @@ _cb_sensor_oem_parse (conffile_t cf,
       return (-1);
     }
 
-  if (interpret_config_parse_manufactuer_id_product_id (cf,
-                                                        data->stringlist[0],
-                                                        ids,
-                                                        &ids_count) < 0)
+  if (interpret_config_parse_manufacturer_id_product_id (cf,
+                                                         data->stringlist[0],
+                                                         ids,
+                                                         &ids_count) < 0)
     return (-1);
 
   if (interpret_config_parse_strtoul (cf,

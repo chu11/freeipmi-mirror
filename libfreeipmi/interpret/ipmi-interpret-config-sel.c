@@ -2631,10 +2631,10 @@ _cb_sel_oem_sensor_parse (conffile_t cf,
       return (-1);
     }
 
-  if (interpret_config_parse_manufactuer_id_product_id (cf,
-                                                        data->stringlist[0],
-                                                        ids,
-                                                        &ids_count) < 0)
+  if (interpret_config_parse_manufacturer_id_product_id (cf,
+                                                         data->stringlist[0],
+                                                         ids,
+                                                         &ids_count) < 0)
     return (-1);
 
   if (interpret_config_parse_strtoul (cf,
@@ -2846,10 +2846,10 @@ _cb_sel_oem_record_parse (conffile_t cf,
       oem_data_count = IPMI_SEL_OEM_DATA_NON_TIMESTAMPED_BYTES;
     }
 
-  if (interpret_config_parse_manufactuer_id_product_id (cf,
-                                                        data->stringlist[0],
-                                                        ids,
-                                                        &ids_count) < 0)
+  if (interpret_config_parse_manufacturer_id_product_id (cf,
+                                                         data->stringlist[0],
+                                                         ids,
+                                                         &ids_count) < 0)
     return (-1);
 
   if (interpret_config_parse_strtoul (cf,
