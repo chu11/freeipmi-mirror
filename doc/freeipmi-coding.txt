@@ -215,7 +215,7 @@ fill_cmd_set_lan_configuration_parameters_authentication_type_enables (uint8_t c
 The function name and parameters look pretty long and terrible.  But
 the names and fields exactly match the get authentication type enables
 fields listed in Table 23-4.  There should be very little difficulty
-understanding what this funciton does, how it should be called, and
+understanding what this function does, how it should be called, and
 what the parameters are if you are reading along with the spec.
 
 Because we want the code to match the IPMI spec as closely as

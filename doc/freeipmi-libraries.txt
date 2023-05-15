@@ -22,7 +22,7 @@ problems.  'api' is used by most FreeIPMI tools and libraries, such as
 bmc-info(8), ipmi-sensors(8), and libipmimonitoring(3).
 
 cmds - Provides fiid templates and 'fill' functions for IPMI
-commands.  Also provides macros definining common parameters for
+commands.  Also provides macros defining common parameters for
 IPMI commands.  The cmds are used by most other portions of
 libfreeipmi including the 'api' sub-section and tools such as
 ipmipower(8) and ipmiconsole(8).
@@ -109,7 +109,7 @@ iterate through sensor values, groups, units, and states.
 libipmidetect
 -------------
 
-Libipmidetect implements a high level API for determing which nodes in
+Libipmidetect implements a high level API for determining which nodes in
 a cluster do or do-not support IPMI.  This library is primarily useful
 for detecting when nodes are removed from a cluster for servicing, so
 that IPMI applications can avoid unnecessary timeouts.  The library

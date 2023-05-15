@@ -425,7 +425,7 @@ could change this viewpoint later.
 4) Configuration tool callback design
 -------------------------------------
 
-Ipmi-config is coded with a archicture that reads/writes each
+Ipmi-config is coded with a architecture that reads/writes each
 configurable field in the BMC separately.
 
 As an example, suppose we have the following BMC configuration file
@@ -543,7 +543,7 @@ A number of these workarounds are due to vendor compliance problems
 that are sometimes so intrusive (e.g. using a different hashing
 algorithm for keys) they must require a workaround on the command line
 b/c there is really no other way to handle it.  However, some could be
-handled seemlessly, but would require altered behavior to handle the
+handled seamlessly, but would require altered behavior to handle the
 "common case" or "lowest common denominator" of all IPMI protocols.
 
 The general rule that the FreeIPMI authors have come to is that if the
@@ -559,7 +559,7 @@ workround, if a SDR entry cannot be found for a respective system
 event, we will also search for a SDR entry using the generator ID
 shifted by one.  If the resulting SDR entry is found, we assume the
 original generator ID was just off by one and we use the located SDR
-record.  This workaround is seemless and doesn't involve an option on
+record.  This workaround is seamless and doesn't involve an option on
 the command line.
 
 In contrast, we found on some other motherboards that some SEL records
