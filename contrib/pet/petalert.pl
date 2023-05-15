@@ -546,7 +546,7 @@ sub alert {
       eval {
         my $message = Net::SMTP->new($alert_opts{'server'}) || die "ERROR: can't talk to server $alert_opts{'server'}\n";
         $message->mail($alert_opts{'from'});
-        $message->to(@ARGV) || die "ERROR: failed to send to the recepients ",join(",",@ARGV),": $!";
+        $message->to(@ARGV) || die "ERROR: failed to send to the recipients ",join(",",@ARGV),": $!";
         $message->data();
         $message->datasend($data);
         $message->dataend();
