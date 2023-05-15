@@ -14,6 +14,11 @@
 	* libfreeipmi/include/freeipmi/spec/ipmi-rmcpplus-status-spec.h:
 	Fix typo in error message string.
 
+	* libfreeipmi/sel/ipmi-sel-string-intel-windmill.c
+	(sel_string_output_intel_windmill_event_data1_class_sensor_specific_discrete),
+	libfreeipmi/util/ipmi-sensor-and-event-code-tables-util.c
+	(ipmi_get_oem_sensor_type_message): Fix output typos.
+
 2023-05-12 Albert Chu <chu11@llnl.gov>
 
 	* ipmiseld/ipmiseld-ipmi-communication.c (ipmiseld_ipmi_setup),

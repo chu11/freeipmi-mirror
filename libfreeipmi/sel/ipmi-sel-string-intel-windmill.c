@@ -283,7 +283,7 @@ sel_string_output_intel_windmill_event_data1_class_sensor_specific_discrete (ipm
           hsc_str = "An undervoltage condition on the input supply was detected by the power monitor.";
           break;
         case IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT_VIN_OV_WARN:
-          hsc_str = "An overvoltage condition on the input supply was detected by hte power monitor.";
+          hsc_str = "An overvoltage condition on the input supply was detected by the power monitor.";
           break;
         case IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT_VIN_OV_FAULT:
           hsc_str = "An overvoltage was detected on the OV pin.";

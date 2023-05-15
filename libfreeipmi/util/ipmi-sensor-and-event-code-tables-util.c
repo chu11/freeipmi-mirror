@@ -2123,7 +2123,7 @@ ipmi_get_oem_sensor_type_message (uint32_t manufacturer_id,
           else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT_VIN_UV_WARN))
             return (snprintf (buf, buflen, "An undervoltage condition on the input supply was detected by the power monitor"));
           else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT_VIN_OV_WARN))
-            return (snprintf (buf, buflen, "An overvoltage condition on the input supply was detected by hte power monitor"));
+            return (snprintf (buf, buflen, "An overvoltage condition on the input supply was detected by the power monitor"));
           else if (sensor_reading & (1 << IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT_VIN_OV_FAULT))
             return (snprintf (buf, buflen, "An overvoltage was detected on the OV pin"));
         }
