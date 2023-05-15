@@ -4,6 +4,8 @@
 
 	* global: Fix various comment / doc typos.
 
+	* contrib/pet/petalert.pl: Change output error message typo.
+
 2023-05-12 Albert Chu <chu11@llnl.gov>
 
 	* ipmiseld/ipmiseld-ipmi-communication.c (ipmiseld_ipmi_setup),
