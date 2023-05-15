@@ -204,7 +204,7 @@ user    0m0.005s
 sys     0m0.012s
 
 The time differences may not seem like much difference in these
-examples.  But think of when this is done across an extremeley large
+examples.  But think of when this is done across an extremely large
 cluster (i.e. thousands of nodes).
 
 2) Hostrange input/output in FreeIPMI

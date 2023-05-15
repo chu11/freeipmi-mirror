@@ -482,7 +482,7 @@ read the @acronym{SEL}.
 @item FRU
 
 The @strong{Field Replaceable Unit} is a general computing term
-refering to a replaceable unit of electronics.  In @acronym{IPMI} it is
+referring to a replaceable unit of electronics.  In @acronym{IPMI} it is
 common to refer to the ``@acronym{FRU}'' as the database of all
 @acronym{FRU} components on a system.  In FreeIPMI, @command{ipmi-fru}
 can be used to read the @acronym{FRU} components on a system.

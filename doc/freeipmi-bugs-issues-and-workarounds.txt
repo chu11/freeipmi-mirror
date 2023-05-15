@@ -903,7 +903,7 @@ Serial-Over-LAN Issue #20: [COMPLIANCE]
 
 Serial-Over-LAN Issue #21: [COMPLIANCE]
 
-  The BMC occassionally gets stuck and an increase in the SOL packet
+  The BMC occasionally gets stuck and an increase in the SOL packet
   sequence number is required to get the machine unstuck.
 
   Seen on: Intel Windmill, Quanta Winterfell, Wiwynn Windmill
@@ -1485,7 +1485,7 @@ Sensors Issue #8: [COMPLIANCE]
 
 Sensors Issue #9: [COMPLIANCE]
 
-  Sensor bridging over IPMI 1.5 fails b/c IPMB respones have invalid
+  Sensor bridging over IPMI 1.5 fails b/c IPMB response have invalid
   authentication codes.
 
   Seen on: Inventec 5441/Dell Xanadu II, Inventec 5442/Dell Xanadu III

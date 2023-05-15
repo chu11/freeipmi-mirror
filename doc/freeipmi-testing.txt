@@ -76,7 +76,7 @@ written.
 Test)
 
 Execute ipmi-config with --checkout on a default/unmodified
-manufacturered system.
+manufactured system.
 
 Using the --commit and --filename options, commit the checked out
 configuration file back to the BMC.
@@ -357,7 +357,7 @@ Execute bmc-info with no bmc-info specific options, verify tool:
   * Firmware Revision
   * IPMI Version
   * Manufacturer ID
-    o The name of the manufacter outputs
+    o The name of the manufacturer outputs
 
       e.g. "Manufacturer ID       : SOME-COMPANY (1234)"
            vs.
@@ -1395,7 +1395,7 @@ Test)
 
 If Bad Password Thresholds and Attempt Count Reset Interval are
 supported, configure a non-zero Bad Password Threshold and non-zero
-Attempt Count Reset Interval.  Verify that a user is diabled after the
+Attempt Count Reset Interval.  Verify that a user is disabled after the
 number of bad passwords crosses the threshold occurs with the Attempt
 Count Reset Interval.  Verify that a user is NOT disabled if the
 number of bad passwords crosses the threshold outside of the Attempt
@@ -1405,7 +1405,7 @@ Test)
 
 If Bad Password Thresholds and a User Lockout Interval are supported,
 configure a non-zero Bad Password Threshold and non-zero User Lockout
-Interval.  Verify that a user is diabled after the number of bad
+Interval.  Verify that a user is disabled after the number of bad
 passwords crosses the threshold.  Verify that a user is enabled after
 the User Lockout Interval has passed.
 
