@@ -1776,10 +1776,10 @@ _output_device_type_and_modifier (ipmi_sensors_state_data_t *state_data)
 
   memset (device_type_modifier_buf, '\0', IPMI_SENSORS_DEVICE_TYPE_BUFLEN + 1);
 
-  if ((len = ipmi_device_type_modifer_message (device_type,
-                                               device_type_modifier,
-                                               device_type_modifier_buf,
-                                               IPMI_SENSORS_DEVICE_TYPE_BUFLEN)) < 0)
+  if ((len = ipmi_device_type_modifier_message (device_type,
+                                                device_type_modifier,
+                                                device_type_modifier_buf,
+                                                IPMI_SENSORS_DEVICE_TYPE_BUFLEN)) < 0)
     {
       /* assume invalid device type and/or modifier */
       pstdout_printf (state_data->pstate,

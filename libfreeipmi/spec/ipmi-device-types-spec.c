@@ -362,7 +362,7 @@ const char * const ipmi_device_type_modifier_eeprom_24c64_or_equivalent[] =
   };
 unsigned int ipmi_device_type_modifier_eeprom_24c64_or_equivalent_max_index = 0x03;
 
-/* achu: not a typo, 00h and 0x02 are same.  00h for backwards compatability, see spec */
+/* achu: not a typo, 00h and 0x02 are same.  00h for backwards compatibility, see spec */
 const char * const ipmi_device_type_modifier_fru_inventory_device_behind_management_controller[] =
   {
     "IPMI FRU Inventory",

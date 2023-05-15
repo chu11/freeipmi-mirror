@@ -259,11 +259,11 @@ sel_string_output_intel_xeon_broadwell_event_data2_event_data3 (ipmi_sel_ctx_t c
 
       memset (dimm_str, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
 
-      channel_information_validity_check = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_CHANNEL_INFORMATON_VALIDITY_CHECK_BITMASK);
-      channel_information_validity_check >>= IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_CHANNEL_INFORMATON_VALIDITY_CHECK_SHIFT;
+      channel_information_validity_check = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_CHANNEL_INFORMATION_VALIDITY_CHECK_BITMASK);
+      channel_information_validity_check >>= IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_CHANNEL_INFORMATION_VALIDITY_CHECK_SHIFT;
 
-      dimm_information_validity_check = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_DIMM_INFORMATON_VALIDITY_CHECK_BITMASK);
-      dimm_information_validity_check >>= IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_DIMM_INFORMATON_VALIDITY_CHECK_SHIFT;
+      dimm_information_validity_check = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_DIMM_INFORMATION_VALIDITY_CHECK_BITMASK);
+      dimm_information_validity_check >>= IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_DIMM_INFORMATION_VALIDITY_CHECK_SHIFT;
 
       error_type = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_ERROR_TYPE_BITMASK);
       error_type >>= IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_ERROR_TYPE_SHIFT;

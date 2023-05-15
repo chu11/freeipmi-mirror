@@ -532,7 +532,7 @@ username_checkout (ipmi_config_state_data_t *state_data,
 
  got_data:
 
-  /* for backwards compatability with older ipmi-configs */
+  /* for backwards compatibility with older ipmi-configs */
   if (state_data->prog_data->args->action == IPMI_CONFIG_ACTION_DIFF
       && userid == 1
       && same (kv->value_input, "anonymous"))
@@ -575,7 +575,7 @@ username_commit (ipmi_config_state_data_t *state_data,
   /* can't change userid 1 */
   if (userid == 1)
     {
-      /* anonymous for backwards compatability */
+      /* anonymous for backwards compatibility */
       if (same (kv->value_input, "NULL")
           || same (kv->value_input, "anonymous"))
         return (IPMI_CONFIG_ERR_SUCCESS);

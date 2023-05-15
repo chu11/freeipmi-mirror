@@ -185,7 +185,7 @@ extern "C" {
 #define IPMI_FRU_LANGUAGE_CODE_TSONGA               124
 #define IPMI_FRU_LANGUAGE_CODE_TATAR                125
 #define IPMI_FRU_LANGUAGE_CODE_TWI                  126
-#define IPMI_FRU_LANGUAGE_CODE_UKRANIAN             127
+#define IPMI_FRU_LANGUAGE_CODE_UKRAINIAN            127
 #define IPMI_FRU_LANGUAGE_CODE_URDU                 128
 #define IPMI_FRU_LANGUAGE_CODE_UZBEK                129
 #define IPMI_FRU_LANGUAGE_CODE_VIETNAMESE           130

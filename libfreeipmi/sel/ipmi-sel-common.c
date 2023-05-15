@@ -177,7 +177,7 @@ sel_get_record_header_info (ipmi_sel_ctx_t ctx,
         }
       (*record_type) = val;
 
-      if (ctx->flags & IPMI_SEL_FLAGS_ASSUME_SYTEM_EVENT_RECORDS
+      if (ctx->flags & IPMI_SEL_FLAGS_ASSUME_SYSTEM_EVENT_RECORDS
           && !IPMI_SEL_RECORD_TYPE_VALID ((*record_type)))
         (*record_type) = IPMI_SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD;
     }

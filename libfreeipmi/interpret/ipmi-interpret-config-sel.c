@@ -936,8 +936,8 @@ static struct ipmi_interpret_sel_config ipmi_interpret_sel_version_change_config
   {
     { "IPMI_Version_Change_Hardware_Change_Detected_With_Associated_Entity", IPMI_INTERPRET_STATE_WARNING, IPMI_INTERPRET_STATE_WARNING},
     { "IPMI_Version_Change_Firmware_Or_Software_Change_Detected_With_Associated_Entity", IPMI_INTERPRET_STATE_WARNING, IPMI_INTERPRET_STATE_WARNING},
-    { "IPMI_Version_Change_Hardware_Incompatability_Detected_With_Associated_Entity", IPMI_INTERPRET_STATE_CRITICAL, IPMI_INTERPRET_STATE_CRITICAL},
-    { "IPMI_Version_Change_Firmware_Or_Software_Incompatability_Detected_With_Associated_Entity", IPMI_INTERPRET_STATE_CRITICAL, IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Version_Change_Hardware_Incompatibility_Detected_With_Associated_Entity", IPMI_INTERPRET_STATE_CRITICAL, IPMI_INTERPRET_STATE_CRITICAL},
+    { "IPMI_Version_Change_Firmware_Or_Software_Incompatibility_Detected_With_Associated_Entity", IPMI_INTERPRET_STATE_CRITICAL, IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Version_Change_Entity_Is_Of_An_Invalid_Or_Unsupported_Hardware_Version", IPMI_INTERPRET_STATE_CRITICAL, IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Version_Change_Entity_Contains_An_Invalid_Or_Unsupported_Firmware_Or_Software_Version", IPMI_INTERPRET_STATE_CRITICAL, IPMI_INTERPRET_STATE_CRITICAL},
     { "IPMI_Version_Change_Hardware_Change_Detected_With_Associated_Entity_Was_Successful", IPMI_INTERPRET_STATE_NOMINAL, IPMI_INTERPRET_STATE_NOMINAL},

@@ -739,7 +739,7 @@ sel_string_output_dell_poweredge_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
         case IPMI_SENSOR_TYPE_OS_CRITICAL_STOP_OEM_DELL_TXT_ERROR_CODE_BIOS_ACM_ERROR_STATUS_LPC_PS_POLICY_INTEGRITY_FAILED:
           error_code_str = "LPC PS Policy Integrity Failed";
           break;
-        case IPMI_SENSOR_TYPE_OS_CRITICAL_STOP_OEM_DELL_TXT_ERROR_CODE_BIOS_ACM_ERROR_STATUS_INTERRUPT_OCCURED:
+        case IPMI_SENSOR_TYPE_OS_CRITICAL_STOP_OEM_DELL_TXT_ERROR_CODE_BIOS_ACM_ERROR_STATUS_INTERRUPT_OCCURRED:
           error_code_str = "Interrupt Occurred";
           break;
         case IPMI_SENSOR_TYPE_OS_CRITICAL_STOP_OEM_DELL_TXT_ERROR_CODE_BIOS_ACM_ERROR_STATUS_CPU_NOT_SUPPORTED_BY_THIS_ACM:
@@ -1987,7 +1987,7 @@ sel_string_output_dell_poweredge_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
   /* From Dell Spec */
   if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
-      && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_VERSION_CHANGE_HARDWARE_INCOMPATABILITY_DETECTED_WITH_ASSOCIATED_ENTITY
+      && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_VERSION_CHANGE_HARDWARE_INCOMPATIBILITY_DETECTED_WITH_ASSOCIATED_ENTITY
       && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
       && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
     {
@@ -2206,7 +2206,7 @@ sel_string_output_dell_poweredge_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
    * From Dell Provided Source Code
    *
    * Specifically for Version Change Sensors with an event offset
-   * IPMI_SENSOR_TYPE_VERSION_CHANGE_FIRMWARE_OR_SOFTWARE_INCOMPATABILITY_DETECTED_WITH_ASSOCIATED_ENTITY
+   * IPMI_SENSOR_TYPE_VERSION_CHANGE_FIRMWARE_OR_SOFTWARE_INCOMPATIBILITY_DETECTED_WITH_ASSOCIATED_ENTITY
    *
    * achu: XXX: dataX & 0x1F != 1F ???  The bitmasks below have never
    * been verified by Dell.
@@ -2224,7 +2224,7 @@ sel_string_output_dell_poweredge_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
       && ctx->ipmi_version_minor == IPMI_2_0_MINOR_VERSION
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
-      && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_VERSION_CHANGE_FIRMWARE_OR_SOFTWARE_INCOMPATABILITY_DETECTED_WITH_ASSOCIATED_ENTITY
+      && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_VERSION_CHANGE_FIRMWARE_OR_SOFTWARE_INCOMPATIBILITY_DETECTED_WITH_ASSOCIATED_ENTITY
       && system_event_record_data->event_data2_flag == IPMI_SEL_EVENT_DATA_OEM_CODE
       && system_event_record_data->event_data3_flag == IPMI_SEL_EVENT_DATA_OEM_CODE)
     {

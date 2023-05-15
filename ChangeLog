@@ -1,5 +1,10 @@
 2023-05-15 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi, libipmimonitoring: Fix various function and macro
+	typos
+
+2023-05-15 Albert Chu <chu11@llnl.gov>
+
 	* doc, man: fix a number of typos
 
 	* bmc-device, ipmi-fru, ipmi-oem: Fix several output typos

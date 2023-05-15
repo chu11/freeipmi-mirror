@@ -777,8 +777,8 @@ sel_string_output_wistron_c6220_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_WISTRON_POST_ERROR_CODE_MIRROR_MODE_IS_NOT_CONFIGURED:
           error_code_str = "Mirror Mode is not Configured";
           break;
-        case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_WISTRON_POST_ERROR_CODE_SUPERVISER_AND_USER_PASSWORDS_CLEARED:
-          error_code_str = "Superviser and User passwords have been cleared";
+        case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_WISTRON_POST_ERROR_CODE_SUPERVISOR_AND_USER_PASSWORDS_CLEARED:
+          error_code_str = "Supervisor and User passwords have been cleared";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_WISTRON_POST_ERROR_CODE_CMOS_BATTERY_FAULT:
           error_code_str = "CMOS Battery Fault";

@@ -65,7 +65,7 @@ extern "C" {
 #define IPMI_ENTITY_ID_EXTERNAL_ENVIRONMENT                      0x27
 #define IPMI_ENTITY_ID_BATTERY                                   0x28
 #define IPMI_ENTITY_ID_PROCESSING_BLADE                          0x29
-#define IPMI_ENTITY_ID_CONNECTIVITY_SWTICH                       0x2A
+#define IPMI_ENTITY_ID_CONNECTIVITY_SWITCH                       0x2A
 #define IPMI_ENTITY_ID_PROCESSOR_MEMORY_MODULE                   0x2B
 #define IPMI_ENTITY_ID_IO_MODULE                                 0x2C
 #define IPMI_ENTITY_ID_PROCESSOR_IO_MODULE                       0x2D

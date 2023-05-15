@@ -1279,7 +1279,7 @@ ipmi_oem_inventec_update_firmware (ipmi_oem_state_data_t *state_data)
 
   /* achu - none yet */
 
-  bytes_rq[0] = IPMI_CMD_OEM_INVENTEC_UPDATE_FIRMARE;
+  bytes_rq[0] = IPMI_CMD_OEM_INVENTEC_UPDATE_FIRMWARE;
 
   /* what do you know, it all maps to one for now .. lucky us */
   if (!strcasecmp (state_data->prog_data->args->oem_options[0], "tftp")
@@ -1317,7 +1317,7 @@ ipmi_oem_inventec_update_firmware (ipmi_oem_state_data_t *state_data)
                                                    bytes_rs,
                                                    rs_len,
                                                    2,
-                                                   IPMI_CMD_OEM_INVENTEC_UPDATE_FIRMARE,
+                                                   IPMI_CMD_OEM_INVENTEC_UPDATE_FIRMWARE,
                                                    IPMI_NET_FN_FIRMWARE_RS,
                                                    NULL) < 0)
     goto cleanup;

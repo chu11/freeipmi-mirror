@@ -160,7 +160,7 @@ FIID Template: tmpl_fru_management_access_record
     { 8, "sub_record_type", REQUIRED, LENGTH-FIXED }
     { 2048, "record", REQUIRED, LENGTH-VARIABLE }
 
-FRU Base Compatability Record
+FRU Base Compatibility Record
 -----------------------------
 
 FIID Template: tmpl_fru_base_compatibility_record
@@ -172,7 +172,7 @@ FIID Template: tmpl_fru_base_compatibility_record
     { 1, "reserved", REQUIRED, LENGTH-FIXED }
     { 4096, "code_range_mask", REQUIRED, LENGTH-VARIABLE }
 
-FRU Extended Compatability Record
+FRU Extended Compatibility Record
 ---------------------------------
 
 FIID Template: tmpl_fru_extended_compatibility_record

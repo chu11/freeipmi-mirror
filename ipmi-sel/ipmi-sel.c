@@ -2054,7 +2054,7 @@ _ipmi_sel (pstdout_state_t pstate,
     sel_flags |= IPMI_SEL_FLAGS_DEBUG_DUMP;
 
   if (state_data.prog_data->args->assume_system_event_records)
-    sel_flags |= IPMI_SEL_FLAGS_ASSUME_SYTEM_EVENT_RECORDS;
+    sel_flags |= IPMI_SEL_FLAGS_ASSUME_SYSTEM_EVENT_RECORDS;
 
   if (sel_flags)
     {

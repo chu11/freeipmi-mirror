@@ -265,7 +265,7 @@ ipmi_sel_ctx_set_flags (ipmi_sel_ctx_t ctx, unsigned int flags)
           return (-1);
         }
 
-      if (flags & IPMI_SEL_FLAGS_ASSUME_SYTEM_EVENT_RECORDS)
+      if (flags & IPMI_SEL_FLAGS_ASSUME_SYSTEM_EVENT_RECORDS)
         interpret_flags |= IPMI_INTERPRET_FLAGS_SEL_ASSUME_SYSTEM_EVENT_RECORDS;
       else
         interpret_flags &= ~IPMI_INTERPRET_FLAGS_SEL_ASSUME_SYSTEM_EVENT_RECORDS;

@@ -26,10 +26,10 @@ extern "C" {
 #include <stdint.h>
 
 /* return length of string written into buffer on success, -1 on error */
-int ipmi_device_type_modifer_message (uint8_t device_type,
-                                      uint8_t device_modifier,
-                                      char *buf,
-                                      unsigned int buflen);
+int ipmi_device_type_modifier_message (uint8_t device_type,
+                                       uint8_t device_modifier,
+                                       char *buf,
+                                       unsigned int buflen);
 
 #ifdef __cplusplus
 }

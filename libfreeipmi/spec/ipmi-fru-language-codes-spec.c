@@ -166,7 +166,7 @@ const char *const ipmi_fru_language_codes[] =
     "Tsonga",
     "Tatar",
     "Twi",
-    "Ukranian",
+    "Ukrainian",
     "Urdu",
     "Uzbek",
     "Vietnamese",

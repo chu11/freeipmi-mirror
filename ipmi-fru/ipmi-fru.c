@@ -183,13 +183,13 @@ _output_fru (ipmi_fru_state_data_t *state_data)
                                                             area_length) < 0)
                 goto cleanup;
               break;
-            case IPMI_FRU_AREA_TYPE_MULTIRECORD_BASE_COMPATABILITY_RECORD:
+            case IPMI_FRU_AREA_TYPE_MULTIRECORD_BASE_COMPATIBILITY_RECORD:
               if (ipmi_fru_output_base_compatibility_record (state_data,
                                                              areabuf,
                                                              area_length) < 0)
                 goto cleanup;
               break;
-            case IPMI_FRU_AREA_TYPE_MULTIRECORD_EXTENDED_COMPATABILITY_RECORD:
+            case IPMI_FRU_AREA_TYPE_MULTIRECORD_EXTENDED_COMPATIBILITY_RECORD:
               if (ipmi_fru_output_extended_compatibility_record (state_data,
                                                                  areabuf,
                                                                  area_length) < 0)
@@ -585,7 +585,7 @@ _is_logical_fru (uint8_t device_type, uint8_t device_type_modifier)
       || (device_type == IPMI_DEVICE_TYPE_EEPROM_24C64_OR_EQUIVALENT
           && device_type_modifier == IPMI_DEVICE_TYPE_MODIFIER_EEPROM_24C64_OR_EQUIVALENT_IPMI_FRU_INVENTORY)
       || (device_type == IPMI_DEVICE_TYPE_FRU_INVENTORY_DEVICE_BEHIND_MANAGEMENT_CONTROLLER
-          && (device_type_modifier == IPMI_DEVICE_TYPE_MODIFIER_FRU_INVENTORY_DEVICE_BEHIND_MANAGEMENT_CONTROLLER_IPMI_FRU_INVENTORY_BACKWARDS_COMPATABILITY
+          && (device_type_modifier == IPMI_DEVICE_TYPE_MODIFIER_FRU_INVENTORY_DEVICE_BEHIND_MANAGEMENT_CONTROLLER_IPMI_FRU_INVENTORY_BACKWARDS_COMPATIBILITY
               || device_type_modifier == IPMI_DEVICE_TYPE_MODIFIER_FRU_INVENTORY_DEVICE_BEHIND_MANAGEMENT_CONTROLLER_IPMI_FRU_INVENTORY)))
     return (1);
 

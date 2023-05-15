@@ -1320,7 +1320,7 @@ _ipmiseld_poll (void *arg)
     sel_flags |= IPMI_SEL_FLAGS_DEBUG_DUMP;
 
   if (host_data->prog_data->args->common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_ASSUME_SYSTEM_EVENT)
-    sel_flags |= IPMI_SEL_FLAGS_ASSUME_SYTEM_EVENT_RECORDS;
+    sel_flags |= IPMI_SEL_FLAGS_ASSUME_SYSTEM_EVENT_RECORDS;
 
   if (sel_flags)
     {

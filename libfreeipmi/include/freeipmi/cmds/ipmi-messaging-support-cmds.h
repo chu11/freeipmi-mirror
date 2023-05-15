@@ -35,11 +35,11 @@ extern "C" {
 #define IPMI_MAX_K_G_LENGTH                 20
 
 #define IPMI_BMC_GLOBAL_ENABLES_ENABLED     0x1
-#define IPMI_BMC_GLOBAL_ENALBES_DISABLED    0x0
+#define IPMI_BMC_GLOBAL_ENABLES_DISABLED    0x0
 
 #define IPMI_BMC_GLOBAL_ENABLES_VALID(__val) \
   (((__val) == IPMI_BMC_GLOBAL_ENABLES_ENABLED \
-    || (__val) == IPMI_BMC_GLOBAL_ENALBES_DISABLED) ? 1 : 0)
+    || (__val) == IPMI_BMC_GLOBAL_ENABLES_DISABLED) ? 1 : 0)
 
 #define IPMI_MESSAGE_FLAGS_CLEAR            0x1
 #define IPMI_MESSAGE_FLAGS_DONT_CLEAR       0x0

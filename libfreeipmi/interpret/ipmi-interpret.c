@@ -194,7 +194,7 @@ ipmi_interpret_ctx_set_flags (ipmi_interpret_ctx_t ctx, unsigned int flags)
     }
 
   if (flags & IPMI_INTERPRET_FLAGS_SEL_ASSUME_SYSTEM_EVENT_RECORDS)
-    tmpflags |= IPMI_SEL_FLAGS_ASSUME_SYTEM_EVENT_RECORDS;
+    tmpflags |= IPMI_SEL_FLAGS_ASSUME_SYSTEM_EVENT_RECORDS;
 
 
   if (ipmi_sel_ctx_set_flags (ctx->sel_ctx, tmpflags) < 0)

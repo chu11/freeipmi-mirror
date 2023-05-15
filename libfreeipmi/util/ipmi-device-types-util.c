@@ -58,10 +58,10 @@ _get_message (unsigned int offset,
 }
 
 int
-ipmi_device_type_modifer_message (uint8_t device_type,
-                                  uint8_t device_modifier,
-                                  char *buf,
-                                  unsigned int buflen)
+ipmi_device_type_modifier_message (uint8_t device_type,
+                                   uint8_t device_modifier,
+                                   char *buf,
+                                   unsigned int buflen)
 {
   if (!IPMI_DEVICE_TYPE_VALID (device_type)
       || !buf

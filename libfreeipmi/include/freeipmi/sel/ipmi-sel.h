@@ -51,7 +51,7 @@ extern "C" {
 
 #define IPMI_SEL_FLAGS_DEFAULT                              0x0000
 #define IPMI_SEL_FLAGS_DEBUG_DUMP                           0x0001
-#define IPMI_SEL_FLAGS_ASSUME_SYTEM_EVENT_RECORDS           0x0002
+#define IPMI_SEL_FLAGS_ASSUME_SYSTEM_EVENT_RECORDS          0x0002
 
 #define IPMI_SEL_PARAMETER_INTERPRET_CONTEXT                0x0001
 #define IPMI_SEL_PARAMETER_UTC_OFFSET                       0x0002

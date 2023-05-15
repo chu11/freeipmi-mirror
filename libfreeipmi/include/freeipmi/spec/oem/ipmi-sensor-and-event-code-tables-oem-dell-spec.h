@@ -358,7 +358,7 @@ extern unsigned int ipmi_sensor_type_oem_dell_upgrade_max_index;
 #define IPMI_SENSOR_TYPE_OS_CRITICAL_STOP_OEM_DELL_TXT_ERROR_CODE_BIOS_ACM_ERROR_STATUS_LPC_NPW_NOT_ALLOWED                                                            0x42
 #define IPMI_SENSOR_TYPE_OS_CRITICAL_STOP_OEM_DELL_TXT_ERROR_CODE_BIOS_ACM_ERROR_STATUS_LPC_PO_POLICY_INTEGRITY_FAILED                                                 0x43
 #define IPMI_SENSOR_TYPE_OS_CRITICAL_STOP_OEM_DELL_TXT_ERROR_CODE_BIOS_ACM_ERROR_STATUS_LPC_PS_POLICY_INTEGRITY_FAILED                                                 0x44
-#define IPMI_SENSOR_TYPE_OS_CRITICAL_STOP_OEM_DELL_TXT_ERROR_CODE_BIOS_ACM_ERROR_STATUS_INTERRUPT_OCCURED                                                              0x45
+#define IPMI_SENSOR_TYPE_OS_CRITICAL_STOP_OEM_DELL_TXT_ERROR_CODE_BIOS_ACM_ERROR_STATUS_INTERRUPT_OCCURRED                                                             0x45
 #define IPMI_SENSOR_TYPE_OS_CRITICAL_STOP_OEM_DELL_TXT_ERROR_CODE_BIOS_ACM_ERROR_STATUS_CPU_NOT_SUPPORTED_BY_THIS_ACM                                                  0x46
 #define IPMI_SENSOR_TYPE_OS_CRITICAL_STOP_OEM_DELL_TXT_ERROR_CODE_BIOS_ACM_ERROR_STATUS_ONE_OF_THE_FIT_TABLE_CHECKS_FAILED                                             0x47
 #define IPMI_SENSOR_TYPE_OS_CRITICAL_STOP_OEM_DELL_TXT_ERROR_CODE_BIOS_ACM_ERROR_STATUS_VERIFY_BIOS_FAILED                                                             0x48
