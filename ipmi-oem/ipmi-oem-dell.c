@@ -5526,7 +5526,7 @@ _ipmi_oem_dell_power_supply_info_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
                         onlinestatus);
 
       pstdout_printf (state_data->pstate,
-                      "Firmare Version   : %s\n",
+                      "Firmware Version  : %s\n",
                       firmwareversion);
 
       /* internal dell componentid code */

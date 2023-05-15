@@ -2,7 +2,7 @@
 
 	* doc, man: fix a number of typos
 
-	* bmc-device, ipmi-fru: Fix several output typos
+	* bmc-device, ipmi-fru, ipmi-oem: Fix several output typos
 
 	* global: Fix various comment / doc typos.
 
