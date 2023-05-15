@@ -585,7 +585,7 @@ ipmi_fru_output_power_supply_information (ipmi_fru_state_data_t *state_data,
                   "  FRU Power Supply Power Factor Correction Supported: %s\n",
                   (power_factor_correction) ? "Yes" : "No");
   pstdout_printf (state_data->pstate,
-                  "  FRU Power Supply AutoSwitch Supprt: %s\n",
+                  "  FRU Power Supply AutoSwitch Support: %s\n",
                   (autoswitch) ? "Yes" : "No");
   pstdout_printf (state_data->pstate,
                   "  FRU Power Supply Hot Swap Support: %s\n",
@@ -701,7 +701,7 @@ ipmi_fru_output_dc_output (ipmi_fru_state_data_t *state_data,
                   "  FRU DC Output Output Number: %u\n",
                   output_number);
   pstdout_printf (state_data->pstate,
-                  "  FRU DC Output Output on Standy: %s\n",
+                  "  FRU DC Output Output on Standby: %s\n",
                   (standby) ? "Yes" : "No");
   pstdout_printf (state_data->pstate,
                   "  FRU DC Output Nominal Voltage: %d mV\n",
@@ -991,10 +991,10 @@ ipmi_fru_output_base_compatibility_record (ipmi_fru_state_data_t *state_data,
                   "  FRU Base Compatibility Entity ID: %Xh\n",
                   entity_id_code);
   pstdout_printf (state_data->pstate,
-                  "  FRU Base Compatibility Comptability Base: %Xh\n",
+                  "  FRU Base Compatibility Compatibility Base: %Xh\n",
                   compatibility_base);
   pstdout_printf (state_data->pstate,
-                  "  FRU Base Compatibility Comptability Code Start Value: %Xh\n",
+                  "  FRU Base Compatibility Compatibility Code Start Value: %Xh\n",
                   compatibility_code_start_value);
 
   if (code_range_mask_len)
@@ -1085,10 +1085,10 @@ ipmi_fru_output_extended_compatibility_record (ipmi_fru_state_data_t *state_data
                   "  FRU Extended Compatibility Entity ID: %Xh\n",
                   entity_id_code);
   pstdout_printf (state_data->pstate,
-                  "  FRU Extended Compatibility Comptability Base: %Xh\n",
+                  "  FRU Extended Compatibility Compatibility Base: %Xh\n",
                   compatibility_base);
   pstdout_printf (state_data->pstate,
-                  "  FRU Extended Compatibility Comptability Code Start Value: %Xh\n",
+                  "  FRU Extended Compatibility Compatibility Code Start Value: %Xh\n",
                   compatibility_code_start_value);
 
   if (code_range_mask_len)
