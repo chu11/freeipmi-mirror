@@ -127,7 +127,7 @@ with the respective operation \fIwrite\fR and \fInochange\fR.  For the
 \fIassertion_bitmask\fR and \fIdeassertion_bitmask\fR, the 0 bits of
 the bitmask can clear the bits of the status, the 1 bits of the
 bitmask can set the bits of the status, the entire bitmask can be
-written as the status, or the status cannot be changed respecitvely
+written as the status, or the status cannot be changed respectively
 with the respective operations \fIclear0bits\fR, \fIset1bits\fR,
 \fIwrite\fR, and \fInochange\fR.  The \fIevent_data1\fR byte can be
 written fully, written without the event offset (bits 3:0), or not be

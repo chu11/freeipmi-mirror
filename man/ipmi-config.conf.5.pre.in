@@ -273,7 +273,7 @@ open-source and vendor) do not allow the user to input a username and
 assume the NULL username by default.  If the tools you are interested
 in using allow usernames to be input, then it is recommended that one
 of the non-NULL usernames be enabled and the NULL username disabled
-for security reasons.  It is recommeneded that you disable the NULL
+for security reasons.  It is recommended that you disable the NULL
 username in section User1, so that users are required to specify a
 username for IPMI over LAN communication.
 .LP
@@ -310,7 +310,7 @@ Those familiar with setting up networks should find most of the fields
 in this section self explanatory.  The example BMC configuration above
 illustrates the setup of a static IP address.  The field
 \fIIP_Address_Source\fR is configured with "Static".  The IP address,
-subnet mask, and gateway IP addresses of the machine are respecitvely
+subnet mask, and gateway IP addresses of the machine are respectively
 configured with the \fIIP_Address\fR, \fISubnet_Mask\fR,
 \fIDefault_Gateway_Ip_Address\fR, and \fIBackup_Gateway_Ip_Address\fR
 fields.  The respective MAC addresses for the IP addresses are

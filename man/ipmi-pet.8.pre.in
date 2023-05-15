@@ -12,7 +12,7 @@ command line, a file via the \fB\-\-file\fR option, or via stdin if
 neither of the previous are specified.
 
 .B Ipmi-pet
-is commonly used in conjunction with an SNMP trap daemon to intrepret
+is commonly used in conjunction with an SNMP trap daemon to interpret
 the results from an IPMI PET trap captured by the daemon.  While
 .B ipmi-pet
 could be called directly from such a daemon, typically a script is called

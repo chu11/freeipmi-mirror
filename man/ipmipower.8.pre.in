@@ -166,7 +166,7 @@ messages will be sent to all configured remote hosts every
 MILLISECONDS to confirm their support of IPMI.  Power commands cannot
 be sent to a host until it is discovered (or re-discovered if
 previously lost).  Defaults to 5000 milliseconds (5 seconds).  Ping
-discovery messages can be disabled by setting this valu to 0.  RMCP
+discovery messages can be disabled by setting this value to 0.  RMCP
 ping discovery messages are automatically disabled in non-interactive
 mode.
 .TP
