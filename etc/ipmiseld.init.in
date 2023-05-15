@@ -11,7 +11,7 @@
 # Default-Start:  3 5
 # Default-Stop:   0 1 2 6
 # Short-Description: Start and stop ipmidetectd
-# Description: IPMI SEL sylog logging daemon
+# Description: IPMI SEL syslog logging daemon
 ### END INIT INFO
 
 IPMISELD=@X_SBINDIR@/ipmiseld

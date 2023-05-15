@@ -523,7 +523,7 @@ _get_dell_system_info_idrac_info (ipmi_oem_state_data_t *state_data,
    * - 0x0A - 11G monolithic
    * - 0x0B - 11g modular
    * - 0x0D - maser lite
-   * - 0x10 - 12g monolothic
+   * - 0x10 - 12g monolithic
    * - 0x11 - 12g modular
    *
    * set selector 0 = bytes 1-16
@@ -3415,7 +3415,7 @@ _dell_set_extended_configuration (ipmi_oem_state_data_t *state_data,
    * 0x?? - [7:4] - reserved
    *      - [3:0] - in progress
    *              - 0 in progress
-   *              - 1 last token data being transfered in this request
+   *              - 1 last token data being transferred in this request
    * 0x??+ - token data
    *
    * Response

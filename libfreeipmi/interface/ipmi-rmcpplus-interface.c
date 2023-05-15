@@ -71,7 +71,7 @@ fiid_template_t tmpl_rmcpplus_session_hdr =
     { 8, "reserved2", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
     { 16, "oem_payload_id", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
     { 32, "session_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    /* 0h outside of a session, seperate #'s if authenticated or unauthenticated session */
+    /* 0h outside of a session, separate #'s if authenticated or unauthenticated session */
     { 32, "session_sequence_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* length of just the payload */
     { 16, "ipmi_payload_len", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},

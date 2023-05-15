@@ -990,7 +990,7 @@ _ipmiconsole_block (ipmiconsole_ctx_t c)
   FD_SET (c->blocking.blocking_notification[0], &rds);
 
   /* No mutex required here, just reading off the pipe, the pipe is
-   * all controled in API land
+   * all controlled in API land
    */
 
   if ((n = select (c->blocking.blocking_notification[0] + 1, &rds, NULL, NULL, NULL)) < 0)

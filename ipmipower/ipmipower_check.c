@@ -290,7 +290,7 @@ ipmipower_check_outbound_sequence_number (ipmipower_powercmd_t ip,
    * The initial outbound sequence number on activate session response
    * is off by one.  The activate session response packet is supposed
    * to contain the initial outbound sequence number passed during the
-   * request.  The outbound sequence number on a close session reponse
+   * request.  The outbound sequence number on a close session response
    * may also be incorrect.
    */
 

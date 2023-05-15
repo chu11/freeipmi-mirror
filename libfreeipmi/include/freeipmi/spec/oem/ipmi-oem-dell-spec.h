@@ -245,7 +245,7 @@ extern "C" {
  * email alert enable - boolean
  * email address string length - uint8
  * email address string - 0-63
- * email alert custon message string length - uint8
+ * email alert custom message string length - uint8
  * email alert custom message string - 0-31
  */
 #define IPMI_OEM_DELL_EXTENDED_CONFIG_EMAIL_ALERT_CONFIGURATION_EMAIL_ALERT_ENABLE_MASK     0x0001
@@ -762,7 +762,7 @@ extern "C" {
  * ipv6 addr string - 0-39
  * ipv6 gateway ip string length - uint8
  * ipv6 gateway ip string - 0-39
- * ipv6 prefix lenth - uint8
+ * ipv6 prefix length - uint8
  * ipv6 auto config - boolean
  * ipv6 link local addr string length - uint8
  * ipv6 link locl address string - 0-39 (read only)

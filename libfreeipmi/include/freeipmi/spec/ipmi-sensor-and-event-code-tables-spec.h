@@ -139,7 +139,7 @@ extern const char * const ipmi_generic_event_reading_type_code_acpi_power_state[
 extern unsigned int ipmi_generic_event_reading_type_code_acpi_power_state_max_index;
 
 /*
- * "short" arrays are same strings, but shortened to more reasonble lengths for output
+ * "short" arrays are same strings, but shortened to more reasonable lengths for output
  */
 extern const char * const ipmi_generic_event_reading_type_code_threshold_short[];
 extern unsigned int ipmi_generic_event_reading_type_code_threshold_short_max_index;
@@ -738,7 +738,7 @@ extern const char * const ipmi_sensor_type_fru_state[];
 extern unsigned int ipmi_sensor_type_fru_state_max_index;
 
 /*
- * "short" arrays are same strings, but shortened to more reasonble lengths for output
+ * "short" arrays are same strings, but shortened to more reasonable lengths for output
  */
 extern const char * const ipmi_sensor_type_physical_security_short[];
 extern unsigned int ipmi_sensor_type_physical_security_short_max_index;

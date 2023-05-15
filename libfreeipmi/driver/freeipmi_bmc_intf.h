@@ -76,7 +76,7 @@ extern "C" {
 
 /* for checking BMC specific stuff */
 #define BMC_GET_DEVICE_ID               0x1     /* GET DEVICE ID COMMAND */
-#define BMC_IPMI_15_VER         0x51    /* IPMI 1.5 definion */
+#define BMC_IPMI_15_VER         0x51    /* IPMI 1.5 definition */
 
 /* BMC Completion Code and OEM Completion Code */
 #define BMC_IPMI_UNSPECIFIC_ERROR       0xFF    /* Unspecific Error */

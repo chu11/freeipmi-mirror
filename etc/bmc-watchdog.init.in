@@ -29,7 +29,7 @@ if [ -f @X_SYSCONFDIR@/rc.d/init.d/functions ] ; then
     . @X_SYSCONFDIR@/rc.d/init.d/functions
     Xstart() {
 
-        # Default deamon mode
+        # Default daemon mode
         #
         # timer use = SMS/OS
         # pre-timeout interrupt = none

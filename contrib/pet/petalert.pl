@@ -46,7 +46,7 @@
 # - in case of no PTR, fallback to ip
 #
 # * Sun 06 Nov 2011 kaiwang.chen@gmail.com
-# - Inital version
+# - Initial version
 
 package IpmiPET::Perf;
 use Time::HiRes qw(tv_interval gettimeofday);

@@ -497,7 +497,7 @@ struct ipmiconsole_ctx_blocking {
    * It is never read again in API land and never written to in engine
    * land.
    *
-   * sol_session_established is initialied in API land, afterwards it
+   * sol_session_established is initialized in API land, afterwards it
    * is only written/read in the engine after a context is submitted.
    *
    * after initialization, the API and Engine only touch their

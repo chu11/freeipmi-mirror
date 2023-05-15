@@ -105,7 +105,7 @@ fiid_template_t tmpl_smbios_ipmi_device_info_record =
        interface type, see Table C1-2, Interface Type
        field values. */
     { 8, "interface_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    /* Somewhat mis-named. Actually identifies the
+    /* Somewhat miss-named. Actually identifies the
        IPMI Specification Version, in BCD format, to
        which the BMC was designed. Bits 7:4 hold the
        most significant digit of the version,

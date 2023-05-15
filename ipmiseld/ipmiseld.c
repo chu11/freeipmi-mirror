@@ -794,7 +794,7 @@ ipmiseld_check_sel_info (ipmiseld_host_data_t *host_data, uint16_t *record_id_st
               host_data->now_host_state.last_record_id.record_id = 0;
             }
         }
-      /* An erase and addition occured, must determine the type of action that occurred */
+      /* An erase and addition occurred, must determine the type of action that occurred */
       else if (host_data->now_host_state.sel_info.most_recent_addition_timestamp != host_data->last_host_state.sel_info.most_recent_addition_timestamp
                && host_data->now_host_state.sel_info.most_recent_erase_timestamp != host_data->last_host_state.sel_info.most_recent_erase_timestamp)
         {

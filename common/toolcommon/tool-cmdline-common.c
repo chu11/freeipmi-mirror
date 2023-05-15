@@ -53,7 +53,7 @@ cmdline_config_file_parse (int key, char *arg, struct argp_state *state)
 
   switch (key)
     {
-      /* ARGP_CONFIG_KEY for backwards compatability */
+      /* ARGP_CONFIG_KEY for backwards compatibility */
     case ARGP_CONFIG_KEY:
     case ARGP_CONFIG_FILE_KEY:
       free (common_args->config_file);
@@ -127,7 +127,7 @@ common_parse_opt (int key,
         }
       common_args->driver_type = tmp;
       break;
-      /* ARGP_NO_PROBING_KEY for backwards compatability */
+      /* ARGP_NO_PROBING_KEY for backwards compatibility */
     case ARGP_NO_PROBING_KEY:
     case ARGP_DISABLE_AUTO_PROBE_KEY:
       common_args->disable_auto_probe = 1;
@@ -307,7 +307,7 @@ common_parse_opt (int key,
           common_args->k_g_len = rv;
       }
       break;
-      /* ARGP_TIMEOUT_KEY for backwards compatability */
+      /* ARGP_TIMEOUT_KEY for backwards compatibility */
     case ARGP_TIMEOUT_KEY:
     case ARGP_SESSION_TIMEOUT_KEY:
       errno = 0;
@@ -321,7 +321,7 @@ common_parse_opt (int key,
         }
       common_args->session_timeout = tmp;
       break;
-      /* ARGP_RETRY_TIMEOUT_KEY for backwards compatability */
+      /* ARGP_RETRY_TIMEOUT_KEY for backwards compatibility */
     case ARGP_RETRY_TIMEOUT_KEY:
     case ARGP_RETRANSMISSION_TIMEOUT_KEY:
       errno = 0;
@@ -335,7 +335,7 @@ common_parse_opt (int key,
         }
       common_args->retransmission_timeout = tmp;
       break;
-      /* ARGP_AUTH_TYPE_KEY for backwards compatability */
+      /* ARGP_AUTH_TYPE_KEY for backwards compatibility */
     case ARGP_AUTH_TYPE_KEY:
     case ARGP_AUTHENTICATION_TYPE_KEY:
       if ((tmp = parse_authentication_type (arg)) < 0)
@@ -363,8 +363,8 @@ common_parse_opt (int key,
         }
       common_args->cipher_suite_id = tmp;
       break;
-      /* ARGP_PRIVILEGE_KEY for backwards compatability */
-      /* ARGP_PRIV_LEVEL_KEY for backwards compatability */     \
+      /* ARGP_PRIVILEGE_KEY for backwards compatibility */
+      /* ARGP_PRIV_LEVEL_KEY for backwards compatibility */     \
     case ARGP_PRIVILEGE_KEY:
     case ARGP_PRIV_LEVEL_KEY:
     case ARGP_PRIVILEGE_LEVEL_KEY:
@@ -380,7 +380,7 @@ common_parse_opt (int key,
        * misc options
        */
 
-      /* ARGP_CONFIG_KEY for backwards compatability */
+      /* ARGP_CONFIG_KEY for backwards compatibility */
     case ARGP_CONFIG_KEY:
     case ARGP_CONFIG_FILE_KEY:
       /* ignore config option - should have been parsed earlier */

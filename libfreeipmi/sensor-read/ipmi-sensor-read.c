@@ -257,7 +257,7 @@ _sensor_reading_corner_case_checks (ipmi_sensor_read_ctx_t ctx,
        * For some reason, some sensors can return this error code
        * (0xFF).  However, it appears to be an invalid error response
        * b/c the sensor properly reports that the sensor reading is
-       * not available or that scanning is diabled.  So if the sensor
+       * not available or that scanning is disabled.  So if the sensor
        * reports that it is unavailable, we'll report an error code
        * slightly more appropriate.
        *

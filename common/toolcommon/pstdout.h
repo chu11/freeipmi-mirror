@@ -45,7 +45,7 @@
  * call pstdout_init()
  * call pstdout_set_output_flags() if non-defaults needed
  * call pstdout_set_fanout() if non-defaults needed
- * call pstdout_lauch() to launch parallel threads
+ * call pstdout_launch() to launch parallel threads
  * - within callback functions replace printf/fprintf/perror calls
  *   with pstdout equivalent calls.
  */

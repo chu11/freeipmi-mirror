@@ -1671,7 +1671,7 @@ api_lan_open_session (ipmi_ctx_t ctx)
    *
    * Discovered on IBM eServer 325
    *
-   * The remote BMC ignores if permsg authentiction is enabled
+   * The remote BMC ignores if permsg authentication is enabled
    * or disabled.  So we need to force it no matter what.
    */
   if (!(ctx->workaround_flags_outofband & IPMI_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION))
@@ -1942,7 +1942,7 @@ api_lan_open_session (ipmi_ctx_t ctx)
    * (Note: This could work for "IBM eServer 325" per msg auth
    * problem.  But I don't have hardware to test it :-()
    *
-   * The remote BMC ignores if permsg authentiction is disabled.
+   * The remote BMC ignores if permsg authentication is disabled.
    * Handle it appropriately by just not doing permsg authentication.
    */
   if (ctx->io.outofband.per_msg_auth_disabled

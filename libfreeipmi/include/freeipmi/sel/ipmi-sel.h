@@ -241,7 +241,7 @@ int ipmi_sel_parse_read_record_type (ipmi_sel_ctx_t ctx,
                                      unsigned int sel_record_len,
                                      uint8_t *record_type);
 
-/* timetamp - works with sel event and timestamped OEM record types */
+/* timestamp - works with sel event and timestamped OEM record types */
 int ipmi_sel_parse_read_timestamp (ipmi_sel_ctx_t ctx,
                                    const void *sel_record,
                                    unsigned int sel_record_len,

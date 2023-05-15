@@ -94,7 +94,7 @@ typedef int (*HeapCmpF) (void *x, void *y);
 /*
  *  Function prototype for comparing two items in a heap.
  *  Returns less-than-zero if (x<y), zero if (x==y), and
- *    greather-than-zero if (x>y).
+ *    greater-than-zero if (x>y).
  */
 
 /*******************************

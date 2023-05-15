@@ -25,7 +25,7 @@ receiver.
 
 If you prefer to running it as embedded perl handler, your version of
 Net-SNMP should have embedded perl support enabled, see "Embedded Perl
-Support" from snmpd.conf(8) for more infomration. Usually it's
+Support" from snmpd.conf(8) for more information. Usually it's
 enabled, and you can verify with the following command:
 
 # net-snmp-config --configure-options | tr ' ' '\n' | grep perl
@@ -93,7 +93,7 @@ back to use ip.
 Platform event trap is over UDP, you might worry about trap loss. IPMI
 spec allows the trap receiver to acknowledge the trap. Use --ack to
 acknowledge the trap before alerting. You may need workarounds for
-acknowledgement.  See BUGS. So in a acknowlege setup, it might be like
+acknowledgement.  See BUGS. So in a acknowledge setup, it might be like
 this:
 
   perl do "/usr/share/doc/freeipmi/contrib/pet/petalert.pl";
@@ -412,9 +412,9 @@ Then you can browse the interactions with the help of Wireshark.
 It's spotted that factory default rules of iDRAC Express on Dell
 PowerEdge R610 don't match software generated events. You need to make
 a catch-all filter rule to report those events. However, hardware
-gernerated events are not subject to such limitation. To verify this
+generated events are not subject to such limitation. To verify this
 situation, open the case to generate a hardware generated intrusion
-event. Dell PowerEdge 1950 with BMC has similiar problem. The
+event. Dell PowerEdge 1950 with BMC has similar problem. The
 difference is that 1950 has 31 filter rules, so you don't worry about
 overwriting an existent one.
 

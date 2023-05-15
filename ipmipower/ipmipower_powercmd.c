@@ -842,7 +842,7 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
 
   ipmipower_packet_dump (ip, pkt, recv_buf, recv_len);
 
-  /* rv = 0 if the packet is unparseable */
+  /* rv = 0 if the packet is unparsable */
   if (!ipmipower_packet_store (ip, pkt, recv_buf, recv_len))
     {
       rv = 0;
@@ -1585,7 +1585,7 @@ _check_ipmi_1_5_authentication_capabilities (ipmipower_powercmd_t ip)
    *
    * Discovered on IBM eServer 325
    *
-   * The remote BMC ignores if permsg authentiction is enabled
+   * The remote BMC ignores if permsg authentication is enabled
    * or disabled.  So we need to force it no matter what.
    */
   if (!(cmd_args.common_args.workaround_flags_outofband & IPMI_PARSE_WORKAROUND_FLAGS_OUTOFBAND_FORCE_PERMSG_AUTHENTICATION))
@@ -1715,7 +1715,7 @@ _check_activate_session_authentication_type (ipmipower_powercmd_t ip)
    * (Note: This could work for "IBM eServer 325" per msg auth
    * problem.  But I don't have hardware to test it :-()
    *
-   * The remote BMC ignores if permsg authentiction is disabled.
+   * The remote BMC ignores if permsg authentication is disabled.
    * Handle it appropriately by just not doing permsg authentication.
    */
   if (!ip->permsgauth_enabled)
@@ -2027,7 +2027,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
           else if (ip->cmd == IPMIPOWER_POWER_CMD_IDENTIFY_ON
                    || ip->cmd == IPMIPOWER_POWER_CMD_IDENTIFY_OFF)
             _send_packet (ip, IPMIPOWER_PACKET_TYPE_CHASSIS_IDENTIFY_RQ);
-          else /* on, off, cycle, reset, pulse diag interupt, soft shutdown */
+          else /* on, off, cycle, reset, pulse diag interrupt, soft shutdown */
             _send_packet (ip, IPMIPOWER_PACKET_TYPE_CHASSIS_CONTROL_RQ);
         }
       else /* cmd_args.oem_power_type == IPMIPOWER_OEM_POWER_TYPE_C410X */

@@ -228,7 +228,7 @@ extern unsigned int ipmi_sensor_type_oem_dell_upgrade_max_index;
  * Progress codes range from 01h to 7Fh
  * Fatal error codes range from 80h to FEh
  * Progress codes less than 3Fh are pre-video activity
- * Progress codes greather than 40h are post-video activity
+ * Progress codes greater than 40h are post-video activity
  * Fatal error codes less than BFh indicate pre-video failure
  * Fatal error codes greater than C0h indicate post-video failure.
  */

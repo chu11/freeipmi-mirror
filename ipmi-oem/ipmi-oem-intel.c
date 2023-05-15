@@ -64,10 +64,10 @@
  * this command.  The BMC generates a composite fault state from this
  * information and its own internal fault state, and uses this to
  * drive front panel indicators.  The fault indication state
- * contributes to the system status state, as reported by the fron
- * tpanel system status. ... This command also supports additional
+ * contributes to the system status state, as reported by the front
+ * panel system status. ... This command also supports additional
  * parameters to control BMC-owned component fault LEDs associated
- * with teh specified fault condition."
+ * with the specified fault condition."
  *
  * Set Fault Indication Request
  *

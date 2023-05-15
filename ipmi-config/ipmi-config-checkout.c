@@ -191,7 +191,7 @@ ipmi_config_checkout_section (ipmi_config_state_data_t *state_data,
            * value automatically commented out.  Sometimes (in the
            * case of passwords) they cannot be checked out, so the
            * default is for value to be empty.  We do not want the
-           * user accidently commiting this checked out file,
+           * user accidently committing this checked out file,
            * which (in this example) clears the password.
            *
            * Some other keys may or may not have a value, depending on

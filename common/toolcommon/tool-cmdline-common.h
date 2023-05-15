@@ -36,15 +36,15 @@
 enum argp_common_option_keys
   {
     ARGP_DRIVER_TYPE_KEY = 'D',
-    ARGP_NO_PROBING_KEY = 131,      /* for backwards compatability */
+    ARGP_NO_PROBING_KEY = 131,      /* for backwards compatibility */
     ARGP_DISABLE_AUTO_PROBE_KEY = 130,
     ARGP_DRIVER_ADDRESS_KEY = 132,
     ARGP_DRIVER_DEVICE_KEY = 133,
-    ARGP_TIMEOUT_KEY = 134,      /* for backwards compatability */
+    ARGP_TIMEOUT_KEY = 134,      /* for backwards compatibility */
     ARGP_SESSION_TIMEOUT_KEY = 135,
-    ARGP_RETRY_TIMEOUT_KEY = 136,     /* for backwards compatability */
+    ARGP_RETRY_TIMEOUT_KEY = 136,     /* for backwards compatibility */
     ARGP_RETRANSMISSION_TIMEOUT_KEY = 137,
-    ARGP_REG_SPACE_KEY = 138,     /* for backwards compatability */
+    ARGP_REG_SPACE_KEY = 138,     /* for backwards compatibility */
     ARGP_REGISTER_SPACING_KEY = 139,
     ARGP_TARGET_CHANNEL_NUMBER_KEY = 140,
     ARGP_TARGET_SLAVE_ADDRESS_KEY = 141,
@@ -54,13 +54,13 @@ enum argp_common_option_keys
     ARGP_PASSWORD_PROMPT_KEY = 'P',
     ARGP_K_G_KEY = 'k',
     ARGP_K_G_PROMPT_KEY = 'K',
-    ARGP_AUTH_TYPE_KEY = 142,     /* for backwards compatability */
+    ARGP_AUTH_TYPE_KEY = 142,     /* for backwards compatibility */
     ARGP_AUTHENTICATION_TYPE_KEY = 'a',
     ARGP_CIPHER_SUITE_ID_KEY = 'I',
-    ARGP_PRIVILEGE_KEY = 143,     /* for backwards compatability */
-    ARGP_PRIV_LEVEL_KEY = 144,     /* for backwards compatability */
+    ARGP_PRIVILEGE_KEY = 143,     /* for backwards compatibility */
+    ARGP_PRIV_LEVEL_KEY = 144,     /* for backwards compatibility */
     ARGP_PRIVILEGE_LEVEL_KEY = 'l',
-    ARGP_CONFIG_KEY = 145,          /* for backwards compatability */
+    ARGP_CONFIG_KEY = 145,          /* for backwards compatibility */
     ARGP_CONFIG_FILE_KEY = 146,
     ARGP_WORKAROUND_FLAGS_KEY = 'W',
     ARGP_DEBUG_KEY = 147,
@@ -97,8 +97,8 @@ enum argp_common_option_keys
   { "driver-type",    ARGP_DRIVER_TYPE_KEY, "IPMIDRIVER", 0,                                                    \
       "Specify the driver type to use instead of doing an auto selection.", 0}
 
-/* no-probing is maintained for backwards compatability */
-/* reg-space is maintained for backwards compatability */
+/* no-probing is maintained for backwards compatibility */
+/* reg-space is maintained for backwards compatibility */
 #define ARGP_COMMON_OPTIONS_INBAND                                                                              \
   { "no-probing",     ARGP_NO_PROBING_KEY, 0, OPTION_HIDDEN,                                                    \
       "Do not probe in-band IPMI devices for default settings.", 1},                                            \
@@ -127,8 +127,8 @@ enum argp_common_option_keys
       "Specify the remote host(s) to communicate with.", 7},                                                    \
     ARGP_COMMON_OPTIONS_OUTOFBAND_COMMON
 
-/* retry-timeout is maintained for backwards compatability */
-/* timeout is maintained for backwards compatability */
+/* retry-timeout is maintained for backwards compatibility */
+/* timeout is maintained for backwards compatibility */
 #define ARGP_COMMON_OPTIONS_OUTOFBAND_COMMON                                                                    \
   { "username",       ARGP_USERNAME_KEY, "USERNAME", 0,                                                         \
       "Specify the username to use when authenticating with the remote host.", 8},                              \
@@ -149,7 +149,7 @@ enum argp_common_option_keys
   { "retransmission-timeout", ARGP_RETRANSMISSION_TIMEOUT_KEY, "MILLISECONDS", 0,                               \
       "Specify the packet retransmission timeout in milliseconds.", 14}
 
-/* auth-type is maintained for backwards compatability */
+/* auth-type is maintained for backwards compatibility */
 #define ARGP_COMMON_OPTIONS_AUTHENTICATION_TYPE                                                                 \
   { "auth-type", ARGP_AUTH_TYPE_KEY, "AUTHENTICATION-TYPE", OPTION_HIDDEN,                                      \
       "Specify the IPMI 1.5 authentication type to use.", 15},                                                  \
@@ -186,7 +186,7 @@ enum argp_common_option_keys
   { "sdr-cache-recreate", ARGP_SDR_CACHE_RECREATE_KEY,  0, 0,                                                   \
       "Recreate sensor data repository (SDR) cache if cache is out of date or invalid.", 22}
 
-/* older -f option maintained for backwards compatability */
+/* older -f option maintained for backwards compatibility */
 #define ARGP_COMMON_SDR_CACHE_OPTIONS_LEGACY                                                                    \
   { "flush-cache", ARGP_FLUSH_CACHE_LEGACY_KEY,  0, OPTION_HIDDEN,                                              \
       "Flush a cached version of the sensor data repository (SDR) cache.", 20},                                 \
