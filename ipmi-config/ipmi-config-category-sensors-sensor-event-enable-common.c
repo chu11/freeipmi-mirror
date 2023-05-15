@@ -42,8 +42,8 @@
 /* achu: making a generic "convert event message string into
  * key_name" for this tool was difficult.  There are too many
  * conversions and exceptions to the rules (abbreviations, slashes,
- * spaces, hypens, spaces w/ hyphens, single quotes, double quotes,
- * examples, parentheses, strings that are too long, wierd
+ * spaces, hyphens, spaces w/ hyphens, single quotes, double quotes,
+ * examples, parentheses, strings that are too long, weird
  * capitalization, need lower cases, etc.)  that strings never
  * turned out right.  I decided to just hard code names in at the
  * end of the day.

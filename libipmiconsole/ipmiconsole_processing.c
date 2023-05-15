@@ -570,7 +570,7 @@ _receive_packet (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
 
   if (!ret)
     {
-      /* Assume it's an error if the packet is unparseable, not
+      /* Assume it's an error if the packet is unparsable, not
        * expected, etc., but don't exit
        */
       if (c->config.debug_flags & IPMICONSOLE_DEBUG_IPMI_PACKETS)

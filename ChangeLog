@@ -2,6 +2,10 @@
 
 	* doc, man: fix a number of typos
 
+	* bmc-device, ipmi-fru: Fix several output typos
+
+	* global: Fix various comment / doc typos.
+
 2023-05-12 Albert Chu <chu11@llnl.gov>
 
 	* ipmiseld/ipmiseld-ipmi-communication.c (ipmiseld_ipmi_setup),

@@ -758,7 +758,7 @@ _print_except_default_fru_cb (ipmi_fru_state_data_t *state_data,
       assert (state_data->prog_data->args->bridge_fru);
 
       /* achu: Thanks to Michael L. Winiarski <michael.winiarski at
-       * hp.com> patch on ipmitool mailing list Was not originaly
+       * hp.com> patch on ipmitool mailing list.  Was not originally
        * aware that FRU could be specified via this record.
        */
 

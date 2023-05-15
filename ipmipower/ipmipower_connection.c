@@ -508,7 +508,7 @@ _hostname_count (const char *hostname)
    * parsed as foohost[1-3]+1, foohost[1-3]+2, foohost[1-3]+3.  So it
    * can appear like 9 hosts when in fact it is 3.
    *
-   * This function will attempt to handle everthing and count up
+   * This function will attempt to handle everything and count up
    * everything appropriately.
    */
 

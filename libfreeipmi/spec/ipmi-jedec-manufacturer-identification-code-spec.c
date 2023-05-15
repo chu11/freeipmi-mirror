@@ -29,7 +29,7 @@
 
 /* Generated from jedec-raw.txt, copied from
  *
- * Jedec 106 - Standard Manufactuer's Identification Code - JEP106AN - January 2014
+ * Jedec 106 - Standard Manufacturer's Identification Code - JEP106AN - January 2014
  */
 
 const struct ipmi_jedec_manufacturer_id_pair ipmi_jedec_manufacturer_id_bank1[] =

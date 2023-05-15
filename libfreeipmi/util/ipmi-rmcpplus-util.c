@@ -150,7 +150,7 @@ ipmi_calculate_sik (uint8_t authentication_algorithm,
           IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH);
   hash_data_len += IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH;
 
-  /* This part of the spec is wierd, gotta hack it out */
+  /* This part of the spec is weird, gotta hack it out */
   if (name_only_lookup)
     priv_byte |= 0x10;
   priv_byte |= (requested_privilege_level & 0xF);
@@ -763,7 +763,7 @@ ipmi_calculate_rakp_3_key_exchange_authentication_code (uint8_t authentication_a
   buf_index++;
   buf[buf_index] = (remote_console_session_id & 0xff000000) >> 24;
   buf_index++;
-  /* This part of the spec is wierd, gotta hack it out */
+  /* This part of the spec is weird, gotta hack it out */
   if (name_only_lookup)
     priv_byte |= 0x10;
   priv_byte |= (requested_privilege_level & 0xF);
@@ -1047,7 +1047,7 @@ ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code (uint8_t authenticat
   buf_index += IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH;
   memcpy (buf + buf_index, managed_system_guid, IPMI_MANAGED_SYSTEM_GUID_LENGTH);
   buf_index += IPMI_MANAGED_SYSTEM_GUID_LENGTH;
-  /* This part of the spec is wierd, gotta hack it out */
+  /* This part of the spec is weird, gotta hack it out */
   if (name_only_lookup)
     priv_byte |= 0x10;
   priv_byte |= (requested_privilege_level & 0xF);

@@ -122,7 +122,7 @@ _dcmi_specification_conformance (ipmi_dcmi_state_data_t *state_data, uint8_t *pa
   minor = val;
 
   /* XXX: achu: The spec does not say how these version numbers are
-   * formmatted.  decimal?  BCD?  On the one hand, I think to be
+   * formatted.  decimal?  BCD?  On the one hand, I think to be
    * consistent to the "IPMI Version" of a Get Device ID call, it
    * should be BCD.  But, these are 8 bit fields instead of 4 bit
    * fields (e.g. would I output "01.00" instead of "1.0"?).  So I'm

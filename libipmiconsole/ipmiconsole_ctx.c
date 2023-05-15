@@ -147,7 +147,7 @@ ipmiconsole_ctx_garbage_collection_cleanup (ipmiconsole_ctx_t c)
       ipmiconsole_ctx_cleanup (c);
     }
   /* When tearing down engine, contexts could be in garbage collection
-   * wait b/c we're tearing down things.  Move to ENGINE_DESTOYED to
+   * wait b/c we're tearing down things.  Move to ENGINE_DESTROYED to
    * allow ipmiconsole_ctx_destroy() to do final cleanup.
    */
   else if (c->signal.ctx_state == IPMICONSOLE_CTX_STATE_GARBAGE_COLLECTION_WAIT)

@@ -94,7 +94,7 @@ rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT
 DESTDIR="$RPM_BUILD_ROOT" make install
 %if %{?_with_systemd:0}%{!?_with_systemd:1}
-# fix coherance problems with associated script filenames
+# fix coherence problems with associated script filenames
 mkdir -p $RPM_BUILD_ROOT/%{_initrddir}/
 # if check needed for SLES systems
 if [[ "%{_sysconfdir}/init.d" != "%{_initrddir}" ]]
@@ -534,7 +534,7 @@ fi
 - Support /etc/freeipmi/ config dir.
 - Support new ipmi_monitoring*.h files.
 - Support new manpages.
-- Support new compatability symlinks/manpages.
+- Support new compatibility symlinks/manpages.
 
 * Wed Sep 30 2009 Albert Chu <chu11@llnl.gov> 0.8.0
 - Update for dcmi.

@@ -108,7 +108,7 @@ extern unsigned int ipmi_oem_intel_specific_pci_correctable_sensor_max_index;
 #define IPMI_OEM_INTEL_SPECIFIC_QPI_FATAL_ERROR_LINK_LAYER_UNCORRECTABLE_ECC_ERROR             0x00
 #define IPMI_OEM_INTEL_SPECIFIC_QPI_FATAL_ERROR_PROTOCOL_LAYER_POISONED_PACKET_RECEPTION_ERROR 0x01
 #define IPMI_OEM_INTEL_SPECIFIC_QPI_FATAL_ERROR_LINK_PHY_INIT_FAILURE                          0x02
-/* achu: earlier S2600JF / S2600WP implementatino prefixed next four with CSI */
+/* achu: earlier S2600JF / S2600WP implementation prefixed next four with CSI */
 #define IPMI_OEM_INTEL_SPECIFIC_QPI_FATAL_ERROR_PHY_LAYER_DETECTED_DRIFT_BUFFER_ALARM          0x03
 #define IPMI_OEM_INTEL_SPECIFIC_QPI_FATAL_ERROR_PHY_DETECTED_LATENCY_BUFFER_ROLLOVER           0x04
 #define IPMI_OEM_INTEL_SPECIFIC_QPI_FATAL_ERROR_PHY_INIT_FAILURE                               0x05

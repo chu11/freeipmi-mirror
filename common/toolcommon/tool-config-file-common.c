@@ -2154,7 +2154,7 @@ config_file_parse (const char *filename,
         &(ipmi_config_data.verbose_count),
         0,
       },
-      /* legacy backwards compatability to bmc-config */
+      /* legacy backwards compatibility to bmc-config */
       {
         "bmc-config-username",
         CONFFILE_OPTION_STRING,
@@ -2166,7 +2166,7 @@ config_file_parse (const char *filename,
         &common_cmd_args_config,
         0,
       },
-      /* legacy backwards compatability to bmc-config */
+      /* legacy backwards compatibility to bmc-config */
       {
         "bmc-config-password",
         CONFFILE_OPTION_STRING,
@@ -2178,7 +2178,7 @@ config_file_parse (const char *filename,
         &common_cmd_args_config,
         0,
       },
-      /* legacy backwards compatability to bmc-config */
+      /* legacy backwards compatibility to bmc-config */
       {
         "bmc-config-k_g",
         CONFFILE_OPTION_STRING,
@@ -2190,7 +2190,7 @@ config_file_parse (const char *filename,
         &common_cmd_args_config,
         0,
       },
-      /* legacy backwards compatability to bmc-config */
+      /* legacy backwards compatibility to bmc-config */
       {
         "bmc-config-authentication-type",
         CONFFILE_OPTION_STRING,
@@ -2202,7 +2202,7 @@ config_file_parse (const char *filename,
         &common_cmd_args_config,
         0,
       },
-      /* legacy backwards compatability to bmc-config */
+      /* legacy backwards compatibility to bmc-config */
       {
         "bmc-config-cipher-suite-id",
         CONFFILE_OPTION_INT,
@@ -2214,7 +2214,7 @@ config_file_parse (const char *filename,
         &common_cmd_args_config,
         0,
       },
-      /* legacy backwards compatability to bmc-config */
+      /* legacy backwards compatibility to bmc-config */
       {
         "bmc-config-privilege-level",
         CONFFILE_OPTION_STRING,
@@ -2226,7 +2226,7 @@ config_file_parse (const char *filename,
         &common_cmd_args_config,
         0,
       },
-      /* legacy backwards compatability to bmc-config */
+      /* legacy backwards compatibility to bmc-config */
       {
         "bmc-config-workaround-flags",
         CONFFILE_OPTION_LIST_STRING,
@@ -2238,7 +2238,7 @@ config_file_parse (const char *filename,
         &common_cmd_args_config,
         0
       },
-      /* legacy backwards compatability to bmc-config */
+      /* legacy backwards compatibility to bmc-config */
       {
         "bmc-config-verbose-count",
         CONFFILE_OPTION_INT,
@@ -2250,7 +2250,7 @@ config_file_parse (const char *filename,
         &(ipmi_config_data.verbose_count),
         0,
       },
-      /* legacy backwards compatability to ipmi-chassis-config */
+      /* legacy backwards compatibility to ipmi-chassis-config */
       {
         "ipmi-chassis-config-username",
         CONFFILE_OPTION_STRING,
@@ -2262,7 +2262,7 @@ config_file_parse (const char *filename,
         &common_cmd_args_config,
         0,
       },
-      /* legacy backwards compatability to ipmi-chassis-config */
+      /* legacy backwards compatibility to ipmi-chassis-config */
       {
         "ipmi-chassis-config-password",
         CONFFILE_OPTION_STRING,
@@ -2274,7 +2274,7 @@ config_file_parse (const char *filename,
         &common_cmd_args_config,
         0,
       },
-      /* legacy backwards compatability to ipmi-chassis-config */
+      /* legacy backwards compatibility to ipmi-chassis-config */
       {
         "ipmi-chassis-config-k_g",
         CONFFILE_OPTION_STRING,
@@ -2286,7 +2286,7 @@ config_file_parse (const char *filename,
         &common_cmd_args_config,
         0,
       },
-      /* legacy backwards compatability to ipmi-chassis-config */
+      /* legacy backwards compatibility to ipmi-chassis-config */
       {
         "ipmi-chassis-config-authentication-type",
         CONFFILE_OPTION_STRING,
@@ -2298,7 +2298,7 @@ config_file_parse (const char *filename,
         &common_cmd_args_config,
         0,
       },
-      /* legacy backwards compatability to ipmi-chassis-config */
+      /* legacy backwards compatibility to ipmi-chassis-config */
       {
         "ipmi-chassis-config-cipher-suite-id",
         CONFFILE_OPTION_INT,
@@ -2310,7 +2310,7 @@ config_file_parse (const char *filename,
         &common_cmd_args_config,
         0,
       },
-      /* legacy backwards compatability to ipmi-chassis-config */
+      /* legacy backwards compatibility to ipmi-chassis-config */
       {
         "ipmi-chassis-config-privilege-level",
         CONFFILE_OPTION_STRING,
@@ -2322,7 +2322,7 @@ config_file_parse (const char *filename,
         &common_cmd_args_config,
         0,
       },
-      /* legacy backwards compatability to ipmi-chassis-config */
+      /* legacy backwards compatibility to ipmi-chassis-config */
       {
         "ipmi-chassis-config-workaround-flags",
         CONFFILE_OPTION_LIST_STRING,
@@ -2334,7 +2334,7 @@ config_file_parse (const char *filename,
         &common_cmd_args_config,
         0
       },
-      /* legacy backwards compatability to ipmi-chassis-config */
+      /* legacy backwards compatibility to ipmi-chassis-config */
       {
         "ipmi-chassis-config-verbose-count",
         CONFFILE_OPTION_INT,
@@ -2346,7 +2346,7 @@ config_file_parse (const char *filename,
         &(ipmi_config_data.verbose_count),
         0,
       },
-      /* legacy backwards compatability to pef-config */
+      /* legacy backwards compatibility to pef-config */
       {
         "pef-config-username",
         CONFFILE_OPTION_STRING,
@@ -2358,7 +2358,7 @@ config_file_parse (const char *filename,
         &common_cmd_args_config,
         0,
       },
-      /* legacy backwards compatability to pef-config */
+      /* legacy backwards compatibility to pef-config */
       {
         "pef-config-password",
         CONFFILE_OPTION_STRING,
@@ -2370,7 +2370,7 @@ config_file_parse (const char *filename,
         &common_cmd_args_config,
         0,
       },
-      /* legacy backwards compatability to pef-config */
+      /* legacy backwards compatibility to pef-config */
       {
         "pef-config-k_g",
         CONFFILE_OPTION_STRING,
@@ -2382,7 +2382,7 @@ config_file_parse (const char *filename,
         &common_cmd_args_config,
         0,
       },
-      /* legacy backwards compatability to pef-config */
+      /* legacy backwards compatibility to pef-config */
       {
         "pef-config-authentication-type",
         CONFFILE_OPTION_STRING,
@@ -2394,7 +2394,7 @@ config_file_parse (const char *filename,
         &common_cmd_args_config,
         0,
       },
-      /* legacy backwards compatability to pef-config */
+      /* legacy backwards compatibility to pef-config */
       {
         "pef-config-cipher-suite-id",
         CONFFILE_OPTION_INT,
@@ -2406,7 +2406,7 @@ config_file_parse (const char *filename,
         &common_cmd_args_config,
         0,
       },
-      /* legacy backwards compatability to pef-config */
+      /* legacy backwards compatibility to pef-config */
       {
         "pef-config-privilege-level",
         CONFFILE_OPTION_STRING,
@@ -2418,7 +2418,7 @@ config_file_parse (const char *filename,
         &common_cmd_args_config,
         0,
       },
-      /* legacy backwards compatability to pef-config */
+      /* legacy backwards compatibility to pef-config */
       {
         "pef-config-workaround-flags",
         CONFFILE_OPTION_LIST_STRING,
@@ -2430,7 +2430,7 @@ config_file_parse (const char *filename,
         &common_cmd_args_config,
         0
       },
-      /* legacy backwards compatability to pef-config */
+      /* legacy backwards compatibility to pef-config */
       {
         "pef-config-verbose-count",
         CONFFILE_OPTION_INT,
@@ -2442,7 +2442,7 @@ config_file_parse (const char *filename,
         &(ipmi_config_data.verbose_count),
         0,
       },
-      /* legacy backwards compatability to ipmi-pef-config */
+      /* legacy backwards compatibility to ipmi-pef-config */
       {
         "ipmi-pef-config-username",
         CONFFILE_OPTION_STRING,
@@ -2454,7 +2454,7 @@ config_file_parse (const char *filename,
         &common_cmd_args_config,
         0,
       },
-      /* legacy backwards compatability to ipmi-pef-config */
+      /* legacy backwards compatibility to ipmi-pef-config */
       {
         "ipmi-pef-config-password",
         CONFFILE_OPTION_STRING,
@@ -2466,7 +2466,7 @@ config_file_parse (const char *filename,
         &common_cmd_args_config,
         0,
       },
-      /* legacy backwards compatability to ipmi-pef-config */
+      /* legacy backwards compatibility to ipmi-pef-config */
       {
         "ipmi-pef-config-k_g",
         CONFFILE_OPTION_STRING,
@@ -2478,7 +2478,7 @@ config_file_parse (const char *filename,
         &common_cmd_args_config,
         0,
       },
-      /* legacy backwards compatability to ipmi-pef-config */
+      /* legacy backwards compatibility to ipmi-pef-config */
       {
         "ipmi-pef-config-authentication-type",
         CONFFILE_OPTION_STRING,
@@ -2490,7 +2490,7 @@ config_file_parse (const char *filename,
         &common_cmd_args_config,
         0,
       },
-      /* legacy backwards compatability to ipmi-pef-config */
+      /* legacy backwards compatibility to ipmi-pef-config */
       {
         "ipmi-pef-config-cipher-suite-id",
         CONFFILE_OPTION_INT,
@@ -2502,7 +2502,7 @@ config_file_parse (const char *filename,
         &common_cmd_args_config,
         0,
       },
-      /* legacy backwards compatability to ipmi-pef-config */
+      /* legacy backwards compatibility to ipmi-pef-config */
       {
         "ipmi-pef-config-privilege-level",
         CONFFILE_OPTION_STRING,
@@ -2514,7 +2514,7 @@ config_file_parse (const char *filename,
         &common_cmd_args_config,
         0,
       },
-      /* legacy backwards compatability to ipmi-pef-config */
+      /* legacy backwards compatibility to ipmi-pef-config */
       {
         "ipmi-pef-config-workaround-flags",
         CONFFILE_OPTION_LIST_STRING,
@@ -2526,7 +2526,7 @@ config_file_parse (const char *filename,
         &common_cmd_args_config,
         0
       },
-      /* legacy backwards compatability to ipmi-pef-config */
+      /* legacy backwards compatibility to ipmi-pef-config */
       {
         "ipmi-pef-config-verbose-count",
         CONFFILE_OPTION_INT,
@@ -2538,7 +2538,7 @@ config_file_parse (const char *filename,
         &(ipmi_config_data.verbose_count),
         0,
       },
-      /* legacy backwards compatability to ipmi-sensors-config */
+      /* legacy backwards compatibility to ipmi-sensors-config */
       {
         "ipmi-sensors-config-username",
         CONFFILE_OPTION_STRING,
@@ -2550,7 +2550,7 @@ config_file_parse (const char *filename,
         &common_cmd_args_config,
         0,
       },
-      /* legacy backwards compatability to ipmi-sensors-config */
+      /* legacy backwards compatibility to ipmi-sensors-config */
       {
         "ipmi-sensors-config-password",
         CONFFILE_OPTION_STRING,
@@ -2562,7 +2562,7 @@ config_file_parse (const char *filename,
         &common_cmd_args_config,
         0,
       },
-      /* legacy backwards compatability to ipmi-sensors-config */
+      /* legacy backwards compatibility to ipmi-sensors-config */
       {
         "ipmi-sensors-config-k_g",
         CONFFILE_OPTION_STRING,
@@ -2574,7 +2574,7 @@ config_file_parse (const char *filename,
         &common_cmd_args_config,
         0,
       },
-      /* legacy backwards compatability to ipmi-sensors-config */
+      /* legacy backwards compatibility to ipmi-sensors-config */
       {
         "ipmi-sensors-config-authentication-type",
         CONFFILE_OPTION_STRING,
@@ -2586,7 +2586,7 @@ config_file_parse (const char *filename,
         &common_cmd_args_config,
         0,
       },
-      /* legacy backwards compatability to ipmi-sensors-config */
+      /* legacy backwards compatibility to ipmi-sensors-config */
       {
         "ipmi-sensors-config-cipher-suite-id",
         CONFFILE_OPTION_INT,
@@ -2598,7 +2598,7 @@ config_file_parse (const char *filename,
         &common_cmd_args_config,
         0,
       },
-      /* legacy backwards compatability to ipmi-sensors-config */
+      /* legacy backwards compatibility to ipmi-sensors-config */
       {
         "ipmi-sensors-config-privilege-level",
         CONFFILE_OPTION_STRING,
@@ -2610,7 +2610,7 @@ config_file_parse (const char *filename,
         &common_cmd_args_config,
         0,
       },
-      /* legacy backwards compatability to ipmi-sensors-config */
+      /* legacy backwards compatibility to ipmi-sensors-config */
       {
         "ipmi-sensors-config-workaround-flags",
         CONFFILE_OPTION_LIST_STRING,
@@ -2622,7 +2622,7 @@ config_file_parse (const char *filename,
         &common_cmd_args_config,
         0
       },
-      /* legacy backwards compatability to ipmi-sensors-config */
+      /* legacy backwards compatibility to ipmi-sensors-config */
       {
         "ipmi-sensors-config-verbose-count",
         CONFFILE_OPTION_INT,

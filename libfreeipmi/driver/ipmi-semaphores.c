@@ -68,7 +68,7 @@ driver_mutex_init (void)
     {
       if (errno == EEXIST) /* You are not the first one */
         {
-          /* Get the orignial semid */
+          /* Get the original semid */
           if ((semid = semget (key, 1, IPC_CREAT | 0600)) < 0)
             {
               ERRNO_TRACE (errno);

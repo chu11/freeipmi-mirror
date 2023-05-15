@@ -512,7 +512,7 @@ ipmi_oem_fujitsu_get_system_status (ipmi_oem_state_data_t *state_data)
    *      bit 1 - Agent connected
    *      bit 0 - Post State
    * 0x?? - Signaling
-   *      bit 7 - Identify LED (sometimes refered as "Localize")
+   *      bit 7 - Identify LED (sometimes referred as "Localize")
    *      bit 6 -
    *      bit 5 -
    *      bit 4 -

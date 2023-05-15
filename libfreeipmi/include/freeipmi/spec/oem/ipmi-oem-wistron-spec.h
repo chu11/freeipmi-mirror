@@ -214,7 +214,7 @@ extern "C" {
  *
  * connection retry - 1 byte, 0 = no retries
  *
- * retry interval - 1 byte, in 5 second increments, defalut 01h
+ * retry interval - 1 byte, in 5 second increments, default 01h
  *
  * delay time - 1 byte, in seconds, 0h = immediate, ffh = random between 5 and 10
  */
@@ -285,7 +285,7 @@ extern "C" {
  *
  * ipv6 snmp trap destination address - 1-40 bytes
  *
- * number of ipv6 snmp trap desitnations - 1 byte (read only)
+ * number of ipv6 snmp trap destinations - 1 byte (read only)
  */
 #define IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SNMP_TRAP_DESTINATION_SETTING   0x01
 #define IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SNMP_TRAP_DESTINATION_ADDRESS   0x02

@@ -39,7 +39,7 @@
 #include "freeipmi-portability.h"
 
 /*
- * Threshold Comparsion status
+ * Threshold Comparison status
  */
 static char *threshold_comparison_status_desc[] =
   {

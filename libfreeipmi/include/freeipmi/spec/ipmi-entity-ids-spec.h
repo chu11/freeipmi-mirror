@@ -82,7 +82,7 @@ extern "C" {
  *
  * Ugh .. 0x37 is listed as air inlet in markup 4 spec, but not in
  * errata 4.  Initial assumption was that it was a typo.  Later, DCMI
- * v1.5 spec lits 0x37 is inlet temperature.
+ * v1.5 spec list 0x37 is inlet temperature.
  *
  * So the assumption is it's not a typo now, we'll list 0x37 as
  * AIR_INLET "B"

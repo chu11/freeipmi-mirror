@@ -538,7 +538,7 @@ ipmipower_ping_process_pings (int *timeout)
               if (ret)
                 {
                   /* achu: check for ipmi_support and pong type, but don't
-                   * check for message tag.  On occassion, I have witnessed
+                   * check for message tag.  On occasion, I have witnessed
                    * BMCs send message tags "out of sync".  For example, you
                    * send 8, BMC returns 7.  You send 9, BMC returns 8.  We
                    * really don't care if the BMC is out of sync.  We just

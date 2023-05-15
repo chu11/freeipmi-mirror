@@ -305,7 +305,7 @@ extern "C" {
  * stolen.
  *
  * The affect is that this loss of the serial connection will not be
- * noticed by the IPMI client until serial data is transfered from the
+ * noticed by the IPMI client until serial data is transferred from the
  * client to the BMC and a timeout (or similar error) eventually occurs.
  * The IPMI client must then reconnect to restablish the session.
  *
@@ -702,7 +702,7 @@ int ipmiconsole_engine_init (unsigned int thread_count,
  * return value of 0 indicates the context was submitted properly.  A
  * return value of -1 indicates an error occurred during the
  * submission.  On an error, ipmiconsole_ctx_errnum() can be used to
- * determine the type of error that occured.
+ * determine the type of error that occurred.
  *
  * After a context has been submitted, the user may determine if a SOL
  * session has been established several ways:
@@ -777,7 +777,7 @@ int ipmiconsole_engine_submit (ipmiconsole_ctx_t c,
  * session is established or an error/timeout occurs.  A return value
  * of 0 indicates the SOL session was established and a -1 indicates
  * an error occurred.  On an error, ipmiconsole_ctx_errnum() can be
- * used to determine the type of error that occured.
+ * used to determine the type of error that occurred.
  *
  * Returns 0 on success, -1 on error.  ipmiconsole_ctx_errnum() can be
  * called to determine the cause of the error.

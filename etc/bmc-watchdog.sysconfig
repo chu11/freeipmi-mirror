@@ -9,7 +9,7 @@
 #
 #       -p INT, --pre-timeout-interrupt=INT
 #              Set pre-timeout interrupt.  The pre timeout interrupt can be set
-#              to one of the following: 0 = None, 1 = SMI, 2 = NMI, 3 = Messag-
+#              to one of the following: 0 = None, 1 = SMI, 2 = NMI, 3 = Message-
 #              ing Interrupt.
 #
 #       -a INT, --timeout-action=INT

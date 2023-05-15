@@ -252,7 +252,7 @@ host_is_valid (const char *addr, const char *port, uint16_t *portptr)
  *
  * The reason is that most of FreeIPMI supports mapping "localhost" to
  * "inband" communication primarily for convenience.  Programmers
- * don't have to handle "inband" communication differenly than
+ * don't have to handle "inband" communication differently than
  * "outofband" cases.  e.g.  you can script/program with the hosts
  * "node1,node2,node3,localhost,node4" and not have to program a
  * special case for "inband" communication.

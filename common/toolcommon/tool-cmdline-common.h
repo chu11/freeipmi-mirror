@@ -157,7 +157,7 @@ enum argp_common_option_keys
   { "sdr-cache-recreate", ARGP_SDR_CACHE_RECREATE_KEY,  0, 0,                                                   \
       "Recreate sensor data repository (SDR) cache if cache is out of date or invalid.", 22}
 
-/* older -f option maintained for backwards compatability */
+/* older -f option maintained for backwards compatibility */
 #define ARGP_COMMON_SDR_CACHE_OPTIONS_LEGACY                                                                    \
   { "flush-cache", ARGP_FLUSH_CACHE_LEGACY_KEY,  0, OPTION_HIDDEN,                                              \
       "Flush a cached version of the sensor data repository (SDR) cache.", 20},                                 \

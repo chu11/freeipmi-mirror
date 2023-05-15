@@ -326,7 +326,7 @@ extern unsigned int ipmi_oem_intel_s2600bpb_specific_system_firmware_security_ma
 extern const char * const ipmi_oem_intel_s2600bpb_specific_kcs_policy[];
 extern unsigned int ipmi_oem_intel_s2600bpb_specific_kcs_policy_max_index;
 
-/* achu: Document is ambiguous about if this applys to event data 2 or
+/* achu: Document is ambiguous about if this applies to event data 2 or
  * 3, so we just say "EVENT_DATA"
  */
 #define IPMI_OEM_INTEL_S2600BPB_SPECIFIC_REMOTE_DEBUG_EVENT_DATA_JTAG_SESSION_STATE_BITMASK 0x01
