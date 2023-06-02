@@ -1,3 +1,7 @@
+2023-06-02 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi: Fix typo.
+
 2023-05-15 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi, libipmimonitoring: Fix various function and macro

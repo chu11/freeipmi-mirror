@@ -216,7 +216,7 @@ ipmi_sensor_units_string (uint8_t sensor_units_percentage,
 
   if (sensor_units_rate != IPMI_SENSOR_RATE_UNIT_NONE)
     {
-      /* Special case, RPM is inheritly per minute
+      /* Special case, RPM is inherently per minute
        *
        * If vendor specifies a rate other than "per minute", that's
        * probably a bug in their SDR.
