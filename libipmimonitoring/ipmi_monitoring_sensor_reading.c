@@ -423,8 +423,12 @@ _get_sensor_units (ipmi_monitoring_ctx_t c,
 
   if (sensor_units_rate != IPMI_SENSOR_RATE_UNIT_NONE)
     {
-      IPMI_MONITORING_DEBUG (("sensor_units_rate '0x%X' not supported", sensor_units_rate));
-      return (IPMI_MONITORING_SENSOR_UNITS_UNKNOWN);
+      /* Special case, "RPM" is inherently "per minute" */
+      if (!(sensor_base_unit_type == IPMI_SENSOR_UNIT_RPM
+            && sensor_units_rate == IPMI_SENSOR_RATE_UNIT_PER_MINUTE)) {
+        IPMI_MONITORING_DEBUG (("sensor_units_rate '0x%X' not supported", sensor_units_rate));
+        return (IPMI_MONITORING_SENSOR_UNITS_UNKNOWN);
+      }
     }
 
   if (sensor_modifier_unit_type != IPMI_SENSOR_UNIT_UNSPECIFIED)
