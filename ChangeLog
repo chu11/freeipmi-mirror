@@ -1,3 +1,9 @@
+2023-06-02 Albert Chu <chu11@llnl.gov>
+
+	* libipmimonitoring/ipmi_monitoring_sensor_reading.c
+	(_get_sensor_units): Handle special case when sensor has units
+	"RPM" and the units rate is "per minute".
+
 2023-05-15 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi, libipmimonitoring: Fix various function and macro
