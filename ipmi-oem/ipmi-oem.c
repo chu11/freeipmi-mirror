@@ -581,22 +581,6 @@ struct ipmi_oem_command oem_intelnm[] =
       IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
       ipmi_oem_intelnm_set_node_manager_policy_alert_thresholds
     },
-    /* legacy */
-    {
-      "get-node-manager-alert-thresholds",
-      "[domainid=platform|cpu|memory|highpowerio] [policyid=num]",
-      0,
-      IPMI_OEM_COMMAND_FLAGS_HIDDEN | IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
-      ipmi_oem_intelnm_get_node_manager_policy_alert_thresholds
-    },
-    /* legacy */
-    {
-      "set-node-manager-alert-thresholds",
-      "domainid=platform|cpu|memory|highpowerio policyid=num [threshold1=num] [threshold2=num] [threshold3=num]",
-      2,
-      IPMI_OEM_COMMAND_FLAGS_HIDDEN | IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
-      ipmi_oem_intelnm_set_node_manager_policy_alert_thresholds
-    },
     {
       "get-node-manager-policy-suspend-periods",
       "[domainid=platform|cpu|memory|highpowerio] [policyid=num]",
