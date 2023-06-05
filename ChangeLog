@@ -2,6 +2,10 @@
 
 	* libfreeipmi/spec: Update enterprise numbers scripts
 
+	* libfreeipmi/spec: Update enterprise numbers.  Hand remove few
+	instances where vendor decided to put their URL in their company
+	name.
+
 2023-06-05 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem: Remove legacy Dell get-system-info "slot-number" key.

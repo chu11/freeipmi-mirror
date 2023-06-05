@@ -1,7 +1,7 @@
 #!/bin/bash
 
-rm -f enterprise-numbers.txt
-wget http://www.iana.org/assignments/enterprise-numbers.txt
+#rm -f enterprise-numbers.txt
+#wget http://www.iana.org/assignments/enterprise-numbers.txt
 ./enterprise-numbers.pl enterprise-numbers.txt > ipmi-iana-enterprise-numbers-spec.c
 
 # Determine max index, last 30 lines of the file is sufficient
