@@ -8,6 +8,10 @@
 
 	* ipmi-config: Remove legacy -f command line option.
 
+	* ipmi-oem: Remove intelnm legacy commands
+	get-node-manager-alert-thresholds and
+	set-node-manager-alert-thresholds.
+
 2023-06-05 Albert Chu <chu11@llnl.gov>
 
 	* libipmimonitoring/ipmi_monitoring_sensor_reading.c

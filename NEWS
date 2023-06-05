@@ -236,6 +236,9 @@ o Remove legacy OEM Dell command options / keys
 o Remove legacy OEM Inventec commands
   - get-nic-status (use get-nic-mode)
   - set-nic-status (use set-nic-mode)
+o Remove legacy OEM IntelNM commands
+  - get-node-manager-alert-thresholds (use get-node-manager-policy-alert-thresholds)
+  - set-node-manager-alert-thresholds (use set-node-manager-policy-alert-thresholds)
 o Remove legacy command line option --config_file in ipmidetectd (use
   --config-file)
 o Remove legacy short option -o in ipmidetect (use -h)
