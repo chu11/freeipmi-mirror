@@ -6,6 +6,8 @@
 
 	* ipmi-config/ipmi-config.h: Remove legacy / unused macro.
 
+	* ipmi-config: Remove legacy -f command line option.
+
 2023-06-05 Albert Chu <chu11@llnl.gov>
 
 	* libipmimonitoring/ipmi_monitoring_sensor_reading.c
