@@ -12,6 +12,10 @@
 	get-node-manager-alert-thresholds and
 	set-node-manager-alert-thresholds.
 
+	* ipmi-oem: Remove legacy support of "inlet" as input for
+	"get-node-manager-capabilities policytrigger" and
+	"set-node-manager-policy policytrigger".
+
 2023-06-05 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/spec: Update enterprise numbers scripts
