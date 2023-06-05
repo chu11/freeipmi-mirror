@@ -6,6 +6,8 @@
 	* bmc-watchdog: remove legacy --logfile option and config
 	file support.
 
+	* libfreeipmi: remove legacy Dell macro from reverse engineering attempt.
+
 2023-06-02 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi: Fix typo.
