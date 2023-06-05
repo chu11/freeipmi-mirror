@@ -58,9 +58,7 @@ enum argp_common_option_keys
     ARGP_DEBUG_KEY = 139,
     /* sdr options */
     ARGP_FLUSH_CACHE_KEY = 140,
-    ARGP_FLUSH_CACHE_LEGACY_KEY = 'f',
     ARGP_QUIET_CACHE_KEY = 141,
-    ARGP_QUIET_CACHE_LEGACY_KEY = 'Q',
     ARGP_SDR_CACHE_RECREATE_KEY = 142,
     ARGP_SDR_CACHE_FILE_KEY = 143,
     ARGP_SDR_CACHE_DIRECTORY_KEY = 144,
@@ -156,13 +154,6 @@ enum argp_common_option_keys
       "Do not output information about cache creation/deletion.", 21},                                          \
   { "sdr-cache-recreate", ARGP_SDR_CACHE_RECREATE_KEY,  0, 0,                                                   \
       "Recreate sensor data repository (SDR) cache if cache is out of date or invalid.", 22}
-
-/* older -f option maintained for backwards compatibility */
-#define ARGP_COMMON_SDR_CACHE_OPTIONS_LEGACY                                                                    \
-  { "flush-cache", ARGP_FLUSH_CACHE_LEGACY_KEY,  0, OPTION_HIDDEN,                                              \
-      "Flush a cached version of the sensor data repository (SDR) cache.", 20},                                 \
-  { "quiet-cache", ARGP_QUIET_CACHE_LEGACY_KEY,  0, OPTION_HIDDEN,                                              \
-      "Do not output information about cache creation/deletion.", 21}                                           \
 
 #define ARGP_COMMON_SDR_CACHE_OPTIONS_FILE_DIRECTORY                                                            \
   { "sdr-cache-file", ARGP_SDR_CACHE_FILE_KEY, "FILE", 0,                                                       \

@@ -67,7 +67,6 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_OPTIONS_WORKAROUND_FLAGS,
     ARGP_COMMON_SDR_CACHE_OPTIONS,
     ARGP_COMMON_SDR_CACHE_OPTIONS_FILE_DIRECTORY,
-    ARGP_COMMON_SDR_CACHE_OPTIONS_LEGACY,
     ARGP_COMMON_OPTIONS_DEBUG,
     { "verbose",    VERBOSE_KEY,    0, 0,
       "Increase verbosity in output.", 40},
