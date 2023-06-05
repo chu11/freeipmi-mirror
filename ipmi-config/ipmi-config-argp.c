@@ -100,10 +100,8 @@ static struct argp_option cmdline_options[] = {
     "Use a specific Serial Channel Number.", 50},
   { "sol-channel-number", IPMI_CONFIG_ARGP_SOL_CHANNEL_NUMBER_KEY, "NUMBER", 0,
     "Use a specific SOL Channel Number.", 51},
-  { "foobar", IPMI_CONFIG_ARGP_FILENAME_KEY_LEGACY, "FILENAME", OPTION_HIDDEN,
-    "Specify a config file for checkout/commit/diff.", 52},
   { "info", IPMI_CONFIG_ARGP_PEF_INFO_KEY, 0, OPTION_HIDDEN,
-    "Show general information about PEF configuration.", 53},
+    "Show general information about PEF configuration.", 52},
   { NULL, 0, NULL, 0, NULL, 0}
 };
 
@@ -496,7 +494,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
         cmd_args->action = -1;
       break;
     case IPMI_CONFIG_ARGP_FILENAME_KEY:
-    case IPMI_CONFIG_ARGP_FILENAME_KEY_LEGACY:
       free (cmd_args->filename);
       if (!(cmd_args->filename = strdup (arg)))
         {
