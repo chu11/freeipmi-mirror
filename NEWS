@@ -116,6 +116,8 @@ o Remove many legacy long options in tools
   - --privilege (use --privilege-level)
   - --priv-level (use --privilege-level)
   - --config (use --config-file)
+  - -f (use --flush-cache)
+  - -q (use --quiet-cache)
 o Remove legacy options in tools
   - Do not support "plain" as an authentication type.
 o Remove legacy config file options
