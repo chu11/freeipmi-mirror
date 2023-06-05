@@ -4,6 +4,8 @@
 	common/toolcommon/tool-cmdline-common.c: Remove legacy SDR options
 	-f and -q.  Update users accordingly.
 
+	* ipmi-config/ipmi-config.h: Remove legacy / unused macro.
+
 2023-06-05 Albert Chu <chu11@llnl.gov>
 
 	* libipmimonitoring/ipmi_monitoring_sensor_reading.c
