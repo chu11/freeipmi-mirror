@@ -211,6 +211,7 @@ o Remove legacy config options in ipmi-config
   - User:Password20 (is now just Password)
   - User:Lan_Enable_Restrict_to_Callback (is now Lan_Enable_Restricted_to_Callback)
   - User:Serial_Enable_Restrict_to_Callback (is now Serial_Enable_Restricted_to_Callback)
+o Remove legacy --logfile option to bmc-watchdog.
 o Remove legacy OEM Dell commands
   - get-power-info (use get-power-consumption-data)
   - reset-power-info (use reset-power-consumption-data)

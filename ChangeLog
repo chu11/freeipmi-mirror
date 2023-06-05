@@ -3,6 +3,9 @@
 	* ipmi-oem: Remove legacy Dell get-system-info "slot-number" key.
 	Users should use "blade-slot-info".
 
+	* bmc-watchdog: remove legacy --logfile option and config
+	file support.
+
 2023-06-02 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi: Fix typo.

@@ -1941,18 +1941,6 @@ config_file_parse (const char *filename,
         &common_cmd_args_config,
         0
       },
-      /* deprecated */
-      {
-        "bmc-watchdog-logfile",
-        CONFFILE_OPTION_IGNORE,
-        -1,
-        _config_file_string,
-        1,
-        0,
-        &(bmc_watchdog_data.logfile_count),
-        &(bmc_watchdog_data.logfile),
-        0
-      },
       {
         "bmc-watchdog-verbose-logging",
         CONFFILE_OPTION_BOOL,
