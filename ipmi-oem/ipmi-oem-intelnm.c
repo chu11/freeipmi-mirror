@@ -1801,7 +1801,6 @@ ipmi_oem_intelnm_get_node_manager_capabilities (ipmi_oem_state_data_t *state_dat
             {
               if (strcasecmp (value, "none")
                   && strcasecmp (value, "inlettemperaturelimitpolicytrigger")
-                  && strcasecmp (value, "inlet") /* legacy */
                   && strcasecmp (value, "missingpowerreadingtimeout")
                   && strcasecmp (value, "timeafterplatformresettrigger")
                   && strcasecmp (value, "boottimepolicy"))
@@ -1817,8 +1816,7 @@ ipmi_oem_intelnm_get_node_manager_capabilities (ipmi_oem_state_data_t *state_dat
 
               if (!strcasecmp (value, "none"))
                 policytrigger_input[0] = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_NO_POLICY_TRIGGER;
-              else if (!strcasecmp (value, "inlettemperaturelimitpolicytrigger")
-                       || !strcasecmp (value, "inlet")) /* legacy */
+              else if (!strcasecmp (value, "inlettemperaturelimitpolicytrigger"))
                 policytrigger_input[0] = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_INLET_TEMPERATURE_LIMIT_POLICY_TRIGGER;
               else if (!strcasecmp (value, "missingpowerreadingtimeout"))
                 policytrigger_input[0] = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_MISSING_POWER_READING_TIMEOUT;
@@ -2864,7 +2862,6 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
         {
           if (strcasecmp (value, "none")
               && strcasecmp (value, "inlettemperaturelimitpolicytrigger")
-              && strcasecmp (value, "inlet") /* legacy */
               && strcasecmp (value, "missingpowerreadingtimeout")
               && strcasecmp (value, "timeafterplatformresettrigger")
               && strcasecmp (value, "boottimepolicy"))
@@ -2880,8 +2877,7 @@ ipmi_oem_intelnm_set_node_manager_policy (ipmi_oem_state_data_t *state_data)
 
           if (!strcasecmp (value, "none"))
             policytrigger = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_NO_POLICY_TRIGGER;
-          else if (!strcasecmp (value, "inlettemperaturelimitpolicytrigger")
-                   || !strcasecmp (value, "inlet")) /* legacy */
+          else if (!strcasecmp (value, "inlettemperaturelimitpolicytrigger"))
             policytrigger = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_INLET_TEMPERATURE_LIMIT_POLICY_TRIGGER;
           else if (!strcasecmp (value, "missingpowerreadingtimeout"))
             policytrigger = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_TRIGGER_TYPE_MISSING_POWER_READING_TIMEOUT;

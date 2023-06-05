@@ -239,6 +239,9 @@ o Remove legacy OEM Inventec commands
 o Remove legacy OEM IntelNM commands
   - get-node-manager-alert-thresholds (use get-node-manager-policy-alert-thresholds)
   - set-node-manager-alert-thresholds (use set-node-manager-policy-alert-thresholds)
+o Remove legacy input options in OEM IntelNM commands:
+  - get-node-manager-capabilities policytrigger - remove "inlet" support (use "inlettemperaturelimitpolicytrigger")
+  - set-node-manager-policy policytrigger - remove "inlet" support (use "inlettemperaturelimitpolicytrigger")
 o Remove legacy command line option --config_file in ipmidetectd (use
   --config-file)
 o Remove legacy short option -o in ipmidetect (use -h)
