@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 # This script should be used to process the IANA Private Enterprise
-# list from http://www.iana.org/assignments/enterprise-numbers.
+# list from https://www.iana.org/assignments/enterprise-numbers.txt.
 #
 # It handles a number of corner case formatting errors in the list.
 # Hopefully new ones don't crop up when you update.
