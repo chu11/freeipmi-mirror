@@ -1838,12 +1838,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
                       "Option: chassis-related-service-tag\n"
                       "Option: board-revision\n"
                       "Option: platform-model-name\n"
-#if 0
-                      /* legacy */
-                      "Option: slot-number\n"
-#else
                       "Option: blade-slot-info\n"
-#endif
                       "Option: system-revision\n"
                       "Option: embedded-video-status\n"
                       "Option: idrac-info\n"
@@ -1878,7 +1873,6 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
       && strcasecmp (state_data->prog_data->args->oem_options[0], "chassis-related-service-tag")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "board-revision")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "platform-model-name")
-      && strcasecmp (state_data->prog_data->args->oem_options[0], "slot-number") /* legacy */
       && strcasecmp (state_data->prog_data->args->oem_options[0], "blade-slot-info")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "system-revision")
       && strcasecmp (state_data->prog_data->args->oem_options[0], "embedded-video-status")

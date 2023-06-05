@@ -1,3 +1,8 @@
+2023-06-05 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem: Remove legacy Dell get-system-info "slot-number" key.
+	Users should use "blade-slot-info".
+
 2023-06-02 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi: Fix typo.
