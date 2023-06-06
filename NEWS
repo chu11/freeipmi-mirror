@@ -3,6 +3,8 @@ FreeIPMI 1.6.11 - XX/XX/XX
 o Fix double free corner case in ipmiseld.
 o Support ISO 8601 date inputs to date range options in ipmi-sel.
 o Support Xilinx OEM FRU records.
+o Fix corner case in libipmimonitoring, support sensor if units is
+  "RPM per minute", but just return "RPM" as the units.
 o Fix portability compilation on cygwin.
 o Fix typo in fiid template field that could lead to packet
   interpretation errors.
