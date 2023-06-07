@@ -69,6 +69,7 @@ nobase_include_HEADERS = \
 	freeipmi/record-format/ipmi-sel-record-format.h \
 	freeipmi/record-format/ipmi-sel-oem-record-format.h \
 	freeipmi/record-format/oem/ipmi-fru-wistron-oem-record-format.h \
+	freeipmi/record-format/oem/ipmi-fru-xilinx-oem-record-format.h \
 	freeipmi/record-format/oem/ipmi-sdr-oem-intel-node-manager-record-format.h \
 	freeipmi/record-format/oem/ipmi-sdr-oem-intel-record-format.h \
 	freeipmi/record-format/oem/ipmi-sel-oem-intel-record-format.h \
