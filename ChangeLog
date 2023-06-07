@@ -1,3 +1,7 @@
+2023-06-07 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include: Add missing xilinx header to dist.
+
 2023-06-06 Albert Chu <chu11@llnl.gov>
 
 	* common/toolcommon/tool-cmdline-common.h,
