@@ -1,4 +1,4 @@
-FreeIPMI 1.6.11 - XX/XX/XX
+FreeIPMI 1.6.11 - 06/07/23
 --------------------------
 o Fix double free corner case in ipmiseld.
 o Support ISO 8601 date inputs to date range options in ipmi-sel.
