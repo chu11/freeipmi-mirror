@@ -1,3 +1,8 @@
+2023-06-22 Albert Chu <chu11@llnl.gov>
+
+	* doc/freeipmi-bugs-and-workarounds.txt: Document issue with
+	Vadatech VT811.
+
 2023-06-07 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include: Add missing xilinx header to dist.
