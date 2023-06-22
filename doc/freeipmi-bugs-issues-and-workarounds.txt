@@ -119,7 +119,7 @@ LAN Authentication Issue #5: [COMPLIANCE]
   the Get Authentication Capabilities response.
 
   Seen on: Asus P5M2, Asus P5MT-R, Asus S162-E4, Asus RX4, Sun Fire
-  X4150, Sun Fire X4450, Intel SR1520ML, Intel X38ML
+  X4150, Sun Fire X4450, Intel SR1520ML, Intel X38ML, Vadatech VT811
 
   Resolution: Workaround option added to inform software to ignore
   flags in the Get Authentication Capabilities response.
