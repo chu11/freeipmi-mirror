@@ -1,11 +1,35 @@
 FreeIPMI 1.7.1 - XX/XX/XX
 -------------------------
+
+In 2019 the IPMI standard was frozen.  So a decision was made to try
+and make the FreeIPMI 1.7.X line the last stable line in FreeIPMI.  A
+number of decisions were made to remove legacy support and fix minor issues,
+even at the cost of breaking backwards compatibility.
+
+Updated Features:
+-----------------
+
 Libraries
 ---------
 o libfreeipmi/sensor-read: Add error for privilege level insufficient.
 o In libfreeipmi, support Intel S2600BPB OEM SEL interpretations.
 o Significant refactoring of Intel OEM extensions.  Names of
   variables, macros, etc. may have changed.
+
+Tools
+-----
+o In ipmi-sel, support Intel S2600BPB OEM SEL interpretations.
+o In ipmi-config, support configuration of Maximum_Privilege_Cipher_Suite_Id_16.
+
+Typo Fixes:
+-----------
+
+Fix large number of typos.  The following have the potential to break
+against existing builds or scripts that relied on previous expected output.
+
+Libraries:
+----------
+
 o In libfreeipmi, fix typos in function names.
   - ipmi_device_type_modifer_message() -> ipmi_device_type_modifier_message()
 o In libfreeipmi, fix typos in macro names.
@@ -86,10 +110,9 @@ o In freeipmi_interpret_sensor.conf fix field name typos:
   - IPMI_Version_Change_Firmware_Or_Software_Incompatability_Detected_With_Associated_Entity
       IPMI_Version_Change_Firmware_Or_Software_Incompatibility_Detected_With_Associated_Entity
 
-Tools
------
-o In ipmi-sel, support Intel S2600BPB OEM SEL interpretations.
-o In ipmi-config, support configuration of Maximum_Privilege_Cipher_Suite_Id_16.
+Tools:
+------
+
 o In bmc-device, ipmi-fru, and ipmi-oem, fix several typos in output.  Could
   cause issues for those who script against the output.
 
