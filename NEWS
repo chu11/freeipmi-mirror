@@ -1,3 +1,7 @@
+FreeIPMI 1.6.12 - XX/XX/XX
+--------------------------
+o Fix potential portability problems on systems without cbrt().
+
 FreeIPMI 1.6.11 - 06/07/23
 --------------------------
 o Fix double free corner case in ipmiseld.
