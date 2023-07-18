@@ -90,7 +90,7 @@
 #endif
 /* uClibc may not have cbrt() */
 #ifndef HAVE_CBRT
-#define cbrt(x)         (pow((x), -3.0))
+#define cbrt(x)         (pow((x), (1.0/3.0)))
 #endif
 
 /* FreeBSD don't have strdupa */
