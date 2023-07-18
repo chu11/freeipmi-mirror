@@ -1,3 +1,8 @@
+2023-07-18 Albert Chu <chu11@llnl.gov>
+
+	* common/portability/freeipmi-portability.h: Fix portability of
+	cbrt() redefinition.  cube root is x^(1/3) not x^-3.
+
 2023-06-22 Albert Chu <chu11@llnl.gov>
 
 	* doc/freeipmi-bugs-and-workarounds.txt: Document issue with
