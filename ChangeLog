@@ -1,3 +1,8 @@
+2023-08-27 Albert Chu <chu11@llnl.gov>
+
+	* configure.ac: fix warning by moving AC_USE_SYSTEM_EXTENSIONS
+	earlier in the file before some checks are done.
+
 2023-07-18 Albert Chu <chu11@llnl.gov>
 
 	* common/portability/freeipmi-portability.h: Fix portability of

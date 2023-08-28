@@ -288,6 +288,8 @@ AC_SUBST(LIBIPMIDETECT_VERSION_PATCH)
 
 AC_CANONICAL_HOST
 
+AC_USE_SYSTEM_EXTENSIONS
+
 dnl Checks for programs.
 AC_PROG_INSTALL
 AC_PROG_CC
@@ -303,8 +305,6 @@ AC_SUBST([CPP_FOR_BUILD])
 AM_CONDITIONAL(WITH_GNU_LD, test "$with_gnu_ld" = "yes")
 AC_PROG_MAKE_SET
 AC_PROG_LN_S
-
-AC_USE_SYSTEM_EXTENSIONS
 
 dnl Enable error tracing. Lower level calls will spit error messages
 dnl on to the console
