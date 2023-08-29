@@ -182,7 +182,7 @@ _str_replace (const char *orig, const char *replace, const char *with) {
       len_front = ins - p;
       strncpy (newp, p, len_front);
       newp += len_front;
-      strncpy (newp, with, len_with);
+      memcpy (newp, with, len_with);
       newp += len_with;
       p += len_front + len_replace;
       count--;
