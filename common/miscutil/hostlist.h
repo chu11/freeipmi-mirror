@@ -1,5 +1,7 @@
 /*****************************************************************************\
- *  $Id: hostlist.h,v 1.3 2009-12-16 17:49:40 chu11 Exp $
+ *  $Id$
+ *****************************************************************************
+ *  $LSDId: hostlist.h 7428 2008-05-23 16:08:31Z grondo $
  *****************************************************************************
  *  Copyright (C) 2002 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
