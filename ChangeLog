@@ -1,3 +1,8 @@
+2023-09-02 Albert Chu <chu11@llnl.gov>
+
+	* man/ipmi-config.8.pre.in: Add pointer to ipmi-config.conf(5)
+	manpage so users know to look there.
+
 2023-07-18 Albert Chu <chu11@llnl.gov>
 
 	* common/portability/freeipmi-portability.h: Fix portability of
