@@ -19,7 +19,9 @@ will let you \fI\-\-checkout\fR or \fI\-\-commit\fR only the
 \fIcore\fR IPMI values necessary for IPMI configuration.  For
 additional advanced configuration fields related to Chassis
 configuration (including boot options), Platform Event Filtering
-(PEF), or Sensors, see the \fI\-\-category\fR option below.
+(PEF), or Sensors, see the \fI\-\-category\fR option below.  For
+more details on \fIcore\fR IPMI configuration, see
+.B ipmi-config.conf(5).
 
 The majority of
 configuration operations require ADMIN privilege when using
