@@ -1,6 +1,7 @@
 FreeIPMI 1.6.12 - XX/XX/XX
 --------------------------
 o Fix potential portability problems on systems without cbrt().
+o Minor documentation updates.
 
 FreeIPMI 1.6.11 - 06/07/23
 --------------------------
