@@ -189,7 +189,7 @@ MANS_COMMON = \
 	manpage-common-legacy-output.man
 
 $(MANS_CPP): $(MANS_CPP:%=%.pre)
-	$(CPP_FOR_BUILD) -nostdinc -w -C -P -I$(top_srcdir)/man $@.pre $@
+	$(CPP_FOR_BUILD) -nostdinc -w -C -P -I. -I$(top_srcdir)/man $@.pre $@
 
 CLEANFILES = $(MANS_CPP) *~
 DISTCLEANFILES = $(MANS_CPP) $(MANS_CPP:%=%.pre) .deps/*.P
