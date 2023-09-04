@@ -487,7 +487,7 @@ ipmi_oem_supermicro_get_power_supply_status2 (ipmi_oem_state_data_t *state_data)
    *      - 0xb0 - ps 1
    *      - 0xb2 - ps 2
    * 0x02 - read count
-   * 0x79 - data to write ... no idea why 0x0c
+   * 0x79 - data to write ... no idea why 0x79
    *
    * Response
    *

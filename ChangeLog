@@ -1,3 +1,8 @@
+2023-09-04 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/ipmi-oem-supermicro.c
+	(ipmi_oem_supermicro_get_power_supply_status2): Fix comment typo.
+
 2023-09-02 Albert Chu <chu11@llnl.gov>
 
 	* man/Makefile.am: Fix make distcheck.
