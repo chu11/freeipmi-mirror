@@ -3,6 +3,9 @@
 	* configure.ac: Add define definitions for `exp10', `exp2', `log2'
 	to config.h.in.
 
+	* configure.ac: Add define definition for `cbrt' in math library
+	to config.h.in
+
 2023-09-05 Albert Chu <chu11@llnl.gov>
 
 	* man/ipmi-oem.8.pre.in: Document support on Supermicro X9DRD.
