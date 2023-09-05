@@ -138,7 +138,7 @@ static struct argp_option cmdline_options[] =
     { "no-header-output", NO_HEADER_OUTPUT_KEY, 0, 0,
       "Do not output column headers.", 67},
     { "non-abbreviated-units", NON_ABBREVIATED_UNITS_KEY, 0, 0,
-      "Output non-abbreviated units (e.g. 'Amps' insetead of 'A').", 68},
+      "Output non-abbreviated units (e.g. 'Amps' instead of 'A').", 68},
     { "legacy-output", LEGACY_OUTPUT_KEY, 0, 0,
       "Output in legacy format.", 69},
     /* ipmimonitoring legacy support */

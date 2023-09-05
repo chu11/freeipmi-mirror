@@ -1,3 +1,7 @@
+2023-09-05 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors: Fix help output typo.
+
 2023-09-05 MIYAZAKI Yasushi (on Savannah)
 
 	* configure.ac: Add define definitions for `exp10', `exp2', `log2'
