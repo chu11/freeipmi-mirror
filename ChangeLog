@@ -6,6 +6,12 @@
 	* configure.ac: Add define definition for `cbrt' in math library
 	to config.h.in
 
+	* configure.ac: 'inb' and `outb' may be defined as inline
+	functions (ex. glibc 2.28 on debian buster (amd64)), so check with
+	AC_CHECK_DECL instead of AC_CHECK_FUNCS . Due to `Fix build issue
+	when inb/outb are not available on some systems' in 1.6.9 release,
+	the previously working kcs driver was causing errors.
+
 2023-09-05 Albert Chu <chu11@llnl.gov>
 
 	* man/ipmi-oem.8.pre.in: Document support on Supermicro X9DRD.
