@@ -626,7 +626,7 @@ Configure "pristine" configuration.
 
 Execute ipmiconsole, authentication with SOL1, verify tool:
 - Establishes a SOL session by outputting "[SOL established]"
-- Verify session can be exitted cleanly (by default type &.).
+- Verify session can be exited cleanly (by default type &.).
 
 Test)
 
@@ -662,7 +662,7 @@ Configure sol_privilege_level to "user".
 Execute ipmiconsole, authentication with SOL1 and privilege level user
 (-l user), verify tool:
 - Establishes a SOL session by outputting "[SOL established]"
-- Verify session can be exitted cleanly (by default type '&.').
+- Verify session can be exited cleanly (by default type '&.').
 
 Test)
 

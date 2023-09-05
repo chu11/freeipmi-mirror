@@ -555,7 +555,7 @@ pressure vendors into fixing their implementations.
 As an example, on some motherboards, we found that System Event Log
 (SEL) records reported an invalid sensor generator ID.  We found that
 the reported generator ID was shifted off by one.  Thus, as a
-workround, if a SDR entry cannot be found for a respective system
+workaround, if a SDR entry cannot be found for a respective system
 event, we will also search for a SDR entry using the generator ID
 shifted by one.  If the resulting SDR entry is found, we assume the
 original generator ID was just off by one and we use the located SDR

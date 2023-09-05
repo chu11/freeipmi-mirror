@@ -237,7 +237,7 @@ LAN Authentication Issue #14: [COMPLIANCE]
   Given specific configuration of IPMI 1.5 authentication types,
   certain user privileges are not specified correctly during Get
   Authentication Capabilities and a CCh = "Invalid data field in
-  request" is returned during Activiate Session.
+  request" is returned during Activate Session.
 
   Seen on: Inventec 5441/Dell Xanadu II
 
@@ -588,7 +588,7 @@ SDR Issue #5: [COMPLIANCE]
 
   Seen on: Xyratex HB-F8-SRAY
 
-  Resolution: Workaround added to detect issue and do parital reads
+  Resolution: Workaround added to detect issue and do partial reads
   instead.
 
 SDR Issue #6: [COMPLIANCE]

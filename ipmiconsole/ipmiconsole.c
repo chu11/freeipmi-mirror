@@ -161,7 +161,7 @@ _stdin (ipmiconsole_ctx_t c,
                     }
                 }
 
-              /* b/c we're exitting */
+              /* b/c we're exiting */
               return (-1);
             }
           else if (buf[i] == 'B')
@@ -487,7 +487,7 @@ main (int argc, char **argv)
             }
           else
             {
-              /* b/c we're exitting */
+              /* b/c we're exiting */
               /* achu: it is possible that errnum can equal success.
                * Most likely scenario is user sets a flag in the
                * libipmiconsole.conf file that alters the behavior of

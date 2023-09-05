@@ -89,7 +89,7 @@ root access in FreeIPMI tools.
 --without-random-device
 
 This option disables checks and use of /dev/urandom and /dev/random.
-This may be required for embededded systems without these devices.
+This may be required for embedded systems without these devices.
 
 --with-pkgconfig-dir
 

@@ -892,7 +892,7 @@ _output_guid_manufacturer_id_system_id (ipmi_pet_state_data_t *state_data,
   assert (state_data->prog_data->args->verbose_count >= 2);
 
   /* Output format for guid from "Wired for Management Specification",
-   * Appendex 1 "String Representation of UUIDs" in the above
+   * Appendix 1 "String Representation of UUIDs" in the above
    * document.  Note that the output is supposed to be output in most
    * significant byte order.
    */

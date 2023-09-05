@@ -1679,7 +1679,7 @@ run_cmd_args (ipmi_oem_state_data_t *state_data)
   args = state_data->prog_data->args;
 
   /* shouldn't be possible at this point, make sure we've already
-   * exitted
+   * exited
    */
   assert (!args->list);
   assert (args->oem_id);

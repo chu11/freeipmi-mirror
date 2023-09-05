@@ -1018,7 +1018,7 @@ api_lan_cmd_wrapper (ipmi_ctx_t ctx,
            * The problem seems to exist only when the retransmitted packet
            * is transmitted from the same source port.  Therefore, the fix
            * is to send the retransmission from a different source port.
-           * So we'll create a new socket, re-bind to an ephemereal port
+           * So we'll create a new socket, re-bind to an ephemeral port
            * (guaranteeing us a brand new port), and store this new
            * socket.
            *
