@@ -502,9 +502,9 @@ AC_TRY_LINK([#include <stdio.h>],
             [AC_DEFINE_UNQUOTED(HAVE_PUTC_UNLOCKED, [1], [Define to 1 if you have putc_unlocked])])
 
 dnl FreeBSD has no exp10() nor log2(), FreeBSD < 5 has no exp2()
-AC_CHECK_LIB([m], [exp10])
-AC_CHECK_LIB([m], [exp2])
-AC_CHECK_LIB([m], [log2])
+AC_CHECK_LIB([m], [exp10], [AC_DEFINE(HAVE_EXP10, [1], [Define to 1 if you have `exp10' function.])])
+AC_CHECK_LIB([m], [exp2], [AC_DEFINE(HAVE_EXP2, [1], [Define to 1 if you have `exp2' function.])])
+AC_CHECK_LIB([m], [log2], [AC_DEFINE(HAVE_LOG2, [1], [Define to 1 if you have `log2' function.])])
 
 dnl Solaris needs -lsocket
 AC_CHECK_FUNC([socket],
