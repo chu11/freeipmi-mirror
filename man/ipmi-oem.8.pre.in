@@ -1192,8 +1192,8 @@ confirmed to work on Supermicro X10DRU-i+.
 .B get-pmbus-power-supply-status \fIps_num\fR
 This OEM command will get the status of a PMBus based power supply.
 Presently, it can get the status of power supplies 1 through 3.
-Command confirmed to work on Supermicro X8DTU, Supermicro X8STi, and
-Supermicro X9DRW.
+Command confirmed to work on Supermicro X8DTU, Supermicro X8STi,
+Supermicro X9DRW, and Supermicro X9DRD.
 .RE
 .TP
 .B Wistron

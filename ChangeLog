@@ -1,3 +1,7 @@
+2023-09-05 Albert Chu <chu11@llnl.gov>
+
+	* man/ipmi-oem.8.pre.in: Document support on Supermicro X9DRD.
+
 2023-09-02 Albert Chu <chu11@llnl.gov>
 
 	* man/Makefile.am: Fix make distcheck.
