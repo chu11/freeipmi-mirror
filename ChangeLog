@@ -1,3 +1,9 @@
+2023-09-05 Felip Moll <felip.moll@schedmd.com>
+
+	* libfreeipmi/driver/ipmi-openipmi-driver.c (_openipmi_read):
+	Convert from select() to poll() to avoid issues with high number
+	of open file descriptors when next fd > 1024. (GNU bug #64721).
+
 2023-09-05 Albert Chu <chu11@llnl.gov>
 
 	* Globally fix various typos.
