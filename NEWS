@@ -1,5 +1,6 @@
 FreeIPMI 1.6.12 - XX/XX/XX
 --------------------------
+o Use poll() over select() to avoid fd limit in openipmi driver.
 o Fix potential portability problems on systems without cbrt().
 o Minor documentation updates.
 
