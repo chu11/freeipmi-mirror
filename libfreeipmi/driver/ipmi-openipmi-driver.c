@@ -46,7 +46,7 @@
 #if HAVE_SYS_IOCCOM_H
 #include <sys/ioccom.h>         /* solaris _IOR, etc. */
 #endif /* !HAVE_SYS_IOCCOM_H */
-#include <sys/select.h>
+#include <sys/poll.h>
 #ifdef __CYGWIN__
 #define __USE_LINUX_IOCTL_DEFS
 #endif /* !__CYGWIN__ */
@@ -500,9 +500,9 @@ _openipmi_read (ipmi_openipmi_ctx_t ctx,
   uint8_t rs_buf[IPMI_OPENIPMI_BUFLEN];
   struct ipmi_system_interface_addr rs_addr;
   struct ipmi_recv rs_packet;
-  fd_set read_fds;
   struct timeval tv, tv_orig, start, end, delta;
-  int n;
+  struct pollfd pfd_read;
+  int n, timeout_ms;
 
   assert (ctx);
   assert (ctx->magic == IPMI_OPENIPMI_CTX_MAGIC);
@@ -512,9 +512,6 @@ _openipmi_read (ipmi_openipmi_ctx_t ctx,
   rs_packet.addr_len = sizeof (struct ipmi_system_interface_addr);
   rs_packet.msg.data = rs_buf_temp;
   rs_packet.msg.data_len = IPMI_OPENIPMI_BUFLEN;
-
-  FD_ZERO (&read_fds);
-  FD_SET (ctx->device_fd, &read_fds);
 
   tv.tv_sec = IPMI_OPENIPMI_TIMEOUT;
   tv.tv_usec = 0;
@@ -529,11 +526,12 @@ _openipmi_read (ipmi_openipmi_ctx_t ctx,
     }
 
   do {
-    if ((n = select (ctx->device_fd + 1,
-                     &read_fds,
-                     NULL,
-                     NULL,
-                     &tv)) < 0)
+    pfd_read.fd = ctx->device_fd;
+    pfd_read.events = POLLIN;
+    pfd_read.revents = 0;
+    timeout_ms = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
+
+    if ((n = poll (&pfd_read, 1, timeout_ms)) < 0)
       {
         if (errno != EINTR)
           {
