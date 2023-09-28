@@ -266,6 +266,24 @@ libipmidetect
 
 A library for IPMI node detection.
 
+Building
+--------
+
+For those who have downloaded official releases, please follow the
+directions in INSTALL for building and installation.
+
+For those trying to build from the repo you typically need to run
+autogen.sh first.  i.e.
+
+> ./autogen.sh; ./configure; make
+
+to build.
+
+Most systems should have all the packages you need to build already
+installed.  The one semi-untypical package that may not be installed
+is libgcrypt and its development headers (i.e. libgcrypt-devel or
+libgcrypt-dev).
+
 Help, Questions, etc.
 ---------------------
 
