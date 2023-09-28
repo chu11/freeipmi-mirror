@@ -3,6 +3,8 @@
 	* configure.ac: temporarily set version to 1.7.0 for user to
 	experiment with installed build.
 
+	* README: add some build notes / help.
+
 2023-09-05 Felip Moll <felip.moll@schedmd.com>
 
 	* libfreeipmi/driver/ipmi-openipmi-driver.c (_openipmi_read):
