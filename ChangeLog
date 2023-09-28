@@ -1,3 +1,8 @@
+2023-09-28 Albert Chu <chu11@llnl.gov>
+
+	* configure.ac: temporarily set version to 1.7.0 for user to
+	experiment with installed build.
+
 2023-09-05 Felip Moll <felip.moll@schedmd.com>
 
 	* libfreeipmi/driver/ipmi-openipmi-driver.c (_openipmi_read):
