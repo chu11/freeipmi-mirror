@@ -1,3 +1,7 @@
+2023-09-29 Albert Chu <chu11@llnl.gov>
+
+	* README: add rpm build notes
+
 2023-09-28 Albert Chu <chu11@llnl.gov>
 
 	* configure.ac: temporarily set version to 1.7.0 for user to

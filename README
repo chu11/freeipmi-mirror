@@ -284,6 +284,13 @@ installed.  The one semi-untypical package that may not be installed
 is libgcrypt and its development headers (i.e. libgcrypt-devel or
 libgcrypt-dev).
 
+To build an rpm, you typically want to make a release distribution and
+use rpmbuild with it.  In modern systems, typically the following will
+work:
+
+> make dist
+> rpmbuild -ta --with systemd freeipmi-<VERSION>.tar.gz
+
 Help, Questions, etc.
 ---------------------
 
