@@ -276,6 +276,9 @@ _parse_workaround_flags (const char *str,
                && !strcasecmp (tok, IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_ASSUME_BMC_OWNER_STR))
         (*section_specific_workaround_flags) |= IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_ASSUME_BMC_OWNER;
       else if (section_specific_workaround_flags
+               && !strcasecmp (tok, IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_ALTERNATE_BRIDGING_STR))
+        (*section_specific_workaround_flags) |= IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_ALTERNATE_BRIDGING;
+      else if (section_specific_workaround_flags
                && !strcasecmp (tok, IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_AUTH_CODE_STR))
         (*section_specific_workaround_flags) |= IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_AUTH_CODE;
       else if (section_specific_workaround_flags

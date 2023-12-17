@@ -122,7 +122,7 @@ intel20, supermicro20, sun20, opensesspriv, integritycheckvalue,
 assumemaxsdrrecordcount, solpayloadsize, solport, solstatus,
 solchannelsupport, serialalertsdeferred, solpacketseq, skipchecks,
 assumesystemevent, discretereading, ignorescanningdisabled,
-assumebmcowner, ignoreauthcode, slowcommit, veryslowcommit,
+assumebmcowner, albridging, ignoreauthcode, slowcommit, veryslowcommit,
 solchannelassumelanchannel, ignorestateflag, malformedack, guidformat,
 ipmiping.
 
