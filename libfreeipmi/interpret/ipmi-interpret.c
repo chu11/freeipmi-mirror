@@ -752,6 +752,9 @@ ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
                    && sensor_type == IPMI_SENSOR_TYPE_FAN)
             sel_config = ctx->interpret_sel.ipmi_interpret_sel_fan_redundancy_config;
           else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
+                   && sensor_type == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY)
+            sel_config = ctx->interpret_sel.ipmi_interpret_sel_physical_security_state_config;
+          else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
                    && sensor_type == IPMI_SENSOR_TYPE_PROCESSOR)
             sel_config = ctx->interpret_sel.ipmi_interpret_sel_processor_state_config;
           else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
@@ -1267,6 +1270,9 @@ ipmi_interpret_sensor (ipmi_interpret_ctx_t ctx,
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_REDUNDANCY
                && sensor_type == IPMI_SENSOR_TYPE_FAN)
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_fan_redundancy_config;
+      else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
+               && sensor_type == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY)
+        sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_physical_security_state_config;
       else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE
                && sensor_type == IPMI_SENSOR_TYPE_PROCESSOR)
         sensor_config = ctx->interpret_sensor.ipmi_interpret_sensor_processor_state_config;

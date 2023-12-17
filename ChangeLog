@@ -1,3 +1,8 @@
+2023-12-17 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/interpret: Support intepretation of physical
+	intrusion + state sensors.
+
 2023-09-29 Albert Chu <chu11@llnl.gov>
 
 	* README: add rpm build notes

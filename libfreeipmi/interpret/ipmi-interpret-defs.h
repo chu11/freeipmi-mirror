@@ -143,6 +143,7 @@ struct ipmi_interpret_sel {
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_fan_transition_availability_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_fan_redundancy_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_physical_security_config;
+  struct ipmi_interpret_sel_config **ipmi_interpret_sel_physical_security_state_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_platform_security_violation_attempt_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_processor_config;
   struct ipmi_interpret_sel_config **ipmi_interpret_sel_processor_state_config;
@@ -246,6 +247,7 @@ struct ipmi_interpret_sensor {
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_fan_transition_availability_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_fan_redundancy_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_physical_security_config;
+  struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_physical_security_state_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_platform_security_violation_attempt_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_processor_config;
   struct ipmi_interpret_sensor_config **ipmi_interpret_sensor_processor_state_config;
