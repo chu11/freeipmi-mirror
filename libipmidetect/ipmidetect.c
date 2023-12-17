@@ -99,7 +99,7 @@ static char * ipmidetect_errmsg[] =
 #define IPMIDETECT_MAGIC_NUM            0xbeefbeef
 
 #define IPMIDETECT_CONFIG_HOSTNAMES_MAX 8
-#define IPMIDETECT_MAXHOSTNAMELEN       64
+#define IPMIDETECT_MAXHOSTNAMELEN       256
 
 #define IPMIDETECT_DETECTED_NODES     1
 #define IPMIDETECT_UNDETECTED_NODES   0

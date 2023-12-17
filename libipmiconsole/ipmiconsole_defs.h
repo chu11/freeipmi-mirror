@@ -49,17 +49,11 @@
 #endif /* !TIME_WITH_SYS_TIME */
 #include <sys/param.h>
 #include <netinet/in.h>
-#include <limits.h>             /* MAXHOSTNAMELEN */
-#ifdef HAVE_NETDB_H
-#include <netdb.h>              /* MAXHOSTNAMELEN Solaris */
-#endif /* HAVE_NETDB_H */
 #include <freeipmi/freeipmi.h>
 
-#include "scbuf.h"
+#include "freeipmi-portability.h"
 
-#ifndef MAXHOSTNAMELEN
-#define MAXHOSTNAMELEN 64
-#endif /* MAXHOSTNAMELEN */
+#include "scbuf.h"
 
 #define MAXPORTBUFLEN 16
 
@@ -243,7 +237,7 @@ typedef enum
 struct ipmiconsole_ctx_config {
 
   /* ipmi config */
-  char hostname[MAXHOSTNAMELEN+1];
+  char hostname[FREEIPMI_MAXHOSTNAMELEN+1];
   uint16_t port;
   char username[IPMI_MAX_USER_NAME_LENGTH+1];
   char password[IPMI_2_0_MAX_PASSWORD_LENGTH+1];

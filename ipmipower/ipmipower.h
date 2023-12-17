@@ -43,12 +43,10 @@
 #endif /* !TIME_WITH_SYS_TIME */
 #include <sys/param.h>
 #include <netinet/in.h>
-#include <limits.h>             /* MAXHOSTNAMELEN */
-#ifdef HAVE_NETDB_H
-#include <netdb.h>              /* MAXHOSTNAMELEN Solaris */
-#endif /* HAVE_NETDB_H */
 
 #include <freeipmi/freeipmi.h>
+
+#include "freeipmi-portability.h"
 
 #include "cbuf.h"
 #include "fi_hostlist.h"
@@ -56,10 +54,6 @@
 #include "tool-cmdline-common.h"
 
 #include "ipmidetect.h"
-
-#ifndef MAXHOSTNAMELEN
-#define MAXHOSTNAMELEN 64
-#endif /* MAXHOSTNAMELEN */
 
 #define MAXPORTBUFLEN 16
 
@@ -466,7 +460,7 @@ struct ipmipower_connection
   unsigned int ping_consec_count;
 
   ipmipower_discover_state_t discover_state;
-  char hostname[MAXHOSTNAMELEN+1];
+  char hostname[FREEIPMI_MAXHOSTNAMELEN+1];
   /* for oem power types ; extra arg passed in via "+extra" at end of hostname */
   struct ipmipower_connection_extra_arg *extra_args;
   struct sockaddr *srcaddr;

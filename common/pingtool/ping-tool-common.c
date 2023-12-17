@@ -63,10 +63,6 @@
 #include <time.h>
 #endif  /* !HAVE_SYS_TIME_H */
 #endif /* !TIME_WITH_SYS_TIME */
-#include <limits.h>             /* MAXHOSTNAMELEN */
-#ifdef HAVE_NETDB_H
-#include <netdb.h>              /* MAXHOSTNAMELEN Solaris */
-#endif /* HAVE_NETDB_H */
 #include <assert.h>
 #include <ifaddrs.h>
 
@@ -81,10 +77,6 @@
  */
 #ifndef INET6_ADDRSTRLEN
 #define INET6_ADDRSTRLEN 46
-#endif
-
-#ifndef MAXHOSTNAMELEN
-#define MAXHOSTNAMELEN 64
 #endif
 
 #define MAXPORTBUFLEN 16
@@ -118,7 +110,7 @@ static int pingtool_initial_sequence_number = -1;
 static int pingtool_sockfd = 0;
 static char *pingtool_progname = NULL;
 static char *pingtool_interface = NULL;
-static char pingtool_dest[MAXHOSTNAMELEN+1];
+static char pingtool_dest[FREEIPMI_MAXHOSTNAMELEN+1];
 static char pingtool_dest_ip[INET6_ADDRSTRLEN+1];
 static struct sockaddr *pingtool_srcaddr;
 static socklen_t pingtool_srcaddr_len;
@@ -298,7 +290,7 @@ _cmdline_parse (int argc,
   if (optind >= argc)
     ipmi_ping_err_exit ("destination must be specified");
 
-  _strncpy (pingtool_dest, argv[optind], MAXHOSTNAMELEN);
+  _strncpy (pingtool_dest, argv[optind], FREEIPMI_MAXHOSTNAMELEN);
 }
 
 /* signal handlers + sleep(3) is a bad idea, so use select(3) */
