@@ -239,6 +239,13 @@ static struct ipmi_interpret_sel_config ipmi_interpret_sel_physical_security_con
   };
 static unsigned int ipmi_interpret_sel_physical_security_config_len = 7;
 
+static struct ipmi_interpret_sel_config ipmi_interpret_sel_physical_security_state_config[] =
+  {
+    { "IPMI_Physical_Security_State_Deasserted", IPMI_INTERPRET_STATE_NOMINAL, IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Physical_Security_State_Asserted", IPMI_INTERPRET_STATE_CRITICAL, IPMI_INTERPRET_STATE_CRITICAL},
+  };
+static unsigned int ipmi_interpret_sel_physical_security_state_config_len = 2;
+
 static struct ipmi_interpret_sel_config ipmi_interpret_sel_platform_security_violation_attempt_config[] =
   {
     { "IPMI_Platform_Security_Violation_Attempt_Secure_Mode_Violation_Attempt", IPMI_INTERPRET_STATE_CRITICAL, IPMI_INTERPRET_STATE_CRITICAL},
@@ -1822,6 +1829,12 @@ interpret_sel_init (ipmi_interpret_ctx_t ctx)
     goto cleanup;
 
   if (_interpret_config_sel_init (ctx,
+                                  &ctx->interpret_sel.ipmi_interpret_sel_physical_security_state_config,
+                                  ipmi_interpret_sel_physical_security_state_config,
+                                  ipmi_interpret_sel_physical_security_state_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_config_sel_init (ctx,
                                   &ctx->interpret_sel.ipmi_interpret_sel_platform_security_violation_attempt_config,
                                   ipmi_interpret_sel_platform_security_violation_attempt_config,
                                   ipmi_interpret_sel_platform_security_violation_attempt_config_len) < 0)
@@ -2313,6 +2326,9 @@ interpret_sel_destroy (ipmi_interpret_ctx_t ctx)
 
   _interpret_config_sel_destroy (ctx,
                                  ctx->interpret_sel.ipmi_interpret_sel_physical_security_config);
+
+  _interpret_config_sel_destroy (ctx,
+                                 ctx->interpret_sel.ipmi_interpret_sel_physical_security_state_config);
 
   _interpret_config_sel_destroy (ctx,
                                  ctx->interpret_sel.ipmi_interpret_sel_platform_security_violation_attempt_config);
@@ -3020,6 +3036,7 @@ interpret_sel_config_parse (ipmi_interpret_ctx_t ctx,
   int ipmi_interpret_sel_fan_transition_availability_flags[ipmi_interpret_sel_fan_transition_availability_config_len];
   int ipmi_interpret_sel_fan_redundancy_flags[ipmi_interpret_sel_fan_redundancy_config_len];
   int ipmi_interpret_sel_physical_security_flags[ipmi_interpret_sel_physical_security_config_len];
+  int ipmi_interpret_sel_physical_security_state_flags[ipmi_interpret_sel_physical_security_state_config_len];
   int ipmi_interpret_sel_platform_security_violation_attempt_flags[ipmi_interpret_sel_platform_security_violation_attempt_config_len];
   int ipmi_interpret_sel_processor_flags[ipmi_interpret_sel_processor_config_len];
   int ipmi_interpret_sel_processor_state_flags[ipmi_interpret_sel_processor_state_config_len];
@@ -3192,6 +3209,12 @@ interpret_sel_config_parse (ipmi_interpret_ctx_t ctx,
                             ctx->interpret_sel.ipmi_interpret_sel_physical_security_config,
                             ipmi_interpret_sel_physical_security_flags,
                             ipmi_interpret_sel_physical_security_config_len);
+
+  _fill_sel_config_options (config_file_options,
+                            &config_file_options_len,
+                            ctx->interpret_sel.ipmi_interpret_sel_physical_security_state_config,
+                            ipmi_interpret_sel_physical_security_state_flags,
+                            ipmi_interpret_sel_physical_security_state_config_len);
 
   _fill_sel_config_options (config_file_options,
                             &config_file_options_len,

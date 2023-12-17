@@ -248,6 +248,14 @@ static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_physical_securi
   };
 static unsigned int ipmi_interpret_sensor_physical_security_config_len = 8;
 
+static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_physical_security_state_config[] =
+  {
+    { "IPMI_Physical_Security_State_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Physical_Security_State_Deasserted", IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_Physical_Security_State_Asserted", IPMI_INTERPRET_STATE_CRITICAL},
+  };
+static unsigned int ipmi_interpret_sensor_physical_security_state_config_len = 3;
+
 static struct ipmi_interpret_sensor_config ipmi_interpret_sensor_platform_security_violation_attempt_config[] =
   {
     { "IPMI_Platform_Security_Violation_Attempt_No_Event", IPMI_INTERPRET_STATE_NOMINAL},
@@ -1731,6 +1739,12 @@ interpret_sensor_init (ipmi_interpret_ctx_t ctx)
     goto cleanup;
 
   if (_interpret_config_sensor_init (ctx,
+                                     &ctx->interpret_sensor.ipmi_interpret_sensor_physical_security_state_config,
+                                     ipmi_interpret_sensor_physical_security_state_config,
+                                     ipmi_interpret_sensor_physical_security_state_config_len) < 0)
+    goto cleanup;
+
+  if (_interpret_config_sensor_init (ctx,
                                      &ctx->interpret_sensor.ipmi_interpret_sensor_platform_security_violation_attempt_config,
                                      ipmi_interpret_sensor_platform_security_violation_attempt_config,
                                      ipmi_interpret_sensor_platform_security_violation_attempt_config_len) < 0)
@@ -2186,6 +2200,9 @@ interpret_sensor_destroy (ipmi_interpret_ctx_t ctx)
                                     ctx->interpret_sensor.ipmi_interpret_sensor_physical_security_config);
 
   _interpret_config_sensor_destroy (ctx,
+                                    ctx->interpret_sensor.ipmi_interpret_sensor_physical_security_state_config);
+
+  _interpret_config_sensor_destroy (ctx,
                                     ctx->interpret_sensor.ipmi_interpret_sensor_platform_security_violation_attempt_config);
 
   _interpret_config_sensor_destroy (ctx,
@@ -2620,6 +2637,7 @@ interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
   int ipmi_interpret_sensor_fan_transition_availability_flags[ipmi_interpret_sensor_fan_transition_availability_config_len];
   int ipmi_interpret_sensor_fan_redundancy_flags[ipmi_interpret_sensor_fan_redundancy_config_len];
   int ipmi_interpret_sensor_physical_security_flags[ipmi_interpret_sensor_physical_security_config_len];
+  int ipmi_interpret_sensor_physical_security_state_flags[ipmi_interpret_sensor_physical_security_state_config_len];
   int ipmi_interpret_sensor_platform_security_violation_attempt_flags[ipmi_interpret_sensor_platform_security_violation_attempt_config_len];
   int ipmi_interpret_sensor_processor_flags[ipmi_interpret_sensor_processor_config_len];
   int ipmi_interpret_sensor_processor_state_flags[ipmi_interpret_sensor_processor_state_config_len];
@@ -2786,6 +2804,12 @@ interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
                                ctx->interpret_sensor.ipmi_interpret_sensor_physical_security_config,
                                ipmi_interpret_sensor_physical_security_flags,
                                ipmi_interpret_sensor_physical_security_config_len);
+
+  _fill_sensor_config_options (config_file_options,
+                               &config_file_options_len,
+                               ctx->interpret_sensor.ipmi_interpret_sensor_physical_security_state_config,
+                               ipmi_interpret_sensor_physical_security_state_flags,
+                               ipmi_interpret_sensor_physical_security_state_config_len);
 
   _fill_sensor_config_options (config_file_options,
                                &config_file_options_len,
