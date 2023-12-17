@@ -1437,6 +1437,9 @@ _ipmi_sensors (pstdout_state_t pstate,
   if (state_data.prog_data->args->common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_ASSUME_BMC_OWNER)
     sensor_read_flags |= IPMI_SENSOR_READ_FLAGS_ASSUME_BMC_OWNER;
 
+  if (state_data.prog_data->args->common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_ALTERNATE_BRIDGING)
+    sensor_read_flags |= IPMI_SENSOR_READ_FLAGS_ALTERNATE_BRIDGING;
+
   if (sensor_read_flags)
     {
       /* Don't error out, if this fails we can still continue */
