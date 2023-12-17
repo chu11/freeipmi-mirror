@@ -41,6 +41,7 @@
 #include "freeipmi/spec/ipmi-channel-spec.h"
 #include "freeipmi/spec/ipmi-comp-code-spec.h"
 #include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
+#include "freeipmi/spec/ipmi-netfn-spec.h"
 #include "freeipmi/spec/ipmi-slave-address-spec.h"
 #include "freeipmi/spec/ipmi-sensor-units-spec.h"
 #include "freeipmi/util/ipmi-sensor-and-event-code-tables-util.h"
@@ -332,6 +333,50 @@ _get_sensor_reading (ipmi_sensor_read_ctx_t ctx,
 }
 
 int
+_get_sensor_reading_not_bmc_lun (ipmi_sensor_read_ctx_t ctx,
+                                 uint8_t sensor_owner_lun,
+                                 uint8_t sensor_number,
+                                 fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int rv = -1;
+
+  assert (ctx);
+  assert (ctx->magic == IPMI_SENSOR_READ_CTX_MAGIC);
+  assert (obj_cmd_rs);
+
+  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_sensor_reading_rq)))
+    {
+      SENSOR_READ_ERRNO_TO_SENSOR_READ_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (fill_cmd_get_sensor_reading (sensor_number,
+                                   obj_cmd_rq) < 0)
+    {
+      SENSOR_READ_ERRNO_TO_SENSOR_READ_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (ipmi_cmd (ctx->ipmi_ctx,
+                sensor_owner_lun,
+                IPMI_NET_FN_SENSOR_EVENT_RQ,
+                obj_cmd_rq,
+                obj_cmd_rs) < 0)
+    {
+      if (_sensor_reading_corner_case_checks (ctx, obj_cmd_rs) < 0)
+        goto cleanup;
+      SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_IPMI_ERROR);
+      goto cleanup;
+    }
+
+  rv = 0;
+ cleanup:
+  fiid_obj_destroy (obj_cmd_rq);
+  return (rv);
+}
+
+int
 _get_sensor_reading_ipmb (ipmi_sensor_read_ctx_t ctx,
                           uint8_t slave_address,
                           uint8_t lun,
@@ -568,7 +613,54 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
    * On some motherboards, the sensor owner is invalid.  The sensor
    * owner as actually the BMC.
    */
-  if (!(ctx->flags & IPMI_SENSOR_READ_FLAGS_ASSUME_BMC_OWNER))
+  if (ctx->flags & IPMI_SENSOR_READ_FLAGS_ASSUME_BMC_OWNER)
+    {
+        if (_get_sensor_reading (ctx,
+                                 sensor_number,
+                                 obj_cmd_rs) < 0)
+            goto cleanup;
+    }
+  /* IPMI Workaround
+   *
+   * Discovered on Lenovo SR650 v3
+   *
+   * Normal bridging doesn't work.  Instead just pass to
+   * target lun in the message header.
+   *
+   * achu: according to ipmitool code, this should work on most
+   * systems.  Although I don't remember why, it was done differently
+   * in FreeIPMI.  Perhaps some random system(s) did not work with
+   * this technique in the current bridging technique was used instead.
+   */
+  else if (ctx->flags & IPMI_SENSOR_READ_FLAGS_ALTERNATE_BRIDGING)
+    {
+      if (slave_address != IPMI_SLAVE_ADDRESS_BMC)
+        {
+          if (_get_sensor_reading_ipmb (ctx,
+                                        slave_address,
+                                        sensor_owner_lun,
+                                        channel_number,
+                                        sensor_number,
+                                        obj_cmd_rs) < 0)
+            goto cleanup;
+        }
+      else if (sensor_owner_lun != IPMI_BMC_IPMB_LUN_BMC)
+        {
+          if (_get_sensor_reading_not_bmc_lun (ctx,
+                                               sensor_owner_lun,
+                                               sensor_number,
+                                               obj_cmd_rs) < 0)
+            goto cleanup;
+        }
+      else
+        {
+          if (_get_sensor_reading (ctx,
+                                   sensor_number,
+                                   obj_cmd_rs) < 0)
+            goto cleanup;
+        }
+    }
+  else
     {
       if (slave_address == IPMI_SLAVE_ADDRESS_BMC && sensor_owner_lun == IPMI_BMC_IPMB_LUN_BMC)
         {
@@ -587,13 +679,6 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
                                         obj_cmd_rs) < 0)
             goto cleanup;
         }
-    }
-  else
-    {
-      if (_get_sensor_reading (ctx,
-                               sensor_number,
-                               obj_cmd_rs) < 0)
-        goto cleanup;
     }
 
   /*

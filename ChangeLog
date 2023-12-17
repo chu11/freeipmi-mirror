@@ -1,5 +1,10 @@
 2023-12-17 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sensors: support new "altbridging" workaround for Lenovo
+	SR650 v3 motherboards.
+
+2023-12-17 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/interpret: Support intepretation of physical
 	intrusion + state sensors.
 
