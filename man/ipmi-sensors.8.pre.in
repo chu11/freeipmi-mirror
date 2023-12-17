@@ -234,6 +234,13 @@ BMC.  This problem may exist on your motherboard if sensors are listed
 as "N/A" even if they should be available. This option is confirmed to
 work around issues on Fujitsu RX300 and Fujitsu RX300S2 motherboards.
 .LP
+\fIaltbridging\fR - This workaround option will attempt alternate
+bridging logic that does not work on some motherboards.  This problem
+may exist on your motherboard if \fB\-\-bridge\-sensors\fR does not
+work and sensors are listed as "N/A" even if they should be
+available. This option is confirmed to work around issues on Lenovo
+SR650 v3 motherboards.
+.LP
 \fIignoreauthcode\fR - This workaround option will allow sensor
 readings to be read if the remote machine is invalidly calculating
 authentication codes (i.e. authentication hashes) when communicating
