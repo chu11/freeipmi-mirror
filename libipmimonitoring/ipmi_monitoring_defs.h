@@ -35,17 +35,9 @@
 #include <sys/param.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <limits.h>             /* MAXHOSTNAMELEN */
-#ifdef HAVE_NETDB_H
-#include <netdb.h>              /* MAXHOSTNAMELEN Solaris */
-#endif /* HAVE_NETDB_H */
 #include <freeipmi/freeipmi.h>
 
 #include "list.h"
-
-#ifndef MAXHOSTNAMELEN
-#define MAXHOSTNAMELEN 64
-#endif /* MAXHOSTNAMELEN */
 
 #ifndef MAXPATHLEN
 #define MAXPATHLEN 4096

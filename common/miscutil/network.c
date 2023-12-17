@@ -39,17 +39,12 @@
 #include <errno.h>
 #include <unistd.h>
 #include <arpa/inet.h>
-#include <limits.h>             /* MAXHOSTNAMELEN */
-#ifdef HAVE_NETDB_H
-#include <netdb.h>              /* MAXHOSTNAMELEN Solaris */
-#endif /* HAVE_NETDB_H */
+#include <limits.h>
+
+#include "freeipmi-portability.h"
 
 #include "fi_hostlist.h"
 #include "hostlist.h"
-
-#ifndef MAXHOSTNAMELEN
-#define MAXHOSTNAMELEN 64
-#endif
 
 int
 host_is_ipv6_with_port (const char *host, char **addr, char **port)
@@ -223,7 +218,7 @@ host_is_valid (const char *addr, const char *port, uint16_t *portptr)
   /* achu: max length IPv6 is 45 chars
    * ABCD:ABCD:ABCD:ABCD:ABCD:ABCD:192.168.100.200
    */
-  if (strlen (addr) > MAXHOSTNAMELEN)
+  if (strlen (addr) > FREEIPMI_MAXHOSTNAMELEN)
     return (0);
 
   if (port)

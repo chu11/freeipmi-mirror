@@ -285,8 +285,8 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
       goto cleanup;
     }
 
-  strncpy (ic->hostname, hostname_second_parse_ptr, MAXHOSTNAMELEN);
-  ic->hostname[MAXHOSTNAMELEN] = '\0';
+  strncpy (ic->hostname, hostname_second_parse_ptr, FREEIPMI_MAXHOSTNAMELEN);
+  ic->hostname[FREEIPMI_MAXHOSTNAMELEN] = '\0';
 
   memset (port_str, '\0', MAXPORTBUFLEN + 1);
   snprintf (port_str, MAXPORTBUFLEN, "%d", port);

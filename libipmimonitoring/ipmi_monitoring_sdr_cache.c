@@ -129,11 +129,11 @@ _ipmi_monitoring_sdr_cache_filename (ipmi_monitoring_ctx_t c,
                 }
               else if (*str == 'L')
                 {
-                  char local_hostname[MAXHOSTNAMELEN+1];
+                  char local_hostname[FREEIPMI_MAXHOSTNAMELEN+1];
                   char *ptr;
 
-                  memset (local_hostname, '\0', MAXHOSTNAMELEN+1);
-                  if (gethostname (local_hostname, MAXHOSTNAMELEN) < 0)
+                  memset (local_hostname, '\0', FREEIPMI_MAXHOSTNAMELEN+1);
+                  if (gethostname (local_hostname, FREEIPMI_MAXHOSTNAMELEN) < 0)
                     {
                       IPMI_MONITORING_DEBUG (("gethostname: %s", strerror (errno)));
                       c->errnum = IPMI_MONITORING_ERR_SYSTEM_ERROR;

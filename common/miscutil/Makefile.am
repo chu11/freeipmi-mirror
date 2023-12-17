@@ -2,6 +2,7 @@ noinst_LTLIBRARIES = \
 	libmiscutil.la
 
 libmiscutil_la_CPPFLAGS = \
+	-I$(top_srcdir)/common/portability \
 	-D_REENTRANT
 
 libmiscutil_la_SOURCES = \

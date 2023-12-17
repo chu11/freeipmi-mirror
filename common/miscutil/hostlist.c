@@ -46,6 +46,8 @@
 #include <sys/param.h>
 #include <unistd.h>
 
+#include "freeipmi-portability.h"
+
 #include "hostlist.h"
 
 /*
@@ -110,12 +112,6 @@
 
 /* max number of ranges that will be processed between brackets */
 #define MAX_RANGES    10240    /* 10K Ranges */
-
-/* size of internal hostname buffer (+ some slop), hostnames will probably
- * be truncated if longer than MAXHOSTNAMELEN */
-#ifndef MAXHOSTNAMELEN
-#define MAXHOSTNAMELEN    64
-#endif
 
 /* max size of internal hostrange buffer */
 #define MAXHOSTRANGELEN 1024
@@ -1852,11 +1848,11 @@ int hostlist_delete_host(hostlist_t hl, const char *hostname)
 static char *
 _hostrange_string(hostrange_t hr, int depth)
 {
-    char buf[MAXHOSTNAMELEN + 16];
-    int  len = snprintf(buf, MAXHOSTNAMELEN + 15, "%s", hr->prefix);
+    char buf[FREEIPMI_MAXHOSTNAMELEN + 16];
+    int  len = snprintf(buf, FREEIPMI_MAXHOSTNAMELEN + 15, "%s", hr->prefix);
 
     if (!hr->singlehost)
-        snprintf(buf+len, MAXHOSTNAMELEN+15 - len, "%0*lu",
+        snprintf(buf+len, FREEIPMI_MAXHOSTNAMELEN + 15 - len, "%0*lu",
                  hr->width, hr->lo + depth);
     return strdup(buf);
 }

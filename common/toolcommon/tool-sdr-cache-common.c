@@ -33,10 +33,6 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif  /* HAVE_UNISTD_H */
-#include <limits.h>             /* MAXHOSTNAMELEN */
-#ifdef HAVE_NETDB_H
-#include <netdb.h>              /* MAXHOSTNAMELEN Solaris */
-#endif /* HAVE_NETDB_H */
 #include <libgen.h>
 #include <assert.h>
 #include <errno.h>
@@ -44,10 +40,6 @@
 #define SDR_CACHE_DIR                     "sdr-cache"
 #define SDR_CACHE_FILENAME_PREFIX         "sdr-cache"
 #define FREEIPMI_CONFIG_DIRECTORY_MODE    0700
-
-#ifndef MAXHOSTNAMELEN
-#define MAXHOSTNAMELEN 64
-#endif /* MAXHOSTNAMELEN */
 
 #ifndef MAXPATHLEN
 #define MAXPATHLEN 4096
@@ -321,11 +313,11 @@ _sdr_cache_get_cache_filename (pstdout_state_t pstate,
 
   if (!common_args->sdr_cache_file)
     {
-      char hostnamebuf[MAXHOSTNAMELEN+1];
+      char hostnamebuf[FREEIPMI_MAXHOSTNAMELEN+1];
 
-      memset (hostnamebuf, '\0', MAXHOSTNAMELEN+1);
-      if (gethostname (hostnamebuf, MAXHOSTNAMELEN) < 0)
-        snprintf (hostnamebuf, MAXHOSTNAMELEN, "localhost");
+      memset (hostnamebuf, '\0', FREEIPMI_MAXHOSTNAMELEN+1);
+      if (gethostname (hostnamebuf, FREEIPMI_MAXHOSTNAMELEN) < 0)
+        snprintf (hostnamebuf, FREEIPMI_MAXHOSTNAMELEN, "localhost");
 
       /* shorten hostname if necessary */
       if ((ptr = strchr (hostnamebuf, '.')))
