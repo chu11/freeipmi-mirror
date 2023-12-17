@@ -36,10 +36,6 @@
 #include <time.h>
 #endif /* !HAVE_SYS_TIME_H */
 #endif  /* !TIME_WITH_SYS_TIME */
-#include <limits.h>             /* MAXHOSTNAMELEN */
-#ifdef HAVE_NETDB_H
-#include <netdb.h>              /* MAXHOSTNAMELEN Solaris */
-#endif /* HAVE_NETDB_H */
 
 #include "freeipmi/cmds/ipmi-messaging-support-cmds.h"
 #include "freeipmi/fiid/fiid.h"
@@ -52,6 +48,8 @@
 
 #include "freeipmi/api/ipmi-api.h"
 
+#include "freeipmi-portability.h"
+
 #define IPMI_MAX_SIK_KEY_LENGTH                           64
 #define IPMI_MAX_INTEGRITY_KEY_LENGTH                     64
 #define IPMI_MAX_CONFIDENTIALITY_KEY_LENGTH               64
@@ -60,10 +58,6 @@
 #define IPMI_MAX_PKT_LEN                                4096
 
 #define IPMI_CTX_MAGIC 0xfafab0b0
-
-#ifndef MAXHOSTNAMELEN
-#define MAXHOSTNAMELEN 64
-#endif
 
 #define MAXPORTBUFLEN 16
 
@@ -121,7 +115,7 @@ struct ipmi_ctx
     {
       int sockfd;
 
-      char hostname[MAXHOSTNAMELEN+1];
+      char hostname[FREEIPMI_MAXHOSTNAMELEN+1];
 
       struct sockaddr *remote_host;
       socklen_t remote_host_len;

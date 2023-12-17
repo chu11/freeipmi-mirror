@@ -215,4 +215,6 @@ int freeipmi_gethostbyname_r (const char *name,
                               int *h_errnop);
 #endif /* !defined(HAVE_FUNC_GETHOSTBYNAME_R_6) && !defined(HAVE_FUNC_GETHOSTBYNAME_R_5) */
 
+#define FREEIPMI_MAXHOSTNAMELEN 256
+
 #endif /* FREEIPMI_PORTABILITY_H */

@@ -1,7 +1,19 @@
+2024-01-26 Albert Chu <chu11@llnl.gov>
+
+	* Globally replace use of MAXHOSTNAMELEN with internal
+	FREEIPMI_MAXHOSTNAMELEN which is set to 256 bytes (vs the typical
+	64 bytes that MAXHOSTNAMELEN).  This allows hostnames of > 64
+	characters in length to be specified.
+
 2024-01-25 Anonymous
 
 	* configure.ac: check for inb and outb declarations in header
 	files.
+
+2024-12-17 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/interpret: Support intepretation of physical
+	intrusion + state sensors.
 
 2023-09-29 Albert Chu <chu11@llnl.gov>
 

@@ -411,7 +411,7 @@ _setup_hostname (ipmi_ctx_t ctx, const char *hostname)
 
   strncpy (ctx->io.outofband.hostname,
            hostname_ptr,
-           MAXHOSTNAMELEN);
+           FREEIPMI_MAXHOSTNAMELEN);
 
   rv = 0;
  cleanup:
