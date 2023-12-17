@@ -1,5 +1,6 @@
 FreeIPMI 1.6.12 - 11/19/23
 --------------------------
+o Support new "altbridging" workaround in ipmi-sensors.
 o Use poll() over select() to avoid fd limit in openipmi driver.
 o Fix potential portability problems on systems without cbrt().
 o In libfreeipmi, add additional sensor / event interpretations.
