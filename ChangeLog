@@ -1,7 +1,7 @@
-2023-12-17 Albert Chu <chu11@llnl.gov>
+2024-01-25 Anonymous
 
-	* libfreeipmi/interpret: Support intepretation of physical
-	intrusion + state sensors.
+	* configure.ac: check for inb and outb declarations in header
+	files.
 
 2023-09-29 Albert Chu <chu11@llnl.gov>
 

@@ -505,6 +505,10 @@ AC_CHECK_FUNCS([asprintf])
 AC_CHECK_LIB([m], [cbrt], [AC_DEFINE(HAVE_CBRT, [1], [Define to 1 if you have `cbrt' function.])])
 AC_CHECK_FUNCS([getmsg putmsg])
 
+dnl inb and outb are inline asm in some linux systems
+AC_CHECK_DECLS([inb], [], [], [[#include <sys/io.h>]])
+AC_CHECK_DECLS([outb], [], [], [[#include <sys/io.h>]])
+
 dnl sighandler_t apparently not defined in Apple/OS X
 AC_CHECK_TYPES([sighandler_t], [], [], [[#define _GNU_SOURCE
 #include <signal.h>]])
