@@ -2,6 +2,8 @@ FreeIPMI 1.6.12 - 11/19/23
 --------------------------
 o Use poll() over select() to avoid fd limit in openipmi driver.
 o Fix potential portability problems on systems without cbrt().
+o Fix build issues on systems where inb/outb are declared with inline
+  assembly.
 o Minor documentation updates.
 
 FreeIPMI 1.6.11 - 06/07/23
