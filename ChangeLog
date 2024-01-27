@@ -1,3 +1,8 @@
+2024-01-27 Albert Chu <chu11@llnl.gov>
+
+	* configure.ac: Remove duplicate inb/outb declaration check.  Could
+	lead to broken builds on non-x86 systems.
+
 2024-01-25 Anonymous
 
 	* configure.ac: check for inb and outb declarations in header
