@@ -1,7 +1,8 @@
-FreeIPMI 1.6.13 - XX/XX/XX
+FreeIPMI 1.6.13 - 01/26/24
 --------------------------
 o Fix build issues on systems where inb/outb are declared with inline
   assembly.
+o Add additional sensor/event interpretations.
 
 FreeIPMI 1.6.12 - 11/19/23
 --------------------------
