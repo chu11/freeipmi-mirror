@@ -24,6 +24,7 @@ Tools
 -----
 o In ipmi-sel, support Intel S2600BPB OEM SEL interpretations.
 o In ipmi-config, support configuration of Maximum_Privilege_Cipher_Suite_Id_16.
+o In ipmi-sensors, support new "altbridging" workaround for Lenovo motherboards.
 
 Typo Fixes:
 -----------
