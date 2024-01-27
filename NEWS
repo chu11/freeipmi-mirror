@@ -9,6 +9,10 @@ even at the cost of breaking backwards compatibility.
 Updated Features:
 -----------------
 
+Globally
+--------
+o Internally allow hostnames to be up to 256 characters (previously only 64).
+
 Libraries
 ---------
 o libfreeipmi/sensor-read: Add error for privilege level insufficient.
