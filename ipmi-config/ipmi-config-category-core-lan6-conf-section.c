@@ -1227,7 +1227,7 @@ ipv6_dynamic_address_source_type_checkout (ipmi_config_state_data_t *state_data,
 
   if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
-                                                  get_dynamic_address_source_type_string (ipv6_data.source)) < 0)
+                                                  get_dynamic_address_source_type_string (ipv6_data.source_type)) < 0)
     return (IPMI_CONFIG_ERR_FATAL_ERROR);
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
