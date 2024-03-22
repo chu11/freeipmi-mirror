@@ -5164,7 +5164,7 @@ ipmi_oem_dell_get_power_consumption_data (ipmi_oem_state_data_t *state_data)
                   time_buf);
 
   pstdout_printf (state_data->pstate,
-                  "Cumulative Energy            : %.2f kWh\n",
+                  "Cumulative Energy            : %.3f kWh\n",
                   cumulative_reading_val);
 
   peak_amp_reading_val = ((double)peak_amp_reading) / 10.0;
