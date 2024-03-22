@@ -1,3 +1,9 @@
+2024-03-22 Alex Owen
+
+	* ipmi-oem/ipmi-oem-dell.c
+	(ipmi_oem_dell_get_power_consumption_data): Increase output
+	precision in cumalative energy output.
+
 2024-02-21 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-config/ipmi-config-category-core-lan6-conf-section.c
