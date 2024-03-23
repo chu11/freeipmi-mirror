@@ -3,6 +3,7 @@ FreeIPMI 1.6.15 - XX/XX/XX
 o In ipmi-config, fix incorrect output of
   IPv6_Dynamic_Address_Source_Type.
 o In ipmi-oem, increase precision of Dell cumalitive energy output.
+o Fix build error with implicit-function-declaration.
 
 FreeIPMI 1.6.14 - 01/27/24
 --------------------------
