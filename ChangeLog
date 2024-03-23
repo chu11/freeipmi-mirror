@@ -1,3 +1,8 @@
+2024-03-22 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/sel/ipmi-sel-string-supermicro-common.h: Add missing
+	function prototype.
+
 2024-03-22 Alex Owen
 
 	* ipmi-oem/ipmi-oem-dell.c
