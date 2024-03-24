@@ -17,7 +17,7 @@
  */
 
 #ifndef IPMI_SENSORS_OEM_INTEL_S2600WP_H
-#define IPMI_SENSORS_OEM_INTEL_H
+#define IPMI_SENSORS_OEM_INTEL_S2600WP_H
 
 #include "ipmi-sensors.h"
 

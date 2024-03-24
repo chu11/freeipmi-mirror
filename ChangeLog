@@ -1,3 +1,10 @@
+2024-03-23 Albert Chu <chu11@llnl.gov>
+
+        * ipmi-sensors/ipmi-sensors-oem-intel-quanta-qssc-s4r.h,
+	ipmi-sensors/ipmi-sensors/ipmi-sensors-oem-intel-s2600jf.h,
+	ipmi-sensors/ipmi-sensors-oem-intel-s5500wb.h: Fix header guard
+	definitions.
+
 2024-03-22 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/sel/ipmi-sel-string-supermicro-common.h: Add missing
