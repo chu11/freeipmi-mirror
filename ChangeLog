@@ -1,3 +1,7 @@
+2024-03-25 Albert Chu <chu11@llnl.gov>
+
+        * ipmi-sensors/ipmi-sensors-oem-intel.c: Add missing include.
+
 2024-03-23 Albert Chu <chu11@llnl.gov>
 
         * ipmi-sensors/ipmi-sensors-oem-intel-quanta-qssc-s4r.h,

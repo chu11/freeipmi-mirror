@@ -34,6 +34,7 @@
 #include "ipmi-sensors-oem-intel.h"
 #include "ipmi-sensors-oem-intel-s5500wb.h"
 #include "ipmi-sensors-oem-intel-s2600jf.h"
+#include "ipmi-sensors-oem-intel-s2600wp.h"
 #include "ipmi-sensors-oem-intel-quanta-qssc-s4r.h"
 #include "ipmi-sensors-oem-intel-node-manager.h"
 
