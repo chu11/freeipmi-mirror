@@ -95,9 +95,9 @@ static struct argp_option cmdline_options[] =
       "Deactivate all payload instances instead of just the configured payload instance.", 46},
     { "lock-memory", LOCK_MEMORY_KEY, 0, 0,
       "Lock sensitive information (such as usernames and passwords) in memory.", 47},
+#ifndef NDEBUG
     { "debugfile", DEBUGFILE_KEY, 0, 0,
       "Output debugging to files in current directory rather than to standard output.", 48},
-#ifndef NDEBUG
     { "noraw", NORAW_KEY, 0, 0,
       "Don't enter terminal raw mode.", 49},
 #endif
