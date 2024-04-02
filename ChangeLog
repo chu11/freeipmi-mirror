@@ -1,3 +1,8 @@
+2024-04-02 Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/ipmiconsole-argp.c, man/ipmiconsole.8.pre.in:
+	--debugfile only available in debug mode.
+
 2024-03-22 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/sel/ipmi-sel-string-supermicro-common.h: Add missing
