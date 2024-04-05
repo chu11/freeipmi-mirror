@@ -1632,13 +1632,6 @@ ipmi_cmd (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  if (!fiid_obj_valid (obj_cmd_rq)
-      || !fiid_obj_valid (obj_cmd_rs))
-    {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
-    }
-
   if (FIID_OBJ_PACKET_VALID (obj_cmd_rq) < 0)
     {
       API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);

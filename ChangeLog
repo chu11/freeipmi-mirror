@@ -1,3 +1,8 @@
+2024-04-05 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/api/ipmi-api.c (ipmi_cmd): Remove duplicate
+	parameter check.
+
 2024-04-02 Albert Chu <chu11@llnl.gov>
 
 	* ipmiconsole/ipmiconsole-argp.c, man/ipmiconsole.8.pre.in:
