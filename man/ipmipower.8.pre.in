@@ -483,8 +483,10 @@ Other methods are listed in the IPMI specification.
 .B ipmipower
 to use IPMI based ping packets instead of RMCP ping packets.  Some
 motherboards have been observed to not implement RMCP ping/pong
-support despite being required by the IPMI specification.  Issue
-observed on Intel Windmill, Quanta Winterfell, and Wiwynn Windmill.
+support despite being required by the IPMI specification.  Those
+hitting this issue may see "not discovered" errors in shell mode.
+Issue observed on Intel M50FCP, Intel Windmill, Quanta Winterfell, and
+Wiwynn Windmill.
 #include <@top_srcdir@/man/manpage-common-workaround-extra-text.man>
 #include <@top_srcdir@/man/manpage-common-diagnostics.man>
 #include <@top_srcdir@/man/manpage-common-diagnostics-hostranged-text.man>
