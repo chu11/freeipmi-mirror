@@ -1,3 +1,8 @@
+2024-04-12 Albert Chu <chu11@llnl.gov>
+
+	* man/ipmipower.8.pre.in: Add help about "ipmiping" workaround and
+	document it is needed on Intel M50FCP.
+
 2024-04-05 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/api/ipmi-api.c (ipmi_cmd): Remove duplicate
