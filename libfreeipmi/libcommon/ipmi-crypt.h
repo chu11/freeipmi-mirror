@@ -67,35 +67,35 @@ int crypt_init (void);
 
 /* return length of data written into buffer on success, -1 on error */
 int crypt_hash (unsigned int hash_algorithm,
-                     unsigned int hash_flags,
-                     const void *key,
-                     unsigned int key_len,
-                     const void *hash_data,
-                     unsigned int hash_data_len,
-                     void *digest,
-                     unsigned int digest_len);
+                unsigned int hash_flags,
+                const void *key,
+                unsigned int key_len,
+                const void *hash_data,
+                unsigned int hash_data_len,
+                void *digest,
+                unsigned int digest_len);
 
 int crypt_hash_digest_len (unsigned int hash_algorithm);
 
 /* return length of data written into buffer on success, -1 on error */
 int crypt_cipher_encrypt (unsigned int cipher_algorithm,
-                               unsigned int cipher_mode,
-                               const void *key,
-                               unsigned int key_len,
-                               const void *iv,
-                               unsigned int iv_len,
-                               void *data,
-                               unsigned int data_len);
+                          unsigned int cipher_mode,
+                          const void *key,
+                          unsigned int key_len,
+                          const void *iv,
+                          unsigned int iv_len,
+                          void *data,
+                          unsigned int data_len);
 
 /* return length of data written into buffer on success, -1 on error */
 int crypt_cipher_decrypt (unsigned int cipher_algorithm,
-                               unsigned int cipher_mode,
-                               const void *key,
-                               unsigned int key_len,
-                               const void *iv,
-                               unsigned int iv_len,
-                               void *data,
-                               unsigned int data_len);
+                          unsigned int cipher_mode,
+                          const void *key,
+                          unsigned int key_len,
+                          const void *iv,
+                          unsigned int iv_len,
+                          void *data,
+                          unsigned int data_len);
 
 int crypt_cipher_key_len (unsigned int cipher_algorithm);
 
