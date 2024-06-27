@@ -141,6 +141,8 @@ libfreeipmi_la_SOURCES = \
 	libcommon/ipmi-bit-ops.h \
 	libcommon/ipmi-crypt.c \
 	libcommon/ipmi-crypt.h \
+	libcommon/ipmi-crypt-gcrypt.c \
+	libcommon/ipmi-crypt-gcrypt.h \
 	libcommon/ipmi-fiid-util.c \
 	libcommon/ipmi-fiid-util.h \
 	libcommon/ipmi-fill-util.h \
