@@ -43,9 +43,6 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
-#if HAVE_GCRYPT_H
-#include <gcrypt.h>
-#endif /* HAVE_GCRYPT_H */
 
 #include "freeipmi/util/ipmi-util.h"
 #include "freeipmi/fiid/fiid.h"
