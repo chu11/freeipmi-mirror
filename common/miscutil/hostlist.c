@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $LSDId: hostlist.c 11882 2012-10-03 17:31:41Z grondo $
+ *  $LSDId: commit c08d251f3cc9b1a5b69a268f952d64f990366835 $
  *****************************************************************************
  *  Copyright (C) 2002 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -383,7 +383,7 @@ static char * _next_tok(char *sep, char **str)
     tok = *str;
 
     while ( **str != '\0' &&
-	    (level != 0 || strchr(sep, **str) == NULL) ) {
+            (level != 0 || strchr(sep, **str) == NULL) ) {
       if ( **str == '[' ) level++;
       else if ( **str == ']' ) level--;
       (*str)++;
@@ -1067,7 +1067,7 @@ static hostlist_t hostlist_new(void)
     if (!new)
         goto fail1;
 
-    assert(new->magic = HOSTLIST_MAGIC);
+    assert((new->magic = HOSTLIST_MAGIC));
     mutex_init(&new->mutex);
 
     new->hr = (hostrange_t *) malloc(HOSTLIST_CHUNK * sizeof(hostrange_t));
@@ -1103,7 +1103,7 @@ static int hostlist_resize(hostlist_t hl, size_t newsize)
     int i;
     size_t oldsize;
     assert(hl != NULL);
-    assert(hl->magic == HOSTLIST_MAGIC);
+    assert((hl->magic == HOSTLIST_MAGIC));
     oldsize = hl->size;
     hl->size = newsize;
     hl->hr = realloc((void *) hl->hr, hl->size*sizeof(hostrange_t));
@@ -1190,7 +1190,7 @@ static int hostlist_insert_range(hostlist_t hl, hostrange_t hr, int n)
     hostlist_iterator_t hli;
 
     assert(hl != NULL);
-    assert(hl->magic == HOSTLIST_MAGIC);
+    assert((hl->magic == HOSTLIST_MAGIC));
     assert(hr != NULL);
 
     if (n > hl->nranges)
@@ -1229,7 +1229,7 @@ static void hostlist_delete_range(hostlist_t hl, int n)
     hostrange_t old;
 
     assert(hl != NULL);
-    assert(hl->magic == HOSTLIST_MAGIC);
+    assert((hl->magic == HOSTLIST_MAGIC));
     assert(n < hl->nranges && n >= 0);
 
     old = hl->hr[n];
@@ -1283,7 +1283,7 @@ hostlist_t _hostlist_create(const char *hostlist, char *sep, char *r_op)
         /* find end of alpha part
          *   do this by finding last occurence of range_op in str */
         pos = strlen(tok) - 1;
-        if (strstr(tok, r_op) != '\0') {
+        if (strstr(tok, r_op) != NULL) {
             while (pos >= 0 && (char) tok[pos] != range_op)
                 pos--;
         }
@@ -1516,7 +1516,7 @@ _hostlist_create_bracketed(const char *hostlist, char *sep, char *r_op)
     }
 
     while ((tok = _next_tok(sep, &str)) != NULL) {
-        strncpy(cur_tok, tok, 1024);
+        strncpy(cur_tok, tok, sizeof (cur_tok) - 1);
 
         if ((p = strchr(tok, '[')) != NULL) {
             char *q, *prefix = tok;
@@ -1533,17 +1533,20 @@ _hostlist_create_bracketed(const char *hostlist, char *sep, char *r_op)
                 else
                     _push_range_list(new, prefix, ranges, nr);
 
+            } else                   /* Error: brackets must be balanced */
+                goto error_unmatched;
 
-            } else
-                hostlist_push_host(new, cur_tok);
-
-        } else
+        } else if (strchr(tok, ']')) /* Error: brackets must be balanced */
+            goto error_unmatched;
+        else                         /* Ok: No brackets found, single host */
             hostlist_push_host(new, cur_tok);
     }
 
     free(orig);
     return new;
 
+  error_unmatched:
+    errno = EINVAL;
   error:
     err = errno;
     hostlist_destroy(new);
@@ -1599,7 +1602,7 @@ void hostlist_destroy(hostlist_t hl)
     for (i = 0; i < hl->nranges; i++)
         hostrange_destroy(hl->hr[i]);
     free(hl->hr);
-    assert(hl->magic = 0x1);
+    assert((hl->magic = 0x1));
     UNLOCK_HOSTLIST(hl);
     mutex_destroy(&hl->mutex);
     free(hl);
@@ -2219,7 +2222,7 @@ static hostlist_iterator_t hostlist_iterator_new(void)
     i->idx = 0;
     i->depth = -1;
     i->next = i;
-    assert(i->magic = HOSTLIST_MAGIC);
+    assert((i->magic = HOSTLIST_MAGIC));
     return i;
 }
 
@@ -2270,7 +2273,7 @@ void hostlist_iterator_destroy(hostlist_iterator_t i)
         }
     }
     UNLOCK_HOSTLIST(i->hl);
-    assert(i->magic = 0x1);
+    assert((i->magic = 0x1));
     free(i);
 }
 
@@ -2282,7 +2285,11 @@ static void _iterator_advance(hostlist_iterator_t i)
         return;
     if (++(i->depth) > (i->hr->hi - i->hr->lo)) {
         i->depth = 0;
-        i->hr = i->hl->hr[++i->idx];
+        if (++i->idx >= i->hl->size) {
+            i->hr = NULL;
+            return;
+        }
+        i->hr = i->hl->hr[i->idx];
     }
 }
 
