@@ -1,3 +1,7 @@
+2024-12-13 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-raw: removed unused variable
+
 2024-04-12 Albert Chu <chu11@llnl.gov>
 
 	* man/ipmipower.8.pre.in: Add help about "ipmiping" workaround and
