@@ -7,6 +7,7 @@ o Do not advertise options that are only available when special debugging
   is compiled into FreeIPMI.
 o Fix build errors with implicit-function-declaration.
 o libfreeipmi: remove unnecessary / duplicate parameter checks.
+o Fix gcc 14.x build failures.
 o Minor documentation updates.
 
 FreeIPMI 1.6.14 - 01/27/24
