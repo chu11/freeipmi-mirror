@@ -1,4 +1,4 @@
-FreeIPMI 1.6.15 - XX/XX/XX
+FreeIPMI 1.6.15 - 01/15/25
 --------------------------
 o In ipmi-config, fix incorrect output of
   IPv6_Dynamic_Address_Source_Type.
