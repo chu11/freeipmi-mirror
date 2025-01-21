@@ -1,3 +1,7 @@
+2025-01-21 Albert Chu <chu11@llnl.gov>
+
+	* README.build: Add notes on building with systemd.
+
 2024-12-13 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-raw: removed unused variable
