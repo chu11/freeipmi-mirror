@@ -65,6 +65,11 @@ After the RPMs are built, you may install them the normal way:
 
 rpm -i freeipmi-X.Y.Z.ARCH.rpm
 
+Note: For distros that use systemd, you must inform the FreeIPMI build
+to build for systemd. i.e.
+
+rpmbuild -ta --with systemd freeipmi-X.Y.Z.tar.gz
+
 Additional configure options
 ----------------------------
 

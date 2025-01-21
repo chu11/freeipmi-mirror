@@ -1,3 +1,7 @@
+2025-01-21 Albert Chu <chu11@llnl.gov>
+
+	* README.build: Add notes on building with systemd.
+
 2025-01-02 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/ipmi-sensors-oem-intel-quanta-qssc-s4r.h: Fix header guard.
