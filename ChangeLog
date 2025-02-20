@@ -1,3 +1,8 @@
+2025-02-20 Pavel Cahyna <pcahyna@redhat.com>
+
+	* common/toolcommon/tool-config-file-common.c: Fix gcc 15
+	compilation failure.
+
 2025-01-21 Albert Chu <chu11@llnl.gov>
 
 	* README.build: Add notes on building with systemd.

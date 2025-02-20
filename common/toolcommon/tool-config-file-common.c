@@ -78,14 +78,14 @@ _config_file_bool (conffile_t cf,
                    void *app_ptr,
                    int app_data)
 {
-  int *bool;
+  int *value;
 
   assert (data);
   assert (optionname);
   assert (option_ptr);
 
-  bool = (int *)option_ptr;
-  *bool = data->boolval;
+  value = (int *)option_ptr;
+  *value = data->boolval;
   return (0);
 }
 
