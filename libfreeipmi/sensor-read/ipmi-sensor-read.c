@@ -852,6 +852,13 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
               goto cleanup;
             }
 
+          fprintf (stderr, "r_exponent = 0x%X\n", r_exponent);
+          fprintf (stderr, "b_exponent = 0x%X\n", b_exponent);
+          fprintf (stderr, "m = 0x%X\n", m);
+          fprintf (stderr, "b = 0x%X\n", b);
+          fprintf (stderr, "linearization = 0x%X\n", linearization);
+          fprintf (stderr, "analog_data_format = 0x%X\n", analog_data_format);
+          fprintf (stderr, "raw sensor = 0x%X\n", local_sensor_reading_raw);
           if (ipmi_sensor_decode_value (r_exponent,
                                         b_exponent,
                                         m,
@@ -864,7 +871,7 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
               SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_INTERNAL_ERROR);
               goto cleanup;
             }
-
+          fprintf (stderr, "reading = %f\n", *tmp_sensor_reading);
           *sensor_reading = tmp_sensor_reading;
         }
       rv = 1;
