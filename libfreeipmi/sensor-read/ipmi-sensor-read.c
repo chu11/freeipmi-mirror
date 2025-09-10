@@ -463,6 +463,7 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
   unsigned int ctx_flags_orig;
   int event_reading_type_code_class = 0;
 
+  fprintf (stderr, "%s:%d\n", __FUNCTION__, __LINE__);
   if (!ctx || ctx->magic != IPMI_SENSOR_READ_CTX_MAGIC)
     {
       ERR_TRACE (ipmi_sensor_read_ctx_errormsg (ctx), ipmi_sensor_read_ctx_errnum (ctx));

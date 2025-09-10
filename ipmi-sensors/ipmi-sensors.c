@@ -925,6 +925,7 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
       goto cleanup;
     }
 
+  fprintf (stderr, "%s:%d\n", __FUNCTION__, __LINE__);
   if (ipmi_sensor_read (state_data->sensor_read_ctx,
                         sdr_record,
                         sdr_record_len,
