@@ -479,6 +479,8 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
       return (-1);
     }
 
+  fprintf (stderr, "ctx->flags = %X\n", ctx->flags);
+
   *sensor_reading = NULL;
   *sensor_event_bitmask = 0;
 
@@ -803,16 +805,23 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
   if (sensor_reading_raw)
     (*sensor_reading_raw) = local_sensor_reading_raw;
 
+  fprintf (stderr, "event reading type code = %X\n", event_reading_type_code);
+
   event_reading_type_code_class = ipmi_event_reading_type_code_class (event_reading_type_code);
+
+  fprintf (stderr, "event reading type code class = %u\n", event_reading_type_code_class);
+  fprintf (stderr, "record_type = %u\n", record_type);
 
   if (event_reading_type_code_class == IPMI_EVENT_READING_TYPE_CODE_CLASS_THRESHOLD)
     {
+      fprintf (stderr, "%s:%d\n", __FUNCTION__, __LINE__);
       if (record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
         {
           int8_t r_exponent, b_exponent;
           int16_t m, b;
           uint8_t linearization, analog_data_format;
 
+          fprintf (stderr, "%s:%d\n", __FUNCTION__, __LINE__);
           if (ipmi_sdr_parse_sensor_decoding_data (ctx->sdr_ctx,
                                                    sdr_record,
                                                    sdr_record_len,
@@ -899,6 +908,7 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
        * Note that this can only occur for full records, since
        * decoding data does not exist in compact records.
        */
+      fprintf (stderr, "%s:%d\n", __FUNCTION__, __LINE__);
       if (ctx->flags & IPMI_SENSOR_READ_FLAGS_DISCRETE_READING
           && record_type == IPMI_SDR_FORMAT_FULL_SENSOR_RECORD)
         {
@@ -911,6 +921,7 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
           uint8_t sensor_base_unit_type;
           uint8_t sensor_modifier_unit_type;
 
+          fprintf (stderr, "%s:%d\n", __FUNCTION__, __LINE__);
           if (ipmi_sdr_parse_sensor_decoding_data (ctx->sdr_ctx,
                                                    sdr_record,
                                                    sdr_record_len,
@@ -973,6 +984,13 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
               goto cleanup;
             }
 
+          fprintf (stderr, "r_exponent = 0x%X\n", r_exponent);
+          fprintf (stderr, "b_exponent = 0x%X\n", b_exponent);
+          fprintf (stderr, "m = 0x%X\n", m);
+          fprintf (stderr, "b = 0x%X\n", b);
+          fprintf (stderr, "linearization = 0x%X\n", linearization);
+          fprintf (stderr, "analog_data_format = 0x%X\n", analog_data_format);
+          fprintf (stderr, "raw sensor = 0x%X\n", local_sensor_reading_raw);
           if (ipmi_sensor_decode_value (r_exponent,
                                         b_exponent,
                                         m,
@@ -985,7 +1003,7 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
               SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_INTERNAL_ERROR);
               goto cleanup;
             }
-
+          fprintf (stderr, "reading = %f\n", *tmp_sensor_reading);
           *sensor_reading = tmp_sensor_reading;
         }
       rv = 1;
@@ -996,6 +1014,8 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
   else
     rv = 0;
 
+  fprintf (stderr, "%s:%d\n", __FUNCTION__, __LINE__);
+  fprintf (stderr, "rv = %d\n", rv);
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   if (rv <= 0)
