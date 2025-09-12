@@ -1,3 +1,9 @@
+2025-09-12 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/util/ipmi-sensor-util.c (ipmi_sensor_decode_value)
+	(ipmi_sensor_decode_raw_value): Cast with "int8_t" instead of
+	"char", as "char" is not portable for signed one byte integers.
+
 2025-02-20 Pavel Cahyna <pcahyna@redhat.com>
 
 	* common/toolcommon/tool-config-file-common.c: Fix gcc 15
