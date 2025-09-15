@@ -1,7 +1,7 @@
 FreeIPMI 1.6.16 - 09/15/25
 --------------------------
-o Fix sensor reading miscalculation on systems where a char is defined
-  as unsigned (such as ARM) vs signed (such as x86).
+o Fix potential sensor reading miscalculation on systems where a char
+  is defined as unsigned (such as ARM) vs signed (such as x86).
 o Fix gcc15 compilation errors.
 
 FreeIPMI 1.6.15 - 01/15/25
