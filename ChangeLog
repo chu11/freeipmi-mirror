@@ -1,3 +1,7 @@
+2026-02-10 Boris Lytochkin <lytboris@yandex-team.com>
+
+	* ipmiconsole: Support --proxy.
+
 2026-02-05 Albert Chu <chu11@llnl.gov>
 
 	* man/ipmiconsole.8.pre.in: Fix typo
