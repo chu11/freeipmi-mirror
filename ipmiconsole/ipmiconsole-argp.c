@@ -45,6 +45,12 @@
 #include <assert.h>
 #include <errno.h>
 
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+
 #include <ipmiconsole.h>        /* lib ipmiconsole.h */
 
 #include "ipmiconsole_.h"       /* tool ipmiconsole.h */
@@ -101,6 +107,12 @@ static struct argp_option cmdline_options[] =
     { "noraw", NORAW_KEY, 0, 0,
       "Don't enter terminal raw mode.", 49},
 #endif
+    { "proxy", TCPPROXY_KEY, 0, 0,
+      "Run in TCP-to-SOL proxy rather than terminal mode.", 50},
+    { "proxyport", TCPPROXY_PORT_KEY, "NUM", 0,
+      "TCP port to be used as SOL tcp proxy.", 51},
+    { "proxyaddr", TCPPROXY_ADDR_KEY, "ADDRESS", 0,
+      "TCP address to bind to for SOL tcp proxy.", 52},
     { NULL, 0, NULL, 0, NULL, 0}
   };
 
@@ -115,6 +127,47 @@ static struct argp cmdline_config_file_argp = { cmdline_options,
                                                 cmdline_config_file_parse,
                                                 cmdline_args_doc,
                                                 cmdline_doc };
+
+static int
+parse_address (struct addrinfo *addr, const char *hostname)
+{
+  struct addrinfo ai_hints, *ai_res = NULL, *ai = NULL;
+  struct sockaddr *sa;
+  int ret;
+
+  memset (&ai_hints, 0, sizeof (struct addrinfo));
+  ai_hints.ai_family = AF_UNSPEC;
+  ai_hints.ai_socktype = SOCK_STREAM;
+  ai_hints.ai_flags = AI_ADDRCONFIG;
+
+  if ((ret = getaddrinfo (hostname, NULL, &ai_hints, &ai_res)))
+    {
+      fprintf (stderr, "getaddrinfo: %s", gai_strerror (ret));
+      return (-1);
+    }
+
+  /* Try all of the different answers we got, until we succeed. */
+  sa = addr->ai_addr;
+  for (ai = ai_res; ai != NULL; ai = ai->ai_next)
+    {
+      if (ai->ai_family != AF_INET && ai->ai_family != AF_INET6)
+        continue;
+
+      memcpy (sa, ai->ai_addr, ai->ai_family == AF_INET ?
+                              sizeof (struct sockaddr_in) :
+                              sizeof (struct sockaddr_in6));
+      *addr = *ai;
+      /* restore real address storage */
+      addr->ai_addr = sa;
+      addr->ai_next = NULL;
+      freeaddrinfo (ai_res);
+      return (0);
+    }
+
+  freeaddrinfo (ai_res);
+  fprintf (stderr, "getaddrinfo: no entry found");
+  return (-1);
+}
 
 static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
@@ -170,6 +223,35 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       cmd_args->noraw++;
       break;
 #endif /* NDEBUG */
+    case TCPPROXY_KEY:
+      cmd_args->run_solproxy++;
+      if (cmd_args->bind_addr.ai_family == AF_UNSPEC &&
+          parse_address (&cmd_args->bind_addr, "127.0.0.1") != 0)
+        {
+          fprintf (stderr, "parse_address (127.0.0.1) failed \n");
+          exit (EXIT_FAILURE);
+        }
+      break;
+    case TCPPROXY_PORT_KEY:
+      errno = 0;
+      tmp = strtol (arg, &endptr, 0);
+      if (errno
+          || endptr[0] != '\0'
+          || tmp <= 0
+          || tmp > 65535)
+        {
+          fprintf (stderr, "invalid proxy port \n");
+          exit (EXIT_FAILURE);
+        }
+      cmd_args->listen_port = tmp;
+      break;
+    case TCPPROXY_ADDR_KEY:
+        if (parse_address (&cmd_args->bind_addr, arg) != 0)
+          {
+            fprintf (stderr, "invalid proxy listening address \n");
+            exit (EXIT_FAILURE);
+          }
+      break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */
       argp_usage (state);
@@ -264,6 +346,10 @@ ipmiconsole_argp_parse (int argc, char **argv, struct ipmiconsole_arguments *cmd
   cmd_args->sol_payload_instance = 0;
   cmd_args->deactivate_all_instances = 0;
   cmd_args->lock_memory = 0;
+  cmd_args->run_solproxy = 0;
+  cmd_args->bind_addr.ai_family = AF_UNSPEC;
+  cmd_args->bind_addr.ai_addr = (struct sockaddr *)&cmd_args->__ai_addr;
+  cmd_args->listen_port = 6023;
 #ifndef NDEBUG
   cmd_args->debugfile = 0;
   cmd_args->noraw = 0;

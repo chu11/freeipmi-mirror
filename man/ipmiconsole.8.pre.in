@@ -147,6 +147,22 @@ payload instance.
 \fB\-\-lock-memory\fR
 Lock sensitive information (such as usernames and passwords) in
 memory.
+.TP
+\fB\-\-proxy\fR
+Run a TCP proxy redirecting all socket input/output into remote console.
+Useful for remote kernel debugging with gdb.
+Please see the SOL-TO-TCP PROXY MODE section below for more information
+on this mode.
+.TP
+\fB\-\-proxyport\fR=\fIPORTNUMBER\fR
+Configure a custom TCP port number for TCP proxy mode.
+Default port is 6023.
+.TP
+\fB\-\-proxyaddr\fR=\fIADDRESS\fR
+Configure a custom listening address for TCP proxy mode.
+Default address is 127.0.0.1.
+Please see the SOL-TO-TCP PROXY MODE section below for security caveats
+overriding this value.
 .if @WITH_DEBUG@ \{
 .TP
 \fB\-\-debugfile\fR
@@ -301,6 +317,25 @@ client is accepted by the remote machine, but no character data or
 console data is ever sent back from the remote machine.  The SOL
 session is subsequently useless.  There is currently no workaround in
 place to handle this.  The session must be closed and restarted.
+
+.SH "SOL-TO-TCP PROXY MODE"
+By default
+.B ipmiconsole
+will use current terminal for input/output for a remote console.
+Use
+\fB\-\-proxy\fR
+option to turn
+.B ipmiconsole
+into a TCP proxy that accepts a single TCP connection and use it for
+input/output for a remote console.
+.PP
+Enabling this mode allows any user with an access to the TCP socket
+to connect to a remote SOL instance WITHOUT ANY AUTHENTICATION.
+.PP
+Do not override proxy binding address unless you take measures to
+prevent unauthorized access.
+.PP
+Do not run proxy mode on an untrusted host.
 
 .SH "EXAMPLES"
 .B # ipmiconsole -h ahost -u myusername -p mypassword

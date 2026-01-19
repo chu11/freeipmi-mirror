@@ -55,12 +55,18 @@
 #include <assert.h>
 #include <errno.h>
 
+#include <sys/socket.h>
+#include <netdb.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+
 #include <ipmiconsole.h>        /* lib ipmiconsole.h */
 #include "ipmiconsole_.h"       /* tool ipmiconsole.h */
 #include "ipmiconsole-argp.h"
 
 #include "freeipmi-portability.h"
 
+volatile unsigned int sigterm = 0x0;
 static struct termios saved_tty;
 static int raw_mode_set = 0;
 
@@ -249,18 +255,19 @@ _stdin (ipmiconsole_ctx_t c,
 static void
 sol_ioloop (ipmiconsole_ctx_t c,
         char escape_char,
-        int solfd)
+        int solfd,
+        int localfd)
 {
   char buf[IPMICONSOLE_BUFLEN];
   struct timeval tv;
   ssize_t n;
   fd_set rds;
 
-  while (1)
+  while (sigterm == 0)
     {
       FD_ZERO (&rds);
       FD_SET (solfd, &rds);
-      FD_SET (STDOUT_FILENO, &rds);
+      FD_SET (localfd, &rds);
 
       tv.tv_sec = 0;
       tv.tv_usec = 250000;
@@ -271,9 +278,9 @@ sol_ioloop (ipmiconsole_ctx_t c,
           return;
         }
 
-      if (FD_ISSET (STDOUT_FILENO, &rds))
+      if (FD_ISSET (localfd, &rds))
         {
-          if ((n = read (STDOUT_FILENO, buf, IPMICONSOLE_BUFLEN)) < 0)
+          if ((n = read (localfd, buf, IPMICONSOLE_BUFLEN)) < 0)
             {
               perror ("read");
               return;
@@ -282,12 +289,24 @@ sol_ioloop (ipmiconsole_ctx_t c,
           if (!n)
             return;
 
-          if (_stdin (c,
-                      escape_char,
-                      solfd,
-                      buf,
-                      n) < 0)
-            return;
+          if (localfd == STDIN_FILENO)
+            {
+              if (_stdin (c,
+                          escape_char,
+                          solfd,
+                          buf,
+                          n) < 0)
+                return;
+            }
+          else
+            {
+              /* copy data (fd -> cd) */
+              if (write (solfd, buf, n) != n)
+                {
+                      perror ("Writing data to SOL socket failed\n");
+                      return;
+                }
+            }
         }
 
       if (FD_ISSET (solfd, &rds))
@@ -300,7 +319,7 @@ sol_ioloop (ipmiconsole_ctx_t c,
 
           if (n)
             {
-              if (write (STDOUT_FILENO, buf, n) != n)
+              if (write (localfd, buf, n) != n)
                 {
                   perror ("write");
                   return;
@@ -339,7 +358,8 @@ sol_connect (ipmiconsole_ctx_t c,
             struct ipmiconsole_arguments *cmd_args,
             struct ipmiconsole_ipmi_config *ipmi_config,
             struct ipmiconsole_protocol_config *protocol_config,
-            struct ipmiconsole_engine_config *engine_config)
+            struct ipmiconsole_engine_config *engine_config,
+            int localfd)
 {
   int solfd = -1;
 
@@ -404,12 +424,99 @@ sol_connect (ipmiconsole_ctx_t c,
 
   sol_ioloop (c,
             cmd_args->escape_char,
-            solfd);
+            solfd,
+            localfd);
 
   printf ("\r\n[closing the connection]\r\n");
   /* ignore potential error, cleanup path */
   close (solfd);
   return (0);
+}
+
+static void sigterm_handler (int signal, siginfo_t *_unused, void *_unused2)
+{
+        sigterm = 1;
+}
+
+
+void set_sigterm_handler (int type)
+{
+        struct sigaction sig_action;
+
+        sigemptyset (&sig_action.sa_mask);
+        sig_action.sa_sigaction = &sigterm_handler;
+        sig_action.sa_flags = type;
+        sigaction (SIGTERM, &sig_action, NULL);
+        sigaction (SIGINT,  &sig_action, NULL);
+}
+
+static void
+sol_proxy (ipmiconsole_ctx_t c,
+            struct ipmiconsole_arguments *cmd_args,
+            struct ipmiconsole_ipmi_config *ipmi_config,
+            struct ipmiconsole_protocol_config *protocol_config,
+            struct ipmiconsole_engine_config *engine_config,
+            int listen_s)
+{
+  char addrbuf[INET6_ADDRSTRLEN];
+  struct sockaddr remote_addr;
+  int connection_s = -1;
+  int ret;
+  socklen_t remote_addr_len;
+
+  while (sigterm == 0)
+    {
+      if (listen (listen_s, 1) < 0) /* accept 1 connection */
+        {
+          fprintf (stderr, "listen () failure: %s\n", strerror (errno));
+          return;
+        }
+      if (inet_ntop (cmd_args->bind_addr.ai_family,
+          (cmd_args->bind_addr.ai_family == AF_INET ?
+            (void *)&((struct sockaddr_in *)cmd_args->bind_addr.ai_addr)->sin_addr :
+            (void *)&((struct sockaddr_in6 *)cmd_args->bind_addr.ai_addr)->sin6_addr
+          ),
+          addrbuf,
+          sizeof (addrbuf)) == NULL)
+        {
+          fprintf (stderr, "inet_ntop () failure: %s\n", strerror (errno));
+          return;
+        }
+      printf ("\r\nListening on %s:%d\n", addrbuf, cmd_args->listen_port);
+      set_sigterm_handler (SA_SIGINFO);
+      remote_addr_len = sizeof (remote_addr);
+      connection_s = accept (listen_s, &remote_addr, &remote_addr_len);
+      if (connection_s < 0)
+        {
+          if (errno != EINTR)
+            fprintf (stderr, "Could not accept incoming connection: %s\n", strerror (errno));
+          return;
+        }
+      set_sigterm_handler (SA_SIGINFO | SA_RESTART);
+      if (inet_ntop (remote_addr.sa_family,
+          (remote_addr.sa_family == AF_INET ?
+            (void *)&((struct sockaddr_in *)&remote_addr)->sin_addr :
+            (void *)&((struct sockaddr_in6 *)&remote_addr)->sin6_addr
+          ),
+          addrbuf,
+          sizeof (addrbuf)) == NULL)
+        {
+          fprintf (stderr, "inet_ntop () failure: %s\n", strerror (errno));
+          strcpy (addrbuf, "[UNSPEC]");
+        }
+      printf ("Connection from %s\n", addrbuf);
+      ret = sol_connect (c,
+                        cmd_args,
+                        ipmi_config,
+                        protocol_config,
+                        engine_config,
+                        connection_s);
+      if (ret < 0)
+        fprintf (stderr, "Session terminated with error: %d\n", ret);
+
+      printf ("Connection closed\n");
+      close (connection_s);
+    }
 }
 
 int
@@ -421,6 +528,8 @@ main (int argc, char **argv)
   struct ipmiconsole_engine_config engine_config;
   ipmiconsole_ctx_t c = NULL;
   int debug_flags = 0;
+  int proxyfd = -1;
+  int yes = 1;
 
   ipmiconsole_argp_parse (argc, argv, &cmd_args);
 
@@ -525,6 +634,51 @@ main (int argc, char **argv)
   if (cmd_args.deactivate_all_instances)
     engine_config.behavior_flags |= IPMICONSOLE_BEHAVIOR_DEACTIVATE_ALL_INSTANCES;
   engine_config.debug_flags = debug_flags;
+
+
+  if (cmd_args.run_solproxy)
+    {
+      proxyfd = socket (cmd_args.bind_addr.ai_family,
+                        cmd_args.bind_addr.ai_socktype,
+                        cmd_args.bind_addr.ai_protocol);
+      if (proxyfd < 0)
+        {
+          fprintf (stderr, "proxy socket () returned error: %s\r\n", strerror (errno));
+          exit (EXIT_FAILURE);
+        }
+      if (cmd_args.bind_addr.ai_family == AF_INET)
+        ((struct sockaddr_in *)cmd_args.bind_addr.ai_addr)->sin_port = htons (cmd_args.listen_port);
+      else
+        ((struct sockaddr_in6 *)cmd_args.bind_addr.ai_addr)->sin6_port = htons (cmd_args.listen_port);
+
+      if (setsockopt (proxyfd,
+                      SOL_SOCKET,
+                      SO_REUSEADDR,
+                      &yes,
+                      sizeof (int)) == -1)
+        {
+          fprintf (stderr, "setsockopt () return error: %s\r\n", strerror (errno));
+          exit (EXIT_FAILURE);
+        }
+
+      if (bind (proxyfd,
+               cmd_args.bind_addr.ai_addr,
+               cmd_args.bind_addr.ai_addrlen
+               ) < 0)
+        {
+          fprintf (stderr, "proxy bind () returned error: %s\r\n", strerror (errno));
+          exit (EXIT_FAILURE);
+        }
+        sol_proxy (c,
+                  &cmd_args,
+                  &ipmi_config,
+                  &protocol_config,
+                  &engine_config,
+                  proxyfd);
+        shutdown (proxyfd, 2);
+        close (proxyfd);
+        goto cleanup;
+    }
 
 #ifndef NDEBUG
   if (!cmd_args.noraw)
