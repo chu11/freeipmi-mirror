@@ -1234,6 +1234,7 @@ _ipmi_acpi_get_table_sysfs (ipmi_locate_ctx_t ctx,
   rv = 0;
  cleanup:
   close (sysfs_acpi_fd);
+  free (sysfs_path);
   return rv;
 }
 

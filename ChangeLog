@@ -1,3 +1,8 @@
+2026-01-27 Eric Fang <???>
+
+	* libfreeipmi/locate/ipmi-locate-acpi-spmi.c
+	(_ipmi_acpi_get_table_sysfs): Fix memleak.
+
 2025-09-12 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/util/ipmi-sensor-util.c (ipmi_sensor_decode_value)
