@@ -1,3 +1,7 @@
+FreeIPMI 1.6.17 - XX/XX/26
+--------------------------
+o Fix mem-leak within libfreeipmi locate api.
+
 FreeIPMI 1.6.16 - 09/15/25
 --------------------------
 o Fix potential sensor reading miscalculation on systems where a char
