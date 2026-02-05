@@ -114,7 +114,7 @@ connections may still be alive, some motherboards have exhibited bugs
 in which underlying serial data can no longer be sent/received.  From
 the viewpoint of
 .B ipmiconsole,
-data is simply not be sent out of the remote system and this problem
+data is simply not being sent out of the remote system and this problem
 is only detected once there is user interaction.  By sending the
 occasional NUL character, the underlying loss of serial data transfer
 can be detected far more quickly.  There is some risk with this option,
