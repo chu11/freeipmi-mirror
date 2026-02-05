@@ -462,7 +462,7 @@ sol_proxy (ipmiconsole_ctx_t c,
   struct sockaddr remote_addr;
   int connection_s = -1;
   int ret;
-  socklen_t remote_addr_len = sizeof (remote_addr_len);
+  socklen_t remote_addr_len;
 
   while (sigterm == 0)
     {
@@ -471,19 +471,20 @@ sol_proxy (ipmiconsole_ctx_t c,
           fprintf (stderr, "listen () failure: %s\n", strerror (errno));
           return;
         }
-      if (NULL == inet_ntop (cmd_args->bind_addr.ai_family,
-                (cmd_args->bind_addr.ai_family == AF_INET ?
-                  (void *)&((struct sockaddr_in *)cmd_args->bind_addr.ai_addr)->sin_addr :
-                  (void *)&((struct sockaddr_in6 *)cmd_args->bind_addr.ai_addr)->sin6_addr
-                ),
-                addrbuf,
-                sizeof (addrbuf)))
+      if (inet_ntop (cmd_args->bind_addr.ai_family,
+          (cmd_args->bind_addr.ai_family == AF_INET ?
+            (void *)&((struct sockaddr_in *)cmd_args->bind_addr.ai_addr)->sin_addr :
+            (void *)&((struct sockaddr_in6 *)cmd_args->bind_addr.ai_addr)->sin6_addr
+          ),
+          addrbuf,
+          sizeof (addrbuf)) == NULL)
         {
           fprintf (stderr, "inet_ntop () failure: %s\n", strerror (errno));
           return;
         }
-      printf ("\r\nListening on %s:%d...\n", addrbuf, cmd_args->listen_port);
+      printf ("\r\nListening on %s:%d\n", addrbuf, cmd_args->listen_port);
       set_sigterm_handler (SA_SIGINFO);
+      remote_addr_len = sizeof (remote_addr);
       connection_s = accept (listen_s, &remote_addr, &remote_addr_len);
       if (connection_s < 0)
         {
@@ -492,13 +493,13 @@ sol_proxy (ipmiconsole_ctx_t c,
           return;
         }
       set_sigterm_handler (SA_SIGINFO | SA_RESTART);
-      if (NULL == inet_ntop (remote_addr.sa_family,
-                (remote_addr.sa_family == AF_INET ?
-                  (void *)&((struct sockaddr_in *)&remote_addr)->sin_addr :
-                  (void *)&((struct sockaddr_in6 *)&remote_addr)->sin6_addr
-                ),
-                addrbuf,
-                sizeof (addrbuf)))
+      if (inet_ntop (remote_addr.sa_family,
+          (remote_addr.sa_family == AF_INET ?
+            (void *)&((struct sockaddr_in *)&remote_addr)->sin_addr :
+            (void *)&((struct sockaddr_in6 *)&remote_addr)->sin6_addr
+          ),
+          addrbuf,
+          sizeof (addrbuf)) == NULL)
         {
           fprintf (stderr, "inet_ntop () failure: %s\n", strerror (errno));
           strcpy (addrbuf, "[UNSPEC]");
