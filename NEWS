@@ -1,5 +1,6 @@
 FreeIPMI 1.6.17 - XX/XX/26
 --------------------------
+o Support --proxy in ipmiconsole.
 o Fix mem-leak within libfreeipmi locate api.
 
 FreeIPMI 1.6.16 - 09/15/25
