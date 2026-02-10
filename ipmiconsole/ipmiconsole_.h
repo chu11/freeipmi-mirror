@@ -52,11 +52,16 @@ enum ipmiconsole_argp_option_keys
     DEBUG_KEY = 167,
     DEBUGFILE_KEY = 168,
     NORAW_KEY = 169,
+    TCPPROXY_KEY = 170,
+    TCPPROXY_PORT_KEY = 171,
+    TCPPROXY_ADDR_KEY = 172,
   };
 
 struct ipmiconsole_arguments
 {
   struct common_cmd_args common_args;
+  struct addrinfo bind_addr;
+  struct sockaddr_storage __ai_addr;
   char escape_char;
   int dont_steal;
   int deactivate;
@@ -65,6 +70,8 @@ struct ipmiconsole_arguments
   unsigned int sol_payload_instance;
   int deactivate_all_instances;
   int lock_memory;
+  int run_solproxy;
+  int listen_port;
 #ifndef NDEBUG
   int debugfile;
   int noraw;

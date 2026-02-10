@@ -55,12 +55,18 @@
 #include <assert.h>
 #include <errno.h>
 
+#include <sys/socket.h>
+#include <netdb.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+
 #include <ipmiconsole.h>        /* lib ipmiconsole.h */
 #include "ipmiconsole_.h"       /* tool ipmiconsole.h */
 #include "ipmiconsole-argp.h"
 
 #include "freeipmi-portability.h"
 
+volatile unsigned int sigterm = 0x0;
 static struct termios saved_tty;
 static int raw_mode_set = 0;
 
@@ -246,6 +252,273 @@ _stdin (ipmiconsole_ctx_t c,
   return (0);
 }
 
+static void
+sol_ioloop (ipmiconsole_ctx_t c,
+        char escape_char,
+        int solfd,
+        int localfd)
+{
+  char buf[IPMICONSOLE_BUFLEN];
+  struct timeval tv;
+  ssize_t n;
+  fd_set rds;
+
+  while (sigterm == 0)
+    {
+      FD_ZERO (&rds);
+      FD_SET (solfd, &rds);
+      FD_SET (localfd, &rds);
+
+      tv.tv_sec = 0;
+      tv.tv_usec = 250000;
+
+      if (select (solfd + 1, &rds, NULL, NULL, &tv) < 0)
+        {
+          perror ("select");
+          return;
+        }
+
+      if (FD_ISSET (localfd, &rds))
+        {
+          if ((n = read (localfd, buf, IPMICONSOLE_BUFLEN)) < 0)
+            {
+              perror ("read");
+              return;
+            }
+
+          if (!n)
+            return;
+
+          if (localfd == STDIN_FILENO)
+            {
+              if (_stdin (c,
+                          escape_char,
+                          solfd,
+                          buf,
+                          n) < 0)
+                return;
+            }
+          else
+            {
+              /* copy data (fd -> cd) */
+              if (write (solfd, buf, n) != n)
+                {
+                      perror ("Writing data to SOL socket failed\n");
+                      return;
+                }
+            }
+        }
+
+      if (FD_ISSET (solfd, &rds))
+        {
+          if ((n = read (solfd, buf, IPMICONSOLE_BUFLEN)) < 0)
+            {
+              perror ("read");
+              return;
+            }
+
+          if (n)
+            {
+              if (write (localfd, buf, n) != n)
+                {
+                  perror ("write");
+                  return;
+                }
+            }
+          else
+            {
+              /* b/c we're exiting */
+              /* achu: it is possible that errnum can equal success.
+               * Most likely scenario is user sets a flag in the
+               * libipmiconsole.conf file that alters the behavior of
+               * what this tool expects to happen.  For example, if
+               * user specifies deactivate on the command line, we
+               * know to quit early.  However, if the user does so in
+               * libipmiconsole.conf, we as a tool won't know to
+               * expect it.
+               */
+              if (ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_SOL_STOLEN)
+                printf ("\r\n[%s]\r\n",
+                        ipmiconsole_ctx_errormsg (c));
+              else if (ipmiconsole_ctx_errnum (c) != IPMICONSOLE_ERR_SUCCESS)
+                printf ("\r\n[error received]: %s\r\n",
+                        ipmiconsole_ctx_errormsg (c));
+              return;
+            }
+
+        }
+
+      /* Clear out data, may still use buffer */
+      memset (buf, '\0', IPMICONSOLE_BUFLEN);
+    }
+}
+
+static int
+sol_connect (ipmiconsole_ctx_t c,
+            struct ipmiconsole_arguments *cmd_args,
+            struct ipmiconsole_ipmi_config *ipmi_config,
+            struct ipmiconsole_protocol_config *protocol_config,
+            struct ipmiconsole_engine_config *engine_config,
+            int localfd)
+{
+  int solfd = -1;
+
+  if (!(c = ipmiconsole_ctx_create (cmd_args->common_args.hostname,
+                                    ipmi_config,
+                                    protocol_config,
+                                    engine_config)))
+    {
+      perror ("ipmiconsole_ctx_create");
+      return (-1);
+    }
+
+  if (cmd_args->sol_payload_instance)
+    {
+      if (ipmiconsole_ctx_set_config (c,
+                                      IPMICONSOLE_CTX_CONFIG_OPTION_SOL_PAYLOAD_INSTANCE,
+                                      &(cmd_args->sol_payload_instance)) < 0)
+        {
+          fprintf (stderr, "ipmiconsole_submit_block: %s\r\n", ipmiconsole_ctx_errormsg (c));
+          return (-1);
+        }
+    }
+
+  if (ipmiconsole_engine_submit_block (c) < 0)
+    {
+      if (ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_IPMI_2_0_UNAVAILABLE
+          || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_CIPHER_SUITE_ID_UNAVAILABLE
+          || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_HOSTNAME_INVALID
+          || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_USERNAME_INVALID
+          || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_PASSWORD_INVALID
+          || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_K_G_INVALID
+          || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_PRIVILEGE_LEVEL_INSUFFICIENT
+          || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED
+          || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_SOL_UNAVAILABLE
+          || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_SOL_INUSE
+          || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_SOL_REQUIRES_ENCRYPTION
+          || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_SOL_REQUIRES_NO_ENCRYPTION
+          || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_BMC_BUSY
+          || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_BMC_ERROR
+          || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_BMC_IMPLEMENTATION
+          || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_CONNECTION_TIMEOUT
+          || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_SESSION_TIMEOUT
+          || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_EXCESS_RETRANSMISSIONS_SENT
+          || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_EXCESS_ERRORS_RECEIVED)
+        printf ("[error received]: %s\n", ipmiconsole_ctx_errormsg (c));
+      else
+        fprintf (stderr, "ipmiconsole_submit_block: %s\r\n", ipmiconsole_ctx_errormsg (c));
+      return (-1);
+    }
+
+  if (cmd_args->deactivate)
+    return (0);
+
+  if ((solfd = ipmiconsole_ctx_fd (c)) < 0)
+    {
+      fprintf (stderr, "ipmiconsole_ctx_fd: %s\r\n", ipmiconsole_ctx_errormsg (c));
+      return (-1);
+    }
+
+
+  printf ("[SOL established]\r\n");
+
+  sol_ioloop (c,
+            cmd_args->escape_char,
+            solfd,
+            localfd);
+
+  printf ("\r\n[closing the connection]\r\n");
+  /* ignore potential error, cleanup path */
+  close (solfd);
+  return (0);
+}
+
+static void sigterm_handler (int signal, siginfo_t *_unused, void *_unused2)
+{
+        sigterm = 1;
+}
+
+
+void set_sigterm_handler (int type)
+{
+        struct sigaction sig_action;
+
+        sigemptyset (&sig_action.sa_mask);
+        sig_action.sa_sigaction = &sigterm_handler;
+        sig_action.sa_flags = type;
+        sigaction (SIGTERM, &sig_action, NULL);
+        sigaction (SIGINT,  &sig_action, NULL);
+}
+
+static void
+sol_proxy (ipmiconsole_ctx_t c,
+            struct ipmiconsole_arguments *cmd_args,
+            struct ipmiconsole_ipmi_config *ipmi_config,
+            struct ipmiconsole_protocol_config *protocol_config,
+            struct ipmiconsole_engine_config *engine_config,
+            int listen_s)
+{
+  char addrbuf[INET6_ADDRSTRLEN];
+  struct sockaddr remote_addr;
+  int connection_s = -1;
+  int ret;
+  socklen_t remote_addr_len;
+
+  while (sigterm == 0)
+    {
+      if (listen (listen_s, 1) < 0) /* accept 1 connection */
+        {
+          fprintf (stderr, "listen () failure: %s\n", strerror (errno));
+          return;
+        }
+      if (inet_ntop (cmd_args->bind_addr.ai_family,
+          (cmd_args->bind_addr.ai_family == AF_INET ?
+            (void *)&((struct sockaddr_in *)cmd_args->bind_addr.ai_addr)->sin_addr :
+            (void *)&((struct sockaddr_in6 *)cmd_args->bind_addr.ai_addr)->sin6_addr
+          ),
+          addrbuf,
+          sizeof (addrbuf)) == NULL)
+        {
+          fprintf (stderr, "inet_ntop () failure: %s\n", strerror (errno));
+          return;
+        }
+      printf ("\r\nListening on %s:%d\n", addrbuf, cmd_args->listen_port);
+      set_sigterm_handler (SA_SIGINFO);
+      remote_addr_len = sizeof (remote_addr);
+      connection_s = accept (listen_s, &remote_addr, &remote_addr_len);
+      if (connection_s < 0)
+        {
+          if (errno != EINTR)
+            fprintf (stderr, "Could not accept incoming connection: %s\n", strerror (errno));
+          return;
+        }
+      set_sigterm_handler (SA_SIGINFO | SA_RESTART);
+      if (inet_ntop (remote_addr.sa_family,
+          (remote_addr.sa_family == AF_INET ?
+            (void *)&((struct sockaddr_in *)&remote_addr)->sin_addr :
+            (void *)&((struct sockaddr_in6 *)&remote_addr)->sin6_addr
+          ),
+          addrbuf,
+          sizeof (addrbuf)) == NULL)
+        {
+          fprintf (stderr, "inet_ntop () failure: %s\n", strerror (errno));
+          strcpy (addrbuf, "[UNSPEC]");
+        }
+      printf ("Connection from %s\n", addrbuf);
+      ret = sol_connect (c,
+                        cmd_args,
+                        ipmi_config,
+                        protocol_config,
+                        engine_config,
+                        connection_s);
+      if (ret < 0)
+        fprintf (stderr, "Session terminated with error: %d\n", ret);
+
+      printf ("Connection closed\n");
+      close (connection_s);
+    }
+}
+
 int
 main (int argc, char **argv)
 {
@@ -255,7 +528,8 @@ main (int argc, char **argv)
   struct ipmiconsole_engine_config engine_config;
   ipmiconsole_ctx_t c = NULL;
   int debug_flags = 0;
-  int fd = -1;
+  int proxyfd = -1;
+  int yes = 1;
 
   ipmiconsole_argp_parse (argc, argv, &cmd_args);
 
@@ -361,60 +635,49 @@ main (int argc, char **argv)
     engine_config.behavior_flags |= IPMICONSOLE_BEHAVIOR_DEACTIVATE_ALL_INSTANCES;
   engine_config.debug_flags = debug_flags;
 
-  if (!(c = ipmiconsole_ctx_create (cmd_args.common_args.hostname,
-                                    &ipmi_config,
-                                    &protocol_config,
-                                    &engine_config)))
-    {
-      perror ("ipmiconsole_ctx_create");
-      goto cleanup;
-    }
 
-  if (cmd_args.sol_payload_instance)
+  if (cmd_args.run_solproxy)
     {
-      if (ipmiconsole_ctx_set_config (c,
-                                      IPMICONSOLE_CTX_CONFIG_OPTION_SOL_PAYLOAD_INSTANCE,
-                                      &(cmd_args.sol_payload_instance)) < 0)
+      proxyfd = socket (cmd_args.bind_addr.ai_family,
+                        cmd_args.bind_addr.ai_socktype,
+                        cmd_args.bind_addr.ai_protocol);
+      if (proxyfd < 0)
         {
-          fprintf (stderr, "ipmiconsole_submit_block: %s\r\n", ipmiconsole_ctx_errormsg (c));
-          goto cleanup;
+          fprintf (stderr, "proxy socket () returned error: %s\r\n", strerror (errno));
+          exit (EXIT_FAILURE);
         }
-    }
-
-  if (ipmiconsole_engine_submit_block (c) < 0)
-    {
-      if (ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_IPMI_2_0_UNAVAILABLE
-          || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_CIPHER_SUITE_ID_UNAVAILABLE
-          || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_HOSTNAME_INVALID
-          || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_USERNAME_INVALID
-          || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_PASSWORD_INVALID
-          || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_K_G_INVALID
-          || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_PRIVILEGE_LEVEL_INSUFFICIENT
-          || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_PRIVILEGE_LEVEL_CANNOT_BE_OBTAINED
-          || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_SOL_UNAVAILABLE
-          || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_SOL_INUSE
-          || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_SOL_REQUIRES_ENCRYPTION
-          || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_SOL_REQUIRES_NO_ENCRYPTION
-          || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_BMC_BUSY
-          || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_BMC_ERROR
-          || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_BMC_IMPLEMENTATION
-          || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_CONNECTION_TIMEOUT
-          || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_SESSION_TIMEOUT
-          || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_EXCESS_RETRANSMISSIONS_SENT
-          || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_EXCESS_ERRORS_RECEIVED)
-        printf ("[error received]: %s\n", ipmiconsole_ctx_errormsg (c));
+      if (cmd_args.bind_addr.ai_family == AF_INET)
+        ((struct sockaddr_in *)cmd_args.bind_addr.ai_addr)->sin_port = htons (cmd_args.listen_port);
       else
-        fprintf (stderr, "ipmiconsole_submit_block: %s\r\n", ipmiconsole_ctx_errormsg (c));
-      goto cleanup;
-    }
+        ((struct sockaddr_in6 *)cmd_args.bind_addr.ai_addr)->sin6_port = htons (cmd_args.listen_port);
 
-  if (cmd_args.deactivate)
-    goto cleanup;
+      if (setsockopt (proxyfd,
+                      SOL_SOCKET,
+                      SO_REUSEADDR,
+                      &yes,
+                      sizeof (int)) == -1)
+        {
+          fprintf (stderr, "setsockopt () return error: %s\r\n", strerror (errno));
+          exit (EXIT_FAILURE);
+        }
 
-  if ((fd = ipmiconsole_ctx_fd (c)) < 0)
-    {
-      fprintf (stderr, "ipmiconsole_ctx_fd: %s\r\n", ipmiconsole_ctx_errormsg (c));
-      goto cleanup;
+      if (bind (proxyfd,
+               cmd_args.bind_addr.ai_addr,
+               cmd_args.bind_addr.ai_addrlen
+               ) < 0)
+        {
+          fprintf (stderr, "proxy bind () returned error: %s\r\n", strerror (errno));
+          exit (EXIT_FAILURE);
+        }
+        sol_proxy (c,
+                  &cmd_args,
+                  &ipmi_config,
+                  &protocol_config,
+                  &engine_config,
+                  proxyfd);
+        shutdown (proxyfd, 2);
+        close (proxyfd);
+        goto cleanup;
     }
 
 #ifndef NDEBUG
@@ -428,99 +691,12 @@ main (int argc, char **argv)
     goto cleanup;
 #endif /* !NDEBUG */
 
-  printf ("[SOL established]\r\n");
-
-  while (1)
-    {
-      char buf[IPMICONSOLE_BUFLEN];
-      struct timeval tv;
-      ssize_t n;
-      fd_set rds;
-
-      FD_ZERO (&rds);
-      FD_SET (fd, &rds);
-      FD_SET (STDIN_FILENO, &rds);
-
-      tv.tv_sec = 0;
-      tv.tv_usec = 250000;
-
-      if (select (fd + 1, &rds, NULL, NULL, &tv) < 0)
-        {
-          perror ("select");
-          goto cleanup;
-        }
-
-      if (FD_ISSET (STDIN_FILENO, &rds))
-        {
-          if ((n = read (STDIN_FILENO, buf, IPMICONSOLE_BUFLEN)) < 0)
-            {
-              perror ("read");
-              goto cleanup;
-            }
-
-          if (!n)
-            goto cleanup;
-
-          if (_stdin (c,
-                      cmd_args.escape_char,
-                      fd,
-                      buf,
-                      n) < 0)
-            goto cleanup;
-        }
-
-      if (FD_ISSET (fd, &rds))
-        {
-          if ((n = read (fd, buf, IPMICONSOLE_BUFLEN)) < 0)
-            {
-              perror ("read");
-              goto cleanup;
-            }
-
-          if (n)
-            {
-              if (write (STDOUT_FILENO, buf, n) != n)
-                {
-                  perror ("write");
-                  goto cleanup;
-                }
-            }
-          else
-            {
-              /* b/c we're exiting */
-              /* achu: it is possible that errnum can equal success.
-               * Most likely scenario is user sets a flag in the
-               * libipmiconsole.conf file that alters the behavior of
-               * what this tool expects to happen.  For example, if
-               * user specifies deactivate on the command line, we
-               * know to quit early.  However, if the user does so in
-               * libipmiconsole.conf, we as a tool won't know to
-               * expect it.
-               */
-              if (ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_SOL_STOLEN)
-                printf ("\r\n[%s]\r\n",
-                        ipmiconsole_ctx_errormsg (c));
-              else if (ipmiconsole_ctx_errnum (c) != IPMICONSOLE_ERR_SUCCESS)
-                printf ("\r\n[error received]: %s\r\n",
-                        ipmiconsole_ctx_errormsg (c));
-              goto cleanup;
-            }
-
-        }
-
-      /* Clear out data, may still use buffer */
-      memset (buf, '\0', IPMICONSOLE_BUFLEN);
-    }
-
- cleanup:
-  if (fd >= 0)
-    {
-      printf ("\r\n[closing the connection]\r\n");
-      /* ignore potential error, cleanup path */
-      close (fd);
-    }
-  ipmiconsole_ctx_destroy (c);
-  ipmiconsole_engine_teardown (1);
+  sol_connect (c,
+                  &cmd_args,
+                  &ipmi_config,
+                  &protocol_config,
+                  &engine_config,
+                  STDIN_FILENO);
 
 #ifndef NDEBUG
   if (!cmd_args.noraw)
@@ -528,6 +704,10 @@ main (int argc, char **argv)
 #else /* !NDEBUG */
   _reset_mode ();
 #endif /* !NDEBUG */
+
+ cleanup:
+  ipmiconsole_ctx_destroy (c);
+  ipmiconsole_engine_teardown (1);
 
   return (EXIT_SUCCESS);
 }
