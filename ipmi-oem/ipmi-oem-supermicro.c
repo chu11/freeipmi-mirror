@@ -129,7 +129,12 @@ ipmi_oem_supermicro_extra_firmware_info (ipmi_oem_state_data_t *state_data)
   firmware_hardware_id = bytes_rs[18];
 
   if (rs_len > 19)
-    memcpy (firmware_tag, &bytes_rs[19], rs_len - 19);
+    {
+      size_t tag_len = (size_t)(rs_len - 19);
+      if (tag_len > IPMI_OEM_SUPERMICRO_STRING_MAX)
+        tag_len = IPMI_OEM_SUPERMICRO_STRING_MAX;
+      memcpy (firmware_tag, &bytes_rs[19], tag_len);
+    }
 
   /* assume minor version is BCD, just like in Get Device ID command */
   /* assume sub version is also BCD */

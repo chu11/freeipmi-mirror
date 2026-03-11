@@ -7161,7 +7161,7 @@ ipmi_oem_dell_get_last_post_code (ipmi_oem_state_data_t *state_data)
   uint8_t bytes_rq[IPMI_OEM_MAX_BYTES];
   uint8_t bytes_rs[IPMI_OEM_MAX_BYTES];
   uint8_t post_code;
-  uint8_t string_length;
+  size_t string_length;
   char post_code_string[IPMI_OEM_STR_BUFLEN + 1];
   int rs_len;
   int rv = -1;
@@ -7216,10 +7216,16 @@ ipmi_oem_dell_get_last_post_code (ipmi_oem_state_data_t *state_data)
     goto cleanup;
 
   post_code = bytes_rs[2];
-  string_length = bytes_rs[3];
+  string_length = (size_t)bytes_rs[3];
 
   if (string_length)
-    memcpy (post_code_string, &bytes_rs[4], string_length);
+    {
+      if (string_length > (size_t)(rs_len - 4))
+        string_length = rs_len - 4;
+      if (string_length > IPMI_OEM_STR_BUFLEN)
+        string_length = IPMI_OEM_STR_BUFLEN;
+      memcpy (post_code_string, &bytes_rs[4], string_length);
+    }
 
   pstdout_printf (state_data->pstate,
                   "Post Code %02Xh : %s\n",
