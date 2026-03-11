@@ -3047,6 +3047,7 @@ ipmi_oem_wistron_read_proprietary_string (ipmi_oem_state_data_t *state_data)
   char string[IPMI_OEM_WISTRON_PROPRIETARY_STRING_MAX + 1];
   int rs_len;
   int rv = -1;
+  size_t len;
 
   assert (state_data);
   assert (!state_data->prog_data->args->oem_options_count);
@@ -3107,8 +3108,12 @@ ipmi_oem_wistron_read_proprietary_string (ipmi_oem_state_data_t *state_data)
       goto cleanup;
     }
 
+  len = (size_t)bytes_rs[3];
+  if (len > (size_t)(rs_len - 4))
+    len = rs_len - 4;
+
   memset (string, '\0', IPMI_OEM_WISTRON_PROPRIETARY_STRING_MAX + 1);
-  memcpy (string, &bytes_rs[4], bytes_rs[3]);
+  memcpy (string, &bytes_rs[4], len);
 
   pstdout_printf (state_data->pstate,
                   "%s\n",
