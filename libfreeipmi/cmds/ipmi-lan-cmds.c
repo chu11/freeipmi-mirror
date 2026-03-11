@@ -1882,7 +1882,7 @@ fill_cmd_set_lan_configuration_parameters_community_string (uint8_t channel_numb
 {
   char buf[IPMI_MAX_COMMUNITY_STRING_LENGTH];
 
-  /* achu: community_string can be the max length.  Null termination in IPMI
+  /* achu: community_string can be the max length.  NUL termination in IPMI
    * packet not required.
    */
   if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)

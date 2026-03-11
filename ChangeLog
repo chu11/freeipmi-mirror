@@ -1,3 +1,9 @@
+2026-03-11 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/cmds/ipmi-lan-cmds.c
+	(fill_cmd_set_lan_configuration_parameters_community_string): Fix
+	comment typo.
+
 2026-02-10 Boris Lytochkin <lytboris@yandex-team.com>
 
 	* ipmiconsole: Support --proxy.
