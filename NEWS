@@ -1,5 +1,9 @@
-FreeIPMI 1.6.17 - XX/XX/26
+FreeIPMI 1.6.17 - 03/23/26
 --------------------------
+o Fix exploitable buffer overflows in the following ipmi-oem commands:
+  - ipmi-oem dell get-last-post-code
+  - ipmi-oem supermicro extra-firmware-info
+  - ipmi-oem wistron read-proprietary-string
 o Support --proxy in ipmiconsole.
 o Fix mem-leak within libfreeipmi locate api.
 
