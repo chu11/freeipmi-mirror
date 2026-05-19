@@ -4198,7 +4198,7 @@ ipmi_oem_dell_set_web_server_config (ipmi_oem_state_data_t *state_data)
 int
 ipmi_oem_dell_get_active_directory_config (ipmi_oem_state_data_t *state_data)
 {
-  uint8_t token_data[IPMI_OEM_MAX_BYTES];
+  uint8_t token_data[IPMI_OEM_DELL_TOKEN_DATA_MAX];
   uint16_t expected_valid_field_mask = IPMI_OEM_DELL_EXTENDED_CONFIG_AD_CONFIGURATION_ALL_FIELD_MASK;
   unsigned int token_data_read = 0;
   unsigned int min_token_data_read = 0;

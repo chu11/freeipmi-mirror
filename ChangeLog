@@ -1,5 +1,11 @@
 2026-06-01 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-dell.c
+	(ipmi_oem_dell_get_active_directory_config): Fix potential stack
+	corruption.
+
+2026-06-01 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-sensors.8.pre.in: Document additional hardware for
 	albridging workaround.
 
