@@ -1384,6 +1384,8 @@ ipmi_oem_fujitsu_get_sel_entry_long_text (ipmi_oem_state_data_t *state_data)
         }
 
       data_length = bytes_rs[15];
+      if (data_length > IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_DATA_LENGTH)
+        data_length = IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_DATA_LENGTH;
 
       /* Every response should be NUL terminated, not just the last
        * component.
