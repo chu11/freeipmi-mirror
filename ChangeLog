@@ -4,6 +4,10 @@
 	(ipmi_oem_dell_get_active_directory_config): Fix potential stack
 	corruption.
 
+	* ipmi-oem/ipmi-oem-fujitsu.c
+	(ipmi_oem_fujitsu_get_sel_entry_long_text): Fix potential buffer
+	overflow.
+
 2026-06-01 Albert Chu <chu11@llnl.gov>
 
 	* man/ipmi-sensors.8.pre.in: Document additional hardware for
