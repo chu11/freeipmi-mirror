@@ -1,3 +1,9 @@
+2026-06-01 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/ipmi-oem-dell.c
+	(ipmi_oem_dell_get_active_directory_config): Fix potential stack
+	corruption.
+
 2023-12-17 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors: support new "altbridging" workaround for Lenovo
