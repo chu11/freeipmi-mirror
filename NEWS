@@ -1,6 +1,9 @@
-FreeIPMI 1.6.18 - 06/01/26
+FreeIPMI 1.6.18 - 06/02/26
 --------------------------
 o Support new "altbridging" workaround in ipmi-sensors.
+o Fix exploitable buffer overflows in the following ipmi-oem commands:
+  - ipmi-oem dell get-active-directory-config
+  - ipmi-oem fujitsu get-sel-entry-long-text
 
 FreeIPMI 1.6.17 - 03/23/26
 --------------------------
