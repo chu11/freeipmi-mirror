@@ -122,7 +122,7 @@ string or by number (decimal or hex).  Please see
 .B ipmi-sel(8)
 \fI\-\-list\-types\fR option to see possible string input types.
 .TP
-\fIexclude\-sensor\-types\fR \fSENSOR-TYPES-LIST\fR
+\fIexclude\-sensor\-types\fR \fISENSOR-TYPES-LIST\fR
 Specify sensor types of SEL events to not log.  default sensor types
 to not show sensor outputs for.  Multiple sensor types can be
 specified separated by whitespace.  Users may specify sensor types by

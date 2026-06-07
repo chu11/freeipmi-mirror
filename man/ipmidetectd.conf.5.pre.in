@@ -44,7 +44,6 @@ lines can be continued on the next using backslash ("\\").
 
 .SH "IPMIDETECTD CONFIGURATION OPTIONS"
 .TP
-.TP
 .I ipmiping_period num
 Specify the period time in milliseconds that IPMI pings should be
 regularly sent out.  Default is 15000.
