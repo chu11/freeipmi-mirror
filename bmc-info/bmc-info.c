@@ -1373,7 +1373,7 @@ display_channel_info (bmc_info_state_data_t *state_data)
                         channel_info_list[i].vendor_id);
       else
         pstdout_printf (state_data->pstate,
-                        "Vendor ID             : %u\n",
+                        "Vendor ID            : %u\n",
                         channel_info_list[i].vendor_id);
 
       first_newline_output++;
