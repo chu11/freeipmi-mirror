@@ -2047,7 +2047,7 @@ get_mca_auxiliary_log_status (bmc_device_state_data_t *state_data)
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "fiid_obj_get: 'timestamp': %s\n",
-                       fiid_obj_errormsg (obj_cmd_rs));
+                       fiid_obj_errormsg (mca_obj_cmd_rs));
       goto cleanup;
     }
 
@@ -2073,7 +2073,7 @@ get_mca_auxiliary_log_status (bmc_device_state_data_t *state_data)
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "fiid_obj_get: 'mca_log_entry_count': %s\n",
-                       fiid_obj_errormsg (obj_cmd_rs));
+                       fiid_obj_errormsg (mca_obj_cmd_rs));
       goto cleanup;
     }
   mca_log_entry_count = val;
@@ -2985,7 +2985,7 @@ error_out:
           pstdout_fprintf (state_data->pstate,
                            stderr,
                            "fiid_obj_get: 'count_written': %s\n",
-                           fiid_obj_errormsg (fru_get_inventory_rs));
+                           fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
       count_written = val;

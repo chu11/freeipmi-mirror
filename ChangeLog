@@ -1,5 +1,8 @@
 2026-07-28 Albert Chu <chu11@llnl.gov>
 
+	* bmc-device/bmc-device.c (get_mca_auxiliary_log_status, write_fru):
+	Report errors from the object actually queried.
+
 	* bmc-device/bmc-device-argp.c (cmdline_options): Fix duplicate argp
 	help group-order numbers.
 
