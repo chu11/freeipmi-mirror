@@ -196,7 +196,7 @@ get_self_test_results (bmc_device_state_data_t *state_data)
                     "Self Test Result : Self Test function not implemented in this controller.\n");
   else if (self_test_result == IPMI_SELF_TEST_RESULT_CORRUPTED_OR_INACCESSIBLE_DATA_OR_DEVICES)
     pstdout_printf (state_data->pstate,
-                    "Self Test Result                                  : Corrupted or inaccessible data or devices\n");
+                    "Self Test Result : Corrupted or inaccessible data or devices\n");
   else if (self_test_result == IPMI_SELF_TEST_RESULT_FATAL_HARDWARE_ERROR)
     pstdout_printf (state_data->pstate,
                     "Self Test Result : Fatal hardware error (system should consider BMC inoperative).  Controller hardware may need to be repaired or replaced.\n");
@@ -1653,7 +1653,7 @@ platform_event (bmc_device_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "ipmi_cmd_get_channel_info: %s",
+                       "ipmi_cmd_get_channel_info: %s\n",
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }

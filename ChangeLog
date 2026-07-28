@@ -1,5 +1,8 @@
 2026-07-28 Albert Chu <chu11@llnl.gov>
 
+	* bmc-device/bmc-device.c (get_self_test_results, platform_event):
+	Fix error message newline and self-test output alignment.
+
 	* bmc-device/bmc-device.c (rearm_sensor, platform_event)
 	(set_sensor_reading_and_event_status): Remove redundant NUL from
 	strtok_r delimiter strings.
