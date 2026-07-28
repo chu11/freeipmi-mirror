@@ -1255,7 +1255,7 @@ set_asset_tag (ipmi_dcmi_state_data_t *state_data)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "fiid_obj_get: 'total_asset_tag_length': %s\n",
+                           "fiid_obj_get: 'total_asset_tag_length_written': %s\n",
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
@@ -1442,7 +1442,7 @@ set_management_controller_identifier_string (ipmi_dcmi_state_data_t *state_data)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "fiid_obj_get: 'total_management_controller_identifier_string_length': %s\n",
+                           "fiid_obj_get: 'total_length_written': %s\n",
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
