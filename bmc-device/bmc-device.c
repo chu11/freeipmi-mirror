@@ -990,13 +990,13 @@ rearm_sensor (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  str_ptr = strtok_r (rearm_sensor_arg_cpy, " \t\0", &lasts);
+  str_ptr = strtok_r (rearm_sensor_arg_cpy, " \t", &lasts);
   while (str_ptr && num_str_args < BMC_DEVICE_MAX_REARM_SENSOR_ARGS)
     {
       str_args[num_str_args] = str_ptr;
       num_str_args++;
 
-      str_ptr = strtok_r (NULL, " \t\0", &lasts);
+      str_ptr = strtok_r (NULL, " \t", &lasts);
     }
 
   if (num_str_args != BMC_DEVICE_MIN_REARM_SENSOR_ARGS
@@ -1620,13 +1620,13 @@ platform_event (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  str_ptr = strtok_r (platform_event_arg_cpy, " \t\0", &lasts);
+  str_ptr = strtok_r (platform_event_arg_cpy, " \t", &lasts);
   while (str_ptr && num_str_args < BMC_DEVICE_MAX_PLATFORM_EVENT_ARGS)
     {
       str_args[num_str_args] = str_ptr;
       num_str_args++;
 
-      str_ptr = strtok_r (NULL, " \t\0", &lasts);
+      str_ptr = strtok_r (NULL, " \t", &lasts);
     }
 
   if (num_str_args != BMC_DEVICE_MAX_PLATFORM_EVENT_ARGS
@@ -1832,13 +1832,13 @@ set_sensor_reading_and_event_status (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  str_ptr = strtok_r (set_sensor_reading_and_event_status_arg_cpy, " \t\0", &lasts);
+  str_ptr = strtok_r (set_sensor_reading_and_event_status_arg_cpy, " \t", &lasts);
   while (str_ptr && num_str_args < BMC_DEVICE_SET_SENSOR_READING_AND_EVENT_STATUS_ARGS)
     {
       str_args[num_str_args] = str_ptr;
       num_str_args++;
 
-      str_ptr = strtok_r (NULL, " \t\0", &lasts);
+      str_ptr = strtok_r (NULL, " \t", &lasts);
     }
 
   if (num_str_args != BMC_DEVICE_SET_SENSOR_READING_AND_EVENT_STATUS_ARGS)
