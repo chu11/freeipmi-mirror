@@ -1147,7 +1147,7 @@ _daemon_setup (void)
         gratuitous_arp = IPMI_BMC_GENERATED_GRATUITOUS_ARP_DO_NOT_SUSPEND;
 
       if (cmd_args.arp_response)
-        arp_response = cmd_args.gratuitous_arp_arg;
+        arp_response = cmd_args.arp_response_arg;
       else
         arp_response = IPMI_BMC_GENERATED_ARP_RESPONSE_DO_NOT_SUSPEND;
 
