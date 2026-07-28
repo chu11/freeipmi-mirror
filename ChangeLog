@@ -1,5 +1,8 @@
 2026-07-28 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-chassis/ipmi-chassis.c (get_chassis_capabilities): Test named
+	local for FRU address Unspecified suffix.
+
 	* ipmi-chassis/ipmi-chassis.c (get_chassis_capabilities): Fix wrong
 	field name in bridge_device_address error message.
 
