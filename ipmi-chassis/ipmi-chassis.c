@@ -199,7 +199,7 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'system_management_device_address': %s\n",
+                       "fiid_obj_get: 'bridge_device_address': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
