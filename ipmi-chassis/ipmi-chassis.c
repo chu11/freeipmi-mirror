@@ -147,7 +147,7 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
   pstdout_printf (state_data->pstate,
                   "FRU Info Device Address : %Xh %s\n",
                   fru_info_device_address,
-                  (val ? "" : "(Unspecified)"));
+                  (fru_info_device_address ? "" : "(Unspecified)"));
 
   if (FIID_OBJ_GET (obj_cmd_rs,
                     "sdr_device_address",
