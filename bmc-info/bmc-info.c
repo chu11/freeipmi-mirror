@@ -1216,6 +1216,8 @@ display_channel_info (bmc_info_state_data_t *state_data)
 
   assert (state_data);
 
+  memset (channel_info_list, '\0', sizeof (channel_info_list));
+
   if (get_channel_info_list (state_data, channel_info_list) < 0)
     return (-1);
 
