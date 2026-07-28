@@ -717,8 +717,6 @@ display_system_info_common (bmc_info_state_data_t *state_data,
   assert (func_cmd_str);
   assert (string_prefix);
 
-  assert (state_data);
-
   memset (string, '\0', BMC_INFO_SYSTEM_INFO_STRING_MAX + 1);
 
   if (!(obj_cmd_first_set_rs = fiid_obj_create (tmpl_cmd_first_set)))

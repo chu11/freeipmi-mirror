@@ -1,5 +1,8 @@
 2026-07-28 Albert Chu <chu11@llnl.gov>
 
+	* bmc-info/bmc-info.c (display_system_info_common): Remove duplicate
+	assert.
+
 	* bmc-info/bmc-info.c (display_channel_info): Fix Vendor ID label
 	alignment in channel info output.
 
