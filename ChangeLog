@@ -1,5 +1,8 @@
 2026-07-28 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-chassis/ipmi-chassis.c (get_chassis_capabilities): Fix wrong
+	field name in bridge_device_address error message.
+
 	* ipmi-chassis/ipmi-chassis.c (get_power_on_hours_counter): Guard
 	against division by zero.
 
