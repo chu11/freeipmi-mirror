@@ -111,7 +111,7 @@ cold_reset (bmc_device_state_data_t *state_data)
     }
 
   rv = 0;
- cleanup:
+cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
@@ -143,7 +143,7 @@ warm_reset (bmc_device_state_data_t *state_data)
     }
 
   rv = 0;
- cleanup:
+cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
@@ -330,7 +330,7 @@ get_self_test_results (bmc_device_state_data_t *state_data)
     }
 
   rv = 0;
- cleanup:
+cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
@@ -509,7 +509,7 @@ get_acpi_power_state (bmc_device_state_data_t *state_data)
                     statestr);
 
   rv = 0;
- cleanup:
+cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
@@ -551,7 +551,7 @@ set_acpi_power_state (bmc_device_state_data_t *state_data)
     }
 
   rv = 0;
- cleanup:
+cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
@@ -746,7 +746,7 @@ get_lan_statistics (bmc_device_state_data_t *state_data)
                   udp_proxy_packets_dropped);
 
   rv = 0;
- cleanup:
+cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
@@ -793,7 +793,7 @@ clear_lan_statistics (bmc_device_state_data_t *state_data)
     }
 
   rv = 0;
- cleanup:
+cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
@@ -1166,7 +1166,7 @@ rearm_sensor (bmc_device_state_data_t *state_data)
     }
 
   rv = 0;
- cleanup:
+cleanup:
   free (rearm_sensor_arg_cpy);
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
@@ -1230,7 +1230,7 @@ get_sdr_repository_time (bmc_device_state_data_t *state_data)
                   "SDR Repository Time : %s\n",
                   timestr);
   rv = 0;
- cleanup:
+cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
@@ -1301,7 +1301,7 @@ set_sdr_repository_time (bmc_device_state_data_t *state_data)
     }
 
   rv = 0;
- cleanup:
+cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
@@ -1364,7 +1364,7 @@ get_sel_time (bmc_device_state_data_t *state_data)
                   "SEL Time : %s\n",
                   timestr);
   rv = 0;
- cleanup:
+cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
@@ -1435,7 +1435,7 @@ set_sel_time (bmc_device_state_data_t *state_data)
     }
 
   rv = 0;
- cleanup:
+cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
@@ -1486,7 +1486,7 @@ get_sel_time_utc_offset (bmc_device_state_data_t *state_data)
                     "SEL UTC Offset : %d minutes\n",
                     offset);
   rv = 0;
- cleanup:
+cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
@@ -1533,7 +1533,7 @@ set_sel_time_utc_offset (bmc_device_state_data_t *state_data)
     }
 
   rv = 0;
- cleanup:
+cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
@@ -1791,7 +1791,7 @@ platform_event (bmc_device_state_data_t *state_data)
     }
 
   rv = 0;
- cleanup:
+cleanup:
   free (platform_event_arg_cpy);
   fiid_obj_destroy (obj_cmd_get_channel_info_rs);
   fiid_obj_destroy (obj_cmd_rs);
@@ -1991,7 +1991,7 @@ set_sensor_reading_and_event_status (bmc_device_state_data_t *state_data)
     }
 
   rv = 0;
- cleanup:
+cleanup:
   free (set_sensor_reading_and_event_status_arg_cpy);
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
@@ -2083,7 +2083,7 @@ get_mca_auxiliary_log_status (bmc_device_state_data_t *state_data)
                   mca_log_entry_count);
 
   rv = 0;
- cleanup:
+cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   fiid_obj_destroy (mca_obj_cmd_rs);
   return (rv);
@@ -2214,7 +2214,7 @@ get_ssif_interface_capabilities (bmc_device_state_data_t *state_data)
                   output_message_size);
 
   rv = 0;
- cleanup:
+cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
@@ -2282,7 +2282,7 @@ get_kcs_interface_capabilities (bmc_device_state_data_t *state_data)
                   input_maximum_message_size);
 
   rv = 0;
- cleanup:
+cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
@@ -2391,7 +2391,7 @@ get_bt_interface_capabilities (bmc_device_state_data_t *state_data)
                   recommended_retries);
 
   rv = 0;
- cleanup:
+cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
@@ -2516,7 +2516,7 @@ get_bmc_global_enables (bmc_device_state_data_t *state_data)
                   (val == IPMI_BMC_GLOBAL_ENABLES_ENABLED) ? "enabled" : "disabled");
 
   rv = 0;
- cleanup:
+cleanup:
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
 }
@@ -2621,7 +2621,7 @@ set_system_info_common (bmc_device_state_data_t *state_data,
     }
 
   rv = 0;
- cleanup:
+cleanup:
   fiid_obj_destroy (obj_cmd_first_set_rs);
   fiid_obj_destroy (obj_cmd_rs);
   return (rv);
@@ -2813,9 +2813,9 @@ read_fru (bmc_device_state_data_t *state_data)
 
 
  /* Close of fru_ctx in run_cmd_args */
- out:
+out:
   rv = 0;
- cleanup:
+cleanup:
   ipmi_fru_close_device_id (state_data->fru_ctx);
   close (fd);
   return (rv);
@@ -2970,7 +2970,7 @@ write_fru (bmc_device_state_data_t *state_data)
               continue;
             }
 
-        error_out:
+error_out:
           pstdout_fprintf (state_data->pstate,
                            stderr,
                            "ipmi_cmd_write_fru_data: %s\n",
@@ -3007,7 +3007,7 @@ write_fru (bmc_device_state_data_t *state_data)
     fprintf (stderr, "100%%\r\n");
 
   rv = 0;
- cleanup:
+cleanup:
   fiid_obj_destroy (fru_get_inventory_rs);
   fiid_obj_destroy (obj_cmd_rs);
   close (fd);
@@ -3165,7 +3165,7 @@ _bmc_device (pstdout_state_t pstate,
     goto cleanup;
 
   exit_code = EXIT_SUCCESS;
- cleanup:
+cleanup:
   ipmi_sdr_ctx_destroy (state_data.sdr_ctx);
   ipmi_fru_ctx_destroy (state_data.fru_ctx);
   ipmi_ctx_close (state_data.ipmi_ctx);

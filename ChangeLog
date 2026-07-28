@@ -1,5 +1,8 @@
 2026-07-28 Albert Chu <chu11@llnl.gov>
 
+	* bmc-device/bmc-device.c: Make goto label indentation consistent,
+	flush left throughout.
+
 	* bmc-device/bmc-device.c (get_sel_time_utc_offset): Remove unused
 	argument to pstdout_printf that had no matching format specifier.
 
