@@ -1,5 +1,8 @@
 2026-07-28 Albert Chu <chu11@llnl.gov>
 
+	* bmc-info/bmc-info.c (get_channel_info_list): Advance channel index
+	for failed channel queries.
+
 	* bmc-info/bmc-info.c (display_channel_info): Zero channel_info_list
 	before populating.
 

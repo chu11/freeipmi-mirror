@@ -1117,6 +1117,7 @@ get_channel_info_list (bmc_info_state_data_t *state_data, channel_info_t *channe
           channel_info_list[ci].active_session_count = 0;
           channel_info_list[ci].session_support = 0;
           channel_info_list[ci].vendor_id = 0;
+          ci++;
           continue;
         }
 
