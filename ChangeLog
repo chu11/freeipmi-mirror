@@ -1,3 +1,8 @@
+2026-07-28 Albert Chu <chu11@llnl.gov>
+
+	* bmc-device/bmc-device.c (get_sel_time_utc_offset): Remove unused
+	argument to pstdout_printf that had no matching format specifier.
+
 2026-06-07 Fabio Fantoni <fantonifabio@tiscali.it>
 
 	* man/freeipmi.conf.5.pre.in, man/ipmidetectd.conf.5.pre.in,
