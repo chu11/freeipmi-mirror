@@ -867,6 +867,14 @@ get_power_on_hours_counter (ipmi_chassis_state_data_t *state_data)
 
   counter_reading = val;
 
+  if (!minutes_per_counter)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "invalid minutes_per_counter (0) returned by BMC\n");
+      goto cleanup;
+    }
+
   min = counter_reading / minutes_per_counter;
 
   hrs = min / 60;
