@@ -1,5 +1,9 @@
 2026-07-28 Albert Chu <chu11@llnl.gov>
 
+	* bmc-device/bmc-device.c (rearm_sensor, platform_event)
+	(set_sensor_reading_and_event_status): Remove redundant NUL from
+	strtok_r delimiter strings.
+
 	* bmc-device/bmc-device.c: Make goto label indentation consistent,
 	flush left throughout.
 
