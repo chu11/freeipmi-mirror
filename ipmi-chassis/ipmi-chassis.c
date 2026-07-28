@@ -52,6 +52,8 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
   uint64_t val = 0;
   int rv = -1;
 
+  assert (state_data);
+
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_chassis_capabilities_rs)))
     {
       pstdout_fprintf (state_data->pstate,
@@ -227,6 +229,8 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
   char *str;
   int rv = -1;
   int flag;
+
+  assert (state_data);
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_chassis_status_rs)))
     {
@@ -667,6 +671,8 @@ chassis_control (ipmi_chassis_state_data_t *state_data)
   int rv = -1;
   struct ipmi_chassis_arguments *args;
 
+  assert (state_data);
+
   args = state_data->prog_data->args;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_chassis_control_rs)))
@@ -701,6 +707,8 @@ chassis_identify (ipmi_chassis_state_data_t *state_data)
   fiid_obj_t obj_cmd_rs = NULL;
   int rv = -1;
   struct ipmi_chassis_arguments *args;
+
+  assert (state_data);
 
   args = state_data->prog_data->args;
 
@@ -738,6 +746,8 @@ get_system_restart_cause (ipmi_chassis_state_data_t *state_data)
   uint64_t val = 0;
   char *restart_cause_str;
   int rv = -1;
+
+  assert (state_data);
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_system_restart_cause_rs)))
     {
@@ -826,6 +836,8 @@ get_power_on_hours_counter (ipmi_chassis_state_data_t *state_data)
   uint8_t minutes_per_counter;
   uint32_t counter_reading, min, hrs;
   int rv = -1;
+
+  assert (state_data);
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_power_on_hours_counter_rs)))
     {
