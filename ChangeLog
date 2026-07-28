@@ -1,5 +1,8 @@
 2026-07-28 Albert Chu <chu11@llnl.gov>
 
+	* bmc-device/bmc-device-argp.c (cmdline_options): Fix duplicate argp
+	help group-order numbers.
+
 	* bmc-device/bmc-device.c (get_self_test_results, platform_event):
 	Fix error message newline and self-test output alignment.
 
