@@ -128,8 +128,6 @@ static struct argp_option cmdline_options[] =
       "Specify time interval before resetting timer.", 67},
     { "help", HELP_KEY, NULL, 0,
       "Output help.", 68},
-    { "help", HELP_KEY, NULL, 0,
-      "Output help.", 69},
     { "version", VERSION_KEY, NULL, 0,
       "Output version.", 70},
     { NULL, 0, NULL, 0, NULL, 0}
