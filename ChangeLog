@@ -1,5 +1,9 @@
 2026-07-28 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-dcmi/ipmi-dcmi.c
+	(set_management_controller_identifier_string): Remove stray blank
+	line.
+
 	* ipmi-chassis/ipmi-chassis.c (get_chassis_capabilities): Test named
 	local for FRU address Unspecified suffix.
 

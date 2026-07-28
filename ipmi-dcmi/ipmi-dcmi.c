@@ -1447,7 +1447,6 @@ set_management_controller_identifier_string (ipmi_dcmi_state_data_t *state_data)
           goto cleanup;
         }
 
-
       /* DCMI 1.1 spec is unclear on "total_length_written", is it the
        * number of bytes just written or total bytes written so far?
        *
