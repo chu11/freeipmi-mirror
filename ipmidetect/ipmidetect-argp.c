@@ -127,11 +127,11 @@ _read_nodes_from_stdin (struct ipmidetect_arguments *cmd_args)
 
   if (n > 0)
     {
-      char *ptr = strtok (buf, " \t\n\0");
+      char *ptr = strtok (buf, " \t\n");
       while (ptr)
         {
           _push_inputted_nodes (cmd_args, ptr);
-          ptr = strtok (NULL, " \t\n\0");
+          ptr = strtok (NULL, " \t\n");
         }
     }
 }
