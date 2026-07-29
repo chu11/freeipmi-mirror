@@ -1,5 +1,8 @@
 2026-07-29 Albert Chu <chu11@llnl.gov>
 
+	* common/pingtool/ping-tool-common.c (_strncpy): NUL-terminate
+	instead of writing '0'.
+
 	* common/pingtool/ping-tool-common.c (_setup): Remove dead srand()
 	and unused DEVURANDOM/DEVRANDOM defines.
 
