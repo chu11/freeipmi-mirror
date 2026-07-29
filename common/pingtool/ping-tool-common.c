@@ -484,10 +484,10 @@ _setup (void)
                           break;
                         }
                     }
-
-                  if (!ifa)
-                    ipmi_ping_err_exit ("Cannot find interface: %s", pingtool_interface);
 		}
+
+	      if (!ifa)
+		ipmi_ping_err_exit ("Cannot find interface: %s", pingtool_interface);
 
 	      freeifaddrs (ifaddr);
             }
