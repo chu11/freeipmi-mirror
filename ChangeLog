@@ -1,5 +1,8 @@
 2026-07-29 Albert Chu <chu11@llnl.gov>
 
+	* ipmiping/ipmiping.c (parsepacket): Remove duplicated
+	per_message_authentication read.
+
 	* ipmidetectd/ipmidetectd.c (_fds_setup): Use -1 sentinel for unset
 	server_fd.
 

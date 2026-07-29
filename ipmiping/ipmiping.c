@@ -370,13 +370,6 @@ parsepacket (const char *destination,
                             fiid_obj_errormsg (obj_cmd));
       per_message_authentication = val;
 
-      if (FIID_OBJ_GET (obj_cmd,
-                        "authentication_status.per_message_authentication",
-                        &val) < 0)
-        ipmi_ping_err_exit ("fiid_obj_get: 'authentication_status.per_message_authentication': %s",
-                            fiid_obj_errormsg (obj_cmd));
-      per_message_authentication = val;
-
       printf (", auth: none=%s md2=%s md5=%s password=%s oem=%s anon=%s null=%s non-null=%s user=%s permsg=%s ",
               _setstr (none), _setstr (md2), _setstr (md5),
               _setstr (straight_password_key),_setstr (oem),
