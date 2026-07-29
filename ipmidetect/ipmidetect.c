@@ -400,6 +400,7 @@ main (int argc, char *argv[])
 
   (void)ipmidetect_handle_destroy (handle);
   fi_hostlist_destroy (cmd_args.inputted_nodes);
+  free (cmd_args.hostname);
 
   exit (exit_val);
 }
