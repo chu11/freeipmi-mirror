@@ -87,9 +87,6 @@
 #define IPMI_PING_VERSION_1_5_STR  "1.5"
 #define IPMI_PING_VERSION_2_0_STR  "2.0"
 
-#define DEVURANDOM                "/dev/urandom"
-#define DEVRANDOM                 "/dev/random"
-
 /* getopt */
 extern char *optarg;
 extern int optind, opterr, optopt;
@@ -514,8 +511,6 @@ _setup (void)
 
   if (!ai)
     ipmi_ping_err_exit ("Error determining destination IP");
-
-  srand (time (NULL));
 
   freeaddrinfo (ai_res);
 }
