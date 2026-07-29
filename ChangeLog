@@ -1,5 +1,7 @@
 2026-07-29 Albert Chu <chu11@llnl.gov>
 
+	* ipmidetect/ipmidetect.c (main): Free strdup'd hostname on exit.
+
 	* ipmidetect/ipmidetect-argp.c (_read_nodes_from_stdin): Drop
 	redundant NUL from strtok delimiter set.
 
