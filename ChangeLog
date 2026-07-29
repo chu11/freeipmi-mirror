@@ -1,5 +1,8 @@
 2026-07-29 Albert Chu <chu11@llnl.gov>
 
+	* ipmidetect/ipmidetect-argp.c (_read_nodes_from_stdin): Drop
+	redundant NUL from strtok delimiter set.
+
 	* ipmidetect/ipmidetect-argp.c (cmdline_parse): Validate port is in
 	range 1-65535.
 
