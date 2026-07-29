@@ -1,5 +1,8 @@
 2026-07-29 Albert Chu <chu11@llnl.gov>
 
+	* ipmidetectd/ipmidetectd.c (_fds_setup): Use -1 sentinel for unset
+	server_fd.
+
 	* ipmidetect/ipmidetect.c (main): Free strdup'd hostname on exit.
 
 	* ipmidetect/ipmidetect-argp.c (_read_nodes_from_stdin): Drop
