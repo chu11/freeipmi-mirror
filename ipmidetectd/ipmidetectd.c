@@ -113,7 +113,7 @@ unsigned int fds_count = 0;
 List nodes = NULL;
 unsigned int nodes_count = 0;
 hash_t nodes_index = NULL;
-int server_fd = 0;
+int server_fd = -1;
 
 extern int h_errno;
 
@@ -131,7 +131,7 @@ _fds_setup (void)
   assert (!fds);
   assert (!fds_count);
   assert (!nodes_count);
-  assert (!server_fd);
+  assert (server_fd < 0);
 
   /* IPv4 and IPv6 fds are not needed in the general sense, however b/c
    * we're doing up/down based on IP/string matching, we need binding so
