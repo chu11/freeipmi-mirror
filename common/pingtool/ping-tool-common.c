@@ -472,7 +472,8 @@ _setup (void)
 		      memcpy (&tmpaddr, ifa->ifa_addr, sizeof (struct sockaddr_in6));
 
 		      if ((is_interfacename && !strcmp (ifa->ifa_name, pingtool_interface))
-			  || !memcmp (&tmpaddr.sin6_addr, &in6, sizeof (struct in6_addr)))
+			  || (!is_interfacename
+			      && !memcmp (&tmpaddr.sin6_addr, &in6, sizeof (struct in6_addr))))
                         {
                           memcpy (&pingtool_srcaddr6.sin6_addr,
                                   &tmpaddr.sin6_addr,

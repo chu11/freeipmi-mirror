@@ -1,5 +1,8 @@
 2026-07-29 Albert Chu <chu11@llnl.gov>
 
+	* common/pingtool/ping-tool-common.c (_setup): Do not read
+	uninitialized in6 in IPv6 interface match.
+
 	* common/pingtool/ping-tool-common.c (_setup): Fix IPv6 "Cannot find
 	interface" check trapped inside loop.
 
