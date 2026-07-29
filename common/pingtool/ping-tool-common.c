@@ -164,7 +164,7 @@ _strncpy (char *dest, char *src, unsigned int len)
   assert (src);
 
   strncpy (dest, src, len);
-  dest[len] = '0';
+  dest[len] = '\0';
 }
 
 static void
