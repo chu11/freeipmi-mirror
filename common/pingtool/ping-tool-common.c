@@ -240,7 +240,7 @@ _cmdline_parse (int argc,
           pingtool_count = strtol (optarg, &endptr, 10);
           if (errno || endptr[0] != '\0')
             ipmi_ping_err_exit ("count argument invalid");
-          if (!pingtool_count)
+          if (pingtool_count < 1)
             ipmi_ping_err_exit ("count must be > 0");
           break;
         case 'i':
@@ -248,7 +248,7 @@ _cmdline_parse (int argc,
           pingtool_interval = strtol (optarg, &endptr, 10);
           if (errno || endptr[0] != '\0')
             ipmi_ping_err_exit ("interval argument invalid");
-          if (!pingtool_interval)
+          if (pingtool_interval < 1)
             ipmi_ping_err_exit ("interval must be > 0");
           break;
         case 'I':
@@ -259,7 +259,7 @@ _cmdline_parse (int argc,
           pingtool_timeout = strtol (optarg, &endptr, 10);
           if (errno || endptr[0] != '\0')
             ipmi_ping_err_exit ("timeout argument invalid");
-          if (!pingtool_timeout)
+          if (pingtool_timeout < 1)
             ipmi_ping_err_exit ("timeout must be > 0");
           break;
         case 'v':
