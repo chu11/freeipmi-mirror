@@ -156,7 +156,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       errno = 0;
       cmd_args->port = strtol (arg, &endptr, 10);
       if (errno
-          || endptr[0] != '\0')
+          || endptr[0] != '\0'
+          || cmd_args->port < 1
+          || cmd_args->port > 65535)
         err_exit ("invalid port specified");
       break;
     case IPMIDETECT_DETECTED_KEY:
