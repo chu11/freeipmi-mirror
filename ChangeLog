@@ -1,5 +1,8 @@
 2026-07-30 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-locate/ipmi-locate.c (main): Add missing newline to the
+	ipmi_locate_ctx_create() error message.
+
 	* ipmi-fru/ipmi-fru-output.c (ipmi_fru_output_power_supply_information):
 	Drop the stray peak_capacity argument from the "unspecified" printf,
 	whose format string has no matching conversion.
