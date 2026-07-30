@@ -597,8 +597,7 @@ ipmi_fru_output_power_supply_information (ipmi_fru_state_data_t *state_data,
                     peak_capacity);
   else
     pstdout_printf (state_data->pstate,
-                    "  FRU Power Supply Peak Capacity: unspecified\n",
-                    peak_capacity);
+                    "  FRU Power Supply Peak Capacity: unspecified\n");
 
   pstdout_printf (state_data->pstate,
                   "  FRU Power Supply Hold Up Time: %u s\n",

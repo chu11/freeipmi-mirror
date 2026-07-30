@@ -1,5 +1,9 @@
 2026-07-30 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-fru/ipmi-fru-output.c (ipmi_fru_output_power_supply_information):
+	Drop the stray peak_capacity argument from the "unspecified" printf,
+	whose format string has no matching conversion.
+
 	* ipmi-fru/ipmi-fru-argp.c (cmdline_parse): Store the --device-id
 	strtol result in a long so out-of-range values are range-checked
 	before being narrowed to int rather than silently truncated.
