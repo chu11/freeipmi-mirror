@@ -1,5 +1,9 @@
 2026-07-30 Albert Chu <chu11@llnl.gov>
 
+	* libipmimonitoring/ipmi_monitoring_sel.c: Pass ipmi_sel_ctx_errormsg
+	rather than ipmi_sel_ctx_errnum to the "%s" debug format on SEL parse
+	error paths.
+
 	* libipmidetect/ipmidetect.c (ipmidetect_load_data): Use each
 	configured hostname when trying the config-file server list.
 
