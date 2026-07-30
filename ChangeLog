@@ -1,5 +1,10 @@
 2026-07-29 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-intelnm.c (_parse_suspend_period_time): Parse
+	the minutes field from minutes_ptr rather than re-parsing the hours
+	buffer, so minutes are read correctly instead of always equaling
+	hours.
+
 	* common/pingtool/ping-tool-common.c (_setup): Fix IPv6 "Cannot find
 	interface" check trapped inside loop.
 
