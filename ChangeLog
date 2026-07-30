@@ -1,3 +1,9 @@
+2026-07-30 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-fru/ipmi-fru-argp.c (cmdline_parse): Store the --device-id
+	strtol result in a long so out-of-range values are range-checked
+	before being narrowed to int rather than silently truncated.
+
 2026-08-04 Anonymous <anonymous>
 
 	* man/Makefile.am: Fix preprocessor portability through use of -x
