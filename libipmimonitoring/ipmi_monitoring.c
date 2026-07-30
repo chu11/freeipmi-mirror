@@ -902,7 +902,7 @@ ipmi_monitoring_sel_iterator_destroy (ipmi_monitoring_ctx_t c)
   if (!c || c->magic != IPMI_MONITORING_MAGIC)
     return;
 
-  list_delete_all (c->sensor_readings, _list_delete_all, "dummyvalue");
+  list_delete_all (c->sel_records, _list_delete_all, "dummyvalue");
 
   if (c->sel_records_itr)
     {

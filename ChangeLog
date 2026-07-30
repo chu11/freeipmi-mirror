@@ -1,5 +1,8 @@
 2026-07-30 Albert Chu <chu11@llnl.gov>
 
+	* libipmimonitoring/ipmi_monitoring.c (ipmi_monitoring_sel_iterator_destroy):
+	Clear c->sel_records rather than c->sensor_readings.
+
 	* libipmidetect/ipmidetect.c (ipmidetect_load_data): Use each
 	configured hostname when trying the config-file server list.
 
