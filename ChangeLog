@@ -1,5 +1,10 @@
 2026-07-30 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-intelnm.c (_parse_suspend_period_time): Parse
+	the minutes field from minutes_ptr rather than re-parsing the hours
+	buffer, so minutes are read correctly instead of always equaling
+	hours.
+
 	* ipmi-oem/ipmi-oem-thirdparty.c
 	(ipmi_oem_thirdparty_get_account_status): Destroy
 	get_user_name_obj_cmd_rs in the cleanup path; it was leaked on

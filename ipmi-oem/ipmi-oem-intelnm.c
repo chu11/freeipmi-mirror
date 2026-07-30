@@ -4690,7 +4690,7 @@ _parse_suspend_period_time (ipmi_oem_state_data_t *state_data,
     }
 
   errno = 0;
-  minutes = strtoul (buf, &ptr, 10);
+  minutes = strtoul (minutes_ptr, &ptr, 10);
 
   if (errno
       || ptr[0] != '\0'
