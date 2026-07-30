@@ -109,9 +109,9 @@ ipmiconsole_packet_template (ipmiconsole_ctx_t c,
     case IPMICONSOLE_PACKET_TYPE_DEACTIVATE_PAYLOAD_RS:
       return (&tmpl_cmd_deactivate_payload_rs[0]);
     case IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RQ:
-      return (&tmpl_cmd_chassis_control_rq[0]);
+      return (&tmpl_cmd_close_session_rq[0]);
     case IPMICONSOLE_PACKET_TYPE_CLOSE_SESSION_RS:
-      return (&tmpl_cmd_chassis_control_rs[0]);
+      return (&tmpl_cmd_close_session_rs[0]);
     default:
       IPMICONSOLE_CTX_DEBUG (c, ("invalid packet type: %d", p));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);

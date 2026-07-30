@@ -1,5 +1,9 @@
 2026-07-30 Albert Chu <chu11@llnl.gov>
 
+	* libipmiconsole/ipmiconsole_packet.c (ipmiconsole_packet_template):
+	Return the close_session templates rather than the chassis_control
+	templates for the CLOSE_SESSION packet types.
+
 	* libipmiconsole/ipmiconsole.c (ipmiconsole_ctx_create): Pass
 	strerror(errno) rather than the raw int errno to the "%s" debug
 	format on the host parse/validation error paths.
