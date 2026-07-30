@@ -167,6 +167,12 @@ _ipmi_monitoring_sdr_cache_filename (ipmi_monitoring_ctx_t c,
                 }
               else
                 {
+                  if ((index + 2) >= MAXPATHLEN)
+                    {
+                      IPMI_MONITORING_DEBUG (("_ipmi_monitoring_sdr_cache_filename: overflow"));
+                      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
+                      return (-1);
+                    }
                   sdr_cache_filename[index] = '%';
                   index++;
                   sdr_cache_filename[index] = *str;
