@@ -1,3 +1,8 @@
+2026-07-30 Albert Chu <chu11@llnl.gov>
+
+	* libipmidetect/ipmidetect.c (ipmidetect_load_data): Use each
+	configured hostname when trying the config-file server list.
+
 2026-08-03 Albert Chu <chu11@llnl.gov>
 
 	* common/toolcommon/pstdout.c (_pstdout_consolidated_data_compare):
