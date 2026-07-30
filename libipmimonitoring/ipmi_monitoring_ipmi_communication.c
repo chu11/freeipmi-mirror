@@ -398,7 +398,7 @@ _ipmi_2_0_init (ipmi_monitoring_ctx_t c,
   else
     privilege_level = IPMI_MONITORING_PRIVILEGE_LEVEL_DEFAULT;
 
-  if (config && config->cipher_suite_id > 0)
+  if (config && config->cipher_suite_id >= 0)
     cipher_suite_id = config->cipher_suite_id;
   else
     cipher_suite_id = 3;
