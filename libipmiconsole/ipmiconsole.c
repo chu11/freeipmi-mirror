@@ -1200,7 +1200,7 @@ ipmiconsole_ctx_create (const char *hostname,
                                      &hostname_copy,
                                      &port_copy)) < 0)
     {
-      IPMICONSOLE_DEBUG (("host_is_host_with_port: %s", errno));
+      IPMICONSOLE_DEBUG (("host_is_host_with_port: %s", strerror (errno)));
       errno = EINVAL;
       return (NULL);
     }
@@ -1217,7 +1217,7 @@ ipmiconsole_ctx_create (const char *hostname,
                             port_ptr,
                             &port)) < 0)
     {
-      IPMICONSOLE_DEBUG (("host_is_valid: %s", errno));
+      IPMICONSOLE_DEBUG (("host_is_valid: %s", strerror (errno)));
       errno = EINVAL;
       goto free_cleanup;
     }

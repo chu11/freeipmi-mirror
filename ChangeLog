@@ -1,5 +1,9 @@
 2026-07-30 Albert Chu <chu11@llnl.gov>
 
+	* libipmiconsole/ipmiconsole.c (ipmiconsole_ctx_create): Pass
+	strerror(errno) rather than the raw int errno to the "%s" debug
+	format on the host parse/validation error paths.
+
 	* libipmimonitoring/ipmi_monitoring.c (ipmi_monitoring_sel_iterator_first)
 	(ipmi_monitoring_sel_iterator_next): Report NO_SEL_RECORDS rather than
 	NO_SENSOR_READINGS.
