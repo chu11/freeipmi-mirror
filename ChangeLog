@@ -1,5 +1,9 @@
 2026-07-30 Albert Chu <chu11@llnl.gov>
 
+	* libipmimonitoring/ipmi_monitoring.c (ipmi_monitoring_sel_iterator_first)
+	(ipmi_monitoring_sel_iterator_next): Report NO_SEL_RECORDS rather than
+	NO_SENSOR_READINGS.
+
 	* libipmimonitoring/ipmi_monitoring_sensor_reading.c
 	(_get_sensor_bitmask_type): Join the THRESHOLD test to the following
 	if/else-if chain so it is not clobbered by the terminal else.
