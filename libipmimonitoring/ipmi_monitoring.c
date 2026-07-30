@@ -869,7 +869,7 @@ ipmi_monitoring_sel_iterator_first (ipmi_monitoring_ctx_t c)
 
   if (!c->sel_records_itr)
     {
-      c->errnum = IPMI_MONITORING_ERR_NO_SENSOR_READINGS;
+      c->errnum = IPMI_MONITORING_ERR_NO_SEL_RECORDS;
       return (-1);
     }
 
@@ -887,7 +887,7 @@ ipmi_monitoring_sel_iterator_next (ipmi_monitoring_ctx_t c)
 
   if (!c->sel_records_itr)
     {
-      c->errnum = IPMI_MONITORING_ERR_NO_SENSOR_READINGS;
+      c->errnum = IPMI_MONITORING_ERR_NO_SEL_RECORDS;
       return (-1);
     }
 

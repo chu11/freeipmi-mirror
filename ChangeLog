@@ -1,5 +1,9 @@
 2026-07-30 Albert Chu <chu11@llnl.gov>
 
+	* libipmimonitoring/ipmi_monitoring.c (ipmi_monitoring_sel_iterator_first)
+	(ipmi_monitoring_sel_iterator_next): Report NO_SEL_RECORDS rather than
+	NO_SENSOR_READINGS.
+
 	* libipmimonitoring/ipmi_monitoring_ipmi_communication.c (_ipmi_2_0_init):
 	Accept cipher suite id 0 rather than overriding it with the default.
 
