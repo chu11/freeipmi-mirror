@@ -1,3 +1,8 @@
+2026-07-30 Albert Chu <chu11@llnl.gov>
+
+	* libipmidetect/ipmidetect.c (ipmidetect_load_data): Use each
+	configured hostname when trying the config-file server list.
+
 2026-07-29 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/ipmi-oem-intelnm.c (_parse_suspend_period_time): Parse

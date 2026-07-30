@@ -659,7 +659,7 @@ ipmidetect_load_data (ipmidetect_t handle,
           if (strlen (conffile_config.hostnames[i]) > 0)
             {
               if (_get_data (handle,
-                             hostname,
+                             conffile_config.hostnames[i],
                              port,
                              timeout_len) < 0)
                 continue;
