@@ -1251,6 +1251,7 @@ ipmi_oem_thirdparty_get_account_status (ipmi_oem_state_data_t *state_data)
   rv = 0;
  cleanup:
   fiid_obj_destroy (get_user_access_obj_cmd_rs);
+  fiid_obj_destroy (get_user_name_obj_cmd_rs);
   return (rv);
 }
 
