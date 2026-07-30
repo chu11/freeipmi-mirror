@@ -652,7 +652,7 @@ _get_sensor_bitmask_type (ipmi_monitoring_ctx_t c,
 
   if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_THRESHOLD)
     sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_THRESHOLD;
-  if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_STATE)
+  else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_TRANSITION_STATE)
     sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_TRANSITION_STATE;
   else if (event_reading_type_code == IPMI_EVENT_READING_TYPE_CODE_STATE)
     sensor_bitmask_type = IPMI_MONITORING_SENSOR_BITMASK_TYPE_STATE;

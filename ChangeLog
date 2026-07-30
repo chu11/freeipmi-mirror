@@ -1,5 +1,9 @@
 2026-07-30 Albert Chu <chu11@llnl.gov>
 
+	* libipmimonitoring/ipmi_monitoring_sensor_reading.c
+	(_get_sensor_bitmask_type): Join the THRESHOLD test to the following
+	if/else-if chain so it is not clobbered by the terminal else.
+
 	* libipmimonitoring/ipmi_monitoring_sdr_cache.c
 	(_ipmi_monitoring_sdr_cache_filename): Bounds-check the two-byte
 	unknown-escape write so the filename buffer stays NUL-terminated.
