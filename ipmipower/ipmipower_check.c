@@ -1090,7 +1090,7 @@ ipmipower_check_rakp_4_integrity_check_value (ipmipower_powercmd_t ip,
   if ((managed_system_guid_len = fiid_obj_get_data (ip->obj_rakp_message_2_rs,
                                                     "managed_system_guid",
                                                     managed_system_guid,
-                                                    IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH)) < 0)
+                                                    IPMI_MANAGED_SYSTEM_GUID_LENGTH)) < 0)
     {
       IPMIPOWER_ERROR (("fiid_obj_get_data: 'managed_system_guid': %s",
                         fiid_obj_errormsg (ip->obj_rakp_message_2_rs)));

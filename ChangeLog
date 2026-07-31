@@ -1,5 +1,12 @@
 2026-07-30 Albert Chu <chu11@llnl.gov>
 
+	* ipmipower/ipmipower_check.c
+	(ipmipower_check_rakp_4_integrity_check_value): Pass
+	IPMI_MANAGED_SYSTEM_GUID_LENGTH rather than
+	IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH as the buffer length to
+	fiid_obj_get_data for managed_system_guid, matching the
+	destination buffer size.
+
 	* ipmi-oem/ipmi-oem-intelnm.c (_parse_suspend_period_time): Parse
 	the minutes field from minutes_ptr rather than re-parsing the hours
 	buffer, so minutes are read correctly instead of always equaling
