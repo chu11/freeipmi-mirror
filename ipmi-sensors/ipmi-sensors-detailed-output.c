@@ -1007,7 +1007,7 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
   int event_reading_type_code_class;
   uint64_t val;
   uint8_t event_reading_type_code;
-  uint8_t sensor_type;
+  uint8_t sensor_type = 0;
   uint8_t all_event_messages;
   uint8_t scanning_on_this_sensor;
   uint16_t event_bitmask;
