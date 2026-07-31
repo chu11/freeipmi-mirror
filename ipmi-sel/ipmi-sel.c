@@ -505,6 +505,8 @@ _hex_output (ipmi_sel_state_data_t *state_data)
 
   assert (state_data);
 
+  memset (record_data, '\0', IPMI_SEL_RECORD_MAX_RECORD_LENGTH);
+
   if ((record_data_len = ipmi_sel_parse_read_record (state_data->sel_ctx,
                                                      record_data,
                                                      IPMI_SEL_RECORD_MAX_RECORD_LENGTH)) < 0)

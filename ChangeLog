@@ -1,5 +1,10 @@
 2026-07-30 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sel/ipmi-sel.c (_hex_output): memset record_data before
+	reading the SEL record, so a short/malformed record does not lead
+	to the hex-dump print loop reading uninitialized stack bytes when
+	--debug is not specified.
+
 	* ipmi-raw/ipmi-raw.c (ipmi_raw_stream): Print line_count, an
 	unsigned int, with %u rather than %d in the "Invalid number of hex
 	bytes" and "Invalid netfn value" error messages.
