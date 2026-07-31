@@ -254,9 +254,9 @@ _stdin (ipmiconsole_ctx_t c,
 
 static void
 sol_ioloop (ipmiconsole_ctx_t c,
-        char escape_char,
-        int solfd,
-        int localfd)
+            char escape_char,
+            int solfd,
+            int localfd)
 {
   char buf[IPMICONSOLE_BUFLEN];
   struct timeval tv;
@@ -355,11 +355,11 @@ sol_ioloop (ipmiconsole_ctx_t c,
 
 static int
 sol_connect (ipmiconsole_ctx_t c,
-            struct ipmiconsole_arguments *cmd_args,
-            struct ipmiconsole_ipmi_config *ipmi_config,
-            struct ipmiconsole_protocol_config *protocol_config,
-            struct ipmiconsole_engine_config *engine_config,
-            int localfd)
+             struct ipmiconsole_arguments *cmd_args,
+             struct ipmiconsole_ipmi_config *ipmi_config,
+             struct ipmiconsole_protocol_config *protocol_config,
+             struct ipmiconsole_engine_config *engine_config,
+             int localfd)
 {
   int solfd = -1;
 
@@ -423,9 +423,9 @@ sol_connect (ipmiconsole_ctx_t c,
   printf ("[SOL established]\r\n");
 
   sol_ioloop (c,
-            cmd_args->escape_char,
-            solfd,
-            localfd);
+              cmd_args->escape_char,
+              solfd,
+              localfd);
 
   printf ("\r\n[closing the connection]\r\n");
   /* ignore potential error, cleanup path */
@@ -435,28 +435,28 @@ sol_connect (ipmiconsole_ctx_t c,
 
 static void sigterm_handler (int signal, siginfo_t *_unused, void *_unused2)
 {
-        sigterm = 1;
+  sigterm = 1;
 }
 
 
 void set_sigterm_handler (int type)
 {
-        struct sigaction sig_action;
+  struct sigaction sig_action;
 
-        sigemptyset (&sig_action.sa_mask);
-        sig_action.sa_sigaction = &sigterm_handler;
-        sig_action.sa_flags = type;
-        sigaction (SIGTERM, &sig_action, NULL);
-        sigaction (SIGINT,  &sig_action, NULL);
+  sigemptyset (&sig_action.sa_mask);
+  sig_action.sa_sigaction = &sigterm_handler;
+  sig_action.sa_flags = type;
+  sigaction (SIGTERM, &sig_action, NULL);
+  sigaction (SIGINT,  &sig_action, NULL);
 }
 
 static void
 sol_proxy (ipmiconsole_ctx_t c,
-            struct ipmiconsole_arguments *cmd_args,
-            struct ipmiconsole_ipmi_config *ipmi_config,
-            struct ipmiconsole_protocol_config *protocol_config,
-            struct ipmiconsole_engine_config *engine_config,
-            int listen_s)
+           struct ipmiconsole_arguments *cmd_args,
+           struct ipmiconsole_ipmi_config *ipmi_config,
+           struct ipmiconsole_protocol_config *protocol_config,
+           struct ipmiconsole_engine_config *engine_config,
+           int listen_s)
 {
   char addrbuf[INET6_ADDRSTRLEN];
   struct sockaddr remote_addr;
@@ -506,11 +506,11 @@ sol_proxy (ipmiconsole_ctx_t c,
         }
       printf ("Connection from %s\n", addrbuf);
       ret = sol_connect (c,
-                        cmd_args,
-                        ipmi_config,
-                        protocol_config,
-                        engine_config,
-                        connection_s);
+                         cmd_args,
+                         ipmi_config,
+                         protocol_config,
+                         engine_config,
+                         connection_s);
       if (ret < 0)
         fprintf (stderr, "Session terminated with error: %d\n", ret);
 
@@ -670,11 +670,11 @@ main (int argc, char **argv)
           exit (EXIT_FAILURE);
         }
         sol_proxy (c,
-                  &cmd_args,
-                  &ipmi_config,
-                  &protocol_config,
-                  &engine_config,
-                  proxyfd);
+                   &cmd_args,
+                   &ipmi_config,
+                   &protocol_config,
+                   &engine_config,
+                   proxyfd);
         shutdown (proxyfd, 2);
         close (proxyfd);
         goto cleanup;
@@ -692,11 +692,11 @@ main (int argc, char **argv)
 #endif /* !NDEBUG */
 
   sol_connect (c,
-                  &cmd_args,
-                  &ipmi_config,
-                  &protocol_config,
-                  &engine_config,
-                  STDIN_FILENO);
+               &cmd_args,
+               &ipmi_config,
+               &protocol_config,
+               &engine_config,
+               STDIN_FILENO);
 
 #ifndef NDEBUG
   if (!cmd_args.noraw)
