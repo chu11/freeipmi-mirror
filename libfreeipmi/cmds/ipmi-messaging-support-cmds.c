@@ -1432,7 +1432,6 @@ fill_cmd_set_system_info_parameters_set_in_progress (uint8_t state,
     }
 
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
-  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SYSTEM_INFO_PARAMETERS);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SYSTEM_INFO_PARAMETER_SYSTEM_FIRMWARE_VERSION);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "state", state);

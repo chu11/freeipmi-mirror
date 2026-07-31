@@ -1,5 +1,9 @@
 2026-07-31 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/cmds/ipmi-messaging-support-cmds.c
+	(fill_cmd_set_system_info_parameters_set_in_progress): Remove the
+	duplicate FILL_FIID_OBJ_CLEAR call.
+
 	* libfreeipmi/cmds/ipmi-rmcpplus-support-and-payload-cmds.c
 	(fill_cmd_set_user_payload_access): Remove the duplicate
 	"reserved2" set; the field is already set above and this second
