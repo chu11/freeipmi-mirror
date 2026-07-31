@@ -1,5 +1,18 @@
 2026-07-31 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/cmds/ipmi-messaging-support-cmds.c
+	(fill_cmd_get_session_challenge, fill_cmd_set_user_name)
+	(fill_cmd_set_user_password): Copy the validated argument length
+	rather than the fixed buffer size into the pre-zeroed buffer.
+
+	* libfreeipmi/cmds/ipmi-lan-cmds.c
+	(fill_cmd_set_lan_configuration_parameters_community_string):
+	Likewise.  strncpy(buf, src, sizeof(buf)) reads src until a NUL or
+	the buffer size, so a caller passing a non-NUL-terminated buffer
+	shorter than the fixed length could be over-read; memcpy of the
+	already-validated length avoids the over-read (the buffer is
+	memset to zero first, so zero-extension is preserved).
+
 	* libfreeipmi/cmds/ipmi-pef-and-alerting-cmds.c
 	(fill_cmd_set_last_processed_event_id): Fix field name
 	"set_record_id_for_last_record," -> "set_record_id_for_last_record"

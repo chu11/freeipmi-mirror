@@ -1909,7 +1909,7 @@ fill_cmd_set_lan_configuration_parameters_community_string (uint8_t channel_numb
   /* achu: community_string should be zero extended */
   memset (buf, '\0', IPMI_MAX_COMMUNITY_STRING_LENGTH);
   if (community_string)
-    strncpy (buf, community_string, IPMI_MAX_COMMUNITY_STRING_LENGTH);
+    memcpy (buf, community_string, community_string_len);
 
   FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "community_string", buf, IPMI_MAX_COMMUNITY_STRING_LENGTH);
 
