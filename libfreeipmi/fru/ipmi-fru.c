@@ -566,7 +566,7 @@ _ipmi_fru_open_device_id_common (ipmi_fru_ctx_t ctx,
       memcpy (ctx->frudata,
               areabuf,
               areabuflen > IPMI_FRU_AREA_SIZE_MAX ? IPMI_FRU_AREA_SIZE_MAX : areabuflen);
-      ctx->fru_inventory_area_size = areabuflen;
+      ctx->fru_inventory_area_size = areabuflen > IPMI_FRU_AREA_SIZE_MAX ? IPMI_FRU_AREA_SIZE_MAX : areabuflen;
       ctx->device_opened_with_buffer = 1;
     }
   else

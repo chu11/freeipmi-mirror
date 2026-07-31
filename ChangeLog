@@ -1,5 +1,14 @@
 2026-07-31 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/fru/ipmi-fru.c (_ipmi_fru_open_device_id_common):
+	Clamp ctx->fru_inventory_area_size to IPMI_FRU_AREA_SIZE_MAX when
+	opening with a caller-supplied buffer, matching the clamp already
+	applied to the frudata memcpy.  Previously the size was set to the
+	unclamped areabuflen, so a caller opening with areabuflen greater
+	than IPMI_FRU_AREA_SIZE_MAX could pass the bounds check in
+	_read_fru_data and read past the end of the 65536-byte frudata
+	buffer.
+
 	* libfreeipmi/libcommon/ipmi-crypt-gcrypt.c (gcrypt_init): Unlock
 	gcrypt_thread_initialized_mutex on the GCRYCTL_SET_THREAD_CBS
 	error path before returning; previously the function returned with
