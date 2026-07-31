@@ -1,3 +1,12 @@
+2026-07-31 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/cmds/ipmi-pef-and-alerting-cmds.c
+	(fill_cmd_set_last_processed_event_id): Fix field name
+	"set_record_id_for_last_record," -> "set_record_id_for_last_record"
+	in the FILL_FIID_OBJ_SET call.  The stray trailing comma in the
+	string literal did not match any template field, so
+	fiid_obj_set failed and the fill function always returned -1.
+
 2026-07-30 Albert Chu <chu11@llnl.gov>
 
 	* libipmiconsole/ipmiconsole_packet.c (ipmiconsole_packet_template):

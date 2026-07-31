@@ -1045,7 +1045,7 @@ fill_cmd_set_last_processed_event_id (uint8_t set_record_id_for_last_record,
 
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAST_PROCESSED_EVENT_ID);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "set_record_id_for_last_record,", set_record_id_for_last_record);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "set_record_id_for_last_record", set_record_id_for_last_record);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "record_id", record_id);
   return (0);
