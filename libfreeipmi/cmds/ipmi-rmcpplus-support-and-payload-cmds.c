@@ -624,7 +624,6 @@ fill_cmd_set_user_payload_access (uint8_t channel_number,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "standard_payload_5", standard_payload_5);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "standard_payload_6", standard_payload_6);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "standard_payload_7", standard_payload_7);
-  FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved3", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "oem_payload_0", oem_payload_0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "oem_payload_1", oem_payload_1);

@@ -1,5 +1,11 @@
 2026-07-31 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/cmds/ipmi-rmcpplus-support-and-payload-cmds.c
+	(fill_cmd_set_user_payload_access): Remove the duplicate
+	"reserved2" set; the field is already set above and this second
+	set (between the standard_payload sets and "reserved3") was a
+	redundant no-op.
+
 	* libfreeipmi/cmds/ipmi-messaging-support-cmds.c
 	(fill_cmd_get_session_challenge, fill_cmd_set_user_name)
 	(fill_cmd_set_user_password): Copy the validated argument length
