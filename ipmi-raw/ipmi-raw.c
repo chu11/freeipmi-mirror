@@ -285,7 +285,7 @@ ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "Invalid number of hex bytes on line %d\n",
+                           "Invalid number of hex bytes on line %u\n",
                            line_count);
           goto end_loop;
         }
@@ -294,7 +294,7 @@ ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "Invalid netfn value on line %d\n",
+                           "Invalid netfn value on line %u\n",
                            line_count);
           goto end_loop;
         }

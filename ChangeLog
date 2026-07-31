@@ -1,5 +1,9 @@
 2026-07-30 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-raw/ipmi-raw.c (ipmi_raw_stream): Print line_count, an
+	unsigned int, with %u rather than %d in the "Invalid number of hex
+	bytes" and "Invalid netfn value" error messages.
+
 	* ipmipower/ipmipower.c (_sendto): Drop the stray fd argument from
 	the cbuf_read error message, whose format string has a single %s
 	that consumed fd (an int) as a char pointer.
