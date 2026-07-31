@@ -216,7 +216,7 @@ _sendto (cbuf_t cbuf, int fd, struct sockaddr *destaddr, socklen_t destaddrlen)
 
   if ((n = cbuf_read (cbuf, buf, IPMIPOWER_PACKET_BUFLEN)) < 0)
     {
-      IPMIPOWER_ERROR (("cbuf_read: %s", fd, strerror (errno)));
+      IPMIPOWER_ERROR (("cbuf_read: %s", strerror (errno)));
       exit (EXIT_FAILURE);
     }
 

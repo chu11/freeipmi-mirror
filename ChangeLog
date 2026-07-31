@@ -1,5 +1,9 @@
 2026-07-30 Albert Chu <chu11@llnl.gov>
 
+	* ipmipower/ipmipower.c (_sendto): Drop the stray fd argument from
+	the cbuf_read error message, whose format string has a single %s
+	that consumed fd (an int) as a char pointer.
+
 	* ipmipower/ipmipower_check.c
 	(ipmipower_check_rakp_4_integrity_check_value): Pass
 	IPMI_MANAGED_SYSTEM_GUID_LENGTH rather than
