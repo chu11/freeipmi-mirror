@@ -433,8 +433,8 @@ _get_destination_addresses (ipmi_config_state_data_t *state_data,
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  uint8_t alert_ip_address_bytes[4];
-  uint8_t alert_mac_address_bytes[6];
+  uint8_t alert_ip_address_bytes[4] = { 0, 0, 0, 0 };
+  uint8_t alert_mac_address_bytes[6] = { 0, 0, 0, 0, 0, 0 };
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   ipmi_config_err_t ret;
   uint8_t channel_number;

@@ -1,5 +1,13 @@
 2026-07-30 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config-category-pef-lan-alert-destination.c
+	(_get_destination_addresses): Zero-initialize alert_ip_address_bytes
+	and alert_mac_address_bytes at declaration.  fiid_obj_get_data copies
+	only as many bytes as the response field contains, so a BMC returning
+	a short alerting_ip_address/alerting_mac_address field left trailing
+	bytes uninitialized, which snprintf then formatted into the checkout
+	string.
+
 	* ipmi-sensors/ipmi-sensors-detailed-output.c
 	(_detailed_output_event_enable): Initialize sensor_type to 0 at
 	declaration; it was passed uninitialized to ipmi_get_event_messages
