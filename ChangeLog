@@ -1,5 +1,11 @@
 2026-07-31 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/libcommon/ipmi-crypt-gcrypt.c (gcrypt_init): Unlock
+	gcrypt_thread_initialized_mutex on the GCRYCTL_SET_THREAD_CBS
+	error path before returning; previously the function returned with
+	the mutex still held, which could deadlock a subsequent
+	gcrypt_init call.
+
 	* libfreeipmi/cmds/ipmi-messaging-support-cmds.c
 	(fill_cmd_set_system_info_parameters_set_in_progress): Remove the
 	duplicate FILL_FIID_OBJ_CLEAR call.

@@ -88,6 +88,7 @@ gcrypt_init (void)
         {
           ERR_GCRYPT_TRACE (e);
           SET_ERRNO (_gpg_error_to_errno (e));
+          pthread_mutex_unlock (&gcrypt_thread_initialized_mutex);
           return (-1);
         }
       gcrypt_thread_initialized++;
