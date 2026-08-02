@@ -1,3 +1,13 @@
+2026-08-02 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/util/ipmi-lan-util.c (ipmi_lan_check_packet_checksum):
+	Return 0 for a runt packet whose length is smaller than the
+	authentication_type offset, before reading that byte.  Previously
+	the byte was read after only a "!pkt_len" check, so a packet of
+	1..4 bytes caused a read past the packet content.  This mirrors the
+	guard already present in
+	ipmi_lan_check_packet_session_authentication_code.
+
 2026-07-31 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/fru/ipmi-fru.c (_ipmi_fru_open_device_id_common):
