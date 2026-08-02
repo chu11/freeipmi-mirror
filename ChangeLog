@@ -1,5 +1,10 @@
 2026-08-02 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/util/ipmi-lan-util.c (ipmi_lan_check_session_id): Fix
+	inverted fiid_obj_valid check; the guard returned EINVAL for a
+	valid object and fell through with an invalid one.  Add the missing
+	"!" so the function matches its sibling validators.
+
 	* libfreeipmi/util/ipmi-lan-util.c (ipmi_lan_check_packet_checksum):
 	Return 0 for a runt packet whose length is smaller than the
 	authentication_type offset, before reading that byte.  Previously

@@ -79,7 +79,7 @@ ipmi_lan_check_session_id (fiid_obj_t obj_lan_session_hdr, uint32_t session_id)
   uint32_t session_id_recv;
   uint64_t val;
 
-  if (fiid_obj_valid (obj_lan_session_hdr))
+  if (!fiid_obj_valid (obj_lan_session_hdr))
     {
       SET_ERRNO (EINVAL);
       return (-1);
