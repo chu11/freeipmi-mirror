@@ -1,5 +1,11 @@
 2026-08-03 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/util/ipmi-error-util.c (ipmi_completion_code_string):
+	Add missing "break" after the IPMI_CMD_MASTER_WRITE_READ comp_code
+	switch.  Without it, an unmatched comp_code fell through into the
+	IPMI_CMD_SUSPEND_RESUME_PAYLOAD_ENCRYPTION case and could return the
+	wrong error string.
+
 	* libfreeipmi/util/ipmi-sensor-util.c (ipmi_sensor_units_string):
 	After emitting the "% " percentage prefix, pass "buflen - offset"
 	(not the full "buflen") to the subsequent snprintf calls that write

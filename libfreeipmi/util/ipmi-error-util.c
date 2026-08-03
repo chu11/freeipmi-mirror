@@ -436,6 +436,7 @@ ipmi_completion_code_strerror_r (uint8_t cmd,
                 case IPMI_COMP_CODE_MASTER_WRITE_READ_TRUNCATED_READ:
                   SNPRINTF_RETURN (IPMI_COMP_CODE_MASTER_WRITE_READ_TRUNCATED_READ_STR);
                 }
+              break;
             case IPMI_CMD_SUSPEND_RESUME_PAYLOAD_ENCRYPTION:
               switch (comp_code)
                 {
