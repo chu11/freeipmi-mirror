@@ -464,6 +464,14 @@ _ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
         break;
     }
 
+  /* achu: bytes_read accumulates the raw device-claimed block lengths,
+   * which can exceed buf_len; cap it to the bytes actually stored in buf
+   * (like ipmi_kcs_read) so the returned count can never exceed the
+   * buffer we filled.
+   */
+  if (bytes_read > buf_len)
+    bytes_read = buf_len;
+
   if (bytes_read > INT_MAX)
     {
       SSIF_SET_ERRNUM (ctx, IPMI_SSIF_ERR_OVERFLOW);

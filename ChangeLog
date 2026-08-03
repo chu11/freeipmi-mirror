@@ -1,5 +1,13 @@
 2026-08-03 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/driver/ipmi-ssif-driver.c (_ipmi_ssif_read): Cap the
+	returned byte count to buf_len before returning.  bytes_read
+	accumulated the raw device-claimed SSIF block lengths, which a
+	malfunctioning or malicious BMC can inflate beyond the caller's
+	buffer; the copy loops were already clamped, but the uncapped count
+	was returned as read_len and handed to unassemble_ipmi_kcs_pkt.
+	Match ipmi_kcs_read, which caps its count at buf_len.
+
 	* libfreeipmi/api/ipmi-api.c (ipmi_ctx_open_outofband,
 	ipmi_ctx_open_outofband_2_0): On the retransmission/session timeout
 	parameter-error exit, "goto cleanup" instead of returning directly so
