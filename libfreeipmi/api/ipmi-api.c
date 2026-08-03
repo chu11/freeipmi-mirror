@@ -540,7 +540,7 @@ ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
   if (ctx->io.outofband.retransmission_timeout >= ctx->io.outofband.session_timeout)
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
+      goto cleanup;
     }
 
   memset (&ctx->io.outofband.last_send, '\0', sizeof (struct timeval));
@@ -696,7 +696,7 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
   if (ctx->io.outofband.retransmission_timeout >= ctx->io.outofband.session_timeout)
     {
       API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
-      return (-1);
+      goto cleanup;
     }
 
   memset (ctx->io.outofband.k_g, '\0', IPMI_MAX_K_G_LENGTH);

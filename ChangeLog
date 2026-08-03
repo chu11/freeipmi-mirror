@@ -1,5 +1,13 @@
 2026-08-03 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/api/ipmi-api.c (ipmi_ctx_open_outofband,
+	ipmi_ctx_open_outofband_2_0): On the retransmission/session timeout
+	parameter-error exit, "goto cleanup" instead of returning directly so
+	ctx->type is reset to IPMI_DEVICE_UNKNOWN.  Previously the context was
+	left marked LAN/LAN_2_0, so a retry after correcting the timeout hit a
+	spurious IPMI_ERR_DEVICE_ALREADY_OPEN.  No allocations have occurred at
+	this point, so the cleanup path is a no-op apart from the type reset.
+
 	* libfreeipmi/cmds/ipmi-messaging-support-cmds.c
 	(fill_cmd_set_user_password): secure_memset the local "buf" scratch
 	buffer before returning; it holds a cleartext copy of the password
