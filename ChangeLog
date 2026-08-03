@@ -1,5 +1,10 @@
 2026-08-03 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/cmds/ipmi-messaging-support-cmds.c
+	(fill_cmd_set_user_password): secure_memset the local "buf" scratch
+	buffer before returning; it holds a cleartext copy of the password
+	and was previously left on the stack.  Include secure.h.
+
 	* libfreeipmi/util/ipmi-sensor-and-event-code-tables-util.c
 	(_strcat_pef_action): Append the actual pef_action string after the
 	separator instead of the literal "%s".  For the second and later

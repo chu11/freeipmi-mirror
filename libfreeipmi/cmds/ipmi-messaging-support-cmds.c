@@ -42,6 +42,7 @@
 #include "libcommon/ipmi-trace.h"
 
 #include "freeipmi-portability.h"
+#include "secure.h"
 
 #define IPMI_MAX_K_LENGTH 64
 
@@ -2395,6 +2396,9 @@ fill_cmd_set_user_password (uint8_t user_id,
         memcpy (buf, password, password_len);
 
       FILL_FIID_OBJ_SET_DATA (obj_cmd_rq, "password", buf, buf_max_len);
+
+      /* secure_memset b/c buf could contain cleartext password */
+      secure_memset (buf, '\0', IPMI_2_0_MAX_PASSWORD_LENGTH);
     }
 
   return (0);
