@@ -240,7 +240,7 @@ _strcat_pef_action (char *buf, unsigned int buflen, uint8_t flag, int str_len, i
       else
         {
           strcat (buf, _ipmi_event_message_separator);
-          strcat (buf, "%s");
+          strcat (buf, ipmi_sensor_type_system_event_event_data2_offset_pef_action[index]);
         }
 
       return (str_len + len_temp);

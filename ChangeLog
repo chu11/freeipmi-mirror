@@ -1,5 +1,12 @@
 2026-08-03 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/util/ipmi-sensor-and-event-code-tables-util.c
+	(_strcat_pef_action): Append the actual pef_action string after the
+	separator instead of the literal "%s".  For the second and later
+	actions the function concatenated "%s" rather than the action name,
+	so a PEF action list with more than one entry produced e.g.
+	"Power off%s" instead of "Power off / Reset".
+
 	* libfreeipmi/util/ipmi-error-util.c (ipmi_completion_code_string):
 	Add missing "break" after the IPMI_CMD_MASTER_WRITE_READ comp_code
 	switch.  Without it, an unmatched comp_code fell through into the
