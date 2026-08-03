@@ -1,3 +1,12 @@
+2026-08-03 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/util/ipmi-sensor-util.c (ipmi_sensor_units_string):
+	After emitting the "% " percentage prefix, pass "buflen - offset"
+	(not the full "buflen") to the subsequent snprintf calls that write
+	at "buf + offset", and clamp offset to buflen - 1 if the prefix was
+	truncated.  Previously each post-prefix snprintf was told it had the
+	full buffer, so it could write up to offset bytes past the end.
+
 2026-08-02 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/util/ipmi-lan-util.c (ipmi_lan_check_session_id): Fix

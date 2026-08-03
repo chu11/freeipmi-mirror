@@ -194,9 +194,17 @@ ipmi_sensor_units_string (uint8_t sensor_units_percentage,
           return (rv);
         }
       else
-        offset = snprintf (buf,
-                           buflen,
-                           "%% ");
+        {
+          offset = snprintf (buf,
+                             buflen,
+                             "%% ");
+          /* snprintf returns the length it would have written; clamp so
+           * "buf + offset" and "buflen - offset" below stay in bounds if
+           * the prefix was truncated.
+           */
+          if (offset >= (int)buflen)
+            offset = buflen - 1;
+        }
     }
 
   if (abbreviated_units_flag)
@@ -208,7 +216,7 @@ ipmi_sensor_units_string (uint8_t sensor_units_percentage,
       && sensor_units_rate == IPMI_SENSOR_RATE_UNIT_NONE)
     {
       rv = snprintf (buf + offset,
-                     buflen,
+                     buflen - offset,
                      "%s",
                      sensor_units[sensor_base_unit_type]);
       return (rv);
@@ -224,12 +232,12 @@ ipmi_sensor_units_string (uint8_t sensor_units_percentage,
       if (sensor_base_unit_type == IPMI_SENSOR_UNIT_RPM
           && sensor_units_rate == IPMI_SENSOR_RATE_UNIT_PER_MINUTE)
         rv = snprintf (buf + offset,
-                       buflen,
+                       buflen - offset,
                        "%s",
                        sensor_units[sensor_base_unit_type]);
       else
         rv = snprintf (buf + offset,
-                       buflen,
+                       buflen - offset,
                        "%s %s",
                        sensor_units[sensor_base_unit_type],
                        ipmi_sensor_rate_units[sensor_units_rate]);
@@ -242,7 +250,7 @@ ipmi_sensor_units_string (uint8_t sensor_units_percentage,
   if (sensor_modifier_unit_type == IPMI_SENSOR_UNIT_UNSPECIFIED)
     {
       rv = snprintf (buf + offset,
-                     buflen,
+                     buflen - offset,
                      "%s",
                      sensor_units[sensor_base_unit_type]);
     }
@@ -250,13 +258,13 @@ ipmi_sensor_units_string (uint8_t sensor_units_percentage,
     {
       if (sensor_units_modifier == IPMI_SDR_MODIFIER_UNIT_DIVIDE)
         rv = snprintf (buf + offset,
-                       buflen,
+                       buflen - offset,
                        "%s / %s",
                        sensor_units[sensor_base_unit_type],
                        sensor_units[sensor_modifier_unit_type]);
       else
         rv = snprintf (buf + offset,
-                       buflen,
+                       buflen - offset,
                        "%s * %s",
                        sensor_units[sensor_base_unit_type],
                        sensor_units[sensor_modifier_unit_type]);
