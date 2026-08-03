@@ -1385,7 +1385,7 @@ _ipmi_acpi_get_table_dev_mem (ipmi_locate_ctx_t ctx,
   else
     acpi_table_count = rsdt_xsdt_table_data_length / 8;
 
-  acpi_table_length = 0;
+  *acpi_table_length = 0;
   for (i = 0, signature_table_count = 0; i < acpi_table_count; i++)
     {
       fiid_field_t *tmpl_table_address = NULL;
@@ -1437,12 +1437,12 @@ _ipmi_acpi_get_table_dev_mem (ipmi_locate_ctx_t ctx,
       if (signature_table_count == table_instance)
         break;
 
-      free (acpi_table);
-      acpi_table = NULL;
-      acpi_table_length = 0;
+      free (*acpi_table);
+      *acpi_table = NULL;
+      *acpi_table_length = 0;
     }
 
-  if (!acpi_table)
+  if (!(*acpi_table))
     {
       LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
       goto cleanup;

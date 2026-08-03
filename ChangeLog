@@ -1,5 +1,19 @@
 2026-08-03 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/locate/ipmi-locate-acpi-spmi.c
+	(_ipmi_acpi_get_table_dev_mem): Fix pointer/dereference confusion on
+	the acpi_table (uint8_t **) and acpi_table_length (uint32_t *)
+	out-parameters.  The code assigned and freed the parameter pointers
+	themselves instead of their targets: "acpi_table_length = 0",
+	"free (acpi_table)", "acpi_table = NULL", "acpi_table_length = 0", and
+	tested "!acpi_table".  free (acpi_table) freed the address of the
+	caller's local variable (an invalid free / heap corruption), the
+	NULL-pointer assignments caused the callee _ipmi_acpi_get_table to
+	write through a NULL pointer, and "!acpi_table" was always false so the
+	"table not found" error was never reported.  Dereference all four:
+	"*acpi_table_length = 0", "free (*acpi_table)", "*acpi_table = NULL",
+	"!(*acpi_table)".  Reachable on the /dev/mem ACPI fallback path.
+
 	* libfreeipmi/driver/ipmi-inteldcmi-driver.c (_inteldcmi_write_read):
 	On the "!rs_len" and fiid_obj_set_all error exits, "goto cleanup"
 	instead of returning directly so obj_inteldcmi_rq is destroyed rather
