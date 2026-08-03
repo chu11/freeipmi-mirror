@@ -81,6 +81,13 @@ debug_dprintf (int fd, const char *fmt, ...)
 
   va_start (ap, fmt);
   len = vsnprintf (buf, IPMI_DEBUG_MAX_BUF_LEN, fmt, ap);
+  /* vsnprintf() returns the length that *would* have been written; on
+   * truncation this exceeds the buffer size, and it is negative on error.
+   * Clamp before handing the length to _write() so we never read past buf. */
+  if (len < 0)
+    len = 0;
+  else if (len > IPMI_DEBUG_MAX_BUF_LEN)
+    len = IPMI_DEBUG_MAX_BUF_LEN;
   rv = _write (fd, buf, len);
   va_end (ap);
 

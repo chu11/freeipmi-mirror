@@ -1,5 +1,12 @@
 2026-08-03 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/debug/ipmi-debug-common.c (debug_dprintf): Clamp the
+	vsnprintf() return value before passing it to _write().  vsnprintf()
+	returns the length that would have been written (which exceeds the
+	buffer size on truncation) and a negative value on error; either would
+	make _write() read past the end of buf.  Clamp negative values to 0 and
+	oversized values to IPMI_DEBUG_MAX_BUF_LEN.
+
 	* libfreeipmi/interface/ipmi-rmcpplus-interface.c
 	(_deconstruct_payload_confidentiality_aes_cbc_128): Fix a stray comma
 	operator in the confidentiality_trailer fiid_obj_set_data check.  The
