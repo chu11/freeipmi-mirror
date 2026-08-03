@@ -486,7 +486,7 @@ _inteldcmi_write_read (ipmi_inteldcmi_ctx_t ctx,
   uint8_t rq_cmd;
   unsigned int rq_data_len = 0;
   int len;
-  unsigned int rs_len;
+  unsigned int rs_len = 0;
   fiid_obj_t obj_inteldcmi_rq = NULL;
   struct inteldcmi_smi smi_msg;
   struct io_status_block ntstatusdummy;

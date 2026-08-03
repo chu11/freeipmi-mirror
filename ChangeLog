@@ -1,5 +1,12 @@
 2026-08-03 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/driver/ipmi-inteldcmi-driver.c (_inteldcmi_write_read):
+	Initialize rs_len to 0.  It is used purely as the ioctl output
+	parameter (lpcbBytesReturned); a driver that returns success without
+	writing it would leave the subsequent "!rs_len" test and memcpy count
+	reading stack garbage.  The copy is clamped regardless, so this is a
+	robustness fix.
+
 	* libfreeipmi/driver/ipmi-ssif-driver.c (_ipmi_ssif_read): Cap the
 	returned byte count to buf_len before returning.  bytes_read
 	accumulated the raw device-claimed SSIF block lengths, which a
