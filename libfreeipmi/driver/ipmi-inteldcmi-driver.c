@@ -631,7 +631,7 @@ _inteldcmi_write_read (ipmi_inteldcmi_ctx_t ctx,
   if (!rs_len)
     {
       INTELDCMI_SET_ERRNUM (ctx, IPMI_INTELDCMI_ERR_SYSTEM_ERROR);
-      return (-1);
+      goto cleanup;
     }
 
   rs_data[0] = rq_cmd;
@@ -645,7 +645,7 @@ _inteldcmi_write_read (ipmi_inteldcmi_ctx_t ctx,
                         rs_len + 1) < 0)
     {
       INTELDCMI_SET_ERRNUM (ctx, IPMI_INTELDCMI_ERR_INTERNAL_ERROR);
-      return (-1);
+      goto cleanup;
     }
 
   rv = 0;

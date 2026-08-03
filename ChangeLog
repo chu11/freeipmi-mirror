@@ -1,6 +1,13 @@
 2026-08-03 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/driver/ipmi-inteldcmi-driver.c (_inteldcmi_write_read):
+	On the "!rs_len" and fiid_obj_set_all error exits, "goto cleanup"
+	instead of returning directly so obj_inteldcmi_rq is destroyed rather
+	than leaked.  The "!rs_len" path is reachable from a device that
+	returns a zero-length response, so a misbehaving BMC could leak a
+	fiid object on every command.
+
+	* libfreeipmi/driver/ipmi-inteldcmi-driver.c (_inteldcmi_write_read):
 	Initialize rs_len to 0.  It is used purely as the ioctl output
 	parameter (lpcbBytesReturned); a driver that returns success without
 	writing it would leave the subsequent "!rs_len" test and memcpy count
