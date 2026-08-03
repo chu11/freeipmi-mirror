@@ -1999,7 +1999,7 @@ _deconstruct_payload_confidentiality_aes_cbc_128 (uint8_t payload_type,
   if (fiid_obj_set_data (obj_rmcpplus_payload,
                          "confidentiality_trailer",
                          payload_buf + cmd_data_len,
-                         pad_length + 1), 0)
+                         pad_length + 1) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_payload);
       return (-1);

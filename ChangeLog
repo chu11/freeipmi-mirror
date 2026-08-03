@@ -1,5 +1,13 @@
 2026-08-03 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/interface/ipmi-rmcpplus-interface.c
+	(_deconstruct_payload_confidentiality_aes_cbc_128): Fix a stray comma
+	operator in the confidentiality_trailer fiid_obj_set_data check.  The
+	expression "fiid_obj_set_data (...), 0) < 0" discarded the
+	fiid_obj_set_data return value and tested the constant 0, so the error
+	branch was dead code and a set_data failure went undetected.  Test the
+	fiid_obj_set_data return value itself: ") < 0".
+
 	* libfreeipmi/locate/ipmi-locate-acpi-spmi.c
 	(_ipmi_acpi_get_table_dev_mem): Fix pointer/dereference confusion on
 	the acpi_table (uint8_t **) and acpi_table_length (uint32_t *)
