@@ -196,7 +196,7 @@ _pstdout_consolidated_data_compare(void *x, void *y)
   assert(y);
 
   cdataX = (struct pstdout_consolidated_data *)x;
-  cdataY = (struct pstdout_consolidated_data *)x;
+  cdataY = (struct pstdout_consolidated_data *)y;
 
   assert(cdataX->h);
   assert(cdataY->h);

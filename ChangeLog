@@ -1,5 +1,11 @@
 2026-08-03 Albert Chu <chu11@llnl.gov>
 
+	* common/toolcommon/pstdout.c (_pstdout_consolidated_data_compare):
+	Cast the second argument y, not x, into cdataY.  Both operands pointed
+	at x, so the comparator always compared an element with itself and
+	returned 0, leaving list_sort() unable to order the consolidated output
+	by host count.
+
 	* common/miscutil/heap.c (heap_node_destroy): Fix the locked-mutex
 	assert to reference h->mutex instead of the nonexistent identifier
 	l->mutex.  The typo compiled only because asserts are disabled in
