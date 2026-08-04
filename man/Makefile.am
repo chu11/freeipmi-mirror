@@ -188,7 +188,7 @@ MANS_COMMON = \
 	manpage-common-non-abbreviated-units.man
 
 $(MANS_CPP): $(MANS_CPP:%=%.pre)
-	$(CPP_FOR_BUILD) -nostdinc -w -C -P -I. -I$(top_srcdir)/man $@.pre $@
+	$(CPP_FOR_BUILD) -x c -nostdinc -w -C -P -I. -I$(top_srcdir)/man $@.pre -o $@
 
 CLEANFILES = $(MANS_CPP) *~
 DISTCLEANFILES = $(MANS_CPP) $(MANS_CPP:%=%.pre) .deps/*.P

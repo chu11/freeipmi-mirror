@@ -1,3 +1,8 @@
+2026-08-04 Anonymous <anonymous>
+
+	* man/Makefile.am: Fix preprocessor portability through use of -x
+	and -o.
+
 2026-07-29 Albert Chu <chu11@llnl.gov>
 
 	* common/pingtool/ping-tool-common.c (_cmdline_parse): Reject
