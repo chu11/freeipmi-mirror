@@ -318,7 +318,7 @@ heap_node_destroy (Heap h, struct heapNode *p)
   void *v;
   assert (h != NULL);
   assert (h->magic == HEAP_MAGIC);
-  assert (heap_mutex_is_locked(&l->mutex));
+  assert (heap_mutex_is_locked(&h->mutex));
   assert (p != NULL);
   v = p->data;
   free (p);

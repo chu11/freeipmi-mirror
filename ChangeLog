@@ -1,5 +1,10 @@
 2026-08-03 Albert Chu <chu11@llnl.gov>
 
+	* common/miscutil/heap.c (heap_node_destroy): Fix the locked-mutex
+	assert to reference h->mutex instead of the nonexistent identifier
+	l->mutex.  The typo compiled only because asserts are disabled in
+	release builds; with asserts enabled it would fail to build.
+
 	* common/toolcommon/tool-sdr-cache-common.c (_sdr_cache_create): Zero
 	cachefilenamebuf before the first "goto cleanup" instead of after it.
 	The _sdr_cache_create_directory() failure path jumped to cleanup, which
