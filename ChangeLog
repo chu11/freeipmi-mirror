@@ -1,5 +1,17 @@
 2026-08-03 Albert Chu <chu11@llnl.gov>
 
+	* ipmiseld/ipmiseld.c (_ipmiseld_poll): Replace seven "return (-1)"
+	statements with "goto cleanup" on the SEL separator and OEM-data setup
+	paths.  These returns were reached after the ipmi, sdr, sel, and
+	interpret contexts had been created but bypassed the cleanup label,
+	leaking all four contexts and leaving host_data->host_poll pointing at
+	the returning frame's stack instead of NULL.  The very next action in
+	daemon mode is _ipmiseld_poll_postprocess, which asserts
+	!host_data->host_poll.  The ipmi_get_oem_data path is BMC-reachable
+	(it issues Get Device ID), so with --interpret-oem-data or
+	--output-oem-event-strings a BMC that fails that command could crash
+	the daemon or, with asserts disabled, leak a context set every poll.
+
 	* ipmiseld/ipmiseld.c (ipmiseld_calc_percent_full): Return 0 when
 	total_bytes is zero before the percent divide.  The entries and
 	free_space fields both come from the BMC's Get SEL Info response; a

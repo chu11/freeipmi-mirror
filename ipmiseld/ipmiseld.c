@@ -1393,7 +1393,7 @@ _ipmiseld_poll (void *arg)
     {
       ipmiseld_err_output (host_data, "ipmi_sel_ctx_set_separator: %s",
                   ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
-      return (-1);
+      goto cleanup;
     }
 
   if (host_data->prog_data->args->interpret_oem_data
@@ -1402,14 +1402,14 @@ _ipmiseld_poll (void *arg)
       if (ipmi_get_oem_data (NULL,
                              host_data->host_poll->ipmi_ctx,
                              &host_data->host_poll->oem_data) < 0)
-        return (-1);
+        goto cleanup;
 
       if (ipmi_sel_ctx_set_manufacturer_id (host_data->host_poll->sel_ctx,
                                             host_data->host_poll->oem_data.manufacturer_id) < 0)
         {
           ipmiseld_err_output (host_data, "ipmi_sel_ctx_set_manufacturer_id: %s",
                       ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
-          return (-1);
+          goto cleanup;
         }
 
       if (ipmi_sel_ctx_set_product_id (host_data->host_poll->sel_ctx,
@@ -1417,7 +1417,7 @@ _ipmiseld_poll (void *arg)
         {
           ipmiseld_err_output (host_data, "ipmi_sel_ctx_set_product_id: %s",
                       ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
-          return (-1);
+          goto cleanup;
         }
 
       if (ipmi_sel_ctx_set_ipmi_version (host_data->host_poll->sel_ctx,
@@ -1426,7 +1426,7 @@ _ipmiseld_poll (void *arg)
         {
           ipmiseld_err_output (host_data, "ipmi_sel_ctx_set_ipmi_version: %s",
                       ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
-          return (-1);
+          goto cleanup;
         }
 
       if (host_data->prog_data->args->interpret_oem_data)
@@ -1436,7 +1436,7 @@ _ipmiseld_poll (void *arg)
             {
               ipmiseld_err_output (host_data, "ipmi_interpret_ctx_set_manufacturer_id: %s",
                           ipmi_interpret_ctx_errormsg (host_data->host_poll->interpret_ctx));
-              return (-1);
+              goto cleanup;
             }
 
           if (ipmi_interpret_ctx_set_product_id (host_data->host_poll->interpret_ctx,
@@ -1444,7 +1444,7 @@ _ipmiseld_poll (void *arg)
             {
               ipmiseld_err_output (host_data, "ipmi_interpret_ctx_set_product_id: %s",
                           ipmi_interpret_ctx_errormsg (host_data->host_poll->interpret_ctx));
-              return (-1);
+              goto cleanup;
             }
         }
     }
