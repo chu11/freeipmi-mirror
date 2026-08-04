@@ -1,5 +1,14 @@
 2026-08-03 Albert Chu <chu11@llnl.gov>
 
+	* common/toolcommon/pstdout.c (_pstdout_output_finish): Drop and
+	reacquire pstate->mutex around each _pstdout_print_wrapper() call used
+	to flush the residual "\n" from the stdout and stderr cbufs.  The
+	wrappers go through _pstdout_print(), which locks pstate->mutex itself;
+	since the mutex is created non-recursive, calling them while already
+	holding the lock deadlocked the finishing thread.  The surrounding
+	buffered-data flush (which takes only the process-wide consolidation
+	mutex) stays under pstate->mutex as before.
+
 	* common/toolcommon/pstdout.c (_pstdout_print): Replace the bare
 	"return -1" in the unreachable else of the output-mode dispatch with
 	"goto cleanup".  Every other exit in the function uses goto cleanup,

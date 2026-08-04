@@ -1050,12 +1050,58 @@ _pstdout_output_finish(pstdout_state_t pstate)
 
   /* If there is remaining junk in the cbufs, write a "\n" to it so we
    * finish off the line and get it flushed out.
+   *
+   * _pstdout_print_wrapper() reaches _pstdout_print(), which acquires
+   * pstate->mutex itself.  The mutex is non-recursive, so we must drop
+   * the lock across each wrapper call and reacquire it afterward;
+   * calling the wrapper while still holding the lock would deadlock the
+   * finishing thread against itself.
    */
   if (!cbuf_is_empty(pstate->p_stdout))
-    _pstdout_print_wrapper(pstate, 1, stdout, "\n");
+    {
+      if ((rc = pthread_mutex_unlock(&(pstate->mutex))))
+        {
+          if (pstdout_debug_flags & PSTDOUT_DEBUG_STANDARD)
+            fprintf(stderr, "pthread_mutex_unlock: %s\n", strerror(rc));
+          pstdout_errnum = PSTDOUT_ERR_INTERNAL;
+          goto cleanup;
+        }
+      pstate_mutex_locked--;
+
+      _pstdout_print_wrapper(pstate, 1, stdout, "\n");
+
+      if ((rc = pthread_mutex_lock(&(pstate->mutex))))
+        {
+          if (pstdout_debug_flags & PSTDOUT_DEBUG_STANDARD)
+            fprintf(stderr, "pthread_mutex_lock: %s\n", strerror(rc));
+          pstdout_errnum = PSTDOUT_ERR_INTERNAL;
+          goto cleanup;
+        }
+      pstate_mutex_locked++;
+    }
 
   if (!cbuf_is_empty(pstate->p_stderr))
-    _pstdout_print_wrapper(pstate, 1, stderr, "\n");
+    {
+      if ((rc = pthread_mutex_unlock(&(pstate->mutex))))
+        {
+          if (pstdout_debug_flags & PSTDOUT_DEBUG_STANDARD)
+            fprintf(stderr, "pthread_mutex_unlock: %s\n", strerror(rc));
+          pstdout_errnum = PSTDOUT_ERR_INTERNAL;
+          goto cleanup;
+        }
+      pstate_mutex_locked--;
+
+      _pstdout_print_wrapper(pstate, 1, stderr, "\n");
+
+      if ((rc = pthread_mutex_lock(&(pstate->mutex))))
+        {
+          if (pstdout_debug_flags & PSTDOUT_DEBUG_STANDARD)
+            fprintf(stderr, "pthread_mutex_lock: %s\n", strerror(rc));
+          pstdout_errnum = PSTDOUT_ERR_INTERNAL;
+          goto cleanup;
+        }
+      pstate_mutex_locked++;
+    }
 
   if (_pstdout_output_buffer_data(pstate,
                                   stdout,
