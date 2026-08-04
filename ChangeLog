@@ -1,5 +1,16 @@
 2026-08-03 Albert Chu <chu11@llnl.gov>
 
+	* common/toolcommon/pstdout.c (_pstdout_output_buffer_data): Release
+	whichconsolidatedmutex on the error paths.  The consolidated-output
+	branch unlocked the mutex only on the success path; the three
+	"goto cleanup" exits (on _pstdout_consolidated_data_create failure,
+	list_append failure, and fi_hostlist_push failure) returned -1 with the
+	process-wide consolidation mutex still held, so any later thread that
+	consolidated its output would block forever.  Track the lock with a
+	consolidatedmutex_locked flag and unlock it at the cleanup label,
+	checking the unlock return and reporting it under PSTDOUT_DEBUG_STANDARD
+	as the other cleanup sections do.
+
 	* ipmiseld/ipmiseld.c (_ipmiseld_poll): Replace seven "return (-1)"
 	statements with "goto cleanup" on the SEL separator and OEM-data setup
 	paths.  These returns were reached after the ipmi, sdr, sel, and

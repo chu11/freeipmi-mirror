@@ -918,6 +918,9 @@ _pstdout_output_buffer_data(pstdout_state_t pstate,
                             List whichconsolidatedlist,
                             pthread_mutex_t *whichconsolidatedmutex)
 {
+  int consolidatedmutex_locked = 0;
+  int rc;
+
   assert(pstate);
   assert(pstate->magic == PSTDOUT_STATE_MAGIC);
   assert(pstate->p_stdout);
@@ -963,7 +966,6 @@ _pstdout_output_buffer_data(pstdout_state_t pstate,
       else
         {
           struct pstdout_consolidated_data *cdata;
-          int rc;
 
           if ((rc = pthread_mutex_lock(whichconsolidatedmutex)))
             {
@@ -972,6 +974,7 @@ _pstdout_output_buffer_data(pstdout_state_t pstate,
               pstdout_errnum = PSTDOUT_ERR_INTERNAL;
               goto cleanup;
             }
+          consolidatedmutex_locked = 1;
 
           if (!(cdata = list_find_first(whichconsolidatedlist, _pstdout_consolidated_data_find, *whichbuffer)))
             {
@@ -1005,6 +1008,7 @@ _pstdout_output_buffer_data(pstdout_state_t pstate,
               pstdout_errnum = PSTDOUT_ERR_INTERNAL;
               goto cleanup;
             }
+          consolidatedmutex_locked = 0;
 
         }
     }
@@ -1012,6 +1016,15 @@ _pstdout_output_buffer_data(pstdout_state_t pstate,
   return 0;
 
  cleanup:
+  if (consolidatedmutex_locked)
+    {
+      if ((rc = pthread_mutex_unlock(whichconsolidatedmutex)))
+        {
+          if (pstdout_debug_flags & PSTDOUT_DEBUG_STANDARD)
+            fprintf(stderr, "pthread_mutex_unlock: %s\n", strerror(rc));
+          /* Don't change error code, just move on */
+        }
+    }
   return -1;
 }
 
