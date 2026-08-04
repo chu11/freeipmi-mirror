@@ -654,7 +654,7 @@ _pstdout_print(pstdout_state_t pstate,
           else
             {
               pstdout_errnum = PSTDOUT_ERR_INTERNAL;
-              return -1;
+              goto cleanup;
             }
         }
 

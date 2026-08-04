@@ -1,5 +1,12 @@
 2026-08-03 Albert Chu <chu11@llnl.gov>
 
+	* common/toolcommon/pstdout.c (_pstdout_print): Replace the bare
+	"return -1" in the unreachable else of the output-mode dispatch with
+	"goto cleanup".  Every other exit in the function uses goto cleanup,
+	which unlocks pstate->mutex and frees buf and linebuf; the bare return
+	leaked both buffers and left pstate->mutex locked, deadlocking the next
+	print on that host.
+
 	* common/toolcommon/pstdout.c (_pstdout_output_buffer_data): Release
 	whichconsolidatedmutex on the error paths.  The consolidated-output
 	branch unlocked the mutex only on the success path; the three
