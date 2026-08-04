@@ -1,5 +1,11 @@
 2026-08-03 Albert Chu <chu11@llnl.gov>
 
+	* common/toolcommon/tool-sdr-cache-common.c (_sdr_cache_create): Zero
+	cachefilenamebuf before the first "goto cleanup" instead of after it.
+	The _sdr_cache_create_directory() failure path jumped to cleanup, which
+	calls ipmi_sdr_cache_delete(ctx, cachefilenamebuf) on the still
+	uninitialized stack buffer.
+
 	* common/toolcommon/tool-cmdline-common.c (parse_common_opt): Bail out
 	when getpass() returns NULL for the --password-prompt and --k-g-prompt
 	options.  getpass() returns NULL on error (e.g. failing to open the

@@ -526,10 +526,11 @@ _sdr_cache_create (ipmi_sdr_ctx_t ctx,
   assert (ipmi_ctx);
   assert (common_args);
 
+  memset (cachefilenamebuf, '\0', MAXPATHLEN+1);
+
   if (_sdr_cache_create_directory (pstate, common_args->sdr_cache_directory) < 0)
     goto cleanup;
 
-  memset (cachefilenamebuf, '\0', MAXPATHLEN+1);
   if (_sdr_cache_get_cache_filename (pstate,
                                      hostname,
                                      common_args,
