@@ -1,5 +1,13 @@
 2026-08-03 Albert Chu <chu11@llnl.gov>
 
+	* common/toolcommon/tool-cmdline-common.c (parse_common_opt): Bail out
+	when getpass() returns NULL for the --password-prompt and --k-g-prompt
+	options.  getpass() returns NULL on error (e.g. failing to open the
+	controlling terminal); the password path then called strdup(NULL) and
+	the k_g path passed NULL to check_kg_len(), which asserts/derefs it.
+	Print the errno and exit(EXIT_FAILURE) instead, matching how the other
+	prompt failures are handled.
+
 	* common/toolcommon/pstdout.c (_pstdout_output_finish): Drop and
 	reacquire pstate->mutex around each _pstdout_print_wrapper() call used
 	to flush the residual "\n" from the stdout and stderr cbufs.  The

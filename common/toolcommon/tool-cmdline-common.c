@@ -238,7 +238,12 @@ common_parse_opt (int key,
     case ARGP_PASSWORD_PROMPT_KEY:
       free (common_args->password);
       arg = getpass ("Password: ");
-      if (arg && strlen (arg) > IPMI_2_0_MAX_PASSWORD_LENGTH)
+      if (!arg)
+        {
+          fprintf (stderr, "getpass: %s\n", strerror (errno));
+          exit (EXIT_FAILURE);
+        }
+      if (strlen (arg) > IPMI_2_0_MAX_PASSWORD_LENGTH)
         {
           fprintf (stderr, "password too long\n");
           exit (EXIT_FAILURE);
@@ -287,6 +292,11 @@ common_parse_opt (int key,
           }
 
         arg = getpass ("K_g: ");
+        if (!arg)
+          {
+            fprintf (stderr, "getpass: %s\n", strerror (errno));
+            exit (EXIT_FAILURE);
+          }
 
         if ((rv = check_kg_len (arg)) < 0)
           {
