@@ -1,3 +1,12 @@
+2026-08-03 Albert Chu <chu11@llnl.gov>
+
+	* ipmiseld/ipmiseld.c (ipmiseld_calc_percent_full): Return 0 when
+	total_bytes is zero before the percent divide.  The entries and
+	free_space fields both come from the BMC's Get SEL Info response; a
+	BMC reporting zero entries and zero free space made total_bytes zero,
+	so "100 * (double)used_bytes/total_bytes" evaluated to a non-finite
+	double (0/0 or x/0) whose subsequent (int) cast is undefined behavior.
+
 2026-07-30 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-config/ipmi-config-category-pef-lan-alert-destination.c

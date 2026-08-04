@@ -231,6 +231,16 @@ ipmiseld_calc_percent_full (ipmiseld_host_data_t *host_data,
 
   used_bytes = (sel_info->entries * IPMI_SEL_RECORD_MAX_RECORD_LENGTH);
   total_bytes = used_bytes + sel_info->free_space;
+
+  /* entries and free_space both come from the BMC's Get SEL Info
+   * response.  A BMC reporting zero entries and zero free space makes
+   * total_bytes zero; the divide below would then be 0/0 or x/0,
+   * producing a non-finite double whose subsequent (int) cast is
+   * undefined behavior.  Such a BMC has no meaningful fill level.
+   */
+  if (!total_bytes)
+    return (0);
+
   percent = (int)(100 * (double)used_bytes/total_bytes);
 
   if (percent > 100)
