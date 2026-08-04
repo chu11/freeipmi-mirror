@@ -1,3 +1,8 @@
+2026-08-04 Anonymous <anonymous>
+
+	* man/Makefile.am: Fix preprocessor portability through use of -x
+	and -o.
+
 2026-06-07 Fabio Fantoni <fantonifabio@tiscali.it>
 
 	* man/freeipmi.conf.5.pre.in, man/ipmidetectd.conf.5.pre.in,
