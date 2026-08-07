@@ -2,6 +2,15 @@ FreeIPMI 1.6.19 - XX/XX/XX
 --------------------------
 o Fix minor groff warnings in manpages.
 o Fix portability of building manpages.
+o Fix minor bugs found by LLM analysis:
+  - bmc-watchdog: Fix bug with --arp-response command line parsing.
+  - ipmi/rmcpping: Fix bug with finding an IPv6 interface.
+  - ipmi-oem intelnm: fix parsing of hours/minutes error
+  - ipmidetect: fix bug in which hostname configs not used properly
+  - libipmimonitoring: fix mem-leak on SEL iterator
+  - libipmimonitoring: allow cipher suite 0 in configs
+  - libipmimonitoring: report NO_SEL_RECORDS instead of
+    NO_SENSOR_READINGS cut and paste errors in some functions.
 
 FreeIPMI 1.6.18 - 06/02/26
 --------------------------
