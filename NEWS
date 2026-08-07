@@ -281,8 +281,12 @@ o Remove legacy command line option --config_file in ipmidetectd (use
   --config-file)
 o Remove legacy short option -o in ipmidetect (use -h)
 
-Minor Bug Fixes
----------------
+Smaller Bug Fixes
+-----------------
+
+o In ipmi-config, drop support for
+  Rmcpplus_Conf_Privilege:Maximum_Privilege_Cipher_Suite_Id_16.  It is
+  not configurable.
 
 o Globally, fix potential output sorting error with
   --consolidate-output.  Could alter output differently than before.

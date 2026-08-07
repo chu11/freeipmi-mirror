@@ -756,6 +756,13 @@ ipmi_config_core_rmcpplus_conf_privilege_section_get (ipmi_config_state_data_t *
                                    rmcpplus_priv_number_validate) < 0)
     goto cleanup;
 
+#if 0
+
+  /* achu: Can't support this config until IPMI spec is updated.  It
+   * has support outside of configuration, but not within
+   * configuration.
+   */
+
   if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Maximum_Privilege_Cipher_Suite_Id_16",
@@ -765,6 +772,8 @@ ipmi_config_core_rmcpplus_conf_privilege_section_get (ipmi_config_state_data_t *
                                    id_commit_cb,
                                    rmcpplus_priv_number_validate) < 0)
     goto cleanup;
+
+#endif
 
 #if 0
 

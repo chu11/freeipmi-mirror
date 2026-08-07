@@ -1,3 +1,10 @@
+2026-08-07 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-config/ipmi-config-category-core-rmcpplus-conf-privilege-section.c
+	(ipmi_config_core_rmcpplus_conf_privilege_section_get): Drop support for
+	Rmcpplus_Conf_Privilege:Maximum_Privilege_Cipher_Suite_Id_16.  It
+	is not configurable.  Configuration only goes up to cipher suite 15.
+
 2026-08-03 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/debug/ipmi-debug-common.c (debug_dprintf): Clamp the
