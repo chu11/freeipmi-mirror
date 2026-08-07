@@ -26,11 +26,12 @@ o In ipmi-sel, support Intel S2600BPB OEM SEL interpretations.
 o In ipmi-config, support configuration of Maximum_Privilege_Cipher_Suite_Id_16.
 o In ipmi-sensors, support new "altbridging" workaround for Lenovo motherboards.
 
-Typo Fixes:
------------
+Typo Fixes & Output Format:
+---------------------------
 
-Fix large number of typos.  The following have the potential to break
-against existing builds or scripts that relied on previous expected output.
+Fix large number of typo and minor output formattings.  The following
+have the potential to break against existing builds or scripts that
+relied on previous expected output.
 
 Libraries:
 ----------
@@ -122,6 +123,10 @@ Tools:
 
 o In bmc-device, ipmi-fru, and ipmi-oem, fix several typos in output.  Could
   cause issues for those who script against the output.
+
+o In bmc-device, bmc-info, fix minor output errors (i.e. space
+  alignment, lack of newline, etc.).  Could cause issues for those who
+  script against output.
 
 
 Remove Large Amount of Legacy Support
@@ -275,6 +280,12 @@ o Remove legacy input options in OEM IntelNM commands:
 o Remove legacy command line option --config_file in ipmidetectd (use
   --config-file)
 o Remove legacy short option -o in ipmidetect (use -h)
+
+Minor Bug Fixes
+---------------
+
+o Globally, fix potential output sorting error with
+  --consolidate-output.  Could alter output differently than before.
 
 FreeIPMI 1.6.1 - 02/02/18
 -------------------------
