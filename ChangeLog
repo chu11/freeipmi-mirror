@@ -1,3 +1,13 @@
+2026-08-11 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-dcmi/ipmi-dcmi.c (get_asset_tag)
+	(get_management_controller_identifier_string): Break out of the
+	multi-chunk read loop with an error if the BMC reports a non-zero
+	total length but returns a zero-length data field.  Previously
+	offset was advanced by the returned data length, so a device that
+	reported data but returned none left offset unchanged and the loop
+	repeated the same request forever.
+
 2026-08-07 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-config/ipmi-config-category-core-rmcpplus-conf-privilege-section.c

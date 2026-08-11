@@ -1151,6 +1151,19 @@ get_asset_tag (ipmi_dcmi_state_data_t *state_data)
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
+
+      /* A non-zero total length with a zero-length data field would
+       * leave offset unchanged and spin this loop forever.  Treat a
+       * device that reports data but returns none as an error.
+       */
+      if (!data_len)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "no asset tag data returned by BMC\n");
+          goto cleanup;
+        }
+
       offset += data_len;
 
       if (offset >= total_asset_tag_length)
@@ -1354,6 +1367,19 @@ get_management_controller_identifier_string (ipmi_dcmi_state_data_t *state_data)
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
+
+      /* A non-zero total length with a zero-length data field would
+       * leave offset unchanged and spin this loop forever.  Treat a
+       * device that reports data but returns none as an error.
+       */
+      if (!data_len)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "no management controller identifier string data returned by BMC\n");
+          goto cleanup;
+        }
+
       offset += data_len;
 
       if (offset >= total_length)
