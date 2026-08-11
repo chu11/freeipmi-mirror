@@ -2763,6 +2763,7 @@ _cb_sel_oem_sensor_parse (conffile_t cf,
             }
 
           /* check for duplicates */
+          found = 0;
           for (k = 0; k < oem_conf->oem_sensor_data_count; k++)
             {
               if (oem_conf->oem_sensor_data[k].event_direction_any_flag == event_direction_any_flag
@@ -2955,6 +2956,7 @@ _cb_sel_oem_record_parse (conffile_t cf,
             }
 
           /* check for duplicates */
+          found = 0;
           for (k = 0; k < oem_conf->oem_record_count; k++)
             {
               if (!memcmp (oem_bytes, oem_conf->oem_record[k].oem_bytes, sizeof (struct ipmi_interpret_sel_oem_data_byte) * IPMI_SEL_OEM_DATA_MAX))

@@ -1,5 +1,15 @@
 2026-08-11 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/interpret/ipmi-interpret-config-sensor.c
+	(_cb_sensor_oem_parse): * libfreeipmi/interpret/
+	ipmi-interpret-config-sel.c (_cb_sel_oem_sensor_parse)
+	(_cb_sel_oem_record_parse): Reset the duplicate-detection flag
+	"found" to 0 before each per-(manufacturer,product) duplicate scan.
+	It was zeroed only once at function scope, so after the first pair
+	that matched an existing entry it stayed non-zero for every later
+	pair on the same config line, skipping the append and silently
+	dropping those distinct OEM entries.
+
 	* libfreeipmi/interpret/ipmi-interpret-config-common.c
 	(interpret_config_parse_manufacturer_id_product_id): Reject a '+'
 	separated product-id list with more than

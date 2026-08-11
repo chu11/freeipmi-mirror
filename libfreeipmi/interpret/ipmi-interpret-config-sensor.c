@@ -2544,6 +2544,7 @@ _cb_sensor_oem_parse (conffile_t cf,
             }
 
           /* check for duplicates */
+          found = 0;
           for (k = 0; k < oem_conf->oem_state_count; k++)
             {
               if (oem_conf->oem_state[k].oem_state_type == oem_state_type
