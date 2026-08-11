@@ -1,3 +1,14 @@
+2026-08-11 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/fru/ipmi-fru.c (_read_fru_data): Reject a
+	count_returned greater than count_to_read before the memcpy into
+	frubuf.  The read loop requests at most count_to_read bytes per
+	iteration, but the BMC-supplied count_returned was only checked for
+	non-zero and for matching the returned data length, never against
+	the amount requested.  A malicious BMC returning more bytes than
+	asked could advance num_bytes_read past fru_read_bytes and overflow
+	the stack frubuf buffer.
+
 2026-08-25 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/ipmi-oem-dell.c (ipmi_oem_dell_get_system_info): Read the
