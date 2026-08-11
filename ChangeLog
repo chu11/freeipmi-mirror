@@ -1,5 +1,11 @@
 2026-08-11 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/locate/ipmi-locate-acpi-spmi.c (_ipmi_acpi_get_rsdp):
+	Use fiid_obj_set_all instead of a raw memcpy to RSDP descriptor.
+	The memcpy wrote 36 firmware bytes over the fiid_obj_t struct
+	header itself -- clobbering its magic, errnum, data pointer and
+	field_data -- rather than into the object's data buffer.
+
 	* libfreeipmi/interpret/ipmi-interpret-config-sensor.c
 	(_cb_sensor_oem_parse): * libfreeipmi/interpret/
 	ipmi-interpret-config-sel.c (_cb_sel_oem_sensor_parse)

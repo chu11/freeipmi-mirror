@@ -970,7 +970,13 @@ _ipmi_acpi_get_rsdp (ipmi_locate_ctx_t ctx,
               }
 
             /* we found another RSDP */
-            memcpy (obj_acpi_rsdp_descriptor, memdata, acpi_rsdp_descriptor_len);
+            if (fiid_obj_set_all (obj_acpi_rsdp_descriptor,
+                                  memdata,
+                                  acpi_rsdp_descriptor_len) < 0)
+              {
+                LOCATE_FIID_OBJECT_ERROR_TO_LOCATE_ERRNUM (ctx, obj_acpi_rsdp_descriptor);
+                goto cleanup;
+              }
           }
 
           rv = 0;
