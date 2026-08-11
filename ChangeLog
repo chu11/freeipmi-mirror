@@ -1,5 +1,13 @@
 2026-08-11 Albert Chu <chu11@llnl.gov>
 
+	* ipmidetectd/ipmidetectd.c (_ipmidetectd_send_pings, _receive_ping)
+	(_send_ping_data): Log and continue instead of err_exit on transient
+	runtime errors in the steady-state poll loop.  A per-node
+	ipmi_lan_sendto failure, a non-ignored ipmi_lan_recvfrom error, or a
+	failed accept() previously terminated the daemon, stopping monitoring
+	for every node.  Report the error with err_output and skip the node /
+	return so the loop keeps running.
+
 	* ipmi-dcmi/ipmi-dcmi.c (get_asset_tag)
 	(get_management_controller_identifier_string): Break out of the
 	multi-chunk read loop with an error if the BMC reports a non-zero

@@ -470,13 +470,20 @@ _ipmidetectd_send_pings (void)
       if ((len = _ipmi_ping_build (info, buf, IPMIDETECTD_BUFLEN)) < 0)
         err_exit ("_ipmi_ping_build: %s", strerror (errno));
 
+      /* A transient send failure to one node (e.g. ENETUNREACH /
+       * EHOSTUNREACH) should not take down monitoring for every other
+       * node; log it and move on to the next node.
+       */
       if (ipmi_lan_sendto (info->fd,
                            buf,
                            len,
                            0,
                            info->destaddr,
                            info->destaddr_len) < 0)
-        err_exit ("ipmi_lan_sendto: %s", strerror (errno));
+        {
+          err_output ("ipmi_lan_sendto: %s: %s", info->hostname, strerror (errno));
+          continue;
+        }
 
       if (cmd_args.debug)
         fprintf (stderr, "Ping Request to %s\n", info->hostname);
@@ -559,8 +566,14 @@ _receive_ping (int fd)
           || errno == ECONNREFUSED))
     return;
 
+  /* A transient receive error should not take down the daemon; log it
+   * and return.  The next poll cycle will read again.
+   */
   if (len < 0)
-    err_exit ("ipmi_lan_recvfrom: %s", strerror (errno));
+    {
+      err_output ("ipmi_lan_recvfrom: %s", strerror (errno));
+      return;
+    }
 
   memset (ipbuf, '\0', IPMIDETECTD_BUFLEN + 1);
   if (from6.sin6_family == AF_INET6)
@@ -603,8 +616,14 @@ _send_ping_data (void)
   assert (nodes);
   assert (nodes_count);
 
+  /* A failed accept() for one client should not take down the daemon;
+   * log it and return, leaving monitoring intact.
+   */
   if ((rhost_fd = accept (server_fd, (struct sockaddr *)&rhost, &rhost_len)) < 0)
-    err_exit ("accept: %s", strerror (errno));
+    {
+      err_output ("accept: %s", strerror (errno));
+      return;
+    }
 
   if (cmd_args.debug)
     fprintf (stderr, "Received ipmidetectd server request\n");
