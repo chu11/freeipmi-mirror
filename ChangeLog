@@ -1,5 +1,15 @@
 2026-08-11 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/interpret/ipmi-interpret-config-common.c
+	(interpret_config_parse_manufacturer_id_product_id): Reject a '+'
+	separated product-id list with more than
+	IPMI_INTERPRET_CONFIG_FILE_PRODUCT_ID_MAX entries.  The while loop
+	stopped at index MAX with a '+' still present, leaving the trailing
+	id for an unguarded post-loop store that wrote product_ids[MAX] --
+	one element past the array -- and set product_ids_count past the
+	end, causing an out-of-bounds write and later count over-reads.
+	Check the bound before the store, mirroring the '-' range branch.
+
 	* ipmidetectd/ipmidetectd.c (_ipmidetectd_send_pings, _receive_ping)
 	(_send_ping_data): Log and continue instead of err_exit on transient
 	runtime errors in the steady-state poll loop.  A per-node

@@ -218,6 +218,12 @@ interpret_config_parse_manufacturer_id_product_id (conffile_t cf,
               index++;
             }
 
+          if (index >= IPMI_INTERPRET_CONFIG_FILE_PRODUCT_ID_MAX)
+            {
+              conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_TOOMANY);
+              return (-1);
+            }
+
           if (interpret_config_parse_strtoul (cf,
                                               product_ids_ptr,
                                               USHRT_MAX,
