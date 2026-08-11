@@ -489,6 +489,17 @@ _read_fru_data (ipmi_fru_ctx_t ctx,
           goto cleanup;
         }
 
+      /* The BMC must not return more bytes than were requested.  A
+       * larger count_returned would advance num_bytes_read past
+       * fru_read_bytes and overflow frubuf via the memcpy below, so
+       * reject it rather than trust the device-supplied count.
+       */
+      if (count_returned > count_to_read)
+        {
+          FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_IPMI_ERROR);
+          goto cleanup;
+        }
+
       memcpy (frubuf + num_bytes_read,
               buf,
               count_returned);
