@@ -691,7 +691,19 @@ ipmi_sdr_cache_record_read (ipmi_sdr_ctx_t ctx,
       return (-1);
     }
 
+  if ((ctx->current_offset.offset + IPMI_SDR_RECORD_HEADER_LENGTH) > ctx->records_end_offset)
+    {
+      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_CACHE_INVALID);
+      return (-1);
+    }
+
   record_length = (uint8_t)((ctx->sdr_cache + ctx->current_offset.offset)[IPMI_SDR_RECORD_LENGTH_INDEX]);
+
+  if ((ctx->current_offset.offset + record_length + IPMI_SDR_RECORD_HEADER_LENGTH) > ctx->records_end_offset)
+    {
+      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_CACHE_INVALID);
+      return (-1);
+    }
 
   if (buflen < (record_length + IPMI_SDR_RECORD_HEADER_LENGTH))
     {

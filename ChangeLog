@@ -1,5 +1,14 @@
 2026-08-12 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/sdr/ipmi-sdr-cache-read.c (ipmi_sdr_cache_record_read):
+	Bound the record read against records_end_offset.  The 1-byte
+	record_length is read from the mmap'd (attacker- or file-influenced)
+	cache and record_length + 5 bytes were copied out checking only the
+	destination buffer; a crafted cache could make the length byte read
+	and the copy run past the end of the mapping.  Verify the header and
+	the full record lie within records_end_offset before reading the
+	length byte and copying.
+
 	* ipmi-fru/ipmi-fru.c (run_cmd_args): Error out on a short read of a
 	--fru-file.  fd_read_n stops at EOF, so a file truncated between the
 	stat and the read (or a special file) returns fewer bytes than
