@@ -1040,6 +1040,18 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
           goto cleanup;
         }
 
+      /* double check len to avoid TOCTOU */
+      if (len != sbuf.st_size)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "FRU file '%s' short read: expected %lu bytes, got %ld\n",
+                           state_data->prog_data->args->fru_file,
+                           (unsigned long) sbuf.st_size,
+                           (long) len);
+          goto cleanup;
+        }
+
       if (_use_buffer_and_output_fru (state_data,
                                       &output_count,
                                       frubuf,

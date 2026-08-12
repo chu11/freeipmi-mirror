@@ -1,5 +1,13 @@
 2026-08-12 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-fru/ipmi-fru.c (run_cmd_args): Error out on a short read of a
+	--fru-file.  fd_read_n stops at EOF, so a file truncated between the
+	stat and the read (or a special file) returns fewer bytes than
+	sbuf.st_size -- possibly zero -- which was then passed as frubuflen
+	into _use_buffer_and_output_fru and tripped its assert (frubuflen) on
+	a zero-length read, or parsed a truncated buffer.  Reject len !=
+	sbuf.st_size with a proper error.
+
 	* bmc-device/bmc-device-argp.c (_bmc_device_args_validate): Drop the
 	create-then-unlink probe used to test creatability of a non-existent
 	--read-fru output file.  It left the path empty across the window
