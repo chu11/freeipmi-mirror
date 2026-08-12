@@ -1,14 +1,14 @@
 /*****************************************************************************\
  *  $Id: conffile.c,v 1.39 2010-02-02 00:01:53 chu11 Exp $
  *****************************************************************************
- *  Copyright (C) 2007-2011 Lawrence Livermore National Security, LLC.
+ *  Copyright (C) 2007-2015 Lawrence Livermore National Security, LLC.
  *  Copyright (C) 2003-2007 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
  *  Written by Albert Chu <chu11@llnl.gov>
  *  UCRL-CODE-155699
  *
  *  This file is part of Whatsup, tools and libraries for determining up and
- *  down nodes in a cluster. For details, see https://savannah.gnu.org/projects/freeipmi/.
+ *  down nodes in a cluster. For details, see https://github.com/chaos/whatsup.
  *
  *  Whatsup is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by the
@@ -221,7 +221,7 @@ _setup(conffile_t cf,
     int i;
 
     /* If it doesn't exist for real or can't be read, we consider it
-     * non-existant
+     * non-existent
      */
     if (access(filename, R_OK) < 0) {
         cf->errnum = CONFFILE_ERR_EXIST;
@@ -420,6 +420,11 @@ _parse_args(conffile_t cf,
          */
          if ((linebuf = _move_past_whitespace(cf, linebuf)) == NULL)
             break;
+
+        if (numargs >= CONFFILE_MAX_ARGS) {
+            cf->errnum = CONFFILE_ERR_PARSE_ARG_TOOMANY;
+            return -1;
+        }
 
         quote_flag = 0;
         memset(args[numargs], '\0', CONFFILE_MAX_ARGLEN);
