@@ -1,5 +1,18 @@
 2026-08-12 Albert Chu <chu11@llnl.gov>
 
+	* bmc-device/bmc-device-argp.c (_bmc_device_args_validate): Drop the
+	create-then-unlink probe used to test creatability of a non-existent
+	--read-fru output file.  It left the path empty across the window
+	before the real open in read_fru() and provided no real guarantee.
+	Keep only the non-destructive "exists but not writable" early check.
+
+	* bmc-device/bmc-device.c (read_fru, write_fru): Open the FRU files
+	with O_NOFOLLOW so a symlink planted in the check-to-use window is
+	not followed, closing a time-of-check/time-of-use redirect on the
+	locally-supplied filename.  Add O_TRUNC to the --read-fru output open
+	so a shorter dump does not leave stale trailing bytes from a longer
+	pre-existing file.
+
 	* common/src/miscutil/conffile.c: Update to latest version.
 
 2026-08-11 Albert Chu <chu11@llnl.gov>

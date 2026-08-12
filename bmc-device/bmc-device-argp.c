@@ -538,43 +538,18 @@ _bmc_device_args_validate (struct bmc_device_arguments *cmd_args)
           exit (EXIT_FAILURE);
         }
 
-      if (access (cmd_args->read_fru_filename, F_OK) == 0)
+      /* Best-effort early check only: if the output file already exists
+       * but isn't writable, fail now rather than after talking to the
+       * BMC.
+       */
+      if (access (cmd_args->read_fru_filename, F_OK) == 0
+          && access (cmd_args->read_fru_filename, W_OK) < 0)
         {
-          if (access (cmd_args->read_fru_filename, W_OK) < 0)
-            {
-              fprintf (stderr,
-                       "Cannot write to '%s': %s\n",
-                       cmd_args->read_fru_filename,
-                       strerror (errno));
-              exit (EXIT_FAILURE);
-            }
-        }
-      else
-        {
-          int fd;
-
-          if ((fd = open (cmd_args->read_fru_filename, O_CREAT, 0644)) < 0)
-            {
-              fprintf (stderr,
-                       "Cannot open '%s': %s\n",
-                       cmd_args->read_fru_filename,
-                       strerror (errno));
-              exit (EXIT_FAILURE);
-            }
-          else
-            {
-              /* ignore close error, don't care right now */
-              close (fd);
-
-              if (unlink (cmd_args->read_fru_filename) < 0)
-                {
-                  fprintf (stderr,
-                           "Cannot remove '%s': %s\n",
-                           cmd_args->read_fru_filename,
-                           strerror (errno));
-                  exit (EXIT_FAILURE);
-                }
-            }
+          fprintf (stderr,
+                   "Cannot write to '%s': %s\n",
+                   cmd_args->read_fru_filename,
+                   strerror (errno));
+          exit (EXIT_FAILURE);
         }
     }
 

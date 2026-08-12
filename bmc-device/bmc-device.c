@@ -2785,7 +2785,9 @@ read_fru (bmc_device_state_data_t *state_data)
 
   if (area_length)
     {
-      if ((fd = open (state_data->prog_data->args->read_fru_filename, O_CREAT | O_WRONLY, 0600)) < 0)
+      if ((fd = open (state_data->prog_data->args->read_fru_filename,
+                      O_CREAT | O_WRONLY | O_TRUNC | O_NOFOLLOW,
+                      0600)) < 0)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
@@ -2903,7 +2905,7 @@ write_fru (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
-  if ((fd = open (state_data->prog_data->args->write_fru_filename, O_RDONLY)) < 0)
+  if ((fd = open (state_data->prog_data->args->write_fru_filename, O_RDONLY | O_NOFOLLOW)) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
