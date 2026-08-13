@@ -636,7 +636,7 @@ _send_ping_data (void)
       char buf[IPMIDETECTD_BUFLEN];
       int len, n;
 
-      len = snprintf (buf, IPMIDETECTD_BUFLEN, "%s %lu\n", info->hostname, info->last_received.tv_sec);
+      len = snprintf (buf, IPMIDETECTD_BUFLEN, "%s %lu\n", info->hostname, (unsigned long)info->last_received.tv_sec);
       if (len >= IPMIDETECTD_BUFLEN)
         err_exit ("len=%d", len);
 

@@ -1,5 +1,11 @@
 2026-08-13 Albert Chu <chu11@llnl.gov>
 
+	* ipmidetectd/ipmidetectd.c (_send_ping_data): Cast tv_sec to
+	(unsigned long) before printing with %lu.  tv_sec is time_t, which is
+	not necessarily unsigned long (e.g. 64-bit time_t on a 32-bit
+	platform), so the bare %lu was a format/type mismatch that could print
+	a wrong last-seen time in the client-facing status line.
+
 	* ipmiconsole/ipmiconsole.c (sol_connect, sol_proxy): Remove
 	unused ipmiconsole_ctx_t parameter.  In sol_connect, replace with
 	local variable and cleanup accordingly.
