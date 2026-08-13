@@ -1,5 +1,13 @@
 2026-08-13 Albert Chu <chu11@llnl.gov>
 
+	* ipmipower/ipmipower_connection.c (_connection_setup): On a
+	non-EMFILE socket() failure, continue to the next addrinfo instead
+	of falling through into the bind block with an fd of -1.  Both
+	socket() calls previously special-cased only EMFILE, so any other
+	error (EAFNOSUPPORT, ENOBUFS, ...) left an invalid descriptor in
+	use until bind() happened to fail.  Also close the already-opened
+	ipmi_fd when the ping_fd socket() fails.
+
 	* libfreeipmi/libcommon/ipmi-bit-ops.c (bits_extract): Return 0 for a
 	zero-width (start == end) field instead of shifting by 64.  The shift
 	amount (63 - (end - 1)) + start equals 64 whenever start == end, and

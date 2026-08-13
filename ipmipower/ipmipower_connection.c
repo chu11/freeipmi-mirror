@@ -319,6 +319,8 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
 	      IPMIPOWER_DEBUG (("file descriptor limit reached"));
 	      return (-1);
 	    }
+	  /* some other error, try the next addrinfo */
+	  continue;
 	}
 
       if ((ic->ping_fd = socket (ai->ai_family,
@@ -327,8 +329,13 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
 	  if (errno == EMFILE)
 	    {
 	      IPMIPOWER_DEBUG (("file descriptor limit reached"));
+	      close (ic->ipmi_fd);
 	      return (-1);
 	    }
+	  /* some other error, close the ipmi_fd we just opened and try
+	   * the next addrinfo */
+	  close (ic->ipmi_fd);
+	  continue;
 	}
 
       if (ai->ai_family == AF_INET)
