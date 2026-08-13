@@ -1,3 +1,11 @@
+2026-08-13 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/libcommon/ipmi-bit-ops.c (bits_extract): Return 0 for a
+	zero-width (start == end) field instead of shifting by 64.  The shift
+	amount (63 - (end - 1)) + start equals 64 whenever start == end, and
+	shifting a 64-bit value by 64 is undefined behavior.  end is
+	exclusive, so a zero-width extraction is well-defined as 0.
+
 2026-08-12 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/sdr/ipmi-sdr-cache-read.c (ipmi_sdr_cache_record_read):

@@ -48,6 +48,16 @@ bits_extract (uint64_t bits, uint8_t start, uint8_t end, uint64_t *result)
       return (-1);
     }
 
+  /* end is exclusive, so start == end is a zero-width field.  Return 0
+   * directly: the shift amount below, (63 - (end - 1)) + start, equals
+   * 64 whenever start == end, and shifting a 64-bit value by 64 is
+   * undefined behavior. */
+  if (start == end)
+    {
+      *result = 0;
+      return (0);
+    }
+
   bits >>= start;
   bits <<= ((63 - (end - 1)) + start);
   bits >>= ((63 - (end - 1)) + start);
