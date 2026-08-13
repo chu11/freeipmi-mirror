@@ -1,5 +1,10 @@
 2026-08-13 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-fru/ipmi-fru.c (run_cmd_args): Print sbuf.st_size (off_t) with
+	%ju and an (uintmax_t) cast instead of %lu.  On platforms where off_t
+	is wider than long (32-bit with large file support) the %lu conversion
+	was a format/width mismatch (undefined behavior).
+
 	* ipmipower/ipmipower_connection.c (_connection_setup): On a
 	non-EMFILE socket() failure, continue to the next addrinfo instead
 	of falling through into the bind block with an fd of -1.  Both

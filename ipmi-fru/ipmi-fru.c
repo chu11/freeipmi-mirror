@@ -1014,10 +1014,10 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "FRU file '%s' too large, max area size is %u < %lu\n",
+                           "FRU file '%s' too large, max area size is %u < %ju\n",
                            state_data->prog_data->args->fru_file,
                            IPMI_FRU_AREA_SIZE_MAX,
-                           sbuf.st_size);
+                           (uintmax_t)sbuf.st_size);
           goto cleanup;
         }
 
