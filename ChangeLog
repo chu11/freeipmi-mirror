@@ -1,5 +1,9 @@
 2026-08-13 Albert Chu <chu11@llnl.gov>
 
+	* ipmiconsole/ipmiconsole.c (sol_connect, sol_proxy): Remove
+	unused ipmiconsole_ctx_t parameter.  In sol_connect, replace with
+	local variable and cleanup accordingly.
+
 	* ipmi-fru/ipmi-fru.c (run_cmd_args): Print sbuf.st_size (off_t) with
 	%ju and an (uintmax_t) cast instead of %lu.  On platforms where off_t
 	is wider than long (32-bit with large file support) the %lu conversion

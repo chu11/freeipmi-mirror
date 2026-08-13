@@ -354,14 +354,15 @@ sol_ioloop (ipmiconsole_ctx_t c,
 }
 
 static int
-sol_connect (ipmiconsole_ctx_t c,
-             struct ipmiconsole_arguments *cmd_args,
+sol_connect (struct ipmiconsole_arguments *cmd_args,
              struct ipmiconsole_ipmi_config *ipmi_config,
              struct ipmiconsole_protocol_config *protocol_config,
              struct ipmiconsole_engine_config *engine_config,
              int localfd)
 {
+  ipmiconsole_ctx_t c = NULL;
   int solfd = -1;
+  int rv = -1;
 
   if (!(c = ipmiconsole_ctx_create (cmd_args->common_args.hostname,
                                     ipmi_config,
@@ -369,7 +370,7 @@ sol_connect (ipmiconsole_ctx_t c,
                                     engine_config)))
     {
       perror ("ipmiconsole_ctx_create");
-      return (-1);
+      goto cleanup;
     }
 
   if (cmd_args->sol_payload_instance)
@@ -379,7 +380,7 @@ sol_connect (ipmiconsole_ctx_t c,
                                       &(cmd_args->sol_payload_instance)) < 0)
         {
           fprintf (stderr, "ipmiconsole_submit_block: %s\r\n", ipmiconsole_ctx_errormsg (c));
-          return (-1);
+          goto cleanup;
         }
     }
 
@@ -407,16 +408,19 @@ sol_connect (ipmiconsole_ctx_t c,
         printf ("[error received]: %s\n", ipmiconsole_ctx_errormsg (c));
       else
         fprintf (stderr, "ipmiconsole_submit_block: %s\r\n", ipmiconsole_ctx_errormsg (c));
-      return (-1);
+      goto cleanup;
     }
 
   if (cmd_args->deactivate)
-    return (0);
+    {
+      rv = 0;
+      goto cleanup;
+    }
 
   if ((solfd = ipmiconsole_ctx_fd (c)) < 0)
     {
       fprintf (stderr, "ipmiconsole_ctx_fd: %s\r\n", ipmiconsole_ctx_errormsg (c));
-      return (-1);
+      goto cleanup;
     }
 
 
@@ -428,9 +432,12 @@ sol_connect (ipmiconsole_ctx_t c,
               localfd);
 
   printf ("\r\n[closing the connection]\r\n");
+  rv = 0;
+cleanup:
+  ipmiconsole_ctx_destroy (c);
   /* ignore potential error, cleanup path */
   close (solfd);
-  return (0);
+  return (rv);
 }
 
 static void sigterm_handler (int signal, siginfo_t *_unused, void *_unused2)
@@ -451,8 +458,7 @@ void set_sigterm_handler (int type)
 }
 
 static void
-sol_proxy (ipmiconsole_ctx_t c,
-           struct ipmiconsole_arguments *cmd_args,
+sol_proxy (struct ipmiconsole_arguments *cmd_args,
            struct ipmiconsole_ipmi_config *ipmi_config,
            struct ipmiconsole_protocol_config *protocol_config,
            struct ipmiconsole_engine_config *engine_config,
@@ -505,8 +511,7 @@ sol_proxy (ipmiconsole_ctx_t c,
           strcpy (addrbuf, "[UNSPEC]");
         }
       printf ("Connection from %s\n", addrbuf);
-      ret = sol_connect (c,
-                         cmd_args,
+      ret = sol_connect (cmd_args,
                          ipmi_config,
                          protocol_config,
                          engine_config,
@@ -526,7 +531,6 @@ main (int argc, char **argv)
   struct ipmiconsole_ipmi_config ipmi_config;
   struct ipmiconsole_protocol_config protocol_config;
   struct ipmiconsole_engine_config engine_config;
-  ipmiconsole_ctx_t c = NULL;
   int debug_flags = 0;
   int proxyfd = -1;
   int yes = 1;
@@ -669,8 +673,7 @@ main (int argc, char **argv)
           fprintf (stderr, "proxy bind () returned error: %s\r\n", strerror (errno));
           exit (EXIT_FAILURE);
         }
-        sol_proxy (c,
-                   &cmd_args,
+        sol_proxy (&cmd_args,
                    &ipmi_config,
                    &protocol_config,
                    &engine_config,
@@ -691,8 +694,7 @@ main (int argc, char **argv)
     goto cleanup;
 #endif /* !NDEBUG */
 
-  sol_connect (c,
-               &cmd_args,
+  sol_connect (&cmd_args,
                &ipmi_config,
                &protocol_config,
                &engine_config,
@@ -706,7 +708,6 @@ main (int argc, char **argv)
 #endif /* !NDEBUG */
 
  cleanup:
-  ipmiconsole_ctx_destroy (c);
   ipmiconsole_engine_teardown (1);
 
   return (EXIT_SUCCESS);
