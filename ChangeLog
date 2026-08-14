@@ -1,5 +1,15 @@
 2026-08-14 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/debug/ipmi-debug-rmcpplus.c
+	(_ipmi_dump_rmcpplus_packet): Clamp the session header's self-declared
+	ipmi_payload_len to the bytes actually remaining in the packet before
+	dumping the payload.  The field is attacker-controlled and, unlike the
+	production unassemble_ipmi_rmcpplus_pkt path, was not clamped here, so
+	a short packet declaring a large payload length made the payload
+	dumpers (confidentiality none, AES-CBC-128, and the RAKP message
+	paths) read up to ~64 KB past the end of the received buffer,
+	emitting the out-of-bounds bytes into the debug dump or faulting.
+
 	* libfreeipmi/locate/ipmi-locate-dmidecode.c
 	(ipmi_locate_dmidecode_get_device_info): Skip an EFI systab line that
 	contains no '=' character instead of dereferencing the NULL returned

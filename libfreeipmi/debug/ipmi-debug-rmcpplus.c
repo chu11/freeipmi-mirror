@@ -1266,6 +1266,15 @@ _ipmi_dump_rmcpplus_packet (int fd,
   if (pkt_len <= indx)
     goto out;
 
+  /* ipmi_payload_len is a self-declared field from the session header
+   * and may exceed the bytes actually remaining in the packet.  Clamp
+   * it to the real remainder so the downstream payload dumpers cannot
+   * read past the end of the buffer (mirrors
+   * unassemble_ipmi_rmcpplus_pkt).
+   */
+  if (ipmi_payload_len > (pkt_len - indx))
+    ipmi_payload_len = pkt_len - indx;
+
   /* achu: If the packet is really messed up, dump the packet in raw form */
   if ((payload_type != IPMI_PAYLOAD_TYPE_IPMI
        && payload_type != IPMI_PAYLOAD_TYPE_SOL
