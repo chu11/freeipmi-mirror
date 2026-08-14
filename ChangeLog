@@ -1,5 +1,11 @@
 2026-08-14 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/locate/ipmi-locate-dmidecode.c
+	(ipmi_locate_dmidecode_get_device_info): Skip an EFI systab line that
+	contains no '=' character instead of dereferencing the NULL returned
+	by memchr.  A blank or malformed line in /proc/efi/systab or
+	/sys/firmware/efi/systab would otherwise cause a NULL-pointer write.
+
 	* libfreeipmi/fru/ipmi-fru-data.c (_parse_type_length): Verify
 	current_area_offset is within areabuflen before reading the
 	type/length byte; the existing bounds check only guarded the

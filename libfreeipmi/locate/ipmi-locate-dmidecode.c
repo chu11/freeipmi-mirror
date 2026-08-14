@@ -500,6 +500,8 @@ ipmi_locate_dmidecode_get_device_info (ipmi_locate_ctx_t ctx,
       while ((fgets (linebuf, sizeof (linebuf) - 1, efi_systab)))
         {
           char *addr =  memchr (linebuf, '=', strlen (linebuf));
+          if (!addr)
+            continue;
           *(addr++) = '\0';
           if (!strcmp (linebuf, "SMBIOS"))
             {
