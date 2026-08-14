@@ -231,13 +231,12 @@ heap_create (int size, HeapCmpF fCmp, HeapDelF fDel)
   if (h->heap_size < HEAP_SIZE_MINIMUM)
     h->heap_size = HEAP_SIZE_MINIMUM;
 
-  if (!(h->heaparray = (struct heapNode **)malloc (sizeof (struct heapNode *) * h->heap_size)))
+  if (!(h->heaparray = (struct heapNode **)calloc (h->heap_size, sizeof (struct heapNode *))))
     {
       free (h);
       errno = ENOMEM;
       return (lsd_nomem_error (__FILE__, __LINE__, "heap array create"));
     }
-  memset (h->heaparray, '\0', sizeof (void *) * h->heap_size);
 
   heap_mutex_init (&h->mutex);
   assert(h->magic = HEAP_MAGIC);      /* set magic via assert abuse */

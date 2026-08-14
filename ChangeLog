@@ -1,5 +1,12 @@
 2026-08-14 Albert Chu <chu11@llnl.gov>
 
+	* common/miscutil/heap.c (heap_create): Allocate heaparray with calloc
+	instead of malloc so the heap_size * sizeof(ptr) multiply is
+	overflow-checked (matching hash_create).  On ILP32 an oversized
+	heap_size rounded toward 2^31 would wrap size_t and under-allocate the
+	array.  calloc also zeroes the array, so the following memset is
+	removed.
+
 	* ipmidetectd/ipmidetectd-config.c (_config_file_parse): Range-check
 	ipmiping_period (> 0) and ipmidetectd_server_port (1..65535) from the
 	config file.  The port is passed to htons() (silently truncated to 16
