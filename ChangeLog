@@ -1,3 +1,12 @@
+2026-08-14 Albert Chu <chu11@llnl.gov>
+
+	* ipmidetectd/ipmidetectd-config.c (_config_file_parse): Range-check
+	ipmiping_period (> 0) and ipmidetectd_server_port (1..65535) from the
+	config file.  The port is passed to htons() (silently truncated to 16
+	bits) and the period feeds timeval_add_ms, so a negative or absurd
+	value would distort the send cadence or bind an unintended port; err
+	out on invalid values instead.
+
 2026-08-13 Albert Chu <chu11@llnl.gov>
 
 	* ipmidetectd/ipmidetectd.c (_send_ping_data): Cast tv_sec to

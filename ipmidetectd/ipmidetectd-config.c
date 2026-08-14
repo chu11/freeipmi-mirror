@@ -160,6 +160,15 @@ _config_file_parse (void)
         err_exit ("conffile_parse: %s", buf);
     }
 
+  /* Config sanity checks */
+  if (conf.ipmiping_period <= 0)
+    err_exit ("invalid ipmiping_period: %d", conf.ipmiping_period);
+
+  if (conf.ipmidetectd_server_port <= 0
+      || conf.ipmidetectd_server_port > 65535)
+    err_exit ("invalid ipmidetectd_server_port: %d",
+              conf.ipmidetectd_server_port);
+
  cleanup:
   conffile_handle_destroy (cf);
 }
