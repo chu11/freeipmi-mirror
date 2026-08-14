@@ -1,5 +1,17 @@
 2026-08-14 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/fru/ipmi-fru-data.c (_parse_type_length): Verify
+	current_area_offset is within areabuflen before reading the
+	type/length byte; the existing bounds check only guarded the
+	following memcpy, not the type/length read itself.
+	(ipmi_fru_board_info_area, ipmi_fru_chassis_info_area,
+	ipmi_fru_product_info_area): Verify area_offset is within areabuflen
+	immediately before each fixed-header field and type/length-byte read,
+	sized to the bytes that read consumes.  Entry validation only rejected
+	a NULL/zero-length area, so a short or truncated caller-supplied area
+	could drive these reads past the end of the buffer.  Fail with
+	IPMI_FRU_ERR_FRU_INFORMATION_INCONSISTENT on a short area.
+
 	* libfreeipmi/sdr/ipmi-sdr-common.c (sdr_check_read_status): Validate
 	the record source range against records_end_offset before reading the
 	record_length byte and before dumping the record in the debug-dump

@@ -104,6 +104,12 @@ _parse_type_length (ipmi_fru_ctx_t ctx,
   assert (areabuflen);
   assert (number_of_data_bytes);
 
+  if (current_area_offset >= areabuflen)
+    {
+      FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_FRU_INFORMATION_INCONSISTENT);
+      return (-1);
+    }
+
   type_length = areabufptr[current_area_offset];
 
   /* IPMI Workaround
@@ -195,6 +201,12 @@ ipmi_fru_chassis_info_area (ipmi_fru_ctx_t ctx,
     (*chassis_type) = areabufptr[area_offset];
   area_offset++;
 
+  if (area_offset >= areabuflen)
+    {
+      FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_FRU_INFORMATION_INCONSISTENT);
+      goto cleanup;
+    }
+
   if (areabufptr[area_offset] == IPMI_FRU_SENTINEL_VALUE)
     goto out;
 
@@ -207,6 +219,12 @@ ipmi_fru_chassis_info_area (ipmi_fru_ctx_t ctx,
     goto cleanup;
   area_offset += 1;          /* type/length byte */
   area_offset += number_of_data_bytes;
+
+  if (area_offset >= areabuflen)
+    {
+      FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_FRU_INFORMATION_INCONSISTENT);
+      goto cleanup;
+    }
 
   if (areabufptr[area_offset] == IPMI_FRU_SENTINEL_VALUE)
     goto out;
@@ -326,6 +344,12 @@ ipmi_fru_board_info_area (ipmi_fru_ctx_t ctx,
     (*language_code) = areabufptr[area_offset];
   area_offset++;
 
+  if ((area_offset + 2) >= areabuflen)
+    {
+      FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_FRU_INFORMATION_INCONSISTENT);
+      return (-1);
+    }
+
   if (mfg_date_time)
     {
       struct tm tm;
@@ -373,6 +397,12 @@ ipmi_fru_board_info_area (ipmi_fru_ctx_t ctx,
   else
     area_offset += 3;
 
+  if (area_offset >= areabuflen)
+    {
+      FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_FRU_INFORMATION_INCONSISTENT);
+      goto cleanup;
+    }
+
   if (areabufptr[area_offset] == IPMI_FRU_SENTINEL_VALUE)
     goto out;
 
@@ -385,6 +415,12 @@ ipmi_fru_board_info_area (ipmi_fru_ctx_t ctx,
     goto cleanup;
   area_offset += 1;          /* type/length byte */
   area_offset += number_of_data_bytes;
+
+  if (area_offset >= areabuflen)
+    {
+      FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_FRU_INFORMATION_INCONSISTENT);
+      goto cleanup;
+    }
 
   if (areabufptr[area_offset] == IPMI_FRU_SENTINEL_VALUE)
     goto out;
@@ -399,6 +435,12 @@ ipmi_fru_board_info_area (ipmi_fru_ctx_t ctx,
   area_offset += 1;          /* type/length byte */
   area_offset += number_of_data_bytes;
 
+  if (area_offset >= areabuflen)
+    {
+      FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_FRU_INFORMATION_INCONSISTENT);
+      goto cleanup;
+    }
+
   if (areabufptr[area_offset] == IPMI_FRU_SENTINEL_VALUE)
     goto out;
 
@@ -412,6 +454,12 @@ ipmi_fru_board_info_area (ipmi_fru_ctx_t ctx,
   area_offset += 1;          /* type/length byte */
   area_offset += number_of_data_bytes;
 
+  if (area_offset >= areabuflen)
+    {
+      FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_FRU_INFORMATION_INCONSISTENT);
+      goto cleanup;
+    }
+
   if (areabufptr[area_offset] == IPMI_FRU_SENTINEL_VALUE)
     goto out;
 
@@ -424,6 +472,12 @@ ipmi_fru_board_info_area (ipmi_fru_ctx_t ctx,
     goto cleanup;
   area_offset += 1;          /* type/length byte */
   area_offset += number_of_data_bytes;
+
+  if (area_offset >= areabuflen)
+    {
+      FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_FRU_INFORMATION_INCONSISTENT);
+      goto cleanup;
+    }
 
   if (areabufptr[area_offset] == IPMI_FRU_SENTINEL_VALUE)
     goto out;
@@ -551,6 +605,12 @@ ipmi_fru_product_info_area (ipmi_fru_ctx_t ctx,
     (*language_code) = areabufptr[area_offset];
   area_offset++;
 
+  if (area_offset >= areabuflen)
+    {
+      FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_FRU_INFORMATION_INCONSISTENT);
+      goto cleanup;
+    }
+
   if (areabufptr[area_offset] == IPMI_FRU_SENTINEL_VALUE)
     goto out;
 
@@ -563,6 +623,12 @@ ipmi_fru_product_info_area (ipmi_fru_ctx_t ctx,
     goto cleanup;
   area_offset += 1;          /* type/length byte */
   area_offset += number_of_data_bytes;
+
+  if (area_offset >= areabuflen)
+    {
+      FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_FRU_INFORMATION_INCONSISTENT);
+      goto cleanup;
+    }
 
   if (areabufptr[area_offset] == IPMI_FRU_SENTINEL_VALUE)
     goto out;
@@ -577,6 +643,12 @@ ipmi_fru_product_info_area (ipmi_fru_ctx_t ctx,
   area_offset += 1;          /* type/length byte */
   area_offset += number_of_data_bytes;
 
+  if (area_offset >= areabuflen)
+    {
+      FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_FRU_INFORMATION_INCONSISTENT);
+      goto cleanup;
+    }
+
   if (areabufptr[area_offset] == IPMI_FRU_SENTINEL_VALUE)
     goto out;
 
@@ -589,6 +661,12 @@ ipmi_fru_product_info_area (ipmi_fru_ctx_t ctx,
     goto cleanup;
   area_offset += 1;          /* type/length byte */
   area_offset += number_of_data_bytes;
+
+  if (area_offset >= areabuflen)
+    {
+      FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_FRU_INFORMATION_INCONSISTENT);
+      goto cleanup;
+    }
 
   if (areabufptr[area_offset] == IPMI_FRU_SENTINEL_VALUE)
     goto out;
@@ -603,6 +681,12 @@ ipmi_fru_product_info_area (ipmi_fru_ctx_t ctx,
   area_offset += 1;          /* type/length byte */
   area_offset += number_of_data_bytes;
 
+  if (area_offset >= areabuflen)
+    {
+      FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_FRU_INFORMATION_INCONSISTENT);
+      goto cleanup;
+    }
+
   if (areabufptr[area_offset] == IPMI_FRU_SENTINEL_VALUE)
     goto out;
 
@@ -616,6 +700,12 @@ ipmi_fru_product_info_area (ipmi_fru_ctx_t ctx,
   area_offset += 1;          /* type/length byte */
   area_offset += number_of_data_bytes;
 
+  if (area_offset >= areabuflen)
+    {
+      FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_FRU_INFORMATION_INCONSISTENT);
+      goto cleanup;
+    }
+
   if (areabufptr[area_offset] == IPMI_FRU_SENTINEL_VALUE)
     goto out;
 
@@ -628,6 +718,12 @@ ipmi_fru_product_info_area (ipmi_fru_ctx_t ctx,
     goto cleanup;
   area_offset += 1;          /* type/length byte */
   area_offset += number_of_data_bytes;
+
+  if (area_offset >= areabuflen)
+    {
+      FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_FRU_INFORMATION_INCONSISTENT);
+      goto cleanup;
+    }
 
   if (areabufptr[area_offset] == IPMI_FRU_SENTINEL_VALUE)
     goto out;
