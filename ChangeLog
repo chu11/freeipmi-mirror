@@ -1,5 +1,11 @@
 2026-08-14 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/driver/ipmi-sunbmc-driver.c (_sunbmc_read): Zero the
+	rs_buf_temp and rs_buf response scratch buffers.  Only the strbuf was
+	memset, so a BMC that reports a datalength larger than the bytes
+	getmsg actually returned would copy stale, uninitialized stack
+	contents into the response object rather than zeros.
+
 	* common/toolcommon/pstdout.c (_pstdout_print): Bail out on a negative
 	vsnprintf return instead of comparing it against the size_t buflen.
 	A negative wlen (e.g. an encoding error) would promote to a huge

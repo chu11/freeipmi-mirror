@@ -516,6 +516,8 @@ _sunbmc_read (ipmi_sunbmc_ctx_t ctx,
 
 #if defined(HAVE_SYS_STROPTS_H)
   memset (&sbuf, '\0', sizeof (struct strbuf));
+  memset (rs_buf_temp, '\0', IPMI_SUNBMC_BUFLEN);
+  memset (rs_buf, '\0', IPMI_SUNBMC_BUFLEN);
 
   sbuf.maxlen = IPMI_SUNBMC_BUFLEN;
   sbuf.buf = (char *)rs_buf_temp;
