@@ -1,5 +1,12 @@
 2026-08-14 Albert Chu <chu11@llnl.gov>
 
+	* common/toolcommon/pstdout.c (_pstdout_print): Bail out on a negative
+	vsnprintf return instead of comparing it against the size_t buflen.
+	A negative wlen (e.g. an encoding error) would promote to a huge
+	unsigned value, so wlen < buflen was never true, the retry loop never
+	terminated, and buf grew by PSTDOUT_BUFLEN until realloc failed
+	(OOM).  Cast to size_t for the fits-in-buffer comparison.
+
 	* common/miscutil/heap.c (heap_create): Allocate heaparray with calloc
 	instead of malloc so the heap_size * sizeof(ptr) multiply is
 	overflow-checked (matching hash_create).  On ILP32 an oversized

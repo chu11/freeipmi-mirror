@@ -546,7 +546,12 @@ _pstdout_print(pstdout_state_t pstate,
       va_copy(vacpy, ap);
       wlen = vsnprintf(buf, buflen, format, vacpy);
       va_end(vacpy);
-      if (wlen < buflen)
+      if (wlen < 0)
+        {
+          pstdout_errnum = PSTDOUT_ERR_INTERNAL;
+          goto cleanup;
+        }
+      if ((size_t)wlen < buflen)
         break;
       buflen += PSTDOUT_BUFLEN;
     }
