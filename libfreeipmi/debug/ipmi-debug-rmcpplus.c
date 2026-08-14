@@ -1048,11 +1048,15 @@ _dump_rmcpplus_session_trlr (int fd,
 
   if (pkt_len < (pad_length_field_len))
     {
+      pad_length_field_len = 0;
       next_header_field_len = 0;
       authentication_code_len = 0;
     }
   else if (pkt_len < (pad_length_field_len + next_header_field_len))
-    authentication_code_len = 0;
+    {
+      next_header_field_len = 0;
+      authentication_code_len = 0;
+    }
   else if (authentication_code_len
            && pkt_len < (authentication_code_len + pad_length_field_len + next_header_field_len))
     authentication_code_len = pkt_len - pad_length_field_len - next_header_field_len;

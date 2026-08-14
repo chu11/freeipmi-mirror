@@ -1,6 +1,16 @@
 2026-08-14 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/debug/ipmi-debug-rmcpplus.c
+	(_dump_rmcpplus_session_trlr): Avoid an unsigned underflow when
+	computing the integrity pad length from a short session trailer.  When
+	fewer than pad_length + next_header bytes remained, next_header_field_len
+	was left non-zero, so the pad_length subtraction wrapped to a huge
+	value and the subsequent indx advance produced a wild-pointer read
+	(near-certain crash from a single crafted authenticated packet).  Zero
+	pad_length_field_len as well when no trailer byte remains, so the
+	subtraction cannot underflow in any branch.
+
+	* libfreeipmi/debug/ipmi-debug-rmcpplus.c
 	(_ipmi_dump_rmcpplus_packet): Clamp the session header's self-declared
 	ipmi_payload_len to the bytes actually remaining in the packet before
 	dumping the payload.  The field is attacker-controlled and, unlike the
