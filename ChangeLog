@@ -1,5 +1,13 @@
 2026-08-14 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/sdr/ipmi-sdr-common.c (sdr_check_read_status): Validate
+	the record source range against records_end_offset before reading the
+	record_length byte and before dumping the record in the debug-dump
+	path.  A crafted SDR cache could position a record so that its length
+	byte, or the record_length + header it advertises, ran past the mmap'd
+	file, hex-dumping past the mapping (SIGBUS crash or information leak of
+	adjacent bytes).  Skip the dump for an out-of-range record instead.
+
 	* libfreeipmi/driver/ipmi-sunbmc-driver.c (_sunbmc_read): Zero the
 	rs_buf_temp and rs_buf response scratch buffers.  Only the strbuf was
 	memset, so a BMC that reports a datalength larger than the bytes

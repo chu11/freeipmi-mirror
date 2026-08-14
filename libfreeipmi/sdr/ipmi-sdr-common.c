@@ -275,7 +275,19 @@ sdr_check_read_status (ipmi_sdr_ctx_t ctx)
       unsigned int record_length;
       const char *record_str;
 
+      if (ctx->current_offset.offset + IPMI_SDR_RECORD_LENGTH_INDEX >= ctx->records_end_offset)
+        {
+          ctx->current_offset.offset_dumped = 1;
+          return;
+        }
+
       record_length = (uint8_t)((ctx->sdr_cache + ctx->current_offset.offset)[IPMI_SDR_RECORD_LENGTH_INDEX]);
+
+      if (ctx->current_offset.offset + record_length + IPMI_SDR_RECORD_HEADER_LENGTH > ctx->records_end_offset)
+        {
+          ctx->current_offset.offset_dumped = 1;
+          return;
+        }
 
       if ((record_str = sdr_record_type_str (ctx,
                                              ctx->sdr_cache + ctx->current_offset.offset,
