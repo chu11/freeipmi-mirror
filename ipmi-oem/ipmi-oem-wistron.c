@@ -3165,6 +3165,17 @@ ipmi_oem_wistron_write_proprietary_string (ipmi_oem_state_data_t *state_data)
 
   len = strlen (state_data->prog_data->args->oem_options[0]);
 
+  if (!len)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s' : string empty\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[0]);
+      goto cleanup;
+    }
+
   for (i = 0; i < ((len - 1) / IPMI_OEM_WISTRON_PROPRIETARY_STRING_BLOCK) + 1; i++)
     {
       bytes_rq[0] = IPMI_CMD_OEM_WISTRON_WRITE_PROPRIETARY_STRING;

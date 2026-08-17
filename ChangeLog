@@ -1,5 +1,13 @@
 2026-08-17 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-wistron.c
+	(ipmi_oem_wistron_write_proprietary_string): Reject an empty string
+	argument.  len is unsigned, so an empty argument made the block-count
+	expression ((len - 1) / BLOCK) + 1 underflow to ~268 million
+	iterations, and on the second iteration the per-block length byte
+	wrapped to 240, reading past the argument and firing that many IPMI
+	commands at the BMC.
+
 	* ipmi-oem/ipmi-oem-intelnm.c
 	(ipmi_oem_intelnm_set_turbo_synchronization_ratio): Require the active
 	cores configuration to be specified, mirroring the getter.  Without the
