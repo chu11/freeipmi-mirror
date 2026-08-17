@@ -859,6 +859,9 @@ _ipmi_acpi_get_rsdp (ipmi_locate_ctx_t ctx,
                    strlen (IPMI_ACPI_RSDP_SIG)) != 0)
         continue;
 
+      if (i + acpi_rsdp_descriptor_len > rsdp_window_size)
+        continue;
+
       /* now check the checksum */
       if (!_ipmi_acpi_table_checksum (ctx,
                                       &memdata[i],

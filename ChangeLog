@@ -1,5 +1,14 @@
 2026-08-17 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/locate/ipmi-locate-acpi-spmi.c (_ipmi_acpi_get_rsdp):
+	Skip an RSDP signature match too close to the end of the scan window
+	to hold a full RSDP descriptor.  The window is scanned in 16-byte
+	steps, so a match at the last step left only 16 bytes, yet the
+	checksum read 20 bytes and fiid_obj_set_all copied the 36-byte
+	descriptor from that offset, reading up to 20 bytes past the malloc'd
+	window and steering subsequent RSDT/XSDT lookups with the leaked
+	bytes.
+
 	* libfreeipmi/locate/ipmi-locate-smbios.c (_copy_ipmi_dev_info):
 	Verify a SMBIOS structure's firmware-supplied length byte does not
 	extend past the mapped structure table before copying the structure
