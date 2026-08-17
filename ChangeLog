@@ -1,5 +1,12 @@
 2026-08-17 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-intelnm.c
+	(ipmi_oem_intelnm_set_turbo_synchronization_ratio): Require the active
+	cores configuration to be specified, mirroring the getter.  Without the
+	guard an operator supplying only turboratiolimit left
+	active_cores_configuration uninitialized on the stack, sending a garbage
+	byte to the BMC.
+
 	* ipmi-oem/ipmi-oem-intel.c (ipmi_oem_intel_set_smtp_config):
 	Zero-initialize the SMTP string buffers.  ipmi_oem_parse_string fills
 	them with memcpy and does not NUL-terminate, so
