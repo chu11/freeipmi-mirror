@@ -390,14 +390,15 @@ ipmi_oem_inventec_set_mac_address (ipmi_oem_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (sscanf (state_data->prog_data->args->oem_options[1],
-              "%02x:%02x:%02x:%02x:%02x:%02x",
-              &tmp,
-              &tmp,
-              &tmp,
-              &tmp,
-              &tmp,
-              &tmp) != 6)
+  if (strlen (state_data->prog_data->args->oem_options[1]) != 17
+      || sscanf (state_data->prog_data->args->oem_options[1],
+                 "%02x:%02x:%02x:%02x:%02x:%02x",
+                 &tmp,
+                 &tmp,
+                 &tmp,
+                 &tmp,
+                 &tmp,
+                 &tmp) != 6)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,

@@ -1,5 +1,12 @@
 2026-08-17 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-inventec.c (ipmi_oem_inventec_set_mac_address):
+	Require the MAC address argument to be exactly 17 characters before
+	copying it into the request.  The "%02x" sscanf fields match a maximum
+	width of two, so a short argument such as "1:2:3:4:5:6" still parsed as
+	six fields, after which the unconditional 17-byte memcpy read past the
+	end of the argument string.
+
 	* ipmi-oem/ipmi-oem-dell.c
 	(_output_dell_system_info_10g_mac_addresses): Reject a zero-length
 	response before reading the NIC count.  Only a negative length was
