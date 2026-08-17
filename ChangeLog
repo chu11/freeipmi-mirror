@@ -1,3 +1,14 @@
+2026-08-17 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/ipmi-oem-fujitsu.c (ipmi_oem_fujitsu_get_sel_entry_long_text):
+	Copy only data_length - offset bytes in the SEL long-text truncate
+	branch.  The branch copied a fixed MAX_DATA_LENGTH - offset bytes from
+	the response regardless of how much the BMC returned, reading
+	uninitialized stack past the actual data on a short response.  The
+	truncate branch is taken only when the component would overflow
+	data_length, so data_length - offset is both the amount needed and
+	within the received bytes.
+
 2026-08-18 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/ipmi-oem-dell.c
