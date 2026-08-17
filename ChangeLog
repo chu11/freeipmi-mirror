@@ -1,3 +1,13 @@
+2026-08-17 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/locate/ipmi-locate-acpi-spmi.c
+	(_ipmi_acpi_get_table_dev_mem): Reject an RSDT/XSDT whose
+	firmware-supplied header length field is smaller than the ACPI header
+	before subtracting the header length.  The subtraction is unsigned, so
+	a short length wrapped to ~4 billion, yielding an acpi_table_count of
+	~1e9 and an enormous out-of-bounds walk of the table data (crash, and
+	the out-of-bounds bytes steered subsequent /dev/mem maps).
+
 2026-08-14 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/debug/ipmi-debug-rmcpplus.c

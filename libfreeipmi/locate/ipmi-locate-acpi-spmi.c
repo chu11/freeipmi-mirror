@@ -1383,6 +1383,13 @@ _ipmi_acpi_get_table_dev_mem (ipmi_locate_ctx_t ctx,
                             &rsdt_xsdt_table_length) < 0)
     goto cleanup;
 
+  /* Guard against possible underflow */
+  if (rsdt_xsdt_table_length < (uint32_t)acpi_table_hdr_length)
+    {
+      LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
+      goto cleanup;
+    }
+
   rsdt_xsdt_table_data_length = rsdt_xsdt_table_length - acpi_table_hdr_length;
   rsdt_xsdt_table_data = (rsdt_xsdt_table + acpi_table_hdr_length);
 
