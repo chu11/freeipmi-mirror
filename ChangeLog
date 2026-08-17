@@ -1,5 +1,12 @@
 2026-08-17 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/locate/ipmi-locate-smbios.c (_copy_ipmi_dev_info):
+	Verify a SMBIOS structure's firmware-supplied length byte does not
+	extend past the mapped structure table before copying the structure
+	out.  Near the end of the table dev_info_p could sit within a byte of
+	the end while its length byte was up to 255, so the memcpy read past
+	the end of the mapping.  Stop parsing the table in that case.
+
 	* libfreeipmi/locate/ipmi-locate-acpi-spmi.c
 	(_ipmi_acpi_get_table_dev_mem): Reject an RSDT/XSDT whose
 	firmware-supplied header length field is smaller than the ACPI header

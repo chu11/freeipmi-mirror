@@ -394,6 +394,11 @@ _copy_ipmi_dev_info (ipmi_locate_ctx_t ctx,
 
               if (flag)
                 {
+                  /* size is a firmware-supplied length byte; make sure the
+                     structure does not run past the mapped table before
+                     copying it out, or the memcpy over-reads the mapping */
+                  if (size > (size_t)((pmem_table + s_table_len) - dev_info_p))
+                    break;
                   if (!(result = malloc (size)))
                     {
                       LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_OUT_OF_MEMORY);
