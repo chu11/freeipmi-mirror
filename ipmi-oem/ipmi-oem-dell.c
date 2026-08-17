@@ -1619,6 +1619,15 @@ _output_dell_system_info_10g_mac_addresses (ipmi_oem_state_data_t *state_data)
       goto cleanup;
     }
 
+  if (!len)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "ipmi_cmd_get_system_info_parameters: invalid buffer length returned: %d\n",
+                       len);
+      goto cleanup;
+    }
+
   number_of_nics = configuration_parameter_data[0];
 
   if (!number_of_nics)

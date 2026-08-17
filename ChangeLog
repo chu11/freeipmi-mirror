@@ -1,6 +1,13 @@
 2026-08-17 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/ipmi-oem-dell.c
+	(_output_dell_system_info_10g_mac_addresses): Reject a zero-length
+	response before reading the NIC count.  Only a negative length was
+	handled, so a BMC returning an empty payload caused
+	configuration_parameter_data[0] to be read from uninitialized stack
+	and used to drive the subsequent length validation.
+
+	* ipmi-oem/ipmi-oem-dell.c
 	(ipmi_oem_dell_get_power_consumption_statistics): Require a 24-byte
 	response before parsing the max/min power-consumption timestamps.  The
 	length guard only checked for 8 bytes, sufficient for the average
