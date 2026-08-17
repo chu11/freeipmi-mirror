@@ -1400,7 +1400,7 @@ ipmi_oem_fujitsu_get_sel_entry_long_text (ipmi_oem_state_data_t *state_data)
         {
           memcpy (data_buf + offset,
                   &bytes_rs[16],
-                  IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_DATA_LENGTH - offset);
+                  data_length - offset);
           offset = data_length;
         }
       else
