@@ -5907,6 +5907,15 @@ ipmi_oem_dell_get_power_consumption_statistics (ipmi_oem_state_data_t *state_dat
   if (system_info_parameter == IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_MAX_POWER_CONSUMPTION_STATISTICS
       || system_info_parameter == IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_MIN_POWER_CONSUMPTION_STATISTICS)
     {
+      if (len < 24)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_cmd_get_system_info_parameters: invalid buffer length returned: %d\n",
+                           len);
+          goto cleanup;
+        }
+
       last_minute_power_time = configuration_parameter_data[8];
       last_minute_power_time |= (configuration_parameter_data[9] << 8);
       last_minute_power_time |= (configuration_parameter_data[10] << 16);

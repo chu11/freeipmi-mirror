@@ -1,5 +1,14 @@
 2026-08-17 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-dell.c
+	(ipmi_oem_dell_get_power_consumption_statistics): Require a 24-byte
+	response before parsing the max/min power-consumption timestamps.  The
+	length guard only checked for 8 bytes, sufficient for the average
+	parameter, but the max/min branch read bytes 8..23 to build four
+	timestamps.  A BMC returning the max/min parameter with an 8..23 byte
+	payload caused the trailing timestamp bytes to be read from
+	uninitialized stack and printed.
+
 	* libfreeipmi/locate/ipmi-locate-acpi-spmi.c (_ipmi_acpi_get_rsdp):
 	Skip an RSDP signature match too close to the end of the scan window
 	to hold a full RSDP descriptor.  The window is scanned in 16-byte
