@@ -1,5 +1,13 @@
 2026-08-17 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-intel.c (ipmi_oem_intel_set_smtp_config):
+	Zero-initialize the SMTP string buffers.  ipmi_oem_parse_string fills
+	them with memcpy and does not NUL-terminate, so
+	_set_smtp_configuration_string's strlen calls read past the copied
+	value into the uninitialized stack tail until a stray NUL, letting the
+	trailing bytes influence the length check and the padded copy sent to
+	the BMC.
+
 	* ipmi-oem/ipmi-oem-inventec.c (ipmi_oem_inventec_set_mac_address):
 	Require the MAC address argument to be exactly 17 characters before
 	copying it into the request.  The "%02x" sscanf fields match a maximum
