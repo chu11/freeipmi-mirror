@@ -1,6 +1,18 @@
 2026-08-18 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/ipmi-oem-dell.c
+	(ipmi_oem_dell_get_active_directory_config): Bounds-check every read
+	against the number of bytes actually returned by the BMC.  The parser
+	walked nine length-prefixed strings plus interspersed single-byte
+	fields, trusting each length byte without verifying offset stayed
+	within token_data_read, so a BMC advertising a length larger than the
+	data returned caused memcpy/reads past the valid prefix -- printing up
+	to ~2 KB of uninitialized stack.  Verify offset < token_data_read
+	before each single-byte read and offset + length <= token_data_read
+	before each memcpy, bailing otherwise, and memset token_data as
+	defense-in-depth.
+
+	* ipmi-oem/ipmi-oem-dell.c
 	(_output_dell_system_info_11g_or_12g_mac_addresses): Require a 4-byte
 	response before reading the total-bytes field.  The length check only
 	demanded three bytes, but bytes_rs[3] was then read to drive the record

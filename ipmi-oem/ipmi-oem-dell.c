@@ -4294,6 +4294,12 @@ ipmi_oem_dell_get_active_directory_config (ipmi_oem_state_data_t *state_data)
   memset (ad_gc_filter2_string, '\0', IPMI_OEM_DELL_TOKEN_STRING_MAX+1);
   memset (ad_gc_filter3_string, '\0', IPMI_OEM_DELL_TOKEN_STRING_MAX+1);
 
+  /* Defense-in-depth: zero the buffer so that a length field larger than
+   * the data actually returned cannot leak uninitialized stack.  The
+   * offset bounds checks below are the primary guard.
+   */
+  memset (token_data, '\0', IPMI_OEM_DELL_TOKEN_DATA_MAX);
+
   if (_dell_get_extended_configuration (state_data,
                                         IPMI_OEM_DELL_TOKEN_ID_AD_CONFIGURATION,
                                         token_data,
@@ -4313,10 +4319,22 @@ ipmi_oem_dell_get_active_directory_config (ipmi_oem_state_data_t *state_data)
       goto cleanup;
     }
 
+  /* Every read below is bounded against token_data_read (the number of
+   * bytes actually returned by the BMC).  A single-byte read requires
+   * offset < token_data_read; a string read requires
+   * offset + length <= token_data_read.  A BMC that advertises a length
+   * larger than the data returned would otherwise cause us to read (and
+   * print) bytes past the valid prefix.
+   */
+
   offset = 5;
+  if (offset >= token_data_read)
+    goto invalid_token_data_length;
   ad_enable = token_data[offset];
   offset++;
 
+  if (offset + 4 > token_data_read)
+    goto invalid_token_data_length;
   ad_timeout = token_data[offset];
   offset++;
   ad_timeout |= (token_data[offset] << 8);
@@ -4326,117 +4344,163 @@ ipmi_oem_dell_get_active_directory_config (ipmi_oem_state_data_t *state_data)
   ad_timeout |= (token_data[offset] << 24);
   offset++;
 
+  if (offset >= token_data_read)
+    goto invalid_token_data_length;
   ad_root_domain_string_length = token_data[offset];
   offset++;
 
   if (ad_root_domain_string_length)
     {
+      if (offset + ad_root_domain_string_length > token_data_read)
+        goto invalid_token_data_length;
       memcpy (ad_root_domain_string,
               &token_data[offset],
               ad_root_domain_string_length);
       offset += ad_root_domain_string_length;
     }
 
+  if (offset >= token_data_read)
+    goto invalid_token_data_length;
   ad_rac_domain_string_length = token_data[offset];
   offset++;
 
   if (ad_rac_domain_string_length)
     {
+      if (offset + ad_rac_domain_string_length > token_data_read)
+        goto invalid_token_data_length;
       memcpy (ad_rac_domain_string,
               &token_data[offset],
               ad_rac_domain_string_length);
       offset += ad_rac_domain_string_length;
     }
 
+  if (offset >= token_data_read)
+    goto invalid_token_data_length;
   ad_rac_name_string_length = token_data[offset];
   offset++;
 
   if (ad_rac_name_string_length)
     {
+      if (offset + ad_rac_name_string_length > token_data_read)
+        goto invalid_token_data_length;
       memcpy (ad_rac_name_string,
               &token_data[offset],
               ad_rac_name_string_length);
       offset += ad_rac_name_string_length;
     }
 
+  if (offset >= token_data_read)
+    goto invalid_token_data_length;
   ad_type = token_data[offset];
   offset++;
 
+  if (offset >= token_data_read)
+    goto invalid_token_data_length;
   scl_state = token_data[offset];
   offset++;
 
+  if (offset >= token_data_read)
+    goto invalid_token_data_length;
   crl_state = token_data[offset];
   offset++;
 
+  if (offset >= token_data_read)
+    goto invalid_token_data_length;
   ad_sso_enable = token_data[offset];
   offset++;
 
+  if (offset >= token_data_read)
+    goto invalid_token_data_length;
   ad_dc_filter1_string_length = token_data[offset];
   offset++;
 
   if (ad_dc_filter1_string_length)
     {
+      if (offset + ad_dc_filter1_string_length > token_data_read)
+        goto invalid_token_data_length;
       memcpy (ad_dc_filter1_string,
               &token_data[offset],
               ad_dc_filter1_string_length);
       offset += ad_dc_filter1_string_length;
     }
 
+  if (offset >= token_data_read)
+    goto invalid_token_data_length;
   ad_dc_filter2_string_length = token_data[offset];
   offset++;
 
   if (ad_dc_filter2_string_length)
     {
+      if (offset + ad_dc_filter2_string_length > token_data_read)
+        goto invalid_token_data_length;
       memcpy (ad_dc_filter2_string,
               &token_data[offset],
               ad_dc_filter2_string_length);
       offset += ad_dc_filter2_string_length;
     }
 
+  if (offset >= token_data_read)
+    goto invalid_token_data_length;
   ad_dc_filter3_string_length = token_data[offset];
   offset++;
 
   if (ad_dc_filter3_string_length)
     {
+      if (offset + ad_dc_filter3_string_length > token_data_read)
+        goto invalid_token_data_length;
       memcpy (ad_dc_filter3_string,
               &token_data[offset],
               ad_dc_filter3_string_length);
       offset += ad_dc_filter3_string_length;
     }
 
+  if (offset >= token_data_read)
+    goto invalid_token_data_length;
   ad_gc_filter1_string_length = token_data[offset];
   offset++;
 
   if (ad_gc_filter1_string_length)
     {
+      if (offset + ad_gc_filter1_string_length > token_data_read)
+        goto invalid_token_data_length;
       memcpy (ad_gc_filter1_string,
               &token_data[offset],
               ad_gc_filter1_string_length);
       offset += ad_gc_filter1_string_length;
     }
 
+  if (offset >= token_data_read)
+    goto invalid_token_data_length;
   ad_gc_filter2_string_length = token_data[offset];
   offset++;
 
   if (ad_gc_filter2_string_length)
     {
+      if (offset + ad_gc_filter2_string_length > token_data_read)
+        goto invalid_token_data_length;
       memcpy (ad_gc_filter2_string,
               &token_data[offset],
               ad_gc_filter2_string_length);
       offset += ad_gc_filter2_string_length;
     }
 
+  if (offset >= token_data_read)
+    goto invalid_token_data_length;
   ad_gc_filter3_string_length = token_data[offset];
   offset++;
 
   if (ad_gc_filter3_string_length)
     {
+      if (offset + ad_gc_filter3_string_length > token_data_read)
+        goto invalid_token_data_length;
       memcpy (ad_gc_filter3_string,
               &token_data[offset],
               ad_gc_filter3_string_length);
       offset += ad_gc_filter3_string_length;
     }
 
+  if (offset >= token_data_read)
+    goto invalid_token_data_length;
   ad_certificate_validation_enable = token_data[offset];
   offset++;
 
@@ -4512,6 +4576,12 @@ ipmi_oem_dell_get_active_directory_config (ipmi_oem_state_data_t *state_data)
                   (ad_certificate_validation_enable) ? "Enabled" : "Disabled");
 
   rv = 0;
+  goto cleanup;
+
+ invalid_token_data_length:
+  pstdout_fprintf (state_data->pstate,
+                   stderr,
+                   "invalid token data length returned\n");
  cleanup:
   return (rv);
 }
