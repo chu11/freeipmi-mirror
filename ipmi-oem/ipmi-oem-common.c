@@ -214,7 +214,7 @@ ipmi_oem_parse_1_byte_field (ipmi_oem_state_data_t *state_data,
                              const char *value,
                              uint8_t *value_out)
 {
-  unsigned int temp;
+  unsigned long temp;
   char *ptr = NULL;
 
   assert (state_data);
@@ -248,7 +248,7 @@ ipmi_oem_parse_2_byte_field (ipmi_oem_state_data_t *state_data,
                              const char *value,
                              uint16_t *value_out)
 {
-  unsigned int temp;
+  unsigned long temp;
   char *ptr = NULL;
 
   assert (state_data);
@@ -282,7 +282,7 @@ ipmi_oem_parse_4_byte_field (ipmi_oem_state_data_t *state_data,
                              const char *value,
                              uint32_t *value_out)
 {
-  unsigned int temp;
+  unsigned long temp;
   char *ptr = NULL;
 
   assert (state_data);
@@ -294,7 +294,8 @@ ipmi_oem_parse_4_byte_field (ipmi_oem_state_data_t *state_data,
   temp = strtoul (value, &ptr, 10);
 
   if (errno
-      || ptr[0] != '\0')
+      || ptr[0] != '\0'
+      || temp > 0xFFFFFFFF)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -317,7 +318,7 @@ ipmi_oem_parse_unsigned_int_range (ipmi_oem_state_data_t *state_data,
                                    unsigned int min,
                                    unsigned int max)
 {
-  unsigned int temp;
+  unsigned long temp;
   char *ptr = NULL;
 
   assert (state_data);

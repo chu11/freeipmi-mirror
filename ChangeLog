@@ -1,5 +1,14 @@
 2026-08-17 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-common.c (ipmi_oem_parse_1_byte_field,
+	ipmi_oem_parse_2_byte_field, ipmi_oem_parse_4_byte_field,
+	ipmi_oem_parse_unsigned_int_range): Hold the strtoul result in an
+	unsigned long so the range check runs on the full value.  On LP64 the
+	64-bit result was narrowed to unsigned int before the check, so an
+	argument such as "4294967296" wrapped to 0 and passed.  Also add the
+	missing upper-bound check to the 4-byte parser, which previously
+	truncated any value into the uint32_t output without complaint.
+
 	* ipmi-oem/ipmi-oem-fujitsu.c (ipmi_oem_fujitsu_get_sel_entry_long_text):
 	Copy only data_length - offset bytes in the SEL long-text truncate
 	branch.  The branch copied a fixed MAX_DATA_LENGTH - offset bytes from
