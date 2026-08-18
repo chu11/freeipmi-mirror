@@ -1709,7 +1709,7 @@ _output_dell_system_info_11g_or_12g_mac_addresses (ipmi_oem_state_data_t *state_
   if (ipmi_oem_check_response_and_completion_code (state_data,
                                                    bytes_rs,
                                                    rs_len,
-                                                   3,
+                                                   4,
                                                    IPMI_CMD_GET_SYSTEM_INFO_PARAMETERS,
                                                    IPMI_NET_FN_APP_RS,
                                                    NULL) < 0)

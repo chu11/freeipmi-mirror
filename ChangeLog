@@ -1,5 +1,12 @@
 2026-08-18 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-dell.c
+	(_output_dell_system_info_11g_or_12g_mac_addresses): Require a 4-byte
+	response before reading the total-bytes field.  The length check only
+	demanded three bytes, but bytes_rs[3] was then read to drive the record
+	loop count, so a BMC returning exactly three bytes left total_bytes
+	read from uninitialized stack.
+
 	* ipmi-oem/ipmi-oem-thirdparty.c
 	(ipmi_oem_thirdparty_set_extended_config_string): Reject a string
 	longer than the request buffer can hold before copying it in.  buflen
