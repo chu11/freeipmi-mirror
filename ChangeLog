@@ -1,5 +1,10 @@
 2026-08-18 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-ibm.c (_ipmi_oem_ibm_led_sdr_callback): Do not
+	splice led_info into the printf format string.  Build the format
+	with a trailing %%s and pass led_info as the matching argument, as
+	led_name and led_state_str already are.
+
 	* ipmi-oem/ipmi-oem-dell.c
 	(ipmi_oem_dell_get_active_directory_config): Bounds-check every read
 	against the number of bytes actually returned by the BMC.  The parser

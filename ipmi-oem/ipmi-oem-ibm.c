@@ -767,11 +767,10 @@ _get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
 
   snprintf (fmt,
             IPMI_OEM_FMT_BUFLEN,
-            "%%-%du | %%-%ds | %%-%ds | %s\n",
+            "%%-%du | %%-%ds | %%-%ds | %%s\n",
             sdr_callback_arg->column_width->record_id,
             IPMI_OEM_IBM_LED_NAME_COLUMN_SIZE,
-            IPMI_OEM_IBM_LED_STATE_COLUMN_SIZE,
-            led_info);
+            IPMI_OEM_IBM_LED_STATE_COLUMN_SIZE);
 
   pstdout_printf (state_data->pstate,
                   fmt,
