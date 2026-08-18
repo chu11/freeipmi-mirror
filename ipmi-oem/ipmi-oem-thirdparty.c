@@ -725,6 +725,15 @@ ipmi_oem_thirdparty_set_extended_config_string (ipmi_oem_state_data_t *state_dat
   bytes_rq[7] = 0x01;
   bytes_rq[8] = strlen (buf);
 
+  /* +9 for the request header bytes preceding the string data */
+  if (buflen > (IPMI_OEM_MAX_BYTES - 9))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "string length too long\n");
+      goto cleanup;
+    }
+
   if (buflen)
     memcpy (&bytes_rq[9], buf, buflen);
 

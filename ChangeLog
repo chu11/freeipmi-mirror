@@ -1,3 +1,13 @@
+2026-08-18 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/ipmi-oem-thirdparty.c
+	(ipmi_oem_thirdparty_set_extended_config_string): Reject a string
+	longer than the request buffer can hold before copying it in.  buflen
+	is a caller-supplied content length; the DNS domain-name and BMC
+	host-name options could drive it to 248-255, past the 247 bytes that
+	fit after the nine header bytes of the 256-byte request buffer,
+	smashing the stack.
+
 2026-08-17 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/ipmi-oem-common.c (ipmi_oem_parse_1_byte_field,
