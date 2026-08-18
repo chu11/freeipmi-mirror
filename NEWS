@@ -2,7 +2,7 @@ FreeIPMI 1.6.19 - XX/XX/XX
 --------------------------
 o Fix minor groff warnings in manpages.
 o Fix portability of building manpages.
-o Fix minor bugs found by LLM analysis:
+o Fix minor bugs found by code analysis:
   - bmc-watchdog: Fix bug with --arp-response command line parsing.
   - ipmi/rmcpping: Fix bug with finding an IPv6 interface.
   - ipmidetect: fix bug in which hostname configs not used properly
@@ -23,6 +23,11 @@ o Fix minor bugs found by LLM analysis:
   - libipmimonitoring: allow cipher suite 0 in configs
   - libipmimonitoring: report NO_SEL_RECORDS instead of
     NO_SENSOR_READINGS cut and paste errors in some functions.
+o Fix potential stack overflows found by code analysis in ipmi-oem
+  dell get-system-info command (specifically idrac-info, cmc-info,
+  cmc-ipv6-info subcommands) and ipmi-oem fujitsu get-sel-entry-long-text.
+o Fix potential stack overflow in libfreeipmi also related to Fujitsu
+  long SEL entries.
 
 FreeIPMI 1.6.18 - 06/02/26
 --------------------------
