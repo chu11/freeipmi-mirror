@@ -1220,6 +1220,15 @@ _output_dell_system_info_cmc_ipv6_info (ipmi_oem_state_data_t *state_data)
           goto cleanup;
         }
 
+      if ((cmc_ipv6_info_len + (len - 1)) > sizeof (cmc_ipv6_info))
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_cmd_get_system_info_parameters: invalid buffer length returned: %d\n",
+                           len);
+          goto cleanup;
+        }
+
       memcpy (&cmc_ipv6_info[cmc_ipv6_info_len],
               configuration_parameter_data + 1, /* remove set selector */
               len - 1);

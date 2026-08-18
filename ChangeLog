@@ -1,3 +1,13 @@
+2026-08-18 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/ipmi-oem-dell.c
+	(_output_dell_system_info_cmc_ipv6_info): Bound the accumulation copy
+	against the destination buffer.  The loop copied (len - 1) BMC-supplied
+	bytes into the 256-byte cmc_ipv6_info buffer over four iterations
+	without checking the running offset, so a BMC returning large blocks
+	could overflow the stack buffer.  Reject a copy that would exceed
+	sizeof (cmc_ipv6_info) before the memcpy.
+
 2026-08-11 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/fru/ipmi-fru.c (_read_fru_data): Reject a
