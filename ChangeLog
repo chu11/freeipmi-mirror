@@ -1,3 +1,8 @@
+2026-08-19 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sel/ipmi-sel-argp.c (_read_date_range): Fix corner case
+	in which "now" was not acceptable option in date range.
+
 2026-08-18 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/ipmi-oem-ibm.c (_ipmi_oem_ibm_led_sdr_callback): Do not
