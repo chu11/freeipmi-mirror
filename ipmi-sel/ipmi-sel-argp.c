@@ -328,28 +328,64 @@ _read_date_range (int *flag,
     split_ptr = strchr (range_str, '-');
   else if (dash_count == 3)
     {
-      /* one date input w/ dashes, one with slashes */
+      /* one date input w/ dashes, one with slashes or "now" */
       char *ptr1, *ptr2;
 
       ptr1 = strchr (range_str, '/');
       ptr2 = strchr (range_str, '-');
 
-      /* determine if MM/DD/YYYY is first or second date listed */
-      if (ptr1 < ptr2)
-        split_ptr = strchr (range_str, '-');
+      if (!ptr1)
+        {
+          /* if no slashes, one of the dates should be "now".
+           */
+          char *ptr3 = strstr (range_str, "now");
+          if (!ptr3)
+            {
+              fprintf (stderr, "invalid range input\n");
+              exit (EXIT_FAILURE);
+            }
+          else
+            {
+              /* determine if "now" is first or second date listed.
+               * Note that "now" as the first part of the range makes
+               * no sense, but users are allowed to do it.  Will
+               * likely be caught as error later.
+               */
+              if (ptr3 < ptr2)
+                split_ptr = strchr (range_str, '-');
+              else
+                {
+                  ptr = range_str;
+                  ptr = strchr (ptr, '-');
+                  ptr++;
+                  ptr = strchr (ptr, '-');
+                  ptr++;
+                  split_ptr = strchr (ptr, '-');
+                }
+            }
+        }
       else
         {
-          ptr = range_str;
-          ptr = strchr (ptr, '-');
-          ptr++;
-          ptr = strchr (ptr, '-');
-          ptr++;
-          split_ptr = strchr (ptr, '-');
+          /* determine if MM/DD/YYYY is first or second date listed */
+          if (ptr1 < ptr2)
+            split_ptr = strchr (range_str, '-');
+          else
+            {
+              ptr = range_str;
+              ptr = strchr (ptr, '-');
+              ptr++;
+              ptr = strchr (ptr, '-');
+              ptr++;
+              split_ptr = strchr (ptr, '-');
+            }
         }
     }
   else if (dash_count == 5)
     {
-      /* find the middle dash */
+      /* presumably two dates specified w/ dashes with one dash in the middle.
+       *
+       * find the middle dash
+       */
       ptr = range_str;
       ptr = strchr (ptr, '-');
       ptr++;
