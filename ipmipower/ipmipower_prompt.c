@@ -351,7 +351,7 @@ _cmd_privilege_level (char **argv)
                                argv[1]);
       else
         {
-          cmd_args.common_args.authentication_type = tmp;
+          cmd_args.common_args.privilege_level = tmp;
           ipmipower_cbuf_printf (ttyout,
                                  "privilege_level type is now %s\n",
                                  argv[1]);
