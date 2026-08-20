@@ -714,7 +714,7 @@ main (int argc, char *argv[])
   /* If any error messages other than "on", "off", or "ok", then an
    * error occurred
    */
-  for (i = IPMIPOWER_MSG_TYPE_ERROR_MIN; i < IPMIPOWER_MSG_TYPE_ERROR_MAX; i++)
+  for (i = IPMIPOWER_MSG_TYPE_ERROR_MIN; i <= IPMIPOWER_MSG_TYPE_ERROR_MAX; i++)
     {
       if (output_counts[i])
         return (EXIT_FAILURE);

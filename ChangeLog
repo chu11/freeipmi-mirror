@@ -1,5 +1,10 @@
 2026-08-20 Albert Chu <chu11@llnl.gov>
 
+	* ipmipower/ipmipower.c (main): Include BMC error results when
+	determining the process exit status.
+
+2026-08-20 Albert Chu <chu11@llnl.gov>
+
 	* ipmipower/ipmipower_prompt.c (_cmd_privilege_level): Store the
 	parsed privilege in privilege_level instead of authentication_type.
 
