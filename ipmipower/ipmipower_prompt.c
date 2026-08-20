@@ -59,6 +59,7 @@
 #include "cbuf.h"
 #include "fi_hostlist.h"
 #include "pstdout.h"
+#include "secure.h"
 #include "tool-cmdline-common.h"
 #include "tool-util-common.h"
 
@@ -237,6 +238,7 @@ static void
 _cmd_k_g (char **argv)
 {
   int rv = 0;
+  uint8_t k_g_tmp[IPMI_MAX_K_G_LENGTH + 1];
 #ifndef NDEBUG
   char buf[IPMI_MAX_K_G_LENGTH*2+3];
 #endif /* !NDEBUG */
@@ -247,15 +249,19 @@ _cmd_k_g (char **argv)
     ipmipower_cbuf_printf (ttyout, "k_g is only used for IPMI 2.0");
   else
     {
-      memset (cmd_args.common_args.k_g, '\0', IPMI_MAX_K_G_LENGTH + 1);
+      memset (k_g_tmp, '\0', sizeof (k_g_tmp));
 
       if (argv[1])
-        rv = parse_kg (cmd_args.common_args.k_g, IPMI_MAX_K_G_LENGTH, argv[1]);
+        rv = parse_kg (k_g_tmp, IPMI_MAX_K_G_LENGTH, argv[1]);
 
       if (rv < 0)
         ipmipower_cbuf_printf (ttyout, "k_g invalid\n");
       else
         {
+          secure_memset (cmd_args.common_args.k_g,
+                         '\0',
+                         sizeof (cmd_args.common_args.k_g));
+          memcpy (cmd_args.common_args.k_g, k_g_tmp, sizeof (k_g_tmp));
           cmd_args.common_args.k_g_len = rv;
 #ifdef NDEBUG
           ipmipower_cbuf_printf (ttyout, "k_g changed\n");
@@ -267,6 +273,8 @@ _cmd_k_g (char **argv)
                                                                              cmd_args.common_args.k_g) : "NULL");
 #endif /* !NDEBUG */
         }
+
+      secure_memset (k_g_tmp, '\0', sizeof (k_g_tmp));
     }
 }
 
