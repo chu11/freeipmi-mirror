@@ -262,16 +262,22 @@ cmdline_parse (int key,
       cmd_args->ping_packet_count = tmp;
       break;
     case PING_PERCENT_KEY:       /* --ping-percent */
-      errno = 0;
-      tmp = strtol (arg, &endptr, 10);
-      if (errno
-          || endptr[0] != '\0'
-          || tmp < 0)
-        {
-          fprintf (stderr, "ping percent invalid");
-          exit (EXIT_FAILURE);
-        }
-      cmd_args->ping_percent = tmp;
+      {
+        long ping_percent;
+
+        errno = 0;
+        ping_percent = strtol (arg, &endptr, 10);
+        if (errno
+            || endptr == arg
+            || endptr[0] != '\0'
+            || ping_percent < 0
+            || ping_percent > 100)
+          {
+            fprintf (stderr, "ping percent invalid");
+            exit (EXIT_FAILURE);
+          }
+        cmd_args->ping_percent = (unsigned int)ping_percent;
+      }
       break;
     case PING_CONSEC_COUNT_KEY:       /* --ping-consec-count */
       errno = 0;

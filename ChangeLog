@@ -1,5 +1,11 @@
 2026-08-20 Albert Chu <chu11@llnl.gov>
 
+	* ipmipower/ipmipower_argp.c (cmdline_parse): Validate ping percent
+	before converting it to unsigned int and reject values greater than
+	100.
+
+2026-08-20 Albert Chu <chu11@llnl.gov>
+
 	* ipmipower/ipmipower_prompt.c (_cmd_k_g): Preserve the current K_g
 	key if a replacement value is invalid.
 
