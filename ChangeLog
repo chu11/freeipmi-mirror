@@ -1,5 +1,11 @@
 2026-08-21 Albert Chu <chu11@llnl.gov>
 
+	* bmc-info/bmc-info-argp.c (_bmc_info_args_validate): Reject multiple
+	output-selection commands.
+	(bmc_info_argp_parse): Call _bmc_info_args_validate.
+
+2026-08-21 Albert Chu <chu11@llnl.gov>
+
 	* bmc-info/bmc-info.c (display_guid): Report unsupported commands for
 	explicit system GUID requests.
 

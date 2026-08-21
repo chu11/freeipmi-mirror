@@ -135,6 +135,22 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 }
 
 static void
+_bmc_info_args_validate (struct bmc_info_arguments *cmd_args)
+{
+  assert (cmd_args);
+
+  if ((cmd_args->get_device_id
+       + cmd_args->get_device_guid
+       + cmd_args->get_system_guid
+       + cmd_args->get_system_info
+       + cmd_args->get_channel_info) > 1)
+    {
+      fprintf (stderr, "Multiple commands specified.\n");
+      exit (EXIT_FAILURE);
+    }
+}
+
+static void
 _bmc_info_config_file_parse (struct bmc_info_arguments *cmd_args)
 {
   struct config_file_data_bmc_info config_file_data;
@@ -192,4 +208,5 @@ bmc_info_argp_parse (int argc, char **argv, struct bmc_info_arguments *cmd_args)
               cmd_args);
 
   verify_common_cmd_args (&(cmd_args->common_args));
+  _bmc_info_args_validate (cmd_args);
 }
