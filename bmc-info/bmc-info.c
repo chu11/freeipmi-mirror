@@ -557,7 +557,7 @@ display_guid (bmc_info_state_data_t *state_data,
 
   if (ipmi_cmd_get_guid_func (state_data->ipmi_ctx, obj_cmd_rs) < 0)
     {
-      if (!state_data->prog_data->args->get_device_guid
+      if (!get_guid_only_flag
           && ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_COMMAND_INVALID_OR_UNSUPPORTED
           && ipmi_check_completion_code (obj_cmd_rs,
                                          IPMI_COMP_CODE_INVALID_COMMAND) == 1)
