@@ -2921,6 +2921,17 @@ write_fru (bmc_device_state_data_t *state_data)
       goto cleanup;
     }
 
+  if (len != (ssize_t)area_size)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "FRU file '%s': short read (%ld of %u bytes)\n",
+                       state_data->prog_data->args->write_fru_filename,
+                       (long)len,
+                       area_size);
+      goto cleanup;
+    }
+
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_write_fru_data_rs)))
     {
       pstdout_fprintf (state_data->pstate,

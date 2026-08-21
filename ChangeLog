@@ -1,5 +1,9 @@
 2026-08-21 Albert Chu <chu11@llnl.gov>
 
+	* bmc-device/bmc-device.c (write_fru): Reject short FRU file reads.
+
+2026-08-21 Albert Chu <chu11@llnl.gov>
+
 	* bmc-device/bmc-device.c (write_fru): Reject invalid write counts
 	returned by the BMC.
 
