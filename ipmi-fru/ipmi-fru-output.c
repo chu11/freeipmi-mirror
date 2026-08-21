@@ -1367,31 +1367,31 @@ _ipmi_fru_output_dimm_ddr3 (ipmi_fru_state_data_t *state_data,
       total_sdram_capacity_str = "1 Gb";
       total_sdram_capacity_val = 1024;
       total_sdram_capacity_valid = 1;
-      total_memory_capacity_units_str = "GB";
+      total_memory_capacity_units_str = "MB";
       break;
     case IPMI_FRU_DIMMSPD_TOTAL_SDRAM_CAPACITY_2_GB:
       total_sdram_capacity_str = "2 Gb";
       total_sdram_capacity_val = 2048;
       total_sdram_capacity_valid = 1;
-      total_memory_capacity_units_str = "GB";
+      total_memory_capacity_units_str = "MB";
      break;
     case IPMI_FRU_DIMMSPD_TOTAL_SDRAM_CAPACITY_4_GB:
       total_sdram_capacity_str = "4 Gb";
       total_sdram_capacity_val = 4096;
       total_sdram_capacity_valid = 1;
-      total_memory_capacity_units_str = "GB";
+      total_memory_capacity_units_str = "MB";
       break;
     case IPMI_FRU_DIMMSPD_TOTAL_SDRAM_CAPACITY_8_GB:
       total_sdram_capacity_str = "8 Gb";
       total_sdram_capacity_val = 8192;
       total_sdram_capacity_valid = 1;
-      total_memory_capacity_units_str = "GB";
+      total_memory_capacity_units_str = "MB";
       break;
     case IPMI_FRU_DIMMSPD_TOTAL_SDRAM_CAPACITY_16_GB:
       total_sdram_capacity_str = "16 Gb";
       total_sdram_capacity_val = 16384;
       total_sdram_capacity_valid = 1;
-      total_memory_capacity_units_str = "GB";
+      total_memory_capacity_units_str = "MB";
       break;
     default:
       total_sdram_capacity_str = "Unknown";
@@ -2025,37 +2025,37 @@ _ipmi_fru_output_dimm_ddr4 (ipmi_fru_state_data_t *state_data,
       total_sdram_capacity_str = "1 Gb";
       total_sdram_capacity_val = 1024;
       total_sdram_capacity_valid = 1;
-      total_memory_capacity_units_str = "GB";
+      total_memory_capacity_units_str = "MB";
       break;
     case IPMI_FRU_DIMMSPD_DDR4_TOTAL_SDRAM_CAPACITY_2_GB:
       total_sdram_capacity_str = "2 Gb";
       total_sdram_capacity_val = 2048;
       total_sdram_capacity_valid = 1;
-      total_memory_capacity_units_str = "GB";
+      total_memory_capacity_units_str = "MB";
      break;
     case IPMI_FRU_DIMMSPD_DDR4_TOTAL_SDRAM_CAPACITY_4_GB:
       total_sdram_capacity_str = "4 Gb";
       total_sdram_capacity_val = 4096;
       total_sdram_capacity_valid = 1;
-      total_memory_capacity_units_str = "GB";
+      total_memory_capacity_units_str = "MB";
       break;
     case IPMI_FRU_DIMMSPD_DDR4_TOTAL_SDRAM_CAPACITY_8_GB:
       total_sdram_capacity_str = "8 Gb";
       total_sdram_capacity_val = 8192;
       total_sdram_capacity_valid = 1;
-      total_memory_capacity_units_str = "GB";
+      total_memory_capacity_units_str = "MB";
       break;
     case IPMI_FRU_DIMMSPD_DDR4_TOTAL_SDRAM_CAPACITY_16_GB:
       total_sdram_capacity_str = "16 Gb";
       total_sdram_capacity_val = 16384;
       total_sdram_capacity_valid = 1;
-      total_memory_capacity_units_str = "GB";
+      total_memory_capacity_units_str = "MB";
       break;
     case IPMI_FRU_DIMMSPD_DDR4_TOTAL_SDRAM_CAPACITY_32_GB:
       total_sdram_capacity_str = "32 Gb";
       total_sdram_capacity_val = 32768;
       total_sdram_capacity_valid = 1;
-      total_memory_capacity_units_str = "GB";
+      total_memory_capacity_units_str = "MB";
       break;
     default:
       total_sdram_capacity_str = "Unknown";
