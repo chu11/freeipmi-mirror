@@ -1,5 +1,10 @@
 2026-08-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-chassis/ipmi-chassis-argp.c (cmdline_parse): Validate chassis
+	identify intervals before narrowing them.
+
+2026-08-21 Albert Chu <chu11@llnl.gov>
+
 	* bmc-watchdog/bmc-watchdog.c (_daemon_setup): Require the reset
 	period to be shorter than the initial countdown.
 

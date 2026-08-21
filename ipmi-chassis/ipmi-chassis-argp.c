@@ -100,7 +100,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   char *endptr = NULL;
   struct ipmi_chassis_arguments *cmd_args;
-  int tmp;
+  long tmp;
 
   assert (state);
 
