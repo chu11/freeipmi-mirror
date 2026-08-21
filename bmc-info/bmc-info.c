@@ -840,6 +840,17 @@ display_system_info_common (bmc_info_state_data_t *state_data,
                        fiid_obj_errormsg (obj_cmd_first_set_rs));
       goto cleanup;
     }
+
+  if (!len)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "system information string data is incomplete\n");
+      goto cleanup;
+    }
+
+  if (len > (string_length - string_count))
+    len = string_length - string_count;
   string_count += len;
 
   /* string_length is 8 bits, so we should not call >= 17 times,
@@ -889,12 +900,32 @@ display_system_info_common (bmc_info_state_data_t *state_data,
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
+
+      if (!len)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "system information string data is incomplete\n");
+          goto cleanup;
+        }
+
+      if (len > (string_length - string_count))
+        len = string_length - string_count;
       string_count += len;
       set_selector++;
     }
 
+  if (string_count != string_length)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "system information string data is incomplete\n");
+      goto cleanup;
+    }
 
  output:
+
+  string[string_count] = '\0';
 
   /* XXX: assume ascii, or if not, user has set locale properly?? */
   pstdout_printf (state_data->pstate,

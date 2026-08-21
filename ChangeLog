@@ -1,5 +1,10 @@
 2026-08-21 Albert Chu <chu11@llnl.gov>
 
+	* bmc-info/bmc-info.c (display_system_info_common): Enforce the
+	declared system information string length.
+
+2026-08-21 Albert Chu <chu11@llnl.gov>
+
 	* bmc-info/bmc-info-argp.c (_bmc_info_args_validate): Reject multiple
 	output-selection commands.
 	(bmc_info_argp_parse): Call _bmc_info_args_validate.
