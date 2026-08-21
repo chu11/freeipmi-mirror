@@ -1,5 +1,10 @@
 2026-08-21 Albert Chu <chu11@llnl.gov>
 
+	* bmc-device/bmc-device.c (write_fru): Reject invalid write counts
+	returned by the BMC.
+
+2026-08-21 Albert Chu <chu11@llnl.gov>
+
 	* bmc-device/bmc-device.c (read_fru): Return failure if the FRU output
 	file cannot be written or closed.
 
@@ -24367,4 +24372,3 @@
 	  libfreeipmi/src/rmcp.h, libfreeipmi/src/smbios.c,
 	  libfreeipmi/src/smbios.h, libfreeipmi/src/xmalloc.c,
 	  libfreeipmi/src/xmalloc.h: First merged tree.
-

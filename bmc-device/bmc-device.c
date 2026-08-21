@@ -2992,6 +2992,15 @@ error_out:
         }
       count_written = val;
 
+      if (!count_written || count_written > blocksize)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "Invalid FRU write count returned: %u\n",
+                           count_written);
+          goto cleanup;
+        }
+
       area_offset += count_written;
 
       if (state_data->prog_data->args->verbose)
