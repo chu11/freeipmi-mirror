@@ -516,13 +516,13 @@ _hex_output (ipmi_sel_state_data_t *state_data)
       goto out;
     }
 
-  if (state_data->prog_data->args->common_args.debug
-      && record_data_len < IPMI_SEL_RECORD_MAX_RECORD_LENGTH)
+  if (record_data_len < IPMI_SEL_RECORD_MAX_RECORD_LENGTH)
     {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "Invalid length SEL entry read: %d\n",
-                       record_data_len);
+      if (state_data->prog_data->args->common_args.debug)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "Invalid length SEL entry read: %d\n",
+                         record_data_len);
       goto out;
     }
 

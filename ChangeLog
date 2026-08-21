@@ -1,5 +1,10 @@
 2026-08-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sel/ipmi-sel.c (_hex_output): Do not output short SEL records
+	padded with zero-valued fields.
+
+2026-08-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sel/ipmi-sel-argp.c (_read_record_list): Reject empty record
 	lists and lists that exceed the fixed record array capacity.
 
