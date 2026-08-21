@@ -2959,17 +2959,20 @@ write_fru (bmc_device_state_data_t *state_data)
                     blocksize /= 2;
                   else
                     goto error_out;
-                }
 
-              if (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_WRITE_FRU_DATA_FRU_DEVICE_BUSY) == 1)
+                  continue;
+                }
+              else if (ipmi_check_completion_code (obj_cmd_rs, IPMI_COMP_CODE_WRITE_FRU_DATA_FRU_DEVICE_BUSY) == 1)
                 {
                   loop_errors++;
 
                   if (loop_errors > loop_errors_max)
                     goto error_out;
+
+                  continue;
                 }
 
-              continue;
+              goto error_out;
             }
 
 error_out:
