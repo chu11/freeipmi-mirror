@@ -1,5 +1,11 @@
 2026-08-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sel/ipmi-sel-argp.c (_read_record_list,
+	_read_record_id_range, cmdline_parse): Validate record IDs and tail
+	counts before narrowing them.
+
+2026-08-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-fru/ipmi-fru-output.c (_ipmi_fru_output_dimm_ddr3,
 	_ipmi_fru_output_dimm_ddr4): Output calculated memory capacities in
 	megabytes.

@@ -166,7 +166,7 @@ _read_record_list (int *flag,
 {
   char *endptr;
   char *tok;
-  int value;
+  long value;
 
   assert (flag);
   assert (record_list);
@@ -186,11 +186,11 @@ _read_record_list (int *flag,
           || value <= IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
           || value >= IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
         {
-          fprintf (stderr, "invalid record number: %d\n", value);
+          fprintf (stderr, "invalid record number: %ld\n", value);
           exit (EXIT_FAILURE);
         }
 
-      record_list[(*record_list_length)] = value;
+      record_list[(*record_list_length)] = (uint16_t)value;
       (*record_list_length)++;
       tok = strtok (NULL, " ,");
     }
@@ -207,7 +207,7 @@ _read_record_id_range (int *flag,
   char *start_ptr = NULL;
   char *range1_str = NULL;
   char *range2_str = NULL;
-  int value = 0;
+  long value = 0;
 
   assert (flag);
   assert (range1);
@@ -244,11 +244,11 @@ _read_record_id_range (int *flag,
       || value <= IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
       || value >= IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
     {
-      fprintf (stderr, "invalid range record number: %d\n", value);
+      fprintf (stderr, "invalid range record number: %ld\n", value);
       exit (EXIT_FAILURE);
     }
 
-  (*range1) = value;
+  (*range1) = (uint16_t)value;
 
   errno = 0;
   value = strtol (range2_str, &endptr, 10);
@@ -259,11 +259,11 @@ _read_record_id_range (int *flag,
       || value <= IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
       || value >= IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
     {
-      fprintf (stderr, "invalid range record number: %d\n", value);
+      fprintf (stderr, "invalid range record number: %ld\n", value);
       exit (EXIT_FAILURE);
     }
 
-  (*range2) = value;
+  (*range2) = (uint16_t)value;
 
   if ((*range2) < (*range1))
     {
@@ -520,7 +520,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   struct ipmi_sel_arguments *cmd_args;
   char *endptr;
-  int value;
+  long value;
 
   assert (state);
 
@@ -597,12 +597,12 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           || value <= IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
           || value >= IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
         {
-          fprintf (stderr, "invalid record count: %d\n", value);
+          fprintf (stderr, "invalid record count: %ld\n", value);
           exit (EXIT_FAILURE);
         }
 
       cmd_args->tail = 1;
-      cmd_args->tail_count = value;
+      cmd_args->tail_count = (uint16_t)value;
       break;
     case CLEAR_KEY:
       cmd_args->clear = 1;
