@@ -267,7 +267,7 @@ ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
         }
       line_count++;
 
-      /* On invalid inputs, we exit instead of goto end loop.
+      /* On invalid inputs, we exit instead of continuing the loop.
        *
        * We could continue and read the next line, but the assumption
        * is that the user is writing a script of some sort to perform
@@ -287,7 +287,7 @@ ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
                            stderr,
                            "Invalid number of hex bytes on line %u\n",
                            line_count);
-          goto end_loop;
+          goto cleanup;
         }
 
       if (!IPMI_NET_FN_RQ_VALID (bytes_rq[1]))
@@ -296,7 +296,7 @@ ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
                            stderr,
                            "Invalid netfn value on line %u\n",
                            line_count);
-          goto end_loop;
+          goto cleanup;
         }
 
       if (!(bytes_rs = calloc (IPMI_RAW_MAX_ARGS, sizeof (uint8_t))))
@@ -317,7 +317,7 @@ ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
                            stderr,
                            "ipmi_cmd_raw: %s\n",
                            ipmi_ctx_errormsg (state_data->ipmi_ctx));
-          goto end_loop;
+          goto cleanup;
         }
 
       pstdout_printf (state_data->pstate, "rcvd: ");
@@ -325,7 +325,6 @@ ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
         pstdout_printf (state_data->pstate, "%02X ", bytes_rs[i]);
       pstdout_printf (state_data->pstate, "\n");
 
-    end_loop:
       free (line);
       line = NULL;
       free (bytes_rq);
