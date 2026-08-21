@@ -1,3 +1,8 @@
+2026-08-21 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-chassis/ipmi-chassis.c (get_power_on_hours_counter): Apply the
+	minutes-per-counter scale correctly without overflowing.
+
 2026-08-19 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sel/ipmi-sel-argp.c (_read_date_range): Fix corner case

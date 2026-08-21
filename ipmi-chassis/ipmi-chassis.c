@@ -26,6 +26,7 @@
 #include <string.h>
 #endif /* STDC_HEADERS */
 #include <assert.h>
+#include <inttypes.h>
 
 #include <freeipmi/freeipmi.h>
 
@@ -941,8 +942,9 @@ get_power_on_hours_counter (ipmi_chassis_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val = 0;
+  uint64_t total_minutes, hrs, min;
   uint8_t minutes_per_counter;
-  uint32_t counter_reading, min, hrs;
+  uint32_t counter_reading;
   int rv = -1;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_power_on_hours_counter_rs)))
@@ -985,14 +987,14 @@ get_power_on_hours_counter (ipmi_chassis_state_data_t *state_data)
 
   counter_reading = val;
 
-  min = counter_reading / minutes_per_counter;
+  total_minutes = (uint64_t)counter_reading * minutes_per_counter;
 
-  hrs = min / 60;
+  hrs = total_minutes / 60;
 
-  min = min % 60;
+  min = total_minutes % 60;
 
   pstdout_printf (state_data->pstate,
-                  "Power on hours : %u Hours %u Minutes\n",
+                  "Power on hours : %" PRIu64 " Hours %" PRIu64 " Minutes\n",
                   hrs,
                   min);
   rv = 0;
