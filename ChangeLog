@@ -1,5 +1,10 @@
 2026-08-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sel/ipmi-sel-argp.c (_read_record_list): Reject empty record
+	lists and lists that exceed the fixed record array capacity.
+
+2026-08-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sel/ipmi-sel.c (_display_sel_records): Honor --post-clear when
 	--tail selects the entire SEL.
 

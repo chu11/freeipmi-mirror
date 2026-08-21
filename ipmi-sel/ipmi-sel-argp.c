@@ -175,6 +175,12 @@ _read_record_list (int *flag,
 
   (*flag) = 1;
   tok = strtok (arg, " ,");
+  if (!tok)
+    {
+      fprintf (stderr, "record list is empty\n");
+      exit (EXIT_FAILURE);
+    }
+
   while (tok && (*record_list_length) < IPMI_SEL_MAX_RECORD)
     {
       errno = 0;
@@ -193,6 +199,12 @@ _read_record_list (int *flag,
       record_list[(*record_list_length)] = (uint16_t)value;
       (*record_list_length)++;
       tok = strtok (NULL, " ,");
+    }
+
+  if (tok)
+    {
+      fprintf (stderr, "too many record numbers\n");
+      exit (EXIT_FAILURE);
     }
 }
 
