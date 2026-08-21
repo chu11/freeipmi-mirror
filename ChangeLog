@@ -1,5 +1,10 @@
 2026-08-21 Albert Chu <chu11@llnl.gov>
 
+	* bmc-watchdog/bmc-watchdog.c (_daemon_setup): Require the reset
+	period to be shorter than the initial countdown.
+
+2026-08-21 Albert Chu <chu11@llnl.gov>
+
 	* bmc-info/bmc-info.c (display_system_info_common): Enforce the
 	declared system information string length.
 

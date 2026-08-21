@@ -1099,8 +1099,8 @@ _daemon_setup (void)
   if (cmd_args.reset_period)
     reset_period = cmd_args.reset_period_arg;
 
-  if (reset_period > initial_countdown_seconds)
-    err_exit ("Error: reset-period interval greater than initial countdown seconds");
+  if (reset_period >= initial_countdown_seconds)
+    err_exit ("Error: reset-period interval must be less than initial countdown seconds");
 
   while (1)
     {
