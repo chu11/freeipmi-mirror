@@ -1850,7 +1850,7 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
                                ipmi_sel_ctx_errormsg (state_data->sel_ctx));
               goto cleanup;
             }
-          goto out;
+          goto post_clear;
         }
 
       if (ipmi_sel_parse (state_data->sel_ctx,
@@ -1934,6 +1934,7 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
         }
     }
 
+ post_clear:
   if (args->post_clear)
     {
       if (ipmi_sel_clear_sel (state_data->sel_ctx) < 0)
@@ -1946,7 +1947,6 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
         }
     }
 
- out:
   rv = 0;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
