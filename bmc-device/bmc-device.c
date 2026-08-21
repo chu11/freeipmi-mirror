@@ -1010,8 +1010,9 @@ rearm_sensor (bmc_device_state_data_t *state_data)
       str_ptr = strtok_r (NULL, " \t", &lasts);
     }
 
-  if (num_str_args != BMC_DEVICE_MIN_REARM_SENSOR_ARGS
-      && num_str_args != BMC_DEVICE_MAX_REARM_SENSOR_ARGS)
+  if (str_ptr
+      || (num_str_args != BMC_DEVICE_MIN_REARM_SENSOR_ARGS
+          && num_str_args != BMC_DEVICE_MAX_REARM_SENSOR_ARGS))
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -1648,8 +1649,9 @@ platform_event (bmc_device_state_data_t *state_data)
       str_ptr = strtok_r (NULL, " \t", &lasts);
     }
 
-  if (num_str_args != BMC_DEVICE_MAX_PLATFORM_EVENT_ARGS
-      && num_str_args != (BMC_DEVICE_MAX_PLATFORM_EVENT_ARGS - 1))
+  if (str_ptr
+      || (num_str_args != BMC_DEVICE_MAX_PLATFORM_EVENT_ARGS
+          && num_str_args != (BMC_DEVICE_MAX_PLATFORM_EVENT_ARGS - 1)))
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -1860,7 +1862,8 @@ set_sensor_reading_and_event_status (bmc_device_state_data_t *state_data)
       str_ptr = strtok_r (NULL, " \t", &lasts);
     }
 
-  if (num_str_args != BMC_DEVICE_SET_SENSOR_READING_AND_EVENT_STATUS_ARGS)
+  if (str_ptr
+      || num_str_args != BMC_DEVICE_SET_SENSOR_READING_AND_EVENT_STATUS_ARGS)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
