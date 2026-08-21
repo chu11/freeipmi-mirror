@@ -651,4 +651,3 @@ bmc_device_argp_parse (int argc, char **argv, struct bmc_device_arguments *cmd_a
   verify_common_cmd_args (&(cmd_args->common_args));
   _bmc_device_args_validate (cmd_args);
 }
-

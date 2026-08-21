@@ -1,5 +1,11 @@
 2026-08-21 Albert Chu <chu11@llnl.gov>
 
+	* bmc-device/bmc-device.c (parse_uint16, parse_int16): Validate parsed
+	values before narrowing them.
+	(set_sel_time_utc_offset): Reject offsets outside the protocol range.
+
+2026-08-21 Albert Chu <chu11@llnl.gov>
+
 	* bmc-device/bmc-device.c (write_fru): Reject short FRU file reads.
 
 2026-08-21 Albert Chu <chu11@llnl.gov>

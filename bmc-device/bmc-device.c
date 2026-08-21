@@ -22,6 +22,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #if STDC_HEADERS
 #include <string.h>
 #include <ctype.h>
@@ -842,6 +843,7 @@ parse_uint16 (bmc_device_state_data_t *state_data,
               char *str)
 {
   char *endptr;
+  long tmp;
 
   assert (state_data);
   assert (from);
@@ -858,9 +860,12 @@ parse_uint16 (bmc_device_state_data_t *state_data,
     }
 
   errno = 0;
-  (*to) = strtol (from, &endptr, 0);
+  tmp = strtol (from, &endptr, 0);
   if (errno
-      || endptr[0] != '\0')
+      || endptr == from
+      || endptr[0] != '\0'
+      || tmp < 0
+      || tmp > UINT16_MAX)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -869,6 +874,7 @@ parse_uint16 (bmc_device_state_data_t *state_data,
       return (-1);
     }
 
+  (*to) = (uint16_t)tmp;
   return (0);
 }
 
@@ -925,6 +931,7 @@ parse_int16 (bmc_device_state_data_t *state_data,
              char *str)
 {
   char *endptr;
+  long tmp;
 
   assert (state_data);
   assert (from);
@@ -941,9 +948,12 @@ parse_int16 (bmc_device_state_data_t *state_data,
     }
 
   errno = 0;
-  (*to) = strtol (from, &endptr, 0);
+  tmp = strtol (from, &endptr, 0);
   if (errno
-      || endptr[0] != '\0')
+      || endptr == from
+      || endptr[0] != '\0'
+      || tmp < INT16_MIN
+      || tmp > INT16_MAX)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -952,6 +962,7 @@ parse_int16 (bmc_device_state_data_t *state_data,
       return (-1);
     }
 
+  (*to) = (int16_t)tmp;
   return (0);
 }
 
@@ -1512,6 +1523,14 @@ set_sel_time_utc_offset (bmc_device_state_data_t *state_data)
                        &offset,
                        "offset") < 0)
         goto cleanup;
+
+      if (!IPMI_SEL_TIME_UTC_OFFSET_VALID (offset))
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "invalid argument for offset\n");
+          goto cleanup;
+        }
     }
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_sel_time_utc_offset_rs)))
