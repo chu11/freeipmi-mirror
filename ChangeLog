@@ -1,5 +1,10 @@
 2026-08-21 Albert Chu <chu11@llnl.gov>
 
+	* bmc-device/bmc-device.c (read_fru): Return failure if the FRU output
+	file cannot be written or closed.
+
+2026-08-21 Albert Chu <chu11@llnl.gov>
+
 	* bmc-device/bmc-device.c (write_fru): Fail on unexpected completion
 	codes instead of retrying indefinitely.
 

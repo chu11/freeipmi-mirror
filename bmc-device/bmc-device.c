@@ -2780,7 +2780,7 @@ read_fru (bmc_device_state_data_t *state_data)
     {
       pstdout_printf (state_data->pstate,
                       "FRU Error: Invalid area type returned\n");
-      goto out;
+      goto cleanup;
     }
 
   if (area_length)
@@ -2794,7 +2794,7 @@ read_fru (bmc_device_state_data_t *state_data)
                            "Cannot open '%s': %s\n",
                            state_data->prog_data->args->read_fru_filename,
                            strerror (errno));
-          goto out;
+          goto cleanup;
         }
 
       if (fd_write_n (fd, areabuf, area_length) < 0)
@@ -2803,19 +2803,16 @@ read_fru (bmc_device_state_data_t *state_data)
                            stderr,
                            "fd_write_n: %s\n",
                            strerror (errno));
-          goto out;
+          goto cleanup;
         }
     }
   else
     {
       pstdout_printf (state_data->pstate,
                       "FRU Error: FRU area is zero length\n");
-      goto out;
+      goto cleanup;
     }
 
-
- /* Close of fru_ctx in run_cmd_args */
-out:
   rv = 0;
 cleanup:
   ipmi_fru_close_device_id (state_data->fru_ctx);
