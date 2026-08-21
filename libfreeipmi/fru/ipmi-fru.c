@@ -467,7 +467,8 @@ _read_fru_data (ipmi_fru_ctx_t ctx,
         }
       count_returned = val;
 
-      if (!count_returned)
+      if (!count_returned
+          || count_returned > count_to_read)
         {
           FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_IPMI_ERROR);
           goto cleanup;

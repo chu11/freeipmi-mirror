@@ -1,5 +1,10 @@
 2026-08-21 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/fru/ipmi-fru.c (_read_fru_data): Reject response data
+	counts larger than the requested FRU read size.
+
+2026-08-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-raw/ipmi-raw.c (ipmi_raw_stream): Stop processing command
 	streams and return failure after invalid commands or IPMI errors.
 
