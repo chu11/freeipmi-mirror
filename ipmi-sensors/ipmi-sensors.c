@@ -513,9 +513,6 @@ _calculate_record_ids (ipmi_sensors_state_data_t *state_data,
                 continue;
             }
 
-          output_record_ids[(*output_record_ids_length)] = record_id;
-          (*output_record_ids_length)++;
-
           if ((*output_record_ids_length) >= MAX_SENSOR_RECORD_IDS)
             {
               pstdout_fprintf (state_data->pstate,
@@ -524,6 +521,9 @@ _calculate_record_ids (ipmi_sensors_state_data_t *state_data,
                                MAX_SENSOR_RECORD_IDS);
               return (-1);
             }
+
+          output_record_ids[(*output_record_ids_length)] = record_id;
+          (*output_record_ids_length)++;
         }
     }
   else if (state_data->prog_data->args->record_ids_length)
@@ -580,9 +580,6 @@ _calculate_record_ids (ipmi_sensors_state_data_t *state_data,
                 continue;
             }
 
-          output_record_ids[(*output_record_ids_length)] = state_data->prog_data->args->record_ids[i];
-          (*output_record_ids_length)++;
-
           if ((*output_record_ids_length) >= MAX_SENSOR_RECORD_IDS)
             {
               pstdout_fprintf (state_data->pstate,
@@ -591,6 +588,9 @@ _calculate_record_ids (ipmi_sensors_state_data_t *state_data,
                                MAX_SENSOR_RECORD_IDS);
               return (-1);
             }
+
+          output_record_ids[(*output_record_ids_length)] = state_data->prog_data->args->record_ids[i];
+          (*output_record_ids_length)++;
         }
     }
   else /* state_data->prog_data->args->sensor_types_length */
@@ -650,9 +650,6 @@ _calculate_record_ids (ipmi_sensors_state_data_t *state_data,
                 continue;
             }
 
-          output_record_ids[(*output_record_ids_length)] = record_id;
-          (*output_record_ids_length)++;
-
           if ((*output_record_ids_length) >= MAX_SENSOR_RECORD_IDS)
             {
               pstdout_fprintf (state_data->pstate,
@@ -661,6 +658,9 @@ _calculate_record_ids (ipmi_sensors_state_data_t *state_data,
                                MAX_SENSOR_RECORD_IDS);
               return (-1);
             }
+
+          output_record_ids[(*output_record_ids_length)] = record_id;
+          (*output_record_ids_length)++;
         }
     }
 

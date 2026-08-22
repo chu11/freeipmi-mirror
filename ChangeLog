@@ -1,5 +1,11 @@
 2026-08-22 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sensors/ipmi-sensors.c (_calculate_record_ids): Check the
+	record ID array capacity before inserting a new ID, allowing the array
+	to hold exactly MAX_SENSOR_RECORD_IDS entries.
+
+2026-08-22 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sensors/ipmi-sensors-argp.c (cmdline_parse): Reject empty and
 	oversized sensor record ID lists.
 	* common/toolcommon/tool-sensor-common.c (parse_sensor_types): Reject
