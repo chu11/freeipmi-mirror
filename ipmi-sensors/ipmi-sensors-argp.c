@@ -138,7 +138,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   struct ipmi_sensors_arguments *cmd_args;
   char *endptr;
   char *tok;
-  int value;
+  long value;
 
   assert (state);
 
@@ -174,11 +174,11 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
               || value < IPMI_SDR_RECORD_ID_FIRST
               || value > IPMI_SDR_RECORD_ID_LAST)
             {
-              fprintf (stderr, "invalid sensor record id: %d\n", value);
+              fprintf (stderr, "invalid sensor record id: %ld\n", value);
               exit (EXIT_FAILURE);
             }
 
-          cmd_args->record_ids[cmd_args->record_ids_length] = value;
+          cmd_args->record_ids[cmd_args->record_ids_length] = (unsigned int)value;
           cmd_args->record_ids_length++;
           tok = strtok (NULL, " ,");
         }
@@ -202,11 +202,11 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
               || value < IPMI_SDR_RECORD_ID_FIRST
               || value > IPMI_SDR_RECORD_ID_LAST)
             {
-              fprintf (stderr, "invalid sensor record id: %d\n", value);
+              fprintf (stderr, "invalid sensor record id: %ld\n", value);
               exit (EXIT_FAILURE);
             }
 
-          cmd_args->exclude_record_ids[cmd_args->exclude_record_ids_length] = value;
+          cmd_args->exclude_record_ids[cmd_args->exclude_record_ids_length] = (unsigned int)value;
           cmd_args->exclude_record_ids_length++;
           tok = strtok (NULL, " ,");
         }

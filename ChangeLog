@@ -1,3 +1,8 @@
+2026-08-22 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/ipmi-sensors-argp.c (cmdline_parse): Validate sensor
+	record IDs before narrowing them.
+
 2026-08-21 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sel/ipmi-sel.c (_hex_output): Do not output short SEL records
