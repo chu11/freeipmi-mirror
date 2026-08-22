@@ -194,7 +194,7 @@ valid_sensor_types (char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
     {
       int j = 0;
       int found = 0;
-      int value;
+      long value;
       char *ptr = NULL;
 
       errno = 0;
@@ -202,6 +202,8 @@ valid_sensor_types (char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
 
       if (!errno
           && !ptr[0]
+          && value >= 0
+          && value <= UINT8_MAX
           && (IPMI_SENSOR_TYPE_VALID ((uint8_t)value)
               || IPMI_SENSOR_TYPE_IS_OEM ((uint8_t)value)))
         found++;
@@ -329,7 +331,7 @@ _sensor_type_strcmp (pstdout_state_t pstate,
   const char *sensor_type_str;
   char *tmpstr = NULL;
   int rv = -1;
-  int value;
+  long value;
   char *ptr = NULL;
 
   assert (sensor_type_str_input);
@@ -339,7 +341,9 @@ _sensor_type_strcmp (pstdout_state_t pstate,
 
   /* should be validated earlier - this in the only check to do */
   if (!errno
-      && !ptr[0])
+      && !ptr[0]
+      && value >= 0
+      && value <= UINT8_MAX)
     {
       if ((uint8_t)value == sensor_type)
         rv = 1;
@@ -916,4 +920,3 @@ calculate_column_widths_ignored_sdr_cache (unsigned int non_abbreviated_units,
 
   return (0);
 }
-

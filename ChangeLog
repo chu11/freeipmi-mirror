@@ -1,5 +1,11 @@
 2026-08-22 Albert Chu <chu11@llnl.gov>
 
+	* common/toolcommon/tool-sensor-common.c (valid_sensor_types,
+	_sensor_type_strcmp): Validate numeric sensor types before narrowing
+	them.
+
+2026-08-22 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sensors/ipmi-sensors-argp.c (cmdline_parse): Validate sensor
 	record IDs before narrowing them.
 
