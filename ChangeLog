@@ -1,5 +1,12 @@
 2026-08-22 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sensors/ipmi-sensors-argp.c (cmdline_parse): Reject empty and
+	oversized sensor record ID lists.
+	* common/toolcommon/tool-sensor-common.c (parse_sensor_types): Reject
+	empty and oversized sensor type lists.
+
+2026-08-22 Albert Chu <chu11@llnl.gov>
+
 	* common/toolcommon/tool-sensor-common.c (valid_sensor_types,
 	_sensor_type_strcmp): Validate numeric sensor types before narrowing
 	them.

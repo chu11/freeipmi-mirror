@@ -144,11 +144,19 @@ parse_sensor_types (const char *special_string,
     }
 
   tok = strtok (strtmp, " ,");
+  if (!tok)
+    {
+      fprintf (stderr, "sensor type list is empty\n");
+      free (strtmp);
+      return (-1);
+    }
+
   while (tok && (*sensor_types_length) < MAX_SENSOR_TYPES)
     {
       if (!strcasecmp (tok, special_string))
         {
           (*sensor_types_length) = 0;
+          tok = NULL;
           break;
         }
       strncpy (sensor_types[(*sensor_types_length)],
@@ -156,6 +164,13 @@ parse_sensor_types (const char *special_string,
                MAX_SENSOR_TYPES_STRING_LENGTH);
       (*sensor_types_length)++;
       tok = strtok (NULL, " ,");
+    }
+
+  if (tok)
+    {
+      fprintf (stderr, "too many sensor types\n");
+      free (strtmp);
+      return (-1);
     }
 
   free (strtmp);

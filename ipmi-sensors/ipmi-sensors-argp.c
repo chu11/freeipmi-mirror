@@ -157,11 +157,17 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case RECORD_IDS_KEY:
       tok = strtok (arg, " ,");
+      if (!tok)
+        {
+          fprintf (stderr, "sensor record id list is empty\n");
+          exit (EXIT_FAILURE);
+        }
       while (tok && cmd_args->record_ids_length < MAX_SENSOR_RECORD_IDS)
         {
           if (!strcasecmp (tok, SENSOR_PARSE_ALL_STRING))
             {
               cmd_args->record_ids_length = 0;
+              tok = NULL;
               break;
             }
 
@@ -182,14 +188,25 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           cmd_args->record_ids_length++;
           tok = strtok (NULL, " ,");
         }
+      if (tok)
+        {
+          fprintf (stderr, "too many sensor record ids\n");
+          exit (EXIT_FAILURE);
+        }
       break;
     case EXCLUDE_RECORD_IDS_KEY:
       tok = strtok (arg, " ,");
+      if (!tok)
+        {
+          fprintf (stderr, "excluded sensor record id list is empty\n");
+          exit (EXIT_FAILURE);
+        }
       while (tok && cmd_args->exclude_record_ids_length < MAX_SENSOR_RECORD_IDS)
         {
           if (!strcasecmp (tok, SENSOR_PARSE_NONE_STRING))
             {
               cmd_args->exclude_record_ids_length = 0;
+              tok = NULL;
               break;
             }
 
@@ -209,6 +226,11 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           cmd_args->exclude_record_ids[cmd_args->exclude_record_ids_length] = (unsigned int)value;
           cmd_args->exclude_record_ids_length++;
           tok = strtok (NULL, " ,");
+        }
+      if (tok)
+        {
+          fprintf (stderr, "too many excluded sensor record ids\n");
+          exit (EXIT_FAILURE);
         }
       break;
     case SENSOR_TYPES_KEY:
