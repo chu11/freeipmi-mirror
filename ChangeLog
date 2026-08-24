@@ -1,5 +1,10 @@
 2026-08-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmidetect/ipmidetect.c (_output_nodes): Continue delimiter searches
+	after each replacement instead of rescanning the output from its start.
+
+2026-08-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmidetect/ipmidetect-argp.c (cmdline_parse): Validate port values as
 	long integers before narrowing them to int.
 

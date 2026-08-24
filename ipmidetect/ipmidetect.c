@@ -237,8 +237,12 @@ _output_nodes (char *nodebuf)
       /* convert commas to appropriate break types */
       if (cmd_args.output_format != ',')
         {
-          while ((ptr = strchr (tbuf, ',')))
-            *ptr = (char)cmd_args.output_format;
+          ptr = tbuf;
+          while ((ptr = strchr (ptr, ',')))
+            {
+              *ptr = (char)cmd_args.output_format;
+              ptr++;
+            }
         }
 
       /* start on the next line if its a newline separator */
