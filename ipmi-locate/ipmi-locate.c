@@ -124,6 +124,7 @@ dmidecode_probe_display (ipmi_locate_ctx_t ctx)
   assert (ctx);
 
   printf ("Probing KCS device using DMIDECODE... ");
+  fflush (stdout);
   if (!ipmi_locate_dmidecode_get_device_info (ctx,
                                               IPMI_INTERFACE_KCS,
                                               &info))
@@ -141,6 +142,7 @@ dmidecode_probe_display (ipmi_locate_ctx_t ctx)
   printf ("\n");
 
   printf ("Probing SMIC device using DMIDECODE... ");
+  fflush (stdout);
   if (!ipmi_locate_dmidecode_get_device_info (ctx,
                                               IPMI_INTERFACE_SMIC,
                                               &info))
@@ -158,6 +160,7 @@ dmidecode_probe_display (ipmi_locate_ctx_t ctx)
   printf ("\n");
 
   printf ("Probing BT device using DMIDECODE... ");
+  fflush (stdout);
   if (!ipmi_locate_dmidecode_get_device_info (ctx,
                                               IPMI_INTERFACE_BT,
                                               &info))
@@ -175,6 +178,7 @@ dmidecode_probe_display (ipmi_locate_ctx_t ctx)
   printf ("\n");
 
   printf ("Probing SSIF device using DMIDECODE... ");
+  fflush (stdout);
   if (!ipmi_locate_dmidecode_get_device_info (ctx,
                                               IPMI_INTERFACE_SSIF,
                                               &info))
@@ -202,6 +206,7 @@ smbios_probe_display (ipmi_locate_ctx_t ctx)
   assert (ctx);
 
   printf ("Probing KCS device using SMBIOS... ");
+  fflush (stdout);
   if (!ipmi_locate_smbios_get_device_info (ctx,
                                            IPMI_INTERFACE_KCS,
                                            &info))
@@ -219,6 +224,7 @@ smbios_probe_display (ipmi_locate_ctx_t ctx)
   printf ("\n");
 
   printf ("Probing SMIC device using SMBIOS... ");
+  fflush (stdout);
   if (!ipmi_locate_smbios_get_device_info (ctx,
                                            IPMI_INTERFACE_SMIC,
                                            &info))
@@ -236,6 +242,7 @@ smbios_probe_display (ipmi_locate_ctx_t ctx)
   printf ("\n");
 
   printf ("Probing BT device using SMBIOS... ");
+  fflush (stdout);
   if (!ipmi_locate_smbios_get_device_info (ctx,
                                            IPMI_INTERFACE_BT,
                                            &info))
@@ -253,6 +260,7 @@ smbios_probe_display (ipmi_locate_ctx_t ctx)
   printf ("\n");
 
   printf ("Probing SSIF device using SMBIOS... ");
+  fflush (stdout);
   if (!ipmi_locate_smbios_get_device_info (ctx,
                                            IPMI_INTERFACE_SSIF,
                                            &info))
@@ -280,6 +288,7 @@ acpi_probe_display (ipmi_locate_ctx_t ctx)
   assert (ctx);
 
   printf ("Probing KCS device using ACPI... ");
+  fflush (stdout);
   if (!ipmi_locate_acpi_spmi_get_device_info (ctx,
                                               IPMI_INTERFACE_KCS,
                                               &info))
@@ -297,6 +306,7 @@ acpi_probe_display (ipmi_locate_ctx_t ctx)
   printf ("\n");
 
   printf ("Probing SMIC device using ACPI... ");
+  fflush (stdout);
   if (!ipmi_locate_acpi_spmi_get_device_info (ctx,
                                               IPMI_INTERFACE_SMIC,
                                               &info))
@@ -314,6 +324,7 @@ acpi_probe_display (ipmi_locate_ctx_t ctx)
   printf ("\n");
 
   printf ("Probing BT device using ACPI... ");
+  fflush (stdout);
   if (!ipmi_locate_acpi_spmi_get_device_info (ctx,
                                               IPMI_INTERFACE_BT,
                                               &info))
@@ -331,6 +342,7 @@ acpi_probe_display (ipmi_locate_ctx_t ctx)
   printf ("\n");
 
   printf ("Probing SSIF device using ACPI... ");
+  fflush (stdout);
   if (!ipmi_locate_acpi_spmi_get_device_info (ctx,
                                               IPMI_INTERFACE_SSIF,
                                               &info))
@@ -358,6 +370,7 @@ pci_probe_display (ipmi_locate_ctx_t ctx)
   assert (ctx);
 
   printf ("Probing KCS device using PCI... ");
+  fflush (stdout);
   if (!ipmi_locate_pci_get_device_info (ctx,
                                         IPMI_INTERFACE_KCS,
                                         &info))
@@ -375,6 +388,7 @@ pci_probe_display (ipmi_locate_ctx_t ctx)
   printf ("\n");
 
   printf ("Probing SMIC device using PCI... ");
+  fflush (stdout);
   if (!ipmi_locate_pci_get_device_info (ctx,
                                         IPMI_INTERFACE_SMIC,
                                         &info))
@@ -392,6 +406,7 @@ pci_probe_display (ipmi_locate_ctx_t ctx)
   printf ("\n");
 
   printf ("Probing BT device using PCI... ");
+  fflush (stdout);
   if (!ipmi_locate_pci_get_device_info (ctx,
                                         IPMI_INTERFACE_BT,
                                         &info))
@@ -409,6 +424,7 @@ pci_probe_display (ipmi_locate_ctx_t ctx)
   printf ("\n");
 
   printf ("Probing SSIF device using PCI... ");
+  fflush (stdout);
   if (!ipmi_locate_pci_get_device_info (ctx,
                                         IPMI_INTERFACE_SSIF,
                                         &info))
@@ -547,4 +563,3 @@ main (int argc, char **argv)
   ipmi_locate_ctx_destroy (ctx);
   return (EXIT_SUCCESS);
 }
-

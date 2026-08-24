@@ -1,5 +1,11 @@
 2026-08-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-locate/ipmi-locate.c (dmidecode_probe_display,
+	smbios_probe_display, acpi_probe_display, pci_probe_display): Flush each
+	progress prompt before starting its probe.
+
+2026-08-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmidetectd/ipmidetectd.c (_fds_setup): Enable SO_REUSEADDR before
 	binding the server socket so it applies during quick restarts.
 
