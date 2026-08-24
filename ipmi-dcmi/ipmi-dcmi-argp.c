@@ -190,6 +190,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       cmd_args->set_power_limit++;
       break;
     case EXCEPTION_ACTIONS:
+      cmd_args->exception_actions++;
       /* special case */
       if (!strcasecmp (arg, "NO_ACTION"))
         {
@@ -221,7 +222,6 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           exit (EXIT_FAILURE);
         }
       cmd_args->exception_actions_arg = tmp;
-      cmd_args->exception_actions++;
       break;
     case POWER_LIMIT_REQUESTED:
       errno = 0;

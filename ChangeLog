@@ -1,5 +1,10 @@
 2026-08-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-dcmi/ipmi-dcmi-argp.c (cmdline_parse): Mark symbolic exception
+	actions as supplied so set-power-limit applies them.
+
+2026-08-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-dcmi/ipmi-dcmi-argp.c (_ipmi_dcmi_args_validate): Reject power
 	limit configuration options unless the set-power-limit command is
 	selected.
