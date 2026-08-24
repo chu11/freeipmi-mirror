@@ -29,6 +29,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
@@ -148,7 +149,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   struct ipmiseld_arguments *cmd_args;
   char *endptr;
-  int tmp;
+  long tmp;
 
   assert (state);
 
@@ -257,7 +258,8 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       tmp = strtol (arg, &endptr, 0);
       if (errno
           || endptr[0] != '\0'
-          || tmp <= 0)
+          || tmp <= 0
+          || tmp > UINT_MAX)
         {
           fprintf (stderr, "invalid poll interval\n");
           exit (EXIT_FAILURE);
@@ -299,7 +301,8 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       tmp = strtol (arg, &endptr, 0);
       if (errno
           || endptr[0] != '\0'
-          || tmp <= 0)
+          || tmp <= 0
+          || tmp > UINT_MAX)
         {
           fprintf (stderr, "invalid threadpool count\n");
           exit (EXIT_FAILURE);

@@ -1,5 +1,11 @@
 2026-08-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmiseld/ipmiseld-argp.c (cmdline_parse): Validate numeric
+	arguments as long values, including destination-range checks,
+	before assigning them to unsigned options.
+
+2026-08-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmiseld/ipmiseld.c (ipmiseld_sel_parse_log): Retry a clear after a
 	reservation cancellation without reporting success or resetting the
 	record cursor.
