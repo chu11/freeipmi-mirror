@@ -453,9 +453,21 @@ ipmi_sdr_cache_next (ipmi_sdr_ctx_t ctx)
       return (-1);
     }
 
+  if ((ctx->current_offset.offset + IPMI_SDR_RECORD_HEADER_LENGTH) > ctx->records_end_offset)
+    {
+      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_CACHE_INVALID);
+      return (-1);
+    }
+
   record_length = (uint8_t)((ctx->sdr_cache + ctx->current_offset.offset)[IPMI_SDR_RECORD_LENGTH_INDEX]);
 
-  if ((ctx->current_offset.offset + record_length + IPMI_SDR_RECORD_HEADER_LENGTH) >= ctx->records_end_offset)
+  if ((ctx->current_offset.offset + record_length + IPMI_SDR_RECORD_HEADER_LENGTH) > ctx->records_end_offset)
+    {
+      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_CACHE_INVALID);
+      return (-1);
+    }
+
+  if ((ctx->current_offset.offset + record_length + IPMI_SDR_RECORD_HEADER_LENGTH) == ctx->records_end_offset)
     return (0);
 
   _sdr_set_current_offset (ctx, ctx->current_offset.offset + IPMI_SDR_RECORD_HEADER_LENGTH + record_length);
@@ -493,13 +505,25 @@ ipmi_sdr_cache_seek (ipmi_sdr_ctx_t ctx, unsigned int index)
     {
       unsigned int record_length;
 
+      if ((offset + IPMI_SDR_RECORD_HEADER_LENGTH) > ctx->records_end_offset)
+        {
+          SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_CACHE_INVALID);
+          return (-1);
+        }
+
       record_length = (uint8_t)((ctx->sdr_cache + offset)[IPMI_SDR_RECORD_LENGTH_INDEX]);
 
-      if ((offset + record_length + IPMI_SDR_RECORD_HEADER_LENGTH) >= ctx->records_end_offset)
-        break;
+      if ((offset + record_length + IPMI_SDR_RECORD_HEADER_LENGTH) > ctx->records_end_offset)
+        {
+          SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_CACHE_INVALID);
+          return (-1);
+        }
 
       offset += IPMI_SDR_RECORD_HEADER_LENGTH;
       offset += record_length;
+
+      if (offset == ctx->records_end_offset)
+        break;
     }
 
   _sdr_set_current_offset (ctx, offset);
@@ -533,6 +557,20 @@ ipmi_sdr_cache_search_record_id (ipmi_sdr_ctx_t ctx, uint16_t record_id)
       uint16_t record_id_current;
       unsigned int record_length;
 
+      if ((offset + IPMI_SDR_RECORD_HEADER_LENGTH) > ctx->records_end_offset)
+        {
+          SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_CACHE_INVALID);
+          return (-1);
+        }
+
+      record_length = (uint8_t)((ctx->sdr_cache + offset)[IPMI_SDR_RECORD_LENGTH_INDEX]);
+
+      if ((offset + record_length + IPMI_SDR_RECORD_HEADER_LENGTH) > ctx->records_end_offset)
+        {
+          SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_CACHE_INVALID);
+          return (-1);
+        }
+
       /* Record ID stored little-endian */
       record_id_current = (uint16_t)ptr[IPMI_SDR_RECORD_ID_INDEX_LS] & 0xFF;
       record_id_current |= ((uint16_t)ptr[IPMI_SDR_RECORD_ID_INDEX_MS] & 0xFF) << 8;
@@ -544,13 +582,11 @@ ipmi_sdr_cache_search_record_id (ipmi_sdr_ctx_t ctx, uint16_t record_id)
           break;
         }
 
-      record_length = (uint8_t)((ctx->sdr_cache + offset)[IPMI_SDR_RECORD_LENGTH_INDEX]);
-
-      if ((offset + record_length + IPMI_SDR_RECORD_HEADER_LENGTH) >= ctx->records_end_offset)
-        break;
-
       offset += IPMI_SDR_RECORD_HEADER_LENGTH;
       offset += record_length;
+
+      if (offset == ctx->records_end_offset)
+        break;
     }
 
   if (!found)
@@ -587,6 +623,23 @@ ipmi_sdr_cache_search_sensor (ipmi_sdr_ctx_t ctx, uint8_t sensor_number, uint8_t
       uint8_t *ptr = ctx->sdr_cache + offset;
       uint8_t record_type_current;
       unsigned int record_length;
+      unsigned int record_size;
+
+      if ((offset + IPMI_SDR_RECORD_HEADER_LENGTH) > ctx->records_end_offset)
+        {
+          SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_CACHE_INVALID);
+          return (-1);
+        }
+
+      record_length = (uint8_t)((ctx->sdr_cache + offset)[IPMI_SDR_RECORD_LENGTH_INDEX]);
+
+      if ((offset + record_length + IPMI_SDR_RECORD_HEADER_LENGTH) > ctx->records_end_offset)
+        {
+          SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_CACHE_INVALID);
+          return (-1);
+        }
+
+      record_size = record_length + IPMI_SDR_RECORD_HEADER_LENGTH;
 
       record_type_current = ptr[IPMI_SDR_RECORD_TYPE_INDEX];
 
@@ -596,6 +649,12 @@ ipmi_sdr_cache_search_sensor (ipmi_sdr_ctx_t ctx, uint8_t sensor_number, uint8_t
         {
           uint8_t sensor_number_current;
           uint8_t sensor_owner_id_current;
+
+          if (record_size <= IPMI_SDR_RECORD_SENSOR_NUMBER_INDEX)
+            {
+              SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_CACHE_INVALID);
+              return (-1);
+            }
 
           sensor_owner_id_current = ptr[IPMI_SDR_RECORD_SENSOR_OWNER_ID_INDEX];
           sensor_number_current = ptr[IPMI_SDR_RECORD_SENSOR_NUMBER_INDEX];
@@ -619,12 +678,24 @@ ipmi_sdr_cache_search_sensor (ipmi_sdr_ctx_t ctx, uint8_t sensor_number, uint8_t
 
               if (record_type_current == IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
                 {
+                  if (record_size <= IPMI_SDR_RECORD_COMPACT_SHARE_COUNT)
+                    {
+                      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_CACHE_INVALID);
+                      return (-1);
+                    }
+
                   share_count = ptr[IPMI_SDR_RECORD_COMPACT_SHARE_COUNT];
                   share_count &= IPMI_SDR_RECORD_COMPACT_SHARE_COUNT_BITMASK;
                   share_count >>= IPMI_SDR_RECORD_COMPACT_SHARE_COUNT_SHIFT;
                 }
               else
                 {
+                  if (record_size <= IPMI_SDR_RECORD_EVENT_SHARE_COUNT)
+                    {
+                      SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_CACHE_INVALID);
+                      return (-1);
+                    }
+
                   share_count = ptr[IPMI_SDR_RECORD_EVENT_SHARE_COUNT];
                   share_count &= IPMI_SDR_RECORD_EVENT_SHARE_COUNT_BITMASK;
                   share_count >>= IPMI_SDR_RECORD_EVENT_SHARE_COUNT_SHIFT;
@@ -647,13 +718,11 @@ ipmi_sdr_cache_search_sensor (ipmi_sdr_ctx_t ctx, uint8_t sensor_number, uint8_t
             }
         }
 
-      record_length = (uint8_t)((ctx->sdr_cache + offset)[IPMI_SDR_RECORD_LENGTH_INDEX]);
-
-      if ((offset + record_length + IPMI_SDR_RECORD_HEADER_LENGTH) >= ctx->records_end_offset)
-        break;
-
       offset += IPMI_SDR_RECORD_HEADER_LENGTH;
       offset += record_length;
+
+      if (offset == ctx->records_end_offset)
+        break;
     }
 
   if (!found)

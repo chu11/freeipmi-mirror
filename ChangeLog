@@ -1,3 +1,10 @@
+2026-08-24 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/sdr/ipmi-sdr-cache-read.c
+	(ipmi_sdr_cache_next, ipmi_sdr_cache_seek,
+	ipmi_sdr_cache_search_record_id, ipmi_sdr_cache_search_sensor): Validate
+	complete SDR cache records before reading their headers or payloads.
+
 2026-08-22 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/ipmi-sensors.c (_calculate_record_ids): Check the
