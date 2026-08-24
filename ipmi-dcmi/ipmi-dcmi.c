@@ -1001,7 +1001,7 @@ static int
 _enhanced_system_power_statistics_attributes (ipmi_dcmi_state_data_t *state_data)
 {
   uint8_t rolling_average_time_periods[IPMI_DCMI_ROLLING_AVERAGE_TIME_PERIOD_BUFLEN];
-  uint8_t number_of_supported_rolling_average_time_periods;
+  uint8_t number_of_supported_rolling_average_time_periods = 0;
   int i;
 
   assert (state_data);

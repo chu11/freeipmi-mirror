@@ -1,5 +1,12 @@
 2026-08-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-dcmi/ipmi-dcmi.c
+	(_enhanced_system_power_statistics_attributes): Defensively initialize
+	the rolling average time period count when the optional capability is
+	not supported.
+
+2026-08-24 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/sdr/ipmi-sdr-cache-read.c
 	(ipmi_sdr_cache_next, ipmi_sdr_cache_seek,
 	ipmi_sdr_cache_search_record_id, ipmi_sdr_cache_search_sensor): Validate
