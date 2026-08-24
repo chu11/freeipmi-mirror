@@ -274,6 +274,9 @@ ipmiseld_ipmi_setup (ipmiseld_host_data_t *host_data)
         }
     }
 
+  host_data->last_ipmi_errnum = 0;
+  host_data->last_ipmi_errnum_count = 0;
+
   rv = 0;
  cleanup:
   if (rv < 0)

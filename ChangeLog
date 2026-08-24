@@ -1,5 +1,11 @@
 2026-08-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmiseld/ipmiseld-ipmi-communication.c (ipmiseld_ipmi_setup): Reset
+	connection-error suppression after a connection and target setup
+	complete successfully.
+
+2026-08-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmiseld/ipmiseld-argp.c (cmdline_parse): Validate numeric
 	arguments as long values, including destination-range checks,
 	before assigning them to unsigned options.
