@@ -127,7 +127,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   struct ipmi_dcmi_arguments *cmd_args;
   char *endptr = NULL;
-  int tmp;
+  long tmp;
   long long lltmp;
 
   assert (state);
@@ -221,7 +221,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           fprintf (stderr, "exception actions out of range\n");
           exit (EXIT_FAILURE);
         }
-      cmd_args->exception_actions_arg = tmp;
+      cmd_args->exception_actions_arg = (uint8_t)tmp;
       break;
     case POWER_LIMIT_REQUESTED:
       errno = 0;
@@ -238,7 +238,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           fprintf (stderr, "power limit requested out of range\n");
           exit (EXIT_FAILURE);
         }
-      cmd_args->power_limit_requested_arg = tmp;
+      cmd_args->power_limit_requested_arg = (uint16_t)tmp;
       cmd_args->power_limit_requested++;
       break;
     case CORRECTION_TIME_LIMIT:
@@ -274,7 +274,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           fprintf (stderr, "statistics sampling period out of range\n");
           exit (EXIT_FAILURE);
         }
-      cmd_args->statistics_sampling_period_arg = tmp;
+      cmd_args->statistics_sampling_period_arg = (uint16_t)tmp;
       cmd_args->statistics_sampling_period++;
       break;
     case ACTIVATE_DEACTIVATE_POWER_LIMIT:

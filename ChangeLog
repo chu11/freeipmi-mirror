@@ -1,5 +1,10 @@
 2026-08-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-dcmi/ipmi-dcmi-argp.c (cmdline_parse): Validate numeric power
+	limit options as long values before narrowing them to protocol fields.
+
+2026-08-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-dcmi/ipmi-dcmi-argp.c (cmdline_parse): Mark symbolic exception
 	actions as supplied so set-power-limit applies them.
 
