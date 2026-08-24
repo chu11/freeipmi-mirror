@@ -1273,6 +1273,14 @@ set_asset_tag (ipmi_dcmi_state_data_t *state_data)
           goto cleanup;
         }
 
+      if (!val && bytes_to_write)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "no asset tag data written by BMC\n");
+          goto cleanup;
+        }
+
       /* DCMI 1.1 spec is unclear on "total_length_written", is it the
        * number of bytes just written or total bytes written so far?
        *
@@ -1470,6 +1478,14 @@ set_management_controller_identifier_string (ipmi_dcmi_state_data_t *state_data)
                            stderr,
                            "fiid_obj_get: 'total_length_written': %s\n",
                            fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+
+      if (!val && bytes_to_write)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "no management controller identifier string data written by BMC\n");
           goto cleanup;
         }
 

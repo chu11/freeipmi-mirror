@@ -1,5 +1,11 @@
 2026-08-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-dcmi/ipmi-dcmi.c (set_asset_tag,
+	set_management_controller_identifier_string): Reject successful write
+	responses that report no progress while data remains.
+
+2026-08-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-dcmi/ipmi-dcmi-argp.c (cmdline_parse): Validate numeric power
 	limit options as long values before narrowing them to protocol fields.
 
