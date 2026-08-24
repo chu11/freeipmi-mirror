@@ -1,5 +1,11 @@
 2026-08-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmiseld/ipmiseld.c (ipmiseld_sel_parse_log): Retry a clear after a
+	reservation cancellation without reporting success or resetting the
+	record cursor.
+
+2026-08-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-locate/ipmi-locate.c (dmidecode_probe_display,
 	smbios_probe_display, acpi_probe_display, pci_probe_display): Flush each
 	progress prompt before starting its probe.

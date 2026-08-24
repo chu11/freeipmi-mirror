@@ -1225,7 +1225,10 @@ ipmiseld_sel_parse_log (ipmiseld_host_data_t *host_data)
         {
           if (reserve_flag
               && ipmi_sel_ctx_errnum (host_data->host_poll->sel_ctx) == IPMI_SEL_ERR_RESERVATION_CANCELED)
-            retry_flag++;
+            {
+              retry_flag++;
+              goto save_state_out;
+            }
           else
             {
               ipmiseld_err_output (host_data, "ipmi_sel_clear_sel: %s",
