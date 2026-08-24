@@ -1586,7 +1586,18 @@ _sensor_info_output (ipmi_dcmi_state_data_t *state_data,
       number_of_record_ids_in_this_response = val;
 
       if (!number_of_record_ids_in_this_response)
-        break;
+        {
+          if (total_entity_instances_parsed < total_number_of_available_instances)
+            {
+              pstdout_fprintf (state_data->pstate,
+                               stderr,
+                               "incomplete sensor info response: %u of %u instances returned\n",
+                               total_entity_instances_parsed,
+                               total_number_of_available_instances);
+              goto cleanup;
+            }
+          break;
+        }
 
       if ((sdr_record_ids_len = fiid_obj_get_data (obj_cmd_rs,
                                                    "sdr_record_ids",

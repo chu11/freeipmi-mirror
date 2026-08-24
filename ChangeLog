@@ -1,5 +1,11 @@
 2026-08-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-dcmi/ipmi-dcmi.c (_sensor_info_output): Reject incomplete
+	sensor enumeration responses that report no records before all available
+	instances have been returned.
+
+2026-08-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-dcmi/ipmi-dcmi.c
 	(_enhanced_system_power_statistics_attributes): Defensively initialize
 	the rolling average time period count when the optional capability is
