@@ -162,13 +162,6 @@ _fds_setup (void)
   if ((server_fd = socket (AF_INET6, SOCK_STREAM, 0)) < 0)
     err_exit ("socket: %s", strerror (errno));
 
-  memset (&servaddr, '\0', sizeof (struct sockaddr_in6));
-  servaddr.sin6_family = AF_INET6;
-  servaddr.sin6_port = htons (conf.ipmidetectd_server_port);
-
-  if (bind (server_fd, (struct sockaddr *)&servaddr, sizeof (struct sockaddr_in6)) < 0)
-    err_exit ("bind: %s", strerror (errno));
-
   /* For quick start/restart */
   option_value = 1;
   option_value_len = sizeof(option_value);
@@ -179,6 +172,13 @@ _fds_setup (void)
                   &option_value,
                   option_value_len) < 0)
     err_exit ("setsockopt: %s", strerror (errno));
+
+  memset (&servaddr, '\0', sizeof (struct sockaddr_in6));
+  servaddr.sin6_family = AF_INET6;
+  servaddr.sin6_port = htons (conf.ipmidetectd_server_port);
+
+  if (bind (server_fd, (struct sockaddr *)&servaddr, sizeof (struct sockaddr_in6)) < 0)
+    err_exit ("bind: %s", strerror (errno));
 
   if (listen (server_fd, IPMIDETECTD_SERVER_BACKLOG) < 0)
     err_exit ("listen: %s", strerror (errno));
