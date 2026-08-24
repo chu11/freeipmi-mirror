@@ -1,5 +1,10 @@
 2026-08-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmidetect/ipmidetect-argp.c (cmdline_parse): Validate port values as
+	long integers before narrowing them to int.
+
+2026-08-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-dcmi/ipmi-dcmi.c (set_asset_tag,
 	set_management_controller_identifier_string): Reject successful write
 	responses that report no progress while data remains.

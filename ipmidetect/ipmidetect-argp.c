@@ -141,6 +141,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   struct ipmidetect_arguments *cmd_args;
   char *endptr;
+  long port;
 
   assert (state);
 
@@ -154,12 +155,13 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case IPMIDETECT_PORT_KEY:
       errno = 0;
-      cmd_args->port = strtol (arg, &endptr, 10);
+      port = strtol (arg, &endptr, 10);
       if (errno
           || endptr[0] != '\0'
-          || cmd_args->port < 1
-          || cmd_args->port > 65535)
+          || port < 1
+          || port > 65535)
         err_exit ("invalid port specified");
+      cmd_args->port = (int)port;
       break;
     case IPMIDETECT_DETECTED_KEY:
       cmd_args->output_type = IPMIDETECT_DETECTED_NODES;
