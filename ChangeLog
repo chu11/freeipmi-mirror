@@ -1,5 +1,11 @@
 2026-08-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmidetectd/ipmidetectd.c (exit_flag, _ipmidetectd_loop): Use a
+	signal-safe shutdown flag and treat an interrupted poll as a normal
+	wake-up so signal-driven shutdown can leave the loop cleanly.
+
+2026-08-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmidetect/ipmidetect.c (_output_nodes): Continue delimiter searches
 	after each replacement instead of rescanning the output from its start.
 

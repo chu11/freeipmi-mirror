@@ -117,7 +117,7 @@ int server_fd = -1;
 
 extern int h_errno;
 
-static int exit_flag = 1;
+static volatile sig_atomic_t exit_flag = 1;
 
 static void
 _fds_setup (void)
@@ -702,7 +702,11 @@ _ipmidetectd_loop (void)
       timeval_millisecond_calc (&timeout, &timeout_ms);
 
       if ((num = poll (pfds, fds_count + 1, timeout_ms)) < 0)
-        err_exit ("poll: %s", strerror (errno));
+        {
+          if (errno == EINTR)
+            continue;
+          err_exit ("poll: %s", strerror (errno));
+        }
 
       if (num)
         {
