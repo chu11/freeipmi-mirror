@@ -1,5 +1,11 @@
 2026-08-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-dcmi/ipmi-dcmi-argp.c (_ipmi_dcmi_args_validate): Reject power
+	limit configuration options unless the set-power-limit command is
+	selected.
+
+2026-08-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-dcmi/ipmi-dcmi.c (_sensor_info_output): Reject incomplete
 	sensor enumeration responses that report no records before all available
 	instances have been returned.

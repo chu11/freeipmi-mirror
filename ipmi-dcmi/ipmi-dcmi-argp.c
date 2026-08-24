@@ -380,6 +380,17 @@ _ipmi_dcmi_args_validate (struct ipmi_dcmi_arguments *cmd_args)
                "No power limit configuration changes specified\n");
       exit (EXIT_FAILURE);
     }
+
+  if (!cmd_args->set_power_limit
+      && (cmd_args->exception_actions
+          || cmd_args->power_limit_requested
+          || cmd_args->correction_time_limit
+          || cmd_args->statistics_sampling_period))
+    {
+      fprintf (stderr,
+               "Power limit configuration option specified without set power limit command\n");
+      exit (EXIT_FAILURE);
+    }
 }
 
 void
