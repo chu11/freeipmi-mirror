@@ -1967,6 +1967,9 @@ ipmi_oem_intelnm_get_node_manager_capabilities (ipmi_oem_state_data_t *state_dat
           policytrigger_array = policytrigger_defaults_1_5;
           policytrigger_array_len = policytrigger_defaults_1_5_len;
         }
+
+      policypowerdomain_array = policypowerdomain_legacy;
+      policypowerdomain_array_len = policypowerdomain_legacy_len;
     }
 
   for (i = 0; i < domainid_array_len; i++)
@@ -6245,4 +6248,3 @@ ipmi_oem_intelnm_get_node_manager_version (ipmi_oem_state_data_t *state_data)
  cleanup:
   return (rv);
 }
-

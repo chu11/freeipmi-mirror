@@ -1,5 +1,11 @@
 2026-08-25 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-intelnm.c
+	(ipmi_oem_intelnm_get_node_manager_capabilities): Initialize the legacy
+	policy power domain for Node Manager 1.0 and 1.5 capabilities queries.
+
+2026-08-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/interpret/ipmi-interpret-config-common.c
 	(interpret_config_parse_manufacturer_id_product_id): Free the duplicated
 	configuration string when rejecting invalid product ID ranges and lists.
