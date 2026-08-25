@@ -113,7 +113,11 @@ host_is_ipv6_with_port (const char *host, char **addr, char **port)
                         {
                           if (!(*port = strdup (portptr)))
                             {
-                              free (*addr);
+                              if (addr)
+                                {
+                                  free (*addr);
+                                  *addr = NULL;
+                                }
                               goto cleanup;
                             }
                         }
@@ -196,7 +200,11 @@ host_is_host_with_port (const char *host, char **addr, char **port)
             {
               if (!(*port = strdup (portptr)))
                 {
-                  free (*addr);
+                  if (addr)
+                    {
+                      free (*addr);
+                      *addr = NULL;
+                    }
                   goto cleanup;
                 }
             }

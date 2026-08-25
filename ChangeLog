@@ -1,5 +1,11 @@
 2026-08-25 Albert Chu <chu11@llnl.gov>
 
+	* common/miscutil/network.c (host_is_ipv6_with_port,
+	host_is_host_with_port): Guard address cleanup when callers request only
+	the parsed port, and clear freed address outputs on allocation failure.
+
+2026-08-25 Albert Chu <chu11@llnl.gov>
+
 	* common/pingtool/ping-tool-common.c (_cmdline_parse): Validate numeric
 	ping arguments as long values before assigning them to int storage.
 
