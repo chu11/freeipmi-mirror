@@ -33,6 +33,8 @@
 #endif /* HAVE_ERROR_H */
 #include <assert.h>
 #include <errno.h>
+#include <limits.h>
+#include <stdint.h>
 
 #include <freeipmi/freeipmi.h>
 
@@ -95,7 +97,7 @@ common_parse_opt (int key,
                   struct common_cmd_args *common_args)
 {
   char *endptr;
-  int tmp;
+  long tmp;
   unsigned int outofband_flags, outofband_2_0_flags, inband_flags, sdr_flags, section_flags;
   int n;
 
@@ -133,7 +135,8 @@ common_parse_opt (int key,
       tmp = strtol (arg, &endptr, 0);
       if (errno
           || endptr[0] != '\0'
-          || tmp <= 0)
+          || tmp <= 0
+          || (unsigned long)tmp > UINT_MAX)
         {
           fprintf (stderr, "invalid driver address\n");
           exit (EXIT_FAILURE);
@@ -153,7 +156,8 @@ common_parse_opt (int key,
       tmp = strtol (arg, &endptr, 0);
       if (errno
           || endptr[0] != '\0'
-          || tmp <= 0)
+          || tmp <= 0
+          || (unsigned long)tmp > UINT_MAX)
         {
           fprintf (stderr, "invalid register spacing\n");
           exit (EXIT_FAILURE);
@@ -166,6 +170,7 @@ common_parse_opt (int key,
       if (errno
           || endptr[0] != '\0'
           || tmp < 0
+          || (unsigned long)tmp > UINT8_MAX
           || !IPMI_CHANNEL_NUMBER_VALID (tmp))
         {
           fprintf (stderr, "invalid target channel numbern");
@@ -179,7 +184,8 @@ common_parse_opt (int key,
       tmp = strtol (arg, &endptr, 0);
       if (errno
           || endptr[0] != '\0'
-          || tmp < 0)
+          || tmp < 0
+          || (unsigned long)tmp > UINT8_MAX)
         {
           fprintf (stderr, "invalid target slave addressn");
           exit (EXIT_FAILURE);
@@ -318,7 +324,8 @@ common_parse_opt (int key,
       tmp = strtol (arg, &endptr, 0);
       if (errno
           || endptr[0] != '\0'
-          || tmp <= 0)
+          || tmp <= 0
+          || (unsigned long)tmp > UINT_MAX)
         {
           fprintf (stderr, "invalid session timeout\n");
           exit (EXIT_FAILURE);
@@ -330,7 +337,8 @@ common_parse_opt (int key,
       tmp = strtol (arg, &endptr, 0);
       if (errno
           || endptr[0] != '\0'
-          || tmp <= 0)
+          || tmp <= 0
+          || (unsigned long)tmp > UINT_MAX)
         {
           fprintf (stderr, "invalid retransmission timeout\n");
           exit (EXIT_FAILURE);
@@ -662,4 +670,3 @@ verify_common_cmd_args (struct common_cmd_args *common_args)
       exit (EXIT_FAILURE);
     }
 }
-
