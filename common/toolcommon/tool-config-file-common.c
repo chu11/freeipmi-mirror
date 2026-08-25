@@ -1773,7 +1773,7 @@ config_file_parse (const char *filename,
         1,
         0,
         &buffer_output_count,
-        &(common_args->consolidate_output),
+        &(common_args->buffer_output),
         0
       },
       {
