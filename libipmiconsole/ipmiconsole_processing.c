@@ -221,7 +221,8 @@ _send_sol_packet_with_character_data (ipmiconsole_ctx_t c,
           if (!c->session.console_remote_console_to_bmc_bytes_before_break)
             max_character_send_size = c->session.max_sol_character_send_size;
           else
-            max_character_send_size = c->session.console_remote_console_to_bmc_bytes_before_break;
+            max_character_send_size = MIN (c->session.console_remote_console_to_bmc_bytes_before_break,
+                                           c->session.max_sol_character_send_size);
 
           /* Notes: Since c->session.console_remote_console_to_bmc is a circular buffer, it may
            * not be apparent why 'c->session.sol_input_character_data' and

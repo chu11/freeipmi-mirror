@@ -1,5 +1,11 @@
 2026-08-25 Albert Chu <chu11@llnl.gov>
 
+	* libipmiconsole/ipmiconsole_processing.c
+	(_send_sol_packet_with_character_data): Limit pre-break character data
+	to the negotiated SOL payload size.
+
+2026-08-25 Albert Chu <chu11@llnl.gov>
+
 	* libipmidetect/ipmidetect.c (_reset_node_lists,
 	ipmidetect_load_data): Clear partial node data before trying the next
 	configured server.
