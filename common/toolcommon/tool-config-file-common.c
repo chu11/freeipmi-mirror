@@ -1671,7 +1671,7 @@ config_file_parse (const char *filename,
       },
       {
         "utc-offset",
-        CONFFILE_OPTION_BOOL,
+        CONFFILE_OPTION_INT,
         -1,
         _config_file_utc_offset,
         1,
