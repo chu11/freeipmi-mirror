@@ -80,10 +80,10 @@ _ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_ctx_t ctx,
   uint8_t severity = 0;
   char data_buf[IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_DATA_LENGTH + 1];
   char string_buf[IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_STRING_LENGTH + 1];
-  uint8_t data_length;
+  unsigned int data_length;
   uint8_t max_read_length;
-  uint8_t offset = 0;
-  uint8_t component_length = 0;
+  unsigned int offset = 0;
+  size_t component_length = 0;
   const char *css_str = NULL;
   const char *severity_str = NULL;
   int rv = -1;
@@ -208,8 +208,10 @@ _ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_ctx_t ctx,
                             "[Fujitsu OEM decoding requires administrator privilege]");
                   goto out;
                 }
-              goto cleanup;
             }
+
+          SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_IPMI_ERROR);
+          goto cleanup;
         }
 
       /* Get severity and CSS flag only once */
@@ -224,24 +226,29 @@ _ipmi_sel_oem_fujitsu_get_sel_entry_long_text (ipmi_sel_ctx_t ctx,
 
       data_length = bytes_rs[15];
 
+      if (data_length > IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_DATA_LENGTH
+          || offset > data_length)
+        {
+          SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_IPMI_ERROR);
+          goto cleanup;
+        }
+
       bytes_rs[rs_len-1] = '\0'; /* just to be sure it's terminated */
       component_length = strlen ((char *)bytes_rs + 16);
 
-      /* achu: truncate if there is overflow */
-      if (offset + component_length > data_length)
+      if (component_length > (data_length - offset))
+        component_length = data_length - offset;
+
+      if (!component_length && offset < data_length)
         {
-          memcpy (data_buf + offset,
-                  &bytes_rs[16],
-                  IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_DATA_LENGTH - offset);
-          offset = data_length;
+          SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_IPMI_ERROR);
+          goto cleanup;
         }
-      else
-        {
-          memcpy (data_buf + offset,
-                  &bytes_rs[16],
-                  component_length);
-          offset += component_length;
-        }
+
+      memcpy (data_buf + offset,
+              &bytes_rs[16],
+              component_length);
+      offset += component_length;
     }
 
   if (css == IPMI_OEM_FUJITSU_CSS_COMPONENT)
