@@ -635,7 +635,7 @@ ipmidetect_load_data (ipmidetect_t handle,
         timeout_len = IPMIDETECT_TIMEOUT_LEN_DEFAULT;
     }
 
-  if (conffile_config.hostnames_flag)
+  if (!hostname && conffile_config.hostnames_flag)
     {
       unsigned int i;
 
