@@ -1,5 +1,10 @@
 2026-08-25 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/api/ipmi-api.c (ipmi_ctx_open_outofband_2_0): Check the
+	zero-padded K_g copy instead of reading beyond a short caller buffer.
+
+2026-08-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/util/ipmi-lan-util.c
 	(ipmi_lan_check_session_authentication_code,
 	ipmi_lan_check_packet_session_authentication_code): Validate consistent

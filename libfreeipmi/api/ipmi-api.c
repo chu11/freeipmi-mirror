@@ -717,7 +717,7 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
        */
       for (i = 0; i < IPMI_MAX_K_G_LENGTH; i++)
         {
-          if (k_g[i] != 0)
+          if (ctx->io.outofband.k_g[i] != 0)
             {
               all_zeroes = 0;
               break;
