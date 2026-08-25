@@ -1,3 +1,10 @@
+2026-08-24 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/cmds/
+	ipmi-rmcpplus-support-and-payload-cmds.h
+	(IPMI_PAYLOAD_INSTANCE_VALID): Require payload instances to satisfy
+	both ends of the valid range.
+
 2026-08-21 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sel/ipmi-sel.c (_display_sel_records): Honor --post-clear when
