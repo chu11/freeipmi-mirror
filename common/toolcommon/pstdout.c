@@ -706,7 +706,7 @@ _pstdout_print_wrapper(pstdout_state_t pstate,
   assert(format);
 
   va_start(ap, format);
-  _pstdout_print(pstate, internal_to_pstdout, stderr, format, ap);
+  _pstdout_print(pstate, internal_to_pstdout, stream, format, ap);
   va_end(ap);
 }
 
