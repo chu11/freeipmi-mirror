@@ -405,7 +405,7 @@ ipmi_monitoring_ctx_sdr_cache_filenames (ipmi_monitoring_ctx_t c, const char *fo
       return (-1);
     }
 
-  if (!format)
+  if (!format || strlen (format) > MAXPATHLEN)
     {
       c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
       return (-1);
@@ -424,6 +424,7 @@ ipmi_monitoring_ctx_sdr_cache_filenames (ipmi_monitoring_ctx_t c, const char *fo
     }
 
   strncpy (c->sdr_cache_filename_format, format, MAXPATHLEN);
+  c->sdr_cache_filename_format[MAXPATHLEN] = '\0';
   c->sdr_cache_filename_format_set = 1;
 
   c->errnum = IPMI_MONITORING_ERR_SUCCESS;

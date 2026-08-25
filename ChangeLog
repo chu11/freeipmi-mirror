@@ -1,5 +1,11 @@
 2026-08-25 Albert Chu <chu11@llnl.gov>
 
+	* libipmimonitoring/ipmi_monitoring.c
+	(ipmi_monitoring_ctx_sdr_cache_filenames): Reject filename formats that
+	exceed the context buffer instead of silently truncating them.
+
+2026-08-25 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config-category-dcmi-dcmi-conf-section.c
 	(asset_tag_checkout, asset_tag_commit,
 	management_controller_identifier_string_checkout,
