@@ -1,5 +1,12 @@
 2026-08-24 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/cmds/
+	ipmi-rmcpplus-support-and-payload-cmds.h
+	(IPMI_PAYLOAD_INSTANCE_VALID): Require payload instances to satisfy
+	both ends of the valid range.
+
+2026-08-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmiconsole/ipmiconsole.c (_stdin): Allow room in the translation
 	buffer for an escape character carried over from the previous input
 	buffer.

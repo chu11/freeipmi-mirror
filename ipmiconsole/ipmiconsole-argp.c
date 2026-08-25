@@ -361,4 +361,3 @@ ipmiconsole_argp_parse (int argc, char **argv, struct ipmiconsole_arguments *cmd
   verify_common_cmd_args (&(cmd_args->common_args));
   _ipmiconsole_args_validate (cmd_args);
 }
-
