@@ -262,6 +262,9 @@ sol_ioloop (ipmiconsole_ctx_t c,
   struct timeval tv;
   ssize_t n;
   fd_set rds;
+  int nfds;
+
+  nfds = ((solfd > localfd) ? solfd : localfd) + 1;
 
   while (sigterm == 0)
     {
@@ -272,7 +275,7 @@ sol_ioloop (ipmiconsole_ctx_t c,
       tv.tv_sec = 0;
       tv.tv_usec = 250000;
 
-      if (select (solfd + 1, &rds, NULL, NULL, &tv) < 0)
+      if (select (nfds, &rds, NULL, NULL, &tv) < 0)
         {
           perror ("select");
           return;

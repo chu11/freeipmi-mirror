@@ -1,5 +1,10 @@
 2026-08-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmiconsole/ipmiconsole.c (sol_ioloop): Include both console
+	descriptors in the range passed to select.
+
+2026-08-24 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/cmds/
 	ipmi-rmcpplus-support-and-payload-cmds.h
 	(IPMI_PAYLOAD_INSTANCE_VALID): Require payload instances to satisfy
