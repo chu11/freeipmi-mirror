@@ -1,5 +1,11 @@
 2026-08-25 Albert Chu <chu11@llnl.gov>
 
+	* common/toolcommon/tool-config-file-common.c
+	(config_file_parse): Advance the option-table offset after copying SDR
+	options so subsequent time options do not overwrite them.
+
+2026-08-25 Albert Chu <chu11@llnl.gov>
+
 	* common/miscutil/network.c (host_is_valid): Validate port strings as
 	long values before narrowing them to the output port.
 
