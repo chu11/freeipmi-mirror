@@ -2225,7 +2225,7 @@ ipmi_oem_dell_get_system_info (ipmi_oem_state_data_t *state_data)
 
       if (bytes[0] == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_WEB_GUI_SERVER_CONTROL_DISABLED)
         idrac_web_gui_server_control_str = "Disabled";
-      else if (bytes[1] == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_WEB_GUI_SERVER_CONTROL_ENABLED)
+      else if (bytes[0] == IPMI_OEM_DELL_SYSTEM_INFO_IDRAC_WEB_GUI_SERVER_CONTROL_ENABLED)
         idrac_web_gui_server_control_str = "Enabled";
       else
         idrac_web_gui_server_control_str = "Unknown";
