@@ -1,5 +1,11 @@
 2026-08-25 Albert Chu <chu11@llnl.gov>
 
+	* libipmidetect/ipmidetect.c (_reset_node_lists,
+	ipmidetect_load_data): Clear partial node data before trying the next
+	configured server.
+
+2026-08-25 Albert Chu <chu11@llnl.gov>
+
 	* libipmidetect/ipmidetect.c (ipmidetect_load_data): Give an explicit
 	hostname precedence over the configured default server list.
 

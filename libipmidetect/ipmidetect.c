@@ -526,6 +526,29 @@ _low_timeout_connect (ipmidetect_t handle,
 }
 
 static int
+_reset_node_lists (ipmidetect_t handle)
+{
+  fi_hostlist_destroy (handle->detected_nodes);
+  fi_hostlist_destroy (handle->undetected_nodes);
+  handle->detected_nodes = NULL;
+  handle->undetected_nodes = NULL;
+
+  if (!(handle->detected_nodes = fi_hostlist_create (NULL)))
+    {
+      handle->errnum = IPMIDETECT_ERR_OUT_OF_MEMORY;
+      return (-1);
+    }
+
+  if (!(handle->undetected_nodes = fi_hostlist_create (NULL)))
+    {
+      handle->errnum = IPMIDETECT_ERR_OUT_OF_MEMORY;
+      return (-1);
+    }
+
+  return (0);
+}
+
+static int
 _get_data (ipmidetect_t handle,
            const char *hostname,
            int port,
@@ -606,17 +629,8 @@ ipmidetect_load_data (ipmidetect_t handle,
   if (_read_conffile (handle, &conffile_config) < 0)
     goto cleanup;
 
-  if (!(handle->detected_nodes = fi_hostlist_create (NULL)))
-    {
-      handle->errnum = IPMIDETECT_ERR_OUT_OF_MEMORY;
-      goto cleanup;
-    }
-
-  if (!(handle->undetected_nodes = fi_hostlist_create (NULL)))
-    {
-      handle->errnum = IPMIDETECT_ERR_OUT_OF_MEMORY;
-      goto cleanup;
-    }
+  if (_reset_node_lists (handle) < 0)
+    goto cleanup;
 
   handle->load_state = IPMIDETECT_LOAD_STATE_SETUP;
 
@@ -653,11 +667,16 @@ ipmidetect_load_data (ipmidetect_t handle,
   if (!hostname && conffile_config.hostnames_flag)
     {
       unsigned int i;
+      unsigned int attempts = 0;
 
       for (i = 0; i < conffile_config.hostnames_len; i++)
         {
           if (strlen (conffile_config.hostnames[i]) > 0)
             {
+              if (attempts && _reset_node_lists (handle) < 0)
+                goto cleanup;
+              attempts++;
+
               if (_get_data (handle,
                              conffile_config.hostnames[i],
                              port,
