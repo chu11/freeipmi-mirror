@@ -1,5 +1,11 @@
 2026-08-25 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-dell.c (ipmi_oem_dell_get_system_info): Read the
+	one-byte iDRAC web server control value from its returned byte when
+	checking both the disabled and enabled states.
+
+2026-08-25 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-oem/ipmi-oem-dell.c (_output_dell_system_info_cmc_info): Use
 	the autoconfiguration field when reporting the CMC IPv6
 	autoconfiguration state.
