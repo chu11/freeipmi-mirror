@@ -1,5 +1,10 @@
 2026-08-25 Albert Chu <chu11@llnl.gov>
 
+	* common/pingtool/ping-tool-common.c (_cmdline_parse): Validate numeric
+	ping arguments as long values before assigning them to int storage.
+
+2026-08-25 Albert Chu <chu11@llnl.gov>
+
 	* common/toolcommon/pstdout.c (_pstdout_print_wrapper): Pass the
 	requested output stream through so finishing a partial stdout line does
 	not route its newline through stderr.

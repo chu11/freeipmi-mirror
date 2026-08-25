@@ -42,6 +42,7 @@
 #endif /* HAVE_FCNTL_H */
 #include <signal.h>
 #include <errno.h>
+#include <limits.h>
 #include <sys/types.h>
 #include <sys/select.h>
 #include <sys/socket.h>
@@ -211,6 +212,7 @@ _cmdline_parse (int argc,
                 const char *options)
 {
   char *endptr;
+  long tmp;
   int c;
 
   assert (argc >= 0);
@@ -237,42 +239,54 @@ _cmdline_parse (int argc,
           break;
         case 'c':
           errno = 0;
-          pingtool_count = strtol (optarg, &endptr, 10);
-          if (errno || endptr[0] != '\0')
+          tmp = strtol (optarg, &endptr, 10);
+          if (errno
+              || endptr[0] != '\0'
+              || tmp > INT_MAX)
             ipmi_ping_err_exit ("count argument invalid");
-          if (pingtool_count < 1)
+          if (tmp < 1)
             ipmi_ping_err_exit ("count must be > 0");
+          pingtool_count = tmp;
           break;
         case 'i':
           errno = 0;
-          pingtool_interval = strtol (optarg, &endptr, 10);
-          if (errno || endptr[0] != '\0')
+          tmp = strtol (optarg, &endptr, 10);
+          if (errno
+              || endptr[0] != '\0'
+              || tmp > INT_MAX)
             ipmi_ping_err_exit ("interval argument invalid");
-          if (pingtool_interval < 1)
+          if (tmp < 1)
             ipmi_ping_err_exit ("interval must be > 0");
+          pingtool_interval = tmp;
           break;
         case 'I':
           pingtool_interface = optarg;
           break;
         case 't':
           errno = 0;
-          pingtool_timeout = strtol (optarg, &endptr, 10);
-          if (errno || endptr[0] != '\0')
+          tmp = strtol (optarg, &endptr, 10);
+          if (errno
+              || endptr[0] != '\0'
+              || tmp > INT_MAX)
             ipmi_ping_err_exit ("timeout argument invalid");
-          if (pingtool_timeout < 1)
+          if (tmp < 1)
             ipmi_ping_err_exit ("timeout must be > 0");
+          pingtool_timeout = tmp;
           break;
         case 'v':
           pingtool_verbose++;
           break;
         case 's':
           errno = 0;
-          pingtool_initial_sequence_number = strtol (optarg, &endptr, 10);
-          if (errno || endptr[0] != '\0')
+          tmp = strtol (optarg, &endptr, 10);
+          if (errno
+              || endptr[0] != '\0')
             ipmi_ping_err_exit ("initial sequence number invalid");
-          if (pingtool_initial_sequence_number < min_sequence_number
-              || pingtool_initial_sequence_number > max_sequence_number)
+          if (tmp < 0
+              || (unsigned long)tmp < min_sequence_number
+              || (unsigned long)tmp > max_sequence_number)
             ipmi_ping_err_exit ("initial sequence number out of range");
+          pingtool_initial_sequence_number = tmp;
           break;
         case 'd':
           pingtool_debug++;
