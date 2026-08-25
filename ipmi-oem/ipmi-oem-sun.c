@@ -141,6 +141,15 @@ _sun_get_led_sdr_callback (ipmi_sdr_ctx_t sdr_ctx,
   if (record_type != IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD)
     return (0);
 
+  if (sdr_record_len <= IPMI_SDR_RECORD_GENERIC_DEVICE_LOCATOR_OEM_INDEX)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "Invalid generic device locator record length: %u\n",
+                       sdr_record_len);
+      return (-1);
+    }
+
   if (ipmi_sdr_parse_entity_id_instance_type (state_data->sdr_ctx,
                                               sdr_record,
                                               sdr_record_len,
@@ -537,6 +546,15 @@ ipmi_oem_sun_set_led (ipmi_oem_state_data_t *state_data)
                        stderr,
                        "Record ID points to invalid record type: %Xh\n",
                        record_type);
+      goto cleanup;
+    }
+
+  if (sdr_record_len <= IPMI_SDR_RECORD_GENERIC_DEVICE_LOCATOR_OEM_INDEX)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "Invalid generic device locator record length: %d\n",
+                       sdr_record_len);
       goto cleanup;
     }
 

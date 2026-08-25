@@ -1,5 +1,11 @@
 2026-08-25 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-sun.c (_sun_get_led_sdr_callback,
+	ipmi_oem_sun_set_led): Require a generic device locator record to
+	contain the raw OEM byte before constructing a Sun LED request.
+
+2026-08-25 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-oem/ipmi-oem-fujitsu.c
 	(ipmi_oem_fujitsu_get_sel_entry_long_text): Reject an empty response
 	component when more SEL text remains to prevent a no-progress loop.
