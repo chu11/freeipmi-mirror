@@ -1,5 +1,11 @@
 2026-08-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmiconsole/ipmiconsole-argp.c (cmdline_parse): Validate numeric
+	arguments as long values before narrowing them to their destination
+	types.
+
+2026-08-24 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/cmds/
 	ipmi-rmcpplus-support-and-payload-cmds.h
 	(IPMI_PAYLOAD_INSTANCE_VALID): Require payload instances to satisfy

@@ -174,7 +174,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   struct ipmiconsole_arguments *cmd_args;
   char *endptr;
-  int tmp;
+  long tmp;
 
   assert (state);
 
