@@ -110,6 +110,7 @@ static char * ipmidetect_errmsg[] =
 
 #define IPMIDETECT_BUFLEN               1024
 #define IPMIDETECT_PORT_DEFAULT         9225
+#define IPMIDETECT_PORT_MAX             65535
 #define IPMIDETECT_TIMEOUT_LEN_DEFAULT  60
 #define IPMIDETECT_BACKEND_CONNECT_LEN  5
 
@@ -605,11 +606,17 @@ ipmidetect_load_data (ipmidetect_t handle,
 
   handle->load_state = IPMIDETECT_LOAD_STATE_SETUP;
 
-  if (port <= 0)
+  if (port > IPMIDETECT_PORT_MAX)
+    {
+      handle->errnum = IPMIDETECT_ERR_PARAMETERS;
+      goto cleanup;
+    }
+  else if (port <= 0)
     {
       if (conffile_config.port_flag)
         {
-          if (conffile_config.port <= 0)
+          if (conffile_config.port <= 0
+              || conffile_config.port > IPMIDETECT_PORT_MAX)
             {
               handle->errnum = IPMIDETECT_ERR_CONF_INPUT;
               goto cleanup;

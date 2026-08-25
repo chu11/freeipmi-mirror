@@ -1,5 +1,10 @@
 2026-08-25 Albert Chu <chu11@llnl.gov>
 
+	* libipmidetect/ipmidetect.c (ipmidetect_load_data): Reject caller and
+	configuration ports outside the TCP port range.
+
+2026-08-25 Albert Chu <chu11@llnl.gov>
+
 	* libipmidetect/ipmidetect.c (ipmidetect_load_data): Give an explicit
 	hostname precedence over the configured default server list.
 
