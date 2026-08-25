@@ -1,5 +1,11 @@
 2026-08-25 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/interpret/ipmi-interpret-config-common.c
+	(interpret_config_parse_manufacturer_id_product_id): Free the duplicated
+	configuration string when rejecting invalid product ID ranges and lists.
+
+2026-08-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/api/ipmi-lan-session-common.c
 	(api_lan_cmd_wrapper): Free saved retransmission socket nodes and route
 	post-allocation errors through the common cleanup path.

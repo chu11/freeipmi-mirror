@@ -179,13 +179,13 @@ interpret_config_parse_manufacturer_id_product_id (conffile_t cf,
           if (product_id1 > product_id2)
             {
               conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_INVALID);
-              return (-1);
+              goto cleanup;
             }
 
           if ((product_id2 - product_id1 + 1) > IPMI_INTERPRET_CONFIG_FILE_PRODUCT_ID_MAX)
             {
               conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_TOOMANY);
-              return (-1);
+              goto cleanup;
             }
 
           for (i = 0; i < (product_id2 - product_id1 + 1) ; i++)
@@ -221,7 +221,7 @@ interpret_config_parse_manufacturer_id_product_id (conffile_t cf,
           if (index >= IPMI_INTERPRET_CONFIG_FILE_PRODUCT_ID_MAX)
             {
               conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_TOOMANY);
-              return (-1);
+              goto cleanup;
             }
 
           if (interpret_config_parse_strtoul (cf,
@@ -258,4 +258,3 @@ interpret_config_parse_manufacturer_id_product_id (conffile_t cf,
   free (tmpstr);
   return (rv);
 }
-
