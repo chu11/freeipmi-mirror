@@ -1,5 +1,11 @@
 2026-08-25 Albert Chu <chu11@llnl.gov>
 
+	* common/toolcommon/tool-config-file-common.c (config_file_parse): Parse
+	utc-offset as an integer so numeric offsets reach their range-checking
+	callback.
+
+2026-08-25 Albert Chu <chu11@llnl.gov>
+
 	* common/toolcommon/tool-config-file-common.c
 	(config_file_parse): Advance the option-table offset after copying SDR
 	options so subsequent time options do not overwrite them.
