@@ -1,5 +1,12 @@
 2026-08-25 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/util/ipmi-lan-util.c
+	(ipmi_lan_check_session_authentication_code,
+	ipmi_lan_check_packet_session_authentication_code): Validate consistent
+	authentication-code pointers and lengths, and zero-pad short keys.
+
+2026-08-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/sel/ipmi-sel-string-fujitsu-irmc-common.c
 	(_ipmi_sel_oem_fujitsu_get_sel_entry_long_text): Reject malformed
 	Fujitsu SEL long-text responses before copying their data.
