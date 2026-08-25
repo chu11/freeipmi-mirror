@@ -1260,7 +1260,7 @@ _output_dell_system_info_cmc_ipv6_info (ipmi_oem_state_data_t *state_data)
 
   pstdout_printf (state_data->pstate,
                   "Autoconfiguration : %s\n",
-                  ipv6_status == IPMI_OEM_DELL_SYSTEM_INFO_CMC_IPV6_INFO_AUTOCONFIGURATION_ENABLED ? "Enabled" : "Disabled");
+                  autoconfiguration == IPMI_OEM_DELL_SYSTEM_INFO_CMC_IPV6_INFO_AUTOCONFIGURATION_ENABLED ? "Enabled" : "Disabled");
 
   memset (ipv6_str_buf, '\0', IPMI_OEM_STR_BUFLEN + 1);
 

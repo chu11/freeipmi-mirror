@@ -1,5 +1,11 @@
 2026-08-25 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-dell.c (_output_dell_system_info_cmc_info): Use
+	the autoconfiguration field when reporting the CMC IPv6
+	autoconfiguration state.
+
+2026-08-25 Albert Chu <chu11@llnl.gov>
+
 	* libipmidetect/ipmidetect.c (_reset_node_lists,
 	ipmidetect_load_data): Clear partial node data before trying the next
 	configured server.
