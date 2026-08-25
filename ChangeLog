@@ -1,3 +1,8 @@
+2026-08-25 Albert Chu <chu11@llnl.gov>
+
+	* libipmidetect/ipmidetect.c (_get_data): Bound daemon hostname parsing
+	to the destination buffer.
+
 2026-08-17 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/ipmi-oem-fujitsu.c (ipmi_oem_fujitsu_get_sel_entry_long_text):
