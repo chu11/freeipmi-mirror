@@ -1,5 +1,13 @@
 2026-08-25 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config-category-dcmi-dcmi-conf-section.c
+	(asset_tag_checkout, asset_tag_commit,
+	management_controller_identifier_string_checkout,
+	management_controller_identifier_string_commit): Reject successful DCMI
+	string transfers that report no progress.
+
+2026-08-25 Albert Chu <chu11@llnl.gov>
+
 	* common/miscutil/network.c (host_is_ipv6_with_port,
 	host_is_host_with_port): Guard address cleanup when callers request only
 	the parsed port, and clear freed address outputs on allocation failure.

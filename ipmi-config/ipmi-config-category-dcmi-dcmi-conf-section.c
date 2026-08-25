@@ -130,6 +130,13 @@ asset_tag_checkout (ipmi_config_state_data_t *state_data,
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
+      if (!data_len)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get_data: 'data': no data returned\n");
+          goto cleanup;
+        }
       offset += data_len;
 
       if (offset >= total_asset_tag_length)
@@ -257,6 +264,14 @@ asset_tag_commit (ipmi_config_state_data_t *state_data,
           goto cleanup;
         }
 
+      if (!val)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_cmd_dcmi_set_asset_tag: no data written\n");
+          goto cleanup;
+        }
+
       /* DCMI 1.1 spec is unclear on "total_length_written", is it the
        * number of bytes just written or total bytes written so far?
        *
@@ -380,6 +395,13 @@ management_controller_identifier_string_checkout (ipmi_config_state_data_t *stat
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
+      if (!data_len)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "fiid_obj_get_data: 'data': no data returned\n");
+          goto cleanup;
+        }
       offset += data_len;
 
       if (offset >= total_length)
@@ -484,6 +506,14 @@ management_controller_identifier_string_commit (ipmi_config_state_data_t *state_
                            stderr,
                            "fiid_obj_get: 'total_management_controller_identifier_string_length': %s\n",
                            fiid_obj_errormsg (obj_cmd_rs));
+          goto cleanup;
+        }
+
+      if (!val)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_cmd_dcmi_set_management_controller_identifier_string: no data written\n");
           goto cleanup;
         }
 
@@ -1161,4 +1191,3 @@ ipmi_config_dcmi_dcmi_conf_section_get (ipmi_config_state_data_t *state_data)
     ipmi_config_section_destroy (section);
   return (NULL);
 }
-
