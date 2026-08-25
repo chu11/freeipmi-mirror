@@ -6068,17 +6068,6 @@ ipmi_oem_intelnm_set_turbo_synchronization_ratio (ipmi_oem_state_data_t *state_d
                                                &turbo_ratio_limit) < 0)
                 goto cleanup;
 
-              if (!IPMI_OEM_INTEL_NODE_MANAGER_CPU_SOCKET_VALID(turbo_ratio_limit))
-                {
-                  pstdout_fprintf (state_data->pstate,
-                                   stderr,
-                                   "%s:%s invalid OEM option argument '%s' : invalid cpu socket number\n",
-                                   state_data->prog_data->args->oem_id,
-                                   state_data->prog_data->args->oem_command,
-                                   state_data->prog_data->args->oem_options[i]);
-                  goto cleanup;
-                }
-
               turbo_ratio_limit_specified++;
             }
         }

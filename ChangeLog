@@ -1,5 +1,11 @@
 2026-08-25 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-intelnm.c
+	(ipmi_oem_intelnm_set_turbo_synchronization_ratio): Do not constrain
+	the turbo ratio limit to the unrelated CPU socket number range.
+
+2026-08-25 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-oem/ipmi-oem-dell.c (_get_dell_system_info_long_string),
 	ipmi-oem/ipmi-oem-thirdparty.c
 	(ipmi_oem_thirdparty_get_system_info_block_pstring): Compare each new
