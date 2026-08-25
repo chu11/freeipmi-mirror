@@ -1,5 +1,11 @@
 2026-08-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmiconsole/ipmiconsole.c (_stdin): Allow room in the translation
+	buffer for an escape character carried over from the previous input
+	buffer.
+
+2026-08-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmiseld/ipmiseld-ipmi-communication.c (ipmiseld_ipmi_setup): Reset
 	connection-error suppression after a connection and target setup
 	complete successfully.

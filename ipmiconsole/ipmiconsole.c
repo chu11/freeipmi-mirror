@@ -126,7 +126,8 @@ _stdin (ipmiconsole_ctx_t c,
         unsigned int buflen)
 {
   static int last_char_escape = 0;
-  char tbuf[IPMICONSOLE_BUFLEN];
+  /* +1 for possible escape */
+  char tbuf[IPMICONSOLE_BUFLEN + 1];
   unsigned int tbuflen = 0;
   ssize_t n;
   unsigned int i;
