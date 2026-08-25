@@ -373,7 +373,7 @@ ipmi_lan_check_packet_session_authentication_code (const void *pkt,
 
   authentication_type_offset = rmcp_hdr_len + authentication_type_index;
 
-  if (pkt_len < authentication_type_offset)
+  if (pkt_len <= authentication_type_offset)
     return (0);
 
   authentication_type_recv = ((uint8_t *)pkt)[authentication_type_offset];
@@ -733,7 +733,7 @@ ipmi_lan_check_packet_checksum (const void *pkt, unsigned int pkt_len)
 
   authentication_type_offset = rmcp_hdr_len + authentication_type_start_bytes;
 
-  if (pkt_len < authentication_type_offset)
+  if (pkt_len <= authentication_type_offset)
     return (0);
 
   authentication_type = ((uint8_t *)pkt)[authentication_type_offset];
