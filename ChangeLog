@@ -1,5 +1,10 @@
 2026-08-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmiconsole/ipmiconsole.c (sol_ioloop): Include both console
+	descriptors in the range passed to select.
+
+2026-08-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmiconsole/ipmiconsole-argp.c (cmdline_parse): Validate numeric
 	arguments as long values before narrowing them to their destination
 	types.
