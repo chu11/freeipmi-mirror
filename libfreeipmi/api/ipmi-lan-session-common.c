@@ -1097,7 +1097,7 @@ api_lan_cmd_wrapper (ipmi_ctx_t ctx,
                                           intf_flags)) < 0)
         {
           API_ERRNO_TO_API_ERRNUM (ctx, errno);
-          return (-1);
+          goto cleanup;
         }
 
       if (!ret)
@@ -1121,7 +1121,7 @@ api_lan_cmd_wrapper (ipmi_ctx_t ctx,
       if (gettimeofday (&(ctx->io.outofband.last_received), NULL) < 0)
         {
           API_ERRNO_TO_API_ERRNUM (ctx, errno);
-          return (-1);
+          goto cleanup;
         }
 
       rv = 0;
@@ -1135,9 +1135,12 @@ api_lan_cmd_wrapper (ipmi_ctx_t ctx,
     *rq_seq = ((*rq_seq) + 1) % (IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX + 1);
   while (sockets)
     {
+      struct socket_to_close *s = sockets;
+
       /* ignore potential error, cleanup path */
-      close (sockets->fd);
-      sockets = sockets->next;
+      close (s->fd);
+      sockets = s->next;
+      free (s);
     }
   return (rv);
 }

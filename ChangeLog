@@ -1,5 +1,11 @@
 2026-08-25 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/api/ipmi-lan-session-common.c
+	(api_lan_cmd_wrapper): Free saved retransmission socket nodes and route
+	post-allocation errors through the common cleanup path.
+
+2026-08-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/interpret/ipmi-interpret.c
 	(_get_threshold_sensor_state, _get_sensor_state): Do not evaluate the
 	event-bit shift for the special zero index.
