@@ -548,7 +548,7 @@ _get_data (ipmidetect_t handle,
       if (!len)
         break;
 
-      num = sscanf (buf, "%s %lu\n", l_hostname, &localtime);
+      num = sscanf (buf, "%256s %lu\n", l_hostname, &localtime);
       if (num != 2)
         {
           handle->errnum = IPMIDETECT_ERR_INTERNAL;

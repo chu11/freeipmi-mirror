@@ -1,5 +1,10 @@
 2026-08-25 Albert Chu <chu11@llnl.gov>
 
+	* libipmidetect/ipmidetect.c (_get_data): Bound daemon hostname parsing
+	to the destination buffer.
+
+2026-08-25 Albert Chu <chu11@llnl.gov>
+
 	* libipmimonitoring/ipmi_monitoring.c
 	(ipmi_monitoring_ctx_sdr_cache_filenames): Reject filename formats that
 	exceed the context buffer instead of silently truncating them.
