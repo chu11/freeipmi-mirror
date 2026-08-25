@@ -1,5 +1,11 @@
 2026-08-25 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-fujitsu.c
+	(ipmi_oem_fujitsu_get_sel_entry_long_text): Reject an empty response
+	component when more SEL text remains to prevent a no-progress loop.
+
+2026-08-25 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-oem/ipmi-oem-intelnm.c
 	(ipmi_oem_intelnm_get_node_manager_capabilities): Initialize the legacy
 	policy power domain for Node Manager 1.0 and 1.5 capabilities queries.

@@ -1395,6 +1395,14 @@ ipmi_oem_fujitsu_get_sel_entry_long_text (ipmi_oem_state_data_t *state_data)
 
       component_length = strlen ((char *)bytes_rs + 16);
 
+      if (!component_length && offset < data_length)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_cmd_raw: invalid zero-length response data\n");
+          goto cleanup;
+        }
+
       /* achu: truncate if there is overflow */
       if (offset + component_length > data_length)
         {
@@ -1470,4 +1478,3 @@ ipmi_oem_fujitsu_get_sel_entry_long_text (ipmi_oem_state_data_t *state_data)
  cleanup:
   return (rv);
 }
-
