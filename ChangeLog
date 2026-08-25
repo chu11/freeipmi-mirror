@@ -1,5 +1,11 @@
 2026-08-25 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/interpret/ipmi-interpret.c
+	(_get_threshold_sensor_state, _get_sensor_state): Do not evaluate the
+	event-bit shift for the special zero index.
+
+2026-08-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/util/ipmi-lan-util.c
 	(ipmi_lan_check_packet_session_authentication_code,
 	ipmi_lan_check_packet_checksum): Require the packet to contain the
