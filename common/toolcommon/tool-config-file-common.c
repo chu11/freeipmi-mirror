@@ -5191,6 +5191,8 @@ config_file_parse (const char *filename,
                  sdr_options,
                  options_len);
 
+  config_file_options_len += options_len;
+
   options_len = sizeof (time_options)/sizeof (struct conffile_option);
   if (!(support & CONFIG_FILE_TIME))
     _ignore_options (time_options, options_len);
