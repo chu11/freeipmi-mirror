@@ -1,5 +1,12 @@
 2026-08-25 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-dell.c (_get_dell_system_info_long_string),
+	ipmi-oem/ipmi-oem-thirdparty.c
+	(ipmi_oem_thirdparty_get_system_info_block_pstring): Compare each new
+	string block only with the remaining buffer capacity.
+
+2026-08-25 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-oem/ipmi-oem-dell.c (ipmi_oem_dell_get_system_info): Read the
 	one-byte iDRAC web server control value from its returned byte when
 	checking both the disabled and enabled states.

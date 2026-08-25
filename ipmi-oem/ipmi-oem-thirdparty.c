@@ -211,7 +211,7 @@ ipmi_oem_thirdparty_get_system_info_block_pstring (ipmi_oem_state_data_t *state_
 
       /* configuration_parameter_data[0] is the set selector, we don't care */
 
-      if ((string_count + (len - 1)) > (string_len - string_count))
+      if ((len - 1) > (string_len - string_count))
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
