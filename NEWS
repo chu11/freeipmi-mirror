@@ -5,8 +5,20 @@ o Fix portability of building manpages.
 o Fix minor bugs found by LLM analysis:
   - bmc-watchdog: Fix bug with --arp-response command line parsing.
   - ipmi/rmcpping: Fix bug with finding an IPv6 interface.
-  - ipmi-oem intelnm: fix parsing of hours/minutes error
   - ipmidetect: fix bug in which hostname configs not used properly
+  - ipmi-oem intelnm: fix parsing of hours/minutes error
+  - ipmi-oem: Correct Dell CMC IPv6 autoconfiguration output.
+  - ipmi-oem: Correct Dell iDRAC web server control output.
+  - libipmidetect: Isolate partial results between fallback servers.
+  - libipmidetect: Honor caller-provided hostnames over configured defaults.
+  - common: Preserve stream state when finishing buffered output.
+  - common: Fix buffer-output configuration parse issue.
+  - common: Parse UTC offset configuration as an integer.
+  - ipmiconsole: Monitor both console descriptors.
+  - ipmiconsole: Check valid payload instance range correctly.
+  - ipmi-sel: Honor post-clear after full tail output.
+  - ipmi-fru: Report DIMM capacities in megabytes.
+  - ipmi-chassis: Apply the Power-On Hours scale correctly.
   - libipmimonitoring: fix mem-leak on SEL iterator
   - libipmimonitoring: allow cipher suite 0 in configs
   - libipmimonitoring: report NO_SEL_RECORDS instead of
