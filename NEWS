@@ -1,4 +1,4 @@
-FreeIPMI 1.6.19 - XX/XX/XX
+FreeIPMI 1.6.19 - 08/27/26
 --------------------------
 o Fix minor groff warnings in manpages.
 o Fix portability of building manpages.
