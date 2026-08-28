@@ -1,11 +1,5 @@
 2026-08-25 Albert Chu <chu11@llnl.gov>
 
-	* libfreeipmi/sel/ipmi-sel-string-fujitsu-irmc-common.c
-	(_ipmi_sel_oem_fujitsu_get_sel_entry_long_text): Reject malformed
-	Fujitsu SEL long-text responses before copying their data.
-
-2026-08-25 Albert Chu <chu11@llnl.gov>
-
 	* libipmidetect/ipmidetect.c (_get_data): Bound daemon hostname parsing
 	to the destination buffer.
 
