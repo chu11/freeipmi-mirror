@@ -1334,7 +1334,7 @@ confirmed to work on Wistron / Dell Poweredge C6220.
 .TP
 .B user-default-setting \fIset|reset\fR
 This OEM command will allow users to customize BMC settings, store
-tham as defaults, and restore back to previous settings as desired.
+them as defaults, and restore back to previous settings as desired.
 The user default settings include all OEM extended configuration
 settings (such as the ones set by \fIset\-nic\-mode\fR,
 \fIset\-web\-server\-config, and others above), IPMI user account

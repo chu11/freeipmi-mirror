@@ -134,7 +134,7 @@ _get_shared_sensor_name (ipmi_sdr_ctx_t ctx,
            * "Suppose sensor ID is 'Temp' for 'Temperature
            * Sensor', share count = 3, ID string instance
            * modifier = numeric, instance modifier offset
-           * = 5 - then the sensors oculd be identified
+           * = 5 - then the sensors could be identified
            * as: Temp 5, Temp 6, Temp 7"
            */
           snprintf (buf,

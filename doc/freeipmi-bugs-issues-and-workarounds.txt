@@ -1963,7 +1963,7 @@ document.
 
 [SENSORS-1]
 
-In all liklihood, these are all circumstances that the vendor wanted
+In all likelihood, these are all circumstances that the vendor wanted
 to say "this sensor isn't available on this motherboard".  It is
 ironic that there are so many error codes vendors are returning for
 this circumstance.  It's also strange that so many vendors don't set

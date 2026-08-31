@@ -1722,7 +1722,7 @@ _check_activate_session_authentication_type (ipmipower_powercmd_t ip)
     {
       if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
         {
-          IPMIPOWER_DEBUG (("host = %s; p = %d; not none authentcation",
+          IPMIPOWER_DEBUG (("host = %s; p = %d; not none authentication",
                             ip->ic->hostname,
                             ip->protocol_state));
 

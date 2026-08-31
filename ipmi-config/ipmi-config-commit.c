@@ -129,7 +129,7 @@ _ipmi_config_commit_section (ipmi_config_state_data_t *state_data,
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "ERROR: `%s:%s' is not writeable\n",
+                           "ERROR: `%s:%s' is not writable\n",
                            section->section_name,
                            kv->key->key_name);
           ret = IPMI_CONFIG_ERR_NON_FATAL_ERROR;

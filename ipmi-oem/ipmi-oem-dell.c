@@ -3471,7 +3471,7 @@ _dell_set_extended_configuration (ipmi_oem_state_data_t *state_data,
        * payload length of 255 total.  At this point stage of the API,
        * there's no way to know what is legit to use.  So we round
        * down IPMI_OEM_DELL_TOKEN_WRITE_MAX to some reasonable
-       * guestimate of what is good.
+       * guesstimate of what is good.
        */
 
       bytes_rq[0] = IPMI_CMD_OEM_DELL_SET_EXTENDED_CONFIGURATION;

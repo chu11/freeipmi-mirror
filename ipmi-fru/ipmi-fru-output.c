@@ -1653,7 +1653,7 @@ _ipmi_fru_output_dimm_ddr3 (ipmi_fru_state_data_t *state_data,
     {
       /* Per JEDEC document, in section "Byte 8"
        *
-       * SDRAM CAPCITY / 8 * PRIMARY BUS WIDTH / SDRAM WIDTH * RANKS
+       * SDRAM CAPACITY / 8 * PRIMARY BUS WIDTH / SDRAM WIDTH * RANKS
        */
       total_memory_capacity = (total_sdram_capacity_val / 8) * (primary_bus_width_val / sdram_device_width_val) * number_of_ranks_val;
 

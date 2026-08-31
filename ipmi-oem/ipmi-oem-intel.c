@@ -144,7 +144,7 @@
  *      - 64-bit map forindicating the presence of a memory temp
  *        sensor for devices in the specified group ID.  Byte order is
  *        LSByte first.  Setting a bit to 1 indicates that the
- *        associated device is present and its temperature shoulde be
+ *        associated device is present and its temperature should be
  *        monitored.  Device enumeration corresponds to bit-position
  *        in the bit-mask.  Valid only if Memory Device Group ID field
  *        is not set to FFh.

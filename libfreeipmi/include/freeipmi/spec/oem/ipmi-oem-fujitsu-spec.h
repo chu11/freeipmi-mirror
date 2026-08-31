@@ -179,7 +179,7 @@ extern "C" {
  * CSS (Customer Self Service)
  *
  * If the component is marked as CSS, the customer can replace it by
- * himself without a service technican (e.g. Memory DIMM etc.)  CSS is
+ * himself without a service technician (e.g. Memory DIMM etc.)  CSS is
  * combined with the severity information.
  */
 #define IPMI_OEM_FUJITSU_CSS_BITMASK      0x80

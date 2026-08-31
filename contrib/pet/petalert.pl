@@ -789,7 +789,7 @@ sub process_args {
     if (-r $module) {
       require "$module";
       # TODO
-      die "<not implemenented yet>";
+      die "<not implemented yet>";
     }
     else {
       die "Unknown alert module to load: $module\n";

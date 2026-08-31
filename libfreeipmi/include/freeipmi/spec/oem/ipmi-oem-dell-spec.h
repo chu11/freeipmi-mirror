@@ -82,7 +82,7 @@ extern "C" {
 #define IPMI_OEM_DELL_TOKEN_STRING_MAX               255
 
 /* IPMI over LAN has a max payload length of 255 total.  So we round
- * down to some reasonable guestimate of what is good.
+ * down to some reasonable guesstimate of what is good.
  */
 #define IPMI_OEM_DELL_TOKEN_WRITE_MAX                128
 

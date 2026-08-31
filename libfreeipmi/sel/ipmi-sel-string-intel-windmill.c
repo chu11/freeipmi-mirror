@@ -1159,7 +1159,7 @@ sel_string_output_intel_windmill_oem_record_data (ipmi_sel_ctx_t ctx,
           error_code_str = "Received ERR_FATAL message from downstream device.";
           break;
         case IPMI_SEL_OEM_INTEL_WINDMILL_ERROR_CODE_OUTBOUND_SWITCH_HEADER_QUEUE_PARITY_ERROR:
-          error_code_str = "Outbound switch header queue partiy error";
+          error_code_str = "Outbound switch header queue parity error";
           break;
         default:
           error_code_str = "Unknown";
@@ -1169,7 +1169,7 @@ sel_string_output_intel_windmill_oem_record_data (ipmi_sel_ctx_t ctx,
       if (sel_string_snprintf (buf,
                                buflen,
                                wlen,
-                               "Devie ID = %u, Device Identification Number = %s, Error = %s",
+                               "Device ID = %u, Device Identification Number = %s, Error = %s",
                                device_id,
                                device_identification_number_str,
                                error_code_str))

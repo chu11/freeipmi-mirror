@@ -83,7 +83,7 @@ extern unsigned int ipmi_oem_intel_quanta_qssc_s4r_specific_pci_fatal_sensor_max
  * Sensor Number = IPMI_SENSOR_NUMBER_OEM_INTEL_QUANTA_QSSC_S4R_PATROL_SCRUB_ERROR
  */
 /* achu: This is just like normal memory specific sensors.  Typo in document? */
-#define IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_CORRECTABLE_MEMORY_ERROR_CORRECTABLE_RROR    0
+#define IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_CORRECTABLE_MEMORY_ERROR_CORRECTABLE_ERROR   0
 #define IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_CORRECTABLE_MEMORY_ERROR_UNCORRECTABLE_ERROR 1
 
 

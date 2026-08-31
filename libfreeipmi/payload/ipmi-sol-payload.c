@@ -38,7 +38,7 @@ fiid_template_t tmpl_sol_payload_data =
     /* 0h ack only packet */
     { 4, "packet_sequence_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    /* 0h information pakcet.  No request packet being ack'd or nack'd */
+    /* 0h information packet.  No request packet being ack'd or nack'd */
     { 4, "packet_ack_nack_sequence_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8, "accepted_character_count", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -53,7 +53,7 @@ fiid_template_t tmpl_sol_payload_data_remote_console_to_bmc =
     /* 0h ack only packet */
     { 4, "packet_sequence_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    /* 0h information pakcet.  No request packet being ack'd or nack'd */
+    /* 0h information packet.  No request packet being ack'd or nack'd */
     { 4, "packet_ack_nack_sequence_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8, "accepted_character_count", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -75,7 +75,7 @@ fiid_template_t tmpl_sol_payload_data_bmc_to_remote_console =
     /* 0h ack only packet */
     { 4, "packet_sequence_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    /* 0h information pakcet.  No request packet being ack'd or nack'd */
+    /* 0h information packet.  No request packet being ack'd or nack'd */
     { 4, "packet_ack_nack_sequence_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8, "accepted_character_count", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},

@@ -388,7 +388,7 @@ option allows you to enable or disable this feature.  The
 frequency at which gratuitous ARPs are sent onto the network.
 .LP
 Instead of gratuitous ARPs some BMCs are able to respond to ARP
-requests, even when powered off.  If offerred, this feature can be
+requests, even when powered off.  If offered, this feature can be
 enabled through the \fIEnable_Arp_Response\fR option.
 .LP
 Generally speaking, turning on gratuitous ARPs is acceptable.

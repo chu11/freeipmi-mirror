@@ -220,7 +220,7 @@ sel_string_output_intel_quanta_qssc_s4r_event_data1_class_oem (ipmi_sel_ctx_t ct
     {
       char *event_msg_str = NULL;
 
-      if (system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_CORRECTABLE_MEMORY_ERROR_CORRECTABLE_RROR)
+      if (system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_CORRECTABLE_MEMORY_ERROR_CORRECTABLE_ERROR)
         event_msg_str = "Correctable Error";
       else if (system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_CORRECTABLE_MEMORY_ERROR_UNCORRECTABLE_ERROR)
         event_msg_str = "Uncorrectable Error";
