@@ -1,7 +1,7 @@
 FreeIPMI 1.7.1 - XX/XX/XX
 -------------------------
 
-In 2019 the IPMI standard was frozen.  So a decision was made to try
+In 2020 the IPMI standard was frozen.  So a decision was made to try
 and make the FreeIPMI 1.7.X line the last stable line in FreeIPMI.  A
 number of decisions were made to remove legacy support and fix minor issues,
 even at the cost of breaking backwards compatibility.
