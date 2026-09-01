@@ -1,5 +1,11 @@
 2026-09-01 Albert Chu <chu11@llnl.gov>
 
+	* common/toolcommon/pstdout.c (pstdout_launch): Track ownership of the
+	thread-count mutex and release it during cleanup after launch or wait
+	failures.
+
+2026-09-01 Albert Chu <chu11@llnl.gov>
+
 	* common/toolcommon/pstdout.c (pstdout_launch): Track successful thread
 	attribute initialization and only destroy initialized attributes during
 	cleanup.

@@ -1403,6 +1403,7 @@ pstdout_launch(const char *hostnames, Pstdout_Thread pstdout_func, void *arg)
   int exit_code = -1;
   sighandler_t sighandler_save = NULL;
   int sighandler_set = 0;
+  int threadcount_mutex_locked = 0;
   int rc;
   int i;
 
@@ -1544,6 +1545,7 @@ pstdout_launch(const char *hostnames, Pstdout_Thread pstdout_func, void *arg)
           pstdout_errnum = PSTDOUT_ERR_INTERNAL;
           goto cleanup;
         }
+      threadcount_mutex_locked++;
 
       if (pstdout_threadcount == pstdout_fanout)
         {
@@ -1576,6 +1578,7 @@ pstdout_launch(const char *hostnames, Pstdout_Thread pstdout_func, void *arg)
           pstdout_errnum = PSTDOUT_ERR_INTERNAL;
           goto cleanup;
         }
+      threadcount_mutex_locked = 0;
     }
 
   /* Wait for Threads to finish */
@@ -1587,6 +1590,7 @@ pstdout_launch(const char *hostnames, Pstdout_Thread pstdout_func, void *arg)
       pstdout_errnum = PSTDOUT_ERR_INTERNAL;
       goto cleanup;
     }
+  threadcount_mutex_locked++;
 
   while (pstdout_threadcount > 0)
     {
@@ -1611,6 +1615,15 @@ pstdout_launch(const char *hostnames, Pstdout_Thread pstdout_func, void *arg)
     }
 
  cleanup:
+  if (threadcount_mutex_locked)
+    {
+      if ((rc = pthread_mutex_unlock(&pstdout_threadcount_mutex)))
+        {
+          if (pstdout_debug_flags & PSTDOUT_DEBUG_STANDARD)
+            fprintf(stderr, "pthread_mutex_unlock: %s\n", strerror(rc));
+          /* Don't change error code, just move on */
+        }
+    }
   /* Cannot pass NULL for key, so just pass dummy key */
   list_delete_all(pstdout_consolidated_stdout, _pstdout_consolidated_data_delete_all, "");
   list_delete_all(pstdout_consolidated_stderr, _pstdout_consolidated_data_delete_all, "");
