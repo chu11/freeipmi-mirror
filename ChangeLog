@@ -1,3 +1,9 @@
+2026-09-01 Albert Chu <chu11@llnl.gov>
+
+	* common/toolcommon/pstdout.c (pstdout_launch): Track successful thread
+	attribute initialization and only destroy initialized attributes during
+	cleanup.
+
 2026-08-25 Albert Chu <chu11@llnl.gov>
 
 	* libipmidetect/ipmidetect.c (_get_data): Bound daemon hostname parsing

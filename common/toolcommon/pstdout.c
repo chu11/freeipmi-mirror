@@ -84,6 +84,7 @@ struct pstdout_thread_data {
   char *hostname;
   pthread_t tid;
   pthread_attr_t attr;
+  int attr_initialized;
   int exit_code;
   Pstdout_Thread pstdout_func;
   void *arg;
@@ -1512,6 +1513,7 @@ pstdout_launch(const char *hostnames, Pstdout_Thread pstdout_func, void *arg)
           pstdout_errnum = PSTDOUT_ERR_INTERNAL;
           goto cleanup;
         }
+      tdata[i]->attr_initialized++;
 
       if ((rc = pthread_attr_setdetachstate(&(tdata[i]->attr), PTHREAD_CREATE_DETACHED)))
         {
@@ -1621,7 +1623,8 @@ pstdout_launch(const char *hostnames, Pstdout_Thread pstdout_func, void *arg)
           if (tdata[i])
             {
               free(tdata[i]->hostname);
-              pthread_attr_destroy(&(tdata[i]->attr));
+              if (tdata[i]->attr_initialized)
+                pthread_attr_destroy(&(tdata[i]->attr));
               free(tdata[i]);
             }
         }
