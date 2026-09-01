@@ -162,12 +162,12 @@ ipmiseld_threadpool_init (struct ipmiseld_prog_data *prog_data,
           goto cleanup;
         }
 
+      threadpool_data_array_len++;
+
       pthread_mutex_lock (&threadpool_count_lock);
       threadpool_count++;
       pthread_mutex_unlock (&threadpool_count_lock);
     }
-
-  threadpool_data_array_len = prog_data->args->threadpool_count;
 
   rv = 0;
  cleanup:
