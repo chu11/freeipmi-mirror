@@ -95,6 +95,7 @@ _ipmi_monitoring_sdr_cache_filename (ipmi_monitoring_ctx_t c,
 {
   char sdr_cache_filename[MAXPATHLEN+1];
   char *dir;
+  int len;
 
   assert (c);
   assert (c->magic == IPMI_MONITORING_MAGIC);
@@ -196,11 +197,17 @@ _ipmi_monitoring_sdr_cache_filename (ipmi_monitoring_ctx_t c,
               IPMI_MONITORING_SDR_CACHE_FILENAME,
               hostname);
 
-  snprintf (buf,
-            buflen - 1,
-            "%s/%s",
-            dir,
-            sdr_cache_filename);
+  len = snprintf (buf,
+                  buflen,
+                  "%s/%s",
+                  dir,
+                  sdr_cache_filename);
+  if (len < 0 || (unsigned int)len >= buflen)
+    {
+      IPMI_MONITORING_DEBUG (("_ipmi_monitoring_sdr_cache_filename: overflow"));
+      c->errnum = IPMI_MONITORING_ERR_SDR_CACHE_FILESYSTEM;
+      return (-1);
+    }
 
   return (0);
 }

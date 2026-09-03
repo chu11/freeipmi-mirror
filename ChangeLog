@@ -1,5 +1,12 @@
 2026-09-03 Albert Chu <chu11@llnl.gov>
 
+	* libipmimonitoring/ipmi_monitoring_sdr_cache.c
+	(_ipmi_monitoring_sdr_cache_filename): Reject a combined SDR cache path
+	that does not fit in the caller's buffer instead of using a truncated path
+	that can alias another host's cache.
+
+2026-09-03 Albert Chu <chu11@llnl.gov>
+
 	* ipmipower/ipmipower_error.h (IPMIPOWER_ERROR, IPMIPOWER_DEBUG): Pass
 	already-rendered diagnostic text through a literal string format so percent
 	characters in message data are not interpreted a second time.
