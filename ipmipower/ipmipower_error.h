@@ -84,7 +84,7 @@
             free (__str);                                                       \
           }                                                                     \
       }                                                                         \
-    ipmipower_error (__err);                                                    \
+    ipmipower_error ("%s", __err);                                              \
   } while(0)
 
 #define IPMIPOWER_DEBUG(__msg)                                                  \
@@ -109,7 +109,7 @@
                 free (__str);                                                   \
               }                                                                 \
           }                                                                     \
-        ipmipower_debug (__err);                                                \
+        ipmipower_debug ("%s", __err);                                          \
       }                                                                         \
   } while(0)
 

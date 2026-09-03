@@ -1,5 +1,11 @@
 2026-09-03 Albert Chu <chu11@llnl.gov>
 
+	* ipmipower/ipmipower_error.h (IPMIPOWER_ERROR, IPMIPOWER_DEBUG): Pass
+	already-rendered diagnostic text through a literal string format so percent
+	characters in message data are not interpreted a second time.
+
+2026-09-03 Albert Chu <chu11@llnl.gov>
+
 	* ipmipower/ipmipower_powercmd.c (_recv_packet): Report IPMI 2.0
 	completion-code errors before terminating the command so rejected power
 	operations contribute to the process exit status.
