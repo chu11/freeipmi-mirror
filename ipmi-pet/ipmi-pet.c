@@ -1851,7 +1851,11 @@ _ipmi_pet_acknowledge (ipmi_pet_state_data_t *state_data, FILE *stream)
         {
           if (getline (&line, &n, stream) < 0)
             {
-              /* perror ("getline()"); */
+              if (!feof (stream))
+                {
+                  perror ("getline");
+                  goto cleanup;
+                }
               break;
             }
           line_count++;
@@ -1977,7 +1981,11 @@ _ipmi_pet_stream (ipmi_pet_state_data_t *state_data, FILE *stream)
 
       if (getline (&line, &n, stream) < 0)
         {
-          /* perror ("getline()"); */
+          if (!feof (stream))
+            {
+              perror ("getline");
+              goto cleanup;
+            }
           break;
         }
       line_count++;
@@ -2242,4 +2250,3 @@ main (int argc, char **argv)
 
   return (_ipmi_pet (&prog_data));
 }
-
