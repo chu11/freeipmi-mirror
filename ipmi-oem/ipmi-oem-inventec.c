@@ -2500,6 +2500,8 @@ _ipmi_oem_inventec_read_eeprom_at24c256n (ipmi_oem_state_data_t *state_data)
 
   while (read_count <= IPMI_OEM_INVENTEC_EEPROM_AT24C256N_ADDRESS_MAX)
     {
+      int i;
+
       data_rq[0] = (read_count & 0xFF00) >> 8;
       data_rq[1] = (read_count & 0x00FF);
 
@@ -2532,20 +2534,27 @@ _ipmi_oem_inventec_read_eeprom_at24c256n (ipmi_oem_state_data_t *state_data)
           goto cleanup;
         }
 
-      if (len)
+      if (!len
+          || len > 1
+          || (unsigned int)len > (IPMI_OEM_INVENTEC_EEPROM_AT24C256N_ADDRESS_MAX
+                                  - read_count + 1))
         {
-          int i;
-
-          for (i = read_count; i < (read_count + len); i++)
-            {
-              if (i && (i % 8) == 0)
-                pstdout_printf (state_data->pstate, "\n");
-
-              pstdout_printf (state_data->pstate, "0x%02X ", data_rs[i - read_count]);
-            }
-
-          read_count += len;
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_cmd_master_write_read: invalid response data length: %d\n",
+                           len);
+          goto cleanup;
         }
+
+      for (i = read_count; i < (read_count + len); i++)
+        {
+          if (i && (i % 8) == 0)
+            pstdout_printf (state_data->pstate, "\n");
+
+          pstdout_printf (state_data->pstate, "0x%02X ", data_rs[i - read_count]);
+        }
+
+      read_count += len;
     }
 
   pstdout_printf (state_data->pstate, "\n");

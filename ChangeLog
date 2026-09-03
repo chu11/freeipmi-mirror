@@ -1,5 +1,12 @@
 2026-09-03 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-inventec.c
+	(_ipmi_oem_inventec_read_eeprom_at24c256n): Reject empty, oversized, or
+	out-of-range EEPROM read responses so malformed replies cannot prevent
+	forward progress or overrun the requested address range.
+
+2026-09-03 Albert Chu <chu11@llnl.gov>
+
 	* ipmiseld/ipmiseld.c (_sel_log_format), ipmiseld/ipmiseld.h,
 	man/ipmiseld.8.pre.in, man/ipmiseld.8: Use %H for the target-host
 	conversion so %h remains available for the SEL event data 3 string.
