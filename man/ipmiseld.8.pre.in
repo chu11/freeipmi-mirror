@@ -139,21 +139,21 @@ or
 \fB\-\-system\-event\-format\fR=\fIFORMATSTRING\fR
 Specify the format of the log output when a SEL system event is
 encountered.  Defaults to "SEL System Event: %d, %t, %s, %I, %E" if
-logging locally, "SEL System Event(%h): %d, %t, %s, %I, %E" if logging
+logging locally, "SEL System Event(%H): %d, %t, %s, %I, %E" if logging
 outofband or with hostranges.  See SEL LOG FORMAT STRING below for
 formatting details.
 .TP
 \fB\-\-oem\-timestamped\-event\-format\fR=\fIFORMATSTRING\fR
 Specify the format of the log output when a SEL OEM timestamped event
 is encountered.  Defaults to "SEL OEM Event: %d, %t, %I, %o" if
-logging locally, "SEL OEM Event(%h): %d, %t, %I, %o" if logging
+logging locally, "SEL OEM Event(%H): %d, %t, %I, %o" if logging
 outofband or with hostranges..  See SEL LOG FORMAT STRING below for
 formatting details.
 .TP
 \fB\-\-oem\-non\-timestamped\-event\-format\fR=\fIFORMATSTRING\fR
 Specify the format of the log output when a SEL OEM non-timestamped
 event is encountered.  Defaults to "SEL OEM Event: %I, %o" if logging
-locally, "SEL OEM Event(%h): %I, %o" if logging outofband or with
+locally, "SEL OEM Event(%H): %I, %o" if logging outofband or with
 hostranges..  See SEL LOG FORMAT STRING below for formatting details.
 .TP
 \fB\-\-poll\-interval\fR=\fISECONDS\fR
@@ -223,7 +223,7 @@ output specifics of each SEL event that occurs.
 .sp
 \fIFor System, OEM timestamped, and OEM non-timestamped events\fR
 .sp
-%h - target host, useful if logging from multiple hosts
+%H - target host, useful if logging from multiple hosts
 .sp
 %i - record ID in decimal
 .sp

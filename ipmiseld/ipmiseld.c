@@ -355,7 +355,7 @@ _sel_log_format (ipmiseld_host_data_t *host_data,
             percent_flag = 1;
           goto end_loop;
         }
-      else if (percent_flag && *ptr == 'h')
+      else if (percent_flag && *ptr == 'H')
         {
           if (_snprintf (fmtbuf, fmtbuf_len, &wlen, "%s",
                          host_data->hostname ? host_data->hostname : "localhost"))

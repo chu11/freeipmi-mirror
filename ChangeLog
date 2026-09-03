@@ -1,3 +1,9 @@
+2026-09-03 Albert Chu <chu11@llnl.gov>
+
+	* ipmiseld/ipmiseld.c (_sel_log_format), ipmiseld/ipmiseld.h,
+	man/ipmiseld.8.pre.in, man/ipmiseld.8: Use %H for the target-host
+	conversion so %h remains available for the SEL event data 3 string.
+
 2026-08-25 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/sel/ipmi-sel-string-fujitsu-irmc-common.c
