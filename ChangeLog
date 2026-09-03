@@ -1,5 +1,11 @@
 2026-09-03 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config-argp.c (_ipmi_config_parse_channel_number):
+	Validate channel numbers in the wide type returned by strtol before
+	narrowing them to uint8_t.
+
+2026-09-03 Albert Chu <chu11@llnl.gov>
+
 	* bmc-watchdog/bmc-watchdog-argp.c (_bmc_watchdog_args_validate): Reject
 	clear-os-load and start-if-stopped options for commands where they have no
 	effect.

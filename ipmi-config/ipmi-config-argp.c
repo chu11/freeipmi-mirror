@@ -171,7 +171,7 @@ _ipmi_config_parse_channel_number (char *arg,
                                    int *channel_number_set)
 {
   char *endptr;
-  int tmp;
+  long tmp;
 
   assert (arg);
   assert (channel_number);
