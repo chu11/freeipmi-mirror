@@ -1,5 +1,11 @@
 2026-09-03 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sel/ipmi-sel-argp.c (_ipmi_sel_args_validate): Reject
+	conflicting primary actions and display modes instead of silently
+	applying precedence.
+
+2026-09-03 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-raw/ipmi-raw.c (ipmi_raw_stream): Report getline failures and
 	return an error instead of treating them as normal end-of-file.
 

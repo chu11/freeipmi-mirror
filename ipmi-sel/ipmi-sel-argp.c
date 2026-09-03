@@ -769,7 +769,33 @@ _ipmi_sel_config_file_parse (struct ipmi_sel_arguments *cmd_args)
 static void
 _ipmi_sel_args_validate (struct ipmi_sel_arguments *cmd_args)
 {
+  unsigned int action_count;
+  unsigned int display_mode_count;
+
   assert (cmd_args);
+
+  action_count = cmd_args->info
+    + cmd_args->clear
+    + cmd_args->delete
+    + cmd_args->delete_range
+    + cmd_args->list_sensor_types;
+  display_mode_count = cmd_args->display
+    + cmd_args->display_range
+    + cmd_args->tail;
+
+  if (action_count > 1
+      || display_mode_count > 1)
+    {
+      fprintf (stderr, "conflicting command options specified\n");
+      exit (EXIT_FAILURE);
+    }
+
+  if (cmd_args->system_event_only && cmd_args->oem_event_only)
+    {
+      fprintf (stderr,
+               "--system-event-only cannot be used with --oem-event-only\n");
+      exit (EXIT_FAILURE);
+    }
 
   if (cmd_args->sensor_types_length)
     {
