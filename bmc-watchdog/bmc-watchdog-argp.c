@@ -587,11 +587,13 @@ _bmc_watchdog_args_validate (struct bmc_watchdog_arguments *cmd_args)
            || cmd_args->pre_timeout_interval
            || cmd_args->clear_bios_frb2
            || cmd_args->clear_bios_post
+           || cmd_args->clear_os_load
            || cmd_args->clear_sms_os
            || cmd_args->clear_oem
            || cmd_args->initial_countdown_seconds
            || cmd_args->start_after_set
            || cmd_args->reset_after_set
+           || cmd_args->start_if_stopped
            || cmd_args->reset_if_running
            || cmd_args->reset_period))
       || (cmd_args->set
@@ -600,6 +602,7 @@ _bmc_watchdog_args_validate (struct bmc_watchdog_arguments *cmd_args)
           && (cmd_args->stop_timer
               || cmd_args->start_after_set
               || cmd_args->reset_after_set
+              || cmd_args->start_if_stopped
               || cmd_args->reset_if_running))
       || ((cmd_args->set
            || cmd_args->get

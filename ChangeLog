@@ -1,5 +1,11 @@
 2026-09-03 Albert Chu <chu11@llnl.gov>
 
+	* bmc-watchdog/bmc-watchdog-argp.c (_bmc_watchdog_args_validate): Reject
+	clear-os-load and start-if-stopped options for commands where they have no
+	effect.
+
+2026-09-03 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-fru/ipmi-fru.c (_use_buffer_and_output_fru): Return failure for
 	malformed explicit FRU files instead of treating parser errors as normal
 	completion, while preserving the existing FRU error diagnostics.
