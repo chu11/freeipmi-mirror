@@ -1,5 +1,11 @@
 2026-09-03 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-fru/ipmi-fru-argp.c (_ipmi_fru_args_validate): Reject conflicting
+	FRU input, device-selection, and bridging modes instead of silently
+	ignoring options.
+
+2026-09-03 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config-argp.c (_ipmi_config_parse_channel_number):
 	Validate channel numbers in the wide type returned by strtol before
 	narrowing them to uint8_t.

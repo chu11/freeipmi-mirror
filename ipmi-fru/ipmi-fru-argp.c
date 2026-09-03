@@ -202,8 +202,21 @@ _ipmi_fru_config_file_parse (struct ipmi_fru_arguments *cmd_args)
 static void
 _ipmi_fru_args_validate (struct ipmi_fru_arguments *cmd_args)
 {
+  assert (cmd_args);
+
   if (cmd_args->fru_file)
     {
+      if (cmd_args->device_id_set)
+        {
+          fprintf (stderr, "--fru-file cannot be used with --device-id\n");
+          exit (EXIT_FAILURE);
+        }
+      if (cmd_args->bridge_fru)
+        {
+          fprintf (stderr, "--fru-file cannot be used with --bridge-fru\n");
+          exit (EXIT_FAILURE);
+        }
+
       if (access (cmd_args->fru_file, R_OK) < 0)
         {
           fprintf (stderr,
@@ -212,6 +225,12 @@ _ipmi_fru_args_validate (struct ipmi_fru_arguments *cmd_args)
                    strerror (errno));
           exit (EXIT_FAILURE);
         }
+    }
+
+  if (cmd_args->common_args.ignore_sdr_cache && cmd_args->bridge_fru)
+    {
+      fprintf (stderr, "--ignore-sdr-cache cannot be used with --bridge-fru\n");
+      exit (EXIT_FAILURE);
     }
 }
 
