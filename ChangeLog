@@ -1,5 +1,11 @@
 2026-09-03 Albert Chu <chu11@llnl.gov>
 
+	* common/pingtool/ping-tool-common.c (ipmi_ping_setup): Narrow
+	only after their full strtol values have passed destination and
+	protocol range checks.
+
+2026-09-03 Albert Chu <chu11@llnl.gov>
+
 	* common/pingtool/ping-tool-common.c (ipmi_ping_err_exit): Print the
 	program name separately from the caller's diagnostic format so percent
 	characters in argv[0] cannot become vfprintf conversions.

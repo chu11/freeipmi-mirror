@@ -244,7 +244,7 @@ _cmdline_parse (int argc,
             ipmi_ping_err_exit ("count argument invalid");
           if (tmp < 1)
             ipmi_ping_err_exit ("count must be > 0");
-          pingtool_count = tmp;
+          pingtool_count = (int)tmp;
           break;
         case 'i':
           errno = 0;
@@ -255,7 +255,7 @@ _cmdline_parse (int argc,
             ipmi_ping_err_exit ("interval argument invalid");
           if (tmp < 1)
             ipmi_ping_err_exit ("interval must be > 0");
-          pingtool_interval = tmp;
+          pingtool_interval = (int)tmp;
           break;
         case 'I':
           pingtool_interface = optarg;
@@ -269,7 +269,7 @@ _cmdline_parse (int argc,
             ipmi_ping_err_exit ("timeout argument invalid");
           if (tmp < 1)
             ipmi_ping_err_exit ("timeout must be > 0");
-          pingtool_timeout = tmp;
+          pingtool_timeout = (int)tmp;
           break;
         case 'v':
           pingtool_verbose++;
@@ -284,7 +284,7 @@ _cmdline_parse (int argc,
               || (unsigned long)tmp < min_sequence_number
               || (unsigned long)tmp > max_sequence_number)
             ipmi_ping_err_exit ("initial sequence number out of range");
-          pingtool_initial_sequence_number = tmp;
+          pingtool_initial_sequence_number = (int)tmp;
           break;
         case 'd':
           pingtool_debug++;
