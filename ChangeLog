@@ -1,5 +1,11 @@
 2026-09-03 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-fru/ipmi-fru.c (_use_buffer_and_output_fru): Return failure for
+	malformed explicit FRU files instead of treating parser errors as normal
+	completion, while preserving the existing FRU error diagnostics.
+
+2026-09-03 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-oem/ipmi-oem-inventec.c
 	(_ipmi_oem_inventec_read_eeprom_at24c256n): Reject empty, oversized, or
 	out-of-range EEPROM read responses so malformed replies cannot prevent

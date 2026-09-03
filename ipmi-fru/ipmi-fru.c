@@ -314,7 +314,7 @@ _use_buffer_and_output_fru (ipmi_fru_state_data_t *state_data,
                               "  FRU Error: %s\n",
                               ipmi_fru_ctx_errormsg (state_data->fru_ctx));
             }
-          goto out;
+          goto cleanup;
         }
 
       pstdout_fprintf (state_data->pstate,
