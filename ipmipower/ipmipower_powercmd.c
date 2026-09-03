@@ -1233,6 +1233,8 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
           if (pkt == IPMIPOWER_PACKET_TYPE_CLOSE_SESSION_RS)
             goto close_session_workaround;
 
+          ipmipower_output (ipmipower_packet_errmsg (ip, pkt), ip->ic->hostname, ip->extra_arg);
+
           ip->retransmission_count = 0;  /* important to reset */
           if (gettimeofday (&ip->ic->last_ipmi_recv, NULL) < 0)
             {
