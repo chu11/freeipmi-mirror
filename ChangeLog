@@ -1,5 +1,10 @@
 2026-09-03 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-raw/ipmi-raw.c (ipmi_raw_stream): Report getline failures and
+	return an error instead of treating them as normal end-of-file.
+
+2026-09-03 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-pet/ipmi-pet.c (_ipmi_pet_acknowledge, _ipmi_pet_stream): Report
 	getline failures and return an error instead of treating them as normal
 	end-of-file.

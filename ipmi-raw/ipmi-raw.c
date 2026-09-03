@@ -262,7 +262,11 @@ ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
     {
       if (getline (&line, &n, stream) < 0)
         {
-          /* perror ("getline()"); */
+          if (!feof (stream))
+            {
+              pstdout_perror (state_data->pstate, "getline");
+              goto cleanup;
+            }
           break;
         }
       line_count++;
