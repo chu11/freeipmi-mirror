@@ -1,5 +1,11 @@
 2026-09-03 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-raw/ipmi-raw.c (main): Reject standard-input command mode when
+	more than one host is selected, and recommend --file so parallel workers
+	do not race to consume different parts of one stream.
+
+2026-09-03 Albert Chu <chu11@llnl.gov>
+
 	* common/pingtool/ping-tool-common.c (ipmi_ping_setup): Narrow
 	only after their full strtol values have passed destination and
 	protocol range checks.

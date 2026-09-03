@@ -438,6 +438,15 @@ main (int argc, char **argv)
   if (!hosts_count)
     return (EXIT_SUCCESS);
 
+  if (hosts_count > 1
+      && !prog_data.args->cmd_length
+      && !prog_data.args->cmd_file)
+    {
+      fprintf (stderr,
+               "Cannot read commands from standard input for multiple hosts; use --file instead.\n");
+      return (EXIT_FAILURE);
+    }
+
   if ((rv = pstdout_launch (prog_data.args->common_args.hostname,
                             _ipmi_raw,
                             &prog_data)) < 0)
