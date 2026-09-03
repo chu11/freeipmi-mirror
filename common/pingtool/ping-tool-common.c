@@ -83,8 +83,6 @@
 #define MAXPORTBUFLEN 16
 
 #define IPMI_PING_MAX_PKT_LEN      1024
-#define IPMI_PING_MAX_ERR_LEN      1024
-
 #define IPMI_PING_VERSION_1_5_STR  "1.5"
 #define IPMI_PING_VERSION_2_0_STR  "2.0"
 
@@ -143,15 +141,15 @@ _err_init (char *progname)
 void
 ipmi_ping_err_exit (char *fmt, ...)
 {
-  char buf[IPMI_PING_MAX_ERR_LEN];
   va_list ap;
 
   assert (pingtool_progname);
   assert (fmt);
 
   va_start (ap, fmt);
-  snprintf (buf, IPMI_PING_MAX_ERR_LEN, "%s: %s\n", pingtool_progname, fmt);
-  vfprintf (stderr, buf, ap);
+  fprintf (stderr, "%s: ", pingtool_progname);
+  vfprintf (stderr, fmt, ap);
+  fprintf (stderr, "\n");
   va_end (ap);
 
   _cleanup ();
