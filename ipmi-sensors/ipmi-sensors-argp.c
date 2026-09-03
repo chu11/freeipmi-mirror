@@ -414,7 +414,18 @@ _ipmi_sensors_config_file_parse (struct ipmi_sensors_arguments *cmd_args)
 static void
 _ipmi_sensors_args_validate (struct ipmi_sensors_arguments *cmd_args)
 {
+  unsigned int action_count;
+
   assert (cmd_args);
+
+  action_count = cmd_args->list_sensor_types
+    + cmd_args->sdr_info;
+
+  if (action_count > 1)
+    {
+      fprintf (stderr, "conflicting command options specified\n");
+      exit (EXIT_FAILURE);
+    }
 
   if (cmd_args->sensor_types_length)
     {

@@ -1,5 +1,10 @@
 2026-09-03 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sensors/ipmi-sensors-argp.c (_ipmi_sensors_args_validate):
+	Reject conflicting primary actions.
+
+2026-09-03 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sel/ipmi-sel-argp.c (_ipmi_sel_args_validate): Reject
 	conflicting primary actions and display modes instead of silently
 	applying precedence.
