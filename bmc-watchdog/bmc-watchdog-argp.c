@@ -294,7 +294,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 {
   struct bmc_watchdog_arguments *cmd_args;
   char *endptr;
-  int tmp;
+  long tmp;
 
   assert (state);
 
@@ -340,7 +340,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           fprintf (stderr, "invalid timer use\n");
           exit (EXIT_FAILURE);
         }
-      cmd_args->timer_use_arg = tmp;
+      cmd_args->timer_use_arg = (uint8_t)tmp;
       break;
     case STOP_TIMER_KEY:
       cmd_args->stop_timer++;
@@ -353,7 +353,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           fprintf (stderr, "invalid stop timer value\n");
           exit (EXIT_FAILURE);
         }
-      cmd_args->stop_timer_arg = tmp;
+      cmd_args->stop_timer_arg = (uint8_t)tmp;
       break;
     case LOG_KEY:
       cmd_args->log++;
@@ -366,7 +366,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           fprintf (stderr, "invalid log value\n");
           exit (EXIT_FAILURE);
         }
-      cmd_args->log_arg = tmp;
+      cmd_args->log_arg = (uint8_t)tmp;
       break;
     case TIMEOUT_ACTION_KEY:
       cmd_args->timeout_action++;
@@ -379,7 +379,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           fprintf (stderr, "invalid timeout action value\n");
           exit (EXIT_FAILURE);
         }
-      cmd_args->timeout_action_arg = tmp;
+      cmd_args->timeout_action_arg = (uint8_t)tmp;
       break;
     case PRE_TIMEOUT_INTERRUPT_KEY:
       cmd_args->pre_timeout_interrupt++;
@@ -392,7 +392,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           fprintf (stderr, "invalid pre timeout interrupt value\n");
           exit (EXIT_FAILURE);
         }
-      cmd_args->pre_timeout_interrupt_arg = tmp;
+      cmd_args->pre_timeout_interrupt_arg = (uint8_t)tmp;
       break;
     case PRE_TIMEOUT_INTERVAL_KEY:
       cmd_args->pre_timeout_interval++;
@@ -410,7 +410,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           fprintf (stderr, "pre timeout interval out of range\n");
           exit (EXIT_FAILURE);
         }
-      cmd_args->pre_timeout_interval_arg = tmp;
+      cmd_args->pre_timeout_interval_arg = (uint8_t)tmp;
       break;
     case CLEAR_BIOS_FRB2_KEY:
       cmd_args->clear_bios_frb2++;
@@ -443,7 +443,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           fprintf (stderr, "initial countdown out of range\n");
           exit (EXIT_FAILURE);
         }
-      cmd_args->initial_countdown_seconds_arg = tmp;
+      cmd_args->initial_countdown_seconds_arg = (uint16_t)tmp;
       break;
     case START_AFTER_SET_KEY:
       cmd_args->start_after_set++;
@@ -468,7 +468,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           fprintf (stderr, "invalid gratuitous arp value\n");
           exit (EXIT_FAILURE);
         }
-      cmd_args->gratuitous_arp_arg = tmp;
+      cmd_args->gratuitous_arp_arg = (uint8_t)tmp;
       break;
     case ARP_RESPONSE_KEY:
       cmd_args->arp_response++;
@@ -481,7 +481,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           fprintf (stderr, "invalid arp response value\n");
           exit (EXIT_FAILURE);
         }
-      cmd_args->arp_response_arg = tmp;
+      cmd_args->arp_response_arg = (uint8_t)tmp;
       break;
     case RESET_PERIOD_KEY:
       cmd_args->reset_period++;
@@ -499,7 +499,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           fprintf (stderr, "reset period out of range\n");
           exit (EXIT_FAILURE);
         }
-      cmd_args->reset_period_arg = tmp;
+      cmd_args->reset_period_arg = (uint32_t)tmp;
       break;
       /* do not output default argp help, do internal help */
     case HELP_KEY:

@@ -1,5 +1,11 @@
 2026-09-03 Albert Chu <chu11@llnl.gov>
 
+	* bmc-watchdog/bmc-watchdog-argp.c (cmdline_parse): Validate complete
+	strtol results in a wide temporary before narrowing them to watchdog
+	option fields.
+
+2026-09-03 Albert Chu <chu11@llnl.gov>
+
 	* ipmipower/ipmipower_util.c (ipmipower_cbuf_printf): Clamp a truncated
 	formatted message to the bytes actually stored in the stack buffer before
 	writing it to the circular buffer.
