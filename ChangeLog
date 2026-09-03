@@ -1,5 +1,11 @@
 2026-09-03 Albert Chu <chu11@llnl.gov>
 
+	* ipmipower/ipmipower_util.c (ipmipower_cbuf_printf): Clamp a truncated
+	formatted message to the bytes actually stored in the stack buffer before
+	writing it to the circular buffer.
+
+2026-09-03 Albert Chu <chu11@llnl.gov>
+
 	* libipmimonitoring/ipmi_monitoring_sdr_cache.c
 	(_ipmi_monitoring_sdr_cache_filename): Reject a combined SDR cache path
 	that does not fit in the caller's buffer instead of using a truncated path

@@ -193,8 +193,16 @@ ipmipower_cbuf_printf(cbuf_t cbuf, const char *fmt, ...)
 
   va_start(ap, fmt);
 
-  /* overflow ignored */
   len = vsnprintf (buf, IPMIPOWER_OUTPUT_BUFLEN, fmt, ap);
+  va_end(ap);
+
+  if (len < 0)
+    {
+      IPMIPOWER_ERROR (("vsnprintf: %s", strerror (errno)));
+      exit (EXIT_FAILURE);
+    }
+  if (len >= IPMIPOWER_OUTPUT_BUFLEN)
+    len = IPMIPOWER_OUTPUT_BUFLEN - 1;
 
   written = cbuf_write (cbuf, buf, len, &dropped);
   if (written < 0)
@@ -202,8 +210,6 @@ ipmipower_cbuf_printf(cbuf_t cbuf, const char *fmt, ...)
       IPMIPOWER_ERROR (("cbuf_write: %s", strerror (errno)));
       exit (EXIT_FAILURE);
     }
-
-  va_end(ap);
 }
 
 int
