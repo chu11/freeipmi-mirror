@@ -496,6 +496,8 @@ _cmd_power_specific_nodes (char **argv, ipmipower_power_cmd_t cmd)
       goto cleanup;
     }
 
+  fi_hostlist_uniq (h);
+
   if (!(hitr = fi_hostlist_iterator_create (h)))
     {
       IPMIPOWER_ERROR (("fi_hostlist_iterator_create: %s", strerror (errno)));

@@ -1,5 +1,11 @@
 2026-09-03 Albert Chu <chu11@llnl.gov>
 
+	* ipmipower/ipmipower_prompt.c (_cmd_power_specific_nodes): Deduplicate the
+	outer interactive host list so identical requests cannot queue concurrent
+	commands against one connection buffer.
+
+2026-09-03 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sensors/ipmi-sensors-argp.c (_ipmi_sensors_args_validate):
 	Reject conflicting primary actions.
 
