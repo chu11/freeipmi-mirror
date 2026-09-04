@@ -753,7 +753,13 @@ _ipmi_monitoring_date_parse (ipmi_monitoring_ctx_t c,
       return (-1);
     }
 
-  (*date_val) = t;
+  if ((t < 0) || ((uint64_t)t > UINT32_MAX))
+    {
+      c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
+      return (-1);
+    }
+
+  (*date_val) = (unsigned int)t;
   return (0);
 }
 
@@ -807,6 +813,11 @@ ipmi_monitoring_sel_by_date_range (ipmi_monitoring_ctx_t c,
        * date, so we might need to add seconds to the end to get to
        * the end of the day.
        */
+      if (date_end_val > (UINT32_MAX - (24 * 60 * 60)))
+        {
+          c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
+          return (-1);
+        }
       date_end_val = date_end_val + (24 * 60 * 60);
     }
   else

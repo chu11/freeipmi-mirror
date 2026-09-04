@@ -1,5 +1,13 @@
 2026-09-04 Albert Chu <chu11@llnl.gov>
 
+	* libipmimonitoring/ipmi_monitoring.c
+	(_ipmi_monitoring_date_parse, ipmi_monitoring_sel_by_date_range):
+	Reject parsed times outside the unsigned 32-bit SEL timestamp
+	range before narrowing them, and reject an end-of-day adjustment
+	that would overflow that range.
+
+2026-09-04 Albert Chu <chu11@llnl.gov>
+
 	* libipmiconsole/ipmiconsole_engine.c (_ipmiconsole_poll): Clamp the
 	remaining poll timeout to zero when an interruption occurs after the
 	original deadline, so a finite wait cannot become infinite.
