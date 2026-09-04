@@ -1,5 +1,11 @@
 2026-09-04 Albert Chu <chu11@llnl.gov>
 
+	* libipmiconsole/ipmiconsole_engine.c (_ipmiconsole_poll): Clamp the
+	remaining poll timeout to zero when an interruption occurs after the
+	original deadline, so a finite wait cannot become infinite.
+
+2026-09-04 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/locate/ipmi-locate-dmidecode.c
 	(ipmi_locate_dmidecode_get_device_info): Close the EFI system-table stream
 	when its SMBIOS address is malformed.
