@@ -1,5 +1,11 @@
 2026-09-04 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/locate/ipmi-locate-dmidecode.c
+	(ipmi_locate_dmidecode_get_device_info): Close the EFI system-table stream
+	when its SMBIOS address is malformed.
+
+2026-09-04 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/api/ipmi-api.c (ipmi_ctx_find_inband): Return a successful
 	Sun BMC open and retain the SSIF discovery result instead of testing the
 	stale KCS result.

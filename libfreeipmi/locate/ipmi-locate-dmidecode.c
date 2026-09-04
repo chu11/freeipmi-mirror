@@ -513,6 +513,7 @@ ipmi_locate_dmidecode_get_device_info (ipmi_locate_ctx_t ctx,
                   || ((endptr[0] != '\0') && (endptr[0] != 0x0a)))
                 {
                   LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
+                  fclose (efi_systab);
                   return (-1);
                 }
             }
