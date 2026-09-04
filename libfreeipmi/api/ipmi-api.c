@@ -1336,6 +1336,12 @@ ipmi_ctx_find_inband (ipmi_ctx_t ctx,
         goto cleanup;
     }
 
+  if (!ret)
+    {
+      rv = 1;
+      goto out;
+    }
+
   if ((ret = ipmi_ctx_open_inband (ctx,
                                    IPMI_DEVICE_INTELDCMI,
                                    disable_auto_probe,
@@ -1398,9 +1404,9 @@ ipmi_ctx_find_inband (ipmi_ctx_t ctx,
         }
     }
 
-  if (!ipmi_locate_discover_device_info (locate_ctx,
-                                         IPMI_INTERFACE_SSIF,
-                                         &locate_info))
+  if ((ret = ipmi_locate_discover_device_info (locate_ctx,
+                                               IPMI_INTERFACE_SSIF,
+                                               &locate_info)) < 0)
     {
       if (_is_locate_ctx_fatal_error (locate_ctx))
         goto cleanup;

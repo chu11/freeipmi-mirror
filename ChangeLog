@@ -1,3 +1,9 @@
+2026-09-04 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/api/ipmi-api.c (ipmi_ctx_find_inband): Return a successful
+	Sun BMC open and retain the SSIF discovery result instead of testing the
+	stale KCS result.
+
 2026-09-03 Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/ipmipower_util.c (ipmipower_poll): Clamp the remaining poll
