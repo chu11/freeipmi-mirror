@@ -174,9 +174,19 @@ ipmipower_poll (struct pollfd *ufds, unsigned int nfds, int timeout)
               exit (EXIT_FAILURE);
             }
 
-          timersub(&end, &start, &delta);     /* delta = end-start */
-          timersub(&tv_orig, &delta, &tv);    /* tv = tvsave-delta */
-          timeout = (tv.tv_sec * 1000) + (tv.tv_usec/1000);
+          if (timercmp (&end, &start, <=))
+            timeout = (tv_orig.tv_sec * 1000) + (tv_orig.tv_usec / 1000);
+          else
+            {
+              timersub (&end, &start, &delta);     /* delta = end-start */
+              if (timercmp (&delta, &tv_orig, >=))
+                timeout = 0;
+              else
+                {
+                  timersub (&tv_orig, &delta, &tv); /* tv = tvsave-delta */
+                  timeout = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
+                }
+            }
         }
     } while (n < 0);
 
