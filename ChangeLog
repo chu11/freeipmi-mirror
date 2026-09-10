@@ -1,3 +1,9 @@
+2026-09-10 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/sensor-read/ipmi-sensor-read.c
+	(ipmi_sensor_read_ctx_create, ipmi_sensor_read): Initialize and update
+	the sensor read error state on all return paths.
+
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-oem/ipmi-oem-fujitsu.c (ipmi_oem_fujitsu_get_sel_entry_long_text):
