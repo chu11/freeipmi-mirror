@@ -59,8 +59,6 @@
 #include "tool-util-common.h"
 
 #define BMC_WATCHDOG_ERR_BUFLEN           1024
-#define BMC_WATCHDOG_STR_BUFLEN           1024
-#define BMC_WATCHDOG_PKT_BUFLEN           1024
 #define BMC_WATCHDOG_RESET_PERIOD_DEFAULT   60
 
 #define BMC_WATCHDOG_RETRY_WAIT_TIME_DEFAULT 1
