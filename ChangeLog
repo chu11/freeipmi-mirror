@@ -1,5 +1,9 @@
 2026-09-16 Albert Chu <chu11@llnl.gov>
 
+	* bmc-device/bmc-device-argp.c: Include <errno.h>.
+
+2026-09-16 Albert Chu <chu11@llnl.gov>
+
 	* bmc-device/bmc-device-argp.c (cmdline_parse): Treat repeated command
 	flags as a single command.
 
