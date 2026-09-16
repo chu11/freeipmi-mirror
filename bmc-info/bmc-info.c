@@ -68,7 +68,7 @@ typedef int (*Bmc_info_system_info)(ipmi_ctx_t ctx,
                                     uint8_t block_selector,
                                     fiid_obj_t obj_cmd_rs);
 
-fiid_template_t tmpl_cmd_get_device_id_sr870bn4_rs =
+static fiid_template_t tmpl_cmd_get_device_id_sr870bn4_rs =
   {
     { 8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
