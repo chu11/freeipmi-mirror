@@ -1,5 +1,9 @@
 2026-09-16 Albert Chu <chu11@llnl.gov>
 
+	* bmc-device/bmc-device.h (SYSTEM_INFO_STRING_MAX): Remove unused macro.
+
+2026-09-16 Albert Chu <chu11@llnl.gov>
+
 	* bmc-device/bmc-device-argp.c: Include <errno.h>.
 
 2026-09-16 Albert Chu <chu11@llnl.gov>

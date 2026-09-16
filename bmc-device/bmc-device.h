@@ -66,8 +66,6 @@ enum bmc_device_set_acpi_power_state_options
     SET_ACPI_DEVICE_POWER_STATE_KEY = 201,
   };
 
-#define SYSTEM_INFO_STRING_MAX 255
-
 struct bmc_device_set_acpi_power_state
 {
   uint8_t system_power_state;
