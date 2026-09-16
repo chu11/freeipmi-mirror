@@ -1,5 +1,10 @@
 2026-09-16 Albert Chu <chu11@llnl.gov>
 
+	* bmc-device/bmc-device-argp.c (cmdline_parse): Treat repeated command
+	flags as a single command.
+
+2026-09-16 Albert Chu <chu11@llnl.gov>
+
 	* bmc-device/bmc-device.c (read_fru): Report FRU area errors on stderr.
 
 2026-09-16 Albert Chu <chu11@llnl.gov>

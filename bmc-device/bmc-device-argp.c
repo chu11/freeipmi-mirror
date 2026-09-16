@@ -171,19 +171,19 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   switch (key)
     {
     case COLD_RESET_KEY:
-      cmd_args->cold_reset++;
+      cmd_args->cold_reset = 1;
       break;
     case WARM_RESET_KEY:
-      cmd_args->warm_reset++;
+      cmd_args->warm_reset = 1;
       break;
     case GET_SELF_TEST_RESULTS_KEY:
-      cmd_args->get_self_test_results++;
+      cmd_args->get_self_test_results = 1;
       break;
     case GET_ACPI_POWER_STATE_KEY:
-      cmd_args->get_acpi_power_state++;
+      cmd_args->get_acpi_power_state = 1;
       break;
     case SET_ACPI_POWER_STATE_KEY:
-      cmd_args->set_acpi_power_state++;
+      cmd_args->set_acpi_power_state = 1;
       break;
     case SET_ACPI_SYSTEM_POWER_STATE_KEY:
       if (!strcasecmp (arg, "S0") /* acceptable here */
@@ -244,10 +244,10 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
         }
       break;
     case GET_LAN_STATISTICS_KEY:
-      cmd_args->get_lan_statistics++;
+      cmd_args->get_lan_statistics = 1;
       break;
     case CLEAR_LAN_STATISTICS_KEY:
-      cmd_args->clear_lan_statistics++;
+      cmd_args->clear_lan_statistics = 1;
       break;
     case REARM_SENSOR_KEY:
       cmd_args->rearm_sensor = 1;
