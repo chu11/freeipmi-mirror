@@ -1149,6 +1149,7 @@ _daemon_cmd (const char *progname)
   uint16_t initial_countdown_seconds;
   uint16_t previous_present_countdown_seconds = 0;
   uint16_t present_countdown_seconds;
+  int err_flags;
 
   assert (progname);
 
@@ -1158,12 +1159,16 @@ _daemon_cmd (const char *progname)
 
   daemon_signal_handler_setup (_signal_handler_callback);
 
-  /* move error outs to syslog from stderr */
+  /* move error outs to syslog from stderr, but keep stderr when
+   * running in the foreground for debugging
+   */
 
+  err_flags = 0;
   if (!cmd_args.no_logging)
-    err_set_flags (ERROR_SYSLOG);
-  else
-    err_set_flags (0);
+    err_flags |= ERROR_SYSLOG;
+  if (cmd_args.common_args.debug)
+    err_flags |= ERROR_STDERR;
+  err_set_flags (err_flags);
 
   openlog (progname, LOG_ODELAY | LOG_PID, LOG_DAEMON);
 
