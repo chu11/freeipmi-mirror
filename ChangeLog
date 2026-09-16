@@ -1,5 +1,10 @@
 2026-09-16 Albert Chu <chu11@llnl.gov>
 
+	* bmc-device/bmc-device.c (get_acpi_power_state): Close the parenthesis
+	in the LEGACY_ON description.
+
+2026-09-16 Albert Chu <chu11@llnl.gov>
+
 	* bmc-device/bmc-device.h (SYSTEM_INFO_STRING_MAX): Remove unused macro.
 
 2026-09-16 Albert Chu <chu11@llnl.gov>

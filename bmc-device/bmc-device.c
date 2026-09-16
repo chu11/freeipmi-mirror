@@ -430,7 +430,7 @@ get_acpi_power_state (bmc_device_state_data_t *state_data)
     case IPMI_ACPI_SYSTEM_POWER_STATE_LEGACY_ON:
       statestr = "LEGACY_ON";
       /* achu: specification text uses singular "system".  I substitute in correct english. */
-      verbosestr = "Legacy On (indicates On for systems that don't support ACPI or have ACPI capabilities disabled:";
+      verbosestr = "Legacy On (indicates On for systems that don't support ACPI or have ACPI capabilities disabled)";
       break;
     case IPMI_ACPI_SYSTEM_POWER_STATE_LEGACY_OFF:
       statestr = "LEGACY_OFF";
