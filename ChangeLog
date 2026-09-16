@@ -1,5 +1,10 @@
 2026-09-16 Albert Chu <chu11@llnl.gov>
 
+	* bmc-watchdog/bmc-watchdog-argp.c (_usage): Match the --daemon
+	description to the option table.
+
+2026-09-16 Albert Chu <chu11@llnl.gov>
+
 	* bmc-watchdog/bmc-watchdog-argp.c (cmdline_options): Use NULL for
 	the --verbose-logging argument name.
 

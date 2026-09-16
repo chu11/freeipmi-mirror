@@ -184,7 +184,7 @@ _usage (struct bmc_watchdog_arguments *cmd_args)
                "  -t         --start                          Start BMC Watchdog Timer.\n"
                "  -y         --stop                           Stop BMC Watchdog Timer.\n"
                "  -c         --clear                          Clear BMC Watchdog Config.\n"
-               "  -d         --daemon                         Run in Daemon Mode.\n\n");
+               "  -d         --daemon                         Run in daemon mode.\n\n");
     }
   else
     fprintf (stderr,
