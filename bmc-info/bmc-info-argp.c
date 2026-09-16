@@ -31,6 +31,7 @@
 #include "freeipmi-argp.h"
 #endif /* !HAVE_ARGP_H */
 #include <assert.h>
+#include <errno.h>
 
 #include "bmc-info.h"
 #include "bmc-info-argp.h"
