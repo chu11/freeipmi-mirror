@@ -28,6 +28,7 @@
 #include "freeipmi/fiid/fiid.h"
 #include "freeipmi/record-format/ipmi-sel-record-format.h"
 #include "freeipmi/spec/ipmi-cmd-spec.h"
+#include "freeipmi/spec/ipmi-event-reading-type-code-spec.h"
 #include "freeipmi/spec/ipmi-ipmb-lun-spec.h"
 
 #include "libcommon/ipmi-fiid-util.h"
@@ -157,7 +158,8 @@ fill_cmd_platform_event (uint8_t *generator_id,
   /* b/c OEM codes are allowed here, don't really need to check for
    * a lot of correct input.  Anything is allowed in many cases.
    */
-  if (!IPMI_SEL_RECORD_EVENT_DIRECTION_VALID (event_dir)
+  if (!IPMI_EVENT_READING_TYPE_CODE_LEGAL (event_type_code)
+      || !IPMI_SEL_RECORD_EVENT_DIRECTION_VALID (event_dir)
       || !fiid_obj_valid (obj_cmd_rq))
     {
       SET_ERRNO (EINVAL);

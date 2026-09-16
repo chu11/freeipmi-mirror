@@ -1,5 +1,12 @@
 2026-09-16 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/spec/ipmi-event-reading-type-code-spec.h
+	(IPMI_EVENT_READING_TYPE_CODE_LEGAL): New macro.
+	* libfreeipmi/cmds/ipmi-event-cmds.c (fill_cmd_platform_event): Reject
+	event type codes that do not fit the 7 bit request field.
+
+2026-09-16 Albert Chu <chu11@llnl.gov>
+
 	* ipmiping/ipmiping.c (endresult), rmcpping/rmcpping.c (endresult):
 	Print packet counters with unsigned conversions.
 

@@ -59,6 +59,12 @@ extern "C" {
   (((__val) >= IPMI_EVENT_READING_TYPE_CODE_OEM_MIN \
     && (__val) <= IPMI_EVENT_READING_TYPE_CODE_OEM_MAX) ? 1 : 0)
 
+/* event/reading type code is a 7 bit field */
+/* To avoid gcc warnings, add +1 in comparison */
+#define IPMI_EVENT_READING_TYPE_CODE_LEGAL(__val) \
+  ((((__val) + 1) >= (IPMI_EVENT_READING_TYPE_CODE_UNSPECIFIED + 1) \
+    && (__val) <= IPMI_EVENT_READING_TYPE_CODE_OEM_MAX) ? 1 : 0)
+
 #ifdef __cplusplus
 }
 #endif
