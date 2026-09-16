@@ -1,5 +1,12 @@
 2026-09-16 Albert Chu <chu11@llnl.gov>
 
+	* bmc-watchdog/bmc-watchdog.c (_cmd): Always record the completion
+	code of a failed command.  Do not output the retry exhaustion message
+	directly.
+	(_daemon_cmd_err): Output busy errors subject to the repeat limit.
+
+2026-09-16 Albert Chu <chu11@llnl.gov>
+
 	* bmc-info/bmc-info.c (tmpl_cmd_get_device_id_sr870bn4_rs): Make
 	static.
 

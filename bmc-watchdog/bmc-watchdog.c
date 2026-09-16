@@ -226,21 +226,19 @@ _cmd (const char *str,
 
               if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
                 {
+                  uint64_t val;
+
+                  _fiid_obj_get (obj_cmd_rs, "comp_code", &val);
+                  last_comp_code = val;
+
                   if (ipmi_completion_code_strerror_cmd_r (obj_cmd_rs,
                                                            netfn,
                                                            comp_code_errbuf,
                                                            BMC_WATCHDOG_ERR_BUFLEN) < 0)
-                    {
-                      uint64_t val;
-
-                      _fiid_obj_get (obj_cmd_rs, "comp_code", &val);
-                      last_comp_code = val;
-
-                      snprintf (comp_code_errbuf,
-                                BMC_WATCHDOG_ERR_BUFLEN,
-                                "Comp Code 0x%X",
-                                last_comp_code);
-                    }
+                    snprintf (comp_code_errbuf,
+                              BMC_WATCHDOG_ERR_BUFLEN,
+                              "Comp Code 0x%X",
+                              last_comp_code);
                 }
 
               return (-1);
@@ -250,10 +248,7 @@ _cmd (const char *str,
       if (ret < 0)
         {
           if (retry_count >= retry_attempts)
-            {
-              err_output ("%s: BMC Timeout: %s", str, ipmi_ctx_errormsg (ipmi_ctx));
-              return (-1);
-            }
+            return (-1);
 
           daemon_sleep (retry_wait_time);
           retry_count++;
@@ -1010,12 +1005,13 @@ _daemon_cmd_err (const char *str, int exit_on_fatal)
 
   if (ipmi_ctx_errnum (ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE)
     err_output ("%s: %s", str, comp_code_errbuf);
-  else if (ipmi_ctx_errnum (ipmi_ctx) != IPMI_ERR_DRIVER_BUSY
-           && ipmi_ctx_errnum (ipmi_ctx) != IPMI_ERR_BMC_BUSY
-           && ipmi_ctx_errnum (ipmi_ctx) != IPMI_ERR_IPMI_ERROR)
+  else
     {
       err_output ("%s: %s", str, ipmi_ctx_errormsg (ipmi_ctx));
-      if (exit_on_fatal)
+      if (exit_on_fatal
+          && ipmi_ctx_errnum (ipmi_ctx) != IPMI_ERR_DRIVER_BUSY
+          && ipmi_ctx_errnum (ipmi_ctx) != IPMI_ERR_BMC_BUSY
+          && ipmi_ctx_errnum (ipmi_ctx) != IPMI_ERR_IPMI_ERROR)
         exit (EXIT_FAILURE);
     }
 
