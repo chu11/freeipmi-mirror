@@ -29,6 +29,8 @@ support, and globally unique IDs (guids).
 .SH "BMC-INFO OPTIONS"
 The following options are specific to
 .B bmc-info.
+Only one of the \fB\-\-get\-*\fR options may be specified; if none is
+specified, all information is displayed.
 .TP
 \fB\-\-get\-device\-id\fR
 Display only device ID information.

@@ -104,19 +104,19 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   switch (key)
     {
     case GET_DEVICE_ID_KEY:
-      cmd_args->get_device_id++;
+      cmd_args->get_device_id = 1;
       break;
     case GET_DEVICE_GUID_KEY:
-      cmd_args->get_device_guid++;
+      cmd_args->get_device_guid = 1;
       break;
     case GET_SYSTEM_GUID_KEY:
-      cmd_args->get_system_guid++;
+      cmd_args->get_system_guid = 1;
       break;
     case GET_SYSTEM_INFO_KEY:
-      cmd_args->get_system_info++;
+      cmd_args->get_system_info = 1;
       break;
     case GET_CHANNEL_INFO_KEY:
-      cmd_args->get_channel_info++;
+      cmd_args->get_channel_info = 1;
       break;
     case INTERPRET_OEM_DATA_KEY:
       cmd_args->interpret_oem_data = 1;

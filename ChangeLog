@@ -1,5 +1,12 @@
 2026-09-16 Albert Chu <chu11@llnl.gov>
 
+	* bmc-info/bmc-info-argp.c (cmdline_parse): Treat repeated output
+	selection options as a single command.
+	* man/bmc-info.8.pre.in: Document that only one --get-* option may be
+	specified.
+
+2026-09-16 Albert Chu <chu11@llnl.gov>
+
 	* bmc-info/bmc-info.c (display_system_info_common): Only restore the
 	context flags if they were changed.
 
