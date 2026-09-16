@@ -1,5 +1,9 @@
 2026-09-16 Albert Chu <chu11@llnl.gov>
 
+	* bmc-device/bmc-device.c (read_fru): Report FRU area errors on stderr.
+
+2026-09-16 Albert Chu <chu11@llnl.gov>
+
 	* bmc-device/bmc-device.c (write_fru): Reset the busy retry count after
 	each successful block and pause briefly before retrying.
 

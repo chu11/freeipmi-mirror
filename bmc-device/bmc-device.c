@@ -2808,8 +2808,9 @@ read_fru (bmc_device_state_data_t *state_data)
 
   if (area_type != IPMI_FRU_AREA_TYPE_RAW_DATA)
     {
-      pstdout_printf (state_data->pstate,
-                      "FRU Error: Invalid area type returned\n");
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "FRU Error: Invalid area type returned\n");
       goto cleanup;
     }
 
@@ -2838,8 +2839,9 @@ read_fru (bmc_device_state_data_t *state_data)
     }
   else
     {
-      pstdout_printf (state_data->pstate,
-                      "FRU Error: FRU area is zero length\n");
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "FRU Error: FRU area is zero length\n");
       goto cleanup;
     }
 
