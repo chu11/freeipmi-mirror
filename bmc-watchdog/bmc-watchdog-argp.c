@@ -84,7 +84,7 @@ static struct argp_option cmdline_options[] =
       "Clear BMC Watchdog Config.", 45},
     { "daemon", DAEMON_KEY, NULL, 0,
       "Run in daemon mode.", 46},
-    { "verbose-logging", VERBOSE_LOGGING_KEY, 0, 0,
+    { "verbose-logging", VERBOSE_LOGGING_KEY, NULL, 0,
       "Increase verbosity in logging.", 47},
     { "no-logging", NO_LOGGING_KEY, NULL, 0,
       "Turn off all syslogging.", 48},
