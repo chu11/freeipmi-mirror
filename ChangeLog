@@ -1,3 +1,8 @@
+2026-09-16 Albert Chu <chu11@llnl.gov>
+
+	* man/bmc-watchdog.8.pre.in: Show the SECONDS argument of
+	--reset-period.
+
 2026-09-15 Albert Chu <chu11@llnl.gov>
 
 	* man/ipmidetect.8.pre.in: Correct the documented default server port.
