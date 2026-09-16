@@ -2865,6 +2865,7 @@ write_fru (bmc_device_state_data_t *state_data)
   int rv = -1;
   int loop_errors = 0;
   int loop_errors_max = 5;      /* arbitrarily selected */
+  unsigned int loop_errors_delay = 100000; /* microseconds, arbitrarily selected */
   unsigned int percent = 0;
   uint64_t val;
 
@@ -3007,6 +3008,7 @@ write_fru (bmc_device_state_data_t *state_data)
                   if (loop_errors > loop_errors_max)
                     goto error_out;
 
+                  usleep (loop_errors_delay);
                   continue;
                 }
 
@@ -3043,6 +3045,7 @@ error_out:
         }
 
       area_offset += count_written;
+      loop_errors = 0;
 
       if (state_data->prog_data->args->verbose)
         {

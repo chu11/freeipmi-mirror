@@ -1,5 +1,10 @@
 2026-09-16 Albert Chu <chu11@llnl.gov>
 
+	* bmc-device/bmc-device.c (write_fru): Reset the busy retry count after
+	each successful block and pause briefly before retrying.
+
+2026-09-16 Albert Chu <chu11@llnl.gov>
+
 	* bmc-device/bmc-device.c (platform_event): Reject event types that
 	do not fit the 7 bit field before issuing the request.
 
