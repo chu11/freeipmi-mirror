@@ -2572,7 +2572,6 @@ set_system_info_common (bmc_device_state_data_t *state_data,
   assert (func_cmd_first_set_str);
   assert (func_cmd);
   assert (func_cmd_str);
-  assert (state_data);
   assert (string);
   assert (strlen (string) <= IPMI_SYSTEM_INFO_STRING_LEN_MAX);
 

@@ -1,5 +1,10 @@
 2026-09-16 Albert Chu <chu11@llnl.gov>
 
+	* bmc-device/bmc-device.c (set_system_info_common): Remove duplicate
+	assert.
+
+2026-09-16 Albert Chu <chu11@llnl.gov>
+
 	* bmc-device/bmc-device.c (get_bmc_global_enables): Label the event
 	message buffer full interrupt enable as an interrupt.
 
