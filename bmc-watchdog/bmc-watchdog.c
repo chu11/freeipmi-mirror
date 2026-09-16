@@ -673,7 +673,7 @@ _set_cmd (void)
   return;
 }
 
-static char *
+static const char *
 _log_str (uint8_t log)
 {
   switch (log)
@@ -689,7 +689,7 @@ _log_str (uint8_t log)
   return (NULL);                /* NOT REACHED */
 }
 
-static char *
+static const char *
 _timer_state_str (uint8_t timer_state)
 {
   switch (timer_state)
@@ -705,7 +705,7 @@ _timer_state_str (uint8_t timer_state)
   return (NULL);                /* NOT REACHED */
 }
 
-static char *
+static const char *
 _timer_use_str (uint8_t timer_use)
 {
   switch (timer_use)
@@ -727,7 +727,7 @@ _timer_use_str (uint8_t timer_use)
   return (NULL);                /* NOT REACHED */
 }
 
-static char *
+static const char *
 _pre_timeout_interrupt_str (uint8_t pre_timeout_interrupt)
 {
   switch (pre_timeout_interrupt)
@@ -747,7 +747,7 @@ _pre_timeout_interrupt_str (uint8_t pre_timeout_interrupt)
   return (NULL);                /* NOT REACHED */
 }
 
-static char *
+static const char *
 _timeout_action_str (uint8_t timeout_action)
 {
   switch (timeout_action)

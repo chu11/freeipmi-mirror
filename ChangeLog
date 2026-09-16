@@ -1,5 +1,11 @@
 2026-09-16 Albert Chu <chu11@llnl.gov>
 
+	* bmc-watchdog/bmc-watchdog.c (_log_str, _timer_state_str,
+	_timer_use_str, _pre_timeout_interrupt_str, _timeout_action_str):
+	Return const char *.
+
+2026-09-16 Albert Chu <chu11@llnl.gov>
+
 	* man/bmc-watchdog.8.pre.in: Show the SECONDS argument of
 	--reset-period.
 
