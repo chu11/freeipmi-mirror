@@ -1238,19 +1238,13 @@ _daemon_cmd (const char *progname)
       if (cmd_args.common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_STATE_FLAG)
         {
           if (previous_present_countdown_seconds == present_countdown_seconds)
-            {
-              err_output ("timer stopped by another process");
-              return;
-            }
+            err_exit ("timer is stopped (stopped by another process or expired)");
           previous_present_countdown_seconds = present_countdown_seconds;
         }
       else
         {
           if (timer_state == IPMI_BMC_WATCHDOG_TIMER_TIMER_STATE_STOPPED)
-            {
-              err_output ("timer stopped by another process");
-              return;
-            }
+            err_exit ("timer is stopped (stopped by another process or expired)");
         }
 
       if (_reset_watchdog_timer_cmd () < 0)

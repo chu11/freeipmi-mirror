@@ -1,5 +1,10 @@
 2026-09-16 Albert Chu <chu11@llnl.gov>
 
+	* bmc-watchdog/bmc-watchdog.c (_daemon_cmd): Exit with failure when
+	the timer is found stopped, and note that it may have expired.
+
+2026-09-16 Albert Chu <chu11@llnl.gov>
+
 	* bmc-watchdog/bmc-watchdog.c (_fiid_obj_get_safe): Remove.
 	(_get_watchdog_timer_cmd): Use _fiid_obj_get.
 
