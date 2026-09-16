@@ -68,7 +68,7 @@
 
 #define BMC_WATCHDOG_LOG_REPEAT_LIMIT       10
 
-struct bmc_watchdog_arguments cmd_args;
+static struct bmc_watchdog_arguments cmd_args;
 
 static ipmi_ctx_t ipmi_ctx = NULL;
 static unsigned int retry_wait_time = BMC_WATCHDOG_RETRY_WAIT_TIME_DEFAULT;
