@@ -705,6 +705,7 @@ display_system_info_common (bmc_info_state_data_t *state_data,
   uint8_t set_selector = 0;
   unsigned int string_count = 0;
   unsigned int orig_flags = 0;
+  int flags_changed = 0;
   int ret, len;
   int rv = -1;
 
@@ -763,6 +764,7 @@ display_system_info_common (bmc_info_state_data_t *state_data,
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
+  flags_changed = 1;
 
   if (func_cmd_first_set (state_data->ipmi_ctx,
                           IPMI_GET_SYSTEM_INFO_PARAMETER,
@@ -926,7 +928,8 @@ display_system_info_common (bmc_info_state_data_t *state_data,
 
   rv = 1;
  cleanup:
-  if (ipmi_ctx_set_flags (state_data->ipmi_ctx, orig_flags) < 0)
+  if (flags_changed
+      && ipmi_ctx_set_flags (state_data->ipmi_ctx, orig_flags) < 0)
     pstdout_fprintf (state_data->pstate,
                      stderr,
                      "ipmi_ctx_set_flags: %s\n",
