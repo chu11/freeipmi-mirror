@@ -272,7 +272,7 @@ timer is running.  A flag value of 1 suspends ARP responses.  A value
 of 0 will not suspend ARP responses.  If this option is not specified,
 ARP responses will not be suspended.
 .TP
-\fB\-e\fR, \fB\-\-reset\-period\fR
+\fB\-e\fR \fISECONDS\fR, \fB\-\-reset\-period\fR=\fISECONDS\fR
 Time interval to wait before resetting timer.  The default is 60
 seconds.
 .SH "ERRORS"

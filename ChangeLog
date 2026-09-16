@@ -1,5 +1,10 @@
 2026-09-16 Albert Chu <chu11@llnl.gov>
 
+	* man/bmc-watchdog.8.pre.in: Show the SECONDS argument of
+	--reset-period.
+
+2026-09-16 Albert Chu <chu11@llnl.gov>
+
 	* bmc-watchdog/bmc-watchdog-argp.c (_usage): List --workaround-flags.
 
 2026-09-16 Albert Chu <chu11@llnl.gov>
