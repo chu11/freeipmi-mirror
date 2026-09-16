@@ -197,7 +197,7 @@ _usage (struct bmc_watchdog_arguments *cmd_args)
            "                 --driver-address=DRIVER-ADDRESS      Specify driver address.\n"
            "                 --driver-device=DEVICE               Specify driver device path.\n"
            "                 --register-spacing=REGISTER-SPACING  Specify driver register spacing.\n"
-           "                 --config-file=FILE                   Specify an alternate config file\n"
+           "                 --config-file=FILE                   Specify an alternate config file.\n"
            "  -W WORKAROUNDS --workaround-flags=WORKAROUNDS       Specify workarounds to vendor compliance issues.\n"
            "  -v             --verbose-logging                    Turn on verbose logging\n"
            "  -n             --no-logging                         Turn off all logging\n"
