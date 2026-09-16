@@ -2464,7 +2464,7 @@ get_bmc_global_enables (bmc_device_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "Receive Message Queue Interrupt : %s\n",
+                  "Receive Message Queue Interrupt     : %s\n",
                   (val == IPMI_BMC_GLOBAL_ENABLES_ENABLED) ? "enabled" : "disabled");
 
   if (FIID_OBJ_GET (obj_cmd_rs, "event_message_buffer_full_interrupt", &val) < 0)
@@ -2477,7 +2477,7 @@ get_bmc_global_enables (bmc_device_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "Event Message Buffer Full       : %s\n",
+                  "Event Message Buffer Full Interrupt : %s\n",
                   (val == IPMI_BMC_GLOBAL_ENABLES_ENABLED) ? "enabled" : "disabled");
 
   if (FIID_OBJ_GET (obj_cmd_rs, "event_message_buffer", &val) < 0)
@@ -2490,7 +2490,7 @@ get_bmc_global_enables (bmc_device_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "Event Message Buffer            : %s\n",
+                  "Event Message Buffer                : %s\n",
                   (val == IPMI_BMC_GLOBAL_ENABLES_ENABLED) ? "enabled" : "disabled");
 
   if (FIID_OBJ_GET (obj_cmd_rs, "system_event_logging", &val) < 0)
@@ -2503,7 +2503,7 @@ get_bmc_global_enables (bmc_device_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "System Event Logging            : %s\n",
+                  "System Event Logging                : %s\n",
                   (val == IPMI_BMC_GLOBAL_ENABLES_ENABLED) ? "enabled" : "disabled");
 
   if (FIID_OBJ_GET (obj_cmd_rs, "oem_0", &val) < 0)
@@ -2516,7 +2516,7 @@ get_bmc_global_enables (bmc_device_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "OEM 0                           : %s\n",
+                  "OEM 0                               : %s\n",
                   (val == IPMI_BMC_GLOBAL_ENABLES_ENABLED) ? "enabled" : "disabled");
 
   if (FIID_OBJ_GET (obj_cmd_rs, "oem_1", &val) < 0)
@@ -2529,7 +2529,7 @@ get_bmc_global_enables (bmc_device_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "OEM 1                           : %s\n",
+                  "OEM 1                               : %s\n",
                   (val == IPMI_BMC_GLOBAL_ENABLES_ENABLED) ? "enabled" : "disabled");
 
   if (FIID_OBJ_GET (obj_cmd_rs, "oem_2", &val) < 0)
@@ -2542,7 +2542,7 @@ get_bmc_global_enables (bmc_device_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "OEM 2                           : %s\n",
+                  "OEM 2                               : %s\n",
                   (val == IPMI_BMC_GLOBAL_ENABLES_ENABLED) ? "enabled" : "disabled");
 
   rv = 0;

@@ -1,5 +1,10 @@
 2026-09-16 Albert Chu <chu11@llnl.gov>
 
+	* bmc-device/bmc-device.c (get_bmc_global_enables): Label the event
+	message buffer full interrupt enable as an interrupt.
+
+2026-09-16 Albert Chu <chu11@llnl.gov>
+
 	* bmc-device/bmc-device.c (rearm_sensor): Name the IPMB re-arm function
 	in its error message.
 
