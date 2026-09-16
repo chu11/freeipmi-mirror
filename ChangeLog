@@ -1,5 +1,10 @@
 2026-09-16 Albert Chu <chu11@llnl.gov>
 
+	* bmc-device/bmc-device.c (platform_event): Reject event types that
+	do not fit the 7 bit field before issuing the request.
+
+2026-09-16 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/ipmi-event-reading-type-code-spec.h
 	(IPMI_EVENT_READING_TYPE_CODE_LEGAL): New macro.
 	* libfreeipmi/cmds/ipmi-event-cmds.c (fill_cmd_platform_event): Reject

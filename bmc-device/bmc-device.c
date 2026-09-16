@@ -1738,6 +1738,14 @@ platform_event (bmc_device_state_data_t *state_data)
                       &event_type,
                       "event type") < 0)
     goto cleanup;
+
+  if (!IPMI_EVENT_READING_TYPE_CODE_LEGAL (event_type))
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "invalid hex byte argument for event type\n");
+      goto cleanup;
+    }
   str_args_index++;
 
   if (!strcasecmp (str_args[str_args_index], "assertion"))
