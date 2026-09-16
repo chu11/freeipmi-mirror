@@ -1080,12 +1080,11 @@ display_system_info (bmc_info_state_data_t *state_data)
   if (!ret)
     goto newline_cleanup;
 
-  /* New, may not be supported */
+  /* Parameters 5-7 were added together in IPMI 2.0 rev 1.1 and are
+   * individually optional - if ret == 0, can still go on
+   */
   if ((ret = display_system_info_present_os_version_number (state_data)) < 0)
     return (-1);
-
-  if (!ret)
-    goto newline_cleanup;
 
   /* optional - if ret == 0, can still go on */
   if ((ret = display_system_info_bmc_url (state_data)) < 0)

@@ -1,5 +1,11 @@
 2026-09-16 Albert Chu <chu11@llnl.gov>
 
+	* bmc-info/bmc-info.c (display_system_info): Continue to the BMC URL
+	and Base OS/Hypervisor URL parameters when Present OS Version Number is
+	unsupported.
+
+2026-09-16 Albert Chu <chu11@llnl.gov>
+
 	* bmc-info/bmc-info.c (display_system_info_common): Report unsupported
 	completion codes on continuation sets as errors instead of treating the
 	parameter as unsupported.
