@@ -1,5 +1,10 @@
 2026-09-16 Albert Chu <chu11@llnl.gov>
 
+	* bmc-device/bmc-device.c (rearm_sensor): Name the IPMB re-arm function
+	in its error message.
+
+2026-09-16 Albert Chu <chu11@llnl.gov>
+
 	* bmc-device/bmc-device.c (get_acpi_power_state): Close the parenthesis
 	in the LEGACY_ON description.
 
