@@ -1,5 +1,12 @@
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
+	* man/freeipmi.conf.5.pre.in: Document ipmi-sel-sensor-types,
+	ipmi-sel-exclude-sensor-types, ipmi-sensors-sensor-types and
+	ipmi-sensors-exclude-sensor-types by their real names, and refer to
+	--list-sensor-types.
+
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
 	* common/toolcommon/tool-config-file-common.c (config_file_parse):
 	Declare ipmiconsole-sol-payload-instance as an integer option so its
 	callback sees the value.
