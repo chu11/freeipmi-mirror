@@ -1,5 +1,11 @@
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
+	* common/miscutil/network.c: Include network.h so the definitions
+	are checked against their prototypes; drop the unused hostlist
+	includes.
+
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
 	* common/miscutil/network.c (host_is_valid): Parse the port as
 	decimal rather than letting strtol() guess the base.
 

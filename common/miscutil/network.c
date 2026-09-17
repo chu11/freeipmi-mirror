@@ -43,8 +43,7 @@
 
 #include "freeipmi-portability.h"
 
-#include "fi_hostlist.h"
-#include "hostlist.h"
+#include "network.h"
 
 int
 host_is_ipv6_with_port (const char *host, char **addr, char **port)
