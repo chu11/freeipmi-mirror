@@ -1,5 +1,14 @@
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
+	* common/pingtool/ping-tool-common.c (_signal_handler): Only set a
+	flag; do not call the end result callback or exit() from the
+	handler.
+	(_main_loop): Check the flag around the waits, treat EINTR from the
+	receive select() as a wakeup, and print the end result from the main
+	loop on interrupt.
+
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
 	* common/pingtool/ping-tool-common.c (ipmi_ping_setup): Skip
 	getopt's ':' markers explicitly when validating the option string,
 	rather than relying on a ':' in the list of valid letters.

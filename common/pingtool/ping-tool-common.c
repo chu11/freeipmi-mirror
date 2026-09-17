@@ -110,6 +110,7 @@ static struct sockaddr_in6 pingtool_destaddr6;
 static unsigned int pingtool_pkt_sent = 0;
 static unsigned int pingtool_pkt_recv = 0;
 static Ipmi_Ping_EndResult pingtool_end_result = NULL;
+static volatile sig_atomic_t pingtool_interrupted = 0;
 
 static void
 _cleanup (void)
@@ -319,20 +320,11 @@ _sleep (unsigned int len)
 static void
 _signal_handler (int sig)
 {
-  int ret;
-
-  assert (pingtool_progname);
-  assert (pingtool_end_result);
-
-  /* Must output result here, b/c who knows where in the code we are
-   * when we caught the signal
+  /* Only set a flag here; the end result callback uses stdio, which is
+   * not safe to call from a signal handler.  The main loop's waits
+   * return with EINTR and it notices the flag.
    */
-  ret = pingtool_end_result (pingtool_progname,
-                             pingtool_dest,
-                             pingtool_pkt_sent,
-                             pingtool_pkt_recv);
-  _cleanup ();
-  exit (ret);
+  pingtool_interrupted = 1;
 }
 
 static void
@@ -580,7 +572,8 @@ _main_loop (Ipmi_Ping_CreatePacket create,
 
   printf ("%s %s (%s)\n", pingtool_progname, pingtool_dest, pingtool_dest_ip);
 
-  while (pingtool_count == -1 || (pingtool_pkt_sent < (unsigned int)pingtool_count))
+  while (!pingtool_interrupted
+         && (pingtool_count == -1 || (pingtool_pkt_sent < (unsigned int)pingtool_count)))
     {
       int rv, len, received = 0;
       uint8_t buf[IPMI_PING_MAX_PKT_LEN];
@@ -619,7 +612,8 @@ _main_loop (Ipmi_Ping_CreatePacket create,
 
       pingtool_pkt_sent++;
 
-      while (((now = time (NULL)) - last_send) < pingtool_timeout)
+      while (!pingtool_interrupted
+             && ((now = time (NULL)) - last_send) < pingtool_timeout)
         {
           fd_set rset;
           struct timeval tv;
@@ -631,7 +625,11 @@ _main_loop (Ipmi_Ping_CreatePacket create,
           tv.tv_usec = 0;
 
           if ((rv = select (pingtool_sockfd+1, &rset, NULL, NULL, &tv)) < 0)
-            ipmi_ping_err_exit ("select: %s", strerror (errno));
+            {
+              if (errno == EINTR)
+                continue;
+              ipmi_ping_err_exit ("select: %s", strerror (errno));
+            }
 
           if (rv == 1)
             {
@@ -726,6 +724,12 @@ _main_loop (Ipmi_Ping_CreatePacket create,
               break;
             }
         }
+
+      /* On interrupt the wait was cut short, so the packet is not
+       * known to be late; just report the totals.
+       */
+      if (pingtool_interrupted)
+        break;
 
       if (!received)
         late (sequence_number);
