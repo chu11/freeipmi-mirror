@@ -45,7 +45,7 @@
 #include "debug-util.h"
 #include "ping-tool-common.h"
 
-#define _supported(x)   (x) ? "supported" : "not-supported"
+#define _supported(x)   ((x) ? "supported" : "not-supported")
 
 int
 createpacket (const char *destination,

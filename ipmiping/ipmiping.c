@@ -46,7 +46,7 @@
 
 #include "ping-tool-common.h"
 
-#define _setstr(x)   (x) ? "set" : "clear"
+#define _setstr(x)   ((x) ? "set" : "clear")
 
 /* IPMI has a 6 bit sequence number */
 #define IPMI_RQ_SEQ_MAX  0x3F

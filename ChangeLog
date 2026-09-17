@@ -1,5 +1,10 @@
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
+	* ipmiping/ipmiping.c (_setstr), rmcpping/rmcpping.c (_supported):
+	Parenthesize the macro body.
+
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
 	* common/pingtool/ping-tool-common.c: Remove the gethostbyname
 	h_errno declaration, redundant getopt externs, and unused includes.
 
