@@ -1,5 +1,10 @@
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
+	* common/pingtool/ping-tool-common.c (_cmdline_parse): Reject empty
+	strings for -c, -i, -t and -s.
+
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
 	* common/toolcommon/tool-cmdline-common.c (common_parse_opt): Reject
 	empty strings for every numeric option by testing endptr == arg.
 

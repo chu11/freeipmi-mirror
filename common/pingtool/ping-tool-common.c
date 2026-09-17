@@ -230,6 +230,7 @@ _cmdline_parse (int argc,
           errno = 0;
           tmp = strtol (optarg, &endptr, 10);
           if (errno
+              || endptr == optarg
               || endptr[0] != '\0'
               || tmp > INT_MAX)
             ipmi_ping_err_exit ("count argument invalid");
@@ -241,6 +242,7 @@ _cmdline_parse (int argc,
           errno = 0;
           tmp = strtol (optarg, &endptr, 10);
           if (errno
+              || endptr == optarg
               || endptr[0] != '\0'
               || tmp > INT_MAX)
             ipmi_ping_err_exit ("interval argument invalid");
@@ -255,6 +257,7 @@ _cmdline_parse (int argc,
           errno = 0;
           tmp = strtol (optarg, &endptr, 10);
           if (errno
+              || endptr == optarg
               || endptr[0] != '\0'
               || tmp > INT_MAX)
             ipmi_ping_err_exit ("timeout argument invalid");
@@ -269,6 +272,7 @@ _cmdline_parse (int argc,
           errno = 0;
           tmp = strtol (optarg, &endptr, 10);
           if (errno
+              || endptr == optarg
               || endptr[0] != '\0')
             ipmi_ping_err_exit ("initial sequence number invalid");
           if (tmp < 0
