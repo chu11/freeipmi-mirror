@@ -1,5 +1,10 @@
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
+	* common/pingtool/ping-tool-common.c (_main_loop): Cast the count
+	to unsigned before comparing it to the sent counter.
+
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
 	* ipmiping/ipmiping.c (createpacket, parsepacket): Size and clear
 	the debug header buffer the same way rmcpping does.
 

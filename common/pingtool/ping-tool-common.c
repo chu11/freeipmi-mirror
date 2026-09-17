@@ -572,7 +572,7 @@ _main_loop (Ipmi_Ping_CreatePacket create,
 
   printf ("%s %s (%s)\n", pingtool_progname, pingtool_dest, pingtool_dest_ip);
 
-  while (pingtool_count == -1 || (pingtool_pkt_sent < pingtool_count))
+  while (pingtool_count == -1 || (pingtool_pkt_sent < (unsigned int)pingtool_count))
     {
       int rv, len, received = 0;
       uint8_t buf[IPMI_PING_MAX_PKT_LEN];
