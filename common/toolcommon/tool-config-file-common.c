@@ -4517,7 +4517,7 @@ config_file_parse (const char *filename,
               || ((tool_support & CONFIG_FILE_TOOL_IPMIPOWER) && tool_data)
               || ((tool_support & CONFIG_FILE_TOOL_IPMISELD) && tool_data)));
 
-  memset (config_file_options, '\0', sizeof (struct conffile_option));
+  memset (config_file_options, '\0', sizeof (config_file_options));
 
   /* set ignore options the tool doesn't care about */
 
