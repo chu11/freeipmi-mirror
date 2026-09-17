@@ -1,5 +1,10 @@
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
+	* bmc-watchdog/bmc-watchdog-argp.c (cmdline_parse): Reject empty
+	strings for every numeric option.
+
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-oem/ipmi-oem-common.c (ipmi_oem_parse_1_byte_field)
 	(ipmi_oem_parse_2_byte_field, ipmi_oem_parse_4_byte_field)
 	(ipmi_oem_parse_unsigned_int_range): Reject empty values.
