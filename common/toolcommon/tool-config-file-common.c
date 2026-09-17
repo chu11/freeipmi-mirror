@@ -1261,13 +1261,13 @@ _config_file_ipmiconsole_sol_payload_instance (conffile_t cf,
                                                void *app_ptr,
                                                int app_data)
 {
-  unsigned int *value;
+  int *value;
 
   assert (data);
   assert (optionname);
   assert (option_ptr);
 
-  value = (unsigned int *)option_ptr;
+  value = (int *)option_ptr;
 
   if (!IPMI_PAYLOAD_INSTANCE_VALID (data->intval))
     {
@@ -3970,7 +3970,7 @@ config_file_parse (const char *filename,
       },
       {
         "ipmiconsole-sol-payload-instance",
-        CONFFILE_OPTION_STRING,
+        CONFFILE_OPTION_INT,
         -1,
         _config_file_ipmiconsole_sol_payload_instance,
         1,

@@ -1,6 +1,14 @@
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
 	* common/toolcommon/tool-config-file-common.c (config_file_parse):
+	Declare ipmiconsole-sol-payload-instance as an integer option so its
+	callback sees the value.
+	(_config_file_ipmiconsole_sol_payload_instance): Store through an
+	int pointer.
+
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
+	* common/toolcommon/tool-config-file-common.c (config_file_parse):
 	Fix the names of the ipmi-pet-output-event-severity,
 	ipmi-pet-output-event-state and ipmi-sel-output-event-state options,
 	which were spelled with a doubled "output-" prefix.
