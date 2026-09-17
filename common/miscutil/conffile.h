@@ -116,10 +116,9 @@
  * Callback functions are required for all of the above option types
  * except for IGNORE and FLAG
  *
- * If an argument is missing a PARSE_NO_ARG error is returned.  If the
- * incorrect number of arguments is listed, PARSE_NUM_ARGS is
- * returned.  If an invalid argument is listed, PARSE_INVALID_ARG is
- * returned.
+ * If an argument is missing a PARSE_ARG_MISSING error is returned.  If
+ * too many arguments are listed, PARSE_ARG_TOOMANY is returned.  If an
+ * invalid argument is listed, PARSE_ARG_INVALID is returned.
  *
  */
 #define CONFFILE_OPTION_IGNORE                 0x00

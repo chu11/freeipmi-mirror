@@ -1,5 +1,10 @@
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
+	* common/miscutil/conffile.h: Refer to the argument parse error codes
+	by their real names in the OPTION TYPES comment.
+
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
 	* common/miscutil/conffile.c (_readline): Remove the unused
 	continuation counter.
 	(_parseline): Remove an inner rv declaration that shadowed the
