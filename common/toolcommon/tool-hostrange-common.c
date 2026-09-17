@@ -191,6 +191,19 @@ pstdout_setup (char **hosts, struct common_cmd_args *common_args)
                    "invalid number of hosts specified\n");
           goto cleanup;
         }
+
+      /* Eliminate before choosing output flags, since the flags depend
+       * on how many hosts are left.
+       */
+      if (common_args->eliminate)
+        {
+          if ((hosts_count = eliminate_nodes (hosts)) < 0)
+            goto cleanup;
+
+          /* nothing left to do, caller will exit */
+          if (!hosts_count)
+            return (0);
+        }
     }
   else /* inband communication, hosts_count = 1 */
     {
@@ -240,16 +253,6 @@ pstdout_setup (char **hosts, struct common_cmd_args *common_args)
                    pstdout_strerror (pstdout_errnum));
           goto cleanup;
         }
-    }
-
-  if (*hosts && common_args->eliminate)
-    {
-      int hosts_count_new;
-
-      if ((hosts_count_new = eliminate_nodes (hosts)) < 0)
-        goto cleanup;
-
-      hosts_count = hosts_count_new;
     }
 
   return (hosts_count);

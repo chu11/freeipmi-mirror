@@ -1,5 +1,11 @@
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
+	* common/toolcommon/tool-hostrange-common.c (pstdout_setup):
+	Eliminate undetected hosts before choosing the output flags, so the
+	flags reflect the number of hosts that will actually be run.
+
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
 	* common/toolcommon/tool-hostrange-common.c (FI_HOSTLIST_BUFLEN):
 	Raise from 1024 to 32768 to match pstdout, so --eliminate does not
 	fail on long lists of hosts that do not compress into ranges.
