@@ -1,5 +1,10 @@
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-fru/ipmi-fru-argp.c (cmdline_parse): Reject empty string for
+	--device-id.
+
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
 	* bmc-device/bmc-device-argp.c (cmdline_parse): Reject empty string
 	for --device-id.
 
