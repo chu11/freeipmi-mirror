@@ -1,5 +1,9 @@
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmiping.8.pre.in: Fix "Capabilitiesl" typo.
+
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
 	* common/pingtool/ping-tool-common.c (_cmdline_parse): Set the
 	verbose and debug flags instead of counting them.
 

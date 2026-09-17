@@ -32,7 +32,7 @@ ipmiping \- send IPMI Get Authentication Capability request to network hosts
 .SH "DESCRIPTION"
 .B ipmiping
 uses the IPMI Get Channel Authentication Capabilities request datagram
-to elicit an IPMI Get Channel Authentication Capabilitiesl response
+to elicit an IPMI Get Channel Authentication Capabilities response
 from a remote host.  The utility can be used to verify if a remote
 host supports IPMI.  The initial starting sequence number will be
 randomized.
