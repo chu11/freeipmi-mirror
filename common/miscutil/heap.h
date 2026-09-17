@@ -143,6 +143,7 @@ void * heap_insert (Heap h, void *x);
 /*
  *  Pushes data [x] onto the top of heap [h].
  *  Returns the data's ptr, or lsd_nomem_error() if insertion failed.
+ *  If the heap is full, returns NULL with errno set to ENOSPC.
  */
 
 void * heap_pop (Heap h);

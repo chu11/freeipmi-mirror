@@ -1,5 +1,10 @@
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
+	* common/miscutil/heap.h (heap_insert): Document that a full heap
+	returns NULL with errno set to ENOSPC.
+
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
 	* common/miscutil/conffile.h, common/miscutil/error.h,
 	common/miscutil/network.h: Do not use reserved identifiers for the
 	include guards.
