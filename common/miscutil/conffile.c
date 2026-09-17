@@ -346,6 +346,11 @@ _readline(conffile_t cf, char *linebuf, int linebuflen)
         cf->line_count++;
         memcpy(linebuf + len, buf, ret);
         len += ret;
+        /* The final line of a file may end at EOF without a newline;
+         * the trailing whitespace pass below is not guaranteed to
+         * write a terminator in that case.
+         */
+        linebuf[len] = '\0';
 
         len = _remove_trailing_whitespace(cf, linebuf, len);
         if (len == 0) {
