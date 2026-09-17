@@ -1,5 +1,10 @@
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
+	* common/parsecommon/parse-common.c (_parse_workaround_flags): Use
+	strtok_r() instead of strtok().
+
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
 	* common/miscutil/network.c: Include network.h so the definitions
 	are checked against their prototypes; drop the unused hostlist
 	includes.

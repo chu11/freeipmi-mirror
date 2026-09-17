@@ -143,6 +143,7 @@ _parse_workaround_flags (const char *str,
 {
   char buf[WORKAROUND_FLAG_BUFLEN+1];
   char *tok;
+  char *lasts;
 
   assert (str);
 
@@ -160,7 +161,7 @@ _parse_workaround_flags (const char *str,
   if (section_specific_workaround_flags)
     (*section_specific_workaround_flags) = 0;
 
-  tok = strtok (buf, ",");
+  tok = strtok_r (buf, ",", &lasts);
   while (tok)
     {
       if (command_line_flag
@@ -302,7 +303,7 @@ _parse_workaround_flags (const char *str,
         (*section_specific_workaround_flags) |= IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IPMIPING;
       else
         return (-1);
-      tok = strtok (NULL, ",");
+      tok = strtok_r (NULL, ",", &lasts);
     }
 
   return (0);
