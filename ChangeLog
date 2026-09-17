@@ -1,5 +1,11 @@
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
+	* ipmiseld/ipmiseld-argp.c (cmdline_parse): Reject empty strings for
+	--warning-threshold, --clear-threshold, --poll-interval and
+	--threadpool-count.
+
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
 	* ipmipower/ipmipower_prompt.c (_cmd_cipher_suite_id)
 	(_cmd_set_unsigned_int, _cmd_set_unsigned_int_ranged): Reject empty
 	strings.

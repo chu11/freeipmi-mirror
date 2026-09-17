@@ -210,6 +210,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       errno = 0;
       tmp = strtol (arg, &endptr, 0);
       if (errno
+          || endptr == arg
           || endptr[0] != '\0'
           || tmp < 0
           || tmp > 100)
@@ -223,6 +224,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       errno = 0;
       tmp = strtol (arg, &endptr, 0);
       if (errno
+          || endptr == arg
           || endptr[0] != '\0'
           || tmp < 0
           || tmp > 100)
@@ -257,6 +259,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       errno = 0;
       tmp = strtol (arg, &endptr, 0);
       if (errno
+          || endptr == arg
           || endptr[0] != '\0'
           || tmp <= 0
           || tmp > UINT_MAX)
@@ -300,6 +303,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       errno = 0;
       tmp = strtol (arg, &endptr, 0);
       if (errno
+          || endptr == arg
           || endptr[0] != '\0'
           || tmp <= 0
           || tmp > UINT_MAX)
