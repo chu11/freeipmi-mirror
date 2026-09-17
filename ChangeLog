@@ -1,5 +1,9 @@
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmiping.8.pre.in: Fix "exists" typo.
+
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmiping.8.pre.in: Fix "Capabilitiesl" typo.
 
 2026-09-16 Albert Chu <chu11@llnl.gov>
