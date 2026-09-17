@@ -403,7 +403,7 @@ _move_past_whitespace(conffile_t cf, char *linebuf)
     return linebuf;
 }
 
-int
+static int
 _parse_args(conffile_t cf,
             char *linebuf,
             char args[CONFFILE_MAX_ARGS][CONFFILE_MAX_ARGLEN])
