@@ -205,6 +205,7 @@ cmdline_parse (int key,
       errno = 0;
       tmp = strtol (arg, &endptr, 10);
       if (errno
+          || endptr == arg
           || endptr[0] != '\0'
           || tmp <= 0)
         {
@@ -217,6 +218,7 @@ cmdline_parse (int key,
       errno = 0;
       tmp = strtol (arg, &endptr, 10);
       if (errno
+          || endptr == arg
           || endptr[0] != '\0'
           || tmp <= 0)
         {
@@ -229,6 +231,7 @@ cmdline_parse (int key,
       errno = 0;
       tmp = strtol (arg, &endptr, 10);
       if (errno
+          || endptr == arg
           || endptr[0] != '\0'
           || tmp < 0)
         {
@@ -241,6 +244,7 @@ cmdline_parse (int key,
       errno = 0;
       tmp = strtol (arg, &endptr, 10);
       if (errno
+          || endptr == arg
           || endptr[0] != '\0'
           || tmp < 0)
         {
@@ -253,6 +257,7 @@ cmdline_parse (int key,
       errno = 0;
       tmp = strtol (arg, &endptr, 10);
       if (errno
+          || endptr == arg
           || endptr[0] != '\0'
           || tmp < 0)
         {
@@ -283,6 +288,7 @@ cmdline_parse (int key,
       errno = 0;
       tmp = strtol (arg, &endptr, 10);
       if (errno
+          || endptr == arg
           || endptr[0] != '\0'
           || tmp < 0)
         {
