@@ -1,5 +1,12 @@
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
+	* common/toolcommon/tool-config-file-common.c (config_file_parse):
+	Fix the names of the ipmi-pet-output-event-severity,
+	ipmi-pet-output-event-state and ipmi-sel-output-event-state options,
+	which were spelled with a doubled "output-" prefix.
+
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
 	* common/toolcommon/tool-cmdline-common.c (_init_common_cmd_args):
 	Initialize workaround_flags_sdr.
 
