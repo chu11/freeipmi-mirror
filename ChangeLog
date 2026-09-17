@@ -1,5 +1,11 @@
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
+	* common/parsecommon/parse-common.c (parse_kg): Reject hexadecimal
+	keys with an odd number of digits instead of guessing how the last
+	digit should be aligned.
+
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
 	* common/parsecommon/parse-common.c (_parse_workaround_flags): Use
 	strtok_r() instead of strtok().
 

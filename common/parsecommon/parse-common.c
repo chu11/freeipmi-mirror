@@ -362,27 +362,30 @@ parse_kg (void *out, unsigned int outlen, const char *in)
 
   if (!strncasecmp (in, "0x", 2))
     {
-      if (strlen (in) > IPMI_MAX_K_G_LENGTH*2+2)
-        return (-1);
+      size_t len;
+
       p = (char *)in + 2;
+      len = strlen (p);
+
+      /* Every byte is exactly two hex digits; a trailing lone digit is
+       * ambiguous (0xC or 0xC0?), so refuse it rather than guess.
+       */
+      if (len % 2 || len > IPMI_MAX_K_G_LENGTH*2)
+        return (-1);
+
       /* wipe buffer, '\0', possibly ok */
       memset (out, '\0', IPMI_MAX_K_G_LENGTH);
-      for (i = j = 0; i < strlen (p); i+=2, j++)
+      for (i = j = 0; i < len; i+=2, j++)
         {
           if (!isxdigit (p[i])
-              || (p[i+1] && !isxdigit (p[i+1])))
+              || !isxdigit (p[i+1]))
             return (-1);
           buf[0] = p[i];
-          if (p[i+1])
-            buf[1] = p[i+1];
-          else
-            buf[1] = 0;
+          buf[1] = p[i+1];
           buf[2] = '\0';
           errno = 0;
           (((uint8_t *)out)[j]) = (uint8_t)strtoul (buf, &q, 16);
-          if (errno
-              || ((p[i+1] && (q != buf + 2))
-                  || (!p[i+1] && (q != buf + 1))))
+          if (errno || q != buf + 2)
             return (-1);
           rv++;
         }
