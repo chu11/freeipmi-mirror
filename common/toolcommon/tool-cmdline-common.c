@@ -627,11 +627,25 @@ verify_common_cmd_args_outofband (struct common_cmd_args *common_args, int check
     }
   /* else, 2_0 password length was checked in argp_parse() previously */
 
-  if (common_args->retransmission_timeout > common_args->session_timeout)
-    {
-      fprintf (stderr, "retransmission timeout larger than session timeout\n");
-      exit (EXIT_FAILURE);
-    }
+  /* A zero timeout means "use the library default", so compare against
+   * the defaults the library will substitute.  The library rejects
+   * retransmission_timeout >= session_timeout.
+   */
+  {
+    unsigned int session_timeout = common_args->session_timeout;
+    unsigned int retransmission_timeout = common_args->retransmission_timeout;
+
+    if (!session_timeout)
+      session_timeout = IPMI_SESSION_TIMEOUT_DEFAULT;
+    if (!retransmission_timeout)
+      retransmission_timeout = IPMI_RETRANSMISSION_TIMEOUT_DEFAULT;
+
+    if (retransmission_timeout >= session_timeout)
+      {
+        fprintf (stderr, "retransmission timeout must be less than session timeout\n");
+        exit (EXIT_FAILURE);
+      }
+  }
 
   if (common_args->k_g_len)
     {

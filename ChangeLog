@@ -1,5 +1,12 @@
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
+	* common/toolcommon/tool-cmdline-common.c
+	(verify_common_cmd_args_outofband): Substitute the library defaults
+	for unset session and retransmission timeouts before comparing them,
+	and reject retransmission >= session like the library does.
+
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
 	* common/miscutil/conffile.c (_readline): NUL-terminate the line
 	buffer after copying, so a final line without a trailing newline does
 	not run into the remains of the previous line.
