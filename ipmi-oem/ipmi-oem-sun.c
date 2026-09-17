@@ -393,6 +393,7 @@ ipmi_oem_sun_set_led (ipmi_oem_state_data_t *state_data)
   errno = 0;
   value = strtol (state_data->prog_data->args->oem_options[0], &ptr, 10);
   if (errno
+      || ptr == state_data->prog_data->args->oem_options[0]
       || ptr[0] != '\0'
       || value < 0
       || value < IPMI_SDR_RECORD_ID_FIRST

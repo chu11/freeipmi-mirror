@@ -5718,6 +5718,7 @@ ipmi_oem_dell_get_instantaneous_power_consumption_data (ipmi_oem_state_data_t *s
       errno = 0;
       temp = strtoul (state_data->prog_data->args->oem_options[0], &endptr, 10);
       if (errno
+          || endptr == state_data->prog_data->args->oem_options[0]
           || endptr[0] != '\0'
           || temp > UCHAR_MAX)
         {
@@ -6506,6 +6507,7 @@ ipmi_oem_dell_set_power_capacity (ipmi_oem_state_data_t *state_data)
   errno = 0;
   temp = strtoul (state_data->prog_data->args->oem_options[0], &endptr, 10);
   if (errno
+      || endptr == state_data->prog_data->args->oem_options[0]
       || endptr[0] != '\0'
       || temp > USHRT_MAX)
     {
@@ -6793,6 +6795,7 @@ ipmi_oem_dell_power_monitoring_over_interval (ipmi_oem_state_data_t *state_data)
   errno = 0;
   temp = strtoul (state_data->prog_data->args->oem_options[0], &endptr, 10);
   if (errno
+      || endptr == state_data->prog_data->args->oem_options[0]
       || endptr[0] != '\0'
       || temp < IPMI_OEM_DELL_POWER_MONITORING_INTERVAL_MIN
       || temp > IPMI_OEM_DELL_POWER_MONITORING_INTERVAL_MAX)
@@ -7395,6 +7398,7 @@ ipmi_oem_dell_slot_power_toggle (ipmi_oem_state_data_t *state_data)
   errno = 0;
   temp = strtoul (state_data->prog_data->args->oem_options[0], &endptr, 10);
   if (errno
+      || endptr == state_data->prog_data->args->oem_options[0]
       || endptr[0] != '\0')
     {
       pstdout_fprintf (state_data->pstate,
@@ -7501,6 +7505,7 @@ ipmi_oem_dell_slot_power_control (ipmi_oem_state_data_t *state_data)
   errno = 0;
   temp = strtoul (state_data->prog_data->args->oem_options[2], &endptr, 10);
   if (errno
+      || endptr == state_data->prog_data->args->oem_options[2]
       || endptr[0] != '\0')
     {
       pstdout_fprintf (state_data->pstate,
@@ -8040,6 +8045,7 @@ ipmi_oem_dell_set_port_map (ipmi_oem_state_data_t *state_data)
   errno = 0;
   temp = strtoul (state_data->prog_data->args->oem_options[1], &endptr, 10);
   if (errno
+      || endptr == state_data->prog_data->args->oem_options[1]
       || endptr[0] != '\0')
     {
       pstdout_fprintf (state_data->pstate,

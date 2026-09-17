@@ -291,6 +291,7 @@ ipmi_oem_fujitsu_get_remote_storage_status (ipmi_oem_state_data_t *state_data)
                 &endptr,
                 0);
   if (errno
+      || endptr == state_data->prog_data->args->oem_options[0]
       || endptr[0] != '\0'
       || tmp < 0
       || tmp > UCHAR_MAX)
@@ -719,6 +720,7 @@ ipmi_oem_fujitsu_get_eeprom_version_info (ipmi_oem_state_data_t *state_data)
                 &endptr,
                 0);
   if (errno
+      || endptr == state_data->prog_data->args->oem_options[0]
       || endptr[0] != '\0'
       || tmp < 0
       || tmp > UCHAR_MAX)
@@ -1224,6 +1226,7 @@ ipmi_oem_fujitsu_get_sel_entry_long_text (ipmi_oem_state_data_t *state_data)
 
   value = strtol (state_data->prog_data->args->oem_options[0], &endptr, 0);
   if (errno
+      || endptr == state_data->prog_data->args->oem_options[0]
       || endptr[0] != '\0'
       || value < IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
       || value > IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)

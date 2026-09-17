@@ -502,6 +502,7 @@ ipmi_oem_quanta_get_processor_information (ipmi_oem_state_data_t *state_data)
       errno = 0;
       temp = strtoul (state_data->prog_data->args->oem_options[0], &endptr, 10);
       if (errno
+          || endptr == state_data->prog_data->args->oem_options[0]
           || endptr[0] != '\0'
           || temp > UCHAR_MAX
           || !temp)

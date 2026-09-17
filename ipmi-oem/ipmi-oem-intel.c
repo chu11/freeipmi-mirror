@@ -430,6 +430,7 @@ ipmi_oem_intel_get_smtp_config (ipmi_oem_state_data_t *state_data)
       errno = 0;
       temp = strtoul (state_data->prog_data->args->oem_options[0], &endptr, 10);
       if (errno
+          || endptr == state_data->prog_data->args->oem_options[0]
           || endptr[0] != '\0'
           || temp > UCHAR_MAX
           || !temp)
@@ -875,6 +876,7 @@ ipmi_oem_intel_set_smtp_config (ipmi_oem_state_data_t *state_data)
       errno = 0;
       temp = strtoul (state_data->prog_data->args->oem_options[0], &endptr, 10);
       if (!(errno
+            || endptr == state_data->prog_data->args->oem_options[0]
             || endptr[0] != '\0'
             || temp > UCHAR_MAX
             || !temp))
@@ -1204,6 +1206,7 @@ ipmi_oem_intel_set_power_restore_delay (ipmi_oem_state_data_t *state_data)
                  &endptr,
                  10);
   if (errno
+      || endptr == state_data->prog_data->args->oem_options[0]
       || endptr[0] != '\0'
       || tmp > IPMI_OEM_INTEL_S2600JF_POWER_RESTORE_DELAY_MAX)
     {

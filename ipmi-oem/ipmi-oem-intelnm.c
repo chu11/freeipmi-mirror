@@ -4623,6 +4623,7 @@ _parse_suspend_period_number (ipmi_oem_state_data_t *state_data,
   temp = strtoul (str, &ptr, 10);
 
   if (errno
+      || ptr == str
       || ptr[0] != '\0'
       || !temp
       || temp > IPMI_OEM_INTEL_NODE_MANAGER_POLICY_SUSPEND_PERIODS_MAX)
@@ -4680,6 +4681,7 @@ _parse_suspend_period_time (ipmi_oem_state_data_t *state_data,
   hours = strtoul (buf, &ptr, 10);
 
   if (errno
+      || ptr == buf
       || ptr[0] != '\0'
       || hours > 23)
     {
@@ -4696,6 +4698,7 @@ _parse_suspend_period_time (ipmi_oem_state_data_t *state_data,
   minutes = strtoul (minutes_ptr, &ptr, 10);
 
   if (errno
+      || ptr == minutes_ptr
       || ptr[0] != '\0'
       || minutes > 59)
     {

@@ -1815,6 +1815,7 @@ ipmi_oem_wistron_set_ipv6_trap_settings (ipmi_oem_state_data_t *state_data)
   errno = 0;
   indextmp = strtoul (state_data->prog_data->args->oem_options[0], &endptr, 0);
   if (errno
+      || endptr == state_data->prog_data->args->oem_options[0]
       || endptr[0] != '\0'
       || indextmp > UCHAR_MAX)
     {
@@ -2677,6 +2678,7 @@ ipmi_oem_wistron_set_dhcp_retry (ipmi_oem_state_data_t *state_data)
       errno = 0;
       value = strtoul (state_data->prog_data->args->oem_options[0], &endptr, 0);
       if (errno
+          || endptr == state_data->prog_data->args->oem_options[0]
           || endptr[0] != '\0'
           || value > UCHAR_MAX)
         {
@@ -2695,6 +2697,7 @@ ipmi_oem_wistron_set_dhcp_retry (ipmi_oem_state_data_t *state_data)
   errno = 0;
   value = strtoul (state_data->prog_data->args->oem_options[1], &endptr, 0);
   if (errno
+      || endptr == state_data->prog_data->args->oem_options[1]
       || endptr[0] != '\0'
       || value > UCHAR_MAX)
     {
@@ -2712,6 +2715,7 @@ ipmi_oem_wistron_set_dhcp_retry (ipmi_oem_state_data_t *state_data)
   errno = 0;
   value = strtoul (state_data->prog_data->args->oem_options[2], &endptr, 0);
   if (errno
+      || endptr == state_data->prog_data->args->oem_options[2]
       || endptr[0] != '\0'
       || value > UCHAR_MAX)
     {

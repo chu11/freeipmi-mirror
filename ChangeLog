@@ -1,5 +1,14 @@
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-dell.c, ipmi-oem/ipmi-oem-fujitsu.c,
+	ipmi-oem/ipmi-oem-intel.c, ipmi-oem/ipmi-oem-intelnm.c,
+	ipmi-oem/ipmi-oem-inventec.c, ipmi-oem/ipmi-oem-quanta.c,
+	ipmi-oem/ipmi-oem-sun.c, ipmi-oem/ipmi-oem-thirdparty.c,
+	ipmi-oem/ipmi-oem-wistron.c: Reject empty strings in every
+	vendor-specific numeric option parser.
+
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
 	* ipmidetect/ipmidetect-argp.c (cmdline_parse): Reject empty string
 	for --port.
 
