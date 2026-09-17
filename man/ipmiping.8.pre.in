@@ -39,7 +39,7 @@ randomized.
 
 .B ipmiping
 will return 0 to the environment if it receives atleast 1 response
-from the remote host.  Otherwise, it exists with a value of 1.
+from the remote host.  Otherwise, it exits with a value of 1.
 #include <@top_srcdir@/man/manpage-common-ping-options.man>
 .TP
 \fB\-r\fR \fIversion\fR
