@@ -1458,11 +1458,29 @@ pstdout_launch(const char *hostnames, Pstdout_Thread pstdout_func, void *arg)
   /* Special case */
   if (h_count == 1)
     {
-      if (_pstdout_state_init(&pstate, hostnames) < 0)
+      /* hostnames may still be a range expression (e.g. "node[5]"),
+       * so hand the callback the expanded name, as the threaded path
+       * does.
+       */
+      if (!(hitr = fi_hostlist_iterator_create(h)))
+        {
+          pstdout_errnum = PSTDOUT_ERR_OUTMEM;
+          goto cleanup;
+        }
+
+      if (!(host = fi_hostlist_next(hitr)))
+        {
+          if (pstdout_debug_flags & PSTDOUT_DEBUG_STANDARD)
+            fprintf(stderr, "fi_hostlist_next: %s\n", strerror(errno));
+          pstdout_errnum = PSTDOUT_ERR_INTERNAL;
+          goto cleanup;
+        }
+
+      if (_pstdout_state_init(&pstate, host) < 0)
         goto cleanup;
       pstate_init++;
 
-      exit_code = pstdout_func(&pstate, hostnames, arg);
+      exit_code = pstdout_func(&pstate, host, arg);
       pstdout_errnum = PSTDOUT_ERR_SUCCESS;
       goto cleanup;
     }
