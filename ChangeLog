@@ -1,5 +1,10 @@
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
+	* ipmidetect/ipmidetect-argp.c (cmdline_parse): Reject empty string
+	for --port.
+
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
 	* ipmiconsole/ipmiconsole-argp.c (cmdline_parse): Reject empty
 	strings for --sol-payload-instance and --tcpproxy-port.
 
