@@ -154,6 +154,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       errno = 0;
       tmp = strtoul (arg, &endptr, 10);
       if (errno
+          || endptr == arg
           || endptr[0] != '\0'
           || !tmp)
         {
@@ -167,6 +168,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       errno = 0;
       tmp = strtoul (arg, &endptr, 10);
       if (errno
+          || endptr == arg
           || endptr[0] != '\0'
           || tmp > USHRT_MAX)
         {
@@ -213,6 +215,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
             errno = 0;
             uvalue = strtoul (arg, &endptr, 0);
             if (errno
+                || endptr == arg
                 || endptr[0] != '\0')
               {
                 fprintf (stderr, "invalid specific trap argument\n");
