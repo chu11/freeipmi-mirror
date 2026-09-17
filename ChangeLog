@@ -1,5 +1,11 @@
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-dcmi/ipmi-dcmi-argp.c (cmdline_parse): Reject empty strings
+	for --exception-actions, --power-limit-requested,
+	--correction-time-limit and --statistics-sampling-period.
+
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config-argp.c (_ipmi_config_parse_channel_number):
 	Reject empty string.
 

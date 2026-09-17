@@ -210,6 +210,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       errno = 0;
       tmp = strtol (arg, &endptr, 0);
       if (errno
+          || endptr == arg
           || endptr[0] != '\0')
         {
           fprintf (stderr, "invalid value for exception actions\n");
@@ -227,6 +228,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       errno = 0;
       tmp = strtol (arg, &endptr, 10);
       if (errno
+          || endptr == arg
           || endptr[0] != '\0')
         {
           fprintf (stderr, "invalid value for power limit requested\n");
@@ -245,6 +247,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       errno = 0;
       lltmp = strtoll (arg, &endptr, 10);
       if (errno
+          || endptr == arg
           || endptr[0] != '\0')
         {
           fprintf (stderr, "invalid value for correction time limit\n");
@@ -263,6 +266,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       errno = 0;
       tmp = strtol (arg, &endptr, 10);
       if (errno
+          || endptr == arg
           || endptr[0] != '\0')
         {
           fprintf (stderr, "invalid value for statistics sampling period\n");
