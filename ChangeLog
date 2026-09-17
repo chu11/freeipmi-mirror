@@ -1,5 +1,12 @@
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
+	* common/pingtool/ping-tool-common.c (_sleep): Do not treat EINTR
+	from select() as fatal.
+	(_main_loop): Re-check the clock after sleeping instead of assuming
+	the full interval elapsed.
+
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
 	* common/miscutil/heap.h (heap_insert): Document that a full heap
 	returns NULL with errno set to ENOSPC.
 

@@ -306,7 +306,11 @@ _sleep (unsigned int len)
   tv.tv_sec = len;
   tv.tv_usec = 0;
 
-  if (select (1, NULL, NULL, NULL, &tv) < 0)
+  /* A signal cutting the sleep short is not an error; the caller
+   * re-checks the clock and sleeps again if needed.
+   */
+  if (select (1, NULL, NULL, NULL, &tv) < 0
+      && errno != EINTR)
     ipmi_ping_err_exit ("select: %s", strerror (errno));
 
   return (0);
@@ -582,12 +586,13 @@ _main_loop (Ipmi_Ping_CreatePacket create,
       uint8_t buf[IPMI_PING_MAX_PKT_LEN];
       time_t now;
 
-      /* wait if necessary */
+      /* wait if necessary; the sleep may return early on a signal, so
+       * loop back and re-check the clock rather than sending now */
       now = time (NULL);
       if ((now - last_send) < pingtool_interval)
         {
-          if (_sleep ((last_send + pingtool_interval - now)) < 0)
-            continue;
+          _sleep (last_send + pingtool_interval - now);
+          continue;
         }
 
       if ((len = create (pingtool_dest,
