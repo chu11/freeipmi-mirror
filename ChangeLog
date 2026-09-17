@@ -1,5 +1,11 @@
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
+	* common/toolcommon/tool-sdr-cache-common.c (_sdr_cache_create): Do
+	not create the default cache directory when --sdr-cache-file is
+	given.
+
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
 	* common/toolcommon/tool-hostrange-common.c (pstdout_setup):
 	Eliminate undetected hosts before choosing the output flags, so the
 	flags reflect the number of hosts that will actually be run.

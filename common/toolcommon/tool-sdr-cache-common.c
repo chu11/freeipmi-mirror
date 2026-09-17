@@ -528,8 +528,15 @@ _sdr_cache_create (ipmi_sdr_ctx_t ctx,
 
   memset (cachefilenamebuf, '\0', MAXPATHLEN+1);
 
-  if (_sdr_cache_create_directory (pstate, common_args->sdr_cache_directory) < 0)
-    goto cleanup;
+  /* With an explicit cache file the default cache directory is not
+   * used; _sdr_cache_get_cache_filename() checks the file's own
+   * directory.
+   */
+  if (!common_args->sdr_cache_file)
+    {
+      if (_sdr_cache_create_directory (pstate, common_args->sdr_cache_directory) < 0)
+        goto cleanup;
+    }
 
   if (_sdr_cache_get_cache_filename (pstate,
                                      hostname,
