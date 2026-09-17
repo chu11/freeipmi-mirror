@@ -1,5 +1,10 @@
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
+	* ipmiping/ipmiping.c (createpacket, parsepacket): Size and clear
+	the debug header buffer the same way rmcpping does.
+
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
 	* ipmiping/ipmiping.c (parsepacket): Don't end verbose output
 	lines with a trailing space.
 

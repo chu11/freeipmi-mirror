@@ -127,7 +127,9 @@ createpacket (const char *destination,
 
   if (debug)
     {
-      char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
+      char hdrbuf[DEBUG_UTIL_HDR_BUFLEN + 1];
+
+      memset (hdrbuf, '\0', DEBUG_UTIL_HDR_BUFLEN + 1);
 
       debug_hdr_cmd ((version == IPMI_PING_VERSION_1_5) ? DEBUG_UTIL_TYPE_IPMI_1_5 : DEBUG_UTIL_TYPE_IPMI_2_0,
                      DEBUG_UTIL_DIRECTION_REQUEST,
@@ -199,7 +201,9 @@ parsepacket (const char *destination,
 
   if (debug)
     {
-      char hdrbuf[DEBUG_UTIL_HDR_BUFLEN];
+      char hdrbuf[DEBUG_UTIL_HDR_BUFLEN + 1];
+
+      memset (hdrbuf, '\0', DEBUG_UTIL_HDR_BUFLEN + 1);
 
       debug_hdr_cmd ((version == IPMI_PING_VERSION_1_5) ? DEBUG_UTIL_TYPE_IPMI_1_5 : DEBUG_UTIL_TYPE_IPMI_2_0,
                      DEBUG_UTIL_DIRECTION_RESPONSE,
