@@ -1,5 +1,11 @@
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
+	* common/miscutil/secure.c (secure_malloc, secure_free): Remove the
+	dead MAP_LOCKED branch, which tested for a misspelled MAP_LOCK, and
+	guard the mmap()+mlock() branch on HAVE_MMAP.
+
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
 	* common/toolcommon/tool-sdr-cache-common.c (_sdr_cache_create)
 	(_sdr_cache_create_callback): Make static.
 

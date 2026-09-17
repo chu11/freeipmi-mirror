@@ -63,15 +63,11 @@ secure_malloc (size_t len)
 
   assert (len);
 
-#if defined(MAP_ANONYMOUS) && defined(MAP_LOCK) && HAVE_MMAP
-  if ((ptr = mmap (NULL,
-                   len,
-                   PROT_READ | PROT_WRITE,
-                   MAP_SHARED | MAP_ANONYMOUS | MAP_LOCKED,
-                   -1,
-                   0)) == MAP_FAILED)
-    return (NULL);
-#elif defined(MAP_ANONYMOUS) && !defined(MAP_LOCK)
+#if defined(MAP_ANONYMOUS) && HAVE_MMAP
+  /* mmap's MAP_LOCKED is deliberately not used: Linux documents it as
+   * best effort, with mmap() succeeding even if the pages could not
+   * be locked, whereas mlock() reports the failure.
+   */
   if ((ptr = mmap (NULL,
                    len,
                    PROT_READ | PROT_WRITE,
@@ -84,10 +80,10 @@ secure_malloc (size_t len)
       munmap (ptr, len);
       return (NULL);
     }
-#else /* !defined(MAP_ANONYMOUS) */
+#else /* !(defined(MAP_ANONYMOUS) && HAVE_MMAP) */
   if (!(ptr = malloc (len)))
     return (NULL);
-#endif /* !defined(MAP_ANONYMOUS) */
+#endif /* !(defined(MAP_ANONYMOUS) && HAVE_MMAP) */
 
 #if 0
   /* The following case could be implemented, however, we don't compile
@@ -128,15 +124,12 @@ secure_free (void *ptr, size_t len)
   if (ptr)
     {
       secure_memset (ptr, '\0', len);
-#if defined(MAP_ANONYMOUS) && defined(MAP_LOCK) && HAVE_MMAP
-      /* ignore potential error, void return func */
-      munmap (ptr, len);
-#elif defined(MAP_ANONYMOUS) && !defined(MAP_LOCK)
+#if defined(MAP_ANONYMOUS) && HAVE_MMAP
       /* ignore potential error, void return func */
       /* munlock is not necessary, munmap is sufficient */
       munmap (ptr, len);
-#else /* !defined(MAP_ANONYMOUS) */
+#else /* !(defined(MAP_ANONYMOUS) && HAVE_MMAP) */
       free (ptr);
-#endif /* !defined(MAP_ANONYMOUS) */
+#endif /* !(defined(MAP_ANONYMOUS) && HAVE_MMAP) */
     }
 }
