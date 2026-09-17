@@ -36,12 +36,9 @@ o In ipmi-config, drop support for
 o Globally, fix potential output sorting error with
   --consolidate-output.  Could alter output differently than before.
 
-o In bmc-device, ipmi-fru, and ipmi-oem, fix several typos in output.  Could
-  cause issues for those who script against the output.
-
-o In bmc-device, bmc-info, fix minor output errors (i.e. space
-  alignment, lack of newline, etc.).  Could cause issues for those who
-  script against output.
+o Fix many minor output errors (i.e. typos, space alignment, lack of
+  newline, etc.).  Could cause issues for those who script against
+  output.
 
 Remove Large Amount of Legacy Support
 -------------------------------------
@@ -199,8 +196,16 @@ Typo Fixes:
 -----------
 
 Fix large number of typo and minor output formattings.  The following
-have the potential to break against existing builds or scripts that
-relied on previous expected output.
+have the potential to break against existing builds or scripts or
+configs that relied on previous expected output.
+
+Config:
+-------
+
+o Fix following configuration field typos:
+  - ipmi-pet-output-output-event-severity -> ipmi-pet-output-event-severity
+    ipmi-pet-output-output-event-state -> ipmi-pet-output-event-state
+    ipmi-sel-output-output-event-state -> ipmi-sel-output-event-state
 
 Libraries:
 ----------
