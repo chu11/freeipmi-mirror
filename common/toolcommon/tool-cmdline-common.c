@@ -538,6 +538,7 @@ _init_common_cmd_args (struct common_cmd_args *common_args)
   common_args->workaround_flags_outofband = 0;
   common_args->workaround_flags_outofband_2_0 = 0;
   common_args->workaround_flags_inband = 0;
+  common_args->workaround_flags_sdr = 0;
   common_args->section_specific_workaround_flags = 0;
   common_args->debug = 0;
 

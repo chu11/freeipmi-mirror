@@ -1,5 +1,10 @@
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
+	* common/toolcommon/tool-cmdline-common.c (_init_common_cmd_args):
+	Initialize workaround_flags_sdr.
+
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
 	* common/toolcommon/tool-cmdline-common.c
 	(verify_common_cmd_args_outofband): Substitute the library defaults
 	for unset session and retransmission timeouts before comparing them,
