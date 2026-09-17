@@ -342,6 +342,7 @@ _setup (void)
   struct addrinfo ai_hints, *ai_res = NULL, *ai = NULL;
   uint16_t port = RMCP_PRIMARY_RMCP_PORT;
   char port_str[MAXPORTBUFLEN + 1];
+  int interface_not_found = 0;
   int ret;
 
   if (signal (SIGINT, _signal_handler) == SIG_ERR)
@@ -425,8 +426,15 @@ _setup (void)
 
                     }
 
+                  /* Interface may have an address of another family,
+                   * try the next answer.
+                   */
                   if (!ifa)
-                    ipmi_ping_err_exit ("Cannot find interface: %s", pingtool_interface);
+                    {
+                      freeifaddrs (ifaddr);
+                      interface_not_found++;
+                      continue;
+                    }
 
                   freeifaddrs (ifaddr);
                 }
@@ -499,8 +507,15 @@ _setup (void)
                     }
 		}
 
+	      /* Interface may have an address of another family,
+	       * try the next answer.
+	       */
 	      if (!ifa)
-		ipmi_ping_err_exit ("Cannot find interface: %s", pingtool_interface);
+		{
+		  freeifaddrs (ifaddr);
+		  interface_not_found++;
+		  continue;
+		}
 
 	      freeifaddrs (ifaddr);
             }
@@ -523,7 +538,11 @@ _setup (void)
     }
 
   if (!ai)
-    ipmi_ping_err_exit ("Error determining destination IP");
+    {
+      if (interface_not_found)
+        ipmi_ping_err_exit ("Cannot find interface: %s", pingtool_interface);
+      ipmi_ping_err_exit ("Error determining destination IP");
+    }
 
   freeaddrinfo (ai_res);
 }

@@ -1,5 +1,11 @@
 2026-09-16 Albert Chu <chu11@llnl.gov>
 
+	* common/pingtool/ping-tool-common.c (_setup): Try the next
+	getaddrinfo answer when the -I interface has no address of the
+	current answer's family instead of exiting.
+
+2026-09-16 Albert Chu <chu11@llnl.gov>
+
 	* bmc-watchdog/bmc-watchdog-argp.c (_usage): Add missing period to
 	the --config-file description.
 
