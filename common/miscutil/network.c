@@ -235,7 +235,7 @@ host_is_valid (const char *addr, const char *port, uint16_t *portptr)
       long tmp;
 
       errno = 0;
-      tmp = strtol (port, &endptr, 0);
+      tmp = strtol (port, &endptr, 10);
       if (errno
           || endptr[0] != '\0'
           || tmp <= 0

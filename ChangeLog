@@ -1,5 +1,10 @@
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
+	* common/miscutil/network.c (host_is_valid): Parse the port as
+	decimal rather than letting strtol() guess the base.
+
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
 	* common/miscutil/conffile.h (CONFFILE_MAX_LINELEN): Fix the 32778
 	typo; the intended value is 32768.
 
