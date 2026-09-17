@@ -308,7 +308,6 @@ static int
 _readline(conffile_t cf, char *linebuf, int linebuflen)
 {
     int ret, len = 0;
-    int continuation = 0;
     char buf[CONFFILE_MAX_LINELEN];
 
     if (linebuflen < CONFFILE_MAX_LINELEN) {
@@ -379,7 +378,6 @@ _readline(conffile_t cf, char *linebuf, int linebuflen)
         }
 
         if (linebuf[len-1] == '\\') {
-            continuation++;
             linebuf[len-1] = '\0';
             len--;
             continue;
@@ -516,7 +514,6 @@ _parseline(conffile_t cf, char *linebuf, int linebuflen)
     }
 
     for (i = 0; i < cf->options_len; i++) {
-        int rv;
         if (cf->flags & CONFFILE_FLAG_OPTION_CASESENSITIVE)
             rv = strcmp(cf->options[i].optionname, cf->optionname);
         else
