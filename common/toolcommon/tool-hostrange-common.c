@@ -35,7 +35,10 @@
 #include "pstdout.h"
 #include "tool-hostrange-common.h"
 
-#define FI_HOSTLIST_BUFLEN 1024
+/* Hostnames that do not compress into ranges (e.g. IP addresses) can
+ * need far more than a few hundred bytes; match pstdout's buffer size.
+ */
+#define FI_HOSTLIST_BUFLEN 32768
 
 static int
 eliminate_nodes (char **hosts)

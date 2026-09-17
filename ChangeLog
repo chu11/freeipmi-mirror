@@ -1,5 +1,11 @@
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
+	* common/toolcommon/tool-hostrange-common.c (FI_HOSTLIST_BUFLEN):
+	Raise from 1024 to 32768 to match pstdout, so --eliminate does not
+	fail on long lists of hosts that do not compress into ranges.
+
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
 	* common/toolcommon/tool-config-file-common.c (config_file_parse):
 	Give each legacy bmc-config-*, ipmi-chassis-config-*, pef-config-*,
 	ipmi-pef-config-* and ipmi-sensors-config-* alias its own count
