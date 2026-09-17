@@ -748,21 +748,22 @@ ipmi_ping_setup (int argc,
                  unsigned int max_sequence_number,
                  const char *options)
 {
-  char *valid_options = "hVciItvrsd:";
-  char *ptr;
+  const char *valid_options = "hVciItvrsd";
+  const char *ptr;
   char c;
 
   assert (argc >= 0);
   assert (argv);
   assert (options);
 
-  /* Check for valid options */
-  ptr = (char *)options;
+  /* Check for valid options; ':' is getopt's "takes an argument"
+   * marker, not an option letter */
+  ptr = options;
   while ((c = *ptr))
     {
-      if (!strchr (valid_options, c))
+      if (c != ':' && !strchr (valid_options, c))
         {
-          fprintf (stderr, "ipmi_ping_setup: invalid options listed");
+          fprintf (stderr, "ipmi_ping_setup: invalid options listed\n");
           exit (EXIT_FAILURE);
         }
       ptr++;

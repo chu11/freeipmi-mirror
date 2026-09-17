@@ -1,5 +1,11 @@
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
+	* common/pingtool/ping-tool-common.c (ipmi_ping_setup): Skip
+	getopt's ':' markers explicitly when validating the option string,
+	rather than relying on a ':' in the list of valid letters.
+
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
 	* common/pingtool/ping-tool-common.c (_sleep): Do not treat EINTR
 	from select() as fatal.
 	(_main_loop): Re-check the clock after sleeping instead of assuming
