@@ -226,6 +226,7 @@ ipmi_oem_parse_1_byte_field (ipmi_oem_state_data_t *state_data,
   temp = strtoul (value, &ptr, 10);
 
   if (errno
+      || ptr == value
       || ptr[0] != '\0'
       || temp > UCHAR_MAX)
     {
@@ -260,6 +261,7 @@ ipmi_oem_parse_2_byte_field (ipmi_oem_state_data_t *state_data,
   temp = strtoul (value, &ptr, 10);
 
   if (errno
+      || ptr == value
       || ptr[0] != '\0'
       || temp > USHRT_MAX)
     {
@@ -294,6 +296,7 @@ ipmi_oem_parse_4_byte_field (ipmi_oem_state_data_t *state_data,
   temp = strtoul (value, &ptr, 10);
 
   if (errno
+      || ptr == value
       || ptr[0] != '\0'
       || temp > 0xFFFFFFFF)
     {
@@ -331,6 +334,7 @@ ipmi_oem_parse_unsigned_int_range (ipmi_oem_state_data_t *state_data,
   temp = strtoul (value, &ptr, 10);
 
   if (errno
+      || ptr == value
       || ptr[0] != '\0')
     {
       pstdout_fprintf (state_data->pstate,
