@@ -69,7 +69,7 @@ int err_get_flags(void);
 /*
  * err_set_flags
  *
- * Sets the error lib flags to 'flags'.
+ * Sets the error lib flags to 'flags'.  The default is ERROR_STDERR.
  */
 void err_set_flags(int flags);
 

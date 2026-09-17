@@ -40,7 +40,7 @@
 #include "error.h"
 
 static char *err_prog = NULL;
-static int err_flags = 0;
+static int err_flags = ERROR_STDERR;
 static int exit_value = EXIT_FAILURE;
 
 #define ERROR_BUFLEN   1024
