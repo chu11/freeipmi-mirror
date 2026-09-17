@@ -343,6 +343,7 @@ _setup (void)
   uint16_t port = RMCP_PRIMARY_RMCP_PORT;
   char port_str[MAXPORTBUFLEN + 1];
   int interface_not_found = 0;
+  int bind_errno = 0;
   int ret;
 
   if (signal (SIGINT, _signal_handler) == SIG_ERR)
@@ -530,6 +531,7 @@ _setup (void)
 
       if (bind (pingtool_sockfd, pingtool_srcaddr, pingtool_srcaddr_len) < 0)
         {
+          bind_errno = errno;
           close (pingtool_sockfd);
           continue;
         }
@@ -539,6 +541,8 @@ _setup (void)
 
   if (!ai)
     {
+      if (bind_errno)
+        ipmi_ping_err_exit ("bind: %s", strerror (bind_errno));
       if (interface_not_found)
         ipmi_ping_err_exit ("Cannot find interface: %s", pingtool_interface);
       ipmi_ping_err_exit ("Error determining destination IP");
