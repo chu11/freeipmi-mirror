@@ -1,5 +1,10 @@
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
+	* common/pingtool/ping-tool-common.c (ipmi_ping_setup): Line
+	buffer stdout so output appears as it happens when piped.
+
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
 	* common/pingtool/ping-tool-common.c (_setup): Report the bind
 	error when no answer could be bound.
 

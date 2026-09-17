@@ -768,6 +768,11 @@ ipmi_ping_setup (int argc,
       ptr++;
     }
 
+  /* Responses are normally read a line at a time, e.g. through tee or
+   * a pipe; don't hold them until exit.
+   */
+  setvbuf (stdout, NULL, _IOLBF, 0);
+
   _err_init (argv[0]);
   _cmdline_parse (argc,
                   argv,
