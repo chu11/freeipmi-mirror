@@ -461,7 +461,7 @@ _setup_sdr_cache_directory (pstdout_state_t pstate,
   return (0);
 }
 
-void
+static void
 _sdr_cache_create_callback (uint8_t sdr_version,
                             uint16_t record_count,
                             uint32_t most_recent_addition_timestamp,
@@ -510,7 +510,7 @@ _sdr_cache_create_directory (pstdout_state_t pstate,
   return (0);
 }
 
-int
+static int
 _sdr_cache_create (ipmi_sdr_ctx_t ctx,
                    pstdout_state_t pstate,
                    ipmi_ctx_t ipmi_ctx,
