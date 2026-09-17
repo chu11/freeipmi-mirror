@@ -263,7 +263,7 @@ _cmdline_parse (int argc,
           pingtool_timeout = (int)tmp;
           break;
         case 'v':
-          pingtool_verbose++;
+          pingtool_verbose = 1;
           break;
         case 's':
           errno = 0;
@@ -278,7 +278,7 @@ _cmdline_parse (int argc,
           pingtool_initial_sequence_number = (int)tmp;
           break;
         case 'd':
-          pingtool_debug++;
+          pingtool_debug = 1;
           break;
         default:
           ipmi_ping_err_exit ("Command line option error");
