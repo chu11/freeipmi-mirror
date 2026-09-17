@@ -137,7 +137,7 @@
  * the conffile parser.
  */
 
-#define CONFFILE_MAX_LINELEN                  32778
+#define CONFFILE_MAX_LINELEN                  32768
 #define CONFFILE_MAX_OPTIONNAMELEN              256
 #define CONFFILE_MAX_ARGS                        64
 #define CONFFILE_MAX_ARGLEN                    1024

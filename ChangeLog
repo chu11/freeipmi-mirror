@@ -1,5 +1,10 @@
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
+	* common/miscutil/conffile.h (CONFFILE_MAX_LINELEN): Fix the 32778
+	typo; the intended value is 32768.
+
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
 	* common/miscutil/conffile.h: Refer to the argument parse error codes
 	by their real names in the OPTION TYPES comment.
 
