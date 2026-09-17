@@ -1,5 +1,11 @@
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
+	* common/toolcommon/tool-config-file-common.c
+	(_config_file_ipmiconsole_escape_char): Require the value to be
+	exactly one character.
+
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
 	* common/toolcommon/tool-config-file-common.c (config_file_parse):
 	Clear the whole option array, not just its first element.
 

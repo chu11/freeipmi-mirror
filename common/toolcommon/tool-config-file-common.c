@@ -1247,6 +1247,12 @@ _config_file_ipmiconsole_escape_char (conffile_t cf,
 
   chr = (char *)option_ptr;
 
+  if (!data->string[0] || data->string[1])
+    {
+      fprintf (stderr, "Config File Error: %s must be exactly one character\n", optionname);
+      exit (EXIT_FAILURE);
+    }
+
   *chr = data->string[0];
   return (0);
 }
