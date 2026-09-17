@@ -180,6 +180,7 @@ _ipmi_config_parse_channel_number (char *arg,
   errno = 0;
   tmp = strtol (arg, &endptr, 0);
   if (errno
+      || endptr == arg
       || endptr[0] != '\0')
     {
       fprintf (stderr, "invalid channel number\n");

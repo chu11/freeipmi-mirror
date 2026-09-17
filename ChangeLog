@@ -1,5 +1,10 @@
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config-argp.c (_ipmi_config_parse_channel_number):
+	Reject empty string.
+
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-chassis/ipmi-chassis-argp.c (cmdline_parse): Reject empty
 	string for --chassis-identify.
 
