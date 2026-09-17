@@ -206,6 +206,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       errno = 0;
       tmp = strtol (arg, &endptr, 0);
       if (errno
+          || endptr == arg
           || endptr[0] != '\0'
           || !IPMI_PAYLOAD_INSTANCE_VALID (tmp))
         {
@@ -241,6 +242,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       errno = 0;
       tmp = strtol (arg, &endptr, 0);
       if (errno
+          || endptr == arg
           || endptr[0] != '\0'
           || tmp <= 0
           || tmp > 65535)
