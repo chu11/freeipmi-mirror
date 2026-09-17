@@ -382,7 +382,7 @@ parsepacket (const char *destination,
                             fiid_obj_errormsg (obj_cmd));
       per_message_authentication = val;
 
-      printf (", auth: none=%s md2=%s md5=%s password=%s oem=%s anon=%s null=%s non-null=%s user=%s permsg=%s ",
+      printf (", auth: none=%s md2=%s md5=%s password=%s oem=%s anon=%s null=%s non-null=%s user=%s permsg=%s",
               _setstr (none), _setstr (md2), _setstr (md5),
               _setstr (straight_password_key),_setstr (oem),
               _setstr (anonymous_login), _setstr (null_username),
@@ -405,7 +405,7 @@ parsepacket (const char *destination,
                                 fiid_obj_errormsg (obj_cmd));
           k_g = val;
 
-          printf ("k_g=%s ipmi_v2.0_extended_capabilities_available=%s ",
+          printf (" k_g=%s ipmi_v2.0_extended_capabilities_available=%s",
                   _setstr (k_g),
                   _setstr (ipmi_v20_extended_capabilities_available));
 
@@ -425,7 +425,7 @@ parsepacket (const char *destination,
                                     fiid_obj_errormsg (obj_cmd));
               ipmi_v20 = val;
 
-              printf ("ipmi_v1.5=%s ipmi_v2.0=%s ", _setstr (ipmi_v15), _setstr (ipmi_v20));
+              printf (" ipmi_v1.5=%s ipmi_v2.0=%s", _setstr (ipmi_v15), _setstr (ipmi_v20));
             }
         }
     }
