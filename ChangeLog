@@ -1,5 +1,10 @@
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
+	* man/rmcpping.8.pre.in: Use the "System Commands" section title
+	like the other tools.
+
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
 	* man/rmcpping.8.pre.in: Fix the .TH title.
 
 2026-09-17 Albert Chu <chu11@llnl.gov>
