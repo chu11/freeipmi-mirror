@@ -46,10 +46,8 @@
 #include <sys/types.h>
 #include <sys/select.h>
 #include <sys/socket.h>
-#include <sys/param.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <net/if.h>
 #include <netdb.h>
 #if HAVE_GETOPT_H
 #include <getopt.h>
@@ -85,13 +83,6 @@
 #define IPMI_PING_MAX_PKT_LEN      1024
 #define IPMI_PING_VERSION_1_5_STR  "1.5"
 #define IPMI_PING_VERSION_2_0_STR  "2.0"
-
-/* getopt */
-extern char *optarg;
-extern int optind, opterr, optopt;
-
-/* gethostbyname */
-extern int h_errno;
 
 /* cmdline options */
 static int pingtool_count = -1;
