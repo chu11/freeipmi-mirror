@@ -134,6 +134,7 @@ common_parse_opt (int key,
       errno = 0;
       tmp = strtol (arg, &endptr, 0);
       if (errno
+          || endptr == arg
           || endptr[0] != '\0'
           || tmp <= 0
           || (unsigned long)tmp > UINT16_MAX)
@@ -155,6 +156,7 @@ common_parse_opt (int key,
       errno = 0;
       tmp = strtol (arg, &endptr, 0);
       if (errno
+          || endptr == arg
           || endptr[0] != '\0'
           || tmp <= 0
           || (unsigned long)tmp > UINT8_MAX)
@@ -168,6 +170,7 @@ common_parse_opt (int key,
       errno = 0;
       tmp = strtol (arg, &endptr, 0);
       if (errno
+          || endptr == arg
           || endptr[0] != '\0'
           || tmp < 0
           || (unsigned long)tmp > UINT8_MAX
@@ -183,6 +186,7 @@ common_parse_opt (int key,
       errno = 0;
       tmp = strtol (arg, &endptr, 0);
       if (errno
+          || endptr == arg
           || endptr[0] != '\0'
           || tmp < 0
           || (unsigned long)tmp > UINT8_MAX)
@@ -323,6 +327,7 @@ common_parse_opt (int key,
       errno = 0;
       tmp = strtol (arg, &endptr, 0);
       if (errno
+          || endptr == arg
           || endptr[0] != '\0'
           || tmp <= 0
           || (unsigned long)tmp > UINT_MAX)
@@ -336,6 +341,7 @@ common_parse_opt (int key,
       errno = 0;
       tmp = strtol (arg, &endptr, 0);
       if (errno
+          || endptr == arg
           || endptr[0] != '\0'
           || tmp <= 0
           || (unsigned long)tmp > UINT_MAX)
@@ -357,6 +363,7 @@ common_parse_opt (int key,
       errno = 0;
       tmp = strtol (arg, &endptr, 0);
       if (errno
+          || endptr == arg
           || endptr[0] != '\0'
           || tmp < IPMI_CIPHER_SUITE_ID_MIN
           || tmp > IPMI_CIPHER_SUITE_ID_MAX)
@@ -453,6 +460,7 @@ common_parse_opt (int key,
       errno = 0;
       tmp = strtol (arg, &endptr, 0);
       if (errno
+          || endptr == arg
           || endptr[0] != '\0'
           || !IPMI_UTC_OFFSET_VALID (tmp))
         {
@@ -475,6 +483,7 @@ common_parse_opt (int key,
       errno = 0;
       tmp = strtol (arg, &endptr, 10);
       if (errno
+          || endptr == arg
           || endptr[0] != '\0'
           || (tmp < PSTDOUT_FANOUT_MIN)
           || (tmp > PSTDOUT_FANOUT_MAX))

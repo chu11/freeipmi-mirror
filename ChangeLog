@@ -1,5 +1,10 @@
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
+	* common/toolcommon/tool-cmdline-common.c (common_parse_opt): Reject
+	empty strings for every numeric option by testing endptr == arg.
+
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
 	* man/manpage-common-ping-options.man: Document the valid -s range.
 	* common/pingtool/ping-tool-common.c (_output_usage): List the -r
 	values and default.
