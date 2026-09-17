@@ -233,6 +233,7 @@ ipmipower_oem_power_cmd_check_extra_arg (const char *extra_arg,
       errno = 0;
       tmp = strtol (extra_arg, &endptr, 0);
       if (errno
+          || endptr == extra_arg
           || endptr[0] != '\0')
         {
           if (errbuf && errbuflen)
