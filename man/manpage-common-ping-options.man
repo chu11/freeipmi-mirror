@@ -29,8 +29,12 @@ Time to wait for a response, in seconds. Default is five seconds.
 Verbose output.
 .TP
 \fB\-s\fR \fInum\fR
-Specify an initial starting sequence number.  The default is to use a
-random initial sequence number.
+Specify an initial starting sequence number.  Valid values are 0
+through 63 for
+.B ipmiping
+and 0 through 254 for
+.B rmcpping.
+The default is to use a random initial sequence number.
 .TP
 \fB\-d\fR
 Turn on debugging.

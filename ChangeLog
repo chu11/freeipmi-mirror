@@ -1,5 +1,11 @@
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
+	* man/manpage-common-ping-options.man: Document the valid -s range.
+	* common/pingtool/ping-tool-common.c (_output_usage): List the -r
+	values and default.
+
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
 	* man/rmcpping.8.pre.in: Include manpage-common-ping-origin.man
 	instead of duplicating the ORIGIN section.
 

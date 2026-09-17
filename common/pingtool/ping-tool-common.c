@@ -175,7 +175,7 @@ _output_usage (const char *options)
   if (strchr (options, 'v'))
     fprintf (stderr, "  -v   verbose output\n");
   if (strchr (options, 'r'))
-    fprintf (stderr, "  -r   protocol version\n");
+    fprintf (stderr, "  -r   protocol version (1.5 or 2.0, default 1.5)\n");
   if (strchr (options, 's'))
     fprintf (stderr, "  -s   starting sequence number\n");
   if (strchr (options, 'd'))
