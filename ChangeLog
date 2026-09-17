@@ -1,5 +1,11 @@
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
+	* common/miscutil/conffile.c (conffile_parse): Only close the file
+	descriptor if one is open, and reset it to -1 afterwards so a reused
+	handle cannot close a stale descriptor.
+
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
 	* common/toolcommon/pstdout.c (pstdout_launch): In the single host
 	case, pass the callback the expanded hostname rather than the
 	original hostrange string.

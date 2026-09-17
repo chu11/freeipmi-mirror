@@ -778,8 +778,11 @@ conffile_parse(conffile_t cf,
     retval = 0;
 
  cleanup:
-    /* ignore potential error, just return result to user */
-    close(cf->fd);
+    if (cf->fd >= 0) {
+        /* ignore potential error, just return result to user */
+        close(cf->fd);
+        cf->fd = -1;
+    }
     return retval;
 }
 
