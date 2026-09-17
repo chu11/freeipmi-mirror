@@ -271,17 +271,6 @@ parsepacket (const char *destination,
       goto cleanup;
     }
 
-  if ((ret = ipmi_check_completion_code_success (obj_cmd)) < 0)
-    ipmi_ping_err_exit ("ipmi_check_comp_code: %s", strerror (errno));
-
-  if (!ret)
-    {
-      if (debug)
-        fprintf (stderr, "%s(%d): comp_code failed\n", __FUNCTION__, __LINE__);
-      rv = 0;
-      goto cleanup;
-    }
-
   if (FIID_OBJ_GET (obj_lan_msg_hdr,
                     "rq_seq",
                     &val) < 0)
@@ -294,6 +283,29 @@ parsepacket (const char *destination,
       if (debug)
         fprintf (stderr, "%s(%d): req_seq failed\n", __FUNCTION__, __LINE__);
       rv = 0;
+      goto cleanup;
+    }
+
+  if ((ret = ipmi_check_completion_code_success (obj_cmd)) < 0)
+    ipmi_ping_err_exit ("ipmi_check_comp_code: %s", strerror (errno));
+
+  /* An error response still tells us an IPMI host answered; it just
+   * carries none of the capability fields.
+   */
+  if (!ret)
+    {
+      uint8_t comp_code;
+
+      if (FIID_OBJ_GET (obj_cmd,
+                        "comp_code",
+                        &val) < 0)
+        ipmi_ping_err_exit ("fiid_obj_get: 'comp_code': %s",
+                            fiid_obj_errormsg (obj_cmd));
+      comp_code = val;
+
+      printf ("response received from %s: rq_seq=%u, completion code=0x%02X\n",
+              from, req_seq, comp_code);
+      rv = 1;
       goto cleanup;
     }
 

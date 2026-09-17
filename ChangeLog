@@ -1,3 +1,8 @@
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
+	* ipmiping/ipmiping.c (parsepacket): Report a response with a
+	non-zero completion code instead of waiting for a timeout.
+
 2026-09-16 Albert Chu <chu11@llnl.gov>
 
 	* common/pingtool/ping-tool-common.c (_setup): Try the next
