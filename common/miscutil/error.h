@@ -25,8 +25,8 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA.
 \*****************************************************************************/
 
-#ifndef _ERROR_H
-#define _ERROR_H
+#ifndef ERROR_H
+#define ERROR_H
 
 #if HAVE_CONFIG_H
 #include "config.h"
@@ -94,4 +94,4 @@ void err_output(const char *fmt, ...);
  */
 void err_exit(const char *fmt, ...);
 
-#endif /* _ERROR_H */
+#endif /* ERROR_H */

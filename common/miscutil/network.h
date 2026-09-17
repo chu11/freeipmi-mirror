@@ -26,8 +26,8 @@
 
 /* Convenience network functions */
 
-#ifndef _NETWORK_H
-#define _NETWORK_H
+#ifndef NETWORK_H
+#define NETWORK_H
 
 #include <stdint.h>
 
@@ -61,4 +61,4 @@ int host_is_valid (const char *addr, const char *port, uint16_t *portptr);
  */
 int host_is_localhost (const char *host);
 
-#endif /* !_NETWORK_H */
+#endif /* !NETWORK_H */

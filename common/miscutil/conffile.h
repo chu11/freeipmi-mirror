@@ -24,8 +24,8 @@
  *  with Whatsup.  If not, see <http://www.gnu.org/licenses/>.
 \*****************************************************************************/
 
-#ifndef _CONFFILE_H
-#define _CONFFILE_H 1
+#ifndef CONFFILE_H
+#define CONFFILE_H 1
 
 /*
  * This is a generic configuration file parsing library.  Some library
@@ -418,4 +418,4 @@ CONFFILE_OPTION_FUNC(conffile_double);
  */
 CONFFILE_OPTION_FUNC(conffile_string);
 
-#endif /* _CONFFILE_H */
+#endif /* CONFFILE_H */

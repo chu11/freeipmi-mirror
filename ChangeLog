@@ -1,5 +1,11 @@
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
+	* common/miscutil/conffile.h, common/miscutil/error.h,
+	common/miscutil/network.h: Do not use reserved identifiers for the
+	include guards.
+
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
 	* common/miscutil/error.c (err_flags): Default to ERROR_STDERR so
 	messages are not silently dropped before err_set_flags() is called.
 	* common/miscutil/error.h (err_set_flags): Document the default.
