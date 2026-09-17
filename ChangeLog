@@ -1,5 +1,12 @@
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
+	* common/toolcommon/tool-config-file-common.c (config_file_parse):
+	Give each legacy bmc-config-*, ipmi-chassis-config-*, pef-config-*,
+	ipmi-pef-config-* and ipmi-sensors-config-* alias its own count
+	variable instead of sharing the ipmi-config-* one.
+
+2026-09-17 Albert Chu <chu11@llnl.gov>
+
 	* common/toolcommon/tool-config-file-common.c
 	(_config_file_ipmiconsole_escape_char): Require the value to be
 	exactly one character.
