@@ -1377,7 +1377,7 @@ _pstdout_sigint(int s)
   if ((rc = pthread_mutex_lock(&pstdout_states_mutex)))
     {
       if (pstdout_debug_flags & PSTDOUT_DEBUG_STANDARD)
-        fprintf(stderr, "fi_hostlist_ranged_string: %s\n", strerror(rc));
+        fprintf(stderr, "pthread_mutex_lock: %s\n", strerror(rc));
     }
 
   if (list_for_each(pstdout_states, _pstdout_sigint_finish_output, NULL) < 0)

@@ -1,5 +1,11 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* common/toolcommon/pstdout.c (_pstdout_sigint): Name
+	pthread_mutex_lock, not fi_hostlist_ranged_string, in the lock
+	failure message.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* common/toolcommon/pstdout.h (pstdout_printf, pstdout_vprintf)
 	(pstdout_fprintf, pstdout_vfprintf): Document that the return value
 	is the length of the last complete line output, not the length of
