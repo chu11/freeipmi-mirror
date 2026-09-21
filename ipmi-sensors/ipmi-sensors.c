@@ -141,9 +141,16 @@ _sdr_repository_info (ipmi_sensors_state_data_t *state_data)
     }
   free_space = val;
 
-  pstdout_printf (state_data->pstate,
-                  "Free space remaining                              : %u bytes\n",
-                  free_space);
+  if (free_space == IPMI_SDR_FREE_SPACE_UNSPECIFIED)
+    pstdout_printf (state_data->pstate,
+                    "Free space remaining                              : unspecified\n");
+  else if (free_space == IPMI_SDR_FREE_SPACE_64KB_OR_MORE)
+    pstdout_printf (state_data->pstate,
+                    "Free space remaining                              : 64 KB or more\n");
+  else
+    pstdout_printf (state_data->pstate,
+                    "Free space remaining                              : %u bytes\n",
+                    free_space);
 
   if (FIID_OBJ_GET (obj_cmd_rs, "most_recent_addition_timestamp", &val) < 0)
     {

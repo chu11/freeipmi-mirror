@@ -37,6 +37,10 @@ extern "C" {
 #define IPMI_SDR_RECORD_ID_FIRST 0x0000
 #define IPMI_SDR_RECORD_ID_LAST  0xFFFF
 
+/* Get SDR Repository Info free space special values */
+#define IPMI_SDR_FREE_SPACE_64KB_OR_MORE 0xFFFE
+#define IPMI_SDR_FREE_SPACE_UNSPECIFIED  0xFFFF
+
 #define IPMI_SDR_READ_ENTIRE_RECORD_BYTES_TO_READ  0xFF
 
 /*

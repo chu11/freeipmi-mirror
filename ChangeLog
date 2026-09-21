@@ -1,5 +1,15 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/cmds/ipmi-sdr-repository-cmds.h
+	(IPMI_SDR_FREE_SPACE_64KB_OR_MORE, IPMI_SDR_FREE_SPACE_UNSPECIFIED):
+	New defines for the Get SDR Repository Info free space special
+	values.
+	* ipmi-sensors/ipmi-sensors.c (_sdr_repository_info): Print
+	"unspecified" and "64 KB or more" for them instead of 65535 and
+	65534 bytes.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sensors/ipmi-sensors.c (_output_sensor): When
 	ipmi_sensor_read returns 0 with IPMI_SENSOR_READ_ERR_SDR_ENTRY_ERROR,
 	i.e. the record's event/reading type code is not one the library
