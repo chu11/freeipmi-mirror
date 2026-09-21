@@ -1,5 +1,14 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-dcmi.8.pre.in: Document --exception-actions as taking a
+	single ACTION value rather than a BITMASK, list the named values
+	with their numeric equivalents, and note that decimal or hex
+	numbers are accepted and reserved values are rejected.
+	* ipmi-dcmi/ipmi-dcmi-argp.c (cmdline_options): Likewise in the
+	--help text.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-dcmi/ipmi-dcmi.c (_dcmi_specification_conformance): Read the
 	conformance version and parameter revision from a caller supplied
 	response object instead of issuing Get DCMI Capability Info

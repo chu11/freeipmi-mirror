@@ -120,11 +120,14 @@ options
 listed below.  If one or more options below are not specified, current
 configuration will be utilized.
 .TP
-\fB\-\-exception\-actions\fR=\fIBITMASK\fR
-Specify exception actions for set power limit configuration.  Special
-case allowable values: NO_ACTION, HARD_POWER_OFF_SYSTEM,
-LOG_EVENT_TO_SEL_ONLY.  Other values (e.g. 0x02 through 0x10) are OEM
-dependent.  Used with the \fB\-\-set\-power\-limit\fR option.
+\fB\-\-exception\-actions\fR=\fIACTION\fR
+Specify exception action for set power limit configuration.  The
+action is a single value, not a bitmask.  It may be given by name:
+NO_ACTION (0x00), HARD_POWER_OFF_SYSTEM (0x01), or
+LOG_EVENT_TO_SEL_ONLY (0x11); or as a decimal or hexadecimal number.
+Values 0x02 through 0x10 are OEM dependent.  All other values are
+reserved and rejected.  Used with the \fB\-\-set\-power\-limit\fR
+option.
 .TP
 \fB\-\-power\-limit\-requested\fR=\fIWATTS\fR
 Specify power limit for set power limit configuration.  Input is
