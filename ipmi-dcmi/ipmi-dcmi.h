@@ -83,7 +83,7 @@ struct ipmi_dcmi_arguments
 
 typedef struct ipmi_dcmi_prog_data
 {
-  char *progname;
+  const char *progname;
   struct ipmi_dcmi_arguments *args;
 } ipmi_dcmi_prog_data_t;
 
