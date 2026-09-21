@@ -192,7 +192,7 @@ _read_record_list (int *flag,
           || value <= IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
           || value >= IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
         {
-          fprintf (stderr, "invalid record number: %ld\n", value);
+          fprintf (stderr, "invalid record number: %s\n", tok);
           exit (EXIT_FAILURE);
         }
 
@@ -256,7 +256,7 @@ _read_record_id_range (int *flag,
       || value <= IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
       || value >= IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
     {
-      fprintf (stderr, "invalid range record number: %ld\n", value);
+      fprintf (stderr, "invalid range record number: %s\n", range1_str);
       exit (EXIT_FAILURE);
     }
 
@@ -271,7 +271,7 @@ _read_record_id_range (int *flag,
       || value <= IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
       || value >= IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
     {
-      fprintf (stderr, "invalid range record number: %ld\n", value);
+      fprintf (stderr, "invalid range record number: %s\n", range2_str);
       exit (EXIT_FAILURE);
     }
 
@@ -614,7 +614,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           || value <= IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
           || value >= IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
         {
-          fprintf (stderr, "invalid record count: %ld\n", value);
+          fprintf (stderr, "invalid record count: %s\n", arg);
           exit (EXIT_FAILURE);
         }
 

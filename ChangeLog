@@ -1,5 +1,11 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sel/ipmi-sel-argp.c (_read_record_list, _read_record_id_range,
+	cmdline_parse): Report the offending input string rather than the
+	half-parsed strtol value in invalid record number/count errors.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sel/ipmi-sel.c (_display_sel_records): Name
 	ipmi_sel_ctx_set_separator, not ipmi_sel_parse, in the error
 	output when it fails.
