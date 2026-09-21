@@ -112,8 +112,9 @@ List sensor types.
 \fB\-\-tail\fR=\fIcount\fR
 Display approximately the last \fIcount\fR SEL records.  The display
 count is calculated by approximating the record ids of the last SEL
-records.  It's correctness depends highly on the SEL implementation by
-the vendor.
+records.  Its correctness depends highly on the SEL implementation by
+the vendor; more or fewer than \fIcount\fR records may be displayed
+if record ids are not evenly spaced.
 .TP
 \fB\-\-clear\fR
 Clear SEL.
