@@ -176,7 +176,7 @@ common_parse_opt (int key,
           || (unsigned long)tmp > UINT8_MAX
           || !IPMI_CHANNEL_NUMBER_VALID (tmp))
         {
-          fprintf (stderr, "invalid target channel numbern");
+          fprintf (stderr, "invalid target channel number\n");
           exit (EXIT_FAILURE);
         }
       common_args->target_channel_number = tmp;
@@ -191,7 +191,7 @@ common_parse_opt (int key,
           || tmp < 0
           || (unsigned long)tmp > UINT8_MAX)
         {
-          fprintf (stderr, "invalid target slave addressn");
+          fprintf (stderr, "invalid target slave address\n");
           exit (EXIT_FAILURE);
         }
       common_args->target_slave_address = tmp;

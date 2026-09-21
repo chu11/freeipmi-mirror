@@ -1,5 +1,11 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* common/toolcommon/tool-cmdline-common.c (common_parse_opt): Fix
+	missing backslash in the newline of the invalid target channel
+	number and target slave address messages.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* common/toolcommon/tool-sensor-common.c
 	(calculate_column_widths_ignored_sdr_cache): Initialize the
 	record_id width too.
