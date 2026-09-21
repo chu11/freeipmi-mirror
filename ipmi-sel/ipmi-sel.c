@@ -1570,7 +1570,7 @@ _display_sel_records (ipmi_sel_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "ipmi_sel_parse: %s\n",
+                       "ipmi_sel_ctx_set_separator: %s\n",
                        ipmi_sel_ctx_errormsg (state_data->sel_ctx));
       goto cleanup;
     }

@@ -1,5 +1,11 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sel/ipmi-sel.c (_display_sel_records): Name
+	ipmi_sel_ctx_set_separator, not ipmi_sel_parse, in the error
+	output when it fails.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sel/ipmi-sel.c (_sel_parse_callback): Apply --exclude-display
 	and --exclude-display-range independently; the range was ignored
 	when both were given.
