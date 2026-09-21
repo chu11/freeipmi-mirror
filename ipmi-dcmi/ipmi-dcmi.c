@@ -187,7 +187,7 @@ _supported_dcmi_capabilities (ipmi_dcmi_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'mandatory_platform_capabilities.identification_support': %s\n",
+                       "fiid_obj_get: 'parameter_revision': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
@@ -411,7 +411,7 @@ _mandatory_platform_attributes (ipmi_dcmi_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_get: 'mandatory_platform_capabilities.identification_support': %s\n",
+                       "fiid_obj_get: 'parameter_revision': %s\n",
                        fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }

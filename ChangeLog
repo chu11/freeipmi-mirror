@@ -1,5 +1,12 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-dcmi/ipmi-dcmi.c (_supported_dcmi_capabilities)
+	(_mandatory_platform_attributes): Fix error messages that named
+	'mandatory_platform_capabilities.identification_support' when the
+	get of 'parameter_revision' failed.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-dcmi/ipmi-dcmi-argp.c (cmdline_parse): Add comment noting
 	the spec is not clear on how to clear the asset tag, that
 	overwriting it with spaces is assumed to be what is desired, and
