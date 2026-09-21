@@ -875,7 +875,7 @@ _get_enhanced_system_power_statistics_attributes (ipmi_dcmi_state_data_t *state_
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "invalid number of supported rolling average time periods reported: %u vs. %u\n",
+                       "invalid number of supported rolling average time periods reported: %u vs. %d\n",
                        (*number_of_supported_rolling_average_time_periods),
                        len);
       goto cleanup;
@@ -895,7 +895,7 @@ _get_enhanced_system_power_statistics_attributes (ipmi_dcmi_state_data_t *state_
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "rolling average time period length invalid: %u\n",
+                       "rolling average time period length invalid: %d\n",
                        len);
       goto cleanup;
     }
@@ -1635,7 +1635,7 @@ _sensor_info_output (ipmi_dcmi_state_data_t *state_data,
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "invalid sdr_record_ids length returned: %u\n",
+                           "invalid sdr_record_ids length returned: %d\n",
                            sdr_record_ids_len);
           goto cleanup;
         }
@@ -1644,7 +1644,7 @@ _sensor_info_output (ipmi_dcmi_state_data_t *state_data,
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "invalid sdr_record_ids returned: %u > %u\n",
+                           "invalid sdr_record_ids returned: %u > %d\n",
                            number_of_record_ids_in_this_response,
                            (sdr_record_ids_len / 2));
           goto cleanup;

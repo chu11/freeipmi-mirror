@@ -1,5 +1,11 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-dcmi/ipmi-dcmi.c
+	(_get_enhanced_system_power_statistics_attributes)
+	(_sensor_info_output): Print int lengths with %d, not %u.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-dcmi/ipmi-dcmi.c (_output_power_statistics): Output N/A for
 	the current, minimum, maximum and average power readings when the
 	BMC reports power measurement is not active, rather than printing
