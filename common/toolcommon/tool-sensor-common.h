@@ -82,7 +82,8 @@ int parse_sensor_types (const char *special_string,
 
 int list_sensor_types (void);
 
-/* 1 if all valid, 0 if not, -1 on error */
+/* 0 if all valid, -1 if not (with a message to stderr naming the
+ * first invalid type) */
 int valid_sensor_types (char sensor_types[][MAX_SENSOR_TYPES_STRING_LENGTH+1],
                         unsigned int sensor_types_length);
 

@@ -1,5 +1,10 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* common/toolcommon/tool-sensor-common.h (valid_sensor_types):
+	Document the return value the function actually has.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* common/toolcommon/tool-event-common.c (_sel_parse_record_string):
 	Name ipmi_sel_parse_read_record_string, the function actually
 	called, in the error message.
