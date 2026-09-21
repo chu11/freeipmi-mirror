@@ -1,5 +1,11 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-dcmi/ipmi-dcmi.c
+	(_get_enhanced_system_power_statistics_attributes)
+	(_sensor_info_output): Print int lengths with %d, not %u.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-dcmi.8.pre.in: Fix wording: drop the stray "tag" from
 	the management controller identifier string options, "affectively"
 	-> "effectively", and remove the claim that DCMI is often referred
