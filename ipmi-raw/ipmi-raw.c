@@ -294,6 +294,15 @@ ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
           goto cleanup;
         }
 
+      if (send_len > IPMI_RAW_MAX_ARGS)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "Too many hex bytes on line %u\n",
+                           line_count);
+          goto cleanup;
+        }
+
       if (!IPMI_NET_FN_RQ_VALID (bytes_rq[1]))
         {
           pstdout_fprintf (state_data->pstate,
