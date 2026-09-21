@@ -1,5 +1,12 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sel/ipmi-sel-argp.c (cmdline_options): Give --sensor-types
+	and --exclude-sensor-types their own argp group numbers; they
+	shared 46/47 with the date range options, interleaving the two
+	pairs in --help.  Renumber the following options sequentially.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sel/ipmi-sel_.h (ipmi_sel_prog_data_t): Declare progname
 	const; it only ever points at argv[0].
 
