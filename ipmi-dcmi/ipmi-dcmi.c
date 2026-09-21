@@ -996,21 +996,32 @@ _get_time_duration_info (ipmi_dcmi_state_data_t *state_data,
   return (rv);
 }
 
-/* return 1 on output success, 0 on no output, -1 on error */
+/* return 1 on output success, 0 on no output, -1 on error.  If
+ * prior_output is set, a blank separator line is printed before any
+ * output.
+ */
 static int
-_enhanced_system_power_statistics_attributes (ipmi_dcmi_state_data_t *state_data)
+_enhanced_system_power_statistics_attributes (ipmi_dcmi_state_data_t *state_data,
+                                              int prior_output)
 {
   uint8_t rolling_average_time_periods[IPMI_DCMI_ROLLING_AVERAGE_TIME_PERIOD_BUFLEN];
   uint8_t number_of_supported_rolling_average_time_periods = 0;
+  int ret;
   int i;
 
   assert (state_data);
 
-  if (_get_enhanced_system_power_statistics_attributes (state_data,
-                                                        &number_of_supported_rolling_average_time_periods,
-                                                        rolling_average_time_periods,
-                                                        IPMI_DCMI_ROLLING_AVERAGE_TIME_PERIOD_BUFLEN) < 0)
+  if ((ret = _get_enhanced_system_power_statistics_attributes (state_data,
+                                                               &number_of_supported_rolling_average_time_periods,
+                                                               rolling_average_time_periods,
+                                                               IPMI_DCMI_ROLLING_AVERAGE_TIME_PERIOD_BUFLEN)) < 0)
     return (-1);
+
+  if (!ret || !number_of_supported_rolling_average_time_periods)
+    return (0);
+
+  if (prior_output)
+    pstdout_printf (state_data->pstate, "\n");
 
   for (i = 0; i < number_of_supported_rolling_average_time_periods; i++)
     {
@@ -1069,10 +1080,7 @@ get_dcmi_capability_info (ipmi_dcmi_state_data_t *state_data)
 
   if (parameter_revision >= 0x02)
     {
-      if (ret)
-        pstdout_printf (state_data->pstate, "\n");
-
-      if ((ret = _enhanced_system_power_statistics_attributes (state_data)) < 0)
+      if (_enhanced_system_power_statistics_attributes (state_data, ret) < 0)
         return (-1);
     }
 
@@ -1923,16 +1931,24 @@ get_enhanced_system_power_statistics (ipmi_dcmi_state_data_t *state_data)
 {
   uint8_t rolling_average_time_periods[IPMI_DCMI_ROLLING_AVERAGE_TIME_PERIOD_BUFLEN];
   uint8_t number_of_supported_rolling_average_time_periods = 0;
+  int ret;
   int i;
 
   assert (state_data);
 
-  if (_get_enhanced_system_power_statistics_attributes (state_data,
-                                                        &number_of_supported_rolling_average_time_periods,
-                                                        rolling_average_time_periods,
-                                                        IPMI_DCMI_ROLLING_AVERAGE_TIME_PERIOD_BUFLEN) < 0)
+  if ((ret = _get_enhanced_system_power_statistics_attributes (state_data,
+                                                               &number_of_supported_rolling_average_time_periods,
+                                                               rolling_average_time_periods,
+                                                               IPMI_DCMI_ROLLING_AVERAGE_TIME_PERIOD_BUFLEN)) < 0)
     return (-1);
 
+  if (!ret || !number_of_supported_rolling_average_time_periods)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "Enhanced System Power Statistics not supported\n");
+      return (-1);
+    }
 
   for (i = 0; i < number_of_supported_rolling_average_time_periods; i++)
     {
@@ -1944,6 +1960,9 @@ get_enhanced_system_power_statistics (ipmi_dcmi_state_data_t *state_data)
                                    &time_duration,
                                    &time_duration_units_str) < 0)
         return (-1);
+
+      if (i)
+        pstdout_printf (state_data->pstate, "\n");
 
       pstdout_printf (state_data->pstate,
                       "Power Statistics for Rolling Average Time Period %u %s\n",

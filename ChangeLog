@@ -1,5 +1,19 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-dcmi/ipmi-dcmi.c (get_enhanced_system_power_statistics):
+	Report "Enhanced System Power Statistics not supported" and fail
+	instead of silently printing nothing when the BMC does not support
+	the capability parameter or advertises no rolling average time
+	periods.  Separate consecutive time periods with a blank line.
+	(_enhanced_system_power_statistics_attributes): Take a
+	prior_output flag and print the separating blank line only when
+	there is something to output, so --get-dcmi-capability-info no
+	longer ends with a stray blank line on BMCs without the parameter.
+	Return 0 when nothing is output.
+	(get_dcmi_capability_info): Update caller.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-dcmi/ipmi-dcmi.c (get_asset_tag): Never request more asset
 	tag bytes than the buffer can hold and warn that output is
 	truncated if the BMC reports a longer tag.  A 64 byte tag, which
