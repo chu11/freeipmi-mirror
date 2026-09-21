@@ -1,5 +1,9 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* common/toolcommon/pstdout.c (_pstdout_sigint): Make static.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* common/miscutil/timeval.h (timeval_sub): Document that the result
 	is clamped to zero when a <= b.
 

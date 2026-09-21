@@ -1366,7 +1366,7 @@ _pstdout_sigint_finish_output(void *x, void *arg)
   return 0;
 }
 
-void
+static void
 _pstdout_sigint(int s)
 {
   int rc;
