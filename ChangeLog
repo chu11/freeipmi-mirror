@@ -1,5 +1,12 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-dcmi/ipmi-dcmi-argp.c (cmdline_options): Name the
+	--activate-deactivate-power-limit argument OPERATION in --help to
+	match the man page; it was ACTION, which now belongs to
+	--exception-actions.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-dcmi.8.pre.in: Document --exception-actions as taking a
 	single ACTION value rather than a BITMASK, list the named values
 	with their numeric equivalents, and note that decimal or hex
