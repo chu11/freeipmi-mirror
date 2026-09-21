@@ -1,5 +1,12 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* bmc-device/bmc-device.c (set_sdr_repository_time, set_sel_time):
+	Require strptime() to consume the whole time argument rather than
+	only checking for a NULL return, so trailing garbage is rejected
+	instead of silently ignored.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sel/ipmi-sel-argp.c (_parse_date): New helper; try each
 	accepted date format and require strptime() to consume the whole
 	string, resetting struct tm before each attempt.

@@ -1270,7 +1270,10 @@ set_sdr_repository_time (bmc_device_state_data_t *state_data)
     t = time (NULL);
   else
     {
-      if (!strptime (args->set_sdr_repository_time_arg, "%m/%d/%Y - %H:%M:%S", &tm))
+      char *endptr;
+
+      if (!(endptr = strptime (args->set_sdr_repository_time_arg, "%m/%d/%Y - %H:%M:%S", &tm))
+          || endptr[0] != '\0')
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
@@ -1404,7 +1407,10 @@ set_sel_time (bmc_device_state_data_t *state_data)
     t = time (NULL);
   else
     {
-      if (!strptime (args->set_sel_time_arg, "%m/%d/%Y - %H:%M:%S", &tm))
+      char *endptr;
+
+      if (!(endptr = strptime (args->set_sel_time_arg, "%m/%d/%Y - %H:%M:%S", &tm))
+          || endptr[0] != '\0')
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
