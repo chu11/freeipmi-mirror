@@ -1,5 +1,12 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sensors/ipmi-sensors-detailed-output.c
+	(_detailed_output_hysteresis, _output_entity_id_and_instance)
+	(_detailed_output_fru_device_locator_record): Name the function
+	that actually failed in the error messages.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sensors/ipmi-sensors.c (_display_sensors): Use goto
 	cleanup like the rest of the function instead of a bare return.
 

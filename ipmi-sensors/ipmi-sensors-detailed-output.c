@@ -817,7 +817,7 @@ _detailed_output_hysteresis (ipmi_sensors_state_data_t *state_data,
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "ipmi_sdr_parse_sensor_reading_ranges: %s\n",
+                       "ipmi_sdr_parse_sensor_capabilities: %s\n",
                        ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       goto cleanup;
     }
@@ -1876,7 +1876,7 @@ _output_entity_id_and_instance (ipmi_sensors_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "ipmi_sdr_parse_entity_id_and_instance: %s\n",
+                       "ipmi_sdr_parse_entity_id_instance_type: %s\n",
                        ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
       return (-1);
     }
@@ -1992,7 +1992,7 @@ _detailed_output_fru_device_locator_record (ipmi_sensors_state_data_t *state_dat
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "ipmi_sdr_parse_generic_device_locator_parameters: %s\n",
+                       "ipmi_sdr_parse_fru_device_locator_parameters: %s\n",
                        ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
 
       return (-1);
