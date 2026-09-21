@@ -287,6 +287,45 @@ _read_record_id_range (int *flag,
   free (range2_str);
 }
 
+/* return 1 if parsed as ISO 8601
+ * return 0 if parsed as any other accepted format
+ * return -1 if not parseable
+ */
+static int
+_parse_date (const char *str, struct tm *tm)
+{
+  static const char *formats[] =
+    {
+      "%FT%T",
+      "%m/%d/%Y",
+      "%b/%d/%Y",
+      "%m-%d-%Y",
+      "%b-%d-%Y",
+      NULL,
+    };
+  unsigned int i;
+
+  assert (str);
+  assert (tm);
+
+  for (i = 0; formats[i]; i++)
+    {
+      char *endptr;
+
+      /* A failed attempt may leave fields partially set, and Posix
+       * says individual calls need not clear/set all portions of
+       * 'struct tm', so start each attempt from a clean slate.
+       */
+      memset (tm, '\0', sizeof (struct tm));
+
+      if ((endptr = strptime (str, formats[i], tm))
+          && endptr[0] == '\0')
+        return (i == 0 ? 1 : 0);
+    }
+
+  return (-1);
+}
+
 static void
 _read_date_range (int *flag,
                   uint32_t *range1,
@@ -301,7 +340,7 @@ _read_date_range (int *flag,
   unsigned int dash_count = 0;
   time_t t;
   struct tm tm;
-  int range2_is_iso8601 = 1;
+  int range2_is_iso8601;
 
   assert (flag);
   assert (range1);
@@ -416,34 +455,16 @@ _read_date_range (int *flag,
   *split_ptr = '\0';
   range1_str = range_str;
 
-  /* Posix says individual calls need not clear/set all portions of
-   * 'struct tm', thus passing 'struct tm' between functions could
-   * have issues.  So we need to memset.
-   */
-  memset (&tm, '\0', sizeof (struct tm));
-
   if (!strcasecmp (range1_str, "now"))
     t = time (NULL);
   else
     {
-      if (!strptime (range1_str, "%FT%T", &tm))
+      if (_parse_date (range1_str, &tm) < 0)
         {
-          if (!strptime (range1_str, "%m/%d/%Y", &tm))
-            {
-              if (!strptime (range1_str, "%b/%d/%Y", &tm))
-                {
-                  if (!strptime (range1_str, "%m-%d-%Y", &tm))
-                    {
-                      if (!strptime (range1_str, "%b-%d-%Y", &tm))
-                        {
-                          fprintf (stderr,
-                                   "Invalid time specification '%s'.\n",
-                                   range1_str);
-                          exit (EXIT_FAILURE);
-                        }
-                    }
-                }
-            }
+          fprintf (stderr,
+                   "Invalid time specification '%s'.\n",
+                   range1_str);
+          exit (EXIT_FAILURE);
         }
 
       /* strptime() does not set tm_isdst.  Set so mktime() will not
@@ -462,35 +483,19 @@ _read_date_range (int *flag,
 
   (*range1) = (uint32_t)t;
 
-  /* Posix says individual calls need not clear/set all portions of
-   * 'struct tm', thus passing 'struct tm' between functions could
-   * have issues.  So we need to memset.
-   */
-  memset (&tm, '\0', sizeof (struct tm));
-
   if (!strcasecmp (range2_str, "now"))
-    t = time (NULL);
+    {
+      t = time (NULL);
+      range2_is_iso8601 = 0;
+    }
   else
     {
-      if (!strptime (range2_str, "%FT%T", &tm))
+      if ((range2_is_iso8601 = _parse_date (range2_str, &tm)) < 0)
         {
-          range2_is_iso8601 = 0;
-          if (!strptime (range2_str, "%m/%d/%Y", &tm))
-            {
-              if (!strptime (range2_str, "%b/%d/%Y", &tm))
-                {
-                  if (!strptime (range2_str, "%m-%d-%Y", &tm))
-                    {
-                      if (!strptime (range2_str, "%b-%d-%Y", &tm))
-                        {
-                          fprintf (stderr,
-                                   "Invalid time specification '%s'.\n",
-                                   range2_str);
-                          exit (EXIT_FAILURE);
-                        }
-                    }
-                }
-            }
+          fprintf (stderr,
+                   "Invalid time specification '%s'.\n",
+                   range2_str);
+          exit (EXIT_FAILURE);
         }
 
       /* strptime() does not set tm_isdst.  Set so mktime() will not

@@ -1,5 +1,13 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sel/ipmi-sel-argp.c (_parse_date): New helper; try each
+	accepted date format and require strptime() to consume the whole
+	string, resetting struct tm before each attempt.
+	(_read_date_range): Use it, rejecting dates with trailing garbage
+	that were previously accepted with the tail silently ignored.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-raw/ipmi-raw.h (ipmi_raw_prog_data_t): Declare progname
 	const; it only ever points at argv[0].
 
