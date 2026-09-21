@@ -33,7 +33,6 @@ enum ipmi_sensors_argp_option_keys
     QUIET_READINGS_KEY = 'q',
     RECORD_IDS_KEY = 'r',
     EXCLUDE_RECORD_IDS_KEY = 'R',
-    SENSOR_TYPE_KEY = 163,
     SENSOR_TYPES_KEY = 't',
     EXCLUDE_SENSOR_TYPES_KEY = 'T',
     LIST_SENSOR_TYPES_KEY = 'L',

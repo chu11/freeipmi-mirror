@@ -1,5 +1,11 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sensors/ipmi-sensors.h (ipmi_sensors_argp_option_keys):
+	Remove SENSOR_TYPE_KEY, left over from the old --sensor-type
+	option and no longer referenced.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sensors/ipmi-sensors.c (_display_sensors): Do not shadow
 	the record id loop variable with the shared sensor loop variable.
 
