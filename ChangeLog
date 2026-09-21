@@ -1,5 +1,10 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-dcmi/ipmi-dcmi.h (ipmi_dcmi_prog_data_t): Declare progname
+	const; it only ever points at argv[0].
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-dcmi/ipmi-dcmi.c
 	(_get_enhanced_system_power_statistics_attributes)
 	(_sensor_info_output): Print int lengths with %d, not %u.
