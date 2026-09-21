@@ -91,7 +91,7 @@ int get_sensor_units_output_string (pstdout_state_t pstate,
                                     ipmi_sdr_ctx_t sdr_ctx,
                                     char *sensor_units_buf,
                                     unsigned int sensor_units_buflen,
-                                    unsigned int abbreviated_units_flag);
+                                    unsigned int non_abbreviated_units_flag);
 
 int sensor_type_listed (pstdout_state_t pstate,
                         uint8_t sensor_type,

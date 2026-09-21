@@ -1,5 +1,12 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* common/toolcommon/tool-sensor-common.h
+	(get_sensor_units_output_string): Name the last parameter
+	non_abbreviated_units_flag, as the definition and all callers treat
+	it.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* common/toolcommon/tool-sensor-common.h (valid_sensor_types):
 	Document the return value the function actually has.
 
