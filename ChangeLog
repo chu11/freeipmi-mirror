@@ -1,5 +1,10 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* common/toolcommon/tool-common.c (ipmi_open): Add the missing
+	newline to the ipmi_ctx_create error message.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* common/toolcommon/tool-cmdline-common.c (common_parse_opt): Fix
 	missing backslash in the newline of the invalid target channel
 	number and target slave address messages.

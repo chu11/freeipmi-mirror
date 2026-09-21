@@ -60,7 +60,7 @@ ipmi_open (const char *progname,
     {
       PSTDOUT_FPRINTF (pstate,
                        stderr,
-                       "ipmi_ctx_create: %s",
+                       "ipmi_ctx_create: %s\n",
                        strerror (errno));
       goto cleanup;
     }
