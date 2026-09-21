@@ -1,5 +1,10 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-raw/ipmi-raw.c (ipmi_raw_stream): Include the line number
+	when a request fails to send.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-raw/ipmi-raw-argp.c (ipmi_raw_argp_parse): Reject --no-session
 	when no hostname is given or the driver is LAN_2_0, with a message
 	that says what the option requires.

@@ -319,8 +319,9 @@ ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "ipmi_cmd_raw: %s\n",
-                           ipmi_ctx_errormsg (state_data->ipmi_ctx));
+                           "ipmi_cmd_raw: %s on line %u\n",
+                           ipmi_ctx_errormsg (state_data->ipmi_ctx),
+                           line_count);
           goto cleanup;
         }
 
