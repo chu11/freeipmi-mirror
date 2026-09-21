@@ -163,7 +163,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
 
       if (strlen (cmd_args->set_asset_tag_arg) > IPMI_DCMI_MAX_ASSET_TAG_LENGTH)
         {
-          fprintf (stderr, "asset tag invalid length\n");
+          fprintf (stderr,
+                   "asset tag invalid length, maximum %u bytes\n",
+                   IPMI_DCMI_MAX_ASSET_TAG_LENGTH);
           exit (EXIT_FAILURE);
         }
       break;
@@ -176,7 +178,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       /* IPMI_DCMI_MAX_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_LENGTH includes NUL char, so subtract 1 in check */
       if (strlen (cmd_args->set_management_controller_identifier_string_arg) > (IPMI_DCMI_MAX_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_LENGTH - 1))
         {
-          fprintf (stderr, "management controller identifier string invalid length\n");
+          fprintf (stderr,
+                   "management controller identifier string invalid length, maximum %u bytes\n",
+                   IPMI_DCMI_MAX_MANAGEMENT_CONTROLLER_IDENTIFIER_STRING_LENGTH - 1);
           exit (EXIT_FAILURE);
         }
       break;

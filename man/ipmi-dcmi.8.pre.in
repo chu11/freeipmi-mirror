@@ -88,13 +88,14 @@ Get DCMI capability information.
 Get asset tag.
 .TP
 \fB\-\-set\-asset\-tag\fR=\fISTRING\fR
-Set asset tag.
+Set asset tag.  The string may be at most 63 bytes long.
 .TP
 \fB\-\-get\-management\-controller\-identifier\-string\fR
 Get management controller identifier string tag.
 .TP
 \fB\-\-set\-management\-controller\-identifier\-string\fR=\fISTRING\fR
-Set management controller identifier string tag.
+Set management controller identifier string tag.  The string may be
+at most 63 bytes long.
 .TP
 \fB\-\-get\-dcmi\-sensor\-info\fR
 Get DCMI sensor information.
