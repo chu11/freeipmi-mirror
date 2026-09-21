@@ -1840,21 +1840,41 @@ _output_power_statistics (ipmi_dcmi_state_data_t *state_data,
     }
   power_measurement = val;
 
-  pstdout_printf (state_data->pstate,
-                  "Current Power                        : %u Watts\n",
-                  current_power);
+  /* The power readings are not meaningful when power measurement is
+   * not active.
+   */
+  if (power_measurement)
+    {
+      pstdout_printf (state_data->pstate,
+                      "Current Power                        : %u Watts\n",
+                      current_power);
 
-  pstdout_printf (state_data->pstate,
-                  "Minimum Power over sampling duration : %u watts\n",
-                  minimum_power_over_sampling_duration);
+      pstdout_printf (state_data->pstate,
+                      "Minimum Power over sampling duration : %u watts\n",
+                      minimum_power_over_sampling_duration);
 
-  pstdout_printf (state_data->pstate,
-                  "Maximum Power over sampling duration : %u watts\n",
-                  maximum_power_over_sampling_duration);
+      pstdout_printf (state_data->pstate,
+                      "Maximum Power over sampling duration : %u watts\n",
+                      maximum_power_over_sampling_duration);
 
-  pstdout_printf (state_data->pstate,
-                  "Average Power over sampling duration : %u watts\n",
-                  average_power_over_sampling_duration);
+      pstdout_printf (state_data->pstate,
+                      "Average Power over sampling duration : %u watts\n",
+                      average_power_over_sampling_duration);
+    }
+  else
+    {
+      pstdout_printf (state_data->pstate,
+                      "Current Power                        : N/A\n");
+
+      pstdout_printf (state_data->pstate,
+                      "Minimum Power over sampling duration : N/A\n");
+
+      pstdout_printf (state_data->pstate,
+                      "Maximum Power over sampling duration : N/A\n");
+
+      pstdout_printf (state_data->pstate,
+                      "Average Power over sampling duration : N/A\n");
+    }
 
   memset (timestr, '\0', IPMI_DCMI_TIME_BUFLEN + 1);
 

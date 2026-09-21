@@ -1,5 +1,12 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-dcmi/ipmi-dcmi.c (_output_power_statistics): Output N/A for
+	the current, minimum, maximum and average power readings when the
+	BMC reports power measurement is not active, rather than printing
+	values the spec says are not meaningful.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-dcmi.8.pre.in: Fix wording: drop the stray "tag" from
 	the management controller identifier string options, "affectively"
 	-> "effectively", and remove the claim that DCMI is often referred
