@@ -225,7 +225,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val = 0, temp_val;
-  char *str;
+  const char *str;
   int rv = -1;
   int flag;
 
@@ -737,7 +737,7 @@ get_system_restart_cause (ipmi_chassis_state_data_t *state_data)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val = 0;
-  char *restart_cause_str;
+  const char *restart_cause_str;
   int rv = -1;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_system_restart_cause_rs)))

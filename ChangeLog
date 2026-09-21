@@ -1,5 +1,11 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-chassis/ipmi-chassis.c (get_chassis_status,
+	get_system_restart_cause): Declare the pointers to string literals
+	const.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* common/debugutil/debug-util.c (debug_hdr_str): Declare the
 	pointers to string literals const.
 
