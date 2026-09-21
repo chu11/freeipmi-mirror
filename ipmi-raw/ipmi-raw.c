@@ -55,7 +55,6 @@ ipmi_raw_cmdline (ipmi_raw_state_data_t *state_data)
   int i;
 
   assert (state_data);
-  assert (state_data->prog_data->args->cmd);
   assert (state_data->prog_data->args->cmd_length);
 
   args = state_data->prog_data->args;

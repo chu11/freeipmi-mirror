@@ -1,5 +1,10 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-raw/ipmi-raw.c (ipmi_raw_cmdline): Drop the assert on the
+	address of the cmd array member, which is always true.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-raw/ipmi-raw.c (ipmi_raw_stream): Reject lines with more
 	than IPMI_RAW_MAX_ARGS bytes, as the command line already does.
 
