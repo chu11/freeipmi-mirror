@@ -56,7 +56,8 @@ POWER\-CYCLE, HARD\-RESET, DIAGNOSTIC\-INTERRUPT, SOFT\-SHUTDOWN.
 Set chassis identification.  This command controls physical system
 identification, typically a LED.  Supported values: TURN\-OFF to turn
 off identification, <interval> to turn on identification for
-"interval" seconds, FORCE to turn on indefinitely.
+"interval" seconds, FORCE to turn on indefinitely.  The interval must
+be between 0 and 255; an interval of 0 is equivalent to TURN\-OFF.
 .TP
 \fB\-\-get\-system\-restart\-cause\fR
 Get system restart cause.
