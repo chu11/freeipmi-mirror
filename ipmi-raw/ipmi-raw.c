@@ -99,9 +99,9 @@ ipmi_raw_cmdline (ipmi_raw_state_data_t *state_data)
       goto cleanup;
     }
 
-  pstdout_printf (state_data->pstate, "rcvd: ");
+  pstdout_printf (state_data->pstate, "rcvd:");
   for (i = 0; i < rs_len; i++)
-    pstdout_printf (state_data->pstate, "%02X ", bytes_rs[i]);
+    pstdout_printf (state_data->pstate, " %02X", bytes_rs[i]);
   pstdout_printf (state_data->pstate, "\n");
 
   rv = 0;
@@ -333,9 +333,9 @@ ipmi_raw_stream (ipmi_raw_state_data_t *state_data, FILE *stream)
           goto cleanup;
         }
 
-      pstdout_printf (state_data->pstate, "rcvd: ");
+      pstdout_printf (state_data->pstate, "rcvd:");
       for (i = 0; i < rs_len; i++)
-        pstdout_printf (state_data->pstate, "%02X ", bytes_rs[i]);
+        pstdout_printf (state_data->pstate, " %02X", bytes_rs[i]);
       pstdout_printf (state_data->pstate, "\n");
 
       free (line);
