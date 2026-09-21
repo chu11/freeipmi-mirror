@@ -1,5 +1,10 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sensors/ipmi-sensors.c (_display_sensors): Use goto
+	cleanup like the rest of the function instead of a bare return.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sensors/ipmi-sensors-oem-intel-quanta-qssc-s4r.c
 	(ipmi_sensors_oem_intel_quanta_qssc_s4r_output_oem_record): The
 	inlet temperature and temperature rise are stored in 0.5 C units;

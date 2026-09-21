@@ -1237,7 +1237,7 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
   if (_calculate_record_ids (state_data,
                              output_record_ids,
                              &output_record_ids_length) < 0)
-    return (-1);
+    goto cleanup;
 
   if (state_data->prog_data->args->common_args.section_specific_workaround_flags & IPMI_PARSE_SECTION_SPECIFIC_WORKAROUND_FLAGS_IGNORE_AUTH_CODE)
     {
