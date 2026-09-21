@@ -212,11 +212,12 @@ int pstdout_hostnames_count(const char *hostnames);
  * Parallel standard output.  Should only be called by a thread
  * executed by 'pstdout_launch'.
  *
- * Returns number of characters printed, -1 on error.
- *
- * Note that the return value of number of characters printed may be
- * 0, because data is being buffered for output on a later
- * pstdout_printf call.
+ * Output is handled a line at a time.  Returns the number of
+ * characters output for the last complete line handled by this call
+ * (including any hostname prefix), 0 if no complete line was available
+ * yet and the data is being held for a later call, or -1 on error.
+ * The return value is therefore not the number of characters in the
+ * formatted string, as it is for printf().
  */
 int pstdout_printf(pstdout_state_t pstate, const char *format, ...);
 
@@ -225,11 +226,7 @@ int pstdout_printf(pstdout_state_t pstate, const char *format, ...);
  * Parallel standard output.  Should only be called by a thread
  * executed by 'pstdout_launch'.
  *
- * Returns number of characters printed, -1 on error.
- *
- * Note that the return value of number of characters printed may be
- * 0, because data is being buffered for output on a later
- * pstdout_printf call.
+ * Return value as for pstdout_printf().
  */
 int pstdout_vprintf(pstdout_state_t pstate, const char *format, va_list ap);
 
@@ -239,11 +236,7 @@ int pstdout_vprintf(pstdout_state_t pstate, const char *format, va_list ap);
  * executed by 'pstdout_launch'.  Currently will only work with stdout
  * and stderr.
  *
- * Returns number of characters printed, -1 on error.
- *
- * Note that the return value of number of characters printed may be
- * 0, because data is being buffered for output on a later
- * pstdout_fprintf call.
+ * Return value as for pstdout_printf().
  */
 int pstdout_fprintf(pstdout_state_t pstate, FILE *stream, const char *format, ...);
 
@@ -253,11 +246,7 @@ int pstdout_fprintf(pstdout_state_t pstate, FILE *stream, const char *format, ..
  * executed by 'pstdout_launch'.  Currently will only work with stdout
  * and stderr.
  *
- * Returns number of characters printed, -1 on error.
- *
- * Note that the return value of number of characters printed may be
- * 0, because data is being buffered for output on a later
- * pstdout_fprintf call.
+ * Return value as for pstdout_printf().
  */
 int pstdout_vfprintf(pstdout_state_t pstate, FILE *stream, const char *format,
                      va_list ap);
