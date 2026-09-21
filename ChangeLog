@@ -1,5 +1,12 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-dcmi.8.pre.in: Fix wording: drop the stray "tag" from
+	the management controller identifier string options, "affectively"
+	-> "effectively", and remove the claim that DCMI is often referred
+	to as "DCM".
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-dcmi.8.pre.in: Document the 63 byte maximum length of
 	the --set-asset-tag and --set-management-controller-identifier-string
 	arguments.
