@@ -103,7 +103,7 @@ static struct argp_option cmdline_options[] =
       "Specify correction time limit for set power limit configuration.", 52},
     { "statistics-sampling-period", STATISTICS_SAMPLING_PERIOD, "SECONDS", 0,
       "Specify management application statistics sampling period for set power limit configuration.", 53},
-    { "activate-deactivate-power-limit", ACTIVATE_DEACTIVATE_POWER_LIMIT, "ACTION", 0,
+    { "activate-deactivate-power-limit", ACTIVATE_DEACTIVATE_POWER_LIMIT, "OPERATION", 0,
       "Activate or deactivate power limit.", 54},
     { "interpret-oem-data", INTERPRET_OEM_DATA_KEY, NULL, 0,
       "Attempt to interpret OEM data.", 55},
