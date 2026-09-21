@@ -1311,7 +1311,7 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
       if (state_data->prog_data->args->shared_sensors)
         {
           uint8_t share_count;
-          int i;
+          unsigned int j;
 
           if (record_type != IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
             goto fallthrough;
@@ -1340,11 +1340,11 @@ _display_sensors (ipmi_sensors_state_data_t *state_data)
            * count was 3, then sensors 10, 11, and 12 would share
            * the record"
            */
-          for (i = 0; i < share_count; i++)
+          for (j = 0; j < share_count; j++)
             {
               if (_output_sensor (state_data,
                                   sensor_number_base,
-                                  i) < 0)
+                                  j) < 0)
                 goto cleanup;
             }
         }

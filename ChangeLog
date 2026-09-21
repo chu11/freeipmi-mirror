@@ -1,5 +1,10 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sensors/ipmi-sensors.c (_display_sensors): Do not shadow
+	the record id loop variable with the shared sensor loop variable.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sensors/ipmi-sensors.c (_calculate_record_ids): Print
 	"Sensor Record ID not found" to stderr like the other errors, and
 	format the unsigned id with %u.
