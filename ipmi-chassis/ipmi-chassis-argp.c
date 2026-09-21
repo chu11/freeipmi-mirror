@@ -168,7 +168,10 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           if (tmp < IPMI_CHASSIS_IDENTIFY_INTERVAL_MIN
               || tmp > IPMI_CHASSIS_IDENTIFY_INTERVAL_MAX)
             {
-              fprintf (stderr, "chassis-identify interval out of range\n");
+              fprintf (stderr,
+                       "chassis-identify interval out of range (%d-%d)\n",
+                       IPMI_CHASSIS_IDENTIFY_INTERVAL_MIN,
+                       IPMI_CHASSIS_IDENTIFY_INTERVAL_MAX);
               exit (EXIT_FAILURE);
             }
           cmd_args->chassis_identify_args.identify_interval = 1;

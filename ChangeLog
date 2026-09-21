@@ -1,5 +1,10 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-chassis/ipmi-chassis-argp.c (cmdline_parse): State the valid
+	range in the chassis-identify interval out of range error.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-chassis/ipmi-chassis.c (get_chassis_status): Drop the
 	trailing blank line; no other command prints one.
 
