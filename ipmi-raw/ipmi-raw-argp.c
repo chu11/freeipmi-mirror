@@ -217,4 +217,15 @@ ipmi_raw_argp_parse (int argc, char **argv, struct ipmi_raw_arguments *cmd_args)
               cmd_args);
 
   verify_common_cmd_args (&(cmd_args->common_args));
+
+  /* libfreeipmi only supports IPMI_FLAGS_NOSESSION on the IPMI 1.5
+   * LAN driver; catch the obvious misuses before opening anything.
+   */
+  if (cmd_args->no_session
+      && (!cmd_args->common_args.hostname
+          || cmd_args->common_args.driver_type == IPMI_DEVICE_LAN_2_0))
+    {
+      fprintf (stderr, "--no-session requires IPMI 1.5 out of band communication\n");
+      exit (EXIT_FAILURE);
+    }
 }
