@@ -896,7 +896,6 @@ static int
 run_cmd_args (ipmi_chassis_state_data_t *state_data)
 {
   struct ipmi_chassis_arguments *args;
-  int rv = -1;
 
   assert (state_data);
 
@@ -920,8 +919,7 @@ run_cmd_args (ipmi_chassis_state_data_t *state_data)
   if (args->get_power_on_hours_counter)
     return (get_power_on_hours_counter (state_data));
 
-  rv = 0;
-  return (rv);
+  return (0);
 }
 
 static int
