@@ -1,5 +1,13 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-dcmi.8.pre.in: Document the 63 byte maximum length of
+	the --set-asset-tag and --set-management-controller-identifier-string
+	arguments.
+	* ipmi-dcmi/ipmi-dcmi-argp.c (cmdline_parse): Include the maximum
+	length in the corresponding "invalid length" errors.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-dcmi/ipmi-dcmi-argp.c (cmdline_options): Name the
 	--activate-deactivate-power-limit argument OPERATION in --help to
 	match the man page; it was ACTION, which now belongs to
