@@ -1,5 +1,10 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-raw.8.pre.in: Fix the --file example; there is no -f
+	short option.  Say NETFN rather than FN consistently.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmiseld.conf.5.pre.in: Document sensor-types by its real name
 	(not "sensors-types"), set it and exclude-sensor-types in bold like
 	the other options, refer to --list-sensor-types, and drop a
