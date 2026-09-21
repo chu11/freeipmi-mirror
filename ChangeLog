@@ -1,5 +1,13 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sensors/ipmi-sensors.c (_output_sensor): When
+	ipmi_sensor_read returns 0 with IPMI_SENSOR_READ_ERR_SDR_ENTRY_ERROR,
+	i.e. the record's event/reading type code is not one the library
+	can interpret, output the sensor as "Unknown" and continue instead
+	of aborting the whole listing on that one record.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sensors/ipmi-sensors-simple-output.c (_round_double2):
 	Remove.  It rounded negative readings toward zero rather than to
 	nearest (-11.999 printed as -11.99) and was redundant with the
