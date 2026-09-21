@@ -1,5 +1,13 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-dcmi/ipmi-dcmi.c (get_asset_tag): Never request more asset
+	tag bytes than the buffer can hold and warn that output is
+	truncated if the BMC reports a longer tag.  A 64 byte tag, which
+	some BMCs store, previously failed with "fiid_obj_get_data:
+	'data': overflow" instead of being printed.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-dcmi/ipmi-dcmi.c (_supported_dcmi_capabilities)
 	(_mandatory_platform_attributes): Fix error messages that named
 	'mandatory_platform_capabilities.identification_support' when the

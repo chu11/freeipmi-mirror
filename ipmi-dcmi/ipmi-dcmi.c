@@ -1113,6 +1113,14 @@ get_asset_tag (ipmi_dcmi_state_data_t *state_data)
       else
         bytes_to_read = total_asset_tag_length - offset;
 
+      /* Some BMCs store a 64 byte tag although the spec wording caps
+       * it at 63.  Never request more than the buffer can hold, else
+       * the last read fails with a fiid overflow instead of printing
+       * the tag.
+       */
+      if (bytes_to_read > (IPMI_DCMI_MAX_ASSET_TAG_LENGTH - offset))
+        bytes_to_read = IPMI_DCMI_MAX_ASSET_TAG_LENGTH - offset;
+
       if (ipmi_cmd_dcmi_get_asset_tag (state_data->ipmi_ctx,
                                        offset,
                                        bytes_to_read,
@@ -1168,6 +1176,16 @@ get_asset_tag (ipmi_dcmi_state_data_t *state_data)
 
       if (offset >= total_asset_tag_length)
         break;
+
+      if (offset >= IPMI_DCMI_MAX_ASSET_TAG_LENGTH)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "asset tag length %u exceeds maximum of %u, output truncated\n",
+                           total_asset_tag_length,
+                           IPMI_DCMI_MAX_ASSET_TAG_LENGTH);
+          break;
+        }
     }
 
   if (total_asset_tag_length)
