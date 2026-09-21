@@ -1,5 +1,13 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sensors/ipmi-sensors-argp.c (cmdline_options): Fix
+	"sendor" typo in the --sdr-info help text.
+	* ipmi-sensors/ipmi-sensors-detailed-output.c
+	(_detailed_output_compact_record): Fix "for reach shared record"
+	typo.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sensors/ipmi-sensors-detailed-output.c
 	(_detailed_output_hysteresis, _output_entity_id_and_instance)
 	(_detailed_output_fru_device_locator_record): Name the function

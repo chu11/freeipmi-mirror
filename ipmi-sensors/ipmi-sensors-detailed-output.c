@@ -1647,7 +1647,7 @@ _detailed_output_compact_record (ipmi_sensors_state_data_t *state_data,
 
       if (entity_instance_sharing == IPMI_SDR_ENTITY_INSTANCE_INCREMENTS_FOR_EACH_SHARED_RECORD)
         pstdout_printf (state_data->pstate,
-                        "Entity Instance Sharing: Increments for reach shared record\n");
+                        "Entity Instance Sharing: Increments for each shared record\n");
       else
         pstdout_printf (state_data->pstate,
                         "Entity Instance Sharing: Same for all records\n");

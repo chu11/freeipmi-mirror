@@ -76,7 +76,7 @@ static struct argp_option cmdline_options[] =
     { "verbose",        VERBOSE_KEY,        0, 0,
       "Increase verbosity in output.  May be specified multiple times.", 40},
     { "sdr-info",       SDR_INFO_KEY,       0, 0,
-      "Show sendor data repository (SDR) information.", 41},
+      "Show sensor data repository (SDR) information.", 41},
     { "quiet-readings", QUIET_READINGS_KEY,  0, 0,
       "Do not output sensor readings or thresholds on simple output.", 42},
     { "record-ids",     RECORD_IDS_KEY, "RECORD-IDS-LIST", 0,
